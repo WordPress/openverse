@@ -11,8 +11,8 @@ per minute rate limit in place for anonymous users. This is fine for introducing
 yourself to the API, but we strongly recommend that you obtain an API key as
 soon as possible. Authorized clients have a higher rate limit of 10000 requests
 per day and 100 requests per minute. Additionally, Openverse can give your key
-an even higher limit that fits your application's needs. See the 
-[Register and Authenticate section](#section/Register-and-Authenticate) for 
+an even higher limit that fits your application's needs. See the
+[Register and Authenticate section](#section/Register-and-Authenticate) for
 instructions on obtaining an API key.
 
 # Register and Authenticate
@@ -25,7 +25,7 @@ Example on how to register for a key:
 ```bash
 $ curl \
   -X POST \
-  -H "Content-Type: application/json" \ 
+  -H "Content-Type: application/json" \
   -d '{"name": "My amazing project", "description": "To access Openverse API", "email": "zack.krida@automattic.com"}' \
   "https://api.openverse.engineering/v1/auth_tokens/register"
 ```
@@ -49,7 +49,7 @@ Example on how to authenticate using OAuth2:
 ```bash
 $ curl \
   -X POST \
-  -d "client_id=pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda&client_secret=YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e&grant_type=client_credentials" \ 
+  -d "client_id=pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda&client_secret=YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e&grant_type=client_credentials" \
   "https://api.openverse.engineering/v1/auth_tokens/token/"
 ```
 If your request is successful, you will get an access token.
@@ -97,8 +97,8 @@ $ curl \
 
 # Contribute
 
-We love pull requests! If you’re interested in 
-[contributing on Github](https://github.com/wordpress/openverse-api), here’s a 
+We love pull requests! If you’re interested in
+[contributing on Github](https://github.com/wordpress/openverse-api), here’s a
 todo list to get started.
 
 - Read up about [Django REST Framework](https://www.django-rest-framework.org/),

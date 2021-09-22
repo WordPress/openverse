@@ -1,6 +1,7 @@
 import json
 import random
 import uuid
+
 from locust import HttpLocust, TaskSet, task
 
 
@@ -8,7 +9,7 @@ class BrowseResults(TaskSet):
     @task(30)
     def view_image(self):
         if self.parent.results:
-            image_id = random.choice(self.parent.results)['id']
+            image_id = random.choice(self.parent.results)["id"]
             self.client.get(f"/image/{image_id}", name="/image/[id]")
 
     @task(10)
@@ -17,9 +18,8 @@ class BrowseResults(TaskSet):
         if self.parent.results:
             list_length = random.choice([2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 9])
             selected_images = self.parent.results[0:list_length]
-            ids = [image['id'] for image in selected_images]
-            self.client.post("/list",
-                             {"title": "Load test" + str(ids), "images": ids})
+            ids = [image["id"] for image in selected_images]
+            self.client.post("/list", {"title": "Load test" + str(ids), "images": ids})
 
     @task(10)
     def shorten_link(self):
@@ -42,13 +42,12 @@ class UserBehavior(TaskSet):
     def search(self):
         query_length = random.choice([1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 5])
         query = [random.choice(self.common_words) for _ in range(query_length)]
-        query = ','.join(query)
+        query = ",".join(query)
         self.query = query
         response = self.client.get(
-            f"/image/search?q={query}",
-            name="/image/search?q=[keywords]"
+            f"/image/search?q={query}", name="/image/search?q=[keywords]"
         )
-        self.results = json.loads(response.content.decode("utf-8"))['results']
+        self.results = json.loads(response.content.decode("utf-8"))["results"]
 
 
 class SearchUser(HttpLocust):

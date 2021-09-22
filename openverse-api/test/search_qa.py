@@ -1,9 +1,12 @@
-import requests
-import pprint
 import json
-import pytest
+import pprint
 from enum import Enum
+
+import pytest
+import requests
+
 from .api_live_integration import API_URL
+
 
 """
 Perform some basic tests to ensure that search rankings work as anticipated.
@@ -23,6 +26,6 @@ def test_phrase_relevance():
     )
     parsed = json.loads(res.text)
     pprint.pprint(parsed)
-    assert int(parsed['results'][0]['id']) == QAScores.TARGET.value
-    assert int(parsed['results'][1]['id']) < QAScores.NOT_RELEVANT.value
-    assert int(parsed['results'][-1]['id']) != QAScores.NOT_RELEVANT.value
+    assert int(parsed["results"][0]["id"]) == QAScores.TARGET.value
+    assert int(parsed["results"][1]["id"]) < QAScores.NOT_RELEVANT.value
+    assert int(parsed["results"][-1]["id"]) != QAScores.NOT_RELEVANT.value

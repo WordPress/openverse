@@ -9,18 +9,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  Style:
+  Linting:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/setup-python@v2
-    - name: Install pycodestyle
-      run: pip install pycodestyle
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Check API style
-      run: pycodestyle openverse-api/catalog --exclude='openverse-api/catalog/api/migrations,openverse-api/catalog/example_responses.py' --max-line-length=80 --ignore=E402,E702
-    - name: Check ingestion-server style
-      run: pycodestyle ingestion_server/ingestion_server --max-line-length=80 --ignore=E402
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Lint
+      working-directory: ./openverse-api
+      run: |
+        pip install --upgrade pipenv
+        pipenv install --dev
+        pipenv run pre-commit run --all-files
+
   Tests:
     timeout-minutes: 15
     runs-on: ubuntu-latest

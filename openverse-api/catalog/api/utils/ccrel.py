@@ -1,8 +1,10 @@
-from libxmp.consts import XMP_NS_CC, XMP_NS_XMP_Rights, XMP_NS_XMP
-import libxmp
 import io
 import os
 import uuid
+
+import libxmp
+from libxmp.consts import XMP_NS_CC, XMP_NS_XMP, XMP_NS_XMP_Rights
+
 
 """
 Tools for embedding Creative Commons Rights Expression Language (ccREL) data
@@ -33,47 +35,43 @@ def embed_xmp_bytes(image: io.BytesIO, work_properties):
     # `io.BytesIO` object, we have to use a temporary file and then convert it
     # back.
     # https://github.com/python-xmp-toolkit/python-xmp-toolkit/issues/46
-    filename = f'/tmp/{uuid.uuid4()}'
-    with open(filename, 'w+b') as xmp_temp:
+    filename = f"/tmp/{uuid.uuid4()}"
+    with open(filename, "w+b") as xmp_temp:
         xmp_temp.write(image.getvalue())
         xmp_temp.flush()
         xmpfile = libxmp.XMPFiles(file_path=xmp_temp.name, open_forupdate=True)
 
         # Set CC rights.
         xmp = xmpfile.get_xmp()
-        xmp.register_namespace(XMP_NS_CC, 'cc')
-        xmp.set_property(XMP_NS_CC, 'license', work_properties['license_url'])
-        if 'creator' in work_properties:
-            if not xmp.does_property_exist(XMP_NS_CC, 'attributionName'):
+        xmp.register_namespace(XMP_NS_CC, "cc")
+        xmp.set_property(XMP_NS_CC, "license", work_properties["license_url"])
+        if "creator" in work_properties:
+            if not xmp.does_property_exist(XMP_NS_CC, "attributionName"):
                 xmp.set_property(
-                    XMP_NS_CC, 'attributionName', work_properties['creator']
+                    XMP_NS_CC, "attributionName", work_properties["creator"]
                 )
-        if 'work_landing_page' in work_properties:
-            if not xmp.does_property_exist(XMP_NS_CC, 'attributionURL'):
+        if "work_landing_page" in work_properties:
+            if not xmp.does_property_exist(XMP_NS_CC, "attributionURL"):
                 xmp.set_property(
-                    XMP_NS_CC,
-                    'attributionURL',
-                    work_properties['work_landing_page']
+                    XMP_NS_CC, "attributionURL", work_properties["work_landing_page"]
                 )
-        xmp.register_namespace(XMP_NS_XMP, 'xmp')
-        if 'identifier' in work_properties:
-            if not xmp.does_property_exist(XMP_NS_XMP, 'Identifier'):
+        xmp.register_namespace(XMP_NS_XMP, "xmp")
+        if "identifier" in work_properties:
+            if not xmp.does_property_exist(XMP_NS_XMP, "Identifier"):
                 xmp.set_property(
-                    XMP_NS_XMP,
-                    'Identifier',
-                    work_properties['identifier']
+                    XMP_NS_XMP, "Identifier", work_properties["identifier"]
                 )
         # Set generic XMP rights.
-        xmp.register_namespace(XMP_NS_XMP_Rights, 'xmpRights')
-        if not xmp.does_property_exist(XMP_NS_XMP_Rights, 'XMP_NS_XMP_Rights'):
-            xmp.set_property_bool(XMP_NS_XMP_Rights, 'Marked', True)
-        if not xmp.does_property_exist(XMP_NS_XMP_Rights, 'UsageTerms'):
-            usage = work_properties['attribution']
-            xmp.set_property(XMP_NS_XMP_Rights, 'UsageTerms', usage)
+        xmp.register_namespace(XMP_NS_XMP_Rights, "xmpRights")
+        if not xmp.does_property_exist(XMP_NS_XMP_Rights, "XMP_NS_XMP_Rights"):
+            xmp.set_property_bool(XMP_NS_XMP_Rights, "Marked", True)
+        if not xmp.does_property_exist(XMP_NS_XMP_Rights, "UsageTerms"):
+            usage = work_properties["attribution"]
+            xmp.set_property(XMP_NS_XMP_Rights, "UsageTerms", usage)
         xmpfile.put_xmp(xmp)
         xmpfile.close_file()
 
-    with open(filename, 'r+b') as xmpfile:
+    with open(filename, "r+b") as xmpfile:
         file_with_xmp = io.BytesIO(xmpfile.read())
     os.remove(filename)
     return file_with_xmp

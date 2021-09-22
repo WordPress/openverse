@@ -14,7 +14,7 @@ def get_status_code_view(data, status_code=200):
     :return: the class based view that returns the same response for all methods
     """
 
-    @method_decorator(csrf_exempt, name='dispatch')
+    @method_decorator(csrf_exempt, name="dispatch")
     class StatusCodeView(View):
         status = status_code
 

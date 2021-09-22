@@ -1,9 +1,9 @@
 from enum import Enum, auto
 
-from elasticsearch_dsl import Integer, Document, Field
-
+from elasticsearch_dsl import Document, Field, Integer
 from ingestion_server.authority import get_authority_boost
 from ingestion_server.categorize import get_categories
+
 
 """
 Provides an ORM-like experience for accessing data in Elasticsearch.
@@ -14,7 +14,7 @@ low-level changes to the index must be represented there as well.
 
 
 class RankFeature(Field):
-    name = 'rank_feature'
+    name = "rank_feature"
 
 
 def _verify_rank_feature(value, low, high):
@@ -34,6 +34,7 @@ class SyncableDocType(Document):
     Represents tables in the source-of-truth that will be replicated to
     Elasticsearch.
     """
+
     # Aggregations can't be performed on the _id meta-column, which
     # necessitates copying it to this column in the doc. Aggregation is
     # used to find the last document inserted into Elasticsearch
@@ -50,7 +51,7 @@ class SyncableDocType(Document):
         :return:
         """
         raise NotImplementedError(
-            'Model is missing database -> Elasticsearch translation.'
+            "Model is missing database -> Elasticsearch translation."
         )
 
 
@@ -61,7 +62,7 @@ class Media(SyncableDocType):
     """
 
     class Index:
-        name = 'media'
+        name = "media"
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
@@ -75,7 +76,7 @@ class Media(SyncableDocType):
         """
 
         raise NotImplementedError(
-            'Missing database row -> Elasticsearch schema translation.'
+            "Missing database row -> Elasticsearch schema translation."
         )
 
     @staticmethod
@@ -89,42 +90,33 @@ class Media(SyncableDocType):
         :return: the ES sub-document holding the common cols of the row tuple
         """
 
-        meta = row[schema['meta_data']]
+        meta = row[schema["meta_data"]]
 
-        if 'standardized_popularity' in schema:
-            popularity = Media.get_popularity(
-                row[schema['standardized_popularity']]
-            )
+        if "standardized_popularity" in schema:
+            popularity = Media.get_popularity(row[schema["standardized_popularity"]])
         else:
             popularity = None
 
         return {
-            '_id': row[schema['id']],
-            'id': row[schema['id']],
-            'identifier': row[schema['identifier']],
-
-            'title': row[schema['title']],
-            'foreign_landing_url': row[schema['foreign_landing_url']],
-            'description': Media.parse_description(meta),
-
-            'creator': row[schema['creator']],
-            'creator_url': row[schema['creator_url']],
-
-            'url': row[schema['url']],
-            'extension': Media.get_extension(row[schema['url']]),
-
-            'license': row[schema['license']].lower(),
-            'license_version': row[schema['license_version']],
-            'license_url': Media.get_license_url(meta),
-
-            'provider': row[schema['provider']],
-            'source': row[schema['source']],
-
-            'created_on': row[schema['created_on']],
-            'tags': Media.parse_detailed_tags(row[schema['tags']]),
-            'mature': Media.get_maturity(meta, row[schema['mature']]),
-
-            'standardized_popularity': popularity,
+            "_id": row[schema["id"]],
+            "id": row[schema["id"]],
+            "identifier": row[schema["identifier"]],
+            "title": row[schema["title"]],
+            "foreign_landing_url": row[schema["foreign_landing_url"]],
+            "description": Media.parse_description(meta),
+            "creator": row[schema["creator"]],
+            "creator_url": row[schema["creator_url"]],
+            "url": row[schema["url"]],
+            "extension": Media.get_extension(row[schema["url"]]),
+            "license": row[schema["license"]].lower(),
+            "license_version": row[schema["license_version"]],
+            "license_url": Media.get_license_url(meta),
+            "provider": row[schema["provider"]],
+            "source": row[schema["source"]],
+            "created_on": row[schema["created_on"]],
+            "tags": Media.parse_detailed_tags(row[schema["tags"]]),
+            "mature": Media.get_maturity(meta, row[schema["mature"]]),
+            "standardized_popularity": popularity,
         }
 
     @staticmethod
@@ -135,8 +127,8 @@ class Media(SyncableDocType):
         Limit to the first 2000 characters.
         """
         try:
-            if 'description' in metadata_field:
-                return metadata_field['description'][:2000]
+            if "description" in metadata_field:
+                return metadata_field["description"][:2000]
         except TypeError:
             return None
 
@@ -145,8 +137,8 @@ class Media(SyncableDocType):
         """
         Get the extension from the last segment of the URL separated by a dot.
         """
-        extension = url.split('.')[-1].lower()
-        if '/' in extension or extension is None:
+        extension = url.split(".")[-1].lower()
+        if "/" in extension or extension is None:
             return None
         else:
             return extension
@@ -157,8 +149,8 @@ class Media(SyncableDocType):
         If the license_url is not provided, we'll try to generate it elsewhere
         from the `license` and `license_version`.
         """
-        if meta_data and 'license_url' in meta_data:
-            return meta_data['license_url']
+        if meta_data and "license_url" in meta_data:
+            return meta_data["license_url"]
         else:
             return None
 
@@ -174,8 +166,8 @@ class Media(SyncableDocType):
         :return:
         """
         _mature = False
-        if meta_data and 'mature' in meta_data:
-            _mature = meta_data['mature']
+        if meta_data and "mature" in meta_data:
+            _mature = meta_data["mature"]
         if api_maturity_flag:
             _mature = True
         return _mature
@@ -183,12 +175,10 @@ class Media(SyncableDocType):
     @staticmethod
     def get_authority_boost(meta_data, source):
         authority_boost = None
-        if meta_data and 'authority_boost' in meta_data:
+        if meta_data and "authority_boost" in meta_data:
             try:
-                authority_boost = float(meta_data['authority_boost'])
-                authority_boost = _verify_rank_feature(
-                    authority_boost, low=0, high=100
-                )
+                authority_boost = float(meta_data["authority_boost"])
+                authority_boost = _verify_rank_feature(authority_boost, low=0, high=100)
             except (ValueError, TypeError):
                 pass
         else:
@@ -208,10 +198,10 @@ class Media(SyncableDocType):
             return None
         parsed_tags = []
         for tag in json_tags:
-            if 'name' in tag:
-                parsed_tag = {'name': tag['name']}
-                if 'accuracy' in tag:
-                    parsed_tag['accuracy'] = tag['accuracy']
+            if "name" in tag:
+                parsed_tag = {"name": tag["name"]}
+                if "accuracy" in tag:
+                    parsed_tag["accuracy"] = tag["accuracy"]
                 parsed_tags.append(parsed_tag)
         return parsed_tags
 
@@ -227,6 +217,7 @@ class Image(Media):
         These aspect ratios are also hardcoded in the `aspect_ratio` field in
         openverse-api/catalog/api/serializers/image_serializers.py.
         """
+
         TALL = auto()
         WIDE = auto()
         SQUARE = auto()
@@ -238,38 +229,37 @@ class Image(Media):
         These sizes are also hardcoded in the `aspect_ratio` field in
         openverse-api/catalog/api/serializers/image_serializers.py.
         """
+
         SMALL = 640 * 480
         MEDIUM = 1600 * 900
         LARGE = float("inf")
 
     class Index:
-        name = 'image'
+        name = "image"
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
-        source = row[schema['source']]
-        extension = Image.get_extension(row[schema['url']])
+        source = row[schema["source"]]
+        extension = Image.get_extension(row[schema["url"]])
         categories = get_categories(extension, source)
 
-        height = row[schema['height']]
-        width = row[schema['width']]
+        height = row[schema["height"]]
+        width = row[schema["width"]]
         aspect_ratio = Image.get_aspect_ratio(height, width)
         size = Image.get_size(height, width)
 
-        meta = row[schema['meta_data']]
-        provider = row[schema['provider']]
+        meta = row[schema["meta_data"]]
+        provider = row[schema["provider"]]
         authority_boost = Image.get_authority_boost(meta, provider)
 
         attrs = Image.get_instance_attrs(row, schema)
-        popularity = attrs['standardized_popularity']
+        popularity = attrs["standardized_popularity"]
 
         return Image(
-            thumbnail=row[schema['thumbnail']],
-
+            thumbnail=row[schema["thumbnail"]],
             categories=categories,
             aspect_ratio=aspect_ratio,
             size=size,
-
             authority_boost=authority_boost,
             max_boost=max(popularity or 1, authority_boost or 1),
             min_boost=min(popularity or 1, authority_boost or 1),
@@ -311,28 +301,28 @@ class Audio(Media):
         These durations are also hardcoded in the `duration` field in
         openverse-api/catalog/api/serializers/audio_serializers.py.
         """
+
         SHORT = 4 * 60 * 1e3  # under 4 minutes
         MEDIUM = 20 * 60 * 1e3  # 4 - 20 minutes
         LONG = float("inf")  # longer than 20 minutes
 
     class Index:
-        name = 'audio'
+        name = "audio"
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
-        meta = row[schema['meta_data']]
-        provider = row[schema['provider']]
+        meta = row[schema["meta_data"]]
+        provider = row[schema["provider"]]
         authority_boost = Audio.get_authority_boost(meta, provider)
 
         attrs = Audio.get_instance_attrs(row, schema)
-        popularity = attrs['standardized_popularity']
+        popularity = attrs["standardized_popularity"]
 
         return Audio(
-            bit_rate=row[schema['bit_rate']],
-            sample_rate=row[schema['sample_rate']],
-            genres=row[schema['genres']],
-            category=row[schema['category']],
-
+            bit_rate=row[schema["bit_rate"]],
+            sample_rate=row[schema["sample_rate"]],
+            genres=row[schema["genres"]],
+            category=row[schema["category"]],
             authority_boost=authority_boost,
             max_boost=max(popularity or 1, authority_boost or 1),
             min_boost=min(popularity or 1, authority_boost or 1),
@@ -350,6 +340,6 @@ class Audio(Media):
 
 # Table name -> Elasticsearch model
 database_table_to_elasticsearch_model = {
-    'image': Image,
-    'audio': Audio,
+    "image": Image,
+    "audio": Audio,
 }

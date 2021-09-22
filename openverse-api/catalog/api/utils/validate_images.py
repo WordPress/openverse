@@ -1,8 +1,10 @@
-import time
-import grequests
 import logging
-from django_redis import get_redis_connection
+import time
+
+import grequests
 from catalog.api.utils.dead_link_mask import get_query_mask, save_query_mask
+from django_redis import get_redis_connection
+
 
 log = logging.getLogger(__name__)
 
@@ -21,11 +23,10 @@ def validate_images(query_hash, start_slice, results, image_urls):
     start_time = time.time()
     # Pull matching images from the cache.
     redis = get_redis_connection("default")
-    cache_prefix = 'valid:'
+    cache_prefix = "valid:"
     cached_statuses = redis.mget([cache_prefix + url for url in image_urls])
     cached_statuses = [
-        int(b.decode('utf-8'))
-        if b is not None else None for b in cached_statuses
+        int(b.decode("utf-8")) if b is not None else None for b in cached_statuses
     ]
     # Anything that isn't in the cache needs to be validated via HEAD request.
     to_verify = {}
@@ -80,8 +81,8 @@ def validate_images(query_hash, start_slice, results, image_urls):
         status = cached_statuses[del_idx]
         if status == 429 or status == 403:
             log.warning(
-                'Image validation failed due to rate limiting or blocking. '
-                f'Affected URL: {image_urls[idx]}'
+                "Image validation failed due to rate limiting or blocking. "
+                f"Affected URL: {image_urls[idx]}"
             )
         elif status != 200:
             log.info(
@@ -98,8 +99,8 @@ def validate_images(query_hash, start_slice, results, image_urls):
     save_query_mask(query_hash, new_mask)
 
     end_time = time.time()
-    log.info(f'Validated images in {end_time - start_time} ')
+    log.info(f"Validated images in {end_time - start_time} ")
 
 
 def _validation_failure(request, exception):
-    log.warning(f'Failed to validate image! Reason: {exception}')
+    log.warning(f"Failed to validate image! Reason: {exception}")

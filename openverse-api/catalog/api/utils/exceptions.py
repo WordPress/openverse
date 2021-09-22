@@ -1,5 +1,5 @@
-from rest_framework.serializers import ValidationError
 from rest_framework.exceptions import APIException
+from rest_framework.serializers import ValidationError
 from rest_framework.views import exception_handler as drf_exception_handler
 
 
@@ -20,6 +20,7 @@ def get_api_exception(error_message, response_code=500, error_code=None):
         status_code = response_code
         default_detail = error_message
         default_code = error_code
+
     return SubAPIException()
 
 
@@ -36,7 +37,5 @@ def exception_handler(ex, context):
     res = drf_exception_handler(ex, context)
     if isinstance(ex, ValidationError):
         # Wrap validation errors inside a `detail` key for consistency
-        res.data = {
-            'detail': res.data
-        }
+        res.data = {"detail": res.data}
     return res

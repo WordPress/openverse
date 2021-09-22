@@ -1,24 +1,23 @@
-from rest_framework import serializers
-
 from catalog.api.controllers.search_controller import get_sources
 from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import AudioReport
 from catalog.api.serializers.media_serializers import (
-    _validate_enum,
     MediaSearchRequestSerializer,
     MediaSearchSerializer,
     MediaSerializer,
+    _validate_enum,
 )
+from rest_framework import serializers
 
 
 class AudioSearchRequestSerializer(MediaSearchRequestSerializer):
-    """ Parse and validate search query string parameters. """
+    """Parse and validate search query string parameters."""
 
     fields_names = [
         *MediaSearchRequestSerializer.fields_names,
-        'source',
-        'categories',
-        'duration',
+        "source",
+        "categories",
+        "duration",
     ]
     """
     Keep the fields names in sync with the actual fields below as this list is
@@ -28,67 +27,64 @@ class AudioSearchRequestSerializer(MediaSearchRequestSerializer):
     source = serializers.CharField(
         label="provider",
         help_text="A comma separated list of data sources to search. Valid "
-                  "inputs: "
-                  f"`{list(get_sources('audio').keys())}`",
-        required=False
+        "inputs: "
+        f"`{list(get_sources('audio').keys())}`",
+        required=False,
     )
     categories = serializers.CharField(
         label="categories",
         help_text="A comma separated list of categories; available categories "
-                  "include `music`, `sound_effect`, `podcast`, `audiobook`, "
-                  "and `news`.",
-        required=False
+        "include `music`, `sound_effect`, `podcast`, `audiobook`, "
+        "and `news`.",
+        required=False,
     )
     duration = serializers.CharField(
-        label='duration',
+        label="duration",
         help_text="A comma separated list of audio lengths; available lengths "
-                  "include `short`, and `long`.",
-        required=False
+        "include `short`, and `long`.",
+        required=False,
     )
 
     @staticmethod
     def validate_source(input_sources):
-        allowed_sources = list(get_sources('audio').keys())
-        input_sources = input_sources.split(',')
+        allowed_sources = list(get_sources("audio").keys())
+        input_sources = input_sources.split(",")
         input_sources = [x for x in input_sources if x in allowed_sources]
-        input_sources = ','.join(input_sources)
+        input_sources = ",".join(input_sources)
         return input_sources.lower()
 
     @staticmethod
     def validate_categories(value):
         valid_categories = {
-            'music',
-            'sound_effect',
-            'podcast',
-            'news',
-            'audiobook',
+            "music",
+            "sound_effect",
+            "podcast",
+            "news",
+            "audiobook",
         }
-        _validate_enum('category', valid_categories, value)
+        _validate_enum("category", valid_categories, value)
         return value.lower()
 
     @staticmethod
     def validate_duration(value):
-        valid_durations = {  # TODO: Finalise duration filters
-            'short',
-            'long'
-        }
-        _validate_enum('duration', valid_durations, value)
+        valid_durations = {"short", "long"}  # TODO: Finalise duration filters
+        _validate_enum("duration", valid_durations, value)
         return value.lower()
 
 
 class AudioSerializer(MediaSerializer):
-    """ A single audio file. Used in search results."""
+    """A single audio file. Used in search results."""
 
     fields_names = [
         *MediaSerializer.fields_names,
-        'audio_set',
-        'genre',
-        'duration',
-        'bit_rate',
-        'sample_rate',
-        'alt_files',
-        'detail_url',
-        'related_url',
+        "audio_set",
+        "genre",
+        "duration",
+        "bit_rate",
+        "sample_rate",
+        "alt_files",
+        "detail_url",
+        "related_url",
     ]
     """
     Keep the fields names in sync with the actual fields below as this list is
@@ -97,60 +93,56 @@ class AudioSerializer(MediaSerializer):
 
     audio_set = serializers.PrimaryKeyRelatedField(
         required=False,
-        help_text='Reference to set of which this track is a part.',
-        read_only=True
+        help_text="Reference to set of which this track is a part.",
+        read_only=True,
     )
 
     genres = serializers.ListField(
         child=serializers.CharField(),
         required=False,
-        help_text='An array of audio genres such as '
-                  '`rock`, `electronic` for `music` category, or '
-                  '`politics`, `sport`, `education` for `podcast` category'
+        help_text="An array of audio genres such as "
+        "`rock`, `electronic` for `music` category, or "
+        "`politics`, `sport`, `education` for `podcast` category",
     )
 
     duration = serializers.IntegerField(
-        required=False,
-        help_text='The time length of the audio file in milliseconds.'
+        required=False, help_text="The time length of the audio file in milliseconds."
     )
     bit_rate = serializers.IntegerField(
-        required=False,
-        help_text='Number in bits per second, eg. 128000.'
+        required=False, help_text="Number in bits per second, eg. 128000."
     )
     sample_rate = serializers.IntegerField(
-        required=False,
-        help_text='Number in hertz, eg. 44100.'
+        required=False, help_text="Number in hertz, eg. 44100."
     )
 
     alt_files = serializers.JSONField(
-        required=False,
-        help_text='JSON describing alternative files for this audio.'
+        required=False, help_text="JSON describing alternative files for this audio."
     )
 
     # Hyperlinks
     thumbnail = serializers.HyperlinkedIdentityField(
         read_only=True,
-        view_name='audio-thumb',
-        lookup_field='identifier',
-        help_text="A direct link to the miniature artwork."
+        view_name="audio-thumb",
+        lookup_field="identifier",
+        help_text="A direct link to the miniature artwork.",
     )
     waveform = serializers.HyperlinkedIdentityField(
         read_only=True,
-        view_name='audio-waveform',
-        lookup_field='identifier',
-        help_text='A direct link to the waveform peaks.'
+        view_name="audio-waveform",
+        lookup_field="identifier",
+        help_text="A direct link to the waveform peaks.",
     )
     detail_url = serializers.HyperlinkedIdentityField(
         read_only=True,
-        view_name='audio-detail',
-        lookup_field='identifier',
-        help_text="A direct link to the detail view of this audio file."
+        view_name="audio-detail",
+        lookup_field="identifier",
+        help_text="A direct link to the detail view of this audio file.",
     )
     related_url = serializers.HyperlinkedIdentityField(
         read_only=True,
-        view_name='audio-related',
-        lookup_field='identifier',
-        help_text="A link to an endpoint that provides similar audio files."
+        view_name="audio-related",
+        lookup_field="identifier",
+        help_text="A link to an endpoint that provides similar audio files.",
     )
 
 
@@ -160,6 +152,7 @@ class AudioSearchSerializer(MediaSearchSerializer):
     This serializer is purely representational and not actually used to
     serialize the response.
     """
+
     results = AudioSerializer(
         many=True,
         help_text=(
@@ -172,13 +165,18 @@ class AudioSearchSerializer(MediaSearchSerializer):
 class AudioReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = AudioReport
-        fields = ('identifier', 'reason', 'description')
-        read_only_fields = ('identifier',)
+        fields = ("identifier", "reason", "description")
+        read_only_fields = ("identifier",)
 
     def create(self, validated_data):
-        if validated_data['reason'] == "other" and \
-            ('description' not in validated_data or len(
-                validated_data['description'])) < 20:
+        if (
+            validated_data["reason"] == "other"
+            and (
+                "description" not in validated_data
+                or len(validated_data["description"])
+            )
+            < 20
+        ):
             raise serializers.ValidationError(
                 "Description must be at least be 20 characters long"
             )
@@ -187,10 +185,8 @@ class AudioReportSerializer(serializers.ModelSerializer):
 
 class AudioWaveformSerializer(serializers.Serializer):
     len = serializers.SerializerMethodField()
-    points = serializers.ListField(
-        serializers.FloatField(min_value=0, max_value=1)
-    )
+    points = serializers.ListField(serializers.FloatField(min_value=0, max_value=1))
 
     @staticmethod
     def get_len(obj) -> int:
-        return len(obj.get('points', []))
+        return len(obj.get("points", []))

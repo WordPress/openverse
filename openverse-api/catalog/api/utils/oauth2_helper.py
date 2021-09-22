@@ -1,7 +1,9 @@
 import datetime as dt
 import logging
-from oauth2_provider.models import AccessToken
+
 from catalog.api.models import ThrottledApplication
+from oauth2_provider.models import AccessToken
+
 
 log = logging.getLogger(__name__)
 
@@ -27,13 +29,11 @@ def get_token_info(token: str):
             rate_limit_model = application.rate_limit_model
             verified = application.verified
         except ThrottledApplication.DoesNotExist:
-            log.warning(
-                'Failed to find application associated with access token.'
-            )
+            log.warning("Failed to find application associated with access token.")
             client_id = None
             rate_limit_model = None
             verified = None
         return client_id, rate_limit_model, verified
     else:
-        log.warning('Rejected expired access token.')
+        log.warning("Rejected expired access token.")
         return None, None, None

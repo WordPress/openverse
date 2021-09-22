@@ -1,24 +1,20 @@
+import catalog.api.controllers.search_controller as search_controller
+from catalog.api.licenses import ATTRIBUTION, get_license_url
+from catalog.api.models.base import OpenLedgerModel
+from catalog.api.models.mixins import FileMixin, IdentifierMixin, MediaMixin
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.html import format_html
 
-import catalog.api.controllers.search_controller as search_controller
-from catalog.api.licenses import ATTRIBUTION, get_license_url
-from catalog.api.models.base import OpenLedgerModel
-from catalog.api.models.mixins import (
-    IdentifierMixin,
-    MediaMixin,
-    FileMixin,
-)
 
-PENDING = 'pending_review'
-MATURE_FILTERED = 'mature_filtered'
-DEINDEXED = 'deindexed'
-NO_ACTION = 'no_action'
+PENDING = "pending_review"
+MATURE_FILTERED = "mature_filtered"
+DEINDEXED = "deindexed"
+NO_ACTION = "no_action"
 
-MATURE = 'mature'
-DMCA = 'dmca'
-OTHER = 'other'
+MATURE = "mature"
+DMCA = "dmca"
+OTHER = "other"
 
 
 class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
@@ -28,10 +24,7 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     """
 
     thumbnail = models.URLField(
-        max_length=1000,
-        blank=True,
-        null=True,
-        help_text="The thumbnail for the media."
+        max_length=1000, blank=True, null=True, help_text="The thumbnail for the media."
     )
 
     watermarked = models.BooleanField(blank=True, null=True)
@@ -44,21 +37,18 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
         blank=True,
         null=True,
         db_index=True,
-        help_text="The content provider, e.g. Flickr, Jamendo...")
+        help_text="The content provider, e.g. Flickr, Jamendo...",
+    )
     source = models.CharField(
         max_length=80,
         blank=True,
         null=True,
         db_index=True,
         help_text="The source of the data, meaning a particular dataset. "
-                  "Source and provider can be different. Eg: the Google Open "
-                  "Images dataset is source=openimages, but provider=flickr."
+        "Source and provider can be different. Eg: the Google Open "
+        "Images dataset is source=openimages, but provider=flickr.",
     )
-    last_synced_with_source = models.DateTimeField(
-        blank=True,
-        null=True,
-        db_index=True
-    )
+    last_synced_with_source = models.DateTimeField(blank=True, null=True, db_index=True)
     removed_from_source = models.BooleanField(default=False)
 
     view_count = models.IntegerField(
@@ -68,11 +58,7 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     )
 
     tags = models.JSONField(blank=True, null=True)
-    tags_list = ArrayField(
-        models.CharField(max_length=255),
-        blank=True,
-        null=True
-    )
+    tags_list = ArrayField(models.CharField(max_length=255), blank=True, null=True)
 
     meta_data = models.JSONField(blank=True, null=True)
 
@@ -89,17 +75,17 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
         if self.title:
             title = f'"{self.title}"'
         else:
-            title = 'This work'
+            title = "This work"
         if self.creator:
-            creator = f'by {self.creator} '
+            creator = f"by {self.creator} "
         else:
-            creator = ''
+            creator = ""
         attribution = ATTRIBUTION.format(
             title=title,
             creator=creator,
             _license=_license.upper(),
             version=license_version,
-            license_url=str(self.license_url)
+            license_url=str(self.license_url),
         )
         return attribution
 
@@ -108,12 +94,13 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
         Meta class for all media types indexed by Openverse. All concrete media
         classes should inherit their Meta class from this.
         """
-        ordering = ['-created_on']
+
+        ordering = ["-created_on"]
         abstract = True
         constraints = [
             models.UniqueConstraint(
-                fields=['foreign_identifier', 'provider'],
-                name='unique_provider_%(class)s'  # populated by concrete model
+                fields=["foreign_identifier", "provider"],
+                name="unique_provider_%(class)s",  # populated by concrete model
             ),
         ]
 
@@ -125,51 +112,39 @@ class AbstractMediaReport(models.Model):
     deleted content.
     """
 
-    BASE_URL = 'https://search.creativecommons.org/'
+    BASE_URL = "https://search.creativecommons.org/"
 
-    REPORT_CHOICES = [
-        (MATURE, MATURE),
-        (DMCA, DMCA),
-        (OTHER, OTHER)
-    ]
+    REPORT_CHOICES = [(MATURE, MATURE), (DMCA, DMCA), (OTHER, OTHER)]
 
     STATUS_CHOICES = [
         (PENDING, PENDING),
         (MATURE_FILTERED, MATURE_FILTERED),
         (DEINDEXED, DEINDEXED),
-        (NO_ACTION, NO_ACTION)
+        (NO_ACTION, NO_ACTION),
     ]
 
     created_at = models.DateTimeField(auto_now_add=True)
 
-    identifier = models.UUIDField(
-        help_text="The ID for media to be reported."
-    )
+    identifier = models.UUIDField(help_text="The ID for media to be reported.")
     reason = models.CharField(
         max_length=20,
         choices=REPORT_CHOICES,
-        help_text="The reason to report media to Openverse."
+        help_text="The reason to report media to Openverse.",
     )
     description = models.TextField(
         max_length=500,
         blank=True,
         null=True,
-        help_text="The explanation on why media is being reported."
+        help_text="The explanation on why media is being reported.",
     )
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default=PENDING
-    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
 
     class Meta:
         abstract = True
 
     def url(self, media_type):
-        url = (f'{AbstractMediaReport.BASE_URL}'
-               f'{media_type}/'
-               f'{self.identifier}')
-        return format_html(f'<a href={url}>{url}</a>')
+        url = f"{AbstractMediaReport.BASE_URL}" f"{media_type}/" f"{self.identifier}"
+        return format_html(f"<a href={url}>{url}</a>")
 
     def save(self, *args, **kwargs):
         """
@@ -186,10 +161,10 @@ class AbstractMediaReport(models.Model):
         deleted_class : Class that stores deleted media, eg. ``DeletedImage``
         """
 
-        index_name = kwargs.pop('index_name')
-        media_class = kwargs.pop('media_class')
-        mature_class = kwargs.pop('mature_class')
-        deleted_class = kwargs.pop('deleted_class')
+        index_name = kwargs.pop("index_name")
+        media_class = kwargs.pop("media_class")
+        mature_class = kwargs.pop("mature_class")
+        deleted_class = kwargs.pop("deleted_class")
 
         update_required = {MATURE_FILTERED, DEINDEXED}  # ES needs updating
         if self.status in update_required:
@@ -204,11 +179,7 @@ class AbstractMediaReport(models.Model):
                 # Create an instance of the mature class for this media
                 mature_class.objects.create(identifier=self.identifier)
                 # Mark as 'mature' in Elastic Search
-                es.update(
-                    index=index_name,
-                    id=es_id,
-                    body={'doc': {'mature': True}}
-                )
+                es.update(index=index_name, id=es_id, body={"doc": {"mature": True}})
             elif self.status == DEINDEXED:
                 # Delete from the API database, retaining the copy of the
                 # metadata upstream in the catalog
@@ -237,9 +208,7 @@ class AbstractDeletedMedia(OpenLedgerModel):
     """
 
     identifier = models.UUIDField(
-        unique=True,
-        primary_key=True,
-        help_text="The identifier of the deleted media."
+        unique=True, primary_key=True, help_text="The identifier of the deleted media."
     )
 
     class Meta:
@@ -252,10 +221,7 @@ class AbstractMatureMedia(models.Model):
     """
 
     created_on = models.DateTimeField(auto_now_add=True)
-    identifier = models.UUIDField(
-        unique=True,
-        primary_key=True
-    )
+    identifier = models.UUIDField(unique=True, primary_key=True)
 
     class Meta:
         abstract = True
@@ -271,14 +237,14 @@ class AbstractMediaList(OpenLedgerModel):
     slug = models.CharField(
         max_length=200,
         help_text="A unique identifier used to make a friendly URL for "
-                  "downstream API consumers.",
+        "downstream API consumers.",
         unique=True,
-        db_index=True
+        db_index=True,
     )
     auth = models.CharField(
         max_length=64,
         help_text="A randomly generated string assigned upon list creation. "
-                  "Used to authenticate updates and deletions."
+        "Used to authenticate updates and deletions.",
     )
 
     class Meta:
@@ -297,5 +263,5 @@ class AbstractAltFile:
     """
 
     def __init__(self, attrs):
-        self.url = attrs.get('url')
-        self.filesize = attrs.get('filesize')
+        self.url = attrs.get("url")
+        self.filesize = attrs.get("filesize")

@@ -1,8 +1,9 @@
 import os
 
-origin = os.getenv('AUDIO_REQ_ORIGIN', 'https://api.openverse.engineering')
 
-identifier = '29cb352c-60c1-41d8-bfa1-7d6f7d955f63'
+origin = os.getenv("AUDIO_REQ_ORIGIN", "https://api.openverse.engineering")
+
+identifier = "29cb352c-60c1-41d8-bfa1-7d6f7d955f63"
 
 base_image = {
     "id": identifier,
@@ -17,7 +18,7 @@ base_image = {
     "source": "sciencemuseum",
     "thumbnail": f"{origin}/v1/images/{identifier}/thumb/",
     "detail_url": f"{origin}/v1/images/{identifier}/",
-    "related_url": f"{origin}/v1/images/{identifier}/related/"
+    "related_url": f"{origin}/v1/images/{identifier}/related/",
 }
 
 image_search_200_example = {
@@ -27,12 +28,11 @@ image_search_200_example = {
         "page_size": 20,
         "page": 1,
         "results": [
-            base_image | {
-                "fields_matched": [
-                    "title"
-                ],
+            base_image
+            | {
+                "fields_matched": ["title"],
             }
-        ]
+        ],
     },
 }
 
@@ -40,9 +40,7 @@ image_search_400_example = {
     "application/json": {
         "error": "InputError",
         "detail": "Invalid input given for fields. 'license' -> License 'PDMNBCG' does not exist.",  # noqa
-        "fields": [
-            "license"
-        ]
+        "fields": ["license"],
     }
 }
 
@@ -53,42 +51,43 @@ image_stats_200_example = {
             "display_name": "Flickr",
             "source_url": "https://www.flickr.com",
             "logo_url": None,
-            "media_count": 1000
+            "media_count": 1000,
         },
         {
             "source_name": "rawpixel",
             "display_name": "rawpixel",
             "source_url": "https://www.rawpixel.com",
             "logo_url": None,
-            "media_count": 1000
+            "media_count": 1000,
         },
         {
             "source_name": "sciencemuseum",
             "display_name": "Science Museum",
             "source_url": "https://www.sciencemuseum.org.uk",
             "logo_url": None,
-            "media_count": 1000
+            "media_count": 1000,
         },
         {
             "source_name": "stocksnap",
             "display_name": "StockSnap",
             "source_url": "https://stocksnap.io",
             "logo_url": None,
-            "media_count": 1000
+            "media_count": 1000,
         },
         {
             "source_name": "wikimedia",
             "display_name": "Wikimedia",
             "source_url": "https://commons.wikimedia.org",
             "logo_url": None,
-            "media_count": 1000
-        }
+            "media_count": 1000,
+        },
     ]
 }
 
 image_detail_200_example = {
-    "application/json": base_image | {
-        "attribution": "\"Bust of Patroclus (photograph; calotype; salt print)\" by William Henry Fox Talbot is licensed under CC-BY-NC-ND 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/4.0/.",  # noqa
+    "application/json": base_image
+    | {
+        "attribution": '"Bust of Patroclus (photograph; calotype; salt print)" by William Henry Fox Talbot is licensed under CC-BY-NC-ND 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/4.0/.',  # noqa
         "height": 1536,
         "width": 1276,
         "tags": None,
@@ -96,11 +95,7 @@ image_detail_200_example = {
     }
 }
 
-image_detail_404_example = {
-    "application/json": {
-        "detail": "Not found."
-    }
-}
+image_detail_404_example = {"application/json": {"detail": "Not found."}}
 
 image_related_200_example = {
     "application/json": {
@@ -112,14 +107,7 @@ image_related_200_example = {
                 "id": "610756ec-ae31-4d5e-8f03-8cc52f31b71d",
                 "creator": "Sean MacEntee",
                 "creator_url": "https://www.flickr.com/photos/18090920@N07",
-                "tags": [
-                    {
-                        "name": "exam"
-                    },
-                    {
-                        "name": "tactics"
-                    }
-                ],
+                "tags": [{"name": "exam"}, {"name": "tactics"}],
                 "url": "https://live.staticflickr.com/4065/4459771899_07595dc42e.jpg",  # noqa
                 "thumbnail": "https://api.openverse.engineering/v1/thumbs/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa
                 "provider": "flickr",
@@ -129,21 +117,19 @@ image_related_200_example = {
                 "license_url": "https://creativecommons.org/licenses/by/2.0/",
                 "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/4459771899",  # noqa
                 "detail_url": "http://api.openverse.engineering/v1/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa
-                "related_url": "http://api.openverse.engineering/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d"  # noqa
+                "related_url": "http://api.openverse.engineering/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa
             }
-        ]
+        ],
     }
 }
 
 image_related_404_example = {
-    "application/json": {
-        "detail": "An internal server error occurred."
-    }
+    "application/json": {"detail": "An internal server error occurred."}
 }
 
 image_oembed_200_example = {
     "application/json": {
-        "version": '1.0',
+        "version": "1.0",
         "type": "photo",
         "width": 1276,
         "height": 1536,
@@ -155,15 +141,13 @@ image_oembed_200_example = {
 }
 
 image_oembed_404_example = {
-    "application/json": {
-        "detail": "An internal server error occurred."
-    }
+    "application/json": {"detail": "An internal server error occurred."}
 }
 
 image_complain_201_example = {
     "application/json": {
         "identifier": identifier,
         "reason": "mature",
-        "description": "This image contains sensitive content"
+        "description": "This image contains sensitive content",
     }
 }

@@ -1,5 +1,5 @@
 # All possible letters that can appear in a shortened URL path
-URL_ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+URL_ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 # Inverted index of the alphabet
 ALPHABET_INDEX = {c: idx for idx, c in enumerate(URL_ALPHABET)}
 
@@ -11,6 +11,7 @@ def get_next_shortened_path(last_url):
     :param last_url: The last allocated URL.
     :return: A short URL path, such as '9abx'
     """
+
     def get_next_char(c):
         c_idx = ALPHABET_INDEX[c]
         next_char_idx = (c_idx + 1) % len(URL_ALPHABET)
@@ -35,8 +36,7 @@ def get_next_shortened_path(last_url):
                     temp_path = temp_path + URL_ALPHABET[0]
             else:
                 carry = False
-            temp_path = \
-                temp_path[:idx] + get_next_char(c) + temp_path[idx + 1:]
+            temp_path = temp_path[:idx] + get_next_char(c) + temp_path[idx + 1 :]
             idx -= 1
         next_path = temp_path
     else:

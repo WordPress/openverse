@@ -1,12 +1,11 @@
-from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
-
 from catalog.api.utils.exceptions import get_api_exception
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 
 
 class StandardPagination(PageNumberPagination):
-    page_size_query_param = 'page_size'
-    page_query_param = 'page'
+    page_size_query_param = "page_size"
+    page_query_param = "page"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -27,7 +26,7 @@ class StandardPagination(PageNumberPagination):
             return
         value = int(value)  # convert str params to int
         if value <= 0 or value > 500:
-            raise get_api_exception(f'Page size must be between 0 & 500.', 400)
+            raise get_api_exception("Page size must be between 0 & 500.", 400)
         self._page_size = value
 
     @property
@@ -41,14 +40,16 @@ class StandardPagination(PageNumberPagination):
             value = 1
         value = int(value)  # convert str params to int
         if value <= 0:
-            raise get_api_exception('Page must be greater than 0.', 400)
+            raise get_api_exception("Page must be greater than 0.", 400)
         self._page = value
 
     def get_paginated_response(self, data):
-        return Response({
-            'result_count': self.result_count,
-            'page_count': self.page_count,
-            'page_size': self.page_size,
-            'page': self.page,
-            'results': data,
-        })
+        return Response(
+            {
+                "result_count": self.result_count,
+                "page_count": self.page_count,
+                "page_size": self.page_size,
+                "page": self.page,
+                "results": data,
+            }
+        )

@@ -7,18 +7,19 @@ request.
 Once the reindexing job is finished, each worker will notify Ingestion Server,
 which should then shut down the instances.
 """
-import math
-import requests
 import logging as log
+import math
 import os
-import time
-import boto3
 import socket
+import time
 
+import boto3
+import requests
 from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.state import register_indexing_job
 
-client = boto3.client('ec2', region_name=os.getenv('AWS_REGION', 'us-east-1'))
+
+client = boto3.client("ec2", region_name=os.getenv("AWS_REGION", "us-east-1"))
 
 
 def schedule_distributed_index(db_conn, target_index):
@@ -32,32 +33,32 @@ def _assign_work(db_conn, workers, target_index):
     """
     Target index has a form of `<media_type>-<uuid>`
     """
-    table_name = target_index.split('-')[0]
+    table_name = target_index.split("-")[0]
     # Defaulting to 'image' for backward compatibility
     if not table_name or table_name not in MEDIA_TYPES:
-        table_name = 'image'
-    est_records_query = f'SELECT id FROM {table_name} ORDER BY id DESC LIMIT 1'
+        table_name = "image"
+    est_records_query = f"SELECT id FROM {table_name} ORDER BY id DESC LIMIT 1"
     with db_conn.cursor() as cur:
         cur.execute(est_records_query)
         estimated_records = cur.fetchone()[0]
     records_per_worker = math.floor(estimated_records / len(workers))
 
-    worker_url_template = 'http://{}:8002'
+    worker_url_template = "http://{}:8002"
     # Wait for the workers to start.
     for worker in workers:
         worker_url = worker_url_template.format(worker)
-        succeeded = _wait_for_healthcheck(f'{worker_url}/healthcheck')
+        succeeded = _wait_for_healthcheck(f"{worker_url}/healthcheck")
         if not succeeded:
             return False
     for idx, worker in enumerate(workers):
         worker_url = worker_url_template.format(worker)
         params = {
-            'start_id': idx * records_per_worker,
-            'end_id': (1 + idx) * records_per_worker,
-            'target_index': target_index
+            "start_id": idx * records_per_worker,
+            "end_id": (1 + idx) * records_per_worker,
+            "target_index": target_index,
         }
-        log.info(f'Assigning job {params} to {worker_url}')
-        requests.post(worker_url + '/indexing_task', json=params)
+        log.info(f"Assigning job {params} to {worker_url}")
+        requests.post(worker_url + "/indexing_task", json=params)
 
 
 def _prepare_workers():
@@ -67,29 +68,23 @@ def _prepare_workers():
 
     :return: A list of private URLs pointing to each available indexing worker
     """
-    environment = os.getenv('ENVIRONMENT', 'local')
-    if environment == 'local':
-        return [socket.gethostbyname('indexer-worker')]
+    environment = os.getenv("ENVIRONMENT", "local")
+    if environment == "local":
+        return [socket.gethostbyname("indexer-worker")]
     instance_filters = [
-        {
-            'Name': 'tag:Name',
-            'Values': ['indexer-worker-' + environment + '*']
-        },
-        {
-            'Name': 'instance-state-name',
-            'Values': ['stopped', 'running']
-        }
+        {"Name": "tag:Name", "Values": ["indexer-worker-" + environment + "*"]},
+        {"Name": "instance-state-name", "Values": ["stopped", "running"]},
     ]
     response = client.describe_instances(Filters=instance_filters)
     servers = []
     ids = []
-    for reservation in response['Reservations']:
-        instance = reservation['Instances'][0]
-        server = instance['PrivateIpAddress']
-        _id = instance['InstanceId']
+    for reservation in response["Reservations"]:
+        instance = reservation["Instances"][0]
+        server = instance["PrivateIpAddress"]
+        _id = instance["InstanceId"]
         servers.append(server)
         ids.append(_id)
-    log.info(f'Selected worker instances {servers}')
+    log.info(f"Selected worker instances {servers}")
     client.start_instances(InstanceIds=ids)
     return servers
 
@@ -107,7 +102,7 @@ def _wait_for_healthcheck(endpoint, attempts=60, wait=5):
     healthcheck_passed = False
     while not healthcheck_passed and num_attempts < attempts:
         try:
-            log.info(f'Checking {endpoint}. . .')
+            log.info(f"Checking {endpoint}. . .")
             response = requests.get(endpoint, timeout=3)
             if response.status_code == 200:
                 healthcheck_passed = True
@@ -117,8 +112,8 @@ def _wait_for_healthcheck(endpoint, attempts=60, wait=5):
         time.sleep(wait)
         num_attempts += 1
     if num_attempts >= attempts or not healthcheck_passed:
-        log.error(f'Timed out waiting for {endpoint}.')
+        log.error(f"Timed out waiting for {endpoint}.")
         return False
     else:
-        log.info(f'{endpoint} passed healthcheck')
+        log.info(f"{endpoint} passed healthcheck")
         return True

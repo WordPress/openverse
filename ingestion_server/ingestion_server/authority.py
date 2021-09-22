@@ -1,4 +1,6 @@
 from enum import Enum, auto
+
+
 """
 Authority is a ranking from 0 to 100 (with 0 being least authoritative)
 indicating the pedigree of an image. Some examples of things that could impact
@@ -32,24 +34,24 @@ class AuthorityTypes(Enum):
 boost = {
     AuthorityTypes.CURATED: 90,
     AuthorityTypes.SOCIAL_MEDIA: 80,
-    AuthorityTypes.DEFAULT: 85
+    AuthorityTypes.DEFAULT: 85,
 }
 authority_types = {
-    'flickr': AuthorityTypes.SOCIAL_MEDIA,
-    'behance': AuthorityTypes.SOCIAL_MEDIA,
-    'thingiverse': AuthorityTypes.SOCIAL_MEDIA,
-    'sketchfab': AuthorityTypes.SOCIAL_MEDIA,
-    'deviantart': AuthorityTypes.SOCIAL_MEDIA,
-    'thorvaldsensmuseum': AuthorityTypes.CURATED,
-    'svgsilh': AuthorityTypes.CURATED,
-    'smithsonian': AuthorityTypes.CURATED,
-    'rijksmuseum': AuthorityTypes.CURATED,
-    'museumsvictoria': AuthorityTypes.CURATED,
-    'met': AuthorityTypes.CURATED,
-    'mccordsmuseum': AuthorityTypes.CURATED,
-    'digitaltmuseum': AuthorityTypes.CURATED,
-    'clevelandmuseum': AuthorityTypes.CURATED,
-    'brooklynmuseum': AuthorityTypes.CURATED
+    "flickr": AuthorityTypes.SOCIAL_MEDIA,
+    "behance": AuthorityTypes.SOCIAL_MEDIA,
+    "thingiverse": AuthorityTypes.SOCIAL_MEDIA,
+    "sketchfab": AuthorityTypes.SOCIAL_MEDIA,
+    "deviantart": AuthorityTypes.SOCIAL_MEDIA,
+    "thorvaldsensmuseum": AuthorityTypes.CURATED,
+    "svgsilh": AuthorityTypes.CURATED,
+    "smithsonian": AuthorityTypes.CURATED,
+    "rijksmuseum": AuthorityTypes.CURATED,
+    "museumsvictoria": AuthorityTypes.CURATED,
+    "met": AuthorityTypes.CURATED,
+    "mccordsmuseum": AuthorityTypes.CURATED,
+    "digitaltmuseum": AuthorityTypes.CURATED,
+    "clevelandmuseum": AuthorityTypes.CURATED,
+    "brooklynmuseum": AuthorityTypes.CURATED,
 }
 
 

@@ -1,12 +1,15 @@
 import csv
-import gevent.queue
-import gevent.pool
-import grequests
-import statistics
-import json
 import datetime
-from locust import HttpLocust, TaskSet, task, between
+import json
+import statistics
 from collections import defaultdict
+
+import gevent.pool
+import gevent.queue
+import grequests
+from locust import HttpLocust, TaskSet, between, task
+
+
 """
 Swarm the API server with async requests for thumbnails. Requires `url_dump.csv`
 in the same directory as the script. It is intentionally omitted from source
@@ -41,10 +44,10 @@ statuses_by_provider = {}
 response_times = []
 
 
-with open('url_dump.csv') as urls_csv:
+with open("url_dump.csv") as urls_csv:
     reader = csv.reader(urls_csv)
     for row in reader:
-        if row[0] == 'url':
+        if row[0] == "url":
             continue
         url = row[0]
         provider = row[1]
@@ -68,12 +71,12 @@ def print_current_stats():
             successful += num_statuses
 
     out = {
-        'timestamp': str(datetime.datetime.now()),
-        'mean_response_time': mean_response_time,
-        'successful': successful,
-        'failed': failed,
-        'statuses': thumb_statuses,
-        'provider_statuses': statuses_by_provider
+        "timestamp": str(datetime.datetime.now()),
+        "mean_response_time": mean_response_time,
+        "successful": successful,
+        "failed": failed,
+        "statuses": thumb_statuses,
+        "provider_statuses": statuses_by_provider,
     }
     print(json.dumps(out))
 
@@ -96,7 +99,7 @@ class ThumbTask(TaskSet):
         for _ in range(20):
             base_url, provider = url_queue.get()
             providers.append(provider)
-            proxied_url = f'{PROXY_URL}{base_url}'
+            proxied_url = f"{PROXY_URL}{base_url}"
             reqs.append(grequests.get(proxied_url))
         thumb_responses = grequests.map(reqs)
         record_stats(thumb_responses, providers)
@@ -107,5 +110,6 @@ class ThumbLocust(HttpLocust):
     """
     Load a page's worth of thumbnails every 3 to 6 seconds.
     """
+
     wait_time = between(3, 6)
     task_set = ThumbTask
