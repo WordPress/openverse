@@ -235,7 +235,7 @@ export default {
         ? getFullLicenseName(this.image.license, this.image.license_version)
         : ''
     },
-    ccLicenseURL() {
+    openverseLicenseURL() {
       return `${this.image.license_url}?ref=openverse`
     },
   },
