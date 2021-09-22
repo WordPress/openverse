@@ -52,7 +52,7 @@ services:
         hard: 65536
 
   web:
-    build: openverse-api/
+    build: openverse_api/
     image: openverse_api
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
