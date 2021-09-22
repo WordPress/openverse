@@ -371,7 +371,7 @@ msgstr ""
 # about.planning.community
 #: src/pages/about.vue:54
 msgctxt "about.planning.community"
-msgid "Make Wordpress community"
+msgid "Make WordPress community"
 msgstr ""
 
 # footer.navigation.terms
