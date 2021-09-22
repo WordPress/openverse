@@ -18,10 +18,5 @@ module.exports = {
   testPathIgnorePatterns: ['/e2e/'],
   collectCoverage: true,
   coverageDirectory: '<rootDir>/test/unit/coverage',
-  collectCoverageFrom: [
-    '<rootDir>/src/components/**/*.vue',
-    '<rootDir>/src/layouts/**/*.vue',
-    '<rootDir>/src/pages/**/*.vue',
-    '<rootDir>/src/**/*.js',
-  ],
+  collectCoverageFrom: ['<rootDir>/src/**/*.vue', '<rootDir>/src/**/*.js'],
 }
