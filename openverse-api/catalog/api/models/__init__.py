@@ -1,3 +1,4 @@
+from catalog.api.models.base import OpenLedgerModel  # isort:skip
 from catalog.api.models.audio import (
     AltAudioFile,
     Audio,
@@ -7,7 +8,6 @@ from catalog.api.models.audio import (
     DeletedAudio,
     MatureAudio,
 )
-from catalog.api.models.base import OpenLedgerModel
 from catalog.api.models.image import (
     DeletedImage,
     Image,
