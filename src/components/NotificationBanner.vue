@@ -1,21 +1,21 @@
 <template>
   <div class="notification__wrapper">
     <p class="notification__text">
-      {{ $t(text) }}
+      {{ $t(notificationText) }}
     </p>
     <div class="notification__actions">
       <button
-        v-if="!!okayLabel"
+        v-if="!!notificationOkay"
         class="button is-success small"
-        @click="handleOkayClick"
+        @click="notificationAction"
       >
-        {{ $t(okayLabel) }}
+        {{ $t(notificationOkay) }}
       </button>
       <button
         class="button is-text small dismiss-button"
         @click="handleDismissClick"
       >
-        <span v-if="!!dismissLabel">{{ $t(dismissLabel) }}</span>
+        <span v-if="!!notificationDismiss">{{ $t(notificationDismiss) }}</span>
         <svg
           v-else
           viewBox="0 0 30 30"
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import { SET_SHOW_NOTIFICATION } from '~/constants/mutation-types'
 import { NOTIFICATION } from '~/constants/store-modules'
 import { NOTIFICATION_ACTION } from '~/constants/action-types'
@@ -42,20 +42,21 @@ import { NOTIFICATION_ACTION } from '~/constants/action-types'
 export default {
   name: 'NotificationBanner',
   computed: {
-    ...mapState({
-      text: (state) => state.notification.notificationText,
-      dismissLabel: (state) => state.notification.notificationDismiss,
-      okayLabel: (state) => state.notification.notificationOkay,
-    }),
+    ...mapState('notification', [
+      'notificationText',
+      'notificationDismiss',
+      'notificationOkay',
+    ]),
   },
   methods: {
+    ...mapActions(NOTIFICATION, { notificationAction: NOTIFICATION_ACTION }),
+    ...mapMutations(NOTIFICATION, {
+      setShowNotification: SET_SHOW_NOTIFICATION,
+    }),
     handleDismissClick() {
-      this.$store.commit(`${NOTIFICATION}/${SET_SHOW_NOTIFICATION}`, {
+      this.setShowNotification({
         showNotification: false,
       })
-    },
-    handleOkayClick() {
-      this.$store.dispatch(`${NOTIFICATION}/${NOTIFICATION_ACTION}`)
     },
   },
 }

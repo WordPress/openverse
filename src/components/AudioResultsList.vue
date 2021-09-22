@@ -65,16 +65,18 @@ export default {
     }
   },
   computed: {
+    ...mapState([
+      'audios',
+      'isFetching.audios',
+      'isFetchingError.audios',
+      'errorMessage',
+    ]),
     ...mapState({
-      audios: (state) => state.audios,
-      audioResultsCount: (state) => state.count.audios,
-      currentPage: (state) => state.audioPage,
-      isFetchingAudios: (state) => state.isFetching.audios,
-      isFetchingAudiosError: (state) => state.isFetchingError.audios,
-      errorMessage: (state) => state.errorMessage,
+      resultsCount: 'count',
+      currentPage: 'audioPage',
     }),
     audiosCount() {
-      const count = this.audioResultsCount
+      const count = this.resultsCount.audios
       if (count === 0) {
         return this.$t('browse-page.audio-no-results')
       }

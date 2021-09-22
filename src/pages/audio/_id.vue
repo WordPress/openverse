@@ -30,7 +30,7 @@ import {
   FETCH_AUDIO,
   FETCH_RELATED_MEDIA,
   RESET_RELATED_MEDIA,
-} from '~/store-modules/action-types'
+} from '~/constants/action-types'
 import iframeHeight from '~/mixins/iframe-height'
 import { AUDIO } from '~/constants/media'
 import attributionHtml from '~/utils/attribution-html'
@@ -40,7 +40,7 @@ const AudioDetailPage = {
   name: 'AudioDetailPage',
   mixins: [iframeHeight],
   layout({ store }) {
-    return store.state.isEmbedded
+    return store.state.nav.isEmbedded
       ? 'embedded-with-nav-search'
       : 'with-nav-search'
   },
@@ -53,17 +53,16 @@ const AudioDetailPage = {
     }
   },
   computed: {
-    ...mapState({
-      filter: 'query.filter',
-      query: 'query',
-      tags: 'audio.tags',
-      audio: 'audio',
-    }),
-    relatedAudiosCount() {
-      return this.$store.state.related.audios.length
+    ...mapState(['query', 'audio']),
+    ...mapState('related', { relatedAudios: 'audios' }),
+    filter() {
+      return this.query.filter
     },
-    relatedAudios() {
-      return this.$store.state.related.audios
+    tags() {
+      return this.audio.tags
+    },
+    relatedAudiosCount() {
+      return this.relatedAudios.length
     },
     fullLicenseName() {
       return getFullLicenseName(this.audio.license, this.audio.license_version)

@@ -60,17 +60,14 @@ const PhotoDetailPage = {
     }
   },
   computed: {
-    ...mapState({
-      filter: (state) => state.query.filter,
-      images: (state) => state.images,
-      query: (state) => state.query,
-      tags: (state) => state.image.tags,
-      image: (state) => state.image,
-    }),
-    ...mapState(RELATED, {
-      relatedImagesCount: (state) => state.images.length,
-      relatedImages: (state) => state.images,
-    }),
+    ...mapState(['images', 'query', 'image']),
+    ...mapState('related', { relatedImages: 'images' }),
+    filter() {
+      return this.query.filter
+    },
+    tags() {
+      return this.image.tags
+    },
   },
   watch: {
     image() {

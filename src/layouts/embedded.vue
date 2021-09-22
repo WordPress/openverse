@@ -19,9 +19,7 @@ const embeddedPage = {
   head() {
     return this.$nuxtI18nHead({ addSeoAttributes: true })
   },
-  computed: mapState({
-    isReferredFromCc: (state) => state.nav.isReferredFromCc,
-  }),
+  computed: { ...mapState('nav', ['isReferredFromCc']) },
 }
 export default embeddedPage
 </script>

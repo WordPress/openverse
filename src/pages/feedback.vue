@@ -97,12 +97,12 @@ export const FeedbackPage = {
     },
   },
   computed: {
-    ...mapState({
-      isEmbedded: (state) => state.nav.isEmbedded,
-      isReportingBug: (state) => state['bug-report'].isReportingBug,
-      bugReported: (state) => state['bug-report'].bugReported,
-      bugReportFailed: (state) => state['bug-report'].bugReportFailed,
-    }),
+    ...mapState('bug-report', [
+      'isReportingBug',
+      'bugReported',
+      'bugReportFailed',
+    ]),
+    ...mapState('nav', ['isEmbedded']),
   },
 }
 

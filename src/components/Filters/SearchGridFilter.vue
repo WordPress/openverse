@@ -21,10 +21,7 @@ import { TOGGLE_FILTER } from '~/constants/action-types'
 export default {
   name: 'SearchGridFilter',
   computed: {
-    ...mapState({
-      filters: (state) => state.filters,
-      isFilterVisible: (state) => state.isFilterVisible,
-    }),
+    ...mapState(['filters', 'isFilterVisible']),
     /**
      * Show filters expanded by default
      * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic

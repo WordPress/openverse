@@ -2,6 +2,7 @@ import { SET_EMBEDDED, SET_REFERRED } from '~/constants/mutation-types'
 
 export const state = () => ({
   isEmbedded: true,
+  isReferredFromCc: false,
 })
 
 export const mutations = {

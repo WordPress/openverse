@@ -153,10 +153,8 @@ const SourcePage = {
     }
   },
   computed: {
-    ...mapState({
-      imageProviders: (state) => state.provider.imageProviders,
-      isEmbedded: (state) => state.nav.isEmbedded,
-    }),
+    ...mapState('nav', ['isEmbedded']),
+    ...mapState('provider', ['imageProviders']),
     sortedProviders() {
       const sorted = sortBy(this.imageProviders, [this.sort.field])
       return this.sort.direction === 'asc' ? sorted : sorted.reverse()

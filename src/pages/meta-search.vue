@@ -115,7 +115,7 @@ export default {
       : 'with-nav-search'
   },
   computed: {
-    ...mapState(['isEmbedded']),
+    ...mapState('nav', ['isEmbedded']),
   },
 }
 </script>

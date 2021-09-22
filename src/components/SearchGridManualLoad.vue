@@ -107,12 +107,12 @@ export default {
   },
   computed: {
     ...mapState({
-      isFetchingImages: (state) => state.isFetching.images,
-      isFetchingImagesError: (state) => state.isFetchingError.images,
-      storeImages: (state) => state.images,
-      storeImagesCount: (state) => state.imagesCount,
-      currentPage: (state) => state.imagePage,
-      _errorMessage: (state) => state.errorMessage,
+      isFetchingImages: 'isFetching.images',
+      isFetchingImagesError: 'isFetchingError.images',
+      storeImages: 'images',
+      storeImagesCount: 'imagesCount',
+      currentPage: 'imagePage',
+      _errorMessage: 'errorMessage',
     }),
     _images() {
       return this.useInfiniteScroll ? this.storeImages : this.images

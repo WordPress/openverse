@@ -26,9 +26,10 @@ import { TOGGLE_FILTER } from '~/constants/action-types'
 export default {
   name: 'LicenseFilter',
   computed: {
-    ...mapState({
-      licenseTypes: (state) => state.filters.licenseTypes,
-    }),
+    ...mapState(['filters']),
+    licenseTypes() {
+      return this.filters.licenseTypes
+    },
   },
   methods: {
     ...mapActions({ toggleFilter: TOGGLE_FILTER }),

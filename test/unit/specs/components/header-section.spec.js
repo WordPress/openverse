@@ -9,7 +9,7 @@ describe('HeaderSection', () => {
       },
       mocks: {
         $store: {
-          state: { user: { abSessionId: '' }, nav: { isEmbedded: true } },
+          rootState: { user: { abSessionId: '' }, nav: { isEmbedded: true } },
         },
         $route: {
           path: '',

@@ -265,7 +265,7 @@ const SearchHelpPage = {
       : 'with-nav-search'
   },
   computed: {
-    ...mapState(['imageProviders', 'isEmbedded']),
+    ...mapState('nav', ['isEmbedded']),
   },
   methods: {
     providerSearchLink(providerCode) {

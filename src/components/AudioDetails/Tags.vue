@@ -8,6 +8,7 @@
         v-for="(tag, index) in getValidTags()"
         :key="index"
         class="mr-4"
+        @click="searchByTagName"
       >
         {{ tag.name }}
       </MediaTag>
@@ -16,7 +17,7 @@
 </template>
 
 <script>
-import { SET_QUERY } from '~/store-modules/mutation-types'
+import { SET_QUERY } from '~/constants/mutation-types'
 
 export default {
   name: 'AudioTags',

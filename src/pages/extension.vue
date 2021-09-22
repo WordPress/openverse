@@ -98,7 +98,7 @@ const AboutPage = {
     }
   },
   computed: {
-    ...mapState({ isEmbedded: (state) => state.nav.isEmbedded }),
+    ...mapState('nav', ['isEmbedded']),
   },
   methods: {
     togglePlay() {

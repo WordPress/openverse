@@ -106,7 +106,7 @@ const AboutPage = {
       : 'with-nav-search'
   },
   computed: {
-    ...mapState({ isEmbedded: (state) => state.nav.isEmbedded }),
+    ...mapState('nav', ['isEmbedded']),
   },
 }
 
