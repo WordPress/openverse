@@ -34,10 +34,10 @@ Any code modifications will have to be accompanied by the appropriate unit tests
 
 You can check the health of a live deployment of the API by running the live integration tests.
 
-1. Change directory to `openverse-api`
+1. Change directory to `openverse_api`
 
 ```
-cd openverse-api
+cd openverse_api
 ```
 
 1. Install all dependencies for Openverse API

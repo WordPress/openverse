@@ -1,5 +1,5 @@
 """
-Also see `openverse-api/constants/media_types.py`
+Also see `openverse_api/constants/media_types.py`
 """
 
 AUDIO_TYPE = 'audio'
