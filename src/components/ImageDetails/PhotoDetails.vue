@@ -236,7 +236,7 @@ export default {
         : ''
     },
     ccLicenseURL() {
-      return `${this.image.license_url}?ref=ccsearch`
+      return `${this.image.license_url}?ref=openverse`
     },
   },
   methods: {
