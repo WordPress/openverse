@@ -18,7 +18,7 @@ After that, don't forget to tag the issue with the "Bug" label.
 
 ### Proposing changes or new features
 
-If you have an idea of a new feature or change to how the Openverse API works, please [start a discussion](https://github.com/WordPress/openverse_api/discussions/new?category=ideas) so we can discuss the possibility of that change or new feature being implemented and released in the future. This lets us come to an agreement about the proposed idea before any work is done.
+If you have an idea of a new feature or change to how the Openverse API works, please [start a discussion](https://github.com/WordPress/openverse-api/discussions/new?category=ideas) so we can discuss the possibility of that change or new feature being implemented and released in the future. This lets us come to an agreement about the proposed idea before any work is done.
 
 ### Pull requests
 
