@@ -23,7 +23,7 @@ You need to install [Docker](https://docs.docker.com/install/) (with [Docker Com
 3. Clone Openverse API
 
 ```
-git clone https://github.com/WordPress/openverse_api.git
+git clone https://github.com/WordPress/openverse-api.git
 ```
 
 4. Change directories with `cd openverse_api`
