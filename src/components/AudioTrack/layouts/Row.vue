@@ -29,17 +29,17 @@
               <template #creator>{{ audio.creator }}</template>
             </i18n>
             <span v-if="!isSmall">
-              {{ seperator }} {{ timeFmt(audio.duration) }}
-              {{ seperator }}
+              {{ separator }} {{ timeFmt(audio.duration) }}
+              {{ separator }}
               {{ $t(`audio-categories.${audio.category}`) }}
             </span>
           </div>
 
           <div class="part-b">
             <template v-if="isSmall">
-              {{ timeFmt(audio.duration) }} {{ seperator }}
+              {{ timeFmt(audio.duration) }} {{ separator }}
               {{ $t(`audio-categories.${audio.category}`) }}
-              {{ seperator }}
+              {{ separator }}
             </template>
             <License class="inline" :license="audio.license" />
           </div>
@@ -79,7 +79,7 @@ export default {
     const isSmall = computed(() => props.size === 's')
 
     return {
-      seperator: this.$t('interpunct'),
+      separator: this.$t('interpunct'),
       timeFmt,
       isSmall,
     }
