@@ -50,6 +50,8 @@ jobs:
       run: bash -c 'while [[ "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/image | grep -c image-)" == "0" || "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/audio | grep -c audio-)" == "0" ]]; do sleep 5 && docker-compose logs; done'
     - name: Run API tests
       working-directory: ./openverse-api
+      env:
+        PIPENV_DOTENV_LOCATION: ./.env.stencil
       run: pipenv run test/run_test.sh
     - name: Run analytics tests
       working-directory: ./analytics
