@@ -1,5 +1,5 @@
 <template>
-  <div class="sketchfab-viewer image is-sketchfab-viewer">
+  <div class="sketchfab-viewer image is-16by9">
     <!-- <div v-if="loading">Loading...</div> -->
     <iframe
       id="sketchfab-iframe"
