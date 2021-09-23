@@ -1,8 +1,9 @@
-
 from typing import List
-from django_redis import get_redis_connection
+
 from deepdiff import DeepHash
+from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
+
 
 # 3 hours minutes (in seconds)
 DEAD_LINK_MASK_TTL = 60 * 60 * 3
@@ -18,8 +19,8 @@ def get_query_hash(s: Search) -> str:
     :return: Serialized Search object hash.
     """
     serialized_search_obj = s.to_dict()
-    serialized_search_obj.pop('from', None)
-    serialized_search_obj.pop('size', None)
+    serialized_search_obj.pop("from", None)
+    serialized_search_obj.pop("size", None)
     deep_hash = DeepHash(serialized_search_obj)[serialized_search_obj]
     return deep_hash
 
@@ -33,7 +34,7 @@ def get_query_mask(query_hash: str) -> List[int]:
     :return: Boolean mask as a list of integers (0 or 1).
     """
     redis = get_redis_connection("default")
-    key = f'{query_hash}:dead_link_mask'
+    key = f"{query_hash}:dead_link_mask"
     return list(map(int, redis.lrange(key, 0, -1)))
 
 
@@ -45,7 +46,7 @@ def save_query_mask(query_hash: str, mask: List):
     :param query_hash: Unique value to be used as key.
     """
     redis_pipe = get_redis_connection("default").pipeline()
-    key = f'{query_hash}:dead_link_mask'
+    key = f"{query_hash}:dead_link_mask"
 
     redis_pipe.delete(key)
     redis_pipe.rpush(key, *mask)

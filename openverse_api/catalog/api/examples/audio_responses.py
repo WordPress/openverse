@@ -1,8 +1,9 @@
 import os
 
-origin = os.getenv('AUDIO_REQ_ORIGIN', 'https://api.openverse.engineering')
 
-identifier = '440a0240-8b20-49e2-a4e6-6fee550fcc41'
+origin = os.getenv("AUDIO_REQ_ORIGIN", "https://api.openverse.engineering")
+
+identifier = "440a0240-8b20-49e2-a4e6-6fee550fcc41"
 
 base_audio = {
     "id": identifier,
@@ -17,38 +18,20 @@ base_audio = {
     "provider": "jamendo",
     "source": "jamendo",
     "tags": [
-        {
-            "name": "instrumental"
-        },
-        {
-            "name": "neutral"
-        },
-        {
-            "name": "speed_medium"
-        },
-        {
-            "name": "piano"
-        },
-        {
-            "name": "strings"
-        },
-        {
-            "name": "love"
-        },
-        {
-            "name": "upbeat"
-        },
-        {
-            "name": "neutral"
-        }
+        {"name": "instrumental"},
+        {"name": "neutral"},
+        {"name": "speed_medium"},
+        {"name": "piano"},
+        {"name": "strings"},
+        {"name": "love"},
+        {"name": "upbeat"},
+        {"name": "neutral"},
     ],
-    "genres": [
-        "newage"
-    ],
+    "genres": ["newage"],
     "thumbnail": f"{origin}/v1/audio/{identifier}/thumb/",
     "waveform": f"{origin}/v1/audio/{identifier}/waveform/",
     "detail_url": f"{origin}/v1/audio/{identifier}/",
-    "related_url": f"{origin}/v1/audio/{identifier}/related/"
+    "related_url": f"{origin}/v1/audio/{identifier}/related/",
 }
 
 audio_search_200_example = {
@@ -58,12 +41,8 @@ audio_search_200_example = {
         "page_size": 20,
         "page": 1,
         "results": [
-            base_audio | {
-                "fields_matched": [
-                    "title"
-                ]
-            },
-        ]
+            base_audio | {"fields_matched": ["title"]},
+        ],
     },
 }
 
@@ -71,9 +50,7 @@ audio_search_400_example = {
     "application/json": {
         "error": "InputError",
         "detail": "Invalid input given for fields. 'license' -> License 'PDMNBCG' does not exist.",  # noqa
-        "fields": [
-            "license"
-        ]
+        "fields": ["license"],
     }
 }
 
@@ -90,21 +67,18 @@ audio_stats_200_example = {
 }
 
 audio_detail_200_example = {
-    "application/json": base_audio | {
-        "attribution": "\"Friend\" by Rob Costlow is licensed under CC-BY-NC-ND 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/3.0/.",  # noqa
+    "application/json": base_audio
+    | {
+        "attribution": '"Friend" by Rob Costlow is licensed under CC-BY-NC-ND 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/3.0/.',  # noqa
         "audio_set": None,
         "duration": 240000,
         "bit_rate": None,
         "sample_rate": None,
-        "alt_files": None
+        "alt_files": None,
     },
 }
 
-audio_detail_404_example = {
-    "application/json": {
-        "detail": "Not found."
-    }
-}
+audio_detail_404_example = {"application/json": {"detail": "Not found."}}
 
 audio_related_200_example = {
     "application/json": {
@@ -125,33 +99,21 @@ audio_related_200_example = {
                 "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=3536953",  # noqa
                 "detail_url": "http://api.openverse.engineering/v1/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",  # noqa
                 "related_url": "http://api.openverse.engineering/v1/recommendations/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",  # noqa
-                "fields_matched": [
-                    "description",
-                    "title"
-                ],
-                "tags": [
-                    {
-                        "name": "exam"
-                    },
-                    {
-                        "name": "tactics"
-                    }
-                ],
+                "fields_matched": ["description", "title"],
+                "tags": [{"name": "exam"}, {"name": "tactics"}],
             }
-        ]
+        ],
     }
 }
 
 audio_related_404_example = {
-    "application/json": {
-        "detail": "An internal server error occurred."
-    }
+    "application/json": {"detail": "An internal server error occurred."}
 }
 
 audio_complain_201_example = {
     "application/json": {
         "identifier": identifier,
         "reason": "mature",
-        "description": "This audio contains sensitive content"
+        "description": "This audio contains sensitive content",
     }
 }

@@ -12,25 +12,24 @@ def get_existence_queries(table):
     """
 
     exists_in_table = (
-        'EXISTS(SELECT 1 FROM {table} '
-        'WHERE identifier = {identifier}) AS {name}'
+        "EXISTS(SELECT 1 FROM {table} " "WHERE identifier = {identifier}) AS {name}"
     )
     exists_in_deleted_table = SQL(exists_in_table).format(
-        table=Identifier(f'api_deleted{table}'),
+        table=Identifier(f"api_deleted{table}"),
         identifier=Identifier(table, "identifier"),
-        name=Identifier('deleted'),
+        name=Identifier("deleted"),
     )
     exists_in_mature_table = SQL(exists_in_table).format(
-        table=Identifier(f'api_mature{table}'),
+        table=Identifier(f"api_mature{table}"),
         identifier=Identifier(table, "identifier"),
-        name=Identifier('mature'),
+        name=Identifier("mature"),
     )
     return exists_in_deleted_table, exists_in_mature_table
 
 
-def get_fdw_query(host: str, port: int,
-                  dbname: str, user: str, password: str,
-                  table: str):
+def get_fdw_query(
+    host: str, port: int, dbname: str, user: str, password: str, table: str
+):
     """
     Get the query for creating a new FDW to be used when copying data from the
     upstream DB to the downstream DB. It creates a new schema named "upstream"
@@ -45,7 +44,8 @@ def get_fdw_query(host: str, port: int,
     :return: the SQL query for creating a new FDW
     """
 
-    return SQL('''
+    return SQL(
+        """
         CREATE EXTENSION IF NOT EXISTS postgres_fdw;
 
         DROP SERVER IF EXISTS upstream CASCADE;
@@ -60,7 +60,8 @@ def get_fdw_query(host: str, port: int,
 
         IMPORT FOREIGN SCHEMA public LIMIT TO ({table})
           FROM SERVER upstream INTO upstream_schema;
-    ''').format(
+    """
+    ).format(
         host=Literal(host),
         port=Literal(str(port)),
         dbname=Literal(dbname),
@@ -82,7 +83,8 @@ def get_copy_data_query(table: str, columns: list[str]):
     :columns: the names of the columns to copy from upstream
     """
 
-    return SQL('''
+    return SQL(
+        """
         DROP TABLE IF EXISTS {temp_table};
         CREATE TABLE {temp_table} (LIKE {table} INCLUDING CONSTRAINTS);
         CREATE TEMP SEQUENCE IF NOT EXISTS id_temp_seq;
@@ -105,12 +107,13 @@ def get_copy_data_query(table: str, columns: list[str]):
         ALTER TABLE {temp_table} ADD PRIMARY KEY (id);
 
         DROP SERVER upstream CASCADE;
-    ''').format(
+    """
+    ).format(
         table=Identifier(table),
-        temp_table=Identifier(f'temp_import_{table}'),
-        upstream_table=Identifier('upstream_schema', f'{table}_view'),
-        deleted_table=Identifier(f'api_deleted{table}'),
-        columns=SQL(',').join([Identifier(col) for col in columns]),
+        temp_table=Identifier(f"temp_import_{table}"),
+        upstream_table=Identifier("upstream_schema", f"{table}_view"),
+        deleted_table=Identifier(f"api_deleted{table}"),
+        columns=SQL(",").join([Identifier(col) for col in columns]),
     )
 
 
@@ -124,10 +127,12 @@ def get_go_live_query(table: str):
     :return: the SQL query for replacing the old table with new temporary table
     """
 
-    return SQL('''
+    return SQL(
+        """
         DROP TABLE {table};
         ALTER TABLE {temp_table} RENAME TO {table};
-    ''').format(
+    """
+    ).format(
         table=Identifier(table),
-        temp_table=Identifier(f'temp_import_{table}'),
+        temp_table=Identifier(f"temp_import_{table}"),
     )

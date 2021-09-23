@@ -3,16 +3,16 @@ import logging as log
 import os
 
 import psycopg2
-from psycopg2.extras import DictCursor
-from psycopg2.sql import SQL, Identifier, Literal
-
 from ingestion_server.cleanup import clean_image_data
 from ingestion_server.indexer import database_connect
 from ingestion_server.queries import (
-    get_fdw_query,
     get_copy_data_query,
+    get_fdw_query,
     get_go_live_query,
 )
+from psycopg2.extras import DictCursor
+from psycopg2.sql import SQL, Identifier, Literal
+
 
 """
 Pull the latest copy of a table from the upstream database (aka CC Catalog/the
@@ -32,21 +32,19 @@ table to replace the old data. This strategy is far faster than updating the
 data in place.
 """
 
-UPSTREAM_DB_HOST = os.environ.get('UPSTREAM_DB_HOST', 'upstream_db')
-UPSTREAM_DB_USER = os.environ.get('UPSTREAM_DB_USER', 'deploy')
-UPSTREAM_DB_PASSWORD = os.environ.get('UPSTREAM_DB_PASSWORD', 'deploy')
-UPSTREAM_DATABASE_NAME = os.environ.get('UPSTREAM_DATABASE_NAME', 'openledger')
-UPSTREAM_DB_PORT = int(os.environ.get('UPSTREAM_DB_PORT', 5432))
+UPSTREAM_DB_HOST = os.environ.get("UPSTREAM_DB_HOST", "upstream_db")
+UPSTREAM_DB_USER = os.environ.get("UPSTREAM_DB_USER", "deploy")
+UPSTREAM_DB_PASSWORD = os.environ.get("UPSTREAM_DB_PASSWORD", "deploy")
+UPSTREAM_DATABASE_NAME = os.environ.get("UPSTREAM_DATABASE_NAME", "openledger")
+UPSTREAM_DB_PORT = int(os.environ.get("UPSTREAM_DB_PORT", 5432))
 
 RELATIVE_UPSTREAM_DB_HOST = os.environ.get(
-    'RELATIVE_UPSTREAM_DB_HOST',
-    UPSTREAM_DB_HOST
+    "RELATIVE_UPSTREAM_DB_HOST", UPSTREAM_DB_HOST
 )
 """The hostname of the upstream DB from the POV of the downstream DB"""
-RELATIVE_UPSTREAM_DB_PORT = int(os.environ.get(
-    'RELATIVE_UPSTREAM_DB_PORT',
-    UPSTREAM_DB_PORT
-))
+RELATIVE_UPSTREAM_DB_PORT = int(
+    os.environ.get("RELATIVE_UPSTREAM_DB_PORT", UPSTREAM_DB_PORT)
+)
 """The port of the upstream DB from the POV of the downstream DB"""
 
 
@@ -62,15 +60,15 @@ def _get_shared_cols(downstream, upstream, table: str):
     :return: a list of the column names that are common to both databases
     """
     with downstream.cursor() as cur1, upstream.cursor() as cur2:
-        get_tables = SQL('SELECT * FROM {table} LIMIT 0;')
+        get_tables = SQL("SELECT * FROM {table} LIMIT 0;")
         cur1.execute(get_tables.format(table=Identifier(table)))
         conn1_cols = set([desc[0] for desc in cur1.description])
-        cur2.execute(get_tables.format(table=Identifier(f'{table}_view')))
+        cur2.execute(get_tables.format(table=Identifier(f"{table}_view")))
         conn2_cols = set([desc[0] for desc in cur2.description])
 
     shared = conn1_cols.intersection(conn2_cols)
-    shared.add('standardized_popularity')
-    log.info(f'Shared columns: {shared}')
+    shared.add("standardized_popularity")
+    log.info(f"Shared columns: {shared}")
     return list(shared)
 
 
@@ -88,6 +86,7 @@ def _generate_indices(conn, table: str):
     :param table: The table to be updated.
     :return: A list of CREATE INDEX statements.
     """
+
     def _clean_idxs(indices):
         # Remove names of indices. We don't want to collide with the old names;
         # we want the database to generate them for us upon recreating the
@@ -95,26 +94,24 @@ def _generate_indices(conn, table: str):
         cleaned = []
         for index in indices:
             # The index name is always after CREATE [UNIQUE] INDEX; delete it.
-            tokens = index[0].split(' ')
-            index_idx = tokens.index('INDEX')
+            tokens = index[0].split(" ")
+            index_idx = tokens.index("INDEX")
             del tokens[index_idx + 1]
             # The table name is always after ON. Rename it to match the
             # temporary copy of the data.
-            on_idx = tokens.index('ON')
+            on_idx = tokens.index("ON")
             table_name_idx = on_idx + 1
-            schema_name, table_name = tokens[table_name_idx].split('.')
-            tokens[table_name_idx] = f'{schema_name}.temp_import_{table_name}'
-            if 'id' not in index:
-                cleaned.append(' '.join(tokens))
+            schema_name, table_name = tokens[table_name_idx].split(".")
+            tokens[table_name_idx] = f"{schema_name}.temp_import_{table_name}"
+            if "id" not in index:
+                cleaned.append(" ".join(tokens))
 
         return cleaned
 
     # Get all of the old indices from the existing table.
     with conn.cursor() as cur:
         get_idxs = SQL(
-            'SELECT indexdef '
-            'FROM pg_indexes '
-            'WHERE tablename = {table};'
+            "SELECT indexdef " "FROM pg_indexes " "WHERE tablename = {table};"
         ).format(table=Literal(table))
         cur.execute(get_idxs)
         idxs = cur.fetchall()
@@ -130,14 +127,16 @@ def _generate_constraints(conn, table: str):
     :return: A list of SQL statements.
     """
     # List all active constraints across the database.
-    get_all_constraints = SQL('''
+    get_all_constraints = SQL(
+        """
         SELECT conrelid::regclass AS table, conname, pg_get_constraintdef(c.oid)
         FROM pg_constraint AS c
         JOIN pg_namespace AS n
         ON n.oid = c.connamespace
         AND n.nspname = 'public'
         ORDER BY conrelid::regclass::text, contype DESC;
-    ''')
+    """
+    )
     with conn.cursor(cursor_factory=DictCursor) as cur:
         cur.execute(get_all_constraints)
         all_constraints = cur.fetchall()
@@ -146,12 +145,12 @@ def _generate_constraints(conn, table: str):
     remap_constraints = []
     drop_orphans = []
     for constraint in all_constraints:
-        statement = constraint['pg_get_constraintdef']
-        con_table = constraint['table']
+        statement = constraint["pg_get_constraintdef"]
+        con_table = constraint["table"]
         is_fk = _is_foreign_key(statement, table)
-        if (con_table == table or is_fk) and 'PRIMARY KEY' not in statement:
+        if (con_table == table or is_fk) and "PRIMARY KEY" not in statement:
             alter_stmnts = _remap_constraint(
-                constraint['conname'], con_table, statement, table
+                constraint["conname"], con_table, statement, table
             )
             remap_constraints.extend(alter_stmnts)
             if is_fk:
@@ -165,7 +164,7 @@ def _generate_constraints(conn, table: str):
 
 
 def _is_foreign_key(_statement, table):
-    return f'REFERENCES {table}(' in _statement
+    return f"REFERENCES {table}(" in _statement
 
 
 def _generate_delete_orphans(fk_statement, fk_table):
@@ -175,39 +174,38 @@ def _generate_delete_orphans(fk_statement, fk_table):
     constraints back to the table. To accomplish this, parse the
     foreign key statement and generate the deletion statement.
     """
-    fk_tokens = fk_statement.split(' ')
-    fk_field_idx = fk_tokens.index('KEY') + 1
-    fk_ref_idx = fk_tokens.index('REFERENCES') + 1
-    fk_field = fk_tokens[fk_field_idx].replace('(', '').replace(')', '')
+    fk_tokens = fk_statement.split(" ")
+    fk_field_idx = fk_tokens.index("KEY") + 1
+    fk_ref_idx = fk_tokens.index("REFERENCES") + 1
+    fk_field = fk_tokens[fk_field_idx].replace("(", "").replace(")", "")
     fk_reference = fk_tokens[fk_ref_idx]
-    ref_table, ref_field = fk_reference.split('(')
-    ref_field = ref_field.replace(')', '')
+    ref_table, ref_field = fk_reference.split("(")
+    ref_field = ref_field.replace(")", "")
 
     del_orphans = SQL(
-        'DELETE FROM {fk_table} AS fk_table '
-        'WHERE NOT EXISTS(SELECT 1 FROM {ref_table} AS r '
-        'WHERE {ref_field} = {fk_field});'
+        "DELETE FROM {fk_table} AS fk_table "
+        "WHERE NOT EXISTS(SELECT 1 FROM {ref_table} AS r "
+        "WHERE {ref_field} = {fk_field});"
     ).format(
         fk_table=Identifier(fk_table),
-        ref_table=Identifier(f'temp_import_{ref_table}'),
-        ref_field=Identifier('r', ref_field),
-        fk_field=Identifier('fk_table', fk_field),
+        ref_table=Identifier(f"temp_import_{ref_table}"),
+        ref_field=Identifier("r", ref_field),
+        fk_field=Identifier("fk_table", fk_field),
     )
     return del_orphans
 
 
 def _remap_constraint(name, con_table, fk_statement, table):
-    """ Produce ALTER TABLE ... statements for each constraint."""
+    """Produce ALTER TABLE ... statements for each constraint."""
     alterations = [
-        SQL('ALTER TABLE {con_table} DROP CONSTRAINT {name}').format(
-            con_table=Identifier(con_table),
-            name=Identifier(name)
+        SQL("ALTER TABLE {con_table} DROP CONSTRAINT {name}").format(
+            con_table=Identifier(con_table), name=Identifier(name)
         )
     ]
     # Constraint applies to the table we're replacing
     if con_table == table:
         alterations.append(
-            SQL('ALTER TABLE {con_table} ADD {fk_statement}').format(
+            SQL("ALTER TABLE {con_table} ADD {fk_statement}").format(
                 con_table=Identifier(con_table),
                 fk_statement=SQL(fk_statement),
             )
@@ -215,20 +213,17 @@ def _remap_constraint(name, con_table, fk_statement, table):
     # Constraint references the table we're replacing. Point it at the new
     # one.
     else:
-        tokens = fk_statement.split(' ')
+        tokens = fk_statement.split(" ")
         # Point the constraint to the new table.
-        reference_idx = tokens.index('REFERENCES') + 1
+        reference_idx = tokens.index("REFERENCES") + 1
         table_reference = tokens[reference_idx]
-        match_old_ref = f'{table}('
-        new_ref = f'temp_import_{table}('
+        match_old_ref = f"{table}("
+        new_ref = f"temp_import_{table}("
         new_reference = table_reference.replace(match_old_ref, new_ref)
         tokens[reference_idx] = new_reference
-        con_definition = ' '.join(tokens)
-        create_constraint = SQL(
-            'ALTER TABLE {con_table} ADD {con_definition}'
-        ).format(
-            con_table=Identifier(con_table),
-            con_definition=SQL(con_definition)
+        con_definition = " ".join(tokens)
+        create_constraint = SQL("ALTER TABLE {con_table} ADD {con_definition}").format(
+            con_table=Identifier(con_table), con_definition=SQL(con_definition)
         )
         alterations.append(create_constraint)
     return alterations
@@ -262,57 +257,55 @@ def reload_upstream(table, progress=None, finish_time=None):
         port=UPSTREAM_DB_PORT,
         password=UPSTREAM_DB_PASSWORD,
         host=UPSTREAM_DB_HOST,
-        connect_timeout=5
+        connect_timeout=5,
     )
     shared_cols = _get_shared_cols(downstream_db, upstream_db, table)
     upstream_db.close()
 
     with downstream_db.cursor() as downstream_cur:
         # Step 2: Create FDW for the data transfer
-        log.info('(Re)initializing foreign data wrapper')
+        log.info("(Re)initializing foreign data wrapper")
         init_fdw = get_fdw_query(
             RELATIVE_UPSTREAM_DB_HOST,
             RELATIVE_UPSTREAM_DB_PORT,
             UPSTREAM_DATABASE_NAME,
             UPSTREAM_DB_USER,
             UPSTREAM_DB_PASSWORD,
-            f'{table}_view',
+            f"{table}_view",
         )
         downstream_cur.execute(init_fdw)
 
         # Step 3: Import data into a temporary table
-        log.info('Copying upstream data...')
+        log.info("Copying upstream data...")
         copy_data = get_copy_data_query(table, shared_cols)
         downstream_cur.execute(copy_data)
     downstream_db.commit()
     downstream_db.close()
 
-    if table != 'audio':
+    if table != "audio":
         # Step 4: Clean the data
-        log.info('Cleaning data...')
+        log.info("Cleaning data...")
         clean_image_data(table)
 
     downstream_db = database_connect()
     with downstream_db.cursor() as downstream_cur:
         # Step 5: Recreate indices from the original table
-        log.info('Copying finished! Recreating database indices...')
-        create_indices = ';\n'.join(_generate_indices(downstream_db, table))
+        log.info("Copying finished! Recreating database indices...")
+        create_indices = ";\n".join(_generate_indices(downstream_db, table))
         _update_progress(progress, 50.0)
-        if create_indices != '':
+        if create_indices != "":
             downstream_cur.execute(create_indices)
         _update_progress(progress, 70.0)
 
         # Step 6: Recreate constraints from the original table
-        log.info('Done creating indices! Remapping constraints...')
-        remap_constraints = SQL(';\n').join(
-            _generate_constraints(downstream_db, table)
-        )
-        if remap_constraints != '':
+        log.info("Done creating indices! Remapping constraints...")
+        remap_constraints = SQL(";\n").join(_generate_constraints(downstream_db, table))
+        if remap_constraints != "":
             downstream_cur.execute(remap_constraints)
         _update_progress(progress, 99.0)
 
         # Step 7: Promote the temporary table and delete the original
-        log.info('Done remapping constraints! Going live with new table...')
+        log.info("Done remapping constraints! Going live with new table...")
         go_live = get_go_live_query(table)
         downstream_cur.execute(go_live)
     downstream_db.commit()

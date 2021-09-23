@@ -1,28 +1,23 @@
-from django.contrib.postgres.fields import ArrayField
-from django.db import models
-from uuslug import uuslug
-
 import catalog.api.controllers.search_controller as search_controller
 from catalog.api.models import OpenLedgerModel
 from catalog.api.models.media import (
     AbstractAltFile,
-    AbstractMedia,
-    AbstractMediaReport,
     AbstractDeletedMedia,
     AbstractMatureMedia,
+    AbstractMedia,
     AbstractMediaList,
+    AbstractMediaReport,
 )
-from catalog.api.models.mixins import (
-    IdentifierMixin,
-    MediaMixin,
-    FileMixin,
-)
+from catalog.api.models.mixins import FileMixin, IdentifierMixin, MediaMixin
+from django.contrib.postgres.fields import ArrayField
+from django.db import models
+from uuslug import uuslug
 
 
 class AltAudioFile(AbstractAltFile):
     def __init__(self, attrs):
-        self.bit_rate = attrs.get('bit_rate')
-        self.sample_rate = attrs.get('sample_rate')
+        self.bit_rate = attrs.get("bit_rate")
+        self.sample_rate = attrs.get("sample_rate")
         super(AltAudioFile, self).__init__(attrs)
 
     @property
@@ -36,7 +31,7 @@ class AltAudioFile(AbstractAltFile):
     def __str__(self):
         br = self.bit_rate_in_kbps
         sr = self.sample_rate_in_khz
-        return f'<AltAudioFile {br}kbps / {sr}kHz>'
+        return f"<AltAudioFile {br}kbps / {sr}kHz>"
 
     def __repr__(self):
         return str(self)
@@ -56,16 +51,14 @@ class AudioSet(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
 
 class Audio(AbstractMedia):
     audio_set = models.ForeignKey(
-        help_text='Reference to set of which this track is a part.',
+        help_text="Reference to set of which this track is a part.",
         to=AudioSet,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
     )
     audio_set_position = models.IntegerField(
-        blank=True,
-        null=True,
-        help_text='Ordering of the audio in the set.'
+        blank=True, null=True, help_text="Ordering of the audio in the set."
     )
 
     genres = ArrayField(
@@ -75,43 +68,43 @@ class Audio(AbstractMedia):
         ),
         null=True,
         db_index=True,
-        help_text='The artistic style of this audio file, '
-                  'eg. hip-hop (music) / tech (podcasts).',
+        help_text="The artistic style of this audio file, "
+        "eg. hip-hop (music) / tech (podcasts).",
     )
     category = models.CharField(
         max_length=80,
         blank=True,
         null=True,
         db_index=True,
-        help_text='The category of this audio file, '
-                  'eg. music, sound_effect, podcast, news & audiobook.',
+        help_text="The category of this audio file, "
+        "eg. music, sound_effect, podcast, news & audiobook.",
     )
 
     duration = models.IntegerField(
         blank=True,
         null=True,
-        help_text='The time length of the audio file in milliseconds.',
+        help_text="The time length of the audio file in milliseconds.",
     )
     bit_rate = models.IntegerField(
         blank=True,
         null=True,
-        help_text='Number in bits per second, eg. 128000.',
+        help_text="Number in bits per second, eg. 128000.",
     )
     sample_rate = models.IntegerField(
         blank=True,
         null=True,
-        help_text='Number in hertz, eg. 44100.',
+        help_text="Number in hertz, eg. 44100.",
     )
 
     alt_files = models.JSONField(
         blank=True,
         null=True,
-        help_text='JSON describing alternative files for this audio.',
+        help_text="JSON describing alternative files for this audio.",
     )
 
     @property
     def alternative_files(self):
-        if hasattr(self.alt_files, '__iter__'):
+        if hasattr(self.alt_files, "__iter__"):
             return [AltAudioFile(alt_file) for alt_file in self.alt_files]
         return None
 
@@ -128,24 +121,26 @@ class Audio(AbstractMedia):
         return self.bit_rate / 1e3
 
     class Meta(AbstractMedia.Meta):
-        db_table = 'audio'
+        db_table = "audio"
 
 
 class AudioReport(AbstractMediaReport):
     class Meta:
-        db_table = 'nsfw_reports_audio'
+        db_table = "nsfw_reports_audio"
 
     @property
     def audio_url(self):
-        return super(AudioReport, self).url('audio')
+        return super(AudioReport, self).url("audio")
 
     def save(self, *args, **kwargs):
-        kwargs.update({
-            'index_name': 'audio',
-            'media_class': Audio,
-            'mature_class': MatureAudio,
-            'deleted_class': DeletedAudio,
-        })
+        kwargs.update(
+            {
+                "index_name": "audio",
+                "media_class": Audio,
+                "mature_class": MatureAudio,
+                "deleted_class": DeletedAudio,
+            }
+        )
         super(AudioReport, self).save(*args, **kwargs)
 
 
@@ -154,17 +149,13 @@ class DeletedAudio(AbstractDeletedMedia):
 
 
 class MatureAudio(AbstractMatureMedia):
-    """ Stores all audios that have been flagged as 'mature'. """
+    """Stores all audios that have been flagged as 'mature'."""
 
     def delete(self, *args, **kwargs):
         es = search_controller.es
         aud = Audio.objects.get(identifier=self.identifier)
         es_id = aud.id
-        es.update(
-            index='audio',
-            id=es_id,
-            body={'doc': {'mature': False}}
-        )
+        es.update(index="audio", id=es_id, body={"doc": {"mature": False}})
         super(MatureAudio, self).delete(*args, **kwargs)
 
 
@@ -172,11 +163,11 @@ class AudioList(AbstractMediaList):
     audios = models.ManyToManyField(
         Audio,
         related_name="lists",
-        help_text="A list of identifier keys corresponding to audios."
+        help_text="A list of identifier keys corresponding to audios.",
     )
 
     class Meta:
-        db_table = 'audiolist'
+        db_table = "audiolist"
 
     def save(self, *args, **kwargs):
         self.slug = uuslug(self.title, instance=self)

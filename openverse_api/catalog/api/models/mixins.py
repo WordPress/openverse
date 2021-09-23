@@ -14,14 +14,14 @@ class IdentifierMixin(models.Model):
     identifier = models.UUIDField(
         unique=True,
         db_index=True,
-        help_text="Our unique identifier for an open-licensed work."
+        help_text="Our unique identifier for an open-licensed work.",
     )
     foreign_identifier = models.CharField(
         max_length=1000,
         blank=True,
         null=True,
         db_index=True,
-        help_text="The identifier provided by the upstream source."
+        help_text="The identifier provided by the upstream source.",
     )
 
     class Meta:
@@ -45,7 +45,7 @@ class MediaMixin(models.Model):
         max_length=1000,
         blank=True,
         null=True,
-        help_text="The landing page of the work."
+        help_text="The landing page of the work.",
     )
 
     creator = models.CharField(max_length=2000, blank=True, null=True)
@@ -62,9 +62,7 @@ class FileMixin(models.Model):
     """
 
     url = models.URLField(
-        unique=True,
-        max_length=1000,
-        help_text="The actual URL to the media file."
+        unique=True, max_length=1000, help_text="The actual URL to the media file."
     )
     filesize = models.IntegerField(blank=True, null=True)
 

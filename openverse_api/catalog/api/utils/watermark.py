@@ -5,14 +5,15 @@ from textwrap import wrap
 
 import piexif
 import requests
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
+
 
 BREAKPOINT_DIMENSION = 400  # 400px
 MARGIN_RATIO = 0.04  # 4%
 FONT_RATIO = 0.04  # 4%
 
-FRAME_COLOR = '#fff'  # White frame
-TEXT_COLOR = '#000'  # Black text
+FRAME_COLOR = "#fff"  # White frame
+TEXT_COLOR = "#000"  # Black text
 
 
 class Dimension(Flag):
@@ -27,6 +28,7 @@ class Dimension(Flag):
 
 
 # Utils
+
 
 def _smaller_dimension(width, height):
     """
@@ -51,14 +53,8 @@ def _get_font_path(monospace=False):
     :return: the path to the TTF font file
     """
 
-    font_name = 'SourceCodePro-Bold.ttf' \
-        if monospace \
-        else 'SourceSansPro-Bold.ttf'
-    font_path = os.path.join(
-        os.path.dirname(__file__),
-        'fonts',
-        font_name
-    )
+    font_name = "SourceCodePro-Bold.ttf" if monospace else "SourceSansPro-Bold.ttf"
+    font_path = os.path.join(os.path.dirname(__file__), "fonts", font_name)
 
     return font_path
 
@@ -72,18 +68,16 @@ def _fit_in_width(text, font, max_width):
     :return: the fitted text
     """
 
-    char_width, _ = font.getsize('x')  # x has the closest to average width
+    char_width, _ = font.getsize("x")  # x has the closest to average width
     max_chars = max_width // char_width
 
-    text = '\n'.join([
-        '\n'.join(wrap(line, max_chars))
-        for line in text.split('\n')
-    ])
+    text = "\n".join(["\n".join(wrap(line, max_chars)) for line in text.split("\n")])
 
     return text
 
 
 # Framing
+
 
 def _create_frame(dimensions):
     """
@@ -92,11 +86,7 @@ def _create_frame(dimensions):
     :return: a white frame with the given dimensions
     """
 
-    return Image.new(
-        'RGB',
-        dimensions,
-        FRAME_COLOR
-    )
+    return Image.new("RGB", dimensions, FRAME_COLOR)
 
 
 def _frame_image(image, frame, left_margin, top_margin):
@@ -123,11 +113,11 @@ def _full_license(image_info):
     :return: the full license text for the image
     """
 
-    license_name = image_info['license'].upper()
-    license_version = image_info['license_version'].upper()
-    prefix = '' if license_name == 'CC0' else 'CC '
+    license_name = image_info["license"].upper()
+    license_version = image_info["license_version"].upper()
+    prefix = "" if license_name == "CC0" else "CC "
 
-    return f'{prefix}{license_name} {license_version}'
+    return f"{prefix}{license_name} {license_version}"
 
 
 def _get_attribution_text(image_info):
@@ -137,16 +127,15 @@ def _get_attribution_text(image_info):
     :return: the attribution text
     """
 
-    title = image_info['title']
-    creator = image_info['creator']
+    title = image_info["title"]
+    creator = image_info["creator"]
     full_license = _full_license(image_info)
 
-    return (
-        f'"{title}" by {creator} is licensed under {full_license}.'
-    )
+    return f'"{title}" by {creator} is licensed under {full_license}.'
 
 
 # Actions
+
 
 def _open_image(url):
     """
@@ -160,13 +149,13 @@ def _open_image(url):
         img_bytes = BytesIO(response.content)
         img = Image.open(img_bytes)
         # Preserve EXIF metadata
-        if 'exif' in img.info:
-            exif = piexif.load(img.info['exif'])
+        if "exif" in img.info:
+            exif = piexif.load(img.info["exif"])
         else:
             exif = None
         return img, exif
     except requests.exceptions.RequestException:
-        print('Error loading image data')
+        print("Error loading image data")
 
 
 def _print_attribution_on_image(img, image_info):
@@ -187,9 +176,9 @@ def _print_attribution_on_image(img, image_info):
     else:
         margin = round(MARGIN_RATIO * BREAKPOINT_DIMENSION)
         font_size = round(FONT_RATIO * BREAKPOINT_DIMENSION)
-        new_width = BREAKPOINT_DIMENSION \
-            if Dimension.WIDTH in smaller_dimension \
-            else width
+        new_width = (
+            BREAKPOINT_DIMENSION if Dimension.WIDTH in smaller_dimension else width
+        )
 
     font = ImageFont.truetype(_get_font_path(), size=font_size)
 
@@ -201,14 +190,22 @@ def _print_attribution_on_image(img, image_info):
     frame_height = margin + height + margin + attribution_height + margin
     left_margin = (frame_width - width) // 2
 
-    frame = _create_frame((frame_width, frame_height,))
+    frame = _create_frame(
+        (
+            frame_width,
+            frame_height,
+        )
+    )
     _frame_image(img, frame, left_margin, margin)
 
     draw = ImageDraw.Draw(frame)
     text_position_x = margin
     text_position_y = margin + height + margin
     draw.text(
-        xy=(text_position_x, text_position_y,),
+        xy=(
+            text_position_x,
+            text_position_y,
+        ),
         text=text,
         font=font,
         fill=TEXT_COLOR,
