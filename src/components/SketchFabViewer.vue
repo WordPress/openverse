@@ -72,7 +72,7 @@ export default {
 .image {
   display: block;
 }
-.is-sketchfab-viewer {
+.is-16by9 {
   padding-top: 56.25%;
 }
 .has-ratio {
