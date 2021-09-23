@@ -50,36 +50,34 @@ The steps above are performed in [`ExtractCCLinks.py`][ex_cc_links].
 various API ETL jobs which pull and process data from a number of open APIs on
 the internet.
 
-### Daily API Workflows
+### API Workflows
+
+Our API-based workflows run at different schedules: some daily, others monthly. Please consider the which to use whenever a new DAG is written, and add your new script to one of these schedules.
+#### Daily
 
 Workflows that have a `schedule_string='@daily'` parameter are run daily. The DAG
-workflows run `provider_api_scripts` to load and extract media data from the APIs.
-Below are some of the daily DAG workflows that run the corresponding `provider_api_scripts`
-daily:
+workflows run `provider_api_scripts` to load and extract media data from the APIs. These provider scripts are run daily:
 
-- [Met Museum Workflow](openverse_catalog/dags/metropolitan_museum_workflow.py)
-  ( [API script](openverse_catalog/dags/provider_api_scripts/metropolitan_museum_of_art.py) )
-- [PhyloPic Workflow](openverse_catalog/dags/phylopic_workflow.py)
-  ( [API script](openverse_catalog/dags/provider_api_scripts/phylopic.py) )
-- [Flickr Workflow](openverse_catalog/dags/flickr_workflow.py)
-  ( [API script](openverse_catalog/dags/provider_api_scripts/flickr.py) )
-- [Wikimedia Commons Workflow](openverse_catalog/dags/wikimedia_workflow.py)
-  ( [Commons API script](openverse_catalog/dags/provider_api_scripts/wikimedia_commons.py) )
+- [Flickr](openverse_catalog/dags/provider_api_scripts/flickr.py)
+- [Met Museum](openverse_catalog/dags/provider_api_scripts/metropolitan_museum_of_art.py)
+- [PhyloPic](openverse_catalog/dags/provider_api_scripts/phylopic.py)
+- [Wikimedia Commons](openverse_catalog/dags/provider_api_scripts/wikimedia_commons.py)
 
-### Monthly Workflow
+#### Monthly
 
 Some API ingestion workflows are scheduled to run on the 15th day of each
 month at 16:00 UTC. These workflows are reserved for long-running jobs or
-APIs that do not have date filtering capabilities so the data is reprocessed
-monthly to keep the catalog updated. The following tasks are performed monthly:
+APIs that do not have date filtering capabilities, so the data is reprocessed
+monthly to keep the catalog updated. These provider scripts are run monthly:
 
-- [Cleveland Museum of Art](openverse_catalog/dags/provider_api_scripts/cleveland_museum_of_art.py)
-- [RawPixel](openverse_catalog/dags/provider_api_scripts/raw_pixel.py)
-- [Common Crawl Syncer](openverse_catalog/dags/commoncrawl_scripts/commoncrawl_s3_syncer/SyncImageProviders.py)
 - [Brooklyn Museum](openverse_catalog/dags/provider_api_scripts/brooklyn_museum.py)
+- [Cleveland Museum of Art](openverse_catalog/dags/provider_api_scripts/cleveland_museum_of_art.py)
+- [Common Crawl Syncer](openverse_catalog/dags/commoncrawl_scripts/commoncrawl_s3_syncer/SyncImageProviders.py)
 - [NYPL](openverse_catalog/dags/provider_api_scripts/nypl.py)
+- [RawPixel](openverse_catalog/dags/provider_api_scripts/raw_pixel.py)
+- [StockSnap](openverse_catalog/dags/provider_api_scripts/stocksnap.py)
 
-### DB_Loader
+### TSV to Postgres Loader
 
 The Airflow DAG defined in [`loader_workflow.py`][db_loader] runs every minute,
 and loads the oldest file which has not been modified in the last 15 minutes
