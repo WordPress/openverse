@@ -49,6 +49,8 @@ jobs:
     - name: Wait for data to be indexed in Elasticsearch
       run: bash -c 'while [[ "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/image | grep -c image-)" == "0" || "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/audio | grep -c audio-)" == "0" ]]; do sleep 5 && docker-compose logs; done'
     - name: Run API tests
-      run: cd openverse-api && test/run_test.sh
+      working-directory: ./openverse-api
+      run: pipenv run test/run_test.sh
     - name: Run analytics tests
-      run: cd ./analytics && docker exec -i openverse-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
+      working-directory: ./analytics
+      run: docker exec -i openverse-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
