@@ -53,6 +53,7 @@ the internet.
 ### API Workflows
 
 Our API-based workflows run at different schedules: some daily, others monthly. Please consider the which to use whenever a new DAG is written, and add your new script to one of these schedules.
+
 #### Daily
 
 Workflows that have a `schedule_string='@daily'` parameter are run daily. The DAG
