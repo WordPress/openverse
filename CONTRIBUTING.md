@@ -88,4 +88,4 @@ python3 test/integration_tests.py
 
 ## Questions or Thoughts?
 
-Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community memebers on #openverse. We also use [GitHub discussions](https://github.com/WordPress/openverse_api/discussions) for feature requests, troubleshooting, and other 'off-topic' conversations.
+Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community memebers on #openverse. We also use [GitHub discussions](https://github.com/WordPress/openverse-api/discussions) for feature requests, troubleshooting, and other 'off-topic' conversations.
