@@ -12,7 +12,7 @@ Please consult the [README](./README.md) and [CODEBASE](./CODEBASE.md) files at 
 
 ### Bugs
 
-If you find a bug, please open an issue in this repository describing the bug. You can file a bug [here](https://github.com/wordpress/openverse_api/issues/new?template=bug_report.md). You will see a bug report template with the required information you should provide.
+If you find a bug, please open an issue in this repository describing the bug. You can file a bug [here](https://github.com/WordPress/openverse-api/issues/new?template=bug_report.md). You will see a bug report template with the required information you should provide.
 
 After that, don't forget to tag the issue with the "Bug" label.
 
