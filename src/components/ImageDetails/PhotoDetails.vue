@@ -126,7 +126,7 @@
           <ImageAttribution
             data-testid="image-attribution"
             :image="image"
-            :cc-license-u-r-l="ccLicenseURL"
+            :cc-license-u-r-l="openverseLicenseURL"
             :full-license-name="fullLicenseName"
             :attribution-html="attributionHtml()"
           />
@@ -141,7 +141,7 @@
           <ImageInfo
             data-testid="image-info"
             :image="image"
-            :cc-license-u-r-l="ccLicenseURL"
+            :cc-license-u-r-l="openverseLicenseURL"
             :full-license-name="fullLicenseName"
             :image-width="imageWidth"
             :image-height="imageHeight"
@@ -235,8 +235,8 @@ export default {
         ? getFullLicenseName(this.image.license, this.image.license_version)
         : ''
     },
-    ccLicenseURL() {
-      return `${this.image.license_url}?ref=ccsearch`
+    openverseLicenseURL() {
+      return `${this.image.license_url}?ref=openverse`
     },
   },
   methods: {
@@ -263,7 +263,7 @@ export default {
       this.activeTab = tabIdx
     },
     attributionHtml() {
-      const licenseURL = `${this.ccLicenseURL}&atype=html`
+      const licenseURL = `${this.openverseLicenseURL}&atype=html`
       return attributionHtml(this.image, licenseURL, this.fullLicenseName)
     },
     toggleReportFormVisibility() {
