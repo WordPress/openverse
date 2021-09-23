@@ -2,6 +2,7 @@ import DownloadButton from '~/components/DownloadButton'
 import render from '../../test-utils/render'
 import { mount } from '@vue/test-utils'
 import axios from 'axios'
+import MockAdapter from 'axios-mock-adapter'
 
 import local from '~/utils/local'
 
@@ -16,10 +17,6 @@ const mockFilesizes = {
   FLAC: 2500,
   OGG: 2000,
 }
-
-jest.mock('axios', () => ({
-  head: jest.fn((extensionName) => mockFilesizes[extensionName]),
-}))
 
 const formats = [
   {
@@ -40,6 +37,18 @@ const formats = [
   },
 ]
 
+const mockAxios = new MockAdapter(axios)
+
+formats.forEach((format) =>
+  mockAxios
+    .onHead(format.download_url)
+    .reply(() => [
+      200,
+      {},
+      { 'content-length': mockFilesizes[format.extension_name] },
+    ])
+)
+
 const doRender = async () => {
   const wrapper = render(DownloadButton, { propsData: { formats } }, mount)
   await DownloadButton.fetch.call(wrapper.vm)
@@ -48,7 +57,7 @@ const doRender = async () => {
 
 describe('DownloadButton', () => {
   beforeEach(() => {
-    axios.head.mockReset()
+    mockAxios.resetHistory()
   })
 
   // TODO(@sarayourfriend) convert this to testing-library once it's possible to get the `vm` from the wrapper
@@ -77,8 +86,11 @@ describe('DownloadButton', () => {
 
   it('should retrieve the filesizes using a head request', async () => {
     await doRender()
+    expect(mockAxios.history.head.length).toBe(4) // there are four formats to check
     formats.forEach(({ download_url }) =>
-      expect(axios.head).toHaveBeenCalledWith(download_url)
+      expect(
+        mockAxios.history.head.find((request) => request.url === download_url)
+      ).toBeDefined()
     )
   })
 })
