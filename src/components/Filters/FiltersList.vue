@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="filterlist-header">
+  <div class="p-4">
+    <div class="filterlist-header mt-4 mb-8">
       <h4 class="filter-heading">
         {{ $t('filter-list.filter-by') }}
       </h4>
@@ -8,7 +8,6 @@
       <button
         id="hide-filters-button"
         type="button"
-        class="button is-text tiny p-0 mt-6 mr-2 report float-right"
         @click="onToggleSearchGridFilter()"
         @keyup.enter="onToggleSearchGridFilter()"
       >
@@ -31,21 +30,21 @@
         @filterChanged="onUpdateFilter"
       />
     </form>
-    <div v-if="isAnyFilterApplied" class="clear-filters filter-buttons">
+    <footer v-if="isAnyFilterApplied" class="flex justify-between">
       <button
         id="clear-filter-button"
-        class="button tiny"
+        class="text-sm py-4 px-6 lowercase rounded"
         @click="onClearFilters"
       >
         {{ $t('filter-list.clear') }}
       </button>
       <button
-        class="button is-primary tiny is-hidden-desktop"
+        class="text-sm py-4 px-6 lowercase rounded bg-trans-blue text-white is-hidden-desktop"
         @click="onToggleSearchGridFilter()"
       >
         {{ $t('filter-list.show') }}
       </button>
-    </div>
+    </footer>
   </div>
 </template>
 
@@ -104,13 +103,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-left: 3.25rem;
-  padding-top: 1.938rem;
-  padding-bottom: 1rem;
-  margin: 0;
-}
-.filterlist-header h4 {
-  display: inline-block;
 }
 
 .filter-heading {
@@ -142,15 +134,8 @@ export default {
 }
 #clear-filter-button:hover {
   color: white;
+  // @todo: Remove hardcoded colors
   background-color: #919496;
-  border: none;
-}
-
-.filter-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin: 0;
-  padding-top: 1rem;
-  padding-left: 3.25rem;
+  border-color: #919496;
 }
 </style>

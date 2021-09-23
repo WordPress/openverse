@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{ ['filters']: true, ['single']: isSingleFilter }"
+    :class="{ ['filters']: true, ['single']: isSingleFilter, 'mb-8': true }"
     @click="hideLicenseExplanationVisibility()"
     @keyup.enter="hideLicenseExplanationVisibility()"
   >
@@ -186,10 +186,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.filters {
-  padding: 1rem 1.5rem 1rem 3.25rem;
-}
-
 .filters-title {
   font-size: 1.25em;
   font-weight: 600;
