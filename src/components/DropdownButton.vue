@@ -19,7 +19,7 @@
         @click="toggleOpen"
         @keydown.space.prevent="toggleOpen"
       >
-        <svg class="h-2 w-4">
+        <svg class="h-2 w-4 pointer-events-none">
           <use :href="`${icons.caretDown}#icon`" />
         </svg>
       </button>
