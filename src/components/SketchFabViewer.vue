@@ -18,7 +18,7 @@
 import loadScript from '~/utils/load-script'
 
 const sketchfabUrl =
-  'https://static.sketchfab.com/api/sketchfab-viewer-1.8.2.js'
+  'https://static.sketchfab.com/api/sketchfab-viewer-1.10.1.js'
 
 export default {
   props: {
