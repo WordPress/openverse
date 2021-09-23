@@ -12,7 +12,7 @@ Openverse API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a 
 
 ## How to Start Contributing
 
-- Run the server locally by following this [link](https://github.com/wordpress/openverse_api#running-the-server-locally)
+- Run the server locally by following this [link](https://github.com/WordPress/openverse-api#running-the-server-locally)
 - Update documentation
 - Make sure the updates passed the automated tests in this [file](https://github.com/wordpress/openverse_api/blob/master/.github/workflows/integration-tests.yml)
 - Commit and push
