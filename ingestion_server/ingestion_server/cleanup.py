@@ -6,8 +6,9 @@ from urllib.parse import urlparse
 
 import requests as re
 import tldextract
-from ingestion_server.indexer import DB_BUFFER_SIZE, database_connect
 from psycopg2.extras import DictCursor, Json
+
+from ingestion_server.indexer import DB_BUFFER_SIZE, database_connect
 
 
 """

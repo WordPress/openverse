@@ -13,12 +13,13 @@ from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, NotFoundError, RequestsHttpConnection, helpers
 from elasticsearch.exceptions import ConnectionError as ESConnectionError
 from elasticsearch_dsl import Search, connections
+from psycopg2.sql import SQL, Identifier, Literal
+
 from ingestion_server.distributed_reindex_scheduler import schedule_distributed_index
 from ingestion_server.elasticsearch_models import database_table_to_elasticsearch_model
 from ingestion_server.es_mapping import index_settings
 from ingestion_server.qa import create_search_qa_index
 from ingestion_server.queries import get_existence_queries
-from psycopg2.sql import SQL, Identifier, Literal
 
 
 """

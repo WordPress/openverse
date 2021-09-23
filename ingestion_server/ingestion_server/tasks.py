@@ -4,6 +4,7 @@ from enum import Enum
 from multiprocessing import Process
 
 import requests
+
 from ingestion_server.indexer import TableIndexer, elasticsearch_connect
 from ingestion_server.ingest import reload_upstream
 

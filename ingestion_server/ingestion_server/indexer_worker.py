@@ -13,10 +13,11 @@ from multiprocessing import Process, Value
 import boto3
 import falcon
 import requests
+from psycopg2.sql import SQL, Identifier, Literal
+
 from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.indexer import TableIndexer, elasticsearch_connect
 from ingestion_server.queries import get_existence_queries
-from psycopg2.sql import SQL, Identifier, Literal
 
 
 ec2_client = boto3.client(
