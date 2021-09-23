@@ -24,7 +24,7 @@ If you have an idea of a new feature or change to how the Openverse API works, p
 
 Before you start writing code, make sure there is an issue open. Pull requests without a link to an existing issue won't be merged.
 
-If you want to get started contributing code to this project but don't know exactly what to work on, we compiled a good list of issues labeled as [`good first issue`](https://github.com/wordpress/openverse_api/labels/good%20first%20issue) which are small in scope and not so complex to solve. There are also issues labeled as [`help wanted`](https://github.com/wordpress/openverse_api/labels/help%20wanted) which can be a bit more complex but are good examples of things we are currently accepting help from the community.
+If you want to get started contributing code to this project but don't know exactly what to work on, we compiled a good list of issues labeled as [`good first issue`](https://github.com/wordpress/openverse-api/labels/good%20first%20issue) which are small in scope and not so complex to solve. There are also issues labeled as [`help wanted`](https://github.com/wordpress/openverse-api/labels/help%20wanted) which can be a bit more complex but are good examples of things we are currently accepting help from the community.
 
 Any code modifications will have to be accompanied by the appropriate unit tests. This will be checked and verified during code review. Once the Pull Request is opened, our CI server will run the unit test suite and run a code linter to verify that the code follows the coding guidelines.
 
