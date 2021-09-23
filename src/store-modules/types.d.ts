@@ -32,6 +32,7 @@ export type AudioDetail = {
   alt_files?: any
   detail_url: string
   related_url: string
+  filetype?: string
 }
 
 /**

@@ -1,10 +1,10 @@
-// @ts-check
 import isEmpty from 'lodash.isempty'
 import findIndex from 'lodash.findindex'
 import prepareSearchQueryParams from '~/utils/prepare-search-query-params'
 import decodeMediaData from '~/utils/decode-media-data'
 import {
   FETCH_MEDIA,
+  FETCH_AUDIO,
   FETCH_IMAGE,
   FETCH_COLLECTION_IMAGES,
   HANDLE_NO_MEDIA,
@@ -16,7 +16,7 @@ import {
   FETCH_END_MEDIA,
   FETCH_MEDIA_ERROR,
   FETCH_START_MEDIA,
-  IMAGE_NOT_FOUND,
+  MEDIA_NOT_FOUND,
   SET_AUDIO,
   SET_IMAGE,
   SET_IMAGE_PAGE,
@@ -179,6 +179,30 @@ const actions = (AudioService, ImageService) => ({
       })
   },
   // eslint-disable-next-line no-unused-vars
+  [FETCH_AUDIO]({ commit, dispatch, state }, params) {
+    dispatch(SEND_RESULT_CLICKED_EVENT, {
+      query: state.query.q,
+      resultUuid: params.id,
+      resultRank: findIndex(state.images, (img) => img.id === params.id),
+      sessionId: state.usageSessionId,
+    })
+
+    commit(FETCH_START_MEDIA, { mediaType: AUDIO })
+    commit(SET_AUDIO, { audio: {} })
+    return AudioService.getMediaDetail(params)
+      .then(({ data }) => {
+        commit(FETCH_END_MEDIA, { mediaType: AUDIO })
+        commit(SET_AUDIO, { audio: data })
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          commit(MEDIA_NOT_FOUND, { mediaType: AUDIO })
+        } else {
+          dispatch(HANDLE_MEDIA_ERROR, { mediaType: AUDIO, error })
+        }
+      })
+  },
+  // eslint-disable-next-line no-unused-vars
   [FETCH_IMAGE]({ commit, dispatch, state }, params) {
     dispatch(SEND_RESULT_CLICKED_EVENT, {
       query: state.query.q,
@@ -196,7 +220,7 @@ const actions = (AudioService, ImageService) => ({
       })
       .catch((error) => {
         if (error.response && error.response.status === 404) {
-          commit(IMAGE_NOT_FOUND)
+          commit(MEDIA_NOT_FOUND, { mediaType: IMAGE })
         } else {
           dispatch(HANDLE_MEDIA_ERROR, { mediaType: IMAGE, error })
         }
@@ -314,8 +338,8 @@ const mutations = {
   [SET_QUERY](_state, params) {
     setQuery(_state, params)
   },
-  [IMAGE_NOT_FOUND]() {
-    throw new Error('Image not found')
+  [MEDIA_NOT_FOUND](params) {
+    throw new Error(`Media of type ${params.mediaType} not found`)
   },
   [SET_SEARCH_TYPE](_state, params) {
     _state.searchType = params.searchType

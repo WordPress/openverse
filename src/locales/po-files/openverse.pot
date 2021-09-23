@@ -371,7 +371,7 @@ msgstr ""
 # about.planning.community
 #: src/pages/about.vue:54
 msgctxt "about.planning.community"
-msgid "Make Wordpress community"
+msgid "Make WordPress community"
 msgstr ""
 
 # footer.navigation.terms
@@ -1109,18 +1109,34 @@ msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
 
+# error.media-not-found (Do not translate words between ###)
+#: src/pages/audio/_id.vue:99
+msgctxt "error.media-not-found"
+msgid "Couldn't find ###mediaType### with id ###id###"
+msgstr ""
+
+# error.image
+msgctxt "error.image"
+msgid "image"
+msgstr ""
+
+# error.audio
+msgctxt "error.audio"
+msgid "audio"
+msgstr ""
+
 # search-tab.all
 msgctxt "search-tab.all"
 msgid "All"
 msgstr ""
 
-# search-tab.image
-msgctxt "search-tab.image"
+# error.image
+msgctxt "error.image"
 msgid "Image"
 msgstr ""
 
-# search-tab.audio
-msgctxt "search-tab.audio"
+# error.audio
+msgctxt "error.audio"
 msgid "Audio"
 msgstr ""
 
@@ -1565,13 +1581,13 @@ msgctxt "hero.search.placeholder"
 msgid "Search all ###type###"
 msgstr ""
 
-# search-tab.image
-msgctxt "search-tab.image"
+# error.image
+msgctxt "error.image"
 msgid "images"
 msgstr ""
 
-# search-tab.audio
-msgctxt "search-tab.audio"
+# error.audio
+msgctxt "error.audio"
 msgid "audio"
 msgstr ""
 
@@ -1693,8 +1709,29 @@ msgctxt "filters.creator"
 msgid "search by creator"
 msgstr ""
 
-# search-tab.image
-msgctxt "search-tab.image"
+# hero.title
+#: src/components/HeroSection.vue:6
+msgctxt "hero.title"
+msgid "Reuse content"
+msgstr ""
+
+# media-details.reuse.license-header
+msgctxt "media-details.reuse.license-header"
+msgid "License"
+msgstr ""
+
+# media-details.reuse.tool-header
+msgctxt "media-details.reuse.tool-header"
+msgid "Public Domain"
+msgstr ""
+
+# error.audio
+msgctxt "error.audio"
+msgid "Audio"
+msgstr ""
+
+# error.image
+msgctxt "error.image"
 msgid "Image"
 msgstr ""
 
@@ -1784,16 +1821,6 @@ msgctxt "media-details.reuse.copy-license.plain"
 msgid "Plain text"
 msgstr ""
 
-# media-details.reuse.license-header
-msgctxt "media-details.reuse.license-header"
-msgid "License"
-msgstr ""
-
-# media-details.reuse.tool-header
-msgctxt "media-details.reuse.tool-header"
-msgid "Public Domain"
-msgstr ""
-
 # media-details.reuse.attribution.main (Do not translate words between ###)
 #: src/components/MediaInfo/MediaLicense.vue:7
 msgctxt "media-details.reuse.attribution.main"
@@ -1804,6 +1831,22 @@ msgstr ""
 #: src/pages/meta-search.vue:17
 msgctxt "meta-search-page.license"
 msgid "license."
+msgstr ""
+
+# media-details.provider-label
+msgctxt "media-details.provider-label"
+msgid "Provider"
+msgstr ""
+
+# media-details.source-label
+msgctxt "media-details.source-label"
+msgid "Source"
+msgstr ""
+
+# feedback.loading
+#: src/pages/feedback.vue:54
+msgctxt "feedback.loading"
+msgid "Loading..."
 msgstr ""
 
 # photo-details.back
@@ -2070,7 +2113,7 @@ msgid "main content"
 msgstr ""
 
 # photo-details.aria.related
-#: src/components/RelatedImages.vue:3
+#: src/components/AudioDetails/Related.vue:2
 msgctxt "photo-details.aria.related"
 msgid "related images"
 msgstr ""
@@ -2085,6 +2128,59 @@ msgstr ""
 #: src/components/ImageDetails/PhotoDetails.vue:70
 msgctxt "photo-details.aria.creator-url"
 msgid "author ###creator###"
+msgstr ""
+
+# audio-details.genre-label
+msgctxt "audio-details.genre-label"
+msgid "Genre"
+msgstr ""
+
+# audio-details.related-audios
+#: src/components/AudioDetails/Related.vue:4
+msgctxt "audio-details.related-audios"
+msgid "Related audios"
+msgstr ""
+
+# audio-details.table.album
+#: src/components/AudioDetails/Table.vue:16
+msgctxt "audio-details.table.album"
+msgid "Album"
+msgstr ""
+
+# audio-details.table.category
+#: src/components/AudioDetails/Table.vue:22
+msgctxt "audio-details.table.category"
+msgid "Type"
+msgstr ""
+
+# audio-details.table.sample-rate
+#: src/components/AudioDetails/Table.vue:29
+msgctxt "audio-details.table.sample-rate"
+msgid "Sample Rate"
+msgstr ""
+
+# audio-details.table.filetype
+#: src/components/AudioDetails/Table.vue:37
+msgctxt "audio-details.table.filetype"
+msgid "Format"
+msgstr ""
+
+# sources.cc-content.provider
+#: src/pages/sources.vue:15
+msgctxt "sources.cc-content.provider"
+msgid "Provider"
+msgstr ""
+
+# sources.providers.source
+#: src/pages/sources.vue:97
+msgctxt "sources.providers.source"
+msgid "Source"
+msgstr ""
+
+# audio-details.table.genre
+#: src/components/AudioDetails/Table.vue:61
+msgctxt "audio-details.table.genre"
+msgid "Genre"
 msgstr ""
 
 # hero.caption

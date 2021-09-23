@@ -52,11 +52,11 @@ export default {
   methods: {
     getLicenseDeedLink(licenseTerm) {
       if (licenseTerm === 'cc0') {
-        return 'https://creativecommons.org/publicdomain/zero/1.0/?ref=ccsearch&atype=rich'
+        return 'https://creativecommons.org/publicdomain/zero/1.0/?ref=openverse&atype=rich'
       } else if (licenseTerm === 'pdm') {
-        return 'https://creativecommons.org/publicdomain/mark/1.0/?ref=ccsearch&atype=rich'
+        return 'https://creativecommons.org/publicdomain/mark/1.0/?ref=openverse&atype=rich'
       }
-      return `https://creativecommons.org/licenses/${licenseTerm}/4.0/?ref=ccsearch&atype=rich`
+      return `https://creativecommons.org/licenses/${licenseTerm}/4.0/?ref=openverse&atype=rich`
     },
   },
 }

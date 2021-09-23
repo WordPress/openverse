@@ -4,6 +4,7 @@ import {
   SET_RELATED_MEDIA,
 } from './mutation-types'
 import {
+  RESET_RELATED_MEDIA,
   FETCH_RELATED_MEDIA,
   HANDLE_NO_MEDIA,
   HANDLE_MEDIA_ERROR,
@@ -51,6 +52,13 @@ const actions = (AudioService, ImageService) => ({
         })
       })
   },
+  [RESET_RELATED_MEDIA]({ commit }, params) {
+    const { mediaType } = params
+    commit(SET_RELATED_MEDIA, {
+      mediaType,
+      relatedMedia: [],
+    })
+  },
 })
 
 const mutations = {
@@ -60,7 +68,12 @@ const mutations = {
    * @param {Array} relatedMedia
    */
   [SET_RELATED_MEDIA](_state, { mediaType, relatedMedia }) {
-    _state.related[`${mediaType}s`] = relatedMedia
+    // TODO: remove audio handling after API related media count is changed
+    if (mediaType === AUDIO) {
+      _state.related.audios = relatedMedia.slice(0, 5)
+    } else {
+      _state.related[`${mediaType}s`] = relatedMedia
+    }
   },
 }
 

@@ -101,7 +101,7 @@
       "common-crawl": "Common Crawl",
       "meta": "meta search",
       "projects": "Openverse projects",
-      "community": "Make Wordpress community",
+      "community": "Make WordPress community",
       "terms": "Openverse terms of use",
       "sources-table": "sources table",
       "creative-commons": "Creative Commons",
@@ -291,7 +291,10 @@
   "error": {
     "not-found": "Page Not Found",
     "occurred": "An error occurred",
-    "image-not-found": "Couldn't find image with id {id}"
+    "image-not-found": "Couldn't find image with id {id}",
+    "media-not-found": "Couldn't find {mediaType} with id {id}",
+    "image": "image",
+    "audio": "audio"
   },
   "search-tab": {
     "all": "All",
@@ -450,6 +453,10 @@
   },
   "media-details": {
     "reuse": {
+      "title": "Reuse content",
+      "license-header": "License",
+      "tool-header": "Public Domain",
+      "audio": "Audio",
       "image": "Image",
       "license": {
         "content": "Read more about the license {link}",
@@ -474,13 +481,14 @@
         "html": "HTML",
         "plain": "Plain text"
       },
-      "license-header": "License",
-      "tool-header": "Public Domain",
       "attribution": {
         "main": "This image was marked with a {link} license.",
         "license": "license."
       }
-    }
+    },
+    "provider-label": "Provider",
+    "source-label": "Source",
+    "loading": "Loading..."
   },
   "photo-details": {
     "back": "Back to search results",
@@ -548,6 +556,19 @@
       "related": "related images",
       "provider-report-form": "{provider} form",
       "creator-url": "author {creator}"
+    }
+  },
+  "audio-details": {
+    "genre-label": "Genre",
+    "related-audios": "Related audios",
+    "table": {
+      "album": "Album",
+      "category": "Type",
+      "sample-rate": "Sample Rate",
+      "filetype": "Format",
+      "provider": "Provider",
+      "source": "Source",
+      "genre": "Genre"
     }
   },
   "meta-search": {
