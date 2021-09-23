@@ -172,7 +172,7 @@ You can view the custom administration views at the `/admin/` endpoint.
 
 Pull requests are welcome! Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community members on #openverse.
 
-You are welcome to take any open issue in the tracker labeled [`help wanted`](https://github.com/WordPress/openverse_api/labels/help%20wanted) or [`good first issue`](https://github.com/WordPress/openverse_api/labels/good%20first%20issue); **there's no need to ask for permission in advance**. Other issues are open for contribution as well, but may be less accessible or well-defined in comparison to those that are explicitly labeled.
+You are welcome to take any open issue in the tracker labeled [`help wanted`](https://github.com/WordPress/openverse-api/labels/help%20wanted) or [`good first issue`](https://github.com/WordPress/openverse-api/labels/good%20first%20issue); **there's no need to ask for permission in advance**. Other issues are open for contribution as well, but may be less accessible or well-defined in comparison to those that are explicitly labeled.
 
 See the [CONTRIBUTING](CONTRIBUTING.md) file for details.
 
