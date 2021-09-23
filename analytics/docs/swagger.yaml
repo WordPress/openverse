@@ -8,7 +8,7 @@ info:
     email: "zack.krida@automattic.com"
   license:
     name: "MIT License"
-    url: "https://github.com/wordpress/openverse-api/blob/master/LICENSE"
+    url: "https://github.com/wordpress/openverse_api/blob/master/LICENSE"
 host: "api.openverse.engineering"
 basePath: "/analytics"
 tags:

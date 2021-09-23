@@ -15,7 +15,7 @@ with open(description_path, 'r') as description_file:
 
 tos_url = "https://api.openverse.engineering/terms_of_service.html"
 license_url = "https://github.com/" \
-              "WordPress/openverse-api/blob/master/LICENSE"
+              "WordPress/openverse_api/blob/master/LICENSE"
 logo_url = "https://raw.githubusercontent.com/" \
            "WordPress/openverse/master/brand/logo.svg"
 schema_view = get_schema_view(

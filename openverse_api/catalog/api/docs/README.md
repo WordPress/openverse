@@ -1,6 +1,6 @@
 # Introduction
 
-The Openverse API ('openverse-api') is a system that allows programmatic access
+The Openverse API ('openverse_api') is a system that allows programmatic access
 to public domain digital media. It is our ambition to index and catalog billions
 of openly-licensed works, including articles, songs, videos, photographs,
 paintings, and more. Using this API, developers will be able to access the
@@ -98,7 +98,7 @@ $ curl \
 # Contribute
 
 We love pull requests! If you’re interested in 
-[contributing on Github](https://github.com/wordpress/openverse-api), here’s a 
+[contributing on Github](https://github.com/wordpress/openverse_api), here’s a 
 todo list to get started.
 
 - Read up about [Django REST Framework](https://www.django-rest-framework.org/),
@@ -108,9 +108,9 @@ todo list to get started.
 - Read up about Documentation Guidelines, which provides guidelines on how to
   contribute to documentation, documentation styles and cheat sheet for drf-yasg
 - Run the server locally by following this
-  [link](https://github.com/wordpress/openverse-api#running-the-server-locally)
+  [link](https://github.com/wordpress/openverse_api#running-the-server-locally)
 - Update documentation or codebase
 - Make sure the updates passed the automated tests in this
-  [file](https://github.com/wordpress/openverse-api/blob/master/.github/workflows/integration-tests.yml)
+  [file](https://github.com/wordpress/openverse_api/blob/master/.github/workflows/integration-tests.yml)
 - Commit and push
 - Create pull request
