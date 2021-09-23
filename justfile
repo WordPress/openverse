@@ -16,6 +16,12 @@ lint:
     pipenv run pre-commit run --all-files
 
 
+env:
+    #! /usr/bin/env sh
+    cp openverse-api/.env.stencil openverse-api/.env
+    cp ingestion_server/.env.stencil ingestion_server/.env
+
+
 up:
     docker-compose {{ DOCKER_FILE }} up -d
 
