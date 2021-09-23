@@ -111,6 +111,6 @@ todo list to get started.
   [link](https://github.com/wordpress/openverse-api#running-the-server-locally)
 - Update documentation or codebase
 - Make sure the updates passed the automated tests in this
-  [file](https://github.com/wordpress/openverse_api/blob/master/.github/workflows/integration-tests.yml)
+  [file](https://github.com/WordPress/openverse-api/blob/master/.github/workflows/integration-tests.yml)
 - Commit and push
 - Create pull request
