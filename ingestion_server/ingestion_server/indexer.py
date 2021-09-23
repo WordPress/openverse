@@ -40,26 +40,28 @@ is useful for local development environments.
 """
 
 # For AWS IAM access to Elasticsearch
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
-ELASTICSEARCH_URL = os.environ.get("ELASTICSEARCH_URL", "localhost")
-ELASTICSEARCH_PORT = int(os.environ.get("ELASTICSEARCH_PORT", 9200))
-AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", "")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "")
 
-DATABASE_HOST = os.environ.get("DATABASE_HOST", "localhost")
-DATABASE_USER = os.environ.get("DATABASE_USER", "deploy")
-DATABASE_PASSWORD = os.environ.get("DATABASE_PASSWORD", "deploy")
-DATABASE_NAME = os.environ.get("DATABASE_NAME", "openledger")
-DATABASE_PORT = int(os.environ.get("DATABASE_PORT", 5432))
+ELASTICSEARCH_URL = os.getenv("ELASTICSEARCH_URL", "localhost")
+ELASTICSEARCH_PORT = int(os.getenv("ELASTICSEARCH_PORT", 9200))
+
+AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
+
+DATABASE_HOST = os.getenv("DATABASE_HOST", "localhost")
+DATABASE_PORT = int(os.getenv("DATABASE_PORT", 5432))
+DATABASE_USER = os.getenv("DATABASE_USER", "deploy")
+DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "deploy")
+DATABASE_NAME = os.getenv("DATABASE_NAME", "openledger")
 
 # The number of database records to load in memory at once.
-DB_BUFFER_SIZE = int(os.environ.get("DB_BUFFER_SIZE", 100000))
+DB_BUFFER_SIZE = int(os.getenv("DB_BUFFER_SIZE", 100000))
 
-SYNCER_POLL_INTERVAL = int(os.environ.get("SYNCER_POLL_INTERVAL", 60))
+SYNCER_POLL_INTERVAL = int(os.getenv("SYNCER_POLL_INTERVAL", 60))
 
 # A comma separated list of tables in the database table to replicate to
 # Elasticsearch. Ex: image,docs
-REP_TABLES = os.environ.get("COPY_TABLES", "image")
+REP_TABLES = os.getenv("COPY_TABLES", "image")
 replicate_tables = REP_TABLES.split(",") if "," in REP_TABLES else [REP_TABLES]
 
 TWELVE_HOURS_SEC = 60 * 60 * 12
@@ -391,13 +393,15 @@ class TableIndexer:
                 self.es = elasticsearch_connect()
             time.sleep(poll_interval)
 
-    def reindex(self, model_name: str, distributed=True):
+    def reindex(self, model_name: str, distributed=None):
         """
         Copy contents of the database to a new Elasticsearch index. Create an
         index alias to make the new index the "live" index when finished.
         """
         suffix = uuid.uuid4().hex
-        destination_index = model_name + "-" + suffix
+        destination_index = f"{model_name}-{suffix}"
+        if distributed is None:
+            distributed = os.getenv("ENVIRONMENT", "local") != "local"
         if distributed:
             self.es.indices.create(
                 index=destination_index, body=index_settings(model_name)
