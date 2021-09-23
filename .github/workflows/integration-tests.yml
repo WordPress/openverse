@@ -21,7 +21,7 @@ jobs:
       working-directory: ./openverse-api
       run: |
         pip install --upgrade pipenv
-        pipenv install --dev
+        pipenv install pre-commit
         pipenv run pre-commit run --all-files
 
   Tests:
