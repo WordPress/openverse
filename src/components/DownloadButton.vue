@@ -14,7 +14,7 @@
         <span class="ml-4 selected-format">
           {{ selectedFormat.extension_name }}
         </span>
-        <span class="ml-1 font-thin">{{
+        <span class="ml-1 font-normal">{{
           getFormatSize(selectedFormat.extension_name)
         }}</span>
       </a>
