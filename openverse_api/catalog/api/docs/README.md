@@ -108,7 +108,7 @@ todo list to get started.
 - Read up about Documentation Guidelines, which provides guidelines on how to
   contribute to documentation, documentation styles and cheat sheet for drf-yasg
 - Run the server locally by following this
-  [link](https://github.com/wordpress/openverse_api#running-the-server-locally)
+  [link](https://github.com/wordpress/openverse-api#running-the-server-locally)
 - Update documentation or codebase
 - Make sure the updates passed the automated tests in this
   [file](https://github.com/wordpress/openverse_api/blob/master/.github/workflows/integration-tests.yml)
