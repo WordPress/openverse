@@ -51,7 +51,11 @@ describe('PhotoDetails', () => {
         commit: commitMock,
         dispatch: dispatchMock,
         state: {
-          isReportFormVisible: false,
+          'report-content': {
+            isReportFormVisible: false,
+            isReportSent: false,
+            reportFailed: false,
+          },
         },
       },
     }

@@ -42,6 +42,7 @@ describe('CopyLicense', () => {
       attributionHtml: '<div>attribution</div>',
     }
     options = {
+      stubs: { CopyButton: true },
       propsData: props,
       mocks: {
         $store: {

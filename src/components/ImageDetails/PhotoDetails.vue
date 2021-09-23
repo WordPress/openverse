@@ -40,13 +40,12 @@
           </span>
         </button>
       </div>
-      <div class="mt-2 text-left">
-        <ContentReportForm
-          v-if="isReportFormVisible"
-          :image="image"
-          data-testid="content-report-form"
-        />
-      </div>
+      <ContentReportForm
+        v-if="isReportFormVisible"
+        :image="image"
+        data-testid="content-report-form"
+        class="mt-2 text-left"
+      />
     </div>
     <div
       role="region"
@@ -213,6 +212,9 @@ export default {
     }
   },
   computed: {
+    isReportFormVisible() {
+      return this.$store.state[REPORT_CONTENT].isReportFormVisible
+    },
     imgUrl() {
       return this.image && this.image.url ? this.image.url : this.thumbnail
     },
@@ -228,9 +230,6 @@ export default {
         .split('https://media.sketchfab.com/models/')[1]
         .split('/')[0]
     },
-    isReportFormVisible() {
-      return this.$store.state.isReportFormVisible
-    },
     fullLicenseName() {
       return this.image
         ? getFullLicenseName(this.image.license, this.image.license_version)
@@ -241,7 +240,7 @@ export default {
     },
   },
   methods: {
-    sendDetailPageEvent(eventType) {
+    sendEvent(eventType) {
       const eventData = {
         eventType,
         resultUuid: this.$props.image.id,
@@ -271,10 +270,10 @@ export default {
       this.$store.commit(`${REPORT_CONTENT}/${TOGGLE_REPORT_FORM_VISIBILITY}`)
     },
     onPhotoSourceLinkClicked() {
-      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.SOURCE_CLICKED)
+      this.sendEvent(DETAIL_PAGE_EVENTS.SOURCE_CLICKED)
     },
     onPhotoCreatorLinkClicked() {
-      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.CREATOR_CLICKED)
+      this.sendEvent(DETAIL_PAGE_EVENTS.CREATOR_CLICKED)
     },
   },
 }

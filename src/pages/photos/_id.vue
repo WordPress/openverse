@@ -12,9 +12,7 @@
       :social-sharing-enabled="socialSharingEnabled"
       @onImageLoaded="onImageLoaded"
     />
-    <div class="p-4 my-6">
-      <PhotoTags :tags="tags" :show-header="true" />
-    </div>
+    <PhotoTags :tags="tags" :show-header="true" class="p-4 my-6" />
     <RelatedImages
       :related-images="relatedImages"
       :images-count="relatedImagesCount"
@@ -61,12 +59,17 @@ const PhotoDetailPage = {
   },
   computed: {
     ...mapState(['images', 'query', 'image']),
-    ...mapState('related', { relatedImages: 'images' }),
     filter() {
       return this.query.filter
     },
     tags() {
       return this.image.tags
+    },
+    relatedImages() {
+      return this.$store.state.related.images
+    },
+    relatedImagesCount() {
+      return this.relatedImages.length
     },
   },
   watch: {

@@ -101,6 +101,7 @@ import DoneMessage from './DoneMessage'
 import ReportError from './ReportError'
 import { SEND_CONTENT_REPORT } from '~/constants/action-types'
 import { REPORT_FORM_CLOSED } from '~/constants/mutation-types'
+import { PROVIDER, REPORT_CONTENT } from '~/constants/store-modules'
 
 const dmcaFormUrl =
   'https://docs.google.com/forms/d/e/1FAIpQLSd0I8GsEbGQLdaX4K_F6V2NbHZqN137WMZgnptUpzwd-kbDKA/viewform'
@@ -124,14 +125,14 @@ export default {
   },
   computed: {
     isReportSent() {
-      return this.$store.state.isReportSent
+      return this.$store.state[REPORT_CONTENT].isReportSent
     },
     reportFailed() {
-      return this.$store.state.reportFailed
+      return this.$store.state[REPORT_CONTENT].reportFailed
     },
     providerName() {
       return getProviderName(
-        this.$store.state.imageProviders,
+        this.$store.state[PROVIDER].imageProviders,
         this.image.provider
       )
     },
@@ -143,6 +144,7 @@ export default {
       } else if (this.selectedReason === 'dmca') {
         this.selectedCopyright = true
       } else {
+        console.log('sending content report')
         this.sendContentReport()
       }
     },
@@ -151,14 +153,14 @@ export default {
       this.selectedCopyright = false
     },
     sendContentReport(description = '') {
-      this.$store.dispatch(SEND_CONTENT_REPORT, {
+      this.$store.dispatch(`${REPORT_CONTENT}/${SEND_CONTENT_REPORT}`, {
         identifier: this.$props.image.id,
         reason: this.selectedReason,
         description,
       })
     },
     closeForm() {
-      this.$store.commit(REPORT_FORM_CLOSED)
+      this.$store.commit(`${REPORT_CONTENT}/${REPORT_FORM_CLOSED}`)
     },
   },
 }
