@@ -1,7 +1,7 @@
 <template>
   <!-- Should be wrapped by a fixed-width parent -->
   <div class="relative h-0 w-full pt-full" :title="helpText">
-    <div class="absolute inset-0 bg-yellow">
+    <div class="thumbnail absolute inset-0 bg-yellow">
       <img
         v-if="audio.thumbnail"
         class="h-full w-full object-cover object-center overflow-clip"

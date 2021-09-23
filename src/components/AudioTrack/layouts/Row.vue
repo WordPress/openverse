@@ -102,11 +102,19 @@ export default {
   @apply h-20;
 }
 
+.row-track.size-s .thumbnail {
+  @apply rounded-tl-sm rounded-bl-sm overflow-hidden;
+}
+
 .row-track.size-m .play-pause {
   @apply h-14 w-14;
 }
 
 .row-track.size-m .waveform {
   @apply h-14;
+}
+
+.row-track.size-m .thumbnail {
+  @apply rounded-sm overflow-hidden;
 }
 </style>
