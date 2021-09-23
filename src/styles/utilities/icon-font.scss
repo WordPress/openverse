@@ -4,7 +4,7 @@
  * Copied from: https://raw.githubusercontent.com/creativecommons/vocabulary/main/packages/fonts/src/styles/vocabulary_icons.scss
  */
 
-@font-face {
+ @font-face {
   font-family: 'Vocabulary Icons';
   font-style: normal;
   font-weight: 400;
@@ -150,5 +150,11 @@ $brand-colors: (
   &.has-background-white {
     background-image: radial-gradient(circle, #ffffff 60%, transparent 60%);
     background-color: transparent !important;
+  }
+}
+
+.icon[class*='cc'] {
+  &.filter-icon {
+    font-size: 1.25rem;
   }
 }
