@@ -14,7 +14,7 @@ Performance is dependent on the size of the target Elasticsearch cluster, databa
 
 ## How Indexing Works
 
-![How indexing works](https://github.com/wordpress/openverse_api/blob/master/ingestion_server/howitworks.png)
+![How indexing works](https://github.com/wordpress/openverse-api/blob/master/ingestion_server/howitworks.png)
 
 ## Safety and security considerations
 
