@@ -5,9 +5,9 @@
     </p>
     <div class="notification__actions">
       <button
-        v-if="notificationOkay"
+        v-if="!!notificationOkay"
         class="button is-success small"
-        @click="handleOkayClick"
+        @click="notificationAction"
       >
         {{ $t(notificationOkay) }}
       </button>
@@ -15,7 +15,7 @@
         class="button is-text small dismiss-button"
         @click="handleDismissClick"
       >
-        <span v-if="notificationDismiss">{{ $t(notificationDismiss) }}</span>
+        <span v-if="!!notificationDismiss">{{ $t(notificationDismiss) }}</span>
         <svg
           v-else
           viewBox="0 0 30 30"
@@ -34,21 +34,29 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
+import { SET_SHOW_NOTIFICATION } from '~/constants/mutation-types'
+import { NOTIFICATION } from '~/constants/store-modules'
+import { NOTIFICATION_ACTION } from '~/constants/action-types'
 
 export default {
   name: 'NotificationBanner',
-  computed: mapState([
-    'notificationText',
-    'notificationDismiss',
-    'notificationOkay',
-  ]),
+  computed: {
+    ...mapState('notification', [
+      'notificationText',
+      'notificationDismiss',
+      'notificationOkay',
+    ]),
+  },
   methods: {
+    ...mapActions(NOTIFICATION, { notificationAction: NOTIFICATION_ACTION }),
+    ...mapMutations(NOTIFICATION, {
+      setShowNotification: SET_SHOW_NOTIFICATION,
+    }),
     handleDismissClick() {
-      this.$store.commit('SET_SHOW_NOTIFICATION', { showNotification: false })
-    },
-    handleOkayClick() {
-      this.$store.dispatch('NOTIFICATION_ACTION')
+      this.setShowNotification({
+        showNotification: false,
+      })
     },
   },
 }

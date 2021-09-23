@@ -36,11 +36,12 @@
 </template>
 
 <script>
-import { SOCIAL_MEDIA_SHARE } from '~/store-modules/action-types'
+import { SOCIAL_MEDIA_SHARE } from '~/constants/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '~/store-modules/usage-data-analytics-types'
+} from '~/constants/usage-data-analytics-types'
+import { SOCIAL, USAGE_DATA } from '~/constants/store-modules'
 
 export default {
   name: 'SocialShareButtons',
@@ -53,8 +54,8 @@ export default {
   },
   methods: {
     onSocialMediaLinkClick(site) {
-      this.$store.dispatch(SOCIAL_MEDIA_SHARE, { site })
-      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+      this.$store.dispatch(`${SOCIAL}/${SOCIAL_MEDIA_SHARE}`, { site })
+      this.$store.dispatch(`${USAGE_DATA}/${SEND_DETAIL_PAGE_EVENT}`, {
         eventType: DETAIL_PAGE_EVENTS.SHARED_SOCIAL,
         resultUuid: this.$props.image.id,
       })

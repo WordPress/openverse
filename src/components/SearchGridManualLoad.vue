@@ -64,9 +64,10 @@
 </template>
 
 <script>
-import { FETCH_MEDIA } from '~/store-modules/action-types'
-import { SET_MEDIA } from '~/store-modules/mutation-types'
+import { FETCH_MEDIA } from '~/constants/action-types'
+import { SET_MEDIA } from '~/constants/mutation-types'
 import { IMAGE } from '~/constants/media'
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'SearchGridManualLoad',
@@ -97,29 +98,28 @@ export default {
     showMetaImageSearch: false,
   }),
   async fetch() {
-    if (!this.$store.state.images.length) {
-      await this.$store.dispatch(FETCH_MEDIA, {
+    if (!this.storeImages.length) {
+      await this.fetchMedia({
         ...this.$store.state.query,
         mediaType: IMAGE,
       })
     }
   },
   computed: {
-    isFetchingImagesError() {
-      return this.$store.state.isFetchingError.images
-    },
-    isFetchingImages() {
-      return this.$store.state.isFetching.images
-    },
+    ...mapState({
+      isFetchingImages: 'isFetching.images',
+      isFetchingImagesError: 'isFetchingError.images',
+      storeImages: 'images',
+      storeImagesCount: 'imagesCount',
+      currentPage: 'imagePage',
+      _errorMessage: 'errorMessage',
+    }),
     _images() {
-      return this.useInfiniteScroll ? this.$store.state.images : this.images
-    },
-    currentPage() {
-      return this.$store.state.imagePage
+      return this.useInfiniteScroll ? this.storeImages : this.images
     },
     _imagesCount() {
       const count = this.useInfiniteScroll
-        ? this.$store.state.imagesCount
+        ? this.storeImagesCount
         : this.imagesCount
       if (count === 0) {
         return this.$t('browse-page.image-no-results')
@@ -135,9 +135,6 @@ export default {
     _query() {
       return this.$props.query
     },
-    _errorMessage() {
-      return this.$store.state.errorMessage
-    },
     isFinished() {
       return this.currentPage >= this.$store.state.pageCount.images
     },
@@ -151,8 +148,14 @@ export default {
     },
   },
   methods: {
+    ...mapMutations({
+      setMedia: SET_MEDIA,
+    }),
+    ...mapActions({
+      fetchMedia: FETCH_MEDIA,
+    }),
     searchChanged() {
-      this.$store.commit(SET_MEDIA, { media: [], page: 1 })
+      this.setMedia({ media: [], page: 1 })
     },
     onLoadMoreImages() {
       const searchParams = {

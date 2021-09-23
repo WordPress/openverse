@@ -14,7 +14,9 @@ describe('FilterChecklist', () => {
     }
     options = {
       propsData: props,
-      mocks: { $store: { state: {} } },
+      mocks: {
+        $store: { state: { filters: { licenses: {}, licenseTypes: {} } } },
+      },
     }
   })
 

@@ -18,7 +18,8 @@
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '~/store-modules/usage-data-analytics-types'
+} from '~/constants/usage-data-analytics-types'
+import { USAGE_DATA } from '~/constants/store-modules'
 
 const reuseForm =
   'https://docs.google.com/forms/d/e/1FAIpQLSegPUDIUj_odzclJhhWRfPumSfbHtXDVDCHqRfFl7ZS8cMn2g/viewform'
@@ -41,7 +42,7 @@ export default {
   },
   methods: {
     onReuseSurveyClick() {
-      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+      this.$store.dispatch(`${USAGE_DATA}/${SEND_DETAIL_PAGE_EVENT}`, {
         eventType: DETAIL_PAGE_EVENTS.REUSE_SURVEY,
         resultUuid: this.$props.image.id,
       })

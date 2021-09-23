@@ -260,12 +260,12 @@ import { mapState } from 'vuex'
 const SearchHelpPage = {
   name: 'search-help-page',
   layout({ store }) {
-    return store.state.isEmbedded
+    return store.state.nav.isEmbedded
       ? 'embedded-with-nav-search'
       : 'with-nav-search'
   },
   computed: {
-    ...mapState(['imageProviders', 'isEmbedded']),
+    ...mapState('nav', ['isEmbedded']),
   },
   methods: {
     providerSearchLink(providerCode) {

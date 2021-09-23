@@ -11,7 +11,7 @@ import {
   HANDLE_MEDIA_ERROR,
   UPDATE_SEARCH_TYPE,
   SET_SEARCH_TYPE_FROM_URL,
-} from './action-types'
+} from '~/constants/action-types'
 import {
   FETCH_END_MEDIA,
   FETCH_MEDIA_ERROR,
@@ -24,13 +24,14 @@ import {
   SET_QUERY,
   SET_SEARCH_TYPE,
   UPDATE_FILTERS,
-} from './mutation-types'
+} from '~/constants/mutation-types'
 import {
   SEND_SEARCH_QUERY_EVENT,
   SEND_RESULT_CLICKED_EVENT,
-} from './usage-data-analytics-types'
+} from '~/constants/usage-data-analytics-types'
 import { queryStringToSearchType } from '~/utils/search-query-transform'
 import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
+import { USAGE_DATA } from '~/constants/store-modules'
 
 // const getSearchPath = () =>
 //   window.location.pathname && window.location.pathname.includes('search')
@@ -84,7 +85,7 @@ const fetchCollectionImages = (commit, params, imageService) => {
  * and handle possible errors
  * @param {import('vuex').Commit} commit
  * @param {import('vuex').Dispatch} dispatch
- * @param {import('./types').MediaResult} data
+ * @param {import('../store/types').MediaResult} data
  * @param {Object} params
  * @param {'image'|'audio'} params.mediaType
  * @param {boolean} params.shouldPersistMedia
@@ -109,9 +110,9 @@ const handleSearchResponse = async (
 }
 
 /**
- * @type {{ audios: import('./types').AudioDetail[],
+ * @type {{ audios: import('../store/types').AudioDetail[],
  * audiosCount: number, audioPage:number,
- * images: import('./types').ImageDetail[],
+ * images: import('../store/types').ImageDetail[],
  * imagePage: number, imagesCount: number, query: {},
  * pageCount: {images: number, audios: number},
  * isFetching: {images: boolean, audios: boolean},
@@ -147,13 +148,13 @@ const state = {
  * @param {Object} ImageService
  */
 const actions = (AudioService, ImageService) => ({
-  [FETCH_MEDIA]({ commit, dispatch, state }, params) {
+  [FETCH_MEDIA]({ commit, dispatch, rootState }, params) {
     // does not send event if user is paginating for more results
     const { page, mediaType, q } = params
     if (!page) {
-      dispatch(SEND_SEARCH_QUERY_EVENT, {
+      dispatch(`${USAGE_DATA}/${SEND_SEARCH_QUERY_EVENT}`, {
         query: q,
-        sessionId: state.usageSessionId,
+        sessionId: rootState.user.usageSessionId,
       })
     }
 
@@ -179,12 +180,12 @@ const actions = (AudioService, ImageService) => ({
       })
   },
   // eslint-disable-next-line no-unused-vars
-  [FETCH_AUDIO]({ commit, dispatch, state }, params) {
-    dispatch(SEND_RESULT_CLICKED_EVENT, {
+  [FETCH_AUDIO]({ commit, dispatch, state, rootState }, params) {
+    dispatch(`${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`, {
       query: state.query.q,
       resultUuid: params.id,
-      resultRank: findIndex(state.images, (img) => img.id === params.id),
-      sessionId: state.usageSessionId,
+      resultRank: findIndex(state.audios, (img) => img.id === params.id),
+      sessionId: rootState.usageSessionId,
     })
 
     commit(FETCH_START_MEDIA, { mediaType: AUDIO })
@@ -203,12 +204,12 @@ const actions = (AudioService, ImageService) => ({
       })
   },
   // eslint-disable-next-line no-unused-vars
-  [FETCH_IMAGE]({ commit, dispatch, state }, params) {
-    dispatch(SEND_RESULT_CLICKED_EVENT, {
+  [FETCH_IMAGE]({ commit, dispatch, state, rootState }, params) {
+    dispatch(`${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`, {
       query: state.query.q,
       resultUuid: params.id,
       resultRank: findIndex(state.images, (img) => img.id === params.id),
-      sessionId: state.usageSessionId,
+      sessionId: rootState.user.usageSessionId,
     })
 
     commit(FETCH_START_MEDIA, { mediaType: IMAGE })

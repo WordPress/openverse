@@ -30,6 +30,10 @@ describe('ImageAttribution', () => {
       mocks: {
         $t,
       },
+      stubs: {
+        MediaLicense: true,
+        CopyLicense: true,
+      },
     }
   })
 

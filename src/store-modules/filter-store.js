@@ -13,7 +13,7 @@ import {
   VIDEO,
   supportedMediaTypes,
 } from '~/constants/media'
-import { TOGGLE_FILTER } from '~/store-modules/action-types'
+import { TOGGLE_FILTER } from '~/constants/action-types'
 import {
   SET_FILTER,
   SET_PROVIDERS_FILTERS,
@@ -21,7 +21,7 @@ import {
   SET_FILTERS_FROM_URL,
   SET_FILTER_IS_VISIBLE,
   UPDATE_FILTERS,
-} from '~/store-modules/mutation-types'
+} from '~/constants/mutation-types'
 
 // The order of the keys here is the same as in the side filter display
 export const mediaFilterKeys = {

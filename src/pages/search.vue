@@ -22,35 +22,32 @@
   </div>
 </template>
 <script>
-import {
-  FETCH_MEDIA,
-  SET_SEARCH_TYPE_FROM_URL,
-} from '~/store-modules/action-types'
+import { FETCH_MEDIA, SET_SEARCH_TYPE_FROM_URL } from '~/constants/action-types'
 import {
   SET_QUERY,
   SET_FILTER_IS_VISIBLE,
   SET_FILTERS_FROM_URL,
-} from '~/store-modules/mutation-types'
+} from '~/constants/mutation-types'
 import { queryStringToQueryData } from '~/utils/search-query-transform'
 import local from '~/utils/local'
 import { screenWidth } from '~/utils/get-browser-info'
 import { ALL_MEDIA, IMAGE } from '~/constants/media'
+import { mapActions, mapMutations } from 'vuex'
 
 const BrowsePage = {
   name: 'browse-page',
   layout({ store }) {
-    return store.state.isEmbedded ? 'embedded' : 'default'
+    return store.state.nav.isEmbedded ? 'embedded' : 'default'
   },
   scrollToTop: false,
   async fetch() {
+    const url = this.$route.fullPath
     if (process.server) {
-      const query = queryStringToQueryData(this.$route.fullPath)
-      this.$store.commit(SET_QUERY, { query })
+      const query = queryStringToQueryData(url)
+      this.setQuery({ query })
     }
-    await this.$store.dispatch(SET_SEARCH_TYPE_FROM_URL, {
-      url: this.$route.fullPath,
-    })
-    this.$store.commit(SET_FILTERS_FROM_URL, { url: this.$route.fullPath })
+    await this.setSearchTypeFromUrl({ url })
+    await this.setFiltersFromUrl({ url })
   },
   mounted() {
     const localFilterState = () =>
@@ -61,8 +58,7 @@ const BrowsePage = {
     const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 800
     const isDesktop = () =>
       screenWidth() > MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT
-
-    this.$store.commit(SET_FILTER_IS_VISIBLE, {
+    this.setFilterVisibility({
       isFilterVisible: isDesktop() ? localFilterState() : false,
     })
   },
@@ -81,17 +77,26 @@ const BrowsePage = {
     },
   },
   methods: {
+    ...mapActions({
+      fetchMedia: FETCH_MEDIA,
+      setSearchTypeFromUrl: SET_SEARCH_TYPE_FROM_URL,
+    }),
+    ...mapMutations({
+      setQuery: SET_QUERY,
+      setFilterVisibility: SET_FILTER_IS_VISIBLE,
+      setFiltersFromUrl: SET_FILTERS_FROM_URL,
+    }),
     getMediaItems(params, mediaType) {
-      this.$store.dispatch(FETCH_MEDIA, { ...params, mediaType })
+      this.fetchMedia({ ...params, mediaType })
     },
     onLoadMoreItems(searchParams) {
       this.getMediaItems(searchParams, this.mediaType)
     },
     onSearchFormSubmit(searchParams) {
-      this.$store.commit(SET_QUERY, searchParams)
+      this.setQuery(searchParams)
     },
     onToggleSearchGridFilter() {
-      this.$store.commit(SET_FILTER_IS_VISIBLE, {
+      this.setFilterVisibility({
         isFilterVisible: !this.isFilterVisible,
       })
     },

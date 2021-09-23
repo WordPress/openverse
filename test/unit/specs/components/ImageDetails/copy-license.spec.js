@@ -1,12 +1,13 @@
 import CopyLicense from '~/components/MediaInfo/CopyLicense'
-import { COPY_ATTRIBUTION } from '~/store-modules/action-types'
+import { COPY_ATTRIBUTION } from '~/constants/action-types'
 import {
   DETAIL_PAGE_EVENTS,
   SEND_DETAIL_PAGE_EVENT,
-} from '~/store-modules/usage-data-analytics-types'
+} from '~/constants/usage-data-analytics-types'
 
 import render from '../../../test-utils/render'
 import i18n from '../../../test-utils/i18n'
+import { ATTRIBUTION, USAGE_DATA } from '~/constants/store-modules'
 
 describe('CopyLicense', () => {
   let options = null
@@ -41,6 +42,7 @@ describe('CopyLicense', () => {
       attributionHtml: '<div>attribution</div>',
     }
     options = {
+      stubs: { CopyButton: true },
       propsData: props,
       mocks: {
         $store: {
@@ -59,18 +61,24 @@ describe('CopyLicense', () => {
   it('should dispatch COPY_ATTRIBUTION', () => {
     const wrapper = render(CopyLicense, options)
     wrapper.vm.onCopyAttribution(copyData.type, copyData.event)
-    expect(dispatchMock).toHaveBeenCalledWith(COPY_ATTRIBUTION, {
-      type: copyData.type,
-      content: copyData.event.content,
-    })
+    expect(dispatchMock).toHaveBeenCalledWith(
+      `${ATTRIBUTION}/${COPY_ATTRIBUTION}`,
+      {
+        type: copyData.type,
+        content: copyData.event.content,
+      }
+    )
   })
 
   it('should dispatch SEND_DETAIL_PAGE_EVENT on copy attribution', () => {
     const wrapper = render(CopyLicense, options)
     wrapper.vm.onCopyAttribution(copyData.type, copyData.event)
-    expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
-      eventType: DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED,
-      resultUuid: props.media.id,
-    })
+    expect(dispatchMock).toHaveBeenCalledWith(
+      `${USAGE_DATA}/${SEND_DETAIL_PAGE_EVENT}`,
+      {
+        eventType: DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED,
+        resultUuid: props.media.id,
+      }
+    )
   })
 })

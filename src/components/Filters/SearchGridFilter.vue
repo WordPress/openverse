@@ -11,19 +11,15 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import {
   SET_FILTER_IS_VISIBLE,
   CLEAR_FILTERS,
-} from '~/store-modules/mutation-types'
-import { TOGGLE_FILTER } from '~/store-modules/action-types'
-import FiltersList from './FiltersList'
+} from '~/constants/mutation-types'
+import { TOGGLE_FILTER } from '~/constants/action-types'
 
 export default {
   name: 'SearchGridFilter',
-  components: {
-    FiltersList,
-  },
   computed: {
     ...mapState(['filters', 'isFilterVisible']),
     /**
@@ -36,17 +32,21 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      toggleFilter: TOGGLE_FILTER,
+    }),
+    ...mapMutations({
+      setFilterVisible: SET_FILTER_IS_VISIBLE,
+      clearFilters: CLEAR_FILTERS,
+    }),
     onUpdateFilter({ code, filterType }) {
-      this.$store.dispatch(TOGGLE_FILTER, {
-        code,
-        filterType,
-      })
+      this.toggleFilter({ code, filterType })
     },
     onClearFilters() {
-      this.$store.commit(CLEAR_FILTERS, {})
+      this.clearFilters()
     },
     onToggleSearchGridFilter() {
-      this.$store.commit(SET_FILTER_IS_VISIBLE, {
+      this.setFilterVisible({
         isFilterVisible: !this.isFilterVisible,
       })
     },

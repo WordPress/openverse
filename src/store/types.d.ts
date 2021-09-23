@@ -58,6 +58,6 @@ export type ImageDetail = {
 }
 
 export interface ActiveMediaState {
-  activeMediaType: 'image' | 'audio' | null
-  activeMediaId: string | null
+  type: 'image' | 'audio' | null
+  id: string | null
 }
