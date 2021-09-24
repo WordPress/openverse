@@ -4,7 +4,7 @@
     <MediaReuse
       data-testid="audio-attribution"
       :media="audio"
-      :license-u-r-l="openverseLicenseUrl"
+      :license-url="openverseLicenseUrl"
       :full-license-name="fullLicenseName"
       :attribution-html="attributionHtml()"
       class="my-16 px-4 tab:px-0"
