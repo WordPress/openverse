@@ -8,7 +8,7 @@
     <CopyLicense
       :media="image"
       :full-license-name="fullLicenseName"
-      :license-u-r-l="licenseUrl"
+      :license-url="licenseUrl"
       :attribution-html="attributionHtml"
       class="my-6"
     />
