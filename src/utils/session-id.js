@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 import Cookie from 'js-cookie'
 
 const COOKIE_EXPIRY_DAYS = 7
+const COOKIE_PREFIX = 'openverse_'
 
 const generateSessionId = () => uuidv4()
 
@@ -16,7 +17,11 @@ const generateSessionId = () => uuidv4()
  */
 const saveSessionIdInCookie = (cookieName, sessionId, hasExpirationDate) => {
   if (hasExpirationDate) {
-    Cookie.set(cookieName, sessionId, { expires: COOKIE_EXPIRY_DAYS })
+    Cookie.set(COOKIE_PREFIX + cookieName, sessionId, {
+      expires: COOKIE_EXPIRY_DAYS,
+      secure: true,
+      sameSite: 'None',
+    })
   } else {
     Cookie.set(cookieName, sessionId)
   }
@@ -28,7 +33,7 @@ const saveSessionIdInCookie = (cookieName, sessionId, hasExpirationDate) => {
  * @param {boolean} [hasExpirationDate=false] Whether the cookie should expire when user closes the browser
  */
 const SessionId = (cookieName, hasExpirationDate = false) => {
-  let sessionId = Cookie.get(cookieName)
+  let sessionId = Cookie.get(COOKIE_PREFIX + cookieName)
 
   if (!sessionId) {
     sessionId = generateSessionId()
