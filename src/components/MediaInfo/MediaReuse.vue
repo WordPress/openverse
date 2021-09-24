@@ -5,7 +5,7 @@
       <MediaLicense
         :license="media.license"
         :full-license-name="fullLicenseName"
-        :license-u-r-l="licenseUrl"
+        :license-url="licenseUrl"
         class="column"
       />
       <CopyLicense
