@@ -8,7 +8,7 @@ The Openverse API is a system that allows programmatic access to public domain d
 
 1. Change into the API directory.
    ```bash
-   cd openverse-api/
+   cd openverse_api/
    ```
 
 2. Setup environment if you haven't already.
@@ -41,7 +41,7 @@ The Openverse API is a system that allows programmatic access to public domain d
 
 2. Change into the API directory.
    ```bash
-   cd openverse-api/
+   cd openverse_api/
    ```
 
 3. Run the tests in a separate terminal instance. Pipenv will automatically read the necessary environment variables from `.env`.

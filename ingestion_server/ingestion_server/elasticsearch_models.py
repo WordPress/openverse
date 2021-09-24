@@ -216,7 +216,7 @@ class Image(Media):
     class AspectRatios(Enum):
         """
         These aspect ratios are also hardcoded in the `aspect_ratio` field in
-        openverse-api/catalog/api/serializers/image_serializers.py.
+        openverse_api/catalog/api/serializers/image_serializers.py.
         """
 
         TALL = auto()
@@ -228,7 +228,7 @@ class Image(Media):
         Maximum threshold for each image size band
 
         These sizes are also hardcoded in the `aspect_ratio` field in
-        openverse-api/catalog/api/serializers/image_serializers.py.
+        openverse_api/catalog/api/serializers/image_serializers.py.
         """
 
         SMALL = 640 * 480
@@ -300,7 +300,7 @@ class Audio(Media):
         Maximum threshold for each audio duration band
 
         These durations are also hardcoded in the `duration` field in
-        openverse-api/catalog/api/serializers/audio_serializers.py.
+        openverse_api/catalog/api/serializers/audio_serializers.py.
         """
 
         SHORT = 4 * 60 * 1e3  # under 4 minutes

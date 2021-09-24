@@ -5,14 +5,14 @@ DOCKER_FILE := "-f docker-compose.yml"
 
 install:
     #! /usr/bin/env sh
-    cd openverse-api
+    cd openverse_api
     pipenv install --dev
     pipenv run pre-commit install
 
 
 lint:
     #! /usr/bin/env sh
-    cd openverse-api
+    cd openverse_api
     pipenv run pre-commit run --all-files
 
 
@@ -44,7 +44,7 @@ test: up
 
 testlocal:
     #! /usr/bin/env sh
-    cd openverse-api
+    cd openverse_api
     pipenv run bash ./test/run_test.sh
 
 

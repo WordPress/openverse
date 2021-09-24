@@ -81,8 +81,8 @@ The command `just up` spawns the following services:
 - [Elasticsearch](https://www.elastic.co/elasticsearch/)
 - [Redis](https://redis.io/)
 - [imageproxy](https://github.com/willnorris/imageproxy)
-- **web** (`openverse-api/`)
-- **ingestion-server** (`ingestion-server/`)
+- **web** (`openverse_api/`)
+- **ingestion-server** (`ingestion_server/`)
 - **analytics** (`analytics/`)
 
 The last three are subproject of this monorepo, described below.
@@ -99,9 +99,9 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 
 ### Description of subprojects
 
-- **openverse-api**: a Django Rest Framework API server
+- **openverse_api**: a Django Rest Framework API server
   For a full description of its capabilities, please see the [browsable documentation](https://api.openverse.engineering).
-- **ingestion-server**: a service for downloading and indexing search data once it has been prepared by the Openverse Catalog
+- **ingestion_server**: a service for downloading and indexing search data once it has been prepared by the Openverse Catalog
 - **analytics**: a Falcon REST API for collecting usage data
 
 ## Troubleshooting

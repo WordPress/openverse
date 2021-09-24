@@ -12,7 +12,7 @@ Please consult the [README](./README.md) and [CODEBASE](./CODEBASE.md) files at 
 
 ### Bugs
 
-If you find a bug, please open an issue in this repository describing the bug. You can file a bug [here](https://github.com/wordpress/openverse-api/issues/new?template=bug_report.md). You will see a bug report template with the required information you should provide.
+If you find a bug, please open an issue in this repository describing the bug. You can file a bug [here](https://github.com/WordPress/openverse-api/issues/new?template=bug_report.md). You will see a bug report template with the required information you should provide.
 
 After that, don't forget to tag the issue with the "Bug" label.
 
@@ -34,10 +34,10 @@ Any code modifications will have to be accompanied by the appropriate unit tests
 
 You can check the health of a live deployment of the API by running the live integration tests.
 
-1. Change directory to `openverse-api`
+1. Change directory to `openverse_api`
 
 ```
-cd openverse-api
+cd openverse_api
 ```
 
 1. Install all dependencies for Openverse API
