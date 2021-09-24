@@ -21,7 +21,7 @@ describe('ImageAttribution', () => {
         creator: 'John',
         creator_url: 'http://creator.com',
       },
-      openverseLicenseUrl: 'http://license.com',
+      licenseUrl: 'http://license.com',
       fullLicenseName: 'LICENSE',
       attributionHtml: '<div>attribution</div>',
     }

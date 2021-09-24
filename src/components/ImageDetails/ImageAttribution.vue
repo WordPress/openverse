@@ -3,12 +3,12 @@
     <MediaLicense
       :full-license-name="fullLicenseName"
       :license="image.license"
-      :license-url="licenseUrl"
+      :license-url="licenseUrlRichText"
     />
     <CopyLicense
       :media="image"
       :full-license-name="fullLicenseName"
-      :license-url="licenseUrl"
+      :license-url="licenseUrlRichText"
       :attribution-html="attributionHtml"
       class="my-6"
     />
@@ -21,13 +21,13 @@ export default {
   props: {
     id: {},
     image: {},
-    openverseLicenseUrl: String,
+    licenseUrl: String,
     fullLicenseName: String,
     attributionHtml: String,
   },
   computed: {
-    licenseUrl() {
-      return `${this.openverseLicenseUrl}&atype=rich`
+    licenseUrlRichText() {
+      return `${this.licenseUrl}&atype=rich`
     },
   },
 }

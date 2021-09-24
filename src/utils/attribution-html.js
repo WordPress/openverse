@@ -1,4 +1,4 @@
-function attributionHtml(image, openverseLicenseUrl, fullLicenseName) {
+function attributionHtml(image, licenseUrl, fullLicenseName) {
   if (!image) {
     return ''
   }
@@ -14,7 +14,7 @@ function attributionHtml(image, openverseLicenseUrl, fullLicenseName) {
   } else if (image.creator && !image.creator_url) {
     creator = `<span> by <span>${image.creator}</span></span>`
   }
-  const licenseLink = ` is licensed under <a href="${openverseLicenseUrl}" style="margin-right: 5px;">${fullLicenseName.toUpperCase()}</a>`
+  const licenseLink = ` is licensed under <a href="${licenseUrl}" style="margin-right: 5px;">${fullLicenseName.toUpperCase()}</a>`
 
   let licenseIcons = `<img style="height: inherit;margin-right: 3px;display: inline-block;" src="${baseAssetsPath}/cc_icon.svg?image_id=${image.id}" />`
   if (image.license) {
@@ -27,7 +27,7 @@ function attributionHtml(image, openverseLicenseUrl, fullLicenseName) {
       .join('')
   }
 
-  const licenseImgLink = `<a href="${openverseLicenseUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block;white-space: none;margin-top: 2px;margin-left: 3px;height: 22px !important;">${licenseIcons}</a>`
+  const licenseImgLink = `<a href="${licenseUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block;white-space: none;margin-top: 2px;margin-left: 3px;height: 22px !important;">${licenseIcons}</a>`
   return `<p style="font-size: 0.9rem;font-style: italic;">${imageTag}${imgLink}${creator}${licenseLink}${licenseImgLink}</p>`
 }
 

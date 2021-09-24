@@ -126,7 +126,7 @@
           <ImageAttribution
             data-testid="image-attribution"
             :image="image"
-            :openverse-license-url="openverseLicenseUrl"
+            :license-url="licenseUrl"
             :full-license-name="fullLicenseName"
             :attribution-html="attributionHtml()"
           />
@@ -141,7 +141,7 @@
           <ImageInfo
             data-testid="image-info"
             :image="image"
-            :openverse-license-url="openverseLicenseUrl"
+            :license-url="licenseUrl"
             :full-license-name="fullLicenseName"
             :image-width="imageWidth"
             :image-height="imageHeight"
@@ -235,7 +235,7 @@ export default {
         ? getFullLicenseName(this.image.license, this.image.license_version)
         : ''
     },
-    openverseLicenseUrl() {
+    licenseUrl() {
       return `${this.image.license_url}?ref=openverse`
     },
   },
