@@ -69,7 +69,7 @@ workflows run `provider_api_scripts` to load and extract media data from the API
 Some API ingestion workflows are scheduled to run on the 15th day of each
 month at 16:00 UTC. These workflows are reserved for long-running jobs or
 APIs that do not have date filtering capabilities, so the data is reprocessed
-monthly to keep the catalog updated. These provider scripts are run monthly:
+monthly to keep the catalog updated. The following provider scripts are run monthly:
 
 - [Brooklyn Museum](openverse_catalog/dags/provider_api_scripts/brooklyn_museum.py)
 - [Cleveland Museum of Art](openverse_catalog/dags/provider_api_scripts/cleveland_museum_of_art.py)
