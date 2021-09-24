@@ -1,6 +1,6 @@
 # Introduction
 
-The Openverse API ('openverse-api') is a system that allows programmatic access
+The Openverse API ('openverse_api') is a system that allows programmatic access
 to public domain digital media. It is our ambition to index and catalog billions
 of openly-licensed works, including articles, songs, videos, photographs,
 paintings, and more. Using this API, developers will be able to access the
@@ -111,6 +111,6 @@ todo list to get started.
   [link](https://github.com/wordpress/openverse-api#running-the-server-locally)
 - Update documentation or codebase
 - Make sure the updates passed the automated tests in this
-  [file](https://github.com/wordpress/openverse-api/blob/master/.github/workflows/integration-tests.yml)
+  [file](https://github.com/WordPress/openverse-api/blob/master/.github/workflows/integration-tests.yml)
 - Commit and push
 - Create pull request

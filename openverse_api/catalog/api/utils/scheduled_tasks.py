@@ -14,7 +14,7 @@ server.
 
 Even though there may be multiple instances of the server running, a job is
 guaranteed to execute only once. Jobs are not run unless it can acquire a lock
-inside of the cache (shared by all instances of openverse-api).
+inside of the cache (shared by all instances of openverse_api).
 """
 model_name_to_instance = {"Image": Image}
 

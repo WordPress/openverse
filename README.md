@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Openverse API (`openverse-api`) is a system that allows programmatic access to public domain digital media. It is our ambition to index and catalog [billions of openly-licensed works](https://stateof.creativecommons.org/), including articles, songs, videos, photographs, paintings, and more. Using this API, developers will be able to access the digital commons in their own applications.
+The Openverse API (`openverse_api`) is a system that allows programmatic access to public domain digital media. It is our ambition to index and catalog [billions of openly-licensed works](https://stateof.creativecommons.org/), including articles, songs, videos, photographs, paintings, and more. Using this API, developers will be able to access the digital commons in their own applications.
 
 This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [Openverse Catalog repository](https://github.com/WordPress/openverse-catalog). A front end web application that interfaces with the API can be found at the [Openverse frontend repository](https://github.com/WordPress/openverse-frontend).
 
@@ -26,7 +26,7 @@ You need to install [Docker](https://docs.docker.com/install/) (with [Docker Com
 git clone https://github.com/WordPress/openverse-api.git
 ```
 
-4. Change directories with `cd openverse-api`
+4. Change directories with `cd openverse_api`
 5. Start Openverse API locally by running the docker containers. You can use usual `docker-compose` commands or the simplified `just` command. You will need the [just](https://github.com/casey/just#installation) command runner installed to follow the next steps.
 
 ```
@@ -38,7 +38,7 @@ just up
 7. Open up your browser and type `localhost:8000` in the search tab
 8. Make sure you see the local API documentation
    ![Local API Documentation](local_api_documentation.PNG)
-9. Open a new CMD or terminal and change directory to `openverse-api`
+9. Open a new CMD or terminal and change directory to `openverse_api`
 10. Still in the new CMD or terminal, load the sample data. This script requires a local postgres installation to connect to and alter our database.
 
 ```
@@ -106,7 +106,7 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 
 ### Description of subprojects
 
-- _openverse-api_ is a Django Rest Framework API server. For a full description of its capabilities, please see the [browsable documentation](https://api.openverse.engineering).
+- _openverse_api_ is a Django Rest Framework API server. For a full description of its capabilities, please see the [browsable documentation](https://api.openverse.engineering).
 - _ingestion-server_ is a service for downloading and indexing search data once it has been prepared by the Openverse Catalog
 - _analytics_ is a Falcon REST API for collecting usage data.
 

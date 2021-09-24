@@ -52,11 +52,11 @@ services:
         hard: 65536
 
   web:
-    build: openverse-api/
+    build: openverse_api/
     image: openverse_api
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./openverse-api:/openverse-api
+      - ./openverse_api:/openverse_api
     ports:
       - "8000:8000"
       - "4444:4444"
