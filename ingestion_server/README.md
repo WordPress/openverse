@@ -1,20 +1,17 @@
-# Ingestion Server
+# Ingestion server
 
 ## Introduction
 
-Ingestion Server is a small private API for copying data from an upstream source and loading it into the Openverse API. This is a two step process:
+Ingestion Server is a small private API for copying data from an upstream source and loading it into the Openverse API. This is a two-step process:
 
 1. The data is copied from the upstream CC Catalog database and into the downstream API database.
 2. Data from the downstream API database gets indexed in Elasticsearch.
 
-For example, let's say that I want to download and index all new images.
-`http POST ingestion.private:8001/task <<<'{"model": "image", "action": "INGEST_UPSTREAM"}'`
-
 Performance is dependent on the size of the target Elasticsearch cluster, database throughput, and bandwidth available to the ingestion server. The primary bottleneck is indexing to Elasticsearch.
 
-## How Indexing Works
+## How indexing works
 
-![How indexing works](https://github.com/wordpress/openverse-api/blob/master/ingestion_server/howitworks.png)
+![How indexing works](../readme_assets/howitworks.png)
 
 ## Safety and security considerations
 
@@ -22,43 +19,45 @@ The server has been designed to fail gracefully in the event of network interrup
 
 The server is designed to be run in a private network only. You must not expose the private Ingestion Server API to the public internet.
 
+## Running on the host
+
+1. Change into the ingestion server directory.
+   ```bash
+   cd ingestion_server/
+   ```
+
+2. Setup environment if you haven't already.
+   ```bash
+   pipenv install
+   ```
+
+3. Start the Gunicorn server. Pipenv will automatically read the necessary environment variables from `.env`.
+   ```bash
+   pipenv run gunicorn
+   ```
+
 ## Running the tests
 
-This runs a simulated environment in Docker containers and ensures that ingestion is working properly.
+<!-- TODO -->
 
-```
-mkvirtualenv venv
-source venv/bin/activate
-python test/integration_tests.py
+#### Making requests
+
+To make cURL requests to the server
+```bash
+pipenv run \
+  curl \
+    --XPOST localhost:8001/task \
+    -H "Content-Type: application/json" \
+    -d '{"model": <model>, "action": <action>}'
 ```
 
-Set `ENABLE_DETAILED_LOGS` to `True` if more information is needed about the failing test.
+Replace `<model>` and `<action>` with the correct values. For example, to
+download and index all new images, `<model>` will be `"image"` and `<action>`
+will be `"INGEST_UPSTREAM"`.
 
 ## Configuration
 
-All configuration is performed through environment variables.
-
-#### Required
-
-- **COPY_TABLES**: A comma-separated list of database tables that should be replicated to Elasticsearch. **Example**: image,text
-
-- ELASTICSEARCH_URL
-- ELASTICSEARCH_PORT
-- DATABASE_HOST
-- DATABASE_USER
-- DATABASE_PASSWORD
-- DATABASE_NAME
-- DATABASE_PORT
-
-#### Optional
-
-- **DB_BUFFER_SIZE**: The number of rows to load from the database at once while replicating. **Default**: 100000
-
-To access a cluster on AWS, define these additional environment variables.
-
-- AWS_ACCESS_KEY_ID
-- AWS_SECRET_ACCESS_KEY
-- AWS_REGION
+All configuration is performed through environment variables. See the `.env.docker` file for a comprehensive list of all environment variables. The ones with sane defaults have been commented out.
 
 ## Mapping database tables to Elasticsearch
 
@@ -70,7 +69,7 @@ In order to synchronize a given table to Elasticsearch, the following requiremen
 
 Example from `es_syncer/elasticsearch_models.py`:
 
-```
+```python
 class Image(SyncableDocType):
     title = Text(analyzer="english")
     identifier = Text(index="not_analyzed")
@@ -117,7 +116,7 @@ database_table_to_elasticsearch_model = {
 }
 ```
 
-# Deployment (last deployed version: 1.20.0)
+## Deployment (last deployed version: 1.20.0)
 
 This codebase is deployed as Docker image to Docker hub. The deployed image is then pulled in the production environment. See the [`./publish_release.sh`](publish_release.sh) script for deploying to Docker hub. The machine running the script must be logged into Docker as the Openverse account.
 
