@@ -31,8 +31,11 @@ const replaceVarsPlaceholders = (string) => {
   if (!containsCurlyWord(string)) {
     return string
   }
+  let result = ''
   const variable = /{(?<variable>[a-zA-Z-]*)}/g
-  return string.replace(variable, `###$<variable>###`).toUpperCase()
+  result = string.replace(variable, (match) => match.toUpperCase())
+  result = result.replace(variable, `###$<variable>###`)
+  return result
 }
 
 /**

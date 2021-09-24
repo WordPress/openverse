@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-09-23T23:56:40+00:00\n"
+"POT-Creation-Date: 2021-09-24T00:04:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -40,7 +40,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "ALL OUR CONTENT IS UNDER CREATIVE COMMONS LICENSES OR IN THE PUBLIC DOMAIN. ###LINK### ABOUT CC LICENSES AND TOOLS."
+msgid "All our content is under Creative Commons licenses or in the public domain. ###LINK### about CC licenses and tools."
 msgstr ""
 
 #: src/components/HeroSection.vue:44
@@ -179,7 +179,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HomeLicenseFilter.vue:4
 msgctxt "hero.license-filter.label"
-msgid "EXCEPT WHERE OTHERWISE ###NOTED###, CONTENT ON THIS SITE IS LICENSED UNDER A ###ATTRIBUTION###. ###ICONS###"
+msgid "Except where otherwise ###NOTED###, content on this site is licensed under a ###ATTRIBUTION###. ###ICONS###"
 msgstr ""
 
 #: src/components/FooterSection.vue:23
@@ -228,7 +228,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "OPENVERSE SEARCHES ACROSS MORE THAN 300 MILLION IMAGES FROM OPEN APIS AND THE ###COMMON-CRAWL### DATASET. IT GOES BEYOND SIMPLE SEARCH TO AGGREGATE RESULTS ACROSS MULTIPLE PUBLIC REPOSITORIES INTO A SINGLE CATALOG, AND FACILITATES REUSE THROUGH FEATURES LIKE MACHINE-GENERATED TAGS AND ONE-CLICK ATTRIBUTION."
+msgid "Openverse searches across more than 300 million images from open APIs and the ###COMMON-CRAWL### dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution."
 msgstr ""
 
 #: src/pages/about.vue:16
@@ -239,7 +239,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "CURRENTLY OPENVERSE ONLY SEARCHES IMAGES, WITH SEARCH FOR AUDIO AND VIDEO PROVIDED THROUGH ###META###. BUT WE PLAN TO ADD ADDITIONAL MEDIA TYPES SUCH AS OPEN TEXTS AND AUDIO, WITH THE ULTIMATE GOAL OF PROVIDING ACCESS TO ALL 1.4 BILLION CC LICENSED AND PUBLIC DOMAIN WORKS ON THE WEB. ALL OF OUR CODE IS OPEN SOURCE (###SEARCH###, ###API###, ###CATALOG###) AND WE ###COMMUNITY###. YOU CAN SEE WHAT ###WORKING###."
+msgid "Currently Openverse only searches images, with search for audio and video provided through ###META###. But we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. All of our code is open source (###SEARCH###, ###API###, ###CATALOG###) and we ###COMMUNITY###. You can see what ###WORKING###."
 msgstr ""
 
 #: src/pages/about.vue:26
@@ -274,7 +274,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "OPENVERSE IS THE SUCCESSOR TO CC SEARCH WHICH WAS LAUNCHED BY CREATIVE COMMONS IN 2019, AFTER ITS MIGRATION TO WORDPRESS IN 2021. YOU CAN READ MORE ABOUT THIS TRANSITION IN THE OFFICIAL ANNOUNCEMENTS FROM ###CREATIVE-COMMONS### AND ###WORDPRESS###. WE REMAIN COMMITTED TO OUR GOAL OF TACKLING DISCOVERABILITY AND ACCESSIBILITY OF OPEN ACCESS MEDIA."
+msgid "Openverse is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from ###CREATIVE-COMMONS### and ###WORDPRESS###. We remain committed to our goal of tackling discoverability and accessibility of open access media."
 msgstr ""
 
 #: src/pages/about.vue:71
@@ -290,7 +290,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "PLEASE NOTE THAT OPENVERSE DOES NOT VERIFY WHETHER THE IMAGES ARE PROPERLY CC LICENSED, OR WHETHER THE ATTRIBUTION AND OTHER LICENSING INFORMATION WE HAVE AGGREGATED IS ACCURATE OR COMPLETE. PLEASE INDEPENDENTLY VERIFY THE LICENSING STATUS AND ATTRIBUTION INFORMATION BEFORE REUSING THE CONTENT. FOR MORE DETAILS, READ THE ###TERMS###."
+msgid "Please note that Openverse does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the ###TERMS###."
 msgstr ""
 
 msgctxt "footer.navigation.terms"
@@ -358,7 +358,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/sources.vue:77
 msgctxt "sources.detail"
-msgid "CLICKING ON A ###SINGLE-NAME### ALLOWS YOU TO BROWSE AND FILTER ITEMS WITHIN THAT SOURCE."
+msgid "Clicking on a ###SINGLE-NAME### allows you to browse and filter items within that source."
 msgstr ""
 
 #: src/pages/sources.vue:80
@@ -394,13 +394,13 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/sources.vue:15
 msgctxt "sources.cc-content.provider"
-msgid "SOME PROVIDERS HAVE MULTIPLE DIFFERENT GROUPINGS OF CONTENT WITHIN THEM. ###FLICKR### HAS SOURCES RANGING FROM NASA TO PERSONAL PHOTOGRAPHY. THE ###SMITHSONIAN### COMPRISES A DOZEN, DIVERSE COLLECTIONS. WIKIMEDIA COMMONS RUNS THE GAMUT IN TERMS OF CONTENT, AND IS USED BY SEVERAL GALLERIES, LIBRARIES, ARCHIVES, AND MUSEUMS HIGHLIGHTING SOME OR ALL OF THEIR DIGITIZED COLLECTIONS."
+msgid "Some providers have multiple different groupings of content within them. ###FLICKR### has sources ranging from NASA to personal photography. The ###SMITHSONIAN### comprises a dozen, diverse collections. Wikimedia Commons runs the gamut in terms of content, and is used by several Galleries, Libraries, Archives, and Museums highlighting some or all of their digitized collections."
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/sources.vue:27
 msgctxt "sources.cc-content.europeana"
-msgid "OPENVERSE IS ESPECIALLY GRATEFUL FOR THE WORK OF ###LINK###, AN ORGANIZATION THAT WORKS TO DIGITIZE AND MAKE DISCOVERABLE CULTURAL HERITAGE WORKS ACROSS EUROPE. OPENVERSE IS ABLE TO INDEX HUNDREDS OF VALUABLE SOURCES, THROUGH A SINGLE INTEGRATION WITH THE ###LINK-API###."
+msgid "Openverse is especially grateful for the work of ###LINK###, an organization that works to digitize and make discoverable cultural heritage works across Europe. Openverse is able to index hundreds of valuable sources, through a single integration with the ###LINK-API###."
 msgstr ""
 
 #: src/pages/sources.vue:30
@@ -466,7 +466,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/meta-search.vue:10
 msgctxt "meta-search-page.intro"
-msgid "OPENVERSE IS BUILT ON TOP OF A CATALOG THAT INDEXES CC-LICENSED AND PUBLIC DOMAIN CONTENT FROM SELECTED SOURCES. LEARN MORE ABOUT OUR ###LINK###."
+msgid "Openverse is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our ###LINK###."
 msgstr ""
 
 #: src/components/HeroSection.vue:44
@@ -517,7 +517,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/meta-search.vue:36
 msgctxt "meta-search-page.images.info"
-msgid "WHEN YOU CLICK ON “NOT FINDING WHAT YOU NEED?” A MODAL WILL LOAD WITH OTHER SOURCES OF CC-LICENSED AND PUBLIC DOMAIN CONTENT. YOUR SEARCH QUERY WILL BE PRELOADED, AND IF SUPPORTED, YOU CAN SELECT A ###USE### FILTER TO PROACTIVELY FILTER YOUR RESULTS. CLICK ON THE BUTTON FOR THE EXTERNAL SOURCE YOU’D LIKE TO SEARCH, AND YOUR RESULTS WILL OPEN IN A NEW TAB."
+msgid "When you click on “Not finding what you need?” a modal will load with other sources of CC-licensed and public domain content. Your search query will be preloaded, and if supported, you can select a ###USE### filter to proactively filter your results. Click on the button for the external source you’d like to search, and your results will open in a new tab."
 msgstr ""
 
 #: src/components/HeroSection.vue:6
@@ -533,7 +533,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/meta-search.vue:51
 msgctxt "meta-search-page.audio-video.filter"
-msgid "THE FILTERS BAR ON THE LEFT INCLUDES THE ###USE### FILTER, WHICH MAY BE SUPPORTED BY SOME META SEARCH SOURCES. APPLY THESE BEFORE CLICKING ON THE BUTTON FOR THE EXTERNAL SOURCE YOU’D LIKE TO SEARCH."
+msgid "The Filters bar on the left includes the ###USE### filter, which may be supported by some meta search sources. Apply these before clicking on the button for the external source you’d like to search."
 msgstr ""
 
 #: src/components/HeroSection.vue:6
@@ -544,7 +544,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "YES, PLEASE! CREATE AN ###ISSUE### IN OUR GITHUB REPOSITORY OR SEND US AN ###EMAIL### AND TELL US ABOUT THE NEW SOURCES YOU’D LIKE TO SEE INCLUDED."
+msgid "Yes, please! Create an ###ISSUE### in our GitHub repository or send us an ###EMAIL### and tell us about the new sources you’d like to see included."
 msgstr ""
 
 #: src/pages/meta-search.vue:70
@@ -579,7 +579,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/meta-search.vue:94
 msgctxt "meta-search-page.why.feedback-suggestions"
-msgid "WE HOPE YOU ENJOY, AND IF YOU HAVE SUGGESTIONS FOR IMPROVEMENT, LEAVE US ###FEEDBACK###."
+msgid "We hope you enjoy, and if you have suggestions for improvement, leave us ###FEEDBACK###."
 msgstr ""
 
 #: src/pages/meta-search.vue:99
@@ -615,7 +615,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "PUT A WORD OR PHRASE INSIDE QUOTES. FOR EXAMPLE, ###LINK###."
+msgid "Put a word or phrase inside quotes. For example, ###LINK###."
 msgstr ""
 
 #: src/components/HeroSection.vue:6
@@ -630,37 +630,37 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/search-help.vue:37
 msgctxt "search-guide.combine.and"
-msgid "###SYMBOL### SIGNIFIES AND OPERATION"
+msgid "###SYMBOL### signifies AND operation"
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/search-help.vue:46
 msgctxt "search-guide.combine.or"
-msgid "###SYMBOL### SIGNIFIES OR OPERATION"
+msgid "###SYMBOL### signifies OR operation"
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/search-help.vue:57
 msgctxt "search-guide.combine.negate"
-msgid "###SYMBOL### NEGATES A SINGLE TOKEN"
+msgid "###SYMBOL### negates a single token"
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/search-help.vue:66
 msgctxt "search-guide.combine.prefix"
-msgid "###SYMBOL### AT THE END OF A TERM SIGNIFIES A PREFIX QUERY"
+msgid "###SYMBOL### at the end of a term signifies a prefix query"
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/search-help.vue:75
 msgctxt "search-guide.combine.precedence"
-msgid "###OPEN### AND ###CLOSE### SIGNIFY PRECEDENCE"
+msgid "###OPEN### and ###CLOSE### signify precedence"
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/search-help.vue:95
 msgctxt "search-guide.combine.fuzziness"
-msgid "###SYMBOL### AFTER A WORD SIGNIFIES EDIT DISTANCE (FUZZINESS)"
+msgid "###SYMBOL### after a word signifies edit distance (fuzziness)"
 msgstr ""
 
 #: src/pages/search-help.vue:95
@@ -700,7 +700,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "about.description"
-msgid "EXAMPLE: ###LINK######BR### THIS WILL SEARCH FOR IMAGES RELATED TO BOTH DOG AND CAT."
+msgid "Example: ###LINK######BR### This will search for images related to both dog and cat."
 msgstr ""
 
 #: src/pages/meta-search.vue:97
@@ -714,7 +714,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "about.description"
-msgid "EXAMPLE: ###LINK######BR### THIS WILL SEARCH FOR IMAGES RELATED TO DOG OR CAT, BUT NOT NECESSARILY BOTH."
+msgid "Example: ###LINK######BR### This will search for images related to dog or cat, but not necessarily both."
 msgstr ""
 
 #: src/pages/meta-search.vue:97
@@ -728,7 +728,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "about.description"
-msgid "YOU CAN USE THE ###OPERATOR### TO EXCLUDE A SEARCH TERM FROM THE RESULTS."
+msgid "You can use the ###OPERATOR### to exclude a search term from the results."
 msgstr ""
 
 #: src/pages/search-help.vue:144
@@ -753,12 +753,12 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "EXAMPLE: ###LINK######BR### THIS WILL SEARCH FOR IMAGES RELATED TO DOG BUT WON'T INCLUDE RESULTS RELATED TO 'PUG'"
+msgid "Example: ###LINK######BR### This will search for images related to dog but won't include results related to 'pug'"
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "about.description"
-msgid "YOU CAN USE THE ###OPERATOR-NAME### TO MARK A PREFIX TERM. THIS WILL MATCH ANYTHING AFTER THE *."
+msgid "You can use the ###OPERATOR-NAME### to mark a prefix term. This will match anything after the *."
 msgstr ""
 
 #: src/pages/search-help.vue:144
@@ -783,12 +783,12 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "EXAMPLE: ###LINK######BR### THIS WILL SEARCH FOR IMAGES MATCHING ANYTHING WITH 'NET'. THIS MIGHT INCLUDE 'NETWORK', 'NETFLIX', 'NETHERLANDS', ETC.."
+msgid "Example: ###LINK######BR### This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc.."
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "about.description"
-msgid "YOU CAN USE PARENTHESES ###HIGHLIGHT### TO SPECIFY PRECEDENCE OF TERMS OR COMBINE MORE COMPLEX QUERIES."
+msgid "You can use parentheses ###HIGHLIGHT### to specify precedence of terms or combine more complex queries."
 msgstr ""
 
 #: src/pages/meta-search.vue:97
@@ -803,12 +803,12 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "EXAMPLE: ###LINK######BR### THIS WILL SEARCH FOR IMAGES THAT MATCH DOGS THAT ARE EITHER CORGIS OR LABRADOR."
+msgid "Example: ###LINK######BR### This will search for images that match dogs that are either corgis or labrador."
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "about.description"
-msgid "YOU CAN USE ###HIGHLIGHT### TO SPECIFY SOME FUZZY LOGIC TO THE TERM ACCORDING TO THE ###LINK### — THE NUMBER OF ONE CHARACTER CHANGES THAT NEED TO BE MADE TO ONE STRING TO MAKE IT THE SAME AS ANOTHER STRING."
+msgid "You can use ###HIGHLIGHT### to specify some fuzzy logic to the term according to the ###LINK### — the number of one character changes that need to be made to one string to make it the same as another string."
 msgstr ""
 
 #: src/pages/search-help.vue:227
@@ -828,7 +828,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "EXAMPLE: ###LINK######BR### THIS WILL SEARCH FOR IMAGES THAT MATCH STRINGS CLOSE TO THE TERM 'THEATRE' WITH A DIFFERENCE OF ONE CHARACTER. RESULTS MIGHT INCLUDE TERMS WITH DIFFERENT SPELLINGS LIKE 'THEATER'."
+msgid "Example: ###LINK######BR### This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'."
 msgstr ""
 
 #: src/components/HeroSection.vue:6
@@ -839,7 +839,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "THANK YOU FOR USING OPENVERSE! WE WELCOME YOUR IDEAS FOR IMPROVING THE TOOL BELOW. TO PROVIDE REGULAR FEEDBACK, JOIN THE ###OPENVERSE### CHANNEL IN THE ###MAKING-WORDPRESS### SLACK WORKSPACE."
+msgid "Thank you for using Openverse! We welcome your ideas for improving the tool below. To provide regular feedback, join the ###OPENVERSE### channel in the ###MAKING-WORDPRESS### Slack workspace."
 msgstr ""
 
 #: src/pages/feedback.vue:14
@@ -934,7 +934,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "collections.collection-size"
-msgid "COLLECTION SIZE: ###COUNT### IMAGES"
+msgid "Collection size: ###COUNT### images"
 msgstr ""
 
 #: src/layouts/error.vue:5
@@ -950,13 +950,13 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/photos/_id.vue:103
 msgctxt "error.image-not-found"
-msgid "COULDN'T FIND IMAGE WITH ID ###ID###"
+msgid "Couldn't find image with id ###ID###"
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/audio/_id.vue:98
 msgctxt "error.media-not-found"
-msgid "COULDN'T FIND ###MEDIATYPE### WITH ID ###ID###"
+msgid "Couldn't find ###MEDIATYPE### with id ###ID###"
 msgstr ""
 
 msgctxt "error.image"
@@ -996,7 +996,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/Filters/FilterTag.vue:4
 msgctxt "filters.filter-tag-aria"
-msgid "###FILTERLABEL### FILTER"
+msgid "###FILTERLABEL### filter"
 msgstr ""
 
 #: src/components/HeroSection.vue:6
@@ -1208,13 +1208,13 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/Filters/LicenseExplanationTooltip.vue:8
 msgctxt "filters.license-explanation.tool"
-msgid "READ MORE ABOUT THE TOOL ###LINK###"
+msgid "Read more about the tool ###LINK###"
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/meta-search.vue:17
 msgctxt "meta-search-page.license"
-msgid "READ MORE ABOUT THE LICENSE ###LINK###"
+msgid "Read more about the license ###LINK###"
 msgstr ""
 
 #: src/components/HeroSection.vue:44
@@ -1245,7 +1245,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/Filters/FilterChecklist.vue:16
 msgctxt "filter-list.category-aria"
-msgid "FILTERS LIST FOR ###CATEGORYNAME### CATEGORY"
+msgid "filters list for ###CATEGORYNAME### category"
 msgstr ""
 
 msgctxt "browse-page.all-no-results"
@@ -1264,54 +1264,54 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "browse-page.all-result-count"
-msgid "###LOCALECOUNT### RESULT"
-msgid_plural "###LOCALECOUNT### RESULTS"
+msgid "###LOCALECOUNT### result"
+msgid_plural "###LOCALECOUNT### results"
 msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
 #: src/components/AudioResultsList.vue:87
 msgctxt "browse-page.audio-result-count"
-msgid "###LOCALECOUNT### AUDIO RESULT"
-msgid_plural "###LOCALECOUNT### AUDIO RESULTS"
+msgid "###LOCALECOUNT### audio result"
+msgid_plural "###LOCALECOUNT### audio results"
 msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
 #: src/components/SearchGridManualLoad.vue:131
 msgctxt "browse-page.image-result-count"
-msgid "###LOCALECOUNT### IMAGE RESULT"
-msgid_plural "###LOCALECOUNT### IMAGE RESULTS"
+msgid "###LOCALECOUNT### image result"
+msgid_plural "###LOCALECOUNT### image results"
 msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "browse-page.all-result-count-more"
-msgid "OVER ###LOCALECOUNT### RESULTS"
-msgid_plural "OVER ###LOCALECOUNT### RESULTS"
+msgid "Over ###LOCALECOUNT### results"
+msgid_plural "Over ###LOCALECOUNT### results"
 msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
 #: src/components/AudioResultsList.vue:84
 msgctxt "browse-page.audio-result-count-more"
-msgid "OVER ###LOCALECOUNT### AUDIO RESULTS"
-msgid_plural "OVER ###LOCALECOUNT### AUDIO RESULTS"
+msgid "Over ###LOCALECOUNT### audio results"
+msgid_plural "Over ###LOCALECOUNT### audio results"
 msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
 #: src/components/SearchGridManualLoad.vue:128
 msgctxt "browse-page.image-result-count-more"
-msgid "OVER ###LOCALECOUNT### IMAGE RESULTS"
-msgid_plural "OVER ###LOCALECOUNT### IMAGE RESULTS"
+msgid "Over ###LOCALECOUNT### image results"
+msgid_plural "Over ###LOCALECOUNT### image results"
 msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
 #: src/components/AudioResultsList.vue:25
 msgctxt "browse-page.no-more"
-msgid "NO MORE ###TYPE### :("
+msgid "No more ###TYPE### :("
 msgstr ""
 
 #: src/components/AudioResultsList.vue:29
@@ -1322,7 +1322,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/AudioResultsList.vue:36
 msgctxt "browse-page.fetching-error"
-msgid "ERROR FETCHING ###TYPE###:"
+msgid "Error fetching ###TYPE###:"
 msgstr ""
 
 msgctxt "browse-page.other-source"
@@ -1352,7 +1352,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:28
 msgctxt "hero.search.placeholder"
-msgid "SEARCH ALL ###TYPE###"
+msgid "Search all ###TYPE###"
 msgstr ""
 
 msgctxt "error.image"
@@ -1483,7 +1483,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "READ MORE ABOUT THE LICENSE ###LINK###"
+msgid "Read more about the license ###LINK###"
 msgstr ""
 
 #: src/components/HeroSection.vue:44
@@ -1494,7 +1494,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "READ MORE ABOUT THE TOOL ###LINK###"
+msgid "Read more about the tool ###LINK###"
 msgstr ""
 
 #: src/components/HeroSection.vue:44
@@ -1510,7 +1510,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/MediaInfo/CopyLicense.vue:49
 msgctxt "media-details.reuse.credit.creator-text"
-msgid " BY ###CREATOR-NAME###"
+msgid " by ###CREATOR-NAME###"
 msgstr ""
 
 #: src/components/MediaInfo/CopyLicense.vue:71
@@ -1526,7 +1526,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/MediaInfo/CopyLicense.vue:150
 msgctxt "media-details.reuse.credit.view-legal-text"
-msgid ". TO VIEW ###TERMS-COPY###VISIT ###URL###"
+msgid ". To view ###TERMS-COPY###visit ###URL###"
 msgstr ""
 
 #: src/components/MediaInfo/CopyLicense.vue:154
@@ -1559,7 +1559,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/MediaInfo/MediaLicense.vue:7
 msgctxt "media-details.reuse.attribution.main"
-msgid "THIS IMAGE WAS MARKED WITH A ###LINK### LICENSE."
+msgid "This image was marked with a ###LINK### license."
 msgstr ""
 
 #: src/pages/meta-search.vue:17
@@ -1587,7 +1587,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "filters.creator"
-msgid "BY ###NAME###"
+msgid "by ###NAME###"
 msgstr ""
 
 #: src/components/HeroSection.vue:6
@@ -1729,13 +1729,13 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "YOU MUST FILL OUT THIS ###LINK### TO REPORT COPYRIGHT INFRINGEMENT. NO ACTION WILL BE TAKEN UNTIL THE FORM IS FILLED OUT AND SUBMITTED."
+msgid "You must fill out this ###LINK### to report copyright infringement. No action will be taken until the form is filled out and submitted."
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/sources.vue:15
 msgctxt "sources.cc-content.provider"
-msgid "WE RECOMMEND DOING THE SAME AT THE SOURCE, ###LINK###."
+msgid "We recommend doing the same at the source, ###LINK###."
 msgstr ""
 
 #: src/components/ContentReport/DoneMessage.vue:4
@@ -1755,7 +1755,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "photo-details.content-report.dmca.aria-form"
-msgid "###PROVIDER### FORM"
+msgid "###PROVIDER### form"
 msgstr ""
 
 #: src/components/ContentReport/ContentReportForm.vue:4
@@ -1810,13 +1810,13 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/ContentReport/DmcaNotice.vue:27
 msgctxt "photo-details.aria.provider-report-form"
-msgid "###PROVIDER### FORM"
+msgid "###PROVIDER### form"
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/components/ImageDetails/PhotoDetails.vue:69
 msgctxt "photo-details.aria.creator-url"
-msgid "AUTHOR ###CREATOR###"
+msgid "author ###CREATOR###"
 msgstr ""
 
 msgctxt "audio-details.genre-label"
@@ -1873,7 +1873,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "hero.caption"
-msgid "CLICK ON A SOURCE BELOW TO DIRECTLY SEARCH OTHER COLLECTIONS OF CC-LICENSED IMAGES.###BREAK###PLEASE NOTE THAT USE FILTERS ARE NOT SUPPORTED FOR OPEN CLIP ART LIBRARY OR NAPPY."
+msgid "Click on a source below to directly search other collections of CC-licensed images.###BREAK###Please note that Use filters are not supported for Open Clip Art Library or Nappy."
 msgstr ""
 
 #: src/components/HeroSection.vue:6
@@ -1891,17 +1891,17 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "meta-search.form.unsupported-title"
-msgid "OPENVERSE DOES NOT YET SUPPORT BUILT-IN ###TYPE### SEARCH."
+msgid "Openverse does not yet support built-in ###TYPE### search."
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "meta-search.form.supported-title"
-msgid "NOT FINDING WHAT YOU'RE LOOKING FOR? TRY ADDITIONAL ###TYPE### SOURCES."
+msgid "Not finding what you're looking for? Try additional ###TYPE### sources."
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "hero.caption"
-msgid "CLICK ON A SOURCE BELOW TO DIRECTLY SEARCH OTHER COLLECTIONS OF CC-LICENSED ###TYPE###.###BREAK###PLEASE NOTE THAT USE FILTERS ARE NOT SUPPORTED FOR ###FILTER###."
+msgid "Click on a source below to directly search other collections of CC-licensed ###TYPE###.###BREAK###Please note that Use filters are not supported for ###FILTER###."
 msgstr ""
 
 msgctxt "browsers.chrome"
@@ -1928,13 +1928,13 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/AudioTrack/Waveform.vue:420
 msgctxt "waveform.current-time"
-msgid "###TIME### SECONDS"
+msgid "###TIME### seconds"
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/components/HeroSection.vue:6
 msgctxt "hero.title"
-msgid "###TITLE### BY ###CREATOR###"
+msgid "###TITLE### by ###CREATOR###"
 msgstr ""
 
 #: src/pages/meta-search.vue:97
@@ -1965,7 +1965,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "filters.creator"
-msgid "BY ###CREATOR###"
+msgid "by ###CREATOR###"
 msgstr ""
 
 msgctxt "play-pause.play"
@@ -2038,7 +2038,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/MigrationNotice.vue:4
 msgctxt "migration-notice.more"
-msgid "###READ-MORE### ABOUT THIS ANNOUNCEMENT."
+msgid "###READ-MORE### about this announcement."
 msgstr ""
 
 #: src/components/MigrationNotice.vue:10
