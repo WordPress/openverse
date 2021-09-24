@@ -51,4 +51,4 @@ jobs:
     - name: Run API tests
       run: cd openverse_api && test/run_test.sh
     - name: Run analytics tests
-      run: cd ./analytics && docker exec -i openverse_api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
+      run: cd ./analytics && docker exec -i openverse-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
