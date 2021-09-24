@@ -9,12 +9,11 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
-import os
 from pathlib import Path
 from socket import gethostbyname, gethostname
 
+from decouple import config
 
-TRUE_STRINGS = ["true", "t", "yes", "y", "1"]
 
 # Build paths inside the project like this: BASE_DIR.join('dir', 'subdir'...)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,10 +29,10 @@ MEDIA_URL = "/media/"
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]  # required
+SECRET_KEY = config("DJANGO_SECRET_KEY")  # required
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DJANGO_DEBUG_ENABLED", "True").lower() in TRUE_STRINGS
+DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
 
 ALLOWED_HOSTS = [
     "api-dev.openverse.engineering",
@@ -42,7 +41,7 @@ ALLOWED_HOSTS = [
     gethostbyname(gethostname()),
 ]
 
-if lb_url := os.getenv("LOAD_BALANCER_URL"):
+if lb_url := config("LOAD_BALANCER_URL", default=""):
     ALLOWED_HOSTS.append(lb_url)
 
 if DEBUG:
@@ -60,7 +59,7 @@ SHORT_URL_WHITELIST = {
 }
 SHORT_URL_PATH_WHITELIST = ["/v1/list", "/v1/images/"]
 
-USE_S3 = os.getenv("USE_S3", "False") in TRUE_STRINGS
+USE_S3 = config("USE_S3", default=False, cast=bool)
 
 # Application definition
 
@@ -82,7 +81,7 @@ INSTALLED_APPS = [
 
 if USE_S3:
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-    AWS_STORAGE_BUCKET_NAME = os.getenv("LOGOS_BUCKET", "openverse_api-logos-prod")
+    AWS_STORAGE_BUCKET_NAME = config("LOGOS_BUCKET", default="openverse_api-logos-prod")
     AWS_S3_SIGNATURE_VERSION = "s3v4"
     INSTALLED_APPS.append("storages")
 
@@ -138,13 +137,13 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "catalog.api.utils.exceptions.exception_handler",
 }
 
-if os.getenv("DISABLE_GLOBAL_THROTTLING", "True").lower() in TRUE_STRINGS:
+if config("DISABLE_GLOBAL_THROTTLING", default=True, cast=bool):
     del REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"]
     del REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"]
 
-REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
-REDIS_PORT = os.getenv("REDIS_PORT", "6379")
-REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
+REDIS_HOST = config("REDIS_HOST", default="localhost")
+REDIS_PORT = config("REDIS_PORT", default=6379, cast=int)
+REDIS_PASSWORD = config("REDIS_PASSWORD", default="")
 CACHES = {
     # Site cache writes to 'default'
     "default": {
@@ -174,7 +173,7 @@ CACHES = {
 }
 
 # Produce CC-hosted thumbnails dynamically through a proxy.
-THUMBNAIL_PROXY_URL = os.getenv("THUMBNAIL_PROXY_URL", "http://localhost:8222")
+THUMBNAIL_PROXY_URL = config("THUMBNAIL_PROXY_URL", default="http://localhost:8222")
 
 THUMBNAIL_WIDTH_PX = 600
 
@@ -209,19 +208,19 @@ WSGI_APPLICATION = "catalog.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.getenv("DJANGO_DATABASE_HOST", "localhost"),
-        "PORT": int(os.getenv("DJANGO_DATABASE_PORT", "5432")),
-        "USER": os.getenv("DJANGO_DATABASE_USER", "deploy"),
-        "PASSWORD": os.getenv("DJANGO_DATABASE_PASSWORD", "deploy"),
-        "NAME": os.getenv("DJANGO_DATABASE_NAME", "openledger"),
+        "HOST": config("DJANGO_DATABASE_HOST", default="localhost"),
+        "PORT": config("DJANGO_DATABASE_PORT", default=5432, cast=int),
+        "USER": config("DJANGO_DATABASE_USER", default="deploy"),
+        "PASSWORD": config("DJANGO_DATABASE_PASSWORD", default="deploy"),
+        "NAME": config("DJANGO_DATABASE_NAME", default="openledger"),
     },
     "upstream": {
         "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.getenv("UPSTREAM_DATABASE_HOST", "localhost"),
-        "PORT": int(os.getenv("UPSTREAM_DATABASE_PORT", "5433")),
-        "USER": os.getenv("UPSTREAM_DATABASE_USER", "deploy"),
-        "PASSWORD": os.getenv("UPSTREAM_DATABASE_PASSWORD", "deploy"),
-        "NAME": os.getenv("UPSTREAM_DATABASE_NAME", "upstream_db"),
+        "HOST": config("UPSTREAM_DATABASE_HOST", default="localhost"),
+        "PORT": config("UPSTREAM_DATABASE_PORT", default=5433, cast=int),
+        "USER": config("UPSTREAM_DATABASE_USER", default="deploy"),
+        "PASSWORD": config("UPSTREAM_DATABASE_PASSWORD", default="deploy"),
+        "NAME": config("UPSTREAM_DATABASE_NAME", default="openledger"),
     },
 }
 
@@ -289,22 +288,22 @@ STATIC_URL = "/static/"
 CORS_ORIGIN_ALLOW_ALL = True
 
 # The version of the API. We follow the semantic version specification.
-API_VERSION = os.getenv("SEMANTIC_VERSION", "Version not specified")
+API_VERSION = config("SEMANTIC_VERSION", default="Version not specified")
 
-WATERMARK_ENABLED = os.getenv("WATERMARK_ENABLED", "False").lower() in TRUE_STRINGS
+WATERMARK_ENABLED = config("WATERMARK_ENABLED", default=False, cast=bool)
 
-ELASTICSEARCH_URL = os.getenv("ELASTICSEARCH_URL", "localhost")
-ELASTICSEARCH_PORT = int(os.getenv("ELASTICSEARCH_PORT", "9200"))
-ELASTICSEARCH_AWS_REGION = os.getenv("ELASTICSEARCH_AWS_REGION", "us-east-1")
+ELASTICSEARCH_URL = config("ELASTICSEARCH_URL", default="localhost")
+ELASTICSEARCH_PORT = config("ELASTICSEARCH_PORT", default=9200, cast=int)
+ELASTICSEARCH_AWS_REGION = config("ELASTICSEARCH_AWS_REGION", default="us-east-1")
 
 # Additional settings for dev/prod environments
-AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", "")
-AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default="")
+AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", default="")
 
-EMAIL_HOST = os.getenv("EMAIL_HOST", "")
-EMAIL_PORT = os.getenv("EMAIL_PORT", 25)
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_HOST = config("EMAIL_HOST", default="")
+EMAIL_PORT = config("EMAIL_PORT", default=25, cast=int)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 EMAIL_SUBJECT_PREFIX = "[noreply]"
 EMAIL_USE_TLS = True
 
@@ -314,7 +313,7 @@ else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Log full Elasticsearch response
-VERBOSE_ES_RESPONSE = os.getenv("DEBUG_SCORES", "False").lower() in TRUE_STRINGS
+VERBOSE_ES_RESPONSE = config("DEBUG_SCORES", default=False, cast=bool)
 
 # Whether to boost results by authority and popularity
-USE_RANK_FEATURES = os.getenv("USE_RANK_FEATURES", "True").lower() in TRUE_STRINGS
+USE_RANK_FEATURES = config("USE_RANK_FEATURES", default=True, cast=bool)
