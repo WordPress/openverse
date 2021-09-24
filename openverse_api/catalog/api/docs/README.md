@@ -98,7 +98,7 @@ $ curl \
 # Contribute
 
 We love pull requests! If you’re interested in
-[contributing on Github](https://github.com/wordpress/openverse_api), here’s a
+[contributing on Github](https://github.com/wordpress/openverse-api), here’s a
 todo list to get started.
 
 - Read up about [Django REST Framework](https://www.django-rest-framework.org/),
