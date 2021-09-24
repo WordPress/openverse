@@ -818,7 +818,7 @@
             "designer": "Creative Commons",
             "designerURL": "https://opensource.creativecommons.org",
             "license": "MIT",
-            "licenseUrl": "https://opensource.org/licenses/MIT"
+            "licenseURL": "https://opensource.org/licenses/MIT"
           },
           "metrics": { "emSize": 1024, "baseline": 6.25, "whitespace": 50 },
           "embed": false,
