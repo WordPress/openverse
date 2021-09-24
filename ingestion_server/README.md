@@ -21,17 +21,22 @@ The server is designed to be run in a private network only. You must not expose 
 
 ## Running on the host
 
-1. Change into the ingestion server directory.
+1. Create environment variables from the stencil file.
+   ```bash
+   just env
+   ```
+
+2. Change into the ingestion server directory.
    ```bash
    cd ingestion_server/
    ```
 
-2. Setup environment if you haven't already.
+3. Setup environment if you haven't already.
    ```bash
    pipenv install
    ```
 
-3. Start the Gunicorn server. Pipenv will automatically read the necessary environment variables from `.env`.
+4. Start the Gunicorn server. Pipenv will automatically read the necessary environment variables from `.env`.
    ```bash
    pipenv run gunicorn
    ```

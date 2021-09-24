@@ -6,17 +6,22 @@ The Openverse API is a system that allows programmatic access to public domain d
 
 ## Running on the host
 
-1. Change into the API directory.
+1. Create environment variables from the stencil file.
+   ```bash
+   just env
+   ```
+
+2. Change into the API directory.
    ```bash
    cd openverse_api/
    ```
 
-2. Setup environment if you haven't already.
+3. Setup environment if you haven't already.
    ```bash
    pipenv install
    ```
 
-3. Start the Django dev server. Pipenv will automatically read the necessary environment variables from `.env`.
+4. Start the Django dev server. Pipenv will automatically read the necessary environment variables from `.env`.
    ```bash
    pipenv run python manage.py runserver
    ```
