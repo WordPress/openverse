@@ -41,6 +41,7 @@ python3-openid = "*"
 redlock-py = "*"
 requests-oauthlib = "*"
 wsgi-basic-auth = "*"
+python-decouple = "*"
 
 [requires]
 python_version = "3.9"
