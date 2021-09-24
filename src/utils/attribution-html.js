@@ -1,4 +1,4 @@
-function attributionHtml(image, ccLicenseUrl, fullLicenseName) {
+function attributionHtml(image, openverseLicenseUrl, fullLicenseName) {
   if (!image) {
     return ''
   }
