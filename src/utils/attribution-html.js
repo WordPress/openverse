@@ -27,7 +27,7 @@ function attributionHtml(image, openverseLicenseUrl, fullLicenseName) {
       .join('')
   }
 
-  const licenseImgLink = `<a href="${ccLicenseUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block;white-space: none;margin-top: 2px;margin-left: 3px;height: 22px !important;">${licenseIcons}</a>`
+  const licenseImgLink = `<a href="${openverseLicenseUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block;white-space: none;margin-top: 2px;margin-left: 3px;height: 22px !important;">${licenseIcons}</a>`
   return `<p style="font-size: 0.9rem;font-style: italic;">${imageTag}${imgLink}${creator}${licenseLink}${licenseImgLink}</p>`
 }
 
