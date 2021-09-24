@@ -21,7 +21,7 @@ export default {
   props: {
     id: {},
     image: {},
-    ccLicenseUrl: String,
+    openverseLicenseUrl: String,
     fullLicenseName: String,
     attributionHtml: String,
   },
