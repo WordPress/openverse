@@ -21,7 +21,7 @@ jobs:
       working-directory: ./openverse-api
       run: |
         pip install pre-commit
-        pre-commit run pre-commit run --all-files
+        pre-commit run --all-files
   Tests:
     timeout-minutes: 15
     runs-on: ubuntu-latest
