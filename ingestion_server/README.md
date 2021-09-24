@@ -57,7 +57,7 @@ will be `"INGEST_UPSTREAM"`.
 
 ## Configuration
 
-All configuration is performed through environment variables. See the `.env.docker` file for a comprehensive list of all environment variables. The ones with sane defaults have been commented out.
+All configuration is performed through environment variables. See the `.env.stencil` file for a comprehensive list of all environment variables. The ones with sane defaults have been commented out.
 
 ## Mapping database tables to Elasticsearch
 
