@@ -43,18 +43,20 @@ This repository is primarily concerned with back end infrastructure like datasto
    ```
 
    Piping the response through a pretty-printer like
-   [`jq`](https://stedolan.github.io/jq/) should yield an output like this.
+   [`jq`](https://stedolan.github.io/jq/) should yield an output like the
+   following.
+   ```bash
+   just healthcheck | jq '.[0]'
+   ```
+
    ```json
-   [
-       {
-           "source_name": "flickr",
-           "display_name": "Flickr",
-           "source_url": "https://www.flickr.com",
-           "logo_url": null,
-           "media_count": 1000
-       },
-       "..."
-   ]
+   {
+     "source_name":   "flickr",
+     "display_name": "Flickr",
+     "source_url": "https://www.flickr.com",
+     "logo_url": null,
+     "media_count": 1000
+   }
    ```
 
 7. When done, bring the system down. To remove all volumes as well, pass the `-v` flag.
