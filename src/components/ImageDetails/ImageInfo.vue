@@ -63,7 +63,7 @@ export default {
   },
   props: [
     'image',
-    'ccLicenseUrl',
+    'openverseLicenseUrl',
     'fullLicenseName',
     'imageWidth',
     'imageHeight',
