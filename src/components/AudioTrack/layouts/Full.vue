@@ -7,21 +7,24 @@
         <slot name="play-pause" />
 
         <div class="audio-info">
-          <i18n
-            tag="h1"
-            class="text-3xl font-heading font-semibold"
-            path="audio-track.title"
-          >
-            <template #title>{{ audio.title }}</template>
-            <template #creator>
-              <a class="text-pink hover:text-pink" :href="audio.creator_url">{{
-                audio.creator
-              }}</a>
-            </template>
-          </i18n>
-          <p class="text-base leading-snug mt-1">
+          <h1 class="text-3xl font-heading font-semibold">{{ audio.title }}</h1>
+          <div class="subtitle mt-1">
+            <i18n
+              as="span"
+              path="audio-track.creator"
+              class="font-semibold leading-snug mt-1"
+            >
+              <template #creator>
+                <a
+                  class="text-pink hover:text-pink"
+                  :href="audio.creator_url"
+                  >{{ audio.creator }}</a
+                >
+              </template>
+            </i18n>
+            <span class="text-dark-charcoal-70">{{ $t('interpunct') }}</span>
             {{ timeFmt(audio.duration) }}
-          </p>
+          </div>
         </div>
       </div>
 
