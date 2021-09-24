@@ -4,7 +4,7 @@
     <MediaReuse
       data-testid="audio-attribution"
       :media="audio"
-      :license-u-r-l="openverseLicenseURL"
+      :license-u-r-l="openverseLicenseUrl"
       :full-license-name="fullLicenseName"
       :attribution-html="attributionHtml()"
       class="my-16 px-4 tab:px-0"
@@ -67,7 +67,7 @@ const AudioDetailPage = {
     fullLicenseName() {
       return getFullLicenseName(this.audio.license, this.audio.license_version)
     },
-    openverseLicenseURL() {
+    openverseLicenseUrl() {
       return `${this.audio.license_url}?ref=openverse`
     },
   },
@@ -113,7 +113,7 @@ const AudioDetailPage = {
   methods: {
     ...mapActions([FETCH_AUDIO, FETCH_RELATED_MEDIA]),
     attributionHtml() {
-      const licenseUrl = `${this.openverseLicenseURL}&atype=html`
+      const licenseUrl = `${this.openverseLicenseUrl}&atype=html`
       return attributionHtml(this.audio, licenseUrl, this.fullLicenseName)
     },
     getRelatedAudios() {
