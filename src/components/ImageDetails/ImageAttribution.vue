@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     licenseUrl() {
-      return `${this.ccLicenseUrl}&atype=rich`
+      return `${this.openverseLicenseUrl}&atype=rich`
     },
   },
 }
