@@ -37,7 +37,7 @@ describe('CopyLicense', () => {
         creator: 'John',
         creator_url: 'http://creator.com',
       },
-      ccLicenseUrl: 'http://license.com',
+      openverseLicenseUrl: 'http://license.com',
       fullLicenseName: 'LICENSE',
       attributionHtml: '<div>attribution</div>',
     }
