@@ -14,7 +14,7 @@ function attributionHtml(image, openverseLicenseUrl, fullLicenseName) {
   } else if (image.creator && !image.creator_url) {
     creator = `<span> by <span>${image.creator}</span></span>`
   }
-  const licenseLink = ` is licensed under <a href="${ccLicenseUrl}" style="margin-right: 5px;">${fullLicenseName.toUpperCase()}</a>`
+  const licenseLink = ` is licensed under <a href="${openverseLicenseUrl}" style="margin-right: 5px;">${fullLicenseName.toUpperCase()}</a>`
 
   let licenseIcons = `<img style="height: inherit;margin-right: 3px;display: inline-block;" src="${baseAssetsPath}/cc_icon.svg?image_id=${image.id}" />`
   if (image.license) {
