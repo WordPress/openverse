@@ -3,7 +3,7 @@
     <MediaLicense
       :full-license-name="fullLicenseName"
       :license="image.license"
-      :license-u-r-l="licenseUrl"
+      :license-url="licenseUrl"
     />
     <CopyLicense
       :media="image"
