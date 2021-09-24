@@ -59,7 +59,7 @@ services:
       - es
       - cache
     env_file:
-      - openverse-api/.env.docker
+      - openverse_api/.env.docker
     stdin_open: true
     tty: true
 
