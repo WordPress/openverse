@@ -52,7 +52,7 @@ the internet.
 
 ### API Workflows
 
-Our API-based workflows run at different schedules: some daily, others monthly. Please consider the which to use whenever a new DAG is written, and add your new script to one of these schedules.
+Our API-based workflows run at different schedules: some daily, others monthly. Please consider which to use whenever a new DAG is written, and add your new script to one of these schedules.
 
 #### Daily
 
