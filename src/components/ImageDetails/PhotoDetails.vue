@@ -126,7 +126,7 @@
           <ImageAttribution
             data-testid="image-attribution"
             :image="image"
-            :cc-license-u-r-l="openverseLicenseUrl"
+            :openverse-license-url="openverseLicenseUrl"
             :full-license-name="fullLicenseName"
             :attribution-html="attributionHtml()"
           />
