@@ -21,7 +21,7 @@ describe('Image Info', () => {
         creator: 'John',
         creator_url: 'http://creator.com',
       },
-      ccLicenseURL: 'http://license.com',
+      ccLicenseUrl: 'http://license.com',
       fullLicenseName: 'LICENSE',
       imageHeight: 1000,
       imageWidth: 500,

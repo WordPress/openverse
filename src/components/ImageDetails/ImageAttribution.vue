@@ -21,13 +21,13 @@ export default {
   props: {
     id: {},
     image: {},
-    ccLicenseURL: String,
+    ccLicenseUrl: String,
     fullLicenseName: String,
     attributionHtml: String,
   },
   computed: {
     licenseUrl() {
-      return `${this.ccLicenseURL}&atype=rich`
+      return `${this.ccLicenseUrl}&atype=rich`
     },
   },
 }
