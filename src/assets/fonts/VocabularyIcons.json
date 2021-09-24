@@ -799,7 +799,7 @@
         "designer": "Creative Commons",
         "designerURL": "https://opensource.creativecommons.org",
         "license": "MIT",
-        "licenseUrl": "https://opensource.org/licenses/MIT"
+        "licenseURL": "https://opensource.org/licenses/MIT"
       },
       "preferences": {
         "showGlyphs": true,
