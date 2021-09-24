@@ -599,7 +599,6 @@
     "current-time": "{time} seconds"
   },
   "audio-track": {
-    "title": "{title} by {creator}",
     "aria-label": "Audio Player",
     "messages": {
       "err_aborted": "You aborted playback.",
