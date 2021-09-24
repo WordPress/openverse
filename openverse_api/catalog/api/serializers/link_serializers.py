@@ -1,11 +1,10 @@
 import logging as log
-import os
 from urllib.parse import urlparse
 
 import redlock
-from catalog import settings
 from catalog.api.controllers.link_controller import get_next_shortened_path
 from catalog.api.models import ShortenedLink
+from django.conf import settings
 from rest_framework import serializers
 from rest_framework.serializers import (
     ModelSerializer,
@@ -20,7 +19,7 @@ from rest_framework.serializers import (
 __parsed_redis_url = urlparse(settings.CACHES["locks"]["LOCATION"])
 __host, __port = __parsed_redis_url.netloc.split(":")
 __db_num = __parsed_redis_url.path[1] if __parsed_redis_url.path else None
-__password = os.environ.get("REDIS_PASSWORD")
+__password = settings.REDIS_PASSWORD
 # Clients will attempt to acquire the lock infinitely with a 1 second delay.
 url_lock = redlock.Redlock(
     [{"host": __host, "port": __port, "db": __db_num, "password": __password}],
