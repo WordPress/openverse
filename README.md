@@ -57,7 +57,7 @@ Our API-based workflows run at different schedules: some daily, others monthly. 
 #### Daily
 
 Workflows that have a `schedule_string='@daily'` parameter are run daily. The DAG
-workflows run `provider_api_scripts` to load and extract media data from the APIs. These provider scripts are run daily:
+workflows run `provider_api_scripts` to load and extract media data from the APIs. The following provider scripts are run daily:
 
 - [Flickr](openverse_catalog/dags/provider_api_scripts/flickr.py)
 - [Met Museum](openverse_catalog/dags/provider_api_scripts/metropolitan_museum_of_art.py)
