@@ -18,7 +18,7 @@ lint:
 
 env:
     #! /usr/bin/env sh
-    cp openverse-api/.env.stencil openverse-api/.env
+    cp openverse_api/.env.stencil openverse_api/.env
     cp ingestion_server/.env.stencil ingestion_server/.env
 
 
