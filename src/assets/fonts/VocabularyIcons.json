@@ -799,7 +799,7 @@
         "designer": "Creative Commons",
         "designerURL": "https://opensource.creativecommons.org",
         "license": "MIT",
-        "licenseURL": "https://opensource.org/licenses/MIT"
+        "licenseUrl": "https://opensource.org/licenses/MIT"
       },
       "preferences": {
         "showGlyphs": true,
@@ -818,7 +818,7 @@
             "designer": "Creative Commons",
             "designerURL": "https://opensource.creativecommons.org",
             "license": "MIT",
-            "licenseURL": "https://opensource.org/licenses/MIT"
+            "licenseUrl": "https://opensource.org/licenses/MIT"
           },
           "metrics": { "emSize": 1024, "baseline": 6.25, "whitespace": 50 },
           "embed": false,
@@ -1447,7 +1447,7 @@
         "designer": "Creative Commons",
         "designerURL": "https://opensource.creativecommons.org",
         "license": "MIT",
-        "licenseURL": "https://opensource.org/licenses/MIT"
+        "licenseUrl": "https://opensource.org/licenses/MIT"
       },
       "metrics": { "emSize": 1024, "baseline": 6.25, "whitespace": 50 },
       "embed": false,

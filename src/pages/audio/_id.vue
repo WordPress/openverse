@@ -113,8 +113,8 @@ const AudioDetailPage = {
   methods: {
     ...mapActions([FETCH_AUDIO, FETCH_RELATED_MEDIA]),
     attributionHtml() {
-      const licenseURL = `${this.openverseLicenseURL}&atype=html`
-      return attributionHtml(this.audio, licenseURL, this.fullLicenseName)
+      const licenseUrl = `${this.openverseLicenseURL}&atype=html`
+      return attributionHtml(this.audio, licenseUrl, this.fullLicenseName)
     },
     getRelatedAudios() {
       if (this.audio && this.audio.id) {

@@ -263,8 +263,8 @@ export default {
       this.activeTab = tabIdx
     },
     attributionHtml() {
-      const licenseURL = `${this.openverseLicenseURL}&atype=html`
-      return attributionHtml(this.image, licenseURL, this.fullLicenseName)
+      const licenseUrl = `${this.openverseLicenseURL}&atype=html`
+      return attributionHtml(this.image, licenseUrl, this.fullLicenseName)
     },
     toggleReportFormVisibility() {
       this.$store.commit(`${REPORT_CONTENT}/${TOGGLE_REPORT_FORM_VISIBILITY}`)

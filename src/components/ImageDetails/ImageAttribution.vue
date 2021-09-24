@@ -3,12 +3,12 @@
     <MediaLicense
       :full-license-name="fullLicenseName"
       :license="image.license"
-      :license-u-r-l="licenseURL"
+      :license-u-r-l="licenseUrl"
     />
     <CopyLicense
       :media="image"
       :full-license-name="fullLicenseName"
-      :license-u-r-l="licenseURL"
+      :license-u-r-l="licenseUrl"
       :attribution-html="attributionHtml"
       class="my-6"
     />
@@ -26,7 +26,7 @@ export default {
     attributionHtml: String,
   },
   computed: {
-    licenseURL() {
+    licenseUrl() {
       return `${this.ccLicenseURL}&atype=rich`
     },
   },
