@@ -20,6 +20,7 @@ const useVueI18n = (vue) => {
 const stubs = {
   AudioController: true,
   PlayPause: true,
+  NuxtLink: true,
   Waveform: true,
 }
 
@@ -77,8 +78,17 @@ describe('AudioTrack', () => {
     }
   })
 
-  it('should render the audio track even without duration', () => {
+  it('should render the full audio track component even without duration', () => {
     const { getByText } = render(AudioTrack, options, useVueI18n)
     getByText(props.audio.creator)
+  })
+
+  it('should render the row audio track component even without duration', () => {
+    options.propsData = {
+      ...options.propsData,
+      layout: 'row',
+    }
+    const { getByText } = render(AudioTrack, options, useVueI18n)
+    getByText('by ' + props.audio.creator)
   })
 })
