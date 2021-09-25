@@ -1,7 +1,6 @@
 import argparse
 import datetime
 import logging as log
-import os
 import sys
 import time
 import uuid
@@ -10,6 +9,7 @@ from collections import deque
 import elasticsearch
 import psycopg2
 from aws_requests_auth.aws_auth import AWSRequestsAuth
+from decouple import config
 from elasticsearch import Elasticsearch, NotFoundError, RequestsHttpConnection, helpers
 from elasticsearch.exceptions import ConnectionError as ESConnectionError
 from elasticsearch_dsl import Search, connections
@@ -40,29 +40,30 @@ is useful for local development environments.
 """
 
 # For AWS IAM access to Elasticsearch
-AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", "")
-AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default="")
+AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", default="")
 
-ELASTICSEARCH_URL = os.getenv("ELASTICSEARCH_URL", "localhost")
-ELASTICSEARCH_PORT = int(os.getenv("ELASTICSEARCH_PORT", 9200))
+ELASTICSEARCH_URL = config("ELASTICSEARCH_URL", default="localhost")
+ELASTICSEARCH_PORT = config("ELASTICSEARCH_PORT", default=9200, cast=int)
 
-AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
+AWS_REGION = config("AWS_REGION", "us-east-1")
 
-DATABASE_HOST = os.getenv("DATABASE_HOST", "localhost")
-DATABASE_PORT = int(os.getenv("DATABASE_PORT", 5432))
-DATABASE_USER = os.getenv("DATABASE_USER", "deploy")
-DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "deploy")
-DATABASE_NAME = os.getenv("DATABASE_NAME", "openledger")
+DATABASE_HOST = config("DATABASE_HOST", default="localhost")
+DATABASE_PORT = config("DATABASE_PORT", default=5432, cast=int)
+DATABASE_USER = config("DATABASE_USER", default="deploy")
+DATABASE_PASSWORD = config("DATABASE_PASSWORD", default="deploy")
+DATABASE_NAME = config("DATABASE_NAME", default="openledger")
 
 # The number of database records to load in memory at once.
-DB_BUFFER_SIZE = int(os.getenv("DB_BUFFER_SIZE", 100000))
+DB_BUFFER_SIZE = config("DB_BUFFER_SIZE", default=100000, cast=int)
 
-SYNCER_POLL_INTERVAL = int(os.getenv("SYNCER_POLL_INTERVAL", 60))
+SYNCER_POLL_INTERVAL = config("SYNCER_POLL_INTERVAL", default=60, cast=int)
 
 # A comma separated list of tables in the database table to replicate to
 # Elasticsearch. Ex: image,docs
-REP_TABLES = os.getenv("COPY_TABLES", "image")
-replicate_tables = REP_TABLES.split(",") if "," in REP_TABLES else [REP_TABLES]
+REP_TABLES = config(
+    "COPY_TABLES", default="image", cast=lambda var: [s.strip() for s in var.split(",")]
+)
 
 TWELVE_HOURS_SEC = 60 * 60 * 12
 
@@ -351,7 +352,7 @@ class TableIndexer:
         # because there will only be one node available. In production, there
         # are many nodes, and the index should not be promoted until all
         # shards have been initialized.
-        environment = os.getenv("ENVIRONMENT", "local")
+        environment = config("ENVIRONMENT", default="local")
         if environment != "local":
             log.info("Waiting for replica shards. . .")
             es.cluster.health(index=write_index, wait_for_status="green", timeout="12h")
@@ -401,7 +402,7 @@ class TableIndexer:
         suffix = uuid.uuid4().hex
         destination_index = f"{model_name}-{suffix}"
         if distributed is None:
-            distributed = os.getenv("ENVIRONMENT", "local") != "local"
+            distributed = config("ENVIRONMENT", default="local") != "local"
         if distributed:
             self.es.indices.create(
                 index=destination_index, body=index_settings(model_name)
@@ -471,7 +472,7 @@ if __name__ == "__main__":
     log.getLogger(TableIndexer.__name__).setLevel(log.INFO)
     log.info("Connecting to Elasticsearch")
     elasticsearch_client = elasticsearch_connect()
-    syncer = TableIndexer(elasticsearch_client, replicate_tables)
+    syncer = TableIndexer(elasticsearch_client, REP_TABLES)
     if parsed.reindex:
         log.info(f"Reindexing {parsed.reindex}")
         syncer.reindex(parsed.reindex)

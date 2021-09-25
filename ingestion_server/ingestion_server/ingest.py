@@ -1,8 +1,8 @@
 import datetime
 import logging as log
-import os
 
 import psycopg2
+from decouple import config
 from psycopg2.extras import DictCursor
 from psycopg2.sql import SQL, Identifier, Literal
 
@@ -33,16 +33,22 @@ table to replace the old data. This strategy is far faster than updating the
 data in place.
 """
 
-UPSTREAM_DB_HOST = os.getenv("UPSTREAM_DB_HOST", "localhost")
-UPSTREAM_DB_PORT = int(os.getenv("UPSTREAM_DB_PORT", 5433))
-UPSTREAM_DB_USER = os.getenv("UPSTREAM_DB_USER", "deploy")
-UPSTREAM_DB_PASSWORD = os.getenv("UPSTREAM_DB_PASSWORD", "deploy")
-UPSTREAM_DB_NAME = os.getenv("UPSTREAM_DB_NAME", "openledger")
+UPSTREAM_DB_HOST = config("UPSTREAM_DB_HOST", default="localhost")
+UPSTREAM_DB_PORT = config("UPSTREAM_DB_PORT", default=5433, cast=int)
+UPSTREAM_DB_USER = config("UPSTREAM_DB_USER", default="deploy")
+UPSTREAM_DB_PASSWORD = config("UPSTREAM_DB_PASSWORD", default="deploy")
+UPSTREAM_DB_NAME = config("UPSTREAM_DB_NAME", default="openledger")
 
-RELATIVE_UPSTREAM_DB_HOST = os.getenv("RELATIVE_UPSTREAM_DB_HOST", UPSTREAM_DB_HOST)
+RELATIVE_UPSTREAM_DB_HOST = config(
+    "RELATIVE_UPSTREAM_DB_HOST",
+    default=UPSTREAM_DB_HOST,
+)
 """The hostname of the upstream DB from the POV of the downstream DB"""
-RELATIVE_UPSTREAM_DB_PORT = int(
-    os.getenv("RELATIVE_UPSTREAM_DB_PORT", str(UPSTREAM_DB_PORT))
+
+RELATIVE_UPSTREAM_DB_PORT = config(
+    "RELATIVE_UPSTREAM_DB_PORT",
+    default=UPSTREAM_DB_PORT,
+    cast=int,
 )
 """The port of the upstream DB from the POV of the downstream DB"""
 
