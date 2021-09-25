@@ -39,14 +39,20 @@ healthcheck:
 
 
 test: up
-    docker-compose exec web bash ./test/run_test.sh
+    docker-compose exec web ./test/run_test.sh
 
 
 testlocal:
     #! /usr/bin/env sh
     cd openverse_api
-    pipenv run bash ./test/run_test.sh
+    pipenv run ./test/run_test.sh
 
 
 logs service="":
     docker-compose {{ DOCKER_FILE }} logs -f {{ service }}
+
+
+dj args="":
+    #! /usr/bin/env sh
+    cd openverse_api
+    pipenv run python manage.py {{ args }}
