@@ -21,6 +21,7 @@ boto3 = "*"
 filelock = "*"
 pytest = "*"
 tldextract = "*"
+python-decouple = "*"
 
 [requires]
 python_version = "3.9"
