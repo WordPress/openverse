@@ -26,17 +26,12 @@ The server is designed to be run in a private network only. You must not expose 
    just env
    ```
 
-2. Change into the ingestion server directory.
+2. Install Python dependencies.
    ```bash
-   cd ingestion_server/
+   just install
    ```
 
-3. Setup environment if you haven't already.
-   ```bash
-   pipenv install
-   ```
-
-4. Start the Gunicorn server. Pipenv will automatically read the necessary environment variables from `.env`.
+3. Start the Gunicorn server.
    ```bash
    pipenv run gunicorn
    ```
@@ -63,6 +58,8 @@ will be `"INGEST_UPSTREAM"`.
 ## Configuration
 
 All configuration is performed through environment variables. See the `.env.stencil` file for a comprehensive list of all environment variables. The ones with sane defaults have been commented out.
+
+Pipenv will automatically load `.env` files when running commands with `pipenv run`.
 
 ## Mapping database tables to Elasticsearch
 

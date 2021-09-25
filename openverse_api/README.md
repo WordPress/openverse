@@ -11,47 +11,37 @@ The Openverse API is a system that allows programmatic access to public domain d
    just env
    ```
 
-2. Change into the API directory.
+2. Install Python dependencies.
    ```bash
-   cd openverse_api/
+   just install
    ```
 
-3. Setup environment if you haven't already.
+3. Start the Django dev server.
    ```bash
-   pipenv install
-   ```
-
-4. Start the Django dev server. Pipenv will automatically read the necessary environment variables from `.env`.
-   ```bash
-   pipenv run python manage.py runserver
+   just dj runserver
    ```
 
 ## Running the tests
 
 ### Inside Docker (preferred)
 
-1. Ensure that Docker containers are up. See the section above for instructions.
+1. Ensure that Docker containers are up.
    ```bash
    docker-compose ps
    ```
 
 2. Run the tests in an interactive TTY connected to a `web` container.
    ```bash
-   docker-compose exec web bash ./test/run_test.sh
+   just test
    ```
 
 ### On the host
 
 1. Start the Django dev server. See the section above for instructions.
 
-2. Change into the API directory.
+2. Run the tests in a terminal on the host.
    ```bash
-   cd openverse_api/
-   ```
-
-3. Run the tests in a separate terminal instance. Pipenv will automatically read the necessary environment variables from `.env`.
-   ```bash
-   pipenv run ./test/run_test.sh
+   just testlocal
    ```
 
 ## API documentation
@@ -65,6 +55,8 @@ You can view the custom administration views at the `/admin/` endpoint. You can 
 ## Configuration
 
 All configuration is performed through environment variables. See the `.env.stencil` file for a comprehensive list of all environment variables. The ones with sane defaults have been commented out.
+
+Pipenv will automatically load `.env` files when running commands with `pipenv run`.
 
 ## Deployment
 
