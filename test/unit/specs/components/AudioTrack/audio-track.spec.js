@@ -91,4 +91,18 @@ describe('AudioTrack', () => {
     const { getByText } = render(AudioTrack, options, useVueI18n)
     getByText('by ' + props.audio.creator)
   })
+
+  it('should show audio title as page title', () => {
+    const { getByText } = render(AudioTrack, options, useVueI18n)
+    const element = getByText(props.audio.title + ' by')
+    expect(element).toBeInstanceOf(HTMLHeadingElement)
+    expect(element.tagName).toEqual('H1')
+  })
+
+  it('should show audio creator with link', () => {
+    const { getByText } = render(AudioTrack, options, useVueI18n)
+    const element = getByText(props.audio.creator)
+    expect(element).toBeInstanceOf(HTMLAnchorElement)
+    expect(element).toHaveAttribute('href', props.audio.creator_url)
+  })
 })
