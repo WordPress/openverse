@@ -92,9 +92,9 @@ describe('AudioTrack', () => {
     getByText('by ' + props.audio.creator)
   })
 
-  it('should show audio title as page title', () => {
+  it('should show audio title as main page title', () => {
     const { getByText } = render(AudioTrack, options, useVueI18n)
-    const element = getByText(props.audio.title + ' by')
+    const element = getByText(props.audio.title)
     expect(element).toBeInstanceOf(HTMLHeadingElement)
     expect(element.tagName).toEqual('H1')
   })
