@@ -7,7 +7,7 @@
       class="flex"
       :class="isSmall ? 'flex-row gap-8' : 'flex-col justify-between'"
     >
-      <div class="flex-shrink-0">
+      <div class="flex-shrink-0" :class="isSmall ? 'w-96' : ''">
         <NuxtLink
           :to="localePath(`/audio/${audio.id}`)"
           class="font-heading font-semibold text-2xl"
@@ -35,12 +35,12 @@
             </span>
           </div>
 
-          <div class="part-b">
-            <template v-if="isSmall">
+          <div class="part-b inline-flex space-x-1">
+            <div v-if="isSmall">
               {{ timeFmt(audio.duration) }} {{ $t('interpunct') }}
               {{ $t(`audio-categories.${audio.category}`) }}
               {{ $t('interpunct') }}
-            </template>
+            </div>
             <License class="inline" :license="audio.license" />
           </div>
         </div>

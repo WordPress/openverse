@@ -5,7 +5,7 @@
         {{ audiosCount }}
       </span>
     </div>
-    <div class="px-6">
+    <div class="px-6 pt-6">
       <AudioTrack
         v-for="audio in audios"
         :key="audio.id"
