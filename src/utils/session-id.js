@@ -17,7 +17,7 @@ const generateSessionId = () => uuidv4()
  */
 const saveSessionIdInCookie = (cookieName, sessionId, hasExpirationDate) => {
   if (hasExpirationDate) {
-    Cookie.set(COOKIE_PREFIX + cookieName, sessionId, {
+    Cookie.set(`${COOKIE_PREFIX}${cookieName}`, sessionId, {
       expires: COOKIE_EXPIRY_DAYS,
       secure: true,
       sameSite: 'None',
@@ -33,7 +33,7 @@ const saveSessionIdInCookie = (cookieName, sessionId, hasExpirationDate) => {
  * @param {boolean} [hasExpirationDate=false] Whether the cookie should expire when user closes the browser
  */
 const SessionId = (cookieName, hasExpirationDate = false) => {
-  let sessionId = Cookie.get(COOKIE_PREFIX + cookieName)
+  let sessionId = Cookie.get(`${COOKIE_PREFIX}${cookieName}`)
 
   if (!sessionId) {
     sessionId = generateSessionId()
