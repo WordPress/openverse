@@ -53,5 +53,5 @@ synchronised across all Openverse repos. Treating this repo as the source of
 truth, it creates PRs to resolve any differences.
 
 **Cron:** [at 00:00](https://crontab.guru/#0_0_*_*_*)  
-**Push:** Glob `.github/**`  
+**Push:** Branch `main`
 **Dispatch:** enabled
