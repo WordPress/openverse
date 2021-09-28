@@ -20,10 +20,8 @@ jobs:
     - name: Lint
       working-directory: ./openverse_api
       run: |
-        pip install --upgrade pipenv
-        pipenv install --dev
-        pipenv run pre-commit run --all-files
-
+        pip install pre-commit
+        pre-commit run --all-files
   Tests:
     timeout-minutes: 15
     runs-on: ubuntu-latest
