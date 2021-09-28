@@ -50,6 +50,7 @@ export default {
         date.setSeconds(ms / 1e3)
         return date.toISOString().substr(11, 8).replace(/^00:/, '')
       }
+      return '--:--'
     }
 
     return {
