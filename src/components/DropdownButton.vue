@@ -14,12 +14,12 @@
         class="dropdown-button ml-1 rounded-r-sm rounded-l-none"
         :class="{ 'dropdown-button-active': isOpen }"
         aria-haspopup="menu"
-        :aria-label="$t('dropdown-button.aria.arrow-label')"
+        :aria-label="safeDropdownAriaLabel"
         :aria-expanded="isOpen"
         @click="toggleOpen"
         @keydown.space.prevent="toggleOpen"
       >
-        <svg class="h-2 w-4">
+        <svg class="h-2 w-4 pointer-events-none">
           <use :href="`${icons.caretDown}#icon`" />
         </svg>
       </button>
@@ -50,12 +50,22 @@ import caretDown from '~/assets/icons/caret-down.svg'
 
 const DropdownButton = {
   name: 'DropdownButton',
-  data: () => ({
-    isOpen: false,
-    icons: {
-      caretDown,
+  props: {
+    dropdownAriaLabel: {
+      type: String,
+      required: false,
     },
-  }),
+  },
+  data() {
+    return {
+      isOpen: false,
+      icons: {
+        caretDown,
+      },
+      safeDropdownAriaLabel:
+        this.dropdownAriaLabel || this.$t('dropdown-button.aria.arrow-label'),
+    }
+  },
   mounted() {
     document.addEventListener('click', this.onClickout)
   },
@@ -136,7 +146,7 @@ export default DropdownButton
 
 <style lang="css" scoped>
 .dropdown-button {
-  @apply flex items-center justify-center bg-pink text-white font-bold p-2 px-4 transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink hover:bg-dark-pink;
+  @apply flex items-center justify-center bg-pink text-white font-bold p-2 px-4 transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink hover:bg-dark-pink no-underline appearance-none;
 }
 
 .dropdown-button-active {

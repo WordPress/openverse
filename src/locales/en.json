@@ -639,5 +639,11 @@
     "more": "{read-more} about this announcement.",
     "read": "Read more"
   },
+  "download-button": {
+    "aria": {
+      "dropdown-label": "Select the download file format"
+    },
+    "download": "Download"
+  },
   "interpunct": "•"
 }
