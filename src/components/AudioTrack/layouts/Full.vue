@@ -45,9 +45,12 @@ export default {
      * @returns {string} the duration in a human-friendly format
      */
     const timeFmt = (ms) => {
-      const date = new Date(0)
-      date.setSeconds(ms / 1e3)
-      return date.toISOString().substr(11, 8).replace(/^00:/, '')
+      if (ms) {
+        const date = new Date(0)
+        date.setSeconds(ms / 1e3)
+        return date.toISOString().substr(11, 8).replace(/^00:/, '')
+      }
+      return '--:--'
     }
 
     return {

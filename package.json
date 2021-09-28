@@ -19,7 +19,7 @@
     "storybook": "nuxt storybook",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:unit": "jest",
+    "test:unit": "jest --collectCoverage=false",
     "test:e2e": "cypress open",
     "test:e2e:ci": "cypress run",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
