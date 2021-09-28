@@ -7,7 +7,7 @@
       class="flex"
       :class="isSmall ? 'flex-row gap-8' : 'flex-col justify-between'"
     >
-      <div class="flex-shrink-0">
+      <div class="flex-shrink-0" :class="isSmall ? 'w-70' : ''">
         <NuxtLink
           :to="localePath(`/audio/${audio.id}`)"
           class="font-heading font-semibold text-2xl"
@@ -30,17 +30,21 @@
             </i18n>
             <span v-if="!isSmall">
               {{ $t('interpunct') }} {{ timeFmt(audio.duration) }}
-              {{ $t('interpunct') }}
-              {{ $t(`audio-categories.${audio.category}`) }}
+              <template v-if="audio.category">
+                {{ $t('interpunct') }}
+                {{ $t(`audio-categories.${audio.category}`) }}
+              </template>
             </span>
           </div>
 
-          <div class="part-b">
-            <template v-if="isSmall">
+          <div class="part-b inline-flex space-x-1">
+            <div v-if="isSmall">
               {{ timeFmt(audio.duration) }} {{ $t('interpunct') }}
-              {{ $t(`audio-categories.${audio.category}`) }}
-              {{ $t('interpunct') }}
-            </template>
+              <template v-if="audio.category">
+                {{ $t(`audio-categories.${audio.category}`) }}
+                {{ $t('interpunct') }}
+              </template>
+            </div>
             <License class="inline" :license="audio.license" />
           </div>
         </div>
@@ -71,9 +75,12 @@ export default {
      * @returns {string} the duration in a human-friendly format
      */
     const timeFmt = (ms) => {
-      const date = new Date(0)
-      date.setSeconds(ms / 1e3)
-      return date.toISOString().substr(11, 8).replace(/^00:/, '')
+      if (ms) {
+        const date = new Date(0)
+        date.setSeconds(ms / 1e3)
+        return date.toISOString().substr(11, 8).replace(/^00:/, '')
+      }
+      return '--:--'
     }
 
     const isSmall = computed(() => props.size === 's')

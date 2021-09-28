@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-09-28T13:31:53+00:00\n"
+"POT-Creation-Date: 2021-09-28T13:37:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1252,7 +1252,7 @@ msgctxt "browse-page.all-no-results"
 msgid "No results"
 msgstr ""
 
-#: src/components/AudioResultsList.vue:81
+#: src/components/AudioResultsList.vue:80
 msgctxt "browse-page.audio-no-results"
 msgid "No audio results"
 msgstr ""
@@ -1270,7 +1270,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
-#: src/components/AudioResultsList.vue:87
+#: src/components/AudioResultsList.vue:86
 msgctxt "browse-page.audio-result-count"
 msgid "###localeCount### audio result"
 msgid_plural "###localeCount### audio results"
@@ -1293,7 +1293,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
-#: src/components/AudioResultsList.vue:84
+#: src/components/AudioResultsList.vue:83
 msgctxt "browse-page.audio-result-count-more"
 msgid "Over ###localeCount### audio results"
 msgid_plural "Over ###localeCount### audio results"
@@ -1309,18 +1309,18 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
-#: src/components/AudioResultsList.vue:25
+#: src/components/AudioResultsList.vue:26
 msgctxt "browse-page.no-more"
 msgid "No more ###type### :("
 msgstr ""
 
-#: src/components/AudioResultsList.vue:29
+#: src/components/AudioResultsList.vue:30
 msgctxt "browse-page.load"
 msgid "Load more results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/AudioResultsList.vue:36
+#: src/components/AudioResultsList.vue:37
 msgctxt "browse-page.fetching-error"
 msgid "Error fetching ###type###:"
 msgstr ""
