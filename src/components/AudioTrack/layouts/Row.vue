@@ -7,7 +7,7 @@
       class="flex"
       :class="isSmall ? 'flex-row gap-8' : 'flex-col justify-between'"
     >
-      <div class="flex-shrink-0" :class="isSmall ? 'w-96' : ''">
+      <div class="flex-shrink-0" :class="isSmall ? 'w-70' : ''">
         <NuxtLink
           :to="localePath(`/audio/${audio.id}`)"
           class="font-heading font-semibold text-2xl"
