@@ -12,7 +12,7 @@
         <template #link>
           <a
             class="photo_license"
-            :href="licenseURL"
+            :href="licenseUrl"
             target="_blank"
             rel="noopener"
           >
@@ -30,7 +30,7 @@
         <template #link>
           <a
             :aria-label="$t('media-details.aria.attribution.license')"
-            :href="licenseURL"
+            :href="licenseUrl"
             target="_blank"
             rel="noopener"
           >
@@ -49,7 +49,7 @@
         <template #link>
           <a
             :aria-label="$t('media-details.aria.attribution.tool')"
-            :href="licenseURL"
+            :href="licenseUrl"
             target="_blank"
             rel="noopener"
           >
@@ -69,7 +69,7 @@ export default {
   props: {
     fullLicenseName: String,
     license: String,
-    licenseURL: String,
+    licenseUrl: String,
   },
   computed: {
     isLicense() {
