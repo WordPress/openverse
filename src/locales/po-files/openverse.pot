@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-09-21T14:27:06+00:00\n"
+"POT-Creation-Date: 2021-09-28T13:30:33+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1104,13 +1104,13 @@ msgid "An error occurred"
 msgstr ""
 
 # error.image-not-found (Do not translate words between ###)
-#: src/pages/photos/_id.vue:104
+#: src/pages/photos/_id.vue:103
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
 
 # error.media-not-found (Do not translate words between ###)
-#: src/pages/audio/_id.vue:99
+#: src/pages/audio/_id.vue:98
 msgctxt "error.media-not-found"
 msgid "Couldn't find ###mediaType### with id ###id###"
 msgstr ""
@@ -1448,13 +1448,13 @@ msgid "Hide filters"
 msgstr ""
 
 # filter-list.clear
-#: src/components/Filters/FiltersList.vue:35
+#: src/components/Filters/FiltersList.vue:39
 msgctxt "filter-list.clear"
 msgid "Clear filters"
 msgstr ""
 
 # filter-list.show
-#: src/components/Filters/FiltersList.vue:41
+#: src/components/Filters/FiltersList.vue:45
 msgctxt "filter-list.show"
 msgid "Show results"
 msgstr ""
@@ -1471,7 +1471,7 @@ msgid "No results"
 msgstr ""
 
 # browse-page.audio-no-results
-#: src/components/AudioResultsList.vue:73
+#: src/components/AudioResultsList.vue:81
 msgctxt "browse-page.audio-no-results"
 msgid "No audio results"
 msgstr ""
@@ -1490,7 +1490,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 # browse-page.audio-result-count (Do not translate words between ###)
-#: src/components/AudioResultsList.vue:79
+#: src/components/AudioResultsList.vue:87
 msgctxt "browse-page.audio-result-count"
 msgid "###localeCount### audio result"
 msgid_plural "###localeCount### audio results"
@@ -1513,7 +1513,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 # browse-page.audio-result-count-more (Do not translate words between ###)
-#: src/components/AudioResultsList.vue:76
+#: src/components/AudioResultsList.vue:84
 msgctxt "browse-page.audio-result-count-more"
 msgid "Over ###localeCount### audio results"
 msgid_plural "Over ###localeCount### audio results"
@@ -1915,7 +1915,7 @@ msgid "pixels"
 msgstr ""
 
 # photo-details.share
-#: src/components/ImageDetails/PhotoDetails.vue:116
+#: src/components/ImageDetails/PhotoDetails.vue:115
 msgctxt "photo-details.share"
 msgid "Share"
 msgstr ""
@@ -1939,7 +1939,7 @@ msgid "by answering a few questions."
 msgstr ""
 
 # photo-details.weblink
-#: src/components/ImageDetails/PhotoDetails.vue:177
+#: src/components/ImageDetails/PhotoDetails.vue:176
 msgctxt "photo-details.weblink"
 msgid "Go to image's website"
 msgstr ""
@@ -2083,7 +2083,7 @@ msgid "read more about the tool"
 msgstr ""
 
 # photo-details.aria.details
-#: src/components/ImageDetails/PhotoDetails.vue:53
+#: src/components/ImageDetails/PhotoDetails.vue:52
 msgctxt "photo-details.aria.details"
 msgid "image details"
 msgstr ""
@@ -2125,7 +2125,7 @@ msgid "###provider### form"
 msgstr ""
 
 # photo-details.aria.creator-url (Do not translate words between ###)
-#: src/components/ImageDetails/PhotoDetails.vue:70
+#: src/components/ImageDetails/PhotoDetails.vue:69
 msgctxt "photo-details.aria.creator-url"
 msgid "author ###creator###"
 msgstr ""
