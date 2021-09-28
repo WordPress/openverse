@@ -29,15 +29,17 @@
               <template #creator>{{ audio.creator }}</template>
             </i18n>
             <span v-if="!isSmall">
-              • {{ timeFmt(audio.duration) }} •
+              {{ $t('interpunct') }} {{ timeFmt(audio.duration) }}
+              {{ $t('interpunct') }}
               {{ $t(`audio-categories.${audio.category}`) }}
             </span>
           </div>
 
           <div class="part-b">
             <template v-if="isSmall">
-              {{ timeFmt(audio.duration) }} •
-              {{ $t(`audio-categories.${audio.category}`) }} •
+              {{ timeFmt(audio.duration) }} {{ $t('interpunct') }}
+              {{ $t(`audio-categories.${audio.category}`) }}
+              {{ $t('interpunct') }}
             </template>
             <License class="inline" :license="audio.license" />
           </div>
@@ -78,7 +80,6 @@ export default {
 
     return {
       timeFmt,
-
       isSmall,
     }
   },

@@ -75,7 +75,7 @@
           <template #license>
             <a
               class="photo_license"
-              :href="openverseLicenseURL"
+              :href="licenseUrl"
               target="_blank"
               rel="noopener"
             >
@@ -155,8 +155,8 @@
                     : $t('media-details.reuse.credit.copy-text')
                 }}
               </template>
-              <template v-if="openverseLicenseURL" #URL>
-                {{ openverseLicenseURL }}
+              <template v-if="licenseUrl" #URL>
+                {{ licenseUrl }}
               </template>
             </i18n>
           </template>
@@ -186,7 +186,7 @@ export default {
     media: {},
     fullLicenseName: String,
     attributionHtml: String,
-    openverseLicenseURL: String,
+    licenseUrl: String,
   },
   data() {
     return {
