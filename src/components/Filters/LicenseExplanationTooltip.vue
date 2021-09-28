@@ -63,7 +63,6 @@ export default {
       return isLicense(this.$props.license)
     },
     inlineStyle() {
-      console.log(this.iconDomNode.getBoundingClientRect())
       const helpIconBounding = this.iconDomNode.getBoundingClientRect()
       const helpIconLeft = helpIconBounding.x
       const helpIconTop = helpIconBounding.y
@@ -93,11 +92,6 @@ export default {
       }
     },
   },
-  mounted() {
-    console.log('mounted!')
-    console.log(this.parentPosition)
-  },
-
   methods: {
     getLicenseDeedLink(licenseTerm) {
       if (licenseTerm === 'cc0') {
