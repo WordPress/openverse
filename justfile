@@ -30,8 +30,8 @@ logs services="":
 
 # Create .env files from stencils
 env:
-    cp openverse_api/.env.stencil openverse_api/.env
-    cp ingestion_server/.env.stencil ingestion_server/.env
+    cp openverse_api/env.template openverse_api/.env
+    cp ingestion_server/env.template ingestion_server/.env
 
 # Load sample data into the Docker Compose services
 init: up

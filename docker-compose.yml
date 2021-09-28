@@ -5,7 +5,7 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - postgres/.env.docker
+      - postgres/env.docker
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
 
@@ -22,7 +22,7 @@ services:
     volumes:
       - ./sample_data:/sample_data
     env_file:
-      - postgres/.env.docker
+      - postgres/env.docker
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
 
@@ -59,7 +59,7 @@ services:
       - es
       - cache
     env_file:
-      - openverse_api/.env.docker
+      - openverse_api/env.docker
     stdin_open: true
     tty: true
 
@@ -80,7 +80,7 @@ services:
     volumes:
       - ./ingestion_server:/ingestion_server
     env_file:
-      - ingestion_server/.env.docker
+      - ingestion_server/env.docker
     stdin_open: true
     tty: true
 
@@ -96,7 +96,7 @@ services:
     volumes:
       - ./ingestion_server:/ingestion_server
     env_file:
-      - ingestion_server/.env.docker
+      - ingestion_server/env.docker
     stdin_open: true
     tty: true
 
