@@ -102,18 +102,6 @@
           >
             {{ $t('photo-details.information.title') }}
           </button>
-          <button
-            v-if="socialSharingEnabled"
-            id="social-sharing"
-            role="tab"
-            aria-controls="tab-social-sharing"
-            :aria-selected="activeTab === 2"
-            :class="tabClass(2, 'a')"
-            @click.prevent="setActiveTab(2)"
-            @keyup.enter.prevent="setActiveTab(2)"
-          >
-            {{ $t('photo-details.share') }}
-          </button>
         </div>
         <!-- <section class="photo_info-ctr tabs-content">-->
         <div
@@ -146,19 +134,6 @@
             :image-width="imageWidth"
             :image-height="imageHeight"
             :image-type="imageType"
-          />
-        </div>
-        <div
-          id="tab-social-sharing"
-          role="tabpanel"
-          aria-labelledby="social-sharing"
-          tabindex="0"
-          :class="tabClass(2, 'tabs-panel')"
-        >
-          <ImageSocialShare
-            v-if="socialSharingEnabled"
-            :image="image"
-            data-testid="social-share"
           />
         </div>
       </section>
@@ -202,7 +177,6 @@ export default {
     'imageWidth',
     'imageHeight',
     'imageType',
-    'socialSharingEnabled',
     'thumbnail',
   ],
   data() {

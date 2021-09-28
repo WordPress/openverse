@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       // Only show audio results if non-image results are supported
-      supported: process.env.allMediaFeature,
+      supported: process.env.enableAudio,
     }
   },
   computed: {

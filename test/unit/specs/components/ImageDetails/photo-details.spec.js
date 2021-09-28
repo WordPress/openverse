@@ -13,7 +13,6 @@ const stubs = {
   ImageAttribution: true,
   ContentReportForm: true,
   ReuseSurvey: true,
-  ImageSocialShare: true,
   ImageInfo: true,
 }
 
@@ -40,7 +39,6 @@ describe('PhotoDetails', () => {
         creator: 'John',
         creator_url: 'http://creator.com',
       },
-      socialSharingEnabled: true,
     }
 
     commitMock = jest.fn()
@@ -77,18 +75,6 @@ describe('PhotoDetails', () => {
     expect(wrapper.find('[data-testid="image-attribution"]').exists()).toBe(
       true
     )
-    expect(wrapper.find('[data-testid="social-share"]').exists()).toBe(true)
-  })
-
-  it('should render social sharing buttons', () => {
-    const wrapper = render(PhotoDetails, options)
-    expect(wrapper.find('[data-testid="social-share"]').exists()).toBe(true)
-  })
-
-  it('should not render social sharing buttons when social sharing is disabled', () => {
-    options.propsData.socialSharingEnabled = false
-    const wrapper = render(PhotoDetails, options)
-    expect(wrapper.find('[data-testid="social-share"]').exists()).toBe(false)
   })
 
   it('should generate license name', () => {

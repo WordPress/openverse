@@ -506,7 +506,6 @@
       "tags": "Tags",
       "pixels": "pixels"
     },
-    "share": "Share",
     "survey": {
       "content": "How are you using this image?",
       "link": "Let us know",
@@ -547,11 +546,6 @@
         "tool": "read more about the tool"
       },
       "details": "image details",
-      "share": {
-        "facebook": "share on facebook",
-        "twitter": "share on twitter",
-        "pinterest": "share on pinterest"
-      },
       "main": "main content",
       "related": "related images",
       "provider-report-form": "{provider} form",
