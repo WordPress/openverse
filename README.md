@@ -24,7 +24,7 @@ This repository is primarily concerned with back end infrastructure like datasto
    cd openverse-api/
    ```
 
-3. From the monorepo root, bring up the Docker Compose system. Docker Compose will automatically read the necessary environment variables from `.env.docker` files from project directories.
+3. From the monorepo root, bring up the Docker Compose system. Docker Compose will automatically read the necessary environment variables from `env.docker` files from project directories.
    ```bash
    just up
    ```

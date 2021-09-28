@@ -51,7 +51,7 @@ jobs:
     - name: Run API tests
       working-directory: ./openverse_api
       env:
-        PIPENV_DOTENV_LOCATION: ./.env.stencil
+        PIPENV_DOTENV_LOCATION: ./env.template
       run: pipenv run test/run_test.sh
     - name: Run analytics tests
       working-directory: ./analytics
