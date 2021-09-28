@@ -30,16 +30,20 @@
             </i18n>
             <span v-if="!isSmall">
               {{ $t('interpunct') }} {{ timeFmt(audio.duration) }}
-              {{ $t('interpunct') }}
-              {{ $t(`audio-categories.${audio.category}`) }}
+              <template v-if="audio.category">
+                {{ $t('interpunct') }}
+                {{ $t(`audio-categories.${audio.category}`) }}
+              </template>
             </span>
           </div>
 
           <div class="part-b inline-flex space-x-1">
             <div v-if="isSmall">
               {{ timeFmt(audio.duration) }} {{ $t('interpunct') }}
-              {{ $t(`audio-categories.${audio.category}`) }}
-              {{ $t('interpunct') }}
+              <template v-if="audio.category">
+                {{ $t(`audio-categories.${audio.category}`) }}
+                {{ $t('interpunct') }}
+              </template>
             </div>
             <License class="inline" :license="audio.license" />
           </div>
