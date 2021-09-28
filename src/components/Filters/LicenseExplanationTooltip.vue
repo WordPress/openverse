@@ -47,10 +47,13 @@ export default {
       type: String,
       required: true,
     },
+    iconDomNode: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
-      isMounted: false,
       tooltipBeforeBorderWidth: 13,
       tooltipBeforeTop: 10,
     }
@@ -60,48 +63,41 @@ export default {
       return isLicense(this.$props.license)
     },
     inlineStyle() {
-      const styleObject = {}
+      console.log(this.iconDomNode.getBoundingClientRect())
+      const helpIconBounding = this.iconDomNode.getBoundingClientRect()
+      const helpIconLeft = helpIconBounding.x
+      const helpIconTop = helpIconBounding.y
+      const helpIconWidth = helpIconBounding.width
+      const helpIconHeight = helpIconBounding.height
+      const helpIconTopRelative = this.iconDomNode.offsetTop
+      const helpIconWidthNoPadding = this.iconDomNode.width
 
-      if (this.isMounted) {
-        if (event) {
-          const helpIconBounding = event.target.getBoundingClientRect()
-          const helpIconLeft = helpIconBounding.x
-          const helpIconTop = helpIconBounding.y
-          const helpIconWidth = helpIconBounding.width
-          const helpIconHeight = helpIconBounding.height
-          const helpIconTopRelative = event.target.offsetTop
-          const helpIconWidthNoPadding = event.target.width
-
-          const computedProperties = {
-            '--desktop-tooltip-top': `${Math.round(
-              helpIconTop -
-                this.tooltipBeforeTop -
-                this.tooltipBeforeBorderWidth / 2
-            )}px`,
-            '--desktop-tooltip-left': `${
-              Math.round(helpIconLeft + helpIconWidth) +
-              this.tooltipBeforeBorderWidth
-            }px`,
-            '--touch-tooltip-top': `${Math.round(
-              helpIconTopRelative + helpIconHeight + this.tooltipBeforeTop
-            )}px`,
-            '--touch-tooltip-right': `calc(1rem - ${Math.round(
-              helpIconWidth / 2 - (helpIconWidth - helpIconWidthNoPadding)
-            )}px)`,
-            '--tooltip-before-top': `${this.tooltipBeforeTop}px`,
-            '--tooltip-before-border-width': `${this.tooltipBeforeBorderWidth}px`,
-          }
-
-          Object.assign(styleObject, computedProperties)
-        }
+      return {
+        '--desktop-tooltip-top': `${Math.round(
+          helpIconTop -
+            this.tooltipBeforeTop -
+            this.tooltipBeforeBorderWidth / 2
+        )}px`,
+        '--desktop-tooltip-left': `${
+          Math.round(helpIconLeft + helpIconWidth) +
+          this.tooltipBeforeBorderWidth
+        }px`,
+        '--touch-tooltip-top': `${Math.round(
+          helpIconTopRelative + helpIconHeight + this.tooltipBeforeTop
+        )}px`,
+        '--touch-tooltip-right': `calc(1rem - ${Math.round(
+          helpIconWidth / 2 - (helpIconWidth - helpIconWidthNoPadding)
+        )}px)`,
+        '--tooltip-before-top': `${this.tooltipBeforeTop}px`,
+        '--tooltip-before-border-width': `${this.tooltipBeforeBorderWidth}px`,
       }
-
-      return styleObject
     },
   },
   mounted() {
-    this.isMounted = true
+    console.log('mounted!')
+    console.log(this.parentPosition)
   },
+
   methods: {
     getLicenseDeedLink(licenseTerm) {
       if (licenseTerm === 'cc0') {

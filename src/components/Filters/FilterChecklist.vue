@@ -50,6 +50,7 @@
         </label>
         <img
           v-if="filterType === 'licenses'"
+          :ref="`${index}licenseIcon`"
           :aria-label="$t('browse-page.aria.license-explanation')"
           tabindex="0"
           src="@/assets/help_icon.svg"
@@ -65,6 +66,7 @@
             !isDisabled(item)
           "
           :license="licenseExplanationCode"
+          :icon-dom-node="$refs[`${index}licenseIcon`][0]"
         />
       </div>
     </template>
