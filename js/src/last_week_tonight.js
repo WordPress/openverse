@@ -107,7 +107,7 @@ const postActivities = (activities) => {
             Authorization: `Basic ${token}`,
         },
         body: JSON.stringify({
-            title: `Last week in Openverse: ${startDate} - ${endDate}`,
+            title: `A week in Openverse: ${startDate} - ${endDate}`,
             slug: `last-week-openverse-${startDate}-${endDate}`,
             excerpt: `The developments in Openverse between ${startDate} and ${endDate}`,
             content: report,
