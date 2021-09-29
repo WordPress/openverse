@@ -2,7 +2,7 @@ name: New PR automation
 # ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#new-pr-automation
 
 on:
-  pull_request:
+  pull_request_target:
     types:
     - opened
     - converted_to_draft
