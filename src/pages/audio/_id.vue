@@ -25,7 +25,6 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import featureFlags from '~/feature-flags'
 import {
   FETCH_AUDIO,
   FETCH_RELATED_MEDIA,
@@ -49,7 +48,6 @@ const AudioDetailPage = {
       thumbnailURL: null,
       breadCrumbURL: '',
       shouldShowBreadcrumb: false,
-      socialSharingEnabled: featureFlags.socialSharing,
     }
   },
   computed: {

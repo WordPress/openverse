@@ -75,7 +75,7 @@ export default {
     onSubmit() {
       this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm } })
       const newPath = this.localePath({
-        path: process.env.allMediaFeature ? '/search' : '/search/image',
+        path: process.env.enableAudio ? '/search' : '/search/image',
         query: {
           q: this.form.searchTerm,
           ...filtersToQueryData(this.$store.state.filters, ALL_MEDIA),

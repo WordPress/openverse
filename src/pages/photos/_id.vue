@@ -9,7 +9,6 @@
       :image-width="imageWidth"
       :image-height="imageHeight"
       :image-type="imageType"
-      :social-sharing-enabled="socialSharingEnabled"
       @onImageLoaded="onImageLoaded"
     />
     <PhotoTags :tags="tags" :show-header="true" class="p-4 my-6" />
@@ -26,7 +25,6 @@
 <script>
 import axios from 'axios'
 import { mapActions, mapMutations, mapState } from 'vuex'
-import featureFlags from '~/feature-flags'
 import { FETCH_IMAGE, FETCH_RELATED_MEDIA } from '~/constants/action-types'
 import { SET_IMAGE, SET_RELATED_MEDIA } from '~/constants/mutation-types'
 import { IMAGE } from '~/constants/media'
@@ -54,7 +52,6 @@ const PhotoDetailPage = {
       imageWidth: 0,
       imageHeight: 0,
       imageType: 'Unknown',
-      socialSharingEnabled: featureFlags.socialSharing,
     }
   },
   computed: {

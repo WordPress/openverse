@@ -36,7 +36,7 @@ export const mediaFilterKeys = {
     'searchBy',
     'mature',
   ],
-  audio: process.env.allMediaFeature
+  audio: process.env.enableAudio
     ? [
         'licenses',
         'licenseTypes',
@@ -60,7 +60,7 @@ export const mediaSpecificFilters = {
     'sizes',
     'imageProviders',
   ],
-  audio: process.env.allMediaFeature
+  audio: process.env.enableAudio
     ? ['audioCategories', 'audioExtensions', 'durations', 'audioProviders']
     : [],
   video: [],
