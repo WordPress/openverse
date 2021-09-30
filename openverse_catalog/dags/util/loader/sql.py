@@ -4,7 +4,8 @@ from textwrap import dedent
 
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from psycopg2.errors import InvalidTextRepresentation
-from util.loader import column_names as col
+from storage import column_names as col
+from util.constants import AUDIO, IMAGE
 from util.loader import provider_details as prov
 from util.loader.paths import _extract_media_type
 
@@ -12,8 +13,7 @@ from util.loader.paths import _extract_media_type
 logger = logging.getLogger(__name__)
 
 LOAD_TABLE_NAME_STUB = "provider_data_"
-IMAGE_TABLE_NAME = "image"
-AUDIO_TABLE_NAME = "audio"
+TABLE_NAMES = {AUDIO: AUDIO, IMAGE: IMAGE}
 DB_USER_NAME = "deploy"
 NOW = "NOW()"
 FALSE = "'f'"
@@ -42,10 +42,10 @@ def create_loading_table(
     """
     media_type = ti.xcom_pull(task_ids="stage_oldest_tsv_file", key="media_type")
     if media_type is None:
-        media_type = "image"
+        media_type = IMAGE
     load_table = _get_load_table_name(identifier, media_type=media_type)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    if media_type == "audio":
+    if media_type == AUDIO:
         table_creation_query = dedent(
             f"""
             CREATE TABLE public.{load_table} (
@@ -161,7 +161,7 @@ def load_local_data_to_intermediate_table(
 
 
 def load_s3_data_to_intermediate_table(
-    postgres_conn_id, bucket, s3_key, identifier, media_type="image"
+    postgres_conn_id, bucket, s3_key, identifier, media_type=IMAGE
 ):
     load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f"Loading {s3_key} from S3 Bucket {bucket} into {load_table}")
@@ -215,7 +215,7 @@ def upsert_records_to_db_table(
     postgres_conn_id,
     identifier,
     db_table=None,
-    media_type="image",
+    media_type=IMAGE,
 ):
     def _newest_non_null(column: str) -> str:
         return f"{column} = COALESCE(EXCLUDED.{column}, old.{column})"
@@ -253,7 +253,7 @@ def upsert_records_to_db_table(
         )"""
 
     if db_table is None:
-        db_table = AUDIO_TABLE_NAME if media_type == "audio" else IMAGE_TABLE_NAME
+        db_table = TABLE_NAMES.get(media_type, TABLE_NAMES[IMAGE])
 
     load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f"Upserting new records into {db_table}.")
@@ -280,7 +280,7 @@ def upsert_records_to_db_table(
         col.TAGS: col.TAGS,
         col.WATERMARKED: col.WATERMARKED,
     }
-    if media_type == "audio":
+    if media_type == AUDIO:
         column_inserts.update(
             {
                 col.DURATION: col.DURATION,
@@ -299,7 +299,7 @@ def upsert_records_to_db_table(
                 col.HEIGHT: col.HEIGHT,
             }
         )
-    if media_type == "audio":
+    if media_type == AUDIO:
         media_specific_upsert_query = f"""{_newest_non_null(col.DURATION)},
             {_newest_non_null(col.BIT_RATE)},
             {_newest_non_null(col.SAMPLE_RATE)},
@@ -342,14 +342,14 @@ def upsert_records_to_db_table(
 
 
 def overwrite_records_in_db_table(
-    postgres_conn_id, identifier, db_table=None, media_type="image"
+    postgres_conn_id, identifier, db_table=None, media_type=IMAGE
 ):
     if db_table is None:
-        db_table = AUDIO_TABLE_NAME if media_type == "audio" else IMAGE_TABLE_NAME
+        db_table = TABLE_NAMES.get(media_type, TABLE_NAMES[IMAGE])
     load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f"Updating records in {db_table}.")
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    if media_type == "audio":
+    if media_type == AUDIO:
         columns_to_update = [
             col.LANDING_URL,
             col.DIRECT_URL,
@@ -411,7 +411,7 @@ def overwrite_records_in_db_table(
 def drop_load_table(postgres_conn_id, identifier, ti):
     media_type = ti.xcom_pull(task_ids="stage_oldest_tsv_file", key="media_type")
     if media_type is None:
-        media_type = "image"
+        media_type = IMAGE
     load_table = _get_load_table_name(identifier, media_type=media_type)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.run(f"DROP TABLE {load_table};")
@@ -419,7 +419,7 @@ def drop_load_table(postgres_conn_id, identifier, ti):
 
 def _get_load_table_name(
     identifier: str,
-    media_type: str = "image",
+    media_type: str = IMAGE,
     load_table_name_stub: str = LOAD_TABLE_NAME_STUB,
 ) -> str:
     return f"{load_table_name_stub}{media_type}_{identifier}"
@@ -496,7 +496,7 @@ def _create_temp_flickr_sub_prov_table(
 
 def update_flickr_sub_providers(
     postgres_conn_id,
-    image_table=IMAGE_TABLE_NAME,
+    image_table=TABLE_NAMES[IMAGE],
     default_provider=prov.FLICKR_DEFAULT_PROVIDER,
 ):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
@@ -591,7 +591,7 @@ def _create_temp_europeana_sub_prov_table(
 
 def update_europeana_sub_providers(
     postgres_conn_id,
-    image_table=IMAGE_TABLE_NAME,
+    image_table=TABLE_NAMES[IMAGE],
     default_provider=prov.EUROPEANA_DEFAULT_PROVIDER,
     sub_providers=prov.EUROPEANA_SUB_PROVIDERS,
 ):
@@ -658,7 +658,7 @@ def update_europeana_sub_providers(
 
 def update_smithsonian_sub_providers(
     postgres_conn_id,
-    image_table=IMAGE_TABLE_NAME,
+    image_table=TABLE_NAMES[IMAGE],
     default_provider=prov.SMITHSONIAN_DEFAULT_PROVIDER,
     sub_providers=prov.SMITHSONIAN_SUB_PROVIDERS,
 ):
@@ -707,7 +707,7 @@ def update_smithsonian_sub_providers(
         )
 
 
-def expire_old_images(postgres_conn_id, provider, image_table=IMAGE_TABLE_NAME):
+def expire_old_images(postgres_conn_id, provider, image_table=TABLE_NAMES[IMAGE]):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
 
     if provider not in OLDEST_PER_PROVIDER:

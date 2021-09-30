@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import pytest
 from common.licenses.licenses import LicenseInfo, get_license_info
-from common.storage import image
+from storage import image
 
 
 logging.basicConfig(
@@ -59,41 +59,6 @@ def test_MediaStore_includes_media_type_in_output_file_string():
     image_store = image.ImageStore("test_provider")
     assert type(image_store._OUTPUT_PATH) == str
     assert "image" in image_store._OUTPUT_PATH
-
-
-def test_MediaStore_add_item_adds_realistic_image_to_buffer():
-    image_store = image.ImageStore(provider="testing_provider")
-    image_store.add_item(
-        foreign_landing_url="https://images.org/image01",
-        image_url="https://images.org/image01.jpg",
-        license_info=PD_LICENSE_INFO,
-    )
-    assert len(image_store._media_buffer) == 1
-
-
-def test_MediaStore_add_item_adds_multiple_images_to_buffer():
-    image_store = image.ImageStore(provider="testing_provider")
-    image_store.add_item(
-        foreign_landing_url="https://images.org/image01",
-        image_url="https://images.org/image01.jpg",
-        license_info=PD_LICENSE_INFO,
-    )
-    image_store.add_item(
-        foreign_landing_url="https://images.org/image02",
-        image_url="https://images.org/image02.jpg",
-        license_info=PD_LICENSE_INFO,
-    )
-    image_store.add_item(
-        foreign_landing_url="https://images.org/image03",
-        image_url="https://images.org/image03.jpg",
-        license_info=PD_LICENSE_INFO,
-    )
-    image_store.add_item(
-        foreign_landing_url="https://images.org/image04",
-        image_url="https://images.org/image04.jpg",
-        license_info=PD_LICENSE_INFO,
-    )
-    assert len(image_store._media_buffer) == 4
 
 
 def test_MediaStore_add_item_flushes_buffer(tmpdir):
@@ -598,135 +563,6 @@ def test_ImageStore_get_image_nones_nonlist_tags():
     )
 
     assert actual_image.tags is None
-
-
-@pytest.fixture
-def default_image_args():
-    return dict(
-        foreign_identifier=None,
-        foreign_landing_url="https://image.org",
-        image_url="https://image.org",
-        thumbnail_url=None,
-        width=None,
-        height=None,
-        filesize=None,
-        license_="cc0",
-        license_version="1.0",
-        creator=None,
-        creator_url=None,
-        title=None,
-        meta_data=None,
-        tags=None,
-        watermarked=None,
-        provider=None,
-        source=None,
-        ingestion_type=None,
-    )
-
-
-def test_create_tsv_row_non_none_if_req_fields(
-    default_image_args,
-):
-    image_store = image.ImageStore()
-    test_image = image.Image(**default_image_args)
-    actual_row = image_store._create_tsv_row(test_image)
-    assert actual_row is not None
-
-
-def test_create_tsv_row_none_if_no_foreign_landing_url(
-    default_image_args,
-):
-    image_store = image.ImageStore()
-    image_args = default_image_args
-    image_args["foreign_landing_url"] = None
-    test_image = image.Image(**image_args)
-    expect_row = None
-    actual_row = image_store._create_tsv_row(test_image)
-    assert expect_row == actual_row
-
-
-def test_create_tsv_row_none_if_no_license(
-    default_image_args,
-):
-    image_store = image.ImageStore()
-    image_args = default_image_args
-    image_args["license_"] = None
-    test_image = image.Image(**image_args)
-    expect_row = None
-    actual_row = image_store._create_tsv_row(test_image)
-    assert expect_row == actual_row
-
-
-def test_create_tsv_row_none_if_no_license_version(
-    default_image_args,
-):
-    image_store = image.ImageStore()
-    image_args = default_image_args
-    image_args["license_version"] = None
-    test_image = image.Image(**image_args)
-    expect_row = None
-    actual_row = image_store._create_tsv_row(test_image)
-    assert expect_row == actual_row
-
-
-def test_create_tsv_row_returns_none_if_missing_image_url(
-    default_image_args,
-):
-    image_store = image.ImageStore()
-    image_args = default_image_args
-    image_args["image_url"] = None
-    test_image = image.Image(**image_args)
-    expect_row = None
-    actual_row = image_store._create_tsv_row(test_image)
-    assert expect_row == actual_row
-
-
-def test_create_tsv_row_handles_empty_dict_and_tags(
-    default_image_args,
-):
-    image_store = image.ImageStore()
-    meta_data = {}
-    tags = []
-    image_args = default_image_args
-    image_args["meta_data"] = meta_data
-    image_args["tags"] = tags
-    test_image = image.Image(**image_args)
-
-    actual_row = image_store._create_tsv_row(test_image).split("\t")
-    meta_data_col_id = IMAGE_COLUMN_NAMES.index("meta_data")
-    tags_col_id = IMAGE_COLUMN_NAMES.index("tags")
-    actual_meta_data, actual_tags = (
-        actual_row[meta_data_col_id],
-        actual_row[tags_col_id],
-    )
-    expect_meta_data, expect_tags = "\\N", "\\N"
-    assert expect_meta_data == actual_meta_data
-    assert expect_tags == actual_tags
-
-
-def test_create_tsv_row_turns_empty_into_nullchar(
-    default_image_args,
-):
-    """
-    Null values are converted into `N/A` in tsv files
-    This test first selects all the media properties with value None,
-    and then checks if all corresponding tsv values are `N/A`.
-    The last element has a new line at the end, so we check it separately
-    """
-    image_store = image.ImageStore()
-    image_args = default_image_args
-    test_image = image.Image(**image_args)
-
-    none_fields = [
-        i for i, x in enumerate(test_image._fields) if getattr(test_image, x) is None
-    ]
-    # none_field_names = [test_image._fields[x] for x in none_fields]
-
-    actual_row = image_store._create_tsv_row(test_image).split("\t")
-    assert actual_row[-1] == "\\N\n"
-
-    actual_row[-1] = "\\N"
-    assert all([actual_row[i] == "\\N" for i in none_fields]) is True
 
 
 def test_create_tsv_row_properly_places_entries(monkeypatch):

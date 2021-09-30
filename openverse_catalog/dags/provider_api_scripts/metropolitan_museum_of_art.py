@@ -15,7 +15,7 @@ import logging
 
 from common.licenses.licenses import get_license_info
 from common.requester import DelayedRequester
-from common.storage.image import ImageStore
+from storage.image import ImageStore
 
 
 DELAY = 1.0  # time delay (in seconds)

@@ -15,7 +15,7 @@ from datetime import datetime
 
 from common.licenses.licenses import LicenseInfo
 from common.requester import DelayedRequester
-from common.storage.image import ImageStore
+from storage.image import ImageStore
 from util.loader import provider_details as prov
 
 

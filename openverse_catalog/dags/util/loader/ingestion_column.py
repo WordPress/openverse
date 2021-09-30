@@ -6,9 +6,9 @@ PostgreSQL.
 import logging
 import os
 
-from common.storage import media
-from common.storage.audio import AUDIO_TSV_COLUMNS
-from common.storage.image import IMAGE_TSV_COLUMNS
+from storage import media
+from storage.audio import AUDIO_TSV_COLUMNS
+from storage.image import IMAGE_TSV_COLUMNS
 
 
 logger = logging.getLogger(__name__)

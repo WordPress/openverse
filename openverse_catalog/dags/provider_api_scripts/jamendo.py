@@ -21,8 +21,8 @@ from functools import lru_cache
 
 from common.licenses.licenses import get_license_info
 from common.requester import DelayedRequester
-from common.storage.audio import AudioStore
 from common.urls import rewrite_redirected_url
+from storage.audio import AudioStore
 from util.loader import provider_details as prov
 
 

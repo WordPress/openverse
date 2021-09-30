@@ -11,10 +11,11 @@ from pathlib import Path
 from textwrap import dedent
 
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from common.storage import image
+from storage import column_names as col
+from storage import image
 from util import tsv_cleaner
-from util.loader import column_names as col
-from util.loader.sql import IMAGE_TABLE_NAME
+from util.constants import IMAGE
+from util.loader.sql import TABLE_NAMES
 
 
 logger = logging.getLogger(__name__)
@@ -167,7 +168,7 @@ def hex_counter(length):
         yield format(h, format_string)
 
 
-def _select_records(postgres_conn_id, prefix, image_table=IMAGE_TABLE_NAME):
+def _select_records(postgres_conn_id, prefix, image_table=TABLE_NAMES[IMAGE]):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     min_base_uuid = "00000000-0000-0000-0000-000000000000"
     max_base_uuid = "ffffffff-ffff-ffff-ffff-ffffffffffff"

@@ -2,7 +2,7 @@ import logging
 import string
 
 import tldextract
-from common.storage import columns
+from storage import columns
 
 
 logging.basicConfig(

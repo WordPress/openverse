@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 import requests
 import science_museum as sm
 from common.licenses.licenses import LicenseInfo
-from common.storage.image import MockImageStore
+from storage.image import MockImageStore
 
 
 _license_info = (

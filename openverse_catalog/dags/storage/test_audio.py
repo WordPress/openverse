@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 from common.licenses.licenses import LicenseInfo
-from common.storage import audio
+from storage import audio
 
 
 logging.basicConfig(

@@ -3,8 +3,8 @@ from collections import namedtuple
 from typing import Dict, Optional, Union
 
 from common.licenses.licenses import LicenseInfo
-from common.storage import columns
-from common.storage.media import MediaStore
+from storage import columns
+from storage.media import MediaStore
 
 
 logger = logging.getLogger(__name__)

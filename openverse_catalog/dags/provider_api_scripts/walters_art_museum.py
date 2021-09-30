@@ -14,7 +14,7 @@ import logging
 import os
 
 from common.requester import DelayedRequester
-from common.storage.image import ImageStore
+from storage.image import ImageStore
 from util.loader import provider_details as prov
 
 

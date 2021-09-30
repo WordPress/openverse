@@ -2,14 +2,12 @@ from collections import namedtuple
 from textwrap import dedent
 
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from util.loader import column_names as col
-from util.loader.sql import AUDIO_TABLE_NAME, IMAGE_TABLE_NAME
+from storage import column_names as col
+from util.constants import AUDIO, IMAGE
+from util.loader.sql import TABLE_NAMES
 
 
 DEFAULT_PERCENTILE = 0.85
-
-IMAGE_TYPE = "image"
-AUDIO_TYPE = "audio"
 
 IMAGE_VIEW_NAME = "image_view"
 AUDIO_VIEW_NAME = "audio_view"
@@ -30,7 +28,7 @@ AUDIO_VIEW_PROVIDER_FID_IDX = "audio_view_provider_fid_idx"
 # Column name constants
 CONSTANT = "constant"
 FID = col.FOREIGN_ID
-IDENTIFIER = "identifier"
+IDENTIFIER = col.IDENTIFIER
 METADATA_COLUMN = col.META_DATA
 METRIC = "metric"
 PARTITION = col.PROVIDER
@@ -60,13 +58,13 @@ POPULARITY_METRICS_TABLE_COLUMNS = [
 
 def drop_media_popularity_relations(
     postgres_conn_id,
-    media_type=IMAGE_TYPE,
+    media_type=IMAGE,
     db_view=IMAGE_VIEW_NAME,
     constants=IMAGE_POPULARITY_CONSTANTS_VIEW,
     metrics=IMAGE_POPULARITY_METRICS_TABLE_NAME,
 ):
 
-    if media_type == AUDIO_TYPE:
+    if media_type == AUDIO:
         db_view = AUDIO_VIEW_NAME
         constants = AUDIO_POPULARITY_CONSTANTS_VIEW
         metrics = AUDIO_POPULARITY_METRICS_TABLE_NAME
@@ -84,11 +82,11 @@ def drop_media_popularity_relations(
 
 def drop_media_popularity_functions(
     postgres_conn_id,
-    media_type=IMAGE_TYPE,
+    media_type=IMAGE,
     standardized_popularity=STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
     popularity_percentile=IMAGE_POPULARITY_PERCENTILE_FUNCTION,
 ):
-    if media_type == AUDIO_TYPE:
+    if media_type == AUDIO:
         popularity_percentile = AUDIO_POPULARITY_PERCENTILE_FUNCTION
         standardized_popularity = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
@@ -104,13 +102,13 @@ def drop_media_popularity_functions(
 
 def create_media_popularity_metrics(
     postgres_conn_id,
-    media_type=IMAGE_TYPE,
+    media_type=IMAGE,
     popularity_metrics_table=IMAGE_POPULARITY_METRICS_TABLE_NAME,
 ):
-    if media_type == AUDIO_TYPE:
+    if media_type == AUDIO:
         popularity_metrics_table = AUDIO_POPULARITY_METRICS_TABLE_NAME
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    popularity_metrics_columns_string = ",\n          ".join(
+    popularity_metrics_columns_string = ",\n            ".join(
         f"{c.name} {c.definition}" for c in POPULARITY_METRICS_TABLE_COLUMNS
     )
     query = dedent(
@@ -125,16 +123,16 @@ def create_media_popularity_metrics(
 
 def update_media_popularity_metrics(
     postgres_conn_id,
-    media_type=IMAGE_TYPE,
+    media_type=IMAGE,
     popularity_metrics=None,
     popularity_metrics_table=IMAGE_POPULARITY_METRICS_TABLE_NAME,
 ):
     if popularity_metrics is None:
-        if media_type == AUDIO_TYPE:
+        if media_type == AUDIO:
             popularity_metrics = AUDIO_POPULARITY_METRICS
         else:
             popularity_metrics = IMAGE_POPULARITY_METRICS
-    if media_type == AUDIO_TYPE:
+    if media_type == AUDIO:
         popularity_metrics_table = AUDIO_POPULARITY_METRICS_TABLE_NAME
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     column_names = [c.name for c in POPULARITY_METRICS_TABLE_COLUMNS]
@@ -184,14 +182,14 @@ def _format_popularity_metric_insert_tuple_string(
 
 def create_media_popularity_percentile_function(
     postgres_conn_id,
-    media_type=IMAGE_TYPE,
+    media_type=IMAGE,
     popularity_percentile=IMAGE_POPULARITY_PERCENTILE_FUNCTION,
-    media_table=IMAGE_TABLE_NAME,
+    media_table=TABLE_NAMES[IMAGE],
 ):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    if media_type == AUDIO_TYPE:
+    if media_type == AUDIO:
         popularity_percentile = AUDIO_POPULARITY_PERCENTILE_FUNCTION
-        media_table = AUDIO_TABLE_NAME
+        media_table = TABLE_NAMES[AUDIO]
     query = dedent(
         f"""
         CREATE OR REPLACE FUNCTION public.{popularity_percentile}(
@@ -212,14 +210,14 @@ def create_media_popularity_percentile_function(
 
 def create_media_popularity_constants_view(
     postgres_conn_id,
-    media_type=IMAGE_TYPE,
+    media_type=IMAGE,
     popularity_constants=IMAGE_POPULARITY_CONSTANTS_VIEW,
     popularity_constants_idx=IMAGE_POP_CONSTANTS_IDX,
     popularity_metrics=IMAGE_POPULARITY_METRICS_TABLE_NAME,
     popularity_percentile=IMAGE_POPULARITY_PERCENTILE_FUNCTION,
 ):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    if media_type == AUDIO_TYPE:
+    if media_type == AUDIO:
         popularity_constants = AUDIO_POPULARITY_CONSTANTS_VIEW
         popularity_constants_idx = AUDIO_POP_CONSTANTS_IDX
         popularity_metrics = AUDIO_POPULARITY_METRICS_TABLE_NAME
@@ -263,10 +261,10 @@ def create_media_popularity_constants_view(
 
 def update_media_popularity_constants(
     postgres_conn_id,
-    media_type=IMAGE_TYPE,
+    media_type=IMAGE,
     popularity_constants_view=IMAGE_POPULARITY_CONSTANTS_VIEW,
 ):
-    if media_type == AUDIO_TYPE:
+    if media_type == AUDIO:
         popularity_constants_view = AUDIO_POPULARITY_CONSTANTS_VIEW
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.run(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {popularity_constants_view};")
@@ -274,11 +272,11 @@ def update_media_popularity_constants(
 
 def create_standardized_media_popularity_function(
     postgres_conn_id,
-    media_type=IMAGE_TYPE,
+    media_type=IMAGE,
     function_name=STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
     popularity_constants=IMAGE_POPULARITY_CONSTANTS_VIEW,
 ):
-    if media_type == AUDIO_TYPE:
+    if media_type == AUDIO:
         popularity_constants = AUDIO_POPULARITY_CONSTANTS_VIEW
         function_name = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
@@ -300,15 +298,15 @@ def create_standardized_media_popularity_function(
 
 def create_media_view(
     postgres_conn_id,
-    media_type=IMAGE_TYPE,
+    media_type=IMAGE,
     standardized_popularity_func=STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
-    table_name=IMAGE_TABLE_NAME,
+    table_name=TABLE_NAMES[IMAGE],
     db_view_name=IMAGE_VIEW_NAME,
     db_view_id_idx=IMAGE_VIEW_ID_IDX,
     db_view_provider_fid_idx=IMAGE_VIEW_PROVIDER_FID_IDX,
 ):
-    if media_type == AUDIO_TYPE:
-        table_name = AUDIO_TABLE_NAME
+    if media_type == AUDIO:
+        table_name = TABLE_NAMES[AUDIO]
         db_view_name = AUDIO_VIEW_NAME
         db_view_id_idx = AUDIO_VIEW_ID_IDX
         db_view_provider_fid_idx = AUDIO_VIEW_PROVIDER_FID_IDX
@@ -341,10 +339,10 @@ def create_media_view(
 
 def update_db_view(
     postgres_conn_id,
-    media_type=IMAGE_TYPE,
+    media_type=IMAGE,
     db_view_name=IMAGE_VIEW_NAME,
 ):
-    if media_type == AUDIO_TYPE:
+    if media_type == AUDIO:
         db_view_name = AUDIO_VIEW_NAME
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.run(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {db_view_name};")

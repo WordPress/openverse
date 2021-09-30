@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Optional, Union
 
 from common.licenses.licenses import is_valid_license_info
-from common.storage import util
+from storage import util
 
 
 logger = logging.getLogger(__name__)
