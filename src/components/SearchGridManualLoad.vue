@@ -40,24 +40,23 @@
         </h5>
       </div>
       <div class="pb-6">
-        <div v-if="!isFetchingImagesError" class="load-more">
+        <div v-if="!isFetchingImagesError && !isFinished" class="load-more">
           <button
             v-show="!isFetchingImages && includeAnalytics"
             class="button"
-            :disabled="isFinished"
             @click="onLoadMoreImages"
             @keyup.enter="onLoadMoreImages"
           >
-            <span v-if="isFinished">{{
-              $t('browse-page.no-more', {
-                type: $t('browse-page.search-form.image'),
-              })
-            }}</span>
-            <span v-else>{{ $t('browse-page.load') }}</span>
+            <span>{{ $t('browse-page.load') }}</span>
           </button>
           <LoadingIcon v-show="isFetchingImages" />
         </div>
-        <MetaSearchForm type="image" :query="query" :supported="true" />
+        <MetaSearchForm
+          type="image"
+          :noresult="storeImagesCount === 0"
+          :query="query"
+          :supported="true"
+        />
       </div>
     </div>
   </section>

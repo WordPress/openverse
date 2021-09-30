@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-09-28T20:27:14+00:00\n"
+"POT-Creation-Date: 2021-09-30T16:59:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1257,7 +1257,7 @@ msgctxt "browse-page.audio-no-results"
 msgid "No audio results"
 msgstr ""
 
-#: src/components/SearchGridManualLoad.vue:125
+#: src/components/SearchGridManualLoad.vue:124
 msgctxt "browse-page.image-no-results"
 msgid "No image results"
 msgstr ""
@@ -1278,7 +1278,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
-#: src/components/SearchGridManualLoad.vue:131
+#: src/components/SearchGridManualLoad.vue:130
 msgctxt "browse-page.image-result-count"
 msgid "###localeCount### image result"
 msgid_plural "###localeCount### image results"
@@ -1301,7 +1301,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
-#: src/components/SearchGridManualLoad.vue:128
+#: src/components/SearchGridManualLoad.vue:127
 msgctxt "browse-page.image-result-count-more"
 msgid "Over ###localeCount### image results"
 msgid_plural "Over ###localeCount### image results"
@@ -1877,6 +1877,12 @@ msgstr ""
 #. Do not translate words between ### ###.
 msgctxt "meta-search.form.supported-title"
 msgid "Not finding what you're looking for? Try additional ###type### sources."
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/components/MetaSearch/MetaSearchForm.vue:4
+msgctxt "meta-search.form.no-results-title"
+msgid "No ###type### results for \"###query###\"."
 msgstr ""
 
 #. Do not translate words between ### ###.

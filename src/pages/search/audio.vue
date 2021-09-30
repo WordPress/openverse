@@ -1,3 +1,4 @@
+<!-- noresult is hardcoded since it does not yet support built-in audio search -->
 <template>
   <div id="tab-audio" role="tabpanel" aria-labelledby="audio">
     <AudioResultsList
@@ -5,7 +6,12 @@
       :query="query"
       @onLoadMoreAudios="onLoadMoreAudios"
     />
-    <MetaSearchForm type="audio" :query="query" :supported="supported" />
+    <MetaSearchForm
+      type="audio"
+      :query="query"
+      :noresult="false"
+      :supported="supported"
+    />
   </div>
 </template>
 
