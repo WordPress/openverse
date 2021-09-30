@@ -2,8 +2,8 @@ import { createApiService } from './api-service'
 
 const baseUrl = process.env.apiUrl
 
-// Analytics API is available at `http://api.creativecommons.engineering/analytics/`
-// and not `http://api.creativecommons.engineering/v1/analytics
+// Analytics API is available at `http://api.openverse.engineering/analytics/`
+// and not `http://api.openverse.engineering/v1/analytics
 const ApiService = createApiService(baseUrl.replace('/v1', ''))
 
 const UsageDataService = {
