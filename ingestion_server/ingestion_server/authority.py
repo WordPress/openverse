@@ -36,27 +36,28 @@ boost = {
     AuthorityTypes.CURATED: 85,
     AuthorityTypes.CULTURAL_INSTITUTION: 90,
     AuthorityTypes.SOCIAL_MEDIA: 75,
-    AuthorityTypes.DEFAULT: 80
+    AuthorityTypes.DEFAULT: 80,
 }
 
 authority_types = {
-    'flickr': AuthorityTypes.SOCIAL_MEDIA,
-    'behance': AuthorityTypes.SOCIAL_MEDIA,
-    'thingiverse': AuthorityTypes.SOCIAL_MEDIA,
-    'sketchfab': AuthorityTypes.SOCIAL_MEDIA,
-    'deviantart': AuthorityTypes.SOCIAL_MEDIA,
-    'thorvaldsensmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
-    'svgsilh': AuthorityTypes.CULTURAL_INSTITUTION,
-    'smithsonian': AuthorityTypes.CULTURAL_INSTITUTION,
-    'rijksmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
-    'museumsvictoria': AuthorityTypes.CULTURAL_INSTITUTION,
-    'met': AuthorityTypes.CULTURAL_INSTITUTION,
-    'mccordsmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
-    'digitaltmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
-    'clevelandmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
-    'brooklynmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
-    'stocksnap': AuthorityTypes.CURATED
+    "flickr": AuthorityTypes.SOCIAL_MEDIA,
+    "behance": AuthorityTypes.SOCIAL_MEDIA,
+    "thingiverse": AuthorityTypes.SOCIAL_MEDIA,
+    "sketchfab": AuthorityTypes.SOCIAL_MEDIA,
+    "deviantart": AuthorityTypes.SOCIAL_MEDIA,
+    "thorvaldsensmuseum": AuthorityTypes.CULTURAL_INSTITUTION,
+    "svgsilh": AuthorityTypes.CULTURAL_INSTITUTION,
+    "smithsonian": AuthorityTypes.CULTURAL_INSTITUTION,
+    "rijksmuseum": AuthorityTypes.CULTURAL_INSTITUTION,
+    "museumsvictoria": AuthorityTypes.CULTURAL_INSTITUTION,
+    "met": AuthorityTypes.CULTURAL_INSTITUTION,
+    "mccordsmuseum": AuthorityTypes.CULTURAL_INSTITUTION,
+    "digitaltmuseum": AuthorityTypes.CULTURAL_INSTITUTION,
+    "clevelandmuseum": AuthorityTypes.CULTURAL_INSTITUTION,
+    "brooklynmuseum": AuthorityTypes.CULTURAL_INSTITUTION,
+    "stocksnap": AuthorityTypes.CURATED,
 }
+
 
 def get_authority_boost(source):
     authority_boost = None
