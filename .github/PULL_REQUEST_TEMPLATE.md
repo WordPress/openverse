@@ -5,20 +5,15 @@ Fixes #[issue number] by @[issue author]
 
 ## Description
 <!-- Concisely describe what the pull request does. -->
+<!-- Add screenshots, videos, or other media to show the problem and the solution when appropriate. -->
 
-## Technical details
-<!-- Add any other information or technical details about the implementation; or delete this section entirely. -->
-
-## Tests
+## Testing Instructions
 <!-- Give steps for the reviewer to verify that this PR fixes the problem; or delete this section entirely. -->
-
-## Screenshots
-<!-- Add screenshots to show the problem and the solution; or delete this section entirely. -->
 
 ## Checklist
 <!-- Replace  the [ ] with [x] to check the boxes. -->
 - [ ] My pull request has a descriptive title (not a vague title like `Update index.md`).
-- [ ] My pull request targets the *default* branch of the repository (`main` or `master`).
+- [ ] My pull request targets the *default* branch of the repository (`main`) or a parent feature branch.
 - [ ] My commit messages follow [best practices][best_practices].
 - [ ] My code follows the established code style of the repository.
 - [ ] I added or updated tests for the changes I made (if applicable).

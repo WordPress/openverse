@@ -1,10 +1,12 @@
-import logging
 import datetime as dt
-import requests
+import logging
 from enum import Enum
 from multiprocessing import Process
-from ingestion_server.indexer import elasticsearch_connect, TableIndexer
+
+import requests
+from ingestion_server.indexer import TableIndexer, elasticsearch_connect
 from ingestion_server.ingest import reload_upstream
+
 
 """ Simple in-memory tracking of executed tasks. """
 
@@ -51,19 +53,18 @@ class TaskTracker:
             active = task.is_alive()
             start_time = self.id_start_time[_id]
             finish_time = self.id_finish_time[_id].value
-            results.append({
-                'task_id': _id,
-                'active': active,
-                'action': self.id_action[_id],
-                'progress': percent_completed,
-                'error': percent_completed < 100 and not active,
-                'start_time': start_time,
-                'finish_time': finish_time
-            })
-        sorted_results = sorted(
-            results,
-            key=lambda x: x['finish_time']
-        )
+            results.append(
+                {
+                    "task_id": _id,
+                    "active": active,
+                    "action": self.id_action[_id],
+                    "progress": percent_completed,
+                    "error": percent_completed < 100 and not active,
+                    "start_time": start_time,
+                    "finish_time": finish_time,
+                }
+            )
+        sorted_results = sorted(results, key=lambda x: x["finish_time"])
 
         to_utc = dt.datetime.utcfromtimestamp
 
@@ -72,17 +73,18 @@ class TaskTracker:
 
         # Convert date to a readable format
         for idx, task in enumerate(sorted_results):
-            start_time = task['start_time']
-            finish_time = task['finish_time']
-            sorted_results[idx]['start_time'] = str(render_date(start_time))
-            sorted_results[idx]['finish_time'] = str(render_date(finish_time))
+            start_time = task["start_time"]
+            finish_time = task["finish_time"]
+            sorted_results[idx]["start_time"] = str(render_date(start_time))
+            sorted_results[idx]["finish_time"] = str(render_date(finish_time))
 
         return sorted_results
 
 
 class Task(Process):
-    def __init__(self, model, task_type, since_date, progress, task_id,
-                 finish_time, callback_url):
+    def __init__(
+        self, model, task_type, since_date, progress, task_id, finish_time, callback_url
+    ):
         Process.__init__(self)
         self.model = model
         self.task_type = task_type
@@ -107,10 +109,10 @@ class Task(Process):
             indexer.reindex(self.model)
         elif self.task_type == TaskTypes.LOAD_TEST_DATA:
             indexer.load_test_data(self.model)
-        logging.info(f'Task {self.task_id} exited.')
+        logging.info(f"Task {self.task_id} exited.")
         if self.callback_url:
             try:
                 requests.post(self.callback_url)
             except requests.exceptions.RequestException as e:
-                logging.error('Failed to send callback!')
+                logging.error("Failed to send callback!")
                 logging.error(e)

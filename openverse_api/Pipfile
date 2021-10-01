@@ -1,0 +1,46 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+ipython = "*"
+pipdeptree = "*"
+pycodestyle = "*"
+pytest-django = ">=3.5"
+remote-pdb = "*"
+pre-commit = "*"
+
+[packages]
+aws-requests-auth = "*"
+boto3 = "*"
+deepdiff = "*"
+Django = "==3.2.7"
+django-braces = "*"
+django-cors-headers = "*"
+django-oauth-toolkit = "==1.5.0"
+django-redis = "*"
+django-sslserver = "*"
+django-storages = "*"
+django-uuslug = "*"
+djangorestframework = "*"
+djangorestframework-xml = "*"
+drf-yasg = "*"
+elasticsearch-dsl = "==7.4.0"
+future = {version = "*"}
+gevent = "*"
+grequests = "*"
+hvac = "*"
+ipaddress = {version = "*"}
+piexif = "*"
+Pillow = "*"
+psycopg2 = "*"
+PyJWT = "*"
+python-xmp-toolkit = "*"
+python3-openid = "*"
+redlock-py = "*"
+requests-oauthlib = "*"
+wsgi-basic-auth = "*"
+
+[requires]
+python_version = "3.9"

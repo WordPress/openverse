@@ -1,4 +1,6 @@
 from enum import Enum, auto
+
+
 """
 Authority is a ranking from 0 to 100 (with 0 being least authoritative)
 indicating the pedigree of an image. Some examples of things that could impact
@@ -36,6 +38,7 @@ boost = {
     AuthorityTypes.SOCIAL_MEDIA: 75,
     AuthorityTypes.DEFAULT: 80
 }
+
 authority_types = {
     'flickr': AuthorityTypes.SOCIAL_MEDIA,
     'behance': AuthorityTypes.SOCIAL_MEDIA,
@@ -54,7 +57,6 @@ authority_types = {
     'brooklynmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
     'stocksnap': AuthorityTypes.CURATED
 }
-
 
 def get_authority_boost(source):
     authority_boost = None

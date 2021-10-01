@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Openverse API (`openverse-api`) is a system that allows programmatic access to public domain digital media. It is our ambition to index and catalog [billions of openly-licensed works](https://stateof.creativecommons.org/), including articles, songs, videos, photographs, paintings, and more. Using this API, developers will be able to access the digital commons in their own applications.
+The Openverse API (`openverse_api`) is a system that allows programmatic access to public domain digital media. It is our ambition to index and catalog [billions of openly-licensed works](https://stateof.creativecommons.org/), including articles, songs, videos, photographs, paintings, and more. Using this API, developers will be able to access the digital commons in their own applications.
 
 This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [Openverse Catalog repository](https://github.com/WordPress/openverse-catalog). A front end web application that interfaces with the API can be found at the [Openverse frontend repository](https://github.com/WordPress/openverse-frontend).
 
@@ -14,7 +14,7 @@ In the [API documentation](https://api.openverse.engineering), you can find more
 
 ### Prerequisites
 
-You need to install [Docker](https://docs.docker.com/install/) (with [Docker Compose](https://docs.docker.com/compose/install/)), [Git](https://git-scm.com/downloads), and [PostgreSQL client tools](https://www.postgresql.org/download/). On Debian, the package is called `postgresql-client-common`.
+You need to install [Docker](https://docs.docker.com/install/) (with [Docker Compose](https://docs.docker.com/compose/install/)), [Git](https://git-scm.com/downloads), and [PostgreSQL client tools](https://www.postgresql.org/download/). On Debian, the package is called `postgresql-client-common`. You'll also want to install the [just](https://github.com/casey/just) command runner.
 
 ### Running locally
 
@@ -26,11 +26,11 @@ You need to install [Docker](https://docs.docker.com/install/) (with [Docker Com
 git clone https://github.com/WordPress/openverse-api.git
 ```
 
-4. Change directories with `cd openverse-api`
-5. Start Openverse API locally by running the docker containers
+4. Change directories with `cd openverse_api`
+5. Start Openverse API locally by running the docker containers. You can use usual `docker-compose` commands or the simplified `just` command. You will need the [just](https://github.com/casey/just#installation) command runner installed to follow the next steps.
 
 ```
-docker-compose up
+just up
 ```
 
 6. Wait until your CMD or terminal displays that it is starting development server at `http://0.0.0.0:8000/`
@@ -38,17 +38,17 @@ docker-compose up
 7. Open up your browser and type `localhost:8000` in the search tab
 8. Make sure you see the local API documentation
    ![Local API Documentation](local_api_documentation.PNG)
-9. Open a new CMD or terminal and change directory to `openverse-api`
+9. Open a new CMD or terminal and change directory to `openverse_api`
 10. Still in the new CMD or terminal, load the sample data. This script requires a local postgres installation to connect to and alter our database.
 
 ```
-./load_sample_data.sh
+just init
 ```
 
 11. Still in the new CMD or terminal, hit the API with a request
 
 ```
-curl localhost:8000/v1/images?q=honey
+just healthcheck
 ```
 
 12. Make sure you see the following response from the API
@@ -56,9 +56,21 @@ curl localhost:8000/v1/images?q=honey
 
 Congratulations! You just ran the server locally.
 
+To access the logs run:
+
+```
+just logs
+```
+
+That will follow all the logs for all the services. To isolate a service, simply pass the service name, for example:
+
+```
+just logs web
+```
+
 ### What Happens In the Background
 
-After executing `docker-compose up` (in Step 5), you will be running:
+After executing `just up` (in Step 5), you will be running:
 
 - A Django API server
 - Two PostgreSQL instances (one simulates the upstream data source, the other serves as the application database)
@@ -94,7 +106,7 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 
 ### Description of subprojects
 
-- _openverse-api_ is a Django Rest Framework API server. For a full description of its capabilities, please see the [browsable documentation](https://api.openverse.engineering).
+- _openverse_api_ is a Django Rest Framework API server. For a full description of its capabilities, please see the [browsable documentation](https://api.openverse.engineering).
 - _ingestion-server_ is a service for downloading and indexing search data once it has been prepared by the Openverse Catalog
 - _analytics_ is a Falcon REST API for collecting usage data.
 
@@ -104,34 +116,24 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 
 You can check the health of a live deployment of the API by running the live integration tests.
 
-1. Change directory to the `openverse-api`
+1. Run the install recipe:
 
 ```
-cd openverse-api
+just install
 ```
 
 #### On the host
 
-1. Install all dependencies for Openverse API.
+1. Run the tests in a Pipenv subshell.
 ```
-pipenv install
-```
-
-2. Run the tests in a Pipenv subshell.
-```
-pipenv run bash ./test/run_test.sh
+just testlocal
 ```
 
 #### Inside the container
 
-1. Ensure that Docker containers are up. See the section above for instructions.
+1. Run the tests in an interactive TTY connected to a `web` container.
 ```
-docker-compose ps
-```
-
-2. Run the tests in an interactive TTY connected to a `web` container.
-```
-docker-compose exec web bash ./test/run_test.sh
+just test
 ```
 
 ### How to Run Ingestion Server tests

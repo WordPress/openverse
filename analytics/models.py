@@ -1,10 +1,13 @@
 import enum
-from sqlalchemy import Integer, Column, Enum, String, DateTime, Boolean, Float
+
+from sqlalchemy import Boolean, Column, DateTime, Enum, Float, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql import func
+
 
 Base = declarative_base()
+
 
 class Image(Base):
     __tablename__ = "image"
@@ -32,6 +35,7 @@ class SearchEvent(Base, EventMixin):
     """
     Store searches linked to a session UUID.
     """
+
     __tablename__ = "search_event"
 
     query = Column(String, index=True)
@@ -42,7 +46,8 @@ class SearchRatingEvent(Base, EventMixin):
     """
     Users can provide feedback about the quality of search results.
     """
-    __tablename__= "search_rating_event"
+
+    __tablename__ = "search_rating_event"
 
     query = Column(String, index=True)
     relevant = Column(Boolean, index=True)
@@ -52,6 +57,7 @@ class ResultClickedEvent(Base, EventMixin):
     """
     Link result clicks to search sessions.
     """
+
     __tablename__ = "result_clicked_event"
 
     session_uuid = Column(UUID, index=True)
@@ -73,6 +79,7 @@ class DetailPageEvent(Base, EventMixin):
     Events that happen on result pages, such as clicking an attribution button
     or sharing the result on social media.
     """
+
     __tablename__ = "detail_page_event"
 
     result_uuid = Column(UUID, index=True)
@@ -85,6 +92,7 @@ class AttributionReferrerEvent(Base, EventMixin):
     site. By parsing server logs, we can determine which work was embedded and
     on which domain it appeared.
     """
+
     __tablename__ = "attribution_referrer_event"
 
     image_uuid = Column(UUID, index=True)
@@ -93,11 +101,13 @@ class AttributionReferrerEvent(Base, EventMixin):
     # The path to the embedded asset on our server. ex: /static/img/cc-by.svg
     resource = Column(String, index=True)
 
+
 # Reports
 
 
 class UsageReport(Base, ReportMixin):
-    """ Tracks statistics for the last 24 hours """
+    """Tracks statistics for the last 24 hours"""
+
     __tablename__ = "usage_reports"
     results_clicked = Column(Integer)
     attribution_buttonclicks = Column(Integer)

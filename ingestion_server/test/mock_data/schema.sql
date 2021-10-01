@@ -143,4 +143,3 @@ CREATE INDEX temp_import_image_url_idx1 ON public.image USING btree (url varchar
 --
 -- PostgreSQL database dump complete
 --
-
