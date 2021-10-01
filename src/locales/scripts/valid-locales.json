@@ -63,6 +63,13 @@
     "file": "es-ec.json"
   },
   {
+    "code": "es-mx",
+    "name": "Spanish (Mexico)",
+    "iso": "es",
+    "wpLocale": "es_MX",
+    "file": "es-mx.json"
+  },
+  {
     "code": "es-ve",
     "name": "Spanish (Venezuela)",
     "iso": "es",
@@ -152,5 +159,12 @@
     "iso": "zh",
     "wpLocale": "zh_CN",
     "file": "zh-cn.json"
+  },
+  {
+    "code": "zh-tw",
+    "name": "Chinese (Taiwan)",
+    "iso": "zh",
+    "wpLocale": "zh_TW",
+    "file": "zh-tw.json"
   }
 ]
