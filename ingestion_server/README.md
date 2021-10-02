@@ -21,7 +21,7 @@ The server is designed to be run in a private network only. You must not expose 
 
 ## Running on the host
 
-1. Create environment variables from the stencil file.
+1. Create environment variables from the template file.
    ```bash
    just env
    ```

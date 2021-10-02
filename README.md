@@ -85,7 +85,7 @@ The command `just up` spawns the following services:
 - **ingestion-server** (`ingestion_server/`)
 - **analytics** (`analytics/`)
 
-The last three are subproject of this monorepo, described below.
+The last three are subprojects of this monorepo, described below.
 
 ## System architecture
 
