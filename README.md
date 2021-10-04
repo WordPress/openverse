@@ -41,7 +41,7 @@ docker-compose up
 
 You should now have the application running and accessible at http://localhost:8443.
 
-You don't need to have the Openverse API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [API](https://api.creativecommons.engineering) that's already publicly available. If you wish, you can change the URL of the API that's used during development by setting the `API_URL` environment variable.
+You don't need to have the Openverse API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [API](https://api.openverse.engineering) that's already publicly available. If you wish, you can change the URL of the API that's used during development by setting the `API_URL` environment variable.
 
 ### Standalone and embedded modes
 
