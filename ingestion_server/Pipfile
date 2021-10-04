@@ -12,7 +12,7 @@ pycodestyle = "*"
 [packages]
 aws-requests-auth = "*"
 bottle = "*"
-elasticsearch-dsl = "==7.0.0"
+elasticsearch-dsl = "==7.4.0"
 falcon = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
