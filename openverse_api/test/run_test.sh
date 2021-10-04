@@ -10,18 +10,8 @@ endcol="\e[0m"
 # ```
 TEST_ARG="${1:-test/}"
 
-# Local environments don't have valid certificates; suppress this warning.
-export PYTHONWARNINGS="ignore:Unverified HTTPS request"
-export INTEGRATION_TEST_URL="http://localhost:8000"
-
+PYTHONWARNINGS="ignore:Unverified HTTPS request" \
 PYTHONPATH=. \
-DJANGO_SETTINGS_MODULE='catalog.settings' \
-DJANGO_SECRET_KEY="${DJANGO_SECRET_KEY:-ny#b__$f6ry4wy8oxre97&-68u_0lk3gw(z=d40_dxey3zw0v1}" \
-DJANGO_DATABASE_NAME="${DJANGO_DATABASE_NAME:-openledger}" \
-DJANGO_DATABASE_USER="${DJANGO_DATABASE_USER:-deploy}" \
-DJANGO_DATABASE_PASSWORD="${DJANGO_DATABASE_PASSWORD:-deploy}" \
-DJANGO_DATABASE_HOST="${DJANGO_DATABASE_HOST:-localhost}" \
-REDIS_HOST="${REDIS_HOST:-localhost}" \
 pytest -s --disable-pytest-warnings $TEST_ARG
 
 succeeded=$?

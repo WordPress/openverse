@@ -1,9 +1,9 @@
 import datetime
 import enum
 import logging as log
-import os
 import shelve
 
+from decouple import config
 from filelock import FileLock
 
 
@@ -18,8 +18,8 @@ so all operations need to acquire a lock.
 """
 
 
-lock_path = os.getenv("LOCK_PATH", "lock")
-shelf_path = os.getenv("SHELF_PATH", "db")
+lock_path = config("LOCK_PATH", default="lock")
+shelf_path = config("SHELF_PATH", default="db")
 
 
 class WorkerStatus(enum.Enum):

@@ -9,17 +9,18 @@ which should then shut down the instances.
 """
 import logging as log
 import math
-import os
 import socket
 import time
 
 import boto3
 import requests
+from decouple import config
+
 from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.state import register_indexing_job
 
 
-client = boto3.client("ec2", region_name=os.getenv("AWS_REGION", "us-east-1"))
+client = boto3.client("ec2", region_name=config("AWS_REGION", default="us-east-1"))
 
 
 def schedule_distributed_index(db_conn, target_index):
@@ -68,7 +69,7 @@ def _prepare_workers():
 
     :return: A list of private URLs pointing to each available indexing worker
     """
-    environment = os.getenv("ENVIRONMENT", "local")
+    environment = config("ENVIRONMENT", default="local")
     if environment == "local":
         return [socket.gethostbyname("indexer-worker")]
     instance_filters = [

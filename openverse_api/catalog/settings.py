@@ -9,12 +9,11 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
-import os
 from pathlib import Path
 from socket import gethostbyname, gethostname
 
+from decouple import config
 
-true_strings = ["true", "True", "t", "1"]
 
 # Build paths inside the project like this: BASE_DIR.join('dir', 'subdir'...)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,20 +29,27 @@ MEDIA_URL = "/media/"
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+SECRET_KEY = config("DJANGO_SECRET_KEY")  # required
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DJANGO_DEBUG_ENABLED", default=False) in true_strings
+DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
 
 ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    os.environ.get("LOAD_BALANCER_URL"),
     "api-dev.openverse.engineering",
     "api.openverse.engineering",
     gethostname(),
     gethostbyname(gethostname()),
 ]
+
+if lb_url := config("LOAD_BALANCER_URL", default=""):
+    ALLOWED_HOSTS.append(lb_url)
+
+if DEBUG:
+    ALLOWED_HOSTS += [
+        "localhost",
+        "127.0.0.1",
+        "0.0.0.0",
+    ]
 
 # Domains that shortened links may point to
 SHORT_URL_WHITELIST = {
@@ -53,7 +59,7 @@ SHORT_URL_WHITELIST = {
 }
 SHORT_URL_PATH_WHITELIST = ["/v1/list", "/v1/images/"]
 
-USE_S3 = os.getenv("USE_S3", False)
+USE_S3 = config("USE_S3", default=False, cast=bool)
 
 # Application definition
 
@@ -75,7 +81,7 @@ INSTALLED_APPS = [
 
 if USE_S3:
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-    AWS_STORAGE_BUCKET_NAME = os.getenv("LOGOS_BUCKET", "openverse_api-logos-prod")
+    AWS_STORAGE_BUCKET_NAME = config("LOGOS_BUCKET", default="openverse_api-logos-prod")
     AWS_S3_SIGNATURE_VERSION = "s3v4"
     INSTALLED_APPS.append("storages")
 
@@ -131,16 +137,18 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "catalog.api.utils.exceptions.exception_handler",
 }
 
-if os.environ.get("DISABLE_GLOBAL_THROTTLING", default=False) in true_strings:
+if config("DISABLE_GLOBAL_THROTTLING", default=True, cast=bool):
     del REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"]
     del REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"]
 
-REDIS_HOST = os.environ.get("REDIS_HOST", "cache")
+REDIS_HOST = config("REDIS_HOST", default="localhost")
+REDIS_PORT = config("REDIS_PORT", default=6379, cast=int)
+REDIS_PASSWORD = config("REDIS_PASSWORD", default="")
 CACHES = {
     # Site cache writes to 'default'
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://" + REDIS_HOST + ":6379/" + "0",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -148,7 +156,7 @@ CACHES = {
     # For rapidly changing stats that we don't want to hammer the database with
     "traffic_stats": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://" + REDIS_HOST + ":6379/" + "1",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -157,7 +165,7 @@ CACHES = {
     # Used by Redlock.
     "locks": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://" + REDIS_HOST + ":6379/2",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/2",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -165,11 +173,7 @@ CACHES = {
 }
 
 # Produce CC-hosted thumbnails dynamically through a proxy.
-THUMBNAIL_PROXY_URL = os.environ.get("THUMBNAIL_PROXY_URL", "http://localhost:8222")
-# Proxy insecure HTTP images through our internal proxy.
-DETAIL_PROXY_URL = os.environ.get(
-    "DETAIL_PROXY_URL", "https://api.openverse.engineering/t"
-)
+THUMBNAIL_PROXY_URL = config("THUMBNAIL_PROXY_URL", default="http://localhost:8222")
 
 THUMBNAIL_WIDTH_PX = 600
 
@@ -204,19 +208,19 @@ WSGI_APPLICATION = "catalog.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DJANGO_DATABASE_NAME"),
-        "USER": os.environ.get("DJANGO_DATABASE_USER"),
-        "PASSWORD": os.environ.get("DJANGO_DATABASE_PASSWORD"),
-        "HOST": os.environ.get("DJANGO_DATABASE_HOST"),
-        "PORT": os.environ.get("DJANGO_DATABASE_PORT"),
+        "HOST": config("DJANGO_DATABASE_HOST", default="localhost"),
+        "PORT": config("DJANGO_DATABASE_PORT", default=5432, cast=int),
+        "USER": config("DJANGO_DATABASE_USER", default="deploy"),
+        "PASSWORD": config("DJANGO_DATABASE_PASSWORD", default="deploy"),
+        "NAME": config("DJANGO_DATABASE_NAME", default="openledger"),
     },
     "upstream": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DJANGO_DATABASE_NAME"),
-        "USER": os.environ.get("DJANGO_DATABASE_USER"),
-        "PASSWORD": os.environ.get("UPSTREAM_DATABASE_PASSWORD", "deploy"),
-        "HOST": os.environ.get("UPSTREAM_DATABASE_HOST"),
-        "PORT": os.environ.get("DJANGO_DATABASE_PORT"),
+        "HOST": config("UPSTREAM_DATABASE_HOST", default="localhost"),
+        "PORT": config("UPSTREAM_DATABASE_PORT", default=5433, cast=int),
+        "USER": config("UPSTREAM_DATABASE_USER", default="deploy"),
+        "PASSWORD": config("UPSTREAM_DATABASE_PASSWORD", default="deploy"),
+        "NAME": config("UPSTREAM_DATABASE_NAME", default="openledger"),
     },
 }
 
@@ -284,24 +288,22 @@ STATIC_URL = "/static/"
 CORS_ORIGIN_ALLOW_ALL = True
 
 # The version of the API. We follow the semantic version specification.
-API_VERSION = os.environ.get("SEMANTIC_VERSION", "Version not specified.")
+API_VERSION = config("SEMANTIC_VERSION", default="Version not specified")
 
-WATERMARK_ENABLED = os.environ.get("WATERMARK_ENABLED", "false") in true_strings
+WATERMARK_ENABLED = config("WATERMARK_ENABLED", default=False, cast=bool)
 
-ELASTICSEARCH_URL = os.environ.get("ELASTICSEARCH_URL", "localhost")
-ELASTICSEARCH_PORT = int(os.environ.get("ELASTICSEARCH_PORT", 9200))
+ELASTICSEARCH_URL = config("ELASTICSEARCH_URL", default="localhost")
+ELASTICSEARCH_PORT = config("ELASTICSEARCH_PORT", default=9200, cast=int)
+ELASTICSEARCH_AWS_REGION = config("ELASTICSEARCH_AWS_REGION", default="us-east-1")
 
 # Additional settings for dev/prod environments
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
-ELASTICSEARCH_AWS_REGION = os.environ.get("ELASTICSEARCH_AWS_REGION", "us-east-1")
+AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default="")
+AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", default="")
 
-ROOT_SHORTENING_URL = os.environ.get("ROOT_SHORTENING_URL", "dev.shares.cc")
-
-EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
-EMAIL_PORT = os.environ.get("EMAIL_PORT", 25)
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_HOST = config("EMAIL_HOST", default="")
+EMAIL_PORT = config("EMAIL_PORT", default=25, cast=int)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 EMAIL_SUBJECT_PREFIX = "[noreply]"
 EMAIL_USE_TLS = True
 
@@ -311,7 +313,7 @@ else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Log full Elasticsearch response
-VERBOSE_ES_RESPONSE = os.getenv("DEBUG_SCORES", "False") in true_strings
+VERBOSE_ES_RESPONSE = config("DEBUG_SCORES", default=False, cast=bool)
 
 # Whether to boost results by authority and popularity
-USE_RANK_FEATURES = os.getenv("USE_RANK_FEATURES", "True") in true_strings
+USE_RANK_FEATURES = config("USE_RANK_FEATURES", default=True, cast=bool)

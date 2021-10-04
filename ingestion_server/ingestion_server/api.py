@@ -7,6 +7,7 @@ from multiprocessing import Process, Value
 from urllib.parse import urlparse
 
 import falcon
+
 import ingestion_server.indexer as indexer
 from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.state import clear_state, worker_finished

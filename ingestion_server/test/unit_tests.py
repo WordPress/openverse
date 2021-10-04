@@ -1,9 +1,10 @@
 import datetime
 from uuid import uuid4
 
+from psycopg2.extras import Json
+
 from ingestion_server.cleanup import CleanupFunctions
 from ingestion_server.elasticsearch_models import Image
-from psycopg2.extras import Json
 
 
 def create_mock_image(override=None):

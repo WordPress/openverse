@@ -4,11 +4,8 @@ services:
     image: postgres:13.2-alpine
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_DB: "openledger"
-      POSTGRES_USER: "deploy"
-      POSTGRES_PASSWORD: "deploy"
-      POSTGRES_HOST: "0.0.0.0"
+    env_file:
+      - postgres/env.docker
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
 
@@ -24,11 +21,8 @@ services:
       - "5433:5432"
     volumes:
       - ./sample_data:/sample_data
-    environment:
-      POSTGRES_DB: "openledger"
-      POSTGRES_USER: "deploy"
-      POSTGRES_PASSWORD: "deploy"
-      POSTGRES_HOST: "0.0.0.0"
+    env_file:
+      - postgres/env.docker
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
 
@@ -64,23 +58,8 @@ services:
       - db
       - es
       - cache
-    environment:
-      - DJANGO_DATABASE_NAME=openledger
-      - DJANGO_DATABASE_USER=deploy
-      - DJANGO_DATABASE_PASSWORD=deploy
-      - DJANGO_DATABASE_HOST=db
-      - REDIS_HOST=cache
-      - UPSTREAM_DATABASE_HOST=upstream_db
-      - PYTHONUNBUFFERED=0
-      - DJANGO_DEBUG_ENABLED=True
-      - ELASTICSEARCH_URL=es
-      - ELASTICSEARCH_PORT=9200
-      - DISABLE_GLOBAL_THROTTLING=True
-      - ROOT_SHORTENING_URL=localhost:8000
-      - THUMBNAIL_PROXY_URL=http://thumbs:8222
-      - DJANGO_SECRET_KEY=ny#b__$$f6ry4wy8oxre97&-68u_0lk3gw(z=d40_dxey3zw0v1
-      - AWS_SECRET_ACCESS_KEY=''
-      - AWS_ACCESS_KEY_ID=''
+    env_file:
+      - openverse_api/env.docker
     stdin_open: true
     tty: true
 
@@ -100,22 +79,8 @@ services:
       - indexer-worker
     volumes:
       - ./ingestion_server:/ingestion_server
-    environment:
-      PYTHONUNBUFFERED: "0"
-      ELASTICSEARCH_URL: 'es'
-      ELASTICSEARCH_PORT: "9200"
-      DATABASE_HOST: 'db'
-      DATABASE_USER: 'deploy'
-      DATABASE_PASSWORD: 'deploy'
-      DATABASE_NAME: 'openledger'
-      DATABASE_PORT: '5432'
-      UPSTREAM_DB_HOST: 'upstream_db'
-      UPSTREAM_DB_PORT: 5432
-      DB_BUFFER_SIZE: '100000'
-      COPY_TABLES: 'image'
-      SYNCER_POLL_INTERVAL: '60'
-      LOCK_PATH: /worker_state/lock
-      SHELF_PATH: /worker_state/db
+    env_file:
+      - ingestion_server/env.docker
     stdin_open: true
     tty: true
 
@@ -130,22 +95,8 @@ services:
       - es
     volumes:
       - ./ingestion_server:/ingestion_server
-    environment:
-      PYTHONUNBUFFERED: "0"
-      ELASTICSEARCH_URL: 'es'
-      ELASTICSEARCH_PORT: "9200"
-      DATABASE_HOST: 'db'
-      DATABASE_USER: 'deploy'
-      DATABASE_PASSWORD: 'deploy'
-      DATABASE_NAME: 'openledger'
-      DATABASE_PORT: '5432'
-      UPSTREAM_DB_HOST: 'upstream_db'
-      UPSTREAM_DB_PORT: 5432
-      DB_BUFFER_SIZE: '100000'
-      COPY_TABLES: 'image'
-      SYNCER_POLL_INTERVAL: '60'
-      LOCK_PATH: /worker_state/lock
-      SHELF_PATH: /worker_state/db
+    env_file:
+      - ingestion_server/env.docker
     stdin_open: true
     tty: true
 
@@ -155,4 +106,4 @@ services:
     ports:
       - "8090:8090"
     environment:
-      DATABASE_CONN: 'postgresql+psycopg2://deploy:deploy@db/openledger'
+      DATABASE_CONN: "postgresql+psycopg2://deploy:deploy@db/openledger"

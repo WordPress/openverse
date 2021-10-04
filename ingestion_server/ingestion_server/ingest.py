@@ -1,8 +1,11 @@
 import datetime
 import logging as log
-import os
 
 import psycopg2
+from decouple import config
+from psycopg2.extras import DictCursor
+from psycopg2.sql import SQL, Identifier, Literal
+
 from ingestion_server.cleanup import clean_image_data
 from ingestion_server.indexer import database_connect
 from ingestion_server.queries import (
@@ -10,8 +13,6 @@ from ingestion_server.queries import (
     get_fdw_query,
     get_go_live_query,
 )
-from psycopg2.extras import DictCursor
-from psycopg2.sql import SQL, Identifier, Literal
 
 
 """
@@ -32,18 +33,22 @@ table to replace the old data. This strategy is far faster than updating the
 data in place.
 """
 
-UPSTREAM_DB_HOST = os.environ.get("UPSTREAM_DB_HOST", "upstream_db")
-UPSTREAM_DB_USER = os.environ.get("UPSTREAM_DB_USER", "deploy")
-UPSTREAM_DB_PASSWORD = os.environ.get("UPSTREAM_DB_PASSWORD", "deploy")
-UPSTREAM_DATABASE_NAME = os.environ.get("UPSTREAM_DATABASE_NAME", "openledger")
-UPSTREAM_DB_PORT = int(os.environ.get("UPSTREAM_DB_PORT", 5432))
+UPSTREAM_DB_HOST = config("UPSTREAM_DB_HOST", default="localhost")
+UPSTREAM_DB_PORT = config("UPSTREAM_DB_PORT", default=5433, cast=int)
+UPSTREAM_DB_USER = config("UPSTREAM_DB_USER", default="deploy")
+UPSTREAM_DB_PASSWORD = config("UPSTREAM_DB_PASSWORD", default="deploy")
+UPSTREAM_DB_NAME = config("UPSTREAM_DB_NAME", default="openledger")
 
-RELATIVE_UPSTREAM_DB_HOST = os.environ.get(
-    "RELATIVE_UPSTREAM_DB_HOST", UPSTREAM_DB_HOST
+RELATIVE_UPSTREAM_DB_HOST = config(
+    "RELATIVE_UPSTREAM_DB_HOST",
+    default=UPSTREAM_DB_HOST,
 )
 """The hostname of the upstream DB from the POV of the downstream DB"""
-RELATIVE_UPSTREAM_DB_PORT = int(
-    os.environ.get("RELATIVE_UPSTREAM_DB_PORT", UPSTREAM_DB_PORT)
+
+RELATIVE_UPSTREAM_DB_PORT = config(
+    "RELATIVE_UPSTREAM_DB_PORT",
+    default=UPSTREAM_DB_PORT,
+    cast=int,
 )
 """The port of the upstream DB from the POV of the downstream DB"""
 
@@ -252,7 +257,7 @@ def reload_upstream(table, progress=None, finish_time=None):
     # Step 1: Get the list of overlapping columns
     downstream_db = database_connect()
     upstream_db = psycopg2.connect(
-        dbname=UPSTREAM_DATABASE_NAME,
+        dbname=UPSTREAM_DB_NAME,
         user=UPSTREAM_DB_USER,
         port=UPSTREAM_DB_PORT,
         password=UPSTREAM_DB_PASSWORD,
@@ -268,7 +273,7 @@ def reload_upstream(table, progress=None, finish_time=None):
         init_fdw = get_fdw_query(
             RELATIVE_UPSTREAM_DB_HOST,
             RELATIVE_UPSTREAM_DB_PORT,
-            UPSTREAM_DATABASE_NAME,
+            UPSTREAM_DB_NAME,
             UPSTREAM_DB_USER,
             UPSTREAM_DB_PASSWORD,
             f"{table}_view",

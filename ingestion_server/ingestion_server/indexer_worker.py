@@ -6,24 +6,25 @@ Accept an HTTP request specifying a range of image IDs to reindex. After the
 data has been indexed, notify Ingestion Server and stop the instance.
 """
 import logging as log
-import os
 import sys
 from multiprocessing import Process, Value
 
 import boto3
 import falcon
 import requests
+from decouple import config
+from psycopg2.sql import SQL, Identifier, Literal
+
 from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.indexer import TableIndexer, elasticsearch_connect
 from ingestion_server.queries import get_existence_queries
-from psycopg2.sql import SQL, Identifier, Literal
 
 
 ec2_client = boto3.client(
     "ec2",
-    region_name=os.getenv("AWS_REGION", "us-east-1"),
-    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID", None),
-    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY", None),
+    region_name=config("AWS_REGION", default="us-east-1"),
+    aws_access_key_id=config("AWS_ACCESS_KEY_ID", default=None),
+    aws_secret_access_key=config("AWS_SECRET_ACCESS_KEY", default=None),
 )
 
 
@@ -92,7 +93,7 @@ def _self_destruct():
     Stop this EC2 instance once the task is finished.
     """
     # Get instance ID from AWS metadata service
-    if os.getenv("ENVIRONMENT", "local") == "local":
+    if config("ENVIRONMENT", default="local") == "local":
         log.info("Skipping self destruction because worker is in local environment")
         return
     endpoint = "http://169.254.169.254/latest/meta-data/instance-id"

@@ -2,101 +2,94 @@
 
 ## Purpose
 
-The Openverse API (`openverse_api`) is a system that allows programmatic access to public domain digital media. It is our ambition to index and catalog [billions of openly-licensed works](https://stateof.creativecommons.org/), including articles, songs, videos, photographs, paintings, and more. Using this API, developers will be able to access the digital commons in their own applications.
-
 This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [Openverse Catalog repository](https://github.com/WordPress/openverse-catalog). A front end web application that interfaces with the API can be found at the [Openverse frontend repository](https://github.com/WordPress/openverse-frontend).
 
-## API Documentation
-
-In the [API documentation](https://api.openverse.engineering), you can find more details about the endpoints with examples on how to use them.
-
-## How to Run the Server Locally
+## Running the system
 
 ### Prerequisites
 
-You need to install [Docker](https://docs.docker.com/install/) (with [Docker Compose](https://docs.docker.com/compose/install/)), [Git](https://git-scm.com/downloads), and [PostgreSQL client tools](https://www.postgresql.org/download/). On Debian, the package is called `postgresql-client-common`. You'll also want to install the [just](https://github.com/casey/just) command runner.
+- [Git](https://git-scm.com/downloads)
+- [Docker](https://docs.docker.com/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Pipenv](https://pipenv.pypa.io/en/latest/#install-pipenv-today)
+- [Just](https://github.com/casey/just)
 
-### Running locally
+### Steps
 
-1. Run the [Docker daemon](https://docs.docker.com/config/daemon/)
-2. Open your command prompt (CMD) or terminal
-3. Clone Openverse API
+1. Ensure that the [Docker daemon](https://docs.docker.com/config/daemon/) is running.
 
-```
-git clone https://github.com/WordPress/openverse-api.git
-```
+2. Clone the repository and `cd` into it. This is the monorepo root.
+   ```bash
+   git clone https://github.com/WordPress/openverse-api.git
+   cd openverse-api/
+   ```
 
-4. Change directories with `cd openverse_api`
-5. Start Openverse API locally by running the docker containers. You can use usual `docker-compose` commands or the simplified `just` command. You will need the [just](https://github.com/casey/just#installation) command runner installed to follow the next steps.
+3. From the monorepo root, bring up the Docker Compose system. Docker Compose will automatically read the necessary environment variables from `env.docker` files from project directories.
+   ```bash
+   just up
+   ```
 
-```
-just up
-```
+4. Point your browser to `localhost:8000`. You should be able to see the API documentation.
+   ![API ReDoc](readme_assets/api_redoc.png)
 
-6. Wait until your CMD or terminal displays that it is starting development server at `http://0.0.0.0:8000/`
-   ![Initialization](initialization.PNG)
-7. Open up your browser and type `localhost:8000` in the search tab
-8. Make sure you see the local API documentation
-   ![Local API Documentation](local_api_documentation.PNG)
-9. Open a new CMD or terminal and change directory to `openverse_api`
-10. Still in the new CMD or terminal, load the sample data. This script requires a local postgres installation to connect to and alter our database.
+5. Load the sample data. This could take a couple of minutes.
+   ```bash
+   just init
+   ```
 
-```
-just init
-```
+6. Make an API request using cURL. You should receive a JSON response.
+   ```bash
+   just healthcheck
+   ```
 
-11. Still in the new CMD or terminal, hit the API with a request
+   Piping the response through a pretty-printer like
+   [`jq`](https://stedolan.github.io/jq/) should yield an output like the
+   following.
+   ```bash
+   just healthcheck | jq '.[0]'
+   ```
 
-```
-just healthcheck
-```
+   ```json
+   {
+     "source_name":   "flickr",
+     "display_name": "Flickr",
+     "source_url": "https://www.flickr.com",
+     "logo_url": null,
+     "media_count": 1000
+   }
+   ```
 
-12. Make sure you see the following response from the API
-    ![Sample API_Request](localhost_request.PNG)
+7. When done, bring the system down. To remove all volumes as well, pass the `-v` flag.
+   ```bash
+   just down
+   just down -v # removes volumes
+   ```
 
-Congratulations! You just ran the server locally.
+8. Use the `logs` command access the logs from all services. To isolate a service, pass the service name as an argument.
+   ```bash
+   just logs
+   just logs web # only shows logs web service
+   ```
 
-To access the logs run:
+### Services
 
-```
-just logs
-```
+The command `just up` spawns the following services:
 
-That will follow all the logs for all the services. To isolate a service, simply pass the service name, for example:
+- [PostgreSQL](https://www.postgresql.org/) x 2 instances
+  - upstream data source simulator
+  - API application database
+- [Elasticsearch](https://www.elastic.co/elasticsearch/)
+- [Redis](https://redis.io/)
+- [imageproxy](https://github.com/willnorris/imageproxy)
+- **web** (`openverse_api/`)
+- **ingestion-server** (`ingestion_server/`)
+- **analytics** (`analytics/`)
 
-```
-just logs web
-```
+The last three are subprojects of this monorepo, described below.
 
-### What Happens In the Background
+## System architecture
 
-After executing `just up` (in Step 5), you will be running:
-
-- A Django API server
-- Two PostgreSQL instances (one simulates the upstream data source, the other serves as the application database)
-- Elasticsearch
-- Redis
-- A thumbnail-generating image proxy
-- ingestion-server, a service for bulk ingesting and indexing search data.
-- analytics, a REST API server for collecting search usage data
-
-### Diagnosing local Elasticsearch issues
-
-If the API server container failed to start, there's a good chance that Elasticsearch failed to start on your machine. Ensure that you have allocated enough memory to Docker applications, otherwise the container will instantly exit with an error. Also, if the logs mention "insufficient max map count", increase the number of open files allowed on your system. For most Linux machines, you can fix this by adding the following line to `/etc/sysctl.conf`:
-
-```
-vm.max_map_count=262144
-```
-
-To make this setting take effect, run:
-
-```
-sudo sysctl -p
-```
-
-## System Architecture
-
-![System Architecture](system_architecture.png)
+![System architecture](readme_assets/system_architecture.png)
 
 ### Basic flow of data
 
@@ -106,67 +99,24 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 
 ### Description of subprojects
 
-- _openverse_api_ is a Django Rest Framework API server. For a full description of its capabilities, please see the [browsable documentation](https://api.openverse.engineering).
-- _ingestion-server_ is a service for downloading and indexing search data once it has been prepared by the Openverse Catalog
-- _analytics_ is a Falcon REST API for collecting usage data.
+- **openverse_api**: a Django Rest Framework API server
+  For a full description of its capabilities, please see the [browsable documentation](https://api.openverse.engineering).
+- **ingestion_server**: a service for downloading and indexing search data once it has been prepared by the Openverse Catalog
+- **analytics**: a Falcon REST API for collecting usage data
 
-## Running the tests
+## Troubleshooting
 
-### How to Run API live integration tests
+### Diagnosing local Elasticsearch issues
 
-You can check the health of a live deployment of the API by running the live integration tests.
-
-1. Run the install recipe:
-
-```
-just install
+If the API server container failed to start, there's a good chance that Elasticsearch failed to start on your machine. Ensure that you have allocated enough memory to Docker applications, otherwise the container will instantly exit with an error. Also, if the logs mention "insufficient max map count", increase the number of open files allowed on your system. For most Linux machines, you can fix this by adding the following line to `/etc/sysctl.conf`:
+```ini
+vm.max_map_count=262144
 ```
 
-#### On the host
-
-1. Run the tests in a Pipenv subshell.
+To make this setting take effect, update kernel state.
+```bash
+sudo sysctl -p
 ```
-just testlocal
-```
-
-#### Inside the container
-
-1. Run the tests in an interactive TTY connected to a `web` container.
-```
-just test
-```
-
-### How to Run Ingestion Server tests
-
-You can ingest and index some dummy data using the Ingestion Server API.
-
-1. Change directory to ingestion server
-
-```
-cd ingestion_server
-```
-
-2. Install all dependencies for Ingestion Server API
-
-```
-pipenv install
-```
-
-3. Launch a new shell session
-
-```
-pipenv shell
-```
-
-4. Run the integration tests
-
-```
-python3 test/integration_tests.py
-```
-
-## Django Admin
-
-You can view the custom administration views at the `/admin/` endpoint.
 
 ## Contributing
 
