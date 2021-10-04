@@ -23,8 +23,8 @@ soon as they are created.
 
 ### New PR automation
 
-This workflow adds PRs to the "In progress" or "Needs review" columns based on 
-whether they are marked as draft or ready.
+This workflow adds PRs to the "In progress" or "Needs review" columns in the 
+Openverse PRs project, based on whether they are marked as draft or ready.
 
 **PR:** opened, converted_to_draft, ready_for_review  
 **Dispatch:** disabled
