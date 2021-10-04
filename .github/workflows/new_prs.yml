@@ -17,7 +17,7 @@ jobs:
     - name: Add PR to "In progress"
       uses: alex-page/github-project-automation-plus@v0.8.1
       with:
-        project: Openverse
+        project: Openverse PRs
         column: In progress
         repo-token: ${{ secrets.ACCESS_TOKEN }}
 
@@ -29,6 +29,6 @@ jobs:
     - name: Add PR to "Needs review"
       uses: alex-page/github-project-automation-plus@v0.8.1
       with:
-        project: Openverse
+        project: Openverse PRs
         column: Needs review
         repo-token: ${{ secrets.ACCESS_TOKEN }}
