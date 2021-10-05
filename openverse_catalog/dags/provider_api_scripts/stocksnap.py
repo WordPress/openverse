@@ -176,7 +176,7 @@ def _get_metadata(item):
     """
     Include popularity statistics.
     """
-    extras = ["downloads", "page_views", "favorites"]
+    extras = ["downloads_raw", "page_views_raw", "favorites_raw"]
     metadata = {}
     for key in extras:
         value = item.get(key)
