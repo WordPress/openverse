@@ -59,7 +59,7 @@
 
 <script>
 import { computed } from '@nuxtjs/composition-api'
-import AudioThumbnail from '~/components/AudioTrack/AudioThumbnail.vue'
+import AudioThumbnail from '~/components/AudioThumbnail/AudioThumbnail.vue'
 import License from '~/components/License/License.vue'
 
 export default {
@@ -110,11 +110,19 @@ export default {
   @apply h-20;
 }
 
+.row-track.size-s .thumbnail {
+  @apply rounded-tl-sm rounded-bl-sm overflow-hidden;
+}
+
 .row-track.size-m .play-pause {
   @apply h-14 w-14;
 }
 
 .row-track.size-m .waveform {
   @apply h-14;
+}
+
+.row-track.size-m .thumbnail {
+  @apply rounded-sm overflow-hidden;
 }
 </style>

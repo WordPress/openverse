@@ -593,6 +593,9 @@
     "label": "Audio seek bar",
     "current-time": "{time} seconds"
   },
+  "audio-thumbnail": {
+    "alt": "Cover art for \"{title}\" by {creator}"
+  },
   "audio-track": {
     "aria-label": "Audio Player",
     "messages": {
