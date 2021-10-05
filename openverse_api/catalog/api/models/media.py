@@ -1,3 +1,5 @@
+import mimetypes
+
 import catalog.api.controllers.search_controller as search_controller
 from catalog.api.licenses import ATTRIBUTION, get_license_url
 from catalog.api.models.base import OpenLedgerModel
@@ -259,9 +261,28 @@ class AbstractAltFile:
     provides alternative qualities, formats and resolutions that are available
     from the provider that are not canonical.
 
-    The schema of the class must correspond to that of the ``FileMixin`` class.
+    The schema of the class must correspond to that of the
+    :py:class:`catalog.api.models.mixins.FileMixin` class.
     """
 
     def __init__(self, attrs):
         self.url = attrs.get("url")
         self.filesize = attrs.get("filesize")
+        self.filetype = attrs.get("filetype")
+
+    @property
+    def size_in_mib(self):  # ~ MiB or mibibytes
+        return self.filesize / 2 ** 20
+
+    @property
+    def size_in_mb(self):  # ~ MB or megabytes
+        return self.filesize / 1e6
+
+    @property
+    def mime_type(self):
+        """
+        Get the MIME type of the file inferred from the extension of the file.
+        :return: the inferred MIME type of the file
+        """
+
+        return mimetypes.types_map[f".{self.filetype}"]
