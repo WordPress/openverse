@@ -1,2 +1,0 @@
-1. Set environment variable INTEGRATION_TEST_URL to the instance you would like to test. Defaults to localhost.
-2. Run `pytest -s`
