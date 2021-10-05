@@ -113,9 +113,9 @@ def test_extract_image_data_handles_example_dict():
         "width": 6000,
         "thumbnail_url": image_url,
         "meta_data": {
-            "page_views": 30,
-            "downloads": 0,
-            "favorites": 0,
+            "page_views_raw": 30,
+            "downloads_raw": 0,
+            "favorites_raw": 0,
         },
         "raw_tags": [
             "female",

@@ -43,6 +43,7 @@ AUDIO_POPULARITY_METRICS_TABLE_NAME = "audio_popularity_metrics"
 IMAGE_POPULARITY_METRICS = {
     "flickr": {"metric": "views"},
     "wikimedia": {"metric": "global_usage_count"},
+    "stocksnap": {"metric": "downloads_raw"},
 }
 
 AUDIO_POPULARITY_METRICS = {
