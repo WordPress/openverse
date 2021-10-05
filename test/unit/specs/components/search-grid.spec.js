@@ -11,6 +11,7 @@ describe('SearchGrid', () => {
         SearchRating: true,
         SaferBrowsing: true,
         LoadingIcon: true,
+        MetaSearchForm: true,
       },
       propsData: {
         query: { q: 'foo' },

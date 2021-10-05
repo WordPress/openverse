@@ -4,19 +4,19 @@ import stringToBoolean from './src/utils/string-to-boolean'
 
 /**
  * Default environment variables are set on this key. Defaults are fallbacks to existing env vars.
+ * All boolean values should be designed to be false by default.
  */
 export const env = {
-  apiUrl: process.env.API_URL ?? 'https://api.creativecommons.engineering/v1/',
-  socialSharing: stringToBoolean(process.env.SOCIAL_SHARING) ?? true,
-  enableGoogleAnalytics:
-    stringToBoolean(process.env.ENABLE_GOOGLE_ANALYTICS) ?? false,
+  apiUrl: process.env.API_URL ?? 'https://api.openverse.engineering/v1/',
+  enableGoogleAnalytics: stringToBoolean(process.env.ENABLE_GOOGLE_ANALYTICS),
   googleAnalyticsUA: process.env.GOOGLE_ANALYTICS_UA ?? 'UA-2010376-36',
   filterStorageKey: 'openverse-filter-visibility',
   notificationStorageKey: 'openverse-show-notification',
-  enableInternalAnalytics:
-    stringToBoolean(process.env.ENABLE_INTERNAL_ANALYTICS) ?? false,
+  enableInternalAnalytics: stringToBoolean(
+    process.env.ENABLE_INTERNAL_ANALYTICS
+  ),
   /** Feature flag to enable non-image media */
-  allMediaFeature: stringToBoolean(process.env.ALL_MEDIA_FEATURE) ?? true,
+  enableAudio: stringToBoolean(process.env.ENABLE_AUDIO),
 }
 
 /**
@@ -132,6 +132,7 @@ export default {
       '~/components/ImageDetails',
       '~/components/MediaInfo',
       '~/components/MetaSearch',
+      '~/components/MediaTag',
     ],
   },
   plugins: [
@@ -181,10 +182,16 @@ export default {
     langDir: 'locales',
     strategy: 'no_prefix',
     defaultLocale: 'en',
+    /**
+     * This section is critical for the current, iframed production environment
+     * {@link https://i18n.nuxtjs.org/options-reference/#detectbrowserlanguage}
+     * */
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_redirected',
       alwaysRedirect: true,
+      cookieCrossOrigin: true,
+      cookieSecure: true,
     },
     baseUrl: 'http://localhost:8443',
     vueI18n: '~/plugins/vue-i18n.js',

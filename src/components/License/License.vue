@@ -1,26 +1,28 @@
 <template>
-  <div class="license text-dark-charcoal-70">
-    <svg
-      v-if="isCC"
-      class="h-5 w-5 inline"
-      viewBox="0 0 30 30"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <use :href="`${ccLogo}#icon`" />
-    </svg>
-    <svg
-      v-for="(name, index) in icons"
-      :key="index"
-      class="h-5 w-5 inline"
-      viewBox="0 0 30 30"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <use :href="`${svgs[name]}#icon`" />
-    </svg>
+  <div class="license text-dark-charcoal-70 flex gap-2">
+    <div class="flex gap-1">
+      <svg
+        v-if="isCC"
+        class="h-5 w-5 inline"
+        viewBox="0 0 30 30"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <use :href="`${ccLogo}#icon`" />
+      </svg>
+      <svg
+        v-for="(name, index) in icons"
+        :key="index"
+        class="h-5 w-5 inline"
+        viewBox="0 0 30 30"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <use :href="`${svgs[name]}#icon`" />
+      </svg>
+    </div>
     <span class="name">
       {{ $t(`license-names.${license}`) }}
     </span>

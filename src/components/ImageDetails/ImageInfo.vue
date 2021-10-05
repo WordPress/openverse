@@ -50,10 +50,11 @@
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '~/store-modules/usage-data-analytics-types'
+} from '~/constants/usage-data-analytics-types'
 import PhotoTags from '~/components/PhotoTags'
 import getProviderName from '~/utils/get-provider-name'
 import getProviderLogo from '~/utils/get-provider-logo'
+import { USAGE_DATA } from '~/constants/store-modules'
 
 export default {
   name: 'ImageInfo',
@@ -62,7 +63,7 @@ export default {
   },
   props: [
     'image',
-    'ccLicenseURL',
+    'licenseUrl',
     'fullLicenseName',
     'imageWidth',
     'imageHeight',
@@ -93,7 +94,7 @@ export default {
       return getProviderLogo(providerName)
     },
     onPhotoSourceLinkClicked() {
-      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+      this.$store.dispatch(`${USAGE_DATA}/${SEND_DETAIL_PAGE_EVENT}`, {
         eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
         resultUuid: this.$props.image.id,
       })

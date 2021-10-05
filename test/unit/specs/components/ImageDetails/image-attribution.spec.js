@@ -21,7 +21,7 @@ describe('ImageAttribution', () => {
         creator: 'John',
         creator_url: 'http://creator.com',
       },
-      ccLicenseURL: 'http://license.com',
+      licenseUrl: 'http://license.com',
       fullLicenseName: 'LICENSE',
       attributionHtml: '<div>attribution</div>',
     }
@@ -29,6 +29,10 @@ describe('ImageAttribution', () => {
       propsData: props,
       mocks: {
         $t,
+      },
+      stubs: {
+        MediaLicense: true,
+        CopyLicense: true,
       },
     }
   })

@@ -1,6 +1,9 @@
 <template>
   <span class="photo-license-icons">
-    <i class="icon cc-logo text-lgr text-black has-background-white" title="CC">
+    <i
+      class="icon cc-logo text-lgr text-black has-background-white filter-icon"
+      title="CC"
+    >
       <!-- Closing i and opening template tag must be adjacent to prevent whitespace --> </i
     ><template v-for="(l, i) in getLicenseIcon(license)">
       <i
@@ -12,6 +15,7 @@
           ['has-background-white']: true,
           ['text-lgr']: true,
           [`cc-${l}`]: true,
+          ['filter-icon']: true,
         }"
         :alt="`${l.toUpperCase()}`"
       />
@@ -31,7 +35,6 @@ const APItoIconNameMap = {
 
 const LicenseIcons = {
   name: 'license-icons',
-  components: {},
   props: {
     license: '',
   },
@@ -54,5 +57,9 @@ export default LicenseIcons
 .icon {
   vertical-align: middle;
   margin-right: 0.3rem;
+}
+.photo-license-icons {
+  display: inline-block;
+  margin-right: 0.188rem;
 }
 </style>

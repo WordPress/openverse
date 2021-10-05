@@ -8,6 +8,7 @@ describe('Dropdown', () => {
     props = {
       filter: [{ text: 'Code is Poetry' }],
       filterType: 'bar',
+      text: 'Dropdown',
     }
     options = {
       propsData: props,

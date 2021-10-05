@@ -3,8 +3,9 @@ import {
   SEND_RESULT_CLICKED_EVENT,
   SEND_DETAIL_PAGE_EVENT,
   SEND_SEARCH_RATING_EVENT,
-} from './usage-data-analytics-types'
+} from '~/constants/usage-data-analytics-types'
 import stringToBoolean from '~/utils/string-to-boolean'
+import UsageDataService from '~/data/usage-data-service'
 
 const disabled = !stringToBoolean(process.env.enableInternalAnalytics)
 
@@ -20,31 +21,31 @@ const handleUsageEvent = (eventName) => (promise) =>
     })
   )
 
-const actions = (UsageDataService) => ({
+export const createActions = (usageDataService) => ({
   async [SEND_SEARCH_QUERY_EVENT](context, params) {
     if (disabled) return
     await handleUsageEvent(SEND_SEARCH_QUERY_EVENT)(
-      UsageDataService.sendSearchQueryEvent(params)
+      usageDataService.sendSearchQueryEvent(params)
     )
   },
   async [SEND_RESULT_CLICKED_EVENT](context, params) {
     if (disabled) return
     await handleUsageEvent(SEND_RESULT_CLICKED_EVENT)(
-      UsageDataService.sendResultClickedEvent(params)
+      usageDataService.sendResultClickedEvent(params)
     )
   },
   async [SEND_SEARCH_RATING_EVENT](context, params) {
     if (disabled) return
     await handleUsageEvent(SEND_SEARCH_RATING_EVENT)(
-      UsageDataService.sendSearchRatingEvent(params)
+      usageDataService.sendSearchRatingEvent(params)
     )
   },
   async [SEND_DETAIL_PAGE_EVENT](context, params) {
     if (disabled) return
     await handleUsageEvent(SEND_DETAIL_PAGE_EVENT)(
-      UsageDataService.sendDetailPageEvent(params)
+      usageDataService.sendDetailPageEvent(params)
     )
   },
 })
 
-export default { actions }
+export const actions = createActions(UsageDataService)

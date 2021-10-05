@@ -11,13 +11,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 export default {
   name: 'HeaderSection',
   props: {
+    isEmbedded: { type: Boolean, default: true },
     showNavSearch: { type: Boolean, default: false },
+    showNotification: { type: Boolean, default: false },
   },
-  computed: mapState(['showNotification', 'isEmbedded']),
 }
 </script>

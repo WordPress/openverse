@@ -82,7 +82,7 @@ const AboutPage = {
   name: 'about-page',
   components: { ExtensionBrowsers },
   layout({ store }) {
-    return store.state.isEmbedded
+    return store.state.nav.isEmbedded
       ? 'embedded-with-nav-search'
       : 'with-nav-search'
   },
@@ -98,7 +98,7 @@ const AboutPage = {
     }
   },
   computed: {
-    ...mapState(['isEmbedded']),
+    ...mapState('nav', ['isEmbedded']),
   },
   methods: {
     togglePlay() {

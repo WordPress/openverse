@@ -1,40 +1,49 @@
-import store from '~/store-modules/media-provider-store'
+import { state, mutations, createActions } from '~/store/provider'
 import {
   FETCH_MEDIA_PROVIDERS_END,
   FETCH_MEDIA_PROVIDERS_START,
   SET_MEDIA_PROVIDERS,
   SET_PROVIDER_FETCH_ERROR,
-} from '~/store-modules/mutation-types'
-import { FETCH_MEDIA_TYPE_PROVIDERS } from '~/store-modules/action-types'
+} from '~/constants/mutation-types'
+import { FETCH_MEDIA_TYPE_PROVIDERS } from '~/constants/action-types'
+import { IMAGE } from '~/constants/media'
 
 describe('Image Provider Store', () => {
   describe('state', () => {
     it('exports default state', () => {
-      expect(store.state.imageProviders).toHaveLength(0)
-      expect(store.state.isFetchingImageProvidersError).toBeFalsy()
-      expect(store.state.isFetchingImageProviders).toBeFalsy()
+      expect(state().imageProviders).toHaveLength(0)
+      expect(state().isFetchingImageProvidersError).toBeFalsy()
+      expect(state().isFetchingImageProviders).toBeFalsy()
     })
   })
 
   describe('mutations', () => {
-    let state = null
+    let store = {}
+    let serviceMock = null
 
     beforeEach(() => {
-      state = {}
+      serviceMock = jest.fn()
+      store = {
+        state: state(),
+        mutations: mutations,
+        actions: createActions(serviceMock),
+      }
     })
 
     it('FETCH_MEDIA_PROVIDERS_START sets isFetchingImageProviders to true', () => {
-      store.mutations[FETCH_MEDIA_PROVIDERS_START](state, {
+      store.mutations[FETCH_MEDIA_PROVIDERS_START](store.state, {
         mediaType: 'image',
       })
 
-      expect(state.isFetchingImageProviders).toBeTruthy()
+      expect(store.state.isFetchingImageProviders).toBeTruthy()
     })
 
     it('FETCH_MEDIA_PROVIDERS_END sets isFetchingImageProviders to false', () => {
-      store.mutations[FETCH_MEDIA_PROVIDERS_END](state, { mediaType: 'image' })
+      store.mutations[FETCH_MEDIA_PROVIDERS_END](store.state, {
+        mediaType: 'image',
+      })
 
-      expect(state.isFetchingImageProviders).toBeFalsy()
+      expect(store.state.isFetchingImageProviders).toBeFalsy()
     })
 
     it('SET_PROVIDER_FETCH_ERROR sets isFetchingImageProvidersError', () => {
@@ -42,9 +51,9 @@ describe('Image Provider Store', () => {
         mediaType: 'image',
         error: true,
       }
-      store.mutations[SET_PROVIDER_FETCH_ERROR](state, params)
+      store.mutations[SET_PROVIDER_FETCH_ERROR](store.state, params)
 
-      expect(state.isFetchingImageProvidersError).toBe(params.error)
+      expect(store.state.isFetchingImageProvidersError).toBe(params.error)
     })
 
     it('SET_IMAGE_PROVIDERS sets imageProviders', () => {
@@ -52,9 +61,9 @@ describe('Image Provider Store', () => {
         mediaType: 'image',
         providers: [{ name: 'testProvider' }],
       }
-      store.mutations[SET_MEDIA_PROVIDERS](state, params)
+      store.mutations[SET_MEDIA_PROVIDERS](store.state, params)
 
-      expect(state.imageProviders).toBe(params.providers)
+      expect(store.state.imageProviders).toBe(params.providers)
     })
   })
 
@@ -63,13 +72,11 @@ describe('Image Provider Store', () => {
     const imageProviderServiceMock = {
       getProviderStats: jest.fn(() => Promise.resolve({ data })),
     }
+    const services = { [IMAGE]: imageProviderServiceMock }
     const commit = jest.fn()
     const dispatch = jest.fn()
     it('FETCH_MEDIA_TYPE_PROVIDERS on success', (done) => {
-      const action = store.actions(
-        imageProviderServiceMock,
-        imageProviderServiceMock
-      )[FETCH_MEDIA_TYPE_PROVIDERS]
+      const action = createActions(services)[FETCH_MEDIA_TYPE_PROVIDERS]
       action({ commit, dispatch }, { mediaType: 'image' }).then(() => {
         expect(commit).toBeCalledWith(SET_PROVIDER_FETCH_ERROR, {
           error: false,

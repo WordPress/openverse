@@ -1,5 +1,5 @@
 import SearchStore from '~/store-modules/search-store'
-import MediaProviderStore from '~/store-modules/media-provider-store'
+import MediaProviderStore from '~/store/provider'
 
 const store = {
   state: Object.assign(SearchStore.state, MediaProviderStore.state),

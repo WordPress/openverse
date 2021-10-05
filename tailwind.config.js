@@ -16,6 +16,7 @@ module.exports = {
       'dark-turquoise': '#05b5da',
       'dark-slate-blue': '#3c5c99',
       'trans-blue': '#3e58e1',
+      'trans-blue-action': '#5067e4',
       'dark-blue': '#23282d',
 
       // Brand
@@ -67,6 +68,7 @@ module.exports = {
       20: '5.00rem',
       24: '6.00rem',
       30: '7.50rem',
+      70: '17.50rem',
     },
     ringWidth: {
       DEFAULT: '1.5px',

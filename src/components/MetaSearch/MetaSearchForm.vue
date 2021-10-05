@@ -2,6 +2,7 @@
   <section :key="type" class="p-6 meta-search">
     <header class="mb-10">
       <i18n
+        v-if="!noresult"
         :path="
           supported
             ? 'meta-search.form.supported-title'
@@ -12,6 +13,19 @@
       >
         <template #type>
           {{ type }}
+        </template>
+      </i18n>
+      <i18n
+        v-else
+        path="meta-search.form.no-results-title"
+        tag="h4"
+        class="b-header mb-2"
+      >
+        <template #type>
+          {{ type }}
+        </template>
+        <template #query>
+          {{ query.q }}
         </template>
       </i18n>
       <i18n path="meta-search.form.caption" tag="p">
@@ -43,6 +57,7 @@ export default {
   props: {
     type: { type: String, required: true },
     supported: { type: Boolean, default: false },
+    noresult: { type: Boolean, required: true },
   },
   computed: {
     query() {

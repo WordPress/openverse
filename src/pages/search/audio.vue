@@ -1,3 +1,4 @@
+<!-- noresult is hardcoded since it does not yet support built-in audio search -->
 <template>
   <div id="tab-audio" role="tabpanel" aria-labelledby="audio">
     <AudioResultsList
@@ -5,12 +6,17 @@
       :query="query"
       @onLoadMoreAudios="onLoadMoreAudios"
     />
-    <MetaSearchForm type="audio" :query="query" :supported="supported" />
+    <MetaSearchForm
+      type="audio"
+      :query="query"
+      :noresult="false"
+      :supported="supported"
+    />
   </div>
 </template>
 
 <script>
-import { UPDATE_SEARCH_TYPE } from '~/store-modules/action-types'
+import { UPDATE_SEARCH_TYPE } from '~/constants/action-types'
 import { AUDIO } from '~/constants/media'
 
 export default {
@@ -18,7 +24,7 @@ export default {
   data() {
     return {
       // Only show audio results if non-image results are supported
-      supported: process.env.allMediaFeature,
+      supported: process.env.enableAudio,
     }
   },
   computed: {

@@ -14,7 +14,7 @@ describe('SearchGridCell', () => {
   }
   const options = {
     propsData: props,
-    stubs: { RouterLink: true },
+    stubs: { RouterLink: true, NuxtLink: true },
   }
 
   it('should render correct contents', () => {
@@ -49,6 +49,7 @@ describe('SearchGridCell', () => {
     const wrapper = render(SearchGridCell, {
       propsData: props,
       mocks: { localeRoute: localeRouteMock },
+      stubs: { nuxtLink: true },
     })
     const link = wrapper.find('.search-grid_image-ctr')
     await link.trigger('click')

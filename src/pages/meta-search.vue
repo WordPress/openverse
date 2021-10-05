@@ -110,12 +110,12 @@ import { mapState } from 'vuex'
 export default {
   name: 'MetaSearchPage',
   layout({ store }) {
-    return store.state.isEmbedded
+    return store.state.nav.isEmbedded
       ? 'embedded-with-nav-search'
       : 'with-nav-search'
   },
   computed: {
-    ...mapState(['isEmbedded']),
+    ...mapState('nav', ['isEmbedded']),
   },
 }
 </script>

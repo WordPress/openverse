@@ -124,7 +124,7 @@
 </template>
 
 <script>
-import { SET_QUERY } from '~/store-modules/mutation-types'
+import { SET_QUERY } from '~/constants/mutation-types'
 import Dropdown from '~/components/Dropdown'
 
 export default {

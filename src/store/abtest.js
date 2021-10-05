@@ -1,17 +1,17 @@
-import { JOINED_AB_TEST_EXPERIMENT } from './mutation-types'
-import { CONVERT_AB_TEST_EXPERIMENT } from './action-types'
+import { JOINED_AB_TEST_EXPERIMENT } from '~/constants/mutation-types'
+import { CONVERT_AB_TEST_EXPERIMENT } from '~/constants/action-types'
 import { convert } from '~/utils/sixpack'
 
-const state = {
+export const state = () => ({
   experiments: [],
-}
+})
 
-const actions = {
+export const actions = {
   [CONVERT_AB_TEST_EXPERIMENT](context, params) {
     const experiment = context.state.experiments.find(
       ({ name }) => name === params.name
     )
-    const sessionId = context.state.abSessionId
+    const sessionId = context.state.user.abSessionId
 
     if (!experiment) {
       return
@@ -25,7 +25,7 @@ const actions = {
   },
 }
 
-const mutations = {
+export const mutations = {
   [JOINED_AB_TEST_EXPERIMENT](_state, params) {
     _state.experiments = [{ ...params }, ..._state.experiments]
   },

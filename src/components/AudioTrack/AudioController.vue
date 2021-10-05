@@ -32,7 +32,7 @@ import { computed, ref, useStore, watch } from '@nuxtjs/composition-api'
 import {
   SET_ACTIVE_MEDIA_ITEM,
   UNSET_ACTIVE_MEDIA_ITEM,
-} from '~/store-modules/mutation-types'
+} from '~/constants/mutation-types'
 
 /**
  * Controls the interaction between the parent Vue component, the underlying
@@ -78,8 +78,8 @@ export default {
 
     const isActiveTrack = computed(
       () =>
-        store.state.activeMediaType === 'audio' &&
-        store.state.activeMediaId === props.audio.id
+        store.state.active.type === 'audio' &&
+        store.state.active.id === props.audio.id
     )
     // Sync status from parent to player and store
     watch(
@@ -107,7 +107,7 @@ export default {
     )
     // Sync status from store to parent
     watch(
-      () => [store.state.activeMediaType, store.state.activeMediaId],
+      () => [store.state.active.type, store.state.active.id],
       () => {
         const status = isActiveTrack.value ? 'playing' : 'paused'
         emit('change', status)
