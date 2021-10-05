@@ -16,7 +16,7 @@ jobs:
         run: |
           cd ./openverse_catalog
           cp env.template .env
-          docker-compose up -d
+          docker-compose --file=docker-compose.yml --file=docker-compose.override.yml up -d
       - name: Test
         run: |
           sleep 10

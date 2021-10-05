@@ -1,23 +1,6 @@
 version: '3'
 
 services:
-  postgres:
-    build: ./local_postgres
-    environment:
-      - POSTGRES_USER=deploy
-      - POSTGRES_PASSWORD=deploy
-      - POSTGRES_DB=openledger
-    env_file: .env
-    ports:
-      - "5434:5432"
-    volumes:
-      - postgres-volume:/var/lib/postgresql/data
-
-  s3:
-    build:
-      context: ./local_s3
-    ports:
-      - "5000:5000"
 
   webserver:
     build:
@@ -27,9 +10,6 @@ services:
         - REQUIREMENTS_FILE=requirements_prod.txt
     env_file: .env
     restart: always
-    depends_on:
-      - postgres
-      - s3
     ports:
       - "${AIRFLOW_PORT}:8080"
     volumes:
@@ -37,4 +17,3 @@ services:
 
 volumes:
   airflow-volume:
-  postgres-volume:
