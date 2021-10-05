@@ -1,6 +1,9 @@
 import ContentReportForm from '~/components/ContentReport/ContentReportForm'
 import render from '../../../test-utils/render'
 import i18n from '../../../test-utils/i18n'
+import { PROVIDER, REPORT_CONTENT } from '~/constants/store-modules'
+import { SEND_CONTENT_REPORT } from '~/constants/action-types'
+import { REPORT_FORM_CLOSED } from '~/constants/mutation-types'
 
 describe('ContentReportForm', () => {
   let props = null
@@ -22,8 +25,13 @@ describe('ContentReportForm', () => {
         dispatch: dispatchMock,
         commit: commitMock,
         state: {
-          isReportSent: false,
-          reportFailed: false,
+          [PROVIDER]: {
+            imageProviders: [],
+          },
+          [REPORT_CONTENT]: {
+            isReportSent: false,
+            reportFailed: false,
+          },
         },
       },
     }
@@ -43,13 +51,13 @@ describe('ContentReportForm', () => {
   })
 
   it('should render report sent', async () => {
-    storeState.$store.state.isReportSent = true
+    storeState.$store.state[REPORT_CONTENT].isReportSent = true
     const wrapper = render(ContentReportForm, options)
     expect(wrapper.findComponent({ name: 'DoneMessage' }).vm).toBeDefined()
   })
 
   it('should render error message', async () => {
-    storeState.$store.state.reportFailed = true
+    storeState.$store.state[REPORT_CONTENT].reportFailed = true
     const wrapper = render(ContentReportForm, options)
     expect(wrapper.findComponent({ name: 'ReportError' }).vm).toBeDefined()
   })
@@ -83,11 +91,14 @@ describe('ContentReportForm', () => {
 
     const button = wrapper.find('.next-button')
     await button.trigger('click')
-    expect(dispatchMock).toHaveBeenCalledWith('SEND_CONTENT_REPORT', {
-      identifier: props.image.id,
-      reason: 'mature',
-      description: '',
-    })
+    expect(dispatchMock).toHaveBeenCalledWith(
+      `${REPORT_CONTENT}/${SEND_CONTENT_REPORT}`,
+      {
+        identifier: props.image.id,
+        reason: 'mature',
+        description: '',
+      }
+    )
   })
 
   it('should not dispatch SEND_CONTENT_REPORT on next when dmca is selected', async () => {
@@ -105,11 +116,14 @@ describe('ContentReportForm', () => {
     await wrapper.setData({ selectedReason: 'other' })
     const description = 'foo bar'
     wrapper.vm.sendContentReport(description)
-    expect(dispatchMock).toHaveBeenCalledWith('SEND_CONTENT_REPORT', {
-      identifier: props.image.id,
-      reason: 'other',
-      description,
-    })
+    expect(dispatchMock).toHaveBeenCalledWith(
+      `${REPORT_CONTENT}/${SEND_CONTENT_REPORT}`,
+      {
+        identifier: props.image.id,
+        reason: 'other',
+        description,
+      }
+    )
   })
 
   it('should close form', async () => {
@@ -117,6 +131,8 @@ describe('ContentReportForm', () => {
 
     const button = wrapper.find('.close-button')
     await button.trigger('click')
-    expect(commitMock).toHaveBeenCalledWith('REPORT_FORM_CLOSED')
+    expect(commitMock).toHaveBeenCalledWith(
+      `${REPORT_CONTENT}/${REPORT_FORM_CLOSED}`
+    )
   })
 })

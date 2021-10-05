@@ -5,13 +5,13 @@
       <MediaLicense
         :license="media.license"
         :full-license-name="fullLicenseName"
-        :license-u-r-l="licenseURL"
+        :license-url="licenseUrl"
         class="column"
       />
       <CopyLicense
         :media="media"
         :full-license-name="fullLicenseName"
-        :license-u-r-l="licenseURL"
+        :license-url="licenseUrl"
         :attribution-html="attributionHtml"
         class="column"
       />
@@ -24,7 +24,7 @@ export default {
   name: 'MediaReuse',
   props: {
     media: {},
-    licenseURL: String,
+    licenseUrl: String,
     fullLicenseName: String,
     attributionHtml: String,
   },

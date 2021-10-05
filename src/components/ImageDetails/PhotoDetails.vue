@@ -40,13 +40,12 @@
           </span>
         </button>
       </div>
-      <div class="mt-2 text-left">
-        <ContentReportForm
-          v-if="isReportFormVisible"
-          :image="image"
-          data-testid="content-report-form"
-        />
-      </div>
+      <ContentReportForm
+        v-if="isReportFormVisible"
+        :image="image"
+        data-testid="content-report-form"
+        class="mt-2 text-left"
+      />
     </div>
     <div
       role="region"
@@ -103,18 +102,6 @@
           >
             {{ $t('photo-details.information.title') }}
           </button>
-          <button
-            v-if="socialSharingEnabled"
-            id="social-sharing"
-            role="tab"
-            aria-controls="tab-social-sharing"
-            :aria-selected="activeTab === 2"
-            :class="tabClass(2, 'a')"
-            @click.prevent="setActiveTab(2)"
-            @keyup.enter.prevent="setActiveTab(2)"
-          >
-            {{ $t('photo-details.share') }}
-          </button>
         </div>
         <!-- <section class="photo_info-ctr tabs-content">-->
         <div
@@ -127,7 +114,7 @@
           <ImageAttribution
             data-testid="image-attribution"
             :image="image"
-            :cc-license-u-r-l="ccLicenseURL"
+            :license-url="licenseUrl"
             :full-license-name="fullLicenseName"
             :attribution-html="attributionHtml()"
           />
@@ -142,24 +129,11 @@
           <ImageInfo
             data-testid="image-info"
             :image="image"
-            :cc-license-u-r-l="ccLicenseURL"
+            :license-url="licenseUrl"
             :full-license-name="fullLicenseName"
             :image-width="imageWidth"
             :image-height="imageHeight"
             :image-type="imageType"
-          />
-        </div>
-        <div
-          id="tab-social-sharing"
-          role="tabpanel"
-          aria-labelledby="social-sharing"
-          tabindex="0"
-          :class="tabClass(2, 'tabs-panel')"
-        >
-          <ImageSocialShare
-            v-if="socialSharingEnabled"
-            :image="image"
-            data-testid="social-share"
           />
         </div>
       </section>
@@ -184,13 +158,14 @@
 </template>
 
 <script>
-import { TOGGLE_REPORT_FORM_VISIBILITY } from '~/store-modules/mutation-types'
+import { TOGGLE_REPORT_FORM_VISIBILITY } from '~/constants/mutation-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '~/store-modules/usage-data-analytics-types'
+} from '~/constants/usage-data-analytics-types'
 import attributionHtml from '~/utils/attribution-html'
 import { getFullLicenseName } from '~/utils/license'
+import { REPORT_CONTENT, USAGE_DATA } from '~/constants/store-modules'
 
 export default {
   name: 'PhotoDetails',
@@ -202,7 +177,6 @@ export default {
     'imageWidth',
     'imageHeight',
     'imageType',
-    'socialSharingEnabled',
     'thumbnail',
   ],
   data() {
@@ -212,6 +186,9 @@ export default {
     }
   },
   computed: {
+    isReportFormVisible() {
+      return this.$store.state[REPORT_CONTENT].isReportFormVisible
+    },
     imgUrl() {
       return this.image && this.image.url ? this.image.url : this.thumbnail
     },
@@ -227,19 +204,23 @@ export default {
         .split('https://media.sketchfab.com/models/')[1]
         .split('/')[0]
     },
-    isReportFormVisible() {
-      return this.$store.state.isReportFormVisible
-    },
     fullLicenseName() {
       return this.image
         ? getFullLicenseName(this.image.license, this.image.license_version)
         : ''
     },
-    ccLicenseURL() {
-      return `${this.image.license_url}?ref=ccsearch`
+    licenseUrl() {
+      return `${this.image.license_url}?ref=openverse`
     },
   },
   methods: {
+    sendEvent(eventType) {
+      const eventData = {
+        eventType,
+        resultUuid: this.$props.image.id,
+      }
+      this.$store.dispatch(`${USAGE_DATA}/${SEND_DETAIL_PAGE_EVENT}`, eventData)
+    },
     onGoBackToSearchResults() {
       this.$router.back()
     },
@@ -256,23 +237,17 @@ export default {
       this.activeTab = tabIdx
     },
     attributionHtml() {
-      const licenseURL = `${this.ccLicenseURL}&atype=html`
-      return attributionHtml(this.image, licenseURL, this.fullLicenseName)
+      const licenseUrl = `${this.openverseLicenseUrl}&atype=html`
+      return attributionHtml(this.image, licenseUrl, this.fullLicenseName)
     },
     toggleReportFormVisibility() {
-      this.$store.commit(TOGGLE_REPORT_FORM_VISIBILITY)
+      this.$store.commit(`${REPORT_CONTENT}/${TOGGLE_REPORT_FORM_VISIBILITY}`)
     },
     onPhotoSourceLinkClicked() {
-      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
-        eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
-        resultUuid: this.$props.image.id,
-      })
+      this.sendEvent(DETAIL_PAGE_EVENTS.SOURCE_CLICKED)
     },
     onPhotoCreatorLinkClicked() {
-      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
-        eventType: DETAIL_PAGE_EVENTS.CREATOR_CLICKED,
-        resultUuid: this.$props.image.id,
-      })
+      this.sendEvent(DETAIL_PAGE_EVENTS.CREATOR_CLICKED)
     },
   },
 }

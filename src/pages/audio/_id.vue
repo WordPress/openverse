@@ -4,7 +4,7 @@
     <MediaReuse
       data-testid="audio-attribution"
       :media="audio"
-      :license-u-r-l="openverseLicenseURL"
+      :license-url="licenseUrl"
       :full-license-name="fullLicenseName"
       :attribution-html="attributionHtml()"
       class="my-16 px-4 tab:px-0"
@@ -25,12 +25,11 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import featureFlags from '~/feature-flags'
 import {
   FETCH_AUDIO,
   FETCH_RELATED_MEDIA,
   RESET_RELATED_MEDIA,
-} from '~/store-modules/action-types'
+} from '~/constants/action-types'
 import iframeHeight from '~/mixins/iframe-height'
 import { AUDIO } from '~/constants/media'
 import attributionHtml from '~/utils/attribution-html'
@@ -40,7 +39,7 @@ const AudioDetailPage = {
   name: 'AudioDetailPage',
   mixins: [iframeHeight],
   layout({ store }) {
-    return store.state.isEmbedded
+    return store.state.nav.isEmbedded
       ? 'embedded-with-nav-search'
       : 'with-nav-search'
   },
@@ -49,26 +48,24 @@ const AudioDetailPage = {
       thumbnailURL: null,
       breadCrumbURL: '',
       shouldShowBreadcrumb: false,
-      socialSharingEnabled: featureFlags.socialSharing,
     }
   },
   computed: {
-    ...mapState({
-      filter: 'query.filter',
-      query: 'query',
-      tags: 'audio.tags',
-      audio: 'audio',
-    }),
-    relatedAudiosCount() {
-      return this.$store.state.related.audios.length
+    ...mapState(['query', 'audio']),
+    ...mapState('related', { relatedAudios: 'audios' }),
+    filter() {
+      return this.query.filter
     },
-    relatedAudios() {
-      return this.$store.state.related.audios
+    tags() {
+      return this.audio.tags
+    },
+    relatedAudiosCount() {
+      return this.relatedAudios.length
     },
     fullLicenseName() {
       return getFullLicenseName(this.audio.license, this.audio.license_version)
     },
-    openverseLicenseURL() {
+    licenseUrl() {
       return `${this.audio.license_url}?ref=openverse`
     },
   },
@@ -114,8 +111,8 @@ const AudioDetailPage = {
   methods: {
     ...mapActions([FETCH_AUDIO, FETCH_RELATED_MEDIA]),
     attributionHtml() {
-      const licenseURL = `${this.openverseLicenseURL}&atype=html`
-      return attributionHtml(this.audio, licenseURL, this.fullLicenseName)
+      const licenseUrl = `${this.licenseUrl}&atype=html`
+      return attributionHtml(this.audio, licenseUrl, this.fullLicenseName)
     },
     getRelatedAudios() {
       if (this.audio && this.audio.id) {

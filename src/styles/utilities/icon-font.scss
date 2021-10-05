@@ -152,3 +152,9 @@ $brand-colors: (
     background-color: transparent !important;
   }
 }
+
+.icon[class*='cc'] {
+  &.filter-icon {
+    font-size: 1.25rem;
+  }
+}

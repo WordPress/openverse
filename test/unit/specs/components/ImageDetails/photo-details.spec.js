@@ -2,16 +2,17 @@ import PhotoDetails from '~/components/ImageDetails/PhotoDetails'
 import {
   DETAIL_PAGE_EVENTS,
   SEND_DETAIL_PAGE_EVENT,
-} from '~/store-modules/usage-data-analytics-types'
+} from '~/constants/usage-data-analytics-types'
 import render from '../../../test-utils/render'
 import i18n from '../../../test-utils/i18n'
+import { REPORT_CONTENT, USAGE_DATA } from '~/constants/store-modules'
+import { TOGGLE_REPORT_FORM_VISIBILITY } from '~/constants/mutation-types'
 
 const stubs = {
   LegalDisclaimer: true,
   ImageAttribution: true,
   ContentReportForm: true,
   ReuseSurvey: true,
-  ImageSocialShare: true,
   ImageInfo: true,
 }
 
@@ -38,7 +39,6 @@ describe('PhotoDetails', () => {
         creator: 'John',
         creator_url: 'http://creator.com',
       },
-      socialSharingEnabled: true,
     }
 
     commitMock = jest.fn()
@@ -49,7 +49,11 @@ describe('PhotoDetails', () => {
         commit: commitMock,
         dispatch: dispatchMock,
         state: {
-          isReportFormVisible: false,
+          'report-content': {
+            isReportFormVisible: false,
+            isReportSent: false,
+            reportFailed: false,
+          },
         },
       },
     }
@@ -71,18 +75,6 @@ describe('PhotoDetails', () => {
     expect(wrapper.find('[data-testid="image-attribution"]').exists()).toBe(
       true
     )
-    expect(wrapper.find('[data-testid="social-share"]').exists()).toBe(true)
-  })
-
-  it('should render social sharing buttons', () => {
-    const wrapper = render(PhotoDetails, options)
-    expect(wrapper.find('[data-testid="social-share"]').exists()).toBe(true)
-  })
-
-  it('should not render social sharing buttons when social sharing is disabled', () => {
-    options.propsData.socialSharingEnabled = false
-    const wrapper = render(PhotoDetails, options)
-    expect(wrapper.find('[data-testid="social-share"]').exists()).toBe(false)
   })
 
   it('should generate license name', () => {
@@ -162,7 +154,9 @@ describe('PhotoDetails', () => {
     const button = wrapper.find('.report')
     await button.trigger('click')
 
-    expect(commitMock).toHaveBeenCalledWith('TOGGLE_REPORT_FORM_VISIBILITY')
+    expect(commitMock).toHaveBeenCalledWith(
+      `${REPORT_CONTENT}/${TOGGLE_REPORT_FORM_VISIBILITY}`
+    )
   })
 
   it('report form should be invisible by default', () => {
@@ -184,9 +178,12 @@ describe('PhotoDetails', () => {
     const wrapper = render(PhotoDetails, options)
     wrapper.vm.onPhotoSourceLinkClicked()
 
-    expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
-      eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
-      resultUuid: props.image.id,
-    })
+    expect(dispatchMock).toHaveBeenCalledWith(
+      `${USAGE_DATA}/${SEND_DETAIL_PAGE_EVENT}`,
+      {
+        eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
+        resultUuid: props.image.id,
+      }
+    )
   })
 })

@@ -140,7 +140,7 @@ import { mapState } from 'vuex'
 const SourcePage = {
   name: 'source-page',
   layout({ store }) {
-    return store.state.isEmbedded
+    return store.state.nav.isEmbedded
       ? 'embedded-with-nav-search'
       : 'with-nav-search'
   },
@@ -153,7 +153,8 @@ const SourcePage = {
     }
   },
   computed: {
-    ...mapState(['imageProviders', 'isEmbedded']),
+    ...mapState('nav', ['isEmbedded']),
+    ...mapState('provider', ['imageProviders']),
     sortedProviders() {
       const sorted = sortBy(this.imageProviders, [this.sort.field])
       return this.sort.direction === 'asc' ? sorted : sorted.reverse()

@@ -18,7 +18,7 @@
 import loadScript from '~/utils/load-script'
 
 const sketchfabUrl =
-  'https://static.sketchfab.com/api/sketchfab-viewer-1.8.2.js'
+  'https://static.sketchfab.com/api/sketchfab-viewer-1.10.1.js'
 
 export default {
   props: {
@@ -68,3 +68,20 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.image {
+  display: block;
+}
+.is-16by9 {
+  padding-top: 56.25%;
+}
+.has-ratio {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+}
+</style>

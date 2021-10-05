@@ -4,17 +4,18 @@ import {
   REPORT_FORM_CLOSED,
   REPORT_ERROR,
   BACK_TO_REPORT_START,
-} from './mutation-types'
-import { SEND_CONTENT_REPORT } from './action-types'
+} from '~/constants/mutation-types'
+import { SEND_CONTENT_REPORT } from '~/constants/action-types'
+import ReportService from '~/data/report-service'
 
-const state = {
+export const state = () => ({
   isReportFormVisible: false,
   isReportSent: false,
   reportFailed: false,
-}
+})
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
-const mutations = {
+export const mutations = {
   [TOGGLE_REPORT_FORM_VISIBILITY](_state) {
     _state.isReportFormVisible = !_state.isReportFormVisible
   },
@@ -34,14 +35,16 @@ const mutations = {
     _state.isReportFormVisible = false
   },
 }
-
-const actions = (ReportService) => ({
+export const createActions = (reportService) => ({
   [SEND_CONTENT_REPORT]({ commit }, params) {
-    return ReportService.sendReport(params)
+    return reportService
+      .sendReport(params)
       .then(() => commit(REPORT_SENT))
       .catch(() => commit(REPORT_ERROR))
   },
 })
+
+export const actions = createActions(ReportService)
 
 export default {
   state,

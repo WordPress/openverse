@@ -14,22 +14,15 @@
   </div>
 </template>
 <script>
-import { TOGGLE_FILTER } from '~/store-modules/action-types'
+import { TOGGLE_FILTER } from '~/constants/action-types'
 import FilterTag from '~/components/Filters/FilterTag'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'FilterDisplay',
   components: { FilterTag },
   computed: {
-    searchType() {
-      return this.$store.state.searchType
-    },
-    isAnyFilterApplied() {
-      return this.$store.getters.isAnyFilterApplied
-    },
-    appliedFilterTags() {
-      return this.$store.getters.appliedFilterTags
-    },
+    ...mapGetters(['appliedFilterTags', 'isAnyFilterApplied']),
   },
   methods: {
     onUpdateFilter({ code, filterType }) {

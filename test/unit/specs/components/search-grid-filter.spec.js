@@ -36,6 +36,7 @@ describe('SearchGridFilter', () => {
     }
 
     options = {
+      stubs: { FiltersList: true },
       propsData: props,
       mocks: {
         $store: storeMock,
@@ -84,9 +85,7 @@ describe('SearchGridFilter', () => {
   it('clears filters', () => {
     const wrapper = render(SearchGridFilter, options)
     wrapper.vm.onClearFilters()
-    expect(commitMock).toHaveBeenCalledWith('CLEAR_FILTERS', {
-      provider: props.provider,
-    })
+    expect(commitMock).toHaveBeenCalledWith('CLEAR_FILTERS')
   })
 
   it('toggles search visibility', () => {

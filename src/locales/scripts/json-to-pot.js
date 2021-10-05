@@ -18,12 +18,12 @@ const fs = require('fs')
 const curlyRegex = new RegExp('{[a-zA-Z-]*}')
 const containsCurlyWord = (string) => curlyRegex.test(string)
 const checkStringForVars = (string) =>
-  containsCurlyWord(string) ? ' (Do not translate words between ###)' : ''
+  containsCurlyWord(string) ? 'Do not translate words between ### ###.' : ''
 
 /**
  * For GlotPress to display warning when the translators try to
  * replace placeholders with something else, we need to wrap the
- * placeholders with `###word###`
+ * placeholders with `###WORD###`
  * @param string
  * @return {string}
  */
@@ -143,8 +143,9 @@ function potTime(json, parent = json) {
           pluralizedValues.push(pluralizedValues[0])
         }
         potFile = `${potFile}
-
-# ${keyPath}${checkStringForVars(value)}${getRefComment(keyPath)}
+${
+  checkStringForVars(value) ? `\n#. ${checkStringForVars(value)}` : ''
+}${getRefComment(keyPath)}
 msgctxt "${keyPath}"
 msgid "${processValue(pluralizedValues[0])}"
 msgid_plural "${processValue(pluralizedValues[1])}"
@@ -152,8 +153,9 @@ msgstr[0] ""
 msgstr[1] ""`
       } else {
         potFile = `${potFile}
-
-# ${keyPath}${checkStringForVars(value)}${getRefComment(keyPath)}
+${
+  checkStringForVars(value) ? `\n#. ${checkStringForVars(value)}` : ''
+}${getRefComment(keyPath)}
 msgctxt "${keyPath}"
 msgid "${processValue(value)}"
 msgstr ""`

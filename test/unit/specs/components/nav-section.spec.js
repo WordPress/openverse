@@ -1,5 +1,5 @@
 import NavSection from '~/components/NavSection'
-import { SET_QUERY } from '~/store-modules/mutation-types'
+import { SET_QUERY } from '~/constants/mutation-types'
 import render from '../../test-utils/render'
 
 describe('NavSection', () => {

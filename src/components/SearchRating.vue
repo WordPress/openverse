@@ -30,7 +30,8 @@
 </template>
 
 <script>
-import { SEND_SEARCH_RATING_EVENT } from '~/store-modules/usage-data-analytics-types'
+import { SEND_SEARCH_RATING_EVENT } from '~/constants/usage-data-analytics-types'
+import { USAGE_DATA } from '~/constants/store-modules'
 
 const Statuses = {
   NOT_SENT: 'NOT_SENT',
@@ -47,7 +48,7 @@ export default {
   },
   methods: {
     sendSearchRatingEvent(isRelevant) {
-      this.$store.dispatch(SEND_SEARCH_RATING_EVENT, {
+      this.$store.dispatch(`${USAGE_DATA}/${SEND_SEARCH_RATING_EVENT}`, {
         query: this.$props.searchTerm,
         relevant: isRelevant,
       })

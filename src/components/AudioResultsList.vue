@@ -5,12 +5,13 @@
         {{ audiosCount }}
       </span>
     </div>
-    <div class="px-6">
+    <div class="px-6 pt-6">
       <AudioTrack
         v-for="audio in audios"
         :key="audio.id"
         :audio="audio"
-        :is-compact="true"
+        :size="audioTrackSize"
+        layout="row"
       />
     </div>
     <div v-if="!isFetchingAudiosError" class="load-more">
@@ -44,8 +45,9 @@
 </template>
 
 <script>
-import { FETCH_MEDIA } from '~/store-modules/action-types'
+import { FETCH_MEDIA } from '~/constants/action-types'
 import { AUDIO } from '~/constants/media'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'AudioResultsList',
@@ -56,19 +58,24 @@ export default {
     },
   },
   async fetch() {
-    if (!this.$store.state.audios.length) {
-      await this.$store.dispatch(FETCH_MEDIA, {
+    if (!this.audios.length) {
+      await this.fetchMedia({
         ...this.$store.state.query,
         mediaType: AUDIO,
       })
     }
   },
   computed: {
-    audios() {
-      return this.$store.state.audios
-    },
+    ...mapState(['audios', 'errorMessage', 'isFilterVisible']),
+    ...mapState({
+      isFetchingAudios: 'isFetching.audios',
+      isFetchingAudiosError: 'isFetchingError.audios',
+      resultsCount: 'audiosCount',
+      currentPage: 'audioPage',
+      audioPageCount: 'pageCount.audios',
+    }),
     audiosCount() {
-      const count = this.$store.state.audiosCount
+      const count = this.resultsCount
       if (count === 0) {
         return this.$t('browse-page.audio-no-results')
       }
@@ -80,23 +87,17 @@ export default {
             localeCount: count.toLocaleString(this.$i18n.locale),
           })
     },
-    currentPage() {
-      return this.$store.state.audioPage
-    },
-    isFetchingAudiosError() {
-      return this.$store.state.isFetchingError.audios
-    },
-    isFetchingAudios() {
-      return this.$store.state.isFetching.audios
-    },
     isFinished() {
-      return this.currentPage >= this.$store.state.pageCount.audios
+      return this.currentPage >= this.audioPageCount
     },
-    errorMessage() {
-      return this.$store.state.errorMessage
+    audioTrackSize() {
+      return this.isFilterVisible ? 'm' : 's'
     },
   },
   methods: {
+    ...mapActions({
+      fetchMedia: FETCH_MEDIA,
+    }),
     onLoadMoreAudios() {
       const searchParams = {
         page: this.currentPage + 1,

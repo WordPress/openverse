@@ -27,7 +27,7 @@ export default {
   name: 'SearchTypeTabs',
   data() {
     let contentTypes = [IMAGE, AUDIO, VIDEO]
-    if (process.env.allMediaFeature) {
+    if (process.env.enableAudio) {
       contentTypes.unshift(ALL_MEDIA)
     }
     return {

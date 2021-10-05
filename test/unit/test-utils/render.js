@@ -15,7 +15,11 @@ const i18n = new VueI18n({
   messages,
 })
 
-const render = (Component, options = { localVue, i18n }) => {
+const render = (
+  Component,
+  options = { localVue, i18n },
+  renderer = shallowMount
+) => {
   if (!options.store) {
     const store = new Vuex.Store(sampleStore)
     options.store = store
@@ -23,7 +27,7 @@ const render = (Component, options = { localVue, i18n }) => {
   if (!options.i18n) {
     options.i18n = i18n
   }
-  return shallowMount(Component, options)
+  return renderer(Component, options)
 }
 
 export default render

@@ -2,20 +2,19 @@
   <button
     v-if="showBtn"
     :aria-label="$t('browse-page.aria.scroll')"
-    class="scroll"
+    class="scroll text-white bg-trans-blue hover:bg-trans-blue-action transition-all duration-100 ease-linear fixed right-4 bottom-4 w-14 h-14 hover:shadow-md rounded-full text-center"
     @click="scrollToTop"
     @keyup.enter="scrollToTop"
   >
     <svg
-      width="20"
+      viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
-      height="20"
-      viewBox="0 0 64 64"
+      role="img"
+      aria-hidden="true"
+      focusable="false"
+      class="w-full h-full fill-curr"
     >
-      <path
-        fill="#fff"
-        d="M3.352 48.296l28.56-28.328 28.58 28.347c.397.394.917.59 1.436.59.52 0 1.04-.196 1.436-.59a2.003 2.003 0 000-2.849l-29.98-29.735c-.2-.2-.494-.375-.757-.475a2.052 2.052 0 00-2.166.456L.479 45.447a2.003 2.003 0 000 2.849 2.045 2.045 0 002.873 0z"
-      />
+      <path d="M6.5 12.4L12 8l5.5 4.4-.9 1.2L12 10l-4.5 3.6-1-1.2z" />
     </svg>
   </button>
 </template>
@@ -30,7 +29,6 @@ export default {
   },
   methods: {
     scrollToTop() {
-      /* istanbul ignore next */
       window.scrollTo({
         top: 0,
         left: 0,
@@ -40,25 +38,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.scroll {
-  right: 10px;
-  width: 50px;
-  height: 50px;
-  position: fixed;
-  bottom: 10px;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.25);
-  background-color: #5fd1fc;
-  color: #fff;
-  border-radius: 50%;
-  outline: none;
-  cursor: pointer;
-  transition: all 5s ease-in;
-  z-index: 5;
-}
-
-.scroll:hover {
-  background-color: #1e96c2;
-}
-</style>

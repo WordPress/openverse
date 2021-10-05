@@ -506,7 +506,6 @@
       "tags": "Tags",
       "pixels": "pixels"
     },
-    "share": "Share",
     "survey": {
       "content": "How are you using this image?",
       "link": "Let us know",
@@ -547,11 +546,6 @@
         "tool": "read more about the tool"
       },
       "details": "image details",
-      "share": {
-        "facebook": "share on facebook",
-        "twitter": "share on twitter",
-        "pinterest": "share on pinterest"
-      },
       "main": "main content",
       "related": "related images",
       "provider-report-form": "{provider} form",
@@ -585,6 +579,7 @@
     "form": {
       "unsupported-title": "Openverse does not yet support built-in {type} search.",
       "supported-title": "Not finding what you're looking for? Try additional {type} sources.",
+      "no-results-title": "No {type} results for \"{query}\".",
       "caption": "Click on a source below to directly search other collections of CC-licensed {type}.{break}Please note that Use filters are not supported for {filter}."
     }
   },
@@ -602,7 +597,6 @@
     "alt": "Cover art for \"{title}\" by {creator}"
   },
   "audio-track": {
-    "title": "{title} by {creator}",
     "aria-label": "Audio Player",
     "messages": {
       "err_aborted": "You aborted playback.",
@@ -642,5 +636,12 @@
     "intro": "CC Search is now called Openverse and joins WordPress as an open source project.",
     "more": "{read-more} about this announcement.",
     "read": "Read more"
-  }
+  },
+  "download-button": {
+    "aria": {
+      "dropdown-label": "Select the download file format"
+    },
+    "download": "Download"
+  },
+  "interpunct": "•"
 }
