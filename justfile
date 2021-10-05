@@ -38,8 +38,8 @@ init: up
     ./load_sample_data.sh
 
 # Make a test cURL request to the API
-healthcheck:
-    curl "http://localhost:8000/v1/images/stats/"
+healthcheck media="images":
+    curl "http://localhost:8000/v1/{{ media }}/stats/"
 
 
 #######
