@@ -5,7 +5,7 @@ token = os.getenv("AUDIO_REQ_TOKEN", "DLBYIcfnKfolaXKcmMC8RIDCavc2hW")
 origin = os.getenv("AUDIO_REQ_ORIGIN", "https://api.openverse.engineering")
 
 auth = f'-H "Authorization: Bearer {token}"' if token else ""
-identifier = "440a0240-8b20-49e2-a4e6-6fee550fcc41"
+identifier = "8624ba61-57f1-4f98-8a85-ece206c319cf"
 
 syntax_examples = {
     "using single query parameter": "test",
@@ -29,9 +29,9 @@ curl {auth} "{origin}/v1/audio/?q={syntax}"
 )
 
 audio_search_curl = f"""
-# Search for music titled "Friend" by Rob Costlow
-curl {auth} "{origin}/v1/audio/?title=Friend&creator=Rob%20Costlow"
-"""
+# Search for music titled "Wish You Were Here" by The.madpix.project
+curl {auth} "{origin}/v1/audio/?title=Wish%20You%20Were%20Here&creator=The.madpix.project"
+"""  # noqa
 
 audio_stats_curl = f"""
 # Get the statistics for audio sources
