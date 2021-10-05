@@ -16,6 +16,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - uses: extractions/setup-just@v1
     - name: Set up Python 3.9
       uses: actions/setup-python@v1
       with:
@@ -23,4 +24,4 @@ jobs:
     - name: Lint
       run: |
         pip install pre-commit
-        pre-commit run --all-files
+        just lint

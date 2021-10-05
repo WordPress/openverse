@@ -34,6 +34,10 @@ recreate: dotenv
 logs: up
     docker-compose {{ DEV_DOCKER_FILES }} logs -f
 
+# Run pre-commit on all files
+lint:
+    pre-commit run --all-files
+
 # Run pytest using the webserver image
 test pytestargs="": up
     docker-compose {{ DEV_DOCKER_FILES }} run --rm {{ SERVICE }} /usr/local/airflow/.local/bin/pytest {{ pytestargs }}

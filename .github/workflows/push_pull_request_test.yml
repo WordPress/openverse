@@ -12,12 +12,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Build the stack
-        run: |
-          cd ./openverse_catalog
-          cp env.template .env
-          docker-compose --file=docker-compose.yml --file=docker-compose.override.yml up -d
+      - uses: extractions/setup-just@v1
       - name: Test
-        run: |
-          sleep 10
-          docker exec openverse_catalog_webserver_1 /usr/local/airflow/.local/bin/pytest
+        run: just test
