@@ -3,31 +3,33 @@ import os
 
 origin = os.getenv("AUDIO_REQ_ORIGIN", "https://api.openverse.engineering")
 
-identifier = "440a0240-8b20-49e2-a4e6-6fee550fcc41"
+identifier = "8624ba61-57f1-4f98-8a85-ece206c319cf"
 
 base_audio = {
     "id": identifier,
-    "title": "Friend",
-    "foreign_landing_url": "https://www.jamendo.com/track/5786",
-    "creator": "Rob Costlow",
-    "creator_url": "https://www.jamendo.com/artist/125/rob.costlow",
-    "url": "https://mp3d.jamendo.com/download/track/5786/mp32",
-    "license": "by-nc-nd",
+    "title": "Wish You Were Here",
+    "foreign_landing_url": "https://www.jamendo.com/track/1214935",
+    "creator": "The.madpix.project",
+    "creator_url": "https://www.jamendo.com/artist/441585/the.madpix.project",
+    "url": "https://mp3d.jamendo.com/download/track/1214935/mp32",
+    "license": "by-nc-sa",
     "license_version": "3.0",
-    "license_url": "https://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "license_url": "https://creativecommons.org/licenses/by-nc-sa/3.0/",
     "provider": "jamendo",
     "source": "jamendo",
     "tags": [
-        {"name": "instrumental"},
-        {"name": "neutral"},
+        {"name": "vocal"},
+        {"name": "female"},
         {"name": "speed_medium"},
-        {"name": "piano"},
+        {"name": "guitar"},
         {"name": "strings"},
-        {"name": "love"},
-        {"name": "upbeat"},
-        {"name": "neutral"},
+        {"name": "energetic"},
+        {"name": "acoustic"},
+        {"name": "vocal"},
+        {"name": "voice"},
+        {"name": "funkyhouse"},
     ],
-    "genres": ["newage"],
+    "genres": ["dance", "electronic", "house"],
     "thumbnail": f"{origin}/v1/audio/{identifier}/thumb/",
     "waveform": f"{origin}/v1/audio/{identifier}/waveform/",
     "detail_url": f"{origin}/v1/audio/{identifier}/",
@@ -61,17 +63,24 @@ audio_stats_200_example = {
             "display_name": "Jamendo",
             "source_url": "https://www.jamendo.com",
             "logo_url": None,
-            "media_count": 5153,
-        }
+            "media_count": 180,
+        },
+        {
+            "source_name": "wikimedia_audio",
+            "display_name": "Wikimedia",
+            "source_url": "https://commons.wikimedia.org",
+            "logo_url": None,
+            "media_count": 4820,
+        },
     ]
 }
 
 audio_detail_200_example = {
     "application/json": base_audio
     | {
-        "attribution": '"Friend" by Rob Costlow is licensed under CC-BY-NC-ND 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/3.0/.',  # noqa
+        "attribution": '"Wish You Were Here" by The.madpix.project is licensed under CC-BY-NC-SA 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/.',  # noqa
         "audio_set": None,
-        "duration": 240000,
+        "duration": 270000,
         "bit_rate": None,
         "sample_rate": None,
         "alt_files": None,
