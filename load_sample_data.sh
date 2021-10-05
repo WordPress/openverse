@@ -36,7 +36,8 @@ docker-compose exec -T "$DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openle
 		(now(), 'sciencemuseum', 'Science Museum', 'https://www.sciencemuseum.org.uk', false, 'image'),
 		(now(), 'stocksnap', 'StockSnap', 'https://stocksnap.io', false, 'image'),
 		(now(), 'wikimedia', 'Wikimedia', 'https://commons.wikimedia.org', false, 'image'),
-		(now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio');
+		(now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio'),
+		(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio');
 	EOF"
 
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF
