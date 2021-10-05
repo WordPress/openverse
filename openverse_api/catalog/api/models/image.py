@@ -6,13 +6,30 @@ from catalog.api.models.media import (
     AbstractMediaList,
     AbstractMediaReport,
 )
+from catalog.api.models.mixins import FileMixin
 from django.db import models
 from uuslug import uuslug
 
 
-class Image(AbstractMedia):
+class ImageFileMixin(FileMixin):
+    """
+    This mixin adds fields related to image resolution to the standard file
+    mixin. Do not use this as the sole base class.
+    """
+
     width = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
+
+    @property
+    def resolution_in_mp(self):  # ~ MP or megapixels
+        return (self.width * self.height) / 1e6
+
+    class Meta:
+        abstract = True
+
+
+class Image(ImageFileMixin, AbstractMedia):
+    pass
 
     class Meta(AbstractMedia.Meta):
         db_table = "image"
