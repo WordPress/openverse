@@ -599,7 +599,7 @@
     "current-time": "{time} seconds"
   },
   "audio-thumbnail": {
-    "alt": "Covert art for \"{title}\" by {creator}"
+    "alt": "Cover art for \"{title}\" by {creator}"
   },
   "audio-track": {
     "title": "{title} by {creator}",
