@@ -1,3 +1,5 @@
+import mimetypes
+
 from django.db import models
 
 
@@ -64,7 +66,35 @@ class FileMixin(models.Model):
     url = models.URLField(
         unique=True, max_length=1000, help_text="The actual URL to the media file."
     )
-    filesize = models.IntegerField(blank=True, null=True)
+    filesize = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text="Number in bytes, e.g. 1024.",
+        # Bytes for parity with the HTTP Content-Length header
+    )
+    filetype = models.CharField(
+        max_length=80,
+        blank=True,
+        null=True,
+        help_text="The type of the file, related to the file extension.",
+    )
+
+    @property
+    def size_in_mib(self):  # ~ MiB or mibibytes
+        return self.filesize / 2 ** 20
+
+    @property
+    def size_in_mbs(self):  # ~ MB or megabytes
+        return self.filesize / 1e6
+
+    @property
+    def mime_type(self):
+        """
+        Get the MIME type of the file inferred from the extension of the file.
+        :return: the inferred MIME type of the file
+        """
+
+        return mimetypes.types_map[f".{self.filetype}"]
 
     class Meta:
         abstract = True

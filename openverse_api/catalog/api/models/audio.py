@@ -49,7 +49,36 @@ class AudioSet(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     pass
 
 
-class Audio(AbstractMedia):
+class AudioFileMixin(FileMixin):
+    """
+    This mixin adds fields related to audio quality to the standard file mixin.
+    Do not use this as the sole base class.
+    """
+
+    bit_rate = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text="Number in bits per second, eg. 128000.",
+    )
+    sample_rate = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text="Number in hertz, eg. 44100.",
+    )
+
+    @property
+    def sample_rate_in_khz(self):
+        return self.sample_rate / 1e3
+
+    @property
+    def bit_rate_in_kbps(self):
+        return self.bit_rate / 1e3
+
+    class Meta:
+        abstract = True
+
+
+class Audio(AudioFileMixin, AbstractMedia):
     audio_set = models.ForeignKey(
         help_text="Reference to set of which this track is a part.",
         to=AudioSet,
@@ -85,16 +114,6 @@ class Audio(AbstractMedia):
         null=True,
         help_text="The time length of the audio file in milliseconds.",
     )
-    bit_rate = models.IntegerField(
-        blank=True,
-        null=True,
-        help_text="Number in bits per second, eg. 128000.",
-    )
-    sample_rate = models.IntegerField(
-        blank=True,
-        null=True,
-        help_text="Number in hertz, eg. 44100.",
-    )
 
     alt_files = models.JSONField(
         blank=True,
@@ -111,14 +130,6 @@ class Audio(AbstractMedia):
     @property
     def duration_in_s(self):
         return self.duration / 1e3
-
-    @property
-    def sample_rate_in_khz(self):
-        return self.sample_rate / 1e3
-
-    @property
-    def bit_rate_in_kbps(self):
-        return self.bit_rate / 1e3
 
     class Meta(AbstractMedia.Meta):
         db_table = "audio"
