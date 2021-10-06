@@ -42,7 +42,7 @@ init: wait-until-healthy
     ./load_sample_data.sh
 
 # Make a test cURL request to the API
-healthcheck media="images":
+stats media="images":
     curl "http://localhost:8000/v1/{{ media }}/stats/"
 
 
