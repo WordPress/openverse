@@ -48,7 +48,7 @@ export default {
       required: true,
     },
     iconDomNode: {
-      type: SVGSVGElement,
+      type: Object,
       required: true,
     },
   },
