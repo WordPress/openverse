@@ -48,9 +48,10 @@
           <LicenseIcons v-if="filterType === 'licenses'" :license="item.code" />
           {{ itemLabel(item) }}
         </label>
-        <button class="appearance-none">
+        <button class="appearance-none" type="button">
           <svg
             v-if="filterType === 'licenses'"
+            :ref="`${index}licenseIcon`"
             width="24"
             height="20"
             viewBox="0 0 24 20"
@@ -79,6 +80,7 @@
             !isDisabled(item)
           "
           :license="licenseExplanationCode"
+          :icon-dom-node="$refs[`${index}licenseIcon`][0]"
         />
       </div>
     </template>
