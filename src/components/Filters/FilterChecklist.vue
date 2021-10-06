@@ -48,7 +48,6 @@
           <LicenseIcons v-if="filterType === 'licenses'" :license="item.code" />
           {{ itemLabel(item) }}
         </label>
-        
         <button class="appearance-none" type="button">
           <svg
             v-if="filterType === 'licenses'"
