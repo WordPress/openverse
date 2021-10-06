@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:14-alpine
 
 # directory for the app in the container
 WORKDIR /usr/app
@@ -14,4 +14,6 @@ RUN rm -rf /usr/app/node_modules/
 
 ENV CYPRESS_INSTALL_BINARY=0
 
-RUN npm install
+RUN npm install -g npm@7.21.0 && \
+    npm install && \
+    npm run i18n:get-translations
