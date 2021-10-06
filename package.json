@@ -12,7 +12,7 @@
   "author": "sebworks",
   "private": true,
   "scripts": {
-    "dev": "ENABLE_AUDIO=true nuxt",
+    "dev": "cross-env ENABLE_AUDIO=true nuxt",
     "build": "npm run i18n:get-translations && nuxt build",
     "generate": "nuxt generate",
     "start": "nuxt start",
@@ -81,6 +81,7 @@
     "@vue/test-utils": "^1.1.3",
     "autoprefixer": "^10.3.1",
     "core-js": "^3.16.1",
+    "cross-env": "^7.0.3",
     "cypress": "^6.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.1.0",
