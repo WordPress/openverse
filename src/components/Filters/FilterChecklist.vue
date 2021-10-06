@@ -49,7 +49,7 @@
           {{ itemLabel(item) }}
         </label>
         
-        <button class="appearance-none">
+        <button class="appearance-none" type="button">
           <svg
             v-if="filterType === 'licenses'"
             :ref="`${index}licenseIcon`"
