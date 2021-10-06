@@ -28,6 +28,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v1
+    - uses: extractions/setup-just@v1
     - name: Install dependencies
       run: |
         pip install pytest pipenv
@@ -38,12 +39,8 @@ jobs:
     - name: Cache Docker images
       uses: satackey/action-docker-layer-caching@v0.0.11
       continue-on-error: true
-    - name: Start API
-      run: docker-compose up --build -d
-    - name: Wait for API to come up
-      run: bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8000/healthcheck)" != "200" ]]; do sleep 10; done'
-    - name: Ingest and index test data
-      run: ./load_sample_data.sh
+    - name: Start API, ingest and index test data
+      run: just init
     - name: Wait for data to be indexed in Elasticsearch
       run: bash -c 'while [[ "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/image | grep -c image-)" == "0" || "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/audio | grep -c audio-)" == "0" ]]; do sleep 5 && docker-compose logs; done'
     - name: Run API tests

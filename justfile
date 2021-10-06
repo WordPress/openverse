@@ -33,8 +33,12 @@ env:
     cp openverse_api/env.template openverse_api/.env
     cp ingestion_server/env.template ingestion_server/.env
 
+# Wait until services are healthy
+wait-until-healthy: up
+    @bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8000/healthcheck)" != "200" ]]; do echo "Waiting for services to start up... " && sleep 10; done'
+
 # Load sample data into the Docker Compose services
-init: up
+init: wait-until-healthy
     ./load_sample_data.sh
 
 # Make a test cURL request to the API
@@ -65,7 +69,7 @@ lint:
 #######
 
 # Run API tests inside Docker
-test: up
+test: wait-until-healthy
     docker-compose exec web ./test/run_test.sh
 
 # Run API tests locally

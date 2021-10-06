@@ -4,6 +4,9 @@ es-venv
 # IDE junk
 .idea
 
+# Vim junk
+*.swp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
