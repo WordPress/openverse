@@ -42,6 +42,12 @@ If you want to run the unit tests and linter on your machine, run the following 
 
 You can also configure your editor of choice with a ESLint plugin so you can get the linter feedback as you write code.
 
+### Types
+
+We use JSDoc to document type definitions for functions throughout the code base with the eventual goal of using the TypeScript compiler to actually run a type-checker against our code. To facilitate this, we use the TypeScript "flavor" for JSDoc. Please familiarize yourself with the [documentation for TypeScript in JSDoc here](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html).
+
+TypeScript support in Vue 2 (which we're currently locked into due to Nuxt's current limitations), is an afterthought. Therefore, types are primarily focused on the Vuex store and API service/utility functions. However, it is possible to add type annotations to some parts of Vue components, like the return value of the `data` function. Whenever possible, contributors should add or correct types to functions they are adding or modifying.
+
 ## Questions or Thoughts?
 
 Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community memebers on #openverse.
