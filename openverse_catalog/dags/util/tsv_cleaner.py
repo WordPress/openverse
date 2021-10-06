@@ -40,7 +40,7 @@ def _process_row(tsv_row):
     image_store = _image_store_dict[row_image.provider]
     image_store.add_item(
         foreign_landing_url=row_image.foreign_landing_url,
-        image_url=row_image.image_url,
+        image_url=row_image.url,
         thumbnail_url=row_image.thumbnail_url,
         license_info=get_license_info(
             license_url=get_license_url(row_meta_data),
@@ -57,6 +57,7 @@ def _process_row(tsv_row):
         raw_tags=_get_json_from_string(row_image.tags),
         watermarked=row_image.watermarked,
         source=row_image.source,
+        ingestion_type=row_image.ingestion_type,
     )
 
 

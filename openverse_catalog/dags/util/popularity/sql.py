@@ -2,7 +2,7 @@ from collections import namedtuple
 from textwrap import dedent
 
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from storage import column_names as col
+from storage import columns as col
 from util.constants import AUDIO, IMAGE
 from util.loader.sql import TABLE_NAMES
 
@@ -27,13 +27,13 @@ AUDIO_VIEW_PROVIDER_FID_IDX = "audio_view_provider_fid_idx"
 
 # Column name constants
 CONSTANT = "constant"
-FID = col.FOREIGN_ID
-IDENTIFIER = col.IDENTIFIER
-METADATA_COLUMN = col.META_DATA
+FID = col.FOREIGN_ID.db_name
+IDENTIFIER = col.IDENTIFIER.db_name
+METADATA_COLUMN = col.META_DATA.db_name
 METRIC = "metric"
-PARTITION = col.PROVIDER
+PARTITION = col.PROVIDER.db_name
 PERCENTILE = "percentile"
-PROVIDER = col.PROVIDER
+PROVIDER = col.PROVIDER.db_name
 
 Column = namedtuple("Column", ["name", "definition"])
 

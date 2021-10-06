@@ -4,6 +4,7 @@ with licenses.
 """
 import logging
 from collections import namedtuple
+from functools import lru_cache
 from typing import Optional, Tuple
 from urllib.parse import urlparse
 
@@ -24,6 +25,7 @@ class InvalidLicenseURLException(Exception):
 LicenseInfo = namedtuple("LicenseInfo", ["license", "version", "url", "raw_url"])
 
 
+@lru_cache(maxsize=1024)
 def get_license_info(license_url=None, license_=None, license_version=None):
     """
     Returns a valid license, version, license URL tuple if possible.

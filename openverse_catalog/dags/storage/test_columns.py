@@ -3,6 +3,7 @@ import string
 
 import tldextract
 from storage import columns
+from storage.columns import Datatype
 
 
 logging.basicConfig(
@@ -17,7 +18,7 @@ class TruncateColumn(columns.Column):
     def __init__(self, size, truncate):
         self.SIZE = size
         self.TRUNCATE = truncate
-        super().__init__("test_column", False)
+        super().__init__("test_column", False, datatype=Datatype.char)
 
     def prepare_string(self, value):
         return self._Column__enforce_char_limit(value, self.SIZE, self.TRUNCATE)

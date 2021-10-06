@@ -58,6 +58,7 @@ CREATE MATERIALIZED VIEW audio_view AS
     foreign_landing_url,
     url,
     thumbnail,
+    filetype,
     duration,
     bit_rate,
     sample_rate,

@@ -69,6 +69,7 @@ def test_process_item_batch_handles_example_batch():
             "creator": "Haeresis",
             "creator_url": "https://www.jamendo.com/artist/92/haeresis",
             "duration": 144000,
+            "filetype": "mp3",
             "foreign_identifier": "732",
             "foreign_landing_url": "https://www.jamendo.com/track/732",
             "genres": [],
@@ -85,6 +86,7 @@ def test_process_item_batch_handles_example_batch():
                 "release_date": "2005-04-12",
             },
             "raw_tags": ["instrumental", "speed_medium"],
+            "set_foreign_id": "119",
             "set_position": 6,
             "set_thumbnail": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
             "set_url": "https://www.jamendo.com/album/119/opera-i",
@@ -159,6 +161,7 @@ def test_get_audio_set_info():
         audio_data = json.load(f)
     actual_audio_set_info = jamendo._get_audio_set_info(audio_data)
     expected_audio_set_info = (
+        "119",
         "Opera I",
         6,
         "https://www.jamendo.com/album/119/opera-i",
@@ -211,6 +214,7 @@ def test_extract_audio_data_handles_example_dict():
         "creator": "Haeresis",
         "creator_url": "https://www.jamendo.com/artist/92/haeresis",
         "duration": 144000,
+        "filetype": "mp3",
         "foreign_identifier": "732",
         "foreign_landing_url": "https://www.jamendo.com/track/732",
         "genres": [],
@@ -227,6 +231,7 @@ def test_extract_audio_data_handles_example_dict():
             "release_date": "2005-04-12",
         },
         "raw_tags": ["instrumental", "speed_medium"],
+        "set_foreign_id": "119",
         "set_position": 6,
         "set_thumbnail": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
         "set_url": "https://www.jamendo.com/album/119/opera-i",

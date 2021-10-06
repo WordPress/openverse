@@ -1,3 +1,51 @@
+"""\
+#### Database Loader DAG
+**DB Loader Apache Airflow DAG** (directed acyclic graph) takes the media data saved
+locally in TSV files, cleans it using an intermediate database table, and saves
+the cleaned-up data into the main database (also called upstream or Openledger).
+
+In production,"locally" means on AWS EC2 instance that runs the Apache Airflow
+webserver. Storing too much data there is dangerous, because if ingestion to the
+database breaks down, the disk of this server gets full, and breaks all
+Apache Airflow operations.
+
+As a first step, the DB Loader Apache Airflow DAG saves the data gathered by
+Provider API Scripts to S3 before attempting to load it to PostgreSQL, and delete
+ it from disk if saving to S3 succeeds, even if loading to PostgreSQL fails.
+
+This way, we can delete data from the EC2 instance to open up disk space without
+ the possibility of losing that data altogether. This will allow us to recover if
+ we lose data from the DB somehow, because it will all be living in S3.
+It's also a prerequisite to the long-term plan of saving data only to S3
+(since saving it to the EC2 disk is a source of concern in the first place).
+
+This is one step along the path to avoiding saving data on the local disk at all.
+It should also be faster to load into the DB from S3, since AWS RDS instances
+provide special optimized functionality to load data from S3 into tables in the DB.
+
+Loading the data into the Database is a two-step process: first, data is saved
+to the intermediate table. Any items that don't have the required fields
+(media url, license, foreign landing url and foreign id), and duplicates as
+determined by combination of provider and foreign_id are deleted.
+Then the data from the intermediate table is upserted into the main database.
+If the same item is already present in the database, we update its information
+with newest (non-null) data, and merge any metadata or tags objects to preserve all
+previously downloaded data, and update any data that needs updating
+(eg. popularity metrics).
+
+You can find more background information on the loading process in the following
+issues and related PRs:
+
+- [[Feature] More sophisticated merging of columns in PostgreSQL when upserting](
+https://github.com/creativecommons/cccatalog/issues/378)
+
+- [DB Loader DAG should write to S3 as well as PostgreSQL](
+https://github.com/creativecommons/cccatalog/issues/333)
+
+- [DB Loader should take data from S3, rather than EC2 to load into PostgreSQL](
+https://github.com/creativecommons/cccatalog/issues/334)
+
+"""
 import logging
 import os
 from datetime import datetime, timedelta

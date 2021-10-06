@@ -1,11 +1,87 @@
 import json
 import logging
 from abc import ABC, abstractmethod
+from enum import Enum, auto
+from typing import NewType, Optional
 
 from common import urls
 
 
 logger = logging.getLogger(__name__)
+
+NOW = "NOW()"
+FALSE = "'f'"
+NULL = "NULL"
+
+
+class Datatype(Enum):
+    bool = "boolean"
+    char = "character"
+    int = "integer"
+    jsonb = "jsonb"
+    timestamp = "timestamp with time zone"
+    uuid = "uuid"
+
+
+class UpsertStrategy(Enum):
+    now = auto()
+    false = auto()
+    newest_non_null = auto()
+    merge_jsonb_objects = auto()
+    merge_jsonb_arrays = auto()
+    merge_array = auto()
+    no_change = ()
+
+
+Datatypes = NewType("Datatype", Datatype)
+UpsertStrategies = NewType("UpsertStrategy", UpsertStrategy)
+
+
+def _newest_non_null(column: str) -> str:
+    return f"{column} = COALESCE(EXCLUDED.{column}, old.{column})"
+
+
+def _merge_jsonb_objects(column: str) -> str:
+    """
+    This function returns SQL that merges the top-level keys of the
+    a JSONB column, taking the newest available non-null value.
+    """
+    return f"""{column} = COALESCE(
+           jsonb_strip_nulls(old.{column})
+             || jsonb_strip_nulls(EXCLUDED.{column}),
+           EXCLUDED.{column},
+           old.{column}
+         )"""
+
+
+def _merge_jsonb_arrays(column: str) -> str:
+    return f"""{column} = COALESCE(
+           (
+             SELECT jsonb_agg(DISTINCT x)
+             FROM jsonb_array_elements(old.{column} || EXCLUDED.{column}) t(x)
+           ),
+           EXCLUDED.{column},
+           old.{column}
+         )"""
+
+
+def _merge_array(column: str) -> str:
+    return f"""{column} = COALESCE(
+       (
+         SELECT array_agg(DISTINCT x)
+         FROM unnest(old.{column} || EXCLUDED.{column}) t(x)
+       ),
+       EXCLUDED.{column},
+       old.{column}
+       )"""
+
+
+def _now(column: str):
+    return f"{column} = {NOW}"
+
+
+def _false(column):
+    return f"{column} = {FALSE}"
 
 
 class Column(ABC):
@@ -16,9 +92,46 @@ class Column(ABC):
     properly format data for a given column type.
     """
 
-    def __init__(self, name: str, required: bool):
-        self.NAME = name
-        self.REQUIRED = required
+    strategies = {
+        UpsertStrategy.newest_non_null: _newest_non_null,
+        UpsertStrategy.now: _now,
+        UpsertStrategy.false: _false,
+        UpsertStrategy.merge_jsonb_objects: _merge_jsonb_objects,
+        UpsertStrategy.merge_jsonb_arrays: _merge_jsonb_arrays,
+        UpsertStrategy.merge_array: _merge_array,
+    }
+
+    def __init__(
+        self,
+        name: str,
+        required: bool,
+        datatype: Datatype = Datatype.char,
+        upsert_strategy: Optional[UpsertStrategy] = UpsertStrategy.newest_non_null,
+        constraint: Optional[str] = None,
+        db_name: Optional[str] = None,
+        nullable: Optional[bool] = None,
+    ):
+        """
+        :param name: The column name used in TSV, ImageStore and provider API scripts,
+        can be different from the name in the database.
+        :param required: If True, the database column will be set to 'NOT NULL'
+        :param datatype: Postgres datatype representation
+        :param upsert_strategy: Shows the strategy used when the data for a media item
+        is re-ingested: Simple values are replaced with newer non-null values,
+        json and array values are merged, some timestamps are set to the execution time.
+        :param constraint: Column constraint in database
+        :param db_name: Column name in database, if different from TSV name
+        """
+        self.name = name
+        self.required = required
+        self.datatype = datatype
+        self.upsert_strategy = upsert_strategy
+        self.constraint = constraint
+        self.db_name = db_name or name
+        self.nullable = nullable if nullable is not None else not required
+
+    def __str__(self):
+        return f"{type(self).__name__} {self.name}"
 
     @abstractmethod
     def prepare_string(self, value):
@@ -56,6 +169,34 @@ class Column(ABC):
         else:
             return string
 
+    @property
+    def upsert_name(self):
+        if self.upsert_strategy == UpsertStrategy.now:
+            return NOW
+        elif self.upsert_strategy == UpsertStrategy.false:
+            return FALSE
+        else:
+            return self.db_name
+
+    @property
+    def upsert_value(self):
+        strategy = Column.strategies.get(self.upsert_strategy)
+        if strategy is None:
+            logging.warning(
+                f"Unrecognized column {self.name}; setting to NULL during upsert"
+            )
+            return NULL
+        else:
+            return strategy(self.db_name)
+
+    def create_definition(self, is_loading: bool):
+        dt = self.datatype.value
+        constraint = "" if self.constraint is None else f" {self.constraint}"
+        nullable = ""
+        if not is_loading and not self.nullable:
+            nullable = " NOT NULL"
+        return f"{self.db_name} {dt}{constraint}{nullable}"
+
 
 class IntegerColumn(Column):
     """
@@ -66,6 +207,22 @@ class IntegerColumn(Column):
                instantiating script.  (Not necessarily mapping to
                `not null` columns in the PostgreSQL table)
     """
+
+    def __init__(
+        self,
+        name: str,
+        required: bool,
+        constraint: Optional[str] = None,
+        db_name: Optional[str] = None,
+    ):
+        super().__init__(
+            name,
+            required,
+            datatype=Datatype.int,
+            upsert_strategy=UpsertStrategy.newest_non_null,
+            constraint=constraint,
+            db_name=db_name,
+        )
 
     def prepare_string(self, value):
         """
@@ -93,6 +250,24 @@ class BooleanColumn(Column):
                instantiating script.  (Not necessarily mapping to
                `not null` columns in the PostgreSQL table)
     """
+
+    def __init__(
+        self,
+        name: str,
+        required: bool,
+        upsert_strategy: Optional[UpsertStrategy] = UpsertStrategy.newest_non_null,
+        constraint: Optional[str] = None,
+        db_name: Optional[str] = None,
+    ):
+        super().__init__(
+            name,
+            required,
+            datatype=Datatype.bool,
+            upsert_strategy=upsert_strategy,
+            constraint=constraint,
+            db_name=db_name,
+        )
+        self.constraint = constraint
 
     def prepare_string(self, value):
         """
@@ -123,6 +298,23 @@ class JSONColumn(Column):
                instantiating script.  (Not necessarily mapping to
                `not null` columns in the PostgreSQL table)
     """
+
+    def __init__(
+        self,
+        name: str,
+        required: bool,
+        db_name: Optional[str] = None,
+        upsert_strategy: Optional[UpsertStrategy] = None,
+    ):
+        strategy = upsert_strategy or UpsertStrategy.merge_jsonb_objects
+        super().__init__(
+            name,
+            required,
+            datatype=Datatype.jsonb,
+            upsert_strategy=strategy,
+            db_name=db_name,
+            constraint=None,
+        )
 
     def prepare_string(self, value):
         """
@@ -183,10 +375,24 @@ class StringColumn(Column):
                limit will be mapped to None.
     """
 
-    def __init__(self, name: str, required: bool, size: int, truncate: bool):
+    def __init__(
+        self,
+        name: str,
+        required: bool,
+        size: int,
+        truncate: bool,
+        db_name: Optional[str] = None,
+    ):
         self.SIZE = size
         self.TRUNCATE = truncate
-        super().__init__(name, required)
+        super().__init__(
+            name,
+            required,
+            datatype=Datatype.char,
+            upsert_strategy=UpsertStrategy.newest_non_null,
+            constraint=f"varying({size})",
+            db_name=db_name,
+        )
 
     def prepare_string(self, value):
         """
@@ -195,6 +401,56 @@ class StringColumn(Column):
         return self._Column__enforce_char_limit(
             self._Column__sanitize_string(value), self.SIZE, self.TRUNCATE
         )
+
+
+class UUIDColumn(Column):
+    """
+    Represents the PrimaryKey `identifier` column in PostgreSQL.
+    name:          Column name
+    """
+
+    def __init__(self, name: str):
+        super().__init__(
+            name,
+            required=True,
+            datatype=Datatype.uuid,
+            upsert_strategy=None,
+            constraint="PRIMARY KEY DEFAULT public.uuid_generate_v4()",
+        )
+
+    def prepare_string(self, value):
+        return value
+
+
+class TimestampColumn(Column):
+    """
+    Represents a PostgreSQL column of type `timestamp with time zone`.
+
+    name:             Column name
+    required:         If True, `NOT NULL` constraint is added
+    upsert_strategy:  Strategy to use for data for a media item is re-ingested,
+                      one of the UpsertStrategy. Default is to replace with `NOW()`
+    """
+
+    def __init__(
+        self,
+        name: str,
+        required: bool,
+        upsert_strategy: Optional[UpsertStrategy] = None,
+    ):
+        super().__init__(
+            name,
+            required=required,
+            datatype=Datatype.timestamp,
+            upsert_strategy=upsert_strategy or UpsertStrategy.now,
+        )
+
+    @property
+    def upsert_name(self):
+        return NOW
+
+    def prepare_string(self, value):
+        return value
 
 
 class URLColumn(Column):
@@ -214,9 +470,24 @@ class URLColumn(Column):
            string.
     """
 
-    def __init__(self, name: str, required: bool, size: int):
+    def __init__(
+        self,
+        name: str,
+        required: bool,
+        size: int,
+        nullable: bool = False,
+        db_name: Optional[str] = None,
+    ):
         self.SIZE = size
-        super().__init__(name, required)
+        super().__init__(
+            name,
+            required,
+            datatype=Datatype.char,
+            upsert_strategy=UpsertStrategy.newest_non_null,
+            constraint=f"varying({size})",
+            db_name=db_name,
+            nullable=nullable,
+        )
 
     def prepare_string(self, value):
         """
@@ -236,7 +507,7 @@ class URLColumn(Column):
 class ArrayColumn(Column):
     """
     Represents a PostgreSQL column of type Array, which should hold elements
-    of the given BASE_COLUMN type.
+    of the given base_column type.
 
     name:           name of the corresponding column in the DB
     required:       whether the column should be considered required by the
@@ -246,9 +517,22 @@ class ArrayColumn(Column):
 
     """
 
-    def __init__(self, name: str, required: bool, base_column: Column):
-        self.BASE_COLUMN = base_column
-        super().__init__(name, required)
+    def __init__(
+        self,
+        name: str,
+        required: bool,
+        base_column: Column,
+        db_name: Optional[str] = None,
+    ):
+        self.base_column = base_column
+        super().__init__(
+            name,
+            required,
+            datatype=Datatype.char,
+            upsert_strategy=UpsertStrategy.merge_array,
+            constraint="varying(80)[]",
+            db_name=db_name,
+        )
 
     def prepare_string(self, value):
         """
@@ -262,7 +546,7 @@ class ArrayColumn(Column):
         if value is None:
             return value
         elif input_type != list:
-            arr_str = self.BASE_COLUMN.prepare_string(value)
+            arr_str = self.base_column.prepare_string(value)
             return "{" + arr_str + "}" if arr_str else None
 
         values = []
@@ -270,6 +554,114 @@ class ArrayColumn(Column):
             if val is None:
                 values.append(None)
             else:
-                values.append(self.BASE_COLUMN.prepare_string(val))
+                values.append(self.base_column.prepare_string(val))
         arr_str = json.dumps(values, ensure_ascii=False)
         return "{" + arr_str[1:-1] + "}" if arr_str else None
+
+
+FOREIGN_ID = StringColumn(
+    name="foreign_identifier",
+    required=True,
+    size=3000,
+    truncate=False,
+)
+LANDING_URL = URLColumn(
+    name="foreign_landing_url", required=True, size=1000, nullable=True
+)
+DIRECT_URL = URLColumn(
+    # `url` in DB
+    name="url",
+    required=True,
+    size=3000,
+    db_name="url",
+)
+THUMBNAIL = URLColumn(
+    # `thumbnail` in DB
+    name="thumbnail_url",
+    required=False,
+    size=3000,
+    db_name="thumbnail",
+)
+FILESIZE = IntegerColumn(name="filesize", required=False)
+LICENSE = StringColumn(
+    name="license_", required=True, size=50, truncate=False, db_name="license"
+)
+LICENSE_VERSION = StringColumn(
+    name="license_version", required=True, size=25, truncate=False
+)
+CREATOR = StringColumn(name="creator", required=False, size=2000, truncate=True)
+CREATOR_URL = URLColumn(name="creator_url", required=False, size=2000)
+TITLE = StringColumn(name="title", required=False, size=5000, truncate=True)
+META_DATA = JSONColumn(name="meta_data", required=False)
+TAGS = JSONColumn(
+    name="tags", required=False, upsert_strategy=UpsertStrategy.merge_jsonb_arrays
+)
+WATERMARKED = BooleanColumn(name="watermarked", required=False)
+PROVIDER = StringColumn(name="provider", required=False, size=80, truncate=False)
+SOURCE = StringColumn(name="source", required=False, size=80, truncate=False)
+INGESTION_TYPE = StringColumn(
+    name="ingestion_type", required=False, size=80, truncate=False
+)
+WIDTH = IntegerColumn(name="width", required=False)
+HEIGHT = IntegerColumn(name="height", required=False)
+
+DURATION = IntegerColumn(name="duration", required=False)
+BIT_RATE = IntegerColumn(
+    name="bit_rate",
+    required=False,
+)
+
+SAMPLE_RATE = IntegerColumn(
+    name="sample_rate",
+    required=False,
+)
+CATEGORY = ArrayColumn(
+    name="category",
+    required=False,
+    base_column=StringColumn(
+        name="single_category",
+        required=False,
+        size=80,
+        truncate=False,
+    ),
+)
+GENRES = ArrayColumn(
+    name="genres",
+    required=False,
+    base_column=StringColumn(name="genre", required=False, size=80, truncate=False),
+)
+AUDIO_SET = JSONColumn(
+    # set name, thumbnail, url, identifier etc.
+    name="audio_set",
+    required=False,
+)
+SET_POSITION = IntegerColumn(
+    name="set_position",
+    required=False,
+)
+ALT_FILES = JSONColumn(
+    # Alternative files: url, filesize, bit_rate, sample_rate
+    name="alt_files",
+    required=False,
+)
+
+IDENTIFIER = UUIDColumn(
+    name="identifier",
+)
+
+CREATED_ON = TimestampColumn(
+    name="created_on", required=True, upsert_strategy=UpsertStrategy.no_change
+)
+
+UPDATED_ON = TimestampColumn(
+    name="updated_on",
+    required=True,
+)
+
+LAST_SYNCED = TimestampColumn(name="last_synced_with_source", required=False)
+
+REMOVED = BooleanColumn(
+    name="removed_from_source", required=True, upsert_strategy=UpsertStrategy.false
+)
+
+FILETYPE = StringColumn(name="filetype", required=False, truncate=False, size=5)

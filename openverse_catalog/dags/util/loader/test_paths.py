@@ -18,7 +18,7 @@ ti = TaskInstance(
 def test_stage_oldest_tsv_file_finds_tsv_file(tmpdir):
     tmp_directory = str(tmpdir)
     identifier = TEST_ID
-    test_tsv = "test.tsv"
+    test_tsv = "test_v002_.tsv"
     path = tmpdir.join(test_tsv)
     path.write("")
     tsv_found = paths.stage_oldest_tsv_file(
@@ -35,7 +35,7 @@ def test_stage_oldest_tsv_file_stages_tsv_file(tmpdir):
     tmp_directory = str(tmpdir)
     staging_subdirectory = paths.STAGING_SUBDIRECTORY
     identifier = TEST_ID
-    test_tsv = "test.tsv"
+    test_tsv = "test_v002_.tsv"
     path = tmpdir.join(test_tsv)
     path.write("")
     paths.stage_oldest_tsv_file(tmp_directory, identifier, 0, ti)
@@ -47,7 +47,7 @@ def test_stage_oldest_tsv_file_stages_tsv_file(tmpdir):
 def test_stage_oldest_tsv_file_removes_staged_file_from_output_dir(tmpdir):
     tmp_directory = str(tmpdir)
     identifier = TEST_ID
-    test_tsv = "test.tsv"
+    test_tsv = "test_v002_.tsv"
     path = tmpdir.join(test_tsv)
     path.write("")
     paths.stage_oldest_tsv_file(tmp_directory, identifier, 0, ti)
@@ -59,8 +59,8 @@ def test_stage_oldest_tsv_file_stages_older_file(tmpdir):
     tmp_directory = str(tmpdir)
     staging_subdirectory = paths.STAGING_SUBDIRECTORY
     identifier = TEST_ID
-    test_one_tsv = "test1.tsv"
-    test_two_tsv = "test2.tsv"
+    test_one_tsv = "test1_v001_.tsv"
+    test_two_tsv = "test2_v001_.tsv"
     path_one = tmpdir.join(test_one_tsv)
     path_one.write("")
     time.sleep(0.01)
@@ -75,8 +75,8 @@ def test_stage_oldest_tsv_file_ignores_newer_file(tmpdir):
     tmp_directory = str(tmpdir)
     staging_subdirectory = paths.STAGING_SUBDIRECTORY
     identifier = TEST_ID
-    test_one_tsv = "test1.tsv"
-    test_two_tsv = "test2.tsv"
+    test_one_tsv = "test1_v002_.tsv"
+    test_two_tsv = "test2_v002_.tsv"
     path_one = tmpdir.join(test_one_tsv)
     path_one.write("")
     time.sleep(0.01)
@@ -105,7 +105,7 @@ def test_stage_oldest_tsv_file_ignores_young_tsv(tmpdir):
     tmp_directory = str(tmpdir)
     staging_subdirectory = paths.STAGING_SUBDIRECTORY
     identifier = TEST_ID
-    test_tsv = "test.tsv"
+    test_tsv = "test_v002_.tsv"
     path = tmpdir.join(test_tsv)
     path.write("")
     paths.stage_oldest_tsv_file(tmp_directory, identifier, 5, ti)

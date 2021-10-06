@@ -16,7 +16,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-IMAGE_COLUMN_NAMES = [x.NAME for x in image.IMAGE_TSV_COLUMNS]
+IMAGE_COLUMN_NAMES = [x.name for x in image.CURRENT_IMAGE_TSV_COLUMNS]
 
 PD_LICENSE_INFO = LicenseInfo(
     "zero", "1.0", "https://creativecommons.org/publicdomain/zero/1.0/", None
@@ -75,21 +75,25 @@ def test_MediaStore_add_item_flushes_buffer(tmpdir):
         buffer_length=3,
     )
     image_store.add_item(
+        foreign_identifier="01",
         foreign_landing_url="https://images.org/image01",
         image_url="https://images.org/image01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
+        foreign_identifier="02",
         foreign_landing_url="https://images.org/image02",
         image_url="https://images.org/image02.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
+        foreign_identifier="03",
         foreign_landing_url="https://images.org/image03",
         image_url="https://images.org/image03.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
+        foreign_identifier="04",
         foreign_landing_url="https://images.org/image04",
         image_url="https://images.org/image04.jpg",
         license_info=PD_LICENSE_INFO,
@@ -108,16 +112,19 @@ def test_MediaStore_commit_writes_nothing_if_no_lines_in_buffer():
 def test_MediaStore_produces_correct_total_images():
     image_store = image.ImageStore(provider="testing_provider")
     image_store.add_item(
+        foreign_identifier="01",
         foreign_landing_url="https://images.org/image01",
         image_url="https://images.org/image01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
+        foreign_identifier="02",
         foreign_landing_url="https://images.org/image02",
         image_url="https://images.org/image02.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
+        foreign_identifier="03",
         foreign_landing_url="https://images.org/image03",
         image_url="https://images.org/image03.jpg",
         license_info=PD_LICENSE_INFO,
@@ -157,19 +164,6 @@ def test_MediaStore_clean_media_metadata_adds_provider(
     cleaned_data = image_store.clean_media_metadata(**image_data)
 
     assert cleaned_data["provider"] == provider
-
-
-def test_MediaStore_clean_media_metadata_adds_filesize(
-    monkeypatch,
-):
-    image_store = image.ImageStore()
-    image_data = {
-        "license_info": BY_LICENSE_INFO,
-    }
-    cleaned_data = image_store.clean_media_metadata(**image_data)
-
-    assert "filesize" in cleaned_data
-    assert cleaned_data["filesize"] is None
 
 
 def test_MediaStore_clean_media_metadata_removes_license_urls(
@@ -240,6 +234,8 @@ def test_MediaStore_get_image_gets_source(
         foreign_landing_url=None,
         image_url=None,
         thumbnail_url=None,
+        filetype=None,
+        filesize=None,
         foreign_identifier=None,
         width=None,
         height=None,
@@ -248,6 +244,7 @@ def test_MediaStore_get_image_gets_source(
         title=None,
         meta_data=None,
         raw_tags=None,
+        category=None,
         watermarked=None,
         source="diff_source",
         ingestion_type=None,
@@ -265,6 +262,8 @@ def test_MediaStore_sets_source_to_provider_if_source_is_none(
         foreign_landing_url=None,
         image_url=None,
         thumbnail_url=None,
+        filetype=None,
+        filesize=1000,
         foreign_identifier=None,
         width=None,
         height=None,
@@ -273,6 +272,7 @@ def test_MediaStore_sets_source_to_provider_if_source_is_none(
         title=None,
         meta_data=None,
         raw_tags=None,
+        category=None,
         watermarked=None,
         source=None,
         ingestion_type=None,
@@ -422,6 +422,8 @@ def test_MediaStore_get_image_enriches_singleton_tags():
         foreign_landing_url=None,
         image_url=None,
         thumbnail_url=None,
+        filetype=None,
+        filesize=None,
         foreign_identifier=None,
         width=None,
         height=None,
@@ -430,6 +432,7 @@ def test_MediaStore_get_image_enriches_singleton_tags():
         title=None,
         meta_data=None,
         raw_tags=["lone"],
+        category=None,
         watermarked=None,
         source=None,
         ingestion_type=None,
@@ -458,8 +461,11 @@ def test_MediaStore_get_image_tag_blacklist():
         image_url=None,
         meta_data=None,
         raw_tags=raw_tags,
+        category=None,
         foreign_identifier=None,
         thumbnail_url=None,
+        filetype=None,
+        filesize=None,
         width=None,
         height=None,
         creator=None,
@@ -483,6 +489,8 @@ def test_MediaStore_get_image_enriches_multiple_tags():
         foreign_landing_url=None,
         image_url=None,
         thumbnail_url=None,
+        filetype=None,
+        filesize=None,
         foreign_identifier=None,
         width=None,
         height=None,
@@ -491,6 +499,7 @@ def test_MediaStore_get_image_enriches_multiple_tags():
         title=None,
         meta_data=None,
         raw_tags=["tagone", "tag2", "tag3"],
+        category=None,
         watermarked=None,
         source=None,
         ingestion_type=None,
@@ -503,7 +512,7 @@ def test_MediaStore_get_image_enriches_multiple_tags():
     ]
 
 
-def test_ImageStore_get_image_leaves_preenriched_tags(setup_env):
+def test_MediaStore_get_image_leaves_preenriched_tags(setup_env):
     image_store = image.ImageStore("test_provider")
     tags = [
         {"name": "tagone", "provider": "test_provider"},
@@ -520,6 +529,8 @@ def test_ImageStore_get_image_leaves_preenriched_tags(setup_env):
         foreign_landing_url=None,
         image_url=None,
         thumbnail_url=None,
+        filetype=None,
+        filesize=None,
         foreign_identifier=None,
         width=None,
         height=None,
@@ -528,6 +539,7 @@ def test_ImageStore_get_image_leaves_preenriched_tags(setup_env):
         title=None,
         meta_data=None,
         raw_tags=tags,
+        category=None,
         watermarked=None,
         source=None,
         ingestion_type=None,
@@ -536,7 +548,7 @@ def test_ImageStore_get_image_leaves_preenriched_tags(setup_env):
     assert actual_image.tags == tags
 
 
-def test_ImageStore_get_image_nones_nonlist_tags():
+def test_MediaStore_get_image_nones_nonlist_tags():
     image_store = image.ImageStore("test_provider")
     tags = "notalist"
 
@@ -549,6 +561,8 @@ def test_ImageStore_get_image_nones_nonlist_tags():
         foreign_landing_url=None,
         image_url=None,
         thumbnail_url=None,
+        filetype=None,
+        filesize=None,
         foreign_identifier=None,
         width=None,
         height=None,
@@ -557,69 +571,10 @@ def test_ImageStore_get_image_nones_nonlist_tags():
         title=None,
         meta_data=None,
         raw_tags=tags,
+        category=None,
         watermarked=None,
         source=None,
         ingestion_type=None,
     )
 
     assert actual_image.tags is None
-
-
-def test_create_tsv_row_properly_places_entries(monkeypatch):
-    def mock_validate_url(url_string):
-        return url_string
-
-    monkeypatch.setattr(image.columns.urls, "validate_url_string", mock_validate_url)
-    image_store = image.ImageStore()
-    req_args_dict = {
-        "foreign_landing_url": "https://landing_page.com",
-        "image_url": "https://imageurl.com",
-        "license_": "testlicense",
-        "license_version": "1.0",
-    }
-    args_dict = {
-        "foreign_identifier": "foreign_id",
-        "thumbnail_url": "https://thumbnail.com",
-        "width": 200,
-        "height": 500,
-        "filesize": None,
-        "creator": "tyler",
-        "creator_url": "https://creatorurl.com",
-        "title": "agreatpicture",
-        "meta_data": {"description": "cat picture"},
-        "tags": [{"name": "tag1", "provider": "testing"}],
-        "watermarked": "f",
-        "provider": "testing_provider",
-        "source": "testing_source",
-        "ingestion_type": "testing_ingestion",
-    }
-    args_dict.update(req_args_dict)
-
-    test_image = image.Image(**args_dict)
-    actual_row = image_store._create_tsv_row(test_image)
-    expect_row = (
-        "\t".join(
-            [
-                "foreign_id",
-                "https://landing_page.com",
-                "https://imageurl.com",
-                "https://thumbnail.com",
-                "200",
-                "500",
-                "\\N",
-                "testlicense",
-                "1.0",
-                "tyler",
-                "https://creatorurl.com",
-                "agreatpicture",
-                '{"description": "cat picture"}',
-                '[{"name": "tag1", "provider": "testing"}]',
-                "f",
-                "testing_provider",
-                "testing_source",
-                "testing_ingestion",
-            ]
-        )
-        + "\n"
-    )
-    assert expect_row == actual_row

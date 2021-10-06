@@ -73,6 +73,8 @@ CREATE MATERIALIZED VIEW image_view AS
     watermarked,
     last_synced_with_source,
     removed_from_source,
+    filetype,
+    category,
     standardized_image_popularity(
       image.provider, image.meta_data
     ) AS standardized_popularity

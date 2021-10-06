@@ -11,7 +11,8 @@ from pathlib import Path
 from textwrap import dedent
 
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from storage import column_names as col
+from common import urls
+from storage import columns as column
 from storage import image
 from util import tsv_cleaner
 from util.constants import IMAGE
@@ -20,7 +21,7 @@ from util.loader.sql import TABLE_NAMES
 
 logger = logging.getLogger(__name__)
 logging.getLogger(image.__name__).setLevel(logging.WARNING)
-logging.getLogger(image.columns.urls.__name__).setLevel(logging.WARNING)
+logging.getLogger(urls.__name__).setLevel(logging.WARNING)
 
 MAX_DIR_SIZE = 8 * 1024 ** 3
 OUTPUT_DIR = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
@@ -151,8 +152,8 @@ def _wait_for_space(
             break
         else:
             logger.info(
-                f"{output_path} holds {du / 1024**2} MB,"
-                f" but max is {max_dir_size / 1024**2} MB."
+                f"{output_path} holds {du / 1024 ** 2} MB,"
+                f" but max is {max_dir_size / 1024 ** 2} MB."
                 f" Waiting for {delay} seconds"
             )
             time.sleep(delay)
@@ -177,17 +178,23 @@ def _select_records(postgres_conn_id, prefix, image_table=TABLE_NAMES[IMAGE]):
     select_query = dedent(
         f"""
         SELECT
-          {col.IDENTIFIER}, {col.CREATED_ON}, {col.UPDATED_ON},
-          {col.INGESTION_TYPE}, {col.PROVIDER}, {col.SOURCE}, {col.FOREIGN_ID},
-          {col.LANDING_URL}, {col.DIRECT_URL}, {col.THUMBNAIL}, {col.WIDTH},
-          {col.HEIGHT}, {col.FILESIZE}, {col.LICENSE}, {col.LICENSE_VERSION},
-          {col.CREATOR}, {col.CREATOR_URL}, {col.TITLE}, {col.META_DATA},
-          {col.TAGS}, {col.WATERMARKED}, {col.LAST_SYNCED}, {col.REMOVED}
+          {column.IDENTIFIER.db_name}, {column.CREATED_ON.db_name},
+          {column.UPDATED_ON.db_name}, {column.INGESTION_TYPE.db_name},
+          {column.PROVIDER.db_name}, {column.SOURCE.db_name},
+          {column.FOREIGN_ID.db_name}, {column.LANDING_URL.db_name},
+          {column.DIRECT_URL.db_name}, {column.THUMBNAIL.db_name},
+          {column.WIDTH.db_name}, {column.HEIGHT.db_name},
+          {column.FILESIZE.db_name}, {column.LICENSE.db_name},
+          {column.LICENSE_VERSION.db_name}, {column.CREATOR.db_name},
+          {column.CREATOR_URL.db_name}, {column.TITLE.db_name},
+          {column.META_DATA.db_name}, {column.TAGS.db_name},
+          {column.WATERMARKED.db_name}, {column.LAST_SYNCED.db_name},
+          {column.REMOVED.db_name}
         FROM {image_table}
         WHERE
-          {col.IDENTIFIER}>='{min_uuid}'::uuid
+          {column.IDENTIFIER.db_name}>='{min_uuid}'::uuid
           AND
-          {col.IDENTIFIER}<='{max_uuid}'::uuid;
+          {column.IDENTIFIER.db_name}<='{max_uuid}'::uuid;
         """
     )
     return postgres.get_records(select_query)

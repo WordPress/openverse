@@ -6,6 +6,7 @@ from typing import Optional, Union
 
 from common.licenses.licenses import is_valid_license_info
 from storage import util
+from storage.tsv_columns import CURRENT_VERSION
 
 
 logger = logging.getLogger(__name__)
@@ -57,7 +58,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         buffer_length: int = 100,
         media_type: Optional[str] = "generic",
     ):
-        logger.info(f"Initialized {media_type} MediaStore" f" with provider {provider}")
+        logger.info(f"Initialized {media_type} MediaStore with provider {provider}")
         self.media_type = media_type
         self._media_buffer = []
         self._total_items = 0
@@ -107,7 +108,6 @@ class MediaStore(metaclass=abc.ABCMeta):
         - replace `raw_tags` with enriched `tags`,
         - validate `source`,
         - add `provider`,
-        - add `filesize` (with value of None)
 
         Returns None if license is invalid
         """
@@ -136,7 +136,6 @@ class MediaStore(metaclass=abc.ABCMeta):
 
         media_data.pop("license_info", None)
         media_data["provider"] = self._PROVIDER
-        media_data["filesize"] = None
         return media_data
 
     def commit(self):
@@ -149,6 +148,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         output_dir: Optional[str],
         output_file: Optional[str],
         provider: str,
+        version: Optional[str] = None,
     ) -> str:
         """Creates the path for the tsv file.
         If output_dir and output_file ar not given,
@@ -159,21 +159,22 @@ class MediaStore(metaclass=abc.ABCMeta):
             Path of the tsv file to write media data pulled from providers
         """
         if output_dir is None:
-            logger.info(
-                "No given output directory. " "Using OUTPUT_DIR from environment."
-            )
+            logger.info("No given output directory. Using OUTPUT_DIR from environment.")
             output_dir = os.getenv("OUTPUT_DIR")
         if output_dir is None:
             logger.warning(
-                "OUTPUT_DIR is not set in the environment. " "Output will go to /tmp."
+                "OUTPUT_DIR is not set in the environment. Output will go to /tmp."
             )
             output_dir = "/tmp"
-
+        if version is None:
+            version = CURRENT_VERSION[self.media_type]
         if output_file is not None:
             output_file = str(output_file)
         else:
             datetime_string = datetime.strftime(self._NOW, "%Y%m%d%H%M%S")
-            output_file = f"{provider}_{self.media_type}" f"_{datetime_string}.tsv"
+            output_file = (
+                f"{provider}_{self.media_type}_v{version}_{datetime_string}.tsv"
+            )
 
         output_path = os.path.join(output_dir, output_file)
         logger.info(f"Output path: {output_path}")
@@ -191,8 +192,8 @@ class MediaStore(metaclass=abc.ABCMeta):
         ]
         logger.debug(f"Prepared strings list:\n{prepared_strings}")
         for i in range(row_length):
-            if self.columns[i].REQUIRED and prepared_strings[i] is None:
-                logger.warning(f"Row missing required {self.columns[i].NAME}")
+            if self.columns[i].required and prepared_strings[i] is None:
+                logger.warning(f"Row missing required {self.columns[i].name}")
                 return None
         else:
             return (

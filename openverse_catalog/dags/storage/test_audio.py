@@ -2,6 +2,7 @@ import logging
 from unittest.mock import patch
 
 import pytest
+import storage.columns
 from common.licenses.licenses import LicenseInfo
 from storage import audio
 
@@ -25,6 +26,8 @@ mock_audio_args = {
     "license_info": BY_LICENSE_INFO,
     "foreign_identifier": "foreign_id",
     "thumbnail_url": "https://thumbnail.com",
+    "filetype": "ogg",
+    "filesize": 1000,
     "duration": 200,
     "creator": "tyler",
     "creator_url": "https://creatorurl.com",
@@ -37,6 +40,7 @@ mock_audio_args = {
     "category": None,
     "genres": [],
     "audio_set": {},
+    "set_position": None,
     "alt_files": [],
     "source": "testing_source",
     "ingestion_type": "provider_api",
@@ -58,6 +62,7 @@ def test_AudioStore_add_item_adds_realistic_audio_to_buffer():
     license_info = PD_LICENSE_INFO
     audio_store = audio.AudioStore(provider="testing_provider")
     audio_store.add_item(
+        foreign_identifier="01",
         foreign_landing_url="https://audios.org/audio01",
         audio_url="https://audios.org/audio01.jpg",
         license_info=license_info,
@@ -69,21 +74,25 @@ def test_AudioStore_add_item_adds_realistic_audio_to_buffer():
 def test_AudioStore_add_item_adds_multiple_audios_to_buffer():
     audio_store = audio.AudioStore(provider="testing_provider")
     audio_store.add_item(
+        foreign_identifier="01",
         foreign_landing_url="https://audios.org/audio01",
         audio_url="https://audios.org/audio01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
+        foreign_identifier="02",
         foreign_landing_url="https://audios.org/audio02",
         audio_url="https://audios.org/audio02.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
+        foreign_identifier="03",
         foreign_landing_url="https://audios.org/audio03",
         audio_url="https://audios.org/audio03.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
+        foreign_identifier="04",
         foreign_landing_url="https://audios.org/audio04",
         audio_url="https://audios.org/audio04.jpg",
         license_info=PD_LICENSE_INFO,
@@ -104,21 +113,25 @@ def test_AudioStore_add_item_flushes_buffer(tmpdir):
         buffer_length=3,
     )
     audio_store.add_item(
+        foreign_identifier="01",
         foreign_landing_url="https://audios.org/audio01",
         audio_url="https://audios.org/audio01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
+        foreign_identifier="02",
         foreign_landing_url="https://audios.org/audio02",
         audio_url="https://audios.org/audio02.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
+        foreign_identifier="03",
         foreign_landing_url="https://audios.org/audio03",
         audio_url="https://audios.org/audio03.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
+        foreign_identifier="04",
         foreign_landing_url="https://audios.org/audio04",
         audio_url="https://audios.org/audio04.jpg",
         license_info=PD_LICENSE_INFO,
@@ -137,16 +150,19 @@ def test_AudioStore_commit_writes_nothing_if_no_lines_in_buffer():
 def test_AudioStore_produces_correct_total_audios():
     audio_store = audio.AudioStore(provider="testing_provider")
     audio_store.add_item(
+        foreign_identifier="01",
         foreign_landing_url="https://audios.org/audio01",
         audio_url="https://audios.org/audio01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
+        foreign_identifier="02",
         foreign_landing_url="https://audios.org/audio02",
         audio_url="https://audios.org/audio02.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
+        foreign_identifier="03",
         foreign_landing_url="https://audios.org/audio03",
         audio_url="https://audios.org/audio03.jpg",
         license_info=PD_LICENSE_INFO,
@@ -174,10 +190,12 @@ def default_audio_args():
     return dict(
         foreign_identifier="foreign_id",
         foreign_landing_url="https://landing_page.org",
-        audio_url="https://audiourl.org",
+        url="https://audiourl.org",
         thumbnail_url="https://thumbnail.com",
+        filetype=None,
         filesize=None,
         audio_set=None,
+        set_position=1,
         license_="by",
         license_version="4.0",
         creator="tyler",
@@ -189,7 +207,7 @@ def default_audio_args():
         duration=100,
         bit_rate=None,
         sample_rate=None,
-        category="music",
+        category=["music"],
         genres=["rock", "pop"],
         alt_files=None,
         provider="testing_provider",
@@ -219,10 +237,11 @@ def test_create_tsv_row_creates_alt_files(
         return value
 
     with patch.object(
-        audio.columns.urls, "validate_url_string", side_effect=mock_url_validator
+        storage.columns.urls,
+        "validate_url_string",
+        side_effect=mock_url_validator,
     ):
         actual_row = audio_store._create_tsv_row(test_audio)
-        print(f"\nActual row: {actual_row}")
         expected_row = (
             "\t".join(
                 [
@@ -231,6 +250,7 @@ def test_create_tsv_row_creates_alt_files(
                     "https://audiourl.org",
                     "https://thumbnail.com",
                     "\\N",
+                    "\\N",
                     "by",
                     "4.0",
                     "tyler",
@@ -238,6 +258,7 @@ def test_create_tsv_row_creates_alt_files(
                     "agreatsong",
                     '{"description": "cat song"}',
                     '{"name": "tag1", "provider": "testing"}',
+                    '{"music"}',
                     "\\N",
                     "testing_provider",
                     "testing_source",
@@ -245,9 +266,9 @@ def test_create_tsv_row_creates_alt_files(
                     "100",
                     "\\N",
                     "\\N",
-                    "music",
                     '{"rock", "pop"}',
                     "\\N",
+                    "1",
                     '[{"url": '
                     '"https://alternative.com/audio.mp3", "filesize": "123", "bit_rate": "41000", '
                     '"sample_rate": "16000"}]',
@@ -277,7 +298,7 @@ def test_create_tsv_row_creates_audio_set(
         return value
 
     with patch.object(
-        audio.columns.urls, "validate_url_string", side_effect=mock_url_validator
+        storage.columns.urls, "validate_url_string", side_effect=mock_url_validator
     ):
         actual_row = audio_store._create_tsv_row(test_audio)
         expected_row = (
@@ -288,6 +309,7 @@ def test_create_tsv_row_creates_audio_set(
                     "https://audiourl.org",
                     "https://thumbnail.com",
                     "\\N",
+                    "\\N",
                     "by",
                     "4.0",
                     "tyler",
@@ -295,6 +317,7 @@ def test_create_tsv_row_creates_audio_set(
                     "agreatsong",
                     '{"description": "cat song"}',
                     '{"name": "tag1", "provider": "testing"}',
+                    '{"music"}',
                     "\\N",
                     "testing_provider",
                     "testing_source",
@@ -302,10 +325,10 @@ def test_create_tsv_row_creates_audio_set(
                     "100",
                     "\\N",
                     "\\N",
-                    "music",
                     '{"rock", "pop"}',
                     '{"audio_set": "test_audio_set", "set_url": "test.com", '
                     '"set_position": "1", "set_thumbnail": "thumbnail.jpg"}',
+                    "1",
                     "\\N",
                 ]
             )
@@ -364,7 +387,7 @@ def test_create_tsv_row_returns_none_if_missing_audio_url(
 ):
     audio_store = audio.AudioStore()
     audio_args = default_audio_args
-    audio_args["audio_url"] = None
+    audio_args["url"] = None
     test_audio = audio.Audio(**audio_args)
     expect_row = None
     actual_row = audio_store._create_tsv_row(test_audio)
@@ -399,17 +422,18 @@ def test_create_tsv_row_properly_places_entries(monkeypatch):
     def mock_validate_url(url_string):
         return url_string
 
-    monkeypatch.setattr(audio.columns.urls, "validate_url_string", mock_validate_url)
+    monkeypatch.setattr(storage.columns.urls, "validate_url_string", mock_validate_url)
     audio_store = audio.AudioStore()
     req_args_dict = {
         "foreign_landing_url": "https://landing_page.com",
-        "audio_url": "https://audiourl.com",
+        "url": "https://audiourl.com",
         "license_": "testlicense",
         "license_version": "1.0",
     }
     args_dict = {
         "foreign_identifier": "foreign_id",
         "thumbnail_url": "https://thumbnail.com",
+        "filetype": "mp3",
         "duration": 200,
         "filesize": None,
         "creator": "tyler",
@@ -420,7 +444,7 @@ def test_create_tsv_row_properly_places_entries(monkeypatch):
         "watermarked": None,
         "bit_rate": 16000,
         "sample_rate": 44100,
-        "category": "music",
+        "category": ["music"],
         "genres": ["pop", "rock"],
         "audio_set": {
             "audio_set": "album",
@@ -428,6 +452,7 @@ def test_create_tsv_row_properly_places_entries(monkeypatch):
             "set_url": "https://album.com/",
             "set_thumbnail": "https://album.com/thumbnail.jpg",
         },
+        "set_position": 1,
         "alt_files": None,
         "provider": "testing_provider",
         "source": "testing_source",
@@ -444,6 +469,7 @@ def test_create_tsv_row_properly_places_entries(monkeypatch):
                 "https://landing_page.com",
                 "https://audiourl.com",
                 "https://thumbnail.com",
+                "mp3",
                 "\\N",
                 "testlicense",
                 "1.0",
@@ -452,6 +478,7 @@ def test_create_tsv_row_properly_places_entries(monkeypatch):
                 "agreatsong",
                 '{"description": "a song about cat"}',
                 '[{"name": "tag1", "provider": "testing"}]',
+                '{"music"}',
                 "\\N",
                 "testing_provider",
                 "testing_source",
@@ -459,10 +486,10 @@ def test_create_tsv_row_properly_places_entries(monkeypatch):
                 "200",
                 "16000",
                 "44100",
-                "music",
                 '{"pop", "rock"}',
                 '{"audio_set": "album", "set_position": "1", "set_url": "https://album.com/", '
                 '"set_thumbnail": "https://album.com/thumbnail.jpg"}',
+                "1",
                 "\\N",
             ]
         )

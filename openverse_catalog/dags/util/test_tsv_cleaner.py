@@ -1,16 +1,29 @@
-import os
+from pathlib import Path
 from unittest.mock import call, patch
 
-from common.licenses.licenses import get_license_info
+from common.licenses.licenses import LicenseInfo
+from storage import image
 from util import tsv_cleaner
-from util.loader.ingestion_column import check_and_fix_tsv_file
 
 
-RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "test_resources")
+RESOURCES = Path(__file__).parent.resolve() / "test_resources"
+
+by_nc_license = LicenseInfo(
+    license="by-nc",
+    version="4.0",
+    url="https://creativecommons.org/licenses/by-nc/4.0/",
+    raw_url="https://creativecommons.org/licenses/by-nc/4.0/",
+)
+by_license = LicenseInfo(
+    license="by",
+    version="4.0",
+    url="https://creativecommons.org/licenses/by/4.0/",
+    raw_url="https://creativecommons.org/licenses/by/4.0/",
+)
 
 
 def test_clean_tsv_cleans_tsv_rows(tmpdir):
-    tsv_file_path = os.path.join(RESOURCES, "multi_prov.tsv")
+    tsv_file_path = RESOURCES / "multi_prov.tsv"
 
     expected_calls = [
         call(provider="test_provider"),
@@ -18,9 +31,7 @@ def test_clean_tsv_cleans_tsv_rows(tmpdir):
             foreign_landing_url="https://example.com/landing1",
             image_url="https://example.com/image1",
             thumbnail_url="https://example.com/thumbnail1",
-            license_info=get_license_info(
-                license_url="https://creativecommons.org/licenses/by/4.0/"
-            ),
+            license_info=by_license,
             foreign_identifier="one",
             width="1000",
             height="500",
@@ -38,15 +49,14 @@ def test_clean_tsv_cleans_tsv_rows(tmpdir):
             ],
             watermarked="f",
             source="alice_official",
+            ingestion_type="provider_api",
         ),
         call(provider="next_provider"),
         call().add_item(
             foreign_landing_url="https://example.com/landing2",
             image_url="https://example.com/image2",
             thumbnail_url="https://example.com/thumbnail2",
-            license_info=get_license_info(
-                license_url="https://creativecommons.org/licenses/by-nc/4.0/"
-            ),
+            license_info=by_nc_license,
             foreign_identifier="two",
             width="1000",
             height="500",
@@ -64,17 +74,17 @@ def test_clean_tsv_cleans_tsv_rows(tmpdir):
             ],
             watermarked="f",
             source="next_provider",
+            ingestion_type="provider_api",
         ),
         call().commit(),
         call().commit(),
     ]
 
     with patch.object(
-        tsv_cleaner.image,
+        image,
         "ImageStore",
         autospec=True,
     ) as mock_image_store:
-        # tsv file does not have ingestion_type column
-        check_and_fix_tsv_file(tsv_file_path)
         tsv_cleaner.clean_tsv(tsv_file_path)
-    mock_image_store.assert_has_calls(expected_calls)
+    for i, expected_call in enumerate(expected_calls):
+        assert mock_image_store.mock_calls[i] == expected_call

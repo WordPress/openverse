@@ -19,6 +19,7 @@ import logging
 import os
 from functools import lru_cache
 
+import common
 from common.licenses.licenses import get_license_info
 from common.requester import DelayedRequester
 from common.urls import rewrite_redirected_url
@@ -30,6 +31,7 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
+logging.getLogger(common.urls.__name__).setLevel(logging.WARNING)
 
 LIMIT = 200  # number of items per page in API response
 DELAY = 1  # in seconds
@@ -141,8 +143,16 @@ def _extract_audio_data(media_data):
     tags = _get_tags(media_data)
     # Jamendo has only music
     category = "music"
+    # We request mp3 files
+    filetype = "mp3"
     genres = _get_genres(media_data)
-    audio_set, position, url, set_thumbnail = _get_audio_set_info(media_data)
+    (
+        set_foreign_id,
+        audio_set,
+        position,
+        url,
+        set_thumbnail,
+    ) = _get_audio_set_info(media_data)
     return {
         "title": title,
         "creator": creator,
@@ -151,12 +161,14 @@ def _extract_audio_data(media_data):
         "foreign_landing_url": foreign_landing_url,
         "audio_url": audio_url,
         "duration": duration,
+        "filetype": filetype,
         "thumbnail_url": thumbnail,
         "license_info": item_license,
         "meta_data": metadata,
         "raw_tags": tags,
         "category": category,
         "genres": genres,
+        "set_foreign_id": set_foreign_id,
         "audio_set": audio_set,
         "set_position": position,
         "set_url": url,
@@ -199,9 +211,11 @@ def _get_audio_set_info(media_data):
     thumbnail = media_data.get("album_image")
     set_id = media_data.get("album_id")
     if set_id and audio_set:
-        set_slug = audio_set.lower().replace(" ", "-")
+        set_slug = (
+            audio_set.lower().replace(" ", "-").replace("/", "-").replace("--", "")
+        )
         url = _cleanse_url(f"{base_url}{set_id}/{set_slug}")
-    return audio_set, position, url, thumbnail
+    return set_id, audio_set, position, url, thumbnail
 
 
 def _get_thumbnail_url(media_data):

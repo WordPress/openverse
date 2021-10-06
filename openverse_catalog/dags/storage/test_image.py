@@ -1,6 +1,7 @@
 import logging
 
 import pytest
+from common import urls
 from common.licenses.licenses import LicenseInfo
 from storage import image, util
 
@@ -28,6 +29,7 @@ def setup_env(monkeypatch):
 def test_ImageStore_add_item_adds_realistic_image_to_buffer(setup_env):
     image_store = image.ImageStore(provider="testing_provider")
     image_store.add_item(
+        foreign_identifier="01",
         foreign_landing_url="https://images.org/image01",
         image_url="https://images.org/image01.jpg",
         license_info=PD_LICENSE_INFO,
@@ -40,21 +42,25 @@ def test_ImageStore_add_item_adds_multiple_images_to_buffer(
 ):
     image_store = image.ImageStore(provider="testing_provider")
     image_store.add_item(
+        foreign_identifier="01",
         foreign_landing_url="https://images.org/image01",
         image_url="https://images.org/image01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
+        foreign_identifier="02",
         foreign_landing_url="https://images.org/image02",
         image_url="https://images.org/image02.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
+        foreign_identifier="03",
         foreign_landing_url="https://images.org/image03",
         image_url="https://images.org/image03.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
+        foreign_identifier="04",
         foreign_landing_url="https://images.org/image04",
         image_url="https://images.org/image04.jpg",
         license_info=PD_LICENSE_INFO,
@@ -72,6 +78,8 @@ def test_ImageStore_get_image_places_given_args(
         "license_info": BY_LICENSE_INFO,
         "foreign_identifier": "foreign_id",
         "thumbnail_url": "https://thumbnail.com",
+        "filetype": "svg",
+        "filesize": 1000,
         "width": 200,
         "height": 500,
         "creator": "tyler",
@@ -79,6 +87,7 @@ def test_ImageStore_get_image_places_given_args(
         "title": "agreatpicture",
         "meta_data": {"description": "cat picture"},
         "raw_tags": [{"name": "tag1", "provider": "testing"}],
+        "category": ["photograph"],
         "watermarked": "f",
         "source": "testing_source",
         "ingestion_type": "provider_api",
@@ -97,9 +106,10 @@ def test_ImageStore_get_image_places_given_args(
     actual_image = image_store._get_image(**args_dict)
     args_dict["tags"] = args_dict.pop("raw_tags")
     args_dict["provider"] = "testing_provider"
-    args_dict["filesize"] = None
+    args_dict["filesize"] = 1000
     args_dict["license_"] = args_dict.get("license_info").license
     args_dict["license_version"] = args_dict.pop("license_info").version
+    args_dict["url"] = args_dict.pop("image_url")
 
     assert actual_image == image.Image(**args_dict)
 
@@ -109,10 +119,11 @@ def default_image_args(
     setup_env,
 ):
     return dict(
-        foreign_identifier=None,
+        foreign_identifier="01",
         foreign_landing_url="https://image.org",
-        image_url="https://image.org",
+        url="https://image.org",
         thumbnail_url=None,
+        filetype=None,
         width=None,
         height=None,
         filesize=None,
@@ -123,6 +134,7 @@ def default_image_args(
         title=None,
         meta_data=None,
         tags=None,
+        category=None,
         watermarked=None,
         provider=None,
         source=None,
@@ -146,7 +158,7 @@ def test_create_tsv_row_non_none_if_req_fields(
         "foreign_landing_url",
         "license_",
         "license_version",
-        "image_url",
+        "url",
     ],
 )
 def test_create_tsv_row_none_if_missing_required(
@@ -194,7 +206,10 @@ def test_create_tsv_row_turns_empty_into_nullchar(
     actual_row = image_store._create_tsv_row(test_image).split("\t")
     assert (
         all(
-            [actual_row[i] == "\\N" for i in [0, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15]]
+            [
+                actual_row[i] == "\\N"
+                for i in [3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+            ]
         )
         is True
     )
@@ -205,17 +220,19 @@ def test_create_tsv_row_properly_places_entries(setup_env, monkeypatch):
     def mock_validate_url(url_string):
         return url_string
 
-    monkeypatch.setattr(image.columns.urls, "validate_url_string", mock_validate_url)
     image_store = image.ImageStore()
+    monkeypatch.setattr(urls, "validate_url_string", mock_validate_url)
+
     req_args_dict = {
+        "foreign_identifier": "foreign_id",
         "foreign_landing_url": "https://landing_page.com",
-        "image_url": "http://imageurl.com",
+        "url": "http://imageurl.com",
         "license_": "testlicense",
         "license_version": "1.0",
     }
     args_dict = {
-        "foreign_identifier": "foreign_id",
         "thumbnail_url": "http://thumbnail.com",
+        "filetype": "png",
         "width": 200,
         "height": 500,
         "filesize": None,
@@ -224,6 +241,7 @@ def test_create_tsv_row_properly_places_entries(setup_env, monkeypatch):
         "title": "agreatpicture",
         "meta_data": {"description": "cat picture"},
         "tags": [{"name": "tag1", "provider": "testing"}],
+        "category": ["digitized_artwork"],
         "watermarked": "f",
         "provider": "testing_provider",
         "source": "testing_source",
@@ -240,8 +258,7 @@ def test_create_tsv_row_properly_places_entries(setup_env, monkeypatch):
                 "https://landing_page.com",
                 "http://imageurl.com",
                 "http://thumbnail.com",
-                "200",
-                "500",
+                "png",
                 "\\N",
                 "testlicense",
                 "1.0",
@@ -250,10 +267,13 @@ def test_create_tsv_row_properly_places_entries(setup_env, monkeypatch):
                 "agreatpicture",
                 '{"description": "cat picture"}',
                 '[{"name": "tag1", "provider": "testing"}]',
+                '{"digitized_artwork"}',
                 "f",
                 "testing_provider",
                 "testing_source",
                 "provider_api",
+                "200",
+                "500",
             ]
         )
         + "\n"

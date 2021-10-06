@@ -1,10 +1,19 @@
 import json
 import logging
 from textwrap import dedent
+from typing import List
 
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from psycopg2.errors import InvalidTextRepresentation
-from storage import column_names as col
+from storage import columns as col
+from storage.columns import NULL, Column, UpsertStrategy
+from storage.db_columns import AUDIO_TABLE_COLUMNS, IMAGE_TABLE_COLUMNS
+from storage.tsv_columns import (
+    COLUMNS,
+    CURRENT_AUDIO_TSV_COLUMNS,
+    CURRENT_IMAGE_TSV_COLUMNS,
+    required_columns,
+)
 from util.constants import AUDIO, IMAGE
 from util.loader import provider_details as prov
 from util.loader.paths import _extract_media_type
@@ -31,6 +40,23 @@ OLDEST_PER_PROVIDER = {
     prov.STATENS_DEFAULT_PROVIDER: "1 month 3 days",
 }
 
+DB_COLUMNS = {
+    IMAGE: IMAGE_TABLE_COLUMNS,
+    AUDIO: AUDIO_TABLE_COLUMNS,
+}
+TSV_COLUMNS = {
+    AUDIO: CURRENT_AUDIO_TSV_COLUMNS,
+    IMAGE: CURRENT_IMAGE_TSV_COLUMNS,
+}
+CURRENT_TSV_VERSION = "001"
+
+
+def create_column_definitions(table_columns: List[Column], is_loading=True):
+    """Loading table should not have 'NOT NULL' constraints: all TSV values
+    are copied, and then the items without required columns are dropped"""
+    definitions = [column.create_definition(is_loading) for column in table_columns]
+    return ",\n  ".join(definitions)
+
 
 def create_loading_table(
     postgres_conn_id,
@@ -43,91 +69,38 @@ def create_loading_table(
     media_type = ti.xcom_pull(task_ids="stage_oldest_tsv_file", key="media_type")
     if media_type is None:
         media_type = IMAGE
+
     load_table = _get_load_table_name(identifier, media_type=media_type)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    if media_type == AUDIO:
-        table_creation_query = dedent(
-            f"""
-            CREATE TABLE public.{load_table} (
-              {col.FOREIGN_ID} character varying(3000),
-              {col.LANDING_URL} character varying(1000),
-              {col.DIRECT_URL} character varying(3000),
-              {col.THUMBNAIL} character varying(3000),
-              {col.FILESIZE} integer,
-              {col.LICENSE} character varying(50),
-              {col.LICENSE_VERSION} character varying(25),
-              {col.CREATOR} character varying(2000),
-              {col.CREATOR_URL} character varying(2000),
-              {col.TITLE} character varying(5000),
-              {col.META_DATA} jsonb,
-              {col.TAGS} jsonb,
-              {col.WATERMARKED} boolean,
-              {col.PROVIDER} character varying(80),
-              {col.SOURCE} character varying(80),
-              {col.INGESTION_TYPE} character varying(80),
-              {col.DURATION} integer,
-              {col.BIT_RATE} integer,
-              {col.SAMPLE_RATE} integer,
-              {col.CATEGORY} character varying(100),
-              {col.GENRES} character varying(80)[],
-              {col.AUDIO_SET} jsonb,
-              {col.ALT_FILES} jsonb
-            );
-            """
+    loading_table_columns = TSV_COLUMNS[media_type]
+    columns_definition = f"{create_column_definitions(loading_table_columns)}"
+    table_creation_query = dedent(
+        f"""
+    CREATE TABLE public.{load_table}(
+    {columns_definition});
+    """
+    )
+
+    def create_index(column, btree_column=None):
+        btree_string = (
+            f"{column}"
+            if not btree_column
+            else f"{btree_column}, md5(({column})::text)"
         )
-    else:
-        table_creation_query = dedent(
-            f"""
-            CREATE TABLE public.{load_table} (
-              {col.FOREIGN_ID} character varying(3000),
-              {col.LANDING_URL} character varying(1000),
-              {col.DIRECT_URL} character varying(3000),
-              {col.THUMBNAIL} character varying(3000),
-              {col.WIDTH} integer,
-              {col.HEIGHT} integer,
-              {col.FILESIZE} integer,
-              {col.LICENSE} character varying(50),
-              {col.LICENSE_VERSION} character varying(25),
-              {col.CREATOR} character varying(2000),
-              {col.CREATOR_URL} character varying(2000),
-              {col.TITLE} character varying(5000),
-              {col.META_DATA} jsonb,
-              {col.TAGS} jsonb,
-              {col.WATERMARKED} boolean,
-              {col.PROVIDER} character varying(80),
-              {col.SOURCE} character varying(80),
-              {col.INGESTION_TYPE} character varying(80)
-            );
-            """
+        postgres.run(
+            dedent(
+                f"""
+               CREATE INDEX IF NOT EXISTS {load_table}_{column}_key
+               ON public.{load_table} USING btree ({btree_string});
+               """
+            )
         )
+
     postgres.run(table_creation_query)
     postgres.run(f"ALTER TABLE public.{load_table} OWNER TO {DB_USER_NAME};")
-    postgres.run(
-        dedent(
-            f"""
-            CREATE INDEX IF NOT EXISTS {load_table}_{col.PROVIDER}_key
-            ON public.{load_table} USING btree ({col.PROVIDER});
-            """
-        )
-    )
-    postgres.run(
-        dedent(
-            f"""
-            CREATE INDEX IF NOT EXISTS {load_table}_{col.FOREIGN_ID}_key
-            ON public.{load_table}
-            USING btree (provider, md5(({col.FOREIGN_ID})::text));
-            """
-        )
-    )
-    postgres.run(
-        dedent(
-            f"""
-            CREATE INDEX IF NOT EXISTS {load_table}_{col.DIRECT_URL}_key
-            ON public.{load_table}
-            USING btree (provider, md5(({col.DIRECT_URL})::text));
-            """
-        )
-    )
+    create_index(col.PROVIDER.db_name, None)
+    create_index(col.FOREIGN_ID.db_name, "provider")
+    create_index(col.DIRECT_URL.db_name, "provider")
 
 
 def load_local_data_to_intermediate_table(
@@ -161,7 +134,11 @@ def load_local_data_to_intermediate_table(
 
 
 def load_s3_data_to_intermediate_table(
-    postgres_conn_id, bucket, s3_key, identifier, media_type=IMAGE
+    postgres_conn_id,
+    bucket,
+    s3_key,
+    identifier,
+    media_type=IMAGE,
 ):
     load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f"Loading {s3_key} from S3 Bucket {bucket} into {load_table}")
@@ -193,10 +170,8 @@ def _clean_intermediate_table_data(postgres_hook, load_table):
     Also removes any duplicate rows that have the same `provider`
     and `foreign_id`.
     """
-    postgres_hook.run(f"DELETE FROM {load_table} WHERE {col.DIRECT_URL} IS NULL;")
-    postgres_hook.run(f"DELETE FROM {load_table} WHERE {col.LICENSE} IS NULL;")
-    postgres_hook.run(f"DELETE FROM {load_table} WHERE {col.LANDING_URL} IS NULL;")
-    postgres_hook.run(f"DELETE FROM {load_table} WHERE {col.FOREIGN_ID} IS NULL;")
+    for column in required_columns:
+        postgres_hook.run(f"DELETE FROM {load_table} WHERE {column.db_name} IS NULL;")
     postgres_hook.run(
         dedent(
             f"""
@@ -204,192 +179,107 @@ def _clean_intermediate_table_data(postgres_hook, load_table):
             USING {load_table} p2
             WHERE
               p1.ctid < p2.ctid
-              AND p1.{col.PROVIDER} = p2.{col.PROVIDER}
-              AND p1.{col.FOREIGN_ID} = p2.{col.FOREIGN_ID};
+              AND p1.{col.PROVIDER.db_name} = p2.{col.PROVIDER.db_name}
+              AND p1.{col.FOREIGN_ID.db_name} = p2.{col.FOREIGN_ID.db_name};
             """
         )
     )
 
 
+def _is_tsv_column_from_different_version(
+    column: Column, media_type: str, tsv_version: str
+) -> bool:
+    """
+    Checks that column is a column that exists in TSV files (unlike the db-only
+    columns like IDENTIFIER or CREATED_ON), but is not available for `tsv_version`.
+    For example, Category column was added to Image TSV in version 001
+    >>> from storage.columns import CATEGORY, DIRECT_URL
+    >>> _is_tsv_column_from_different_version(CATEGORY, IMAGE, '000')
+    True
+    >>> _is_tsv_column_from_different_version(DIRECT_URL, IMAGE, '000')
+    False
+    >>> from storage.columns import IDENTIFIER
+    >>> _is_tsv_column_from_different_version(IDENTIFIER, IMAGE, '000')
+    False
+
+    """
+    return (
+        column not in COLUMNS[media_type][tsv_version]
+        and column.upsert_strategy == UpsertStrategy.newest_non_null
+    )
+
+
 def upsert_records_to_db_table(
-    postgres_conn_id,
-    identifier,
-    db_table=None,
-    media_type=IMAGE,
+    postgres_conn_id: str,
+    identifier: str,
+    db_table: str = None,
+    media_type: str = IMAGE,
+    tsv_version: str = CURRENT_TSV_VERSION,
 ):
-    def _newest_non_null(column: str) -> str:
-        return f"{column} = COALESCE(EXCLUDED.{column}, old.{column})"
-
-    def _merge_jsonb_objects(column: str) -> str:
-        """
-        This function returns SQL that merges the top-level keys of the
-        a JSONB column, taking the newest available non-null value.
-        """
-        return f"""{column} = COALESCE(
-            jsonb_strip_nulls(old.{column})
-              || jsonb_strip_nulls(EXCLUDED.{column}),
-            EXCLUDED.{column},
-            old.{column}
-          )"""
-
-    def _merge_jsonb_arrays(column: str) -> str:
-        return f"""{column} = COALESCE(
-            (
-              SELECT jsonb_agg(DISTINCT x)
-              FROM jsonb_array_elements(old.{column} || EXCLUDED.{column}) t(x)
-            ),
-            EXCLUDED.{column},
-            old.{column}
-          )"""
-
-    def _merge_array(column: str) -> str:
-        return f"""{column} = COALESCE(
-            (
-              SELECT array_agg(DISTINCT x)
-              FROM unnest(old.{column} || EXCLUDED.{column}) t(x)
-            ),
-            EXCLUDED.{column},
-            old.{column}
-        )"""
-
+    """
+    Upserts newly ingested records from loading table into the main db table.
+    For tsv columns that do not exist in the `tsv_version` for `media_type`,
+    NULL value is used.
+    :param postgres_conn_id
+    :param identifier
+    :param db_table
+    :param media_type
+    :param tsv_version:      The version of TSV being processed. This
+    determines which columns are used in the upsert query.
+    :return:
+    """
     if db_table is None:
         db_table = TABLE_NAMES.get(media_type, TABLE_NAMES[IMAGE])
 
     load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f"Upserting new records into {db_table}.")
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    column_inserts = {
-        col.CREATED_ON: NOW,
-        col.UPDATED_ON: NOW,
-        col.INGESTION_TYPE: col.INGESTION_TYPE,
-        col.PROVIDER: col.PROVIDER,
-        col.SOURCE: col.SOURCE,
-        col.FOREIGN_ID: col.FOREIGN_ID,
-        col.LANDING_URL: col.LANDING_URL,
-        col.DIRECT_URL: col.DIRECT_URL,
-        col.THUMBNAIL: col.THUMBNAIL,
-        col.FILESIZE: col.FILESIZE,
-        col.LICENSE: col.LICENSE,
-        col.LICENSE_VERSION: col.LICENSE_VERSION,
-        col.CREATOR: col.CREATOR,
-        col.CREATOR_URL: col.CREATOR_URL,
-        col.TITLE: col.TITLE,
-        col.LAST_SYNCED: NOW,
-        col.REMOVED: FALSE,
-        col.META_DATA: col.META_DATA,
-        col.TAGS: col.TAGS,
-        col.WATERMARKED: col.WATERMARKED,
-    }
-    if media_type == AUDIO:
-        column_inserts.update(
-            {
-                col.DURATION: col.DURATION,
-                col.BIT_RATE: col.BIT_RATE,
-                col.SAMPLE_RATE: col.SAMPLE_RATE,
-                col.CATEGORY: col.CATEGORY,
-                col.GENRES: col.GENRES,
-                col.AUDIO_SET: col.AUDIO_SET,
-                col.ALT_FILES: col.ALT_FILES,
-            }
-        )
-    else:
-        column_inserts.update(
-            {
-                col.WIDTH: col.WIDTH,
-                col.HEIGHT: col.HEIGHT,
-            }
-        )
-    if media_type == AUDIO:
-        media_specific_upsert_query = f"""{_newest_non_null(col.DURATION)},
-            {_newest_non_null(col.BIT_RATE)},
-            {_newest_non_null(col.SAMPLE_RATE)},
-            {_newest_non_null(col.CATEGORY)},
-            {_merge_array(col.GENRES)},
-            {_merge_jsonb_objects(col.AUDIO_SET)},
-            {_merge_jsonb_objects(col.ALT_FILES)}
-            """
-    else:
-        media_specific_upsert_query = f"""{_newest_non_null(col.WIDTH)},
-            {_newest_non_null(col.HEIGHT)}"""
+
+    # Remove identifier column
+    db_columns: List[Column] = DB_COLUMNS[media_type][1:]
+    column_inserts = {}
+    column_conflict_values = {}
+    for column in db_columns:
+        if column.upsert_strategy == UpsertStrategy.no_change:
+            column_inserts[column.db_name] = column.upsert_name
+        elif _is_tsv_column_from_different_version(column, media_type, tsv_version):
+            column_inserts[column.db_name] = NULL
+            column_conflict_values[column.db_name] = NULL
+        else:
+            column_inserts[column.db_name] = column.upsert_name
+            column_conflict_values[column.db_name] = column.upsert_value
+    upsert_conflict_string = ",\n    ".join(column_conflict_values.values())
     upsert_query = dedent(
         f"""
         INSERT INTO {db_table} AS old ({', '.join(column_inserts.keys())})
         SELECT {', '.join(column_inserts.values())}
         FROM {load_table}
-        ON CONFLICT ({col.PROVIDER}, md5({col.FOREIGN_ID}))
+        ON CONFLICT ({col.PROVIDER.db_name}, md5({col.FOREIGN_ID.db_name}))
         DO UPDATE SET
-          {col.UPDATED_ON} = {NOW},
-          {col.LAST_SYNCED} = {NOW},
-          {col.REMOVED} = {FALSE},
-          {_newest_non_null(col.INGESTION_TYPE)},
-          {_newest_non_null(col.SOURCE)},
-          {_newest_non_null(col.LANDING_URL)},
-          {_newest_non_null(col.DIRECT_URL)},
-          {_newest_non_null(col.THUMBNAIL)},
-          {_newest_non_null(col.FILESIZE)},
-          {_newest_non_null(col.LICENSE)},
-          {_newest_non_null(col.LICENSE_VERSION)},
-          {_newest_non_null(col.CREATOR)},
-          {_newest_non_null(col.CREATOR_URL)},
-          {_newest_non_null(col.TITLE)},
-          {_merge_jsonb_objects(col.META_DATA)},
-          {_merge_jsonb_arrays(col.TAGS)},
-          {_newest_non_null(col.WATERMARKED)},
-          {media_specific_upsert_query}
+          {upsert_conflict_string}
         """
     )
     postgres.run(upsert_query)
 
 
 def overwrite_records_in_db_table(
-    postgres_conn_id, identifier, db_table=None, media_type=IMAGE
+    postgres_conn_id,
+    identifier,
+    db_table=None,
+    media_type=IMAGE,
+    tsv_version=CURRENT_TSV_VERSION,
 ):
     if db_table is None:
         db_table = TABLE_NAMES.get(media_type, TABLE_NAMES[IMAGE])
     load_table = _get_load_table_name(identifier, media_type=media_type)
-    logger.info(f"Updating records in {db_table}.")
+    logger.info(f"Updating records in {db_table}. {tsv_version}")
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    if media_type == AUDIO:
-        columns_to_update = [
-            col.LANDING_URL,
-            col.DIRECT_URL,
-            col.THUMBNAIL,
-            col.FILESIZE,
-            col.LICENSE,
-            col.LICENSE_VERSION,
-            col.CREATOR,
-            col.CREATOR_URL,
-            col.TITLE,
-            col.META_DATA,
-            col.TAGS,
-            col.WATERMARKED,
-            col.DURATION,
-            col.BIT_RATE,
-            col.SAMPLE_RATE,
-            col.CATEGORY,
-            col.GENRES,
-            col.AUDIO_SET,
-            col.ALT_FILES,
+    columns_to_update = TSV_COLUMNS[media_type]
+    update_set_string = ",\n  ".join(
+        [
+            f"{column.db_name} = {load_table}.{column.db_name}"
+            for column in columns_to_update
         ]
-    else:
-        columns_to_update = [
-            col.LANDING_URL,
-            col.DIRECT_URL,
-            col.THUMBNAIL,
-            col.WIDTH,
-            col.HEIGHT,
-            col.FILESIZE,
-            col.LICENSE,
-            col.LICENSE_VERSION,
-            col.CREATOR,
-            col.CREATOR_URL,
-            col.TITLE,
-            col.META_DATA,
-            col.TAGS,
-            col.WATERMARKED,
-        ]
-    update_set_string = ",\n".join(
-        [f"{column} = {load_table}.{column}" for column in columns_to_update]
     )
 
     update_query = dedent(
@@ -399,10 +289,10 @@ def overwrite_records_in_db_table(
         {update_set_string}
         FROM {load_table}
         WHERE
-          {db_table}.{col.PROVIDER} = {load_table}.{col.PROVIDER}
+          {db_table}.{col.PROVIDER.db_name} = {load_table}.{col.PROVIDER.db_name}
           AND
-          md5({db_table}.{col.FOREIGN_ID})
-            = md5({load_table}.{col.FOREIGN_ID});
+          md5({db_table}.{col.FOREIGN_ID.db_name})
+            = md5({load_table}.{col.FOREIGN_ID.db_name});
         """
     )
     postgres.run(update_query)
@@ -461,7 +351,7 @@ def _create_temp_flickr_sub_prov_table(
         dedent(
             f"""
             CREATE TABLE public.{temp_table} (
-              {col.CREATOR_URL} character varying(2000),
+              {col.CREATOR_URL.db_name} character varying(2000),
               sub_provider character varying(80)
             );
             """
@@ -480,7 +370,7 @@ def _create_temp_flickr_sub_prov_table(
                 dedent(
                     f"""
                     INSERT INTO public.{temp_table} (
-                      {col.CREATOR_URL},
+                      {col.CREATOR_URL.db_name},
                       sub_provider
                     )
                     VALUES (
@@ -505,15 +395,15 @@ def update_flickr_sub_providers(
     select_query = dedent(
         f"""
         SELECT
-        {col.FOREIGN_ID} AS foreign_id,
+        {col.FOREIGN_ID.db_name} AS foreign_id,
         public.{temp_table}.sub_provider AS sub_provider
         FROM {image_table}
         INNER JOIN public.{temp_table}
         ON
-        {image_table}.{col.CREATOR_URL} = public.{temp_table}.{
-        col.CREATOR_URL}
+        {image_table}.{col.CREATOR_URL.db_name} = public.{temp_table}.{
+        col.CREATOR_URL.db_name}
         AND
-        {image_table}.{col.PROVIDER} = '{default_provider}';
+        {image_table}.{col.PROVIDER.db_name} = '{default_provider}';
         """
     )
 
@@ -527,11 +417,11 @@ def update_flickr_sub_providers(
             dedent(
                 f"""
                 UPDATE {image_table}
-                SET {col.SOURCE} = '{sub_provider}'
+                SET {col.SOURCE.db_name} = '{sub_provider}'
                 WHERE
-                {image_table}.{col.PROVIDER} = '{default_provider}'
+                {image_table}.{col.PROVIDER.db_name} = '{default_provider}'
                 AND
-                MD5({image_table}.{col.FOREIGN_ID}) = MD5('{foreign_id}');
+                MD5({image_table}.{col.FOREIGN_ID.db_name}) = MD5('{foreign_id}');
                 """
             )
         )
@@ -603,14 +493,14 @@ def update_europeana_sub_providers(
         SELECT L.foreign_id, L.data_providers, R.sub_provider
         FROM(
         SELECT
-        {col.FOREIGN_ID} AS foreign_id,
-        {col.META_DATA} ->> 'dataProvider' AS data_providers,
-        {col.META_DATA}
+        {col.FOREIGN_ID.db_name} AS foreign_id,
+        {col.META_DATA.db_name} ->> 'dataProvider' AS data_providers,
+        {col.META_DATA.db_name}
         FROM {image_table}
-        WHERE {col.PROVIDER} = '{default_provider}'
+        WHERE {col.PROVIDER.db_name} = '{default_provider}'
         ) L INNER JOIN
         {temp_table} R ON
-        L.{col.META_DATA} ->'dataProvider' ? R.data_provider;
+        L.{col.META_DATA.db_name} ->'dataProvider' ? R.data_provider;
         """
     )
 
@@ -641,11 +531,11 @@ def update_europeana_sub_providers(
             dedent(
                 f"""
                 UPDATE {image_table}
-                SET {col.SOURCE} = '{sub_provider}'
+                SET {col.SOURCE.db_name} = '{sub_provider}'
                 WHERE
-                {image_table}.{col.PROVIDER} = '{default_provider}'
+                {image_table}.{col.PROVIDER.db_name} = '{default_provider}'
                 AND
-                MD5({image_table}.{col.FOREIGN_ID}) = MD5('{foreign_id}');
+                MD5({image_table}.{col.FOREIGN_ID.db_name}) = MD5('{foreign_id}');
                 """
             )
         )
@@ -669,13 +559,13 @@ def update_smithsonian_sub_providers(
     """
     select_query = dedent(
         f"""
-        SELECT {col.FOREIGN_ID},
-        {col.META_DATA} ->> 'unit_code' AS unit_code
+        SELECT {col.FOREIGN_ID.db_name},
+        {col.META_DATA.db_name} ->> 'unit_code' AS unit_code
         FROM {image_table}
         WHERE
-        {col.PROVIDER} = '{default_provider}'
+        {col.PROVIDER.db_name} = '{default_provider}'
         AND
-        {col.SOURCE} = '{default_provider}';
+        {col.SOURCE.db_name} = '{default_provider}';
         """
     )
 
@@ -697,11 +587,11 @@ def update_smithsonian_sub_providers(
             dedent(
                 f"""
                 UPDATE {image_table}
-                SET {col.SOURCE} = '{source}'
+                SET {col.SOURCE.db_name} = '{source}'
                 WHERE
-                {image_table}.{col.PROVIDER} = '{default_provider}'
+                {image_table}.{col.PROVIDER.db_name} = '{default_provider}'
                 AND
-                MD5({image_table}.{col.FOREIGN_ID}) = MD5('{foreign_id}');
+                MD5({image_table}.{col.FOREIGN_ID.db_name}) = MD5('{foreign_id}');
                 """
             )
         )
@@ -721,12 +611,12 @@ def expire_old_images(postgres_conn_id, provider, image_table=TABLE_NAMES[IMAGE]
     """
     select_query = dedent(
         f"""
-        SELECT {col.FOREIGN_ID}
+        SELECT {col.FOREIGN_ID.db_name}
         FROM {image_table}
         WHERE
-        {col.PROVIDER} = '{provider}'
+        {col.PROVIDER.db_name} = '{provider}'
         AND
-        {col.UPDATED_ON} < {NOW} - INTERVAL '{OLDEST_PER_PROVIDER[provider]}';
+        {col.UPDATED_ON.db_name} < {NOW} - INTERVAL '{OLDEST_PER_PROVIDER[provider]}';
         """
     )
 
@@ -743,11 +633,11 @@ def expire_old_images(postgres_conn_id, provider, image_table=TABLE_NAMES[IMAGE]
             dedent(
                 f"""
                 UPDATE {image_table}
-                SET {col.REMOVED} = 't'
+                SET {col.REMOVED.db_name} = 't'
                 WHERE
-                {image_table}.{col.PROVIDER} = '{provider}'
+                {image_table}.{col.PROVIDER.db_name} = '{provider}'
                 AND
-                MD5({image_table}.{col.FOREIGN_ID}) = MD5('{foreign_id}');
+                MD5({image_table}.{col.FOREIGN_ID.db_name}) = MD5('{foreign_id}');
                 """
             )
         )

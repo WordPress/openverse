@@ -3,84 +3,13 @@ from collections import namedtuple
 from typing import Dict, Optional, Union
 
 from common.licenses.licenses import LicenseInfo
-from storage import columns
 from storage.media import MediaStore
+from storage.tsv_columns import CURRENT_AUDIO_TSV_COLUMNS
 
 
 logger = logging.getLogger(__name__)
 
-AUDIO_TSV_COLUMNS = [
-    # The order of this list maps to the order of the columns in the TSV.
-    columns.StringColumn(
-        name="foreign_identifier", required=False, size=3000, truncate=False
-    ),
-    columns.URLColumn(name="foreign_landing_url", required=True, size=1000),
-    columns.URLColumn(
-        # `url` in DB
-        name="audio_url",
-        required=True,
-        size=3000,
-    ),
-    columns.URLColumn(
-        # `thumbnail` in DB
-        name="thumbnail_url",
-        required=False,
-        size=3000,
-    ),
-    columns.IntegerColumn(name="filesize", required=False),
-    columns.StringColumn(name="license_", required=True, size=50, truncate=False),
-    columns.StringColumn(
-        name="license_version", required=True, size=25, truncate=False
-    ),
-    columns.StringColumn(name="creator", required=False, size=2000, truncate=True),
-    columns.URLColumn(name="creator_url", required=False, size=2000),
-    columns.StringColumn(name="title", required=False, size=5000, truncate=True),
-    columns.JSONColumn(name="meta_data", required=False),
-    columns.JSONColumn(name="tags", required=False),
-    columns.BooleanColumn(
-        name="watermarked",
-        required=False,
-    ),
-    columns.StringColumn(name="provider", required=False, size=80, truncate=False),
-    columns.StringColumn(name="source", required=False, size=80, truncate=False),
-    columns.StringColumn(
-        name="ingestion_type", required=False, size=80, truncate=False
-    ),
-    columns.IntegerColumn(name="duration", required=False),
-    columns.IntegerColumn(
-        name="bit_rate",
-        required=False,
-    ),
-    columns.IntegerColumn(
-        name="sample_rate",
-        required=False,
-    ),
-    columns.StringColumn(
-        name="category",
-        required=False,
-        size=80,
-        truncate=False,
-    ),
-    columns.ArrayColumn(
-        name="genres",
-        required=False,
-        base_column=columns.StringColumn(
-            name="genre", required=False, size=80, truncate=False
-        ),
-    ),
-    columns.JSONColumn(
-        # set name, set thumbnail, position of audio in set, set url
-        name="audio_set",
-        required=False,
-    ),
-    columns.JSONColumn(
-        # Alternative files: url, filesize, bit_rate, sample_rate
-        name="alt_files",
-        required=False,
-    ),
-]
-
-Audio = namedtuple("Audio", [c.NAME for c in AUDIO_TSV_COLUMNS])
+Audio = namedtuple("Audio", [c.name for c in CURRENT_AUDIO_TSV_COLUMNS])
 
 
 class AudioStore(MediaStore):
@@ -106,7 +35,7 @@ class AudioStore(MediaStore):
         tsv_columns=None,
     ):
         super().__init__(provider, output_file, output_dir, buffer_length, media_type)
-        self.columns = AUDIO_TSV_COLUMNS if tsv_columns is None else tsv_columns
+        self.columns = CURRENT_AUDIO_TSV_COLUMNS if tsv_columns is None else tsv_columns
 
     def add_item(
         self,
@@ -114,6 +43,8 @@ class AudioStore(MediaStore):
         audio_url: str,
         license_info: LicenseInfo,
         thumbnail_url: Optional[str] = None,
+        filesize: Optional[int] = None,
+        filetype: Optional[str] = None,
         foreign_identifier: Optional[str] = None,
         creator: Optional[str] = None,
         creator_url: Optional[str] = None,
@@ -124,8 +55,9 @@ class AudioStore(MediaStore):
         duration: Optional[int] = None,
         bit_rate: Optional[int] = None,
         sample_rate: Optional[int] = None,
-        category: Optional[str] = None,
-        genres: Optional[Union[list, str]] = None,
+        category: Optional[list[str]] = None,
+        genres: Optional[list[str]] = None,
+        set_foreign_id: Optional[str] = None,
         audio_set: Optional[str] = None,
         set_position: Optional[int] = None,
         set_thumbnail: Optional[str] = None,
@@ -161,7 +93,9 @@ class AudioStore(MediaStore):
         Optional Arguments:
 
         thumbnail_url:       Direct link to a thumbnail-sized version of
-                             the audio
+                             the audio.
+        filesize:            Size of the main file in bytes
+        filetype:            The filetype of the main file, eg. 'mp3', 'ogg'.
         foreign_identifier:  Unique identifier for the audio on the
                              source site.
         creator:             The creator of the audio.
@@ -178,8 +112,11 @@ class AudioStore(MediaStore):
         duration:            in milliseconds
         bit_rate:            Audio bit rate as int.
         sample_rate:         Audio sample rate as int.
-        category:            'music', 'sound' or 'podcast'.
+        category:            List of categories such as 'music', 'sound'
+                             or 'podcast'.
         genres:              List of genres
+        set_foreign_id:      Unique identifier for the audio set on the
+                             source site.
         audio_set:           The name of the set (album, pack) the audio
                              is part of
         set_position:        Position of the audio in the audio_set
@@ -198,32 +135,39 @@ class AudioStore(MediaStore):
                              provider of the audio.
         ingestion_type:      set programmatically
         """
-
-        audio_set_data = {
-            "audio_set": audio_set,
-            "set_url": set_url,
-            "set_position": set_position,
-            "set_thumbnail": set_thumbnail,
-        }
+        if audio_set is None:
+            audio_set_data = None
+        else:
+            audio_set_data = {
+                "title": audio_set,
+                "foreign_landing_url": set_url,
+                "url": set_thumbnail,
+                "creator": creator,
+                "creator_url": creator_url,
+                "foreign_identifier": set_foreign_id,
+            }
 
         audio_data = {
             "foreign_landing_url": foreign_landing_url,
             "audio_url": audio_url,
             "license_info": license_info,
             "thumbnail_url": thumbnail_url,
+            "filesize": filesize,
+            "filetype": filetype,
             "foreign_identifier": foreign_identifier,
             "creator": creator,
             "creator_url": creator_url,
             "title": title,
             "meta_data": meta_data,
             "raw_tags": raw_tags,
+            "category": category,
             "watermarked": watermarked,
             "duration": duration,
             "bit_rate": bit_rate,
             "sample_rate": sample_rate,
-            "category": category,
             "genres": genres,
             "audio_set": audio_set_data,
+            "set_position": set_position,
             "alt_files": alt_files,
             "source": source,
             "ingestion_type": ingestion_type,
@@ -239,6 +183,9 @@ class AudioStore(MediaStore):
         audio_metadata = self.clean_media_metadata(**kwargs)
         if audio_metadata is None:
             return None
+        # Convert the `audio_url` key used in AudioStore, TSV and
+        # provider API scripts into `url` key used in db
+        audio_metadata["url"] = audio_metadata.pop("audio_url")
         return Audio(**audio_metadata)
 
 

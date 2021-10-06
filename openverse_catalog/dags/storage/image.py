@@ -3,51 +3,13 @@ from collections import namedtuple
 from typing import Dict, Optional, Union
 
 from common.licenses.licenses import LicenseInfo
-from storage import columns
 from storage.media import MediaStore
+from storage.tsv_columns import CURRENT_IMAGE_TSV_COLUMNS
 
 
 logger = logging.getLogger(__name__)
 
-IMAGE_TSV_COLUMNS = [
-    # The order of this list maps to the order of the columns in the TSV.
-    columns.StringColumn(
-        name="foreign_identifier", required=False, size=3000, truncate=False
-    ),
-    columns.URLColumn(name="foreign_landing_url", required=True, size=1000),
-    columns.URLColumn(
-        # `url` in DB
-        name="image_url",
-        required=True,
-        size=3000,
-    ),
-    columns.URLColumn(
-        # `thumbnail` in DB
-        name="thumbnail_url",
-        required=False,
-        size=3000,
-    ),
-    columns.IntegerColumn(name="width", required=False),
-    columns.IntegerColumn(name="height", required=False),
-    columns.IntegerColumn(name="filesize", required=False),
-    columns.StringColumn(name="license_", required=True, size=50, truncate=False),
-    columns.StringColumn(
-        name="license_version", required=True, size=25, truncate=False
-    ),
-    columns.StringColumn(name="creator", required=False, size=2000, truncate=True),
-    columns.URLColumn(name="creator_url", required=False, size=2000),
-    columns.StringColumn(name="title", required=False, size=5000, truncate=True),
-    columns.JSONColumn(name="meta_data", required=False),
-    columns.JSONColumn(name="tags", required=False),
-    columns.BooleanColumn(name="watermarked", required=False),
-    columns.StringColumn(name="provider", required=False, size=80, truncate=False),
-    columns.StringColumn(name="source", required=False, size=80, truncate=False),
-    columns.StringColumn(
-        name="ingestion_type", required=False, size=80, truncate=False
-    ),
-]
-
-Image = namedtuple("Image", [c.NAME for c in IMAGE_TSV_COLUMNS])
+Image = namedtuple("Image", [c.name for c in CURRENT_IMAGE_TSV_COLUMNS])
 
 
 class ImageStore(MediaStore):
@@ -73,7 +35,7 @@ class ImageStore(MediaStore):
         tsv_columns=None,
     ):
         super().__init__(provider, output_file, output_dir, buffer_length, media_type)
-        self.columns = IMAGE_TSV_COLUMNS if tsv_columns is None else tsv_columns
+        self.columns = CURRENT_IMAGE_TSV_COLUMNS if tsv_columns is None else tsv_columns
 
     def add_item(
         self,
@@ -81,6 +43,8 @@ class ImageStore(MediaStore):
         image_url: str,
         license_info: LicenseInfo,
         thumbnail_url: Optional[str] = None,
+        filesize: Optional[int] = None,
+        filetype: Optional[str] = None,
         foreign_identifier: Optional[str] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
@@ -89,6 +53,7 @@ class ImageStore(MediaStore):
         title: Optional[str] = None,
         meta_data: Optional[Union[Dict, str]] = None,
         raw_tags=None,
+        category: Optional[list[str]] = None,
         watermarked: Optional[str] = "f",
         source: Optional[str] = None,
         ingestion_type: Optional[str] = None,
@@ -120,11 +85,13 @@ class ImageStore(MediaStore):
         Optional Arguments:
 
         thumbnail_url:       Direct link to a thumbnail-sized version of
-                             the image
+                             the image.
+        filesize:            Size of the image file in bytes.
+        filetype:            eg. 'jpg', 'svg'.
         foreign_identifier:  Unique identifier for the image on the
                              source site.
-        width:               in pixels
-        height:              in pixels
+        width:               in pixels.
+        height:              in pixels.
         creator:             The creator of the image.
         creator_url:         The user page, or home page of the creator.
         title:               Title of the image.
@@ -151,6 +118,8 @@ class ImageStore(MediaStore):
             "foreign_landing_url": foreign_landing_url,
             "image_url": image_url,
             "thumbnail_url": thumbnail_url,
+            "filesize": filesize,
+            "filetype": filetype,
             "license_info": license_info,
             "foreign_identifier": foreign_identifier,
             "width": width,
@@ -160,6 +129,7 @@ class ImageStore(MediaStore):
             "title": title,
             "meta_data": meta_data,
             "raw_tags": raw_tags,
+            "category": category,
             "watermarked": watermarked,
             "source": source,
             "ingestion_type": ingestion_type,
@@ -174,7 +144,9 @@ class ImageStore(MediaStore):
         image_metadata = self.clean_media_metadata(**kwargs)
         if image_metadata is None:
             return None
-
+        # Convert the `image_url` key used in ImageStore, TSV and
+        # provider API scripts into `url` key used in db
+        image_metadata["url"] = image_metadata.pop("image_url")
         return Image(**image_metadata)
 
 
