@@ -84,6 +84,8 @@ audio_detail_200_example = {
         "bit_rate": None,
         "sample_rate": None,
         "alt_files": None,
+        "filesize": None,
+        "filetype": "mp3",
     },
 }
 

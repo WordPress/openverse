@@ -222,6 +222,8 @@ class MediaSerializer(serializers.Serializer):
         "creator",
         "creator_url",
         "url",
+        "filesize",
+        "filetype",
         "license",
         "license_version",
         "license_url",
@@ -260,6 +262,13 @@ class MediaSerializer(serializers.Serializer):
 
     # Fields corresponding to FileMixin
     url = serializers.URLField(help_text="The actual URL to the media file.")
+    filesize = serializers.CharField(
+        required=False, help_text="Number in bytes, e.g. 1024."
+    )
+    filetype = serializers.CharField(
+        required=False,
+        help_text="The type of the file, related to the file extension.",
+    )
 
     # Fields corresponding to AbstractMedia
     license = serializers.SerializerMethodField(
