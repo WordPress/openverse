@@ -5,6 +5,17 @@ default:
   @just --list --unsorted
 
 
+###########
+# Helpers #
+###########
+
+# Sleep for given time showing the given message as long as given condition is met
+@_loop condition message time="1":
+    while [[ {{ condition }} ]]; do \
+        echo "{{ message }}" && sleep {{ time }}; \
+    done
+
+
 ##########
 # Docker #
 ##########
