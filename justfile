@@ -10,7 +10,7 @@ default:
 ###########
 
 # Sleep for given time showing the given message as long as given condition is met
-@_loop condition message time="1":
+@_loop condition message time="5":
     while [[ {{ condition }} ]]; do \
         echo "{{ message }}" && sleep {{ time }}; \
     done
