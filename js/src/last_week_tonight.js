@@ -99,7 +99,7 @@ const token = Buffer.from(`${username}:${password}`).toString('base64');
  * @returns {Promise} - the response for the POST request
  */
 const postActivities = (activities) => {
-    const report = activities.map(getRepoHtml).join('\n');
+    const report = activities.map(getRepoHtml).flat().join('\n');
     return fetch(`${MAKE_SITE_API}/posts`, {
         method: 'POST',
         headers: {
