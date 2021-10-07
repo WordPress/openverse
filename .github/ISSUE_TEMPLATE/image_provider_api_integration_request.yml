@@ -1,0 +1,30 @@
+name: Image Provider API Integration Request
+description: Tell us about an API providing CC-licensed images
+title: "[API Integration] Provider name here"
+labels: ["🚦 status: awaiting triage", "✨ goal: improvement", "🧹 status: ticket work required", "☁️ provider: images"]
+body:
+  - type: input
+    id: source
+    attributes:
+      label: Source Site
+    validations:
+      required: true
+  - type: input
+    id: value
+    attributes:
+      label: Value Provided
+    validations:
+      required: true
+  - type: input
+    id: licenses
+    attributes:
+      label: Licenses Provided
+    validations:
+      required: true
+  - type: checkboxes
+    id: implementation
+    attributes:
+      label: Implementation
+      options:
+        - label: 🙋 I would be interested in implementing this feature.
+          required: false
