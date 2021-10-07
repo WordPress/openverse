@@ -92,6 +92,8 @@ image_detail_200_example = {
         "width": 1276,
         "tags": None,
         "creator_url": None,
+        "filesize": None,
+        "filetype": None,
     }
 }
 
