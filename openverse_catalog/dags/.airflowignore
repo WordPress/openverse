@@ -1,5 +1,6 @@
-commoncrawl_s3_syncer
+# Ignore all non-DAG files
+common
+commoncrawl_scripts
 provider_api_scripts
-scripts
+storage
 util
-test_*.py

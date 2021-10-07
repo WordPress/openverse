@@ -4,18 +4,22 @@ set dotenv-load := false
 default:
   @just --list --unsorted
 
-DEV_DOCKER_FILES := "--file=openverse_catalog/docker-compose.yml --file=openverse_catalog/docker-compose.override.yml"
+DEV_DOCKER_FILES := "--file=docker-compose.yml --file=docker-compose.override.yml"
 SERVICE := "webserver"
 
 
 # Install dependencies into the current environment
 install:
-    pip install -r requirements.txt -r openverse_catalog/requirements_dev.txt
+    pip install -r requirements.txt -r requirements_dev.txt
     pre-commit install
 
 # Create the .env file from the template
 dotenv:
-    @([ ! -f openverse_catalog/.env ] && cp openverse_catalog/env.template openverse_catalog/.env) || true
+    @([ ! -f .env ] && cp env.template .env) || true
+
+# Build all (or specified) container(s)
+build service="": dotenv
+    docker-compose {{ DEV_DOCKER_FILES }} build {{ service }}
 
 # Bring all Docker services up
 up flags="": dotenv
@@ -40,7 +44,8 @@ lint:
 
 # Run pytest using the webserver image
 test pytestargs="": up
-    docker-compose {{ DEV_DOCKER_FILES }} run --rm {{ SERVICE }} /usr/local/airflow/.local/bin/pytest {{ pytestargs }}
+    # The test directory is mounted into the container only during testing
+    docker-compose {{ DEV_DOCKER_FILES }} run -v {{ justfile_directory() }}/tests:/usr/local/airflow/tests/ --rm {{ SERVICE }} /usr/local/airflow/.local/bin/pytest {{ pytestargs }}
 
 # Open a shell into the webserver container
 shell: up

@@ -144,7 +144,7 @@ and some networking setup so that they can communicate. Note:
   databases and tables to emulate the production environment. It also provides a
   database for Airflow to store its running state.
 - The directory containing the DAG files, as well as dependencies will be
-  mounted to the `usr/local/airflow/dags` directory in the container
+  mounted to the `/usr/local/airflow/dags` directory in the container
   `openverse_catalog_webserver_1`.
 
 At this stage, you can run the tests via:
@@ -197,7 +197,7 @@ just recreate
 ```
 
 [justfile]: justfile
-[dockercompose]: openverse_catalog/docker-compose.yml
+[dockercompose]: docker-compose.yml
 [cc_airflow]: openverse_catalog/
 
 ## PySpark development setup

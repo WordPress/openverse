@@ -141,3 +141,6 @@ unittests.cfg
 
 # large SI sample data
 si_samples_*
+
+# Vim detritus
+*.swp

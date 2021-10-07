@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  webserver:
+    build:
+      context: .
+      dockerfile: docker/airflow/Dockerfile
+      args:
+        - OUTPUT_DIR=${OUTPUT_DIR}
+        - REQUIREMENTS_FILE=requirements_prod.txt
+    env_file: .env
+    restart: always
+    ports:
+      - "${AIRFLOW_PORT}:8080"
+    volumes:
+      - airflow-volume:/var/workflow_output
+      - ./openverse_catalog/dags:/usr/local/airflow/dags
+
+volumes:
+  airflow-volume:

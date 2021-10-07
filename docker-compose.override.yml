@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  # Services only needed for local development
+  postgres:
+    build: docker/local_postgres
+    environment:
+      - POSTGRES_USER=deploy
+      - POSTGRES_PASSWORD=deploy
+      - POSTGRES_DB=openledger
+    env_file: .env
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+
+  s3:
+    build:
+      context: docker/local_s3
+    ports:
+      - "5000:5000"
+
+  # Dev changes for the webserver container
+  webserver:
+    depends_on:
+      - postgres
+      - s3
+    build:
+      args:
+        - REQUIREMENTS_FILE=requirements_dev.txt
+
+volumes:
+  postgres-volume:
