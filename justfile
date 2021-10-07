@@ -44,17 +44,9 @@ env:
     cp openverse_api/env.template openverse_api/.env
     cp ingestion_server/env.template ingestion_server/.env
 
-# Wait until services are healthy
-wait-until-healthy: up
-    @bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8000/healthcheck)" != "200" ]]; do echo "Waiting for services to start up... " && sleep 10; done'
-
 # Load sample data into the Docker Compose services
-init: wait-until-healthy
+init: wait-for-es wait-for-is wait-for-web
     ./load_sample_data.sh
-
-# Make a test cURL request to the API
-stats media="images":
-    curl "http://localhost:8000/v1/{{ media }}/stats/"
 
 
 #######
@@ -75,12 +67,68 @@ lint:
     cd openverse_api && pipenv run pre-commit run --all-files
 
 
+#################
+# Elasticsearch #
+#################
+
+@es-health:
+    -curl -s -o /dev/null -w '%{http_code}' 'http://localhost:9200/_cluster/health?pretty'
+
+@wait-for-es: up
+    just _loop \
+    '"$(just es-health)" != "200"' \
+    "Waiting for Elasticsearch to be healthy..."
+
+# Check if the media is indexed in Elasticsearch
+@check-index index="image":
+    -curl -sb -H "Accept:application/json" "http://localhost:9200/_cat/aliases/{{ index }}" | grep -c "{{ index }}-"
+
+# Wait for the media to be indexed in Elasticsearch
+@wait-for-index index="image":
+    just _loop \
+    '"$(just check-index {{ index }})" != "1"' \
+    "Waiting for index '{{ index }}' to be ready..."
+
+
+####################
+# Ingestion server #
+####################
+
+# Check the health of the ingestion-server
+@is-health:
+    -curl -s -o /dev/null -w '%{http_code}' 'http://localhost:8001/'
+
+# Wait for the health of the ingestion-server
+@wait-for-is: up
+    just _loop \
+    '"$(just is-health)" != "200"' \
+    "Waiting for the ingestion-server to be healthy..."
+
+# Load QA data into QA indices in Elasticsearch
+load-test-data model="image":
+    curl -XPOST localhost:8001/task -H "Content-Type: application/json" -d '{"model": "{{ model }}", "action": "LOAD_TEST_DATA"}'
+
+# Load sample data into prod indices in Elasticsearch
+ingest-upstream model="image":
+    curl -XPOST localhost:8001/task -H "Content-Type: application/json" -d '{"model": "{{ model }}", "action": "INGEST_UPSTREAM"}'
+
+
 #######
 # API #
 #######
 
+# Check the health of the API
+@web-health:
+    -curl -s -o /dev/null -w '%{http_code}' 'http://localhost:8000/healthcheck'
+
+# Wait for the health of the API
+@wait-for-web: up
+    just _loop \
+    '"$(just web-health)" != "200"' \
+    "Waiting for the API to be healthy..."
+
 # Run API tests inside Docker
-test: wait-until-healthy
+test: wait-for-es wait-for-is wait-for-web
     docker-compose exec web ./test/run_test.sh
 
 # Run API tests locally
@@ -90,3 +138,7 @@ testlocal:
 # Run Django administrative commands
 dj args="":
     cd openverse_api && pipenv run python manage.py {{ args }}
+
+# Make a test cURL request to the API
+stats media="images":
+    curl "http://localhost:8000/v1/{{ media }}/stats/"
