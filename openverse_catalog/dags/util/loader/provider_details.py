@@ -12,6 +12,7 @@ API level.
 # Default provider names
 FLICKR_DEFAULT_PROVIDER = "flickr"
 EUROPEANA_DEFAULT_PROVIDER = "europeana"
+WIKIMEDIA_AUDIO_PROVIDER = "wikimedia_audio"
 WIKIMEDIA_DEFAULT_PROVIDER = "wikimedia"
 SMITHSONIAN_DEFAULT_PROVIDER = "smithsonian"
 BROOKLYN_DEFAULT_PROVIDER = "brooklynmuseum"

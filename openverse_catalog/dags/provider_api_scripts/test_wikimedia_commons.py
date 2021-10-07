@@ -1,15 +1,14 @@
 import json
 import logging
-import os
+from pathlib import Path
 from unittest.mock import call, patch
 
 import wikimedia_commons as wmc
 from common.licenses.licenses import get_license_info
+from util.constants import IMAGE
 
 
-RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), "tests/resources/wikimedia"
-)
+RESOURCES = Path(__file__).parent.resolve() / "tests/resources/wikimedia"
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
@@ -25,7 +24,7 @@ def test_derive_timestamp_pair():
 
 
 def test_get_image_pages_returns_correctly_with_continue():
-    with open(os.path.join(RESOURCES, "response_small_with_continue.json")) as f:
+    with open(RESOURCES / "response_small_with_continue.json") as f:
         resp_dict = json.load(f)
 
     expect_result = {"84798633": {"pageid": 84798633, "title": "File:Ambassade1.jpg"}}
@@ -69,11 +68,11 @@ def test_build_query_params_adds_continue():
 
 
 def test_get_image_batch(monkeypatch):
-    with open(os.path.join(RESOURCES, "continuation", "wmc_pretty1.json")) as f:
+    with open(RESOURCES / "continuation/wmc_pretty1.json") as f:
         first_response = json.load(f)
-    with open(os.path.join(RESOURCES, "continuation", "wmc_pretty2.json")) as f:
+    with open(RESOURCES / "continuation/wmc_pretty2.json") as f:
         second_response = json.load(f)
-    with open(os.path.join(RESOURCES, "continuation", "wmc_pretty3.json")) as f:
+    with open(RESOURCES / "continuation/wmc_pretty3.json") as f:
         third_response = json.load(f)
 
     def mock_get_response_json(endpoint, retries, query_params, **kwargs):
@@ -88,7 +87,7 @@ def test_get_image_batch(monkeypatch):
         else:
             return None
 
-    with open(os.path.join(RESOURCES, "continuation", "wmc_pretty123.json")) as f:
+    with open(RESOURCES / "continuation/wmc_pretty123.json") as f:
         expect_image_batch = json.load(f)
     expect_image_batch.pop("continue")
     expect_continue_token = {
@@ -102,7 +101,7 @@ def test_get_image_batch(monkeypatch):
     monkeypatch.setattr(
         wmc.delayed_requester, "get_response_json", mock_get_response_json
     )
-    actual_image_batch, actual_continue_token = wmc._get_image_batch(
+    actual_image_batch, actual_continue_token = wmc._get_media_batch(
         "2019-01-01", "2019-01-02"
     )
     assert actual_image_batch == expect_image_batch
@@ -110,13 +109,13 @@ def test_get_image_batch(monkeypatch):
 
 
 def test_get_image_batch_returns_correctly_without_continue(monkeypatch):
-    with open(os.path.join(RESOURCES, "response_small_missing_continue.json")) as f:
+    with open(RESOURCES / "response_small_missing_continue.json") as f:
         resp_dict = json.load(f)
 
     with patch.object(
         wmc.delayed_requester, "get_response_json", return_value=resp_dict
     ) as mock_response_json:
-        actual_result, actual_continue = wmc._get_image_batch(
+        actual_result, actual_continue = wmc._get_media_batch(
             "2019-01-01", "2019-01-02", retries=2
         )
 
@@ -129,11 +128,11 @@ def test_get_image_batch_returns_correctly_without_continue(monkeypatch):
 
 
 def test_merge_response_jsons():
-    with open(os.path.join(RESOURCES, "continuation", "wmc_pretty1.json")) as f:
+    with open(RESOURCES / "continuation/wmc_pretty1.json") as f:
         left_response = json.load(f)
-    with open(os.path.join(RESOURCES, "continuation", "wmc_pretty2.json")) as f:
+    with open(RESOURCES / "continuation/wmc_pretty2.json") as f:
         right_response = json.load(f)
-    with open(os.path.join(RESOURCES, "continuation", "wmc_pretty1plus2.json")) as f:
+    with open(RESOURCES / "continuation/wmc_pretty1plus2.json") as f:
         expect_merged_response = json.load(f)
 
     actual_merged_response = wmc._merge_response_jsons(
@@ -144,49 +143,47 @@ def test_merge_response_jsons():
 
 
 def test_merge_image_pages_left_only_with_gu():
-    with open(os.path.join(RESOURCES, "continuation", "page_44672185_left.json")) as f:
+    with open(RESOURCES / "continuation/page_44672185_left.json") as f:
         left_page = json.load(f)
-    with open(os.path.join(RESOURCES, "continuation", "page_44672185_right.json")) as f:
+    with open(RESOURCES / "continuation/page_44672185_right.json") as f:
         right_page = json.load(f)
     actual_merged_page = wmc._merge_image_pages(left_page, right_page)
     assert actual_merged_page == left_page
 
 
 def test_merge_image_pages_left_only_with_gu_backwards():
-    with open(os.path.join(RESOURCES, "continuation", "page_44672185_left.json")) as f:
+    with open(RESOURCES / "continuation/page_44672185_left.json") as f:
         left_page = json.load(f)
-    with open(os.path.join(RESOURCES, "continuation", "page_44672185_right.json")) as f:
+    with open(RESOURCES / "continuation/page_44672185_right.json") as f:
         right_page = json.load(f)
     actual_merged_page = wmc._merge_image_pages(right_page, left_page)
     assert actual_merged_page == left_page
 
 
 def test_merge_image_pages_neither_have_gu():
-    with open(os.path.join(RESOURCES, "continuation", "page_44672210_left.json")) as f:
+    with open(RESOURCES / "continuation/page_44672210_left.json") as f:
         left_page = json.load(f)
-    with open(os.path.join(RESOURCES, "continuation", "page_44672210_right.json")) as f:
+    with open(RESOURCES / "continuation/page_44672210_right.json") as f:
         right_page = json.load(f)
     actual_merged_page = wmc._merge_image_pages(left_page, right_page)
     assert actual_merged_page == left_page
 
 
 def test_merge_image_pages_neigher_have_gu_backwards():
-    with open(os.path.join(RESOURCES, "continuation", "page_44672210_left.json")) as f:
+    with open(RESOURCES / "continuation/page_44672210_left.json") as f:
         left_page = json.load(f)
-    with open(os.path.join(RESOURCES, "continuation", "page_44672210_right.json")) as f:
+    with open(RESOURCES / "continuation/page_44672210_right.json") as f:
         right_page = json.load(f)
     actual_merged_page = wmc._merge_image_pages(right_page, left_page)
     assert actual_merged_page == left_page
 
 
 def test_merge_image_pages_both_have_gu():
-    with open(os.path.join(RESOURCES, "continuation", "page_44672212_left.json")) as f:
+    with open(RESOURCES / "continuation/page_44672212_left.json") as f:
         left_page = json.load(f)
-    with open(os.path.join(RESOURCES, "continuation", "page_44672212_right.json")) as f:
+    with open(RESOURCES / "continuation/page_44672212_right.json") as f:
         right_page = json.load(f)
-    with open(
-        os.path.join(RESOURCES, "continuation", "page_44672212_merged.json")
-    ) as f:
+    with open(RESOURCES / "continuation/page_44672212_merged.json") as f:
         expect_merged_page = json.load(f)
     actual_merged_page = wmc._merge_image_pages(left_page, right_page)
     assert actual_merged_page == expect_merged_page
@@ -204,16 +201,16 @@ def test_extract_title_gets_cleaned_title():
     assert actual_title == expected_title
 
 
-def test_process_image_data_handles_example_dict():
+def test_process_media_data_handles_example_dict():
     """
     Converts sample json data to correct image metadata,
     and calls `add_item` once for a valid image.
     """
-    with open(os.path.join(RESOURCES, "image_data_example.json")) as f:
-        image_data = json.load(f)
+    with open(RESOURCES / "image_data_example.json") as f:
+        media_data = json.load(f)
 
     with patch.object(wmc.image_store, "add_item", return_value=1) as mock_add:
-        wmc._process_image_data(image_data)
+        wmc._process_media_data(media_data)
     expected_license_info = get_license_info(
         license_url="https://creativecommons.org/licenses/by-sa/4.0"
     )
@@ -222,17 +219,19 @@ def test_process_image_data_handles_example_dict():
         foreign_landing_url=(
             "https://commons.wikimedia.org/w/index.php?curid=81754323"
         ),
+        foreign_identifier=81754323,
         image_url=(
             "https://upload.wikimedia.org/wikipedia/commons/2/25/20120925_"
             "PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg"
         ),
         license_info=expected_license_info,
-        foreign_identifier=81754323,
         width=5514,
         height=3102,
         creator="PtrQs",
         creator_url="https://commons.wikimedia.org/wiki/User:PtrQs",
         title="20120925 PlozevetBretagne LoneTree DSC07971 PtrQs",
+        filetype="jpg",
+        filesize=11863148,
         meta_data={
             "description": "SONY DSC",
             "global_usage_count": 0,
@@ -241,7 +240,7 @@ def test_process_image_data_handles_example_dict():
             "categories": [
                 "Coasts of Ploz\u00e9vet",
                 "No QIC by usr:PtrQs",
-                ("Photographs taken with Minolta AF Zoom " "28-70mm F2.8 G"),
+                "Photographs taken with Minolta AF Zoom " "28-70mm F2.8 G",
                 "Self-published work",
                 "Taken with Sony DSLR-A900",
                 "Trees in Finist\u00e8re",
@@ -250,62 +249,62 @@ def test_process_image_data_handles_example_dict():
     )
 
 
-def test_process_image_data_adds_example_dict():
+def test_process_media_data_adds_example_dict():
     """
-    `_process_image_data` calls `ImageStore.add_item` with valid arguments,
+    `_process_media_data` calls `ImageStore.add_item` with valid arguments,
     and doesn't pass unexpected arguments. Saves the item to the `ImageStore`.
     """
-    with open(os.path.join(RESOURCES, "image_data_example.json")) as f:
-        image_data = json.load(f)
-    wmc._process_image_data(image_data)
+    with open(RESOURCES / "image_data_example.json") as f:
+        media_data = json.load(f)
+    wmc._process_media_data(media_data)
     assert wmc.image_store.total_items == 1
 
 
-def test_process_image_data_throws_out_invalid_mediatype(monkeypatch):
-    image_data = {"mediatype": "INVALID"}
+def test_process_media_data_throws_out_invalid_mediatype(monkeypatch):
+    media_data = {"mediatype": "INVALID"}
 
     def mock_check_mediatype(image_info):
         return False
 
     monkeypatch.setattr(wmc, "_check_mediatype", mock_check_mediatype)
     with patch.object(wmc.image_store, "add_item", return_value=1) as mock_add:
-        wmc._process_image_data(image_data)
+        wmc._process_media_data(media_data)
 
     mock_add.assert_not_called()
 
 
 def test_get_image_info_dict():
-    with open(os.path.join(RESOURCES, "image_data_example.json")) as f:
-        image_data = json.load(f)
+    with open(RESOURCES / "image_data_example.json") as f:
+        media_data = json.load(f)
 
-    with open(os.path.join(RESOURCES, "image_info_from_example_data.json")) as f:
+    with open(RESOURCES / "image_info_from_example_data.json") as f:
         expect_image_info = json.load(f)
 
-    actual_image_info = wmc._get_image_info_dict(image_data)
+    actual_image_info = wmc._get_image_info_dict(media_data)
 
     assert actual_image_info == expect_image_info
 
 
 def test_check_mediatype_with_valid_image_info():
-    with open(os.path.join(RESOURCES, "image_info_from_example_data.json")) as f:
+    with open(RESOURCES / "image_info_from_example_data.json") as f:
         image_info = json.load(f)
 
     valid_mediatype = wmc._check_mediatype(image_info)
-    assert valid_mediatype is True
+    assert valid_mediatype == IMAGE
 
 
 def test_check_mediatype_with_invalid_mediatype_in_image_info():
-    with open(os.path.join(RESOURCES, "image_info_from_example_data.json")) as f:
+    with open(RESOURCES / "image_info_from_example_data.json") as f:
         image_info = json.load(f)
 
     image_info.update(mediatype="INVALIDTYPE")
 
     valid_mediatype = wmc._check_mediatype(image_info)
-    assert valid_mediatype is False
+    assert valid_mediatype is None
 
 
 def test_extract_creator_info_handles_plaintext():
-    with open(os.path.join(RESOURCES, "image_info_artist_string.json")) as f:
+    with open(RESOURCES / "image_info_artist_string.json") as f:
         image_info = json.load(f)
     actual_creator, actual_creator_url = wmc._extract_creator_info(image_info)
     expect_creator = "Artist Name"
@@ -315,7 +314,7 @@ def test_extract_creator_info_handles_plaintext():
 
 
 def test_extract_creator_info_handles_well_formed_link():
-    with open(os.path.join(RESOURCES, "image_info_artist_link.json")) as f:
+    with open(RESOURCES / "image_info_artist_link.json") as f:
         image_info = json.load(f)
     actual_creator, actual_creator_url = wmc._extract_creator_info(image_info)
     expect_creator = "link text"
@@ -325,7 +324,7 @@ def test_extract_creator_info_handles_well_formed_link():
 
 
 def test_extract_creator_info_handles_div_with_no_link():
-    with open(os.path.join(RESOURCES, "image_info_artist_div.json")) as f:
+    with open(RESOURCES / "image_info_artist_div.json") as f:
         image_info = json.load(f)
     actual_creator, actual_creator_url = wmc._extract_creator_info(image_info)
     expect_creator = "Jona Lendering"
@@ -335,7 +334,7 @@ def test_extract_creator_info_handles_div_with_no_link():
 
 
 def test_extract_creator_info_handles_internal_wc_link():
-    with open(os.path.join(RESOURCES, "image_info_artist_internal_link.json")) as f:
+    with open(RESOURCES / "image_info_artist_internal_link.json") as f:
         image_info = json.load(f)
     actual_creator, actual_creator_url = wmc._extract_creator_info(image_info)
     expect_creator = "NotaRealUser"
@@ -348,7 +347,7 @@ def test_extract_creator_info_handles_internal_wc_link():
 
 
 def test_extract_creator_info_handles_link_as_partial_text():
-    with open(os.path.join(RESOURCES, "image_info_artist_partial_link.json")) as f:
+    with open(RESOURCES / "image_info_artist_partial_link.json") as f:
         image_info = json.load(f)
     actual_creator, actual_creator_url = wmc._extract_creator_info(image_info)
     expect_creator = "Jeff & Brian from Eastbourne"
@@ -358,7 +357,7 @@ def test_extract_creator_info_handles_link_as_partial_text():
 
 
 def test_get_license_info_finds_license_url():
-    with open(os.path.join(RESOURCES, "image_info_from_example_data.json")) as f:
+    with open(RESOURCES / "image_info_from_example_data.json") as f:
         image_info = json.load(f)
 
     expect_license_url = "https://creativecommons.org/licenses/by-sa/4.0/"
@@ -367,43 +366,63 @@ def test_get_license_info_finds_license_url():
 
 
 def test_get_license_url_handles_missing_license_url():
-    with open(os.path.join(RESOURCES, "image_info_artist_partial_link.json")) as f:
+    with open(RESOURCES / "image_info_artist_partial_link.json") as f:
         image_info = json.load(f)
     expect_license_url = None
     actual_license_url = wmc._get_license_info(image_info).url
     assert actual_license_url == expect_license_url
 
 
-def test_get_license_url_handles_cc0_license():
-    with open(os.path.join(RESOURCES, "image_info_cc0.json")) as f:
-        image_info = json.load(f)
-    expect_license_url = "https://creativecommons.org/publicdomain/zero/1.0/"
-    actual_license_url = wmc._get_license_info(image_info).url
-    assert actual_license_url == expect_license_url
-
-
 def test_create_meta_data_scrapes_text_from_html_description():
-    with open(os.path.join(RESOURCES, "image_data_html_description.json")) as f:
-        image_data = json.load(f)
+    with open(RESOURCES / "image_data_html_description.json") as f:
+        media_data = json.load(f)
     expect_description = (
         "Identificatie Titel(s):  Allegorie op kunstenaar Francesco Mazzoli, "
         "bekend als Parmigianino"
     )
-    actual_description = wmc._create_meta_data_dict(image_data)["description"]
+    actual_description = wmc._create_meta_data_dict(media_data)["description"]
     assert actual_description == expect_description
 
 
 def test_create_meta_data_tallies_global_usage_count():
-    with open(os.path.join(RESOURCES, "continuation", "page_44672185_left.json")) as f:
-        image_data = json.load(f)
-    actual_gu = wmc._create_meta_data_dict(image_data)["global_usage_count"]
+    with open(RESOURCES / "continuation/page_44672185_left.json") as f:
+        media_data = json.load(f)
+    actual_gu = wmc._create_meta_data_dict(media_data)["global_usage_count"]
     expect_gu = 3
     assert actual_gu == expect_gu
 
 
 def test_create_meta_data_tallies_zero_global_usage_count():
-    with open(os.path.join(RESOURCES, "continuation", "page_44672185_right.json")) as f:
-        image_data = json.load(f)
-    actual_gu = wmc._create_meta_data_dict(image_data)["global_usage_count"]
+    with open(RESOURCES / "continuation/page_44672185_right.json") as f:
+        media_data = json.load(f)
+    actual_gu = wmc._create_meta_data_dict(media_data)["global_usage_count"]
     expect_gu = 0
     assert actual_gu == expect_gu
+
+
+def test_parse_audio_file_data_parses_ogg_streams():
+    with open(RESOURCES / "audio_filedata_ogg.json") as f:
+        file_metadata = json.load(f)
+    original_data = {"meta_data": {}}
+    actual_parsed_data = wmc._parse_audio_file_data(original_data, file_metadata)
+
+    expected_parsed_data = {
+        "bit_rate": 112000,
+        "sample_rate": 48000,
+        "meta_data": {"channels": 2},
+    }
+    assert actual_parsed_data == expected_parsed_data
+
+
+def test_parse_audio_file_data_parses_wav_audio_data():
+    with open(RESOURCES / "audio_filedata_wav.json") as f:
+        file_metadata = json.load(f)
+    original_data = {"meta_data": {}}
+    actual_parsed_data = wmc._parse_audio_file_data(original_data, file_metadata)
+
+    expected_parsed_data = {
+        "bit_rate": 768000,
+        "sample_rate": 48000,
+        "meta_data": {"channels": 1},
+    }
+    assert actual_parsed_data == expected_parsed_data

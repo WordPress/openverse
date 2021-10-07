@@ -46,6 +46,6 @@ globals()[DAG_ID] = create_day_partitioned_ingestion_dag(
     wikimedia_commons.main,
     reingestion_days,
     start_date=START_DATE,
-    concurrency=8,
+    concurrency=2,
     ingestion_task_timeout=INGESTION_TASK_TIMEOUT,
 )

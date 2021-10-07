@@ -15,12 +15,15 @@ import logging
 import os
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
+from typing import Optional
 from urllib.parse import urlparse
 
 import lxml.html as html
 from common.licenses.licenses import get_license_info
 from common.requester import DelayedRequester
+from storage.audio import AudioStore
 from storage.image import ImageStore
+from util.constants import AUDIO, IMAGE
 from util.loader import provider_details as prov
 
 
@@ -39,6 +42,7 @@ DELAY = 1
 HOST = "commons.wikimedia.org"
 ENDPOINT = f"https://{HOST}/w/api.php"
 PROVIDER = prov.WIKIMEDIA_DEFAULT_PROVIDER
+AUDIO_PROVIDER = prov.WIKIMEDIA_AUDIO_PROVIDER
 CONTACT_EMAIL = os.getenv("WM_SCRIPT_CONTACT")
 UA_STRING = f"CC-Catalog/0.1 (https://creativecommons.org; {CONTACT_EMAIL})"
 DEFAULT_REQUEST_HEADERS = {"User-Agent": UA_STRING}
@@ -49,15 +53,18 @@ DEFAULT_QUERY_PARAMS = {
     "gaidir": "newer",
     "gailimit": LIMIT,
     "prop": "imageinfo|globalusage",
-    "iiprop": "url|user|dimensions|extmetadata|mediatype",
+    "iiprop": "url|user|dimensions|extmetadata|mediatype|size|metadata",
     "gulimit": LIMIT,
     "gunamespace": 0,
     "format": "json",
 }
 PAGES_PATH = ["query", "pages"]
-IMAGE_MEDIATYPES = {"BITMAP"}
+IMAGE_MEDIATYPES = {"BITMAP", "DRAWING"}
+AUDIO_MEDIATYPES = {"AUDIO"}
+# Other types available in the API are OFFICE for pdfs and VIDEO
 
 delayed_requester = DelayedRequester(DELAY)
+audio_store = AudioStore(provider=AUDIO_PROVIDER)
 image_store = ImageStore(provider=PROVIDER)
 
 
@@ -76,25 +83,28 @@ def main(date):
     logger.info(f"Processing Wikimedia Commons API for date: {date}")
 
     continue_token = {}
+    total_audio = 0
     total_images = 0
     start_timestamp, end_timestamp = _derive_timestamp_pair(date)
 
     while True:
-        image_batch, continue_token = _get_image_batch(
+        media_batch, continue_token = _get_media_batch(
             start_timestamp, end_timestamp, continue_token=continue_token
         )
         logger.info(f"Continue Token: {continue_token}")
-        image_pages = _get_image_pages(image_batch)
+        image_pages = _get_image_pages(media_batch)
         if image_pages:
             _process_image_pages(image_pages)
             total_images = image_store.total_items
-        logger.info(f"Total Images so far: {total_images}")
+            total_audio = audio_store.total_items
+        logger.info(f"Total: {total_images} images and {total_audio} audio so far")
         if not continue_token:
             break
 
+    audio_store.commit()
     image_store.commit()
-    total_images = image_store.total_items
-    logger.info(f"Total images: {total_images}")
+    logger.info(f"Total images: {image_store.total_items}")
+    logger.info(f"Total audios: {audio_store.total_items}")
     logger.info("Terminated!")
 
 
@@ -106,7 +116,7 @@ def _derive_timestamp_pair(date):
     return start_timestamp, end_timestamp
 
 
-def _get_image_batch(start_timestamp, end_timestamp, continue_token=None, retries=5):
+def _get_media_batch(start_timestamp, end_timestamp, continue_token=None, retries=5):
     if continue_token is None:
         continue_token = {}
     query_params = _build_query_params(
@@ -154,7 +164,7 @@ def _get_image_pages(image_batch):
 
 def _process_image_pages(image_pages):
     for i in image_pages.values():
-        _process_image_data(i)
+        _process_media_data(i)
 
 
 def _build_query_params(
@@ -206,94 +216,175 @@ def _merge_response_jsons(left_json, right_json):
 
 def _merge_image_pages(left_page, right_page):
     merged_page = deepcopy(left_page)
-    merged_globalusage = left_page["globalusage"] + right_page["globalusage"]
+    merged_globalusage = left_page.get("globalusage", []) + right_page.get(
+        "globalusage", []
+    )
     merged_page.update(right_page)
     merged_page["globalusage"] = merged_globalusage
 
     return merged_page
 
 
-def _process_image_data(image_data):
-    foreign_id = image_data.get("pageid")
+def _extract_file_type(media_info):
+    filetype = media_info.get("url", "").split(".")[-1]
+    return None if filetype == "" else filetype
+
+
+def _process_media_data(media_data):
+    foreign_id = media_data.get("pageid")
     logger.debug(f"Processing page ID: {foreign_id}")
-    image_info = _get_image_info_dict(image_data)
-    valid_mediatype = _check_mediatype(image_info)
+    media_info = _get_image_info_dict(media_data)
+    valid_mediatype = _check_mediatype(media_info)
     if not valid_mediatype:
         return None
-    license_info = _get_license_info(image_info)
+    license_info = _get_license_info(media_info)
     if license_info.url is None:
         return None
-    image_url = image_info.get("url")
-    creator, creator_url = _extract_creator_info(image_info)
-    title = _extract_title(image_info)
+    media_url = media_info.get("url")
+    if media_url is None:
+        return None
+    creator, creator_url = _extract_creator_info(media_info)
+    title = _extract_title(media_info)
+    filesize = media_info.get("size", 0)  # in bytes
+    filetype = _extract_file_type(media_info)
+    parsed_data = {
+        "media_url": media_url,
+        "foreign_landing_url": media_info.get("descriptionshorturl"),
+        "foreign_identifier": foreign_id,
+        "license_info": license_info,
+        "creator": creator,
+        "creator_url": creator_url,
+        "title": title,
+        "filetype": filetype,
+        "filesize": filesize,
+    }
 
-    image_store.add_item(
-        foreign_landing_url=image_info.get("descriptionshorturl"),
-        image_url=image_url,
-        license_info=license_info,
-        foreign_identifier=foreign_id,
-        width=image_info.get("width"),
-        height=image_info.get("height"),
-        creator=creator,
-        creator_url=creator_url,
-        title=title,
-        meta_data=_create_meta_data_dict(image_data),
-    )
+    funcs = {
+        IMAGE: _add_image,
+        AUDIO: _add_audio,
+    }
+    funcs[valid_mediatype](parsed_data, media_data, media_info)
 
 
-def _get_image_info_dict(image_data):
-    image_info_list = image_data.get("imageinfo")
-    if image_info_list:
-        image_info = image_info_list[0]
+def _get_value_by_name(key_value_list: list, prop_name: str):
+    prop_list = [
+        key_value_pair
+        for key_value_pair in key_value_list
+        if key_value_pair["name"] == prop_name
+    ]
+    if prop_list:
+        return prop_list[0].get("value")
+
+
+def _get_value_by_names(key_value_list: list, prop_names: list):
+    """Gets the first available value for one of the `prop_names`
+    property names"""
+    for prop_name in prop_names:
+        if val := _get_value_by_name(key_value_list, prop_name):
+            return val
+
+
+def _parse_audio_file_data(parsed_data: dict, file_metadata: list) -> dict:
+    streams = _get_value_by_name(file_metadata, "streams")
+    if not streams:
+        audio = _get_value_by_name(file_metadata, "audio")
+        streams = _get_value_by_name(audio, "streams")
+    try:
+        streams_data = [stream["value"] for stream in streams][0]
+        file_data = _get_value_by_name(streams_data, "header")
+        if not file_data:
+            file_data = streams_data
+    except (IndexError, TypeError):
+        file_data = []
+    if sample_rate := _get_value_by_names(
+        file_data, ["audio_sample_rate", "sample_rate"]
+    ):
+        parsed_data["sample_rate"] = sample_rate
+    if bit_rate := _get_value_by_names(file_data, ["bitrate_nominal", "bitrate"]):
+        parsed_data["bit_rate"] = bit_rate
+    if channels := _get_value_by_names(file_data, ["audio_channels", "channels"]):
+        parsed_data["meta_data"]["channels"] = channels
+    return parsed_data
+
+
+def _extract_audio_category(parsed_data):
+    """Set category to ["sound"] for any audio with
+    pronunciation of a word or a phrase"""
+    for category in parsed_data["meta_data"].get("categories", []):
+        if "pronunciation" in category.lower():
+            return ["sound"]
+
+
+def _add_audio(parsed_data, media_data, media_info):
+    # Converting duration into milliseconds
+    duration = int(float(media_info.get("duration", 0)) * 1000)
+    parsed_data["audio_url"] = parsed_data.pop("media_url")
+    parsed_data["duration"] = duration
+    parsed_data["meta_data"] = _create_meta_data_dict(media_data)
+    if not parsed_data.get("category"):
+        parsed_data["category"] = _extract_audio_category(parsed_data)
+    file_metadata: list = media_info.get("metadata", [])
+    parsed_data = _parse_audio_file_data(parsed_data, file_metadata)
+    audio_store.add_item(**parsed_data)
+
+
+def _add_image(parsed_data, media_data, media_info):
+    parsed_data["meta_data"] = _create_meta_data_dict(media_data)
+    parsed_data["width"] = media_info.get("width")
+    parsed_data["height"] = media_info.get("height")
+    parsed_data["image_url"] = parsed_data.pop("media_url")
+    if parsed_data["filetype"] == "svg":
+        parsed_data["category"] = ["illustration"]
+    image_store.add_item(**parsed_data)
+
+
+def _get_image_info_dict(media_data):
+    media_info_list = media_data.get("imageinfo")
+    if media_info_list:
+        media_info = media_info_list[0]
     else:
-        image_info = {}
-    return image_info
+        media_info = {}
+    return media_info
 
 
-def _check_mediatype(image_info, image_mediatypes=None):
-    if image_mediatypes is None:
-        image_mediatypes = IMAGE_MEDIATYPES
-    image_mediatype = image_info.get("mediatype")
-    if image_mediatype not in image_mediatypes:
+def _check_mediatype(media_info):
+    item_mediatype = media_info.get("mediatype")
+    if item_mediatype in IMAGE_MEDIATYPES:
+        return IMAGE
+    elif item_mediatype in AUDIO_MEDIATYPES:
+        return AUDIO
+    else:
         logger.debug(
-            f"Incorrect mediatype: {image_mediatype} not in {image_mediatypes}"
+            f"Incorrect mediatype: {item_mediatype} not in "
+            f"valid mediatypes ({IMAGE_MEDIATYPES}, {AUDIO_MEDIATYPES})"
         )
-        valid_mediatype = False
-    else:
-        valid_mediatype = True
-    return valid_mediatype
+        return None
 
 
-def _extract_title(image_info):
+def _extract_title(media_info):
     # Titles often have 'File:filename.jpg' form
     # We remove the 'File:' and extension from title
-    name = image_info.get("extmetadata", {}).get("ObjectName", {})
-    title = name.get("value", "")
+    title = _get_ext_value(media_info, "ObjectName")
     if title is None:
-        title = image_info.get("title")
+        title = media_info.get("title")
     if title.startswith("File:"):
         title = title.replace("File:", "", 1)
     last_dot_position = title.rfind(".")
     if last_dot_position > 0:
         possible_extension = title[last_dot_position:]
-        if possible_extension.lower() in [".png", ".jpg", ".jpeg"]:
+        if possible_extension.lower() in {".png", ".jpg", ".jpeg", ".ogg", ".wav"}:
             title = title[:last_dot_position]
     return title
 
 
-def _extract_date_info(image_info):
-    date_originally_created = (
-        image_info.get("extmetadata", {}).get("DateTimeOriginal", {}).get("value", "")
-    )
-
-    last_modified_at_source = (
-        image_info.get("extmetadata", {}).get("DateTime", {}).get("value", "")
-    )
+def _extract_date_info(media_info):
+    date_originally_created = _get_ext_value(media_info, "DateTimeOriginal")
+    last_modified_at_source = _get_ext_value(media_info, "DateTime")
     return date_originally_created, last_modified_at_source
 
 
-def _extract_creator_info(image_info):
-    artist_string = image_info.get("extmetadata", {}).get("Artist", {}).get("value", "")
+def _extract_creator_info(media_info):
+    artist_string = _get_ext_value(media_info, "Artist")
 
     if not artist_string:
         return None, None
@@ -306,45 +397,46 @@ def _extract_creator_info(image_info):
     return artist_text, artist_url
 
 
-def _extract_category_info(image_info):
-    categories_string = (
-        image_info.get("extmetadata", {}).get("Categories", {}).get("value", "")
-    )
+def _extract_category_info(media_info):
+    categories_string = _get_ext_value(media_info, "Categories") or ""
 
     categories_list = categories_string.split("|")
     return categories_list
 
 
-def _get_license_info(image_info):
-    license_url = (
-        image_info.get("extmetadata", {}).get("LicenseUrl", {}).get("value", "").strip()
-    )
-    if license_url == "":
-        license_name = (
-            image_info.get("extmetadata", {})
-            .get("LicenseShortName", {})
-            .get("value", "")
-            .lower()
-        )
-        if license_name == "public_domain":
-            license_url = "https://creativecommons.org/publicdomain/mark/1.0/"
-        elif license_name == "pdm-owner":
-            license_url = "https://creativecommons.org/publicdomain/zero/1.0/"
-        else:
-            license_url = None
-    license_info = get_license_info(license_url=license_url)
+def _get_license_info(media_info):
+    license_url = _get_ext_value(media_info, "LicenseUrl") or ""
+    # TODO Add public domain items
+    # if license_url == "":
+    #     license_name = _get_ext_value(media_info, "LicenseShortName") or ""
+    #     if license_name.lower() in {"public_domain", "pdm-owner"}:
+    #         pass
+
+    license_info = get_license_info(license_url=license_url.strip())
     return license_info
 
 
-def _create_meta_data_dict(image_data):
+def _get_geo_data(media_data):
+    geo_properties = {
+        "latitude": "GPSLatitude",
+        "longitude": "GPSLongitude",
+        "map_datum": "GPSMapDatum",
+    }
+    geo_data = {}
+    for (key, value) in geo_properties.items():
+        key_value = media_data.get(value, {}).get("value")
+        if key_value:
+            geo_data[key] = key_value
+    return geo_data
+
+
+def _create_meta_data_dict(media_data):
     meta_data = {}
-    global_usage_length = len(image_data.get("globalusage", []))
-    image_info = _get_image_info_dict(image_data)
-    date_originally_created, last_modified_at_source = _extract_date_info(image_info)
-    categories_list = _extract_category_info(image_info)
-    description = (
-        image_info.get("extmetadata", {}).get("ImageDescription", {}).get("value")
-    )
+    global_usage_length = len(media_data.get("globalusage", []))
+    media_info = _get_image_info_dict(media_data)
+    date_originally_created, last_modified_at_source = _extract_date_info(media_info)
+    categories_list = _extract_category_info(media_info)
+    description = _get_ext_value(media_info, "ImageDescription")
     if description:
         description_text = " ".join(
             html.fromstring(description).xpath("//text()")
@@ -354,6 +446,7 @@ def _create_meta_data_dict(image_data):
     meta_data["date_originally_created"] = date_originally_created
     meta_data["last_modified_at_source"] = last_modified_at_source
     meta_data["categories"] = categories_list
+    meta_data.update(_get_geo_data(media_data))
     return meta_data
 
 
@@ -371,6 +464,10 @@ def _cleanse_url(url_string):
 
     if parse_result.netloc or parse_result.path:
         return parse_result.geturl()
+
+
+def _get_ext_value(media_info: dict, ext_key: str) -> Optional[str]:
+    return media_info.get("extmetadata", {}).get(ext_key, {}).get("value")
 
 
 if __name__ == "__main__":

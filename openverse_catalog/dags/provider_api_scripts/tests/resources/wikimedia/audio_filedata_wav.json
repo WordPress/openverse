@@ -1,0 +1,272 @@
+[
+  {
+    "name": "GETID3_VERSION",
+    "value": "1.9.20-202006061653"
+  },
+  {
+    "name": "filesize",
+    "value": 101164
+  },
+  {
+    "name": "avdataoffset",
+    "value": 44
+  },
+  {
+    "name": "avdataend",
+    "value": 101164
+  },
+  {
+    "name": "fileformat",
+    "value": "wav"
+  },
+  {
+    "name": "audio",
+    "value": [
+      {
+        "name": "dataformat",
+        "value": "wav"
+      },
+      {
+        "name": "bitrate_mode",
+        "value": "cbr"
+      },
+      {
+        "name": "wformattag",
+        "value": 1
+      },
+      {
+        "name": "streams",
+        "value": [
+          {
+            "name": 0,
+            "value": [
+              {
+                "name": "codec",
+                "value": "Pulse Code Modulation (PCM)"
+              },
+              {
+                "name": "channels",
+                "value": 1
+              },
+              {
+                "name": "sample_rate",
+                "value": 48000
+              },
+              {
+                "name": "bitrate",
+                "value": 768000
+              },
+              {
+                "name": "bits_per_sample",
+                "value": 16
+              },
+              {
+                "name": "wformattag",
+                "value": 1
+              },
+              {
+                "name": "bitrate_mode",
+                "value": "cbr"
+              },
+              {
+                "name": "lossless",
+                "value": true
+              },
+              {
+                "name": "dataformat",
+                "value": "wav"
+              },
+              {
+                "name": "compression_ratio",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "codec",
+        "value": "Pulse Code Modulation (PCM)"
+      },
+      {
+        "name": "channels",
+        "value": 1
+      },
+      {
+        "name": "sample_rate",
+        "value": 48000
+      },
+      {
+        "name": "bitrate",
+        "value": 768000
+      },
+      {
+        "name": "bits_per_sample",
+        "value": 16
+      },
+      {
+        "name": "lossless",
+        "value": true
+      },
+      {
+        "name": "channelmode",
+        "value": "mono"
+      },
+      {
+        "name": "compression_ratio",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "warning",
+    "value": [
+      {
+        "name": 0,
+        "value": "Expecting \"RIFF|JUNK|IDVX\" at 101168, found \"\ufffd\ufffd\ufffd\ufffd\" (00 00 00 00 ) - skipping rest of file"
+      }
+    ]
+  },
+  {
+    "name": "encoding",
+    "value": "UTF-8"
+  },
+  {
+    "name": "mime_type",
+    "value": "audio/wav"
+  },
+  {
+    "name": "riff",
+    "value": [
+      {
+        "name": "raw",
+        "value": [
+          {
+            "name": "fmt ",
+            "value": [
+              {
+                "name": "wFormatTag",
+                "value": 1
+              },
+              {
+                "name": "nChannels",
+                "value": 1
+              },
+              {
+                "name": "nSamplesPerSec",
+                "value": 48000
+              },
+              {
+                "name": "nAvgBytesPerSec",
+                "value": 96000
+              },
+              {
+                "name": "nBlockAlign",
+                "value": 2
+              },
+              {
+                "name": "wBitsPerSample",
+                "value": 16
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "audio",
+        "value": [
+          {
+            "name": 0,
+            "value": [
+              {
+                "name": "codec",
+                "value": "Pulse Code Modulation (PCM)"
+              },
+              {
+                "name": "channels",
+                "value": 1
+              },
+              {
+                "name": "sample_rate",
+                "value": 48000
+              },
+              {
+                "name": "bitrate",
+                "value": 768000
+              },
+              {
+                "name": "bits_per_sample",
+                "value": 16
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "header_size",
+        "value": 101152
+      },
+      {
+        "name": "WAVE",
+        "value": [
+          {
+            "name": "fmt ",
+            "value": [
+              {
+                "name": 0,
+                "value": [
+                  {
+                    "name": "offset",
+                    "value": 12
+                  },
+                  {
+                    "name": "size",
+                    "value": 16
+                  },
+                  {
+                    "name": "data",
+                    "value": "\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdw\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "data",
+            "value": [
+              {
+                "name": 0,
+                "value": [
+                  {
+                    "name": "offset",
+                    "value": 36
+                  },
+                  {
+                    "name": "size",
+                    "value": 101120
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "playtime_seconds",
+    "value": 1.0533333333333332
+  },
+  {
+    "name": "bitrate",
+    "value": 768000
+  },
+  {
+    "name": "playtime_string",
+    "value": "0:01"
+  },
+  {
+    "name": "version",
+    "value": 2
+  }
+]

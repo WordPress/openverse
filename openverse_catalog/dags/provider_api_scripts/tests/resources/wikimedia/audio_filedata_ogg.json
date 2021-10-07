@@ -1,0 +1,98 @@
+[
+  {
+    "name": "version",
+    "value": 2
+  },
+  {
+    "name": "streams",
+    "value": [
+      {
+        "name": 996071589,
+        "value": [
+          {
+            "name": "serial",
+            "value": 996071589
+          },
+          {
+            "name": "group",
+            "value": 0
+          },
+          {
+            "name": "type",
+            "value": "Vorbis"
+          },
+          {
+            "name": "vendor",
+            "value": "Lavf58.45.100"
+          },
+          {
+            "name": "length",
+            "value": 123.768
+          },
+          {
+            "name": "size",
+            "value": 1235274
+          },
+          {
+            "name": "header",
+            "value": [
+              {
+                "name": "vorbis_version",
+                "value": 0
+              },
+              {
+                "name": "audio_channels",
+                "value": 2
+              },
+              {
+                "name": "audio_sample_rate",
+                "value": 48000
+              },
+              {
+                "name": "bitrate_maximum",
+                "value": 0
+              },
+              {
+                "name": "bitrate_nominal",
+                "value": 112000
+              },
+              {
+                "name": "bitrate_minimum",
+                "value": 0
+              },
+              {
+                "name": "blocksize_0",
+                "value": 8
+              },
+              {
+                "name": "blocksize_1",
+                "value": 11
+              },
+              {
+                "name": "framing_flag",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "comments",
+            "value": [
+              {
+                "name": "encoder",
+                "value": "Lavc58.91.100 libvorbis"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "length",
+    "value": 123.768
+  },
+  {
+    "name": "offset",
+    "value": null
+  }
+]
