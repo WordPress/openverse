@@ -1,0 +1,33 @@
+name: Weekly updates
+# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#project-automation
+
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: "1 0 * * 1" # just after midnight on Monday
+
+env:
+  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+  MAKE_USERNAME: ${{ secrets.MAKE_USERNAME }}
+  MAKE_PASSWORD: ${{ secrets.MAKE_PASSWORD }}
+
+jobs:
+  make_post:
+    name: Create post on Make site
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+
+    - name: Install dependencies
+      working-directory: ./js
+      run: npm ci
+
+    - name: Create draft post
+      working-directory: ./js
+      run: node src/last_week_tonight.js
