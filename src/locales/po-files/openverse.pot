@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-10-05T11:03:37+00:00\n"
+"POT-Creation-Date: 2021-10-06T12:05:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -948,7 +948,7 @@ msgid "An error occurred"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/photos/_id.vue:100
+#: src/pages/photos/_id.vue:66
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
@@ -1578,6 +1578,11 @@ msgstr ""
 #: src/pages/feedback.vue:54
 msgctxt "feedback.loading"
 msgid "Loading..."
+msgstr ""
+
+#: src/components/AudioDetails/Related.vue:51
+msgctxt "media-details.related-error"
+msgid "Error fetching related media"
 msgstr ""
 
 #: src/components/ImageDetails/PhotoDetails.vue:12

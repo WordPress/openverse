@@ -15,21 +15,16 @@
       class="my-16 px-4 desk:px-0"
     />
     <AudioDetailsRelated
-      v-if="!$fetchState.pending"
-      :related-audios="relatedAudios"
+      v-if="audio.id"
       class="my-16 px-4 desk:px-0"
+      :audio-id="audio.id"
     />
-    <p v-else>{{ $t('media-details.loading') }}</p>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import {
-  FETCH_AUDIO,
-  FETCH_RELATED_MEDIA,
-  RESET_RELATED_MEDIA,
-} from '~/constants/action-types'
+import { FETCH_AUDIO } from '~/constants/action-types'
 import iframeHeight from '~/mixins/iframe-height'
 import { AUDIO } from '~/constants/media'
 import attributionHtml from '~/utils/attribution-html'
@@ -48,19 +43,16 @@ const AudioDetailPage = {
       thumbnailURL: null,
       breadCrumbURL: '',
       shouldShowBreadcrumb: false,
+      id: null,
     }
   },
   computed: {
     ...mapState(['query', 'audio']),
-    ...mapState('related', { relatedAudios: 'audios' }),
     filter() {
       return this.query.filter
     },
     tags() {
       return this.audio.tags
-    },
-    relatedAudiosCount() {
-      return this.relatedAudios.length
     },
     fullLicenseName() {
       return getFullLicenseName(this.audio.license, this.audio.license_version)
@@ -70,20 +62,11 @@ const AudioDetailPage = {
     },
   },
   watch: {
-    audio() {
-      this.getRelatedAudios()
+    audio(newAudio) {
+      this.id = newAudio.id
     },
   },
-  async fetch() {
-    // Load the related images
-    await this[FETCH_RELATED_MEDIA]({
-      mediaType: AUDIO,
-      id: this.$route.params.id,
-    })
-  },
   async asyncData({ env, store, route, error, app }) {
-    // Clear related audios if present
-    await store.dispatch(RESET_RELATED_MEDIA, { mediaType: AUDIO })
     try {
       await store.dispatch(FETCH_AUDIO, { id: route.params.id })
       return {
@@ -109,15 +92,10 @@ const AudioDetailPage = {
     })
   },
   methods: {
-    ...mapActions([FETCH_AUDIO, FETCH_RELATED_MEDIA]),
+    ...mapActions([FETCH_AUDIO]),
     attributionHtml() {
       const licenseUrl = `${this.licenseUrl}&atype=html`
       return attributionHtml(this.audio, licenseUrl, this.fullLicenseName)
-    },
-    getRelatedAudios() {
-      if (this.audio && this.audio.id) {
-        this[FETCH_RELATED_MEDIA]({ mediaType: AUDIO, id: this.audio.id })
-      }
     },
   },
 }

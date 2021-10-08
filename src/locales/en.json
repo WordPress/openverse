@@ -488,7 +488,8 @@
     },
     "provider-label": "Provider",
     "source-label": "Source",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "related-error": "Error fetching related media"
   },
   "photo-details": {
     "back": "Back to search results",

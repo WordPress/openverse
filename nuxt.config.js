@@ -130,6 +130,7 @@ export default {
       '~/components/ContentReport',
       '~/components/Filters',
       '~/components/ImageDetails',
+      '~/components/ImageGrid',
       '~/components/MediaInfo',
       '~/components/MetaSearch',
       '~/components/MediaTag',

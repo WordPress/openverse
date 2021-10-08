@@ -21,6 +21,13 @@
     "file": "en-au.json"
   },
   {
+    "code": "en-ca",
+    "name": "English (Canada)",
+    "iso": "en",
+    "wpLocale": "en_CA",
+    "file": "en-ca.json"
+  },
+  {
     "code": "en-gb",
     "name": "English (UK)",
     "iso": "en",
