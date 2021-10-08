@@ -71,9 +71,11 @@ lint:
 # Elasticsearch #
 #################
 
+# Check the health of Elasticsearch
 @es-health:
     -curl -s -o /dev/null -w '%{http_code}' 'http://localhost:9200/_cluster/health?pretty'
 
+# Wait for Elasticsearch to be healthy
 @wait-for-es: up
     just _loop \
     '"$(just es-health)" != "200"' \
@@ -106,7 +108,7 @@ _is-api model action:
 @is-health:
     -curl -s -o /dev/null -w '%{http_code}' 'http://localhost:8001/'
 
-# Wait for the health of the ingestion-server
+# Wait for the ingestion-server to be healthy
 @wait-for-is: up
     just _loop \
     '"$(just is-health)" != "200"' \
@@ -129,7 +131,7 @@ ingest-upstream model="image":
 @web-health:
     -curl -s -o /dev/null -w '%{http_code}' 'http://localhost:8000/healthcheck'
 
-# Wait for the health of the API
+# Wait for the API to be healthy
 @wait-for-web: up
     just _loop \
     '"$(just web-health)" != "200"' \
