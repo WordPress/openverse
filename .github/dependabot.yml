@@ -43,3 +43,16 @@ updates:
       - "🧰 goal: internal improvement"
       - "dependencies"
       - "python"
+
+  # Enable version updates for Python libs in analytics
+  - package-ecosystem: 'pip'
+    # Look for a `Pipfile` in the `/analytics` directory
+    directory: '/analytics'
+    # Check for updates once a week
+    schedule:
+      interval: 'weekly'
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "dependencies"
+      - "python"
