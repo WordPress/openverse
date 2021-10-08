@@ -1,7 +1,13 @@
 {
-  "tabWidth": 2,
-  "useTabs": false,
-  "semi": false,
-  "arrowParens": "avoid",
-  "singleQuote": true
-}
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": false,
+    "arrowParens": "avoid",
+    "singleQuote": true,
+    "vueIndentScriptAndStyle": false,
+    "extends": [
+      "prettier"
+    ]
+  }
+  

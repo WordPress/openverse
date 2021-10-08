@@ -1,0 +1,10 @@
+.github
+dist
+test/unit/coverage
+.nuxt
+.nuxt-storybook
+storybook-static
+
+# Ignore artifacts:
+build
+coverage
