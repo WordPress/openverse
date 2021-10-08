@@ -94,6 +94,14 @@ lint:
 # Ingestion server #
 ####################
 
+# Perform the given action on the given model by invoking the ingestion-server API
+_is-api model action:
+    curl \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -d '{"model": "{{ model }}", "action": "{{ action }}"}' \
+      'http://localhost:8001/task'
+
 # Check the health of the ingestion-server
 @is-health:
     -curl -s -o /dev/null -w '%{http_code}' 'http://localhost:8001/'
@@ -106,11 +114,11 @@ lint:
 
 # Load QA data into QA indices in Elasticsearch
 load-test-data model="image":
-    curl -XPOST localhost:8001/task -H "Content-Type: application/json" -d '{"model": "{{ model }}", "action": "LOAD_TEST_DATA"}'
+    just _is-api {{ model }} "LOAD_TEST_DATA"
 
 # Load sample data into prod indices in Elasticsearch
 ingest-upstream model="image":
-    curl -XPOST localhost:8001/task -H "Content-Type: application/json" -d '{"model": "{{ model }}", "action": "INGEST_UPSTREAM"}'
+    just _is-api {{ model }} "INGEST_UPSTREAM"
 
 
 #######
