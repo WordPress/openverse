@@ -39,14 +39,14 @@ This repository is primarily concerned with back end infrastructure like datasto
 
 6. Make an API request using cURL. You should receive a JSON response.
    ```bash
-   just healthcheck
+   just stats
    ```
 
    Piping the response through a pretty-printer like
    [`jq`](https://stedolan.github.io/jq/) should yield an output like the
    following.
    ```bash
-   just healthcheck | jq '.[0]'
+   just stats | jq '.[0]'
    ```
 
    ```json

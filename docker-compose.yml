@@ -1,4 +1,4 @@
-version: '3'
+version: "2.4"
 services:
   db:
     image: postgres:13.2-alpine
@@ -47,7 +47,7 @@ services:
     # Memory limit for ES, as it tends to be a memory hoarder
     # Set this value to an empty string to remove the limit
     # https://docs.docker.com/compose/compose-file/compose-file-v2/#cpu-and-other-resources
-    mem_limit: ${ES_MEM_LIMIT:-4g}
+    mem_limit: ${ES_MEM_LIMIT:-4294967296}  # 4 GiB in bytes
 
   web:
     build: openverse_api/

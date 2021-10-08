@@ -26,6 +26,12 @@ CALLBACK_URL = "callback_url"
 SINCE_DATE = "since_date"
 
 
+class Health:
+    def on_get(self, req, resp):
+        resp.status = falcon.HTTP_200
+        resp.media = {"status": "200 OK"}
+
+
 class TaskResource:
     def __init__(self, tracker: TaskTracker):
         self.tracker = tracker
@@ -176,6 +182,7 @@ def create_api(log=True):
     task_tracker = TaskTracker()
     task_resource = TaskResource(task_tracker)
     get_task_status = TaskStatus(task_tracker)
+    _api.add_route("/", Health())
     _api.add_route("/task", task_resource)
     _api.add_route("/task/{task_id}", get_task_status)
     _api.add_route("/worker_finished", WorkerFinishedResource())

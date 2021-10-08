@@ -62,16 +62,18 @@ docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy 
 	EOF"
 
 # Load search quality assurance data.
-curl -XPOST localhost:8001/task -H "Content-Type: application/json" -d '{"model": "image", "action": "LOAD_TEST_DATA"}'
+just load-test-data "image"
 sleep 2
-curl -XPOST localhost:8001/task -H "Content-Type: application/json" -d '{"model": "audio", "action": "LOAD_TEST_DATA"}'
+
+just load-test-data "audio"
 sleep 2
 
 # Ingest and index the data
-curl -XPOST localhost:8001/task -H "Content-Type: application/json" -d '{"model": "image", "action": "INGEST_UPSTREAM"}'
-sleep 30
-curl -XPOST localhost:8001/task -H "Content-Type: application/json" -d '{"model": "audio", "action": "INGEST_UPSTREAM"}'
-sleep 30
+just ingest-upstream "image"
+just wait-for-index "image"
+
+just ingest-upstream "audio"
+just wait-for-index "audio"
 
 # Clear source cache since it's out of date after data has been loaded
 docker-compose exec -T "$CACHE_SERVICE_NAME" /bin/bash -c "echo \"del :1:sources-image\" | redis-cli"
