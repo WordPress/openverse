@@ -28,6 +28,7 @@ SINCE_DATE = "since_date"
 
 class Health:
     def on_get(self, req, resp):
+        resp.status = falcon.HTTP_200
         resp.media = {"status": "200 OK"}
 
 

@@ -42,7 +42,7 @@ class HealthCheck(APIView):
     swagger_schema = None
 
     def get(self, request, format=None):
-        return Response("", status=200)
+        return Response({"status": "200 OK"}, status=200)
 
 
 class Register(APIView):
