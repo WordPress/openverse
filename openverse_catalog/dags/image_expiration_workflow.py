@@ -49,11 +49,10 @@ def create_dag(
     )
 
     with dag:
-        run_task_list = [
-            operators.get_image_expiration_operator(dag, postgres_conn_id, provider)
+        [
+            operators.get_image_expiration_operator(postgres_conn_id, provider)
             for provider in sql.OLDEST_PER_PROVIDER
         ]
-        run_task_list
 
     return dag
 

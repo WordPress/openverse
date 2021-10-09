@@ -52,8 +52,7 @@ def create_dag(
     )
 
     with dag:
-        run_task = get_runner_operator(dag, source, script_location)
-        run_task
+        get_runner_operator(source, script_location)
 
     return dag
 

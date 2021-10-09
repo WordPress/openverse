@@ -43,16 +43,12 @@ def create_id_partitioned_cleaner_dag(
     )
     hex_prefixes = pg_cleaner.hex_counter(prefix_length)
     with dag:
-        cleaner_list = [
-            _get_pg_cleaner_operator(dag, prefix, postgres_conn_id)
-            for prefix in hex_prefixes
-        ]
-        cleaner_list
+        [_get_pg_cleaner_operator(prefix, postgres_conn_id) for prefix in hex_prefixes]
+
     return dag
 
 
 def _get_pg_cleaner_operator(
-    dag,
     prefix,
     postgres_conn_id,
     desired_length=DESIRED_PREFIX_LENGTH,
@@ -68,7 +64,6 @@ def _get_pg_cleaner_operator(
             "delay_minutes": delay,
         },
         depends_on_past=False,
-        dag=dag,
     )
 
 

@@ -166,12 +166,10 @@ with DAG(
     catchup=False,
 ) as dag:
     check_for_cc_index = operators.get_check_cc_index_in_s3_sensor(
-        dag,
         AWS_CONN_ID,
     )
 
     check_for_wat_file = operators.get_check_wat_file_in_s3_sensor(
-        dag,
         AWS_CONN_ID,
     )
 

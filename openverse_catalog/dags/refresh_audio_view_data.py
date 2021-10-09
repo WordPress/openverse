@@ -55,10 +55,7 @@ def create_dag(
         catchup=False,
     )
     with dag:
-        update_audio_view = operators.update_db_view(
-            dag, postgres_conn_id, media_type="audio"
-        )
-        update_audio_view
+        operators.update_db_view(postgres_conn_id, media_type="audio")
 
     return dag
 

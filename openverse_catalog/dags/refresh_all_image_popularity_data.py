@@ -52,13 +52,9 @@ def create_dag(
         catchup=False,
     )
     with dag:
-        update_metrics = operators.update_media_popularity_metrics(
-            dag, postgres_conn_id
-        )
-        update_constants = operators.update_media_popularity_constants(
-            dag, postgres_conn_id
-        )
-        update_image_view = operators.update_db_view(dag, postgres_conn_id)
+        update_metrics = operators.update_media_popularity_metrics(postgres_conn_id)
+        update_constants = operators.update_media_popularity_constants(postgres_conn_id)
+        update_image_view = operators.update_db_view(postgres_conn_id)
 
         (update_metrics >> update_constants >> update_image_view)
 

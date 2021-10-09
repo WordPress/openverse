@@ -53,17 +53,14 @@ def create_dag(
     )
     with dag:
         update_metrics = operators.update_media_popularity_metrics(
-            dag,
             postgres_conn_id,
             media_type="audio",
         )
         update_constants = operators.update_media_popularity_constants(
-            dag,
             postgres_conn_id,
             media_type="audio",
         )
         update_image_view = operators.update_db_view(
-            dag,
             postgres_conn_id,
             media_type="audio",
         )

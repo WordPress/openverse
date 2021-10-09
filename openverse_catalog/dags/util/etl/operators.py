@@ -12,7 +12,7 @@ from airflow.providers.amazon.aws.sensors.s3_prefix import S3PrefixSensor
 from airflow.utils.trigger_rule import TriggerRule
 
 
-def get_check_cc_index_in_s3_sensor(dag, aws_conn_id):
+def get_check_cc_index_in_s3_sensor(aws_conn_id):
     return S3PrefixSensor(
         task_id="check_for_cc_index",
         retries=0,
@@ -26,7 +26,7 @@ def get_check_cc_index_in_s3_sensor(dag, aws_conn_id):
     )
 
 
-def get_check_wat_file_in_s3_sensor(dag, aws_conn_id):
+def get_check_wat_file_in_s3_sensor(aws_conn_id):
     return S3KeySensor(
         task_id="check_for_wat_file",
         retries=0,

@@ -54,29 +54,21 @@ def create_dag(
     )
     with dag:
         drop_relations = operators.drop_media_popularity_relations(
-            dag,
             postgres_conn_id,
         )
         drop_functions = operators.drop_media_popularity_functions(
-            dag,
             postgres_conn_id,
         )
-        create_metrics = operators.create_media_popularity_metrics(
-            dag, postgres_conn_id
-        )
-        update_metrics = operators.update_media_popularity_metrics(
-            dag, postgres_conn_id
-        )
+        create_metrics = operators.create_media_popularity_metrics(postgres_conn_id)
+        update_metrics = operators.update_media_popularity_metrics(postgres_conn_id)
         create_percentile = operators.create_media_popularity_percentile(
-            dag, postgres_conn_id
+            postgres_conn_id
         )
-        create_constants = operators.create_media_popularity_constants(
-            dag, postgres_conn_id
-        )
+        create_constants = operators.create_media_popularity_constants(postgres_conn_id)
         create_popularity = operators.create_media_standardized_popularity(
-            dag, postgres_conn_id
+            postgres_conn_id
         )
-        create_image_view = operators.create_db_view(dag, postgres_conn_id)
+        create_image_view = operators.create_db_view(postgres_conn_id)
 
         (
             [drop_relations, drop_functions]

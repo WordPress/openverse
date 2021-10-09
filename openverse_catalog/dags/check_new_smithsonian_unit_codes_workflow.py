@@ -50,8 +50,7 @@ def create_dag(
     )
 
     with dag:
-        run_task = operators.get_smithsonian_unit_code_operator(dag, postgres_conn_id)
-        run_task
+        operators.get_smithsonian_unit_code_operator(postgres_conn_id)
 
     return dag
 

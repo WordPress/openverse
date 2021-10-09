@@ -51,10 +51,7 @@ DAG_DEFAULT_ARGS = {
 }
 
 
-def get_log_cleaner_operator(
-    dag,
-    base_log_folder,
-):
+def get_log_cleaner_operator(base_log_folder):
     return PythonOperator(
         task_id="log_cleaner_operator",
         python_callable=log_cleanup.clean_up,
@@ -63,7 +60,6 @@ def get_log_cleaner_operator(
             "{{ params.get('maxLogAgeInDays') }}",
             "{{ params.get('enableDelete') }}",
         ],
-        dag=dag,
     )
 
 
@@ -87,11 +83,7 @@ def create_dag(
     )
 
     with dag:
-        run_task = get_log_cleaner_operator(
-            dag,
-            BASE_LOG_FOLDER,
-        )
-        run_task
+        get_log_cleaner_operator(BASE_LOG_FOLDER)
 
     return dag
 

@@ -55,8 +55,7 @@ def create_dag(
         catchup=False,
     )
     with dag:
-        update_image_view = operators.update_db_view(dag, postgres_conn_id)
-        update_image_view
+        operators.update_db_view(postgres_conn_id)
 
     return dag
 

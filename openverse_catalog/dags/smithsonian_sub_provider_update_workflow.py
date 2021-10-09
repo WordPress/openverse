@@ -49,10 +49,7 @@ def create_dag(
     )
 
     with dag:
-        run_task = operators.get_smithsonian_sub_provider_update_operator(
-            dag, postgres_conn_id
-        )
-        run_task
+        operators.get_smithsonian_sub_provider_update_operator(postgres_conn_id)
 
     return dag
 
