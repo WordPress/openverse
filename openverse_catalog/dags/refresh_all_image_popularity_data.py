@@ -11,7 +11,6 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from util.operator_util import get_log_operator
 from util.popularity import operators
 
 
@@ -53,7 +52,6 @@ def create_dag(
         catchup=False,
     )
     with dag:
-        start_task = get_log_operator(dag, DAG_ID, "Starting")
         update_metrics = operators.update_media_popularity_metrics(
             dag, postgres_conn_id
         )
@@ -61,15 +59,8 @@ def create_dag(
             dag, postgres_conn_id
         )
         update_image_view = operators.update_db_view(dag, postgres_conn_id)
-        end_task = get_log_operator(dag, DAG_ID, "Finished")
 
-        (
-            start_task
-            >> update_metrics
-            >> update_constants
-            >> update_image_view
-            >> end_task
-        )
+        (update_metrics >> update_constants >> update_image_view)
 
     return dag
 

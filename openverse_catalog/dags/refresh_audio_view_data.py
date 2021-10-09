@@ -12,7 +12,6 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from util.operator_util import get_log_operator
 from util.popularity import operators
 
 
@@ -56,13 +55,10 @@ def create_dag(
         catchup=False,
     )
     with dag:
-        start_task = get_log_operator(dag, DAG_ID, "Starting")
         update_audio_view = operators.update_db_view(
             dag, postgres_conn_id, media_type="audio"
         )
-        end_task = get_log_operator(dag, DAG_ID, "Finished")
-
-        start_task >> update_audio_view >> end_task
+        update_audio_view
 
     return dag
 

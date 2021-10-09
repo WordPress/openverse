@@ -4,7 +4,7 @@ import os
 import util.config as conf
 from airflow import DAG
 from croniter import croniter
-from util.operator_util import get_log_operator, get_runner_operator
+from util.operator_util import get_runner_operator
 
 
 logging.basicConfig(
@@ -52,11 +52,8 @@ def create_dag(
     )
 
     with dag:
-        start_task = get_log_operator(dag, source, "starting")
         run_task = get_runner_operator(dag, source, script_location)
-        end_task = get_log_operator(dag, source, "finished")
-
-        start_task >> run_task >> end_task
+        run_task
 
     return dag
 

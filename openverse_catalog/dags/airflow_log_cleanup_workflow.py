@@ -19,7 +19,6 @@ import logging
 from datetime import datetime, timedelta
 
 import jinja2
-import util.operator_util as ops
 from airflow.configuration import conf
 from airflow.models import DAG
 from airflow.operators.python import PythonOperator
@@ -88,14 +87,11 @@ def create_dag(
     )
 
     with dag:
-        start_task = ops.get_log_operator(dag, dag.dag_id, "Starting")
         run_task = get_log_cleaner_operator(
             dag,
             BASE_LOG_FOLDER,
         )
-        end_task = ops.get_log_operator(dag, dag.dag_id, "Finished")
-
-        start_task >> run_task >> end_task
+        run_task
 
     return dag
 

@@ -39,13 +39,5 @@ def get_main_runner_operator(dag, main_function):
     )
 
 
-def get_log_operator(dag, source, status):
-    return BashOperator(
-        task_id=f"{source}_{status}",
-        bash_command=f"echo {status} {source} workflow at $(date)",
-        dag=dag,
-    )
-
-
 def get_wait_till_done_operator(dag, task_id):
     return DummyOperator(task_id=task_id, trigger_rule=TriggerRule.ALL_DONE, dag=dag)

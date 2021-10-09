@@ -1,4 +1,3 @@
-from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.providers.amazon.aws.operators.emr_create_job_flow import (
@@ -11,14 +10,6 @@ from airflow.providers.amazon.aws.sensors.emr_job_flow import EmrJobFlowSensor
 from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
 from airflow.providers.amazon.aws.sensors.s3_prefix import S3PrefixSensor
 from airflow.utils.trigger_rule import TriggerRule
-
-
-def get_log_operator(dag, status):
-    return BashOperator(
-        task_id=f"log_{dag.dag_id}_{status}",
-        bash_command=f"echo {status} {dag.dag_id} at $(date)",
-        trigger_rule=TriggerRule.ALL_SUCCESS,
-    )
 
 
 def get_check_cc_index_in_s3_sensor(dag, aws_conn_id):

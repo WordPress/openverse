@@ -12,7 +12,6 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from util.operator_util import get_log_operator
 from util.popularity import operators
 
 
@@ -54,7 +53,6 @@ def create_dag(
         catchup=False,
     )
     with dag:
-        start_task = get_log_operator(dag, DAG_ID, "Starting")
         drop_relations = operators.drop_media_popularity_relations(
             dag,
             postgres_conn_id,
@@ -95,17 +93,14 @@ def create_dag(
             postgres_conn_id,
             "audio",
         )
-        end_task = get_log_operator(dag, DAG_ID, "Finished")
 
         (
-            start_task
-            >> [drop_relations, drop_functions]
+            [drop_relations, drop_functions]
             >> create_metrics
             >> [update_metrics, create_percentile]
             >> create_constants
             >> create_popularity
             >> create_db_view
-            >> end_task
         )
 
     return dag

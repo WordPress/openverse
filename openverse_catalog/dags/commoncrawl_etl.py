@@ -165,9 +165,6 @@ with DAG(
     concurrency=1,
     catchup=False,
 ) as dag:
-
-    job_start_logger = operators.get_log_operator(dag, "Starting")
-
     check_for_cc_index = operators.get_check_cc_index_in_s3_sensor(
         dag,
         AWS_CONN_ID,
@@ -207,15 +204,12 @@ with DAG(
         AWS_CONN_ID,
     )
 
-    job_done_logger = operators.get_log_operator(dag, "Finished")
-
     (
-        job_start_logger
-        >> check_for_cc_index
+        check_for_cc_index
         >> check_for_wat_file
         >> [extract_script_loader, cluster_bootstrap_loader]
         >> job_flow_creator
         >> job_sensor
         >> job_flow_terminator
     )
-    [job_flow_creator, job_sensor, job_flow_terminator] >> job_done_logger
+    [job_flow_creator, job_sensor, job_flow_terminator]

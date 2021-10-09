@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
-from util.operator_util import get_log_operator
 from util.tsv_cleaner import clean_tsv_directory
 
 
@@ -91,21 +90,12 @@ def create_dag():
     )
 
     with dag:
-        start_task = get_log_operator(dag, DAG_ID, "Starting")
         create_dir_task = get_creator_operator(dag)
         sync_tsvs_task = get_syncer_operator(dag)
         clean_tsvs_task = get_cleaner_operator(dag)
         empty_dir_task = get_deleter_operator(dag)
-        end_task = get_log_operator(dag, DAG_ID, "Finished")
 
-        (
-            start_task
-            >> create_dir_task
-            >> sync_tsvs_task
-            >> clean_tsvs_task
-            >> empty_dir_task
-            >> end_task
-        )
+        (create_dir_task >> sync_tsvs_task >> clean_tsvs_task >> empty_dir_task)
     return dag
 
 
