@@ -65,7 +65,7 @@ class AudioViewSet(MediaViewSet):
         image_url = None
         if thumbnail := audio.thumbnail:
             image_url = thumbnail
-        elif audio.audio_set and (thumbnail := audio.audio_set.url):
+        elif audio.audio_set and (thumbnail := audio.audio_set.thumbnail):
             image_url = thumbnail
         if not image_url:
             raise get_api_exception("Could not find artwork.", 404)
