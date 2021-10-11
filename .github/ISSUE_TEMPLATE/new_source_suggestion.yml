@@ -1,34 +1,36 @@
 name: New Source Suggestion for Openverse
 description: Tell us about a website or platform with CC-licensed content
 title: "[Source Suggestion] Insert source name here"
-labels: ["🚦 status: awaiting triage", "🧹 status: ticket work required", "☁️ provider: any"]
+labels:
+  - "🚦 status: awaiting triage"
+  - "🧹 status: ticket work required"
+  - "☁️ provider: any"
 body:
   - type: input
     id: source
     attributes:
       label: Source Site
-      description: <!-- Please provide a link to the Source site that you'd like considered for inclusion on Openverse -->
+      description: Please provide a link to the Source site that you'd like considered for inclusion on Openverse
     validations:
       required: true
   - type: input
     id: value
     attributes:
       label: Value Provided
-      description: <!-- Please explain why it would be valuable to include this source on Openverse -->
+      description: Please explain why it would be valuable to include this source on Openverse
     validations:
       required: true
   - type: input
     id: licenses
     attributes:
       label: Licenses Provided
-      description: <!-- Which CC licenses or Public Domain tools are in use by the source (if known) -->
+      description: Which CC licenses or Public Domain tools are in use by the source (if known)
     validations:
       required: true
   - type: checkboxes
     id: implementation
     attributes:
       label: Implementation
-      description: <!-- Replace the [ ] with [x] to check the box. -->
       options:
         - label: 🙋 I would be interested in implementing this feature.
           required: false
