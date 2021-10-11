@@ -14,7 +14,7 @@ body:
       description: Please provide links to the API endpoint, and any known documentation
     validations:
       required: true
-  - type: input
+  - type: textarea
     id: description
     attributes:
       label: Provider description
