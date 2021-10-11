@@ -1,7 +1,7 @@
 name: Image Provider API Integration Request
 description: Tell us about an API providing CC-licensed images
 title: "[API Integration] Provider name here"
-labels: 
+labels:
   - "🚦 status: awaiting triage"
   - "✨ goal: improvement"
   - "🧹 status: ticket work required"
@@ -55,11 +55,11 @@ body:
         - label: Attach example responses to API queries that have the relevant info.
           required: false
   - type: markdown
-    attributes: 
+    attributes:
       value: |
         ## General Recommendations for implementation
         Modify this section if necessary
-        
+
         - The script should be in the `openverse_catalog/dags/provider_api_scripts/` directory.
         - The script should have a test suite in the same directory.
         - The script must use the `ImageStore` class (Import this from `openverse_catalog/dags/provider_api_scripts/common/storage/image.py`).
@@ -70,16 +70,16 @@ body:
         - The script *must* conform to [PEP8][pep8]. Please use `pycodestyle` (available via `pip install pycodestyle`) to check for compliance.
         - The script should use small, testable functions.
         - The test suite for the script may break PEP8 rules regarding long lines where appropriate (e.g., long strings for testing).
-        
+
         [pep8]: https://www.python.org/dev/peps/pep-0008/
   - type: markdown
-    attributes: 
+    attributes:
       value: |
         ## Examples of other Provider API Scripts
         It's unlikely this section needs to be modified
-        
+
         For example Provider API Scripts and accompanying test suites, please see
-        
+
         - `openverse_catalog/dags/provider_api_scripts/flickr.py` and
         - `openverse_catalog/dags/provider_api_scripts/test_flickr.py`, or
         - `openverse_catalog/dags/provider_api_scripts/wikimedia_commons.py` and
