@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
-from util.operator_util import get_log_operator
 from util.tsv_cleaner import clean_tsv_directory
 
 
@@ -29,24 +28,22 @@ CRAWL_OUTPUT_DIR = os.path.join(
 )
 
 
-def get_creator_operator(dag):
+def get_creator_operator():
     return PythonOperator(
         task_id="create_tsv_directory",
         python_callable=os.makedirs,
         op_args=[CRAWL_OUTPUT_DIR],
         op_kwargs={"exist_ok": True},
         depends_on_past=False,
-        dag=dag,
     )
 
 
-def get_syncer_operator(dag):
+def get_syncer_operator():
     return BashOperator(
         task_id="sync_commoncrawl_workflow",
         bash_command=(
             f"python {airflowHome}/dags/" "commoncrawl_s3_syncer/SyncImageProviders.py"
         ),
-        dag=dag,
         env={
             "S3_BUCKET": os.environ["S3_BUCKET"],
             "OUTPUT_DIR": CRAWL_OUTPUT_DIR,
@@ -56,23 +53,21 @@ def get_syncer_operator(dag):
     )
 
 
-def get_cleaner_operator(dag):
+def get_cleaner_operator():
     return PythonOperator(
         task_id="clean_commoncrawl_tsvs",
         python_callable=clean_tsv_directory,
         op_args=[CRAWL_OUTPUT_DIR],
         depends_on_past=False,
-        dag=dag,
     )
 
 
-def get_deleter_operator(dag):
+def get_deleter_operator():
     return PythonOperator(
         task_id="empty_tsv_directory",
         python_callable=_empty_tsv_dir,
         op_args=[CRAWL_OUTPUT_DIR],
         depends_on_past=False,
-        dag=dag,
     )
 
 
@@ -91,21 +86,13 @@ def create_dag():
     )
 
     with dag:
-        start_task = get_log_operator(dag, DAG_ID, "Starting")
-        create_dir_task = get_creator_operator(dag)
-        sync_tsvs_task = get_syncer_operator(dag)
-        clean_tsvs_task = get_cleaner_operator(dag)
-        empty_dir_task = get_deleter_operator(dag)
-        end_task = get_log_operator(dag, DAG_ID, "Finished")
+        create_dir_task = get_creator_operator()
+        sync_tsvs_task = get_syncer_operator()
+        clean_tsvs_task = get_cleaner_operator()
+        empty_dir_task = get_deleter_operator()
 
-        (
-            start_task
-            >> create_dir_task
-            >> sync_tsvs_task
-            >> clean_tsvs_task
-            >> empty_dir_task
-            >> end_task
-        )
+        (create_dir_task >> sync_tsvs_task >> clean_tsvs_task >> empty_dir_task)
+
     return dag
 
 

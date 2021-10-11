@@ -7,7 +7,6 @@ import logging
 import os
 from datetime import datetime, timedelta
 
-import util.operator_util as ops
 from airflow import DAG
 from util.loader import operators, sql
 
@@ -50,14 +49,10 @@ def create_dag(
     )
 
     with dag:
-        start_task = ops.get_log_operator(dag, dag.dag_id, "Starting")
-        run_task_list = [
-            operators.get_image_expiration_operator(dag, postgres_conn_id, provider)
+        [
+            operators.get_image_expiration_operator(postgres_conn_id, provider)
             for provider in sql.OLDEST_PER_PROVIDER
         ]
-        end_task = ops.get_log_operator(dag, dag.dag_id, "Finished")
-
-        start_task >> run_task_list >> end_task
 
     return dag
 

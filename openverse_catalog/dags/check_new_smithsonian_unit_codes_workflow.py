@@ -8,7 +8,6 @@ import logging
 import os
 from datetime import datetime, timedelta
 
-import util.operator_util as ops
 from airflow import DAG
 from util.loader import operators
 
@@ -51,11 +50,7 @@ def create_dag(
     )
 
     with dag:
-        start_task = ops.get_log_operator(dag, dag.dag_id, "Starting")
-        run_task = operators.get_smithsonian_unit_code_operator(dag, postgres_conn_id)
-        end_task = ops.get_log_operator(dag, dag.dag_id, "Finished")
-
-        start_task >> run_task >> end_task
+        operators.get_smithsonian_unit_code_operator(postgres_conn_id)
 
     return dag
 

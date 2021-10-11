@@ -5,7 +5,7 @@ from datetime import datetime
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from util import config, operator_util, pg_cleaner
+from util import config, pg_cleaner
 
 
 logging.basicConfig(
@@ -43,18 +43,12 @@ def create_id_partitioned_cleaner_dag(
     )
     hex_prefixes = pg_cleaner.hex_counter(prefix_length)
     with dag:
-        cleaner_list = [
-            _get_pg_cleaner_operator(dag, prefix, postgres_conn_id)
-            for prefix in hex_prefixes
-        ]
-        start_task = operator_util.get_log_operator(dag, dag.dag_id, "Started")
-        end_task = operator_util.get_log_operator(dag, dag.dag_id, "Ended")
-        start_task >> cleaner_list >> end_task
+        [_get_pg_cleaner_operator(prefix, postgres_conn_id) for prefix in hex_prefixes]
+
     return dag
 
 
 def _get_pg_cleaner_operator(
-    dag,
     prefix,
     postgres_conn_id,
     desired_length=DESIRED_PREFIX_LENGTH,
@@ -70,7 +64,6 @@ def _get_pg_cleaner_operator(
             "delay_minutes": delay,
         },
         depends_on_past=False,
-        dag=dag,
     )
 
 

@@ -111,55 +111,47 @@ def create_dag(
 
     with dag:
         stage_oldest_tsv_file = operators.get_file_staging_operator(
-            dag,
             output_dir,
             minimum_file_age_minutes,
             identifier=identifier,
         )
         create_loading_table = operators.get_table_creator_operator(
-            dag,
             postgres_conn_id,
             identifier=identifier,
         )
         copy_to_s3 = operators.get_copy_to_s3_operator(
-            dag,
             output_dir,
             storage_bucket,
             aws_conn_id,
             identifier=identifier,
         )
         load_s3_data = operators.get_load_s3_data_operator(
-            dag,
             storage_bucket,
             aws_conn_id,
             postgres_conn_id,
             overwrite=overwrite,
             identifier=identifier,
         )
-        one_failed_s3 = operators.get_one_failed_switch(dag, "s3")
+        one_failed_s3 = operators.get_one_failed_switch("s3")
         load_local_data = operators.get_load_local_data_operator(
-            dag,
             output_dir,
             postgres_conn_id,
             overwrite=overwrite,
             identifier=identifier,
         )
-        one_success_save = operators.get_one_success_switch(dag, "save")
-        all_done_save = operators.get_all_done_switch(dag, "save")
-        all_failed_save = operators.get_all_failed_switch(dag, "save")
+        one_success_save = operators.get_one_success_switch("save")
+        all_done_save = operators.get_all_done_switch("save")
+        all_failed_save = operators.get_all_failed_switch("save")
         delete_staged_file = operators.get_file_deletion_operator(
-            dag,
             output_dir,
             identifier=identifier,
         )
-        one_failed_delete = operators.get_one_failed_switch(dag, "delete")
+        one_failed_delete = operators.get_one_failed_switch("delete")
         drop_loading_table = operators.get_drop_table_operator(
-            dag,
             postgres_conn_id,
             identifier=identifier,
         )
         move_staged_failures = operators.get_failure_moving_operator(
-            dag,
             output_dir,
             identifier=identifier,
         )

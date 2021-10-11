@@ -19,7 +19,6 @@ import logging
 from datetime import datetime, timedelta
 
 import jinja2
-import util.operator_util as ops
 from airflow.configuration import conf
 from airflow.models import DAG
 from airflow.operators.python import PythonOperator
@@ -52,10 +51,7 @@ DAG_DEFAULT_ARGS = {
 }
 
 
-def get_log_cleaner_operator(
-    dag,
-    base_log_folder,
-):
+def get_log_cleaner_operator(base_log_folder):
     return PythonOperator(
         task_id="log_cleaner_operator",
         python_callable=log_cleanup.clean_up,
@@ -64,7 +60,6 @@ def get_log_cleaner_operator(
             "{{ params.get('maxLogAgeInDays') }}",
             "{{ params.get('enableDelete') }}",
         ],
-        dag=dag,
     )
 
 
@@ -88,14 +83,7 @@ def create_dag(
     )
 
     with dag:
-        start_task = ops.get_log_operator(dag, dag.dag_id, "Starting")
-        run_task = get_log_cleaner_operator(
-            dag,
-            BASE_LOG_FOLDER,
-        )
-        end_task = ops.get_log_operator(dag, dag.dag_id, "Finished")
-
-        start_task >> run_task >> end_task
+        get_log_cleaner_operator(BASE_LOG_FOLDER)
 
     return dag
 

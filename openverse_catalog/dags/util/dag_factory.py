@@ -73,16 +73,12 @@ def create_provider_api_workflow(
     )
 
     with dag:
-        start_task = ops.get_log_operator(dag, dag.dag_id, "Starting")
         if dated:
-            run_task = ops.get_dated_main_runner_operator(
-                dag, main_function, dagrun_timeout, day_shift=day_shift
+            ops.get_dated_main_runner_operator(
+                main_function, dagrun_timeout, day_shift=day_shift
             )
         else:
-            run_task = ops.get_main_runner_operator(dag, main_function)
-        end_task = ops.get_log_operator(dag, dag.dag_id, "Finished")
-
-        start_task >> run_task >> end_task
+            ops.get_main_runner_operator(main_function)
 
     return dag
 
@@ -184,27 +180,25 @@ def create_day_partitioned_ingestion_dag(
     )
     with dag:
         ingest_operator_list_list = _build_ingest_operator_list_list(
-            reingestion_day_list_list, dag, main_function, ingestion_task_timeout
+            reingestion_day_list_list, main_function, ingestion_task_timeout
         )
-        end_task = ops.get_log_operator(dag, dag.dag_id, "Finished")
         for i in range(len(ingest_operator_list_list) - 1):
-            wait_operator = ops.get_wait_till_done_operator(dag, f"wait_L{i}")
-            cross_downstream(ingest_operator_list_list[i], [wait_operator, end_task])
+            wait_operator = ops.get_wait_till_done_operator(f"wait_L{i}")
+            cross_downstream(ingest_operator_list_list[i], [wait_operator])
             wait_operator >> ingest_operator_list_list[i + 1]
-        ingest_operator_list_list[-1] >> end_task
+        ingest_operator_list_list[-1]
 
     return dag
 
 
 def _build_ingest_operator_list_list(
-    reingestion_day_list_list, dag, main_function, ingestion_task_timeout
+    reingestion_day_list_list, main_function, ingestion_task_timeout
 ):
     if reingestion_day_list_list[0] != [0]:
         reingestion_day_list_list = [[0]] + reingestion_day_list_list
     return [
         [
             ops.get_dated_main_runner_operator(
-                dag,
                 main_function,
                 ingestion_task_timeout,
                 day_shift=d,
