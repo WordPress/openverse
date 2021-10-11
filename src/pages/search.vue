@@ -3,14 +3,14 @@
     <div class="search columns">
       <div class="desk:hidden">
         <AppModal v-if="isFilterVisible" @close="onToggleSearchGridFilter">
-          <SearchGridFilter @onSearchFilterChanged="onSearchFormSubmit" />
+          <SearchGridFilter />
         </AppModal>
       </div>
       <aside
         v-if="isFilterVisible"
         class="column is-narrow grid-sidebar is-hidden-touch"
       >
-        <SearchGridFilter @onSearchFilterChanged="onSearchFormSubmit" />
+        <SearchGridFilter />
       </aside>
       <div class="column search-grid-ctr">
         <SearchGridForm @onSearchFormSubmit="onSearchFormSubmit" />

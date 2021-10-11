@@ -114,9 +114,6 @@ export default {
         isFilterVisible: !this.isFilterVisible,
       })
     },
-    onSearchFilterChanged(query) {
-      this.$emit('onSearchFormSubmit', query)
-    },
     setFormInput() {
       this.searchTermsModel = this.searchTerms
     },
