@@ -1,15 +1,13 @@
 import json
 import logging
-import os
+from pathlib import Path
 from unittest.mock import patch
 
 from common.licenses.licenses import LicenseInfo
 from provider_api_scripts import jamendo
 
 
-RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), "resources/jamendo"
-)
+RESOURCES = Path(__file__).parent.resolve() / "resources/jamendo"
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
@@ -47,7 +45,7 @@ def test_get_query_params_leaves_other_keys():
 
 
 def test_get_items():
-    with open(os.path.join(RESOURCES, "page1.json")) as f:
+    with open(RESOURCES / "page1.json") as f:
         first_response = json.load(f)
     with patch.object(jamendo, "_get_batch_json", side_effect=[first_response, []]):
         expected_image_count = 4
@@ -56,7 +54,7 @@ def test_get_items():
 
 
 def test_process_item_batch_handles_example_batch():
-    with open(os.path.join(RESOURCES, "audio_data_example.json")) as f:
+    with open(RESOURCES / "audio_data_example.json") as f:
         items_batch = [json.load(f)]
     with patch.object(jamendo.audio_store, "add_item", return_value=1) as mock_add:
         jamendo._process_item_batch(items_batch)
@@ -69,7 +67,7 @@ def test_process_item_batch_handles_example_batch():
             "creator": "Haeresis",
             "creator_url": "https://www.jamendo.com/artist/92/haeresis",
             "duration": 144000,
-            "filetype": "mp3",
+            "filetype": "mp32",
             "foreign_identifier": "732",
             "foreign_landing_url": "https://www.jamendo.com/track/732",
             "genres": [],
@@ -88,7 +86,7 @@ def test_process_item_batch_handles_example_batch():
             "raw_tags": ["instrumental", "speed_medium"],
             "set_foreign_id": "119",
             "set_position": 6,
-            "set_thumbnail": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
+            "set_thumbnail": "https://usercontent.jamendo.com?type=album&id=119&width=200",
             "set_url": "https://www.jamendo.com/album/119/opera-i",
             "thumbnail_url": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
             "title": "Thoughtful",
@@ -103,7 +101,7 @@ def test_extract_audio_data_returns_none_when_media_data_none():
 
 
 def test_extract_audio_data_returns_none_when_no_foreign_id():
-    with open(os.path.join(RESOURCES, "audio_data_example.json")) as f:
+    with open(RESOURCES / "audio_data_example.json") as f:
         audio_data = json.load(f)
         audio_data.pop("shareurl", None)
     actual_image_info = jamendo._extract_audio_data(audio_data)
@@ -121,7 +119,7 @@ def test_extract_audio_data_falls_back_on_audio_url_when_download_not_available(
         "https://mp3d.jamendo.com/?trackid=732&format=mp32&from="
         "WftSCtIfbfXP90c1jNqsfw%3D%3D%7CNzgGctbCMB1xAW8bJE5uEw%3D%3D"
     )
-    with open(os.path.join(RESOURCES, "audio_data_example.json")) as f:
+    with open(RESOURCES / "audio_data_example.json") as f:
         audio_data = json.load(f)
     actual_image_info = jamendo._extract_audio_data(audio_data)["audio_url"]
     expected_image_download_url = AUDIO_D_URL
@@ -140,7 +138,7 @@ def test_extract_audio_data_falls_back_on_audio_url_when_download_not_available(
 
 
 def test_extract_audio_data_returns_none_when_no_audio_url():
-    with open(os.path.join(RESOURCES, "audio_data_example.json")) as f:
+    with open(RESOURCES / "audio_data_example.json") as f:
         audio_data = json.load(f)
         audio_data.pop("audio", None)
         audio_data["audiodownload_allowed"] = False
@@ -149,7 +147,7 @@ def test_extract_audio_data_returns_none_when_no_audio_url():
 
 
 def test_extract_audio_data_returns_none_when_no_license():
-    with open(os.path.join(RESOURCES, "audio_data_example.json")) as f:
+    with open(RESOURCES / "audio_data_example.json") as f:
         audio_data = json.load(f)
         audio_data.pop("license_ccurl", None)
     actual_audio_info = jamendo._extract_audio_data(audio_data)
@@ -157,7 +155,7 @@ def test_extract_audio_data_returns_none_when_no_license():
 
 
 def test_get_audio_set_info():
-    with open(os.path.join(RESOURCES, "audio_data_example.json")) as f:
+    with open(RESOURCES / "audio_data_example.json") as f:
         audio_data = json.load(f)
     actual_audio_set_info = jamendo._get_audio_set_info(audio_data)
     expected_audio_set_info = (
@@ -165,13 +163,13 @@ def test_get_audio_set_info():
         "Opera I",
         6,
         "https://www.jamendo.com/album/119/opera-i",
-        "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
+        "https://usercontent.jamendo.com?type=album&id=119&width=200",
     )
     assert actual_audio_set_info == expected_audio_set_info
 
 
 def test_get_creator_data():
-    with open(os.path.join(RESOURCES, "audio_data_example.json")) as f:
+    with open(RESOURCES / "audio_data_example.json") as f:
         audio_data = json.load(f)
     actual_creator, actual_creator_url = jamendo._get_creator_data(audio_data)
     expected_creator = "Haeresis"
@@ -182,7 +180,7 @@ def test_get_creator_data():
 
 
 def test_get_creator_data_handles_no_url():
-    with open(os.path.join(RESOURCES, "audio_data_example.json")) as f:
+    with open(RESOURCES / "audio_data_example.json") as f:
         audio_data = json.load(f)
     audio_data.pop("artist_idstr", None)
     expected_creator = "Haeresis"
@@ -193,7 +191,7 @@ def test_get_creator_data_handles_no_url():
 
 
 def test_get_creator_data_returns_none_when_no_artist():
-    with open(os.path.join(RESOURCES, "audio_data_example.json")) as f:
+    with open(RESOURCES / "audio_data_example.json") as f:
         audio_data = json.load(f)
     audio_data.pop("artist_name", None)
     actual_creator, actual_creator_url = jamendo._get_creator_data(audio_data)
@@ -203,7 +201,7 @@ def test_get_creator_data_returns_none_when_no_artist():
 
 
 def test_extract_audio_data_handles_example_dict():
-    with open(os.path.join(RESOURCES, "audio_data_example.json")) as f:
+    with open(RESOURCES / "audio_data_example.json") as f:
         audio_data = json.load(f)
 
     actual_image_info = jamendo._extract_audio_data(audio_data)
@@ -214,7 +212,7 @@ def test_extract_audio_data_handles_example_dict():
         "creator": "Haeresis",
         "creator_url": "https://www.jamendo.com/artist/92/haeresis",
         "duration": 144000,
-        "filetype": "mp3",
+        "filetype": "mp32",
         "foreign_identifier": "732",
         "foreign_landing_url": "https://www.jamendo.com/track/732",
         "genres": [],
@@ -233,7 +231,7 @@ def test_extract_audio_data_handles_example_dict():
         "raw_tags": ["instrumental", "speed_medium"],
         "set_foreign_id": "119",
         "set_position": 6,
-        "set_thumbnail": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
+        "set_thumbnail": "https://usercontent.jamendo.com?type=album&id=119&width=200",
         "set_url": "https://www.jamendo.com/album/119/opera-i",
         "thumbnail_url": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
         "title": "Thoughtful",

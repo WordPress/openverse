@@ -141,7 +141,7 @@ class AudioStore(MediaStore):
             audio_set_data = {
                 "title": audio_set,
                 "foreign_landing_url": set_url,
-                "url": set_thumbnail,
+                "thumbnail": set_thumbnail,
                 "creator": creator,
                 "creator_url": creator_url,
                 "foreign_identifier": set_foreign_id,
