@@ -53,6 +53,11 @@ class MediaMixin(models.Model):
     creator = models.CharField(max_length=2000, blank=True, null=True)
     creator_url = models.URLField(max_length=2000, blank=True, null=True)
 
+    # Because all forms of media have a thumbnail for visual representation
+    thumbnail = models.URLField(
+        max_length=1000, blank=True, null=True, help_text="The thumbnail for the media."
+    )
+
     class Meta:
         abstract = True
 

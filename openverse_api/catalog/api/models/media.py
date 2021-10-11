@@ -25,10 +25,6 @@ class AbstractMedia(IdentifierMixin, MediaMixin, OpenLedgerModel):
     information common to all media types indexed by Openverse.
     """
 
-    thumbnail = models.URLField(
-        max_length=1000, blank=True, null=True, help_text="The thumbnail for the media."
-    )
-
     watermarked = models.BooleanField(blank=True, null=True)
 
     license = models.CharField(max_length=50)
