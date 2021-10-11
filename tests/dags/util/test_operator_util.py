@@ -10,11 +10,9 @@ def dated(dag_date):
 
 
 def test_get_runner_operator_creates_valid_string():
-    dag = DAG(dag_id="test_dag", start_date=datetime.strptime("2019-01-01", "%Y-%m-%d"))
-    with dag:
-        runner = op_util.get_runner_operator("test_source", "/test/script/location.py")
-        expected_command = "python /test/script/location.py --mode default"
-        assert runner.bash_command == expected_command
+    runner = op_util.get_runner_operator("test_source", "/test/script/location.py")
+    expected_command = "python /test/script/location.py --mode default"
+    assert runner.bash_command == expected_command
 
 
 def test_get_dated_main_runner_handles_zero_shift(capsys):
