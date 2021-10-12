@@ -45,7 +45,11 @@ lint:
 # Run pytest using the webserver image
 test pytestargs="": up
     # The test directory is mounted into the container only during testing
-    docker-compose {{ DEV_DOCKER_FILES }} run -v {{ justfile_directory() }}/tests:/usr/local/airflow/tests/ --rm {{ SERVICE }} /usr/local/airflow/.local/bin/pytest {{ pytestargs }}
+    docker-compose {{ DEV_DOCKER_FILES }} run \
+        -v {{ justfile_directory() }}/tests:/usr/local/airflow/tests/ \
+        --rm \
+        {{ SERVICE }} \
+        /usr/local/airflow/.local/bin/pytest {{ pytestargs }}
 
 # Open a shell into the webserver container
 shell: up

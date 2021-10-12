@@ -28,6 +28,11 @@ services:
     build:
       args:
         - REQUIREMENTS_FILE=requirements_dev.txt
+    # Volume override to include *all* of openverse_catalog, not just the DAGs folder
+    # Note, this overrides the whole block, so existing volumes must be duplicated
+    volumes:
+      - airflow-volume:/var/workflow_output
+      - ./openverse_catalog:/usr/local/airflow/openverse_catalog
 
 volumes:
   postgres-volume:

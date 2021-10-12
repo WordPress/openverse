@@ -143,9 +143,10 @@ and some networking setup so that they can communicate. Note:
 - `openverse_catalog_postgres_1` is running PostgreSQL, and is setup with some
   databases and tables to emulate the production environment. It also provides a
   database for Airflow to store its running state.
-- The directory containing the DAG files, as well as dependencies will be
-  mounted to the `/usr/local/airflow/dags` directory in the container
-  `openverse_catalog_webserver_1`.
+- The directory containing all modules files (including DAGs, dependencies, and other
+  tooling) will be mounted to the directory `/usr/local/airflow/openverse_catalog`
+  in the container `openverse_catalog_webserver_1`. On production, only the DAGs folder
+  will be mounted, e.g. `/usr/local/airflow/openverse_catalog/dags`.
 
 At this stage, you can run the tests via:
 

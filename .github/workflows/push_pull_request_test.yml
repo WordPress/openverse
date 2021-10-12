@@ -13,5 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: extractions/setup-just@v1
+      - name: Change permissions for Docker steps
+        run: chmod -R 777 openverse_catalog/ tests/
       - name: Test
         run: just test

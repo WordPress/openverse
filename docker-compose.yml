@@ -15,7 +15,7 @@ services:
       - "${AIRFLOW_PORT}:8080"
     volumes:
       - airflow-volume:/var/workflow_output
-      - ./openverse_catalog/dags:/usr/local/airflow/dags
+      - ./openverse_catalog/dags:/usr/local/airflow/openverse_catalog/dags
 
 volumes:
   airflow-volume:

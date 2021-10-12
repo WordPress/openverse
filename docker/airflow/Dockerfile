@@ -5,6 +5,7 @@ ARG REQUIREMENTS_FILE=requirements_prod.txt
 # https://airflow.apache.org/docs/apache-airflow/2.1.2/installation.html#constraints-files
 ARG CONSTRAINTS_FILE="https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-3.9.txt"
 ENV AIRFLOW_HOME=/usr/local/airflow
+ENV AIRFLOW__CORE__DAGS_FOLDER=${AIRFLOW_HOME}/openverse_catalog/dags
 ENV PATH=/usr/local/airflow/.local/bin:$PATH
 ENV PIPNOCACHEDIR=1
 ENV DEBIAN_FRONTEND=noninteractive
