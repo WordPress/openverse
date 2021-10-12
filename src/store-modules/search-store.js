@@ -212,18 +212,16 @@ const actions = (AudioService, ImageService) => ({
       sessionId: rootState.user.usageSessionId,
     })
 
-    commit(FETCH_START_MEDIA, { mediaType: IMAGE })
     commit(SET_IMAGE, { image: {} })
     return ImageService.getMediaDetail(params)
       .then(({ data }) => {
-        commit(FETCH_END_MEDIA, { mediaType: IMAGE })
         commit(SET_IMAGE, { image: data })
       })
       .catch((error) => {
         if (error.response && error.response.status === 404) {
           commit(MEDIA_NOT_FOUND, { mediaType: IMAGE })
         } else {
-          dispatch(HANDLE_MEDIA_ERROR, { mediaType: IMAGE, error })
+          throw new Error(`Error fetching the image: ${error}`)
         }
       })
   },

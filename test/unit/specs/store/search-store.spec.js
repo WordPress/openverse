@@ -455,12 +455,8 @@ describe('Search Store', () => {
         FETCH_IMAGE
       ]
       action({ commit, dispatch, state, rootState }, params).then(() => {
-        expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
         expect(commit).toBeCalledWith(SET_IMAGE, { image: {} })
-        expect(commit).toBeCalledWith(FETCH_END_MEDIA, { mediaType: IMAGE })
-
         expect(commit).toBeCalledWith(SET_IMAGE, { image: imageDetailData })
-
         expect(imageServiceMock.getMediaDetail).toBeCalledWith(params)
 
         done()
@@ -507,7 +503,6 @@ describe('Search Store', () => {
       const params = { id: 'foo' }
       const action = store.actions(failedMock, failedMock)[FETCH_IMAGE]
       action({ commit, dispatch, state, rootState }, params).then(() => {
-        expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
         expect(commit).toBeCalledWith(MEDIA_NOT_FOUND, { mediaType: IMAGE })
 
         done()
