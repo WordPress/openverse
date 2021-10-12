@@ -1,0 +1,137 @@
+{
+  "_links": {
+    "about": [
+      {
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/types/attachment"
+      }
+    ],
+    "author": [
+      {
+        "embeddable": true,
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/users/3606"
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/media"
+      }
+    ],
+    "replies": [
+      {
+        "embeddable": true,
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/comments?post=44"
+      }
+    ],
+    "self": [
+      {
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/media/44"
+      }
+    ]
+  },
+  "alt_text": "",
+  "author": 3606,
+  "caption": {
+    "rendered": "<p>Lupinus polyphyllus (aka Washington lupine)</p>\n"
+  },
+  "comment_status": "open",
+  "date": "2021-06-08T07:34:17",
+  "date_gmt": "2021-06-08T07:34:17",
+  "description": {
+    "rendered": "<p class=\"attachment\"><a href='https://pd.w.org/2021/06/56560bf1d69971f38.94814132.jpg'><img width=\"225\" height=\"300\" src=\"https://pd.w.org/2021/06/56560bf1d69971f38.94814132-225x300.jpg\" class=\"attachment-medium size-medium\" alt=\"\" loading=\"lazy\" srcset=\"https://storage.googleapis.com/pd.w.org/2021/06/56560bf1d69971f38.94814132-225x300.jpg 225w, https://storage.googleapis.com/pd.w.org/2021/06/56560bf1d69971f38.94814132-768x1024.jpg 768w, https://storage.googleapis.com/pd.w.org/2021/06/56560bf1d69971f38.94814132-1152x1536.jpg 1152w, https://storage.googleapis.com/pd.w.org/2021/06/56560bf1d69971f38.94814132-1536x2048.jpg 1536w\" sizes=\"(max-width: 225px) 100vw, 225px\" /></a></p>\n<p>Lupinus polyphyllus (aka Washington lupine)</p>\n"
+  },
+  "guid": {
+    "rendered": "https://storage.googleapis.com/pd.w.org/2021/06/56560bf1d69971f38.94814132.jpg"
+  },
+  "id": 44,
+  "link": "https://pd.w.org/2021/06/56560bf1d69971f38.94814132.jpg",
+  "media_details": {
+    "file": "2021/06/56560bf1d69971f38.94814132.jpg",
+    "gcs_bucket": "pd.w.org",
+    "gcs_name": "2021/06/56560bf1d69971f38.94814132.jpg",
+    "gcs_url": "https://pd.w.org/2021/06/56560bf1d69971f38.94814132.jpg",
+    "height": 4032,
+    "image_meta": {
+      "aperture": "1.8",
+      "camera": "Pixel 2 XL",
+      "caption": "",
+      "copyright": "",
+      "created_timestamp": "1591460495",
+      "credit": "Scott Reilly",
+      "focal_length": "4.459",
+      "iso": "45",
+      "keywords": [],
+      "orientation": "1",
+      "shutter_speed": "0.00171",
+      "title": ""
+    },
+    "sizes": {
+      "1536x1536": {
+        "file": "56560bf1d69971f38.94814132-1152x1536.jpg",
+        "height": 1536,
+        "mime_type": "image/jpeg",
+        "source_url": "https://pd.w.org/2021/06/56560bf1d69971f38.94814132-1152x1536.jpg",
+        "width": 1152
+      },
+      "2048x2048": {
+        "file": "56560bf1d69971f38.94814132-1536x2048.jpg",
+        "height": 2048,
+        "mime_type": "image/jpeg",
+        "source_url": "https://pd.w.org/2021/06/56560bf1d69971f38.94814132-1536x2048.jpg",
+        "width": 1536
+      },
+      "full": {
+        "file": "56560bf1d69971f38.94814132.jpg",
+        "height": 4032,
+        "mime_type": "image/jpeg",
+        "source_url": "https://pd.w.org/2021/06/56560bf1d69971f38.94814132.jpg",
+        "width": 3024
+      },
+      "large": {
+        "file": "56560bf1d69971f38.94814132-768x1024.jpg",
+        "height": 1024,
+        "mime_type": "image/jpeg",
+        "source_url": "https://pd.w.org/2021/06/56560bf1d69971f38.94814132-768x1024.jpg",
+        "width": 768
+      },
+      "medium": {
+        "file": "56560bf1d69971f38.94814132-225x300.jpg",
+        "height": 300,
+        "mime_type": "image/jpeg",
+        "source_url": "https://pd.w.org/2021/06/56560bf1d69971f38.94814132-225x300.jpg",
+        "width": 225
+      },
+      "medium_large": {
+        "file": "56560bf1d69971f38.94814132-768x1024.jpg",
+        "height": 1024,
+        "mime_type": "image/jpeg",
+        "source_url": "https://pd.w.org/2021/06/56560bf1d69971f38.94814132-768x1024.jpg",
+        "width": 768
+      },
+      "thumbnail": {
+        "file": "56560bf1d69971f38.94814132-150x150.jpg",
+        "height": 150,
+        "mime_type": "image/jpeg",
+        "source_url": "https://pd.w.org/2021/06/56560bf1d69971f38.94814132-150x150.jpg",
+        "width": 150
+      }
+    },
+    "width": 3024
+  },
+  "media_type": "image",
+  "meta": {
+    "spay_email": ""
+  },
+  "mime_type": "image/jpeg",
+  "modified": "2021-09-23T21:56:53",
+  "modified_gmt": "2021-09-23T21:56:53",
+  "ping_status": "closed",
+  "post": 43,
+  "slug": "washington-lupine",
+  "source_url": "https://pd.w.org/2021/06/56560bf1d69971f38.94814132.jpg",
+  "status": "inherit",
+  "template": "",
+  "title": {
+    "rendered": "washington-lupine"
+  },
+  "type": "attachment"
+}

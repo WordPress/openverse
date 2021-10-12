@@ -1,0 +1,116 @@
+{
+  "_links": {
+    "about": [
+      {
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/types/photo"
+      }
+    ],
+    "author": [
+      {
+        "embeddable": true,
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/users/3606"
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/photos"
+      }
+    ],
+    "curies": [
+      {
+        "href": "https://api.w.org/{rel}",
+        "name": "wp",
+        "templated": true
+      }
+    ],
+    "predecessor-version": [
+      {
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/photos/43/revisions/45",
+        "id": 45
+      }
+    ],
+    "self": [
+      {
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/photos/43"
+      }
+    ],
+    "version-history": [
+      {
+        "count": 1,
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/photos/43/revisions"
+      }
+    ],
+    "wp:attachment": [
+      {
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/media?parent=43"
+      }
+    ],
+    "wp:featuredmedia": [
+      {
+        "embeddable": true,
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/media/44"
+      }
+    ],
+    "wp:term": [
+      {
+        "embeddable": true,
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/photo-categories?post=43",
+        "taxonomy": "photo_category"
+      },
+      {
+        "embeddable": true,
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/photo-colors?post=43",
+        "taxonomy": "photo_color"
+      },
+      {
+        "embeddable": true,
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/photo-orientations?post=43",
+        "taxonomy": "photo_orientation"
+      },
+      {
+        "embeddable": true,
+        "href": "https://wordpress.org/photos/wp-json/wp/v2/photo-tags?post=43",
+        "taxonomy": "photo_tag"
+      }
+    ]
+  },
+  "author": 3606,
+  "content": {
+    "protected": false,
+    "rendered": "<p>Lupinus polyphyllus (aka Washington lupine)</p>\n"
+  },
+  "date": "2021-06-08T07:37:45",
+  "date_gmt": "2021-06-08T07:37:45",
+  "featured_media": 44,
+  "guid": {
+    "rendered": "https://wordpress.org/photos/?post_type=photo&#038;p=43"
+  },
+  "id": 43,
+  "link": "https://wordpress.org/photos/photo/56560bf1d6/",
+  "meta": {
+    "spay_email": ""
+  },
+  "modified": "2021-06-08T07:37:45",
+  "modified_gmt": "2021-06-08T07:37:45",
+  "photo-categories": [
+    8
+  ],
+  "photo-colors": [
+    15,
+    36
+  ],
+  "photo-orientations": [
+    24
+  ],
+  "photo-tags": [
+    35,
+    28
+  ],
+  "slug": "56560bf1d6",
+  "status": "publish",
+  "template": "",
+  "title": {
+    "rendered": "56560bf1d6"
+  },
+  "type": "photo"
+}

@@ -1,0 +1,119 @@
+[
+  {
+    "_links": {
+      "about": [
+        {
+          "href": "https://wordpress.org/photos/wp-json/wp/v2/taxonomies/photo_orientation"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://wordpress.org/photos/wp-json/wp/v2/photo-orientations"
+        }
+      ],
+      "curies": [
+        {
+          "href": "https://api.w.org/{rel}",
+          "name": "wp",
+          "templated": true
+        }
+      ],
+      "self": [
+        {
+          "href": "https://wordpress.org/photos/wp-json/wp/v2/photo-orientations/23"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://wordpress.org/photos/wp-json/wp/v2/photos?photo-orientations=23"
+        }
+      ]
+    },
+    "count": 1,
+    "description": "",
+    "id": 23,
+    "link": "https://wordpress.org/photos/orientation/landscape/",
+    "meta": [],
+    "name": "landscape",
+    "slug": "landscape",
+    "taxonomy": "photo_orientation"
+  },
+  {
+    "_links": {
+      "about": [
+        {
+          "href": "https://wordpress.org/photos/wp-json/wp/v2/taxonomies/photo_orientation"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://wordpress.org/photos/wp-json/wp/v2/photo-orientations"
+        }
+      ],
+      "curies": [
+        {
+          "href": "https://api.w.org/{rel}",
+          "name": "wp",
+          "templated": true
+        }
+      ],
+      "self": [
+        {
+          "href": "https://wordpress.org/photos/wp-json/wp/v2/photo-orientations/24"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://wordpress.org/photos/wp-json/wp/v2/photos?photo-orientations=24"
+        }
+      ]
+    },
+    "count": 1,
+    "description": "",
+    "id": 24,
+    "link": "https://wordpress.org/photos/orientation/portrait/",
+    "meta": [],
+    "name": "portrait",
+    "slug": "portrait",
+    "taxonomy": "photo_orientation"
+  },
+  {
+    "_links": {
+      "about": [
+        {
+          "href": "https://wordpress.org/photos/wp-json/wp/v2/taxonomies/photo_orientation"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://wordpress.org/photos/wp-json/wp/v2/photo-orientations"
+        }
+      ],
+      "curies": [
+        {
+          "href": "https://api.w.org/{rel}",
+          "name": "wp",
+          "templated": true
+        }
+      ],
+      "self": [
+        {
+          "href": "https://wordpress.org/photos/wp-json/wp/v2/photo-orientations/25"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://wordpress.org/photos/wp-json/wp/v2/photos?photo-orientations=25"
+        }
+      ]
+    },
+    "count": 0,
+    "description": "",
+    "id": 25,
+    "link": "https://wordpress.org/photos/orientation/square/",
+    "meta": [],
+    "name": "square",
+    "slug": "square",
+    "taxonomy": "photo_orientation"
+  }
+]
