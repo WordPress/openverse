@@ -12,8 +12,7 @@
       aria-hidden="true"
       focusable="false"
     >
-      <use v-if="isPlaying" :href="`${icons.pause}#icon`" />
-      <use v-else :href="`${icons.play}#icon`" />
+      <use :href="`${icon}#icon`" />
     </svg>
   </button>
 </template>
@@ -21,6 +20,27 @@
 <script>
 import playIcon from '~/assets/icons/play.svg'
 import pauseIcon from '~/assets/icons/pause.svg'
+import replayIcon from '~/assets/icons/replay.svg'
+
+/**
+ * @param {'playing' | 'paused' | 'played'} status
+ */
+const getLabelFromStatus = (status) => {
+  switch (status) {
+    case 'playing':
+      return 'play-pause.pause'
+    case 'paused':
+      return 'play-pause.play'
+    case 'played':
+      return 'play-pause.replay'
+  }
+}
+
+const STATUS_TO_ICON = {
+  playing: pauseIcon,
+  paused: playIcon,
+  played: replayIcon,
+}
 
 /**
  * Displays the control for switching between the playing and paused states of
@@ -38,21 +58,18 @@ export default {
      */
     status: {
       type: String,
-      validator: (val) => ['playing', 'paused'].includes(val),
+      validator: (val) => ['playing', 'paused', 'played'].includes(val),
     },
   },
-  data: () => ({
-    icons: {
-      play: playIcon,
-      pause: pauseIcon,
-    },
-  }),
   computed: {
     isPlaying() {
       return this.status === 'playing'
     },
     label() {
-      return this.$t(this.isPlaying ? 'play-pause.pause' : 'play-pause.play')
+      return this.$t(getLabelFromStatus(this.status))
+    },
+    icon() {
+      return STATUS_TO_ICON[this.status]
     },
   },
   methods: {

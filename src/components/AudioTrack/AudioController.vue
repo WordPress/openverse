@@ -61,7 +61,7 @@ export default {
     status: {
       type: String,
       required: true,
-      validator: (val) => ['playing', 'paused'].includes(val),
+      validator: (val) => ['playing', 'paused', 'played'].includes(val),
     },
     /**
      * the CSS classes to apply on the waveform; This can take any form
@@ -84,8 +84,13 @@ export default {
     // Sync status from parent to player and store
     watch(
       () => props.status,
-      (status) => {
+      (status, prevStatus) => {
         if (!audioEl.value) return
+
+        if (prevStatus === 'played' && status === 'playing') {
+          // If going from played to playing, then reset the time to the beginning. Let the regular logic handle actually triggering the playing of the audio
+          audioEl.value.currentTime = 0
+        }
 
         switch (status) {
           case 'playing':
@@ -146,6 +151,10 @@ export default {
 
       currentTime.value = audioEl.value.currentTime
       duration.value = audioEl.value.duration
+
+      if (currentTime.value >= duration.value) {
+        emit('finished')
+      }
     }
     const updateTimeLoop = () => {
       updateTime()
@@ -169,6 +178,7 @@ export default {
       if (audioEl.value && duration.value) {
         audioEl.value.currentTime = duration.value * frac
         updateTime()
+        emit('seeked')
       }
     }
 
