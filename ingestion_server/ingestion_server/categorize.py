@@ -1,12 +1,11 @@
-from enum import Enum, auto
-
-
 """
 https://github.com/creativecommons/cccatalog-api/issues/340
 
 Attempt to figure out the image type (illustration, vector, photograph, or
 digitized artwork) based on its source and file extension.
 """
+
+from enum import Enum, auto
 
 
 class Category(Enum):

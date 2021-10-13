@@ -1,12 +1,3 @@
-import datetime
-import enum
-import logging as log
-import shelve
-
-from decouple import config
-from filelock import FileLock
-
-
 """
 Indexing is distributed across multiple independent hosts. We don't want to
 "go live" in production with the newly indexed data until all of the indexing
@@ -16,6 +7,14 @@ each worker, and be notified when the job has finished.
 State is persisted to the disk using shelve. Concurrent writes aren't allowed,
 so all operations need to acquire a lock.
 """
+
+import datetime
+import enum
+import logging as log
+import shelve
+
+from decouple import config
+from filelock import FileLock
 
 
 lock_path = config("LOCK_PATH", default="lock")

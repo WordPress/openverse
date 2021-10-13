@@ -1,6 +1,3 @@
-from enum import Enum, auto
-
-
 """
 Authority is a ranking from 0 to 100 (with 0 being least authoritative)
 indicating the pedigree of an image. Some examples of things that could impact
@@ -21,6 +18,8 @@ tailored measures of authority later on.
 Also note that this is just one factor in rankings, and the magnitude of the
 boost can be adjusted at search-time.
 """
+
+from enum import Enum, auto
 
 
 class AuthorityTypes(Enum):

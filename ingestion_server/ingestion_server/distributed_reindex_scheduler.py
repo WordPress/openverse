@@ -7,6 +7,7 @@ request.
 Once the reindexing job is finished, each worker will notify Ingestion Server,
 which should then shut down the instances.
 """
+
 import logging as log
 import math
 import socket

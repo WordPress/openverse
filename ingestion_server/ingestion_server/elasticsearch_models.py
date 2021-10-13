@@ -1,17 +1,16 @@
-from enum import Enum, auto
-
-from elasticsearch_dsl import Document, Field, Integer
-
-from ingestion_server.authority import get_authority_boost
-from ingestion_server.categorize import get_categories
-
-
 """
 Provides an ORM-like experience for accessing data in Elasticsearch.
 
 Note the actual schema for Elasticsearch is defined in es_mapping.py; any
 low-level changes to the index must be represented there as well.
 """
+
+from enum import Enum, auto
+
+from elasticsearch_dsl import Document, Field, Integer
+
+from ingestion_server.authority import get_authority_boost
+from ingestion_server.categorize import get_categories
 
 
 class RankFeature(Field):

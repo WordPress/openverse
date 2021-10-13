@@ -1,3 +1,20 @@
+"""
+A utility for indexing data to Elasticsearch. For each table to
+sync, find its largest ID in database. Find the corresponding largest ID in
+Elasticsearch. If the database ID is greater than the largest corresponding
+ID in Elasticsearch, copy the missing records over to Elasticsearch.
+
+Each table is database corresponds to an identically named index in
+Elasticsearch. For instance, if database has a table that we would like to
+replicate called 'image', the indexer will create an Elasticsearch called
+'image' and populate the index with documents. See elasticsearch_models.py to
+change the format of Elasticsearch documents.
+
+This can either be run as a module, CLI, or in daemon mode. In daemon mode,
+it will actively monitor Postgres for updates and index them automatically. This
+is useful for local development environments.
+"""
+
 import argparse
 import datetime
 import logging as log
@@ -21,23 +38,6 @@ from ingestion_server.es_mapping import index_settings
 from ingestion_server.qa import create_search_qa_index
 from ingestion_server.queries import get_existence_queries
 
-
-"""
-A utility for indexing data to Elasticsearch. For each table to
-sync, find its largest ID in database. Find the corresponding largest ID in
-Elasticsearch. If the database ID is greater than the largest corresponding
-ID in Elasticsearch, copy the missing records over to Elasticsearch.
-
-Each table is database corresponds to an identically named index in
-Elasticsearch. For instance, if database has a table that we would like to
-replicate called 'image', the indexer will create an Elasticsearch called
-'image' and populate the index with documents. See elasticsearch_models.py to
-change the format of Elasticsearch documents.
-
-This can either be run as a module, CLI, or in daemon mode. In daemon mode,
-it will actively monitor Postgres for updates and index them automatically. This
-is useful for local development environments.
-"""
 
 # For AWS IAM access to Elasticsearch
 AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default="")

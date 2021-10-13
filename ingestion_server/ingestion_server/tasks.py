@@ -1,3 +1,7 @@
+"""
+Simple in-memory tracking of executed tasks.
+"""
+
 import datetime as dt
 import logging
 from enum import Enum
@@ -7,9 +11,6 @@ import requests
 
 from ingestion_server.indexer import TableIndexer, elasticsearch_connect
 from ingestion_server.ingest import reload_upstream
-
-
-""" Simple in-memory tracking of executed tasks. """
 
 
 class TaskTypes(Enum):

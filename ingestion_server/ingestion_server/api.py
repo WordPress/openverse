@@ -1,3 +1,8 @@
+"""
+A small RPC API server for scheduling ingestion of upstream data and
+Elasticsearch indexing tasks.
+"""
+
 import json
 import logging
 import sys
@@ -12,12 +17,6 @@ import ingestion_server.indexer as indexer
 from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.state import clear_state, worker_finished
 from ingestion_server.tasks import Task, TaskTracker, TaskTypes
-
-
-"""
-A small RPC API server for scheduling ingestion of upstream data and
-Elasticsearch indexing tasks.
-"""
 
 
 MODEL = "model"

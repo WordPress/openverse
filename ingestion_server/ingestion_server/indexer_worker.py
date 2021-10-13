@@ -5,6 +5,7 @@ database.
 Accept an HTTP request specifying a range of image IDs to reindex. After the
 data has been indexed, notify Ingestion Server and stop the instance.
 """
+
 import logging as log
 import sys
 from multiprocessing import Process, Value

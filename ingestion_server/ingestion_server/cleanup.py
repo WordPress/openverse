@@ -1,3 +1,8 @@
+"""
+Functions for processing data when it is imported into the catalog. This
+includes cleaning up malformed URLs and filtering out undesirable tags.
+"""
+
 import logging as log
 import multiprocessing
 import time
@@ -10,11 +15,6 @@ from psycopg2.extras import DictCursor, Json
 
 from ingestion_server.indexer import DB_BUFFER_SIZE, database_connect
 
-
-"""
-Functions for processing data when it is imported into the CC Catalog. This
-includes cleaning up malformed URLs and filtering out undesirable tags.
-"""
 
 # Number of records to buffer in memory at once
 CLEANUP_BUFFER_SIZE = DB_BUFFER_SIZE
