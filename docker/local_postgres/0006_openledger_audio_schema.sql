@@ -29,7 +29,7 @@ CREATE TABLE public.audio (
     duration integer,
     bit_rate integer,
     sample_rate integer,
-    category character varying(80)[],
+    category character varying(80),
     genres character varying(80)[],
     audio_set jsonb,
     set_position integer,

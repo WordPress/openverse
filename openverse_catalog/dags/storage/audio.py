@@ -55,7 +55,7 @@ class AudioStore(MediaStore):
         duration: Optional[int] = None,
         bit_rate: Optional[int] = None,
         sample_rate: Optional[int] = None,
-        category: Optional[list[str]] = None,
+        category: Optional[str] = None,
         genres: Optional[list[str]] = None,
         set_foreign_id: Optional[str] = None,
         audio_set: Optional[str] = None,
@@ -112,7 +112,7 @@ class AudioStore(MediaStore):
         duration:            in milliseconds
         bit_rate:            Audio bit rate as int.
         sample_rate:         Audio sample rate as int.
-        category:            List of categories such as 'music', 'sound'
+        category:            Category such as 'music', 'sound', 'audio_book'
                              or 'podcast'.
         genres:              List of genres
         set_foreign_id:      Unique identifier for the audio set on the

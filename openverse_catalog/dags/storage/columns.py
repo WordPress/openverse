@@ -615,15 +615,11 @@ SAMPLE_RATE = IntegerColumn(
     name="sample_rate",
     required=False,
 )
-CATEGORY = ArrayColumn(
+CATEGORY = StringColumn(
     name="category",
     required=False,
-    base_column=StringColumn(
-        name="single_category",
-        required=False,
-        size=80,
-        truncate=False,
-    ),
+    size=80,
+    truncate=False,
 )
 GENRES = ArrayColumn(
     name="genres",

@@ -308,11 +308,11 @@ def _parse_audio_file_data(parsed_data: dict, file_metadata: list) -> dict:
 
 
 def _extract_audio_category(parsed_data):
-    """Set category to ["sound"] for any audio with
+    """Set category to "sound" for any audio with
     pronunciation of a word or a phrase"""
     for category in parsed_data["meta_data"].get("categories", []):
         if "pronunciation" in category.lower():
-            return ["sound"]
+            return "sound"
 
 
 def _add_audio(parsed_data, media_data, media_info):
@@ -334,7 +334,7 @@ def _add_image(parsed_data, media_data, media_info):
     parsed_data["height"] = media_info.get("height")
     parsed_data["image_url"] = parsed_data.pop("media_url")
     if parsed_data["filetype"] == "svg":
-        parsed_data["category"] = ["illustration"]
+        parsed_data["category"] = "illustration"
     image_store.add_item(**parsed_data)
 
 

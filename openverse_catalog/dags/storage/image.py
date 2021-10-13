@@ -53,7 +53,7 @@ class ImageStore(MediaStore):
         title: Optional[str] = None,
         meta_data: Optional[Union[Dict, str]] = None,
         raw_tags=None,
-        category: Optional[list[str]] = None,
+        category: Optional[str] = None,
         watermarked: Optional[str] = "f",
         source: Optional[str] = None,
         ingestion_type: Optional[str] = None,
