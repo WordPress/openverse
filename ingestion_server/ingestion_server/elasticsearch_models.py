@@ -324,6 +324,7 @@ class Audio(Media):
             sample_rate=row[schema["sample_rate"]],
             genres=row[schema["genres"]],
             category=row[schema["category"]],
+            duration=row[schema["duration"]],
             authority_boost=authority_boost,
             max_boost=max(popularity or 1, authority_boost or 1),
             min_boost=min(popularity or 1, authority_boost or 1),

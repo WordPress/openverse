@@ -85,6 +85,7 @@ class AudioSerializer(MediaSerializer):
         "alt_files",
         "detail_url",
         "related_url",
+        "category",
     ]
     """
     Keep the fields names in sync with the actual fields below as this list is
@@ -117,6 +118,10 @@ class AudioSerializer(MediaSerializer):
 
     alt_files = serializers.JSONField(
         required=False, help_text="JSON describing alternative files for this audio."
+    )
+
+    category = serializers.CharField(
+        required=False, help_text="The category of the audio."
     )
 
     # Hyperlinks
