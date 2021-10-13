@@ -144,7 +144,6 @@ export default {
       } else if (this.selectedReason === 'dmca') {
         this.selectedCopyright = true
       } else {
-        console.log('sending content report')
         this.sendContentReport()
       }
     },

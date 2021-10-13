@@ -4,9 +4,12 @@ import SearchStore from '~/store-modules/search-store'
 import FilterStore from '~/store-modules/filter-store'
 import { FETCH_MEDIA_PROVIDERS } from '~/constants/action-types'
 import { PROVIDER } from '~/constants/store-modules'
+import { AUDIO, IMAGE } from '~/constants/media'
+
+const mediaServices = { [AUDIO]: AudioService, [IMAGE]: ImageService }
 
 export const actions = Object.assign(
-  SearchStore.actions(AudioService, ImageService),
+  SearchStore.actions(mediaServices),
   FilterStore.actions,
   {
     async nuxtServerInit({ dispatch }) {

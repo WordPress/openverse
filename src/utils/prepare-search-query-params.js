@@ -1,4 +1,7 @@
 export default function prepareSearchQueryParams(searchParams) {
+  if (typeof searchParams.mediaType !== 'undefined') {
+    delete searchParams.mediaType
+  }
   const params = {
     ...searchParams,
   }
