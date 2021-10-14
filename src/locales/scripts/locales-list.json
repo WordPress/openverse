@@ -156,6 +156,14 @@
     "facebook_locale": "bg_BG",
     "wp_locale": "bg_BG"
   },
+  "bgn": {
+    "english_name": "Western Balochi",
+    "native_name": "بلوچی‎",
+    "country_code": "pk",
+    "slug": "bgn",
+    "text_direction": "rtl",
+    "wp_locale": "bgn"
+  },
   "bho": {
     "english_name": "Bhojpuri",
     "native_name": "भोजपुरी",

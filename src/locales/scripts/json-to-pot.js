@@ -11,7 +11,8 @@
  msgid untranslated-string
  msgstr translated-string
  */
-const getParsedVueFiles = require('./parse-vue-files.js')
+const { getAllPaths, getKeyValue } = require('./json-helpers')
+const { getParsedVueFiles } = require('./parse-vue-files')
 const json = require('../en.json')
 const fs = require('fs')
 
@@ -43,42 +44,6 @@ const replaceVarsPlaceholders = (string) => {
  */
 const processValue = (string) => {
   return escapeQuotes(replaceVarsPlaceholders(string))
-}
-
-const findPath = (ob, key) => {
-  const path = []
-  const keyExists = (obj) => {
-    if (!obj || (typeof obj !== 'object' && !Array.isArray(obj))) {
-      return false
-    } else if (key in obj) {
-      return true
-    } else if (Array.isArray(obj)) {
-      let parentKey = path.length ? path.pop() : ''
-
-      for (let i = 0; i < obj.length; i++) {
-        path.push(`${parentKey}[${i}]`)
-        const result = keyExists(obj[i], key)
-        if (result) {
-          return result
-        }
-        path.pop()
-      }
-    } else {
-      for (const k in obj) {
-        path.push(k)
-        const result = keyExists(obj[k], key)
-        if (result) {
-          return result
-        }
-        path.pop()
-      }
-    }
-    return false
-  }
-
-  keyExists(ob)
-
-  return path.join('.')
 }
 
 const PARSED_VUE_FILES = getParsedVueFiles('**/*.?(js|vue)')
@@ -131,41 +96,38 @@ msgstr ""
 // msgid untranslated-string
 // msgstr translated-string
 
-function potTime(json, parent = json) {
-  let potFile = ''
-  for (const row of Object.entries(json)) {
-    let [key, value] = row
-    if (typeof value === 'string') {
-      const keyPath = `${findPath(parent, key)}.${key}`
-      if (pluralizedKeys.includes(key)) {
-        const pluralizedValues = value.split('|')
-        if (pluralizedValues.length === 1) {
-          pluralizedValues.push(pluralizedValues[0])
-        }
-        potFile = `${potFile}
+function potTime(json) {
+  let potFileString = ''
+  const jsonKeys = getAllPaths(json)
+  jsonKeys.forEach((key) => {
+    const parts = key.split('.')
+    const keyName = parts[parts.length - 1]
+    const value = getKeyValue(key, json)
+    if (!pluralizedKeys.includes(keyName)) {
+      potFileString = `${potFileString}
 ${
   checkStringForVars(value) ? `\n#. ${checkStringForVars(value)}` : ''
-}${getRefComment(keyPath)}
-msgctxt "${keyPath}"
+}${getRefComment(key)}
+msgctxt "${key}"
+msgid "${processValue(value)}"
+msgstr ""`
+    } else {
+      const pluralizedValues = value.split('|')
+      if (pluralizedValues.length === 1) {
+        pluralizedValues.push(pluralizedValues[0])
+      }
+      potFileString = `${potFileString}
+${
+  checkStringForVars(value) ? `\n#. ${checkStringForVars(value)}` : ''
+}${getRefComment(key)}
+msgctxt "${key}"
 msgid "${processValue(pluralizedValues[0])}"
 msgid_plural "${processValue(pluralizedValues[1])}"
 msgstr[0] ""
 msgstr[1] ""`
-      } else {
-        potFile = `${potFile}
-${
-  checkStringForVars(value) ? `\n#. ${checkStringForVars(value)}` : ''
-}${getRefComment(keyPath)}
-msgctxt "${keyPath}"
-msgid "${processValue(value)}"
-msgstr ""`
-      }
     }
-    if (typeof value === 'object') {
-      potFile = `${potFile}${potTime(value, parent)}`
-    }
-  }
-  return potFile
+  })
+  return potFileString
 }
 
 const potFile = `${POT_FILE_META}${potTime(json)}\n`
@@ -176,3 +138,4 @@ try {
 } catch (err) {
   console.error(err)
 }
+module.exports = { replaceVarsPlaceholders, potTime }

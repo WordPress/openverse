@@ -1,10 +1,25 @@
 [
   {
+    "code": "ar",
+    "name": "Arabic",
+    "iso": "ar",
+    "wpLocale": "ar",
+    "dir": "rtl",
+    "file": "ar.json"
+  },
+  {
     "code": "cs",
     "name": "Czech",
     "iso": "cs",
     "wpLocale": "cs_CZ",
     "file": "cs.json"
+  },
+  {
+    "code": "da",
+    "name": "Danish",
+    "iso": "da",
+    "wpLocale": "da_DK",
+    "file": "da.json"
   },
   {
     "code": "de",
@@ -119,11 +134,25 @@
     "file": "ja.json"
   },
   {
+    "code": "kn",
+    "name": "Kannada",
+    "iso": "kn",
+    "wpLocale": "kn",
+    "file": "kn.json"
+  },
+  {
     "code": "nl",
     "name": "Dutch",
     "iso": "nl",
     "wpLocale": "nl_NL",
     "file": "nl.json"
+  },
+  {
+    "code": "nl-be",
+    "name": "Dutch (Belgium)",
+    "iso": "nl",
+    "wpLocale": "nl_BE",
+    "file": "nl-be.json"
   },
   {
     "code": "pt",

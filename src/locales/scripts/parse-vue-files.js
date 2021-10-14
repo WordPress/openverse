@@ -118,4 +118,4 @@ const getParsedVueFiles = (vueFiles) => {
   return parseVueFiles(resolvedVueFiles)
 }
 
-module.exports = getParsedVueFiles
+module.exports = { getParsedVueFiles }
