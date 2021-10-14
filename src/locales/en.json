@@ -20,7 +20,13 @@
     },
     "aria": {
       "search": "search",
-      "caption": "about cc licenses"
+      "caption": "about cc licenses",
+      "search-type": "search type"
+    },
+    "search-type": {
+      "audio": "Audio",
+      "image": "Images",
+      "prompt": "I would like to find:"
     }
   },
   "header": {

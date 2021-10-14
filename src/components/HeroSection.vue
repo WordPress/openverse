@@ -32,6 +32,12 @@
             {{ $t('hero.search.button') }}
           </button>
         </div>
+
+        <div v-if="showSearchType" class="flex flex-col items-center">
+          <p class="py-2">{{ $t('hero.search-type.prompt') }}</p>
+          <SearchTypeToggle v-model.lazy="form.searchType" />
+        </div>
+
         <div class="text-sm mt-6 font-medium">
           <i18n path="hero.caption.content" tag="p">
             <template #link>
@@ -59,26 +65,49 @@
 </template>
 
 <script>
-import { SET_QUERY } from '~/constants/mutation-types'
+import { SET_QUERY, SET_SEARCH_TYPE } from '~/constants/mutation-types'
 import { filtersToQueryData } from '~/utils/search-query-transform'
 import { ALL_MEDIA } from '~/constants/media'
 
 export default {
   name: 'HeroSection',
-  data: () => ({ form: { searchTerm: '' } }),
+  /**
+   * @return {{ form: { searchTerm: string, searchType: 'image' | 'audio' }, showSearchType: boolean }}
+   */
+  data: () => ({
+    form: { searchTerm: '', searchType: 'image' },
+    showSearchType: process.env.enableAudio,
+  }),
   mounted() {
     if (document.querySelector('#searchTerm')) {
       document.querySelector('#searchTerm').focus()
     }
   },
   methods: {
+    getPath() {
+      if (!process.env.enableAudio) return '/search'
+
+      return `/search/${this.form.searchType}`
+    },
+    getMediaType() {
+      if (!process.env.enableAudio) return ALL_MEDIA
+
+      return this.form.searchType
+    },
     onSubmit() {
       this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm } })
+
+      if (process.env.enableAudio) {
+        this.$store.commit(SET_SEARCH_TYPE, {
+          searchType: this.form.searchType,
+        })
+      }
+
       const newPath = this.localePath({
-        path: process.env.enableAudio ? '/search' : '/search/image',
+        path: this.getPath(),
         query: {
           q: this.form.searchTerm,
-          ...filtersToQueryData(this.$store.state.filters, ALL_MEDIA),
+          ...filtersToQueryData(this.$store.state.filters, this.getMediaType()),
         },
       })
       this.$router.push(newPath)

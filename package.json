@@ -18,7 +18,7 @@
     "start": "nuxt start",
     "storybook": "nuxt storybook",
     "test": "jest",
-    "test:watch": "jest --watch",
+    "test:watch": "jest --collectCoverage=false --watch",
     "test:unit": "jest --collectCoverage=false",
     "test:e2e": "cypress open",
     "test:e2e:ci": "cypress run",

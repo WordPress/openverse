@@ -4,9 +4,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-10-14T17:01:40+00:00\n"
+"POT-Creation-Date: 2021-10-14T18:25:11+00:00\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain charset=UTF-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -2017,14 +2017,34 @@ msgctxt "hero.subtitle"
 msgid "Browse over 500 million images, available for reuse"
 msgstr ""
 
+#: src/components/SearchTypeToggle.vue:19
+msgctxt "hero.search-type.audio"
+msgid "Audio"
+msgstr ""
+
+#: src/components/SearchTypeToggle.vue:10
+msgctxt "hero.search-type.image"
+msgid "Images"
+msgstr ""
+
+#: src/components/HeroSection.vue:37
+msgctxt "hero.search-type.prompt"
+msgid "I would like to find:"
+msgstr ""
+
 #: src/components/HeroSection.vue:24
 msgctxt "hero.aria.search"
 msgid "search"
 msgstr ""
 
-#: src/components/HeroSection.vue:41
+#: src/components/HeroSection.vue:47
 msgctxt "hero.aria.caption"
 msgid "about cc licenses"
+msgstr ""
+
+#: src/components/SearchTypeToggle.vue:2
+msgctxt "hero.aria.search-type"
+msgid "search type"
 msgstr ""
 
 #: src/components/LocaleSelector.vue:3
@@ -2042,12 +2062,12 @@ msgid "I want something I can"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/HeroSection.vue:36
+#: src/components/HeroSection.vue:42
 msgctxt "hero.caption.content"
 msgid "All our content is under Creative Commons licenses or in the public domain. ###link### about CC licenses and tools."
 msgstr ""
 
-#: src/components/HeroSection.vue:44
+#: src/components/HeroSection.vue:50
 msgctxt "hero.caption.link"
 msgid "Learn more"
 msgstr ""
