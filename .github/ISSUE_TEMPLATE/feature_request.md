@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest a new feature or improvements to an existing one
 labels: "✨ goal: improvement, 🚦 status: awaiting triage, 💻 aspect: code, 🟩 priority: low"
-title: "[Feature] <Replace this with actual title>"
+title: "<Replace this with actual title>"
 ---
 
 ## Problem
