@@ -34,6 +34,9 @@ module.exports = {
       'light-gray': '#d8d8d8', // rgb(216, 216, 216)
       white: 'white',
 
+      // WordPress
+      'admin-gray': '#DCDCDE',
+
       // Semi-transparent
       'dark-charcoal-04': 'rgba(48, 39, 46, 0.04)',
       'dark-charcoal-20': 'rgba(48, 39, 46, 0.2)',

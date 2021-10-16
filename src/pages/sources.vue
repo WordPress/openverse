@@ -84,7 +84,7 @@
       <table
         :aria-label="$t('about.aria.sources-table')"
         role="region"
-        class="table is-striped mt-4 mb-10"
+        class="table is-striped mt-4 mb-10 border border-admin-gray"
       >
         <thead>
           <tr>
@@ -95,7 +95,7 @@
             >
               <span class="table-header-inner">
                 {{ $t('sources.providers.source') }}
-                <span class="icon"><i class="icon sort" /></span>
+                <TableSortIcon :active="sort.field === 'display_name'" />
               </span>
             </th>
             <th>{{ $t('sources.providers.domain') }}</th>
@@ -106,24 +106,24 @@
             >
               <span class="table-header-inner">
                 {{ $t('sources.providers.item') }}
-                <span class="icon"><i class="icon sort" /></span>
+                <TableSortIcon :active="sort.field === 'image_count'" />
               </span>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(imageProvider, index) in sortedProviders" :key="index">
-            <td class="bold-cell">
+            <td class="font-semibold">
               <a :href="`/search?source=${imageProvider.source_name}`">
                 {{ imageProvider.display_name }}
               </a>
             </td>
-            <td class="bold-cell">
+            <td class="font-semibold">
               <a :href="imageProvider.source_url">
                 {{ imageProvider.source_url }}
               </a>
             </td>
-            <td class="number-cell">
+            <td class="number-cell font-semibold">
               {{ getProviderImageCount(imageProvider.image_count) }}
             </td>
           </tr>
@@ -183,7 +183,7 @@ export default SourcePage
 @import '~/styles/text-only-page.scss';
 
 $table-border: 1px solid $color-light-gray;
-$table-border-radius: 4px;
+$table-border-radius: 2px;
 
 .button.is-primary {
   font-size: 1.1875rem;
@@ -225,9 +225,6 @@ $table-border-radius: 4px;
   }
 
   tr:last-child {
-    td {
-      border-bottom: $table-border;
-    }
     td:first-child {
       border-bottom-left-radius: $table-border-radius;
     }
@@ -236,20 +233,9 @@ $table-border-radius: 4px;
     }
   }
 
-  td {
+  th:not(:first-child),
+  td:not(:first-child) {
     border-left: $table-border;
   }
-
-  tr td:last-child {
-    border-right: $table-border;
-  }
-}
-
-.bold-cell {
-  font-weight: 600;
-}
-
-.number-cell {
-  font-weight: 500;
 }
 </style>

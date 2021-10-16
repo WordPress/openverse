@@ -13,7 +13,7 @@ $table-head-cell-color: $text-strong
 $table-foot-cell-border-width: 2px 0 0
 $table-foot-cell-color: $text-strong
 
-$table-head-background-color: $color-light-gray
+$table-head-background-color: #F0F0F1
 $table-body-background-color: transparent
 $table-foot-background-color: transparent
 
@@ -22,8 +22,8 @@ $table-row-hover-background-color: $color-white
 $table-row-active-background-color: $primary
 $table-row-active-color: $color-white
 
-$table-striped-row-even-background-color: #f5f5f5
-$table-striped-row-even-hover-background-color: #f5f5f5
+$table-striped-row-even-background-color: #F6F7F7
+$table-striped-row-even-hover-background-color: #F6F7F7
 
 .table
   +block
@@ -63,11 +63,11 @@ $table-striped-row-even-hover-background-color: #f5f5f5
         border-color: $table-row-active-color
         color: currentColor
   thead
-    background-color: $table-head-background-color
     td,
     th
       border-width: $table-head-cell-border-width
       color: $table-head-cell-color
+      background-color: $table-head-background-color
   tfoot
     background-color: $table-foot-background-color
     td,
