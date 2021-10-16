@@ -311,7 +311,6 @@
   "filters": {
     "title": "Filters",
     "filter-by": "Filter By",
-    "filter-tag-aria": "{filterLabel} filter",
     "licenses": {
       "title": "License or Public Domain",
       "cc0": "CC0",
@@ -392,6 +391,9 @@
       "tool": "Read more about the tool {link}",
       "license": "Read more about the license {link}",
       "link": "here"
+    },
+    "aria": {
+      "remove-filter": "Remove {label} filter"
     }
   },
   "filter-list": {

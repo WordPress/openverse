@@ -1,16 +1,11 @@
 <template>
   <button
-    class="filter-block button tiny tag mx-1"
-    :aria-label="$t('filters.filter-tag-aria', { filterLabel: filterLabel })"
+    class="button tiny tag"
+    :aria-label="$t('filters.aria.remove-filter', { label: filterLabel })"
+    @click="onClick"
   >
     <span>{{ filterLabel }}</span>
-    <span
-      class="close ml-2 p-2"
-      tabindex="0"
-      @click="onClick"
-      @keyup.enter="onClick"
-      ><i class="icon cross"
-    /></span>
+    <span class="close ml-2 p-2"><i class="icon cross" /></span>
   </button>
 </template>
 <script>
@@ -43,8 +38,3 @@ export default {
   },
 }
 </script>
-<style lang="scss" scoped>
-.filter-block {
-  margin-left: 0.5rem;
-}
-</style>

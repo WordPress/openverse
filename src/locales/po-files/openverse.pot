@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-10-14T18:25:11+00:00\n"
+"POT-Creation-Date: 2021-10-15T17:05:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -863,8 +863,8 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/components/Filters/FilterTag.vue:4
-msgctxt "filters.filter-tag-aria"
-msgid "###filterLabel### filter"
+msgctxt "filters.aria.remove-filter"
+msgid "Remove ###label### filter"
 msgstr ""
 
 #. Do not translate words between ### ###.
