@@ -2,6 +2,7 @@
   <DropdownButton
     v-if="filesizes"
     :dropdown-aria-label="$t('download-button.aria.dropdown-label')"
+    :is-single-item="formats.length === 1"
   >
     <template #default="{ buttonProps }">
       <a

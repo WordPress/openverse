@@ -30,6 +30,7 @@
             "name": "vocal"
           }
         ],
+        "filetype": "mp3",
         "fields_matched": ["tags.name"],
         "genres": ["classical", "gospel"],
         "detail_url": "http://localhost:8000/v1/audio/8071128a-bebc-4c24-823d-6e26a2e6dfe2",
@@ -58,6 +59,7 @@
             "name": "vocal"
           }
         ],
+        "filetype": "mp3",
         "fields_matched": ["tags.name"],
         "genres": ["metal"],
         "detail_url": "http://localhost:8000/v1/audio/73e00493-9189-42ed-955b-4f9d26d0d9f4",
@@ -220,7 +222,7 @@
     "provider": "jamendo",
     "source": "jamendo",
     "category": "music",
-    "filetype": "mp3",
+    "filetype": "mp32",
     "sample_rate": "1.67",
     "description": "",
     "tags": [
@@ -250,6 +252,16 @@
       "name": "Distance & Temps",
       "url": "https://www.jamendo.com/album/1290/distance-and-temps"
     },
+    "alt_files": [
+      {
+        "filetype": "flac",
+        "url": "https://mp3d.jamendo.com/download/track/8561/flac"
+      },
+      {
+        "filetype": "mp31",
+        "url": "https://mp3d.jamendo.com/download/track/8561/mp31"
+      }
+    ],
     "duration": 248000,
     "detail_url": "http://localhost:8000/v1/audio/242c1a4c-0623-436c-a600-7847412d28b6",
     "related_url": "http://localhost:8000/v1/audio/242c1a4c-0623-436c-a600-7847412d28b6/recommendations"

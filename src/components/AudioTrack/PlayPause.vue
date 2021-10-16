@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="play-pause flex items-center justify-center bg-dark-charcoal text-white transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink"
+    class="play-pause flex-shrink-0 flex items-center justify-center bg-dark-charcoal text-white transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink"
     @click="handleClick"
   >
     <span class="sr-only">{{ label }}</span>

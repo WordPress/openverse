@@ -42,6 +42,7 @@ describe('AudioTrack', () => {
         license_url: 'https://creativecommons.org/licenses/by-nc-sa/2.5/',
         provider: 'jamendo',
         source: 'jamendo',
+        filetype: 'mp32',
         tags: [
           {
             name: 'vocal',
