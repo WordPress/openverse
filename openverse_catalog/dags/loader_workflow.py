@@ -65,7 +65,7 @@ DAG_ID = "tsv_to_postgres_loader"
 OVERWRITE_DAG_ID = "tsv_to_postgres_loader_overwrite"
 DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")
 AWS_CONN_ID = os.getenv("AWS_CONN_ID", "no_aws_conn_id")
-CCCATALOG_STORAGE_BUCKET = os.getenv("CCCATALOG_STORAGE_BUCKET")
+OPENVERSE_BUCKET = os.getenv("OPENVERSE_BUCKET")
 MINIMUM_FILE_AGE_MINUTES = int(os.getenv("LOADER_FILE_AGE", 15))
 CONCURRENCY = 5
 SCHEDULE_CRON = "* * * * *"
@@ -92,7 +92,7 @@ def create_dag(
     postgres_conn_id=DB_CONN_ID,
     aws_conn_id=AWS_CONN_ID,
     output_dir=OUTPUT_DIR_PATH,
-    storage_bucket=CCCATALOG_STORAGE_BUCKET,
+    storage_bucket=OPENVERSE_BUCKET,
     minimum_file_age_minutes=MINIMUM_FILE_AGE_MINUTES,
     overwrite=False,
 ):

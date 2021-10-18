@@ -68,7 +68,7 @@ def test_copy_file_to_s3_staging_uses_bucket_environ(monkeypatch):
     tsv_file_path = "/test/file/path/to/data.tsv"
     aws_conn_id = "test_conn_id"
     test_bucket_name = "test-bucket"
-    monkeypatch.setenv("CCCATALOG_STORAGE_BUCKET", test_bucket_name)
+    monkeypatch.setenv("OPENVERSE_BUCKET", test_bucket_name)
 
     with patch.object(s3.S3Hook, "load_file") as mock_s3_load_file:
         s3.copy_file_to_s3_staging(

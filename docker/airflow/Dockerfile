@@ -1,16 +1,28 @@
 FROM python:3.9-slim
 
-ARG OUTPUT_DIR=/var/workflow_output/
+# Build-time arguments, with sensible defaults
 ARG REQUIREMENTS_FILE=requirements_prod.txt
 # https://airflow.apache.org/docs/apache-airflow/2.1.2/installation.html#constraints-files
 ARG CONSTRAINTS_FILE="https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-3.9.txt"
+
+# Path configurations
 ENV AIRFLOW_HOME=/usr/local/airflow
-ENV AIRFLOW__CORE__DAGS_FOLDER=${AIRFLOW_HOME}/openverse_catalog/dags
 ENV PATH=/usr/local/airflow/.local/bin:$PATH
+
+# Container optimizations
 ENV PIPNOCACHEDIR=1
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_COLOR=1
+
+# Airflow/workflow configuration
+ENV OUTPUT_DIR=/var/workflow_output/
+ENV AIRFLOW__CORE__DAGS_FOLDER=${AIRFLOW_HOME}/openverse_catalog/dags
+ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
+ENV AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
+ENV AIRFLOW__LOGGING__REMOTE_LOGGING=True
+ENV AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID=aws_default
+ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://openverse-airflow-logs/logs
 
 
 RUN apt-get update && apt-get -yqq upgrade && apt-get -yqq install \

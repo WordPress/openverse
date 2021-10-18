@@ -23,7 +23,7 @@ S3 = boto3.resource(
 )
 BUCKET_LIST = [
     "openverse-airflow-logs",
-    "cccatalog-storage",
+    "openverse-storage",
     "commonsmapper-v2",
     "commonsmapper",
 ]

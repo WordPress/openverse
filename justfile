@@ -35,8 +35,8 @@ recreate: dotenv
     @just up "--force-recreate --build"
 
 # Show logs of all, or named, Docker services
-logs: up
-    docker-compose {{ DEV_DOCKER_FILES }} logs -f
+logs service="": up
+    docker-compose {{ DEV_DOCKER_FILES }} logs -f {{ service }}
 
 # Run pre-commit on all files
 lint:
