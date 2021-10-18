@@ -12,6 +12,8 @@ group:
         dest: .github/workflows/new_prs.yml
       - source: .github/workflows/pr_label_check.yml
         dest: .github/workflows/pr_label_check.yml
+      - source: .github/workflows/pr_ping.yml
+        dest: .github/workflows/pr_ping.yml
       - source: .github/ISSUE_TEMPLATE/
         dest: .github/ISSUE_TEMPLATE/
       - source: .github/PULL_REQUEST_TEMPLATE.md
