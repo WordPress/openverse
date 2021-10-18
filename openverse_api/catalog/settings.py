@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
+
 from pathlib import Path
 from socket import gethostbyname, gethostname
 
@@ -290,6 +291,9 @@ CORS_ORIGIN_ALLOW_ALL = True
 # The version of the API. We follow the semantic version specification.
 API_VERSION = config("SEMANTIC_VERSION", default="Version not specified")
 
+# The contact email of the Openverse team
+CONTACT_EMAIL = config("CONTACT_EMAIL", default="openverse@wordpress.org")
+
 WATERMARK_ENABLED = config("WATERMARK_ENABLED", default=False, cast=bool)
 
 ELASTICSEARCH_URL = config("ELASTICSEARCH_URL", default="localhost")
@@ -300,6 +304,7 @@ ELASTICSEARCH_AWS_REGION = config("ELASTICSEARCH_AWS_REGION", default="us-east-1
 AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default="")
 AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", default="")
 
+EMAIL_SENDER = config("EMAIL_SENDER", default="")
 EMAIL_HOST = config("EMAIL_HOST", default="")
 EMAIL_PORT = config("EMAIL_PORT", default=25, cast=int)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")

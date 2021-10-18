@@ -24,7 +24,7 @@ schema_view = get_schema_view(
         title="Openverse API",
         default_version=settings.API_VERSION,
         description=description,
-        contact=openapi.Contact(email="zack.krida@automattic.com"),
+        contact=openapi.Contact(email=settings.CONTACT_EMAIL),
         license=openapi.License(name="MIT License", url=license_url),
         terms_of_service=tos_url,
         x_logo={"url": logo_url, "backgroundColor": "#fafafa"},

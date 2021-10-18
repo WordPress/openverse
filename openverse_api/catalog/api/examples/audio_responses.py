@@ -81,7 +81,15 @@ audio_detail_200_example = {
     "application/json": base_audio
     | {
         "attribution": '"Wish You Were Here" by The.madpix.project is licensed under CC-BY-NC-SA 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/.',  # noqa
-        "audio_set": None,
+        "audio_set": {
+            "title": "Wish You Were Here",
+            "foreign_landing_url": "https://www.jamendo.com/album/145774/wish-you-were-here",  # noqa
+            "creator": "The.madpix.project",
+            "creator_url": "https://www.jamendo.com/artist/441585/the.madpix.project",
+            "url": "https://usercontent.jamendo.com?type=album&id=145774&width=200",
+            "filesize": None,
+            "filetype": None,
+        },
         "duration": 270000,
         "bit_rate": None,
         "sample_rate": None,

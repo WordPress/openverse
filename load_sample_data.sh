@@ -30,7 +30,9 @@ docker-compose exec -T "$ANALYTICS_SERVICE_NAME" /bin/bash -c "PYTHONPATH=. pipe
 # Load content providers
 docker-compose exec -T "$DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF
 	DELETE FROM content_provider;
-	INSERT INTO content_provider (created_on, provider_identifier, provider_name, domain_name, filter_content, media_type) VALUES
+	INSERT INTO content_provider
+		(created_on, provider_identifier, provider_name, domain_name, filter_content, media_type)
+	VALUES
 		(now(), 'flickr', 'Flickr', 'https://www.flickr.com', false, 'image'),
 		(now(), 'rawpixel', 'rawpixel', 'https://www.rawpixel.com', false, 'image'),
 		(now(), 'sciencemuseum', 'Science Museum', 'https://www.sciencemuseum.org.uk', false, 'image'),
@@ -41,24 +43,63 @@ docker-compose exec -T "$DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openle
 	EOF"
 
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF
-		DROP TABLE IF EXISTS content_provider CASCADE;
+	DROP TABLE IF EXISTS content_provider CASCADE;
 	EOF"
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "PGPASSWORD=deploy pg_dump -t content_provider -U deploy -d openledger -h db | psql -U deploy -d openledger"
 
 # Load sample data for images
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "PGPASSWORD=deploy pg_dump -s -t image -U deploy -d openledger -h db | psql -U deploy -d openledger"
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF
-	ALTER TABLE image RENAME TO image_view;
-	ALTER TABLE image_view ADD COLUMN standardized_popularity double precision, ADD COLUMN ingestion_type varchar(1000);
-	\copy image_view (identifier,created_on,updated_on,ingestion_type,provider,source,foreign_identifier,foreign_landing_url,url,thumbnail,width,height,filesize,license,license_version,creator,creator_url,title,meta_data,tags,watermarked,last_synced_with_source,removed_from_source,standardized_popularity) from './sample_data/sample_data.csv' with (FORMAT csv, HEADER true)
+	ALTER TABLE image
+		RENAME TO image_view;
+	ALTER TABLE image_view
+		ADD COLUMN standardized_popularity double precision,
+		ADD COLUMN ingestion_type          varchar(1000);
+
+	\copy image_view \
+			(identifier, created_on, updated_on, ingestion_type, provider, source, foreign_identifier, foreign_landing_url, url, thumbnail, width, height, filesize, license, license_version, creator, creator_url, title, meta_data, tags,watermarked, last_synced_with_source, removed_from_source, standardized_popularity) \
+		from './sample_data/sample_data.csv' \
+		with (FORMAT csv, HEADER true);
 	EOF"
 
 # Load sample data for audio
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "PGPASSWORD=deploy pg_dump -s -t audio -U deploy -d openledger -h db | head -n -14 | psql -U deploy -d openledger"
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF
-	ALTER TABLE audio RENAME TO audio_view;
-	ALTER TABLE audio_view ADD COLUMN standardized_popularity double precision, ADD COLUMN ingestion_type varchar(1000), ADD COLUMN audio_set jsonb;
-	\copy audio_view (identifier,created_on,updated_on,ingestion_type,provider,source,foreign_identifier,foreign_landing_url,url,thumbnail,filetype,duration,bit_rate,sample_rate,category,genres,audio_set,audio_set_position,alt_files,filesize,license,license_version,creator,creator_url,title,meta_data,tags,watermarked,last_synced_with_source,removed_from_source,standardized_popularity) from './sample_data/sample_audio_data.csv' with (FORMAT csv, HEADER true)
+	ALTER TABLE audio
+		RENAME TO audio_view;
+	ALTER TABLE audio_view
+		ADD COLUMN standardized_popularity double precision,
+		ADD COLUMN ingestion_type          varchar(1000),
+		ADD COLUMN audio_set               jsonb;
+
+	\copy audio_view \
+			(identifier, created_on, updated_on, ingestion_type, provider, source, foreign_identifier, foreign_landing_url, url, thumbnail, filetype, duration, bit_rate, sample_rate, category, genres, audio_set, audio_set_position, alt_files, filesize, license, license_version, creator, creator_url, title, meta_data, tags, watermarked, last_synced_with_source, removed_from_source, standardized_popularity) \
+		from './sample_data/sample_audio_data.csv' \
+		with (FORMAT csv, HEADER true);
+
+	UPDATE audio_view
+		SET audio_set_foreign_identifier = audio_set->>'foreign_identifier';
+
+	DROP TYPE IF EXISTS audio_set_type;
+	CREATE TYPE audio_set_type
+	AS (
+    foreign_identifier  varchar(1000),
+    title               varchar(2000),
+    foreign_landing_url varchar(1000),
+    creator             varchar(2000),
+    creator_url         varchar(2000),
+    url                 varchar(1000),
+    filesize            integer,
+    filetype            varchar(80),
+    thumbnail           varchar(1000)
+	);
+
+	DROP VIEW IF EXISTS audioset_view;
+	CREATE VIEW audioset_view
+	AS
+		SELECT DISTINCT (jsonb_populate_record(null::audio_set_type, audio_set)).*, provider
+		FROM audio_view
+		WHERE audio_set IS NOT NULL;
 	EOF"
 
 # Load search quality assurance data.

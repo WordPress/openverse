@@ -1,4 +1,4 @@
-from catalog.api.views.site_views import Register, VerifyEmail
+from catalog.api.views.oauth2_views import Register, VerifyEmail
 from django.urls import include, path
 
 

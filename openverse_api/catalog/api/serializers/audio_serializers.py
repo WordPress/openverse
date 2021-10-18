@@ -10,6 +10,31 @@ from catalog.api.serializers.media_serializers import (
 from rest_framework import serializers
 
 
+class AudioSetSerializer(serializers.Serializer):
+    """An audio set, rendered as a part of the ``AudioSerializer`` output."""
+
+    title = serializers.CharField(help_text="The name of the media.", required=False)
+    foreign_landing_url = serializers.URLField(
+        required=False, help_text="A foreign landing link for the image."
+    )
+
+    creator = serializers.CharField(
+        help_text="The name of the media creator.", required=False, allow_blank=True
+    )
+    creator_url = serializers.URLField(
+        required=False, help_text="A direct link to the media creator."
+    )
+
+    url = serializers.URLField(help_text="The actual URL to the media file.")
+    filesize = serializers.CharField(
+        required=False, help_text="Number in bytes, e.g. 1024."
+    )
+    filetype = serializers.CharField(
+        required=False,
+        help_text="The type of the file, related to the file extension.",
+    )
+
+
 class AudioSearchRequestSerializer(MediaSearchRequestSerializer):
     """Parse and validate search query string parameters."""
 
@@ -92,7 +117,7 @@ class AudioSerializer(MediaSerializer):
     used to generate Swagger documentation.
     """
 
-    audio_set = serializers.PrimaryKeyRelatedField(
+    audio_set = AudioSetSerializer(
         required=False,
         help_text="Reference to set of which this track is a part.",
         read_only=True,

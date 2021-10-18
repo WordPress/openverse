@@ -1,12 +1,3 @@
-import logging as log
-import time
-
-from catalog.api.models import Image
-from django.core.exceptions import ObjectDoesNotExist
-from django_cron import CronJobBase, Schedule
-from django_redis import get_redis_connection
-
-
 """
 Cron-like tasks run at a set interval. `python3 manage.py runcrons` will
 execute any scheduled tasks. This is intended to run on all instances of the
@@ -16,6 +7,16 @@ Even though there may be multiple instances of the server running, a job is
 guaranteed to execute only once. Jobs are not run unless it can acquire a lock
 inside of the cache (shared by all instances of openverse_api).
 """
+
+import logging as log
+import time
+
+from catalog.api.models import Image
+from django.core.exceptions import ObjectDoesNotExist
+from django_cron import CronJobBase, Schedule
+from django_redis import get_redis_connection
+
+
 model_name_to_instance = {"Image": Image}
 
 

@@ -10,6 +10,7 @@ pycodestyle = "*"
 pytest-django = ">=3.5"
 remote-pdb = "*"
 pre-commit = "*"
+locust = "*"
 
 [packages]
 aws-requests-auth = "*"
@@ -42,6 +43,7 @@ redlock-py = "*"
 requests-oauthlib = "*"
 wsgi-basic-auth = "*"
 python-decouple = "*"
+django-cron = "*"
 
 [requires]
 python_version = "3.9"

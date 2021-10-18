@@ -1,4 +1,7 @@
-from psycopg2.sql import SQL, Identifier, Literal
+from typing import Literal
+
+from psycopg2.sql import SQL, Identifier
+from psycopg2.sql import Literal as PgLiteral
 
 
 def get_existence_queries(table):
@@ -62,16 +65,18 @@ def get_fdw_query(
           FROM SERVER upstream INTO upstream_schema;
     """
     ).format(
-        host=Literal(host),
-        port=Literal(str(port)),
-        dbname=Literal(dbname),
-        user=Literal(user),
-        password=Literal(password),
+        host=PgLiteral(host),
+        port=PgLiteral(str(port)),
+        dbname=PgLiteral(dbname),
+        user=PgLiteral(user),
+        password=PgLiteral(password),
         table=Identifier(table),
     )
 
 
-def get_copy_data_query(table: str, columns: list[str]):
+def get_copy_data_query(
+    table: str, columns: list[str], approach: Literal["basic", "advanced"]
+):
     """
     Get the query for copying data from the upstream table to a temporary table
     in the downstream database. This temporary table will replace the permanent
@@ -79,36 +84,70 @@ def get_copy_data_query(table: str, columns: list[str]):
     table and avoids entries from the deleted table with the "api_deleted"
     prefix. After the copying process, the "upstream" schema is dropped.
 
-    :table: the name of the downstream table being replaced
-    :columns: the names of the columns to copy from upstream
+    :param table: the name of the downstream table being replaced
+    :param columns: the names of the columns to copy from upstream
+    :param approach: whether to use advanced logic specific to media ingestion
+    :return: the SQL query for copying the data
     """
 
-    return SQL(
-        """
-        DROP TABLE IF EXISTS {temp_table};
-        CREATE TABLE {temp_table} (LIKE {table} INCLUDING CONSTRAINTS);
-        CREATE TEMP SEQUENCE IF NOT EXISTS id_temp_seq;
-
-        ALTER TABLE {temp_table} ADD COLUMN IF NOT EXISTS
-          standardized_popularity double precision;
-        ALTER TABLE {temp_table} ADD COLUMN IF NOT EXISTS
-          id serial;
-        ALTER TABLE {temp_table} ALTER COLUMN
-          view_count SET DEFAULT 0;
-        ALTER TABLE {temp_table} ALTER COLUMN
-          id SET DEFAULT nextval('id_temp_seq'::regclass);
-
-        INSERT INTO {temp_table} ({columns})
-          SELECT {columns} from {upstream_table} AS u
-          WHERE NOT EXISTS(
-            SELECT FROM {deleted_table} WHERE identifier = u.identifier
-          );
-
-        ALTER TABLE {temp_table} ADD PRIMARY KEY (id);
-
-        DROP SERVER upstream CASCADE;
+    table_creation = """
+    DROP TABLE IF EXISTS {temp_table};
+    CREATE TABLE {temp_table} (LIKE {table} INCLUDING DEFAULTS INCLUDING CONSTRAINTS);
     """
-    ).format(
+
+    id_column_setup = """
+    ALTER TABLE {temp_table} ADD COLUMN IF NOT EXISTS
+        id serial;
+    CREATE TEMP SEQUENCE IF NOT EXISTS id_temp_seq;
+    ALTER TABLE {temp_table} ALTER COLUMN
+        id SET DEFAULT nextval('id_temp_seq'::regclass);
+    """
+
+    timestamp_column_setup = """
+    ALTER TABLE {temp_table} ALTER COLUMN
+        created_on SET DEFAULT CURRENT_TIMESTAMP;
+    ALTER TABLE {temp_table} ALTER COLUMN
+        updated_on SET DEFAULT CURRENT_TIMESTAMP;
+    """
+
+    metric_column_setup = """
+    ALTER TABLE {temp_table} ADD COLUMN IF NOT EXISTS
+        standardized_popularity double precision;
+    ALTER TABLE {temp_table} ALTER COLUMN
+        view_count SET DEFAULT 0;
+    """
+
+    conclusion = """
+    ALTER TABLE {temp_table} ADD PRIMARY KEY (id);
+    DROP SERVER upstream CASCADE;
+    """
+
+    if approach == "basic":
+        steps = [
+            table_creation,
+            id_column_setup,
+            timestamp_column_setup,
+            """
+            INSERT INTO {temp_table} ({columns}) SELECT {columns} from {upstream_table};
+            """,
+            conclusion,
+        ]
+    else:  # approach == 'advanced'
+        steps = [
+            table_creation,
+            id_column_setup,
+            metric_column_setup,
+            """
+            INSERT INTO {temp_table} ({columns})
+                SELECT {columns} from {upstream_table} AS u
+                WHERE NOT EXISTS(
+                    SELECT FROM {deleted_table} WHERE identifier = u.identifier
+                );
+            """,
+            conclusion,
+        ]
+
+    return SQL("".join(steps)).format(
         table=Identifier(table),
         temp_table=Identifier(f"temp_import_{table}"),
         upstream_table=Identifier("upstream_schema", f"{table}_view"),

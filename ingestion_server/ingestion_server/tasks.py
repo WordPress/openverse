@@ -108,6 +108,8 @@ class Task(Process):
             indexer.update(self.model, self.since_date)
         elif self.task_type == TaskTypes.INGEST_UPSTREAM:
             reload_upstream(self.model)
+            if self.model == "audio":
+                reload_upstream("audioset", approach="basic")
             indexer.reindex(self.model)
         elif self.task_type == TaskTypes.LOAD_TEST_DATA:
             indexer.load_test_data(self.model)

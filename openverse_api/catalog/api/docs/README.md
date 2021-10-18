@@ -26,7 +26,7 @@ Example on how to register for a key:
 $ curl \
   -X POST \
   -H "Content-Type: application/json" \
-  -d '{"name": "My amazing project", "description": "To access Openverse API", "email": "zack.krida@automattic.com"}' \
+  -d '{"name": "My amazing project", "description": "To access Openverse API", "email": "user@example.com"}' \
   "https://api.openverse.engineering/v1/auth_tokens/register"
 ```
 If your request is successful, you will get a `client_id` and `client_secret`.
