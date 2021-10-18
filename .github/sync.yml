@@ -1,19 +1,32 @@
-group: # Openverse
-  repos: |
-    WordPress/openverse-catalog
-    WordPress/openverse-api
-    WordPress/openverse-frontend
-    WordPress/openverse-browser-extension
-  files:
-    - source: .github/workflows/new_issues.yml
-      dest: .github/workflows/new_issues.yml
-    - source: .github/workflows/new_prs.yml
-      dest: .github/workflows/new_prs.yml
-    - source: .github/workflows/pr_label_check.yml
-      dest: .github/workflows/pr_label_check.yml
-    - source: .github/ISSUE_TEMPLATE/
-      dest: .github/ISSUE_TEMPLATE/
-    - source: .github/PULL_REQUEST_TEMPLATE.md
-      dest: .github/PULL_REQUEST_TEMPLATE.md
-    - source: .github/CODEOWNERS
-      dest: .github/CODEOWNERS
+group:
+  # Openverse
+  - repos: |
+      WordPress/openverse-catalog
+      WordPress/openverse-api
+      WordPress/openverse-frontend
+      WordPress/openverse-browser-extension
+    files:
+      - source: .github/workflows/new_issues.yml
+        dest: .github/workflows/new_issues.yml
+      - source: .github/workflows/new_prs.yml
+        dest: .github/workflows/new_prs.yml
+      - source: .github/workflows/pr_label_check.yml
+        dest: .github/workflows/pr_label_check.yml
+      - source: .github/ISSUE_TEMPLATE/
+        dest: .github/ISSUE_TEMPLATE/
+      - source: .github/PULL_REQUEST_TEMPLATE.md
+        dest: .github/PULL_REQUEST_TEMPLATE.md
+  # Frontend repositories
+  - repos: |
+      WordPress/openverse-frontend
+      WordPress/openverse-browser-extension
+    files:
+      - source: .github/CODEOWNERS_FRONTEND
+        dest: .github/CODEOWNERS
+  # Backend repositories
+  - repos: |
+      WordPress/openverse-catalog
+      WordPress/openverse-api
+    files:
+      - source: .github/CODEOWNERS
+        dest: .github/CODEOWNERS
