@@ -64,3 +64,10 @@ be reviewed manually and then published.
 
 **Cron:** [at 00:01 on Monday](https://crontab.guru/#1_0_*_*_1)  
 **Dispatch:** enabled
+
+### New PR notification
+
+This workflow makes a `POST` request to the Slack webhook when a new PR is
+created, sending a notification message to the `#openverse` channel.
+
+**PR:** opened
