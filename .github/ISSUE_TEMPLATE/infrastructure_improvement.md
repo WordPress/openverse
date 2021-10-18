@@ -2,7 +2,7 @@
 name: Infrastructure Improvement Suggestion
 about: Suggest a way to improve our infrastructure
 labels: "🚦 status: awaiting triage, ✨ goal: improvement"
-title: "[Infrastructure] Replace with Title"
+title: "<Replace this with the actual title>"
 ---
 
 ## Current Situation
