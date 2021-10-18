@@ -58,3 +58,7 @@ shell: up
 # Run a given airflow command using the webserver image
 airflow command="": up
     docker-compose {{ DEV_DOCKER_FILES }} exec {{ SERVICE }} airflow {{ command }}
+
+# Launch a pgcli shell on the postgres container
+db-shell: up
+    docker-compose {{ DEV_DOCKER_FILES }} exec postgres pgcli

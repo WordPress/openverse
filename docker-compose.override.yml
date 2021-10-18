@@ -8,6 +8,8 @@ services:
       - POSTGRES_USER=deploy
       - POSTGRES_PASSWORD=deploy
       - POSTGRES_DB=openledger
+      - PGUSER=deploy
+      - PGDATABASE=openledger
     env_file: .env
     ports:
       - "5434:5432"

@@ -198,6 +198,12 @@ just logs
 
 To see the Airflow web UI, point your browser to `localhost:9090`. The default user name and password for the airflow UI are both `airflow`.
 
+To begin an interactive [`pgcli` shell](https://www.pgcli.com/) on the database container, run:
+
+```shell
+just db-shell
+```
+
 If you'd like to bring down the containers, run
 
 ```shell
