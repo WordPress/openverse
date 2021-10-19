@@ -71,11 +71,9 @@
           >
         </template>
         <template #email>
-          <a
-            aria-label="email"
-            href="mailto:support-search@creativecommons.org"
-            >{{ $t('meta-search-page.new.email') }}</a
-          >
+          <a aria-label="email" href="mailto:openverse@wordpress.org">{{
+            $t('meta-search-page.new.email')
+          }}</a>
         </template>
       </i18n>
       <h2 class="mt-10 mb-4 text-2xl">
