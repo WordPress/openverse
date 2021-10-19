@@ -8,6 +8,7 @@ CREATE TABLE public.audio_popularity_metrics (
 INSERT INTO public.audio_popularity_metrics (
   provider, metric, percentile
 ) VALUES
+  ('wikimedia_audio', 'global_usage_count', 0.85),
   ('jamendo', 'listens', 0.85);
 
 
