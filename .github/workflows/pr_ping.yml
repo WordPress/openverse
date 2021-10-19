@@ -24,4 +24,4 @@ jobs:
         pr_url: ${{ github.event.pull_request.html_url }}
         pr_title: ${{ github.event.pull_request.title }}
         pr_author: ${{ github.event.pull_request.user.login }}
-        pr_repo: ${{ github.event.pull_request.repo.full_name }}
+        pr_repo: ${{ github.event.pull_request.base.repo.full_name }}
