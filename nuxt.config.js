@@ -146,6 +146,7 @@ export default {
     '~/assets/fonts.css',
     '~/styles/vocabulary.scss',
     '~/styles/global.scss',
+    '~/styles/accent.scss',
   ],
   head,
   env,
