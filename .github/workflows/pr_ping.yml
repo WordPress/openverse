@@ -9,7 +9,6 @@ on:
 jobs:
   send_message:
     name: Send message
-    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
     - name: Send Slack notification
@@ -18,10 +17,11 @@ jobs:
           $slack_url \
           -X POST \
           -H 'Content-Type: application/json' \
-          -d '{"blocks": [{"type":"section","text":{"type":"mrkdwn","text":":pull-request: New PR by *'"$pr_author"'* in `'"$pr_repo"'`:\n<'"$pr_url"'|'"$pr_title"'>"}}]}'
+          -d '{"blocks": [{"type":"section","text":{"type":"mrkdwn","text":":pull-request: New PR by *'"$pr_author"'* in `'"$pr_repo"'`:\n<'"$pr_url"'|#'"$pr_number"' - '"$pr_title"'>"}}]}'
       env:
         slack_url: ${{ secrets.SLACK_WEBHOOK_URL }}
         pr_url: ${{ github.event.pull_request.html_url }}
+        pr_number: ${{ github.event.pull_request.number }}
         pr_title: ${{ github.event.pull_request.title }}
         pr_author: ${{ github.event.pull_request.user.login }}
         pr_repo: ${{ github.event.pull_request.base.repo.full_name }}
