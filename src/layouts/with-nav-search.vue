@@ -12,7 +12,7 @@ const withNavSearch = {
   name: 'with-nav-search',
   layout: 'with-nav-search',
   head() {
-    return this.$nuxtI18nHead({ addSeoAttributes: true })
+    return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
   },
 }
 export default withNavSearch

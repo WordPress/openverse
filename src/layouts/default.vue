@@ -12,7 +12,7 @@ const defaultPage = {
   name: 'default',
   layout: 'default',
   head() {
-    return this.$nuxtI18nHead({ addSeoAttributes: true })
+    return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
   },
 }
 export default defaultPage

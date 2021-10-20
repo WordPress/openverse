@@ -17,7 +17,7 @@ const embeddedPage = {
   layout: 'embedded',
   mixins: [iframeHeight, i18nSync],
   head() {
-    return this.$nuxtI18nHead({ addSeoAttributes: true })
+    return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
   },
   computed: { ...mapState('nav', ['isReferredFromCc']) },
 }

@@ -16,12 +16,13 @@
         </svg>
       </span>
       <div class="select">
-        <select ref="select" aria-labelledby="locale-label" @change="setLocale">
-          <option :key="$i18n.locale" :value="$i18n.locale">
-            {{ $i18n.localeProperties.name }}
-          </option>
+        <select
+          ref="select"
+          v-model="currentLocale"
+          aria-labelledby="locale-label"
+        >
           <option
-            v-for="locale in otherAvailableLocales"
+            v-for="locale in $i18n.locales"
             :key="locale.code"
             :value="locale.code"
           >
@@ -50,13 +51,13 @@ export default {
     }
   },
   computed: {
-    otherAvailableLocales() {
-      return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale)
-    },
-  },
-  methods: {
-    setLocale(event) {
-      this.$i18n.setLocale(event.target.value)
+    currentLocale: {
+      get() {
+        return this.$i18n.locale
+      },
+      set(val) {
+        this.$i18n.setLocale(val)
+      },
     },
   },
 }
