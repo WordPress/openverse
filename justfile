@@ -59,6 +59,6 @@ shell: up
 airflow command="": up
     docker-compose {{ DEV_DOCKER_FILES }} exec {{ SERVICE }} airflow {{ command }}
 
-# Launch a pgcli shell on the postgres container
-db-shell: up
-    docker-compose {{ DEV_DOCKER_FILES }} exec postgres pgcli
+# Launch a pgcli shell on the postgres container (defaults to openledger) use "airflow" for airflow metastore
+db-shell args="openledger": up
+    docker-compose {{ DEV_DOCKER_FILES }} exec postgres pgcli {{ args }}
