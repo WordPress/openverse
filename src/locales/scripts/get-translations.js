@@ -41,7 +41,7 @@ const replacePlaceholders = (json) => {
     return null
   }
   if (typeof json === 'string') {
-    return json.replace(/###([a-zA-Z-]*)###/, '{$1}')
+    return json.replace(/###([a-zA-Z-]*)###/g, '{$1}')
   }
   let currentJson = { ...json }
 

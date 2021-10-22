@@ -78,6 +78,13 @@
     "file": "es-co.json"
   },
   {
+    "code": "es-do",
+    "name": "Spanish (Dominican Republic)",
+    "iso": "es",
+    "wpLocale": "es_DO",
+    "file": "es-do.json"
+  },
+  {
     "code": "es-ec",
     "name": "Spanish (Ecuador)",
     "iso": "es",

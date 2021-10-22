@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-10-15T17:05:38+00:00\n"
+"POT-Creation-Date: 2021-10-21T17:13:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,7 +18,7 @@ msgctxt "interpunct"
 msgid "•"
 msgstr ""
 
-#: src/components/DownloadButton.vue:13
+#: src/components/DownloadButton.vue:14
 msgctxt "download-button.download"
 msgid "Download"
 msgstr ""
@@ -44,7 +44,7 @@ msgctxt "migration-notice.read"
 msgid "Read more"
 msgstr ""
 
-#: src/components/DropdownButton.vue:66
+#: src/components/DropdownButton.vue:71
 msgctxt "dropdown-button.aria.arrow-label"
 msgid "Dropdown"
 msgstr ""
@@ -1514,33 +1514,33 @@ msgctxt "meta-search-page.use"
 msgid " Use "
 msgstr ""
 
-#: src/pages/meta-search.vue:82
+#: src/pages/meta-search.vue:80
 msgctxt "meta-search-page.why.title"
 msgid "Why did you build this?"
 msgstr ""
 
-#: src/pages/meta-search.vue:84
+#: src/pages/meta-search.vue:82
 msgctxt "meta-search-page.why.content"
 msgid "For many years, CC has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. These platforms included Europeana, Google Images, Flickr, Jamendo, Open Clip Art Library, SpinXpress, Wikimedia Commons, YouTube, ccMixter, and SoundCloud. The search experience looked like this:"
 msgstr ""
 
-#: src/pages/meta-search.vue:92
+#: src/pages/meta-search.vue:90
 msgctxt "meta-search-page.why.new"
 msgid "For users of the legacy CC Meta Search site, the Meta Search feature on Openverse will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the Meta Search feature builds on this functionality, allowing us to quickly add new sources to Meta Search as we discover them, and support new content types in the future, as we expand."
 msgstr ""
 
-#: src/pages/meta-search.vue:97
+#: src/pages/meta-search.vue:95
 msgctxt "meta-search-page.why.aria-label"
 msgid "feedback"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/meta-search.vue:94
+#: src/pages/meta-search.vue:92
 msgctxt "meta-search-page.why.feedback-suggestions"
 msgid "We hope you enjoy, and if you have suggestions for improvement, leave us ###feedback###."
 msgstr ""
 
-#: src/pages/meta-search.vue:99
+#: src/pages/meta-search.vue:97
 msgctxt "meta-search-page.why.feedback-link"
 msgid "feedback"
 msgstr ""
@@ -1561,7 +1561,7 @@ msgctxt "meta-search-page.new.issue"
 msgid "issue"
 msgstr ""
 
-#: src/pages/meta-search.vue:77
+#: src/pages/meta-search.vue:75
 msgctxt "meta-search-page.new.email"
 msgid "email"
 msgstr ""
