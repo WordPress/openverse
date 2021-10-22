@@ -74,6 +74,7 @@ services:
 
   ingestion-server:
     build: ./ingestion_server/
+    image: ingestion_server
     command: bash -c 'sleep 20 && supervisord -c config/supervisord.conf'
     ports:
       - "8001:8001"
@@ -92,6 +93,7 @@ services:
     build:
       context: ./ingestion_server/
       dockerfile: Dockerfile-worker
+    image: indexer_worker
     ports:
       - "8002:8002"
     depends_on:

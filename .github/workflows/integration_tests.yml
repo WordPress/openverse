@@ -9,45 +9,79 @@ on:
   workflow_dispatch:
 
 jobs:
-  Linting:
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.9
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Setup Python
       uses: actions/setup-python@v2
+    - name: Cache pre-commit envs
+      uses: actions/cache@v2
       with:
-        python-version: 3.9
-    - name: Lint
-      working-directory: ./openverse_api
+        path: ~/.cache/pre-commit
+        key: ${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+    - name: Run pre-commit to lint files
       run: |
         pip install pre-commit
         pre-commit run --all-files
-  Tests:
-    timeout-minutes: 15
+
+  test:
+    name: Run tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
-    - uses: extractions/setup-just@v1
-    - name: Install dependencies
-      run: |
-        pip install pytest pipenv
-        sudo apt-get install libexempi8 librdkafka-dev
-        PIPENV_PIPFILE=./openverse_api/Pipfile pipenv install --system --deploy --dev &
-    - name: Pull containers
-      run: docker-compose pull --ignore-pull-failures
-    - name: Cache Docker images
-      uses: satackey/action-docker-layer-caching@v0.0.11
-      continue-on-error: true
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Setup just
+      uses: extractions/setup-just@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      with:
+        install: true
+    - name: Build image `openverse_api`
+      uses: docker/build-push-action@v2
+      with:
+        context: ./openverse_api/
+        push: false
+        load: true
+        target: api
+        tags: openverse_api
+        cache-from: type=gha,scope=openverse_api
+        cache-to: type=gha,scope=openverse_api,mode=max
+    - name: Build image `ingestion_server`
+      uses: docker/build-push-action@v2
+      with:
+        context: ./ingestion_server/
+        push: false
+        load: true
+        tags: ingestion_server
+        cache-from: type=gha,scope=ingestion_server
+        cache-to: type=gha,scope=ingestion_server
+    - name: Build image `indexer_worker`
+      uses: docker/build-push-action@v2
+      with:
+        context: ./ingestion_server/
+        file: ./ingestion_server/Dockerfile-worker
+        push: false
+        load: true
+        tags: indexer_worker
+        cache-from: type=gha,scope=indexer_worker
+        cache-to: type=gha,scope=indexer_worker
+    - name: Build image `analytics`
+      uses: docker/build-push-action@v2
+      with:
+        context: ./analytics/
+        push: false
+        load: true
+        tags: analytics
+        cache-from: type=gha,scope=analytics
+        cache-to: type=gha,scope=analytics
     - name: Start API, ingest and index test data
       run: just init
-    - name: Wait for data to be indexed in Elasticsearch
-      run: bash -c 'while [[ "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/image | grep -c image-)" == "0" || "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/audio | grep -c audio-)" == "0" ]]; do sleep 5 && docker-compose logs; done'
     - name: Run API tests
-      working-directory: ./openverse_api
-      env:
-        PIPENV_DOTENV_LOCATION: ./env.template
-      run: pipenv run test/run_test.sh
+      run: just test -T
     - name: Run analytics tests
       working-directory: ./analytics
-      run: docker exec -i openverse-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
+      run: just nl-test -T

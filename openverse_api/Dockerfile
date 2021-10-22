@@ -3,7 +3,7 @@ FROM realies/audiowaveform:latest AS awf
 RUN ldd /usr/local/bin/audiowaveform | tr -s '[:blank:]' '\n' | grep '^/' | \
     xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%;'
 
-FROM python:3.10.0
+FROM python:3.10 AS api
 
 ENV PYTHONBUFFERED 1
 

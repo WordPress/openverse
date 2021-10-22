@@ -19,6 +19,6 @@ RUN pip install --upgrade pip \
 # Copy the Pipenv files into the container
 COPY . /analytics/
 
-RUN pipenv install
+RUN pipenv install --deploy --system --dev
 EXPOSE 8090
 ENTRYPOINT pipenv run gunicorn -b '0.0.0.0:8090' server:api
