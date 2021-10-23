@@ -23,7 +23,7 @@ syntax_examples = {
 image_search_list_curl = "\n".join(
     f"""
 # Example {index}: Search for images {purpose}
-curl {auth} "{origin}/v1/images?q={syntax}"
+curl {auth} "{origin}/v1/images/?q={syntax}"
 """
     for (index, (purpose, syntax)) in enumerate(syntax_examples.items())
 )
