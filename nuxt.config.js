@@ -217,7 +217,7 @@ export default {
         options: {
           backgrounds: false,
           viewport: false,
-          toolbars: false,
+          toolbars: true,
         },
       },
     ],
