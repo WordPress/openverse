@@ -1,6 +1,7 @@
 import logging
 import time
 
+import oauth2
 import requests
 
 
@@ -24,6 +25,7 @@ class DelayedRequester:
     def __init__(self, delay=0):
         self._DELAY = delay
         self._last_request = 0
+        self.session = requests.Session()
 
     def get(self, url, params=None, **kwargs):
         """
@@ -38,7 +40,7 @@ class DelayedRequester:
         self._delay_processing()
         self._last_request = time.time()
         try:
-            response = requests.get(url, params=params, **kwargs)
+            response = self.session.get(url, params=params, **kwargs)
             if response.status_code == requests.codes.ok:
                 logger.info(f"Received response from url {response.url}")
                 return response
@@ -90,3 +92,10 @@ class DelayedRequester:
             )
 
         return response_json
+
+
+class OAuth2DelayedRequester(DelayedRequester):
+    def __init__(self, provider_name: str, delay: int = 0):
+        super().__init__(delay)
+        # Replace session with Oauth one
+        self.session = oauth2.get_oauth_client(provider_name)

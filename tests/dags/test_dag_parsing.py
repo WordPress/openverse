@@ -44,6 +44,8 @@ ADDITIONAL_DAGS = [
     "refresh_all_image_popularity_data.py",
     "refresh_image_view_data.py",
     "commoncrawl_etl.py",
+    "oauth2/authorize_dag.py",
+    "oauth2/token_refresh_dag.py",
 ]
 
 # Expected count from the DagBag once a file has been parsed
