@@ -16,4 +16,7 @@ jobs:
       - name: Change permissions for Docker steps
         run: chmod -R 777 openverse_catalog/ tests/
       - name: Test
-        run: just test
+        run: |
+          just up
+          sleep 5  # TODO: Find a more thorough way of addressing this
+          just test
