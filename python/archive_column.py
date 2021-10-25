@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 # region argparse
 parser = argparse.ArgumentParser(
-    description="Move issues to the correct columns in projects",
+    description="Archive all cards in the given column of a project",
 )
 parser.add_argument(
     "--project-number",
@@ -18,7 +18,7 @@ parser.add_argument(
     metavar="project-number",
     type=int,
     required=True,
-    help="the project in which to move cards containing issues with PRs",
+    help="the project in which to the column to archive is located",
 )
 parser.add_argument(
     "--column",
@@ -26,7 +26,7 @@ parser.add_argument(
     metavar="column",
     type=str,
     required=True,
-    help="column from which to archive cards for PRs",
+    help="column from which to archive the cards",
 )
 
 
