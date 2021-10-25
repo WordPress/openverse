@@ -68,6 +68,7 @@ be reviewed manually and then published.
 ### New PR notification
 
 This workflow makes a `POST` request to the Slack webhook when a new PR is
-created, sending a notification message to the `#openverse` channel.
+created, sending a notification message to the `#openverse` channel. This ping
+is not sent for PRs made by Dependabot and downstream sync action.
 
 **PR:** opened
