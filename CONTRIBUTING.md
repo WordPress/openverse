@@ -50,11 +50,11 @@ TypeScript support in Vue 2 (which we're currently locked into due to Nuxt's cur
 
 ### Styles/CSS
 
-We use TailwindCSS for writing styles. There are some legacy components that have been written in "hand-written" CSS. Our aim is to eventually re-write these using Tailwind classes.
+We use [Tailwind CSS](https://tailwindcss.com/) for writing styles. There are some legacy components that have been written in "hand-written" CSS. Our aim is to eventually re-write these using Tailwind classes.
 
-Our Tailwind configuration lives at [`./tailwind.config.js`](./tailwind.config.js) and is a useful reference for Openverse specific spacing and color classes. Please refer to the official [TailwindCSS documentation](https://tailwindcss.com/docs) for a detailed and searchable list of the available classes. At times you'll need to cross reference this documentation with our specific configuration in the `tailwind.config.js` file.
+Our Tailwind configuration lives at [`./tailwind.config.js`](./tailwind.config.js) and is a useful reference for Openverse specific spacing and color classes. Please refer to the official [Tailwind CSS documentation](https://tailwindcss.com/docs) for a detailed and searchable list of the available classes. At times you'll need to cross reference this documentation with our specific configuration in the `tailwind.config.js` file.
 
-We also use the [TailwindCSS RTL](https://github.com/20lives/tailwindcss-rtl) plugin to make writing RTL styles seamless. Most use cases of the right/left based classes should use the start/end variants introduced by the plugin instead.
+We also use the [Tailwind CSS RTL](https://github.com/20lives/tailwindcss-rtl) plugin to make writing [right-to-left (RTL)](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/dir) styles seamless. Most use cases of the right/left based classes should use the start/end variants introduced by the plugin instead.
 
 ## Questions or Thoughts?
 
