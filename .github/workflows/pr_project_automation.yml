@@ -1,0 +1,44 @@
+name: PR project automation
+# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#pr-project-automation
+
+on:
+  schedule:
+  - cron: "15 15 * * 2" # 3:15pm on Tuesday
+
+env:
+  LOGGING_LEVEL: 20 # corresponds to INFO
+  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+jobs:
+  clear_done:
+    name: Clear done PRs
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.9"
+
+    - name: Install dependencies
+      working-directory: ./python
+      run: |
+        python -m pip install --user --upgrade pip
+        python -m pip install --user pipenv
+        pipenv install --deploy
+
+    - name: Clear PRs in "Merged!"
+      working-directory: ./python
+      run: |
+        pipenv run python archive_column.py \
+        --project-number 8 \
+        --column "Merged\!"
+
+    - name: Clear PRs in "Closed"
+      working-directory: ./python
+      run: |
+        pipenv run python archive_column.py \
+        --project-number 8 \
+        --column "Closed"
