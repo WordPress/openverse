@@ -58,9 +58,8 @@ truth, it creates PRs to resolve any differences.
 
 ### Weekly updates
 
-This workflow creates a draft post on the Make Openverse site once a week 
-outlining the closed issues and merged PRs of the preceding week. The post can
-be reviewed manually and then published.
+This workflow creates and publishes a post on the Make Openverse site once a week 
+outlining the closed issues and merged PRs of the preceding week.
 
 **Cron:** [at 00:01 on Monday](https://crontab.guru/#1_0_*_*_1)  
 **Dispatch:** enabled
