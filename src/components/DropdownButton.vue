@@ -4,7 +4,7 @@
     <div class="flex">
       <slot
         :button-props="{
-          class: 'dropdown-button rounded-l-sm rounded-r-none',
+          class: 'dropdown-button rounded-s-sm rounded-e-none',
           type: 'button',
         }"
       />
@@ -12,7 +12,7 @@
         v-if="!isSingleItem"
         ref="dropdownButton"
         type="button"
-        class="dropdown-button ml-1 rounded-r-sm rounded-l-none w-14"
+        class="dropdown-button ms-1 rounded-e-sm rounded-s-none w-14"
         :class="{ 'dropdown-button-active': isOpen }"
         aria-haspopup="menu"
         :aria-label="safeDropdownAriaLabel"

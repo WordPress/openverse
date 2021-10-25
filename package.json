@@ -99,6 +99,7 @@
     "postcss": "^8.3.6",
     "prettier": "^2.2.1",
     "tailwindcss": "^2.2.7",
+    "tailwindcss-rtl": "^0.7.3",
     "vue-i18n-extract": "^2.0.0",
     "vue-jest": "^3.0.7"
   },

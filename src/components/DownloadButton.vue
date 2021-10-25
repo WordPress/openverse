@@ -12,10 +12,10 @@
         download=""
       >
         <span>{{ $t('download-button.download') }}</span>
-        <span class="ml-4 selected-format">
+        <span class="ms-4 selected-format">
           {{ selectedFormat.extension_name }}
         </span>
-        <span class="ml-1 font-normal">{{
+        <span class="ms-1 font-normal">{{
           getFormatSize(selectedFormat.extension_name)
         }}</span>
       </a>
@@ -48,7 +48,7 @@
             "
             @keydown="onItemKeydown($event)"
           >
-            <span class="font-bold mr-2">{{ format.extension_name }}</span>
+            <span class="font-bold me-2">{{ format.extension_name }}</span>
             <span>{{ getFormatSize(format.extension_name) }}</span>
           </button>
         </li>

@@ -172,5 +172,5 @@ module.exports = {
       ringWidth: ['focus-visible'],
     },
   },
-  plugins: [],
+  plugins: [require('tailwindcss-rtl')],
 }
