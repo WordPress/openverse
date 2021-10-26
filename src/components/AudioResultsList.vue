@@ -52,7 +52,6 @@ import { mapActions, mapState } from 'vuex'
 export default {
   name: 'AudioResultsList',
   props: {
-    query: {},
     includeAnalytics: {
       default: true,
     },
@@ -60,13 +59,13 @@ export default {
   async fetch() {
     if (!this.audios.length) {
       await this.fetchMedia({
-        ...this.$store.state.query,
+        ...this.query,
         mediaType: AUDIO,
       })
     }
   },
   computed: {
-    ...mapState(['audios', 'errorMessage', 'isFilterVisible']),
+    ...mapState(['audios', 'errorMessage', 'isFilterVisible', 'query']),
     ...mapState({
       isFetchingAudios: 'isFetching.audios',
       isFetchingAudiosError: 'isFetchingError.audios',

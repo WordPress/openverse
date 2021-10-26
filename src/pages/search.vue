@@ -22,13 +22,20 @@
   </div>
 </template>
 <script>
-import { FETCH_MEDIA, SET_SEARCH_TYPE_FROM_URL } from '~/constants/action-types'
+import {
+  FETCH_MEDIA,
+  SET_SEARCH_TYPE_FROM_URL,
+  UPDATE_SEARCH_TYPE,
+} from '~/constants/action-types'
 import {
   SET_QUERY,
   SET_FILTER_IS_VISIBLE,
   SET_FILTERS_FROM_URL,
 } from '~/constants/mutation-types'
-import { queryStringToQueryData } from '~/utils/search-query-transform'
+import {
+  queryStringToQueryData,
+  queryStringToSearchType,
+} from '~/utils/search-query-transform'
 import local from '~/utils/local'
 import { screenWidth } from '~/utils/get-browser-info'
 import { ALL_MEDIA, IMAGE } from '~/constants/media'
@@ -80,6 +87,7 @@ const BrowsePage = {
     ...mapActions({
       fetchMedia: FETCH_MEDIA,
       setSearchTypeFromUrl: SET_SEARCH_TYPE_FROM_URL,
+      updateSearchType: UPDATE_SEARCH_TYPE,
     }),
     ...mapMutations({
       setQuery: SET_QUERY,
@@ -116,6 +124,10 @@ const BrowsePage = {
         this.$router.push(newPath)
         this.getMediaItems(newQuery, this.mediaType)
       }
+    },
+    $route(route) {
+      const searchType = queryStringToSearchType(route.path)
+      this.updateSearchType({ searchType })
     },
   },
 }
