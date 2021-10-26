@@ -8,6 +8,7 @@ from shared.data import get_data
 from shared.github import get_client
 from shared.log import configure_logger
 
+
 log = logging.getLogger(__name__)
 
 

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import logging
 import sys
@@ -7,6 +8,7 @@ from shared.data import get_data
 from shared.github import get_client
 from shared.log import configure_logger
 from shared.project import get_org_project, get_project_column
+
 
 log = logging.getLogger(__name__)
 

@@ -21,14 +21,14 @@ color them. The SVG paths for the icon are classed based on their position as
 
 ![icon](icon.svg)
 
-**Dimensions:** 46px &times; 42px  
+**Dimensions:** 46px &times; 42px
 **Group ID:** `icon`
 
 ### Logo
 
 ![logo](logo.svg)
 
-**Dimensions:** 226px &times; 34px  
+**Dimensions:** 226px &times; 34px
 **Group ID:** `logo`
 
 ## Colors

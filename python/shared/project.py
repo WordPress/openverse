@@ -2,6 +2,7 @@ import logging
 
 from github import Organization, Project, ProjectColumn
 
+
 log = logging.getLogger(__name__)
 
 
