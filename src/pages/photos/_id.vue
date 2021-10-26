@@ -41,22 +41,19 @@ const PhotoDetailPage = {
   computed: {
     ...mapState(['image']),
   },
-  async asyncData({ env, route }) {
-    return {
-      thumbnailURL: `${env.apiUrl}thumbs/${route.params.id}`,
-      imageId: route.params.id,
-    }
-  },
   async fetch() {
+    this.imageId = this.$route.params.id
+    this.thumbnailURL = `${process.env.apiUrl}thumbs/${this.imageId}`
+
     try {
-      // Load the image
-      await this.$store.dispatch(`${FETCH_IMAGE}`, { id: this.imageId })
+      await this.fetchImage({ id: this.imageId })
     } catch (err) {
+      const errorMessage = this.$t('error.image-not-found', {
+        id: this.imageId,
+      })
       this.$nuxt.error({
         statusCode: 404,
-        message: this.$t('error.image-not-found', {
-          id: this.imageId,
-        }).toString(),
+        message: errorMessage,
       })
     }
   },
@@ -69,7 +66,7 @@ const PhotoDetailPage = {
     })
   },
   methods: {
-    ...mapActions([FETCH_IMAGE]),
+    ...mapActions({ fetchImage: FETCH_IMAGE }),
     onImageLoaded(event) {
       this.imageWidth = event.target.naturalWidth
       this.imageHeight = event.target.naturalHeight

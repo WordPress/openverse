@@ -69,6 +69,8 @@ const state = {
   errorMessage: null,
   searchType: ALL_MEDIA,
   query: {},
+  audio: {},
+  image: {},
 }
 
 const actions = (services) => ({
