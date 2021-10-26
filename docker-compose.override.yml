@@ -14,13 +14,37 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - postgres-volume:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
 
   s3:
-    build:
-      context: docker/local_s3
+    image: minio/minio:latest
     ports:
       - "5000:5000"
+      - "5001:5001"
+    env_file:
+      - .env
+    environment:
+      MINIO_ROOT_USER: ${AWS_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${AWS_SECRET_KEY}
+      # Comma separated list of buckets to create on startup
+      BUCKETS_TO_CREATE: ${OPENVERSE_BUCKET},openverse-airflow-logs,commonsmapper-v2,commonsmapper
+    # Create the buckets on every container startup
+    # Note: $0 is included in the exec because "/bin/bash -c" swallows the first
+    # argument, so it must be re-added at the beginning of the exec call
+    entrypoint: >-
+      /bin/bash -c
+      "for b in $${BUCKETS_TO_CREATE//,/ }; do
+        echo \"Making bucket $$b\" && mkdir -p /data/$$b;
+      done &&
+      exec $$0 \"$$@\""
+    command: minio server /data --address :5000 --console-address :5001
+    volumes:
+      - minio:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
 
   # Dev changes for the webserver container
   webserver:
@@ -33,8 +57,9 @@ services:
     # Volume override to include *all* of openverse_catalog, not just the DAGs folder
     # Note, this overrides the whole block, so existing volumes must be duplicated
     volumes:
-      - airflow-volume:/var/workflow_output
+      - airflow:/var/workflow_output
       - ./openverse_catalog:/usr/local/airflow/openverse_catalog
 
 volumes:
-  postgres-volume:
+  postgres:
+  minio:

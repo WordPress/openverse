@@ -11,11 +11,11 @@ from util.loader import s3
 TEST_ID = "testing"
 TEST_MEDIA_PREFIX = "media"
 TEST_STAGING_PREFIX = "test_staging"
-AWS_CONN_ID = os.getenv("AWS_TEST_CONN_ID")
+AWS_CONN_ID = os.getenv("AWS_CONN_ID")
 S3_LOCAL_ENDPOINT = os.getenv("S3_LOCAL_ENDPOINT")
 S3_TEST_BUCKET = f"cccatalog-storage-{TEST_ID}"
-ACCESS_KEY = os.getenv("TEST_ACCESS_KEY")
-SECRET_KEY = os.getenv("TEST_SECRET_KEY")
+ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
+SECRET_KEY = os.getenv("AWS_SECRET_KEY")
 S3_HOST = socket.gethostbyname(urlparse(S3_LOCAL_ENDPOINT).hostname)
 
 

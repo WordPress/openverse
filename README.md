@@ -169,6 +169,12 @@ and some networking setup so that they can communicate. Note:
   in the container `openverse_catalog_webserver_1`. On production, only the DAGs folder
   will be mounted, e.g. `/usr/local/airflow/openverse_catalog/dags`.
 
+The various services can be accessed using these links:
+
+- Airflow: `localhost:9090` (The default username and password are both `airflow`.)
+- Minio Console: `localhost:5001` (The default username and password are `test_key` and `test_secret`)
+- Postgres: `localhost:5434` (using a database connector)
+
 At this stage, you can run the tests via:
 
 ```shell
@@ -195,8 +201,6 @@ To follow the logs of the running container:
 ```shell
 just logs
 ```
-
-To see the Airflow web UI, point your browser to `localhost:9090`. The default user name and password for the airflow UI are both `airflow`.
 
 To begin an interactive [`pgcli` shell](https://www.pgcli.com/) on the database container, run:
 
