@@ -37,11 +37,11 @@ USER airflow
 
 WORKDIR  ${AIRFLOW_HOME}
 # Always add the prod req because the dev reqs depend on it for deduplication
-COPY ${REQUIREMENTS_FILE} requirements_prod.txt wait_for_db.py ${AIRFLOW_HOME}/
+COPY ${REQUIREMENTS_FILE} requirements_prod.txt docker/airflow/wait_for_db.py ${AIRFLOW_HOME}/
 
 RUN pip install --user -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE}
 
-CMD python wait_for_db.py && \
-  airflow db init && \
-  airflow users create -r Admin -u airflow -f Air -l Flow -p airflow --email airflow@example.org && \
-  (airflow scheduler & airflow webserver)
+COPY docker/airflow/entrypoint.sh entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["server"]

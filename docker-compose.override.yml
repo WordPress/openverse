@@ -54,6 +54,8 @@ services:
     build:
       args:
         - REQUIREMENTS_FILE=requirements_dev.txt
+    # This command ensures an admin account is created on startup
+    command: init
     # Volume override to include *all* of openverse_catalog, not just the DAGs folder
     # Note, this overrides the whole block, so existing volumes must be duplicated
     volumes:
