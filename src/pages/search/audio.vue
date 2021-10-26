@@ -6,12 +6,7 @@
       :query="query"
       @onLoadMoreAudios="onLoadMoreAudios"
     />
-    <MetaSearchForm
-      type="audio"
-      :query="query"
-      :noresult="false"
-      :supported="supported"
-    />
+    <MetaSearchForm type="audio" :noresult="false" :supported="supported" />
   </div>
 </template>
 

@@ -30,9 +30,9 @@
 
       <div class="mb-1 text-left">
         <button
+          type="button"
           class="button is-text tiny p-0 report mt-2"
-          @click.prevent="toggleReportFormVisibility"
-          @keypress.enter.prevent="toggleReportFormVisibility"
+          @click="toggleReportFormVisibility"
         >
           <span class="text-trans-blue ml-2 text-sm">
             <i class="icon flag mr-2" />
@@ -139,7 +139,6 @@
       </section>
 
       <a
-        v-if="activeTab < 2"
         data-testid="source-button"
         :href="image.foreign_landing_url"
         target="_blank"
@@ -152,7 +151,7 @@
         <i class="icon external-link ml-4 text-base pt-1 text-light-gray" />
       </a>
 
-      <ReuseSurvey v-if="activeTab < 2" :image="image" />
+      <ReuseSurvey :image="image" />
     </div>
   </div>
 </template>
@@ -173,7 +172,6 @@ export default {
     'image',
     'breadCrumbURL',
     'shouldShowBreadcrumb',
-    'query',
     'imageWidth',
     'imageHeight',
     'imageType',
@@ -237,7 +235,7 @@ export default {
       this.activeTab = tabIdx
     },
     attributionHtml() {
-      const licenseUrl = `${this.openverseLicenseUrl}&atype=html`
+      const licenseUrl = `${this.licenseUrl}&atype=html`
       return attributionHtml(this.image, licenseUrl, this.fullLicenseName)
     },
     toggleReportFormVisibility() {

@@ -47,13 +47,7 @@ const AudioDetailPage = {
     }
   },
   computed: {
-    ...mapState(['query', 'audio']),
-    filter() {
-      return this.query.filter
-    },
-    tags() {
-      return this.audio.tags
-    },
+    ...mapState(['audio']),
     fullLicenseName() {
       return getFullLicenseName(this.audio.license, this.audio.license_version)
     },

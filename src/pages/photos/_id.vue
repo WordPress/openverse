@@ -5,7 +5,6 @@
       :thumbnail="thumbnailURL"
       :bread-crumb-u-r-l="breadCrumbURL"
       :should-show-breadcrumb="shouldShowBreadcrumb"
-      :query="query"
       :image-width="imageWidth"
       :image-height="imageHeight"
       :image-type="imageType"
@@ -17,9 +16,8 @@
 
 <script>
 import axios from 'axios'
-import { mapActions, mapMutations, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import { FETCH_IMAGE } from '~/constants/action-types'
-import { SET_IMAGE } from '~/constants/mutation-types'
 
 const PhotoDetailPage = {
   name: 'PhotoDetailPage',
@@ -31,7 +29,6 @@ const PhotoDetailPage = {
   data() {
     return {
       breadCrumbURL: '',
-      hasClarifaiTags: false,
       isPrimaryImageLoaded: false,
       shouldShowBreadcrumb: false,
       imageWidth: 0,
@@ -42,13 +39,7 @@ const PhotoDetailPage = {
     }
   },
   computed: {
-    ...mapState(['images', 'query', 'image']),
-    filter() {
-      return this.query.filter
-    },
-    tags() {
-      return this.image.tags
-    },
+    ...mapState(['image']),
   },
   async asyncData({ env, route }) {
     return {
@@ -79,7 +70,6 @@ const PhotoDetailPage = {
   },
   methods: {
     ...mapActions([FETCH_IMAGE]),
-    ...mapMutations([SET_IMAGE]),
     onImageLoaded(event) {
       this.imageWidth = event.target.naturalWidth
       this.imageHeight = event.target.naturalHeight
