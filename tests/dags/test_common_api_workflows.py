@@ -1,13 +1,58 @@
 import os
+from datetime import datetime, timedelta, timezone
 
 import common_api_workflows as caw
 import util.config as conf
-from airflow.models import DagBag
+import util.dag_factory
+from airflow import DAG
+from airflow.models import DagBag, TaskInstance
 
 
 SCRIPT = conf.SCRIPT
 CRONTAB_STR = conf.CRONTAB_STR
 FILE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+
+def dated(dag_date):
+    print(dag_date)
+
+
+def test_get_dated_main_runner_handles_zero_shift(capsys):
+    dag = DAG(dag_id="test_dag", start_date=datetime.strptime("2019-01-01", "%Y-%m-%d"))
+    execution_date = datetime.strptime("2019-01-01", "%Y-%m-%d").replace(
+        tzinfo=timezone.utc
+    )
+    main_func = dated
+    with dag:
+        runner = util.dag_factory.get_dated_main_runner_operator(
+            main_func, timedelta(minutes=1)
+        )
+        ti = TaskInstance(runner, execution_date)
+        ti.run(ignore_task_deps=True, ignore_ti_state=True, test_mode=True)
+        # main_func.assert_called_with('2019-01-01')
+        # Mocking main_func causes errors because Airflow JSON-encodes it,
+        # and MagicMock is not JSON-serializable.
+        captured = capsys.readouterr()
+        assert captured.out == "2019-01-01\n"
+
+
+def test_get_dated_main_runner_handles_day_shift(capsys):
+    dag = DAG(dag_id="test_dag", start_date=datetime.strptime("2019-01-01", "%Y-%m-%d"))
+    execution_date = datetime.strptime("2019-01-01", "%Y-%m-%d").replace(
+        tzinfo=timezone.utc
+    )
+    main_func = dated
+    with dag:
+        runner = util.dag_factory.get_dated_main_runner_operator(
+            main_func, timedelta(minutes=1), day_shift=1
+        )
+        ti = TaskInstance(runner, execution_date)
+        ti.run(ignore_task_deps=True, ignore_ti_state=True, test_mode=True)
+        # main_func.assert_called_with('2018-12-31')
+        # Mocking main_func causes errors because Airflow JSON-encodes it,
+        # and MagicMock is not JSON-serializable.
+        captured = capsys.readouterr()
+        assert captured.out == "2018-12-31\n"
 
 
 def test_dags_load_with_no_errors(tmpdir):

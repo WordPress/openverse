@@ -3,12 +3,30 @@ from copy import deepcopy
 from datetime import datetime, timedelta
 
 import util.config as conf
-import util.operator_util as ops
 from airflow import DAG
 from airflow.models.baseoperator import cross_downstream
+from airflow.operators.dummy import DummyOperator
+from airflow.operators.python import PythonOperator
+from airflow.utils.trigger_rule import TriggerRule
 
 
 logger = logging.getLogger(__name__)
+
+
+def get_dated_main_runner_operator(
+    main_function,
+    execution_timeout,
+    day_shift=0,
+    task_id="pull_image_data",
+):
+    args_str = f"{{{{ macros.ds_add(ds, -{day_shift}) }}}}"
+    return PythonOperator(
+        task_id=task_id,
+        python_callable=main_function,
+        op_args=[args_str],
+        execution_timeout=execution_timeout,
+        depends_on_past=False,
+    )
 
 
 def create_provider_api_workflow(
@@ -74,11 +92,15 @@ def create_provider_api_workflow(
 
     with dag:
         if dated:
-            ops.get_dated_main_runner_operator(
+            get_dated_main_runner_operator(
                 main_function, dagrun_timeout, day_shift=day_shift
             )
         else:
-            ops.get_main_runner_operator(main_function)
+            PythonOperator(
+                task_id="pull_image_data",
+                python_callable=main_function,
+                depends_on_past=False,
+            )
 
     return dag
 
@@ -183,7 +205,9 @@ def create_day_partitioned_ingestion_dag(
             reingestion_day_list_list, main_function, ingestion_task_timeout
         )
         for i in range(len(ingest_operator_list_list) - 1):
-            wait_operator = ops.get_wait_till_done_operator(f"wait_L{i}")
+            wait_operator = DummyOperator(
+                task_id=f"wait_L{i}", trigger_rule=TriggerRule.ALL_DONE
+            )
             cross_downstream(ingest_operator_list_list[i], [wait_operator])
             wait_operator >> ingest_operator_list_list[i + 1]
         ingest_operator_list_list[-1]
@@ -198,7 +222,7 @@ def _build_ingest_operator_list_list(
         reingestion_day_list_list = [[0]] + reingestion_day_list_list
     return [
         [
-            ops.get_dated_main_runner_operator(
+            get_dated_main_runner_operator(
                 main_function,
                 ingestion_task_timeout,
                 day_shift=d,

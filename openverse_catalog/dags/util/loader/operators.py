@@ -121,30 +121,6 @@ def get_failure_moving_operator(output_dir, identifier=TIMESTAMP_TEMPLATE):
     )
 
 
-def get_flickr_sub_provider_update_operator(postgres_conn_id):
-    return PythonOperator(
-        task_id="update_flickr_sub_providers",
-        python_callable=sql.update_flickr_sub_providers,
-        op_args=[postgres_conn_id],
-    )
-
-
-def get_europeana_sub_provider_update_operator(postgres_conn_id):
-    return PythonOperator(
-        task_id="update_europeana_sub_providers",
-        python_callable=sql.update_europeana_sub_providers,
-        op_args=[postgres_conn_id],
-    )
-
-
-def get_smithsonian_sub_provider_update_operator(postgres_conn_id):
-    return PythonOperator(
-        task_id="update_smithsonian_sub_providers",
-        python_callable=sql.update_smithsonian_sub_providers,
-        op_args=[postgres_conn_id],
-    )
-
-
 def get_smithsonian_unit_code_operator(postgres_conn_id):
     return PythonOperator(
         task_id="check_new_smithsonian_unit_codes",

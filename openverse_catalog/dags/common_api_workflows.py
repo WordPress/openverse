@@ -3,8 +3,8 @@ import os
 
 import util.config as conf
 from airflow import DAG
+from airflow.operators.bash import BashOperator
 from croniter import croniter
-from util.operator_util import get_runner_operator
 
 
 logging.basicConfig(
@@ -52,7 +52,10 @@ def create_dag(
     )
 
     with dag:
-        get_runner_operator(source, script_location)
+        BashOperator(
+            task_id=f"get_{source}_images",
+            bash_command=f"python {script_location} --mode default",
+        )
 
     return dag
 
