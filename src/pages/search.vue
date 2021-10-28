@@ -17,6 +17,10 @@
         <SearchTypeTabs />
         <FilterDisplay v-if="shouldShowFilterTags" />
         <NuxtChild :key="$route.path" @onLoadMoreItems="onLoadMoreItems" />
+        <ScrollButton
+          data-testid="scroll-button"
+          :show-btn="showScrollButton"
+        />
       </div>
     </div>
   </div>
@@ -40,6 +44,7 @@ import local from '~/utils/local'
 import { screenWidth } from '~/utils/get-browser-info'
 import { ALL_MEDIA, IMAGE } from '~/constants/media'
 import { mapActions, mapMutations } from 'vuex'
+import debounce from 'lodash.debounce'
 
 const BrowsePage = {
   name: 'browse-page',
@@ -56,6 +61,12 @@ const BrowsePage = {
     await this.setSearchTypeFromUrl({ url })
     await this.setFiltersFromUrl({ url })
   },
+  data: () => ({
+    showScrollButton: false,
+  }),
+  created() {
+    this.debounceScrollHandling = debounce(this.checkScrollLength, 100)
+  },
   mounted() {
     const localFilterState = () =>
       local.get(process.env.filterStorageKey)
@@ -68,6 +79,10 @@ const BrowsePage = {
     this.setFilterVisibility({
       isFilterVisible: isDesktop() ? localFilterState() : false,
     })
+    window.addEventListener('scroll', this.debounceScrollHandling)
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.debounceScrollHandling)
   },
   computed: {
     query() {
@@ -112,6 +127,9 @@ const BrowsePage = {
       return (
         this.$route.path === '/search/' || this.$route.path === '/search/image'
       )
+    },
+    checkScrollLength() {
+      this.showScrollButton = window.scrollY > 70
     },
   },
   watch: {
