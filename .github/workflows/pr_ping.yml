@@ -10,7 +10,7 @@ jobs:
   send_message:
     name: Send message
     if: |
-      ${{ github.event.pull_request.user.login != 'dependabot[bot]' }} &&
+      ${{ github.actor != 'dependabot[bot]' }} &&
       ${{ !startsWith(github.event.pull_request.title, '🔄') }}
     runs-on: ubuntu-latest
     steps:
