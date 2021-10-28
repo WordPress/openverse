@@ -116,7 +116,9 @@ class Task(Process):
         logging.info(f"Task {self.task_id} exited.")
         if self.callback_url:
             try:
-                requests.post(self.callback_url)
+                logging.info("Sending callback request")
+                res = requests.post(self.callback_url)
+                logging.info(f"Response: {res.text}")
             except requests.exceptions.RequestException as e:
                 logging.error("Failed to send callback!")
                 logging.error(e)

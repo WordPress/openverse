@@ -51,7 +51,7 @@ env:
     cp analytics/env.template analytics/.env
 
 # Load sample data into the Docker Compose services
-init: wait-for-es wait-for-is wait-for-web
+init: up wait-for-es wait-for-ing wait-for-web
     ./load_sample_data.sh
 
 
@@ -60,9 +60,9 @@ init: wait-for-es wait-for-is wait-for-web
 #######
 
 # Install Python dependencies in Pipenv environments
-install:
-    cd openverse_api && pipenv install --dev
-    cd ingestion_server && pipenv install --dev
+@install:
+    just _api-install
+    just _ing-install
 
 # Setup pre-commit as a Git hook
 precommit:
@@ -78,13 +78,13 @@ lint:
 #################
 
 # Check the health of Elasticsearch
-@es-health:
-    -curl -s -o /dev/null -w '%{http_code}' 'http://localhost:9200/_cluster/health?pretty'
+@es-health es_host:
+    -curl -s -o /dev/null -w '%{http_code}' 'http://{{ es_host }}/_cluster/health?pretty'
 
 # Wait for Elasticsearch to be healthy
-@wait-for-es: up
+@wait-for-es es_host="localhost:9200":
     just _loop \
-    '"$(just es-health)" != "200"' \
+    '"$(just es-health {{ es_host }})" != "200"' \
     "Waiting for Elasticsearch to be healthy..."
 
 # Check if the media is indexed in Elasticsearch
@@ -102,53 +102,64 @@ lint:
 # Ingestion server #
 ####################
 
+# Install dependencies for ingestion-server
+_ing-install:
+    cd ingestion_server && pipenv install --dev
+
 # Perform the given action on the given model by invoking the ingestion-server API
-_is-api model action:
+_ing-api model action port="8001":
     curl \
       -X POST \
       -H 'Content-Type: application/json' \
       -d '{"model": "{{ model }}", "action": "{{ action }}"}' \
-      'http://localhost:8001/task'
+      'http://localhost:{{ port }}/task'
 
 # Check the health of the ingestion-server
-@is-health:
-    -curl -s -o /dev/null -w '%{http_code}' 'http://localhost:8001/'
+@ing-health ing_host:
+    -curl -s -o /dev/null -w '%{http_code}' 'http://{{ ing_host }}/'
 
 # Wait for the ingestion-server to be healthy
-@wait-for-is: up
+@wait-for-ing ing_host="localhost:8001":
     just _loop \
-    '"$(just is-health)" != "200"' \
+    '"$(just ing-health {{ ing_host }})" != "200"' \
     "Waiting for the ingestion-server to be healthy..."
 
 # Load QA data into QA indices in Elasticsearch
-load-test-data model="image":
-    just _is-api {{ model }} "LOAD_TEST_DATA"
+@load-test-data model="image":
+    just _ing-api {{ model }} "LOAD_TEST_DATA"
 
 # Load sample data into prod indices in Elasticsearch
-ingest-upstream model="image":
-    just _is-api {{ model }} "INGEST_UPSTREAM"
+@ingest-upstream model="image":
+    just _ing-api {{ model }} "INGEST_UPSTREAM"
 
+# Run ingestion-server tests locally
+ing-testlocal:
+    cd ingestion_server && pipenv run ./test/run_test.sh
 
 #######
 # API #
 #######
+
+# Install depenendencies for API
+_api-install:
+    cd openverse_api && pipenv install --dev
 
 # Check the health of the API
 @web-health:
     -curl -s -o /dev/null -w '%{http_code}' 'http://localhost:8000/healthcheck'
 
 # Wait for the API to be healthy
-@wait-for-web: up
+@wait-for-web:
     just _loop \
     '"$(just web-health)" != "200"' \
     "Waiting for the API to be healthy..."
 
 # Run API tests inside Docker
-test args="": wait-for-es wait-for-is wait-for-web
+api-test args="": up wait-for-es wait-for-ing wait-for-web
     docker-compose exec {{ args }} web ./test/run_test.sh
 
 # Run API tests locally
-testlocal:
+api-testlocal:
     cd openverse_api && pipenv run ./test/run_test.sh
 
 # Run Django administrative commands

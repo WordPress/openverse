@@ -32,7 +32,7 @@ The Openverse API is a system that allows programmatic access to public domain d
 
 2. Run the tests in an interactive TTY connected to a `web` container.
    ```bash
-   just test
+   just api-test
    ```
 
 ### On the host
@@ -41,7 +41,7 @@ The Openverse API is a system that allows programmatic access to public domain d
 
 2. Run the tests in a terminal on the host.
    ```bash
-   just testlocal
+   just api-testlocal
    ```
 
 ## API documentation

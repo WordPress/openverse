@@ -1,0 +1,142 @@
+"""
+Parses the top-level Docker Compose file and generates a Docker Compose file for
+the integration tests.
+
+The generated file is written to the same directory this script resides in with
+the name ``integration-docker-compose.yml``.
+
+A new file is generated instead of inheritance because using an inherited file
+will result in the containers being destroyed and recreated. By using generated
+files we ensure an up-to-date copy that does not interfere with the development
+environment.
+"""
+
+import pathlib
+
+import yaml
+
+from .test_constants import service_ports
+
+
+this_dir = pathlib.Path(__file__).resolve().parent
+
+# Docker Compose config will be copied from ``src_dc_path`` to ``dest_dc_path``
+src_dc_path = this_dir.parent.parent.joinpath("docker-compose.yml")
+dest_dc_path = this_dir.joinpath("integration-docker-compose.yml")
+
+
+def _prune_services(conf: dict):
+    """
+    Prune the unnecessary services from the Docker Compose configuration,
+    keeping only those that are used in the integration tests.
+    :param conf: the Docker Compose configuration
+    """
+
+    services_to_keep = {"es", "ingestion_server", "db", "upstream_db"}
+    for service_name in dict(conf["services"]):
+        if service_name not in services_to_keep:
+            del conf["services"][service_name]
+
+
+def _map_ports(conf: dict):
+    """
+    Change the port mappings for the services so as to not conflict any running
+    containers that might be using those ports.
+    :param conf: the Docker Compose configuration
+    """
+
+    for service_name, service in conf["services"].items():
+        ports = service["ports"]
+        ports = [
+            f"{service_ports[service_name]}:{port.split(':')[1]}" for port in ports
+        ]
+        service["ports"] = ports
+
+
+def _fixup_env(conf: dict):
+    """
+    Change the relative paths to the environment files to absolute paths so that
+    they hold up in the new Docker Compose file.
+    :param conf: the Docker Compose configuration
+    """
+
+    for service in {"db", "upstream_db"}:
+        env_files = conf["services"][service]["env_file"]
+        env_files = [str(src_dc_path.parent.joinpath(path)) for path in env_files]
+        conf["services"][service]["env_file"] = env_files
+    conf["services"]["ingestion_server"]["env_file"] = ["env.integration"]
+
+
+def _change_directories(conf: dict):
+    """
+    Update the relative paths of the directories such as build context or bind
+    volumes attached to the containers.
+    :param conf: the Docker Compose configuration
+    """
+
+    conf["services"]["ingestion_server"]["volumes"] = ["../:/ingestion_server"]
+    conf["services"]["ingestion_server"]["build"] = "../"
+
+    conf["services"]["upstream_db"]["volumes"] = ["./mock_data:/mock_data"]
+
+
+def _rename_services(conf: dict):
+    """
+    Add the 'integration_' prefix to the services to distinguish them from the
+    normal services running in dev environments.
+    :param conf: the Docker Compose configuration
+    """
+
+    for service_name, service in dict(conf["services"]).items():
+        conf["services"][f"integration_{service_name}"] = service
+        del conf["services"][service_name]
+
+    conf["services"]["integration_ingestion_server"]["depends_on"] = [
+        "integration_db",
+        "integration_es",
+    ]
+
+
+def gen_integration_compose():
+    print("Generating Docker Compose configuration for integration tests...")
+
+    with open(src_dc_path, "r") as src_dc:
+        conf = yaml.safe_load(src_dc)
+
+        print("│ Pruning unwanted services... ", end="")
+        _prune_services(conf)
+        print("done")
+
+        print("│ Mapping alternative ports... ", end="")
+        _map_ports(conf)
+        print("done")
+
+        print("│ Updating environment variables... ", end="")
+        _fixup_env(conf)
+        print("done")
+
+        print("│ Changing directories... ", end="")
+        _change_directories(conf)
+        print("done")
+
+        print("│ Renaming services... ", end="")
+        _rename_services(conf)
+        print("done")
+
+        with open(dest_dc_path, "w") as dest_dc:
+            dest_dc.write(
+                "# This is an auto-generated Docker Compose configuration file.\n"
+                "# Do not modify this file directly. Your changes will be overwritten.\n\n"
+            )
+            yaml.dump(conf, dest_dc, default_flow_style=False)
+
+    print("done\n")
+    return dest_dc_path
+
+
+if __name__ == "__main__":
+    dest_path = gen_integration_compose()
+
+    green = "\033[32m"
+    endcol = "\033[0m"
+    print(f"{green}:-) Docker Compose configuration written to {dest_path}{endcol}")

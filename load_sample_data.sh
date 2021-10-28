@@ -58,7 +58,7 @@ docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy 
 
 	\copy image_view \
 			(identifier, created_on, updated_on, ingestion_type, provider, source, foreign_identifier, foreign_landing_url, url, thumbnail, width, height, filesize, license, license_version, creator, creator_url, title, meta_data, tags,watermarked, last_synced_with_source, removed_from_source, standardized_popularity) \
-		from './sample_data/sample_data.csv' \
+		from './sample_data/sample_images.csv' \
 		with (FORMAT csv, HEADER true);
 	EOF"
 
@@ -74,30 +74,29 @@ docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy 
 
 	\copy audio_view \
 			(identifier, created_on, updated_on, ingestion_type, provider, source, foreign_identifier, foreign_landing_url, url, thumbnail, filetype, duration, bit_rate, sample_rate, category, genres, audio_set, audio_set_position, alt_files, filesize, license, license_version, creator, creator_url, title, meta_data, tags, watermarked, last_synced_with_source, removed_from_source, standardized_popularity) \
-		from './sample_data/sample_audio_data.csv' \
+		from './sample_data/sample_audio.csv' \
 		with (FORMAT csv, HEADER true);
+	EOF"
 
+# Make one-off modifications to the upstream DB for ingesting audiosets
+docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF
 	UPDATE audio_view
 		SET audio_set_foreign_identifier = audio_set->>'foreign_identifier';
-
-	DROP TYPE IF EXISTS audio_set_type;
-	CREATE TYPE audio_set_type
-	AS (
-    foreign_identifier  varchar(1000),
-    title               varchar(2000),
-    foreign_landing_url varchar(1000),
-    creator             varchar(2000),
-    creator_url         varchar(2000),
-    url                 varchar(1000),
-    filesize            integer,
-    filetype            varchar(80),
-    thumbnail           varchar(1000)
-	);
 
 	DROP VIEW IF EXISTS audioset_view;
 	CREATE VIEW audioset_view
 	AS
-		SELECT DISTINCT (jsonb_populate_record(null::audio_set_type, audio_set)).*, provider
+		SELECT DISTINCT
+			cast(audio_set ->> 'foreign_identifier'  as varchar(1000)) as foreign_identifier,
+			cast(audio_set ->> 'title'               as varchar(2000)) as title,
+			cast(audio_set ->> 'foreign_landing_url' as varchar(1000)) as foreign_landing_url,
+			cast(audio_set ->> 'creator'             as varchar(2000)) as creator,
+			cast(audio_set ->> 'creator_url'         as varchar(2000)) as creator_url,
+			cast(audio_set ->> 'url'                 as varchar(1000)) as url,
+			cast(audio_set ->> 'filesize'            as integer)       as filesize,
+			cast(audio_set ->> 'filetype'            as varchar(80))   as filetype,
+			cast(audio_set ->> 'thumbnail'           as varchar(1000)) as thumbnail,
+			provider
 		FROM audio_view
 		WHERE audio_set IS NOT NULL;
 	EOF"

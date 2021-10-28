@@ -82,7 +82,7 @@ The command `just up` spawns the following services:
 - [Redis](https://redis.io/)
 - [imageproxy](https://github.com/willnorris/imageproxy)
 - **web** (`openverse_api/`)
-- **ingestion-server** (`ingestion_server/`)
+- **ingestion_server** and **indexer_worker** (`ingestion_server/`)
 - **analytics** (`analytics/`)
 
 The last three are subprojects of this monorepo, described below.

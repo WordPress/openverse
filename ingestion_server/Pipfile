@@ -8,6 +8,7 @@ remote-pdb = "*"
 ipython = "*"
 pipdeptree = "*"
 pycodestyle = "*"
+pytest-order = "*"
 
 [packages]
 aws-requests-auth = "*"
