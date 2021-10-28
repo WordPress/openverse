@@ -1,3 +1,8 @@
+"""
+End-to-end tests of the analytics server. These tests are written to work with
+``pytest``.
+"""
+
 import datetime
 import json
 import os
@@ -16,11 +21,6 @@ from analytics.report_controller import (
     generate_top_searches,
     generate_usage_report,
 )
-
-
-"""
-End-to-end tests of the analytics server. Run with `pytest -s`.
-"""
 
 
 API_URL = os.getenv("ANALYTICS_SERVER_URL", "http://localhost:8090")

@@ -26,6 +26,11 @@ services:
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
 
+  cache:
+    image: redis:4.0.10
+    ports:
+      - "6379:6379"
+
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
     ports:
@@ -50,14 +55,12 @@ services:
     mem_limit: ${ES_MEM_LIMIT:-4294967296}  # 4 GiB in bytes
 
   web:
-    build: openverse_api/
+    build: ./openverse_api/
     image: openverse_api
-    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./openverse_api:/openverse_api
     ports:
       - "8000:8000"
-      - "4444:4444"
     depends_on:
       - db
       - es
@@ -66,11 +69,6 @@ services:
       - openverse_api/env.docker
     stdin_open: true
     tty: true
-
-  cache:
-    image: redis:4.0.10
-    ports:
-      - "6379:6379"
 
   ingestion-server:
     build: ./ingestion_server/
@@ -92,7 +90,7 @@ services:
   indexer-worker:
     build:
       context: ./ingestion_server/
-      dockerfile: Dockerfile-worker
+      dockerfile: Dockerfile_worker
     image: indexer_worker
     ports:
       - "8002:8002"
@@ -111,5 +109,7 @@ services:
     image: analytics
     ports:
       - "8090:8090"
-    environment:
-      DATABASE_CONN: "postgresql+psycopg2://deploy:deploy@db/openledger"
+    volumes:
+      - ./analytics:/analytics
+    env_file:
+    - ./analytics/env.docker

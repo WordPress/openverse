@@ -1,16 +1,26 @@
 swagger: "2.0"
+
 info:
-  description: "An API for registering anonymous usage data events in Openverse, which we intend to use to improve the quality of the search results."
+  description: |
+    # Introduction
+
+    An API for registering anonymous usage data events in Openverse, which we
+    intend to use to improve the quality of the search results.
   version: "1.0.0"
-  title: "Openverse Usage Data API"
+  title: "Openverse Analytics"
   termsOfService: "https://api.openverse.engineering/terms_of_service.html"
   contact:
-    email: "zack.krida@automattic.com"
+    email: "openverse@wordpress.org"
   license:
     name: "MIT License"
-    url: "https://github.com/wordpress/openverse-api/blob/master/LICENSE"
+    url: "https://github.com/WordPress/openverse-api/blob/HEAD/LICENSE"
+  x-logo:
+    url: "https://raw.githubusercontent.com/WordPress/openverse/HEAD/brand/logo.svg"
+    backgroundColor: "#fafafa"
+
 host: "api.openverse.engineering"
 basePath: "/analytics"
+
 tags:
 - name: "Register events"
   description: "Send events to the analytics server."
@@ -184,5 +194,5 @@ definitions:
         description: "The unique identifier for the detail page associated with the event."
 
 externalDocs:
-  description: "The Openverse API"
+  description: "Openverse API docs"
   url: "https://api.openverse.engineering"

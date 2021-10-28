@@ -15,6 +15,7 @@ requests = "*"
 pytest = "*"
 falcon-cors = "*"
 confluent-kafka = "*"
+python-decouple = "*"
 
 [requires]
 python_version = "3.9"

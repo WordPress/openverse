@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>ReDoc</title>
+    <title>Openverse Analytics</title>
     <!-- needed for adaptive design -->
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
 
     <!--
     ReDoc doesn't change outer page styles
@@ -15,10 +14,14 @@
         margin: 0;
         padding: 0;
       }
+
+      img[alt='logo'] {
+        padding: 20px; /* same as other sidebar items */
+      }
     </style>
   </head>
   <body>
-    <redoc spec-url='https://api.openverse.engineering/analytics/swagger.yaml'></redoc>
-    <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
+    <redoc spec-url='/swagger.yaml' expand-responses="all"></redoc>
+    <script src="https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"> </script>
   </body>
 </html>

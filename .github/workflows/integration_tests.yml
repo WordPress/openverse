@@ -63,7 +63,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: ./ingestion_server/
-        file: ./ingestion_server/Dockerfile-worker
+        file: ./ingestion_server/Dockerfile_worker
         push: false
         load: true
         tags: indexer_worker

@@ -1,11 +1,12 @@
-import os
+from decouple import config
 
 
-DATABASE_CONNECTION = os.getenv(
-    "DATABASE_CONN", "postgresql+psycopg2://deploy:deploy@localhost/openledger"
+DATABASE_CONNECTION = config(
+    "DATABASE_CONN",
+    default="postgresql+psycopg2://deploy:deploy@localhost/openledger",
 )
 
 # Attribution events stream configuration
-KAFKA_HOSTS = os.getenv("KAFKA_HOSTS", "kafka:9092")
-KAFKA_TOPIC_NAME = os.getenv("KAFKA_TOPIC", "attribution_events_dev")
-ATTRIBUTION_LOGFILE = os.getenv("LOGFILE", "/var/log/attribution_worker.log")
+KAFKA_HOSTS = config("KAFKA_HOSTS", default="kafka:9092")
+KAFKA_TOPIC_NAME = config("KAFKA_TOPIC", default="attribution_events_dev")
+ATTRIBUTION_LOGFILE = config("LOGFILE", default="/var/log/attribution_worker.log")

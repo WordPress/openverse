@@ -15,10 +15,8 @@ with open(description_path, "r") as description_file:
     description = description_file.read()
 
 tos_url = "https://api.openverse.engineering/terms_of_service.html"
-license_url = "https://github.com/" "WordPress/openverse-api/blob/master/LICENSE"
-logo_url = (
-    "https://raw.githubusercontent.com/" "WordPress/openverse/master/brand/logo.svg"
-)
+license_url = "https://github.com/WordPress/openverse-api/blob/HEAD/LICENSE"
+logo_url = "https://raw.githubusercontent.com/WordPress/openverse/HEAD/brand/logo.svg"
 schema_view = get_schema_view(
     openapi.Info(
         title="Openverse API",

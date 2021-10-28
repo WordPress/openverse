@@ -2,8 +2,7 @@ FROM python:3.9
 
 ENV PYTHONBUFFERED 1
 
-RUN mkdir /ingestion_server \
-    && mkdir /worker_state
+RUN mkdir /worker_state
 
 ENV PYTHONPATH=$PYTHONPATH:/ingestion_server/
 
@@ -15,8 +14,7 @@ RUN pip install --upgrade pip \
     && pip install --upgrade pipenv
 
 # Copy the Pipenv files into the container
-COPY Pipfile /ingestion_server/
-COPY Pipfile.lock /ingestion_server/
+COPY Pipfile Pipfile.lock /ingestion_server/
 
 # Install the dependencies system-wide
 # TODO: Use build args to avoid installing dev dependencies in production
@@ -24,4 +22,4 @@ RUN pipenv install --deploy --system --dev
 
 EXPOSE 8002
 
-CMD gunicorn indexer_worker:api -b 0.0.0.0:8002 --reload --access-logfile '-' --error-logfile '-' --chdir ./ingestion_server/
+CMD ["gunicorn", "-c", "./gunicorn_worker.conf.py"]

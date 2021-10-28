@@ -48,6 +48,7 @@ logs services="":
 env:
     cp openverse_api/env.template openverse_api/.env
     cp ingestion_server/env.template ingestion_server/.env
+    cp analytics/env.template analytics/.env
 
 # Load sample data into the Docker Compose services
 init: wait-for-es wait-for-is wait-for-web
