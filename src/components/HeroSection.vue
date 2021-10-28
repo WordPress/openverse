@@ -67,7 +67,6 @@
 <script>
 import { SET_Q, SET_SEARCH_TYPE } from '~/constants/mutation-types'
 import { filtersToQueryData } from '~/utils/search-query-transform'
-import { ALL_MEDIA } from '~/constants/media'
 import { SEARCH } from '~/constants/store-modules'
 import { mapMutations } from 'vuex'
 import HomeLicenseFilter from '~/components/HomeLicenseFilter'
@@ -94,13 +93,10 @@ export default {
       setSearchType: SET_SEARCH_TYPE,
     }),
     getPath() {
-      if (!process.env.enableAudio) return '/search'
-
+      if (!process.env.enableAudio) return '/search/image'
       return `/search/${this.form.searchType}`
     },
     getMediaType() {
-      if (!process.env.enableAudio) return ALL_MEDIA
-
       return this.form.searchType
     },
     onSubmit() {
