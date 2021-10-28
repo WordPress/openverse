@@ -11,6 +11,7 @@
 import { mapState } from 'vuex'
 import iframeHeight from '~/mixins/iframe-height'
 import i18nSync from '~/mixins/i18n-sync'
+import { NAV } from '~/constants/store-modules'
 
 const embeddedPage = {
   name: 'embedded',
@@ -19,7 +20,7 @@ const embeddedPage = {
   head() {
     return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
   },
-  computed: { ...mapState('nav', ['isReferredFromCc']) },
+  computed: { ...mapState(NAV, ['isReferredFromCc']) },
 }
 export default embeddedPage
 </script>

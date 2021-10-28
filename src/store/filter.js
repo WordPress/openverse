@@ -2,10 +2,7 @@ import findIndex from 'lodash.findindex'
 import clonedeep from 'lodash.clonedeep'
 
 import local from '~/utils/local'
-import {
-  filtersToQueryData,
-  queryToFilterData,
-} from '~/utils/search-query-transform'
+import { queryToFilterData } from '~/utils/search-query-transform'
 import {
   ALL_MEDIA,
   AUDIO,
@@ -13,15 +10,20 @@ import {
   VIDEO,
   supportedMediaTypes,
 } from '~/constants/media'
-import { TOGGLE_FILTER } from '~/constants/action-types'
+import {
+  SET_FILTERS_FROM_URL,
+  TOGGLE_FILTER,
+  UPDATE_QUERY,
+} from '~/constants/action-types'
 import {
   SET_FILTER,
   SET_PROVIDERS_FILTERS,
   CLEAR_FILTERS,
-  SET_FILTERS_FROM_URL,
   SET_FILTER_IS_VISIBLE,
   UPDATE_FILTERS,
+  REPLACE_FILTERS,
 } from '~/constants/mutation-types'
+import { SEARCH } from '~/constants/store-modules'
 
 // The order of the keys here is the same as in the side filter display
 export const mediaFilterKeys = {
@@ -163,31 +165,36 @@ export const filterData = {
  * @param filters
  * @returns {boolean}
  */
+// eslint-disable-next-line no-unused-vars
 const anyFilterApplied = (filters) =>
   Object.keys(filters).some((filterKey) => {
     if (filterKey === 'mature') {
       return false
     } // this is hardcoded to "false" because we do not show mature in `FilterDisplay.vue` like the other filters
 
-    return filters[filterKey].some((filter) => filter.checked)
+    return (
+      filters[filterKey] && filters[filterKey].some((filter) => filter.checked)
+    )
   })
 
-const state = {
-  filters: filterData,
+export const state = () => ({
+  filters: clonedeep(filterData),
   isFilterVisible: false,
-}
+})
 
-const getters = {
+export const getters = {
   /**
    * Returns all applied filters in unified format
    * Mature filter is not returned because it is not displayed
    * as a filter tag
    * @param state
+   * @param getters
+   * @param rootState
    * @returns {{code: string, name: string, filterType: string}[]}
    */
-  appliedFilterTags: (state) => {
+  appliedFilterTags: (state, getters, rootState) => {
     let appliedFilters = []
-    const filterKeys = mediaFilterKeys[state.searchType]
+    const filterKeys = mediaFilterKeys[rootState.search.searchType]
     filterKeys.forEach((filterType) => {
       if (filterType !== 'mature') {
         const newFilters = state.filters[filterType]
@@ -204,9 +211,9 @@ const getters = {
     })
     return appliedFilters
   },
-  isAnyFilterApplied: (state) => {
+  isAnyFilterApplied: (state, getters, rootState) => {
     return anyFilterApplied(
-      getMediaTypeFilters(state, { mediaType: state.searchType })
+      getMediaTypeFilters(state, { mediaType: rootState.search.searchType })
     )
   },
   allFiltersForDisplay: (state) => {
@@ -236,22 +243,35 @@ const getters = {
 }
 
 const actions = {
-  [TOGGLE_FILTER]({ commit, state }, params) {
+  [TOGGLE_FILTER]({ commit, dispatch, state }, params) {
     const { filterType, code } = params
     const filters = state.filters[filterType]
     const codeIdx = findIndex(filters, (f) => f.code === code)
 
     commit(SET_FILTER, { codeIdx, ...params })
+    dispatch(`${SEARCH}/${UPDATE_QUERY}`, null, { root: true })
   },
-}
+  [CLEAR_FILTERS]({ commit, dispatch, state }) {
+    const initialFilters = clonedeep(filterData)
 
-function setQuery(state) {
-  const query = filtersToQueryData(state.filters, state.searchType)
-
-  state.query = {
-    q: state.query.q,
-    ...query,
-  }
+    const resetProviders = (mediaType) => {
+      return state.filters[`${mediaType}Providers`].map((provider) => ({
+        ...provider,
+        checked: false,
+      }))
+    }
+    const newFilterData = {
+      ...initialFilters,
+      audioProviders: resetProviders(AUDIO),
+      imageProviders: resetProviders(IMAGE),
+    }
+    commit(REPLACE_FILTERS, { newFilterData })
+    dispatch(`${SEARCH}/${UPDATE_QUERY}`, null, { root: true })
+  },
+  [SET_FILTERS_FROM_URL]({ commit }, { url }) {
+    const newFilterData = queryToFilterData(url)
+    commit(REPLACE_FILTERS, { newFilterData })
+  },
 }
 
 function getMediaTypeFilters(state, { mediaType, includeMature = false }) {
@@ -266,42 +286,17 @@ function getMediaTypeFilters(state, { mediaType, includeMature = false }) {
   return mediaTypeFilters
 }
 
-function replaceFilters(state, filterData) {
-  Object.keys(state.filters).forEach((filterType) => {
-    if (filterType === 'mature') {
-      state.filters.mature = filterData.mature
-    } else if (['audioProviders', 'imageProviders'].includes(filterType)) {
-      filterData[filterType].forEach((provider) => {
-        const idx = state.filters[filterType].findIndex(
-          (p) => p.code === provider.code
-        )
-        if (idx > -1) {
-          state.filters[filterType][idx].checked = provider.checked
-        }
-      })
-    } else {
-      state.filters[filterType] = filterData[filterType]
-    }
-  })
-}
-
-function setFilter(state, params) {
-  const { filterType, codeIdx } = params
-  if (filterType === 'mature') {
-    state.filters.mature = !state.filters.mature
-  } else {
-    const filters = state.filters[filterType]
-    filters[codeIdx].checked = !filters[codeIdx].checked
-  }
-
-  setQuery(state, params)
-}
-
 // Make sure when redirecting after applying a filter, we stick to the right tab (i.e, "/search/video", "/search/audio", etc.)
 const mutations = {
-  [UPDATE_FILTERS](state) {
+  /**
+   * After a search type is changed, unchecks all the filters that are not
+   * applicable for this Media type.
+   * @param state
+   * @param searchType
+   */
+  [UPDATE_FILTERS](state, { searchType }) {
     const mediaTypesToClear = supportedMediaTypes.filter(
-      (media) => media !== state.searchType
+      (media) => media !== searchType
     )
 
     let filterKeysToClear = []
@@ -319,27 +314,32 @@ const mutations = {
       }
     })
   },
-  [SET_FILTERS_FROM_URL](state, params) {
-    replaceFilters(state, queryToFilterData(params.url))
+  [REPLACE_FILTERS](state, { newFilterData }) {
+    Object.keys(state.filters).forEach((filterType) => {
+      if (filterType === 'mature') {
+        state.filters.mature = newFilterData.mature
+      } else if (['audioProviders', 'imageProviders'].includes(filterType)) {
+        newFilterData[filterType].forEach((provider) => {
+          const idx = state.filters[filterType].findIndex(
+            (p) => p.code === provider.code
+          )
+          if (idx > -1) {
+            state.filters[filterType][idx].checked = provider.checked
+          }
+        })
+      } else {
+        state.filters[filterType] = newFilterData[filterType]
+      }
+    })
   },
   [SET_FILTER](state, params) {
-    return setFilter(state, params)
-  },
-  [CLEAR_FILTERS](state) {
-    const initialFilters = clonedeep(filterData)
-
-    const resetProviders = (mediaType) => {
-      return state.filters[`${mediaType}Providers`].map((provider) => ({
-        ...provider,
-        checked: false,
-      }))
+    const { filterType, codeIdx } = params
+    if (filterType === 'mature') {
+      state.filters.mature = !state.filters.mature
+    } else {
+      const filters = state.filters[filterType]
+      filters[codeIdx].checked = !filters[codeIdx].checked
     }
-    state.filters = {
-      ...initialFilters,
-      audioProviders: resetProviders(AUDIO),
-      imageProviders: resetProviders(IMAGE),
-    }
-    return setQuery(state)
   },
   [SET_PROVIDERS_FILTERS](state, params) {
     const { mediaType, providers } = params

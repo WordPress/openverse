@@ -4,7 +4,7 @@ import {
   queryToFilterData,
   queryStringToQueryData,
 } from '~/utils/search-query-transform'
-import { filterData } from '~/store-modules/filter-store'
+import { filterData } from '~/store/filter'
 import { IMAGE } from '~/constants/media'
 
 describe('searchQueryTransform', () => {

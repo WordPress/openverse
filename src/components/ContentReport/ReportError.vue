@@ -18,12 +18,13 @@
 
 <script>
 import { BACK_TO_REPORT_START } from '~/constants/mutation-types'
+import { REPORT_CONTENT } from '~/constants/store-modules'
 
 export default {
   name: 'ReportError',
   methods: {
     onBackClick() {
-      this.$store.commit(BACK_TO_REPORT_START)
+      this.$store.commit(`${REPORT_CONTENT}/${BACK_TO_REPORT_START}`)
     },
   },
 }

@@ -72,22 +72,19 @@
 
 <script>
 import getProviderName from '~/utils/get-provider-name'
+import { PROVIDER } from '~/constants/store-modules'
+import { mapState } from 'vuex'
 
 export default {
   name: 'AudioDetailsTable',
   props: ['audio'],
   computed: {
+    ...mapState(PROVIDER, ['audioProviders']),
     providerName() {
-      return getProviderName(
-        this.$store.state.audioProviders,
-        this.$props.audio.provider
-      )
+      return getProviderName(this.audioProviders, this.$props.audio.provider)
     },
     sourceName() {
-      return getProviderName(
-        this.$store.state.audioProviders,
-        this.$props.audio.source
-      )
+      return getProviderName(this.audioProviders, this.$props.audio.source)
     },
   },
 }

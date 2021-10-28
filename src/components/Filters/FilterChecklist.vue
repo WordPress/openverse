@@ -150,7 +150,7 @@ export default {
       this.licenseExplanationVisible = false
     },
     getFilterTypeValue(filterKey, val) {
-      return this.$store.state.filters[filterKey].filter((item) =>
+      return this.$store.state.filter.filters[filterKey].filter((item) =>
         item.code.includes(val)
       )
     },

@@ -102,6 +102,7 @@ import ReportError from './ReportError'
 import { SEND_CONTENT_REPORT } from '~/constants/action-types'
 import { REPORT_FORM_CLOSED } from '~/constants/mutation-types'
 import { PROVIDER, REPORT_CONTENT } from '~/constants/store-modules'
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 const dmcaFormUrl =
   'https://docs.google.com/forms/d/e/1FAIpQLSd0I8GsEbGQLdaX4K_F6V2NbHZqN137WMZgnptUpzwd-kbDKA/viewform'
@@ -124,20 +125,15 @@ export default {
     }
   },
   computed: {
-    isReportSent() {
-      return this.$store.state[REPORT_CONTENT].isReportSent
-    },
-    reportFailed() {
-      return this.$store.state[REPORT_CONTENT].reportFailed
-    },
+    ...mapState(REPORT_CONTENT, ['isReportSent', 'reportFailed']),
+    ...mapState(PROVIDER, ['imageProviders']),
     providerName() {
-      return getProviderName(
-        this.$store.state[PROVIDER].imageProviders,
-        this.image.provider
-      )
+      return getProviderName(this.imageProviders, this.image.provider)
     },
   },
   methods: {
+    ...mapActions(REPORT_CONTENT, { sendReport: SEND_CONTENT_REPORT }),
+    ...mapMutations(REPORT_CONTENT, { closeReportForm: REPORT_FORM_CLOSED }),
     onIssueSelected() {
       if (this.selectedReason === 'other') {
         this.selectedOther = true
@@ -152,14 +148,14 @@ export default {
       this.selectedCopyright = false
     },
     sendContentReport(description = '') {
-      this.$store.dispatch(`${REPORT_CONTENT}/${SEND_CONTENT_REPORT}`, {
+      this.sendReport({
         identifier: this.$props.image.id,
         reason: this.selectedReason,
         description,
       })
     },
     closeForm() {
-      this.$store.commit(`${REPORT_CONTENT}/${REPORT_FORM_CLOSED}`)
+      this.closeReportForm
     },
   },
 }

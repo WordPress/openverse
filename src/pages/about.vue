@@ -97,6 +97,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { NAV } from '~/constants/store-modules'
 
 const AboutPage = {
   name: 'about-page',
@@ -106,7 +107,7 @@ const AboutPage = {
       : 'with-nav-search'
   },
   computed: {
-    ...mapState('nav', ['isEmbedded']),
+    ...mapState(NAV, ['isEmbedded']),
   },
 }
 

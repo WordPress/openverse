@@ -8,6 +8,7 @@ import {
   HANDLE_MEDIA_ERROR,
   HANDLE_NO_MEDIA,
   SET_SEARCH_TYPE_FROM_URL,
+  UPDATE_QUERY,
   UPDATE_SEARCH_TYPE,
 } from '~/constants/action-types'
 import {
@@ -15,11 +16,13 @@ import {
   FETCH_MEDIA_ERROR,
   FETCH_START_MEDIA,
   MEDIA_NOT_FOUND,
+  REPLACE_QUERY,
   RESET_MEDIA,
   SET_AUDIO,
   SET_IMAGE,
   SET_IMAGE_PAGE,
   SET_MEDIA,
+  SET_Q,
   SET_QUERY,
   SET_SEARCH_TYPE,
   UPDATE_FILTERS,
@@ -28,17 +31,17 @@ import {
   SEND_RESULT_CLICKED_EVENT,
   SEND_SEARCH_QUERY_EVENT,
 } from '~/constants/usage-data-analytics-types'
-import { queryStringToSearchType } from '~/utils/search-query-transform'
+import {
+  filtersToQueryData,
+  queryStringToSearchType,
+} from '~/utils/search-query-transform'
 import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
-import { USAGE_DATA } from '~/constants/store-modules'
-
-// const getSearchPath = () =>
-//   window.location.pathname && window.location.pathname.includes('search')
-//     ? window.location.pathname
-//     : '/search'
+import { FILTER, USAGE_DATA } from '~/constants/store-modules'
+import AudioService from '~/data/audio-service'
+import ImageService from '~/data/image-service'
 
 /**
- * @type {{ audios: import('../store/types').AudioDetail[],
+ * @type {{ audios: import('./types').AudioDetail[],
  * audiosCount: number, audioPage:number,
  * images: import('../store/types').ImageDetail[],
  * imagePage: number, imagesCount: number, query: {},
@@ -47,7 +50,7 @@ import { USAGE_DATA } from '~/constants/store-modules'
  * isFetchingError: {images: boolean, audios: boolean},
  * errorMessage: null, searchType: string, }}
  */
-const state = {
+export const state = () => ({
   audios: [],
   audiosCount: 0,
   audioPage: 1,
@@ -71,17 +74,19 @@ const state = {
   query: {},
   audio: {},
   image: {},
-}
+})
 
-const actions = (services) => ({
+export const createActions = (services) => ({
   async [FETCH_MEDIA]({ commit, dispatch, rootState }, params) {
     // does not send event if user is paginating for more results
     const { page, mediaType, q } = params
+    const sessionId = rootState.user.usageSessionId
     if (!page) {
-      dispatch(`${USAGE_DATA}/${SEND_SEARCH_QUERY_EVENT}`, {
-        query: q,
-        sessionId: rootState.user.usageSessionId,
-      })
+      dispatch(
+        `${USAGE_DATA}/${SEND_SEARCH_QUERY_EVENT}`,
+        { query: q, sessionId },
+        { root: true }
+      )
     }
 
     commit(FETCH_START_MEDIA, { mediaType })
@@ -112,12 +117,16 @@ const actions = (services) => ({
       })
   },
   async [FETCH_AUDIO]({ commit, dispatch, state, rootState }, params) {
-    dispatch(`${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`, {
-      query: state.query.q,
-      resultUuid: params.id,
-      resultRank: findIndex(state.audios, (img) => img.id === params.id),
-      sessionId: rootState.user.usageSessionId,
-    })
+    dispatch(
+      `${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`,
+      {
+        query: state.query.q,
+        resultUuid: params.id,
+        resultRank: findIndex(state.audios, (img) => img.id === params.id),
+        sessionId: rootState.user.usageSessionId,
+      },
+      { root: true }
+    )
     commit(SET_AUDIO, { audio: {} })
     await services[AUDIO].getMediaDetail(params)
       .then(({ data }) => {
@@ -132,12 +141,16 @@ const actions = (services) => ({
       })
   },
   async [FETCH_IMAGE]({ commit, dispatch, state, rootState }, params) {
-    dispatch(`${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`, {
-      query: state.query.q,
-      resultUuid: params.id,
-      resultRank: findIndex(state.images, (img) => img.id === params.id),
-      sessionId: rootState.user.usageSessionId,
-    })
+    dispatch(
+      `${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`,
+      {
+        query: state.query.q,
+        resultUuid: params.id,
+        resultRank: findIndex(state.images, (img) => img.id === params.id),
+        sessionId: rootState.user.usageSessionId,
+      },
+      { root: true }
+    )
 
     commit(SET_IMAGE, { image: {} })
     await services[IMAGE].getMediaDetail(params)
@@ -173,16 +186,35 @@ const actions = (services) => ({
     }
   },
   [SET_SEARCH_TYPE_FROM_URL]({ commit }, params) {
-    commit(SET_SEARCH_TYPE, { searchType: queryStringToSearchType(params.url) })
-    commit(UPDATE_FILTERS)
+    const searchType = queryStringToSearchType(params.url)
+    commit(SET_SEARCH_TYPE, { searchType })
+    commit(`${FILTER}/${UPDATE_FILTERS}`, { searchType }, { root: true })
   },
-  [UPDATE_SEARCH_TYPE]({ commit }, params) {
-    commit(SET_SEARCH_TYPE, { searchType: params.searchType })
-    commit(UPDATE_FILTERS)
+  [UPDATE_SEARCH_TYPE]({ commit }, { searchType }) {
+    commit(SET_SEARCH_TYPE, { searchType })
+    commit(`${FILTER}/${UPDATE_FILTERS}`, { searchType }, { root: true })
+  },
+  [UPDATE_QUERY]({ commit, state, rootState }) {
+    const query = filtersToQueryData(rootState.filter.filters, state.searchType)
+    commit(REPLACE_QUERY, {
+      query: {
+        q: state.query.q,
+        ...query,
+      },
+    })
   },
 })
 
-const mutations = {
+export const getters = {
+  isFetching(state) {
+    return state.isFetching[state.searchType]
+  },
+  isFetchingError(state) {
+    return state.isFetchingError[state.searchType]
+  },
+}
+
+export const mutations = {
   [FETCH_START_MEDIA](_state, { mediaType }) {
     const mediaPlural = `${mediaType}s`
     _state.isFetching[mediaPlural] = true
@@ -230,9 +262,39 @@ const mutations = {
     _state[`${mediaType}Page`] = page || 1
     _state.pageCount[mediaPlural] = pageCount
   },
-  [SET_QUERY](_state, params) {
-    _state.query = Object.assign({}, _state.query, params.query)
+  /**
+   * Merges the query object from parameters with the existing
+   * query object. Used on 'Search' button click.
+   * @param _state
+   * @param {object} query
+   */
+  [SET_QUERY](_state, { query }) {
+    _state.query = Object.assign({}, _state.query, query)
     _state.images = []
+    _state.audios = []
+  },
+  /**
+   * When a new search term is searched for, sets the `q`
+   * parameter for the API request query and resets the media.
+   * Leaves other query parameters for filters as before.
+   * @param _state
+   * @param {string} q
+   */
+  [SET_Q](_state, { q }) {
+    _state.query.q = q
+    _state.images = []
+    _state.audios = []
+  },
+  /**
+   * Replaces the query object completely and resets all the
+   * media. Called when filters are updated.
+   * @param _state
+   * @param {object} query
+   */
+  [REPLACE_QUERY](_state, { query }) {
+    _state.query = query
+    _state.images = []
+    _state.audios = []
   },
   [MEDIA_NOT_FOUND](_state, params) {
     throw new Error(`Media of type ${params.mediaType} not found`)
@@ -249,8 +311,12 @@ const mutations = {
   },
 }
 
+const mediaServices = { [AUDIO]: AudioService, [IMAGE]: ImageService }
+const actions = createActions(mediaServices)
+
 export default {
   state,
+  getters,
   actions,
   mutations,
 }

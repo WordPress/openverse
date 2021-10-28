@@ -1,4 +1,4 @@
-import SearchStore from '~/store-modules/search-store'
+import SearchStore from '~/store/search'
 import MediaProviderStore from '~/store/provider'
 
 const store = {

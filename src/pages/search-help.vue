@@ -256,6 +256,7 @@
 /* eslint-disable vue/html-quotes */
 
 import { mapState } from 'vuex'
+import { NAV } from '~/constants/store-modules'
 
 const SearchHelpPage = {
   name: 'search-help-page',
@@ -265,7 +266,7 @@ const SearchHelpPage = {
       : 'with-nav-search'
   },
   computed: {
-    ...mapState('nav', ['isEmbedded']),
+    ...mapState(NAV, ['isEmbedded']),
   },
   methods: {
     providerSearchLink(providerCode) {

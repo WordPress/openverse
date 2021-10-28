@@ -18,6 +18,7 @@
 import axios from 'axios'
 import { mapActions, mapState } from 'vuex'
 import { FETCH_IMAGE } from '~/constants/action-types'
+import { SEARCH } from '~/constants/store-modules'
 
 const PhotoDetailPage = {
   name: 'PhotoDetailPage',
@@ -39,7 +40,13 @@ const PhotoDetailPage = {
     }
   },
   computed: {
-    ...mapState(['image']),
+    ...mapState(SEARCH, ['image']),
+  },
+  async asyncData({ env, route }) {
+    return {
+      thumbnailURL: `${env.apiUrl}thumbs/${route.params.id}`,
+      imageId: route.params.id,
+    }
   },
   async fetch() {
     this.imageId = this.$route.params.id
@@ -66,7 +73,7 @@ const PhotoDetailPage = {
     })
   },
   methods: {
-    ...mapActions({ fetchImage: FETCH_IMAGE }),
+    ...mapActions(SEARCH, { fetchImage: FETCH_IMAGE }),
     onImageLoaded(event) {
       this.imageWidth = event.target.naturalWidth
       this.imageHeight = event.target.naturalHeight

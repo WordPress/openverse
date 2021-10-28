@@ -42,7 +42,7 @@ import { NOTIFICATION_ACTION } from '~/constants/action-types'
 export default {
   name: 'NotificationBanner',
   computed: {
-    ...mapState('notification', [
+    ...mapState(NOTIFICATION, [
       'notificationText',
       'notificationDismiss',
       'notificationOkay',

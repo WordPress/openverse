@@ -48,6 +48,8 @@
 <script>
 import MetaSourceList from './MetaSourceList'
 import { AUDIO, IMAGE, VIDEO } from '~/constants/media'
+import { mapState } from 'vuex'
+import { SEARCH } from '~/constants/store-modules'
 
 export default {
   name: 'MetaSearch',
@@ -60,9 +62,7 @@ export default {
     noresult: { type: Boolean, required: true },
   },
   computed: {
-    query() {
-      return this.$store.state.query
-    },
+    ...mapState(SEARCH, ['query']),
     unsupportedByUsefilter() {
       if (this.type === AUDIO) {
         return 'CC Mixter, Jamendo, or Wikimedia Commons'

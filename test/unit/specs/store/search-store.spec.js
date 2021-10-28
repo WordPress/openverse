@@ -1,4 +1,4 @@
-import store from '~/store-modules/search-store'
+import store, { createActions } from '~/store/search'
 import {
   FETCH_END_MEDIA,
   FETCH_MEDIA_ERROR,
@@ -27,12 +27,12 @@ import {
   SEND_RESULT_CLICKED_EVENT,
   SEND_SEARCH_QUERY_EVENT,
 } from '~/constants/usage-data-analytics-types'
-import { USAGE_DATA } from '~/constants/store-modules'
+import { FILTER, USAGE_DATA } from '~/constants/store-modules'
 
 describe('Search Store', () => {
   describe('state', () => {
     it('exports default state', () => {
-      const state = store.state
+      const state = store.state()
       expect(state.audios).toHaveLength(0)
       expect(state.audiosCount).toBe(0)
       expect(state.audioPage).toBe(1)
@@ -55,11 +55,7 @@ describe('Search Store', () => {
     const mutations = store.mutations
 
     beforeEach(() => {
-      state = {
-        isFetching: {},
-        isFetchingError: {},
-        pageCount: {},
-      }
+      state = store.state()
     })
 
     it('FETCH_START_MEDIA updates state', () => {
@@ -208,11 +204,8 @@ describe('Search Store', () => {
     let services = null
     let audioServiceMock = null
     let imageServiceMock = null
-    let commit = null
-    let dispatch = null
-    let state = {}
-    let rootState = {}
-
+    let state
+    let context
     beforeEach(() => {
       imageServiceMock = {
         search: jest.fn(() => Promise.resolve({ data: searchData })),
@@ -233,24 +226,27 @@ describe('Search Store', () => {
         ),
       }
       services = { [AUDIO]: audioServiceMock, [IMAGE]: imageServiceMock }
-      commit = jest.fn()
-      dispatch = jest.fn()
       state = {
         audios: [{ id: 'foo' }, { id: 'bar' }, { id: 'zeta' }],
         images: [{ id: 'foo' }, { id: 'bar' }, { id: 'zeta' }],
         query: { q: 'foo query' },
       }
-      rootState = { user: { usageSessionId: 'foo' } }
-      store.rootState = rootState
+
+      context = {
+        commit: jest.fn(),
+        dispatch: jest.fn(),
+        rootState: { user: { usageSessionId: 'foo' } },
+        state: state,
+      }
     })
 
     it('FETCH_MEDIA throws an error on unknown media type', async () => {
-      const action = store.actions(services)[FETCH_MEDIA]
+      const action = createActions(services)[FETCH_MEDIA]
       const params = {
         mediaType: 'unknown',
         page: 1,
       }
-      await expect(action({ commit, dispatch, state }, params)).rejects.toThrow(
+      await expect(action(context, params)).rejects.toThrow(
         'Cannot fetch unknown media type "unknown"'
       )
     })
@@ -262,14 +258,16 @@ describe('Search Store', () => {
         shouldPersistMedia: false,
         mediaType: IMAGE,
       }
-      const action = store.actions(services)[FETCH_MEDIA]
-      await action({ commit, dispatch, state }, params)
-      expect(commit).toHaveBeenCalledWith(FETCH_START_MEDIA, {
+      const action = createActions(services)[FETCH_MEDIA]
+      await action(context, params)
+      expect(context.commit).toHaveBeenCalledWith(FETCH_START_MEDIA, {
         mediaType: IMAGE,
       })
-      expect(commit).toHaveBeenCalledWith(FETCH_END_MEDIA, { mediaType: IMAGE })
+      expect(context.commit).toHaveBeenCalledWith(FETCH_END_MEDIA, {
+        mediaType: IMAGE,
+      })
 
-      expect(commit).toHaveBeenCalledWith(SET_MEDIA, {
+      expect(context.commit).toHaveBeenCalledWith(SET_MEDIA, {
         media: searchData.results,
         mediaCount: searchData.result_count,
         shouldPersistMedia: params.shouldPersistMedia,
@@ -281,15 +279,16 @@ describe('Search Store', () => {
 
     it('FETCH_MEDIA dispatches SEND_SEARCH_QUERY_EVENT', async () => {
       const params = { q: 'foo', shouldPersistMedia: false, mediaType: IMAGE }
-      const action = store.actions(services)[FETCH_MEDIA]
-      await action({ commit, dispatch, state, rootState }, params)
+      const action = createActions(services)[FETCH_MEDIA]
+      await action(context, params)
 
-      expect(dispatch).toHaveBeenCalledWith(
+      expect(context.dispatch).toHaveBeenCalledWith(
         `${USAGE_DATA}/${SEND_SEARCH_QUERY_EVENT}`,
         {
           query: params.q,
-          sessionId: rootState.user.usageSessionId,
-        }
+          sessionId: context.rootState.user.usageSessionId,
+        },
+        { root: true }
       )
     })
 
@@ -300,13 +299,16 @@ describe('Search Store', () => {
         shouldPersistMedia: false,
         mediaType: IMAGE,
       }
-      const action = store.actions(services)[FETCH_MEDIA]
-      await action({ commit, dispatch, state }, params)
+      const action = createActions(services)[FETCH_MEDIA]
+      await action(context, params)
 
-      expect(dispatch).not.toHaveBeenCalledWith('SEND_SEARCH_QUERY_EVENT', {
-        query: params.q,
-        sessionId: state.usageSessionId,
-      })
+      expect(context.dispatch).not.toHaveBeenCalledWith(
+        `${USAGE_DATA}/${SEND_SEARCH_QUERY_EVENT}`,
+        {
+          query: params.q,
+          sessionId: context.rootState.user.usageSessionId,
+        }
+      )
     })
 
     it('FETCH_MEDIA on error', async () => {
@@ -320,12 +322,14 @@ describe('Search Store', () => {
         shouldPersistMedia: false,
         mediaType,
       }
-      const action = store.actions(services)[FETCH_MEDIA]
-      await action({ commit, dispatch, state }, params)
+      const action = createActions(services)[FETCH_MEDIA]
+      await action(context, params)
       await expect(services[IMAGE].search).rejects.toEqual('error')
 
-      expect(commit).toHaveBeenCalledWith(FETCH_START_MEDIA, { mediaType })
-      expect(dispatch).toHaveBeenCalledWith('HANDLE_MEDIA_ERROR', {
+      expect(context.commit).toHaveBeenCalledWith(FETCH_START_MEDIA, {
+        mediaType,
+      })
+      expect(context.dispatch).toHaveBeenCalledWith(HANDLE_MEDIA_ERROR, {
         error: 'error',
         mediaType,
       })
@@ -339,12 +343,16 @@ describe('Search Store', () => {
         shouldPersistMedia: false,
         mediaType,
       }
-      const action = store.actions(services)[FETCH_MEDIA]
-      await action({ commit, dispatch, state, rootState }, params)
+      const action = createActions(services)[FETCH_MEDIA]
+      await action(context, params)
 
-      expect(commit).toHaveBeenCalledWith(FETCH_START_MEDIA, { mediaType })
-      expect(commit).toHaveBeenCalledWith(RESET_MEDIA, { mediaType })
-      expect(commit).toHaveBeenCalledWith(FETCH_END_MEDIA, { mediaType })
+      expect(context.commit).toHaveBeenCalledWith(FETCH_START_MEDIA, {
+        mediaType,
+      })
+      expect(context.commit).toHaveBeenCalledWith(RESET_MEDIA, { mediaType })
+      expect(context.commit).toHaveBeenCalledWith(FETCH_END_MEDIA, {
+        mediaType,
+      })
     })
 
     it('FETCH_MEDIA does not reset images if page is defined', async () => {
@@ -355,34 +363,39 @@ describe('Search Store', () => {
         shouldPersistMedia: false,
         mediaType,
       }
-      const action = store.actions(services)[FETCH_MEDIA]
-      await action({ commit, dispatch, state }, params)
+      const action = createActions(services)[FETCH_MEDIA]
+      await action(context, params)
 
-      expect(commit).not.toHaveBeenCalledWith(RESET_MEDIA, { mediaType })
+      expect(context.commit).not.toHaveBeenCalledWith(RESET_MEDIA, {
+        mediaType,
+      })
     })
 
     it('FETCH_AUDIO on success', async () => {
       const params = { id: 'foo' }
-      const action = store.actions(services)[FETCH_AUDIO]
-      await action({ commit, dispatch, state, rootState }, params)
-      expect(commit).toHaveBeenCalledWith(SET_AUDIO, { audio: {} })
-      expect(commit).toHaveBeenCalledWith(SET_AUDIO, { audio: audioDetailData })
+      const action = createActions(services)[FETCH_AUDIO]
+      await action(context, params)
+      expect(context.commit).toHaveBeenCalledWith(SET_AUDIO, { audio: {} })
+      expect(context.commit).toHaveBeenCalledWith(SET_AUDIO, {
+        audio: audioDetailData,
+      })
       expect(audioServiceMock.getMediaDetail).toHaveBeenCalledWith(params)
     })
 
     it('FETCH_AUDIO dispatches SEND_RESULT_CLICKED_EVENT', () => {
       const params = { id: 'foo' }
-      const action = store.actions(services)[FETCH_AUDIO]
-      action({ commit, dispatch, state, rootState }, params)
+      const action = createActions(services)[FETCH_AUDIO]
+      action(context, params)
 
-      expect(dispatch).toHaveBeenLastCalledWith(
+      expect(context.dispatch).toHaveBeenLastCalledWith(
         `${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`,
         {
           query: state.query.q,
           resultUuid: 'foo',
           resultRank: 0,
-          sessionId: rootState.user.usageSessionId,
-        }
+          sessionId: context.rootState.user.usageSessionId,
+        },
+        { root: true }
       )
     })
 
@@ -391,11 +404,11 @@ describe('Search Store', () => {
         getMediaDetail: jest.fn(() => Promise.reject('error')),
       }
       const params = { id: 'foo' }
-      const action = store.actions(services)[FETCH_AUDIO]
-      await action({ commit, dispatch, state, rootState }, params)
+      const action = createActions(services)[FETCH_AUDIO]
+      await action(context, params)
       await expect(services[AUDIO].getMediaDetail).rejects.toEqual('error')
 
-      expect(dispatch).toHaveBeenLastCalledWith('HANDLE_MEDIA_ERROR', {
+      expect(context.dispatch).toHaveBeenLastCalledWith(HANDLE_MEDIA_ERROR, {
         error: 'error',
         mediaType: 'audio',
       })
@@ -409,34 +422,39 @@ describe('Search Store', () => {
         ),
       }
       const params = { id: 'foo' }
-      const action = store.actions(services)[FETCH_AUDIO]
-      await action({ commit, dispatch, state, rootState }, params)
-      expect(commit).toHaveBeenCalledWith(MEDIA_NOT_FOUND, { mediaType })
+      const action = createActions(services)[FETCH_AUDIO]
+      await action(context, params)
+      expect(context.commit).toHaveBeenCalledWith(MEDIA_NOT_FOUND, {
+        mediaType,
+      })
     })
 
     it('FETCH_IMAGE on success', async () => {
       const params = { id: 'foo' }
-      const action = store.actions(services)[FETCH_IMAGE]
-      await action({ commit, dispatch, state, rootState }, params)
-      expect(commit).toHaveBeenCalledWith(SET_IMAGE, { image: {} })
-      expect(commit).toHaveBeenCalledWith(SET_IMAGE, { image: imageDetailData })
+      const action = createActions(services)[FETCH_IMAGE]
+      await action(context, params)
+      expect(context.commit).toHaveBeenCalledWith(SET_IMAGE, { image: {} })
+      expect(context.commit).toHaveBeenCalledWith(SET_IMAGE, {
+        image: imageDetailData,
+      })
 
       expect(imageServiceMock.getMediaDetail).toHaveBeenCalledWith(params)
     })
 
     it('FETCH_IMAGE dispatches SEND_RESULT_CLICKED_EVENT', () => {
       const params = { id: 'foo' }
-      const action = store.actions(services)[FETCH_IMAGE]
-      action({ commit, dispatch, state, rootState }, params)
+      const action = createActions(services)[FETCH_IMAGE]
+      action(context, params)
 
-      expect(dispatch).toHaveBeenLastCalledWith(
+      expect(context.dispatch).toHaveBeenLastCalledWith(
         `${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`,
         {
           query: state.query.q,
           resultUuid: 'foo',
           resultRank: 0,
-          sessionId: rootState.user.usageSessionId,
-        }
+          sessionId: context.rootState.user.usageSessionId,
+        },
+        { root: true }
       )
     })
 
@@ -447,10 +465,10 @@ describe('Search Store', () => {
         ),
       }
       const params = { id: 'foo' }
-      const action = store.actions(services)[FETCH_IMAGE]
-      await expect(
-        action({ commit, dispatch, state, rootState }, params)
-      ).rejects.toThrow('Error fetching the image: Server error')
+      const action = createActions(services)[FETCH_IMAGE]
+      await expect(action(context, params)).rejects.toThrow(
+        'Error fetching the image: Server error'
+      )
     })
 
     it('FETCH_IMAGE on 404 doesnt break and commits MEDIA_NOT_FOUND', async () => {
@@ -461,81 +479,95 @@ describe('Search Store', () => {
         ),
       }
       const params = { id: 'foo' }
-      const action = store.actions(services)[FETCH_IMAGE]
-      await action({ commit, dispatch, state, rootState }, params)
-      expect(commit).toHaveBeenCalledWith(MEDIA_NOT_FOUND, { mediaType })
+      const action = createActions(services)[FETCH_IMAGE]
+      await action(context, params)
+      expect(context.commit).toHaveBeenCalledWith(MEDIA_NOT_FOUND, {
+        mediaType,
+      })
     })
 
     it('HANDLE_MEDIA_ERROR handles 500 error', () => {
-      const action = store.actions(services)[HANDLE_MEDIA_ERROR]
+      const action = createActions(services)[HANDLE_MEDIA_ERROR]
       const error = { response: { status: 500, message: 'Server error' } }
 
-      action({ commit }, { mediaType: AUDIO, error })
-      expect(commit).toHaveBeenCalledWith(FETCH_MEDIA_ERROR, {
+      action(context, { mediaType: AUDIO, error })
+      expect(context.commit).toHaveBeenCalledWith(FETCH_MEDIA_ERROR, {
         errorMessage: 'There was a problem with our servers',
         mediaType: AUDIO,
       })
     })
 
     it('HANDLE_MEDIA_ERROR handles a 403 error', () => {
-      const action = store.actions(services)[HANDLE_MEDIA_ERROR]
+      const action = createActions(services)[HANDLE_MEDIA_ERROR]
       const error = { response: { status: 403, message: 'Server error' } }
 
-      action({ commit }, { mediaType: AUDIO, error })
-      expect(commit).toHaveBeenCalledWith(FETCH_MEDIA_ERROR, {
+      action(context, { mediaType: AUDIO, error })
+      expect(context.commit).toHaveBeenCalledWith(FETCH_MEDIA_ERROR, {
         errorMessage: error.response.message,
         mediaType: AUDIO,
       })
     })
 
     it('HANDLE_MEDIA_ERROR throws a new error on error when server did not respond', async () => {
-      const action = store.actions(services)[HANDLE_MEDIA_ERROR]
+      const action = createActions(services)[HANDLE_MEDIA_ERROR]
       const error = new Error('Server did not respond')
       await expect(
-        action({ commit }, { mediaType: AUDIO, error })
+        action(context, { mediaType: AUDIO, error })
       ).rejects.toThrow(error.message)
     })
 
     it('HANDLE_NO_MEDIA throws an error when media count is 0', async () => {
-      const action = store.actions(services)[HANDLE_NO_MEDIA]
-      await action({ commit }, { mediaCount: 0, mediaType: IMAGE })
-      expect(commit).toHaveBeenLastCalledWith(FETCH_MEDIA_ERROR, {
+      const action = createActions(services)[HANDLE_NO_MEDIA]
+      await action(context, { mediaCount: 0, mediaType: IMAGE })
+      expect(context.commit).toHaveBeenLastCalledWith(FETCH_MEDIA_ERROR, {
         errorMessage: 'No image found for this query',
       })
     })
 
     it('HANDLE_NO_MEDIA does not throw an error when media count is not 0', () => {
-      const action = store.actions(services)[HANDLE_NO_MEDIA]
-      action({ commit }, { mediaCount: 1, mediaType: IMAGE })
-      expect(commit.mock.calls.length).toEqual(0)
+      const action = createActions(services)[HANDLE_NO_MEDIA]
+      action(context, { mediaCount: 1, mediaType: IMAGE })
+      expect(context.commit.mock.calls.length).toEqual(0)
     })
 
     it('SET_SEARCH_TYPE_FROM_URL sets search type to image', () => {
-      const action = store.actions(services)[SET_SEARCH_TYPE_FROM_URL]
-      action({ commit }, { url: '/search/image?q=cat&source=met' })
-      expect(commit).toHaveBeenCalledWith(SET_SEARCH_TYPE, {
+      const action = createActions(services)[SET_SEARCH_TYPE_FROM_URL]
+      action(context, { url: '/search/image?q=cat&source=met' })
+      expect(context.commit).toHaveBeenCalledWith(SET_SEARCH_TYPE, {
         searchType: IMAGE,
       })
-      expect(commit).toHaveBeenCalledWith(UPDATE_FILTERS)
+      expect(context.commit).toHaveBeenCalledWith(
+        `${FILTER}/${UPDATE_FILTERS}`,
+        { searchType: IMAGE },
+        { root: true }
+      )
     })
 
     it('SET_SEARCH_TYPE_FROM_URL sets search type to ALL_MEDIA if URL param is not set', () => {
-      const action = store.actions(services)[SET_SEARCH_TYPE_FROM_URL]
-      action({ commit }, { url: '/search/?q=cat&source=met' })
-      expect(commit).toHaveBeenCalledWith(SET_SEARCH_TYPE, {
+      const action = createActions(services)[SET_SEARCH_TYPE_FROM_URL]
+      action(context, { url: '/search/?q=cat&source=met' })
+      expect(context.commit).toHaveBeenCalledWith(SET_SEARCH_TYPE, {
         searchType: ALL_MEDIA,
       })
-      expect(commit).toHaveBeenCalledWith(UPDATE_FILTERS)
+      expect(context.commit).toHaveBeenCalledWith(
+        `${FILTER}/${UPDATE_FILTERS}`,
+        { searchType: 'all' },
+        { root: true }
+      )
     })
 
     it('UPDATE_SEARCH_TYPE sets search type to ALL_MEDIA if URL param is not set', () => {
-      const action = store.actions(services)[UPDATE_SEARCH_TYPE]
+      const action = createActions(services)[UPDATE_SEARCH_TYPE]
 
-      action({ commit }, { searchType: ALL_MEDIA })
-      expect(commit).toHaveBeenCalledWith(SET_SEARCH_TYPE, {
+      action(context, { searchType: ALL_MEDIA })
+      expect(context.commit).toHaveBeenCalledWith(SET_SEARCH_TYPE, {
         searchType: ALL_MEDIA,
       })
-      expect(commit).toHaveBeenCalledWith(UPDATE_FILTERS)
+      expect(context.commit).toHaveBeenCalledWith(
+        `${FILTER}/${UPDATE_FILTERS}`,
+        { searchType: 'all' },
+        { root: true }
+      )
     })
   })
 })

@@ -1,39 +1,69 @@
 import SearchGrid from '~/components/SearchGridManualLoad'
 import render from '../../test-utils/render'
+import { SET_MEDIA } from '~/constants/mutation-types'
+import filterStore from '~/store/filter'
+import searchStore from '~/store/search'
+
+import Vuex from 'vuex'
+import { IMAGE } from '~/constants/media'
 describe('SearchGrid', () => {
   let options = {}
   let commitMock = null
+  let storeMock
+  let searchStoreMock
 
   beforeEach(() => {
     commitMock = jest.fn()
+    searchStoreMock = {
+      state: {
+        images: [{ id: 'foo', title: 'image1.jpg' }],
+        imagesCount: 1,
+        imagePage: 1,
+        isFetching: {
+          images: false,
+        },
+        isFetchingError: {
+          images: false,
+        },
+        pageCount: {
+          images: 2,
+        },
+        searchType: IMAGE,
+      },
+      getters: searchStore.getters,
+      actions: searchStore.actions,
+      mutations: {
+        ...searchStore.mutations,
+        [SET_MEDIA]: commitMock,
+      },
+    }
+    storeMock = new Vuex.Store({
+      modules: {
+        filter: {
+          namespaced: true,
+          ...filterStore,
+        },
+        search: {
+          namespaced: true,
+          ...searchStoreMock,
+        },
+      },
+    })
     options = {
+      store: storeMock,
       stubs: {
-        SearchRating: true,
         SaferBrowsing: true,
         LoadingIcon: true,
         MetaSearchForm: true,
+        SearchGridCell: true,
+        SearchRating: true,
       },
       propsData: {
-        query: { q: 'foo' },
         includeAnalytics: true,
       },
       mocks: {
-        $store: {
-          state: {
-            isFetching: {
-              images: false,
-            },
-            isFetchingError: {
-              images: false,
-            },
-            pageCount: {
-              images: 5,
-            },
-            imagesCount: 100,
-            imagePage: 1,
-          },
-          commit: commitMock,
-        },
+        $store: storeMock,
+        store: storeMock,
       },
     }
   })
@@ -50,13 +80,13 @@ describe('SearchGrid', () => {
   })
 
   it("doesn't render load more button if is loading images", () => {
-    options.mocks.$store.state.isFetching.images = true
+    options.mocks.$store.state.search.isFetching.images = true
     const wrapper = render(SearchGrid, options)
     expect(wrapper.find('.load-more').vm).not.toBeDefined()
   })
 
   it('shows loading icon if is loading images', () => {
-    options.mocks.$store.state.isFetching.images = true
+    options.mocks.$store.state.search.isFetching.images = true
 
     const wrapper = render(SearchGrid, options)
     expect(wrapper.findComponent({ name: 'LoadingIcon' })).toBeDefined()
@@ -75,14 +105,14 @@ describe('SearchGrid', () => {
       },
     ])
   })
-
-  it('sets image to empty array on search changed', () => {
-    const wrapper = render(SearchGrid, options)
-    wrapper.vm.searchChanged()
-
-    expect(commitMock).toHaveBeenCalledWith('SET_MEDIA', {
-      media: [],
-      page: 1,
-    })
-  })
+  // TODO: SearchGrid should be replaced with ImageGrid, and tested with testing library
+  // it('sets image to empty array on search changed', () => {
+  //   const wrapper = render(SearchGrid, options)
+  //   wrapper.vm.searchChanged()
+  //
+  //   expect(commitMock).toHaveBeenLastCalledWith(`${SEARCH}/${SET_MEDIA}`, {
+  //     media: [],
+  //     page: 1,
+  //   })
+  // })
 })

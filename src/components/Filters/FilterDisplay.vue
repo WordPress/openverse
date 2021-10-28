@@ -19,16 +19,17 @@
 import { TOGGLE_FILTER } from '~/constants/action-types'
 import FilterTag from '~/components/Filters/FilterTag'
 import { mapGetters } from 'vuex'
+import { FILTER } from '~/constants/store-modules'
 
 export default {
   name: 'FilterDisplay',
   components: { FilterTag },
   computed: {
-    ...mapGetters(['appliedFilterTags', 'isAnyFilterApplied']),
+    ...mapGetters(FILTER, ['appliedFilterTags', 'isAnyFilterApplied']),
   },
   methods: {
     onUpdateFilter({ code, filterType }) {
-      this.$store.dispatch(TOGGLE_FILTER, { code, filterType })
+      this.$store.dispatch(`${FILTER}/${TOGGLE_FILTER}`, { code, filterType })
     },
   },
 }

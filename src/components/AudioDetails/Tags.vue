@@ -17,7 +17,9 @@
 </template>
 
 <script>
-import { SET_QUERY } from '~/constants/mutation-types'
+import { SET_Q } from '~/constants/mutation-types'
+import { SEARCH } from '~/constants/store-modules'
+import { mapMutations } from 'vuex'
 
 export default {
   name: 'AudioTags',
@@ -28,11 +30,12 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(SEARCH, { setSearchTerm: SET_Q }),
     isClarifaiTag(provider) {
       return provider === 'clarifai'
     },
     searchByTagName(query) {
-      this.$store.commit(SET_QUERY, { query: { q: query } })
+      this.setSearchTerm({ q: query })
     },
     getValidTags() {
       return this.$props.tags.filter((tag) => !!tag.name)

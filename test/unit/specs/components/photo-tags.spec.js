@@ -1,6 +1,8 @@
-import PhotoTags from '~/components/PhotoTags'
-import { SET_QUERY } from '~/constants/mutation-types'
+import Vuex from 'vuex'
+import { SET_Q } from '~/constants/mutation-types'
 import render from '../../test-utils/render'
+import { createLocalVue } from '@vue/test-utils'
+import PhotoTags from '~/components/PhotoTags'
 
 describe('PhotoTags', () => {
   let options = null
@@ -40,22 +42,25 @@ describe('PhotoTags', () => {
   })
 
   it('commits a mutation when a tag is clicked', () => {
-    const storeMock = {
-      commit: jest.fn(),
-    }
+    const commitMock = jest.fn()
+    const localVue = createLocalVue()
+    localVue.use(Vuex)
+    const storeMock = new Vuex.Store({
+      modules: {
+        search: { namespaced: true, mutations: { [SET_Q]: commitMock } },
+      },
+    })
     const opts = {
+      localVue,
       propsData: {
         ...props,
       },
-      mocks: {
-        $store: storeMock,
-      },
+      store: storeMock,
     }
     const wrapper = render(PhotoTags, opts)
     wrapper.find('.tag').trigger('click')
     const tagName = wrapper.find('.tag').text()
-    expect(storeMock.commit).toHaveBeenCalledWith(SET_QUERY, {
-      query: { q: tagName },
-    })
+    // When mocking the module's mutation, the mutation type comes as `{}`
+    expect(commitMock).toHaveBeenCalledWith({}, { q: tagName })
   })
 })

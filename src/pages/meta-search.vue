@@ -104,6 +104,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { NAV } from '~/constants/store-modules'
 
 export default {
   name: 'MetaSearchPage',
@@ -113,7 +114,7 @@ export default {
       : 'with-nav-search'
   },
   computed: {
-    ...mapState('nav', ['isEmbedded']),
+    ...mapState(NAV, ['isEmbedded']),
   },
 }
 </script>

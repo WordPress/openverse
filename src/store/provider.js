@@ -14,6 +14,7 @@ import {
   SET_MEDIA_PROVIDERS,
   SET_PROVIDERS_FILTERS,
 } from '~/constants/mutation-types'
+import { FILTER } from '~/constants/store-modules'
 
 const AudioProviderService = MediaProviderService(AUDIO)
 const ImageProviderService = MediaProviderService(IMAGE)
@@ -72,7 +73,7 @@ export const createActions = (services) => ({
           providers: sortedProviders,
         })
         commit(
-          `${SET_PROVIDERS_FILTERS}`,
+          `${FILTER}/${SET_PROVIDERS_FILTERS}`,
           {
             mediaType,
             providers: sortedProviders,

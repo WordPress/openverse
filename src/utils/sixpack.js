@@ -70,7 +70,7 @@ export const participate = (
       session: sessionId,
     }))
     .catch((error) => {
-      console.error(error)
+      console.error(`Using default a/b case due to error: ${error.message}`)
       return {
         name,
         case: defaultCase,

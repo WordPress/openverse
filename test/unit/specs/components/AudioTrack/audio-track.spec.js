@@ -19,6 +19,7 @@ const useVueI18n = (vue) => {
 
 const stubs = {
   AudioController: true,
+  DownloadButton: true,
   PlayPause: true,
   NuxtLink: true,
   Waveform: true,

@@ -54,7 +54,8 @@ import {
 import PhotoTags from '~/components/PhotoTags'
 import getProviderName from '~/utils/get-provider-name'
 import getProviderLogo from '~/utils/get-provider-logo'
-import { USAGE_DATA } from '~/constants/store-modules'
+import { PROVIDER, USAGE_DATA } from '~/constants/store-modules'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'ImageInfo',
@@ -70,11 +71,9 @@ export default {
     'imageType',
   ],
   computed: {
+    ...mapState(PROVIDER, ['imageProviders']),
     providerName() {
-      return getProviderName(
-        this.$store.state.imageProviders,
-        this.$props.image.provider
-      )
+      return getProviderName(this.imageProviders, this.$props.image.provider)
     },
     prettyImageType() {
       if (this.imageType && this.imageType.split('/').length > 1) {
@@ -83,18 +82,16 @@ export default {
       return 'Unknown'
     },
     sourceName() {
-      return getProviderName(
-        this.$store.state.imageProviders,
-        this.$props.image.source
-      )
+      return getProviderName(this.imageProviders, this.$props.image.source)
     },
   },
   methods: {
+    ...mapActions(USAGE_DATA, { sendEvent: SEND_DETAIL_PAGE_EVENT }),
     getProviderLogo(providerName) {
       return getProviderLogo(providerName)
     },
     onPhotoSourceLinkClicked() {
-      this.$store.dispatch(`${USAGE_DATA}/${SEND_DETAIL_PAGE_EVENT}`, {
+      this.sendEvent({
         eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
         resultUuid: this.$props.image.id,
       })

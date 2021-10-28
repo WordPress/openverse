@@ -1,42 +1,69 @@
 import HeroSection from '~/components/HeroSection'
-import render from '../../test-utils/render'
-import { filterData } from '~/store-modules/filter-store'
+import { fireEvent, render, screen } from '@testing-library/vue'
+import filterStore, { filterData } from '~/store/filter'
+import store from '~/store/search'
+import { createLocalVue } from '@vue/test-utils'
+import Vuex from 'vuex'
+import clonedeep from 'lodash.clonedeep'
+import VueI18n from 'vue-i18n'
+import messages from '~/locales/en.json'
+
+const i18n = new VueI18n({
+  locale: 'en',
+  fallbackLocale: 'en',
+  messages: { en: messages },
+})
 
 describe('HeroSection', () => {
   let options = {}
-  let commitMock = null
+  let localVue
+  let storeMock
+  let filters
+  const routerMock = { push: jest.fn() }
 
   beforeEach(() => {
-    commitMock = jest.fn()
-    options = {
-      stubs: { HomeLicenseFilter: true },
-      mocks: {
-        $router: {
-          push: () => {},
+    localVue = createLocalVue()
+    localVue.use(VueI18n)
+    localVue.use(Vuex)
+    filters = clonedeep(filterData)
+    storeMock = new Vuex.Store({
+      modules: {
+        filter: {
+          namespaced: true,
+          ...filterStore,
+          state: {
+            isFilterVisible: true,
+            filters,
+          },
         },
-        $store: {
-          commit: commitMock,
-          state: { filters: filterData },
+        search: {
+          namespaced: true,
+          ...store,
         },
       },
+    })
+    options = {
+      mocks: {
+        $router: routerMock,
+        $store: storeMock,
+      },
+      i18n,
     }
   })
   it('should render correct contents', () => {
-    const wrapper = render(HeroSection, options)
-    expect(wrapper.find('.hero').element).toBeDefined()
-    expect(wrapper.find('.hero-search__form').element).toBeDefined()
+    render(HeroSection, options)
+    screen.getByRole('search')
   })
 
   it('should search when a query is entered', async () => {
-    const wrapper = render(HeroSection, options)
-    const form = wrapper.find('.hero-search__form')
-    const input = wrapper.find('input[type="search"]')
+    render(HeroSection, options)
 
-    await input.setValue('me')
-    await input.trigger('change')
-    await form.trigger('submit.prevent')
+    const searchBox = screen.getByRole('searchbox')
+    await fireEvent.update(searchBox, 'me')
+    await fireEvent.click(screen.queryByTitle('Search'))
 
-    expect(commitMock).toHaveBeenCalledWith('SET_QUERY', {
+    expect(routerMock.push).toHaveBeenCalledWith({
+      path: '/search/image',
       query: { q: 'me' },
     })
   })

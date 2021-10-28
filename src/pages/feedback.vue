@@ -62,6 +62,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { BUG_REPORT, NAV } from '~/constants/store-modules'
 
 const bugForm =
   'https://docs.google.com/forms/d/e/1FAIpQLSenCn-3HoZlCz4vlL2621wjezfu1sPZDaWGe_FtQ1R5-5qR4Q/viewform'
@@ -97,12 +98,12 @@ export const FeedbackPage = {
     },
   },
   computed: {
-    ...mapState('bug-report', [
+    ...mapState(BUG_REPORT, [
       'isReportingBug',
       'bugReported',
       'bugReportFailed',
     ]),
-    ...mapState('nav', ['isEmbedded']),
+    ...mapState(NAV, ['isEmbedded']),
   },
 }
 

@@ -77,6 +77,7 @@ import ExtensionBrowsers from '~/components/ExtensionBrowsers'
 import feature1 from '~/assets/screenshots/extension_feat_1.png'
 import feature2 from '~/assets/screenshots/extension_feat_2.png'
 import feature3 from '~/assets/screenshots/extension_feat_3.png'
+import { NAV } from '~/constants/store-modules'
 
 const AboutPage = {
   name: 'about-page',
@@ -98,7 +99,7 @@ const AboutPage = {
     }
   },
   computed: {
-    ...mapState('nav', ['isEmbedded']),
+    ...mapState(NAV, ['isEmbedded']),
   },
   methods: {
     togglePlay() {

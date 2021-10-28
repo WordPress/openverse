@@ -136,6 +136,7 @@
 <script>
 import sortBy from 'lodash.sortby'
 import { mapState } from 'vuex'
+import { NAV, PROVIDER } from '~/constants/store-modules'
 
 const SourcePage = {
   name: 'source-page',
@@ -153,8 +154,8 @@ const SourcePage = {
     }
   },
   computed: {
-    ...mapState('nav', ['isEmbedded']),
-    ...mapState('provider', ['imageProviders']),
+    ...mapState(NAV, ['isEmbedded']),
+    ...mapState(PROVIDER, ['imageProviders']),
     sortedProviders() {
       const sorted = sortBy(this.imageProviders, [this.sort.field])
       return this.sort.direction === 'asc' ? sorted : sorted.reverse()

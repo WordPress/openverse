@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { FILTER } from '~/constants/store-modules'
 import { CLEAR_FILTERS } from '~/constants/mutation-types'
 
 const HomePage = {
@@ -11,7 +12,7 @@ const HomePage = {
     return store.state.nav.isEmbedded ? 'embedded' : 'default'
   },
   beforeMount() {
-    this.$store.commit(CLEAR_FILTERS)
+    this.$store.dispatch(`${FILTER}/${CLEAR_FILTERS}`)
   },
 }
 

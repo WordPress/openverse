@@ -1,12 +1,29 @@
 import ImageInfo from '~/components/ImageDetails/ImageInfo'
 import render from '../../../test-utils/render'
 import i18n from '../../../test-utils/i18n'
+import { createLocalVue } from '@vue/test-utils'
+import Vuex from 'vuex'
 
 describe('Image Info', () => {
   let props = null
   let options = {}
+  let localVue = null
+  let storeMock = null
   const $t = (key) => i18n.messages[key]
   beforeEach(() => {
+    localVue = createLocalVue()
+    localVue.use(Vuex)
+    storeMock = new Vuex.Store({
+      modules: {
+        provider: {
+          namespaced: true,
+          state: {
+            provider: 'flickr',
+            source: 'flickr',
+          },
+        },
+      },
+    })
     props = {
       image: {
         id: 0,
@@ -28,14 +45,10 @@ describe('Image Info', () => {
     }
 
     options = {
+      localVue,
       propsData: props,
+      store: storeMock,
       mocks: {
-        $store: {
-          state: {
-            provider: 'flickr',
-            source: 'flickr',
-          },
-        },
         $t,
       },
     }

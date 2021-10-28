@@ -124,8 +124,10 @@
 </template>
 
 <script>
-import { SET_QUERY } from '~/constants/mutation-types'
+import { SET_Q } from '~/constants/mutation-types'
 import Dropdown from '~/components/Dropdown'
+import { SEARCH } from '~/constants/store-modules'
+import { mapMutations } from 'vuex'
 
 export default {
   name: 'EmbeddedNavSection',
@@ -142,11 +144,13 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(SEARCH, { setSearchTerm: SET_Q }),
     onSubmit() {
-      this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm } })
+      const q = this.form.searchTerm
+      this.setSearchTerm({ q })
       const newPath = this.localePath({
         path: '/search',
-        query: { q: this.form.searchTerm },
+        query: { q },
       })
       this.$router.push(newPath)
     },
