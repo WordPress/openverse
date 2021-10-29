@@ -10,8 +10,8 @@ jobs:
   send_message:
     name: Send message
     if: |
-      ${{ github.actor != 'dependabot[bot]' }} &&
-      ${{ !startsWith(github.event.pull_request.title, '🔄') }}
+      github.actor != 'dependabot[bot]' &&
+      !startsWith(github.event.pull_request.title, '🔄')
     runs-on: ubuntu-latest
     steps:
     - name: Send Slack notification
