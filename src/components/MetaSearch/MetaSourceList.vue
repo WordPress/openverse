@@ -6,11 +6,11 @@
           target="_blank"
           rel="nofollow noreferrer"
           :href="getSourceUrl(source)"
-          class="button small mr-2 is-opaque"
+          class="button small me-2 is-opaque"
         >
           {{ source }}
           <sup class="top-0">
-            <i class="ml-2 icon external-link" />
+            <i class="ms-2 icon external-link" />
           </sup>
         </a>
       </li>

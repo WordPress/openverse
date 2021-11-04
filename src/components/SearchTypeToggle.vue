@@ -10,7 +10,7 @@
       {{ $t('hero.search-type.image') }}
     </button>
     <button
-      class="toggle-button ml-2"
+      class="toggle-button ms-2"
       role="radio"
       type="button"
       :aria-checked="value === 'audio'"

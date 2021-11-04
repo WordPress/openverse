@@ -5,7 +5,7 @@
     @click="onClick"
   >
     <span>{{ filterLabel }}</span>
-    <span class="close ml-2 p-2"><i class="icon cross" /></span>
+    <span class="close ms-2 p-2"><i class="icon cross" /></span>
   </button>
 </template>
 <script>

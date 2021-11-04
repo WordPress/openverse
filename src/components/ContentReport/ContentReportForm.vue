@@ -37,7 +37,7 @@
         </legend>
 
         <div>
-          <label for="dmca" class="ml-2">
+          <label for="dmca" class="ms-2">
             <input
               id="dmca"
               v-model="selectedReason"
@@ -50,7 +50,7 @@
         </div>
 
         <div>
-          <label for="mature" class="ml-2">
+          <label for="mature" class="ms-2">
             <input
               id="mature"
               v-model="selectedReason"
@@ -63,7 +63,7 @@
         </div>
 
         <div>
-          <label for="other" class="ml-2">
+          <label for="other" class="ms-2">
             <input
               id="other"
               v-model="selectedReason"

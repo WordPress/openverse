@@ -6,11 +6,11 @@
     :data-clipboard-target="el"
   >
     <span v-if="!success">
-      <i class="icon cc-share mr-2" />
+      <i class="icon cc-share me-2" />
       {{ $t('photo-details.copy.copy') }}
     </span>
     <span v-else>
-      <i class="icon cc-share mr-2" />
+      <i class="icon cc-share me-2" />
       {{ $t('photo-details.copy.copied') }}
     </span>
   </button>

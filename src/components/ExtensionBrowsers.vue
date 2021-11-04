@@ -5,10 +5,10 @@
         target="_blank"
         rel="nofollow noreferrer"
         :href="browser.extUrl"
-        class="browser-button button small mr-2 is-opaque"
+        class="browser-button button small me-2 is-opaque"
       >
         {{ $t(`browsers.${key}`) }}
-        <img class="ml-2" :src="browser.logo" :alt="$t(`browsers.${key}`)" />
+        <img class="ms-2" :src="browser.logo" :alt="$t(`browsers.${key}`)" />
       </a>
     </li>
   </ul>

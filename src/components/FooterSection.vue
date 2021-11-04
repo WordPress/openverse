@@ -44,8 +44,8 @@
               </template>
             </i18n>
             <div class="mt-1">
-              <i class="icon cc-logo mr-2 text-lgr" />
-              <i class="icon cc-by mr-2 text-lgr" />
+              <i class="icon cc-logo me-2 text-lgr" />
+              <i class="icon cc-by me-2 text-lgr" />
             </div>
           </div>
         </div>

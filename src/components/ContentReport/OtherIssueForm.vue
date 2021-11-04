@@ -21,7 +21,7 @@
         @keyup.enter="onBackClick()"
       >
         <span>
-          <i class="icon chevron-left mr-2" />
+          <i class="icon chevron-left me-2" />
           {{ $t('photo-details.content-report.back') }}
         </span>
       </button>

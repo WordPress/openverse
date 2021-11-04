@@ -11,7 +11,7 @@
         <span class="caption font-semibold">
           {{ _imagesCount }}
         </span>
-        <div class="hidden desk:block desk:mr-auto desk:pl-6">
+        <div class="hidden desk:block desk:me-auto desk:ps-6">
           <SearchRating v-if="searchTerm" :search-term="searchTerm" />
         </div>
         <SaferBrowsing />

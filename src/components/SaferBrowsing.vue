@@ -7,7 +7,7 @@
     >
       <span class="text-trans-blue" style="white-space: nowrap">
         {{ $t('browse-page.safer-browsing.title') }}
-        <i class="icon flag ml-2" />
+        <i class="icon flag ms-2" />
       </span>
     </button>
     <FocusTrap :active="true">
@@ -19,7 +19,7 @@
         >
           <i class="icon cross" />
         </button>
-        <p class="caption font-semibold pr-6">
+        <p class="caption font-semibold pe-6">
           {{ $t('browse-page.safer-browsing.caption') }}
         </p>
 

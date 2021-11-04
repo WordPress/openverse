@@ -26,7 +26,7 @@
       </a>
     </div>
     <div :class="{ ['navbar-menu']: true, ['is-active']: isBurgerMenuActive }">
-      <div v-if="showNavSearch" class="ml-6">
+      <div v-if="showNavSearch" class="ms-6">
         <form
           class="hero_search-form"
           role="search"

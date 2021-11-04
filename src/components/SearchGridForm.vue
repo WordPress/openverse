@@ -16,7 +16,7 @@
       {{ $t('filters.title') }}
     </button>
     <div
-      class="search-field field has-addons control search-control has-icons-left ml-2"
+      class="search-field field has-addons control search-control has-icons-left ms-2"
     >
       <label for="searchInput" class="search-field__label control label">
         <input

@@ -1,6 +1,6 @@
 <template>
   <article class="row-track flex flex-row" :class="`size-${size}`">
-    <div class="flex-shrink-0" :class="isSmall ? 'w-20 mr-4' : 'w-30 mr-6'">
+    <div class="flex-shrink-0" :class="isSmall ? 'w-20 me-4' : 'w-30 me-6'">
       <AudioThumbnail :audio="audio" />
     </div>
     <div
@@ -95,11 +95,11 @@ export default {
 
 <style>
 .row-track .play-pause {
-  @apply rounded-tl-sm rounded-bl-sm flex-shrink-0;
+  @apply rounded-ts-sm rounded-bs-sm flex-shrink-0;
 }
 
 .row-track .waveform {
-  @apply rounded-tr-sm rounded-br-sm;
+  @apply rounded-te-sm rounded-be-sm;
 }
 
 .row-track.size-s .play-pause {
@@ -111,7 +111,7 @@ export default {
 }
 
 .row-track.size-s .thumbnail {
-  @apply rounded-tl-sm rounded-bl-sm overflow-hidden;
+  @apply rounded-ts-sm rounded-bs-sm overflow-hidden;
 }
 
 .row-track.size-m .play-pause {

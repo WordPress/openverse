@@ -10,7 +10,7 @@ exports[`FilterTag should render correct contents 1`] = `
   </span>
    
   <span
-    class="close ml-2 p-2"
+    class="close ms-2 p-2"
   >
     <i
       class="icon cross"

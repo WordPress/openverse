@@ -40,7 +40,7 @@
             :key="index"
             :name="item.code"
             type="checkbox"
-            class="filter-checkbox mr-2"
+            class="filter-checkbox me-2"
             :checked="item.checked"
             :disabled="isDisabled(item)"
             @change="onValueChange"
@@ -60,7 +60,7 @@
             :aria-label="$t('browse-page.aria.license-explanation')"
             tabindex="0"
             alt="help"
-            class="license-help pr-1"
+            class="license-help pe-1"
             @click.stop="toggleLicenseExplanationVisibility(item.code)"
             @keyup.enter="toggleLicenseExplanationVisibility(item.code)"
           >

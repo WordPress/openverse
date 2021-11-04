@@ -3,12 +3,12 @@
     <div class="column is-three-fifths photo_image-ctr mt-4">
       <a
         v-if="shouldShowBreadcrumb"
-        class="block photo_breadcrumb text-left ml-4 mb-4 text-dark-gray font-semibold caption"
+        class="block photo_breadcrumb text-left ms-4 mb-4 text-dark-gray font-semibold caption"
         :href="breadCrumbURL"
         @click.prevent="onGoBackToSearchResults"
         @keyup.enter.prevent="onGoBackToSearchResults"
       >
-        <i class="icon chevron-left mr-2" />
+        <i class="icon chevron-left me-2" />
         {{ $t('photo-details.back') }}
       </a>
 
@@ -34,8 +34,8 @@
           class="button is-text tiny p-0 report mt-2"
           @click="toggleReportFormVisibility"
         >
-          <span class="text-trans-blue ml-2 text-sm">
-            <i class="icon flag mr-2" />
+          <span class="text-trans-blue ms-2 text-sm">
+            <i class="icon flag me-2" />
             {{ $t('photo-details.content-report.title') }}
           </span>
         </button>
@@ -50,7 +50,7 @@
     <div
       role="region"
       :aria-label="$t('photo-details.aria.details')"
-      class="column image-info ml-12"
+      class="column image-info ms-12"
     >
       <div class="my-4">
         <h1 class="text-2xl">
@@ -148,7 +148,7 @@
         @keyup.enter="onPhotoSourceLinkClicked"
       >
         {{ $t('photo-details.weblink') }}
-        <i class="icon external-link ml-4 text-base pt-1 text-light-gray" />
+        <i class="icon external-link ms-4 text-base pt-1 text-light-gray" />
       </a>
 
       <ReuseSurvey :image="image" />
