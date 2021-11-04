@@ -48,7 +48,7 @@ def _render_file(
 def fill_template(provider, media_type):
     print(f"Creating files in {REPO_PATH}")
 
-    dags_path = TEMPLATES_PATH.parent / "dags"
+    dags_path = TEMPLATES_PATH.parent / "dags" / "providers"
     api_path = dags_path / "provider_api_scripts"
     filename = provider.replace(" ", "_").lower()
 
@@ -74,7 +74,7 @@ def fill_template(provider, media_type):
     script_template_path = TEMPLATES_PATH / "template_test.py_template"
     tests_path = REPO_PATH / "tests"
     # Mirror the directory structure, but under the "tests" top level directory
-    test_script_path = tests_path.joinpath(*api_path.parts[-2:]) / f"test_{filename}.py"
+    test_script_path = tests_path.joinpath(*api_path.parts[-3:]) / f"test_{filename}.py"
     _render_file(
         test_script_path, script_template_path, provider, media_type, "API script test"
     )

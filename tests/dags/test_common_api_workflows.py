@@ -1,9 +1,9 @@
 import os
 from datetime import datetime, timedelta, timezone
 
+import common.config as conf
+import common.dag_factory
 import common_api_workflows as caw
-import util.config as conf
-import util.dag_factory
 from airflow import DAG
 from airflow.models import DagBag, TaskInstance
 
@@ -24,7 +24,7 @@ def test_get_dated_main_runner_handles_zero_shift(capsys):
     )
     main_func = dated
     with dag:
-        runner = util.dag_factory.get_dated_main_runner_operator(
+        runner = common.dag_factory.get_dated_main_runner_operator(
             main_func, timedelta(minutes=1)
         )
         ti = TaskInstance(runner, execution_date)
@@ -43,7 +43,7 @@ def test_get_dated_main_runner_handles_day_shift(capsys):
     )
     main_func = dated
     with dag:
-        runner = util.dag_factory.get_dated_main_runner_operator(
+        runner = common.dag_factory.get_dated_main_runner_operator(
             main_func, timedelta(minutes=1), day_shift=1
         )
         ti = TaskInstance(runner, execution_date)
@@ -94,7 +94,8 @@ def test_load_dag_conf_validates_script_location():
 def test_load_dag_conf_returns_valid_script_location():
     source = "test_source"
     expected_script_location = os.path.join(
-        os.path.join(FILE_DIR, "provider_api_scripts/resources"), "FakeSource.py"
+        os.path.join(FILE_DIR, "providers/provider_api_scripts/resources"),
+        "FakeSource.py",
     )
     dag_variables = {"test_source": {SCRIPT: expected_script_location}}
     script_location, dag_id, crontab_str = caw.load_dag_conf(source, dag_variables)

@@ -1,5 +1,6 @@
 import logging
 
+import common.urls
 import pytest
 import tldextract
 from common.licenses import licenses
@@ -9,7 +10,7 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
 )
 
-licenses.urls.tldextract.extract = tldextract.TLDExtract(suffix_list_urls=None)
+common.urls.tldextract.extract = tldextract.TLDExtract(suffix_list_urls=None)
 
 
 @pytest.fixture

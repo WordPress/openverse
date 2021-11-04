@@ -14,11 +14,11 @@ import logging
 from pathlib import Path
 from urllib.parse import urlparse
 
-from common.licenses.licenses import get_license_info, get_license_info_from_license_pair
+from common.licenses import get_license_info, get_license_info_from_license_pair
+from common.loader import provider_details as prov
 from common.requester import DelayedRequester
-from storage.image import ImageStore
-from storage.audio import AudioStore
-from util.loader import provider_details as prov
+from common.storage.image import ImageStore
+from common.storage.audio import AudioStore
 
 """
 This is template for an API script. Broadly, there are several steps:

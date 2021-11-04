@@ -59,10 +59,10 @@ Our API-based workflows run at different schedules: some daily, others monthly. 
 Workflows that have a `schedule_string='@daily'` parameter are run daily. The DAG
 workflows run `provider_api_scripts` to load and extract media data from the APIs. The following provider scripts are run daily:
 
-- [Flickr](openverse_catalog/dags/provider_api_scripts/flickr.py)
-- [Met Museum](openverse_catalog/dags/provider_api_scripts/metropolitan_museum_of_art.py)
-- [PhyloPic](openverse_catalog/dags/provider_api_scripts/phylopic.py)
-- [Wikimedia Commons](openverse_catalog/dags/provider_api_scripts/wikimedia_commons.py)
+- [Flickr](openverse_catalog/dags/providers/provider_api_scripts/flickr.py)
+- [Met Museum](openverse_catalog/dags/providers/provider_api_scripts/metropolitan_museum_of_art.py)
+- [PhyloPic](openverse_catalog/dags/providers/provider_api_scripts/phylopic.py)
+- [Wikimedia Commons](openverse_catalog/dags/providers/provider_api_scripts/wikimedia_commons.py)
 
 #### Monthly
 
@@ -71,12 +71,12 @@ month at 16:00 UTC. These workflows are reserved for long-running jobs or
 APIs that do not have date filtering capabilities, so the data is reprocessed
 monthly to keep the catalog updated. The following provider scripts are run monthly:
 
-- [Brooklyn Museum](openverse_catalog/dags/provider_api_scripts/brooklyn_museum.py)
-- [Cleveland Museum of Art](openverse_catalog/dags/provider_api_scripts/cleveland_museum_of_art.py)
-- [Common Crawl Syncer](openverse_catalog/dags/commoncrawl_scripts/commoncrawl_s3_syncer/SyncImageProviders.py)
-- [NYPL](openverse_catalog/dags/provider_api_scripts/nypl.py)
-- [RawPixel](openverse_catalog/dags/provider_api_scripts/raw_pixel.py)
-- [StockSnap](openverse_catalog/dags/provider_api_scripts/stocksnap.py)
+- [Brooklyn Museum](openverse_catalog/dags/providers/provider_api_scripts/brooklyn_museum.py)
+- [Cleveland Museum of Art](openverse_catalog/dags/providers/provider_api_scripts/cleveland_museum_of_art.py)
+- [Common Crawl Syncer](openverse_catalog/dags/commoncrawl/commoncrawl_scripts/commoncrawl_s3_syncer/SyncImageProviders.py)
+- [NYPL](openverse_catalog/dags/providers/provider_api_scripts/nypl.py)
+- [RawPixel](openverse_catalog/dags/providers/provider_api_scripts/raw_pixel.py)
+- [StockSnap](openverse_catalog/dags/providers/provider_api_scripts/stocksnap.py)
 
 ### TSV to Postgres Loader
 
@@ -84,7 +84,7 @@ The Airflow DAG defined in [`loader_workflow.py`][db_loader] runs every minute,
 and loads the oldest file which has not been modified in the last 15 minutes
 into the upstream database. It includes some data preprocessing steps.
 
-[db_loader]: openverse_catalog/dags/loader_workflow.py
+[db_loader]: openverse_catalog/dags/database/loader_workflow.py
 
 See each provider API script's notes in their respective [handbook][ov-handbook] entry.
 
@@ -98,7 +98,7 @@ loaded into a database to be indexed for searching in the Openverse API. These r
 different environment than the PySpark portion of the project, and so have their
 own dependency requirements.
 
-[api_scripts]: openverse_catalog/dags/provider_api_scripts
+[api_scripts]: openverse_catalog/dags/providers/provider_api_scripts
 
 ### Requirements
 
@@ -232,25 +232,30 @@ just recreate
 [dockercompose]: docker-compose.yml
 [cc_airflow]: openverse_catalog/
 
-## PySpark development setup
+## Directory Structure
 
-### Prerequisites
-
+```text
+openverse-catalog
+├── .github/                                # Templates for GitHub
+├── archive/                                # Files related to the previous CommonCrawl parsing implementation
+├── docker/                                 # Dockerfiles and supporting files
+│   ├── airflow/                            #   - Docker image for Airflow server and workers
+│   └── local_postgres/                     #   - Docker image for development Postgres database
+├── openverse_catalog/                      # Primary code directory
+│   ├── dags/                               # DAGs & DAG support code
+│   │   ├── common/                         #   - Shared modules used across DAGs
+│   │   ├── commoncrawl/                    #   - DAGs & scripts for commoncrawl parsing
+│   │   ├── database/                       #   - DAGs related to database actions (matview refresh, cleaning, etc.)
+│   │   ├── maintenance/                    #   - DAGs related to airflow/infrastructure maintenance
+│   │   ├── oauth2/                         #   - DAGs & code for Oauth2 key management
+│   │   ├── providers/                      #   - DAGs & code for provider ingestion
+│   │   │   ├── provider_api_scripts/       #       - API access code specific to providers
+│   │   │   └── *.py                        #       - DAG definition files for providers
+│   │   └── retired/                        #   - DAGs & code that is no longer needed but might be a useful guide for the future
+│   └── templates/                          # Templates for generating new provider code
+└── *                                       # Documentation, configuration files, and project requirements
 ```
-JDK 9.0.1
-Python 3.6
-Pytest 4.3.1
-Spark 2.2.1
-Airflow 1.10.4
 
-pip install -r requirements.txt
-```
-
-### Running the tests
-
-```
-python -m pytest tests/test_ExtractCCLinks.py
-```
 
 ## Contributing
 

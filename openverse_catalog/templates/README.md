@@ -2,7 +2,7 @@
 
 Openverse Catalog uses APIs of sites that share openly-licensed media to collect the data about the media and save it to the database.
 We call the scripts that pull the data from these APIs "Provider API scripts".
-You can find examples in [`provider_api_scripts` folder](../dags/provider_api_scripts).
+You can find examples in [`provider_api_scripts` folder](../dags/providers/provider_api_scripts).
 
 To add a Provider API script using this template, you will need to have Python 3 installed on your machine (preferably, version 3.9). You will also need to know the name of provider, and the type of media you are going to collect (`image` or `audio`).
 

@@ -66,8 +66,8 @@ test-session:
     @just _mount-tests bash
 
 # Run pytest using the webserver image
-test pytestargs="":
-    @just _mount-tests /usr/local/airflow/.local/bin/pytest {{ pytestargs }}
+test *pytestargs:
+    @just _mount-tests "/usr/local/airflow/.local/bin/pytest {{ pytestargs }}"
 
 # Open a shell into the webserver container
 shell: up
@@ -77,9 +77,9 @@ shell: up
 ipython: up
     docker-compose {{ DOCKER_FILES }} exec -w /usr/local/airflow/openverse_catalog/dags {{ SERVICE }} /usr/local/airflow/.local/bin/ipython
 
-# Run a given airflow command using the webserver image
-airflow command="": up
-    docker-compose {{ DOCKER_FILES }} exec {{ SERVICE }} airflow {{ command }}
+# Run a given command using the webserver image
+run *args: (up "postgres s3")
+    docker-compose {{ DOCKER_FILES }} run --rm {{ SERVICE }} {{ args }}
 
 # Launch a pgcli shell on the postgres container (defaults to openledger) use "airflow" for airflow metastore
 db-shell args="openledger": up

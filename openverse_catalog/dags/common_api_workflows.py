@@ -1,7 +1,7 @@
 import logging
 import os
 
-import util.config as conf
+import common.config as conf
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from croniter import croniter
