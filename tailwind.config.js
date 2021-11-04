@@ -37,11 +37,17 @@ module.exports = {
       // WordPress
       'admin-gray': '#DCDCDE',
 
-      // Semi-transparent
-      'dark-charcoal-04': 'rgba(48, 39, 46, 0.04)',
-      'dark-charcoal-20': 'rgba(48, 39, 46, 0.2)',
-      'dark-charcoal-60': 'rgba(48, 39, 46, 0.6)',
-      'dark-charcoal-70': 'rgba(48, 39, 46, 0.7)',
+      // Dark Charcoal
+      'dark-charcoal-04': 'rgba(48, 39, 46, 0.04)', // This is a legacy opacity-based color. We should avoid it if possible
+      'dark-charcoal-06': '#F3F2F2',
+      'dark-charcoal-10': '#EAE9EA',
+      'dark-charcoal-20': '#D6D4D5',
+      'dark-charcoal-30': '#C1BEC0',
+      'dark-charcoal-40': '#ACA9AB',
+      'dark-charcoal-50': '#989397',
+      'dark-charcoal-60': '#837D82',
+      'dark-charcoal-70': '#6E686D',
+      'dark-charcoal-80': '#595258',
 
       // Special keywords
       tx: 'transparent',

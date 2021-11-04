@@ -1,4 +1,9 @@
 module.exports = {
+  globals: {
+    'vue-jest': {
+      experimentalCSSCompile: false,
+    },
+  },
   moduleFileExtensions: ['js', 'vue', 'json'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
