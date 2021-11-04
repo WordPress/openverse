@@ -12,7 +12,7 @@
   "author": "sebworks",
   "private": true,
   "scripts": {
-    "dev": "cross-env ENABLE_AUDIO=true nuxt",
+    "dev": "npm run i18n:get-valid-locales && cross-env ENABLE_AUDIO=true nuxt",
     "build": "npm run i18n:get-translations && nuxt build",
     "generate": "nuxt generate",
     "start": "nuxt start",
@@ -29,7 +29,8 @@
     "vue-i18n-extract": "vue-i18n-extract report -v './src/**/*.?(js|vue)' -l './src/locales/*.?(json)'",
     "postinstall": "patch-package",
     "prepare": "husky install",
-    "i18n:get-translations": "node src/locales/scripts/get-translations && node src/locales/scripts/get-validated-locales",
+    "i18n:get-valid-locales": "node src/locales/scripts/get-validated-locales",
+    "i18n:get-translations": "node src/locales/scripts/get-translations && npm run i18n:get-valid-locales",
     "i18n:generate-pot": "node src/locales/scripts/json-to-pot",
     "i18n:update-locales": "node src/locales/scripts/update-locale-list"
   },

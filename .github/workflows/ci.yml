@@ -41,4 +41,4 @@ jobs:
         run: npm run format:test
 
       - name: Run tests
-        run: npm run test:unit
+        run: npm run i18n:get-translations && npm run test:unit
