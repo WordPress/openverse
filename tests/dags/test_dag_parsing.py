@@ -51,7 +51,7 @@ ADDITIONAL_DAGS = [
 
 # Expected count from the DagBag once a file has been parsed
 # (this will likely not need to be edited for new providers)
-EXPECTED_COUNT = {"database/loader_workflow.py": 2}
+EXPECTED_COUNT = {}
 
 
 # relative_path represents the path from the DAG folder to the file

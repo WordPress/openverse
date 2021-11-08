@@ -30,12 +30,11 @@ def get_table_creator_operator(postgres_conn_id, identifier=TIMESTAMP_TEMPLATE):
 
 
 def get_load_local_data_operator(
-    output_dir, postgres_conn_id, overwrite=False, identifier=TIMESTAMP_TEMPLATE
+    output_dir, postgres_conn_id, identifier=TIMESTAMP_TEMPLATE
 ):
     return PythonOperator(
         task_id="load_local_data",
         python_callable=loader.load_local_data,
-        op_kwargs={"overwrite": overwrite},
         op_args=[output_dir, postgres_conn_id, identifier],
         trigger_rule=TriggerRule.ALL_SUCCESS,
     )
@@ -55,13 +54,11 @@ def get_load_s3_data_operator(
     bucket,
     aws_conn_id,
     postgres_conn_id,
-    overwrite=False,
     identifier=TIMESTAMP_TEMPLATE,
 ):
     return PythonOperator(
         task_id="load_s3_data",
         python_callable=loader.load_s3_data,
-        op_kwargs={"overwrite": overwrite},
         op_args=[bucket, aws_conn_id, postgres_conn_id, identifier],
     )
 

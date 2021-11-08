@@ -2,7 +2,7 @@ from common.loader import paths, s3, sql
 from common.loader.paths import _extract_media_type
 
 
-def load_local_data(output_dir, postgres_conn_id, identifier, ti, overwrite=False):
+def load_local_data(output_dir, postgres_conn_id, identifier, ti):
     tsv_file_name = paths.get_staged_file(output_dir, identifier)
     tsv_version = ti.xcom_pull(task_ids="stage_oldest_tsv_file", key="tsv_version")
 
@@ -10,14 +10,9 @@ def load_local_data(output_dir, postgres_conn_id, identifier, ti, overwrite=Fals
     sql.load_local_data_to_intermediate_table(
         postgres_conn_id, tsv_file_name, identifier
     )
-    if overwrite is True:
-        sql.overwrite_records_in_db_table(
-            postgres_conn_id, identifier, media_type=media_type, tsv_version=tsv_version
-        )
-    else:
-        sql.upsert_records_to_db_table(
-            postgres_conn_id, identifier, media_type=media_type, tsv_version=tsv_version
-        )
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, media_type=media_type, tsv_version=tsv_version
+    )
 
 
 def copy_to_s3(output_dir, bucket, identifier, aws_conn_id):
@@ -34,7 +29,6 @@ def load_s3_data(
     postgres_conn_id,
     identifier,
     ti,
-    overwrite=False,
 ):
     media_type = ti.xcom_pull(task_ids="stage_oldest_tsv_file", key="media_type")
     tsv_version = ti.xcom_pull(task_ids="stage_oldest_tsv_file", key="tsv_version")
@@ -47,12 +41,6 @@ def load_s3_data(
     sql.load_s3_data_to_intermediate_table(
         postgres_conn_id, bucket, tsv_key, identifier, media_type
     )
-
-    if overwrite is True:
-        sql.overwrite_records_in_db_table(
-            postgres_conn_id, identifier, media_type=media_type, tsv_version=tsv_version
-        )
-    else:
-        sql.upsert_records_to_db_table(
-            postgres_conn_id, identifier, media_type=media_type, tsv_version=tsv_version
-        )
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, media_type=media_type, tsv_version=tsv_version
+    )

@@ -261,42 +261,6 @@ def upsert_records_to_db_table(
     postgres.run(upsert_query)
 
 
-def overwrite_records_in_db_table(
-    postgres_conn_id,
-    identifier,
-    db_table=None,
-    media_type=IMAGE,
-    tsv_version=CURRENT_TSV_VERSION,
-):
-    if db_table is None:
-        db_table = TABLE_NAMES.get(media_type, TABLE_NAMES[IMAGE])
-    load_table = _get_load_table_name(identifier, media_type=media_type)
-    logger.info(f"Updating records in {db_table}. {tsv_version}")
-    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    columns_to_update = TSV_COLUMNS[media_type]
-    update_set_string = ",\n  ".join(
-        [
-            f"{column.db_name} = {load_table}.{column.db_name}"
-            for column in columns_to_update
-        ]
-    )
-
-    update_query = dedent(
-        f"""
-        UPDATE {db_table}
-        SET
-        {update_set_string}
-        FROM {load_table}
-        WHERE
-          {db_table}.{col.PROVIDER.db_name} = {load_table}.{col.PROVIDER.db_name}
-          AND
-          md5({db_table}.{col.FOREIGN_ID.db_name})
-            = md5({load_table}.{col.FOREIGN_ID.db_name});
-        """
-    )
-    postgres.run(update_query)
-
-
 def drop_load_table(postgres_conn_id, identifier, ti):
     media_type = ti.xcom_pull(task_ids="stage_oldest_tsv_file", key="media_type")
     if media_type is None:
