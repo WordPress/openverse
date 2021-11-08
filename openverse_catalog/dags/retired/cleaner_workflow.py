@@ -5,7 +5,8 @@ from datetime import datetime
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from common import config, pg_cleaner
+from common import config
+from retired.common import pg_cleaner
 
 
 logging.basicConfig(

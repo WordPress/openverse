@@ -40,7 +40,6 @@ ADDITIONAL_DAGS = [
     "maintenance/airflow_log_cleanup_workflow.py",
     "commoncrawl/sync_commoncrawl_workflow.py",
     "commoncrawl/commoncrawl_etl.py",
-    "database/cleaner_workflow.py",
     "database/loader_workflow.py",
     "database/recreate_image_popularity_calculation.py",
     "database/refresh_all_image_popularity_data.py",
