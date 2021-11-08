@@ -36,6 +36,7 @@ CREATE MATERIALIZED VIEW public.image_popularity_constants AS
   SELECT *, ((1 - percentile) / percentile) * val AS constant
   FROM popularity_metric_values;
 
+CREATE UNIQUE INDEX ON image_popularity_constants (provider);
 
 
 CREATE FUNCTION standardized_image_popularity(provider text, meta_data jsonb)
@@ -79,3 +80,5 @@ CREATE MATERIALIZED VIEW image_view AS
       image.provider, image.meta_data
     ) AS standardized_popularity
   FROM image;
+
+CREATE UNIQUE INDEX ON image_view (identifier);

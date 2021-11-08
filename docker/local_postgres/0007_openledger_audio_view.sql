@@ -35,6 +35,7 @@ CREATE MATERIALIZED VIEW public.audio_popularity_constants AS
   SELECT *, ((1 - percentile) / percentile) * val AS constant
   FROM popularity_metric_values;
 
+CREATE UNIQUE INDEX ON audio_popularity_constants (provider);
 
 
 CREATE FUNCTION standardized_audio_popularity(provider text, meta_data jsonb)
@@ -82,3 +83,5 @@ CREATE MATERIALIZED VIEW audio_view AS
       audio.provider, audio.meta_data
     ) AS standardized_popularity
   FROM audio;
+
+CREATE UNIQUE INDEX ON audio_view (identifier);
