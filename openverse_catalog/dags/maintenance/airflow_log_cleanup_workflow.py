@@ -80,6 +80,7 @@ def create_dag(
         catchup=False,
         # Use the docstring at the top of the file as md docs in the UI
         doc_md=__doc__,
+        tags=["maintenance"],
     )
 
     with dag:

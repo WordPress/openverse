@@ -50,6 +50,7 @@ def create_dag(
         max_active_runs=max_active_runs,
         schedule_interval=schedule_cron,
         catchup=False,
+        tags=["database"],
     )
     with dag:
         update_metrics = operators.update_media_popularity_metrics(

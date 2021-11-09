@@ -51,6 +51,7 @@ def create_dag(
         max_active_runs=max_active_runs,
         schedule_interval=schedule_cron,
         catchup=False,
+        tags=["database"],
     )
     with dag:
         drop_relations = operators.drop_media_popularity_relations(

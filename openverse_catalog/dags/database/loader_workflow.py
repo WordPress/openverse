@@ -78,6 +78,7 @@ dag = DAG(
     max_active_runs=CONCURRENCY,
     schedule_interval="* * * * *",
     catchup=False,
+    tags=["database"],
     doc_md=__doc__,
 )
 

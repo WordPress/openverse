@@ -26,6 +26,7 @@ dag = DAG(
         "email_on_retry": False,
         "retries": 0,
     },
+    tags=["oauth"],
 )
 
 _current_providers = [

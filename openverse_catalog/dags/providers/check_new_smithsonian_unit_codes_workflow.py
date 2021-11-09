@@ -47,6 +47,7 @@ def create_dag(
         max_active_runs=max_active_runs,
         catchup=False,
         schedule_interval=None,
+        tags=["provider-metadata"],
     )
 
     with dag:

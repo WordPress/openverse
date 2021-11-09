@@ -53,6 +53,7 @@ def create_dag(
         max_active_runs=max_active_runs,
         schedule_interval=schedule_cron,
         catchup=False,
+        tags=["database"],
     )
     with dag:
         operators.update_db_view(postgres_conn_id)

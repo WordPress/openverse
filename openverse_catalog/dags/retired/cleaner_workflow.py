@@ -41,6 +41,7 @@ def create_id_partitioned_cleaner_dag(
         schedule_interval=None,
         start_date=start_date,
         catchup=False,
+        tags=["database"],
     )
     hex_prefixes = pg_cleaner.hex_counter(prefix_length)
     with dag:

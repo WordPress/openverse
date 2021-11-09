@@ -83,6 +83,7 @@ def create_dag():
         start_date=datetime(2020, 1, 15),
         schedule_interval="0 16 15 * *",
         catchup=False,
+        tags=["commoncrawl"],
     )
 
     with dag:

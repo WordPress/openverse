@@ -164,6 +164,7 @@ with DAG(
     schedule_interval="0 0 * * 1",
     concurrency=1,
     catchup=False,
+    tags=["commoncrawl"],
 ) as dag:
     check_for_cc_index = operators.get_check_cc_index_in_s3_sensor(
         AWS_CONN_ID,
