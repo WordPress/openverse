@@ -13,6 +13,14 @@ to the "In progress" column.
 **Cron:** [at every 15th minute](https://crontab.guru/#*/15_*_*_*_*)  
 **Dispatch:** enabled
 
+### PR project automation
+
+This workflow archives PRs in the "Merged!" and "Closed" columns of the PR
+project board, 15 minutes after the commencement of the weekly developer chat
+at 15:00 UTC every Tuesday.
+
+**Cron:** [at 15:15 on Tuesday](https://crontab.guru/#15_15_*_*_2)
+
 ### New issue automation
 
 This workflow adds issues to the "Backlog" column in the Openverse project as
