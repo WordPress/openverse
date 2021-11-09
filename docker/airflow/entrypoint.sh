@@ -36,7 +36,7 @@ sleep 0.1;  # The $COLUMNS variable takes a moment to populate
 
 # Wait for postgres
 header "WAITING FOR POSTGRES"
-python wait_for_db.py
+python /opt/airflow/wait_for_db.py
 # Upgrade the database -- command is idempotent.
 header "MIGRATING DATABASE"
 airflow db upgrade
