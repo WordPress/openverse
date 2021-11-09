@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 from airflow.models import TaskInstance
-from common.loader.ingestion_column import _fix_ingestion_column
 
 
 FAILURE_SUBDIRECTORY = "db_loader_failures"
@@ -43,11 +42,7 @@ def stage_oldest_tsv_file(
     tsv_found = tsv_file_name is not None
     if tsv_found:
         tsv_version = _get_tsv_version(tsv_file_name)
-        should_fix_ingestion_type = False
-        if tsv_version == LEGACY_TSV_VERSION:
-            should_fix_ingestion_type = True
-            logger.info(f"Will move and fix ingestion type: {tsv_version}")
-        _move_file(tsv_file_name, staging_directory, should_fix_ingestion_type)
+        _move_file(tsv_file_name, staging_directory)
         media_type = _extract_media_type(tsv_file_name)
         ti.xcom_push(key="media_type", value=media_type)
         ti.xcom_push(key="tsv_version", value=tsv_version)
@@ -126,13 +121,11 @@ def _get_oldest_tsv_file(
     return oldest_file_name
 
 
-def _move_file(file_path, new_directory, should_fix_ingestion_type=False):
+def _move_file(file_path, new_directory):
     os.makedirs(new_directory, exist_ok=True)
     new_file_path = os.path.join(new_directory, os.path.basename(file_path))
     logger.info(f"Moving {file_path} to {new_file_path}")
     os.rename(file_path, new_file_path)
-    if should_fix_ingestion_type:
-        _fix_ingestion_column(new_file_path)
 
 
 def _get_full_tsv_paths(directory):
