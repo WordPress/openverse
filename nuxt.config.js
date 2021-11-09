@@ -134,6 +134,7 @@ export default {
       '~/components/MediaInfo',
       '~/components/MetaSearch',
       '~/components/MediaTag',
+      '~/components/Skeleton',
     ],
   },
   plugins: [
