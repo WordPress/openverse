@@ -32,7 +32,9 @@ RUN apt-get update && apt-get -yqq upgrade && apt-get -yqq install \
     libffi-dev \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
-RUN useradd -m -d ${AIRFLOW_HOME} airflow
+RUN useradd -m -d ${AIRFLOW_HOME} airflow && \
+    mkdir -p ${OUTPUT_DIR} && \
+    chown airflow:airflow ${OUTPUT_DIR}
 USER airflow
 
 WORKDIR  ${AIRFLOW_HOME}
