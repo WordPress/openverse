@@ -159,7 +159,7 @@ $hero-height: 55vh;
     border-top-right-radius: 0;
     width: 100%;
     max-width: 100%;
-    @include desktop {
+    @screen lg {
       width: 570px;
       font-size: 1.75rem;
       height: 5.063rem;
@@ -171,7 +171,7 @@ $hero-height: 55vh;
     border-top-left-radius: 0;
     font-size: 1rem;
     padding: 0.5rem 1.2rem;
-    @include desktop {
+    @screen lg {
       font-size: 1.75rem;
       padding-left: var(--button-padding-horizontal);
       padding-right: var(--button-padding-horizontal);
@@ -201,7 +201,7 @@ $hero-height: 55vh;
   object-fit: cover;
   object-position: left center;
 
-  @include desktop {
+  @screen lg {
     object-fit: initial;
     height: auto;
     padding: 0;

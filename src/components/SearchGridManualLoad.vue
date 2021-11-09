@@ -11,7 +11,7 @@
         <span class="caption font-semibold">
           {{ _imagesCount }}
         </span>
-        <div class="hidden desk:block desk:me-auto desk:ps-6">
+        <div class="hidden lg:block lg:me-auto lg:ps-6">
           <SearchRating v-if="searchTerm" :search-term="searchTerm" />
         </div>
         <SaferBrowsing />
@@ -214,7 +214,7 @@ label {
 .results-meta {
   @apply px-6 pt-2;
 
-  @include desktop {
+  @screen lg {
     display: flex;
     justify-content: space-between;
     align-items: center;

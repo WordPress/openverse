@@ -11,10 +11,10 @@
         @click="onToggleSearchGridFilter()"
         @keyup.enter="onToggleSearchGridFilter()"
       >
-        <span class="text-trans-blue hidden desk:block text-sm lowercase">{{
+        <span class="text-trans-blue hidden lg:block text-sm lowercase">{{
           $t('filter-list.hide')
         }}</span>
-        <span class="me-4 text-lg desk:hidden">
+        <span class="me-4 text-lg lg:hidden">
           <i class="icon cross" />
         </span>
       </button>
@@ -39,7 +39,7 @@
         {{ $t('filter-list.clear') }}
       </button>
       <button
-        class="text-sm py-4 px-6 lowercase rounded bg-trans-blue text-white is-hidden-desktop"
+        class="text-sm py-4 px-6 lowercase rounded bg-trans-blue text-white lg:hidden"
         @click="onToggleSearchGridFilter()"
       >
         {{ $t('filter-list.show') }}
@@ -114,18 +114,6 @@ export default {
 
 .filter-heading {
   font-size: 1rem;
-}
-
-.filter-buttons {
-  padding: 1.5rem;
-  text-align: center;
-  @include desktop {
-    padding: 0 0 1rem;
-    margin: 1.5rem;
-  }
-}
-.filter-buttons .button:first-child {
-  margin-right: 1rem;
 }
 
 #hide-filters-button {

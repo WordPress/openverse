@@ -133,7 +133,7 @@ export default {
   &:hover {
     border-color: transparent;
   }
-  @include desktop {
+  @screen lg {
     height: 3.875rem;
   }
 }
@@ -164,7 +164,7 @@ export default {
   clear: both;
   position: relative;
   text-align: left;
-  @include desktop {
+  @screen lg {
     width: 100%;
   }
   .label {
@@ -174,7 +174,7 @@ export default {
   .input {
     font-size: 1rem;
     height: 2.5rem;
-    @include desktop {
+    @screen lg {
       font-size: 1.43rem;
       height: 3.875rem;
     }
@@ -185,7 +185,7 @@ export default {
   .button {
     font-size: 1rem;
     padding: 0.5rem calc(1rem + 0.2rem);
-    @include desktop {
+    @screen lg {
       font-size: 1.43rem;
       padding-left: var(--button-padding-horizontal);
       padding-right: var(--button-padding-horizontal);

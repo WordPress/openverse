@@ -142,7 +142,7 @@ export default {
 .results-meta {
   @apply px-6 pt-2;
 
-  @include desktop {
+  @screen lg {
     display: flex;
     justify-content: space-between;
     align-items: center;

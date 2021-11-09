@@ -1,13 +1,6 @@
 module.exports = {
   purge: ['src/**/*.{vue,js,jsx,ts,tsx,mdx}', './nuxt.config.js'],
   theme: {
-    screens: {
-      // Determined by the lower bound of screen width
-      tab: '768px',
-      desk: '1024px',
-      wide: '1216px',
-      hd: '1408px',
-    },
     colors: {
       // Accents
       tomato: '#e23600',
@@ -78,6 +71,7 @@ module.exports = {
       24: '6.00rem',
       30: '7.50rem',
       70: '17.50rem',
+      80: '20.00rem',
     },
     ringWidth: {
       DEFAULT: '1.5px',

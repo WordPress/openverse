@@ -70,18 +70,15 @@ describe('SearchGridFilter', () => {
     storeMock.state.filter.isFilterVisible = true
     await render(SearchGridFilter, options)
     expect(screen.getByTestId('filters-list')).toBeVisible()
-    expect(screen.getByTestId('filters-list')).toHaveClass(
-      'search-filters__visible'
-    )
+    expect(screen.getByTestId('filters-list')).toHaveClass('block')
   })
 
   it('should not show search filters when isFilterVisible is false', async () => {
     storeMock.state.filter.isFilterVisible = false
     await render(SearchGridFilter, options)
+
     // not.toBeVisible does not work
-    expect(screen.getByTestId('filters-list')).not.toHaveClass(
-      'search-filters__visible'
-    )
+    expect(screen.getByTestId('filters-list')).toHaveClass('hidden')
   })
 
   it('toggles filter', async () => {
@@ -114,14 +111,12 @@ describe('SearchGridFilter', () => {
 
   it('toggles search visibility', async () => {
     render(SearchGridFilter, options)
-    expect(screen.getByTestId('filters-list')).toBeVisible()
-    expect(screen.getByTestId('filters-list')).toHaveClass(
-      'search-filters__visible'
-    )
+    const element = screen.getByTestId('filters-list')
+
+    expect(element).toBeVisible()
+    expect(element).toHaveClass('block')
 
     await fireEvent.click(screen.getByText('filter-list.hide'))
-    expect(screen.getByTestId('filters-list')).not.toHaveClass(
-      'search-filters__visible'
-    )
+    expect(element).toHaveClass('hidden')
   })
 })

@@ -114,7 +114,7 @@ export default {
   z-index: 400;
   width: 20rem;
   box-shadow: 10px 10px 10px -10px rgba(0, 0, 0, 0.25);
-  @include desktop {
+  @screen lg {
     top: var(--desktop-tooltip-top);
     left: var(--desktop-tooltip-left);
   }
@@ -125,7 +125,7 @@ export default {
 }
 .license-explanation-tooltip:after,
 .license-explanation-tooltip:before {
-  @include desktop {
+  @screen lg {
     right: 100%;
     top: var(--tooltip-before-top);
   }
@@ -145,7 +145,7 @@ export default {
   border-color: rgba(255, 255, 255, 0);
   border-width: 10px;
 
-  @include desktop {
+  @screen lg {
     border-right-color: #ffffff;
     margin-top: 3px;
   }
@@ -158,7 +158,7 @@ export default {
   border-color: rgba(120, 120, 120, 0);
   border-width: var(--tooltip-before-border-width);
 
-  @include desktop {
+  @screen lg {
     border-right-color: #d8d8d8;
     margin-top: 0px;
   }

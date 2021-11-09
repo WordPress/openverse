@@ -7,16 +7,16 @@
       :license-url="licenseUrl"
       :full-license-name="fullLicenseName"
       :attribution-html="attributionHtml()"
-      class="my-16 px-4 tab:px-0"
+      class="my-16 px-4 md:px-0"
     />
     <AudioDetailsTable
       data-testid="audio-info"
       :audio="audio"
-      class="my-16 px-4 desk:px-0"
+      class="my-16 px-4 lg:px-0"
     />
     <AudioDetailsRelated
       v-if="audio.id"
-      class="my-16 px-4 desk:px-0"
+      class="my-16 px-4 lg:px-0"
       :audio-id="audio.id"
     />
   </div>
@@ -108,7 +108,7 @@ export default AudioDetailPage
 }
 .audio-page .full-track .mx-16 {
   @apply mt-6;
-  @apply px-4 tab:px-0;
+  @apply px-4 md:px-0;
   max-width: var(--wp-max-width);
   margin-right: auto;
   margin-left: auto;

@@ -9,7 +9,7 @@
           </slot>
           <button
             type="button"
-            class="close-button text-gray text-lgr desk:text-base"
+            class="close-button text-gray text-lgr lg:text-base"
             :aria-label="$t('browse-page.aria.close')"
             @click="$emit('close')"
             @keypress.enter="$emit('close')"

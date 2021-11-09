@@ -1,9 +1,7 @@
 <template>
   <FiltersList
-    :class="{
-      'search-filters': true,
-      'search-filters__visible': isFilterVisible,
-    }"
+    class="search-filters h-auto max-h-full overflow-y-scroll"
+    :class="[isFilterVisible ? 'block' : 'hidden']"
     data-testid="filters-list"
     @onUpdateFilter="onUpdateFilter"
     @onToggleSearchGridFilter="onToggleSearchGridFilter"
@@ -52,24 +50,11 @@ export default {
 
 <style lang="scss" scoped>
 .search-filters {
-  display: none;
-  height: auto;
-  max-height: 100%;
-  overflow-y: scroll;
-
-  label {
-    color: #333333;
-  }
-
   @include touch {
     width: 21.875rem;
     max-width: 100%;
     max-height: 37rem;
     overflow-x: hidden;
   }
-}
-
-.search-filters__visible {
-  display: block;
 }
 </style>
