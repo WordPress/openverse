@@ -4,6 +4,7 @@ import re
 from datetime import datetime, timedelta
 from typing import Optional
 
+from airflow.exceptions import AirflowSkipException
 from airflow.models import TaskInstance
 
 
@@ -40,12 +41,13 @@ def stage_oldest_tsv_file(
     staging_directory = _get_staging_directory(output_dir, identifier)
     tsv_file_name = _get_oldest_tsv_file(output_dir, minimum_file_age_minutes)
     tsv_found = tsv_file_name is not None
-    if tsv_found:
-        tsv_version = _get_tsv_version(tsv_file_name)
-        _move_file(tsv_file_name, staging_directory)
-        media_type = _extract_media_type(tsv_file_name)
-        ti.xcom_push(key="media_type", value=media_type)
-        ti.xcom_push(key="tsv_version", value=tsv_version)
+    if not tsv_found:
+        raise AirflowSkipException("No files to process")
+    tsv_version = _get_tsv_version(tsv_file_name)
+    _move_file(tsv_file_name, staging_directory)
+    media_type = _extract_media_type(tsv_file_name)
+    ti.xcom_push(key="media_type", value=media_type)
+    ti.xcom_push(key="tsv_version", value=tsv_version)
     return tsv_found
 
 

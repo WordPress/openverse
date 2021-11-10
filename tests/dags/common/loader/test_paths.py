@@ -2,6 +2,7 @@ import datetime
 import time
 
 import pytest
+from airflow.exceptions import AirflowSkipException
 from airflow.models import TaskInstance
 from airflow.operators.dummy import DummyOperator
 from common.loader import paths
@@ -90,29 +91,22 @@ def test_stage_oldest_tsv_file_ignores_newer_file(tmpdir):
 
 def test_stage_oldest_tsv_file_ignores_non_tsv(tmpdir):
     tmp_directory = str(tmpdir)
-    staging_subdirectory = paths.STAGING_SUBDIRECTORY
     identifier = TEST_ID
     test = "t"
     path = tmpdir.join(test)
     path.write("")
-    paths.stage_oldest_tsv_file(tmp_directory, identifier, 0, ti)
-    staged_path = tmpdir.join(staging_subdirectory, identifier, test)
-    assert staged_path.check(file=0)
-    assert path.check(file=1)
+    with pytest.raises(AirflowSkipException):
+        paths.stage_oldest_tsv_file(tmp_directory, identifier, 0, ti)
 
 
 def test_stage_oldest_tsv_file_ignores_young_tsv(tmpdir):
     tmp_directory = str(tmpdir)
-    staging_subdirectory = paths.STAGING_SUBDIRECTORY
     identifier = TEST_ID
     test_tsv = "test_v002_.tsv"
     path = tmpdir.join(test_tsv)
     path.write("")
-    paths.stage_oldest_tsv_file(tmp_directory, identifier, 5, ti)
-    staged_path = tmpdir.join(staging_subdirectory, identifier, test_tsv)
-
-    assert staged_path.check(file=0)
-    assert path.check(file=1)
+    with pytest.raises(AirflowSkipException):
+        paths.stage_oldest_tsv_file(tmp_directory, identifier, 5, ti)
 
 
 def test_delete_staged_file_deletes_staged_file(tmpdir):
