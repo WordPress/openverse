@@ -56,6 +56,16 @@ You can run the unit tests by executing:
 npm run test
 ```
 
+To run the e2e tests, run:
+
+```bash
+npm run test:e2e
+```
+
+You might have to run `npx playwright install` to get the browsers installed if e2e tests fail.
+
+When writing e2e tests, you can also use `npm run generate-e2e-tests` to generate tests and test selectors.
+
 ### localhost tunneling
 
 If you want to make your local development server accessible to the internet (for testing or showing someone something you're working on), you can use [`ngrok`](https://ngrok.com/). Follow the documentation on the `ngrok` site to install it and set it up. Once you have it installed, get the development server for Openverse running and in a separate window/tab, run:

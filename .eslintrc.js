@@ -3,7 +3,6 @@ module.exports = {
   env: {
     browser: true,
     node: true,
-    'cypress/globals': true,
   },
   parserOptions: {
     parser: 'babel-eslint',
@@ -18,7 +17,7 @@ module.exports = {
     'plugin:@intlify/vue-i18n/recommended',
   ],
   // required to lint *.vue files
-  plugins: ['vue', 'cypress', 'vuejs-accessibility', 'unicorn'],
+  plugins: ['vue', 'vuejs-accessibility', 'unicorn'],
   // add your custom rules here
   rules: {
     semi: [2, 'never'],

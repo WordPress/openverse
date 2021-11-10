@@ -94,6 +94,7 @@ const BrowsePage = {
     ...mapActions(SEARCH, {
       fetchMedia: FETCH_MEDIA,
       setSearchTypeFromUrl: SET_SEARCH_TYPE_FROM_URL,
+      setFiltersFromUrl: SET_FILTERS_FROM_URL,
       updateSearchType: UPDATE_SEARCH_TYPE,
     }),
     ...mapActions(FILTER, {
