@@ -63,11 +63,11 @@ export default {
   column-count: 2;
   column-gap: 1rem;
 
-  @screen tab {
+  @screen md {
     column-count: 3;
   }
 
-  @screen desk {
+  @screen lg {
     column-count: 5;
   }
 }
