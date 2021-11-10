@@ -1,7 +1,7 @@
 <template>
   <div class="audio-controller">
     <Waveform
-      :class="waveformClasses"
+      v-bind="waveformProps"
       :message="message ? $t(`audio-track.messages.${message}`) : null"
       :current-time="currentTime"
       :duration="duration"
@@ -27,11 +27,14 @@
 </template>
 
 <script>
-import Waveform from '~/components/AudioTrack/Waveform'
 import { computed, ref, useStore, watch } from '@nuxtjs/composition-api'
+
+import Waveform from '~/components/AudioTrack/Waveform'
+
+import { ACTIVE } from '~/constants/store-modules.js'
 import {
+  PAUSE_ACTIVE_MEDIA_ITEM,
   SET_ACTIVE_MEDIA_ITEM,
-  UNSET_ACTIVE_MEDIA_ITEM,
 } from '~/constants/mutation-types'
 
 /**
@@ -64,10 +67,10 @@ export default {
       validator: (val) => ['playing', 'paused', 'played'].includes(val),
     },
     /**
-     * the CSS classes to apply on the waveform; This can take any form
-     * acceptable to Vue class bindings.
+     * the Vue props to pass to the waveform; This can take any form acceptable
+     * to Vue bindings.
      */
-    waveformClasses: {},
+    waveformProps: {},
   },
   setup(props, { emit }) {
     const store = useStore()
@@ -88,23 +91,25 @@ export default {
         if (!audioEl.value) return
 
         if (prevStatus === 'played' && status === 'playing') {
-          // If going from played to playing, then reset the time to the beginning. Let the regular logic handle actually triggering the playing of the audio
+          // If going from played to playing, then reset the time to the beginning.
+          // Let the regular logic handle actually triggering the playing of the audio
           audioEl.value.currentTime = 0
         }
 
         switch (status) {
           case 'playing':
             audioEl.value.play()
-            store.commit(SET_ACTIVE_MEDIA_ITEM, {
+            store.commit(`${ACTIVE}/${SET_ACTIVE_MEDIA_ITEM}`, {
               type: 'audio',
               id: props.audio.id,
             })
             window.requestAnimationFrame(updateTimeLoop)
             break
           case 'paused':
+          case 'played': // Note that played media shows as paused in the store
             audioEl.value.pause()
             if (isActiveTrack.value) {
-              store.commit(UNSET_ACTIVE_MEDIA_ITEM)
+              store.commit(`${ACTIVE}/${PAUSE_ACTIVE_MEDIA_ITEM}`)
             }
             break
         }

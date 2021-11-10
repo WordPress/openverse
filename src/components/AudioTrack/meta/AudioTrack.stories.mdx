@@ -24,7 +24,7 @@ import wavWaveform from './wav-waveform.json'
     },
     layout: {
       defaultValue: 'full',
-      options: ['full', 'box', 'row'],
+      options: ['full', 'box', 'row', 'global'],
       control: 'select',
     },
     size: {
@@ -48,6 +48,8 @@ export const commonAttrs = () => ({
   creator: 'Wolfgang Amadeus Mozart',
   creatorUrl: 'https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart',
   category: 'music',
+  thumbnail:
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Croce-Mozart-Detail.jpg/370px-Croce-Mozart-Detail.jpg',
 })
 
 export const formatExamples = {
@@ -105,13 +107,25 @@ export const Template = (args, { argTypes }) => ({
 
 <ArgsTable of={AudioTrack} />
 
-<Canvas>
-  <Story name="Default">{Template.bind({})}</Story>
-</Canvas>
+**Audio thumbnail:** "Mozart Family" by
+[Johann Nepomuk della Croce](https://en.wikipedia.org/wiki/Johann_Nepomuk_della_Croce)
+(Public Domain)
 
-The component can also be rendered in a multiple different layouts, by
+## Layouts
+
+The component can be rendered in a multiple different layouts, by
 specifying a `layout`. The layout can further be customised by the `size` and
 `aspect` props.
+
+### Full (default)
+
+<Canvas>
+  <Story name="Full">{Template.bind({})}</Story>
+</Canvas>
+
+### Row
+
+**Sizes:** S (small) and M (medium) and L (large)
 
 <Canvas>
   <Story
@@ -123,11 +137,39 @@ specifying a `layout`. The layout can further be customised by the `size` and
   >
     {Template.bind({})}
   </Story>
+</Canvas>
+
+<Canvas>
   <Story
     name="Row (medium)"
     args={{
       layout: 'row',
       size: 'm',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name="Row (large)"
+    args={{
+      layout: 'row',
+      size: 'l',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Global
+
+<Canvas>
+  <Story
+    name="Global"
+    args={{
+      layout: 'global',
     }}
   >
     {Template.bind({})}

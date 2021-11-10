@@ -28,18 +28,17 @@ module.exports = {
       white: 'white',
 
       // WordPress
-      'admin-gray': '#DCDCDE',
+      'admin-gray': '#dcdcde',
 
       // Dark Charcoal
-      'dark-charcoal-04': 'rgba(48, 39, 46, 0.04)', // This is a legacy opacity-based color. We should avoid it if possible
-      'dark-charcoal-06': '#F3F2F2',
-      'dark-charcoal-10': '#EAE9EA',
-      'dark-charcoal-20': '#D6D4D5',
-      'dark-charcoal-30': '#C1BEC0',
-      'dark-charcoal-40': '#ACA9AB',
+      'dark-charcoal-06': '#f3f2f2',
+      'dark-charcoal-10': '#eae9ea',
+      'dark-charcoal-20': '#d6d4d5',
+      'dark-charcoal-30': '#c1bec0',
+      'dark-charcoal-40': '#aca9ab',
       'dark-charcoal-50': '#989397',
-      'dark-charcoal-60': '#837D82',
-      'dark-charcoal-70': '#6E686D',
+      'dark-charcoal-60': '#837d82',
+      'dark-charcoal-70': '#6e686d',
       'dark-charcoal-80': '#595258',
 
       // Special keywords
@@ -57,6 +56,7 @@ module.exports = {
 
       // Indexed by multiples of baseline (~ `0.25rem`)
       0: '0',
+      0.5: '0.125rem',
       1: '0.25rem',
       2: '0.50rem',
       3: '0.75rem',

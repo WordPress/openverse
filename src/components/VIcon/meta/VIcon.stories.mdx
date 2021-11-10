@@ -1,0 +1,54 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import VIcon from '~/components/VIcon/VIcon.vue'
+
+import replayIcon from '~/assets/icons/replay.svg'
+
+<Meta title="Components/VIcon" component={VIcon} />
+
+export const Template = (args, { argTypes }) => ({
+  template: `<VIcon v-bind="$props" />`,
+  components: { VIcon },
+  props: Object.keys(argTypes),
+})
+
+# Icon
+
+<Description of={VIcon} />
+
+<ArgsTable of={VIcon} />
+
+To display the icon, the path to the SVG must be specified. When using a bundler
+like Webpack, importing an SVG (with the right loaders) will give the path to
+that SVG.
+
+```js
+import iconSvg from '~/path/to/icon' // contains the URL path to the SVG
+```
+
+You can then pass this imported value as the `iconPath` prop.
+
+```html
+<VIcon :iconPath="iconSvg" />
+```
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      iconPath: replayIcon,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+Each icon SVG must have a `<g>` element right below the top-level `<svg>`
+element. This element should have the `id` attribute equal to `"icon"`. If not,
+pass the attribute value as the `gId` prop.

@@ -85,6 +85,28 @@ The waveform always takes the height and width of its container.
 Thus the `barWidth` and `barGap` will be maintained even in the case of
 horizontal scaling.
 
+## Usable area
+
+To leave some blank space at the top, for overlaying your own stuff, you can
+pass a number less than 1 as the `usableFrac` prop. Note that the usable area
+contains both the bars and the timestamps so the actual bar height is less than
+`usableFrac`.
+
+<Canvas>
+  <Story
+    name="With blank space"
+    args={{
+      peaks: [0.5, 1, 0.5, 0, 0.5],
+      currentTime: 2,
+      duration: 10,
+      showDuration: true,
+      usableFrac: 0.5,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
 ## Message state
 
 The waveform bars are set to zero height when the `message` prop is passed. They

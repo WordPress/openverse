@@ -618,7 +618,8 @@
   },
   "play-pause": {
     "play": "Play",
-    "pause": "Pause"
+    "pause": "Pause",
+    "replay": "Replay"
   },
   "audio-categories": {
     "title": "Audio Category",

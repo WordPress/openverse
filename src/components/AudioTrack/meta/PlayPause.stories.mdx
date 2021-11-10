@@ -47,7 +47,11 @@ of `h-*` and `w-*` classes are needed.
 </Canvas>
 
 The recommended way to use it is with `v-model` mapping to a `String` that can
-either be `'playing'` or `'paused'`.
+either be `'playing'`, `'paused'` or `'played'`.
+
+It should be noted that both paused and played states change to playing when
+toggled whereas the playing state toggles to paused. The played state can only
+be achieved by playing till the end of a track.
 
 export const vModelTemplate = () => ({
   template: `
@@ -59,7 +63,7 @@ export const vModelTemplate = () => ({
   components: { PlayPause },
   data() {
     return {
-      status: 'paused',
+      status: 'played',
     }
   },
 })

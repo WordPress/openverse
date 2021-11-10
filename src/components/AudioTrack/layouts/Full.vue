@@ -34,8 +34,13 @@
 </template>
 
 <script>
+import DownloadButton from '~/components/DownloadButton.vue'
+
 export default {
   name: 'Full',
+  components: {
+    DownloadButton,
+  },
   props: ['audio'],
   setup() {
     /**
