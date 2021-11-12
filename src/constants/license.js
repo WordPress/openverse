@@ -9,7 +9,7 @@ export const CC_LICENSES = [
 
 export const NON_CC_LICENSES = ['cc0', 'pdm']
 
-export const ALL_LICENCES = [...CC_LICENSES, ...NON_CC_LICENSES]
+export const ALL_LICENSES = [...CC_LICENSES, ...NON_CC_LICENSES]
 
 export const LICENSE_ICON_MAPPING = {
   by: 'by',

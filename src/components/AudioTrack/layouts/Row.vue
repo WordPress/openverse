@@ -58,7 +58,7 @@
                 {{ $t('interpunct') }}
               </template>
             </div>
-            <License :license="audio.license" />
+            <VLicense :license="audio.license" />
           </div>
         </div>
       </div>
@@ -80,11 +80,11 @@
 <script>
 import { computed } from '@nuxtjs/composition-api'
 import AudioThumbnail from '~/components/AudioThumbnail/AudioThumbnail.vue'
-import License from '~/components/License/License.vue'
+import VLicense from '~/components/License/VLicense.vue'
 
 export default {
   name: 'Row',
-  components: { AudioThumbnail, License },
+  components: { AudioThumbnail, VLicense },
   props: ['audio', 'size'],
   setup(props) {
     /* Utils */

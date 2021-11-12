@@ -6,21 +6,21 @@ import {
   Story,
 } from '@storybook/addon-docs'
 
-import License from '~/components/License/License'
+import VLicense from '~/components/License/VLicense'
 
-<Meta title="Components/License" component={License} />
+<Meta title="Components/VLicense" component={VLicense} />
 
 export const Template = (args, { argTypes }) => ({
-  template: `<License v-bind="$props" />`,
-  components: { License },
+  template: `<VLicense v-bind="$props" />`,
+  components: { VLicense },
   props: Object.keys(argTypes),
 })
 
-# License
+# VLicense
 
-<Description of={License} />
+<Description of={VLicense} />
 
-<ArgsTable of={License} />
+<ArgsTable of={VLicense} />
 
 It can display CC licenses.
 
