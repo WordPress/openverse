@@ -1,0 +1,35 @@
+{
+  "avg_rating": 0.0,
+  "bitdepth": 16,
+  "bitrate": 1381,
+  "created": "2018-01-15T00:02:51",
+  "description": "A disinterested noise in a somewhat low tone.",
+  "download": "https://freesound.org/apiv2/sounds/415362/download/",
+  "duration": 0.608754,
+  "filesize": 107592,
+  "geotag": null,
+  "id": 415362,
+  "license": "http://creativecommons.org/licenses/by/3.0/",
+  "name": "Ehh disinterested.wav",
+  "num_downloads": 164,
+  "num_ratings": 0,
+  "pack": "https://freesound.org/apiv2/packs/23434/",
+  "previews": {
+    "preview-hq-mp3": "https://freesound.org/data/previews/415/415362_6044691-hq.mp3",
+    "preview-hq-ogg": "https://freesound.org/data/previews/415/415362_6044691-hq.ogg",
+    "preview-lq-mp3": "https://freesound.org/data/previews/415/415362_6044691-lq.mp3",
+    "preview-lq-ogg": "https://freesound.org/data/previews/415/415362_6044691-lq.ogg"
+  },
+  "samplerate": 44100.0,
+  "tags": [
+    "eh",
+    "disinterest",
+    "low",
+    "uh",
+    "voice",
+    "uncaring"
+  ],
+  "type": "wav",
+  "url": "https://freesound.org/people/owly-bee/sounds/415362/",
+  "username": "owly-bee"
+}

@@ -49,6 +49,7 @@ IMAGE_POPULARITY_METRICS = {
 AUDIO_POPULARITY_METRICS = {
     "jamendo": {"metric": "listens"},
     "wikimedia_audio": {"metric": "global_usage_count"},
+    "freesound": {"metric": "num_downloads"},
 }
 
 POPULARITY_METRICS_TABLE_COLUMNS = [
