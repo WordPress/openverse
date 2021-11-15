@@ -55,16 +55,6 @@ describe('Image Provider Store', () => {
 
       expect(store.state.isFetchingImageProvidersError).toBe(params.error)
     })
-
-    it('SET_IMAGE_PROVIDERS sets imageProviders', () => {
-      const params = {
-        mediaType: 'image',
-        providers: [{ name: 'testProvider' }],
-      }
-      store.mutations[SET_MEDIA_PROVIDERS](store.state, params)
-
-      expect(store.state.imageProviders).toBe(params.providers)
-    })
   })
 
   describe('actions', () => {

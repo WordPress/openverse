@@ -15,7 +15,7 @@
       <div class="column search-grid-ctr">
         <SearchGridForm @onSearchFormSubmit="onSearchFormSubmit" />
         <SearchTypeTabs />
-        <FilterDisplay v-if="shouldShowFilterTags" />
+        <FilterDisplay v-show="shouldShowFilterTags" />
         <NuxtChild :key="$route.path" @onLoadMoreItems="onLoadMoreItems" />
         <ScrollButton
           data-testid="scroll-button"
@@ -28,20 +28,17 @@
 <script>
 import {
   FETCH_MEDIA,
-  SET_FILTERS_FROM_URL,
-  SET_SEARCH_TYPE_FROM_URL,
+  UPDATE_QUERY,
+  SET_SEARCH_STATE_FROM_URL,
   UPDATE_SEARCH_TYPE,
 } from '~/constants/action-types'
-import { SET_QUERY, SET_FILTER_IS_VISIBLE } from '~/constants/mutation-types'
-import {
-  queryStringToQueryData,
-  queryStringToSearchType,
-} from '~/utils/search-query-transform'
+import { SET_FILTER_IS_VISIBLE } from '~/constants/mutation-types'
+import { queryStringToSearchType } from '~/utils/search-query-transform'
 import local from '~/utils/local'
 import { screenWidth } from '~/utils/get-browser-info'
-import { ALL_MEDIA, IMAGE } from '~/constants/media'
-import { mapActions, mapMutations, mapState } from 'vuex'
-import { FILTER, SEARCH } from '~/constants/store-modules'
+import { ALL_MEDIA, IMAGE, VIDEO } from '~/constants/media'
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
+import { MEDIA, SEARCH } from '~/constants/store-modules'
 import debounce from 'lodash.debounce'
 
 const BrowsePage = {
@@ -51,19 +48,21 @@ const BrowsePage = {
   },
   scrollToTop: false,
   async fetch() {
-    const url = this.$route.fullPath
-    if (process.server) {
-      const query = queryStringToQueryData(url)
-      this.setQuery({ query })
+    if (this.mediaType !== VIDEO && this.results.items.length === 0) {
+      await this.fetchMedia({ mediaType: this.mediaType, q: this.query.q })
     }
-    await this.setSearchTypeFromUrl({ url })
-    await this.setFiltersFromUrl({ url })
   },
   data: () => ({
     showScrollButton: false,
   }),
-  created() {
+  async created() {
     this.debounceScrollHandling = debounce(this.checkScrollLength, 100)
+    if (process.server) {
+      await this.setSearchStateFromUrl({
+        path: this.$route.path,
+        query: this.$route.query,
+      })
+    }
   },
   mounted() {
     const localFilterState = () =>
@@ -83,66 +82,70 @@ const BrowsePage = {
     window.removeEventListener('scroll', this.debounceScrollHandling)
   },
   computed: {
-    ...mapState(SEARCH, ['query', 'searchType']),
-    ...mapState(FILTER, ['isFilterVisible']),
+    ...mapState(SEARCH, ['query', 'isFilterVisible', 'searchType']),
+    ...mapGetters(SEARCH, ['searchQueryParams', 'isAnyFilterApplied']),
+    ...mapGetters(MEDIA, ['results']),
     mediaType() {
       // Default to IMAGE until media search/index is generalized
       return this.searchType !== ALL_MEDIA ? this.searchType : IMAGE
     },
+    shouldShowFilterTags() {
+      return (
+        ['/search/', '/search/image'].includes(this.$route.path) &&
+        this.isAnyFilterApplied
+      )
+    },
   },
   methods: {
+    ...mapActions(MEDIA, { fetchMedia: FETCH_MEDIA }),
     ...mapActions(SEARCH, {
-      fetchMedia: FETCH_MEDIA,
-      setSearchTypeFromUrl: SET_SEARCH_TYPE_FROM_URL,
-      setFiltersFromUrl: SET_FILTERS_FROM_URL,
+      setSearchStateFromUrl: SET_SEARCH_STATE_FROM_URL,
       updateSearchType: UPDATE_SEARCH_TYPE,
-    }),
-    ...mapActions(FILTER, {
-      setFiltersFromUrl: SET_FILTERS_FROM_URL,
+      updateQuery: UPDATE_QUERY,
     }),
     ...mapMutations(SEARCH, {
-      setQuery: SET_QUERY,
-    }),
-    ...mapMutations(FILTER, {
       setFilterVisibility: SET_FILTER_IS_VISIBLE,
     }),
-    getMediaItems(params, mediaType) {
-      this.fetchMedia({ ...params, mediaType })
+    async getMediaItems(params, mediaType) {
+      await this.fetchMedia({ ...params, mediaType })
     },
     onLoadMoreItems(searchParams) {
       this.getMediaItems(searchParams, this.mediaType)
     },
-    onSearchFormSubmit(searchParams) {
-      this.setQuery(searchParams)
+    onSearchFormSubmit({ q }) {
+      this.updateQuery({ q })
     },
     onToggleSearchGridFilter() {
       this.setFilterVisibility({
         isFilterVisible: !this.isFilterVisible,
       })
     },
-    shouldShowFilterTags() {
-      return (
-        this.$route.path === '/search/' || this.$route.path === '/search/image'
-      )
-    },
     checkScrollLength() {
       this.showScrollButton = window.scrollY > 70
     },
   },
   watch: {
-    query(newQuery) {
-      if (newQuery) {
+    query: {
+      deep: true,
+      handler() {
         const newPath = this.localePath({
           path: this.$route.path,
-          query: newQuery,
+          query: this.searchQueryParams,
         })
         this.$router.push(newPath)
-        this.getMediaItems(newQuery, this.mediaType)
-      }
+        this.getMediaItems(this.query, this.mediaType)
+      },
     },
-    $route(route) {
-      const searchType = queryStringToSearchType(route.path)
-      this.updateSearchType({ searchType })
+    /**
+     * Updates the search type only if the route's path changes.
+     * @param newRoute
+     * @param oldRoute
+     */
+    $route(newRoute, oldRoute) {
+      if (newRoute.path !== oldRoute.path) {
+        const searchType = queryStringToSearchType(newRoute.path)
+        this.updateSearchType({ searchType })
+      }
     },
   },
 }

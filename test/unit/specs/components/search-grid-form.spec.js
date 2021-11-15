@@ -7,13 +7,9 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 const storeMock = new Vuex.Store({
   modules: {
-    filter: {
-      namespaced: true,
-      state: { isFilterVisible: true },
-    },
     search: {
       namespaced: true,
-      state: { query: { q: 'foo' } },
+      state: { query: { q: 'foo' }, isFilterVisible: true },
     },
   },
 })

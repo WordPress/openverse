@@ -18,7 +18,7 @@
 import axios from 'axios'
 import { mapActions, mapState } from 'vuex'
 import { FETCH_IMAGE } from '~/constants/action-types'
-import { SEARCH } from '~/constants/store-modules'
+import { MEDIA } from '~/constants/store-modules'
 
 const PhotoDetailPage = {
   name: 'PhotoDetailPage',
@@ -40,7 +40,7 @@ const PhotoDetailPage = {
     }
   },
   computed: {
-    ...mapState(SEARCH, ['image']),
+    ...mapState(MEDIA, ['image']),
   },
   async asyncData({ env, route }) {
     return {
@@ -73,7 +73,7 @@ const PhotoDetailPage = {
     })
   },
   methods: {
-    ...mapActions(SEARCH, { fetchImage: FETCH_IMAGE }),
+    ...mapActions(MEDIA, { fetchImage: FETCH_IMAGE }),
     onImageLoaded(event) {
       this.imageWidth = event.target.naturalWidth
       this.imageHeight = event.target.naturalHeight

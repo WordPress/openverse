@@ -1,4 +1,4 @@
-import SearchStore from '~/store/search'
+import SearchStore from '~/store/media'
 import MediaProviderStore from '~/store/provider'
 
 const store = {

@@ -19,6 +19,10 @@ export default function prepareSearchQueryParams(searchParams) {
     params[params.searchBy] = params.q
     delete params.q
   }
-
+  Object.keys(params).forEach((key) => {
+    if (params[key] === '' || params[key] === false) {
+      delete params[key]
+    }
+  })
   return params
 }

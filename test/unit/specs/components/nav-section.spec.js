@@ -1,8 +1,8 @@
-import NavSection from '~/components/NavSection'
-import { SET_Q } from '~/constants/mutation-types'
+import Vuex from 'vuex'
 import render from '../../test-utils/render'
 import { createLocalVue } from '@vue/test-utils'
-import Vuex from 'vuex'
+import NavSection from '~/components/NavSection'
+import { UPDATE_QUERY } from '~/constants/action-types'
 
 describe('NavSection', () => {
   it('should render correct contents', () => {
@@ -10,16 +10,16 @@ describe('NavSection', () => {
     expect(wrapper.find('nav').vm).toBeDefined()
   })
 
-  it('commits a mutation when the form is submitted', async () => {
+  it('dispatches an action when the form is submitted', async () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
-    const commitMock = jest.fn()
+    const dispatchMock = jest.fn()
     const storeMock = new Vuex.Store({
       modules: {
         search: {
           namespaced: true,
-          mutations: {
-            [SET_Q]: commitMock,
+          actions: {
+            [UPDATE_QUERY]: dispatchMock,
           },
         },
       },
@@ -43,7 +43,7 @@ describe('NavSection', () => {
       path: '/search',
       query: { q: 'foo' },
     })
-    // The first parameter should be the commit type, but because of the way it's mocked, it's {}
-    expect(commitMock).toHaveBeenLastCalledWith({}, { q: 'foo' })
+    const dispatchArgs = dispatchMock.mock.calls[0][1]
+    expect(dispatchArgs).toEqual({ q: 'foo' })
   })
 })

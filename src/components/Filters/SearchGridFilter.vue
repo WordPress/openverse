@@ -16,21 +16,21 @@ import {
   CLEAR_FILTERS,
 } from '~/constants/mutation-types'
 import { TOGGLE_FILTER } from '~/constants/action-types'
-import { FILTER } from '~/constants/store-modules'
+import { SEARCH } from '~/constants/store-modules'
 import FiltersList from '~/components/Filters/FiltersList'
 
 export default {
   name: 'SearchGridFilter',
   components: { FiltersList },
   computed: {
-    ...mapState(FILTER, ['filters', 'isFilterVisible']),
+    ...mapState(SEARCH, ['filters', 'isFilterVisible']),
   },
   methods: {
-    ...mapActions(FILTER, {
+    ...mapActions(SEARCH, {
       toggleFilter: TOGGLE_FILTER,
       clearFilters: CLEAR_FILTERS,
     }),
-    ...mapMutations(FILTER, {
+    ...mapMutations(SEARCH, {
       setFilterVisible: SET_FILTER_IS_VISIBLE,
     }),
     onUpdateFilter({ code, filterType }) {

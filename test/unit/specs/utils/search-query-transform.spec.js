@@ -4,7 +4,7 @@ import {
   queryToFilterData,
   queryStringToQueryData,
 } from '~/utils/search-query-transform'
-import { filterData } from '~/store/filter'
+import { filterData } from '~/store/search'
 import { IMAGE } from '~/constants/media'
 
 describe('searchQueryTransform', () => {
@@ -110,9 +110,9 @@ describe('searchQueryTransform', () => {
     const filters = {
       ...filterData,
     }
-    const query = ''
+    const query = {}
 
-    const result = queryToFilterData(query)
+    const result = queryToFilterData({ query, defaultFilters: filters })
     expect(result).toEqual(filters) // toEqual checks for value equality
   })
   it('queryToFilterData all image filters', () => {
@@ -246,14 +246,27 @@ describe('searchQueryTransform', () => {
       ],
       mature: true,
     }
-    const queryString =
-      'http://localhost:8443/search/audio?q=cat&license=cc0&license_type=commercial&categories=music&extension=mp3&duration=medium&source=jamendo,wikimedia&searchBy=creator&mature=true'
+    const query = {
+      q: 'cat',
+      license: 'cc0',
+      license_type: 'commercial',
+      categories: 'music',
+      extension: 'mp3',
+      duration: 'medium',
+      source: 'jamendo',
+      searchBy: 'creator',
+      mature: 'true',
+    }
     const testFilters = clonedeep(filters)
     testFilters.audioProviders = [
       { code: 'jamendo', checked: true },
       { code: 'wikimedia', checked: true },
     ]
-    const result = queryToFilterData(queryString, testFilters)
+    const result = queryToFilterData({
+      query,
+      searchType: 'audio',
+      defaultFilters: testFilters,
+    })
     expect(result).toEqual(filters) // toEqual checks for value equality
   })
   it('queryStringToQueryData', () => {

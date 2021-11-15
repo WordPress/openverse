@@ -8,6 +8,35 @@ export interface MediaResult<T> {
   results: T
 }
 
+export type Query = {
+  mediaType: 'audio' | 'image'
+  q: string
+  license: string
+  license_type: string
+  extension: string
+  size: string
+  aspect_ratio: string
+  searchBy: string
+  categories: string
+  source: string
+  duration: string
+  mature: boolean
+}
+
+export type ApiQueryParams = {
+  q: string
+  license?: string
+  license_type?: string
+  extension?: string
+  size?: string
+  aspect_ratio?: string
+  searchBy?: string
+  categories?: string
+  source?: string
+  duration?: string
+  mature?: string
+}
+
 /**
  * Audio Properties returned by the API
  */
@@ -57,8 +86,62 @@ export type ImageDetail = {
   fields_matched?: string[]
 }
 
+export interface FilterItem {
+  code: string
+  name: string
+  checked: boolean
+}
+
+export interface Filters {
+  licenses: FilterItem[]
+  licenseTypes: FilterItem[]
+  audioCategories: FilterItem[]
+  imageCategories: FilterItem[]
+  audioExtensions: FilterItem[]
+  imageExtensions: FilterItem[]
+  aspectRatios: FilterItem[]
+  durations: FilterItem[]
+  sizes: FilterItem[]
+  audioProviders: FilterItem[]
+  imageProviders: FilterItem[]
+  searchBy: FilterItem[]
+  mature: boolean
+}
+
+export interface FetchingState {
+  isFetching: boolean
+  fetchingError: null | string
+}
+
+export interface SearchState {
+  isFilterVisible: boolean
+  searchType: 'all' | 'audio' | 'image' | 'video'
+  query: Query
+  filters: Filters
+}
+
 export interface ActiveMediaState {
   type: 'image' | 'audio' | null
   id: string | null
   status: 'ejected' | 'playing' | 'paused' // 'ejected' means player is closed
+}
+
+export interface MediaStoreResult {
+  count: number
+  page?: number
+  pageCount: number
+  items: AudioDetail[] | ImageDetail[]
+}
+
+export interface MediaState {
+  results: {
+    audio: MediaStoreResult
+    image: MediaStoreResult
+  }
+  fetchingState: {
+    audio: FetchingState
+    image: FetchingState
+  }
+  audio: Object | AudioDetail
+  image: Object | ImageDetail
 }

@@ -16,12 +16,10 @@ describe('Search Grid Wrapper', () => {
           namespaced: true,
           state: {
             query: { q: 'foo' },
-          },
-        },
-        filter: {
-          namespaced: true,
-          state: {
             isFilterVisible: false,
+          },
+          mutations: {
+            SET_FILTER_IS_VISIBLE: jest.fn(),
           },
         },
       },

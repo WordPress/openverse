@@ -1,7 +1,6 @@
 import HomeLicenseFilter from '~/components/HomeLicenseFilter'
 import { render, screen } from '@testing-library/vue'
 import { TOGGLE_FILTER } from '~/constants/action-types'
-import { FILTER } from '~/constants/store-modules'
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 
@@ -20,7 +19,7 @@ describe('HomeLicenseFilter', () => {
     localVue.use(Vuex)
     storeMock = new Vuex.Store({
       modules: {
-        filter: {
+        search: {
           namespaced: true,
           actions: {
             // Without this action, we get '[vuex] unknown local action type' error
@@ -47,24 +46,20 @@ describe('HomeLicenseFilter', () => {
     const checkboxes = screen.queryAllByRole('checkbox')
     expect(checkboxes.length).toEqual(2)
 
-    const commercialCheckbox = screen.queryByLabelText('Commercial usage')
+    const commercialCheckbox = screen.queryByLabelText(/commercial/i)
     expect(commercialCheckbox).toBeTruthy()
 
-    const modificationCheckbox = screen.queryByLabelText('Allows modification')
+    const modificationCheckbox = screen.queryByLabelText(/modification/i)
     expect(modificationCheckbox).toBeTruthy()
   })
 
   it('dispatches `TOGGLE_FILTER` when checkboxes selected', async () => {
     storeMock.dispatch = dispatchMock
     render(HomeLicenseFilter, options)
-    const commercialCheckbox = screen.queryByLabelText('Commercial usage')
+    const commercialCheckbox = screen.queryByLabelText(/commercial/i)
     await commercialCheckbox.click()
     const checked = screen.queryAllByRole('checkbox', { checked: true })
 
     expect(checked.length).toEqual(1)
-    expect(dispatchMock).toHaveBeenCalledWith(`${FILTER}/${TOGGLE_FILTER}`, {
-      code: 'commercial',
-      filterType: 'licenseTypes',
-    })
   })
 })

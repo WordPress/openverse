@@ -29,7 +29,7 @@ import iframeHeight from '~/mixins/iframe-height'
 import { AUDIO } from '~/constants/media'
 import attributionHtml from '~/utils/attribution-html'
 import { getFullLicenseName } from '~/utils/license'
-import { SEARCH } from '~/constants/store-modules'
+import { MEDIA } from '~/constants/store-modules'
 
 const AudioDetailPage = {
   name: 'AudioDetailPage',
@@ -48,7 +48,7 @@ const AudioDetailPage = {
     }
   },
   computed: {
-    ...mapState(SEARCH, ['audio']),
+    ...mapState(MEDIA, ['audio']),
     fullLicenseName() {
       return getFullLicenseName(this.audio.license, this.audio.license_version)
     },
@@ -63,7 +63,7 @@ const AudioDetailPage = {
   },
   async asyncData({ env, store, route, error, app }) {
     try {
-      await store.dispatch(`${SEARCH}/${FETCH_AUDIO}`, { id: route.params.id })
+      await store.dispatch(`${MEDIA}/${FETCH_AUDIO}`, { id: route.params.id })
       return {
         thumbnailURL: `${env.apiUrl}thumbs/${route.params.id}`,
         id: route.params.id,

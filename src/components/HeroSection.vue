@@ -52,7 +52,7 @@
             </template>
           </i18n>
         </div>
-        <HomeLicenseFilter />
+        <HomeLicenseFilter @toggle="toggleFilter" />
       </form>
     </div>
     <img
@@ -65,10 +65,9 @@
 </template>
 
 <script>
-import { SET_Q, SET_SEARCH_TYPE } from '~/constants/mutation-types'
-import { filtersToQueryData } from '~/utils/search-query-transform'
+import { UPDATE_QUERY, TOGGLE_FILTER } from '~/constants/action-types'
 import { SEARCH } from '~/constants/store-modules'
-import { mapMutations } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import HomeLicenseFilter from '~/components/HomeLicenseFilter'
 import SearchTypeToggle from '~/components/SearchTypeToggle'
 
@@ -80,17 +79,21 @@ export default {
    */
   data: () => ({
     form: { searchTerm: '', searchType: 'image' },
-    showSearchType: process.env.enableAudio,
+    filters: { commercial: false, modification: false },
+    showSearchType: process.env.enableAudio || false,
   }),
+  computed: {
+    ...mapGetters(SEARCH, ['searchQueryParams']),
+  },
   mounted() {
     if (document.querySelector('#searchTerm')) {
       document.querySelector('#searchTerm').focus()
     }
   },
   methods: {
-    ...mapMutations(SEARCH, {
-      setSearchTerm: SET_Q,
-      setSearchType: SET_SEARCH_TYPE,
+    ...mapActions(SEARCH, {
+      setSearchTerm: UPDATE_QUERY,
+      checkFilter: TOGGLE_FILTER,
     }),
     getPath() {
       if (!process.env.enableAudio) return '/search/image'
@@ -99,22 +102,25 @@ export default {
     getMediaType() {
       return this.form.searchType
     },
+    toggleFilter({ code }) {
+      this.filters[code] = !this.filters[code]
+    },
     onSubmit() {
-      this.setSearchTerm({ q: this.form.searchTerm })
+      const newQuery = { q: this.form.searchTerm }
+      const checkedFilters = Object.keys(this.filters).filter(
+        (filterName) => !!this.filters[filterName]
+      )
+      checkedFilters.forEach((f) => {
+        this.checkFilter({ filterType: 'licenseTypes', code: f })
+      })
 
       if (process.env.enableAudio) {
-        this.setSearchType({ searchType: this.form.searchType })
+        newQuery.searchType = this.form.searchType
       }
-
+      this.setSearchTerm(newQuery)
       const newPath = this.localePath({
         path: this.getPath(),
-        query: {
-          q: this.form.searchTerm,
-          ...filtersToQueryData(
-            this.$store.state.filter.filters,
-            this.getMediaType()
-          ),
-        },
+        query: this.searchQueryParams,
       })
       this.$router.push(newPath)
     },

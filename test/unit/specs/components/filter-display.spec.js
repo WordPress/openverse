@@ -16,9 +16,6 @@ describe('FilterDisplay', () => {
             q: 'foo',
           },
         },
-      },
-      filter: {
-        namespaced: true,
         getters: {
           isAnyFilterApplied: () => true,
           appliedFilterTags: () => [

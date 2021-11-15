@@ -1,6 +1,5 @@
 import clonedeep from 'lodash.clonedeep'
-import findIndex from 'lodash.findindex'
-import { filterData, mediaSpecificFilters } from '~/store/filter'
+import { mediaSpecificFilters } from '~/store/search'
 import getParameterByName from './get-parameter-by-name'
 import { ALL_MEDIA, IMAGE } from '~/constants/media'
 
@@ -85,23 +84,6 @@ export const filtersToQueryData = (
   return queryDataObject
 }
 
-const parseQueryString = (
-  queryString,
-  queryStringParamKey,
-  filterKey,
-  data
-) => {
-  const queryStringFilters = getParameterByName(
-    queryStringParamKey,
-    queryString
-  ).split(',')
-  data[filterKey].forEach((filter) => {
-    if (findIndex(queryStringFilters, (f) => f === filter.code) >= 0) {
-      filter.checked = true
-    }
-  })
-}
-
 /**
  * Extract search type from the url. Returns the the last part
  * of the path between `/search/` and query, or `all` by default.
@@ -155,14 +137,18 @@ const getMediaTypeApiFilters = (filterParameter, parameterFilters) => {
 
 /**
  * converts the browser filter query string into the internal filter store data format
- * @param {string} queryString browser filter query string
+ * @param {Object} query browser filter query
+ * @param {'all'|'audio'|'image'|'video'} searchType
  * @param {Object} defaultFilters default filters for testing purposes
  */
-export const queryToFilterData = (queryString, defaultFilters = null) => {
-  const filters = defaultFilters
-    ? clonedeep(defaultFilters)
-    : clonedeep(filterData)
-  const searchType = queryStringToSearchType(queryString)
+export const queryToFilterData = ({
+  query,
+  searchType = 'image',
+  defaultFilters,
+}) => {
+  // The default filterData object from search store doesn't contain provider filters,
+  // so we can't use it.
+  const filters = clonedeep(defaultFilters)
   const filterTypes = getMediaFilterTypes(searchType)
   const differentFiltersWithSameApiParams = [
     'audioProviders',
@@ -174,23 +160,29 @@ export const queryToFilterData = (queryString, defaultFilters = null) => {
   ]
   filterTypes.forEach((filterDataKey) => {
     if (differentFiltersWithSameApiParams.includes(filterDataKey)) {
-      const parameter = getParameterByName(
-        filterPropertyMappings[filterDataKey],
-        queryString
-      )
-      filters[filterDataKey] = getMediaTypeApiFilters(
-        parameter,
-        filters[filterDataKey]
-      )
+      const parameter = query[filterPropertyMappings[filterDataKey]]
+      if (parameter) {
+        filters[filterDataKey] = getMediaTypeApiFilters(
+          parameter,
+          filters[filterDataKey]
+        )
+      }
     } else if (filterDataKey !== 'mature') {
       const queryDataKey = filterPropertyMappings[filterDataKey]
-      parseQueryString(queryString, queryDataKey, filterDataKey, filters)
+      if (query[queryDataKey]) {
+        const filterValues = query[queryDataKey].split(',')
+        filterValues.forEach((val) => {
+          const idx = filters[filterDataKey].findIndex((f) => f.code === val)
+          if (idx >= 0) {
+            filters[filterDataKey][idx].checked = true
+          }
+        })
+      }
     }
   })
 
-  const mature = getParameterByName('mature', queryString)
-  if (mature) {
-    filters.mature = mature.toLowerCase() === 'true'
+  if (query.mature) {
+    filters.mature = query.mature.toLowerCase() === 'true'
   }
 
   return filters

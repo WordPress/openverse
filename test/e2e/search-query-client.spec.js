@@ -2,11 +2,13 @@ const { test, expect } = require('@playwright/test')
 
 /**
  * When navigating to the search page on the client side:
- * 1. `q` parameter is set as the search input value and url parameter
- * 2. Selecting 'audio' on homepage sets the search page path and search tab
- * 3. Selecting filters on the homepage sets the search query and url parameter
+ * 1. `q` parameter is set as the search input value and url parameter.
+ * 2. Selecting 'audio' on homepage sets the search page path and search tab.
+ * 3. Selecting filters on the homepage sets the search query and url parameter.
  * 4. Query parameters (filter types or filter values) that are not used for
- * current media type are discarded
+ * current media type are discarded.
+ * 5. Can change the `q` parameter by typing into the search input and clicking on
+ * the Search button.
  * All of these tests test search page on the client
  */
 
@@ -97,4 +99,11 @@ test.skip('url filter types not used by current mediaType are discarded', async 
 
   await page.click('[role="tab"]:has-text("Audio")')
   await expect(page).toHaveURL('/search/audio?q=cat')
+})
+
+test('can search for a different term', async ({ page }) => {
+  await page.goto('/search/image?q=cat')
+  await page.fill('input[type="search"]', 'dog')
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL('/search/image?q=dog')
 })

@@ -7,7 +7,10 @@
     }"
   >
     <div ref="gridItems" class="search-grid_ctr">
-      <div v-show="!isFetching && includeAnalytics" class="results-meta">
+      <div
+        v-show="!fetchingState.isFetching && includeAnalytics"
+        class="results-meta"
+      >
         <span class="caption font-semibold">
           {{ _imagesCount }}
         </span>
@@ -18,13 +21,13 @@
       </div>
       <div class="search-grid-cells">
         <SearchGridCell
-          v-for="(image, index) in images"
+          v-for="(image, index) in results.items"
           :key="index"
           :image="image"
         />
       </div>
       <div
-        v-if="isFetchingError"
+        v-if="!!fetchingState.error"
         class="search-grid_notification callout alert"
       >
         <h5>
@@ -33,24 +36,27 @@
               type: $t('browse-page.search-form.audio'),
             })
           }}
-          {{ errorMessage }}
+          {{ fetchingState.fetchingError }}
         </h5>
       </div>
       <div class="pb-6">
-        <div v-if="!isFetchingError && !isFinished" class="load-more">
+        <div
+          v-if="!fetchingState.fetchingError && !isFinished"
+          class="load-more"
+        >
           <button
-            v-show="!isFetching && includeAnalytics"
+            v-show="!fetchingState.isFetching && includeAnalytics"
             class="button"
             @click="onLoadMoreImages"
             @keyup.enter="onLoadMoreImages"
           >
             <span>{{ $t('browse-page.load') }}</span>
           </button>
-          <LoadingIcon v-show="isFetching" />
+          <LoadingIcon v-show="fetchingState.isFetching" />
         </div>
         <MetaSearchForm
           type="image"
-          :noresult="imagesCount === 0"
+          :noresult="!fetchingState.isFetching && results.count === 0"
           :supported="true"
         />
       </div>
@@ -60,10 +66,10 @@
 
 <script>
 import { FETCH_MEDIA } from '~/constants/action-types'
-import { SET_MEDIA } from '~/constants/mutation-types'
+import { RESET_MEDIA } from '~/constants/mutation-types'
 import { IMAGE } from '~/constants/media'
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
-import { SEARCH } from '~/constants/store-modules'
+import { MEDIA, SEARCH } from '~/constants/store-modules'
 
 export default {
   name: 'SearchGridManualLoad',
@@ -86,41 +92,23 @@ export default {
     shouldContainImages: false,
     showMetaImageSearch: false,
   }),
-  async fetch() {
-    if (!this.images.length) {
-      await this.fetchMedia({
-        ...this.query,
-        mediaType: IMAGE,
-      })
-    }
-  },
   computed: {
-    ...mapState(SEARCH, [
-      'imagesCount',
-      'imagePage',
-      'errorMessage',
-      'images',
-      'query',
-    ]),
-    ...mapGetters(SEARCH, ['isFetching', 'isFetchingError']),
+    ...mapState(SEARCH, ['query']),
+    ...mapGetters(MEDIA, ['fetchingState', 'results', 'isFinished']),
     _imagesCount() {
-      const count = this.imagesCount
+      const count = this.results.count
       if (count === 0) {
         return this.$t('browse-page.image-no-results')
       }
-      return count >= 10000
-        ? this.$tc('browse-page.image-result-count-more', count, {
-            localeCount: count.toLocaleString(this.$i18n.locale),
-          })
-        : this.$tc('browse-page.image-result-count', count, {
-            localeCount: count.toLocaleString(this.$i18n.locale),
-          })
+      const localeCount = count.toLocaleString(this.$i18n.locale)
+      const i18nKey =
+        count >= 10000
+          ? 'browse-page.image-result-count-more'
+          : 'browse-page.image-result-count'
+      return this.$tc(i18nKey, count, { localeCount })
     },
     _query() {
       return this.query
-    },
-    isFinished() {
-      return this.imagePage >= this.$store.state.search.pageCount.images
     },
   },
   watch: {
@@ -132,14 +120,14 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(SEARCH, { setMedia: SET_MEDIA }),
-    ...mapActions(SEARCH, { fetchMedia: FETCH_MEDIA }),
+    ...mapMutations(MEDIA, { resetMedia: RESET_MEDIA }),
+    ...mapActions(MEDIA, { fetchMedia: FETCH_MEDIA }),
     searchChanged() {
-      this.setMedia({ media: [], page: 1 })
+      this.resetMedia({ mediaType: IMAGE })
     },
     onLoadMoreImages() {
       const searchParams = {
-        page: this.imagePage + 1,
+        page: this.results.page + 1,
         shouldPersistMedia: true,
         ...this._query,
       }

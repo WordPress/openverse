@@ -1,12 +1,13 @@
+import Vuex from 'vuex'
 import HeroSection from '~/components/HeroSection'
 import { fireEvent, render, screen } from '@testing-library/vue'
-import filterStore, { filterData } from '~/store/filter'
-import store from '~/store/search'
+import searchStore, { filterData } from '~/store/search'
+import mediaStore from '~/store/media'
 import { createLocalVue } from '@vue/test-utils'
-import Vuex from 'vuex'
 import clonedeep from 'lodash.clonedeep'
 import VueI18n from 'vue-i18n'
 import messages from '~/locales/en.json'
+import { IMAGE } from '~/constants/media'
 
 const i18n = new VueI18n({
   locale: 'en',
@@ -28,17 +29,18 @@ describe('HeroSection', () => {
     filters = clonedeep(filterData)
     storeMock = new Vuex.Store({
       modules: {
-        filter: {
+        search: {
           namespaced: true,
-          ...filterStore,
+          ...mediaStore,
+          ...searchStore,
           state: {
+            query: {
+              q: 'me',
+              mediaType: IMAGE,
+            },
             isFilterVisible: true,
             filters,
           },
-        },
-        search: {
-          namespaced: true,
-          ...store,
         },
       },
     })

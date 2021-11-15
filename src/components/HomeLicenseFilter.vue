@@ -3,12 +3,12 @@
     <legend>
       {{ $t('hero.license-filter.label') }}
     </legend>
-    <template v-for="(licenseType, index) in licenseTypes">
+    <template v-for="(licenseType, index) in filters">
       <label :key="index" class="checkbox" :for="licenseType.code">
         <input
           :id="licenseType.code"
+          v-model="licenseType.checked"
           type="checkbox"
-          :checked="licenseType.checked"
           name="lt"
           :value="licenseType.code"
           @change="onFilterChanged(licenseType.code)"
@@ -20,25 +20,25 @@
 </template>
 
 <script>
-import { TOGGLE_FILTER } from '~/constants/action-types'
-import { FILTER } from '~/constants/store-modules'
-import { mapActions, mapState } from 'vuex'
-
 export default {
   name: 'LicenseFilter',
-  computed: {
-    ...mapState(FILTER, ['filters']),
-    licenseTypes() {
-      return this.filters.licenseTypes
-    },
-  },
+  data: () => ({
+    filters: [
+      {
+        code: 'commercial',
+        name: 'filters.license-types.commercial',
+        checked: false,
+      },
+      {
+        code: 'modification',
+        name: 'filters.license-types.modification',
+        checked: false,
+      },
+    ],
+  }),
   methods: {
-    ...mapActions(FILTER, { toggleFilter: TOGGLE_FILTER }),
     onFilterChanged(code) {
-      this.toggleFilter({
-        code,
-        filterType: 'licenseTypes',
-      })
+      this.$emit('toggle', { code })
     },
   },
 }

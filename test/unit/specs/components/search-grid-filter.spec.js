@@ -1,11 +1,10 @@
+import clonedeep from 'lodash.clonedeep'
 import Vuex from 'vuex'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { createLocalVue } from '@vue/test-utils'
-import SearchGridFilter from '~/components/Filters/SearchGridFilter'
-import { UPDATE_QUERY } from '~/constants/action-types'
 import { IMAGE } from '~/constants/media'
-import store from '~/store/filter'
-import clonedeep from 'lodash.clonedeep'
+import store from '~/store/search'
+import SearchGridFilter from '~/components/Filters/SearchGridFilter'
 
 const initialFilters = {
   licenseTypes: [
@@ -38,21 +37,25 @@ describe('SearchGridFilter', () => {
     filters = clonedeep(initialFilters)
     storeMock = new Vuex.Store({
       modules: {
-        filter: {
+        search: {
           namespaced: true,
           state: {
+            searchType: IMAGE,
             isFilterVisible: true,
             filters,
+            query: {
+              q: '',
+              mediaType: IMAGE,
+            },
           },
           mutations: store.mutations,
           actions: store.actions,
           getters: store.getters,
         },
-        search: {
+        media: {
           namespaced: true,
-          state: { searchType: IMAGE },
-          actions: {
-            [UPDATE_QUERY]: jest.fn(),
+          state: {
+            imagesCount: 2,
           },
         },
       },
@@ -67,14 +70,14 @@ describe('SearchGridFilter', () => {
   })
 
   it('should show search filters when isFilterVisible is true', async () => {
-    storeMock.state.filter.isFilterVisible = true
+    storeMock.state.search.isFilterVisible = true
     await render(SearchGridFilter, options)
     expect(screen.getByTestId('filters-list')).toBeVisible()
     expect(screen.getByTestId('filters-list')).toHaveClass('block')
   })
 
   it('should not show search filters when isFilterVisible is false', async () => {
-    storeMock.state.filter.isFilterVisible = false
+    storeMock.state.search.isFilterVisible = false
     await render(SearchGridFilter, options)
 
     // not.toBeVisible does not work
@@ -94,7 +97,7 @@ describe('SearchGridFilter', () => {
   })
 
   it('clears filters', async () => {
-    storeMock.state.filter.filters.licenses[0].checked = true
+    storeMock.state.search.filters.licenses[0].checked = true
     await render(SearchGridFilter, options)
     // if no checked checkboxes were found, this would raise an error
     screen.getByRole('checkbox', { checked: true })

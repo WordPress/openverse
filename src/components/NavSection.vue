@@ -125,10 +125,10 @@
 </template>
 
 <script>
-import { SET_Q } from '~/constants/mutation-types'
+import { UPDATE_QUERY } from '~/constants/action-types'
 import Dropdown from '~/components/Dropdown'
 import { SEARCH } from '~/constants/store-modules'
-import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'NavSection',
@@ -145,14 +145,12 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(SEARCH, { setSearchTerm: SET_Q }),
+    ...mapActions(SEARCH, { setSearchTerm: UPDATE_QUERY }),
     onSubmit() {
-      const q = this.form.searchTerm
-      const theArgs = { q }
-      this.setSearchTerm(theArgs)
+      this.setSearchTerm({ q: this.form.searchTerm })
       const newPath = this.localePath({
         path: '/search',
-        query: { q },
+        query: { q: this.form.searchTerm },
       })
       this.$router.push(newPath)
     },

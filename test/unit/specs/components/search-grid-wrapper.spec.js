@@ -7,9 +7,10 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 const storeMock = new Vuex.Store({
   modules: {
-    filter: {
+    search: {
       namespaced: true,
       state: {
+        query: { q: 'foo' },
         filters: {
           licenseTypes: [
             { code: 'commercial', name: 'Commercial usage' },
@@ -17,10 +18,6 @@ const storeMock = new Vuex.Store({
           ],
         },
       },
-    },
-    search: {
-      namespaced: true,
-      state: { query: { q: 'foo' } },
     },
   },
 })
