@@ -135,6 +135,7 @@ export default {
       '~/components/MetaSearch',
       '~/components/MediaTag',
       '~/components/Skeleton',
+      '~/components/VPopover',
     ],
   },
   plugins: [

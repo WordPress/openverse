@@ -1,6 +1,11 @@
 import { render, screen } from '@testing-library/vue'
 
 import VButton from '~/components/VButton.vue'
+import { warn } from '~/utils/warn'
+
+jest.mock('~/utils/warn', () => ({ warn: jest.fn() }))
+
+const nextTick = () => new Promise((r) => setTimeout(r, 0))
 
 /**
  * Throughout this suite we use the `screen.findBy*` functions to asynchronously
@@ -10,18 +15,9 @@ import VButton from '~/components/VButton.vue'
  * won't be rendered.
  */
 describe('VButton', () => {
-  let warn
-  beforeAll(() => {
-    warn = console.warn
-    console.warn = jest.fn()
+  afterEach(() => {
+    warn.mockReset()
   })
-  beforeEach(() => {
-    console.warn.mockReset()
-  })
-  afterAll(() => {
-    console.warn = warn
-  })
-
   it('should render a `button` by default with type="button" and no tabindex', async () => {
     render(VButton, {
       slots: { default: 'Code is Poetry' },
@@ -45,16 +41,14 @@ describe('VButton', () => {
     expect(element).toHaveAttribute('type', 'submit')
   })
 
-  // @todo(sarayourfriend) fix this failing test!
-  it.skip('should render an anchor with no type attribute', async () => {
+  it('should render an anchor with no type attribute', async () => {
     render(VButton, {
       props: { as: 'a' },
       slots: { default: 'Code is Poetry' },
     })
+    await nextTick()
 
     const element = await screen.findByText(/code is poetry/i)
-
-    screen.debug(element)
 
     expect(element.tagName).toBe('A')
     expect(element).not.toHaveAttribute('type')
@@ -111,8 +105,8 @@ describe('VButton', () => {
 
       await screen.findByText(/code is poetry/i)
 
-      expect(console.warn).toHaveBeenCalledTimes(1)
-      expect(console.warn).toHaveBeenCalledWith(
+      expect(warn).toHaveBeenCalledTimes(1)
+      expect(warn).toHaveBeenCalledWith(
         'Do not use anchor elements without a valid `href` attribute. Use a `button` instead.'
       )
     }

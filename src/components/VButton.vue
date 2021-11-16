@@ -2,7 +2,6 @@
   <Component
     :is="as"
     :type="typeRef"
-    :role="role"
     :class="[
       $style.button,
       $style[variant],
@@ -23,6 +22,7 @@
 
 <script>
 import { defineComponent, ref, watch, toRefs } from '@nuxtjs/composition-api'
+import { warn } from '~/utils/warn'
 
 /**
  * A button component that behaves just like a regular HTML `button` element
@@ -166,7 +166,7 @@ const VButton = defineComponent({
           // meaning we'll always have the latest values for the properties on the
           // attrs object
           if (!attrs.href || attrs.href === '#') {
-            console.warn(
+            warn(
               'Do not use anchor elements without a valid `href` attribute. Use a `button` instead.'
             )
           }
