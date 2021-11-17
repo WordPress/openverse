@@ -621,6 +621,9 @@
     "pause": "Pause",
     "replay": "Replay"
   },
+  "search": {
+    "search": "Search"
+  },
   "audio-categories": {
     "title": "Audio Category",
     "music": "Music",

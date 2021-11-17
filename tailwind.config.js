@@ -48,7 +48,9 @@ module.exports = {
     fill: (theme) => theme('colors'),
     spacing: {
       // Constants
+      '0.5px': '0.5px',
       px: '1px',
+      '1.5px': '1.5px',
       ch: '1ch',
       ex: '1ex',
       half: '50%',
@@ -76,6 +78,13 @@ module.exports = {
     },
     ringWidth: {
       DEFAULT: '1.5px',
+      0: 0,
+    },
+    borderWidth: {
+      0: '0px',
+      DEFAULT: '1px',
+      1.5: '1.5px',
+      2: '2px',
     },
     ringOffsetWidth: {
       2: '2px',
@@ -171,6 +180,8 @@ module.exports = {
       ringColor: ['focus-visible'],
       ringOffsetWidth: ['focus-visible'],
       ringWidth: ['focus-visible'],
+      borderWidth: ['focus', 'focus-within'],
+      padding: ['focus', 'focus-within'],
     },
   },
   plugins: [require('tailwindcss-rtl')],

@@ -46,6 +46,10 @@ module.exports = {
       },
     ],
     'vuejs-accessibility/aria-role': 'warn',
+    'vuejs-accessibility/label-has-for': [
+      'warn',
+      { required: { some: ['nesting', 'id'] } },
+    ],
     'unicorn/filename-case': ['error', { case: 'kebabCase' }],
   },
   settings: {
