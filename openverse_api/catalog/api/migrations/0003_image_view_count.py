@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0002_auto_20180723_1737'),
+        ('api', '0001_initial'),  # 0002 was merged into 0001 to protect FK constraint
     ]
 
     operations = [

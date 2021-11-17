@@ -1,9 +1,10 @@
 import datetime
+from unittest.mock import MagicMock
 from uuid import uuid4
 
 from psycopg2.extras import Json
 
-from ingestion_server.cleanup import CleanupFunctions
+from ingestion_server.cleanup import CleanupFunctions, TlsTest
 from ingestion_server.elasticsearch_models import Image
 
 
@@ -141,6 +142,7 @@ class TestCleanup:
         expected = "'https://flickr.com'"
 
         bad_http = "neverssl.com"
+        TlsTest.test_tls_supported = MagicMock(return_value=False)
         result_http = CleanupFunctions.cleanup_url(bad_http, tls_support_cache)
         expected_http = "'http://neverssl.com'"
         assert result == expected

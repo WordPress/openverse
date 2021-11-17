@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('created_on', models.DateTimeField(auto_now_add=True)),
                 ('updated_on', models.DateTimeField(auto_now=True)),
-                ('id', models.IntegerField(primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(help_text='Display name', max_length=2000)),
                 ('images', models.ManyToManyField(help_text='A list of primary keys corresponding to images.', related_name='lists', to='api.Image')),
             ],
