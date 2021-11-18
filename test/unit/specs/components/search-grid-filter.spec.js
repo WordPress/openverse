@@ -19,6 +19,7 @@ const initialFilters = {
   imageExtensions: [{ code: 'jpg', name: 'JPG', checked: false }],
   imageProviders: [{ code: 'met', name: 'Metropolitan', checked: false }],
   audioProviders: [{ code: 'jamendo', name: 'Jamendo', checked: false }],
+  sizes: [{ code: 'small', name: 'small', checked: false }],
   aspectRatios: [],
   searchBy: [{ code: 'creator', checked: false }],
   mature: false,
@@ -89,7 +90,7 @@ describe('SearchGridFilter', () => {
     const checked = screen.queryAllByRole('checkbox', { checked: true })
     expect(checked.length).toEqual(0)
 
-    await fireEvent.click(screen.queryByLabelText('Commercial usage'))
+    await fireEvent.click(screen.queryByLabelText(/commercial/i))
 
     // `getBy` serves as expect because it throws an error if no element is found
     screen.getByRole('checkbox', { checked: true })
@@ -109,7 +110,7 @@ describe('SearchGridFilter', () => {
     })
     expect(checkedFilters.length).toEqual(0)
     // Filters are reset with the initial `filterData`
-    expect(uncheckedFilters.length).toEqual(22)
+    expect(uncheckedFilters.length).toEqual(25)
   })
 
   it('toggles search visibility', async () => {

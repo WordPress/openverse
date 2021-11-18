@@ -1,20 +1,18 @@
 <template>
-  <div class="safer-browsing" @keyup.esc="closeShowForm">
+  <div class="relative" @keyup.esc="closeShowForm">
     <button
-      class="button is-text tiny p-0 rating"
-      @keypress.enter="toggleShowForm"
+      type="button"
+      class="appearance-none px-0 leading-10 text-xs text-trans-blue font-semibold"
+      style="white-space: nowrap"
       @click="toggleShowForm"
     >
-      <span class="text-trans-blue" style="white-space: nowrap">
-        {{ $t('browse-page.safer-browsing.title') }}
-        <i class="icon flag ms-2" />
-      </span>
+      {{ $t('browse-page.safer-browsing.title') }}
     </button>
     <FocusTrap :active="true">
       <div v-show="showForm" class="p-4 arrow-popup arrow-popup--anchor-right">
         <button
           class="button close-button is-text tiny float-right block text-light-gray"
-          @keypress.enter="toggleShowForm"
+          type="button"
           @click="toggleShowForm"
         >
           <i class="icon cross" />
@@ -74,13 +72,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.safer-browsing {
-  position: relative;
-}
-
-.safer-browsing > .button.tiny {
-  font-size: 0.8rem;
-}
-</style>

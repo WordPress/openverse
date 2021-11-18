@@ -1,10 +1,10 @@
 <template>
   <fieldset class="home-license-filter mt-16">
-    <legend>
+    <legend class="w-full text-center">
       {{ $t('hero.license-filter.label') }}
     </legend>
     <template v-for="(licenseType, index) in filters">
-      <label :key="index" class="checkbox" :for="licenseType.code">
+      <label :key="index" class="checkbox mx-3" :for="licenseType.code">
         <input
           :id="licenseType.code"
           v-model="licenseType.checked"
@@ -43,20 +43,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.home-license-filter {
-  display: flex;
-  justify-content: center;
-  legend {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-}
-
-.checkbox:not(:last-child) {
-  margin-right: 1.5rem;
-}
-</style>

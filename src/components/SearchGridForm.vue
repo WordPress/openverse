@@ -16,7 +16,8 @@
       {{ $t('filters.title') }}
     </button>
     <div
-      class="search-field field has-addons control search-control has-icons-left ms-2"
+      class="search-field field has-addons control search-control"
+      :class="{ 'ms-2': isFilterVisible }"
     >
       <label for="searchInput" class="search-field__label control label">
         <input
@@ -25,7 +26,7 @@
           :aria-label="$t('browse-page.aria.search')"
           required="required"
           autofocus="true"
-          class="search-field__input input"
+          class="search-input input placeholder-dark-charcoal-50 placeholder-opacity-50"
           type="search"
           :placeholder="searchBoxPlaceholder"
           :value="searchTermsModel"
@@ -33,7 +34,7 @@
           @keyup.enter="onSubmit"
         />
       </label>
-      <span class="icon is-left">
+      <span class="search-icon icon">
         <svg
           viewBox="0 0 30 30"
           xmlns="http://www.w3.org/2000/svg"
@@ -49,10 +50,9 @@
       </span>
       <input
         type="submit"
-        class="control button is-primary"
+        class="control button is-primary rounded rounded-s-none text-2xl"
         :value="$t('browse-page.search-form.button')"
         @click.prevent="onSubmit"
-        @keyup.enter.prevent="onSubmit"
       />
     </div>
   </form>
@@ -137,7 +137,18 @@ export default {
     height: 3.875rem;
   }
 }
-
+.search-icon {
+  @apply start-0 text-light-gray w-10 h-10 absolute items-center inline-flex justify-center pointer-events-none;
+}
+.search-input {
+  @apply w-full max-w-full h-10 relative appearance-none items-center justify-start -me-px ps-10;
+  @apply text-2xl text-start font-semibold placeholder-dark-charcoal-70;
+  @apply border border-light-gray rounded rounded-e-none focus:outline-none focus:border-gray;
+  @screen lg {
+    font-size: 1.43rem;
+    height: 3.875rem;
+  }
+}
 .search-form {
   width: 100%;
   top: 0;
@@ -146,18 +157,6 @@ export default {
   display: flex;
 }
 
-.has-addons {
-  .control:first-child:not(:only-child),
-  .control:first-child:not(:only-child) .input {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
-    margin-right: -1px;
-  }
-  .button {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-  }
-}
 .search-field {
   display: flex;
   width: 100%;
@@ -171,22 +170,13 @@ export default {
     flex: 1;
     margin-bottom: 0;
   }
-  .input {
-    font-size: 1rem;
-    height: 2.5rem;
-    @screen lg {
-      font-size: 1.43rem;
-      height: 3.875rem;
-    }
-  }
+
   .icon {
     top: calc(50% - 1.25em);
   }
   .button {
-    font-size: 1rem;
     padding: 0.5rem calc(1rem + 0.2rem);
     @screen lg {
-      font-size: 1.43rem;
       padding-left: var(--button-padding-horizontal);
       padding-right: var(--button-padding-horizontal);
       height: 3.875rem;
