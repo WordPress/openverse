@@ -1,11 +1,16 @@
 import FilterChecklist from '~/components/Filters/FilterChecklist'
-import render from '../../test-utils/render'
+import VCheckbox from '~/components/VCheckbox'
+import { createLocalVue } from '@vue/test-utils'
+import { fireEvent, render, screen } from '@testing-library/vue'
 
 describe('FilterChecklist', () => {
   let options = {}
   let props = null
+  let localVue = null
 
   beforeEach(() => {
+    localVue = createLocalVue()
+    localVue.component('VCheckbox', VCheckbox)
     props = {
       options: [{ code: 'foo', name: 'bar', checked: false }],
       title: 'Foo',
@@ -13,32 +18,21 @@ describe('FilterChecklist', () => {
       disabled: false,
     }
     options = {
+      localVue,
       propsData: props,
-      mocks: {
-        $store: { state: { filters: { licenses: {}, licenseTypes: {} } } },
-      },
     }
   })
 
-  it('should render correct contents', () => {
-    const wrapper = render(FilterChecklist, options)
-    expect(wrapper.find('.filters').vm).toBeDefined()
-  })
+  it('should render correct contents', async () => {
+    const { container } = render(FilterChecklist, options)
+    const checkbox = screen.getByRole('checkbox', {
+      checked: false,
+      label: /bar/i,
+    })
+    expect(checkbox).toBeTruthy()
+    expect(container.querySelector('svg')).not.toBeVisible()
 
-  xit('should render filter visibility toggle button', () => {
-    const wrapper = render(FilterChecklist, options)
-    expect(wrapper.find('.filter-visibility-toggle').element).toBeDefined()
-  })
-
-  xit('visibility toggle button should be in collapsed state by default', () => {
-    const wrapper = render(FilterChecklist, options)
-    expect(wrapper.find('.angle-down').element).toBeDefined()
-  })
-
-  xit('hides checklist when visibility toggle button pressed twice', async () => {
-    const wrapper = render(FilterChecklist, options)
-    await wrapper.find('.filter-visibility-toggle').trigger('click') // should open
-    await wrapper.find('.filter-visibility-toggle').trigger('click') // should close
-    expect(wrapper.find('.angle-down').element).toBeDefined()
+    await fireEvent.click(checkbox)
+    expect(container.querySelector('svg')).toBeVisible()
   })
 })

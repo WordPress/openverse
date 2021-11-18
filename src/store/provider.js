@@ -60,7 +60,7 @@ export const createActions = (services) => ({
         sortedProviders = sortProviders(data)
       })
       .catch((error) => {
-        console.error(
+        console.warn(
           `Error getting ${mediaType} providers: ${error}.  Will use saved provider data instead `
         )
         sortedProviders = existingProviders[mediaType]

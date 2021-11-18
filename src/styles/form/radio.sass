@@ -1,4 +1,4 @@
-%checkbox-radio
+%radio
   cursor: pointer
   display: inline-block
   line-height: 1.25
@@ -13,10 +13,7 @@
     color: $input-disabled-color
     cursor: not-allowed
 
-.checkbox
-  @extend %checkbox-radio
-
 .radio
-  @extend %checkbox-radio
+  @extend %radio
   & + .radio
     +ltr-property("margin", 0.5em, false)

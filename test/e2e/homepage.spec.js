@@ -9,7 +9,7 @@ test('can change type and search for audio/modification from homepage', async ({
   // Click text=Audio
   await page.click('text=Audio')
   // Check text=Modify or adapt >> input[name="lt"]
-  await page.check('text=Modify or adapt >> input[name="lt"]')
+  await page.check('text=Modify or adapt >> input[name="licenseType"]')
   // Click [placeholder="Search all content"]
   await page.click('[placeholder="Search all content"]')
   // Fill [placeholder="Search all content"]

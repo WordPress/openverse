@@ -6,7 +6,7 @@ export const actions = {
     try {
       await dispatch(`${PROVIDER}/${FETCH_MEDIA_PROVIDERS}`)
     } catch (error) {
-      console.error("Couldn't fetch media providers")
+      console.warn("Couldn't fetch media providers")
     }
   },
 }

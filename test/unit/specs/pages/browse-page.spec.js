@@ -18,6 +18,9 @@ describe('Search Grid Wrapper', () => {
             query: { q: 'foo' },
             isFilterVisible: false,
           },
+          getters: {
+            isAnyFilterApplied: () => false,
+          },
           mutations: {
             SET_FILTER_IS_VISIBLE: jest.fn(),
           },

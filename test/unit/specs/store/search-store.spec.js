@@ -1,5 +1,6 @@
 import store, { filterData } from '~/store/search'
 import {
+  CLEAR_FILTERS,
   SET_SEARCH_STATE_FROM_URL,
   TOGGLE_FILTER,
   UPDATE_QUERY_FROM_FILTERS,
@@ -8,7 +9,6 @@ import {
 import {
   SET_FILTER,
   SET_PROVIDERS_FILTERS,
-  CLEAR_FILTERS,
   SET_FILTER_IS_VISIBLE,
   REPLACE_FILTERS,
   SET_SEARCH_TYPE,

@@ -1,13 +1,13 @@
-import Vuex from 'vuex'
-import HeroSection from '~/components/HeroSection'
 import { fireEvent, render, screen } from '@testing-library/vue'
-import searchStore, { filterData } from '~/store/search'
-import mediaStore from '~/store/media'
 import { createLocalVue } from '@vue/test-utils'
+import Vuex from 'vuex'
 import clonedeep from 'lodash.clonedeep'
 import VueI18n from 'vue-i18n'
 import messages from '~/locales/en.json'
+import searchStore, { filterData } from '~/store/search'
 import { IMAGE } from '~/constants/media'
+import HeroSection from '~/components/HeroSection'
+import VCheckbox from '~/components/VCheckbox'
 
 const i18n = new VueI18n({
   locale: 'en',
@@ -26,12 +26,12 @@ describe('HeroSection', () => {
     localVue = createLocalVue()
     localVue.use(VueI18n)
     localVue.use(Vuex)
+    localVue.component('VCheckbox', VCheckbox)
     filters = clonedeep(filterData)
     storeMock = new Vuex.Store({
       modules: {
         search: {
           namespaced: true,
-          ...mediaStore,
           ...searchStore,
           state: {
             query: {

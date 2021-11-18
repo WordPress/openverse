@@ -71,15 +71,17 @@ test('url query to filter, all tab, one parameter per filter type', async ({
 
   // Have to specify `aside` because there are technically two filter lists on the page:
   // aside for desktop, and a modal for mobile view.
-  const cc0 = page.locator('aside [type="checkbox"][name="cc0"]')
+  const cc0 = page.locator('aside input[type="checkbox"][value="cc0"]')
   await expect(cc0).toBeChecked()
 
-  const commercial = page.locator('aside [type="checkbox"][name="commercial"]')
+  const commercial = page.locator(
+    'aside input[type="checkbox"][value="commercial"]'
+  )
   await expect(commercial).toBeChecked()
 
   // TODO (obulat): Check that this checkbox has a clear a11y name
   const searchByCreator = page.locator(
-    'aside [type="checkbox"][name="creator"]'
+    'aside input[type="checkbox"][value="creator"]'
   )
   await expect(searchByCreator).toBeChecked()
 })
@@ -91,16 +93,16 @@ test('url query to filter, image tab, several filters for one filter type select
     '/search/image?q=cat&searchBy=creator&extension=jpg,png,gif,svg'
   )
 
-  const cc0 = page.locator('aside [type="checkbox"][name="jpg"]')
-  await expect(cc0).toBeChecked()
+  const jpg = page.locator('aside input[type="checkbox"][value="jpg"]')
+  await expect(jpg).toBeChecked()
 
-  const png = page.locator('aside [type="checkbox"][name="png"]')
+  const png = page.locator('aside input[type="checkbox"][value="png"]')
   await expect(png).toBeChecked()
 
-  const gif = page.locator('aside [type="checkbox"][name="gif"]')
+  const gif = page.locator('aside input[type="checkbox"][value="gif"]')
   await expect(gif).toBeChecked()
 
-  const svg = page.locator('aside [type="checkbox"][name="svg"]')
+  const svg = page.locator('aside input[type="checkbox"][value="svg"]')
   await expect(svg).toBeChecked()
 })
 

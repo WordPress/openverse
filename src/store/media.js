@@ -204,6 +204,7 @@ export const createActions = (services) => ({
   [HANDLE_NO_MEDIA]({ commit }, { mediaCount, mediaType }) {
     if (!mediaCount) {
       commit(FETCH_MEDIA_ERROR, {
+        mediaType,
         errorMessage: `No ${mediaType} found for this query`,
       })
     }

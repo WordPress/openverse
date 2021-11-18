@@ -11,11 +11,8 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex'
-import {
-  SET_FILTER_IS_VISIBLE,
-  CLEAR_FILTERS,
-} from '~/constants/mutation-types'
-import { TOGGLE_FILTER } from '~/constants/action-types'
+import { SET_FILTER_IS_VISIBLE } from '~/constants/mutation-types'
+import { CLEAR_FILTERS, TOGGLE_FILTER } from '~/constants/action-types'
 import { SEARCH } from '~/constants/store-modules'
 import FiltersList from '~/components/Filters/FiltersList'
 

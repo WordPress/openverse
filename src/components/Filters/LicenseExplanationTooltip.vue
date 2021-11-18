@@ -48,7 +48,6 @@ export default {
       required: true,
     },
     iconDomNode: {
-      type: Object,
       required: true,
     },
   },

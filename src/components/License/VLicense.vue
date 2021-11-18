@@ -1,16 +1,11 @@
 <template>
   <div class="license flex flex-row items-center gap-2">
     <div class="flex gap-1">
-      <VIcon
-        v-if="isCC"
-        class="icon"
-        view-box="0 0 30 30"
-        :icon-path="ccLogo"
-      />
+      <VIcon v-if="isCC" :size="4" view-box="0 0 30 30" :icon-path="ccLogo" />
       <VIcon
         v-for="(name, index) in icons"
         :key="index"
-        class="icon"
+        :size="4"
         view-box="0 0 30 30"
         :icon-path="svgs[name]"
       />
@@ -83,10 +78,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.icon {
-  height: 1.1667em;
-  width: 1.1667em;
-}
-</style>

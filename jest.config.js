@@ -7,6 +7,7 @@ module.exports = {
   moduleFileExtensions: ['js', 'vue', 'json'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^~/(.*.svg)\\?inline$': '<rootDir>/src/$1',
     '^~/(.*)$': '<rootDir>/src/$1',
     '^vue$': 'vue/dist/vue.common.js',
     '(.*svg)(\\?inline)$': '<rootDir>/test/unit/test-utils/svgTransform.js',

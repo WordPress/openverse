@@ -501,6 +501,7 @@ describe('Search Store', () => {
       const action = createActions(services)[HANDLE_NO_MEDIA]
       await action(context, { mediaCount: 0, mediaType: IMAGE })
       expect(context.commit).toHaveBeenLastCalledWith(FETCH_MEDIA_ERROR, {
+        mediaType: IMAGE,
         errorMessage: 'No image found for this query',
       })
     })

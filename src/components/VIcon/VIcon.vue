@@ -1,6 +1,7 @@
 <template>
   <svg
-    class="v-icon h-6 w-6"
+    class="v-icon"
+    :class="`w-${size} h-${size}`"
     xmlns="http://www.w3.org/2000/svg"
     :viewBox="viewBox"
     aria-hidden="true"
@@ -39,6 +40,10 @@ export default {
     gId: {
       type: String,
       default: 'icon',
+    },
+    size: {
+      type: Number,
+      default: 6,
     },
   },
 }

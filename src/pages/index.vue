@@ -4,7 +4,7 @@
 
 <script>
 import { SEARCH } from '~/constants/store-modules'
-import { CLEAR_FILTERS } from '~/constants/mutation-types'
+import { CLEAR_FILTERS } from '~/constants/action-types'
 
 const HomePage = {
   name: 'home-page',

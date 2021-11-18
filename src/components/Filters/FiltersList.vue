@@ -1,15 +1,14 @@
 <template>
   <div class="p-4">
-    <div class="filterlist-header mt-4 mb-8">
-      <h4 class="filter-heading">
+    <div class="flex items-center justify-between mt-4 mb-8">
+      <h4 class="text-2xl">
         {{ $t('filter-list.filter-by') }}
       </h4>
-
       <button
         id="hide-filters-button"
         type="button"
-        @click="onToggleSearchGridFilter()"
-        @keyup.enter="onToggleSearchGridFilter()"
+        class="text-sm font-medium my-auto"
+        @click="onToggleSearchGridFilter"
       >
         <span class="text-trans-blue hidden lg:block text-sm lowercase">{{
           $t('filter-list.hide')
@@ -19,11 +18,10 @@
         </span>
       </button>
     </div>
-    <form class="filters-form" role="list">
+    <form class="filters-form">
       <FilterChecklist
         v-for="filterType in filterTypes"
         :key="filterType"
-        role="listitem"
         :options="filters[filterType]"
         :title="filterTypeTitle(filterType)"
         :filter-type="filterType"
@@ -33,14 +31,14 @@
     <footer v-if="isAnyFilterApplied" class="flex justify-between">
       <button
         id="clear-filter-button"
-        class="text-sm py-4 px-6 lowercase rounded"
+        class="text-sm py-2 px-4 lowercase rounded color-dark-blue border border-dark-blue hover:text-white hover:bg-dark-gray hover:border-dark-gray"
         @click="onClearFilters"
       >
         {{ $t('filter-list.clear') }}
       </button>
       <button
-        class="text-sm py-4 px-6 lowercase rounded bg-trans-blue text-white lg:hidden"
-        @click="onToggleSearchGridFilter()"
+        class="text-sm py-4 px-6 lowercase rounded bg-trans-blue text-white lg:hidden hover:bg-trans-blue-action"
+        @click="onToggleSearchGridFilter"
       >
         {{ $t('filter-list.show') }}
       </button>
@@ -87,33 +85,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.filterlist-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.filter-heading {
-  font-size: 1rem;
-}
-
-#hide-filters-button {
-  font-size: 0.813rem;
-  font-weight: 500;
-  margin-top: auto;
-  margin-bottom: auto;
-}
-
-#clear-filter-button {
-  color: #23282d;
-  border: solid #23282d33 1px;
-}
-#clear-filter-button:hover {
-  color: white;
-  // @todo: Remove hardcoded colors
-  background-color: #919496;
-  border-color: #919496;
-}
-</style>
