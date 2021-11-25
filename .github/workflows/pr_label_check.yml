@@ -28,3 +28,12 @@ jobs:
       uses: sugarshin/required-labels-action@v0.3.1
       with:
         required_oneof: '🌟 goal: addition,🛠 goal: fix,✨ goal: improvement,🧰 goal: internal improvement'
+
+  check_priority_label:
+    name: Check priority label
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check priority label
+      uses: sugarshin/required-labels-action@v0.3.1
+      with:
+        required_oneof: '🟩 priority: low,🟨 priority: medium,🟧 priority: high,🟥 priority: critical'
