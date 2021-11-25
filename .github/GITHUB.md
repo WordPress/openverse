@@ -40,7 +40,7 @@ Openverse PRs project, based on whether they are marked as draft or ready.
 ### PR label check
 
 This workflow ensures that all PRs have one label from each of the groups 
-'aspect' and 'goal' applied on them. 
+'aspect', 'goal' and 'priority' applied on them. 
 
 **PR:** opened, edited, labeled, unlabeled, synchronize  
 **Dispatch:** disabled
