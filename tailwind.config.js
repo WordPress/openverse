@@ -73,6 +73,7 @@ module.exports = {
       20: '5.00rem',
       24: '6.00rem',
       30: '7.50rem',
+      64: '16.00rem',
       70: '17.50rem',
       80: '20.00rem',
     },
@@ -172,6 +173,11 @@ module.exports = {
       heading: ['"Inter"', 'sans-serif'],
       mono: ['"JetBrains Mono"', 'monospace'],
       icons: ['"Vocabulary Icons"'],
+    },
+    extend: {
+      scale: {
+        '-100': '-1',
+      },
     },
   },
   variants: {

@@ -1,53 +1,65 @@
 <template>
-  <nav :aria-label="$t('header.aria.primary')" class="navbar embedded">
-    <NuxtLink to="/" style="align-self: center; line-height: 0">
-      <img
-        alt="Openverse logo mark"
-        src="~/assets/logo.svg?data"
-        style="padding-right: 24px"
-        width="160"
-        height="24"
-      />
-    </NuxtLink>
-    <div class="navbar-brand text-white">
+  <!-- Refer to the Bulma docs for markup: https://bulma.io/documentation/components/navbar/ -->
+  <nav
+    role="navigation"
+    class="navbar embedded"
+    :aria-label="$t('header.aria.primary')"
+  >
+    <div class="navbar-brand flex-grow md:flex-grow-0">
+      <NuxtLink
+        to="/"
+        class="navbar-item"
+        style="align-self: center; line-height: 0"
+      >
+        <!-- width and height chosen w.r.t. viewBox "0 0 280 42" -->
+        <OpenverseLogo
+          :style="{ width: '160px', height: '24px' }"
+          alt="Openverse logo mark"
+        />
+      </NuxtLink>
+
+      <!-- Hamburger menu -->
       <a
         role="button"
-        :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
+        class="navbar-burger"
+        :class="{ 'is-active': isBurgerMenuActive }"
         :aria-label="$t('header.aria.menu')"
         aria-expanded="false"
         @click="toggleBurgerActive"
         @keyup.enter="toggleBurgerActive"
       >
-        <span aria-hidden="true" />
-        <span aria-hidden="true" />
-        <span aria-hidden="true" />
+        <span v-for="i in 3" :key="i" aria-hidden="true" />
       </a>
     </div>
-    <div :class="{ ['navbar-menu']: true, ['is-active']: isBurgerMenuActive }">
-      <form
-        v-if="showNavSearch"
-        class="hero_search-form"
-        role="search"
-        method="post"
-        @submit.prevent="onSubmit"
-      >
-        <input
-          v-model.lazy="form.searchTerm"
-          :aria-label="$t('header.aria.search')"
-          class="input"
-          type="search"
-          :placeholder="navSearchPlaceholder"
-        />
-        <div class="sr-only">
-          <button
-            :aria-label="$t('header.aria.sr-search')"
-            tabindex="-1"
-            type="submit"
-            class="button secondary"
-            value="Search"
+
+    <div class="navbar-menu" :class="{ 'is-active': isBurgerMenuActive }">
+      <div class="navbar-start">
+        <form
+          v-if="showNavSearch"
+          class="navbar-item flex items-center"
+          role="search"
+          method="post"
+          @submit.prevent="onSubmit"
+        >
+          <input
+            v-model.lazy="form.searchTerm"
+            :aria-label="$t('header.aria.search')"
+            class="input w-64"
+            type="search"
+            :placeholder="navSearchPlaceholder"
           />
-        </div>
-      </form>
+          <div class="sr-only">
+            <button
+              :aria-label="$t('header.aria.sr-search')"
+              tabindex="-1"
+              type="submit"
+              class="button secondary"
+              value="Search"
+            />
+          </div>
+        </form>
+      </div>
+
       <div class="navbar-end">
         <Dropdown v-slot="{ onFocus }" :text="$t('header.about-tab')">
           <NuxtLink
@@ -74,7 +86,7 @@
             role="menuitem"
             @focus="onFocus()"
             >{{ $t('header.licenses-nav-item') }}
-            <i class="icon external-link" />
+            <VIcon class="inline ms-2" :icon-path="externalLinkIcon" rtl-flip />
           </a>
         </Dropdown>
 
@@ -111,7 +123,7 @@
             class="navbar-item"
             @focus="onFocus()"
             >{{ $t('header.api-nav-item') }}
-            <i class="icon external-link" />
+            <VIcon class="inline ms-2" :icon-path="externalLinkIcon" rtl-flip />
           </a>
         </Dropdown>
 
@@ -124,20 +136,34 @@
 </template>
 
 <script>
-import { UPDATE_QUERY } from '~/constants/action-types'
-import Dropdown from '~/components/Dropdown'
-import { SEARCH } from '~/constants/store-modules'
 import { mapActions } from 'vuex'
+
+import Dropdown from '~/components/Dropdown'
+import VIcon from '~/components/VIcon/VIcon.vue'
+
+import { UPDATE_QUERY } from '~/constants/action-types'
+import { SEARCH } from '~/constants/store-modules'
+
+import OpenverseLogo from '~/assets/logo.svg?inline'
+import externalLinkIcon from '~/assets/icons/external-link.svg'
 
 export default {
   name: 'EmbeddedNavSection',
-  components: { Dropdown },
+  components: {
+    VIcon,
+    Dropdown,
+    OpenverseLogo,
+  },
   props: {
     showNavSearch: {
       default: false,
     },
   },
-  data: () => ({ form: { searchTerm: '' }, isBurgerMenuActive: false }),
+  data: () => ({
+    form: { searchTerm: '' },
+    isBurgerMenuActive: false,
+    externalLinkIcon,
+  }),
   computed: {
     navSearchPlaceholder() {
       return this.$t('header.placeholder')
@@ -160,29 +186,3 @@ export default {
   },
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
-/* header */
-.logo {
-  color: black;
-  font-size: 2rem;
-  font-weight: bold;
-  &:link,
-  &:visited,
-  &:hover,
-  &:active {
-    text-decoration: none;
-  }
-}
-
-.hero_search-form {
-  margin: 0 15px 0 0;
-  display: flex;
-  align-items: center;
-
-  input {
-    width: 16rem;
-  }
-}
-</style>

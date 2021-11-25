@@ -1,5 +1,5 @@
 <template>
-  <header :class="isEmbedded ? 'embedded' : ''">
+  <header :class="{ embedded: isEmbedded }">
     <EmbeddedNavSection
       v-if="isEmbedded"
       :key="$route.path"

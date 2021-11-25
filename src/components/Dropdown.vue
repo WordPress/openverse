@@ -25,7 +25,7 @@
     </div>
 
     <div
-      class="navbar-dropdown"
+      class="navbar-dropdown start-0"
       :class="{ visible: isHovered || isFocused }"
       role="menu"
     >

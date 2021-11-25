@@ -9,6 +9,7 @@ import {
 import VIcon from '~/components/VIcon/VIcon.vue'
 
 import replayIcon from '~/assets/icons/replay.svg'
+import externalLinkIcon from '~/assets/icons/external-link.svg'
 
 <Meta title="Components/VIcon" component={VIcon} />
 
@@ -52,3 +53,20 @@ You can then pass this imported value as the `iconPath` prop.
 Each icon SVG must have a `<g>` element right below the top-level `<svg>`
 element. This element should have the `id` attribute equal to `"icon"`. If not,
 pass the attribute value as the `gId` prop.
+
+## RTL
+
+`VIcon` can flip the icon for RTL languages. This is useful for certain icons
+that have an intrinsic directional nature such as those involving arrows.
+
+<Canvas>
+  <Story
+    name="RTL"
+    args={{
+      rtlFlip: true,
+      iconPath: externalLinkIcon,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

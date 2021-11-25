@@ -82,11 +82,11 @@ $wp-max-width: 940px
   padding: 0.5rem 0.75rem
   position: relative
   .icon
-    margin-left: $space-small
+    margin-inline-start: $space-small
 
 .navbar.embedded
   .navbar-end
-    margin-left: auto
+    margin-inline-start: auto
     justify-content: space-between
     +tablet()
       > div.navbar-item:first-child > a.navbar-link
@@ -210,9 +210,9 @@ a.navbar-item,
     flex-shrink: 0
   .navbar-end
     justify-content: flex-end
-    +ltr-property("margin", auto, false)
+    margin-inline-start: auto
     & > .navbar-item:not(:first-child)
-      margin-left: $space-large
+      margin-inline-start: $space-large
   .navbar-dropdown
     background-color: $navbar-dropdown-background-color
     border-bottom-left-radius: $navbar-dropdown-radius
@@ -221,7 +221,6 @@ a.navbar-item,
     box-shadow: 0 8px 8px toRgba($scheme-invert, 0.1)
     display: none
     font-size: 0.875rem
-    +ltr-position(0, false)
     min-width: 100%
     position: absolute
     top: 100%
@@ -230,7 +229,7 @@ a.navbar-item,
       padding: 0.375rem 1rem
       white-space: nowrap
     a.navbar-item
-      +ltr-property("padding", 3rem)
+      padding-inline-end: 3rem
       &:focus,
       &:hover
         background-color: $navbar-dropdown-item-hover-background-color

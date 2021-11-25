@@ -1,7 +1,7 @@
 <template>
   <svg
     class="v-icon"
-    :class="`w-${size} h-${size}`"
+    :class="[`w-${size}`, `h-${size}`, { 'rtl-flip': rtlFlip }]"
     xmlns="http://www.w3.org/2000/svg"
     :viewBox="viewBox"
     aria-hidden="true"
@@ -41,6 +41,18 @@ export default {
       type: String,
       default: 'icon',
     },
+    /**
+     * whether to flip the icon for RTL languages; This generally makes sense
+     * for directional icons such as those involving arrows.
+     */
+    rtlFlip: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * the size of the icon in terms of the Tailwind height and width scale; The
+     * icon, being square, uses this for both dimensions.
+     */
     size: {
       type: Number,
       default: 6,
@@ -48,3 +60,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+[dir='rtl'] .v-icon.rtl-flip {
+  @apply transform -scale-x-100;
+}
+</style>
