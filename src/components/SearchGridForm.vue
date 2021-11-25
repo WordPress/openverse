@@ -10,14 +10,13 @@
       v-if="!isFilterVisible"
       class="button filter-toggle"
       type="button"
-      @click.prevent="onToggleSearchGridFilter()"
-      @keyup.enter.prevent="onToggleSearchGridFilter()"
+      @click="onToggleSearchGridFilter"
     >
       {{ $t('filters.title') }}
     </button>
     <div
       class="search-field field has-addons control search-control"
-      :class="{ 'ms-2': isFilterVisible }"
+      :class="{ 'ms-2': !isFilterVisible }"
     >
       <label for="searchInput" class="search-field__label control label">
         <input
@@ -26,7 +25,7 @@
           :aria-label="$t('browse-page.aria.search')"
           required="required"
           autofocus="true"
-          class="search-input input placeholder-dark-charcoal-50 placeholder-opacity-50"
+          class="search-input input"
           type="search"
           :placeholder="searchBoxPlaceholder"
           :value="searchTermsModel"
@@ -34,13 +33,12 @@
           @keyup.enter="onSubmit"
         />
       </label>
-      <span class="search-icon icon">
+      <span class="search-icon">
         <svg
           viewBox="0 0 30 30"
           xmlns="http://www.w3.org/2000/svg"
           width="16"
           height="16"
-          class="icon__svg"
         >
           <path
             d="M29.59 25.94l-5.842-5.842a1.405 1.405 0 00-.996-.41h-.955a12.128 12.128 0 002.578-7.5C24.375 5.455 18.92 0 12.187 0 5.455 0 0 5.455 0 12.188c0 6.732 5.455 12.187 12.188 12.187 2.83 0 5.431-.96 7.5-2.578v.955c0 .375.146.732.41.996l5.841 5.842a1.4 1.4 0 001.987 0l1.658-1.658c.55-.551.55-1.442.006-1.992zm-17.402-6.253a7.496 7.496 0 01-7.5-7.5c0-4.142 3.351-7.5 7.5-7.5 4.142 0 7.5 3.352 7.5 7.5 0 4.143-3.352 7.5-7.5 7.5z"
@@ -50,7 +48,7 @@
       </span>
       <input
         type="submit"
-        class="control button is-primary rounded rounded-s-none text-2xl"
+        class="control button is-primary"
         :value="$t('browse-page.search-form.button')"
         @click.prevent="onSubmit"
       />
@@ -70,8 +68,7 @@ export default {
   name: 'SearchGridForm',
   data: () => ({ searchTermsModel: null }),
   computed: {
-    ...mapState(SEARCH, ['isFilterVisible']),
-    ...mapState(SEARCH, ['query']),
+    ...mapState(SEARCH, ['isFilterVisible', 'query']),
     searchTerms() {
       return this.query.q
     },
@@ -125,62 +122,35 @@ export default {
 
 <style lang="scss" scoped>
 .filter-toggle {
-  text-transform: none;
-  font-size: 1rem;
-  border-color: $color-light-gray;
-  padding: 0.5rem;
-  height: 2.5rem;
-  &:hover {
-    border-color: transparent;
-  }
-  @screen lg {
-    height: 3.875rem;
-  }
+  @apply h-10 lg:h-14 text-2xl hover:border-tx p-2 border-light-gray normal-case;
 }
 .search-icon {
   @apply start-0 text-light-gray w-10 h-10 absolute items-center inline-flex justify-center pointer-events-none;
 }
 .search-input {
   @apply w-full max-w-full h-10 relative appearance-none items-center justify-start -me-px ps-10;
-  @apply text-2xl text-start font-semibold placeholder-dark-charcoal-70;
-  @apply border border-light-gray rounded rounded-e-none focus:outline-none focus:border-gray;
-  @screen lg {
-    font-size: 1.43rem;
-    height: 3.875rem;
-  }
+  @apply placeholder-dark-charcoal-50 placeholder-opacity-50;
+  @apply text-2xl text-start font-semibold placeholder-dark-charcoal-50;
+  @apply border border-light-gray hover:border-gray rounded rounded-e-none focus:outline-none focus:border-gray;
+  @apply lg:text-lgr lg:h-14;
 }
 .search-form {
-  width: 100%;
-  top: 0;
-  position: sticky;
-  background-color: white;
-  display: flex;
+  @apply w-full top-0 sticky bg-white flex;
 }
 
 .search-field {
-  display: flex;
-  width: 100%;
-  clear: both;
-  position: relative;
-  text-align: left;
-  @screen lg {
-    width: 100%;
-  }
+  @apply flex w-full relative text-start clear-both;
   .label {
-    flex: 1;
-    margin-bottom: 0;
+    @apply mb-0 flex-1;
   }
 
-  .icon {
-    top: calc(50% - 1.25em);
-  }
   .button {
-    padding: 0.5rem calc(1rem + 0.2rem);
-    @screen lg {
-      padding-left: var(--button-padding-horizontal);
-      padding-right: var(--button-padding-horizontal);
-      height: 3.875rem;
-    }
+    @apply py-2 px-5 h-10 lg:h-14 lg:px-10 rounded rounded-s-none text-2xl lg:text-lgr;
   }
+}
+.search-icon {
+  top: calc(50% - 1.25em);
+  // On hover, the icon without z-index disappears
+  z-index: 5;
 }
 </style>

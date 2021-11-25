@@ -70,7 +70,7 @@ const BrowsePage = {
         ? local.get(process.env.filterStorageKey) === 'true'
         : true
 
-    const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 800
+    const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 768
     const isDesktop = () =>
       screenWidth() > MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT
     this.setFilterVisibility({
