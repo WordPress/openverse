@@ -16,6 +16,7 @@ updates:
     labels:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
       - "dependencies"
 
   # Enable version updates for Python libs in Openverse API
@@ -28,6 +29,7 @@ updates:
     labels:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
       - "dependencies"
       - "python"
 
@@ -41,6 +43,7 @@ updates:
     labels:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
       - "dependencies"
       - "python"
 
@@ -54,5 +57,6 @@ updates:
     labels:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
       - "dependencies"
       - "python"
