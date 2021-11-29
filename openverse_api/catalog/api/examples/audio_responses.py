@@ -34,7 +34,7 @@ base_audio = {
     "waveform": f"{origin}/v1/audio/{identifier}/waveform/",
     "detail_url": f"{origin}/v1/audio/{identifier}/",
     "related_url": f"{origin}/v1/audio/{identifier}/related/",
-    "category": "{music}",
+    "category": "music",
     "duration": 270000,
 }
 

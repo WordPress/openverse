@@ -229,6 +229,7 @@ class MediaSerializer(serializers.Serializer):
         "license_url",
         "provider",
         "source",
+        "category",
         "tags",
         "fields_matched",
         "attribution",
@@ -285,6 +286,10 @@ class MediaSerializer(serializers.Serializer):
     source = serializers.CharField(
         required=False,
         help_text="The source of the data, meaning a particular dataset.",
+    )
+
+    category = serializers.CharField(
+        required=True, allow_null=True, help_text="The category of the media."
     )
 
     tags = TagSerializer(

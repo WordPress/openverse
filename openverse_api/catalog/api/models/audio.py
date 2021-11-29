@@ -97,6 +97,12 @@ class AudioFileMixin(FileMixin):
 
 
 class Audio(AudioFileMixin, AbstractMedia):
+    """
+    Inherited fields
+    ================
+    category: eg. music, sound_effect, podcast, news & audiobook
+    """
+
     # Replaces the foreign key to AudioSet
     audio_set_foreign_identifier = models.CharField(
         max_length=1000,
@@ -117,14 +123,6 @@ class Audio(AudioFileMixin, AbstractMedia):
         db_index=True,
         help_text="The artistic style of this audio file, "
         "eg. hip-hop (music) / tech (podcasts).",
-    )
-    category = models.CharField(
-        max_length=80,
-        blank=True,
-        null=True,
-        db_index=True,
-        help_text="The category of this audio file, "
-        "eg. music, sound_effect, podcast, news & audiobook.",
     )
 
     duration = models.IntegerField(

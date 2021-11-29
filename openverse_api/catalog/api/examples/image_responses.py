@@ -16,6 +16,7 @@ base_image = {
     "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
     "provider": "sciencemuseum",
     "source": "sciencemuseum",
+    "category": None,
     "thumbnail": f"{origin}/v1/images/{identifier}/thumb/",
     "detail_url": f"{origin}/v1/images/{identifier}/",
     "related_url": f"{origin}/v1/images/{identifier}/related/",

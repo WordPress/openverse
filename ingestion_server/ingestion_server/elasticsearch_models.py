@@ -10,7 +10,7 @@ from enum import Enum, auto
 from elasticsearch_dsl import Document, Field, Integer
 
 from ingestion_server.authority import get_authority_boost
-from ingestion_server.categorize import get_categories
+from ingestion_server.categorize import get_category
 
 
 class RankFeature(Field):
@@ -241,7 +241,9 @@ class Image(Media):
     def database_row_to_elasticsearch_doc(row, schema):
         source = row[schema["source"]]
         extension = Image.get_extension(row[schema["url"]])
-        categories = get_categories(extension, source)
+        category = get_category(extension, source)
+        if "category" in schema:
+            category = row[schema["category"]]
 
         height = row[schema["height"]]
         width = row[schema["width"]]
@@ -257,7 +259,7 @@ class Image(Media):
 
         return Image(
             thumbnail=row[schema["thumbnail"]],
-            categories=categories,
+            category=category,
             aspect_ratio=aspect_ratio,
             size=size,
             authority_boost=authority_boost,

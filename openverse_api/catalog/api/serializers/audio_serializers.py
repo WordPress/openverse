@@ -145,10 +145,6 @@ class AudioSerializer(MediaSerializer):
         required=False, help_text="JSON describing alternative files for this audio."
     )
 
-    category = serializers.CharField(
-        required=False, help_text="The category of the audio."
-    )
-
     # Hyperlinks
     thumbnail = serializers.HyperlinkedIdentityField(
         read_only=True,

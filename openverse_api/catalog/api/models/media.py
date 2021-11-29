@@ -57,6 +57,14 @@ class AbstractMedia(
     tags = models.JSONField(blank=True, null=True)
     tags_list = ArrayField(models.CharField(max_length=255), blank=True, null=True)
 
+    category = models.CharField(
+        max_length=80,
+        blank=True,
+        null=True,
+        db_index=True,
+        help_text="The top-level classification of this media file.",
+    )
+
     meta_data = models.JSONField(blank=True, null=True)
 
     @property

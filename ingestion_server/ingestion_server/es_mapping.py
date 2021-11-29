@@ -121,6 +121,7 @@ def index_settings(table_name):
             },
             "max_boost": {"type": "rank_feature"},
             "min_boost": {"type": "rank_feature"},
+            "category": {"type": "keyword"},
         }
     }
     media_properties = {
@@ -136,7 +137,6 @@ def index_settings(table_name):
             "sample_rate": {"type": "integer"},
             "genres": {"fields": {"keyword": {"type": "keyword"}}, "type": "text"},
             "duration": {"type": "integer"},
-            "category": {"type": "keyword"},
         },
     }
     media_mappings = common_mappings.copy()

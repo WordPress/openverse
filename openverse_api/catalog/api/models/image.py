@@ -29,7 +29,11 @@ class ImageFileMixin(FileMixin):
 
 
 class Image(ImageFileMixin, AbstractMedia):
-    pass
+    """
+    Inherited fields
+    ================
+    category: eg. photograph, digitised artwork & illustration
+    """
 
     class Meta(AbstractMedia.Meta):
         db_table = "image"
