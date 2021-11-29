@@ -1314,11 +1314,11 @@
         },
         "locust": {
             "hashes": [
-                "sha256:c51538611658425e9b0ff7856913f3f18f549888056fe20d8fd2f95eb44a16aa",
-                "sha256:ffd89e2bc34525a03ff310c9aba563df16c1d92d11e4cdcc058b2d115c1e4122"
+                "sha256:17bffcc3c7ade9e72aa59997c5a8d8bd7aa5cc2b6063637804cd80366b75fa44",
+                "sha256:975e29ad9019db3c5d29eeea7d087c5fd2b643fdbbf1161d445da9fc4308a620"
             ],
             "index": "pypi",
-            "version": "==2.4.0"
+            "version": "==2.5.0"
         },
         "markupsafe": {
             "hashes": [
