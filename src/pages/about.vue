@@ -1,5 +1,5 @@
 <template>
-  <div class="section">
+  <div class="section" dir="ltr">
     <div :class="['container', isEmbedded ? '' : 'is-fluid']">
       <div>
         <h1 class="text-5xl mb-10">
