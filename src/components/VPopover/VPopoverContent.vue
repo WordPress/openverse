@@ -14,11 +14,16 @@
 </template>
 
 <script>
-import { defineComponent, toRefs, ref } from '@nuxtjs/composition-api'
+import { defineComponent, toRefs, ref, provide } from '@nuxtjs/composition-api'
 import { usePopoverContent } from '~/composables/use-popover-content'
 import { warn } from '~/utils/warn'
 
 import { propTypes } from './VPopoverContent.types'
+
+/**
+ * @type {import('@nuxtjs/composition-api').InjectionKey<boolean>}
+ */
+export const VPopoverContentContextKey = Symbol('VPopoverContentContextKey')
 
 export default defineComponent({
   name: 'VPopover',
@@ -34,6 +39,7 @@ export default defineComponent({
    * @param {import('@nuxtjs/composition-api').SetupContext} context
    */
   setup(props, { emit, attrs }) {
+    provide(VPopoverContentContextKey, true)
     if (!attrs['aria-label'] && !attrs['aria-labelledby']) {
       warn('You should provide either `aria-label` or `aria-labelledby` props.')
     }
@@ -74,6 +80,6 @@ export default defineComponent({
 
 <style module>
 .popover {
-  @apply bg-white border border-light-gray rounded-sm px-2 pt-2 pb-1 max-w-min whitespace-nowrap shadow;
+  @apply bg-white border border-light-gray rounded-sm max-w-max whitespace-nowrap shadow;
 }
 </style>

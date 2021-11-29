@@ -11,6 +11,7 @@
     :aria-pressed="pressed"
     :aria-disabled="ariaDisabledRef"
     :disabled="disabledAttributeRef"
+    v-bind="$attrs"
     v-on="$listeners"
   >
     <!--
@@ -72,6 +73,7 @@ const VButton = defineComponent({
           'tertiary',
           'action-menu',
           'action-menu-muted',
+          'grouped',
         ].includes(v),
     },
     /**
@@ -197,7 +199,7 @@ export default VButton
 
 <style module>
 .button {
-  @apply flex max-w-max items-center rounded-sm justify-center transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring focus-visible:ring-offset-2 no-underline appearance-none;
+  @apply flex items-center rounded-sm justify-center transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring no-underline appearance-none;
 }
 
 .button[disabled='disabled'],
@@ -259,5 +261,13 @@ a.button {
 
 .action-menu-muted-pressed {
   @apply border-tx bg-dark-charcoal text-white;
+}
+
+.grouped {
+  @apply bg-white text-black focus-visible:ring-pink;
+}
+
+.grouped-pressed {
+  @apply bg-dark-charcoal-10 ring-offset-dark-charcoal-10;
 }
 </style>

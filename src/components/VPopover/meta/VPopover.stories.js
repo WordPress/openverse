@@ -31,7 +31,7 @@ const SinglePopoverStory = (args, { argTypes }) => ({
         <template #trigger="{ visible, a11yProps }">
           <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
         </template>
-        <div>Code is Poetry</div>
+        <div class="py-1 px-2">Code is Poetry</div>
       </VPopover>
     </div>
   `,
@@ -55,14 +55,14 @@ const TwoPopoverStory = (args, { argTypes }) => ({
         <template #trigger="{ visible, a11yProps }">
           <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'First popover open' : 'First popover closed' }}</VButton>
         </template>
-        <div>First popover content</div>
+        <div class="py-1 px-2">First popover content</div>
       </VPopover>
       <div class="h-5">Some content</div>
       <VPopover label="Second popover" v-bind="$props">
         <template #trigger="{ visible, a11yProps }">
           <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Second popover open' : 'Second popover closed' }}</VButton>
         </template>
-        <div>Second popover content</div>
+        <div class="py-1 px-2">Second popover content</div>
       </VPopover>
     </div>
   `,

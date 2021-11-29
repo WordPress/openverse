@@ -30,7 +30,10 @@ export default {
      * importing an SVG should give us the path to the file.
      */
     iconPath: {
-      type: String,
+      /**
+       * In `jest` our icons get transformed to Vue components
+       */
+      type: process.env.NODE_ENV === 'test' ? Object : String,
       required: true,
     },
     /**
