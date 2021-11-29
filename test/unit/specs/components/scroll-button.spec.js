@@ -19,7 +19,8 @@ describe('Scroll button', () => {
 
   it('should be rendered when window scrolls further', () => {
     options.propsData.showBtn = true
-    const wrapper = render(ScrollButton, options)
-    expect(wrapper.find('button').vm).toBeDefined()
+    const scrollBtn = render(ScrollButton, options).find('button')
+    expect(scrollBtn).toBeDefined()
+    expect(scrollBtn.isVisible()).toBe(true)
   })
 })

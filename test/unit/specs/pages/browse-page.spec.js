@@ -35,7 +35,6 @@ describe('Search Grid Wrapper', () => {
         FilterDisplay: true,
         NuxtChild: true,
         ScrollButton: true,
-        SearchGridFilter: true,
         SearchGridForm: true,
         SearchTypeTabs: true,
         SearchGridManualLoad: true,
@@ -46,12 +45,15 @@ describe('Search Grid Wrapper', () => {
       },
     }
   })
-  it('renders correct content', () => {
+
+  it('hides the scroll button and filters by default', () => {
     const wrapper = render(BrowsePage, options)
-    expect(wrapper.find('[data-testid="scroll-button"]').element).toBeDefined()
     window.scrollY = 50
     wrapper.vm.checkScrollLength()
     expect(wrapper.vm.showScrollButton).toBe(false)
+    expect(wrapper.findComponent({ name: 'SearchGridFilter' }).exists()).toBe(
+      false
+    )
   })
 
   it('renders the scroll button when the page scrolls down', () => {
@@ -59,5 +61,13 @@ describe('Search Grid Wrapper', () => {
     window.scrollY = 80
     wrapper.vm.checkScrollLength()
     expect(wrapper.vm.showScrollButton).toBe(true)
+  })
+
+  it('shows search filters when isFilterVisible is true', () => {
+    storeMock.state.search.isFilterVisible = true
+    const wrapper = render(BrowsePage, options)
+    expect(wrapper.findComponent({ name: 'SearchGridFilter' }).exists()).toBe(
+      true
+    )
   })
 })

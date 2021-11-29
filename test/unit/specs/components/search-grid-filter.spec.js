@@ -33,7 +33,6 @@ const initialFilters = {
 
 describe('SearchGridFilter', () => {
   let options = {}
-  let props = null
   let storeMock
   let localVue
   let filters
@@ -71,7 +70,6 @@ describe('SearchGridFilter', () => {
 
     options = {
       localVue,
-      propsData: props,
       mocks: {
         $store: storeMock,
       },

@@ -1,30 +1,24 @@
 <template>
   <div class="browse-page">
     <div class="search columns">
-      <div class="lg:hidden">
-        <AppModal v-if="isFilterVisible" @close="onToggleSearchGridFilter">
-          <SearchGridFilter />
-        </AppModal>
-      </div>
-      <aside
+      <Component
+        :is="searchFilter.as"
         v-if="isFilterVisible"
-        class="column is-narrow grid-sidebar is-hidden-touch max-w-full bg-white"
-      >
-        <SearchGridFilter />
-      </aside>
+        :class="searchFilter.classes"
+        @close="onToggleSearchGridFilter"
+        ><SearchGridFilter
+      /></Component>
       <div class="column search-grid-ctr">
         <SearchGridForm @onSearchFormSubmit="onSearchFormSubmit" />
         <SearchTypeTabs />
         <FilterDisplay v-show="shouldShowFilterTags" />
         <NuxtChild :key="$route.path" @onLoadMoreItems="onLoadMoreItems" />
-        <ScrollButton
-          data-testid="scroll-button"
-          :show-btn="showScrollButton"
-        />
+        <ScrollButton :show-btn="showScrollButton" />
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import {
   FETCH_MEDIA,
@@ -35,14 +29,31 @@ import {
 import { SET_FILTER_IS_VISIBLE } from '~/constants/mutation-types'
 import { queryStringToSearchType } from '~/utils/search-query-transform'
 import local from '~/utils/local'
-import { screenWidth } from '~/utils/get-browser-info'
 import { ALL_MEDIA, IMAGE, VIDEO } from '~/constants/media'
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import { MEDIA, SEARCH } from '~/constants/store-modules'
 import debounce from 'lodash.debounce'
+import SearchGridFilter from '~/components/Filters/SearchGridFilter.vue'
+import { useMediaQuery } from '~/composables/use-media-query.js'
+import AppModal from '~/components/AppModal'
+
+const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 768
 
 const BrowsePage = {
   name: 'browse-page',
+  components: {
+    SearchGridFilter,
+  },
+  setup() {
+    const defaultWindow = typeof window !== 'undefined' ? window : undefined
+    const isLargeScreen = useMediaQuery(
+      `(min-width: ${MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT}px)`,
+      defaultWindow
+    )
+    return {
+      isLargeScreen,
+    }
+  },
   layout({ store }) {
     return store.state.nav.isEmbedded ? 'embedded' : 'default'
   },
@@ -69,12 +80,8 @@ const BrowsePage = {
       local.get(process.env.filterStorageKey)
         ? local.get(process.env.filterStorageKey) === 'true'
         : true
-
-    const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 768
-    const isDesktop = () =>
-      screenWidth() > MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT
     this.setFilterVisibility({
-      isFilterVisible: isDesktop() ? localFilterState() : false,
+      isFilterVisible: this.isLargeScreen && localFilterState(),
     })
     window.addEventListener('scroll', this.debounceScrollHandling)
   },
@@ -94,6 +101,15 @@ const BrowsePage = {
         ['/search/', '/search/image'].includes(this.$route.path) &&
         this.isAnyFilterApplied
       )
+    },
+    searchFilter() {
+      return {
+        classes: {
+          'column is-narrow grid-sidebar max-w-full bg-white': this
+            .isLargeScreen,
+        },
+        as: this.isLargeScreen ? 'aside' : AppModal,
+      }
     },
   },
   methods: {

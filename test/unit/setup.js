@@ -17,3 +17,11 @@ Vue.use(VueI18n)
 
 config.mocks.$t = (key) => key
 config.mocks.localePath = (i) => i
+global.matchMedia =
+  global.matchMedia ||
+  function () {
+    return {
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    }
+  }
