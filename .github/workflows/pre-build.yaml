@@ -1,0 +1,48 @@
+# this workflow will try to lint and build a node.js application
+#
+# this is useful for stages that you require to make sure everything is working
+# properly before creating a container image to be pushed on the cloud
+#
+name: pre_build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'main'
+      - 'ci/*' # branches that follows the pattern ci/* can access this workflow too
+
+jobs:
+  pre_build:
+    name: pre_build
+    runs-on: ubuntu-latest
+
+    steps:
+      # download the source code into the runner
+      - name: checkout
+        uses: actions/checkout@v2
+
+      # setup node.js environment and npm
+      - name: setup node environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+
+      # lookup cache dependencies already defined, based on the hash generated from the file
+      # yarn.lock
+      - name: cache dependencies
+        id: cache-node-modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      # install dependencies only if the cache is not present
+      - name: install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm install
+
+      # run lint and syntax
+      - name: lint & syntax check
+        run: npm run lint
+
