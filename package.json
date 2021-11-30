@@ -41,7 +41,7 @@
     "@nuxt/components": "^2.1.6",
     "@nuxtjs/composition-api": "^0.27.0",
     "@nuxtjs/i18n": "^7.0.3",
-    "@nuxtjs/sentry": "^5.0.3",
+    "@nuxtjs/sentry": "^5.1.5",
     "@nuxtjs/sitemap": "^2.4.0",
     "@nuxtjs/svg": "^0.1.12",
     "axios": "^0.21.2",
