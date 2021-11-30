@@ -320,3 +320,41 @@ class TestIngestion(unittest.TestCase):
         search_response = es.search(index="audio", body=es_query)
         msg = "There should be 5000 audio tracks in Elasticsearch after ingestion."
         self.assertEquals(search_response["hits"]["total"]["value"], 5000, msg)
+
+    @pytest.mark.order(8)
+    def test_update_index_images(self):
+        """
+        Check that the image data can be updated from the API database into
+        Elasticsearch.
+        """
+        req = {
+            "model": "image",
+            "action": "UPDATE_INDEX",
+            "since_date": "1999-01-01",
+            "callback_url": bottle_url,
+        }
+        res = requests.post(f"{ingestion_server}/task", json=req)
+        stat_msg = "The job should launch successfully and return 202 ACCEPTED."
+        self.assertEqual(res.status_code, 202, msg=stat_msg)
+
+        # Wait for the task to send us a callback.
+        assert self.__class__.cb_queue.get(timeout=120) == "CALLBACK!"
+
+    @pytest.mark.order(9)
+    def test_update_index_audio(self):
+        """
+        Check that the audio data can be updated from the API database into
+        Elasticsearch.
+        """
+        req = {
+            "model": "audio",
+            "action": "UPDATE_INDEX",
+            "since_date": "1999-01-01",
+            "callback_url": bottle_url,
+        }
+        res = requests.post(f"{ingestion_server}/task", json=req)
+        stat_msg = "The job should launch successfully and return 202 ACCEPTED."
+        self.assertEqual(res.status_code, 202, msg=stat_msg)
+
+        # Wait for the task to send us a callback.
+        assert self.__class__.cb_queue.get(timeout=120) == "CALLBACK!"

@@ -414,9 +414,17 @@ class TableIndexer:
 
     def update(self, model_name: str, since_date):
         log.info(f"Updating index {model_name} with changes since {since_date}")
+        deleted, mature = get_existence_queries(model_name)
         query = SQL(
-            "SELECT * FROM {model_name} " "WHERE updated_on >= {since_date};"
-        ).format(model_name=Identifier(model_name), since_date=Literal(since_date))
+            "SELECT *, {deleted}, {mature} "
+            "FROM {model_name} "
+            "WHERE updated_on >= {since_date};"
+        ).format(
+            deleted=deleted,
+            mature=mature,
+            model_name=Identifier(model_name),
+            since_date=Literal(since_date),
+        )
         self.replicate(model_name, model_name, query)
 
     @staticmethod
