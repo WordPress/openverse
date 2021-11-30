@@ -214,6 +214,16 @@ class TestIngestion(unittest.TestCase):
 
         # Stop all running containers and delete all data in volumes
         compose_path = cls.compose_path
+        log_output = compose_path.parent / "ingestion_logs.txt"
+        with log_output.open("w") as file:
+            subprocess.run(
+                ["docker-compose", "-f", compose_path.name, "logs"],
+                cwd=compose_path.parent,
+                check=True,
+                stderr=subprocess.STDOUT,
+                stdout=file,
+            )
+
         stop_cmd = ["docker-compose", "-f", compose_path.name, "down", "-v"]
         subprocess.run(
             stop_cmd,
