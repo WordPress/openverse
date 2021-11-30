@@ -44,6 +44,7 @@ requests-oauthlib = "*"
 wsgi-basic-auth = "*"
 python-decouple = "*"
 django-cron = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.9"
