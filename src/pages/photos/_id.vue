@@ -22,11 +22,7 @@ import { MEDIA } from '~/constants/store-modules'
 
 const PhotoDetailPage = {
   name: 'PhotoDetailPage',
-  layout({ store }) {
-    return store.state.nav.isEmbedded
-      ? 'embedded-with-nav-search'
-      : 'with-nav-search'
-  },
+  layout: 'with-nav-search',
   data() {
     return {
       breadCrumbURL: '',

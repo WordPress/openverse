@@ -1,6 +1,6 @@
 <template>
   <div class="section mb-10" dir="ltr">
-    <div :class="['container', isEmbedded ? '' : 'is-fluid']">
+    <div class="container">
       <div class="mb-10">
         <h1 class="text-5xl">
           {{ $t('meta-search-page.title') }}
@@ -116,19 +116,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { NAV } from '~/constants/store-modules'
-
 export default {
   name: 'MetaSearchPage',
-  layout({ store }) {
-    return store.state.nav.isEmbedded
-      ? 'embedded-with-nav-search'
-      : 'with-nav-search'
-  },
-  computed: {
-    ...mapState(NAV, ['isEmbedded']),
-  },
+  layout: 'with-nav-search',
 }
 </script>
 

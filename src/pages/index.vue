@@ -8,9 +8,7 @@ import { CLEAR_FILTERS } from '~/constants/action-types'
 
 const HomePage = {
   name: 'home-page',
-  layout({ store }) {
-    return store.state.nav.isEmbedded ? 'embedded' : 'default'
-  },
+  layout: 'default',
   beforeMount() {
     this.$store.dispatch(`${SEARCH}/${CLEAR_FILTERS}`)
   },

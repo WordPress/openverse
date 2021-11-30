@@ -1,6 +1,6 @@
 <template>
   <div class="section" dir="ltr">
-    <div :class="['container', isEmbedded ? '' : 'is-fluid']">
+    <div class="container">
       <div class="mb-10">
         <h1 class="text-5xl mb-10">
           {{ $t('search-guide.title') }}
@@ -253,21 +253,9 @@
 </template>
 
 <script>
-/* eslint-disable vue/html-quotes */
-
-import { mapState } from 'vuex'
-import { NAV } from '~/constants/store-modules'
-
 const SearchHelpPage = {
   name: 'search-help-page',
-  layout({ store }) {
-    return store.state.nav.isEmbedded
-      ? 'embedded-with-nav-search'
-      : 'with-nav-search'
-  },
-  computed: {
-    ...mapState(NAV, ['isEmbedded']),
-  },
+  layout: 'with-nav-search',
   methods: {
     providerSearchLink(providerCode) {
       return `https://search.creativecommons.org/search?q=provider%3A%20"${providerCode}"`

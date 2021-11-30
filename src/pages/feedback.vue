@@ -1,6 +1,6 @@
 <template>
   <div class="section" dir="ltr">
-    <div :class="['container', isEmbedded ? '' : 'is-fluid']">
+    <div class="container">
       <div class="pb-6">
         <h1 id="feedback" class="text-5xl mb-10">
           {{ $t('feedback.title') }}
@@ -62,7 +62,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { BUG_REPORT, NAV } from '~/constants/store-modules'
+import { BUG_REPORT } from '~/constants/store-modules'
 
 const bugForm =
   'https://docs.google.com/forms/d/e/1FAIpQLSenCn-3HoZlCz4vlL2621wjezfu1sPZDaWGe_FtQ1R5-5qR4Q/viewform'
@@ -71,11 +71,7 @@ const suggestionForm =
 
 export const FeedbackPage = {
   name: 'feedback-page',
-  layout({ store }) {
-    return store.state.nav.isEmbedded
-      ? 'embedded-with-nav-search'
-      : 'with-nav-search'
-  },
+  layout: 'with-nav-search',
   data() {
     return {
       activeTab: 0,
@@ -103,7 +99,6 @@ export const FeedbackPage = {
       'bugReported',
       'bugReportFailed',
     ]),
-    ...mapState(NAV, ['isEmbedded']),
   },
 }
 

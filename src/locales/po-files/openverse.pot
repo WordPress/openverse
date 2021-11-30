@@ -1926,27 +1926,27 @@ msgctxt "footer.navigation.terms"
 msgid "Terms"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:59
+#: src/components/NavSection.vue:71
 msgctxt "header.about-nav-item"
 msgid "Our Story"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:67
+#: src/components/NavSection.vue:79
 msgctxt "header.source-nav-item"
 msgid "Sources"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:88
+#: src/components/NavSection.vue:100
 msgctxt "header.search-guide-nav-item"
 msgid "Search Guide"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:96
+#: src/components/NavSection.vue:108
 msgctxt "header.meta-search-nav-item"
 msgid "Meta Search"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:104
+#: src/components/NavSection.vue:116
 msgctxt "header.feedback-nav-item"
 msgid "Feedback"
 msgstr ""
@@ -1955,32 +1955,32 @@ msgctxt "header.support-nav-item"
 msgid "Support Us"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:119
+#: src/components/NavSection.vue:131
 msgctxt "header.extension-nav-item"
 msgid "Web extension"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:143
+#: src/components/NavSection.vue:169
 msgctxt "header.placeholder"
 msgid "Search all content"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:76
+#: src/components/NavSection.vue:88
 msgctxt "header.licenses-nav-item"
 msgid "The Licenses"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:52
+#: src/components/NavSection.vue:64
 msgctxt "header.about-tab"
 msgid "About"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:81
+#: src/components/NavSection.vue:93
 msgctxt "header.resources-tab"
 msgid "Resources"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:113
+#: src/components/NavSection.vue:125
 msgctxt "header.api-nav-item"
 msgid "API"
 msgstr ""
@@ -1997,22 +1997,22 @@ msgctxt "header.notification.okay"
 msgid "OK"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:2
+#: src/components/NavSection.vue:6
 msgctxt "header.aria.primary"
 msgid "primary"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:16
+#: src/components/NavSection.vue:26
 msgctxt "header.aria.menu"
 msgid "menu"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:36
+#: src/components/NavSection.vue:46
 msgctxt "header.aria.search"
 msgid "search"
 msgstr ""
 
-#: src/components/EmbeddedNavSection.vue:43
+#: src/components/NavSection.vue:53
 msgctxt "header.aria.sr-search"
 msgid "sr search button"
 msgstr ""

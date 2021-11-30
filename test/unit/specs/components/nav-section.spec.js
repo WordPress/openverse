@@ -38,7 +38,7 @@ describe('NavSection', () => {
 
     const wrapper = render(NavSection, options)
     await wrapper.setData({ form: { searchTerm: 'foo' } })
-    wrapper.find('.hero_search-form').trigger('submit')
+    wrapper.find('.search-form').trigger('submit')
     expect(routerMock.push).toHaveBeenCalledWith({
       path: '/search',
       query: { q: 'foo' },

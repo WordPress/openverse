@@ -1,19 +1,28 @@
 <template>
   <div class="app">
-    <HeaderSection :show-nav-search="true" :is-embedded="false" />
-    <main>
+    <MigrationNotice v-show="isReferredFromCc" />
+    <HeaderSection :show-nav-search="true" />
+    <main class="embedded">
       <Nuxt />
     </main>
-    <FooterSection />
   </div>
 </template>
 <script>
-const withNavSearch = {
-  name: 'with-nav-search',
-  layout: 'with-nav-search',
+import { mapState } from 'vuex'
+
+import iframeHeight from '~/mixins/iframe-height'
+import i18nSync from '~/mixins/i18n-sync'
+
+import { NAV } from '~/constants/store-modules'
+
+const embeddedWithNavSearch = {
+  name: 'embedded-with-nav-search',
+  layout: 'embedded-with-nav-search',
+  mixins: [iframeHeight, i18nSync],
   head() {
     return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
   },
+  computed: { ...mapState(NAV, ['isReferredFromCc']) },
 }
-export default withNavSearch
+export default embeddedWithNavSearch
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div dir="ltr">
     <div class="hero-section border-b">
-      <div class="container pt-16" :class="[isEmbedded ? '' : 'is-fluid']">
+      <div class="container pt-16">
         <div class="intro text-center mx-auto">
           <h2 class="text-5xl mb-10">
             {{ $t('extension.description.intro') }}
@@ -27,7 +27,6 @@
     </div>
     <div
       class="features grid grid-cols-1 tab:grid-cols-2 gap-x-12 gap-y-30 py-30 mx-auto"
-      :class="[isEmbedded ? '' : 'is-fluid']"
     >
       <template v-for="(feature, index) in features">
         <figure
@@ -58,10 +57,7 @@
       </template>
     </div>
     <div class="section">
-      <div
-        class="container conclusion mb-24"
-        :class="[isEmbedded ? '' : 'is-fluid']"
-      >
+      <div class="container conclusion mb-24">
         <h2 class="text-center mx-auto">{{ $t('extension.conclusion') }}</h2>
         <ExtensionBrowsers class="mt-6" />
       </div>
@@ -70,23 +66,16 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import ExtensionBrowsers from '~/components/ExtensionBrowsers'
 
 import feature1 from '~/assets/screenshots/extension_feat_1.png'
 import feature2 from '~/assets/screenshots/extension_feat_2.png'
 import feature3 from '~/assets/screenshots/extension_feat_3.png'
-import { NAV } from '~/constants/store-modules'
 
 const AboutPage = {
   name: 'about-page',
   components: { ExtensionBrowsers },
-  layout({ store }) {
-    return store.state.nav.isEmbedded
-      ? 'embedded-with-nav-search'
-      : 'with-nav-search'
-  },
+  layout: 'with-nav-search',
   data() {
     const features = [
       { key: 'search', image: feature1 },
@@ -97,9 +86,6 @@ const AboutPage = {
       features,
       isPlaying: true,
     }
-  },
-  computed: {
-    ...mapState(NAV, ['isEmbedded']),
   },
   methods: {
     togglePlay() {

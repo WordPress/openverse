@@ -41,6 +41,7 @@ const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 768
 
 const BrowsePage = {
   name: 'browse-page',
+  layout: 'default',
   components: {
     SearchGridFilter,
   },
@@ -53,9 +54,6 @@ const BrowsePage = {
     return {
       isLargeScreen,
     }
-  },
-  layout({ store }) {
-    return store.state.nav.isEmbedded ? 'embedded' : 'default'
   },
   scrollToTop: false,
   async fetch() {
