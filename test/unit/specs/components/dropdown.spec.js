@@ -1,5 +1,5 @@
 import Dropdown from '~/components/Dropdown'
-import render from '../../test-utils/render'
+import { render, fireEvent } from '@testing-library/vue'
 
 describe('Dropdown', () => {
   let options = {}
@@ -13,29 +13,29 @@ describe('Dropdown', () => {
     options = {
       propsData: props,
       scopedSlots: {
-        default: `<a id="dropdown-item" @focus="props.onFocus()">WordPress.org</a>`,
+        default: `<a data-testid="dropdown-item" @focus="props.onFocus()">WordPress.org</a>`,
       },
     }
   })
 
   it('should visually hide the dropdown when not focused', () => {
-    const wrapper = render(Dropdown, options)
-    const dropdownWrapper = wrapper.get('[role="menu"]')
-    expect(dropdownWrapper.classes()).not.toContain('visible')
+    const { getByRole } = render(Dropdown, options)
+    const dropdownWrapper = getByRole('menu')
+    expect(dropdownWrapper).not.toHaveClass('visible')
   })
 
   it('should be visible when the container is focused', async () => {
-    const wrapper = render(Dropdown, options)
-    await wrapper.trigger('focus')
-    const dropdownWrapper = wrapper.get('[role="menu"]')
-    expect(dropdownWrapper.classes()).toContain('visible')
+    const { container, getByRole } = render(Dropdown, options)
+    await fireEvent.focus(container.firstChild)
+    const dropdownWrapper = getByRole('menu')
+    expect(dropdownWrapper).toHaveClass('visible')
   })
 
   it('should be visible when the dropdown items are focused', async () => {
-    const wrapper = render(Dropdown, options)
-    const dropdownItem = wrapper.get('#dropdown-item')
-    await dropdownItem.trigger('focus')
-    const dropdownWrapper = wrapper.get('[role="menu"]')
-    expect(dropdownWrapper.classes()).toContain('visible')
+    const { getByTestId, getByRole } = render(Dropdown, options)
+    const dropdownItem = getByTestId('dropdown-item')
+    await fireEvent.focus(dropdownItem)
+    const dropdownWrapper = getByRole('menu')
+    expect(dropdownWrapper).toHaveClass('visible')
   })
 })

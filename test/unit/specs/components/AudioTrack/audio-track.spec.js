@@ -22,6 +22,7 @@ const stubs = {
   DownloadButton: true,
   PlayPause: true,
   NuxtLink: true,
+  VIcon: true,
   Waveform: true,
 }
 

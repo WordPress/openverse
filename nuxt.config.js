@@ -166,12 +166,7 @@ export default {
   styleResources: {
     scss: ['./styles/utilities/all.scss'],
   },
-  modules: [
-    '@nuxtjs/sentry',
-    'nuxt-ssr-cache',
-    '@nuxtjs/i18n',
-    '@nuxtjs/sitemap',
-  ],
+  modules: ['@nuxtjs/sentry', '@nuxtjs/i18n', '@nuxtjs/sitemap'],
   i18n: {
     locales: [
       {

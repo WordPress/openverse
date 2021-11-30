@@ -98,7 +98,6 @@ describe('SearchGridFilter', () => {
     expect(checked.length).toEqual(0)
 
     await fireEvent.click(screen.queryByLabelText(/commercial/i))
-
     // `getBy` serves as expect because it throws an error if no element is found
     screen.getByRole('checkbox', { checked: true })
     screen.getByLabelText('Commercial usage', { checked: true })
