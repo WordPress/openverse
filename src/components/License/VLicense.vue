@@ -1,16 +1,27 @@
 <template>
   <div class="license flex flex-row items-center gap-2">
     <div class="flex gap-1">
-      <VIcon v-if="isCC" :size="4" view-box="0 0 30 30" :icon-path="ccLogo" />
+      <VIcon
+        v-if="isCC"
+        :class="['icon', bgFilled ? 'bg-filled text-black' : '']"
+        view-box="0 0 30 30"
+        :icon-path="ccLogo"
+        :size="4"
+      />
       <VIcon
         v-for="(name, index) in icons"
         :key="index"
-        :size="4"
+        :class="['icon', bgFilled ? 'bg-filled text-black' : '']"
         view-box="0 0 30 30"
         :icon-path="svgs[name]"
+        :size="4"
       />
     </div>
-    <span class="name">
+    <span
+      v-if="!hideName"
+      class="name"
+      :aria-label="$t(`license-readable-names.${license}`)"
+    >
       {{ $t(`license-names.${license}`) }}
     </span>
   </div>
@@ -52,6 +63,20 @@ export default {
       required: true,
       validator: (val) => ALL_LICENSES.includes(val),
     },
+    /**
+     * Whether to display icons filled with a white background or leave them transparent.
+     */
+    bgFilled: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * Either to show the license name next to the icons or hide it.
+     */
+    hideName: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props) {
     const icons = computed(() =>
@@ -78,3 +103,14 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.icon {
+  height: 1.1667em;
+  width: 1.1667em;
+}
+
+.bg-filled {
+  background-image: radial-gradient(circle, #ffffff 60%, transparent 60%);
+}
+</style>

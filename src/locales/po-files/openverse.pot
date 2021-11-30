@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-11-29T14:32:09+00:00\n"
+"POT-Creation-Date: 2021-11-30T16:26:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -47,6 +47,38 @@ msgstr ""
 #: src/components/DropdownButton.vue:71
 msgctxt "dropdown-button.aria.arrow-label"
 msgid "Dropdown"
+msgstr ""
+
+msgctxt "license-readable-names.cc0"
+msgid "Zero"
+msgstr ""
+
+msgctxt "license-readable-names.pdm"
+msgid "Public Domain Mark"
+msgstr ""
+
+msgctxt "license-readable-names.by"
+msgid "Attribution"
+msgstr ""
+
+msgctxt "license-readable-names.by-sa"
+msgid "Attribution-Share-Alike"
+msgstr ""
+
+msgctxt "license-readable-names.by-nc"
+msgid "Attribution-NonCommercial"
+msgstr ""
+
+msgctxt "license-readable-names.by-nd"
+msgid "Attribution-NoDerivatives"
+msgstr ""
+
+msgctxt "license-readable-names.by-nc-sa"
+msgid "Attribution-NonCommercial-Share-Alike"
+msgstr ""
+
+msgctxt "license-readable-names.by-nc-nd"
+msgid "Attribution-NonCommercial-NoDerivatives"
 msgstr ""
 
 msgctxt "license-names.cc0"
@@ -702,7 +734,7 @@ msgctxt "browse-page.aria.scroll"
 msgid "scroll to top"
 msgstr ""
 
-#: src/components/SearchGridForm.vue:26
+#: src/components/SearchGridForm.vue:25
 msgctxt "browse-page.aria.search"
 msgid "search"
 msgstr ""
@@ -775,7 +807,7 @@ msgid "This work is marked as being in the public domain."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/SearchGridForm.vue:82
+#: src/components/SearchGridForm.vue:79
 msgctxt "browse-page.search-form.placeholder"
 msgid "Search all ###type###"
 msgstr ""
@@ -802,7 +834,7 @@ msgctxt "browse-page.search-form.collection-placeholder"
 msgid "Search this collection"
 msgstr ""
 
-#: src/components/SearchGridForm.vue:54
+#: src/components/SearchGridForm.vue:52
 msgctxt "browse-page.search-form.button"
 msgid "Search"
 msgstr ""
@@ -852,7 +884,7 @@ msgctxt "filter-list.category-aria"
 msgid "filters list for ###categoryName### category"
 msgstr ""
 
-#: src/components/SearchGridForm.vue:16
+#: src/components/SearchGridForm.vue:15
 msgctxt "filters.title"
 msgid "Filters"
 msgstr ""
@@ -1105,13 +1137,13 @@ msgid "An error occurred"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/photos/_id.vue:58
+#: src/pages/photos/_id.vue:54
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/audio/_id.vue:74
+#: src/pages/audio/_id.vue:70
 msgctxt "error.media-not-found"
 msgid "Couldn't find ###mediaType### with id ###id###"
 msgstr ""
@@ -1145,7 +1177,7 @@ msgctxt "extension.title"
 msgid "Web extension"
 msgstr ""
 
-#: src/pages/extension.vue:65
+#: src/pages/extension.vue:61
 msgctxt "extension.conclusion"
 msgid "Have your favourite content while browsing the web"
 msgstr ""
@@ -1936,17 +1968,17 @@ msgctxt "header.source-nav-item"
 msgid "Sources"
 msgstr ""
 
-#: src/components/NavSection.vue:100
+#: src/components/NavSection.vue:103
 msgctxt "header.search-guide-nav-item"
 msgid "Search Guide"
 msgstr ""
 
-#: src/components/NavSection.vue:108
+#: src/components/NavSection.vue:111
 msgctxt "header.meta-search-nav-item"
 msgid "Meta Search"
 msgstr ""
 
-#: src/components/NavSection.vue:116
+#: src/components/NavSection.vue:119
 msgctxt "header.feedback-nav-item"
 msgid "Feedback"
 msgstr ""
@@ -1955,12 +1987,12 @@ msgctxt "header.support-nav-item"
 msgid "Support Us"
 msgstr ""
 
-#: src/components/NavSection.vue:131
+#: src/components/NavSection.vue:134
 msgctxt "header.extension-nav-item"
 msgid "Web extension"
 msgstr ""
 
-#: src/components/NavSection.vue:169
+#: src/components/NavSection.vue:172
 msgctxt "header.placeholder"
 msgid "Search all content"
 msgstr ""
@@ -1970,17 +2002,17 @@ msgctxt "header.licenses-nav-item"
 msgid "The Licenses"
 msgstr ""
 
-#: src/components/NavSection.vue:64
+#: src/components/NavSection.vue:63
 msgctxt "header.about-tab"
 msgid "About"
 msgstr ""
 
-#: src/components/NavSection.vue:93
+#: src/components/NavSection.vue:95
 msgctxt "header.resources-tab"
 msgid "Resources"
 msgstr ""
 
-#: src/components/NavSection.vue:125
+#: src/components/NavSection.vue:128
 msgctxt "header.api-nav-item"
 msgid "API"
 msgstr ""
@@ -2002,17 +2034,17 @@ msgctxt "header.aria.primary"
 msgid "primary"
 msgstr ""
 
-#: src/components/NavSection.vue:26
+#: src/components/NavSection.vue:23
 msgctxt "header.aria.menu"
 msgid "menu"
 msgstr ""
 
-#: src/components/NavSection.vue:46
+#: src/components/NavSection.vue:43
 msgctxt "header.aria.search"
 msgid "search"
 msgstr ""
 
-#: src/components/NavSection.vue:53
+#: src/components/NavSection.vue:50
 msgctxt "header.aria.sr-search"
 msgid "sr search button"
 msgstr ""

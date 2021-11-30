@@ -57,7 +57,7 @@
 
 <script>
 import LicenseExplanationTooltip from '~/components/Filters/LicenseExplanationTooltip'
-import VLicense from '~/components/License/VLicense'
+import VLicense from '~/components/License/VLicense.vue'
 
 export default {
   name: 'FilterCheckList',

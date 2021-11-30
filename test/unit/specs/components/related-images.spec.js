@@ -37,7 +37,7 @@ describe('RelatedImage', () => {
     options = {
       localVue,
       propsData: props,
-      stubs: ['LicenseIcons', 'NuxtLink'],
+      stubs: ['VLicense', 'NuxtLink'],
     }
   })
   it('should render an image grid', async () => {

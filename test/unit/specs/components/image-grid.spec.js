@@ -11,7 +11,7 @@ const propsData = {
 }
 const options = {
   props: propsData,
-  stubs: ['NuxtLink', 'LicenseIcons'],
+  stubs: ['NuxtLink', 'VLicense'],
 }
 describe('ImageGrid', () => {
   it('renders images without load more button if canLoadMore is false', () => {

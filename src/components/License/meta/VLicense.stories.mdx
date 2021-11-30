@@ -6,7 +6,7 @@ import {
   Story,
 } from '@storybook/addon-docs'
 
-import VLicense from '~/components/License/VLicense'
+import VLicense from '~/components/license/VLicense.vue'
 
 <Meta title="Components/VLicense" component={VLicense} />
 
@@ -104,6 +104,20 @@ It can also display some public domain licenses.
     name="PDM"
     args={{
       license: 'pdm',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+It can also show only the license icons.
+
+<Canvas>
+  <Story
+    name="Only icons"
+    args={{
+      license: 'by-nc-sa',
+      hideName: true,
     }}
   >
     {Template.bind({})}

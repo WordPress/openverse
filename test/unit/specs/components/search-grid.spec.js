@@ -85,7 +85,7 @@ describe('SearchGrid', () => {
         MetaSearchForm: true,
         NuxtLink: true,
         // SaferBrowsing: true,
-        LicenseIcons: true,
+        VLicense: true,
       },
       store: storeMock,
       localVue,
