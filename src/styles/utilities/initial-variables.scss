@@ -86,14 +86,14 @@ $space-xxl: 6rem;
 // The container horizontal gap, which acts as the offset for breakpoints
 $gap: 32px;
 // 960, 1152, and 1344 have been chosen because they are divisible by both 12 and 16
-$tablet: 769px;
-// 960px container + 4rem
-$desktop: 960px + (2 * $gap);
-// 1152px container + 4rem
-$widescreen: 1152px + (2 * $gap);
+$tablet: 768px;
+// tailwind `lg`:
+$desktop: 1024px;
+// tailwind `xl`
+$widescreen: 1280px;
 $widescreen-enabled: true;
-// 1344px container + 4rem
-$fullhd: 1248px + (2 * $gap);
+// tailwind `2xl`
+$fullhd: 1536px;
 $fullhd-enabled: true;
 
 // Miscellaneous

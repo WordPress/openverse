@@ -55,7 +55,6 @@ $wp-max-width: 940px
 
 .navbar-brand
   align-items: stretch
-  justify-content: space
   display: flex
   flex-shrink: 0
   min-height: $navbar-height
@@ -69,7 +68,7 @@ $wp-max-width: 940px
 .navbar-burger
   color: $navbar-burger-color
   +hamburger(3.25rem)
-  +ltr-property("margin", auto, false)
+  margin-inline-start: auto
 
 .navbar-menu
   display: none
@@ -90,9 +89,9 @@ $wp-max-width: 940px
     justify-content: space-between
     +tablet()
       > div.navbar-item:first-child > a.navbar-link
-        padding-left: 0
+        padding-inline-start: 0
       > div.navbar-item:last-child > a.navbar-link
-        padding-right: 0
+        padding-inline-end: 0
 
 a.navbar-item,
 .navbar-link
@@ -131,14 +130,6 @@ a.navbar-item,
 .navbar-content
   flex-grow: 1
   flex-shrink: 1
-
-.navbar-link:not(.is-arrowless)
-  +ltr-property("padding", 2.5em)
-  &::after
-    +arrow
-    border-color: $navbar-dropdown-arrow
-    margin-top: -0.375em
-    +ltr-position(1.125em)
 
 .navbar-dropdown
   display: block
@@ -237,9 +228,6 @@ a.navbar-item,
       &.is-active
         background-color: $navbar-dropdown-item-active-background-color
         color: $navbar-dropdown-item-active-color
-    &.is-right
-      left: auto
-      right: 0
   .navbar-divider
     display: block
   // Hover/Active states
