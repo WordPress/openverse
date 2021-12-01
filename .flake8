@@ -1,5 +1,6 @@
 [flake8]
-ignore = E203, E266, E501, W503, F403, F401
-max-line-length = 79
-max-complexity = 18
-select = B,C,E,F,W,T4,B9
+# match black formatter's behavior
+# https://www.flake8rules.com/rules/E203.html
+# https://www.flake8rules.com/rules/W503.html
+ignore = E203, W503
+max-line-length = 88
