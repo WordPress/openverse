@@ -1,18 +1,17 @@
-name: Label sync
-# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#label-sync
+name: PR project automation
+# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#pr-project-automation
 
 on:
-  workflow_dispatch:
   schedule:
-  - cron: "0 0 * * *" # at 00:00
+  - cron: "15 15 * * 2" # 3:15pm on Tuesday
 
 env:
   LOGGING_LEVEL: 20 # corresponds to INFO
   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
 jobs:
-  sync_labels:
-    name: Sync labels
+  clear_done:
+    name: Clear done PRs
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -30,7 +29,16 @@ jobs:
         python -m pip install --user pipenv
         pipenv install --deploy
 
-    - name: Sync standard labels
+    - name: Clear PRs in "Merged!"
       working-directory: ./python
       run: |
-        pipenv run python sync_labels.py
+        pipenv run python archive_column.py \
+        --project-number 8 \
+        --column "Merged\!"
+
+    - name: Clear PRs in "Closed"
+      working-directory: ./python
+      run: |
+        pipenv run python archive_column.py \
+        --project-number 8 \
+        --column "Closed"

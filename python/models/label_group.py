@@ -8,7 +8,11 @@ class LabelGroup:
     """
 
     def __init__(
-        self, color=None, is_prefixed=True, is_required=False, **kwargs
+        self,
+        color=None,
+        is_prefixed=True,
+        is_required=False,
+        **kwargs,
     ):
         self.name = kwargs["name"]
         self.color = color

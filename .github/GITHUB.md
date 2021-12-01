@@ -13,6 +13,14 @@ to the "In progress" column.
 **Cron:** [at every 15th minute](https://crontab.guru/#*/15_*_*_*_*)  
 **Dispatch:** enabled
 
+### PR project automation
+
+This workflow archives PRs in the "Merged!" and "Closed" columns of the PR
+project board, 15 minutes after the commencement of the weekly developer chat
+at 15:00 UTC every Tuesday.
+
+**Cron:** [at 15:15 on Tuesday](https://crontab.guru/#15_15_*_*_2)
+
 ### New issue automation
 
 This workflow adds issues to the "Backlog" column in the Openverse project as
@@ -32,7 +40,7 @@ Openverse PRs project, based on whether they are marked as draft or ready.
 ### PR label check
 
 This workflow ensures that all PRs have one label from each of the groups
-'aspect' and 'goal' applied on them.
+'aspect', 'goal' and 'priority' applied on them.
 
 **PR:** opened, edited, labeled, unlabeled, synchronize  
 **Dispatch:** disabled
@@ -58,8 +66,8 @@ truth, it creates PRs to resolve any differences.
 
 ### Weekly updates
 
-This workflow creates and publishes a post on the Make Openverse site once a week
-outlining the closed issues and merged PRs of the preceding week.
+This workflow creates and publishes a post on the Make Openverse site once a
+week, outlining the closed issues and merged PRs of the preceding week.
 
 **Cron:** [at 00:01 on Monday](https://crontab.guru/#1_0_*_*_1)  
 **Dispatch:** enabled
@@ -67,7 +75,8 @@ outlining the closed issues and merged PRs of the preceding week.
 ### New PR notification
 
 This workflow makes a `POST` request to the Slack webhook when a new PR is
-created, sending a notification message to the `#openverse` channel. This ping
-is not sent for PRs made by Dependabot and downstream sync action.
+created, sending a notification message to the `#openverse-notifications`
+channel. This ping is not sent for PRs made by Dependabot and downstream sync
+action.
 
 **PR:** opened
