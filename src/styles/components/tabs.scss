@@ -6,7 +6,6 @@ $tabs-font-size: 1rem;
   display: flex;
   flex-direction: column;
 
-  font-size: $tabs-font-size;
   justify-content: space-between;
   overflow: hidden;
   overflow-x: auto;
@@ -14,6 +13,7 @@ $tabs-font-size: 1rem;
   [role='tablist'] {
     display: flex;
     border-bottom: $tabs-border-bottom-width solid $tabs-border-bottom-color;
+    font-size: 1rem;
   }
   .tabs-panel {
     display: none;
@@ -39,9 +39,6 @@ $tabs-font-size: 1rem;
     cursor: pointer;
     user-select: none;
     text-decoration: none;
-    &:first-child {
-      margin-left: 0;
-    }
 
     &.is-active,
     &:hover {
@@ -72,7 +69,6 @@ $tabs-font-size: 1rem;
     font-size: 1rem;
     margin: 0 0 -0.125rem;
     border: 1px solid $color-light-gray;
-    border-right: 0;
     padding: 0.5rem 1rem;
 
     &.is-active,
@@ -83,12 +79,6 @@ $tabs-font-size: 1rem;
     }
     &:focus-visible {
       box-shadow: 0 0 0 0.125rem #d8d8d8;
-    }
-    &:first-child {
-      padding-left: 1rem;
-    }
-    &:last-child {
-      border-right: 0.125rem solid #d8d8d8;
     }
   }
 }

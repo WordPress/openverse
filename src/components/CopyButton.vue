@@ -2,15 +2,13 @@
   <button
     :id="id"
     type="button"
-    class="button tiny donate px-4 py-0 mt-4"
+    class="button tiny donate"
     :data-clipboard-target="el"
   >
     <span v-if="!success">
-      <i class="icon cc-share me-2" />
       {{ $t('photo-details.copy.copy') }}
     </span>
     <span v-else>
-      <i class="icon cc-share me-2" />
       {{ $t('photo-details.copy.copied') }}
     </span>
   </button>
@@ -59,3 +57,10 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.button {
+  @apply py-0 px-3 mt-4;
+  font-size: 15px;
+}
+</style>

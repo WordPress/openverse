@@ -74,7 +74,7 @@
           </template>
           <template #license>
             <a
-              class="photo_license"
+              class="uppercase"
               :href="licenseUrl"
               target="_blank"
               rel="noopener"
@@ -104,7 +104,7 @@
             :value="attributionHtml"
             cols="30"
             rows="4"
-            readonly="readonly"
+            dir="ltr"
           />
         </label>
         <CopyButton
@@ -252,9 +252,5 @@ export default {
 textarea {
   border: none;
   resize: none;
-}
-
-.copy-attribution {
-  margin-left: auto;
 }
 </style>

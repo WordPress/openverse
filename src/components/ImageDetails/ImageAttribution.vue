@@ -16,18 +16,28 @@
 </template>
 
 <script>
+import attributionHtml from '~/utils/attribution-html'
+
 export default {
   name: 'ImageAttribution',
   props: {
-    id: {},
-    image: {},
-    licenseUrl: String,
-    fullLicenseName: String,
-    attributionHtml: String,
+    image: {
+      type: Object,
+    },
+    licenseUrl: {
+      type: String,
+    },
+    fullLicenseName: {
+      type: String,
+    },
   },
   computed: {
     licenseUrlRichText() {
       return `${this.licenseUrl}&atype=rich`
+    },
+    attributionHtml() {
+      const licenseUrl = `${this.licenseUrl}&atype=html`
+      return attributionHtml(this.image, licenseUrl, this.fullLicenseName)
     },
   },
 }

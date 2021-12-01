@@ -4,15 +4,18 @@
       <li
         v-for="(li, index) in splitLicenses"
         :key="index"
-        class="license-element"
+        class="flex items-start my-2"
       >
         <i
           aria-hidden="true"
-          :class="`icon cc-${getLicenseIcon(li)}`"
+          class="icon me-2 text-black bg-white"
+          :class="`cc-${getLicenseIcon(li)}`"
           :title="`${li.toUpperCase()}`"
         />
         <span class="sr-only">{{ li.toUpperCase() }}</span>
-        <p>{{ $t(`browse-page.license-description.${li}`) }}</p>
+        <p class="leading-5">
+          {{ $t(`browse-page.license-description.${li}`) }}
+        </p>
       </li>
     </ul>
   </div>
@@ -50,24 +53,9 @@ const LicenseElements = {
 
 export default LicenseElements
 </script>
+
 <style lang="scss" scoped>
-li {
-  display: flex;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-  align-items: flex-start;
-}
-li p {
-  line-height: 22px;
-}
 i {
-  color: black;
-  background-color: white;
   font-size: 1.43rem;
-  margin-right: 0.5rem;
-}
-.tooltip li {
-  align-items: flex-start;
-  line-height: 1.5;
 }
 </style>

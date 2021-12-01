@@ -1,9 +1,9 @@
 <template>
-  <div class="photo columns is-desktop pb-16" :style="{ margin: 0 }">
+  <div class="photo columns is-desktop px-6 md:px-14 pb-16">
     <div class="column is-three-fifths photo_image-ctr mt-4">
       <a
         v-if="shouldShowBreadcrumb"
-        class="block photo_breadcrumb text-left ms-4 mb-4 text-dark-gray font-semibold caption"
+        class="block photo_breadcrumb text-left ms-4 mb-4 lg:ms-0 text-dark-gray font-semibold caption"
         :href="breadCrumbURL"
         @click.prevent="onGoBackToSearchResults"
         @keyup.enter.prevent="onGoBackToSearchResults"
@@ -26,7 +26,11 @@
         @failure="sketchFabfailure = true"
       />
 
-      <LegalDisclaimer />
+      <div class="mt-4 mb-2 ms-4 lg:ms-0">
+        <p class="caption text-left text-dark-gray">
+          {{ $t('photo-details.legal-disclaimer') }}
+        </p>
+      </div>
 
       <div class="mb-1 text-left">
         <button
@@ -35,7 +39,7 @@
           @click="toggleReportFormVisibility"
         >
           <span class="text-trans-blue ms-2 text-sm">
-            <i class="icon flag me-2" />
+            <i class="icon flag" />
             {{ $t('photo-details.content-report.title') }}
           </span>
         </button>
@@ -50,15 +54,15 @@
     <div
       role="region"
       :aria-label="$t('photo-details.aria.details')"
-      class="column image-info ms-12"
+      class="column image-info md:ms-10"
     >
       <div class="my-4">
-        <h1 class="text-2xl">
+        <h1 class="text-6xl">
           {{ image.title }}
         </h1>
         <i18n
           v-if="image.creator"
-          class="caption font-semibold"
+          class="caption"
           path="photo-details.creator"
           tag="span"
         >
@@ -103,7 +107,7 @@
             {{ $t('photo-details.information.title') }}
           </button>
         </div>
-        <!-- <section class="photo_info-ctr tabs-content">-->
+
         <div
           id="tab-reuse"
           role="tabpanel"
@@ -116,7 +120,6 @@
             :image="image"
             :license-url="licenseUrl"
             :full-license-name="fullLicenseName"
-            :attribution-html="attributionHtml()"
           />
         </div>
         <div
@@ -162,7 +165,6 @@ import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
 } from '~/constants/usage-data-analytics-types'
-import attributionHtml from '~/utils/attribution-html'
 import { getFullLicenseName } from '~/utils/license'
 import { REPORT_CONTENT, USAGE_DATA } from '~/constants/store-modules'
 
@@ -234,10 +236,6 @@ export default {
     setActiveTab(tabIdx) {
       this.activeTab = tabIdx
     },
-    attributionHtml() {
-      const licenseUrl = `${this.licenseUrl}&atype=html`
-      return attributionHtml(this.image, licenseUrl, this.fullLicenseName)
-    },
     toggleReportFormVisibility() {
       this.$store.commit(`${REPORT_CONTENT}/${TOGGLE_REPORT_FORM_VISIBILITY}`)
     },
@@ -252,11 +250,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/photodetails.scss';
+.icon {
+  vertical-align: middle;
+}
 
-@include touch {
-  .image-info {
-    margin-left: 0 !important;
+.photo_image.loading {
+  width: 100%;
+}
+
+.photo_image-ctr {
+  overflow: hidden;
+  text-align: center;
+
+  img {
+    position: relative;
+    width: 100%;
+    height: auto;
+    max-height: 44rem;
+    max-width: 100%;
+    object-fit: contain;
   }
+}
+
+.tab:first-child {
+  margin-inline-start: 0;
 }
 </style>

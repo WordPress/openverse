@@ -1,5 +1,5 @@
 <template>
-  <section class="image-grid">
+  <section class="image-grid my-6">
     <div class="image-grid__cells">
       <ImageCell v-for="(image, index) in images" :key="index" :image="image" />
     </div>
@@ -82,7 +82,6 @@ export default {
   &__cells {
     display: flex;
     flex-wrap: wrap;
-    margin: 10px;
 
     @include tablet {
       &:after {

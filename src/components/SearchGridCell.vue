@@ -18,7 +18,7 @@
           loading="lazy"
           :class="{
             'search-grid_image': true,
-            'search-grid_image__fill': !shouldContainImage,
+            'w-full': !shouldContainImage,
           }"
           :alt="image.title"
           :src="getImageUrl(image)"
@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import getProviderLogo from '~/utils/get-provider-logo'
 import VLicense from '~/components/License/VLicense.vue'
 
 const errorImage = require('~/assets/image_not_available_placeholder.png')
@@ -111,9 +110,6 @@ export default {
     },
     getImageForeignUrl(image) {
       return toAbsolutePath(image.foreign_landing_url)
-    },
-    getProviderLogo(providerName) {
-      return getProviderLogo(providerName)
     },
     onGotoDetailPage(event, image) {
       if (!event.metaKey && !event.ctrlKey) {
@@ -221,9 +217,5 @@ export default {
 .search-grid_image {
   margin: auto;
   display: block;
-}
-
-.search-grid_image__fill {
-  width: 100%;
 }
 </style>
