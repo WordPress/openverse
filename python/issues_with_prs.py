@@ -135,13 +135,9 @@ def main():
 
     proj = get_org_project(org=org, proj_number=args.proj_number)
     log.info(f"Found project: {proj.name}")
-    source_column = get_project_column(
-        proj=proj, col_name=args.source_col_name
-    )
+    source_column = get_project_column(proj=proj, col_name=args.source_col_name)
     log.debug("Found source column")
-    target_column = get_project_column(
-        proj=proj, col_name=args.target_col_name
-    )
+    target_column = get_project_column(proj=proj, col_name=args.target_col_name)
     log.debug("Found target column")
 
     issue_cards = get_issue_cards(source_column)
@@ -153,9 +149,7 @@ def main():
     log.info(f"Found {len(cards_to_move)} cards to move")
 
     for (issue_card, issue) in cards_to_move:
-        log.info(
-            f"Moving card for issue {issue.html_url} to {target_column.name}"
-        )
+        log.info(f"Moving card for issue {issue.html_url} to {target_column.name}")
         issue_card.move("bottom", target_column)
 
 

@@ -43,9 +43,7 @@ def set_labels(repo: Repository, labels: list[Label]):
     """
 
     log.info(f"Fetching existing labels from {repo.full_name}")
-    existing_labels = {
-        label.name.casefold(): label for label in repo.get_labels()
-    }
+    existing_labels = {label.name.casefold(): label for label in repo.get_labels()}
     log.info(f"Found {len(existing_labels)} existing labels")
 
     for label in labels:
