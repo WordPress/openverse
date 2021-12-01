@@ -1,4 +1,4 @@
-exclude: Pipfile\.lock|migrations|\.idea
+exclude: Pipfile\.lock|migrations|\.idea|node_modules
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -20,7 +20,7 @@ repos:
         args:
           - --remove
       - id: pretty-format-json
-        exclude: package-lock\.json
+        exclude: package(-lock)?\.json
         args:
           - --autofix
       - id: requirements-txt-fixer
@@ -51,3 +51,18 @@ repos:
       - id: black
         args:
           - --safe
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.3.0
+    hooks:
+      - id: eslint
+        files: ^js/.*$
+        additional_dependencies:
+          - eslint@8.3.0
+          - eslint-config-prettier@8.3.0
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.5.0
+    hooks:
+      - id: prettier
+        files: ^js/.*$
