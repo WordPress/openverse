@@ -2,12 +2,12 @@ import logging
 from copy import deepcopy
 
 from github import Repository
-
 from models.label import Label
 from models.label_group import LabelGroup
 from shared.data import get_data
 from shared.github import get_client
 from shared.log import configure_logger
+
 
 log = logging.getLogger(__name__)
 

@@ -8,8 +8,8 @@ pygithub = "*"
 pyyaml = "*"
 
 [dev-packages]
-black = "*"
 ipython = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.9"

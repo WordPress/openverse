@@ -4,6 +4,7 @@ import typing
 
 from github import Github
 
+
 log = logging.getLogger(__name__)
 
 

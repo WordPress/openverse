@@ -4,6 +4,7 @@ from pathlib import Path
 
 import yaml
 
+
 log = logging.getLogger(__name__)
 
 CURR_FILE = Path(__file__).resolve()

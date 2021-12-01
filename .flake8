@@ -1,0 +1,6 @@
+[flake8]
+# match black formatter's behavior
+# https://www.flake8rules.com/rules/E203.html
+# https://www.flake8rules.com/rules/W503.html
+ignore = E203, W503
+max-line-length = 88
