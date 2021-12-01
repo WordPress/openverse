@@ -3,9 +3,7 @@ const fetch = require('node-fetch')
 const {
   compose,
   zipObj,
-  tap,
   mapAwait,
-  tapLog,
   prop,
   gte,
   map,
@@ -32,11 +30,11 @@ const repos = [
 
 // internals
 const API_ROOT = `https://api.github.com`
-const makeIssueUrl = owner => repo =>
+const makeIssueUrl = (owner) => (repo) =>
   `${API_ROOT}/repos/${owner}/${repo}/issues?state=closed&since=${date}&per_page=10000`
 const makeWpIssueUrl = makeIssueUrl('wordpress')
 // this key only has public repo access, i don't care about showing it
-const authFetch = url =>
+const authFetch = (url) =>
   fetch(url, {
     headers: {
       Authorization:
@@ -44,11 +42,11 @@ const authFetch = url =>
     },
   })
 const fetchRepoIssues = compose(authFetch, makeWpIssueUrl)
-const getJSON = i => i.json()
+const getJSON = (i) => i.json()
 const filterClosed = compose(gte(date), prop('closed_at'))
-const logRepo = repo =>
+const logRepo = (repo) =>
   console.log(`\n## [${repo}](https://github.com/wordpress/${repo}) \n`)
-const logIssue = issue =>
+const logIssue = (issue) =>
   console.log(`- [#${issue.number} ${issue.title}](${issue.html_url})`)
 
 // run it
