@@ -111,7 +111,7 @@ const postActivities = (activities) => {
             slug: `last-week-openverse-${startDate}-${endDate}`,
             excerpt: `The developments in Openverse between ${startDate} and ${endDate}`,
             content: report,
-            status: 'draft',
+            status: 'publish',
             tags: [
                 3, // openverse
                 5, // week-in-openverse

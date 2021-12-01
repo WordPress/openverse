@@ -1,14 +1,2 @@
-# macOS
-._*
-.DS_Store
-
-# Environments
-.env
-env/
-
-# Editor/IDE configs
-.idea/
-.vscode/
-
-# Node
-node_modules
+# Node.js
+node_modules/

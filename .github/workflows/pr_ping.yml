@@ -1,0 +1,30 @@
+name: New PR notification
+# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#new-pr-notification
+
+on:
+  pull_request_target:
+    types:
+    - opened
+
+jobs:
+  send_message:
+    name: Send message
+    if: |
+      github.actor != 'dependabot[bot]' &&
+      !startsWith(github.event.pull_request.title, '🔄')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Send Slack notification
+      run: |
+        curl \
+          $slack_url \
+          -X POST \
+          -H 'Content-Type: application/json' \
+          -d '{"text":"New PR by '"$pr_author"' in '"$pr_repo"': #'"$pr_number"' - '"$pr_title"'","blocks":[{"type":"section","text":{"type":"mrkdwn","text":":pull-request: New PR by *'"$pr_author"'* in `'"$pr_repo"'`:\n<'"$pr_url"'|#'"$pr_number"' - '"$pr_title"'>"}}]}'
+      env:
+        slack_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        pr_url: ${{ github.event.pull_request.html_url }}
+        pr_number: ${{ github.event.pull_request.number }}
+        pr_title: ${{ github.event.pull_request.title }}
+        pr_author: ${{ github.event.pull_request.user.login }}
+        pr_repo: ${{ github.event.pull_request.base.repo.full_name }}

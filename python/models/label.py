@@ -18,7 +18,7 @@ class Label:
         group: LabelGroup = None,
         color: str = None,
         has_emoji_name: bool = True,
-        **kwargs
+        **kwargs,
     ):
         self.name = kwargs["name"]
         self.description = kwargs["description"]
@@ -41,7 +41,7 @@ class Label:
         :return: the 6-digit hexadecimal code of the background color
         """
 
-        colors = get_data('labels.yml')['colors']
+        colors = get_data("labels.yml")["colors"]
 
         color = self.own_color
         if color is None and self.group is not None:
@@ -96,7 +96,7 @@ class Label:
             "description": self.description,
         }
 
-    def __eq__(self, remote: 'Label') -> bool:
+    def __eq__(self, remote: "Label") -> bool:
         """
         Compare this instance with the corresponding PyGithub instance to
         determine whether the two are equal.
@@ -113,7 +113,7 @@ class Label:
             ]
         )
 
-    def __ne__(self, remote: 'Label') -> bool:
+    def __ne__(self, remote: "Label") -> bool:
         """
         Compare this instance with the corresponding PyGithub instance to
         determine whether the two are unequal and would need to be reconciled.

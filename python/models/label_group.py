@@ -7,7 +7,13 @@ class LabelGroup:
     - is_required, which determines if >=1 sub-label must be applied on issues
     """
 
-    def __init__(self, color=None, is_prefixed=True, is_required=False, **kwargs):
+    def __init__(
+        self,
+        color=None,
+        is_prefixed=True,
+        is_required=False,
+        **kwargs,
+    ):
         self.name = kwargs["name"]
         self.color = color
         self.is_prefixed = is_prefixed

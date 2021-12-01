@@ -1,10 +1,7 @@
 import logging
 
-from github import (
-    Organization,
-    Project,
-    ProjectColumn,
-)
+from github import Organization, Project, ProjectColumn
+
 
 log = logging.getLogger(__name__)
 
@@ -24,7 +21,7 @@ def get_org_project(org: Organization, proj_number: int) -> Project:
     project = next(proj for proj in projects if proj.number == proj_number)
     if project is None:
         log.error(f"No project was found with number {proj_number}.")
-        raise ValueError(f"Project not found")
+        raise ValueError("Project not found")
     return project
 
 
@@ -43,5 +40,5 @@ def get_project_column(proj: Project, col_name: str) -> ProjectColumn:
     column = next(col for col in columns if col.name == col_name)
     if column is None:
         log.error(f"No column was found with name {col_name}.")
-        raise ValueError(f"Column not found")
+        raise ValueError("Column not found")
     return column
