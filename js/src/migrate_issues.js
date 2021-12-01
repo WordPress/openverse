@@ -1,5 +1,6 @@
-import { Octokit } from '@octokit/rest'
-import fs from 'fs'
+const fs = require('fs')
+
+const { Octokit } = require('@octokit/rest')
 
 // TODO: add auth token
 const octokit = new Octokit({
@@ -8,11 +9,11 @@ const octokit = new Octokit({
 })
 
 async function getTargetIssues(previousOwner, targetLabel, repos) {
-  const parseComments = comments => {
+  const parseComments = (comments) => {
     if (comments.length === 0) {
       return []
     }
-    return comments.map(comment => {
+    return comments.map((comment) => {
       // Add a `>` symbol at the beginning of a new line
       // in comments to make them look like a quote
       comment.body
@@ -29,11 +30,11 @@ async function getTargetIssues(previousOwner, targetLabel, repos) {
 
   function parseIssues(issues) {
     return issues
-      .filter(issue =>
-        issue.labels.map(label => label.name).includes(targetLabel)
+      .filter((issue) =>
+        issue.labels.map((label) => label.name).includes(targetLabel)
       )
-      .map(issue => {
-        const labelNames = issue.labels.map(label => label.name)
+      .map((issue) => {
+        const labelNames = issue.labels.map((label) => label.name)
         const repoNameParts = issue.repository_url.split('/')
         const repoName = repoNameParts[repoNameParts.length - 1]
         return {
@@ -53,7 +54,7 @@ async function getTargetIssues(previousOwner, targetLabel, repos) {
 
   const addIssueComments = async (issuesToProcess, previousOwner) => {
     return await Promise.all(
-      issuesToProcess.map(async issue => {
+      issuesToProcess.map(async (issue) => {
         let issueComments
         try {
           issueComments = await octokit.rest.issues.listComments({
@@ -99,8 +100,8 @@ async function transferIssues(REPOS, previousOwner, newOwner, targetLabel) {
     ? JSON.parse(fs.readFileSync('issues.json', 'utf-8'))
     : await getTargetIssues(previousOwner, targetLabel, REPOS)
 
-  repos.forEach(repo => {
-    repo.issues.forEach(async issue => {
+  repos.forEach((repo) => {
+    repo.issues.forEach(async (issue) => {
       const issueMeta = `${issue.migrationNotice}\n\`\`\`\n${[
         issue.author,
         issue.date,
@@ -149,4 +150,5 @@ const LABEL = '🙅 status: discontinued'
 // The issues will be transferred from `OLD_ORG` organization to the `NEW_ORG` organization
 const OLD_ORG = 'creativecommons'
 const NEW_ORG = 'Automattic'
-await transferIssues(REPOS, OLD_ORG, NEW_ORG, LABEL)
+
+transferIssues(REPOS, OLD_ORG, NEW_ORG, LABEL)
