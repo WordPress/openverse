@@ -70,8 +70,6 @@ const VCheckbox = defineComponent({
     },
     /**
      * Sets disabled property of the input and changes label opacity if set to true.
-     *
-     * @default false
      */
     disabled: {
       type: Boolean,

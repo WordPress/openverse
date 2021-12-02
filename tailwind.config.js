@@ -195,7 +195,7 @@ module.exports = {
       borderColor: ['checked', 'disabled'],
       margin: ['last'],
       opacity: ['disabled'],
-      ringColor: ['focus-visible'],
+      ringColor: ['focus', 'focus-visible'],
       ringOffsetWidth: ['focus-visible'],
       ringWidth: ['focus-visible'],
       borderWidth: ['focus', 'focus-within'],
