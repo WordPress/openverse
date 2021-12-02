@@ -167,6 +167,9 @@ export default {
     scss: ['./styles/utilities/all.scss'],
   },
   modules: ['@nuxtjs/sentry', '@nuxtjs/i18n', '@nuxtjs/sitemap'],
+  serverMiddleware: [
+    { path: '/healthcheck', handler: '~/server-middleware/healthcheck.js' },
+  ],
   i18n: {
     locales: [
       {
