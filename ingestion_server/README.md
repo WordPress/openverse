@@ -118,10 +118,12 @@ database_table_to_elasticsearch_model = {
 }
 ```
 
-## Deployment (last deployed version: 1.20.0)
+## Deployment (last deployed version: 1.4.0)
 
 This codebase is deployed as Docker image to Docker hub. The deployed image is then pulled in the production environment. See the [`./publish_release.sh`](publish_release.sh) script for deploying to Docker hub. The machine running the script must be logged into Docker as the Openverse account.
 
 The current Docker hub image is at [openverse/ingestion_server](https://hub.docker.com/r/openverse/ingestion_server) but the image previously lived at [creativecommons/ingestion_server](https://hub.docker.com/r/creativecommons/ingestion_server).
 
 The version numbering for the Docker image appears to be a standalone semver value, separate from the repository version.
+
+The published image can be deployed using the minimal [`docker-compose.yml`](docker-compose.yml) file defined in this folder (do not forget to update the `.env` file for production). The repository `justfile` can be used, but the environment variable `IS_PROD` must be set to `true` in order for it to reference the production `docker-compose.yml` file here.

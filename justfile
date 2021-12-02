@@ -20,7 +20,11 @@ default:
 # Docker #
 ##########
 
-DOCKER_FILE := "-f docker-compose.yml"
+IS_PROD := env_var_or_default("IS_PROD", "")
+DOCKER_FILE := "-f " + (
+    if IS_PROD == "true" {"ingestion_server/docker-compose.yml"}
+    else {"docker-compose.yml"}
+)
 
 # Bring all Docker services up
 up flags="":
