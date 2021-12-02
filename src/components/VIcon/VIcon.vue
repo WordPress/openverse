@@ -45,20 +45,23 @@ export default {
       default: 'icon',
     },
     /**
+     * The size of the icon based on tailwind values. Possible values:
+     * 4 - 1rem, 5 - 1.25rem, 6 - 1.5rem.
+     *
+     * @default 6
+     */
+    size: {
+      type: Number,
+      default: 6,
+      validator: (val) => [4, 5, 6].includes(val),
+    },
+    /**
      * whether to flip the icon for RTL languages; This generally makes sense
      * for directional icons such as those involving arrows.
      */
     rtlFlip: {
       type: Boolean,
       default: false,
-    },
-    /**
-     * the size of the icon in terms of the Tailwind height and width scale; The
-     * icon, being square, uses this for both dimensions.
-     */
-    size: {
-      type: Number,
-      default: 6,
     },
   },
 }
