@@ -199,7 +199,7 @@ export default VButton
 
 <style module>
 .button {
-  @apply flex items-center rounded-sm justify-center transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring no-underline appearance-none;
+  @apply flex items-center rounded-sm justify-center transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring no-underline appearance-none ring-offset-1;
 }
 
 .button[disabled='disabled'],
@@ -240,7 +240,7 @@ a.button {
 }
 
 .tertiary {
-  @apply bg-white text-black hover:bg-dark-charcoal hover:text-white border border-dark-charcoal-20 hover:border-tx focus-visible:ring-pink;
+  @apply bg-white text-black hover:bg-dark-charcoal hover:text-white border border-dark-charcoal-20 hover:border-tx focus-visible:ring-pink ring-offset-0;
 }
 
 .tertiary-pressed {
