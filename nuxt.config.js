@@ -173,9 +173,13 @@ export default {
   i18n: {
     locales: [
       {
+        // unique identifier for the locale in Vue i18n
         code: 'en',
         name: 'English',
+        // ISO code used for SEO purposes (html lang attribute)
         iso: 'en',
+        // wp_locale as found in GlotPress
+        wpLocale: 'en_US',
         file: 'en.json',
       },
       ...(locales ?? []),
