@@ -24,3 +24,4 @@ jobs:
         PR_LABELS: |
           🛠 goal: fix
           🤖 aspect: dx
+          🟧 priority: high
