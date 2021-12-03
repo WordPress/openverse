@@ -13,6 +13,7 @@ export function useMediaQuery(query, options = {}) {
   if (!window) return ref(false)
 
   const mediaQuery = window.matchMedia(query)
+  /** @type {import('@nuxtjs/composition-api').Ref<boolean>} */
   const matches = ref(mediaQuery.matches)
 
   const handler = (/** @type MediaQueryListEvent */ event) => {
@@ -35,4 +36,11 @@ export function useMediaQuery(query, options = {}) {
   })
 
   return matches
+}
+
+/**
+ * Check if the user prefers reduced motion or not.
+ */
+export function useReducedMotion(options = {}) {
+  return useMediaQuery('(prefers-reduced-motion: reduce)', options)
 }
