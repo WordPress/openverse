@@ -38,4 +38,4 @@ jobs:
           $slack_url \
           -X POST \
           -H 'Content-Type: application/json' \
-          -d '{"text":"New PR by '"$pr_author"' in '"$pr_repo"': #'"$pr_number"' - '"$pr_title"'","blocks":[{"type":"section","text":{"type":"mrkdwn","text":":pull-request: PR by *'"$pr_author"'* in `'"$pr_repo"'` marked ready for review:\n<'"$pr_url"'|#'"$pr_number"' - '"$pr_title"'>"}}]}'
+          -d '{"text":"PR by '"$pr_author"' in '"$pr_repo"' marked ready for review: #'"$pr_number"' - '"$pr_title"'","blocks":[{"type":"section","text":{"type":"mrkdwn","text":":pull-request: PR by *'"$pr_author"'* in `'"$pr_repo"'` marked ready for review:\n<'"$pr_url"'|#'"$pr_number"' - '"$pr_title"'>"}}]}'
