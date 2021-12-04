@@ -278,7 +278,7 @@ export const mutations = {
     let mediaToSet
     mediaToSet = media.map((item) => decodeMediaData(item))
     if (shouldPersistMedia) {
-      mediaToSet = _state.results[mediaType].items.concat(media)
+      mediaToSet = _state.results[mediaType].items.concat(mediaToSet)
     }
     _state.results[mediaType].items = mediaToSet
     _state.results[mediaType].count = mediaCount || 0
