@@ -80,3 +80,11 @@ channel. This ping is not sent for PRs made by Dependabot and downstream sync
 action.
 
 **PR:** opened
+
+### New discussion notification
+
+This workflow makes a `POST` request to the Slack webhook when a new
+discussion is created, sending a notification message to the
+`#openverse-notifications` channel.
+
+**Discussion:** created
