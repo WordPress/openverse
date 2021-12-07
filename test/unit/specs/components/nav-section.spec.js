@@ -3,13 +3,9 @@ import render from '../../test-utils/render'
 import { createLocalVue } from '@vue/test-utils'
 import NavSection from '~/components/NavSection'
 import { UPDATE_QUERY } from '~/constants/action-types'
+import { IMAGE } from '~/constants/media'
 
 describe('NavSection', () => {
-  it('should render correct contents', () => {
-    const wrapper = render(NavSection, { stubs: { NuxtLink: true } })
-    expect(wrapper.find('nav').vm).toBeDefined()
-  })
-
   it('dispatches an action when the form is submitted', async () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
@@ -18,6 +14,9 @@ describe('NavSection', () => {
       modules: {
         search: {
           namespaced: true,
+          state: {
+            query: { q: 'foo', mediaType: IMAGE },
+          },
           actions: {
             [UPDATE_QUERY]: dispatchMock,
           },
@@ -37,10 +36,9 @@ describe('NavSection', () => {
     }
 
     const wrapper = render(NavSection, options)
-    await wrapper.setData({ form: { searchTerm: 'foo' } })
     wrapper.find('.search-form').trigger('submit')
     expect(routerMock.push).toHaveBeenCalledWith({
-      path: '/search',
+      path: '/search/image',
       query: { q: 'foo' },
     })
     const dispatchArgs = dispatchMock.mock.calls[0][1]

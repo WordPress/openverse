@@ -139,13 +139,13 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import Dropdown from '~/components/Dropdown'
 import VIcon from '~/components/VIcon/VIcon.vue'
 
-import { UPDATE_QUERY } from '~/constants/action-types'
-import { SEARCH } from '~/constants/store-modules'
+import { FETCH_MEDIA, UPDATE_QUERY } from '~/constants/action-types'
+import { MEDIA, SEARCH } from '~/constants/store-modules'
 
 import OpenverseLogo from '~/assets/logo.svg?inline'
 import externalLinkIcon from '~/assets/icons/external-link.svg'
@@ -168,17 +168,24 @@ export default {
     externalLinkIcon,
   }),
   computed: {
+    ...mapState(SEARCH, ['query']),
     navSearchPlaceholder() {
       return this.$t('header.placeholder')
     },
   },
+  mounted() {
+    this.form.searchTerm = this.query.q
+  },
   methods: {
     ...mapActions(SEARCH, { setSearchTerm: UPDATE_QUERY }),
+    ...mapActions(MEDIA, { fetchMedia: FETCH_MEDIA }),
     onSubmit() {
       const q = this.form.searchTerm
+      const mediaType = this.query.mediaType
       this.setSearchTerm({ q })
+      this.fetchMedia({ q, mediaType })
       const newPath = this.localePath({
-        path: '/search',
+        path: `/search/${mediaType}`,
         query: { q },
       })
       this.$router.push(newPath)
