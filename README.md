@@ -14,7 +14,7 @@ The application is live at its previous home: [search.creativecommons.org](https
 
 ## Technology
 
-The frontend app is built using [Vue.js](https://vuejs.org/) and [Nuxt.js](https://nuxtjs.org). You can [learn more about the migration to Nuxt.js here](/CODEBASE.md).
+The frontend app is built using [Vue.js](https://vuejs.org/) and [Nuxt.js](https://nuxtjs.org).
 
 ## Local Development
 
