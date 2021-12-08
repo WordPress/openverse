@@ -1,6 +1,7 @@
 /* this implementation is from https://github.com/vueuse/vueuse/packages/core/useMediaQuery/
  which, in turn, is ported from https://github.com/logaretm/vue-use-web by Abdelrahman Awad */
 import { onBeforeUnmount, ref } from '@nuxtjs/composition-api'
+import { SCREEN_SIZES } from '~/constants/screens.js'
 
 /**
  * Reactive Media Query.
@@ -36,6 +37,16 @@ export function useMediaQuery(query, options = {}) {
   })
 
   return matches
+}
+
+/**
+ * Check whether the screen meets the current breakpoint size.
+ */
+export const isScreen = (breakpointName, options = {}) => {
+  return useMediaQuery(
+    `(min-width: ${SCREEN_SIZES.get(breakpointName)}px)`,
+    options
+  )
 }
 
 /**

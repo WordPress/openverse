@@ -12,6 +12,15 @@ import PlayPause from '~/components/AudioTrack/PlayPause'
   title="Components/Audio track/Play-pause toggle"
   components={PlayPause}
   argTypes={{
+    status: {
+      options: ['playing', 'paused', 'played'],
+      control: 'select',
+    },
+    size: {
+      defaultValue: 'medium',
+      options: ['tiny', 'small', 'medium', 'large'],
+      control: 'select',
+    },
     toggle: {
       action: 'toggle',
     },
@@ -31,20 +40,27 @@ export const Template = (args, { argTypes }) => ({
 <ArgsTable of={PlayPause} />
 
 It should be noted that the component emits the `toggle` event with the opposite
-value of its `status` state. The buttons don't have any dimensions so a pair
-of `h-*` and `w-*` classes are needed.
+value of its `status` state.
+
+## Size
+
+The button dimensions can be set by passing the
+`size` prop (see
+[`VIconButton` docs](?path=/docs/components-viconbutton--default-story)).
 
 <Canvas>
   <Story
     name="Default"
     args={{
       status: 'playing',
-      class: ['h-16', 'w-16'],
+      size: 'large',
     }}
   >
     {Template.bind({})}
   </Story>
 </Canvas>
+
+## Two-way binding
 
 The recommended way to use it is with `v-model` mapping to a `String` that can
 either be `'playing'`, `'paused'` or `'played'`.
@@ -56,7 +72,7 @@ be achieved by playing till the end of a track.
 export const vModelTemplate = () => ({
   template: `
     <div>
-      <PlayPause class="h-16 w-16" v-model="status" />
+      <PlayPause v-model="status" />
       {{ status }}
     </div>
   `,
@@ -72,15 +88,14 @@ export const vModelTemplate = () => ({
   <Story name="v-model">{vModelTemplate.bind({})}</Story>
 </Canvas>
 
-The component is a transparent wrapper over `<button>` so all attributes of the
-button element can be applied to it, e.g. `disabled`.
+The component is, indirectly, a transparent wrapper over `<button>` so all
+attributes of the button element can be applied to it, e.g. `disabled`.
 
 <Canvas>
   <Story
     name="Disabled"
     args={{
       disabled: true,
-      class: ['h-16', 'w-16'],
     }}
   >
     {Template.bind({})}

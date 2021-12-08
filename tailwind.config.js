@@ -1,3 +1,5 @@
+const { SCREEN_SIZES } = require('./src/constants/screens')
+
 module.exports = {
   purge: {
     content: ['src/**/*.{vue,js,jsx,ts,tsx,mdx}', './nuxt.config.js'],
@@ -10,6 +12,9 @@ module.exports = {
     safelist: ['w-4', 'w-5', 'w-6', 'h-4', 'h-5', 'h-6'],
   },
   theme: {
+    screens: Object.fromEntries(
+      Array.from(SCREEN_SIZES, ([name, width]) => [name, `${width}px`])
+    ),
     colors: {
       // Accents
       tomato: '#e23600',
@@ -189,6 +194,9 @@ module.exports = {
       scale: {
         '-100': '-1',
       },
+      boxShadow: {
+        ring: 'inset 0 0 0 1px white',
+      },
     },
   },
   variants: {
@@ -202,6 +210,7 @@ module.exports = {
       ringWidth: ['focus-visible'],
       borderWidth: ['focus', 'focus-within'],
       padding: ['focus', 'focus-within'],
+      boxShadow: ['focus', 'active'],
     },
   },
   plugins: [require('tailwindcss-rtl')],

@@ -2,7 +2,7 @@
   <div class="global-track flex flex-row w-full">
     <div class="flex-shrink-0">
       <AudioThumbnail :audio="audio" />
-      <slot name="play-pause" />
+      <slot name="play-pause" size="medium" />
     </div>
 
     <div class="relative flex-grow">
@@ -28,7 +28,6 @@ export default {
 </script>
 
 <style>
-.global-track .play-pause,
 .global-track .thumbnail {
   @apply h-14 w-14;
 }

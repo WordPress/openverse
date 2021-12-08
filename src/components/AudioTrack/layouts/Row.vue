@@ -6,7 +6,7 @@
     >
       <AudioThumbnail :audio="audio" />
       <div v-if="isSmall" class="absolute bottom-0 end-0">
-        <slot name="play-pause" />
+        <slot name="play-pause" size="tiny" />
       </div>
     </div>
 
@@ -70,7 +70,7 @@
           'flex-grow': isMedium,
         }"
       >
-        <slot name="play-pause" />
+        <slot name="play-pause" :size="isLarge ? 'medium' : 'large'" />
         <slot name="controller" />
       </div>
     </div>
@@ -131,16 +131,8 @@ export default {
   @apply rounded-te-sm rounded-be-sm;
 }
 
-.row-track.size-m .play-pause {
-  @apply h-20 w-20;
-}
-
 .row-track.size-m .waveform {
   @apply h-20;
-}
-
-.row-track.size-l .play-pause {
-  @apply h-14 w-14;
 }
 
 .row-track.size-l .waveform {

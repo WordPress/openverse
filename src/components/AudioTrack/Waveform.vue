@@ -1,7 +1,7 @@
 <template>
   <div
     ref="el"
-    class="waveform relative bg-dark-charcoal-06 overflow-hidden focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink"
+    class="waveform relative bg-dark-charcoal-06 border-1.5 border-tx focus:border-pink focus:outline-none focus:shadow-ring overflow-hidden"
     :style="{ '--unusable-height': `${Math.floor((1 - usableFrac) * 100)}%` }"
     tabIndex="0"
     role="slider"

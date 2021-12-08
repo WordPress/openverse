@@ -4,7 +4,7 @@
 
     <div class="flex flex-row justify-between items-top mx-16 my-6">
       <div class="left-content flex flex-row items-top gap-6">
-        <slot name="play-pause" />
+        <slot name="play-pause" size="medium" />
 
         <div class="audio-info">
           <h1 class="text-3xl font-heading font-semibold">{{ audio.title }}</h1>
@@ -108,6 +108,6 @@ export default {
 }
 
 .full-track .play-pause {
-  @apply h-14 w-14 rounded-sm;
+  @apply rounded-sm;
 }
 </style>

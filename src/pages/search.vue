@@ -34,10 +34,8 @@ import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import { MEDIA, SEARCH } from '~/constants/store-modules'
 import debounce from 'lodash.debounce'
 import SearchGridFilter from '~/components/Filters/SearchGridFilter.vue'
-import { useMediaQuery } from '~/composables/use-media-query.js'
+import { isScreen } from '~/composables/use-media-query.js'
 import AppModal from '~/components/AppModal'
-
-const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 768
 
 const BrowsePage = {
   name: 'browse-page',
@@ -47,12 +45,9 @@ const BrowsePage = {
   },
   setup() {
     const defaultWindow = typeof window !== 'undefined' ? window : undefined
-    const isLargeScreen = useMediaQuery(
-      `(min-width: ${MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT}px)`,
-      defaultWindow
-    )
+    const isMdScreen = isScreen('md', defaultWindow)
     return {
-      isLargeScreen,
+      isMdScreen,
     }
   },
   scrollToTop: false,
@@ -79,7 +74,7 @@ const BrowsePage = {
         ? local.get(process.env.filterStorageKey) === 'true'
         : true
     this.setFilterVisibility({
-      isFilterVisible: this.isLargeScreen && localFilterState(),
+      isFilterVisible: this.isMdScreen && localFilterState(),
     })
     window.addEventListener('scroll', this.debounceScrollHandling)
   },
@@ -103,10 +98,9 @@ const BrowsePage = {
     searchFilter() {
       return {
         classes: {
-          'column is-narrow grid-sidebar max-w-full bg-white': this
-            .isLargeScreen,
+          'column is-narrow grid-sidebar max-w-full bg-white': this.isMdScreen,
         },
-        as: this.isLargeScreen ? 'aside' : AppModal,
+        as: this.isMdScreen ? 'aside' : AppModal,
       }
     },
   },

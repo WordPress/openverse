@@ -24,6 +24,6 @@ describe('SearchBar', () => {
 
     expect(btnElement.tagName).toBe('BUTTON')
     expect(btnElement).toHaveAttribute('type', 'submit')
-    expect(btnElement.textContent.trim()).toEqual('search.search')
+    expect(btnElement).toHaveAttribute('aria-label', 'search.search')
   })
 })

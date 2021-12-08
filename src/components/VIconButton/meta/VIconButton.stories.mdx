@@ -1,0 +1,50 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import VIconButton from '~/components/VIconButton/VIconButton.vue'
+
+import replayIcon from '~/assets/icons/replay.svg'
+
+<Meta
+  title="Components/VIconButton"
+  component={VIconButton}
+  argTypes={{
+    size: {
+      defaultValue: 'medium',
+      options: ['tiny', 'small', 'search', 'medium', 'large'],
+      control: 'select',
+    },
+  }}
+/>
+
+export const Template = (args, { argTypes }) => ({
+  template: `
+    <VIconButton class="text-white bg-dark-charcoal border-dark-charcoal" v-bind="$props"/>
+  `,
+  components: { VIconButton },
+  props: Object.keys(argTypes),
+})
+
+# Icon Button
+
+<Description of={VIconButton} />
+
+<ArgsTable of={VIconButton} />
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      iconProps: {
+        iconPath: replayIcon,
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
