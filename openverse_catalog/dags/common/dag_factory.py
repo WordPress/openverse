@@ -1,8 +1,6 @@
 import logging
-from copy import deepcopy
 from datetime import datetime, timedelta
 
-import common.config as conf
 from airflow import DAG
 from airflow.models.baseoperator import cross_downstream
 from airflow.operators.dummy import DummyOperator
@@ -11,6 +9,16 @@ from airflow.utils.trigger_rule import TriggerRule
 
 
 logger = logging.getLogger(__name__)
+
+
+DAG_DEFAULT_ARGS = {
+    "owner": "data-eng-admin",
+    "depends_on_past": False,
+    "start_date": datetime(2019, 1, 15),
+    "email_on_retry": False,
+    "retries": 3,
+    "retry_delay": timedelta(minutes=15),
+}
 
 
 def get_dated_main_runner_operator(
@@ -32,7 +40,7 @@ def get_dated_main_runner_operator(
 def create_provider_api_workflow(
     dag_id,
     main_function,
-    default_args=conf.DAG_DEFAULT_ARGS,
+    default_args=None,
     start_date=datetime(1970, 1, 1),
     concurrency=1,
     schedule_string="@daily",
@@ -77,12 +85,10 @@ def create_provider_api_workflow(
     dagrun_timeout:   datetime.timedelta giving the total amount of time
                       a given dagrun may take.
     """
-    args = deepcopy(default_args)
-    args.update(start_date=start_date)
-    print(args)
+    default_args = default_args or DAG_DEFAULT_ARGS
     dag = DAG(
         dag_id=dag_id,
-        default_args=args,
+        default_args={**default_args, "start_date": start_date},
         concurrency=concurrency,
         max_active_runs=concurrency,
         dagrun_timeout=dagrun_timeout,
@@ -114,7 +120,7 @@ def create_day_partitioned_ingestion_dag(
     reingestion_day_list_list,
     start_date=datetime(1970, 1, 1),
     concurrency=1,
-    default_args=conf.DAG_DEFAULT_ARGS,
+    default_args=None,
     dagrun_timeout=timedelta(hours=23),
     ingestion_task_timeout=timedelta(hours=2),
 ):
@@ -191,11 +197,10 @@ def create_day_partitioned_ingestion_dag(
     executions of the `main_function` allowed; that is set by the
     `concurrency` parameter.
     """
-    args = deepcopy(default_args)
-    args.update(start_date=start_date)
+    default_args = default_args or DAG_DEFAULT_ARGS
     dag = DAG(
         dag_id=dag_id,
-        default_args=args,
+        default_args={**default_args, "start_date": start_date},
         concurrency=concurrency,
         max_active_runs=concurrency,
         dagrun_timeout=dagrun_timeout,
