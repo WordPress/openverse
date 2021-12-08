@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test')
 
 test('can change type and search for audio/modification from homepage', async ({
   page,
-  context,
+  baseURL,
 }) => {
   // Go to http://localhost:8444/
   await page.goto('/')
@@ -16,7 +16,6 @@ test('can change type and search for audio/modification from homepage', async ({
   await page.fill('[placeholder="Search all content"]', 'cat')
   // Click button:has-text("Search")
   await page.click('button:has-text("Search")')
-  const BASE_URL = context._options.baseURL
-  const expectedUrl = BASE_URL + '/search/audio?q=cat&license_type=modification'
+  const expectedUrl = baseURL + '/search/audio?q=cat&license_type=modification'
   await expect(page).toHaveURL(expectedUrl)
 })

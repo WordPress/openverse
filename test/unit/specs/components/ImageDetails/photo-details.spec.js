@@ -110,11 +110,6 @@ describe('PhotoDetails', () => {
     expect(wrapper.html()).toContain(props.image.title)
   })
 
-  // it('renders creator name', () => {
-  //   const wrapper = render(PhotoDetails, options)
-  //   expect(wrapper.html()).toContain(props.image.creator)
-  // })
-
   it('redirects back when clicking on the back to results link', async () => {
     const routerMock = {
       push: jest.fn(),

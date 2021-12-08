@@ -5,6 +5,7 @@ describe('SearchGridCell', () => {
   const props = {
     image: {
       id: 0,
+      license: 'by',
       title: 'foo',
       provider: 'flickr',
       url: 'foo.bar',

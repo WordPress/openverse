@@ -8,7 +8,7 @@
     <figure class="search-grid_item">
       <i :style="`padding-bottom:${iPadding}%`" />
       <NuxtLink
-        :to="localePath('/photos/' + image.id)"
+        :to="localePath('/image/' + image.id)"
         class="search-grid_image-ctr"
         :style="`width: ${imageWidth}%; top: ${imageTop}%; left:${imageLeft}%;`"
         @click="onGotoDetailPage($event, image)"

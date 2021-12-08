@@ -55,3 +55,13 @@ test('shows search result metadata', async ({ page }) => {
   // All search results have been shown, cannot load more
   await expect(loadMoreButton).toHaveCount(0)
 })
+
+test('navigates to the image detail page correctly', async ({ page }) => {
+  await page.goto('/search/image?q=honey')
+  const figure = page.locator('figure').first()
+  const imgTitle = await figure.locator('img').getAttribute('alt')
+  await figure.click()
+  await expect(page.locator('h1')).toHaveText(imgTitle)
+  // Renders the breadcrumb link
+  await expect(page.locator('text="Back to search results"')).toBeVisible()
+})
