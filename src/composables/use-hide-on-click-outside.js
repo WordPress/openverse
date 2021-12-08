@@ -4,19 +4,26 @@ import { useEventListenerOutside } from './use-event-listener-outside'
 
 /**
  * @typedef Props
- * @property {import('./types').Ref<HTMLElement>} popoverRef
- * @property {import('./types').ToRefs<import('../components/VPopover/VPopover.types').Props>} popoverPropsRefs
+ * @property {import('./types').Ref<HTMLElement>} dialogRef
+ * @property {import('./types').Ref<boolean>} visibleRef
+ * @property {import('./types').Ref<boolean>} hideOnClickOutsideRef
+ * @property {import('./types').Ref<HTMLElement>} triggerElementRef
+ * @property {import('./types').Ref<() => void>} hideRef
  */
 
 /**
  * @param {Props} props
  * @return {import('./types').Ref<EventTarget>}
  */
-function useMouseDownTargetRef({ popoverRef, popoverPropsRefs }) {
+function useMouseDownTargetRef({
+  dialogRef,
+  visibleRef,
+  hideOnClickOutsideRef,
+}) {
   const mouseDownTargetRef = ref()
 
   watch(
-    [popoverPropsRefs.visible, popoverPropsRefs.hideOnClickOutside, popoverRef],
+    [visibleRef, hideOnClickOutsideRef, dialogRef],
     /**
      * @param {[boolean, boolean, HTMLElement]} deps
      * @param {unknown} _
@@ -41,21 +48,26 @@ function useMouseDownTargetRef({ popoverRef, popoverPropsRefs }) {
 /**
  * @param {Props} props
  */
-export function useHideOnClickOutside({ popoverRef, popoverPropsRefs }) {
+export function useHideOnClickOutside({
+  dialogRef,
+  visibleRef,
+  hideOnClickOutsideRef,
+  triggerElementRef,
+  hideRef,
+}) {
   const mouseDownTargetRef = useMouseDownTargetRef({
-    popoverRef,
-    popoverPropsRefs,
+    dialogRef,
+    visibleRef,
+    hideOnClickOutsideRef,
   })
 
   const shouldListenRef = computed(
-    () =>
-      popoverPropsRefs.visible.value &&
-      popoverPropsRefs.hideOnClickOutside.value
+    () => visibleRef.value && hideOnClickOutsideRef.value
   )
 
   useEventListenerOutside({
-    containerRef: popoverRef,
-    triggerRef: popoverPropsRefs.triggerElement,
+    containerRef: dialogRef,
+    triggerRef: triggerElementRef,
     eventType: 'click',
     listener: (event) => {
       if (mouseDownTargetRef.value === event.target) {
@@ -63,20 +75,20 @@ export function useHideOnClickOutside({ popoverRef, popoverPropsRefs }) {
         // triggered the mousedown event. This prevents the dialog from closing
         // by dragging the cursor (for example, selecting some text inside the
         // dialog and releasing the mouse outside of it).
-        popoverPropsRefs.hide.value()
+        hideRef.value()
       }
     },
     shouldListenRef,
   })
 
   useEventListenerOutside({
-    containerRef: popoverRef,
-    triggerRef: popoverPropsRefs.triggerElement,
+    containerRef: dialogRef,
+    triggerRef: triggerElementRef,
     eventType: 'focusin',
     listener: (event) => {
-      const document = getDocument(popoverRef.value)
+      const document = getDocument(dialogRef.value)
       if (event.target !== document) {
-        popoverPropsRefs.hide.value()
+        hideRef.value()
       }
     },
     shouldListenRef,

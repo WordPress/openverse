@@ -667,5 +667,8 @@
     },
     "download": "Download"
   },
-  "interpunct": "•"
+  "interpunct": "•",
+  "modal": {
+    "close": "Close"
+  }
 }

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-11-30T16:26:14+00:00\n"
+"POT-Creation-Date: 2021-12-02T15:06:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,6 +16,11 @@ msgstr ""
 #: src/components/AudioTrack/layouts/Full.vue:25
 msgctxt "interpunct"
 msgid "•"
+msgstr ""
+
+#: src/components/VModal/VModalContent.vue:19
+msgctxt "modal.close"
+msgid "Close"
 msgstr ""
 
 #: src/components/DownloadButton.vue:14
@@ -309,17 +314,17 @@ msgid "Back to search results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/ImageDetails/PhotoDetails.vue:59
+#: src/components/ImageDetails/PhotoDetails.vue:63
 msgctxt "photo-details.creator"
 msgid "by ###name###"
 msgstr ""
 
-#: src/components/ImageDetails/PhotoDetails.vue:150
+#: src/components/ImageDetails/PhotoDetails.vue:153
 msgctxt "photo-details.weblink"
 msgid "Go to image's website"
 msgstr ""
 
-#: src/components/ImageDetails/LegalDisclaimer.vue:4
+#: src/components/ImageDetails/PhotoDetails.vue:31
 msgctxt "photo-details.legal-disclaimer"
 msgid "Openverse aggregates data from publicly available repositories of open content. Openverse does not host the content and does not verify that the content is properly CC-licensed or that the attribution information is accurate or complete. Please follow the link to the source of the content to independently verify before reuse."
 msgstr ""
@@ -339,7 +344,7 @@ msgctxt "photo-details.aria.dmca"
 msgid "dmca form"
 msgstr ""
 
-#: src/components/ImageDetails/PhotoDetails.vue:52
+#: src/components/ImageDetails/PhotoDetails.vue:56
 msgctxt "photo-details.aria.details"
 msgid "image details"
 msgstr ""
@@ -361,7 +366,7 @@ msgid "###provider### form"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/ImageDetails/PhotoDetails.vue:69
+#: src/components/ImageDetails/PhotoDetails.vue:73
 msgctxt "photo-details.aria.creator-url"
 msgid "author ###creator###"
 msgstr ""
@@ -456,12 +461,12 @@ msgctxt "photo-details.content-report.dmca.aria-form"
 msgid "###provider### form"
 msgstr ""
 
-#: src/components/CopyButton.vue:10
+#: src/components/CopyButton.vue:9
 msgctxt "photo-details.copy.copy"
 msgid "Copy"
 msgstr ""
 
-#: src/components/CopyButton.vue:14
+#: src/components/CopyButton.vue:12
 msgctxt "photo-details.copy.copied"
 msgid "Copied!"
 msgstr ""
@@ -481,7 +486,7 @@ msgctxt "photo-details.survey.answer"
 msgid "by answering a few questions."
 msgstr ""
 
-#: src/components/ImageDetails/PhotoDetails.vue:103
+#: src/components/ImageDetails/PhotoDetails.vue:107
 msgctxt "photo-details.information.title"
 msgid "Information"
 msgstr ""
@@ -520,7 +525,7 @@ msgctxt "photo-details.information.pixels"
 msgid "pixels"
 msgstr ""
 
-#: src/components/ImageDetails/PhotoDetails.vue:92
+#: src/components/ImageDetails/PhotoDetails.vue:96
 msgctxt "photo-details.reuse.title"
 msgid "Reuse"
 msgstr ""
@@ -859,22 +864,22 @@ msgctxt "browse-page.search-rating.feedback-thanks"
 msgid "Thank you for the feedback!"
 msgstr ""
 
-#: src/components/Filters/FiltersList.vue:5
+#: src/components/Filters/SearchGridFilter.vue:12
 msgctxt "filter-list.filter-by"
 msgid "Filter results by"
 msgstr ""
 
-#: src/components/Filters/FiltersList.vue:14
+#: src/components/Filters/SearchGridFilter.vue:21
 msgctxt "filter-list.hide"
 msgid "Hide filters"
 msgstr ""
 
-#: src/components/Filters/FiltersList.vue:37
+#: src/components/Filters/SearchGridFilter.vue:45
 msgctxt "filter-list.clear"
 msgid "Clear filters"
 msgstr ""
 
-#: src/components/Filters/FiltersList.vue:43
+#: src/components/Filters/SearchGridFilter.vue:52
 msgctxt "filter-list.show"
 msgid "Show results"
 msgstr ""

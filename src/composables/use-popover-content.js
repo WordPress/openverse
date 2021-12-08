@@ -1,24 +1,32 @@
-import { useFocusOnShow } from '~/composables/use-focus-on-show'
-import { useFocusOnHide } from '~/composables/use-focus-on-hide'
-import { useHideOnClickOutside } from '~/composables/use-hide-on-click-outside'
-import { useFocusOnBlur } from '~/composables/use-focus-on-blur'
 import { usePopper } from '~/composables/use-popper'
+import { useDialogContent } from './use-dialog-content'
 
 /**
  * @typedef Props
  * @property {import('./types').Ref<HTMLElement>} popoverRef
  * @property {import('./types').ToRefs<import('../components/VPopover/VPopoverContent.types').Props>} popoverPropsRefs
+ * @property {import('@nuxtjs/composition-api').SetupContext['emit']} emit
  */
 
 /**
  * @param {Props} props
  */
-export function usePopoverContent(props) {
-  const focusOnBlur = useFocusOnBlur(props)
-  useFocusOnShow(props)
-  useFocusOnHide(props)
-  useHideOnClickOutside(props)
-  usePopper(props)
+export function usePopoverContent({ popoverRef, popoverPropsRefs, emit }) {
+  const { onKeyDown, onBlur } = useDialogContent({
+    dialogRef: popoverRef,
+    visibleRef: popoverPropsRefs.visible,
+    autoFocusOnShowRef: popoverPropsRefs.autoFocusOnShow,
+    autoFocusOnHideRef: popoverPropsRefs.autoFocusOnHide,
+    triggerElementRef: popoverPropsRefs.triggerElement,
+    hideOnClickOutsideRef: popoverPropsRefs.hideOnClickOutside,
+    hideRef: popoverPropsRefs.hide,
+    hideOnEscRef: popoverPropsRefs.hideOnEsc,
+    emit,
+  })
+  usePopper({
+    popoverRef,
+    popoverPropsRefs,
+  })
 
-  return { focusOnBlur }
+  return { onKeyDown, onBlur }
 }

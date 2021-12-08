@@ -7,31 +7,36 @@ export const noFocusableElementWarning =
 
 /**
  * @typedef Props
- * @property {import('./types').Ref<HTMLElement>} popoverRef
- * @property {import('./types').ToRefs<import('../components/VPopover/VPopover.types').Props>} popoverPropsRefs
+ * @property {import('./types').Ref<HTMLElement>} dialogRef
+ * @property {import('./types').Ref<boolean>} visibleRef
+ * @property {import('./types').Ref<boolean>} autoFocusOnShowRef
  */
 
 /**
  * @see https://github.com/reakit/reakit/blob/bce9b8a0e567983f61b5cc627f8dee9461986fab/packages/reakit/src/Dialog/__utils/useFocusOnShow.ts#L9
  * @param {Props} props
  */
-export const useFocusOnShow = ({ popoverRef, popoverPropsRefs }) => {
+export const useFocusOnShow = ({
+  dialogRef,
+  visibleRef,
+  autoFocusOnShowRef,
+}) => {
   watch(
-    [popoverRef, popoverPropsRefs.visible, popoverPropsRefs.autoFocusOnShow],
+    [dialogRef, visibleRef, autoFocusOnShowRef],
     /**
      * @param {[HTMLElement, boolean, boolean]} values
      */
-    ([popover, visible, autoFocusOnShow]) => {
-      if (!popover || !visible || !autoFocusOnShow) return
+    ([dialog, visible, autoFocusOnShow]) => {
+      if (!dialog || !visible || !autoFocusOnShow) return
 
-      const tabbable = getFirstTabbableIn(popover, true)
-      const isActive = () => hasFocusWithin(popover)
+      const tabbable = getFirstTabbableIn(dialog, true)
+      const isActive = () => hasFocusWithin(dialog)
 
       if (tabbable) {
         ensureFocus(tabbable, { preventScroll: true, isActive })
       } else {
-        ensureFocus(popover, { preventScroll: true, isActive })
-        if (popover.tabIndex === undefined || popover.tabIndex < 0) {
+        ensureFocus(dialog, { preventScroll: true, isActive })
+        if (dialog.tabIndex === undefined || dialog.tabIndex < 0) {
           warn(noFocusableElementWarning)
         }
       }

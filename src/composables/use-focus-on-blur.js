@@ -7,8 +7,8 @@ import { ref, watch } from '@nuxtjs/composition-api'
 
 /**
  * @typedef Props
- * @property {import('./types').Ref<HTMLElement>} popoverRef
- * @property {import('./types').ToRefs<import('../components/VPopover/VPopover.types').Props>} popoverPropsRefs
+ * @property {import('./types').Ref<HTMLElement>} dialogRef
+ * @property {import('./types').Ref<boolean>} visibleRef
  */
 
 /**
@@ -39,14 +39,14 @@ function useBlurTracker() {
 /**
  * @param {Props} props
  */
-export function useFocusOnBlur({ popoverRef, popoverPropsRefs }) {
+export function useFocusOnBlur({ dialogRef, visibleRef }) {
   const [blurredRef, scheduleFocus] = useBlurTracker()
 
   watch([blurredRef], ([blurred]) => {
-    if (!popoverPropsRefs.visible.value) return
+    if (!visibleRef.value) return
     if (!blurred) return
-    if (!isActualElement(getActiveElement(popoverRef.value))) {
-      popoverRef.value?.focus()
+    if (!isActualElement(getActiveElement(dialogRef.value))) {
+      dialogRef.value?.focus()
     }
   })
 
@@ -54,7 +54,7 @@ export function useFocusOnBlur({ popoverRef, popoverPropsRefs }) {
    * @param {FocusEvent} event
    */
   const onBlur = (event) => {
-    if (popoverPropsRefs.visible.value) return
+    if (visibleRef.value) return
     const nextActiveElement = getNextActiveElementOnBlur(event)
     if (!isActualElement(nextActiveElement)) {
       scheduleFocus()

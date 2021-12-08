@@ -46,32 +46,11 @@ export default defineComponent({
 
     const propsRefs = toRefs(props)
     const popoverRef = ref()
-    const { focusOnBlur } = usePopoverContent({
+    const { onKeyDown, onBlur } = usePopoverContent({
       popoverRef,
       popoverPropsRefs: propsRefs,
+      emit,
     })
-
-    /**
-     * @param {KeyboardEvent} event
-     */
-    const onKeyDown = (event) => {
-      emit('keydown', event)
-
-      if (event.defaultPrevented) return
-      if (event.key !== 'Escape') return
-      if (!propsRefs.hideOnEsc.value) return
-
-      event.stopPropagation()
-      propsRefs.hide.value()
-    }
-
-    /**
-     * @param {FocusEvent} event
-     */
-    const onBlur = (event) => {
-      emit('blur', event)
-      focusOnBlur(event)
-    }
 
     return { popoverRef, onKeyDown, onBlur }
   },

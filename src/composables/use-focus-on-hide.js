@@ -8,8 +8,10 @@ import {
 
 /**
  * @typedef Props
- * @property {import('./types').Ref<HTMLElement>} popoverRef
- * @property {import('./types').ToRefs<import('../components/VPopover/VPopover.types').Props>} popoverPropsRefs
+ * @property {import('./types').Ref<HTMLElement>} dialogRef
+ * @property {import('./types').Ref<HTMLElement>} triggerElementRef
+ * @property {import('./types').Ref<boolean>} visibleRef
+ * @property {import('./types').Ref<boolean>} autoFocusOnHideRef
  */
 
 /**
@@ -30,20 +32,20 @@ function hidByFocusingAnotherElement(popover) {
 /**
  * @param {Props} Props
  */
-export const useFocusOnHide = ({ popoverRef, popoverPropsRefs }) => {
+export const useFocusOnHide = ({
+  dialogRef,
+  triggerElementRef,
+  visibleRef,
+  autoFocusOnHideRef,
+}) => {
   watch(
-    [
-      popoverRef,
-      popoverPropsRefs.triggerElement,
-      popoverPropsRefs.visible,
-      popoverPropsRefs.autoFocusOnHide,
-    ],
+    [dialogRef, triggerElementRef, visibleRef, autoFocusOnHideRef],
     /**
      * @param {[HTMLElement, HTMLElement, boolean, boolean]} deps
      * @param {[unknown, unknown, boolean]} previousDeps
      */
     (
-      [popover, triggerElement, visible, autoFocusOnHide],
+      [dialog, triggerElement, visible, autoFocusOnHide],
       [, , previousVisible]
     ) => {
       const shouldFocus =
@@ -51,7 +53,7 @@ export const useFocusOnHide = ({ popoverRef, popoverPropsRefs }) => {
 
       if (!shouldFocus) return
 
-      if (hidByFocusingAnotherElement(popover)) return
+      if (hidByFocusingAnotherElement(dialog)) return
 
       ensureFocus(triggerElement)
     }

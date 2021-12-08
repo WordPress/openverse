@@ -8,7 +8,7 @@
     >
       {{ $t('browse-page.safer-browsing.title') }}
     </button>
-    <FocusTrap :active="true">
+    <FocusTrap :active="showForm">
       <div v-show="showForm" class="p-4 arrow-popup arrow-popup--anchor-right">
         <button
           class="button close-button is-text tiny float-right block text-light-gray"
