@@ -26,3 +26,9 @@ test('shows the main image with its title as alt text', async ({ page }) => {
 test('does not show back to search results breadcrumb', async ({ page }) => {
   await expect(page.locator('text="Back to search results"')).not.toBeVisible()
 })
+
+test('redirects from old /photos/:id route to /image/:id', async ({ page }) => {
+  const uuid = 'e9d97a98-621b-4ec2-bf70-f47a74380452'
+  await page.goto('photos/' + uuid)
+  await expect(page).toHaveURL('image/' + uuid)
+})

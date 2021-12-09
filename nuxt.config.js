@@ -166,7 +166,12 @@ export default {
   styleResources: {
     scss: ['./styles/utilities/all.scss'],
   },
-  modules: ['@nuxtjs/sentry', '@nuxtjs/i18n', '@nuxtjs/sitemap'],
+  modules: [
+    '@nuxtjs/i18n',
+    '@nuxtjs/redirect-module',
+    '@nuxtjs/sentry',
+    '@nuxtjs/sitemap',
+  ],
   serverMiddleware: [
     { path: '/healthcheck', handler: '~/server-middleware/healthcheck.js' },
   ],
@@ -202,6 +207,12 @@ export default {
     baseUrl: 'http://localhost:8443',
     vueI18n: '~/plugins/vue-i18n.js',
   },
+  /**
+   * Map the old route for /photos/_id page to /image/_id permanently to keep links working.
+   * See the redirect module for more info.
+   * {@link https://github.com/nuxt-community/redirect-module#usage}
+   */
+  redirect: [{ from: '^/photos/(.*)$', to: '/image/$1', statusCode: 301 }],
   sentry: {
     dsn:
       process.env.SENTRY_DSN ||

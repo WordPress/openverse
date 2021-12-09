@@ -93,6 +93,12 @@ You will need to fix any linting issues before committing. We recommend formatti
 
 All files and folders should be written in `kebab-case`, with the exception of Vue single file components. If it ends in `.vue`, please use `PascalCase`. This distinction makes our component files stand out clearly and is [recommended by the Vue community](https://vuejs.org/v2/style-guide/#Single-file-component-filename-casing-strongly-recommended).
 
+## Redirects
+
+| From         | To          | Status code | Setup level            |
+| ------------ | ----------- | ----------- | ---------------------- |
+| /photos/\_id | /image/\_id | 301         | Nuxt server middleware |
+
 ## Contributing
 
 Pull requests are welcome! Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community members on #openverse.
