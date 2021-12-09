@@ -7,8 +7,8 @@
     </div>
     <div class="px-6 pt-6">
       <AudioTrack
-        v-for="audio in results.items"
-        :key="audio.id"
+        v-for="(audio, index) in results.items"
+        :key="index"
         :audio="audio"
         :size="audioTrackSize"
         layout="row"
@@ -56,7 +56,7 @@ import { MEDIA, SEARCH } from '~/constants/store-modules'
 export default {
   name: 'AudioResultsList',
   async fetch() {
-    if (!this.results.items.length) {
+    if (!Object.keys(this.results.items).length) {
       await this.fetchMedia({
         ...this.query,
         mediaType: AUDIO,

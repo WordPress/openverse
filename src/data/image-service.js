@@ -1,6 +1,11 @@
 import ApiService from './api-service'
+import BaseMediaService from '~/data/base-media-service.js'
+
+import { IMAGE } from '~/constants/media'
 
 const ImageService = {
+  ...BaseMediaService(IMAGE),
+
   /**
    * Search for images by keyword.
    */

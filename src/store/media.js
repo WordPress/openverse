@@ -36,13 +36,13 @@ export const state = () => ({
       count: 0,
       page: undefined,
       pageCount: 0,
-      items: [],
+      items: {},
     },
     image: {
       count: 0,
       page: undefined,
       pageCount: 0,
-      items: [],
+      items: {},
     },
   },
   fetchingState: {
@@ -93,6 +93,10 @@ export const createActions = (services) => ({
       .search(queryParams)
       .then(({ data }) => {
         commit(FETCH_END_MEDIA, { mediaType })
+        return data
+      })
+      .then(services[mediaType].transformResults)
+      .then((data) => {
         const mediaCount = data.result_count
         commit(SET_MEDIA, {
           mediaType,
@@ -276,9 +280,10 @@ export const mutations = {
       shouldPersistMedia,
     } = params
     let mediaToSet
-    mediaToSet = media.map((item) => decodeMediaData(item))
     if (shouldPersistMedia) {
-      mediaToSet = _state.results[mediaType].items.concat(mediaToSet)
+      mediaToSet = { ..._state.results[mediaType].items, ...media }
+    } else {
+      mediaToSet = media
     }
     _state.results[mediaType].items = mediaToSet
     _state.results[mediaType].count = mediaCount || 0

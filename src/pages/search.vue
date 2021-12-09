@@ -52,7 +52,7 @@ const BrowsePage = {
   },
   scrollToTop: false,
   async fetch() {
-    if (this.mediaType !== VIDEO && this.results.items.length === 0) {
+    if (this.mediaType !== VIDEO && !Object.keys(this.results.items).length) {
       await this.fetchMedia({ mediaType: this.mediaType, q: this.query.q })
     }
   },
