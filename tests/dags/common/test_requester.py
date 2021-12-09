@@ -1,3 +1,4 @@
+import logging
 import time
 from unittest.mock import MagicMock, patch
 
@@ -25,14 +26,42 @@ def test_get_waits_before_getting(monkeypatch):
     assert time.time() - start >= delay
 
 
-def test_get_handles_exception(monkeypatch):
+def test_get_handles_exception(monkeypatch, caplog):
     def mock_requests_get(url, params, **kwargs):
         raise requests.exceptions.ReadTimeout("test timeout!")
 
-    monkeypatch.setattr(requester.requests, "get", mock_requests_get)
+    dq = requester.DelayedRequester(1)
+    monkeypatch.setattr(dq.session, "get", mock_requests_get)
+
+    with caplog.at_level(logging.WARNING):
+        dq.get("https://google.com/")
+        assert "Error with the request for URL: https://google.com/" in caplog.text
+
+
+@pytest.mark.parametrize(
+    "code, log_level, expected_message",
+    [
+        (500, logging.WARNING, "Unable to request URL"),
+        (401, logging.ERROR, "Authorization failed for URL"),
+    ],
+)
+def test_get_handles_failure_status_codes(
+    code, log_level, expected_message, monkeypatch, caplog
+):
+    url = "https://google.com/"
+    mock_response = MagicMock()
+    mock_response.status_code = code
+    mock_response.url = url
+
+    def mock_requests_get(url, params, **kwargs):
+        return mock_response
 
     dq = requester.DelayedRequester(1)
-    dq.get("https://google.com/")
+    monkeypatch.setattr(dq.session, "get", mock_requests_get)
+
+    with caplog.at_level(log_level):
+        dq.get(url)
+        assert f"{expected_message}: {url}" in caplog.text
 
 
 def test_get_response_json_retries_with_none_response():

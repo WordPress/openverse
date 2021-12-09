@@ -43,15 +43,16 @@ class DelayedRequester:
             response = self.session.get(url, params=params, **kwargs)
             if response.status_code == requests.codes.ok:
                 logger.info(f"Received response from url {response.url}")
-                return response
+            elif response.status_code == requests.codes.unauthorized:
+                logger.error(f"Authorization failed for URL: {response.url}")
             else:
                 logger.warning(
                     f"Unable to request URL: {response.url}.  "
                     f"Status code: {response.status_code}"
                 )
-                return response
+            return response
         except Exception as e:
-            logger.error(f"Error with the request for url: {url}.")
+            logger.error(f"Error with the request for URL: {url}.")
             logger.info(f"{type(e).__name__}: {e}")
             logger.info(f"Using query parameters {params}")
             logger.info(f'Using headers {kwargs.get("headers")}')
