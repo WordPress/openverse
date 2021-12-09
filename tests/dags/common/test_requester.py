@@ -10,20 +10,44 @@ from requests_oauthlib import OAuth2Session
 from tests.dags.conftest import FAKE_OAUTH_PROVIDER_NAME
 
 
-def test_get_waits_before_getting(monkeypatch):
-    delay = 0.2
+@patch("common.requester.time")
+@pytest.mark.parametrize(
+    "delay, last_request, time_value, expected_wait",
+    [
+        # No wait
+        (0, 0, 1, -1),
+        (0.2, 0, 1, -1),
+        # Some wait
+        (10, 0, 2, 8),
+        (100.01, 0, 0.01, 100.0),
+    ],
+)
+def test_delay_processing(mock_time, delay, last_request, time_value, expected_wait):
+    mock_time.time.return_value = time_value
+    dq = requester.DelayedRequester(delay)
+    dq._last_request = last_request
+    dq._delay_processing()
+    if expected_wait >= 0:
+        mock_time.sleep.assert_called_with(expected_wait)
+    else:
+        mock_time.sleep.assert_not_called()
 
+
+def test_get_delays_processing(monkeypatch):
     def mock_requests_get(url, params, **kwargs):
-        return requests.Response()
+        r = requests.Response()
+        r.status_code = 200
+        return r
 
     monkeypatch.setattr(requester.requests.Session, "get", mock_requests_get)
-    dq = requester.DelayedRequester(delay)
-    s = time.time()
-    dq.get("https://google.com")
-    print(time.time() - s)
+
+    delay = 2
+    dq = requester.DelayedRequester(delay=delay)
     start = time.time()
-    dq.get("https://google.com")
-    assert time.time() - start >= delay
+    dq.get("http://fake_url")
+    dq.get("http://fake_url")
+    end = time.time()
+    assert end - start >= delay
 
 
 def test_get_handles_exception(monkeypatch, caplog):
