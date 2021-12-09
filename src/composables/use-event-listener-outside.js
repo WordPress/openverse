@@ -32,12 +32,11 @@ export const useEventListenerOutside = ({
   const boundEventRef = ref()
 
   watch(
-    [containerRef, triggerRef, shouldListenRef],
-    /**
-     * @param {[HTMLElement, HTMLElement, boolean]} deps
-     * @param {unknown} _
-     * @param {(cb: () => void) => void} onInvalidate
-     */
+    /** @type {const} */ ([
+      containerRef,
+      triggerRef,
+      shouldListenRef || ref(false),
+    ]),
     ([container, trigger, shouldListen], _, onInvalidate) => {
       if (boundEventRef.value && !shouldListen) {
         const document = getDocument(container)
@@ -50,9 +49,9 @@ export const useEventListenerOutside = ({
        * @param {Event} event
        */
       const onEvent = (event) => {
-        if (!listener) return
+        if (!listener || !container || !(event.target instanceof Element))
+          return
         const target = event.target
-        if (!container) return
 
         // When an element is unmounted right after it receives focus, the focus
         // event is triggered after that, when the element isn't part of the

@@ -46,3 +46,6 @@ jobs:
       - name: lint & syntax check
         run: npm run lint
 
+      # run type checker
+      - name: typescript
+        run: npm run types

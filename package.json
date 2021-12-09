@@ -25,6 +25,7 @@
     "run-server": "cross-env ENABLE_AUDIO=true nuxt build && npm run start",
     "e2e:ci": "start-server-and-test run-server http://localhost:8443 test:e2e",
     "generate-e2e-tests": "playwright codegen localhost:8443/",
+    "types": "tsc --noEmit",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "format": "prettier --write .",
@@ -103,6 +104,7 @@
     "start-server-and-test": "^1.14.0",
     "tailwindcss": "^2.2.7",
     "tailwindcss-rtl": "^0.7.3",
+    "typescript": "^4.5.2",
     "vue-i18n-extract": "^2.0.0",
     "vue-jest": "^3.0.7"
   },

@@ -12,4 +12,4 @@ if [[ "$CHANGED" == *"$TRANSFILE"* ]] && [[ "$CHANGED" != *"$POTFILE"* ]]; then
 fi
 
 # Lint staged files
-npx lint-staged
+npx lint-staged && npm run types
