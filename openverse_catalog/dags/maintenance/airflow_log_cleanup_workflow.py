@@ -22,7 +22,7 @@ import jinja2
 from airflow.configuration import conf
 from airflow.models import DAG
 from airflow.operators.python import PythonOperator
-from common import log_cleanup
+from common import log_cleanup, slack
 
 
 logging.basicConfig(
@@ -48,6 +48,7 @@ DAG_DEFAULT_ARGS = {
     "email_on_retry": False,
     "retries": 2,
     "retry_delay": timedelta(minutes=1),
+    "on_failure_callback": slack.on_failure_callback,
 }
 
 

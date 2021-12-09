@@ -12,6 +12,7 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
+from common import slack
 from common.popularity import operators
 
 
@@ -35,6 +36,7 @@ DAG_DEFAULT_ARGS = {
     "email_on_retry": False,
     "retries": 2,
     "retry_delay": timedelta(seconds=3600),
+    "on_failure_callback": slack.on_failure_callback,
 }
 
 

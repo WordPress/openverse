@@ -10,6 +10,7 @@ from datetime import datetime
 import oauth2
 from airflow.models import DAG
 from airflow.operators.python import PythonOperator
+from common import slack
 
 
 dag = DAG(
@@ -24,6 +25,7 @@ dag = DAG(
         "start_date": datetime(2021, 1, 1),
         "email_on_retry": False,
         "retries": 0,
+        "on_failure_callback": slack.on_failure_callback,
     },
     tags=["oauth"],
 )

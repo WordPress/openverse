@@ -53,6 +53,7 @@ from textwrap import dedent as d
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
+from common import slack
 from common.loader import loader, paths, sql
 
 
@@ -76,6 +77,7 @@ dag = DAG(
         "email_on_retry": False,
         "retries": 2,
         "retry_delay": timedelta(seconds=15),
+        "on_failure_callback": slack.on_failure_callback,
     },
     concurrency=CONCURRENCY,
     max_active_runs=1,

@@ -6,6 +6,7 @@ from airflow.models.baseoperator import cross_downstream
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
+from common import slack
 
 
 logger = logging.getLogger(__name__)
@@ -18,6 +19,7 @@ DAG_DEFAULT_ARGS = {
     "email_on_retry": False,
     "retries": 3,
     "retry_delay": timedelta(minutes=15),
+    "on_failure_callback": slack.on_failure_callback,
 }
 
 

@@ -42,15 +42,20 @@ More information can be found here: https://app.slack.com/block-kit-builder.
 """
 
 import json
+import logging
+import textwrap
 from os.path import basename
 from typing import Any, Callable, Optional
 
+from airflow.exceptions import AirflowNotFoundException
+from airflow.models import Variable
 from airflow.providers.http.hooks.http import HttpHook
 from requests import Response
 
 
 SLACK_CONN_ID = "slack"
 JsonDict = dict[str, Any]
+log = logging.getLogger(__name__)
 
 
 class SlackMessage:
@@ -213,3 +218,51 @@ def send_message(
     s = SlackMessage(username, icon_emoji, http_conn_id=http_conn_id)
     s.add_text(text, plain_text=not markdown)
     s.send(text)
+
+
+def on_failure_callback(context: dict) -> None:
+    """
+    Send an alert out regarding a failure to Slack.
+    Errors are only sent out in production and if a Slack connection is defined.
+    """
+    # Exit early if no slack connection exists
+    hook = HttpHook(http_conn_id=SLACK_CONN_ID)
+    try:
+        hook.get_conn()
+    except AirflowNotFoundException:
+        return
+
+    # Exit early if we aren't on production or if force alert is not set
+    environment = Variable.get("environment", default_var="dev")
+    force_alert = Variable.get(
+        "force_slack_alert", default_var=False, deserialize_json=True
+    )
+    if not (environment == "prod" or force_alert):
+        return
+
+    # Get relevant info
+    ti = context["task_instance"]
+    execution_date = context["execution_date"]
+    exception: Optional[Exception] = context.get("exception")
+    exception_message = ""
+
+    if exception:
+        # Forgo the alert on upstream failures
+        if "Upstream task(s) failed" in exception.args:
+            log.info("Forgoing Slack alert due to upstream failures")
+            return
+        exception_message = f"""
+*Exception*: {exception}
+*Exception Type*: `{exception.__class__.__module__}.{exception.__class__.__name__}`
+"""
+
+    message = textwrap.dedent(
+        f"""
+    *DAG*: `{ti.dag_id}`
+    *Task*: `{ti.task_id}`
+    *Execution Date*: {execution_date.strftime('%Y-%m-%dT%H:%M:%SZ')}
+    *Log*: {ti.log_url}
+    {exception_message}
+    """
+    )
+    send_message(message, username="Airflow DAG Failure")

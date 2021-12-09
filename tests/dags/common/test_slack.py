@@ -1,16 +1,18 @@
+from datetime import datetime
 from unittest import mock
 
 import pytest
-from common.slack import SlackMessage, send_message
+from airflow.exceptions import AirflowNotFoundException
+from common.slack import SlackMessage, on_failure_callback, send_message
 
 
 _FAKE_IMAGE = "http://image.com/img.jpg"
 
 
 @pytest.fixture(autouse=True)
-def http_hook_mock():
+def http_hook_mock() -> mock.MagicMock:
     with mock.patch("common.slack.HttpHook") as HttpHookMock:
-        yield HttpHookMock
+        yield HttpHookMock.return_value
 
 
 @pytest.mark.parametrize(
@@ -237,7 +239,7 @@ def test_send_no_context(http_hook_mock):
     s = SlackMessage()
     s.blocks = [1, 2, 3]
     s.send()
-    http_hook_mock.return_value.run.assert_called_with(
+    http_hook_mock.run.assert_called_with(
         endpoint=None,
         data='{"username": "Airflow", "unfurl_links": true, "unfurl_media": true, '
         '"icon_emoji": ":airflow:", "blocks": [1, 2, 3], '
@@ -253,7 +255,7 @@ def test_send_with_context(http_hook_mock):
     s.blocks = [1, 2, 3]
     s.add_context("Sample context")
     s.send()
-    http_hook_mock.return_value.run.assert_called_with(
+    http_hook_mock.run.assert_called_with(
         endpoint=None,
         data='{"username": "Airflow", "unfurl_links": true, "unfurl_media": true, '
         '"icon_emoji": ":airflow:", "blocks": [1, 2, 3, {"type": "context", '
@@ -267,18 +269,19 @@ def test_send_with_context(http_hook_mock):
 
 def test_send_fails(http_hook_mock):
     s = SlackMessage()
+    error_message = "Some fake error"
     # Cause an exception within the raise_for_status call
-    http_hook_mock.return_value.run.return_value.raise_for_status.side_effect = (
-        Exception("HTTP Error 666")
+    http_hook_mock.run.return_value.raise_for_status.side_effect = Exception(
+        error_message
     )
     s.add_text("Sample message")
-    with pytest.raises(Exception, match="HTTP Error 666"):
+    with pytest.raises(Exception, match=error_message):
         s.send()
 
 
 def test_send_message(http_hook_mock):
     send_message("Sample text", username="DifferentUser")
-    http_hook_mock.return_value.run.assert_called_with(
+    http_hook_mock.run.assert_called_with(
         endpoint=None,
         data='{"username": "DifferentUser", "unfurl_links": true, "unfurl_media": true,'
         ' "icon_emoji": ":airflow:", "blocks": [{"type": "section", "text": '
@@ -286,3 +289,50 @@ def test_send_message(http_hook_mock):
         headers={"Content-type": "application/json"},
         extra_options={"verify": True},
     )
+
+
+@pytest.mark.parametrize(
+    "exception, environment, force_slack_alert, call_expected",
+    [
+        # Message with exception
+        (ValueError("Whoops!"), "dev", False, False),
+        (ValueError("Whoops!"), "dev", True, True),
+        (ValueError("Whoops!"), "prod", False, True),
+        (ValueError("Whoops!"), "prod", True, True),
+        # Message without exception
+        (None, "dev", False, False),
+        (None, "dev", True, True),
+        (None, "prod", False, True),
+        (None, "prod", True, True),
+        # Exception with upstream failure message should never run
+        (ValueError("Upstream task(s) failed"), "dev", False, False),
+        (ValueError("Upstream task(s) failed"), "dev", True, False),
+        (ValueError("Upstream task(s) failed"), "prod", False, False),
+        (ValueError("Upstream task(s) failed"), "prod", True, False),
+    ],
+)
+def test_on_failure_callback(
+    exception, environment, force_slack_alert, call_expected, http_hook_mock
+):
+    context = {
+        "task_instance": mock.Mock(),
+        "execution_date": datetime.now(),
+        "exception": exception,
+    }
+    with mock.patch("common.slack.Variable") as MockVariable:
+        run_mock = http_hook_mock.run
+        # Mock the calls to Variable.get, in order
+        MockVariable.get.side_effect = [environment, force_slack_alert]
+        on_failure_callback(context)
+        assert run_mock.called == call_expected
+        if call_expected:
+            # Check that an exception message is present only if one is provided
+            assert bool(exception) ^ (
+                "Exception" not in run_mock.call_args.kwargs["data"]
+            )
+
+
+def test_on_failure_callback_does_nothing_without_hook(http_hook_mock):
+    http_hook_mock.get_conn.side_effect = AirflowNotFoundException("nope")
+    on_failure_callback({})
+    http_hook_mock.run.assert_not_called()

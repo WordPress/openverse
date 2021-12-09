@@ -26,6 +26,7 @@ If it is not `export`ed for the session, `IS_PROD=true` will need to be prepende
    - **(Required)**
       - `AIRFLOW__CORE__SQL_ALCHEMY_CONN` (using the password created above)
       - `AIRFLOW__CORE__HIDE_SENSITIVE_VAR_CONN_FIELDS`
+      - `AIRFLOW_VAR_ENVIRONMENT` (set to `prod`)
       - `AIRFLOW_CONN_AWS_DEFAULT`
       - `AIRFLOW_CONN_POSTGRES_OPENLEDGER_UPSTREAM`
       - `AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING`
