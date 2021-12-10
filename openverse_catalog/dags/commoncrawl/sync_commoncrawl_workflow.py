@@ -28,49 +28,6 @@ CRAWL_OUTPUT_DIR = os.path.join(
 )
 
 
-def get_creator_operator():
-    return PythonOperator(
-        task_id="create_tsv_directory",
-        python_callable=os.makedirs,
-        op_args=[CRAWL_OUTPUT_DIR],
-        op_kwargs={"exist_ok": True},
-        depends_on_past=False,
-    )
-
-
-def get_syncer_operator():
-    return BashOperator(
-        task_id="sync_commoncrawl_workflow",
-        bash_command=(
-            f"python {airflowHome}/dags/" "commoncrawl_s3_syncer/SyncImageProviders.py"
-        ),
-        env={
-            "S3_BUCKET": os.environ["S3_BUCKET"],
-            "OUTPUT_DIR": CRAWL_OUTPUT_DIR,
-            "AWS_ACCESS_KEY": os.environ["AWS_ACCESS_KEY"],
-            "AWS_SECRET_KEY": os.environ["AWS_SECRET_KEY"],
-        },
-    )
-
-
-def get_cleaner_operator():
-    return PythonOperator(
-        task_id="clean_commoncrawl_tsvs",
-        python_callable=clean_tsv_directory,
-        op_args=[CRAWL_OUTPUT_DIR],
-        depends_on_past=False,
-    )
-
-
-def get_deleter_operator():
-    return PythonOperator(
-        task_id="empty_tsv_directory",
-        python_callable=_empty_tsv_dir,
-        op_args=[CRAWL_OUTPUT_DIR],
-        depends_on_past=False,
-    )
-
-
 def _empty_tsv_dir(tsv_directory):
     for tsv in os.listdir(tsv_directory):
         os.remove(os.path.join(tsv_directory, tsv))
@@ -87,10 +44,37 @@ def create_dag():
     )
 
     with dag:
-        create_dir_task = get_creator_operator()
-        sync_tsvs_task = get_syncer_operator()
-        clean_tsvs_task = get_cleaner_operator()
-        empty_dir_task = get_deleter_operator()
+        create_dir_task = PythonOperator(
+            task_id="create_tsv_directory",
+            python_callable=os.makedirs,
+            op_args=[CRAWL_OUTPUT_DIR],
+            op_kwargs={"exist_ok": True},
+            depends_on_past=False,
+        )
+        sync_tsvs_task = BashOperator(
+            task_id="sync_commoncrawl_workflow",
+            bash_command=(
+                f"python {airflowHome}/dags/commoncrawl_s3_syncer/SyncImageProviders.py"
+            ),
+            env={
+                "S3_BUCKET": os.environ["S3_BUCKET"],
+                "OUTPUT_DIR": CRAWL_OUTPUT_DIR,
+                "AWS_ACCESS_KEY": os.environ["AWS_ACCESS_KEY"],
+                "AWS_SECRET_KEY": os.environ["AWS_SECRET_KEY"],
+            },
+        )
+        clean_tsvs_task = PythonOperator(
+            task_id="clean_commoncrawl_tsvs",
+            python_callable=clean_tsv_directory,
+            op_args=[CRAWL_OUTPUT_DIR],
+            depends_on_past=False,
+        )
+        empty_dir_task = PythonOperator(
+            task_id="empty_tsv_directory",
+            python_callable=_empty_tsv_dir,
+            op_args=[CRAWL_OUTPUT_DIR],
+            depends_on_past=False,
+        )
 
         (create_dir_task >> sync_tsvs_task >> clean_tsvs_task >> empty_dir_task)
 

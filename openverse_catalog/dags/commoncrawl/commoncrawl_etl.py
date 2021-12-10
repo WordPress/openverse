@@ -2,7 +2,18 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from common.etl import operators
+from airflow.operators.python import PythonOperator
+from airflow.providers.amazon.aws.operators.emr_create_job_flow import (
+    EmrCreateJobFlowOperator,
+)
+from airflow.providers.amazon.aws.operators.emr_terminate_job_flow import (
+    EmrTerminateJobFlowOperator,
+)
+from airflow.providers.amazon.aws.sensors.emr_job_flow import EmrJobFlowSensor
+from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
+from airflow.providers.amazon.aws.sensors.s3_prefix import S3PrefixSensor
+from airflow.utils.trigger_rule import TriggerRule
+from commoncrawl.commoncrawl_utils import get_load_s3_task_id, load_file_to_s3
 
 
 FILE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -30,6 +41,7 @@ DAG_DEFAULT_ARGS = {
     "retry_delay": timedelta(minutes=60),
 }
 
+CC_INDEX_TEMPLATE = "CC-MAIN-{{ execution_date.strftime('%Y-%V') }}"
 JOB_FLOW_OVERRIDES = {
     "Applications": [{"Name": "hive"}, {"Name": "spark"}, {"Name": "pig"}],
     "BootstrapActions": [
@@ -129,7 +141,9 @@ JOB_FLOW_OVERRIDES = {
                     "--master",
                     "yarn",
                     EXTRACT_SCRIPT_S3,
-                    "--default",
+                    # This was "--default" previously but a task within the DAG
+                    # modified it on DAG parse time to be this value.
+                    CC_INDEX_TEMPLATE,
                 ],
                 "Jar": "command-runner.jar",
             },
@@ -159,41 +173,68 @@ with DAG(
     catchup=False,
     tags=["commoncrawl"],
 ) as dag:
-    check_for_cc_index = operators.get_check_cc_index_in_s3_sensor(
-        AWS_CONN_ID,
+    check_for_cc_index = S3PrefixSensor(
+        task_id="check_for_cc_index",
+        retries=0,
+        aws_conn_id=AWS_CONN_ID,
+        bucket_name="commoncrawl",
+        prefix=f"crawl-data/{CC_INDEX_TEMPLATE}",
+        poke_interval=60,
+        timeout=60 * 60 * 24 * 3,
+        soft_fail=True,
+        mode="reschedule",
     )
 
-    check_for_wat_file = operators.get_check_wat_file_in_s3_sensor(
-        AWS_CONN_ID,
+    check_for_wat_file = S3KeySensor(
+        task_id="check_for_wat_file",
+        retries=0,
+        aws_conn_id=AWS_CONN_ID,
+        bucket_name="commoncrawl",
+        bucket_key=f"crawl-data/{CC_INDEX_TEMPLATE}/wat.paths.gz",
+        poke_interval=60,
+        timeout=60 * 60 * 24 * 3,
+        soft_fail=True,
+        mode="reschedule",
     )
 
-    cluster_bootstrap_loader = operators.get_load_to_s3_operator(
-        CONFIG_SH_LOCAL,
-        CONFIG_SH_KEY,
-        BUCKET_V2,
-        AWS_CONN_ID,
+    cluster_bootstrap_loader = PythonOperator(
+        task_id=get_load_s3_task_id(CONFIG_SH_KEY),
+        python_callable=load_file_to_s3,
+        op_args=[CONFIG_SH_LOCAL, CONFIG_SH_KEY, BUCKET_V2, AWS_CONN_ID],
     )
 
-    extract_script_loader = operators.get_load_to_s3_operator(
-        EXTRACT_SCRIPT_LOCAL,
-        EXTRACT_SCRIPT_S3_KEY,
-        BUCKET_V2,
-        AWS_CONN_ID,
+    extract_script_loader = PythonOperator(
+        task_id=get_load_s3_task_id(EXTRACT_SCRIPT_S3_KEY),
+        python_callable=load_file_to_s3,
+        op_args=[
+            EXTRACT_SCRIPT_LOCAL,
+            EXTRACT_SCRIPT_S3_KEY,
+            BUCKET_V2,
+            AWS_CONN_ID,
+        ],
     )
 
-    job_flow_creator = operators.get_create_job_flow_operator(
-        RAW_PROCESS_JOB_FLOW_NAME, JOB_FLOW_OVERRIDES, AWS_CONN_ID, EMR_CONN_ID
+    job_flow_creator = EmrCreateJobFlowOperator(
+        task_id=f"create_{RAW_PROCESS_JOB_FLOW_NAME}",
+        job_flow_overrides=JOB_FLOW_OVERRIDES,
+        aws_conn_id=AWS_CONN_ID,
+        emr_conn_id=EMR_CONN_ID,
     )
 
-    job_sensor = operators.get_job_sensor(
-        60 * 60 * 7,
-        RAW_PROCESS_JOB_FLOW_NAME,
-        AWS_CONN_ID,
+    job_sensor = EmrJobFlowSensor(
+        task_id=f"check_{RAW_PROCESS_JOB_FLOW_NAME}",
+        timeout=60 * 60 * 7,
+        mode="reschedule",
+        retries=0,
+        job_flow_id=job_flow_creator.task_id,
+        aws_conn_id=AWS_CONN_ID,
     )
 
-    job_flow_terminator = operators.get_job_terminator(
-        RAW_PROCESS_JOB_FLOW_NAME,
-        AWS_CONN_ID,
+    job_flow_terminator = EmrTerminateJobFlowOperator(
+        task_id=f"terminate_{RAW_PROCESS_JOB_FLOW_NAME}",
+        job_flow_id=job_flow_creator.task_id,
+        aws_conn_id=AWS_CONN_ID,
+        trigger_rule=TriggerRule.ALL_DONE,
     )
 
     (

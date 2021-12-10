@@ -21,22 +21,7 @@ DAG_DEFAULT_ARGS = {
     "retry_delay": timedelta(minutes=15),
     "on_failure_callback": slack.on_failure_callback,
 }
-
-
-def get_dated_main_runner_operator(
-    main_function,
-    execution_timeout,
-    day_shift=0,
-    task_id="pull_image_data",
-):
-    args_str = f"{{{{ macros.ds_add(ds, -{day_shift}) }}}}"
-    return PythonOperator(
-        task_id=task_id,
-        python_callable=main_function,
-        op_args=[args_str],
-        execution_timeout=execution_timeout,
-        depends_on_past=False,
-    )
+DATE_RANGE_ARG_TEMPLATE = "{{ macros.ds_add(ds, -%s) }}"
 
 
 def create_provider_api_workflow(
@@ -103,8 +88,12 @@ def create_provider_api_workflow(
 
     with dag:
         if dated:
-            get_dated_main_runner_operator(
-                main_function, dagrun_timeout, day_shift=day_shift
+            PythonOperator(
+                task_id="pull_image_data",
+                python_callable=main_function,
+                op_args=[DATE_RANGE_ARG_TEMPLATE % day_shift],
+                execution_timeout=dagrun_timeout,
+                depends_on_past=False,
             )
         else:
             PythonOperator(
@@ -233,11 +222,12 @@ def _build_ingest_operator_list_list(
         reingestion_day_list_list = [[0]] + reingestion_day_list_list
     return [
         [
-            get_dated_main_runner_operator(
-                main_function,
-                ingestion_task_timeout,
-                day_shift=d,
+            PythonOperator(
                 task_id=f"ingest_{d}",
+                python_callable=main_function,
+                op_args=[DATE_RANGE_ARG_TEMPLATE % d],
+                execution_timeout=ingestion_task_timeout,
+                depends_on_past=False,
             )
             for d in L
         ]

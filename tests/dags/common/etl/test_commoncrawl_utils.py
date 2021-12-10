@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from common.etl import operators
+from commoncrawl import commoncrawl_utils
 
 
 def test_load_file_to_s3_uses_connection_id():
@@ -9,8 +9,8 @@ def test_load_file_to_s3_uses_connection_id():
     aws_conn_id = "test_conn_id"
     test_bucket_name = "test-bucket"
 
-    with patch.object(operators, "S3Hook") as mock_s3:
-        operators._load_file_to_s3(
+    with patch.object(commoncrawl_utils, "S3Hook") as mock_s3:
+        commoncrawl_utils.load_file_to_s3(
             local_file,
             remote_key,
             test_bucket_name,
@@ -25,8 +25,8 @@ def test_load_file_to_s3_loads_file():
     aws_conn_id = "test_conn_id"
     test_bucket_name = "test-bucket"
 
-    with patch.object(operators.S3Hook, "load_file") as mock_s3_load_file:
-        operators._load_file_to_s3(
+    with patch.object(commoncrawl_utils.S3Hook, "load_file") as mock_s3_load_file:
+        commoncrawl_utils.load_file_to_s3(
             local_file,
             remote_key,
             test_bucket_name,
@@ -38,11 +38,3 @@ def test_load_file_to_s3_loads_file():
         replace=True,
         bucket_name=test_bucket_name,
     )
-
-
-def test_get_task_return_value_template():
-    expect_template_string = (
-        "{{ task_instance.xcom_pull(task_ids='abc123', key='return_value') }}"
-    )
-    actual_string = operators._get_task_return_value_template("abc123")
-    assert actual_string == expect_template_string

@@ -1,5 +1,5 @@
 # Ignore all non-DAG files
-common
+common/
 commoncrawl/commoncrawl_scripts
 providers/provider_api_scripts
 retired
