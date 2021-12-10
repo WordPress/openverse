@@ -3,19 +3,12 @@ This file configures the Apache Airflow DAG to expire the outdated images
 in the image table by setting the removed_from_source column value to true
 """
 
-import logging
 import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
 from common.loader import operators, sql
 
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
-)
-
-logger = logging.getLogger(__name__)
 
 DAG_ID = "image_expiration_workflow"
 DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")

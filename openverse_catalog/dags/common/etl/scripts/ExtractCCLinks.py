@@ -24,13 +24,6 @@ from warcio.archiveiterator import ArchiveIterator
 
 
 class CCLinks:
-
-    logging.getLogger("ExtractCCLinks")
-    logging.basicConfig(
-        format="%(asctime)s: [%(levelname)s - ExtractCCLinks] =======> %(message)s",
-        level=logging.INFO,
-    )
-
     def __init__(self, _index, _ptn=2500):
         """
         CCLinks constructor: Validate the user-defined index based on Common Crawl's expected format.

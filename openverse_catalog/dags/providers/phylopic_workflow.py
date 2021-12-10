@@ -1,16 +1,9 @@
 # airflow DAG (necessary for Airflow to find this file)
-import logging
 from datetime import datetime
 
 from common.dag_factory import create_provider_api_workflow
 from providers.provider_api_scripts import phylopic
 
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
-)
-
-logger = logging.getLogger(__name__)
 
 DAG_ID = "phylopic_workflow"
 

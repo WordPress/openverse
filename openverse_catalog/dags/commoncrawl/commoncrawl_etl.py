@@ -1,16 +1,9 @@
-import logging
 import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
 from common.etl import operators
 
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
-    level=logging.INFO,
-)
-logger = logging.getLogger(__name__)
 
 FILE_DIR = os.path.abspath(os.path.dirname(__file__))
 CORE_INSTANCE_COUNT = 100

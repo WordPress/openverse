@@ -1,19 +1,11 @@
 # airflow DAG (necessary for Airflow to find this file)
 
-import logging
 from datetime import datetime, timedelta
 
 from common.dag_factory import create_day_partitioned_ingestion_dag
 from common.helpers import get_reingestion_day_list_list
 from providers.provider_api_scripts import europeana
 
-
-logging.basicConfig(
-    format="%(asctime)s: [%(levelname)s - DAG Loader] %(message)s", level=logging.DEBUG
-)
-
-
-logger = logging.getLogger(__name__)
 
 DAG_ID = "europeana_ingestion_workflow"
 START_DATE = datetime(2013, 11, 21)

@@ -6,10 +6,6 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Union
 
 
-logging.basicConfig(
-    format="%(asctime)s: [%(levelname)s - Log cleanup] %(message)s", level=logging.DEBUG
-)
-
 logger = logging.getLogger(__name__)
 
 MAX_LOG_AGE_IN_DAYS = 7

@@ -23,12 +23,6 @@ DELAY = 5.0  # seconds
 FILE = "thingiverse_{}.tsv".format(int(time.time()))
 
 
-logging.basicConfig(
-    format="%(asctime)s: [%(levelname)s - Thingiverse API] =======> %(message)s",
-    level=logging.INFO,
-)
-
-
 def requestBatchThings(_page):
 
     url = "https://api.thingiverse.com/newest?access_token={1}&per_page={2}&page={0}".format(

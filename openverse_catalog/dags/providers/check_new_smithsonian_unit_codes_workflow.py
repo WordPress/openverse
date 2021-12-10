@@ -4,19 +4,12 @@ smithsonian unit codes which are not seen in the SMITHSONIAN_SUB_PROVIDERS
 dictionary
 """
 
-import logging
 import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
 from common.loader import operators
 
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
-)
-
-logger = logging.getLogger(__name__)
 
 DAG_ID = "check_new_smithsonian_unit_codes_workflow"
 DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")

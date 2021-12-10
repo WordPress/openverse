@@ -1,6 +1,5 @@
 # flake8: noqa
 import argparse
-import logging
 import os
 import re
 
@@ -13,11 +12,6 @@ BUCKET = os.environ["S3_BUCKET"]
 PATH = os.environ["OUTPUT_DIR"]
 ACCESS_KEY = os.environ["AWS_ACCESS_KEY"]
 SECRET_KEY = os.environ["AWS_SECRET_KEY"]
-
-logging.basicConfig(
-    format="%(asctime)s: [%(levelname)s - Sync Common Crawl Image Providers] =======> %(message)s",
-    level=logging.INFO,
-)
 
 
 def getCrawlIndex(_param):

@@ -3,20 +3,12 @@ This file configures the Apache Airflow DAG to ingest NYPL data.
 
 We do this by running `provider_api_scripts.nypl.main`
 """
-import logging
-
 # airflow DAG (necessary for Airflow to find this file)
 from datetime import datetime, timedelta
 
 from common.dag_factory import create_provider_api_workflow
 from providers.provider_api_scripts import nypl
 
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
-)
-
-logger = logging.getLogger(__name__)
 
 DAG_ID = "nypl_workflow"
 START_DATE = datetime(2020, 1, 1)

@@ -15,7 +15,6 @@ This should all go on one line:
     maxLogAgeInDays:<INT> - Optional
     enableDelete:<BOOLEAN> - Optional
 """
-import logging
 from datetime import datetime, timedelta
 
 import jinja2
@@ -24,12 +23,6 @@ from airflow.models import DAG
 from airflow.operators.python import PythonOperator
 from common import log_cleanup, slack
 
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
-)
-
-logger = logging.getLogger(__name__)
 
 DAG_ID = "airflow_log_cleanup"
 BASE_LOG_FOLDER = conf.get("logging", "BASE_LOG_FOLDER").rstrip("/")

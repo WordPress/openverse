@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 from unittest.mock import MagicMock, patch
 
@@ -9,11 +8,6 @@ from providers.provider_api_scripts import flickr
 
 
 RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "resources/flickr")
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
-    level=logging.DEBUG,
-)
 
 
 def _get_resource_json(json_name):
