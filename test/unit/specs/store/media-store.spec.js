@@ -194,18 +194,12 @@ describe('Search Store', () => {
     beforeEach(() => {
       imageServiceMock = {
         search: jest.fn(() => Promise.resolve({ data: searchData })),
-        getProviderCollection: jest.fn(() =>
-          Promise.resolve({ data: searchData })
-        ),
         getMediaDetail: jest.fn(() =>
           Promise.resolve({ data: imageDetailData })
         ),
       }
       audioServiceMock = {
         search: jest.fn(() => Promise.resolve({ data: searchData })),
-        getProviderCollection: jest.fn(() =>
-          Promise.resolve({ data: searchData })
-        ),
         getMediaDetail: jest.fn(() =>
           Promise.resolve({ data: audioDetailData })
         ),

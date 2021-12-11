@@ -98,15 +98,24 @@
                 <TableSortIcon :active="sort.field === 'display_name'" />
               </span>
             </th>
-            <th>{{ $t('sources.providers.domain') }}</th>
             <th
               tabindex="0"
-              @click="sortTable('image_count')"
-              @keypress.enter="sortTable('image_count')"
+              @click="sortTable('source_url')"
+              @keypress.enter="sortTable('source_url')"
+            >
+              <span class="table-header-inner">
+                {{ $t('sources.providers.domain') }}
+                <TableSortIcon :active="sort.field === 'source_url'" />
+              </span>
+            </th>
+            <th
+              tabindex="0"
+              @click="sortTable('media_count')"
+              @keypress.enter="sortTable('media_count')"
             >
               <span class="table-header-inner">
                 {{ $t('sources.providers.item') }}
-                <TableSortIcon :active="sort.field === 'image_count'" />
+                <TableSortIcon :active="sort.field === 'media_count'" />
               </span>
             </th>
           </tr>
@@ -124,7 +133,7 @@
               </a>
             </td>
             <td class="number-cell font-semibold">
-              {{ getProviderImageCount(imageProvider.image_count) }}
+              {{ getProviderMediaCount(imageProvider.media_count || 0) }}
             </td>
           </tr>
         </tbody>
@@ -160,9 +169,10 @@ const SourcePage = {
   },
   methods: {
     /**
-     * @param {number} imageCount
+     * @param {number} mediaCount
+     * @return {string} Localized media count
      */
-    getProviderImageCount(imageCount) {
+    getProviderMediaCount(mediaCount = 0) {
       let locale = this.$i18n.locale
       if (ARABIC_NUMERAL_LOCALES.some((l) => locale.startsWith(l))) {
         // most sites with RTL language with numbers continue to use Western Arabic Numerals whereas `toLocaleString` will use Eastern Arabic Numerals for Arabic and Hebrew by default
@@ -170,7 +180,7 @@ const SourcePage = {
         // https://en.wikipedia.org/wiki/Decimal_separator#Countries_using_decimal_point
         locale = 'en-GB'
       }
-      return imageCount.toLocaleString(locale)
+      return mediaCount.toLocaleString(locale)
     },
     sortTable(field) {
       let direction = 'asc'

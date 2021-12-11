@@ -1,6 +1,4 @@
 import MediaProviderService from '~/data/media-provider-service'
-import previousImageProviders from '../data/existing-image-providers'
-import previousAudioProviders from '../data/existing-audio-providers'
 import { AUDIO, IMAGE } from '~/constants/media'
 import {
   FETCH_MEDIA_TYPE_PROVIDERS,
@@ -18,11 +16,6 @@ import { SEARCH } from '~/constants/store-modules'
 
 const AudioProviderService = MediaProviderService(AUDIO)
 const ImageProviderService = MediaProviderService(IMAGE)
-
-const existingProviders = {
-  [AUDIO]: previousAudioProviders,
-  [IMAGE]: previousImageProviders,
-}
 
 const sortProviders = (data) => {
   return data.sort((sourceObjectA, sourceObjectB) => {
@@ -61,9 +54,8 @@ export const createActions = (services) => ({
       })
       .catch((error) => {
         console.warn(
-          `Error getting ${mediaType} providers: ${error}.  Will use saved provider data instead `
+          `Error getting ${mediaType} providers: ${error}. Will use saved provider data instead.`
         )
-        sortedProviders = existingProviders[mediaType]
         commit(SET_PROVIDER_FETCH_ERROR, { mediaType, error: true })
       })
       .finally(() => {

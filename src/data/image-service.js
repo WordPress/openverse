@@ -13,10 +13,6 @@ const ImageService = {
     return ApiService.query('images', params)
   },
 
-  getProviderCollection(params) {
-    return ApiService.query('images', params)
-  },
-
   /**
    * Retrieve image details by Id number.
    * SSR-called
@@ -31,6 +27,12 @@ const ImageService = {
     return ApiService.get('images', params.id)
   },
 
+  /**
+   * Retrieve related media
+   * @param {object} params
+   * @param {string} params.id
+   * @return {Promise<{data: any}>}
+   */
   getRelatedMedia(params) {
     if (!params.id) {
       throw new Error(
@@ -38,7 +40,7 @@ const ImageService = {
       )
     }
 
-    return ApiService.get('recommendations/images', params.id)
+    return ApiService.get('images', `${params.id}/related`)
   },
 }
 

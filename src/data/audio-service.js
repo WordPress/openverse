@@ -20,11 +20,7 @@ const AudioService = {
       const data = JSON.parse(JSON.stringify(sampleAudioResponses.search))
       return Promise.resolve({ data })
     }
-    return ApiService.query('audios', params)
-  },
-
-  getProviderCollection(params) {
-    return ApiService.query('audios', params)
+    return ApiService.query('audio', params)
   },
 
   /**
@@ -43,12 +39,12 @@ const AudioService = {
 
     return config.dev
       ? Promise.resolve({ data: sampleAudioResponses.detail })
-      : ApiService.get('audios', params.id)
+      : ApiService.get('audio', params.id)
   },
 
   /**
    * Retrieve related media
-   * @param params
+   * @param {object} params
    * @param {string} params.id
    * @return {Promise<{data: any}>}
    */
@@ -58,9 +54,10 @@ const AudioService = {
         '[RWV] AudioService.getRelatedMedia() id parameter required to retrieve related audios.'
       )
     }
+
     return config.dev
       ? Promise.resolve({ data: sampleAudioResponses.related })
-      : ApiService.get('recommendations/audios', params.id)
+      : ApiService.get('audio', `${params.id}/related`)
   },
 }
 
