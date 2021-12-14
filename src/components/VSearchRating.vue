@@ -1,7 +1,7 @@
 <template>
-  <div class="caption font-semibold">
+  <div>
     <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-    <div v-if="status == 'NOT_SENT'">
+    <template v-if="status === 'NOT_SENT'">
       <span>{{ $t('browse-page.search-rating.content') }}</span>
       <button
         :aria-label="$t('browse-page.aria.relevance.yes')"
@@ -20,12 +20,12 @@
       >
         {{ $t('browse-page.search-rating.no') }}
       </button>
-    </div>
-    <div v-else-if="status == 'SENT'">
+    </template>
+    <template v-else-if="status === 'SENT'">
       <span class="thank-you">{{
         $t('browse-page.search-rating.feedback-thanks')
       }}</span>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -39,7 +39,7 @@ const Statuses = {
 }
 
 export default {
-  name: 'SearchRating',
+  name: 'VSearchRating',
   props: ['searchTerm'],
   data() {
     return {

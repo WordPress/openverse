@@ -150,10 +150,9 @@ export const legacySourceMap = {
       return {
         url: 'https://commons.wikimedia.org/w/index.php',
         query: {
-          sort: 'relevance',
-          search: `${search.q} filetype:audio`,
-          title: 'Special:Search',
-          'advancedSearch-current': '{"fields":{"filetype":"audio"}}',
+          search: `${search.q}`,
+          title: 'Special:MediaSearch',
+          type: 'audio',
         },
       }
     },
@@ -161,10 +160,9 @@ export const legacySourceMap = {
       return {
         url: 'https://commons.wikimedia.org/w/index.php',
         query: {
-          sort: 'relevance',
-          search: `${search.q} filetype:video`,
-          title: 'Special:Search',
-          'advancedSearch-current': '{"fields":{"filetype":"audio"}}',
+          search: `${search.q}`,
+          title: 'Special:MediaSearch',
+          type: 'video',
         },
       }
     },

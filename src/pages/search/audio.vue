@@ -1,25 +1,70 @@
-<!-- noresult is hardcoded since it does not yet support built-in audio search -->
 <template>
-  <div id="tab-audio" role="tabpanel" aria-labelledby="audio">
-    <AudioResultsList v-if="supported" @onLoadMoreAudios="onLoadMoreAudios" />
-    <MetaSearchForm type="audio" :noresult="false" :supported="supported" />
-  </div>
+  <section>
+    <template v-if="supported">
+      <AudioTrack
+        v-for="audio in mediaResults.items"
+        :key="audio.id"
+        class="px-6 mb-6"
+        :audio="audio"
+        :size="audioTrackSize"
+        layout="row"
+      />
+
+      <template v-if="isError" class="m-auto w-1/2 text-center pt-6">
+        <h5>{{ errorHeader }}</h5>
+        <p>{{ fetchState.fetchingError }}</p>
+      </template>
+      <LoadMoreButton
+        v-if="canLoadMore"
+        :is-error="isError"
+        :is-fetching="fetchState.isFetching"
+        :is-finished="fetchState.isFinished"
+        media-type="audio"
+        data-testid="load-more"
+        @onLoadMore="onLoadMore"
+      />
+    </template>
+  </section>
 </template>
 
 <script>
-export default {
+import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
+import { useLoadMore } from '~/composables/use-load-more'
+
+import AudioTrack from '~/components/AudioTrack/AudioTrack.vue'
+import LoadMoreButton from '~/components/ImageGrid/LoadMoreButton.vue'
+
+import { propTypes } from './search-page.types'
+
+const AudioSearch = defineComponent({
   name: 'AudioSearch',
-  data() {
+  components: {
+    AudioTrack,
+    LoadMoreButton,
+  },
+  props: propTypes,
+  setup(props) {
+    const { i18n } = useContext()
+
+    const audioTrackSize = computed(() => (props.isFilterVisible ? 'm' : 's'))
+
+    const isError = computed(() => !!props.fetchState.fetchingError)
+    const errorHeader = computed(() => {
+      const type = i18n.t('browse-page.search-form.audio')
+      return i18n.t('browse-page.fetching-error', { type })
+    })
+
+    const { canLoadMore, onLoadMore } = useLoadMore(props)
+
     return {
-      // Only show audio results if non-image results are supported
-      supported: process.env.enableAudio,
+      audioTrackSize,
+      isError,
+      errorHeader,
+
+      canLoadMore,
+      onLoadMore,
     }
   },
-  methods: {
-    onLoadMoreAudios(searchParams) {
-      if (!this.supported) return
-      this.$emit('onLoadMoreItems', searchParams)
-    },
-  },
-}
+})
+export default AudioSearch
 </script>

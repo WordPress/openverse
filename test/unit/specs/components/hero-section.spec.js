@@ -6,7 +6,7 @@ import clonedeep from 'lodash.clonedeep'
 import VueI18n from 'vue-i18n'
 import messages from '~/locales/en.json'
 import { IMAGE } from '~/constants/media'
-import HeroSection from '~/components/HeroSection'
+import VHeroSection from '~/components/VHeroSection'
 import VCheckbox from '~/components/VCheckbox'
 
 const i18n = new VueI18n({
@@ -15,7 +15,7 @@ const i18n = new VueI18n({
   messages: { en: messages },
 })
 
-describe('HeroSection', () => {
+describe('VHeroSection', () => {
   let options = {}
   let localVue
   let storeMock
@@ -53,12 +53,12 @@ describe('HeroSection', () => {
     }
   })
   it('should render correct contents', () => {
-    render(HeroSection, options)
+    render(VHeroSection, options)
     screen.getByRole('search')
   })
 
   it('should search when a query is entered', async () => {
-    render(HeroSection, options)
+    render(VHeroSection, options)
 
     const searchBox = screen.getByRole('searchbox')
     await fireEvent.update(searchBox, 'me')

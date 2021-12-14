@@ -44,7 +44,7 @@ import { mapActions } from 'vuex'
 import { SEARCH } from '~/constants/store-modules'
 
 export default {
-  name: 'SaferBrowsing',
+  name: 'VSaferBrowsing',
   components: {
     FocusTrap,
   },

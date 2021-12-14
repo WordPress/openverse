@@ -19,32 +19,31 @@ test.beforeEach(async ({ context }) => {
   )
 })
 
-// TODO(obulat): Fix the search metadata before search
-//  This test currently passes, although everything should be the opposite
 test('does not show an error message before search', async ({ page }) => {
   await page.goto('/search')
 
   // The search meta data under the search input, should not be shown if no
   // media had been fetched
-  await expect(page.locator('span:has-text("No image results")')).toHaveCount(1)
+  await expect(page.locator('text=No image results')).not.toBeVisible()
 
   // Load more button, should not be shown if the `q` parameter is not set
   await expect(page.locator('button:has-text("Load more results")'))
 
   // There should be no error messages when no search has been done
   await expect(page.locator('[data-testid="search-grid"] h4')).toHaveCount(1)
-  await expect(page.locator('text=No image results for')).toHaveCount(1)
 })
 
 test('shows search result metadata', async ({ page }) => {
-  await page.goto('/search/image?source=rijksmuseum&q=cat')
+  await page.goto('/search/image?q=cat&source=rijksmuseum')
   await page.route('https://api.openverse.engineering/v1/images/**', (route) =>
     route.fulfill({ path: 'test/e2e/resources/last_page.json' })
   )
 
   // Expect results meta
-  // Flaky test. Is there a way to mock the first api result?
-  await expect(page.locator('text=41 image results')).toHaveCount(1)
+  // Flaky test. Is there a way to mock the first api result when loading on the server?
+  await expect(page.locator('.results-meta span.pe-6')).toContainText(
+    /image results/
+  )
   await expect(page.locator('text=Are these results relevant?')).toHaveCount(1)
 
   // Click load more button
@@ -52,6 +51,9 @@ test('shows search result metadata', async ({ page }) => {
   await expect(loadMoreButton).toHaveCount(1)
   await loadMoreButton.click()
 
+  // Click load more button
+  await expect(loadMoreButton).toHaveCount(1)
+  await loadMoreButton.click()
   // All search results have been shown, cannot load more
   await expect(loadMoreButton).toHaveCount(0)
 })
@@ -60,7 +62,8 @@ test('navigates to the image detail page correctly', async ({ page }) => {
   await page.goto('/search/image?q=honey')
   const figure = page.locator('figure').first()
   const imgTitle = await figure.locator('img').getAttribute('alt')
-  await figure.click()
+
+  await page.locator('figure a').first().click()
   await expect(page.locator('h1')).toHaveText(imgTitle)
   // Renders the breadcrumb link
   await expect(page.locator('text="Back to search results"')).toBeVisible()

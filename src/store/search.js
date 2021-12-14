@@ -242,8 +242,11 @@ export const getters = {
    * @return {import('./types').ApiQueryParams}
    */
   searchQueryParams: (state) => {
+    const params = {}
     // Ensure that q filter always comes first
-    const params = { q: state.query.q }
+    if (state.query.q.trim() !== '') {
+      params.q = state.query.q.trim()
+    }
     // Remove the mediaType parameter, and handle mature filter separately
     const filterKeys = Object.keys(state.query).filter(
       (key) => !['q', 'mediaType', 'mature'].includes(key)

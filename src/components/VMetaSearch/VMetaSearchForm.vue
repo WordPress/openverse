@@ -1,5 +1,5 @@
 <template>
-  <section :key="type" class="p-6 meta-search">
+  <section :key="type" class="p-6 meta-search text-center mt-12">
     <header class="mb-10">
       <i18n
         v-if="!noresult"
@@ -37,32 +37,31 @@
       </i18n>
     </header>
 
-    <MetaSourceList :type="type" :query="metaQuery" />
+    <VMetaSourceList :type="type" :query="metaQuery" />
 
-    <p class="caption font-semibold max-w-lg">
+    <p class="caption font-semibold max-w-3xl my-0 mx-auto">
       {{ $t('meta-search.caption') }}
     </p>
   </section>
 </template>
 
 <script>
-import MetaSourceList from './MetaSourceList'
 import { AUDIO, IMAGE, VIDEO } from '~/constants/media'
-import { mapState } from 'vuex'
-import { SEARCH } from '~/constants/store-modules'
+
+import VMetaSourceList from './VMetaSourceList.vue'
 
 export default {
-  name: 'MetaSearch',
+  name: 'VMetaSearch',
   components: {
-    MetaSourceList,
+    VMetaSourceList,
   },
   props: {
+    query: { type: Object, required: true },
     type: { type: String, required: true },
     supported: { type: Boolean, default: false },
     noresult: { type: Boolean, required: true },
   },
   computed: {
-    ...mapState(SEARCH, ['query']),
     unsupportedByUsefilter() {
       if (this.type === AUDIO) {
         return 'CC Mixter, Jamendo, or Wikimedia Commons'
@@ -87,15 +86,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.meta-search {
-  margin-top: 3rem;
-  text-align: center;
-}
-
-.max-w-lg {
-  max-width: 48rem;
-  margin: 0 auto;
-}
-</style>

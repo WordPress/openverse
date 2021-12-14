@@ -68,14 +68,19 @@
 </template>
 
 <script>
-import { UPDATE_QUERY, TOGGLE_FILTER } from '~/constants/action-types'
-import { SEARCH } from '~/constants/store-modules'
+import {
+  UPDATE_QUERY,
+  TOGGLE_FILTER,
+  FETCH_MEDIA,
+} from '~/constants/action-types'
+import { MEDIA, SEARCH } from '~/constants/store-modules'
 import { mapActions, mapGetters } from 'vuex'
-import HomeLicenseFilter from '~/components/HomeLicenseFilter'
-import SearchTypeToggle from '~/components/SearchTypeToggle'
+
+import HomeLicenseFilter from '~/components/HomeLicenseFilter.vue'
+import SearchTypeToggle from '~/components/SearchTypeToggle.vue'
 
 export default {
-  name: 'HeroSection',
+  name: 'VHeroSection',
   components: { HomeLicenseFilter, SearchTypeToggle },
   /**
    * @return {{ form: { searchTerm: string, searchType: 'image' | 'audio' }, showSearchType: boolean }}
@@ -98,6 +103,7 @@ export default {
       setSearchTerm: UPDATE_QUERY,
       checkFilter: TOGGLE_FILTER,
     }),
+    ...mapActions(MEDIA, { fetchMedia: FETCH_MEDIA }),
     getPath() {
       if (!process.env.enableAudio) return '/search/image'
       return `/search/${this.form.searchType}`
@@ -121,6 +127,8 @@ export default {
         newQuery.searchType = this.form.searchType
       }
       this.setSearchTerm(newQuery)
+      this.fetchMedia({})
+
       const newPath = this.localePath({
         path: this.getPath(),
         query: this.searchQueryParams,

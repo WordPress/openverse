@@ -9,7 +9,7 @@
     >
       <span>{{ buttonLabel }}</span>
     </button>
-    <LoadingIcon :should-show="isFetching" />
+    <LoadingIcon v-show="isFetching" />
   </div>
 </template>
 <script>
@@ -31,10 +31,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    mediaType: {
+      type: String,
+      default: 'image',
+    },
   },
   computed: {
     finishedLabel() {
-      const type = this.$t('browse-page.search-form.image')
+      const type = this.$t(`browse-page.search-form.${this.mediaType}`)
       return this.$t('browse-page.no-more', { type })
     },
     buttonLabel() {

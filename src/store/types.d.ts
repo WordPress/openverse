@@ -108,9 +108,10 @@ export interface Filters {
   mature: boolean
 }
 
-export interface FetchingState {
+export interface FetchState {
   isFetching: boolean
   fetchingError: null | string
+  isFinished?: boolean
 }
 
 export interface SearchState {
@@ -138,10 +139,16 @@ export interface MediaState {
     audio: MediaStoreResult
     image: MediaStoreResult
   }
-  fetchingState: {
-    audio: FetchingState
-    image: FetchingState
+  fetchState: {
+    audio: FetchState
+    image: FetchState
   }
   audio: Object | AudioDetail
   image: Object | ImageDetail
+}
+
+export interface MediaFetchState {
+  isFetching: boolean
+  fetchingError: string | null
+  isFinished?: boolean
 }

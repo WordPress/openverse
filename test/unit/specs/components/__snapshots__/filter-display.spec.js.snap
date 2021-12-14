@@ -3,7 +3,7 @@
 exports[`FilterDisplay should render correct contents 1`] = `
 <div
   aria-live="polite"
-  class="flex flex-wrap items-center p-4"
+  class="flex flex-wrap items-center px-6"
 >
   <span
     class="me-2 font-semibold mb-2"

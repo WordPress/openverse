@@ -22,7 +22,7 @@ import {
   SEND_RESULT_CLICKED_EVENT,
   SEND_SEARCH_QUERY_EVENT,
 } from '~/constants/usage-data-analytics-types'
-import { AUDIO, IMAGE } from '~/constants/media'
+import { AUDIO, IMAGE, VIDEO } from '~/constants/media'
 import { USAGE_DATA } from '~/constants/store-modules'
 import AudioService from '~/data/audio-service'
 import ImageService from '~/data/image-service'
@@ -45,14 +45,16 @@ export const state = () => ({
       items: {},
     },
   },
-  fetchingState: {
+  fetchState: {
     audio: {
       isFetching: false,
       fetchingError: null,
+      isFinished: false,
     },
     image: {
       isFetching: false,
       fetchingError: null,
+      isFinished: false,
     },
   },
   audio: {},
@@ -63,31 +65,37 @@ export const createActions = (services) => ({
   /**
    *
    * @param {import('vuex').ActionContext} context
-   * @param params
+   * @param {Object} payload
+   * @param {number} [payload.page] - API page to load.
+   * @param {boolean} [payload.shouldPersistMedia] - whether the existing media
+   * should be added to or replaced.
    * @return {Promise<void>}
    */
-  async [FETCH_MEDIA]({ commit, dispatch, rootState, rootGetters }, params) {
+  async [FETCH_MEDIA](
+    { commit, dispatch, rootState, rootGetters },
+    payload = {}
+  ) {
+    const { page = undefined, shouldPersistMedia = false } = payload
+
+    const queryParams = prepareSearchQueryParams({
+      ...rootGetters['search/searchQueryParams'],
+      ...payload,
+    })
+
     // does not send event if user is paginating for more results
-    const { page, mediaType, q } = params
-    const sessionId = rootState.user.usageSessionId
     if (!page) {
+      const sessionId = rootState.user.usageSessionId
       await dispatch(
         `${USAGE_DATA}/${SEND_SEARCH_QUERY_EVENT}`,
-        { query: q, sessionId },
+        { query: queryParams.q, sessionId },
         { root: true }
       )
     }
+    const mediaType = rootState.search.query.mediaType
 
     commit(FETCH_START_MEDIA, { mediaType })
-    if (!params.page) {
+    if (!page) {
       commit(RESET_MEDIA, { mediaType })
-    }
-    const queryParams = prepareSearchQueryParams({
-      ...rootGetters['search/searchQueryParams'],
-      ...params,
-    })
-    if (!Object.keys(services).includes(mediaType)) {
-      throw new Error(`Cannot fetch unknown media type "${mediaType}"`)
     }
     await services[mediaType]
       .search(queryParams)
@@ -103,7 +111,7 @@ export const createActions = (services) => ({
           media: data.results,
           mediaCount,
           pageCount: data.page_count,
-          shouldPersistMedia: params.shouldPersistMedia,
+          shouldPersistMedia,
           page: page,
         })
         dispatch(HANDLE_NO_MEDIA, { mediaType, mediaCount })
@@ -224,45 +232,56 @@ export const getters = {
    * @return {import('./types').MediaStoreResult}
    */
   results(state, getters, rootState) {
-    return state.results[rootState.search.query.mediaType]
+    return state.results[rootState.search.query.mediaType] || null
   },
   /**
    * Search fetching state for selected media type.
    * @param {import('./types').MediaState} state
    * @param getters
-   * @param rootState
-   * @returns {import('./types').FetchingState}
+   * @returns {import('./types').fetchState}
    */
-  fetchingState(state, getters, rootState) {
-    return state.fetchingState[rootState.search.query.mediaType]
+  fetchState(state, getters) {
+    return (
+      state.fetchState[getters.mediaType] || {
+        isFetching: false,
+        fetchError: false,
+        isFinished: true,
+      }
+    )
+  },
+  mediaType(state, getters, rootState) {
+    return rootState.search.query.mediaType
   },
   /**
-   * Returns true if all pages from the search result have been shown.
-   * @param {import('./types').MediaState} state
+   * Returns true for media types that are not supported in the API: video and currently audio.
+   *
+   * @param state
    * @param getters
    * @param rootState
    * @returns {boolean}
    */
-  isFinished(state, getters, rootState) {
+  unsupportedMediaType(state, getters, rootState) {
+    const mediaType = rootState.search.query.mediaType
     return (
-      state.results[rootState.search.query.mediaType].page >=
-      state.results[rootState.search.query.mediaType].pageCount
+      mediaType === VIDEO || (mediaType === AUDIO && !process.env.enableAudio)
     )
   },
 }
 
 export const mutations = {
   [FETCH_START_MEDIA](_state, { mediaType }) {
-    _state.fetchingState[mediaType].isFetching = true
-    _state.fetchingState[mediaType].fetchingError = null
+    _state.fetchState[mediaType].isFetching = true
+    _state.fetchState[mediaType].fetchingError = null
+    _state.fetchState[mediaType].isFinished = false
   },
   [FETCH_END_MEDIA](_state, { mediaType }) {
-    _state.fetchingState[mediaType].isFetching = false
+    _state.fetchState[mediaType].isFetching = false
   },
   [FETCH_MEDIA_ERROR](_state, params) {
     const { mediaType, errorMessage } = params
-    _state.fetchingState[mediaType].isFetching = false
-    _state.fetchingState[mediaType].fetchingError = errorMessage
+    _state.fetchState[mediaType].isFetching = false
+    _state.fetchState[mediaType].fetchingError = errorMessage
+    _state.fetchState[mediaType].isFinished = true
   },
   [SET_AUDIO](_state, params) {
     _state.audio = decodeMediaData(params.audio, AUDIO)
@@ -285,10 +304,12 @@ export const mutations = {
     } else {
       mediaToSet = media
     }
+    const mediaPage = page || 1
     _state.results[mediaType].items = mediaToSet
     _state.results[mediaType].count = mediaCount || 0
-    _state.results[mediaType].page = page || 1
+    _state.results[mediaType].page = mediaPage
     _state.results[mediaType].pageCount = pageCount
+    _state.fetchState[mediaType].isFinished = mediaPage >= pageCount
   },
   [MEDIA_NOT_FOUND](_state, params) {
     throw new Error(`Media of type ${params.mediaType} not found`)

@@ -2,7 +2,7 @@
   <section class="px-10 pb-16">
     <div
       v-if="isForTab == 'all'"
-      class="grid gap-4 tab:grid-cols-2 desk:grid-cols-5"
+      class="grid gap-4 tab:grid-cols-2 lg:grid-cols-5"
     >
       <VBone v-for="idx in numElems" :key="idx" class="square" />
     </div>

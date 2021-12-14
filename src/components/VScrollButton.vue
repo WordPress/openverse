@@ -1,7 +1,7 @@
 <template>
   <button
-    v-if="showBtn"
     :aria-label="$t('browse-page.aria.scroll')"
+    type="button"
     class="scroll text-white bg-trans-blue hover:bg-trans-blue-action transition-all duration-100 ease-linear fixed end-4 bottom-4 w-14 h-14 hover:shadow-md rounded-full text-center"
     @click="scrollToTop"
     @keyup.enter="scrollToTop"
@@ -20,12 +20,7 @@
 
 <script>
 export default {
-  name: 'ScrollButton',
-  props: {
-    showBtn: {
-      type: Boolean,
-    },
-  },
+  name: 'VScrollButton',
   methods: {
     scrollToTop() {
       window.scrollTo({

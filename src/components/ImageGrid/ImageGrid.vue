@@ -4,15 +4,15 @@
       <ImageCell v-for="(image, index) in images" :key="index" :image="image" />
     </div>
     <h5 v-if="isError" class="image-grid__notification py-4">
-      {{ errorMessageText }}
+      {{ fetchState.fetchingError }}
     </h5>
     <LoadMoreButton
       v-if="canLoadMore"
       :is-error="isError"
-      :is-fetching="isFetching"
-      :is-finished="isFinished"
+      :is-fetching="fetchState.isFetching"
+      :is-finished="fetchState.isFinished"
       data-testid="load-more"
-      @onLoadMore="onLoadMoreImages"
+      @onLoadMore="onLoadMore"
     />
   </section>
 </template>
@@ -39,26 +39,14 @@ export default {
       type: Boolean,
       default: true,
     },
-    isFetching: {
-      type: Boolean,
-      default: false,
-    },
-    fetchingError: {
-      default: null,
-    },
-    errorMessageText: {
-      type: String,
-      default: '',
-    },
-    isFinished: {
-      type: Boolean,
-      default: false,
+    fetchState: {
+      required: true,
     },
   },
 
   computed: {
     isError() {
-      return !!this.fetchingError
+      return !!this.fetchState.fetchingError
     },
     fetchingErrorHeading() {
       const type = this.$t('browse-page.search-form.image')
@@ -66,8 +54,8 @@ export default {
     },
   },
   methods: {
-    onLoadMoreImages() {
-      this.$emit('onLoadMoreImages')
+    onLoadMore() {
+      this.$emit('load-more')
     },
   },
 }

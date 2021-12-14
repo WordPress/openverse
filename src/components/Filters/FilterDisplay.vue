@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap items-center p-4" aria-live="polite">
+  <div class="flex flex-wrap items-center px-6" aria-live="polite">
     <span v-if="isAnyFilterApplied" class="me-2 font-semibold mb-2">
       {{ $t('filters.filter-by') }}
     </span>

@@ -1,26 +1,11 @@
-import ScrollButton from '~/components/ScrollButton'
-import render from '../../test-utils/render'
+import VScrollButton from '~/components/VScrollButton'
+import { render, screen } from '@testing-library/vue'
 
 describe('Scroll button', () => {
-  let props = null
-  let options = null
-
-  beforeEach(() => {
-    props = {
-      showBtn: false,
-    }
-    options = { propsData: props }
-  })
-
-  it('should not be rendered at first', () => {
-    const wrapper = render(ScrollButton, options)
-    expect(wrapper.find('button').vm).not.toBeDefined()
-  })
-
-  it('should be rendered when window scrolls further', () => {
-    options.propsData.showBtn = true
-    const scrollBtn = render(ScrollButton, options).find('button')
-    expect(scrollBtn).toBeDefined()
-    expect(scrollBtn.isVisible()).toBe(true)
+  it('should render a scroll button', () => {
+    const { container } = render(VScrollButton)
+    expect(screen.getByRole('button')).toBeTruthy()
+    expect(screen.getByLabelText(/scroll/i)).toBeTruthy()
+    expect(container.querySelectorAll('svg').length).toEqual(1)
   })
 })

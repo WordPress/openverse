@@ -9,9 +9,10 @@
     <ImageGrid
       :images="images"
       :can-load-more="false"
-      :is-fetching="$fetchState.pending"
-      :fetching-error="$fetchState.error"
-      :error-message-text="null"
+      :fetch-state="{
+        isFetching: $fetchState.pending,
+        fetchingError: $fetchState.error,
+      }"
     />
   </aside>
 </template>
