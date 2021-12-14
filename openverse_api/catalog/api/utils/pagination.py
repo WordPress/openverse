@@ -22,7 +22,7 @@ class StandardPagination(PageNumberPagination):
 
     @page_size.setter
     def page_size(self, value):
-        if value is None:
+        if value is None or not str(value).isnumeric():
             return
         value = int(value)  # convert str params to int
         if value <= 0 or value > 500:
@@ -36,7 +36,7 @@ class StandardPagination(PageNumberPagination):
 
     @page.setter
     def page(self, value):
-        if value is None:
+        if value is None or not str(value).isnumeric():
             value = 1
         value = int(value)  # convert str params to int
         if value <= 0:
