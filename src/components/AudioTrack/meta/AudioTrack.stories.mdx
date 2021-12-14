@@ -18,8 +18,8 @@ import wavWaveform from './wav-waveform.json'
   component={AudioTrack}
   argTypes={{
     format: {
-      defaultValue: 'ogg',
-      options: ['ogg', 'mp3', 'flac', 'wav'],
+      defaultValue: 'mp3',
+      options: ['mp3', 'ogg', 'flac', 'wav'],
       control: 'select',
     },
     layout: {
@@ -29,12 +29,7 @@ import wavWaveform from './wav-waveform.json'
     },
     size: {
       defaultValue: 'm',
-      options: ['s', 'm', 'l', 'xl'],
-      control: 'select',
-    },
-    aspect: {
-      defaultValue: 'regular',
-      options: ['regular', 'wide'],
+      options: ['s', 'm', 'l'],
       control: 'select',
     },
     audio: {
@@ -46,7 +41,7 @@ import wavWaveform from './wav-waveform.json'
 export const commonAttrs = () => ({
   id: Math.floor(Math.random() * 1e9),
   creator: 'Wolfgang Amadeus Mozart',
-  creatorUrl: 'https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart',
+  creator_url: 'https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart',
   category: 'music',
   thumbnail:
     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Croce-Mozart-Detail.jpg/370px-Croce-Mozart-Detail.jpg',
@@ -114,42 +109,46 @@ export const Template = (args, { argTypes }) => ({
 ## Layouts
 
 The component can be rendered in a multiple different layouts, by
-specifying a `layout`. The layout can further be customised by the `size` and
-`aspect` props.
+specifying a `layout`. The layout can further be customised by the `size` prop.
 
 ### Full (default)
 
+#### Size M (default)
+
 <Canvas>
-  <Story name="Full">{Template.bind({})}</Story>
+  <Story
+    name="Full (medium)"
+    args={
+      {
+        // layout: 'full', (default)
+        // size: 'm', (default)
+      }
+    }
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+#### Size S (mobile)
+
+<Canvas>
+  <Story
+    name="Full (small)"
+    args={{
+      // layout: 'full', (default)
+      size: 's',
+    }}
+    parameters={{
+      viewport: { defaultViewport: 'mob' },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
 </Canvas>
 
 ### Row
 
-**Sizes:** S (small) and M (medium) and L (large)
-
-<Canvas>
-  <Story
-    name="Row (small)"
-    args={{
-      layout: 'row',
-      size: 's',
-    }}
-  >
-    {Template.bind({})}
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story
-    name="Row (medium)"
-    args={{
-      layout: 'row',
-      size: 'm',
-    }}
-  >
-    {Template.bind({})}
-  </Story>
-</Canvas>
+#### Size L
 
 <Canvas>
   <Story
@@ -163,13 +162,95 @@ specifying a `layout`. The layout can further be customised by the `size` and
   </Story>
 </Canvas>
 
-### Global
+#### Size M (default)
+
+<Canvas>
+  <Story
+    name="Row (medium)"
+    args={{
+      layout: 'row',
+      // size: 'm', (default)
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+#### Size S (mobile)
+
+<Canvas>
+  <Story
+    name="Row (small)"
+    args={{
+      layout: 'row',
+      size: 's',
+    }}
+    parameters={{
+      viewport: { defaultViewport: 'mob' },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Box
+
+#### Sizes L and M (default)
+
+Box sizes L and M are identical with the only difference being the `width`
+dimension.
+
+<Canvas>
+  <Story
+    name="Box (large)"
+    args={{
+      layout: 'box',
+      size: 'l',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Box (medium)"
+    args={{
+      layout: 'box',
+      // size: 'm', (default)
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+#### Size S (mobile)
+
+<Canvas>
+  <Story
+    name="Box (small)"
+    args={{
+      layout: 'box',
+      size: 's',
+    }}
+    parameters={{
+      viewport: { defaultViewport: 'mob' },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Global (mobile exclusive)
+
+This version of the player is affixed to the bottom of the screen and retained
+across pages when navigating.
 
 <Canvas>
   <Story
     name="Global"
     args={{
       layout: 'global',
+    }}
+    parameters={{
+      viewport: { defaultViewport: 'mob' },
     }}
   >
     {Template.bind({})}

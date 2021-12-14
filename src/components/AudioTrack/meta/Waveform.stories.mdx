@@ -47,7 +47,7 @@ Here 9 points are upsampled to as many as required to fill the viewport.
       peaks: [0.5, 1, 0.5, 0, 0.5, 1, 0.5, 0, 0.5], // triangular wave with 9 points
       currentTime: 2,
       duration: 10,
-      showDuration: true,
+      features: ['timestamps', 'duration'],
     }}
   >
     {Template.bind({})}
@@ -68,7 +68,28 @@ Here 1000 points are downsampled to as many as required to fill the viewport.
       ), // sine wave with 1000 points
       currentTime: 2,
       duration: 10,
-      showDuration: true,
+      features: ['timestamps', 'duration'],
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Background
+
+The background color for the waveform can be changed as required. To do so, set
+the `--waveform-background-color` CSS custom property on the component or on the
+`.waveform` class.
+
+<Canvas>
+  <Story
+    name="Background"
+    args={{
+      peaks: [0.5, 1, 0.5, 0, 0.5],
+      currentTime: 2,
+      duration: 10,
+      features: ['timestamps', 'duration'],
+      style: { '--waveform-background-color': '#d7fcd4' },
     }}
   >
     {Template.bind({})}
@@ -99,8 +120,28 @@ contains both the bars and the timestamps so the actual bar height is less than
       peaks: [0.5, 1, 0.5, 0, 0.5],
       currentTime: 2,
       duration: 10,
-      showDuration: true,
+      features: ['timestamps', 'duration'],
       usableFrac: 0.5,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Features
+
+Certain features in the waveform can be enabled or disabled, as required, to
+meet the design requirements and space/information density constraints. The
+`features` prop allows you to enable only the needed features.
+
+<Canvas>
+  <Story
+    name="Selective features"
+    args={{
+      peaks: [0.5, 1, 0.5, 0, 0.5],
+      currentTime: 2,
+      duration: 10,
+      features: ['timestamps', 'duration'],
     }}
   >
     {Template.bind({})}

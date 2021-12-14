@@ -2,38 +2,51 @@
   <div class="full-track w-full">
     <slot name="controller" />
 
-    <div class="flex flex-row justify-between items-top mx-16 my-6">
-      <div class="left-content flex flex-row items-top gap-6">
-        <slot name="play-pause" size="medium" />
+    <div
+      class="flex flex-row flex-wrap items-top mx-6 sm:mx-16 my-4 sm:my-6 gap-6"
+    >
+      <slot name="play-pause" :size="isSmall ? 'small' : 'medium'" />
 
-        <div class="audio-info">
-          <h1 class="text-3xl font-heading font-semibold">{{ audio.title }}</h1>
-          <div class="subtitle mt-1">
-            <i18n
-              as="span"
-              path="audio-track.creator"
-              class="font-semibold leading-snug mt-1"
-            >
-              <template #creator>
-                <a
-                  class="text-pink hover:text-pink"
-                  :href="audio.creator_url"
-                  >{{ audio.creator }}</a
-                >
-              </template>
-            </i18n>
-            <span class="text-dark-charcoal-70">{{ $t('interpunct') }}</span>
-            {{ timeFmt(audio.duration) }}
-          </div>
+      <div class="audio-info order-2 sm:order-1 w-full sm:w-auto">
+        <h1 class="text-base sm:text-3xl font-heading font-semibold">
+          {{ audio.title }}
+        </h1>
+        <div
+          class="subtitle mt-1 flex flex-col sm:flex-row sm:items-center gap-2"
+        >
+          <i18n
+            as="span"
+            path="audio-track.creator"
+            class="font-semibold leading-snug"
+          >
+            <template #creator>
+              <a
+                class="text-pink hover:text-pink p-px rounded-sm focus:outline-none focus:ring focus:ring-pink"
+                :href="audio.creator_url"
+                >{{ audio.creator }}</a
+              >
+            </template>
+          </i18n>
+
+          <span v-if="!isSmall" class="text-dark-charcoal-70">{{
+            $t('interpunct')
+          }}</span>
+
+          <div>{{ timeFmt(audio.duration) }}</div>
         </div>
       </div>
 
-      <DownloadButton :formats="getFormats(audio)" />
+      <DownloadButton
+        class="ms-auto order-1 sm:order-2"
+        :formats="getFormats(audio)"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import { computed } from '@nuxtjs/composition-api'
+
 import DownloadButton from '~/components/DownloadButton.vue'
 
 export default {
@@ -41,8 +54,8 @@ export default {
   components: {
     DownloadButton,
   },
-  props: ['audio'],
-  setup() {
+  props: ['audio', 'size'],
+  setup(props) {
     /**
      * Format the time as hh:mm:ss, dropping the hour part if it is zero.
      * @param {number} ms - the number of milliseconds in the duration
@@ -56,6 +69,7 @@ export default {
       }
       return '--:--'
     }
+
     /**
      * Returns specific display name for file format if there is a mapping for
      * provider's format display names (like Jamendo's `mp32` -> `MP3 V0`).
@@ -72,6 +86,7 @@ export default {
       }
       return format ? format.toUpperCase() : ''
     }
+
     /**
      * Creates a list of { extension_name, download_url } objects
      * for DownloadButton
@@ -94,9 +109,14 @@ export default {
       }
       return formats
     }
+
+    const isSmall = computed(() => props.size === 's')
+
     return {
       timeFmt,
       getFormats,
+
+      isSmall,
     }
   },
 }

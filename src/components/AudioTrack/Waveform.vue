@@ -1,10 +1,14 @@
 <template>
   <div
     ref="el"
-    class="waveform relative bg-dark-charcoal-06 border-1.5 border-tx focus:border-pink focus:outline-none focus:shadow-ring overflow-hidden"
-    :style="{ '--unusable-height': `${Math.floor((1 - usableFrac) * 100)}%` }"
-    tabIndex="0"
-    role="slider"
+    class="waveform group relative bg-background-var focus:outline-none overflow-hidden"
+    :style="{
+      '--usable-height': `${Math.floor(usableFrac * 100)}%`,
+      '--unusable-height': `${Math.floor((1 - usableFrac) * 100)}%`,
+    }"
+    :tabIndex="!message && isReady ? 0 : -1"
+    :role="!message && isReady ? 'slider' : null"
+    :aria-disabled="!(!message && isReady)"
     :aria-label="$t('waveform.label')"
     aria-orientation="horizontal"
     aria-valuemin="0"
@@ -20,6 +24,36 @@
     @keydown.home.prevent="handlePosKeys(0)"
     @keydown.end.prevent="handlePosKeys(1)"
   >
+    <!-- Focus ring -->
+    <svg
+      class="hidden group-focus:block absolute inset-0 w-full h-full z-20 shadow-ring-1"
+      xmlns="http://www.w3.org/2000/svg"
+      :viewBox="viewBox"
+      preserveAspectRatio="none"
+    >
+      <!-- Stroke is calculated from the centre of the path -->
+      <rect
+        class="stroke-pink"
+        x="0.75"
+        y="0.75"
+        :width="waveformDimens.width - 1.5"
+        :height="waveformDimens.height - 1.5"
+        rx="2"
+        fill="none"
+        stroke-width="1.5"
+      />
+      <rect
+        class="stroke-white"
+        x="2"
+        y="2"
+        :width="waveformDimens.width - 4"
+        :height="waveformDimens.height - 4"
+        fill="none"
+        stroke-width="1"
+        rx="0.75"
+      />
+    </svg>
+
     <!-- Progress bar -->
     <svg
       class="absolute inset-0 w-full h-full"
@@ -40,7 +74,7 @@
     <!-- Bars -->
     <svg
       class="bars absolute bottom-0 w-full"
-      :style="{ '--usable-height': `${Math.floor(usableFrac * 100)}%` }"
+      :class="{ 'with-space': showDuration || showTimestamps }"
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="viewBox"
       preserveAspectRatio="none"
@@ -62,7 +96,7 @@
 
     <!-- Keyboard focus -->
     <div
-      class="focus-indicator hidden absolute z-20 top-0 flex flex-col items-center justify-between bg-black h-full"
+      class="focus-indicator hidden absolute z-30 top-0 flex flex-col items-center justify-between bg-black h-full"
       :style="{ width: `${barWidth}px`, left: `${seekSpaceBefore}px` }"
     >
       <div
@@ -80,30 +114,32 @@
 
     <!-- Timestamps -->
     <template v-if="isReady">
-      <div
-        ref="progressTimestampEl"
-        class="progress timestamp z-10 transform"
-        :class="[
-          ...(isProgressTimestampCutoff
-            ? ['bg-dark-charcoal-06']
-            : ['bg-yellow', '-translate-x-full']),
-        ]"
-        :style="{ '--progress-time-left': `${progressBarWidth}px` }"
-      >
-        {{ timeFmt(progressTimestamp) }}
-      </div>
-      <div
-        v-if="seekFrac"
-        ref="seekTimestampEl"
-        class="seek timestamp transform"
-        :class="{ '-translate-x-full': !isSeekTimestampCutoff }"
-        :style="{ '--seek-time-left': `${seekBarWidth}px` }"
-      >
-        {{ timeFmt(seekTimestamp) }}
-      </div>
+      <template v-if="showTimestamps">
+        <div
+          ref="progressTimestampEl"
+          class="progress timestamp z-10 transform"
+          :class="[
+            ...(isProgressTimestampCutoff
+              ? ['bg-background-var']
+              : ['bg-yellow', '-translate-x-full']),
+          ]"
+          :style="{ '--progress-time-left': `${progressBarWidth}px` }"
+        >
+          {{ timeFmt(progressTimestamp) }}
+        </div>
+        <div
+          v-if="seekFrac"
+          ref="seekTimestampEl"
+          class="seek timestamp transform"
+          :class="{ '-translate-x-full': !isSeekTimestampCutoff }"
+          :style="{ '--seek-time-left': `${seekBarWidth}px` }"
+        >
+          {{ timeFmt(seekTimestamp) }}
+        </div>
+      </template>
       <div
         v-if="showDuration"
-        class="duration timestamp right-0 bg-dark-charcoal-06"
+        class="duration timestamp right-0 bg-background-var"
       >
         {{ timeFmt(duration) }}
       </div>
@@ -167,19 +203,20 @@ export default {
       default: 0,
     },
     /**
-     * whether to show the duration of the audio at the ending edge
-     */
-    showDuration: {
-      type: Boolean,
-      default: false,
-    },
-    /**
      * the fraction of the waveform height to use for the bars and timestamp;
      * The remaining space can be used to place other elements.
      */
     usableFrac: {
       type: Number,
       default: 1,
+    },
+    /**
+     * selectively enable features in the waveform; Available features are
+     * `'timestamp'` and `'duration'`.
+     */
+    features: {
+      type: Array,
+      default: () => ['timestamps'],
     },
   },
   setup(props, { emit }) {
@@ -212,7 +249,7 @@ export default {
      */
     const getPositionFrac = (event) => {
       const xPos = getPosition(event)
-      return xPos / waveformWidth.value
+      return xPos / waveformDimens.value.width
     }
     /**
      * Get the number of peaks that will fit within the given width.
@@ -226,21 +263,29 @@ export default {
     /* Element dimensions */
 
     const el = ref(null) // template ref
-    const waveformWidth = ref(0)
-    const updateWaveformWidth = () => {
-      waveformWidth.value = el.value.clientWidth
+    const waveformDimens = ref({ width: 0, height: 0 })
+    const updateWaveformDimens = () => {
+      waveformDimens.value = {
+        width: el.value.clientWidth,
+        height: el.value.clientHeight,
+      }
     }
     let observer
     onMounted(() => {
-      observer = new ResizeObserver(updateWaveformWidth)
+      observer = new ResizeObserver(updateWaveformDimens)
       observer.observe(el.value)
-      updateWaveformWidth()
+      updateWaveformDimens()
     })
     onBeforeUnmount(() => {
       if (observer) {
         observer.disconnect()
       }
     })
+
+    /* Features */
+
+    const showDuration = computed(() => props.features.includes('duration'))
+    const showTimestamps = computed(() => props.features.includes('timestamps'))
 
     /* State */
 
@@ -250,23 +295,31 @@ export default {
 
     const barWidth = 2
     const barGap = 2
-    const peakCount = computed(() => getPeaksInWidth(waveformWidth.value))
+    const peakCount = computed(() =>
+      getPeaksInWidth(waveformDimens.value.width)
+    )
     const normalizedPeaks = computed(() => {
-      const givenLength = props.peaks.length
+      let samples = props.peaks
+
+      const givenLength = samples.length
       const required = peakCount.value
       if (givenLength < required) {
-        return upsampleArray(props.peaks, required)
+        samples = upsampleArray(samples, required)
       } else if (givenLength > required) {
-        return downsampleArray(props.peaks, required)
+        samples = downsampleArray(samples, required)
       }
-      return props.peaks
+
+      return samples.map((peak) => peak * waveformDimens.value.height)
     })
 
     /* SVG drawing */
 
-    const viewBox = computed(() => `0 0 ${waveformWidth.value} 1`)
-    const spaceBefore = (index) => index * barWidth + (index + 1) * barGap
-    const spaceAbove = (index) => 1 - normalizedPeaks.value[index]
+    const viewBox = computed(() =>
+      [0, 0, waveformDimens.value.width, waveformDimens.value.height].join(' ')
+    )
+    const spaceBefore = (index) => index * barWidth + index * barGap
+    const spaceAbove = (index) =>
+      waveformDimens.value.height - normalizedPeaks.value[index]
 
     /* Progress bar */
 
@@ -275,7 +328,7 @@ export default {
     )
     const progressBarWidth = computed(() => {
       const frac = isDragging.value ? seekFrac.value : currentFrac.value
-      return waveformWidth.value * frac
+      return waveformDimens.value.width * frac
     })
 
     /* Progress timestamp */
@@ -296,7 +349,7 @@ export default {
     const seekFrac = ref(null)
     const seekBarWidth = computed(() => {
       const frac = seekFrac.value ?? currentFrac.value
-      return waveformWidth.value * frac
+      return waveformDimens.value.width * frac
     })
     const seekIndex = computed(() => getPeaksInWidth(seekBarWidth.value))
     const seekSpaceBefore = computed(() => spaceBefore(seekIndex.value))
@@ -390,11 +443,15 @@ export default {
 
       el, // template ref
 
+      showDuration,
+      showTimestamps,
+
       isReady,
 
       barWidth,
       normalizedPeaks,
 
+      waveformDimens,
       viewBox,
       spaceBefore,
       spaceAbove,
@@ -436,12 +493,27 @@ export default {
 </script>
 
 <style scoped lang="css">
+.waveform {
+  --v-background-color: var(
+    --waveform-background-color,
+    theme('colors.dark-charcoal.06')
+  );
+}
+
 .timestamp {
   @apply absolute font-bold text-xs px-1 pointer-events-none;
   top: calc(var(--unusable-height) + theme('spacing[0.5]'));
 }
 
+.bg-background-var {
+  background-color: var(--v-background-color);
+}
+
 .bars {
+  height: calc(var(--usable-height));
+}
+
+.bars.with-space {
   height: calc(var(--usable-height) - 1rem - 2 * theme('spacing[0.5]'));
 }
 

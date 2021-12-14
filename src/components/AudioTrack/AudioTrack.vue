@@ -4,12 +4,7 @@
     :aria-label="$t('audio-track.aria-label')"
     role="region"
   >
-    <Component
-      :is="layoutComponent"
-      :audio="audio"
-      :size="size"
-      :aspect="aspect"
-    >
+    <Component :is="layoutComponent" :audio="audio" :size="size">
       <template #controller="controllerProps">
         <AudioController
           v-model="status"
@@ -40,6 +35,7 @@ import AudioController from '~/components/AudioTrack/AudioController.vue'
 
 import Full from '~/components/AudioTrack/layouts/Full.vue'
 import Row from '~/components/AudioTrack/layouts/Row.vue'
+import Box from '~/components/AudioTrack/layouts/Box.vue'
 import Global from '~/components/AudioTrack/layouts/Global.vue'
 
 /**
@@ -55,6 +51,7 @@ export default {
     // Layouts
     Full,
     Row,
+    Box,
     Global,
   },
   props: {
@@ -81,16 +78,7 @@ export default {
     size: {
       type: String,
       default: 'm',
-      validator: (val) => ['s', 'm', 'l', 'xl'].includes(val),
-    },
-    /**
-     * whether to show the 'box' layout with a wider aspect ratio; This is
-     * opposed to the regular square layout.
-     */
-    aspect: {
-      type: String,
-      default: 'regular',
-      validator: (val) => ['regular', 'wide'].includes(val),
+      validator: (val) => ['s', 'm', 'l'].includes(val),
     },
   },
   setup(props) {
@@ -119,6 +107,7 @@ export default {
     const layoutMappings = {
       full: 'Full',
       row: 'Row',
+      box: 'Box',
       global: 'Global',
     }
     const layoutComponent = computed(() => layoutMappings[props.layout])

@@ -28,7 +28,6 @@ module.exports = {
 
       // Brand
       yellow: '#ffe033',
-      'dark-charcoal': '#30272e',
       pink: '#c52b9b',
       primary: '#3e58e1', // will change to pink after redesign launch
       // Active
@@ -45,21 +44,25 @@ module.exports = {
       'admin-gray': '#dcdcde',
 
       // Dark Charcoal
-      'dark-charcoal-06': '#f3f2f2',
-      'dark-charcoal-10': '#eae9ea',
-      'dark-charcoal-20': '#d6d4d5',
-      'dark-charcoal-30': '#c1bec0',
-      'dark-charcoal-40': '#aca9ab',
-      'dark-charcoal-50': '#989397',
-      'dark-charcoal-60': '#837d82',
-      'dark-charcoal-70': '#6e686d',
-      'dark-charcoal-80': '#595258',
+      'dark-charcoal': {
+        DEFAULT: '#30272e',
+        '06': '#f3f2f2',
+        10: '#eae9ea',
+        20: '#d6d4d5',
+        30: '#c1bec0',
+        40: '#aca9ab',
+        50: '#989397',
+        60: '#837d82',
+        70: '#6e686d',
+        80: '#595258',
+      },
 
       // Special keywords
       tx: 'transparent',
       curr: 'currentColor',
     },
     fill: (theme) => theme('colors'),
+    stroke: (theme) => theme('colors'),
     spacing: {
       // Constants
       '0.5px': '0.5px',
@@ -196,6 +199,7 @@ module.exports = {
       },
       boxShadow: {
         ring: 'inset 0 0 0 1px white',
+        'ring-1.5': 'inset 0 0 0 1.5px white',
       },
     },
   },
@@ -211,6 +215,7 @@ module.exports = {
       borderWidth: ['focus', 'focus-within'],
       padding: ['focus', 'focus-within'],
       boxShadow: ['focus', 'active'],
+      display: ['group-hover', 'group-focus'],
     },
   },
   plugins: [require('tailwindcss-rtl')],

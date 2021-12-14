@@ -23,9 +23,9 @@ export default {
   animation: shimmer 3s infinite linear;
   background: linear-gradient(
     to right,
-    theme('colors.dark-charcoal-10') 4%,
-    theme('colors.dark-charcoal-20') 25%,
-    theme('colors.dark-charcoal-10') 36%
+    theme('colors.dark-charcoal.10') 4%,
+    theme('colors.dark-charcoal.20') 25%,
+    theme('colors.dark-charcoal.10') 36%
   );
   background-size: 1000px 100%;
 }

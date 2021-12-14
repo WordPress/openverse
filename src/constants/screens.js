@@ -2,12 +2,25 @@
  * Mapping of a breakpoint name to the lower-bound of its screen-width range
  * @type {Map<string, number>}
  */
-export const SCREEN_SIZES = new Map()
-SCREEN_SIZES.set('2xl', 1536)
-SCREEN_SIZES.set('xl', 1280)
-SCREEN_SIZES.set('lg', 1024)
-SCREEN_SIZES.set('md', 768)
-SCREEN_SIZES.set('sm', 640)
+export const SCREEN_SIZES = new Map([
+  ['2xl', 1536],
+  ['xl', 1280],
+  ['lg', 1024],
+  ['md', 768],
+  ['sm', 640],
+])
+
+export const VIEWPORTS = Object.fromEntries(
+  [...Array.from(SCREEN_SIZES), ['mob', 400]].map(([key, val]) => {
+    return [
+      key,
+      {
+        name: `${key} (${val}px)`,
+        styles: { width: `${val}px`, height: '768px' },
+      },
+    ]
+  })
+)
 
 /**
  * Get the breakpoint in which the screen with the given width lies.
