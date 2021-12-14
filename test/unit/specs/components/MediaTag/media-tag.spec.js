@@ -11,10 +11,10 @@ describe('MediaTag', () => {
     options = { propsData: props }
   })
 
-  it('should render an span tag by default', () => {
+  it('should render an div tag by default', () => {
     const wrapper = render(MediaTag, options)
-    expect(wrapper.vm.$props.tag).toEqual('span')
-    expect(wrapper.vm.$el).toBeInstanceOf(HTMLSpanElement)
+    expect(wrapper.vm.$props.tag).toEqual('div')
+    expect(wrapper.vm.$el).toBeInstanceOf(HTMLDivElement)
   })
 
   it('should render the supplied tag', () => {

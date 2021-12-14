@@ -7,7 +7,7 @@
       <MediaTag
         v-for="(tag, index) in getValidTags()"
         :key="index"
-        class="me-4"
+        class="me-4 inline"
         @click="searchByTagName"
       >
         {{ tag.name }}

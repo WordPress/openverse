@@ -50,7 +50,7 @@
             </span>
           </div>
 
-          <div class="part-b inline-flex space-x-1">
+          <div class="part-b inline-flex gap-1">
             <div v-if="isMedium">
               {{ timeFmt(audio.duration) }} {{ $t('interpunct') }}
               <template v-if="audio.category">
