@@ -2022,18 +2022,6 @@ msgctxt "header.api-nav-item"
 msgid "API"
 msgstr ""
 
-msgctxt "header.notification.text"
-msgid "{example_notification_text}"
-msgstr ""
-
-msgctxt "header.notification.dismiss"
-msgid "Dismiss"
-msgstr ""
-
-msgctxt "header.notification.okay"
-msgid "OK"
-msgstr ""
-
 #: src/components/NavSection.vue:6
 msgctxt "header.aria.primary"
 msgid "primary"
@@ -2052,6 +2040,25 @@ msgstr ""
 #: src/components/NavSection.vue:50
 msgctxt "header.aria.sr-search"
 msgid "sr search button"
+msgstr ""
+
+msgctxt "notification.dismiss"
+msgid "Dismiss"
+msgstr ""
+
+msgctxt "notification.okay"
+msgid "OK"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/layouts/default.vue:10
+msgctxt "notification.translation.text"
+msgid "The translation for ###locale### locale is incomplete. Help us get to 100 percent by ###link###."
+msgstr ""
+
+#: src/layouts/default.vue:13
+msgctxt "notification.translation.link"
+msgid "contributing a translation"
 msgstr ""
 
 msgctxt "hero.brand"

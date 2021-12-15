@@ -54,6 +54,7 @@ specifiers:
   lodash.findindex: ^4.6.0
   lodash.isempty: ^4.4.0
   lodash.sortby: ^4.7.0
+  node-html-parser: ^5.1.0
   nuxt: ^2.15.4
   postcss: ^8.3.6
   prettier: ^2.2.1
@@ -97,6 +98,7 @@ dependencies:
   lodash.findindex: 4.6.0
   lodash.isempty: 4.4.0
   lodash.sortby: 4.7.0
+  node-html-parser: 5.1.0
   nuxt: 2.15.8_typescript@4.5.4
   reakit-utils: 0.15.2
   uuid: 8.3.2
@@ -13139,6 +13141,13 @@ packages:
 
   /node-html-parser/3.3.6:
     resolution: {integrity: sha512-VkWDHvNgFGB3mbQGMyzqRE1i/BG7TKX9wRXC8e/v8kL0kZR/Oy6RjYxXH91K6/+m3g8iQ8dTqRy75lTYoA2Cjg==}
+    dependencies:
+      css-select: 4.2.0
+      he: 1.2.0
+    dev: false
+
+  /node-html-parser/5.1.0:
+    resolution: {integrity: sha512-l6C1Gf1o7YuxeMGa17PypEez/rj+ii3q4/NZG37nRmWSLDjHyB0WNrlE4h2UW92D0JSfUSfu+lOvxThttVe7Jw==}
     dependencies:
       css-select: 4.2.0
       he: 1.2.0

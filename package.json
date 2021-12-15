@@ -12,7 +12,7 @@
   "author": "sebworks",
   "private": true,
   "scripts": {
-    "dev": "pnpm i18n:get-valid-locales && cross-env ENABLE_AUDIO=true nuxt",
+    "dev": "pnpm i18n:create-locales-list && cross-env ENABLE_AUDIO=true nuxt",
     "build": "pnpm i18n:get-translations && nuxt build",
     "generate": "nuxt generate",
     "start": "nuxt start",
@@ -32,10 +32,10 @@
     "format:test": "prettier --check .",
     "vue-i18n-extract": "vue-i18n-extract report -v './src/**/*.?(js|vue)' -l './src/locales/*.?(json)'",
     "prepare": "husky install",
-    "i18n:get-valid-locales": "node src/locales/scripts/get-validated-locales",
-    "i18n:get-translations": "node src/locales/scripts/get-translations && pnpm i18n:get-valid-locales",
+    "i18n:update-locales": "node src/locales/scripts/get-validated-locales",
+    "i18n:get-translations": "node src/locales/scripts/get-translations && pnpm i18n:update-locales",
     "i18n:generate-pot": "node src/locales/scripts/json-to-pot",
-    "i18n:update-locales": "node src/locales/scripts/update-locale-list"
+    "i18n:create-locales-list": "node src/locales/scripts/create-wp-locale-list"
   },
   "dependencies": {
     "@nuxt/components": "^2.1.6",
@@ -64,6 +64,7 @@
     "lodash.findindex": "^4.6.0",
     "lodash.isempty": "^4.4.0",
     "lodash.sortby": "^4.7.0",
+    "node-html-parser": "^5.1.0",
     "nuxt": "^2.15.4",
     "reakit-utils": "^0.15.2",
     "uuid": "^8.3.2",
@@ -111,7 +112,7 @@
   },
   "engines": {
     "node": ">= 16.0.0",
-    "pnpm": "6.24.0"
+    "pnpm": ">=6.24.0"
   },
   "browserslist": [
     "> 1%",

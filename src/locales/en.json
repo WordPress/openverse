@@ -29,6 +29,14 @@
       "prompt": "I would like to find:"
     }
   },
+  "notification": {
+    "translation": {
+      "text": "The translation for {locale} locale is incomplete. Help us get to 100 percent by {link}.",
+      "link": "contributing a translation"
+    },
+    "dismiss": "Dismiss",
+    "okay": "OK"
+  },
   "header": {
     "about-nav-item": "Our Story",
     "source-nav-item": "Sources",
@@ -47,12 +55,7 @@
     "licenses-nav-item": "The Licenses",
     "about-tab": "About",
     "resources-tab": "Resources",
-    "api-nav-item": "API",
-    "notification": {
-      "text": "{example_notification_text}",
-      "dismiss": "Dismiss",
-      "okay": "OK"
-    }
+    "api-nav-item": "API"
   },
   "footer": {
     "navigation": {

@@ -8,4 +8,9 @@
  * @typedef {import('@nuxtjs/composition-api').ToRefs<T>} ToRefs
  */
 
+/**
+ * @template T
+ * @typedef {import('@nuxtjs/composition-api').Ref | T} MaybeRef
+ */
+
 export default {}
