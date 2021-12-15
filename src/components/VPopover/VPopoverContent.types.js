@@ -6,7 +6,9 @@ export const propTypes = {
     required: true,
   },
   hide: {
-    type: /** @type {import('@nuxtjs/composition-api').PropType<() => void>} */ (Function),
+    type: /** @type {import('@nuxtjs/composition-api').PropType<() => void>} */ (
+      Function
+    ),
     required: true,
   },
   hideOnEsc: {
@@ -26,12 +28,14 @@ export const propTypes = {
     default: true,
   },
   triggerElement: {
-    type: /** @type {import('@nuxtjs/composition-api').PropType<HTMLElement>} */ (process.server
-      ? Object
-      : HTMLElement),
+    type: /** @type {import('@nuxtjs/composition-api').PropType<HTMLElement>} */ (
+      process.server ? Object : HTMLElement
+    ),
   },
   placement: {
-    type: /** @type {import('@nuxtjs/composition-api').PropType<import('@popperjs/core').Placement>} */ (String),
+    type: /** @type {import('@nuxtjs/composition-api').PropType<import('@popperjs/core').Placement>} */ (
+      String
+    ),
     default: 'bottom-end',
     validate: (v) => popoverPlacements.includes(v),
   },

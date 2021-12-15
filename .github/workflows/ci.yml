@@ -23,22 +23,25 @@ jobs:
           node-version: '16.13.0'
 
       - name: Cache Node.js modules
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
-          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
+            ${{ runner.os }}-
 
-      - name: Install dependencies
-        run: npm ci
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.24.0
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile]
 
       - name: Run lint
-        run: npm run lint
+        run: pnpm lint
 
       - name: Run formatting test
-        run: npm run format:test
+        run: pnpm format:test
 
       - name: Run tests
-        run: npm run i18n:get-translations && npm run test:unit
+        run: pnpm i18n:get-translations && pnpm test:unit

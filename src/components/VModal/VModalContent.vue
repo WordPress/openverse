@@ -59,7 +59,9 @@ const VModalContent = defineComponent({
       required: true,
     },
     hide: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<() => void>} */ (Function),
+      type: /** @type {import('@nuxtjs/composition-api').PropType<() => void>} */ (
+        Function
+      ),
       required: true,
     },
     hideOnEsc: {
@@ -79,9 +81,9 @@ const VModalContent = defineComponent({
       default: true,
     },
     triggerElement: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<HTMLElement>} */ (process.server
-        ? Object
-        : HTMLElement),
+      type: /** @type {import('@nuxtjs/composition-api').PropType<HTMLElement>} */ (
+        process.server ? Object : HTMLElement
+      ),
     },
   },
   setup(props, { emit, attrs }) {

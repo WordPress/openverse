@@ -28,24 +28,29 @@ jobs:
         with:
           node-version: '16.x'
 
-      # lookup cache dependencies already defined, based on the hash generated from the file
-      # yarn.lock
       - name: cache dependencies
-        id: cache-node-modules
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('package-lock.json') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.24.0
+          # Set this to false because we want to be able to skip installation if there is a cache hit in the next step
+          run_install: false
 
       # install dependencies only if the cache is not present
       - name: install dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       # run lint and syntax
       - name: lint & syntax check
-        run: npm run lint
+        run: pnpm lint
 
       # run type checker
       - name: typescript
-        run: npm run types
+        run: pnpm types

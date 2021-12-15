@@ -60,7 +60,9 @@ export default defineComponent({
      * @default 'vertical'
      */
     direction: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<'vertical' | 'horizontal'>} */ (String),
+      type: /** @type {import('@nuxtjs/composition-api').PropType<'vertical' | 'horizontal'>} */ (
+        String
+      ),
       default: 'vertical',
       validate: (v) => ['vertical', 'horizontal'].includes(v),
     },
@@ -89,7 +91,9 @@ export default defineComponent({
      * @default 'menu'
      */
     type: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<'menu' | 'radiogroup'>} */ (String),
+      type: /** @type {import('@nuxtjs/composition-api').PropType<'menu' | 'radiogroup'>} */ (
+        String
+      ),
       default: 'menu',
       validate: (v) => ['menu', 'radiogroup'].includes(v),
     },

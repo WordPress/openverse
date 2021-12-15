@@ -7,9 +7,9 @@ POTFILE=src/locales/po-files/openverse.pot
 CHANGED=$(git diff --staged --name-only HEAD)
 
 if [[ "$CHANGED" == *"$TRANSFILE"* ]] && [[ "$CHANGED" != *"$POTFILE"* ]]; then
-  npm run i18n:generate-pot
+  pnpm i18n:generate-pot
   git add $POTFILE
 fi
 
 # Lint staged files
-npx lint-staged && npm run types
+pnpx lint-staged && pnpm types

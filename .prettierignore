@@ -4,3 +4,4 @@ test/unit/coverage
 .nuxt
 .nuxt-storybook
 storybook-static
+pnpm-lock.yaml

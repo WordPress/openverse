@@ -7,11 +7,16 @@ FROM node:16 AS builder
 
 WORKDIR /usr/app
 
+# Install pnpm
+RUN npm install -g pnpm
+
 # copy package.json and package-lock.json files
-COPY package*.json .
+COPY package.json .
+COPY pnpm-lock.yaml .
+COPY .npmrc .
 
 # install dependencies including local development tools
-RUN npm install
+RUN pnpm install
 
 # copy the rest of the content
 COPY . /usr/app
@@ -20,7 +25,7 @@ COPY . /usr/app
 ENV NUXT_TELEMETRY_DISABLED=1
 
 # build the application and generate a distribution package
-RUN npm run build
+RUN pnpm run build
 
 # ==
 # development
@@ -29,6 +34,9 @@ RUN npm run build
 FROM node:16 AS dev
 
 WORKDIR /usr/app
+
+# Install pnpm
+RUN npm install -g pnpm
 
 ENV NODE_ENV=development
 ENV CYPRESS_INSTALL_BINARY=0
@@ -40,13 +48,13 @@ COPY . /usr/app
 ENV NUXT_TELEMETRY_DISABLED=1
 
 # install dependencies (development dependencies included)
-RUN npm install
+RUN pnpm install
 
 # expose port 8443
 EXPOSE 8443
 
 # run the application in development mode
-ENTRYPOINT [ "npm", "run", "dev" ]
+ENTRYPOINT [ "pnpm", "run", "dev" ]
 
 # ==
 # production
@@ -56,11 +64,16 @@ FROM node:alpine AS app
 
 WORKDIR /usr/app
 
+# Install pnpm
+RUN npm install -g pnpm
+
 ENV NODE_ENV=production
 ENV PLAYWRIGHT_SKIP_BROWSER_GC=1
 
-# copy the package.json and package-lock.json files
-COPY package*.json .
+# copy package.json and package-lock.json files
+COPY package.json .
+COPY pnpm-lock.yaml .
+COPY .npmrc .
 
 # copy the nuxt configuration file
 COPY --from=builder /usr/app/nuxt.config.js .
@@ -72,7 +85,7 @@ COPY --from=builder /usr/app/.nuxt /usr/app/.nuxt
 COPY --from=builder /usr/app/src/locales /usr/app/src/locales
 COPY --from=builder /usr/app/src/utils  /usr/app/src/utils
 
-RUN npm ci --only=production --ignore-script
+RUN pnpm install --frozen-lockfile
 
 # set app serving to permissive / assigned
 ENV NUXT_HOST=0.0.0.0
@@ -87,5 +100,5 @@ ENV PORT=8443
 EXPOSE 8443
 
 # run the application in static mode
-ENTRYPOINT ["npm", "start"]
+ENTRYPOINT ["pnpm", "run", "start"]
 

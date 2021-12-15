@@ -88,7 +88,9 @@ export default defineComponent({
      * @default 'bottom'
      */
     placement: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<import('@popperjs/core').Placement>} */ (String),
+      type: /** @type {import('@nuxtjs/composition-api').PropType<import('@popperjs/core').Placement>} */ (
+        String
+      ),
     },
     /**
      * The label of the popover content. Must be provided if `labelledBy` is empty.
