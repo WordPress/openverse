@@ -116,6 +116,17 @@ export const legacySourceMap = {
       }
     },
   },
+  'The Greats': {
+    image(search) {
+      return {
+        url: 'https://www.thegreats.co/artworks/',
+        query: {
+          theme: 0,
+          search: search.q,
+        },
+      }
+    },
+  },
   SoundCloud: {
     audio(search) {
       let license = 'to_share'
