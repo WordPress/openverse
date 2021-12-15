@@ -27,3 +27,4 @@ src/locales/*.json
 storybook-static
 .vercel
 /src/locales/scripts/valid-locales.json
+.zshrc
