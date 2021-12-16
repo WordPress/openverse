@@ -29,12 +29,12 @@ DELAY = 1  # in seconds
 RETRIES = 3
 HOST = "stocksnap.io"
 ENDPOINT = f"https://{HOST}/api/load-photos/date/desc"
-CDN = "https://cdn.stocksnap.io/img-thumbs/960w"
+IMAGE_CDN = "https://cdn.stocksnap.io/img-thumbs/960w"
+THUMBNAIL_CDN = "https://cdn.stocksnap.io/img-thumbs/280h"
 PROVIDER = prov.STOCKSNAP_DEFAULT_PROVIDER
 HEADERS = {
     "Accept": "application/json",
 }
-DEFAULT_QUERY_PARAMS = {}
 
 delayed_requester = DelayedRequester(DELAY)
 image_store = ImageStore(provider=PROVIDER)
@@ -104,7 +104,7 @@ def _extract_item_data(media_data):
     except (TypeError, KeyError, AttributeError):
         return None
     foreign_landing_url = f"https://{HOST}/photo/{foreign_id}"
-    image_url, width, height = _get_image_info(media_data)
+    image_url, thumbnail_url, width, height = _get_image_info(media_data)
     if image_url is None:
         logger.info("Found no image url.")
         logger.info(f"{json.dumps(media_data, indent=2)}")
@@ -115,7 +115,6 @@ def _extract_item_data(media_data):
         logger.info(f"{json.dumps(media_data, indent=2)}")
         return None
     creator, creator_url = _get_creator_data(media_data)
-    thumbnail = image_url
     metadata = _get_metadata(media_data)
     tags = _get_tags(media_data)
 
@@ -126,12 +125,15 @@ def _extract_item_data(media_data):
         "foreign_identifier": foreign_id,
         "foreign_landing_url": foreign_landing_url,
         "image_url": image_url,
+        "filesize": _get_filesize(image_url),
+        "filetype": "jpg",
         "height": height,
         "width": width,
-        "thumbnail_url": thumbnail,
+        "thumbnail_url": thumbnail_url,
         "license_info": license_info,
         "meta_data": metadata,
         "raw_tags": tags,
+        "category": prov.DEFAULT_IMAGE_CATEGORY[PROVIDER],
     }
 
 
@@ -139,8 +141,9 @@ def _get_image_info(item):
     width = item.get("img_width")
     height = item.get("img_height")
     img_id = item.get("img_id")
-    image_url = f"{CDN}/{img_id}.jpg"
-    return image_url, width, height
+    image_url = f"{IMAGE_CDN}/{img_id}.jpg"
+    thumbnail_url = f"{THUMBNAIL_CDN}/{img_id}.jpg"
+    return image_url, thumbnail_url, width, height
 
 
 def _get_creator_data(item):
@@ -170,6 +173,16 @@ def _get_title(item):
         tags.append("Photo")
         img_title = " ".join(tags)
         return img_title.title()
+
+
+def _get_filesize(image_url):
+    """
+    Get the size of the image in bytes.
+    """
+    resp = delayed_requester.get(image_url)
+    if resp:
+        filesize = int(resp.headers.get("Content-Length", 0))
+        return filesize if filesize != 0 else None
 
 
 def _get_metadata(item):

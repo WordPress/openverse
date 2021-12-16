@@ -2,9 +2,9 @@ import json
 import os
 from unittest.mock import MagicMock, patch
 
-import requests
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts import flickr
+from requests import Response, codes
 
 
 RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "resources/flickr")
@@ -101,7 +101,9 @@ def test_process_interval_skips_bad_pages():
 
 
 def test_get_image_list_retries_with_none_response():
-    with patch.object(flickr.delayed_requester, "get", return_value=None) as mock_get:
+    with patch.object(
+        flickr.delayed_requester, "get", return_value=Response()
+    ) as mock_get:
         flickr._get_image_list("1234", "5678", "test", 4, max_tries=3)
 
     assert mock_get.call_count == 3
@@ -109,7 +111,7 @@ def test_get_image_list_retries_with_none_response():
 
 def test_get_image_list_retries_with_non_ok_response():
     response_json = _get_resource_json("flickr_example_pretty.json")
-    r = requests.Response()
+    r = Response()
     r.status_code = 504
     r.json = MagicMock(return_value=response_json)
     with patch.object(flickr.delayed_requester, "get", return_value=r) as mock_get:
@@ -120,7 +122,7 @@ def test_get_image_list_retries_with_non_ok_response():
 
 def test_get_image_list_with_partial_response():
     response_json = _get_resource_json("total_pages_but_no_image_list.json")
-    r = requests.Response()
+    r = Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_json)
     with patch.object(flickr.delayed_requester, "get", return_value=r) as mock_get:
@@ -133,7 +135,7 @@ def test_get_image_list_with_partial_response():
 
 def test_get_image_list_with_realistic_response():
     response_json = _get_resource_json("flickr_example_pretty.json")
-    r = requests.Response()
+    r = Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_json)
     with patch.object(flickr.delayed_requester, "get", return_value=r) as mock_get:
@@ -158,10 +160,9 @@ def test_build_query_param_dict_default():
     expect_query_param_dict = {
         "method": "flickr.photos.search",
         "media": "photos",
-        "content_type": 1,
         "extras": (
             "description,license,date_upload,date_taken,owner_name,tags,"
-            "o_dims,url_t,url_s,url_m,url_l,views"
+            "o_dims,url_t,url_s,url_m,url_l,views,content_type"
         ),
         "format": "json",
         "nojsoncallback": 1,
@@ -245,8 +246,8 @@ def test_extract_image_list_from_json_returns_nones_given_none_json():
 def test_process_image_data_with_real_example():
     image_data = _get_resource_json("image_data_complete_example.json")
     with patch.object(
-        flickr.image_store, "add_item", return_value=100
-    ) as mock_add_item:
+        flickr, "_get_file_properties", return_value=(371862, "jpg")
+    ), patch.object(flickr.image_store, "add_item", return_value=100) as mock_add_item:
         total_images = flickr._process_image_data(image_data)
 
     expect_meta_data = {
@@ -276,6 +277,8 @@ def test_process_image_data_with_real_example():
         foreign_identifier="49514824541",
         width=1024,
         height=683,
+        filesize=371862,
+        filetype="jpg",
         creator="Marine Explorer",
         creator_url="https://www.flickr.com/photos/71925535@N03",
         title=("Surveying Ruperts Reef @reeflifesurvey #lapofaus " "#marineexplorer"),
@@ -289,6 +292,7 @@ def test_process_image_data_with_real_example():
             "underwater",
         ],
         source=flickr.PROVIDER,
+        category="photograph",
     )
     assert total_images == 100
 
@@ -486,8 +490,8 @@ def test_create_tags_list_returns_falsy_empty_tags():
 def test_process_image_data_with_sub_provider():
     image_data = _get_resource_json("image_data_sub_provider_example.json")
     with patch.object(
-        flickr.image_store, "add_item", return_value=100
-    ) as mock_add_item:
+        flickr, "_get_file_properties", return_value=(218414, "jpg")
+    ), patch.object(flickr.image_store, "add_item", return_value=100) as mock_add_item:
         total_images = flickr._process_image_data(image_data)
 
     expect_meta_data = {
@@ -520,6 +524,8 @@ def test_process_image_data_with_sub_provider():
         foreign_identifier="49950595947",
         width=1024,
         height=683,
+        filesize=218414,
+        filetype="jpg",
         creator="NASA HQ PHOTO",
         creator_url="https://www.flickr.com/photos/35067687@N04",
         title="SpaceX Demo-2 Preflight (NHQ202005290001)",
@@ -533,5 +539,34 @@ def test_process_image_data_with_sub_provider():
             "spacex",
         ],
         source="nasa",
+        category=None,
     )
     assert total_images == 100
+
+
+def test_get_file_properties_returns_no_filesize_from_no_response():
+    url = "https://flickr.com/image.jpg"
+    with patch.object(flickr.delayed_requester, "get", return_value=None):
+        actual_filesize, _ = flickr._get_file_properties(url)
+    assert actual_filesize is None
+
+
+def test_get_file_properties_returns_both_values():
+    url = "https://flickr.com/image.jpg"
+    headers = {"X-TTDB-L": "123456"}
+
+    def get_mock_headers(name, default):
+        return headers[name]
+
+    mock_response = Response()
+    mock_response.status_code = codes.ok
+    mock_response.headers = MagicMock()
+    mock_response.headers.get.side_effect = get_mock_headers
+
+    # filesize and filetype
+    expect_props = (123456, "jpg")
+
+    with patch.object(flickr.delayed_requester, "get", return_value=mock_response):
+        actual_props = flickr._get_file_properties(url)
+
+    assert actual_props == expect_props

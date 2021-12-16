@@ -8,6 +8,8 @@ Apart from that, this file stores other provider related information which
 might be useful for retrieving sub-providers at the database level and the
 API level.
 """
+from enum import Enum
+
 
 # Default provider names
 FLICKR_DEFAULT_PROVIDER = "flickr"
@@ -104,4 +106,34 @@ SMITHSONIAN_SUB_PROVIDERS = {
     "smithsonian_american_art_museum": {"SAAM"},  # Smithsonian American Art Museum
     "smithsonian_institution_archives": {"SIA"},  # Smithsonian Institution Archives
     "smithsonian_libraries": {"SIL"},  # Smithsonian Libraries
+}
+
+
+class ImageCategory(Enum):
+    PHOTOGRAPH = "photograph"
+    DIGITIZED_ARTWORK = "digitized_artwork"
+    ILLUSTRATION = "illustration"
+
+
+# Default image category by source
+DEFAULT_IMAGE_CATEGORY = {
+    "flickr": ImageCategory.PHOTOGRAPH.value,
+    "stocksnap": ImageCategory.PHOTOGRAPH.value,
+    # Remains to be assigned
+    "animaldiversity": ImageCategory.PHOTOGRAPH.value,
+    "brooklynmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
+    "capl": ImageCategory.PHOTOGRAPH.value,
+    "clevelandmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
+    "deviantart": ImageCategory.DIGITIZED_ARTWORK.value,
+    "digitaltmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
+    "floraon": ImageCategory.PHOTOGRAPH.value,
+    "mccordmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
+    "met": ImageCategory.DIGITIZED_ARTWORK.value,
+    "museumsvictoria": ImageCategory.DIGITIZED_ARTWORK.value,
+    "phylopic": ImageCategory.ILLUSTRATION.value,
+    "rijksmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
+    "sciencemuseum": ImageCategory.PHOTOGRAPH.value,
+    "svgsilh": ImageCategory.ILLUSTRATION.value,
+    "thorvaldsenmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
+    "worms": ImageCategory.PHOTOGRAPH.value,
 }

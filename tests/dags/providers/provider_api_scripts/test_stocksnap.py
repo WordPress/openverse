@@ -97,8 +97,11 @@ def test_get_creator_data_returns_none_when_no_author():
 def test_extract_image_data_handles_example_dict():
     with open(os.path.join(RESOURCES, "full_item.json")) as f:
         image_data = json.load(f)
-    actual_image_info = stocksnap._extract_item_data(image_data)
+
+    with patch.object(stocksnap, "_get_filesize", return_value=123456):
+        actual_image_info = stocksnap._extract_item_data(image_data)
     image_url = "https://cdn.stocksnap.io/img-thumbs/960w/7VAQUG1X3B.jpg"
+    thumbnail_url = "https://cdn.stocksnap.io/img-thumbs/280h/7VAQUG1X3B.jpg"
     expected_image_info = {
         "title": "Female Fitness Photo",
         "creator": "Matt Moloney",
@@ -109,9 +112,11 @@ def test_extract_image_data_handles_example_dict():
             license_url="https://creativecommons.org/publicdomain/zero/1.0/"
         ),
         "image_url": image_url,
+        "filesize": 123456,
+        "filetype": "jpg",
         "height": 4000,
         "width": 6000,
-        "thumbnail_url": image_url,
+        "thumbnail_url": thumbnail_url,
         "meta_data": {
             "page_views_raw": 30,
             "downloads_raw": 0,
@@ -144,6 +149,7 @@ def test_extract_image_data_handles_example_dict():
             "lifestyle",
             "squat",
         ],
+        "category": "photograph",
     }
     assert actual_image_info == expected_image_info
 

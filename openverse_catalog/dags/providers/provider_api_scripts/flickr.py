@@ -60,10 +60,9 @@ LICENSE_INFO = {
 DEFAULT_QUERY_PARAMS = {
     "method": "flickr.photos.search",
     "media": "photos",
-    "content_type": 1,
     "extras": (
         "description,license,date_upload,date_taken,owner_name,tags,o_dims,"
-        "url_t,url_s,url_m,url_l,views"
+        "url_t,url_s,url_m,url_l,views,content_type"
     ),
     "format": "json",
     "nojsoncallback": 1,
@@ -167,7 +166,7 @@ def _get_image_list(
             params=query_param_dict,
         )
 
-        logger.debug("response.status_code: {response.status_code}")
+        logger.debug(f"response.status_code: {response.status_code}")
         response_json = _extract_response_json(response)
         image_list, total_pages = _extract_image_list_from_json(response_json)
 
@@ -254,24 +253,28 @@ def _process_image_data(image_data, sub_providers=SUB_PROVIDERS, provider=PROVID
     if foreign_id is None:
         logger.warning("No foreign_id in image_data!")
     foreign_landing_url = _build_foreign_landing_url(creator_url, foreign_id)
-
     owner = image_data.get("owner").strip()
     source = next((s for s in sub_providers if owner in sub_providers[s]), provider)
-    license_info = get_license_info(license_=license_, license_version=license_version)
+    filesize, filetype = _get_file_properties(image_url)
     return image_store.add_item(
         foreign_landing_url=foreign_landing_url,
         image_url=image_url,
         thumbnail_url=image_data.get("url_s"),
-        license_info=license_info,
+        license_info=get_license_info(
+            license_=license_, license_version=license_version
+        ),
         foreign_identifier=foreign_id,
         width=width,
         height=height,
+        filesize=filesize,
+        filetype=filetype,
         creator=image_data.get("ownername"),
         creator_url=creator_url,
         title=image_data.get("title"),
         meta_data=_create_meta_data_dict(image_data),
         raw_tags=_create_tags_list(image_data),
         source=source,
+        category=_get_category(image_data),
     )
 
 
@@ -319,6 +322,22 @@ def _get_image_url(image_data):
     return None, None, None
 
 
+def _get_file_properties(image_url):
+    """
+    Get the size of the image in bytes and its filetype.
+    """
+    filesize, filetype = None, None
+    if image_url:
+        filetype = image_url.split(".")[-1]
+        resp = delayed_requester.get(image_url)
+        if resp:
+            filesize = int(resp.headers.get("X-TTDB-L", 0))
+    return (
+        filesize if filesize != 0 else None,
+        filetype if filetype != "" else None,
+    )
+
+
 def _get_license(license_id, license_info=None):
     if license_info is None:
         license_info = LICENSE_INFO.copy()
@@ -364,6 +383,18 @@ def _create_tags_list(image_data, max_tag_string_length=MAX_TAG_STRING_LENGTH):
         raw_tags = sorted(list(set(raw_tag_string.split())))
 
     return raw_tags
+
+
+def _get_category(image_data):
+    """
+    Flickr has three types:
+        0 for photos
+        1 for screenshots
+        3 for other
+    Treating everything different from photos as unknown.
+    """
+    if "content_type" in image_data and image_data["content_type"] == "0":
+        return prov.DEFAULT_IMAGE_CATEGORY[PROVIDER]
 
 
 if __name__ == "__main__":
