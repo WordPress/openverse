@@ -111,6 +111,19 @@ groups:
   - name: discussion
     description: Open for discussions and feedback
     emoji: "💬"
+    
+- name: tech
+  color: 'fcdf4a'
+  labels:
+  - name: javascript
+    description: Requires writing JavaScript code
+    emoji: "🟨"
+  - name: python
+    description: Requires writing Python code
+    emoji: "🐍"
+  - name: php
+    description: Requires writing PHP code
+    emoji: "🐘"
 
 - name: friendliness
   color: '7f0799'
