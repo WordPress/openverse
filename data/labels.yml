@@ -100,7 +100,7 @@ groups:
     emoji: "🤖"
   - name: a11y
     description: Concerns related to the project's accessibility
-    emoji: ♿️
+    emoji: "♿️"
 
 - name: talk
   color: 'f9bbe5'
@@ -138,6 +138,9 @@ groups:
   - name: docker
     description: Requires writing Docker configuration
     emoji: "🐳"
+  - name: postgres
+    description: Requires working with PostgreSQL migrations or databases
+    emoji: "💾"
     
 
 - name: friendliness
