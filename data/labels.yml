@@ -115,6 +115,7 @@ groups:
 - name: tech
   color: 'fcdf4a'
   labels:
+  # Programming languages   
   - name: javascript
     description: Requires writing JavaScript code
     emoji: "🟨"
@@ -124,6 +125,20 @@ groups:
   - name: php
     description: Requires writing PHP code
     emoji: "🐘"
+  # Libraries / other software
+  - name: vue
+    description: Requires writing Vue.js JavaScript code
+    emoji: "🔧"
+  - name: django
+    description: Requires writing Python with the Django framework
+    emoji: "🔧"
+  - name: airflow
+    description: Requires working with Apache Airflow
+    emoji: "🔧"
+  - name: docker
+    description: Requires writing Docker configuration
+    emoji: "🐳"
+    
 
 - name: friendliness
   color: '7f0799'
