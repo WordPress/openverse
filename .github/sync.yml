@@ -32,3 +32,9 @@ group:
     files:
       - source: .github/CODEOWNERS
         dest: .github/CODEOWNERS
+  # Automattic repositories
+  - repos: |
+      Automattic/openverse-infrastructure
+    files:
+      - source: .github/workflows/pr_ping.yml
+        dest: .github/workflows/pr_ping.yml
