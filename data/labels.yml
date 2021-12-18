@@ -100,7 +100,7 @@ groups:
     emoji: "🤖"
   - name: a11y
     description: Concerns related to the project's accessibility
-    emoji: ♿️
+    emoji: "♿️"
 
 - name: talk
   color: 'f9bbe5'
@@ -111,6 +111,37 @@ groups:
   - name: discussion
     description: Open for discussions and feedback
     emoji: "💬"
+    
+- name: tech
+  color: 'fcdf4a'
+  labels:
+  # Programming languages   
+  - name: javascript
+    description: Requires writing JavaScript code
+    emoji: "🟨"
+  - name: python
+    description: Requires writing Python code
+    emoji: "🐍"
+  - name: php
+    description: Requires writing PHP code
+    emoji: "🐘"
+  # Libraries / other software
+  - name: vue
+    description: Requires writing Vue.js JavaScript code
+    emoji: "🔧"
+  - name: django
+    description: Requires writing Python with the Django framework
+    emoji: "🔧"
+  - name: airflow
+    description: Requires working with Apache Airflow
+    emoji: "🔧"
+  - name: docker
+    description: Requires writing Docker configuration
+    emoji: "🐳"
+  - name: postgres
+    description: Requires working with PostgreSQL migrations or databases
+    emoji: "💾"
+    
 
 - name: friendliness
   color: '7f0799'
