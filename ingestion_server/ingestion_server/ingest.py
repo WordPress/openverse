@@ -75,45 +75,58 @@ def _get_shared_cols(downstream, upstream, table: str):
     return shared
 
 
-def _generate_indices(conn, table: str):
+def _generate_indices(conn, table: str) -> tuple[list[str], dict[str, str]]:
     """
     Using the existing table as a template, generate CREATE INDEX statements for
     the new table.
 
     :param conn: A connection to the API database.
     :param table: The table to be updated.
-    :return: A list of CREATE INDEX statements.
+    :return: A list of CREATE INDEX statements, and a mapping from new indices to
+    the previous ones.
     """
+    index_mapping = {}
 
-    def _clean_idxs(indices):
+    def _clean_idxs(indices: list[str]):
         # Remove names of indices. We don't want to collide with the old names;
         # we want the database to generate them for us upon recreating the
         # table.
         cleaned = []
         for index in indices:
             # The index name is always after CREATE [UNIQUE] INDEX; delete it.
-            tokens = index[0].split(" ")
+            tokens = index.split(" ")
             index_idx = tokens.index("INDEX")
-            del tokens[index_idx + 1]
+            is_pk = "(id)" in index
+            # Record what the old index was
+            old_index = tokens[index_idx + 1]
+            # Primary keys during data refresh are based on the table name and may
+            # not be exactly correlated with what the primary keys are actually named
+            new_index = (
+                f"temp_import_{old_index}" if not is_pk else f"temp_import_{table}_pkey"
+            )
+            index_mapping[new_index] = old_index
+            # Update name
+            tokens[index_idx + 1] = new_index
             # The table name is always after ON. Rename it to match the
             # temporary copy of the data.
             on_idx = tokens.index("ON")
             table_name_idx = on_idx + 1
             schema_name, table_name = tokens[table_name_idx].split(".")
             tokens[table_name_idx] = f"{schema_name}.temp_import_{table_name}"
-            if "id" not in index:
+            # Skip the primary key, it already exists
+            if not is_pk:
                 cleaned.append(" ".join(tokens))
 
-        return cleaned
+        return cleaned, index_mapping
 
     # Get all of the old indices from the existing table.
     with conn.cursor() as cur:
         get_idxs = SQL(
-            "SELECT indexdef " "FROM pg_indexes " "WHERE tablename = {table};"
+            "SELECT indexdef FROM pg_indexes WHERE tablename = {table};"
         ).format(table=Literal(table))
         cur.execute(get_idxs)
         idxs = cur.fetchall()
-    cleaned_idxs = _clean_idxs(idxs)
+    cleaned_idxs = _clean_idxs([idx[0] for idx in idxs])
     return cleaned_idxs
 
 
@@ -281,6 +294,7 @@ def reload_upstream(table, progress=None, finish_time=None, approach="advanced")
         # Step 3: Import data into a temporary table
         log.info("Copying upstream data...")
         copy_data = get_copy_data_query(table, shared_cols, approach=approach)
+        log.info(f"Running copy-data query: \n{copy_data.as_string(downstream_cur)}")
         downstream_cur.execute(copy_data)
     downstream_db.commit()
     downstream_db.close()
@@ -294,10 +308,10 @@ def reload_upstream(table, progress=None, finish_time=None, approach="advanced")
     with downstream_db.cursor() as downstream_cur:
         # Step 5: Recreate indices from the original table
         log.info("Copying finished! Recreating database indices...")
-        create_indices = ";\n".join(_generate_indices(downstream_db, table))
+        create_indices, index_mapping = _generate_indices(downstream_db, table)
         _update_progress(progress, 50.0)
         if create_indices != "":
-            downstream_cur.execute(create_indices)
+            downstream_cur.execute(";\n".join(create_indices))
         _update_progress(progress, 70.0)
 
         # Step 6: Recreate constraints from the original table
@@ -309,7 +323,8 @@ def reload_upstream(table, progress=None, finish_time=None, approach="advanced")
 
         # Step 7: Promote the temporary table and delete the original
         log.info("Done remapping constraints! Going live with new table...")
-        go_live = get_go_live_query(table)
+        go_live = get_go_live_query(table, index_mapping)
+        log.info(f"Running go-live: \n{go_live.as_string(downstream_cur)}")
         downstream_cur.execute(go_live)
     downstream_db.commit()
     downstream_db.close()

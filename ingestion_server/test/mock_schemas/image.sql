@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.2
+-- Dumped from database version 13.3
 -- Dumped by pg_dump version 13.3 (Debian 13.3-1.pgdg100+1)
 
 SET statement_timeout = 0;
@@ -10,6 +10,7 @@ SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
@@ -41,7 +42,7 @@ CREATE TABLE public.image (
     license_version character varying(25),
     creator character varying(2000),
     creator_url character varying(2000),
-    title character varying(2000),
+    title character varying(5000),
     tags_list character varying(255)[],
     last_synced_with_source timestamp with time zone,
     removed_from_source boolean NOT NULL,
@@ -50,102 +51,110 @@ CREATE TABLE public.image (
     tags jsonb,
     watermarked boolean,
     filetype character varying(80),
-    standardized_popularity double precision
+    standardized_popularity double precision,
+    category character varying(80)
 );
 
 
 ALTER TABLE public.image OWNER TO deploy;
 
 --
--- Name: image temp_import_image_pkey; Type: CONSTRAINT; Schema: public; Owner: deploy
+-- Name: image image_pkey; Type: CONSTRAINT; Schema: public; Owner: deploy
 --
 
 ALTER TABLE ONLY public.image
-    ADD CONSTRAINT temp_import_image_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT image_pkey PRIMARY KEY (id);
 
 
 --
--- Name: temp_import_image_foreign_identifier_idx; Type: INDEX; Schema: public; Owner: deploy
+-- Name: image_category_daa5d91c; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE INDEX temp_import_image_foreign_identifier_idx ON public.image USING btree (foreign_identifier varchar_pattern_ops);
-
-
---
--- Name: temp_import_image_foreign_identifier_idx1; Type: INDEX; Schema: public; Owner: deploy
---
-
-CREATE INDEX temp_import_image_foreign_identifier_idx1 ON public.image USING btree (foreign_identifier);
+CREATE INDEX image_category_daa5d91c ON public.image USING btree (category);
 
 
 --
--- Name: temp_import_image_foreign_identifier_provider_idx; Type: INDEX; Schema: public; Owner: deploy
+-- Name: image_category_daa5d91c_like; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE UNIQUE INDEX temp_import_image_foreign_identifier_provider_idx ON public.image USING btree (foreign_identifier, provider);
-
-
---
--- Name: temp_import_image_id_idx; Type: INDEX; Schema: public; Owner: deploy
---
-
-CREATE UNIQUE INDEX temp_import_image_id_idx ON public.image USING btree (id);
+CREATE INDEX image_category_daa5d91c_like ON public.image USING btree (category varchar_pattern_ops);
 
 
 --
--- Name: temp_import_image_identifier_idx; Type: INDEX; Schema: public; Owner: deploy
+-- Name: image_foreign_identifier_4c72d3ee; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE UNIQUE INDEX temp_import_image_identifier_idx ON public.image USING btree (identifier);
-
-
---
--- Name: temp_import_image_last_synced_with_source_idx; Type: INDEX; Schema: public; Owner: deploy
---
-
-CREATE INDEX temp_import_image_last_synced_with_source_idx ON public.image USING btree (last_synced_with_source);
+CREATE INDEX image_foreign_identifier_4c72d3ee ON public.image USING btree (foreign_identifier);
 
 
 --
--- Name: temp_import_image_provider_idx; Type: INDEX; Schema: public; Owner: deploy
+-- Name: image_foreign_identifier_4c72d3ee_like; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE INDEX temp_import_image_provider_idx ON public.image USING btree (provider);
-
-
---
--- Name: temp_import_image_provider_idx1; Type: INDEX; Schema: public; Owner: deploy
---
-
-CREATE INDEX temp_import_image_provider_idx1 ON public.image USING btree (provider varchar_pattern_ops);
+CREATE INDEX image_foreign_identifier_4c72d3ee_like ON public.image USING btree (foreign_identifier varchar_pattern_ops);
 
 
 --
--- Name: temp_import_image_source_idx; Type: INDEX; Schema: public; Owner: deploy
+-- Name: image_identifier_key; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE INDEX temp_import_image_source_idx ON public.image USING btree (source);
-
-
---
--- Name: temp_import_image_source_idx1; Type: INDEX; Schema: public; Owner: deploy
---
-
-CREATE INDEX temp_import_image_source_idx1 ON public.image USING btree (source varchar_pattern_ops);
+CREATE UNIQUE INDEX image_identifier_key ON public.image USING btree (identifier);
 
 
 --
--- Name: temp_import_image_url_idx; Type: INDEX; Schema: public; Owner: deploy
+-- Name: image_last_synced_with_source_187adf09; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE UNIQUE INDEX temp_import_image_url_idx ON public.image USING btree (url);
+CREATE INDEX image_last_synced_with_source_187adf09 ON public.image USING btree (last_synced_with_source);
 
 
 --
--- Name: temp_import_image_url_idx1; Type: INDEX; Schema: public; Owner: deploy
+-- Name: image_provider_7d11f847; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE INDEX temp_import_image_url_idx1 ON public.image USING btree (url varchar_pattern_ops);
+CREATE INDEX image_provider_7d11f847 ON public.image USING btree (provider);
+
+
+--
+-- Name: image_provider_7d11f847_like; Type: INDEX; Schema: public; Owner: deploy
+--
+
+CREATE INDEX image_provider_7d11f847_like ON public.image USING btree (provider varchar_pattern_ops);
+
+
+--
+-- Name: image_source_d5a89e97; Type: INDEX; Schema: public; Owner: deploy
+--
+
+CREATE INDEX image_source_d5a89e97 ON public.image USING btree (source);
+
+
+--
+-- Name: image_source_d5a89e97_like; Type: INDEX; Schema: public; Owner: deploy
+--
+
+CREATE INDEX image_source_d5a89e97_like ON public.image USING btree (source varchar_pattern_ops);
+
+
+--
+-- Name: image_url_c6aabda2_like; Type: INDEX; Schema: public; Owner: deploy
+--
+
+CREATE INDEX image_url_c6aabda2_like ON public.image USING btree (url varchar_pattern_ops);
+
+
+--
+-- Name: image_url_key; Type: INDEX; Schema: public; Owner: deploy
+--
+
+CREATE UNIQUE INDEX image_url_key ON public.image USING btree (url);
+
+
+--
+-- Name: unique_provider_image; Type: INDEX; Schema: public; Owner: deploy
+--
+
+CREATE UNIQUE INDEX unique_provider_image ON public.image USING btree (foreign_identifier, provider);
 
 
 --

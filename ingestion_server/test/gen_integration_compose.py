@@ -67,6 +67,26 @@ def _fixup_env(conf: dict):
     conf["services"]["ingestion_server"]["env_file"] = ["env.integration"]
 
 
+def _remove_volumes(conf: dict):
+    """
+    Remove the volumes from the compose configuration so that the images begin with
+    a fresh start on every startup.
+    :param conf: the Docker Compose configuration
+    """
+    volumes_to_remove = {
+        "db": "api-postgres",
+        "upstream_db": "catalog-postgres",
+        "es": "es-data",
+    }
+
+    for service, volume_to_remove in volumes_to_remove.items():
+        volumes = conf["services"][service]["volumes"]
+        volumes = [volume for volume in volumes if volume_to_remove not in volume]
+        conf["services"][service]["volumes"] = volumes
+
+    conf["volumes"] = {}
+
+
 def _change_directories(conf: dict):
     """
     Update the relative paths of the directories such as build context or bind
@@ -113,6 +133,10 @@ def gen_integration_compose():
 
         print("│ Updating environment variables... ", end="")
         _fixup_env(conf)
+        print("done")
+
+        print("│ Removing volumes... ", end="")
+        _remove_volumes(conf)
         print("done")
 
         print("│ Changing directories... ", end="")

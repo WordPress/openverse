@@ -163,6 +163,85 @@ class TestIngestion(unittest.TestCase):
         conn.commit()
         cur.close()
 
+    @staticmethod
+    def _get_index_parts(index: str, table: str) -> list[str]:
+        """
+        Strip out common keywords from the index to get a the name & columns.
+        Indices take the form of:
+          CREATE [UNIQUE] INDEX {name} ON {table} USING btree {columns}
+        Output will look like: ["my_special_index", "(my_column)"]
+        """
+        for token in [
+            "CREATE",
+            "UNIQUE",
+            "INDEX",
+            "ON",
+            "USING",
+            f"public.{table}",
+            "btree",
+        ]:
+            index = index.replace(f"{token} ", "")
+        return index.split(" ", maxsplit=1)
+
+    @classmethod
+    def _get_indices(cls, conn, table) -> dict[str, str]:
+        """
+        Get the indices on a given table using a given connection.
+        """
+        index_sql = f"SELECT indexdef FROM pg_indexes WHERE tablename = '{table}';"
+        with conn.cursor() as cursor:
+            cursor.execute(index_sql)
+            indices = [cls._get_index_parts(row[0], table) for row in cursor]
+            idx_mapping = {columns: name for name, columns in indices}
+            return idx_mapping
+
+    @classmethod
+    def _get_constraints(cls, conn, table) -> dict[str, str]:
+        """
+        Get the constraints on a given table using a given connection.
+        """
+        constraint_sql = f"""
+             SELECT conname, pg_get_constraintdef(c.oid)
+             FROM pg_constraint AS c
+             JOIN pg_namespace AS n
+             ON n.oid = c.connamespace
+             AND n.nspname = 'public'
+             AND conrelid::regclass::text = '{table}'
+             ORDER BY conrelid::regclass::text, contype DESC;
+        """
+        with conn.cursor() as cursor:
+            cursor.execute(constraint_sql)
+            return {constraint: name for name, constraint in cursor}
+
+    def _ingest_upstream(self, model):
+        """
+        Check that INGEST_UPSTREAM task completes successfully and responds
+        with a callback.
+        """
+        before_indices = self._get_indices(self.downstream_db, model)
+        before_constraints = self._get_constraints(self.downstream_db, model)
+        req = {
+            "model": model,
+            "action": "INGEST_UPSTREAM",
+            "callback_url": bottle_url,
+        }
+        res = requests.post(f"{ingestion_server}/task", json=req)
+        stat_msg = "The job should launch successfully and return 202 ACCEPTED."
+        self.assertEqual(res.status_code, 202, msg=stat_msg)
+
+        # Wait for the task to send us a callback.
+        assert self.__class__.cb_queue.get(timeout=120) == "CALLBACK!"
+
+        # Check that the indices remained the same
+        after_indices = self._get_indices(self.downstream_db, model)
+        after_constraints = self._get_constraints(self.downstream_db, model)
+        assert (
+            before_indices == after_indices
+        ), "Indices in DB don't match the names they had before the go-live"
+        assert (
+            before_constraints == after_constraints
+        ), "Constraints in DB don't match the names they had before the go-live"
+
     @classmethod
     def setUpClass(cls) -> None:
         # Launch a Bottle server to receive and handle callbacks
@@ -185,14 +264,16 @@ class TestIngestion(unittest.TestCase):
         )
 
         # Wait for services to be ready
-        upstream_db, downstream_db = cls._wait_for_dbs()
+        cls.upstream_db, cls.downstream_db = cls._wait_for_dbs()
         cls._wait_for_es()
         cls._wait_for_ing()
 
         # Set up the base scenario for the tests
-        cls._load_schemas(upstream_db, ["audio_view", "audioset_view", "image_view"])
         cls._load_schemas(
-            downstream_db,
+            cls.upstream_db, ["audio_view", "audioset_view", "image_view"]
+        )
+        cls._load_schemas(
+            cls.downstream_db,
             [
                 "api_deletedaudio",
                 "api_deletedimage",
@@ -203,9 +284,7 @@ class TestIngestion(unittest.TestCase):
                 "image",
             ],
         )
-        cls._load_data(upstream_db, ["audio_view", "image_view"])
-        upstream_db.close()
-        downstream_db.close()
+        cls._load_data(cls.upstream_db, ["audio_view", "image_view"])
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -232,6 +311,11 @@ class TestIngestion(unittest.TestCase):
             capture_output=True,
         )
 
+        # Close connections with databases
+        for conn in [cls.upstream_db, cls.downstream_db]:
+            if conn:
+                conn.close()
+
     @pytest.mark.order(1)
     def test_list_tasks_empty(self):
         res = requests.get(f"{ingestion_server}/task")
@@ -241,21 +325,7 @@ class TestIngestion(unittest.TestCase):
 
     @pytest.mark.order(2)
     def test_image_ingestion_succeeds(self):
-        """
-        Check that INGEST_UPSTREAM task completes successfully and responds
-        with a callback.
-        """
-        req = {
-            "model": "image",
-            "action": "INGEST_UPSTREAM",
-            "callback_url": bottle_url,
-        }
-        res = requests.post(f"{ingestion_server}/task", json=req)
-        stat_msg = "The job should launch successfully and return 202 ACCEPTED."
-        self.assertEqual(res.status_code, 202, msg=stat_msg)
-
-        # Wait for the task to send us a callback.
-        assert self.__class__.cb_queue.get(timeout=120) == "CALLBACK!"
+        self._ingest_upstream("image")
 
     @pytest.mark.order(3)
     def test_task_count_after_one(self):
@@ -266,21 +336,7 @@ class TestIngestion(unittest.TestCase):
 
     @pytest.mark.order(4)
     def test_audio_ingestion_succeeds(self):
-        """
-        Check that INGEST_UPSTREAM task completes successfully and responds
-        with a callback.
-        """
-        req = {
-            "model": "audio",
-            "action": "INGEST_UPSTREAM",
-            "callback_url": bottle_url,
-        }
-        res = requests.post(f"{ingestion_server}/task", json=req)
-        stat_msg = "The job should launch successfully and return 202 ACCEPTED."
-        self.assertEqual(res.status_code, 202, msg=stat_msg)
-
-        # Wait for the task to send us a callback.
-        assert self.__class__.cb_queue.get(timeout=120) == "CALLBACK!"
+        self._ingest_upstream("audio")
 
     @pytest.mark.order(5)
     def test_task_count_after_two(self):

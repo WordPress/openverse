@@ -137,8 +137,8 @@ _ing-api model action port="8001":
     just _ing-api {{ model }} "INGEST_UPSTREAM"
 
 # Run ingestion-server tests locally
-ing-testlocal:
-    cd ingestion_server && pipenv run ./test/run_test.sh
+ing-testlocal *args:
+    cd ingestion_server && pipenv run ./test/run_test.sh {{ args }}
 
 #######
 # API #

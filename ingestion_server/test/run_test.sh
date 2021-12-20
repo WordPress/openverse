@@ -12,7 +12,7 @@ TEST_ARG="${1:-test/}"
 
 PYTHONWARNINGS="ignore:Unverified HTTPS request" \
 PYTHONPATH=. \
-pytest -s --disable-pytest-warnings $TEST_ARG
+pytest -sx -vv --disable-pytest-warnings $TEST_ARG
 
 succeeded=$?
 if [[ $succeeded -eq 0 ]]; then

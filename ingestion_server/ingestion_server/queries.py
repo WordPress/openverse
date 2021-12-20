@@ -156,7 +156,7 @@ def get_copy_data_query(
     )
 
 
-def get_go_live_query(table: str):
+def get_go_live_query(table: str, index_mapping: dict[str, str]):
     """
     Get the query for replacing the old table with new temporary table. The
     temporary table with the "temp_import_" prefix replaces the un-prefixed
@@ -165,13 +165,21 @@ def get_go_live_query(table: str):
     :param table: the name of the old table being replaced with the temp
     :return: the SQL query for replacing the old table with new temporary table
     """
+    alters = [
+        SQL("ALTER INDEX {new} RENAME TO {old};").format(
+            new=Identifier(new), old=Identifier(old)
+        )
+        for new, old in index_mapping.items()
+    ]
 
     return SQL(
         """
         DROP TABLE {table};
+        {alters}
         ALTER TABLE {temp_table} RENAME TO {table};
     """
     ).format(
         table=Identifier(table),
+        alters=SQL("\n        ").join(alters),
         temp_table=Identifier(f"temp_import_{table}"),
     )

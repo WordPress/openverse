@@ -38,9 +38,12 @@ The server is designed to be run in a private network only. You must not expose 
 
 ## Running the tests
 
-<!-- TODO -->
+### Integration Tests
 
-#### Making requests
+The integration tests can be run using `just ing-testlocal`.
+Note that if a `.env` file exists in the folder you're running `just` from, it may interfere with the integration test variables and cause unexpected failures.
+
+### Making requests
 
 To make cURL requests to the server
 ```bash
