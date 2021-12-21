@@ -50,5 +50,11 @@ CREATE TABLE public.audio (
 
 ALTER TABLE public.audio OWNER TO deploy;
 CREATE UNIQUE INDEX audio_provider_fid_idx
-  ON public.audio
-  USING btree (provider, md5(foreign_identifier));
+    ON public.audio
+        USING btree (provider, md5(foreign_identifier));
+CREATE UNIQUE INDEX audio_identifier_key
+    ON public.audio
+    USING btree (identifier);
+CREATE UNIQUE INDEX audio_url_key
+    ON public.audio
+    USING btree (url);

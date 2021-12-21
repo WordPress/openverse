@@ -44,5 +44,11 @@ CREATE TABLE public.image (
 
 ALTER TABLE public.image OWNER TO deploy;
 CREATE UNIQUE INDEX image_provider_fid_idx
-  ON public.image
-  USING btree (provider, md5(foreign_identifier));
+    ON public.image
+    USING btree (provider, md5(foreign_identifier));
+CREATE UNIQUE INDEX image_identifier_key
+    ON public.image
+    USING btree (identifier);
+CREATE UNIQUE INDEX image_url_key
+    ON public.image
+    USING btree (url);
