@@ -146,6 +146,7 @@ export default {
     { src: '~/plugins/migration-notice.js' },
   ],
   css: [
+    '~/styles/tailwind.css',
     '~/assets/fonts.css',
     '~/styles/vocabulary.scss',
     '~/styles/global.scss',
@@ -156,7 +157,7 @@ export default {
   dev: process.env.NODE_ENV !== 'production',
   buildModules: [
     '@nuxtjs/composition-api/module',
-    '@nuxtjs/tailwindcss',
+    '@nuxt/postcss8',
     '@nuxtjs/style-resources',
     '@nuxtjs/svg',
     '@nuxtjs/eslint-module',
@@ -222,9 +223,13 @@ export default {
     environment: process.env.NODE_ENV,
     lazy: true,
   },
-  tailwindcss: {
-    // https://github.com/nuxt-community/tailwindcss-module/issues/114#issuecomment-698885369
-    configPath: '~~/tailwind.config.js',
+  build: {
+    postcss: {
+      plugins: {
+        tailwindcss: {},
+        autoprefixer: {},
+      },
+    },
   },
   storybook: {
     port: 6006, // standard port for Storybook

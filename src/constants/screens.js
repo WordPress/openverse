@@ -2,7 +2,7 @@
  * Mapping of a breakpoint name to the lower-bound of its screen-width range
  * @type {Map<string, number>}
  */
-export const SCREEN_SIZES = new Map([
+const SCREEN_SIZES = new Map([
   ['2xl', 1536],
   ['xl', 1280],
   ['lg', 1024],
@@ -10,7 +10,7 @@ export const SCREEN_SIZES = new Map([
   ['sm', 640],
 ])
 
-export const VIEWPORTS = Object.fromEntries(
+const VIEWPORTS = Object.fromEntries(
   [...Array.from(SCREEN_SIZES), ['mob', 400]].map(([key, val]) => {
     return [
       key,
@@ -27,11 +27,17 @@ export const VIEWPORTS = Object.fromEntries(
  * @param {number} screenWidth - the width of the screen
  * @returns {string} the breakpoint in which the screen lies
  */
-export const getBreakpointName = (screenWidth) => {
+const getBreakpointName = (screenWidth) => {
   for (const [breakpointName, lowerLimit] of SCREEN_SIZES) {
     if (screenWidth >= lowerLimit) {
       return breakpointName
     }
   }
   return 'mob' // smallest breakpoint
+}
+
+module.exports = {
+  SCREEN_SIZES,
+  VIEWPORTS,
+  getBreakpointName,
 }

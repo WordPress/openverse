@@ -128,7 +128,7 @@ export default {
   @apply start-0 text-light-gray w-10 h-10 absolute items-center inline-flex justify-center pointer-events-none;
 }
 .search-input {
-  @apply w-full max-w-full h-10 relative appearance-none items-center justify-start -me-px ps-10;
+  @apply w-full max-w-full h-10 relative appearance-none items-center justify-start ps-10;
   @apply placeholder-dark-charcoal-50 placeholder-opacity-50;
   @apply text-2xl text-start font-semibold placeholder-dark-charcoal-50;
   @apply border border-light-gray hover:border-gray rounded rounded-e-none focus:outline-none focus:border-gray;

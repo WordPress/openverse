@@ -1,16 +1,11 @@
 const { SCREEN_SIZES } = require('./src/constants/screens')
 
 module.exports = {
-  purge: {
-    content: ['src/**/*.{vue,js,jsx,ts,tsx,mdx}', './nuxt.config.js'],
-    /**
-     * In production, dynamically-created class names are purged as unused:
-     * https://tailwindcss.com/docs/optimizing-for-production#writing-purgeable-html
-     * The commonly-used icon size classes are safe-listed here
-     * to ensure that they are not removed:
-     */
-    safelist: ['w-4', 'w-5', 'w-6', 'h-4', 'h-5', 'h-6'],
-  },
+  content: [
+    'src/**/*.{vue,js,jsx,ts,tsx,mdx}',
+    './nuxt.config.js',
+    './tailwind.safelist.txt',
+  ],
   theme: {
     screens: Object.fromEntries(
       Array.from(SCREEN_SIZES, ([name, width]) => [name, `${width}px`])
@@ -60,9 +55,8 @@ module.exports = {
       // Special keywords
       tx: 'transparent',
       curr: 'currentColor',
+      current: 'currentColor',
     },
-    fill: (theme) => theme('colors'),
-    stroke: (theme) => theme('colors'),
     spacing: {
       // Constants
       '0.5px': '0.5px',
@@ -201,21 +195,6 @@ module.exports = {
         ring: 'inset 0 0 0 1px white',
         'ring-1.5': 'inset 0 0 0 1.5px white',
       },
-    },
-  },
-  variants: {
-    extend: {
-      backgroundColor: ['checked', 'disabled'],
-      borderColor: ['checked', 'disabled'],
-      margin: ['last'],
-      opacity: ['disabled'],
-      ringColor: ['focus', 'focus-visible'],
-      ringOffsetWidth: ['focus-visible'],
-      ringWidth: ['focus-visible'],
-      borderWidth: ['focus', 'focus-within'],
-      padding: ['focus', 'focus-within'],
-      boxShadow: ['focus', 'active'],
-      display: ['group-hover', 'group-focus'],
     },
   },
   plugins: [require('tailwindcss-rtl')],

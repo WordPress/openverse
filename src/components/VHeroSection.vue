@@ -20,7 +20,7 @@
             id="searchTerm"
             v-model.lazy="form.searchTerm"
             required="required"
-            class="hero-search__input input rounded rounded-e-none -me-px text-start lg:px-10 w-full max-w-full"
+            class="hero-search__input input rounded rounded-e-none text-start lg:px-10 w-full max-w-full"
             :aria-label="$t('hero.aria.search')"
             autofocus
             type="search"
