@@ -25,7 +25,7 @@ from analytics.report_controller import (
 
 API_URL = os.getenv("ANALYTICS_SERVER_URL", "http://localhost:8090")
 session_id = "00000000-0000-0000-0000-000000000000"
-result_id = "29cb352c-60c1-41d8-bfa1-7d6f7d955f63"
+result_id = "cdbd3bf6-1745-45bb-b399-61ee149cd58a"
 test_query = "integration test"
 engine = create_engine(settings.DATABASE_CONNECTION)
 session_maker = sessionmaker(bind=engine)

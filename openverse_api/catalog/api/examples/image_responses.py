@@ -3,20 +3,36 @@ import os
 
 origin = os.getenv("AUDIO_REQ_ORIGIN", "https://api.openverse.engineering")
 
-identifier = "29cb352c-60c1-41d8-bfa1-7d6f7d955f63"
+identifier = "cdbd3bf6-1745-45bb-b399-61ee149cd58a"
 
 base_image = {
     "id": identifier,
-    "title": "Bust of Patroclus (photograph; calotype; salt print)",
-    "foreign_landing_url": "https://collection.sciencemuseumgroup.org.uk/objects/co8554747/bust-of-patroclus-photograph-calotype-salt-print",  # noqa
-    "creator": "William Henry Fox Talbot",
-    "url": "https://coimages.sciencemuseumgroup.org.uk/images/439/67/large_1937_1281_0001__0001_.jpg",  # noqa
-    "license": "by-nc-nd",
-    "license_version": "4.0",
-    "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
-    "provider": "sciencemuseum",
-    "source": "sciencemuseum",
-    "category": None,
+    "title": "Train area in Copenhagen South / Tog område i Syd København",
+    "foreign_landing_url": "https://www.flickr.com/photos/126744325@N07/51745389858",
+    "creator": "Kristoffer Trolle",
+    "creator_url": "https://www.flickr.com/photos/126744325@N07",
+    "url": "https://live.staticflickr.com/65535/51745389858_c10358e1a3_b.jpg",
+    "license": "by",
+    "license_version": "2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0/",
+    "provider": "flickr",
+    "source": "flickr",
+    "category": "photograph",
+    "tags": [
+        {"name": "copenhagen"},
+        {"name": "danmark"},
+        {"name": "denmark"},
+        {"name": "dsb"},
+        {"name": "fujifilmxf35mmf2rwr"},
+        {"name": "fujifilmxh1"},
+        {"name": "københavn"},
+        {"name": "område"},
+        {"name": "south"},
+        {"name": "syd"},
+        {"name": "tiffenblackpromist14filter"},
+        {"name": "tog"},
+        {"name": "train"},
+    ],
     "thumbnail": f"{origin}/v1/images/{identifier}/thumb/",
     "detail_url": f"{origin}/v1/images/{identifier}/",
     "related_url": f"{origin}/v1/images/{identifier}/related/",
@@ -52,35 +68,14 @@ image_stats_200_example = {
             "display_name": "Flickr",
             "source_url": "https://www.flickr.com",
             "logo_url": None,
-            "media_count": 1000,
-        },
-        {
-            "source_name": "rawpixel",
-            "display_name": "rawpixel",
-            "source_url": "https://www.rawpixel.com",
-            "logo_url": None,
-            "media_count": 1000,
-        },
-        {
-            "source_name": "sciencemuseum",
-            "display_name": "Science Museum",
-            "source_url": "https://www.sciencemuseum.org.uk",
-            "logo_url": None,
-            "media_count": 1000,
+            "media_count": 2500,
         },
         {
             "source_name": "stocksnap",
             "display_name": "StockSnap",
             "source_url": "https://stocksnap.io",
             "logo_url": None,
-            "media_count": 1000,
-        },
-        {
-            "source_name": "wikimedia",
-            "display_name": "Wikimedia",
-            "source_url": "https://commons.wikimedia.org",
-            "logo_url": None,
-            "media_count": 1000,
+            "media_count": 2500,
         },
     ]
 }
@@ -88,13 +83,11 @@ image_stats_200_example = {
 image_detail_200_example = {
     "application/json": base_image
     | {
-        "attribution": '"Bust of Patroclus (photograph; calotype; salt print)" by William Henry Fox Talbot is licensed under CC-BY-NC-ND 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/4.0/.',  # noqa
-        "height": 1536,
-        "width": 1276,
-        "tags": None,
-        "creator_url": None,
-        "filesize": None,
-        "filetype": None,
+        "attribution": '"Train area in Copenhagen South / Tog område i Syd København" by Kristoffer Trolle is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.',  # noqa
+        "height": 683,
+        "width": 1024,
+        "filesize": "157497",
+        "filetype": "jpg",
     }
 }
 
@@ -134,12 +127,12 @@ image_oembed_200_example = {
     "application/json": {
         "version": "1.0",
         "type": "photo",
-        "width": 1276,
-        "height": 1536,
-        "title": "Bust of Patroclus (photograph; calotype; salt print)",
-        "author_name": "William Henry Fox Talbot",
-        "author_url": None,
-        "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+        "width": 1024,
+        "height": 683,
+        "title": "Train area in Copenhagen South / Tog område i Syd København",
+        "author_name": "Kristoffer Trolle",
+        "author_url": "https://www.flickr.com/photos/126744325@N07",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/",
     }
 }
 

@@ -34,10 +34,7 @@ docker-compose exec -T "$DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openle
 		(created_on, provider_identifier, provider_name, domain_name, filter_content, media_type)
 	VALUES
 		(now(), 'flickr', 'Flickr', 'https://www.flickr.com', false, 'image'),
-		(now(), 'rawpixel', 'rawpixel', 'https://www.rawpixel.com', false, 'image'),
-		(now(), 'sciencemuseum', 'Science Museum', 'https://www.sciencemuseum.org.uk', false, 'image'),
 		(now(), 'stocksnap', 'StockSnap', 'https://stocksnap.io', false, 'image'),
-		(now(), 'wikimedia', 'Wikimedia', 'https://commons.wikimedia.org', false, 'image'),
 		(now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio'),
 		(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio');
 	EOF"
@@ -57,7 +54,7 @@ docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy 
 		ADD COLUMN ingestion_type          varchar(1000);
 
 	\copy image_view \
-			(identifier, created_on, updated_on, ingestion_type, provider, source, foreign_identifier, foreign_landing_url, url, thumbnail, width, height, filesize, license, license_version, creator, creator_url, title, meta_data, tags,watermarked, last_synced_with_source, removed_from_source, standardized_popularity) \
+			(identifier, created_on, updated_on, ingestion_type, provider, source, foreign_identifier, foreign_landing_url, url, thumbnail, width, height, filesize, license, license_version, creator, creator_url, title, meta_data, tags, watermarked, last_synced_with_source, removed_from_source, filetype, category, standardized_popularity) \
 		from './sample_data/sample_images.csv' \
 		with (FORMAT csv, HEADER true);
 	EOF"

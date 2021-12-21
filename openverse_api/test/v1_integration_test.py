@@ -4,18 +4,13 @@ designed. Run with the `pytest -s` command from this directory.
 """
 
 import json
-import time
-import uuid
 from test.constants import API_URL
 
-import catalog.settings
 import pytest
 import requests
 from catalog.api.licenses import LICENSE_GROUPS
-from catalog.api.models import Image, OAuth2Verification
+from catalog.api.models import Image
 from catalog.api.utils.watermark import watermark
-from django.db.models import Max
-from django.urls import reverse
 
 
 @pytest.fixture
@@ -106,105 +101,18 @@ def test_creator_quotation_grouping():
     down their searches more effectively.
     """
     no_quotes = json.loads(
-        requests.get(
-            f"{API_URL}/v1/images?creator=william%20ford%stanley", verify=False
-        ).text
+        requests.get(f"{API_URL}/v1/images?creator=Steve%20Wedgwood", verify=False).text
     )
     quotes = json.loads(
         requests.get(
-            f'{API_URL}/v1/images?creator="william%20ford%stanley"', verify=False
+            f'{API_URL}/v1/images?creator="Steve%20Wedgwood"', verify=False
         ).text
     )
     # Did quotation marks actually narrow down the search?
     assert len(no_quotes["results"]) > len(quotes["results"])
     # Did we find only William Ford Stanley works, or also by others?
     for result in quotes["results"]:
-        assert "William Ford Stanley" in result["creator"]
-
-
-@pytest.fixture
-def test_auth_tokens_registration():
-    payload = {
-        "name": f"INTEGRATION TEST APPLICATION {uuid.uuid4()}",
-        "description": "A key for testing the OAuth2 registration process.",
-        "email": "example@example.org",
-    }
-    response = requests.post(
-        f"{API_URL}/v1/auth_tokens/register", json=payload, verify=False
-    )
-    parsed_response = json.loads(response.text)
-    assert response.status_code == 201
-    return parsed_response
-
-
-@pytest.fixture
-def test_auth_token_exchange(test_auth_tokens_registration):
-    client_id = test_auth_tokens_registration["client_id"]
-    client_secret = test_auth_tokens_registration["client_secret"]
-    token_exchange_request = (
-        f"client_id={client_id}&"
-        f"client_secret={client_secret}&"
-        "grant_type=client_credentials"
-    )
-    headers = {
-        "content-type": "application/x-www-form-urlencoded",
-        "cache-control": "no-cache",
-    }
-    response = json.loads(
-        requests.post(
-            f"{API_URL}/v1/auth_tokens/token/",
-            data=token_exchange_request,
-            headers=headers,
-            verify=False,
-        ).text
-    )
-    assert "access_token" in response
-    return response
-
-
-def test_auth_rate_limit_reporting(test_auth_token_exchange, verified=False):
-    # We're anonymous still, so we need to wait a second before exchanging
-    # the token.
-    time.sleep(1)
-    token = test_auth_token_exchange["access_token"]
-    headers = {"Authorization": f"Bearer {token}"}
-    response = json.loads(
-        requests.get(f"{API_URL}/v1/rate_limit", headers=headers).text
-    )
-    if verified:
-        assert response["rate_limit_model"] == "standard"
-        assert response["verified"] is True
-    else:
-        assert response["rate_limit_model"] == "standard"
-        assert response["verified"] is False
-
-
-@pytest.fixture(scope="session")
-def django_db_setup():
-    if API_URL == "http://localhost:8000":
-        catalog.settings.DATABASES["default"] = {
-            "ENGINE": "django.db.backends.postgresql",
-            "HOST": "127.0.0.1",
-            "NAME": "openledger",
-            "PASSWORD": "deploy",
-            "USER": "deploy",
-            "PORT": 5432,
-        }
-
-
-@pytest.mark.django_db
-def test_auth_email_verification(test_auth_token_exchange, django_db_setup):
-    # This test needs to cheat by looking in the database, so it will be
-    # skipped in non-local environments.
-    if API_URL == "http://localhost:8000":
-        _id = OAuth2Verification.objects.aggregate(Max("id"))["id__max"]
-        verify = OAuth2Verification.objects.get(id=_id)
-        code = verify.code
-        path = reverse("verify-email", args=[code])
-        url = f"{API_URL}{path}"
-        response = requests.get(url)
-        assert response.status_code == 200
-        test_auth_rate_limit_reporting(test_auth_token_exchange, verified=True)
+        assert "Steve Wedgwood" in result["creator"]
 
 
 @pytest.mark.skip(reason="Unmaintained feature/grequests ssl recursion bug")
@@ -304,106 +212,6 @@ def test_extension_filter():
     parsed = json.loads(response.text)
     for result in parsed["results"]:
         assert ".jpg" in result["url"]
-
-
-@pytest.fixture
-def search_factory():
-    """
-    Allows passing url parameters along with a search request.
-    """
-
-    def _parameterized_search(**kwargs):
-        response = requests.get(f"{API_URL}/v1/images", params=kwargs, verify=False)
-        assert response.status_code == 200
-        parsed = response.json()
-        return parsed
-
-    return _parameterized_search
-
-
-@pytest.fixture
-def search_with_dead_links(search_factory):
-    """
-    Here we pass filter_dead = False.
-    """
-
-    def _search_with_dead_links(**kwargs):
-        return search_factory(filter_dead=False, **kwargs)
-
-    return _search_with_dead_links
-
-
-@pytest.fixture
-def search_without_dead_links(search_factory):
-    """
-    Here we pass filter_dead = True.
-    """
-
-    def _search_without_dead_links(**kwargs):
-        return search_factory(filter_dead=True, **kwargs)
-
-    return _search_without_dead_links
-
-
-def test_page_size_removing_dead_links(search_without_dead_links):
-    """
-    We have about 500 dead links in the sample data and should have around
-    8 dead links in the first 100 results on a query composed of a single
-    wildcard operator.
-
-    Test whether the number of results returned is equal to the requested
-    page_size of 100.
-    """
-    data = search_without_dead_links(q="*", page_size=100)
-    assert len(data["results"]) == 100
-
-
-def test_dead_links_are_correctly_filtered(
-    search_with_dead_links, search_without_dead_links
-):
-    """
-    Test the results for the same query with and without dead links are
-    actually different.
-
-    We use the results' id to compare them.
-    """
-    data_with_dead_links = search_with_dead_links(q="*", page_size=100)
-    data_without_dead_links = search_without_dead_links(q="*", page_size=100)
-
-    comparisons = []
-    for result_1 in data_with_dead_links["results"]:
-        for result_2 in data_without_dead_links["results"]:
-            comparisons.append(result_1["id"] == result_2["id"])
-
-    # Some results should be different
-    # so we should have less than 100 True comparisons
-    assert comparisons.count(True) < 100
-
-
-def test_page_consistency_removing_dead_links(search_without_dead_links):
-    """
-    Test the results returned in consecutive pages are never repeated when
-    filtering out dead links.
-    """
-    total_pages = 30
-    page_size = 5
-
-    page_results = []
-    for page in range(1, total_pages + 1):
-        page_data = search_without_dead_links(q="*", page_size=page_size, page=page)
-        page_results += page_data["results"]
-
-    def no_duplicates(xs):
-        s = set()
-        for x in xs:
-            if x in s:
-                return False
-            s.add(x)
-        return True
-
-    ids = list(map(lambda x: x["id"], page_results))
-    # No results should be repeated so we should have no duplicate ids
-    assert no_duplicates(ids)
 
 
 @pytest.fixture

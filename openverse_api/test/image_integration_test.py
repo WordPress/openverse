@@ -22,6 +22,9 @@ import pytest
 import requests
 
 
+identifier = "cdbd3bf6-1745-45bb-b399-61ee149cd58a"
+
+
 @pytest.fixture
 def image_fixture():
     response = requests.get(f"{API_URL}/v1/images?q=dog", verify=False)
@@ -65,7 +68,7 @@ def test_audio_report(image_fixture):
 
 def test_oembed_endpoint_for_json():
     params = {
-        "url": "https://any.domain/any/path/29cb352c-60c1-41d8-bfa1-7d6f7d955f63",
+        "url": f"https://any.domain/any/path/{identifier}",
         # 'format': 'json' is the default
     }
     response = requests.get(
@@ -75,14 +78,14 @@ def test_oembed_endpoint_for_json():
     assert response.headers["Content-Type"] == "application/json"
 
     parsed = response.json()
-    assert parsed["width"] == 1276
-    assert parsed["height"] == 1536
-    assert parsed["license_url"] == "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+    assert parsed["width"] == 1024
+    assert parsed["height"] == 683
+    assert parsed["license_url"] == "https://creativecommons.org/licenses/by/2.0/"
 
 
 def test_oembed_endpoint_for_xml():
     params = {
-        "url": "https://any.domain/any/path/29cb352c-60c1-41d8-bfa1-7d6f7d955f63",
+        "url": f"https://any.domain/any/path/{identifier}",
         "format": "xml",
     }
     response = requests.get(
@@ -93,9 +96,9 @@ def test_oembed_endpoint_for_xml():
 
     response_body_as_xml = ET.fromstring(response.content)
     xml_tree = ET.ElementTree(response_body_as_xml)
-    assert xml_tree.find("width").text == "1276"
-    assert xml_tree.find("height").text == "1536"
+    assert xml_tree.find("width").text == "1024"
+    assert xml_tree.find("height").text == "683"
     assert (
         xml_tree.find("license_url").text
-        == "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+        == "https://creativecommons.org/licenses/by/2.0/"
     )

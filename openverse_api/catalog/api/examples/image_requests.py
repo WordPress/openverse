@@ -5,7 +5,7 @@ token = os.getenv("AUDIO_REQ_TOKEN", "DLBYIcfnKfolaXKcmMC8RIDCavc2hW")
 origin = os.getenv("AUDIO_REQ_ORIGIN", "https://api.openverse.engineering")
 
 auth = f'-H "Authorization: Bearer {token}"' if token else ""
-identifier = "29cb352c-60c1-41d8-bfa1-7d6f7d955f63"
+identifier = "cdbd3bf6-1745-45bb-b399-61ee149cd58a"
 
 syntax_examples = {
     "using single query parameter": "test",
@@ -30,7 +30,7 @@ curl {auth} "{origin}/v1/images/?q={syntax}"
 
 image_search_curl = f"""
 # Search for images titled "Bust" by Talbot
-curl {auth} "{origin}/v1/images/?title=Bust&creator=Talbot"
+curl {auth} "{origin}/v1/images/?title=Train&creator=Trolle"
 """
 
 image_stats_curl = f"""

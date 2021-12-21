@@ -1,9 +1,9 @@
 import logging
 import time
 
+import django_redis
 import grequests
 from catalog.api.utils.dead_link_mask import get_query_mask, save_query_mask
-from django_redis import get_redis_connection
 
 
 log = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ def validate_images(query_hash, start_slice, results, image_urls):
         return
     start_time = time.time()
     # Pull matching images from the cache.
-    redis = get_redis_connection("default")
+    redis = django_redis.get_redis_connection("default")
     cache_prefix = "valid:"
     cached_statuses = redis.mget([cache_prefix + url for url in image_urls])
     cached_statuses = [
