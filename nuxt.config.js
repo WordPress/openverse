@@ -127,7 +127,7 @@ export default {
   },
   components: {
     dirs: [
-      '~/components',
+      { path: '~/components', ignore: '**/*.types.js' },
       '~/components/ContentReport',
       '~/components/Filters',
       '~/components/ImageDetails',
@@ -136,7 +136,6 @@ export default {
       '~/components/VMetaSearch',
       '~/components/MediaTag',
       '~/components/Skeleton',
-      '~/components/VPopover',
     ],
   },
   plugins: [

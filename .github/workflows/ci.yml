@@ -45,3 +45,6 @@ jobs:
 
       - name: Run tests
         run: pnpm i18n:get-translations && pnpm test:unit
+
+      - name: Run Storybook smoke-test
+        run: pnpm storybook -- --ci --smoke-test

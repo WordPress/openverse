@@ -40,7 +40,7 @@
 <script>
 import { defineComponent, toRefs, ref } from '@nuxtjs/composition-api'
 import { FocusTrap } from 'focus-trap-vue'
-import { VTeleport } from '~/components/VTeleport'
+import VTeleport from '~/components/VTeleport/VTeleport'
 import { useDialogContent } from '~/composables/use-dialog-content'
 import { warn } from '~/utils/warn'
 import VButton from '~/components/VButton.vue'
