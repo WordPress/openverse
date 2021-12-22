@@ -81,7 +81,7 @@ dag = DAG(
     },
     max_active_tasks=MAX_ACTIVE_TASKS,
     max_active_runs=1,
-    schedule_interval="* * * * *",
+    schedule_interval=None,
     catchup=False,
     tags=["database"],
     doc_md=__doc__,
