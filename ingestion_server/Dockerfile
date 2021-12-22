@@ -13,6 +13,8 @@ RUN apt-get update \
     && chown -R supervisord:supervisord /worker_state
 
 ENV PYTHONPATH=$PYTHONPATH:/ingestion_server/
+# TLDEXTRACT fails to cache in /home/supervisord, set its cache to /tmp instead
+ENV TLDEXTRACT_CACHE=/tmp/python-tldextract
 
 WORKDIR /ingestion_server
 
