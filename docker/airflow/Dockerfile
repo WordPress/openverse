@@ -2,8 +2,6 @@ FROM python:3.9-slim
 
 # Build-time arguments, with sensible defaults
 ARG REQUIREMENTS_FILE=requirements_prod.txt
-# https://airflow.apache.org/docs/apache-airflow/2.1.2/installation.html#constraints-files
-ARG CONSTRAINTS_FILE="https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-3.9.txt"
 
 # Path configurations
 ENV AIRFLOW_HOME=/usr/local/airflow
@@ -41,6 +39,9 @@ WORKDIR  ${AIRFLOW_HOME}
 # Always add the prod req because the dev reqs depend on it for deduplication
 COPY ${REQUIREMENTS_FILE} requirements_prod.txt ${AIRFLOW_HOME}/
 COPY docker/airflow/wait_for_db.py /opt/airflow/
+
+# https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html#constraints-files
+ARG CONSTRAINTS_FILE="https://raw.githubusercontent.com/apache/airflow/constraints-2.2.3/constraints-3.9.txt"
 
 RUN pip install --user -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE}
 

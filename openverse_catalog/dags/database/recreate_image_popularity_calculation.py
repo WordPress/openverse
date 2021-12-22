@@ -17,7 +17,7 @@ from common.popularity import operators
 
 DAG_ID = "recreate_image_popularity_calculation"
 DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")
-CONCURRENCY = 1
+MAX_ACTIVE_TASKS = 1
 SCHEDULE_CRON = None
 
 DAG_DEFAULT_ARGS = {
@@ -34,15 +34,15 @@ DAG_DEFAULT_ARGS = {
 def create_dag(
     dag_id=DAG_ID,
     args=DAG_DEFAULT_ARGS,
-    concurrency=CONCURRENCY,
-    max_active_runs=CONCURRENCY,
+    max_active_tasks=MAX_ACTIVE_TASKS,
+    max_active_runs=MAX_ACTIVE_TASKS,
     schedule_cron=SCHEDULE_CRON,
     postgres_conn_id=DB_CONN_ID,
 ):
     dag = DAG(
         dag_id=dag_id,
         default_args=args,
-        concurrency=concurrency,
+        max_active_tasks=max_active_tasks,
         max_active_runs=max_active_runs,
         schedule_interval=schedule_cron,
         catchup=False,

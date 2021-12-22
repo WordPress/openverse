@@ -62,7 +62,7 @@ DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")
 AWS_CONN_ID = os.getenv("AWS_CONN_ID", "no_aws_conn_id")
 OPENVERSE_BUCKET = os.getenv("OPENVERSE_BUCKET")
 MINIMUM_FILE_AGE_MINUTES = int(os.getenv("LOADER_FILE_AGE", 15))
-CONCURRENCY = 5
+MAX_ACTIVE_TASKS = 5
 TIMESTAMP_TEMPLATE = "{{ ts_nodash }}"
 
 OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
@@ -79,7 +79,7 @@ dag = DAG(
         "retry_delay": timedelta(seconds=15),
         "on_failure_callback": slack.on_failure_callback,
     },
-    concurrency=CONCURRENCY,
+    max_active_tasks=MAX_ACTIVE_TASKS,
     max_active_runs=1,
     schedule_interval="* * * * *",
     catchup=False,

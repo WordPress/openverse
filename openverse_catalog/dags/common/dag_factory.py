@@ -29,7 +29,7 @@ def create_provider_api_workflow(
     main_function,
     default_args=None,
     start_date=datetime(1970, 1, 1),
-    concurrency=1,
+    max_active_tasks=1,
     schedule_string="@daily",
     dated=True,
     day_shift=0,
@@ -55,7 +55,7 @@ def create_provider_api_workflow(
                       __init__ method.
     start_date:       datetime.datetime giving the first valid execution
                       date of the DAG.
-    concurrency:      integer that sets the number of tasks which can
+    max_active_tasks:      integer that sets the number of tasks which can
                       run simultaneously for this DAG, and the number of
                       dagruns of this DAG which can be run in parallel.
                       It's important to keep the rate limits of the
@@ -76,8 +76,8 @@ def create_provider_api_workflow(
     dag = DAG(
         dag_id=dag_id,
         default_args={**default_args, "start_date": start_date},
-        concurrency=concurrency,
-        max_active_runs=concurrency,
+        max_active_tasks=max_active_tasks,
+        max_active_runs=max_active_tasks,
         dagrun_timeout=dagrun_timeout,
         start_date=start_date,
         schedule_interval=schedule_string,
@@ -110,7 +110,7 @@ def create_day_partitioned_ingestion_dag(
     main_function,
     reingestion_day_list_list,
     start_date=datetime(1970, 1, 1),
-    concurrency=1,
+    max_active_tasks=1,
     default_args=None,
     dagrun_timeout=timedelta(hours=23),
     ingestion_task_timeout=timedelta(hours=2),
@@ -140,7 +140,7 @@ def create_day_partitioned_ingestion_dag(
 
     start_date:              datetime.datetime giving the
                              first valid execution_date of the DAG.
-    concurrency:             integer that sets the number of tasks which
+    max_active_tasks:             integer that sets the number of tasks which
                              can run simultaneously for this DAG. It's
                              important to keep the rate limits of the
                              Provider API in mind when setting this
@@ -186,14 +186,14 @@ def create_day_partitioned_ingestion_dag(
     may be run.  The order within the inner lists is not relevant.  The
     size of the inner lists does *not* set the number of simultaneous
     executions of the `main_function` allowed; that is set by the
-    `concurrency` parameter.
+    `max_active_tasks` parameter.
     """
     default_args = default_args or DAG_DEFAULT_ARGS
     dag = DAG(
         dag_id=dag_id,
         default_args={**default_args, "start_date": start_date},
-        concurrency=concurrency,
-        max_active_runs=concurrency,
+        max_active_tasks=max_active_tasks,
+        max_active_runs=max_active_tasks,
         dagrun_timeout=dagrun_timeout,
         schedule_interval="@daily",
         start_date=start_date,

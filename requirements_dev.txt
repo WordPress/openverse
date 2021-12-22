@@ -1,6 +1,6 @@
 -r requirements_prod.txt
 
-ipython==7.25.0
+ipython
 pytest-mock==3.6.1
 pytest-raises==0.11
 pytest-random-order==1.0.4

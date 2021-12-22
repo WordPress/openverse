@@ -4,14 +4,13 @@ import os
 import socket
 import time
 from collections import namedtuple
-from datetime import datetime
+from unittest import mock
 from urllib.parse import urlparse
 
 import boto3
 import psycopg2
 import pytest
 from airflow.models import TaskInstance
-from airflow.operators.dummy import DummyOperator
 from common.constants import IMAGE
 from common.loader import sql
 from common.loader.sql import TSV_COLUMNS, create_column_definitions
@@ -60,9 +59,8 @@ UNIQUE_CONDITION_QUERY = (
 
 DROP_IMAGE_INDEX_QUERY = f"DROP INDEX IF EXISTS {TEST_IMAGE_TABLE}_provider_fid_idx;"
 
-op_no_dag = DummyOperator(task_id="op_no_dag")
-naive_datetime = datetime(2016, 1, 1).replace(tzinfo=None)
-ti = TaskInstance(task=op_no_dag, execution_date=naive_datetime)
+ti = mock.Mock(spec=TaskInstance)
+ti.xcom_pull.return_value = None
 
 COLUMN_NAMES = [column.db_name for column in IMAGE_TABLE_COLUMNS]
 

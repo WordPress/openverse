@@ -24,6 +24,6 @@ globals()[DAG_ID] = create_day_partitioned_ingestion_dag(
     europeana.main,
     reingestion_days,
     start_date=START_DATE,
-    concurrency=3,
+    max_active_tasks=3,
     ingestion_task_timeout=INGESTION_TASK_TIMEOUT,
 )

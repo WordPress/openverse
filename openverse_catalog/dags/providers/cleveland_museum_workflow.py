@@ -12,7 +12,7 @@ globals()[DAG_ID] = create_provider_api_workflow(
     DAG_ID,
     cleveland_museum_of_art.main,
     start_date=datetime(2020, 1, 15),
-    concurrency=1,
+    max_active_tasks=1,
     schedule_string="@daily",
     dated=False,
 )

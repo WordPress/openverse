@@ -169,7 +169,7 @@ with DAG(
     default_args=DAG_DEFAULT_ARGS,
     start_date=datetime(1970, 1, 1),
     schedule_interval="0 0 * * 1",
-    concurrency=1,
+    max_active_tasks=1,
     catchup=False,
     tags=["commoncrawl"],
 ) as dag:

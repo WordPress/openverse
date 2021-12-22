@@ -42,6 +42,6 @@ globals()[DAG_ID] = create_day_partitioned_ingestion_dag(
     flickr.main,
     reingestion_days,
     start_date=START_DATE,
-    concurrency=1,
+    max_active_tasks=1,
     ingestion_task_timeout=INGESTION_TASK_TIMEOUT,
 )

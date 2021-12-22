@@ -17,9 +17,9 @@ globals()[DAG_ID] = create_provider_api_workflow(
     DAG_ID,
     wikimedia_commons.main,
     start_date=datetime(1970, 1, 1),
-    # concurrency was 3 before,
+    # max_active_tasks was 3 before,
     # maybe this is the reason for frequent failures?
-    concurrency=1,
+    max_active_tasks=1,
     schedule_string="@monthly",
     dated=True,
 )

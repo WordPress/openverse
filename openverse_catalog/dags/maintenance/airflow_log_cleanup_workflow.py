@@ -30,7 +30,7 @@ BASE_LOG_FOLDER = conf.get("logging", "BASE_LOG_FOLDER").rstrip("/")
 # temporarily avoid deleting the logs
 DEFAULT_MAX_LOG_AGE_IN_DAYS = 7
 ENABLE_DELETE = True
-CONCURRENCY = 1
+MAX_ACTIVE_TASKS = 1
 # should we send someone an email when this DAG fails?
 ALERT_EMAIL_ADDRESSES = ""
 DAG_DEFAULT_ARGS = {
@@ -48,13 +48,13 @@ DAG_DEFAULT_ARGS = {
 def create_dag(
     dag_id=DAG_ID,
     args=DAG_DEFAULT_ARGS,
-    concurrency=CONCURRENCY,
-    max_active_runs=CONCURRENCY,
+    max_active_tasks=MAX_ACTIVE_TASKS,
+    max_active_runs=MAX_ACTIVE_TASKS,
 ):
     dag = DAG(
         dag_id=dag_id,
         default_args=args,
-        concurrency=concurrency,
+        max_active_tasks=max_active_tasks,
         schedule_interval="@weekly",
         max_active_runs=max_active_runs,
         # If this was True, airflow would run this DAG in the beginning

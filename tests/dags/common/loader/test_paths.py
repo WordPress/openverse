@@ -1,19 +1,15 @@
-import datetime
 import time
+from unittest import mock
 
 import pytest
 from airflow.exceptions import AirflowSkipException
 from airflow.models import TaskInstance
-from airflow.operators.dummy import DummyOperator
 from common.loader import paths
 
 
 TEST_ID = "testing"
 
-ti = TaskInstance(
-    task=DummyOperator(task_id="op_no_dag"),
-    execution_date=datetime.datetime(2016, 1, 1),
-)
+ti = mock.Mock(spec=TaskInstance)
 
 
 def test_stage_oldest_tsv_file_finds_tsv_file(tmpdir):

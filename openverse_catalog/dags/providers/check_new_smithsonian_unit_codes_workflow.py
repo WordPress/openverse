@@ -14,7 +14,7 @@ from common.loader import smithsonian_unit_codes
 
 DAG_ID = "check_new_smithsonian_unit_codes_workflow"
 DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")
-CONCURRENCY = 5
+MAX_ACTIVE_TASKS = 5
 
 DAG_DEFAULT_ARGS = {
     "owner": "data-eng-admin",
@@ -30,14 +30,14 @@ DAG_DEFAULT_ARGS = {
 def create_dag(
     dag_id=DAG_ID,
     args=DAG_DEFAULT_ARGS,
-    concurrency=CONCURRENCY,
-    max_active_runs=CONCURRENCY,
+    max_active_tasks=MAX_ACTIVE_TASKS,
+    max_active_runs=MAX_ACTIVE_TASKS,
     postgres_conn_id=DB_CONN_ID,
 ):
     dag = DAG(
         dag_id=dag_id,
         default_args=args,
-        concurrency=concurrency,
+        max_active_tasks=max_active_tasks,
         max_active_runs=max_active_runs,
         catchup=False,
         schedule_interval=None,
