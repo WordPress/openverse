@@ -34,7 +34,7 @@ jobs:
       run: |
         pipenv run python archive_column.py \
         --project-number 8 \
-        --column "Merged\!"
+        --column 'Merged!'
 
     - name: Clear PRs in "Closed"
       working-directory: ./python
