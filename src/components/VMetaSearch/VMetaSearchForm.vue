@@ -21,12 +21,8 @@
         tag="h4"
         class="b-header mb-2"
       >
-        <template #type>
-          {{ type }}
-        </template>
-        <template #query>
-          {{ query.q }}
-        </template>
+        <template #type>{{ type }}</template>
+        <template #query>{{ query.q }}</template>
       </i18n>
       <i18n path="meta-search.form.caption" tag="p">
         <template #type>{{ type }}</template>
