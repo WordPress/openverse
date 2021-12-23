@@ -1,5 +1,4 @@
 import { sendWindowMessage } from '~/utils/send-message.js'
-import config from '../../nuxt.config.js'
 import untranslatedLocales from '../locales/scripts/untranslated-locales.json'
 import {
   computed,
@@ -130,7 +129,6 @@ export default function useI18nSync() {
   onMounted(() => {
     window.addEventListener('message', localeMsgHandler)
     sendWindowMessage({
-      debug: config.dev,
       type: 'localeGet',
       value: {},
     })

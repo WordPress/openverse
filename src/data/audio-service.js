@@ -1,4 +1,4 @@
-import config from '../../nuxt.config.js'
+import { dev } from '~/utils/dev'
 import sampleAudioResponses from './sample-audio-responses.json'
 
 import ApiService from '~/data/api-service'
@@ -16,7 +16,7 @@ const AudioService = {
    * @return {Promise<{data: any}>}
    */
   search(params) {
-    if (config.dev) {
+    if (dev) {
       const data = JSON.parse(JSON.stringify(sampleAudioResponses.search))
       return Promise.resolve({ data })
     }
@@ -37,7 +37,7 @@ const AudioService = {
       )
     }
 
-    return config.dev
+    return dev
       ? Promise.resolve({ data: sampleAudioResponses.detail })
       : ApiService.get('audio', params.id)
   },
@@ -55,7 +55,7 @@ const AudioService = {
       )
     }
 
-    return config.dev
+    return dev
       ? Promise.resolve({ data: sampleAudioResponses.related })
       : ApiService.get('audio', `${params.id}/related`)
   },

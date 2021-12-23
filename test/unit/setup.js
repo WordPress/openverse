@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import { env } from '../../nuxt.config'
+import { env } from '~/utils/env'
 import { config } from '@vue/test-utils'
 
 // Attach nuxt config to process

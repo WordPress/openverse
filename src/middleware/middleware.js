@@ -1,6 +1,5 @@
 import { SET_EMBEDDED, SET_REFERRED } from '~/constants/mutation-types'
 import { sendWindowMessage } from '~/utils/send-message'
-import config from '../../nuxt.config.js'
 import { NAV } from '~/constants/store-modules'
 
 /**
@@ -24,7 +23,6 @@ export default function ({ store, query, route }) {
   }
   if (process.client) {
     sendWindowMessage({
-      debug: config.dev,
       type: 'urlChange',
       value: { path: route.fullPath, title: document.title },
     })

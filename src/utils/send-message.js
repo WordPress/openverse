@@ -1,16 +1,18 @@
+import { dev } from '~/utils/dev'
+
 // TODO: set correct targetOrigin of the parent window
 const TARGET_ORIGIN = '*'
 
 /**
  * Send message to the outer window. Can only be called on client-side
  * because it uses `window` object.
- * @typedef {Object} message
- * @property {boolean} debug - whether more verbose debug output should be used
- * @property {'resize'|'changeUrl'} type - event that triggers the message
- * @property {Object} value - the value of event
+ * @param {Object} message
+ * @param {boolean} [message.debug] - whether more verbose debug output should be used
+ * @param {'resize'|'changeUrl'} message.type - event that triggers the message
+ * @param {any} message.value - the value of event
  */
-export const sendWindowMessage = (message) => {
+export const sendWindowMessage = ({ debug = dev, ...message }) => {
   if (window.parent !== window) {
-    window.parent.postMessage(message, TARGET_ORIGIN)
+    window.parent.postMessage({ debug, ...message }, TARGET_ORIGIN)
   }
 }
