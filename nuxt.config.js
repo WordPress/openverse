@@ -126,17 +126,7 @@ export default {
     middleware: 'middleware',
   },
   components: {
-    dirs: [
-      { path: '~/components', ignore: '**/*.types.js' },
-      '~/components/ContentReport',
-      '~/components/Filters',
-      '~/components/ImageDetails',
-      '~/components/ImageGrid',
-      '~/components/MediaInfo',
-      '~/components/VMetaSearch',
-      '~/components/MediaTag',
-      '~/components/Skeleton',
-    ],
+    dirs: [{ path: '~/components', extensions: ['vue'], pathPrefix: false }],
   },
   plugins: [
     { src: '~/plugins/ab-test-init.js', mode: 'client' },
