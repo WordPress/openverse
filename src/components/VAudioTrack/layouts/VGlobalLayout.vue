@@ -18,13 +18,17 @@
 </template>
 
 <script>
+import { defineComponent } from '@nuxtjs/composition-api'
+
 import AudioThumbnail from '~/components/AudioThumbnail/AudioThumbnail.vue'
 
-export default {
-  name: 'Global',
-  components: { AudioThumbnail },
+export default defineComponent({
+  name: 'VGlobalLayout',
+  components: {
+    AudioThumbnail,
+  },
   props: ['audio'],
-}
+})
 </script>
 
 <style>

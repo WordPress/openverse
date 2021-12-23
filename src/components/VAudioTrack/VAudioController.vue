@@ -1,6 +1,6 @@
 <template>
   <div class="audio-controller">
-    <Waveform
+    <VWaveform
       v-bind="waveformProps"
       :message="message ? $t(`audio-track.messages.${message}`) : null"
       :current-time="currentTime"
@@ -27,9 +27,15 @@
 </template>
 
 <script>
-import { computed, ref, useStore, watch } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  ref,
+  useStore,
+  watch,
+} from '@nuxtjs/composition-api'
 
-import Waveform from '~/components/AudioTrack/Waveform'
+import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
 
 import { ACTIVE } from '~/constants/store-modules.js'
 import {
@@ -42,9 +48,9 @@ import {
  * HTMLAudioElement and the Active Media Store. Also displays the waveform that
  * is deeply linked to timekeeping for the HTMLAudioElement.
  */
-export default {
-  name: 'AudioController',
-  components: { Waveform },
+export default defineComponent({
+  name: 'VAudioController',
+  components: { VWaveform },
   inheritAttrs: false,
   model: {
     prop: 'status',
@@ -201,5 +207,5 @@ export default {
       handleSeeked,
     }
   },
-}
+})
 </script>

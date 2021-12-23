@@ -1,4 +1,4 @@
-import AudioTrack from '~/components/AudioTrack/AudioTrack'
+import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 import { render } from '@testing-library/vue'
 import Vuei18n from 'vue-i18n'
 
@@ -18,12 +18,12 @@ const useVueI18n = (vue) => {
 }
 
 const stubs = {
-  AudioController: true,
+  VAudioController: true,
   DownloadButton: true,
-  PlayPause: true,
+  VPlayPause: true,
   NuxtLink: true,
   VLicense: true,
-  Waveform: true,
+  VWaveform: true,
 }
 
 describe('AudioTrack', () => {
@@ -82,7 +82,7 @@ describe('AudioTrack', () => {
   })
 
   it('should render the full audio track component even without duration', () => {
-    const { getByText } = render(AudioTrack, options, useVueI18n)
+    const { getByText } = render(VAudioTrack, options, useVueI18n)
     getByText(props.audio.creator)
   })
 
@@ -91,19 +91,19 @@ describe('AudioTrack', () => {
       ...options.propsData,
       layout: 'row',
     }
-    const { getByText } = render(AudioTrack, options, useVueI18n)
+    const { getByText } = render(VAudioTrack, options, useVueI18n)
     getByText('by ' + props.audio.creator)
   })
 
   it('should show audio title as main page title', () => {
-    const { getByText } = render(AudioTrack, options, useVueI18n)
+    const { getByText } = render(VAudioTrack, options, useVueI18n)
     const element = getByText(props.audio.title)
     expect(element).toBeInstanceOf(HTMLHeadingElement)
     expect(element.tagName).toEqual('H1')
   })
 
   it('should show audio creator with link', () => {
-    const { getByText } = render(AudioTrack, options, useVueI18n)
+    const { getByText } = render(VAudioTrack, options, useVueI18n)
     const element = getByText(props.audio.creator)
     expect(element).toBeInstanceOf(HTMLAnchorElement)
     expect(element).toHaveAttribute('href', props.audio.creator_url)

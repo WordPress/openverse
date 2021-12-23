@@ -1,7 +1,7 @@
 <template>
   <section>
     <template v-if="supported">
-      <AudioTrack
+      <VAudioTrack
         v-for="audio in mediaResults.items"
         :key="audio.id"
         class="px-6 mb-6"
@@ -31,7 +31,7 @@
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 import { useLoadMore } from '~/composables/use-load-more'
 
-import AudioTrack from '~/components/AudioTrack/AudioTrack.vue'
+import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 import LoadMoreButton from '~/components/ImageGrid/LoadMoreButton.vue'
 
 import { propTypes } from './search-page.types'
@@ -39,7 +39,7 @@ import { propTypes } from './search-page.types'
 const AudioSearch = defineComponent({
   name: 'AudioSearch',
   components: {
-    AudioTrack,
+    VAudioTrack,
     LoadMoreButton,
   },
   props: propTypes,

@@ -6,7 +6,7 @@ import {
   Story,
 } from '@storybook/addon-docs'
 
-import AudioTrack from '~/components/AudioTrack/AudioTrack'
+import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 
 import flacWaveform from './flac-waveform.json'
 import mp3Waveform from './mp3-waveform.json'
@@ -15,7 +15,7 @@ import wavWaveform from './wav-waveform.json'
 
 <Meta
   title="Components/Audio track"
-  component={AudioTrack}
+  component={VAudioTrack}
   argTypes={{
     format: {
       defaultValue: 'mp3',
@@ -79,8 +79,8 @@ export const formatExamples = {
 }
 
 export const Template = (args, { argTypes }) => ({
-  template: `<AudioTrack v-bind="$props" :audio="audioObj"/>`,
-  components: { AudioTrack },
+  template: `<VAudioTrack v-bind="$props" :audio="audioObj"/>`,
+  components: { VAudioTrack },
   props: Object.keys(argTypes),
   computed: {
     audioObj() {
@@ -94,9 +94,9 @@ export const Template = (args, { argTypes }) => ({
 
 # Audio track
 
-<Description of={AudioTrack} />
+<Description of={VAudioTrack} />
 
-<ArgsTable of={AudioTrack} />
+<ArgsTable of={VAudioTrack} />
 
 **Audio thumbnail:** "Mozart Family" by
 [Johann Nepomuk della Croce](https://en.wikipedia.org/wiki/Johann_Nepomuk_della_Croce)
@@ -268,7 +268,7 @@ media, enabling only one player to be active at any given time.
 export const Multiple = () => ({
   template: `
     <div>
-      <AudioTrack
+      <VAudioTrack
         v-for="(audio, key) in formatExamples"
         :key="key"
         class="mb-8"
@@ -276,7 +276,7 @@ export const Multiple = () => ({
         layout="row"/>
     </div>
   `,
-  components: { AudioTrack },
+  components: { VAudioTrack },
   data() {
     return { formatExamples }
   },

@@ -1,6 +1,6 @@
 <template>
   <div :aria-label="$t('photo-details.aria.main')" class="audio-page">
-    <AudioTrack :audio="audio" class="main-track" />
+    <VAudioTrack :audio="audio" class="main-track" />
     <MediaReuse
       data-testid="audio-attribution"
       :media="audio"

@@ -25,7 +25,7 @@ const doRender = async () => {
       localVue,
       propsData: { audioId: 'foo', service: serviceMock },
       mocks: { $fetchState: { pending: false, error: null, timestamp: null } },
-      stubs: { LoadingIcon: true, AudioTrack: true },
+      stubs: { LoadingIcon: true, VAudioTrack: true },
     },
     mount
   )
@@ -38,7 +38,7 @@ describe('RelatedAudios', () => {
     const header = wrapper.find('h4').text()
     expect(header).toEqual('audio-details.related-audios')
 
-    const audioTracks = wrapper.findAll('audiotrack-stub')
+    const audioTracks = wrapper.findAll('vaudiotrack-stub')
     expect(audioTracks.length).toEqual(audioResults.length)
 
     expect(serviceMock.getRelatedMedia).toHaveBeenCalledTimes(1)

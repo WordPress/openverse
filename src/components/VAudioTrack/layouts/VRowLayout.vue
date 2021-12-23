@@ -71,7 +71,7 @@
         <slot name="play-pause" :size="isLarge ? 'medium' : 'large'" />
         <slot
           name="controller"
-          :waveform-props="{ features: ['timestamps', 'duration'] }"
+          :waveform-props="{ features: ['timestamps', 'duration', 'seek'] }"
         />
       </div>
     </div>
@@ -79,13 +79,16 @@
 </template>
 
 <script>
-import { computed } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import AudioThumbnail from '~/components/AudioThumbnail/AudioThumbnail.vue'
 import VLicense from '~/components/License/VLicense.vue'
 
-export default {
-  name: 'Row',
-  components: { AudioThumbnail, VLicense },
+export default defineComponent({
+  name: 'VRowLayout',
+  components: {
+    AudioThumbnail,
+    VLicense,
+  },
   props: ['audio', 'size'],
   setup(props) {
     /* Utils */
@@ -116,7 +119,7 @@ export default {
       isLarge,
     }
   },
-}
+})
 </script>
 
 <style>

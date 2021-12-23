@@ -6,7 +6,7 @@
   >
     <Component :is="layoutComponent" :audio="audio" :size="size">
       <template #controller="controllerProps">
-        <AudioController
+        <VAudioController
           v-model="status"
           v-bind="controllerProps"
           :audio="audio"
@@ -17,7 +17,7 @@
       </template>
 
       <template #play-pause="playPauseProps">
-        <PlayPause
+        <VPlayPause
           v-model="status"
           v-bind="playPauseProps"
           :disabled="!isReady"
@@ -28,31 +28,31 @@
 </template>
 
 <script>
-import { computed, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 
-import PlayPause from '~/components/AudioTrack/PlayPause.vue'
-import AudioController from '~/components/AudioTrack/AudioController.vue'
+import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
+import VAudioController from '~/components/VAudioTrack/VAudioController.vue'
 
-import Full from '~/components/AudioTrack/layouts/Full.vue'
-import Row from '~/components/AudioTrack/layouts/Row.vue'
-import Box from '~/components/AudioTrack/layouts/Box.vue'
-import Global from '~/components/AudioTrack/layouts/Global.vue'
+import VFullLayout from '~/components/VAudioTrack/layouts/VFullLayout.vue'
+import VRowLayout from '~/components/VAudioTrack/layouts/VRowLayout.vue'
+import VBoxLayout from '~/components/VAudioTrack/layouts/VBoxLayout.vue'
+import VGlobalLayout from '~/components/VAudioTrack/layouts/VGlobalLayout.vue'
 
 /**
  * Displays the waveform and basic information about the track, along with
  * controls to play, pause or seek to a point on the track.
  */
-export default {
-  name: 'AudioTrack',
+export default defineComponent({
+  name: 'VAudioTrack',
   components: {
-    AudioController,
-    PlayPause,
+    VAudioController,
+    VPlayPause,
 
     // Layouts
-    Full,
-    Row,
-    Box,
-    Global,
+    VFullLayout,
+    VRowLayout,
+    VBoxLayout,
+    VGlobalLayout,
   },
   props: {
     /**
@@ -105,10 +105,10 @@ export default {
     /* Layout */
 
     const layoutMappings = {
-      full: 'Full',
-      row: 'Row',
-      box: 'Box',
-      global: 'Global',
+      full: 'VFullLayout',
+      row: 'VRowLayout',
+      box: 'VBoxLayout',
+      global: 'VGlobalLayout',
     }
     const layoutComponent = computed(() => layoutMappings[props.layout])
 
@@ -123,5 +123,5 @@ export default {
       layoutComponent,
     }
   },
-}
+})
 </script>

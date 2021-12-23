@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { defineComponent } from '@nuxtjs/composition-api'
+
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
 
 import playIcon from '~/assets/icons/play.svg'
@@ -19,8 +21,8 @@ import replayIcon from '~/assets/icons/replay.svg'
  * Displays the control for switching between the playing and paused states of
  * a media file.
  */
-export default {
-  name: 'PlayPause',
+export default defineComponent({
+  name: 'VPlayPause',
   components: { VIconButton },
   inheritAttrs: false,
   model: {
@@ -72,5 +74,5 @@ export default {
       this.$emit('toggle', this.isPlaying ? 'paused' : 'playing')
     },
   },
-}
+})
 </script>

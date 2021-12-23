@@ -6,11 +6,11 @@ import {
   Story,
 } from '@storybook/addon-docs'
 
-import PlayPause from '~/components/AudioTrack/PlayPause'
+import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
 
 <Meta
   title="Components/Audio track/Play-pause toggle"
-  components={PlayPause}
+  components={VPlayPause}
   argTypes={{
     status: {
       options: ['playing', 'paused', 'played'],
@@ -28,16 +28,16 @@ import PlayPause from '~/components/AudioTrack/PlayPause'
 />
 
 export const Template = (args, { argTypes }) => ({
-  template: `<PlayPause v-bind="$props" v-on="$props"/>`,
-  components: { PlayPause },
+  template: `<VPlayPause v-bind="$props" v-on="$props"/>`,
+  components: { VPlayPause },
   props: Object.keys(argTypes),
 })
 
 # Play-pause toggle
 
-<Description of={PlayPause} />
+<Description of={VPlayPause} />
 
-<ArgsTable of={PlayPause} />
+<ArgsTable of={VPlayPause} />
 
 It should be noted that the component emits the `toggle` event with the opposite
 value of its `status` state.
@@ -72,11 +72,11 @@ be achieved by playing till the end of a track.
 export const vModelTemplate = () => ({
   template: `
     <div>
-      <PlayPause v-model="status" />
+      <VPlayPause v-model="status" />
       {{ status }}
     </div>
   `,
-  components: { PlayPause },
+  components: { VPlayPause },
   data() {
     return {
       status: 'played',

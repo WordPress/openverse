@@ -45,12 +45,12 @@
 </template>
 
 <script>
-import { computed } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 
 import DownloadButton from '~/components/DownloadButton.vue'
 
-export default {
-  name: 'Full',
+export default defineComponent({
+  name: 'VFullLayout',
   components: {
     DownloadButton,
   },
@@ -119,7 +119,7 @@ export default {
       isSmall,
     }
   },
-}
+})
 </script>
 
 <style>

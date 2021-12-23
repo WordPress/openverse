@@ -4,7 +4,7 @@
       {{ $t('audio-details.related-audios') }}
     </h4>
     <template v-if="!$fetchState.error">
-      <AudioTrack
+      <VAudioTrack
         v-for="audio in audios"
         :key="audio.id"
         :audio="audio"
