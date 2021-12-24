@@ -1,0 +1,54 @@
+name: Storybook GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'WordPress/openverse-frontend' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # setup node.js environment and npm
+      - name: Setup Node environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.24.0
+          # Set this to false because we want to be able to skip installation if there is a cache hit in the next step
+          run_install: false
+
+      # install dependencies only if the cache is not present
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch translation files
+        run: pnpm i18n:get-translations
+
+      - name: Build Storybook
+        run: pnpm nuxt storybook build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@bbdfb200618d235585ad98e965f4aafc39b4c501 # v3.7.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./storybook-static
+          force_orphan: true
