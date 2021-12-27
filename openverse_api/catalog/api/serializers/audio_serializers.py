@@ -211,7 +211,9 @@ class AudioReportSerializer(serializers.ModelSerializer):
 
 class AudioWaveformSerializer(serializers.Serializer):
     len = serializers.SerializerMethodField()
-    points = serializers.ListField(serializers.FloatField(min_value=0, max_value=1))
+    points = serializers.ListField(
+        child=serializers.FloatField(min_value=0, max_value=1)
+    )
 
     @staticmethod
     def get_len(obj) -> int:
