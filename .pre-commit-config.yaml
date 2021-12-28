@@ -66,3 +66,5 @@ repos:
     hooks:
       - id: prettier
         files: ^js/.*$
+      - id: prettier
+        types: [yaml]

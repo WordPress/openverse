@@ -4,7 +4,7 @@ name: New discussion notification
 on:
   discussion:
     types:
-    - created
+      - created
 
 jobs:
   send_message:
@@ -18,10 +18,10 @@ jobs:
       discussion_author: ${{ github.event.discussion.user.login }}
       discussion_repo: ${{ github.event.repository.full_name }}
     steps:
-    - name: Send notification for new discussion
-      run: |
-        curl \
-          $slack_url \
-          -X POST \
-          -H 'Content-Type: application/json' \
-          -d '{"text":"New discussion opened by '"$discussion_author"' in '"$discussion_repo"': #'"$discussion_number"' - '"$discussion_title"'","blocks":[{"type":"section","text":{"type":"mrkdwn","text":":github: New discussion opened by *'"$discussion_author"'* in `'"$discussion_repo"'`:\n<'"$discussion_url"'|#'"$discussion_number"' - '"$discussion_title"'>"}}]}'
+      - name: Send notification for new discussion
+        run: |
+          curl \
+            $slack_url \
+            -X POST \
+            -H 'Content-Type: application/json' \
+            -d '{"text":"New discussion opened by '"$discussion_author"' in '"$discussion_repo"': #'"$discussion_number"' - '"$discussion_title"'","blocks":[{"type":"section","text":{"type":"mrkdwn","text":":github: New discussion opened by *'"$discussion_author"'* in `'"$discussion_repo"'`:\n<'"$discussion_url"'|#'"$discussion_number"' - '"$discussion_title"'>"}}]}'

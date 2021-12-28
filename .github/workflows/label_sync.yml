@@ -4,7 +4,7 @@ name: Label sync
 on:
   workflow_dispatch:
   schedule:
-  - cron: "0 0 * * *" # at 00:00
+    - cron: "0 0 * * *" # at 00:00
 
 env:
   LOGGING_LEVEL: 20 # corresponds to INFO
@@ -15,22 +15,22 @@ jobs:
     name: Sync labels
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Setup Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.9"
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
 
-    - name: Install dependencies
-      working-directory: ./python
-      run: |
-        python -m pip install --user --upgrade pip
-        python -m pip install --user pipenv
-        pipenv install --deploy
+      - name: Install dependencies
+        working-directory: ./python
+        run: |
+          python -m pip install --user --upgrade pip
+          python -m pip install --user pipenv
+          pipenv install --deploy
 
-    - name: Sync standard labels
-      working-directory: ./python
-      run: |
-        pipenv run python sync_labels.py
+      - name: Sync standard labels
+        working-directory: ./python
+        run: |
+          pipenv run python sync_labels.py

@@ -4,7 +4,7 @@ name: Weekly updates
 on:
   workflow_dispatch:
   schedule:
-  - cron: "1 0 * * 1" # just after midnight on Monday
+    - cron: "1 0 * * 1" # just after midnight on Monday
 
 env:
   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -16,18 +16,18 @@ jobs:
     name: Create post on Make site
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 14
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
 
-    - name: Install dependencies
-      working-directory: ./js
-      run: npm ci
+      - name: Install dependencies
+        working-directory: ./js
+        run: npm ci
 
-    - name: Create draft post
-      working-directory: ./js
-      run: node src/last_week_tonight.js
+      - name: Create draft post
+        working-directory: ./js
+        run: node src/last_week_tonight.js
