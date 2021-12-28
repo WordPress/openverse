@@ -4,16 +4,16 @@ name: New issue automation
 on:
   issues:
     types:
-    - opened
+      - opened
 
 jobs:
   add_issue:
     name: Add new issue
     runs-on: ubuntu-latest
     steps:
-    - name: Add issue to "Backlog"
-      uses: alex-page/github-project-automation-plus@v0.8.1
-      with:
-        project: Openverse
-        column: Backlog
-        repo-token: ${{ secrets.ACCESS_TOKEN }}
+      - name: Add issue to "Backlog"
+        uses: alex-page/github-project-automation-plus@v0.8.1
+        with:
+          project: Openverse
+          column: Backlog
+          repo-token: ${{ secrets.ACCESS_TOKEN }}
