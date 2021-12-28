@@ -4,9 +4,9 @@ name: New PR automation
 on:
   pull_request_target:
     types:
-    - opened
-    - converted_to_draft
-    - ready_for_review
+      - opened
+      - converted_to_draft
+      - ready_for_review
 
 jobs:
   add_draft:
@@ -14,21 +14,21 @@ jobs:
     if: ${{ github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
-    - name: Add PR to "In progress"
-      uses: alex-page/github-project-automation-plus@v0.8.1
-      with:
-        project: Openverse PRs
-        column: In progress
-        repo-token: ${{ secrets.ACCESS_TOKEN }}
+      - name: Add PR to "In progress"
+        uses: alex-page/github-project-automation-plus@v0.8.1
+        with:
+          project: Openverse PRs
+          column: In progress
+          repo-token: ${{ secrets.ACCESS_TOKEN }}
 
   add_ready:
     name: Add ready PR
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
-    - name: Add PR to "Needs review"
-      uses: alex-page/github-project-automation-plus@v0.8.1
-      with:
-        project: Openverse PRs
-        column: Needs review
-        repo-token: ${{ secrets.ACCESS_TOKEN }}
+      - name: Add PR to "Needs review"
+        uses: alex-page/github-project-automation-plus@v0.8.1
+        with:
+          project: Openverse PRs
+          column: Needs review
+          repo-token: ${{ secrets.ACCESS_TOKEN }}

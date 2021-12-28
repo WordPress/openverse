@@ -7,56 +7,56 @@ version: 2
 
 updates:
   # Enable version updates for Docker containers in Openverse API
-  - package-ecosystem: 'docker'
+  - package-ecosystem: docker
     # Look for a `Dockerfile` in the `/openverse_api` directory
-    directory: '/openverse_api'
+    directory: /openverse_api
     # Check for updates once a week
     schedule:
-      interval: 'weekly'
+      interval: weekly
     labels:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
       - "🟩 priority: low"
-      - "dependencies"
+      - dependencies
 
   # Enable version updates for Python libs in Openverse API
-  - package-ecosystem: 'pip'
+  - package-ecosystem: pip
     # Look for a `Pipfile` in the `/openverse_api` directory
-    directory: '/openverse_api'
+    directory: /openverse_api
     # Check for updates once a week
     schedule:
-      interval: 'weekly'
+      interval: weekly
     labels:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
       - "🟩 priority: low"
-      - "dependencies"
-      - "python"
+      - dependencies
+      - python
 
   # Enable version updates for Python libs in ingestion server
-  - package-ecosystem: 'pip'
+  - package-ecosystem: pip
     # Look for a `Pipfile` in the `/ingestion_server` directory
-    directory: '/ingestion_server'
+    directory: /ingestion_server
     # Check for updates once a week
     schedule:
-      interval: 'weekly'
+      interval: weekly
     labels:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
       - "🟩 priority: low"
-      - "dependencies"
-      - "python"
+      - dependencies
+      - python
 
   # Enable version updates for Python libs in analytics
-  - package-ecosystem: 'pip'
+  - package-ecosystem: pip
     # Look for a `Pipfile` in the `/analytics` directory
-    directory: '/analytics'
+    directory: /analytics
     # Check for updates once a week
     schedule:
-      interval: 'weekly'
+      interval: weekly
     labels:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
       - "🟩 priority: low"
-      - "dependencies"
-      - "python"
+      - dependencies
+      - python
