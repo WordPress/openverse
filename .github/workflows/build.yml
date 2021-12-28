@@ -6,7 +6,7 @@ name: build
 on:
   release:
     types:
-      - 'prereleased'
+      - "prereleased"
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
@@ -48,5 +48,3 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           push: true
-
-

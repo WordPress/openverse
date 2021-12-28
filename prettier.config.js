@@ -4,4 +4,12 @@ module.exports = {
   semi: false,
   singleQuote: true,
   vueIndentScriptAndStyle: false,
+  overrides: [
+    {
+      files: '*.yml',
+      options: {
+        singleQuote: false,
+      },
+    },
+  ],
 }

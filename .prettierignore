@@ -1,4 +1,4 @@
-.github
+.github/**/*.md
 dist
 test/unit/coverage
 .nuxt
