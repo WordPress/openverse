@@ -65,4 +65,6 @@ repos:
     rev: v2.5.0
     hooks:
       - id: prettier
-        types_or: [yaml]
+        files: ^js/.*$
+      - id: prettier
+        types: [yaml]
