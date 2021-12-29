@@ -90,3 +90,14 @@ channel. This ping is not sent for PRs made by Dependabot and downstream sync
 action.
 
 **PR:** opened
+
+## Downstream workflows
+
+These workflows run only in the downstream synced repos and not in `openverse`.
+
+### Draft release
+
+This workflow updates the draft release message when new commits are added to
+`main` so that there is a ready-to-go changelog when publishing a new release.
+
+**Push:** Branch `main`

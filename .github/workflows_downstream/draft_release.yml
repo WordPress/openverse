@@ -1,0 +1,17 @@
+name: Draft release
+# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#draft-release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update_draft_release:
+    name: Update draft release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update draft release
+        uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
