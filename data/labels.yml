@@ -158,6 +158,21 @@ groups:
         description: Restricted to staff members
         emoji: "🔒"
 
+  # Labels for semantic versioning
+  # Docs: https://semver.org
+  - name: versioning
+    color:
+    labels:
+      - name: major
+        description: Major version bump, associated with breaking change
+        emoji: "💥"
+      - name: minor
+        description: Minor version bump, associated with new feature
+        emoji: "🎉"
+      - name: patch
+        description: Patch version bump, associated with bug fix
+        emoji: "🐛"
+
 standalone:
   - name: "ノಠ益ಠノ彡┻━┻"
     color: "000000"
