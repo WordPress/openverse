@@ -55,6 +55,7 @@ truth, it creates PRs to resolve any differences.
 **Cron:** [at 00:00](https://crontab.guru/#0_0_*_*_*)  
 **Push:** Branch `main`  
 **Dispatch:** enabled
+**Config:** `.github/sync.yml`
 
 ## Synced workflows
 
@@ -101,3 +102,4 @@ This workflow updates the draft release message when new commits are added to
 `main` so that there is a ready-to-go changelog when publishing a new release.
 
 **Push:** Branch `main`
+**Config:** `.github/release_drafter.yml`
