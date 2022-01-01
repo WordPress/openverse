@@ -37,14 +37,14 @@ const contentTypes = [
     name: 'All',
     url: '/search/?q=cat',
     supported: true,
-    sources: 5,
+    sources: 6,
   },
   {
     id: 'image',
     name: 'Image',
     url: '/search/image?q=cat',
     supported: true,
-    sources: 5,
+    sources: 6,
   },
   {
     id: 'audio',
@@ -100,10 +100,9 @@ for (const [i, contentType] of contentTypes.entries()) {
     }
 
     // MetaSearch form
-    const metaSearchFormText = contentType.supported
-      ? "Not finding what you're looking for? Try additional"
-      : 'Openverse does not yet support built-in '
-    const metaSearchForm = await page.locator(`text=${metaSearchFormText}`)
+    const metaSearchForm = await page.locator(
+      '[data-testid="meta-search-form"]'
+    )
     await expect(metaSearchForm).toHaveCount(1)
 
     const sourceButtons = await page.locator('.meta-search a')
@@ -152,10 +151,9 @@ for (const [i, contentType] of contentTypes.entries()) {
     }
 
     // MetaSearch form
-    const metaSearchFormText = contentType.supported
-      ? "Not finding what you're looking for? Try additional"
-      : 'Openverse does not yet support built-in '
-    const metaSearchForm = await page.locator(`text=${metaSearchFormText}`)
+    const metaSearchForm = await page.locator(
+      '[data-testid="meta-search-form"]'
+    )
     await expect(metaSearchForm).toHaveCount(1)
 
     const sourceButtons = await page.locator('.meta-search a')

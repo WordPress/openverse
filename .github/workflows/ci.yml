@@ -48,3 +48,9 @@ jobs:
 
       - name: Run Storybook smoke-test
         run: pnpm storybook -- --ci --smoke-test
+
+      - name: Install E2E browsers
+        run: pnpx playwright install
+
+      - name: Run E2E
+        run: pnpm e2e:ci
