@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/release-drafter/release-drafter/master/schema.json
+#
+# Configuration for the action `release-drafter/release-drafter`
+# Docs: https://github.com/release-drafter/release-drafter
+# Workflow: Draft release
+
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+categories:
+  - title: New Features
+    label: "🌟 goal: addition"
+  - title: Improvements
+    label: "✨ goal: improvement"
+  - title: Internal Improvements
+    labels:
+      - "🤖 aspect: dx"
+      - "🧰 goal: internal improvement"
+  - title: Bug Fixes
+    label: "🛠 goal: fix"
+change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
+version-resolver:
+  major:
+    labels:
+      - "💥 versioning: major"
+  minor:
+    labels:
+      - "🎉 versioning: minor"
+  patch:
+    labels:
+      - "🐛 versioning: patch"
+  default: patch
+template: |
+  $CHANGES
+
+  ## Credits
+
+  Thanks to $CONTRIBUTORS for their contributions!
