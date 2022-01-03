@@ -117,29 +117,29 @@ groups:
     labels:
       # Programming languages
       - name: javascript
-        description: Requires writing JavaScript code
+        description: Requires familiarity with JavaScript
         emoji: "🟨"
       - name: python
-        description: Requires writing Python code
+        description: Requires familiarity with Python
         emoji: "🐍"
       - name: php
-        description: Requires writing PHP code
+        description: Requires familiarity with PHP
         emoji: "🐘"
       # Libraries / other software
       - name: vue
-        description: Requires writing Vue.js JavaScript code
+        description: Requires familiarity with Vue.js
         emoji: "🔧"
       - name: django
-        description: Requires writing Python with the Django framework
+        description: Requires familiarity with Django
         emoji: "🔧"
       - name: airflow
-        description: Requires working with Apache Airflow
+        description: Requires familiarity with Apache Airflow
         emoji: "🔧"
       - name: docker
-        description: Requires writing Docker configuration
+        description: Requires familiarity with Docker
         emoji: "🐳"
       - name: postgres
-        description: Requires working with PostgreSQL migrations or databases
+        description: Requires familiarity with PostgreSQL
         emoji: "💾"
 
   - name: friendliness
@@ -157,6 +157,21 @@ groups:
       - name: staff only
         description: Restricted to staff members
         emoji: "🔒"
+
+  # Labels for semantic versioning
+  # Docs: https://semver.org
+  - name: versioning
+    color:
+    labels:
+      - name: major
+        description: Major version bump, associated with breaking change
+        emoji: "💥"
+      - name: minor
+        description: Minor version bump, associated with new feature
+        emoji: "🎉"
+      - name: patch
+        description: Patch version bump, associated with bug fix
+        emoji: "🐛"
 
 standalone:
   - name: "ノಠ益ಠノ彡┻━┻"

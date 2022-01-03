@@ -1,3 +1,7 @@
+# Configuration file for the action `BetaHuhn/repo-file-sync-action`
+# Docs: https://github.com/BetaHuhn/repo-file-sync-action
+# Workflow: Meta file sync
+
 group:
   # Openverse
   - repos: |
@@ -6,6 +10,7 @@ group:
       WordPress/openverse-frontend
       WordPress/openverse-browser-extension
     files:
+      # Synced workflows
       - source: .github/workflows/new_issues.yml
         dest: .github/workflows/new_issues.yml
       - source: .github/workflows/new_prs.yml
@@ -14,6 +19,12 @@ group:
         dest: .github/workflows/pr_label_check.yml
       - source: .github/workflows/pr_ping.yml
         dest: .github/workflows/pr_ping.yml
+      # Downstream workflows
+      - source: .github/workflows_downstream/draft_release.yml
+        dest: .github/workflows/draft_release.yml
+      - source: .github/release_drafter.yml
+        dest: .github/release_drafter.yml
+      # Templates
       - source: .github/ISSUE_TEMPLATE/
         dest: .github/ISSUE_TEMPLATE/
       - source: .github/PULL_REQUEST_TEMPLATE.md
