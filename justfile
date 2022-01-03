@@ -174,6 +174,10 @@ dj args="":
 stats media="images":
     curl "http://localhost:8000/v1/{{ media }}/stats/"
 
+# Attach to ipython
+ipython:
+    docker-compose exec web ipython
+
 
 #############
 # Analytics #

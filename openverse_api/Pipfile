@@ -45,6 +45,7 @@ wsgi-basic-auth = "*"
 python-decouple = "*"
 django-cron = "*"
 gunicorn = "*"
+sentry-sdk = "*"
 
 [requires]
 python_version = "3.9"

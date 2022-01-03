@@ -13,7 +13,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 from pathlib import Path
 from socket import gethostbyname, gethostname
 
+import sentry_sdk
 from decouple import config
+from sentry_sdk.integrations.django import DjangoIntegration
 
 
 # Build paths inside the project like this: BASE_DIR.join('dir', 'subdir'...)
@@ -34,6 +36,8 @@ SECRET_KEY = config("DJANGO_SECRET_KEY")  # required
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
+
+PYTHON_ENV = config("PYTHON_ENV", default="production")
 
 ALLOWED_HOSTS = [
     "api-dev.openverse.engineering",
@@ -322,3 +326,18 @@ VERBOSE_ES_RESPONSE = config("DEBUG_SCORES", default=False, cast=bool)
 
 # Whether to boost results by authority and popularity
 USE_RANK_FEATURES = config("USE_RANK_FEATURES", default=True, cast=bool)
+
+SENTRY_DSN = config(
+    "SENTRY_DSN",
+    default="https://08f4706d16004f57bcd37eb907bfc2e7@o787041.ingest.sentry.io/6107216",
+)
+SENTRY_SAMPLE_RATE = config("SENTRY_SAMPLE_RATE", default=1.0, cast=float)
+
+if not DEBUG:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=SENTRY_SAMPLE_RATE,
+        send_default_pii=False,
+        environment=PYTHON_ENV,
+    )

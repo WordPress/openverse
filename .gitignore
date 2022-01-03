@@ -139,3 +139,4 @@ ccbot/crawl_plan.yml
 # Ingestion server
 ingestion_server/ingestion_server/db
 ingestion_server/ingestion_server/lock
+.vscode
