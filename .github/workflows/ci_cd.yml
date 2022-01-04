@@ -1,4 +1,4 @@
-name: Automated tests
+name: CI + CD
 on:
   pull_request:
     branches:
@@ -6,6 +6,9 @@ on:
   push:
     branches:
       - main
+  release:
+    types:
+      - published
   workflow_dispatch:
 
 jobs:
@@ -131,3 +134,44 @@ jobs:
         run: just api-test -T
       - name: Run analytics tests
         run: just nl-test -T
+
+  push:
+    name: Publish Docker images
+    runs-on: ubuntu-latest
+    if: github.event == 'release' && github.event.action == 'published'
+    needs:
+      - test-ing
+      - test-api
+    permissions:
+      packages: write
+      contents: read
+    strategy:
+      matrix:
+        image:
+          - openverse_api
+          - ingestion_server
+          - analytics
+    steps:
+      - name: Log in to GitHub Docker Registry
+        uses: docker/login-action@v1
+        with:
+          registry: https://ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download image `${{ matrix.image }}`
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ matrix.image }}
+          path: /tmp
+
+      - name: Load and tag image `${{ matrix.image }}`
+        run: |
+          docker load --input /tmp/${{ matrix.image }}.tar
+          docker tag ${{ matrix.image }} \
+            ghcr.io/wordpress/openverse-${{ matrix.image }}:latest
+          docker tag ${{ matrix.image }} \
+            ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ github.sha }}
+          docker tag ${{ matrix.image }} \
+            ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ github.ref_name }}
+          docker push --all-tags ghcr.io/wordpress/openverse-${{ matrix.image }}

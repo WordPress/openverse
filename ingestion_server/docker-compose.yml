@@ -1,7 +1,7 @@
 version: "2.4"
 services:
   ingestion_server:
-    image: openverse/ingestion_server:1.4.0
+    image: ghcr.io/wordpress/openverse-ingestion-server:latest
     ports:
       - "8001:8001"
     env_file:
