@@ -138,7 +138,7 @@ jobs:
   push:
     name: Publish Docker images
     runs-on: ubuntu-latest
-    if: github.event == 'release' && github.event.action == 'published'
+    if: github.event_name == 'release' && github.event.action == 'published'
     needs:
       - test-ing
       - test-api
