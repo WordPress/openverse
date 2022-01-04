@@ -9,6 +9,7 @@ from multiprocessing import Process
 
 import requests
 
+from ingestion_server import slack
 from ingestion_server.indexer import TableIndexer, elasticsearch_connect
 from ingestion_server.ingest import reload_upstream
 
@@ -97,28 +98,36 @@ class Task(Process):
         self.callback_url = callback_url
 
     def run(self):
-        # Map task types to actions.
-        elasticsearch = elasticsearch_connect()
-        indexer = TableIndexer(
-            elasticsearch, self.model, self.progress, self.finish_time
-        )
-        if self.task_type == TaskTypes.REINDEX:
-            indexer.reindex(self.model)
-        elif self.task_type == TaskTypes.UPDATE_INDEX:
-            indexer.update(self.model, self.since_date)
-        elif self.task_type == TaskTypes.INGEST_UPSTREAM:
-            reload_upstream(self.model)
-            if self.model == "audio":
-                reload_upstream("audioset", approach="basic")
-            indexer.reindex(self.model)
-        elif self.task_type == TaskTypes.LOAD_TEST_DATA:
-            indexer.load_test_data(self.model)
-        logging.info(f"Task {self.task_id} exited.")
-        if self.callback_url:
-            try:
-                logging.info("Sending callback request")
-                res = requests.post(self.callback_url)
-                logging.info(f"Response: {res.text}")
-            except requests.exceptions.RequestException as e:
-                logging.error("Failed to send callback!")
-                logging.error(e)
+        try:
+            # Map task types to actions.
+            elasticsearch = elasticsearch_connect()
+            indexer = TableIndexer(
+                elasticsearch, self.model, self.progress, self.finish_time
+            )
+            if self.task_type == TaskTypes.REINDEX:
+                indexer.reindex(self.model)
+            elif self.task_type == TaskTypes.UPDATE_INDEX:
+                indexer.update(self.model, self.since_date)
+            elif self.task_type == TaskTypes.INGEST_UPSTREAM:
+                reload_upstream(self.model)
+                if self.model == "audio":
+                    reload_upstream("audioset", approach="basic")
+                indexer.reindex(self.model)
+            elif self.task_type == TaskTypes.LOAD_TEST_DATA:
+                indexer.load_test_data(self.model)
+            logging.info(f"Task {self.task_id} exited.")
+            if self.callback_url:
+                try:
+                    logging.info("Sending callback request")
+                    res = requests.post(self.callback_url)
+                    logging.info(f"Response: {res.text}")
+                except requests.exceptions.RequestException as e:
+                    logging.error("Failed to send callback!")
+                    logging.error(e)
+        except Exception as err:
+            exception_type = f"{err.__class__.__module__}.{err.__class__.__name__}"
+            slack.message(
+                f":x_red: Error processing task `{self.task_type}` for `{self.model}`: "
+                f'"{err}" (`{exception_type}`)'
+            )
+            raise

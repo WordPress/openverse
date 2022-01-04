@@ -19,6 +19,10 @@ The server has been designed to fail gracefully in the event of network interrup
 
 The server is designed to be run in a private network only. You must not expose the private Ingestion Server API to the public internet.
 
+## Notifications
+
+If a `SLACK_WEBHOOK` variable is provided, the ingestion server will provide periodic updates on the progress of a data refresh, or relay any errors that may occur during the process.
+
 ## Running on the host
 
 1. Create environment variables from the template file.
