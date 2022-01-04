@@ -8,8 +8,8 @@ version: 2
 updates:
   # Enable version updates for Python libs in Openverse API
   - package-ecosystem: pip
-    # Look for a `Pipfile` in the `/openverse_api` directory
-    directory: /openverse_api
+    # Look for a `Pipfile` in the `/api` directory
+    directory: /api
     # Check for updates once a week
     schedule:
       interval: monthly

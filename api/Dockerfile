@@ -44,7 +44,7 @@ ENV PYTHONBUFFERED=1
 # Activate the virtualenv
 ENV PATH="/venv/bin:$PATH"
 
-WORKDIR /openverse_api
+WORKDIR /api
 
 ADD catalog/api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansPro-Bold.ttf
 
@@ -59,14 +59,14 @@ COPY --from=awf /usr/local/bin/audiowaveform /usr/local/bin
 # - Install system packages needed for running Python dependencies
 #   - libexempi8
 #   - libpq-dev: required by `psycopg2`
-# - Create directory for dumping openverse-api logs
+# - Create directory for dumping API logs
 RUN apt-get update \
       && apt-get install -y curl libpq-dev libexempi8 \
       && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /var/log/openverse_api/openverse_api.log
 
 # Exposes
-# - 8000: Dev server for `openverse_api` Django app
+# - 8000: Dev server for API Django app
 # - 3000: Sphinx live server
 EXPOSE 8000 3000
 

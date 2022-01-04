@@ -38,7 +38,7 @@ jobs:
     strategy:
       matrix:
         image:
-          - openverse_api
+          - api
           - ingestion_server
           - analytics
     steps:
@@ -124,7 +124,7 @@ jobs:
 
       - name: Load all images
         run: |
-          docker load --input /tmp/openverse_api/openverse_api.tar
+          docker load --input /tmp/api/api.tar
           docker load --input /tmp/ingestion_server/ingestion_server.tar
           docker load --input /tmp/analytics/analytics.tar
 
@@ -148,7 +148,7 @@ jobs:
     strategy:
       matrix:
         image:
-          - openverse_api
+          - api
           - ingestion_server
           - analytics
     steps:

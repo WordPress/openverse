@@ -64,10 +64,10 @@ services:
       - es-data:/usr/share/elasticsearch/data
 
   web:
-    build: ./openverse_api/
-    image: openverse_api
+    build: ./api/
+    image: api
     volumes:
-      - ./openverse_api:/openverse_api
+      - ./api:/api
     ports:
       - "8000:8000"
     depends_on:
@@ -75,7 +75,7 @@ services:
       - es
       - cache
     env_file:
-      - openverse_api/env.docker
+      - api/env.docker
     stdin_open: true
     tty: true
 
