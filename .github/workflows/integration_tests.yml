@@ -17,6 +17,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup Python
         uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
       - name: Cache pre-commit envs
         uses: actions/cache@v2
         with:
@@ -27,10 +29,46 @@ jobs:
           pip install pre-commit
           pre-commit run --all-files
 
+  build-images:
+    name: Build images
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image:
+          - openverse_api
+          - ingestion_server
+          - analytics
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          install: true
+
+      - name: Build image `${{ matrix.image }}`
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ matrix.image }}
+          push: false
+          tags: ${{ matrix.image }}
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,scope=${{ matrix.image }}
+          outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
+
+      - name: Upload image `${{ matrix.image }}`
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.image }}
+          path: /tmp/${{ matrix.image }}.tar
+
   test-ing:
     name: Run tests for ingestion-server
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    needs:
+      - build-images
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -39,7 +77,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.9"
+          python-version: "3.10"
       - name: Cache Python dependencies
         uses: actions/cache@v2
         with:
@@ -47,24 +85,20 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v1
-        with:
-          install: true
       - name: Install Python deps for ingestion-server
         run: |
           pip install -U pip
           pip install pipenv
           just _ing-install
-      - name: Build image `ingestion_server`
-        uses: docker/build-push-action@v2
+
+      - name: Download image `ingestion_server`
+        uses: actions/download-artifact@v2
         with:
-          context: ./ingestion_server/
-          push: false
-          load: true
-          tags: ingestion_server
-          cache-from: type=gha,scope=ingestion_server
-          cache-to: type=gha,scope=ingestion_server
+          name: ingestion_server
+          path: /tmp
+      - name: Load image `ingestion_server`
+        run: docker load --input /tmp/ingestion_server.tar
+
       - name: Run ingestion-server tests
         run: just ing-testlocal
 
@@ -72,53 +106,25 @@ jobs:
     name: Run tests for the API
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    needs:
+      - build-images
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Setup just
         uses: extractions/setup-just@v1
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v1
+
+      - name: Download all images
+        uses: actions/download-artifact@v2
         with:
-          install: true
-      - name: Build image `openverse_api`
-        uses: docker/build-push-action@v2
-        with:
-          context: ./openverse_api/
-          push: false
-          load: true
-          target: api
-          tags: openverse_api
-          cache-from: type=gha,scope=openverse_api
-          cache-to: type=gha,scope=openverse_api,mode=max
-      - name: Build image `ingestion_server`
-        uses: docker/build-push-action@v2
-        with:
-          context: ./ingestion_server/
-          push: false
-          load: true
-          tags: ingestion_server
-          cache-from: type=gha,scope=ingestion_server
-          cache-to: type=gha,scope=ingestion_server
-      - name: Build image `indexer_worker`
-        uses: docker/build-push-action@v2
-        with:
-          context: ./ingestion_server/
-          file: ./ingestion_server/Dockerfile_worker
-          push: false
-          load: true
-          tags: indexer_worker
-          cache-from: type=gha,scope=indexer_worker
-          cache-to: type=gha,scope=indexer_worker
-      - name: Build image `analytics`
-        uses: docker/build-push-action@v2
-        with:
-          context: ./analytics/
-          push: false
-          load: true
-          tags: analytics
-          cache-from: type=gha,scope=analytics
-          cache-to: type=gha,scope=analytics
+          path: /tmp
+
+      - name: Load all images
+        run: |
+          docker load --input /tmp/openverse_api/openverse_api.tar
+          docker load --input /tmp/ingestion_server/ingestion_server.tar
+          docker load --input /tmp/analytics/analytics.tar
+
       - name: Start API, ingest and index test data
         run: just init
       - name: Run API tests

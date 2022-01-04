@@ -25,7 +25,7 @@ docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py shell
 	EOF"
 
 # Migrate analytics
-docker-compose exec -T "$ANALYTICS_SERVICE_NAME" /bin/bash -c "PYTHONPATH=. pipenv run alembic upgrade head"
+docker-compose exec -T "$ANALYTICS_SERVICE_NAME" /bin/bash -c "alembic upgrade head"
 
 # Load content providers
 docker-compose exec -T "$DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF

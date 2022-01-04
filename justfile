@@ -67,6 +67,7 @@ init: up wait-for-es wait-for-ing wait-for-web
 @install:
     just _api-install
     just _ing-install
+    just _nl-install
 
 # Setup pre-commit as a Git hook
 precommit:
@@ -144,7 +145,7 @@ ing-testlocal *args:
 # API #
 #######
 
-# Install depenendencies for API
+# Install dependencies for API
 _api-install:
     cd openverse_api && pipenv install --dev
 
@@ -182,6 +183,10 @@ ipython:
 #############
 # Analytics #
 #############
+
+# Install dependencies for analytics
+_nl-install:
+    cd analytics && pipenv install --dev
 
 nl-test args="":
     docker-compose exec {{ args }} analytics pytest tests.py
