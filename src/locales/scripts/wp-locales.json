@@ -467,7 +467,7 @@
     "facebookLocale": "el_GR",
     "wpLocale": "el",
     "code": "el",
-    "translated": 28
+    "translated": 38
   },
   "en_AU": {
     "name": "English (Australia)",
@@ -528,7 +528,7 @@
     "googleCode": "en",
     "wpLocale": "en_ZA",
     "code": "en-za",
-    "translated": 94
+    "translated": 100
   },
   "eo": {
     "name": "Esperanto",
@@ -848,7 +848,7 @@
     "facebookLocale": "fr_FR",
     "wpLocale": "fr_FR",
     "code": "fr",
-    "translated": 89
+    "translated": 90
   },
   "frp": {
     "name": "Arpitan",
@@ -1101,7 +1101,7 @@
     "facebookLocale": "id_ID",
     "wpLocale": "id_ID",
     "code": "id",
-    "translated": 56
+    "translated": 64
   },
   "ido": {
     "name": "Ido",
@@ -1138,7 +1138,7 @@
     "facebookLocale": "it_IT",
     "wpLocale": "it_IT",
     "code": "it",
-    "translated": 44
+    "translated": 47
   },
   "ja": {
     "name": "Japanese",
@@ -1576,7 +1576,7 @@
     "googleCode": "nl",
     "wpLocale": "nl_BE",
     "code": "nl-be",
-    "translated": 15
+    "translated": 24
   },
   "nl_NL": {
     "name": "Dutch",
@@ -1737,7 +1737,7 @@
     "facebookLocale": "pt_BR",
     "wpLocale": "pt_BR",
     "code": "pt-br",
-    "translated": 64
+    "translated": 72
   },
   "pt_PT": {
     "name": "Portuguese (Portugal)",
@@ -1929,7 +1929,7 @@
     "facebookLocale": "sq_AL",
     "wpLocale": "sq",
     "code": "sq",
-    "translated": 98
+    "translated": 99
   },
   "sq_XK": {
     "name": "Shqip (Kosovo)",
@@ -2002,7 +2002,7 @@
     "facebookLocale": "sv_SE",
     "wpLocale": "sv_SE",
     "code": "sv",
-    "translated": 71
+    "translated": 74
   },
   "sw": {
     "name": "Swahili",

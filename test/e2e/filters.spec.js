@@ -86,6 +86,6 @@ test('new media request is sent when a filter is selected', async ({
 
   await expect(cc0Checkbox).toBeChecked()
   await expect(apiRequest).toEqual(
-    'https://api.openverse.engineering/v1/images?q=cat&license=cc0'
+    'https://api.openverse.engineering/v1/images/?q=cat&license=cc0'
   )
 })

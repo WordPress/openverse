@@ -10,7 +10,7 @@ const ImageService = {
    * Search for images by keyword.
    */
   search(params) {
-    return ApiService.query('images', params)
+    return ApiService.query('images/', params)
   },
 
   /**

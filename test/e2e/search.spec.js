@@ -33,7 +33,7 @@ test('does not show an error message before search', async ({ page }) => {
   await expect(page.locator('[data-testid="search-grid"] h4')).toHaveCount(1)
 })
 
-test('shows search result metadata', async ({ page }) => {
+test.skip('shows search result metadata', async ({ page }) => {
   await page.goto('/search/image?q=cat&source=rijksmuseum')
   await page.route('https://api.openverse.engineering/v1/images/**', (route) =>
     route.fulfill({ path: 'test/e2e/resources/last_page.json' })

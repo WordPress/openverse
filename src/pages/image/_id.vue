@@ -40,14 +40,11 @@ const PhotoDetailPage = {
   },
   async asyncData({ env, route }) {
     return {
-      thumbnailURL: `${env.apiUrl}thumbs/${route.params.id}`,
+      thumbnailURL: `${env.apiUrl}images/${route.params.id}/thumb/`,
       imageId: route.params.id,
     }
   },
   async fetch() {
-    this.imageId = this.$route.params.id
-    this.thumbnailURL = `${process.env.apiUrl}thumbs/${this.imageId}`
-
     try {
       await this.fetchImage({ id: this.imageId })
     } catch (err) {

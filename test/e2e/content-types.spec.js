@@ -42,21 +42,21 @@ const contentTypes = [
   {
     id: 'image',
     name: 'Image',
-    url: '/search/image?q=cat',
+    url: '/search/image/?q=cat',
     supported: true,
     sources: 6,
   },
   {
     id: 'audio',
     name: 'Audio',
-    url: '/search/audio?q=cat',
+    url: '/search/audio/?q=cat',
     supported: true,
     sources: 5,
   },
   {
     id: 'video',
     name: 'Video',
-    url: '/search/video?q=cat',
+    url: '/search/video/?q=cat',
     supported: false,
     sources: 4,
   },
@@ -108,7 +108,9 @@ for (const [i, contentType] of contentTypes.entries()) {
     const sourceButtons = await page.locator('.meta-search a')
     await expect(sourceButtons).toHaveCount(contentType.sources)
   })
-  test(`Can open ${contentType.name} page client-side`, async ({ page }) => {
+  test.skip(`Can open ${contentType.name} page client-side`, async ({
+    page,
+  }) => {
     const pageToOpen = (i + 1) % contentTypes.length
     await page.goto(contentTypes[pageToOpen].url)
 
