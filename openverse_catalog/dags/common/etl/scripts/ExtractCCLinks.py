@@ -4,6 +4,7 @@
 
 import gzip
 import logging
+import os
 import random
 import re
 import sys
@@ -21,6 +22,9 @@ from pyspark.sql import SparkSession, SQLContext
 from pyspark.sql.types import *
 from urlparse import urlparse
 from warcio.archiveiterator import ArchiveIterator
+
+
+BUCKET = os.environ.get("COMMONCRAWL_BUCKET", "not_set")
 
 
 class CCLinks:
@@ -52,10 +56,8 @@ class CCLinks:
             sys.exit()
 
         self.numPartitions = _ptn
-        self.url = (
-            "https://commoncrawl.s3.amazonaws.com/crawl-data/{}/wat.paths.gz".format(
-                self.crawlIndex
-            )
+        self.url = "https://{}.s3.amazonaws.com/crawl-data/{}/wat.paths.gz".format(
+            BUCKET, self.crawlIndex
         )
         self.output = "s3://commonsmapper-v2/output/{}".format(self.crawlIndex)
 
@@ -112,15 +114,13 @@ class CCLinks:
             level=logging.INFO,
         )
 
-        bucket = "commoncrawl"
-
         # connect to s3 using boto3
         s3 = boto3.resource("s3")
         # s3.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
 
         try:
             # verify bucket
-            s3.meta.client.head_bucket(Bucket=bucket)
+            s3.meta.client.head_bucket(Bucket=BUCKET)
         except botocore.exceptions.ClientError as e:
             error = int(e.response["Error"]["Code"])
 
@@ -134,7 +134,7 @@ class CCLinks:
 
                 try:
                     # verify key
-                    s3.Object(bucket, uri.strip()).load()
+                    s3.Object(BUCKET, uri.strip()).load()
 
                 except botocore.client.ClientError as e:
                     logging.warning(
@@ -145,8 +145,8 @@ class CCLinks:
                 else:
                     try:
                         resp = requests.get(
-                            "https://commoncrawl.s3.amazonaws.com/{}".format(
-                                uri.strip()
+                            "https://{}.s3.amazonaws.com/{}".format(
+                                BUCKET, uri.strip()
                             ),
                             stream=True,
                         )
@@ -334,13 +334,12 @@ def main():
     crawlIndex = args.strip()
 
     if crawlIndex.lower() == "--default":
-        bucket = "commoncrawl"
         s3 = boto3.client("s3")
 
         # verify bucket
         contents = []
         prefix = "cc-index/collections/CC-MAIN-"
-        botoArgs = {"Bucket": bucket, "Prefix": prefix}
+        botoArgs = {"Bucket": BUCKET, "Prefix": prefix}
 
         while True:
 

@@ -20,7 +20,8 @@ FILE_DIR = os.path.abspath(os.path.dirname(__file__))
 CORE_INSTANCE_COUNT = 100
 AWS_CONN_ID = os.getenv("AWS_CONN_ID", "aws_test")
 EMR_CONN_ID = os.getenv("EMR_CONN_ID", "emr_test")
-BUCKET_V2 = "commonsmapper-v2"
+COMMONCRAWL_BUCKET = os.environ.get("COMMONCRAWL_BUCKET", "not_set")
+BUCKET_V2 = "ov-commonsmapper"
 CONFIG_SH_KEY = "bootstrap/config-py27.sh"
 CONFIG_SH = f"s3://{BUCKET_V2}/{CONFIG_SH_KEY}"
 EXTRACT_SCRIPT_S3_KEY = "scripts/ExtractCCLinks.py"
@@ -177,7 +178,7 @@ with DAG(
         task_id="check_for_cc_index",
         retries=0,
         aws_conn_id=AWS_CONN_ID,
-        bucket_name="commoncrawl",
+        bucket_name=COMMONCRAWL_BUCKET,
         prefix=f"crawl-data/{CC_INDEX_TEMPLATE}",
         poke_interval=60,
         timeout=60 * 60 * 24 * 3,
@@ -189,7 +190,7 @@ with DAG(
         task_id="check_for_wat_file",
         retries=0,
         aws_conn_id=AWS_CONN_ID,
-        bucket_name="commoncrawl",
+        bucket_name=COMMONCRAWL_BUCKET,
         bucket_key=f"crawl-data/{CC_INDEX_TEMPLATE}/wat.paths.gz",
         poke_interval=60,
         timeout=60 * 60 * 24 * 3,

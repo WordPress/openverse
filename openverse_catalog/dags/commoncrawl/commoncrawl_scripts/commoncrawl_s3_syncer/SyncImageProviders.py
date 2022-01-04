@@ -9,6 +9,7 @@ from botocore.client import Config
 
 
 BUCKET = os.environ["S3_BUCKET"]
+COMMONCRAWL_BUCKET = os.environ.get("COMMONCRAWL_BUCKET", "not_set")
 PATH = os.environ["OUTPUT_DIR"]
 ACCESS_KEY = os.environ["AWS_ACCESS_KEY"]
 SECRET_KEY = os.environ["AWS_SECRET_KEY"]
@@ -17,13 +18,12 @@ SECRET_KEY = os.environ["AWS_SECRET_KEY"]
 def getCrawlIndex(_param):
 
     if not _param:  # get the most recent index from common crawl
-        bucket = "commoncrawl"
         s3 = boto3.client("s3", config=Config(signature_version=UNSIGNED))
 
         # verify bucket
         contents = []
         prefix = "cc-index/collections/CC-MAIN-"
-        botoArgs = {"Bucket": bucket, "Prefix": prefix}
+        botoArgs = {"Bucket": COMMONCRAWL_BUCKET, "Prefix": prefix}
 
         while True:
 
