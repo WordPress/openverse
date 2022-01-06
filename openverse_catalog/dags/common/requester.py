@@ -42,7 +42,7 @@ class DelayedRequester:
         try:
             response = self.session.get(url, params=params, **kwargs)
             if response.status_code == requests.codes.ok:
-                logger.info(f"Received response from url {response.url}")
+                logger.debug(f"Received response from url {response.url}")
             elif response.status_code == requests.codes.unauthorized:
                 logger.error(f"Authorization failed for URL: {response.url}")
             else:
