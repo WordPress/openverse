@@ -17,8 +17,8 @@ updates:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
       - "🟩 priority: low"
+      - "🐍 tech: python"
       - dependencies
-      - python
 
   # Enable version updates for Python libs in ingestion server
   - package-ecosystem: pip
@@ -31,8 +31,8 @@ updates:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
       - "🟩 priority: low"
+      - "🐍 tech: python"
       - dependencies
-      - python
 
   # Enable version updates for Python libs in analytics
   - package-ecosystem: pip
@@ -45,5 +45,5 @@ updates:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
       - "🟩 priority: low"
+      - "🐍 tech: python"
       - dependencies
-      - python
