@@ -141,6 +141,7 @@ _ing-api model action port="8001":
 ing-testlocal *args:
     cd ingestion_server && pipenv run ./test/run_test.sh {{ args }}
 
+
 #######
 # API #
 #######
@@ -190,3 +191,20 @@ _nl-install:
 
 nl-test args="":
     docker-compose exec {{ args }} analytics pytest tests.py
+
+
+##########
+# Sphinx #
+##########
+
+# Compile Sphinx documentation into HTML output
+sphinx-make service="web": up wait-for-es wait-for-ing wait-for-web
+    docker-compose exec {{ service }} sphinx-build -M html docs/ build/
+
+# Serve Sphinx documentation via a live-reload server
+sphinx-live service="web" port="3000": up wait-for-es wait-for-ing wait-for-web
+    docker-compose exec {{ service }} sphinx-autobuild --host 0.0.0.0 --port {{ port }} docs/ build/html/
+
+# Serve the Sphinx documentation from the HTML output directory
+sphinx-serve dir="api" port="3001":
+    cd {{ dir }}/build/html && pipenv run python -m http.server {{ port }}

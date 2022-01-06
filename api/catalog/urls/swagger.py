@@ -19,7 +19,7 @@ license_url = "https://github.com/WordPress/openverse-api/blob/HEAD/LICENSE"
 logo_url = "https://raw.githubusercontent.com/WordPress/openverse/HEAD/brand/logo.svg"
 schema_view = get_schema_view(
     openapi.Info(
-        title="Openverse API",
+        title="Openverse API consumer docs",
         default_version=settings.API_VERSION,
         description=description,
         contact=openapi.Contact(email=settings.CONTACT_EMAIL),

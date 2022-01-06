@@ -1,3 +1,7 @@
+This documentation is focused towards consumers who are using the Openverse API.
+The developer documentation for the Openverse API can be found [here]().
+
+
 # Introduction
 
 The Openverse API is a system that allows programmatic access
