@@ -26,7 +26,7 @@ import { AUDIO } from '~/constants/media'
 import useRelated from '~/composables/use-related'
 
 export default {
-  name: 'RelatedAudios',
+  name: 'VRelatedAudio',
   props: {
     audioId: {
       type: String,

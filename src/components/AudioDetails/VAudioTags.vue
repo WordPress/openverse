@@ -22,7 +22,7 @@ import { SEARCH } from '~/constants/store-modules'
 import { mapActions } from 'vuex'
 
 export default {
-  name: 'AudioTags',
+  name: 'VAudioTags',
   props: ['tags', 'header'],
   computed: {
     showHeader() {

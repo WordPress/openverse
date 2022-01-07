@@ -9,12 +9,12 @@
       :attribution-html="attributionHtml()"
       class="my-16 px-4 md:px-0"
     />
-    <AudioDetailsTable
+    <VAudioDetails
       data-testid="audio-info"
       :audio="audio"
       class="my-16 px-4 lg:px-0"
     />
-    <AudioDetailsRelated
+    <VRelatedAudio
       v-if="audio.id"
       class="my-16 px-4 lg:px-0"
       :audio-id="audio.id"

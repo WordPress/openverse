@@ -1,4 +1,4 @@
-import RelatedAudios from '~/components/AudioDetails/Related'
+import VRelatedAudio from '~/components/AudioDetails/VRelatedAudio.vue'
 import render from '../../test-utils/render'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
@@ -20,7 +20,7 @@ localVue.prototype.$nuxt = {
 
 const doRender = async () => {
   return render(
-    RelatedAudios,
+    VRelatedAudio,
     {
       localVue,
       propsData: { audioId: 'foo', service: serviceMock },

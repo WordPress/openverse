@@ -6,11 +6,7 @@
       <img :src="audio.thumbnail" alt="thumbnail" width="110" height="110" />
       <div class="audio-info__data">
         <p>{{ audio.description }}</p>
-        <AudioDetailsTags
-          :tags="audio.tags"
-          :show-header="false"
-          class="mt-6 mb-6"
-        />
+        <VAudioTags :tags="audio.tags" :show-header="false" class="mt-6 mb-6" />
         <dl v-if="audio">
           <div v-if="audio.audio_set">
             <dt>{{ $t('audio-details.table.album') }}</dt>
@@ -76,7 +72,7 @@ import { PROVIDER } from '~/constants/store-modules'
 import { mapState } from 'vuex'
 
 export default {
-  name: 'AudioDetailsTable',
+  name: 'VAudioDetails',
   props: ['audio'],
   computed: {
     ...mapState(PROVIDER, ['audioProviders']),
