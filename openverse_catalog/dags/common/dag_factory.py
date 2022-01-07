@@ -33,7 +33,7 @@ def create_provider_api_workflow(
     schedule_string="@daily",
     dated=True,
     day_shift=0,
-    dagrun_timeout=timedelta(minutes=30),
+    dagrun_timeout=timedelta(hours=12),
     doc_md="",
 ):
     """
