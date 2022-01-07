@@ -11,15 +11,15 @@ test.beforeEach(async ({ context }) => {
     (route) => route.fulfill({ path: 'test/e2e/resources/sample_image.jpg' })
   )
   // Serve mock data on all image search requests
-  // await context.route(
-  //   'https://api.openverse.engineering/v1/images?***',
-  //   (route) => route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
-  // )
+  await context.route(
+    'https://api.openverse.engineering/v1/images/?***',
+    (route) => route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
+  )
 })
 
 test('can unset filters using filter tags', async ({ page }) => {
   // Serve mock data on all image search requests
-  await page.route('https://api.openverse.engineering/v1/images?**', (route) =>
+  await page.route('https://api.openverse.engineering/v1/images/?**', (route) =>
     route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
   )
   await page.goto('/search/image?q=cat&license=cc0')
@@ -30,9 +30,10 @@ test('can unset filters using filter tags', async ({ page }) => {
   await expect(cc0Tag).toHaveCount(1)
   page.on('requestfinished', (request) => {
     const url = request.url()
-    const baseUrl = 'https://api.openverse.engineering/v1/images'
+    // Only check the URL for an image search query `?`, not thumbs or related requests
+    const baseUrl = 'https://api.openverse.engineering/v1/images/?'
     if (url.startsWith(baseUrl)) {
-      expect(url).toEqual(baseUrl + '?q=cat')
+      expect(url).toEqual(baseUrl + 'q=cat')
     }
   })
   await cc0Tag.click()
@@ -59,7 +60,7 @@ test('filters are updated when media type changes', async ({ page }) => {
   await page.click('[role="tab"]:has-text("Audio")')
 
   // TODO(obulat): the URL should not have aspect_ratio query for audio
-  // await expect(page).toHaveURL('/search/audio?q=cat')
+  // await expect(page).toHaveURL('/search/audio/?q=cat')
   await expect(page).toHaveURL('/search/audio?q=cat&aspect_ratio=tall')
 
   await expect(tallTag).toHaveCount(0)
@@ -73,7 +74,7 @@ test('new media request is sent when a filter is selected', async ({
   // Serve mock data on all image search requests and save the API request url
   // There must be a better way to get the request url than this
   await page.route(
-    'https://api.openverse.engineering/v1/images?**',
+    'https://api.openverse.engineering/v1/images/?**',
     (route) => {
       apiRequest = route.request().url()
       route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
