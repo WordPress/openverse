@@ -535,21 +535,24 @@
       "title": "Report this content",
       "issue": "What's the issue?",
       "issue-description": "Please describe the issue for us",
-      "copyright": "Infringes Copyright",
-      "mature": "Contains mature content",
-      "other": "Other",
+      "reasons": {
+        "dmca": "Infringes Copyright",
+        "mature": "Contains mature content",
+        "other": "Other"
+      },
+      "dmca": {
+        "link": "DMCA form",
+        "content": "You must fill out this {link} to report copyright infringement. No action will be taken until the form is filled out and submitted."
+      },
       "caption": "For security purposes, Openverse collects and retains anonymized IP addresses of those who complete and submit this form.",
       "next": "Next",
       "back": "Back",
       "submit": "Submit",
-      "dmca": {
-        "content": "You must fill out this {link} to report copyright infringement. No action will be taken until the form is filled out and submitted.",
-        "provider": "We recommend doing the same at the source, {link}.",
-        "thanks": "Thank you for reporting an issue with the results of Openverse!",
-        "submission-error": "There was an error with the report submission. Please try again.",
-        "link": "DMCA form",
-        "aria-form": "{provider} form"
-      }
+      "thanks": "Thank you for reporting an issue with the results of Openverse!",
+      "provider": "We recommend doing the same at the source, {link}.",
+      "aria-form": "{provider} form",
+      "submission-error": "There was an error with the report submission. Please try again.",
+      "placeholder": "Issue description required (with at least 20 characters)"
     },
     "aria": {
       "close-form": "close form",

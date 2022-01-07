@@ -17,9 +17,15 @@
 
 <script>
 import attributionHtml from '~/utils/attribution-html'
+import CopyLicense from '~/components/MediaInfo/CopyLicense.vue'
+import MediaLicense from '~/components/MediaInfo/MediaLicense.vue'
 
 export default {
   name: 'ImageAttribution',
+  components: {
+    CopyLicense,
+    MediaLicense,
+  },
   props: {
     image: {
       type: Object,

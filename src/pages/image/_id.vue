@@ -1,6 +1,6 @@
 <template>
   <div :aria-label="$t('photo-details.aria.main')">
-    <PhotoDetails
+    <VPhotoDetails
       :image="image"
       :thumbnail="thumbnailURL"
       :bread-crumb-u-r-l="breadCrumbURL"
@@ -19,9 +19,12 @@ import axios from 'axios'
 import { mapActions, mapState } from 'vuex'
 import { FETCH_IMAGE } from '~/constants/action-types'
 import { MEDIA } from '~/constants/store-modules'
+import RelatedImages from '~/components/ImageDetails/RelatedImages.vue'
+import VPhotoDetails from '~/components/ImageDetails/VPhotoDetails.vue'
 
 const PhotoDetailPage = {
   name: 'PhotoDetailPage',
+  components: { RelatedImages, VPhotoDetails },
   layout: 'with-nav-search',
   data() {
     return {

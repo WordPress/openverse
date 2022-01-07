@@ -179,9 +179,13 @@ import {
 } from '~/constants/usage-data-analytics-types'
 import { isPublicDomain } from '~/utils/license'
 import { ATTRIBUTION, USAGE_DATA } from '~/constants/store-modules'
+import CopyButton from '~/components/CopyButton.vue'
 
 export default {
   name: 'CopyLicense',
+  components: {
+    CopyButton,
+  },
   props: {
     media: {},
     fullLicenseName: String,

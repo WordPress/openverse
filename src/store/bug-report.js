@@ -25,7 +25,6 @@ export const state = () => ({
   bugReportFailed: false,
 })
 
-/* eslint no-param-reassign: ["error", { "props": false }] */
 export const mutations = {
   [REPORT_BUG_START](_state) {
     _state.isReportingBug = true

@@ -63,9 +63,13 @@
 
 <script>
 import { isLicense } from '~/utils/license'
+import LicenseElements from '~/components/LicenseElements.vue'
 
 export default {
   name: 'MediaLicense',
+  components: {
+    LicenseElements,
+  },
   props: {
     fullLicenseName: String,
     license: String,
