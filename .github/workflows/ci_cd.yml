@@ -135,6 +135,14 @@ jobs:
       - name: Run analytics tests
         run: just nl-test -T
 
+      - name: Make developer docs
+        run: just sphinx-make -T
+      - name: Upload developer docs
+        uses: actions/upload-artifact@v2
+        with:
+          name: docs
+          path: api/build/html/
+
   push:
     name: Publish Docker images
     runs-on: ubuntu-latest
@@ -175,3 +183,23 @@ jobs:
           docker tag ${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ github.ref_name }}
           docker push --all-tags ghcr.io/wordpress/openverse-${{ matrix.image }}
+
+  docs:
+    name: Publish developer docs
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.repository == 'WordPress/openverse-api'
+    needs:
+      - test-api
+    steps:
+      - name: Download developer docs
+        uses: actions/download-artifact@v2
+        with:
+          name: docs
+          path: /tmp/docs
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@bbdfb200618d235585ad98e965f4aafc39b4c501 # v3.7.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/docs
+          force_orphan: true

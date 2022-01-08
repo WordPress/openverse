@@ -198,8 +198,8 @@ nl-test args="":
 ##########
 
 # Compile Sphinx documentation into HTML output
-sphinx-make service="web": up wait-for-es wait-for-ing wait-for-web
-    docker-compose exec {{ service }} sphinx-build -M html docs/ build/
+sphinx-make args="" service="web": up wait-for-es wait-for-ing wait-for-web
+    docker-compose exec {{ args }} {{ service }} sphinx-build -M html docs/ build/
 
 # Serve Sphinx documentation via a live-reload server
 sphinx-live service="web" port="3000": up wait-for-es wait-for-ing wait-for-web
