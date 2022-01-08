@@ -85,3 +85,19 @@ CREATE MATERIALIZED VIEW audio_view AS
   FROM audio;
 
 CREATE UNIQUE INDEX ON audio_view (identifier);
+
+
+CREATE VIEW audioset_view AS
+  SELECT DISTINCT
+    ((audio_view.audio_set ->> 'foreign_identifier'::text))::character varying(1000) AS foreign_identifier,
+    ((audio_view.audio_set ->> 'title'::text))::character varying(2000) AS title,
+    ((audio_view.audio_set ->> 'foreign_landing_url'::text))::character varying(1000) AS foreign_landing_url,
+    ((audio_view.audio_set ->> 'creator'::text))::character varying(2000) AS creator,
+    ((audio_view.audio_set ->> 'creator_url'::text))::character varying(2000) AS creator_url,
+    ((audio_view.audio_set ->> 'url'::text))::character varying(1000) AS url,
+    ((audio_view.audio_set ->> 'filesize'::text))::integer AS filesize,
+    ((audio_view.audio_set ->> 'filetype'::text))::character varying(80) AS filetype,
+    ((audio_view.audio_set ->> 'thumbnail'::text))::character varying(1000) AS thumbnail,
+    audio_view.provider
+  FROM audio_view
+  WHERE (audio_view.audio_set IS NOT NULL);
