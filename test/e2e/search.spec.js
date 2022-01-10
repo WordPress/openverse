@@ -68,3 +68,13 @@ test('navigates to the image detail page correctly', async ({ page }) => {
   // Renders the breadcrumb link
   await expect(page.locator('text="Back to search results"')).toBeVisible()
 })
+
+test('the Back to search results link returns to the search page', async ({
+  page,
+}) => {
+  const url = '/search/image?q=honey'
+  await page.goto(url)
+  await page.locator('figure a').first().click()
+  await page.locator('text="Back to search results"').click()
+  await expect(page).toHaveURL(url)
+})

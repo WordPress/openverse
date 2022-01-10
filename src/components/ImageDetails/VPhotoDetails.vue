@@ -3,7 +3,7 @@
     <div class="column is-three-fifths photo_image-ctr mt-4">
       <a
         v-if="shouldShowBreadcrumb"
-        class="block photo_breadcrumb text-left ms-4 mb-4 lg:ms-0 text-dark-gray font-semibold caption"
+        class="flex photo_breadcrumb text-left mb-4 lg:ms-0 text-dark-gray font-semibold caption"
         :href="breadCrumbURL"
         @click.prevent="goBackToSearchResults"
       >
@@ -157,7 +157,7 @@
 </template>
 
 <script>
-import { computed, ref, useContext } from '@nuxtjs/composition-api'
+import { computed, ref, useContext, useRouter } from '@nuxtjs/composition-api'
 
 import { USAGE_DATA } from '~/constants/store-modules'
 import {
@@ -200,7 +200,8 @@ export default {
     'thumbnail',
   ],
   setup(props, { emit }) {
-    const { router, store } = useContext()
+    const { store } = useContext()
+    const router = useRouter()
     const sketchFabfailure = ref(false)
     const activeTab = ref(0)
     const isReportFormVisible = ref(false)

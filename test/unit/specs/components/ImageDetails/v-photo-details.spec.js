@@ -9,15 +9,17 @@ import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import messages from '~/locales/en.json'
+
 const i18n = new VueI18n({
   locale: 'en',
   fallbackLocale: 'en',
   messages: { en: messages },
 })
+
 describe('PhotoDetails', () => {
   let options = null
   let props = null
-  let dispatchMock, routeMock, routerMock
+  let dispatchMock
   const localVue = createLocalVue()
   localVue.use(Vuex)
   localVue.use(VueI18n)
@@ -43,11 +45,7 @@ describe('PhotoDetails', () => {
     }
 
     dispatchMock = jest.fn()
-    routerMock = {
-      push: jest.fn(),
-      back: jest.fn(),
-    }
-    routeMock = {
+    const routeMock = {
       params: {
         location: window.scrollY,
       },
@@ -73,7 +71,6 @@ describe('PhotoDetails', () => {
         $nuxt: {
           context: {
             route: routeMock,
-            router: routerMock,
             store: storeMock,
           },
         },
@@ -129,14 +126,6 @@ describe('PhotoDetails', () => {
     render(VPhotoDetails, options)
 
     expect(screen.queryAllByText(props.image.title).length).toEqual(1)
-  })
-
-  it('redirects back when clicking on the back to results link', async () => {
-    render(VPhotoDetails, options)
-    const linkBack = screen.queryByText(/back/i)
-    await fireEvent.click(linkBack)
-
-    expect(routerMock.back).toHaveBeenCalled()
   })
 
   it('should toggle visibility of report form on report button click', async () => {
