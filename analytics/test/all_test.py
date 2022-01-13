@@ -11,7 +11,7 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-import analytics.settings as settings
+from analytics import settings
 from analytics.attribution_worker import is_valid, parse_message
 from analytics.models import AttributionReferrerEvent
 from analytics.report_controller import (
@@ -87,7 +87,7 @@ def test_attribution_validation():
     )
     invalid_msg = mock_attribution_event(
         {
-            "http_referer": "https://search.creativecommons.org/photos/12345",
+            "http_referer": "https://wordpress.org/openverse/photos/12345",
             "request": "GET /static/img/cc-nd_icon.svg HTTP/1.1",
         }
     )

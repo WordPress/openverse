@@ -26,16 +26,22 @@ CALLBACK_URL = "callback_url"
 SINCE_DATE = "since_date"
 
 
-class Health:
-    def on_get(self, req, resp):
+class HealthResource:
+    @staticmethod
+    def on_get(_, resp):
         resp.status = falcon.HTTP_200
         resp.media = {"status": "200 OK"}
 
 
-class TaskResource:
-    def __init__(self, tracker: TaskTracker):
+class BaseTaskResource:
+    """Base class for all resource that need access to a task tracker"""
+
+    def __init__(self, tracker: TaskTracker, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.tracker = tracker
 
+
+class TaskResource(BaseTaskResource):
     @staticmethod
     def _get_base_url(req):
         parsed = urlparse(req.url)
@@ -119,10 +125,7 @@ class TaskResource:
         resp.media = self.tracker.list_task_statuses()
 
 
-class TaskStatus:
-    def __init__(self, tracker: TaskTracker):
-        self.tracker = tracker
-
+class TaskStatus(BaseTaskResource):
     def on_get(self, req, resp, task_id):
         """Check the status of a single task."""
         task = self.tracker.id_task[task_id]
@@ -142,7 +145,8 @@ class WorkerFinishedResource:
     task.
     """
 
-    def on_post(self, req, resp):
+    @staticmethod
+    def on_post(req, _):
         target_index = worker_finished(str(req.remote_addr))
         if target_index:
             logging.info(
@@ -162,7 +166,8 @@ class WorkerFinishedResource:
 
 
 class StateResource:
-    def on_delete(self, req, resp):
+    @staticmethod
+    def on_delete(_, __):
         """
         Forget about the last scheduled indexing job.
         """
@@ -171,6 +176,7 @@ class StateResource:
 
 def create_api(log=True):
     """Create an instance of the Falcon API server."""
+
     if log:
         root = logging.getLogger()
         root.setLevel(logging.DEBUG)
@@ -183,12 +189,12 @@ def create_api(log=True):
         root.addHandler(handler)
 
     _api = falcon.App()
+
     task_tracker = TaskTracker()
-    task_resource = TaskResource(task_tracker)
-    get_task_status = TaskStatus(task_tracker)
-    _api.add_route("/", Health())
-    _api.add_route("/task", task_resource)
-    _api.add_route("/task/{task_id}", get_task_status)
+
+    _api.add_route("/", HealthResource())
+    _api.add_route("/task", TaskResource(task_tracker))
+    _api.add_route("/task/{task_id}", TaskStatus(task_tracker))
     _api.add_route("/worker_finished", WorkerFinishedResource())
     _api.add_route("/state", StateResource())
 

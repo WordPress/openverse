@@ -1,18 +1,19 @@
-from models import (
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from analytics import settings
+from analytics.models import (
     DetailPageEvent,
     DetailPageEvents,
     ResultClickedEvent,
     SearchEvent,
     SearchRatingEvent,
 )
-from settings import DATABASE_CONNECTION
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
 
 class EventController:
     def __init__(self):
-        self.engine = create_engine(DATABASE_CONNECTION)
+        self.engine = create_engine(settings.DATABASE_CONNECTION)
 
     def _persist(self, _object):
         Session = sessionmaker(bind=self.engine)

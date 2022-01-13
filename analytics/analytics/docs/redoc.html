@@ -2,26 +2,21 @@
 <html>
   <head>
     <title>Openverse Analytics</title>
-    <!-- needed for adaptive design -->
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <link rel="icon" type="image/svg" href="https://raw.githubusercontent.com/WordPress/openverse/master/brand/icon.svg">
     <!--
     ReDoc doesn't change outer page styles
     -->
     <style>
-      body {
+    body {{
         margin: 0;
         padding: 0;
-      }
-
-      img[alt='logo'] {
-        padding: 20px; /* same as other sidebar items */
-      }
+    }}
     </style>
   </head>
   <body>
-    <redoc spec-url='/swagger.yaml' expand-responses="all"></redoc>
-    <script src="https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"> </script>
+    <redoc spec-url='{spec_url}' expand-responses="all"></redoc>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
   </body>
-</html>
+  </html>

@@ -16,6 +16,8 @@ pytest = "*"
 falcon-cors = "*"
 confluent-kafka = "*"
 python-decouple = "*"
+spectree = "*"
+pydantic = "*"
 
 [requires]
 python_version = "3.10"

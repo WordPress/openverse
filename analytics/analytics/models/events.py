@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Boolean, Column, DateTime, Enum, Float, Integer, String
+from sqlalchemy import Boolean, Column, DateTime, Enum, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
@@ -9,26 +9,9 @@ from sqlalchemy.sql import func
 Base = declarative_base()
 
 
-class Image(Base):
-    __tablename__ = "image"
-    # Managed by Django ORM; partially duplicated here so we can join
-    # analytics and image data together. This is excluded from migrations.
-    id = Column(Integer, primary_key=True)
-    identifier = Column(UUID)
-    source = Column(String)
-    provider = Column(String)
-    title = Column(String)
-
-
 class EventMixin(object):
     id = Column(Integer, primary_key=True)
     timestamp = Column(DateTime, server_default=func.now(), index=True)
-
-
-class ReportMixin(object):
-    id = Column(Integer, primary_key=True)
-    start_time = Column(DateTime, index=True)
-    end_time = Column(DateTime, index=True)
 
 
 class SearchEvent(Base, EventMixin):
@@ -100,51 +83,3 @@ class AttributionReferrerEvent(Base, EventMixin):
     referer_domain = Column(String, index=True)
     # The path to the embedded asset on our server. ex: /static/img/cc-by.svg
     resource = Column(String, index=True)
-
-
-# Reports
-
-
-class UsageReport(Base, ReportMixin):
-    """Tracks statistics for the last 24 hours"""
-
-    __tablename__ = "usage_reports"
-    results_clicked = Column(Integer)
-    attribution_buttonclicks = Column(Integer)
-    survey_responses = Column(Integer)
-    source_clicked = Column(Integer)
-    creator_clicked = Column(Integer)
-    shared_social = Column(Integer)
-    sessions = Column(Integer)
-    searches = Column(Integer)
-    attribution_referer_hits = Column(Integer)
-    avg_rating = Column(Float)
-    avg_searches_per_session = Column(Float)
-
-
-class SourceUsageReport(Base, ReportMixin):
-    __tablename__ = "source_report"
-
-    source_id = Column(String, index=True)
-    result_clicks = Column(Integer, index=True)
-
-
-class AttributionRefererReport(Base, ReportMixin):
-    __tablename__ = "attribution_referer_report"
-
-    domain = Column(String, index=True)
-    hits = Column(Integer, index=True)
-
-
-class TopSearchesReport(Base, ReportMixin):
-    __tablename__ = "top_searches"
-    term = Column(String, index=True)
-    hits = Column(Integer, index=True)
-
-
-class TopResultsReport(Base, ReportMixin):
-    __tablename__ = "top_results"
-    result_uuid = Column(UUID, index=True)
-    hits = Column(Integer, index=True)
-    source = Column(String, index=True)
-    title = Column(String, index=True)

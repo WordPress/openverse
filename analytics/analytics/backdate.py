@@ -1,9 +1,14 @@
+"""
+A one-off script for generating analytics reports back to September 2019, when
+we first started collecting analytics data.
+"""
+
 import datetime
 
-import settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from analytics import settings
 from analytics.report_controller import (
     generate_referrer_usage_report,
     generate_source_usage_report,
@@ -11,12 +16,6 @@ from analytics.report_controller import (
     generate_top_searches,
     generate_usage_report,
 )
-
-
-"""
-A one-off script for generating analytics reports back to September 2019, when
-we first started collecting analytics data.
-"""
 
 
 engine = create_engine(settings.DATABASE_CONNECTION)

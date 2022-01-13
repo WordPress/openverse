@@ -1,10 +1,10 @@
 import datetime
 import logging as log
 
-import settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from analytics import settings
 from analytics.report_controller import (
     generate_referrer_usage_report,
     generate_source_usage_report,

@@ -1,14 +1,16 @@
-
+import inspect
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+from sqlalchemy.ext.declarative import declarative_base
 
-from alembic import context
-import inspect
-from settings import DATABASE_CONNECTION
-import models
-from models import *
+from analytics import models
+from analytics.settings import DATABASE_CONNECTION
+
+Base = declarative_base()
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -22,6 +24,7 @@ fileConfig(config.config_file_name)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
