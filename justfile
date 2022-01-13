@@ -26,6 +26,10 @@ DOCKER_FILE := "-f " + (
     else {"docker-compose.yml"}
 )
 
+# Build all (or specified) services
+build *args:
+    docker-compose {{ DOCKER_FILE }} build {{ args }}
+
 # Bring all Docker services up
 up flags="":
     docker-compose {{ DOCKER_FILE }} up -d {{ flags }}

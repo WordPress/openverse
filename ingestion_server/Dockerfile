@@ -50,6 +50,9 @@ RUN apt-get update \
       && rm -rf /var/lib/apt/lists/* \
     && mkdir /worker_state
 
+# Copy code into the final image
+COPY . /ingestion_server/
+
 # Exposes
 # - 8001: Gunicorn server for `ingestion_server` Falcon app
 # - 8002: Gunicorn server for `indexer_worker` Falcon app

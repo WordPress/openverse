@@ -1,0 +1,6 @@
+# Exclude everything and only include certain files
+*
+!analytics
+!gunicorn*
+!Pipfile*
+!alembic.ini

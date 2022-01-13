@@ -65,7 +65,7 @@ services:
 
   web:
     build: ./api/
-    image: api
+    image: openverse-api
     volumes:
       - ./api:/api
     ports:
@@ -82,7 +82,7 @@ services:
 
   ingestion_server:
     build: ./ingestion_server/
-    image: ingestion_server
+    image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn.conf.py
     ports:
       - "8001:8001"
@@ -99,7 +99,7 @@ services:
 
   indexer_worker:
     build: ./ingestion_server/
-    image: ingestion_server
+    image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn_worker.conf.py
     ports:
       - "8002:8002"
@@ -115,7 +115,7 @@ services:
 
   analytics:
     build: ./analytics/
-    image: analytics
+    image: openverse-analytics
     ports:
       - "8090:8090"
     volumes:

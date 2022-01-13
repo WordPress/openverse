@@ -48,6 +48,9 @@ RUN apt-get update \
       && apt-get install -y libpq-dev librdkafka-dev \
       && rm -rf /var/lib/apt/lists/*
 
+# Copy code into the final image
+COPY . /analytics/
+
 # Exposes
 # - 8090: Gunicorn server for `analytics` Falcon app
 EXPOSE 8090
