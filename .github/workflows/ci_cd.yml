@@ -176,11 +176,11 @@ jobs:
       - name: Load and tag image `${{ matrix.image }}`
         run: |
           docker load --input /tmp/${{ matrix.image }}.tar
-          docker tag ${{ matrix.image }} \
+          docker tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:latest
-          docker tag ${{ matrix.image }} \
+          docker tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ github.sha }}
-          docker tag ${{ matrix.image }} \
+          docker tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ github.ref_name }}
           docker push --all-tags ghcr.io/wordpress/openverse-${{ matrix.image }}
 
