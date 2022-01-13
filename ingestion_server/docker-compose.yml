@@ -1,13 +1,15 @@
 version: "2.4"
 services:
   ingestion_server:
-    image: ghcr.io/wordpress/openverse-ingestion-server:latest
+    # Allow the image tag to be set to a specific version, default to latest
+    image: ghcr.io/wordpress/openverse-ingestion_server:${IMAGE_TAG:-latest}
     ports:
       - "8001:8001"
     env_file:
       - .env
     dns:
       # Related to DNS management on the production box.
-      # Not sure if this is strictly necessary, but it exists
-      # in the current, running system so we are retaining it here.
+      # 172.16.0.0–172.31.255.255 is a reserved IP range by the (IANA) for
+      # private/internal networking. This specific IP is the DNS resolution address
+      # for a default AWS Virtual Private Cloud.
       - 172.31.0.2
