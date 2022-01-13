@@ -149,10 +149,13 @@ class Audio(AudioFileMixin, AbstractMedia):
 
     @property
     def audio_set(self):
-        return AudioSet.objects.get(
-            provider=self.provider,
-            foreign_identifier=self.audio_set_foreign_identifier,
-        )
+        try:
+            return AudioSet.objects.get(
+                provider=self.provider,
+                foreign_identifier=self.audio_set_foreign_identifier,
+            )
+        except AudioSet.DoesNotExist:
+            return None
 
     class Meta(AbstractMedia.Meta):
         db_table = "audio"
