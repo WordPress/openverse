@@ -55,7 +55,7 @@ jobs:
         with:
           context: ${{ matrix.image }}
           push: false
-          tags: ${{ matrix.image }}
+          tags: openverse-${{ matrix.image }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
