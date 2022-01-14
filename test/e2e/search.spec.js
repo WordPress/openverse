@@ -22,10 +22,6 @@ test.beforeEach(async ({ context }) => {
 test('does not show an error message before search', async ({ page }) => {
   await page.goto('/search')
 
-  // The search meta data under the search input, should not be shown if no
-  // media had been fetched
-  await expect(page.locator('text=No image results')).not.toBeVisible()
-
   // Load more button, should not be shown if the `q` parameter is not set
   await expect(page.locator('button:has-text("Load more results")'))
 

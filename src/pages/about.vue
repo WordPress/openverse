@@ -98,7 +98,6 @@
 <script>
 const AboutPage = {
   name: 'about-page',
-  layout: 'with-nav-search',
 }
 
 export default AboutPage

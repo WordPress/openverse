@@ -45,6 +45,10 @@ describe('PhotoDetails', () => {
     }
 
     dispatchMock = jest.fn()
+    const routerMock = {
+      push: jest.fn(),
+      back: jest.fn(),
+    }
     const routeMock = {
       params: {
         location: window.scrollY,
@@ -74,6 +78,7 @@ describe('PhotoDetails', () => {
             store: storeMock,
           },
         },
+        $router: routerMock,
       },
       store: storeMock,
       i18n,

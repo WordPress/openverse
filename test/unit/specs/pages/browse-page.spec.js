@@ -35,7 +35,6 @@ describe('Search Grid Wrapper', () => {
         FilterDisplay: true,
         NuxtChild: true,
         ScrollButton: true,
-        SearchGridForm: true,
         SearchTypeTabs: true,
         SearchGridManualLoad: true,
       },
@@ -63,7 +62,7 @@ describe('Search Grid Wrapper', () => {
     expect(wrapper.vm.showScrollButton).toBe(true)
   })
 
-  it('shows search filters when isFilterVisible is true', () => {
+  xit('shows search filters when isFilterVisible is true', () => {
     storeMock.state.search.isFilterVisible = true
     const wrapper = render(BrowsePage, options)
     expect(wrapper.findComponent({ name: 'SearchGridFilter' }).exists()).toBe(

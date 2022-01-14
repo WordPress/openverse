@@ -34,7 +34,6 @@ import { MEDIA } from '~/constants/store-modules'
 const AudioDetailPage = {
   name: 'AudioDetailPage',
   mixins: [iframeHeight],
-  layout: 'with-nav-search',
   data() {
     return {
       thumbnailURL: null,

@@ -6,18 +6,7 @@
     class="search-form p-4 z-30"
     @submit.prevent="onSubmit"
   >
-    <button
-      v-if="!isFilterVisible"
-      class="button filter-toggle"
-      type="button"
-      @click="onToggleSearchGridFilter"
-    >
-      {{ $t('filters.title') }}
-    </button>
-    <div
-      class="search-field field has-addons control search-control"
-      :class="{ 'ms-2': !isFilterVisible }"
-    >
+    <div class="search-field field has-addons control search-control">
       <label for="searchInput" class="search-field__label control label">
         <input
           id="searchInput"
@@ -68,7 +57,7 @@ export default {
   name: 'SearchGridForm',
   data: () => ({ searchTermsModel: null }),
   computed: {
-    ...mapState(SEARCH, ['isFilterVisible', 'query']),
+    ...mapState(SEARCH, ['query']),
     searchTerms() {
       return this.query.q
     },
@@ -108,11 +97,6 @@ export default {
         })
       }
     },
-    onToggleSearchGridFilter() {
-      this.setFilterIsVisible({
-        isFilterVisible: !this.isFilterVisible,
-      })
-    },
     setFormInput() {
       this.searchTermsModel = this.searchTerms
     },
@@ -121,9 +105,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.filter-toggle {
-  @apply h-10 lg:h-14 text-2xl hover:border-tx p-2 border-light-gray normal-case;
-}
 .search-icon {
   @apply start-0 text-light-gray w-10 h-10 absolute items-center inline-flex justify-center pointer-events-none;
 }

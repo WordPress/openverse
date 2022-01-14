@@ -1,5 +1,12 @@
 <template>
   <section class="search-grid">
+    <VSearchResultsTitle
+      v-if="query.q && isSupported"
+      class="leading-10"
+      :size="isAllView ? 'large' : 'default'"
+    >
+      {{ query.q }}
+    </VSearchResultsTitle>
     <div
       v-if="shouldShowMeta"
       class="results-meta flex flex-col sm:flex-row items-start justify-between px-6"
@@ -115,6 +122,9 @@ export default {
     const metaSearchFormType = computed(() => {
       return props.searchType === 'all' ? 'image' : props.searchType
     })
+    const isAllView = computed(() => {
+      return props.searchType === 'all'
+    })
 
     return {
       mediaCount,
@@ -122,6 +132,7 @@ export default {
       shouldShowMeta,
       isSupported,
       metaSearchFormType,
+      isAllView,
     }
   },
 }

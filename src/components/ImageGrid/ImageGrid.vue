@@ -6,14 +6,14 @@
     <h5 v-if="isError" class="image-grid__notification py-4">
       {{ fetchState.fetchingError }}
     </h5>
-    <LoadMoreButton
-      v-if="canLoadMore"
-      :is-error="isError"
-      :is-fetching="fetchState.isFetching"
-      :is-finished="fetchState.isFinished"
-      data-testid="load-more"
-      @onLoadMore="onLoadMore"
-    />
+    <footer class="px-2">
+      <VLoadMore
+        v-if="canLoadMore && !fetchState.isFinished"
+        :is-fetching="fetchState.isFetching"
+        data-testid="load-more"
+        @onLoadMore="onLoadMore"
+      />
+    </footer>
   </section>
 </template>
 
@@ -25,12 +25,12 @@
  * or display 'No More Media'.
  * Used to display both image search results, and related images.
  */
-import LoadMoreButton from '~/components/ImageGrid/LoadMoreButton'
+import VLoadMore from '~/components/VLoadMore'
 import ImageCell from '~/components/ImageGrid/ImageCell'
 
 export default {
   name: 'ImageGrid',
-  components: { LoadMoreButton, ImageCell },
+  components: { VLoadMore, ImageCell },
   props: {
     images: {
       default: () => [],

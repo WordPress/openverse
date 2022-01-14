@@ -151,7 +151,6 @@ const ARABIC_NUMERAL_LOCALES = ['ar', 'fa', 'ur', 'ckb', 'ps']
 
 const SourcePage = {
   name: 'source-page',
-  layout: 'with-nav-search',
   data() {
     return {
       sort: {

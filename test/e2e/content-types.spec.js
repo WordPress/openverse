@@ -41,7 +41,7 @@ const contentTypes = [
   },
   {
     id: 'image',
-    name: 'Image',
+    name: 'Images',
     url: '/search/image/?q=cat',
     supported: true,
     sources: 6,
@@ -50,7 +50,7 @@ const contentTypes = [
     id: 'audio',
     name: 'Audio',
     url: '/search/audio/?q=cat',
-    supported: true,
+    supported: false,
     sources: 5,
   },
   {
@@ -63,7 +63,7 @@ const contentTypes = [
 ]
 
 for (const [i, contentType] of contentTypes.entries()) {
-  test(`Can open ${contentType.name} page on SSR`, async ({ page }) => {
+  test(`Can open ${contentType.name} search page on SSR`, async ({ page }) => {
     await page.goto(contentType.url)
 
     // Selected content page
@@ -88,13 +88,12 @@ for (const [i, contentType] of contentTypes.entries()) {
       await expect(searchResult).not.toBeEmpty()
     }
 
-    // Load more, skip on audio
-    // @todo: Restore on audio when production audio data is live
-    if (contentType.supported && contentType.id !== 'audio') {
-      const loadMoreSection = await page.locator('[data-testid="load-more"]')
-      await expect(loadMoreSection).toHaveCount(1)
-      const expectedText = 'Load more'
-      await expect(loadMoreSection).toContainText(expectedText)
+    // Load more
+    if (contentType.supported) {
+      const loadMoreBtn = await page.locator(
+        'button:has-text("Load more results")'
+      )
+      await expect(loadMoreBtn).toHaveCount(1)
     }
 
     // MetaSearch form

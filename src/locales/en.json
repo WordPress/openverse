@@ -1,4 +1,10 @@
 {
+  "404": {
+    "title": "The content you’re looking for seems to have disappeared.",
+    "main": "Go to {link} or search for something similar from the field below.",
+    "link-title": "Openverse",
+    "search-placeholder": "Search for content to reuse"
+  },
   "hero": {
     "brand": "Openverse",
     "title": "Search for content to reuse",
@@ -55,7 +61,17 @@
     "licenses-nav-item": "The Licenses",
     "about-tab": "About",
     "resources-tab": "Resources",
-    "api-nav-item": "API"
+    "api-nav-item": "API",
+    "notification": {
+      "text": "{example_notification_text}",
+      "dismiss": "Dismiss",
+      "okay": "OK"
+    },
+    "loading": "Loading...",
+    "filter-button": {
+      "simple": "Filters",
+      "with-count": "{count} Filter | {count} Filters"
+    }
   },
   "footer": {
     "navigation": {
@@ -300,7 +316,6 @@
     "collection-size": "Collection size: {count} images"
   },
   "error": {
-    "not-found": "Page Not Found",
     "occurred": "An error occurred",
     "image-not-found": "Couldn't find image with id {id}",
     "media-not-found": "Couldn't find {mediaType} with id {id}",
@@ -309,9 +324,11 @@
   },
   "search-tab": {
     "all": "All",
-    "image": "Image",
+    "image": "Images",
     "audio": "Audio",
-    "video": "Video"
+    "video": "Video",
+    "see-image": "See all images",
+    "see-audio": "See all audio"
   },
   "filters": {
     "title": "Filters",
@@ -418,7 +435,6 @@
     "all-result-count-more": "Over {localeCount} results",
     "audio-result-count-more": "Over {localeCount} audio results",
     "image-result-count-more": "Over {localeCount} image results",
-    "no-more": "No more {type} :(",
     "load": "Load more results",
     "fetching-error": "Error fetching {type}:",
     "search-rating": {

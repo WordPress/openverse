@@ -1,12 +1,8 @@
-import { dev } from '~/utils/dev'
-import sampleAudioResponses from './sample-audio-responses.json'
-
 import ApiService from '~/data/api-service'
 import BaseMediaService from '~/data/base-media-service'
 
 import { AUDIO } from '~/constants/media'
 
-// TODO: Remove sample responses when Audio API is available
 const AudioService = {
   ...BaseMediaService(AUDIO),
 
@@ -16,10 +12,6 @@ const AudioService = {
    * @return {Promise<{data: any}>}
    */
   search(params) {
-    if (dev) {
-      const data = JSON.parse(JSON.stringify(sampleAudioResponses.search))
-      return Promise.resolve({ data })
-    }
     return ApiService.query('audio', params)
   },
 
@@ -37,9 +29,7 @@ const AudioService = {
       )
     }
 
-    return dev
-      ? Promise.resolve({ data: sampleAudioResponses.detail })
-      : ApiService.get('audio', params.id)
+    return ApiService.get('audio', params.id)
   },
 
   /**
@@ -55,9 +45,7 @@ const AudioService = {
       )
     }
 
-    return dev
-      ? Promise.resolve({ data: sampleAudioResponses.related })
-      : ApiService.get('audio', `${params.id}/related`)
+    return ApiService.get('audio', `${params.id}/related`)
   },
 }
 

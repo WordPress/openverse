@@ -1,5 +1,4 @@
-import FilterChecklist from '~/components/Filters/FilterChecklist'
-import VCheckbox from '~/components/VCheckbox'
+import FilterChecklist from '~/components/VFilters/VFilterChecklist'
 import { createLocalVue } from '@vue/test-utils'
 import { fireEvent, render, screen } from '@testing-library/vue'
 
@@ -10,7 +9,6 @@ describe('FilterChecklist', () => {
 
   beforeEach(() => {
     localVue = createLocalVue()
-    localVue.component('VCheckbox', VCheckbox)
     props = {
       options: [{ code: 'foo', name: 'bar', checked: false }],
       title: 'Foo',

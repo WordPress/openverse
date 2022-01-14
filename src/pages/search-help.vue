@@ -255,7 +255,6 @@
 <script>
 const SearchHelpPage = {
   name: 'search-help-page',
-  layout: 'with-nav-search',
   methods: {
     providerSearchLink(providerCode) {
       return `https://search.creativecommons.org/search?q=provider%3A%20"${providerCode}"`

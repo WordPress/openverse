@@ -235,7 +235,9 @@ export default {
       () => `${props.image.license_url}?ref=openverse`
     )
 
-    const goBackToSearchResults = () => router.back()
+    const goBackToSearchResults = () => {
+      router.back()
+    }
     const onImageLoad = (event) => emit('onImageLoaded', event)
 
     const tabClass = (tabIdx, tabClass) => {

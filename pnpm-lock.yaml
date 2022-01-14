@@ -17,7 +17,7 @@ specifiers:
   '@nuxtjs/style-resources': ^1.0.0
   '@nuxtjs/svg': ^0.3.0
   '@playwright/test': ^1.16.2
-  '@testing-library/jest-dom': ^5.14.1
+  '@testing-library/jest-dom': ^5.16.1
   '@testing-library/user-event': ^13.2.1
   '@testing-library/vue': ^5.8.2
   '@types/jest': ^26.0.22
@@ -54,6 +54,7 @@ specifiers:
   lodash.findindex: ^4.6.0
   lodash.isempty: ^4.4.0
   lodash.sortby: ^4.7.0
+  lodash.throttle: ^4.1.1
   node-html-parser: ^5.1.0
   nuxt: ^2.15.4
   postcss: ^8.4.5
@@ -99,6 +100,7 @@ dependencies:
   lodash.findindex: 4.6.0
   lodash.isempty: 4.4.0
   lodash.sortby: 4.7.0
+  lodash.throttle: 4.1.1
   node-html-parser: 5.1.0
   nuxt: 2.15.8_typescript@4.5.4
   reakit-utils: 0.15.2
@@ -137,7 +139,7 @@ devDependencies:
   sass: 1.45.0
   sass-loader: 10.2.0_sass@1.45.0
   start-server-and-test: 1.14.0
-  tailwindcss: 3.0.7_67faf65efc23bbcb8667813493b8c465
+  tailwindcss: 3.0.9_67faf65efc23bbcb8667813493b8c465
   tailwindcss-rtl: 0.8.0
   ts-node: 10.4.0_typescript@4.5.4
   typescript: 4.5.4
@@ -12376,6 +12378,10 @@ packages:
       lodash._reinterpolate: 3.0.0
     dev: false
 
+  /lodash.throttle/4.1.1:
+    resolution: {integrity: sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=}
+    dev: false
+
   /lodash.truncate/4.4.2:
     resolution: {integrity: sha1-WjUNoLERO4N+z//VgSy+WNbq4ZM=}
     dev: true
@@ -16749,8 +16755,8 @@ packages:
     resolution: {integrity: sha512-D+iKrobvc29qAmjwh3IpA2ZrBJacg2tSED7m9doJMCqlqneb8/dK71j0An+zCZQ+pI/c+/CBcm/x7nirzPWVOA==}
     dev: true
 
-  /tailwindcss/3.0.7_67faf65efc23bbcb8667813493b8c465:
-    resolution: {integrity: sha512-rZdKNHtC64jcQncLoWOuCzj4lQDTAgLtgK3WmQS88tTdpHh9OwLqULTQxI3tw9AMJsqSpCKlmcjW/8CSnni6zQ==}
+  /tailwindcss/3.0.9_67faf65efc23bbcb8667813493b8c465:
+    resolution: {integrity: sha512-X8TVifxDWfiNXInOeBofTteXAtZ5f0HnLs/uV4jDQNShc33Jb7qjYbk4VwI365rWAzcqYTks+9kesf3xH7Y35A==}
     engines: {node: '>=12.13.0'}
     hasBin: true
     peerDependencies:
@@ -16779,7 +16785,6 @@ packages:
       postcss-value-parser: 4.2.0
       quick-lru: 5.1.1
       resolve: 1.20.0
-      tmp: 0.2.1
     transitivePeerDependencies:
       - ts-node
     dev: true
@@ -16999,13 +17004,6 @@ packages:
     dependencies:
       os-tmpdir: 1.0.2
     dev: false
-
-  /tmp/0.2.1:
-    resolution: {integrity: sha512-76SUhtfqR2Ijn+xllcI5P1oyannHNHByD80W1q447gU3mp9G9PSpGdWmjUOHRDPiHYacIk66W7ubDTuPF3BEtQ==}
-    engines: {node: '>=8.17.0'}
-    dependencies:
-      rimraf: 3.0.2
-    dev: true
 
   /tmpl/1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}

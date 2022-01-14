@@ -2,6 +2,7 @@
  which, in turn, is ported from https://github.com/logaretm/vue-use-web by Abdelrahman Awad */
 import { onBeforeUnmount, ref } from '@nuxtjs/composition-api'
 import { SCREEN_SIZES } from '~/constants/screens.js'
+import { defaultWindow } from '~/composables/window'
 
 /**
  * Reactive Media Query.
@@ -9,12 +10,12 @@ import { SCREEN_SIZES } from '~/constants/screens.js'
  * @param query
  * @param options
  */
-export function useMediaQuery(query, options = {}) {
-  const { window } = options
-  if (!window) return ref(false)
+export function useMediaQuery(query, options = { shouldPassInSSR: false }) {
+  const { window = defaultWindow } = options
+  if (!window) return ref(options.shouldPassInSSR)
 
   const mediaQuery = window.matchMedia(query)
-  /** @type {import('@nuxtjs/composition-api').Ref<boolean>} */
+  /** @type {import('@nuxtjs/composition-api').Ref<Boolean>} */
   const matches = ref(mediaQuery.matches)
 
   const handler = (/** @type MediaQueryListEvent */ event) => {
@@ -40,9 +41,10 @@ export function useMediaQuery(query, options = {}) {
 }
 
 /**
- * Check whether the screen meets the current breakpoint size.
+ * Check whether the curent screen meets
+ * or exceeds the provided breakpoint size.
  */
-export const isScreen = (breakpointName, options = {}) => {
+export const isMinScreen = (breakpointName, options = {}) => {
   return useMediaQuery(
     `(min-width: ${SCREEN_SIZES.get(breakpointName)}px)`,
     options

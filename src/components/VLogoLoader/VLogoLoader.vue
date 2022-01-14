@@ -8,7 +8,7 @@
     aria-hidden="true"
     :data-prefers-reduced-motion="prefersReducedMotion"
     data-testid="logo-loader"
-    class="hover:bg-yellow w-16 h-16 p-4 rounded inline-flex justify-center items-center"
+    class="w-12 h-12 p-3 rounded inline-flex justify-center items-center"
   >
     <path
       data-logo-part-1
@@ -51,8 +51,7 @@ export default defineComponent({
    * @param {import('@nuxtjs/composition-api').SetupContext} context
    */
   setup() {
-    const defaultWindow = typeof window !== 'undefined' ? window : undefined
-    const prefersReducedMotion = useReducedMotion({ window: defaultWindow })
+    const prefersReducedMotion = useReducedMotion()
 
     return { prefersReducedMotion }
   },

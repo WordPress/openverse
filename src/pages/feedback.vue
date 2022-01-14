@@ -71,7 +71,6 @@ const suggestionForm =
 
 export const FeedbackPage = {
   name: 'feedback-page',
-  layout: 'with-nav-search',
   data() {
     return {
       activeTab: 0,

@@ -1,0 +1,40 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+import VHeader from '~/components/VHeader/VHeader.vue'
+
+<Meta
+  title="Components/VHeader/VHeader"
+  component={VHeader}
+  argTypes={{
+    input: {
+      action: 'input',
+    },
+    submit: {
+      action: 'submit',
+    },
+  }}
+/>
+
+export const Template = (args, { argTypes }) => ({
+  template: `
+    <VHeader v-bind="$props" v-on="$props" />`,
+  components: { VHeader },
+  props: Object.keys(argTypes),
+})
+
+# VHeader
+
+<Description of={VHeader} />
+
+<ArgsTable of={VHeader} />
+
+The header component. Fixed on scroll, search bar, content switcher, pages menu and filters button.
+
+<Canvas>
+  <Story name="Default">{Template.bind({})}</Story>
+</Canvas>

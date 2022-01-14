@@ -228,11 +228,10 @@ export const getters = {
    * Returns the search result data related for selected media.
    * @param {import('./types').MediaState} state
    * @param getters
-   * @param rootState
    * @return {import('./types').MediaStoreResult}
    */
-  results(state, getters, rootState) {
-    return state.results[rootState.search.query.mediaType] || null
+  results(state, getters) {
+    return getters.mediaType ? state.results[getters.mediaType] : {}
   },
   /**
    * Search fetching state for selected media type.

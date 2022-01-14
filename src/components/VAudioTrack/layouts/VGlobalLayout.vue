@@ -1,7 +1,7 @@
 <template>
   <div class="global-track flex flex-row w-full">
     <div class="flex-shrink-0">
-      <AudioThumbnail :audio="audio" />
+      <VAudioThumbnail :audio="audio" />
       <slot name="play-pause" size="medium" />
     </div>
 
@@ -20,12 +20,12 @@
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
 
-import AudioThumbnail from '~/components/AudioThumbnail/AudioThumbnail.vue'
+import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
 
 export default defineComponent({
   name: 'VGlobalLayout',
   components: {
-    AudioThumbnail,
+    VAudioThumbnail,
   },
   props: ['audio'],
 })

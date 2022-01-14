@@ -1,5 +1,16 @@
 const { test, expect } = require('@playwright/test')
 
+const openFilters = async (page) => {
+  const filterButtonSelector =
+    '[aria-controls="filter-sidebar"], [aria-controls="filter-modal"]'
+  const isPressed = async () =>
+    await page.getAttribute(filterButtonSelector, 'aria-pressed')
+  if ((await isPressed()) !== 'true') {
+    await page.click(filterButtonSelector)
+    expect(await isPressed()).toEqual('true')
+  }
+}
+
 test.beforeEach(async ({ context }) => {
   // Block any image or audio (jamendo.com) requests for each test in this file.
   await context.route(/\.(png|jpeg|jpg|svg)$/, (route) => route.abort())
@@ -25,7 +36,12 @@ test('can unset filters using filter tags', async ({ page }) => {
   await page.goto('/search/image?q=cat&license=cc0')
 
   const cc0Tag = page.locator('[aria-label="Remove CC0 filter"]')
-  const cc0Checkbox = page.locator('aside >> text=CC0')
+  await openFilters(page)
+  expect(await page.getAttribute('[aria-label="1 Filter"]', 'aria-label')).toBe(
+    '1 Filter'
+  )
+  const cc0Checkbox = page.locator('label:has-text("CC0")')
+
   await expect(cc0Checkbox).toBeChecked()
   await expect(cc0Tag).toHaveCount(1)
   page.on('requestfinished', (request) => {
@@ -41,8 +57,6 @@ test('can unset filters using filter tags', async ({ page }) => {
   await expect(page).toHaveURL('/search/image?q=cat')
   await expect(cc0Checkbox).not.toBeChecked()
   await expect(page.locator('[aria-label="Remove CC0 filter"]')).toHaveCount(0)
-
-  await cc0Checkbox.click()
 })
 
 test('filters are updated when media type changes', async ({ page }) => {
@@ -51,9 +65,11 @@ test('filters are updated when media type changes', async ({ page }) => {
     route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
   )
   await page.goto('/search/image?q=cat&aspect_ratio=tall')
+  await openFilters(page)
 
   const tallTag = page.locator('[aria-label="Remove Tall filter"]')
-  const tallCheckbox = page.locator('aside >> text=Tall')
+  const tallCheckbox = page.locator('label:has-text("Tall")')
+
   await expect(tallCheckbox).toBeChecked()
   await expect(tallTag).toHaveCount(1)
 
@@ -81,7 +97,9 @@ test('new media request is sent when a filter is selected', async ({
     }
   )
   await page.goto('/search/image?q=cat')
-  const cc0Checkbox = page.locator('aside >> text=CC0')
+  await openFilters(page)
+
+  const cc0Checkbox = page.locator('label:has-text("CC0")')
   await expect(cc0Checkbox).not.toBeChecked()
   await cc0Checkbox.click()
 

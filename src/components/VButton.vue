@@ -2,6 +2,7 @@
   <Component
     :is="as"
     :type="typeRef"
+    class="transition-colors"
     :class="[
       $style.button,
       $style[variant],
@@ -72,6 +73,7 @@ const VButton = defineComponent({
           'secondary',
           'tertiary',
           'action-menu',
+          'action-menu-secondary',
           'action-menu-muted',
           'grouped',
         ].includes(v),
@@ -249,7 +251,15 @@ a.button {
 }
 
 .action-menu {
+  @apply bg-white text-black border border-dark-charcoal-20 hover:border-dark-charcoal-20 focus-visible:ring-pink;
+}
+
+.action-menu-secondary {
   @apply bg-white text-black border border-tx hover:border-dark-charcoal-20 focus-visible:ring-pink;
+}
+
+.action-menu-secondary-pressed {
+  @apply border-tx bg-dark-charcoal text-white;
 }
 
 .action-menu-pressed {
@@ -261,7 +271,7 @@ a.button {
 }
 
 .action-menu-muted-pressed {
-  @apply border-tx bg-dark-charcoal text-white;
+  @apply border-tx bg-dark-charcoal text-white focus-visible:ring-pink;
 }
 
 .grouped {
@@ -270,6 +280,14 @@ a.button {
 
 .grouped-pressed {
   @apply bg-dark-charcoal-10 ring-offset-dark-charcoal-10;
+}
+
+.full {
+  @apply w-full font-semibold bg-dark-charcoal-06 focus-visible:ring-pink hover:bg-dark-charcoal-40 hover:text-white;
+}
+
+.full-pressed {
+  @apply w-full font-semibold bg-dark-charcoal-06 text-dark-charcoal;
 }
 
 .plain {

@@ -1,6 +1,6 @@
 import { render } from '@testing-library/vue'
 
-import FilterDisplay from '~/components/Filters/FilterDisplay'
+import FilterDisplay from '~/components/VFilters/VFilterDisplay'
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 

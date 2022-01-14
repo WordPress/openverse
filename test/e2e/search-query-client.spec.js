@@ -32,7 +32,7 @@ test.beforeEach(async ({ context }) => {
 test('q query parameter is set as the search term', async ({ page }) => {
   await page.goto('/')
 
-  const searchInput = page.locator('input[type="search"]')
+  const searchInput = page.locator('[placeholder="Search all content"]')
   await searchInput.type('cat')
   await page.click('button:has-text("Search")')
 
@@ -45,11 +45,13 @@ test('selecting `audio` on homepage, you can search for audio', async ({
 }) => {
   await page.goto('/')
 
-  await page.type('input[type="search"]', 'cat')
+  await page.type('[placeholder="Search all content"]', 'cat')
   await page.click('button:has-text("Audio")')
   await page.click('button:has-text("Search")')
 
-  await expect(page.locator('input[type="search"]')).toHaveValue('cat')
+  await expect(page.locator('[placeholder="Search all content"]')).toHaveValue(
+    'cat'
+  )
   const activeTabLabel = await page
     .locator('[role="tab"][aria-selected="true"]')
     .textContent()
@@ -62,15 +64,17 @@ test('selecting license type filter on homepage applies filters', async ({
 }) => {
   await page.goto('/')
 
-  await page.type('input[type="search"]', 'cat')
+  await page.type('[placeholder="Search all content"]', 'cat')
   await page.click('label:has-text("Use commercially")')
   await page.click('button:has-text("Search")')
 
-  await expect(page.locator('input[type="search"]')).toHaveValue('cat')
+  await expect(page.locator('[placeholder="Search all content"]')).toHaveValue(
+    'cat'
+  )
   const activeTabLabel = await page
     .locator('[role="tab"][aria-selected="true"]')
     .textContent()
-  expect(activeTabLabel.trim()).toEqual('Image')
+  expect(activeTabLabel.trim()).toEqual('Images')
   await expect(page).toHaveURL('search/image?q=cat&license_type=commercial')
 })
 

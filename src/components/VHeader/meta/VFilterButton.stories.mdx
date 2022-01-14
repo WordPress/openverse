@@ -1,0 +1,72 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+import VFilterButton from '~/components/VHeader/VFilterButton.vue'
+import Vuex from 'vuex'
+
+<Meta
+  title="Components/VHeader/VFilterButton"
+  component={VFilterButton}
+  argTypes={{
+    input: {
+      action: 'input',
+    },
+    submit: {
+      action: 'submit',
+    },
+  }}
+/>
+
+export const Template = (args, { argTypes }) => ({
+  template: `
+    <VFilterButton v-bind="$props" v-on="$props" />`,
+  components: { VFilterButton },
+  props: Object.keys(argTypes),
+  store: new Vuex.Store({
+    getters: {
+      'search/appliedFilterTags': () => [{ code: 'by', filterType: 'license' }],
+    },
+  }),
+})
+
+# Filter button
+
+<Description of={VFilterButton} />
+
+<ArgsTable of={VFilterButton} />
+
+The button opens and closes the filters sidebar. It also shows how many filters are applied
+in the mobile view.
+the field receives an input. It also emits the `search` event when the search
+button is clicked.
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      value: 'Search query',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name="Mobile Scrolled"
+    args={{
+      isScrolled: true,
+    }}
+    parameters={{
+      viewport: {
+        defaultViewport: 'iphonex',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

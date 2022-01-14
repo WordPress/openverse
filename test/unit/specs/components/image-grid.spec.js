@@ -1,5 +1,13 @@
 import ImageGrid from '~/components/ImageGrid/ImageGrid'
 import { render, screen } from '@testing-library/vue'
+import VueI18n from 'vue-i18n'
+import messages from '~/locales/en.json'
+
+const i18n = new VueI18n({
+  locale: 'en',
+  fallbackLocale: 'en',
+  messages: { en: messages },
+})
 
 const propsData = {
   images: [
@@ -16,6 +24,13 @@ const propsData = {
 const options = {
   props: propsData,
   stubs: ['NuxtLink', 'VLicense'],
+  mocks: {
+    $nuxt: {
+      context: {
+        i18n,
+      },
+    },
+  },
 }
 describe('ImageGrid', () => {
   it('renders images without load more button if canLoadMore is false', () => {
@@ -25,7 +40,7 @@ describe('ImageGrid', () => {
     expect(screen.queryAllByRole('figure').length).toEqual(
       propsData.images.length
     )
-    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('load-more')).not.toBeInTheDocument()
   })
 
   it('renders images and load more button if canLoadMore is true', async () => {
@@ -35,16 +50,8 @@ describe('ImageGrid', () => {
     expect(screen.queryAllByRole('figure').length).toEqual(
       propsData.images.length
     )
-    const loadMoreButton = screen.queryByRole('button')
+    const loadMoreButton = screen.queryByTestId('load-more')
     expect(loadMoreButton).toBeVisible()
-    expect(loadMoreButton).toHaveTextContent('browse-page.load')
-  })
-
-  it('shows LoadingIcon instead of LoadMoreButton when isFetching', async () => {
-    options.props.canLoadMore = true
-    options.props.fetchState.isFetching = true
-    render(ImageGrid, options)
-    // getByRole('button') does not find the button
-    expect(screen.getByText('browse-page.load')).not.toBeVisible()
+    expect(loadMoreButton).toHaveTextContent(messages['browse-page'].load)
   })
 })

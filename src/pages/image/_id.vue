@@ -25,7 +25,6 @@ import VPhotoDetails from '~/components/ImageDetails/VPhotoDetails.vue'
 const PhotoDetailPage = {
   name: 'PhotoDetailPage',
   components: { RelatedImages, VPhotoDetails },
-  layout: 'with-nav-search',
   data() {
     return {
       breadCrumbURL: '',

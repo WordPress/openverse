@@ -4,7 +4,7 @@
       class="relative flex-shrink-0 rounded-sm overflow-hidden"
       :class="isLarge ? 'w-30 me-6' : 'w-20 me-4'"
     >
-      <AudioThumbnail :audio="audio" />
+      <VAudioThumbnail :audio="audio" />
       <div v-if="isSmall" class="absolute bottom-0 end-0">
         <slot name="play-pause" size="tiny" />
       </div>
@@ -80,13 +80,13 @@
 
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
-import AudioThumbnail from '~/components/AudioThumbnail/AudioThumbnail.vue'
+import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
 import VLicense from '~/components/License/VLicense.vue'
 
 export default defineComponent({
   name: 'VRowLayout',
   components: {
-    AudioThumbnail,
+    VAudioThumbnail,
     VLicense,
   },
   props: ['audio', 'size'],

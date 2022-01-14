@@ -27,6 +27,7 @@
     >
       <!-- Stroke is calculated from the centre of the path -->
       <rect
+        v-if="waveformDimens.width && waveformDimens.height"
         class="stroke-pink"
         x="0.75"
         y="0.75"
@@ -37,6 +38,7 @@
         stroke-width="1.5"
       />
       <rect
+        v-if="waveformDimens.width && waveformDimens.height"
         class="stroke-white"
         x="2"
         y="2"

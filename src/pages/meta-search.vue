@@ -118,7 +118,6 @@
 <script>
 export default {
   name: 'MetaSearchPage',
-  layout: 'with-nav-search',
 }
 </script>
 
