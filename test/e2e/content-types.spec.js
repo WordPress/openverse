@@ -88,15 +88,13 @@ for (const [i, contentType] of contentTypes.entries()) {
       await expect(searchResult).not.toBeEmpty()
     }
 
-    // Load more
-    if (contentType.supported) {
+    // Load more, skip on audio
+    // @todo: Restore on audio when production audio data is live
+    if (contentType.supported && contentType.id !== 'audio') {
       const loadMoreSection = await page.locator('[data-testid="load-more"]')
       await expect(loadMoreSection).toHaveCount(1)
-      const expectedText =
-        contentType.id === 'audio' ? 'No more audio' : 'Load more'
+      const expectedText = 'Load more'
       await expect(loadMoreSection).toContainText(expectedText)
-    } else {
-      await expect(page.locator('[data-testid="load-more"]')).toHaveCount(0)
     }
 
     // MetaSearch form
