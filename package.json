@@ -12,7 +12,7 @@
   "author": "sebworks",
   "private": true,
   "scripts": {
-    "dev": "pnpm i18n:create-locales-list && cross-env ENABLE_AUDIO=true nuxt",
+    "dev": "pnpm i18n:create-locales-list && pnpm i18n:update-locales && cross-env ENABLE_AUDIO=true nuxt",
     "build": "pnpm i18n:get-translations && nuxt build",
     "generate": "nuxt generate",
     "start": "nuxt start",
@@ -33,7 +33,7 @@
     "vue-i18n-extract": "vue-i18n-extract report -v './src/**/*.?(js|vue)' -l './src/locales/*.?(json)'",
     "prepare": "husky install",
     "i18n:update-locales": "node src/locales/scripts/get-validated-locales",
-    "i18n:get-translations": "node src/locales/scripts/get-translations && pnpm i18n:update-locales",
+    "i18n:get-translations": "pnpm i18n:create-locales-list && node src/locales/scripts/get-translations && pnpm i18n:update-locales",
     "i18n:generate-pot": "node src/locales/scripts/json-to-pot",
     "i18n:create-locales-list": "node src/locales/scripts/create-wp-locale-list"
   },
