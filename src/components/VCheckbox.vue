@@ -3,7 +3,7 @@
     <input
       :id="id"
       type="checkbox"
-      class="checkbox"
+      class="checkbox bg-white"
       v-bind="inputAttrs"
       @change="onChange"
     />

@@ -1,26 +1,38 @@
-import { onMounted, readonly, ref } from '@nuxtjs/composition-api'
+import { onMounted, ref } from '@nuxtjs/composition-api'
 import local from '~/utils/local'
+import { isMinScreen } from '@/composables/use-media-query'
 
-const isFilterSidebarVisible = ref(false)
+/** @type {import('@nuxtjs/composition-api').Ref<boolean>} */
+const isVisible = ref(false)
 
-export function useFilterSidebarVisibility({ mediaQuery }) {
+/**
+ * This composable keeps track of whether the filters (sidebar or modal) should be visible.
+ * @param {object} props
+ * @param {import('@nuxtjs/composition-api').Ref<boolean>} [props.mediaQuery=isMinScreen('md')] - the minimum media query at which
+ * the filters are shown as sidebar instead of the full-page modal.
+ * @returns {{isVisible: import('@nuxtjs/composition-api').Ref<boolean>, setVisibility: (val: boolean) => void}}
+ */
+export function useFilterSidebarVisibility({ mediaQuery } = {}) {
+  if (!mediaQuery) {
+    mediaQuery = isMinScreen('md')
+  }
   /**
    * Open or close the filter sidebar
    * @param {boolean} val
    */
-  const setFilterSidebarVisibility = (val) => {
-    isFilterSidebarVisible.value = val
+  const setVisibility = (val) => {
+    isVisible.value = val
     local.set(process.env.filterStorageKey, val)
   }
 
   onMounted(() => {
     const localFilterState = () =>
       local.get(process.env.filterStorageKey) === 'true'
-    setFilterSidebarVisibility(mediaQuery && localFilterState())
+    setVisibility(mediaQuery.value && localFilterState())
   })
 
   return {
-    isFilterSidebarVisible: readonly(isFilterSidebarVisible),
-    setFilterSidebarVisibility,
+    isVisible,
+    setVisibility,
   }
 }

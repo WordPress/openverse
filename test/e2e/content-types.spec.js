@@ -27,7 +27,11 @@ test.beforeEach(async ({ context }) => {
   // Serve mock data on all image search requests
   await context.route(
     'https://api.openverse.engineering/v1/images/**',
-    (route) => route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
+    (route) =>
+      route.fulfill({
+        headers: { 'Access-Control-Allow-Origin': '*' },
+        path: 'test/e2e/resources/mock_data.json',
+      })
   )
 })
 
@@ -65,13 +69,6 @@ const contentTypes = [
 for (const [i, contentType] of contentTypes.entries()) {
   test(`Can open ${contentType.name} search page on SSR`, async ({ page }) => {
     await page.goto(contentType.url)
-
-    // Selected content page
-    const currentTabLabel = await page
-      .locator('[aria-current="page"]')
-      .textContent()
-
-    expect(currentTabLabel.trim()).toEqual(contentType.name)
 
     // Meta data
     if (contentType.supported) {

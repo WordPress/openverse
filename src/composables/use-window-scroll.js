@@ -9,7 +9,7 @@ import { useEventListener } from '~/composables/use-event-listener'
  *
  * @type {import('@nuxtjs/composition-api').Ref<boolean>}
  */
-export const isHeaderScrolled = ref(false)
+const isWindowScrolled = ref(false)
 
 /**
  *
@@ -26,6 +26,7 @@ export function useWindowScroll({
     return {
       x: ref(0),
       y: ref(0),
+      isWindowScrolled,
     }
   }
 
@@ -35,7 +36,7 @@ export function useWindowScroll({
   const scrollHandler = () => {
     x.value = window.pageXOffset
     y.value = window.pageYOffset
-    isHeaderScrolled.value = y.value > 0
+    isWindowScrolled.value = y.value > 0
   }
 
   const handler = throttleMs
@@ -47,5 +48,5 @@ export function useWindowScroll({
     passive: true,
   })
 
-  return { x, y, isHeaderScrolled }
+  return { x, y, isWindowScrolled }
 }

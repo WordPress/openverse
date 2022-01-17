@@ -1,9 +1,10 @@
-import BrowsePage from '~/pages/search'
-import render from '../../test-utils/render'
+import SearchIndex from '~/pages/search.vue'
+import { render, screen } from '@testing-library/vue'
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
+import { ref } from '@nuxtjs/composition-api'
 
-describe('Search Grid Wrapper', () => {
+describe('SearchIndex', () => {
   let options
   let localVue
   let storeMock
@@ -15,14 +16,19 @@ describe('Search Grid Wrapper', () => {
         search: {
           namespaced: true,
           state: {
-            query: { q: 'foo' },
-            isFilterVisible: false,
+            query: { q: 'foo', mediaType: 'image' },
+            searchType: 'image',
           },
           getters: {
-            isAnyFilterApplied: jest.fn(() => false),
+            isAnyFilterApplied: () => false,
+            appliedFilterTags: () => [],
           },
-          mutations: {
-            SET_FILTER_IS_VISIBLE: jest.fn(),
+        },
+        media: {
+          namespaced: true,
+          getters: {
+            fetchState: () => ({ isFetching: false }),
+            results: () => ({ count: 0 }),
           },
         },
       },
@@ -30,43 +36,27 @@ describe('Search Grid Wrapper', () => {
     options = {
       localVue,
       store: storeMock,
-      stubs: {
-        AppModal: true,
-        FilterDisplay: true,
-        NuxtChild: true,
-        ScrollButton: true,
-        SearchTypeTabs: true,
-        SearchGridManualLoad: true,
-      },
       mocks: {
         $router: { path: { name: 'search-image' } },
         $route: { path: '/search/image' },
       },
+      stubs: { NuxtChild: true, VSearchGrid: true },
     }
   })
 
-  it('hides the scroll button and filters by default', () => {
-    const wrapper = render(BrowsePage, options)
-    window.scrollY = 50
-    wrapper.vm.checkScrollLength()
-    expect(wrapper.vm.showScrollButton).toBe(false)
-    expect(wrapper.findComponent({ name: 'SearchGridFilter' }).exists()).toBe(
-      false
-    )
+  it('hides the scroll button when injected value is false', () => {
+    options.provide = { showScrollButton: ref(false) }
+
+    render(SearchIndex, options)
+
+    expect(screen.queryByLabelText(/scroll/i)).not.toBeVisible()
   })
 
-  it('renders the scroll button when the page scrolls down', () => {
-    const wrapper = render(BrowsePage, options)
-    window.scrollY = 80
-    wrapper.vm.checkScrollLength()
-    expect(wrapper.vm.showScrollButton).toBe(true)
-  })
+  it('shows the scroll button when injected value is false', () => {
+    options.provide = { showScrollButton: ref(true) }
 
-  xit('shows search filters when isFilterVisible is true', () => {
-    storeMock.state.search.isFilterVisible = true
-    const wrapper = render(BrowsePage, options)
-    expect(wrapper.findComponent({ name: 'SearchGridFilter' }).exists()).toBe(
-      true
-    )
+    render(SearchIndex, options)
+
+    expect(screen.queryByLabelText(/scroll/i)).toBeVisible()
   })
 })

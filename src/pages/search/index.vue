@@ -12,8 +12,11 @@ import { propTypes } from '~/pages/search/search-page.types'
 import { defineComponent } from '@nuxtjs/composition-api'
 import { useLoadMore } from '~/composables/use-load-more'
 
+import ImageGrid from '~/components/ImageGrid/ImageGrid.vue'
+
 const SearchIndex = defineComponent({
   name: 'SearchIndex',
+  components: { ImageGrid },
   props: propTypes,
 
   setup(props) {

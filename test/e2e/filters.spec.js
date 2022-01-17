@@ -28,7 +28,8 @@ test.beforeEach(async ({ context }) => {
   )
 })
 
-test('can unset filters using filter tags', async ({ page }) => {
+// todo(obulat): remove this test if we do not have filter tags
+test.skip('can unset filters using filter tags', async ({ page }) => {
   // Serve mock data on all image search requests
   await page.route('https://api.openverse.engineering/v1/images/?**', (route) =>
     route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
@@ -59,7 +60,7 @@ test('can unset filters using filter tags', async ({ page }) => {
   await expect(page.locator('[aria-label="Remove CC0 filter"]')).toHaveCount(0)
 })
 
-test('filters are updated when media type changes', async ({ page }) => {
+test.skip('filters are updated when media type changes', async ({ page }) => {
   // Serve mock data on all image search requests
   await page.route('https://api.openverse.engineering/v1/images?**', (route) =>
     route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
@@ -67,19 +68,15 @@ test('filters are updated when media type changes', async ({ page }) => {
   await page.goto('/search/image?q=cat&aspect_ratio=tall')
   await openFilters(page)
 
-  const tallTag = page.locator('[aria-label="Remove Tall filter"]')
   const tallCheckbox = page.locator('label:has-text("Tall")')
 
   await expect(tallCheckbox).toBeChecked()
-  await expect(tallTag).toHaveCount(1)
 
-  await page.click('[role="tab"]:has-text("Audio")')
+  await page.click('[aria-label="Images"]')
+  await page.click(`a:has-text("Audio")`)
 
-  // TODO(obulat): the URL should not have aspect_ratio query for audio
-  // await expect(page).toHaveURL('/search/audio/?q=cat')
-  await expect(page).toHaveURL('/search/audio?q=cat&aspect_ratio=tall')
+  await expect(page).toHaveURL('/search/audio?q=cat')
 
-  await expect(tallTag).toHaveCount(0)
   await expect(tallCheckbox).toHaveCount(0)
 })
 

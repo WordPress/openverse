@@ -1,14 +1,15 @@
 <template>
   <VButton
     :variant="variant"
-    class="self-center gap-2 align-center font-semibold"
+    class="self-center gap-2 align-center font-semibold md:flex-shrink-0"
+    :class="{ 'w-12': isHeaderScrolled && !isMinScreenMd }"
     :pressed="pressed"
     aria-controls="filter-sidebar"
     :aria-label="label"
     @click="toggleFilters"
   >
-    <VIcon v-if="showIcon" :icon-path="filterIcon" />
-    <span v-if="showLabel" data-testid="filterbutton-label">{{ label }}</span>
+    <VIcon v-show="showIcon" :icon-path="filterIcon" />
+    <span v-show="showLabel" data-testid="filterbutton-label">{{ label }}</span>
   </VButton>
 </template>
 
@@ -16,13 +17,14 @@
 import {
   computed,
   defineComponent,
+  inject,
   toRefs,
   useContext,
 } from '@nuxtjs/composition-api'
-import { isMinScreen } from '~/composables/use-media-query'
 import filterIcon from '~/assets/icons/filter.svg'
+
 import VButton from '~/components/VButton.vue'
-import VIcon from '~/components/VIcon/VIcon'
+import VIcon from '~/components/VIcon/VIcon.vue'
 
 const VFilterButton = defineComponent({
   name: 'VFilterButton',
@@ -31,13 +33,6 @@ const VFilterButton = defineComponent({
     VButton,
   },
   props: {
-    /**
-     * @default false
-     */
-    isHeaderScrolled: {
-      type: Boolean,
-      default: false,
-    },
     pressed: {
       type: Boolean,
       default: false,
@@ -45,9 +40,9 @@ const VFilterButton = defineComponent({
   },
   setup(props, { emit }) {
     const { i18n, store } = useContext()
-    const { isHeaderScrolled, pressed } = toRefs(props)
-    const isMinScreenMD = isMinScreen('md')
-
+    const { pressed } = toRefs(props)
+    const isMinScreenMd = inject('isMinScreenMd')
+    const isHeaderScrolled = inject('isHeaderScrolled')
     const filterCount = computed(
       () => store.getters['search/appliedFilterTags'].length
     )
@@ -58,11 +53,11 @@ const VFilterButton = defineComponent({
      * based on the viewport, the application of filters, and scrolling.
      */
     const variant = computed(() => {
-      // Show the borderd state by default, unless below md
-      let value = isMinScreenMD.value ? 'action-menu' : 'action-menu-secondary'
+      // Show the bordered state by default, unless below md
+      let value = isMinScreenMd.value ? 'tertiary' : 'action-menu'
 
       if (isHeaderScrolled.value) {
-        value = 'action-menu-secondary'
+        value = 'action-menu'
       }
       if (filtersAreApplied.value) {
         value = 'action-menu-muted'
@@ -76,7 +71,7 @@ const VFilterButton = defineComponent({
 
     const label = computed(() => {
       // Below medium viewport logic
-      if (!isMinScreenMD.value) {
+      if (!isMinScreenMd.value) {
         return isHeaderScrolled.value
           ? filterCount.value
           : i18n.tc('header.filter-button.with-count', filterCount.value)
@@ -88,7 +83,7 @@ const VFilterButton = defineComponent({
     })
 
     /**
-     * Whether or not to show the filter icon,
+     * Whether to show the filter icon,
      * based on viewport and the application of filters.
      */
     const showIcon = computed(() => {
@@ -97,7 +92,7 @@ const VFilterButton = defineComponent({
         return false
       }
       // Below the medium viewport, only show when there's no filters applied.
-      if (!isMinScreenMD.value) {
+      if (!isMinScreenMd.value) {
         return !isHeaderScrolled.value || !filtersAreApplied.value
       }
       return true
@@ -105,10 +100,7 @@ const VFilterButton = defineComponent({
 
     // Hide the label entirely when no filters are applied on mobile.
     const showLabel = computed(() => {
-      if (!isMinScreenMD.value && !filtersAreApplied.value) {
-        return false
-      }
-      return true
+      return !(!isMinScreenMd.value && !filtersAreApplied.value)
     })
 
     return {
@@ -121,6 +113,8 @@ const VFilterButton = defineComponent({
         emit('toggle')
       },
       variant,
+      isMinScreenMd,
+      isHeaderScrolled,
     }
   },
 })

@@ -53,9 +53,7 @@
       class="column image-info md:ms-10"
     >
       <div class="my-4">
-        <h1 class="text-6xl">
-          {{ image.title }}
-        </h1>
+        <h1 v-if="isLoaded" class="text-6xl">{{ image.title }}</h1>
         <i18n
           v-if="image.creator"
           class="caption"

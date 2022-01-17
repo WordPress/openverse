@@ -35,8 +35,12 @@ test.beforeEach(async ({ context }) => {
   )
   // Serve mock data on all image search requests
   await context.route(
-    'https://api.openverse.engineering/v1/images**',
-    (route) => route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
+    'https://api.openverse.engineering/v1/images/**',
+    (route) =>
+      route.fulfill({
+        path: 'test/e2e/resources/mock_data.json',
+        headers: { 'Access-Control-Allow-Origin': '*' },
+      })
   )
 })
 
@@ -51,7 +55,7 @@ test('q query parameter is set as the search term', async ({ page }) => {
   // await expect(searchInput).toBeFocused()
 })
 
-test('url path /search/ is used to select `all` search tab', async ({
+test.skip('url path /search/ is used to select `all` search tab', async ({
   page,
 }) => {
   await page.goto('/search/?q=cat')
@@ -62,7 +66,7 @@ test('url path /search/ is used to select `all` search tab', async ({
   expect(activeTabLabel.trim()).toEqual('All')
 })
 
-test('url path /search/audio is used to select `audio` search tab', async ({
+test.skip('url path /search/audio is used to select `audio` search tab', async ({
   page,
 }) => {
   const audioSearchUrl = '/search/audio?q=cat'

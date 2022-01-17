@@ -18,7 +18,27 @@ msgctxt "interpunct"
 msgid "•"
 msgstr ""
 
-#: src/components/VModal/VModalContent.vue:25
+msgctxt "search-type.image"
+msgid "Images"
+msgstr ""
+
+msgctxt "search-type.audio"
+msgid "Audio"
+msgstr ""
+
+msgctxt "search-type.all"
+msgid "All content"
+msgstr ""
+
+msgctxt "search-type.video"
+msgid "Videos"
+msgstr ""
+
+msgctxt "search-type.label"
+msgid "Type of content to search"
+msgstr ""
+
+#: src/components/VModal/VMobileModalContent.vue:30
 msgctxt "modal.close"
 msgid "Close"
 msgstr ""
@@ -861,22 +881,21 @@ msgctxt "browse-page.search-rating.feedback-thanks"
 msgid "Thank you for the feedback!"
 msgstr ""
 
-#: src/components/VFilters/VSearchGridFilter.vue:11
+#: src/components/VFilters/VSearchGridFilter.vue:14
 msgctxt "filter-list.filter-by"
 msgid "Filter results by"
 msgstr ""
 
-#: src/components/VFilters/VSearchGridFilter.vue:16
 msgctxt "filter-list.hide"
 msgid "Hide filters"
 msgstr ""
 
-#: src/components/VFilters/VSearchGridFilter.vue:45
+#: src/components/VFilters/VSearchGridFilter.vue:23
 msgctxt "filter-list.clear"
 msgid "Clear filters"
 msgstr ""
 
-#: src/components/VFilters/VSearchGridFilter.vue:52
+#: src/components/VFilters/VSearchGridFilter.vue:42
 msgctxt "filter-list.show"
 msgid "Show results"
 msgstr ""
@@ -918,7 +937,7 @@ msgctxt "filters.license-explanation.link"
 msgid "here"
 msgstr ""
 
-#: src/components/VFilters/VFilterChecklist.vue:85
+#: src/components/VFilters/VFilterChecklist.vue:74
 msgctxt "filters.searchBy.title"
 msgid "Search By"
 msgstr ""
@@ -1116,7 +1135,7 @@ msgid "All"
 msgstr ""
 
 msgctxt "search-tab.image"
-msgid "Images"
+msgid "Image"
 msgstr ""
 
 msgctxt "search-tab.audio"
@@ -1125,14 +1144,6 @@ msgstr ""
 
 msgctxt "search-tab.video"
 msgid "Video"
-msgstr ""
-
-msgctxt "search-tab.see-image"
-msgid "See all images"
-msgstr ""
-
-msgctxt "search-tab.see-audio"
-msgid "See all audio"
 msgstr ""
 
 msgctxt "error.occurred"
@@ -2020,18 +2031,18 @@ msgctxt "header.api-nav-item"
 msgid "API"
 msgstr ""
 
-#: src/components/VHeader/VHeader.vue:148
+#: src/components/VHeader/VHeader.vue:189
 msgctxt "header.loading"
 msgid "Loading..."
 msgstr ""
 
-#: src/components/VHeader/VFilterButton.vue:87
+#: src/components/VHeader/VFilterButton.vue:85
 msgctxt "header.filter-button.simple"
 msgid "Filters"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VFilterButton.vue:82
+#: src/components/VHeader/VFilterButton.vue:80
 msgctxt "header.filter-button.with-count"
 msgid "###count### Filter | ###count### Filters"
 msgstr ""
@@ -2065,7 +2076,7 @@ msgstr ""
 
 #: src/components/NavSection.vue:50
 msgctxt "header.aria.sr-search"
-msgid "sr search button"
+msgid "search button"
 msgstr ""
 
 msgctxt "notification.dismiss"

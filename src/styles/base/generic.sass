@@ -1,12 +1,9 @@
 @import "../utilities/mixins"
 
 $body-background-color: $scheme-main
-$body-size: 16px
 $body-min-width: 300px
 $body-rendering: optimizeLegibility
 $body-family: $family-primary
-$body-overflow-x: hidden
-$body-overflow-y: scroll
 
 $body-color: $color-dark-slate-gray
 $body-font-size: 0.875em
@@ -33,12 +30,9 @@ $pre-code-font-size: 1em
 
 html
   background-color: $body-background-color
-  font-size: $body-size
   -moz-osx-font-smoothing: grayscale
   -webkit-font-smoothing: antialiased
   min-width: $body-min-width
-  overflow-x: $body-overflow-x
-  overflow-y: $body-overflow-y
   text-rendering: $body-rendering
   text-size-adjust: 100%
 
@@ -79,14 +73,8 @@ body
 // Inline
 
 a
-  color: $link
   cursor: pointer
   text-decoration: none
-  strong
-    color: currentColor
-  &:hover
-    color: $link-hover
-    text-decoration: underline
 
 code
   background-color: $code-background

@@ -260,7 +260,7 @@ export const getters = {
    * @returns {boolean}
    */
   unsupportedMediaType(state, getters, rootState) {
-    const mediaType = rootState.search.query.mediaType
+    const mediaType = rootState.search.searchType
     return (
       mediaType === VIDEO || (mediaType === AUDIO && !process.env.enableAudio)
     )

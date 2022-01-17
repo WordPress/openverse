@@ -28,23 +28,7 @@
         type="button"
         @click.stop="toggleLicenseExplanationVisibility(item.code)"
       >
-        <svg
-          aria-hidden="true"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          class="pe-1"
-        >
-          <circle cx="12" cy="10" r="8" stroke="#1E1E1E" stroke-width="1.5" />
-          <path
-            d="M9.75 8.25C9.75 7.00736 10.7574 6 12 6C13.2426 6 14.25 7.00736 14.25 8.25C14.25 9.40828 13.3748 10.3621 12.2496 10.4863C12.1124 10.5015 12 10.6119 12 10.75V12"
-            stroke="#1E1E1E"
-            stroke-width="1.5"
-          />
-          <path d="M12 13V14.5" stroke="#1E1E1E" stroke-width="1.5" />
-        </svg>
+        <VIcon :icon-path="helpIcon" />
       </button>
     </div>
     <VLicenseExplanationTooltip
@@ -56,14 +40,18 @@
 </template>
 
 <script>
-import VLicenseExplanationTooltip from '~/components/VFilters/VLicenseExplanationTooltip'
+import helpIcon from '~/assets/icons/help.svg'
+
+import VLicenseExplanationTooltip from '~/components/VFilters/VLicenseExplanationTooltip.vue'
 import VCheckbox from '~/components/VCheckbox.vue'
 import VLicense from '~/components/License/VLicense.vue'
+import VIcon from '~/components/VIcon/VIcon.vue'
 
 export default {
   name: 'FilterCheckList',
   components: {
     VCheckbox,
+    VIcon,
     VLicense,
     VLicenseExplanationTooltip,
   },
@@ -77,6 +65,7 @@ export default {
     return {
       licenseExplanationVisible: false,
       licenseExplanationCode: null,
+      helpIcon,
     }
   },
   computed: {

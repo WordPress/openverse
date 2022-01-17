@@ -2,7 +2,8 @@
   <button
     :aria-label="$t('browse-page.aria.scroll')"
     type="button"
-    class="scroll text-white bg-trans-blue hover:bg-trans-blue-action transition-all duration-100 ease-linear fixed end-4 bottom-4 w-14 h-14 hover:shadow-md rounded-full text-center"
+    class="scroll text-white bg-trans-blue hover:bg-trans-blue-action transition-all duration-100 ease-linear fixed bottom-4 w-14 h-14 hover:shadow-md rounded-full text-center"
+    :class="hClass"
     @click="scrollToTop"
     @keyup.enter="scrollToTop"
   >
@@ -19,11 +20,23 @@
 </template>
 
 <script>
+import { computed } from '@nuxtjs/composition-api'
+import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
+
+const positionWithoutSidebar = 'ltr:right-4 rtl:left-4'
+const positionWithSidebar = 'ltr:right-[21rem] rtl:left-[21rem]'
 export default {
   name: 'VScrollButton',
+  setup() {
+    const { isVisible: isFilterVisible } = useFilterSidebarVisibility()
+    const hClass = computed(() =>
+      isFilterVisible.value ? positionWithSidebar : positionWithoutSidebar
+    )
+    return { hClass, isFilterVisible }
+  },
   methods: {
     scrollToTop() {
-      window.scrollTo({
+      this.$el.parentElement.scrollTo({
         top: 0,
         left: 0,
         behavior: 'smooth',

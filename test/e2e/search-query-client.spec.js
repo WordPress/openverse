@@ -25,18 +25,22 @@ test.beforeEach(async ({ context }) => {
   // Serve mock data on all image search requests
   await context.route(
     'https://api.openverse.engineering/v1/images/**',
-    (route) => route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
+    (route) =>
+      route.fulfill({
+        path: 'test/e2e/resources/mock_data.json',
+        headers: { 'Access-Control-Allow-Origin': '*' },
+      })
   )
 })
 
 test('q query parameter is set as the search term', async ({ page }) => {
   await page.goto('/')
 
-  const searchInput = page.locator('[placeholder="Search all content"]')
+  const searchInput = page.locator('main input[type="search"]')
   await searchInput.type('cat')
   await page.click('button:has-text("Search")')
 
-  await expect(searchInput).toHaveValue('cat')
+  await expect(page.locator('header input[type="search"]')).toHaveValue('cat')
   await expect(page).toHaveURL('search/image?q=cat')
 })
 
@@ -45,17 +49,12 @@ test('selecting `audio` on homepage, you can search for audio', async ({
 }) => {
   await page.goto('/')
 
-  await page.type('[placeholder="Search all content"]', 'cat')
+  await page.type('main input[type="search"]', 'cat')
   await page.click('button:has-text("Audio")')
   await page.click('button:has-text("Search")')
 
-  await expect(page.locator('[placeholder="Search all content"]')).toHaveValue(
-    'cat'
-  )
-  const activeTabLabel = await page
-    .locator('[role="tab"][aria-selected="true"]')
-    .textContent()
-  expect(activeTabLabel.trim()).toEqual('Audio')
+  await expect(page.locator('header input[type="search"]')).toHaveValue('cat')
+
   await expect(page).toHaveURL('search/audio?q=cat')
 })
 
@@ -64,18 +63,12 @@ test('selecting license type filter on homepage applies filters', async ({
 }) => {
   await page.goto('/')
 
-  await page.type('[placeholder="Search all content"]', 'cat')
+  await page.type('main input[type="search"]', 'cat')
   await page.click('label:has-text("Use commercially")')
   await page.click('button:has-text("Search")')
 
-  await expect(page.locator('[placeholder="Search all content"]')).toHaveValue(
-    'cat'
-  )
-  const activeTabLabel = await page
-    .locator('[role="tab"][aria-selected="true"]')
-    .textContent()
-  expect(activeTabLabel.trim()).toEqual('Images')
   await expect(page).toHaveURL('search/image?q=cat&license_type=commercial')
+  await expect(page.locator('header input[type="search"]')).toHaveValue('cat')
 })
 
 test.skip('url filter parameters not used by current mediaType are discarded', async ({
