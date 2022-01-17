@@ -17,6 +17,8 @@ import sentry_sdk
 from decouple import config
 from sentry_sdk.integrations.django import DjangoIntegration
 
+from .logger import LOGGING  # noqa: F401
+
 
 # Build paths inside the project like this: BASE_DIR.join('dir', 'subdir'...)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -247,29 +249,6 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation" ".NumericPasswordValidator",
     },
 ]
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "level": "INFO",
-            "class": "logging.StreamHandler",
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["console"],
-            "level": "INFO",
-            "propagate": True,
-        },
-        # root logger
-        "": {
-            "level": "INFO",
-            "handlers": ["console"],
-        },
-    },
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
