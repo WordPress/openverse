@@ -136,6 +136,9 @@ def _get_batch_json(endpoint=ENDPOINT, headers=None, retries=RETRIES, query_para
 
 def _process_item_batch(items_batch):
     for item in items_batch:
+        # Freesound sometimes returns results that are just "None"
+        if item is None:
+            continue
         item_meta_data = _extract_audio_data(item)
         if item_meta_data is None:
             continue

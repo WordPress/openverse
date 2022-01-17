@@ -67,8 +67,11 @@ def test_get_items():
         assert expected_audio_count == actual_audio_count
 
 
-def test_process_item_batch_handles_example_batch(audio_data):
+@pytest.mark.parametrize("has_nones", [False, True])
+def test_process_item_batch_handles_example_batch(has_nones, audio_data):
     items_batch = [audio_data]
+    if has_nones:
+        items_batch = [None, None, audio_data, None]
     with patch.object(freesound.audio_store, "add_item", return_value=1) as mock_add:
         freesound._process_item_batch(items_batch)
         mock_add.assert_called_once()
