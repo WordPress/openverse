@@ -651,7 +651,8 @@
     "title": "Audio Category",
     "music": "Music",
     "sound-effects": "Sound Effects",
-    "podcast": "Podcast"
+    "podcast": "Podcast",
+    "pronunciation": "Pronunciation"
   },
   "license-names": {
     "cc0": "CC0",

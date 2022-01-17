@@ -20,7 +20,7 @@
 
         <div v-if="!isSmall" class="player flex flex-row">
           <slot name="play-pause" size="small" />
-          <slot name="controller" :waveform-props="{ features: [] }" />
+          <slot name="controller" :features="[]" />
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@ export default defineComponent({
 </script>
 
 <style>
-.box-track .audio-controller {
+.box-track .waveform {
   @apply flex-grow;
   --waveform-background-color: theme('colors.yellow');
 }

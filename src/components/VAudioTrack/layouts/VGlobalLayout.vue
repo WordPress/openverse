@@ -12,7 +12,7 @@
         <p class="text-sr font-semibold">{{ audio.title }}</p>
       </div>
 
-      <slot name="controller" :waveform-props="{ 'usable-frac': 0.5 }" />
+      <slot name="controller" :usable-frac="0.5" />
     </div>
   </div>
 </template>
@@ -34,10 +34,6 @@ export default defineComponent({
 <style>
 .global-track .thumbnail {
   @apply h-14 w-14;
-}
-
-.global-track .audio-controller {
-  @apply absolute inset-0;
 }
 
 .global-track .waveform {

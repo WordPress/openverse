@@ -2,6 +2,7 @@ import {
   SET_ACTIVE_MEDIA_ITEM,
   PAUSE_ACTIVE_MEDIA_ITEM,
   EJECT_ACTIVE_MEDIA_ITEM,
+  SET_MESSAGE,
 } from '~/constants/mutation-types'
 
 /**
@@ -12,6 +13,7 @@ const state = () => ({
   type: null,
   id: null,
   status: 'ejected', // can be 'playing' or 'paused' as well
+  message: null,
 })
 
 const mutations = {
@@ -43,6 +45,9 @@ const mutations = {
     _state.type = null
     _state.id = null
     _state.status = 'ejected'
+  },
+  [SET_MESSAGE](_state, { message }) {
+    _state.message = message
   },
 }
 

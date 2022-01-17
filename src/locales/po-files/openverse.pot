@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-01-12T20:51:27+00:00\n"
+"POT-Creation-Date: 2022-01-17T06:57:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -134,6 +134,10 @@ msgctxt "audio-categories.podcast"
 msgid "Podcast"
 msgstr ""
 
+msgctxt "audio-categories.pronunciation"
+msgid "Pronunciation"
+msgstr ""
+
 #: src/components/VHeader/VSearchBar/VSearchButton.vue:7
 msgctxt "search.search"
 msgid "Search"
@@ -183,7 +187,7 @@ msgid "Loading..."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/AudioThumbnail/AudioThumbnail.vue:33
+#: src/components/VAudioThumbnail/VAudioThumbnail.vue:142
 msgctxt "audio-thumbnail.alt"
 msgid "Cover art for \"###title###\" by ###creator###"
 msgstr ""
@@ -194,7 +198,7 @@ msgid "Audio seek bar"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VWaveform.vue:514
+#: src/components/VAudioTrack/VWaveform.vue:516
 msgctxt "waveform.current-time"
 msgid "###time### seconds"
 msgstr ""
@@ -1136,13 +1140,13 @@ msgid "An error occurred"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id.vue:54
+#: src/pages/image/_id.vue:53
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/audio/_id.vue:70
+#: src/pages/audio/_id.vue:69
 msgctxt "error.media-not-found"
 msgid "Couldn't find ###mediaType### with id ###id###"
 msgstr ""
@@ -2016,7 +2020,7 @@ msgctxt "header.api-nav-item"
 msgid "API"
 msgstr ""
 
-#: src/components/VHeader/VHeader.vue:144
+#: src/components/VHeader/VHeader.vue:148
 msgctxt "header.loading"
 msgid "Loading..."
 msgstr ""
