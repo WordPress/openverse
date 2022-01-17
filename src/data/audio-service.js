@@ -12,7 +12,7 @@ const AudioService = {
    * @return {Promise<{data: any}>}
    */
   search(params) {
-    return ApiService.query('audio', params)
+    return ApiService.query('audio/', params)
   },
 
   /**
