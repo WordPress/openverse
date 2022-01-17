@@ -43,7 +43,7 @@ const AudioSearch = defineComponent({
   setup(props) {
     const { i18n } = useContext()
 
-    const audioTrackSize = computed(() => (props.isFilterVisible ? 'm' : 's'))
+    const audioTrackSize = computed(() => (props.isFilterVisible ? 'l' : 'm'))
 
     const isError = computed(() => !!props.fetchState.fetchingError)
     const errorHeader = computed(() => {
