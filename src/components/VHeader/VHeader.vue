@@ -1,16 +1,16 @@
 <template>
   <header
-    class="flex py-4 px-4 md:px-7 items-stretch z-40 w-full bg-white md:gap-x-2"
+    class="flex py-4 px-4 md:px-7 items-stretch z-40 w-full bg-white md:gap-x-2 gap-y-4"
     :class="{
+      'flex-wrap': isSearchRoute,
       'border-b border-white': !isHeaderScrolled && !isMenuOpen,
       'border-b border-dark-charcoal-20':
         isSearchRoute && (isHeaderScrolled || isMenuOpen),
-      'flex-wrap gap-y-4': !isMinScreenMd && !isHeaderScrolled,
       'justify-between': isSearchRoute,
       'justify-start': !isSearchRoute,
     }"
   >
-    <div class="one-third items-stretch flex">
+    <div class="items-stretch flex" :class="{ 'one-third': isSearchRoute }">
       <NuxtLink
         to="/"
         class="rounded-sm ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink -ms-2 inline-flex items-center hover:bg-yellow mr-auto"
@@ -50,9 +50,16 @@
       </span>
     </VSearchBar>
 
+    <VHeaderMenu
+      :is-search-route="isSearchRoute"
+      :class="{ 'one-third': isSearchRoute }"
+      @open="openMenuModal(menus.CONTENT_SWITCHER)"
+      @close="close()"
+    />
     <VHeaderFilter
       v-if="isSearchRoute"
-      class="one-third"
+      class="text-sr md:text-base"
+      :class="{ 'one-third': isSearchRoute }"
       @open="openMenuModal(menus.FILTERS)"
       @close="close()"
     />
@@ -85,9 +92,10 @@ import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-vis
 import closeIcon from '~/assets/icons/close.svg'
 import OpenverseLogoText from '~/assets/icons/openverse-logo-text.svg?inline'
 
-import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar'
+import VHeaderMenu from '~/components/VHeader/VHeaderMenu.vue'
 import VHeaderFilter from '~/components/VHeader/VHeaderFilter.vue'
-import VLogoLoader from '~/components/VLogoLoader/VLogoLoader'
+import VLogoLoader from '~/components/VLogoLoader/VLogoLoader.vue'
+import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
 
 const i18nKeys = {
   [AUDIO]: {
@@ -110,6 +118,7 @@ const VHeader = defineComponent({
   name: 'VHeader',
   components: {
     VHeaderFilter,
+    VHeaderMenu,
     VLogoLoader,
     VSearchBar,
     OpenverseLogoText,
@@ -123,6 +132,7 @@ const VHeader = defineComponent({
 
     const isHeaderScrolled = inject('isHeaderScrolled')
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
+    const headerHasTwoRows = inject('headerHasTwoRows')
     provide('isMinScreenMd', isMinScreenMd)
 
     const menuModalRef = ref(null)
@@ -177,7 +187,9 @@ const VHeader = defineComponent({
     }
 
     /** @type {import('@nuxtjs/composition-api').ComputedRef<number>} */
-    const resultsCount = computed(() => store.getters['media/results'].count)
+    const resultsCount = computed(
+      () => store.getters['media/results']?.count ?? 0
+    )
 
     /**
      * Status is hidden below the medium breakpoint.
@@ -268,6 +280,7 @@ const VHeader = defineComponent({
 
       isHeaderScrolled,
       isMinScreenMd,
+      headerHasTwoRows,
 
       isSearchRoute,
       isHomeRoute,

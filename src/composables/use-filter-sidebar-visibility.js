@@ -1,6 +1,6 @@
 import { onMounted, ref } from '@nuxtjs/composition-api'
 import local from '~/utils/local'
-import { isMinScreen } from '@/composables/use-media-query'
+import { isMinScreen } from '~/composables/use-media-query'
 
 /** @type {import('@nuxtjs/composition-api').Ref<boolean>} */
 const isVisible = ref(false)

@@ -30,11 +30,14 @@ export default {
   /* Negative margin removes a tiny gap between the button and the input borders */
   margin-inline-start: -1px;
   border-inline-start-color: transparent;
+  border-width: 1px;
 }
 .search-button.search-button:not(:hover):not(:focus):not(:focus-within) {
   border-inline-start-color: transparent;
+  border-width: 1px;
 }
 .search-button.search-button:hover {
   border-inline-start-color: rgba(214, 212, 213, 1);
+  border-width: 1px;
 }
 </style>

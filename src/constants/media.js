@@ -5,11 +5,15 @@ export const ALL_MEDIA = 'all'
 
 /** @typedef {typeof AUDIO | typeof IMAGE | typeof VIDEO | typeof ALL_MEDIA} MediaType */
 
-// Media types
-/** @type {MediaType[]} */
-export const mediaTypes = [AUDIO, IMAGE]
-// Media types which support custom filters
-/** @type {MediaType[]} */
-export const supportedMediaTypes = [AUDIO, IMAGE, VIDEO]
-/** @type {MediaType[]} */
-export const allMediaTypes = [ALL_MEDIA, IMAGE, AUDIO, VIDEO]
+/**
+ * Media types that the API supports.
+ * These types also support custom filters.
+ * @type {MediaType[]}
+ */
+export const supportedMediaTypes = [AUDIO, IMAGE]
+
+/**
+ * The types of content that users can search. `All` is also an option here.
+ * @type {MediaType[]}
+ */
+export const supportedContentTypes = [ALL_MEDIA, IMAGE, AUDIO]

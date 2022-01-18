@@ -216,3 +216,12 @@ export const queryStringToQueryData = (queryString) => {
 
   return queryDataObject
 }
+
+export const areQueriesEqual = (oldQuery, newQuery) => {
+  for (let key of Object.keys(oldQuery)) {
+    if (oldQuery[key] !== newQuery[key]) {
+      return false
+    }
+  }
+  return true
+}

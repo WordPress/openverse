@@ -31,7 +31,7 @@ import VTeleport from '~/components/VTeleport/VTeleport.vue'
 import VFilterButton from '~/components/VHeader/VFilterButton.vue'
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 import VSidebarContent from '~/components/VHeader/VSidebarContent.vue'
-import VMobileModalContent from '@/components/VModal/VMobileModalContent'
+import VMobileModalContent from '~/components/VModal/VMobileModalContent.vue'
 
 export default {
   name: 'VHeaderFilter',

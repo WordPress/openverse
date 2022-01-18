@@ -2,7 +2,7 @@
   <div>
     <div
       ref="triggerContainerRef"
-      class="w-min whitespace-nowrap"
+      class="w-min whitespace-nowrap flex items-stretch"
       @click="onTriggerClick"
     >
       <!--

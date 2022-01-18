@@ -3,7 +3,11 @@
     ref="nodeRef"
     class="w-full flex"
     :role="type"
-    :class="direction === 'vertical' ? 'flex-col' : 'flex-row'"
+    :class="{
+      'flex-col': direction === 'vertical',
+      'flex-row': direction !== 'vertical',
+      'flex-wrap': direction === 'columns',
+    }"
     @focusin="isFocused = true"
     @focusout="isFocused = false"
   >
@@ -60,15 +64,15 @@ export default defineComponent({
      * @default 'vertical'
      */
     direction: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<'vertical' | 'horizontal'>} */ (
+      type: /** @type {import('@nuxtjs/composition-api').PropType<'vertical' | 'horizontal' | 'columns' >} */ (
         String
       ),
       default: 'vertical',
-      validate: (v) => ['vertical', 'horizontal'].includes(v),
+      validate: (v) => ['vertical', 'horizontal', 'columns'].includes(v),
     },
     /**
      * Whether to render a bordered, separated list of items. When false each
-     * item will be have whitespace separating them instead of borders.
+     * item will have whitespace separating them instead of borders.
      *
      * @default true
      */

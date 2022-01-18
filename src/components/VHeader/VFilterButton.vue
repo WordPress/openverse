@@ -1,7 +1,8 @@
 <template>
   <VButton
     :variant="variant"
-    class="self-center gap-2 align-center font-semibold md:flex-shrink-0"
+    size="disabled"
+    class="self-center gap-2 align-center font-semibold px-3 py-2 md:flex-shrink-0"
     :class="{ 'w-12': isHeaderScrolled && !isMinScreenMd }"
     :pressed="pressed"
     aria-controls="filter-sidebar"

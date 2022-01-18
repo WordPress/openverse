@@ -13,6 +13,7 @@
   >
     <VButton
       data-item-group-item
+      :as="as"
       class="flex justify-between focus-visible:ring-pink rounded min-w-full"
       :class="[$style.button, $style[`${contextProps.direction}-button`]]"
       variant="grouped"
@@ -26,6 +27,8 @@
       @focus="isFocused = true"
       @blur="isFocused = false"
       @keydown="focusContext.onItemKeyPress"
+      @keydown.native="focusContext.onItemKeyPress"
+      @click.native="$emit('click')"
     >
       <div
         class="flex-grow whitespace-nowrap"
@@ -35,7 +38,7 @@
       </div>
       <VIcon
         v-if="!isInPopover && selected && contextProps.direction === 'vertical'"
-        :icon-path="check"
+        :icon-path="checkmark"
       />
     </VButton>
   </div>
@@ -49,7 +52,7 @@ import {
   computed,
   watch,
 } from '@nuxtjs/composition-api'
-import check from '~/assets/icons/check.svg'
+import checkmark from '~/assets/icons/checkmark.svg'
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
 import {
@@ -62,6 +65,7 @@ import { warn } from '~/utils/warn'
 export default defineComponent({
   name: 'VItem',
   components: { VButton, VIcon },
+  inheritAttrs: false,
   props: {
     /**
      * Whether the item is selected/checked.
@@ -77,7 +81,26 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+    /**
+     * To change the underlying component for the VButton,
+     * pass `as` prop.
+     * @variants 'button', 'a', 'NuxtLink'
+     */
+    as: {
+      type: String,
+      default: 'button',
+      validator: (val) => ['button', 'a', 'NuxtLink'].includes(val),
+    },
   },
+  /**
+   * Setting `inheritAttrs` to false ensures that the $attrs are only passed to VButton component,
+   * and not the outer div. In Vue 3 this will also stops native events such as `click` from
+   * going up the tree. Adding `emits` should fix this:
+   * https://v3.vuejs.org/guide/migration/v-on-native-modifier-removed.html#_3-x-syntax
+   * However, with current Vue 2 setup, if VItem is a link (a or NuxtLink), it is
+   * necessary to add native modifier to handle click event: `@click.native='handler'`.
+   */
+  emits: ['click'],
   setup(props) {
     const focusContext = inject(VItemGroupFocusContextKey)
     const isFocused = ref(false)
@@ -109,12 +132,12 @@ export default defineComponent({
       // If the group is not focused but this is the selected item, then this should be the focusable item when focusing into the group
       if (!focusContext.isGroupFocused.value && props.selected) return 0
 
-      // Otherwise the item should not be tabbable. The logic above guarantees that at least one other item in the group will be tabbable.
+      // Otherwise, the item should not be tabbable. The logic above guarantees that at least one other item in the group will be tabbable.
       return -1
     })
 
     return {
-      check,
+      checkmark,
       contextProps,
       isInPopover,
       isFocused,

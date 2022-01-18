@@ -31,12 +31,12 @@ import {
   SET_SEARCH_STATE_FROM_URL,
   UPDATE_SEARCH_TYPE,
 } from '~/constants/action-types'
-import { queryStringToSearchType } from '~/utils/search-query-transform'
 import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
+import isEqual from 'lodash.isequal'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { inject } from '@nuxtjs/composition-api'
 import { MEDIA, SEARCH } from '~/constants/store-modules'
 
+import { inject } from '@nuxtjs/composition-api'
 import { isMinScreen } from '~/composables/use-media-query.js'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 
@@ -123,28 +123,34 @@ const BrowsePage = {
   },
   watch: {
     query: {
-      deep: true,
-      handler() {
+      handler(newQuery, oldQuery) {
+        console.log('query changed')
         const newPath = this.localePath({
-          path: this.$route.path,
+          path: `/search/${this.searchType === 'all' ? '' : this.searchType}/`,
           query: this.searchQueryParams,
         })
         this.$router.push(newPath)
-        if (this.supported) {
+        if (!isEqual(oldQuery, newQuery) && this.supported) {
           this.getMediaItems(this.query)
         }
       },
     },
-    /**
-     * Updates the search type only if the route's path changes.
-     * @param newRoute
-     * @param oldRoute
-     */
-    $route(newRoute, oldRoute) {
-      if (newRoute.path !== oldRoute.path) {
-        const searchType = queryStringToSearchType(newRoute.path)
-        this.updateSearchType({ searchType })
-      }
+    searchType: {
+      // This fix is necessary only until All search page is merged
+      handler(newQuery, oldQuery) {
+        if (
+          [ALL_MEDIA, IMAGE].includes(newQuery) &&
+          [ALL_MEDIA, IMAGE].includes(oldQuery)
+        ) {
+          const newPath = this.localePath({
+            path: `/search/${
+              this.searchType === 'all' ? '' : this.searchType
+            }/`,
+            query: this.searchQueryParams,
+          })
+          this.$router.push(newPath)
+        }
+      },
     },
   },
 }

@@ -31,7 +31,11 @@
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 import { resultsCount } from '~/composables/use-i18n-utilities'
-import { AUDIO, IMAGE, mediaTypes } from '~/constants/media'
+import {
+  AUDIO,
+  IMAGE,
+  supportedMediaTypes as mediaTypes,
+} from '~/constants/media'
 import VIcon from '~/components/VIcon/VIcon.vue'
 
 import audioIcon from '~/assets/icons/audio-wave.svg'

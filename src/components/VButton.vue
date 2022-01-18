@@ -6,7 +6,7 @@
     :class="[
       $style.button,
       $style[variant],
-      pressed && $style[`${variant}-pressed`],
+      isActive && $style[`${variant}-pressed`],
       $style[`size-${size}`],
     ]"
     :aria-pressed="pressed"
@@ -23,7 +23,13 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, toRefs } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  ref,
+  watch,
+  toRefs,
+  computed,
+} from '@nuxtjs/composition-api'
 import { warn } from '~/utils/warn'
 
 /**
@@ -57,7 +63,7 @@ const VButton = defineComponent({
     as: {
       type: String,
       default: 'button',
-      validate: (v) => ['a', 'button'].includes(v),
+      validate: (v) => ['a', 'button', 'NuxtLink'].includes(v),
     },
     /**
      * The variant of the button.
@@ -143,6 +149,13 @@ const VButton = defineComponent({
     const typeRef = ref(propsRef.type.value)
     const supportsDisabledAttributeRef = ref(true)
 
+    const isActive = computed(() => {
+      return (
+        propsRef.pressed.value ||
+        attrs['aria-pressed'] ||
+        attrs['aria-expanded']
+      )
+    })
     watch(
       [propsRef.disabled, propsRef.focusableWhenDisabled],
       ([disabled, focusableWhenDisabled]) => {
@@ -162,18 +175,23 @@ const VButton = defineComponent({
     watch(
       propsRef.as,
       (as) => {
-        if (as === 'a') {
+        if (['a', 'NuxtLink'].includes(as)) {
           typeRef.value = undefined
           supportsDisabledAttributeRef.value = false
-
-          // No need to decalare `href` as an explicit prop as Vue preserves
-          // the `attrs` object reference between renders and updates the properties
-          // meaning we'll always have the latest values for the properties on the
-          // attrs object
-          if (!attrs.href || attrs.href === '#') {
-            warn(
-              'Do not use anchor elements without a valid `href` attribute. Use a `button` instead.'
-            )
+          if (as === 'a') {
+            // No need to declare `href` as an explicit prop as Vue preserves
+            // the `attrs` object reference between renders and updates the properties
+            // meaning we'll always have the latest values for the properties on the
+            // attrs object
+            if (!attrs.href || attrs.href === '#') {
+              warn(
+                'Do not use anchor elements without a valid `href` attribute. Use a `button` instead.'
+              )
+            }
+          } else {
+            if (!attrs.to) {
+              warn('NuxtLink needs a `to` attribute')
+            }
           }
         }
       },
@@ -193,6 +211,7 @@ const VButton = defineComponent({
       disabledAttributeRef,
       ariaDisabledRef,
       typeRef,
+      isActive,
     }
   },
 })
@@ -239,11 +258,11 @@ a.button {
 }
 
 .secondary-pressed {
-  @apply bg-dark-charcoal-80;
+  @apply bg-dark-charcoal-80 hover:border-tx;
 }
 
 .tertiary {
-  @apply bg-white text-black hover:bg-dark-charcoal hover:text-white border border-dark-charcoal-20 hover:border-tx focus-visible:ring-pink ring-offset-0;
+  @apply bg-white text-black border border-dark-charcoal-20 focus-visible:border-tx focus-visible:ring-pink ring-offset-0;
 }
 
 .tertiary-pressed {
@@ -251,7 +270,7 @@ a.button {
 }
 
 .action-menu {
-  @apply bg-white text-black border border-dark-charcoal-20 hover:border-dark-charcoal-20 focus-visible:ring-pink;
+  @apply bg-white text-black border border-tx hover:border-dark-charcoal-20 focus-visible:ring-pink;
 }
 
 .action-menu-secondary {
@@ -263,7 +282,7 @@ a.button {
 }
 
 .action-menu-pressed {
-  @apply border-tx bg-dark-charcoal text-white;
+  @apply border-tx hover:border-tx bg-dark-charcoal text-white;
 }
 
 .action-menu-muted {
