@@ -89,25 +89,27 @@ export default defineComponent({
 
     /**
      * Creates a list of { extension_name, download_url } objects
-     * for DownloadButton
+     * for DownloadButton.
+     *
+     * If there are `alt_files` then just use that list. Otherwise,
+     * create one using the preview URL.
+     *
      * @param {AudioDetail} audio
      */
     const getFormats = (audio) => {
-      let formats = [
+      if (audio.alt_files?.length) {
+        return audio.alt_files.map((altFile) => ({
+          extension_name: displayFormat(audio.provider, altFile.filetype),
+          download_url: altFile.url,
+        }))
+      }
+
+      return [
         {
           extension_name: displayFormat(audio.provider, audio.filetype),
           download_url: audio.url,
         },
       ]
-      if (audio.alt_files) {
-        formats = formats.concat(
-          audio.alt_files.map((altFile) => ({
-            extension_name: displayFormat(audio.provider, altFile.filetype),
-            download_url: altFile.url,
-          }))
-        )
-      }
-      return formats
     }
 
     const isSmall = computed(() => props.size === 's')
