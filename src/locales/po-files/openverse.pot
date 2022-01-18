@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-01-17T14:14:29+00:00\n"
+"POT-Creation-Date: 2022-01-18T06:42:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -338,12 +338,12 @@ msgid "Back to search results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/ImageDetails/VPhotoDetails.vue:59
+#: src/components/ImageDetails/VPhotoDetails.vue:57
 msgctxt "photo-details.creator"
 msgid "by ###name###"
 msgstr ""
 
-#: src/components/ImageDetails/VPhotoDetails.vue:146
+#: src/components/ImageDetails/VPhotoDetails.vue:144
 msgctxt "photo-details.weblink"
 msgid "Go to image's website"
 msgstr ""
@@ -390,7 +390,7 @@ msgid "###provider### form"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/ImageDetails/VPhotoDetails.vue:69
+#: src/components/ImageDetails/VPhotoDetails.vue:67
 msgctxt "photo-details.aria.creator-url"
 msgid "author ###creator###"
 msgstr ""
@@ -512,7 +512,7 @@ msgctxt "photo-details.survey.answer"
 msgid "by answering a few questions."
 msgstr ""
 
-#: src/components/ImageDetails/VPhotoDetails.vue:102
+#: src/components/ImageDetails/VPhotoDetails.vue:100
 msgctxt "photo-details.information.title"
 msgid "Information"
 msgstr ""
@@ -551,7 +551,7 @@ msgctxt "photo-details.information.pixels"
 msgid "pixels"
 msgstr ""
 
-#: src/components/ImageDetails/VPhotoDetails.vue:91
+#: src/components/ImageDetails/VPhotoDetails.vue:89
 msgctxt "photo-details.reuse.title"
 msgid "Reuse"
 msgstr ""
@@ -571,6 +571,16 @@ msgstr ""
 #: src/components/AudioDetails/VRelatedAudio.vue:18
 msgctxt "media-details.related-error"
 msgid "Error fetching related media"
+msgstr ""
+
+#: src/components/MediaInfo/MediaLicense.vue:32
+msgctxt "media-details.aria.attribution.license"
+msgid "read more about the license"
+msgstr ""
+
+#: src/components/MediaInfo/MediaLicense.vue:51
+msgctxt "media-details.aria.attribution.tool"
+msgid "read more about the tool"
 msgstr ""
 
 #: src/components/MediaInfo/MediaReuse.vue:3
@@ -1135,7 +1145,7 @@ msgid "All"
 msgstr ""
 
 msgctxt "search-tab.image"
-msgid "Image"
+msgid "Images"
 msgstr ""
 
 msgctxt "search-tab.audio"
@@ -1144,6 +1154,14 @@ msgstr ""
 
 msgctxt "search-tab.video"
 msgid "Video"
+msgstr ""
+
+msgctxt "search-tab.see-image"
+msgid "See all images"
+msgstr ""
+
+msgctxt "search-tab.see-audio"
+msgid "See all audio"
 msgstr ""
 
 msgctxt "error.occurred"
@@ -2031,18 +2049,18 @@ msgctxt "header.api-nav-item"
 msgid "API"
 msgstr ""
 
-#: src/components/VHeader/VHeader.vue:189
+#: src/components/VHeader/VHeader.vue:194
 msgctxt "header.loading"
 msgid "Loading..."
 msgstr ""
 
-#: src/components/VHeader/VFilterButton.vue:85
+#: src/components/VHeader/VFilterButton.vue:82
 msgctxt "header.filter-button.simple"
 msgid "Filters"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VFilterButton.vue:80
+#: src/components/VHeader/VFilterButton.vue:77
 msgctxt "header.filter-button.with-count"
 msgid "###count### Filter | ###count### Filters"
 msgstr ""

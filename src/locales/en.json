@@ -517,7 +517,13 @@
     "provider-label": "Provider",
     "source-label": "Source",
     "loading": "Loading...",
-    "related-error": "Error fetching related media"
+    "related-error": "Error fetching related media",
+    "aria": {
+      "attribution": {
+        "license": "read more about the license",
+        "tool": "read more about the tool"
+      }
+    }
   },
   "photo-details": {
     "back": "Back to search results",
