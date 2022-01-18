@@ -39,6 +39,7 @@
       <DownloadButton
         class="ms-auto order-1 sm:order-2"
         :formats="getFormats(audio)"
+        :size="isSmall ? 'small' : 'medium'"
       />
     </div>
   </div>

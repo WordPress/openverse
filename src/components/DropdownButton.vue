@@ -4,7 +4,7 @@
     <div class="flex">
       <slot
         :button-props="{
-          class: 'dropdown-button rounded-s-sm rounded-e-none',
+          class: `dropdown-button rounded-s-sm rounded-e-none dropdown-button-${size}`,
           type: 'button',
         }"
       />
@@ -13,7 +13,10 @@
         ref="dropdownButton"
         type="button"
         class="dropdown-button ms-1 rounded-e-sm rounded-s-none w-14"
-        :class="{ 'dropdown-button-active': isOpen }"
+        :class="[
+          isOpen && 'dropdown-button-active',
+          `dropdown-icon-button-${size}`,
+        ]"
         aria-haspopup="menu"
         :aria-label="safeDropdownAriaLabel"
         :aria-expanded="isOpen"
@@ -47,9 +50,10 @@
 </template>
 
 <script>
+import { defineComponent } from '@nuxtjs/composition-api'
 import caretDown from '~/assets/icons/caret-down.svg'
 
-const DropdownButton = {
+const DropdownButton = defineComponent({
   name: 'DropdownButton',
   props: {
     dropdownAriaLabel: {
@@ -59,6 +63,13 @@ const DropdownButton = {
     isSingleItem: {
       type: Boolean,
       required: false,
+    },
+    size: {
+      type: /** @type {import('@nuxtjs/composition-api').PropType<'medium' | 'small'>} */ (
+        String
+      ),
+      default: 'medium',
+      validator: (v) => ['medium', 'small'].includes(v),
     },
   },
   data() {
@@ -70,6 +81,11 @@ const DropdownButton = {
       safeDropdownAriaLabel:
         this.dropdownAriaLabel || this.$t('dropdown-button.aria.arrow-label'),
     }
+  },
+  computed: {
+    sizeClass() {
+      return `dropdown-button-${this.size}`
+    },
   },
   mounted() {
     document.addEventListener('click', this.onClickout)
@@ -144,14 +160,43 @@ const DropdownButton = {
       }
     },
   },
-}
+})
 
 export default DropdownButton
 </script>
 
 <style lang="css" scoped>
 .dropdown-button {
-  @apply flex items-center justify-center bg-pink text-white font-bold p-4 leading-6 transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink hover:bg-dark-pink no-underline appearance-none;
+  @apply flex items-center justify-center bg-pink text-white font-bold transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink hover:bg-dark-pink no-underline appearance-none;
+}
+
+.dropdown-icon-button-medium,
+.dropdown-button-medium {
+  @apply p-4 leading-6;
+}
+
+/*
+Note the bespoke `py-[0.86rem]` class used below is necessary
+to match the height of the small Audio play/pause button.
+
+This is currently the only application of the DropdownButton
+component (via the DownloadButton component) so as a stop-gap
+solution to get the redesign out the door in a timely manner it
+is necessary.
+
+In the future it would be nice to coordinate these sizes across
+all our buttons, regardless of content (icon vs text for example)
+so that don't have to worry about things like this. We should feel
+free to use sizes like 0.86rem if they're the right size, but it is
+good to avoid the long term effects of scattering too many ad-hoc
+sizes throughout the codebase.
+*/
+.dropdown-button-small {
+  @apply px-4 py-[0.86rem] leading-3;
+}
+
+.dropdown-icon-button-small {
+  @apply px-0 py-[0.86rem] leading-3 w-10;
 }
 
 .dropdown-button-active {

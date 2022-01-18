@@ -61,7 +61,9 @@ const VButton = defineComponent({
      * @default 'button'
      */
     as: {
-      type: String,
+      type: /** @type {import('@nuxtjs/composition-api').PropType<'a' | 'button'>} */ (
+        String
+      ),
       default: 'button',
       validate: (v) => ['a', 'button', 'NuxtLink'].includes(v),
     },
@@ -71,7 +73,9 @@ const VButton = defineComponent({
      * @default 'primary'
      */
     variant: {
-      type: String,
+      type: /** @type {import('@nuxtjs/composition-api').PropType<'primary' | 'secondary' | 'tertiary' | 'action-menu' | 'action-menu-muted' | 'grouped'>} */ (
+        String
+      ),
       default: 'primary',
       validate: (v) =>
         [
@@ -101,7 +105,9 @@ const VButton = defineComponent({
      * @default 'medium'
      */
     size: {
-      type: String,
+      type: /** @type {import('@nuxtjs/composition-api').PropType<'large' | 'medium' | 'small' | 'disabled'>} */ (
+        String
+      ),
       default: 'medium',
       validate: (v) => ['large', 'medium', 'small', 'disabled'].includes(v),
     },
@@ -135,12 +141,17 @@ const VButton = defineComponent({
      * @default 'button'
      */
     type: {
-      type: String,
+      type: /** @type {import('@nuxtjs/composition-api').PropType<'buton' | 'submit' | 'reset'>} */ (
+        String
+      ),
       default: 'button',
       validate: (v) => ['button', 'submit', 'reset'].includes(v),
     },
   },
-  /* eslint-disable no-unused-vars */
+  /**
+   * @param {Props} props
+   * @param {import('@nuxtjs/composition-api').SetupContext}
+   */
   setup(props, { attrs }) {
     const propsRef = toRefs(props)
     const disabledAttributeRef = ref(propsRef.disabled.value)

@@ -3,12 +3,18 @@ import DropdownButton from '~/components/DropdownButton'
 export default {
   title: 'Components/DropdownButton',
   component: DropdownButton,
+  argTypes: {
+    size: {
+      type: 'select',
+      options: ['medium', 'small'],
+    },
+  },
 }
 
-export const Default = () => ({
+export const Default = (args, { argTypes }) => ({
   template: `
     <div>
-      <DropdownButton>
+      <DropdownButton v-bind="$props">
         <template #default="{ buttonProps }">
           <button v-bind="buttonProps" class="whitespace-nowrap" @click="onClick">Download {{ activeItem?.name ?? '' }}</button>
         </template>
@@ -24,14 +30,18 @@ export const Default = () => ({
       Test element below
     </div>
   `,
-  data: () => ({
-    items: [
-      { name: 'Item 1', active: false },
-      { name: 'Item 2', active: false },
-    ],
-  }),
+  props: Object.keys(argTypes).filter((i) => i !== 'items'),
+  data() {
+    return {
+      items: [
+        { name: 'Item 1', active: false },
+        { name: 'Item 2', active: false },
+      ],
+    }
+  },
   computed: {
     activeItem() {
+      console.log(this)
       return this.items.find((item) => item.active)
     },
   },

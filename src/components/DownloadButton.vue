@@ -3,6 +3,7 @@
     v-if="filesizes"
     :dropdown-aria-label="$t('download-button.aria.dropdown-label')"
     :is-single-item="formats.length === 1"
+    :size="size"
   >
     <template #default="{ buttonProps }">
       <a
@@ -76,6 +77,13 @@ export default {
         const properties = ['extension_name', 'download_url']
         return formats.every((format) => properties.every((p) => p in format))
       },
+    },
+    size: {
+      type: /** @type {import('@nuxtjs/composition-api').PropType<'medium' | 'small'>} */ (
+        String
+      ),
+      default: 'medium',
+      validator: (v) => ['medium', 'small'].includes(v),
     },
   },
   data() {
