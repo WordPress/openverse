@@ -17,24 +17,21 @@
         :size="4"
       />
     </div>
-    <span
-      v-if="!hideName"
-      class="name"
-      :aria-label="$t(`license-readable-names.${license}`)"
-    >
-      {{ $t(`license-names.${license}`) }}
+    <span v-if="!hideName" class="name" :aria-label="licenseName.readable">
+      {{ licenseName.full }}
     </span>
   </div>
 </template>
 
 <script>
-import { computed } from '@nuxtjs/composition-api'
+import { computed, useContext } from '@nuxtjs/composition-api'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 
 import {
   ALL_LICENSES,
   CC_LICENSES,
+  DEPRECATED_LICENSES,
   LICENSE_ICON_MAPPING,
 } from '~/constants/license.js'
 
@@ -79,12 +76,34 @@ export default {
     },
   },
   setup(props) {
-    const icons = computed(() =>
-      props.license.split(/[-\s]/).map((term) => LICENSE_ICON_MAPPING[term])
+    const { i18n } = useContext()
+    const isDeprecated = computed(() =>
+      DEPRECATED_LICENSES.includes(props.license)
     )
+    const icons = computed(() => {
+      if (isDeprecated.value) {
+        return []
+      }
+      return props.license
+        .split(/[-\s]/)
+        .map((term) => LICENSE_ICON_MAPPING[term])
+    })
     const isCC = computed(
       () => CC_LICENSES.includes(props.license) || props.license === 'cc0'
     )
+    /**
+     * @type {import('@nuxtjs/composition-api').ComputedRef<{ readable: string, full: string }>}
+     */
+    const licenseName = computed(() => {
+      if (isDeprecated.value) {
+        return { readable: props.license, full: props.license }
+      } else {
+        return {
+          readable: i18n.t(`license-readable-names.${props.license}`),
+          full: i18n.t(`license-names.${props.license}`),
+        }
+      }
+    })
 
     return {
       ccLogo,
@@ -99,6 +118,7 @@ export default {
 
       icons,
       isCC,
+      licenseName,
     }
   },
 }

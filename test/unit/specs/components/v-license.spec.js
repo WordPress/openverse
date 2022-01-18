@@ -6,6 +6,13 @@ describe('VLicense', () => {
     props: {
       license: 'by',
     },
+    mocks: {
+      $nuxt: {
+        context: {
+          i18n: { t: (val) => val },
+        },
+      },
+    },
   }
 
   it('should render the license name and icons', () => {
