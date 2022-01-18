@@ -43,7 +43,6 @@ More information can be found here: https://app.slack.com/block-kit-builder.
 
 import json
 import logging
-import textwrap
 from os.path import basename
 from typing import Any, Callable, Optional
 
@@ -256,13 +255,11 @@ def on_failure_callback(context: dict) -> None:
 *Exception Type*: `{exception.__class__.__module__}.{exception.__class__.__name__}`
 """
 
-    message = textwrap.dedent(
-        f"""
-    *DAG*: `{ti.dag_id}`
-    *Task*: `{ti.task_id}`
-    *Execution Date*: {execution_date.strftime('%Y-%m-%dT%H:%M:%SZ')}
-    *Log*: {ti.log_url}
-    {exception_message}
-    """
-    )
+    message = f"""
+*DAG*: `{ti.dag_id}`
+*Task*: `{ti.task_id}`
+*Execution Date*: {execution_date.strftime('%Y-%m-%dT%H:%M:%SZ')}
+*Log*: {ti.log_url}
+{exception_message}
+"""
     send_message(message, username="Airflow DAG Failure")
