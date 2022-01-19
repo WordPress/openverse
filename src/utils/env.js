@@ -15,5 +15,5 @@ export const env = {
     process.env.ENABLE_INTERNAL_ANALYTICS
   ),
   /** Feature flag to enable non-image media */
-  enableAudio: stringToBoolean(process.env.ENABLE_AUDIO),
+  enableAudio: true,
 }
