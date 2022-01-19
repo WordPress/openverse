@@ -1,5 +1,5 @@
 import { ref } from '@nuxtjs/composition-api'
-import { getDocument } from 'reakit-utils'
+import { getDocument } from 'reakit-utils/getDocument'
 
 /**
  * Creates a utility for locking body scrolling for a particular node.

@@ -1,10 +1,8 @@
 import { watch } from '@vue/composition-api'
-import {
-  isTabbable,
-  getActiveElement,
-  contains,
-  ensureFocus,
-} from 'reakit-utils'
+import { isTabbable } from 'reakit-utils/tabbable'
+import { getActiveElement } from 'reakit-utils/getActiveElement'
+import { contains } from 'reakit-utils/contains'
+import { ensureFocus } from 'reakit-utils/ensureFocus'
 
 /**
  * @typedef Props

@@ -17,6 +17,7 @@ specifiers:
   '@nuxtjs/style-resources': ^1.0.0
   '@nuxtjs/svg': ^0.3.0
   '@playwright/test': ^1.16.2
+  '@popperjs/core': ^2.11.2
   '@testing-library/jest-dom': ^5.16.1
   '@testing-library/user-event': ^13.2.1
   '@testing-library/vue': ^5.8.2
@@ -83,6 +84,7 @@ dependencies:
   '@nuxtjs/sentry': 5.1.6
   '@nuxtjs/sitemap': 2.4.0
   '@nuxtjs/svg': 0.3.0
+  '@popperjs/core': 2.11.2
   axios: 0.21.4
   axios-mock-adapter: 1.20.0_axios@0.21.4
   babel-core: 7.0.0-bridge.0
@@ -3527,9 +3529,8 @@ packages:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: false
 
-  /@popperjs/core/2.11.0:
-    resolution: {integrity: sha512-zrsUxjLOKAzdewIDRWy9nsV1GQsKBCWaGwsZQlCgr6/q+vjyZhFgqedLfFBuI9anTPEUT4APq9Mu0SZBTzIcGQ==}
-    dev: true
+  /@popperjs/core/2.11.2:
+    resolution: {integrity: sha512-92FRmppjjqz29VMJ2dn+xdyXZBrMlE42AV6Kq6BwjWV7CNUW1hs2FtxSNLQE+gJhaZ6AAmYuO9y8dshhcBl7vA==}
 
   /@reach/router/1.3.4:
     resolution: {integrity: sha512-+mtn9wjlB9NN2CNnnC/BRYtwdKBfSyyasPYraNAyvaV1occr/5NnB4CVzjEZipNHwYebQwcndGUmpFzxAUoqSA==}
@@ -4385,7 +4386,7 @@ packages:
       react: ^16.8.0 || ^17.0.0
       react-dom: ^16.8.0 || ^17.0.0
     dependencies:
-      '@popperjs/core': 2.11.0
+      '@popperjs/core': 2.11.2
       '@storybook/client-logger': 6.3.12
       '@storybook/csf': 0.0.1
       '@storybook/theming': 6.3.12
@@ -4419,7 +4420,7 @@ packages:
       react: ^16.8.0 || ^17.0.0
       react-dom: ^16.8.0 || ^17.0.0
     dependencies:
-      '@popperjs/core': 2.11.0
+      '@popperjs/core': 2.11.2
       '@storybook/client-logger': 6.3.12
       '@storybook/csf': 0.0.1
       '@storybook/theming': 6.3.12_react-dom@16.14.0+react@16.14.0
@@ -15225,8 +15226,8 @@ packages:
       react-dom: ^16.6.0 || ^17.0.0
     dependencies:
       '@babel/runtime': 7.16.5
-      '@popperjs/core': 2.11.0
-      react-popper: 2.2.5_@popperjs+core@2.11.0
+      '@popperjs/core': 2.11.2
+      react-popper: 2.2.5_@popperjs+core@2.11.2
     dev: true
 
   /react-popper-tooltip/3.1.1_react-dom@16.14.0+react@16.14.0:
@@ -15236,31 +15237,31 @@ packages:
       react-dom: ^16.6.0 || ^17.0.0
     dependencies:
       '@babel/runtime': 7.16.5
-      '@popperjs/core': 2.11.0
+      '@popperjs/core': 2.11.2
       react: 16.14.0
       react-dom: 16.14.0_react@16.14.0
-      react-popper: 2.2.5_46e2f60275754032f56abd5a2e68e0ab
+      react-popper: 2.2.5_b929fd6de5e082ba4cc01fd429715a88
     dev: true
 
-  /react-popper/2.2.5_46e2f60275754032f56abd5a2e68e0ab:
+  /react-popper/2.2.5_@popperjs+core@2.11.2:
     resolution: {integrity: sha512-kxGkS80eQGtLl18+uig1UIf9MKixFSyPxglsgLBxlYnyDf65BiY9B3nZSc6C9XUNDgStROB0fMQlTEz1KxGddw==}
     peerDependencies:
       '@popperjs/core': ^2.0.0
       react: ^16.8.0 || ^17
     dependencies:
-      '@popperjs/core': 2.11.0
-      react: 16.14.0
+      '@popperjs/core': 2.11.2
       react-fast-compare: 3.2.0
       warning: 4.0.3
     dev: true
 
-  /react-popper/2.2.5_@popperjs+core@2.11.0:
+  /react-popper/2.2.5_b929fd6de5e082ba4cc01fd429715a88:
     resolution: {integrity: sha512-kxGkS80eQGtLl18+uig1UIf9MKixFSyPxglsgLBxlYnyDf65BiY9B3nZSc6C9XUNDgStROB0fMQlTEz1KxGddw==}
     peerDependencies:
       '@popperjs/core': ^2.0.0
       react: ^16.8.0 || ^17
     dependencies:
-      '@popperjs/core': 2.11.0
+      '@popperjs/core': 2.11.2
+      react: 16.14.0
       react-fast-compare: 3.2.0
       warning: 4.0.3
     dev: true

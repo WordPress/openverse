@@ -47,6 +47,7 @@
     "@nuxtjs/sentry": "^5.1.5",
     "@nuxtjs/sitemap": "^2.4.0",
     "@nuxtjs/svg": "^0.3.0",
+    "@popperjs/core": "^2.11.2",
     "axios": "^0.21.2",
     "axios-mock-adapter": "^1.20.0",
     "babel-core": "^7.0.0-bridge.0",

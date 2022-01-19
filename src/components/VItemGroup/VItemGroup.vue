@@ -25,7 +25,7 @@ import {
   ref,
   readonly,
 } from '@nuxtjs/composition-api'
-import { ensureFocus } from 'reakit-utils'
+import { ensureFocus } from 'reakit-utils/ensureFocus'
 import { useI18n } from '~/composables/use-i18n'
 
 /**
