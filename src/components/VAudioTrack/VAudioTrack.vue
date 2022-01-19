@@ -127,7 +127,22 @@ export default defineComponent({
     const duration = computed(() => (props.audio.duration ?? 0) / 1e3) // seconds
 
     const updateTime = () => {
-      if (window?.audioEl) {
+      if (
+        window?.audioEl &&
+        /**
+         * When the user switches from playing one audio track to another,
+         * say on the related audio section, if we don't check that the src
+         * of the audio element matches the source of the audio for this
+         * current instance of the audio track component, then we'll end up
+         * updating this instances `currentTime` ref to the value of the
+         * current time of the audio playing for the other element.
+         *
+         * The effect of this is that when you're switching audio tracks that
+         * are playing, the previous track that was playing will end up having
+         * it's current time set to the current time of the next audio track.
+         */
+        window.audioEl.src === props.audio.url
+      ) {
         currentTime.value = window.audioEl.currentTime
         if (currentTime.value >= duration.value) {
           store.commit(`${ACTIVE}/${PAUSE_ACTIVE_MEDIA_ITEM}`)
@@ -135,11 +150,18 @@ export default defineComponent({
         }
       }
     }
+
     const updateTimeLoop = () => {
       updateTime()
       if (status.value === 'playing') {
         // Audio is playing, keep looping
         window.requestAnimationFrame(updateTimeLoop)
+      } else {
+        // Update time one last time on the next frame to try to fix
+        // some weird, difficult to reproduce, seemingly machine
+        // dependent bugs, described in the PR discussion below:
+        // https://github.com/WordPress/openverse-frontend/pull/633
+        window.requestAnimationFrame(updateTime)
       }
     }
 
@@ -158,7 +180,13 @@ export default defineComponent({
     const elPlay = () => {
       if (window?.audioEl) {
         if (window.audioEl.src !== props.audio.url) {
-          window.audioEl.src = props.audio.url // resets position to zero
+          window.audioEl.src = props.audio.url
+          // Set the current time of the audio back to the seeked time
+          // of the waveform/timeline. In the future we might change
+          // this to reset the audio back to 0 anytime another audio
+          // is played but for now this is simpler and requires less
+          // cross-instance communication.
+          window.audioEl.currentTime = currentTime.value
         }
         window.audioEl.play()
       }
@@ -239,9 +267,22 @@ export default defineComponent({
 
     /* Interface with VWaveform */
 
+    /**
+     * Always update the current time ref when seeking happens
+     * for this audio track so that seeking can happen on one
+     * track even if it's not being played, and then that new
+     * time will get used if this instance's track gets played.
+     *
+     * Otherwise seeking will appear to not work on paused
+     * audio tracks.
+     *
+     * @param {number} frac
+     */
     const elSetTime = (frac) => {
+      const seekedTime = frac * (props.audio.duration / 1e3)
+      currentTime.value = seekedTime
       if (window?.audioEl && isActiveTrack.value) {
-        window.audioEl.currentTime = frac * (props.audio.duration / 1e3)
+        window.audioEl.currentTime = seekedTime
       }
     }
     const handleSeeked = (frac) => {

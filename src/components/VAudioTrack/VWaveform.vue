@@ -217,6 +217,17 @@ export default defineComponent({
       default: () => ['timestamps', 'seek'],
     },
   },
+  emits: [
+    /**
+     * Emitted when the waveform receives mouse events for seeking,
+     * either single clicks on a specific part of the waveform,
+     * or a click and drag.
+     *
+     * Also emitted when the waveform receives arrow key or home/end
+     * keyboard events that also correspond to seeking.
+     */
+    'seeked',
+  ],
   setup(props, { emit }) {
     /* Utils */
 
@@ -437,7 +448,13 @@ export default defineComponent({
         emit('seeked', currentFrac.value + delta)
       }
     }
+
+    const willBeHandled = (event) =>
+      ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)
+
     const handleKeys = (event) => {
+      if (!willBeHandled(event)) return
+
       event.preventDefault()
       if (['ArrowLeft', 'ArrowRight'].includes(event.key))
         return handleArrowKeys(event)
