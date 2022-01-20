@@ -44,6 +44,11 @@ export default function usePages() {
       name: 'header.extension-nav-item',
       link: app.localePath('/extension'),
     },
+    {
+      id: 'privacy',
+      name: 'header.privacy-nav-item',
+      link: 'https://wordpress.org/privacy',
+    },
   ]
 
   const route = useRoute()
