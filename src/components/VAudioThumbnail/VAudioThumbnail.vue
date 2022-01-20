@@ -1,38 +1,37 @@
 <template>
   <!-- Should be wrapped by a fixed-width parent -->
-  <div class="relative h-0 w-full pt-full" :title="helpText">
-    <div class="thumbnail absolute inset-0 bg-yellow">
+  <div class="relative h-0 w-full pt-full bg-yellow" :title="helpText">
+    <!-- Programmatic thumbnail -->
+    <svg class="absolute inset-0" :viewBox="`0 0 ${canvasSize} ${canvasSize}`">
+      <template v-for="i in dotCount">
+        <circle
+          v-for="j in dotCount"
+          :key="`${i}-${j}`"
+          class="fill-dark-charcoal"
+          :cx="offset(j)"
+          :cy="offset(i)"
+          :r="radius(i, j)"
+        />
+      </template>
+    </svg>
+
+    <div v-show="audio.thumbnail && isOk" class="thumbnail absolute inset-0">
       <img
-        v-if="audio.thumbnail && ok"
+        ref="imgEl"
         class="h-full w-full object-cover object-center overflow-clip"
         :src="audio.thumbnail"
         :alt="helpText"
-        @error="handleError"
+        @load="handleLoad"
       />
-
-      <!-- Programmatic thumbnail -->
-      <svg
-        v-else
-        class="h-full w-full"
-        :viewBox="`0 0 ${canvasSize} ${canvasSize}`"
-      >
-        <template v-for="i in dotCount">
-          <circle
-            v-for="j in dotCount"
-            :key="`${i}-${j}`"
-            class="fill-dark-charcoal"
-            :cx="offset(j)"
-            :cy="offset(i)"
-            :r="radius(i, j)"
-          />
-        </template>
-      </svg>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from '@nuxtjs/composition-api'
+import { ref, onMounted } from '@nuxtjs/composition-api'
+
+import { rand, hash } from '~/utils/prng'
+import { lerp, dist, bezier } from '~/utils/math'
 
 /**
  * Displays the cover art for the audio in a square aspect ratio.
@@ -49,51 +48,17 @@ export default {
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     /* Switching */
 
-    const ok = ref(true)
-    const handleError = () => {
-      ok.value = false
+    const imgEl = ref(null)
+    const isOk = ref(false)
+    const handleLoad = () => {
+      isOk.value = true
     }
-
-    /* Math utilities */
-
-    /**
-     * Perform linear interpolation to find a value that is fractionally between
-     * the low and high limits of the given range.
-     *
-     * @param {number} low - the lower limit of the range
-     * @param {number} high - the upper limit of the range
-     * @param {number} frac - fraction controlling position of interpolated number
-     * @returns {number} the interpolated number
-     */
-    const lerp = (low, high, frac) => low + (high - low) * frac
-
-    /**
-     * Interpolate twice to solve the Bézier equation for three points P0, P1
-     * and P2.
-     *
-     * @param {[number, number]} p0 - point #0
-     * @param {[number, number]} p1 - point #1
-     * @param {[number, number]} p2 - point #2
-     * @param {number} frac - the fraction at which to solve the Bézier equation
-     * @returns {[number,number]} a solution to the 3-point Bézier equation
-     */
-    const doubleLerp = (p0, p1, p2, frac) => [
-      lerp(lerp(p0[0], p1[0], frac), lerp(p1[0], p2[0], frac), frac),
-      lerp(lerp(p0[1], p1[1], frac), lerp(p1[1], p2[1], frac), frac),
-    ]
-
-    /**
-     * Find the distance between two points P0 and P1.
-     *
-     * @param {[number, number]} p0 - point #0
-     * @param {[number, number]} p1 - point #1
-     * @returns {number} the distance between the two points
-     */
-    const dist = (p0, p1) =>
-      Math.sqrt(Math.pow(p0[0] - p1[0], 2) + Math.pow(p0[1] - p1[1], 2))
+    onMounted(() => {
+      isOk.value = imgEl.value.complete && imgEl.value.naturalWidth
+    })
 
     /* Artwork */
 
@@ -102,20 +67,14 @@ export default {
     const minRadius = 2
     const maxRadius = 27
 
+    const random = rand(hash(props.audio.title ?? ''))
     const ctrlPts = Array.from({ length: 4 }, (_, idx) => [
-      Math.random() * canvasSize,
+      random() * canvasSize,
       (idx / 3) * canvasSize,
     ])
 
     const pointCount = dotCount + 1
-    const bezierPoints = []
-    for (let i = 0; i <= pointCount; i++) {
-      const frac = i / pointCount
-      const a = doubleLerp(ctrlPts[0], ctrlPts[1], ctrlPts[2], frac)
-      const b = doubleLerp(ctrlPts[1], ctrlPts[2], ctrlPts[3], frac)
-      const x = lerp(a[0], b[0], frac)
-      bezierPoints.push(x)
-    }
+    const bezierPoints = bezier(ctrlPts, pointCount)
 
     const offset = (i) => {
       return i * (canvasSize / (dotCount + 1))
@@ -128,8 +87,9 @@ export default {
     }
 
     return {
-      ok,
-      handleError,
+      imgEl,
+      isOk,
+      handleLoad,
 
       canvasSize,
       dotCount,
