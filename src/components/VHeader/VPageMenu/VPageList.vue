@@ -1,5 +1,9 @@
 <template>
-  <VItemGroup :direction="layout" class="mt-10 md:mt-2" :bordered="false">
+  <VItemGroup
+    :direction="layout"
+    class="mt-10 md:mt-2 min-w-[200px]"
+    :bordered="false"
+  >
     <VItem
       v-for="(page, idx) in pages.all"
       :key="page.id"
