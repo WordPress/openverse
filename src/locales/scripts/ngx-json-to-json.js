@@ -1,4 +1,4 @@
-const set = require('lodash/set')
+const set = require('lodash.set')
 
 /**
  * Convert an NGX-Translate object to a nested JSON object
