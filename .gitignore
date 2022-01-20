@@ -11,6 +11,7 @@ yarn-error.log*
 /test/selenium-webdriver/geckodriver.log
 /test/selenium-webdriver/screenshots/*
 selenium-debug.log
+.pnpm-debug.log
 .env
 .idea
 .vscode
