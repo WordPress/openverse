@@ -1,0 +1,127 @@
+{
+  "sets": [
+    {
+      "term": "Universe",
+      "prefix": "Universe",
+      "images": [
+        {
+          "index": 1,
+          "title": "Mandela base",
+          "identifier": "cfa45160-a7be-4911-9b9f-4e66678ec7f7"
+        },
+        {
+          "index": 2,
+          "title": "Saturn's Rings in Ultraviolet Light",
+          "identifier": "47e4e857-07ef-4a97-b6ca-94126a3c4246"
+        },
+        {
+          "index": 3,
+          "title": "Starburst Cluster Shows Celestial Fireworks",
+          "identifier": "09e5cb23-db65-48a0-bb3a-2a6f7e028d84"
+        },
+        {
+          "index": 4,
+          "title": "Neutron Stars Rip Each Other Apart to Form Black Hole",
+          "identifier": "8da073a3-21bd-4722-87f1-2cf5104bb33f"
+        },
+        {
+          "index": 5,
+          "title": "Hubbell Revival-style Rug with Moki (Moqui) Stripes",
+          "identifier": "19d3e29b-c7a1-427a-925c-7ecb041fefcf"
+        },
+        {
+          "index": 6,
+          "title": "Planisphaerium Ptolemaicum siue machina orbium mundi ex hypothesi Ptolemaica in plano disposita",
+          "identifier": "bee966d9-8095-4349-abb9-576dedc1be1a"
+        },
+        {
+          "index": 7,
+          "title": "Carina Nebula Detail",
+          "identifier": "190ecf9b-acfa-4aef-8805-3445e7b91db1"
+        }
+      ]
+    },
+    {
+      "term": "Indigenous pottery",
+      "prefix": "Pottery",
+      "images": [
+        {
+          "index": 1,
+          "title": "Impasto four-handled ovoid olla with lid, from S. Marzano sul Sarno",
+          "identifier": "802d76cd-84cf-45bc-81ac-610331dab420"
+        },
+        {
+          "index": 2,
+          "title": "Female Figurine Rattle",
+          "identifier": "80f0cae9-0574-48be-9458-c514dcb105be"
+        },
+        {
+          "index": 3,
+          "title": "Architectural Sculpture Fragment",
+          "identifier": "0a67002e-92ad-4d6a-9384-c9fd2eb41477"
+        },
+        {
+          "index": 4,
+          "title": "Tribal Art New York 2011: Africa/Oceana/Americas",
+          "identifier": "8ebf0e1c-4375-47e8-9365-ed20850f9b47"
+        },
+        {
+          "index": 5,
+          "title": "Tiwi Islands indigenous pottery, Museum & Art Gallery of the NT, Darwin, Australia.01",
+          "identifier": "9466e58e-614f-4e39-a36b-e0ba8924443c"
+        },
+        {
+          "index": 6,
+          "title": "Lima_2018 05 13_1096",
+          "identifier": "39e1c7e8-01d8-472c-8fd2-6c070da277de"
+        },
+        {
+          "index": 7,
+          "title": "Female Holding A Bowl Figurine",
+          "identifier": "03226074-7d2e-4a23-921a-3f76bf349ea2"
+        }
+      ]
+    },
+    {
+      "term": "Olympic games",
+      "prefix": "Olympics",
+      "images": [
+        {
+          "index": 1,
+          "title": "Olympic Games Seoul ´88",
+          "identifier": "53841492-9703-4892-96b4-10297dd84ed0"
+        },
+        {
+          "index": 2,
+          "title": "Bob Beamon",
+          "identifier": "1663eec8-7b2c-4a84-8d25-0543482c23ef"
+        },
+        {
+          "index": 3,
+          "title": "Olympic Games. Stockholm 1912",
+          "identifier": "32814c7e-2c3d-451b-b33e-12bf4c0d5413"
+        },
+        {
+          "index": 4,
+          "title": "Youth Olympic Games",
+          "identifier": "e7ebeaaf-1cb2-4bae-a6e8-550aaa2e1e1d"
+        },
+        {
+          "index": 5,
+          "title": "File:The victorious English 400 m. women's relay swimming team at Wellcome V0048555.jpg",
+          "identifier": "648b566f-0228-4819-83d5-8f1d324ec06d"
+        },
+        {
+          "index": 6,
+          "title": "Youth Olympic Games",
+          "identifier": "2c8ce5eb-5031-4d38-9a65-967a919a6055"
+        },
+        {
+          "index": 7,
+          "title": "File:Wrestling at the 2016 Summer Olympics – Men's freestyle 86 kg 5 (0).jpg",
+          "identifier": "31616f0d-3f70-4ea1-8132-d73f7c2145bf"
+        }
+      ]
+    }
+  ]
+}

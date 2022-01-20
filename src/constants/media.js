@@ -10,7 +10,7 @@ export const ALL_MEDIA = 'all'
  * These types also support custom filters.
  * @type {MediaType[]}
  */
-export const supportedMediaTypes = [AUDIO, IMAGE]
+export const supportedMediaTypes = [IMAGE, AUDIO]
 
 /**
  * The types of content that users can search. `All` is also an option here.

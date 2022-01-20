@@ -8,14 +8,14 @@
   "hero": {
     "brand": "Openverse",
     "title": "Search for content to reuse",
-    "subtitle": "Browse over 500 million images, available for reuse",
+    "subtitle": "Browse through over 600 million items to reuse",
     "search": {
       "placeholder": "Search all content",
       "button": "Search"
     },
-    "caption": {
-      "content": "All our content is under Creative Commons licenses or in the public domain. {link} about CC licenses and tools.",
-      "link": "Learn more"
+    "disclaimer": {
+      "content": "All Openverse content is under a {license} or is in the public domain.",
+      "license": "Creative Commons license"
     },
     "license-filter": {
       "label": "I want something I can"

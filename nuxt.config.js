@@ -42,6 +42,11 @@ const meta = [
     name: 'monetization',
     content: '$ilp.uphold.com/edR8erBDbRyq',
   },
+  {
+    hid: 'theme-color',
+    name: 'theme-color',
+    content: '#ffffff',
+  },
 ]
 
 if (process.env.NODE_ENV === 'production') {

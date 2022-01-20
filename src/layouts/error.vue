@@ -2,7 +2,10 @@
   <main class="bg-yellow h-screen relative page-404 overflow-x-hidden">
     <NuxtLink to="/" class="relative z-10">
       <span class="sr-only">{{ $t('404.link-title') }}</span>
-      <Logo aria-hidden="true" class="pt-6 lg:pt-8 ms-6 lg:ms-10 w-30 h-auto" />
+      <OpenverseLogo
+        aria-hidden="true"
+        class="pt-6 lg:pt-8 ms-6 lg:ms-10 w-30 h-auto"
+      />
     </NuxtLink>
     <Oops
       aria-hidden="true"
@@ -49,13 +52,13 @@ import { MEDIA, SEARCH } from '~/constants/store-modules'
 import { FETCH_MEDIA, UPDATE_QUERY } from '~/constants/action-types'
 
 import Oops from '~/assets/oops.svg?inline'
-import Logo from '~/assets/logo.svg?inline'
+import OpenverseLogo from '~/assets/logo.svg?inline'
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar'
 
 const Error = defineComponent({
   name: 'ErrorPage',
   components: {
-    Logo,
+    OpenverseLogo,
     Oops,
     VSearchBar,
   },
@@ -93,6 +96,15 @@ const Error = defineComponent({
       setSearchTerm,
       handleSearch,
     }
+  },
+  head: {
+    meta: [
+      {
+        hid: 'theme-color',
+        name: 'theme-color',
+        content: '#ffe033',
+      },
+    ],
   },
 })
 export default Error
