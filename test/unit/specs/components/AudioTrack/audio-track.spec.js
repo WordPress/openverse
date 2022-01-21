@@ -3,6 +3,10 @@ import { render } from '@testing-library/vue'
 import Vuei18n from 'vue-i18n'
 import Vuex from 'vuex'
 
+jest.mock('~/composables/use-browser-detection', () => ({
+  useBrowserIsBlink: jest.fn(() => false),
+}))
+
 const enMessages = require('~/locales/en.json')
 const useVueI18n = (vue) => {
   vue.use(Vuei18n)
@@ -46,6 +50,7 @@ const configureVue = (vue) => {
   return {
     i18n,
     store,
+    /** @todo Create a better mock that can be configured to test this behavior.  */
   }
 }
 
@@ -128,9 +133,9 @@ describe('AudioTrack', () => {
 
   it('should show audio title as main page title', () => {
     const { getByText } = render(VAudioTrack, options, configureVue)
-    const element = getByText(props.audio.title)
-    expect(element).toBeInstanceOf(HTMLHeadingElement)
-    expect(element.tagName).toEqual('H1')
+    // Title text appears multiple times in the track, so need to specify selector
+    const element = getByText(props.audio.title, { selector: 'H1' })
+    expect(element).toBeInTheDocument()
   })
 
   it('should show audio creator with link', () => {

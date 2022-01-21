@@ -74,7 +74,8 @@
         <slot name="play-pause" :size="isLarge ? 'medium' : 'large'" />
         <slot
           name="controller"
-          :features="['timestamps', 'duration', 'seek']"
+          :features="features"
+          :feature-notices="featureNotices"
         />
       </div>
     </div>
@@ -82,7 +83,9 @@
 </template>
 
 <script>
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
+import { useBrowserIsBlink } from '~/composables/use-browser-detection'
+
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
 import VLicense from '~/components/License/VLicense.vue'
 
@@ -95,6 +98,15 @@ export default defineComponent({
   props: ['audio', 'size'],
   setup(props) {
     /* Utils */
+    const browserIsBlink = useBrowserIsBlink()
+    const { i18n } = useContext()
+
+    const featureNotices = {}
+    const features = ['timestamps', 'duration', 'seek']
+    if (browserIsBlink && props.audio.source === 'jamendo') {
+      features.pop()
+      featureNotices.seek = i18n.t('audio-track.messages.blink_seek_disabled')
+    }
 
     /**
      * Format the time as hh:mm:ss, dropping the hour part if it is zero.
@@ -116,6 +128,9 @@ export default defineComponent({
 
     return {
       timeFmt,
+
+      features,
+      featureNotices,
 
       isSmall,
       isMedium,

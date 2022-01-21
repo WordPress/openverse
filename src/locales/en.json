@@ -639,6 +639,7 @@
   "audio-track": {
     "aria-label": "Audio Player",
     "messages": {
+      "blink_seek_disabled": "Seeking for Jamendo tracks is limited to Firefox and Safari.",
       "err_aborted": "You aborted playback.",
       "err_network": "A network error occurred.",
       "err_decode": "Could not decode audio.",

@@ -42,6 +42,7 @@ specifiers:
   eslint-plugin-unicorn: ^35.0.0
   eslint-plugin-vue: ^7.8.0
   eslint-plugin-vuejs-accessibility: ^0.6.1
+  express-useragent: ^1.0.15
   filesize: ^8.0.2
   focus-trap: ^6.7.1
   focus-trap-vue: 1.1.1
@@ -97,6 +98,7 @@ dependencies:
   clipboard: 2.0.8
   core-js: 3.19.3
   deepmerge: 4.2.2
+  express-useragent: 1.0.15
   filesize: 8.0.6
   focus-trap: 6.7.1
   focus-trap-vue: 1.1.1_focus-trap@6.7.1
@@ -9498,6 +9500,11 @@ packages:
       jest-message-util: 27.4.2
       jest-regex-util: 27.4.0
     dev: true
+
+  /express-useragent/1.0.15:
+    resolution: {integrity: sha512-eq5xMiYCYwFPoekffMjvEIk+NWdlQY9Y38OsTyl13IvA728vKT+q/CSERYWzcw93HGBJcIqMIsZC5CZGARPVdg==}
+    engines: {node: '>=4.5'}
+    dev: false
 
   /express/4.17.1:
     resolution: {integrity: sha512-mHJ9O79RqluphRrcw2X/GTh3k9tVv8YcoyY4Kkh4WDMUYKRZUq0h1o0w2rrrxBqM7VoeUVqgb27xlEMXTnYt4g==}

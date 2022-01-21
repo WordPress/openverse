@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-01-21T13:57:45+00:00\n"
+"POT-Creation-Date: 2022-01-21T15:40:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -192,6 +192,11 @@ msgctxt "audio-track.creator"
 msgid "by ###creator###"
 msgstr ""
 
+#: src/components/VAudioTrack/layouts/VRowLayout.vue:108
+msgctxt "audio-track.messages.blink_seek_disabled"
+msgid "Seeking for Jamendo tracks is limited to Firefox and Safari."
+msgstr ""
+
 msgctxt "audio-track.messages.err_aborted"
 msgid "You aborted playback."
 msgstr ""
@@ -224,7 +229,7 @@ msgid "Audio seek bar"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VWaveform.vue:533
+#: src/components/VAudioTrack/VWaveform.vue:554
 msgctxt "waveform.current-time"
 msgid "###time### seconds"
 msgstr ""

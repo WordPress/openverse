@@ -122,6 +122,7 @@ export default {
     { src: '~/plugins/ga.js', mode: 'client' },
     { src: '~/plugins/url-change.js' },
     { src: '~/plugins/migration-notice.js' },
+    { src: '~/plugins/ua-parse.js' },
   ],
   css: [
     '~/styles/tailwind.css',
