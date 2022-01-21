@@ -117,7 +117,7 @@ test('url query to filter, image tab, several filters for one filter type select
   await expect(svg).toBeChecked()
 })
 
-test('url mature query is set, and can be unchecked using the Safer Browsing popup', async ({
+test.skip('url mature query is set, and can be unchecked using the Safer Browsing popup', async ({
   page,
 }) => {
   await page.goto('/search/image?q=cat&mature=true')

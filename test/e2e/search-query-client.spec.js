@@ -38,37 +38,25 @@ test('q query parameter is set as the search term', async ({ page }) => {
 
   const searchInput = page.locator('main input[type="search"]')
   await searchInput.type('cat')
-  await page.click('button:has-text("Search")')
+  await page.click('[aria-label="Search"]')
 
   await expect(page.locator('header input[type="search"]')).toHaveValue('cat')
-  await expect(page).toHaveURL('search/image?q=cat')
+  await expect(page).toHaveURL('search/?q=cat')
 })
 
 test('selecting `audio` on homepage, you can search for audio', async ({
   page,
 }) => {
   await page.goto('/')
+  await page.click('[aria-label="All content"]')
+  await page.click('button[role="radio"]:has-text("Audio")')
 
   await page.type('main input[type="search"]', 'cat')
-  await page.click('button:has-text("Audio")')
-  await page.click('button:has-text("Search")')
+  await page.click('[aria-label="Search"]')
 
   await expect(page.locator('header input[type="search"]')).toHaveValue('cat')
 
   await expect(page).toHaveURL('search/audio?q=cat')
-})
-
-test('selecting license type filter on homepage applies filters', async ({
-  page,
-}) => {
-  await page.goto('/')
-
-  await page.type('main input[type="search"]', 'cat')
-  await page.click('label:has-text("Use commercially")')
-  await page.click('button:has-text("Search")')
-
-  await expect(page).toHaveURL('search/image?q=cat&license_type=commercial')
-  await expect(page.locator('header input[type="search"]')).toHaveValue('cat')
 })
 
 test.skip('url filter parameters not used by current mediaType are discarded', async ({
@@ -104,6 +92,7 @@ test('can search for a different term', async ({ page }) => {
   await page.keyboard.press('Enter')
   await expect(page).toHaveURL('/search/image?q=dog')
 })
+
 test('search for a different term keeps query parameters', async ({ page }) => {
   await page.goto('/search/image?q=cat&license=by&extension=jpg')
   await page.fill('header input[type="search"]', 'dog')

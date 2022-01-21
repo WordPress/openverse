@@ -38,7 +38,7 @@ test.beforeEach(async ({ context }) => {
 const contentTypes = [
   {
     id: 'all',
-    name: 'All',
+    name: 'All content',
     url: '/search/?q=cat',
     supported: true,
     sources: 6,
@@ -57,29 +57,13 @@ const contentTypes = [
     supported: false,
     sources: 5,
   },
-  {
-    id: 'video',
-    name: 'Video',
-    url: '/search/video/?q=cat',
-    supported: false,
-    sources: 4,
-  },
 ]
 
 for (const [i, contentType] of contentTypes.entries()) {
   test(`Can open ${contentType.name} search page on SSR`, async ({ page }) => {
     await page.goto(contentType.url)
 
-    // Meta data
     if (contentType.supported) {
-      const searchMetaData = await page.locator('[data-testid="search-meta"]')
-
-      await expect(searchMetaData).toContainText(
-        contentType.id === 'all' ? 'image results' : `${contentType.id} results`
-      )
-      await expect(searchMetaData).toContainText('Are these results relevant')
-      await expect(searchMetaData).toContainText('Safer Browsing')
-
       const searchResult = await page.locator('[data-testid="search-results"]')
       await expect(searchResult).toBeVisible()
       await expect(searchResult).not.toBeEmpty()
@@ -102,34 +86,21 @@ for (const [i, contentType] of contentTypes.entries()) {
     const sourceButtons = await page.locator('.meta-search a')
     await expect(sourceButtons).toHaveCount(contentType.sources)
   })
-  test.skip(`Can open ${contentType.name} page client-side`, async ({
-    page,
-  }) => {
-    const pageToOpen = (i + 1) % contentTypes.length
-    await page.goto(contentTypes[pageToOpen].url)
+  test(`Can open ${contentType.name} page client-side`, async ({ page }) => {
+    const pageToOpen = contentTypes[(i + 1) % contentTypes.length]
+    await page.goto(pageToOpen.url)
+    await page.click(`[aria-label="${pageToOpen.name}"]`)
 
-    await page.click(`[role="tab"]:has-text("${contentType.name}")`)
+    await Promise.all([
+      page.waitForNavigation(/*{ url: '/search/audio?q=cat' }*/),
+      page.click(`button[role="radio"]:has-text("${contentType.name}")`),
+    ])
     const urlParam = contentType.id === 'all' ? '' : contentType.id
     const expectedURL = `/search/${urlParam}?q=cat`
     await expect(page).toHaveURL(expectedURL)
 
-    // Selected content page
-    const currentTabLabel = await page
-      .locator('[aria-current="page"]')
-      .textContent()
-
-    expect(currentTabLabel.trim()).toEqual(contentType.name)
-
     // Meta data
     if (contentType.supported) {
-      const searchMetaData = await page.locator('[data-testid="search-meta"]')
-
-      await expect(searchMetaData).toContainText(
-        contentType.id === 'all' ? 'image results' : `${contentType.id} results`
-      )
-      await expect(searchMetaData).toContainText('Are these results relevant')
-      await expect(searchMetaData).toContainText('Safer Browsing')
-
       const searchResult = await page.locator('[data-testid="search-results"]')
       await expect(searchResult).toBeVisible()
       await expect(searchResult).not.toBeEmpty()

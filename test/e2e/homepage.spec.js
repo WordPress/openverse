@@ -20,29 +20,40 @@ test.beforeEach(async ({ context }) => {
   )
 })
 
-test('can change type and search for audio/modification from homepage', async ({
-  page,
-}) => {
+test('can change type and search for audio from homepage', async ({ page }) => {
   // Go to http://localhost:8444/
   await page.goto('/')
-  await page.click('text=Audio')
-  await page.check('text=Modify or adapt >> input[name="licenseType"]')
+  await page.click('[aria-label="All content"]')
+  await page.click('button[role="radio"]:has-text("Audio")')
 
   const searchInput = page.locator('main input[type="search"]')
   await searchInput.type('cat')
-  await page.click('button:has-text("Search")')
-  const expectedUrl = '/search/audio?q=cat&license_type=modification'
+  await page.click('[aria-label="Search"]')
+  const expectedUrl = '/search/audio?q=cat'
   await expect(page).toHaveURL(expectedUrl)
 })
 
+test('can search for all results from homepage', async ({ page }) => {
+  await page.goto('/')
+
+  const searchInput = page.locator('main input[type="search"]')
+  await searchInput.type('cat')
+  await page.click('[aria-label="Search"]')
+
+  await expect(page).toHaveURL('search/?q=cat')
+
+  await expect(page.locator('img')).toHaveCount(20)
+})
 test('can search for images from homepage, and then load more results', async ({
   page,
 }) => {
   await page.goto('/')
+  await page.click('[aria-label="All content"]')
+  await page.click('button[role="radio"]:has-text("Images")')
 
   const searchInput = page.locator('main input[type="search"]')
   await searchInput.type('cat')
-  await page.click('button:has-text("Search")')
+  await page.click('[aria-label="Search"]')
 
   await expect(page).toHaveURL('search/image?q=cat')
 
