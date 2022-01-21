@@ -29,6 +29,7 @@ import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 import VLoadMore from '~/components/VLoadMore.vue'
 
 import { propTypes } from './search-page.types'
+import { isMinScreen } from '@/composables/use-media-query'
 
 const AudioSearch = defineComponent({
   name: 'AudioSearch',
@@ -42,8 +43,10 @@ const AudioSearch = defineComponent({
       Object.values(props.mediaResults?.audio?.items ?? [])
     )
     const { i18n } = useContext()
-
-    const audioTrackSize = computed(() => (props.isFilterVisible ? 'l' : 'm'))
+    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: false })
+    const audioTrackSize = computed(() => {
+      return !isMinScreenMd.value ? 's' : props.isFilterVisible ? 'l' : 'm'
+    })
 
     const isError = computed(() => !!props.fetchState.fetchingError)
     const errorHeader = computed(() => {

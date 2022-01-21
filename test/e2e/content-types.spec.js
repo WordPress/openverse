@@ -59,7 +59,7 @@ const contentTypes = [
   },
 ]
 
-for (const [i, contentType] of contentTypes.entries()) {
+for (const contentType of contentTypes) {
   test(`Can open ${contentType.name} search page on SSR`, async ({ page }) => {
     await page.goto(contentType.url)
 
@@ -87,14 +87,13 @@ for (const [i, contentType] of contentTypes.entries()) {
     await expect(sourceButtons).toHaveCount(contentType.sources)
   })
   test(`Can open ${contentType.name} page client-side`, async ({ page }) => {
-    const pageToOpen = contentTypes[(i + 1) % contentTypes.length]
+    // Audio is loading a lot of files, so we do not use it for the first SSR page
+    const pageToOpen =
+      contentType.id === 'all' ? contentTypes[1] : contentTypes[0]
     await page.goto(pageToOpen.url)
     await page.click(`[aria-label="${pageToOpen.name}"]`)
 
-    await Promise.all([
-      page.waitForNavigation(/*{ url: '/search/audio?q=cat' }*/),
-      page.click(`button[role="radio"]:has-text("${contentType.name}")`),
-    ])
+    await page.click(`button[role="radio"]:has-text("${contentType.name}")`)
     const urlParam = contentType.id === 'all' ? '' : contentType.id
     const expectedURL = `/search/${urlParam}?q=cat`
     await expect(page).toHaveURL(expectedURL)
