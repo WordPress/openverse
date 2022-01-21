@@ -42,8 +42,8 @@ const VFilterButton = defineComponent({
   setup(props, { emit }) {
     const { i18n, store } = useContext()
     const { pressed } = toRefs(props)
-    const isMinScreenMd = inject('isMinScreenMd')
-    const isHeaderScrolled = inject('isHeaderScrolled')
+    const isMinScreenMd = inject('isMinScreenMd', false)
+    const isHeaderScrolled = inject('isHeaderScrolled', false)
     const filterCount = computed(
       () => store.getters['search/appliedFilterTags'].length
     )

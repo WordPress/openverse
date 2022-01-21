@@ -269,7 +269,7 @@ a.button {
 }
 
 .secondary-pressed {
-  @apply bg-dark-charcoal-80 hover:border-tx;
+  @apply bg-dark-charcoal-80 border border-tx hover:border-tx;
 }
 
 .tertiary {
@@ -301,7 +301,7 @@ a.button {
 }
 
 .action-menu-muted-pressed {
-  @apply border-tx bg-dark-charcoal text-white focus-visible:ring-pink;
+  @apply border border-tx bg-dark-charcoal text-white focus-visible:ring-pink;
 }
 
 .grouped {
