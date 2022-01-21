@@ -110,33 +110,7 @@ export default defineComponent({
     VBoxLayout,
     VGlobalLayout,
   },
-  props: {
-    /**
-     * the information about the track, typically from a track's detail endpoint
-     */
-    audio: {
-      type: Object,
-      required: true,
-    },
-    /**
-     * the arrangement of the contents on the canvas; This determines the
-     * overall L&F of the audio component.
-     */
-    layout: {
-      type: String,
-      default: 'full',
-      validator: (val) => ['full', 'box', 'row', 'global'].includes(val),
-    },
-    /**
-     * the size of the component; Both 'box' and 'row' layouts offer multiple
-     * sizes to choose from.
-     */
-    size: {
-      type: String,
-      default: 'm',
-      validator: (val) => ['s', 'm', 'l', 'full'].includes(val),
-    },
-  },
+  props: propTypes,
   setup(props) {
     const store = useStore()
     const route = useRoute()
