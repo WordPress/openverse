@@ -11,6 +11,9 @@
     @focusin="isFocused = true"
     @focusout="isFocused = false"
   >
+    <h2 v-if="showHeading" class="text-sr p-6 pb-4 uppercase font-semibold">
+      {{ heading }}
+    </h2>
     <!--
       @slot The items in the item group. Should all be `VItem`s
     -->
@@ -24,6 +27,7 @@ import {
   provide,
   ref,
   readonly,
+  computed,
 } from '@nuxtjs/composition-api'
 import { ensureFocus } from 'reakit-utils/ensureFocus'
 import { useI18n } from '~/composables/use-i18n'
@@ -33,6 +37,7 @@ import { useI18n } from '~/composables/use-i18n'
  * @property {'vertical' | 'horizontal'} direction
  * @property {boolean} bordered
  * @property {'menu' | 'radiogroup'} type
+ * @property {'small' | 'medium'} size
  */
 
 /**
@@ -100,6 +105,24 @@ export default defineComponent({
       ),
       default: 'menu',
       validate: (v) => ['menu', 'radiogroup'].includes(v),
+    },
+    /**
+     * The heading text to show at the top of the Item Group.
+     * Optional.
+     */
+    heading: {
+      type: String,
+      required: false,
+    },
+    /**
+     * Size of the item group corresponds to the size of the component.
+     *
+     * @default 'small'
+     */
+    size: {
+      type: String,
+      default: 'small',
+      validate: (val) => ['small', 'medium'].includes(val),
     },
   },
   setup(props) {
@@ -169,6 +192,8 @@ export default defineComponent({
       if (!previousSelected && selected) selectedCount.value += 1
     }
 
+    const showHeading = computed(() => Boolean(props.heading))
+
     const focusContext = {
       isGroupFocused: readonly(isFocused),
       onItemKeyPress,
@@ -178,7 +203,7 @@ export default defineComponent({
 
     provide(VItemGroupFocusContextKey, focusContext)
 
-    return { isFocused, nodeRef }
+    return { isFocused, nodeRef, showHeading }
   },
 })
 </script>

@@ -17,14 +17,8 @@
       :aria-label="$t('header.filter-button.simple')"
     >
       <nav class="p-6" aria-labelledby="content-switcher-heading">
-        <h2
-          id="content-switcher-heading"
-          class="md:sr-only text-sr pb-4 uppercase font-semibold"
-        >
-          {{ $t('search-type.heading') }}
-        </h2>
         <VContentTypes
-          :bordered="false"
+          size="small"
           :active-item="content.activeType.value"
           @select="selectItem"
         />

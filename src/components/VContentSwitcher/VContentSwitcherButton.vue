@@ -67,7 +67,7 @@ export default {
       return i18n.t(labelKey)
     })
     const showLabel = computed(
-      () => isMinScreenMd.value || !isHeaderScrolled.value
+      () => isMinScreenMd.value || !isHeaderScrolled?.value
     )
 
     return {

@@ -232,7 +232,7 @@ export default VButton
 
 <style module>
 .button {
-  @apply flex items-center rounded-sm justify-center transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring no-underline appearance-none ring-offset-1;
+  @apply flex items-center rounded-sm justify-center transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:outline-none no-underline appearance-none ring-offset-1;
 }
 
 .button[disabled='disabled'],
@@ -257,7 +257,7 @@ a.button {
 }
 
 .primary {
-  @apply bg-pink text-white focus-visible:ring-pink hover:bg-dark-pink hover:text-white;
+  @apply bg-pink text-white focus-visible:ring focus-visible:ring-pink hover:bg-dark-pink hover:text-white;
 }
 
 .primary-pressed {
@@ -265,7 +265,7 @@ a.button {
 }
 
 .secondary {
-  @apply bg-dark-charcoal text-white font-bold focus-visible:ring-pink hover:bg-dark-charcoal-80 hover:text-white;
+  @apply bg-dark-charcoal text-white font-bold focus-visible:ring focus-visible:ring-pink hover:bg-dark-charcoal-80 hover:text-white;
 }
 
 .secondary-pressed {
@@ -273,7 +273,7 @@ a.button {
 }
 
 .tertiary {
-  @apply bg-white text-black border border-dark-charcoal-20 focus-visible:border-tx focus-visible:ring-pink ring-offset-0;
+  @apply bg-white text-black border border-dark-charcoal-20 focus-visible:border-tx focus-visible:ring focus-visible:ring-pink ring-offset-0;
 }
 
 .tertiary-pressed {
@@ -281,11 +281,11 @@ a.button {
 }
 
 .action-menu {
-  @apply bg-white text-black border border-tx hover:border-dark-charcoal-20 focus-visible:ring-pink;
+  @apply bg-white text-black border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
 }
 
 .action-menu-secondary {
-  @apply bg-white text-black border border-tx hover:border-dark-charcoal-20 focus-visible:ring-pink;
+  @apply bg-white text-black border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
 }
 
 .action-menu-secondary-pressed {
@@ -297,15 +297,15 @@ a.button {
 }
 
 .action-menu-muted {
-  @apply bg-dark-charcoal-10 text-black border border-tx hover:border-dark-charcoal-20 focus-visible:ring-pink;
+  @apply bg-dark-charcoal-10 text-black border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
 }
 
 .action-menu-muted-pressed {
-  @apply border border-tx bg-dark-charcoal text-white focus-visible:ring-pink;
+  @apply border border-tx bg-dark-charcoal text-white focus-visible:ring focus-visible:ring-pink;
 }
 
 .grouped {
-  @apply bg-white text-black focus-visible:ring-pink;
+  @apply bg-white text-black;
 }
 
 .grouped-pressed {
@@ -313,7 +313,7 @@ a.button {
 }
 
 .full {
-  @apply w-full font-semibold bg-dark-charcoal-06 focus-visible:ring-pink hover:bg-dark-charcoal-40 hover:text-white;
+  @apply w-full font-semibold bg-dark-charcoal-06 focus-visible:ring focus-visible:ring-pink hover:bg-dark-charcoal-40 hover:text-white;
 }
 
 .full-pressed {
@@ -321,6 +321,6 @@ a.button {
 }
 
 .plain {
-  @apply bg-tx focus-visible:ring-pink;
+  @apply bg-tx focus-visible:ring focus-visible:ring-pink;
 }
 </style>

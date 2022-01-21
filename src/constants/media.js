@@ -17,3 +17,19 @@ export const supportedMediaTypes = [IMAGE, AUDIO]
  * @type {MediaType[]}
  */
 export const supportedContentTypes = [ALL_MEDIA, IMAGE, AUDIO]
+
+/** @typedef {'supported'|'beta'|'additional'} SupportStatus */
+/** @type {{SUPPORTED: SupportStatus, ADDITIONAL: SupportStatus, BETA: SupportStatus}}*/
+export const statuses = {
+  SUPPORTED: 'supported',
+  BETA: 'beta',
+  ADDITIONAL: 'additional',
+}
+
+/** @type {Object.<MediaType, SupportStatus>} */
+export const contentStatus = {
+  [ALL_MEDIA]: statuses.SUPPORTED,
+  [IMAGE]: statuses.SUPPORTED,
+  [AUDIO]: statuses.BETA,
+  [VIDEO]: statuses.ADDITIONAL,
+}

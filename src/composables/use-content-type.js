@@ -11,10 +11,10 @@ const icons = {
   audio: audioIcon,
   image: imageIcon,
 }
+const contentTypes = [...supportedContentTypes]
+
 export default function useContentType() {
   const { store } = useContext()
-
-  const contentTypes = [...supportedContentTypes]
 
   const activeType = computed(() => store.state.search.searchType)
   const previousContentType = ref(activeType.value)

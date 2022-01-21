@@ -44,7 +44,7 @@ test('can search for all results from homepage', async ({ page }) => {
 
   await expect(page.locator('img')).toHaveCount(20)
 })
-test('can search for images from homepage, and then load more results', async ({
+test.skip('can search for images from homepage, and then load more results', async ({
   page,
 }) => {
   await page.goto('/')

@@ -14,10 +14,14 @@
     <VButton
       data-item-group-item
       :as="as"
-      class="flex justify-between focus-visible:ring-pink rounded min-w-full"
-      :class="[$style.button, $style[`${contextProps.direction}-button`]]"
+      class="flex justify-between rounded min-w-full group relative hover:bg-dark-charcoal-10 px-2 py-2"
+      :class="[
+        $style.button,
+        $style[`${contextProps.direction}-button`],
+        $style[`${contextProps.size}-button`],
+      ]"
       variant="grouped"
-      size="small"
+      size="disabled"
       :pressed="selected"
       :role="contextProps.type === 'radiogroup' ? 'radio' : 'menuitemcheckbox'"
       :aria-checked="selected"
@@ -31,13 +35,17 @@
       @click.native="$emit('click')"
     >
       <div
-        class="flex-grow whitespace-nowrap"
-        :class="$style[`${contextProps.direction}-content`]"
+        class="flex-grow whitespace-nowrap my-0 rounded-sm px-2 group-focus-visible:ring group-focus-visible:ring-pink md:group-focus-visible:ring-tx"
+        :class="[
+          $style[`${contextProps.direction}-content`],
+          $style[`${contextProps.size}-content`],
+        ]"
       >
         <slot name="default" />
       </div>
       <VIcon
         v-if="!isInPopover && selected && contextProps.direction === 'vertical'"
+        class="absolute end-5"
         :icon-path="checkmark"
       />
     </VButton>
@@ -106,6 +114,7 @@ export default defineComponent({
     const isFocused = ref(false)
     const isInPopover = inject(VPopoverContentContextKey, false)
     const contextProps = inject(VItemGroupContextKey)
+    console.log('vitem', contextProps)
 
     if (isInPopover && contextProps.bordered) {
       warn('Bordered popover items are not supported')
@@ -153,6 +162,14 @@ export default defineComponent({
   @apply z-10;
 }
 
+.medium-button {
+  @apply focus-visible:ring focus-visible:ring-pink;
+}
+
+.small-content {
+  @apply group-focus-visible:ring group-focus-visible:ring-pink;
+}
+
 .vertical {
   @apply min-w-max;
 }
@@ -174,7 +191,7 @@ export default defineComponent({
 }
 
 .vertical-content {
-  @apply flex flex-row;
+  @apply flex flex-row items-center;
 }
 
 .vertical-popover-item {

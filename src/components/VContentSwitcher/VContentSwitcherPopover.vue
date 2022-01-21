@@ -11,7 +11,7 @@
       />
     </template>
     <VContentTypes
-      :bordered="false"
+      size="medium"
       :active-item="activeItem"
       @select="selectItem"
     />
@@ -25,12 +25,14 @@ import checkIcon from '~/assets/icons/checkmark.svg'
 
 import VPopover from '~/components/VPopover/VPopover.vue'
 import VContentSwitcherButton from '~/components/VContentSwitcher/VContentSwitcherButton.vue'
+import VContentTypes from '~/components/VContentSwitcher/VContentTypes.vue'
 
 export default {
   name: 'VContentSwitcherPopover',
   components: {
     VContentSwitcherButton,
     VPopover,
+    VContentTypes,
   },
   props: {
     activeItem: {

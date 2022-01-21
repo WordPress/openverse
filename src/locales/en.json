@@ -709,6 +709,7 @@
     "all": "All content",
     "video": "Videos",
     "label": "Type of content to search",
-    "heading": "Content types"
+    "heading": "Content types",
+    "status-beta": "Beta"
   }
 }
