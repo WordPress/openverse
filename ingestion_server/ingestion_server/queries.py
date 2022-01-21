@@ -1,7 +1,10 @@
-from typing import Literal
+from textwrap import dedent as d
+from typing import Optional
 
 from psycopg2.sql import SQL, Identifier
 from psycopg2.sql import Literal as PgLiteral
+
+from ingestion_server.constants.internal_types import ApproachType
 
 
 def get_existence_queries(table):
@@ -75,7 +78,10 @@ def get_fdw_query(
 
 
 def get_copy_data_query(
-    table: str, columns: list[str], approach: Literal["basic", "advanced"]
+    table: str,
+    columns: list[str],
+    approach: ApproachType,
+    limit: Optional[int] = 100_000,
 ):
     """
     Get the query for copying data from the upstream table to a temporary table
@@ -84,68 +90,100 @@ def get_copy_data_query(
     table and avoids entries from the deleted table with the "api_deleted"
     prefix. After the copying process, the "upstream" schema is dropped.
 
+    When running this on a non-production environment, the results will be ordered
+    by `identifier` to simulate a random sample and only the first 100k records
+    will be pulled from the upstream database.
+
     :param table: the name of the downstream table being replaced
     :param columns: the names of the columns to copy from upstream
     :param approach: whether to use advanced logic specific to media ingestion
+    :param limit: number of rows to copy when
     :return: the SQL query for copying the data
     """
 
-    table_creation = """
+    table_creation = d(
+        """
     DROP TABLE IF EXISTS {temp_table};
     CREATE TABLE {temp_table} (LIKE {table} INCLUDING DEFAULTS INCLUDING CONSTRAINTS);
     """
+    )
 
-    id_column_setup = """
+    id_column_setup = d(
+        """
     ALTER TABLE {temp_table} ADD COLUMN IF NOT EXISTS
         id serial;
     CREATE TEMP SEQUENCE IF NOT EXISTS id_temp_seq;
     ALTER TABLE {temp_table} ALTER COLUMN
         id SET DEFAULT nextval('id_temp_seq'::regclass);
     """
+    )
 
-    timestamp_column_setup = """
+    timestamp_column_setup = d(
+        """
     ALTER TABLE {temp_table} ALTER COLUMN
         created_on SET DEFAULT CURRENT_TIMESTAMP;
     ALTER TABLE {temp_table} ALTER COLUMN
         updated_on SET DEFAULT CURRENT_TIMESTAMP;
     """
+    )
 
-    metric_column_setup = """
+    metric_column_setup = d(
+        """
     ALTER TABLE {temp_table} ADD COLUMN IF NOT EXISTS
         standardized_popularity double precision;
     ALTER TABLE {temp_table} ALTER COLUMN
         view_count SET DEFAULT 0;
     """
+    )
 
-    conclusion = """
+    conclusion = d(
+        """
     ALTER TABLE {temp_table} ADD PRIMARY KEY (id);
     DROP SERVER upstream CASCADE;
     """
+    )
 
     if approach == "basic":
-        steps = [
-            table_creation,
-            id_column_setup,
-            timestamp_column_setup,
+        tertiary_column_setup = timestamp_column_setup
+        select_insert = d(
             """
-            INSERT INTO {temp_table} ({columns}) SELECT {columns} from {upstream_table};
-            """,
-            conclusion,
-        ]
+        INSERT INTO {temp_table} ({columns}) SELECT {columns} FROM {upstream_table}
+        """
+        )
     else:  # approach == 'advanced'
-        steps = [
-            table_creation,
-            id_column_setup,
-            metric_column_setup,
+        tertiary_column_setup = metric_column_setup
+        select_insert = d(
             """
-            INSERT INTO {temp_table} ({columns})
-                SELECT {columns} from {upstream_table} AS u
-                WHERE NOT EXISTS(
-                    SELECT FROM {deleted_table} WHERE identifier = u.identifier
-                );
-            """,
-            conclusion,
-        ]
+        INSERT INTO {temp_table} ({columns})
+            SELECT {columns} from {upstream_table} AS u
+            WHERE NOT EXISTS(
+                SELECT FROM {deleted_table} WHERE identifier = u.identifier
+            )
+        """
+        )
+
+    # If a limit is requested, add the condition onto the select at the very end
+    if limit:
+        # The audioset view does not have identifiers associated with it
+        if table != "audioset":
+            select_insert += d(
+                """
+            ORDER BY identifier"""
+            )
+        select_insert += d(
+            """
+        LIMIT {limit}"""
+        )
+    # Always add a semi-colon at the end
+    select_insert += ";"
+
+    steps = [
+        table_creation,
+        id_column_setup,
+        tertiary_column_setup,
+        select_insert,
+        conclusion,
+    ]
 
     return SQL("".join(steps)).format(
         table=Identifier(table),
@@ -153,6 +191,7 @@ def get_copy_data_query(
         upstream_table=Identifier("upstream_schema", f"{table}_view"),
         deleted_table=Identifier(f"api_deleted{table}"),
         columns=SQL(",").join([Identifier(col) for col in columns]),
+        limit=PgLiteral(limit),
     )
 
 

@@ -16,8 +16,8 @@ data in place.
 """
 
 import datetime
-import gc
 import logging as log
+import multiprocessing
 
 import psycopg2
 from decouple import config
@@ -26,6 +26,7 @@ from psycopg2.sql import SQL, Identifier, Literal
 
 from ingestion_server import slack
 from ingestion_server.cleanup import clean_image_data
+from ingestion_server.constants.internal_types import ApproachType
 from ingestion_server.indexer import database_connect
 from ingestion_server.queries import (
     get_copy_data_query,
@@ -247,7 +248,12 @@ def _update_progress(progress, new_value):
         progress.value = new_value
 
 
-def reload_upstream(table, progress=None, finish_time=None, approach="advanced"):
+def reload_upstream(
+    table: str,
+    progress: multiprocessing.Value = None,
+    finish_time: multiprocessing.Value = None,
+    approach: ApproachType = "advanced",
+):
     """
     Import updates from the upstream catalog database into the API. The
     process involves the following steps.
@@ -265,6 +271,7 @@ def reload_upstream(table, progress=None, finish_time=None, approach="advanced")
     :param table: The upstream table to copy.
     :param progress: multiprocessing.Value float for sharing task progress
     :param finish_time: multiprocessing.Value int for sharing finish timestamp
+    :param approach: whether to use advanced logic specific to media ingestion
     """
 
     # Step 1: Get the list of overlapping columns
@@ -298,7 +305,15 @@ def reload_upstream(table, progress=None, finish_time=None, approach="advanced")
 
         # Step 3: Import data into a temporary table
         log.info("Copying upstream data...")
-        copy_data = get_copy_data_query(table, shared_cols, approach=approach)
+        environment = config("ENVIRONMENT", default="local").lower()
+        limit_default = 100_000
+        if environment in {"prod", "production"}:
+            # If we're in production, turn off limits unless it's explicitly provided
+            limit_default = 0
+        limit = config("DATA_REFRESH_LIMIT", cast=int, default=limit_default)
+        copy_data = get_copy_data_query(
+            table, shared_cols, approach=approach, limit=limit
+        )
         log.info(f"Running copy-data query: \n{copy_data.as_string(downstream_cur)}")
         downstream_cur.execute(copy_data)
 
@@ -320,9 +335,6 @@ def reload_upstream(table, progress=None, finish_time=None, approach="advanced")
             f"_Next: re-applying indices & constraints_"
         )
 
-    # The server sometimes hangs on or before this next step. This is a pre-emptive
-    # garbage collection to try and assist with that.
-    gc.collect()
     downstream_db = database_connect()
     with downstream_db.cursor() as downstream_cur:
         # Step 5: Recreate indices from the original table

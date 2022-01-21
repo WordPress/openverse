@@ -23,6 +23,12 @@ The server is designed to be run in a private network only. You must not expose 
 
 If a `SLACK_WEBHOOK` variable is provided, the ingestion server will provide periodic updates on the progress of a data refresh, or relay any errors that may occur during the process.
 
+## Data refresh limit
+
+The `DATA_REFRESH_LIMIT` variable can be used to define a limit to the number of rows pulled from the upstream
+catalog database. If the server is running in an `ENVIRONMENT` that is not `prod` or `production`, this is
+automatically set to 100k records.
+
 ## Running on the host
 
 1. Create environment variables from the template file.
