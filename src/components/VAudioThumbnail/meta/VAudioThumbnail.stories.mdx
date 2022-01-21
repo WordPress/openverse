@@ -8,20 +8,12 @@ import {
 
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
 
-<Meta
-  title="Components/VAudioThumbnail"
-  components={VAudioThumbnail}
-  argTypes={{
-    toggle: {
-      action: 'toggle',
-    },
-  }}
-/>
+<Meta title="Components/VAudioThumbnail" components={VAudioThumbnail} />
 
 export const Template = (args, { argTypes }) => ({
   template: `
     <div class="w-30">
-      <VAudioThumbnail v-bind="$props" v-on="$props"/>
+      <VAudioThumbnail v-bind="$props"/>
     </div>
   `,
   components: { VAudioThumbnail },
