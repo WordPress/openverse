@@ -6,7 +6,7 @@
     <VInputField
       v-bind="$attrs"
       class="flex-grow search-field"
-      label-text="Search"
+      :label-text="$t('hero.aria.search')"
       :connection-sides="['end']"
       field-id="search-bar"
       type="search"

@@ -23,16 +23,18 @@
       <VSearchBar
         v-model.trim="searchTerm"
         class="max-w-[40rem] mt-4 lg:mt-8"
-        :placeholder="featuredSearchText"
+        :placeholder="$t('hero.search.placeholder')"
         @submit="handleSearch"
       >
-        <VContentSwitcherPopover
-          v-if="isMounted && isMinScreenMd"
-          ref="contentSwitcher"
-          class="mx-3"
-          :active-item="contentType"
-          @select="setContentType"
-        />
+        <ClientOnly>
+          <VContentSwitcherPopover
+            v-if="isMinScreenMd"
+            ref="contentSwitcher"
+            class="mx-3"
+            :active-item="contentType"
+            @select="setContentType"
+          />
+        </ClientOnly>
       </VSearchBar>
 
       <!-- Disclaimer for large screens -->
@@ -57,28 +59,30 @@
       <!-- Width is 57.143vh i.e. half of height (because grid dimensions are 4 ⨯ 2) -->
       <div
         class="homepage-images flex flex-row gap-4 lg:gap-0 items-center lg:grid lg:grid-cols-2 lg:grid-rows-4 lg:w-[57.143vh] lg:h-[114.286vh]"
+        aria-hidden
       >
-        <Transition
-          v-for="(image, index) in featuredSearchImages"
-          :key="image.identifier"
-          name="fade"
-          mode="out-in"
-          appear
-        >
-          <NuxtLink
+        <ClientOnly>
+          <Transition
+            v-for="(image, index) in featuredSearch.images"
             :key="image.identifier"
-            :to="image.url"
-            class="homepage-image block aspect-square h-30 w-30 lg:h-auto lg:w-auto lg:m-[2vh] rounded-full"
-            :style="{ '--transition-index': `${index * 0.05}s` }"
+            name="fade"
+            mode="out-in"
+            appear
           >
-            <img
-              class="object-cover h-full w-full rounded-full"
-              :src="image.src"
-              :alt="image.title"
-              :title="image.title"
-            />
-          </NuxtLink>
-        </Transition>
+            <NuxtLink
+              :to="image.url"
+              class="homepage-image block aspect-square h-30 w-30 lg:h-auto lg:w-auto lg:m-[2vh] rounded-full"
+              :style="{ '--transition-index': `${index * 0.05}s` }"
+            >
+              <img
+                class="object-cover h-full w-full rounded-full"
+                :src="image.src"
+                :alt="image.title"
+                :title="image.title"
+              />
+            </NuxtLink>
+          </Transition>
+        </ClientOnly>
       </div>
     </div>
 
@@ -100,14 +104,7 @@
 </template>
 
 <script>
-import {
-  ref,
-  onMounted,
-  onBeforeUnmount,
-  useRouter,
-  useStore,
-  useContext,
-} from '@nuxtjs/composition-api'
+import { ref, useRouter, useStore, useContext } from '@nuxtjs/composition-api'
 
 import VContentSwitcherPopover from '~/components/VContentSwitcher/VContentSwitcherPopover.vue'
 
@@ -154,61 +151,8 @@ const HomePage = {
       })),
     }))
 
-    const featuredSearchIdx = ref(-1) // immediately updates to 0 on mount
-    const nextIdx = () => {
-      featuredSearchIdx.value =
-        (featuredSearchIdx.value + 1) % featuredSearches.length
-      const featuredSearch = featuredSearches[featuredSearchIdx.value]
-      typeText(featuredSearch.term, () => {
-        setImages(featuredSearch.images)
-      })
-    }
-
-    const rotationTime = 6e3 // ms
-    let rotInterval = null
-    onMounted(() => {
-      nextIdx()
-      rotInterval = setInterval(nextIdx, rotationTime)
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          rotInterval = setInterval(nextIdx, rotationTime)
-        } else if (document.visibilityState === 'hidden' && rotInterval) {
-          clearInterval(rotInterval)
-        }
-      })
-    })
-    onBeforeUnmount(() => {
-      if (rotInterval) {
-        clearInterval(rotInterval)
-      }
-    })
-
-    const featuredSearchText = ref('')
-    const keystrokeTime = 100 // ms
-    const typeText = (text, callback) => {
-      let length = 0
-      const typeInterval = setInterval(() => {
-        length += 1
-        featuredSearchText.value = text.substring(0, length)
-        if (length === text.length) {
-          clearInterval(typeInterval)
-          callback()
-        }
-      }, keystrokeTime)
-    }
-
-    const featuredSearchImages = ref([])
-    const setImages = (images) => {
-      featuredSearchImages.value = images
-    }
-
-    const isMounted = ref(false)
-    onMounted(() => {
-      isMounted.value = true
-    })
-    onBeforeUnmount(() => {
-      isMounted.value = false
-    })
+    const featuredSearchIdx = Math.floor(Math.random() * 3)
+    const featuredSearch = featuredSearches[featuredSearchIdx]
 
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
 
@@ -226,7 +170,7 @@ const HomePage = {
     const searchTerm = ref('')
     const handleSearch = async () => {
       await store.dispatch(`${SEARCH}/${UPDATE_QUERY}`, {
-        q: searchTerm.value || featuredSearches[featuredSearchIdx.value].term,
+        q: searchTerm.value || '',
         searchType: contentType.value,
       })
       const newPath = app.localePath({
@@ -243,10 +187,7 @@ const HomePage = {
     }
 
     return {
-      featuredSearchText,
-      featuredSearchImages,
-
-      isMounted,
+      featuredSearch,
 
       isMinScreenMd,
 

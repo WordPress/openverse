@@ -9,13 +9,13 @@
       },
     ]"
   >
-    <label class="sr-only" :for="fieldId">{{ labelText }}</label>
     <input
       :id="fieldId"
       v-bind="$attrs"
       :type="type"
       class="flex-1 leading-none font-semibold bg-tx placeholder-dark-charcoal-70 ms-4 h-full focus:outline-none"
       :value="modelValue"
+      :aria-label="labelText"
       @input="updateModelValue"
       v-on="$listeners"
     />
