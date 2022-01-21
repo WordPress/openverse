@@ -2,6 +2,7 @@ import logging
 import os
 
 import requests
+from decouple import config
 
 
 log = logging.getLogger(__name__)
@@ -25,10 +26,12 @@ def message(text: str, summary: str = None) -> None:
         else:
             summary = text
 
+    environment = config("ENVIRONMENT", default="local")
+
     data = {
         "blocks": [{"text": {"text": text, "type": "mrkdwn"}, "type": "section"}],
         "text": summary,
-        "username": "Data Refresh Notification",
+        "username": f"Data Refresh Notification | {environment.upper()}",
         "icon_emoji": "arrows_counterclockwise",
     }
     try:
