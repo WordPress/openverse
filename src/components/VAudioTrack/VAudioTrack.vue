@@ -3,6 +3,8 @@
     class="audio-track"
     :aria-label="$t('audio-track.aria-label')"
     role="region"
+    v-bind="layoutBasedProps"
+    v-on="layoutBasedListeners"
   >
     <Component :is="layoutComponent" :audio="audio" :size="size">
       <template #controller="waveformProps">
@@ -18,6 +20,7 @@
 
       <template #play-pause="playPauseProps">
         <VPlayPause
+          ref="playPauseRef"
           :status="status"
           v-bind="playPauseProps"
           @toggle="handleToggle"
@@ -67,6 +70,7 @@ const propTypes = {
   /**
    * the arrangement of the contents on the canvas; This determines the
    * overall L&F of the audio component.
+   * @todo This type def should be extracted for reuse across components
    */
   layout: {
     type: /** @type {import('@nuxtjs/composition-api').PropType<'full' | 'box' | 'row' | 'global'>} */ (
@@ -111,7 +115,7 @@ export default defineComponent({
     VGlobalLayout,
   },
   props: propTypes,
-  setup(props) {
+  setup(props, { emit }) {
     const store = useStore()
     const route = useRoute()
 
@@ -328,6 +332,47 @@ export default defineComponent({
     }
     const layoutComponent = computed(() => layoutMappings[props.layout])
 
+    /**
+     * A ref used on the play/pause button,
+     * so we can capture clicks and skip
+     * sending an event to the boxed layout.
+     */
+    const playPauseRef = ref(null)
+
+    /**
+     * These layout-conditional props and listeners allow us
+     * to set properties on the parent element depending on
+     * the layout in use. This is currently relevant for the
+     * boxed layout exclusively.
+     */
+    const isBoxed = computed(() => props.layout === 'box')
+    const layoutBasedProps = computed(() => {
+      if (!isBoxed.value) return {}
+      return {
+        tabindex: isBoxed.value ? 0 : -1,
+        class:
+          'block focus:bg-white focus:border-tx focus:ring focus:ring-pink focus:outline-none focus:shadow-ring rounded-sm overflow-hidden cursor-pointer',
+      }
+    })
+    const layoutBasedListeners = computed(() => {
+      if (!isBoxed.value) return {}
+      return {
+        click: (event) => {
+          // Emit an event when the boxed layout is clicked
+          // unless the click is on the play/pause button
+          if (event.target === playPauseRef?.value?.$el) return
+          emit('boxedAudioClick', props.audio)
+        },
+        keydown: (event) => {
+          // 32 is Spacebar
+          if (event.keyCode !== 32) return
+          event.preventDefault()
+          status.value = status.value === 'playing' ? 'paused' : 'playing'
+          handleToggle(status.value)
+        },
+      }
+    })
+
     return {
       status,
       message,
@@ -338,6 +383,11 @@ export default defineComponent({
       duration,
 
       layoutComponent,
+
+      layoutBasedProps,
+      layoutBasedListeners,
+
+      playPauseRef,
     }
   },
 })

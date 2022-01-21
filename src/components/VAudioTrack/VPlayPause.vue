@@ -1,6 +1,7 @@
 <template>
   <VIconButton
     v-bind="$attrs"
+    :tabindex="layout === 'box' ? -1 : 0"
     class="play-pause flex-shrink-0 bg-dark-charcoal border-dark-charcoal text-white disabled:opacity-70"
     :icon-props="{ iconPath: icon }"
     :aria-label="$t(label)"
@@ -36,6 +37,20 @@ export default defineComponent({
     status: {
       type: String,
       validator: (val) => ['playing', 'paused', 'played'].includes(val),
+    },
+    /**
+     * The parent audio layout currently in use
+     * @todo This type def should be extracted for reuse across components
+     */
+    layout: {
+      type: /** @type {import('@nuxtjs/composition-api').PropType<'full' | 'box' | 'row' | 'global'>} */ (
+        String
+      ),
+      default: 'full',
+      /**
+       * @param {string} val
+       */
+      validator: (val) => ['full', 'box', 'row', 'global'].includes(val),
     },
   },
   data() {

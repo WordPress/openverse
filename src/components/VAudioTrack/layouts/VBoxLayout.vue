@@ -20,7 +20,7 @@
         </div>
 
         <div class="hidden player md:flex flex-row">
-          <slot name="play-pause" size="small" />
+          <slot name="play-pause" size="small" layout="box" />
           <slot name="controller" :features="[]" />
         </div>
       </div>

@@ -57,6 +57,7 @@ const propTypes = {
   /**
    * the arrangement of the contents on the canvas; This determines the
    * overall L&F of the audio component.
+   * @todo This type def should be extracted for reuse across components
    */
   layout: {
     type: /** @type {import('@nuxtjs/composition-api').PropType<'full' | 'box' | 'row' | 'global'>} */ (

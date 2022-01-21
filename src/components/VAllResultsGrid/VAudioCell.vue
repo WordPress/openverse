@@ -1,11 +1,10 @@
 <template>
-  <NuxtLink
-    :to="localePath(`/audio/${audio.id}`)"
-    class="block focus:bg-white focus:border-tx focus:ring focus:ring-pink focus:outline-none focus:shadow-ring rounded-sm"
-    @click.native="navigateToSinglePage(audio)"
-  >
-    <VAudioTrack :audio="audio" layout="box" size="full" />
-  </NuxtLink>
+  <VAudioTrack
+    :audio="audio"
+    layout="box"
+    size="full"
+    @boxedAudioClick="navigateToSinglePage"
+  />
 </template>
 
 <script>
@@ -17,17 +16,10 @@ export default defineComponent({
   components: { VAudioTrack },
   props: ['audio'],
   setup() {
-    const { i18n } = useContext()
+    const { app } = useContext()
     const router = useRouter()
-    const navigateToSinglePage = (audio) => (/** @type MouseEvent */ event) => {
-      if (!event.metaKey && !event.ctrlKey) {
-        event.preventDefault()
-        const detailRoute = i18n.localeRoute({
-          name: 'AudioDetailPage',
-          params: { id: audio.id, location: window.scrollY },
-        })
-        router.push(detailRoute)
-      }
+    const navigateToSinglePage = (audio) => {
+      router.push(app.localePath({ path: `/audio/${audio.id}` }))
     }
 
     return {

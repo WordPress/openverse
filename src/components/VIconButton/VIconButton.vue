@@ -5,7 +5,11 @@
     :type="type"
     v-on="$listeners"
   >
-    <VIcon :class="[...iconSizeClasses]" v-bind="iconProps" />
+    <VIcon
+      class="pointer-events-none"
+      :class="[...iconSizeClasses]"
+      v-bind="iconProps"
+    />
   </button>
 </template>
 
