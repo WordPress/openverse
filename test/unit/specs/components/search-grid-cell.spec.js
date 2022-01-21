@@ -23,16 +23,6 @@ describe('SearchGridCell', () => {
     expect(wrapper.find('div').find('figure').element).toBeDefined()
   })
 
-  xit('getProviderLogo should return existing logo', () => {
-    const wrapper = render(SearchGridCell, options)
-    expect(wrapper.vm.getProviderLogo('flickr')).not.toBe('')
-  })
-
-  xit('getProviderLogo should not return non existing logo', () => {
-    const wrapper = render(SearchGridCell, options)
-    expect(wrapper.vm.getProviderLogo('does not exist')).toBe('')
-  })
-
   it('getImageUrl returns image url with https://', () => {
     const wrapper = render(SearchGridCell, options)
     expect(wrapper.vm.getImageUrl(props.image)).toBe('https://foo.bar')
