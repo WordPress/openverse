@@ -1,0 +1,37 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import VContentSwitcherPopover from '@/components/VContentSwitcher/VContentSwitcherPopover.vue'
+
+<Meta
+  title="Components/VContentSwitcherPopover"
+  components={VContentSwitcherPopover}
+  argTypes={{
+    select: {
+      action: 'select',
+    },
+  }}
+/>
+
+export const Template = (args, { argTypes }) => ({
+  template: `<VContentSwitcherPopover active-item="image" v-bind="$props" v-on="$props"/>`,
+  components: { VContentSwitcherPopover },
+  props: Object.keys(argTypes),
+})
+
+# VContentSwitcherPopover
+
+<Description of={VContentSwitcherPopover} />
+
+<ArgsTable of={VContentSwitcherPopover} />
+
+<Canvas>
+  <Story height="480px" name="Default">
+    {Template.bind({})}
+  </Story>
+</Canvas>
