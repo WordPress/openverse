@@ -7,8 +7,6 @@
     "target": "esnext",
     "module": "esnext",
     "lib": ["dom", "esnext"],
-    "declaration": true,
-    "declarationMap": true,
     "noEmit": true,
     "isolatedModules": true,
     "skipLibCheck": true,
@@ -31,10 +29,11 @@
       "~/*": ["./src/*"],
       "~~/*": ["./*"]
     },
-    "baseUrl": "./"
+    "baseUrl": "."
   },
   "include": [
     "src/composables/types.js",
-    "src/composables/use-event-listener-outside.js"
+    "src/composables/use-event-listener-outside.js",
+    "src/composables/use-active-audio.js"
   ]
 }

@@ -1,18 +1,6 @@
 <template>
   <div class="global-audio sticky sm:hidden bottom-0">
-    <VAudioTrack v-if="audio" layout="global" :audio="audio" />
-
-    <!-- eslint-disable vuejs-accessibility/media-has-caption -->
-    <audio
-      v-show="false"
-      ref="audioEl"
-      class="audio-controller"
-      controls
-      crossorigin="anonymous"
-      @error="handleError"
-    />
-    <!-- eslint-enable vuejs-accessibility/media-has-caption -->
-
+    <VGlobalAudioTrack v-if="audio" layout="global" :audio="audio" />
     <VIconButton
       v-if="audio"
       class="absolute top-0 end-0 border-none z-10"
@@ -23,15 +11,7 @@
 </template>
 
 <script>
-import {
-  useStore,
-  useRoute,
-  ref,
-  watch,
-  onMounted,
-  computed,
-  onBeforeUnmount,
-} from '@nuxtjs/composition-api'
+import { useStore, useRoute, watch, computed } from '@nuxtjs/composition-api'
 
 import { ACTIVE } from '~/constants/store-modules'
 import {
@@ -40,6 +20,7 @@ import {
 } from '~/constants/mutation-types'
 
 import closeIcon from '~/assets/icons/close-small.svg'
+import { useActiveAudio } from '~/composables/use-active-audio'
 
 export default {
   name: 'VGlobalAudioSection',
@@ -47,15 +28,7 @@ export default {
     const store = useStore()
     const route = useRoute()
 
-    /* Audio element */
-
-    const audioEl = ref(null)
-    onMounted(() => {
-      window.audioEl = audioEl.value
-    })
-    onBeforeUnmount(() => {
-      delete window.audioEl
-    })
+    const activeAudio = useActiveAudio()
 
     /* Active audio track */
 
@@ -91,6 +64,19 @@ export default {
       })
     }
 
+    watch(
+      activeAudio.obj,
+      (audio, _, onInvalidate) => {
+        if (!audio) return
+        audio.addEventListener('error', handleError)
+
+        onInvalidate(() => {
+          audio.removeEventListener('error', handleError)
+        })
+      },
+      { immediate: true }
+    )
+
     const handleClose = () => {
       store.commit(`${ACTIVE}/${EJECT_ACTIVE_MEDIA_ITEM}`)
     }
@@ -103,7 +89,7 @@ export default {
         oldRouteNameVal.includes('audio') &&
         !routeNameVal.includes('audio')
       ) {
-        audioEl.value.pause()
+        activeAudio.obj.value?.pause()
         store.commit(`${ACTIVE}/${EJECT_ACTIVE_MEDIA_ITEM}`)
       }
     })
@@ -112,8 +98,6 @@ export default {
       icons: {
         closeIcon,
       },
-
-      audioEl,
 
       audio,
 
