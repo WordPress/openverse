@@ -7,7 +7,7 @@
     <VAudioTrack
       v-for="audio in results"
       :key="audio.id"
-      class="mb-6"
+      class="mb-8 md:mb-10"
       :audio="audio"
       :size="audioTrackSize"
       layout="row"
