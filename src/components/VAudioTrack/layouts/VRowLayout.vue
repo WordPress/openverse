@@ -23,7 +23,7 @@
       <div class="flex-shrink-0" :class="{ 'w-70': isMedium }">
         <NuxtLink
           :to="localePath(`/audio/${audio.id}`)"
-          class="font-heading font-semibold text-dark-charcoal hover:text-dark-charcoal p-px rounded-sm focus:outline-none focus:ring focus:ring-pink"
+          class="block font-heading font-semibold text-dark-charcoal hover:text-dark-charcoal p-px rounded-sm focus:outline-none focus:ring focus:ring-pink"
           :class="{
             'text-2xl': isMedium || isLarge,
             'leading-snug': isSmall,
@@ -46,10 +46,10 @@
             ><span v-if="isLarge" class="mx-2">{{ $t('interpunct') }}</span>
           </div>
 
-          <div class="part-b inline-flex">
+          <div class="part-b inline-flex flex-row items-center">
             <span v-if="isSmall">
               <span
-                class="text-dark-charcoal font-semibold bg-dark-charcoal-06 p-1 rounded-sm"
+                class="inline-block text-dark-charcoal font-semibold bg-dark-charcoal-06 p-1 rounded-sm"
                 >{{ timeFmt(audio.duration) }}</span
               ><span class="mx-2">{{ $t('interpunct') }}</span>
             </span>
