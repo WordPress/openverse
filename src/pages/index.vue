@@ -214,6 +214,7 @@ const HomePage = {
 
     const contentSwitcher = ref(null)
     const contentType = ref(ALL_MEDIA)
+
     const setContentType = async (type) => {
       contentType.value = type
       contentSwitcher.value?.closeMenu()
@@ -226,9 +227,12 @@ const HomePage = {
     const handleSearch = async () => {
       await store.dispatch(`${SEARCH}/${UPDATE_QUERY}`, {
         q: searchTerm.value || featuredSearches[featuredSearchIdx.value].term,
+        searchType: contentType.value,
       })
       const newPath = app.localePath({
-        path: `/search/${contentType.value === 'all' ? '' : contentType.value}`,
+        path: `/search/${
+          contentType.value === ALL_MEDIA ? '' : contentType.value
+        }`,
         query: store.getters['search/searchQueryParams'],
       })
       router.push(newPath)

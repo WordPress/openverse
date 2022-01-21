@@ -166,7 +166,7 @@ describe('Filter Store', () => {
       }
     })
 
-    it.each`
+    xit.each`
       searchType | path                | mediaType
       ${'all'}   | ${'/search/'}       | ${'image'}
       ${'image'} | ${'/search/image/'} | ${'image'}
@@ -188,7 +188,7 @@ describe('Filter Store', () => {
       }
     )
 
-    it.each`
+    xit.each`
       query                      | path                | mediaType
       ${{ license: 'cc0,by' }}   | ${'/search/'}       | ${'image'}
       ${{ searchBy: 'creator' }} | ${'/search/image/'} | ${'image'}

@@ -1,7 +1,7 @@
 import clonedeep from 'lodash.clonedeep'
 import { mediaSpecificFilters } from '~/store/search'
 import getParameterByName from './get-parameter-by-name'
-import { ALL_MEDIA, IMAGE } from '~/constants/media'
+import { ALL_MEDIA } from '~/constants/media'
 
 const filterPropertyMappings = {
   licenses: 'license',
@@ -95,11 +95,7 @@ export const filtersToQueryData = (
 export const queryStringToSearchType = (queryString) => {
   const searchTypePattern = /\/search\/(image|audio|video)\?*/
   let matchedType = queryString.match(searchTypePattern)
-  return matchedType === null
-    ? process.env.enableAudio
-      ? ALL_MEDIA
-      : IMAGE
-    : matchedType[1]
+  return matchedType === null ? ALL_MEDIA : matchedType[1]
 }
 
 /**

@@ -1,31 +1,18 @@
 <template>
-  <button
-    class="bg-white border border-dark-charcoal/20 rounded-sm flex hover:bg-dark-charcoal hover:text-white focus:bg-white focus:border-tx focus:ring focus:ring-pink focus:outline-none focus:shadow-ring focus:text-black overflow-hidden"
-    :class="[
-      isStacked
-        ? 'flex-col items-start py-4 ps-4 pe-12'
-        : 'flex-row justify-between items-center w-full min-w-[22rem] p-6',
-    ]"
-    role="radio"
-    type="button"
-    :aria-checked="isSelected"
-    v-on="$listeners"
+  <div
+    class="bg-white border border-dark-charcoal/20 rounded-sm flex hover:bg-dark-charcoal hover:text-white overflow-hidden flex-col items-start py-4 ps-4 pe-12 w-full lg:flex-row lg:justify-between lg:items-center lg:p-6"
   >
-    <div
-      class="flex"
-      :class="[isStacked ? 'flex-col items-start' : ' flex-row items-center']"
-    >
+    <div class="flex flex-col items-start lg:flex-row lg:items-center">
       <VIcon :icon-path="iconPath" />
-      <p class="font-semibold" :class="[isStacked ? 'pt-1' : 'ps-2 text-2xl']">
-        {{
-          isStacked
-            ? $t(`search-tab.${mediaType}`)
-            : $t(`search-tab.see-${mediaType}`)
-        }}
+      <p class="hidden lg:block font-semibold pt-1 lg:ps-2 lg:text-2xl">
+        {{ $t(`search-tab.see-${mediaType}`) }}
+      </p>
+      <p class="block lg:hidden font-semibold pt-1 lg:ps-2 lg:text-2xl">
+        {{ $t(`search-tab.${mediaType}`) }}
       </p>
     </div>
-    <span :class="{ 'text-sr': !isStacked }">{{ resultsCountLabel }}</span>
-  </button>
+    <span class="text-sr lg:text-base">{{ resultsCountLabel }}</span>
+  </div>
 </template>
 
 <script>
@@ -60,21 +47,6 @@ export default defineComponent({
       type: Number,
       required: true,
     },
-    /**
-     * Whether the indicated media type is currently selected.
-     */
-    isSelected: {
-      type: Boolean,
-      default: false,
-    },
-    /**
-     * `stacked` intended for mobile and `horizontal` for desktop.
-     */
-    layout: {
-      type: String,
-      default: 'stacked',
-      validator: (val) => ['stacked', 'horizontal'].includes(val),
-    },
   },
   setup(props) {
     const iconMapping = {
@@ -82,12 +54,9 @@ export default defineComponent({
       [IMAGE]: imageIcon,
     }
     const iconPath = computed(() => iconMapping[props.mediaType])
-
     const resultsCountLabel = computed(() => resultsCount(props.resultsCount))
 
-    const isStacked = computed(() => props.layout == 'stacked')
-
-    return { iconPath, imageIcon, resultsCountLabel, isStacked }
+    return { iconPath, imageIcon, resultsCountLabel }
   },
 })
 </script>

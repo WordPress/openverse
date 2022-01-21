@@ -855,7 +855,7 @@ msgctxt "browse-page.search-form.image"
 msgid "images"
 msgstr ""
 
-#: src/pages/search/audio.vue:50
+#: src/components/VAllResultsGrid/VAllResultsGrid.vue:133
 msgctxt "browse-page.search-form.audio"
 msgid "audio"
 msgstr ""
@@ -923,11 +923,6 @@ msgstr ""
 
 msgctxt "filters.title"
 msgid "Filters"
-msgstr ""
-
-#: src/components/VFilters/VFilterDisplay.vue:4
-msgctxt "filters.filter-by"
-msgid "Filter By"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -2141,12 +2136,12 @@ msgctxt "hero.subtitle"
 msgid "Browse through over 600 million items to reuse"
 msgstr ""
 
-#: src/components/SearchTypeToggle.vue:19
+#: src/components/SearchTypeToggle.vue:32
 msgctxt "hero.search-type.audio"
 msgid "Audio"
 msgstr ""
 
-#: src/components/SearchTypeToggle.vue:10
+#: src/components/SearchTypeToggle.vue:23
 msgctxt "hero.search-type.image"
 msgid "Images"
 msgstr ""
@@ -2154,6 +2149,11 @@ msgstr ""
 #: src/components/VHeroSection.vue:40
 msgctxt "hero.search-type.prompt"
 msgid "I would like to find:"
+msgstr ""
+
+#: src/components/SearchTypeToggle.vue:14
+msgctxt "hero.search-type.all"
+msgid "All"
 msgstr ""
 
 #: src/components/VHeroSection.vue:24
@@ -2166,7 +2166,7 @@ msgctxt "hero.aria.caption"
 msgid "about cc licenses"
 msgstr ""
 
-#: src/components/SearchTypeToggle.vue:2
+#: src/components/SearchTypeToggle.vue:5
 msgctxt "hero.aria.search-type"
 msgid "search type"
 msgstr ""

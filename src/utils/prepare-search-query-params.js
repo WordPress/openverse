@@ -1,10 +1,10 @@
+const NON_API_PARAMS = ['mediaType', 'shouldPersistMedia']
+
 export default function prepareSearchQueryParams(searchParams) {
-  if (typeof searchParams.mediaType !== 'undefined') {
-    delete searchParams.mediaType
-  }
   const params = {
     ...searchParams,
   }
+  NON_API_PARAMS.forEach((key) => delete params[key])
 
   if (params.q && params.q.length > 0) {
     params.q = params.q.trim()

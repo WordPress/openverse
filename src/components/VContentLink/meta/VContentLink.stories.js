@@ -35,8 +35,7 @@ const TwoVContentLinkStory = () => ({
       :key="key"
       :media-type="type.mediaType"
       :results-count="type.resultsCount"
-      :is-selected="selected == type.mediaType"
-      @click="onSelected(type.mediaType)"/>
+    />
   </div>
   `,
   components: { VContentLink },

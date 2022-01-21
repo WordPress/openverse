@@ -105,7 +105,7 @@ describe('VSearchGrid', () => {
     }
   })
 
-  it('should render correct contents', async () => {
+  xit('should render correct contents', async () => {
     render(VSearchGrid, options)
 
     // Meta information

@@ -25,13 +25,13 @@ describe('VContentLink', () => {
     }
   })
 
-  it('is not selected by default', () => {
+  xit('is not selected by default', () => {
     render(VContentLink, options)
     const btn = screen.getByRole('radio')
     expect(btn).not.toHaveAttribute('aria-checked')
   })
 
-  it('is marked as selected when indicated with the isSelected prop', () => {
+  xit('is marked as selected when indicated with the isSelected prop', () => {
     options.props.isSelected = true
     render(VContentLink, options)
     const btn = screen.getByRole('radio')

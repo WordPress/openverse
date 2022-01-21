@@ -1,31 +1,18 @@
 <template>
-  <section class="search-grid">
-    <VSearchResultsTitle
-      v-if="query.q && isSupported"
-      class="leading-10"
-      :size="isAllView ? 'large' : 'default'"
+  <section class="">
+    <header
+      v-if="query.q && isSupported && !noresult"
+      class="mt-4"
+      :class="isAllView ? 'mb-10' : 'mb-8'"
     >
-      {{ query.q }}
-    </VSearchResultsTitle>
-    <div
-      v-if="shouldShowMeta"
-      class="results-meta flex flex-col sm:flex-row items-start justify-between px-6"
-      data-testid="search-meta"
-    >
-      <div
-        class="font-semibold caption leading-10 flex flex-col sm:flex-row sm:me-auto justify-between"
+      <VSearchResultsTitle
+        class="leading-10"
+        :size="isAllView ? 'large' : 'default'"
       >
-        <span class="pe-6">
-          {{ mediaCount }}
-        </span>
-        <VSearchRating
-          v-if="query.q"
-          :search-term="query.q"
-          class="leading-10"
-        />
-      </div>
-      <VSaferBrowsing />
-    </div>
+        {{ query.q }}
+      </VSearchResultsTitle>
+    </header>
+
     <slot name="media" />
 
     <VMetaSearchForm
@@ -40,13 +27,16 @@
 
 <script>
 import { computed, useContext } from '@nuxtjs/composition-api'
-import { AUDIO, IMAGE } from '~/constants/media'
+import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
 
-import VSaferBrowsing from '~/components/VSaferBrowsing.vue'
-import VSearchRating from '~/components/VSearchRating.vue'
 import VMetaSearchForm from '~/components/VMetaSearch/VMetaSearchForm.vue'
 
 const i18nKeys = {
+  [ALL_MEDIA]: {
+    noResult: 'browse-page.all-no-results',
+    result: 'browse-page.all-result-count',
+    more: 'browse-page.all-result-count-more',
+  },
   [AUDIO]: {
     noResult: 'browse-page.audio-no-results',
     result: 'browse-page.audio-result-count',
@@ -61,7 +51,7 @@ const i18nKeys = {
 
 export default {
   name: 'VSearchGrid',
-  components: { VMetaSearchForm, VSaferBrowsing, VSearchRating },
+  components: { VMetaSearchForm },
   props: {
     supported: {
       type: Boolean,

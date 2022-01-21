@@ -1,16 +1,17 @@
 <template>
   <div :style="{ width }">
     <!-- Should be wrapped by a fixed width parent -->
-    <div class="box-track group relative bg-yellow h-0 w-full pt-full">
+    <div
+      class="box-track group relative bg-yellow h-0 w-full pt-full rounded-sm"
+    >
       <div class="absolute inset-0 flex flex-col">
         <div class="info flex-grow flex flex-col justify-between p-4">
-          <span class="font-heading font-semibold leading-snug">{{
+          <span class="font-heading font-semibold leading-snug line-clamp-3">{{
             audio.title
           }}</span>
           <div class="info">
             <VLicense
-              v-if="!isSmall"
-              class="mb-2 hidden group-hover:block group-focus:block"
+              class="mb-2 hidden md:group-hover:block md:group-focus:block"
               hide-name
               :license="audio.license"
             />
@@ -18,7 +19,7 @@
           </div>
         </div>
 
-        <div v-if="!isSmall" class="player flex flex-row">
+        <div class="hidden player md:flex flex-row">
           <slot name="play-pause" size="small" />
           <slot name="controller" :features="[]" />
         </div>

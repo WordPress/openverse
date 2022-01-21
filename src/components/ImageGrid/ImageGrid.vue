@@ -1,9 +1,12 @@
 <template>
-  <section class="image-grid my-6">
+  <section class="image-grid -mx-2">
     <div class="image-grid__cells">
       <ImageCell v-for="(image, index) in images" :key="index" :image="image" />
     </div>
-    <h5 v-if="isError" class="image-grid__notification py-4">
+    <h5
+      v-if="isError && !fetchState.isFinished"
+      class="image-grid__notification py-4"
+    >
       {{ fetchState.fetchingError }}
     </h5>
     <footer class="px-2">

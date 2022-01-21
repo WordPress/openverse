@@ -46,18 +46,16 @@ export const mediaFilterKeys = {
     'searchBy',
     'mature',
   ],
-  audio: process.env.enableAudio
-    ? [
-        'licenses',
-        'licenseTypes',
-        'audioCategories',
-        'audioExtensions',
-        'durations',
-        'audioProviders',
-        'searchBy',
-        'mature',
-      ]
-    : [],
+  audio: [
+    'licenses',
+    'licenseTypes',
+    'audioCategories',
+    'audioExtensions',
+    'durations',
+    'audioProviders',
+    'searchBy',
+    'mature',
+  ],
   video: [],
   all: ['licenses', 'licenseTypes', 'searchBy', 'mature'],
 }
@@ -71,9 +69,7 @@ export const mediaSpecificFilters = {
     'sizes',
     'imageProviders',
   ],
-  audio: process.env.enableAudio
-    ? ['audioCategories', 'audioExtensions', 'durations', 'audioProviders']
-    : [],
+  audio: ['audioCategories', 'audioExtensions', 'durations', 'audioProviders'],
   video: [],
 }
 
@@ -168,23 +164,14 @@ export const filterData = {
   ],
   mature: false,
 }
-const supportedTabTypes = [AUDIO, IMAGE]
-if (process.env.enableAudio) {
-  supportedTabTypes.unshift(ALL_MEDIA)
+
+const searchTabToMediaType = {
+  [ALL_MEDIA]: ALL_MEDIA,
+  [AUDIO]: AUDIO,
+  [IMAGE]: IMAGE,
+  [VIDEO]: null,
 }
-const searchTabToMediaType = process.env.enableAudio
-  ? {
-      [ALL_MEDIA]: IMAGE,
-      [AUDIO]: AUDIO,
-      [IMAGE]: IMAGE,
-      [VIDEO]: null,
-    }
-  : {
-      [ALL_MEDIA]: IMAGE,
-      [AUDIO]: null,
-      [IMAGE]: IMAGE,
-      [VIDEO]: null,
-    }
+
 /**
  * Returns true if any of the filters' checked property is true
  * except for `mature` filter, as it is not displayed as a tag

@@ -1,5 +1,18 @@
 <template>
-  <div class="flex" role="radiogroup" :aria-label="$t('hero.aria.search-type')">
+  <div
+    class="flex gap-2"
+    role="radiogroup"
+    :aria-label="$t('hero.aria.search-type')"
+  >
+    <button
+      class="toggle-button"
+      role="radio"
+      type="button"
+      :aria-checked="value === 'all'"
+      @click="$emit('selected', 'image')"
+    >
+      {{ $t('hero.search-type.all') }}
+    </button>
     <button
       class="toggle-button"
       role="radio"
@@ -10,7 +23,7 @@
       {{ $t('hero.search-type.image') }}
     </button>
     <button
-      class="toggle-button ms-2"
+      class="toggle-button"
       role="radio"
       type="button"
       :aria-checked="value === 'audio'"

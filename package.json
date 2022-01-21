@@ -12,7 +12,7 @@
   "author": "sebworks",
   "private": true,
   "scripts": {
-    "dev": "pnpm i18n:create-locales-list && pnpm i18n:update-locales && cross-env ENABLE_AUDIO=true nuxt",
+    "dev": "pnpm i18n:create-locales-list && pnpm i18n:update-locales && cross-env nuxt",
     "build": "pnpm i18n:get-translations && nuxt build",
     "generate": "nuxt generate",
     "start": "nuxt start",
@@ -22,7 +22,7 @@
     "test:watch": "jest --collectCoverage=false --watch",
     "test:unit": "jest --collectCoverage=false",
     "test:e2e": "playwright test",
-    "run-server": "cross-env ENABLE_AUDIO=true nuxt build && pnpm start",
+    "run-server": "cross-env nuxt build && pnpm start",
     "e2e:ci": "start-server-and-test run-server http://localhost:8443 test:e2e",
     "generate-e2e-tests": "playwright codegen localhost:8443/",
     "types": "tsc --noEmit",
@@ -48,6 +48,7 @@
     "@nuxtjs/sitemap": "^2.4.0",
     "@nuxtjs/svg": "^0.3.0",
     "@popperjs/core": "^2.11.2",
+    "@tailwindcss/line-clamp": "^0.3.1",
     "axios": "^0.21.2",
     "axios-mock-adapter": "^1.20.0",
     "babel-core": "^7.0.0-bridge.0",
@@ -72,6 +73,7 @@
     "node-html-parser": "^5.1.0",
     "nuxt": "^2.15.4",
     "reakit-utils": "^0.15.2",
+    "seeded-rand": "^2.0.1",
     "uuid": "^8.3.2",
     "vue-i18n": "^8.26.5"
   },

@@ -65,7 +65,7 @@ describe('VHeroSection', () => {
     await fireEvent.click(screen.queryByTitle('Search'))
 
     expect(routerMock.push).toHaveBeenCalledWith({
-      path: '/search/image',
+      path: '/search',
       query: { q: 'me' },
     })
   })

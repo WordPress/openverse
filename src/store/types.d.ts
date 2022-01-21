@@ -62,6 +62,7 @@ export type AudioDetail = {
   detail_url: string
   related_url: string
   filetype?: string
+  frontendMediaType?: 'audio'
 }
 
 /**
@@ -84,6 +85,7 @@ export type ImageDetail = {
   detail_url: string
   related_url: string
   fields_matched?: string[]
+  frontendMediaType?: 'image'
 }
 
 export interface FilterItem {

@@ -32,7 +32,8 @@
     "search-type": {
       "audio": "Audio",
       "image": "Images",
-      "prompt": "I would like to find:"
+      "prompt": "I would like to find:",
+      "all": "All"
     }
   },
   "notification": {

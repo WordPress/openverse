@@ -35,6 +35,7 @@ describe('SearchGridFilter', () => {
   let storeMock
   let localVue
   let filters
+  const routerMock = { push: jest.fn() }
 
   beforeEach(() => {
     localVue = createLocalVue()
@@ -69,6 +70,7 @@ describe('SearchGridFilter', () => {
     options = {
       localVue,
       mocks: {
+        $router: routerMock,
         $store: storeMock,
         $nuxt: {
           context: {

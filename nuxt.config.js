@@ -208,6 +208,12 @@ export default {
         autoprefixer: {},
       },
     },
+    // Enables use of IDE debuggers
+    extend(config, ctx) {
+      if (ctx.isDev) {
+        config.devtool = ctx.isClient ? 'source-map' : 'inline-source-map'
+      }
+    },
   },
   storybook: {
     port: 6006, // standard port for Storybook

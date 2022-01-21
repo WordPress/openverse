@@ -1,6 +1,6 @@
 <template>
   <div
-    class="py-8 px-10 search-filters"
+    class="py-8 px-10 min-h-full"
     :class="{
       'bg-dark-charcoal-06': isMinScreenMd,
     }"
@@ -46,11 +46,15 @@
 </template>
 
 <script>
-import { computed, useContext } from '@nuxtjs/composition-api'
+import { computed, useContext, useRouter } from '@nuxtjs/composition-api'
 import { kebabize } from '~/utils/format-strings'
 
-import { CLEAR_FILTERS, TOGGLE_FILTER } from '~/constants/action-types'
-import { SEARCH } from '~/constants/store-modules'
+import {
+  CLEAR_FILTERS,
+  FETCH_MEDIA,
+  TOGGLE_FILTER,
+} from '~/constants/action-types'
+import { MEDIA, SEARCH } from '~/constants/store-modules'
 import { isMinScreen } from '~/composables/use-media-query'
 
 import VFilterChecklist from '~/components/VFilters/VFilterChecklist.vue'
@@ -62,6 +66,7 @@ export default {
   },
   setup() {
     const { i18n, store } = useContext()
+    const router = useRouter()
     const isMinScreenMd = isMinScreen('md')
 
     const isAnyFilterApplied = computed(
@@ -77,11 +82,22 @@ export default {
       }
       return i18n.t(`filters.${kebabize(filterType)}.title`)
     }
-    const onUpdateFilter = ({ code, filterType }) => {
-      store.dispatch(`${SEARCH}/${TOGGLE_FILTER}`, { code, filterType })
+
+    const updateSearch = async () => {
+      await router.push({ query: store.getters['search/searchQueryParams'] })
+      await store.dispatch(`${MEDIA}/${FETCH_MEDIA}`, {
+        ...store.getters['search/searchQueryParams'],
+      })
     }
-    const clearFilters = () => {
-      store.dispatch(`${SEARCH}/${CLEAR_FILTERS}`)
+
+    const onUpdateFilter = async ({ code, filterType }) => {
+      await store.dispatch(`${SEARCH}/${TOGGLE_FILTER}`, { code, filterType })
+      await updateSearch()
+    }
+    const clearFilters = async () => {
+      await store.dispatch(`${SEARCH}/${CLEAR_FILTERS}`)
+
+      await updateSearch()
     }
 
     return {

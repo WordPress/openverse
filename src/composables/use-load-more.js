@@ -11,17 +11,26 @@ import { MEDIA } from '~/constants/store-modules'
 export const useLoadMore = (props) => {
   const { store } = useContext()
 
-  const searchParams = computed(() => ({
-    page: props.mediaResults.page + 1,
-    shouldPersistMedia: true,
-  }))
+  const searchParams = computed(() => {
+    const pages = {}
+    Object.keys(props.mediaResults).forEach((key) => {
+      const mediaPage = props.mediaResults[key]?.page || 0
+      pages[key] = mediaPage ? mediaPage + 1 : undefined
+    })
+    return {
+      page: pages,
+      shouldPersistMedia: true,
+    }
+  })
 
-  const canLoadMore = computed(() => props.searchTerm.trim() !== '')
+  const canLoadMore = computed(() => {
+    return props.searchTerm.trim() !== ''
+  })
+
   const onLoadMore = async () => {
     if (canLoadMore) {
       await store.dispatch(`${MEDIA}/${FETCH_MEDIA}`, searchParams.value)
     }
-    await Promise.resolve()
   }
 
   return { canLoadMore, onLoadMore }

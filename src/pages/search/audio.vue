@@ -1,26 +1,23 @@
 <template>
-  <section class="px-6">
-    <template v-if="supported">
-      <VAudioTrack
-        v-for="audio in mediaResults.items"
-        :key="audio.id"
-        class="mb-6"
-        :audio="audio"
-        :size="audioTrackSize"
-        layout="row"
-      />
-
-      <template v-if="isError" class="m-auto w-1/2 text-center pt-6">
-        <h5>{{ errorHeader }}</h5>
-        <p>{{ fetchState.fetchingError }}</p>
-      </template>
-      <VLoadMore
-        v-if="canLoadMore && !fetchState.isFinished"
-        :is-fetching="fetchState.isFetching"
-        data-testid="load-more"
-        @onLoadMore="onLoadMore"
-      />
-    </template>
+  <section>
+    <GridSkeleton
+      v-if="results.length === 0 && !fetchState.isFinished"
+      is-for-tab="audio"
+    />
+    <VAudioTrack
+      v-for="audio in results"
+      :key="audio.id"
+      class="mb-6"
+      :audio="audio"
+      :size="audioTrackSize"
+      layout="row"
+    />
+    <VLoadMore
+      v-if="canLoadMore && !fetchState.isFinished"
+      :is-fetching="fetchState.isFetching"
+      data-testid="load-more"
+      @onLoadMore="onLoadMore"
+    />
   </section>
 </template>
 
@@ -41,6 +38,9 @@ const AudioSearch = defineComponent({
   },
   props: propTypes,
   setup(props) {
+    const results = computed(() =>
+      Object.values(props.mediaResults?.audio?.items ?? [])
+    )
     const { i18n } = useContext()
 
     const audioTrackSize = computed(() => (props.isFilterVisible ? 'l' : 'm'))
@@ -54,6 +54,7 @@ const AudioSearch = defineComponent({
     const { canLoadMore, onLoadMore } = useLoadMore(props)
 
     return {
+      results,
       audioTrackSize,
       isError,
       errorHeader,

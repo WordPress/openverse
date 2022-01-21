@@ -1,11 +1,22 @@
 <script>
-import { inject, onMounted, ref } from '@nuxtjs/composition-api'
+import {
+  inject,
+  onMounted,
+  ref,
+  useContext,
+  useRouter,
+  useStore,
+} from '@nuxtjs/composition-api'
 import useContentType from '~/composables/use-content-type'
 
 import VMobileContentSwitcher from '~/components/VContentSwitcher/VMobileMenuModal.vue'
 import VContentSwitcherPopover from '~/components/VContentSwitcher/VContentSwitcherPopover.vue'
 import VDesktopPageMenu from '~/components/VHeader/VPageMenu/VDesktopPageMenu.vue'
 import VMobilePageMenu from '~/components/VHeader/VPageMenu/VMobilePageMenu.vue'
+import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
+import { FETCH_MEDIA } from '~/constants/action-types'
+import { MEDIA } from '~/constants/store-modules'
+import isEmpty from 'lodash.isempty'
 
 export default {
   name: 'VHeaderMenu',
@@ -27,14 +38,38 @@ export default {
     /** @type {import('@nuxtjs/composition-api').Ref<null|HTMLElement>} */
     const menuModalRef = ref(null)
     const content = useContentType()
+    const { app } = useContext()
+    const store = useStore()
+    const router = useRouter()
 
     const isMounted = ref(false)
     onMounted(() => {
       isMounted.value = true
     })
-    const selectContentType = (val) => {
-      content.setActiveType(val)
+    const selectContentType = async (type) => {
       menuModalRef.value?.closeMenu()
+      await content.setActiveType(type)
+
+      const newPath = app.localePath({
+        path: `/search/${type === ALL_MEDIA ? '' : type}`,
+        query: store.getters['search/searchQueryParams'],
+      })
+      router.push(newPath)
+
+      function typeWithoutMedia(mediaType) {
+        return isEmpty(store.getters['media/mediaResults'][mediaType])
+      }
+
+      const shouldFetchMedia =
+        type === ALL_MEDIA
+          ? [AUDIO, IMAGE].every((type) => typeWithoutMedia(type))
+          : typeWithoutMedia(type)
+
+      if (shouldFetchMedia) {
+        await store.dispatch(`${MEDIA}/${FETCH_MEDIA}`, {
+          ...store.getters['search/searchQueryParams'],
+        })
+      }
     }
 
     return {

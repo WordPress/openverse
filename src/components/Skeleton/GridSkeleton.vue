@@ -1,9 +1,6 @@
 <template>
-  <section class="px-10 pb-16">
-    <div
-      v-if="isForTab == 'all'"
-      class="grid gap-4 tab:grid-cols-2 lg:grid-cols-5"
-    >
+  <section>
+    <div v-if="isForTab == 'all'" class="grid gap-4 grid-cols-2 lg:grid-cols-5">
       <VBone v-for="idx in numElems" :key="idx" class="square" />
     </div>
 
@@ -38,7 +35,7 @@ export default {
     numElems: {
       type: Number,
       default: function () {
-        if (this.isForTab === 'all') return 10
+        if (this.isForTab === 'all') return 20
         if (this.isForTab === 'image') return 30
         return 8
       },

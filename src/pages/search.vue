@@ -1,5 +1,5 @@
 <template>
-  <div class="browse-page flex flex-col w-full search-grid-ctr">
+  <div class="browse-page flex flex-col w-full px-4 md:px-10">
     <VSearchGrid
       :fetch-state="fetchState"
       :query="query"
@@ -32,9 +32,9 @@ import {
   UPDATE_SEARCH_TYPE,
 } from '~/constants/action-types'
 import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
-import isEqual from 'lodash.isequal'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { MEDIA, SEARCH } from '~/constants/store-modules'
+import { queryStringToSearchType } from '~/utils/search-query-transform'
 
 import { inject } from '@nuxtjs/composition-api'
 import { isMinScreen } from '~/composables/use-media-query.js'
@@ -42,13 +42,11 @@ import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-vis
 
 import VScrollButton from '~/components/VScrollButton.vue'
 import VSearchGrid from '~/components/VSearchGrid.vue'
-import VFilterDisplay from '~/components/VFilters/VFilterDisplay.vue'
 
 const BrowsePage = {
   name: 'browse-page',
   layout: 'default',
   components: {
-    VFilterDisplay,
     VScrollButton,
     VSearchGrid,
   },
@@ -65,11 +63,7 @@ const BrowsePage = {
   },
   scrollToTop: false,
   async fetch() {
-    if (
-      this.supported &&
-      !Object.keys(this.results.items).length &&
-      this.query.q.trim() !== ''
-    ) {
+    if (this.supported && !this.resultCount && this.query.q.trim() !== '') {
       await this.fetchMedia({})
     }
   },
@@ -84,25 +78,20 @@ const BrowsePage = {
   computed: {
     ...mapState(SEARCH, ['query', 'searchType']),
     ...mapGetters(SEARCH, ['searchQueryParams', 'isAnyFilterApplied']),
-    ...mapGetters(MEDIA, ['results', 'fetchState']),
+    ...mapGetters(MEDIA, ['results', 'resultCount', 'fetchState']),
     mediaType() {
       // Default to IMAGE until media search/index is generalized
-      return this.searchType !== ALL_MEDIA ? this.searchType : IMAGE
+      return this.searchType ?? ALL_MEDIA
     },
     /**
      * Number of search results. Returns 0 for unsupported types.
      * @returns {number}
      */
     resultsCount() {
-      return this.supported ? this.results.count : 0
+      return this.supported ? this.resultCount : 0 ?? 0
     },
     supported() {
-      if (this.searchType === AUDIO) {
-        // Only show audio results if non-image results are supported
-        return process.env.enableAudio
-      } else {
-        return [IMAGE, ALL_MEDIA].includes(this.searchType)
-      }
+      return [IMAGE, AUDIO, ALL_MEDIA].includes(this.searchType)
     },
   },
   methods: {
@@ -112,60 +101,24 @@ const BrowsePage = {
       updateSearchType: UPDATE_SEARCH_TYPE,
       updateQuery: UPDATE_QUERY,
     }),
-    async getMediaItems(params) {
-      if (this.query.q.trim() !== '') {
-        await this.fetchMedia({ ...params })
-      }
-    },
     onSearchFormSubmit({ q }) {
       this.updateQuery({ q })
     },
   },
   watch: {
-    query: {
-      handler(newQuery, oldQuery) {
-        console.log('query changed')
-        const newPath = this.localePath({
-          path: `/search/${this.searchType === 'all' ? '' : this.searchType}/`,
-          query: this.searchQueryParams,
-        })
-        this.$router.push(newPath)
-        if (!isEqual(oldQuery, newQuery) && this.supported) {
-          this.getMediaItems(this.query)
-        }
-      },
-    },
-    searchType: {
-      // This fix is necessary only until All search page is merged
-      handler(newQuery, oldQuery) {
-        if (
-          [ALL_MEDIA, IMAGE].includes(newQuery) &&
-          [ALL_MEDIA, IMAGE].includes(oldQuery)
-        ) {
-          const newPath = this.localePath({
-            path: `/search/${
-              this.searchType === 'all' ? '' : this.searchType
-            }/`,
-            query: this.searchQueryParams,
-          })
-          this.$router.push(newPath)
-        }
-      },
+    /**
+     * Updates the search type only if the route's path changes.
+     * @param newRoute
+     * @param oldRoute
+     */
+    $route(newRoute, oldRoute) {
+      if (newRoute.path !== oldRoute.path) {
+        const searchType = queryStringToSearchType(newRoute.path)
+        this.updateSearchType({ searchType })
+      }
     },
   },
 }
 
 export default BrowsePage
 </script>
-
-<style lang="scss" scoped>
-.search-grid-ctr {
-  min-height: 600px;
-  padding: 0;
-
-  @include mobile {
-    width: 100%;
-    flex: none;
-  }
-}
-</style>
