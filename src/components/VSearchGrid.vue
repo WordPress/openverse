@@ -1,7 +1,7 @@
 <template>
   <section class="">
     <header
-      v-if="query.q && isSupported && !noresult"
+      v-if="query.q && isSupported"
       class="mt-4"
       :class="isAllView ? 'mb-10' : 'mb-8'"
     >
@@ -26,28 +26,11 @@
 </template>
 
 <script>
-import { computed, useContext } from '@nuxtjs/composition-api'
-import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
+import { computed } from '@nuxtjs/composition-api'
+import { resultsCount } from '~/composables/use-i18n-utilities'
+import { supportedContentTypes } from '~/constants/media'
 
 import VMetaSearchForm from '~/components/VMetaSearch/VMetaSearchForm.vue'
-
-const i18nKeys = {
-  [ALL_MEDIA]: {
-    noResult: 'browse-page.all-no-results',
-    result: 'browse-page.all-result-count',
-    more: 'browse-page.all-result-count-more',
-  },
-  [AUDIO]: {
-    noResult: 'browse-page.audio-no-results',
-    result: 'browse-page.audio-result-count',
-    more: 'browse-page.audio-result-count-more',
-  },
-  [IMAGE]: {
-    noResult: 'browse-page.image-no-results',
-    result: 'browse-page.image-result-count',
-    more: 'browse-page.image-result-count-more',
-  },
-}
 
 export default {
   name: 'VSearchGrid',
@@ -74,14 +57,6 @@ export default {
     },
   },
   setup(props) {
-    const { i18n } = useContext()
-    const shouldShowMeta = computed(() => {
-      return (
-        props.supported &&
-        props.query.q.trim() !== '' &&
-        !props.fetchState.isFetching
-      )
-    })
     /**
      * The translated string showing how many results were found for
      * this media type.
@@ -90,13 +65,7 @@ export default {
      */
     const mediaCount = computed(() => {
       if (!props.supported) return
-
-      const count = props.resultsCount
-      const countKey =
-        count === 0 ? 'noResult' : count >= 10000 ? 'more' : 'result'
-      const i18nKey = i18nKeys[props.query.mediaType][countKey]
-      const localeCount = count.toLocaleString(i18n.locale)
-      return i18n.tc(i18nKey, count, { localeCount })
+      return resultsCount(props.resultsCount, props.query.mediaType)
     })
 
     const noresult = computed(() => {
@@ -107,7 +76,7 @@ export default {
         : false
     })
     const isSupported = computed(() => {
-      return props.searchType === 'all' ? true : props.supported
+      return supportedContentTypes.includes(props.searchType)
     })
     const metaSearchFormType = computed(() => {
       return props.searchType === 'all' ? 'image' : props.searchType
@@ -119,7 +88,6 @@ export default {
     return {
       mediaCount,
       noresult,
-      shouldShowMeta,
       isSupported,
       metaSearchFormType,
       isAllView,

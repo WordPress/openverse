@@ -114,7 +114,6 @@ export default defineComponent({
     const isFocused = ref(false)
     const isInPopover = inject(VPopoverContentContextKey, false)
     const contextProps = inject(VItemGroupContextKey)
-    console.log('vitem', contextProps)
 
     if (isInPopover && contextProps.bordered) {
       warn('Bordered popover items are not supported')
