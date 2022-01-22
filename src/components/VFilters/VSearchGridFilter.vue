@@ -9,8 +9,8 @@
     @onToggleSearchGridFilter="$emit('close')"
     @onClearFilters="clearFilters"
   >
-    <div class="flex items-center justify-between mt-4 mb-8">
-      <h4 class="text-2xl">
+    <div class="flex items-center justify-between mt-2 mb-6">
+      <h4 class="text-2xl py-2">
         {{ $t('filter-list.filter-by') }}
       </h4>
       <button
