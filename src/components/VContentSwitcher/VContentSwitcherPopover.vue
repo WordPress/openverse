@@ -34,6 +34,10 @@ export default {
     VPopover,
     VContentTypes,
   },
+  model: {
+    prop: 'activeItem',
+    event: 'select',
+  },
   props: {
     activeItem: {
       type: String,

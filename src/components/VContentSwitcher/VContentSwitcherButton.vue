@@ -9,7 +9,7 @@
     @click="$emit('click')"
   >
     <VIcon :icon-path="icon" />
-    <span v-show="showLabel" :class="{ 'ms-2': showLabel }">{{
+    <span v-show="showLabel" :class="{ 'ms-2 w-20 text-left': showLabel }">{{
       buttonLabel
     }}</span>
     <VIcon

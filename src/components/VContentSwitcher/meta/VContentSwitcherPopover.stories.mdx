@@ -6,6 +6,8 @@ import {
   Story,
 } from '@storybook/addon-docs'
 
+import { ref } from '@nuxtjs/composition-api'
+
 import VContentSwitcherPopover from '@/components/VContentSwitcher/VContentSwitcherPopover.vue'
 
 <Meta
@@ -33,5 +35,29 @@ export const Template = (args, { argTypes }) => ({
 <Canvas>
   <Story height="480px" name="Default">
     {Template.bind({})}
+  </Story>
+</Canvas>
+
+## v-model
+
+The recommended way to use it is with `v-model` mapping to a `String`.
+
+export const vModelTemplate = () => ({
+  template: `
+    <div>
+      {{ item }}
+      <VContentSwitcherPopover v-model="item"/>
+    </div>
+  `,
+  components: { VContentSwitcherPopover },
+  setup() {
+    const item = ref('all')
+    return { item }
+  },
+})
+
+<Canvas>
+  <Story height="480px" name="v-model">
+    {vModelTemplate.bind({})}
   </Story>
 </Canvas>
