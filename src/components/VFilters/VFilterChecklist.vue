@@ -1,12 +1,12 @@
 <template>
   <fieldset class="mb-8" @click.stop="hideLicenseExplanationVisibility">
-    <legend v-if="title" class="text-2xl font-semibold mb-2">
+    <legend v-if="title" class="text-sm font-semibold">
       {{ title }}
     </legend>
     <div
       v-for="(item, index) in options"
       :key="index"
-      class="flex justify-between items-center mt-3"
+      class="flex justify-between items-center mt-4"
     >
       <VCheckbox
         :id="item.code"
@@ -24,7 +24,7 @@
         v-if="filterType === 'licenses'"
         :ref="`${item.code}licenseIcon`"
         :aria-label="$t('browse-page.aria.license-explanation')"
-        class="appearance-none"
+        class="text-dark-charcoal-70 appearance-none"
         type="button"
         @click.stop="toggleLicenseExplanationVisibility(item.code)"
       >

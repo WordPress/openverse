@@ -125,11 +125,6 @@ export default {
 </script>
 
 <style scoped>
-.icon {
-  height: 1.1667em;
-  width: 1.1667em;
-}
-
 .bg-filled {
   background-image: radial-gradient(circle, #ffffff 60%, transparent 60%);
 }

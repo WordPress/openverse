@@ -124,7 +124,7 @@ export default VCheckbox
 </script>
 <style scoped>
 .checkbox-label {
-  @apply relative flex text-base leading-5;
+  @apply relative flex text-sm leading-5;
 }
 .checkbox {
   @apply appearance-none w-5 h-5 border-dark-charcoal border rounded-sm me-3 flex-shrink-0 relative;

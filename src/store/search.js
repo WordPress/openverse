@@ -36,8 +36,8 @@ import {
 // The order of the keys here is the same as in the side filter display
 export const mediaFilterKeys = {
   image: [
-    'licenses',
     'licenseTypes',
+    'licenses',
     'imageCategories',
     'imageExtensions',
     'aspectRatios',
@@ -47,8 +47,8 @@ export const mediaFilterKeys = {
     'mature',
   ],
   audio: [
-    'licenses',
     'licenseTypes',
+    'licenses',
     'audioCategories',
     'audioExtensions',
     'durations',
@@ -57,7 +57,7 @@ export const mediaFilterKeys = {
     'mature',
   ],
   video: [],
-  all: ['licenses', 'licenseTypes', 'searchBy', 'mature'],
+  all: ['licenseTypes', 'licenses', 'searchBy', 'mature'],
 }
 
 export const mediaSpecificFilters = {

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-01-21T15:40:19+00:00\n"
+"POT-Creation-Date: 2022-01-24T13:49:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -39,9 +39,14 @@ msgctxt "search-type.label"
 msgid "Type of content to search"
 msgstr ""
 
-#: src/components/VContentSwitcher/VMobileMenuModal.vue:24
+#: src/components/VContentSwitcher/VContentTypes.vue:6
 msgctxt "search-type.heading"
 msgid "Content types"
+msgstr ""
+
+#: src/components/VContentSwitcher/VContentItem.vue:13
+msgctxt "search-type.status-beta"
+msgid "Beta"
 msgstr ""
 
 #: src/components/VModal/VMobileModalContent.vue:30
@@ -904,7 +909,7 @@ msgstr ""
 
 #: src/components/VFilters/VSearchGridFilter.vue:14
 msgctxt "filter-list.filter-by"
-msgid "Filter results by"
+msgid "Filter by"
 msgstr ""
 
 msgctxt "filter-list.hide"
@@ -995,7 +1000,7 @@ msgid "Enable Mature Content"
 msgstr ""
 
 msgctxt "filters.sizes.title"
-msgid "Image Size"
+msgid "Image size"
 msgstr ""
 
 msgctxt "filters.sizes.small"
@@ -1011,7 +1016,7 @@ msgid "Large"
 msgstr ""
 
 msgctxt "filters.aspect-ratios.title"
-msgid "Aspect Ratio"
+msgid "Aspect ratio"
 msgstr ""
 
 msgctxt "filters.aspect-ratios.tall"
@@ -1027,7 +1032,7 @@ msgid "Square"
 msgstr ""
 
 msgctxt "filters.image-extensions.title"
-msgid "File Type"
+msgid "File type"
 msgstr ""
 
 msgctxt "filters.image-extensions.jpg"
@@ -1047,7 +1052,7 @@ msgid "SVGs"
 msgstr ""
 
 msgctxt "filters.audio-extensions.title"
-msgid "File Type"
+msgid "File type"
 msgstr ""
 
 msgctxt "filters.audio-extensions.mp3"
@@ -1063,7 +1068,7 @@ msgid "FLACs"
 msgstr ""
 
 msgctxt "filters.image-categories.title"
-msgid "Image Type"
+msgid "Image type"
 msgstr ""
 
 msgctxt "filters.image-categories.photograph"
@@ -1079,7 +1084,7 @@ msgid "Digitized Artworks"
 msgstr ""
 
 msgctxt "filters.audio-categories.title"
-msgid "Audio Category"
+msgid "Audio category"
 msgstr ""
 
 msgctxt "filters.audio-categories.music"
@@ -1115,7 +1120,7 @@ msgid "Modify or adapt"
 msgstr ""
 
 msgctxt "filters.licenses.title"
-msgid "License or Public Domain"
+msgid "Licenses"
 msgstr ""
 
 msgctxt "filters.licenses.cc0"

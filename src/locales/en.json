@@ -336,7 +336,7 @@
     "title": "Filters",
     "filter-by": "Filter By",
     "licenses": {
-      "title": "License or Public Domain",
+      "title": "Licenses",
       "cc0": "CC0",
       "pdm": "Public Domain Mark",
       "by": "BY",
@@ -358,38 +358,38 @@
       "title": "Source"
     },
     "audio-categories": {
-      "title": "Audio Category",
+      "title": "Audio category",
       "music": "Music",
       "sound": "Sound effects",
       "podcast": "Podcast"
     },
     "image-categories": {
-      "title": "Image Type",
+      "title": "Image type",
       "photograph": "Photographs",
       "illustration": "Illustrations",
       "digitized-artwork": "Digitized Artworks"
     },
     "audio-extensions": {
-      "title": "File Type",
+      "title": "File type",
       "mp3": "MP3s",
       "ogg": "OGGs",
       "flac": "FLACs"
     },
     "image-extensions": {
-      "title": "File Type",
+      "title": "File type",
       "jpg": "JPEGs",
       "png": "PNGs",
       "gif": "GIFs",
       "svg": "SVGs"
     },
     "aspect-ratios": {
-      "title": "Aspect Ratio",
+      "title": "Aspect ratio",
       "tall": "Tall",
       "wide": "Wide",
       "square": "Square"
     },
     "sizes": {
-      "title": "Image Size",
+      "title": "Image size",
       "small": "Small",
       "medium": "Medium",
       "large": "Large"
@@ -421,7 +421,7 @@
     }
   },
   "filter-list": {
-    "filter-by": "Filter results by",
+    "filter-by": "Filter by",
     "hide": "Hide filters",
     "clear": "Clear filters",
     "show": "Show results",

@@ -10,7 +10,7 @@
     @onClearFilters="clearFilters"
   >
     <div class="flex items-center justify-between mt-2 mb-6">
-      <h4 class="text-2xl py-2">
+      <h4 class="text-sr font-semibold py-2 uppercase">
         {{ $t('filter-list.filter-by') }}
       </h4>
       <button
