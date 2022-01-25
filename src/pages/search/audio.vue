@@ -22,7 +22,13 @@
 </template>
 
 <script>
-import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  useContext,
+  useMeta,
+  useStore,
+} from '@nuxtjs/composition-api'
 import { useLoadMore } from '~/composables/use-load-more'
 
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
@@ -39,10 +45,15 @@ const AudioSearch = defineComponent({
   },
   props: propTypes,
   setup(props) {
+    const store = useStore()
+    const { i18n } = useContext()
+
+    const query = computed(() => store.state.search.query.q)
+    useMeta({ title: `${query.value} - ${i18n.t('hero.brand')}` })
+
     const results = computed(() =>
       Object.values(props.mediaResults?.audio?.items ?? [])
     )
-    const { i18n } = useContext()
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: false })
     const audioTrackSize = computed(() => {
       return !isMinScreenMd.value ? 's' : props.isFilterVisible ? 'l' : 'm'
@@ -66,6 +77,7 @@ const AudioSearch = defineComponent({
       onLoadMore,
     }
   },
+  head: {},
 })
 export default AudioSearch
 </script>

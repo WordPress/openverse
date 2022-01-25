@@ -190,6 +190,11 @@ const SourcePage = {
       this.sort = { direction, field }
     },
   },
+  head() {
+    return {
+      title: `${this.$t('sources.title')} - ${this.$t('hero.brand')}`,
+    }
+  },
 }
 
 export default SourcePage

@@ -260,6 +260,11 @@ const SearchHelpPage = {
       return `https://search.creativecommons.org/search?q=provider%3A%20"${providerCode}"`
     },
   },
+  head() {
+    return {
+      title: `${this.$t('search-guide.title')} - ${this.$t('hero.brand')}`,
+    }
+  },
 }
 
 export default SearchHelpPage

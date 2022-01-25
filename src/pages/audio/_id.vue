@@ -87,6 +87,12 @@ const AudioDetailPage = {
       return attributionHtml(this.audio, licenseUrl, this.fullLicenseName)
     },
   },
+  head() {
+    const title = this.audio.title
+    return {
+      title: `${title} - ${this.$t('hero.brand')}`,
+    }
+  },
 }
 
 export default AudioDetailPage

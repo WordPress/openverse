@@ -86,6 +86,11 @@ const AboutPage = {
       isPlaying: true,
     }
   },
+  head() {
+    return {
+      title: `${this.$t('extension.title')} - ${this.$t('hero.brand')}`,
+    }
+  },
   methods: {
     togglePlay() {
       if (this.isPlaying) {

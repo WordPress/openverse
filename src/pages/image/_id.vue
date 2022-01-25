@@ -78,6 +78,12 @@ const PhotoDetailPage = {
       })
     },
   },
+  head() {
+    const title = this.image.title
+    return {
+      title: `${title} - ${this.$t('hero.brand')}`,
+    }
+  },
 }
 
 export default PhotoDetailPage
