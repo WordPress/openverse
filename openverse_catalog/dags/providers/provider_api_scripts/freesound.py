@@ -20,6 +20,8 @@ from common.licenses.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
 from common.storage.audio import AudioStore
+from requests.exceptions import SSLError
+from retry import retry
 
 
 LIMIT = 150
@@ -165,7 +167,11 @@ def _extract_audio_data(media_data):
     # for playing on the frontend,
     # and the actual uploaded file as an alt_file that is available
     # for download (and requires a user to be authenticated to download)
-    main_audio, alt_files = _get_audio_files(media_data)
+    try:
+        main_audio, alt_files = _get_audio_files(media_data)
+    except SSLError:
+        logger.warning(f"Unable to get file size for {foreign_landing_url}, skipping")
+        return None
     if main_audio is None:
         return None
 
@@ -222,6 +228,16 @@ def _get_preview_filedata(preview_type, preview_url):
     }
 
 
+@retry(SSLError, tries=3, delay=1, backoff=2)
+def _get_audio_file_size(url):
+    """
+    Get the content length of a provided URL.
+    Freesound can be a bit finicky, so we want to retry it a few times
+    """
+    # TODO(obulat): move filesize detection to the polite crawler
+    return int(requests.head(url).headers["content-length"])
+
+
 def _get_audio_files(media_data):
     # This is the original file, needs auth for downloading.
     # bit_rate in kilobytes, converted to bytes
@@ -240,9 +256,7 @@ def _get_audio_files(media_data):
         return None
     main_file = _get_preview_filedata("preview-hq-mp3", previews["preview-hq-mp3"])
     main_file["audio_url"] = main_file.pop("url")
-    # TODO(obulat): move filesize detection to the polite crawler
-    filesize = requests.head(main_file["audio_url"]).headers["content-length"]
-    main_file["filesize"] = int(filesize)
+    main_file["filesize"] = _get_audio_file_size(main_file["audio_url"])
     return main_file, alt_files
 
 

@@ -5,6 +5,7 @@ from unittest.mock import patch
 import pytest
 from common.licenses.licenses import LicenseInfo
 from providers.provider_api_scripts import freesound
+from requests.exceptions import SSLError
 
 
 RESOURCES = Path(__file__).parent.resolve() / "resources/freesound"
@@ -41,6 +42,16 @@ def test_get_audio_pages_returns_correctly_with_no_results():
     ):
         actual_result = freesound._get_batch_json()
     assert actual_result == expect_result
+
+
+def test_get_audio_file_size_retries_and_does_not_raise(audio_data):
+    expected_result = None
+    with patch("requests.head") as head_patch:
+        head_patch.side_effect = SSLError("whoops")
+        actual_result = freesound._extract_audio_data(audio_data)
+
+        assert head_patch.call_count == 3
+        assert actual_result == expected_result
 
 
 def test_get_query_params_adds_page_number():
