@@ -6,6 +6,7 @@ services:
     build:
       context: .
       dockerfile: docker/airflow/Dockerfile
+    image: openverse-catalog
     env_file: .env
     restart: always
     ports:

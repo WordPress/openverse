@@ -258,6 +258,9 @@ openverse-catalog
 └── *                                       # Documentation, configuration files, and project requirements
 ```
 
+## Publishing
+
+The docker image for the catalog (Airflow) is published to ghcr.io/WordPress/openverse-catalog.
 
 ## Contributing
 
