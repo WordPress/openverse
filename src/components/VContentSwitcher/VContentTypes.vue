@@ -25,9 +25,9 @@ import useContentType from '~/composables/use-content-type'
 
 import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
 import VContentItem from '~/components/VContentSwitcher/VContentItem.vue'
-import { computed } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 
-export default {
+export default defineComponent({
   name: 'VContentTypes',
   components: { VItemGroup, VContentItem },
   props: {
@@ -58,5 +58,5 @@ export default {
       handleClick,
     }
   },
-}
+})
 </script>

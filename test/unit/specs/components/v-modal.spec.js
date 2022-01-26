@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { ref, computed } from '@nuxtjs/composition-api'
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 
@@ -8,14 +9,26 @@ import VButton from '~/components/VButton.vue'
 
 const TestWrapper = Vue.component('TestWrapper', {
   components: { VModal, VButton, VModalTarget },
+  props: ['useCustomInitialFocus'],
+  setup(props) {
+    const initialFocusElement = ref()
+
+    const resolvedInitialFocusElement = computed(() =>
+      props.useCustomInitialFocus ? initialFocusElement.value : undefined
+    )
+
+    return { initialFocusElement, resolvedInitialFocusElement }
+  },
   template: `
     <div>
-      <VModal label="modal label">
+      <VModal label="modal label" :initial-focus-element="resolvedInitialFocusElement">
         <template #trigger="{ a11yProps, visible }">
           <VButton v-bind="a11yProps">{{ visible }}</VButton>
         </template>
 
         <div>Code is Poetry</div>
+
+        <button ref="initialFocusElement" type="button">Custom initial focus</button>
       </VModal>
       <VModalTarget />
     </div>
@@ -25,6 +38,7 @@ const TestWrapper = Vue.component('TestWrapper', {
 const nextTick = async () =>
   await new Promise((resolve) => setTimeout(resolve, 1))
 
+const getCloseButton = () => screen.getByText('modal.close')
 const getDialog = () => screen.getByRole('dialog')
 const queryDialog = () => screen.queryByRole('dialog')
 const getTrigger = () => screen.getByRole('button')
@@ -56,7 +70,7 @@ describe('VModal', () => {
 
     expect(getDialog()).toBeVisible()
 
-    await userEvent.click(screen.getByText('modal.close'))
+    await userEvent.click(getCloseButton())
     await nextTick()
 
     expect(queryDialog()).toBe(null)
@@ -77,5 +91,21 @@ describe('VModal', () => {
 
     expect(window.scrollTo).toHaveBeenCalledWith(0, scrollY)
     expect(container.ownerDocument.body.style.position).not.toBe('fixed')
+  })
+
+  it('should focus the close button by default', async () => {
+    render(TestWrapper)
+    await doOpen()
+
+    expect(getDialog()).toBeVisible()
+    expect(getCloseButton()).toHaveFocus()
+  })
+
+  it('should focus the explicit initial focus element when specified', async () => {
+    render(TestWrapper, { props: { useCustomInitialFocus: true } })
+    await doOpen()
+
+    expect(getDialog()).toBeVisible()
+    expect(screen.getByText(/custom initial focus/i))
   })
 })

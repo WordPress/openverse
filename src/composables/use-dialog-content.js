@@ -12,6 +12,7 @@ import { useFocusOnBlur } from '~/composables/use-focus-on-blur'
  * @property {boolean} autoFocusOnHideRef
  * @property {boolean} hideOnClickOutsideRef
  * @property {boolean} hideOnEscRef
+ * @property {HTMLElement} initialFocusElementRef
  * @property {() => void} hideRef
  */
 

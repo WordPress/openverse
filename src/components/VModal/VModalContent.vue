@@ -85,6 +85,12 @@ const VModalContent = defineComponent({
         process.server ? Object : HTMLElement
       ),
     },
+    initialFocusElement: {
+      type: /** @type {import('@nuxtjs/composition-api').PropType<HTMLElement>} */ (
+        process.server ? Object : HTMLElement
+      ),
+      required: false,
+    },
   },
   setup(props, { emit, attrs }) {
     if (!attrs['aria-label'] && !attrs['aria-labelledby']) {
@@ -102,6 +108,7 @@ const VModalContent = defineComponent({
       hideOnClickOutsideRef: propsRefs.hideOnClickOutside,
       hideRef: propsRefs.hide,
       hideOnEscRef: propsRefs.hideOnEsc,
+      initialFocusElementRef: propsRefs.initialFocusElement,
       emit,
     })
 
