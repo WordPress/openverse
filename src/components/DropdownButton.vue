@@ -52,6 +52,7 @@
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
 import caretDown from '~/assets/icons/caret-down.svg'
+import * as keycodes from '~/utils/key-codes'
 
 const DropdownButton = defineComponent({
   name: 'DropdownButton',
@@ -127,7 +128,7 @@ const DropdownButton = defineComponent({
       const items = this.getItems()
       const itemIndex = items.findIndex((item) => item === event.target)
       switch (event.key) {
-        case 'ArrowUp': {
+        case keycodes.ArrowUp: {
           if (itemIndex === 0) {
             // don't do anything if pressing up on the first item
             return
@@ -135,7 +136,7 @@ const DropdownButton = defineComponent({
           this.focusElement(items[itemIndex - 1])
           break
         }
-        case 'ArrowDown': {
+        case keycodes.ArrowDown: {
           if (itemIndex === items.length - 1) {
             // don't do anything if pressing down on the last item
             return
@@ -143,17 +144,17 @@ const DropdownButton = defineComponent({
           this.focusElement(items[itemIndex + 1])
           break
         }
-        case 'Escape': {
+        case keycodes.Escape: {
           this.toggleOpen()
           break
         }
-        case 'Home':
-        case 'PageUp': {
+        case keycodes.Home:
+        case keycodes.PageUp: {
           this.focusElement(items[0])
           break
         }
-        case 'End':
-        case 'PageDown': {
+        case keycodes.End:
+        case keycodes.PageDown: {
           this.focusElement(items[items.length - 1])
           break
         }

@@ -13,6 +13,7 @@
           :duration="duration"
           :message="message ? $t(`audio-track.messages.${message}`) : null"
           @seeked="handleSeeked"
+          @toggle-playback="handleToggle"
         />
       </template>
 
@@ -195,9 +196,21 @@ export default defineComponent({
     /* Interface with VPlayPause */
 
     /**
-     * @param {'playing' | 'paused'} state
+     * @param {'playing' | 'paused'} [state]
      */
     const handleToggle = (state) => {
+      if (!state) {
+        switch (status.value) {
+          case 'playing':
+            state = 'paused'
+            break
+          case 'paused':
+          case 'played':
+            state = 'playing'
+            break
+        }
+      }
+
       switch (state) {
         case 'playing':
           play()

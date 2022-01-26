@@ -94,7 +94,7 @@
     <div
       v-if="isInteractive"
       class="focus-indicator hidden absolute z-30 top-0 flex flex-col items-center justify-between bg-black h-full"
-      :style="{ width: `${barWidth}px`, left: `${seekSpaceBefore}px` }"
+      :style="{ width: `${barWidth}px`, left: `${progressBarWidth}px` }"
     >
       <div
         v-for="(classes, name) in {
@@ -169,6 +169,7 @@ import {
   ref,
 } from '@nuxtjs/composition-api'
 import { downsampleArray, upsampleArray } from '~/utils/resampling'
+import * as keycodes from '~/utils/key-codes'
 
 /**
  * Renders an SVG representation of the waveform given a list of heights for the
@@ -382,7 +383,6 @@ export default defineComponent({
       return waveformDimens.value.width * frac
     })
     const seekIndex = computed(() => getPeaksInWidth(seekBarWidth.value))
-    const seekSpaceBefore = computed(() => spaceBefore(seekIndex.value))
 
     /* Seek timestamp */
 
@@ -468,17 +468,34 @@ export default defineComponent({
       }
     }
 
-    const willBeHandled = (event) =>
-      ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)
+    const handleSpacebar = () => {
+      emit('toggle-playback')
+    }
 
+    /**
+     * @param {KeyboardEvent} event
+     */
+    const willBeHandled = (event) =>
+      [
+        keycodes.ArrowLeft,
+        keycodes.ArrowRight,
+        keycodes.Home,
+        keycodes.End,
+        keycodes.Spacebar,
+      ].includes(event.key)
+
+    /**
+     * @param {KeyboardEvent} event
+     */
     const handleKeys = (event) => {
       if (!willBeHandled(event)) return
 
       event.preventDefault()
-      if (['ArrowLeft', 'ArrowRight'].includes(event.key))
+      if ([keycodes.ArrowLeft, keycodes.ArrowRight].includes(event.key))
         return handleArrowKeys(event)
-      if (event.key === 'Home') return handlePosKeys(0)
-      if (event.key === 'End') return handlePosKeys(1)
+      if (event.key === keycodes.Home) return handlePosKeys(0)
+      if (event.key === keycodes.End) return handlePosKeys(1)
+      if (event.key === keycodes.Spacebar) return handleSpacebar()
     }
 
     /* v-on */
@@ -527,7 +544,6 @@ export default defineComponent({
       seekFrac,
       seekBarWidth,
       seekIndex,
-      seekSpaceBefore,
 
       seekTimestamp,
       seekTimestampEl,

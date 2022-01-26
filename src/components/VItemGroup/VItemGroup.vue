@@ -31,6 +31,7 @@ import {
 } from '@nuxtjs/composition-api'
 import { ensureFocus } from 'reakit-utils/ensureFocus'
 import { useI18n } from '~/composables/use-i18n'
+import * as keycodes from '~/utils/key-codes'
 
 /**
  * @typedef VItemGroupContext
@@ -58,7 +59,12 @@ export const VItemGroupContextKey = Symbol('VItemGroupContext')
  */
 export const VItemGroupFocusContextKey = Symbol('VItemGroupFocusContext')
 
-const arrows = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']
+const arrows = [
+  keycodes.ArrowUp,
+  keycodes.ArrowDown,
+  keycodes.ArrowLeft,
+  keycodes.ArrowRight,
+]
 
 export default defineComponent({
   name: 'VItemGroup',
@@ -166,14 +172,14 @@ export default defineComponent({
       const targetIndex = items.findIndex((item) => item === target)
 
       switch (event.key) {
-        case 'ArrowUp':
-        case resolveArrow('ArrowLeft', 'ArrowRight'):
+        case keycodes.ArrowUp:
+        case resolveArrow(keycodes.ArrowLeft, keycodes.ArrowRight):
           if (targetIndex === 0) {
             return ensureFocus(items[items.length - 1])
           }
           return ensureFocus(items[targetIndex - 1])
-        case 'ArrowDown':
-        case resolveArrow('ArrowRight', 'ArrowLeft'):
+        case keycodes.ArrowDown:
+        case resolveArrow(keycodes.ArrowRight, keycodes.ArrowLeft):
           if (targetIndex === items.length - 1) {
             return ensureFocus(items[0])
           }
