@@ -5,10 +5,10 @@
     <div class="flex flex-col items-start lg:flex-row lg:items-center">
       <VIcon :icon-path="iconPath" />
       <p class="hidden lg:block font-semibold pt-1 lg:ps-2 lg:text-2xl">
-        {{ $t(`search-tab.see-${mediaType}`) }}
+        {{ $t(`search-type.see-${mediaType}`) }}
       </p>
       <p class="block lg:hidden font-semibold pt-1 lg:ps-2 lg:text-2xl">
-        {{ $t(`search-tab.${mediaType}`) }}
+        {{ $t(`search-type.${mediaType}`) }}
       </p>
     </div>
     <span class="text-sr lg:text-base">{{ resultsCountLabel }}</span>

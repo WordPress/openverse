@@ -7,11 +7,9 @@
   },
   "hero": {
     "brand": "Openverse",
-    "title": "Search for content to reuse",
     "subtitle": "Browse through over 600 million items to reuse",
     "search": {
-      "placeholder": "Search for content",
-      "button": "Search"
+      "placeholder": "Search for content"
     },
     "disclaimer": {
       "content": "All Openverse content is under a {license} or is in the public domain.",
@@ -26,23 +24,14 @@
     },
     "aria": {
       "search": "search",
-      "caption": "about cc licenses",
       "search-type": "search type"
-    },
-    "search-type": {
-      "audio": "Audio",
-      "image": "Images",
-      "prompt": "I would like to find:",
-      "all": "All"
     }
   },
   "notification": {
     "translation": {
       "text": "The translation for {locale} locale is incomplete. Help us get to 100 percent by {link}.",
       "link": "contributing a translation"
-    },
-    "dismiss": "Dismiss",
-    "okay": "OK"
+    }
   },
   "header": {
     "about-nav-item": "Our Story",
@@ -311,26 +300,12 @@
     },
     "conclusion": "Have your favourite content while browsing the web"
   },
-  "collections": {
-    "title": "Browse collections",
-    "museum": "Museum Collections",
-    "other": "Other Collections",
-    "collection-size": "Collection size: {count} images"
-  },
   "error": {
     "occurred": "An error occurred",
     "image-not-found": "Couldn't find image with id {id}",
     "media-not-found": "Couldn't find {mediaType} with id {id}",
     "image": "image",
     "audio": "audio"
-  },
-  "search-tab": {
-    "all": "All",
-    "image": "Images",
-    "audio": "Audio",
-    "video": "Video",
-    "see-image": "See all images",
-    "see-audio": "See all audio"
   },
   "filters": {
     "title": "Filters",
@@ -462,11 +437,6 @@
       "sa": "Share adaptations under the same terms.",
       "cc0": "This work has been marked as dedicated to the public domain.",
       "pdm": "This work is marked as being in the public domain."
-    },
-    "safer-browsing": {
-      "title": "Safer Browsing",
-      "caption": "By default, search results will not include results that have been reported as mature by users and sources.",
-      "label": "Show Mature Content"
     },
     "aria": {
       "close": "close",
@@ -710,6 +680,8 @@
     "video": "Videos",
     "label": "Type of content to search",
     "heading": "Content types",
-    "status-beta": "Beta"
+    "status-beta": "Beta",
+    "see-image": "See all images",
+    "see-audio": "See all audio"
   }
 }

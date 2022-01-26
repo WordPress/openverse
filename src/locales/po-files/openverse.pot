@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-01-24T13:49:13+00:00\n"
+"POT-Creation-Date: 2022-01-26T10:18:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -47,6 +47,14 @@ msgstr ""
 #: src/components/VContentSwitcher/VContentItem.vue:13
 msgctxt "search-type.status-beta"
 msgid "Beta"
+msgstr ""
+
+msgctxt "search-type.see-image"
+msgid "See all images"
+msgstr ""
+
+msgctxt "search-type.see-audio"
+msgid "See all audio"
 msgstr ""
 
 #: src/components/VModal/VMobileModalContent.vue:30
@@ -782,7 +790,6 @@ msgctxt "browse-page.aria.scroll"
 msgid "scroll to top"
 msgstr ""
 
-#: src/components/SearchGridForm.vue:14
 msgctxt "browse-page.aria.search"
 msgid "search"
 msgstr ""
@@ -808,21 +815,6 @@ msgstr ""
 #: src/components/VSearchRating.vue:16
 msgctxt "browse-page.aria.relevance.no"
 msgid "relevant result? answer: no"
-msgstr ""
-
-#: src/components/VSaferBrowsing.vue:9
-msgctxt "browse-page.safer-browsing.title"
-msgid "Safer Browsing"
-msgstr ""
-
-#: src/components/VSaferBrowsing.vue:21
-msgctxt "browse-page.safer-browsing.caption"
-msgid "By default, search results will not include results that have been reported as mature by users and sources."
-msgstr ""
-
-#: src/components/VSaferBrowsing.vue:33
-msgctxt "browse-page.safer-browsing.label"
-msgid "Show Mature Content"
 msgstr ""
 
 #: src/components/VFilters/VLicenseExplanationTooltip.vue:8
@@ -855,7 +847,6 @@ msgid "This work is marked as being in the public domain."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/SearchGridForm.vue:68
 msgctxt "browse-page.search-form.placeholder"
 msgid "Search all ###type###"
 msgstr ""
@@ -882,7 +873,6 @@ msgctxt "browse-page.search-form.collection-placeholder"
 msgid "Search this collection"
 msgstr ""
 
-#: src/components/SearchGridForm.vue:41
 msgctxt "browse-page.search-form.button"
 msgid "Search"
 msgstr ""
@@ -1155,30 +1145,6 @@ msgctxt "filters.licenses.by-nc-nd"
 msgid "BY-NC-ND"
 msgstr ""
 
-msgctxt "search-tab.all"
-msgid "All"
-msgstr ""
-
-msgctxt "search-tab.image"
-msgid "Images"
-msgstr ""
-
-msgctxt "search-tab.audio"
-msgid "Audio"
-msgstr ""
-
-msgctxt "search-tab.video"
-msgid "Video"
-msgstr ""
-
-msgctxt "search-tab.see-image"
-msgid "See all images"
-msgstr ""
-
-msgctxt "search-tab.see-audio"
-msgid "See all audio"
-msgstr ""
-
 msgctxt "error.occurred"
 msgid "An error occurred"
 msgstr ""
@@ -1203,23 +1169,7 @@ msgctxt "error.audio"
 msgid "audio"
 msgstr ""
 
-msgctxt "collections.title"
-msgid "Browse collections"
-msgstr ""
-
-msgctxt "collections.museum"
-msgid "Museum Collections"
-msgstr ""
-
-msgctxt "collections.other"
-msgid "Other Collections"
-msgstr ""
-
-#. Do not translate words between ### ###.
-msgctxt "collections.collection-size"
-msgid "Collection size: ###count### images"
-msgstr ""
-
+#: src/pages/extension.vue:91
 msgctxt "extension.title"
 msgid "Web extension"
 msgstr ""
@@ -2102,14 +2052,6 @@ msgctxt "header.aria.sr-search"
 msgid "search button"
 msgstr ""
 
-msgctxt "notification.dismiss"
-msgid "Dismiss"
-msgstr ""
-
-msgctxt "notification.okay"
-msgid "OK"
-msgstr ""
-
 #. Do not translate words between ### ###.
 #: src/components/TranslationStatusBanner.vue:7
 msgctxt "notification.translation.text"
@@ -2121,13 +2063,9 @@ msgctxt "notification.translation.link"
 msgid "contributing a translation"
 msgstr ""
 
-#: src/pages/index.vue:11
+#: src/pages/about.vue:103
 msgctxt "hero.brand"
 msgid "Openverse"
-msgstr ""
-
-msgctxt "hero.title"
-msgid "Search for content to reuse"
 msgstr ""
 
 #: src/pages/index.vue:21
@@ -2135,35 +2073,11 @@ msgctxt "hero.subtitle"
 msgid "Browse through over 600 million items to reuse"
 msgstr ""
 
-#: src/components/SearchTypeToggle.vue:32
-msgctxt "hero.search-type.audio"
-msgid "Audio"
-msgstr ""
-
-#: src/components/SearchTypeToggle.vue:23
-msgctxt "hero.search-type.image"
-msgid "Images"
-msgstr ""
-
-msgctxt "hero.search-type.prompt"
-msgid "I would like to find:"
-msgstr ""
-
-#: src/components/SearchTypeToggle.vue:14
-msgctxt "hero.search-type.all"
-msgid "All"
-msgstr ""
-
 #: src/components/VHeader/VSearchBar/VSearchBar.vue:9
 msgctxt "hero.aria.search"
 msgid "search"
 msgstr ""
 
-msgctxt "hero.aria.caption"
-msgid "about cc licenses"
-msgstr ""
-
-#: src/components/SearchTypeToggle.vue:5
 msgctxt "hero.aria.search-type"
 msgid "search type"
 msgstr ""
@@ -2177,7 +2091,6 @@ msgctxt "hero.locale.icon"
 msgid "locale"
 msgstr ""
 
-#: src/components/HomeLicenseFilter.vue:4
 msgctxt "hero.license-filter.label"
 msgid "I want something I can"
 msgstr ""
@@ -2196,10 +2109,6 @@ msgstr ""
 #: src/pages/index.vue:26
 msgctxt "hero.search.placeholder"
 msgid "Search for content"
-msgstr ""
-
-msgctxt "hero.search.button"
-msgid "Search"
 msgstr ""
 
 #: src/layouts/error.vue:18

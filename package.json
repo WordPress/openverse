@@ -30,7 +30,7 @@
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "format": "prettier --write .",
     "format:test": "prettier --check .",
-    "vue-i18n-extract": "vue-i18n-extract report -v './src/**/*.?(js|vue)' -l './src/locales/*.?(json)'",
+    "vue-i18n-check": "vue-i18n-extract report --vueFiles './src/**/*.?(js|vue)' --languageFiles './src/locales/*.?(json)'",
     "prepare": "husky install",
     "i18n:update-locales": "node src/locales/scripts/get-validated-locales",
     "i18n:get-translations": "pnpm i18n:create-locales-list && node src/locales/scripts/get-translations && pnpm i18n:update-locales",
