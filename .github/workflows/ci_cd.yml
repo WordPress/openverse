@@ -75,10 +75,9 @@ jobs:
         run: chmod -R 777 openverse_catalog/ tests/
 
       - name: Test
-        # Randomize test order to suss out any unseen dependencies
         run: |
           just build
-          just test --random-order
+          just test
 
   push:
     name: Publish Docker images

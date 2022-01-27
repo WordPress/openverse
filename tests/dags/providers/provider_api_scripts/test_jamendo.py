@@ -3,6 +3,7 @@ import logging
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts import jamendo
 
@@ -13,6 +14,14 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
     level=logging.DEBUG,
 )
+
+
+@pytest.fixture(autouse=True)
+def cleanse_url():
+    with patch("providers.provider_api_scripts.jamendo._cleanse_url") as mock_cleanse:
+        # Prevent calling out to Jamendo & speed up tests
+        mock_cleanse.side_effect = lambda x: x
+        yield
 
 
 def test_get_image_pages_returns_correctly_with_none_json():

@@ -1,13 +1,10 @@
 import json
 import logging
 import os
-import socket
 import time
 from collections import namedtuple
 from unittest import mock
-from urllib.parse import urlparse
 
-import boto3
 import psycopg2
 import pytest
 from airflow.models import TaskInstance
@@ -16,49 +13,40 @@ from common.loader import sql
 from common.loader.sql import TSV_COLUMNS, create_column_definitions
 from common.storage import columns as col
 from common.storage.db_columns import IMAGE_TABLE_COLUMNS
+from flaky import flaky
 from psycopg2.errors import InvalidTextRepresentation
 
 
-TEST_ID = "testing"
 POSTGRES_CONN_ID = os.getenv("TEST_CONN_ID")
 POSTGRES_TEST_URI = os.getenv("AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING")
-TEST_LOAD_TABLE = f"provider_data_image_{TEST_ID}"
-TEST_IMAGE_TABLE = f"image_{TEST_ID}"
 S3_LOCAL_ENDPOINT = os.getenv("S3_LOCAL_ENDPOINT")
-S3_TEST_BUCKET = f"cccatalog-storage-{TEST_ID}"
 ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
 SECRET_KEY = os.getenv("AWS_SECRET_KEY")
-S3_HOST = socket.gethostbyname(urlparse(S3_LOCAL_ENDPOINT).hostname)
 
 RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "test_resources")
-
-DROP_LOAD_TABLE_QUERY = f"DROP TABLE IF EXISTS {TEST_LOAD_TABLE} CASCADE;"
-DROP_IMAGE_TABLE_QUERY = f"DROP TABLE IF EXISTS {TEST_IMAGE_TABLE} CASCADE;"
 
 LOADING_TABLE_COLUMN_DEFINITIONS = create_column_definitions(
     TSV_COLUMNS[IMAGE], is_loading=True
 )
 
-CREATE_LOAD_TABLE_QUERY = f"""CREATE TABLE public.{TEST_LOAD_TABLE} (
+CREATE_LOAD_TABLE_QUERY = f"""CREATE TABLE public.{{}} (
   {LOADING_TABLE_COLUMN_DEFINITIONS}
 );"""
 
-UUID_FUNCTION_QUERY = 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;'
-
 IMAGE_TABLE_COLUMN_DEFINITIONS = create_column_definitions(IMAGE_TABLE_COLUMNS)
 
-CREATE_IMAGE_TABLE_QUERY = f"""CREATE TABLE public.{TEST_IMAGE_TABLE} (
+CREATE_IMAGE_TABLE_QUERY = f"""CREATE TABLE public.{{}} (
   {IMAGE_TABLE_COLUMN_DEFINITIONS}
 );"""
 
 UNIQUE_CONDITION_QUERY = (
-    f"CREATE UNIQUE INDEX {TEST_IMAGE_TABLE}_provider_fid_idx"
-    f" ON public.{TEST_IMAGE_TABLE}"
+    "CREATE UNIQUE INDEX {table}_provider_fid_idx"
+    " ON public.{table}"
     " USING btree (provider, md5(foreign_identifier));"
 )
 
-DROP_IMAGE_INDEX_QUERY = f"DROP INDEX IF EXISTS {TEST_IMAGE_TABLE}_provider_fid_idx;"
 
+PostgresRef = namedtuple("PostgresRef", ["cursor", "connection"])
 ti = mock.Mock(spec=TaskInstance)
 ti.xcom_pull.return_value = None
 
@@ -106,15 +94,20 @@ def create_query_values(
 
 
 @pytest.fixture
-def postgres():
-    Postgres = namedtuple("Postgres", ["cursor", "connection"])
+def load_table(identifier):
+    # Parallelized tests need to use distinct database tables
+    return f"provider_data_image_{identifier}"
+
+
+@pytest.fixture
+def postgres(load_table) -> PostgresRef:
     conn = psycopg2.connect(POSTGRES_TEST_URI)
     cur = conn.cursor()
-    drop_command = f"DROP TABLE IF EXISTS {TEST_LOAD_TABLE}"
+    drop_command = f"DROP TABLE IF EXISTS {load_table}"
     cur.execute(drop_command)
     conn.commit()
 
-    yield Postgres(cursor=cur, connection=conn)
+    yield PostgresRef(cursor=cur, connection=conn)
 
     cur.execute(drop_command)
     cur.close()
@@ -123,76 +116,45 @@ def postgres():
 
 
 @pytest.fixture
-def postgres_with_load_table():
-    Postgres = namedtuple("Postgres", ["cursor", "connection"])
+def postgres_with_load_table(postgres: PostgresRef, load_table) -> PostgresRef:
+    create_command = CREATE_LOAD_TABLE_QUERY.format(load_table)
+    postgres.cursor.execute(create_command)
+    postgres.connection.commit()
+
+    yield postgres
+
+
+@pytest.fixture
+def postgres_with_load_and_image_table(load_table, image_table):
     conn = psycopg2.connect(POSTGRES_TEST_URI)
     cur = conn.cursor()
-    drop_command = f"DROP TABLE IF EXISTS {TEST_LOAD_TABLE}"
-    cur.execute(drop_command)
-    conn.commit()
-    create_command = CREATE_LOAD_TABLE_QUERY
-    cur.execute(create_command)
+    drop_load_table_query = f"DROP TABLE IF EXISTS {load_table} CASCADE;"
+    drop_image_table_query = f"DROP TABLE IF EXISTS {image_table} CASCADE;"
+    drop_image_index_query = f"DROP INDEX IF EXISTS {image_table}_provider_fid_idx;"
+
+    logging.info(f"dropping load table: {drop_load_table_query}")
+    logging.info(f"dropping image table: {drop_image_table_query}")
+    cur.execute(drop_load_table_query)
+    cur.execute(drop_image_table_query)
+    cur.execute(drop_image_index_query)
+    cur.execute(CREATE_LOAD_TABLE_QUERY.format(load_table))
+    cur.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;')
+    cur.execute(CREATE_IMAGE_TABLE_QUERY.format(image_table))
+    cur.execute(UNIQUE_CONDITION_QUERY.format(table=image_table))
+
     conn.commit()
 
-    yield Postgres(cursor=cur, connection=conn)
+    yield PostgresRef(cursor=cur, connection=conn)
 
-    cur.execute(drop_command)
+    cur.execute(drop_load_table_query)
+    cur.execute(drop_image_table_query)
+    cur.execute(drop_image_index_query)
     cur.close()
     conn.commit()
     conn.close()
 
 
-@pytest.fixture
-def postgres_with_load_and_image_table():
-    Postgres = namedtuple("Postgres", ["cursor", "connection"])
-    conn = psycopg2.connect(POSTGRES_TEST_URI)
-    cur = conn.cursor()
-
-    logging.info(f"dropping load table: {DROP_LOAD_TABLE_QUERY}")
-    logging.info(f"dropping image table: {DROP_IMAGE_TABLE_QUERY}")
-    cur.execute(DROP_LOAD_TABLE_QUERY)
-    cur.execute(DROP_IMAGE_TABLE_QUERY)
-    cur.execute(DROP_IMAGE_INDEX_QUERY)
-    cur.execute(CREATE_LOAD_TABLE_QUERY)
-    cur.execute(UUID_FUNCTION_QUERY)
-    cur.execute(CREATE_IMAGE_TABLE_QUERY)
-    cur.execute(UNIQUE_CONDITION_QUERY)
-
-    conn.commit()
-
-    yield Postgres(cursor=cur, connection=conn)
-
-    cur.execute(DROP_LOAD_TABLE_QUERY)
-    cur.execute(DROP_IMAGE_TABLE_QUERY)
-    cur.execute(DROP_IMAGE_INDEX_QUERY)
-    cur.close()
-    conn.commit()
-    conn.close()
-
-
-@pytest.fixture
-def empty_s3_bucket():
-    bucket = boto3.resource(
-        "s3",
-        aws_access_key_id=ACCESS_KEY,
-        aws_secret_access_key=SECRET_KEY,
-        endpoint_url=S3_LOCAL_ENDPOINT,
-    ).Bucket(S3_TEST_BUCKET)
-
-    def _delete_all_objects():
-        key_list = [{"Key": obj.key} for obj in bucket.objects.all()]
-        if len(list(bucket.objects.all())) > 0:
-            bucket.delete_objects(Delete={"Objects": key_list})
-
-    if bucket.creation_date:
-        _delete_all_objects()
-    else:
-        bucket.create()
-    yield bucket
-    _delete_all_objects()
-
-
-def _load_local_tsv(tmpdir, bucket, tsv_file_name):
+def _load_local_tsv(tmpdir, bucket, tsv_file_name, identifier):
     """
     This wraps sql.load_local_data_to_intermediate_table so we can test it
     under various conditions.
@@ -205,47 +167,49 @@ def _load_local_tsv(tmpdir, bucket, tsv_file_name):
     path = tmpdir.join(test_tsv)
     path.write(f_data)
 
-    sql.load_local_data_to_intermediate_table(POSTGRES_CONN_ID, str(path), TEST_ID)
+    sql.load_local_data_to_intermediate_table(POSTGRES_CONN_ID, str(path), identifier)
 
 
-def _load_s3_tsv(tmpdir, bucket, tsv_file_name):
+def _load_s3_tsv(tmpdir, bucket, tsv_file_name, identifier):
     tsv_file_path = os.path.join(RESOURCES, tsv_file_name)
     key = "path/to/object/{tsv_file_name}"
     bucket.upload_file(tsv_file_path, key)
     sql.load_s3_data_to_intermediate_table(
-        POSTGRES_CONN_ID, S3_TEST_BUCKET, key, TEST_ID
+        POSTGRES_CONN_ID, bucket.name, key, identifier
     )
 
 
-def test_create_loading_table_creates_table(postgres):
+def test_create_loading_table_creates_table(postgres, load_table, identifier):
     postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
     sql.create_loading_table(postgres_conn_id, identifier, ti)
 
     check_query = (
-        f"SELECT EXISTS (" f"SELECT FROM pg_tables WHERE tablename='{load_table}');"
+        f"SELECT EXISTS (SELECT FROM pg_tables WHERE tablename='{load_table}');"
     )
     postgres.cursor.execute(check_query)
     check_result = postgres.cursor.fetchone()[0]
     assert check_result
 
 
-def test_create_loading_table_errors_if_run_twice_with_same_id(postgres):
+def test_create_loading_table_errors_if_run_twice_with_same_id(postgres, identifier):
     postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
     sql.create_loading_table(postgres_conn_id, identifier, ti)
     with pytest.raises(Exception):
         sql.create_loading_table(postgres_conn_id, identifier, ti)
 
 
+@flaky
 @pytest.mark.parametrize("load_function", [_load_local_tsv, _load_s3_tsv])
-@pytest.mark.allow_hosts([S3_HOST])
 def test_loaders_load_good_tsv(
-    postgres_with_load_table, tmpdir, empty_s3_bucket, load_function
+    postgres_with_load_table,
+    tmpdir,
+    empty_s3_bucket,
+    load_function,
+    load_table,
+    identifier,
 ):
-    load_function(tmpdir, empty_s3_bucket, "none_missing.tsv")
-    check_query = f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE};"
+    load_function(tmpdir, empty_s3_bucket, "none_missing.tsv", identifier)
+    check_query = f"SELECT COUNT (*) FROM {load_table};"
     postgres_with_load_table.cursor.execute(check_query)
     num_rows = postgres_with_load_table.cursor.fetchone()[0]
     assert num_rows == 10
@@ -253,10 +217,17 @@ def test_loaders_load_good_tsv(
 
 @pytest.mark.parametrize("load_function", [_load_local_tsv])
 def test_delete_less_than_max_malformed_rows(
-    postgres_with_load_table, tmpdir, empty_s3_bucket, load_function
+    postgres_with_load_table,
+    tmpdir,
+    empty_s3_bucket,
+    load_function,
+    load_table,
+    identifier,
 ):
-    load_function(tmpdir, empty_s3_bucket, "malformed_less_than_max_rows.tsv")
-    check_query = f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE};"
+    load_function(
+        tmpdir, empty_s3_bucket, "malformed_less_than_max_rows.tsv", identifier
+    )
+    check_query = f"SELECT COUNT (*) FROM {load_table};"
     postgres_with_load_table.cursor.execute(check_query)
     num_rows = postgres_with_load_table.cursor.fetchone()[0]
     assert num_rows == 6
@@ -264,10 +235,15 @@ def test_delete_less_than_max_malformed_rows(
 
 @pytest.mark.parametrize("load_function", [_load_local_tsv])
 def test_delete_max_malformed_rows(
-    postgres_with_load_table, tmpdir, empty_s3_bucket, load_function
+    postgres_with_load_table,
+    tmpdir,
+    empty_s3_bucket,
+    load_function,
+    load_table,
+    identifier,
 ):
-    load_function(tmpdir, empty_s3_bucket, "malformed_max_rows.tsv")
-    check_query = f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE};"
+    load_function(tmpdir, empty_s3_bucket, "malformed_max_rows.tsv", identifier)
+    check_query = f"SELECT COUNT (*) FROM {load_table};"
     postgres_with_load_table.cursor.execute(check_query)
     num_rows = postgres_with_load_table.cursor.fetchone()[0]
     assert num_rows == 3
@@ -275,22 +251,29 @@ def test_delete_max_malformed_rows(
 
 @pytest.mark.parametrize("load_function", [_load_local_tsv])
 def test_delete_more_than_max_malformed_rows(
-    postgres_with_load_table, tmpdir, empty_s3_bucket, load_function
+    postgres_with_load_table, tmpdir, empty_s3_bucket, load_function, identifier
 ):
     with pytest.raises(InvalidTextRepresentation):
-        load_function(tmpdir, empty_s3_bucket, "malformed_more_than_max_rows.tsv")
+        load_function(
+            tmpdir, empty_s3_bucket, "malformed_more_than_max_rows.tsv", identifier
+        )
 
 
+@flaky
 @pytest.mark.parametrize("load_function", [_load_local_tsv, _load_s3_tsv])
-@pytest.mark.allow_hosts([S3_HOST])
 def test_loaders_delete_null_url_rows(
-    postgres_with_load_table, tmpdir, empty_s3_bucket, load_function
+    postgres_with_load_table,
+    tmpdir,
+    empty_s3_bucket,
+    load_function,
+    load_table,
+    identifier,
 ):
-    load_function(tmpdir, empty_s3_bucket, "url_missing.tsv")
-    null_url_check = f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE} WHERE url IS NULL;"
+    load_function(tmpdir, empty_s3_bucket, "url_missing.tsv", identifier)
+    null_url_check = f"SELECT COUNT (*) FROM {load_table} WHERE url IS NULL;"
     postgres_with_load_table.cursor.execute(null_url_check)
     null_url_num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    remaining_row_count = f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE};"
+    remaining_row_count = f"SELECT COUNT (*) FROM {load_table};"
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -298,16 +281,21 @@ def test_loaders_delete_null_url_rows(
     assert remaining_rows == 2
 
 
+@flaky
 @pytest.mark.parametrize("load_function", [_load_local_tsv, _load_s3_tsv])
-@pytest.mark.allow_hosts([S3_HOST])
 def test_loaders_delete_null_license_rows(
-    postgres_with_load_table, tmpdir, empty_s3_bucket, load_function
+    postgres_with_load_table,
+    tmpdir,
+    empty_s3_bucket,
+    load_function,
+    load_table,
+    identifier,
 ):
-    load_function(tmpdir, empty_s3_bucket, "license_missing.tsv")
-    license_check = f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE} WHERE license IS NULL;"
+    load_function(tmpdir, empty_s3_bucket, "license_missing.tsv", identifier)
+    license_check = f"SELECT COUNT (*) FROM {load_table} WHERE license IS NULL;"
     postgres_with_load_table.cursor.execute(license_check)
     null_license_num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    remaining_row_count = f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE};"
+    remaining_row_count = f"SELECT COUNT (*) FROM {load_table};"
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -315,19 +303,25 @@ def test_loaders_delete_null_license_rows(
     assert remaining_rows == 2
 
 
+@flaky
 @pytest.mark.parametrize("load_function", [_load_local_tsv, _load_s3_tsv])
-@pytest.mark.allow_hosts([S3_HOST])
 def test_loaders_delete_null_foreign_landing_url_rows(
-    postgres_with_load_table, tmpdir, empty_s3_bucket, load_function
+    postgres_with_load_table,
+    tmpdir,
+    empty_s3_bucket,
+    load_function,
+    load_table,
+    identifier,
 ):
-    load_function(tmpdir, empty_s3_bucket, "foreign_landing_url_missing.tsv")
+    load_function(
+        tmpdir, empty_s3_bucket, "foreign_landing_url_missing.tsv", identifier
+    )
     foreign_landing_url_check = (
-        f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE} "
-        f"WHERE foreign_landing_url IS NULL;"
+        f"SELECT COUNT (*) FROM {load_table} " f"WHERE foreign_landing_url IS NULL;"
     )
     postgres_with_load_table.cursor.execute(foreign_landing_url_check)
     null_foreign_landing_url_num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    remaining_row_count = f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE};"
+    remaining_row_count = f"SELECT COUNT (*) FROM {load_table};"
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -336,17 +330,21 @@ def test_loaders_delete_null_foreign_landing_url_rows(
 
 
 @pytest.mark.parametrize("load_function", [_load_local_tsv, _load_s3_tsv])
-@pytest.mark.allow_hosts([S3_HOST])
 def test_data_loaders_delete_null_foreign_identifier_rows(
-    postgres_with_load_table, tmpdir, empty_s3_bucket, load_function
+    postgres_with_load_table,
+    tmpdir,
+    empty_s3_bucket,
+    load_function,
+    load_table,
+    identifier,
 ):
-    load_function(tmpdir, empty_s3_bucket, "foreign_identifier_missing.tsv")
+    load_function(tmpdir, empty_s3_bucket, "foreign_identifier_missing.tsv", identifier)
     foreign_identifier_check = (
-        f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE} " f"WHERE foreign_identifier IS NULL;"
+        f"SELECT COUNT (*) FROM {load_table} " f"WHERE foreign_identifier IS NULL;"
     )
     postgres_with_load_table.cursor.execute(foreign_identifier_check)
     null_foreign_identifier_num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    remaining_row_count = f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE};"
+    remaining_row_count = f"SELECT COUNT (*) FROM {load_table};"
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -355,18 +353,23 @@ def test_data_loaders_delete_null_foreign_identifier_rows(
 
 
 @pytest.mark.parametrize("load_function", [_load_local_tsv, _load_s3_tsv])
-@pytest.mark.allow_hosts([S3_HOST])
 def test_import_data_deletes_duplicate_foreign_identifier_rows(
-    postgres_with_load_table, tmpdir, empty_s3_bucket, load_function
+    postgres_with_load_table,
+    tmpdir,
+    empty_s3_bucket,
+    load_function,
+    load_table,
+    identifier,
 ):
-    load_function(tmpdir, empty_s3_bucket, "foreign_identifier_duplicate.tsv")
+    load_function(
+        tmpdir, empty_s3_bucket, "foreign_identifier_duplicate.tsv", identifier
+    )
     foreign_id_duplicate_check = (
-        f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE} "
-        f"WHERE foreign_identifier='135257';"
+        f"SELECT COUNT (*) FROM {load_table} " f"WHERE foreign_identifier='135257';"
     )
     postgres_with_load_table.cursor.execute(foreign_id_duplicate_check)
     foreign_id_duplicate_num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    remaining_row_count = f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE};"
+    remaining_row_count = f"SELECT COUNT (*) FROM {load_table};"
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -375,12 +378,9 @@ def test_import_data_deletes_duplicate_foreign_identifier_rows(
 
 
 def test_upsert_records_inserts_one_record_to_empty_image_table(
-    postgres_with_load_and_image_table, tmpdir
+    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
 ):
     postgres_conn_id = POSTGRES_CONN_ID
-    load_table = TEST_LOAD_TABLE
-    image_table = TEST_IMAGE_TABLE
-    identifier = TEST_ID
 
     FID = "a"
     LAND_URL = "https://images.com/a"
@@ -454,12 +454,9 @@ def test_upsert_records_inserts_one_record_to_empty_image_table(
 
 
 def test_upsert_records_inserts_two_records_to_image_table(
-    postgres_with_load_and_image_table, tmpdir
+    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
 ):
     postgres_conn_id = POSTGRES_CONN_ID
-    load_table = TEST_LOAD_TABLE
-    image_table = TEST_IMAGE_TABLE
-    identifier = TEST_ID
 
     FID_A = "a"
     FID_B = "b"
@@ -494,12 +491,9 @@ def test_upsert_records_inserts_two_records_to_image_table(
 
 
 def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
-    postgres_with_load_and_image_table, tmpdir
+    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
 ):
     postgres_conn_id = POSTGRES_CONN_ID
-    load_table = TEST_LOAD_TABLE
-    image_table = TEST_IMAGE_TABLE
-    identifier = TEST_ID
 
     FID = "a"
     LAND_URL = "https://images.com/a"
@@ -545,11 +539,10 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
     assert updated_last_synced > original_last_synced
 
 
-def test_upsert_records_replaces_data(postgres_with_load_and_image_table, tmpdir):
+def test_upsert_records_replaces_data(
+    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+):
     postgres_conn_id = POSTGRES_CONN_ID
-    load_table = TEST_LOAD_TABLE
-    image_table = TEST_IMAGE_TABLE
-    identifier = TEST_ID
 
     FID = "a"
     PROVIDER = "images_provider"
@@ -662,12 +655,9 @@ def test_upsert_records_replaces_data(postgres_with_load_and_image_table, tmpdir
 
 
 def test_upsert_records_does_not_replace_with_nulls(
-    postgres_with_load_and_image_table, tmpdir
+    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
 ):
     postgres_conn_id = POSTGRES_CONN_ID
-    load_table = TEST_LOAD_TABLE
-    image_table = TEST_IMAGE_TABLE
-    identifier = TEST_ID
 
     FID = "a"
     PROVIDER = "images_provider"
@@ -762,11 +752,10 @@ def test_upsert_records_does_not_replace_with_nulls(
     assert actual_row[height_idx] == HEIGHT_A
 
 
-def test_upsert_records_merges_meta_data(postgres_with_load_and_image_table, tmpdir):
+def test_upsert_records_merges_meta_data(
+    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+):
     postgres_conn_id = POSTGRES_CONN_ID
-    load_table = TEST_LOAD_TABLE
-    image_table = TEST_IMAGE_TABLE
-    identifier = TEST_ID
 
     FID = "a"
     PROVIDER = "images_provider"
@@ -821,12 +810,9 @@ def test_upsert_records_merges_meta_data(postgres_with_load_and_image_table, tmp
 
 
 def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
-    postgres_with_load_and_image_table, tmpdir
+    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
 ):
     postgres_conn_id = POSTGRES_CONN_ID
-    load_table = TEST_LOAD_TABLE
-    image_table = TEST_IMAGE_TABLE
-    identifier = TEST_ID
 
     FID = "a"
     PROVIDER = "images_provider"
@@ -882,11 +868,10 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
     assert actual_row[metadata_idx] == expected_meta_data
 
 
-def test_upsert_records_merges_tags(postgres_with_load_and_image_table, tmpdir):
+def test_upsert_records_merges_tags(
+    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+):
     postgres_conn_id = POSTGRES_CONN_ID
-    load_table = TEST_LOAD_TABLE
-    image_table = TEST_IMAGE_TABLE
-    identifier = TEST_ID
 
     FID = "a"
     PROVIDER = "images_provider"
@@ -954,12 +939,9 @@ def test_upsert_records_merges_tags(postgres_with_load_and_image_table, tmpdir):
 
 
 def test_upsert_records_does_not_replace_tags_with_null(
-    postgres_with_load_and_image_table, tmpdir
+    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
 ):
     postgres_conn_id = POSTGRES_CONN_ID
-    load_table = TEST_LOAD_TABLE
-    image_table = TEST_IMAGE_TABLE
-    identifier = TEST_ID
 
     FID = "a"
     PROVIDER = "images_provider"
@@ -1019,11 +1001,10 @@ def test_upsert_records_does_not_replace_tags_with_null(
     assert all([t in actual_tags for t in expect_tags])
 
 
-def test_upsert_records_replaces_null_tags(postgres_with_load_and_image_table, tmpdir):
+def test_upsert_records_replaces_null_tags(
+    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+):
     postgres_conn_id = POSTGRES_CONN_ID
-    load_table = TEST_LOAD_TABLE
-    image_table = TEST_IMAGE_TABLE
-    identifier = TEST_ID
 
     FID = "a"
     PROVIDER = "images_provider"
@@ -1083,10 +1064,8 @@ def test_upsert_records_replaces_null_tags(postgres_with_load_and_image_table, t
     assert all([t in actual_tags for t in expect_tags])
 
 
-def test_drop_load_table_drops_table(postgres_with_load_table):
+def test_drop_load_table_drops_table(postgres_with_load_table, load_table, identifier):
     postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
     sql.drop_load_table(postgres_conn_id, identifier, ti)
     check_query = (
         f"SELECT EXISTS (" f"SELECT FROM pg_tables WHERE tablename='{load_table}');"
@@ -1096,11 +1075,10 @@ def test_drop_load_table_drops_table(postgres_with_load_table):
     assert not check_result
 
 
-def test_image_expiration(postgres_with_load_and_image_table):
+def test_image_expiration(
+    postgres_with_load_and_image_table, load_table, image_table, identifier
+):
     postgres_conn_id = POSTGRES_CONN_ID
-    load_table = TEST_LOAD_TABLE
-    image_table = TEST_IMAGE_TABLE
-    identifier = TEST_ID
 
     FID_A = "a"
     FID_B = "b"

@@ -56,7 +56,8 @@ def test_get_audio_pages_returns_correctly_with_no_results():
 
 def test_get_audio_file_size_retries_and_does_not_raise(audio_data):
     expected_result = None
-    with patch("requests.head") as head_patch:
+    # Patch the sleep function so it doesn't take long
+    with patch("requests.head") as head_patch, patch("time.sleep"):
         head_patch.side_effect = SSLError("whoops")
         actual_result = freesound._extract_audio_data(audio_data)
 
