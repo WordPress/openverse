@@ -8,7 +8,7 @@ const ApiService = createApiService(baseUrl.replace('/v1', ''))
 
 const UsageDataService = {
   post(endpoint, params) {
-    return ApiService.post(`/analytics/${endpoint}`, params)
+    return ApiService.post(`analytics/${endpoint}`, params)
   },
 
   sendSearchQueryEvent({ query, sessionId }) {

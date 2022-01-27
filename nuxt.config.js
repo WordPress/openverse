@@ -3,6 +3,7 @@ import locales from './src/locales/scripts/valid-locales.json'
 import { VIEWPORTS } from './src/constants/screens'
 import { dev } from './src/utils/dev'
 import { env } from './src/utils/env'
+import { sentry } from './src/utils/sentry-config'
 
 /**
  * The default metadata for the site. Can be extended and/or overwritten per page. And even in components!
@@ -195,14 +196,7 @@ export default {
    * {@link https://github.com/nuxt-community/redirect-module#usage}
    */
   redirect: [{ from: '^/photos/(.*)$', to: '/image/$1', statusCode: 301 }],
-  sentry: {
-    dsn:
-      process.env.SENTRY_DSN ||
-      'https://53da8fbcebeb48a6bf614a212629df6b@o787041.ingest.sentry.io/5799642',
-    disabled: process.env.NODE_ENV === 'development',
-    environment: process.env.NODE_ENV,
-    lazy: true,
-  },
+  sentry,
   build: {
     postcss: {
       plugins: {
