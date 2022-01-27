@@ -9,6 +9,7 @@ from requests.exceptions import SSLError
 
 
 RESOURCES = Path(__file__).parent.resolve() / "resources/freesound"
+AUDIO_FILE_SIZE = 16359
 
 
 @pytest.fixture(autouse=True)
@@ -17,6 +18,15 @@ def freesound_module():
     freesound._get_set_info = lambda x: ("foo", x)
     yield
     freesound._get_set_info = old_get_set
+
+
+@pytest.fixture
+def file_size_patch():
+    with patch(
+        "providers.provider_api_scripts.freesound._get_audio_file_size"
+    ) as get_file_size_mock:
+        get_file_size_mock.return_value = AUDIO_FILE_SIZE
+        yield
 
 
 @pytest.fixture
@@ -67,7 +77,7 @@ def test_get_query_params_leaves_other_keys():
     assert len(actual_qp.keys()) == 3
 
 
-def test_get_items():
+def test_get_items(file_size_patch):
     with open(RESOURCES / "page.json") as f:
         first_response = json.load(f)
     with patch.object(freesound, "_get_batch_json", side_effect=[first_response, []]):
@@ -79,7 +89,9 @@ def test_get_items():
 
 
 @pytest.mark.parametrize("has_nones", [False, True])
-def test_process_item_batch_handles_example_batch(has_nones, audio_data):
+def test_process_item_batch_handles_example_batch(
+    has_nones, audio_data, file_size_patch
+):
     items_batch = [audio_data]
     if has_nones:
         items_batch = [None, None, audio_data, None]
@@ -104,7 +116,7 @@ def test_process_item_batch_handles_example_batch(has_nones, audio_data):
             "creator": "owly-bee",
             "creator_url": "https://freesound.org/people/owly-bee/",
             "duration": 608,
-            "filesize": 16359,
+            "filesize": AUDIO_FILE_SIZE,
             "filetype": "mp3",
             "foreign_identifier": 415362,
             "foreign_landing_url": "https://freesound.org/people/owly-bee/sounds/415362/",
@@ -174,7 +186,7 @@ def test_get_creator_data_returns_none_when_no_artist(audio_data):
     assert actual_creator_url is None
 
 
-def test_extract_audio_data_handles_example_dict(audio_data):
+def test_extract_audio_data_handles_example_dict(audio_data, file_size_patch):
     actual_audio_info = freesound._extract_audio_data(audio_data)
     expected_audio_info = {
         "alt_files": [
@@ -193,7 +205,7 @@ def test_extract_audio_data_handles_example_dict(audio_data):
         "creator": "owly-bee",
         "creator_url": "https://freesound.org/people/owly-bee/",
         "duration": 608,
-        "filesize": 16359,
+        "filesize": AUDIO_FILE_SIZE,
         "filetype": "mp3",
         "foreign_identifier": 415362,
         "foreign_landing_url": "https://freesound.org/people/owly-bee/sounds/415362/",
@@ -216,7 +228,7 @@ def test_extract_audio_data_handles_example_dict(audio_data):
     assert actual_audio_info == expected_audio_info
 
 
-def test_get_tags(audio_data):
+def test_get_tags(audio_data, file_size_patch):
     item_data = freesound._extract_audio_data(audio_data)
     actual_tags = item_data["raw_tags"]
     expected_tags = ["eh", "disinterest", "low", "uh", "voice", "uncaring"]
