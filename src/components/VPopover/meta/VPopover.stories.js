@@ -47,6 +47,25 @@ const SinglePopoverStory = (args, { argTypes }) => ({
 export const Default = SinglePopoverStory.bind({})
 Default.args = {}
 
+const ControlStory = (args, { argTypes }) => ({
+  props: Object.keys(argTypes),
+  template: `
+    <VPopover>
+      <template #trigger="{ visible, a11yProps }">
+        <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
+      </template>
+      <template #default="{ close }">
+        <div class="p-4">
+        <VButton @click="close">Close popover</VButton>
+        </div>
+      </template>
+    </VPopover>
+  `,
+})
+
+export const Control = ControlStory.bind({})
+Control.args = {}
+
 const TwoPopoverStory = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   template: `

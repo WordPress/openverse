@@ -30,17 +30,11 @@
       </p>
 
       <VPopover
-        ref="reportPopoverRef"
         :z-index="20"
         :aria-label="$t('photo-details.content-report.title')"
       >
         <template #trigger="{ a11yProps }">
-          <VButton
-            v-bind="a11yProps"
-            variant="plain"
-            class="mt-2"
-            @click="reportForm.toggleVisibility"
-          >
+          <VButton v-bind="a11yProps" variant="plain" class="mt-2">
             {{ $t('photo-details.content-report.title') }}
             <VIcon
               :icon-path="icons.flag"
@@ -48,13 +42,15 @@
             />
           </VButton>
         </template>
-        <VContentReportForm
-          :image="image"
-          :provider-name="providerName"
-          data-testid="content-report-form"
-          class="mt-2 text-left w-80 whitespace-normal"
-          @close-form="reportForm.close()"
-        />
+        <template #default="{ close }">
+          <VContentReportForm
+            :image="image"
+            :provider-name="providerName"
+            data-testid="content-report-form"
+            class="mt-2 text-left w-80 whitespace-normal"
+            @close-form="close"
+          />
+        </template>
       </VPopover>
     </div>
     <div
@@ -214,8 +210,6 @@ export default {
     const router = useRouter()
     const sketchFabfailure = ref(false)
     const activeTab = ref(0)
-    const isReportFormVisible = ref(false)
-    const reportPopoverRef = ref(null)
 
     const imgUrl = computed(() => {
       return isLoaded.value ? props.image.url : props.thumbnail
@@ -259,19 +253,6 @@ export default {
     }
     const setActiveTab = (tabIdx) => (activeTab.value = tabIdx)
 
-    const onCloseReportForm = () => {
-      isReportFormVisible.value = false
-      if (reportPopoverRef.value) {
-        reportPopoverRef.value?.close()
-      }
-    }
-    const toggleReportFormVisibility = () => {
-      if (isReportFormVisible.value && reportPopoverRef.value) {
-        reportPopoverRef.value?.close()
-      }
-      isReportFormVisible.value = !isReportFormVisible.value
-    }
-
     const sendEvent = (eventType) => {
       const eventData = {
         eventType,
@@ -290,7 +271,6 @@ export default {
       isLoaded,
       sketchFabUid,
       sketchFabfailure,
-      isReportFormVisible,
       goBackToSearchResults,
       linkClicked: {
         photoSource: onPhotoSourceLinkClicked,
@@ -299,10 +279,6 @@ export default {
       license: {
         url: licenseUrl.value,
         fullName: fullLicenseName.value,
-      },
-      reportForm: {
-        close: onCloseReportForm,
-        toggleVisibility: toggleReportFormVisibility,
       },
       icons: {
         chevronLeft,
@@ -315,7 +291,6 @@ export default {
       setActiveTab,
 
       providerName,
-      reportPopoverRef,
     }
   },
 }
