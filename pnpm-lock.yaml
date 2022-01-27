@@ -46,6 +46,7 @@ specifiers:
   filesize: ^8.0.2
   focus-trap: ^6.7.1
   focus-trap-vue: 1.1.1
+  focus-visible: ^5.2.0
   glob: ^7.1.6
   husky: ^7.0.1
   jest: ^26.6.3
@@ -63,6 +64,7 @@ specifiers:
   node-html-parser: ^5.1.0
   nuxt: ^2.15.4
   postcss: ^8.4.5
+  postcss-focus-visible: ^6.0.3
   prettier: ^2.2.1
   reakit-utils: ^0.15.2
   sass: ^1.34.0
@@ -102,6 +104,7 @@ dependencies:
   filesize: 8.0.6
   focus-trap: 6.7.1
   focus-trap-vue: 1.1.1_focus-trap@6.7.1
+  focus-visible: 5.2.0
   glob: 7.2.0
   js-cookie: 2.2.1
   lodash.clonedeep: 4.5.0
@@ -114,6 +117,7 @@ dependencies:
   lodash.throttle: 4.1.1
   node-html-parser: 5.1.0
   nuxt: 2.15.8_typescript@4.5.4
+  postcss-focus-visible: 6.0.3_postcss@8.4.5
   reakit-utils: 0.15.2
   seeded-rand: 2.0.1
   uuid: 8.3.2
@@ -6038,7 +6042,7 @@ packages:
       lru-cache: 4.1.5
       merge-source-map: 1.1.0
       postcss: 7.0.39
-      postcss-selector-parser: 6.0.7
+      postcss-selector-parser: 6.0.9
       source-map: 0.6.1
       vue-template-es2015-compiler: 1.9.1
     optionalDependencies:
@@ -9863,6 +9867,10 @@ packages:
     resolution: {integrity: sha512-a6czHbT9twVpy2RpkWQA9vIgwQgB9Nx1PIxNNUxQT4nugG/3QibwxO+tWTh9i+zSY2SFiX4pnYhTaFaQF/6ZAg==}
     dependencies:
       tabbable: 5.2.1
+    dev: false
+
+  /focus-visible/5.2.0:
+    resolution: {integrity: sha512-Rwix9pBtC1Nuy5wysTmKy+UjbDJpIfg8eHjw0rjZ1mX4GNLz1Bmd16uDpI3Gk1i70Fgcs8Csg2lPm8HULFg9DQ==}
     dev: false
 
   /follow-redirects/1.14.6:
@@ -13809,14 +13817,14 @@ packages:
     resolution: {integrity: sha512-clkFxk/9pcdb4Vkn0hAHq3YnxBQ2p0CGD1dy24jN+reBck+EWxMbxSUqN4Yj7t0w8csl87K6p0gxBe1utkJsYA==}
     dependencies:
       postcss: 7.0.39
-      postcss-selector-parser: 6.0.7
+      postcss-selector-parser: 6.0.9
     dev: false
 
   /postcss-calc/7.0.5:
     resolution: {integrity: sha512-1tKHutbGtLtEZF6PT4JSihCHfIVldU72mZ8SdZHIYriIZ9fh9k9aWSppaT8rHsyI3dX+KSR+W+Ix9BMY3AODrg==}
     dependencies:
       postcss: 7.0.39
-      postcss-selector-parser: 6.0.7
+      postcss-selector-parser: 6.0.9
       postcss-value-parser: 4.2.0
     dev: false
 
@@ -13967,6 +13975,16 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       postcss: 7.0.39
+    dev: false
+
+  /postcss-focus-visible/6.0.3_postcss@8.4.5:
+    resolution: {integrity: sha512-ozOsg+L1U8S+rxSHnJJiET6dNLyADcPHhEarhhtCI9DBLGOPG/2i4ddVoFch9LzrBgb8uDaaRI4nuid2OM82ZA==}
+    engines: {node: ^12 || ^14 || >=16}
+    peerDependencies:
+      postcss: ^8.3
+    dependencies:
+      postcss: 8.4.5
+      postcss-selector-parser: 6.0.9
     dev: false
 
   /postcss-focus-within/3.0.0:
@@ -14221,7 +14239,7 @@ packages:
     dependencies:
       icss-utils: 4.1.1
       postcss: 7.0.39
-      postcss-selector-parser: 6.0.7
+      postcss-selector-parser: 6.0.9
       postcss-value-parser: 4.2.0
 
   /postcss-modules-local-by-default/4.0.0_postcss@8.4.5:
@@ -14232,7 +14250,7 @@ packages:
     dependencies:
       icss-utils: 5.1.0_postcss@8.4.5
       postcss: 8.4.5
-      postcss-selector-parser: 6.0.7
+      postcss-selector-parser: 6.0.9
       postcss-value-parser: 4.2.0
 
   /postcss-modules-scope/2.2.0:
@@ -14240,7 +14258,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       postcss: 7.0.39
-      postcss-selector-parser: 6.0.7
+      postcss-selector-parser: 6.0.9
 
   /postcss-modules-scope/3.0.0_postcss@8.4.5:
     resolution: {integrity: sha512-hncihwFA2yPath8oZ15PZqvWGkWf+XUfQgUGamS4LqoP1anQLOsOJw0vr7J7IwLpoY9fatA2qiGUGmuZL0Iqlg==}
@@ -14249,7 +14267,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       postcss: 8.4.5
-      postcss-selector-parser: 6.0.7
+      postcss-selector-parser: 6.0.9
 
   /postcss-modules-values/3.0.0:
     resolution: {integrity: sha512-1//E5jCBrZ9DmRX+zCtmQtRSV6PV42Ix7Bzj9GbwJceduuf7IqP8MgeTXuRDHOWj2m0VzZD5+roFWDuU8RQjcg==}
@@ -14273,7 +14291,7 @@ packages:
       postcss: ^8.2.14
     dependencies:
       postcss: 8.4.5
-      postcss-selector-parser: 6.0.7
+      postcss-selector-parser: 6.0.9
     dev: true
 
   /postcss-nesting/7.0.1:
@@ -14513,6 +14531,14 @@ packages:
 
   /postcss-selector-parser/6.0.7:
     resolution: {integrity: sha512-U+b/Deoi4I/UmE6KOVPpnhS7I7AYdKbhGcat+qTQ27gycvaACvNEw11ba6RrkwVmDVRW7sigWgLj4/KbbJjeDA==}
+    engines: {node: '>=4'}
+    dependencies:
+      cssesc: 3.0.0
+      util-deprecate: 1.0.2
+    dev: true
+
+  /postcss-selector-parser/6.0.9:
+    resolution: {integrity: sha512-UO3SgnZOVTwu4kyLR22UQ1xZh086RyNZppb7lLAKBFK8a32ttG5i87Y/P3+2bRSjZNyJ1B7hfFNo273tKe9YxQ==}
     engines: {node: '>=4'}
     dependencies:
       cssesc: 3.0.0

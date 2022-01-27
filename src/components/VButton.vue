@@ -2,7 +2,7 @@
   <Component
     :is="as"
     :type="typeRef"
-    class="transition-colors"
+    class="transition-colors flex items-center rounded-sm justify-center transition-shadow duration-100 ease-linear disabled:opacity-70 no-underline appearance-none ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink"
     :class="[
       $style.button,
       $style[variant],
@@ -231,10 +231,6 @@ export default VButton
 </script>
 
 <style module>
-.button {
-  @apply flex items-center rounded-sm justify-center transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:outline-none no-underline appearance-none ring-offset-1;
-}
-
 .button[disabled='disabled'],
 .button[aria-disabled='true'] {
   @apply opacity-50;
