@@ -2,7 +2,7 @@
   <div
     v-if="visible"
     ref="popoverRef"
-    :class="$style.popover"
+    :class="[$style.popover, { [`z-${zIndex}`]: zIndex !== undefined }]"
     :aria-hidden="!visible"
     :tabindex="typeof $props.tabindex !== 'undefined' ? $props.tabindex : -1"
     v-on="$listeners"

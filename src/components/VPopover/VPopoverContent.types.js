@@ -39,6 +39,9 @@ export const propTypes = {
     default: 'bottom-end',
     validate: (v) => popoverPlacements.includes(v),
   },
+  zIndex: {
+    type: Number,
+  },
 }
 
 /** @typedef {import('@nuxtjs/composition-api').ExtractPropTypes<typeof propTypes>} Props */

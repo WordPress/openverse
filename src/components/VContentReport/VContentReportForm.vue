@@ -1,5 +1,5 @@
 <template>
-  <div id="content-report-form" class="p-4 arrow-popup">
+  <div id="content-report-form" class="p-4">
     <button
       :aria-label="$t('photo-details.aria.close-form')"
       class="button close-button is-text tiny float-right block bg-white"
