@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white border border-dark-charcoal/20 rounded-sm flex hover:bg-dark-charcoal hover:text-white overflow-hidden flex-col items-start py-4 ps-4 pe-12 w-full lg:flex-row lg:justify-between lg:items-center lg:p-6"
+    class="text-dark-charcoal bg-white border border-dark-charcoal/20 rounded-sm flex flex-col hover:bg-dark-charcoal hover:text-white overflow-hidden items-start py-4 ps-4 pe-12 w-full lg:flex-row lg:justify-between lg:items-center lg:p-6 focus:bg-white focus:border-tx focus:ring focus:ring-pink focus:outline-none focus:shadow-ring focus:text-black"
   >
     <div class="flex flex-col items-start lg:flex-row lg:items-center">
       <VIcon :icon-path="iconPath" />

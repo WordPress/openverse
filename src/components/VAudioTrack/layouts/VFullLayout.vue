@@ -21,7 +21,7 @@
           >
             <template #creator>
               <a
-                class="text-pink hover:text-pink p-px rounded-sm focus:outline-none focus:ring focus:ring-pink"
+                class="p-px rounded-sm focus:outline-none focus:ring focus:ring-pink"
                 :href="audio.creator_url"
                 >{{ audio.creator }}</a
               >

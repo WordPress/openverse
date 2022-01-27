@@ -8,7 +8,7 @@
         v-for="[key, item] in results"
         :key="key"
         :to="{ path: `/search/${key}`, query: $route.query }"
-        class="lg:col-span-2 focus:bg-white focus:border-tx focus:ring focus:ring-pink focus:outline-none focus:shadow-ring focus:text-black rounded-sm"
+        class="lg:col-span-2 hover:no-underline"
       >
         <VContentLink :results-count="item.count" :media-type="key" />
       </NuxtLink>
