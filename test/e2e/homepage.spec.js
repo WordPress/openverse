@@ -44,9 +44,7 @@ test('can search for all results from homepage', async ({ page }) => {
 
   await expect(page.locator('img')).toHaveCount(20)
 })
-test.skip('can search for images from homepage, and then load more results', async ({
-  page,
-}) => {
+test('can search for images from homepage', async ({ page }) => {
   await page.goto('/')
   await page.click('[aria-label="All content"]')
   await page.click('button[role="radio"]:has-text("Images")')
@@ -58,6 +56,4 @@ test.skip('can search for images from homepage, and then load more results', asy
   await expect(page).toHaveURL('search/image?q=cat')
 
   await expect(page.locator('img')).toHaveCount(20)
-  // await page.click('button:has-text("Load more")')
-  // await expect(page.locator('img')).toHaveCount(40)
 })

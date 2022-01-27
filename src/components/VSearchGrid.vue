@@ -27,7 +27,6 @@
 
 <script>
 import { computed } from '@nuxtjs/composition-api'
-import { resultsCount } from '~/composables/use-i18n-utilities'
 import { supportedContentTypes } from '~/constants/media'
 
 import VMetaSearchForm from '~/components/VMetaSearch/VMetaSearchForm.vue'
@@ -57,17 +56,6 @@ export default {
     },
   },
   setup(props) {
-    /**
-     * The translated string showing how many results were found for
-     * this media type.
-     *
-     * @returns {string}
-     */
-    const mediaCount = computed(() => {
-      if (!props.supported) return
-      return resultsCount(props.resultsCount, props.query.mediaType)
-    })
-
     const noresult = computed(() => {
       // noresult is hard-coded for search types that are not currently
       // supported by Openverse built-in search
@@ -86,7 +74,6 @@ export default {
     })
 
     return {
-      mediaCount,
       noresult,
       isSupported,
       metaSearchFormType,

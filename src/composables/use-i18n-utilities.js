@@ -1,24 +1,38 @@
 import { useContext } from '@nuxtjs/composition-api'
-import { ALL_MEDIA } from '~/constants/media'
 
 /**
- * Returns the localized text for the number of search results according to the
- * media type.
- *
- * @param {number} resultsCount
- * @param {string} mediaType
- * @returns {string}
+ * Not using dynamically-generated keys to ensure that
+ * correct line is shown in the 'po' locale files
  */
-export function resultsCount(resultsCount, mediaType = ALL_MEDIA) {
-  const { i18n } = useContext()
+const i18nKeys = {
+  noResult: 'browse-page.all-no-results',
+  result: 'browse-page.all-result-count',
+  more: 'browse-page.all-result-count-more',
+}
 
-  const countKey =
-    resultsCount === 0
-      ? 'no-results'
-      : resultsCount >= 10000
-      ? 'result-count-more'
-      : 'result-count'
-  const fullKey = `browse-page.${mediaType}-${countKey}`
-  const localeCount = resultsCount.toLocaleString(i18n.locale)
-  return i18n.tc(fullKey, resultsCount, { localeCount })
+/**
+ * Returns the localized text for the number of search results.
+ */
+export function useI18nResultsCount() {
+  const { i18n } = useContext()
+  /**
+   * @param {number} resultsCount
+   * @returns {string}
+   */
+  const getI18nCount = (resultsCount) => {
+    const countKey =
+      resultsCount === 0
+        ? 'noResult'
+        : resultsCount >= 10000
+        ? 'more'
+        : 'result'
+    const fullKey = i18nKeys[countKey]
+    const countLocale =
+      i18n.localeProperties?.dir === 'rtl' ? 'en' : i18n.locale
+    const localeCount = resultsCount.toLocaleString(countLocale)
+    return i18n.tc(fullKey, resultsCount, { localeCount })
+  }
+  return {
+    getI18nCount,
+  }
 }

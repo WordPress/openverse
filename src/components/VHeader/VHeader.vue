@@ -85,13 +85,14 @@ import {
   FETCH_MEDIA,
   UPDATE_QUERY,
 } from '~/constants/action-types'
-import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
+import { AUDIO, IMAGE } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
 import {
   useMatchSearchRoutes,
   useMatchHomeRoute,
 } from '~/composables/use-match-routes'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
+import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
 
 import closeIcon from '~/assets/icons/close.svg'
 import OpenverseLogoText from '~/assets/icons/openverse-logo-text.svg?inline'
@@ -101,23 +102,6 @@ import VHeaderFilter from '~/components/VHeader/VHeaderFilter.vue'
 import VLogoLoader from '~/components/VLogoLoader/VLogoLoader.vue'
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
 
-const i18nKeys = {
-  [ALL_MEDIA]: {
-    noResult: 'browse-page.all-no-results',
-    result: 'browse-page.all-result-count',
-    more: 'browse-page.all-result-count-more',
-  },
-  [AUDIO]: {
-    noResult: 'browse-page.audio-no-results',
-    result: 'browse-page.audio-result-count',
-    more: 'browse-page.audio-result-count-more',
-  },
-  [IMAGE]: {
-    noResult: 'browse-page.image-no-results',
-    result: 'browse-page.image-result-count',
-    more: 'browse-page.image-result-count-more',
-  },
-}
 const menus = {
   FILTERS: 'filters',
   CONTENT_SWITCHER: 'content-switcher',
@@ -180,30 +164,15 @@ const VHeader = defineComponent({
       return store.getters['media/fetchState'].isFetching
     })
 
-    /**
-     * Return a text representation of the result count.
-     * @param {number} count
-     * @returns {string}
-     */
-    const mediaCount = (count) => {
-      if (store.getters['media/unsupportedMediaType']) return ''
-
-      const countKey =
-        count === 0 ? 'noResult' : count >= 10000 ? 'more' : 'result'
-      const i18nKey = i18nKeys[store.state.search.searchType][countKey]
-      const localeCount = count.toLocaleString(i18n.locale)
-      return i18n.tc(i18nKey, count, { localeCount })
-    }
-
     /** @type {import('@nuxtjs/composition-api').ComputedRef<number>} */
     const resultsCount = computed(() => store.getters['media/resultCount'])
-
+    const { getI18nCount } = useI18nResultsCount()
     /**
      * Status is hidden below the medium breakpoint.
      * It shows Loading... or Number of results on bigger screens.
      * @returns {string}
      */
-    const setInitialStatus = () => {
+    const setStatus = () => {
       if (
         !isMinScreenMd.value ||
         !isSearchRoute.value ||
@@ -211,24 +180,12 @@ const VHeader = defineComponent({
       )
         return ''
       if (isFetching.value) return i18n.t('header.loading')
-      return mediaCount(resultsCount.value)
+      return getI18nCount(resultsCount.value)
     }
 
-    const searchStatus = ref(setInitialStatus())
+    const searchStatus = ref(setStatus())
 
-    watchEffect(() => {
-      if (isMinScreenMd.value) {
-        if (isFetching.value) {
-          searchStatus.value = i18n.t('header.loading')
-        } else if (!isSearchRoute.value) {
-          searchStatus.value = ''
-        } else {
-          searchStatus.value = mediaCount(resultsCount.value)
-        }
-      } else {
-        searchStatus.value = ''
-      }
-    })
+    watchEffect(() => setStatus())
 
     const localSearchTerm = ref(store.state.search.query.q)
     const searchTerm = computed({

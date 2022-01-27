@@ -25,14 +25,14 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex'
 import {
   FETCH_MEDIA,
   UPDATE_QUERY,
   SET_SEARCH_STATE_FROM_URL,
   UPDATE_SEARCH_TYPE,
 } from '~/constants/action-types'
-import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { ALL_MEDIA, supportedContentTypes } from '~/constants/media'
 import { MEDIA, SEARCH } from '~/constants/store-modules'
 import { queryStringToSearchType } from '~/utils/search-query-transform'
 
@@ -91,7 +91,7 @@ const BrowsePage = {
       return this.supported ? this.resultCount : 0 ?? 0
     },
     supported() {
-      return [IMAGE, AUDIO, ALL_MEDIA].includes(this.searchType)
+      return supportedContentTypes.includes(this.searchType)
     },
   },
   methods: {

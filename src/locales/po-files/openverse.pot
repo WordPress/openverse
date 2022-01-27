@@ -720,14 +720,6 @@ msgctxt "browse-page.all-no-results"
 msgid "No results"
 msgstr ""
 
-msgctxt "browse-page.audio-no-results"
-msgid "No audio results"
-msgstr ""
-
-msgctxt "browse-page.image-no-results"
-msgid "No image results"
-msgstr ""
-
 #. Do not translate words between ### ###.
 msgctxt "browse-page.all-result-count"
 msgid "###localeCount### result"
@@ -736,37 +728,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
-msgctxt "browse-page.audio-result-count"
-msgid "###localeCount### audio result"
-msgid_plural "###localeCount### audio results"
-msgstr[0] ""
-msgstr[1] ""
-
-#. Do not translate words between ### ###.
-msgctxt "browse-page.image-result-count"
-msgid "###localeCount### image result"
-msgid_plural "###localeCount### image results"
-msgstr[0] ""
-msgstr[1] ""
-
-#. Do not translate words between ### ###.
 msgctxt "browse-page.all-result-count-more"
 msgid "Over ###localeCount### results"
 msgid_plural "Over ###localeCount### results"
-msgstr[0] ""
-msgstr[1] ""
-
-#. Do not translate words between ### ###.
-msgctxt "browse-page.audio-result-count-more"
-msgid "Over ###localeCount### audio results"
-msgid_plural "Over ###localeCount### audio results"
-msgstr[0] ""
-msgstr[1] ""
-
-#. Do not translate words between ### ###.
-msgctxt "browse-page.image-result-count-more"
-msgid "Over ###localeCount### image results"
-msgid_plural "Over ###localeCount### image results"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -2007,7 +1971,7 @@ msgctxt "header.api-nav-item"
 msgid "API"
 msgstr ""
 
-#: src/components/VHeader/VHeader.vue:213
+#: src/components/VHeader/VHeader.vue:182
 msgctxt "header.loading"
 msgid "Loading..."
 msgstr ""

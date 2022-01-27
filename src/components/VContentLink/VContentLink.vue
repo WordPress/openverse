@@ -17,16 +17,17 @@
 
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
-import { resultsCount } from '~/composables/use-i18n-utilities'
-import {
-  AUDIO,
-  IMAGE,
-  supportedMediaTypes as mediaTypes,
-} from '~/constants/media'
+import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
+import { AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
 import VIcon from '~/components/VIcon/VIcon.vue'
 
 import audioIcon from '~/assets/icons/audio-wave.svg'
 import imageIcon from '~/assets/icons/image.svg'
+
+const iconMapping = {
+  [AUDIO]: audioIcon,
+  [IMAGE]: imageIcon,
+}
 
 export default defineComponent({
   name: 'VContentLink',
@@ -38,7 +39,7 @@ export default defineComponent({
     mediaType: {
       type: String,
       required: true,
-      validator: (val) => mediaTypes.includes(val),
+      validator: (val) => supportedMediaTypes.includes(val),
     },
     /**
      * The number of results that the search returned.
@@ -49,20 +50,11 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const iconMapping = {
-      [AUDIO]: audioIcon,
-      [IMAGE]: imageIcon,
-    }
     const iconPath = computed(() => iconMapping[props.mediaType])
-    const resultsCountLabel = computed(() => resultsCount(props.resultsCount))
+    const { getI18nCount } = useI18nResultsCount()
+    const resultsCountLabel = computed(() => getI18nCount(props.resultsCount))
 
     return { iconPath, imageIcon, resultsCountLabel }
   },
 })
 </script>
-
-<style scoped>
-button[aria-checked='true'] {
-  @apply bg-dark-charcoal text-white;
-}
-</style>
