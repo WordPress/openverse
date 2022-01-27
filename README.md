@@ -174,7 +174,7 @@ and some networking setup so that they can communicate. Note:
 The various services can be accessed using these links:
 
 - Airflow: `localhost:9090` (The default username and password are both `airflow`.)
-- Minio Console: `localhost:5001` (The default username and password are `test_key` and `test_secret`)
+- Minio Console: `localhost:5011` (The default username and password are `test_key` and `test_secret`)
 - Postgres: `localhost:5434` (using a database connector)
 
 At this stage, you can run the tests via:

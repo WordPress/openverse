@@ -19,8 +19,8 @@ services:
   s3:
     image: minio/minio:latest
     ports:
-      - "5000:5000"
-      - "5001:5001"
+      - "5010:5000"
+      - "5011:5001"
     env_file:
       - .env
     environment:
@@ -41,7 +41,7 @@ services:
     volumes:
       - minio:/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/minio/health/live"]
+      test: ["CMD", "curl", "-f", "http://localhost:5010/minio/health/live"]
       interval: 30s
       timeout: 20s
       retries: 3
