@@ -20,6 +20,15 @@
       <h2 class="text-4xl lg:text-6xl mt-auto lg:mt-6">
         {{ $t('hero.subtitle') }}
       </h2>
+      <div class="flex justify-start gap-4 mt-4 md:hidden">
+        <VContentTypeButton
+          v-for="type in supportedContentTypes"
+          :key="type"
+          :content-type="type"
+          :selected="type === contentType"
+          @select="setContentType"
+        />
+      </div>
       <VSearchBar
         v-model.trim="searchTerm"
         class="max-w-[40rem] mt-4 lg:mt-8"
@@ -105,19 +114,20 @@
 </template>
 
 <script>
-import { ref, useRouter, useStore, useContext } from '@nuxtjs/composition-api'
-
-import VContentSwitcherPopover from '~/components/VContentSwitcher/VContentSwitcherPopover.vue'
+import { ref, useContext, useRouter, useStore } from '@nuxtjs/composition-api'
 
 import { isMinScreen } from '~/composables/use-media-query'
 
-import { ALL_MEDIA } from '~/constants/media'
+import { ALL_MEDIA, supportedContentTypes } from '~/constants/media'
 import { MEDIA, SEARCH } from '~/constants/store-modules'
 import { FETCH_MEDIA, UPDATE_QUERY } from '~/constants/action-types'
 
 import imageInfo from '~/assets/homepage_images/image_info.json'
 
 import OpenverseLogo from '~/assets/logo.svg?inline'
+import VContentSwitcherPopover from '~/components/VContentSwitcher/VContentSwitcherPopover.vue'
+import VContentTypeButton from '~/components/VContentSwitcher/VContentTypeButton.vue'
+import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
 
 const HomePage = {
   name: 'home-page',
@@ -125,6 +135,8 @@ const HomePage = {
   components: {
     OpenverseLogo,
     VContentSwitcherPopover,
+    VContentTypeButton,
+    VSearchBar,
   },
   head: {
     meta: [
@@ -195,6 +207,7 @@ const HomePage = {
       contentSwitcher,
       contentType,
       setContentType,
+      supportedContentTypes,
 
       searchTerm,
       handleSearch,
