@@ -1,7 +1,7 @@
 <template>
   <VIconButton
     v-bind="$attrs"
-    size="search"
+    :size="`search-${size}`"
     class="search-button hover:text-white group-hover:text-white hover:bg-pink group-hover:bg-pink p-0.5px ps-1.5px focus:p-0 border md:border border-dark-charcoal-20 hover:border-pink group-hover:border-pink rounded-e-sm active:shadow-ring"
     :icon-props="{ iconPath: searchIcon }"
     :aria-label="$t('search.search')"
@@ -18,6 +18,13 @@ export default {
   name: 'VSearchButton',
   components: { VIconButton },
   inheritAttrs: false,
+  props: {
+    size: {
+      type: String,
+      required: true,
+      validator: (v) => ['small', 'medium', 'large', 'standalone'].includes(v),
+    },
+  },
   setup() {
     return { searchIcon }
   },

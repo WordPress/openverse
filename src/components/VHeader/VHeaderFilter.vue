@@ -1,5 +1,8 @@
 <template>
-  <div ref="nodeRef" class="flex justify-end items-stretch">
+  <div
+    ref="nodeRef"
+    class="flex justify-end items-stretch text-sr md:text-base"
+  >
     <VFilterButton
       v-show="isMinScreenMd || (!isMinScreenMd && !visibleRef)"
       ref="buttonRef"

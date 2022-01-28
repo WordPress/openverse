@@ -13,14 +13,12 @@
           @keydown="onKeyDown"
           @blur="onBlur"
         >
-          <div class="w-full flex justify-between h-20 px-4 py-6 shrink-0">
-            <NuxtLink
-              to="/"
-              class="rounded-sm ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink -ms-2 inline-flex items-center hover:bg-yellow"
-            >
-              <VLogoLoader />
-              <OpenverseLogoText class="-ml-1 mt-1" width="95" height="15" />
-            </NuxtLink>
+          <div class="w-full flex justify-between px-4 py-3 shrink-0">
+            <VLogoButton
+              :is-fetching="false"
+              :is-header-scrolled="false"
+              :is-search-route="true"
+            />
             <VButton
               size="disabled"
               variant="plain"
@@ -50,12 +48,11 @@ import { useDialogContent } from '~/composables/use-dialog-content'
 import { warn } from '~/utils/warn'
 
 import closeIcon from '~/assets/icons/close.svg'
-import OpenverseLogoText from '~/assets/icons/openverse-logo-text.svg?inline'
 
 import VTeleport from '~/components/VTeleport/VTeleport.vue'
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
-import VLogoLoader from '~/components/VLogoLoader/VLogoLoader.vue'
+import VLogoButton from '~/components/VHeader/VLogoButton.vue'
 
 /**
  * Renders the inner content of a modal and manages focus.
@@ -63,8 +60,7 @@ import VLogoLoader from '~/components/VLogoLoader/VLogoLoader.vue'
 const VMobileModalContent = defineComponent({
   name: 'VMobileModalContent',
   components: {
-    OpenverseLogoText,
-    VLogoLoader,
+    VLogoButton,
     VTeleport,
     VButton,
     VIcon,

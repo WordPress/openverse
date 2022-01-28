@@ -8,7 +8,7 @@
     aria-hidden="true"
     :data-prefers-reduced-motion="prefersReducedMotion"
     data-testid="logo-loader"
-    class="w-12 h-12 p-3 rounded inline-flex justify-center items-center"
+    class="w-10 h-10 md:w-12 md:h-12 p-3 rounded inline-flex justify-center items-center"
   >
     <path
       data-logo-part-1
@@ -46,10 +46,6 @@ import { propTypes } from './VLogoLoader.types'
 export default defineComponent({
   name: 'VLogoLoader',
   props: propTypes,
-  /**
-   * @param {import('./VLogoLoader.types').Props} props
-   * @param {import('@nuxtjs/composition-api').SetupContext} context
-   */
   setup() {
     const prefersReducedMotion = useReducedMotion()
 

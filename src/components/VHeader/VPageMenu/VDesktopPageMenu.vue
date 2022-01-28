@@ -1,5 +1,9 @@
 <template>
-  <VPopover class="flex mx-2 items-stretch" :label="$t('header.aria.menu')">
+  <VPopover
+    ref="pageMenuPopover"
+    class="flex items-stretch"
+    :label="$t('header.aria.menu')"
+  >
     <template #trigger="{ a11yProps }">
       <VPageMenuButton :a11y-props="a11yProps" />
     </template>

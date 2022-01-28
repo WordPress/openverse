@@ -8,6 +8,7 @@
       class="flex-grow search-field"
       :label-text="$t('hero.aria.search')"
       :connection-sides="['end']"
+      :size="size"
       field-id="search-bar"
       type="search"
       name="q"
@@ -17,7 +18,7 @@
       <!-- @slot Extra information such as loading message or result count goes here. -->
       <slot />
     </VInputField>
-    <VSearchButton type="submit" />
+    <VSearchButton type="submit" :size="size" />
   </form>
 </template>
 
@@ -46,6 +47,11 @@ const VSearchBar = defineComponent({
     value: {
       type: String,
       default: '',
+    },
+    size: {
+      type: String,
+      required: true,
+      validator: (v) => ['small', 'medium', 'large', 'standalone'].includes(v),
     },
   },
   emits: ['input', 'submit'],

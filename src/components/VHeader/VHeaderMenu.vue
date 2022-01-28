@@ -9,7 +9,7 @@ import {
 } from '@nuxtjs/composition-api'
 import useContentType from '~/composables/use-content-type'
 
-import VMobileContentSwitcher from '~/components/VContentSwitcher/VMobileMenuModal.vue'
+import VMobileMenuModal from '~/components/VContentSwitcher/VMobileMenuModal.vue'
 import VContentSwitcherPopover from '~/components/VContentSwitcher/VContentSwitcherPopover.vue'
 import VDesktopPageMenu from '~/components/VHeader/VPageMenu/VDesktopPageMenu.vue'
 import VMobilePageMenu from '~/components/VHeader/VPageMenu/VMobilePageMenu.vue'
@@ -21,7 +21,7 @@ import isEmpty from 'lodash.isempty'
 export default {
   name: 'VHeaderMenu',
   components: {
-    VMobileContentSwitcher,
+    VMobileMenuModal,
     VContentSwitcherPopover,
     VDesktopPageMenu,
     VMobilePageMenu,
@@ -87,7 +87,7 @@ export default {
         ? h(VDesktopPageMenu)
         : h(VMobilePageMenu)
     } else if (this.isMinScreenMd && this.isMounted) {
-      return h('div', { class: 'flex flex-grow justify-between' }, [
+      return h('div', { class: 'flex flex-grow justify-between gap-x-2' }, [
         h(VDesktopPageMenu),
         h(VContentSwitcherPopover, {
           props: { activeItem: this.content.activeType.value },
@@ -96,7 +96,7 @@ export default {
         }),
       ])
     } else {
-      return h(VMobileContentSwitcher, {
+      return h(VMobileMenuModal, {
         ref: 'menuModalRef',
         props: { activeItem: this.content.activeType.value },
         on: {

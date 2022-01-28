@@ -1,6 +1,6 @@
 <template>
   <button
-    class="icon-button flex items-center justify-center border-1.5 focus:border-pink focus:outline-none focus:shadow-ring active:shadow-ring"
+    class="icon-button flex flex-shrink-0 items-center justify-center border-1.5 focus:border-pink focus:outline-none focus:shadow-ring active:shadow-ring"
     :class="[...buttonSizeClasses]"
     :type="type"
     v-on="$listeners"
@@ -30,7 +30,16 @@ export default {
       type: String,
       default: 'medium',
       validator: (val) =>
-        ['tiny', 'small', 'search', 'medium', 'large'].includes(val),
+        [
+          'tiny',
+          'small',
+          'search-small',
+          'search-medium',
+          'search-large',
+          'search-standalone',
+          'medium',
+          'large',
+        ].includes(val),
     },
     /**
      * props to pass down to the `VIcon` component nested inside the button; See
@@ -46,7 +55,10 @@ export default {
         ({
           tiny: ['w-6', 'h-6'],
           small: ['w-10', 'h-10'],
-          search: ['w-12', 'h-12'],
+          'search-small': ['w-10', 'md:w-12', 'h-10', 'md:h-12'],
+          'search-medium': ['w-12', 'h-12'],
+          'search-large': ['w-14', 'h-14'],
+          'search-standalone': ['w-14', 'md:w-[69px]', 'h-14', 'md:h-[69px]'],
           medium: ['w-14', 'h-14'],
           large: ['w-20', 'h-20'],
         }[props.size])
