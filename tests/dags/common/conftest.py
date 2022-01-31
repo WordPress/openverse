@@ -4,6 +4,13 @@ import pytest
 from tests.dags.common.loader.test_s3 import ACCESS_KEY, S3_LOCAL_ENDPOINT, SECRET_KEY
 
 
+def _delete_bucket(bucket):
+    key_list = [{"Key": obj.key} for obj in bucket.objects.all()]
+    if len(list(bucket.objects.all())) > 0:
+        bucket.delete_objects(Delete={"Objects": key_list})
+        bucket.delete()
+
+
 @pytest.fixture
 def empty_s3_bucket(request):
     # Bucket names can't be longer than 63 characters or have strange characters
@@ -16,17 +23,11 @@ def empty_s3_bucket(request):
         endpoint_url=S3_LOCAL_ENDPOINT,
     ).Bucket(bucket_name)
 
-    def _delete_all_objects():
-        key_list = [{"Key": obj.key} for obj in bucket.objects.all()]
-        if len(list(bucket.objects.all())) > 0:
-            bucket.delete_objects(Delete={"Objects": key_list})
-
     if bucket.creation_date:
-        _delete_all_objects()
-    else:
-        bucket.create()
+        _delete_bucket(bucket)
+    bucket.create()
     yield bucket
-    _delete_all_objects()
+    _delete_bucket(bucket)
 
 
 @pytest.fixture
