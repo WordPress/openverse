@@ -1,6 +1,6 @@
 <template>
   <main class="bg-yellow h-screen relative page-404 overflow-x-hidden">
-    <NuxtLink to="/" class="relative z-10">
+    <NuxtLink to="/" class="relative z-10 text-dark-charcoal">
       <span class="sr-only">{{ $t('404.link-title') }}</span>
       <OpenverseLogo
         aria-hidden="true"
