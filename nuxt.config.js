@@ -207,9 +207,7 @@ export default {
     },
     // Enables use of IDE debuggers
     extend(config, ctx) {
-      if (ctx.isDev) {
-        config.devtool = ctx.isClient ? 'source-map' : 'inline-source-map'
-      }
+      config.devtool = ctx.isClient ? 'source-map' : 'inline-source-map'
     },
   },
   storybook: {
