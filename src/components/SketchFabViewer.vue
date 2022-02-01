@@ -74,6 +74,7 @@ export default {
 }
 .is-16by9 {
   padding-top: 56.25%;
+  max-width: 1000px;
 }
 .has-ratio {
   position: absolute;

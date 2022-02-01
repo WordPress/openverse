@@ -1,6 +1,6 @@
 <template>
   <div v-if="license">
-    <ul class="my-2">
+    <ul>
       <li
         v-for="(li, index) in splitLicenses"
         :key="index"
@@ -8,12 +8,12 @@
       >
         <i
           aria-hidden="true"
-          class="icon me-2 text-black bg-white"
+          class="icon me-2 text-black text-3xl bg-white"
           :class="`cc-${getLicenseIcon(li)}`"
           :title="`${li.toUpperCase()}`"
         />
         <span class="sr-only">{{ li.toUpperCase() }}</span>
-        <p class="leading-5">
+        <p class="text-sm">
           {{ $t(`browse-page.license-description.${li}`) }}
         </p>
       </li>
@@ -53,9 +53,3 @@ const LicenseElements = {
 
 export default LicenseElements
 </script>
-
-<style lang="scss" scoped>
-i {
-  font-size: 1.43rem;
-}
-</style>

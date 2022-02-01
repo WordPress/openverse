@@ -1,17 +1,17 @@
 <template>
-  <button
+  <VButton
     :id="id"
     type="button"
-    class="button tiny donate"
+    variant="secondary"
     :data-clipboard-target="el"
   >
     <span v-if="!success">
-      {{ $t('photo-details.copy.copy') }}
+      {{ $t('media-details.reuse.copy-license.copy-text') }}
     </span>
     <span v-else>
-      {{ $t('photo-details.copy.copied') }}
+      {{ $t('media-details.reuse.copy-license.copied') }}
     </span>
-  </button>
+  </VButton>
 </template>
 
 <script>
@@ -59,8 +59,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.button {
-  @apply py-0 px-3 mt-4;
-  font-size: 15px;
+button {
+  @apply py-2 px-3 text-sr;
 }
 </style>

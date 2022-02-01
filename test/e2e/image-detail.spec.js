@@ -18,7 +18,7 @@ test('shows the author and title of the image', async ({ page }) => {
 
 test('shows the main image with its title as alt text', async ({ page }) => {
   const imgTitle = await page.locator('h1').innerText()
-  const img = page.locator('img[class="photo_image"]')
+  const img = page.locator('id=main-image')
   await expect(img).toBeVisible()
   await expect(img).toHaveAttribute('alt', imgTitle)
 })

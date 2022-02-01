@@ -1,17 +1,17 @@
 <template>
   <div class="media-attribution">
-    <h5 class="b-header mb-6">
+    <h5 class="mb-4 text-base md:text-2xl font-semibold">
       {{ headerText }}
     </h5>
     <template v-if="isLicense">
       <i18n
-        path="media-details.reuse.attribution.main"
+        path="media-details.reuse.attribution"
         tag="span"
-        class="block"
+        class="block text-sm md:text-base"
       >
         <template #link>
           <a
-            class="uppercase"
+            class="uppercase text-pink"
             :href="licenseUrl"
             target="_blank"
             rel="noopener"
@@ -20,7 +20,7 @@
           </a>
         </template>
       </i18n>
-      <LicenseElements :license="license" />
+      <LicenseElements :license="license" class="md:py-4" />
       <i18n
         v-if="!isLicense"
         path="media-details.reuse.license.content"
@@ -33,14 +33,14 @@
             :href="licenseUrl"
             target="_blank"
             rel="noopener"
+            class="text-pink"
+            >{{ $t('media-details.reuse.license.link') }}</a
           >
-            {{ $t('media-details.reuse.license.link') }}
-          </a>
         </template>
       </i18n>
     </template>
     <template v-else>
-      <LicenseElements :license="license" />
+      <LicenseElements :license="license" class="md:py-4" />
       <i18n
         path="media-details.reuse.tool.content"
         tag="span"
@@ -52,9 +52,9 @@
             :href="licenseUrl"
             target="_blank"
             rel="noopener"
+            class="text-pink"
+            >{{ $t('media-details.reuse.tool.link') }}</a
           >
-            {{ $t('media-details.reuse.tool.link') }}
-          </a>
         </template>
       </i18n>
     </template>
@@ -67,9 +67,7 @@ import LicenseElements from '~/components/LicenseElements.vue'
 
 export default {
   name: 'MediaLicense',
-  components: {
-    LicenseElements,
-  },
+  components: { LicenseElements },
   props: {
     fullLicenseName: String,
     license: String,

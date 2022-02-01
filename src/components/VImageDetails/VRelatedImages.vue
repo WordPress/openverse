@@ -1,11 +1,9 @@
 <template>
-  <aside
-    :aria-label="$t('photo-details.aria.related')"
-    class="m-6 md:mx-14 md:mb-14 photo_related-images"
-  >
-    <h3 class="text-3xl">
-      {{ $t('photo-details.related-images') }}
+  <aside>
+    <h3 class="text-2xl md:text-3xl mb-6">
+      {{ $t('image-details.related-images') }}
     </h3>
+    <!-- TODO: use a image grid with correct margins and items gaps -->
     <ImageGrid
       :images="images"
       :can-load-more="false"
@@ -21,10 +19,10 @@
 import { ref } from '@nuxtjs/composition-api'
 import useRelated from '~/composables/use-related'
 import { IMAGE } from '~/constants/media'
-import ImageGrid from '~/components/ImageGrid/ImageGrid'
+import ImageGrid from '~/components/ImageGrid/ImageGrid.vue'
 
 export default {
-  name: 'RelatedImages',
+  name: 'VRelatedImages',
   components: { ImageGrid },
   props: {
     imageId: {
@@ -33,13 +31,6 @@ export default {
     },
     service: {},
   },
-  /**
-   * Fetches related images on `imageId` change
-   * @param {object} props
-   * @param {string} props.imageId
-   * @param {any} props.service
-   * @return {{ images: Ref<ImageDetail[]> }}
-   */
   setup(props) {
     const mainImageId = ref(props.imageId)
     const relatedOptions = {
@@ -50,6 +41,9 @@ export default {
     if (props.service) {
       relatedOptions.service = props.service
     }
+    /**
+     * Fetches related images on `imageId` change.
+     */
     const { media: images } = useRelated(relatedOptions)
 
     return { images }

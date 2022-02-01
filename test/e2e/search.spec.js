@@ -7,6 +7,7 @@
  * On error: shows error message
  */
 const { expect, test } = require('@playwright/test')
+
 test.beforeEach(async ({ context }) => {
   // Block any image or audio (jamendo.com) requests for each test in this file.
   await context.route(/\.(png|jpeg|jpg|svg)$/, (route) => route.abort())
@@ -51,6 +52,7 @@ test('navigates to the image detail page correctly', async ({ page }) => {
 
   await page.locator('figure a').first().click()
   // Until the image is loaded, the heading is 'Image' instead of the actual title
+  await page.locator('#main-image').waitFor()
 
   const headingText = await page.locator('h1').textContent()
   expect(headingText.trim().toLowerCase()).toEqual(imgTitle.toLowerCase())

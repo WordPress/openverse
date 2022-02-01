@@ -15,12 +15,12 @@ describe('CopyButton', () => {
       el: '#foo',
       id: 'foo',
     }
-    options = { propsData: props }
+    options = { propsData: props, stubs: ['VButton'] }
   })
 
   it('should render correct contents', () => {
     const wrapper = render(CopyButton, options)
-    expect(wrapper.find('button').vm).toBeDefined()
+    expect(wrapper.find('button')).toBeDefined()
   })
 
   it('data.success should be false by default', () => {
