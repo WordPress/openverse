@@ -141,6 +141,9 @@ groups:
       - name: postgres
         description: Requires familiarity with PostgreSQL
         emoji: "💾"
+      - name: css
+        description: Requires familiarity with CSS
+        emoji: "🎨"
 
   - name: friendliness
     color: "7f0799"
