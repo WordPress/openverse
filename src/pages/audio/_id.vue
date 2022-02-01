@@ -75,7 +75,10 @@ const AudioDetailPage = {
   },
   beforeRouteEnter(to, from, nextPage) {
     nextPage((_this) => {
-      if (from.path === '/search/' || from.path === '/search/audio') {
+      if (
+        from.name === _this.localeRoute({ path: '/search/' }).name ||
+        from.name === _this.localeRoute({ path: '/search/audio' }).name
+      ) {
         _this.shouldShowBreadcrumb = true
         _this.breadCrumbURL = from.fullPath
       }

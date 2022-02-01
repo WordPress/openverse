@@ -157,10 +157,12 @@ const HomePage = {
       images: setItem.images.map((imageItem) => ({
         ...imageItem,
         src: require(`~/assets/homepage_images/${setItem.prefix}-${imageItem.index}.jpg`),
-        url: router.resolve({
-          name: 'image-id',
-          params: { id: imageItem.identifier },
-        }).href,
+        url: router.resolve(
+          app.localePath({
+            name: 'image-id',
+            params: { id: imageItem.identifier },
+          })
+        ).href,
       })),
     }))
 
