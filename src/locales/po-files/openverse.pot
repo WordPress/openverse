@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-01-26T10:18:21+00:00\n"
+"POT-Creation-Date: 2022-01-28T12:35:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -88,7 +88,7 @@ msgctxt "migration-notice.read"
 msgid "Read more"
 msgstr ""
 
-#: src/components/DropdownButton.vue:82
+#: src/components/DropdownButton.vue:83
 msgctxt "dropdown-button.aria.arrow-label"
 msgid "Dropdown"
 msgstr ""
@@ -242,10 +242,12 @@ msgid "Audio seek bar"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VWaveform.vue:554
+#: src/components/VAudioTrack/VWaveform.vue:570
 msgctxt "waveform.current-time"
-msgid "###time### seconds"
-msgstr ""
+msgid "###time### second"
+msgid_plural "###time### seconds"
+msgstr[0] ""
+msgstr[1] ""
 
 msgctxt "browsers.chrome"
 msgid "Chrome"
@@ -362,12 +364,12 @@ msgid "Back to search results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/ImageDetails/VPhotoDetails.vue:57
+#: src/components/ImageDetails/VPhotoDetails.vue:63
 msgctxt "photo-details.creator"
 msgid "by ###name###"
 msgstr ""
 
-#: src/components/ImageDetails/VPhotoDetails.vue:144
+#: src/components/ImageDetails/VPhotoDetails.vue:150
 msgctxt "photo-details.weblink"
 msgid "Go to image's website"
 msgstr ""
@@ -392,7 +394,7 @@ msgctxt "photo-details.aria.dmca"
 msgid "dmca form"
 msgstr ""
 
-#: src/components/ImageDetails/VPhotoDetails.vue:52
+#: src/components/ImageDetails/VPhotoDetails.vue:58
 msgctxt "photo-details.aria.details"
 msgid "image details"
 msgstr ""
@@ -414,7 +416,7 @@ msgid "###provider### form"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/ImageDetails/VPhotoDetails.vue:67
+#: src/components/ImageDetails/VPhotoDetails.vue:73
 msgctxt "photo-details.aria.creator-url"
 msgid "author ###creator###"
 msgstr ""
@@ -427,7 +429,7 @@ msgctxt "photo-details.aria.attribution.tool"
 msgid "read more about the tool"
 msgstr ""
 
-#: src/components/ImageDetails/VPhotoDetails.vue:38
+#: src/components/ImageDetails/VPhotoDetails.vue:34
 msgctxt "photo-details.content-report.title"
 msgid "Report this content"
 msgstr ""
@@ -536,7 +538,7 @@ msgctxt "photo-details.survey.answer"
 msgid "by answering a few questions."
 msgstr ""
 
-#: src/components/ImageDetails/VPhotoDetails.vue:100
+#: src/components/ImageDetails/VPhotoDetails.vue:106
 msgctxt "photo-details.information.title"
 msgid "Information"
 msgstr ""
@@ -575,7 +577,7 @@ msgctxt "photo-details.information.pixels"
 msgid "pixels"
 msgstr ""
 
-#: src/components/ImageDetails/VPhotoDetails.vue:89
+#: src/components/ImageDetails/VPhotoDetails.vue:95
 msgctxt "photo-details.reuse.title"
 msgid "Reuse"
 msgstr ""
@@ -729,7 +731,7 @@ msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "browse-page.all-result-count-more"
-msgid "Over ###localeCount### results"
+msgid "Over###localeCount### result"
 msgid_plural "Over ###localeCount### results"
 msgstr[0] ""
 msgstr[1] ""
@@ -1984,8 +1986,10 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/VHeader/VFilterButton.vue:78
 msgctxt "header.filter-button.with-count"
-msgid "###count### Filter | ###count### Filters"
-msgstr ""
+msgid "###count### Filter"
+msgid_plural "###count### Filters"
+msgstr[0] ""
+msgstr[1] ""
 
 msgctxt "header.notification.text"
 msgid "{example_notification_text}"
@@ -2003,7 +2007,7 @@ msgctxt "header.aria.primary"
 msgid "primary"
 msgstr ""
 
-#: src/components/VHeader/VPageMenu/VDesktopPageMenu.vue:5
+#: src/components/VHeader/VPageMenu/VDesktopPageMenu.vue:2
 msgctxt "header.aria.menu"
 msgid "menu"
 msgstr ""

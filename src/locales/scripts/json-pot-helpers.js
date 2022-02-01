@@ -59,14 +59,13 @@ const getRefComment = (keyPath) => {
 }
 
 const escapeQuotes = (str) => str.replace(/"/g, '\\"')
-const pluralizedKeys = [
-  'all-result-count',
-  'audio-result-count',
-  'image-result-count',
-  'all-result-count-more',
-  'audio-result-count-more',
-  'image-result-count-more',
-]
+
+/**
+ * String values that need to be pluralized contain {count},
+ * {time} or {localeCount},
+ * and a pipe symbol.
+ */
+const pluralizedRegex = new RegExp(/(count|time)/i)
 
 const pot_creation_date = () => {
   const today = new Date()
@@ -98,18 +97,8 @@ function potTime(json) {
   let potFileString = ''
   const jsonKeys = getAllPaths(json)
   jsonKeys.forEach((key) => {
-    const parts = key.split('.')
-    const keyName = parts[parts.length - 1]
     const value = getKeyValue(key, json)
-    if (!pluralizedKeys.includes(keyName)) {
-      potFileString = `${potFileString}
-${
-  checkStringForVars(value) ? `\n#. ${checkStringForVars(value)}` : ''
-}${getRefComment(key)}
-msgctxt "${key}"
-msgid "${processValue(value)}"
-msgstr ""`
-    } else {
+    if (value.indexOf('|') > -1 && pluralizedRegex.test(value)) {
       const pluralizedValues = value.split('|')
       if (pluralizedValues.length === 1) {
         pluralizedValues.push(pluralizedValues[0])
@@ -123,6 +112,14 @@ msgid "${processValue(pluralizedValues[0])}"
 msgid_plural "${processValue(pluralizedValues[1])}"
 msgstr[0] ""
 msgstr[1] ""`
+    } else {
+      potFileString = `${potFileString}
+${
+  checkStringForVars(value) ? `\n#. ${checkStringForVars(value)}` : ''
+}${getRefComment(key)}
+msgctxt "${key}"
+msgid "${processValue(value)}"
+msgstr ""`
     }
   })
   return potFileString

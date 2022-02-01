@@ -5,7 +5,7 @@
 const { writeFile } = require('fs/promises')
 const os = require('os')
 const axios = require('axios')
-const ngxJsonToJson = require('./ngx-json-to-json')
+const jed1xJsonToJson = require('./jed1x-json-to-json')
 const localeJSON = require('./wp-locales.json')
 
 /**
@@ -35,8 +35,8 @@ const makeTranslationUrl =
  * fetch a json translation from GlotPress
  * @param {string} locale
  */
-const fetchNgxTranslation = (locale) =>
-  axios.get(makeTranslationUrl('ngx')(locale)).then((res) => res.data)
+const fetchJed1xTranslation = (locale) =>
+  axios.get(makeTranslationUrl('jed1x')(locale)).then((res) => res.data)
 
 const replacePlaceholders = (json) => {
   if (json === null) {
@@ -86,8 +86,8 @@ const isEmpty = (obj) => Object.values(obj).every((x) => x === null)
  *
  * @param {string[]} locales
  */
-const fetchAndConvertNGXTranslations = (locales) => {
-  return Promise.allSettled(locales.map(fetchNgxTranslation))
+const fetchAndConvertJed1xTranslations = (locales) => {
+  return Promise.allSettled(locales.map(fetchJed1xTranslation))
     .then((res) => {
       let successfulTranslations = []
       res.forEach(({ status, value }, index) => {
@@ -99,14 +99,14 @@ const fetchAndConvertNGXTranslations = (locales) => {
     })
     .then((res) => {
       Object.keys(res).forEach((key) => {
-        res[key] = ngxJsonToJson(res[key])
+        res[key] = jed1xJsonToJson(res[key])
       })
       return res
     })
     .then(writeLocaleFiles)
 }
 
-fetchAndConvertNGXTranslations(Object.values(localeJSON).map((i) => i.slug))
+fetchAndConvertJed1xTranslations(Object.values(localeJSON).map((i) => i.slug))
   .then((res) => {
     console.log(`Successfully saved ${res.length} translations.`)
   })

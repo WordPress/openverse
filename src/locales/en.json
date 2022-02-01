@@ -61,7 +61,7 @@
     "loading": "Loading...",
     "filter-button": {
       "simple": "Filters",
-      "with-count": "{count} Filter | {count} Filters"
+      "with-count": "{count} Filter|{count} Filters"
     }
   },
   "footer": {
@@ -405,7 +405,7 @@
   "browse-page": {
     "all-no-results": "No results",
     "all-result-count": "{localeCount} result|{localeCount} results",
-    "all-result-count-more": "Over {localeCount} results",
+    "all-result-count-more": "Over {localeCount} result|Over {localeCount} results",
     "load": "Load more results",
     "fetching-error": "Error fetching {type}:",
     "search-rating": {
@@ -595,7 +595,7 @@
   },
   "waveform": {
     "label": "Audio seek bar",
-    "current-time": "{time} seconds"
+    "current-time": "{time} second|{time} seconds"
   },
   "audio-thumbnail": {
     "alt": "Cover art for \"{title}\" by {creator}"
