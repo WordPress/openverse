@@ -55,7 +55,7 @@ const contentTypes = [
     name: 'Audio',
     url: '/search/audio/?q=cat',
     supported: false,
-    sources: 5,
+    sources: 3,
   },
 ]
 

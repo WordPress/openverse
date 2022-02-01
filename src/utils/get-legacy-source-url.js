@@ -85,17 +85,6 @@ export const legacySourceMap = {
       }
     },
   },
-  Jamendo: {
-    // https://www.jamendo.com/legal/creative-commons
-    audio(search) {
-      return {
-        url: 'https://www.jamendo.com/search/tracks',
-        query: {
-          q: search.q,
-        },
-      }
-    },
-  },
   'Open Clip Art Library': {
     image(search) {
       return {
@@ -157,16 +146,6 @@ export const legacySourceMap = {
     },
   },
   'Wikimedia Commons': {
-    audio(search) {
-      return {
-        url: 'https://commons.wikimedia.org/w/index.php',
-        query: {
-          search: `${search.q}`,
-          title: 'Special:MediaSearch',
-          type: 'audio',
-        },
-      }
-    },
     video(search) {
       return {
         url: 'https://commons.wikimedia.org/w/index.php',

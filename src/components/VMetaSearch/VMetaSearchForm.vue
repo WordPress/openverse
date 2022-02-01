@@ -64,7 +64,7 @@ export default {
   computed: {
     unsupportedByUsefilter() {
       if (this.type === AUDIO) {
-        return 'CC Mixter, Jamendo, or Wikimedia Commons'
+        return 'CC Mixter'
       }
       if (this.type === VIDEO) return 'Wikimedia Commons or Youtube'
       if (this.type === IMAGE) return 'Google Images'
