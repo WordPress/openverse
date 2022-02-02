@@ -4,6 +4,10 @@ export const propTypes = {
     default: 'idle',
     required: false,
   },
+  autoResize: {
+    type: Boolean,
+    default: true,
+  },
 }
 
 /** @typedef {import('@nuxtjs/composition-api').ExtractPropTypes<typeof propTypes>} Props */

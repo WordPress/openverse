@@ -4,63 +4,67 @@
   >
     <!-- TODO: Refine min-width for different breakpoints, remove magic numbers -->
     <header
-      class="flex-grow w-full lg:w-auto lg:min-w-[32rem] xl:min-w-[64rem] box-border px-6 lg:pl-30 lg:pr-0 xl:px-40 mx-auto flex flex-col justify-center"
+      class="flex-grow w-full lg:w-auto lg:min-w-[32rem] xl:min-w-[64rem] box-border flex flex-col justify-between lg:justify-center"
     >
-      <NuxtLink to="/" class="relative z-10">
-        <h1>
-          <span class="sr-only">{{ $t('hero.brand') }}</span>
-          <!-- width and height chosen w.r.t. viewBox "0 0 280 42" -->
-          <OpenverseLogo
-            aria-hidden="true"
-            class="lg:-translate-x-24 w-30 lg:h-[63px] lg:w-auto pt-6 lg:pt-0"
-          />
-        </h1>
-      </NuxtLink>
+      <VLogoButton class="lg:hidden ms-3" :auto-resize-logo="false" />
 
-      <h2 class="text-4xl lg:text-6xl mt-auto lg:mt-6">
-        {{ $t('hero.subtitle') }}
-      </h2>
-      <div class="flex justify-start gap-4 mt-4 md:hidden">
-        <VContentTypeButton
-          v-for="type in supportedContentTypes"
-          :key="type"
-          :content-type="type"
-          :selected="type === contentType"
-          @select="setContentType"
-        />
-      </div>
-      <VSearchBar
-        v-model.trim="searchTerm"
-        class="max-w-[40rem] mt-4 lg:mt-8"
-        size="standalone"
-        :placeholder="$t('hero.search.placeholder')"
-        @submit="handleSearch"
-      >
-        <ClientOnly>
-          <VContentSwitcherPopover
-            v-if="isMinScreenMd"
-            ref="contentSwitcher"
-            class="mx-3"
-            :active-item="contentType"
+      <div class="px-6 lg:pl-30 lg:pr-0 xl:px-40 mx-auto w-full lg:w-auto">
+        <NuxtLink to="/" class="relative z-10 hidden lg:block">
+          <h1>
+            <span class="sr-only">{{ $t('hero.brand') }}</span>
+            <!-- width and height chosen w.r.t. viewBox "0 0 280 42" -->
+            <OpenverseLogo
+              aria-hidden="true"
+              class="lg:-translate-x-24 w-30 lg:h-[63px] lg:w-auto pt-6 lg:pt-0"
+            />
+          </h1>
+        </NuxtLink>
+
+        <h2 class="text-4xl lg:text-6xl mt-auto lg:mt-6">
+          {{ $t('hero.subtitle') }}
+        </h2>
+        <div class="flex justify-start gap-4 mt-4 md:hidden">
+          <VContentTypeButton
+            v-for="type in supportedContentTypes"
+            :key="type"
+            :content-type="type"
+            :selected="type === contentType"
             @select="setContentType"
           />
-        </ClientOnly>
-      </VSearchBar>
+        </div>
+        <VSearchBar
+          v-model.trim="searchTerm"
+          class="max-w-[40rem] mt-4 lg:mt-8"
+          size="standalone"
+          :placeholder="$t('hero.search.placeholder')"
+          @submit="handleSearch"
+        >
+          <ClientOnly>
+            <VContentSwitcherPopover
+              v-if="isMinScreenMd"
+              ref="contentSwitcher"
+              class="mx-3"
+              :active-item="contentType"
+              @select="setContentType"
+            />
+          </ClientOnly>
+        </VSearchBar>
 
-      <!-- Disclaimer for large screens -->
-      <i18n
-        path="hero.disclaimer.content"
-        tag="p"
-        class="hidden lg:block text-sr mt-4"
-      >
-        <template #license>
-          <a
-            href="https://creativecommons.org/licenses/"
-            class="text-dark-charcoal hover:text-dark-charcoal underline"
-            >{{ $t('hero.disclaimer.license') }}</a
-          >
-        </template>
-      </i18n>
+        <!-- Disclaimer for large screens -->
+        <i18n
+          path="hero.disclaimer.content"
+          tag="p"
+          class="hidden lg:block text-sr mt-4"
+        >
+          <template #license>
+            <a
+              href="https://creativecommons.org/licenses/"
+              class="text-dark-charcoal hover:text-dark-charcoal underline"
+              >{{ $t('hero.disclaimer.license') }}</a
+            >
+          </template>
+        </i18n>
+      </div>
     </header>
 
     <!-- Image carousel -->
@@ -128,6 +132,7 @@ import OpenverseLogo from '~/assets/logo.svg?inline'
 import VContentSwitcherPopover from '~/components/VContentSwitcher/VContentSwitcherPopover.vue'
 import VContentTypeButton from '~/components/VContentSwitcher/VContentTypeButton.vue'
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
+import VLogoButton from '~/components/VHeader/VLogoButton.vue'
 
 const HomePage = {
   name: 'home-page',
@@ -137,6 +142,7 @@ const HomePage = {
     VContentSwitcherPopover,
     VContentTypeButton,
     VSearchBar,
+    VLogoButton,
   },
   head: {
     meta: [
