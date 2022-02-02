@@ -1,14 +1,13 @@
-// Small wrapper for localstorage to protect against SSR
+// Small wrapper for localstorage to protect against SSR and permissions
 
-const localStorageExists =
-  typeof window !== 'undefined' && 'localStorage' in window
+const localStorageExists = () => process.client && window.localStorage !== null
 
 const local = {
   get(key) {
-    return localStorageExists ? localStorage.getItem(key) : null
+    return localStorageExists() ? localStorage.getItem(key) : null
   },
   set(key, value) {
-    return localStorageExists ? localStorage.setItem(key, value) : null
+    return localStorageExists() ? localStorage.setItem(key, value) : null
   },
 }
 
