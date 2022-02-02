@@ -3,7 +3,7 @@
     <VGlobalAudioTrack v-if="audio" layout="global" :audio="audio" />
     <VIconButton
       v-if="audio"
-      class="absolute top-0 end-0 border-none z-10"
+      class="absolute top-0 rtl:left-0 ltr:right-0 border-none z-10"
       :icon-props="{ iconPath: icons.closeIcon }"
       @click="handleClose"
     />

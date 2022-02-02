@@ -8,7 +8,7 @@
       :class="isLarge ? 'w-30 me-6' : 'w-20 me-4'"
     >
       <VAudioThumbnail :audio="audio" />
-      <div v-if="isSmall" class="absolute bottom-0 end-0">
+      <div v-if="isSmall" class="absolute bottom-0 rtl:left-0 ltr:right-0">
         <slot name="play-pause" size="tiny" />
       </div>
     </div>
