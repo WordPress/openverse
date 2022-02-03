@@ -301,7 +301,7 @@ a.button {
 }
 
 .grouped {
-  @apply bg-white text-black;
+  @apply bg-white text-black focus-visible:ring-[0];
 }
 
 .grouped-pressed {
