@@ -1,0 +1,32 @@
+# this build is triggered when a new pre-release has been created
+# it creates a new docker build image based on the tag associated
+
+name: openverse/deploy/production
+
+on:
+  release:
+    types:
+      - 'released'
+
+jobs:
+  push:
+    name: push
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://search-prod.openverse.engineering
+
+    steps:
+      # download the source code into the runner
+      - name: checkout
+        uses: actions/checkout@v2
+
+      # build a new docker image and push it into the repository
+      - name: docker build
+        uses: ./.github/actions/build
+        with:
+          is_production: true
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

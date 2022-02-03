@@ -1,0 +1,33 @@
+# this build is triggered when a new pull request has been merged
+# into the main branch
+
+name: openverse/deploy/staging
+
+on:
+  push:
+    branches:
+      - main
+      - ci/* # allow any ci/* branch the ability to deploy to staging without the need to merge the PR
+
+jobs:
+  push:
+    name: push
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://search-staging.openverse.engineering
+
+    steps:
+      # download the source code into the runner
+      - name: checkout
+        uses: actions/checkout@v2
+
+      # build a new docker image and push it into the repository
+      - name: docker build
+        uses: ./.github/actions/build
+        with:
+          is_production: false
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

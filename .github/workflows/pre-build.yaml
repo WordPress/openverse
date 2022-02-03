@@ -1,16 +1,16 @@
 # this workflow will try to lint and build a node.js application
 #
-# this is useful for stages that you require to make sure everything is working
+# this is useful for stages that you require making sure everything is working
 # properly before creating a container image to be pushed on the cloud
 #
-name: pre_build
+name: openverse/validate
 
 on:
   pull_request:
-  push:
-    branches:
-      - 'main'
-      - 'ci/*' # branches that follows the pattern ci/* can access this workflow too
+#  push:
+#    branches:
+#      - 'main'
+#      - 'ci/*' # branches that follows the pattern ci/* can access this workflow too
 
 jobs:
   pre_build:

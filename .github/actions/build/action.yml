@@ -1,0 +1,88 @@
+# this is a reusable workflow that will be called by the
+# push_staging and push_production workflows
+# more info: https://docs.github.com/en/actions/learn-github-actions/reusing-workflows
+
+name: openverse/build
+description: build a docker image that can be used in different environments
+
+inputs:
+  is_production:
+    required: true
+    description: Determine whether the current workflow is executed against production or not
+  aws_region:
+    required: true
+    description: AWS region where the resource will be deployed
+  aws_account_id:
+    required: true
+    description: AWS account number where the resources are already deployed
+  aws_access_key_id:
+    required: true
+    description: AWS access key id that performs the modifications described in this action
+  aws_secret_access_key:
+    required: true
+    description: AWS secret access key associated to the access key id specified above
+
+runs:
+  using: "composite"
+  steps:
+    # setup docker buildx
+    - name: setup docker buildx
+      uses: docker/setup-buildx-action@v1
+      with:
+        install: true
+
+    # login in docker repository
+    - name: docker login
+      uses: aws-actions/amazon-ecr-login@v1
+      env:
+        AWS_REGION: ${{ inputs.aws_region }}
+        AWS_ACCOUNT_ID: ${{ inputs.aws_account_id }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
+
+    # for staging
+    # gather metadata from git & github actions to reference in docker
+    - name: git & github metadata staging
+      id: metadata_staging
+      uses: docker/metadata-action@v3
+      if: ${{ github.event.inputs.is_production == false }}
+      with:
+        images: ${{ inputs.aws_account_id }}.dkr.ecr.${{ inputs.aws_region }}.amazonaws.com/openverse/frontend
+        tags: |
+          type=raw,value=latest
+          type=ref,event=branch
+
+    # build a docker image
+    - name: build docker image
+      uses: docker/build-push-action@v2
+      if: ${{ github.event.inputs.is_production == false }}
+      with:
+        context: .
+        tags: ${{ steps.metadata_staging.outputs.tags }}
+        labels: ${{ steps.metadata_staging.outputs.labels }}
+        push: true
+
+    # for production
+    # gather metadata from git & github actions to reference in docker
+    - name: git & github metadata production
+      id: metadata_production
+      uses: docker/metadata-action@v3
+      if: ${{ github.event.inputs.is_production == true }}
+      with:
+        images: ${{ inputs.aws_account_id }}.dkr.ecr.${{ inputs.aws_region }}.amazonaws.com/openverse/frontend
+        flavor: |
+          latest=false
+        tags: |
+          type=raw,value=stable
+          type=ref,event=tag
+          type=semver,pattern={{version}}
+
+    # build a docker image
+    - name: build docker image
+      uses: docker/build-push-action@v2
+      if: ${{ github.event.inputs.is_production == true }}
+      with:
+        context: .
+        tags: ${{ steps.metadata_production.outputs.tags }}
+        labels: ${{ steps.metadata_production.outputs.labels }}
+        push: true
