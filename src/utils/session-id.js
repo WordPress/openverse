@@ -7,7 +7,7 @@ const COOKIE_PREFIX = 'openverse_'
 const generateSessionId = () => uuidv4()
 
 /**
- * Store a session in in a cookie for a/b tests and usage analytics. By default
+ * Store a session in in a cookie for usage analytics. By default
  * it expires when a user closes the browser. If hasExpirationDate is set to
  * true, the cookie will last for 7 days, which is determined by
  * `COOKIE_EXPIRY_DAYS`.
