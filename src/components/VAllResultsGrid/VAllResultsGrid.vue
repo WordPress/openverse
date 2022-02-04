@@ -4,14 +4,14 @@
       v-if="!noResults"
       class="results-grid grid grid-cols-2 lg:grid-cols-5 2xl:grid-cols-6 gap-4 mb-4"
     >
-      <NuxtLink
+      <VContentLink
         v-for="[key, item] in results"
         :key="key"
+        :media-type="key"
+        :results-count="item.count"
         :to="localePath({ path: `/search/${key}`, query: $route.query })"
-        class="lg:col-span-2 focus:bg-white focus:border-tx focus:ring focus:ring-pink focus:outline-none focus:shadow-ring focus:text-black rounded-sm"
-      >
-        <VContentLink :results-count="item.count" :media-type="key" />
-      </NuxtLink>
+        class="lg:col-span-2"
+      />
     </div>
     <GridSkeleton
       v-if="resultsLoading && allMedia.length === 0"
