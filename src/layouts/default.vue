@@ -1,5 +1,6 @@
 <template>
   <div class="app grid h-screen overflow-hidden">
+    <VTeleportTarget name="skip-to-content" />
     <MigrationNotice v-show="isReferredFromCc" />
     <TranslationStatusBanner />
     <VHeader />
@@ -36,6 +37,7 @@ import VHeader from '~/components/VHeader/VHeader.vue'
 import VModalTarget from '~/components/VModal/VModalTarget.vue'
 import VSidebarTarget from '~/components/VModal/VSidebarTarget.vue'
 import VGlobalAudioSection from '~/components/VGlobalAudioSection/VGlobalAudioSection.vue'
+import VTeleportTarget from '~/components/VTeleport/VTeleportTarget.vue'
 
 const embeddedPage = {
   name: 'embedded',
@@ -44,6 +46,7 @@ const embeddedPage = {
     TranslationStatusBanner,
     VHeader,
     VModalTarget,
+    VTeleportTarget,
     VSidebarTarget,
     VGlobalAudioSection,
   },

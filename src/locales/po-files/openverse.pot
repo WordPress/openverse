@@ -18,6 +18,11 @@ msgctxt "interpunct"
 msgid "•"
 msgstr ""
 
+#: src/components/VSkipToContentContainer.vue:9
+msgctxt "skip-to-content"
+msgid "Skip to content"
+msgstr ""
+
 msgctxt "search-type.image"
 msgid "Images"
 msgstr ""

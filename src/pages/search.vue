@@ -1,5 +1,7 @@
 <template>
-  <div class="browse-page flex flex-col w-full px-4 md:px-10">
+  <VSkipToContentContainer
+    class="browse-page flex flex-col w-full px-4 md:px-10"
+  >
     <VSearchGrid
       :fetch-state="fetchState"
       :query="query"
@@ -21,7 +23,7 @@
       </template>
     </VSearchGrid>
     <VScrollButton v-show="showScrollButton" data-testid="scroll-button" />
-  </div>
+  </VSkipToContentContainer>
 </template>
 
 <script>
@@ -42,6 +44,7 @@ import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-vis
 
 import VScrollButton from '~/components/VScrollButton.vue'
 import VSearchGrid from '~/components/VSearchGrid.vue'
+import VSkipToContentContainer from '~/components/VSkipToContentContainer.vue'
 
 const BrowsePage = {
   name: 'browse-page',
@@ -49,6 +52,7 @@ const BrowsePage = {
   components: {
     VScrollButton,
     VSearchGrid,
+    VSkipToContentContainer,
   },
   setup() {
     const isMinScreenMd = isMinScreen('md')

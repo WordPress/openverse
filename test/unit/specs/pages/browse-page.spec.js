@@ -40,7 +40,11 @@ describe('SearchIndex', () => {
         $router: { path: { name: 'search-image' } },
         $route: { path: '/search/image' },
       },
-      stubs: { NuxtChild: true, VSearchGrid: true },
+      stubs: {
+        NuxtChild: true,
+        VSearchGrid: true,
+        VSkipToContentContainer: true,
+      },
     }
   })
 
