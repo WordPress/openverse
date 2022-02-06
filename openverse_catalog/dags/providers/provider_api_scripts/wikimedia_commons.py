@@ -44,7 +44,7 @@ ENDPOINT = f"https://{HOST}/w/api.php"
 PROVIDER = prov.WIKIMEDIA_DEFAULT_PROVIDER
 AUDIO_PROVIDER = prov.WIKIMEDIA_AUDIO_PROVIDER
 CONTACT_EMAIL = os.getenv("CONTACT_EMAIL")
-UA_STRING = f"CC-Catalog/0.1 (https://creativecommons.org; {CONTACT_EMAIL})"
+UA_STRING = f"Openverse/0.1 (https://wordpress.com/openverse; {CONTACT_EMAIL})"
 DEFAULT_REQUEST_HEADERS = {"User-Agent": UA_STRING}
 DEFAULT_QUERY_PARAMS = {
     "action": "query",
