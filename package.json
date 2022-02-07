@@ -12,7 +12,7 @@
   "author": "sebworks",
   "private": true,
   "scripts": {
-    "dev": "pnpm install && pnpm i18n:create-locales-list && pnpm i18n:update-locales && cross-env nuxt",
+    "dev": "pnpm install && pnpm i18n:create-locales-list && pnpm i18n:update-locales && cross-env nuxt --hostname 0",
     "build": "pnpm i18n:get-translations && nuxt build",
     "generate": "nuxt generate",
     "start": "nuxt start",
