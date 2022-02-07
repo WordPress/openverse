@@ -6,20 +6,29 @@
     <header
       class="flex-grow w-full lg:w-auto lg:min-w-[32rem] xl:min-w-[64rem] box-border flex flex-col justify-between lg:justify-center"
     >
-      <VLogoButton class="lg:hidden ms-3" :auto-resize-logo="false" />
+      <VLogoButton
+        class="lg:hidden ms-3"
+        :auto-resize-logo="false"
+        :is-search-route="false"
+      />
 
-      <div class="px-6 lg:pl-30 lg:pr-0 xl:px-40 mx-auto w-full lg:w-auto">
-        <NuxtLink to="/" class="relative z-10 hidden lg:block">
+      <div class="px-6 lg:ps-30 lg:pe-0 xl:px-40 mx-auto w-full lg:w-auto">
+        <NuxtLink
+          to="/"
+          class="relative z-10 hidden lg:block -left-[6.25rem] rtl:-right-[6.25rem]"
+        >
           <h1>
             <span class="sr-only">{{ $t('hero.brand') }}</span>
             <!-- width and height chosen w.r.t. viewBox "0 0 280 42" -->
-            <OpenverseLogo
+            <span
               aria-hidden="true"
-              class="lg:-translate-x-24 w-30 lg:h-[63px] lg:w-auto pt-6 lg:pt-0"
-            />
+              class="flex flex-row items-center text-dark-charcoal"
+            >
+              <OpenverseLogo class="w-[70px] h-[70px] me-6 xl:me-7" />
+              <OpenverseBrand class="w-[315px] h-[60px]" />
+            </span>
           </h1>
         </NuxtLink>
-
         <h2 class="text-4xl lg:text-6xl mt-auto lg:mt-6">
           {{ $t('hero.subtitle') }}
         </h2>
@@ -129,6 +138,7 @@ import { FETCH_MEDIA, UPDATE_QUERY } from '~/constants/action-types'
 import imageInfo from '~/assets/homepage_images/image_info.json'
 
 import OpenverseLogo from '~/assets/logo.svg?inline'
+import OpenverseBrand from '~/assets/brand.svg?inline'
 import VContentSwitcherPopover from '~/components/VContentSwitcher/VContentSwitcherPopover.vue'
 import VContentTypeButton from '~/components/VContentSwitcher/VContentTypeButton.vue'
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
@@ -139,6 +149,7 @@ const HomePage = {
   layout: 'blank',
   components: {
     OpenverseLogo,
+    OpenverseBrand,
     VContentSwitcherPopover,
     VContentTypeButton,
     VSearchBar,

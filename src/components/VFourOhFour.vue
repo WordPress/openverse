@@ -2,10 +2,13 @@
   <main class="bg-yellow h-screen relative page-404 overflow-x-hidden">
     <NuxtLink to="/" class="relative z-10 text-dark-charcoal">
       <span class="sr-only">{{ $t('404.link-title') }}</span>
-      <OpenverseLogo
+      <span
+        class="flex flex-row pt-6 lg:pt-8 ms-6 lg:ms-10 h-auto w-30 text-dark-charcoal"
         aria-hidden="true"
-        class="pt-6 lg:pt-8 ms-6 lg:ms-10 w-30 h-auto"
-      />
+      >
+        <OpenverseLogo />
+        <OpenverseBrand class="ms-1" />
+      </span>
     </NuxtLink>
     <Oops
       aria-hidden="true"
@@ -54,12 +57,14 @@ import { FETCH_MEDIA, UPDATE_QUERY } from '~/constants/action-types'
 
 import Oops from '~/assets/oops.svg?inline'
 import OpenverseLogo from '~/assets/logo.svg?inline'
+import OpenverseBrand from '~/assets/brand.svg?inline'
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar'
 
 const VFourOhFour = defineComponent({
   name: 'VFourOhFour',
   components: {
     OpenverseLogo,
+    OpenverseBrand,
     Oops,
     VSearchBar,
   },
