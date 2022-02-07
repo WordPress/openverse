@@ -39,7 +39,7 @@ const VLogoButton = defineComponent({
     },
     isSearchRoute: {
       type: Boolean,
-      required: true,
+      default: false,
     },
     autoResizeLogo: {
       type: Boolean,

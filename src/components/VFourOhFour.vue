@@ -34,6 +34,7 @@
         :label-text="$t('404.search-placeholder')"
         field-id="404-search"
         :placeholder="$t('404.search-placeholder')"
+        size="standalone"
         @input="setSearchTerm"
         @submit="handleSearch"
       />
