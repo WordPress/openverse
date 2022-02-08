@@ -2,7 +2,6 @@
   <VAudioTrack
     :audio="audio"
     layout="box"
-    size="full"
     @boxedAudioClick="navigateToSinglePage"
   />
 </template>

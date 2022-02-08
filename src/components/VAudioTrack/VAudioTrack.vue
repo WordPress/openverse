@@ -6,7 +6,7 @@
     v-bind="layoutBasedProps"
     v-on="layoutBasedListeners"
   >
-    <Component :is="layoutComponent" :audio="audio" :size="size">
+    <Component :is="layoutComponent" :audio="audio" :size="_size">
       <template #controller="waveformProps">
         <VWaveform
           v-bind="waveformProps"
@@ -91,7 +91,6 @@ const propTypes = {
     type: /** @type {import('@nuxtjs/composition-api').PropType<'s' | 'm' | 'l'>} */ (
       String
     ),
-    default: 'm',
     /**
      * @param {string} val
      */
@@ -346,6 +345,16 @@ export default defineComponent({
     const layoutComponent = computed(() => layoutMappings[props.layout])
 
     /**
+     * Sets default size if not provided.
+     */
+    const _size = computed(() => {
+      if (isBoxed && !props.size) {
+        return null
+      }
+      return 'm'
+    })
+
+    /**
      * A ref used on the play/pause button,
      * so we can capture clicks and skip
      * sending an event to the boxed layout.
@@ -396,6 +405,7 @@ export default defineComponent({
       duration,
 
       layoutComponent,
+      _size,
 
       layoutBasedProps,
       layoutBasedListeners,

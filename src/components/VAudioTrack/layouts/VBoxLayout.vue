@@ -1,6 +1,6 @@
 <template>
   <div :style="{ width }">
-    <!-- Should be wrapped by a fixed width parent -->
+    <!-- The width is determined by the parent element if the 'size' property is not specified. -->
     <div
       class="box-track group relative bg-yellow h-0 w-full pt-full rounded-sm"
     >
@@ -47,8 +47,9 @@ export default defineComponent({
         l: 13.25,
         m: 12.25,
         s: 9.75,
-      }[props.size ?? 'm']
-      return `${magnitude}rem`
+      }[props.size]
+
+      return props.size ? `${magnitude}rem` : null
     })
 
     return {
