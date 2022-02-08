@@ -24,7 +24,7 @@
     /* Module Resolution Options */
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types"],
+    "typeRoots": ["./typings", "./node_modules/@types"],
     "paths": {
       "~/*": ["./src/*"],
       "~~/*": ["./*"]
@@ -35,6 +35,7 @@
     "src/composables/types.js",
     "src/composables/use-event-listener-outside.js",
     "src/composables/use-active-audio.js",
+    "src/composables/use-get-locale-formatted-number.js",
     "src/utils/key-codes.js"
   ]
 }

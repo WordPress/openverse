@@ -7,8 +7,8 @@ jest.mock('@nuxtjs/composition-api', () => ({
         resultsCount,
         localeCount,
       }),
+      locale: 'en',
     },
-    locale: 'en',
   }),
 }))
 

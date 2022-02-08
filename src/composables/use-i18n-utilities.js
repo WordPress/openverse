@@ -1,4 +1,5 @@
 import { useContext } from '@nuxtjs/composition-api'
+import { useGetLocaleFormattedNumber } from '~/composables/use-get-locale-formatted-number'
 
 /**
  * Not using dynamically-generated keys to ensure that
@@ -15,6 +16,8 @@ const i18nKeys = {
  */
 export function useI18nResultsCount() {
   const { i18n } = useContext()
+  const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
+
   /**
    * @param {number} resultsCount
    * @returns {string}
@@ -27,9 +30,7 @@ export function useI18nResultsCount() {
         ? 'more'
         : 'result'
     const fullKey = i18nKeys[countKey]
-    const countLocale =
-      i18n.localeProperties?.dir === 'rtl' ? 'en' : i18n.locale
-    const localeCount = resultsCount.toLocaleString(countLocale)
+    const localeCount = getLocaleFormattedNumber(resultsCount)
     return i18n.tc(fullKey, resultsCount, { localeCount })
   }
   return {

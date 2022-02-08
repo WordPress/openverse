@@ -133,7 +133,7 @@
               </a>
             </td>
             <td class="number-cell font-semibold">
-              {{ getProviderMediaCount(imageProvider.media_count || 0) }}
+              {{ getLocaleFormattedNumber(imageProvider.media_count || 0) }}
             </td>
           </tr>
         </tbody>
@@ -146,8 +146,7 @@
 import sortBy from 'lodash.sortby'
 import { mapState } from 'vuex'
 import { PROVIDER } from '~/constants/store-modules'
-
-const ARABIC_NUMERAL_LOCALES = ['ar', 'fa', 'ur', 'ckb', 'ps']
+import { useGetLocaleFormattedNumber } from '~/composables/use-get-locale-formatted-number'
 
 const SourcePage = {
   name: 'source-page',
@@ -159,6 +158,11 @@ const SourcePage = {
       },
     }
   },
+  setup() {
+    const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
+
+    return { getLocaleFormattedNumber }
+  },
   computed: {
     ...mapState(PROVIDER, ['imageProviders']),
     sortedProviders() {
@@ -167,20 +171,6 @@ const SourcePage = {
     },
   },
   methods: {
-    /**
-     * @param {number} mediaCount
-     * @return {string} Localized media count
-     */
-    getProviderMediaCount(mediaCount = 0) {
-      let locale = this.$i18n.locale
-      if (ARABIC_NUMERAL_LOCALES.some((l) => locale.startsWith(l))) {
-        // most sites with RTL language with numbers continue to use Western Arabic Numerals whereas `toLocaleString` will use Eastern Arabic Numerals for Arabic and Hebrew by default
-        // Prevent formatting using Eastern Arabic Numerals and use `en-GB` to match the most common decimal and thousands delimiters for those regions
-        // https://en.wikipedia.org/wiki/Decimal_separator#Countries_using_decimal_point
-        locale = 'en-GB'
-      }
-      return mediaCount.toLocaleString(locale)
-    },
     sortTable(field) {
       let direction = 'asc'
       if (field === this.sort.field) {
