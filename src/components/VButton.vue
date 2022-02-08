@@ -269,7 +269,7 @@ a.button {
 }
 
 .tertiary {
-  @apply bg-white text-black border border-dark-charcoal-20 focus-visible:border-tx focus-visible:ring focus-visible:ring-pink ring-offset-0;
+  @apply bg-white text-dark-charcoal border border-dark-charcoal-20 focus-visible:border-tx focus-visible:ring focus-visible:ring-pink ring-offset-0;
 }
 
 .tertiary-pressed {
@@ -277,11 +277,11 @@ a.button {
 }
 
 .action-menu {
-  @apply bg-white text-black border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
+  @apply bg-white text-dark-charcoal border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
 }
 
 .action-menu-secondary {
-  @apply bg-white text-black border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
+  @apply bg-white text-dark-charcoal border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
 }
 
 .action-menu-secondary-pressed {
@@ -293,7 +293,7 @@ a.button {
 }
 
 .action-menu-muted {
-  @apply bg-dark-charcoal-10 text-black border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
+  @apply bg-dark-charcoal-10 text-dark-charcoal border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
 }
 
 .action-menu-muted-pressed {
@@ -301,7 +301,7 @@ a.button {
 }
 
 .grouped {
-  @apply bg-white text-black focus-visible:ring-[0];
+  @apply bg-white text-dark-charcoal focus-visible:ring-[0];
 }
 
 .grouped-pressed {
