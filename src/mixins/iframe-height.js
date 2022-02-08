@@ -12,7 +12,7 @@ export default {
     if (this.$store.state.nav.isEmbedded) {
       this.notifyOuterWindow(document.documentElement.scrollHeight)
       this.observer = this.createResizeObserver()
-      this.observer.observe(document.documentElement)
+      this.observer?.observe(document.documentElement)
     }
   },
   beforeDestroy() {
@@ -26,6 +26,8 @@ export default {
   },
   methods: {
     createResizeObserver() {
+      if (!window.ResizeObserver) return null
+
       return new ResizeObserver(
         debounce((entries) => {
           for (let entry of entries) {

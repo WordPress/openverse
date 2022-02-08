@@ -298,8 +298,10 @@ export default defineComponent({
     }
     let observer
     onMounted(() => {
-      observer = new ResizeObserver(updateWaveformDimens)
-      observer.observe(el.value)
+      if (window.ResizeObserver) {
+        observer = new ResizeObserver(updateWaveformDimens)
+        observer.observe(el.value)
+      }
       updateWaveformDimens()
     })
     onBeforeUnmount(() => {
