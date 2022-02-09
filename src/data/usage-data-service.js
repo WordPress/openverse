@@ -14,7 +14,7 @@ const UsageDataService = {
    * @param {Parameters<typeof ApiService['post']>[1]} data
    */
   post(endpoint, data) {
-    return ApiService.post(`analytics/${endpoint}`, data)
+    return ApiService.post(`analytics/${endpoint}/`, data)
   },
 
   /**

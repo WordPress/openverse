@@ -170,7 +170,7 @@ export default {
         file: 'en.json',
       },
       ...(locales ?? []),
-    ],
+    ].filter((l) => Boolean(l.iso)),
     lazy: true,
     langDir: 'locales',
     defaultLocale: 'en',
