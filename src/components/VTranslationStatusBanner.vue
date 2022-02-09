@@ -1,12 +1,12 @@
 <template>
-  <NotificationBanner v-show="!shouldHideBanner" @close="dismissBanner">
+  <VNotificationBanner v-show="!shouldHideBanner" @close="dismissBanner">
     {{
       // eslint-disable-next-line @intlify/vue-i18n/no-raw-text
       '⚠️'
     }}
     <i18n path="notification.translation.text">
       <template #link>
-        <a :href="translationLink" target="_blank">{{
+        <a :href="translationLink" target="_blank" class="underline">{{
           $t('notification.translation.link')
         }}</a>
       </template>
@@ -14,13 +14,17 @@
         {{ bannerLocale.name }}
       </template>
     </i18n>
-  </NotificationBanner>
+  </VNotificationBanner>
 </template>
 <script>
 import useI18nSync from '~/composables/use-i18n-sync'
+import VNotificationBanner from '~/components/VNotificationBanner.vue'
 
 export default {
-  name: 'TranslationStatusBanner',
+  name: 'VTranslationStatusBanner',
+  components: {
+    VNotificationBanner,
+  },
   setup() {
     const { shouldHideBanner, bannerLocale, translationLink, dismissBanner } =
       useI18nSync()
