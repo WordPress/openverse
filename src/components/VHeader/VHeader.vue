@@ -70,10 +70,7 @@ import {
 } from '~/constants/action-types'
 import { AUDIO, IMAGE } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
-import {
-  useMatchHomeRoute,
-  useMatchSearchRoutes,
-} from '~/composables/use-match-routes'
+import { useMatchSearchRoutes } from '~/composables/use-match-routes'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
 
@@ -102,7 +99,6 @@ const VHeader = defineComponent({
     const router = useRouter()
 
     const { matches: isSearchRoute } = useMatchSearchRoutes()
-    const { matches: isHomeRoute } = useMatchHomeRoute()
 
     const isHeaderScrolled = inject('isHeaderScrolled')
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
@@ -226,10 +222,8 @@ const VHeader = defineComponent({
 
       isHeaderScrolled,
       isMinScreenMd,
-      headerHasTwoRows,
-
       isSearchRoute,
-      isHomeRoute,
+      headerHasTwoRows,
 
       menuModalRef,
 

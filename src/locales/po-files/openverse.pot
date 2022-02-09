@@ -182,7 +182,7 @@ msgctxt "audio-categories.pronunciation"
 msgid "Pronunciation"
 msgstr ""
 
-#: src/components/VHeader/VSearchBar/VSearchButton.vue:7
+#: src/components/VHeader/VSearchBar/VSearchButton.vue:6
 msgctxt "search.search"
 msgid "Search"
 msgstr ""
@@ -1934,7 +1934,7 @@ msgctxt "header.api-nav-item"
 msgid "API"
 msgstr ""
 
-#: src/components/VHeader/VHeader.vue:163
+#: src/components/VHeader/VHeader.vue:159
 msgctxt "header.loading"
 msgid "Loading..."
 msgstr ""
@@ -2002,7 +2002,7 @@ msgctxt "hero.subtitle"
 msgid "Browse through over 600 million items to reuse"
 msgstr ""
 
-#: src/components/VHeader/VSearchBar/VSearchBar.vue:9
+#: src/components/VHeader/VSearchBar/VSearchBar.vue:10
 msgctxt "hero.aria.search"
 msgid "search"
 msgstr ""

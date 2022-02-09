@@ -68,6 +68,8 @@
           <template #license>
             <a
               href="https://creativecommons.org/licenses/"
+              target="blank"
+              rel="noopener noreferrer"
               class="text-dark-charcoal hover:text-dark-charcoal underline"
               >{{ $t('hero.disclaimer.license') }}</a
             >
@@ -118,6 +120,8 @@
       <template #license>
         <a
           href="https://creativecommons.org/licenses/"
+          target="blank"
+          rel="noopener noreferrer"
           class="text-dark-charcoal hover:text-dark-charcoal underline"
           >{{ $t('hero.disclaimer.license') }}</a
         >
