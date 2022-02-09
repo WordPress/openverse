@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-02-01T19:06:38+00:00\n"
+"POT-Creation-Date: 2022-02-09T12:36:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -389,47 +389,37 @@ msgctxt "image-details.aria.creator-url"
 msgid "Author ###creator###"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:13
-msgctxt "image-details.report.short"
-msgid "Report"
-msgstr ""
-
-#: src/components/VImageDetails/VImageDetails.vue:11
-msgctxt "image-details.report.large"
-msgid "Report this content"
-msgstr ""
-
 #: src/components/VImageDetails/VImageDetails.vue:5
 msgctxt "image-details.information.title"
 msgid "Image information"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:19
+#: src/components/VImageDetails/VImageDetails.vue:11
 msgctxt "image-details.information.type"
 msgid "Type"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:23
+#: src/components/VImageDetails/VImageDetails.vue:15
 msgctxt "image-details.information.provider"
 msgid "Provider"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:39
+#: src/components/VImageDetails/VImageDetails.vue:31
 msgctxt "image-details.information.dimensions"
 msgid "Dimensions"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:27
+#: src/components/VImageDetails/VImageDetails.vue:19
 msgctxt "image-details.information.source"
 msgid "Source"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:43
+#: src/components/VImageDetails/VImageDetails.vue:35
 msgctxt "image-details.information.pixels"
 msgid "pixels"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:83
+#: src/components/VImageDetails/VImageDetails.vue:72
 msgctxt "image-details.information.unknown"
 msgid "Unknown"
 msgstr ""
@@ -459,12 +449,104 @@ msgctxt "media-details.audio-info"
 msgid "Audio information"
 msgstr ""
 
-msgctxt "media-details.content-report.report"
+#: src/components/VContentReport/VContentReportButton.vue:7
+msgctxt "media-details.content-report.short"
 msgid "Report"
 msgstr ""
 
-msgctxt "media-details.content-report.title"
+#: src/components/VContentReport/VContentReportButton.vue:10
+msgctxt "media-details.content-report.long"
 msgid "Report this content"
+msgstr ""
+
+#: src/components/VContentReport/VContentReportForm.vue:26
+msgctxt "media-details.content-report.failure.title"
+msgid "Report could not be submitted"
+msgstr ""
+
+#: src/components/VContentReport/VContentReportForm.vue:29
+msgctxt "media-details.content-report.failure.note"
+msgid "Something went wrong, please try again after some time."
+msgstr ""
+
+#: src/components/VContentReport/VContentReportForm.vue:5
+msgctxt "media-details.content-report.success.title"
+msgid "Report submitted successfully"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/components/VContentReport/VContentReportForm.vue:7
+msgctxt "media-details.content-report.success.note"
+msgid "Thank you for reporting this content. We recommend doing the same at the source, ###source###."
+msgstr ""
+
+#: src/components/VContentReport/VContentReportForm.vue:40
+msgctxt "media-details.content-report.form.disclaimer"
+msgid "For security purposes, Openverse collects and retains anonymized IP addresses of those who complete and submit this form."
+msgstr ""
+
+#: src/components/VContentReport/VContentReportForm.vue:46
+msgctxt "media-details.content-report.form.question"
+msgid "What is the reason?"
+msgstr ""
+
+#: src/components/VContentReport/VContentReportForm.vue:101
+msgctxt "media-details.content-report.form.submit"
+msgid "Report"
+msgstr ""
+
+#: src/components/VContentReport/VContentReportForm.vue:78
+msgctxt "media-details.content-report.form.cancel"
+msgid "Cancel"
+msgstr ""
+
+msgctxt "media-details.content-report.form.other.option"
+msgid "Other"
+msgstr ""
+
+#: src/components/VContentReport/VReportDescForm.vue:4
+msgctxt "media-details.content-report.form.other.note"
+msgid "Describe the issue."
+msgstr ""
+
+msgctxt "media-details.content-report.form.other.sub-label"
+msgid "Required"
+msgstr ""
+
+msgctxt "media-details.content-report.form.other.placeholder"
+msgid "Please enter at least 20 characters."
+msgstr ""
+
+msgctxt "media-details.content-report.form.mature.option"
+msgid "Contains mature content"
+msgstr ""
+
+msgctxt "media-details.content-report.form.mature.sub-label"
+msgid "Optional"
+msgstr ""
+
+msgctxt "media-details.content-report.form.mature.placeholder"
+msgid "Optionally, provide a description."
+msgstr ""
+
+msgctxt "media-details.content-report.form.dmca.option"
+msgid "Infringes copyright"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/components/VContentReport/VDmcaNotice.vue:2
+msgctxt "media-details.content-report.form.dmca.note"
+msgid "You must fill out this ###form### to report copyright infringement. No action will be taken until this form is filled out and submitted. We recommend doing the same at the source, ###source###."
+msgstr ""
+
+#: src/components/VContentReport/VDmcaNotice.vue:9
+msgctxt "media-details.content-report.form.dmca.form"
+msgid "DMCA form"
+msgstr ""
+
+#: src/components/VContentReport/VContentReportForm.vue:90
+msgctxt "media-details.content-report.form.dmca.open"
+msgid "Open form"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -1915,7 +1997,7 @@ msgctxt "hero.brand"
 msgid "Openverse"
 msgstr ""
 
-#: src/pages/index.vue:21
+#: src/pages/index.vue:33
 msgctxt "hero.subtitle"
 msgid "Browse through over 600 million items to reuse"
 msgstr ""
@@ -1943,38 +2025,38 @@ msgid "I want something I can"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/index.vue:51
+#: src/pages/index.vue:63
 msgctxt "hero.disclaimer.content"
 msgid "All Openverse content is under a ###license### or is in the public domain."
 msgstr ""
 
-#: src/pages/index.vue:60
+#: src/pages/index.vue:72
 msgctxt "hero.disclaimer.license"
 msgid "Creative Commons license"
 msgstr ""
 
-#: src/pages/index.vue:36
+#: src/pages/index.vue:48
 msgctxt "hero.search.placeholder"
 msgid "Search for content"
 msgstr ""
 
-#: src/layouts/error.vue:18
+#: src/components/VFourOhFour.vue:21
 msgctxt "404.title"
 msgid "The content you’re looking for seems to have disappeared."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/layouts/error.vue:21
+#: src/components/VFourOhFour.vue:24
 msgctxt "404.main"
 msgid "Go to ###link### or search for something similar from the field below."
 msgstr ""
 
-#: src/layouts/error.vue:4
+#: src/components/VFourOhFour.vue:4
 msgctxt "404.link-title"
 msgid "Openverse"
 msgstr ""
 
-#: src/layouts/error.vue:34
+#: src/components/VFourOhFour.vue:37
 msgctxt "404.search-placeholder"
 msgid "Search for content to reuse"
 msgstr ""

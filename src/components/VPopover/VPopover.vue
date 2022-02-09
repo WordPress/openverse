@@ -111,7 +111,7 @@ export default defineComponent({
     /**
      * the z-index to apply to the popover content
      */
-    zIndex: { type: Number },
+    zIndex: { type: Number, default: 999 },
   },
   emits: [
     /**

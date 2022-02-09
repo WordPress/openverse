@@ -1,79 +1,58 @@
 <template>
-  <div>
-    <i18n
-      path="photo-details.content-report.dmca.content"
-      tag="p"
-      class="block px-6 mt-10 text-center"
-    >
-      <template #link>
-        <a
-          :aria-label="$t('photo-details.aria.dmca')"
-          :href="dmcaFormUrl"
-          target="_blank"
-          rel="noopener"
-          >{{ $t('photo-details.content-report.dmca.link') }}</a
-        >
-      </template>
-    </i18n>
-
-    <i18n
-      path="photo-details.content-report.provider"
-      tag="p"
-      class="block px-6 mt-4 text-center"
-    >
-      <template #link>
-        <a
-          :aria-label="
-            $t('photo-details.aria.provider-report-form', { provider })
-          "
-          :href="imageUrl"
-          target="_blank"
-          rel="noopener"
-          >{{ provider }}</a
-        >
-      </template>
-    </i18n>
-
-    <VButton
-      type="button"
-      variant="action-button"
-      size="small"
-      @click="onBackClick"
-    >
-      <VIcon :icon-path="chevronLeftIcon" class="me-2" />
-      {{ $t('photo-details.content-report.back') }}
-    </VButton>
-  </div>
+  <i18n
+    class="dmca-notice"
+    path="media-details.content-report.form.dmca.note"
+    tag="p"
+  >
+    <template #form>
+      <a
+        :aria-label="$t('media-details.content-report.form.dmca.form')"
+        :href="DMCA_FORM_URL"
+        class="text-pink hover:underline"
+        target="_blank"
+        rel="noopener"
+        >{{ $t('media-details.content-report.form.dmca.form') }}</a
+      >
+    </template>
+    <template #source>
+      <a
+        :href="foreignLandingUrl"
+        class="text-pink hover:underline"
+        target="_blank"
+        rel="noopener noreferrer"
+        >{{ provider }}</a
+      >
+    </template>
+  </i18n>
 </template>
 
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
-import VButton from '~/components/VButton.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import chevronLeftIcon from '~/assets/icons/chevron-left.svg'
+
+import { DMCA_FORM_URL } from '~/constants/content-report'
 
 export default defineComponent({
-  name: 'DmcaNotice',
-  components: { VButton, VIcon },
+  name: 'VDmcaNotice',
   props: {
-    dmcaFormUrl: {
+    /**
+     * the foreign landing URL for the media item
+     */
+    foreignLandingUrl: {
       type: String,
       required: true,
     },
-    imageUrl: {
-      type: String,
-      required: true,
-    },
+    /**
+     * the name of the provider of the media item
+     */
     provider: {
       type: String,
       required: true,
     },
   },
-  setup(_, { emit }) {
-    const onBackClick = () => {
-      emit('back-click')
+  setup() {
+    return {
+      DMCA_FORM_URL,
     }
-    return { chevronLeftIcon, onBackClick }
   },
 })
 </script>

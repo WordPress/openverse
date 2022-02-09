@@ -4,15 +4,7 @@
       <h3 class="text-2xl md:text-3xl">
         {{ $t('image-details.information.title') }}
       </h3>
-      <span
-        class="flex flex-row justify-end items-center text-sr text-dark-charcoal-70 font-semibold"
-      >
-        <span class="hidden md:inline">{{
-          $t('image-details.report.large')
-        }}</span>
-        <span class="md:hidden">{{ $t('image-details.report.short') }}</span>
-        <FlagSvg class="ms-2"
-      /></span>
+      <VContentReportPopover :media="image" />
     </div>
     <dl>
       <div>
@@ -50,11 +42,8 @@
 <script>
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 
-import FlagSvg from '~/assets/icons/flag.svg?inline'
-
 const VImageDetails = defineComponent({
   name: 'VImageDetails',
-  components: { FlagSvg },
   props: {
     image: {
       type: Object,

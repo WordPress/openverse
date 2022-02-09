@@ -10,14 +10,6 @@ const i18n = new VueI18n({
   messages,
 })
 
-const getCloseButton = () =>
-  screen.getByRole('button', {
-    name: /close-form/i,
-  })
-const getNextButton = () =>
-  screen.getByRole('button', {
-    name: /next/i,
-  })
 const getDmcaInput = () =>
   screen.getByRole('radio', {
     name: /dmca/i,
@@ -30,6 +22,25 @@ const getOtherInput = () =>
   screen.getByRole('radio', {
     name: /other/i,
   })
+const getCancelButton = () =>
+  screen.getByRole('button', {
+    name: /cancel/i,
+  })
+const getReportButton = () =>
+  screen.getByRole('button', {
+    name: /submit/i,
+  })
+
+// When DMCA selected
+const getReportLink = () =>
+  screen.getByRole('link', {
+    name: /dmca\.open/i,
+  })
+// When other selected
+const getDescriptionTextarea = () =>
+  screen.getByRole('textbox', {
+    name: /other\.note/i,
+  })
 
 describe('VContentReportForm', () => {
   let props = null
@@ -39,8 +50,12 @@ describe('VContentReportForm', () => {
 
   beforeEach(() => {
     props = {
-      image: { id: 1, url: 'http://foo.bar' },
-      providerName: 'provider',
+      media: {
+        identifier: '0aff3595-8168-440b-83ff-7a80b65dea42',
+        foreign_landing_url: 'https://wordpress.org/openverse/',
+        provider: 'provider',
+      },
+      providerName: 'Provider',
       reportService: reportServiceProp,
     }
 
@@ -55,21 +70,20 @@ describe('VContentReportForm', () => {
 
   it('should contain the correct contents', async () => {
     await render(VContentReportForm, options)
-    getCloseButton()
     getDmcaInput()
     getMatureInput()
     getOtherInput()
-    getNextButton()
+    getCancelButton()
+    getReportLink()
   })
 
   it('should render thank you note when report is sent', async () => {
     const { getByText } = render(VContentReportForm, options)
     await fireEvent.click(getMatureInput())
-    await fireEvent.click(getNextButton())
+    await fireEvent.click(getReportButton())
 
-    // Thank you message with a link to provider
-    getByText('photo-details.content-report.thanks')
-    getByText('photo-details.content-report.provider')
+    // Submission successful message
+    getByText('media-details.content-report.success.note')
   })
 
   it('should render error message if report sending fails', async () => {
@@ -77,34 +91,28 @@ describe('VContentReportForm', () => {
 
     const { getByText } = render(VContentReportForm, options)
     await fireEvent.click(getMatureInput())
-    await fireEvent.click(getNextButton())
+    await fireEvent.click(getReportButton())
 
     // Submission error message
-    getByText('photo-details.content-report.submission-error')
-    getByText('photo-details.content-report.back')
+    getByText('media-details.content-report.failure.note')
   })
 
-  it('should render dmca notice', async () => {
+  it('should render DMCA notice', async () => {
     const { getByText } = render(VContentReportForm, options)
     await fireEvent.click(getDmcaInput())
-    await fireEvent.click(getNextButton())
 
     // Notice with link to provider
-    getByText(/dmca/i)
-    getByText('photo-details.content-report.provider')
+    getByText('media-details.content-report.form.dmca.note')
+    getReportLink()
   })
 
-  it('should render other type form', async () => {
-    const { getByRole, getByText } = render(VContentReportForm, options)
+  it('should render other description form', async () => {
+    const { getByText } = render(VContentReportForm, options)
     await fireEvent.click(getOtherInput())
-    await fireEvent.click(getNextButton())
 
     // Report form with a submit button
-    getByText('photo-details.content-report.issue-description')
-    getByRole('textbox', {
-      name: /description/i,
-    })
-    getByRole('button', { name: 'photo-details.content-report.submit' })
+    getByText('media-details.content-report.form.other.note')
+    getDescriptionTextarea()
   })
 
   it('should dispatch SEND_CONTENT_REPORT on next when mature is selected', async () => {
@@ -112,39 +120,28 @@ describe('VContentReportForm', () => {
     options.propsData.reportService = serviceMock
     render(VContentReportForm, options)
     await fireEvent.click(getMatureInput())
-    await fireEvent.click(getNextButton())
+    await fireEvent.click(getReportButton())
 
     expect(serviceMock.sendReport).toHaveBeenCalledWith({
-      identifier: props.image.id,
+      identifier: props.media.identifier,
       reason: 'mature',
       description: '',
     })
-  })
-
-  it('should not dispatch SEND_CONTENT_REPORT on next when dmca is selected', async () => {
-    const serviceMock = { sendReport: jest.fn() }
-    options.propsData.reportService = serviceMock
-
-    render(VContentReportForm, options)
-    await fireEvent.click(getDmcaInput())
-    await fireEvent.click(getNextButton())
-
-    expect(serviceMock.sendReport).toBeCalledTimes(0)
   })
 
   it('should dispatch SEND_CONTENT_REPORT on other form submit', async () => {
     const serviceMock = { sendReport: jest.fn() }
     options.propsData.reportService = serviceMock
 
-    const { getByRole } = render(VContentReportForm, options)
+    render(VContentReportForm, options)
     await fireEvent.click(getOtherInput())
-    await fireEvent.click(getNextButton())
 
     const description = 'description that has more than 20 characters'
-    await fireEvent.update(getByRole('textbox'), description)
-    await fireEvent.click(getByRole('button', { name: /submit/i }))
+    await fireEvent.update(getDescriptionTextarea(), description)
+
+    await fireEvent.click(getReportButton())
     expect(serviceMock.sendReport).toHaveBeenCalledWith({
-      identifier: props.image.id,
+      identifier: props.media.identifier,
       reason: 'other',
       description,
     })
@@ -153,21 +150,10 @@ describe('VContentReportForm', () => {
   it('should not send other report if description is short', async () => {
     options.propsData.reportService = { sendReport: jest.fn() }
 
-    const { getByRole } = render(VContentReportForm, options)
+    render(VContentReportForm, options)
     await fireEvent.click(getOtherInput())
-    await fireEvent.click(getNextButton())
 
-    const description = 'short'
-    await fireEvent.update(getByRole('textbox'), description)
-
-    expect(getByRole('button', { name: /submit/i })).toBeDisabled()
-
-    // Even though the button is disabled, if we `fireEvent.click`, the report
-    // in this test is sent
-    // expect(serviceMock.sendReport).toHaveBeenCalledWith({
-    //   identifier: props.image.id,
-    //   reason: 'other',
-    //   description,
-    // })
+    const description = 'less than 20 chars'
+    await fireEvent.update(getDescriptionTextarea(), description)
   })
 })

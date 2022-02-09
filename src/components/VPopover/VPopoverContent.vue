@@ -2,7 +2,7 @@
   <div
     v-if="visible"
     ref="popoverRef"
-    :class="[$style.popover, { [`z-${zIndex}`]: zIndex !== undefined }]"
+    :class="[$style.popover, { [`z-[${zIndex}]`]: zIndex !== undefined }]"
     :aria-hidden="!visible"
     :tabindex="typeof $props.tabindex !== 'undefined' ? $props.tabindex : -1"
     v-on="$listeners"
@@ -59,6 +59,6 @@ export default defineComponent({
 
 <style module>
 .popover {
-  @apply bg-white border border-light-gray rounded-sm max-w-max whitespace-nowrap shadow;
+  @apply bg-white border border-light-gray rounded-sm max-w-max shadow;
 }
 </style>

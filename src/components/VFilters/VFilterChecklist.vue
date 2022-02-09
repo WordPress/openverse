@@ -43,7 +43,7 @@
 import helpIcon from '~/assets/icons/help.svg'
 
 import VLicenseExplanationTooltip from '~/components/VFilters/VLicenseExplanationTooltip.vue'
-import VCheckbox from '~/components/VCheckbox.vue'
+import VCheckbox from '~/components/VCheckbox/VCheckbox.vue'
 import VLicense from '~/components/License/VLicense.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
 

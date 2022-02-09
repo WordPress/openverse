@@ -493,8 +493,39 @@
     "image-info": "Image information",
     "audio-info": "Audio information",
     "content-report": {
-      "report": "Report",
-      "title": "Report this content"
+      "short": "Report",
+      "long": "Report this content",
+      "form": {
+        "disclaimer": "For security purposes, Openverse collects and retains anonymized IP addresses of those who complete and submit this form.",
+        "question": "What is the reason?",
+        "dmca": {
+          "option": "Infringes copyright",
+          "note": "You must fill out this {form} to report copyright infringement. No action will be taken until this form is filled out and submitted. We recommend doing the same at the source, {source}.",
+          "form": "DMCA form",
+          "open": "Open form"
+        },
+        "mature": {
+          "option": "Contains mature content",
+          "sub-label": "Optional",
+          "placeholder": "Optionally, provide a description."
+        },
+        "other": {
+          "option": "Other",
+          "note": "Describe the issue.",
+          "sub-label": "Required",
+          "placeholder": "Please enter at least 20 characters."
+        },
+        "submit": "Report",
+        "cancel": "Cancel"
+      },
+      "success": {
+        "title": "Report submitted successfully",
+        "note": "Thank you for reporting this content. We recommend doing the same at the source, {source}."
+      },
+      "failure": {
+        "title": "Report could not be submitted",
+        "note": "Something went wrong, please try again after some time."
+      }
     }
   },
   "image-details": {
@@ -509,10 +540,6 @@
       "source": "Source",
       "pixels": "pixels",
       "unknown": "Unknown"
-    },
-    "report": {
-      "short": "Report",
-      "large": "Report this content"
     },
     "related-images": "Related images",
     "aria": {

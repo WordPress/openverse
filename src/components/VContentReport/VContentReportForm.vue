@@ -1,180 +1,184 @@
 <template>
-  <div id="content-report-form" class="p-4">
-    <button
-      :aria-label="$t('photo-details.aria.close-form')"
-      class="button close-button is-text tiny float-right block bg-white"
-      type="button"
-      @click="closeForm"
-    >
-      <VIcon :icon-path="closeIcon" />
-    </button>
-    <VDmcaNotice
-      v-if="showDmcaForm"
-      :image-url="image.foreign_landing_url"
-      :provider="providerName"
-      :dmca-form-url="dmcaFormUrl"
-      @back-click="onBackClick"
-    />
-    <VDoneMessage
-      v-else-if="isDone"
-      :image-url="image.foreign_landing_url"
-      :provider="providerName"
-    />
-    <VReportError v-else-if="reportFailed" @back-click="backToReportStart" />
+  <div id="content-report-form" class="w-80 p-6">
+    <div v-if="status === statuses.SENT">
+      <p class="font-semibold text-2xl mb-4">
+        {{ $t('media-details.content-report.success.title') }}
+      </p>
+      <i18n
+        path="media-details.content-report.success.note"
+        class="text-sm"
+        tag="p"
+      >
+        <template #source>
+          <a
+            :href="media.url"
+            class="text-pink hover:underline"
+            target="_blank"
+            rel="noopener"
+            >{{ providerName }}</a
+          >
+        </template>
+      </i18n>
+    </div>
 
-    <VOtherIssueForm
-      v-else-if="showOtherForm"
-      @back-click="onBackClick"
-      @send-report="sendContentReport"
-    />
-    <form v-else>
-      <h5 class="b-header mb-4">
-        {{ $t('photo-details.content-report.title') }}
-      </h5>
-      <fieldset class="mb-4 flex flex-col">
-        <legend class="mb-4">
-          {{ $t('photo-details.content-report.issue') }}
-        </legend>
-        <label
-          v-for="reason in reasons"
-          :key="reason"
-          :for="reason"
-          class="ms-2 mb-2"
-        >
-          <input
-            :id="reason"
-            v-model="reasonSelected"
-            type="radio"
-            name="type"
-            :value="reason"
-          />
-          {{ $t(`photo-details.content-report.reasons.${reason}`) }}
-        </label>
-      </fieldset>
+    <div v-else-if="status === statuses.FAILED">
+      <p class="font-semibold text-2xl mb-4">
+        {{ $t('media-details.content-report.failure.title') }}
+      </p>
+      <p class="text-sm">
+        {{ $t('media-details.content-report.failure.note') }}
+      </p>
+    </div>
 
-      <p class="caption font-semibold text-gray mb-4">
-        {{ $t('photo-details.content-report.caption') }}
+    <!-- Main form -->
+    <div v-else>
+      <div class="font-semibold text-2xl mb-4">
+        {{ $t('media-details.content-report.long') }}
+      </div>
+
+      <p class="text-sm mb-4">
+        {{ $t('media-details.content-report.form.disclaimer') }}
       </p>
 
-      <VButton
-        :disabled="!reasonSelected"
-        variant="secondary"
-        class="float-end bg-trans-blue"
-        @click="onIssueSelected"
-      >
-        {{ $t('photo-details.content-report.next') }}
-      </VButton>
-    </form>
+      <form class="text-sm">
+        <fieldset class="flex flex-col">
+          <legend class="font-semibold mb-4">
+            {{ $t('media-details.content-report.form.question') }}
+          </legend>
+          <VRadio
+            v-for="reason in reasons"
+            :id="reason"
+            :key="reason"
+            v-model="selectedReason"
+            class="mb-4"
+            name="reason"
+            :value="reason"
+          >
+            {{ $t(`media-details.content-report.form.${reason}.option`) }}
+          </VRadio>
+        </fieldset>
+
+        <div class="mb-4 min-h-[7rem]">
+          <VDmcaNotice
+            v-if="selectedReason === reasons.DMCA"
+            :provider="providerName"
+            :foreign-landing-url="media.foreign_landing_url"
+          />
+          <VReportDescForm
+            v-else
+            key="other"
+            v-model="description"
+            :reason="selectedReason"
+            :is-required="selectedReason === reasons.OTHER"
+          />
+        </div>
+
+        <div class="flex flex-row items-center justify-end gap-4">
+          <VButton variant="tertiary" @click="handleCancel">
+            {{ $t('media-details.content-report.form.cancel') }}
+          </VButton>
+
+          <VButton
+            v-if="selectedReason === reasons.DMCA"
+            key="dmca"
+            as="a"
+            variant="secondary"
+            :href="DMCA_FORM_URL"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ $t('media-details.content-report.form.dmca.open') }}
+            <VIcon :size="4" class="ms-1" :icon-path="icons.externalLink" />
+          </VButton>
+          <VButton
+            v-else
+            key="non-dmca"
+            :disabled="isSubmitDisabled"
+            :focusable-when-disabled="true"
+            variant="secondary"
+            @click="handleSubmit"
+          >
+            {{ $t('media-details.content-report.form.submit') }}
+          </VButton>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
 <script>
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
-import VDmcaNotice from './VDmcaNotice'
-import VOtherIssueForm from './VOtherIssueForm'
-import VDoneMessage from './VDoneMessage'
-import VReportError from './VReportError'
+
+import VButton from '~/components/VButton.vue'
+import VRadio from '~/components/VRadio/VRadio.vue'
+import VDmcaNotice from '~/components/VContentReport/VDmcaNotice.vue'
+import VReportDescForm from '~/components/VContentReport/VReportDescForm.vue'
+
 import ReportService from '~/data/report-service'
 
-import closeIcon from '~/assets/icons/close.svg'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VButton from '~/components/VButton.vue'
+import { reasons, statuses, DMCA_FORM_URL } from '~/constants/content-report'
 
-const dmcaFormUrl =
-  'https://docs.google.com/forms/d/e/1FAIpQLSd0I8GsEbGQLdaX4K_F6V2NbHZqN137WMZgnptUpzwd-kbDKA/viewform'
-const reasons = {
-  DMCA: 'dmca',
-  MATURE: 'mature',
-  OTHER: 'other',
-}
-const statuses = {
-  SENT: 'sent',
-  FAILED: 'failed',
-  ADDING_DETAILS: 'adding_details',
-  OPEN: 'open',
-  CLOSED: 'closed',
-}
+import externalLinkIcon from '~/assets/icons/external-link.svg'
 
 export default defineComponent({
   name: 'VContentReportForm',
   components: {
-    VDoneMessage,
-    VDmcaNotice,
-    VReportError,
-    VOtherIssueForm,
     VButton,
-    VIcon,
+    VRadio,
+    VDmcaNotice,
+    VReportDescForm,
   },
-  props: ['image', 'providerName', 'reportService'],
-  setup(props, { emit }) {
-    const reportStatus = ref(statuses.OPEN)
-    /** @type {import('@nuxtjs/composition-api').Ref<string|null>} */
-    const reasonSelected = ref(null)
-
+  props: ['media', 'providerName', 'reportService', 'closeFn'],
+  setup(props) {
     const service = props.reportService || ReportService
-    const onIssueSelected = () => {
-      if (
-        reasonSelected.value &&
-        ![reasons.OTHER, reasons.DMCA].includes(reasonSelected.value)
-      ) {
-        sendContentReport()
-      } else {
-        reportStatus.value = statuses.ADDING_DETAILS
-      }
+
+    /** @type {import('@nuxtjs/composition-api').Ref<string|null>} */
+    const status = ref(statuses.WIP)
+    const selectedReason = ref(reasons.DMCA)
+    const description = ref('')
+
+    /* Buttons */
+    const handleCancel = () => {
+      selectedReason.value = null
+      description.value = ''
+      props.closeFn()
     }
-    const onBackClick = () => {
-      reportStatus.value = statuses.OPEN
-    }
-    const backToReportStart = () => {
-      reasonSelected.value = null
-      reportStatus.value = statuses.OPEN
-    }
-    const sendContentReport = async ({ description = '' } = {}) => {
+
+    const isSubmitDisabled = computed(
+      () =>
+        selectedReason.value === reasons.OTHER && description.value.length < 20
+    )
+    const handleSubmit = async () => {
+      if (selectedReason.value === reasons.DMCA) return
+      // Submit report
       try {
         await service.sendReport({
-          identifier: props.image.id,
-          reason: reasonSelected.value,
-          description,
+          identifier: props.media.identifier,
+          reason: selectedReason.value,
+          description: description.value,
         })
-        reportStatus.value = statuses.SENT
+        status.value = statuses.SENT
       } catch (error) {
-        reportStatus.value = statuses.FAILED
+        status.value = statuses.FAILED
       }
     }
-    const closeForm = () => {
-      reportStatus.value = statuses.CLOSED
-      emit('close-form')
-    }
-    const reportFailed = computed(() => reportStatus.value === statuses.FAILED)
-    const isDone = computed(
-      () =>
-        reportStatus.value === statuses.SENT &&
-        !(reasonSelected.value === reasons.DMCA)
-    )
-    const showOtherForm = computed(
-      () =>
-        reportStatus.value === statuses.ADDING_DETAILS &&
-        reasonSelected.value === reasons.OTHER
-    )
-    const showDmcaForm = computed(
-      () =>
-        reportStatus.value === statuses.ADDING_DETAILS &&
-        reasonSelected.value === reasons.DMCA
-    )
+
     return {
-      reasonSelected,
-      closeIcon,
-      dmcaFormUrl,
-      isDone,
-      reportFailed,
-      closeForm,
-      onIssueSelected,
-      onBackClick,
-      sendContentReport,
-      backToReportStart,
-      showOtherForm,
-      showDmcaForm,
-      reasons: Object.values(reasons),
+      icons: {
+        externalLink: externalLinkIcon,
+      },
+      reasons,
+      statuses,
+      DMCA_FORM_URL,
+
+      selectedReason,
+      status,
+      description,
+
+      handleCancel,
+
+      isSubmitDisabled,
+      handleSubmit,
     }
   },
 })
