@@ -59,7 +59,6 @@ import {
   useContext,
   useRouter,
   watch,
-  watchEffect,
 } from '@nuxtjs/composition-api'
 
 import { MEDIA, SEARCH } from '~/constants/store-modules'
@@ -147,9 +146,8 @@ const VHeader = defineComponent({
     /**
      * Status is hidden below the medium breakpoint.
      * It shows Loading... or Number of results on bigger screens.
-     * @returns {string}
      */
-    const setStatus = () => {
+    const searchStatus = computed(() => {
       if (
         !isMinScreenMd.value ||
         !isSearchRoute.value ||
@@ -158,11 +156,7 @@ const VHeader = defineComponent({
         return ''
       if (isFetching.value) return i18n.t('header.loading')
       return getI18nCount(resultsCount.value)
-    }
-
-    const searchStatus = ref(setStatus())
-
-    watchEffect(() => setStatus())
+    })
 
     const localSearchTerm = ref(store.state.search.query.q)
     const searchTerm = computed({
