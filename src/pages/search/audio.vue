@@ -35,7 +35,7 @@ import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 import VLoadMore from '~/components/VLoadMore.vue'
 
 import { propTypes } from './search-page.types'
-import { isMinScreen } from '@/composables/use-media-query'
+import { isMinScreen } from '~/composables/use-media-query'
 
 const AudioSearch = defineComponent({
   name: 'AudioSearch',

@@ -67,8 +67,8 @@
 </template>
 
 <script>
-import GoogleAnalytics from '@/analytics/google-analytics'
-import { DonateLinkClick } from '@/analytics/events'
+import GoogleAnalytics from '~/analytics/google-analytics'
+import { DonateLinkClick } from '~/analytics/events'
 
 export default {
   name: 'FooterSection',
