@@ -128,7 +128,7 @@ export default VCheckbox
 }
 .checkbox {
   @apply appearance-none w-5 h-5 border-dark-charcoal border rounded-sm me-3 flex-shrink-0 relative;
-  @apply focus:outline-none focus:ring focus:ring-offset-2 focus:ring-primary;
+  @apply focus:outline-none focus:ring focus:ring-offset-2 focus:ring-pink;
   @apply transition-colors disabled:bg-dark-charcoal-10 disabled:border-dark-charcoal-40;
   @apply checked:bg-dark-charcoal;
 }
