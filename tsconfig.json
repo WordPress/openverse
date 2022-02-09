@@ -36,6 +36,7 @@
     "src/composables/use-event-listener-outside.js",
     "src/composables/use-active-audio.js",
     "src/composables/use-get-locale-formatted-number.js",
-    "src/utils/key-codes.js"
+    "src/utils/key-codes.js",
+    "src/utils/local.js"
   ]
 }
