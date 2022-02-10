@@ -120,7 +120,7 @@ export default {
   name: 'MetaSearchPage',
   head() {
     return {
-      title: `${this.$t('meta-search-page.title')} - ${this.$t('hero.brand')}`,
+      title: `${this.$t('meta-search-page.title')} | ${this.$t('hero.brand')}`,
     }
   },
 }

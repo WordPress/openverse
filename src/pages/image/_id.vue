@@ -193,9 +193,29 @@ const VImageDetailsPage = {
     },
   },
   head() {
-    const title = this.image.title
+    const title = `${this.image.title} | Reusable Image on ${this.$t(
+      'hero.brand'
+    )}`
+
     return {
-      title: `${title} - ${this.$t('hero.brand')}`,
+      title,
+      meta: [
+        {
+          hid: 'robots',
+          name: 'robots',
+          content: 'noindex',
+        },
+        {
+          hid: 'og:title',
+          name: 'og:title',
+          content: title,
+        },
+        {
+          hid: 'og:image',
+          name: 'og:image',
+          content: this.image.foreign_landing_url,
+        },
+      ],
     }
   },
 }

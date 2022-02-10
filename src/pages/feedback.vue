@@ -83,7 +83,7 @@ export const FeedbackPage = {
   },
   head() {
     return {
-      title: `${this.$t('feedback.title')} - ${this.$t('hero.brand')}`,
+      title: `${this.$t('feedback.title')} | ${this.$t('hero.brand')}`,
     }
   },
   methods: {

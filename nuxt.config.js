@@ -12,32 +12,9 @@ import { sentry } from './src/utils/sentry-config'
  */
 const meta = [
   { charset: 'utf-8' },
-  {
-    name: 'description',
-    content:
-      'A new Openverse search tool for creators seeking to discover and reuse free resources with greater ease.',
-  },
   { name: 'viewport', content: 'width=device-width,initial-scale=1' },
-  { name: 'twitter:card', content: 'summary_large_image' },
-  { name: 'twitter:site', content: '@creativecommons' },
-  { name: 'og:title', content: 'Openverse' },
-  {
-    name: 'og:image',
-    content: '/cclogo-shared-image.jpg',
-  },
-  {
-    name: 'og:description',
-    content:
-      'Empowering the world to share through 6 simple licenses + a global community of advocates for open.',
-  },
-  {
-    name: 'og:url',
-    content: 'https://creativecommons.org',
-  },
-  {
-    name: 'og:site_name',
-    content: 'Creative Search',
-  },
+  // Tells Google to only crawl Openverse when iframed
+  { hid: 'googlebot', name: 'googlebot', content: 'noindex,indexifembedded' },
   {
     vmid: 'monetization',
     name: 'monetization',
@@ -48,6 +25,25 @@ const meta = [
     name: 'theme-color',
     content: '#ffffff',
   },
+  {
+    name: 'description',
+    content:
+      'Search over 600 million free and openly licensed images, photos, audio, and other media types for reuse and remixing.',
+  },
+  { hid: 'og:title', name: 'og:title', content: 'Openverse' },
+  {
+    hid: 'og:image',
+    name: 'og:image',
+    content: '/openverse-default.jpg',
+  },
+  {
+    hid: 'og:description',
+    name: 'og:description',
+    content:
+      'Search over 600 million free and openly licensed images, photos, audio, and other media types for reuse and remixing.',
+  },
+  { name: 'twitter:card', content: 'summary_large_image' },
+  { name: 'twitter:site', content: '@WPOpenverse' },
 ]
 
 if (process.env.NODE_ENV === 'production') {
@@ -57,11 +53,31 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
+const favicons = [
+  // SVG favicon
+  {
+    rel: 'icon',
+    href: '/openverse-logo.svg',
+  },
+  // SVG favicon for Safari
+  {
+    rel: 'mask-icon',
+    href: '/opvenverse-logo.svg',
+    color: '#30272E',
+  },
+  // Fallback iPhone Icon
+  {
+    rel: 'apple-touch-icon',
+    href: '/openverse-logo-180.png',
+  },
+]
+
 // Default html head
 const head = {
-  title: 'Openverse',
+  title: 'Openly Licensed Images, Audio and More | Openverse',
   meta,
   link: [
+    ...favicons,
     {
       rel: 'preconnect',
       href: env.apiUrl,
@@ -76,24 +92,6 @@ const head = {
       type: 'application/opensearchdescription+xml',
       title: 'Openverse',
       href: '/opensearch.xml',
-    },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      href: '/app-icons/cc-site-icon-150x150.png',
-      sizes: '32x32',
-    },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      href: '/app-icons/cc-site-icon-300x300.png',
-      sizes: '192x192',
-    },
-    {
-      rel: 'apple-touch-icon-precomposed',
-      type: 'image/png',
-      href: '/app-icons/cc-site-icon-300x300.png',
-      sizes: '192x192',
     },
   ],
 }

@@ -23,12 +23,20 @@ const SearchIndex = defineComponent({
     const { i18n } = useContext()
 
     const query = computed(() => store.state.search.query.q)
-    useMeta({ title: `${query.value} - ${i18n.t('hero.brand')}` })
+    useMeta({ title: `${query.value} | ${i18n.t('hero.brand')}` })
 
     const { canLoadMore, onLoadMore } = useLoadMore(props)
     return { canLoadMore, onLoadMore }
   },
-  head: {},
+  head: {
+    meta: [
+      {
+        hid: 'robots',
+        name: 'robots',
+        content: 'noindex',
+      },
+    ],
+  },
 })
 export default SearchIndex
 </script>

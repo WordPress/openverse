@@ -262,7 +262,7 @@ const SearchHelpPage = {
   },
   head() {
     return {
-      title: `${this.$t('search-guide.title')} - ${this.$t('hero.brand')}`,
+      title: `${this.$t('search-guide.title')} | ${this.$t('hero.brand')}`,
     }
   },
 }

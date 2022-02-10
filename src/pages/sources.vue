@@ -182,7 +182,7 @@ const SourcePage = {
   },
   head() {
     return {
-      title: `${this.$t('sources.title')} - ${this.$t('hero.brand')}`,
+      title: `${this.$t('sources.title')} | ${this.$t('hero.brand')}`,
     }
   },
 }

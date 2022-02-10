@@ -100,7 +100,7 @@ const AboutPage = {
   name: 'about-page',
   head() {
     return {
-      title: `${this.$t('about.title')} - ${this.$t('hero.brand')}`,
+      title: `${this.$t('about.title')} | ${this.$t('hero.brand')}`,
     }
   },
 }
