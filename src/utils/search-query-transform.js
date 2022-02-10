@@ -1,5 +1,5 @@
 import clonedeep from 'lodash.clonedeep'
-import { mediaSpecificFilters } from '~/store/search'
+import { mediaFilterKeys } from '~/store/search'
 import getParameterByName from './get-parameter-by-name'
 import { ALL_MEDIA } from '~/constants/media'
 
@@ -19,11 +19,7 @@ const filterPropertyMappings = {
   mature: 'mature',
 }
 
-const getMediaFilterTypes = (searchType) => {
-  return searchType === ALL_MEDIA
-    ? [...mediaSpecificFilters.all]
-    : [...mediaSpecificFilters.all, ...mediaSpecificFilters[searchType]]
-}
+const getMediaFilterTypes = (contentType) => [...mediaFilterKeys[contentType]]
 // {
 //   license: 'cc0,pdm,by,by-sa,by-nc,by-nd,by-nc-sa,by-nc-nd',
 //   imageCategories: 'photograph,illustration,digitized_artwork',
