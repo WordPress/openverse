@@ -8,8 +8,14 @@
     <template #trigger="{ a11yProps }">
       <VContentSwitcherButton
         :a11y-props="a11yProps"
-        :active-item="activeItem"
         aria-controls="content-switcher-popover"
+        :active-item="activeItem"
+        :class="{
+          '!border-tx': isInSearchBar,
+          'group-hover:!border-dark-charcoal-20':
+            isInSearchBar && !a11yProps['aria-expanded'],
+        }"
+        :type="placement"
       />
     </template>
     <VContentTypes
@@ -22,7 +28,7 @@
 </template>
 
 <script>
-import { ref } from '@nuxtjs/composition-api'
+import { computed, ref } from '@nuxtjs/composition-api'
 import useContentType from '~/composables/use-content-type'
 import checkIcon from '~/assets/icons/checkmark.svg'
 
@@ -46,11 +52,22 @@ export default {
       type: String,
       required: true,
     },
+    placement: {
+      type: String,
+      default: 'header',
+    },
   },
   setup(props, { emit }) {
     const content = useContentType()
 
     const contentMenuPopover = ref(null)
+
+    /**
+     * When in the searchbar, content switcher button has a border when the
+     * search bar group is hovered on.
+     * @type {ComputedRef<boolean>}
+     */
+    const isInSearchBar = computed(() => props.placement === 'searchbar')
 
     /**
      * Only the contentMenuPopover needs to be closed programmatically
@@ -70,6 +87,7 @@ export default {
       checkIcon,
       selectItem,
       contentMenuPopover,
+      isInSearchBar,
       closeMenu,
     }
   },
