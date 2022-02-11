@@ -4,6 +4,7 @@
     @submit.prevent="handleSearch"
   >
     <VInputField
+      :placeholder="placeholder || $t('hero.search.placeholder')"
       v-bind="$attrs"
       class="flex-grow search-field"
       :class="{ 'border-transparent': isHomeRoute }"
@@ -51,6 +52,10 @@ const VSearchBar = defineComponent({
       type: String,
       required: true,
       validator: (v) => ['small', 'medium', 'large', 'standalone'].includes(v),
+    },
+    placeholder: {
+      type: String,
+      required: false,
     },
   },
   emits: ['input', 'submit'],

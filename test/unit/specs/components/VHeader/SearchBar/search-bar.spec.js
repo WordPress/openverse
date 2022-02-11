@@ -7,12 +7,13 @@ jest.mock('~/composables/use-match-routes', () => ({
 }))
 
 const sizes = ['small', 'medium', 'large', 'standalone']
+const defaultPlaceholder = 'Enter search query'
 
 describe('SearchBar', () => {
   let options
   beforeEach(() => {
     options = {
-      attrs: { placeholder: 'Enter search query' },
+      props: { placeholder: defaultPlaceholder, size: 'standalone' },
     }
   })
 
@@ -20,14 +21,14 @@ describe('SearchBar', () => {
     'renders an input field with placeholder and type="search" (%s size)',
     (size) => {
       useMatchHomeRoute.mockImplementation(() => false)
-      options.props = { size: size }
+      options.props.size = size
       render(SearchBar, options)
 
-      const inputElement = screen.getByPlaceholderText('Enter search query')
+      const inputElement = screen.getByPlaceholderText(defaultPlaceholder)
 
       expect(inputElement.tagName).toBe('INPUT')
       expect(inputElement).toHaveAttribute('type', 'search')
-      expect(inputElement).toHaveAttribute('placeholder', 'Enter search query')
+      expect(inputElement).toHaveAttribute('placeholder', defaultPlaceholder)
     }
   )
 
@@ -35,7 +36,7 @@ describe('SearchBar', () => {
     'renders a button with type="submit", ARIA label and SR text (%s size)',
     (size) => {
       useMatchHomeRoute.mockImplementation(() => false)
-      options.props = { size: size }
+      options.props.size = size
       render(SearchBar, options)
 
       const btnElement = screen.getByLabelText('search.search')
@@ -45,4 +46,21 @@ describe('SearchBar', () => {
       expect(btnElement).toHaveAttribute('aria-label', 'search.search')
     }
   )
+
+  describe('placeholder', () => {
+    it('should default to hero.search.placeholder', () => {
+      delete options.props.placeholder
+      render(SearchBar, options)
+      expect(
+        screen.queryByPlaceholderText('hero.search.placeholder')
+      ).not.toBeNull()
+    })
+
+    it('should use the prop when provided', () => {
+      const placeholder = 'This is a different placeholder from the default'
+      options.props.placeholder = placeholder
+      render(SearchBar, options)
+      expect(screen.queryByPlaceholderText(placeholder)).not.toBeNull()
+    })
+  })
 })
