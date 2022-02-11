@@ -81,6 +81,9 @@ COPY --from=builder /usr/app/nuxt.config.js .
 # copy distribution directory with the static content
 COPY --from=builder /usr/app/.nuxt /usr/app/.nuxt
 
+# copy publically-accessible static assets
+COPY --from=builder /usr/app/src/static /usr/app/src/static
+
 # Copy over files needed by Nuxt's runtime process
 COPY --from=builder /usr/app/src/locales /usr/app/src/locales
 COPY --from=builder /usr/app/src/utils  /usr/app/src/utils
