@@ -5,7 +5,10 @@ import { ref } from '@nuxtjs/composition-api'
 import { useEventListener } from '~/composables/use-event-listener'
 
 /**
- * Whether the page has been scrolled down at all
+ * Whether the page has been scrolled down at all.
+ *
+ * This global ref is SSR safe because it will only
+ * change internal value based on client side interaction.
  *
  * @type {import('@nuxtjs/composition-api').Ref<boolean>}
  */

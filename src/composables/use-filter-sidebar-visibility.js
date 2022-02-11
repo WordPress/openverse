@@ -2,7 +2,12 @@ import { onMounted, ref } from '@nuxtjs/composition-api'
 import local from '~/utils/local'
 import { isMinScreen } from '~/composables/use-media-query'
 
-/** @type {import('@nuxtjs/composition-api').Ref<boolean>} */
+/**
+ * This global ref is SSR safe because it will only
+ * change internal value based on client side interaction.
+ *
+ * @type {import('@nuxtjs/composition-api').Ref<boolean>}
+ */
 const isVisible = ref(false)
 
 /**
