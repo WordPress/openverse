@@ -5,6 +5,7 @@ import { IMAGE } from '~/constants/media'
 import store from '~/store/search'
 import clonedeep from 'lodash.clonedeep'
 import SearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
+import { FETCH_MEDIA } from '~/constants/action-types'
 
 const initialFilters = {
   licenseTypes: [
@@ -62,6 +63,9 @@ describe('SearchGridFilter', () => {
           namespaced: true,
           state: {
             imagesCount: 2,
+          },
+          actions: {
+            [FETCH_MEDIA]: jest.fn(),
           },
         },
       },

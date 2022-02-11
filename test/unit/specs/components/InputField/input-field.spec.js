@@ -2,18 +2,20 @@ import { render, screen } from '@testing-library/vue'
 
 import VInputField from '~/components/VInputField/VInputField.vue'
 
+const props = {
+  fieldId: 'input-id',
+  labelText: 'Label',
+  size: 'small',
+}
+
 describe('VInputField', () => {
-  xit('should render an `input` element with type="text"', () => {
+  it('should render an `input` element with type="text"', () => {
     render(VInputField, {
       attrs: {
         placeholder: 'Enter some text',
       },
-      propsData: {
-        fieldId: 'input-id',
-        labelText: 'Label',
-      },
+      propsData: props,
     })
-    screen.debug()
     const element = screen.getByPlaceholderText('Enter some text')
 
     expect(element.tagName).toBe('INPUT')
@@ -26,10 +28,7 @@ describe('VInputField', () => {
         placeholder: 'Enter some number',
         type: 'number',
       },
-      propsData: {
-        fieldId: 'input-id',
-        labelText: 'Label',
-      },
+      propsData: props,
     })
 
     const element = screen.getByPlaceholderText('Enter some number')
@@ -42,10 +41,7 @@ describe('VInputField', () => {
       attrs: {
         placeholder: 'Enter some text',
       },
-      propsData: {
-        fieldId: 'input-id',
-        labelText: 'Label',
-      },
+      propsData: props,
     })
 
     const element = screen.getByPlaceholderText('Enter some text')
@@ -55,10 +51,7 @@ describe('VInputField', () => {
 
   it('should render the label text connected to the input field if specified', () => {
     render(VInputField, {
-      propsData: {
-        fieldId: 'input-id',
-        labelText: 'Label',
-      },
+      propsData: props,
     })
 
     const element = screen.getByLabelText('Label')

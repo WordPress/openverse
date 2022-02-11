@@ -28,6 +28,7 @@ describe('SearchIndex', () => {
           namespaced: true,
           getters: {
             fetchState: () => ({ isFetching: false }),
+            resultCount: () => 0,
             results: () => ({ count: 0 }),
           },
         },
