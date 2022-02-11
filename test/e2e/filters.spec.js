@@ -1,83 +1,75 @@
 const { test, expect } = require('@playwright/test')
-
-const openFilters = async (page) => {
-  const filterButtonSelector =
-    '[aria-controls="filter-sidebar"], [aria-controls="filter-modal"]'
-  const isPressed = async () =>
-    await page.getAttribute(filterButtonSelector, 'aria-pressed')
-  if ((await isPressed()) !== 'true') {
-    await page.click(filterButtonSelector)
-    expect(await isPressed()).toEqual('true')
-  }
-}
+const {
+  assertCheckboxCheckedStatus,
+  openFilters,
+  mockAllSearch,
+  changeContentType,
+} = require('./utils')
 
 test.beforeEach(async ({ context }) => {
-  // Block any image or audio (jamendo.com) requests for each test in this file.
-  await context.route(/\.(png|jpeg|jpg|svg)$/, (route) => route.abort())
+  // Block any audio (jamendo.com) requests for each test in this file.
   await context.route(/.+jamendo.com.+/, (route) => route.abort())
 
-  // Replace all the thumbnail requests with a single sample image
-  await context.route(
-    'https://api.openverse.engineering/v1/thumbs/**',
-    (route) => route.fulfill({ path: 'test/e2e/resources/sample_image.jpg' })
-  )
-  // Serve mock data on all image search requests
-  await context.route(
-    'https://api.openverse.engineering/v1/images/?***',
-    (route) => route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
-  )
+  await mockAllSearch(context)
 })
 
-// todo(obulat): remove this test if we do not have filter tags
-test.skip('can unset filters using filter tags', async ({ page }) => {
-  // Serve mock data on all image search requests
-  await page.route('https://api.openverse.engineering/v1/images/?**', (route) =>
-    route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
+test('common filters are retained when media type changes from all media to single type', async ({
+  page,
+}) => {
+  await page.goto(
+    '/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator'
   )
-  await page.goto('/search/image?q=cat&license=cc0')
-
-  const cc0Tag = page.locator('[aria-label="Remove CC0 filter"]')
   await openFilters(page)
-  expect(await page.getAttribute('[aria-label="1 Filter"]', 'aria-label')).toBe(
-    '1 Filter'
+
+  for (let checkbox of ['cc0', 'commercial', 'creator']) {
+    await assertCheckboxCheckedStatus(page, checkbox)
+  }
+  await changeContentType(page, 'Images')
+
+  await expect(page).toHaveURL(
+    '/search/image?q=cat&license_type=commercial&license=cc0&searchBy=creator'
   )
-  const cc0Checkbox = page.locator('label:has-text("CC0")')
 
-  await expect(cc0Checkbox).toBeChecked()
-  await expect(cc0Tag).toHaveCount(1)
-  page.on('requestfinished', (request) => {
-    const url = request.url()
-    // Only check the URL for an image search query `?`, not thumbs or related requests
-    const baseUrl = 'https://api.openverse.engineering/v1/images/?'
-    if (url.startsWith(baseUrl)) {
-      expect(url).toEqual(baseUrl + 'q=cat')
-    }
-  })
-  await cc0Tag.click()
-
-  await expect(page).toHaveURL('/search/image?q=cat')
-  await expect(cc0Checkbox).not.toBeChecked()
-  await expect(page.locator('[aria-label="Remove CC0 filter"]')).toHaveCount(0)
+  for (let checkbox of ['cc0', 'commercial', 'creator']) {
+    await assertCheckboxCheckedStatus(page, checkbox)
+  }
 })
 
-test.skip('filters are updated when media type changes', async ({ page }) => {
-  // Serve mock data on all image search requests
-  await page.route('https://api.openverse.engineering/v1/images?**', (route) =>
-    route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
+test('common filters are retained when media type changes from single type to all media', async ({
+  page,
+}) => {
+  await page.goto(
+    '/search/audio?q=cat&license_type=commercial&license=cc0&searchBy=creator'
   )
-  await page.goto('/search/image?q=cat&aspect_ratio=tall')
   await openFilters(page)
 
-  const tallCheckbox = page.locator('label:has-text("Tall")')
+  for (let checkbox of ['cc0', 'commercial', 'creator']) {
+    await assertCheckboxCheckedStatus(page, checkbox)
+  }
 
-  await expect(tallCheckbox).toBeChecked()
+  await changeContentType(page, 'All content')
 
-  await page.click('[aria-label="Images"]')
-  await page.click(`a:has-text("Audio")`)
+  await expect(page).toHaveURL(
+    '/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator'
+  )
 
-  await expect(page).toHaveURL('/search/audio?q=cat')
+  for (let checkbox of ['cc0', 'commercial', 'creator']) {
+    await assertCheckboxCheckedStatus(page, checkbox)
+  }
+})
+test('filters are updated when media type changes', async ({ page }) => {
+  await page.goto('/search/image?q=cat&aspect_ratio=tall&license=cc0')
+  await openFilters(page)
 
-  await expect(tallCheckbox).toHaveCount(0)
+  await assertCheckboxCheckedStatus(page, 'Tall')
+  await assertCheckboxCheckedStatus(page, 'cc0')
+
+  await changeContentType(page, 'Audio')
+
+  await expect(page).toHaveURL('/search/audio?q=cat&license=cc0')
+
+  await expect(page.locator('label:has-text("Tall")')).toHaveCount(0)
+  await assertCheckboxCheckedStatus(page, 'cc0')
 })
 
 test('new media request is sent when a filter is selected', async ({
@@ -90,17 +82,19 @@ test('new media request is sent when a filter is selected', async ({
     'https://api.openverse.engineering/v1/images/?**',
     (route) => {
       apiRequest = route.request().url()
-      route.fulfill({ path: 'test/e2e/resources/mock_data.json' })
+      route.fulfill({
+        path: 'test/e2e/resources/mock_image_data.json',
+        headers: { 'Access-Control-Allow-Origin': '*' },
+      })
     }
   )
   await page.goto('/search/image?q=cat')
   await openFilters(page)
 
-  const cc0Checkbox = page.locator('label:has-text("CC0")')
-  await expect(cc0Checkbox).not.toBeChecked()
-  await cc0Checkbox.click()
+  await assertCheckboxCheckedStatus(page, 'cc0', false)
+  await page.click('label:has-text("CC0")')
 
-  await expect(cc0Checkbox).toBeChecked()
+  await assertCheckboxCheckedStatus(page, 'cc0', true)
   await expect(apiRequest).toEqual(
     'https://api.openverse.engineering/v1/images/?q=cat&license=cc0'
   )

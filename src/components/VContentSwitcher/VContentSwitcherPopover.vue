@@ -9,9 +9,11 @@
       <VContentSwitcherButton
         :a11y-props="a11yProps"
         :active-item="activeItem"
+        aria-controls="content-switcher-popover"
       />
     </template>
     <VContentTypes
+      id="content-switcher-popover"
       size="medium"
       :active-item="activeItem"
       @select="selectItem"

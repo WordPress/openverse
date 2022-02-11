@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test')
+const { mockAllSearch, changeContentType } = require('./utils')
 
 /**
  * When navigating to the search page on the client side:
@@ -13,24 +14,10 @@ const { test, expect } = require('@playwright/test')
  */
 
 test.beforeEach(async ({ context }) => {
-  // Block any image or audio (jamendo.com) requests for each test in this file.
-  await context.route(/\.(png|jpeg|jpg|svg)$/, (route) => route.abort())
+  // Block any audio (jamendo.com) requests for each test in this file.
   await context.route('**.jamendo.com**', (route) => route.abort())
 
-  // Replace all the thumbnail requests with a single sample image
-  await context.route(
-    'https://api.openverse.engineering/v1/thumbs/**',
-    (route) => route.fulfill({ path: 'test/e2e/resources/sample_image.jpg' })
-  )
-  // Serve mock data on all image search requests
-  await context.route(
-    'https://api.openverse.engineering/v1/images/**',
-    (route) =>
-      route.fulfill({
-        path: 'test/e2e/resources/mock_data.json',
-        headers: { 'Access-Control-Allow-Origin': '*' },
-      })
-  )
+  await mockAllSearch(context)
 })
 
 test('q query parameter is set as the search term', async ({ page }) => {
@@ -59,30 +46,21 @@ test('selecting `audio` on homepage, you can search for audio', async ({
   await expect(page).toHaveURL('search/audio?q=cat')
 })
 
-test.skip('url filter parameters not used by current mediaType are discarded', async ({
+test('url filter parameters not used by current mediaType are discarded', async ({
   page,
 }) => {
-  // TODO(obulat): Discard unused filter parameters for mediaType
-  // Some filter types have different possible values for different media types.
-  // For example, image has 'photograph' category, but audio doesn't (but it has
-  // 'music', 'sound'). On switching the media type when clicking on another
-  // search tab, such filters should be reset, and the query should be updated.
   await page.goto('/search/image?q=cat&categories=photograph')
 
-  await page.click('[role="tab"]:has-text("Audio")')
+  await changeContentType(page, 'Audio')
   await expect(page).toHaveURL('/search/audio?q=cat')
 })
 
-test.skip('url filter types not used by current mediaType are discarded', async ({
+test('url filter types not used by current mediaType are discarded', async ({
   page,
 }) => {
-  // TODO(obulat): Discard unused filter types for mediaType
-  // Some filter types only apply to one media type. On switching the media type
-  // when clicking on another search tab, such filters should be reset,
-  // and the query should be updated.
   await page.goto('/search/image?q=cat&aspect_ratio=tall')
 
-  await page.click('[role="tab"]:has-text("Audio")')
+  await changeContentType(page, 'Audio')
   await expect(page).toHaveURL('/search/audio?q=cat')
 })
 

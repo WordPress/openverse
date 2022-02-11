@@ -4,6 +4,7 @@
       <VContentSwitcherButton
         :a11y-props="triggerA11yProps"
         :active-item="activeItem"
+        aria-controls="content-switcher-modal"
       />
     </div>
     <VMobileModalContent
@@ -13,7 +14,11 @@
       :aria-label="$t('header.filter-button.simple')"
       :initial-focus-element="initialFocusElement"
     >
-      <nav class="p-6" aria-labelledby="content-switcher-heading">
+      <nav
+        id="content-switcher-modal"
+        class="p-6"
+        aria-labelledby="content-switcher-heading"
+      >
         <VContentTypes
           ref="contentTypesNode"
           size="small"

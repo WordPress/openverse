@@ -14,7 +14,7 @@ test.beforeEach(async ({ context }) => {
     'https://api.openverse.engineering/v1/images/**',
     (route) =>
       route.fulfill({
-        path: 'test/e2e/resources/mock_data.json',
+        path: 'test/e2e/resources/mock_image_data.json',
         headers: { 'Access-Control-Allow-Origin': '*' },
       })
   )

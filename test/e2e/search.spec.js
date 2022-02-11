@@ -7,17 +7,12 @@
  * On error: shows error message
  */
 const { expect, test } = require('@playwright/test')
+const { mockAllSearch } = require('./utils')
 
 test.beforeEach(async ({ context }) => {
-  // Block any image or audio (jamendo.com) requests for each test in this file.
-  await context.route(/\.(png|jpeg|jpg|svg)$/, (route) => route.abort())
+  // Block any audio (jamendo.com) requests for each test in this file.
   await context.route('**.jamendo.com**', (route) => route.abort())
-
-  // Replace all the thumbnail requests with a single sample image
-  await context.route(
-    'https://api.openverse.engineering/v1/thumbs/**',
-    (route) => route.fulfill({ path: 'test/e2e/resources/sample_image.jpg' })
-  )
+  await mockAllSearch(context)
 })
 
 test.skip('shows search result metadata', async ({ page }) => {

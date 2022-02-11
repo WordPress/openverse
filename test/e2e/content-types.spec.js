@@ -1,38 +1,24 @@
 const { test, expect } = require('@playwright/test')
+const { mockAllSearch, changeContentType } = require('./utils')
 
 /**
  * Using SSR:
- * 1. Can open 'all' tab, and see Meta, image grid and Meta search form.
- * 2. Can open 'image' tab, and see Meta, image grid and Meta search form.
- * 3. Can open 'audio' tab, and see Meta, audio grid and Meta search form.
- * 4. Can open 'video' tab, and see Meta, and Meta search form.
+ * 1. Can open 'all' content type page, and see Meta, image grid and Meta search form.
+ * 2. Can open 'image' content type page, and see Meta, image grid and Meta search form.
+ * 3. Can open 'audio' content type page, and see Meta, audio grid and Meta search form.
+ * 4. Can open 'video' content type page, and see Meta, and Meta search form.
  *
  * On client side:
- * 1. Can open 'all' tab, and see Meta, image grid and Meta search form; can load more images.
- * 2. Can open 'image' tab, and see Meta, image grid and Meta search form; can load more images.
- * 3. Can open 'audio' page, and see Meta, audio grid and Meta search form; can not (currently) load more audios.
- * 4. Can open 'video' page, and see Meta, and Meta search form; can not see load more button.
+ * 1. Can open 'all' content type page, and see Meta, image grid and Meta search form; can load more images.
+ * 2. Can open 'image' content type page, and see Meta, image grid and Meta search form; can load more images.
+ * 3. Can open 'audio' content type page, and see Meta, audio grid and Meta search form; can not (currently) load more audios.
+ * 4. Can open 'video' content type page, and see Meta, and Meta search form; can not see load more button.
  */
 
 test.beforeEach(async ({ context }) => {
-  // Block any image or audio (jamendo.com) requests for each test in this file.
-  await context.route(/\.(png|jpeg|jpg|svg)$/, (route) => route.abort())
+  // Block any audio (jamendo.com) requests for each test in this file.
   await context.route('**.jamendo.com**', (route) => route.abort())
-
-  // Replace all the thumbnail requests with a single sample image
-  await context.route(
-    'https://api.openverse.engineering/v1/thumbs/**',
-    (route) => route.fulfill({ path: 'test/e2e/resources/sample_image.jpg' })
-  )
-  // Serve mock data on all image search requests
-  await context.route(
-    'https://api.openverse.engineering/v1/images/**',
-    (route) =>
-      route.fulfill({
-        headers: { 'Access-Control-Allow-Origin': '*' },
-        path: 'test/e2e/resources/mock_data.json',
-      })
-  )
+  await mockAllSearch(context)
 })
 
 const contentTypes = [
@@ -91,9 +77,8 @@ for (const contentType of contentTypes) {
     const pageToOpen =
       contentType.id === 'all' ? contentTypes[1] : contentTypes[0]
     await page.goto(pageToOpen.url)
-    await page.click(`[aria-label="${pageToOpen.name}"]`)
+    await changeContentType(page, contentType.name)
 
-    await page.click(`button[role="radio"]:has-text("${contentType.name}")`)
     const urlParam = contentType.id === 'all' ? '' : contentType.id
     const expectedURL = `/search/${urlParam}?q=cat`
     await expect(page).toHaveURL(expectedURL)
