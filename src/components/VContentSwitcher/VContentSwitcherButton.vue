@@ -9,9 +9,12 @@
     @click="$emit('click')"
   >
     <VIcon :icon-path="icon" />
-    <span v-show="showLabel" :class="{ 'ms-2 md:w-20 text-left': showLabel }">{{
-      buttonLabel
-    }}</span>
+    <span
+      v-show="showLabel"
+      class="hidden xs:block"
+      :class="{ 'ms-2 md:w-20 text-left': showLabel }"
+      >{{ buttonLabel }}</span
+    >
     <VIcon
       class="hidden md:block text-dark-charcoal-40 md:ms-2"
       :icon-path="caretDownIcon"

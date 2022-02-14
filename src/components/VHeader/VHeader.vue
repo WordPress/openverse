@@ -1,9 +1,9 @@
 <template>
   <header
-    class="flex px-4 md:px-7 items-stretch z-40 w-full bg-white gap-x-2 gap-y-4 flex-wrap md:flex-nowrap"
+    class="flex px-4 md:px-7 items-center md:items-stretch z-40 w-screen bg-white gap-x-2 gap-y-4"
     :class="{
-      'py-3': isHeaderScrolled,
-      'py-4': !isHeaderScrolled,
+      'py-3 ': isHeaderScrolled,
+      'py-4 flex-wrap md:flex-nowrap': !isHeaderScrolled,
       'border-b border-white': !isHeaderScrolled && !isMenuOpen,
       'border-b border-dark-charcoal-20':
         isSearchRoute && (isHeaderScrolled || isMenuOpen),
@@ -20,7 +20,7 @@
 
     <VSearchBar
       v-model.trim="searchTerm"
-      class="md:w-full lg:w-1/2 2xl:w-1/3"
+      class="flex-grow lg:flex-grow-0 lg:w-1/2 2xl:w-1/3"
       :size="isMinScreenMd ? 'medium' : isHeaderScrolled ? 'small' : 'large'"
       :class="{
         'order-4 md:order-none w-full md:w-auto': !isHeaderScrolled,
@@ -30,7 +30,7 @@
     >
       <span
         v-show="searchStatus"
-        class="info font-semibold text-xs text-dark-charcoal-70 group-hover:text-dark-charcoal group-focus:text-dark-charcoal mx-4"
+        class="hidden lg:block info font-semibold text-xs text-dark-charcoal-70 group-hover:text-dark-charcoal group-focus:text-dark-charcoal mx-4"
       >
         {{ searchStatus }}
       </span>
@@ -144,16 +144,11 @@ const VHeader = defineComponent({
     const resultsCount = computed(() => store.getters['media/resultCount'])
     const { getI18nCount } = useI18nResultsCount()
     /**
-     * Status is hidden below the medium breakpoint.
-     * It shows Loading... or Number of results on bigger screens.
+     * Additional text at the end of the search bar.
+     * Shows the loading state or result count.
      */
     const searchStatus = computed(() => {
-      if (
-        !isMinScreenMd.value ||
-        !isSearchRoute.value ||
-        store.state.search.query.q === ''
-      )
-        return ''
+      if (!isSearchRoute.value || store.state.search.query.q === '') return ''
       if (isFetching.value) return i18n.t('header.loading')
       return getI18nCount(resultsCount.value)
     })
@@ -237,12 +232,3 @@ const VHeader = defineComponent({
 
 export default VHeader
 </script>
-<style scoped>
-@media (max-width: 767px) {
-  .search-bar-mobile-scrolled {
-    /* outer padding, inner gaps, (logo, content switcher and filter button), additional content switcher padding */
-    /* width: calc(100vw - 2rem - 1.5rem - 3 * 2.5rem - 0.25rem); */
-    width: calc(100vw - 11.25rem);
-  }
-}
-</style>
