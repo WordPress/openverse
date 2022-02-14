@@ -503,11 +503,11 @@
         },
         "pytest-order": {
             "hashes": [
-                "sha256:5997a262b31234eebb461f9a9ef24687bf732029b499845a4398b69edb5ac321",
-                "sha256:a4cdf12f4c83c76bdfd6e6088e2e157df7fdf91a9c3e3ca7d8809e8dabce0f4b"
+                "sha256:5dd6b929fbd7eaa6d0ee07586f65c623babb0afe72b4843c5f15055d6b3b1b1f",
+                "sha256:bbe6e63a8e23741ab3e810d458d1ea7317e797b70f9550512d77d6e9e8fd1bbb"
             ],
             "index": "pypi",
-            "version": "==1.0.0"
+            "version": "==1.0.1"
         },
         "remote-pdb": {
             "hashes": [
