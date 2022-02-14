@@ -77,3 +77,17 @@ The command `just up` spawns the following services:
 - **analytics** (`analytics/`)
 
 The last three are subprojects of this monorepo.
+
+## Troubleshooting
+
+If the Elasticsearch container fails to start on your machine, there's a good chance the container ran out of memory. Ensure that you have allocated enough memory to Docker applications and re-run the `just up` command.
+
+If the logs mention "insufficient max map count", you may also need to increase the number of open files allowed on your system. For most Linux machines, you can fix this by adding the following line to `/etc/sysctl.conf`:
+```ini
+vm.max_map_count=262144
+```
+
+To make this setting take effect, update kernel state:
+```bash
+sudo sysctl -p
+```
