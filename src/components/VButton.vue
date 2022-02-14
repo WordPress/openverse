@@ -231,20 +231,26 @@ export default VButton
 </script>
 
 <style module>
+/**
+ * Classnames in this file are duplicated to increase specificity.
+ * This is currently necessary due to a bug with the order of CSS files
+ * that only appears in development.
+ */
+
 .button[disabled='disabled'],
 .button[aria-disabled='true'] {
   @apply opacity-50;
 }
 
-.size-small {
+.size-small.size-small {
   @apply py-1 px-2;
 }
 
-.size-medium {
+.size-medium.size-medium {
   @apply py-2 px-4;
 }
 
-.size-large {
+.size-large.size-large {
   @apply py-6 px-8;
 }
 
@@ -252,67 +258,67 @@ a.button {
   @apply no-underline;
 }
 
-.primary {
+.primary.primary {
   @apply bg-pink text-white focus-visible:ring focus-visible:ring-pink hover:bg-dark-pink hover:text-white;
 }
 
-.primary-pressed {
+.primary-pressed.primary-pressed {
   @apply bg-dark-pink;
 }
 
-.secondary {
+.secondary.secondary {
   @apply bg-dark-charcoal text-white font-bold focus-visible:ring focus-visible:ring-pink hover:bg-dark-charcoal-80 hover:text-white;
 }
 
-.secondary-pressed {
+.secondary-pressed.secondary-pressed {
   @apply bg-dark-charcoal-80 border border-tx hover:border-tx;
 }
 
-.tertiary {
+.tertiary.tertiary {
   @apply bg-white text-dark-charcoal border border-dark-charcoal-20 focus-visible:border-tx focus-visible:ring focus-visible:ring-pink ring-offset-0;
 }
 
-.tertiary-pressed {
+.tertiary-pressed.tertiary-pressed {
   @apply bg-dark-charcoal text-white border-tx;
 }
 
-.action-menu {
+.action-menu.action-menu {
   @apply bg-white text-dark-charcoal border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
 }
 
-.action-menu-secondary {
+.action-menu-secondary.action-menu-secondary {
   @apply bg-white text-dark-charcoal border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
 }
 
-.action-menu-secondary-pressed {
+.action-menu-secondary-pressed.action-menu-secondary-pressed {
   @apply border-tx bg-dark-charcoal text-white;
 }
 
-.action-menu-pressed {
+.action-menu-pressed.action-menu-pressed {
   @apply border-tx hover:border-tx bg-dark-charcoal text-white;
 }
 
-.action-menu-muted {
+.action-menu-muted.action-menu-muted {
   @apply bg-dark-charcoal-10 text-dark-charcoal border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
 }
 
-.action-menu-muted-pressed {
+.action-menu-muted-pressed.action-menu-muted-pressed {
   @apply border border-tx bg-dark-charcoal text-white focus-visible:ring focus-visible:ring-pink;
 }
 
-.grouped {
+.grouped.grouped {
   @apply bg-white text-dark-charcoal focus-visible:ring-[0];
 }
 
-.grouped-pressed {
+.grouped-pressed.grouped-pressed {
   @apply bg-dark-charcoal-10 ring-offset-dark-charcoal-10;
 }
 
-.full {
+.full.full {
   @apply w-full font-semibold bg-dark-charcoal-06 focus-visible:ring focus-visible:ring-pink hover:bg-dark-charcoal-40 hover:text-white;
 }
 
-.full-pressed {
+.full-pressed.full-pressed {
   @apply w-full font-semibold bg-dark-charcoal-06 text-dark-charcoal;
 }
 
