@@ -1,16 +1,13 @@
 <template>
   <div>
-    <a
-      v-if="shouldShowBreadcrumb"
-      class="px-6 pt-4 flex flex-row items-center bg-dark-charcoal-06 font-semibold text-dark-charcoal text-xs md:text-sr"
-      :href="breadcrumbUrl"
-      @click.prevent="$router.back()"
-    >
-      <Chevron class="-ms-2" />
-      {{ $t('image-details.back') }}
-    </a>
+    <figure class="w-full mb-4 pt-8 md:pt-12 px-6 bg-dark-charcoal-06 relative">
+      <div
+        v-if="showBackToSearchLink"
+        class="absolute left-0 top-0 right-0 z-40 w-full px-2"
+      >
+        <VBackToSearchResultsLink />
+      </div>
 
-    <figure class="w-full mb-4 pt-4 md:pt-8 px-6 bg-dark-charcoal-06">
       <img
         v-if="!sketchFabUid"
         id="main-image"
@@ -42,7 +39,7 @@
         @keyup.enter="onSourceLinkClicked"
         >{{ $t('image-details.weblink') }}</VButton
       >
-      <span class="flex-1">
+      <span class="flex-1 flex flex-col justify-center">
         <h1 class="text-base md:text-3xl font-semibold leading-[130%]">
           {{ image.title }}
         </h1>
@@ -101,12 +98,9 @@ import VMediaReuse from '~/components/VMediaInfo/VMediaReuse.vue'
 import VRelatedImages from '~/components/VImageDetails/VRelatedImages.vue'
 import SketchFabViewer from '~/components/SketchFabViewer.vue'
 
-import Chevron from '~/assets/icons/chevron-left.svg?inline'
-
 const VImageDetailsPage = {
   name: 'VImageDetailsPage',
   components: {
-    Chevron,
     VButton,
     VIcon,
     VImageDetails,
@@ -116,8 +110,7 @@ const VImageDetailsPage = {
   },
   data() {
     return {
-      breadcrumbUrl: '',
-      shouldShowBreadcrumb: false,
+      showBackToSearchLink: false,
       imageWidth: 0,
       imageHeight: 0,
       imageType: 'Unknown',
@@ -160,8 +153,7 @@ const VImageDetailsPage = {
         from.name === _this.localeRoute({ path: '/search/' }).name ||
         from.name === _this.localeRoute({ path: '/search/image' }).name
       ) {
-        _this.shouldShowBreadcrumb = true
-        _this.breadcrumbUrl = from.fullPath
+        _this.showBackToSearchLink = true
       }
     })
   },

@@ -1,12 +1,23 @@
 <template>
-  <!--eslint-disable @intlify/vue-i18n/no-raw-text -->
   <section class="audio-info">
-    <h4 class="b-header mb-6">Audio information</h4>
-    <div class="mb-6 audio-info__grid">
-      <VAudioThumbnail :audio="audio" />
-      <div class="audio-info__data">
+    <h4 class="text-base lg:text-3xl mb-6">
+      {{ $t('audio-details.information') }}
+    </h4>
+    <div class="flex flex-col md:flex-row items-start gap-6">
+      <div class="w-[75px] h-[75px] lg:w-30 lg:h-30 rounded-sm overflow-hidden">
+        <VAudioThumbnail :audio="audio" />
+      </div>
+      <div class="flex flex-col gap-4 lg:gap-6 flex-grow">
         <p v-if="audio.description" class="mb-6">{{ audio.description }}</p>
-        <VAudioTags :tags="audio.tags" :show-header="false" class="mb-6" />
+        <ul class="flex flex-wrap gap-2">
+          <MediaTag
+            v-for="(tag, index) in audio.tags.filter((i) => !!i)"
+            :key="index"
+            tag="li"
+          >
+            {{ tag.name }}
+          </MediaTag>
+        </ul>
         <dl v-if="audio">
           <div v-if="audio.audio_set">
             <dt>{{ $t('audio-details.table.album') }}</dt>
@@ -41,10 +52,16 @@
               {{ $t('audio-details.table.provider') }}
             </dt>
             <dd>
-              {{ providerName }}
+              <a
+                :href="audio.foreign_landing_url"
+                target="blank"
+                rel="noopener noreferrer"
+              >
+                {{ providerName }}
+              </a>
             </dd>
           </div>
-          <div v-if="audio.source">
+          <div v-if="audio.source && sourceName !== providerName">
             <dt>
               {{ $t('audio-details.table.source') }}
             </dt>
@@ -52,7 +69,7 @@
               {{ sourceName }}
             </dd>
           </div>
-          <div v-if="audio.genres">
+          <div v-if="audio.genres && audio.genres.length > 0">
             <dt>
               {{ $t('audio-details.table.genre') }}
             </dt>
@@ -87,16 +104,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.audio-info__grid {
-  display: grid;
-  grid-template-columns: 110px auto;
-  grid-template-rows: repeat(auto-fit, 1fr);
-  grid-gap: 1.5rem;
-}
 dl {
-  display: grid;
+  @apply grid gap-4;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  grid-gap: 1.5rem;
+
+  @screen lg {
+    @apply gap-5;
+  }
 }
 dl div {
   display: flex;

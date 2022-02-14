@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
 
-#: src/components/VAudioTrack/layouts/VFullLayout.vue:32
+#: src/components/VAudioTrack/layouts/VFullLayout.vue:39
 msgctxt "interpunct"
 msgid "•"
 msgstr ""
@@ -93,7 +93,7 @@ msgctxt "migration-notice.read"
 msgid "Read more"
 msgstr ""
 
-#: src/components/DropdownButton.vue:83
+#: src/components/DropdownButton.vue:85
 msgctxt "dropdown-button.aria.arrow-label"
 msgid "Dropdown"
 msgstr ""
@@ -205,7 +205,7 @@ msgid "Audio Player"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/layouts/VFullLayout.vue:17
+#: src/components/VAudioTrack/layouts/VFullLayout.vue:23
 msgctxt "audio-track.creator"
 msgid "by ###creator###"
 msgstr ""
@@ -325,47 +325,47 @@ msgstr ""
 
 #: src/components/AudioDetails/VRelatedAudio.vue:4
 msgctxt "audio-details.related-audios"
-msgid "Related audios"
+msgid "Related audio"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:12
+#: src/components/AudioDetails/VAudioDetails.vue:5
+msgctxt "audio-details.information"
+msgid "Audio information"
+msgstr ""
+
+#: src/components/AudioDetails/VAudioDetails.vue:24
 msgctxt "audio-details.table.album"
 msgid "Album"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:18
+#: src/components/AudioDetails/VAudioDetails.vue:30
 msgctxt "audio-details.table.category"
 msgid "Type"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:25
+#: src/components/AudioDetails/VAudioDetails.vue:37
 msgctxt "audio-details.table.sample-rate"
 msgid "Sample Rate"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:33
+#: src/components/AudioDetails/VAudioDetails.vue:45
 msgctxt "audio-details.table.filetype"
 msgid "Format"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:41
+#: src/components/AudioDetails/VAudioDetails.vue:53
 msgctxt "audio-details.table.provider"
 msgid "Provider"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:49
+#: src/components/AudioDetails/VAudioDetails.vue:67
 msgctxt "audio-details.table.source"
 msgid "Source"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:57
+#: src/components/AudioDetails/VAudioDetails.vue:75
 msgctxt "audio-details.table.genre"
 msgid "Genre"
-msgstr ""
-
-#: src/pages/image/_id.vue:10
-msgctxt "image-details.back"
-msgid "Back to search results"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -422,6 +422,11 @@ msgstr ""
 #: src/components/VImageDetails/VImageDetails.vue:72
 msgctxt "image-details.information.unknown"
 msgid "Unknown"
+msgstr ""
+
+#: src/pages/audio/_id.vue:25
+msgctxt "single-result.back"
+msgid "Back to search results"
 msgstr ""
 
 msgctxt "media-details.provider-label"
@@ -1083,7 +1088,7 @@ msgid "Couldn't find image with id ###id###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/audio/_id.vue:66
+#: src/pages/audio/_id.vue:87
 msgctxt "error.media-not-found"
 msgid "Couldn't find ###mediaType### with id ###id###"
 msgstr ""

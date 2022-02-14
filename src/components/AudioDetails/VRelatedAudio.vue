@@ -1,19 +1,18 @@
 <template>
-  <aside :aria-label="$t('photo-details.aria.related')">
-    <h4 class="b-header mb-6">
+  <aside :aria-label="$t('audio-details.related-audios')">
+    <h4 class="text-base lg:text-3xl mb-6">
       {{ $t('audio-details.related-audios') }}
     </h4>
-    <template v-if="!$fetchState.error">
+    <div v-if="!$fetchState.error" class="flex flex-col gap-8 lg:gap-12 mb-12">
       <VAudioTrack
         v-for="audio in audios"
         :key="audio.id"
         :audio="audio"
         layout="row"
-        size="m"
-        class="mb-12"
+        :size="audioTrackSize"
       />
       <LoadingIcon v-show="$fetchState.pending" />
-    </template>
+    </div>
     <p v-show="!!$fetchState.error">
       {{ $t('media-details.related-error') }}
     </p>
@@ -21,9 +20,11 @@
 </template>
 
 <script>
-import { ref } from '@nuxtjs/composition-api'
+import { computed, ref } from '@nuxtjs/composition-api'
 import { AUDIO } from '~/constants/media'
+
 import useRelated from '~/composables/use-related'
+import { isMinScreen } from '@/composables/use-media-query'
 
 export default {
   name: 'VRelatedAudio',
@@ -39,20 +40,27 @@ export default {
    * @param {object} props
    * @param {string} props.audioId
    * @param {any} props.service
-   * @return {{ audios: Ref<AudioDetail[]> }}
+   * @return {{ audios: import('~/composables/types').Ref<import('~/store/types').AudioDetail[]>, audioTrackSize: import('@nuxtjs/composition-api').ComputedRef<"l" | "s"> }}
    */
   setup(props) {
     const mainAudioId = ref(props.audioId)
     const relatedOptions = {
       mediaType: AUDIO,
       mediaId: mainAudioId,
+      service: undefined,
     }
     // Using service prop to be able to mock when testing
     if (props.service) {
       relatedOptions.service = props.service
     }
+
+    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
+    const audioTrackSize = computed(() => {
+      return isMinScreenMd.value ? 'l' : 's'
+    })
+
     const { media: audios } = useRelated(relatedOptions)
-    return { audios }
+    return { audioTrackSize, audios }
   },
 }
 </script>

@@ -1,18 +1,39 @@
 <template>
   <div class="full-track w-full">
-    <slot name="controller" />
-
+    <div class="bg-dark-charcoal-06 relative">
+      <span
+        v-if="currentTime > 0"
+        class="pointer-events-none absolute h-full hidden md:block w-4 lg:w-10 left-0 bg-yellow"
+        aria-hidden
+      />
+      <span
+        v-if="status === 'played'"
+        class="pointer-events-none absolute h-full hidden md:block w-4 lg:w-10 right-0 bg-yellow"
+        aria-hidden
+      />
+      <div class="md:mx-4 lg:mx-10">
+        <slot
+          name="controller"
+          :features="['timestamps', 'duration', 'seek']"
+          :usable-frac="0.8"
+        />
+      </div>
+    </div>
     <div
-      class="flex flex-row flex-wrap items-top mx-6 sm:mx-16 my-4 sm:my-6 gap-6"
+      class="flex flex-row flex-wrap lg:flex-nowrap items-top px-4 lg:px-0 lg:max-w-5xl mx-auto gap-6 mt-6"
     >
       <slot name="play-pause" :size="isSmall ? 'small' : 'medium'" />
 
-      <div class="audio-info order-2 sm:order-1 w-full sm:w-auto">
-        <h1 class="text-base sm:text-3xl font-heading font-semibold">
+      <div
+        class="audio-info order-2 lg:order-1 w-full lg:w-auto flex flex-col justify-center"
+      >
+        <h1
+          class="text-base lg:text-3xl font-heading font-semibold lg:line-clamp-2"
+        >
           {{ audio.title }}
         </h1>
         <div
-          class="subtitle mt-1 flex flex-col sm:flex-row sm:items-center gap-2"
+          class="subtitle mt-1 flex flex-col lg:flex-row lg:items-center gap-2"
         >
           <i18n
             as="span"
@@ -23,12 +44,13 @@
               <a
                 class="p-px rounded-sm focus:outline-none focus:ring focus:ring-pink"
                 :href="audio.creator_url"
-                >{{ audio.creator }}</a
               >
+                {{ audio.creator }}
+              </a>
             </template>
           </i18n>
 
-          <span v-if="!isSmall" class="text-dark-charcoal-70">{{
+          <span class="hidden lg:block text-dark-charcoal-70">{{
             $t('interpunct')
           }}</span>
 
@@ -37,7 +59,7 @@
       </div>
 
       <DownloadButton
-        class="ms-auto order-1 sm:order-2"
+        class="ms-auto order-1 lg:order-2"
         :formats="getFormats(audio)"
         :size="isSmall ? 'small' : 'medium'"
       />
@@ -55,7 +77,7 @@ export default defineComponent({
   components: {
     DownloadButton,
   },
-  props: ['audio', 'size'],
+  props: ['audio', 'size', 'status', 'currentTime'],
   setup(props) {
     /**
      * Format the time as hh:mm:ss, dropping the hour part if it is zero.
@@ -127,7 +149,7 @@ export default defineComponent({
 
 <style>
 .full-track .waveform {
-  @apply h-30 rounded-sm;
+  @apply h-[185px] rounded-sm;
 }
 
 .full-track .play-pause {
