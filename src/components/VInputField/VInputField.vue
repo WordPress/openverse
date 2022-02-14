@@ -14,7 +14,7 @@
       :id="fieldId"
       v-bind="$attrs"
       :type="type"
-      class="flex-1 leading-none font-semibold bg-tx placeholder-dark-charcoal-70 ms-4 h-full focus:outline-none"
+      class="flex-1 leading-none font-semibold bg-tx placeholder-dark-charcoal-70 ms-4 h-full appearance-none rounded-none focus:outline-none text-2xl md:text-base"
       :value="modelValue"
       :aria-label="labelText"
       @input="updateModelValue"
@@ -30,7 +30,7 @@
 import { computed } from '@nuxtjs/composition-api'
 
 const FIELD_SIZES = {
-  small: 'h-10',
+  small: 'h-10 text-md',
   medium: 'h-12',
   large: 'h-14',
   standalone: 'h-14 md:h-[69px]',

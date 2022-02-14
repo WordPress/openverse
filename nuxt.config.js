@@ -12,9 +12,37 @@ import { sentry } from './src/utils/sentry-config'
  */
 const meta = [
   { charset: 'utf-8' },
-  { name: 'viewport', content: 'width=device-width,initial-scale=1' },
   // Tells Google to only crawl Openverse when iframed
   { hid: 'googlebot', name: 'googlebot', content: 'noindex,indexifembedded' },
+  {
+    name: 'description',
+    content:
+      'A new Openverse search tool for creators seeking to discover and reuse free resources with greater ease.',
+  },
+  {
+    name: 'viewport',
+    content: 'width=device-width,initial-scale=1',
+  },
+  { name: 'twitter:card', content: 'summary_large_image' },
+  { name: 'twitter:site', content: '@creativecommons' },
+  { name: 'og:title', content: 'Openverse' },
+  {
+    name: 'og:image',
+    content: '/cclogo-shared-image.jpg',
+  },
+  {
+    name: 'og:description',
+    content:
+      'Empowering the world to share through 6 simple licenses + a global community of advocates for open.',
+  },
+  {
+    name: 'og:url',
+    content: 'https://creativecommons.org',
+  },
+  {
+    name: 'og:site_name',
+    content: 'Creative Search',
+  },
   {
     vmid: 'monetization',
     name: 'monetization',
