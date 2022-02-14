@@ -4,6 +4,11 @@
 
 This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [Openverse Catalog repository](https://github.com/WordPress/openverse-catalog). A front end web application that interfaces with the API can be found at the [Openverse frontend repository](https://github.com/WordPress/openverse-frontend).
 
+## Getting started
+
+Our quickstart guide and other documentation can be found in our [developer docs](https://wordpress.github.io/openverse-api/guides/quickstart.html) (or within the repo at [`./api/docs/guides/quickstart.md`](./api/docs/guides/quickstart.md)).
+Our API documentation can also be found at [https://api.openverse.engineering](https://api.openverse.engineering).
+
 ## System architecture
 
 ![System architecture](readme_assets/system_architecture.png)
