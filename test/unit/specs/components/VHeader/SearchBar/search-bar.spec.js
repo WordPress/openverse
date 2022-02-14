@@ -14,6 +14,13 @@ describe('SearchBar', () => {
   beforeEach(() => {
     options = {
       props: { placeholder: defaultPlaceholder, size: 'standalone' },
+      mocks: {
+        $nuxt: {
+          context: {
+            app: { $ua: {} },
+          },
+        },
+      },
     }
   })
 

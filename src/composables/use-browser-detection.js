@@ -9,3 +9,7 @@ export const useBrowserIsBlink = () => {
   const browser = useBrowserDetection()
   return browser.isChrome || browser.isEdge || browser.isOpera
 }
+
+export const useBrowserIsMobile = () => {
+  return useBrowserDetection().isMobile
+}

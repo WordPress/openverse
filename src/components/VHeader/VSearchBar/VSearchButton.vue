@@ -1,45 +1,55 @@
 <template>
-  <div>
-    <VButton
-      v-if="isHomeRoute && isMinScreenMd"
-      v-bind="$attrs"
-      :aria-label="$t('search.search')"
-      class="inline-block cta-search-button font-semibold h-full text-2xl"
-      v-on="$listeners"
-      >{{ $t('search.search') }}</VButton
-    >
-    <VIconButton
-      v-else
-      v-bind="$attrs"
-      :size="`search-${size}`"
-      class="search-button hover:text-white group-hover:text-white hover:bg-pink group-hover:bg-pink p-0.5px ps-1.5px focus:p-0 border hover:border-pink group-hover:border-pink rounded-e-sm active:shadow-ring"
-      :class="[
-        isHomeRoute
-          ? 'bg-pink text-white border-tx'
-          : 'border-dark-charcoal-20',
-      ]"
-      :icon-props="{ iconPath: searchIcon }"
-      :aria-label="$t('search.search')"
-      v-on="$listeners"
-    />
-  </div>
+  <VButton
+    v-bind="$attrs"
+    :aria-label="$t('search.search')"
+    size="disabled"
+    :variant="isIcon ? 'plain' : 'primary'"
+    class="transition-none inline-block rounded-s-none font-semibold text-2xl hover:text-white group-hover:text-white hover:bg-pink group-hover:bg-pink"
+    :class="[
+      isIcon ? 'search-button p-[0.5px] ps-[1.5px]' : 'py-6 px-10 h-full',
+      sizeClasses,
+      isHomeRoute
+        ? 'bg-pink border-b border-b-pink text-white border-tx'
+        : 'border-dark-charcoal-20',
+    ]"
+    v-on="$listeners"
+  >
+    <template v-if="isIcon">
+      <VIcon :icon-path="searchIcon" />
+    </template>
+    <template v-else>
+      <span>{{ $t('search.search') }}</span>
+    </template>
+  </VButton>
 </template>
 
 <script>
+import { defineComponent, computed } from '@nuxtjs/composition-api'
 import { isMinScreen } from '~/composables/use-media-query'
+import { useBrowserIsMobile } from '~/composables/use-browser-detection'
 
-import VIconButton from '~/components/VIconButton/VIconButton.vue'
+import VButton from '~/components/VButton.vue'
+import VIcon from '~/components/VIcon/VIcon.vue'
 
 import searchIcon from '~/assets/icons/search.svg'
 
-export default {
+/**
+ * @typedef Props
+ * @property {'small' | 'medium' | 'large' | 'standalone'} size
+ * @property {boolean} isHomeRoute
+ */
+
+export default defineComponent({
   name: 'VSearchButton',
-  components: { VIconButton },
+  components: { VIcon, VButton },
   inheritAttrs: false,
   props: {
     size: {
       type: String,
       required: true,
+      /**
+       * @param {string} v
+       */
       validator: (v) => ['small', 'medium', 'large', 'standalone'].includes(v),
     },
     isHomeRoute: {
@@ -47,20 +57,41 @@ export default {
       default: false,
     },
   },
-  setup() {
-    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
+  /**
+   * @param {Props} props
+   */
+  setup(props) {
+    const isMobile = useBrowserIsMobile()
+    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: !isMobile })
+    const isIcon = computed(() => {
+      // split the evaluation of the isMinScreenMd ref
+      // out to prevent short-circuiting from creating
+      // problems with `computed`'s dependency detection
+      const currentIsMinScreenMd = isMinScreenMd.value
 
-    return { isMinScreenMd, searchIcon }
+      return (
+        props.size !== 'standalone' ||
+        (props.size === 'standalone' && !currentIsMinScreenMd)
+      )
+    })
+
+    const sizeClasses = computed(() => {
+      return isIcon
+        ? {
+            small: ['w-10', 'md:w-12', 'h-10', 'md:h-12'],
+            medium: ['w-12', 'h-12'],
+            large: ['w-14', 'h-14'],
+            standalone: ['w-14', 'md:w-[69px]', 'h-14', 'md:h-[69px]'],
+          }[props.size]
+        : undefined
+    })
+
+    return { isMinScreenMd, searchIcon, sizeClasses, isIcon }
   },
-}
+})
 </script>
 
 <style scoped>
-.cta-search-button {
-  @apply py-6 px-10 rounded-s-none border-b border-b-pink;
-}
-
-/* @todo: Find a better way to override the VIconButton border styles */
 .search-button {
   /* Negative margin removes a tiny gap between the button and the input borders */
   margin-inline-start: -1px;

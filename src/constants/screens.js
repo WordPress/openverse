@@ -1,6 +1,8 @@
+/** @typedef {'2xl' | 'xl' | 'lg' | 'md' | 'sm' | 'xs' | 'mob'} Breakpoints */
+
 /**
  * Mapping of a breakpoint name to the lower-bound of its screen-width range
- * @type {Map<string, number>}
+ * @type {Map<Exclude<Breakpoints, 'mob'>, number>}
  */
 const SCREEN_SIZES = new Map([
   ['2xl', 1536],
@@ -26,7 +28,7 @@ const VIEWPORTS = Object.fromEntries(
 /**
  * Get the breakpoint in which the screen with the given width lies.
  * @param {number} screenWidth - the width of the screen
- * @returns {string} the breakpoint in which the screen lies
+ * @returns {Breakpoints} the breakpoint in which the screen lies
  */
 const getBreakpointName = (screenWidth) => {
   for (const [breakpointName, lowerLimit] of SCREEN_SIZES) {
@@ -37,6 +39,9 @@ const getBreakpointName = (screenWidth) => {
   return 'mob' // smallest breakpoint
 }
 
+/**
+ * This module is consumed by Nuxt and Tailwind config so it needs to use CJS modules
+ */
 module.exports = {
   SCREEN_SIZES,
   VIEWPORTS,
