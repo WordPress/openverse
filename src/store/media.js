@@ -1,14 +1,12 @@
-import findIndex from 'lodash.findindex'
 import prepareSearchQueryParams from '~/utils/prepare-search-query-params'
 import decodeMediaData from '~/utils/decode-media-data'
 import {
-  FETCH_AUDIO,
-  FETCH_IMAGE,
   FETCH_MEDIA,
   FETCH_SINGLE_MEDIA_TYPE,
   HANDLE_MEDIA_ERROR,
   HANDLE_NO_MEDIA,
   CLEAR_MEDIA,
+  FETCH_MEDIA_ITEM,
 } from '~/constants/action-types'
 import {
   FETCH_END_MEDIA,
@@ -16,8 +14,7 @@ import {
   FETCH_START_MEDIA,
   MEDIA_NOT_FOUND,
   RESET_MEDIA,
-  SET_AUDIO,
-  SET_IMAGE,
+  SET_MEDIA_ITEM,
   SET_MEDIA,
 } from '~/constants/mutation-types'
 import {
@@ -158,69 +155,38 @@ export const createActions = (services) => ({
   /**
    *
    * @param {import('vuex').ActionContext} context
-   * @param params
+   * @param {object} params
+   * @param {import('../constants/media').MediaType} params.mediaType
+   * @param {string} params.id
    * @return {Promise<void>}
    */
-  async [FETCH_AUDIO]({ commit, dispatch, state, rootState }, params) {
+  async [FETCH_MEDIA_ITEM]({ commit, dispatch, state, rootState }, params) {
+    const { mediaType, id } = params
+    const resultRank = Object.keys(state.results[mediaType].items).findIndex(
+      (item) => item === id
+    )
     await dispatch(
       `${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`,
       {
         query: rootState.search.query.q,
-        resultUuid: params.id,
-        resultRank: findIndex(
-          state.results.audio.items,
-          (item) => item.id === params.id
-        ),
+        resultUuid: id,
+        resultRank,
         sessionId: rootState.user.usageSessionId,
       },
       { root: true }
     )
-    commit(SET_AUDIO, { audio: {} })
-    await services[AUDIO].getMediaDetail(params)
-      .then(({ data }) => {
-        commit(SET_AUDIO, { audio: data })
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 404) {
-          commit(MEDIA_NOT_FOUND, { mediaType: AUDIO })
-        } else {
-          dispatch(HANDLE_MEDIA_ERROR, { mediaType: AUDIO, error })
-        }
-      })
-  },
-  /**
-   *
-   * @param {import('vuex').ActionContext} context
-   * @param params
-   * @return {Promise<void>}
-   */
-  async [FETCH_IMAGE]({ commit, dispatch, state, rootState }, params) {
-    await dispatch(
-      `${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`,
-      {
-        query: rootState.search.query.q,
-        resultUuid: params.id,
-        resultRank: findIndex(
-          state.results.image.items,
-          (img) => img.id === params.id
-        ),
-        sessionId: rootState.user.usageSessionId,
-      },
-      { root: true }
-    )
-
-    commit(SET_IMAGE, { image: {} })
-    await services[IMAGE].getMediaDetail(params)
-      .then(({ data }) => {
-        commit(SET_IMAGE, { image: data })
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 404) {
-          commit(MEDIA_NOT_FOUND, { mediaType: IMAGE })
-        } else {
-          throw new Error(`Error fetching the image: ${error.message}`)
-        }
-      })
+    commit(SET_MEDIA_ITEM, { item: {}, mediaType })
+    try {
+      const res = await services[mediaType].getMediaDetail(params)
+      const { data } = res
+      commit(SET_MEDIA_ITEM, { item: data, mediaType })
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        commit(MEDIA_NOT_FOUND, { mediaType })
+      } else {
+        await dispatch(HANDLE_MEDIA_ERROR, { mediaType, error })
+      }
+    }
   },
   /**
    *
@@ -376,11 +342,9 @@ export const mutations = {
     _state.fetchState[mediaType].fetchingError = errorMessage
     _state.fetchState[mediaType].isFinished = true
   },
-  [SET_AUDIO](_state, params) {
-    _state.audio = decodeMediaData(params.audio, AUDIO)
-  },
-  [SET_IMAGE](_state, params) {
-    _state.image = decodeMediaData(params.image)
+  [SET_MEDIA_ITEM](_state, params) {
+    const { item, mediaType } = params
+    _state[mediaType] = decodeMediaData(item, mediaType)
   },
   [SET_MEDIA](_state, params) {
     const {

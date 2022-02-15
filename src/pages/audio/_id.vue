@@ -22,7 +22,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { FETCH_AUDIO } from '~/constants/action-types'
+import { FETCH_MEDIA_ITEM } from '~/constants/action-types'
 import iframeHeight from '~/mixins/iframe-height'
 import { AUDIO } from '~/constants/media'
 import getAttributionHtml from '~/utils/attribution-html'
@@ -55,7 +55,10 @@ const AudioDetailPage = {
   },
   async asyncData({ env, store, route, error, app }) {
     try {
-      await store.dispatch(`${MEDIA}/${FETCH_AUDIO}`, { id: route.params.id })
+      await store.dispatch(`${MEDIA}/${FETCH_MEDIA_ITEM}`, {
+        id: route.params.id,
+        mediaType: AUDIO,
+      })
       return {
         thumbnailURL: `${env.apiUrl}audio/${route.params.id}/thumb/`,
         id: route.params.id,

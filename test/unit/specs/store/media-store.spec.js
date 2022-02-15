@@ -5,19 +5,16 @@ import {
   FETCH_START_MEDIA,
   MEDIA_NOT_FOUND,
   RESET_MEDIA,
-  SET_AUDIO,
-  SET_IMAGE,
   SET_MEDIA,
+  SET_MEDIA_ITEM,
 } from '~/constants/mutation-types'
 import {
-  FETCH_AUDIO,
-  FETCH_IMAGE,
-  FETCH_MEDIA,
+  FETCH_MEDIA_ITEM,
   FETCH_SINGLE_MEDIA_TYPE,
   HANDLE_MEDIA_ERROR,
   HANDLE_NO_MEDIA,
 } from '~/constants/action-types'
-import { AUDIO, IMAGE } from '~/constants/media'
+import { AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
 import {
   SEND_RESULT_CLICKED_EVENT,
   SEND_SEARCH_QUERY_EVENT,
@@ -87,19 +84,18 @@ describe('Search Store', () => {
       expect(state.fetchState.image.fetchingError).toBe('error')
     })
 
-    it('SET_AUDIO updates state', () => {
-      const params = { audio: { title: 'Foo', creator: 'bar', tags: [] } }
-      mutations[SET_AUDIO](state, params)
+    it.each(supportedMediaTypes)(
+      'SET_MEDIA_ITEM updates state for ${mediaType}',
+      (mediaType) => {
+        const params = {
+          item: { title: 'Foo', creator: 'bar', tags: [] },
+          mediaType,
+        }
+        mutations[SET_MEDIA_ITEM](state, params)
 
-      expect(state.audio).toEqual(params.audio)
-    })
-
-    it('SET_IMAGE updates state', () => {
-      const params = { image: { title: 'Foo', creator: 'bar', tags: [] } }
-      mutations[SET_IMAGE](state, params)
-
-      expect(state.image).toEqual(params.image)
-    })
+        expect(state[mediaType]).toEqual(params.item)
+      }
+    )
 
     it('SET_MEDIA updates state persisting images', () => {
       const img1 = {
@@ -165,7 +161,7 @@ describe('Search Store', () => {
       ).toThrow('Media of type audio not found')
     })
 
-    xit('RESET_MEDIA resets the media type state', () => {
+    it('RESET_MEDIA resets the media type state', () => {
       state = {
         results: {
           image: {
@@ -178,7 +174,7 @@ describe('Search Store', () => {
       }
 
       mutations[RESET_MEDIA](state, { mediaType: IMAGE })
-      expect(state.results.image.items).toStrictEqual([])
+      expect(state.results.image.items).toStrictEqual({})
       expect(state.results.image.count).toEqual(0)
       expect(state.results.image.page).toBe(undefined)
       expect(state.results.image.pageCount).toEqual(0)
@@ -186,35 +182,48 @@ describe('Search Store', () => {
   })
 
   describe('actions', () => {
-    const searchData = { results: ['foo'], result_count: 1 }
-    const audioDetailData = 'audioDetails'
-    const imageDetailData = 'imageDetails'
+    const searchData = { results: ['foo'], result_count: 22, page_count: 2 }
+    const detailData = { [AUDIO]: 'audioDetails', [IMAGE]: 'imageDetails' }
+    const transformedResults = {
+      results: { foo: { id: 'foo' }, bar: { id: 'bar' }, zeta: { id: 'zeta' } },
+      result_count: 22,
+      page_count: 2,
+    }
     let services = null
-    let audioServiceMock = null
-    let imageServiceMock = null
     let state
     let context
     beforeEach(() => {
-      imageServiceMock = {
-        search: jest.fn(() => Promise.resolve({ data: searchData })),
-        getMediaDetail: jest.fn(() =>
-          Promise.resolve({ data: imageDetailData })
-        ),
+      services = {
+        [AUDIO]: {
+          search: jest.fn(() => Promise.resolve({ data: searchData })),
+          getMediaDetail: jest.fn(() =>
+            Promise.resolve({ data: detailData[AUDIO] })
+          ),
+          transformResults: jest.fn(() => transformedResults),
+        },
+        [IMAGE]: {
+          search: jest.fn(() => Promise.resolve({ data: searchData })),
+          getMediaDetail: jest.fn(() =>
+            Promise.resolve({ data: detailData[IMAGE] })
+          ),
+          transformResults: jest.fn(() => transformedResults),
+        },
       }
-      audioServiceMock = {
-        search: jest.fn(() => Promise.resolve({ data: searchData })),
-        getMediaDetail: jest.fn(() =>
-          Promise.resolve({ data: audioDetailData })
-        ),
-      }
-      services = { [AUDIO]: audioServiceMock, [IMAGE]: imageServiceMock }
       state = {
         results: {
           image: {
-            items: [{ id: 'foo' }, { id: 'bar' }, { id: 'zeta' }],
+            items: {
+              foo: { id: 'foo' },
+              bar: { id: 'bar' },
+              zeta: { id: 'zeta' },
+            },
           },
           audio: {
-            items: [{ id: 'foo' }, { id: 'bar' }, { id: 'zeta' }],
+            items: {
+              foo: { id: 'foo' },
+              bar: { id: 'bar' },
+              zeta: { id: 'zeta' },
+            },
           },
         },
       }
@@ -233,31 +242,39 @@ describe('Search Store', () => {
       }
     })
 
-    xit('FETCH_MEDIA on success', async () => {
-      const params = {
-        q: 'foo',
-        page: 1,
-        shouldPersistMedia: true,
-      }
-      const action = createActions(services)[FETCH_MEDIA]
-      await action(context, params)
-      expect(context.commit).toHaveBeenCalledWith(FETCH_START_MEDIA, {
-        mediaType: IMAGE,
-      })
-      expect(context.commit).toHaveBeenCalledWith(FETCH_END_MEDIA, {
-        mediaType: IMAGE,
-      })
+    it.each(supportedMediaTypes)(
+      'FETCH_SINGLE_MEDIA_TYPE on success',
+      async (mediaType) => {
+        const params = {
+          q: 'foo',
+          page: { [mediaType]: 1 },
+          shouldPersistMedia: true,
+          mediaType,
+        }
+        const action = createActions(services)[FETCH_SINGLE_MEDIA_TYPE]
+        await action(context, params)
+        expect(context.commit).toHaveBeenCalledWith(FETCH_START_MEDIA, {
+          mediaType,
+        })
+        expect(context.commit).toHaveBeenCalledWith(FETCH_END_MEDIA, {
+          mediaType,
+        })
 
-      expect(context.commit).toHaveBeenCalledWith(SET_MEDIA, {
-        media: searchData.results,
-        mediaCount: searchData.result_count,
-        shouldPersistMedia: params.shouldPersistMedia,
-        page: params.page,
-        mediaType: IMAGE,
-      })
-      delete params.mediaType
-      expect(services[IMAGE].search).toHaveBeenCalledWith(params)
-    })
+        // Page parameter is converted from an object into a number
+        params.page = 1
+        expect(context.commit).toHaveBeenCalledWith(SET_MEDIA, {
+          media: transformedResults.results,
+          mediaCount: searchData.result_count,
+          shouldPersistMedia: params.shouldPersistMedia,
+          page: params.page,
+          pageCount: searchData.page_count,
+          mediaType,
+        })
+        delete params.mediaType
+        delete params.shouldPersistMedia
+        expect(services[mediaType].search).toHaveBeenCalledWith(params)
+      }
+    )
 
     it('FETCH_SINGLE_MEDIA_TYPE dispatches SEND_SEARCH_QUERY_EVENT', async () => {
       const params = { q: 'foo', shouldPersistMedia: false, mediaType: IMAGE }
@@ -351,120 +368,80 @@ describe('Search Store', () => {
       })
     })
 
-    it('FETCH_AUDIO on success', async () => {
-      const params = { id: 'foo' }
-      const action = createActions(services)[FETCH_AUDIO]
-      await action(context, params)
-      expect(context.commit).toHaveBeenCalledWith(SET_AUDIO, { audio: {} })
-      expect(context.commit).toHaveBeenCalledWith(SET_AUDIO, {
-        audio: audioDetailData,
-      })
-      expect(audioServiceMock.getMediaDetail).toHaveBeenCalledWith(params)
-    })
-
-    it('FETCH_AUDIO dispatches SEND_RESULT_CLICKED_EVENT', () => {
-      const params = { id: 'foo' }
-      const action = createActions(services)[FETCH_AUDIO]
-      action(context, params)
-
-      expect(context.dispatch).toHaveBeenLastCalledWith(
-        `${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`,
-        {
-          query: context.rootState.search.query.q,
-          resultUuid: 'foo',
-          resultRank: 0,
-          sessionId: context.rootState.user.usageSessionId,
-        },
-        { root: true }
-      )
-    })
-
-    it('FETCH_AUDIO on error', async () => {
-      services[AUDIO] = {
-        getMediaDetail: jest.fn(() => Promise.reject('error')),
+    it.each(supportedMediaTypes)(
+      'FETCH_MEDIA_ITEM on success',
+      async (mediaType) => {
+        const params = { id: 'foo', mediaType }
+        const action = createActions(services)[FETCH_MEDIA_ITEM]
+        await action(context, params)
+        expect(context.commit).toHaveBeenCalledWith(SET_MEDIA_ITEM, {
+          item: {},
+          mediaType,
+        })
+        expect(context.commit).toHaveBeenCalledWith(SET_MEDIA_ITEM, {
+          item: detailData[mediaType],
+          mediaType,
+        })
+        expect(services[mediaType].getMediaDetail).toHaveBeenCalledWith(params)
       }
-      const params = { id: 'foo' }
-      const action = createActions(services)[FETCH_AUDIO]
-      await action(context, params)
-      await expect(services[AUDIO].getMediaDetail).rejects.toEqual('error')
+    )
 
-      expect(context.dispatch).toHaveBeenLastCalledWith(HANDLE_MEDIA_ERROR, {
-        error: 'error',
-        mediaType: 'audio',
-      })
-    })
+    it.each(supportedMediaTypes)(
+      'FETCH_MEDIA_ITEM dispatches SEND_RESULT_CLICKED_EVENT',
+      (mediaType) => {
+        const params = { id: 'foo', mediaType }
+        const action = createActions(services)[FETCH_MEDIA_ITEM]
+        action(context, params)
 
-    it('FETCH_AUDIO on 404 doesnt break and commits MEDIA_NOT_FOUND', async () => {
-      const mediaType = AUDIO
-      services[AUDIO] = {
-        getMediaDetail: jest.fn(() =>
-          Promise.reject({ response: { status: 404 } })
-        ),
+        expect(context.dispatch).toHaveBeenLastCalledWith(
+          `${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`,
+          {
+            query: context.rootState.search.query.q,
+            resultUuid: 'foo',
+            resultRank: 0,
+            sessionId: context.rootState.user.usageSessionId,
+          },
+          { root: true }
+        )
       }
-      const params = { id: 'foo' }
-      const action = createActions(services)[FETCH_AUDIO]
-      await action(context, params)
-      expect(context.commit).toHaveBeenCalledWith(MEDIA_NOT_FOUND, {
-        mediaType,
-      })
-    })
+    )
 
-    it('FETCH_IMAGE on success', async () => {
-      const params = { id: 'foo' }
-      const action = createActions(services)[FETCH_IMAGE]
-      await action(context, params)
-      expect(context.commit).toHaveBeenCalledWith(SET_IMAGE, { image: {} })
-      expect(context.commit).toHaveBeenCalledWith(SET_IMAGE, {
-        image: imageDetailData,
-      })
+    it.each(supportedMediaTypes)(
+      'FETCH_MEDIA_ITEM on error',
+      async (mediaType) => {
+        services[mediaType] = {
+          getMediaDetail: jest.fn(() => Promise.reject('error')),
+        }
+        const params = { id: 'foo', mediaType }
+        const action = createActions(services)[FETCH_MEDIA_ITEM]
+        await action(context, params)
+        await expect(services[mediaType].getMediaDetail).rejects.toEqual(
+          'error'
+        )
 
-      expect(imageServiceMock.getMediaDetail).toHaveBeenCalledWith(params)
-    })
-
-    it('FETCH_IMAGE dispatches SEND_RESULT_CLICKED_EVENT', () => {
-      const params = { id: 'foo' }
-      const action = createActions(services)[FETCH_IMAGE]
-      action(context, params)
-
-      expect(context.dispatch).toHaveBeenLastCalledWith(
-        `${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`,
-        {
-          query: context.rootState.search.query.q,
-          resultUuid: 'foo',
-          resultRank: 0,
-          sessionId: context.rootState.user.usageSessionId,
-        },
-        { root: true }
-      )
-    })
-
-    it('FETCH_IMAGE on error', async () => {
-      services[IMAGE] = {
-        getMediaDetail: jest.fn(() =>
-          Promise.reject(new Error('Server error'))
-        ),
+        expect(context.dispatch).toHaveBeenLastCalledWith(HANDLE_MEDIA_ERROR, {
+          error: 'error',
+          mediaType,
+        })
       }
-      const params = { id: 'foo' }
-      const action = createActions(services)[FETCH_IMAGE]
-      await expect(action(context, params)).rejects.toThrow(
-        'Error fetching the image: Server error'
-      )
-    })
+    )
 
-    it('FETCH_IMAGE on 404 doesnt break and commits MEDIA_NOT_FOUND', async () => {
-      const mediaType = IMAGE
-      services[IMAGE] = {
-        getMediaDetail: jest.fn(() =>
-          Promise.reject({ response: { status: 404 } })
-        ),
+    it.each(supportedMediaTypes)(
+      'FETCH_MEDIA_ITEM on 404 doesnt break and commits MEDIA_NOT_FOUND',
+      async (mediaType) => {
+        services[mediaType] = {
+          getMediaDetail: jest.fn(() =>
+            Promise.reject({ response: { status: 404 } })
+          ),
+        }
+        const params = { id: 'foo', mediaType }
+        const action = createActions(services)[FETCH_MEDIA_ITEM]
+        await action(context, params)
+        expect(context.commit).toHaveBeenCalledWith(MEDIA_NOT_FOUND, {
+          mediaType,
+        })
       }
-      const params = { id: 'foo' }
-      const action = createActions(services)[FETCH_IMAGE]
-      await action(context, params)
-      expect(context.commit).toHaveBeenCalledWith(MEDIA_NOT_FOUND, {
-        mediaType,
-      })
-    })
+    )
 
     it('HANDLE_MEDIA_ERROR handles 500 error', () => {
       const action = createActions(services)[HANDLE_MEDIA_ERROR]
