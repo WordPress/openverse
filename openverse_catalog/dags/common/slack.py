@@ -52,7 +52,8 @@ from airflow.providers.http.hooks.http import HttpHook
 from requests import Response
 
 
-SLACK_CONN_ID = "slack"
+SLACK_NOTIFICATIONS_CONN_ID = "slack_notifications"
+SLACK_ALERTS_CONN_ID = "slack_alerts"
 JsonDict = dict[str, Any]
 log = logging.getLogger(__name__)
 
@@ -66,7 +67,7 @@ class SlackMessage:
         icon_emoji: str = ":airflow:",
         unfurl_links: bool = True,
         unfurl_media: bool = True,
-        http_conn_id: str = SLACK_CONN_ID,
+        http_conn_id: str = SLACK_NOTIFICATIONS_CONN_ID,
     ):
 
         self.http = HttpHook(method="POST", http_conn_id=http_conn_id)
@@ -211,7 +212,7 @@ def send_message(
     username: str = "Airflow",
     icon_emoji: str = ":airflow:",
     markdown: bool = True,
-    http_conn_id: str = SLACK_CONN_ID,
+    http_conn_id: str = SLACK_NOTIFICATIONS_CONN_ID,
 ) -> None:
     """Send a simple slack message, convenience message for short/simple messages."""
     s = SlackMessage(username, icon_emoji, http_conn_id=http_conn_id)
@@ -225,7 +226,7 @@ def on_failure_callback(context: dict) -> None:
     Errors are only sent out in production and if a Slack connection is defined.
     """
     # Exit early if no slack connection exists
-    hook = HttpHook(http_conn_id=SLACK_CONN_ID)
+    hook = HttpHook(http_conn_id=SLACK_ALERTS_CONN_ID)
     try:
         hook.get_conn()
     except AirflowNotFoundException:
