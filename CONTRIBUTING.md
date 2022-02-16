@@ -14,11 +14,13 @@ Please consult the [README](./README.md) and [CODEBASE](./CODEBASE.md) files at 
 
 Please read the processes in our general [Contributing Code](https://creativecommons.github.io/contributing-code/) guidelines on the Creative Common Open Source website. It contains some general instructions that should be followed when contributing to any of the WP Photos open-source repositories.
 
-### Bugs
+### Bugs and testing
 
 If you find a bug, please open an issue in this repository describing the bug. You can file a bug [here](https://github.com/wordpress/openverse-frontend/issues/new?template=bug_report.md). You will see a bug report template with the required information you should provide.
 
 After that, don't forget to tag the issue with the "Bug" label.
+
+Please see our [testing guidelines](./TESTING_GUIDELINES.md) for general instructions and recommendations for how to test the application.
 
 ### Proposing changes or new features
 
