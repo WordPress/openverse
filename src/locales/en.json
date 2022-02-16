@@ -64,28 +64,6 @@
       "with-count": "{count} Filter|{count} Filters"
     }
   },
-  "footer": {
-    "navigation": {
-      "contact": "Contact",
-      "privacy": "Privacy",
-      "policies": "Policies",
-      "terms": "Terms"
-    },
-    "caption": {
-      "label": "Except where otherwise {noted}, content on this site is licensed under a {attribution}. {icons}",
-      "noted": "noted",
-      "attribution": "Creative Commons Attribution 4.0 International license",
-      "icons": "Icons by Font Awesome."
-    },
-    "donate": {
-      "work": "Our work relies on you!",
-      "help": "Help us keep the internet free and open."
-    },
-    "aria": {
-      "contact": "contact info",
-      "donate": "donate section"
-    }
-  },
   "about": {
     "title": "About Openverse",
     "description": {

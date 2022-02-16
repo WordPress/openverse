@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-02-09T12:36:10+00:00\n"
+"POT-Creation-Date: 2022-02-16T14:35:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
 
-#: src/components/VAudioTrack/layouts/VFullLayout.vue:39
+#: src/components/VAudioTrack/layouts/VFullLayout.vue:54
 msgctxt "interpunct"
 msgid "•"
 msgstr ""
@@ -182,7 +182,7 @@ msgctxt "audio-categories.pronunciation"
 msgid "Pronunciation"
 msgstr ""
 
-#: src/components/VHeader/VSearchBar/VSearchButton.vue:6
+#: src/components/VHeader/VSearchBar/VSearchButton.vue:4
 msgctxt "search.search"
 msgid "Search"
 msgstr ""
@@ -205,7 +205,7 @@ msgid "Audio Player"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/layouts/VFullLayout.vue:23
+#: src/components/VAudioTrack/layouts/VFullLayout.vue:38
 msgctxt "audio-track.creator"
 msgid "by ###creator###"
 msgstr ""
@@ -247,7 +247,7 @@ msgid "Audio seek bar"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VWaveform.vue:570
+#: src/components/VAudioTrack/VWaveform.vue:572
 msgctxt "waveform.current-time"
 msgid "###time### second"
 msgid_plural "###time### seconds"
@@ -323,58 +323,58 @@ msgctxt "audio-details.genre-label"
 msgid "Genre"
 msgstr ""
 
-#: src/components/AudioDetails/VRelatedAudio.vue:4
+#: src/components/AudioDetails/VRelatedAudio.vue:2
 msgctxt "audio-details.related-audios"
 msgid "Related audio"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:5
+#: src/components/AudioDetails/VAudioDetails.vue:4
 msgctxt "audio-details.information"
 msgid "Audio information"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:24
+#: src/components/AudioDetails/VAudioDetails.vue:23
 msgctxt "audio-details.table.album"
 msgid "Album"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:30
+#: src/components/AudioDetails/VAudioDetails.vue:29
 msgctxt "audio-details.table.category"
 msgid "Type"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:37
+#: src/components/AudioDetails/VAudioDetails.vue:36
 msgctxt "audio-details.table.sample-rate"
 msgid "Sample Rate"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:45
+#: src/components/AudioDetails/VAudioDetails.vue:44
 msgctxt "audio-details.table.filetype"
 msgid "Format"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:53
+#: src/components/AudioDetails/VAudioDetails.vue:52
 msgctxt "audio-details.table.provider"
 msgid "Provider"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:67
+#: src/components/AudioDetails/VAudioDetails.vue:66
 msgctxt "audio-details.table.source"
 msgid "Source"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:75
+#: src/components/AudioDetails/VAudioDetails.vue:74
 msgctxt "audio-details.table.genre"
 msgid "Genre"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id.vue:49
+#: src/pages/image/_id.vue:46
 msgctxt "image-details.creator"
 msgid "by ###name###"
 msgstr ""
 
-#: src/pages/image/_id.vue:43
+#: src/pages/image/_id.vue:40
 msgctxt "image-details.weblink"
 msgid "Go to image's website"
 msgstr ""
@@ -424,7 +424,7 @@ msgctxt "image-details.information.unknown"
 msgid "Unknown"
 msgstr ""
 
-#: src/pages/audio/_id.vue:25
+#: src/components/VBackToSearchResultsLink.vue:9
 msgctxt "single-result.back"
 msgid "Back to search results"
 msgstr ""
@@ -441,7 +441,7 @@ msgctxt "media-details.loading"
 msgid "Loading..."
 msgstr ""
 
-#: src/components/AudioDetails/VRelatedAudio.vue:18
+#: src/components/AudioDetails/VRelatedAudio.vue:17
 msgctxt "media-details.related-error"
 msgid "Error fetching related media"
 msgstr ""
@@ -555,7 +555,7 @@ msgid "Open form"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id.vue:59
+#: src/pages/image/_id.vue:56
 msgctxt "media-details.aria.creator-url"
 msgid "author ###name###"
 msgstr ""
@@ -625,23 +625,23 @@ msgid "Copied!"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VCopyLicense.vue:37
+#: src/components/VMediaInfo/VCopyLicense.vue:38
 msgctxt "media-details.reuse.credit.text"
 msgid "\"###title###\"###creator######marked-licensed######license######view-legal###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VCopyLicense.vue:54
+#: src/components/VMediaInfo/VCopyLicense.vue:55
 msgctxt "media-details.reuse.credit.creator-text"
 msgid " by ###creator-name###"
 msgstr ""
 
-#: src/components/VMediaInfo/VCopyLicense.vue:76
+#: src/components/VMediaInfo/VCopyLicense.vue:77
 msgctxt "media-details.reuse.credit.marked"
 msgid "is marked with"
 msgstr ""
 
-#: src/components/VMediaInfo/VCopyLicense.vue:77
+#: src/components/VMediaInfo/VCopyLicense.vue:78
 msgctxt "media-details.reuse.credit.licensed"
 msgid "is licensed under"
 msgstr ""
@@ -702,7 +702,7 @@ msgid_plural "Over ###localeCount### results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/components/VLoadMore.vue:26
+#: src/components/VLoadMore.vue:30
 msgctxt "browse-page.load"
 msgid "Load more results"
 msgstr ""
@@ -1082,13 +1082,13 @@ msgid "An error occurred"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id.vue:148
+#: src/pages/image/_id.vue:142
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/audio/_id.vue:87
+#: src/pages/audio/_id.vue:69
 msgctxt "error.media-not-found"
 msgid "Couldn't find ###mediaType### with id ###id###"
 msgstr ""
@@ -1830,63 +1830,6 @@ msgctxt "about.description.content"
 msgid "Openverse is a tool that allows openly licensed and public domain works to be discovered and used by everyone."
 msgstr ""
 
-#: src/components/FooterSection.vue:7
-msgctxt "footer.aria.contact"
-msgid "contact info"
-msgstr ""
-
-#: src/components/FooterSection.vue:55
-msgctxt "footer.aria.donate"
-msgid "donate section"
-msgstr ""
-
-#: src/components/FooterSection.vue:59
-msgctxt "footer.donate.work"
-msgid "Our work relies on you!"
-msgstr ""
-
-#: src/components/FooterSection.vue:61
-msgctxt "footer.donate.help"
-msgid "Help us keep the internet free and open."
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/components/FooterSection.vue:17
-msgctxt "footer.caption.label"
-msgid "Except where otherwise ###noted###, content on this site is licensed under a ###attribution###. ###icons###"
-msgstr ""
-
-#: src/components/FooterSection.vue:23
-msgctxt "footer.caption.noted"
-msgid "noted"
-msgstr ""
-
-#: src/components/FooterSection.vue:32
-msgctxt "footer.caption.attribution"
-msgid "Creative Commons Attribution 4.0 International license"
-msgstr ""
-
-#: src/components/FooterSection.vue:42
-msgctxt "footer.caption.icons"
-msgid "Icons by Font Awesome."
-msgstr ""
-
-msgctxt "footer.navigation.contact"
-msgid "Contact"
-msgstr ""
-
-msgctxt "footer.navigation.privacy"
-msgid "Privacy"
-msgstr ""
-
-msgctxt "footer.navigation.policies"
-msgid "Policies"
-msgstr ""
-
-msgctxt "footer.navigation.terms"
-msgid "Terms"
-msgstr ""
-
 msgctxt "header.about-nav-item"
 msgid "Our Story"
 msgstr ""
@@ -1939,12 +1882,12 @@ msgctxt "header.api-nav-item"
 msgid "API"
 msgstr ""
 
-#: src/components/VHeader/VHeader.vue:159
+#: src/components/VHeader/VHeader.vue:152
 msgctxt "header.loading"
 msgid "Loading..."
 msgstr ""
 
-#: src/components/VContentSwitcher/VMobileMenuModal.vue:13
+#: src/components/VContentSwitcher/VMobileMenuModal.vue:14
 msgctxt "header.filter-button.simple"
 msgid "Filters"
 msgstr ""
@@ -1987,12 +1930,12 @@ msgid "search button"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/TranslationStatusBanner.vue:7
+#: src/components/VTranslationStatusBanner.vue:7
 msgctxt "notification.translation.text"
 msgid "The translation for ###locale### locale is incomplete. Help us get to 100 percent by ###link###."
 msgstr ""
 
-#: src/components/TranslationStatusBanner.vue:10
+#: src/components/VTranslationStatusBanner.vue:10
 msgctxt "notification.translation.link"
 msgid "contributing a translation"
 msgstr ""
@@ -2007,7 +1950,7 @@ msgctxt "hero.subtitle"
 msgid "Browse through over 600 million items to reuse"
 msgstr ""
 
-#: src/components/VHeader/VSearchBar/VSearchBar.vue:10
+#: src/components/VHeader/VSearchBar/VSearchBar.vue:11
 msgctxt "hero.aria.search"
 msgid "search"
 msgstr ""
@@ -2035,12 +1978,12 @@ msgctxt "hero.disclaimer.content"
 msgid "All Openverse content is under a ###license### or is in the public domain."
 msgstr ""
 
-#: src/pages/index.vue:72
+#: src/pages/index.vue:74
 msgctxt "hero.disclaimer.license"
 msgid "Creative Commons license"
 msgstr ""
 
-#: src/pages/index.vue:48
+#: src/components/VHeader/VSearchBar/VSearchBar.vue:7
 msgctxt "hero.search.placeholder"
 msgid "Search for content"
 msgstr ""
