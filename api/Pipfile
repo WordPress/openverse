@@ -5,7 +5,6 @@ verify_ssl = true
 
 [dev-packages]
 ipython = "*"
-pipdeptree = "*"
 pycodestyle = "*"
 pytest-django = ">=3.5"
 remote-pdb = "*"

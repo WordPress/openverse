@@ -6,7 +6,6 @@ verify_ssl = true
 [dev-packages]
 remote-pdb = "*"
 ipython = "*"
-pipdeptree = "*"
 pycodestyle = "*"
 pytest-order = "*"
 
