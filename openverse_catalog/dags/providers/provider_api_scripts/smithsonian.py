@@ -13,6 +13,7 @@ import logging
 import os
 from datetime import datetime
 
+from airflow.models import Variable
 from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
@@ -24,7 +25,7 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 
-API_KEY = os.getenv("DATA_GOV_API_KEY")
+API_KEY = Variable.get("API_KEY_DATA_GOV", default_var=None)
 DELAY = 5.0
 HASH_PREFIX_LENGTH = 2
 LIMIT = 1000  # number of rows to pull at once

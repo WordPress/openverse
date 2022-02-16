@@ -11,9 +11,9 @@ Notes:                  https://www.europeana.eu/api/v2/search.json
 
 import argparse
 import logging
-import os
 from datetime import datetime, timedelta, timezone
 
+from airflow.models import Variable
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 DELAY = 30.0
 RESOURCES_PER_REQUEST = "100"
 PROVIDER = prov.EUROPEANA_DEFAULT_PROVIDER
-API_KEY = os.getenv("EUROPEANA_API_KEY")
+API_KEY = Variable.get("API_KEY_EUROPEANA", default_var=None)
 ENDPOINT = "https://www.europeana.eu/api/v2/search.json?"
 # SUB_PROVIDERS is a collection of providers within europeana which are
 # valuable to a broad audience

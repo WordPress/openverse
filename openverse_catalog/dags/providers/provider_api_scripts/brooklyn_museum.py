@@ -1,7 +1,7 @@
 import logging
-import os
 
 import lxml.html as html
+from airflow.models import Variable
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
@@ -18,7 +18,7 @@ DELAY = 1.0
 RETRIES = 3
 PROVIDER = prov.BROOKLYN_DEFAULT_PROVIDER
 ENDPOINT = "https://www.brooklynmuseum.org/api/v2/object/"
-API_KEY = os.getenv("BROOKLYN_MUSEUM_API_KEY", "nokeyprovided")
+API_KEY = Variable.get("API_KEY_BROOKLYN_MUSEUM", default_var="nokeyprovided")
 
 delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)

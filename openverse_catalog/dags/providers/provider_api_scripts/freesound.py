@@ -12,10 +12,10 @@ Notes:                  https://freesound.org/apiv2/search/text'
 import copy
 import functools
 import logging
-import os
 from datetime import datetime
 
 import requests
+from airflow.models import Variable
 from common.licenses.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
@@ -32,7 +32,7 @@ ENDPOINT = f"https://{HOST}/apiv2/search/text"
 PROVIDER = prov.FREESOUND_DEFAULT_PROVIDER
 # Freesound only has 'sounds'
 FREESOUND_CATEGORY = "sound"
-API_KEY = os.getenv("FREESOUND_API_KEY", "not_set")
+API_KEY = Variable.get("API_KEY_FREESOUND", default_var="not_set")
 
 HEADERS = {
     "Accept": "application/json",

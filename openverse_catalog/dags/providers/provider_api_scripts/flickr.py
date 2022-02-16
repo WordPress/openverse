@@ -12,10 +12,10 @@ Notes:                  https://www.flickr.com/help/terms/api
 
 import argparse
 import logging
-import os
 from datetime import datetime, timedelta, timezone
 
 import lxml.html as html
+from airflow.models import Variable
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
@@ -32,7 +32,7 @@ LIMIT = 500
 MAX_TAG_STRING_LENGTH = 2000
 MAX_DESCRIPTION_LENGTH = 2000
 PROVIDER = prov.FLICKR_DEFAULT_PROVIDER
-API_KEY = os.getenv("FLICKR_API_KEY")
+API_KEY = Variable.get("API_KEY_FLICKR", default_var=None)
 ENDPOINT = "https://api.flickr.com/services/rest/"
 PHOTO_URL_BASE = prov.FLICKR_PHOTO_URL_BASE
 DATE_TYPE = "upload"

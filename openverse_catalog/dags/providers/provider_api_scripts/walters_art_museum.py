@@ -11,8 +11,8 @@ Notes:                  http://api.thewalters.org/
 """
 
 import logging
-import os
 
+from airflow.models import Variable
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
@@ -28,7 +28,7 @@ LIMIT = 250000
 PROVIDER = prov.WALTERS_DEFAULT_PROVIDER
 REQUEST_TYPE = "objects"
 ENDPOINT = f"https://api.thewalters.org/v1/{REQUEST_TYPE}"
-API_KEY = os.getenv("WALTERS_ART_MUSEUEM_KEY")
+API_KEY = Variable.get("API_KEY_WALTERS_ART_MUSEUM", default_var=None)
 MUSEUM_SITE = "https://art.thewalters.org"
 LICENSE = "CC0 1.0"
 

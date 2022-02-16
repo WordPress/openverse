@@ -16,12 +16,12 @@ Notes:                  https://api.jamendo.com/v3.0/tracks/
                         channels: 1/2
 """
 import logging
-import os
 from functools import lru_cache
 from typing import Optional
 from urllib.parse import parse_qs, urlencode, urlsplit
 
 import common
+from airflow.models import Variable
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
@@ -42,7 +42,7 @@ RETRIES = 3
 HOST = "jamendo.com"
 ENDPOINT = f"https://api.{HOST}/v3.0/tracks"
 PROVIDER = prov.JAMENDO_DEFAULT_PROVIDER
-APP_KEY = os.getenv("JAMENDO_APP_KEY", "not_set")
+APP_KEY = Variable.get("API_KEY_JAMENDO", "not_set")
 
 HEADERS = {
     "Accept": "application/json",

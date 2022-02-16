@@ -13,12 +13,13 @@ Notes:                  https://www.thingiverse.com/developers/getting-started
 
 import argparse
 
+from airflow.models import Variable
 from modules.etlMods import *
 
 
 MAX_THINGS = 30
 LICENSE = "pd0"
-TOKEN = os.environ["THINGIVERSE_TOKEN"]
+TOKEN = Variable.get("API_KEY_THINGIVERSE", default_var=None)
 DELAY = 5.0  # seconds
 FILE = "thingiverse_{}.tsv".format(int(time.time()))
 

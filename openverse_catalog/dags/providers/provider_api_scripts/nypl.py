@@ -1,7 +1,7 @@
 import logging
-import os
 from urllib.parse import parse_qs, urlparse
 
+from airflow.models import Variable
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
@@ -19,7 +19,7 @@ RETRIES = 3
 PROVIDER = prov.NYPL_DEFAULT_PROVIDER
 BASE_ENDPOINT = "http://api.repo.nypl.org/api/v1/items/search"
 METADATA_ENDPOINT = "http://api.repo.nypl.org/api/v1/items/item_details/"
-NYPL_API = os.getenv("NYPL_API_KEY")
+NYPL_API = Variable.get("API_KEY_NYPL", default_var=None)
 TOKEN = f"Token token={NYPL_API}"
 
 delay_request = DelayedRequester(delay=DELAY)
