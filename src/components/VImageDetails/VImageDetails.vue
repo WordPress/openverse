@@ -6,6 +6,14 @@
       </h3>
       <VContentReportPopover :media="image" />
     </div>
+    <ul v-if="image && image.tags" class="flex flex-wrap gap-2 mb-6">
+      <VMediaTag
+        v-for="(tag, index) in image.tags.filter((i) => !!i)"
+        :key="index"
+        tag="li"
+        >{{ tag.name }}</VMediaTag
+      >
+    </ul>
     <dl>
       <div>
         <dt>{{ $t('image-details.information.type') }}</dt>
@@ -42,8 +50,12 @@
 <script>
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 
+import VContentReportPopover from '~/components/VContentReport/VContentReportPopover.vue'
+import VMediaTag from '~/components/VMediaTag/VMediaTag.vue'
+
 const VImageDetails = defineComponent({
   name: 'VImageDetails',
+  components: { VContentReportPopover, VMediaTag },
   props: {
     image: {
       type: Object,

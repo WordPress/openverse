@@ -1,8 +1,8 @@
 import { RouterLinkStub } from '@vue/test-utils'
-import MediaTag from '~/components/MediaTag/MediaTag'
+import VMediaTag from '~/components/VMediaTag/VMediaTag'
 import render from '~/../test/unit/test-utils/render'
 
-describe('MediaTag', () => {
+describe('VMediaTag', () => {
   let props = null
   let options = null
 
@@ -11,10 +11,10 @@ describe('MediaTag', () => {
     options = { propsData: props }
   })
 
-  it('should render an div tag by default', () => {
-    const wrapper = render(MediaTag, options)
-    expect(wrapper.vm.$props.tag).toEqual('div')
-    expect(wrapper.vm.$el).toBeInstanceOf(HTMLDivElement)
+  it('should render an span tag by default', () => {
+    const wrapper = render(VMediaTag, options)
+    expect(wrapper.vm.$props.tag).toEqual('span')
+    expect(wrapper.vm.$el).toBeInstanceOf(HTMLSpanElement)
   })
 
   it('should render the supplied tag', () => {
@@ -24,7 +24,7 @@ describe('MediaTag', () => {
       href: 'https://example.com/',
     }
 
-    const wrapper = render(MediaTag, options)
+    const wrapper = render(VMediaTag, options)
     expect(wrapper.vm.$props.tag).toEqual('a')
     expect(wrapper.vm.$el).toBeInstanceOf(HTMLAnchorElement)
     expect(wrapper.vm.$el.href).toEqual('https://example.com/')
@@ -40,7 +40,7 @@ describe('MediaTag', () => {
       RouterLink: RouterLinkStub,
     }
 
-    const wrapper = render(MediaTag, options)
+    const wrapper = render(VMediaTag, options)
     expect(wrapper.vm.$props.tag).toEqual('RouterLink')
     expect(wrapper.vm.$el).toBeInstanceOf(HTMLAnchorElement)
   })
@@ -50,7 +50,7 @@ describe('MediaTag', () => {
       default: '<div id="slot-content">Hello</div>',
     }
 
-    const wrapper = render(MediaTag, options)
+    const wrapper = render(VMediaTag, options)
     const element = wrapper.find('#slot-content').element
     expect(element).toBeInstanceOf(HTMLDivElement)
     expect(element.textContent).toEqual('Hello')

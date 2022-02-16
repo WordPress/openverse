@@ -2,7 +2,7 @@
   <Component
     :is="tag"
     v-bind="$attrs"
-    class="text-dark-blue text-sr md:text-sm font-semibold px-2 md:px-3 py-1 md:py-2 bg-dark-charcoal-10 rounded-full leading-none inline-flex"
+    class="text-dark-blue text-sr md:text-base font-semibold px-3 md:px-4 py-1 md:py-2 bg-dark-charcoal-10 rounded-full leading-[130%] md:leading-[130%] inline-flex"
   >
     <!-- @slot Content goes here -->
     <slot />
@@ -23,7 +23,7 @@ export default {
      */
     tag: {
       type: String,
-      default: 'div',
+      default: 'span',
     },
   },
 }
