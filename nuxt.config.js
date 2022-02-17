@@ -222,6 +222,7 @@ export default {
   redirect: [{ from: '^/photos/(.*)$', to: '/image/$1', statusCode: 301 }],
   sentry,
   build: {
+    friendlyErrors: false,
     postcss: {
       plugins: {
         tailwindcss: {},
