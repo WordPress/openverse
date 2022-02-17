@@ -9,6 +9,7 @@ from catalog.api.models.media import (
     AbstractMediaReport,
 )
 from catalog.api.models.mixins import FileMixin, ForeignIdentifierMixin, MediaMixin
+from catalog.api.utils.waveform import generate_peaks
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from uuslug import uuslug
@@ -96,6 +97,40 @@ class AudioFileMixin(FileMixin):
         abstract = True
 
 
+class AudioAddOn(OpenLedgerModel):
+    audio_identifier = models.UUIDField(
+        primary_key=True,
+        help_text=("The identifier of the audio object."),
+    )
+    """
+    This cannot be a "ForeignKey" or "OneToOneRel" because the refresh process
+    wipes out the Audio table completely and recreates it. If we made these a FK
+    or OneToOneRel there'd be foreign key constraint added that would be violated
+    when the Audio table is recreated.
+
+    The index is necessary as this column is used by the Audio object to query
+    for the relevant add on.
+
+    The refresh process will also eventually include cleaning up any potentially
+    dangling audio_add_on rows.
+    """
+
+    waveform_peaks = ArrayField(
+        base_field=models.FloatField(),
+        # The approximate resolution of waveform generation
+        # results in _about_ 1000 peaks. We use 1500 to give
+        # sufficient wiggle room should we have any outlier
+        # files pop up.
+        # https://github.com/WordPress/openverse-api/blob/a7955c86d43bff504e8d41454f68717d79dd3a44/api/catalog/api/utils/waveform.py#L71
+        size=1500,
+        help_text=(
+            "The waveform peaks. A list of floats in"
+            " the range of 0 -> 1 inclusively."
+        ),
+        null=True,
+    )
+
+
 class Audio(AudioFileMixin, AbstractMedia):
     """
     Inherited fields
@@ -156,6 +191,17 @@ class Audio(AudioFileMixin, AbstractMedia):
             )
         except AudioSet.DoesNotExist:
             return None
+
+    def get_or_create_waveform(self):
+        add_on, _ = AudioAddOn.objects.get_or_create(audio_identifier=self.identifier)
+
+        if add_on.waveform_peaks is not None:
+            return add_on.waveform_peaks
+
+        add_on.waveform_peaks = generate_peaks(self)
+        add_on.save()
+
+        return add_on.waveform_peaks
 
     class Meta(AbstractMedia.Meta):
         db_table = "audio"

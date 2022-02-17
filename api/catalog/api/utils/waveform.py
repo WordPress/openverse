@@ -6,6 +6,7 @@ import os
 import pathlib
 import shutil
 import subprocess
+from typing import List
 
 import requests
 
@@ -128,3 +129,14 @@ def cleanup(file_name):
         os.remove(file_path)
     else:
         log.info("File not found, nothing deleted")
+
+
+def generate_peaks(audio) -> List[float]:
+    file_name = None
+    try:
+        file_name = download_audio(audio.url, audio.identifier)
+        awf_out = generate_waveform(file_name, audio.duration)
+        return process_waveform_output(awf_out)
+    finally:
+        if file_name is not None:
+            cleanup(file_name)

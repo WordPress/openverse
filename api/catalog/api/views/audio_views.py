@@ -16,12 +16,6 @@ from catalog.api.serializers.audio_serializers import (
 )
 from catalog.api.utils.exceptions import get_api_exception
 from catalog.api.utils.throttle import OneThousandPerMinute
-from catalog.api.utils.waveform import (
-    cleanup,
-    download_audio,
-    generate_waveform,
-    process_waveform_output,
-)
 from catalog.api.views.media_views import MediaViewSet
 from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
@@ -84,21 +78,13 @@ class AudioViewSet(MediaViewSet):
     def waveform(self, *_, **__):
         audio = self.get_object()
 
-        file_name = None
         try:
-            file_name = download_audio(audio.url, audio.identifier)
-            awf_out = generate_waveform(file_name, audio.duration)
-            data = process_waveform_output(awf_out)
-
-            obj = {"points": data}
+            obj = {"points": audio.get_or_create_waveform()}
             serializer = self.get_serializer(obj)
 
             return Response(status=200, data=serializer.data)
         except Exception as e:
             raise get_api_exception(getattr(e, "message", str(e)))
-        finally:
-            if file_name is not None:
-                cleanup(file_name)
 
     @action(detail=True, methods=["post"], serializer_class=AudioReportSerializer)
     def report(self, *args, **kwargs):

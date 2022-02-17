@@ -46,6 +46,12 @@ cd openverse_api
 pipenv install
 ```
 
+Note: The following non-Python libraries or binaries are transient dependencies which will also need to be present on your computer for the project to run and install as expected:
+
+* `librdkafka`
+* `exempi`
+* `audiowaveform`
+
 3. Launch a new shell session
 
 ```
