@@ -60,17 +60,16 @@ class MediaStore(metaclass=abc.ABCMeta):
     ):
         logger.info(f"Initialized {media_type} MediaStore with provider {provider}")
         self.media_type = media_type
-        self._media_buffer = []
-        self._total_items = 0
-        self._PROVIDER = provider
-        self._BUFFER_LENGTH = buffer_length
-        self._NOW = datetime.now()
-        self._OUTPUT_PATH = self._initialize_output_path(
+        self.provider = provider
+        self.buffer_length = buffer_length
+        self.output_path = self._initialize_output_path(
             output_dir,
             output_file,
             provider,
         )
         self.columns = None
+        self._media_buffer = []
+        self._total_items = 0
 
     def save_item(self, media) -> None:
         """
@@ -84,7 +83,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         if tsv_row:
             self._media_buffer.append(tsv_row)
             self._total_items += 1
-        if len(self._media_buffer) >= self._BUFFER_LENGTH:
+        if len(self._media_buffer) >= self.buffer_length:
             self._flush_buffer()
 
     @abc.abstractmethod
@@ -116,7 +115,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         ):
             logger.debug("Discarding media due to invalid license")
             return None
-        media_data["source"] = util.get_source(media_data.get("source"), self._PROVIDER)
+        media_data["source"] = util.get_source(media_data.get("source"), self.provider)
         # Add ingestion_type column value based on `source`.
         # The implementation is based on `ingestion_column`
         if media_data.get("ingestion_type") is None:
@@ -135,7 +134,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         media_data["license_version"] = media_data["license_info"].version
 
         media_data.pop("license_info", None)
-        media_data["provider"] = self._PROVIDER
+        media_data["provider"] = self.provider
         return media_data
 
     def commit(self):
@@ -171,7 +170,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         if output_file is not None:
             output_file = str(output_file)
         else:
-            datetime_string = datetime.strftime(self._NOW, "%Y%m%d%H%M%S")
+            datetime_string = datetime.now().strftime("%Y%m%d%H%M%S")
             output_file = (
                 f"{provider}_{self.media_type}_v{version}_{datetime_string}.tsv"
             )
@@ -205,7 +204,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         buffer_length = len(self._media_buffer)
         if buffer_length > 0:
             logger.info(f"Writing {buffer_length} lines from buffer to disk.")
-            with open(self._OUTPUT_PATH, "a") as f:
+            with open(self.output_path, "a") as f:
                 f.writelines(self._media_buffer)
                 self._media_buffer = []
                 logger.debug(
@@ -276,4 +275,4 @@ class MediaStore(metaclass=abc.ABCMeta):
             return tag
         else:
             logger.debug(f"Enriching tag: {tag}")
-            return {"name": tag, "provider": self._PROVIDER}
+            return {"name": tag, "provider": self.provider}

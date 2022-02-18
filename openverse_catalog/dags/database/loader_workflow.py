@@ -104,12 +104,16 @@ with dag:
         """
         ),
     )
+
+    media_type_xcom = f"{{{{ ti.xcom_pull(task_ids='{stage_oldest_tsv_file.task_id}', key='media_type') }}}}"  # noqa: E501
+
     create_loading_table = PythonOperator(
         task_id="create_loading_table",
         python_callable=sql.create_loading_table,
         op_kwargs={
             "postgres_conn_id": DB_CONN_ID,
             "identifier": TIMESTAMP_TEMPLATE,
+            "media_type": media_type_xcom,
         },
         doc_md="Create a temporary loading table for ingesting data from a TSV.",
     )
@@ -155,7 +159,11 @@ with dag:
     drop_loading_table = PythonOperator(
         task_id="drop_loading_table",
         python_callable=sql.drop_load_table,
-        op_kwargs={"postgres_conn_id": DB_CONN_ID, "identifier": TIMESTAMP_TEMPLATE},
+        op_kwargs={
+            "postgres_conn_id": DB_CONN_ID,
+            "identifier": TIMESTAMP_TEMPLATE,
+            "media_type": media_type_xcom,
+        },
         trigger_rule=TriggerRule.NONE_SKIPPED,
         doc_md=d(
             """

@@ -54,8 +54,8 @@ def setup_env(monkeypatch):
 
 def test_AudioStore_includes_provider_in_output_file_string():
     audio_store = audio.AudioStore("test_provider")
-    assert type(audio_store._OUTPUT_PATH) == str
-    assert "test_provider" in audio_store._OUTPUT_PATH
+    assert type(audio_store.output_path) == str
+    assert "test_provider" in audio_store.output_path
 
 
 def test_AudioStore_add_item_adds_realistic_audio_to_buffer():

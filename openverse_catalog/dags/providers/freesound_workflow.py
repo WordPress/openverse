@@ -21,4 +21,5 @@ globals()[DAG_ID] = create_provider_api_workflow(
     schedule_string="@monthly",
     dated=False,
     doc_md=freesound.__doc__,
+    media_types=["audio"],
 )

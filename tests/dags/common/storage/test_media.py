@@ -37,7 +37,7 @@ def test_MediaStore_uses_OUTPUT_DIR_variable(
     testing_output_dir = "/my_output_dir"
     monkeypatch.setenv("OUTPUT_DIR", testing_output_dir)
     image_store = image.ImageStore()
-    assert testing_output_dir in image_store._OUTPUT_PATH
+    assert testing_output_dir in image_store.output_path
 
 
 def test_MediaStore_falls_back_to_tmp_output_dir_variable(
@@ -46,19 +46,19 @@ def test_MediaStore_falls_back_to_tmp_output_dir_variable(
 ):
     monkeypatch.delenv("OUTPUT_DIR")
     image_store = image.ImageStore()
-    assert "/tmp" in image_store._OUTPUT_PATH
+    assert "/tmp" in image_store.output_path
 
 
 def test_MediaStore_includes_provider_in_output_file_string():
     image_store = image.ImageStore("test_provider")
-    assert type(image_store._OUTPUT_PATH) == str
-    assert "test_provider" in image_store._OUTPUT_PATH
+    assert type(image_store.output_path) == str
+    assert "test_provider" in image_store.output_path
 
 
 def test_MediaStore_includes_media_type_in_output_file_string():
     image_store = image.ImageStore("test_provider")
-    assert type(image_store._OUTPUT_PATH) == str
-    assert "image" in image_store._OUTPUT_PATH
+    assert type(image_store.output_path) == str
+    assert "image" in image_store.output_path
 
 
 def test_MediaStore_add_item_flushes_buffer(tmpdir):

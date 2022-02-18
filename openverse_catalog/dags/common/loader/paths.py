@@ -43,7 +43,7 @@ def stage_oldest_tsv_file(
     tsv_found = tsv_file_name is not None
     if not tsv_found:
         raise AirflowSkipException("No files to process")
-    tsv_version = _get_tsv_version(tsv_file_name)
+    tsv_version = get_tsv_version(tsv_file_name)
     _move_file(tsv_file_name, staging_directory)
     media_type = _extract_media_type(tsv_file_name)
     ti.xcom_push(key="media_type", value=media_type)
@@ -156,14 +156,14 @@ def _extract_media_type(tsv_file_name: Optional[str]) -> str:
     return media_type
 
 
-def _get_tsv_version(tsv_file_name: str) -> str:
+def get_tsv_version(tsv_file_name: str) -> str:
     """TSV file version can be deducted from the filename
     v0: without _vN_ in the filename
     v1+: has a _vN in the filename
 
-    >>>_get_tsv_version('/behance_image_20210906130355.tsv')
+    >>>get_tsv_version('/behance_image_20210906130355.tsv')
     '000'
-    >>> _get_tsv_version('/jamendo_audio_v005_20210906130355.tsv')
+    >>> get_tsv_version('/jamendo_audio_v005_20210906130355.tsv')
     '005'
     """
 

@@ -181,7 +181,7 @@ def _load_s3_tsv(tmpdir, bucket, tsv_file_name, identifier):
 
 def test_create_loading_table_creates_table(postgres, load_table, identifier):
     postgres_conn_id = POSTGRES_CONN_ID
-    sql.create_loading_table(postgres_conn_id, identifier, ti)
+    sql.create_loading_table(postgres_conn_id, identifier)
 
     check_query = (
         f"SELECT EXISTS (SELECT FROM pg_tables WHERE tablename='{load_table}');"
@@ -193,9 +193,9 @@ def test_create_loading_table_creates_table(postgres, load_table, identifier):
 
 def test_create_loading_table_errors_if_run_twice_with_same_id(postgres, identifier):
     postgres_conn_id = POSTGRES_CONN_ID
-    sql.create_loading_table(postgres_conn_id, identifier, ti)
+    sql.create_loading_table(postgres_conn_id, identifier)
     with pytest.raises(Exception):
-        sql.create_loading_table(postgres_conn_id, identifier, ti)
+        sql.create_loading_table(postgres_conn_id, identifier)
 
 
 @flaky
@@ -1066,7 +1066,7 @@ def test_upsert_records_replaces_null_tags(
 
 def test_drop_load_table_drops_table(postgres_with_load_table, load_table, identifier):
     postgres_conn_id = POSTGRES_CONN_ID
-    sql.drop_load_table(postgres_conn_id, identifier, ti)
+    sql.drop_load_table(postgres_conn_id, identifier)
     check_query = (
         f"SELECT EXISTS (" f"SELECT FROM pg_tables WHERE tablename='{load_table}');"
     )

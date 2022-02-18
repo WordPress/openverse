@@ -58,17 +58,13 @@ def create_column_definitions(table_columns: List[Column], is_loading=True):
 
 
 def create_loading_table(
-    postgres_conn_id,
-    identifier,
-    ti,
+    postgres_conn_id: str,
+    identifier: str,
+    media_type: str = IMAGE,
 ):
     """
     Create intermediary table and indices if they do not exist
     """
-    media_type = ti.xcom_pull(task_ids="stage_oldest_tsv_file", key="media_type")
-    if media_type is None:
-        media_type = IMAGE
-
     load_table = _get_load_table_name(identifier, media_type=media_type)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     loading_table_columns = TSV_COLUMNS[media_type]
@@ -261,10 +257,11 @@ def upsert_records_to_db_table(
     postgres.run(upsert_query)
 
 
-def drop_load_table(postgres_conn_id, identifier, ti):
-    media_type = ti.xcom_pull(task_ids="stage_oldest_tsv_file", key="media_type")
-    if media_type is None:
-        media_type = IMAGE
+def drop_load_table(
+    postgres_conn_id,
+    identifier,
+    media_type: str = IMAGE,
+):
     load_table = _get_load_table_name(identifier, media_type=media_type)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.run(f"DROP TABLE {load_table};")

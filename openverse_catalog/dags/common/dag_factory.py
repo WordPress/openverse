@@ -1,17 +1,80 @@
+"""
+# Provider DAG Factory
+This file contains two factory functions which generate the bulk of our
+provider workflow DAGs. These DAGs pull data in from a particular provider,
+and produce one or several TSVs of the results.
+
+The "simple" (non-partitioned) DAG also loads the TSVs into the catalog database.
+
+The loading step takes the media data saved locally in TSV files, cleans it using an
+intermediate database table, and saves the cleaned-up data into the main database
+(also called upstream or Openledger).
+
+In production,"locally" means on AWS EC2 instance that runs the Apache Airflow
+webserver. Storing too much data there is dangerous, because if ingestion to the
+database breaks down, the disk of this server gets full, and breaks all
+Apache Airflow operations.
+
+As a first step, the loader portion of the DAG saves the data gathered by
+Provider API Scripts to S3 before attempting to load it to PostgreSQL, and delete
+it from disk if saving to S3 succeeds, even if loading to PostgreSQL fails.
+
+This way, we can delete data from the EC2 instance to open up disk space without
+the possibility of losing that data altogether. This will allow us to recover if
+we lose data from the DB somehow, because it will all be living in S3.
+It's also a prerequisite to the long-term plan of saving data only to S3
+(since saving it to the EC2 disk is a source of concern in the first place).
+
+This is one step along the path to avoiding saving data on the local disk at all.
+It should also be faster to load into the DB from S3, since AWS RDS instances
+provide special optimized functionality to load data from S3 into tables in the DB.
+
+Loading the data into the Database is a two-step process: first, data is saved
+to the intermediate table. Any items that don't have the required fields
+(media url, license, foreign landing url and foreign id), and duplicates as
+determined by combination of provider and foreign_id are deleted.
+Then the data from the intermediate table is upserted into the main database.
+If the same item is already present in the database, we update its information
+with newest (non-null) data, and merge any metadata or tags objects to preserve all
+previously downloaded data, and update any data that needs updating
+(eg. popularity metrics).
+
+You can find more background information on the loading process in the following
+issues and related PRs:
+
+- [[Feature] More sophisticated merging of columns in PostgreSQL when upserting](
+https://github.com/creativecommons/cccatalog/issues/378)
+
+- [DB Loader DAG should write to S3 as well as PostgreSQL](
+https://github.com/creativecommons/cccatalog/issues/333)
+
+- [DB Loader should take data from S3, rather than EC2 to load into PostgreSQL](
+https://github.com/creativecommons/cccatalog/issues/334)
+"""
+import inspect
 import logging
+import os
 from datetime import datetime, timedelta
+from typing import Callable, Dict, List, Optional, Sequence
 
 from airflow import DAG
+from airflow.models import TaskInstance
 from airflow.models.baseoperator import cross_downstream
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import PythonOperator
+from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 from common import slack
+from common.loader import loader, s3, sql
 
 
 logger = logging.getLogger(__name__)
 
 
+DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")
+AWS_CONN_ID = os.getenv("AWS_CONN_ID", "no_aws_conn_id")
+OPENVERSE_BUCKET = os.getenv("OPENVERSE_BUCKET")
+OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
 DAG_DEFAULT_ARGS = {
     "owner": "data-eng-admin",
     "depends_on_past": False,
@@ -21,20 +84,65 @@ DAG_DEFAULT_ARGS = {
     "retry_delay": timedelta(minutes=15),
     "on_failure_callback": slack.on_failure_callback,
 }
-DATE_RANGE_ARG_TEMPLATE = "{{ macros.ds_add(ds, -%s) }}"
+DATE_RANGE_ARG_TEMPLATE = "{{{{ macros.ds_add(ds, -{}) }}}}"
+XCOM_PULL_TEMPLATE = "{{{{ ti.xcom_pull(task_ids='{}', key='{}') }}}}"
+
+
+def _push_output_paths_wrapper(
+    func: Callable,
+    media_types: List[str],
+    ti: TaskInstance,
+    args: Sequence = None,
+):
+    """
+    Run the provided callable after pushing the calculated output directories
+    for each media store to XComs. Output locations are pushed under keys with
+    the format `<media-type>_tsv`. This is a temporary workaround due to the nature
+    of the current provider scripts. Once
+    https://github.com/WordPress/openverse-catalog/issues/229 is addressed and the
+    provider scripts are refactored into classes, this wrapper can either be updated
+    or the XCom pushing can be moved into the provider initialization.
+    """
+    args = args or []
+    logger.info("Pushing available store paths to XComs")
+    module = inspect.getmodule(func)
+    stores = {}
+
+    # Stores exist at the module level, so in order to retrieve the output values we
+    # must first pull the stores from the module.
+    for media_type in media_types:
+        if not (store := getattr(module, f"{media_type}_store", None)):
+            continue
+        stores[media_type] = store
+
+    if len(stores) != len(media_types):
+        raise ValueError(
+            f"Expected stores in {module.__name__} were missing: "
+            f"{list(set(media_types) - set(stores))}"
+        )
+
+    for media_type, store in stores.items():
+        logger.info(f"{media_type.capitalize()} store location: {store.output_path}")
+        ti.xcom_push(key=f"{media_type}_tsv", value=store.output_path)
+
+    logger.info("Running provider function")
+    # Not passing kwargs here because Airflow throws a bunch of stuff in there that none
+    # of our provider scripts are expecting.
+    return func(*args)
 
 
 def create_provider_api_workflow(
-    dag_id,
-    main_function,
-    default_args=None,
-    start_date=datetime(1970, 1, 1),
-    max_active_tasks=1,
-    schedule_string="@daily",
-    dated=True,
-    day_shift=0,
-    dagrun_timeout=timedelta(hours=12),
-    doc_md="",
+    dag_id: str,
+    main_function: Callable,
+    default_args: Optional[Dict] = None,
+    start_date: datetime = datetime(1970, 1, 1),
+    max_active_tasks: int = 1,
+    schedule_string: str = "@daily",
+    dated: bool = True,
+    day_shift: int = 0,
+    dagrun_timeout: timedelta = timedelta(hours=12),
+    doc_md: str = "",
+    media_types: Sequence[str] = ("image",),
 ):
     """
     This factory method instantiates a DAG that will run the given
@@ -71,8 +179,15 @@ def create_provider_api_workflow(
                       be run (if `dated=True`).
     dagrun_timeout:   datetime.timedelta giving the total amount of time
                       a given dagrun may take.
+    doc_md:           string which should be used for the DAG's documentation markdown
+    media_types:      list describing the media type(s) that this provider handles
+                      (e.g. `["audio"]`, `["image", "audio"]`, etc.)
     """
     default_args = default_args or DAG_DEFAULT_ARGS
+    media_type_name = "mixed" if len(media_types) > 1 else media_types[0]
+    provider_name = dag_id.replace("_workflow", "")
+    identifier = f"{provider_name}_{{{{ ts_nodash }}}}"
+
     dag = DAG(
         dag_id=dag_id,
         default_args={**default_args, "start_date": start_date},
@@ -87,20 +202,72 @@ def create_provider_api_workflow(
     )
 
     with dag:
+        pull_kwargs = {"func": main_function, "media_types": media_types}
         if dated:
-            PythonOperator(
-                task_id="pull_image_data",
-                python_callable=main_function,
-                op_args=[DATE_RANGE_ARG_TEMPLATE % day_shift],
-                execution_timeout=dagrun_timeout,
-                depends_on_past=False,
-            )
-        else:
-            PythonOperator(
-                task_id="pull_image_data",
-                python_callable=main_function,
-                depends_on_past=False,
-            )
+            pull_kwargs["args"] = [DATE_RANGE_ARG_TEMPLATE.format(day_shift)]
+
+        pull_data = PythonOperator(
+            task_id=f"pull_{media_type_name}_data",
+            python_callable=_push_output_paths_wrapper,
+            op_kwargs=pull_kwargs,
+            depends_on_past=False,
+            execution_timeout=dagrun_timeout if dated else None,
+        )
+
+        for media_type in media_types:
+            with TaskGroup(group_id=f"load_{media_type}_data") as load_data:
+                create_loading_table = PythonOperator(
+                    task_id="create_loading_table",
+                    python_callable=sql.create_loading_table,
+                    op_kwargs={
+                        "postgres_conn_id": DB_CONN_ID,
+                        "identifier": identifier,
+                        "media_type": media_type,
+                    },
+                    trigger_rule=TriggerRule.NONE_SKIPPED,
+                    doc_md="Create a temporary loading table for "
+                    f"ingesting {media_type} data from a TSV",
+                )
+                copy_to_s3 = PythonOperator(
+                    task_id="copy_to_s3",
+                    python_callable=s3.copy_file_to_s3,
+                    op_kwargs={
+                        "tsv_file_path": XCOM_PULL_TEMPLATE.format(
+                            pull_data.task_id, f"{media_type}_tsv"
+                        ),
+                        "s3_bucket": OPENVERSE_BUCKET,
+                        "s3_prefix": f"{media_type}/{provider_name}",
+                        "aws_conn_id": AWS_CONN_ID,
+                    },
+                    trigger_rule=TriggerRule.NONE_SKIPPED,
+                )
+                load_from_s3 = PythonOperator(
+                    task_id="load_from_s3",
+                    python_callable=loader.load_from_s3,
+                    op_kwargs={
+                        "bucket": OPENVERSE_BUCKET,
+                        "key": XCOM_PULL_TEMPLATE.format(copy_to_s3.task_id, "s3_key"),
+                        "postgres_conn_id": DB_CONN_ID,
+                        "media_type": media_type,
+                        "tsv_version": XCOM_PULL_TEMPLATE.format(
+                            copy_to_s3.task_id, "tsv_version"
+                        ),
+                        "identifier": identifier,
+                    },
+                )
+                drop_loading_table = PythonOperator(
+                    task_id="drop_loading_table",
+                    python_callable=sql.drop_load_table,
+                    op_kwargs={
+                        "postgres_conn_id": DB_CONN_ID,
+                        "identifier": identifier,
+                        "media_type": media_type,
+                    },
+                    trigger_rule=TriggerRule.ALL_DONE,
+                )
+                [create_loading_table, copy_to_s3] >> load_from_s3 >> drop_loading_table
+
+            pull_data >> load_data
 
     return dag
 
@@ -225,7 +392,7 @@ def _build_ingest_operator_list_list(
             PythonOperator(
                 task_id=f"ingest_{d}",
                 python_callable=main_function,
-                op_args=[DATE_RANGE_ARG_TEMPLATE % d],
+                op_args=[DATE_RANGE_ARG_TEMPLATE.format(d)],
                 execution_timeout=ingestion_task_timeout,
                 depends_on_past=False,
             )

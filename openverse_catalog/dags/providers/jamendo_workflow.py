@@ -18,4 +18,5 @@ globals()[DAG_ID] = create_provider_api_workflow(
     schedule_string="@monthly",
     dated=False,
     dagrun_timeout=DAGRUN_TIMEOUT,
+    media_types=["audio"],
 )
