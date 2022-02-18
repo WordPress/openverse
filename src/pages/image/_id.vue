@@ -206,7 +206,7 @@ const VImageDetailsPage = {
         {
           hid: 'og:image',
           name: 'og:image',
-          content: this.image.foreign_landing_url,
+          content: this.image.url,
         },
       ],
     }
