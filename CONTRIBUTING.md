@@ -18,8 +18,6 @@ Please read the processes in our general [Contributing Code](https://creativecom
 
 If you find a bug, please open an issue in this repository describing the bug. You can file a bug [here](https://github.com/wordpress/openverse-frontend/issues/new?template=bug_report.md). You will see a bug report template with the required information you should provide.
 
-After that, don't forget to tag the issue with the "Bug" label.
-
 Please see our [testing guidelines](./TESTING_GUIDELINES.md) for general instructions and recommendations for how to test the application.
 
 ### Proposing changes or new features
