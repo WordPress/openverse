@@ -10,7 +10,7 @@
     <VContentItem
       v-for="(item, idx) in content.types"
       :key="item"
-      :class="{ 'mb-1 p-4': size === 'medium' }"
+      class="md:mb-1"
       :item="item"
       :item-id="idx"
       :icon="content.icons[item]"

@@ -7,14 +7,14 @@
         $style[`${contextProps.direction}-bordered`]
       }`]: contextProps.bordered,
       'bg-dark-charcoal-10': selected && contextProps.bordered,
-      'p-2': isInPopover,
+      'px-2': isInPopover,
       [$style[`${contextProps.direction}-popover-item`]]: isInPopover,
     }"
   >
     <VButton
       data-item-group-item
       :as="as"
-      class="flex justify-between rounded min-w-full group relative hover:bg-dark-charcoal-10 px-2 py-2"
+      class="flex justify-between min-w-full group relative hover:bg-dark-charcoal-10 px-2 py-2"
       :class="[
         $style.button,
         $style[`${contextProps.direction}-button`],
@@ -35,7 +35,7 @@
       @click.native="$emit('click')"
     >
       <div
-        class="flex-grow whitespace-nowrap my-0 rounded-sm px-2 group-focus-visible:ring group-focus-visible:ring-pink md:group-focus-visible:ring-tx"
+        class="flex-grow whitespace-nowrap my-0 rounded-sm px-2 group-focus-visible:ring group-focus-visible:ring-pink"
         :class="[
           $style[`${contextProps.direction}-content`],
           $style[`${contextProps.size}-content`],
