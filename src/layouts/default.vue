@@ -2,7 +2,7 @@
   <div class="app grid h-screen overflow-hidden relative">
     <div>
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
-      <MigrationNotice v-show="isReferredFromCc" />
+      <VMigrationNotice v-show="isReferredFromCc" />
       <VTranslationStatusBanner />
       <VHeader />
     </div>
@@ -33,7 +33,7 @@ import { isMinScreen } from '~/composables/use-media-query'
 import { useMatchSearchRoutes } from '~/composables/use-match-routes'
 import { useScroll } from '~/composables/use-scroll'
 
-import MigrationNotice from '~/components/MigrationNotice.vue'
+import VMigrationNotice from '~/components/VMigrationNotice.vue'
 import VTranslationStatusBanner from '~/components/VTranslationStatusBanner.vue'
 import VHeader from '~/components/VHeader/VHeader.vue'
 import VModalTarget from '~/components/VModal/VModalTarget.vue'
@@ -44,7 +44,7 @@ import VTeleportTarget from '~/components/VTeleport/VTeleportTarget.vue'
 const embeddedPage = {
   name: 'embedded',
   components: {
-    MigrationNotice,
+    VMigrationNotice,
     VTranslationStatusBanner,
     VHeader,
     VModalTarget,

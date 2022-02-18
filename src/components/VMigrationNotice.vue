@@ -1,5 +1,5 @@
 <template>
-  <NoticeBar>
+  <VNoticeBar>
     {{ $t('migration-notice.intro') }}
     <i18n tag="span" path="migration-notice.more">
       <template #read-more>
@@ -11,14 +11,14 @@
         >
       </template>
     </i18n>
-  </NoticeBar>
+  </VNoticeBar>
 </template>
 
 <script>
-import NoticeBar from '~/components/NoticeBar/NoticeBar.vue'
+import VNoticeBar from '~/components/VNoticeBar/VNoticeBar.vue'
 
 export default {
-  name: 'MigrationNotice',
-  components: { NoticeBar },
+  name: 'VMigrationNotice',
+  components: { VNoticeBar },
 }
 </script>

@@ -13,6 +13,6 @@
  * the parent component.
  */
 export default {
-  name: 'NoticeBar',
+  name: 'VNoticeBar',
 }
 </script>
