@@ -1,12 +1,11 @@
 import VCopyLicense from '~/components/VMediaInfo/VCopyLicense.vue'
-import { COPY_ATTRIBUTION } from '~/constants/action-types'
 import {
   DETAIL_PAGE_EVENTS,
   SEND_DETAIL_PAGE_EVENT,
 } from '~/constants/usage-data-analytics-types'
 
 import render from '../../../test-utils/render'
-import { ATTRIBUTION, USAGE_DATA } from '~/constants/store-modules'
+import { USAGE_DATA } from '~/constants/store-modules'
 
 describe('VCopyLicense', () => {
   let options = null
@@ -55,18 +54,6 @@ describe('VCopyLicense', () => {
   it('should contain the correct contents', () => {
     const wrapper = render(VCopyLicense, options)
     expect(wrapper.find('.copy-license')).toBeDefined()
-  })
-
-  it('should dispatch COPY_ATTRIBUTION', () => {
-    const wrapper = render(VCopyLicense, options)
-    wrapper.vm.onCopyAttribution(copyData.type, copyData.event)
-    expect(dispatchMock).toHaveBeenCalledWith(
-      `${ATTRIBUTION}/${COPY_ATTRIBUTION}`,
-      {
-        type: copyData.type,
-        content: copyData.event.content,
-      }
-    )
   })
 
   it('should dispatch SEND_DETAIL_PAGE_EVENT on copy attribution', () => {

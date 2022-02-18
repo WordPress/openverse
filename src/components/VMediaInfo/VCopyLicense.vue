@@ -157,8 +157,7 @@ import {
   useContext,
 } from '@nuxtjs/composition-api'
 import CopyButton from '~/components/CopyButton.vue'
-import { COPY_ATTRIBUTION } from '~/constants/action-types'
-import { ATTRIBUTION, USAGE_DATA } from '~/constants/store-modules'
+import { USAGE_DATA } from '~/constants/store-modules'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
@@ -211,11 +210,7 @@ const VCopyLicense = defineComponent({
     const onSourceLinkClicked = () =>
       sendDetailPageEvent(DETAIL_PAGE_EVENTS.SOURCE_CLICKED)
 
-    const onCopyAttribution = (type, event) => {
-      store.dispatch(`${ATTRIBUTION}/${COPY_ATTRIBUTION}`, {
-        type,
-        content: event.content,
-      })
+    const onCopyAttribution = () => {
       sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED)
     }
 

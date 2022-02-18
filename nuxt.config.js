@@ -116,7 +116,6 @@ export default {
     dirs: [{ path: '~/components', extensions: ['vue'], pathPrefix: false }],
   },
   plugins: [
-    { src: '~/plugins/ga.js', mode: 'client' },
     { src: '~/plugins/url-change.js' },
     { src: '~/plugins/migration-notice.js' },
     { src: '~/plugins/ua-parse.js' },

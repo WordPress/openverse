@@ -7,8 +7,6 @@ import stringToBoolean from './string-to-boolean'
  */
 export const env = {
   apiUrl: process.env.API_URL ?? 'https://api.openverse.engineering/v1/',
-  enableGoogleAnalytics: stringToBoolean(process.env.ENABLE_GOOGLE_ANALYTICS),
-  googleAnalyticsUA: process.env.GOOGLE_ANALYTICS_UA ?? 'UA-2010376-36',
   filterStorageKey: 'openverse-filter-visibility',
   notificationStorageKey: 'openverse-show-notification',
   enableInternalAnalytics: stringToBoolean(
