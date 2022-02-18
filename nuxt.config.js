@@ -12,6 +12,10 @@ import { sentry } from './src/utils/sentry-config'
  */
 const meta = [
   { charset: 'utf-8' },
+  {
+    name: 'viewport',
+    content: 'width=device-width,initial-scale=1',
+  },
   // Tells Google to only crawl Openverse when iframed
   { hid: 'googlebot', name: 'googlebot', content: 'noindex,indexifembedded' },
   {
