@@ -198,7 +198,7 @@ def create_provider_api_workflow(
         schedule_interval=schedule_string,
         catchup=False,
         doc_md=doc_md,
-        tags=["provider"],
+        tags=["provider"] + [f"provider: {media_type}" for media_type in media_types],
     )
 
     with dag:
