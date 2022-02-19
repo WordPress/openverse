@@ -113,6 +113,7 @@ export default defineComponent({
 
     const status = ref('paused')
     const currentTime = ref(0)
+    const audioDuration = ref(null)
 
     const setPlaying = () => {
       status.value = 'playing'
@@ -133,6 +134,9 @@ export default defineComponent({
         }
       }
     }
+    const setDuration = () => {
+      audioDuration.value = activeAudio.obj.value?.duration
+    }
 
     const updateTimeLoop = () => {
       if (activeAudio.obj.value && status.value === 'playing') {
@@ -149,7 +153,9 @@ export default defineComponent({
         audio.addEventListener('pause', setPaused)
         audio.addEventListener('ended', setPlayed)
         audio.addEventListener('timeupdate', setTimeWhenPaused)
+        audio.addEventListener('durationchange', setDuration)
         currentTime.value = audio.currentTime
+        audioDuration.value = audio.duration
 
         /**
          * By the time the `activeAudio` is updated and a rerender
@@ -179,6 +185,7 @@ export default defineComponent({
           audio.removeEventListener('pause', setPaused)
           audio.removeEventListener('ended', setPlayed)
           audio.removeEventListener('timeupdate', setTimeWhenPaused)
+          audio.removeEventListener('durationchange', setDuration)
         })
       },
       { immediate: true }
@@ -189,7 +196,9 @@ export default defineComponent({
 
     /* Timekeeping */
 
-    const duration = computed(() => (props.audio?.duration ?? 0) / 1e3) // seconds
+    const duration = computed(
+      () => audioDuration.value ?? props.audio?.duration / 1e3 ?? 0
+    ) // seconds
 
     const message = computed(() => store.state.active.message)
 

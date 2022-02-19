@@ -129,6 +129,7 @@ export default defineComponent({
 
     const status = ref('paused')
     const currentTime = ref(0)
+    const audioDuration = ref(null)
 
     const initLocalAudio = () => {
       // Preserve existing local audio if we plucked it from the global active audio
@@ -138,6 +139,7 @@ export default defineComponent({
       localAudio.addEventListener('pause', setPaused)
       localAudio.addEventListener('ended', setPlayed)
       localAudio.addEventListener('timeupdate', setTimeWhenPaused)
+      localAudio.addEventListener('durationchange', setDuration)
 
       /**
        * Similar to the behavior in the global audio track,
@@ -221,6 +223,9 @@ export default defineComponent({
         }
       }
     }
+    const setDuration = () => {
+      audioDuration.value = localAudio?.duration
+    }
 
     /**
      * If we're transforming the globally active audio
@@ -243,6 +248,7 @@ export default defineComponent({
       localAudio.removeEventListener('pause', setPaused)
       localAudio.removeEventListener('ended', setPlayed)
       localAudio.removeEventListener('timeupdate', setTimeWhenPaused)
+      localAudio.removeEventListener('durationchange', setDuration)
 
       if (
         route.value.params.id == props.audio.id ||
@@ -290,7 +296,9 @@ export default defineComponent({
 
     /* Timekeeping */
 
-    const duration = computed(() => (props.audio?.duration ?? 0) / 1e3) // seconds
+    const duration = computed(
+      () => audioDuration.value ?? props.audio?.duration / 1e3 ?? 0 // seconds
+    )
 
     const message = computed(() => store.state.active.message)
 
