@@ -20,7 +20,7 @@ YYYYMMDD-<snake case rfc title>.md
 
 ## Format
 
-There is no concrete format for RFCs but they should include, at minimum, the following sections:
+There is no concrete format for RFCs but they probably (but not necessarily) should include the following sections:
 
 * The rationale/reason/goals for the proposed changes. Basically the high-level "why we need this".
 * The existing state of things as it relates to the proposed change. Link to previous related RFCs and other prior art.
