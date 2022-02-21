@@ -19,7 +19,7 @@ const filterPropertyMappings = {
   mature: 'mature',
 }
 
-const getMediaFilterTypes = (contentType) => [...mediaFilterKeys[contentType]]
+const getMediaFilterTypes = (searchType) => [...mediaFilterKeys[searchType]]
 // {
 //   license: 'cc0,pdm,by,by-sa,by-nc,by-nd,by-nc-sa,by-nc-nd',
 //   imageCategories: 'photograph,illustration,digitized_artwork',
@@ -45,7 +45,7 @@ const filterToString = (filter) =>
  * converts the filter store object to the data format accepted by the API,
  * which has slightly different property names
  * @param {object} filters object containing the filter data that comes from the filter store
- * @param {string} searchType
+ * @param {import('../store/types').SearchType} searchType
  * @param hideEmpty
  * @todo Refactor all of these 'reduce' calls to just use lodash methods :)
  */
@@ -81,12 +81,12 @@ export const filtersToQueryData = (
 }
 
 /**
- * Extract search type from the url. Returns the the last part
+ * Extract search type from the url. Returns the last part
  * of the path between `/search/` and query, or `all` by default.
  * `/search/?q=test`: all
  * `/search/image?q=test`: image
  * @param {string} queryString
- * @return {('all'|'audio'|'image'|'video')}
+ * @return {import('../store/types').SearchType}
  */
 export const queryStringToSearchType = (queryString) => {
   const searchTypePattern = /\/search\/(image|audio|video)\?*/
@@ -101,7 +101,7 @@ export const queryStringToSearchType = (queryString) => {
  * `extensions` - audioExtensions/imageExtensions
  * `categories` - audioCategories/imageCategories
  * This function sets only filters that are possible for current
- * media type. Eg., for queryString `search/audio?extensions=ogg`
+ * media type. E.g., for queryString `search/audio?extensions=ogg`
  * the `audioExtensions.ogg.checked` is set to true,
  * but for `search/images?extensions=ogg`, the extensions query parameter
  * is discarded, because `ogg` is not a valid extension for images.
@@ -129,9 +129,10 @@ const getMediaTypeApiFilters = (filterParameter, parameterFilters) => {
 
 /**
  * converts the browser filter query string into the internal filter store data format
- * @param {Object} query browser filter query
- * @param {'all'|'audio'|'image'|'video'} searchType
- * @param {Object} defaultFilters default filters for testing purposes
+ * @param {object} params
+ * @param {object} params.query - browser filter query
+ * @param {import('../store/types').SearchType} [params.searchType]
+ * @param {object} params.defaultFilters default filters for testing purposes
  */
 export const queryToFilterData = ({
   query,

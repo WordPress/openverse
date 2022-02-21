@@ -39,6 +39,7 @@
     "src/composables/use-browser-detection.js",
     "src/composables/use-media-query.js",
     "src/composables/window.js",
+    "src/constants/media.js",
     "src/constants/screens.js",
     "src/data/api-service.js",
     "src/data/usage-data-service.js",

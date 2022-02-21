@@ -33,12 +33,12 @@
           {{ $t('hero.subtitle') }}
         </h2>
         <div class="flex justify-start gap-4 mt-4 md:hidden">
-          <VContentTypeButton
-            v-for="type in supportedContentTypes"
+          <VSearchTypeRadio
+            v-for="type in supportedSearchTypes"
             :key="type"
-            :content-type="type"
-            :selected="type === contentType"
-            @select="setContentType"
+            :search-type="type"
+            :selected="type === searchType"
+            @select="setSearchType"
           />
         </div>
         <VSearchBar
@@ -48,13 +48,13 @@
           @submit="handleSearch"
         >
           <ClientOnly>
-            <VContentSwitcherPopover
+            <VSearchTypePopover
               v-if="isMinScreenMd"
               ref="contentSwitcher"
               class="mx-3"
-              :active-item="contentType"
+              :active-item="searchType"
               placement="searchbar"
-              @select="setContentType"
+              @select="setSearchType"
             />
           </ClientOnly>
         </VSearchBar>
@@ -131,7 +131,7 @@ import { ref, useContext, useRouter, useStore } from '@nuxtjs/composition-api'
 
 import { isMinScreen } from '~/composables/use-media-query'
 
-import { ALL_MEDIA, supportedContentTypes } from '~/constants/media'
+import { ALL_MEDIA, supportedSearchTypes } from '~/constants/media'
 import { MEDIA, SEARCH } from '~/constants/store-modules'
 import { FETCH_MEDIA, UPDATE_QUERY } from '~/constants/action-types'
 
@@ -139,8 +139,8 @@ import imageInfo from '~/assets/homepage_images/image_info.json'
 
 import OpenverseLogo from '~/assets/logo.svg?inline'
 import OpenverseBrand from '~/assets/brand.svg?inline'
-import VContentSwitcherPopover from '~/components/VContentSwitcher/VContentSwitcherPopover.vue'
-import VContentTypeButton from '~/components/VContentSwitcher/VContentTypeButton.vue'
+import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover.vue'
+import VSearchTypeRadio from '~/components/VContentSwitcher/VSearchTypeRadio.vue'
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
 import VLogoButton from '~/components/VHeader/VLogoButton.vue'
 import VLink from '~/components/VLink.vue'
@@ -151,8 +151,8 @@ const HomePage = {
   components: {
     OpenverseLogo,
     OpenverseBrand,
-    VContentSwitcherPopover,
-    VContentTypeButton,
+    VSearchTypePopover,
+    VSearchTypeRadio,
     VSearchBar,
     VLink,
     VLogoButton,
@@ -191,10 +191,10 @@ const HomePage = {
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
 
     const contentSwitcher = ref(null)
-    const contentType = ref(ALL_MEDIA)
+    const searchType = ref(ALL_MEDIA)
 
-    const setContentType = async (type) => {
-      contentType.value = type
+    const setSearchType = async (type) => {
+      searchType.value = type
       contentSwitcher.value?.closeMenu()
       await store.dispatch(`${SEARCH}/${UPDATE_QUERY}`, {
         searchType: type,
@@ -206,11 +206,11 @@ const HomePage = {
       if (!searchTerm.value) return
       await store.dispatch(`${SEARCH}/${UPDATE_QUERY}`, {
         q: searchTerm.value,
-        searchType: contentType.value,
+        searchType: searchType.value,
       })
       const newPath = app.localePath({
         path: `/search/${
-          contentType.value === ALL_MEDIA ? '' : contentType.value
+          searchType.value === ALL_MEDIA ? '' : searchType.value
         }`,
         query: store.getters['search/searchQueryParams'],
       })
@@ -227,9 +227,9 @@ const HomePage = {
       isMinScreenMd,
 
       contentSwitcher,
-      contentType,
-      setContentType,
-      supportedContentTypes,
+      searchType,
+      setSearchType,
+      supportedSearchTypes,
 
       searchTerm,
       handleSearch,

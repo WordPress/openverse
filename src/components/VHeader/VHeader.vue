@@ -67,7 +67,7 @@ import {
   FETCH_MEDIA,
   UPDATE_QUERY,
 } from '~/constants/action-types'
-import { AUDIO, IMAGE } from '~/constants/media'
+import { supportedMediaTypes } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useMatchSearchRoutes } from '~/composables/use-match-routes'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
@@ -185,7 +185,7 @@ const VHeader = defineComponent({
       const searchType = store.state.search.searchType
       if (searchTermChanged) {
         await Promise.all(
-          [IMAGE, AUDIO].map((mediaType) =>
+          supportedMediaTypes.map((mediaType) =>
             store.dispatch(`${MEDIA}/${CLEAR_MEDIA}`, { mediaType })
           )
         )

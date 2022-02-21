@@ -1,4 +1,4 @@
-const NON_API_PARAMS = ['mediaType', 'shouldPersistMedia']
+const NON_API_PARAMS = ['shouldPersistMedia']
 
 export default function prepareSearchQueryParams(searchParams) {
   const params = {

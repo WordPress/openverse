@@ -4,15 +4,12 @@ import {
   SET_SEARCH_STATE_FROM_URL,
   TOGGLE_FILTER,
   UPDATE_QUERY_FROM_FILTERS,
-  UPDATE_SEARCH_TYPE,
 } from '~/constants/action-types'
 import {
   SET_FILTER,
   SET_PROVIDERS_FILTERS,
-  SET_FILTER_IS_VISIBLE,
   REPLACE_FILTERS,
   SET_SEARCH_TYPE,
-  CLEAR_OTHER_MEDIA_TYPE_FILTERS,
   SET_QUERY,
 } from '~/constants/mutation-types'
 import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
@@ -23,23 +20,6 @@ describe('Filter Store', () => {
       const defaultState = store.state()
 
       expect(defaultState.filters).toEqual(filterData)
-    })
-
-    it('state has filter hidden', () => {
-      const defaultState = store.state()
-
-      expect(defaultState.isFilterVisible).toBeFalsy()
-    })
-
-    it('isFilterVisible should be false when innerWidth property is undefined', () => {
-      window.innerWidth = undefined
-      const state = store.state()
-      expect(state.isFilterVisible).toBeFalsy()
-    })
-    it('isFilterVisible should be false when window width is less then 800', () => {
-      window.innerWidth = 500
-      const state = store.state()
-      expect(state.isFilterVisible).toBeFalsy()
     })
   })
 
@@ -137,13 +117,6 @@ describe('Filter Store', () => {
         { code: 'flickr', name: 'Flickr', checked: false },
       ])
     })
-
-    it('SET_FILTER_IS_VISIBLE updates state', () => {
-      const params = { isFilterVisible: 'bar' }
-      mutations[SET_FILTER_IS_VISIBLE](state, params)
-
-      expect(state.isFilterVisible).toBe(params.isFilterVisible)
-    })
   })
 
   describe('actions', () => {
@@ -166,14 +139,14 @@ describe('Filter Store', () => {
       }
     })
 
-    xit.each`
-      searchType | path                | mediaType
-      ${'all'}   | ${'/search/'}       | ${'image'}
-      ${'image'} | ${'/search/image/'} | ${'image'}
-      ${'audio'} | ${'/search/audio/'} | ${'audio'}
-      ${'video'} | ${'/search/video'}  | ${null}
+    it.each`
+      searchType | path
+      ${'all'}   | ${'/search/'}
+      ${'image'} | ${'/search/image/'}
+      ${'audio'} | ${'/search/audio/'}
+      ${'video'} | ${'/search/video'}
     `(
-      "SET_SEARCH_STATE_FROM_URL should set searchType '$searchType' and mediaType '$mediaType' from path '$path'",
+      "SET_SEARCH_STATE_FROM_URL should set searchType '$searchType' from path '$path'",
       ({ searchType, path, mediaType }) => {
         actions[SET_SEARCH_STATE_FROM_URL](
           { commit: commitMock, dispatch: dispatchMock, state },
@@ -188,62 +161,25 @@ describe('Filter Store', () => {
       }
     )
 
-    xit.each`
-      query                      | path                | mediaType
-      ${{ license: 'cc0,by' }}   | ${'/search/'}       | ${'image'}
-      ${{ searchBy: 'creator' }} | ${'/search/image/'} | ${'image'}
-      ${{ mature: 'true' }}      | ${'/search/audio/'} | ${'audio'}
-      ${{ durations: 'medium' }} | ${'/search/image'}  | ${'image'}
+    it.each`
+      query                      | path                | searchType
+      ${{ license: 'cc0,by' }}   | ${'/search/'}       | ${ALL_MEDIA}
+      ${{ searchBy: 'creator' }} | ${'/search/image/'} | ${IMAGE}
+      ${{ mature: 'true' }}      | ${'/search/audio/'} | ${AUDIO}
+      ${{ durations: 'medium' }} | ${'/search/image'}  | ${IMAGE}
     `(
-      "SET_SEARCH_STATE_FROM_URL should set query '$searchType' from query '$path'",
-      ({ path, query, mediaType }) => {
+      "SET_SEARCH_STATE_FROM_URL should set '$searchType' from query '$path'",
+      ({ query, path, searchType }) => {
         actions[SET_SEARCH_STATE_FROM_URL](
           { commit: commitMock, dispatch: dispatchMock, state },
           { path: path, query: query }
         )
-        expect(dispatchMock).toHaveBeenCalledWith(UPDATE_QUERY_FROM_FILTERS, {
-          mediaType,
+        expect(dispatchMock).toHaveBeenCalledWith(UPDATE_QUERY_FROM_FILTERS, {})
+        expect(context.commit).toHaveBeenLastCalledWith(SET_SEARCH_TYPE, {
+          searchType,
         })
       }
     )
-
-    it('SET_SEARCH_STATE_FROM_URL sets search type to image', () => {
-      const path = '/search/image'
-      const query = { q: 'cat', source: 'met' }
-      actions[SET_SEARCH_STATE_FROM_URL](context, { path, query })
-
-      expect(context.commit).toHaveBeenLastCalledWith(SET_SEARCH_TYPE, {
-        searchType: IMAGE,
-      })
-    })
-
-    it('SET_SEARCH_STATE_FROM_URL sets search type to ALL_MEDIA if URL param is not set', () => {
-      const action = actions[SET_SEARCH_STATE_FROM_URL]
-
-      action(context, {
-        path: '/search/',
-        query: { q: 'cat', source: 'met' },
-      })
-      const searchType = ALL_MEDIA
-      expect(context.commit).toHaveBeenLastCalledWith(SET_SEARCH_TYPE, {
-        searchType,
-      })
-    })
-
-    it('UPDATE_SEARCH_TYPE sets search type to ALL_MEDIA if URL param is not set', () => {
-      const action = actions[UPDATE_SEARCH_TYPE]
-
-      action(context, { searchType: ALL_MEDIA })
-      expect(context.commit).toHaveBeenCalledWith(SET_SEARCH_TYPE, {
-        searchType: ALL_MEDIA,
-      })
-      expect(context.commit).toHaveBeenCalledWith(
-        CLEAR_OTHER_MEDIA_TYPE_FILTERS,
-        {
-          searchType: 'all',
-        }
-      )
-    })
 
     it('CLEAR_FILTERS resets filters to initial state', async () => {
       state.filters.licenses = [

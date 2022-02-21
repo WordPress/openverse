@@ -8,11 +8,11 @@ import {
 
 import { ref } from '@nuxtjs/composition-api'
 
-import VContentSwitcherPopover from '~/components/VContentSwitcher/VContentSwitcherPopover.vue'
+import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover.vue'
 
 <Meta
-  title="Components/VContentSwitcherPopover"
-  components={VContentSwitcherPopover}
+  title="Components/VSearchTypePopover"
+  components={VSearchTypePopover}
   argTypes={{
     select: {
       action: 'select',
@@ -21,16 +21,16 @@ import VContentSwitcherPopover from '~/components/VContentSwitcher/VContentSwitc
 />
 
 export const Template = (args, { argTypes }) => ({
-  template: `<VContentSwitcherPopover active-item="image" v-bind="$props" v-on="$props"/>`,
-  components: { VContentSwitcherPopover },
+  template: `<VSearchTypePopover active-item="image" v-bind="$props" v-on="$props"/>`,
+  components: { VSearchTypePopover },
   props: Object.keys(argTypes),
 })
 
-# VContentSwitcherPopover
+# VSearchTypePopover
 
-<Description of={VContentSwitcherPopover} />
+<Description of={VSearchTypePopover} />
 
-<ArgsTable of={VContentSwitcherPopover} />
+<ArgsTable of={VSearchTypePopover} />
 
 <Canvas>
   <Story height="480px" name="Default">
@@ -46,10 +46,10 @@ export const vModelTemplate = () => ({
   template: `
     <div>
       {{ item }}
-      <VContentSwitcherPopover v-model="item"/>
+      <VSearchTypePopover v-model="item"/>
     </div>
   `,
-  components: { VContentSwitcherPopover },
+  components: { VSearchTypePopover },
   setup() {
     const item = ref('all')
     return { item }

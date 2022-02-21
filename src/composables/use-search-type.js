@@ -1,5 +1,5 @@
 import { computed, ref, useContext } from '@nuxtjs/composition-api'
-import { supportedContentTypes } from '~/constants/media'
+import { supportedSearchTypes } from '~/constants/media'
 import { SEARCH } from '~/constants/store-modules'
 import { UPDATE_QUERY } from '~/constants/action-types'
 import allIcon from '~/assets/icons/all-content.svg'
@@ -11,24 +11,24 @@ const icons = {
   audio: audioIcon,
   image: imageIcon,
 }
-const contentTypes = [...supportedContentTypes]
+const searchTypes = [...supportedSearchTypes]
 
-export default function useContentType() {
+export default function useSearchType() {
   const { store } = useContext()
 
   const activeType = computed(() => store.state.search.searchType)
-  const previousContentType = ref(activeType.value)
-  const setActiveType = async (contentType) => {
-    if (previousContentType.value === contentType) return
+  const previousSearchType = ref(activeType.value)
+  const setActiveType = async (searchType) => {
+    if (previousSearchType.value === searchType) return
     await store.dispatch(`${SEARCH}/${UPDATE_QUERY}`, {
-      searchType: contentType,
+      searchType,
     })
-    previousContentType.value = contentType
+    previousSearchType.value = searchType
   }
   return {
     setActiveType,
     activeType,
-    types: contentTypes,
+    types: searchTypes,
     icons,
   }
 }

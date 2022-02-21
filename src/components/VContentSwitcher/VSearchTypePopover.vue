@@ -6,7 +6,7 @@
     placement="bottom-start"
   >
     <template #trigger="{ a11yProps }">
-      <VContentSwitcherButton
+      <VSearchTypeButton
         :a11y-props="a11yProps"
         aria-controls="content-switcher-popover"
         :active-item="activeItem"
@@ -18,7 +18,7 @@
         :type="placement"
       />
     </template>
-    <VContentTypes
+    <VSearchTypes
       id="content-switcher-popover"
       size="medium"
       :active-item="activeItem"
@@ -28,20 +28,20 @@
 </template>
 
 <script>
-import { computed, ref } from '@nuxtjs/composition-api'
-import useContentType from '~/composables/use-content-type'
+import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+import useSearchType from '~/composables/use-search-type'
 import checkIcon from '~/assets/icons/checkmark.svg'
 
 import VPopover from '~/components/VPopover/VPopover.vue'
-import VContentSwitcherButton from '~/components/VContentSwitcher/VContentSwitcherButton.vue'
-import VContentTypes from '~/components/VContentSwitcher/VContentTypes.vue'
+import VSearchTypeButton from '~/components/VContentSwitcher/VSearchTypeButton.vue'
+import VSearchTypes from '~/components/VContentSwitcher/VSearchTypes.vue'
 
-export default {
-  name: 'VContentSwitcherPopover',
+export default defineComponent({
+  name: 'VSearchTypePopover',
   components: {
-    VContentSwitcherButton,
+    VSearchTypeButton,
     VPopover,
-    VContentTypes,
+    VSearchTypes,
   },
   model: {
     prop: 'activeItem',
@@ -58,7 +58,7 @@ export default {
     },
   },
   setup(props, { emit }) {
-    const content = useContentType()
+    const content = useSearchType()
 
     const contentMenuPopover = ref(null)
 
@@ -91,5 +91,5 @@ export default {
       closeMenu,
     }
   },
-}
+})
 </script>

@@ -27,7 +27,7 @@
 
 <script>
 import { computed } from '@nuxtjs/composition-api'
-import { supportedContentTypes } from '~/constants/media'
+import { ALL_MEDIA, IMAGE, supportedSearchTypes } from '~/constants/media'
 
 import VMetaSearchForm from '~/components/VMetaSearch/VMetaSearchForm.vue'
 
@@ -44,7 +44,9 @@ export default {
       required: true,
     },
     searchType: {
-      type: String,
+      type: /** @type {import('@nuxtjs/composition-api').PropType<import('../store/types').SupportedSearchType>} */ (
+        String
+      ),
       required: true,
     },
     fetchState: {
@@ -64,13 +66,13 @@ export default {
         : false
     })
     const isSupported = computed(() => {
-      return supportedContentTypes.includes(props.searchType)
+      return supportedSearchTypes.includes(props.searchType)
     })
     const metaSearchFormType = computed(() => {
-      return props.searchType === 'all' ? 'image' : props.searchType
+      return props.searchType === ALL_MEDIA ? IMAGE : props.searchType
     })
     const isAllView = computed(() => {
-      return props.searchType === 'all'
+      return props.searchType === ALL_MEDIA
     })
 
     return {

@@ -22,9 +22,14 @@
   </VButton>
 </template>
 <script>
-import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
-import { computed, inject, useContext } from '@nuxtjs/composition-api'
-import useContentType from '~/composables/use-content-type'
+import { ALL_MEDIA, supportedSearchTypes } from '~/constants/media'
+import {
+  computed,
+  defineComponent,
+  inject,
+  useContext,
+} from '@nuxtjs/composition-api'
+import useSearchType from '~/composables/use-search-type'
 import { isMinScreen } from '~/composables/use-media-query'
 
 import caretDownIcon from '~/assets/icons/caret-down.svg'
@@ -32,8 +37,8 @@ import caretDownIcon from '~/assets/icons/caret-down.svg'
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
 
-export default {
-  name: 'VContentSwitcherButton',
+export default defineComponent({
+  name: 'VSearchTypeButton',
   components: { VButton, VIcon },
   props: {
     a11yProps: {
@@ -43,7 +48,7 @@ export default {
     activeItem: {
       type: String,
       default: ALL_MEDIA,
-      validator: (v) => [ALL_MEDIA, IMAGE, AUDIO].includes(v),
+      validator: (v) => supportedSearchTypes.includes(v),
     },
     type: {
       type: String,
@@ -56,7 +61,7 @@ export default {
     const isHeaderScrolled = inject('isHeaderScrolled', null)
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
 
-    const { icons, activeType: activeItem } = useContentType()
+    const { icons, activeType: activeItem } = useSearchType()
     const isIconButton = computed(
       () => isHeaderScrolled?.value && !isMinScreenMd.value
     )
@@ -67,7 +72,7 @@ export default {
         return 'w-10 h-10'
       } else {
         /**
-          When there is a caret down icon (on 'md' screens), paddings are balanced, 
+          When there is a caret down icon (on 'md' screens), paddings are balanced,
           without it, paddings need to be adjusted.
           */
         return 'ps-2 pe-3 md:px-2'
@@ -107,5 +112,5 @@ export default {
       icon: computed(() => icons[activeItem.value]),
     }
   },
-}
+})
 </script>

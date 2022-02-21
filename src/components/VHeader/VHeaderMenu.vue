@@ -7,13 +7,13 @@ import {
   useRouter,
   useStore,
 } from '@nuxtjs/composition-api'
-import useContentType from '~/composables/use-content-type'
+import useSearchType from '~/composables/use-search-type'
 
 import VMobileMenuModal from '~/components/VContentSwitcher/VMobileMenuModal.vue'
-import VContentSwitcherPopover from '~/components/VContentSwitcher/VContentSwitcherPopover.vue'
+import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover.vue'
 import VDesktopPageMenu from '~/components/VHeader/VPageMenu/VDesktopPageMenu.vue'
 import VMobilePageMenu from '~/components/VHeader/VPageMenu/VMobilePageMenu.vue'
-import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
+import { ALL_MEDIA, supportedMediaTypes } from '~/constants/media'
 import { FETCH_MEDIA } from '~/constants/action-types'
 import { MEDIA } from '~/constants/store-modules'
 import isEmpty from 'lodash.isempty'
@@ -22,7 +22,7 @@ export default {
   name: 'VHeaderMenu',
   components: {
     VMobileMenuModal,
-    VContentSwitcherPopover,
+    VSearchTypePopover,
     VDesktopPageMenu,
     VMobilePageMenu,
   },
@@ -37,7 +37,7 @@ export default {
     const isMinScreenMd = inject('isMinScreenMd')
     /** @type {import('@nuxtjs/composition-api').Ref<null|HTMLElement>} */
     const menuModalRef = ref(null)
-    const content = useContentType()
+    const content = useSearchType()
     const { app } = useContext()
     const store = useStore()
     const router = useRouter()
@@ -46,7 +46,7 @@ export default {
     onMounted(() => {
       isMounted.value = true
     })
-    const selectContentType = async (type) => {
+    const selectSearchType = async (type) => {
       menuModalRef.value?.closeMenu()
       await content.setActiveType(type)
 
@@ -62,7 +62,7 @@ export default {
 
       const shouldFetchMedia =
         type === ALL_MEDIA
-          ? [AUDIO, IMAGE].every((type) => typeWithoutMedia(type))
+          ? supportedMediaTypes.every((type) => typeWithoutMedia(type))
           : typeWithoutMedia(type)
 
       if (shouldFetchMedia) {
@@ -78,7 +78,7 @@ export default {
       isMounted,
 
       content,
-      selectContentType,
+      selectSearchType,
     }
   },
   render(h) {
@@ -89,10 +89,10 @@ export default {
     } else if (this.isMinScreenMd && this.isMounted) {
       return h('div', { class: 'flex flex-grow justify-between gap-x-2' }, [
         h(VDesktopPageMenu),
-        h(VContentSwitcherPopover, {
+        h(VSearchTypePopover, {
           props: { activeItem: this.content.activeType.value },
           ref: 'menuModalRef',
-          on: { select: this.selectContentType },
+          on: { select: this.selectSearchType },
         }),
       ])
     } else {
@@ -100,7 +100,7 @@ export default {
         ref: 'menuModalRef',
         props: { activeItem: this.content.activeType.value },
         on: {
-          select: this.selectContentType,
+          select: this.selectSearchType,
         },
       })
     }

@@ -25,7 +25,7 @@ describe('VSearchGrid', () => {
         search: {
           namespaced: true,
           state: {
-            query: { q: 'foo', mediaType: IMAGE },
+            query: { q: 'foo' },
             filters: {
               licenseTypes: [
                 { code: 'commercial', name: 'Commercial usage' },
@@ -91,8 +91,8 @@ describe('VSearchGrid', () => {
       },
       propsData: {
         supported: true,
-        query: { q: 'foo', mediaType: IMAGE },
-        searchType: 'image',
+        query: { q: 'foo' },
+        searchType: IMAGE,
         fetchState: {
           isFetching: false,
           isFinished: true,

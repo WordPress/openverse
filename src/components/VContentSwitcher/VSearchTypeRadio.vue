@@ -7,7 +7,7 @@
     @click="handleClick"
   >
     <VIcon :icon-path="iconPath" class="me-1 flex-shrink-0" />
-    <span>{{ $t(`search-type.${contentType}`) }}</span>
+    <span>{{ $t(`search-type.${searchType}`) }}</span>
   </button>
 </template>
 
@@ -17,7 +17,7 @@ import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
-  supportedContentTypes,
+  supportedSearchTypes,
 } from '~/constants/media'
 import VIcon from '~/components/VIcon/VIcon.vue'
 
@@ -32,16 +32,16 @@ const iconMapping = {
 }
 
 export default defineComponent({
-  name: 'VContentTypeButton',
+  name: 'VSearchTypeRadio',
   components: { VIcon },
   props: {
     /**
      * One of the media types supported.
      */
-    contentType: {
+    searchType: {
       type: String,
       required: true,
-      validator: (v) => supportedContentTypes.includes(v),
+      validator: (v) => supportedSearchTypes.includes(v),
     },
     selected: {
       type: Boolean,
@@ -49,8 +49,8 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const iconPath = computed(() => iconMapping[props.contentType])
-    const handleClick = () => emit('select', props.contentType)
+    const iconPath = computed(() => iconMapping[props.searchType])
+    const handleClick = () => emit('select', props.searchType)
     return { iconPath, handleClick }
   },
 })

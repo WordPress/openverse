@@ -56,12 +56,14 @@ import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 import VImageCell from '~/components/VAllResultsGrid/VImageCell.vue'
 import VAudioCell from '~/components/VAllResultsGrid/VAudioCell.vue'
 import VLoadMore from '~/components/VLoadMore.vue'
+import VContentLink from '~/components/VContentLink/VContentLink.vue'
+import GridSkeleton from '~/components/Skeleton/GridSkeleton.vue'
 
 import srand from '~/utils/srand'
 
 export default defineComponent({
   name: 'VAllResultsGrid',
-  components: { VImageCell, VAudioCell, VLoadMore },
+  components: { GridSkeleton, VContentLink, VImageCell, VAudioCell, VLoadMore },
   props: ['canLoadMore'],
   setup(_, { emit }) {
     const { i18n, store } = useContext()
@@ -86,18 +88,21 @@ export default defineComponent({
       // if (resultsLoading.value) return []
       const media = store.getters['media/mediaResults']
       const mediaKeys = Object.keys(media)
-
       // Seed the random number generator with the ID of
       // the first and last search result, so the non-image
       // distribution is the same on repeated searches
       const rand = srand(Object.keys(media[mediaKeys[0]])[0])
       const randomIntegerInRange = (min, max) =>
         Math.floor(rand() * (max - min + 1)) + min
-
+      /**
+       * When navigating from All page to Audio page, VAllResultsGrid is displayed
+       * for a short period of time. Then media['image'] is undefined, and it throws an error
+       * `TypeError: can't convert undefined to object`. To fix it, we add `|| {}` to the media['image'].
+       */
       /** @type {import('../../store/types').AudioDetail[] | import('../../store/types').ImageDetail[]} */
       const newResults = []
       // first push all images to the results list
-      for (const id of Object.keys(media['image'])) {
+      for (const id of Object.keys(media['image'] || {})) {
         const item = media['image'][id]
         item.frontendMediaType = 'image'
         newResults.push(item)

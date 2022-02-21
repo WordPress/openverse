@@ -5,7 +5,7 @@ import {
   queryStringToQueryData,
 } from '~/utils/search-query-transform'
 import { filterData } from '~/store/search'
-import { IMAGE } from '~/constants/media'
+import { AUDIO, IMAGE } from '~/constants/media'
 
 describe('searchQueryTransform', () => {
   it('converts initial filters to query data', () => {
@@ -60,7 +60,7 @@ describe('searchQueryTransform', () => {
           checked: false,
         },
         {
-          code: 'digitized_artwork',
+          code: 'digitized-artwork',
           name: 'filters.image-categories.digitized-artwork',
           checked: false,
         },
@@ -264,7 +264,7 @@ describe('searchQueryTransform', () => {
     ]
     const result = queryToFilterData({
       query,
-      searchType: 'audio',
+      searchType: AUDIO,
       defaultFilters: testFilters,
     })
     expect(result).toEqual(filters) // toEqual checks for value equality

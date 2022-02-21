@@ -320,7 +320,7 @@
       "title": "Image type",
       "photograph": "Photographs",
       "illustration": "Illustrations",
-      "digitized-artwork": "Digitized Artworks"
+      "digitized_artwork": "Digitized Artworks"
     },
     "audio-extensions": {
       "title": "File type",
@@ -360,7 +360,7 @@
     "creator": {
       "title": "Search by Creator"
     },
-    "searchBy": {
+    "search-by": {
       "title": "Search By",
       "creator": "Creator"
     },

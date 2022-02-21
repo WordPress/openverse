@@ -30,16 +30,17 @@ import {
   useStore,
 } from '@nuxtjs/composition-api'
 import { useLoadMore } from '~/composables/use-load-more'
+import { isMinScreen } from '~/composables/use-media-query'
+import { propTypes } from './search-page.types'
 
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 import VLoadMore from '~/components/VLoadMore.vue'
-
-import { propTypes } from './search-page.types'
-import { isMinScreen } from '~/composables/use-media-query'
+import GridSkeleton from '~/components/Skeleton/GridSkeleton.vue'
 
 const AudioSearch = defineComponent({
   name: 'AudioSearch',
   components: {
+    GridSkeleton,
     VAudioTrack,
     VLoadMore,
   },

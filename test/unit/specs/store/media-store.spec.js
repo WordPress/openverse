@@ -233,10 +233,10 @@ describe('Search Store', () => {
         dispatch: jest.fn(),
         rootState: {
           user: { usageSessionId: 'foo' },
-          search: { query: { q: 'cat', mediaType: IMAGE } },
+          search: { query: { q: 'cat' } },
         },
         rootGetters: {
-          search: { searchQueryParams: () => ({ q: 'cat', mediaType: IMAGE }) },
+          search: { searchQueryParams: () => ({ q: 'cat' }) },
         },
         state: state,
       }

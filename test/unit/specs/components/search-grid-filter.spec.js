@@ -50,10 +50,7 @@ describe('SearchGridFilter', () => {
             searchType: IMAGE,
             isFilterVisible: true,
             filters,
-            query: {
-              q: '',
-              mediaType: IMAGE,
-            },
+            query: { q: '' },
           },
           mutations: store.mutations,
           actions: store.actions,

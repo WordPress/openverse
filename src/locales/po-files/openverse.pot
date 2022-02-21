@@ -39,7 +39,7 @@ msgctxt "search-type.video"
 msgid "Videos"
 msgstr ""
 
-#: src/components/VContentSwitcher/VContentSwitcherPopover.vue:5
+#: src/components/VContentSwitcher/VSearchTypePopover.vue:5
 msgctxt "search-type.label"
 msgid "Type of content to search"
 msgstr ""
@@ -49,7 +49,7 @@ msgctxt "search-type.heading"
 msgid "Content types"
 msgstr ""
 
-#: src/components/VContentSwitcher/VContentItem.vue:13
+#: src/components/VContentSwitcher/VSearchTypeItem.vue:13
 msgctxt "search-type.status-beta"
 msgid "Beta"
 msgstr ""
@@ -885,11 +885,11 @@ msgid "here"
 msgstr ""
 
 #: src/components/VFilters/VFilterChecklist.vue:74
-msgctxt "filters.searchBy.title"
+msgctxt "filters.search-by.title"
 msgid "Search By"
 msgstr ""
 
-msgctxt "filters.searchBy.creator"
+msgctxt "filters.search-by.creator"
 msgid "Creator"
 msgstr ""
 
@@ -1001,7 +1001,7 @@ msgctxt "filters.image-categories.illustration"
 msgid "Illustrations"
 msgstr ""
 
-msgctxt "filters.image-categories.digitized-artwork"
+msgctxt "filters.image-categories.digitized_artwork"
 msgid "Digitized Artworks"
 msgstr ""
 

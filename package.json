@@ -22,6 +22,7 @@
     "test:watch": "jest --collectCoverage=false --watch",
     "test:unit": "jest --collectCoverage=false",
     "test:e2e": "playwright test",
+    "test:e2e-debug": "PWDEBUG=1 playwright test",
     "run-server": "cross-env nuxt build && pnpm start",
     "e2e:ci": "start-server-and-test run-server http://localhost:8443 test:e2e",
     "generate-e2e-tests": "playwright codegen localhost:8443/",

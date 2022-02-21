@@ -71,7 +71,7 @@ export default {
   computed: {
     itemName() {
       return this.filterType === 'searchBy'
-        ? this.$t('filters.searchBy.title')
+        ? this.$t('filters.search-by.title')
         : this.title
     },
   },

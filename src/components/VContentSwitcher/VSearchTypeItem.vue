@@ -25,8 +25,8 @@ const propTypes = {
   selected: { type: Boolean, default: false },
   icon: { type: String, required: true },
 }
-const VContentItem = defineComponent({
-  name: 'VContentItem',
+export default defineComponent({
+  name: 'VSearchTypeItem',
   props: propTypes,
   setup(props) {
     const status = computed(() => {
@@ -37,5 +37,4 @@ const VContentItem = defineComponent({
     }
   },
 })
-export default VContentItem
 </script>

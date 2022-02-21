@@ -3,30 +3,31 @@ export const IMAGE = 'image'
 export const VIDEO = 'video'
 export const ALL_MEDIA = 'all'
 
-/** @typedef {typeof AUDIO | typeof IMAGE | typeof VIDEO | typeof ALL_MEDIA} MediaType */
-
 /**
- * Media types that the API supports.
+ * Media types that the API supports and this only includes 'real' media. ALL is a special case not used in this list.
  * These types also support custom filters.
- * @type {MediaType[]}
+ * Note: images should always be first here,
+ *
  */
-export const supportedMediaTypes = [IMAGE, AUDIO]
+export const supportedMediaTypes = /** @type {const} */ ([IMAGE, AUDIO])
 
 /**
  * The types of content that users can search. `All` is also an option here.
- * @type {MediaType[]}
  */
-export const supportedContentTypes = [ALL_MEDIA, IMAGE, AUDIO]
+export const supportedSearchTypes = /** @type {const} */ ([
+  ALL_MEDIA,
+  IMAGE,
+  AUDIO,
+])
 
 /** @typedef {'supported'|'beta'|'additional'} SupportStatus */
-/** @type {{SUPPORTED: SupportStatus, ADDITIONAL: SupportStatus, BETA: SupportStatus}}*/
-export const statuses = {
+export const statuses = /** @type {const} */ ({
   SUPPORTED: 'supported',
   BETA: 'beta',
   ADDITIONAL: 'additional',
-}
+})
 
-/** @type {Object.<MediaType, SupportStatus>} */
+/** @type {Record.<import('../store/types').SearchType, SupportStatus>} */
 export const contentStatus = {
   [ALL_MEDIA]: statuses.SUPPORTED,
   [IMAGE]: statuses.SUPPORTED,
