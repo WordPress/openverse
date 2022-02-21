@@ -1,7 +1,7 @@
 # RFC: Introduce UI state cookie to frontend
 
 - [x] @obulat 
-- [ ] Approver (TBD)
+- [x] @zackkrida 
 
 **Milestone:** TBD
 
