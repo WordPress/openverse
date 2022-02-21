@@ -1,5 +1,5 @@
 <template>
-  <VNoticeBar>
+  <VNoticeBar class="cc-ov-migration">
     {{ $t('migration-notice.intro') }}
     <i18n tag="span" path="migration-notice.more">
       <template #read-more>

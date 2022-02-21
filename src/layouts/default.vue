@@ -20,7 +20,6 @@
 <script>
 import iframeHeight from '~/mixins/iframe-height'
 
-import { NAV } from '~/constants/store-modules'
 import {
   computed,
   provide,
@@ -61,7 +60,7 @@ const embeddedPage = {
     const mainContentRef = ref(null)
     const mainRef = ref(null)
     const { store } = useContext()
-    const isReferredFromCc = store.state[NAV].isReferredFromCc
+    const isReferredFromCc = computed(() => store.state.nav.isReferredFromCc)
 
     const { isVisible: isFilterVisible } = useFilterSidebarVisibility()
     const isMinScreenMd = isMinScreen('md')
