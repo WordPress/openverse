@@ -44,6 +44,7 @@
     "src/data/api-service.js",
     "src/data/usage-data-service.js",
     "src/store/user.js",
+    "src/utils/deep-freeze.js",
     "src/utils/key-codes.js",
     "src/utils/local.js",
     "src/utils/warn.js"

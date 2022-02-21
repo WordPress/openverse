@@ -28,6 +28,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
+import { isShallowEqualObjects } from '@wordpress/is-shallow-equal'
 import {
   FETCH_MEDIA,
   UPDATE_QUERY,
@@ -35,7 +36,6 @@ import {
 } from '~/constants/action-types'
 import { ALL_MEDIA, supportedSearchTypes } from '~/constants/media'
 import { MEDIA, SEARCH } from '~/constants/store-modules'
-import { queryStringToSearchType } from '~/utils/search-query-transform'
 
 import { inject } from '@nuxtjs/composition-api'
 import { isMinScreen } from '~/composables/use-media-query.js'
@@ -109,14 +109,16 @@ const BrowsePage = {
   watch: {
     /**
      * Updates the search type only if the route's path changes.
-     * This watcher is important when changing the search type via All grid's ContentLink.
-     * @param newRoute
-     * @param oldRoute
+     * @param {import('@nuxt/types').Context['route']} newRoute
+     * @param {import('@nuxt/types').Context['route']} oldRoute
      */
-    $route(newRoute, oldRoute) {
-      if (newRoute.path !== oldRoute.path) {
-        const searchType = queryStringToSearchType(newRoute.path)
-        this.updateQuery({ searchType })
+    async $route(newRoute, oldRoute) {
+      if (
+        newRoute.path !== oldRoute.path ||
+        !isShallowEqualObjects(newRoute.query, oldRoute.query)
+      ) {
+        await this.setSearchStateFromUrl(newRoute)
+        this.fetchMedia(this.searchQueryParams)
       }
     },
   },

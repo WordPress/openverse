@@ -28,7 +28,7 @@ export const useLoadMore = (props) => {
   })
 
   const onLoadMore = async () => {
-    if (canLoadMore) {
+    if (canLoadMore.value) {
       await store.dispatch(`${MEDIA}/${FETCH_MEDIA}`, searchParams.value)
     }
   }

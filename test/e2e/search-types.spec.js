@@ -27,31 +27,31 @@ const searchTypes = [
   {
     id: 'all',
     name: 'All content',
-    url: '/search?q=cat',
-    supported: true,
-    sources: 6,
+    url: '/search?q=birds',
+    canLoadMore: true,
+    metaSourceCount: 6,
   },
   {
     id: 'image',
     name: 'Images',
-    url: '/search/image?q=cat',
-    supported: true,
-    sources: 6,
+    url: '/search/image?q=birds',
+    canLoadMore: true,
+    metaSourceCount: 6,
     results: /Over 10,000 results/,
   },
   {
     id: 'audio',
     name: 'Audio',
-    url: '/search/audio?q=cat',
-    supported: true,
-    sources: 3,
-    results: /13 results/,
+    url: '/search/audio?q=birds',
+    canLoadMore: true,
+    metaSourceCount: 3,
+    results: /93 results/,
   },
 ]
 
 async function checkLoadMore(page, searchType) {
   const loadMoreSection = await page.locator('[data-testid="load-more"]')
-  if (!searchType.supported || searchType.id === 'audio') {
+  if (!searchType.canLoadMore) {
     await expect(loadMoreSection).toHaveCount(0)
   } else {
     await expect(loadMoreSection).toHaveCount(1)
@@ -63,11 +63,11 @@ async function checkMetasearchForm(page, searchType) {
   await expect(metaSearchForm).toHaveCount(1)
 
   const sourceButtons = await page.locator('.meta-search a')
-  await expect(sourceButtons).toHaveCount(searchType.sources)
+  await expect(sourceButtons).toHaveCount(searchType.metaSourceCount)
 }
 
 async function checkSearchMetadata(page, searchType) {
-  if (searchType.supported) {
+  if (searchType.canLoadMore) {
     const searchResult = await page.locator('[data-testid="search-results"]')
     await expect(searchResult).toBeVisible()
     await expect(searchResult).not.toBeEmpty()
@@ -94,7 +94,7 @@ for (const searchType of searchTypes) {
     await changeContentType(page, searchType.name)
 
     const urlParam = searchType.id === 'all' ? '' : searchType.id
-    const expectedURL = `/search/${urlParam}?q=cat`
+    const expectedURL = `/search/${urlParam}?q=birds`
     await expect(page).toHaveURL(expectedURL)
 
     await checkSearchResult(page, searchType)
@@ -106,12 +106,12 @@ for (let searchTypeName of ['audio', 'image']) {
   test(`Can open ${searchTypeName} page from the all view`, async ({
     page,
   }) => {
-    await page.goto('/search/?q=cat')
+    await page.goto('/search/?q=birds')
     const contentLink = await page.locator(
-      `a[href*="/search/${searchTypeName}"][href$="q=cat"]`
+      `a[href*="/search/${searchTypeName}"][href$="q=birds"]`
     )
     await expect(contentLink).toContainText(searchType.results)
-    await page.click(`a[href*="/search/${searchTypeName}"][href$="q=cat"]`)
+    await page.click(`a[href*="/search/${searchTypeName}"][href$="q=birds"]`)
 
     await expect(page).toHaveURL(searchType.url)
     await checkSearchResult(page, searchType)

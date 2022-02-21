@@ -1,6 +1,7 @@
 import findIndex from 'lodash.findindex'
 import clonedeep from 'lodash.clonedeep'
 
+import { deepFreeze } from '~/utils/deep-freeze'
 import {
   filtersToQueryData,
   queryStringToSearchType,
@@ -83,7 +84,7 @@ export const mediaSpecificFilters = {
 }
 
 /** @type {import('./types').Filters} */
-export const filterData = {
+export const filterData = deepFreeze({
   licenses: createInitialFilters('licenses', [
     'cc0',
     'pdm',
@@ -130,6 +131,20 @@ export const filterData = {
   imageProviders: [],
   searchBy: createInitialFilters('search-by', ['creator']),
   mature: false,
+})
+
+const getBaseFiltersWithProviders = (state) => {
+  const resetProviders = (mediaType) => {
+    return state.filters[`${mediaType}Providers`].map((provider) => ({
+      ...provider,
+      checked: false,
+    }))
+  }
+  return {
+    ...clonedeep(filterData),
+    audioProviders: resetProviders(AUDIO),
+    imageProviders: resetProviders(IMAGE),
+  }
 }
 
 /**
@@ -299,19 +314,9 @@ const actions = {
    * @param {import('vuex').ActionContext} context
    */
   async [CLEAR_FILTERS]({ commit, dispatch, state }) {
-    const initialFilters = clonedeep(filterData)
-    const resetProviders = (mediaType) => {
-      return state.filters[`${mediaType}Providers`].map((provider) => ({
-        ...provider,
-        checked: false,
-      }))
-    }
-    const newFilterData = {
-      ...initialFilters,
-      audioProviders: resetProviders(AUDIO),
-      imageProviders: resetProviders(IMAGE),
-    }
-    commit(REPLACE_FILTERS, { newFilterData })
+    commit(REPLACE_FILTERS, {
+      newFilterData: getBaseFiltersWithProviders(state),
+    })
     await dispatch(UPDATE_QUERY_FROM_FILTERS, { q: '' })
   },
 
@@ -333,7 +338,7 @@ const actions = {
     const newFilterData = queryToFilterData({
       query,
       searchType,
-      defaultFilters: state.filters,
+      defaultFilters: getBaseFiltersWithProviders(state),
     })
     commit(REPLACE_FILTERS, { newFilterData })
     commit(SET_SEARCH_TYPE, { searchType })
