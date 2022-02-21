@@ -1,7 +1,7 @@
 <template>
   <VButton
-    as="NuxtLink"
-    :to="localePath('/')"
+    as="VLink"
+    href="/"
     variant="plain"
     size="disabled"
     class="max-w-min hover:bg-yellow text-dark-charcoal"

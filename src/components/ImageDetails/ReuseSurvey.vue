@@ -1,15 +1,13 @@
 <template>
   <div class="reuse-survey caption mt-1">
     {{ $t('photo-details.survey.content') }}
-    <a
+    <VLink
       :href="formLink"
-      target="_blank"
-      rel="noopener"
       @click="onReuseSurveyClick"
       @keyup.enter="onReuseSurveyClick"
     >
       {{ $t('photo-details.survey.link') }}
-    </a>
+    </VLink>
     {{ $t('photo-details.survey.answer') }}
   </div>
 </template>
@@ -20,6 +18,7 @@ import {
   DETAIL_PAGE_EVENTS,
 } from '~/constants/usage-data-analytics-types'
 import { USAGE_DATA } from '~/constants/store-modules'
+import VLink from '~/components/VLink.vue'
 
 const reuseForm =
   'https://docs.google.com/forms/d/e/1FAIpQLSegPUDIUj_odzclJhhWRfPumSfbHtXDVDCHqRfFl7ZS8cMn2g/viewform'
@@ -27,6 +26,7 @@ const imageLinkEntry = '2039681354'
 
 export default {
   name: 'ReuseSurvey',
+  components: { VLink },
   props: ['image'],
   data: () => ({
     location: '',

@@ -1,15 +1,13 @@
 <template>
   <ul class="buttons is-centered">
     <li v-for="(browser, key) in browsers" :key="key">
-      <a
-        target="_blank"
-        rel="nofollow noreferrer"
+      <VLink
         :href="browser.extUrl"
         class="browser-button button small me-2 is-opaque"
       >
         {{ $t(`browsers.${key}`) }}
         <img class="ms-2" :src="browser.logo" :alt="$t(`browsers.${key}`)" />
-      </a>
+      </VLink>
     </li>
   </ul>
 </template>

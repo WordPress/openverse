@@ -6,6 +6,7 @@ import {
 import render from '../../../test-utils/render'
 import i18n from '../../../test-utils/i18n'
 import { USAGE_DATA } from '~/constants/store-modules'
+import { mount } from '@vue/test-utils'
 
 describe('ImageAttribution', () => {
   let options = null
@@ -31,7 +32,7 @@ describe('ImageAttribution', () => {
   })
 
   it('should dispatch REUSE_SURVEY on reuse link clicked', () => {
-    const wrapper = render(ReuseSurvey, options)
+    const wrapper = render(ReuseSurvey, options, mount)
     wrapper.find('a').trigger('click')
     expect(dispatchMock).toHaveBeenCalledWith(
       `${USAGE_DATA}/${SEND_DETAIL_PAGE_EVENT}`,

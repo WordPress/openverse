@@ -24,10 +24,13 @@ import { computed, ref } from '@nuxtjs/composition-api'
 import { AUDIO } from '~/constants/media'
 
 import useRelated from '~/composables/use-related'
-import { isMinScreen } from '@/composables/use-media-query'
+import { isMinScreen } from '~/composables/use-media-query'
+import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
+import LoadingIcon from '~/components/LoadingIcon.vue'
 
 export default {
   name: 'VRelatedAudio',
+  components: { VAudioTrack, LoadingIcon },
   props: {
     audioId: {
       type: String,

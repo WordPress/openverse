@@ -10,13 +10,9 @@
         tag="p"
       >
         <template #source>
-          <a
-            :href="media.url"
-            class="text-pink hover:underline"
-            target="_blank"
-            rel="noopener"
-            >{{ providerName }}</a
-          >
+          <VLink :href="media.url" class="text-pink hover:underline">{{
+            providerName
+          }}</VLink>
         </template>
       </i18n>
     </div>
@@ -81,7 +77,7 @@
           <VButton
             v-if="selectedReason === reasons.DMCA"
             key="dmca"
-            as="a"
+            as="VLink"
             variant="secondary"
             :href="DMCA_FORM_URL"
             target="_blank"
@@ -114,6 +110,7 @@ import VIcon from '~/components/VIcon/VIcon.vue'
 import VRadio from '~/components/VRadio/VRadio.vue'
 import VDmcaNotice from '~/components/VContentReport/VDmcaNotice.vue'
 import VReportDescForm from '~/components/VContentReport/VReportDescForm.vue'
+import VLink from '~/components/VLink.vue'
 
 import ReportService from '~/data/report-service'
 
@@ -126,6 +123,7 @@ export default defineComponent({
   components: {
     VButton,
     VIcon,
+    VLink,
     VRadio,
     VDmcaNotice,
     VReportDescForm,

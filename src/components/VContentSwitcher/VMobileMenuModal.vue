@@ -43,14 +43,10 @@ import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 import useContentType from '~/composables/use-content-type'
 import usePages from '~/composables/use-pages'
 
-import externalLinkIcon from 'assets/icons/external-link.svg'
-
 import VMobileModalContent from '~/components/VModal/VMobileModalContent.vue'
 import VContentTypes from '~/components/VContentSwitcher/VContentTypes.vue'
 import VPageList from '~/components/VHeader/VPageMenu/VPageList.vue'
 import VContentSwitcherButton from '~/components/VContentSwitcher/VContentSwitcherButton'
-
-const externalLinkProps = { as: 'a', target: '_blank', rel: 'noopener' }
 
 export default {
   name: 'VMobileContentSwitcher',
@@ -121,16 +117,7 @@ export default {
       emit('select', item)
     }
 
-    const isLinkExternal = (item) => !item.link.startsWith('/')
-    const getLinkProps = (item) => {
-      return isLinkExternal(item)
-        ? { ...externalLinkProps, href: item.link }
-        : { as: 'NuxtLink', to: item.link }
-    }
     return {
-      getLinkProps,
-      isLinkExternal,
-      externalLinkIcon,
       pages,
       content,
       close,

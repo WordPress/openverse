@@ -2,17 +2,12 @@
   <div class="mb-10">
     <ul class="buttons is-centered mt-6">
       <li v-for="source in sources" :key="source">
-        <a
-          target="_blank"
-          rel="nofollow noreferrer"
-          :href="getSourceUrl(source)"
-          class="button small me-2 is-opaque"
-        >
+        <VLink :href="getSourceUrl(source)" class="button small me-2 is-opaque">
           {{ source }}
           <sup class="top-0">
             <i class="ms-2 icon external-link" />
           </sup>
-        </a>
+        </VLink>
       </li>
     </ul>
   </div>
@@ -22,9 +17,11 @@
 import getLegacySourceUrl, {
   legacySourceMap,
 } from '~/utils/get-legacy-source-url'
+import VLink from '~/components/VLink.vue'
 
 export default {
   name: 'MetaSourceList',
+  components: { VLink },
   props: {
     type: { type: String },
     query: { type: Object },

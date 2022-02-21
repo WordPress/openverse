@@ -92,12 +92,12 @@ export default defineComponent({
     /**
      * To change the underlying component for the VButton,
      * pass `as` prop.
-     * @variants 'button', 'a', 'NuxtLink'
+     * @variants 'button', 'VLink'
      */
     as: {
       type: String,
       default: 'button',
-      validator: (val) => ['button', 'a', 'NuxtLink'].includes(val),
+      validator: (val) => ['button', 'VLink'].includes(val),
     },
   },
   /**

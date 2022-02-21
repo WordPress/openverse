@@ -29,7 +29,7 @@
       class="flex flex-row md:flex-row-reverse flex-wrap justify-between md:mt-6"
     >
       <VButton
-        as="a"
+        as="VLink"
         :href="image.foreign_landing_url"
         target="blank"
         rel="noopener noreferrer"
@@ -50,7 +50,7 @@
           class="font-semibold leading-[130%]"
         >
           <template #name>
-            <a
+            <VLink
               v-if="image.creator_url"
               :aria-label="
                 $t('media-details.aria.creator-url', {
@@ -58,11 +58,9 @@
                 })
               "
               :href="image.creator_url"
-              target="blank"
-              rel="noopener noreferrer"
               @click="onCreatorLinkClicked"
               @keyup.enter="onCreatorLinkClicked"
-              >{{ image.creator }}</a
+              >{{ image.creator }}</VLink
             >
             <span v-else>{{ image.creator }}</span>
           </template>
@@ -93,6 +91,7 @@ import {
 
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
+import VLink from '~/components/VLink.vue'
 import VImageDetails from '~/components/VImageDetails/VImageDetails.vue'
 import VMediaReuse from '~/components/VMediaInfo/VMediaReuse.vue'
 import VRelatedImages from '~/components/VImageDetails/VRelatedImages.vue'
@@ -104,6 +103,7 @@ const VImageDetailsPage = {
   components: {
     VButton,
     VIcon,
+    VLink,
     VImageDetails,
     VMediaReuse,
     VRelatedImages,

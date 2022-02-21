@@ -1,6 +1,6 @@
 <template>
-  <NuxtLink
-    :to="to"
+  <VLink
+    :href="to"
     class="text-dark-charcoal bg-white border border-dark-charcoal/20 rounded-sm flex flex-col md:flex-row md:justify-between items-start md:items-center hover:bg-dark-charcoal hover:text-white hover:no-underline focus:border-tx overflow-hidden py-4 ps-4 pe-12 w-full md:p-6"
   >
     <div class="flex flex-col items-start md:flex-row md:items-center">
@@ -13,7 +13,7 @@
       </p>
     </div>
     <span class="text-sr">{{ resultsCountLabel }}</span>
-  </NuxtLink>
+  </VLink>
 </template>
 
 <script>

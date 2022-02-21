@@ -7,8 +7,8 @@
   >
     <figure class="search-grid_item">
       <i :style="`padding-bottom:${iPadding}%`" />
-      <NuxtLink
-        :to="localePath('/image/' + image.id)"
+      <VLink
+        :href="'/image/' + image.id"
         class="search-grid_image-ctr"
         :style="`width: ${imageWidth}%; top: ${imageTop}%; left:${imageLeft}%;`"
         @click="onGotoDetailPage($event, image)"
@@ -25,7 +25,7 @@
           @load="getImgDimension"
           @error="onImageLoadError($event, image)"
         />
-      </NuxtLink>
+      </VLink>
       <figcaption class="overlay overlay__top p-2">
         <VLicense
           :license="image.license"
@@ -42,6 +42,7 @@
 
 <script>
 import VLicense from '~/components/License/VLicense.vue'
+import VLink from '~/components/VLink.vue'
 
 const errorImage = require('~/assets/image_not_available_placeholder.png')
 
@@ -59,7 +60,7 @@ const toAbsolutePath = (url, prefix = 'https://') => {
 
 export default {
   name: 'ImageCell',
-  components: { VLicense },
+  components: { VLicense, VLink },
   props: ['image', 'shouldContainImage'],
   data() {
     return {

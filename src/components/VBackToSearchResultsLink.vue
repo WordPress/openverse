@@ -1,13 +1,13 @@
 <template>
-  <!-- @todo: Seperate the absolute container from the link itself. -->
-  <NuxtLink
+  <!-- @todo: Separate the absolute container from the link itself. -->
+  <VLink
     v-if="show"
     class="px-2 pt-1 md:px-6 md:pt-4 md:pb-2 flex flex-row items-center font-semibold text-dark-charcoal text-xs md:text-sr"
-    :to="path"
+    :href="path"
   >
     <Chevron class="-ms-2" />
     {{ $t('single-result.back') }}
-  </NuxtLink>
+  </VLink>
 </template>
 
 <script>

@@ -6,9 +6,9 @@
     }}
     <i18n path="notification.translation.text">
       <template #link>
-        <a :href="translationLink" target="_blank" class="underline">{{
+        <VLink :href="translationLink" class="underline">{{
           $t('notification.translation.link')
-        }}</a>
+        }}</VLink>
       </template>
       <template #locale>
         {{ bannerLocale.name }}
@@ -18,11 +18,13 @@
 </template>
 <script>
 import useI18nSync from '~/composables/use-i18n-sync'
+import VLink from '~/components/VLink.vue'
 import VNotificationBanner from '~/components/VNotificationBanner.vue'
 
 export default {
   name: 'VTranslationStatusBanner',
   components: {
+    VLink,
     VNotificationBanner,
   },
   setup() {

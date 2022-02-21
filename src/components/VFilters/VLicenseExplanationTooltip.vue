@@ -16,9 +16,9 @@
       class="caption float-right m-2"
     >
       <template #link>
-        <a target="_blank" :href="`${getLicenseDeedLink(license)}`">{{
+        <VLink :href="`${getLicenseDeedLink(license)}`">{{
           $t('filters.license-explanation.link')
-        }}</a>
+        }}</VLink>
       </template>
     </i18n>
     <i18n
@@ -28,9 +28,9 @@
       class="caption float-right m-2"
     >
       <template #link>
-        <a target="_blank" :href="`${getLicenseDeedLink(license)}`">{{
+        <VLink :href="`${getLicenseDeedLink(license)}`">{{
           $t('filters.license-explanation.link')
-        }}</a>
+        }}</VLink>
       </template>
     </i18n>
   </div>
@@ -38,10 +38,12 @@
 
 <script>
 import { isLicense } from '~/utils/license'
+import VLink from '~/components/VLink.vue'
+import LicenseElements from '~/components/LicenseElements.vue'
 
 export default {
   name: 'VLicenseExplanationTooltip',
-
+  components: { VLink, LicenseElements },
   props: {
     license: {
       type: String,

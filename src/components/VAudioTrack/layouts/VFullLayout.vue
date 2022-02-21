@@ -41,12 +41,12 @@
             class="font-semibold leading-snug"
           >
             <template #creator>
-              <a
+              <VLink
                 class="p-px rounded-sm focus:outline-none focus:ring focus:ring-pink"
                 :href="audio.creator_url"
               >
                 {{ audio.creator }}
-              </a>
+              </VLink>
             </template>
           </i18n>
 
@@ -71,11 +71,13 @@
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 
 import DownloadButton from '~/components/DownloadButton.vue'
+import VLink from '~/components/VLink.vue'
 
 export default defineComponent({
   name: 'VFullLayout',
   components: {
     DownloadButton,
+    VLink,
   },
   props: ['audio', 'size', 'status', 'currentTime'],
   setup(props) {

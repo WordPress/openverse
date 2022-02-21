@@ -13,8 +13,8 @@
       />
 
       <div class="px-6 lg:ps-30 lg:pe-0 xl:px-40 mx-auto w-full lg:w-auto">
-        <NuxtLink
-          to="/"
+        <VLink
+          href="/"
           class="relative z-10 hidden lg:block -left-[6.25rem] rtl:-right-[6.25rem]"
         >
           <h1>
@@ -28,7 +28,7 @@
               <OpenverseBrand class="w-[315px] h-[60px]" />
             </span>
           </h1>
-        </NuxtLink>
+        </VLink>
         <h2 class="text-4xl lg:text-6xl mt-auto lg:mt-6">
           {{ $t('hero.subtitle') }}
         </h2>
@@ -66,12 +66,10 @@
           class="hidden lg:block text-sr mt-4"
         >
           <template #license>
-            <a
+            <VLink
               href="https://creativecommons.org/licenses/"
-              target="blank"
-              rel="noopener noreferrer"
               class="text-dark-charcoal hover:text-dark-charcoal underline"
-              >{{ $t('hero.disclaimer.license') }}</a
+              >{{ $t('hero.disclaimer.license') }}</VLink
             >
           </template>
         </i18n>
@@ -94,8 +92,8 @@
             mode="out-in"
             appear
           >
-            <NuxtLink
-              :to="image.url"
+            <VLink
+              :href="image.url"
               class="homepage-image block aspect-square h-30 w-30 lg:h-auto lg:w-auto lg:m-[2vh] rounded-full"
               :style="{ '--transition-index': `${index * 0.05}s` }"
             >
@@ -105,7 +103,7 @@
                 :alt="image.title"
                 :title="image.title"
               />
-            </NuxtLink>
+            </VLink>
           </Transition>
         </ClientOnly>
       </div>
@@ -118,12 +116,10 @@
       class="lg:hidden text-sr p-6 mt-auto"
     >
       <template #license>
-        <a
+        <VLink
           href="https://creativecommons.org/licenses/"
-          target="blank"
-          rel="noopener noreferrer"
           class="text-dark-charcoal hover:text-dark-charcoal underline"
-          >{{ $t('hero.disclaimer.license') }}</a
+          >{{ $t('hero.disclaimer.license') }}</VLink
         >
       </template>
     </i18n>
@@ -147,6 +143,7 @@ import VContentSwitcherPopover from '~/components/VContentSwitcher/VContentSwitc
 import VContentTypeButton from '~/components/VContentSwitcher/VContentTypeButton.vue'
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
 import VLogoButton from '~/components/VHeader/VLogoButton.vue'
+import VLink from '~/components/VLink.vue'
 
 const HomePage = {
   name: 'home-page',
@@ -157,6 +154,7 @@ const HomePage = {
     VContentSwitcherPopover,
     VContentTypeButton,
     VSearchBar,
+    VLink,
     VLogoButton,
   },
   head: {

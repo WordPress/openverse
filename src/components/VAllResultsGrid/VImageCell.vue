@@ -1,10 +1,9 @@
 <template>
-  <NuxtLink
+  <VLink
     itemprop="contentUrl"
     :title="image.title"
-    :to="localePath('/image/' + image.id)"
+    :href="'/image/' + image.id"
     class="group block focus:bg-white focus:ring focus:ring-pink focus:outline-none focus:shadow-ring focus:text-black rounded-sm"
-    @click="onGotoDetailPage($event, image)"
   >
     <figure
       itemprop="image"
@@ -34,7 +33,7 @@
         />
       </figcaption>
     </figure>
-  </NuxtLink>
+  </VLink>
 </template>
 
 <script>

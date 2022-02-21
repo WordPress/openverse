@@ -21,14 +21,14 @@
       }"
     >
       <div class="flex-shrink-0" :class="{ 'w-70': isMedium }">
-        <NuxtLink
-          :to="localePath(`/audio/${audio.id}`)"
+        <VLink
+          :href="`/audio/${audio.id}`"
           class="block font-heading font-semibold line-clamp-2 md:line-clamp-1 text-dark-charcoal hover:text-dark-charcoal p-px rounded-sm focus:outline-none focus:ring focus:ring-pink"
           :class="{
             'text-2xl': isMedium || isLarge,
             'leading-snug': isSmall,
           }"
-          >{{ audio.title }}</NuxtLink
+          >{{ audio.title }}</VLink
         >
 
         <div
@@ -88,12 +88,14 @@ import { useBrowserIsBlink } from '~/composables/use-browser-detection'
 
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
 import VLicense from '~/components/License/VLicense.vue'
+import VLink from '~/components/VLink.vue'
 
 export default defineComponent({
   name: 'VRowLayout',
   components: {
     VAudioThumbnail,
     VLicense,
+    VLink,
   },
   props: ['audio', 'size'],
   setup(props) {

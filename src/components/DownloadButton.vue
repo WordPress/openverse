@@ -6,7 +6,7 @@
     :size="size"
   >
     <template #default="{ buttonProps }">
-      <a
+      <VLink
         v-bind="buttonProps"
         class="whitespace-nowrap"
         :href="selectedFormat.download_url"
@@ -19,7 +19,7 @@
         <span class="ms-1 font-normal">{{
           getFormatSize(selectedFormat.extension_name)
         }}</span>
-      </a>
+      </VLink>
     </template>
 
     <template
@@ -62,13 +62,14 @@
 import filesize from 'filesize'
 import axios from 'axios'
 import local from '~/utils/local'
-import DropdownButton from '~/components/DropdownButton'
+import DropdownButton from '~/components/DropdownButton.vue'
+import VLink from '~/components/VLink.vue'
 
 const LS_DOWNLOAD_FORMAT_EXTENSION_KEY = 'openverse:download-format-extension'
 
 export default {
   name: 'DownloadButton',
-  components: { DropdownButton },
+  components: { DropdownButton, VLink },
   props: {
     formats: {
       type: Array,

@@ -30,7 +30,8 @@ import {
   toRefs,
   computed,
 } from '@nuxtjs/composition-api'
-import { warn } from '~/utils/warn'
+import VLink from '~/components/VLink.vue'
+import { warn } from '@/utils/warn'
 
 /**
  * A button component that behaves just like a regular HTML `button` element
@@ -46,26 +47,27 @@ import { warn } from '~/utils/warn'
  */
 const VButton = defineComponent({
   name: 'VButton',
+  components: { VLink },
   props: {
     /**
      * Passed to `component :is` to allow the button to *appear* as a button but
      * work like another element (like an `anchor`). May only be either `button` or `a`.
      *
-     * We do not support other elements because their use cases are marginal and they
+     * We do not support other elements because their use cases are marginal, and they
      * add complexity that we can avoid otherwise.
      *
-     * We also don't allow any old Vue component because Vue does not have ref-forwarding
+     * We also don't allow any old Vue component because Vue does not have ref-forwarding,
      * so we wouldn't be able to detect the type of the DOM node that is ultimately rendered
      * by any Vue component passed.
      *
      * @default 'button'
      */
     as: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<'a' | 'button'>} */ (
+      type: /** @type {import('@nuxtjs/composition-api').PropType<'VLink' | 'button'>} */ (
         String
       ),
       default: 'button',
-      validate: (v) => ['a', 'button', 'NuxtLink'].includes(v),
+      validate: (v) => ['VLink', 'button'].includes(v),
     },
     /**
      * The variant of the button.
@@ -186,24 +188,13 @@ const VButton = defineComponent({
     watch(
       propsRef.as,
       (as) => {
-        if (['a', 'NuxtLink'].includes(as)) {
+        if (['VLink'].includes(as)) {
           typeRef.value = undefined
           supportsDisabledAttributeRef.value = false
-          if (as === 'a') {
-            // No need to declare `href` as an explicit prop as Vue preserves
-            // the `attrs` object reference between renders and updates the properties
-            // meaning we'll always have the latest values for the properties on the
-            // attrs object
-            if (!attrs.href || attrs.href === '#') {
-              warn(
-                'Do not use anchor elements without a valid `href` attribute. Use a `button` instead.'
-              )
-            }
-          } else {
-            if (!attrs.to) {
-              warn('NuxtLink needs a `to` attribute')
-            }
-          }
+        } else if (['a', 'NuxtLink'].includes(as)) {
+          warn(
+            `Please use \`VLink\` with an \`href\` prop instead of ${as} for the button component`
+          )
         }
       },
       { immediate: true }

@@ -22,7 +22,9 @@
           <div v-if="audio.audio_set">
             <dt>{{ $t('audio-details.table.album') }}</dt>
             <dd>
-              <a :href="audio.audio_set.url">{{ audio.audio_set.name }}</a>
+              <VLink :href="audio.audio_set.url">{{
+                audio.audio_set.name
+              }}</VLink>
             </dd>
           </div>
           <div v-if="audio.category">
@@ -52,13 +54,9 @@
               {{ $t('audio-details.table.provider') }}
             </dt>
             <dd>
-              <a
-                :href="audio.foreign_landing_url"
-                target="blank"
-                rel="noopener noreferrer"
-              >
+              <VLink :href="audio.foreign_landing_url">
                 {{ providerName }}
-              </a>
+              </VLink>
             </dd>
           </div>
           <div v-if="audio.source && sourceName !== providerName">
@@ -87,13 +85,13 @@
 import getProviderName from '~/utils/get-provider-name'
 import { PROVIDER } from '~/constants/store-modules'
 import { mapState } from 'vuex'
-
+import VLink from '~/components/VLink.vue'
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
 import VMediaTag from '~/components/VMediaTag/VMediaTag.vue'
 
 export default {
   name: 'VAudioDetails',
-  components: { VAudioThumbnail, VMediaTag },
+  components: { VAudioThumbnail, VLink, VMediaTag },
   props: ['audio'],
   computed: {
     ...mapState(PROVIDER, ['audioProviders']),

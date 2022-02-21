@@ -15,12 +15,12 @@
         <i18n path="search-guide.exact.content" tag="p">
           <template #link>
             <!-- eslint-disable -->
-            <a
+            <VLink
               :aria-label="$t('search-guide.exact.aria-label')"
               href='https://search.creativecommons.org/search?q="Claude%20Monet"'
             >
               <em>{{ $t('search-guide.exact.claude-monet') }}</em>
-            </a>
+            </VLink>
             <!-- eslint-enable -->
           </template>
         </i18n>
@@ -105,12 +105,12 @@
 
         <i18n path="search-guide.example.and.description" tag="p" class="my-4">
           <template #link>
-            <a
+            <VLink
               :aria-label="$t('search-guide.example.and.aria-label')"
               href="https://search.creativecommons.org/search?q=dog%2Bcat"
             >
               <em>{{ $t('search-guide.example.and.example') }}</em>
-            </a>
+            </VLink>
           </template>
           <template #br>
             <br />
@@ -119,12 +119,12 @@
 
         <i18n path="search-guide.example.or" tag="p" class="my-4">
           <template #link>
-            <a
+            <VLink
               :aria-label="$t('search-guide.example.or.aria-label')"
               href="https://search.creativecommons.org/search?q=dog%7Ccat"
             >
               <em>{{ $t('search-guide.example.or.example') }}</em>
-            </a>
+            </VLink>
           </template>
           <template #br>
             <br />
@@ -148,12 +148,12 @@
 
         <i18n path="search-guide.example.negate.content" tag="p" class="mb-4">
           <template #link>
-            <a
+            <VLink
               :aria-label="$t('search-guide.example.negate.aria-label')"
               href="https://search.creativecommons.org/search?q=dog%20-pug"
             >
               <em>{{ $t('search-guide.example.negate.example') }}</em>
-            </a>
+            </VLink>
           </template>
           <template #br>
             <br />
@@ -174,12 +174,12 @@
 
         <i18n path="search-guide.example.prefix.content" tag="p" class="mb-4">
           <template #link>
-            <a
+            <VLink
               :aria-label="$t('search-guide.example.prefix.aria-label')"
               href="https://search.creativecommons.org/search?q=net%2a"
             >
               <em>{{ $t('search-guide.example.prefix.example') }}</em>
-            </a>
+            </VLink>
           </template>
           <template #br>
             <br />
@@ -202,12 +202,12 @@
           class="mb-4"
         >
           <template #link>
-            <a
+            <VLink
               :aria-label="$t('search-guide.example.precedence.aria-label')"
               href="https://search.creativecommons.org/search?q=dogs%20%2B%20%28corgis%20%7C%20labrador%29"
             >
               <em>{{ $t('search-guide.example.precedence.example') }}</em>
-            </a>
+            </VLink>
           </template>
           <template #br>
             <br />
@@ -223,9 +223,9 @@
             <em aria-label="tilde N">~N</em>
           </template>
           <template #link>
-            <a href="http://en.wikipedia.org/wiki/Levenshtein_distance">
+            <VLink href="http://en.wikipedia.org/wiki/Levenshtein_distance">
               {{ $t('search-guide.example.fuzziness.link-text') }}
-            </a>
+            </VLink>
           </template>
         </i18n>
 
@@ -235,12 +235,12 @@
           class="mb-4"
         >
           <template #link>
-            <a
+            <VLink
               :aria-label="$t('search-guide.example.fuzziness.aria-label')"
               href="https://search.creativecommons.org/search?q=theatre~1"
             >
               <em>{{ $t('search-guide.example.fuzziness.example') }}</em>
-            </a>
+            </VLink>
           </template>
           <template #br>
             <br />
@@ -253,8 +253,11 @@
 </template>
 
 <script>
+import VLink from '~/components/VLink.vue'
+
 const SearchHelpPage = {
   name: 'search-help-page',
+  components: { VLink },
   methods: {
     providerSearchLink(providerCode) {
       return `https://search.creativecommons.org/search?q=provider%3A%20"${providerCode}"`
