@@ -3,7 +3,7 @@
 - [x] @obulat 
 - [x] @zackkrida 
 
-**Milestone:** TBD
+**Milestone:** https://github.com/WordPress/openverse-frontend/milestone/11
 
 ## Rationale
 
