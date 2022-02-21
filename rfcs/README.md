@@ -22,6 +22,8 @@ YYYYMMDD-<snake case rfc title>.md
 
 There is no concrete format for RFCs but they probably (but not necessarily) should include the following sections:
 
+* A list of approvers (to be filled in as approvals are given)
+* A deadline for feedback (typically two weeks from the date the RFC is originally shared unless there are extenuating circumstances)
 * The rationale/reason/goals for the proposed changes. Basically the high-level "why we need this".
 * The existing state of things as it relates to the proposed change. Link to previous related RFCs and other prior art.
 * Describe any proposed new dependencies/technology and why we need them. When appropriate, include information about alternatives that were considered. This can be as short as "standardizing on the Vue community solution for this problem".
