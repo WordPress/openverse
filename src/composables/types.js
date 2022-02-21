@@ -10,7 +10,7 @@
 
 /**
  * @template T
- * @typedef {import('@nuxtjs/composition-api').Ref | T} MaybeRef
+ * @typedef {import('@nuxtjs/composition-api').Ref<T> | T} MaybeRef
  */
 
 export default {}
