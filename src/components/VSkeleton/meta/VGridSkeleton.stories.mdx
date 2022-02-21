@@ -6,21 +6,21 @@ import {
   Story,
 } from '@storybook/addon-docs'
 
-import GridSkeleton from '~/components/Skeleton/GridSkeleton.vue'
+import VGridSkeleton from '~/components/VSkeleton/VGridSkeleton.vue'
 
-<Meta title="Components/Skeleton" component={GridSkeleton} />
+<Meta title="Components/Skeleton" component={VGridSkeleton} />
 
 export const Template = (args, { argTypes }) => ({
-  template: `<GridSkeleton v-bind="$props" />`,
-  components: { GridSkeleton },
+  template: `<VGridSkeleton v-bind="$props" />`,
+  components: { VGridSkeleton },
   props: Object.keys(argTypes),
 })
 
 # Skeleton
 
-<Description of={GridSkeleton} />
+<Description of={VGridSkeleton} />
 
-<ArgsTable of={GridSkeleton} />
+<ArgsTable of={VGridSkeleton} />
 
 ## Grid skeleton for "All" tab
 

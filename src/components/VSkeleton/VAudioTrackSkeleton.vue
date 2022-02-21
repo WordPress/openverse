@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: 'AudioTrackSkeleton',
+  name: 'VAudioTrackSkeleton',
   methods: {
     getRandomSize(max = 250, min = 70) {
       return Math.floor(Math.random() * (max - min) + min)

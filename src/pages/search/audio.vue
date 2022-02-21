@@ -1,6 +1,6 @@
 <template>
   <section>
-    <GridSkeleton
+    <VGridSkeleton
       v-if="results.length === 0 && !fetchState.isFinished"
       is-for-tab="audio"
     />
@@ -35,13 +35,13 @@ import { propTypes } from './search-page.types'
 
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 import VLoadMore from '~/components/VLoadMore.vue'
-import GridSkeleton from '~/components/Skeleton/GridSkeleton.vue'
+import VGridSkeleton from '~/components/VSkeleton/VGridSkeleton.vue'
 
 const AudioSearch = defineComponent({
   name: 'AudioSearch',
   components: {
-    GridSkeleton,
     VAudioTrack,
+    VGridSkeleton,
     VLoadMore,
   },
   props: propTypes,

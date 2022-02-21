@@ -8,7 +8,6 @@ export default function (context, inject) {
   } else if (typeof navigator !== 'undefined') {
     userAgent = navigator.userAgent
   }
-
   const ua = useragent.parse(userAgent)
 
   context.$ua = ua

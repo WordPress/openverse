@@ -13,7 +13,7 @@
         class="lg:col-span-2"
       />
     </div>
-    <GridSkeleton
+    <VGridSkeleton
       v-if="resultsLoading && allMedia.length === 0"
       is-for-tab="all"
     />
@@ -57,13 +57,19 @@ import VImageCell from '~/components/VAllResultsGrid/VImageCell.vue'
 import VAudioCell from '~/components/VAllResultsGrid/VAudioCell.vue'
 import VLoadMore from '~/components/VLoadMore.vue'
 import VContentLink from '~/components/VContentLink/VContentLink.vue'
-import GridSkeleton from '~/components/Skeleton/GridSkeleton.vue'
+import VGridSkeleton from '~/components/VSkeleton/VGridSkeleton.vue'
 
 import srand from '~/utils/srand'
 
 export default defineComponent({
   name: 'VAllResultsGrid',
-  components: { GridSkeleton, VContentLink, VImageCell, VAudioCell, VLoadMore },
+  components: {
+    VImageCell,
+    VAudioCell,
+    VLoadMore,
+    VGridSkeleton,
+    VContentLink,
+  },
   props: ['canLoadMore'],
   setup(_, { emit }) {
     const { i18n, store } = useContext()
@@ -88,6 +94,7 @@ export default defineComponent({
       // if (resultsLoading.value) return []
       const media = store.getters['media/mediaResults']
       const mediaKeys = Object.keys(media)
+
       // Seed the random number generator with the ID of
       // the first and last search result, so the non-image
       // distribution is the same on repeated searches

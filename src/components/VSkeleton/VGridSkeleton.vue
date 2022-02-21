@@ -1,10 +1,13 @@
 <template>
   <section>
-    <div v-if="isForTab == 'all'" class="grid gap-4 grid-cols-2 lg:grid-cols-5">
+    <div
+      v-if="isForTab === 'all'"
+      class="grid gap-4 grid-cols-2 lg:grid-cols-5"
+    >
       <VBone v-for="idx in numElems" :key="idx" class="square" />
     </div>
 
-    <div v-if="isForTab == 'image'" class="masonry">
+    <div v-if="isForTab === 'image'" class="masonry">
       <VBone
         v-for="idx in numElems"
         :key="idx"
@@ -13,8 +16,8 @@
       />
     </div>
 
-    <template v-if="isForTab == 'audio'">
-      <AudioTrackSkeleton v-for="idx in numElems" :key="idx" />
+    <template v-if="isForTab === 'audio'">
+      <VAudioTrackSkeleton v-for="idx in numElems" :key="idx" />
     </template>
   </section>
 </template>
@@ -24,8 +27,12 @@
  * Display placeholder elements while waiting for the actual elements to be
  * loaded in the results views.
  */
+import VAudioTrackSkeleton from '~/components/VSkeleton/VAudioTrackSkeleton.vue'
+import VBone from '~/components/VSkeleton/VBone.vue'
+
 export default {
-  name: 'GridSkeleton',
+  name: 'VGridSkeleton',
+  components: { VAudioTrackSkeleton, VBone },
   props: {
     isForTab: {
       type: String,
