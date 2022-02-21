@@ -7,7 +7,13 @@ A proposal to integrate visual regression testing into the Openverse frontend's 
 - [ ] Approver (TBD)
 - [ ] Approver (TBD)
 
-**Milestone:** TBD
+## Milestone
+
+TBD
+
+## Exploratory code
+
+https://github.com/WordPress/openverse-frontend/pull/899
 
 ## Background
 
