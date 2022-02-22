@@ -4,7 +4,7 @@ A proposal to integrate visual regression testing into the Openverse frontend's 
 
 ## Reviewers
 
-- [ ] Approver (TBD)
+- [x] @obulat
 - [ ] Approver (TBD)
 
 ## Milestone
@@ -151,20 +151,17 @@ For local debugging purposes, `pnpm test:visual-regression:local --debug` can be
 ## Recommended tooling
 
 * Continue using Playwright to manipulate the browser and use it's `screenshot` function to generate screenshots.
-* Use `jest-image-snapshot` to save and diff screenshots.
+* _Try_ to use `jest-image-snapshot` to save and diff screenshots.
 * Run snapshot tests inside a docker container to avoid cross-platform rendering differences.
 * Write a GitHub action to be run [once daily using the `on.schedule` feature](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onschedule) to automatically remove snapshots from the repository history older than a month old.
 * Use GitHub's PR review UI to review visual diffs of snapshots.
-
-If agreeable with the team, I'd also like to take this opportunity to implement TypeScript linting and recommend that we switch to using TypeScript to write Playwright tests. Playwright supports it natively.
+* Write Playwright scripts using TypeScript
+    * Note: TypeScript linting and general infrastructure has already been set up in https://github.com/WordPress/openverse-frontend/issues/921 and https://github.com/WordPress/openverse-frontend/pull/917.
 
 ## Implementation plan
 
 Once the final version of this RFC is approved, a milestone with issues for each individual checkbox listed below will be created.
 
-- [ ] TypeScript setup (**Optional; pending team buy-in**):
-    - Install [TypeScript ESLint parser](https://typescript-eslint.io/docs/linting/) and relevant plugins.
-    - Lint existing TypeScript files.
 - [ ] Configure local visual regression testing:
     - Create a `playwright.config.ts` file in the new directory with the following code:
     ```ts
@@ -184,11 +181,12 @@ Once the final version of this RFC is approved, a milestone with issues for each
     ```
     "test:visual-regression": "node ./bin/visual-regression.js",
     "test:visual-regression:local": "playwright test -c test/visual-regression",
-    "visual-regression:ci": "start-server-and-test run-server http://localhost:8443 test:visual-regression"
+    "ci:visual-regression": "start-server-and-test run-server http://localhost:8443 test:visual-regression"
     ```
     - Install and configure `jest-image-snapshot` and `@types/jest-image-snapshot`:
         - Note: It may be necessary to add additional TypeScript typings in the root level `typings` folder for TypeScript to know that `expect()` includes the `toMatchImageSnapshot` function. Follow the existing examples extending `@types/nuxt` to extend the `@playwright/test` library's `Matchers` interface.
         - Additional note: As mentioned in the section about `jest-image-snapshot` above it may not be possible to get this library to play nicely with Playwright's specific `expect.extend` context. I'd say time box trying to get this to work to an hour or so and then just move on to the next thing. There's an additional task at the end of this list for writing the `pixelmatch` diff generator script in case we need it.
+        - **Extra important note:** This library might not work with Playwright, in which case we'll just leave this out; there's a contingency plan for this case below.
     - Write basic tests for the homepage; a full-page snapshot for `ltr` and `rtl` versions of the page should do just as a start and proof-of-concept.
         - Note: It will be necessary to remove the featured images from the page before taking the snapshot or the diff will fail 2/3 of the time due to them being different. The following code can be used to accomplish this:
         ```ts
@@ -201,7 +199,7 @@ Once the final version of this RFC is approved, a milestone with issues for each
     - Create a `README.md` in the `visual-regression` directory with basic instructions for how to run and write visual regression tests. In particular mention our usage of `jest-image-snapshot` instead of the built in snapshot matcher.
 - [ ] Complete https://github.com/WordPress/openverse-frontend/issues/890 if it isn't already done.
 - [ ] Configure CI to run visual regression tests.
-    - Write a new workflow to run the visual regression tests. You should be able to copy the existing e2e workflow and replace the call to `e2e:ci` to `visual-regression:ci`.
+    - Write a new workflow to run the visual regression tests. You should be able to copy the existing e2e workflow and replace the call to `ci:e2e` to `ci:visual-regression`.
 - [ ] Configure Storybook visual regression tests.
     - Copy the existing `visual-regression` folder's configuration and create a new test folder called `storybook-visual-regression`.
     - Create corresponding local and CI scripts in `package.json` to run these tests, using `storybook` instead of `run-server` and use the correct port for Storybook
