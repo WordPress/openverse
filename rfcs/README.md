@@ -15,8 +15,9 @@ YYYYMMDD-<snake case rfc title>.md
 ```
 3. Wait for feedback. Please `@` contributors you think might have specific and applicable knowledge to the problem space.
 4. Revise based on feedback.
-5. Continue until approval from two core contributors has been given and there are no absolute blockers raised.
-6. Create the related milestone and issues for the implementation plan. Link to the milestone in the final RFC and merge it.
+5. Allow for a minimum of **5** days for review by contributors and the community.
+6. Continue until approval from at least two core contributors has been given and there are no absolute blockers raised.
+7. Create the related milestone and issues for the implementation plan. Link to the milestone in the final RFC and merge it.
 
 ## Format
 
