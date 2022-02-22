@@ -1,0 +1,39 @@
+name: openverse-frontend/setup-node-env
+description: Setup the Node.js environment including `pnpm` and dependencies
+
+inputs:
+  install:
+    default: true
+    description: Whether to install dependencies.
+
+runs:
+  using: "composite"
+  steps:
+    - uses: pnpm/action-setup@v2.0.1
+      with:
+        version: 6.30.1
+
+    - name: Cache pnpm modules
+      uses: actions/cache@v2
+      with:
+        path: ~/.pnpm-store
+        key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-
+
+    - uses: actions/setup-node@v2.5.1
+      with:
+        node-version: 16
+        cache: pnpm
+        cache-dependency-path: |
+          pnpm-lock.yaml
+          .npmrc
+
+    - name: Install
+      if: inputs.install
+      shell: bash
+      run: "pnpm install"
+
+    - name: Get locales
+      shell: bash
+      run: "pnpm i18n:create-locales-list && pnpm i18n:update-locales && pnpm i18n:get-translations"

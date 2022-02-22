@@ -1,56 +1,103 @@
-name: openverse-frontend-ci
+name: CI
 
 on:
   push:
-    branches:
-      - main
+    branches: -main
   pull_request:
-    branches:
-      - main
-      - audio
 
 jobs:
-  ci:
-    name: Run CI tests
+  types:
+    name: Check types
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: "16.13.0"
+      - uses: ./.github/actions/setup-node-env
 
-      - name: Cache Node.js modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-
+      - name: Check types
+        run: pnpm types
 
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.24.0
-          run_install: |
-            - recursive: true
-              args: [--frozen-lockfile]
+  lint:
+    name: Lint files
+    runs-on: ubuntu-latest
 
-      - name: Run lint
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/setup-node-env
+
+      - name: ESLint
         run: pnpm lint
 
-      - name: Run formatting test
+      - name: Prettier
         run: pnpm format:test
 
-      - name: Run tests
-        run: pnpm i18n:get-translations && pnpm test:unit
+  i18n:
+    name: Check translation files
+    runs-on: ubuntu-latest
 
-      - name: Run Storybook smoke-test
-        run: pnpm storybook -- --ci --smoke-test
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/setup-node-env
+
+      - name: Check extracted strings
+        run: pnpm vue-i18n-check
+
+      - name: Check POT files are updated
+        shell: bash
+        run: |
+          pnpm i18n:generate-pot
+          exit $(git status -s -uno | wc -l)
+
+  unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/setup-node-env
+
+      - name: Run unit tests
+        run: pnpm test
+
+  e2e:
+    name: E2E tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/setup-node-env
 
       - name: Install E2E browsers
         run: pnpx playwright install
 
-      - name: Run E2E
+      - name: Run E2E tests
         run: pnpm e2e:ci
+
+  storybook:
+    name: Check Storybook build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/setup-node-env
+
+      - name: Run Storybook smoke-test
+        run: pnpm storybook -- --ci --smoke-test
+
+  build:
+    name: Check Nuxt build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/setup-node-env
+
+      - name: Run build
+        run: pnpm build
