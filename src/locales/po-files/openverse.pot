@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-02-16T14:35:11+00:00\n"
+"POT-Creation-Date: 2022-02-22T03:29:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -44,12 +44,12 @@ msgctxt "search-type.label"
 msgid "Type of content to search"
 msgstr ""
 
-#: src/components/VContentSwitcher/VContentTypes.vue:6
+#: src/components/VContentSwitcher/VSearchTypes.vue:6
 msgctxt "search-type.heading"
 msgid "Content types"
 msgstr ""
 
-#: src/components/VContentSwitcher/VSearchTypeItem.vue:13
+#: src/components/VContentSwitcher/VSearchTypeItem.vue:11
 msgctxt "search-type.status-beta"
 msgid "Beta"
 msgstr ""
@@ -77,18 +77,18 @@ msgctxt "download-button.aria.dropdown-label"
 msgid "Select the download file format"
 msgstr ""
 
-#: src/components/MigrationNotice.vue:3
+#: src/components/VMigrationNotice.vue:3
 msgctxt "migration-notice.intro"
 msgid "CC Search is now called Openverse and joins WordPress as an open source project."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/MigrationNotice.vue:4
+#: src/components/VMigrationNotice.vue:4
 msgctxt "migration-notice.more"
 msgid "###read-more### about this announcement."
 msgstr ""
 
-#: src/components/MigrationNotice.vue:10
+#: src/components/VMigrationNotice.vue:9
 msgctxt "migration-notice.read"
 msgid "Read more"
 msgstr ""
@@ -210,7 +210,7 @@ msgctxt "audio-track.creator"
 msgid "by ###creator###"
 msgstr ""
 
-#: src/components/VAudioTrack/layouts/VRowLayout.vue:108
+#: src/components/VAudioTrack/layouts/VRowLayout.vue:110
 msgctxt "audio-track.messages.blink_seek_disabled"
 msgid "Seeking for Jamendo tracks is limited to Firefox and Safari."
 msgstr ""
@@ -323,47 +323,47 @@ msgctxt "audio-details.genre-label"
 msgid "Genre"
 msgstr ""
 
-#: src/components/AudioDetails/VRelatedAudio.vue:2
+#: src/components/VAudioDetails/VRelatedAudio.vue:2
 msgctxt "audio-details.related-audios"
 msgid "Related audio"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:4
+#: src/components/VAudioDetails/VAudioDetails.vue:4
 msgctxt "audio-details.information"
 msgid "Audio information"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:23
+#: src/components/VAudioDetails/VAudioDetails.vue:23
 msgctxt "audio-details.table.album"
 msgid "Album"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:29
+#: src/components/VAudioDetails/VAudioDetails.vue:31
 msgctxt "audio-details.table.category"
 msgid "Type"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:36
+#: src/components/VAudioDetails/VAudioDetails.vue:38
 msgctxt "audio-details.table.sample-rate"
 msgid "Sample Rate"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:44
+#: src/components/VAudioDetails/VAudioDetails.vue:46
 msgctxt "audio-details.table.filetype"
 msgid "Format"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:52
+#: src/components/VAudioDetails/VAudioDetails.vue:54
 msgctxt "audio-details.table.provider"
 msgid "Provider"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:66
+#: src/components/VAudioDetails/VAudioDetails.vue:64
 msgctxt "audio-details.table.source"
 msgid "Source"
 msgstr ""
 
-#: src/components/AudioDetails/VAudioDetails.vue:74
+#: src/components/VAudioDetails/VAudioDetails.vue:72
 msgctxt "audio-details.table.genre"
 msgid "Genre"
 msgstr ""
@@ -394,32 +394,32 @@ msgctxt "image-details.information.title"
 msgid "Image information"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:11
+#: src/components/VImageDetails/VImageDetails.vue:19
 msgctxt "image-details.information.type"
 msgid "Type"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:15
+#: src/components/VImageDetails/VImageDetails.vue:23
 msgctxt "image-details.information.provider"
 msgid "Provider"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:31
+#: src/components/VImageDetails/VImageDetails.vue:35
 msgctxt "image-details.information.dimensions"
 msgid "Dimensions"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:19
+#: src/components/VImageDetails/VImageDetails.vue:27
 msgctxt "image-details.information.source"
 msgid "Source"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:35
+#: src/components/VImageDetails/VImageDetails.vue:39
 msgctxt "image-details.information.pixels"
 msgid "pixels"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:72
+#: src/components/VImageDetails/VImageDetails.vue:80
 msgctxt "image-details.information.unknown"
 msgid "Unknown"
 msgstr ""
@@ -441,7 +441,7 @@ msgctxt "media-details.loading"
 msgid "Loading..."
 msgstr ""
 
-#: src/components/AudioDetails/VRelatedAudio.vue:17
+#: src/components/VAudioDetails/VRelatedAudio.vue:17
 msgctxt "media-details.related-error"
 msgid "Error fetching related media"
 msgstr ""
@@ -464,12 +464,12 @@ msgctxt "media-details.content-report.long"
 msgid "Report this content"
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:26
+#: src/components/VContentReport/VContentReportForm.vue:22
 msgctxt "media-details.content-report.failure.title"
 msgid "Report could not be submitted"
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:29
+#: src/components/VContentReport/VContentReportForm.vue:25
 msgctxt "media-details.content-report.failure.note"
 msgid "Something went wrong, please try again after some time."
 msgstr ""
@@ -485,22 +485,22 @@ msgctxt "media-details.content-report.success.note"
 msgid "Thank you for reporting this content. We recommend doing the same at the source, ###source###."
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:40
+#: src/components/VContentReport/VContentReportForm.vue:36
 msgctxt "media-details.content-report.form.disclaimer"
 msgid "For security purposes, Openverse collects and retains anonymized IP addresses of those who complete and submit this form."
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:46
+#: src/components/VContentReport/VContentReportForm.vue:42
 msgctxt "media-details.content-report.form.question"
 msgid "What is the reason?"
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:101
+#: src/components/VContentReport/VContentReportForm.vue:97
 msgctxt "media-details.content-report.form.submit"
 msgid "Report"
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:78
+#: src/components/VContentReport/VContentReportForm.vue:74
 msgctxt "media-details.content-report.form.cancel"
 msgid "Cancel"
 msgstr ""
@@ -549,7 +549,7 @@ msgctxt "media-details.content-report.form.dmca.form"
 msgid "DMCA form"
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:90
+#: src/components/VContentReport/VContentReportForm.vue:86
 msgctxt "media-details.content-report.form.dmca.open"
 msgid "Open form"
 msgstr ""
@@ -560,12 +560,12 @@ msgctxt "media-details.aria.creator-url"
 msgid "author ###name###"
 msgstr ""
 
-#: src/components/VMediaInfo/VMediaLicense.vue:32
+#: src/components/VMediaInfo/VMediaLicense.vue:27
 msgctxt "media-details.aria.attribution.license"
 msgid "read more about the license"
 msgstr ""
 
-#: src/components/VMediaInfo/VMediaLicense.vue:51
+#: src/components/VMediaInfo/VMediaLicense.vue:44
 msgctxt "media-details.aria.attribution.tool"
 msgid "read more about the tool"
 msgstr ""
@@ -631,55 +631,55 @@ msgid "\"###title###\"###creator######marked-licensed######license######view-leg
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VCopyLicense.vue:55
+#: src/components/VMediaInfo/VCopyLicense.vue:53
 msgctxt "media-details.reuse.credit.creator-text"
 msgid " by ###creator-name###"
 msgstr ""
 
-#: src/components/VMediaInfo/VCopyLicense.vue:77
+#: src/components/VMediaInfo/VCopyLicense.vue:73
 msgctxt "media-details.reuse.credit.marked"
 msgid "is marked with"
 msgstr ""
 
-#: src/components/VMediaInfo/VCopyLicense.vue:78
+#: src/components/VMediaInfo/VCopyLicense.vue:74
 msgctxt "media-details.reuse.credit.licensed"
 msgid "is licensed under"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VCopyLicense.vue:126
+#: src/components/VMediaInfo/VCopyLicense.vue:119
 msgctxt "media-details.reuse.credit.view-legal-text"
 msgid ". To view ###terms-copy###visit ###URL###"
 msgstr ""
 
-#: src/components/VMediaInfo/VCopyLicense.vue:130
+#: src/components/VMediaInfo/VCopyLicense.vue:123
 msgctxt "media-details.reuse.credit.terms-text"
 msgid "the terms,"
 msgstr ""
 
-#: src/components/VMediaInfo/VCopyLicense.vue:131
+#: src/components/VMediaInfo/VCopyLicense.vue:124
 msgctxt "media-details.reuse.credit.copy-text"
 msgid "a copy of this license,"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VMediaLicense.vue:44
+#: src/components/VMediaInfo/VMediaLicense.vue:37
 msgctxt "media-details.reuse.tool.content"
 msgid "Read more about the tool ###link###."
 msgstr ""
 
-#: src/components/VMediaInfo/VMediaLicense.vue:56
+#: src/components/VMediaInfo/VMediaLicense.vue:47
 msgctxt "media-details.reuse.tool.link"
 msgid "here"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VMediaLicense.vue:24
+#: src/components/VMediaInfo/VMediaLicense.vue:19
 msgctxt "media-details.reuse.license.content"
 msgid "Read more about the license ###link###"
 msgstr ""
 
-#: src/components/VMediaInfo/VMediaLicense.vue:37
+#: src/components/VMediaInfo/VMediaLicense.vue:30
 msgctxt "media-details.reuse.license.link"
 msgid "here"
 msgstr ""
@@ -788,7 +788,7 @@ msgctxt "browse-page.search-form.image"
 msgid "images"
 msgstr ""
 
-#: src/components/VAllResultsGrid/VAllResultsGrid.vue:134
+#: src/components/VAllResultsGrid/VAllResultsGrid.vue:146
 msgctxt "browse-page.search-form.audio"
 msgid "audio"
 msgstr ""
@@ -1153,7 +1153,7 @@ msgctxt "feedback.report"
 msgid "Report a Bug"
 msgstr ""
 
-#: src/pages/feedback.vue:54
+#: src/pages/feedback.vue:51
 msgctxt "feedback.loading"
 msgid "Loading..."
 msgstr ""
@@ -1176,12 +1176,12 @@ msgctxt "feedback.description.content"
 msgid "Thank you for using Openverse! We welcome your ideas for improving the tool below. To provide regular feedback, join the ###openverse### channel in the ###making-wordpress### Slack workspace."
 msgstr ""
 
-#: src/pages/feedback.vue:14
+#: src/pages/feedback.vue:11
 msgctxt "feedback.description.openverse"
 msgid "#openverse"
 msgstr ""
 
-#: src/pages/feedback.vue:19
+#: src/pages/feedback.vue:16
 msgctxt "feedback.description.making-wordpress"
 msgid "Making WordPress"
 msgstr ""
@@ -1599,7 +1599,7 @@ msgctxt "sources.single-name"
 msgid "Source"
 msgstr ""
 
-#: src/pages/sources.vue:65
+#: src/pages/sources.vue:67
 msgctxt "sources.suggestions"
 msgid "We appreciate suggestions for new sources from our community of users."
 msgstr ""
@@ -1609,27 +1609,27 @@ msgctxt "sources.issue-button"
 msgid "Suggest a new source"
 msgstr ""
 
-#: src/pages/sources.vue:44
+#: src/pages/sources.vue:46
 msgctxt "sources.new-content.next"
 msgid "How do we decide what sources to add next?"
 msgstr ""
 
-#: src/pages/sources.vue:47
+#: src/pages/sources.vue:49
 msgctxt "sources.new-content.integrate"
 msgid "We have a never ending list of possible sources to research prior to integration. We ask ourselves questions like:"
 msgstr ""
 
-#: src/pages/sources.vue:52
+#: src/pages/sources.vue:54
 msgctxt "sources.new-content.impact"
 msgid " What is the impact or importance of this source to our users? If it exists within a provider like Wikimedia Commons, is it valuable for our users to be able to filter by this source directly?"
 msgstr ""
 
-#: src/pages/sources.vue:55
+#: src/pages/sources.vue:57
 msgctxt "sources.new-content.reuse"
 msgid "Is licensing and attribution information clearly displayed to enable confident reuse?"
 msgstr ""
 
-#: src/pages/sources.vue:58
+#: src/pages/sources.vue:60
 msgctxt "sources.new-content.total-items"
 msgid "How many new total items or new types of items can we bring to our users through this integration? Some sources are direct integrations, while others may be a source within a source."
 msgstr ""
@@ -1656,12 +1656,12 @@ msgctxt "sources.cc-content.europeana"
 msgid "Openverse is especially grateful for the work of ###link###, an organization that works to digitize and make discoverable cultural heritage works across Europe. Openverse is able to index hundreds of valuable sources, through a single integration with the ###link-api###."
 msgstr ""
 
-#: src/pages/sources.vue:30
+#: src/pages/sources.vue:32
 msgctxt "sources.cc-content.europeana-link"
 msgid "Europeana"
 msgstr ""
 
-#: src/pages/sources.vue:37
+#: src/pages/sources.vue:39
 msgctxt "sources.cc-content.europeana-api"
 msgid "Europeana API"
 msgstr ""
@@ -1701,22 +1701,22 @@ msgctxt "about.aria.common-crawl"
 msgid "Common Crawl"
 msgstr ""
 
-#: src/pages/about.vue:24
+#: src/pages/about.vue:23
 msgctxt "about.aria.meta"
 msgid "meta search"
 msgstr ""
 
-#: src/pages/about.vue:59
+#: src/pages/about.vue:57
 msgctxt "about.aria.projects"
 msgid "Openverse projects"
 msgstr ""
 
-#: src/pages/about.vue:52
+#: src/pages/about.vue:50
 msgctxt "about.aria.community"
 msgid "Make WordPress community"
 msgstr ""
 
-#: src/pages/about.vue:86
+#: src/pages/about.vue:84
 msgctxt "about.aria.terms"
 msgid "Openverse terms of use"
 msgstr ""
@@ -1726,54 +1726,54 @@ msgctxt "about.aria.sources-table"
 msgid "sources table"
 msgstr ""
 
-#: src/pages/about.vue:69
+#: src/pages/about.vue:67
 msgctxt "about.aria.creative-commons"
 msgid "Creative Commons"
 msgstr ""
 
-#: src/pages/about.vue:76
+#: src/pages/about.vue:74
 msgctxt "about.aria.wordpress"
 msgid "WordPress"
 msgstr ""
 
-#: src/pages/about.vue:31
+#: src/pages/about.vue:29
 msgctxt "about.aria.search"
 msgid "Openverse"
 msgstr ""
 
-#: src/pages/about.vue:38
+#: src/pages/about.vue:36
 msgctxt "about.aria.api"
 msgid "Openverse API"
 msgstr ""
 
-#: src/pages/about.vue:45
+#: src/pages/about.vue:43
 msgctxt "about.aria.catalog"
 msgid "Openverse Catalog"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:83
+#: src/pages/about.vue:81
 msgctxt "about.declaration.content"
 msgid "Please note that Openverse does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the ###terms###."
 msgstr ""
 
-#: src/pages/about.vue:88
+#: src/pages/about.vue:86
 msgctxt "about.declaration.terms"
 msgid "Openverse Terms of Use"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:66
+#: src/pages/about.vue:64
 msgctxt "about.transfer.content"
 msgid "Openverse is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from ###creative-commons### and ###wordpress###. We remain committed to our goal of tackling discoverability and accessibility of open access media."
 msgstr ""
 
-#: src/pages/about.vue:71
+#: src/pages/about.vue:69
 msgctxt "about.transfer.creative-commons"
 msgid "Creative Commons"
 msgstr ""
 
-#: src/pages/about.vue:78
+#: src/pages/about.vue:76
 msgctxt "about.transfer.wordpress"
 msgid "WordPress"
 msgstr ""
@@ -1784,32 +1784,32 @@ msgctxt "about.planning.content"
 msgid "Currently Openverse only searches images, with search for audio and video provided through ###meta###. But we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. All of our code is open source (###search###, ###api###, ###catalog###) and we ###community###. You can see what ###working###."
 msgstr ""
 
-#: src/pages/about.vue:26
+#: src/pages/about.vue:24
 msgctxt "about.planning.meta"
 msgid "Meta Search"
 msgstr ""
 
-#: src/pages/about.vue:33
+#: src/pages/about.vue:31
 msgctxt "about.planning.search"
 msgid "Openverse"
 msgstr ""
 
-#: src/pages/about.vue:40
+#: src/pages/about.vue:38
 msgctxt "about.planning.api"
 msgid "Openverse API"
 msgstr ""
 
-#: src/pages/about.vue:47
+#: src/pages/about.vue:45
 msgctxt "about.planning.catalog"
 msgid "Openverse Catalog"
 msgstr ""
 
-#: src/pages/about.vue:54
+#: src/pages/about.vue:52
 msgctxt "about.planning.community"
 msgid "welcome community contribution"
 msgstr ""
 
-#: src/pages/about.vue:61
+#: src/pages/about.vue:59
 msgctxt "about.planning.working"
 msgid "we’re currently working on"
 msgstr ""
@@ -1940,7 +1940,7 @@ msgctxt "notification.translation.link"
 msgid "contributing a translation"
 msgstr ""
 
-#: src/pages/about.vue:103
+#: src/pages/about.vue:105
 msgctxt "hero.brand"
 msgid "Openverse"
 msgstr ""
@@ -1978,7 +1978,7 @@ msgctxt "hero.disclaimer.content"
 msgid "All Openverse content is under a ###license### or is in the public domain."
 msgstr ""
 
-#: src/pages/index.vue:74
+#: src/pages/index.vue:72
 msgctxt "hero.disclaimer.license"
 msgid "Creative Commons license"
 msgstr ""
@@ -2004,7 +2004,7 @@ msgctxt "404.link-title"
 msgid "Openverse"
 msgstr ""
 
-#: src/components/VFourOhFour.vue:37
+#: src/components/VFourOhFour.vue:36
 msgctxt "404.search-placeholder"
 msgid "Search for content to reuse"
 msgstr ""

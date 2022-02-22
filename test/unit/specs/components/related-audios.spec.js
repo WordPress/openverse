@@ -1,4 +1,4 @@
-import VRelatedAudio from '~/components/AudioDetails/VRelatedAudio.vue'
+import VRelatedAudio from '~/components/VAudioDetails/VRelatedAudio.vue'
 import render from '../../test-utils/render'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
