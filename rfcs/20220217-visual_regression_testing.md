@@ -140,7 +140,7 @@ npm run test:visual-regression:local -- $1
 ```
 3. Add two new package.json scripts:
 ```json
-"test:visual-regression": "node ./bin/visual-regression.sh",
+"test:visual-regression": "node ./bin/visual-regression.js",
 "test:visual-regression:local": "playwright test -c ./test/visual-regression"
 ```
 
