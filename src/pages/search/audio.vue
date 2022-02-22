@@ -31,6 +31,7 @@ import {
 } from '@nuxtjs/composition-api'
 import { useLoadMore } from '~/composables/use-load-more'
 import { isMinScreen } from '~/composables/use-media-query'
+import { useBrowserIsMobile } from '~/composables/use-browser-detection'
 import { propTypes } from './search-page.types'
 
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
@@ -56,8 +57,15 @@ const AudioSearch = defineComponent({
       Object.values(props.mediaResults?.audio?.items ?? [])
     )
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: false })
+
+    // On SSR, we set the size to small if the User Agent is mobile, otherwise we set the size to medium.
+    const isMobile = useBrowserIsMobile()
     const audioTrackSize = computed(() => {
-      return !isMinScreenMd.value ? 's' : props.isFilterVisible ? 'l' : 'm'
+      return !isMinScreenMd.value && isMobile
+        ? 's'
+        : props.isFilterVisible
+        ? 'l'
+        : 'm'
     })
 
     const isError = computed(() => !!props.fetchState.fetchingError)

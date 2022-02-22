@@ -27,7 +27,7 @@ describe('VLicense', () => {
     options.props.hideName = true
     const { container } = render(VLicense, options)
     const licenseName = screen.queryByLabelText('license-readable-names.by')
-    expect(licenseName).not.toBeInTheDocument()
+    expect(licenseName).not.toBeVisible()
     const licenseIcons = container.querySelectorAll('svg')
     expect(licenseIcons).toHaveLength(2)
   })

@@ -8,7 +8,7 @@
       :class="isLarge ? 'w-30 me-6' : 'w-20 me-4'"
     >
       <VAudioThumbnail :audio="audio" />
-      <div v-if="isSmall" class="absolute bottom-0 rtl:left-0 ltr:right-0">
+      <div v-show="isSmall" class="absolute bottom-0 rtl:left-0 ltr:right-0">
         <slot name="play-pause" size="tiny" />
       </div>
     </div>
@@ -43,11 +43,11 @@
           <div class="part-a">
             <i18n tag="span" path="audio-track.creator">
               <template #creator>{{ audio.creator }}</template> </i18n
-            ><span v-if="isLarge" class="mx-2">{{ $t('interpunct') }}</span>
+            ><span v-show="isLarge" class="mx-2">{{ $t('interpunct') }}</span>
           </div>
 
           <div class="part-b inline-flex flex-row items-center">
-            <span v-if="isSmall">
+            <span v-show="isSmall">
               <span
                 class="inline-block text-dark-charcoal font-semibold bg-dark-charcoal-06 p-1 rounded-sm"
                 >{{ timeFmt(audio.duration) }}</span

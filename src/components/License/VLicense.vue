@@ -17,7 +17,7 @@
         :size="4"
       />
     </div>
-    <span v-if="!hideName" class="name" :aria-label="licenseName.readable">
+    <span v-show="!hideName" class="name" :aria-label="licenseName.readable">
       {{ licenseName.full }}
     </span>
   </div>

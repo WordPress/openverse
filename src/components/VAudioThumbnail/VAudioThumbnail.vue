@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from '@nuxtjs/composition-api'
+import { ref, onMounted, useContext, computed } from '@nuxtjs/composition-api'
 
 import { rand, hash } from '~/utils/prng'
 import { lerp, dist, bezier } from '~/utils/math'
@@ -49,6 +49,14 @@ export default {
     },
   },
   setup(props) {
+    const { i18n } = useContext()
+    const helpText = computed(() =>
+      i18n.t('audio-thumbnail.alt', {
+        title: props.audio.title,
+        creator: props.audio.creator,
+      })
+    )
+
     /* Switching */
 
     const imgEl = ref(null)
@@ -95,15 +103,8 @@ export default {
       dotCount,
       offset,
       radius,
+      helpText,
     }
-  },
-  computed: {
-    helpText() {
-      return this.$t('audio-thumbnail.alt', {
-        title: this.audio.title,
-        creator: this.audio.creator,
-      })
-    },
   },
 }
 </script>
