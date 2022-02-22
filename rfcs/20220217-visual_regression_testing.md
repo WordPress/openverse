@@ -148,6 +148,20 @@ All of this together should successfully allow us to run the snapshot tests insi
 
 For local debugging purposes, `pnpm test:visual-regression:local --debug` can be used to run the snapshot tests headed in a browser on the host OS. This is useful for debugging the playwright scripts before they actually take a screenshot. Just keep in mind that the final screenshots submitting in a PR need to come from the docker container.
 
+## Additional cross-platform considerations
+
+Some versions of Windows [do not allow installing Docker](https://www.freecodecamp.org/news/how-to-run-docker-on-windows-10-home-edition/); additionally, Docker may not be available on someone's machine for licensing reasons and alternatives like containerd and Podman are not yet wide-spread enough to be reliably available on contributor machines.
+
+For that reason, it'd be good to consider ways for making sure snapshots are able to be updated without Docker being available locally (props to @obulat for mentioning this potential roadblock for contributors). I'd like to propose a new GitHub workflow that runs if the `ci:visual-regression` script fails.
+
+The workflow would create a new branch based on the PR with the changes using the pattern `<pr branch name>__vr-snapshot-update`, run `ci:visual-regression:update` (we'd need a new script for this to pass the `--u` flag to our script specifically instead of to the e2e `run-server-and-test` utility), commit the changes in the new branch and open a PR targeting the parent PR with the changes.
+
+This PR could then be merged directly into the parent PR after the snapshot changes are reviewed.
+
+Additionally, subsequent pushes to the parent PR that include changes to the snapshots would re-use the same branch name and just force push; there'd only ever be a single commit in the companion branch this way and we wouldn't have to worry about a muddied commit history. Ideally this will simplify the implementation of the workflow rather than complicate it.
+
+Likewise, if we end up needing to run `pixelmatch` directly to generate the diff output, it'd be nice if we could just add those diff outputs as a comment in the parent PR whenever snapshot images are updated.
+
 ## Recommended tooling
 
 * Continue using Playwright to manipulate the browser and use it's `screenshot` function to generate screenshots.
@@ -209,6 +223,8 @@ Once the final version of this RFC is approved, a milestone with issues for each
         - If possible, create a shared action that can be re-used between all the Playwright based test workflows.
 - [ ] Write a script to generate `pixelmatch` diffs from failed test results in the `test-results` folder created my Playwright.
     - **Contingent on `jest-image-snapshot` not being able to be used**
+- [ ] Write a new GitHub workflow to generate supplemental PRs with updated snapshots whenever there are outdated snapshots.
+- [ ] Write a new GitHub workflow to generate the snapshot diffs and upload them as a comment in the PR with snapshot changes.
 - [ ] Create a scheduled GitHub action to clean the repository history of snapshot images older than a month in age outside of the `main` branch.
     - I tried searching for prior art here and there isn't much aside from how to completely remove a directory or file from history (usually because something illegal or secret was committed). I think `git filter-branch` is perfect for this though:
     ```bash
