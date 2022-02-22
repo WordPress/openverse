@@ -29,6 +29,7 @@ import {
   SET_QUERY,
   SET_SEARCH_TYPE,
 } from '~/constants/mutation-types'
+import { ACTIVE_LICENSES } from '~/constants/license'
 
 /**
  * List of filters available for each search type. The order of the keys
@@ -85,16 +86,7 @@ export const mediaSpecificFilters = {
 
 /** @type {import('./types').Filters} */
 export const filterData = deepFreeze({
-  licenses: createInitialFilters('licenses', [
-    'cc0',
-    'pdm',
-    'by',
-    'by-sa',
-    'by-nc',
-    'by-nd',
-    'by-nc-sa',
-    'by-nc-nd',
-  ]),
+  licenses: createInitialFilters('licenses', ACTIVE_LICENSES),
   licenseTypes: createInitialFilters('license-types', [
     'commercial',
     'modification',

@@ -31,9 +31,8 @@ export const getFullLicenseName = (license, license_version) => {
 /**
  * CC licenses have different legal status from the public domain marks
  * such as CC0 and PDM, and need different wording.
- * Returns false if licenseOrMark is CC0 or PDM
  * @param {License|LicenseName|''} licenseOrMark
- * @return {boolean}
+ * @return {asserts licenseOrMark is Exclude<'pdm' | 'cc0', License | LicenseName | ''>} false if licenseOrMark is CC0 or PDM, true otherwise
  */
 export const isLicense = (licenseOrMark = '') => {
   return !['pdm', 'cc0'].includes(licenseOrMark.toLowerCase())

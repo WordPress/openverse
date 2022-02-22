@@ -11,6 +11,8 @@ export const NON_CC_LICENSES = ['cc0', 'pdm']
 
 export const DEPRECATED_LICENSES = ['nc-sampling+', 'sampling+']
 
+export const ACTIVE_LICENSES = [...NON_CC_LICENSES, ...CC_LICENSES]
+
 export const ALL_LICENSES = [
   ...CC_LICENSES,
   ...NON_CC_LICENSES,

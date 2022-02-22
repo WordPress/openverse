@@ -1,5 +1,7 @@
 <template>
-  <button
+  <VButton
+    variant="plain"
+    size="disabled"
     class="icon-button flex flex-shrink-0 items-center justify-center border-1.5 focus:border-pink focus:outline-none focus:shadow-ring active:shadow-ring"
     :class="[...buttonSizeClasses]"
     :type="type"
@@ -10,17 +12,18 @@
       :class="[...iconSizeClasses]"
       v-bind="iconProps"
     />
-  </button>
+  </VButton>
 </template>
 
 <script>
 import { computed } from '@nuxtjs/composition-api'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
+import VButton from '~/components/VButton.vue'
 
 export default {
   name: 'VIconButton',
-  components: { VIcon },
+  components: { VIcon, VButton },
   props: {
     /**
      * the size of the button; The size affects both the size of the button

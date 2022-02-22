@@ -15,7 +15,7 @@
           </VLink>
         </template>
       </i18n>
-      <LicenseElements :license="license" class="md:py-4" />
+      <VLicenseElements v-if="license" :license="license" class="md:py-4" />
       <i18n
         v-if="!isLicense"
         path="media-details.reuse.license.content"
@@ -33,7 +33,7 @@
       </i18n>
     </template>
     <template v-else>
-      <LicenseElements :license="license" class="md:py-4" />
+      <VLicenseElements v-if="license" :license="license" class="md:py-4" />
       <i18n
         path="media-details.reuse.tool.content"
         tag="span"
@@ -53,13 +53,14 @@
 </template>
 
 <script>
-import { isLicense } from '~/utils/license'
-import LicenseElements from '~/components/LicenseElements.vue'
+import VLicenseElements from '~/components/VLicenseElements.vue'
 import VLink from '~/components/VLink.vue'
+
+import { isLicense } from '~/utils/license'
 
 export default {
   name: 'MediaLicense',
-  components: { LicenseElements, VLink },
+  components: { VLicenseElements, VLink },
   props: {
     fullLicenseName: String,
     license: String,
@@ -67,7 +68,7 @@ export default {
   },
   computed: {
     isLicense() {
-      return isLicense(this.$props.license)
+      return isLicense(this.license)
     },
     headerText() {
       const licenseOrTool = this.isLicense ? 'license' : 'tool'

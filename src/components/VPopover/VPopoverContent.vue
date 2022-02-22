@@ -1,15 +1,20 @@
 <template>
   <div
-    v-if="visible"
-    ref="popoverRef"
-    :class="[$style.popover, { [`z-[${zIndex}]`]: zIndex !== undefined }]"
+    v-show="visible"
+    class="w-0 h-0"
     :aria-hidden="!visible"
-    :tabindex="typeof $props.tabindex !== 'undefined' ? $props.tabindex : -1"
     v-on="$listeners"
     @keydown="onKeyDown"
-    @blur="onBlur"
   >
-    <slot />
+    <div
+      ref="popoverRef"
+      class="bg-white border border-light-gray rounded-sm shadow max-w-max"
+      :class="{ [`z-[${zIndex}]`]: zIndex !== undefined }"
+      :tabindex="-1"
+      @blur="onBlur"
+    >
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -56,9 +61,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style module>
-.popover {
-  @apply bg-white border border-light-gray rounded-sm max-w-max shadow;
-}
-</style>

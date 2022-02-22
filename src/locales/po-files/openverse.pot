@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-02-22T15:15:29+00:00\n"
+"POT-Creation-Date: 2022-02-22T20:16:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -62,7 +62,7 @@ msgctxt "search-type.see-audio"
 msgid "See all audio"
 msgstr ""
 
-#: src/components/VModal/VMobileModalContent.vue:28
+#: src/components/VFilters/VFilterChecklist.vue:41
 msgctxt "modal.close"
 msgid "Close"
 msgstr ""
@@ -236,7 +236,7 @@ msgid "Loading..."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioThumbnail/VAudioThumbnail.vue:102
+#: src/components/VAudioThumbnail/VAudioThumbnail.vue:54
 msgctxt "audio-thumbnail.alt"
 msgid "Cover art for \"###title###\" by ###creator###"
 msgstr ""
@@ -730,7 +730,7 @@ msgctxt "browse-page.aria.remove-filter"
 msgid "remove filter"
 msgstr ""
 
-#: src/components/VFilters/VFilterChecklist.vue:26
+#: src/components/VFilters/VFilterChecklist.vue:31
 msgctxt "browse-page.aria.license-explanation"
 msgid "license explanation"
 msgstr ""
@@ -749,7 +749,6 @@ msgctxt "browse-page.aria.relevance.no"
 msgid "relevant result? answer: no"
 msgstr ""
 
-#: src/components/VFilters/VLicenseExplanationTooltip.vue:8
 msgctxt "browse-page.license-description.title"
 msgid "License CC"
 msgstr ""
@@ -776,6 +775,10 @@ msgstr ""
 
 msgctxt "browse-page.license-description.pdm"
 msgid "This work is marked as being in the public domain."
+msgstr ""
+
+msgctxt "browse-page.license-description.sampling+"
+msgid "Samples, mash-ups, creative transformations permitted."
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -867,24 +870,33 @@ msgctxt "filters.aria.remove-filter"
 msgid "Remove ###label### filter"
 msgstr ""
 
-#. Do not translate words between ### ###.
-#: src/components/VFilters/VLicenseExplanationTooltip.vue:12
-msgctxt "filters.license-explanation.tool"
-msgid "Read more about the tool ###link###."
+#: src/components/VFilters/VLicenseExplanation.vue:5
+msgctxt "filters.license-explanation.license-definition"
+msgid "License definition"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VFilters/VLicenseExplanationTooltip.vue:24
-msgctxt "filters.license-explanation.license"
-msgid "Read more about the license ###link###."
+#: src/components/VFilters/VLicenseExplanation.vue:8
+msgctxt "filters.license-explanation.mark-definition"
+msgid "###mark### definition"
 msgstr ""
 
-#: src/components/VFilters/VLicenseExplanationTooltip.vue:20
-msgctxt "filters.license-explanation.link"
-msgid "here"
+#. Do not translate words between ### ###.
+msgctxt "filters.license-explanation.more.license"
+msgid "###read-more### about this license."
 msgstr ""
 
-#: src/components/VFilters/VFilterChecklist.vue:74
+#. Do not translate words between ### ###.
+msgctxt "filters.license-explanation.more.mark"
+msgid "###read-more### about ###mark###."
+msgstr ""
+
+#: src/components/VFilters/VLicenseExplanation.vue:30
+msgctxt "filters.license-explanation.more.read-more"
+msgid "Read more"
+msgstr ""
+
+#: src/components/VFilters/VFilterChecklist.vue:88
 msgctxt "filters.search-by.title"
 msgid "Search By"
 msgstr ""
