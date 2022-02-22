@@ -3,7 +3,7 @@ function getAttributionHtml(media, licenseUrl, fullLicenseName) {
   if (!media) {
     return ''
   }
-  const baseAssetsPath = 'https://search.creativecommons.org/static/img'
+  const baseAssetsPath = 'https://search.openverse.engineering/static/img'
   const imgLink = `<a href="${media.foreign_landing_url}" ${linkProperties}>"${media.title}"</a>`
   let creator = ''
   let mediaTag = ''
