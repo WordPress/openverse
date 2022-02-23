@@ -8,22 +8,26 @@
       </div>
 
       <i18n path="meta-search-page.intro" tag="p" class="mb-4">
+        <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+        <template #openverse>Openverse</template>
         <template #link>
-          <VLink :aria-label="$t('meta-search-page.sources')" href="/sources">{{
-            $t('meta-search-page.link')
-          }}</VLink>
+          <VLink href="/sources">{{ $t('meta-search-page.link') }}</VLink>
         </template>
       </i18n>
-      <p>{{ $t('meta-search-page.license') }}</p>
+      <p>{{ $t('meta-search-page.license', { openverse: 'Openverse' }) }}</p>
       <h2 class="mt-10 mb-4 text-2xl">
         {{ $t('meta-search-page.content') }}
       </h2>
-      <p>{{ $t('meta-search-page.content-types') }}</p>
+      <p>
+        {{ $t('meta-search-page.content-types', { openverse: 'Openverse' }) }}
+      </p>
 
       <h2 class="mt-10 mb-4 text-2xl">
         {{ $t('meta-search-page.images.title') }}
       </h2>
-      <p>{{ $t('meta-search-page.images.content') }}</p>
+      <p>
+        {{ $t('meta-search-page.images.content', { openverse: 'Openverse' }) }}
+      </p>
       <div class="content">
         <ol>
           <li>
@@ -65,7 +69,11 @@
       <h2 class="mt-10 mb-4 text-2xl">
         {{ $t('meta-search-page.audio-video.title') }}
       </h2>
-      <p>{{ $t('meta-search-page.audio-video.content') }}</p>
+      <p>
+        {{
+          $t('meta-search-page.audio-video.content', { openverse: 'Openverse' })
+        }}
+      </p>
       <i18n path="meta-search-page.audio-video.filter" tag="p" class="my-2">
         <template #use>
           <strong>{{ $t('meta-search-page.use') }}</strong>
@@ -100,7 +108,7 @@
       </h2>
       <p>{{ $t('meta-search-page.why.content') }}</p>
       <p class="my-2">
-        {{ $t('meta-search-page.why.new') }}
+        {{ $t('meta-search-page.why.new', { openverse: 'Openverse' }) }}
       </p>
       <i18n path="meta-search-page.why.feedback-suggestions" tag="p">
         <template #feedback>
@@ -124,7 +132,7 @@ export default defineComponent({
   components: { VLink },
   head() {
     return {
-      title: `${this.$t('meta-search-page.title')} | ${this.$t('hero.brand')}`,
+      title: `${this.$t('meta-search-page.title')} | Openverse`,
     }
   },
 })

@@ -88,7 +88,7 @@ const AboutPage = {
   },
   head() {
     return {
-      title: `${this.$t('extension.title')} | ${this.$t('hero.brand')}`,
+      title: `${this.$t('extension.title')} | Openverse`,
     }
   },
   methods: {

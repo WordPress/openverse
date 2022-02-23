@@ -2,17 +2,15 @@
   "404": {
     "title": "The content you’re looking for seems to have disappeared.",
     "main": "Go to {link} or search for something similar from the field below.",
-    "link-title": "Openverse",
     "search-placeholder": "Search for content to reuse"
   },
   "hero": {
-    "brand": "Openverse",
     "subtitle": "Browse through over 600 million items to reuse",
     "search": {
       "placeholder": "Search for content"
     },
     "disclaimer": {
-      "content": "All Openverse content is under a {license} or is in the public domain.",
+      "content": "All {openverse} content is under a {license} or is in the public domain.",
       "license": "Creative Commons license"
     },
     "license-filter": {
@@ -65,44 +63,27 @@
     }
   },
   "about": {
-    "title": "About Openverse",
+    "title": "About {openverse}",
     "description": {
-      "content": "Openverse is a tool that allows openly licensed and public domain works to be discovered and used by everyone."
+      "content": "{openverse} is a tool that allows openly licensed and public domain works to be discovered and used by everyone."
     },
     "collection": {
-      "content": "Openverse searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
-      "common-crawl": "Common Crawl"
+      "content": "{openverse} searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution."
     },
     "planning": {
-      "content": "Currently Openverse only searches images, with search for audio and video provided through {meta}. But we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. All of our code is open source ({search}, {api}, {catalog}) and we {community}. You can see what {working}.",
+      "content": "Currently {openverse} only searches images, with search for audio and video provided through {meta}. But we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. All of our code is open source ({search}, {api}, {catalog}) and we {community}. You can see what {working}.",
       "meta": "Meta Search",
-      "search": "Openverse",
-      "api": "Openverse API",
-      "catalog": "Openverse Catalog",
+      "api": "{openverse} API",
+      "catalog": "{openverse} Catalog",
       "community": "welcome community contribution",
       "working": "we’re currently working on"
     },
     "transfer": {
-      "content": "Openverse is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from {creative-commons} and {wordpress}. We remain committed to our goal of tackling discoverability and accessibility of open access media.",
-      "creative-commons": "Creative Commons",
-      "wordpress": "WordPress"
+      "content": "{openverse} is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from {creative-commons} and {wordpress}. We remain committed to our goal of tackling discoverability and accessibility of open access media."
     },
     "declaration": {
-      "content": "Please note that Openverse does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
-      "terms": "Openverse Terms of Use"
-    },
-    "aria": {
-      "common-crawl": "Common Crawl",
-      "meta": "meta search",
-      "projects": "Openverse projects",
-      "community": "Make WordPress community",
-      "terms": "Openverse terms of use",
-      "sources-table": "sources table",
-      "creative-commons": "Creative Commons",
-      "wordpress": "WordPress",
-      "search": "Openverse",
-      "api": "Openverse API",
-      "catalog": "Openverse Catalog"
+      "content": "Please note that {openverse} does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
+      "terms": "{openverse} Terms of Use"
     }
   },
   "sources": {
@@ -115,14 +96,12 @@
       "item": "Total items"
     },
     "cc-content": {
-      "where": "Where does the content on Openverse come from?",
-      "content": "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through Openverse.",
+      "where": "Where does the content on {openverse} come from?",
+      "content": "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through {openverse}.",
       "provider": "Some providers have multiple different groupings of content within them. {flickr} has sources ranging from NASA to personal photography. The {smithsonian} comprises a dozen, diverse collections. Wikimedia Commons runs the gamut in terms of content, and is used by several Galleries, Libraries, Archives, and Museums highlighting some or all of their digitized collections.",
-      "europeana": "Openverse is especially grateful for the work of {link}, an organization that works to digitize and make discoverable cultural heritage works across Europe. Openverse is able to index hundreds of valuable sources, through a single integration with the {link-api}.",
-      "europeana-link": "Europeana",
+      "europeana": "{openverse} is especially grateful for the work of {link}, an organization that works to digitize and make discoverable cultural heritage works across Europe. {openverse} is able to index hundreds of valuable sources, through a single integration with the {link-api}.",
       "europeana-api": "Europeana API",
-      "smithsonian": "Smithsonian Institute",
-      "flickr": "Flickr"
+      "smithsonian": "Smithsonian Institute"
     },
     "new-content": {
       "next": "How do we decide what sources to add next?",
@@ -132,28 +111,29 @@
       "total-items": "How many new total items or new types of items can we bring to our users through this integration? Some sources are direct integrations, while others may be a source within a source."
     },
     "suggestions": "We appreciate suggestions for new sources from our community of users.",
-    "issue-button": "Suggest a new source"
+    "issue-button": "Suggest a new source",
+    "aria": { "table": "sources table" }
   },
   "meta-search-page": {
     "title": "Meta Search",
-    "intro": "Openverse is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our {link}.",
+    "intro": "{openverse} is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our {link}.",
     "link": "sources",
-    "license": "The internet is a big place! There are plenty of search portals and collections, hosting CC-licensed and public domain content, which we aren’t able to index or surface results from within the Openverse interface. These are important sources of CC-licensed and public domain content, and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located.",
+    "license": "The internet is a big place! There are plenty of search portals and collections, hosting CC-licensed and public domain content, which we aren’t able to index or surface results from within the {openverse} interface. These are important sources of CC-licensed and public domain content, and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located.",
     "content": "What content types can I search for using the Meta Search feature?",
-    "content-types": "Meta Search on Openverse currently supports image, audio, and video search on external sites.",
+    "content-types": "Meta Search on {openverse} currently supports image, audio, and video search on external sites.",
     "use": " Use ",
     "images": {
       "title": "How does the Meta Search feature work for indexed media types?",
       "demo-label": "Layout of Meta Search for indexed media type, like images",
-      "content": "Openverse supports built-in search for some media types, such as images. When you enter a query on the Openverse homepage, a page of results will be displayed. Scrolling to the bottom of the page, you have two choices:",
-      "continue": "{load-more}, and continue browsing in Openverse.",
+      "content": "{openverse} supports built-in search for some media types, such as images. When you enter a query on the {openverse} homepage, a page of results will be displayed. Scrolling to the bottom of the page, you have two choices:",
+      "continue": "{load-more}, and continue browsing in {openverse}.",
       "not-finding": "See the section “{not-finding}” below the results.",
       "info": "The “{not-finding}” section lists other sources of CC-licensed and public domain content. Your search query will be preloaded, and if supported, you can select a {use} filter to proactively filter your results. Click on the button for the external source you’d like to search, and your results will open in a new tab."
     },
     "audio-video": {
       "title": "How does the Meta Search feature work for non-indexed media types?",
       "demo-label": "Layout of Meta Search for non-indexed media type, like video",
-      "content": "Openverse does not yet support built-in search for some media types, such as videos. For these media types, click on the appropriate tab and you’ll see sources where you can find CC-licensed content.",
+      "content": "{openverse} does not yet support built-in search for some media types, such as videos. For these media types, click on the appropriate tab and you’ll see sources where you can find CC-licensed content.",
       "filter": "The Filters bar on the left includes the {use} filter, which may be supported by some meta search sources. Apply these before clicking on the button for the external source you’d like to search."
     },
     "new": {
@@ -165,14 +145,14 @@
     "why": {
       "title": "Why did you build this?",
       "content": "For many years, CC has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. These platforms included Europeana, Google Images, Flickr, Jamendo, Open Clip Art Library, SpinXpress, Wikimedia Commons, YouTube, ccMixter, and SoundCloud. The search experience looked like this:",
-      "new": "For users of the legacy CC Meta Search site, the Meta Search feature on Openverse will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the Meta Search feature builds on this functionality, allowing us to quickly add new sources to Meta Search as we discover them, and support new content types in the future, as we expand.",
+      "new": "For users of the legacy CC Meta Search site, the Meta Search feature on {openverse} will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the Meta Search feature builds on this functionality, allowing us to quickly add new sources to Meta Search as we discover them, and support new content types in the future, as we expand.",
       "aria-label": "feedback",
       "feedback-suggestions": "We hope you enjoy, and if you have suggestions for improvement, leave us {feedback}.",
       "feedback-link": "feedback"
     }
   },
   "search-guide": {
-    "title": "Openverse Syntax Guide",
+    "title": "{openverse} Syntax Guide",
     "intro": "When you search, you can enter special symbols or words to your search term to make your search results more precise.",
     "exact": {
       "title": "Search for an exact match",
@@ -243,11 +223,7 @@
   },
   "feedback": {
     "title": "Feedback",
-    "description": {
-      "content": "Thank you for using Openverse! We welcome your ideas for improving the tool below. To provide regular feedback, join the {openverse} channel in the {making-wordpress} Slack workspace.",
-      "openverse": "#openverse",
-      "making-wordpress": "Making WordPress"
-    },
+    "intro": "Thank you for using {openverse}! We welcome your ideas for improving the tool below. To provide regular feedback, join the {slack} channel in the {making-wordpress} Slack workspace.",
     "improve": "Help us Improve",
     "report": "Report a Bug",
     "loading": "Loading...",
@@ -479,7 +455,7 @@
       "short": "Report",
       "long": "Report this content",
       "form": {
-        "disclaimer": "For security purposes, Openverse collects and retains anonymized IP addresses of those who complete and submit this form.",
+        "disclaimer": "For security purposes, {openverse} collects and retains anonymized IP addresses of those who complete and submit this form.",
         "question": "What is the reason?",
         "dmca": {
           "option": "Infringes copyright",
@@ -546,7 +522,7 @@
     "information": "Audio information"
   },
   "meta-search": {
-    "caption": "Openverse does not currently index the sources listed above, but through this interface is offering convenient access to search services provided by other independent organizations. Openverse has no control over the results that are returned. Do not assume that the results displayed in this search portal are under a CC license. Always verify that the work is actually under a CC license by following the link. If you are in doubt, you should contact the copyright holder directly, or try to contact the site where you found the content.",
+    "caption": "{openverse} does not currently index the sources listed above, but through this interface is offering convenient access to search services provided by other independent organizations. {openverse} has no control over the results that are returned. Do not assume that the results displayed in this search portal are under a CC license. Always verify that the work is actually under a CC license by following the link. If you are in doubt, you should contact the copyright holder directly, or try to contact the site where you found the content.",
     "card": {
       "search": "Not finding what you're looking for? Try additional sources",
       "caption": "Click on a source below to directly search other collections of CC-licensed images.{break}Please note that Use filters are not supported for Open Clip Art Library or Nappy.",
@@ -557,7 +533,7 @@
       }
     },
     "form": {
-      "unsupported-title": "Openverse does not yet support built-in {type} search.",
+      "unsupported-title": "{openverse} does not yet support built-in {type} search.",
       "supported-title": "Not finding what you're looking for? Try additional {type} sources.",
       "no-results-title": "No {type} results for \"{query}\".",
       "caption": "Click on a source below to directly search other collections of CC-licensed {type}.{break}Please note that Use filters are not supported for {filter}."
@@ -629,7 +605,7 @@
     }
   },
   "migration-notice": {
-    "intro": "CC Search is now called Openverse and joins WordPress as an open source project.",
+    "intro": "{cc-search} is now called {openverse} and joins {wordpress} as an open source project.",
     "more": "{read-more} about this announcement.",
     "read": "Read more"
   },

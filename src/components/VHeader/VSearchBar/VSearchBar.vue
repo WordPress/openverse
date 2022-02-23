@@ -8,7 +8,7 @@
       v-bind="$attrs"
       class="flex-grow search-field"
       :class="{ 'border-transparent': isHomeRoute }"
-      :label-text="$t('hero.aria.search')"
+      label-text="Openverse"
       :connection-sides="['end']"
       :size="size"
       field-id="search-bar"

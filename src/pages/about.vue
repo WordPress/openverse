@@ -3,88 +3,80 @@
     <div class="container">
       <div>
         <h1 class="text-5xl mb-10">
-          {{ $t('about.title') }}
+          {{ $t('about.title', { openverse: 'Openverse' }) }}
         </h1>
         <div class="content">
-          <p>{{ $t('about.description.content') }}</p>
+          <p>
+            {{ $t('about.description.content', { openverse: 'Openverse' }) }}
+          </p>
 
           <i18n path="about.collection.content" tag="p">
+            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+            <template #openverse>Openverse</template>
             <template #common-crawl>
-              <VLink
-                :aria-label="$t('about.aria.common-crawl')"
-                href="http://commoncrawl.org/"
-                >{{ $t('about.collection.common-crawl') }}</VLink
-              >
+              <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+              <VLink href="https://commoncrawl.org/">Common Crawl</VLink>
             </template>
           </i18n>
 
           <i18n path="about.planning.content" tag="p">
+            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+            <template #openverse>Openverse</template>
             <template #meta>
-              <VLink :aria-label="$t('about.aria.meta')" href="/meta-search">{{
+              <VLink href="/meta-search">{{ $t('about.planning.meta') }}</VLink>
+            </template>
+            <template #search>
+              <VLink href="https://github.com/wordpress/openverse-frontend/">{{
                 $t('about.planning.meta')
               }}</VLink>
             </template>
-            <template #search>
-              <VLink
-                :aria-label="$t('about.aria.search')"
-                href="https://github.com/wordpress/openverse-frontend/"
-                >{{ $t('about.planning.search') }}</VLink
-              >
-            </template>
             <template #api>
-              <VLink
-                :aria-label="$t('about.aria.api')"
-                href="https://github.com/wordpress/openverse-api/"
-                >{{ $t('about.planning.api') }}</VLink
-              >
+              <VLink href="https://github.com/wordpress/openverse-api/">{{
+                $t('about.planning.api', { openverse: 'Openverse' })
+              }}</VLink>
             </template>
             <template #catalog>
-              <VLink
-                :aria-label="$t('about.aria.catalog')"
-                href="https://github.com/wordpress/openverse-catalog/"
-                >{{ $t('about.planning.catalog') }}</VLink
-              >
+              <VLink href="https://github.com/wordpress/openverse-catalog/">{{
+                $t('about.planning.catalog', { openverse: 'Openverse' })
+              }}</VLink>
             </template>
             <template #community>
-              <VLink
-                :aria-label="$t('about.aria.community')"
-                href="https://make.wordpress.org/openverse/"
-                >{{ $t('about.planning.community') }}</VLink
-              >
+              <VLink href="https://make.wordpress.org/openverse/">{{
+                $t('about.planning.community')
+              }}</VLink>
             </template>
             <template #working>
-              <VLink
-                :aria-label="$t('about.aria.projects')"
-                href="https://github.com/orgs/WordPress/projects/3"
-                >{{ $t('about.planning.working') }}</VLink
-              >
+              <VLink href="https://github.com/orgs/WordPress/projects/3">{{
+                $t('about.planning.working')
+              }}</VLink>
             </template>
           </i18n>
 
+          <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
           <i18n path="about.transfer.content" tag="p">
+            <template #openverse>Openverse</template>
             <template #creative-commons>
               <VLink
-                :aria-label="$t('about.aria.creative-commons')"
                 href="https://creativecommons.org/2021/05/03/cc-search-to-join-wordpress/"
-                >{{ $t('about.transfer.creative-commons') }}</VLink
+                >Creative Commons</VLink
               >
             </template>
             <template #wordpress>
               <VLink
-                :aria-label="$t('about.aria.wordpress')"
                 href="https://ma.tt/2021/04/cc-search-to-join-wordpress-org/"
-                >{{ $t('about.transfer.wordpress') }}</VLink
+                >WordPress</VLink
               >
             </template>
           </i18n>
+          <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
 
           <i18n path="about.declaration.content" tag="p">
+            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+            <template #openverse>Openverse</template>
             <template #terms>
-              <VLink
-                :aria-label="$t('about.aria.terms')"
-                href="https://creativecommons.org/terms/"
-                >{{ $t('about.declaration.terms') }}</VLink
-              >
+              <VLink href="https://creativecommons.org/terms/">{{
+                $t('about.declaration.terms', { openverse: 'Openverse' })
+              }}</VLink>
             </template>
           </i18n>
         </div>
@@ -102,7 +94,9 @@ const AboutPage = defineComponent({
   components: { VLink },
   head() {
     return {
-      title: `${this.$t('about.title')} | ${this.$t('hero.brand')}`,
+      title: `${this.$t('about.title', {
+        openverse: 'Openverse',
+      })} | Openverse`,
     }
   },
 })

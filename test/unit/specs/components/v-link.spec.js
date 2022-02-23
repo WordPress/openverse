@@ -1,4 +1,3 @@
-// eslint-disable vue/one-component-per-file
 import { fireEvent, render, screen } from '@testing-library/vue'
 import VLink from '~/components/VLink.vue'
 import Vue from 'vue'
@@ -49,6 +48,7 @@ describe('VLink', () => {
     ${'http://localhost'} | ${'A'}
   `('VLink as a $component handles click', async ({ href }) => {
     const createVLinkWrapper = (href) =>
+      // eslint-disable-next-line vue/one-component-per-file
       Vue.component('VLinkWrapper', {
         data: () => ({ text: 'Link Text' }),
         methods: {

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-02-22T20:16:03+00:00\n"
+"POT-Creation-Date: 2022-02-23T20:16:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -77,18 +77,19 @@ msgctxt "download-button.aria.dropdown-label"
 msgid "Select the download file format"
 msgstr ""
 
-#: src/components/VMigrationNotice.vue:3
+#. Do not translate words between ### ###.
+#: src/components/VMigrationNotice.vue:4
 msgctxt "migration-notice.intro"
-msgid "CC Search is now called Openverse and joins WordPress as an open source project."
+msgid "###cc-search### is now called ###openverse### and joins ###wordpress### as an open source project."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMigrationNotice.vue:4
+#: src/components/VMigrationNotice.vue:10
 msgctxt "migration-notice.more"
 msgid "###read-more### about this announcement."
 msgstr ""
 
-#: src/components/VMigrationNotice.vue:9
+#: src/components/VMigrationNotice.vue:15
 msgctxt "migration-notice.read"
 msgid "Read more"
 msgstr ""
@@ -270,18 +271,19 @@ msgctxt "browsers.edge"
 msgid "Edge"
 msgstr ""
 
-#: src/components/VMetaSearch/VMetaSearchForm.vue:43
+#. Do not translate words between ### ###.
+#: src/components/VMetaSearch/VMetaSearchForm.vue:45
 msgctxt "meta-search.caption"
-msgid "Openverse does not currently index the sources listed above, but through this interface is offering convenient access to search services provided by other independent organizations. Openverse has no control over the results that are returned. Do not assume that the results displayed in this search portal are under a CC license. Always verify that the work is actually under a CC license by following the link. If you are in doubt, you should contact the copyright holder directly, or try to contact the site where you found the content."
+msgid "###openverse### does not currently index the sources listed above, but through this interface is offering convenient access to search services provided by other independent organizations. ###openverse### has no control over the results that are returned. Do not assume that the results displayed in this search portal are under a CC license. Always verify that the work is actually under a CC license by following the link. If you are in doubt, you should contact the copyright holder directly, or try to contact the site where you found the content."
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "meta-search.form.unsupported-title"
-msgid "Openverse does not yet support built-in ###type### search."
+msgid "###openverse### does not yet support built-in ###type### search."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/meta-search.vue:40
+#: src/pages/meta-search.vue:44
 msgctxt "meta-search.form.supported-title"
 msgid "Not finding what you're looking for? Try additional ###type### sources."
 msgstr ""
@@ -293,7 +295,7 @@ msgid "No ###type### results for \"###query###\"."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMetaSearch/VMetaSearchForm.vue:31
+#: src/components/VMetaSearch/VMetaSearchForm.vue:33
 msgctxt "meta-search.form.caption"
 msgid "Click on a source below to directly search other collections of CC-licensed ###type###.###break###Please note that Use filters are not supported for ###filter###."
 msgstr ""
@@ -485,22 +487,23 @@ msgctxt "media-details.content-report.success.note"
 msgid "Thank you for reporting this content. We recommend doing the same at the source, ###source###."
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:36
+#. Do not translate words between ### ###.
+#: src/components/VContentReport/VContentReportForm.vue:37
 msgctxt "media-details.content-report.form.disclaimer"
-msgid "For security purposes, Openverse collects and retains anonymized IP addresses of those who complete and submit this form."
+msgid "For security purposes, ###openverse### collects and retains anonymized IP addresses of those who complete and submit this form."
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:42
+#: src/components/VContentReport/VContentReportForm.vue:46
 msgctxt "media-details.content-report.form.question"
 msgid "What is the reason?"
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:97
+#: src/components/VContentReport/VContentReportForm.vue:101
 msgctxt "media-details.content-report.form.submit"
 msgid "Report"
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:74
+#: src/components/VContentReport/VContentReportForm.vue:78
 msgctxt "media-details.content-report.form.cancel"
 msgid "Cancel"
 msgstr ""
@@ -549,7 +552,7 @@ msgctxt "media-details.content-report.form.dmca.form"
 msgid "DMCA form"
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:86
+#: src/components/VContentReport/VContentReportForm.vue:90
 msgctxt "media-details.content-report.form.dmca.open"
 msgid "Open form"
 msgstr ""
@@ -739,12 +742,10 @@ msgctxt "browse-page.aria.creator"
 msgid "search by creator"
 msgstr ""
 
-#: src/components/VSearchRating.vue:7
 msgctxt "browse-page.aria.relevance.yes"
 msgid "relevant result? answer: yes"
 msgstr ""
 
-#: src/components/VSearchRating.vue:16
 msgctxt "browse-page.aria.relevance.no"
 msgid "relevant result? answer: no"
 msgstr ""
@@ -812,22 +813,18 @@ msgctxt "browse-page.search-form.button"
 msgid "Search"
 msgstr ""
 
-#: src/components/VSearchRating.vue:5
 msgctxt "browse-page.search-rating.content"
 msgid "Are these results relevant?"
 msgstr ""
 
-#: src/components/VSearchRating.vue:12
 msgctxt "browse-page.search-rating.yes"
 msgid "Yes"
 msgstr ""
 
-#: src/components/VSearchRating.vue:21
 msgctxt "browse-page.search-rating.no"
 msgid "No"
 msgstr ""
 
-#: src/components/VSearchRating.vue:26
 msgctxt "browse-page.search-rating.feedback-thanks"
 msgid "Thank you for the feedback!"
 msgstr ""
@@ -1157,6 +1154,12 @@ msgctxt "feedback.title"
 msgid "Feedback"
 msgstr ""
 
+#. Do not translate words between ### ###.
+#: src/pages/feedback.vue:8
+msgctxt "feedback.intro"
+msgid "Thank you for using ###openverse###! We welcome your ideas for improving the tool below. To provide regular feedback, join the ###slack### channel in the ###making-wordpress### Slack workspace."
+msgstr ""
+
 msgctxt "feedback.improve"
 msgid "Help us Improve"
 msgstr ""
@@ -1165,7 +1168,7 @@ msgctxt "feedback.report"
 msgid "Report a Bug"
 msgstr ""
 
-#: src/pages/feedback.vue:51
+#: src/pages/feedback.vue:54
 msgctxt "feedback.loading"
 msgid "Loading..."
 msgstr ""
@@ -1183,24 +1186,9 @@ msgid "report a bug form"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/feedback.vue:8
-msgctxt "feedback.description.content"
-msgid "Thank you for using Openverse! We welcome your ideas for improving the tool below. To provide regular feedback, join the ###openverse### channel in the ###making-wordpress### Slack workspace."
-msgstr ""
-
-#: src/pages/feedback.vue:11
-msgctxt "feedback.description.openverse"
-msgid "#openverse"
-msgstr ""
-
-#: src/pages/feedback.vue:16
-msgctxt "feedback.description.making-wordpress"
-msgid "Making WordPress"
-msgstr ""
-
 #: src/pages/search-help.vue:6
 msgctxt "search-guide.title"
-msgid "Openverse Syntax Guide"
+msgid "###openverse### Syntax Guide"
 msgstr ""
 
 #: src/pages/search-help.vue:9
@@ -1362,7 +1350,7 @@ msgid "If you want to combine terms, you can use the following operators to perf
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/search-help.vue:37
+#: src/pages/search-help.vue:36
 msgctxt "search-guide.combine.and"
 msgid "###symbol### signifies AND operation"
 msgstr ""
@@ -1461,17 +1449,18 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/meta-search.vue:10
 msgctxt "meta-search-page.intro"
-msgid "Openverse is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our ###link###."
+msgid "###openverse### is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our ###link###."
 msgstr ""
 
-#: src/pages/meta-search.vue:13
+#: src/pages/meta-search.vue:14
 msgctxt "meta-search-page.link"
 msgid "sources"
 msgstr ""
 
+#. Do not translate words between ### ###.
 #: src/pages/meta-search.vue:17
 msgctxt "meta-search-page.license"
-msgid "The internet is a big place! There are plenty of search portals and collections, hosting CC-licensed and public domain content, which we aren’t able to index or surface results from within the Openverse interface. These are important sources of CC-licensed and public domain content, and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located."
+msgid "The internet is a big place! There are plenty of search portals and collections, hosting CC-licensed and public domain content, which we aren’t able to index or surface results from within the ###openverse### interface. These are important sources of CC-licensed and public domain content, and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located."
 msgstr ""
 
 #: src/pages/meta-search.vue:19
@@ -1479,118 +1468,122 @@ msgctxt "meta-search-page.content"
 msgid "What content types can I search for using the Meta Search feature?"
 msgstr ""
 
-#: src/pages/meta-search.vue:21
+#. Do not translate words between ### ###.
+#: src/pages/meta-search.vue:22
 msgctxt "meta-search-page.content-types"
-msgid "Meta Search on Openverse currently supports image, audio, and video search on external sites."
+msgid "Meta Search on ###openverse### currently supports image, audio, and video search on external sites."
 msgstr ""
 
-#: src/pages/meta-search.vue:49
+#: src/pages/meta-search.vue:53
 msgctxt "meta-search-page.use"
 msgid " Use "
 msgstr ""
 
-#: src/pages/meta-search.vue:99
+#: src/pages/meta-search.vue:107
 msgctxt "meta-search-page.why.title"
 msgid "Why did you build this?"
 msgstr ""
 
-#: src/pages/meta-search.vue:101
+#: src/pages/meta-search.vue:109
 msgctxt "meta-search-page.why.content"
 msgid "For many years, CC has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. These platforms included Europeana, Google Images, Flickr, Jamendo, Open Clip Art Library, SpinXpress, Wikimedia Commons, YouTube, ccMixter, and SoundCloud. The search experience looked like this:"
 msgstr ""
 
-#: src/pages/meta-search.vue:103
+#. Do not translate words between ### ###.
+#: src/pages/meta-search.vue:111
 msgctxt "meta-search-page.why.new"
-msgid "For users of the legacy CC Meta Search site, the Meta Search feature on Openverse will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the Meta Search feature builds on this functionality, allowing us to quickly add new sources to Meta Search as we discover them, and support new content types in the future, as we expand."
+msgid "For users of the legacy CC Meta Search site, the Meta Search feature on ###openverse### will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the Meta Search feature builds on this functionality, allowing us to quickly add new sources to Meta Search as we discover them, and support new content types in the future, as we expand."
 msgstr ""
 
-#: src/pages/meta-search.vue:108
+#: src/pages/meta-search.vue:116
 msgctxt "meta-search-page.why.aria-label"
 msgid "feedback"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/meta-search.vue:105
+#: src/pages/meta-search.vue:113
 msgctxt "meta-search-page.why.feedback-suggestions"
 msgid "We hope you enjoy, and if you have suggestions for improvement, leave us ###feedback###."
 msgstr ""
 
-#: src/pages/meta-search.vue:110
+#: src/pages/meta-search.vue:118
 msgctxt "meta-search-page.why.feedback-link"
 msgid "feedback"
 msgstr ""
 
-#: src/pages/meta-search.vue:82
+#: src/pages/meta-search.vue:90
 msgctxt "meta-search-page.new.title"
 msgid "Can I suggest new sources for Meta Search?"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/meta-search.vue:84
+#: src/pages/meta-search.vue:92
 msgctxt "meta-search-page.new.content"
 msgid "Yes, please! Create an ###issue### in our GitHub repository or send us an ###email### and tell us about the new sources you’d like to see included."
 msgstr ""
 
-#: src/pages/meta-search.vue:89
+#: src/pages/meta-search.vue:97
 msgctxt "meta-search-page.new.issue"
 msgid "issue"
 msgstr ""
 
-#: src/pages/meta-search.vue:94
+#: src/pages/meta-search.vue:102
 msgctxt "meta-search-page.new.email"
 msgid "email"
 msgstr ""
 
-#: src/pages/meta-search.vue:66
+#: src/pages/meta-search.vue:70
 msgctxt "meta-search-page.audio-video.title"
 msgid "How does the Meta Search feature work for non-indexed media types?"
 msgstr ""
 
-#: src/pages/meta-search.vue:76
+#: src/pages/meta-search.vue:84
 msgctxt "meta-search-page.audio-video.demo-label"
 msgid "Layout of Meta Search for non-indexed media type, like video"
 msgstr ""
 
-#: src/pages/meta-search.vue:68
+#. Do not translate words between ### ###.
+#: src/pages/meta-search.vue:74
 msgctxt "meta-search-page.audio-video.content"
-msgid "Openverse does not yet support built-in search for some media types, such as videos. For these media types, click on the appropriate tab and you’ll see sources where you can find CC-licensed content."
+msgid "###openverse### does not yet support built-in search for some media types, such as videos. For these media types, click on the appropriate tab and you’ll see sources where you can find CC-licensed content."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/meta-search.vue:69
+#: src/pages/meta-search.vue:77
 msgctxt "meta-search-page.audio-video.filter"
 msgid "The Filters bar on the left includes the ###use### filter, which may be supported by some meta search sources. Apply these before clicking on the button for the external source you’d like to search."
 msgstr ""
 
-#: src/pages/meta-search.vue:24
+#: src/pages/meta-search.vue:26
 msgctxt "meta-search-page.images.title"
 msgid "How does the Meta Search feature work for indexed media types?"
 msgstr ""
 
-#: src/pages/meta-search.vue:59
+#: src/pages/meta-search.vue:63
 msgctxt "meta-search-page.images.demo-label"
 msgid "Layout of Meta Search for indexed media type, like images"
 msgstr ""
 
-#: src/pages/meta-search.vue:26
+#. Do not translate words between ### ###.
+#: src/pages/meta-search.vue:29
 msgctxt "meta-search-page.images.content"
-msgid "Openverse supports built-in search for some media types, such as images. When you enter a query on the Openverse homepage, a page of results will be displayed. Scrolling to the bottom of the page, you have two choices:"
+msgid "###openverse### supports built-in search for some media types, such as images. When you enter a query on the ###openverse### homepage, a page of results will be displayed. Scrolling to the bottom of the page, you have two choices:"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/meta-search.vue:30
+#: src/pages/meta-search.vue:34
 msgctxt "meta-search-page.images.continue"
-msgid "###load-more###, and continue browsing in Openverse."
+msgid "###load-more###, and continue browsing in ###openverse###."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/meta-search.vue:37
+#: src/pages/meta-search.vue:41
 msgctxt "meta-search-page.images.not-finding"
 msgid "See the section “###not-finding###” below the results."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/meta-search.vue:47
+#: src/pages/meta-search.vue:51
 msgctxt "meta-search-page.images.info"
 msgid "The “###not-finding###” section lists other sources of CC-licensed and public domain content. Your search query will be preloaded, and if supported, you can select a ###use### filter to proactively filter your results. Click on the button for the external source you’d like to search, and your results will open in a new tab."
 msgstr ""
@@ -1601,59 +1594,66 @@ msgid "Sources"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/sources.vue:77
+#: src/pages/sources.vue:73
 msgctxt "sources.detail"
 msgid "Clicking on a ###single-name### allows you to browse and filter items within that source."
 msgstr ""
 
-#: src/pages/sources.vue:80
+#: src/pages/sources.vue:76
 msgctxt "sources.single-name"
 msgid "Source"
 msgstr ""
 
-#: src/pages/sources.vue:67
+#: src/pages/sources.vue:63
 msgctxt "sources.suggestions"
 msgid "We appreciate suggestions for new sources from our community of users."
 msgstr ""
 
-#: src/pages/sources.vue:73
+#: src/pages/sources.vue:69
 msgctxt "sources.issue-button"
 msgid "Suggest a new source"
 msgstr ""
 
-#: src/pages/sources.vue:46
+#: src/pages/sources.vue:81
+msgctxt "sources.aria.table"
+msgid "sources table"
+msgstr ""
+
+#: src/pages/sources.vue:42
 msgctxt "sources.new-content.next"
 msgid "How do we decide what sources to add next?"
 msgstr ""
 
-#: src/pages/sources.vue:49
+#: src/pages/sources.vue:45
 msgctxt "sources.new-content.integrate"
 msgid "We have a never ending list of possible sources to research prior to integration. We ask ourselves questions like:"
 msgstr ""
 
-#: src/pages/sources.vue:54
+#: src/pages/sources.vue:50
 msgctxt "sources.new-content.impact"
 msgid " What is the impact or importance of this source to our users? If it exists within a provider like Wikimedia Commons, is it valuable for our users to be able to filter by this source directly?"
 msgstr ""
 
-#: src/pages/sources.vue:57
+#: src/pages/sources.vue:53
 msgctxt "sources.new-content.reuse"
 msgid "Is licensing and attribution information clearly displayed to enable confident reuse?"
 msgstr ""
 
-#: src/pages/sources.vue:60
+#: src/pages/sources.vue:56
 msgctxt "sources.new-content.total-items"
 msgid "How many new total items or new types of items can we bring to our users through this integration? Some sources are direct integrations, while others may be a source within a source."
 msgstr ""
 
+#. Do not translate words between ### ###.
 #: src/pages/sources.vue:10
 msgctxt "sources.cc-content.where"
-msgid "Where does the content on Openverse come from?"
+msgid "Where does the content on ###openverse### come from?"
 msgstr ""
 
+#. Do not translate words between ### ###.
 #: src/pages/sources.vue:13
 msgctxt "sources.cc-content.content"
-msgid "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through Openverse."
+msgid "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through ###openverse###."
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -1663,183 +1663,103 @@ msgid "Some providers have multiple different groupings of content within them. 
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/sources.vue:27
+#: src/pages/sources.vue:26
 msgctxt "sources.cc-content.europeana"
-msgid "Openverse is especially grateful for the work of ###link###, an organization that works to digitize and make discoverable cultural heritage works across Europe. Openverse is able to index hundreds of valuable sources, through a single integration with the ###link-api###."
+msgid "###openverse### is especially grateful for the work of ###link###, an organization that works to digitize and make discoverable cultural heritage works across Europe. ###openverse### is able to index hundreds of valuable sources, through a single integration with the ###link-api###."
 msgstr ""
 
-#: src/pages/sources.vue:32
-msgctxt "sources.cc-content.europeana-link"
-msgid "Europeana"
-msgstr ""
-
-#: src/pages/sources.vue:39
+#: src/pages/sources.vue:35
 msgctxt "sources.cc-content.europeana-api"
 msgid "Europeana API"
 msgstr ""
 
-#: src/pages/sources.vue:23
+#: src/pages/sources.vue:22
 msgctxt "sources.cc-content.smithsonian"
 msgid "Smithsonian Institute"
 msgstr ""
 
-#: src/pages/sources.vue:18
-msgctxt "sources.cc-content.flickr"
-msgid "Flickr"
-msgstr ""
-
-#: src/pages/sources.vue:97
+#: src/pages/sources.vue:93
 msgctxt "sources.providers.source"
 msgid "Source"
 msgstr ""
 
-#: src/pages/sources.vue:107
+#: src/pages/sources.vue:103
 msgctxt "sources.providers.domain"
 msgid "Domain"
 msgstr ""
 
-#: src/pages/sources.vue:117
+#: src/pages/sources.vue:113
 msgctxt "sources.providers.item"
 msgid "Total items"
 msgstr ""
 
+#. Do not translate words between ### ###.
 #: src/pages/about.vue:6
 msgctxt "about.title"
-msgid "About Openverse"
-msgstr ""
-
-#: src/pages/about.vue:14
-msgctxt "about.aria.common-crawl"
-msgid "Common Crawl"
-msgstr ""
-
-#: src/pages/about.vue:23
-msgctxt "about.aria.meta"
-msgid "meta search"
-msgstr ""
-
-#: src/pages/about.vue:57
-msgctxt "about.aria.projects"
-msgid "Openverse projects"
-msgstr ""
-
-#: src/pages/about.vue:50
-msgctxt "about.aria.community"
-msgid "Make WordPress community"
-msgstr ""
-
-#: src/pages/about.vue:84
-msgctxt "about.aria.terms"
-msgid "Openverse terms of use"
-msgstr ""
-
-#: src/pages/sources.vue:85
-msgctxt "about.aria.sources-table"
-msgid "sources table"
-msgstr ""
-
-#: src/pages/about.vue:67
-msgctxt "about.aria.creative-commons"
-msgid "Creative Commons"
-msgstr ""
-
-#: src/pages/about.vue:74
-msgctxt "about.aria.wordpress"
-msgid "WordPress"
-msgstr ""
-
-#: src/pages/about.vue:29
-msgctxt "about.aria.search"
-msgid "Openverse"
-msgstr ""
-
-#: src/pages/about.vue:36
-msgctxt "about.aria.api"
-msgid "Openverse API"
-msgstr ""
-
-#: src/pages/about.vue:43
-msgctxt "about.aria.catalog"
-msgid "Openverse Catalog"
+msgid "About ###openverse###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:81
+#: src/pages/about.vue:73
 msgctxt "about.declaration.content"
-msgid "Please note that Openverse does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the ###terms###."
+msgid "Please note that ###openverse### does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the ###terms###."
 msgstr ""
 
-#: src/pages/about.vue:86
+#. Do not translate words between ### ###.
+#: src/pages/about.vue:78
 msgctxt "about.declaration.terms"
-msgid "Openverse Terms of Use"
+msgid "###openverse### Terms of Use"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:64
+#: src/pages/about.vue:56
 msgctxt "about.transfer.content"
-msgid "Openverse is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from ###creative-commons### and ###wordpress###. We remain committed to our goal of tackling discoverability and accessibility of open access media."
-msgstr ""
-
-#: src/pages/about.vue:69
-msgctxt "about.transfer.creative-commons"
-msgid "Creative Commons"
-msgstr ""
-
-#: src/pages/about.vue:76
-msgctxt "about.transfer.wordpress"
-msgid "WordPress"
+msgid "###openverse### is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from ###creative-commons### and ###wordpress###. We remain committed to our goal of tackling discoverability and accessibility of open access media."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:21
+#: src/pages/about.vue:22
 msgctxt "about.planning.content"
-msgid "Currently Openverse only searches images, with search for audio and video provided through ###meta###. But we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. All of our code is open source (###search###, ###api###, ###catalog###) and we ###community###. You can see what ###working###."
+msgid "Currently ###openverse### only searches images, with search for audio and video provided through ###meta###. But we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. All of our code is open source (###search###, ###api###, ###catalog###) and we ###community###. You can see what ###working###."
 msgstr ""
 
-#: src/pages/about.vue:24
+#: src/pages/about.vue:26
 msgctxt "about.planning.meta"
 msgid "Meta Search"
 msgstr ""
 
-#: src/pages/about.vue:31
-msgctxt "about.planning.search"
-msgid "Openverse"
+#. Do not translate words between ### ###.
+#: src/pages/about.vue:35
+msgctxt "about.planning.api"
+msgid "###openverse### API"
 msgstr ""
 
-#: src/pages/about.vue:38
-msgctxt "about.planning.api"
-msgid "Openverse API"
+#. Do not translate words between ### ###.
+#: src/pages/about.vue:40
+msgctxt "about.planning.catalog"
+msgid "###openverse### Catalog"
 msgstr ""
 
 #: src/pages/about.vue:45
-msgctxt "about.planning.catalog"
-msgid "Openverse Catalog"
-msgstr ""
-
-#: src/pages/about.vue:52
 msgctxt "about.planning.community"
 msgid "welcome community contribution"
 msgstr ""
 
-#: src/pages/about.vue:59
+#: src/pages/about.vue:50
 msgctxt "about.planning.working"
 msgid "we’re currently working on"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:11
+#: src/pages/about.vue:13
 msgctxt "about.collection.content"
-msgid "Openverse searches across more than 300 million images from open APIs and the ###common-crawl### dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution."
+msgid "###openverse### searches across more than 300 million images from open APIs and the ###common-crawl### dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution."
 msgstr ""
 
-#: src/pages/about.vue:16
-msgctxt "about.collection.common-crawl"
-msgid "Common Crawl"
-msgstr ""
-
-#: src/pages/about.vue:9
+#. Do not translate words between ### ###.
+#: src/pages/about.vue:10
 msgctxt "about.description.content"
-msgid "Openverse is a tool that allows openly licensed and public domain works to be discovered and used by everyone."
+msgid "###openverse### is a tool that allows openly licensed and public domain works to be discovered and used by everyone."
 msgstr ""
 
 msgctxt "header.about-nav-item"
@@ -1952,17 +1872,11 @@ msgctxt "notification.translation.link"
 msgid "contributing a translation"
 msgstr ""
 
-#: src/pages/about.vue:105
-msgctxt "hero.brand"
-msgid "Openverse"
-msgstr ""
-
-#: src/pages/index.vue:33
+#: src/pages/index.vue:34
 msgctxt "hero.subtitle"
 msgid "Browse through over 600 million items to reuse"
 msgstr ""
 
-#: src/components/VHeader/VSearchBar/VSearchBar.vue:11
 msgctxt "hero.aria.search"
 msgid "search"
 msgstr ""
@@ -1985,12 +1899,12 @@ msgid "I want something I can"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/index.vue:63
+#: src/pages/index.vue:64
 msgctxt "hero.disclaimer.content"
-msgid "All Openverse content is under a ###license### or is in the public domain."
+msgid "All ###openverse### content is under a ###license### or is in the public domain."
 msgstr ""
 
-#: src/pages/index.vue:72
+#: src/pages/index.vue:75
 msgctxt "hero.disclaimer.license"
 msgid "Creative Commons license"
 msgstr ""
@@ -2000,23 +1914,18 @@ msgctxt "hero.search.placeholder"
 msgid "Search for content"
 msgstr ""
 
-#: src/components/VFourOhFour.vue:21
+#: src/components/VFourOhFour.vue:22
 msgctxt "404.title"
 msgid "The content you’re looking for seems to have disappeared."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VFourOhFour.vue:24
+#: src/components/VFourOhFour.vue:25
 msgctxt "404.main"
 msgid "Go to ###link### or search for something similar from the field below."
 msgstr ""
 
-#: src/components/VFourOhFour.vue:4
-msgctxt "404.link-title"
-msgid "Openverse"
-msgstr ""
-
-#: src/components/VFourOhFour.vue:36
+#: src/components/VFourOhFour.vue:39
 msgctxt "404.search-placeholder"
 msgid "Search for content to reuse"
 msgstr ""

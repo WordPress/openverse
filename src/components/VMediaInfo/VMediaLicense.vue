@@ -59,7 +59,7 @@ import VLink from '~/components/VLink.vue'
 import { isLicense } from '~/utils/license'
 
 export default {
-  name: 'MediaLicense',
+  name: 'VMediaLicense',
   components: { VLicenseElements, VLink },
   props: {
     fullLicenseName: String,

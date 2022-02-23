@@ -1,6 +1,12 @@
 <template>
   <VNoticeBar class="cc-ov-migration">
-    {{ $t('migration-notice.intro') }}
+    {{
+      $t('migration-notice.intro', {
+        'cc-search': 'CC Search',
+        openverse: 'Openverse',
+        wordpress: 'WordPress',
+      })
+    }}
     <i18n tag="span" path="migration-notice.more">
       <template #read-more>
         <VLink

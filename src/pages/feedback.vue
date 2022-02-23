@@ -5,17 +5,20 @@
         <h1 id="feedback" class="text-5xl mb-10">
           {{ $t('feedback.title') }}
         </h1>
-        <i18n path="feedback.description.content" tag="p" class="mb-6">
-          <template #openverse>
-            <VLink href="https://wordpress.slack.com/messages/openverse/">
-              {{ $t('feedback.description.openverse') }}</VLink
+        <i18n path="feedback.intro" tag="p" class="mb-6">
+          <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
+          <template #openverse>Openverse</template>
+          <template #slack>
+            <VLink href="https://wordpress.slack.com/messages/openverse/"
+              >#openverse</VLink
             >
           </template>
           <template #making-wordpress>
-            <VLink href="https://make.wordpress.org/chat/">
-              {{ $t('feedback.description.making-wordpress') }}</VLink
+            <VLink href="https://make.wordpress.org/chat/"
+              >Making WordPress</VLink
             >
           </template>
+          <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
         </i18n>
         <section class="tabs mt-6">
           <div role="tablist" :aria-label="$t('feedback.title')">
@@ -80,7 +83,7 @@ export const FeedbackPage = {
   },
   head() {
     return {
-      title: `${this.$t('feedback.title')} | ${this.$t('hero.brand')}`,
+      title: `${this.$t('feedback.title')} | Openverse`,
     }
   },
   methods: {

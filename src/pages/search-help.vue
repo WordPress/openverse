@@ -3,7 +3,7 @@
     <div class="container">
       <div class="mb-10">
         <h1 class="text-5xl mb-10">
-          {{ $t('search-guide.title') }}
+          {{ $t('search-guide.title', { openverse: 'Openverse' }) }}
         </h1>
         <p>
           {{ $t('search-guide.intro') }}
@@ -32,9 +32,9 @@
         <p class="my-4">
           {{ $t('search-guide.combine.description') }}
         </p>
-        <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
         <ul>
           <i18n path="search-guide.combine.and" tag="li" class="listitem">
+            <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
             <template #symbol>
               <code
                 :aria-label="$t('search-guide.combine.aria-labels.plus')"
@@ -246,7 +246,7 @@
             <br />
           </template>
         </i18n>
-        <!-- eslint-enable -->
+        <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
       </div>
     </div>
   </div>
@@ -265,7 +265,9 @@ const SearchHelpPage = {
   },
   head() {
     return {
-      title: `${this.$t('search-guide.title')} | ${this.$t('hero.brand')}`,
+      title: `${this.$t('search-guide.title', {
+        openverse: 'Openverse',
+      })} | Openverse`,
     }
   },
 }

@@ -34,7 +34,7 @@
       <div>
         <dt>{{ $t('image-details.information.dimensions') }}</dt>
         <dd>
-          <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
+          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
           {{ imageWidth }} &times; {{ imageHeight }}
           {{ $t('image-details.information.pixels') }}
         </dd>

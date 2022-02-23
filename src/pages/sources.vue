@@ -7,37 +7,33 @@
         </h1>
         <div class="mb-10">
           <h3 class="text-2xl">
-            {{ $t('sources.cc-content.where') }}
+            {{ $t('sources.cc-content.where', { openverse: 'Openverse' }) }}
           </h3>
           <p class="my-4">
-            {{ $t('sources.cc-content.content') }}
+            {{ $t('sources.cc-content.content', { openverse: 'Openverse' }) }}
           </p>
           <i18n path="sources.cc-content.provider" tag="p" class="my-4">
             <template #flickr>
-              <VLink aria-label="flickr" href="https://www.flickr.com/">{{
-                $t('sources.cc-content.flickr')
-              }}</VLink>
+              <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+              <VLink href="https://www.flickr.com/">Flickr</VLink>
             </template>
             <template #smithsonian>
-              <VLink aria-label="smithsonian" href="https://www.si.edu/">{{
+              <VLink href="https://www.si.edu/">{{
                 $t('sources.cc-content.smithsonian')
               }}</VLink>
             </template>
           </i18n>
           <i18n path="sources.cc-content.europeana" tag="p" class="my-4">
+            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+            <template #openverse>Openverse</template>
             <template #link>
-              <VLink
-                aria-label="europeana"
-                href="https://www.europeana.eu/en"
-                >{{ $t('sources.cc-content.europeana-link') }}</VLink
-              >
+              <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+              <VLink href="https://www.europeana.eu/en">Europeana</VLink>
             </template>
             <template #link-api>
-              <VLink
-                aria-label="europeana-api"
-                href="https://pro.europeana.eu/page/apis"
-                >{{ $t('sources.cc-content.europeana-api') }}</VLink
-              >
+              <VLink href="https://pro.europeana.eu/page/apis">{{
+                $t('sources.cc-content.europeana-api')
+              }}</VLink>
             </template>
           </i18n>
         </div>
@@ -82,7 +78,7 @@
         </template>
       </i18n>
       <table
-        :aria-label="$t('about.aria.sources-table')"
+        :aria-label="$t('sources.aria.table')"
         role="region"
         class="table is-striped mt-4 mb-10 border border-admin-gray"
       >
@@ -184,7 +180,7 @@ const SourcePage = {
   },
   head() {
     return {
-      title: `${this.$t('sources.title')} | ${this.$t('hero.brand')}`,
+      title: `${this.$t('sources.title')} | Openverse`,
     }
   },
 }

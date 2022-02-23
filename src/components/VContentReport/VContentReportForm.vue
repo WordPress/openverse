@@ -33,7 +33,11 @@
       </div>
 
       <p class="text-sm mb-4">
-        {{ $t('media-details.content-report.form.disclaimer') }}
+        {{
+          $t('media-details.content-report.form.disclaimer', {
+            openverse: 'Openverse',
+          })
+        }}
       </p>
 
       <form class="text-sm">

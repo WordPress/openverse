@@ -18,7 +18,8 @@
           class="relative hidden lg:block -left-[6.25rem] rtl:-right-[6.25rem]"
         >
           <h1>
-            <span class="sr-only">{{ $t('hero.brand') }}</span>
+            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+            <span class="sr-only">Openverse</span>
             <!-- width and height chosen w.r.t. viewBox "0 0 280 42" -->
             <span
               aria-hidden="true"
@@ -65,6 +66,8 @@
           tag="p"
           class="hidden lg:block text-sr mt-4"
         >
+          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+          <template #openverse>Openverse</template>
           <template #license>
             <VLink
               href="https://creativecommons.org/licenses/"
@@ -115,6 +118,8 @@
       tag="p"
       class="lg:hidden text-sr p-6 mt-auto"
     >
+      <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+      <template #openverse>Openverse</template>
       <template #license>
         <VLink
           href="https://creativecommons.org/licenses/"

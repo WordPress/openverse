@@ -186,9 +186,7 @@ const VImageDetailsPage = {
     },
   },
   head() {
-    const title = `${this.image.title} | Reusable Image on ${this.$t(
-      'hero.brand'
-    )}`
+    const title = `${this.image.title} | Openverse`
 
     return {
       title,

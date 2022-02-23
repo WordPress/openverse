@@ -15,6 +15,8 @@
         tag="h4"
         class="b-header mb-2"
       >
+        <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+        <template #openverse>Openverse</template>
         <template #type>
           {{ type }}
         </template>
@@ -40,7 +42,7 @@
     <VMetaSourceList :type="type" :query="metaQuery" />
 
     <p class="caption font-semibold max-w-3xl my-0 mx-auto">
-      {{ $t('meta-search.caption') }}
+      {{ $t('meta-search.caption', { openverse: 'Openverse' }) }}
     </p>
   </section>
 </template>

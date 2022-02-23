@@ -1,7 +1,8 @@
 <template>
   <main class="bg-yellow h-screen relative page-404 overflow-x-hidden">
     <VLink href="/" class="relative z-10 text-dark-charcoal">
-      <span class="sr-only">{{ $t('404.link-title') }}</span>
+      <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+      <span class="sr-only">Openverse</span>
       <span
         class="flex flex-row pt-6 lg:pt-8 ms-6 lg:ms-10 h-auto w-30 text-dark-charcoal"
         aria-hidden="true"
@@ -23,11 +24,13 @@
       <p class="font-semibold">
         <i18n path="404.main">
           <template #link>
+            <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
             <VLink
               class="underline text-current hover:text-current active:text-current"
               href="/"
-              >{{ $t('404.link-title') }}</VLink
+              >Openverse</VLink
             >
+            <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
           </template>
         </i18n>
       </p>
