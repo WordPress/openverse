@@ -129,6 +129,7 @@ if (process.argv.includes('-u')) {
 spawnSync('docker', args, {
   stdio: 'inherit',
 })
+```
 2. Create a `./bin/visual-regression.sh` file containing the following (don't forget to `chmod +x` it):
 ```sh
 #!/bin/bash
