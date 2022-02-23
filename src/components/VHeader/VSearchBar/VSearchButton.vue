@@ -6,7 +6,9 @@
     :variant="isIcon ? 'plain' : 'primary'"
     class="transition-none inline-block rounded-s-none font-semibold text-2xl hover:text-white group-hover:text-white hover:bg-pink group-hover:bg-pink"
     :class="[
-      isIcon ? 'search-button p-[0.5px] ps-[1.5px]' : 'py-6 px-10 h-full',
+      isIcon
+        ? 'search-button focus-visible:bg-pink focus-visible:text-white p-[0.5px] ps-[1.5px]'
+        : 'py-6 px-10 h-full',
       sizeClasses,
       isHomeRoute
         ? 'bg-pink border-b border-b-pink text-white border-tx'

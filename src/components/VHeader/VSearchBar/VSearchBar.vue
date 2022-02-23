@@ -90,9 +90,4 @@ export default VSearchBar
 .search-field input[type='search']::-webkit-search-results-decoration {
   -webkit-appearance: none;
 }
-
-/* Necessary to avoid flickering and just 'border-tx' inline class isn't working here */
-.search-field.border-transparent {
-  border-color: transparent;
-}
 </style>

@@ -5,3 +5,4 @@ test/unit/coverage
 .nuxt-storybook
 storybook-static
 pnpm-lock.yaml
+nuxt-template-overrides
