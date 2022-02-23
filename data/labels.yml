@@ -144,6 +144,12 @@ groups:
       - name: css
         description: Requires familiarity with CSS
         emoji: "🎨"
+      - name: bash
+        description: Requires familiarity with Bash
+        emoji: "💲"
+      - name: typescript
+        description: Requires familiarity with TypeScript
+        emoji: "⌨️"
 
   - name: friendliness
     color: "7f0799"
