@@ -47,11 +47,18 @@ def test_push_output_paths_wrapper(func, media_types, stores):
         ti_mock,
         args=[func_mock, value],
     )
-    assert ti_mock.xcom_push.call_count == len(
-        media_types
-    ), "# of output paths didn't match # of stores expected"
-    for args, store in zip(ti_mock.xcom_push.calls, stores):
+    # There should be one call to xcom_push for each provided store, plus
+    # one final call to report the task duration.
+    expected_xcoms = len(media_types) + 1
+    actual_xcoms = ti_mock.xcom_push.call_count
+    assert (
+        actual_xcoms == expected_xcoms
+    ), f"Expected {expected_xcoms} XComs but {actual_xcoms} pushed"
+    for args, store in zip(ti_mock.xcom_push.mock_calls[:-1], stores):
         assert args.kwargs["value"] == store.output_path
+    # Check that the duration was reported
+    assert ti_mock.xcom_push.mock_calls[-1].kwargs["key"] == "duration"
+
     # Check that the function itself was called with the provided args
     func_mock.assert_called_once_with(value)
 

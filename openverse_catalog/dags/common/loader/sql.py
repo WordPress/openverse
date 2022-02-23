@@ -254,7 +254,7 @@ def upsert_records_to_db_table(
           {upsert_conflict_string}
         """
     )
-    postgres.run(upsert_query)
+    return postgres.run(upsert_query, handler=lambda c: c.rowcount)
 
 
 def drop_load_table(

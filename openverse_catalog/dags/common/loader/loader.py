@@ -44,6 +44,7 @@ def load_from_s3(
     sql.load_s3_data_to_intermediate_table(
         postgres_conn_id, bucket, key, identifier, media_type
     )
-    sql.upsert_records_to_db_table(
+    # Returns record count
+    return sql.upsert_records_to_db_table(
         postgres_conn_id, identifier, media_type=media_type, tsv_version=tsv_version
     )

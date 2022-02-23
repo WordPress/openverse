@@ -54,6 +54,7 @@ https://github.com/creativecommons/cccatalog/issues/334)
 import inspect
 import logging
 import os
+import time
 from datetime import datetime, timedelta
 from typing import Callable, Dict, List, Optional, Sequence
 
@@ -65,7 +66,7 @@ from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 from common import slack
-from common.loader import loader, s3, sql
+from common.loader import loader, reporting, s3, sql
 
 
 logger = logging.getLogger(__name__)
@@ -126,9 +127,17 @@ def _push_output_paths_wrapper(
         ti.xcom_push(key=f"{media_type}_tsv", value=store.output_path)
 
     logger.info("Running provider function")
+
+    start_time = time.perf_counter()
     # Not passing kwargs here because Airflow throws a bunch of stuff in there that none
     # of our provider scripts are expecting.
-    return func(*args)
+    data = func(*args)
+    end_time = time.perf_counter()
+
+    duration = end_time - start_time
+    ti.xcom_push(key="duration", value=duration)
+
+    return data
 
 
 def create_provider_api_workflow(
@@ -255,6 +264,20 @@ def create_provider_api_workflow(
                         "identifier": identifier,
                     },
                 )
+                report_load_completion = PythonOperator(
+                    task_id="report_load_completion",
+                    python_callable=reporting.report_completion,
+                    op_kwargs={
+                        "provider_name": provider_name,
+                        "media_type": media_type,
+                        "duration": XCOM_PULL_TEMPLATE.format(
+                            pull_data.task_id, "duration"
+                        ),
+                        "record_count": XCOM_PULL_TEMPLATE.format(
+                            load_from_s3.task_id, "return_value"
+                        ),
+                    },
+                )
                 drop_loading_table = PythonOperator(
                     task_id="drop_loading_table",
                     python_callable=sql.drop_load_table,
@@ -265,7 +288,8 @@ def create_provider_api_workflow(
                     },
                     trigger_rule=TriggerRule.ALL_DONE,
                 )
-                [create_loading_table, copy_to_s3] >> load_from_s3 >> drop_loading_table
+                [create_loading_table, copy_to_s3] >> load_from_s3
+                load_from_s3 >> [report_load_completion, drop_loading_table]
 
             pull_data >> load_data
 

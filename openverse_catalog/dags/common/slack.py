@@ -8,6 +8,13 @@ TODO:
 This class is intended to be used with a channel-specific slack webhook.
 More information can be found here: https://app.slack.com/block-kit-builder.
 
+## Messages are not configured to send in development
+
+Messages or alerts sent using `send_message` or `on_failure_callback` will only
+send if a Slack connection is defined and we are running in production. You can
+manually override this for testing purposes by setting the `slack_message_override`
+variable to `true` in the Airflow UI.
+
 ## Send multiple messages - payload is reset after sending
 
 >>> slack = SlackMessage(username="Multi-message Test")
@@ -215,9 +222,31 @@ def send_message(
     http_conn_id: str = SLACK_NOTIFICATIONS_CONN_ID,
 ) -> None:
     """Send a simple slack message, convenience message for short/simple messages."""
+    if not should_send_message(http_conn_id):
+        return
     s = SlackMessage(username, icon_emoji, http_conn_id=http_conn_id)
     s.add_text(text, plain_text=not markdown)
     s.send(text)
+
+
+def should_send_message(http_conn_id=SLACK_NOTIFICATIONS_CONN_ID):
+    """
+    Returns true if a Slack connection is defined and we are in production (or
+    the message override is set).
+    """
+    # Exit early if no slack connection exists
+    hook = HttpHook(http_conn_id=http_conn_id)
+    try:
+        hook.get_conn()
+    except AirflowNotFoundException:
+        return False
+
+    # Exit early if we aren't on production or if force alert is not set
+    environment = Variable.get("environment", default_var="dev")
+    force_message = Variable.get(
+        "slack_message_override", default_var=False, deserialize_json=True
+    )
+    return environment == "prod" or force_message
 
 
 def on_failure_callback(context: dict) -> None:
@@ -225,21 +254,6 @@ def on_failure_callback(context: dict) -> None:
     Send an alert out regarding a failure to Slack.
     Errors are only sent out in production and if a Slack connection is defined.
     """
-    # Exit early if no slack connection exists
-    hook = HttpHook(http_conn_id=SLACK_ALERTS_CONN_ID)
-    try:
-        hook.get_conn()
-    except AirflowNotFoundException:
-        return
-
-    # Exit early if we aren't on production or if force alert is not set
-    environment = Variable.get("environment", default_var="dev")
-    force_alert = Variable.get(
-        "force_slack_alert", default_var=False, deserialize_json=True
-    )
-    if not (environment == "prod" or force_alert):
-        return
-
     # Get relevant info
     ti = context["task_instance"]
     execution_date = context["execution_date"]
@@ -263,4 +277,6 @@ def on_failure_callback(context: dict) -> None:
 *Log*: {ti.log_url}
 {exception_message}
 """
-    send_message(message, username="Airflow DAG Failure")
+    send_message(
+        message, username="Airflow DAG Failure", http_conn_id=SLACK_ALERTS_CONN_ID
+    )
