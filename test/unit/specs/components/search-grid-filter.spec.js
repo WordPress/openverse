@@ -75,7 +75,7 @@ describe('SearchGridFilter', () => {
         $store: storeMock,
         $nuxt: {
           context: {
-            i18n: { t: () => {} },
+            i18n: { t: (s) => s },
             store: storeMock,
           },
         },

@@ -1,3 +1,5 @@
 module.exports = {
-  render: () => {},
+  render: () => {
+    /* don't render SVGs at all in tests */
+  },
 }

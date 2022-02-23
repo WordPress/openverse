@@ -16,12 +16,22 @@ export interface MediaResult<
   result_count: number
   page_count: number
   page_size: number
+  /**
+   * This monstrosity maps media type keys like `image` or `audio` to a concrete model
+   * We're doing this to make MediaService able to infer which type of media it's for
+   * just based on the key (instead of a passed in type parameter, which isn't possible
+   * with JSDoc and inference is always nicer to use when possible)
+   */
   results: T extends FrontendMediaType
     ? DetailFromMediaType<T>
     : T extends Array<infer P>
-    ? DetailFromMediaType<P>[]
+    ? P extends FrontendMediaType
+      ? DetailFromMediaType<P>[]
+      : never
     : T extends Record<infer K, infer P>
-    ? Record<K, DetailFromMediaType<P>>
+    ? P extends FrontendMediaType
+      ? Record<K, DetailFromMediaType<P>>
+      : never
     : never
 }
 

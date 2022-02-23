@@ -15,7 +15,7 @@ const TestWrapper = Vue.component('TestWrapper', {
   props: {
     popoverProps: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     popoverContentTabIndex: {
       type: Number,

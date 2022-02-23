@@ -231,7 +231,7 @@ export default defineComponent({
      */
     featureNotices: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
   },
   emits: [

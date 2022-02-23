@@ -27,7 +27,7 @@ export const statuses = /** @type {const} */ ({
   ADDITIONAL: 'additional',
 })
 
-/** @type {Record.<import('../store/types').SearchType, SupportStatus>} */
+/** @type {Record<import('~/store/types').SearchType, SupportStatus>} */
 export const contentStatus = {
   [ALL_MEDIA]: statuses.SUPPORTED,
   [IMAGE]: statuses.SUPPORTED,

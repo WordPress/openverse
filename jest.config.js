@@ -4,7 +4,7 @@ module.exports = {
       experimentalCSSCompile: false,
     },
   },
-  moduleFileExtensions: ['js', 'vue', 'json'],
+  moduleFileExtensions: ['ts', 'js', 'vue', 'json'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^~/(.*.svg)\\?inline$': '<rootDir>/src/$1',
@@ -15,7 +15,7 @@ module.exports = {
   setupFiles: ['<rootDir>/test/unit/setup.js'],
   setupFilesAfterEnv: ['<rootDir>/test/unit/setup-after-env.js'],
   transform: {
-    '^.+\\.js$': 'babel-jest',
+    '^.+\\.(j|t)s$': 'babel-jest',
     '.*\\.(vue)$': 'vue-jest',
     '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$':
       'jest-transform-stub',
@@ -27,6 +27,7 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.vue',
     '<rootDir>/src/**/*.js',
+    '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/**/*.stories.js',
   ],
 }

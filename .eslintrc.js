@@ -8,6 +8,7 @@ module.exports = {
     parser: '@typescript-eslint/parser',
   },
   extends: [
+    'plugin:@typescript-eslint/recommended',
     'eslint:recommended',
     // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
     // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
@@ -17,7 +18,7 @@ module.exports = {
     'plugin:@intlify/vue-i18n/recommended',
   ],
   // required to lint *.vue files
-  plugins: ['vue', 'vuejs-accessibility', 'unicorn'],
+  plugins: ['@typescript-eslint', 'vue', 'vuejs-accessibility', 'unicorn'],
   // add your custom rules here
   rules: {
     semi: [2, 'never'],
@@ -71,6 +72,8 @@ module.exports = {
       },
     ],
     'unicorn/filename-case': ['error', { case: 'kebabCase' }],
+    '@typescript-eslint/ban-ts-comment': ['warn'],
+    '@typescript-eslint/no-var-requires': ['warn'],
   },
   settings: {
     'vue-i18n': {

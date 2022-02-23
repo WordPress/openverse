@@ -21,7 +21,6 @@ const SimpleLoaderStory = (_, { argTypes }) => ({
     </div>
   `,
   components: { VLogoLoader },
-  setup() {},
 })
 
 export const Default = SimpleLoaderStory.bind({})
@@ -43,7 +42,6 @@ const LinkWrappedLoaderStory = (_, { argTypes }) => ({
     </a>
   `,
   components: { VLogoLoader },
-  setup() {},
 })
 
 export const LinkWrapped = LinkWrappedLoaderStory.bind({})

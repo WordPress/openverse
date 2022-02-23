@@ -7,3 +7,8 @@ declare module '*.svg!inline' {
   const SVG: string
   export default SVG
 }
+
+declare module '*.png' {
+  const PNG: string
+  export default PNG
+}

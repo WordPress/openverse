@@ -4,12 +4,13 @@
     "checkJs": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
-    "target": "esnext",
-    "module": "esnext",
-    "lib": ["dom", "esnext"],
+    "target": "ES2018",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext", "ESNext.AsyncIterable"],
     "noEmit": true,
     "isolatedModules": true,
     "skipLibCheck": true,
+    "sourceMap": true,
 
     /* Strict Type-Checking Options */
     "strict": true,
@@ -22,7 +23,7 @@
     "importsNotUsedAsValues": "error",
 
     /* Module Resolution Options */
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
     "typeRoots": ["./typings", "./node_modules/@types"],
     "paths": {
@@ -32,6 +33,7 @@
     "baseUrl": "."
   },
   "include": [
+    "src/**/*.ts",
     "src/composables/types.js",
     "src/composables/use-event-listener-outside.js",
     "src/composables/use-active-audio.js",
@@ -50,5 +52,6 @@
     "src/utils/key-codes.js",
     "src/utils/local.js",
     "src/utils/warn.js"
-  ]
+  ],
+  "exclude": ["node_modules"]
 }

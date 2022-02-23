@@ -136,6 +136,7 @@ export default {
   env,
   dev,
   buildModules: [
+    '@nuxt/typescript-build',
     '@nuxtjs/composition-api/module',
     '@nuxt/postcss8',
     '@nuxtjs/style-resources',
