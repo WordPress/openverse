@@ -3,15 +3,12 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from airflow.providers.amazon.aws.operators.emr_create_job_flow import (
+from airflow.providers.amazon.aws.operators.emr import (
     EmrCreateJobFlowOperator,
-)
-from airflow.providers.amazon.aws.operators.emr_terminate_job_flow import (
     EmrTerminateJobFlowOperator,
 )
-from airflow.providers.amazon.aws.sensors.emr_job_flow import EmrJobFlowSensor
-from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
-from airflow.providers.amazon.aws.sensors.s3_prefix import S3PrefixSensor
+from airflow.providers.amazon.aws.sensors.emr import EmrJobFlowSensor
+from airflow.providers.amazon.aws.sensors.s3 import S3KeySensor, S3PrefixSensor
 from airflow.utils.trigger_rule import TriggerRule
 from commoncrawl.commoncrawl_utils import get_load_s3_task_id, load_file_to_s3
 
