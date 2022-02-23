@@ -1,5 +1,4 @@
 import prepareSearchQueryParams from '~/utils/prepare-search-query-params'
-import decodeMediaData from '~/utils/decode-media-data'
 import {
   FETCH_MEDIA,
   FETCH_SINGLE_MEDIA_TYPE,
@@ -23,8 +22,7 @@ import {
 } from '~/constants/usage-data-analytics-types'
 import { AUDIO, IMAGE, ALL_MEDIA, supportedMediaTypes } from '~/constants/media'
 import { USAGE_DATA } from '~/constants/store-modules'
-import AudioService from '~/data/audio-service'
-import ImageService from '~/data/image-service'
+import MediaService from '~/data/media-service'
 
 /**
  * @return {import('./types').MediaState}
@@ -60,7 +58,12 @@ export const state = () => ({
   image: {},
 })
 
-export const createActions = (services) => ({
+export const mediaServices = {
+  [AUDIO]: new MediaService(AUDIO),
+  [IMAGE]: new MediaService(IMAGE),
+}
+
+export const createActions = (services = mediaServices) => ({
   /**
    *
    * @param {import('vuex').ActionContext} context
@@ -127,13 +130,12 @@ export const createActions = (services) => ({
     try {
       const mediaPage = typeof page === 'undefined' ? page : page[mediaType]
 
-      const res = await services[mediaType].search({
+      const data = await services[mediaType].search({
         ...queryParams,
         page: mediaPage,
       })
 
       commit(FETCH_END_MEDIA, { mediaType })
-      const data = services[mediaType].transformResults(res.data)
       const mediaCount = data.result_count
       commit(SET_MEDIA, {
         mediaType,
@@ -176,8 +178,7 @@ export const createActions = (services) => ({
     )
     commit(SET_MEDIA_ITEM, { item: {}, mediaType })
     try {
-      const res = await services[mediaType].getMediaDetail(params)
-      const { data } = res
+      const data = await services[mediaType].getMediaDetail(params)
       commit(SET_MEDIA_ITEM, { item: data, mediaType })
     } catch (error) {
       if (error.response && error.response.status === 404) {
@@ -223,6 +224,7 @@ export const createActions = (services) => ({
     }
   },
 })
+const actions = createActions()
 
 export const getters = {
   /**
@@ -328,7 +330,7 @@ export const mutations = {
   },
   [SET_MEDIA_ITEM](_state, params) {
     const { item, mediaType } = params
-    _state[mediaType] = decodeMediaData(item, mediaType)
+    _state[mediaType] = item
   },
   [SET_MEDIA](_state, params) {
     const {
@@ -367,9 +369,6 @@ export const mutations = {
     _state.results[mediaType].pageCount = 0
   },
 }
-
-const mediaServices = { [AUDIO]: AudioService, [IMAGE]: ImageService }
-const actions = createActions(mediaServices)
 
 export default {
   state,

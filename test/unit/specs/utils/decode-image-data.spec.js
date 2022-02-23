@@ -1,4 +1,5 @@
 import decodeMediaData from '~/utils/decode-media-data'
+import { IMAGE } from '~/constants/media'
 
 describe('decodeImageData', () => {
   it('returns empty string for empty string', () => {
@@ -12,6 +13,7 @@ describe('decodeImageData', () => {
       title: 'Sé',
       creator: 'Sã',
       tags: [{ name: 'maß' }],
+      frontendMediaType: IMAGE,
     }
 
     expect(decodeMediaData(data)).toEqual(expected)

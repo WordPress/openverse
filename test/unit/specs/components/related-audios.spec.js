@@ -6,9 +6,7 @@ import VueI18n from 'vue-i18n'
 
 const audioResults = [{ id: 'audio1' }, { id: 'audio2' }]
 const serviceMock = {
-  getRelatedMedia: jest.fn(() =>
-    Promise.resolve({ data: { results: audioResults } })
-  ),
+  getRelatedMedia: jest.fn(() => Promise.resolve({ results: audioResults })),
 }
 
 const localVue = createLocalVue()

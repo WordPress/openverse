@@ -6,12 +6,10 @@ import VRelatedImages from '~/components/VImageDetails/VRelatedImages'
 
 const serviceMock = jest.fn(() =>
   Promise.resolve({
-    data: {
-      results: [
-        { id: 'img1', url: 'https://wp.org/img1.jpg' },
-        { id: 'img2', url: 'https://wp.org/img2.jpg' },
-      ],
-    },
+    results: [
+      { id: 'img1', url: 'https://wp.org/img1.jpg' },
+      { id: 'img2', url: 'https://wp.org/img2.jpg' },
+    ],
   })
 )
 const failedMock = jest.fn(() => Promise.reject('No result'))

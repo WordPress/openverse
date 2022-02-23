@@ -1,8 +1,20 @@
 import axios from 'axios'
 import { warn } from '~/utils/warn'
+import { AUDIO, IMAGE } from '~/constants/media'
 
 const DEFAULT_REQUEST_TIMEOUT = 30000
 
+/**
+ * Returns a slug with trailing slash for a given resource name.
+ * For media types, converts the name into resource slug when necessary (i.e. pluralizes 'image'),
+ * for other resources uses the resource name as the slug.
+ * @param {string} resource
+ * @returns {string}
+ */
+const getResourceSlug = (resource) => {
+  const slug = { [AUDIO]: 'audio', [IMAGE]: 'images' }[resource] ?? resource
+  return `${slug}/`
+}
 /**
  * @param {boolean} errorCondition
  * @param {string} message
@@ -62,7 +74,7 @@ export const createApiService = (baseUrl = process.env.apiUrl) => {
      * @returns {Promise<import('axios').AxiosResponse<T>>} response  The API response object
      */
     query(resource, params) {
-      return client.get(resource, { params })
+      return client.get(`${getResourceSlug(resource)}`, { params })
     },
 
     /**
@@ -72,7 +84,7 @@ export const createApiService = (baseUrl = process.env.apiUrl) => {
      * @returns {Promise<import('axios').AxiosResponse<T>>} Response The API response object
      */
     get(resource, slug) {
-      return client.get(`${resource}/${slug}/`)
+      return client.get(`${getResourceSlug(resource)}${slug}/`)
     },
 
     /**
@@ -82,7 +94,7 @@ export const createApiService = (baseUrl = process.env.apiUrl) => {
      * @returns {Promise<import('axios').AxiosResponse<T>>} Response The API response object
      */
     post(resource, data) {
-      return client.post(resource, data)
+      return client.post(getResourceSlug(resource), data)
     },
 
     /**
@@ -94,7 +106,9 @@ export const createApiService = (baseUrl = process.env.apiUrl) => {
      * @returns {Promise<import('axios').AxiosResponse<T>>} Response The API response object
      */
     update(resource, slug, data, headers) {
-      return client.put(`${resource}/${slug}`, data, { headers })
+      return client.put(`${getResourceSlug(resource)}${slug}`, data, {
+        headers,
+      })
     },
 
     /**
@@ -103,7 +117,7 @@ export const createApiService = (baseUrl = process.env.apiUrl) => {
      * @returns {Promise<import('axios').AxiosResponse<any>>} Response The API response object
      */
     put(resource, params) {
-      return client.put(resource, params)
+      return client.put(getResourceSlug(resource), params)
     },
 
     /**
@@ -113,7 +127,7 @@ export const createApiService = (baseUrl = process.env.apiUrl) => {
      * @returns {Promise<import('axios').AxiosResponse<any>>} Response The API response object
      */
     delete(resource, slug, headers) {
-      return client.delete(`${resource}/${slug}`, { headers })
+      return client.delete(`${getResourceSlug(resource)}${slug}`, { headers })
     },
   }
 }

@@ -5,11 +5,24 @@ export type SearchType = 'all' | MediaType
 /**
  * The search result object
  */
-export interface MediaResult<T> {
+
+type FrontendMediaType = MediaDetail['frontendMediaType']
+export interface MediaResult<
+  T extends
+    | FrontendMediaType
+    | FrontendMediaType[]
+    | Record<string, FrontendMediaType>
+> {
   result_count: number
   page_count: number
   page_size: number
-  results: T
+  results: T extends FrontendMediaType
+    ? DetailFromMediaType<T>
+    : T extends Array<infer P>
+    ? DetailFromMediaType<P>[]
+    : T extends Record<infer K, infer P>
+    ? Record<K, DetailFromMediaType<P>>
+    : never
 }
 
 export type Query = {
@@ -41,56 +54,49 @@ export type ApiQueryParams = {
   mature?: string
 }
 
-/**
- * Audio Properties returned by the API
- */
-export type AudioDetail = {
+export interface Tag {
+  name: string
+  provider: [string]
+}
+
+export interface BaseMediaDetail<FrontendMediaType extends string> {
   id: string
   foreign_landing_url: string
   creator?: string
   creator_url?: string
   url: string
+  title?: string
   license: string
   license_version: string
   license_url: string
   provider: string
   source?: string
-  tags?: any
+  tags?: Tag[]
   attribution: string
+  detail_url: string
+  related_url: string
+  thumbnail?: string
+  frontendMediaType: FrontendMediaType
+}
+
+export interface AudioDetail extends BaseMediaDetail<'audio'> {
   audio_set?: any
   genres?: any
   duration?: number
   bit_rate?: number
   sample_rate?: number
   alt_files?: any
-  detail_url: string
-  related_url: string
   filetype?: string
-  frontendMediaType?: 'audio'
 }
 
-/**
- * Image Properties returned by the API
- */
-export type ImageDetail = {
-  id: string
-  title?: string
-  creator?: string
-  creator_url?: string
-  tags?: { name: string; provider: [string] }[]
-  url: string
-  thumbnail?: string
-  provider: string
-  source?: string
-  license: string
-  license_version: string
-  license_url: string
-  foreign_landing_url: string
-  detail_url: string
-  related_url: string
+export interface ImageDetail extends BaseMediaDetail<'image'> {
   fields_matched?: string[]
-  frontendMediaType?: 'image'
 }
+
+export type MediaDetail = ImageDetail | AudioDetail
+
+export type DetailFromMediaType<T extends MediaDetail['frontendMediaType']> =
+  T extends 'image' ? ImageDetail : T extends 'audio' ? AudioDetail : never
 
 export interface FilterItem {
   code: string
@@ -132,24 +138,20 @@ export interface ActiveMediaState {
   status: 'ejected' | 'playing' | 'paused' // 'ejected' means player is closed
 }
 
-export interface MediaStoreResult {
-  count: number
-  page?: number
-  pageCount: number
-  items: { [key: SupportedMediaType]: AudioDetail | ImageDetail }
-}
+export interface MediaStoreResult<T extends FrontendMediaType>
+  extends MediaResult<Record<MediaDetail['id'], T>> {}
 
 export interface MediaState {
   results: {
-    audio: MediaStoreResult
-    image: MediaStoreResult
+    audio: MediaStoreResult<'audio'>
+    image: MediaStoreResult<'image'>
   }
   fetchState: {
     audio: FetchState
     image: FetchState
   }
-  audio: Object | AudioDetail
-  image: Object | ImageDetail
+  audio: AudioDetail
+  image: ImageDetail
 }
 
 export interface MediaFetchState {

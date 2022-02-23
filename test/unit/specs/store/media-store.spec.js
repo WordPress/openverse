@@ -182,9 +182,8 @@ describe('Search Store', () => {
   })
 
   describe('actions', () => {
-    const searchData = { results: ['foo'], result_count: 22, page_count: 2 }
     const detailData = { [AUDIO]: 'audioDetails', [IMAGE]: 'imageDetails' }
-    const transformedResults = {
+    const searchResults = {
       results: { foo: { id: 'foo' }, bar: { id: 'bar' }, zeta: { id: 'zeta' } },
       result_count: 22,
       page_count: 2,
@@ -195,18 +194,12 @@ describe('Search Store', () => {
     beforeEach(() => {
       services = {
         [AUDIO]: {
-          search: jest.fn(() => Promise.resolve({ data: searchData })),
-          getMediaDetail: jest.fn(() =>
-            Promise.resolve({ data: detailData[AUDIO] })
-          ),
-          transformResults: jest.fn(() => transformedResults),
+          search: jest.fn(() => Promise.resolve(searchResults)),
+          getMediaDetail: jest.fn(() => Promise.resolve(detailData[AUDIO])),
         },
         [IMAGE]: {
-          search: jest.fn(() => Promise.resolve({ data: searchData })),
-          getMediaDetail: jest.fn(() =>
-            Promise.resolve({ data: detailData[IMAGE] })
-          ),
-          transformResults: jest.fn(() => transformedResults),
+          search: jest.fn(() => Promise.resolve(searchResults)),
+          getMediaDetail: jest.fn(() => Promise.resolve(detailData[IMAGE])),
         },
       }
       state = {
@@ -243,7 +236,7 @@ describe('Search Store', () => {
     })
 
     it.each(supportedMediaTypes)(
-      'FETCH_SINGLE_MEDIA_TYPE on success',
+      'FETCH_SINGLE_MEDIA_TYPE (%s) on success',
       async (mediaType) => {
         const params = {
           q: 'foo',
@@ -263,11 +256,11 @@ describe('Search Store', () => {
         // Page parameter is converted from an object into a number
         params.page = 1
         expect(context.commit).toHaveBeenCalledWith(SET_MEDIA, {
-          media: transformedResults.results,
-          mediaCount: searchData.result_count,
+          media: searchResults.results,
+          mediaCount: searchResults.result_count,
           shouldPersistMedia: params.shouldPersistMedia,
           page: params.page,
-          pageCount: searchData.page_count,
+          pageCount: searchResults.page_count,
           mediaType,
         })
         delete params.mediaType
@@ -369,7 +362,7 @@ describe('Search Store', () => {
     })
 
     it.each(supportedMediaTypes)(
-      'FETCH_MEDIA_ITEM on success',
+      'FETCH_MEDIA_ITEM (%s) on success',
       async (mediaType) => {
         const params = { id: 'foo', mediaType }
         const action = createActions(services)[FETCH_MEDIA_ITEM]
