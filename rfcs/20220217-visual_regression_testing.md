@@ -164,6 +164,52 @@ Additionally, subsequent pushes to the parent PR that include changes to the sna
 
 Likewise, if we end up needing to run `pixelmatch` directly to generate the diff output, it'd be nice if we could just add those diff outputs as a comment in the parent PR whenever snapshot images are updated.
 
+## Test variants
+
+Most tests should be written against two parameters: language direction and breakpoint.
+
+For language direction, the best way to do this is to just test in the default locale which is LTR and to test in Arabic (`ar`) which is RTL.
+
+For breakpoints, it will be tedious to have to add the iteration for each test case, so I've written a utility that we can use to make this easier. This utility can also be used for our regular end-to-end tests:
+
+```ts
+import { test, PlaywrightTestArgs, TestInfo } from '@playwright/test'
+
+import { Breakpoints, SCREEN_SIZES } from '../../../src/constants/screens'
+
+export const testEachBreakpoint = (title: string, testCb: (breakpoint: Breakpoints, args: PlaywrightTestArgs,testInfo: TestInfo) => Promise<void>) => {
+  SCREEN_SIZES.forEach((screenWidth, breakpoint) => {
+    test.describe(`screen at breakpoint ${breakpoint} with width ${screenWidth}`, () => {
+      test(title, async ({ page, context, request }, testInfo) => {
+        await page.setViewportSize({ width: screenWidth, height: 700 })
+        await testCb(breakpoint, { page, context, request }, testInfo)
+      })
+    })
+  })
+}
+```
+
+It's then used in the test like so:
+
+```ts
+test.describe('homepage snapshots', () => {
+  // Repeat below for `rtl`
+  test.describe('ltr', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto('/')
+    })
+
+    testEachBreakpoint('full page', async (breakpoint, { page }) => {
+      await deleteImageCarousel(page)
+
+      expect(await page.screenshot()).toMatchSnapshot({
+        name: `index-ltr-${breakpoint}`,
+      })
+    })
+  })
+})
+```
+
 ## Recommended tooling
 
 * Continue using Playwright to manipulate the browser and use it's `screenshot` function to generate screenshots.
@@ -203,7 +249,7 @@ Once the final version of this RFC is approved, a milestone with issues for each
         - Note: It may be necessary to add additional TypeScript typings in the root level `typings` folder for TypeScript to know that `expect()` includes the `toMatchImageSnapshot` function. Follow the existing examples extending `@types/nuxt` to extend the `@playwright/test` library's `Matchers` interface.
         - Additional note: As mentioned in the section about `jest-image-snapshot` above it may not be possible to get this library to play nicely with Playwright's specific `expect.extend` context. I'd say time box trying to get this to work to an hour or so and then just move on to the next thing. There's an additional task at the end of this list for writing the `pixelmatch` diff generator script in case we need it.
         - **Extra important note:** This library might not work with Playwright, in which case we'll just leave this out; there's a contingency plan for this case below.
-    - Write basic tests for the homepage; a full-page snapshot for `ltr` and `rtl` versions of the page should do just as a start and proof-of-concept.
+    - Write basic tests for the homepage; a full-page snapshot for `ltr` and `rtl` versions of the page using `testEachBreakpoint` should do just as a start and proof-of-concept.
         - Note: It will be necessary to remove the featured images from the page before taking the snapshot or the diff will fail 2/3 of the time due to them being different. The following code can be used to accomplish this:
         ```ts
         const deleteImageCarousel = async (page: Page) => {
