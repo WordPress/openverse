@@ -5,7 +5,8 @@ A proposal to integrate visual regression testing into the Openverse frontend's 
 ## Reviewers
 
 - [x] @obulat
-- [ ] Approver (TBD)
+- [x] @AetherUnbound
+- [ ] Approver
 
 ## Milestone
 
