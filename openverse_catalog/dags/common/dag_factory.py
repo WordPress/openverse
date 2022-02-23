@@ -81,8 +81,9 @@ DAG_DEFAULT_ARGS = {
     "depends_on_past": False,
     "start_date": datetime(2019, 1, 15),
     "email_on_retry": False,
-    "retries": 3,
-    "retry_delay": timedelta(minutes=15),
+    "retries": 2,
+    "retry_delay": timedelta(minutes=5),
+    "execution_timeout": timedelta(hours=1),
     "on_failure_callback": slack.on_failure_callback,
 }
 DATE_RANGE_ARG_TEMPLATE = "{{{{ macros.ds_add(ds, -{}) }}}}"
@@ -149,7 +150,7 @@ def create_provider_api_workflow(
     schedule_string: str = "@daily",
     dated: bool = True,
     day_shift: int = 0,
-    dagrun_timeout: timedelta = timedelta(hours=12),
+    execution_timeout: timedelta = timedelta(hours=12),
     doc_md: str = "",
     media_types: Sequence[str] = ("image",),
 ):
@@ -168,29 +169,29 @@ def create_provider_api_workflow(
 
     Optional Arguments:
 
-    default_args:     dictionary which is passed to the airflow.dag.DAG
-                      __init__ method.
-    start_date:       datetime.datetime giving the first valid execution
-                      date of the DAG.
-    max_active_tasks:      integer that sets the number of tasks which can
-                      run simultaneously for this DAG, and the number of
-                      dagruns of this DAG which can be run in parallel.
-                      It's important to keep the rate limits of the
-                      Provider API in mind when setting this parameter.
-    schedule_string:  string giving the schedule on which the DAG should
-                      be run.  Passed to the airflow.dag.DAG __init__
-                      method.
-    dated:            boolean giving whether the `main_function` takes a
-                      string parameter giving a date (i.e., the date for
-                      which data should be ingested).
-    day_shift:        integer giving the number of days before the
-                      current execution date the `main_function` should
-                      be run (if `dated=True`).
-    dagrun_timeout:   datetime.timedelta giving the total amount of time
-                      a given dagrun may take.
-    doc_md:           string which should be used for the DAG's documentation markdown
-    media_types:      list describing the media type(s) that this provider handles
-                      (e.g. `["audio"]`, `["image", "audio"]`, etc.)
+    default_args:      dictionary which is passed to the airflow.dag.DAG
+                       __init__ method.
+    start_date:        datetime.datetime giving the first valid execution
+                       date of the DAG.
+    max_active_tasks:  integer that sets the number of tasks which can
+                       run simultaneously for this DAG, and the number of
+                       dagruns of this DAG which can be run in parallel.
+                       It's important to keep the rate limits of the
+                       Provider API in mind when setting this parameter.
+    schedule_string:   string giving the schedule on which the DAG should
+                       be run.  Passed to the airflow.dag.DAG __init__
+                       method.
+    dated:             boolean giving whether the `main_function` takes a
+                       string parameter giving a date (i.e., the date for
+                       which data should be ingested).
+    day_shift:         integer giving the number of days before the
+                       current execution date the `main_function` should
+                       be run (if `dated=True`).
+    execution_timeout: datetime.timedelta giving the amount of time a given data
+                       pull may take.
+    doc_md:            string which should be used for the DAG's documentation markdown
+    media_types:       list describing the media type(s) that this provider handles
+                       (e.g. `["audio"]`, `["image", "audio"]`, etc.)
     """
     default_args = default_args or DAG_DEFAULT_ARGS
     media_type_name = "mixed" if len(media_types) > 1 else media_types[0]
@@ -202,7 +203,6 @@ def create_provider_api_workflow(
         default_args={**default_args, "start_date": start_date},
         max_active_tasks=max_active_tasks,
         max_active_runs=max_active_tasks,
-        dagrun_timeout=dagrun_timeout,
         start_date=start_date,
         schedule_interval=schedule_string,
         catchup=False,
@@ -220,7 +220,10 @@ def create_provider_api_workflow(
             python_callable=_push_output_paths_wrapper,
             op_kwargs=pull_kwargs,
             depends_on_past=False,
-            execution_timeout=dagrun_timeout if dated else None,
+            execution_timeout=execution_timeout,
+            # If the data pull fails, we want to load all data that's been retrieved
+            # thus far before we attempt again
+            retries=0,
         )
 
         for media_type in media_types:

@@ -13,7 +13,6 @@ from providers.provider_api_scripts import finnish_museums
 
 DAG_ID = "finnish_museums_workflow"
 START_DATE = datetime(2020, 9, 1)
-DAGRUN_TIMEOUT = timedelta(hours=24)
 
 globals()[DAG_ID] = create_provider_api_workflow(
     DAG_ID,
@@ -21,5 +20,5 @@ globals()[DAG_ID] = create_provider_api_workflow(
     start_date=START_DATE,
     schedule_string="@monthly",
     dated=False,
-    dagrun_timeout=DAGRUN_TIMEOUT,
+    execution_timeout=timedelta(hours=24),
 )

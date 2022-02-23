@@ -7,7 +7,6 @@ from providers.provider_api_scripts import jamendo
 
 
 DAG_ID = "jamendo_workflow"
-DAGRUN_TIMEOUT = timedelta(hours=24)
 
 
 globals()[DAG_ID] = create_provider_api_workflow(
@@ -17,6 +16,6 @@ globals()[DAG_ID] = create_provider_api_workflow(
     max_active_tasks=1,
     schedule_string="@monthly",
     dated=False,
-    dagrun_timeout=DAGRUN_TIMEOUT,
+    execution_timeout=timedelta(hours=24),
     media_types=["audio"],
 )
