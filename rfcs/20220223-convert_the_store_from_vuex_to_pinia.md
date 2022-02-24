@@ -1,8 +1,8 @@
 # RFC: Convert the store from Vuex to Pinia
 
-- [ ] TBD
+- [x] @dhruvkb 
   
-- [ ] TBD
+- [x] @sarayourfriend 
   
 
 **Milestone:** https://github.com/WordPress/openverse-frontend/milestone/5
