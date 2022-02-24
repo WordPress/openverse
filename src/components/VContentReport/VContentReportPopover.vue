@@ -43,6 +43,7 @@ export default defineComponent({
      */
     media: {
       type: Object,
+      required: true,
     },
   },
   setup(props) {

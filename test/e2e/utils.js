@@ -99,4 +99,5 @@ module.exports = {
   assertCheckboxCheckedStatus,
   mockAllSearch,
   mockThumbnails,
+  mockImages,
 }

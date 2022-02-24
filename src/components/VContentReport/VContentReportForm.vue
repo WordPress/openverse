@@ -132,7 +132,12 @@ export default defineComponent({
     VDmcaNotice,
     VReportDescForm,
   },
-  props: ['media', 'providerName', 'reportService', 'closeFn'],
+  props: {
+    media: { required: true },
+    providerName: { required: true },
+    reportService: { required: false },
+    closeFn: { required: true },
+  },
   setup(props) {
     const service = props.reportService || ReportService
 
