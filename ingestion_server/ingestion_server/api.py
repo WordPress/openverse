@@ -156,7 +156,7 @@ class WorkerFinishedResource:
             index_type = target_index.split("-")[0]
             if index_type not in MEDIA_TYPES:
                 index_type = "image"
-            slack.message(
+            slack.verbose(
                 f"`{index_type}`: Elasticsearch reindex complete | "
                 f"_Next: promote index as primary_"
             )

@@ -275,9 +275,7 @@ def reload_upstream(
     """
 
     # Step 1: Get the list of overlapping columns
-    slack.message(
-        f"`{table}`: Starting data refresh | _Next: copying data from upstream_"
-    )
+    slack.info(f"`{table}`: Starting data refresh | _Next: copying data from upstream_")
     downstream_db = database_connect()
     upstream_db = psycopg2.connect(
         dbname=UPSTREAM_DB_NAME,
@@ -322,7 +320,7 @@ def reload_upstream(
         if table == "image"
         else "re-applying indices & constraints"
     )
-    slack.message(f"`{table}`: Data copy complete | _Next: {next_step}_")
+    slack.verbose(f"`{table}`: Data copy complete | _Next: {next_step}_")
     downstream_db.commit()
     downstream_db.close()
 
@@ -330,7 +328,7 @@ def reload_upstream(
         # Step 4: Clean the data
         log.info("Cleaning data...")
         clean_image_data(table)
-        slack.message(
+        slack.verbose(
             f"`{table}`: Data cleaning complete | "
             f"_Next: re-applying indices & constraints_"
         )
@@ -351,7 +349,7 @@ def reload_upstream(
         if len(remap_constraints.seq) != 0:
             downstream_cur.execute(remap_constraints)
         _update_progress(progress, 99.0)
-        slack.message(f"`{table}`: Indices & constraints applied | _Next: go-live_")
+        slack.verbose(f"`{table}`: Indices & constraints applied | _Next: go-live_")
 
         # Step 7: Promote the temporary table and delete the original
         log.info("Done remapping constraints! Going live with new table...")
@@ -362,7 +360,7 @@ def reload_upstream(
     downstream_db.close()
     log.info(f"Finished refreshing table '{table}'.")
     _update_progress(progress, 100.0)
-    slack.message(f"`{table}`: Finished table refresh | _Next: Elasticsearch reindex_")
+    slack.verbose(f"`{table}`: Finished table refresh | _Next: Elasticsearch reindex_")
 
     if finish_time:
         finish_time.value = datetime.datetime.utcnow().timestamp()

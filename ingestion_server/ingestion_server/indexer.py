@@ -377,7 +377,7 @@ class TableIndexer:
         else:
             es.indices.put_alias(index=write_index, name=live_alias)
             log.info(f"Created '{live_alias}' index alias pointing to {write_index}")
-        slack.message(
+        slack.info(
             f"`{write_index}`: ES index promoted - data refresh complete! :tada:"
         )
 
@@ -414,7 +414,7 @@ class TableIndexer:
             schedule_distributed_index(database_connect(), destination_index)
         else:
             self._index_table(model_name, dest_idx=destination_index)
-            slack.message(
+            slack.verbose(
                 f"`{model_name}`: Elasticsearch reindex complete | "
                 f"_Next: promote index as primary_"
             )

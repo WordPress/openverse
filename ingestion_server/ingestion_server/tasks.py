@@ -105,7 +105,7 @@ class Task(Process):
                 elasticsearch, self.model, self.progress, self.finish_time
             )
             if self.task_type == TaskTypes.REINDEX:
-                slack.message(f"`{self.model}`: Beginning Elasticsearch reindex")
+                slack.verbose(f"`{self.model}`: Beginning Elasticsearch reindex")
                 indexer.reindex(self.model)
             elif self.task_type == TaskTypes.UPDATE_INDEX:
                 indexer.update(self.model, self.since_date)
@@ -127,7 +127,7 @@ class Task(Process):
                     logging.error(e)
         except Exception as err:
             exception_type = f"{err.__class__.__module__}.{err.__class__.__name__}"
-            slack.message(
+            slack.error(
                 f":x_red: Error processing task `{self.task_type}` for `{self.model}` "
                 f"(`{exception_type}`): \n"
                 f"```\n{err}\n```"
