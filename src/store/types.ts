@@ -97,6 +97,7 @@ export interface AudioDetail extends BaseMediaDetail<'audio'> {
   sample_rate?: number
   alt_files?: any
   filetype?: string
+  peaks?: number[]
 }
 
 export interface ImageDetail extends BaseMediaDetail<'image'> {
