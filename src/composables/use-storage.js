@@ -28,6 +28,26 @@ export const StorageSerializers = {
 }
 
 /**
+ * Merges the options with the result of getDefaults.
+ * If an error occurs during this process, it will return `null`
+ * @template T
+ * @param {T} options
+ * @param {() => T} getDefaults
+ * @returns {T | null}
+ */
+const useSafeDefaultOptions = (options, getDefaults) => {
+  try {
+    return {
+      ...getDefaults(),
+      ...options,
+    }
+  } catch (e) {
+    console.error(e)
+    return null
+  }
+}
+
+/**
  * Reactive LocalStorage.
  *
  * @see https://vueuse.org/useStorage
@@ -36,15 +56,22 @@ export const StorageSerializers = {
  * @param options
  */
 export function useStorage(key, initialValue, options = {}) {
-  const {
-    listenToStorageChanges = true,
-    writeDefaults = true,
-    window = defaultWindow,
-    storage = defaultWindow?.localStorage,
-    onError = (e) => {
+  const optionsWithDefaults = useSafeDefaultOptions(options, () => ({
+    listenToStorageChanges: true,
+    writeDefaults: true,
+    window: defaultWindow,
+    storage: defaultWindow?.localStorage,
+    onError: (e) => {
       console.error(e)
     },
-  } = options
+  }))
+
+  if (optionsWithDefaults === null) {
+    return ref(initialValue)
+  }
+
+  const { listenToStorageChanges, writeDefaults, window, storage, onError } =
+    optionsWithDefaults
 
   const rawInit = unref(initialValue)
 
