@@ -1,8 +1,8 @@
 # RFC: Convert the store from Vuex to Pinia
 
-- [ ] TBD
+- [x] @dhruvkb 
   
-- [ ] TBD
+- [x] @sarayourfriend 
   
 
 **Milestone:** https://github.com/WordPress/openverse-frontend/milestone/5
@@ -10,7 +10,7 @@
 
 ## Rationale
 
-Currently we use Vuex for global state management. This works fine for Vue 2 but has some considerable disadvantages for Vue 3, especially when it comes to TypeScript support and composition-api usage. We should switch to Pinia instead. It is the new [official default recommendation]( https://blog.vuejs.org/posts/vue-3-as-the-new-default.html) of the Vue project for state management instead of Vuex. 
+Currently we use Vuex for global state management. This works fine for Vue 2 but has some considerable disadvantages for Vue 3, especially when it comes to TypeScript support and composition-api usage. We should switch to Pinia instead. It is the new [official default recommendation]( https://blog.vuejs.org/posts/vue-3-as-the-new-default.html) of the Vue project for state management instead of Vuex. Evan You, the creator of Vue, [has confirmed](https://twitter.com/youyuxi/status/1463429442076745730?lang=en) that Vuex 5 and Pinia are defacto the same. 
 
 Pinia also has better interoperability between Vue 2's composition-api and Vue 3, and would allow us to decouple our state-management API usage from Nuxt. Currently we rely on Nuxt's home-grown `useStore` composable from the `@nuxtjs/composition-api` extension on top of `@vue/composition-api` but there's no guarantee that that composable will stick around in Nuxt 3. Besides, it is not easy to watch for changes in the store from within the `setup` function, at least when rendering on the server, and it caused problems with rendering the correct search input text on SSR.
 
@@ -31,11 +31,11 @@ There are some important differences between Vuex (the version we are currently 
 
 Vuex uses a single store which can have multiple modules that can be namespaced. In our setup we have several namespaced modules inside `src/store` that Nuxt uses to create a single store.
 In Pinia, the equivalent of a Vuex namespaced module is a single store. Namespacing is achieved by giving a store its `id`. All Pinia stores are separate modules, and are usually kept in a `src/stores` folder to emphasize that. To use a store `X` from store `Y`, you need to call `useXStore` inside `storeY`.
-I couldn't find a way to create a central store equivalent to what we have now. So, when using the store in components, we would have to import all the stores that the component uses, instead of using a single `useStore()` call. This means that we will need to do more refactoring.
+I couldn't find a way to create a central store equivalent to what we have now. So, when using the store in components, we would have to import all the stores that the component uses, instead of using a single `useStore()` call. This means that there will be more than single-line changes in the components.
 
 ### Pinia store definitions
 
-Pinia currently supports two types of store definitions: **options store** and **setup store**.
+Pinia currently supports two types of store definitions: **options store** and **setup store**. As a team, we lean towards using the _setup store_, not the _options store_.
 
 **Options store** is similar to the Vuex store: it has `state`, `getters` and `actions`. It could be easier to convert the current Vuex modules into the Pinia options stores as the structure is almost the same, with the main difference being the fact that the mutations are converted into actions, and lack of `context` parameter for actions, and `state` parameter for mutation.
 
@@ -59,9 +59,7 @@ View a sample simple store in the [Pinia repository](https://github.com/vuejs/pi
 
 ## Prior work
 [Original issue](https://github.com/WordPress/openverse-frontend/issues/756) with a discussion of Pinia conversion and initial plan.
-[@dhruvkb's PoC PR with Pinia setup and conversion of active-media store to a Pinia options store](https://github.com/WordPress/openverse-frontend/pull/906)
-[@obulat's PoC PR with conversion of active-media store to a Pinia setup store]
-
+[@dhruvkb's PoC PR with Pinia setup and conversion of active-media store to a Pinia options store, which was later rewritten as a setup store](https://github.com/WordPress/openverse-frontend/pull/906)
 
 ## Implementation plan
 
@@ -76,7 +74,7 @@ This prevents PRs from diverging too much and allows a seamless transition for a
 
 2. Create a feature base branch, do all the conversion in it, and only merge a fully-converted store into main. This will ensure that we are merging a fully-working converted store, and if we find any blocking concern, we can easily revert the changes by closing the feature branch.
 
-While Pinia docs suggest that it is possible to migrate large projects from Vuex to Pinia module by module, they also say that using `disableVuex: false` is not recommended. Also, I'm not sure how to use Pinia stores from Vuex modules, and we do have several interdependent modules that call one another.
+While Pinia docs suggest that it is possible to migrate large projects from Vuex to Pinia module by module, they also say that using `disableVuex: false` is not recommended. ~Also, I'm not sure how to use Pinia stores from Vuex modules, and we do have several interdependent modules that call one another.~ In this case, we can use Pinia stores inside the Vuex stores by calling `useXStore()` inside getters, mutations and actions.
   
 ## Converting a Vuex namespaced store module to a Pinia store
 There is an excellent guide on conversion in Pinia docs. This section will give steps that need to be followed for each store, and add some details specific to Openverse setup.
@@ -92,6 +90,7 @@ For each store, there are several things that need to be done:
 - refactor the use of the store in components.
 - add or refactor the store unit test.
 - refactor the unit tests for components that use this store.
+- add e2e tests for the changes in components.
 
 ### State
 When using the setup store, we should try to use a `reactive` to create the initial state object, and not a set of `ref`s. Otherwise, we can create errors by accidentally having a state property name and an action parameter that is updating it with the same name. This doesn't work:
@@ -104,24 +103,30 @@ function setMessage({message}){
 Here, the destructured parameter name `message` shadows the state property name `message`, and the `setMessage` doesn't update the state as could be expected.
 
 We can use `const { param1, param2 } = toRefs(state)` to enable store destructuring, and make each property reactive. If we do not return all of the state properties, such as when some properties only used from inside the store itself (e.g. `status` for `activeMediaStore`), we can also add a `readonly` state  `state: readonly(state)` property to the return to make it testable.
-`
+
 ### Actions
 Pinia allows changing the state directly in the components (which was frowned upon by Vuex) so we could do away with mutations in theory. But it is better to keep using separate functions (actions) to update the state to keep state changes limited to one file and make it easier to debug.
 
+When using the `setup store`, we don't need the strict divide between mutations that can change the state, and actions that cannot. This way, we can clean up the code from one-line mutations and test them simply by testing the resulting state. However, testing the network-based state changes is not possible this way, so it is better to leave even one line mutations that are based on the network responses. For example, `fetchMedia` in the `mediaStore` sets `isFetching` to true before sending the request, and to `false` after getting a 200 OK response. So, the state test would not detect the changes, and we can use the `hasBeenCalled` mock tests in such cases instead. 
+
 ### Type hinting
 
-In the interest of a quick migration, we can continue to use the existing type definitions for the state and the various mutations/actions from the `types.d.ts` file. Some definitions in the file may be out of date (as was the case for `ActiveMediaState`), so a cursory glance to check that would be useful.
+In the interest of a quick migration, we can continue to use the existing type definitions for the state and the various mutations/actions from the `types.d.ts` file. Some definitions in the file are out of date (as was the case for `ActiveMediaState`), so it is useful to check them.
+
+### Testing
+One of the acceptance criteria for the store conversion PRs should be 100% unit test coverage for the store module, and added e2e tests for the component changes. It is also important to ensure that e2e tests cover both SSR and client-side rendering.
+Pinia Docs has a cookbook page about testing Pinia stores, and testing components that use Pinia stores. Please note, that the page is for Vue 3 version, and needs slight updates to the setup of `TestingPinia` to work properly with the current version of Openverse (Nuxt 2, Vue 2, `composition-api`). The PR for the conversion of the `search` store will have an example of the setup.
 
 ## Steps
 
 0. Install Pinia and test compatibility. Create a sample Pinia store in the `stores` directory.
 
 1. Replace Vuex stores with their Pinia counterparts. The order should be from smallest modules with fewer connections to the largest modules with more connections to other modules:
-- `active-media` and `nav` stores - already refactored
+- `active-media` and `nav` stores - already refactored in [#906](https://github.com/WordPress/openverse-frontend/pull/906)
+- `search` store - another PoC to ensure that Pinia stores can be used from Vuex stores, and figure out testing.
 - `user` store
 - `usage-data` store
 - `provider` store
 - `media` store
-- `search` store
 
 2. In the end, with no Vuex stores remaining, Vuex and all associated dependencies will be removed. The `store/index.js` file can also be removed after the complete migration to Pinia. The `disableVuex: false` flag should also be removed.
