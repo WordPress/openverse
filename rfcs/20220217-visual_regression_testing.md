@@ -9,7 +9,7 @@ A proposal to integrate visual regression testing into the Openverse frontend's 
 
 ## Milestone
 
-TBD
+https://github.com/WordPress/openverse-frontend/milestone/7
 
 ## Exploratory code
 
