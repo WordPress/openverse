@@ -224,7 +224,11 @@ def send_message(
     """Send a simple slack message, convenience message for short/simple messages."""
     if not should_send_message(http_conn_id):
         return
-    s = SlackMessage(username, icon_emoji, http_conn_id=http_conn_id)
+
+    environment = Variable.get("environment", default_var="dev")
+    s = SlackMessage(
+        f"{username} | {environment}", icon_emoji, http_conn_id=http_conn_id
+    )
     s.add_text(text, plain_text=not markdown)
     s.send(text)
 

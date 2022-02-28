@@ -305,12 +305,16 @@ def test_should_send_message_is_false_without_hook(http_hook_mock):
     assert not should_send_message()
 
 
-def test_send_message(http_hook_mock):
-    with mock.patch("common.slack.should_send_message", return_value=True):
+@pytest.mark.parametrize("environment", ["dev", "prod"])
+def test_send_message(environment, http_hook_mock):
+    with mock.patch("common.slack.should_send_message", return_value=True), mock.patch(
+        "common.slack.Variable"
+    ) as MockVariable:
+        MockVariable.get.side_effect = [environment]
         send_message("Sample text", username="DifferentUser")
         http_hook_mock.run.assert_called_with(
             endpoint=None,
-            data='{"username": "DifferentUser", "unfurl_links": true, "unfurl_media": true,'
+            data=f'{{"username": "DifferentUser | {environment}", "unfurl_links": true, "unfurl_media": true,'
             ' "icon_emoji": ":airflow:", "blocks": [{"type": "section", "text": '
             '{"type": "mrkdwn", "text": "Sample text"}}], "text": "Sample text"}',
             headers={"Content-type": "application/json"},
@@ -352,10 +356,18 @@ def test_on_failure_callback(
         "execution_date": datetime.now(),
         "exception": exception,
     }
+    env_vars = {
+        "environment": environment,
+        "slack_message_override": slack_message_override,
+    }
+
+    # Mock env variables
+    def environment_vars_mock(value, **kwargs):
+        return env_vars[value]
+
     with mock.patch("common.slack.Variable") as MockVariable:
         run_mock = http_hook_mock.run
-        # Mock the calls to Variable.get, in order
-        MockVariable.get.side_effect = [environment, slack_message_override]
+        MockVariable.get.side_effect = environment_vars_mock
         on_failure_callback(context)
         assert run_mock.called == call_expected
         if call_expected:
