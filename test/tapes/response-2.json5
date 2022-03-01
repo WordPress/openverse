@@ -1,0 +1,101 @@
+{
+    meta: {
+        createdAt: '2022-03-01T19:41:30.365Z',
+        host: 'https://api.openverse.engineering/v1',
+        resHumanReadable: true,
+    },
+    req: {
+        headers: {
+            accept: 'application/json, text/plain, */*',
+            connection: 'close',
+        },
+        url: '/audio/stats/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Tue, 01 Mar 2022 19:41:31 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'content-length': [
+                '424',
+            ],
+            connection: [
+                'close',
+            ],
+            vary: [
+                'Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '1359',
+            ],
+            'last-modified': [
+                'Tue, 01 Mar 2022 19:18:52 GMT',
+            ],
+            'accept-ranges': [
+                'bytes',
+            ],
+            'expect-ct': [
+                'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '6e545ee13f788ff5-FRA',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: [
+            {
+                source_name: 'jamendo',
+                display_name: 'Jamendo',
+                source_url: 'https://www.jamendo.com/start',
+                logo_url: null,
+                media_count: 11059,
+            },
+            {
+                source_name: 'wikimedia_audio',
+                display_name: 'Wikimedia Commons',
+                source_url: 'https://commons.wikimedia.org/wiki/Main_Page',
+                logo_url: null,
+                media_count: 135,
+            },
+            {
+                source_name: 'freesound',
+                display_name: 'Freesound',
+                source_url: 'https://freesound.org/',
+                logo_url: null,
+                media_count: 3098,
+            },
+        ],
+    },
+}

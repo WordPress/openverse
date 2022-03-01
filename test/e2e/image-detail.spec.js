@@ -1,9 +1,8 @@
 const { test, expect } = require('@playwright/test')
-const { mockImages } = require('./utils')
+const { mockProviderApis } = require('./utils')
 
 const goToCustomImagePage = async (page) => {
   // Test in a custom image detail page, it should apply the same for any image.
-  // TODO: Make these tests independent of the live API.
   await page.goto('image/e9d97a98-621b-4ec2-bf70-f47a74380452')
 }
 
@@ -14,7 +13,7 @@ const showsErrorPage = async (page) => {
 }
 
 test.beforeEach(async ({ context }) => {
-  await mockImages(context)
+  await mockProviderApis(context)
 })
 
 test('shows the author and title of the image', async ({ page }) => {

@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test')
-const { mockAllSearch, openFilters } = require('./utils')
+const { mockProviderApis, openFilters } = require('./utils')
 const { currentContentType, assertCheckboxCheckedStatus } = require('./utils')
 
 /**
@@ -15,9 +15,7 @@ const { currentContentType, assertCheckboxCheckedStatus } = require('./utils')
  */
 
 test.beforeEach(async ({ context }) => {
-  // Block any image or audio (jamendo.com) requests for each test in this file.
-  await context.route('**.jamendo.com**', (route) => route.abort())
-  await mockAllSearch(context)
+  await mockProviderApis(context)
 })
 
 test('q query parameter is set as the search term', async ({ page }) => {

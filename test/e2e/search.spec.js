@@ -7,12 +7,10 @@
  * On error: shows error message
  */
 const { expect, test } = require('@playwright/test')
-const { mockAllSearch } = require('./utils')
+const { mockProviderApis } = require('./utils')
 
 test.beforeEach(async ({ context }) => {
-  // Block any audio (jamendo.com) requests for each test in this file.
-  await context.route('**.jamendo.com**', (route) => route.abort())
-  await mockAllSearch(context)
+  await mockProviderApis(context)
 })
 
 test.skip('shows search result metadata', async ({ page }) => {

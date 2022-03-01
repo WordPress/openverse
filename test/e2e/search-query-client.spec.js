@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test')
-const { mockAllSearch, changeContentType } = require('./utils')
+const { mockProviderApis, changeContentType } = require('./utils')
 
 /**
  * When navigating to the search page on the client side:
@@ -14,10 +14,7 @@ const { mockAllSearch, changeContentType } = require('./utils')
  */
 
 test.beforeEach(async ({ context }) => {
-  // Block any audio (jamendo.com) requests for each test in this file.
-  await context.route('**.jamendo.com**', (route) => route.abort())
-
-  await mockAllSearch(context)
+  await mockProviderApis(context)
 })
 
 test('q query parameter is set as the search term', async ({ page }) => {

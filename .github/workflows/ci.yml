@@ -61,7 +61,7 @@ jobs:
       - uses: ./.github/actions/setup-node-env
 
       - name: Run unit tests
-        run: pnpm test
+        run: pnpm ci:unit-test
 
   e2e:
     name: E2E tests
@@ -75,8 +75,8 @@ jobs:
       - name: Install E2E browsers
         run: pnpx playwright install
 
-      - name: Run E2E tests
-        run: pnpm e2e:ci
+      - name: Run E2E
+        run: pnpm ci:e2e-test
 
   storybook:
     name: Check Storybook build

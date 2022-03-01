@@ -1,6 +1,7 @@
 .github/**/*.md
 dist
 test/unit/coverage
+test/tapes
 .nuxt
 .nuxt-storybook
 storybook-static

@@ -1,23 +1,8 @@
 const { test, expect } = require('@playwright/test')
+const { mockProviderApis } = require('./utils')
 
 test.beforeEach(async ({ context }) => {
-  // Block any image or audio (jamendo.com) requests for each test in this file.
-  await context.route(/\.(png|jpeg|jpg|svg)$/, (route) => route.abort())
-
-  // Replace all the thumbnail requests with a single sample image
-  await context.route(
-    'https://api.openverse.engineering/v1/thumbs/**',
-    (route) => route.fulfill({ path: 'test/e2e/resources/sample_image.jpg' })
-  )
-  // Serve mock data on all image search requests
-  await context.route(
-    'https://api.openverse.engineering/v1/images/**',
-    (route) =>
-      route.fulfill({
-        path: 'test/e2e/resources/mock_image_data.json',
-        headers: { 'Access-Control-Allow-Origin': '*' },
-      })
-  )
+  await mockProviderApis(context)
 })
 
 test('can change type and search for audio from homepage', async ({ page }) => {

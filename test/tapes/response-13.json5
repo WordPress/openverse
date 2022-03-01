@@ -1,0 +1,117 @@
+{
+    meta: {
+        createdAt: '2022-03-01T19:41:37.788Z',
+        host: 'https://api.openverse.engineering/v1',
+        resHumanReadable: true,
+    },
+    req: {
+        headers: {
+            accept: 'application/json, text/plain, */*',
+            connection: 'close',
+        },
+        url: '/audio/?q=galah',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Tue, 01 Mar 2022 19:41:38 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'close',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '1360',
+            ],
+            'last-modified': [
+                'Tue, 01 Mar 2022 19:18:58 GMT',
+            ],
+            'expect-ct': [
+                'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '6e545f091f109073-FRA',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            result_count: 1,
+            page_count: 0,
+            page_size: 20,
+            page: 1,
+            results: [
+                {
+                    id: '632d0076-fdbd-4919-8b8f-b498ef246ee8',
+                    title: 'RainBirdsThunder.wav',
+                    foreign_landing_url: 'https://freesound.org/people/NobodyYouKnowOf/sounds/456258',
+                    creator: 'NobodyYouKnowOf',
+                    creator_url: 'https://freesound.org/people/NobodyYouKnowOf',
+                    url: 'https://freesound.org/data/previews/456/456258_3895722-hq.mp3',
+                    license: 'cc0',
+                    license_version: '1.0',
+                    license_url: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: 'sound',
+                    tags: [
+                        {
+                            name: 'thunder',
+                        },
+                        {
+                            name: 'birds',
+                        },
+                        {
+                            name: 'rain',
+                        },
+                    ],
+                    fields_matched: [
+                        'description',
+                    ],
+                    duration: 204218,
+                    bit_rate: 128000,
+                    thumbnail: 'http://api.openverse.engineering/v1/audio/632d0076-fdbd-4919-8b8f-b498ef246ee8/thumb/',
+                    waveform: 'http://api.openverse.engineering/v1/audio/632d0076-fdbd-4919-8b8f-b498ef246ee8/waveform/',
+                    detail_url: 'http://api.openverse.engineering/v1/audio/632d0076-fdbd-4919-8b8f-b498ef246ee8/',
+                    related_url: 'http://api.openverse.engineering/v1/audio/632d0076-fdbd-4919-8b8f-b498ef246ee8/related/',
+                },
+            ],
+        },
+    },
+}

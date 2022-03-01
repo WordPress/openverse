@@ -2,15 +2,12 @@ const { test, expect } = require('@playwright/test')
 const {
   assertCheckboxCheckedStatus,
   openFilters,
-  mockAllSearch,
+  mockProviderApis,
   changeContentType,
 } = require('./utils')
 
 test.beforeEach(async ({ context }) => {
-  // Block any audio (jamendo.com) requests for each test in this file.
-  await context.route(/.+jamendo.com.+/, (route) => route.abort())
-
-  await mockAllSearch(context)
+  await mockProviderApis(context)
 })
 
 test('common filters are retained when media type changes from all media to single type', async ({
@@ -75,27 +72,17 @@ test('filters are updated when media type changes', async ({ page }) => {
 test('new media request is sent when a filter is selected', async ({
   page,
 }) => {
-  let apiRequest
-  // Serve mock data on all image search requests and save the API request url
-  // There must be a better way to get the request url than this
-  await page.route(
-    'https://api.openverse.engineering/v1/images/?**',
-    (route) => {
-      apiRequest = route.request().url()
-      route.fulfill({
-        path: 'test/e2e/resources/mock_image_data.json',
-        headers: { 'Access-Control-Allow-Origin': '*' },
-      })
-    }
-  )
   await page.goto('/search/image?q=cat')
   await openFilters(page)
-
   await assertCheckboxCheckedStatus(page, 'cc0', false)
-  await page.click('label:has-text("CC0")')
-
+  const [response] = await Promise.all([
+    page.waitForResponse((response) => response.url().includes('cc0')),
+    page.click('label:has-text("CC0")'),
+  ])
+  // Remove the host url and path because when proxied, the 'http://localhost:3000' is used instead of the
+  // real API url
+  const queryString = response.url().split('/images/')[1]
+  expect(queryString).toEqual('?q=cat&license=cc0')
   await assertCheckboxCheckedStatus(page, 'cc0', true)
-  await expect(apiRequest).toEqual(
-    'https://api.openverse.engineering/v1/images/?q=cat&license=cc0'
-  )
+  await expect(page).toHaveURL('/search/image?q=cat&license=cc0')
 })

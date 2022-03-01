@@ -1,10 +1,9 @@
 const { expect, test } = require('@playwright/test')
-const { mockAllSearch, openFilters } = require('./utils')
+const { openFilters } = require('./utils')
 
 test.beforeEach(async ({ context }) => {
   await context.route('**.jamendo.**', (r) => r.abort())
   await context.route('**.freesound.**', (r) => r.abort())
-  await mockAllSearch(context)
 })
 
 test.describe('search history navigation', () => {

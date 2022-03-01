@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test')
-const { mockAllSearch, changeContentType } = require('./utils')
+const { changeContentType } = require('./utils')
 
 /**
  * Using SSR:
@@ -20,7 +20,6 @@ const { mockAllSearch, changeContentType } = require('./utils')
 test.beforeEach(async ({ context }) => {
   // Block any audio (jamendo.com) requests for each test in this file.
   await context.route('**.jamendo.com**', (route) => route.abort())
-  await mockAllSearch(context)
 })
 
 const searchTypes = [

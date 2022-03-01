@@ -1,0 +1,88 @@
+{
+    meta: {
+        createdAt: '2022-03-01T19:41:38.792Z',
+        host: 'https://api.openverse.engineering/v1',
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+            pragma: 'no-cache',
+            'cache-control': 'no-cache',
+            'sec-ch-ua': '',
+            accept: 'application/json, text/plain, */*',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '',
+            'sec-fetch-site': 'same-site',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-dest': 'empty',
+            referer: 'http://localhost:8443/',
+            'accept-encoding': 'gzip, deflate, br',
+        },
+        url: '/audio/?q=cat&license=cc0',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Tue, 01 Mar 2022 19:41:40 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'access-control-allow-origin': [
+                '*',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'MISS',
+            ],
+            'last-modified': [
+                'Tue, 01 Mar 2022 19:41:40 GMT',
+            ],
+            'expect-ct': [
+                'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '6e545f0f4d6c8fe2-FRA',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: 'E/kPAOSaalXtzdaELEH3qbzqU9BgWGQchBVsX/q/PxUohlWo8B62KLUxNfv9Z7nqmDYmVyfWUrCSTbFUrBjuBiwWOE41WzOCevVL2zBkbaXsFW6T1TfcDigTgiFwiSN6Shiu9QUhKBqCJHmvyQrh9yvUDAHkbudNsYIK4RM1upM0OmFpzqr31qnoiwUCW91OCAE+xO3hEdudxVqAQGkL1nEaTnHKdRqH63KCAPttu6yB87IgPoB/N2vLyB/hfh7/vuAU13NdePSqlRtrjddA4MzpmbZAgHScGNmG4usGAlnSOW6Rn+Y9hHcdLHooGKTUfWc6up/Z+aKBwKE2UyBASiLMN1x2rwcCSBYngGxSf0G9YWrnc5tWdRVfd6eacjvHOvEXXBqXTHAgwJ8EBKjgbEBgbdclYYTVGOIQIG10i2PLbpjiGSHAI7Y7/CdhFR/i1u/kW6sJ6bu01WmE/38JlIqnvA7nuKU9Zgi/IV+AIXXZapswXKw8q0EU/iWQr0tMs31wnRUEdnUblrghBKl6IQQBk7c0yOmB83iprF1wuuGyIiPHHvOb5PGaa+OG6eLF/2UcCNzjDUtbzjDWX5IDgWsDck1RK1gJIHAjsh+IGcPycXGjMFH/EqIupZdKUKWxo0a5TH2MlubklccOpXOOHuPWaCFzof3az63UOHxaXupUvx4JwxFeUk4kURCC/I9IqY3OHzqtbNc76bm1mnDom+LpBCMEceJzqM6n+I8YIaUawBaIKXAYa+lYHo6FJfC6WAC4XpU5JZuNMtQql6mRSVHfJUWzsUruhDGmGDehS1nXdbrO2i3XKe3rsTcW0vrOmowTQaxwghP1iJBa6PxBW+mc8MTuuKzryuNzUjsj3eOC9Fi37Zniphblp5fGeUkTev4Y4Eu6XusebJ6YAoexlo7l4VhYAq+LBYDrVdl56xL2mUahPDWxd9SbzlAvCvrSOVuycyVj3NqDnusl/Zc2ib8Nzt2xzrk8pTVBcrAJYgocBlvgWFgCrwtHgn//Aw==',
+    },
+}

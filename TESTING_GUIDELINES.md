@@ -4,7 +4,7 @@ This document describes general guidelines you should follow when testing pull r
 
 ## Running the application
 
-Please follow the instructions in the README for how to set up and run the application locally. If you want to just generally test the application in it's current state (i.e., what exists on `main` as opposed to what has actually been deployed to production) you can find the staging deployment here:
+Please follow the instructions in the README for how to set up and run the application locally. If you want to just generally test the application in its current state (i.e., what exists on `main` as opposed to what has actually been deployed to production) you can find the staging deployment here:
 
 https://search-staging.openverse.engineering
 
@@ -12,14 +12,16 @@ Staging is redeployed everytime we merge to the `main` branch, so if you're look
 
 Once you have the application running, you can visit it in your browser at http://localhost:8443.
 
-You can also access it from other devices in your same network (like a mobile phone) for additional testing. Typically the address for this will be displayed in the output of the `pnpm dev` command that you ran to start the server. It will look something like `http://192.168.0.123:8443` or `http://10.0.0.45:8443` depending on your local network configuration. If you can't find this in the output you will need to determine your local IP address yourself.
+You can also access it from other devices in your same network (like a mobile phone) for additional testing. Typically, the address for this will be displayed in the output of the `pnpm dev` command that you ran to start the server. It will look something like `http://192.168.0.123:8443` or `http://10.0.0.45:8443` depending on your local network configuration. If you can't find this in the output you will need to determine your local IP address yourself.
 
 To do this, follow these instructions for getting your computer's local network IP address:
 
-- Windows: https://support.microsoft.com/en-us/windows/find-your-ip-address-in-windows-f21a9bbc-c582-55cd-35e0-73431160a1b9
+- Windows:
+  1. Find your IP address: https://support.microsoft.com/en-us/windows/find-your-ip-address-in-windows-f21a9bbc-c582-55cd-35e0-73431160a1b9
+  2. Make sure that your Wi-Fi network is set to "private": https://support.microsoft.com/en-US/windows/make-a-wi-fi-network-public-or-private-in-windows-0460117d-8d3e-a7ac-f003-7a0da607448d
 - macOS:
   1. Open the Network Preferences app
-  2. Select WiFi from the list of network devices
+  2. Select Wi-Fi from the list of network devices
   3. Your local IP address will be listed below the "Deactivate Wi-Fi" button
 - Linux:
   1. Follow the instructions for your distro. Most likely the `ip` command will work. Run `ip address show` in your terminal and find your wireless card in the list (probably the second entry). Look for the `inet` line and copy the first 4 groups of numbers for your IP before the `/24`. The line will probably look like this:
@@ -48,7 +50,7 @@ Gutenberg also has an excellent [Accessibility Testing Guide](https://github.com
 
 ### General recommendations
 
-Practice using keyboard navigation when you run the app locally generally. This will reveal to you some of the intial hurdles that the app currently presents to users who rely on assistive technology. Note that keyboard accessibility is part of the bare-minimum in accessibility for a website along with accessible color contrasts.
+Practice using keyboard navigation when you run the app locally generally. This will reveal to you some of the initial hurdles that the app currently presents to users who rely on assistive technology. Note that keyboard accessibility is part of the bare-minimum in accessibility for a website along with accessible color contrasts.
 
 If you are a regular contributor, at least once a week, attempt to use the site using a screen reader like VoiceOver on macOS, NVDA on Windows, or Orca on Linux. If you do not regularly rely on a screen reader for navigating the web, it can also stretch your comfort level a lot by closing your eyes or turning off your monitor while navigating using the screen reader. Keep in mind that many people who rely on screen readers to navigate the web do not have any of the visual context that a sighted user is using to interpret a website. This especially applies to directionality and the _broad_ context of a page. Screen readers can't "see" what's at the "end" of the page unless the user navigates all the way there. Sighted users have a huge privilege in being able to take in the broader context of a website almost immediately through visual information.
 
@@ -78,8 +80,48 @@ Buttons, for example, should have appropriate labels. If the visible text of the
 
 ### Server vs client side render
 
-The Openverse frontend is a Nuxt SSR application. This means the initial Vue page rendering when you make a request is processed by a server and then delivered to you to be "hydrated" with the current state of the page. The implication of this is that there are two ways for _every single page_ to be rendered and we should test with that in mind. Please make sure that you are testing client side navigation as well as SSR. To test SSR for a page, simply reload the page: it will be rendered in SSR and then delivered to your browser. To test client side rendering for a page, navigate to that page from another page without reloading the page in between. For example, to test the search route client side, you can execute a search from the homepage and it will redirect you client-side to the search page.
+The Openverse frontend is a Nuxt SSR application. This means the initial Vue page rendering when you make a request is processed by a server and then delivered to you to be "hydrated" with the current state of the page. The implication of this is that there are two ways for _every single page_ to be rendered, and we should test with that in mind. Please make sure that you are testing client side navigation as well as SSR. To test SSR for a page, simply reload the page: it will be rendered in SSR and then delivered to your browser. To test client side rendering for a page, navigate to that page from another page without reloading the page in between. For example, to test the search route client side, you can execute a search from the homepage and it will redirect you client-side to the search page.
 
 ## Conclusion
 
 Please note that these are non-expert and non-exhaustive recommendations. Spend time reading the [WAI-ARIA spec](https://www.w3.org/TR/wai-aria/) and other web accessibility materials. Even just knowing about specific roles and interactions that exist and are meant to be developed in consistent ways is a good first step to learning what to look out for when testing.
+
+## Running the tests
+
+Openverse uses [Vue Testing Library](https://testing-library.com/docs/vue-testing-library/intro/) for unit testing, and [Playwright](https://playwright.dev) for End-to-End (e2e) testing.
+
+There are also legacy unit tests written in [Vue Test Utils](https://vue-test-utils.vuejs.org/) but those are slated to be re-written using testing library.
+
+### E2e tests
+
+Before running the e2e tests, install the browsers that Playwright needs:
+
+```
+pnpx install playwright
+```
+
+If you don't have the app running, start by running it in the dev mode:
+
+```
+pnpm run dev
+```
+
+After the dev server has finished building, run the e2e tests:
+
+```
+pnpm run test:e2e
+```
+
+When writing e2e tests, it can be helpful to use Playwright [codegen](https://playwright.dev/docs/cli#generate-code) to generate the tests by performing actions in the browser:
+
+```
+pnpm run generate-e2e-tests
+```
+
+This will open the app in a new browser window, and record any actions you take in a format that can be used in e2e tests.
+
+The CI uses [talkback](https://github.com/ijpiantanida/talkback) to ensure that the e2e tests are independent of the network status by recording the network responses in the `/test/tapes` folder. If you add new e2e tests, you may need to update the tapes by running
+
+```
+pnpm run update-tapes
+```
