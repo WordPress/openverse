@@ -3,8 +3,7 @@
     <h3 class="text-2xl md:text-3xl mb-6">
       {{ $t('image-details.related-images') }}
     </h3>
-    <!-- TODO: use a image grid with correct margins and items gaps -->
-    <ImageGrid
+    <VImageGrid
       :images="images"
       :can-load-more="false"
       :fetch-state="{
@@ -19,11 +18,11 @@
 import { ref } from '@nuxtjs/composition-api'
 import useRelated from '~/composables/use-related'
 import { IMAGE } from '~/constants/media'
-import ImageGrid from '~/components/ImageGrid/ImageGrid.vue'
+import VImageGrid from '~/components/VImageGrid/VImageGrid.vue'
 
 export default {
   name: 'VRelatedImages',
-  components: { ImageGrid },
+  components: { VImageGrid },
   props: {
     imageId: {
       type: String,

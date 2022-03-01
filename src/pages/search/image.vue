@@ -1,5 +1,5 @@
 <template>
-  <ImageGrid
+  <VImageGrid
     :images="results"
     :can-load-more="canLoadMore"
     :fetch-state="fetchState"

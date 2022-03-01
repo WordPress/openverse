@@ -1,49 +1,42 @@
 <template>
-  <div
+  <VLink
+    :href="'/image/' + image.id"
+    class="w-full block group relative overflow-hidden rounded-sm focus:ring-[3px] focus:ring-pink focus:ring-offset-[3px] focus:outline-none"
     :aria-label="image.title"
-    class="search-grid_item-container"
-    :style="`width: ${containerAspect * widthBasis}px;
-    flex-grow: ${containerAspect * widthBasis}`"
+    :style="`width: ${containerAspect * widthBasis}px;flex-grow: ${
+      containerAspect * widthBasis
+    }`"
+    @click="onGotoDetailPage($event, image)"
   >
-    <figure class="search-grid_item">
-      <i :style="`padding-bottom:${iPadding}%`" />
-      <VLink
-        :href="'/image/' + image.id"
-        class="search-grid_image-ctr"
-        :style="`width: ${imageWidth}%; top: ${imageTop}%; left:${imageLeft}%;`"
-        @click="onGotoDetailPage($event, image)"
+    <figure
+      class="absolute w-full"
+      :style="`width: ${imageWidth}%; top: ${imageTop}%; left:${imageLeft}%;`"
+    >
+      <img
+        ref="img"
+        loading="lazy"
+        class="margin-auto block w-full"
+        :alt="image.title"
+        :src="getImageUrl(image)"
+        @load="getImgDimension"
+        @error="onImageLoadError($event, image)"
+      />
+      <figcaption
+        class="absolute left-0 bottom-0 invisible group-hover:visible group-focus:visible bg-white p-1 text-dark-charcoal"
       >
-        <img
-          ref="img"
-          loading="lazy"
-          :class="{
-            'search-grid_image': true,
-            'w-full': !shouldContainImage,
-          }"
-          :alt="image.title"
-          :src="getImageUrl(image)"
-          @load="getImgDimension"
-          @error="onImageLoadError($event, image)"
-        />
-      </VLink>
-      <figcaption class="overlay overlay__top p-2">
-        <VLicense
-          :license="image.license"
-          :bg-filled="true"
-          :hide-name="true"
-        />
-      </figcaption>
-      <figcaption class="overlay overlay__bottom py-2 px-4">
-        <span class="caption font-semibold">{{ image.title }}</span>
+        <span class="sr-only">{{ image.title }}</span>
+        <VLicense :license="image.license" :hide-name="true" />
       </figcaption>
     </figure>
-  </div>
+    <i :style="`padding-bottom:${iPadding}%`" class="block" aria-hidden />
+  </VLink>
 </template>
 
 <script>
 import VLicense from '~/components/License/VLicense.vue'
 import VLink from '~/components/VLink.vue'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const errorImage = require('~/assets/image_not_available_placeholder.png')
 
 const minAspect = 3 / 4
@@ -59,9 +52,9 @@ const toAbsolutePath = (url, prefix = 'https://') => {
 }
 
 export default {
-  name: 'ImageCell',
+  name: 'VImageCell',
   components: { VLicense, VLink },
-  props: ['image', 'shouldContainImage'],
+  props: ['image'],
   data() {
     return {
       widthBasis: minRowWidth / maxAspect,
@@ -137,86 +130,3 @@ export default {
   },
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
-.search-grid_image-ctr {
-  background: #ebece4;
-  display: block;
-  width: 100%;
-}
-
-.search-grid_item-container {
-  margin: 0.6rem;
-}
-
-.search-grid_item {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-
-  i {
-    display: block;
-  }
-
-  a {
-    position: absolute;
-    vertical-align: bottom;
-    img {
-      width: 100%;
-    }
-  }
-
-  &:hover .overlay {
-    opacity: 1;
-    bottom: 0;
-  }
-}
-
-.overlay {
-  position: absolute;
-  opacity: 0;
-  transition: all 0.4s ease;
-  color: #fff;
-  display: block;
-  top: -100%;
-
-  &__top {
-    top: 0;
-    width: 100%;
-    height: 2rem;
-  }
-
-  &__bottom {
-    background-color: #000;
-    bottom: -100%;
-    top: auto;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 100%;
-  }
-
-  // Show on touch devices
-  @media (hover: none) {
-    position: absolute;
-    opacity: 1;
-    bottom: 0;
-  }
-}
-
-.search-grid_item {
-  width: 100%;
-  position: relative;
-  display: block;
-  float: left;
-  flex: 0 0 auto;
-  flex-grow: 1;
-  cursor: pointer;
-}
-
-.search-grid_image {
-  margin: auto;
-  display: block;
-}
-</style>
