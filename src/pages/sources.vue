@@ -141,8 +141,10 @@
 <script>
 import sortBy from 'lodash.sortby'
 import { mapState } from 'vuex'
+
 import { PROVIDER } from '~/constants/store-modules'
 import { useGetLocaleFormattedNumber } from '~/composables/use-get-locale-formatted-number'
+
 import VLink from '~/components/VLink.vue'
 
 const SourcePage = {

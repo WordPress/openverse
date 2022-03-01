@@ -1,8 +1,9 @@
-import SearchIndex from '~/pages/search.vue'
 import { render, screen } from '@testing-library/vue'
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { ref } from '@nuxtjs/composition-api'
+
+import SearchIndex from '~/pages/search.vue'
 
 describe('SearchIndex', () => {
   let options

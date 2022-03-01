@@ -1,11 +1,12 @@
-import VCopyLicense from '~/components/VMediaInfo/VCopyLicense.vue'
 import {
   DETAIL_PAGE_EVENTS,
   SEND_DETAIL_PAGE_EVENT,
 } from '~/constants/usage-data-analytics-types'
+import { USAGE_DATA } from '~/constants/store-modules'
+
+import VCopyLicense from '~/components/VMediaInfo/VCopyLicense.vue'
 
 import render from '../../../test-utils/render'
-import { USAGE_DATA } from '~/constants/store-modules'
 
 describe('VCopyLicense', () => {
   let options = null

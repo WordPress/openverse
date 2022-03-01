@@ -22,6 +22,7 @@
 
 <script>
 import { mapState } from 'vuex'
+
 import { FETCH_MEDIA_ITEM } from '~/constants/action-types'
 import iframeHeight from '~/mixins/iframe-height'
 import { AUDIO } from '~/constants/media'

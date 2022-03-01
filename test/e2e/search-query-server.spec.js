@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test')
+
 const { mockProviderApis, openFilters } = require('./utils')
 const { currentContentType, assertCheckboxCheckedStatus } = require('./utils')
 

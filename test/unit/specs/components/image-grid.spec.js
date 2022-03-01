@@ -1,7 +1,9 @@
-import VImageGrid from '~/components/VImageGrid/VImageGrid'
 import { render, screen } from '@testing-library/vue'
 import VueI18n from 'vue-i18n'
+
 import messages from '~/locales/en.json'
+
+import VImageGrid from '~/components/VImageGrid/VImageGrid'
 
 const i18n = new VueI18n({
   locale: 'en',

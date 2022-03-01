@@ -109,16 +109,16 @@
 <script>
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 
+import ReportService from '~/data/report-service'
+
+import { reasons, statuses, DMCA_FORM_URL } from '~/constants/content-report'
+
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VRadio from '~/components/VRadio/VRadio.vue'
 import VDmcaNotice from '~/components/VContentReport/VDmcaNotice.vue'
 import VReportDescForm from '~/components/VContentReport/VReportDescForm.vue'
 import VLink from '~/components/VLink.vue'
-
-import ReportService from '~/data/report-service'
-
-import { reasons, statuses, DMCA_FORM_URL } from '~/constants/content-report'
 
 import externalLinkIcon from '~/assets/icons/external-link.svg'
 

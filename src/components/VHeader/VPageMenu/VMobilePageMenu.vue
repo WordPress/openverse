@@ -22,6 +22,7 @@
 
 <script>
 import { computed, reactive, ref, watch } from '@nuxtjs/composition-api'
+
 import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 
 import VMobileModalContent from '~/components/VModal/VMobileModalContent.vue'

@@ -19,8 +19,9 @@ import {
   EJECT_ACTIVE_MEDIA_ITEM,
 } from '~/constants/mutation-types'
 
-import closeIcon from '~/assets/icons/close-small.svg'
 import { useActiveAudio } from '~/composables/use-active-audio'
+
+import closeIcon from '~/assets/icons/close-small.svg'
 
 export default {
   name: 'VGlobalAudioSection',

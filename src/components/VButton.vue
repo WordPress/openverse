@@ -30,8 +30,10 @@ import {
   toRefs,
   computed,
 } from '@nuxtjs/composition-api'
-import VLink from '~/components/VLink.vue'
+
 import { warn } from '~/utils/console'
+
+import VLink from '~/components/VLink.vue'
 
 /**
  * A button component that behaves just like a regular HTML `button` element

@@ -82,9 +82,12 @@
 </template>
 
 <script>
-import getProviderName from '~/utils/get-provider-name'
-import { PROVIDER } from '~/constants/store-modules'
 import { mapState } from 'vuex'
+
+import { PROVIDER } from '~/constants/store-modules'
+
+import getProviderName from '~/utils/get-provider-name'
+
 import VLink from '~/components/VLink.vue'
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
 import VMediaTag from '~/components/VMediaTag/VMediaTag.vue'

@@ -11,7 +11,9 @@
 </template>
 <script>
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
+
 import VButton from '~/components/VButton.vue'
+
 export default defineComponent({
   name: 'VLoadMore',
   components: {

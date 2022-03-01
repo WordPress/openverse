@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/vue'
 
-import VButton from '~/components/VButton.vue'
 import { warn } from '~/utils/console'
+
+import VButton from '~/components/VButton.vue'
 
 jest.mock('~/utils/console', () => ({ warn: jest.fn(), log: jest.fn() }))
 

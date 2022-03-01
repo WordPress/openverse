@@ -1,4 +1,5 @@
 import { computed, reactive, useContext } from '@nuxtjs/composition-api'
+
 import { StorageSerializers, useStorage } from '~/composables/use-storage'
 
 const BASE_URL = 'https://translate.wordpress.org/projects/meta/openverse/'

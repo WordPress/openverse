@@ -41,6 +41,7 @@
 
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
+
 import { useReducedMotion } from '~/composables/use-media-query'
 
 import { propTypes } from './VLogoLoader.types'

@@ -1,4 +1,5 @@
 import { computed, useContext } from '@nuxtjs/composition-api'
+
 import { FETCH_MEDIA } from '~/constants/action-types'
 import { MEDIA } from '~/constants/store-modules'
 

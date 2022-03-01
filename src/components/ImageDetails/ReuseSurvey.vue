@@ -18,6 +18,7 @@ import {
   DETAIL_PAGE_EVENTS,
 } from '~/constants/usage-data-analytics-types'
 import { USAGE_DATA } from '~/constants/store-modules'
+
 import VLink from '~/components/VLink.vue'
 
 const reuseForm =

@@ -1,8 +1,9 @@
 import Vuex from 'vuex'
 import { render, screen } from '@testing-library/vue'
-import { IMAGE } from '~/constants/media'
 import { createLocalVue } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
+
+import { IMAGE } from '~/constants/media'
 import messages from '~/locales/en.json'
 
 import VSearchGrid from '~/components/VSearchGrid'

@@ -1,4 +1,5 @@
 import debounce from 'lodash.debounce'
+
 import { sendWindowMessage } from '~/utils/send-message'
 
 /**

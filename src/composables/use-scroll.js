@@ -1,6 +1,7 @@
 // code taken from Vueuse
 import throttle from 'lodash.throttle'
 import { ref } from '@nuxtjs/composition-api'
+
 import { useEventListener } from '~/composables/use-event-listener'
 
 /**

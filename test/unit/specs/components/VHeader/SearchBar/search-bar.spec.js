@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/vue'
+
 import { useMatchHomeRoute } from '~/composables/use-match-routes'
+
 import SearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
 
 jest.mock('~/composables/use-match-routes', () => ({

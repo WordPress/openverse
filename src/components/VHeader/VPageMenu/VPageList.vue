@@ -28,11 +28,11 @@
 <script>
 import usePages from '~/composables/use-pages'
 
-import externalLinkIcon from '~/assets/icons/external-link.svg'
-
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VItem from '~/components/VItemGroup/VItem.vue'
 import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
+
+import externalLinkIcon from '~/assets/icons/external-link.svg'
 
 export default {
   name: 'VPageMenuPopover',

@@ -26,6 +26,7 @@
 
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
+
 import { useMatchHomeRoute } from '~/composables/use-match-routes'
 
 import VInputField from '~/components/VInputField/VInputField.vue'

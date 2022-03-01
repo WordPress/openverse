@@ -8,13 +8,14 @@
 </template>
 
 <script>
-import { propTypes } from '~/pages/search/search-page.types'
 import {
   useStore,
   computed,
   defineComponent,
   useMeta,
 } from '@nuxtjs/composition-api'
+
+import { propTypes } from '~/pages/search/search-page.types'
 import { useLoadMore } from '~/composables/use-load-more'
 
 const ImageSearch = defineComponent({

@@ -27,8 +27,10 @@ import {
   useContext,
   inject,
 } from '@nuxtjs/composition-api'
-import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
+
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
+
+import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 
 import VTeleport from '~/components/VTeleport/VTeleport.vue'
 import VFilterButton from '~/components/VHeader/VFilterButton.vue'

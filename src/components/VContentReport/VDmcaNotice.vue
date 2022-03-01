@@ -24,6 +24,7 @@
 import { defineComponent } from '@nuxtjs/composition-api'
 
 import { DMCA_FORM_URL } from '~/constants/content-report'
+
 import VLink from '~/components/VLink.vue'
 
 export default defineComponent({

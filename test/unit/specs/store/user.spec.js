@@ -1,5 +1,6 @@
-import * as user from '~/store/user'
 import { v4 as uuidv4 } from 'uuid'
+
+import * as user from '~/store/user'
 
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 

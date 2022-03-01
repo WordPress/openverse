@@ -9,7 +9,9 @@
  * tests less flaky due to changes in the API or API data.
  */
 const process = require('process')
+
 const talkback = require('talkback')
+
 const host = 'https://api.openverse.engineering/v1'
 
 const tapeNameGenerator = (tapeNumber) => `response-${tapeNumber}`

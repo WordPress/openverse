@@ -84,6 +84,7 @@
 
 <script>
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
+
 import { useBrowserIsBlink } from '~/composables/use-browser-detection'
 
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'

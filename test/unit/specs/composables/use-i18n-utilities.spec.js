@@ -1,4 +1,5 @@
 import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
+
 jest.mock('@nuxtjs/composition-api', () => ({
   useContext: () => ({
     i18n: {

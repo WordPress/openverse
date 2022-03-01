@@ -12,6 +12,7 @@
 
 <script>
 import { defineComponent } from '@vue/composition-api'
+
 import Chevron from '~/assets/icons/chevron-left.svg?inline'
 
 export default defineComponent({

@@ -17,6 +17,7 @@
 import getLegacySourceUrl, {
   legacySourceMap,
 } from '~/utils/get-legacy-source-url'
+
 import VLink from '~/components/VLink.vue'
 
 export default {

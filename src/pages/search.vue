@@ -29,6 +29,8 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { isShallowEqualObjects } from '@wordpress/is-shallow-equal'
+import { inject } from '@nuxtjs/composition-api'
+
 import {
   FETCH_MEDIA,
   UPDATE_QUERY,
@@ -36,14 +38,12 @@ import {
 } from '~/constants/action-types'
 import { ALL_MEDIA, supportedSearchTypes } from '~/constants/media'
 import { MEDIA, SEARCH } from '~/constants/store-modules'
-
-import { inject } from '@nuxtjs/composition-api'
 import { isMinScreen } from '~/composables/use-media-query.js'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 
-import VScrollButton from '~/components/VScrollButton.vue'
 import VSearchGrid from '~/components/VSearchGrid.vue'
 import VSkipToContentContainer from '~/components/VSkipToContentContainer.vue'
+import VScrollButton from '~/components/VScrollButton.vue'
 
 const BrowsePage = {
   name: 'browse-page',

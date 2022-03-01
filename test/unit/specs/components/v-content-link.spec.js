@@ -1,8 +1,10 @@
-import VContentLink from '~/components/VContentLink/VContentLink.vue'
 import { render, screen } from '@testing-library/vue'
 import VueI18n from 'vue-i18n'
 
+import VContentLink from '~/components/VContentLink/VContentLink.vue'
+
 const enMessages = require('~/locales/en.json')
+
 const i18n = new VueI18n({
   locale: 'en',
   fallbackLocale: 'en',

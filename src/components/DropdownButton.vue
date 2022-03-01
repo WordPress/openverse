@@ -53,8 +53,10 @@
 
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
-import caretDown from '~/assets/icons/caret-down.svg'
+
 import * as keycodes from '~/utils/key-codes'
+
+import caretDown from '~/assets/icons/caret-down.svg'
 
 const DropdownButton = defineComponent({
   name: 'DropdownButton',

@@ -125,6 +125,7 @@
 
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
+
 import VLink from '~/components/VLink.vue'
 
 export default defineComponent({

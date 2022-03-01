@@ -1,11 +1,12 @@
 import { render, screen } from '@testing-library/vue'
-
-import VFilterButton from '~/components/VHeader/VFilterButton.vue'
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
-import messages from '../../../../../src/locales/en.json'
 import { ref } from '@nuxtjs/composition-api'
+
+import VFilterButton from '~/components/VHeader/VFilterButton.vue'
+
+import messages from '../../../../../src/locales/en.json'
 
 describe('VFilterButton', () => {
   let options = {}

@@ -21,9 +21,11 @@
 </template>
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
-import OpenverseLogoText from '~/assets/icons/openverse-logo-text.svg?inline'
+
 import VLogoLoader from '~/components/VLogoLoader/VLogoLoader.vue'
 import VButton from '~/components/VButton.vue'
+
+import OpenverseLogoText from '~/assets/icons/openverse-logo-text.svg?inline'
 
 const VLogoButton = defineComponent({
   name: 'VLogoButton',

@@ -1,9 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { createLocalVue } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
+
 import VContentReportForm from '~/components/VContentReport/VContentReportForm.vue'
 
 const messages = require('~/locales/en.json')
+
 const i18n = new VueI18n({
   locale: 'en',
   fallbackLocale: 'en',

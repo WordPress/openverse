@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/vue'
-import VLink from '~/components/VLink.vue'
 import Vue from 'vue'
+
+import VLink from '~/components/VLink.vue'
 
 const nuxtContextMock = {
   $nuxt: { context: { app: { localePath: jest.fn((v) => v) } } },

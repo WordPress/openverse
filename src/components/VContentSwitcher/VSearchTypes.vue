@@ -20,12 +20,15 @@
   </VItemGroup>
 </template>
 <script>
+import { computed, defineComponent } from '@nuxtjs/composition-api'
+
 import { supportedSearchTypes } from '~/constants/media'
+
 import useSearchType from '~/composables/use-search-type'
 
 import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
+
 import VSearchTypeItem from '~/components/VContentSwitcher/VSearchTypeItem.vue'
-import { computed, defineComponent } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   name: 'VSearchTypes',

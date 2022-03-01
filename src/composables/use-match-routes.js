@@ -1,5 +1,4 @@
-import { useContext } from '@nuxtjs/composition-api'
-import { ref, useRoute, useRouter } from '@nuxtjs/composition-api'
+import { useContext, ref, useRoute, useRouter } from '@nuxtjs/composition-api'
 
 /**
  * Reactive property that returns true only on the matching routes.

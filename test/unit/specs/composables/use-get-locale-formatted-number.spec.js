@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import { render } from '@testing-library/vue'
 import VueI18n from 'vue-i18n'
-import messages from '~/locales/en.json'
 
+import messages from '~/locales/en.json'
 import { useGetLocaleFormattedNumber } from '~/composables/use-get-locale-formatted-number'
 
 const TestWrapper = Vue.component('TestWrapper', {

@@ -1,5 +1,4 @@
 import ApiService from '~/data/api-service'
-
 import decodeMediaData from '~/utils/decode-media-data'
 
 /**

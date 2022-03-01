@@ -13,17 +13,19 @@
 
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
+
 import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
   supportedSearchTypes,
 } from '~/constants/media'
+
 import VIcon from '~/components/VIcon/VIcon.vue'
 
-import audioIcon from 'assets/icons/audio-wave.svg'
-import imageIcon from 'assets/icons/image.svg'
-import allIcon from 'assets/icons/all-content.svg'
+import audioIcon from '~/assets/icons/audio-wave.svg'
+import imageIcon from '~/assets/icons/image.svg'
+import allIcon from '~/assets/icons/all-content.svg'
 
 const iconMapping = {
   [AUDIO]: audioIcon,

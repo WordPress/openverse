@@ -50,6 +50,13 @@ import {
 
 import { useActiveAudio } from '~/composables/use-active-audio'
 
+import { ACTIVE, MEDIA } from '~/constants/store-modules'
+
+import {
+  PAUSE_ACTIVE_MEDIA_ITEM,
+  SET_ACTIVE_MEDIA_ITEM,
+} from '~/constants/mutation-types'
+
 import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
 import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
 
@@ -57,12 +64,6 @@ import VFullLayout from '~/components/VAudioTrack/layouts/VFullLayout.vue'
 import VRowLayout from '~/components/VAudioTrack/layouts/VRowLayout.vue'
 import VBoxLayout from '~/components/VAudioTrack/layouts/VBoxLayout.vue'
 import VGlobalLayout from '~/components/VAudioTrack/layouts/VGlobalLayout.vue'
-
-import { ACTIVE, MEDIA } from '~/constants/store-modules'
-import {
-  PAUSE_ACTIVE_MEDIA_ITEM,
-  SET_ACTIVE_MEDIA_ITEM,
-} from '~/constants/mutation-types'
 
 const propTypes = {
   /**
@@ -344,7 +345,6 @@ export default defineComponent({
        * hoops (using `assert`) or adding unnecessary
        * runtime checks.
        */
-      // @ts-ignore
       localAudio.currentTime = frac * duration.value
     }
 

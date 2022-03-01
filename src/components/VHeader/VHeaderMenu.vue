@@ -7,16 +7,20 @@ import {
   useRouter,
   useStore,
 } from '@nuxtjs/composition-api'
+import isEmpty from 'lodash.isempty'
+
 import useSearchType from '~/composables/use-search-type'
+
+import { ALL_MEDIA, supportedMediaTypes } from '~/constants/media'
+
+import { FETCH_MEDIA } from '~/constants/action-types'
+
+import { MEDIA } from '~/constants/store-modules'
 
 import VMobileMenuModal from '~/components/VContentSwitcher/VMobileMenuModal.vue'
 import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover.vue'
 import VDesktopPageMenu from '~/components/VHeader/VPageMenu/VDesktopPageMenu.vue'
 import VMobilePageMenu from '~/components/VHeader/VPageMenu/VMobilePageMenu.vue'
-import { ALL_MEDIA, supportedMediaTypes } from '~/constants/media'
-import { FETCH_MEDIA } from '~/constants/action-types'
-import { MEDIA } from '~/constants/store-modules'
-import isEmpty from 'lodash.isempty'
 
 export default {
   name: 'VHeaderMenu',

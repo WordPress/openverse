@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
+
+import { noFocusableElementWarning } from '~/composables/use-focus-on-show'
+
+import { warn } from '~/utils/console'
+
 import VButton from '~/components/VButton.vue'
 import VPopover from '~/components/VPopover/VPopover.vue'
-import { noFocusableElementWarning } from '~/composables/use-focus-on-show'
-import { warn } from '~/utils/console'
 
 jest.mock('~/utils/console', () => ({
   warn: jest.fn(),

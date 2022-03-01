@@ -10,14 +10,13 @@ module.exports = {
   extends: [
     'plugin:@typescript-eslint/recommended',
     'eslint:recommended',
-    // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
-    // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
     'plugin:vue/recommended',
     'plugin:prettier/recommended',
     'plugin:vuejs-accessibility/recommended',
     'plugin:@intlify/vue-i18n/recommended',
+    'plugin:import/recommended',
+    'plugin:eslint-comments/recommended',
   ],
-  // required to lint *.vue files
   plugins: [
     '@typescript-eslint',
     'eslint-plugin-tsdoc',
@@ -25,7 +24,6 @@ module.exports = {
     'vuejs-accessibility',
     'unicorn',
   ],
-  // add your custom rules here
   rules: {
     semi: [2, 'never'],
     'no-console': 'off',
@@ -79,7 +77,69 @@ module.exports = {
     ],
     'unicorn/filename-case': ['error', { case: 'kebabCase' }],
     '@typescript-eslint/ban-ts-comment': ['warn'],
-    '@typescript-eslint/no-var-requires': ['warn'],
+    '@typescript-eslint/no-var-requires': ['off'],
+    'import/no-unresolved': [
+      'error',
+      {
+        // https://github.com/nuxt-community/svg-module/issues/4
+        ignore: ['.svg'],
+      },
+    ],
+    'import/newline-after-import': ['error'],
+    'import/order': [
+      'error',
+      {
+        'newlines-between': 'always-and-inside-groups',
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index',
+          'object',
+          'type',
+        ],
+        pathGroups: [
+          {
+            // Treate vue and composition-api as "builtin"
+            pattern: '(vue|@nuxtjs/composition-api)',
+            group: 'builtin',
+            position: 'before',
+          },
+          {
+            // Move assets to the very end of the imports list
+            pattern: '~/assets/**',
+            group: 'type',
+            position: 'after',
+          },
+          {
+            // Treat components as their own group and move to the end of the internal imports list
+            pattern: '~/components/**',
+            group: 'internal',
+            position: 'after',
+          },
+          /**
+           * These next two must come after any more specific matchers
+           * as the plugin uses the patterns in order and does not sort
+           * multiple-matches by specificity, it just takes the _first_
+           * pattern that matches and applies that group to the import.
+           */
+          {
+            // Document webpack alias
+            pattern: '~/**',
+            group: 'internal',
+            position: 'before',
+          },
+          {
+            // Document webpack alias
+            pattern: '~~/**',
+            group: 'external',
+            position: 'after',
+          },
+        ],
+      },
+    ],
   },
   overrides: [
     {
@@ -93,6 +153,21 @@ module.exports = {
     'vue-i18n': {
       localeDir: './src/locales/*.{json}',
       messageSyntaxVersion: '^8.24.3',
+    },
+    'import/resolver': {
+      'eslint-import-resolver-custom-alias': {
+        alias: {
+          '~': './src',
+          '~~': '.',
+        },
+        /**
+         * SVG imports are excluded for the import/no-unresolved
+         * rule above due to due to lack of support for `?inline` suffix
+         *
+         * Therefore, there's no need to configure them here
+         */
+        extensions: ['.js', '.ts', '.vue', '.png'],
+      },
     },
   },
 }

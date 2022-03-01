@@ -4,8 +4,10 @@ This script extracts data for locales available in GlotPress and translate.wp.or
  and saves it to `wp-locales-list.json`.
  **/
 
-const axios = require('axios')
 const fs = require('fs')
+
+const axios = require('axios')
+
 const { addFetchedTranslationStatus } = require('./get-translations-status.js')
 
 const base_url =

@@ -1,11 +1,13 @@
 import Vuex from 'vuex'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { createLocalVue } from '@vue/test-utils'
+import clonedeep from 'lodash.clonedeep'
+
 import { IMAGE } from '~/constants/media'
 import store from '~/store/search'
-import clonedeep from 'lodash.clonedeep'
-import SearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 import { FETCH_MEDIA } from '~/constants/action-types'
+
+import SearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 
 const initialFilters = {
   licenseTypes: [

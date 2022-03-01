@@ -21,6 +21,7 @@
 
 <script>
 import { computed } from '@nuxtjs/composition-api'
+
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 
 const positionWithoutSidebar = 'ltr:right-4 rtl:left-4'

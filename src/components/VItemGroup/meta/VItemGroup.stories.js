@@ -1,15 +1,16 @@
+import { ref } from '@nuxtjs/composition-api'
+
 import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
 import VItem from '~/components/VItemGroup/VItem.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VPopover from '~/components/VPopover/VPopover.vue'
 import VButton from '~/components/VButton.vue'
 
-import { ref } from '@nuxtjs/composition-api'
+import replay from '~/assets/icons/replay.svg'
 
-import close from '~/assets/icons/close.svg'
 import pause from '~/assets/icons/pause.svg'
 import play from '~/assets/icons/play.svg'
-import replay from '~/assets/icons/replay.svg'
+import close from '~/assets/icons/close.svg'
 
 const icons = [close, pause, play, replay]
 

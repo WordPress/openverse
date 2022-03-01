@@ -1,5 +1,7 @@
-const json = require('../en.json')
 const fs = require('fs')
+
+const json = require('../en.json')
+
 const { createPotFile } = require('./json-pot-helpers')
 
 const matchPotCreationDate = /^"POT-Creation-Date: .*\\n"$/gm

@@ -13,10 +13,10 @@
 <script>
 import { computed, useContext } from '@nuxtjs/composition-api'
 
-import ellipsisIcon from '~/assets/icons/ellipsis.svg'
-
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VButton from '~/components/VButton.vue'
+
+import ellipsisIcon from '~/assets/icons/ellipsis.svg'
 
 export default {
   name: 'VPageMenuButton',

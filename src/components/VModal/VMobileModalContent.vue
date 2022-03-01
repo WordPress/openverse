@@ -44,15 +44,16 @@
 <script>
 import { defineComponent, toRefs, ref } from '@nuxtjs/composition-api'
 import { FocusTrap } from 'focus-trap-vue'
+
 import { useDialogContent } from '~/composables/use-dialog-content'
 import { warn } from '~/utils/console'
-
-import closeIcon from '~/assets/icons/close.svg'
 
 import VTeleport from '~/components/VTeleport/VTeleport.vue'
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VLogoButton from '~/components/VHeader/VLogoButton.vue'
+
+import closeIcon from '~/assets/icons/close.svg'
 
 /**
  * Renders the inner content of a modal and manages focus.

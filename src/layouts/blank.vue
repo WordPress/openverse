@@ -8,10 +8,13 @@
 
 <script>
 import { defineComponent, useStore } from '@nuxtjs/composition-api'
+
 import iframeHeight from '~/mixins/iframe-height'
+
 import { NAV } from '~/constants/store-modules'
 
 import VTranslationStatusBanner from '~/components/VTranslationStatusBanner.vue'
+
 import VMigrationNotice from '~/components/VMigrationNotice.vue'
 
 export default defineComponent({

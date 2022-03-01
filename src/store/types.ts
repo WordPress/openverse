@@ -90,12 +90,12 @@ export interface BaseMediaDetail<FrontendMediaType extends string> {
 }
 
 export interface AudioDetail extends BaseMediaDetail<'audio'> {
-  audio_set?: any
-  genres?: any
+  audio_set?: string
+  genres?: string[]
   duration?: number
   bit_rate?: number
   sample_rate?: number
-  alt_files?: any
+  alt_files?: { provider: string; filetype: string }[]
   filetype?: string
   peaks?: number[]
 }

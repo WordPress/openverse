@@ -3,6 +3,7 @@
 
 const fs = require('fs')
 const path = require('path')
+
 const glob = require('glob')
 
 const BASE_PATH = path.dirname(path.dirname(__dirname))

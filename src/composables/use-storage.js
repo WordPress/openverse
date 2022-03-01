@@ -1,4 +1,5 @@
 import { ref, unref, watch } from '@nuxtjs/composition-api'
+
 import { useEventListener } from '~/composables/use-event-listener'
 
 const defaultWindow =

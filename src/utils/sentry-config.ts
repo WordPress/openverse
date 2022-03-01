@@ -1,6 +1,6 @@
-import type { ModuleConfiguration } from '@nuxtjs/sentry'
-
 import { isProd } from './node-env'
+
+import type { ModuleConfiguration } from '@nuxtjs/sentry'
 
 /**
  * Get the Sentry configuration based on the current environment.

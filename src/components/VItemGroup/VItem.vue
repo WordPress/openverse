@@ -66,15 +66,19 @@ import {
   computed,
   watch,
 } from '@nuxtjs/composition-api'
-import checkmark from '~/assets/icons/checkmark.svg'
+
+import { warn } from '~/utils/console'
+
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
+import { VPopoverContentContextKey } from '~/components/VPopover/VPopoverContent.vue'
+
 import {
   VItemGroupContextKey,
   VItemGroupFocusContextKey,
 } from './VItemGroup.vue'
-import { VPopoverContentContextKey } from '~/components/VPopover/VPopoverContent.vue'
-import { warn } from '~/utils/console'
+
+import checkmark from '~/assets/icons/checkmark.svg'
 
 export default defineComponent({
   name: 'VItem',

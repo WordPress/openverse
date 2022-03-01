@@ -17,7 +17,9 @@
 <script>
 import { computed } from '@nuxtjs/composition-api'
 import { defineComponent } from '@vue/composition-api'
+
 import { contentStatus } from '~/constants/media'
+
 /** @typedef {import('@nuxtjs/composition-api').ExtractPropTypes<typeof propTypes>} Props */
 const propTypes = {
   item: { type: String, required: true },

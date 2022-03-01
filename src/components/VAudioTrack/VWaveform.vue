@@ -168,6 +168,7 @@ import {
   onMounted,
   ref,
 } from '@nuxtjs/composition-api'
+
 import { downsampleArray, upsampleArray } from '~/utils/resampling'
 import * as keycodes from '~/utils/key-codes'
 

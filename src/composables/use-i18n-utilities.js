@@ -1,4 +1,5 @@
 import { useContext } from '@nuxtjs/composition-api'
+
 import { useGetLocaleFormattedNumber } from '~/composables/use-get-locale-formatted-number'
 
 /**

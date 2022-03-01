@@ -1,5 +1,6 @@
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
+
 import { targets } from './meta/targets'
 
 export default defineComponent({

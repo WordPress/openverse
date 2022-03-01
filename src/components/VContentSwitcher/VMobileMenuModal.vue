@@ -40,9 +40,12 @@ import {
   ref,
   watch,
 } from '@nuxtjs/composition-api'
-import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
-import useSearchType from '~/composables/use-search-type'
+
 import usePages from '~/composables/use-pages'
+
+import useSearchType from '~/composables/use-search-type'
+
+import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 
 import VMobileModalContent from '~/components/VModal/VMobileModalContent.vue'
 import VSearchTypes from '~/components/VContentSwitcher/VSearchTypes.vue'

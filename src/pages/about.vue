@@ -86,8 +86,9 @@
 </template>
 
 <script>
-import VLink from '~/components/VLink.vue'
 import { defineComponent } from '@nuxtjs/composition-api'
+
+import VLink from '~/components/VLink.vue'
 
 const AboutPage = defineComponent({
   name: 'AboutPage',

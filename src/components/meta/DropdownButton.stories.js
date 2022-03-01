@@ -1,6 +1,6 @@
-import DropdownButton from '~/components/DropdownButton'
-
 import { log } from '~/utils/console'
+
+import DropdownButton from '~/components/DropdownButton'
 
 export default {
   title: 'Components/DropdownButton',

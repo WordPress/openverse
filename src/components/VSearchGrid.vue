@@ -27,6 +27,7 @@
 
 <script>
 import { computed } from '@nuxtjs/composition-api'
+
 import { ALL_MEDIA, IMAGE, supportedSearchTypes } from '~/constants/media'
 
 import VMetaSearchForm from '~/components/VMetaSearch/VMetaSearchForm.vue'

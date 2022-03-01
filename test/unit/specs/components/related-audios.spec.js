@@ -1,8 +1,10 @@
-import VRelatedAudio from '~/components/VAudioDetails/VRelatedAudio.vue'
-import render from '../../test-utils/render'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
+
+import VRelatedAudio from '~/components/VAudioDetails/VRelatedAudio.vue'
+
+import render from '../../test-utils/render'
 
 const audioResults = [{ id: 'audio1' }, { id: 'audio2' }]
 const serviceMock = {

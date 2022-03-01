@@ -82,12 +82,17 @@
 <script>
 import axios from 'axios'
 import { mapActions, mapState } from 'vuex'
-import { FETCH_MEDIA_ITEM } from '~/constants/action-types'
-import { MEDIA, USAGE_DATA } from '~/constants/store-modules'
+
 import {
   DETAIL_PAGE_EVENTS,
   SEND_DETAIL_PAGE_EVENT,
 } from '~/constants/usage-data-analytics-types'
+
+import { MEDIA, USAGE_DATA } from '~/constants/store-modules'
+
+import { FETCH_MEDIA_ITEM } from '~/constants/action-types'
+
+import { IMAGE } from '~/constants/media'
 
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
@@ -96,7 +101,6 @@ import VImageDetails from '~/components/VImageDetails/VImageDetails.vue'
 import VMediaReuse from '~/components/VMediaInfo/VMediaReuse.vue'
 import VRelatedImages from '~/components/VImageDetails/VRelatedImages.vue'
 import SketchFabViewer from '~/components/SketchFabViewer.vue'
-import { IMAGE } from '~/constants/media'
 
 const VImageDetailsPage = {
   name: 'VImageDetailsPage',

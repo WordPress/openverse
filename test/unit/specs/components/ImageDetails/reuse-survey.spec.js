@@ -1,12 +1,15 @@
-import ReuseSurvey from '~/components/ImageDetails/ReuseSurvey'
+import { mount } from '@vue/test-utils'
+
 import {
   DETAIL_PAGE_EVENTS,
   SEND_DETAIL_PAGE_EVENT,
 } from '~/constants/usage-data-analytics-types'
-import render from '../../../test-utils/render'
-import i18n from '../../../test-utils/i18n'
 import { USAGE_DATA } from '~/constants/store-modules'
-import { mount } from '@vue/test-utils'
+
+import ReuseSurvey from '~/components/ImageDetails/ReuseSurvey'
+
+import i18n from '../../../test-utils/i18n'
+import render from '../../../test-utils/render'
 
 describe('ImageAttribution', () => {
   let options = null

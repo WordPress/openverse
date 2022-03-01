@@ -9,3 +9,4 @@
  * @type {Record<string, import('vue').Component>}
  */
 export const targets = {}
+/* eslint-enable unicorn/filename-case */

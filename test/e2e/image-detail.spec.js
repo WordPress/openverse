@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test')
+
 const { mockProviderApis } = require('./utils')
 
 const goToCustomImagePage = async (page) => {

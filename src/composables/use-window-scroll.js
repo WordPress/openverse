@@ -1,7 +1,8 @@
 // code taken from Vueuse
 import throttle from 'lodash.throttle'
-import { defaultWindow } from '~/composables/window'
 import { ref } from '@nuxtjs/composition-api'
+
+import { defaultWindow } from '~/composables/window'
 import { useEventListener } from '~/composables/use-event-listener'
 
 /**

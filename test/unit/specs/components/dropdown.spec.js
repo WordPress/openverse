@@ -1,5 +1,6 @@
-import Dropdown from '~/components/Dropdown'
 import { render, fireEvent } from '@testing-library/vue'
+
+import Dropdown from '~/components/Dropdown'
 
 describe('Dropdown', () => {
   let options = {}

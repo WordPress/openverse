@@ -7,6 +7,7 @@
  * On error: shows error message
  */
 const { expect, test } = require('@playwright/test')
+
 const { mockProviderApis } = require('./utils')
 
 test.beforeEach(async ({ context }) => {

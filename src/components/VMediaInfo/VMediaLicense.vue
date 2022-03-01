@@ -53,10 +53,10 @@
 </template>
 
 <script>
+import { isLicense } from '~/utils/license'
+
 import VLicenseElements from '~/components/VLicenseElements.vue'
 import VLink from '~/components/VLink.vue'
-
-import { isLicense } from '~/utils/license'
 
 export default {
   name: 'VMediaLicense',

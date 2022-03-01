@@ -53,13 +53,13 @@
 <script>
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 
+import srand from '~/utils/srand'
+
 import VImageCellSquare from '~/components/VAllResultsGrid/VImageCellSquare.vue'
 import VAudioCell from '~/components/VAllResultsGrid/VAudioCell.vue'
 import VLoadMore from '~/components/VLoadMore.vue'
 import VContentLink from '~/components/VContentLink/VContentLink.vue'
 import VGridSkeleton from '~/components/VSkeleton/VGridSkeleton.vue'
-
-import srand from '~/utils/srand'
 
 export default defineComponent({
   name: 'VAllResultsGrid',

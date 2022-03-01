@@ -10,6 +10,7 @@ export function deepFreeze<T>(object: T): DeepReadonly<T> {
   // Freeze properties before freezing self
 
   for (const name of propNames) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore We got the property name from getOwnPropertyNames so this is safe
     const value = object[name]
 
@@ -18,6 +19,7 @@ export function deepFreeze<T>(object: T): DeepReadonly<T> {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore Because the freezing is happening in place TS can't tell we've traversed the tree and frozen the whole object
   return Object.freeze(object)
 }

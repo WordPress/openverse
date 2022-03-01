@@ -22,6 +22,7 @@
 
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
+
 import { reasons } from '~/constants/content-report'
 
 export default defineComponent({

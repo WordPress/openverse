@@ -44,6 +44,7 @@
 
 <script>
 import { computed, useContext, useRouter } from '@nuxtjs/composition-api'
+
 import { kebabize } from '~/utils/format-strings'
 
 import {

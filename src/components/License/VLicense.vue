@@ -26,14 +26,14 @@
 <script>
 import { computed, useContext } from '@nuxtjs/composition-api'
 
-import VIcon from '~/components/VIcon/VIcon.vue'
-
 import {
   ALL_LICENSES,
   CC_LICENSES,
   DEPRECATED_LICENSES,
   LICENSE_ICON_MAPPING,
 } from '~/constants/license.js'
+
+import VIcon from '~/components/VIcon/VIcon.vue'
 
 import by from '~/assets/licenses/by.svg'
 import cc0 from '~/assets/licenses/cc0.svg'

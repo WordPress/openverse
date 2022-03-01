@@ -1,5 +1,6 @@
-import VSearchResultsTitle from '~/components/VSearchResultsTitle'
 import { render, screen } from '@testing-library/vue'
+
+import VSearchResultsTitle from '~/components/VSearchResultsTitle'
 
 describe('VSearchResultsTitle', () => {
   let options = {

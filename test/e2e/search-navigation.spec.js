@@ -1,4 +1,5 @@
 const { expect, test } = require('@playwright/test')
+
 const { openFilters } = require('./utils')
 
 test.beforeEach(async ({ context }) => {

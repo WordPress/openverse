@@ -134,21 +134,20 @@
 <script>
 import { ref, useContext, useRouter, useStore } from '@nuxtjs/composition-api'
 
+import { FETCH_MEDIA, UPDATE_QUERY } from '~/constants/action-types'
+import { MEDIA, SEARCH } from '~/constants/store-modules'
+import { ALL_MEDIA, supportedSearchTypes } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
 
-import { ALL_MEDIA, supportedSearchTypes } from '~/constants/media'
-import { MEDIA, SEARCH } from '~/constants/store-modules'
-import { FETCH_MEDIA, UPDATE_QUERY } from '~/constants/action-types'
+import VLink from '~/components/VLink.vue'
+import VLogoButton from '~/components/VHeader/VLogoButton.vue'
+import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
+import VSearchTypeRadio from '~/components/VContentSwitcher/VSearchTypeRadio.vue'
+import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover.vue'
 
 import imageInfo from '~/assets/homepage_images/image_info.json'
-
 import OpenverseLogo from '~/assets/logo.svg?inline'
 import OpenverseBrand from '~/assets/brand.svg?inline'
-import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover.vue'
-import VSearchTypeRadio from '~/components/VContentSwitcher/VSearchTypeRadio.vue'
-import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
-import VLogoButton from '~/components/VHeader/VLogoButton.vue'
-import VLink from '~/components/VLink.vue'
 
 const HomePage = {
   name: 'home-page',

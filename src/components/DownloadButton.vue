@@ -61,7 +61,9 @@
 <script>
 import filesize from 'filesize'
 import axios from 'axios'
+
 import local from '~/utils/local'
+
 import DropdownButton from '~/components/DropdownButton.vue'
 import VLink from '~/components/VLink.vue'
 

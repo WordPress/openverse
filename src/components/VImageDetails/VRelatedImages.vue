@@ -16,8 +16,10 @@
 
 <script>
 import { ref } from '@nuxtjs/composition-api'
+
 import useRelated from '~/composables/use-related'
 import { IMAGE } from '~/constants/media'
+
 import VImageGrid from '~/components/VImageGrid/VImageGrid.vue'
 
 export default {

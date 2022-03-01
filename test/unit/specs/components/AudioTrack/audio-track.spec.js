@@ -1,13 +1,15 @@
-import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 import { render } from '@testing-library/vue'
 import Vuei18n from 'vue-i18n'
 import Vuex from 'vuex'
+
+import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 
 jest.mock('~/composables/use-browser-detection', () => ({
   useBrowserIsBlink: jest.fn(() => false),
 }))
 
 const enMessages = require('~/locales/en.json')
+
 const useVueI18n = (vue) => {
   vue.use(Vuei18n)
 

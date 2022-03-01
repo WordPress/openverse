@@ -9,6 +9,7 @@
 <script>
 import { useContext, useRouter } from '@nuxtjs/composition-api'
 import { defineComponent } from '@vue/composition-api'
+
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 
 export default defineComponent({

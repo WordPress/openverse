@@ -1,4 +1,5 @@
 import CopyButton from '~/components/CopyButton'
+
 import render from '../../test-utils/render'
 
 describe('CopyButton', () => {

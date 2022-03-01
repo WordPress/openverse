@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import { ref } from '@nuxtjs/composition-api'
 import { render, screen } from '@testing-library/vue'
+import userEvent from '@testing-library/user-event'
+
+import { useI18n } from '~/composables/use-i18n'
+
 import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
 import VItem from '~/components/VItemGroup/VItem.vue'
-import userEvent from '@testing-library/user-event'
-import { useI18n } from '~/composables/use-i18n'
 
 jest.mock('~/composables/use-i18n', () => ({
   useI18n: jest.fn(),

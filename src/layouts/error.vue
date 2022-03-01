@@ -4,6 +4,7 @@
 
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
+
 import VFourOhFour from '~/components/VFourOhFour.vue'
 
 const Error = defineComponent({

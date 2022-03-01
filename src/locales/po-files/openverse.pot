@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-02-25T18:43:12+00:00\n"
+"POT-Creation-Date: 2022-03-01T15:54:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -94,7 +94,7 @@ msgctxt "migration-notice.read"
 msgid "Read more"
 msgstr ""
 
-#: src/components/DropdownButton.vue:85
+#: src/components/DropdownButton.vue:87
 msgctxt "dropdown-button.aria.arrow-label"
 msgid "Dropdown"
 msgstr ""
@@ -211,7 +211,7 @@ msgctxt "audio-track.creator"
 msgid "by ###creator###"
 msgstr ""
 
-#: src/components/VAudioTrack/layouts/VRowLayout.vue:110
+#: src/components/VAudioTrack/layouts/VRowLayout.vue:111
 msgctxt "audio-track.messages.blink_seek_disabled"
 msgid "Seeking for Jamendo tracks is limited to Firefox and Safari."
 msgstr ""
@@ -248,7 +248,7 @@ msgid "Audio seek bar"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VWaveform.vue:572
+#: src/components/VAudioTrack/VWaveform.vue:573
 msgctxt "waveform.current-time"
 msgid "###time### second"
 msgid_plural "###time### seconds"
@@ -705,7 +705,7 @@ msgid_plural "Over ###localeCount### results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/components/VLoadMore.vue:30
+#: src/components/VLoadMore.vue:32
 msgctxt "browse-page.load"
 msgid "Load more results"
 msgstr ""
@@ -893,7 +893,7 @@ msgctxt "filters.license-explanation.more.read-more"
 msgid "Read more"
 msgstr ""
 
-#: src/components/VFilters/VFilterChecklist.vue:88
+#: src/components/VFilters/VFilterChecklist.vue:89
 msgctxt "filters.search-by.title"
 msgid "Search By"
 msgstr ""
@@ -1091,13 +1091,13 @@ msgid "An error occurred"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id.vue:144
+#: src/pages/image/_id.vue:148
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/audio/_id.vue:66
+#: src/pages/audio/_id.vue:67
 msgctxt "error.media-not-found"
 msgid "Couldn't find ###mediaType### with id ###id###"
 msgstr ""
@@ -1814,7 +1814,7 @@ msgctxt "header.api-nav-item"
 msgid "API"
 msgstr ""
 
-#: src/components/VHeader/VHeader.vue:152
+#: src/components/VHeader/VHeader.vue:153
 msgctxt "header.loading"
 msgid "Loading..."
 msgstr ""
@@ -1825,7 +1825,7 @@ msgid "Filters"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VFilterButton.vue:81
+#: src/components/VHeader/VFilterButton.vue:82
 msgctxt "header.filter-button.with-count"
 msgid "###count### Filter"
 msgid_plural "###count### Filters"
