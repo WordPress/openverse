@@ -1,5 +1,7 @@
 import DropdownButton from '~/components/DropdownButton'
 
+import { log } from '~/utils/console'
+
 export default {
   title: 'Components/DropdownButton',
   component: DropdownButton,
@@ -41,13 +43,13 @@ export const Default = (args, { argTypes }) => ({
   },
   computed: {
     activeItem() {
-      console.log(this)
+      log(this)
       return this.items.find((item) => item.active)
     },
   },
   methods: {
     onClick(event) {
-      console.log(event)
+      log(event)
       alert('clicked!')
     },
     setActive(toActivate) {

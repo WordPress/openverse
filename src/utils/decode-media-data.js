@@ -1,4 +1,4 @@
-import decodeData from '~/utils/decode-data'
+import { decodeData } from '~/utils/decode-data'
 import { IMAGE } from '~/constants/media'
 
 /**

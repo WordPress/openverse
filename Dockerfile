@@ -76,7 +76,7 @@ COPY pnpm-lock.yaml .
 COPY .npmrc .
 
 # copy the nuxt configuration file
-COPY --from=builder /usr/app/nuxt.config.js .
+COPY --from=builder /usr/app/nuxt.config.ts .
 
 # copy distribution directory with the static content
 COPY --from=builder /usr/app/.nuxt /usr/app/.nuxt
@@ -106,4 +106,3 @@ EXPOSE 8443
 
 # run the application in static mode
 ENTRYPOINT ["pnpm", "run", "start"]
-

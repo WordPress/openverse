@@ -31,7 +31,7 @@ import {
   computed,
 } from '@nuxtjs/composition-api'
 import VLink from '~/components/VLink.vue'
-import { warn } from '@/utils/warn'
+import { warn } from '~/utils/console'
 
 /**
  * A button component that behaves just like a regular HTML `button` element

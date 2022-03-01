@@ -2,6 +2,8 @@ import VPopover from '~/components/VPopover/VPopover.vue'
 import VButton from '~/components/VButton'
 import { placements as popoverPlacements } from '@popperjs/core'
 
+import { log } from '~/utils/console'
+
 export default {
   component: VPopover,
   title: 'Components/VPopover',
@@ -37,8 +39,8 @@ const SinglePopoverStory = (args, { argTypes }) => ({
   `,
   components: { VPopover, VButton },
   setup() {
-    const onOpen = () => console.log('opened!')
-    const onClose = () => console.log('closed!')
+    const onOpen = () => log('opened!')
+    const onClose = () => log('closed!')
 
     return { onOpen, onClose }
   },

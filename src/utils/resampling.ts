@@ -2,23 +2,22 @@
  * Resizes a given array to consist of more elements than provided. This uses
  * linear interpolation to fill in the gaps.
  *
- * @param data {number[]} the list of data points to interpolate
- * @param threshold {number} the number of expected data points from the array
- * @returns {number[]} the array with the required number of points
+ * @param data - the list of data points to interpolate
+ * @param threshold - the number of expected data points from the array
+ * @returns the array with the required number of points
  */
-export let upsampleArray = (data, threshold) => {
-  let linearInterpolate = function (before, after, atPoint) {
-    return before + (after - before) * atPoint
-  }
+export const upsampleArray = (data: number[], threshold: number): number[] => {
+  const linearInterpolate = (before: number, after: number, atPoint: number) =>
+    before + (after - before) * atPoint
 
-  let newData = []
-  let springFactor = (data.length - 1) / (threshold - 1)
+  const newData = []
+  const springFactor = (data.length - 1) / (threshold - 1)
   newData[0] = data[0] // for new allocation
   for (let i = 1; i < threshold - 1; i++) {
-    let tmp = i * springFactor
-    let before = Math.floor(tmp).toFixed()
-    let after = Math.ceil(tmp).toFixed()
-    let atPoint = tmp - before
+    const tmp = i * springFactor
+    const before = Math.floor(tmp)
+    const after = Math.ceil(tmp)
+    const atPoint = tmp - before
     newData[i] = linearInterpolate(data[before], data[after], atPoint)
   }
   newData[threshold - 1] = data[data.length - 1] // for new allocation
@@ -26,23 +25,23 @@ export let upsampleArray = (data, threshold) => {
 }
 
 /**
- * Resizes a given array to consist of less elements than provided. This uses
+ * Resizes a given array to consist of fewer elements than provided. This uses
  * the Largest Triangle Three Buckets algorithm by Sveinn Steinarsson.
  *
  * @see {@link https://github.com/sveinn-steinarsson/flot-downsample}
  *
- * @param data {number[]} the list of data points to interpolate
- * @param threshold {number} the number of expected data points from the array
- * @returns {number[]} the array with the required number of points
+ * @param data - the list of data points to interpolate
+ * @param threshold - the number of expected data points from the array
+ * @returns the array with the required number of points
  */
-export const downsampleArray = (data, threshold) => {
-  let dataLength = data.length
+export const downsampleArray = (data: number[], threshold: number) => {
+  const dataLength = data.length
 
-  let sampled = []
+  const sampled = []
   let sampled_index = 0
 
   // Bucket size, except first and last point
-  let every = (dataLength - 2) / (threshold - 2)
+  const every = (dataLength - 2) / (threshold - 2)
 
   let a = 0
   let max_area_point, max_area, area, next_a
@@ -56,7 +55,7 @@ export const downsampleArray = (data, threshold) => {
     let avg_range_end = Math.floor((i + 2) * every) + 1
     avg_range_end = avg_range_end < dataLength ? avg_range_end : dataLength
 
-    let avg_range_length = avg_range_end - avg_range_start
+    const avg_range_length = avg_range_end - avg_range_start
 
     for (; avg_range_start < avg_range_end; avg_range_start++) {
       avg_x += avg_range_start
@@ -67,12 +66,15 @@ export const downsampleArray = (data, threshold) => {
 
     // Get the range for this bucket
     let range_offs = Math.floor(i * every) + 1
-    let range_to = Math.floor((i + 1) * every) + 1
+    const range_to = Math.floor((i + 1) * every) + 1
 
-    let point_a_x = a
-    let point_a_y = data[a]
+    const point_a_x = a
+    const point_a_y = data[a]
 
     max_area = area = -1
+
+    max_area_point = 0
+    next_a = 0
 
     for (; range_offs < range_to; range_offs++) {
       // Calculate triangle area over three buckets

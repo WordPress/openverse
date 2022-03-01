@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { warn } from '~/utils/warn'
+import { warn } from '~/utils/console'
 import { AUDIO, IMAGE } from '~/constants/media'
 
 const DEFAULT_REQUEST_TIMEOUT = 30000

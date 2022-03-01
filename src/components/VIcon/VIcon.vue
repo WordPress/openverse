@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { isTest } from '~/utils/node-env'
+
 /**
  * Displays the given icon in a 24px × 24px square.
  */
@@ -33,7 +35,7 @@ export default {
       /**
        * In `jest` our icons get transformed to Vue components
        */
-      type: process.env.NODE_ENV === 'test' ? Object : String,
+      type: isTest ? Object : String,
       required: true,
     },
     /**

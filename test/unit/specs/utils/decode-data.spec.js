@@ -1,4 +1,4 @@
-import decodeData from '~/utils/decode-data'
+import { decodeData } from '~/utils/decode-data'
 
 describe('decodeData', () => {
   it('returns empty string for empty string', () => {
@@ -16,7 +16,7 @@ describe('decodeData', () => {
   it('returns decoded ASCII hexacode strings', () => {
     const data = 's\\xe9'
 
-    expect(decodeData(data)).toBe('s\xe9')
+    expect(decodeData(data)).toBe('sé')
   })
 
   it('returns decoded unicode strings', () => {

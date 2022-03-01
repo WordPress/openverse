@@ -74,7 +74,7 @@ import {
   VItemGroupFocusContextKey,
 } from './VItemGroup.vue'
 import { VPopoverContentContextKey } from '~/components/VPopover/VPopoverContent.vue'
-import { warn } from '~/utils/warn'
+import { warn } from '~/utils/console'
 
 export default defineComponent({
   name: 'VItem',

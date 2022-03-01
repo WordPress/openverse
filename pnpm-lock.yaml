@@ -46,6 +46,7 @@ specifiers:
   eslint-config-prettier: ^8.1.0
   eslint-loader: ^4.0.2
   eslint-plugin-prettier: ^3.3.1
+  eslint-plugin-tsdoc: ^0.2.14
   eslint-plugin-unicorn: ^35.0.0
   eslint-plugin-vue: ^7.8.0
   eslint-plugin-vuejs-accessibility: ^0.6.1
@@ -157,6 +158,7 @@ devDependencies:
   eslint-config-prettier: 8.3.0_eslint@7.32.0
   eslint-loader: 4.0.2_eslint@7.32.0
   eslint-plugin-prettier: 3.4.1_6e6a25a49a944db0fa38418c3ba4bc86
+  eslint-plugin-tsdoc: 0.2.14
   eslint-plugin-unicorn: 35.0.0_eslint@7.32.0
   eslint-plugin-vue: 7.20.0_eslint@7.32.0
   eslint-plugin-vuejs-accessibility: 0.6.2_eslint@7.32.0
@@ -3093,6 +3095,19 @@ packages:
 
   /@mdx-js/util/1.6.22:
     resolution: {integrity: sha512-H1rQc1ZOHANWBvPcW+JpGwr+juXSxM8Q8YCkm3GhZd8REu1fHR3z99CErO1p9pkcfcxZnMdIZdIsXkOHY0NilA==}
+    dev: true
+
+  /@microsoft/tsdoc-config/0.15.2:
+    resolution: {integrity: sha512-mK19b2wJHSdNf8znXSMYVShAHktVr/ib0Ck2FA3lsVBSEhSI/TfXT7DJQkAYgcztTuwazGcg58ZjYdk0hTCVrA==}
+    dependencies:
+      '@microsoft/tsdoc': 0.13.2
+      ajv: 6.12.6
+      jju: 1.4.0
+      resolve: 1.19.0
+    dev: true
+
+  /@microsoft/tsdoc/0.13.2:
+    resolution: {integrity: sha512-WrHvO8PDL8wd8T2+zBGKrMwVL5IyzR3ryWUsl0PXgEV0QHup4mTLi0QcATefGI6Gx9Anu7vthPyyyLpY0EpiQg==}
     dev: true
 
   /@mrmlnc/readdir-enhanced/2.2.1:
@@ -9508,6 +9523,13 @@ packages:
       prettier-linter-helpers: 1.0.0
     dev: true
 
+  /eslint-plugin-tsdoc/0.2.14:
+    resolution: {integrity: sha512-fJ3fnZRsdIoBZgzkQjv8vAj6NeeOoFkTfgosj6mKsFjX70QV256sA/wq+y/R2+OL4L8E79VVaVWrPeZnKNe8Ng==}
+    dependencies:
+      '@microsoft/tsdoc': 0.13.2
+      '@microsoft/tsdoc-config': 0.15.2
+    dev: true
+
   /eslint-plugin-unicorn/35.0.0_eslint@7.32.0:
     resolution: {integrity: sha512-FHsaO68tDPQILfs/mGF8eSISJp8RswR4FpUuBDnueK2wyEHC6zmsc9WxjYyldXoIsBuVmru6jQyFCbCWPoW/KQ==}
     engines: {node: '>=12'}
@@ -12308,6 +12330,10 @@ packages:
   /jiti/1.12.9:
     resolution: {integrity: sha512-TdcJywkQtcwLxogc4rSMAi479G2eDPzfW0fLySks7TPhgZZ4s/tM6stnzayIh3gS/db3zExWJyUx4cNWrwAmoQ==}
     hasBin: true
+
+  /jju/1.4.0:
+    resolution: {integrity: sha1-o6vicYryQaKykE+EpiWXDzia4yo=}
+    dev: true
 
   /joi/17.5.0:
     resolution: {integrity: sha512-R7hR50COp7StzLnDi4ywOXHrBrgNXuUUfJWIR5lPY5Bm/pOD3jZaTwpluUXVLRWcoWZxkrHBBJ5hLxgnlehbdw==}
@@ -16065,6 +16091,13 @@ packages:
   /resolve-url/0.2.1:
     resolution: {integrity: sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=}
     deprecated: https://github.com/lydell/resolve-url#deprecated
+
+  /resolve/1.19.0:
+    resolution: {integrity: sha512-rArEXAgsBG4UgRGcynxWIWKFvh/XZCcS8UJdHhwy91zwAvCZIbcs+vAbflgBnNjYMs/i/i+/Ux6IZhML1yPvxg==}
+    dependencies:
+      is-core-module: 2.8.0
+      path-parse: 1.0.7
+    dev: true
 
   /resolve/1.20.0:
     resolution: {integrity: sha512-wENBPt4ySzg4ybFQW2TT1zMQucPK95HSh/nq2CFTZVOGut2+pQvSsgtda4d26YrYcr067wjbmzOG8byDPBX63A==}

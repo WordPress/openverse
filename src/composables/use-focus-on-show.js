@@ -3,7 +3,7 @@ import { getFirstTabbableIn } from 'reakit-utils/tabbable'
 import { hasFocusWithin } from 'reakit-utils/hasFocusWithin'
 import { ensureFocus } from 'reakit-utils/ensureFocus'
 
-import { warn } from '~/utils/warn'
+import { warn } from '~/utils/console'
 
 export const noFocusableElementWarning =
   "It's recommended to have at least one tabbable element inside dialog. The dialog element has been automatically focused. If this is the intended behavior, pass `tabIndex={0}` to the dialog element to disable this warning."

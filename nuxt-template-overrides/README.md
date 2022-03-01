@@ -1,6 +1,6 @@
 # Nuxt vue-app template overrides
 
-Due to a CSS ordering bug that we haven't been able to find any other solutions for, we've had to override the Nuxt templates for the `App.js` and `index.js` files to prevent any Vue components from being imported before the static CSS assets in the `nuxt.config.js`.
+Due to a CSS ordering bug that we haven't been able to find any other solutions for, we've had to override the Nuxt templates for the `App.js` and `index.js` files to prevent any Vue components from being imported before the static CSS assets in the `nuxt.config.ts`.
 
 ## Described changes
 

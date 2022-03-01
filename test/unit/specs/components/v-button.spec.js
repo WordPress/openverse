@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/vue'
 
 import VButton from '~/components/VButton.vue'
-import { warn } from '~/utils/warn'
+import { warn } from '~/utils/console'
 
-jest.mock('~/utils/warn', () => ({ warn: jest.fn() }))
+jest.mock('~/utils/console', () => ({ warn: jest.fn(), log: jest.fn() }))
 
 const nextTick = () => new Promise((r) => setTimeout(r, 0))
 /**

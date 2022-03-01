@@ -10,8 +10,8 @@ const { addFetchedTranslationStatus } = require('./get-translations-status')
 /**
  * Returns a list of locale objects with at least one translated string
  * @returns {{
- * translated: import('./types').i18nLocaleProps[],
- * untranslated: import('./types').i18nLocaleProps[]
+ * translated: import('./types').I18nLocaleProps[],
+ * untranslated: import('./types').I18nLocaleProps[]
  * }}
  */
 const getValidatedLocales = async () => {

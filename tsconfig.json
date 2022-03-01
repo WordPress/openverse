@@ -33,7 +33,7 @@
     "baseUrl": "."
   },
   "include": [
-    "src/**/*.ts",
+    "**/*.ts",
     "src/composables/types.js",
     "src/composables/use-event-listener-outside.js",
     "src/composables/use-active-audio.js",
@@ -46,12 +46,10 @@
     "src/data/api-service.js",
     "src/data/usage-data-service.js",
     "src/store/user.js",
-    "src/utils/decode-data.js",
     "src/utils/decode-media-data.js",
     "src/utils/deep-freeze.js",
     "src/utils/key-codes.js",
-    "src/utils/local.js",
-    "src/utils/warn.js"
+    "src/utils/local.js"
   ],
   "exclude": ["node_modules"]
 }

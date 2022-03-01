@@ -149,8 +149,9 @@ export interface ActiveMediaState {
   status: 'ejected' | 'playing' | 'paused' // 'ejected' means player is closed
 }
 
-export interface MediaStoreResult<T extends FrontendMediaType>
-  extends MediaResult<Record<MediaDetail['id'], T>> {}
+export type MediaStoreResult<T extends FrontendMediaType> = MediaResult<
+  Record<MediaDetail['id'], T>
+>
 
 export interface MediaState {
   results: {

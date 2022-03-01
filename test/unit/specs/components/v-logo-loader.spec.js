@@ -2,8 +2,9 @@ import { render, screen } from '@testing-library/vue'
 import VLogoLoader from '~/components/VLogoLoader/VLogoLoader.vue'
 import { useReducedMotion } from '~/composables/use-media-query'
 
-jest.mock('~/utils/warn', () => ({
+jest.mock('~/utils/console', () => ({
   warn: jest.fn(),
+  log: jest.fn(),
 }))
 
 jest.mock('~/composables/use-media-query', () => ({

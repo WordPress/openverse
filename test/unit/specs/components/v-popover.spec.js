@@ -4,9 +4,9 @@ import userEvent from '@testing-library/user-event'
 import VButton from '~/components/VButton.vue'
 import VPopover from '~/components/VPopover/VPopover.vue'
 import { noFocusableElementWarning } from '~/composables/use-focus-on-show'
-import { warn } from '~/utils/warn'
+import { warn } from '~/utils/console'
 
-jest.mock('~/utils/warn', () => ({
+jest.mock('~/utils/console', () => ({
   warn: jest.fn(),
 }))
 

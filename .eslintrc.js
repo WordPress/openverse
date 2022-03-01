@@ -18,7 +18,13 @@ module.exports = {
     'plugin:@intlify/vue-i18n/recommended',
   ],
   // required to lint *.vue files
-  plugins: ['@typescript-eslint', 'vue', 'vuejs-accessibility', 'unicorn'],
+  plugins: [
+    '@typescript-eslint',
+    'eslint-plugin-tsdoc',
+    'vue',
+    'vuejs-accessibility',
+    'unicorn',
+  ],
   // add your custom rules here
   rules: {
     semi: [2, 'never'],
@@ -75,6 +81,14 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': ['warn'],
     '@typescript-eslint/no-var-requires': ['warn'],
   },
+  overrides: [
+    {
+      files: ['*.ts'],
+      rules: {
+        'tsdoc/syntax': 'warn',
+      },
+    },
+  ],
   settings: {
     'vue-i18n': {
       localeDir: './src/locales/*.{json}',

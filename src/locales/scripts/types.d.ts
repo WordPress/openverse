@@ -1,3 +1,9 @@
-/**
- * @typedef {{ code: string, wpLocale?: string, file?: string, iso?: string, name: string, dir?: string, translated?: number }} i18nLocaleProps
- */
+export interface I18nLocaleProps {
+  code: string
+  name: string
+  wpLocale?: string
+  file?: string
+  iso?: string
+  dir?: string
+  translated?: number
+}

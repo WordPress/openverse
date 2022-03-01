@@ -45,7 +45,7 @@
 import { defineComponent, toRefs, ref } from '@nuxtjs/composition-api'
 import { FocusTrap } from 'focus-trap-vue'
 import { useDialogContent } from '~/composables/use-dialog-content'
-import { warn } from '~/utils/warn'
+import { warn } from '~/utils/console'
 
 import closeIcon from '~/assets/icons/close.svg'
 
