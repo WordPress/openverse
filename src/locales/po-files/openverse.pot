@@ -62,7 +62,7 @@ msgctxt "search-type.see-audio"
 msgid "See all audio"
 msgstr ""
 
-#: src/components/VFilters/VFilterChecklist.vue:41
+#: src/components/VFilters/VFilterChecklist.vue:44
 msgctxt "modal.close"
 msgid "Close"
 msgstr ""
@@ -733,7 +733,7 @@ msgctxt "browse-page.aria.remove-filter"
 msgid "remove filter"
 msgstr ""
 
-#: src/components/VFilters/VFilterChecklist.vue:31
+#: src/components/VFilters/VFilterChecklist.vue:27
 msgctxt "browse-page.aria.license-explanation"
 msgid "license explanation"
 msgstr ""
@@ -893,7 +893,7 @@ msgctxt "filters.license-explanation.more.read-more"
 msgid "Read more"
 msgstr ""
 
-#: src/components/VFilters/VFilterChecklist.vue:94
+#: src/components/VFilters/VFilterChecklist.vue:95
 msgctxt "filters.search-by.title"
 msgid "Search By"
 msgstr ""
