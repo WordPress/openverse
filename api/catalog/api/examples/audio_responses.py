@@ -36,6 +36,7 @@ base_audio = {
     "related_url": f"{origin}/v1/audio/{identifier}/related/",
     "category": "music",
     "duration": 270000,
+    "peaks": [],
 }
 
 audio_search_200_example = {

@@ -1,12 +1,14 @@
 from catalog.api.controllers.search_controller import get_sources
 from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import AudioReport
+from catalog.api.models.audio import Audio
 from catalog.api.serializers.media_serializers import (
     MediaSearchRequestSerializer,
     MediaSearchSerializer,
     MediaSerializer,
     _validate_enum,
 )
+from elasticsearch_dsl.response import Hit
 from rest_framework import serializers
 
 
@@ -170,6 +172,15 @@ class AudioSerializer(MediaSerializer):
         lookup_field="identifier",
         help_text="A link to an endpoint that provides similar audio files.",
     )
+
+    # Add-on data
+    peaks = serializers.SerializerMethodField()
+
+    @staticmethod
+    def get_peaks(obj):
+        if isinstance(obj, Hit):
+            obj = Audio.objects.get(identifier=obj.identifier)
+        return obj.get_waveform()
 
 
 class AudioSearchSerializer(MediaSearchSerializer):
