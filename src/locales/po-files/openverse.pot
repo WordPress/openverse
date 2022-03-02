@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-03-01T15:54:20+00:00\n"
+"POT-Creation-Date: 2022-03-02T16:06:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -893,7 +893,7 @@ msgctxt "filters.license-explanation.more.read-more"
 msgid "Read more"
 msgstr ""
 
-#: src/components/VFilters/VFilterChecklist.vue:89
+#: src/components/VFilters/VFilterChecklist.vue:94
 msgctxt "filters.search-by.title"
 msgid "Search By"
 msgstr ""

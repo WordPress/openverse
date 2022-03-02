@@ -36,7 +36,7 @@ test.skip('shows search result metadata', async ({ page }) => {
   await expect(loadMoreButton).toHaveCount(1)
   await loadMoreButton.click()
   // All search results have been shown, cannot load more
-  await expect(loadMoreButton).toHaveCount(0)
+  await expect(loadMoreButton).toHaveCount(0, { timeout: 300 })
 })
 
 test('navigates to the image detail page correctly', async ({ page }) => {

@@ -59,6 +59,9 @@ import VLicense from '~/components/License/VLicense.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VPopover from '~/components/VPopover/VPopover.vue'
 
+import VIconButton from '~/components/VIconButton/VIconButton.vue'
+import VButton from '~/components/VButton.vue'
+
 import closeSmallIcon from '~/assets/icons/close-small.svg'
 
 import helpIcon from '~/assets/icons/help.svg'
@@ -67,7 +70,9 @@ export default {
   name: 'FilterCheckList',
   components: {
     VCheckbox,
+    VButton,
     VIcon,
+    VIconButton,
     VLicense,
     VLicenseExplanation,
     VPopover,

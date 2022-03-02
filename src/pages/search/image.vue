@@ -8,12 +8,7 @@
 </template>
 
 <script>
-import {
-  useStore,
-  computed,
-  defineComponent,
-  useMeta,
-} from '@nuxtjs/composition-api'
+import { computed, defineComponent, useMeta } from '@nuxtjs/composition-api'
 
 import { propTypes } from '~/pages/search/search-page.types'
 import { useLoadMore } from '~/composables/use-load-more'
@@ -22,10 +17,7 @@ const ImageSearch = defineComponent({
   name: 'ImageSearch',
   props: propTypes,
   setup(props) {
-    const store = useStore()
-
-    const query = computed(() => store.state.search.query.q)
-    useMeta({ title: `${query.value} - Openverse` })
+    useMeta({ title: `${props.searchTerm} | Openverse` })
 
     const results = computed(() =>
       Object.values(props.mediaResults?.image?.items ?? [])

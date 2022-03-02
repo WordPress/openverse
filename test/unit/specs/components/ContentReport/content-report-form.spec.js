@@ -58,6 +58,7 @@ describe('VContentReportForm', () => {
         provider: 'provider',
       },
       providerName: 'Provider',
+      closeFn: jest.fn(),
       reportService: reportServiceProp,
     }
 

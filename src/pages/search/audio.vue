@@ -27,7 +27,6 @@ import {
   defineComponent,
   useContext,
   useMeta,
-  useStore,
 } from '@nuxtjs/composition-api'
 
 import { useLoadMore } from '~/composables/use-load-more'
@@ -53,11 +52,9 @@ const AudioSearch = defineComponent({
   },
   props: propTypes,
   setup(props) {
-    const store = useStore()
     const { i18n } = useContext()
 
-    const query = computed(() => store.state.search.query.q)
-    useMeta({ title: `${query.value} - Openverse` })
+    useMeta({ title: `${props.searchTerm} | Openverse` })
 
     const results = computed(() =>
       Object.values(props.mediaResults?.audio?.items ?? [])

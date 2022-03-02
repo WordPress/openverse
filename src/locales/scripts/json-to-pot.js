@@ -16,7 +16,7 @@ try {
 
   if (existingPotFile === potFile.replace(matchPotCreationDate, '')) {
     console.log('No change detected in pot file, skipping write')
-    return process.exit(0)
+    process.exit(0)
   }
 
   fs.writeFileSync(fileName, createPotFile(json))
