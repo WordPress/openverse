@@ -165,7 +165,7 @@ module.exports = {
         },
         /**
          * SVG imports are excluded for the import/no-unresolved
-         * rule above due to due to lack of support for `?inline` suffix
+         * rule above due to lack of support for `?inline` suffix
          *
          * Therefore, there's no need to configure them here
          */
