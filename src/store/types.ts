@@ -147,6 +147,7 @@ export interface ActiveMediaState {
   type: SupportedMediaType | null
   id: string | null
   status: 'ejected' | 'playing' | 'paused' // 'ejected' means player is closed
+  message: string | null
 }
 
 export type MediaStoreResult<T extends FrontendMediaType> = MediaResult<
@@ -158,7 +159,7 @@ export interface MediaState {
     audio: MediaStoreResult<'audio'>
     image: MediaStoreResult<'image'>
   }
-  fetchState: {
+  mediaFetchState: {
     audio: FetchState
     image: FetchState
   }

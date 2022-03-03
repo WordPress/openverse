@@ -13,19 +13,23 @@
 <script>
 import { useStore, useRoute, watch, computed } from '@nuxtjs/composition-api'
 
-import { ACTIVE } from '~/constants/store-modules'
-import {
-  SET_MESSAGE,
-  EJECT_ACTIVE_MEDIA_ITEM,
-} from '~/constants/mutation-types'
-
 import { useActiveAudio } from '~/composables/use-active-audio'
+
+import { useActiveMediaStore } from '~/stores/active-media'
+
+import VIconButton from '~/components/VIconButton/VIconButton.vue'
+import VGlobalAudioTrack from '~/components/VAudioTrack/VGlobalAudioTrack.vue'
 
 import closeIcon from '~/assets/icons/close-small.svg'
 
 export default {
   name: 'VGlobalAudioSection',
+  components: {
+    VGlobalAudioTrack,
+    VIconButton,
+  },
   setup() {
+    const activeMediaStore = useActiveMediaStore()
     const store = useStore()
     const route = useRoute()
 
@@ -34,7 +38,7 @@ export default {
     /* Active audio track */
 
     const audio = computed(() => {
-      const trackId = store.state.active.id
+      const trackId = activeMediaStore.id
       if (trackId) {
         return store.state.media.results.audio.items[trackId]
       }
@@ -60,9 +64,7 @@ export default {
           errorMsg = 'err_unsupported'
           break
       }
-      store.commit(`${ACTIVE}/${SET_MESSAGE}`, {
-        message: errorMsg,
-      })
+      activeMediaStore.setMessage({ message: errorMsg })
     }
 
     watch(
@@ -78,9 +80,7 @@ export default {
       { immediate: true }
     )
 
-    const handleClose = () => {
-      store.commit(`${ACTIVE}/${EJECT_ACTIVE_MEDIA_ITEM}`)
-    }
+    const handleClose = activeMediaStore.ejectActiveMediaItem
 
     /* Router observation */
 
@@ -91,7 +91,7 @@ export default {
         !routeNameVal.includes('audio')
       ) {
         activeAudio.obj.value?.pause()
-        store.commit(`${ACTIVE}/${EJECT_ACTIVE_MEDIA_ITEM}`)
+        activeMediaStore.ejectActiveMediaItem()
       }
     })
 

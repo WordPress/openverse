@@ -47,7 +47,6 @@ import VScrollButton from '~/components/VScrollButton.vue'
 
 const BrowsePage = {
   name: 'browse-page',
-  layout: 'default',
   components: {
     VScrollButton,
     VSearchGrid,

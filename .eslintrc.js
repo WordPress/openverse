@@ -1,3 +1,6 @@
+// WebStorm fix for `~` alias not working:
+// https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000771544-ESLint-does-not-work-with-webpack-import-resolver-in-2017-3
+process.chdir(__dirname)
 module.exports = {
   root: true,
   env: {

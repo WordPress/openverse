@@ -29,15 +29,11 @@
 </template>
 
 <script>
-import {
-  computed,
-  defineComponent,
-  ref,
-  useStore,
-  watch,
-} from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref, watch } from '@nuxtjs/composition-api'
 
 import { useActiveAudio } from '~/composables/use-active-audio'
+
+import { useActiveMediaStore } from '~/stores/active-media'
 
 import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
 import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
@@ -107,8 +103,7 @@ export default defineComponent({
    * @param {import('@nuxtjs/composition-api').ExtractPropTypes<typeof propTypes>} props
    */
   setup(props) {
-    const store = useStore()
-
+    const activeMediaStore = useActiveMediaStore()
     const activeAudio = useActiveAudio()
 
     const status = ref('paused')
@@ -200,7 +195,7 @@ export default defineComponent({
       () => audioDuration.value ?? props.audio?.duration / 1e3 ?? 0
     ) // seconds
 
-    const message = computed(() => store.state.active.message)
+    const message = computed(() => activeMediaStore.message)
 
     /* Interface with VPlayPause */
 

@@ -1,6 +1,9 @@
 import { render } from '@testing-library/vue'
 import Vuei18n from 'vue-i18n'
 import Vuex from 'vuex'
+import { setActivePinia, createPinia, PiniaVuePlugin } from 'pinia'
+
+import { useActiveMediaStore } from '~/stores/active-media'
 
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 
@@ -23,35 +26,32 @@ const useVueI18n = (vue) => {
     i18n,
   }
 }
-const useVuexStore = (vue) => {
+const useStore = (vue) => {
   vue.use(Vuex)
-
-  const store = new Vuex.Store({
-    modules: {
-      active: {
-        namespaced: true,
-        state: {
-          type: 'audio',
-          id: 'e19345b8-6937-49f7-a0fd-03bf057efc28',
-          message: null,
-          state: 'paused',
-        },
-      },
+  vue.use(PiniaVuePlugin)
+  const pinia = createPinia()
+  const activeMediaStore = useActiveMediaStore(pinia)
+  activeMediaStore.$patch({
+    state: {
+      type: 'audio',
+      id: 'e19345b8-6937-49f7-a0fd-03bf057efc28',
+      message: null,
+      state: 'paused',
     },
   })
 
   return {
-    store,
+    pinia,
   }
 }
 
 const configureVue = (vue) => {
   const { i18n } = useVueI18n(vue)
-  const { store } = useVuexStore(vue)
+  const { pinia } = useStore(vue)
 
   return {
     i18n,
-    store,
+    pinia,
     /** @todo Create a better mock that can be configured to test this behavior.  */
   }
 }
@@ -120,6 +120,8 @@ describe('AudioTrack', () => {
         $nuxt: { context: { i18n: { t: jest.fn() } } },
       },
     }
+
+    setActivePinia(createPinia())
   })
 
   it('should render the full audio track component even without duration', () => {

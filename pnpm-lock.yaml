@@ -18,6 +18,8 @@ specifiers:
   '@nuxtjs/storybook': ^4.1.1
   '@nuxtjs/style-resources': ^1.0.0
   '@nuxtjs/svg': ^0.3.0
+  '@pinia/nuxt': ^0.1.8
+  '@pinia/testing': ^0.0.9
   '@playwright/test': ^1.16.2
   '@popperjs/core': ^2.11.2
   '@tailwindcss/line-clamp': ^0.3.1
@@ -74,6 +76,7 @@ specifiers:
   lodash.throttle: ^4.1.1
   node-html-parser: ^5.1.0
   nuxt: ^2.15.4
+  pinia: ^2.0.11
   postcss: ^8.4.5
   postcss-focus-visible: ^6.0.3
   prettier: ^2.2.1
@@ -103,6 +106,7 @@ dependencies:
   '@nuxtjs/sentry': 5.1.6
   '@nuxtjs/sitemap': 2.4.0
   '@nuxtjs/svg': 0.3.0
+  '@pinia/nuxt': 0.1.8_pinia@2.0.11
   '@popperjs/core': 2.11.2
   '@tailwindcss/line-clamp': 0.3.1_tailwindcss@3.0.9
   '@wordpress/is-shallow-equal': 4.3.1
@@ -131,6 +135,7 @@ dependencies:
   lodash.throttle: 4.1.1
   node-html-parser: 5.1.0
   nuxt: 2.15.8_typescript@4.5.5
+  pinia: 2.0.11_typescript@4.5.5
   postcss-focus-visible: 6.0.3_postcss@8.4.5
   reakit-utils: 0.15.2
   seeded-rand: 2.0.1
@@ -146,6 +151,7 @@ devDependencies:
   '@nuxtjs/eslint-module': 3.0.2_eslint@7.32.0
   '@nuxtjs/storybook': 4.2.0_eslint@7.32.0+typescript@4.5.5
   '@nuxtjs/style-resources': 1.2.1
+  '@pinia/testing': 0.0.9_pinia@2.0.11
   '@playwright/test': 1.17.1
   '@testing-library/jest-dom': 5.16.1
   '@testing-library/user-event': 13.5.0
@@ -3714,6 +3720,30 @@ packages:
       stack-trace: 0.0.10
     dev: false
 
+  /@pinia/nuxt/0.1.8_pinia@2.0.11:
+    resolution: {integrity: sha512-+M1GH/4XQdooOulPL7aYzli6UE1R5rWJtgcPhx2/97yYRLhKZvuIT33OauUCjYZ+tQVs8lyKfzt6S2agqzcmWg==}
+    peerDependencies:
+      pinia: ~2.0.9
+    dependencies:
+      pinia: 2.0.11_typescript@4.5.5
+      vue-demi: 0.12.1
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+    dev: false
+
+  /@pinia/testing/0.0.9_pinia@2.0.11:
+    resolution: {integrity: sha512-JG+th+BENR89/7vpRxafDApU56AECZ9m+THd8IKsgomyRXaiRRdwt0BLbjStTkksnoNZfZBCz5NszykyNxz/sQ==}
+    peerDependencies:
+      pinia: ~2.0.7
+    dependencies:
+      pinia: 2.0.11_typescript@4.5.5
+      vue-demi: 0.12.1
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+    dev: true
+
   /@playwright/test/1.17.1:
     resolution: {integrity: sha512-mMZS5OMTN/vUlqd1JZkFoAk2FsIZ4/E/00tw5it2c/VF4+3z/aWO+PPd8ShEGzYME7B16QGWNPjyFpDQI1t4RQ==}
     engines: {node: '>=12'}
@@ -6417,6 +6447,10 @@ packages:
       vue: '>= 2.5 < 3'
     dependencies:
       tslib: 2.3.1
+    dev: false
+
+  /@vue/devtools-api/6.0.12:
+    resolution: {integrity: sha512-iO/4FIezHKXhiDBdKySCvJVh8/mZPxHpiQrTy+PXVqJZgpTPTdHy4q8GXulaY+UKEagdkBb0onxNQZ0LNiqVhw==}
     dev: false
 
   /@vue/reactivity-transform/3.2.26:
@@ -14219,6 +14253,23 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
+  /pinia/2.0.11_typescript@4.5.5:
+    resolution: {integrity: sha512-JzcmnMqu28PNWOjDgEDK6fTrIzX8eQZKPPKvu/fpHdpXARUj1xeVdFi3YFIMOWswqaBd589cpmAMdSSTryI9iw==}
+    peerDependencies:
+      '@vue/composition-api': ^1.4.0
+      typescript: '>=4.4.4'
+      vue: ^2.6.14 || ^3.2.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      typescript:
+        optional: true
+    dependencies:
+      '@vue/devtools-api': 6.0.12
+      typescript: 4.5.5
+      vue-demi: 0.12.1
+    dev: false
+
   /pirates/4.0.4:
     resolution: {integrity: sha512-ZIrVPH+A52Dw84R0L3/VS9Op04PuQ2SEoJL6bkshmiTic/HldyW9Tf7oH5mhJZBK7NmDx27vSMrYEXPXclpDKw==}
     engines: {node: '>= 6'}
@@ -18300,6 +18351,18 @@ packages:
   /vue-client-only/2.1.0:
     resolution: {integrity: sha512-vKl1skEKn8EK9f8P2ZzhRnuaRHLHrlt1sbRmazlvsx6EiC3A8oWF8YCBrMJzoN+W3OnElwIGbVjsx6/xelY1AA==}
     dev: false
+
+  /vue-demi/0.12.1:
+    resolution: {integrity: sha512-QL3ny+wX8c6Xm1/EZylbgzdoDolye+VpCXRhI2hug9dJTP3OUJ3lmiKN3CsVV3mOJKwFi0nsstbgob0vG7aoIw==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
 
   /vue-docgen-api/4.43.0:
     resolution: {integrity: sha512-AF84gxj9W2Ret3TKeX2KEvr481lseqZIJIVvm5eUOrXT2fAywP94RLQF7BpZQmZxEONfsVgZZ1wTACUN6Csiaw==}

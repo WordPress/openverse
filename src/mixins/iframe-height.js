@@ -1,6 +1,7 @@
 import debounce from 'lodash.debounce'
 
 import { sendWindowMessage } from '~/utils/send-message'
+import { useNavStore } from '~/stores/nav'
 
 /**
  * When the app is in embedded mode, it passes the full height
@@ -10,7 +11,8 @@ import { sendWindowMessage } from '~/utils/send-message'
 export default {
   data: () => ({ height: 0, observer: null }),
   mounted() {
-    if (this.$store.state.nav.isEmbedded) {
+    const isEmbedded = useNavStore().isEmbedded
+    if (isEmbedded) {
       this.notifyOuterWindow(document.documentElement.scrollHeight)
       this.observer = this.createResizeObserver()
       this.observer?.observe(document.documentElement)

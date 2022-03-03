@@ -147,6 +147,8 @@ const config: NuxtConfig = {
     '@nuxtjs/style-resources',
     '@nuxtjs/svg',
     '@nuxtjs/eslint-module',
+    // @todo: Remove `disableVuex` once all stores are migrated to pinia
+    ['@pinia/nuxt', { disableVuex: false }],
   ],
   // Load the scss variables into every component:
   // No need to import them. Since the variables will not exist in the final build,
@@ -220,9 +222,16 @@ const config: NuxtConfig = {
         'postcss-focus-visible': {},
       },
     },
-    // Enables use of IDE debuggers
     extend(config, ctx) {
+      // Enables use of IDE debuggers
       config.devtool = ctx.isClient ? 'source-map' : 'inline-source-map'
+
+      // Mitigates import errors for Pinia
+      config.module?.rules.push({
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto',
+      })
     },
   },
   storybook: {

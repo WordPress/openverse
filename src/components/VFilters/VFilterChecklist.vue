@@ -59,10 +59,10 @@
 import VLicenseExplanation from '~/components/VFilters/VLicenseExplanation.vue'
 import VCheckbox from '~/components/VCheckbox/VCheckbox.vue'
 import VLicense from '~/components/License/VLicense.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VPopover from '~/components/VPopover/VPopover.vue'
 import VButton from '~/components/VButton.vue'
+import VIcon from '~/components/VIcon/VIcon.vue'
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
+import VPopover from '~/components/VPopover/VPopover.vue'
 
 import helpIcon from '~/assets/icons/help.svg'
 import closeSmallIcon from '~/assets/icons/close-small.svg'

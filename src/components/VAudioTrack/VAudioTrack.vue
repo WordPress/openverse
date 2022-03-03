@@ -50,12 +50,9 @@ import {
 
 import { useActiveAudio } from '~/composables/use-active-audio'
 
-import { ACTIVE, MEDIA } from '~/constants/store-modules'
+import { MEDIA } from '~/constants/store-modules'
 
-import {
-  PAUSE_ACTIVE_MEDIA_ITEM,
-  SET_ACTIVE_MEDIA_ITEM,
-} from '~/constants/mutation-types'
+import { useActiveMediaStore } from '~/stores/active-media'
 
 import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
 import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
@@ -123,6 +120,7 @@ export default defineComponent({
   },
   props: propTypes,
   setup(props, { emit }) {
+    const activeMediaStore = useActiveMediaStore()
     const store = useStore()
     const route = useRoute()
 
@@ -204,7 +202,7 @@ export default defineComponent({
     const setPlaying = () => {
       status.value = 'playing'
       activeAudio.obj.value = localAudio
-      store.commit(`${ACTIVE}/${SET_ACTIVE_MEDIA_ITEM}`, {
+      activeMediaStore.setActiveMediaItem({
         type: 'audio',
         id: props.audio.id,
       })
@@ -212,7 +210,7 @@ export default defineComponent({
     }
     const setPaused = () => {
       status.value = 'paused'
-      store.commit(`${ACTIVE}/${PAUSE_ACTIVE_MEDIA_ITEM}`)
+      activeMediaStore.pauseActiveMediaItem()
     }
     const setPlayed = () => (status.value = 'played')
     const setTimeWhenPaused = () => {
@@ -252,7 +250,7 @@ export default defineComponent({
       localAudio.removeEventListener('durationchange', setDuration)
 
       if (
-        route.value.params.id == props.audio.id ||
+        route.value.params.id === props.audio.id ||
         store.getters[`${MEDIA}/results`]?.items?.[props.audio.id]
       ) {
         /**
@@ -301,7 +299,7 @@ export default defineComponent({
       () => audioDuration.value ?? props.audio?.duration / 1e3 ?? 0 // seconds
     )
 
-    const message = computed(() => store.state.active.message)
+    const message = computed(() => activeMediaStore.message)
 
     /* Interface with VPlayPause */
 
