@@ -13,12 +13,12 @@
     >
       <img
         ref="img"
-        class="w-full h-full object-cover rounded-sm"
+        class="w-full h-full object-cover rounded-sm bg-dark-charcoal-10 text-dark-charcoal-10"
         loading="lazy"
         :alt="image.title"
         :src="getImageUrl(image)"
-        :width="image.width"
-        :height="image.height"
+        :width="250"
+        :height="250"
         itemprop="thumbnailUrl"
         @error="onImageLoadError($event, image)"
       />
