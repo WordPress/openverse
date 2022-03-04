@@ -113,19 +113,35 @@ Many of the fields towards the end are taken from examples on SketchFab (e.g. ht
 
 ## Some potential risks
 
-- 3D models are often heavy files. We should lazy-load and defer loading of these resources as much as possible.
-- We should probably use *thumbnails* rather than actually render 3D models in the search results. We *could* consider something like [SketchFab's search results](https://sketchfab.com/search?q=snacks&type=models), where they render a 3D model on hover of the search results, when on desktop.
-- We'll need to find a standardized 3d model viewer that will work with various formats. We *really, really* don't want to write our own code here. We will also need to decide if we want to use this universally, or use SketchFab's viewer for SketchFab models, which is an excellent viewer.
+### Performance
+
+3D models are often heavy files. We should lazy-load and defer loading of these resources as much as possible. We should probably use *thumbnails* rather than actually render 3D models in the search results. We *could* consider something like [SketchFab's search results](https://sketchfab.com/search?q=snacks&type=models), where they render a 3D model on hover of the search results, when on desktop.
+
 - We need to consider low power devices and low bandwidth connections. In both of these instances we'll want to try and significantly limit the number of downloaded assets. Some solutions for this might be:
   - Write new composables and/or components to detect user bandwidth and power (see https://github.com/GoogleChromeLabs/react-adaptive-hooks as an example in React!)
   - Only display thumbnails on list views
   - Have a 'play' button on single result views, that triggers the loading of code-split model viewer code
   - Simplify mobile models by default, by using flat colors instead of textures, limiting vertice counts, or other approaches. We need to research what is possible here, and what might give a user a false negative impression about a model. We don't want to inadvertently destroy someone's work to the point that users won't want to download it.
 
+### File types
+
+- Likely formats to support:
+  - [glTF](https://www.khronos.org/gltf/) 
+  - [fbx](https://docs.fileformat.com/3d/fbx/)
+  - [Usdz](https://www.marxentlabs.com/usdz-files/)
+  - [obj](https://all3dp.com/1/obj-file-format-3d-printing-cad/) 
+- We'll need to find a standardized 3d model viewer that will work with various formats. We *really, really* don't want to write our own code here. We will also need to decide if we want to use this universally, or use SketchFab's viewer for SketchFab models, which is an excellent viewer.
+  - [Trois](https://github.com/troisjs/trois) is a good candidate. This is a Vue3 renderer for ThreeJS. 
+
 ## Prior Art
 
 - We already show 3D models as [part of images](https://search.openverse.engineering/search/image?q=dogs&source=sketchfab,thingiverse), which is great! Fewer scripts to write on the catalog side.
 - We also already show Sketchfab's 3D model viewer for their single results: https://search-staging.openverse.engineering/image/00a6a7a4-6605-4cba-bacf-a08b0da546b9
+
+## Collaborators
+
+- The [Open Metaverse Interoperability Group](https://github.com/omigroup/omigroup) aims to standardized protocols for interactive elements in 3D scenes. Core contributor @antpb is a part of this group.
+- Our friend @nebulousflynn at Sketchfab might have some ideas and suggestions as well. 
 
 ## Some code considerations
 
@@ -154,7 +170,7 @@ Many of the fields towards the end are taken from examples on SketchFab (e.g. ht
 
 ### 2. Setup the data for 3D models
 
-- [ ] Create a feature flag for 3D model support. All 3D model features will be behind this.
+- [ ] Create a feature flag for 3D model support. All 3D model features will be behind this. *This specific implementation is waiting on a feature flag RFC and should be updated once that is finalized.*
 - [ ] Generate mock/sample api response data for 3D models.
 - [ ] Create a new media service for Models in the [data directory](https://github.com/WordPress/openverse-frontend/blob/fe24ec9bf6a4d3ad429901cef53744dccd93ed5d/src/data)
 - [ ] Update the [media constants](https://github.com/WordPress/openverse-frontend/blob/4aeb9fd0d9f893f2df1752d6bb1e52351b8c3d35/src/constants/media.js#L1) file with new constants for models, and under the `BETA` flag.
@@ -185,3 +201,7 @@ Design work for the new components must be completed, or at least in a good enou
 - Should we use SketchFab's viewer for SketchFab models?
 - Some models are meant to be 3D printed; some are meant to be used as assets in digital art and games; others are more like standalone pieces of artwork. There are probably different user stories for each of these types. How can we optimize our UI for all of these different experiences?
 
+## Related RFCs
+
+- Frontend Feature Flagging *Todo: Add link once created*
+- API Feature Flagging *Todo: Add link once created*
