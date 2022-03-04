@@ -116,6 +116,11 @@ Many of the fields towards the end are taken from examples on SketchFab (e.g. ht
 - 3D models are often heavy files. We should lazy-load and defer loading of these resources as much as possible.
 - We should probably use *thumbnails* rather than actually render 3D models in the search results. We *could* consider something like [SketchFab's search results](https://sketchfab.com/search?q=snacks&type=models), where they render a 3D model on hover of the search results, when on desktop.
 - We'll need to find a standardized 3d model viewer that will work with various formats. We *really, really* don't want to write our own code here. We will also need to decide if we want to use this universally, or use SketchFab's viewer for SketchFab models, which is an excellent viewer.
+- We need to consider low power devices and low bandwidth connections. In both of these instances we'll want to try and significantly limit the number of downloaded assets. Some solutions for this might be:
+  - Write new composables and/or components to detect user bandwidth and power (see https://github.com/GoogleChromeLabs/react-adaptive-hooks as an example in React!)
+  - Only display thumbnails on list views
+  - Have a 'play' button on single result views, that triggers the loading of code-split model viewer code
+  - Simplify mobile models by default, by using flat colors instead of textures, limiting vertice counts, or other approaches. We need to research what is possible here, and what might give a user a false negative impression about a model. We don't want to inadvertently destroy someone's work to the point that users won't want to download it.
 
 ## Prior Art
 
@@ -179,3 +184,4 @@ Design work for the new components must be completed, or at least in a good enou
 - What features do people need in a 3D model search engine? What functionality does our model viewer need to have?
 - Should we use SketchFab's viewer for SketchFab models?
 - Some models are meant to be 3D printed; some are meant to be used as assets in digital art and games; others are more like standalone pieces of artwork. There are probably different user stories for each of these types. How can we optimize our UI for all of these different experiences?
+
