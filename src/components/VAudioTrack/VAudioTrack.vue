@@ -1,6 +1,6 @@
 <template>
   <div
-    class="audio-track"
+    class="audio-track group"
     :aria-label="$t('audio-track.aria-label')"
     role="region"
     v-bind="layoutBasedProps"
