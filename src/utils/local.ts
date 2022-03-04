@@ -1,28 +1,24 @@
-// Small wrapper for localstorage to protect against SSR and permissions
+/*
+ * Small wrapper for localstorage to protect against SSR and permissions
+ */
+
 import { warn } from '~/utils/console'
 
 const localStorageExists = () => process.client && window.localStorage !== null
 
 const local = {
-  /**
-   * @param {Parameters<typeof localStorage['getItem']>} args
-   */
-  get(...args) {
+  get(key: string) {
     try {
-      return localStorageExists() ? localStorage.getItem(...args) : null
+      return localStorageExists() ? localStorage.getItem(key) : null
     } catch (e) {
       // Probably a `SecurityError`
       warn('`localStorage` access denied', e)
       return null
     }
   },
-  /**
-   * @param {Parameters<typeof localStorage['setItem']>} args
-   * @return {void}
-   */
-  set(...args) {
+  set(key: string, value: string) {
     try {
-      if (localStorageExists()) localStorage.setItem(...args)
+      if (localStorageExists()) localStorage.setItem(key, value)
     } catch (e) {
       // Probably a `SecurityError`
       warn('`localStorage` access denied', e)

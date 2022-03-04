@@ -53,7 +53,7 @@
 <script>
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 
-import srand from '~/utils/srand'
+import { rand as prng, hash } from '~/utils/prng'
 
 import VImageCellSquare from '~/components/VAllResultsGrid/VImageCellSquare.vue'
 import VAudioCell from '~/components/VAllResultsGrid/VAudioCell.vue'
@@ -98,7 +98,11 @@ export default defineComponent({
       // Seed the random number generator with the ID of
       // the first and last search result, so the non-image
       // distribution is the same on repeated searches
-      const rand = srand(Object.keys(media[mediaKeys[0]])[0])
+      let seed = Object.keys(media[mediaKeys[0]])[0]
+      if (typeof seed === 'string') {
+        seed = hash(seed)
+      }
+      const rand = prng(seed)
       const randomIntegerInRange = (min, max) =>
         Math.floor(rand() * (max - min + 1)) + min
       /**

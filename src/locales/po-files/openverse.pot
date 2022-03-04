@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-03-04T04:33:42+00:00\n"
+"POT-Creation-Date: 2022-03-04T12:13:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -735,7 +735,7 @@ msgid "Load more results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAllResultsGrid/VAllResultsGrid.vue:147
+#: src/components/VAllResultsGrid/VAllResultsGrid.vue:151
 msgctxt "browse-page.fetching-error"
 msgid "Error fetching ###type###:"
 msgstr ""
@@ -816,7 +816,7 @@ msgctxt "browse-page.search-form.image"
 msgid "images"
 msgstr ""
 
-#: src/components/VAllResultsGrid/VAllResultsGrid.vue:146
+#: src/components/VAllResultsGrid/VAllResultsGrid.vue:150
 msgctxt "browse-page.search-form.audio"
 msgid "audio"
 msgstr ""
