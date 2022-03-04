@@ -63,7 +63,7 @@ View a sample simple store in the [Pinia repository](https://github.com/vuejs/pi
 
 ## Implementation plan
 
-There are two options available:
+We have considered two options, converting stores one by one, or converting all stores in a feature branch, and decided that the first option is preferable.
 
 1. Convert the store from Vuex to Pinia gradually, one store at a time. 
 @dhruvkb has created an excellent PoC PR for a gradual conversion to Pinia while keeping other stores in Vuex.
@@ -115,7 +115,8 @@ In the interest of a quick migration, we can continue to use the existing type d
 
 ### Testing
 One of the acceptance criteria for the store conversion PRs should be 100% unit test coverage for the store module, and added e2e tests for the component changes. It is also important to ensure that e2e tests cover both SSR and client-side rendering.
-Pinia Docs has a cookbook page about testing Pinia stores, and testing components that use Pinia stores. Please note, that the page is for Vue 3 version, and needs slight updates to the setup of `TestingPinia` to work properly with the current version of Openverse (Nuxt 2, Vue 2, `composition-api`). The PR for the conversion of the `search` store will have an example of the setup.
+One of the acceptance criteria for the store conversion PRs should be 100% unit test coverage for the store module, and added e2e tests for the component changes. It is also important to ensure that e2e tests cover both SSR and client-side rendering.
+Pinia Docs has a cookbook page about testing Pinia stores, and testing components that use Pinia stores. Please note that the setup for component testing with Vue 2 is [slightly different from the Vue 3 setup](https://pinia.vuejs.org/cookbook/testing.html#unit-test-components-vue-2).
 
 ## Steps
 
@@ -123,7 +124,7 @@ Pinia Docs has a cookbook page about testing Pinia stores, and testing component
 
 1. Replace Vuex stores with their Pinia counterparts. The order should be from smallest modules with fewer connections to the largest modules with more connections to other modules:
 - `active-media` and `nav` stores - already refactored in [#906](https://github.com/WordPress/openverse-frontend/pull/906)
-- `search` store - another PoC to ensure that Pinia stores can be used from Vuex stores, and figure out testing.
+- `search` store - another PoC split into 3 PRs ([#1038](https://github.com/WordPress/openverse-frontend/pull/1038), [#1039](https://github.com/WordPress/openverse-frontend/pull/1039), [#1040](https://github.com/WordPress/openverse-frontend/pull/1040)) to ensure that Pinia stores can be used from Vuex stores, and figure out testing.
 - `user` store
 - `usage-data` store
 - `provider` store
