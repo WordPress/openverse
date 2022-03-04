@@ -136,11 +136,15 @@ Many of the fields towards the end are taken from examples on SketchFab (e.g. ht
 ## Prior Art
 
 - We already show 3D models as [part of images](https://search.openverse.engineering/search/image?q=dogs&source=sketchfab,thingiverse), which is great! Fewer scripts to write on the catalog side.
+  - To migrate these providers we should:
+    - Update and modify the provider scripts to support our 3d model type instead of images
+    - Purge their existing images from the catalog `image` database table.
+    - Run the updated provider scripts.
 - We also already show Sketchfab's 3D model viewer for their single results: https://search-staging.openverse.engineering/image/00a6a7a4-6605-4cba-bacf-a08b0da546b9
 
 ## Collaborators
 
-- The [Open Metaverse Interoperability Group](https://github.com/omigroup/omigroup) aims to standardized protocols for interactive elements in 3D scenes. Core contributor @antpb is a part of this group.
+- The [Open Metaverse Interoperability Group](https://github.com/omigroup/omigroup) aims to standardized protocols for interactive elements in 3D scenes. Core contributor @antpb is a part of this group.1
 - Our friend @nebulousflynn at Sketchfab might have some ideas and suggestions as well. 
 
 ## Some code considerations
