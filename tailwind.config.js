@@ -92,6 +92,7 @@ module.exports = {
       64: '16.00rem',
       70: '17.50rem',
       80: '20.00rem',
+      120: '30.00rem',
     },
     ringWidth: {
       DEFAULT: '1.5px',

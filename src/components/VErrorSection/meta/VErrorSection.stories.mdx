@@ -1,0 +1,88 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import VErrorSection from '~/components/VErrorSection/VErrorSection.vue'
+import VErrorImage from '~/components/VErrorSection/VErrorImage.vue'
+import VNoResults from '~/components/VErrorSection/VNoResults.vue'
+import VServerTimeout from '~/components/VErrorSection/VServerTimeout.vue'
+
+import { NO_RESULT, SERVER_TIMEOUT } from '~/constants/errors'
+
+<Meta title="Components/VErrorSection" component={VErrorSection} />
+
+# VErrorSection
+
+<Description of={VErrorSection} />
+
+<ArgsTable of={VErrorSection} />
+
+## No results
+
+This section appears when a search returns no hits.
+
+export const NoResultsTemplate = (args, { argTypes }) => ({
+  template: `
+    <VErrorSection>
+      <template #image>
+       <VErrorImage :error-code="errorCode" />
+      </template>
+      <VNoResults :type="type" :query="query"/>
+    </VErrorSection>
+    `,
+  data: () => ({
+    NO_RESULT,
+  }),
+  components: { VErrorSection, VErrorImage, VNoResults },
+  props: Object.keys(argTypes),
+})
+
+<Canvas>
+  <Story
+    name="No result"
+    args={{
+      errorCode: NO_RESULT,
+      type: 'image',
+      query: {
+        license: '',
+        license_type: '',
+        mature: false,
+        q: 'sad person',
+        searchBy: '',
+      },
+    }}
+  >
+    {NoResultsTemplate.bind({})}
+  </Story>
+</Canvas>
+
+## Server timeout
+
+This result appears when an API request times out.
+
+export const ServerTimeoutTemplate = (args, { argTypes }) => ({
+  template: `
+    <VErrorSection>
+      <template #image>
+        <!-- On large screens, image is in the left pane. -->
+        <VErrorImage class="hidden md:block" :error-code="errorCode" />
+      </template>
+      <VServerTimeout/>
+      <!-- On small screens, image is below error message. -->
+      <VErrorImage class="md:hidden mt-10" :error-code="errorCode" />
+    </VErrorSection>
+  `,
+  data: () => ({ SERVER_TIMEOUT }),
+  components: { VErrorSection, VErrorImage, VServerTimeout },
+  props: Object.keys(argTypes),
+})
+
+<Canvas>
+  <Story name="Server timeout" args={{ errorCode: SERVER_TIMEOUT }}>
+    {ServerTimeoutTemplate.bind({})}
+  </Story>
+</Canvas>

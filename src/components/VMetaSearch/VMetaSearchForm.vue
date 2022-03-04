@@ -6,9 +6,9 @@
   >
     <header class="mb-10">
       <i18n
-        v-if="!noresult"
+        v-if="!hasNoResults"
         :path="
-          supported
+          isSupported
             ? 'meta-search.form.supported-title'
             : 'meta-search.form.unsupported-title'
         "
@@ -39,7 +39,11 @@
       </i18n>
     </header>
 
-    <VMetaSourceList :type="type" :query="metaQuery" />
+    <VMetaSourceList
+      class="md:justify-center mt-6 mb-10"
+      :type="type"
+      :query="metaQuery"
+    />
 
     <p class="caption font-semibold max-w-3xl my-0 mx-auto">
       {{ $t('meta-search.caption', { openverse: 'Openverse' }) }}
@@ -60,8 +64,8 @@ export default {
   props: {
     query: { type: Object, required: true },
     type: { type: String, required: true },
-    supported: { type: Boolean, default: false },
-    noresult: { type: Boolean, required: true },
+    isSupported: { type: Boolean, default: false },
+    hasNoResults: { type: Boolean, required: true },
   },
   computed: {
     unsupportedByUsefilter() {

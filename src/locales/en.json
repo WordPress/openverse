@@ -619,6 +619,17 @@
   "modal": {
     "close": "Close"
   },
+  "error-images": {
+    "depressed-musician": "A depressed pianist rests their head in their hands.",
+    "waiting-for-a-bite": "Three boys sit on a broken log while two of them fish."
+  },
+  "no-results": {
+    "heading": "We couldn't find anything for \"{query}\".",
+    "alternatives": "Try a different query or use one of the additional sources to expand your search."
+  },
+  "server-timeout": {
+    "heading": "Whoops, it looks like that request took too long to complete. Please try again."
+  },
   "search-type": {
     "image": "Images",
     "audio": "Audio",

@@ -39,6 +39,11 @@ test.skip('shows search result metadata', async ({ page }) => {
   await expect(loadMoreButton).toHaveCount(0, { timeout: 300 })
 })
 
+test('shows no results page when no results', async ({ page }) => {
+  await page.goto('/search/image?q=243f6a8885a308d3')
+  await expect(page.locator('.error-section')).toBeVisible()
+})
+
 test('navigates to the image detail page correctly', async ({ page }) => {
   await page.goto('/search/image?q=honey')
   const figure = page.locator('figure').first()

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-03-03T03:31:00+00:00\n"
+"POT-Creation-Date: 2022-03-04T04:33:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -60,6 +60,30 @@ msgstr ""
 
 msgctxt "search-type.see-audio"
 msgid "See all audio"
+msgstr ""
+
+#: src/components/VErrorSection/VServerTimeout.vue:3
+msgctxt "server-timeout.heading"
+msgid "Whoops, it looks like that request took too long to complete. Please try again."
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/components/VErrorSection/VNoResults.vue:3
+msgctxt "no-results.heading"
+msgid "We couldn't find anything for \"###query###\"."
+msgstr ""
+
+#: src/components/VErrorSection/VNoResults.vue:5
+msgctxt "no-results.alternatives"
+msgid "Try a different query or use one of the additional sources to expand your search."
+msgstr ""
+
+msgctxt "error-images.depressed-musician"
+msgid "A depressed pianist rests their head in their hands."
+msgstr ""
+
+msgctxt "error-images.waiting-for-a-bite"
+msgid "Three boys sit on a broken log while two of them fish."
 msgstr ""
 
 #: src/components/VFilters/VFilterChecklist.vue:44
@@ -272,7 +296,7 @@ msgid "Edge"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMetaSearch/VMetaSearchForm.vue:45
+#: src/components/VMetaSearch/VMetaSearchForm.vue:49
 msgctxt "meta-search.caption"
 msgid "###openverse### does not currently index the sources listed above, but through this interface is offering convenient access to search services provided by other independent organizations. ###openverse### has no control over the results that are returned. Do not assume that the results displayed in this search portal are under a CC license. Always verify that the work is actually under a CC license by following the link. If you are in doubt, you should contact the copyright holder directly, or try to contact the site where you found the content."
 msgstr ""
