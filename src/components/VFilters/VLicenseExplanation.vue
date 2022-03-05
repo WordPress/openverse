@@ -41,6 +41,7 @@ import { isLicense } from '~/utils/license'
 import { DEPRECATED_LICENSES } from '~/constants/license'
 
 import VLicenseElements from '~/components/VLicenseElements.vue'
+import VLink from '~/components/VLink.vue'
 
 /**
  * Renders the explanation of the license passed to it by breaking it down to
@@ -50,6 +51,7 @@ export default {
   name: 'VLicenseExplanation',
   components: {
     VLicenseElements,
+    VLink,
   },
   props: {
     /**

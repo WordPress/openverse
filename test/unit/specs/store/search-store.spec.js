@@ -1,4 +1,5 @@
-import store, { filterData } from '~/store/search'
+import store from '~/store/search'
+
 import {
   CLEAR_FILTERS,
   SET_SEARCH_STATE_FROM_URL,
@@ -13,6 +14,8 @@ import {
   SET_QUERY,
 } from '~/constants/mutation-types'
 import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
+
+import { filterData } from '~/constants/filters.ts'
 
 describe('Filter Store', () => {
   describe('state', () => {
@@ -72,16 +75,16 @@ describe('Filter Store', () => {
     )
 
     it('SET_FILTER updates mature', () => {
-      mutations[SET_FILTER](state, { filterType: 'mature' })
+      mutations[SET_FILTER](state, { filterType: 'mature', codeIdx: 0 })
 
-      expect(state.filters.mature).toBeTruthy()
+      expect(state.filters.mature[0].checked).toBeTruthy()
     })
 
     it('SET_FILTER toggles mature', () => {
-      state.filters.mature = true
-      mutations[SET_FILTER](state, { filterType: 'mature' })
+      state.filters.mature[0].checked = true
+      mutations[SET_FILTER](state, { filterType: 'mature', codeIdx: 0 })
 
-      expect(state.filters.mature).toBeFalsy()
+      expect(state.filters.mature[0].checked).toBeFalsy()
     })
 
     it('SET_FILTER updates isFilterApplied with provider', () => {

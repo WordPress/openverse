@@ -47,7 +47,7 @@ export type Query = {
   categories: string
   source: string
   duration: string
-  mature: boolean
+  mature: string
 }
 
 export type ApiQueryParams = {
@@ -128,8 +128,9 @@ export interface Filters {
   audioProviders: FilterItem[]
   imageProviders: FilterItem[]
   searchBy: FilterItem[]
-  mature: boolean
+  mature: FilterItem[]
 }
+export type FilterCategory = keyof Filters
 
 export interface FetchState {
   isFetching: boolean

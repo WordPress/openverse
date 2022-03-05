@@ -3,9 +3,13 @@ import { fireEvent, render, screen } from '@testing-library/vue'
 import { createLocalVue } from '@vue/test-utils'
 import clonedeep from 'lodash.clonedeep'
 
+import VueI18n from 'vue-i18n'
+
 import { IMAGE } from '~/constants/media'
 import store from '~/store/search'
 import { FETCH_MEDIA } from '~/constants/action-types'
+
+import messages from '~/locales/en.json'
 
 import SearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 
@@ -30,7 +34,7 @@ const initialFilters = {
   sizes: [{ code: 'small', name: 'small', checked: false }],
   aspectRatios: [],
   searchBy: [{ code: 'creator', checked: false }],
-  mature: false,
+  mature: [{ code: 'mature', name: 'mature', checked: false }],
 }
 
 describe('SearchGridFilter', () => {
@@ -43,6 +47,12 @@ describe('SearchGridFilter', () => {
   beforeEach(() => {
     localVue = createLocalVue()
     localVue.use(Vuex)
+    localVue.use(VueI18n)
+    const i18n = new VueI18n({
+      locale: 'en',
+      fallbackLocale: 'en',
+      messages: { en: messages },
+    })
     filters = clonedeep(initialFilters)
     storeMock = new Vuex.Store({
       modules: {
@@ -50,7 +60,6 @@ describe('SearchGridFilter', () => {
           namespaced: true,
           state: {
             searchType: IMAGE,
-            isFilterVisible: true,
             filters,
             query: { q: '' },
           },
@@ -72,6 +81,7 @@ describe('SearchGridFilter', () => {
 
     options = {
       localVue,
+      i18n,
       mocks: {
         $router: routerMock,
         $store: storeMock,

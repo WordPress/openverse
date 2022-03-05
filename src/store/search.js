@@ -1,7 +1,6 @@
 import findIndex from 'lodash.findindex'
 import clonedeep from 'lodash.clonedeep'
 
-import { deepFreeze } from '~/utils/deep-freeze'
 import {
   filtersToQueryData,
   queryStringToSearchType,
@@ -12,7 +11,6 @@ import {
   AUDIO,
   IMAGE,
   supportedSearchTypes,
-  VIDEO,
 } from '~/constants/media'
 import {
   UPDATE_QUERY,
@@ -21,6 +19,7 @@ import {
   UPDATE_QUERY_FROM_FILTERS,
   CLEAR_FILTERS,
 } from '~/constants/action-types'
+
 import {
   SET_FILTER,
   SET_PROVIDERS_FILTERS,
@@ -29,115 +28,12 @@ import {
   SET_QUERY,
   SET_SEARCH_TYPE,
 } from '~/constants/mutation-types'
-import { ACTIVE_LICENSES } from '~/constants/license'
 
-/**
- * List of filters available for each search type. The order of the keys
- * is the same as in the filter checklist display (sidebar or modal).
- */
-export const mediaFilterKeys = {
-  [IMAGE]: [
-    'licenseTypes',
-    'licenses',
-    'imageCategories',
-    'imageExtensions',
-    'aspectRatios',
-    'sizes',
-    'imageProviders',
-    'searchBy',
-    'mature',
-  ],
-  [AUDIO]: [
-    'licenseTypes',
-    'licenses',
-    'audioCategories',
-    'audioExtensions',
-    'durations',
-    'audioProviders',
-    'searchBy',
-    'mature',
-  ],
-  [VIDEO]: [],
-  [ALL_MEDIA]: ['licenseTypes', 'licenses', 'searchBy', 'mature'],
-}
-const createInitialFilters = (category, items) =>
-  items.map((item) => ({
-    code: item,
-    name: `filters.${category}.${item}`,
-    checked: false,
-  }))
-
-/**
- * A list of filters that are only used for the specific content type.
- * This is used to clear filters from other content types when changing the content type.
- */
-export const mediaSpecificFilters = {
-  all: [],
-  image: [
-    'imageCategories',
-    'imageExtensions',
-    'aspectRatios',
-    'sizes',
-    'imageProviders',
-  ],
-  audio: ['audioCategories', 'audioExtensions', 'durations', 'audioProviders'],
-  video: [],
-}
-
-/** @type {import('./types').Filters} */
-export const filterData = deepFreeze({
-  licenses: createInitialFilters('licenses', ACTIVE_LICENSES),
-  licenseTypes: createInitialFilters('license-types', [
-    'commercial',
-    'modification',
-  ]),
-  audioCategories: createInitialFilters('audio-categories', [
-    'music',
-    'sound',
-    'podcast',
-  ]),
-  imageCategories: createInitialFilters('image-categories', [
-    'photograph',
-    'illustration',
-    'digitized_artwork',
-  ]),
-  audioExtensions: createInitialFilters('audio-extensions', [
-    'mp3',
-    'ogg',
-    'flac',
-  ]),
-  imageExtensions: createInitialFilters('image-extensions', [
-    'jpg',
-    'png',
-    'gif',
-    'svg',
-  ]),
-  aspectRatios: createInitialFilters('aspect-ratios', [
-    'tall',
-    'wide',
-    'square',
-  ]),
-  durations: createInitialFilters('durations', ['short', 'medium', 'long']),
-  sizes: createInitialFilters('sizes', ['small', 'medium', 'large']),
-  audioProviders: [],
-  imageProviders: [],
-  searchBy: createInitialFilters('search-by', ['creator']),
-  mature: false,
-})
-
-const getBaseFiltersWithProviders = (state) => {
-  const resetProviders = (mediaType) => {
-    return state.filters[`${mediaType}Providers`].map((provider) => ({
-      ...provider,
-      checked: false,
-    }))
-  }
-  return {
-    ...clonedeep(filterData),
-    audioProviders: resetProviders(AUDIO),
-    imageProviders: resetProviders(IMAGE),
-  }
-}
+import {
+  filterData,
+  mediaFilterKeys,
+  mediaUniqueFilterKeys,
+} from '~/constants/filters.ts'
 
 /**
  * Returns true if any of the filters' checked property is true
@@ -156,6 +52,19 @@ const anyFilterApplied = (filters = {}) =>
     )
   })
 
+const getBaseFiltersWithProviders = (state) => {
+  const resetProviders = (mediaType) => {
+    return state.filters[`${mediaType}Providers`].map((provider) => ({
+      ...provider,
+      checked: false,
+    }))
+  }
+  return {
+    ...clonedeep(filterData),
+    audioProviders: resetProviders(AUDIO),
+    imageProviders: resetProviders(IMAGE),
+  }
+}
 /**
  * `query` has the API request parameters for search filtering. Locally, some filters
  * have different names, and some query parameters correspond to different filter parameters
@@ -166,7 +75,7 @@ const anyFilterApplied = (filters = {}) =>
  */
 export const state = () => ({
   filters: clonedeep(filterData),
-  searchType: IMAGE,
+  searchType: ALL_MEDIA,
   query: {
     q: '',
     license: '',
@@ -178,7 +87,7 @@ export const state = () => ({
     size: '',
     source: '',
     searchBy: '',
-    mature: false,
+    mature: '',
   },
 })
 
@@ -384,7 +293,7 @@ const mutations = {
 
     let filterKeysToClear = []
     mediaTypesToClear.forEach((mediaType) => {
-      const filterKeys = mediaSpecificFilters[mediaType]
+      const filterKeys = mediaUniqueFilterKeys[mediaType]
       filterKeysToClear = [...filterKeysToClear, ...filterKeys]
     })
 
@@ -432,12 +341,8 @@ const mutations = {
    */
   [SET_FILTER](state, params) {
     const { filterType, codeIdx } = params
-    if (filterType === 'mature') {
-      state.filters.mature = !state.filters.mature
-    } else {
-      const filters = state.filters[filterType]
-      filters[codeIdx].checked = !filters[codeIdx].checked
-    }
+    const filters = state.filters[filterType]
+    filters[codeIdx].checked = !filters[codeIdx].checked
   },
   [SET_PROVIDERS_FILTERS](state, params) {
     const { mediaType, providers } = params
