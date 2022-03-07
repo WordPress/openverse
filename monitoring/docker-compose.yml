@@ -1,0 +1,23 @@
+version: "3"
+services:
+  prometheus:
+    image: prom/prometheus:v2.33.5
+    volumes:
+      - prom-data:/prometheus
+      - ./configuration/prometheus:/etc/prometheus:ro
+    command:
+      - --config.file=/etc/prometheus/prometheus.${ENV:-local}.yml
+    ports:
+      - 58233:9090
+
+  grafana:
+    image: grafana/grafana:8.4.4
+    volumes:
+      - ./configuration/grafana:/var/lib/grafana:z
+      - ./configuration/grafana/provisioning/:/etc/grafana/provisioning:z
+    ports:
+      - 58234:3000
+    user: ${USER_ID}
+
+volumes:
+  prom-data:

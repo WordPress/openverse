@@ -1,0 +1,6 @@
+*
+!configuration
+!.env.template
+!create_prometheus_yaml.py
+!docker-compose.yml
+!.gitignore
