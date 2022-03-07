@@ -20,6 +20,12 @@ try {
   }
 
   fs.writeFileSync(fileName, createPotFile(json))
+  if (process.env.CI) {
+    console.error(
+      'Detected uncommitted POT file changes. Please run `pnpm i18n:generate-pot` and commit the updated POT file.'
+    )
+    process.exit(1)
+  }
   console.log(`Successfully wrote pot file to ${fileName}`)
 } catch (err) {
   console.error(err)

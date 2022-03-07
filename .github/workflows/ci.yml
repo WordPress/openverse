@@ -47,9 +47,7 @@ jobs:
 
       - name: Check POT files are updated
         shell: bash
-        run: |
-          pnpm i18n:generate-pot
-          exit $(git status -s -uno | wc -l)
+        run: pnpm i18n:generate-pot
 
   unit:
     name: Unit tests
