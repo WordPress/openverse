@@ -40,7 +40,7 @@ jobs:
       - name: Check aspect label
         uses: sugarshin/required-labels-action@v0.3.1
         with:
-          required_oneof: "💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface,♿️ aspect: a11y"
+          required_oneof: "🚦 status: awaiting triage,💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface,♿️ aspect: a11y"
 
   check_goal_label:
     name: Check goal label
@@ -53,7 +53,7 @@ jobs:
       - name: Check goal label
         uses: sugarshin/required-labels-action@v0.3.1
         with:
-          required_oneof: "🌟 goal: addition,🛠 goal: fix,✨ goal: improvement,🧰 goal: internal improvement"
+          required_oneof: "🚦 status: awaiting triage,🌟 goal: addition,🛠 goal: fix,✨ goal: improvement,🧰 goal: internal improvement"
 
   check_priority_label:
     name: Check priority label
@@ -66,4 +66,4 @@ jobs:
       - name: Check priority label
         uses: sugarshin/required-labels-action@v0.3.1
         with:
-          required_oneof: "🟩 priority: low,🟨 priority: medium,🟧 priority: high,🟥 priority: critical"
+          required_oneof: "🚦 status: awaiting triage,🟩 priority: low,🟨 priority: medium,🟧 priority: high,🟥 priority: critical"
