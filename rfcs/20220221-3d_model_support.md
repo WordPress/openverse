@@ -34,6 +34,20 @@ We may be able to use previous work regarding the addition of audio to the catal
 
 WordPress/openverse#19
 
+## Design requirements
+
+### New content type
+- [ ] Create a 3D model icon
+- [ ] Create an icon indicating that the image is a 3d model screenshot/preview
+
+### Search results
+- [ ] Add 3d model results in the All content results
+- [ ] Design a 3d model results page
+- [ ] Review and include filter components if necessary
+
+### Single result view
+- [ ] Design the 3d model single view
+
 ## Technical implementation
 
 ### 1. Add 3D models to the catalog
