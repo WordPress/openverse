@@ -101,10 +101,8 @@
         }
 
         let handler
+
         switch (data.type) {
-          case 'resize':
-            handler = updateHeight
-            break
           case 'urlChange':
             handler = updatePath
             break

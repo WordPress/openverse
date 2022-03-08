@@ -24,7 +24,6 @@
 import { mapState } from 'vuex'
 
 import { FETCH_MEDIA_ITEM } from '~/constants/action-types'
-import iframeHeight from '~/mixins/iframe-height'
 import { AUDIO } from '~/constants/media'
 import getAttributionHtml from '~/utils/attribution-html'
 import { getFullLicenseName } from '~/utils/license'
@@ -32,7 +31,6 @@ import { MEDIA } from '~/constants/store-modules'
 
 const AudioDetailPage = {
   name: 'AudioDetailPage',
-  mixins: [iframeHeight],
   data() {
     return {
       showBackToSearchLink: false,

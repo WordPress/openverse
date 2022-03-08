@@ -28,8 +28,6 @@ import { isMinScreen } from '~/composables/use-media-query'
 
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 
-import iframeHeight from '~/mixins/iframe-height'
-
 import { useNavStore } from '~/stores/nav'
 
 import VMigrationNotice from '~/components/VMigrationNotice.vue'
@@ -52,7 +50,6 @@ const embeddedPage = {
     VGlobalAudioSection,
   },
   layout: 'embedded',
-  mixins: [iframeHeight],
   head() {
     return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
   },
