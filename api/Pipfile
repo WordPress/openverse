@@ -14,6 +14,7 @@ sphinx = "*"
 sphinx-autobuild = "*"
 furo = "*"
 myst-parser = "*"
+factory-boy = "*"
 
 [packages]
 aws-requests-auth = "*"
@@ -49,6 +50,8 @@ python-decouple = "*"
 django-cron = "*"
 gunicorn = "*"
 sentry-sdk = "*"
+django-tqdm = "*"
+limit = "*"
 
 [requires]
 python_version = "3.10"
