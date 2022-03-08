@@ -1,6 +1,6 @@
 # RFC: 3D Model Support
 
-- [ ] [Approver TBD]
+- [x] @sarayourfriend
 - [ ] [Approver TBD]
 
 ## Rationale
