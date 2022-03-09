@@ -1,5 +1,6 @@
 <template>
   <div ref="nodeRef">
+    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
     <div ref="triggerContainerRef" @click="onTriggerClick">
       <!--
         @slot The trigger. Should be a button 99% of the time. If you need custom event handling on the trigger button, ensure bubbling is not prevented or else the dialog will not open.

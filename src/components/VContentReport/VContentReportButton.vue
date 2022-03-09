@@ -17,12 +17,13 @@
 import { defineComponent } from '@nuxtjs/composition-api'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
+import VButton from '~/components/VButton.vue'
 
 import flagIcon from '~/assets/icons/flag.svg'
 
 export default defineComponent({
   name: 'VContentReportButton',
-  components: { VIcon },
+  components: { VButton, VIcon },
   setup() {
     return {
       icons: {

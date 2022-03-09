@@ -1,5 +1,6 @@
 <template>
   <div ref="nodeRef" class="mobile-menu ms-auto md:ms-0">
+    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
     <div ref="triggerContainerRef" @click="onTriggerClick">
       <VSearchTypeButton
         :a11y-props="triggerA11yProps"
@@ -42,9 +43,7 @@ import {
 } from '@nuxtjs/composition-api'
 
 import usePages from '~/composables/use-pages'
-
 import useSearchType from '~/composables/use-search-type'
-
 import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 
 import VMobileModalContent from '~/components/VModal/VMobileModalContent.vue'
@@ -53,7 +52,7 @@ import VPageList from '~/components/VHeader/VPageMenu/VPageList.vue'
 import VSearchTypeButton from '~/components/VContentSwitcher/VSearchTypeButton.vue'
 
 export default defineComponent({
-  name: 'VMobileContentSwitcher',
+  name: 'VMobileMenuModal',
   components: {
     VMobileModalContent,
     VSearchTypes,

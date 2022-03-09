@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-03-07T19:35:50+00:00\n"
+"POT-Creation-Date: 2022-03-09T17:47:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1134,12 +1134,12 @@ msgctxt "error.audio"
 msgid "audio"
 msgstr ""
 
-#: src/pages/extension.vue:91
+#: src/pages/extension.vue:90
 msgctxt "extension.title"
 msgid "Web extension"
 msgstr ""
 
-#: src/pages/extension.vue:61
+#: src/pages/extension.vue:60
 msgctxt "extension.conclusion"
 msgid "Have your favourite content while browsing the web"
 msgstr ""
@@ -1843,7 +1843,7 @@ msgctxt "header.loading"
 msgid "Loading..."
 msgstr ""
 
-#: src/components/VContentSwitcher/VMobileMenuModal.vue:14
+#: src/components/VContentSwitcher/VMobileMenuModal.vue:15
 msgctxt "header.filter-button.simple"
 msgid "Filters"
 msgstr ""

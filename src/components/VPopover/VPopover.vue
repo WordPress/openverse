@@ -1,10 +1,12 @@
 <template>
   <div>
+    <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
     <div
       ref="triggerContainerRef"
       class="w-min whitespace-nowrap flex items-stretch"
       @click="onTriggerClick"
     >
+      <!-- eslint-enable vuejs-accessibility/click-events-have-key-events -->
       <!--
         @slot The trigger, should be a button 99.99% of the time. If you need custom event handling on the trigger button, ensure bubbling is not prevented or else the popover will not open
           @binding {object} a11yProps

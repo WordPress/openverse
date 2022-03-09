@@ -8,7 +8,6 @@
           </h2>
         </div>
         <ExtensionBrowsers />
-        <!-- eslint-disable vuejs-accessibility/media-has-caption -->
         <video
           ref="heroVid"
           class="screenshot block w-full mx-auto"
@@ -16,13 +15,13 @@
           loop
           muted
           @click="togglePlay"
+          @keyup.enter="togglePlay"
         >
           <source
             src="~/assets/screenshots/extension_hero_vid.mp4"
             type="video/mp4"
           />
         </video>
-        <!-- eslint-enable vuejs-accessibility/media-has-caption -->
       </div>
     </div>
     <div
