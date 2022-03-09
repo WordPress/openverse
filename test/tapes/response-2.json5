@@ -1,7 +1,7 @@
 {
     meta: {
-        createdAt: '2022-03-01T19:41:30.365Z',
-        host: 'https://api.openverse.engineering/v1',
+        createdAt: '2022-03-03T13:27:41.513Z',
+        host: 'https://api.openverse.engineering',
         resHumanReadable: true,
     },
     req: {
@@ -9,7 +9,7 @@
             accept: 'application/json, text/plain, */*',
             connection: 'close',
         },
-        url: '/audio/stats/',
+        url: '/v1/audio/stats/',
         method: 'GET',
         body: '',
     },
@@ -17,7 +17,7 @@
         status: 200,
         headers: {
             date: [
-                'Tue, 01 Mar 2022 19:41:31 GMT',
+                'Thu, 03 Mar 2022 13:27:42 GMT',
             ],
             'content-type': [
                 'application/json',
@@ -50,10 +50,10 @@
                 'HIT',
             ],
             age: [
-                '1359',
+                '260325',
             ],
             'last-modified': [
-                'Tue, 01 Mar 2022 19:18:52 GMT',
+                'Mon, 28 Feb 2022 13:08:57 GMT',
             ],
             'accept-ranges': [
                 'bytes',
@@ -68,7 +68,7 @@
                 'cloudflare',
             ],
             'cf-ray': [
-                '6e545ee13f788ff5-FRA',
+                '6e62b6082a9b68bf-BUD',
             ],
             'alt-svc': [
                 'h3=":443"; ma=86400, h3-29=":443"; ma=86400',

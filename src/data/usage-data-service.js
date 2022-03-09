@@ -1,20 +1,17 @@
-import { createApiService } from './api-service'
-
-const baseUrl = process.env.apiUrl
-
 // Analytics API is available at `http://api.openverse.engineering/analytics/`
 // and not `http://api.openverse.engineering/v1/analytics
-const ApiService = createApiService(baseUrl?.replace('/v1', ''))
+
+import { NonversionedApiService } from '~/data/api-service'
 
 /** @typedef {'search_event' | 'result_click_event' | 'detail_page_event' | 'search_rating_event'} SearchEventName */
 
 const UsageDataService = {
   /**
    * @param {SearchEventName} endpoint
-   * @param {Parameters<typeof ApiService['post']>[1]} data
+   * @param {Parameters<typeof NonversionedApiService['post']>[1]} data
    */
   post(endpoint, data) {
-    return ApiService.post(`analytics/${endpoint}/`, data)
+    return NonversionedApiService.post(`analytics/${endpoint}`, data)
   },
 
   /**

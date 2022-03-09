@@ -12,7 +12,7 @@ const process = require('process')
 
 const talkback = require('talkback')
 
-const host = 'https://api.openverse.engineering/v1'
+const host = 'https://api.openverse.engineering'
 
 const tapeNameGenerator = (tapeNumber) => `response-${tapeNumber}`
 
@@ -20,10 +20,9 @@ const updatingTapes = process.argv.includes('--update-tapes')
 const recordMode = updatingTapes
   ? talkback.Options.RecordMode.NEW
   : talkback.Options.RecordMode.DISABLED
-console.log('Record mode: ', recordMode)
 const opts = {
   host,
-  port: 3000,
+  port: 49152,
   path: './test/tapes',
   record: recordMode,
   fallbackMode: talkback.Options.FallbackMode.NOT_FOUND,
@@ -35,7 +34,7 @@ const opts = {
 
 const server = talkback(opts)
 
-server.start(() => console.log('Talkback started!'))
+server.start(() => console.log('Talkback started with record mode', recordMode))
 function closeServer() {
   server.close()
   console.log('Server closed, exiting process')

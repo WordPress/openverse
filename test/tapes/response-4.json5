@@ -1,7 +1,7 @@
 {
     meta: {
-        createdAt: '2022-03-01T19:41:34.143Z',
-        host: 'https://api.openverse.engineering/v1',
+        createdAt: '2022-03-03T13:27:39.583Z',
+        host: 'https://api.openverse.engineering',
         resHumanReadable: true,
     },
     req: {
@@ -9,7 +9,7 @@
             accept: 'application/json, text/plain, */*',
             connection: 'close',
         },
-        url: '/audio/?license_type=commercial&license=cc0&searchBy=creator&creator=cat',
+        url: '/v1/audio/stats/',
         method: 'GET',
         body: '',
     },
@@ -17,13 +17,13 @@
         status: 200,
         headers: {
             date: [
-                'Tue, 01 Mar 2022 19:41:34 GMT',
+                'Thu, 03 Mar 2022 13:27:44 GMT',
             ],
             'content-type': [
                 'application/json',
             ],
             'content-length': [
-                '70',
+                '424',
             ],
             connection: [
                 'close',
@@ -50,10 +50,10 @@
                 'HIT',
             ],
             age: [
-                '1359',
+                '260327',
             ],
             'last-modified': [
-                'Tue, 01 Mar 2022 19:18:55 GMT',
+                'Mon, 28 Feb 2022 13:08:57 GMT',
             ],
             'accept-ranges': [
                 'bytes',
@@ -68,18 +68,34 @@
                 'cloudflare',
             ],
             'cf-ray': [
-                '6e545ef23b30902a-FRA',
+                '6e62b6168c4d1cf2-BUD',
             ],
             'alt-svc': [
                 'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
             ],
         },
-        body: {
-            result_count: 0,
-            page_count: 0,
-            page_size: 20,
-            page: 1,
-            results: [],
-        },
+        body: [
+            {
+                source_name: 'jamendo',
+                display_name: 'Jamendo',
+                source_url: 'https://www.jamendo.com/start',
+                logo_url: null,
+                media_count: 11059,
+            },
+            {
+                source_name: 'wikimedia_audio',
+                display_name: 'Wikimedia Commons',
+                source_url: 'https://commons.wikimedia.org/wiki/Main_Page',
+                logo_url: null,
+                media_count: 135,
+            },
+            {
+                source_name: 'freesound',
+                display_name: 'Freesound',
+                source_url: 'https://freesound.org/',
+                logo_url: null,
+                media_count: 3098,
+            },
+        ],
     },
 }

@@ -82,7 +82,7 @@ test('new media request is sent when a filter is selected', async ({
     page.waitForResponse((response) => response.url().includes('cc0')),
     page.click('label:has-text("CC0")'),
   ])
-  // Remove the host url and path because when proxied, the 'http://localhost:3000' is used instead of the
+  // Remove the host url and path because when proxied, the 'http://localhost:49152' is used instead of the
   // real API url
   const queryString = response.url().split('/images/')[1]
   expect(queryString).toEqual('?q=cat&license=cc0')

@@ -1,4 +1,4 @@
-import ApiService from '~/data/api-service'
+import { VersionedApiService } from '~/data/api-service'
 import decodeMediaData from '~/utils/decode-media-data'
 
 /**
@@ -36,7 +36,7 @@ class MediaService {
    * @return {Promise<import('axios').AxiosResponse<import('../store/types').MediaResult<T[]>>>}
    */
   async search(params) {
-    const res = await ApiService.query(this.mediaType, params)
+    const res = await VersionedApiService.query(this.mediaType, params)
     return this.transformResults(res.data)
   }
 
@@ -53,7 +53,7 @@ class MediaService {
       )
     }
 
-    const res = await ApiService.get(this.mediaType, params.id)
+    const res = await VersionedApiService.get(this.mediaType, params.id)
     return decodeMediaData(res.data, this.mediaType)
   }
 
@@ -69,7 +69,10 @@ class MediaService {
       )
     }
 
-    const res = await ApiService.get(this.mediaType, `${params.id}/related`)
+    const res = await VersionedApiService.get(
+      this.mediaType,
+      `${params.id}/related`
+    )
     return {
       ...res.data,
       results: res.data.results.map((item) =>

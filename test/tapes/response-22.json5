@@ -1,7 +1,7 @@
 {
     meta: {
-        createdAt: '2022-03-01T19:41:39.204Z',
-        host: 'https://api.openverse.engineering/v1',
+        createdAt: '2022-03-03T13:27:49.964Z',
+        host: 'https://api.openverse.engineering',
     },
     req: {
         headers: {
@@ -18,7 +18,7 @@
             referer: 'http://localhost:8443/',
             'accept-encoding': 'gzip, deflate, br',
         },
-        url: '/images/?q=galah&license_type=modification',
+        url: '/v1/images/?q=galah&license_type=modification',
         method: 'GET',
         body: '',
     },
@@ -26,7 +26,7 @@
         status: 200,
         headers: {
             date: [
-                'Tue, 01 Mar 2022 19:41:40 GMT',
+                'Thu, 03 Mar 2022 13:27:50 GMT',
             ],
             'content-type': [
                 'application/json',
@@ -59,10 +59,13 @@
                 'max-age=14400',
             ],
             'cf-cache-status': [
-                'MISS',
+                'HIT',
+            ],
+            age: [
+                '113830',
             ],
             'last-modified': [
-                'Tue, 01 Mar 2022 19:41:40 GMT',
+                'Wed, 02 Mar 2022 05:50:40 GMT',
             ],
             'expect-ct': [
                 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
@@ -74,7 +77,7 @@
                 'cloudflare',
             ],
             'cf-ray': [
-                '6e545f11dfc88fc8-FRA',
+                '6e62b63cd86998bb-OTP',
             ],
             'content-encoding': [
                 'br',
