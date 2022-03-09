@@ -1,0 +1,27 @@
+name: Label new PR
+# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#label-new-pr
+
+on:
+  pull_request:
+    types:
+      # Only set labels when the PR is created, this should fire `labeled`
+      # events that will trigger the checks defined in `pr_label_check.yml`.
+      - opened
+
+jobs:
+  set_label:
+    name: Set labels
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger remote workflow
+        uses: felixp8/dispatch-and-wait@v0.1.0
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        with:
+          owner: WordPress
+          repo: openverse
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event_type: label_pr
+          client_payload: ${{ format('{{"pr_url":"{0}"}}', env.PR_URL) }}
+          wait_time: 5
+          max_time: 60
