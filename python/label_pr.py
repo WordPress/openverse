@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 import argparse
 import logging
 import re
@@ -6,7 +8,10 @@ from typing import Optional
 
 import requests
 from bs4 import BeautifulSoup
-from github import Github, Issue, Label, PullRequest
+from github import Github
+from github.Issue import Issue
+from github.Label import Label
+from github.PullRequest import PullRequest
 from shared.data import get_data
 from shared.github import get_client
 from shared.log import configure_logger
