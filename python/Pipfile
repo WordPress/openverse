@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 pygithub = "*"
 pyyaml = "*"
+beautifulsoup4 = "*"
+requests = "*"
 
 [dev-packages]
 ipython = "*"
