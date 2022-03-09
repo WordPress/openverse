@@ -125,26 +125,22 @@ def main():
     linked_issues = get_linked_issues(pr.html_url)
     log.info(f"Found {len(linked_issues)} linked issues")
 
-    is_labelled = False
-    if linked_issues:
-        for issue in linked_issues:
-            issue = get_issue(gh, issue)
-            labels = issue.labels
-            if all(
-                [
-                    (aspect := get_label_of_cat("aspect", labels)),
-                    (priority := get_label_of_cat("priority", labels)),
-                    (goal := get_label_of_cat("goal", labels)),
-                ]
-            ):
-                log.info(f"Aspect label: {aspect}")
-                log.info(f"Priority label: {priority}")
-                log.info(f"Goal label: {goal}")
-                pr.set_labels(aspect, priority, goal)
-                is_labelled = True
-                break
-
-    if not is_labelled:
+    for issue in linked_issues:
+        issue = get_issue(gh, issue)
+        labels = issue.labels
+        if all(
+            [
+                (aspect := get_label_of_cat("aspect", labels)),
+                (priority := get_label_of_cat("priority", labels)),
+                (goal := get_label_of_cat("goal", labels)),
+            ]
+        ):
+            log.info(f"Aspect label: {aspect}")
+            log.info(f"Priority label: {priority}")
+            log.info(f"Goal label: {goal}")
+            pr.set_labels(aspect, priority, goal)
+            break
+    else:
         log.info("Could not find properly labelled issue")
         pr.set_labels("🚦 status: awaiting triage")
 
