@@ -1,7 +1,7 @@
 # RFC: Introduce UI state cookie to frontend
 
-- [x] @obulat 
-- [x] @zackkrida 
+- [x] @obulat
+- [x] @zackkrida
 
 **Milestone:** https://github.com/WordPress/openverse-frontend/milestone/11
 
