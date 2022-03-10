@@ -15,11 +15,6 @@ import {
   HANDLE_NO_MEDIA,
 } from '~/constants/action-types'
 import { AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
-import {
-  SEND_RESULT_CLICKED_EVENT,
-  SEND_SEARCH_QUERY_EVENT,
-} from '~/constants/usage-data-analytics-types'
-import { USAGE_DATA } from '~/constants/store-modules'
 
 describe('Search Store', () => {
   describe('state', () => {
@@ -225,7 +220,6 @@ describe('Search Store', () => {
         commit: jest.fn(),
         dispatch: jest.fn(),
         rootState: {
-          user: { usageSessionId: 'foo' },
           search: { query: { q: 'cat' } },
         },
         rootGetters: {
@@ -273,15 +267,6 @@ describe('Search Store', () => {
       const params = { q: 'foo', shouldPersistMedia: false, mediaType: IMAGE }
       const action = createActions(services)[FETCH_SINGLE_MEDIA_TYPE]
       await action(context, params)
-
-      expect(context.dispatch).toHaveBeenCalledWith(
-        `${USAGE_DATA}/${SEND_SEARCH_QUERY_EVENT}`,
-        {
-          query: params.q,
-          sessionId: context.rootState.user.usageSessionId,
-        },
-        { root: true }
-      )
     })
 
     it('does not dispatch SEND_SEARCH_QUERY_EVENT if page param is available', async () => {
@@ -292,14 +277,6 @@ describe('Search Store', () => {
       }
       const action = createActions(services)[FETCH_SINGLE_MEDIA_TYPE]
       await action(context, params)
-
-      expect(context.dispatch).not.toHaveBeenCalledWith(
-        `${USAGE_DATA}/${SEND_SEARCH_QUERY_EVENT}`,
-        {
-          query: params.q,
-          sessionId: context.rootState.user.usageSessionId,
-        }
-      )
     })
 
     it('FETCH_SINGLE_MEDIA_TYPE on error', async () => {
@@ -385,17 +362,6 @@ describe('Search Store', () => {
         const params = { id: 'foo', mediaType }
         const action = createActions(services)[FETCH_MEDIA_ITEM]
         action(context, params)
-
-        expect(context.dispatch).toHaveBeenLastCalledWith(
-          `${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`,
-          {
-            query: context.rootState.search.query.q,
-            resultUuid: 'foo',
-            resultRank: 0,
-            sessionId: context.rootState.user.usageSessionId,
-          },
-          { root: true }
-        )
       }
     )
 

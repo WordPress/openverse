@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-03-09T17:47:50+00:00\n"
+"POT-Creation-Date: 2022-03-10T09:11:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -395,12 +395,12 @@ msgid "Genre"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id.vue:46
+#: src/pages/image/_id.vue:42
 msgctxt "image-details.creator"
 msgid "by ###name###"
 msgstr ""
 
-#: src/pages/image/_id.vue:40
+#: src/pages/image/_id.vue:36
 msgctxt "image-details.weblink"
 msgid "Go to image's website"
 msgstr ""
@@ -445,7 +445,7 @@ msgctxt "image-details.information.pixels"
 msgid "pixels"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:80
+#: src/components/VImageDetails/VImageDetails.vue:81
 msgctxt "image-details.information.unknown"
 msgid "Unknown"
 msgstr ""
@@ -582,7 +582,7 @@ msgid "Open form"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id.vue:56
+#: src/pages/image/_id.vue:52
 msgctxt "media-details.aria.creator-url"
 msgid "author ###name###"
 msgstr ""
@@ -652,39 +652,39 @@ msgid "Copied!"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VCopyLicense.vue:38
+#: src/components/VMediaInfo/VCopyLicense.vue:37
 msgctxt "media-details.reuse.credit.text"
 msgid "\"###title###\"###creator######marked-licensed######license######view-legal###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VCopyLicense.vue:53
+#: src/components/VMediaInfo/VCopyLicense.vue:49
 msgctxt "media-details.reuse.credit.creator-text"
 msgid " by ###creator-name###"
 msgstr ""
 
-#: src/components/VMediaInfo/VCopyLicense.vue:73
+#: src/components/VMediaInfo/VCopyLicense.vue:65
 msgctxt "media-details.reuse.credit.marked"
 msgid "is marked with"
 msgstr ""
 
-#: src/components/VMediaInfo/VCopyLicense.vue:74
+#: src/components/VMediaInfo/VCopyLicense.vue:66
 msgctxt "media-details.reuse.credit.licensed"
 msgid "is licensed under"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VCopyLicense.vue:119
+#: src/components/VMediaInfo/VCopyLicense.vue:111
 msgctxt "media-details.reuse.credit.view-legal-text"
 msgid ". To view ###terms-copy###visit ###URL###"
 msgstr ""
 
-#: src/components/VMediaInfo/VCopyLicense.vue:123
+#: src/components/VMediaInfo/VCopyLicense.vue:115
 msgctxt "media-details.reuse.credit.terms-text"
 msgid "the terms,"
 msgstr ""
 
-#: src/components/VMediaInfo/VCopyLicense.vue:124
+#: src/components/VMediaInfo/VCopyLicense.vue:116
 msgctxt "media-details.reuse.credit.copy-text"
 msgid "a copy of this license,"
 msgstr ""
@@ -1115,13 +1115,13 @@ msgid "An error occurred"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id.vue:148
+#: src/pages/image/_id.vue:137
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/audio/_id.vue:65
+#: src/pages/audio/_id.vue:78
 msgctxt "error.media-not-found"
 msgid "Couldn't find ###mediaType### with id ###id###"
 msgstr ""

@@ -25,12 +25,25 @@ import { mapState } from 'vuex'
 
 import { FETCH_MEDIA_ITEM } from '~/constants/action-types'
 import { AUDIO } from '~/constants/media'
+import { MEDIA } from '~/constants/store-modules'
 import getAttributionHtml from '~/utils/attribution-html'
 import { getFullLicenseName } from '~/utils/license'
-import { MEDIA } from '~/constants/store-modules'
+
+import VAudioDetails from '~/components/VAudioDetails/VAudioDetails.vue'
+import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
+import VBackToSearchResultsLink from '~/components/VBackToSearchResultsLink.vue'
+import VRelatedAudio from '~/components/VAudioDetails/VRelatedAudio.vue'
+import VMediaReuse from '~/components/VMediaInfo/VMediaReuse.vue'
 
 const AudioDetailPage = {
   name: 'AudioDetailPage',
+  components: {
+    VAudioDetails,
+    VAudioTrack,
+    VBackToSearchResultsLink,
+    VMediaReuse,
+    VRelatedAudio,
+  },
   data() {
     return {
       showBackToSearchLink: false,

@@ -18,7 +18,6 @@
             : 'border-tx',
         ]"
         @click.prevent="setActiveTab(tab)"
-        @keyup.enter.prevent="setActiveTab(tab)"
       >
         {{ $t(`media-details.reuse.copy-license.${tab}`) }}
       </button>
@@ -41,13 +40,10 @@
           path="media-details.reuse.credit.text"
           tag="p"
         >
-          <template #title>
-            <VLink
-              :href="media.foreign_landing_url"
-              @click="onSourceLinkClicked"
-              @keyup.enter="onSourceLinkClicked"
-              >{{ media.title }}</VLink
-            ></template
+          <template #title
+            ><VLink :href="media.foreign_landing_url">{{
+              media.title
+            }}</VLink></template
           >
           <template #creator>
             <i18n
@@ -56,13 +52,9 @@
               tag="span"
             >
               <template #creator-name>
-                <VLink
-                  v-if="media.creator_url"
-                  :href="media.creator_url"
-                  @click="onCreatorLinkClicked"
-                  @keyup.enter="onCreatorLinkClicked"
-                  >{{ media.creator }}</VLink
-                >
+                <VLink v-if="media.creator_url" :href="media.creator_url">{{
+                  media.creator
+                }}</VLink>
                 <span v-else>{{ media.creator }}</span>
               </template>
             </i18n>
@@ -136,25 +128,14 @@
         :id="`copyattr-${tab}`"
         :el="`#attribution-${tab}`"
         class="mt-6"
-        @copied="(e) => onCopyAttribution(tab, e)"
       />
     </div>
   </div>
 </template>
 
 <script>
-import {
-  computed,
-  defineComponent,
-  ref,
-  useContext,
-} from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 
-import { USAGE_DATA } from '~/constants/store-modules'
-import {
-  SEND_DETAIL_PAGE_EVENT,
-  DETAIL_PAGE_EVENTS,
-} from '~/constants/usage-data-analytics-types'
 import getAttributionHtml from '~/utils/attribution-html'
 import { isPublicDomain } from '~/utils/license'
 
@@ -174,8 +155,6 @@ const VCopyLicense = defineComponent({
     },
   },
   setup(props) {
-    const { store } = useContext()
-
     const activeTab = ref('rich')
     const tabs = ['rich', 'html', 'plain']
 
@@ -192,25 +171,6 @@ const VCopyLicense = defineComponent({
       return getAttributionHtml(props.media, licenseUrl, props.fullLicenseName)
     })
 
-    const sendDetailPageEvent = (eventType) => {
-      const eventData = {
-        eventType,
-        resultUuid: props.media.id,
-      }
-      store.dispatch(`${USAGE_DATA}/${SEND_DETAIL_PAGE_EVENT}`, eventData)
-    }
-
-    const onCreatorLinkClicked = () => {
-      sendDetailPageEvent(DETAIL_PAGE_EVENTS.CREATOR_CLICKED)
-    }
-
-    const onSourceLinkClicked = () =>
-      sendDetailPageEvent(DETAIL_PAGE_EVENTS.SOURCE_CLICKED)
-
-    const onCopyAttribution = () => {
-      sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED)
-    }
-
     const period = '.'
 
     return {
@@ -218,9 +178,6 @@ const VCopyLicense = defineComponent({
       attributionHtml,
       isPDM,
       licenseUrl,
-      onCreatorLinkClicked,
-      onSourceLinkClicked,
-      onCopyAttribution,
       tabs,
       setActiveTab,
       period,

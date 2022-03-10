@@ -47,11 +47,12 @@
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 
 import VContentReportPopover from '~/components/VContentReport/VContentReportPopover.vue'
+import VLink from '~/components/VLink.vue'
 import VMediaTag from '~/components/VMediaTag/VMediaTag.vue'
 
 const VImageDetails = defineComponent({
   name: 'VImageDetails',
-  components: { VContentReportPopover, VMediaTag },
+  components: { VContentReportPopover, VLink, VMediaTag },
   props: {
     image: {
       type: Object,
