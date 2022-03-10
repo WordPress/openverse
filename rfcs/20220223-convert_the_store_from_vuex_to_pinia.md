@@ -1,16 +1,16 @@
 # RFC: Convert the store from Vuex to Pinia
 
-- [x] @dhruvkb 
-  
-- [x] @sarayourfriend 
-  
+- [x] @dhruvkb
+
+- [x] @sarayourfriend
+
 
 **Milestone:** https://github.com/WordPress/openverse-frontend/milestone/5
-  
+
 
 ## Rationale
 
-Currently we use Vuex for global state management. This works fine for Vue 2 but has some considerable disadvantages for Vue 3, especially when it comes to TypeScript support and composition-api usage. We should switch to Pinia instead. It is the new [official default recommendation]( https://blog.vuejs.org/posts/vue-3-as-the-new-default.html) of the Vue project for state management instead of Vuex. Evan You, the creator of Vue, [has confirmed](https://twitter.com/youyuxi/status/1463429442076745730?lang=en) that Vuex 5 and Pinia are defacto the same. 
+Currently we use Vuex for global state management. This works fine for Vue 2 but has some considerable disadvantages for Vue 3, especially when it comes to TypeScript support and composition-api usage. We should switch to Pinia instead. It is the new [official default recommendation]( https://blog.vuejs.org/posts/vue-3-as-the-new-default.html) of the Vue project for state management instead of Vuex. Evan You, the creator of Vue, [has confirmed](https://twitter.com/youyuxi/status/1463429442076745730?lang=en) that Vuex 5 and Pinia are defacto the same.
 
 Pinia also has better interoperability between Vue 2's composition-api and Vue 3, and would allow us to decouple our state-management API usage from Nuxt. Currently we rely on Nuxt's home-grown `useStore` composable from the `@nuxtjs/composition-api` extension on top of `@vue/composition-api` but there's no guarantee that that composable will stick around in Nuxt 3. Besides, it is not easy to watch for changes in the store from within the `setup` function, at least when rendering on the server, and it caused problems with rendering the correct search input text on SSR.
 
@@ -18,7 +18,7 @@ Moving to Pinia will allow us to reduce the current verbosity of the store intro
 
 ## Alternatives
 
-We could just stick with the current Vuex approach and during the Nuxt bridge upgrade replace all usages of `useStore` with `useNuxtApp().$store` instead. This would introduce more code changes during the Nuxt bridge upgrade BUT would prevent us from having to re-write our entire state management strategy before migrating to Nuxt 3. 
+We could just stick with the current Vuex approach and during the Nuxt bridge upgrade replace all usages of `useStore` with `useNuxtApp().$store` instead. This would introduce more code changes during the Nuxt bridge upgrade BUT would prevent us from having to re-write our entire state management strategy before migrating to Nuxt 3.
 
 ## Potential risks
 - Pinia is currently maintained by a Vue core member, but it's still not the official Vue Vuex implementation. However, its development is closely linked with the development of the new version of Vuex and they strive for the same API and some feature parity, so we should be able to move to Vuex 5 whenever it is released if we decide to do so.
@@ -39,21 +39,21 @@ Pinia currently supports two types of store definitions: **options store** and *
 
 **Options store** is similar to the Vuex store: it has `state`, `getters` and `actions`. It could be easier to convert the current Vuex modules into the Pinia options stores as the structure is almost the same, with the main difference being the fact that the mutations are converted into actions, and lack of `context` parameter for actions, and `state` parameter for mutation.
 
-**Setup store** is a newer kind of store that is more compatible with the composition API. The store definition itself is very similar to `setup` function we use in the components. For more context on the `setup store`, watch a talk by 
+**Setup store** is a newer kind of store that is more compatible with the composition API. The store definition itself is very similar to `setup` function we use in the components. For more context on the `setup store`, watch a talk by
 Eduardo San Martin Morote (the creator of Pinia) where he explains the setup syntax on minute 22: [Everything Beyond State Management in Stores with Pinia by Eduardo San Martin Morote - GitNation](https://portal.gitnation.org/contents/everything-beyond-state-management-in-stores-with-pinia). In short, the **advantages** of using the setup store are:
 
 1. It is very similar to the components `setup` function, so it will be easier cognitively to switch between the store code and the component code.
-  
+
 2. We can use other composables within the store.
-  
+
 3. It is easier to use other stores from inside a store: you would only need to call `useXStore` once to use it in different `actions`. For example, when fetching media for search and fetching a single media item details, we use `UsageData` store to send the usage statistics. With the options store, we would have to use `const usageDataStore = useUsageDataStore()` for each action, and with the setup store we can set it up once and use in any action that needs it.
-  
+
 These advantages strongly outweigh some potential **downsides** to using the setup store:
-  
-1. Setup stores are not well documented. Most of the documentation examples use the options store. 
+
+1. Setup stores are not well documented. Most of the documentation examples use the options store.
 
 2. Setup store does not force us to separate the store code into state, getters and actions, so we would have to make effort to somehow make sure that the stores are well-organized, and not just a pile of spaghetti code.
-  
+
 View a sample simple store in the [Pinia repository](https://github.com/vuejs/pinia/blob/f9ba40a7e86e39f5336b587d248f234ccdbad5ca/packages/pinia/test-dts/storeSetup.test-d.ts).
 
 
@@ -65,7 +65,7 @@ View a sample simple store in the [Pinia repository](https://github.com/vuejs/pi
 
 We have considered two options, converting stores one by one, or converting all stores in a feature branch, and decided that the first option is preferable.
 
-1. Convert the store from Vuex to Pinia gradually, one store at a time. 
+1. Convert the store from Vuex to Pinia gradually, one store at a time.
 @dhruvkb has created an excellent PoC PR for a gradual conversion to Pinia while keeping other stores in Vuex.
 
 To minimise disruption, each store can be changed using a lock-based approach where the developer takes a lock on the store using a notification to the group, makes a PR updating a single store and its usages and this lock is released after the PR is merged.
@@ -75,7 +75,7 @@ This prevents PRs from diverging too much and allows a seamless transition for a
 2. Create a feature base branch, do all the conversion in it, and only merge a fully-converted store into main. This will ensure that we are merging a fully-working converted store, and if we find any blocking concern, we can easily revert the changes by closing the feature branch.
 
 While Pinia docs suggest that it is possible to migrate large projects from Vuex to Pinia module by module, they also say that using `disableVuex: false` is not recommended. ~Also, I'm not sure how to use Pinia stores from Vuex modules, and we do have several interdependent modules that call one another.~ In this case, we can use Pinia stores inside the Vuex stores by calling `useXStore()` inside getters, mutations and actions.
-  
+
 ## Converting a Vuex namespaced store module to a Pinia store
 There is an excellent guide on conversion in Pinia docs. This section will give steps that need to be followed for each store, and add some details specific to Openverse setup.
 
@@ -107,7 +107,7 @@ We can use `const { param1, param2 } = toRefs(state)` to enable store destructur
 ### Actions
 Pinia allows changing the state directly in the components (which was frowned upon by Vuex) so we could do away with mutations in theory. But it is better to keep using separate functions (actions) to update the state to keep state changes limited to one file and make it easier to debug.
 
-When using the `setup store`, we don't need the strict divide between mutations that can change the state, and actions that cannot. This way, we can clean up the code from one-line mutations and test them simply by testing the resulting state. However, testing the network-based state changes is not possible this way, so it is better to leave even one line mutations that are based on the network responses. For example, `fetchMedia` in the `mediaStore` sets `isFetching` to true before sending the request, and to `false` after getting a 200 OK response. So, the state test would not detect the changes, and we can use the `hasBeenCalled` mock tests in such cases instead. 
+When using the `setup store`, we don't need the strict divide between mutations that can change the state, and actions that cannot. This way, we can clean up the code from one-line mutations and test them simply by testing the resulting state. However, testing the network-based state changes is not possible this way, so it is better to leave even one line mutations that are based on the network responses. For example, `fetchMedia` in the `mediaStore` sets `isFetching` to true before sending the request, and to `false` after getting a 200 OK response. So, the state test would not detect the changes, and we can use the `hasBeenCalled` mock tests in such cases instead.
 
 ### Type hinting
 
