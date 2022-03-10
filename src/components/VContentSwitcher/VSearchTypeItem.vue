@@ -4,7 +4,7 @@
     :is-first="itemId === 0"
     @click.native="$emit('click', item)"
   >
-    <div class="flex flex-row items-center">
+    <div class="flex flex-row items-center text-base">
       <VIcon :icon-path="icon" class="me-2 my-2" />
       <span class="pe-20 font-semibold">{{ $t(`search-type.${item}`) }}</span>
       <VPill v-if="status === 'beta'">{{

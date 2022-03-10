@@ -6,9 +6,11 @@
     >
       <div class="absolute inset-0 flex flex-col">
         <div class="info flex-grow flex flex-col justify-between p-4">
-          <span class="font-heading font-semibold leading-snug line-clamp-3">{{
-            audio.title
-          }}</span>
+          <h2
+            class="font-heading font-semibold leading-snug line-clamp-3 text-base"
+          >
+            {{ audio.title }}
+          </h2>
           <div class="info">
             <VLicense
               class="mb-2 hidden md:group-hover:block md:group-focus:block"

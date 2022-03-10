@@ -3,7 +3,23 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    @apply text-dark-charcoal m-0 font-normal leading-loose;
+    font-display: swap;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   a {
     @apply text-pink hover:underline;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold;
   }
 }
