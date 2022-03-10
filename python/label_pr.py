@@ -127,6 +127,10 @@ def main():
     pr = get_pull_request(gh, args.pr_url)
     log.info(f"Found PR: {pr.title}")
 
+    if pr.labels:
+        log.info("PR already labelled")
+        return
+
     linked_issues = get_linked_issues(pr.html_url)
     log.info(f"Found {len(linked_issues)} linked issues")
 
