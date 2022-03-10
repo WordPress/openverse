@@ -67,7 +67,7 @@
           class="button is-primary py-8"
         >
           {{ $t('sources.issue-button') }}
-          <i class="icon external-link mx-2 mt-2" />
+          <VIcon :icon-path="externalLinkIcon" :rtl-flip="true" class="mx-2" />
         </VLink>
       </div>
       <i18n path="sources.detail" tag="p">
@@ -145,11 +145,16 @@ import { mapState } from 'vuex'
 import { PROVIDER } from '~/constants/store-modules'
 import { useGetLocaleFormattedNumber } from '~/composables/use-get-locale-formatted-number'
 
+import VButton from '~/components/VButton.vue'
 import VLink from '~/components/VLink.vue'
+import VIcon from '~/components/VIcon/VIcon.vue'
+import TableSortIcon from '~/components/TableSortIcon.vue'
+
+import externalLinkIcon from '~/assets/icons/external-link.svg'
 
 const SourcePage = {
   name: 'source-page',
-  components: { VLink },
+  components: { VButton, VIcon, VLink, TableSortIcon },
   data() {
     return {
       sort: {
@@ -161,7 +166,7 @@ const SourcePage = {
   setup() {
     const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
 
-    return { getLocaleFormattedNumber }
+    return { getLocaleFormattedNumber, externalLinkIcon }
   },
   computed: {
     ...mapState(PROVIDER, ['imageProviders']),

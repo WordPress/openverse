@@ -12,7 +12,12 @@
       >
         {{ source.name }}
         <sup class="top-0">
-          <i class="ms-2 icon external-link" />
+          <VIcon
+            :icon-path="externalLinkIcon"
+            :size="4"
+            :rtl-flip="true"
+            class="ms-2"
+          />
         </sup>
       </VButton>
     </li>
@@ -27,10 +32,13 @@ import getLegacySourceUrl, {
 } from '~/utils/get-legacy-source-url'
 
 import VButton from '~/components/VButton.vue'
+import VIcon from '~/components/VIcon/VIcon.vue'
+
+import externalLinkIcon from '~/assets/icons/external-link.svg'
 
 export default {
   name: 'MetaSourceList',
-  components: { VButton },
+  components: { VButton, VIcon },
   props: {
     type: { type: String },
     query: { type: Object },
@@ -46,6 +54,7 @@ export default {
     )
 
     return {
+      externalLinkIcon,
       sources,
     }
   },
