@@ -293,7 +293,7 @@ class MediaSerializer(serializers.Serializer):
     )
 
     tags = TagSerializer(
-        required=False,
+        default=[],
         many=True,
         help_text="Tags with detailed metadata, such as accuracy.",
     )
