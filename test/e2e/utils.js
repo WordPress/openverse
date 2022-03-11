@@ -11,12 +11,22 @@ const openFilters = async (page) => {
   }
 }
 
-const assertCheckboxCheckedStatus = async (page, label, checked = true) => {
-  const checkbox = page.locator(`label:has-text("${label}")`)
-  if (checked) {
-    await expect(checkbox).toBeChecked()
-  } else {
-    await expect(checkbox).not.toBeChecked()
+const assertCheckboxStatus = async (page, label, status = 'checked') => {
+  const checkbox = page.locator(`label:has-text('${label}')`)
+  switch (status) {
+    case 'checked': {
+      await expect(checkbox).not.toBeDisabled()
+      await expect(checkbox).toBeChecked()
+      break
+    }
+    case 'unchecked': {
+      await expect(checkbox).not.toBeDisabled()
+      await expect(checkbox).not.toBeChecked()
+      break
+    }
+    case 'disabled': {
+      await expect(checkbox).toBeDisabled()
+    }
   }
 }
 
@@ -46,6 +56,6 @@ module.exports = {
   openFilters,
   changeContentType,
   currentContentType,
-  assertCheckboxCheckedStatus,
+  assertCheckboxStatus,
   mockProviderApis,
 }

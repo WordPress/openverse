@@ -35,7 +35,9 @@ test('shows the main image with its title as alt text', async ({ page }) => {
 
 test('does not show back to search results breadcrumb', async ({ page }) => {
   await goToCustomImagePage(page)
-  await expect(page.locator('text="Back to search results"')).not.toBeVisible()
+  await expect(page.locator('text="Back to search results"')).not.toBeVisible({
+    timeout: 300,
+  })
 })
 
 test('redirects from old /photos/:id route to /image/:id', async ({ page }) => {

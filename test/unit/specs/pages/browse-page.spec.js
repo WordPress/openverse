@@ -20,10 +20,6 @@ describe('SearchIndex', () => {
             query: { q: 'foo' },
             searchType: 'image',
           },
-          getters: {
-            isAnyFilterApplied: () => false,
-            appliedFilterTags: () => [],
-          },
         },
         media: {
           namespaced: true,

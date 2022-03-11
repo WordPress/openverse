@@ -52,6 +52,8 @@ const searchTypes = [
 async function checkLoadMore(page, searchType) {
   const loadMoreSection = await page.locator('[data-testid="load-more"]')
   if (!searchType.canLoadMore) {
+    // When we expect the section not to be here, the test becomes very slow because
+    // it waits until the end of the timeout (5 seconds).
     await expect(loadMoreSection).toHaveCount(0, { timeout: 300 })
   } else {
     await expect(loadMoreSection).toHaveCount(1)

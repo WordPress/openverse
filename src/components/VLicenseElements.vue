@@ -23,6 +23,8 @@
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 
+import VIcon from '~/components/VIcon/VIcon.vue'
+
 import by from '~/assets/licenses/by.svg'
 import cc0 from '~/assets/licenses/cc0.svg'
 import nc from '~/assets/licenses/nc.svg'
@@ -34,6 +36,7 @@ import samplingPlus from '~/assets/licenses/sampling-plus.svg'
 
 export default defineComponent({
   name: 'VLicenseElements',
+  components: { VIcon },
   props: {
     license: {
       type: String,

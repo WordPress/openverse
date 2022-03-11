@@ -1,15 +1,21 @@
 import { createLocalVue } from '@vue/test-utils'
 import { fireEvent, render, screen } from '@testing-library/vue'
 
+import { PiniaVuePlugin, createPinia } from 'pinia'
+
 import FilterChecklist from '~/components/VFilters/VFilterChecklist'
 
 describe('FilterChecklist', () => {
   let options = {}
   let props = null
   let localVue = null
+  let pinia
 
   beforeEach(() => {
     localVue = createLocalVue()
+    localVue.use(PiniaVuePlugin)
+    pinia = createPinia()
+
     props = {
       options: [{ code: 'foo', name: 'bar', checked: false }],
       title: 'Foo',
@@ -18,6 +24,7 @@ describe('FilterChecklist', () => {
     }
     options = {
       localVue,
+      pinia,
       propsData: props,
     }
   })

@@ -1,0 +1,410 @@
+{
+    meta: {
+        createdAt: '2022-03-03T06:50:45.582Z',
+        host: 'https://api.openverse.engineering/v1',
+        resHumanReadable: true,
+    },
+    req: {
+        headers: {
+            accept: 'application/json, text/plain, */*',
+            connection: 'close',
+        },
+        url: '/audio/?q=cat&license_type=commercial',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Thu, 03 Mar 2022 06:50:45 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'close',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '163995',
+            ],
+            'last-modified': [
+                'Tue, 01 Mar 2022 09:17:30 GMT',
+            ],
+            'expect-ct': [
+                'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '6e6070948b556277-OTP',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            result_count: 8,
+            page_count: 0,
+            page_size: 20,
+            page: 1,
+            results: [
+                {
+                    id: '2ecd5631-c48c-4a5f-89c4-83c44dbbd365',
+                    title: 'Lucky Cat',
+                    foreign_landing_url: 'https://www.jamendo.com/track/24850',
+                    creator: 'Bruce H. McCosar',
+                    creator_url: 'https://www.jamendo.com/artist/3737/bruce.h.mccosar',
+                    url: 'https://mp3d.jamendo.com/download/track/24850/mp32',
+                    license: 'by-sa',
+                    license_version: '3.0',
+                    license_url: 'https://creativecommons.org/licenses/by-sa/3.0/',
+                    provider: 'jamendo',
+                    source: 'jamendo',
+                    category: 'music',
+                    tags: [
+                        {
+                            name: 'instrumental',
+                        },
+                        {
+                            name: 'neutral',
+                        },
+                        {
+                            name: 'speed_medium',
+                        },
+                        {
+                            name: 'neutral',
+                        },
+                    ],
+                    fields_matched: [
+                        'title',
+                    ],
+                    genres: [
+                        'pop',
+                        'jazz',
+                    ],
+                    duration: 335000,
+                    thumbnail: 'http://api.openverse.engineering/v1/audio/2ecd5631-c48c-4a5f-89c4-83c44dbbd365/thumb/',
+                    waveform: 'http://api.openverse.engineering/v1/audio/2ecd5631-c48c-4a5f-89c4-83c44dbbd365/waveform/',
+                    detail_url: 'http://api.openverse.engineering/v1/audio/2ecd5631-c48c-4a5f-89c4-83c44dbbd365/',
+                    related_url: 'http://api.openverse.engineering/v1/audio/2ecd5631-c48c-4a5f-89c4-83c44dbbd365/related/',
+                },
+                {
+                    id: '1bb94f50-009c-4371-a605-dd289562a9f5',
+                    title: 'Cat Meow.aif',
+                    foreign_landing_url: 'https://freesound.org/people/Wrenasmir/sounds/455493',
+                    creator: 'Wrenasmir',
+                    creator_url: 'https://freesound.org/people/Wrenasmir',
+                    url: 'https://freesound.org/data/previews/455/455493_1138747-hq.mp3',
+                    license: 'cc0',
+                    license_version: '1.0',
+                    license_url: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: 'sound',
+                    tags: [
+                        {
+                            name: 'Meow',
+                        },
+                        {
+                            name: 'Cat',
+                        },
+                        {
+                            name: 'Voice-Acting',
+                        },
+                    ],
+                    fields_matched: [
+                        'description',
+                        'tags.name',
+                        'title',
+                    ],
+                    duration: 6750,
+                    bit_rate: 128000,
+                    thumbnail: 'http://api.openverse.engineering/v1/audio/1bb94f50-009c-4371-a605-dd289562a9f5/thumb/',
+                    waveform: 'http://api.openverse.engineering/v1/audio/1bb94f50-009c-4371-a605-dd289562a9f5/waveform/',
+                    detail_url: 'http://api.openverse.engineering/v1/audio/1bb94f50-009c-4371-a605-dd289562a9f5/',
+                    related_url: 'http://api.openverse.engineering/v1/audio/1bb94f50-009c-4371-a605-dd289562a9f5/related/',
+                },
+                {
+                    id: '71a2cf71-cdb0-49d6-94d0-d0f757e37799',
+                    title: "Mahler's Cat",
+                    foreign_landing_url: 'https://www.jamendo.com/track/35663',
+                    creator: 'softspace',
+                    creator_url: 'https://www.jamendo.com/artist/4965/softspace',
+                    url: 'https://mp3d.jamendo.com/download/track/35663/mp32',
+                    license: 'by',
+                    license_version: '3.0',
+                    license_url: 'https://creativecommons.org/licenses/by/3.0/',
+                    provider: 'jamendo',
+                    source: 'jamendo',
+                    category: 'music',
+                    tags: [
+                        {
+                            name: 'instrumental',
+                        },
+                        {
+                            name: 'speed_medium',
+                        },
+                        {
+                            name: 'soundscape',
+                        },
+                    ],
+                    fields_matched: [
+                        'title',
+                    ],
+                    genres: [
+                        'electronic',
+                        'ambient',
+                        'experimental',
+                    ],
+                    duration: 382000,
+                    thumbnail: 'http://api.openverse.engineering/v1/audio/71a2cf71-cdb0-49d6-94d0-d0f757e37799/thumb/',
+                    waveform: 'http://api.openverse.engineering/v1/audio/71a2cf71-cdb0-49d6-94d0-d0f757e37799/waveform/',
+                    detail_url: 'http://api.openverse.engineering/v1/audio/71a2cf71-cdb0-49d6-94d0-d0f757e37799/',
+                    related_url: 'http://api.openverse.engineering/v1/audio/71a2cf71-cdb0-49d6-94d0-d0f757e37799/related/',
+                },
+                {
+                    id: 'cc04c4a8-f5b1-4d2f-9644-c25dd3b862f4',
+                    title: 'EclipseBeforeDuringAfter.flac',
+                    foreign_landing_url: 'https://freesound.org/people/zimbot/sounds/400175',
+                    creator: 'zimbot',
+                    creator_url: 'https://freesound.org/people/zimbot',
+                    url: 'https://freesound.org/data/previews/400/400175_1449999-hq.mp3',
+                    license: 'by',
+                    license_version: '3.0',
+                    license_url: 'https://creativecommons.org/licenses/by/3.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: 'sound',
+                    tags: [
+                        {
+                            name: 'summer',
+                        },
+                        {
+                            name: 'field-recording',
+                        },
+                        {
+                            name: 'insects',
+                        },
+                        {
+                            name: 'eclipse',
+                        },
+                        {
+                            name: 'water',
+                        },
+                        {
+                            name: 'solar-eclipse',
+                        },
+                        {
+                            name: 'birds',
+                        },
+                    ],
+                    fields_matched: [
+                        'description',
+                    ],
+                    duration: 321616,
+                    bit_rate: 128000,
+                    thumbnail: 'http://api.openverse.engineering/v1/audio/cc04c4a8-f5b1-4d2f-9644-c25dd3b862f4/thumb/',
+                    waveform: 'http://api.openverse.engineering/v1/audio/cc04c4a8-f5b1-4d2f-9644-c25dd3b862f4/waveform/',
+                    detail_url: 'http://api.openverse.engineering/v1/audio/cc04c4a8-f5b1-4d2f-9644-c25dd3b862f4/',
+                    related_url: 'http://api.openverse.engineering/v1/audio/cc04c4a8-f5b1-4d2f-9644-c25dd3b862f4/related/',
+                },
+                {
+                    id: 'a3ff8120-23e7-426d-9aa5-dc929e7e1665',
+                    title: 'gato.mp3',
+                    foreign_landing_url: 'https://freesound.org/people/Sofia_Erzini/sounds/411665',
+                    creator: 'Sofia_Erzini',
+                    creator_url: 'https://freesound.org/people/Sofia_Erzini',
+                    url: 'https://freesound.org/data/previews/411/411665_7325786-hq.mp3',
+                    license: 'cc0',
+                    license_version: '1.0',
+                    license_url: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: 'sound',
+                    tags: [
+                        {
+                            name: 'voice',
+                        },
+                        {
+                            name: 'call',
+                        },
+                        {
+                            name: 'Cat',
+                        },
+                    ],
+                    fields_matched: [
+                        'tags.name',
+                    ],
+                    duration: 40112,
+                    bit_rate: 128000,
+                    thumbnail: 'http://api.openverse.engineering/v1/audio/a3ff8120-23e7-426d-9aa5-dc929e7e1665/thumb/',
+                    waveform: 'http://api.openverse.engineering/v1/audio/a3ff8120-23e7-426d-9aa5-dc929e7e1665/waveform/',
+                    detail_url: 'http://api.openverse.engineering/v1/audio/a3ff8120-23e7-426d-9aa5-dc929e7e1665/',
+                    related_url: 'http://api.openverse.engineering/v1/audio/a3ff8120-23e7-426d-9aa5-dc929e7e1665/related/',
+                },
+                {
+                    id: '8f440118-dd97-4853-9760-69c37cea2db9',
+                    title: 'Far summer camp children NL 170815_1207.flac',
+                    foreign_landing_url: 'https://freesound.org/people/klankbeeld/sounds/399567',
+                    creator: 'klankbeeld',
+                    creator_url: 'https://freesound.org/people/klankbeeld',
+                    url: 'https://freesound.org/data/previews/399/399567_1648170-hq.mp3',
+                    license: 'by',
+                    license_version: '3.0',
+                    license_url: 'https://creativecommons.org/licenses/by/3.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: 'sound',
+                    tags: [
+                        {
+                            name: 'field-recording',
+                        },
+                        {
+                            name: 'announcer',
+                        },
+                        {
+                            name: 'summer',
+                        },
+                        {
+                            name: 'Netherlands',
+                        },
+                        {
+                            name: 'Dutch',
+                        },
+                        {
+                            name: 'village',
+                        },
+                        {
+                            name: 'daytime',
+                        },
+                        {
+                            name: 'ambient',
+                        },
+                        {
+                            name: 'ambience',
+                        },
+                        {
+                            name: 'megaphone',
+                        },
+                        {
+                            name: 'Holland',
+                        },
+                        {
+                            name: 'garden',
+                        },
+                    ],
+                    fields_matched: [
+                        'description',
+                    ],
+                    duration: 614381,
+                    bit_rate: 128000,
+                    thumbnail: 'http://api.openverse.engineering/v1/audio/8f440118-dd97-4853-9760-69c37cea2db9/thumb/',
+                    waveform: 'http://api.openverse.engineering/v1/audio/8f440118-dd97-4853-9760-69c37cea2db9/waveform/',
+                    detail_url: 'http://api.openverse.engineering/v1/audio/8f440118-dd97-4853-9760-69c37cea2db9/',
+                    related_url: 'http://api.openverse.engineering/v1/audio/8f440118-dd97-4853-9760-69c37cea2db9/related/',
+                },
+                {
+                    id: 'dcc5d424-526d-41c2-97c2-d4521b0444f4',
+                    title: 'pfsss.aif',
+                    foreign_landing_url: 'https://freesound.org/people/brunchik/sounds/401597',
+                    creator: 'brunchik',
+                    creator_url: 'https://freesound.org/people/brunchik',
+                    url: 'https://freesound.org/data/previews/401/401597_3516609-hq.mp3',
+                    license: 'cc0',
+                    license_version: '1.0',
+                    license_url: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: 'sound',
+                    tags: [
+                        {
+                            name: 'psss',
+                        },
+                        {
+                            name: 'come-here-kitty',
+                        },
+                        {
+                            name: 'pfsss',
+                        },
+                        {
+                            name: 'cat',
+                        },
+                    ],
+                    fields_matched: [
+                        'description',
+                        'tags.name',
+                    ],
+                    duration: 7833,
+                    bit_rate: 128000,
+                    thumbnail: 'http://api.openverse.engineering/v1/audio/dcc5d424-526d-41c2-97c2-d4521b0444f4/thumb/',
+                    waveform: 'http://api.openverse.engineering/v1/audio/dcc5d424-526d-41c2-97c2-d4521b0444f4/waveform/',
+                    detail_url: 'http://api.openverse.engineering/v1/audio/dcc5d424-526d-41c2-97c2-d4521b0444f4/',
+                    related_url: 'http://api.openverse.engineering/v1/audio/dcc5d424-526d-41c2-97c2-d4521b0444f4/related/',
+                },
+                {
+                    id: '7956ce8d-a029-4a86-9474-90fe9f765fd6',
+                    title: 'gato 3.mp3',
+                    foreign_landing_url: 'https://freesound.org/people/Sofia_Erzini/sounds/411666',
+                    creator: 'Sofia_Erzini',
+                    creator_url: 'https://freesound.org/people/Sofia_Erzini',
+                    url: 'https://freesound.org/data/previews/411/411666_7325786-hq.mp3',
+                    license: 'cc0',
+                    license_version: '1.0',
+                    license_url: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: 'sound',
+                    tags: [
+                        {
+                            name: 'voice',
+                        },
+                        {
+                            name: 'call',
+                        },
+                        {
+                            name: 'Cat',
+                        },
+                    ],
+                    fields_matched: [
+                        'tags.name',
+                    ],
+                    duration: 9000,
+                    bit_rate: 128000,
+                    thumbnail: 'http://api.openverse.engineering/v1/audio/7956ce8d-a029-4a86-9474-90fe9f765fd6/thumb/',
+                    waveform: 'http://api.openverse.engineering/v1/audio/7956ce8d-a029-4a86-9474-90fe9f765fd6/waveform/',
+                    detail_url: 'http://api.openverse.engineering/v1/audio/7956ce8d-a029-4a86-9474-90fe9f765fd6/',
+                    related_url: 'http://api.openverse.engineering/v1/audio/7956ce8d-a029-4a86-9474-90fe9f765fd6/related/',
+                },
+            ],
+        },
+    },
+}

@@ -36,7 +36,7 @@ import {
   UPDATE_QUERY,
   SET_SEARCH_STATE_FROM_URL,
 } from '~/constants/action-types'
-import { ALL_MEDIA, supportedSearchTypes } from '~/constants/media'
+import { supportedSearchTypes } from '~/constants/media'
 import { MEDIA, SEARCH } from '~/constants/store-modules'
 import { isMinScreen } from '~/composables/use-media-query.js'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
@@ -79,11 +79,8 @@ const BrowsePage = {
   },
   computed: {
     ...mapState(SEARCH, ['query', 'searchType']),
-    ...mapGetters(SEARCH, ['searchQueryParams', 'isAnyFilterApplied']),
+    ...mapGetters(SEARCH, ['searchQueryParams']),
     ...mapGetters(MEDIA, ['results', 'resultCount', 'fetchState']),
-    mediaType() {
-      return this.searchType ?? ALL_MEDIA
-    },
     /**
      * Number of search results. Returns 0 for unsupported types.
      * @returns {number}

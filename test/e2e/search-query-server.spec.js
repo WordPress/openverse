@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test')
 
 const { mockProviderApis, openFilters } = require('./utils')
-const { currentContentType, assertCheckboxCheckedStatus } = require('./utils')
+const { currentContentType, assertCheckboxStatus } = require('./utils')
 
 /**
  * URL is correctly converted into search state:
@@ -57,9 +57,9 @@ test('url query to filter, all tab, one parameter per filter type', async ({
   )
 
   await openFilters(page)
-  await assertCheckboxCheckedStatus(page, 'cc0')
-  await assertCheckboxCheckedStatus(page, 'commercial')
-  await assertCheckboxCheckedStatus(page, 'creator')
+  for (let checkbox of ['cc0', 'commercial', 'creator']) {
+    await assertCheckboxStatus(page, checkbox)
+  }
 })
 
 test('url query to filter, image tab, several filters for one filter type selected', async ({
@@ -71,7 +71,7 @@ test('url query to filter, image tab, several filters for one filter type select
   await openFilters(page)
   const checkboxes = ['jpeg', 'png', 'gif', 'svgs']
   for (let checkbox of checkboxes) {
-    await assertCheckboxCheckedStatus(page, checkbox)
+    await assertCheckboxStatus(page, checkbox)
   }
 })
 

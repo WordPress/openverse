@@ -1,17 +1,8 @@
-import findIndex from 'lodash.findindex'
-import clonedeep from 'lodash.clonedeep'
-
 import {
   filtersToQueryData,
   queryStringToSearchType,
-  queryToFilterData,
 } from '~/utils/search-query-transform'
-import {
-  ALL_MEDIA,
-  AUDIO,
-  IMAGE,
-  supportedSearchTypes,
-} from '~/constants/media'
+import { ALL_MEDIA } from '~/constants/media'
 import {
   UPDATE_QUERY,
   SET_SEARCH_STATE_FROM_URL,
@@ -19,52 +10,10 @@ import {
   UPDATE_QUERY_FROM_FILTERS,
   CLEAR_FILTERS,
 } from '~/constants/action-types'
+import { SET_QUERY, SET_SEARCH_TYPE } from '~/constants/mutation-types'
 
-import {
-  SET_FILTER,
-  SET_PROVIDERS_FILTERS,
-  CLEAR_OTHER_MEDIA_TYPE_FILTERS,
-  REPLACE_FILTERS,
-  SET_QUERY,
-  SET_SEARCH_TYPE,
-} from '~/constants/mutation-types'
+import { useFilterStore } from '~/stores/filter'
 
-import {
-  filterData,
-  mediaFilterKeys,
-  mediaUniqueFilterKeys,
-} from '~/constants/filters.ts'
-
-/**
- * Returns true if any of the filters' checked property is true
- * except for `mature` filter, as it is not displayed as a tag
- * @param filters
- * @returns {boolean}
- */
-const anyFilterApplied = (filters = {}) =>
-  Object.keys(filters).some((filterKey) => {
-    if (filterKey === 'mature') {
-      return false
-    } // this is hardcoded to "false" because we do not show mature in `FilterDisplay.vue` like the other filters
-
-    return (
-      filters[filterKey] && filters[filterKey].some((filter) => filter.checked)
-    )
-  })
-
-const getBaseFiltersWithProviders = (state) => {
-  const resetProviders = (mediaType) => {
-    return state.filters[`${mediaType}Providers`].map((provider) => ({
-      ...provider,
-      checked: false,
-    }))
-  }
-  return {
-    ...clonedeep(filterData),
-    audioProviders: resetProviders(AUDIO),
-    imageProviders: resetProviders(IMAGE),
-  }
-}
 /**
  * `query` has the API request parameters for search filtering. Locally, some filters
  * have different names, and some query parameters correspond to different filter parameters
@@ -74,12 +23,11 @@ const getBaseFiltersWithProviders = (state) => {
  * @return {import('./types').SearchState}
  */
 export const state = () => ({
-  filters: clonedeep(filterData),
   searchType: ALL_MEDIA,
   query: {
     q: '',
-    license: '',
     license_type: '',
+    license: '',
     categories: '',
     extension: '',
     duration: '',
@@ -115,60 +63,8 @@ export const getters = {
     }
     return params
   },
-  /**
-   * Returns all applied filters in unified format
-   * Mature filter is not returned because it is not displayed
-   * as a filter tag.
-   *
-   * @param {import('./types').SearchState} state
-   * @returns {{code: string, name: string, filterType: string}[]}
-   */
-  appliedFilterTags: (state) => {
-    let appliedFilters = []
-    const filterKeys = mediaFilterKeys[state.searchType]
-    filterKeys.forEach((filterType) => {
-      if (filterType !== 'mature') {
-        const newFilters = state.filters[filterType]
-          .filter((f) => f.checked)
-          .map((f) => {
-            return {
-              code: f.code,
-              name: f.name,
-              filterType: filterType,
-            }
-          })
-        appliedFilters = [...appliedFilters, ...newFilters]
-      }
-    })
-
-    return appliedFilters
-  },
-  /**
-   * Returns true if any filter except `mature` is applied.
-   *
-   * @param {import('./types').SearchState} state
-   * @return {boolean}
-   */
-  isAnyFilterApplied: (state) => {
-    return anyFilterApplied(
-      getMediaTypeFilters({
-        filters: state.filters,
-        mediaType: state.searchType,
-      })
-    )
-  },
-  /**
-   * Returns the array of the filters applicable for current search type
-   * for display on the Filter sidebar.
-   * @param {import('./types').SearchState} state
-   * @return {{}}
-   */
-  mediaFiltersForDisplay: (state) => {
-    return getMediaTypeFilters({
-      filters: state.filters,
-      mediaType: state.searchType,
-      includeMature: false,
-    })
+  searchFilters: (state) => {
+    return useFilterStore().getMediaTypeFilters({ mediaType: state.searchType })
   },
 }
 
@@ -190,7 +86,7 @@ const actions = {
     }
     if (searchType && searchType !== state.searchType) {
       commit(SET_SEARCH_TYPE, { searchType })
-      commit(CLEAR_OTHER_MEDIA_TYPE_FILTERS, { searchType })
+      useFilterStore().clearOtherMediaTypeFilters({ searchType })
     }
     await dispatch(UPDATE_QUERY_FROM_FILTERS, queryParams)
   },
@@ -199,12 +95,8 @@ const actions = {
    * @param {import('vuex').ActionContext} context
    * @param params
    */
-  async [TOGGLE_FILTER]({ commit, dispatch, state }, params) {
-    const { filterType, code } = params
-    const filters = state.filters[filterType]
-    const codeIdx = findIndex(filters, (f) => f.code === code)
-
-    commit(SET_FILTER, { codeIdx, ...params })
+  async [TOGGLE_FILTER]({ dispatch }, params) {
+    useFilterStore().toggleFilter(params)
     await dispatch(UPDATE_QUERY_FROM_FILTERS)
   },
 
@@ -214,10 +106,8 @@ const actions = {
    * handled separately.
    * @param {import('vuex').ActionContext} context
    */
-  async [CLEAR_FILTERS]({ commit, dispatch, state }) {
-    commit(REPLACE_FILTERS, {
-      newFilterData: getBaseFiltersWithProviders(state),
-    })
+  async [CLEAR_FILTERS]({ dispatch }) {
+    useFilterStore().clearFilters()
     await dispatch(UPDATE_QUERY_FROM_FILTERS, { q: '' })
   },
 
@@ -227,22 +117,16 @@ const actions = {
    * @param {string} path
    * @param {Object} query
    */
-  async [SET_SEARCH_STATE_FROM_URL](
-    { commit, dispatch, state },
-    { path, query }
-  ) {
+  async [SET_SEARCH_STATE_FROM_URL]({ commit, dispatch }, { path, query }) {
     const searchType = queryStringToSearchType(path)
     const queryParams = {}
     if (query.q) {
       queryParams.q = query.q
     }
-    const newFilterData = queryToFilterData({
-      query,
-      searchType,
-      defaultFilters: getBaseFiltersWithProviders(state),
-    })
-    commit(REPLACE_FILTERS, { newFilterData })
+
     commit(SET_SEARCH_TYPE, { searchType })
+    useFilterStore().updateFiltersFromUrl(query, searchType)
+
     await dispatch(UPDATE_QUERY_FROM_FILTERS, queryParams)
   },
   /**
@@ -254,121 +138,29 @@ const actions = {
    */
   async [UPDATE_QUERY_FROM_FILTERS]({ state, commit }, params = {}) {
     const queryFromFilters = filtersToQueryData(
-      state.filters,
+      useFilterStore().filters,
       params.mediaType || state.searchType,
-      false
+      true
     )
-    const query = { ...queryFromFilters }
-    query.q = params?.q || state.query.q
-    commit(SET_QUERY, { query })
-  },
-}
 
-function getMediaTypeFilters({ filters, mediaType, includeMature = false }) {
-  if (!supportedSearchTypes.includes(mediaType)) {
-    mediaType = ALL_MEDIA
-  }
-  let filterKeys = mediaFilterKeys[mediaType]
-  if (!includeMature) {
-    filterKeys = filterKeys.filter((filterKey) => filterKey !== 'mature')
-  }
-  const mediaTypeFilters = {}
-  filterKeys.forEach((filterKey) => {
-    mediaTypeFilters[filterKey] = filters[filterKey]
-  })
-  return mediaTypeFilters
+    // If the filter was unchecked, its value in `queryFromFilters` would be falsy, ''.
+    // So we check if the key exists, not if the value is not falsy.
+    const changedKeys = Object.keys(queryFromFilters)
+    const updatedQuery = /** @type {import('../store/types').Query} */ (
+      Object.keys(state.query).reduce((obj, key) => {
+        if (key === 'q') {
+          obj[key] = params?.q || state.query.q
+        } else {
+          obj[key] = changedKeys.includes(key) ? queryFromFilters[key] : ''
+        }
+        return obj
+      }, {})
+    )
+    commit(SET_QUERY, { query: updatedQuery })
+  },
 }
 
 const mutations = {
-  /**
-   * After a search type is changed, unchecks all the filters that are not
-   * applicable for this Media type.
-   * @param {import('./types').SearchState} state
-   * @param {import('./types').SearchType} searchType
-   */
-  [CLEAR_OTHER_MEDIA_TYPE_FILTERS](state, { searchType }) {
-    const mediaTypesToClear = supportedSearchTypes.filter(
-      (type) => type !== searchType
-    )
-
-    let filterKeysToClear = []
-    mediaTypesToClear.forEach((mediaType) => {
-      const filterKeys = mediaUniqueFilterKeys[mediaType]
-      filterKeysToClear = [...filterKeysToClear, ...filterKeys]
-    })
-
-    Object.keys(state.filters).forEach((filterType) => {
-      if (filterKeysToClear.includes(filterType)) {
-        state.filters[filterType] = state.filters[filterType].map((f) => ({
-          ...f,
-          checked: false,
-        }))
-      }
-    })
-  },
-  /**
-   * Replaces filters with the newFilterData parameter, making sure that
-   * audio/image provider filters are handled correctly.
-   *
-   * @param {import('./types').SearchState} state
-   * @param {import('./types').Filters} newFilterData
-   */
-  [REPLACE_FILTERS](state, { newFilterData }) {
-    Object.keys(state.filters).forEach((filterType) => {
-      if (filterType === 'mature') {
-        state.filters.mature = newFilterData.mature
-      } else if (['audioProviders', 'imageProviders'].includes(filterType)) {
-        newFilterData[filterType].forEach((provider) => {
-          const idx = state.filters[filterType].findIndex(
-            (p) => p.code === provider.code
-          )
-          if (idx > -1) {
-            state.filters[filterType][idx].checked = provider.checked
-          }
-        })
-      } else {
-        state.filters[filterType] = newFilterData[filterType]
-      }
-    })
-  },
-  /**
-   * Toggles the filter's checked value.
-   *
-   * @param {import('./types').SearchState} state
-   * @param {import('vuex').MutationPayload} params
-   * @param {string} params.filterType
-   * @param {number} params.codeIdx
-   */
-  [SET_FILTER](state, params) {
-    const { filterType, codeIdx } = params
-    const filters = state.filters[filterType]
-    filters[codeIdx].checked = !filters[codeIdx].checked
-  },
-  [SET_PROVIDERS_FILTERS](state, params) {
-    const { mediaType, providers } = params
-    // merge providers from API response with the filters that came from the
-    // browse URL search query string and match the checked properties
-    // in the store
-    const providersKey = `${mediaType}Providers`
-    const currentProviders = [...state.filters[providersKey]]
-    state.filters[providersKey] = providers.map((provider) => {
-      const existingProviderFilterIdx = findIndex(
-        currentProviders,
-        (p) => p.code === provider.source_name
-      )
-
-      const checked =
-        existingProviderFilterIdx >= 0
-          ? currentProviders[existingProviderFilterIdx].checked
-          : false
-
-      return {
-        code: provider.source_name,
-        name: provider.display_name,
-        checked,
-      }
-    })
-  },
   /**
    * Sets the content type to search.
    * @param {import('./types').SearchState} state
@@ -376,6 +168,7 @@ const mutations = {
    */
   [SET_SEARCH_TYPE](state, { searchType }) {
     state.searchType = searchType
+    useFilterStore().setSearchType(searchType)
   },
   /**
    * Replaces the query object that is used for API calls.

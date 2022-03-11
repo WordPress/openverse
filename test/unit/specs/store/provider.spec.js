@@ -1,3 +1,5 @@
+import { createPinia, setActivePinia } from 'pinia'
+
 import { state, mutations, createActions } from '~/store/provider'
 import {
   FETCH_MEDIA_PROVIDERS_END,
@@ -65,7 +67,9 @@ describe('Image Provider Store', () => {
     const services = { [IMAGE]: imageProviderServiceMock }
     const commit = jest.fn()
     const dispatch = jest.fn()
+
     it('FETCH_MEDIA_TYPE_PROVIDERS on success', (done) => {
+      setActivePinia(createPinia())
       const action = createActions(services)[FETCH_MEDIA_TYPE_PROVIDERS]
       action({ commit, dispatch }, { mediaType: 'image' }).then(() => {
         expect(commit).toBeCalledWith(SET_PROVIDER_FETCH_ERROR, {

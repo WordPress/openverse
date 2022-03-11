@@ -1,37 +1,49 @@
+import { createPinia, setActivePinia } from 'pinia'
+
 import store from '~/store/search'
 
 import {
   CLEAR_FILTERS,
   SET_SEARCH_STATE_FROM_URL,
-  TOGGLE_FILTER,
   UPDATE_QUERY_FROM_FILTERS,
 } from '~/constants/action-types'
-import {
-  SET_FILTER,
-  SET_PROVIDERS_FILTERS,
-  REPLACE_FILTERS,
-  SET_SEARCH_TYPE,
-  SET_QUERY,
-} from '~/constants/mutation-types'
+import { SET_SEARCH_TYPE, SET_QUERY } from '~/constants/mutation-types'
 import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
 
-import { filterData } from '~/constants/filters.ts'
+import { useFilterStore } from '~/stores/filter'
 
-describe('Filter Store', () => {
+const initialState = {
+  query: {
+    aspect_ratio: '',
+    categories: '',
+    duration: '',
+    extension: '',
+    license: '',
+    license_type: '',
+    mature: '',
+    q: '',
+    searchBy: '',
+    size: '',
+    source: '',
+  },
+  searchType: ALL_MEDIA,
+}
+
+describe('Search Store', () => {
   describe('state', () => {
-    it('state contains all filters', () => {
+    it('initial state is set correctly', () => {
       const defaultState = store.state()
-
-      expect(defaultState.filters).toEqual(filterData)
+      expect(defaultState).toEqual(initialState)
     })
   })
 
   describe('mutations', () => {
     let state = null
     let mutations = null
-    let getters = null
 
     beforeEach(() => {
+      setActivePinia(createPinia())
+
       state = {
         search: {
           searchType: 'image',
@@ -40,7 +52,6 @@ describe('Filter Store', () => {
         ...store.state(),
       }
       mutations = store.mutations
-      getters = store.getters
     })
 
     it('SET_QUERY updates state', () => {
@@ -54,71 +65,6 @@ describe('Filter Store', () => {
       state.searchType = IMAGE
       mutations[SET_SEARCH_TYPE](state, { searchType: AUDIO })
       expect(state.searchType).toEqual(AUDIO)
-    })
-
-    it.each`
-      filterType           | codeIdx
-      ${'licenses'}        | ${0}
-      ${'licenseTypes'}    | ${0}
-      ${'imageExtensions'} | ${0}
-      ${'imageCategories'} | ${0}
-      ${'searchBy'}        | ${0}
-      ${'aspectRatios'}    | ${0}
-      ${'sizes'}           | ${0}
-    `(
-      'SET_FILTER updates $filterType filter state',
-      ({ filterType, codeIdx }) => {
-        mutations[SET_FILTER](state, { filterType, codeIdx })
-
-        expect(state.filters[filterType][codeIdx].checked).toBeTruthy()
-      }
-    )
-
-    it('SET_FILTER updates mature', () => {
-      mutations[SET_FILTER](state, { filterType: 'mature', codeIdx: 0 })
-
-      expect(state.filters.mature[0].checked).toBeTruthy()
-    })
-
-    it('SET_FILTER toggles mature', () => {
-      state.filters.mature[0].checked = true
-      mutations[SET_FILTER](state, { filterType: 'mature', codeIdx: 0 })
-
-      expect(state.filters.mature[0].checked).toBeFalsy()
-    })
-
-    it('SET_FILTER updates isFilterApplied with provider', () => {
-      state.filters.imageProviders = [{ code: 'met', checked: false }]
-      mutations[SET_FILTER](state, { filterType: 'imageProviders', codeIdx: 0 })
-
-      expect(getters.isAnyFilterApplied).toBeTruthy()
-    })
-
-    it('SET_FILTER updates isFilterApplied with license type', () => {
-      mutations[SET_FILTER](state, { filterType: 'licenseTypes', codeIdx: 0 })
-
-      expect(getters.isAnyFilterApplied).toBeTruthy()
-    })
-
-    it('SET_PROVIDERS_FILTERS merges with existing provider filters', () => {
-      const existingProviderFilters = [{ code: 'met', checked: true }]
-
-      const providers = [
-        { source_name: 'met', display_name: 'Metropolitan' },
-        { source_name: 'flickr', display_name: 'Flickr' },
-      ]
-
-      state.filters.imageProviders = existingProviderFilters
-
-      mutations[SET_PROVIDERS_FILTERS](state, {
-        mediaType: 'image',
-        providers: providers,
-      })
-
-      expect(state.filters.imageProviders).toEqual([
-        { code: 'met', name: 'Metropolitan', checked: true },
-        { code: 'flickr', name: 'Flickr', checked: false },
-      ])
     })
   })
 
@@ -185,104 +131,18 @@ describe('Filter Store', () => {
     )
 
     it('CLEAR_FILTERS resets filters to initial state', async () => {
-      state.filters.licenses = [
-        { code: 'by', checked: true },
-        { code: 'by-nc', checked: true },
-        { code: 'by-nd', checked: true },
-      ]
+      const filterStore = useFilterStore()
+      filterStore.toggleFilter({ filterType: 'licenses', code: 'by' })
+      filterStore.toggleFilter({ filterType: 'licenses', code: 'by-nc' })
+      filterStore.toggleFilter({ filterType: 'licenses', code: 'by-nd' })
       actions[CLEAR_FILTERS]({
         commit: commitMock,
         dispatch: dispatchMock,
         state,
       })
-      expect(commitMock).toHaveBeenCalledWith(REPLACE_FILTERS, {
-        newFilterData: filterData,
-      })
       expect(dispatchMock).toHaveBeenCalledWith(UPDATE_QUERY_FROM_FILTERS, {
         q: '',
       })
-    })
-
-    it('CLEAR_FILTERS sets providers filters checked to false', async () => {
-      state.filters.imageProviders = [
-        { code: 'met', name: 'Metropolitan', checked: true },
-        { code: 'flickr', name: 'Flickr', checked: false },
-      ]
-
-      actions[CLEAR_FILTERS]({
-        commit: commitMock,
-        dispatch: dispatchMock,
-        state,
-      })
-      const expectedFilters = {
-        ...state.filters,
-        imageProviders: [
-          { code: 'met', name: 'Metropolitan', checked: false },
-          { code: 'flickr', name: 'Flickr', checked: false },
-        ],
-      }
-      expect(commitMock).toHaveBeenCalledWith(REPLACE_FILTERS, {
-        newFilterData: expectedFilters,
-      })
-      expect(dispatchMock).toHaveBeenCalledWith(UPDATE_QUERY_FROM_FILTERS, {
-        q: '',
-      })
-    })
-
-    it.each`
-      filterType           | code              | idx
-      ${'licenses'}        | ${'cc0'}          | ${0}
-      ${'licenseTypes'}    | ${'modification'} | ${1}
-      ${'imageExtensions'} | ${'svg'}          | ${3}
-      ${'imageCategories'} | ${'photograph'}   | ${0}
-      ${'searchBy'}        | ${'creator'}      | ${0}
-      ${'mature'}          | ${undefined}      | ${-1}
-      ${'aspectRatios'}    | ${'tall'}         | ${0}
-      ${'sizes'}           | ${'medium'}       | ${1}
-    `(
-      "TOGGLE_FILTER should set filter '$code' of type '$filterType",
-      ({ filterType, code, idx }) => {
-        actions[TOGGLE_FILTER](
-          { commit: commitMock, dispatch: dispatchMock, state },
-          { filterType: filterType, code: code }
-        )
-        expect(commitMock).toHaveBeenCalledWith(SET_FILTER, {
-          filterType: filterType,
-          code: code,
-          codeIdx: idx,
-        })
-
-        expect(dispatchMock).toHaveBeenCalledWith(UPDATE_QUERY_FROM_FILTERS)
-      }
-    )
-
-    it('TOGGLE_FILTER updates mature', () => {
-      actions[TOGGLE_FILTER](
-        { commit: commitMock, dispatch: dispatchMock, state },
-        { filterType: 'mature' }
-      )
-
-      expect(commitMock).toHaveBeenCalledWith(SET_FILTER, {
-        filterType: 'mature',
-        codeIdx: -1,
-      })
-
-      expect(dispatchMock).toHaveBeenCalledWith(UPDATE_QUERY_FROM_FILTERS)
-    })
-
-    it('TOGGLE_FILTER toggles mature', () => {
-      state.filters.mature = true
-      actions[TOGGLE_FILTER](
-        { commit: commitMock, dispatch: dispatchMock, state },
-        { filterType: 'mature' }
-      )
-
-      expect(commitMock).toHaveBeenCalledWith(SET_FILTER, {
-        filterType: 'mature',
-        codeIdx: -1,
-      })
-
-      expect(dispatchMock).toHaveBeenCalledWith(UPDATE_QUERY_FROM_FILTERS)
     })
   })
 })

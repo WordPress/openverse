@@ -1,5 +1,7 @@
 import { capital } from 'case'
 
+import { useFilterStore } from '~/stores/filter'
+
 import MediaProviderService from '~/data/media-provider-service'
 import { AUDIO, IMAGE } from '~/constants/media'
 import {
@@ -11,9 +13,7 @@ import {
   FETCH_MEDIA_PROVIDERS_END,
   FETCH_MEDIA_PROVIDERS_START,
   SET_MEDIA_PROVIDERS,
-  SET_PROVIDERS_FILTERS,
 } from '~/constants/mutation-types'
-import { SEARCH } from '~/constants/store-modules'
 import { warn } from '~/utils/console'
 
 const AudioProviderService = MediaProviderService(AUDIO)
@@ -61,6 +61,7 @@ export const createActions = (services) => ({
   },
   [FETCH_MEDIA_TYPE_PROVIDERS]({ commit }, params) {
     const { mediaType } = params
+    const filterStore = useFilterStore()
     commit(SET_PROVIDER_FETCH_ERROR, { mediaType, error: false })
     commit(FETCH_MEDIA_PROVIDERS_START, { mediaType })
     const providerService = services[mediaType]
@@ -82,14 +83,10 @@ export const createActions = (services) => ({
           mediaType,
           providers: sortedProviders,
         })
-        commit(
-          `${SEARCH}/${SET_PROVIDERS_FILTERS}`,
-          {
-            mediaType,
-            providers: sortedProviders,
-          },
-          { root: true }
-        )
+        filterStore.initProviderFilters({
+          mediaType,
+          providers: sortedProviders,
+        })
       })
   },
 })

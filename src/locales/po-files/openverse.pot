@@ -916,7 +916,7 @@ msgctxt "filters.license-explanation.more.read-more"
 msgid "Read more"
 msgstr ""
 
-#: src/components/VFilters/VFilterChecklist.vue:95
+#: src/components/VFilters/VFilterChecklist.vue:97
 msgctxt "filters.search-by.title"
 msgid "Search By"
 msgstr ""
@@ -1848,7 +1848,7 @@ msgid "Filters"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VFilterButton.vue:82
+#: src/components/VHeader/VFilterButton.vue:83
 msgctxt "header.filter-button.with-count"
 msgid "###count### Filter"
 msgid_plural "###count### Filters"

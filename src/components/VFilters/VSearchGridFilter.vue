@@ -46,6 +46,7 @@
 import { computed, useContext, useRouter } from '@nuxtjs/composition-api'
 import { kebab } from 'case'
 
+import { useFilterStore } from '~/stores/filter'
 import {
   CLEAR_FILTERS,
   FETCH_MEDIA,
@@ -61,14 +62,14 @@ export default {
     VFilterChecklist,
   },
   setup() {
+    const filterStore = useFilterStore()
     const { i18n, store } = useContext()
     const router = useRouter()
 
-    const isAnyFilterApplied = computed(
-      () => store.getters[`${SEARCH}/isAnyFilterApplied`]
-    )
+    const isAnyFilterApplied = computed(() => filterStore.isAnyFilterApplied)
+
     const filters = computed(() => {
-      return store.getters[`${SEARCH}/mediaFiltersForDisplay`] || {}
+      return store.getters[`${SEARCH}/searchFilters`]
     })
     const filterTypes = computed(() => Object.keys(filters.value))
     const filterTypeTitle = (filterType) => {
