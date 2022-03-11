@@ -213,7 +213,7 @@ sizes throughout the codebase.
 }
 
 .dropdown-item {
-  @apply hover:bg-light-gray px-2 py-1 mb-1 rounded-sm transition-colors focus:outline-none focus:ring focus:ring-offset-2 focus:ring-pink;
+  @apply hover:bg-light-gray px-2 py-1 mb-1 rounded-sm focus:outline-none focus:ring focus:ring-offset-2 focus:ring-pink;
 }
 
 .dropdown-item-active {
