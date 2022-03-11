@@ -140,7 +140,6 @@ import getAttributionHtml from '~/utils/attribution-html'
 import { isPublicDomain } from '~/utils/license'
 
 import VLink from '~/components/VLink.vue'
-
 import CopyButton from '~/components/CopyButton.vue'
 
 const VCopyLicense = defineComponent({

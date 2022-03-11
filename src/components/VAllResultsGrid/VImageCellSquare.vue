@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import VLink from '~/components/VLink.vue'
 import VLicense from '~/components/License/VLicense.vue'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -47,7 +48,7 @@ const toAbsolutePath = (url, prefix = 'https://') => {
 
 export default {
   name: 'VImageCell',
-  components: { VLicense },
+  components: { VLink, VLicense },
   props: ['image'],
   methods: {
     getImageUrl(image) {

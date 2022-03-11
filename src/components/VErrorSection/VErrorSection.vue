@@ -19,5 +19,3 @@ export default {
   name: 'VErrorSection',
 }
 </script>
-
-<style scoped></style>

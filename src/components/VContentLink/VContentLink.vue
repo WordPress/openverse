@@ -23,6 +23,7 @@ import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
 import { AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
+import VLink from '~/components/VLink.vue'
 
 import audioIcon from '~/assets/icons/audio-wave.svg'
 import imageIcon from '~/assets/icons/image.svg'
@@ -34,7 +35,7 @@ const iconMapping = {
 
 export default defineComponent({
   name: 'VContentLink',
-  components: { VIcon },
+  components: { VIcon, VLink },
   props: {
     /**
      * One of the media types supported.

@@ -37,7 +37,6 @@ import { useActiveMediaStore } from '~/stores/active-media'
 
 import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
 import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
-
 import VFullLayout from '~/components/VAudioTrack/layouts/VFullLayout.vue'
 import VRowLayout from '~/components/VAudioTrack/layouts/VRowLayout.vue'
 import VBoxLayout from '~/components/VAudioTrack/layouts/VBoxLayout.vue'

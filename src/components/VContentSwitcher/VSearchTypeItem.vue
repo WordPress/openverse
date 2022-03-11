@@ -20,6 +20,10 @@ import { defineComponent } from '@vue/composition-api'
 
 import { contentStatus } from '~/constants/media'
 
+import VIcon from '~/components/VIcon/VIcon.vue'
+import VItem from '~/components/VItemGroup/VItem.vue'
+import VPill from '~/components/VPill.vue'
+
 /** @typedef {import('@nuxtjs/composition-api').ExtractPropTypes<typeof propTypes>} Props */
 const propTypes = {
   item: { type: String, required: true },
@@ -29,6 +33,7 @@ const propTypes = {
 }
 export default defineComponent({
   name: 'VSearchTypeItem',
+  components: { VIcon, VItem, VPill },
   props: propTypes,
   setup(props) {
     const status = computed(() => {

@@ -13,11 +13,14 @@
 <script>
 import { defineComponent } from '@vue/composition-api'
 
+import VLink from '~/components/VLink.vue'
+
 import Chevron from '~/assets/icons/chevron-left.svg?inline'
 
 export default defineComponent({
   components: {
     Chevron,
+    VLink,
   },
   data() {
     return {

@@ -29,8 +29,8 @@
  * or display 'No More Media'.
  * Used to display both image search results, and related images.
  */
-import VLoadMore from '~/components/VLoadMore'
-import VImageCell from '~/components/VImageGrid/VImageCell'
+import VLoadMore from '~/components/VLoadMore.vue'
+import VImageCell from '~/components/VImageGrid/VImageCell.vue'
 
 export default {
   name: 'ImageGrid',

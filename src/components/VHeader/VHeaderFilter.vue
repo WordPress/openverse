@@ -29,7 +29,6 @@ import {
 } from '@nuxtjs/composition-api'
 
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
-
 import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 
 import VTeleport from '~/components/VTeleport/VTeleport.vue'

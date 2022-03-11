@@ -21,11 +21,8 @@
 import { computed, provide, ref, watch } from '@nuxtjs/composition-api'
 
 import { useScroll } from '~/composables/use-scroll'
-
 import { useMatchSearchRoutes } from '~/composables/use-match-routes'
-
 import { isMinScreen } from '~/composables/use-media-query'
-
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 
 import { useNavStore } from '~/stores/nav'

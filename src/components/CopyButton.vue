@@ -17,8 +17,11 @@
 <script>
 import Clipboard from 'clipboard'
 
+import VButton from '~/components/VButton.vue'
+
 export default {
   name: 'CopyButton',
+  components: { VButton },
   props: {
     el: {
       required: true,

@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import VLink from '~/components/VLink.vue'
+
 import chromeLogo from '~/assets/browsers/chrome.svg'
 import edgeLogo from '~/assets/browsers/edge.svg'
 import firefoxLogo from '~/assets/browsers/firefox.svg'
@@ -20,6 +22,7 @@ import operaLogo from '~/assets/browsers/opera.svg'
 
 export default {
   name: 'ExtensionBrowsers',
+  components: { VLink },
   data() {
     return {
       browsers: {

@@ -28,7 +28,6 @@ import useRelated from '~/composables/use-related'
 import { isMinScreen } from '~/composables/use-media-query'
 
 import LoadingIcon from '~/components/LoadingIcon.vue'
-
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 
 export default {
