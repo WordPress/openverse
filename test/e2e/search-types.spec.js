@@ -29,14 +29,14 @@ const searchTypes = [
     name: 'All content',
     url: '/search/?q=birds',
     canLoadMore: true,
-    metaSourceCount: 6,
+    metaSourceCount: 7,
   },
   {
     id: 'image',
     name: 'Images',
     url: '/search/image?q=birds',
     canLoadMore: true,
-    metaSourceCount: 6,
+    metaSourceCount: 7,
     results: /Over 10,000 results/,
   },
   {

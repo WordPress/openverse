@@ -17,6 +17,16 @@ export const legacySourceMap = {
       }
     },
   },
+  'Centre For Ageing Better': {
+    image(search) {
+      return {
+        url: 'https://ageingbetter.resourcespace.com/pages/search.php',
+        query: {
+          search: search.q,
+        },
+      }
+    },
+  },
   'EDU images': {
     image(search) {
       return {
