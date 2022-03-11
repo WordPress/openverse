@@ -2,7 +2,7 @@
   <VButton
     variant="plain"
     size="disabled"
-    class="icon-button flex flex-shrink-0 items-center justify-center border-1.5 focus:border-pink focus:outline-none focus:shadow-ring active:shadow-ring"
+    class="icon-button flex flex-shrink-0 items-center justify-center border-1.5 active:shadow-ring"
     :class="[...buttonSizeClasses]"
     :type="type"
     v-on="$listeners"
