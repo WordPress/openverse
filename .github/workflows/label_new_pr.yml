@@ -2,7 +2,7 @@ name: Label new PR
 # ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#label-new-pr
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       # Only set labels when the PR is created, this should fire `labeled`
       # events that will trigger the checks defined in `pr_label_check.yml`.
