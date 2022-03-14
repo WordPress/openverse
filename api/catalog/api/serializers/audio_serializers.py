@@ -88,6 +88,7 @@ class AudioSearchRequestSerializer(MediaSearchRequestSerializer):
             "podcast",
             "news",
             "audiobook",
+            "pronunciation",
         }
         _validate_enum("category", valid_categories, value)
         return value.lower()
