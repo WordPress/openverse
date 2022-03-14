@@ -308,11 +308,11 @@ def _parse_audio_file_data(parsed_data: dict, file_metadata: list) -> dict:
 
 
 def _extract_audio_category(parsed_data):
-    """Set category to "sound" for any audio with
+    """Set category to "pronunciation" for any audio with
     pronunciation of a word or a phrase"""
     for category in parsed_data["meta_data"].get("categories", []):
         if "pronunciation" in category.lower():
-            return "sound"
+            return "pronunciation"
 
 
 def _add_audio(parsed_data, media_data, media_info):

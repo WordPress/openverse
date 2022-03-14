@@ -30,8 +30,6 @@ RETRIES = 3
 HOST = "freesound.org"
 ENDPOINT = f"https://{HOST}/apiv2/search/text"
 PROVIDER = prov.FREESOUND_DEFAULT_PROVIDER
-# Freesound only has 'sounds'
-FREESOUND_CATEGORY = "sound"
 API_KEY = Variable.get("API_KEY_FREESOUND", default_var="not_set")
 
 HEADERS = {
@@ -192,7 +190,6 @@ def _extract_audio_data(media_data):
         "audio_set": audio_set,
         "set_url": set_url,
         "alt_files": alt_files,
-        "category": FREESOUND_CATEGORY,
         # audio_url, filetype, bit_rate
         **main_audio,
     }
