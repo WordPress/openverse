@@ -1,7 +1,7 @@
 # RFC: 3D Model Support
 
 - [x] @sarayourfriend
-- [x] @panchovm 
+- [x] @panchovm
 
 ## Rationale
 
@@ -57,7 +57,7 @@ WordPress/openverse#19
 - [ ] Create a popularity calculation view for `model_3d`
 - [ ] Add the database columns to `db_columns.py`: https://github.com/WordPress/openverse-catalog/blob/main/openverse_catalog/dags/common/storage/db_columns.py
 - [ ] Add the TSV columns to `tsv_columns.py`: https://github.com/WordPress/openverse-catalog/blob/main/openverse_catalog/dags/common/storage/tsv_columns.py
-- [ ] Create a `Model3DStore` subclass of [`MediaStore`](https://github.com/WordPress/openverse-catalog/blob/9538f38401e5428b32dc14c5d5ba7ef50af87a96/openverse_catalog/dags/common/storage/media.py#L39): 
+- [ ] Create a `Model3DStore` subclass of [`MediaStore`](https://github.com/WordPress/openverse-catalog/blob/9538f38401e5428b32dc14c5d5ba7ef50af87a96/openverse_catalog/dags/common/storage/media.py#L39):
 - [ ] Update the [new provider API script template](https://github.com/WordPress/openverse-catalog/tree/main/openverse_catalog/templates) with the `model_3d` provider
 - [ ] Create one/several provider API scripts & associated DAGs
 
@@ -140,12 +140,12 @@ Many of the fields towards the end are taken from examples on SketchFab (e.g. ht
 ### File types
 
 - Likely formats to support:
-  - [glTF](https://www.khronos.org/gltf/) 
+  - [glTF](https://www.khronos.org/gltf/)
   - [fbx](https://docs.fileformat.com/3d/fbx/)
   - [Usdz](https://www.marxentlabs.com/usdz-files/)
-  - [obj](https://all3dp.com/1/obj-file-format-3d-printing-cad/) 
+  - [obj](https://all3dp.com/1/obj-file-format-3d-printing-cad/)
 - We'll need to find a standardized 3d model viewer that will work with various formats. We *really, really* don't want to write our own code here. We will also need to decide if we want to use this universally, or use SketchFab's viewer for SketchFab models, which is an excellent viewer.
-  - [Trois](https://github.com/troisjs/trois) is a good candidate. This is a Vue3 renderer for ThreeJS. 
+  - [Trois](https://github.com/troisjs/trois) is a good candidate. This is a Vue3 renderer for ThreeJS.
 
 ## Prior Art
 
@@ -159,7 +159,7 @@ Many of the fields towards the end are taken from examples on SketchFab (e.g. ht
 ## Collaborators
 
 - The [Open Metaverse Interoperability Group](https://github.com/omigroup/omigroup) aims to standardized protocols for interactive elements in 3D scenes. Core contributor @antpb is a part of this group.1
-- Our friend @nebulousflynn at Sketchfab might have some ideas and suggestions as well. 
+- Our friend @nebulousflynn at Sketchfab might have some ideas and suggestions as well.
 
 ## Some code considerations
 
@@ -194,7 +194,7 @@ Many of the fields towards the end are taken from examples on SketchFab (e.g. ht
 - [ ] Update the [media constants](https://github.com/WordPress/openverse-frontend/blob/4aeb9fd0d9f893f2df1752d6bb1e52351b8c3d35/src/constants/media.js#L1) file with new constants for models, and under the `BETA` flag.
 - [ ] Update the [media store](https://github.com/WordPress/openverse-frontend/blob/f9f549beace4f76480c8cbf1e91d8940a0aeef2b/src/store/media.js#L347) with 3D model support.
 
-### 3. Implement new 3D model UI 
+### 3. Implement new 3D model UI
 
 #### Prerequisites
 
