@@ -10,8 +10,10 @@ from test.media_integration import (
     detail,
     report,
     search,
+    search_all_excluded,
     search_consistency,
     search_quotes,
+    search_source_and_excluded,
     search_special_chars,
     stats,
     thumb,
@@ -35,6 +37,14 @@ def image_fixture():
 
 def test_search(image_fixture):
     search(image_fixture)
+
+
+def test_search_all_excluded():
+    search_all_excluded("images", ["flickr", "stocksnap"])
+
+
+def test_search_source_and_excluded():
+    search_source_and_excluded("images")
 
 
 def test_search_quotes():

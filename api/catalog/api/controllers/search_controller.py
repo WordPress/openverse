@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import json
 import logging as log
 import pprint
 from itertools import accumulate
 from math import ceil
-from typing import List, Optional, Tuple
+from typing import TYPE_CHECKING, List, Literal, Optional, Tuple
 
 import catalog.api.models as models
 from aws_requests_auth.aws_auth import AWSRequestsAuth
@@ -16,6 +18,11 @@ from elasticsearch.exceptions import NotFoundError, RequestError
 from elasticsearch_dsl import Q, Search, connections
 from elasticsearch_dsl.query import Query
 from elasticsearch_dsl.response import Hit, Response
+from rest_framework.request import Request
+
+
+if TYPE_CHECKING:
+    from catalog.api.serializers.media_serializers import MediaSearchRequestSerializer
 
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
@@ -141,28 +148,35 @@ def _post_process_results(
     return results[:page_size]
 
 
-def _apply_filter(s: Search, search_params, param_name, renamed_param=None):
+def _apply_filter(
+    s: Search,
+    search_params: MediaSearchRequestSerializer,
+    serializer_field: str,
+    es_field: Optional[str] = None,
+    behaviour: Literal["filter", "exclude"] = "filter",
+):
     """
     Parse and apply a filter from the search parameters serializer. The
     parameter key is assumed to have the same name as the corresponding
     Elasticsearch property. Each parameter value is assumed to be a comma
     separated list encoded as a string.
 
-    :param s: The Search object to apply the filter to.
-    :param search_params: A serializer containing user input.
-    :param param_name: The name of the parameter in search_params.
-    :param renamed_param: In some cases, the param name in the backend is not
-    the same as the param we want to expose to the outside world. Use this to
-    set the corresponding parameter name in Elasticsearch.
-    :return: A Search object with the filter applied.
+    :param s: The ``Search`` instance to apply the filter to
+    :param search_params: the serializer instance containing user input
+    :param serializer_field: the name of the parameter field in ``search_params``
+    :param es_field: the corresponding parameter name in Elasticsearch
+    :param behaviour: whether to accept (``filter``) or reject (``exclude``) the hit
+    :return: the input ``Search`` object with the filters applied
     """
-    if param_name in search_params.data:
+
+    if serializer_field in search_params.data:
         filters = []
-        for arg in search_params.data[param_name].split(","):
-            _param = renamed_param if renamed_param else param_name
+        for arg in search_params.data[serializer_field].split(","):
+            _param = es_field or serializer_field
             args = {"name_or_query": "term", _param: arg}
             filters.append(Q(**args))
-        return s.filter("bool", should=filters)
+        method = getattr(s, behaviour)
+        return method("bool", should=filters)
     else:
         return s
 
@@ -192,7 +206,13 @@ def _exclude_mature_by_param(s: Search, search_params):
 
 
 def search(
-    search_params, index, page_size, ip, request, filter_dead, page=1
+    search_params: MediaSearchRequestSerializer,
+    index: Literal["image", "audio"],
+    page_size: int,
+    ip: int,
+    request: Request,
+    filter_dead: bool,
+    page: int = 1,
 ) -> Tuple[List[Hit], int, int]:
     """
     Given a set of keywords and an optional set of filters, perform a ranked
@@ -226,9 +246,16 @@ def search(
         ("license", "license__keyword"),
         ("license_type", "license__keyword"),
     ]
-    for tup in filters:
-        api_field, elasticsearch_field = tup
-        s = _apply_filter(s, search_params, api_field, elasticsearch_field)
+    for serializer_field, es_field in filters:
+        if serializer_field in search_params.data:
+            s = _apply_filter(s, search_params, serializer_field, es_field)
+
+    exclude = [
+        ("excluded_source", "source"),
+    ]
+    for serializer_field, es_field in exclude:
+        if serializer_field in search_params.data:
+            s = _apply_filter(s, search_params, serializer_field, es_field, "exclude")
 
     # Exclude mature content and disabled sources
     s = _exclude_mature_by_param(s, search_params)

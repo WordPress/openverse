@@ -2,6 +2,7 @@ from collections import namedtuple
 from urllib.parse import urlparse
 
 import catalog.api.licenses as license_helpers
+from catalog.api.controllers.search_controller import get_sources
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
@@ -64,6 +65,18 @@ def _add_protocol(url: str):
         return url
 
 
+def format_enums(values: list[str]) -> str:
+    """
+    Format a list of strings into a combined string where items are comma separated and
+    surrounded by backticks.
+
+    :param values: the list of valid values
+    :return: a string representation of these values
+    """
+
+    return ",".join([f"`{value}`" for value in values])
+
+
 class TagSerializer(serializers.Serializer):
     name = serializers.CharField(required=True, help_text="The name of a detailed tag.")
     accuracy = serializers.FloatField(
@@ -71,6 +84,61 @@ class TagSerializer(serializers.Serializer):
         help_text="The accuracy of a machine-generated tag. Human-generated "
         "tags do not have an accuracy field.",
     )
+
+
+def get_search_request_source_serializer(media_type):
+    class MediaSearchRequestSourceSerializer(serializers.Serializer):
+        """
+        This serializer parses and validates the source/not_source fields from the query
+        parameters.
+        """
+
+        field_names = [
+            "source",
+            "excluded_source",
+        ]
+        """
+        Keep the fields names in sync with the actual fields below as this list is
+        used to generate Swagger documentation.
+        """
+
+        _field_attrs = {
+            "help_text": (
+                "A comma separated list of data sources to search. "
+                f"Valid inputs: {format_enums(get_sources(media_type).keys())}"
+            ),
+            "required": False,
+        }
+
+        source = serializers.CharField(label="provider", **_field_attrs)
+        excluded_source = serializers.CharField(
+            label="excluded_provider", **_field_attrs
+        )
+
+        @staticmethod
+        def validate_source_field(input_sources):
+            allowed_sources = list(get_sources(media_type).keys())
+            input_sources = input_sources.split(",")
+            input_sources = [x for x in input_sources if x in allowed_sources]
+            input_sources = ",".join(input_sources)
+            return input_sources.lower()
+
+        def validate_source(self, input_sources):
+            return self.validate_source_field(input_sources)
+
+        def validate_excluded_source(self, input_sources):
+            return self.validate_source(input_sources)
+
+        def validate(self, data):
+            data = super().validate(data)
+            if "source" in self.initial_data and "excluded_source" in self.initial_data:
+                raise serializers.ValidationError(
+                    "Cannot set both 'source' and 'excluded_source'. "
+                    "Use exactly one of these."
+                )
+            return data
+
+    return MediaSearchRequestSourceSerializer
 
 
 class MediaSearchRequestSerializer(serializers.Serializer):
@@ -196,13 +264,13 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         return value.lower()
 
     def validate(self, data):
+        data = super().validate(data)
         errors = {}
-        for deprecated in self.deprecated_params:
-            param, successor = deprecated
+        for param, successor in self.deprecated_params:
             if param in self.initial_data:
                 errors[param] = (
-                    f"Parameter '{param}' is deprecated in this release of the "
-                    f"API. Use '{successor}' instead."
+                    f"Parameter '{param}' is deprecated in this release of the API. "
+                    f"Use '{successor}' instead."
                 )
         if errors:
             raise serializers.ValidationError(errors)

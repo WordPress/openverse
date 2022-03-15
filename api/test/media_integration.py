@@ -14,6 +14,21 @@ def search(fixture):
     assert fixture["result_count"] > 0
 
 
+def search_all_excluded(media_path, excluded_source):
+    response = requests.get(
+        f"{API_URL}/v1/{media_path}?q=test&excluded_source={','.join(excluded_source)}"
+    )
+    data = json.loads(response.text)
+    assert data["result_count"] == 0
+
+
+def search_source_and_excluded(media_path):
+    response = requests.get(
+        f"{API_URL}/v1/{media_path}?q=test&source=x&excluded_source=y"
+    )
+    assert response.status_code == 400
+
+
 def search_quotes(media_path, q="test"):
     """Returns a response when quote matching is messed up."""
     response = requests.get(f'{API_URL}/v1/{media_path}?q="{q}', verify=False)
