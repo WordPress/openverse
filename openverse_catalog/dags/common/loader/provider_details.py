@@ -82,7 +82,10 @@ SMITHSONIAN_SUB_PROVIDERS = {
     "smithsonian_freer_gallery_of_art": {
         "FSG"  # Freer Gallery of Art and Arthur M. Sackler Gallery
     },
-    "smithsonian_gardens": {"HAC"},  # Smithsonian Gardens
+    "smithsonian_gardens": {
+        "HAC",  # Smithsonian Gardens
+        "OFEO-SG",  # Office of Facilities Engineering and Operations
+    },
     "smithsonian_hirshhorn_museum": {"HMSG"},  # Hirshhorn Museum and Sculpture Garden
     "smithsonian_anthropological_archives": {
         "NAA"  # National Anthropological Archives
