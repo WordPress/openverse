@@ -15,6 +15,7 @@ sphinx-autobuild = "*"
 furo = "*"
 myst-parser = "*"
 factory-boy = "*"
+fakeredis = "*"
 
 [packages]
 aws-requests-auth = "*"
