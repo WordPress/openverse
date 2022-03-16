@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from '@testing-library/vue'
-import { createLocalVue } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
 
 import VContentReportForm from '~/components/VContentReport/VContentReportForm.vue'
@@ -9,7 +8,7 @@ const messages = require('~/locales/en.json')
 const i18n = new VueI18n({
   locale: 'en',
   fallbackLocale: 'en',
-  messages,
+  messages: { en: messages },
 })
 
 const getDmcaInput = () =>
@@ -53,7 +52,7 @@ describe('VContentReportForm', () => {
   beforeEach(() => {
     props = {
       media: {
-        identifier: '0aff3595-8168-440b-83ff-7a80b65dea42',
+        id: '0aff3595-8168-440b-83ff-7a80b65dea42',
         foreign_landing_url: 'https://wordpress.org/openverse/',
         provider: 'provider',
       },
@@ -62,12 +61,10 @@ describe('VContentReportForm', () => {
       reportService: reportServiceProp,
     }
 
-    const localVue = createLocalVue()
-    localVue.use(VueI18n)
-
     options = {
       propsData: props,
       i18n,
+      stubs: ['VIcon'],
     }
   })
 
@@ -86,7 +83,7 @@ describe('VContentReportForm', () => {
     await fireEvent.click(getReportButton())
 
     // Submission successful message
-    getByText('media-details.content-report.success.note')
+    getByText(/Thank you for reporting this content/i)
   })
 
   it('should render error message if report sending fails', async () => {
@@ -105,7 +102,9 @@ describe('VContentReportForm', () => {
     await fireEvent.click(getDmcaInput())
 
     // Notice with link to provider
-    getByText('media-details.content-report.form.dmca.note')
+    getByText(
+      /No action will be taken until this form is filled out and submitted/i
+    )
     getReportLink()
   })
 
@@ -126,7 +125,7 @@ describe('VContentReportForm', () => {
     await fireEvent.click(getReportButton())
 
     expect(serviceMock.sendReport).toHaveBeenCalledWith({
-      identifier: props.media.identifier,
+      identifier: props.media.id,
       reason: 'mature',
       description: '',
     })
@@ -144,7 +143,7 @@ describe('VContentReportForm', () => {
 
     await fireEvent.click(getReportButton())
     expect(serviceMock.sendReport).toHaveBeenCalledWith({
-      identifier: props.media.identifier,
+      identifier: props.media.id,
       reason: 'other',
       description,
     })

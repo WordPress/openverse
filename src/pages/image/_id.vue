@@ -160,9 +160,17 @@ const VImageDetailsPage = {
       if (this.image.filetype) {
         this.imageType = this.image.filetype
       } else {
-        axios.head(event.target.src).then((res) => {
-          this.imageType = res.headers['content-type']
-        })
+        axios
+          .head(event.target.src)
+          .then((res) => {
+            this.imageType = res.headers['content-type']
+          })
+          .catch(() => {
+            /**
+             * Do nothing. This avoid the console warning "Uncaught (in promise) Error:
+             * Network Error" in Firefox in development mode.
+             */
+          })
       }
       this.isLoadingFullImage = false
     },

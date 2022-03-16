@@ -140,11 +140,13 @@ export default defineComponent({
   },
   setup(props) {
     const service = props.reportService || ReportService
+    const description = ref('')
 
     /** @type {import('@nuxtjs/composition-api').Ref<string|null>} */
     const status = ref(statuses.WIP)
+
+    /** @type {import('@nuxtjs/composition-api').Ref<string|null>} */
     const selectedReason = ref(reasons.DMCA)
-    const description = ref('')
 
     /* Buttons */
     const handleCancel = () => {
@@ -162,7 +164,7 @@ export default defineComponent({
       // Submit report
       try {
         await service.sendReport({
-          identifier: props.media.identifier,
+          identifier: props.media.id,
           reason: selectedReason.value,
           description: description.value,
         })
