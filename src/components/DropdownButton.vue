@@ -54,7 +54,7 @@
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
 
-import * as keycodes from '~/utils/key-codes'
+import { keycodes } from '~/constants/key-codes'
 
 import caretDown from '~/assets/icons/caret-down.svg'
 

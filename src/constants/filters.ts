@@ -4,7 +4,8 @@ import { ALL_MEDIA, AUDIO, IMAGE, VIDEO } from '~/constants/media'
 import { ACTIVE_LICENSES } from '~/constants/license'
 import { deepFreeze } from '~/utils/deep-freeze'
 
-import type { FilterCategory, FilterItem, SearchType } from '~/store/types'
+import type { SearchType } from '~/constants/media'
+import type { FilterCategory, FilterItem } from '~/store/types'
 
 /**
  * List of filters available for each search type. The order of the keys

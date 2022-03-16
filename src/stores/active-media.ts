@@ -1,19 +1,27 @@
 import { defineStore } from 'pinia'
 import { reactive, readonly, toRefs } from '@nuxtjs/composition-api'
 
+import type { SupportedMediaType } from '~/constants/media'
+import type { Media } from '~/models/media'
+
+type MediaStatus = 'ejected' | 'playing' | 'paused' // 'ejected' means player is closed
+
+export interface ActiveMediaState {
+  type: SupportedMediaType | null
+  id: Media['id'] | null
+  status: MediaStatus
+  message: string | null
+}
+
 const ACTIVE_MEDIA = 'active-media'
 
 /**
  * Store information about the active media item.
  */
 export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, () => {
-  /**
-   * `reactive` returns UnwrapRef<T> type, but the Vue docs recommend using the
-   * type of <T> for typing it instead:
-   * https://vuejs.org/guide/typescript/composition-api.html#typing-reactive
-   * @type {import('../store/types').ActiveMediaState}
-   */
-  const state = reactive({
+  /* State */
+
+  const state: ActiveMediaState = reactive({
     type: null,
     id: null,
     status: 'ejected',
@@ -25,14 +33,24 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, () => {
    */
   const { type, id, message } = toRefs(state)
 
-  // Actions
+  /* Actions */
+
   /**
-   * @param {object} payload
-   * @param {'audio'} payload.type
-   * @param {string} payload.id
-   * @param {'ejected' | 'playing' | 'paused'} payload.status
+   * Sets a new media item as the active one.
+   *
+   * @param type - the type of the active media
+   * @param id - the unique identifier of the active media
+   * @param status - the current status of the active media
    */
-  function setActiveMediaItem({ type, id, status = 'playing' }) {
+  function setActiveMediaItem({
+    type,
+    id,
+    status = 'playing',
+  }: {
+    type: SupportedMediaType
+    id: Media['id']
+    status: MediaStatus
+  }) {
     state.type = type
     state.id = id
     state.status = status
@@ -45,13 +63,13 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, () => {
     state.id = null
     state.type = null
   }
-
   /**
-   * @param {object} params
-   * @param {string} params.message
+   * Set the message associated with rendering/playback of the active media.
+   *
+   * @param message - the message to display to the user
    */
-  function setMessage(params) {
-    state.message = params.message
+  function setMessage({ message }: { message: string }) {
+    state.message = message
   }
 
   return {

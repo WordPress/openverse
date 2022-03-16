@@ -41,14 +41,9 @@
     "src/composables/use-browser-detection.js",
     "src/composables/use-media-query.js",
     "src/composables/window.js",
-    "src/constants/media.js",
     "src/constants/screens.js",
     "src/data/api-service.js",
-    "src/stores/active-media.js",
-    "src/stores/nav.js",
-    "src/utils/decode-media-data.js",
-    "src/utils/deep-freeze.js",
-    "src/utils/key-codes.js"
+    "src/utils/deep-freeze.js"
   ],
   "exclude": ["node_modules"]
 }

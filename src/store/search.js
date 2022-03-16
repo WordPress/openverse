@@ -164,7 +164,7 @@ const mutations = {
   /**
    * Sets the content type to search.
    * @param {import('./types').SearchState} state
-   * @param {import('./types').SearchType} searchType
+   * @param {import('../constants/media').SearchType} searchType
    */
   [SET_SEARCH_TYPE](state, { searchType }) {
     state.searchType = searchType

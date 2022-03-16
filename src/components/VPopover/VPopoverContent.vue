@@ -9,7 +9,7 @@
     <div
       ref="popoverRef"
       class="bg-white border border-light-gray rounded-sm shadow max-w-max"
-      :class="{ [`z-[${zIndex}]`]: zIndex !== undefined }"
+      :style="{ zIndex }"
       :tabindex="-1"
       @blur="onBlur"
     >

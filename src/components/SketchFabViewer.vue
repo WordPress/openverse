@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import loadScript from '~/utils/load-script'
+import { loadScript } from '~/utils/load-script'
 import { log } from '~/utils/console'
 
 const sketchfabUrl =

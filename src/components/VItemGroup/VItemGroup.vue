@@ -32,7 +32,8 @@ import {
 import { ensureFocus } from 'reakit-utils/ensureFocus'
 
 import { useI18n } from '~/composables/use-i18n'
-import * as keycodes from '~/utils/key-codes'
+
+import { keycodes } from '~/constants/key-codes'
 
 /**
  * @typedef VItemGroupContext

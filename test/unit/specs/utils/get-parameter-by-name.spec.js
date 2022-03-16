@@ -1,7 +1,8 @@
-import getParameterByName from '~/utils/get-parameter-by-name'
+import { getParameterByName } from '~/utils/url-params'
 
 describe('getParameterByName', () => {
   const queryStr = '?q=nature&provider=flickr&li=by&lt='
+
   it('finds "q" key', () => {
     expect(getParameterByName('q', queryStr)).toBe('nature')
   })
@@ -19,12 +20,12 @@ describe('getParameterByName', () => {
   })
 
   it('finds "lt"', () => {
-    const query = '?q=landscapes&provider=met&li=&lt=commercial'
+    const query = `${queryStr}commercial`
     expect(getParameterByName('lt', query)).toBe('commercial')
   })
 
   it('finds multiple "lt" parameter values', () => {
-    const query = '?q=cat&lt=commercial&lt=modification'
+    const query = `${queryStr}commercial&lt=modification`
     expect(getParameterByName('lt', query)).toBe('commercial,modification')
   })
 })

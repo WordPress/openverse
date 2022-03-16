@@ -1,5 +1,12 @@
+import type { Media } from '~/models/media'
+
 const linkProperties = 'target="_blank" rel="noopener noreferrer"'
-function getAttributionHtml(media, licenseUrl, fullLicenseName) {
+
+function getAttributionHtml(
+  media: Media,
+  licenseUrl: string,
+  fullLicenseName: string
+) {
   if (!media) {
     return ''
   }
@@ -36,12 +43,12 @@ function getAttributionHtml(media, licenseUrl, fullLicenseName) {
  * Get the HTML markup for attributing the given media item.
  *
  * @param mediaItem - the media item, image or audio from the API, to attribute
- * @returns {string} the HTML markup of the attribution
+ * @returns the HTML markup of the attribution
  */
-export const getAttributionMarkup = (mediaItem) => {
+export const getAttributionMarkup = (mediaItem: Media) => {
   if (!mediaItem) return ''
 
-  const extLink = (href, text) =>
+  const extLink = (href: string, text: string) =>
     `<a rel="noopener noreferrer" target="_blank" href="${href}">${text}</a>`
 
   let title = `"${mediaItem.title}"`

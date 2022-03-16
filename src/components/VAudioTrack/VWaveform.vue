@@ -170,7 +170,8 @@ import {
 } from '@nuxtjs/composition-api'
 
 import { downsampleArray, upsampleArray } from '~/utils/resampling'
-import * as keycodes from '~/utils/key-codes'
+
+import { keycodes } from '~/constants/key-codes'
 
 /**
  * Renders an SVG representation of the waveform given a list of heights for the

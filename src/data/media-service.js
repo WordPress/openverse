@@ -1,5 +1,5 @@
 import { VersionedApiService } from '~/data/api-service'
-import decodeMediaData from '~/utils/decode-media-data'
+import { decodeMediaData } from '~/utils/decode-media-data'
 
 /**
  * @template {import('../store/types').FrontendMediaType} [T=any]

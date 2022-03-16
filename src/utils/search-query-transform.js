@@ -1,10 +1,9 @@
 import clonedeep from 'lodash.clonedeep'
 
+import { mediaFilterKeys } from '~/constants/filters'
 import { ALL_MEDIA } from '~/constants/media'
 
-import { mediaFilterKeys } from '~/constants/filters.ts'
-
-import getParameterByName from './get-parameter-by-name'
+import { getParameterByName } from '~/utils/url-params'
 
 const filterPropertyMappings = {
   licenses: 'license',
@@ -50,7 +49,7 @@ const filterToString = (filterItem) => {
  * converts the filter store object to the data format accepted by the API,
  * which has slightly different property names
  * @param {object} filters object containing the filter data that comes from the filter store
- * @param {import('../store/types').SearchType} searchType
+ * @param {import('../constants/media').SearchType} searchType
  * @param hideEmpty
  * @todo Refactor all of these 'reduce' calls to just use lodash methods :)
  */
@@ -89,7 +88,7 @@ export const filtersToQueryData = (
  * `/search/?q=test`: all
  * `/search/image?q=test`: image
  * @param {string} queryString
- * @return {import('../store/types').SearchType}
+ * @return {import('../constants/media').SearchType}
  */
 export const queryStringToSearchType = (queryString) => {
   const searchTypePattern = /\/search\/(image|audio|video)\?*/
@@ -134,7 +133,7 @@ const getMediaTypeApiFilters = (filterParameter, parameterFilters) => {
  * converts the browser filter query string into the internal filter store data format
  * @param {object} params
  * @param {Record<string, string>} params.query - browser filter query
- * @param {import('../store/types').SearchType} [params.searchType]
+ * @param {import('../constants/media').SearchType} [params.searchType]
  * @param {object} params.defaultFilters default filters for testing purposes
  */
 export const queryToFilterData = ({

@@ -19,18 +19,18 @@ import { warn } from '~/utils/console'
 export const useFilterStore = defineStore('filter', () => {
   /** @type {{ filters: import('../store/types').Filters}} */
   const filters = reactive(clonedeep(filterData))
-  const searchType = /** @type {import('../store/types').SearchType} */ (
+  const searchType = /** @type {import('../constants/media').SearchType} */ (
     ref(ALL_MEDIA)
   )
 
   /**
-   * @param {import('../store/types').SearchType} type
+   * @param {import('../constants/media').SearchType} type
    */
   const setSearchType = (type) => (searchType.value = type)
   /**
    *
-   * @param {{ mediaType: import('../store/types').SearchType, includeMature?: boolean }} params
-   * @returns {Partial<import('../store/types').Filters>}
+   * @param {{ mediaType: import('../constants/media').SearchType, includeMature?: boolean }} params
+   * @returns {Partial<import('~/constants/media').Filters>}
    */
   function getMediaTypeFilters({ mediaType, includeMature = false }) {
     let filterKeys = mediaFilterKeys[mediaType]
@@ -99,7 +99,7 @@ export const useFilterStore = defineStore('filter', () => {
   /**
    * After a search type is changed, unchecks all the filters that are not
    * applicable for this Media type.
-   * @param {{ searchType: import('../store/types').SearchType }} props
+   * @param {{ searchType: import('../constants/media').SearchType }} props
    */
   function clearOtherMediaTypeFilters({ searchType }) {
     const mediaTypesToClear = supportedSearchTypes.filter(

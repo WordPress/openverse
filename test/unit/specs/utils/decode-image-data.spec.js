@@ -1,4 +1,4 @@
-import decodeMediaData from '~/utils/decode-media-data'
+import { decodeMediaData } from '~/utils/decode-media-data'
 import { IMAGE } from '~/constants/media'
 
 describe('decodeImageData', () => {

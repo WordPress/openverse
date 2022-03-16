@@ -10,14 +10,16 @@
  * to forget ones like Spacebar, while also removing "magic strings".
  */
 
-export const Spacebar = ' '
-export const Home = 'Home'
-export const End = 'End'
-export const ArrowUp = 'ArrowUp'
-export const ArrowDown = 'ArrowDown'
-export const ArrowLeft = 'ArrowLeft'
-export const ArrowRight = 'ArrowRight'
-export const Escape = 'Escape'
-export const PageUp = 'PageUp'
-export const PageDown = 'PageDown'
-export const Tab = 'Tab'
+export const keycodes = Object.freeze({
+  Spacebar: ' ',
+  Home: 'Home',
+  End: 'End',
+  ArrowUp: 'ArrowUp',
+  ArrowDown: 'ArrowDown',
+  ArrowLeft: 'ArrowLeft',
+  ArrowRight: 'ArrowRight',
+  Escape: 'Escape',
+  PageUp: 'PageUp',
+  PageDown: 'PageDown',
+  Tab: 'Tab',
+} as const)
