@@ -25,7 +25,7 @@ def _get_resource_json(json_name):
 def test_get_query_param_default():
     actual_param = mv._get_query_params()
     expected_param = {
-        "has_image": "yes",
+        "hasimages": "yes",
         "perpage": 100,
         "imagelicence": "cc by",
         "page": 0,
@@ -38,7 +38,7 @@ def test_get_query_param_offset():
     actual_param = mv._get_query_params(license_type="public domain", page=10)
 
     expected_param = {
-        "has_image": "yes",
+        "hasimages": "yes",
         "perpage": 100,
         "imagelicence": "public domain",
         "page": 10,
@@ -49,7 +49,7 @@ def test_get_query_param_offset():
 
 def test_get_batch_objects_success():
     query_param = {
-        "has_image": "yes",
+        "hasimages": "yes",
         "perpage": 100,
         "imagelicence": "cc+by",
         "page": 0,
@@ -71,7 +71,7 @@ def test_get_batch_objects_success():
 
 def test_get_batch_objects_empty():
     query_param = {
-        "has_image": "yes",
+        "hasimages": "yes",
         "perpage": 1,
         "imagelicence": "cc by",
         "page": 1000,
@@ -87,7 +87,7 @@ def test_get_batch_objects_empty():
 
 
 def test_get_batch_objects_error():
-    query_param = {"has_image": "yes", "perpage": 1, "imagelicence": "cc by", "page": 0}
+    query_param = {"hasimages": "yes", "perpage": 1, "imagelicence": "cc by", "page": 0}
 
     r = requests.Response()
     r.status_code = 404

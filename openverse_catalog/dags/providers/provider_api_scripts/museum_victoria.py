@@ -21,10 +21,10 @@ LANDING_PAGE = "https://collections.museumsvictoria.com.au/"
 delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)
 
-HEADERS = {"Accept": "application/json"}
+HEADERS = {"User-Agent": prov.UA_STRING, "Accept": "application/json"}
 
 DEFAULT_QUERY_PARAMS = {
-    "has_image": "yes",
+    "hasimages": "yes",
     "perpage": LIMIT,
     "imagelicence": "cc by",
     "page": 0,

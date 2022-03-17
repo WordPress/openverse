@@ -8,6 +8,7 @@ Apart from that, this file stores other provider related information which
 might be useful for retrieving sub-providers at the database level and the
 API level.
 """
+import os
 from enum import Enum
 
 
@@ -110,6 +111,10 @@ SMITHSONIAN_SUB_PROVIDERS = {
     "smithsonian_institution_archives": {"SIA"},  # Smithsonian Institution Archives
     "smithsonian_libraries": {"SIL"},  # Smithsonian Libraries
 }
+
+# User-Agent header for APIs that require it
+CONTACT_EMAIL = os.getenv("CONTACT_EMAIL")
+UA_STRING = f"Openverse/0.1 (https://wordpress.com/openverse; {CONTACT_EMAIL})"
 
 
 class ImageCategory(Enum):
