@@ -103,7 +103,7 @@ def _process_object_list(object_list):
 
 def _process_object(obj, sub_providers=SUB_PROVIDERS, provider=PROVIDER):
     total_images = 0
-    license_url = obj.get("imageRights", {}).get("link")
+    license_url = get_license_url(obj)
     if license_url is None:
         return None
     foreign_identifier = obj.get("id")
@@ -125,6 +125,18 @@ def _process_object(obj, sub_providers=SUB_PROVIDERS, provider=PROVIDER):
             raw_tags=raw_tags,
         )
     return total_images
+
+
+def get_license_url(obj):
+    license_url = obj.get("imageRights", {}).get("link")
+
+    if license_url is None:
+        return None
+
+    # The API returns urls linking to the Finnish version of the license deed,
+    # (eg `licenses/by/4.0/deed.fi`), but the license validation logic expects
+    # links to the license page (eg `license/by/4.0`).
+    return license_url.removesuffix("deed.fi")
 
 
 def _get_raw_tags(obj):

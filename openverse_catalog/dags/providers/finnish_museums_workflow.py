@@ -20,5 +20,5 @@ globals()[DAG_ID] = create_provider_api_workflow(
     start_date=START_DATE,
     schedule_string="@monthly",
     dated=False,
-    execution_timeout=timedelta(hours=24),
+    execution_timeout=timedelta(days=3),
 )

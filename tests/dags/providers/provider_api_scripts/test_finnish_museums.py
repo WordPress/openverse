@@ -3,6 +3,7 @@ import logging
 import os
 from unittest.mock import patch
 
+import pytest
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts import finnish_museums as fm
 
@@ -96,8 +97,8 @@ def test_process_object_with_real_example():
             LicenseInfo(
                 "by",
                 "4.0",
-                "https://creativecommons.org/licenses/by/4.0/deed.fi",
-                "http://creativecommons.org/licenses/by/4.0/deed.fi",
+                "https://creativecommons.org/licenses/by/4.0/",
+                "http://creativecommons.org/licenses/by/4.0/",
             )
         ),
         foreign_identifier=("museovirasto.CC0641BB5337F541CBD19169838BAC1F"),
@@ -152,3 +153,25 @@ def test_get_raw_tags():
         "valmistusaika: 11.06.1923",
     ]
     assert raw_tags == expected_raw_tags
+
+
+@pytest.mark.parametrize(
+    "image_rights_obj, expected_license_url",
+    [
+        ({}, None),
+        (
+            {
+                "imageRights": {
+                    "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+                }
+            },
+            "http://creativecommons.org/licenses/by/4.0/",
+        ),
+        (
+            {"imageRights": {"link": "http://creativecommons.org/licenses/by/4.0/"}},
+            "http://creativecommons.org/licenses/by/4.0/",
+        ),
+    ],
+)
+def test_get_license_url(image_rights_obj, expected_license_url):
+    assert fm.get_license_url(image_rights_obj) == expected_license_url
