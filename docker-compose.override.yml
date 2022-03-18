@@ -52,8 +52,10 @@ services:
       - postgres
       - s3
     build:
+      context: .
       args:
         - REQUIREMENTS_FILE=requirements_dev.txt
+      dockerfile: docker/airflow/Dockerfile
     # This command ensures an admin account is created on startup
     command: init
     volumes:

@@ -3,10 +3,7 @@ version: '3'
 services:
 
   webserver:
-    build:
-      context: .
-      dockerfile: docker/airflow/Dockerfile
-    image: openverse-catalog
+    image: ghcr.io/wordpress/openverse-catalog:${DOCKER_IMAGE_TAG:-latest}
     env_file: .env
     restart: always
     ports:
