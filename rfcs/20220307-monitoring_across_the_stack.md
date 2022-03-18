@@ -1,10 +1,8 @@
 # Monitoring across the stack
 
-Note: This RFC links out to several pages of relevant documentation and blog posts. It's not necessary to read all of them to review this RFC and I've tried to incorporate the necessary information for understanding any given topic into the RFC itself. However, I've left out specific implementation details for things like aggregated metric building, anomaly detection, etc, in favor of focusing more on the infrastructure side of things. That is: how do we gather the basic time series data that we need to be able to build monitors off of.
+Note: Because I had to spend a good deal of time sketching out how this stuff works, I wrote a good deal of preliminary code. It's probably not perfect so it's really only a starting point, but it at least gives a vision for how we could do this.
 
-Generally I've decided to cut how to build specific monitors out of the scope of this PR aside from broad strokes necessary to describe how a particular metric we're gather might be used (i.e., to clarify why we would want to measure it). As I repeat a few times below, gathering metrics is not free. It costs CPU cycles and introduces regular background I/O in the form of network calls. It also requires a certain amount of memory for gathering batched metrics. None of this is major but it does add up and I think we would do well to justify the metrics we gather. It's tempting to just measure everything, but metrics should have a goal that should include when there are actionable changes to be made to the area being measured.
-
-Additionally, because I had to spend a good deal of time sketching out how this stuff works, I wrote a good deal of preliminary code. It's probably not perfect so it's really only a starting point, but it at least gives a vision for how we could do this.
+Additionally, there are several 
 
 ## Reviewers
 
@@ -89,25 +87,11 @@ These are _per service_ when available. The Thumbnail proxy and Postgres, for ex
 
 ## How we will gather metrics
 
-For most services directly under our control we can implement generic metrics middleware to automatically gather relevant metrics for all routes.
+`django-prometheus` exports Prometheus metrics from a Django app and covers all the information we'd want, at least to start off with.
 
-Additionally, all requests to event submissions should fail fast and _never_ block under any circumstances. Adding monitors and metrics gathering is _not_ free and does have a performance cost so we should be sure to cut any burdens that it could cause[^0].
+There is not a real equivalent for Nuxt so we'll have to write our own either from scratch or based on the ones that already exist. It would be nice to do this as a separate Nuxt module so that we can share it with the wider Nuxt community as an actively maintained and used-in-production Prometheus exporter.
 
-Psuedo code for a middlware of this sort would look like this:
-
-```py
-def metrics_middleware(request, get_response):
-    increment_view_count(request)
-    view_timing = get_view_timer(request)
-
-    view_timing.start()
-    response = get_response()
-    view_timing.stop(submit=True)
-
-    increment_view_response_status_count(request, response)
-```
-
-`increment_*` functions can introspect the view name[^1], and method from the request object. Response status code can be retrieved from the response object. `get_view_timer` could be implemented as a context manager in Python. In JavaScript it should just await the response promise or whatever mechanism exists for yielding to the response generation.
+The rest of our services all have relevant exporters available, either official ones or ones with massive community support. Those are covered in the "Prometheus data integrations" section below.
 
 ## Monitoring
 
@@ -115,7 +99,6 @@ It's hard to get into specifics about this, but there are a some scenarios up-fr
 
 * Sustained periods of time (60 seconds?) where count_req_total == count_5xx_total
 * Each view has a version of the above relative to request frequency. Views with lower overall requests per second will require longer windows of time before alerting. We could also configure something like "view_request_count > threshold && view_5xx_count == view_request_count" to filter out cases where only a small number of requests have occurred against a view that happened to fail; though this is risky. I think in those cases we'd not want an _alarm_ _per se_ but would still want to be closely monitoring these types of occurrences through some low-priority alert and active dashboard viewing.
-* TODO: any more of these that won't require historical data?
 
 Additionally, we'll eventually be able to incorporate anomaly monitors. Anomaly monitoring boils down to determining whether there are any statistically significant periods of time where any given metric is an unexpected standard deviation away from seasonal-mean[^2] for the metric. For example, if we normally mean 1200 2xx response codes per second, with a standard deviation of 100 and our 2xx response codes drop to 1000 per second for a sustained period of time, then we'd want an alarm to be raised.
 
@@ -130,13 +113,9 @@ Our ability to fine tune monitors based on these two variables goes up with the 
 
 There are additional derived statistical information for each metric: percentiles. In particular for view timing this would be a useful thing to keep in mind. If the mean or median response time for a particular view is 300 ms, that looks great. However, if the 95th percentile response time is 1500 ms, then we've got a problem. Most users are experiencing good response times but there are some outliers that are getting significantly worse experiences. Percentile based metrics falling outside of 1 standard deviation from the mean should be actionable and high-value tickets to address.
 
-## Developing monitors and dashboards
-
-TODO -- How to develop new metrics monitors and dashboards locally, upload them to staging, test in staging, then move them to production via Terraform.
-
 ## Isolating the monitoring backend
 
-TODO -- Make it easy to turn metrics on or off or to switch out the backend should implementation requirements change or if alternative deployments of Openverse wish to use a different stack for monitoring.
+I considered that it might be nice to isolate the monitoring backend integration so that the various Openverse services didn't rely on any specific implementation. This would be nice (especially for alternative deployments of Openverse, which would be cool to be able to support) but is too heavy a lift for us and given we can isolate the integrations via configuration and external modules it wouldn't be worth our time at the moment.
 
 ## Relevant integrations
 
@@ -144,7 +123,7 @@ Here's the list of integrations we'll want to incorporate into Prometheus and Gr
 
 ### Prometheus data integrations
 
-These are for pulling metrics into Prometheus from various services. This would all be in addition to writing integrations with the Prometheus client libraries for the Django API and Nuxt (Airflow should be automatically covered by the exporter listed below).
+These are for pulling metrics into Prometheus from various services. This would all be in addition to writing and integration for Nuxt and deploying `django-prometheus` for the API (Airflow should be automatically covered by the exporter listed below).
 
 * Elasticsearch exporter: https://github.com/prometheus-community/elasticsearch_exporter
 * Postgres exporter: https://github.com/prometheus-community/postgres_exporter
@@ -157,24 +136,25 @@ These are for pulling metrics into Prometheus from various services. This would 
     * Does not cover ECS in an obvious way; could we run the node exporter in the container? Would that produce meaningful information?
 * Airflow exporter: https://github.com/epoch8/airflow-exporter
 
-### Prometheus alerting integrations
+### Grafana alerting integrations
 
-There are a number of ways we could integrate alerts.
+Grafana has built in alerting since v4.0. It works upstream from provider alertmanagers, so if we wanted to consume alerting rules from Prometheus we could build rules in Prometheus and then consume them in Grafana and alert on them.
 
-* Signal: https://github.com/dgl/alertmanager-webhook-signald
-* Matrix: https://github.com/matrix-org/go-neb
-* XMPP: https://github.com/jelmer/prometheus-xmpp-alerts
-* Slack: Officially supported by [Alertmanager](https://github.com/prometheus/alertmanager)
+[Here is the list of Grafana "contact points" for alerting.](https://grafana.com/docs/grafana/latest/alerting/unified-alerting/contact-points/) A contact point is the notification channels that Grafana can send alerts to.
 
-Signal and Slack both have reliability problems and are centralized services that cannot be controlled by us. I also personally keep Slack off of my phone and would prefer to keep it that way. Running our own XMPP server could be the most portable solution and is based on open standards. XMPP supports encrypted messages.
+The most relevant for our usage are probably Slack, Webhook, and Email. Optionally we could incorporate PagerDuty depending on the team's tolerance and how we decide to organize expectations around responding to alerts.
 
-Email is the other obvious solution and can also be encrypted (though email headers cannot be encrypted so there are limitations to it).
+My preference is for us to primarily rely on email and in particular to use email lists to allow individuals to subscribe/unsubscribe at will from alarm streams and provide an easy historical public record of alarms. We could use something like [GNU Mailman](https://list.org/) to [host this ourselves](https://github.com/maxking/docker-mailman) using FARGATE.
 
-XMPP is my preference, followed by Email. We should implement Slack alerting either way just for the convenience of it. All three is also a reasonable option.
+Email also makes it easy to compartmentalize alarms per category, it makes it easy for individuals to subscribe to specific streams of alarms by using different email prefixes per category. For example, each service could have its own mailing list.
 
-Matrix is a really nice solution but Element, the most popular Matrix client, does not currently support multiple accounts. Other Matrix clients generally have poor or non-existent support for encrypted channels/messages. Matrix is also significantly more work to run than XMPP. On the other hand, I believe we have easy access to resources in the Matrix community for help setting something reliable up for ourselves if we wanted to go this route.
+We can also integrate Slack for good measure and have all alarms sent to the relevant channels via Slack incoming Webhook. It's very easy to configure the Slack integration.
 
-Encryption might not matter at all. In which case Email and XMPP seem like fine solutions to me. Either one would be acceptable to me with Email having a significantly easier integration path (doesn't require us to run or rely on any new services).
+The general purpose Webhook integration is useful for a future where we migrate away from Slack to Matrix (should that ever happen).
+
+#### Runbooks
+
+All alarms should have a relevant run book configured. Ideally these would just be flat Markdown files but it'd be best if they could be hosted in the Openverse handbook on WordPress.org as well for redundancy and accessibility.
 
 ### Grafana data sources
 
@@ -273,6 +253,21 @@ There is currently no way to export or provision alerting rules.
 
 Prometheus is configured via a single `prometheus.yml` file. I've created a Python script that generatese the appropriate `prometheus.{environment}.yml` file based on a `.conf` file using Python's `configparser` module. It's in the contents of this PR.
 
+## Overview of proposed changes
+
+* Use Docker to deploy the following services in production:
+    * Prometheus
+    * Grafana
+    * GNU Mailman
+* Rely on Prometheus primarily as a metrics aggregator and time series database. Do not use it for rule and alarm configuration.
+* Rely on Grafana for visbility and alarming upstream from Prometheus.
+* Create separate alarm streams per service in Mailman and aggregate all alarms into a Slack channel for extra visibility and redundancy.
+* Use `django-prometheus` library to add the Prometheus `/metrics` endpoint to the API
+* Expose Grafana dashboards publicly _a la_ [Wikimedia](https://grafana.wikimedia.org/?orgId=1) and other FOSS projects
+* Create `@openverse/nuxt-module-prometheus` to create a pluggable Prometheus monitoring integration for Nuxt based on existing (but incomplete) projects
+* Integrate Prometheus exporters for the rest of our services and infrastructure
+* Deploy Runbooks for all alarms to the Openverse handbook on WordPress.org
+
 ## Implementation Plan
 
 1. Merge the example local stack implementation from this PR and update any of the things we agree to change during the RFC period.
@@ -286,6 +281,7 @@ Prometheus is configured via a single `prometheus.yml` file. I've created a Pyth
     * There are some existing Nuxt Prometheus modules like [this one](https://github.com/franckaragao/nuxt-prometheus-module) but they're not maintained and far more basic than what we actually want to get. We could fork those and create our own `@openverse/nuxt-prometheus-module` or something with better defaults more akin to the level of visibility that the `django-prometheus` module provides for Django.
     * Configure Prometheus to be able to scrape the `/metrics` endpoint and update configurations for each environment.
 1. Continue the above for each service. Some things will need to be researched by any team member but then implemented by Ronny I think. At least the first time, given we won't have any concrete examples in Terraform for how to get these things working.
+1. Let metrics gather for around 3-6 weeks then begin identifying areas we can create our first alerts around. Once we reach that milestone, create issues for creating alarms and writing runbooks for them.
 
 <hr />
 
