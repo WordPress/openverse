@@ -20,7 +20,7 @@ from common.licenses.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
 from common.storage.audio import AudioStore
-from requests.exceptions import SSLError
+from requests.exceptions import ConnectionError, SSLError
 from retry import retry
 
 
@@ -31,6 +31,7 @@ HOST = "freesound.org"
 ENDPOINT = f"https://{HOST}/apiv2/search/text"
 PROVIDER = prov.FREESOUND_DEFAULT_PROVIDER
 API_KEY = Variable.get("API_KEY_FREESOUND", default_var="not_set")
+FLAKY_EXCEPTIONS = (SSLError, ConnectionError)
 
 HEADERS = {
     "Accept": "application/json",
@@ -167,7 +168,7 @@ def _extract_audio_data(media_data):
     # for download (and requires a user to be authenticated to download)
     try:
         main_audio, alt_files = _get_audio_files(media_data)
-    except SSLError:
+    except FLAKY_EXCEPTIONS:
         logger.warning(f"Unable to get file size for {foreign_landing_url}, skipping")
         return None
     if main_audio is None:
@@ -225,13 +226,20 @@ def _get_preview_filedata(preview_type, preview_url):
     }
 
 
-@retry(SSLError, tries=3, delay=1, backoff=2)
+@retry(FLAKY_EXCEPTIONS, tries=3, delay=1, backoff=2)
 def _get_audio_file_size(url):
     """
     Get the content length of a provided URL.
-    Freesound can be a bit finicky, so we want to retry it a few times
+    Freesound can be finicky, so we want to retry it a few times on these conditions:
+      * SSLError - 'EOF occurred in violation of protocol (_ssl.c:1129)'
+      * ConnectionError - '[Errno 113] No route to host'
+
+    Both of these seem transient and may be the result of some odd behavior on the
+    Freesound API end. We have an API key that's supposed to be maxed out, so I can't
+    imagine it's throttling (aetherunbound).
+
+    TODO(obulat): move filesize detection to the polite crawler
     """
-    # TODO(obulat): move filesize detection to the polite crawler
     return int(requests.head(url).headers["content-length"])
 
 

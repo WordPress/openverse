@@ -5,7 +5,6 @@ from unittest.mock import patch
 import pytest
 from common.licenses.licenses import LicenseInfo
 from providers.provider_api_scripts import freesound
-from requests.exceptions import SSLError
 
 
 RESOURCES = Path(__file__).parent.resolve() / "resources/freesound"
@@ -54,11 +53,20 @@ def test_get_audio_pages_returns_correctly_with_no_results():
     assert actual_result == expect_result
 
 
-def test_get_audio_file_size_retries_and_does_not_raise(audio_data):
+@pytest.mark.parametrize(
+    "exception_type",
+    [
+        # These are fine
+        *freesound.FLAKY_EXCEPTIONS,
+        # This should raise immediately
+        pytest.param(ValueError, marks=pytest.mark.raises(exception=ValueError)),
+    ],
+)
+def test_get_audio_file_size_retries_and_does_not_raise(exception_type, audio_data):
     expected_result = None
     # Patch the sleep function so it doesn't take long
     with patch("requests.head") as head_patch, patch("time.sleep"):
-        head_patch.side_effect = SSLError("whoops")
+        head_patch.side_effect = exception_type("whoops")
         actual_result = freesound._extract_audio_data(audio_data)
 
         assert head_patch.call_count == 3
