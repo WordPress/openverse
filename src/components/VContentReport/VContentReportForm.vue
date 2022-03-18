@@ -60,12 +60,12 @@
 
         <div class="mb-4 min-h-[7rem]">
           <VDmcaNotice
-            v-if="selectedReason === reasons.DMCA"
+            v-if="media.foreign_landing_url && selectedReason === reasons.DMCA"
             :provider="providerName"
             :foreign-landing-url="media.foreign_landing_url"
           />
           <VReportDescForm
-            v-else
+            v-if="selectedReason !== reasons.DMCA"
             key="other"
             v-model="description"
             :reason="selectedReason"

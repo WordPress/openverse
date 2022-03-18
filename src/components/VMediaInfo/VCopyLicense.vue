@@ -30,10 +30,10 @@
       :aria-labelledby="tab"
       role="tabpanel"
       tabindex="0"
-      class="border border-dark-charcoal-20 p-4 md:p-6 text-sm md:text-base foxus:border-tx focus:outline-none focus:shadow-[0_0_0_1.5px_#c52b9b_inset] h-[190px] flex flex-col justify-between items-start"
+      class="border border-dark-charcoal-20 p-4 md:p-6 text-sm md:text-base focus:border-tx focus:outline-none focus:shadow-[0_0_0_1.5px_#c52b9b_inset] h-[190px] flex flex-col justify-between items-start"
       :class="{ hidden: activeTab !== tab }"
     >
-      <div class="flex-grow-1 overflow-y-scroll w-full">
+      <div class="overflow-y-scroll">
         <i18n
           v-if="tab === 'rich'"
           id="attribution-rich"
@@ -73,17 +73,14 @@
             >{{ period }}
           </template>
         </i18n>
-        <label v-if="tab === 'html'" for="attribution-html" class="w-full">
-          <div
-            id="attribution-html"
-            class="w-full font-mono h-auto w-full resize-none"
-            :value="attributionHtml"
-            dir="ltr"
-            readonly
-          >
-            {{ attributionHtml }}
-          </div>
-        </label>
+        <p
+          v-if="tab === 'html'"
+          id="attribution-html"
+          class="font-mono break-all"
+          dir="ltr"
+        >
+          {{ attributionHtml }}
+        </p>
         <i18n
           v-if="tab === 'plain'"
           id="attribution-plain"

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-03-12T04:28:50+00:00\n"
+"POT-Creation-Date: 2022-03-16T22:36:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -587,12 +587,11 @@ msgctxt "media-details.aria.creator-url"
 msgid "author ###name###"
 msgstr ""
 
-#: src/components/VMediaInfo/VMediaLicense.vue:27
 msgctxt "media-details.aria.attribution.license"
 msgid "read more about the license"
 msgstr ""
 
-#: src/components/VMediaInfo/VMediaLicense.vue:44
+#: src/components/VMediaInfo/VMediaLicense.vue:31
 msgctxt "media-details.aria.attribution.tool"
 msgid "read more about the tool"
 msgstr ""
@@ -619,7 +618,7 @@ msgid "Image"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VMediaLicense.vue:7
+#: src/components/VMediaInfo/VMediaLicense.vue:8
 msgctxt "media-details.reuse.attribution"
 msgid "This image was marked with a ###link### license:"
 msgstr ""
@@ -674,40 +673,29 @@ msgid "is licensed under"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VCopyLicense.vue:111
+#: src/components/VMediaInfo/VCopyLicense.vue:108
 msgctxt "media-details.reuse.credit.view-legal-text"
 msgid ". To view ###terms-copy###visit ###URL###"
 msgstr ""
 
-#: src/components/VMediaInfo/VCopyLicense.vue:115
+#: src/components/VMediaInfo/VCopyLicense.vue:112
 msgctxt "media-details.reuse.credit.terms-text"
 msgid "the terms,"
 msgstr ""
 
-#: src/components/VMediaInfo/VCopyLicense.vue:116
+#: src/components/VMediaInfo/VCopyLicense.vue:113
 msgctxt "media-details.reuse.credit.copy-text"
 msgid "a copy of this license,"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VMediaLicense.vue:37
+#: src/components/VMediaInfo/VMediaLicense.vue:24
 msgctxt "media-details.reuse.tool.content"
 msgid "Read more about the tool ###link###."
 msgstr ""
 
-#: src/components/VMediaInfo/VMediaLicense.vue:47
+#: src/components/VMediaInfo/VMediaLicense.vue:33
 msgctxt "media-details.reuse.tool.link"
-msgid "here"
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/components/VMediaInfo/VMediaLicense.vue:19
-msgctxt "media-details.reuse.license.content"
-msgid "Read more about the license ###link###"
-msgstr ""
-
-#: src/components/VMediaInfo/VMediaLicense.vue:30
-msgctxt "media-details.reuse.license.link"
 msgid "here"
 msgstr ""
 

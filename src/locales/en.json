@@ -411,10 +411,6 @@
       "tool-header": "Public Domain",
       "audio": "Audio",
       "image": "Image",
-      "license": {
-        "content": "Read more about the license {link}",
-        "link": "here"
-      },
       "tool": {
         "content": "Read more about the tool {link}.",
         "link": "here"
