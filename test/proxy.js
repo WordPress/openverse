@@ -9,20 +9,111 @@
  * tests less flaky due to changes in the API or API data.
  */
 const process = require('process')
+const zlib = require('zlib')
 
+// TS doesn't pull the type in correctly for the next dependency when it's `require`'d.
+
+/** @type {import('talkback')['default']} */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 const talkback = require('talkback')
 
+// Talkback does not export its types so we've got to pull them out of the Options
+/** @typedef {Required<typeof talkback['Options']['Default']>} TalkbackOptions */
+/** @typedef {ReturnType<TalkbackOptions['tapeDecorator']>} Tape */
+
+const port = 49152
 const host = 'https://api.openverse.engineering'
 
+/** @type {TalkbackOptions['tapeNameGenerator']} */
 const tapeNameGenerator = (tapeNumber) => `response-${tapeNumber}`
 
-const updatingTapes = process.argv.includes('--update-tapes')
+const updatingTapes =
+  process.argv.includes('--update-tapes') || process.env.UPDATE_TAPES === 'true'
+
+/** @type {TalkbackOptions['record']} */
 const recordMode = updatingTapes
   ? talkback.Options.RecordMode.NEW
   : talkback.Options.RecordMode.DISABLED
-const opts = {
+
+/**
+ * @template T
+ * @param {T} x
+ * @returns {T}
+ */
+const identity = (x) => x
+
+const BodyUtils = Object.freeze({
+  gzip: { read: zlib.gunzipSync, save: zlib.gzipSync },
+  br: { read: zlib.brotliDecompressSync, save: zlib.brotliCompressSync },
+  deflate: { read: zlib.inflateSync, save: zlib.deflateSync },
+  default: {
+    read: identity,
+    save: identity,
+  },
+})
+
+/**
+ * @param {Tape} tape
+ */
+const getBodyUtil = (tape) =>
+  Object.entries(BodyUtils).find(([key]) =>
+    tape.res?.headers['content-encoding']?.includes(key)
+  )?.[1] ?? BodyUtils.default
+
+/**
+ * Transform any response values to use the talkback
+ * proxy instead of pointing directly upstream for
+ * RESTful references.
+ *
+ * Ignore thumbnail and non-successful requests, those
+ * don't return JSON bodies so we can save them as-is.
+ *
+ * Sometimes we get a raw compressed buffer back from upstream
+ * and we need to decompress it. Sometimes we get the actual
+ * JSON. I'm fairly confident this has something to do with Cloudflare
+ * cached responses being compressed and others not? In any case,
+ * if the response comes back compressed then we need to
+ * decompress it, fix the upstream API references, and then
+ * compress it back before saving. We could mess with the
+ * `content-encoding` header instead of re-compressing it but
+ * I think that would sort of violate the contract talkback is meant
+ * to have and furthermore would eliminate a complexity in
+ * our stack that apparently exists in production. Given e2e
+ * tests should aim to test as close to production conditions as
+ * possible I think it makes sense to retain both the compressed
+ * and uncompressed responses.
+ *
+ * A note to future contributors: If you find that JSON.parse is
+ * complaining about unknown characters then you're either
+ * dealing with an error response that isn't being caught by
+ * the status check on the first line OR you've discovered
+ * another compression algorithm being used (or, of course, it
+ * could be something else entirely). Don't discount that it could
+ * be something else, but I'd check those two things first
+ * before digging elsewhere.
+ *
+ * @type {TalkbackOptions['tapeDecorator']}
+ */
+const tapeDecorator = (tape) => {
+  if (!tape.res || tape.req.url.endsWith('/thumb/') || tape.res.status >= 399)
+    return tape
+
+  const bodyUtil = getBodyUtil(tape)
+  const responseBody = bodyUtil.read(tape.res.body).toString()
+
+  const fixedResponseBody = responseBody.replace(
+    /https?:\/\/api.openverse.engineering/g,
+    `http://localhost:${port}`
+  )
+
+  tape.res.body = Buffer.from(bodyUtil.save(fixedResponseBody))
+  return tape
+}
+
+const opts = /** @type {Partial<TalkbackOptions>} */ ({
   host,
-  port: 49152,
+  port,
   path: './test/tapes',
   record: recordMode,
   fallbackMode: talkback.Options.FallbackMode.NOT_FOUND,
@@ -30,7 +121,8 @@ const opts = {
   name: 'Openverse e2e proxy',
   summary: false,
   tapeNameGenerator,
-}
+  tapeDecorator,
+})
 
 const server = talkback(opts)
 

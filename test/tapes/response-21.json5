@@ -1,7 +1,8 @@
 {
     meta: {
-        createdAt: '2022-03-03T13:27:50.033Z',
+        createdAt: '2022-03-14T17:05:22.704Z',
         host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
     },
     req: {
         headers: {
@@ -9,45 +10,42 @@
             pragma: 'no-cache',
             'cache-control': 'no-cache',
             'sec-ch-ua': '',
-            accept: 'application/json, text/plain, */*',
             'sec-ch-ua-mobile': '?0',
             'sec-ch-ua-platform': '',
+            accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
             'sec-fetch-site': 'same-site',
-            'sec-fetch-mode': 'cors',
-            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'no-cors',
+            'sec-fetch-dest': 'image',
             referer: 'http://localhost:8443/',
             'accept-encoding': 'gzip, deflate, br',
         },
-        url: '/v1/audio/?q=galah',
+        url: '/v1/audio/a3ff8120-23e7-426d-9aa5-dc929e7e1665/thumb/',
         method: 'GET',
         body: '',
     },
     res: {
-        status: 200,
+        status: 404,
         headers: {
             date: [
-                'Thu, 03 Mar 2022 13:27:50 GMT',
+                'Mon, 14 Mar 2022 17:05:23 GMT',
             ],
             'content-type': [
                 'application/json',
             ],
-            'transfer-encoding': [
-                'chunked',
+            'content-length': [
+                '36',
             ],
             connection: [
                 'keep-alive',
             ],
             vary: [
-                'Accept-Encoding, Accept, Authorization, Origin',
+                'Accept, Authorization, Origin, Accept-Encoding',
             ],
             allow: [
                 'GET, HEAD, OPTIONS',
             ],
             'x-frame-options': [
                 'DENY',
-            ],
-            'access-control-allow-origin': [
-                '*',
             ],
             'x-content-type-options': [
                 'nosniff',
@@ -62,10 +60,7 @@
                 'HIT',
             ],
             age: [
-                '3723',
-            ],
-            'last-modified': [
-                'Thu, 03 Mar 2022 12:25:47 GMT',
+                '10367',
             ],
             'expect-ct': [
                 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
@@ -77,15 +72,14 @@
                 'cloudflare',
             ],
             'cf-ray': [
-                '6e62b63b88326262-OTP',
-            ],
-            'content-encoding': [
-                'br',
+                '6ebe9806cd598d36-ATL',
             ],
             'alt-svc': [
                 'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
             ],
         },
-        body: 'E0AEAMTv5+y/6m+NDrJ5ytem/KMHZXTZAJpfnDgX0AwHQJlaFgkYyTvfedB4GunDveADleATPuAD4tu8xsPMl6KQJ53SF2Cycjkc0CA4U2hsLRHQ4N5/CthArHDf++jBf77gHRjrhXFab9ZJ5QqXLHfZLtkW2yoplrutVGa5FtlCYfDDScB4sD5c+M71T3sIpZ+TznaCQhU78XXITzY4H+p87E5g7Ieh6Zmo6kQ+4l9PY1fTV+6P6SYW0X38iuNliPNtRUxzPS1Xa7PaQuEd9bbYgcEdoRctqjIU9POdHSw9AC/JrA+i04l8sd2tNsYk+zY9NwsoXMLpAKMsdRuXO+RrgJGltIRVgSYx4icp4/kcQ6/06bE4+dLFs/WBPqWLlKWaoHCyNDByPyj0cexKIaBmooKR5MHWe94d7FnAQKGq4UeFRuE716dLnfUBP/8UKi8n1+dnO5R7ceA/cH4ZhpvBx4B/Cm7sbP0WNnppsq1C4Ye8s4OAM7PVWivYPbL27zORbXwaGwmTdL2kJ+SBacrIjs5Hsk6Khv/LCAqznaSK3VkMWnSCgoPAqO19iywNCmhkf1CcDCTbhJ9/Pw==',
+        body: {
+            detail: 'Could not find artwork.',
+        },
     },
 }

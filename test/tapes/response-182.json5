@@ -1,0 +1,85 @@
+{
+    meta: {
+        createdAt: '2022-03-14T17:07:04.494Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+    },
+    req: {
+        headers: {
+            accept: 'application/json, text/plain, */*',
+            connection: 'close',
+        },
+        url: '/v1/images/?q=243f6a8885a308d3',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Mon, 14 Mar 2022 17:07:04 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'content-length': [
+                '70',
+            ],
+            connection: [
+                'close',
+            ],
+            vary: [
+                'Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '10431',
+            ],
+            'last-modified': [
+                'Mon, 14 Mar 2022 14:13:13 GMT',
+            ],
+            'accept-ranges': [
+                'bytes',
+            ],
+            'expect-ct': [
+                'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '6ebe9a821f871877-ATL',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            result_count: 0,
+            page_count: 0,
+            page_size: 20,
+            page: 1,
+            results: [],
+        },
+    },
+}

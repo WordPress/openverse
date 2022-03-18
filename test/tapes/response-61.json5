@@ -1,0 +1,242 @@
+{
+    meta: {
+        createdAt: '2022-03-14T17:05:40.316Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+            pragma: 'no-cache',
+            'cache-control': 'no-cache',
+            'sec-ch-ua': '',
+            accept: 'application/json, text/plain, */*',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '',
+            'sec-fetch-site': 'same-site',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-dest': 'empty',
+            referer: 'http://localhost:8443/',
+            'accept-encoding': 'gzip, deflate, br',
+        },
+        url: '/v1/audio/?q=cat&license=cc0',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Mon, 14 Mar 2022 17:05:41 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'access-control-allow-origin': [
+                '*',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '7027',
+            ],
+            'last-modified': [
+                'Mon, 14 Mar 2022 15:08:34 GMT',
+            ],
+            'expect-ct': [
+                'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '6ebe98795a778d40-ATL',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            result_count: 4,
+            page_count: 0,
+            page_size: 20,
+            page: 1,
+            results: [
+                {
+                    id: '1bb94f50-009c-4371-a605-dd289562a9f5',
+                    title: 'Cat Meow.aif',
+                    foreign_landing_url: 'https://freesound.org/people/Wrenasmir/sounds/455493',
+                    creator: 'Wrenasmir',
+                    creator_url: 'https://freesound.org/people/Wrenasmir',
+                    url: 'https://freesound.org/data/previews/455/455493_1138747-hq.mp3',
+                    license: 'cc0',
+                    license_version: '1.0',
+                    license_url: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: 'sound',
+                    tags: [
+                        {
+                            name: 'Meow',
+                        },
+                        {
+                            name: 'Cat',
+                        },
+                        {
+                            name: 'Voice-Acting',
+                        },
+                    ],
+                    fields_matched: [
+                        'description',
+                        'tags.name',
+                        'title',
+                    ],
+                    duration: 6750,
+                    bit_rate: 128000,
+                    thumbnail: 'http://localhost:49152/v1/audio/1bb94f50-009c-4371-a605-dd289562a9f5/thumb/',
+                    waveform: 'http://localhost:49152/v1/audio/1bb94f50-009c-4371-a605-dd289562a9f5/waveform/',
+                    detail_url: 'http://localhost:49152/v1/audio/1bb94f50-009c-4371-a605-dd289562a9f5/',
+                    related_url: 'http://localhost:49152/v1/audio/1bb94f50-009c-4371-a605-dd289562a9f5/related/',
+                },
+                {
+                    id: 'a3ff8120-23e7-426d-9aa5-dc929e7e1665',
+                    title: 'gato.mp3',
+                    foreign_landing_url: 'https://freesound.org/people/Sofia_Erzini/sounds/411665',
+                    creator: 'Sofia_Erzini',
+                    creator_url: 'https://freesound.org/people/Sofia_Erzini',
+                    url: 'https://freesound.org/data/previews/411/411665_7325786-hq.mp3',
+                    license: 'cc0',
+                    license_version: '1.0',
+                    license_url: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: 'sound',
+                    tags: [
+                        {
+                            name: 'voice',
+                        },
+                        {
+                            name: 'call',
+                        },
+                        {
+                            name: 'Cat',
+                        },
+                    ],
+                    fields_matched: [
+                        'tags.name',
+                    ],
+                    duration: 40112,
+                    bit_rate: 128000,
+                    thumbnail: 'http://localhost:49152/v1/audio/a3ff8120-23e7-426d-9aa5-dc929e7e1665/thumb/',
+                    waveform: 'http://localhost:49152/v1/audio/a3ff8120-23e7-426d-9aa5-dc929e7e1665/waveform/',
+                    detail_url: 'http://localhost:49152/v1/audio/a3ff8120-23e7-426d-9aa5-dc929e7e1665/',
+                    related_url: 'http://localhost:49152/v1/audio/a3ff8120-23e7-426d-9aa5-dc929e7e1665/related/',
+                },
+                {
+                    id: 'dcc5d424-526d-41c2-97c2-d4521b0444f4',
+                    title: 'pfsss.aif',
+                    foreign_landing_url: 'https://freesound.org/people/brunchik/sounds/401597',
+                    creator: 'brunchik',
+                    creator_url: 'https://freesound.org/people/brunchik',
+                    url: 'https://freesound.org/data/previews/401/401597_3516609-hq.mp3',
+                    license: 'cc0',
+                    license_version: '1.0',
+                    license_url: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: 'sound',
+                    tags: [
+                        {
+                            name: 'psss',
+                        },
+                        {
+                            name: 'come-here-kitty',
+                        },
+                        {
+                            name: 'pfsss',
+                        },
+                        {
+                            name: 'cat',
+                        },
+                    ],
+                    fields_matched: [
+                        'description',
+                        'tags.name',
+                    ],
+                    duration: 7833,
+                    bit_rate: 128000,
+                    thumbnail: 'http://localhost:49152/v1/audio/dcc5d424-526d-41c2-97c2-d4521b0444f4/thumb/',
+                    waveform: 'http://localhost:49152/v1/audio/dcc5d424-526d-41c2-97c2-d4521b0444f4/waveform/',
+                    detail_url: 'http://localhost:49152/v1/audio/dcc5d424-526d-41c2-97c2-d4521b0444f4/',
+                    related_url: 'http://localhost:49152/v1/audio/dcc5d424-526d-41c2-97c2-d4521b0444f4/related/',
+                },
+                {
+                    id: '7956ce8d-a029-4a86-9474-90fe9f765fd6',
+                    title: 'gato 3.mp3',
+                    foreign_landing_url: 'https://freesound.org/people/Sofia_Erzini/sounds/411666',
+                    creator: 'Sofia_Erzini',
+                    creator_url: 'https://freesound.org/people/Sofia_Erzini',
+                    url: 'https://freesound.org/data/previews/411/411666_7325786-hq.mp3',
+                    license: 'cc0',
+                    license_version: '1.0',
+                    license_url: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: 'sound',
+                    tags: [
+                        {
+                            name: 'voice',
+                        },
+                        {
+                            name: 'call',
+                        },
+                        {
+                            name: 'Cat',
+                        },
+                    ],
+                    fields_matched: [
+                        'tags.name',
+                    ],
+                    duration: 9000,
+                    bit_rate: 128000,
+                    thumbnail: 'http://localhost:49152/v1/audio/7956ce8d-a029-4a86-9474-90fe9f765fd6/thumb/',
+                    waveform: 'http://localhost:49152/v1/audio/7956ce8d-a029-4a86-9474-90fe9f765fd6/waveform/',
+                    detail_url: 'http://localhost:49152/v1/audio/7956ce8d-a029-4a86-9474-90fe9f765fd6/',
+                    related_url: 'http://localhost:49152/v1/audio/7956ce8d-a029-4a86-9474-90fe9f765fd6/related/',
+                },
+            ],
+        },
+    },
+}

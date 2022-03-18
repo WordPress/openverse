@@ -4,7 +4,6 @@
 # directories
 node_modules/
 dist/
-test/
 .storybook/
 .husky/
 .github/

@@ -70,11 +70,8 @@ jobs:
 
       - uses: ./.github/actions/setup-node-env
 
-      - name: Install E2E browsers
-        run: pnpx playwright install
-
       - name: Run E2E
-        run: pnpm ci:e2e-test
+        run: PW_USER=root ./bin/playwright.sh e2e
 
   storybook:
     name: Check Storybook build

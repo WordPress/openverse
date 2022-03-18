@@ -1,0 +1,18 @@
+version: "3"
+services:
+  playwright:
+    build:
+      context: .
+      dockerfile: Dockerfile.playwright
+      args:
+        - PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}
+    volumes:
+      - .:/app
+    user: ${PW_USER:-pwuser}
+    working_dir: /app
+    command: |
+      sh -c "
+        echo 'Please wait while Playwright initializes the web server before running tests. This can take several minutes.';
+        pnpm test:${TEST_TYPE}:local;"
+    environment:
+      - UPDATE_TAPES=${UPDATE_TAPES:-false}

@@ -1,7 +1,8 @@
 {
     meta: {
-        createdAt: '2022-03-03T13:27:50.032Z',
+        createdAt: '2022-03-14T17:05:22.872Z',
         host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
     },
     req: {
         headers: {
@@ -9,45 +10,42 @@
             pragma: 'no-cache',
             'cache-control': 'no-cache',
             'sec-ch-ua': '',
-            accept: 'application/json, text/plain, */*',
             'sec-ch-ua-mobile': '?0',
             'sec-ch-ua-platform': '',
+            accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
             'sec-fetch-site': 'same-site',
-            'sec-fetch-mode': 'cors',
-            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'no-cors',
+            'sec-fetch-dest': 'image',
             referer: 'http://localhost:8443/',
             'accept-encoding': 'gzip, deflate, br',
         },
-        url: '/v1/images/?q=galah',
+        url: '/v1/audio/7956ce8d-a029-4a86-9474-90fe9f765fd6/thumb/',
         method: 'GET',
         body: '',
     },
     res: {
-        status: 200,
+        status: 404,
         headers: {
             date: [
-                'Thu, 03 Mar 2022 13:27:50 GMT',
+                'Mon, 14 Mar 2022 17:05:23 GMT',
             ],
             'content-type': [
                 'application/json',
             ],
-            'transfer-encoding': [
-                'chunked',
+            'content-length': [
+                '36',
             ],
             connection: [
                 'keep-alive',
             ],
             vary: [
-                'Accept-Encoding, Accept, Authorization, Origin',
+                'Accept, Authorization, Origin, Accept-Encoding',
             ],
             allow: [
                 'GET, HEAD, OPTIONS',
             ],
             'x-frame-options': [
                 'DENY',
-            ],
-            'access-control-allow-origin': [
-                '*',
             ],
             'x-content-type-options': [
                 'nosniff',
@@ -62,10 +60,7 @@
                 'HIT',
             ],
             age: [
-                '3723',
-            ],
-            'last-modified': [
-                'Thu, 03 Mar 2022 12:25:47 GMT',
+                '10364',
             ],
             'expect-ct': [
                 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
@@ -77,15 +72,14 @@
                 'cloudflare',
             ],
             'cf-ray': [
-                '6e62b63b8d0498bb-OTP',
-            ],
-            'content-encoding': [
-                'br',
+                '6ebe98080ecc1873-ATL',
             ],
             'alt-svc': [
                 'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
             ],
         },
-        body: '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',
+        body: {
+            detail: 'Could not find artwork.',
+        },
     },
 }

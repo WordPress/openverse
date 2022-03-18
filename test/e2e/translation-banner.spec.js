@@ -21,9 +21,7 @@ test('Can close the translation banner', async ({ page }) => {
   await page.goto('/ru/search/')
   await page.click('[aria-label="Закрыть"]')
 
-  const banner = await page.locator(
-    '.span:has-text("Help us get to 100 percent")'
-  )
+  const banner = page.locator('.span:has-text("Help us get to 100 percent")')
   await expect(banner).not.toBeVisible({ timeout: 100 })
   // Test that the banner does not re-appear when navigating to the 'About us' page
   await page.click('[aria-label="меню"]')

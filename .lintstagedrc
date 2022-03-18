@@ -2,7 +2,7 @@
   "*.{ts,js,vue}": [
     "eslint --fix"
   ],
-  "*.{ts,js,vue,json,yml,yaml,mdx}": [
+  "*.{ts,js,vue,json,yml,yaml,mdx,md}": [
     "prettier --write"
   ]
 }
