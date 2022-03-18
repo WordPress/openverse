@@ -75,7 +75,6 @@
     "glob": "^7.1.6",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
-    "lodash.findindex": "^4.6.0",
     "lodash.isempty": "^4.4.0",
     "lodash.set": "^4.3.2",
     "lodash.sortby": "^4.7.0",
