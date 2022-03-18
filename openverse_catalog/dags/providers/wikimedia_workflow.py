@@ -20,7 +20,7 @@ globals()[DAG_ID] = create_provider_api_workflow(
     # max_active_tasks was 3 before,
     # maybe this is the reason for frequent failures?
     max_active_tasks=1,
-    schedule_string="@monthly",
+    schedule_string="@daily",
     dated=True,
     media_types=["image", "audio"],
 )
