@@ -194,30 +194,23 @@ def _get_metadata(mods):
     metadata = {}
 
     type_of_resource = mods.get("typeOfResource")
-    if type(type_of_resource) == list and (
+    if isinstance(type_of_resource, list) and (
         type_of_resource[0].get("usage") == "primary"
     ):
         metadata["type_of_resource"] = type_of_resource[0].get("$")
 
-    if type(mods.get("genre")) == dict:
+    if isinstance(mods.get("genre"), dict):
         metadata["genre"] = mods.get("genre").get("$")
 
     origin_info = mods.get("originInfo")
-    try:
-        metadata["date_issued"] = origin_info.get("dateIssued").get("$")
-    except AttributeError as e:
-        logger.warning(f"date_issued not found due to {e}")
-
-    try:
-        metadata["publisher"] = origin_info.get("publisher").get("$")
-    except AttributeError as e:
-        logger.warning(f"publisher not found due to {e}")
+    if date_issued := origin_info.get("dateIssued", {}).get("$"):
+        metadata["date_issued"] = date_issued
+    if publisher := origin_info.get("publisher", {}).get("$"):
+        metadata["publisher"] = publisher
 
     physical_description = mods.get("physicalDescription")
-    try:
-        metadata["description"] = physical_description.get("note").get("$")
-    except AttributeError as e:
-        logger.warning(f"description not found, due to {e}")
+    if description := physical_description.get("note", {}).get("$"):
+        metadata["description"] = description
 
     return metadata
 

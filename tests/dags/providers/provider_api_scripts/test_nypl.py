@@ -141,6 +141,23 @@ def test_get_metadata():
     assert actual_metadata == expected_metadata
 
 
+def test_get_metadata_missing_attrs():
+    item_response = _get_resource_json("response_itemdetails_success.json")
+    mods = item_response.get("nyplAPI").get("response").get("mods")
+    # Remove data to simulate it being missing
+    mods["originInfo"].pop("dateIssued")
+    mods["originInfo"].pop("publisher")
+    mods["physicalDescription"].pop("note")
+    # Remove data from expected values too
+    expected_metadata = _get_resource_json("metadata.json")
+    for attr in ["date_issued", "publisher", "description"]:
+        expected_metadata.pop(attr)
+
+    actual_metadata = np._get_metadata(mods)
+
+    assert actual_metadata == expected_metadata
+
+
 def test_handle_results_success():
     search_response = _get_resource_json("response_search_success.json")
     result = search_response.get("nyplAPI").get("response").get("result")
