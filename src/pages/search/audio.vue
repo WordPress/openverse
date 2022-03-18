@@ -34,7 +34,9 @@ import { isMinScreen } from '~/composables/use-media-query'
 import { useBrowserIsMobile } from '~/composables/use-browser-detection'
 
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
+
 import VLoadMore from '~/components/VLoadMore.vue'
+
 import VGridSkeleton from '~/components/VSkeleton/VGridSkeleton.vue'
 
 import { propTypes } from './search-page.types'
@@ -52,9 +54,8 @@ const AudioSearch = defineComponent({
 
     useMeta({ title: `${props.searchTerm} | Openverse` })
 
-    const results = computed(() =>
-      Object.values(props.mediaResults?.audio?.items ?? [])
-    )
+    const results = computed(() => props.resultItems.audio)
+
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: false })
 
     // On SSR, we set the size to small if the User Agent is mobile, otherwise we set the size to medium.

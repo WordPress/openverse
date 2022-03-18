@@ -7,7 +7,6 @@ import {
   useRouter,
   useStore,
 } from '@nuxtjs/composition-api'
-import isEmpty from 'lodash.isempty'
 
 import useSearchType from '~/composables/use-search-type'
 
@@ -59,7 +58,7 @@ export default {
       router.push(newPath)
 
       function typeWithoutMedia(mediaType) {
-        return isEmpty(store.getters['media/mediaResults'][mediaType])
+        return store.getters['media/resultCountsPerMediaType'][mediaType] === 0
       }
 
       const shouldFetchMedia =

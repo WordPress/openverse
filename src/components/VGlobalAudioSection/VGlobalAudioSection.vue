@@ -16,6 +16,7 @@ import { useStore, useRoute, watch, computed } from '@nuxtjs/composition-api'
 import { useActiveAudio } from '~/composables/use-active-audio'
 
 import { useActiveMediaStore } from '~/stores/active-media'
+import { AUDIO } from '~/constants/media'
 
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
 import VGlobalAudioTrack from '~/components/VAudioTrack/VGlobalAudioTrack.vue'
@@ -40,7 +41,7 @@ export default {
     const audio = computed(() => {
       const trackId = activeMediaStore.id
       if (trackId) {
-        return store.state.media.results.audio.items[trackId]
+        return store.getters['media/getItemById'](AUDIO, trackId)
       }
       return null
     })

@@ -205,6 +205,7 @@ describe('Search Store', () => {
               bar: { id: 'bar' },
               zeta: { id: 'zeta' },
             },
+            page: undefined,
           },
           audio: {
             items: {
@@ -212,6 +213,7 @@ describe('Search Store', () => {
               bar: { id: 'bar' },
               zeta: { id: 'zeta' },
             },
+            page: undefined,
           },
         },
       }
@@ -234,10 +236,10 @@ describe('Search Store', () => {
       async (mediaType) => {
         const params = {
           q: 'foo',
-          page: { [mediaType]: 1 },
           shouldPersistMedia: true,
           mediaType,
         }
+        state.results[mediaType].page = 2
         const action = createActions(services)[FETCH_SINGLE_MEDIA_TYPE]
         await action(context, params)
         expect(context.commit).toHaveBeenCalledWith(FETCH_START_MEDIA, {
@@ -246,9 +248,7 @@ describe('Search Store', () => {
         expect(context.commit).toHaveBeenCalledWith(FETCH_END_MEDIA, {
           mediaType,
         })
-
-        // Page parameter is converted from an object into a number
-        params.page = 1
+        params.page = 3
         expect(context.commit).toHaveBeenCalledWith(SET_MEDIA, {
           media: searchResults.results,
           mediaCount: searchResults.result_count,
@@ -344,10 +344,6 @@ describe('Search Store', () => {
         const params = { id: 'foo', mediaType }
         const action = createActions(services)[FETCH_MEDIA_ITEM]
         await action(context, params)
-        expect(context.commit).toHaveBeenCalledWith(SET_MEDIA_ITEM, {
-          item: {},
-          mediaType,
-        })
         expect(context.commit).toHaveBeenCalledWith(SET_MEDIA_ITEM, {
           item: detailData[mediaType],
           mediaType,
