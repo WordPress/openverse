@@ -32,6 +32,7 @@
 import { computed, defineComponent, ref, watch } from '@nuxtjs/composition-api'
 
 import { useActiveAudio } from '~/composables/use-active-audio'
+import { defaultRef } from '~/composables/default-ref'
 
 import { useActiveMediaStore } from '~/stores/active-media'
 
@@ -107,7 +108,11 @@ export default defineComponent({
 
     const status = ref('paused')
     const currentTime = ref(0)
-    const audioDuration = ref(null)
+    const duration = defaultRef(() => {
+      if (typeof props.audio?.duration === 'number')
+        return props.audio.duration / 1e3
+      return 0
+    })
 
     const setPlaying = () => {
       status.value = 'playing'
@@ -129,7 +134,7 @@ export default defineComponent({
       }
     }
     const setDuration = () => {
-      audioDuration.value = activeAudio.obj.value?.duration
+      if (activeAudio.obj.value) duration.value = activeAudio.obj.value.duration
     }
 
     const updateTimeLoop = () => {
@@ -149,7 +154,7 @@ export default defineComponent({
         audio.addEventListener('timeupdate', setTimeWhenPaused)
         audio.addEventListener('durationchange', setDuration)
         currentTime.value = audio.currentTime
-        audioDuration.value = audio.duration
+        duration.value = audio.duration
 
         /**
          * By the time the `activeAudio` is updated and a rerender
@@ -189,11 +194,6 @@ export default defineComponent({
     const pause = () => activeAudio.obj.value?.pause()
 
     /* Timekeeping */
-
-    const duration = computed(
-      () => audioDuration.value ?? props.audio?.duration / 1e3 ?? 0
-    ) // seconds
-
     const message = computed(() => activeMediaStore.message)
 
     /* Interface with VPlayPause */

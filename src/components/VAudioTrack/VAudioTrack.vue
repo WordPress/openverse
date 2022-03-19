@@ -49,6 +49,7 @@ import {
 } from '@nuxtjs/composition-api'
 
 import { useActiveAudio } from '~/composables/use-active-audio'
+import { defaultRef } from '~/composables/default-ref'
 
 import { MEDIA } from '~/constants/store-modules'
 import { useActiveMediaStore } from '~/stores/active-media'
@@ -126,7 +127,6 @@ export default defineComponent({
 
     const status = ref('paused')
     const currentTime = ref(0)
-    const audioDuration = ref(null)
 
     const initLocalAudio = () => {
       // Preserve existing local audio if we plucked it from the global active audio
@@ -220,8 +220,16 @@ export default defineComponent({
         }
       }
     }
+    const duration = defaultRef(() => {
+      if (localAudio) {
+        return localAudio.duration
+      }
+      if (typeof props.audio?.duration === 'number')
+        return props.audio.duration / 1e3
+      return 0
+    })
     const setDuration = () => {
-      audioDuration.value = localAudio?.duration
+      if (localAudio) duration.value = localAudio.duration
     }
 
     /**
@@ -292,10 +300,6 @@ export default defineComponent({
     )
 
     /* Timekeeping */
-
-    const duration = computed(
-      () => audioDuration.value ?? props.audio?.duration / 1e3 ?? 0 // seconds
-    )
 
     const message = computed(() => activeMediaStore.message)
 
