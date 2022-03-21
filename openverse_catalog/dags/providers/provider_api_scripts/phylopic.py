@@ -12,6 +12,7 @@ Notes:                  http://phylopic.org/api/
 
 import argparse
 import logging
+from datetime import date, timedelta
 
 from common.licenses import get_license_info
 from common.requester import DelayedRequester
@@ -28,12 +29,14 @@ HOST = "phylopic.org"
 ENDPOINT = f"http://{HOST}/api/a"
 PROVIDER = "phylopic"
 LIMIT = 5
+# Default number of days to process if date_end is not defined
+DEFAULT_PROCESS_DAYS = 7
 
 delayed_requester = DelayedRequester(DELAY)
 image_store = ImageStore(provider=PROVIDER)
 
 
-def main(date="all"):
+def main(date_start: str = "all", date_end: str = None):
     """
     This script pulls the data for a given date from the PhyloPic
     API, and writes it into a .TSV file to be eventually read
@@ -41,15 +44,18 @@ def main(date="all"):
 
     Required Arguments:
 
-    date:  Date String in the form YYYY-MM-DD.  This is the date for
-           which running the script will pull data.
+    date_start:  Date String in the form YYYY-MM-DD. This date defines the beginning
+                 of the range that the script will pull data from.
+    date_end:    Date String in the form YYYY-MM-DD. Similar to `date_start`, this
+                 defines the end of the range of data pulled. Defaults to
+                 DEFAULT_PROCESS_DAYS (7) if undefined.
     """
 
     offset = 0
 
     logger.info("Begin: PhyloPic API requests")
 
-    if date == "all":
+    if date_start == "all":
         logger.info("Processing all images")
         param = {"offset": offset}
 
@@ -62,8 +68,11 @@ def main(date="all"):
             param = {"offset": offset}
 
     else:
-        param = {"date": date}
-        logger.info(f"Processing date: {date}")
+        if date_end is None:
+            date_end = _compute_date_range(date_start)
+        param = {"date_start": date_start, "date_end": date_end}
+
+        logger.info(f"Processing from {date_start} to {date_end}")
         _add_data_to_buffer(**param)
 
     image_store.commit()
@@ -71,16 +80,16 @@ def main(date="all"):
     logger.info("Terminated!")
 
 
-def _add_data_to_buffer(**args):
-    endpoint = _create_endpoint_for_IDs(**args)
+def _add_data_to_buffer(**kwargs):
+    endpoint = _create_endpoint_for_IDs(**kwargs)
     IDs = _get_image_IDs(endpoint)
 
     for id_ in IDs:
         if id_ is not None:
             details = _get_meta_data(id_)
             if details is not None:
-                args = _create_args(details, id_)
-                image_store.add_item(**args)
+                kwargs = _create_args(details, id_)
+                image_store.add_item(**kwargs)
 
 
 def _create_args(details, id_):
@@ -111,18 +120,24 @@ def _get_total_images():
     return total
 
 
-def _create_endpoint_for_IDs(**args):
+def _create_endpoint_for_IDs(**kwargs):
     limit = LIMIT
 
-    if args.get("date"):
-        # Get a list of objects uploaded/updated on a given date.
-        date = args["date"]
-        endpoint = f"http://phylopic.org/api/a/image/list/modified/{date}"
+    if ((date_start := kwargs.get("date_start")) is not None) and (
+        (date_end := kwargs.get("date_end")) is not None
+    ):
+        # Get a list of objects uploaded/updated from a given date to another date
+        # http://phylopic.org/api/#method-image-time-range
+        endpoint = (
+            f"http://phylopic.org/api/a/image/list/modified/{date_start}/{date_end}"
+        )
+
+    elif (offset := kwargs.get("offset")) is not None:
+        # Get all images and limit the results for each request.
+        endpoint = f"http://phylopic.org/api/a/image/list/{offset}/{limit}"
 
     else:
-        # Get all images and limit the results for each request.
-        offset = args["offset"]
-        endpoint = f"http://phylopic.org/api/a/image/list/{offset}/{limit}"
+        raise ValueError("No valid selection criteria found!")
     return endpoint
 
 
@@ -255,14 +270,30 @@ def _get_image_info(result, _uuid):
         return img_url, width, height, thumbnail
 
 
+def _compute_date_range(date_start: str, days: int = DEFAULT_PROCESS_DAYS) -> str:
+    """
+    Given an ISO formatted date string and a number of days, compute the
+    ISO string that represents the start date plus the days provided.
+    """
+    date_end = date.fromisoformat(date_start) + timedelta(days=days)
+    return date_end.isoformat()
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="PhyloPic API Job", add_help=True)
     parser.add_argument(
-        "--date",
+        "--date-start",
         default="all",
-        help="Identify all images" " from a particular date (YYYY-MM-DD).",
+        help="Identify all images starting from a particular date (YYYY-MM-DD).",
+    )
+    parser.add_argument(
+        "--date-end",
+        default=None,
+        help="Used in conjunction with --date-start, identify all images ending on "
+        f"a particular date (YYYY-MM-DD), defaults to {DEFAULT_PROCESS_DAYS} "
+        "if not defined.",
     )
 
-    date = parser.parse_args().date
+    args = parser.parse_args()
 
-    main(date)
+    main(args.date_start, args.date_end)

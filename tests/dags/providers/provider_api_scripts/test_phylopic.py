@@ -1,8 +1,10 @@
 import json
 import logging
 import os
+from functools import partial
 from unittest.mock import patch
 
+import pytest
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts import phylopic as pp
 
@@ -31,16 +33,29 @@ def test_get_total_images_correct():
         assert img_count == 10
 
 
-def test_create_endpoint_for_IDs_by_date():
-    actual_endpoint = pp._create_endpoint_for_IDs(**{"date": "2020-02-10"})
-    expect_endpoint = str("http://phylopic.org/api" "/a/image/list/modified/2020-02-10")
-    assert actual_endpoint == expect_endpoint
+invalid_endpoint = partial(pytest.param, marks=pytest.mark.raises(exception=ValueError))
 
 
-def test_create_endpoint_for_IDs_all():
-    actual_endpoint = pp._create_endpoint_for_IDs(**{"offset": 0})
-    expect_endpoint = "http://phylopic.org/api/a/image/list/0/5"
-    assert actual_endpoint == expect_endpoint
+@pytest.mark.parametrize(
+    "data, expected",
+    [
+        # Happy paths
+        (
+            {"date_start": "2020-02-10", "date_end": "2020-02-11"},
+            "http://phylopic.org/api/a/image/list/modified/2020-02-10/2020-02-11",
+        ),
+        ({"offset": 0}, "http://phylopic.org/api/a/image/list/0/5"),
+        # Missing/None parameters
+        invalid_endpoint({}, None),
+        invalid_endpoint({"offset": None}, None),
+        invalid_endpoint({"date_start": None}, None),
+        invalid_endpoint({"date_start": None, "date_end": None}, None),
+        invalid_endpoint({"date_start": "2020-02-10", "date_end": None}, None),
+    ],
+)
+def test_create_endpoint_for_IDs(data, expected):
+    actual = pp._create_endpoint_for_IDs(**data)
+    assert actual == expected
 
 
 def test_get_image_IDs_for_no_content():
@@ -252,3 +267,16 @@ def test_create_args():
     }
     assert actual_args == expect_args
     assert len(actual_args) == 10
+
+
+@pytest.mark.parametrize(
+    "date_start, days, expected",
+    [
+        ("2022-01-10", 10, "2022-01-20"),
+        ("2022-02-28", 7, "2022-03-07"),
+        ("2022-02-28", -7, "2022-02-21"),
+    ],
+)
+def test_compute_date_range(date_start, days, expected):
+    actual = pp._compute_date_range(date_start, days)
+    assert actual == expected

@@ -13,6 +13,6 @@ globals()[DAG_ID] = create_provider_api_workflow(
     phylopic.main,
     start_date=datetime(1970, 1, 1),
     max_active_tasks=1,
-    schedule_string="@daily",
+    schedule_string="@weekly",
     dated=True,
 )
