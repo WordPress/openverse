@@ -2,13 +2,6 @@
   <div class="license flex flex-row items-center gap-2">
     <div class="flex gap-1">
       <VIcon
-        v-if="isCC"
-        :class="['icon', bgFilled ? 'bg-filled text-black' : '']"
-        view-box="0 0 30 30"
-        :icon-path="ccLogo"
-        :size="4"
-      />
-      <VIcon
         v-for="(name, index) in icons"
         :key="index"
         :class="['icon', bgFilled ? 'bg-filled text-black' : '']"
@@ -26,12 +19,9 @@
 <script>
 import { computed, useContext } from '@nuxtjs/composition-api'
 
-import {
-  ALL_LICENSES,
-  CC_LICENSES,
-  DEPRECATED_LICENSES,
-  LICENSE_ICON_MAPPING,
-} from '~/constants/license'
+import { ALL_LICENSES } from '~/constants/license'
+
+import { isCc, getFullLicenseName } from '~/utils/license'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 
@@ -42,6 +32,7 @@ import nc from '~/assets/licenses/nc.svg'
 import nd from '~/assets/licenses/nd.svg'
 import pdm from '~/assets/licenses/pdm.svg'
 import sa from '~/assets/licenses/sa.svg'
+import samplingPlus from '~/assets/licenses/sampling-plus.svg'
 
 /**
  * Displays the icons for the license along with a readable display name for the
@@ -77,47 +68,37 @@ export default {
   },
   setup(props) {
     const { i18n } = useContext()
-    const isDeprecated = computed(() =>
-      DEPRECATED_LICENSES.includes(props.license)
-    )
+
+    const isCcLicense = computed(() => isCc(props.license))
+
     const icons = computed(() => {
-      if (isDeprecated.value) {
-        return []
-      }
-      return props.license
-        .split(/[-\s]/)
-        .map((term) => LICENSE_ICON_MAPPING[term])
+      let iconList = props.license.split(/[-\s]/)
+      if (isCcLicense.value) iconList = ['ccLogo', ...iconList]
+      return iconList
     })
-    const isCC = computed(
-      () => CC_LICENSES.includes(props.license) || props.license === 'cc0'
-    )
-    /**
-     * @type {import('@nuxtjs/composition-api').ComputedRef<{ readable: string, full: string }>}
-     */
+
     const licenseName = computed(() => {
-      if (isDeprecated.value) {
-        return { readable: props.license, full: props.license }
-      } else {
-        return {
-          readable: i18n.t(`license-readable-names.${props.license}`),
-          full: i18n.t(`license-names.${props.license}`),
-        }
+      return {
+        readable: i18n.t(`license-readable-names.${props.license}`),
+        full: getFullLicenseName(props.license, '', i18n),
       }
     })
 
     return {
       ccLogo,
       svgs: {
+        ccLogo,
         by,
         cc0,
         nc,
         nd,
         pdm,
         sa,
+        'sampling+': samplingPlus,
       },
 
       icons,
-      isCC,
+      isCcLicense,
       licenseName,
     }
   },

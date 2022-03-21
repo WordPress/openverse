@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 
 import { getFullLicenseName } from '~/utils/license'
 
@@ -32,8 +32,10 @@ const VMediaReuse = defineComponent({
     },
   },
   setup(props) {
+    const { i18n } = useContext()
+
     const fullLicenseName = computed(() =>
-      getFullLicenseName(props.media.license, props.media.license_version)
+      getFullLicenseName(props.media.license, props.media.license_version, i18n)
     )
 
     return { fullLicenseName }

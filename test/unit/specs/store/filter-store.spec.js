@@ -148,7 +148,7 @@ describe('Filter Store', () => {
 
     it.each`
       filterType           | code              | idx
-      ${'licenses'}        | ${'cc0'}          | ${0}
+      ${'licenses'}        | ${'cc0'}          | ${1}
       ${'licenseTypes'}    | ${'modification'} | ${1}
       ${'imageExtensions'} | ${'svg'}          | ${3}
       ${'imageCategories'} | ${'photograph'}   | ${0}

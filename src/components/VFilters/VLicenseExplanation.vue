@@ -36,9 +36,7 @@
 </template>
 
 <script>
-import { isLicense } from '~/utils/license'
-
-import { DEPRECATED_LICENSES } from '~/constants/license'
+import { isLicense, isDeprecated } from '~/utils/license'
 
 import VLicenseElements from '~/components/VLicenseElements.vue'
 import VLink from '~/components/VLink.vue'
@@ -78,7 +76,7 @@ export default {
         fragment = 'publicdomain/zero/1.0'
       } else if (licenseTerm === 'pdm') {
         fragment = 'publicdomain/mark/1.0'
-      } else if (DEPRECATED_LICENSES.includes(licenseTerm)) {
+      } else if (isDeprecated(licenseTerm)) {
         fragment = `licenses/${licenseTerm}/1.0`
       } else {
         fragment = `licenses/${licenseTerm}/4.0`

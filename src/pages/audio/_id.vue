@@ -52,7 +52,11 @@ const AudioDetailPage = {
   computed: {
     ...mapState(MEDIA, ['audio']),
     fullLicenseName() {
-      return getFullLicenseName(this.audio.license, this.audio.license_version)
+      return getFullLicenseName(
+        this.audio.license,
+        this.audio.license_version,
+        this.$i18n
+      )
     },
     licenseUrl() {
       return `${this.audio.license_url}?ref=openverse`

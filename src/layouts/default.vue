@@ -110,7 +110,7 @@ export default embeddedPage
   .main {
     height: 100%;
     display: grid;
-    grid-template-columns: 1fr 316px;
+    grid-template-columns: 1fr 336px;
   }
   // Make the main content area span both grid columns
   // when the sidebar is closed...

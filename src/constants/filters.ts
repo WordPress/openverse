@@ -59,7 +59,7 @@ export const mediaUniqueFilterKeys = deepFreeze<
 })
 
 const filterCodesPerCategory = deepFreeze<Record<FilterCategory, string[]>>({
-  licenses: ACTIVE_LICENSES,
+  licenses: [...ACTIVE_LICENSES],
   licenseTypes: ['commercial', 'modification'],
   audioCategories: ['music', 'sound', 'podcast'],
   imageCategories: ['photograph', 'illustration', 'digitized_artwork'],

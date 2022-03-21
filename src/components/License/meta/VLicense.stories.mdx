@@ -10,10 +10,12 @@ import VLicense from '~/components/License/VLicense.vue'
 
 <Meta title="Components/VLicense" component={VLicense} />
 
-export const Template = (args, { argTypes }) => ({
-  template: `<VLicense v-bind="$props" />`,
+export const Template = (args) => ({
+  template: `<VLicense v-bind="args" />`,
   components: { VLicense },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 # VLicense
@@ -24,18 +26,18 @@ export const Template = (args, { argTypes }) => ({
 
 It can display CC licenses.
 
-| License name                            | Code     | Slug       |
-| --------------------------------------- | -------- | ---------- |
-| Attribution                             | BY       | `by`       |
-| Attribution-ShareAlike                  | BY-SA    | `by-sa`    |
-| Attribution-NoDerivatives               | BY-ND    | `by-nd`    |
-| Attribution-NonCommercial               | BY-NC    | `by-nc`    |
-| Attribution-NonCommercial-ShareAlike    | BY-NC-SA | `by-nc-sa` |
-| Attribution-NonCommercial-NoDerivatives | BY-NC-ND | `by-nc-nd` |
+| License name                            | Abbreviation | Slug       |
+| --------------------------------------- | ------------ | ---------- |
+| Attribution                             | CC BY        | `by`       |
+| Attribution-ShareAlike                  | CC BY-SA     | `by-sa`    |
+| Attribution-NoDerivatives               | CC BY-ND     | `by-nd`    |
+| Attribution-NonCommercial               | CC BY-NC     | `by-nc`    |
+| Attribution-NonCommercial-ShareAlike    | CC BY-NC-SA  | `by-nc-sa` |
+| Attribution-NonCommercial-NoDerivatives | CC BY-NC-ND  | `by-nc-nd` |
 
 <Canvas>
   <Story
-    name="BY"
+    name="CC BY"
     args={{
       license: 'by',
     }}
@@ -43,7 +45,7 @@ It can display CC licenses.
     {Template.bind({})}
   </Story>
   <Story
-    name="BY-SA"
+    name="CC BY-SA"
     args={{
       license: 'by-sa',
     }}
@@ -51,7 +53,7 @@ It can display CC licenses.
     {Template.bind({})}
   </Story>
   <Story
-    name="BY-ND"
+    name="CC BY-ND"
     args={{
       license: 'by-nd',
     }}
@@ -59,7 +61,7 @@ It can display CC licenses.
     {Template.bind({})}
   </Story>
   <Story
-    name="BY-NC"
+    name="CC BY-NC"
     args={{
       license: 'by-nc',
     }}
@@ -67,7 +69,7 @@ It can display CC licenses.
     {Template.bind({})}
   </Story>
   <Story
-    name="BY-NC-SA"
+    name="CC BY-NC-SA"
     args={{
       license: 'by-nc-sa',
     }}
@@ -75,7 +77,7 @@ It can display CC licenses.
     {Template.bind({})}
   </Story>
   <Story
-    name="BY-NC-ND"
+    name="CC BY-NC-ND"
     args={{
       license: 'by-nc-nd',
     }}
@@ -86,10 +88,10 @@ It can display CC licenses.
 
 It can also display some public domain licenses.
 
-| License name       | Code | Slug  |
-| ------------------ | ---- | ----- |
-| CC Zero            | CC0  | `cc0` |
-| Public domain mark | PDM  | `pdm` |
+| License name       | Abbreviation | Slug  |
+| ------------------ | ------------ | ----- |
+| CC Zero            | CC0          | `cc0` |
+| Public Domain Mark | -            | `pdm` |
 
 <Canvas>
   <Story
@@ -104,6 +106,32 @@ It can also display some public domain licenses.
     name="PDM"
     args={{
       license: 'pdm',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+It can also display some deprecated CC licenses.
+
+| License name                | Abbreviation    | Slug           |
+| --------------------------- | --------------- | -------------- |
+| Sampling Plus               | CC Sampling+    | `sampling+`    |
+| NonCommercial Sampling Plus | CC NC-Sampling+ | `nc-sampling+` |
+
+<Canvas>
+  <Story
+    name="CC Sampling+"
+    args={{
+      license: 'sampling+',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="CC NC-Sampling+"
+    args={{
+      license: 'nc-sampling+',
     }}
   >
     {Template.bind({})}
