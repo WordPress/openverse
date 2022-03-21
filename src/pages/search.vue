@@ -38,7 +38,7 @@ import {
 } from '~/constants/action-types'
 import { supportedSearchTypes } from '~/constants/media'
 import { MEDIA, SEARCH } from '~/constants/store-modules'
-import { isMinScreen } from '~/composables/use-media-query.js'
+import { isMinScreen } from '~/composables/use-media-query'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 
 import VSearchGrid from '~/components/VSearchGrid.vue'

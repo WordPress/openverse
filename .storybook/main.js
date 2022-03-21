@@ -1,4 +1,4 @@
-const { nuxifyStorybook } = require('../.nuxt-storybook/storybook/main.js')
+const { nuxifyStorybook } = require('../.nuxt-storybook/storybook/main')
 
 module.exports = nuxifyStorybook({
   webpackFinal(config) {

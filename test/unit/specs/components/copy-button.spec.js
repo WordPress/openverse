@@ -1,4 +1,4 @@
-import CopyButton from '~/components/CopyButton'
+import CopyButton from '~/components/CopyButton.vue'
 
 import render from '../../test-utils/render'
 

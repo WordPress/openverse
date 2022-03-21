@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { render, screen, fireEvent } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 
-import DropdownButton from '~/components/DropdownButton'
+import DropdownButton from '~/components/DropdownButton.vue'
 
 const TestWrapper = Vue.component('TestWrapper', {
   components: { DropdownButton },

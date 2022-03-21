@@ -1,4 +1,4 @@
-import DownloadButton from '~/components/DownloadButton'
+import DownloadButton from '~/components/DownloadButton.vue'
 
 export default {
   title: 'Components/DownloadButton',

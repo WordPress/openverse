@@ -5,3 +5,10 @@ dist/
 nuxt-template-overrides/
 test/tapes
 coverage/
+node_modules
+.nuxt
+.nuxt-storybook
+!.github
+!.husky
+storybook-static
+.idea

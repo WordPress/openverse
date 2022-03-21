@@ -2,7 +2,7 @@ import { RouterLinkStub } from '@vue/test-utils'
 
 import render from '~/../test/unit/test-utils/render'
 
-import VMediaTag from '~/components/VMediaTag/VMediaTag'
+import VMediaTag from '~/components/VMediaTag/VMediaTag.vue'
 
 describe('VMediaTag', () => {
   let props = null

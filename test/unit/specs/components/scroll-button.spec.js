@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/vue'
 
-import VScrollButton from '~/components/VScrollButton'
+import VScrollButton from '~/components/VScrollButton.vue'
 
 describe('Scroll button', () => {
   it('should render a scroll button', () => {

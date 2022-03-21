@@ -3,7 +3,7 @@ import { placements as popoverPlacements } from '@popperjs/core'
 import { log } from '~/utils/console'
 
 import VPopover from '~/components/VPopover/VPopover.vue'
-import VButton from '~/components/VButton'
+import VButton from '~/components/VButton.vue'
 
 export default {
   component: VPopover,

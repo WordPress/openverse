@@ -1,4 +1,4 @@
-import VLogoLoader from '~/components/VLogoLoader/VLogoLoader'
+import VLogoLoader from '~/components/VLogoLoader/VLogoLoader.vue'
 
 export default {
   component: VLogoLoader,

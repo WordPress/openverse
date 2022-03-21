@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/vue'
 
 import { PiniaVuePlugin, createPinia } from 'pinia'
 
-import FilterChecklist from '~/components/VFilters/VFilterChecklist'
+import FilterChecklist from '~/components/VFilters/VFilterChecklist.vue'
 
 describe('FilterChecklist', () => {
   let options = {}

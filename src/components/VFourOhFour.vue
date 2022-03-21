@@ -58,7 +58,7 @@ import {
 import { MEDIA, SEARCH } from '~/constants/store-modules'
 import { FETCH_MEDIA, UPDATE_QUERY } from '~/constants/action-types'
 
-import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar'
+import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
 import VLink from '~/components/VLink.vue'
 
 import Oops from '~/assets/oops.svg?inline'

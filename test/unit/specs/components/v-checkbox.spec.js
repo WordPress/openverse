@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import { fireEvent, render, screen } from '@testing-library/vue'
 
-import VCheckbox from '~/components/VCheckbox/VCheckbox'
-import VLicense from '~/components/License/VLicense'
+import VCheckbox from '~/components/VCheckbox/VCheckbox.vue'
+import VLicense from '~/components/License/VLicense.vue'
 
 const TestWrapperStringLabel = ({
   id = 'simple',

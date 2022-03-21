@@ -1,4 +1,4 @@
-import LoadingIcon from '~/components/LoadingIcon'
+import LoadingIcon from '~/components/LoadingIcon.vue'
 
 import render from '../../test-utils/render'
 

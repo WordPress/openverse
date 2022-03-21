@@ -1,4 +1,4 @@
-import { replaceVarsPlaceholders } from '~/locales/scripts/json-pot-helpers.js'
+import { replaceVarsPlaceholders } from '~/locales/scripts/json-pot-helpers'
 
 describe('replaceVarsPlaceholders', () => {
   it('replaces lower case placeholders', () => {

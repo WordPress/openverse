@@ -31,7 +31,7 @@ import {
   CC_LICENSES,
   DEPRECATED_LICENSES,
   LICENSE_ICON_MAPPING,
-} from '~/constants/license.js'
+} from '~/constants/license'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 

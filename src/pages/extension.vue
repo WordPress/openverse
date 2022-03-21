@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import ExtensionBrowsers from '~/components/ExtensionBrowsers'
+import ExtensionBrowsers from '~/components/ExtensionBrowsers.vue'
 
 import feature1 from '~/assets/screenshots/extension_feat_1.png'
 import feature2 from '~/assets/screenshots/extension_feat_2.png'

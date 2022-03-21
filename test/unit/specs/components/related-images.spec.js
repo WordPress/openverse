@@ -3,7 +3,7 @@ import VueI18n from 'vue-i18n'
 import { createLocalVue } from '@vue/test-utils'
 import { render, screen } from '@testing-library/vue'
 
-import VRelatedImages from '~/components/VImageDetails/VRelatedImages'
+import VRelatedImages from '~/components/VImageDetails/VRelatedImages.vue'
 
 const serviceMock = jest.fn(() =>
   Promise.resolve({

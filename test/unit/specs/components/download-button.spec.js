@@ -4,7 +4,7 @@ import MockAdapter from 'axios-mock-adapter'
 
 import local from '~/utils/local'
 
-import DownloadButton from '~/components/DownloadButton'
+import DownloadButton from '~/components/DownloadButton.vue'
 
 import render from '../../test-utils/render'
 

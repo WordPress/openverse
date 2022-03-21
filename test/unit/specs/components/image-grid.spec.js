@@ -3,7 +3,7 @@ import VueI18n from 'vue-i18n'
 
 import messages from '~/locales/en.json'
 
-import VImageGrid from '~/components/VImageGrid/VImageGrid'
+import VImageGrid from '~/components/VImageGrid/VImageGrid.vue'
 
 const i18n = new VueI18n({
   locale: 'en',

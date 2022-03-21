@@ -8,7 +8,7 @@ const fs = require('fs')
 
 const axios = require('axios')
 
-const { addFetchedTranslationStatus } = require('./get-translations-status.js')
+const { addFetchedTranslationStatus } = require('./get-translations-status')
 
 const base_url =
   'https://raw.githubusercontent.com/GlotPress/GlotPress-WP/develop/locales/locales.php'

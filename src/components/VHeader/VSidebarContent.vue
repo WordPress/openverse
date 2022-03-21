@@ -8,7 +8,7 @@
 import { defineComponent } from '@nuxtjs/composition-api'
 
 import VTeleport from '~/components/VTeleport/VTeleport.vue'
-import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter'
+import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 
 /**
  * Renders the inner content of the sidebar and manages focus.

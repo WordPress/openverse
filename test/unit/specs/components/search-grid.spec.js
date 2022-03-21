@@ -6,7 +6,7 @@ import VueI18n from 'vue-i18n'
 import { IMAGE } from '~/constants/media'
 import messages from '~/locales/en.json'
 
-import VSearchGrid from '~/components/VSearchGrid'
+import VSearchGrid from '~/components/VSearchGrid.vue'
 
 describe('VSearchGrid', () => {
   let options = {}

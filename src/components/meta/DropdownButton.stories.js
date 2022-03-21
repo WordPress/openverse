@@ -1,6 +1,6 @@
 import { log } from '~/utils/console'
 
-import DropdownButton from '~/components/DropdownButton'
+import DropdownButton from '~/components/DropdownButton.vue'
 
 export default {
   title: 'Components/DropdownButton',

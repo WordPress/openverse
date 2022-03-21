@@ -1,4 +1,4 @@
-import VButton from '~/components/VButton'
+import VButton from '~/components/VButton.vue'
 
 export default {
   title: 'Components/VButton',
