@@ -6,7 +6,7 @@ We do this by running `provider_api_scripts.museum_victoria.main`
 # airflow DAG (necessary for Airflow to find this file)
 from datetime import datetime, timedelta
 
-from common.dag_factory import create_provider_api_workflow
+from common.provider_dag_factory import create_provider_api_workflow
 from providers.provider_api_scripts import museum_victoria
 
 

@@ -65,7 +65,7 @@ from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
-from common import slack
+from common.constants import DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
 from common.loader import loader, reporting, s3, sql
 
 
@@ -76,18 +76,7 @@ DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")
 AWS_CONN_ID = os.getenv("AWS_CONN_ID", "no_aws_conn_id")
 OPENVERSE_BUCKET = os.getenv("OPENVERSE_BUCKET")
 OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
-DAG_DEFAULT_ARGS = {
-    "owner": "data-eng-admin",
-    "depends_on_past": False,
-    "start_date": datetime(2019, 1, 15),
-    "email_on_retry": False,
-    "retries": 2,
-    "retry_delay": timedelta(minutes=5),
-    "execution_timeout": timedelta(hours=1),
-    "on_failure_callback": slack.on_failure_callback,
-}
 DATE_RANGE_ARG_TEMPLATE = "{{{{ macros.ds_add(ds, -{}) }}}}"
-XCOM_PULL_TEMPLATE = "{{{{ ti.xcom_pull(task_ids='{}', key='{}') }}}}"
 
 
 def _push_output_paths_wrapper(

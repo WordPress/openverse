@@ -2,8 +2,8 @@
 
 from datetime import datetime, timedelta
 
-from common.dag_factory import create_day_partitioned_ingestion_dag
 from common.helpers import get_reingestion_day_list_list
+from common.provider_dag_factory import create_day_partitioned_ingestion_dag
 from providers.provider_api_scripts import europeana
 
 

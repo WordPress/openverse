@@ -3,7 +3,7 @@ from unittest import mock
 import pytest
 import requests
 from airflow.models import TaskInstance
-from common import dag_factory
+from common import provider_dag_factory
 
 from tests.dags.common.test_resources import fake_provider_module
 
@@ -41,7 +41,7 @@ def test_push_output_paths_wrapper(func, media_types, stores):
     # For fake_provider_module.main, the mock will be called with the provided value.
     func_mock = mock.MagicMock()
     value = 42
-    dag_factory._push_output_paths_wrapper(
+    provider_dag_factory._push_output_paths_wrapper(
         func,
         media_types,
         ti_mock,
@@ -64,7 +64,7 @@ def test_push_output_paths_wrapper(func, media_types, stores):
 
 
 def test_create_day_partitioned_ingestion_dag_with_single_layer_dependencies():
-    dag = dag_factory.create_day_partitioned_ingestion_dag(
+    dag = provider_dag_factory.create_day_partitioned_ingestion_dag(
         "test_dag",
         print,
         [[1, 2]],
@@ -83,7 +83,7 @@ def test_create_day_partitioned_ingestion_dag_with_single_layer_dependencies():
 
 
 def test_create_day_partitioned_ingestion_dag_with_multi_layer_dependencies():
-    dag = dag_factory.create_day_partitioned_ingestion_dag(
+    dag = provider_dag_factory.create_day_partitioned_ingestion_dag(
         "test_dag",
         print,
         [[1, 2], [3, 4, 5]],

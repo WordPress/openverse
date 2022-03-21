@@ -8,7 +8,7 @@ We do this by running `provider_api_scripts.smithsonian.main`
 import logging
 from datetime import datetime, timedelta
 
-from common.dag_factory import create_provider_api_workflow
+from common.provider_dag_factory import create_provider_api_workflow
 from providers.provider_api_scripts import smithsonian
 
 

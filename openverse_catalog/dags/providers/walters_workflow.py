@@ -6,7 +6,7 @@ import logging
 # airflow DAG (necessary for Airflow to find this file)
 from datetime import datetime, timedelta
 
-from common.dag_factory import create_provider_api_workflow
+from common.provider_dag_factory import create_provider_api_workflow
 from providers.provider_api_scripts import walters_art_museum as wam
 
 
