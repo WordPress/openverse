@@ -4,7 +4,7 @@ with licenses.
 """
 import logging
 from collections import namedtuple
-from functools import lru_cache
+from functools import cache, lru_cache
 from typing import Optional, Tuple
 from urllib.parse import urlparse
 
@@ -226,6 +226,7 @@ def _build_license_url(license_path) -> str:
     return rewritten_license_url
 
 
+@cache
 def is_valid_license_info(license_info: LicenseInfo) -> bool:
     base_path = "https://creativecommons.org/"
     try:
