@@ -13,4 +13,20 @@ export const sentryConfig: ModuleConfiguration = {
     'https://53da8fbcebeb48a6bf614a212629df6b@o787041.ingest.sentry.io/5799642',
   disabled: !isProd,
   lazy: true,
+  clientConfig: {
+    // Only allow errors that come from an actual openverse.engineering subdomain
+    allowUrls: [/^https?:\/\/(.*)\.openverse\.engineering/],
+  },
+  config: {
+    ignoreErrors: [
+      // Ignore browser extension errors
+      /window\.bannerNight/,
+
+      // Ignore errant focus-trap-vue errors
+      /`initialFocus` did not return a node/,
+
+      // Cloudflare
+      /sendBeacon/,
+    ],
+  },
 }
