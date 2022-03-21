@@ -208,6 +208,7 @@ def create_provider_api_workflow(
         catchup=False,
         doc_md=doc_md,
         tags=["provider"] + [f"provider: {media_type}" for media_type in media_types],
+        render_template_as_native_obj=True,
     )
 
     with dag:

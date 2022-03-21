@@ -13,15 +13,11 @@ def report_completion(provider_name, media_type, duration, record_count):
     In all cases the data is logged.
     """
 
-    # This happens when the task is manually set to `success` in Airflow before
-    # completing.
-    duration = "_No data_" if duration == "None" else duration
-
     message = f"""
 *Provider*: `{provider_name}`
 *Media Type*: `{media_type}`
 *Number of Records Upserted*: {record_count}
-*Duration of data pull task*: {duration}
+*Duration of data pull task*: {duration or "_No data_"}
 
 * _Duration includes time taken to pull data of all media types._
 """
