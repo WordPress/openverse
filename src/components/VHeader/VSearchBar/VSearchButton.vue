@@ -8,7 +8,7 @@
     :class="[
       isIcon
         ? 'search-button focus-visible:bg-pink focus-visible:text-white p-[0.5px] ps-[1.5px]'
-        : 'py-6 px-10 h-full',
+        : 'py-6 px-10 whitespace-nowrap h-full',
       sizeClasses,
       isHomeRoute
         ? 'bg-pink border-b border-b-pink text-white border-tx'
@@ -85,7 +85,7 @@ export default defineComponent({
             small: ['w-10', 'md:w-12', 'h-10', 'md:h-12'],
             medium: ['w-12', 'h-12'],
             large: ['w-14', 'h-14'],
-            standalone: ['w-14', 'md:w-[69px]', 'h-14', 'md:h-[69px]'],
+            standalone: ['w-14', 'md:w-auto', 'h-14', 'md:h-[69px]'],
           }[props.size]
         : undefined
     })

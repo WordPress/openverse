@@ -12,7 +12,7 @@
         :is-search-route="false"
       />
 
-      <div class="px-6 lg:ps-30 lg:pe-0 xl:px-40 mx-auto w-full lg:w-auto">
+      <div class="px-6 lg:ps-30 lg:pe-0 xl:px-40 mx-auto w-full lg:w-auto z-10">
         <VLink
           href="/"
           class="relative hidden lg:block -left-[6.25rem] rtl:-right-[6.25rem]"
