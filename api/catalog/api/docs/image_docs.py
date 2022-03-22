@@ -199,7 +199,6 @@ contains mature or sensitive content and others.
     swagger_setup = {
         "operation_id": "image_report",
         "operation_description": desc,
-        "query_serializer": ImageReportSerializer,
         "responses": responses,
         "code_examples": code_examples,
     }
