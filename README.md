@@ -37,7 +37,45 @@ pnpm i18n:get-translations
 
 # Builds and serves assets with hot-reload
 pnpm dev
+
 ```
+
+### Using HTTPS Locally
+
+To enable SSL support in local development, use the `pnpm dev:secure` command. This requires you to have a private key and certificate in the root of the repository with the following names:
+
+```shell
+localhost+1-key.pem # The private key file
+localhost+1.pem # The certificate file
+```
+
+The easiest way to create these files is with a local development tool called [mkcrt](https://github.com/FiloSottile/mkcert). First make sure you have [mkcert installed](https://github.com/FiloSottile/mkcert#installation) and activated with `mkcert -install`. Then use `mkcert` to create a certificate for `localhost` and for the external IP address used by Nuxt's development process. That command looks like this:
+
+```shell
+mkcert localhost 192.168.50.119
+```
+
+Be sure to replace the IP address in the example with your own. See the next section for how to identify that IP address.
+
+#### Finding your local IP address
+
+You can find the local IP address Nuxt uses by looking at the output of `nuxt dev`. Look in your console for a box of configuration details that looks like this:
+
+```bash
+#  ╭────────────────────────────────────────────╮
+#  │                                           │
+#  │   Nuxt @ v2.15.8                          │
+#  │                                           │
+#  │   ▸ Environment: development              │
+#  │   ▸ Rendering:   server-side              │
+#  │   ▸ Target:      server                   │
+#  │                                           │
+#  │   Listening: http://192.168.50.119:8443/  │ # <-- Use this IP Address
+#  │                                           │
+#  ╰────────────────────────────────────────────╯
+```
+
+You will need to regenerate the certificate if this IP address changes for any reason, like by enabling a VPN or changing networks.
 
 ### Docker setup
 

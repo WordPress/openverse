@@ -35,3 +35,6 @@ storybook-static
 # Playwright creates these two folders
 test-results
 test/Default
+
+# Ignore local certificates
+*.pem

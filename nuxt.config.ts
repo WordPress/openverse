@@ -1,3 +1,6 @@
+import path from 'path'
+import fs from 'fs'
+
 import pkg from './package.json'
 import locales from './src/locales/scripts/valid-locales.json'
 
@@ -117,7 +120,15 @@ const config: NuxtConfig = {
   },
   srcDir: 'src/',
   modern: 'client',
-  server: { port: process.env.PORT || 8443 },
+  server: {
+    port: process.env.PORT || 8443,
+    https: process.env.LOCAL_SSL
+      ? {
+          key: fs.readFileSync(path.resolve(__dirname, 'localhost+1-key.pem')),
+          cert: fs.readFileSync(path.resolve(__dirname, 'localhost+1.pem')),
+        }
+      : undefined,
+  },
   router: {
     middleware: 'middleware',
   },
