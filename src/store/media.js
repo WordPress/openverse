@@ -19,9 +19,7 @@ import {
 } from '~/constants/mutation-types'
 import { AUDIO, IMAGE, ALL_MEDIA, supportedMediaTypes } from '~/constants/media'
 import MediaService from '~/data/media-service'
-
 import { hash, rand as prng } from '~/utils/prng'
-
 import { useSearchStore } from '~/stores/search'
 
 /**
