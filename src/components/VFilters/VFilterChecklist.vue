@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { useFilterStore } from '~/stores/filter'
+import { useSearchStore } from '~/stores/search'
 
 import VLicenseExplanation from '~/components/VFilters/VLicenseExplanation.vue'
 import VCheckbox from '~/components/VCheckbox/VCheckbox.vue'
@@ -105,14 +105,14 @@ export default {
         : this.$t(item.name)
     },
     onValueChange({ value }) {
-      this.$emit('filterChanged', {
+      this.$emit('toggle-filter', {
         code: value,
         filterType: this.filterType,
       })
     },
     isDisabled(item) {
       return (
-        useFilterStore().isFilterDisabled(item, this.filterType) ??
+        useSearchStore().isFilterDisabled(item, this.filterType) ??
         this.disabled
       )
     },

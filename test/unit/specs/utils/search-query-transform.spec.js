@@ -7,7 +7,7 @@ import {
 } from '~/utils/search-query-transform'
 import { AUDIO, IMAGE } from '~/constants/media'
 
-import { filterData } from '~/constants/filters'
+import { filterData, initFilters } from '~/constants/filters'
 
 describe('searchQueryTransform', () => {
   it('converts initial filters to query data', () => {
@@ -15,6 +15,11 @@ describe('searchQueryTransform', () => {
       ...filterData,
     }
 
+    const result = filtersToQueryData(filters)
+    expect(result).toEqual({})
+  })
+  it('converts filter to query data', () => {
+    const filters = { ...filterData }
     const result = filtersToQueryData(filters)
     expect(result).toEqual({})
   })
@@ -264,6 +269,58 @@ describe('searchQueryTransform', () => {
       defaultFilters: testFilters,
     })
     expect(result).toEqual(filters) // toEqual checks for value equality
+  })
+
+  it('queryToFilterData discards all image filters when search type is audio', () => {
+    const filters = initFilters()
+    filters.audioProviders = [
+      { code: 'jamendo', checked: false },
+      { code: 'wikimedia_audio', checked: false },
+    ]
+    /**
+     * `categories` and `extension` parameter values will not be used because those
+     * codes (`photograph` and `svg`) only exist for the `imageCategories` and `imageExtensions`
+     * filter categories.
+     * `source` will only use the `wikimedia_audio` and `jamendo` parameters because they
+     * exist in `filters.audioProviders` list before. Other values either exist in
+     * `filters.imageProviders` list, or do not exist at all, so they are discarded.
+     * Valid filter items for categories that exist for all search types
+     * (`license`, `license_type`, `searchBy`, `mature`) are set to checked.
+     * Invalid filter items for valid categories (`nonexistent` in `license`)
+     * are discarded.
+     */
+    const query = {
+      q: 'cat',
+      license: 'cc0,nonexistent',
+      license_type: 'commercial',
+      categories: 'photograph',
+      extension: 'svg',
+      duration: 'medium',
+      source: 'animaldiversity,wikimedia,nonexistent,wikimedia_audio,jamendo',
+      searchBy: 'creator',
+      mature: 'true',
+    }
+    const expectedFilters = clonedeep(filters)
+    const setChecked = (code, filterCategory) => {
+      const idx = expectedFilters[filterCategory].findIndex(
+        (item) => item.code === code
+      )
+      expectedFilters[filterCategory][idx].checked = true
+    }
+    setChecked('cc0', 'licenses')
+    setChecked('commercial', 'licenseTypes')
+    setChecked('medium', 'durations')
+    setChecked('creator', 'searchBy')
+    setChecked('mature', 'mature')
+    setChecked('jamendo', 'audioProviders')
+    setChecked('wikimedia_audio', 'audioProviders')
+
+    const result = queryToFilterData({
+      query,
+      searchType: AUDIO,
+      defaultFilters: filters,
+    })
+    expect(result).toEqual(expectedFilters) // toEqual checks for value equality
   })
   it('queryStringToQueryData', () => {
     const expectedQueryData = {

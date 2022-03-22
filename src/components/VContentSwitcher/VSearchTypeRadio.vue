@@ -13,12 +13,8 @@
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 
-import {
-  ALL_MEDIA,
-  AUDIO,
-  IMAGE,
-  supportedSearchTypes,
-} from '~/constants/media'
+import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
+import { isValidSearchType } from '~/utils/prop-validators'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 
@@ -42,7 +38,7 @@ export default defineComponent({
     searchType: {
       type: String,
       required: true,
-      validator: (v) => supportedSearchTypes.includes(v),
+      validator: isValidSearchType,
     },
     selected: {
       type: Boolean,

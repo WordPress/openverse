@@ -1,3 +1,5 @@
+import { createPinia, setActivePinia } from 'pinia'
+
 import store, { createActions } from '~/store/media'
 import {
   FETCH_END_MEDIA,
@@ -16,7 +18,9 @@ import {
 } from '~/constants/action-types'
 import { AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
 
-describe('Search Store', () => {
+import { useSearchStore } from '~/stores/search'
+
+describe('Media Store', () => {
   describe('state', () => {
     it('exports default state', () => {
       const state = store.state()
@@ -186,7 +190,10 @@ describe('Search Store', () => {
     let services = null
     let state
     let context
+    let searchStore
+
     beforeEach(() => {
+      setActivePinia(createPinia())
       services = {
         [AUDIO]: {
           search: jest.fn(() => Promise.resolve(searchResults)),
@@ -221,12 +228,6 @@ describe('Search Store', () => {
       context = {
         commit: jest.fn(),
         dispatch: jest.fn(),
-        rootState: {
-          search: { query: { q: 'cat' } },
-        },
-        rootGetters: {
-          search: { searchQueryParams: () => ({ q: 'cat' }) },
-        },
         state: state,
       }
     })
@@ -234,6 +235,8 @@ describe('Search Store', () => {
     it.each(supportedMediaTypes)(
       'FETCH_SINGLE_MEDIA_TYPE (%s) on success',
       async (mediaType) => {
+        searchStore = useSearchStore()
+        searchStore.setSearchTerm('cat')
         const params = {
           q: 'foo',
           shouldPersistMedia: true,
@@ -356,6 +359,8 @@ describe('Search Store', () => {
       'FETCH_MEDIA_ITEM dispatches SEND_RESULT_CLICKED_EVENT',
       (mediaType) => {
         const params = { id: 'foo', mediaType }
+        searchStore = useSearchStore()
+        searchStore.setSearchTerm('cat')
         const action = createActions(services)[FETCH_MEDIA_ITEM]
         action(context, params)
       }

@@ -88,7 +88,7 @@ const filterCodesPerCategory = deepFreeze<Record<FilterCategory, string[]>>({
  * }
  *```
  */
-const initFilters = () =>
+export const initFilters = () =>
   Object.entries(filterCodesPerCategory).reduce(
     (acc, [filterType, filters]) => ({
       ...acc,

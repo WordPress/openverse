@@ -16,10 +16,11 @@
 </template>
 
 <script>
-import { computed, useContext, useRoute } from '@nuxtjs/composition-api'
+import { computed, useContext } from '@nuxtjs/composition-api'
 import { defineComponent } from '@vue/composition-api'
 
 import { ALL_MEDIA, contentStatus } from '~/constants/media'
+import { useSearchStore } from '~/stores/search'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VItem from '~/components/VItemGroup/VItem.vue'
@@ -39,16 +40,14 @@ export default defineComponent({
   props: propTypes,
   setup(props) {
     const { app } = useContext()
-    const route = useRoute()
+    const searchStore = useSearchStore()
 
     const status = computed(() => {
       return contentStatus[props.item]
     })
 
     /**
-     * The query is temporarily set to the incorrect value here: it uses the existing query
-     * that is set for selected search type. When the search store conversion PR is merged,
-     * we will set the query specific for the search type using `computeQueryParams(props.item)` method.
+     * The query sets the filters that are applicable for the specific search type.
      */
     const component = computed(() => {
       if (!props.useLinks) {
@@ -58,8 +57,7 @@ export default defineComponent({
         as: 'VLink',
         href: app.localePath({
           path: `/search/${props.item === ALL_MEDIA ? '' : props.item}`,
-          // query: searchStore.computeQueryParams(props.item),
-          query: route.value.query,
+          query: searchStore.computeQueryParams(props.item),
         }),
       }
     })

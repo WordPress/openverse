@@ -1,17 +1,14 @@
 import Vuex from 'vuex'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { createLocalVue } from '@vue/test-utils'
-
 import VueI18n from 'vue-i18n'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 
-import { IMAGE } from '~/constants/media'
-import store from '~/store/search'
-import { FETCH_MEDIA } from '~/constants/action-types'
-
 import messages from '~/locales/en.json'
 
-import { useFilterStore } from '~/stores/filter'
+import { FETCH_MEDIA } from '~/constants/action-types'
+
+import { useSearchStore } from '~/stores/search'
 
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 
@@ -20,8 +17,9 @@ describe('VSearchGridFilter', () => {
   let storeMock
   let localVue
   let pinia
-  let filterStore
+  let searchStore
   const routerMock = { push: jest.fn() }
+  const routeMock = { path: jest.fn() }
 
   beforeEach(() => {
     localVue = createLocalVue()
@@ -36,16 +34,6 @@ describe('VSearchGridFilter', () => {
     })
     storeMock = new Vuex.Store({
       modules: {
-        search: {
-          namespaced: true,
-          state: {
-            searchType: IMAGE,
-            query: { q: '' },
-          },
-          mutations: store.mutations,
-          actions: store.actions,
-          getters: store.getters,
-        },
         media: {
           namespaced: true,
           state: {
@@ -63,17 +51,19 @@ describe('VSearchGridFilter', () => {
       pinia,
       i18n,
       mocks: {
+        $route: routeMock,
         $router: routerMock,
         $store: storeMock,
         $nuxt: {
           context: {
+            app: { localePath: jest.fn() },
             i18n: { t: (s) => s },
             store: storeMock,
           },
         },
       },
     }
-    filterStore = useFilterStore(pinia)
+    searchStore = useSearchStore(pinia)
   })
 
   it('toggles filter', async () => {
@@ -87,7 +77,7 @@ describe('VSearchGridFilter', () => {
   })
 
   it('clears filters', async () => {
-    filterStore.toggleFilter({ filterType: 'licenses', code: 'by' })
+    searchStore.toggleFilter({ filterType: 'licenses', code: 'by' })
     await render(VSearchGridFilter, options)
     // if no checked checkboxes were found, this would raise an error
     screen.getByRole('checkbox', { checked: true })
@@ -99,7 +89,7 @@ describe('VSearchGridFilter', () => {
     })
 
     expect(checkedFilters.length).toEqual(0)
-    // Filters are reset with the initial `filterData`
-    expect(uncheckedFilters.length).toEqual(24)
+    // Filters are reset with the initial `filterData` for ALL_MEDIA
+    expect(uncheckedFilters.length).toEqual(11)
   })
 })

@@ -82,11 +82,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 import { PROVIDER } from '~/constants/store-modules'
-
-import getProviderName from '~/utils/get-provider-name'
 
 import VLink from '~/components/VLink.vue'
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
@@ -98,11 +96,12 @@ export default {
   props: ['audio'],
   computed: {
     ...mapState(PROVIDER, ['audioProviders']),
+    ...mapGetters(PROVIDER, ['getProviderName']),
     providerName() {
-      return getProviderName(this.audioProviders, this.$props.audio.provider)
+      return this.getProviderName(this.$props.audio.provider)
     },
     sourceName() {
-      return getProviderName(this.audioProviders, this.$props.audio.source)
+      return this.getProviderName(this.$props.audio.source)
     },
   },
 }

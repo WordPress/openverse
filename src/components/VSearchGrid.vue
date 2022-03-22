@@ -1,7 +1,9 @@
 <template>
-  <section v-if="resultsCount">
+  <section
+    v-if="fetchState.isFetching || (!fetchState.isFetching && resultsCount)"
+  >
     <header
-      v-if="query.q && isSupported"
+      v-if="query.q && supported"
       class="mt-4"
       :class="isAllView ? 'mb-10' : 'mb-8'"
     >
@@ -20,7 +22,7 @@
       :type="metaSearchFormType"
       :has-no-results="hasNoResults"
       :query="query"
-      :is-supported="isSupported"
+      :is-supported="supported"
     />
   </section>
   <VErrorSection v-else-if="!fetchState.isFetching" class="w-full py-10">
@@ -34,7 +36,7 @@
 <script>
 import { computed } from '@nuxtjs/composition-api'
 
-import { ALL_MEDIA, IMAGE, supportedSearchTypes } from '~/constants/media'
+import { ALL_MEDIA, IMAGE } from '~/constants/media'
 import { NO_RESULT } from '~/constants/errors'
 
 import VMetaSearchForm from '~/components/VMetaSearch/VMetaSearchForm.vue'
@@ -83,9 +85,6 @@ export default {
         ? props.query.q !== '' && props.resultsCount === 0
         : false
     })
-    const isSupported = computed(() => {
-      return supportedSearchTypes.includes(props.searchType)
-    })
     const metaSearchFormType = computed(() => {
       return props.searchType === ALL_MEDIA ? IMAGE : props.searchType
     })
@@ -95,7 +94,6 @@ export default {
 
     return {
       hasNoResults,
-      isSupported,
       metaSearchFormType,
       isAllView,
       NO_RESULT,

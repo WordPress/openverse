@@ -32,9 +32,10 @@ import {
   useContext,
 } from '@nuxtjs/composition-api'
 
-import { ALL_MEDIA, supportedSearchTypes } from '~/constants/media'
+import { ALL_MEDIA } from '~/constants/media'
 import useSearchType from '~/composables/use-search-type'
 import { isMinScreen } from '~/composables/use-media-query'
+import { isValidSearchType } from '~/utils/prop-validators'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VButton from '~/components/VButton.vue'
@@ -52,7 +53,7 @@ export default defineComponent({
     activeItem: {
       type: String,
       default: ALL_MEDIA,
-      validator: (v) => supportedSearchTypes.includes(v),
+      validator: isValidSearchType,
     },
     type: {
       type: String,

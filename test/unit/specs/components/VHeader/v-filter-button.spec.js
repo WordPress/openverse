@@ -6,21 +6,22 @@ import { ref } from '@nuxtjs/composition-api'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 
 import messages from '~/locales/en.json'
-import { useFilterStore } from '~/stores/filter'
-import { filterData, mediaFilterKeys } from '~/constants/filters'
 
+import { filterData, mediaFilterKeys } from '~/constants/filters'
 import { IMAGE } from '~/constants/media'
+
+import { useSearchStore } from '~/stores/search'
 
 import VFilterButton from '~/components/VHeader/VFilterButton.vue'
 
-function applyNFilters(filterCount, filterStore) {
+function applyNFilters(filterCount, searchStore) {
   const filterTypes = [...mediaFilterKeys[IMAGE]]
   let filterIdx = 0
   // Skip license type filters as they can disable license filters
   let filterTypeIdx = 1
   for (let i = 0; i < filterCount; i++) {
     let filterType = filterTypes[filterTypeIdx]
-    filterStore.toggleFilter({
+    searchStore.toggleFilter({
       filterType,
       codeIdx: filterIdx,
     })
@@ -41,7 +42,7 @@ describe('VFilterButton', () => {
     isHeaderScrolled: ref(false),
   }
   let pinia
-  let filterStore
+  let searchStore
 
   const i18n = new VueI18n({
     locale: 'en',
@@ -54,10 +55,10 @@ describe('VFilterButton', () => {
     localVue.use(VueI18n)
     localVue.use(PiniaVuePlugin)
     pinia = createPinia()
-    filterStore = useFilterStore(pinia)
+    searchStore = useSearchStore(pinia)
     // the default ALL_MEDIA has fewer filters that can be applied,
     // ensure that we can test for more than 10 filters
-    filterStore.setSearchType(IMAGE)
+    searchStore.setSearchType(IMAGE)
 
     options = {
       localVue,
@@ -83,7 +84,7 @@ describe('VFilterButton', () => {
       provided.isMinScreenMd.value = true
       // +2 to guarantee it's plural
       const filterCount = Math.floor(Math.random() * 9) + 2
-      applyNFilters(filterCount, filterStore)
+      applyNFilters(filterCount, searchStore)
       const wrapper = render(VFilterButton, options)
       const button = wrapper.getByText(`${filterCount} Filters`)
 
@@ -91,7 +92,7 @@ describe('VFilterButton', () => {
     })
     it('does not show the icon when filters are applied', () => {
       provided.isMinScreenMd.value = true
-      filterStore.toggleFilter({ filterType: 'licenses', codeIdx: 0 })
+      searchStore.toggleFilter({ filterType: 'licenses', codeIdx: 0 })
 
       const { container } = render(VFilterButton, options)
       const icon = container.querySelector('svg')
@@ -115,7 +116,7 @@ describe('VFilterButton', () => {
       provided.isMinScreenMd.value = false
       // +2 to guarantee it's plural
       const filterCount = Math.floor(Math.random() * 10) + 2
-      applyNFilters(filterCount, filterStore)
+      applyNFilters(filterCount, searchStore)
       const { container } = render(VFilterButton, options)
 
       const icon = container.querySelector('svg')
@@ -129,7 +130,7 @@ describe('VFilterButton', () => {
       provided.isHeaderScrolled.value = true
       // +2 to guarantee it's plural
       const filterCount = Math.floor(Math.random() * 10) + 2
-      applyNFilters(filterCount, filterStore)
+      applyNFilters(filterCount, searchStore)
       const { container } = render(VFilterButton, options)
 
       const icon = container.querySelector('svg')

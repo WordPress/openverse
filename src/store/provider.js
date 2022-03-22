@@ -1,9 +1,7 @@
 import { capital } from 'case'
 
-import { useFilterStore } from '~/stores/filter'
-
 import MediaProviderService from '~/data/media-provider-service'
-import { AUDIO, IMAGE } from '~/constants/media'
+import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
 import {
   FETCH_MEDIA_TYPE_PROVIDERS,
   FETCH_MEDIA_PROVIDERS,
@@ -15,6 +13,8 @@ import {
   SET_MEDIA_PROVIDERS,
 } from '~/constants/mutation-types'
 import { warn } from '~/utils/console'
+
+import { useSearchStore } from '~/stores/search'
 
 const AudioProviderService = MediaProviderService(AUDIO)
 const ImageProviderService = MediaProviderService(IMAGE)
@@ -37,8 +37,10 @@ export const state = () => ({
 })
 
 export const getters = {
-  getProviderName: (state, getters, rootState) => (providerCode) => {
-    const mediaType = rootState.search.mediaType
+  getProviderName: (state) => (providerCode) => {
+    const searchStore = useSearchStore()
+    const mediaType =
+      searchStore.searchType === ALL_MEDIA ? IMAGE : searchStore.searchType
     const providersList = state[`${mediaType}Providers`]
     if (!providersList) {
       return capital(providerCode) || ''
@@ -61,19 +63,20 @@ export const createActions = (services) => ({
   },
   [FETCH_MEDIA_TYPE_PROVIDERS]({ commit }, params) {
     const { mediaType } = params
-    const filterStore = useFilterStore()
+    const searchStore = useSearchStore()
     commit(SET_PROVIDER_FETCH_ERROR, { mediaType, error: false })
     commit(FETCH_MEDIA_PROVIDERS_START, { mediaType })
     const providerService = services[mediaType]
     let sortedProviders
     return providerService
       .getProviderStats()
-      .then(({ data }) => {
+      .then((res) => {
+        const { data } = res
         sortedProviders = sortProviders(data)
       })
       .catch((error) => {
         warn(
-          `Error getting ${mediaType} providers: ${error}. Will use saved provider data instead.`
+          `Error getting ${mediaType} providers: ${error} Will use saved provider data instead.`
         )
         commit(SET_PROVIDER_FETCH_ERROR, { mediaType, error: true })
       })
@@ -83,7 +86,7 @@ export const createActions = (services) => ({
           mediaType,
           providers: sortedProviders,
         })
-        filterStore.initProviderFilters({
+        searchStore.initProviderFilters({
           mediaType,
           providers: sortedProviders,
         })

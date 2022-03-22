@@ -2,25 +2,29 @@ import { render, screen } from '@testing-library/vue'
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { ref } from '@nuxtjs/composition-api'
+import { createPinia, PiniaVuePlugin } from 'pinia'
 
 import SearchIndex from '~/pages/search.vue'
+import { IMAGE } from '~/constants/media'
+
+import { useSearchStore } from '~/stores/search'
 
 describe('SearchIndex', () => {
   let options
   let localVue
   let storeMock
+  let pinia
+  let searchStore
   beforeEach(() => {
     localVue = createLocalVue()
     localVue.use(Vuex)
+    localVue.use(PiniaVuePlugin)
+    pinia = createPinia()
+    searchStore = useSearchStore(pinia)
+    searchStore.setSearchTerm('cat')
+    searchStore.setSearchType(IMAGE)
     storeMock = new Vuex.Store({
       modules: {
-        search: {
-          namespaced: true,
-          state: {
-            query: { q: 'foo' },
-            searchType: 'image',
-          },
-        },
         media: {
           namespaced: true,
           getters: {
@@ -33,6 +37,7 @@ describe('SearchIndex', () => {
     })
     options = {
       localVue,
+      pinia,
       store: storeMock,
       mocks: {
         $router: { path: { name: 'search-image' } },

@@ -2,9 +2,6 @@
   <div
     class="filters py-8 px-10 min-h-full md:bg-dark-charcoal-06"
     data-testid="filters-list"
-    @onUpdateFilter="onUpdateFilter"
-    @onToggleSearchGridFilter="$emit('close')"
-    @onClearFilters="clearFilters"
   >
     <div class="flex items-center justify-between mt-2 mb-6">
       <h4 class="text-sr font-semibold py-2 uppercase">
@@ -27,7 +24,7 @@
         :options="filters[filterType]"
         :title="filterTypeTitle(filterType)"
         :filter-type="filterType"
-        @filterChanged="onUpdateFilter"
+        @toggle-filter="toggleFilter"
       />
     </form>
     <footer v-if="isAnyFilterApplied" class="flex justify-between">
@@ -43,16 +40,17 @@
 </template>
 
 <script>
-import { computed, useContext, useRouter } from '@nuxtjs/composition-api'
+import {
+  computed,
+  useContext,
+  useRoute,
+  useRouter,
+  watch,
+} from '@nuxtjs/composition-api'
 import { kebab } from 'case'
 
-import { useFilterStore } from '~/stores/filter'
-import {
-  CLEAR_FILTERS,
-  FETCH_MEDIA,
-  TOGGLE_FILTER,
-} from '~/constants/action-types'
-import { MEDIA, SEARCH } from '~/constants/store-modules'
+import { useSearchStore } from '~/stores/search'
+import { areQueriesEqual } from '~/utils/search-query-transform'
 
 import VFilterChecklist from '~/components/VFilters/VFilterChecklist.vue'
 
@@ -62,15 +60,14 @@ export default {
     VFilterChecklist,
   },
   setup() {
-    const filterStore = useFilterStore()
-    const { i18n, store } = useContext()
+    const searchStore = useSearchStore()
+
+    const { app, i18n } = useContext()
+    const route = useRoute()
     const router = useRouter()
 
-    const isAnyFilterApplied = computed(() => filterStore.isAnyFilterApplied)
-
-    const filters = computed(() => {
-      return store.getters[`${SEARCH}/searchFilters`]
-    })
+    const isAnyFilterApplied = computed(() => searchStore.isAnyFilterApplied)
+    const filters = computed(() => searchStore.searchFilters)
     const filterTypes = computed(() => Object.keys(filters.value))
     const filterTypeTitle = (filterType) => {
       if (filterType === 'searchBy') {
@@ -79,30 +76,34 @@ export default {
       return i18n.t(`filters.${kebab(filterType)}.title`)
     }
 
-    const updateSearch = async () => {
-      await router.push({ query: store.getters['search/searchQueryParams'] })
-      await store.dispatch(`${MEDIA}/${FETCH_MEDIA}`, {
-        ...store.getters['search/searchQueryParams'],
-      })
-    }
-
-    const onUpdateFilter = async ({ code, filterType }) => {
-      await store.dispatch(`${SEARCH}/${TOGGLE_FILTER}`, { code, filterType })
-      await updateSearch()
-    }
-    const clearFilters = async () => {
-      await store.dispatch(`${SEARCH}/${CLEAR_FILTERS}`)
-
-      await updateSearch()
-    }
+    /**
+     * This watcher fires even when the queries are equal. We update the path only
+     * when the queries change.
+     */
+    watch(
+      () => searchStore.searchQueryParams,
+      /**
+       * @param {import('../../store/types').ApiQueryParams} newQuery
+       * @param {import('../../store/types').ApiQueryParams} oldQuery
+       */
+      (newQuery, oldQuery) => {
+        if (!areQueriesEqual(newQuery, oldQuery)) {
+          const newPath = app.localePath({
+            path: route.value.path,
+            query: searchStore.searchQueryParams,
+          })
+          router.push(newPath)
+        }
+      }
+    )
 
     return {
       isAnyFilterApplied,
       filters,
       filterTypes,
       filterTypeTitle,
-      clearFilters,
-      onUpdateFilter,
+      clearFilters: searchStore.clearFilters,
+      toggleFilter: searchStore.toggleFilter,
     }
   },
 }

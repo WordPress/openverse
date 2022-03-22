@@ -43,6 +43,7 @@
     "src/composables/use-media-query.js",
     "src/composables/window.js",
     "src/constants/screens.js",
+    "src/constants/filters",
     "src/data/api-service.js",
     "src/utils/deep-freeze.js"
   ],

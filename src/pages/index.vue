@@ -134,10 +134,12 @@
 <script>
 import { ref, useContext, useRouter, useStore } from '@nuxtjs/composition-api'
 
-import { FETCH_MEDIA, UPDATE_QUERY } from '~/constants/action-types'
-import { MEDIA, SEARCH } from '~/constants/store-modules'
+import { FETCH_MEDIA } from '~/constants/action-types'
+import { MEDIA } from '~/constants/store-modules'
 import { ALL_MEDIA, supportedSearchTypes } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
+
+import { useSearchStore } from '~/stores/search'
 
 import VLink from '~/components/VLink.vue'
 import VLogoButton from '~/components/VHeader/VLogoButton.vue'
@@ -173,6 +175,7 @@ const HomePage = {
   setup() {
     const { app } = useContext()
     const router = useRouter()
+    const searchStore = useSearchStore()
     const store = useStore()
 
     const featuredSearches = imageInfo.sets.map((setItem) => ({
@@ -197,32 +200,27 @@ const HomePage = {
     const contentSwitcher = ref(null)
     const searchType = ref(ALL_MEDIA)
 
-    const setSearchType = async (type) => {
+    const setSearchType = (type) => {
       searchType.value = type
       contentSwitcher.value?.closeMenu()
-      await store.dispatch(`${SEARCH}/${UPDATE_QUERY}`, {
-        searchType: type,
-      })
+      useSearchStore().setSearchType(type)
     }
 
     const searchTerm = ref('')
     const handleSearch = async () => {
       if (!searchTerm.value) return
-      await store.dispatch(`${SEARCH}/${UPDATE_QUERY}`, {
-        q: searchTerm.value,
-        searchType: searchType.value,
-      })
+      searchStore.setSearchTerm(searchTerm.value)
+      searchStore.setSearchType(searchType.value)
+      const query = searchStore.searchQueryParams
       const newPath = app.localePath({
         path: `/search/${
           searchType.value === ALL_MEDIA ? '' : searchType.value
         }`,
-        query: store.getters['search/searchQueryParams'],
+        query,
       })
       router.push(newPath)
 
-      await store.dispatch(`${MEDIA}/${FETCH_MEDIA}`, {
-        ...store.getters['search/searchQueryParams'],
-      })
+      await store.dispatch(`${MEDIA}/${FETCH_MEDIA}`, { ...query })
     }
 
     return {
