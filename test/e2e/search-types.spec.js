@@ -115,10 +115,12 @@ for (let searchTypeName of ['audio', 'image']) {
   }) => {
     await page.goto('/search/?q=birds')
     const contentLink = await page.locator(
-      `a[href*="/search/${searchTypeName}"][href$="q=birds"]`
+      `a:not([role="radio"])[href*="/search/${searchTypeName}"][href$="q=birds"]`
     )
     await expect(contentLink).toContainText(searchType.results)
-    await page.click(`a[href*="/search/${searchTypeName}"][href$="q=birds"]`)
+    await page.click(
+      `a:not([role="radio"])[href*="/search/${searchTypeName}"][href$="q=birds"]`
+    )
 
     await expect(page).toHaveURL(searchType.url)
     await checkSearchResult(page, searchType)

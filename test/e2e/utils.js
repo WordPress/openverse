@@ -34,7 +34,7 @@ const changeContentType = async (page, to) => {
   await page.click(
     `button[aria-controls="content-switcher-popover"], button[aria-controls="content-switcher-modal"]`
   )
-  await page.click(`button[role="radio"]:has-text("${to}")`)
+  await page.click(`a:has-text("${to}")`)
 }
 /**
  * Finds a button with a popup to the left of the filters button which doesn't have a 'menu' label

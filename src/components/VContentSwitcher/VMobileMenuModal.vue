@@ -24,6 +24,7 @@
           ref="searchTypesNode"
           size="small"
           :active-item="content.activeType.value"
+          :use-links="true"
           @select="selectItem"
         />
         <VPageList layout="columns" class="mt-10" />

@@ -49,7 +49,7 @@ msgctxt "search-type.heading"
 msgid "Content types"
 msgstr ""
 
-#: src/components/VContentSwitcher/VSearchTypeItem.vue:11
+#: src/components/VContentSwitcher/VSearchTypeItem.vue:12
 msgctxt "search-type.status-beta"
 msgid "Beta"
 msgstr ""

@@ -97,13 +97,12 @@ test('common filters are retained when media type changes from single type to al
 
   await changeContentType(page, 'All content')
 
-  await expect(page).toHaveURL(
-    '/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator'
-  )
-
   for (let checkbox of ['cc0', 'commercial', 'creator']) {
     await assertCheckboxStatus(page, checkbox)
   }
+  await expect(page).toHaveURL(
+    '/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator'
+  )
 })
 
 test('selecting some filters can disable dependent filters', async ({
@@ -138,12 +137,12 @@ test('filters are updated when media type changes', async ({ page }) => {
 
   await changeContentType(page, 'Audio')
 
-  await expect(page).toHaveURL('/search/audio?q=cat&license=cc0')
-
   await expect(page.locator('label:has-text("Tall")')).toHaveCount(0, {
     timeout: 300,
   })
   await assertCheckboxStatus(page, 'cc0')
+
+  await expect(page).toHaveURL('/search/audio?q=cat&license=cc0')
 })
 
 test('new media request is sent when a filter is selected', async ({
