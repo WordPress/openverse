@@ -25,6 +25,7 @@
     /* Module Resolution Options */
     "moduleResolution": "Node",
     "resolveJsonModule": true,
+    "types": ["@types/jest"],
     "typeRoots": ["./typings", "./node_modules/@types"],
     "paths": {
       "~/*": ["./src/*"],
@@ -35,6 +36,7 @@
   "include": [
     "**/*.ts",
     "test/proxy.js",
+    "src/components/VLink.vue",
     "src/composables/types.js",
     "src/composables/use-event-listener-outside.js",
     "src/composables/use-active-audio.js",
@@ -47,5 +49,11 @@
     "src/data/api-service.js",
     "src/utils/deep-freeze.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "vueCompilerOptions": {
+    "experimentalCompatMode": 2,
+    "experimentalTemplateCompilerOptions": {
+      "compatConfig": { "MODE": 2 } // optional
+    }
+  }
 }

@@ -34,7 +34,7 @@
     "update-tapes": "cross-env UPDATE_TAPES=true pnpm test:e2e",
     "fix-tape-permissions": "docker run -it --rm --mount type=bind,source=$(pwd),target=/app node:alpine chmod -R 0777 /app/test/tapes",
     "generate-playwright-test": "playwright codegen localhost:8443/",
-    "types": "tsc --noEmit",
+    "types": "vue-tsc --noEmit",
     "lint": "eslint --ext .js,.vue,.ts --ignore-path .gitignore --ignore-path .eslintignore .",
     "lintfix": "pnpm run lint -- --fix",
     "format": "prettier --write --loglevel=warn .",
@@ -107,6 +107,7 @@
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
+    "@vue/runtime-dom": "^3.2.31",
     "@vue/test-utils": "^1.1.3",
     "autoprefixer": "^10.4.0",
     "babel-jest": "^26.6.3",
@@ -138,7 +139,8 @@
     "ts-node": "^10.5.0",
     "typescript": "^4.6.2",
     "vue-i18n-extract": "^2.0.0",
-    "vue-jest": "^3.0.7"
+    "vue-jest": "^3.0.7",
+    "vue-tsc": "^0.33.6"
   },
   "engines": {
     "node": ">= 16.0.0",

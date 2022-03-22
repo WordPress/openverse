@@ -4,7 +4,7 @@
   /></Component>
 </template>
 
-<script>
+<script lang="ts">
 /**
  * This is a wrapper component for all links. If a link is dynamically generated and doesn't have
  * an `href` prop (as the links for detail pages when the image detail hasn't loaded yet),
@@ -16,14 +16,18 @@
  */
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 
-const defaultProps = { target: '_blank', rel: 'noopener noreferrer' }
+const defaultProps = Object.freeze({
+  target: '_blank',
+  rel: 'noopener noreferrer',
+})
 
 export default defineComponent({
   name: 'VLink',
   props: {
     href: {
       type: String,
-      validator: (v) =>
+      required: false,
+      validator: (v: unknown) =>
         (typeof v === 'string' && v.length > 0) || typeof v === 'undefined',
     },
   },
@@ -33,7 +37,7 @@ export default defineComponent({
       () => typeof props.href === 'string' && !['', '#'].includes(props.href)
     )
     const isInternal = computed(
-      () => hasHref.value && props.href.startsWith('/')
+      () => hasHref.value && props.href?.startsWith('/')
     )
     const linkComponent = computed(() =>
       hasHref.value ? (isInternal.value ? 'NuxtLink' : 'a') : 'span'

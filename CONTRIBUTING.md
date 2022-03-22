@@ -44,9 +44,17 @@ You can also configure your editor of choice with a ESLint plugin so you can get
 
 ### Types
 
-We use JSDoc to document type definitions for functions throughout the code base with the eventual goal of using the TypeScript compiler to actually run a type-checker against our code. To facilitate this, we use the TypeScript "flavor" for JSDoc. Please familiarize yourself with the [documentation for TypeScript in JSDoc here](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html).
+We use native TypeScript everywhere we can. Currently there are very few edge cases where it is not possible to use TypeScript, primarily in older components that do not use the composition-api or that rely on Nuxt's auto-component importing.
 
-TypeScript support in Vue 2 (which we're currently locked into due to Nuxt's current limitations), is an afterthought. Therefore, types are primarily focused on the Vuex store and API service/utility functions. However, it is possible to add type annotations to some parts of Vue components, like the return value of the `data` function. Whenever possible, contributors should add or correct types to functions they are adding or modifying.
+TypeScript support for Vue 2 is limited to composition-api based components (i.e., components that use `defineComponent` and declare a `setup` function). If you'd like to use TypeScript for a Vue SFC, add `lang="ts"` to the `script` tag and add the file to the `tsconfig.json` `includes` array.
+
+Elsewhere, simply use (and prefer) the `.ts` extension for all new files.
+
+See [Vue's official documentation about IDE support for Vue with TypeScript](https://vuejs.org/guide/typescript/overview.html#ide-support) for guides on how to set up your editor.
+
+#### JSDoc TypeScript
+
+Some older modules use JSDoc flavored TypeScript. This was primarily used before the project had included support for native TypeScript. Please do not extend the use of JSDoc TypeScript outside of modules that already use it. If you feel so inclined, we always welcome PRs updating such modules to native TypeScript.
 
 ### Styles/CSS
 
