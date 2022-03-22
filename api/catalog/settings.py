@@ -306,6 +306,9 @@ VERBOSE_ES_RESPONSE = config("DEBUG_SCORES", default=False, cast=bool)
 # Whether to boost results by authority and popularity
 USE_RANK_FEATURES = config("USE_RANK_FEATURES", default=True, cast=bool)
 
+# The scheme to use for the hyperlinks in the API responses
+API_LINK_SCHEME = config("API_LINK_SCHEME", default="https")
+
 SENTRY_DSN = config(
     "SENTRY_DSN",
     default="https://08f4706d16004f57bcd37eb907bfc2e7@o787041.ingest.sentry.io/6107216",

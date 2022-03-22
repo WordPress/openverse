@@ -1,6 +1,7 @@
 from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import AudioReport
 from catalog.api.models.audio import Audio
+from catalog.api.serializers.base import SchemableHyperlinkedIdentityField
 from catalog.api.serializers.media_serializers import (
     MediaSearchRequestSerializer,
     MediaSearchSerializer,
@@ -142,25 +143,25 @@ class AudioSerializer(MediaSerializer):
     )
 
     # Hyperlinks
-    thumbnail = serializers.HyperlinkedIdentityField(
+    thumbnail = SchemableHyperlinkedIdentityField(
         read_only=True,
         view_name="audio-thumb",
         lookup_field="identifier",
         help_text="A direct link to the miniature artwork.",
     )
-    waveform = serializers.HyperlinkedIdentityField(
+    waveform = SchemableHyperlinkedIdentityField(
         read_only=True,
         view_name="audio-waveform",
         lookup_field="identifier",
         help_text="A direct link to the waveform peaks.",
     )
-    detail_url = serializers.HyperlinkedIdentityField(
+    detail_url = SchemableHyperlinkedIdentityField(
         read_only=True,
         view_name="audio-detail",
         lookup_field="identifier",
         help_text="A direct link to the detail view of this audio file.",
     )
-    related_url = serializers.HyperlinkedIdentityField(
+    related_url = SchemableHyperlinkedIdentityField(
         read_only=True,
         view_name="audio-related",
         lookup_field="identifier",

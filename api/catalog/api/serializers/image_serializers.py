@@ -1,5 +1,6 @@
 from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import Image, ImageReport
+from catalog.api.serializers.base import SchemableHyperlinkedIdentityField
 from catalog.api.serializers.media_serializers import (
     MediaSearchRequestSerializer,
     MediaSearchSerializer,
@@ -94,19 +95,19 @@ class ImageSerializer(MediaSerializer):
     )
 
     # Hyperlinks
-    thumbnail = serializers.HyperlinkedIdentityField(
+    thumbnail = SchemableHyperlinkedIdentityField(
         read_only=True,
         view_name="image-thumb",
         lookup_field="identifier",
         help_text="A direct link to the miniature image.",
     )
-    detail_url = serializers.HyperlinkedIdentityField(
+    detail_url = SchemableHyperlinkedIdentityField(
         read_only=True,
         view_name="image-detail",
         lookup_field="identifier",
         help_text="A direct link to the detail view of this image.",
     )
-    related_url = serializers.HyperlinkedIdentityField(
+    related_url = SchemableHyperlinkedIdentityField(
         view_name="image-related",
         lookup_field="identifier",
         read_only=True,
