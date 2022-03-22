@@ -119,9 +119,7 @@
         <tbody>
           <tr v-for="(imageProvider, index) in sortedProviders" :key="index">
             <td class="font-semibold">
-              <VLink :href="`/search?source=${imageProvider.source_name}`">
-                {{ imageProvider.display_name }}
-              </VLink>
+              {{ imageProvider.display_name }}
             </td>
             <td class="font-semibold">
               <VLink :href="imageProvider.source_url">
