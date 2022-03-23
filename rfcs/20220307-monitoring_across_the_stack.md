@@ -2,8 +2,6 @@
 
 Note: Because I had to spend a good deal of time sketching out how this stuff works, I wrote a good deal of preliminary code. It's probably not perfect so it's really only a starting point, but it at least gives a vision for how we could do this.
 
-Additionally, there are several 
-
 ## Reviewers
 
 - [ ] @rbadillap
@@ -21,7 +19,6 @@ Production Openverse is deployed across several services, each with their own un
 * Airflow - Has some Slack alerting for DAG failures/successes and some built in things we can gather basic performance information from.
 * API - Has Sentry error monitoring but zero performance monitoring.
 * Nuxt - Has Sentry error monitoring but zero performance monitoring.
-* Analytics service - Has zero monitoring
 * Thumbnail proxy - Has zero monitoring
 * Postgres - Has zero monitoring aside from some CloudWatch system metrics being tracked
 * Elasticsearch - Same as Postgres as far as I'm aware
@@ -67,7 +64,7 @@ There are three key aspects of the application services I think we should monito
 * Storage
 * Processes/threads
 
-These would be gathered from Airflow, API, Analytics, Thumbnail proxy, Postgres and Nuxt. These metrics need to be retrieved from AWS. I _think_ that [this page describes how to do that](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Agent-PrometheusEC2.html) but AWS's language around this stuff is so cryptic to me I can't say with confidence it's the right documentation page for it.
+These would be gathered from Airflow, API, Thumbnail proxy, Postgres and Nuxt. These metrics need to be retrieved from AWS. I _think_ that [this page describes how to do that](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Agent-PrometheusEC2.html) but AWS's language around this stuff is so cryptic to me I can't say with confidence it's the right documentation page for it.
 
 It would also be nice if we could integrate Cloudflare data into Grafana so that our visualizations are all in once place. Cache hits and other relevant information from Cloudflare would be excellent to monitor within our greater monitoring stack.
 
@@ -162,7 +159,7 @@ All alarms should have a relevant run book configured. Ideally these would just 
 * Elasticsearch: https://grafana.com/docs/grafana/latest/datasources/elasticsearch/
     * Note: not for visualizing system stats, those will come from Prometheus. This would be for querying the index. Totally optional.
 * Postgres: https://grafana.com/docs/grafana/latest/datasources/postgres/
-    * Just if we wanted to be able to visualize certain query results. Could eventually be relevant for analytics.
+    * Just if we wanted to be able to visualize certain query results. Could eventually be relevant for general analytics.
 
 ## Configuration and infrastructure (local and cloud)
 
