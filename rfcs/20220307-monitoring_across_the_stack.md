@@ -129,9 +129,10 @@ These are for pulling metrics into Prometheus from various services. This would 
 * Cloudflare exporter: https://gitlab.com/gitlab-org/cloudflare_exporter
 * AWS CloudWatch exporter: https://github.com/prometheus/cloudwatch_exporter
     * This one is interesting. I think we'd define system metrics to gather in CloudWatch and then export them into Prometheus. Hopefully this wouldn't incur additional costs to what we're already doing with CloudWatch.
-* Alternative to the CloudWatch exported is to implement the Node exporter: https://github.com/prometheus/node_exporter
+* Alternative to the CloudWatch exporter is to implement the Node exporter: https://github.com/prometheus/node_exporter
     * This has the added benefit of being portable across cloud providers vs CloudWatch being AWS services only.
     * Does not cover ECS in an obvious way; could we run the node exporter in the container? Would that produce meaningful information?
+* Additional alternative to CloudWatch exporter is EC2 exporter: https://github.com/jmal98/ec2-exporter
 * Airflow exporter: https://github.com/epoch8/airflow-exporter
 
 ### Grafana alerting integrations
