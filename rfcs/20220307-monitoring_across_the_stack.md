@@ -47,7 +47,12 @@ Additionally, both are free software. Prometheus is Apache 2 licensed and Grafan
 
 ## Self-hosted vs. hosted
 
-I will defer this decision to @rbadillap because he has way more knowledge about what will be affordable for us both from a raw cost perspective and from a time-spent-maintaining perspective. My gut says that in the interest of getting monitoring sooner than later we could pay for hosted Prometheus and Grafana to start with and eventually migrate to self-hosted. AWS has hosted offerrings for both. I believe we could use our existing Postgres for them as well. I'm assuming that AWS hasn't added anything that would lock us into their hosted version of these services, but I could be wrong about that.
+I will defer this decision to @rbadillap because he has way more knowledge about what will be affordable for us both from a raw cost perspective and from a time-spent-maintaining perspective. My gut says that in the interest of getting monitoring sooner than later we could pay for hosted Prometheus and Grafana to start with and eventually migrate to self-hosted. AWS has hosted offerrings for both. I believe we could use our existing Postgres RDS instance for them as well. I'm assuming that AWS hasn't added anything that would lock us into their hosted version of these services, but I could be wrong about that.
+
+<aside>
+We could potentially just use SQLite for Prometheus. I don't know if AWS's hosted offerring supports that. Waiting to hear from Ronny about whether we should jump straight to using Postgres instead though.
+
+</aside>
 
 My understanding is that the hosted versions of these services are less expensive to start off with than self-hosting but then gradually balloon in price as time goes on, making self-hosting the more affordable option.
 
