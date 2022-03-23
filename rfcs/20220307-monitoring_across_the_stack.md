@@ -173,7 +173,7 @@ Prometheus works by scraping HTTP endpoints on services that provide a formatted
 
 That has some really nice properties in that each service doesn't need to worry about what Prometheus is doing. We don't need to worry about it's tolerances for getting new events, rate limits, handling bad requests or timeouts if Prometheus is temporarily unavailable, anything like that. We (or rather the client librariy) just write and serve the metric data in the appropriate format and Prometheus handles the rest.
 
-The does have the effect of centralizing a ton of decisions about how to organize things directly into Prometheus's configuration. I don't know where we would want to store this information necessarily. Ideally it'd be somewhere central like our infrastructure repository so that we don't have to duplicate or aggregate various configurations during deployments.
+This does have the effect of centralizing a ton of decisions about how to organize things directly into Prometheus's configuration. I don't know where we would want to store this information necessarily. Ideally it'd be somewhere central like our infrastructure repository so that we don't have to duplicate or aggregate various configurations during deployments.
 
 On the other hand, this massively complicates local development of the monitoring infrastructure and leaves us with two options:
 
