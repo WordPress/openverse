@@ -1,6 +1,6 @@
-const { test, expect } = require('@playwright/test')
+import { test, expect, Page } from '@playwright/test'
 
-const { changeContentType } = require('./utils')
+import { changeContentType } from '~~/test/playwright/utils/navigation'
 
 /**
  * Using SSR:
@@ -23,34 +23,38 @@ test.beforeEach(async ({ context }) => {
   await context.route('**.jamendo.com**', (route) => route.abort())
 })
 
-const searchTypes = [
-  {
-    id: 'all',
-    name: 'All content',
-    url: '/search/?q=birds',
-    canLoadMore: true,
-    metaSourceCount: 7,
-  },
-  {
-    id: 'image',
-    name: 'Images',
-    url: '/search/image?q=birds',
-    canLoadMore: true,
-    metaSourceCount: 7,
-    results: /Over 10,000 results/,
-  },
-  {
-    id: 'audio',
-    name: 'Audio',
-    url: '/search/audio?q=birds',
-    canLoadMore: true,
-    metaSourceCount: 3,
-    results: /93 results/,
-  },
-]
+const allContentConfig = {
+  id: 'all',
+  name: 'All content',
+  url: '/search/?q=birds',
+  canLoadMore: true,
+  metaSourceCount: 7,
+} as const
 
-async function checkLoadMore(page, searchType) {
-  const loadMoreSection = await page.locator('[data-testid="load-more"]')
+const imageConfig = {
+  id: 'image',
+  name: 'Images',
+  url: '/search/image?q=birds',
+  canLoadMore: true,
+  metaSourceCount: 7,
+  results: /Over 10,000 results/,
+} as const
+
+const audioConfig = {
+  id: 'audio',
+  name: 'Audio',
+  url: '/search/audio?q=birds',
+  canLoadMore: true,
+  metaSourceCount: 3,
+  results: /93 results/,
+} as const
+
+const searchTypes = [allContentConfig, imageConfig, audioConfig] as const
+
+type SearchTypeConfig = typeof searchTypes[number]
+
+async function checkLoadMore(page: Page, searchType: SearchTypeConfig) {
+  const loadMoreSection = page.locator('[data-testid="load-more"]')
   if (!searchType.canLoadMore) {
     // When we expect the section not to be here, the test becomes very slow because
     // it waits until the end of the timeout (5 seconds).
@@ -60,7 +64,7 @@ async function checkLoadMore(page, searchType) {
     await expect(loadMoreSection).toContainText('Load more')
   }
 }
-async function checkMetasearchForm(page, searchType) {
+async function checkMetasearchForm(page: Page, searchType: SearchTypeConfig) {
   const metaSearchForm = await page.locator('[data-testid="meta-search-form"]')
   await expect(metaSearchForm).toHaveCount(1)
 
@@ -68,7 +72,7 @@ async function checkMetasearchForm(page, searchType) {
   await expect(sourceButtons).toHaveCount(searchType.metaSourceCount)
 }
 
-async function checkSearchMetadata(page, searchType) {
+async function checkSearchMetadata(page: Page, searchType: SearchTypeConfig) {
   if (searchType.canLoadMore) {
     const searchResult = await page.locator('[data-testid="search-results"]')
     await expect(searchResult).toBeVisible()
@@ -76,7 +80,7 @@ async function checkSearchMetadata(page, searchType) {
   }
 }
 
-async function checkPageMeta(page, searchType) {
+async function checkPageMeta(page: Page, searchType: SearchTypeConfig) {
   const urlParam = searchType.id === 'all' ? '' : searchType.id
 
   const expectedTitle = `birds | Openverse`
@@ -85,7 +89,7 @@ async function checkPageMeta(page, searchType) {
   await expect(page).toHaveTitle(expectedTitle)
   await expect(page).toHaveURL(expectedURL)
 }
-async function checkSearchResult(page, searchType) {
+async function checkSearchResult(page: Page, searchType: SearchTypeConfig) {
   await checkSearchMetadata(page, searchType)
   await checkLoadMore(page, searchType)
   await checkMetasearchForm(page, searchType)
@@ -108,8 +112,10 @@ for (const searchType of searchTypes) {
   })
 }
 
-for (let searchTypeName of ['audio', 'image']) {
-  const searchType = searchTypes.find((type) => type.id === searchTypeName)
+for (const searchTypeName of ['audio', 'image'] as const) {
+  const searchType = searchTypes.find((type) => type.id === searchTypeName) as
+    | typeof audioConfig
+    | typeof imageConfig
   test(`Can open ${searchTypeName} page from the all view`, async ({
     page,
   }) => {

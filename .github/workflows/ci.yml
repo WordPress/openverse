@@ -61,8 +61,8 @@ jobs:
       - name: Run unit tests
         run: pnpm ci:unit-test
 
-  e2e:
-    name: E2E tests
+  playwright:
+    name: Playwright tests
     runs-on: ubuntu-latest
 
     steps:
@@ -70,8 +70,14 @@ jobs:
 
       - uses: ./.github/actions/setup-node-env
 
-      - name: Run E2E
-        run: PW_USER=root ./bin/playwright.sh e2e
+      - name: Run playwright tests
+        run: pnpm test:playwright
+
+      - uses: actions/upload-artifact@v3
+        if: ${{ failure() }}
+        with:
+          name: test-results
+          path: test-results
 
   storybook:
     name: Check Storybook build

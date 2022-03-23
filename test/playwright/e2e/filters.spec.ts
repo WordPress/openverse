@@ -1,30 +1,30 @@
-const { test, expect } = require('@playwright/test')
+import { test, expect, Page } from '@playwright/test'
 
-const {
+import {
   assertCheckboxStatus,
   openFilters,
-  mockProviderApis,
   changeContentType,
-} = require('./utils')
+} from '~~/test/playwright/utils/navigation'
 
-// Cannot require media constants because they use `export`
-const ALL_MEDIA = 'all'
-const AUDIO = 'audio'
-const IMAGE = 'image'
-const supportedSearchTypes = [ALL_MEDIA, AUDIO, IMAGE]
+import { mockProviderApis } from '~~/test/playwright/utils/route'
+
+import {
+  supportedSearchTypes,
+  ALL_MEDIA,
+  IMAGE,
+  AUDIO,
+} from '~/constants/media'
 
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })
 
-/**
- * @param page
- * @param {'checked'|'notChecked'|'total'} checked
- * @param {number} count
- * @returns {Promise<void>}
- */
-const assertCheckboxCount = async (page, checked, count) => {
-  let checkedString = {
+const assertCheckboxCount = async (
+  page: Page,
+  checked: 'checked' | 'notChecked' | 'total',
+  count: number
+) => {
+  const checkedString = {
     checked: ':checked',
     notChecked: ':not(:checked)',
     total: '',
@@ -60,10 +60,11 @@ test('initial filters are applied based on the url', async ({ page }) => {
   await openFilters(page)
   const expectedFilters = ['cc0', 'commercial', 'creator']
 
-  for (let checkbox of expectedFilters) {
+  for (const checkbox of expectedFilters) {
     await assertCheckboxStatus(page, checkbox)
   }
 })
+
 test('common filters are retained when media type changes from all media to single type', async ({
   page,
 }) => {
@@ -73,7 +74,7 @@ test('common filters are retained when media type changes from all media to sing
   await openFilters(page)
   const expectedFilters = ['cc0', 'commercial', 'creator']
 
-  for (let checkbox of expectedFilters) {
+  for (const checkbox of expectedFilters) {
     await assertCheckboxStatus(page, checkbox)
   }
   await changeContentType(page, 'Images')
@@ -81,7 +82,7 @@ test('common filters are retained when media type changes from all media to sing
   await expect(page).toHaveURL(
     '/search/image?q=cat&license_type=commercial&license=cc0&searchBy=creator'
   )
-  for (let checkbox of expectedFilters) {
+  for (const checkbox of expectedFilters) {
     await assertCheckboxStatus(page, checkbox)
   }
 })
@@ -94,13 +95,13 @@ test('common filters are retained when media type changes from single type to al
   )
   await openFilters(page)
 
-  for (let checkbox of ['cc0', 'commercial', 'creator']) {
+  for (const checkbox of ['cc0', 'commercial', 'creator']) {
     await assertCheckboxStatus(page, checkbox)
   }
 
   await changeContentType(page, 'All content')
 
-  for (let checkbox of ['cc0', 'commercial', 'creator']) {
+  for (const checkbox of ['cc0', 'commercial', 'creator']) {
     await assertCheckboxStatus(page, checkbox)
   }
   await expect(page).toHaveURL(
@@ -117,7 +118,7 @@ test('selecting some filters can disable dependent filters', async ({
   // by-nc is special because we normally test for fuzzy match, and by-nc matches 3 labels.
   const byNc = page.locator('input[value="by-nc"]')
   await expect(byNc).toBeDisabled()
-  for (let checkbox of ['by-nc-sa', 'by-nc-nd']) {
+  for (const checkbox of ['by-nc-sa', 'by-nc-nd']) {
     await assertCheckboxStatus(page, checkbox, 'disabled')
   }
   await assertCheckboxStatus(page, 'commercial')
@@ -126,7 +127,7 @@ test('selecting some filters can disable dependent filters', async ({
 
   await assertCheckboxStatus(page, 'commercial', 'unchecked')
   await expect(byNc).not.toBeDisabled()
-  for (let checkbox of ['commercial', 'by-nc-sa', 'by-nc-nd']) {
+  for (const checkbox of ['commercial', 'by-nc-sa', 'by-nc-nd']) {
     await assertCheckboxStatus(page, checkbox, 'unchecked')
   }
 })

@@ -1,7 +1,9 @@
-#! /bin/bash
+#! /usr/bin/env sh
 
-# todo: find a way to make this portable for Windows users so it can be used for the package.json script
+export USER_ID=${USER_ID:-$(id -u)}
+export PLAYWRIGHT_ARGS=$@
+export PLAYWRIGHT_VERSION=$(pnpm playwright-version --silent)
 
-export PLAYWRIGHT_VERSION=$(pnpm ls --dev --depth=0 | grep playwright | awk '{print $2}')
-export TEST_TYPE=$1
-docker-compose -f docker-compose.playwright.yml run playwright
+echo Running Playwright v$PLAYWRIGHT_VERSION as $USER_ID with Playwright arguments $PLAYWRIGHT_ARGS
+
+docker-compose -f docker-compose.playwright.yml up --abort-on-container-exit --exit-code-from playwright

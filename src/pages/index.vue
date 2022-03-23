@@ -80,7 +80,10 @@
     </header>
 
     <!-- Image carousel -->
-    <div class="flex-grow overflow-hidden w-full lg:w-auto lg:h-full px-6">
+    <div
+      class="flex-grow overflow-hidden w-full lg:w-auto lg:h-full px-6"
+      data-testid="image-carousel"
+    >
       <!-- Height is 114.286vh i.e. 100vh * 8/7 (so that 0.75, 1, 1, 0.75 circles are visible) -->
       <!-- Width is 57.143vh i.e. half of height (because grid dimensions are 4 ⨯ 2) -->
       <div

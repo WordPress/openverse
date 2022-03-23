@@ -6,9 +6,9 @@
  * When pending: does not show 'No images', Safer Browsing, search rating or error message
  * On error: shows error message
  */
-const { expect, test } = require('@playwright/test')
+import { expect, test } from '@playwright/test'
 
-const { mockProviderApis } = require('./utils')
+import { mockProviderApis } from '~~/test/playwright/utils/route'
 
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
@@ -54,7 +54,7 @@ test('navigates to the image detail page correctly', async ({ page }) => {
   await page.locator('#main-image').waitFor()
 
   const headingText = await page.locator('h1').textContent()
-  expect(headingText.trim().toLowerCase()).toEqual(imgTitle.toLowerCase())
+  expect(headingText?.trim().toLowerCase()).toEqual(imgTitle?.toLowerCase())
   // Renders the breadcrumb link
   await expect(page.locator('text="Back to search results"')).toBeVisible()
 })

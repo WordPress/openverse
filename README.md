@@ -18,6 +18,8 @@ The frontend app is built using [Vue.js](https://vuejs.org/) and [Nuxt.js](https
 
 ## Local Development
 
+**Note for Windows users:** Please use [WSL](https://docs.microsoft.com/en-us/windows/wsl/install) for developing on the Openverse frontend. Several scripts, primarily support scripts, rely on a general \*nix type environment. Maintaining parity for cross platform scripts proved complicated without significant duplication. If you run into issues with running the Openverse frontend in WSL please let us know by opening an issue or [joining us on Slack](https://make.wordpress.org/chat/) in the `#openverse` room and ask for help.
+
 We use [Volta](https://volta.sh/) to manage our local environment tools. Please install it using the instructions on their website.
 
 Once you have volta installed, manually install `pnpm` using volta. [Volta does not currently officially support `pnpm`](https://github.com/volta-cli/volta/issues/737) so this is a stop gap solution until that support is implemented:

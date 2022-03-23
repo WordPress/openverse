@@ -1,6 +1,7 @@
-const { test, expect } = require('@playwright/test')
+import { test, expect } from '@playwright/test'
 
-const { mockProviderApis, changeContentType } = require('./utils')
+import { changeContentType } from '~~/test/playwright/utils/navigation'
+import { mockProviderApis } from '~~/test/playwright/utils/route'
 
 /**
  * When navigating to the search page on the client side:

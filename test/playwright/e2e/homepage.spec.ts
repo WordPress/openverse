@@ -1,6 +1,6 @@
-const { test, expect } = require('@playwright/test')
+import { test, expect } from '@playwright/test'
 
-const { mockProviderApis } = require('./utils')
+import { mockProviderApis } from '~~/test/playwright/utils/route'
 
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)

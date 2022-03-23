@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test')
+import { test, expect } from '@playwright/test'
 
 test('shows migration banner on homepage', async ({ page }) => {
   await page.goto('/?referrer=creativecommons.org')
@@ -13,7 +13,7 @@ test('shows migration banner on homepage', async ({ page }) => {
 test('migration banner goes away on navigation', async ({ page }) => {
   await page.goto('/?referrer=creativecommons.org')
 
-  let migrationNotice = page.locator('.cc-ov-migration')
+  const migrationNotice = page.locator('.cc-ov-migration')
   await expect(migrationNotice).toBeVisible()
 
   // Navigate away from the page

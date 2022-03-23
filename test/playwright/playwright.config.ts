@@ -1,7 +1,15 @@
+import path from 'path'
+
+import { addAliases } from 'module-alias'
+
 import type { PlaywrightTestConfig } from '@playwright/test'
 
+addAliases({
+  '~': path.resolve(process.cwd(), 'src'),
+  '~~': process.cwd(),
+})
+
 const config: PlaywrightTestConfig = {
-  testDir: '.',
   webServer: {
     /**
      * Note: You can speed up local testing by switching `prod` out for `start`

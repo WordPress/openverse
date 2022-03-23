@@ -1,10 +1,10 @@
-const { expect, test } = require('@playwright/test')
+import { expect, test } from '@playwright/test'
 
-const { openFilters } = require('./utils')
+import { openFilters } from '~~/test/playwright/utils/navigation'
+import { mockProviderApis } from '~~/test/playwright/utils/route'
 
 test.beforeEach(async ({ context }) => {
-  await context.route('**.jamendo.**', (r) => r.abort())
-  await context.route('**.freesound.**', (r) => r.abort())
+  mockProviderApis(context)
 })
 
 test.describe('search history navigation', () => {

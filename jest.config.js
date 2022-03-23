@@ -9,6 +9,7 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^~/(.*.svg)\\?inline$': '<rootDir>/src/$1',
     '^~/(.*)$': '<rootDir>/src/$1',
+    '^~~/(.*)$': '<rootDir>/$1',
     '^vue$': 'vue/dist/vue.common.js',
     '(.*svg)(\\?inline)$': '<rootDir>/test/unit/test-utils/svgTransform.js',
   },
@@ -21,7 +22,7 @@ module.exports = {
       'jest-transform-stub',
     '^.+\\.svg$': '<rootDir>/test/unit/svg-transform.js',
   },
-  testPathIgnorePatterns: ['/e2e/'],
+  testPathIgnorePatterns: ['/playwright/'],
   collectCoverage: true,
   coverageDirectory: '<rootDir>/test/unit/coverage',
   collectCoverageFrom: [

@@ -1,7 +1,11 @@
-const { test, expect } = require('@playwright/test')
+import { test, expect } from '@playwright/test'
 
-const { mockProviderApis, openFilters } = require('./utils')
-const { currentContentType, assertCheckboxStatus } = require('./utils')
+import {
+  openFilters,
+  currentContentType,
+  assertCheckboxStatus,
+} from '~~/test/playwright/utils/navigation'
+import { mockProviderApis } from '~~/test/playwright/utils/route'
 
 /**
  * URL is correctly converted into search state:
@@ -36,7 +40,7 @@ test('url path /search/ is used to select `all` search tab', async ({
   await page.goto('/search/?q=cat')
 
   const contentType = await currentContentType(page)
-  expect(contentType.trim()).toEqual('All content')
+  expect(contentType?.trim()).toEqual('All content')
 })
 
 test('url path /search/audio is used to select `audio` search tab', async ({
@@ -46,7 +50,7 @@ test('url path /search/audio is used to select `audio` search tab', async ({
   await page.goto(audioSearchUrl)
 
   const contentType = await currentContentType(page)
-  expect(contentType.trim()).toEqual('Audio')
+  expect(contentType?.trim()).toEqual('Audio')
 })
 
 test('url query to filter, all tab, one parameter per filter type', async ({
@@ -57,7 +61,7 @@ test('url query to filter, all tab, one parameter per filter type', async ({
   )
 
   await openFilters(page)
-  for (let checkbox of ['cc0', 'commercial', 'creator']) {
+  for (const checkbox of ['cc0', 'commercial', 'creator']) {
     await assertCheckboxStatus(page, checkbox)
   }
 })
@@ -70,7 +74,7 @@ test('url query to filter, image tab, several filters for one filter type select
   )
   await openFilters(page)
   const checkboxes = ['jpeg', 'png', 'gif', 'svgs']
-  for (let checkbox of checkboxes) {
+  for (const checkbox of checkboxes) {
     await assertCheckboxStatus(page, checkbox)
   }
 })

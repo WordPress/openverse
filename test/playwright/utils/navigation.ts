@@ -1,6 +1,6 @@
-const { expect } = require('@playwright/test')
+import { expect, Page } from '@playwright/test'
 
-const openFilters = async (page) => {
+export const openFilters = async (page: Page) => {
   const filterButtonSelector =
     '[aria-controls="filter-sidebar"], [aria-controls="filter-modal"]'
   const isPressed = async () =>
@@ -11,7 +11,11 @@ const openFilters = async (page) => {
   }
 }
 
-const assertCheckboxStatus = async (page, label, status = 'checked') => {
+export const assertCheckboxStatus = async (
+  page: Page,
+  label: string,
+  status: 'checked' | 'unchecked' | 'disabled' = 'checked'
+) => {
   const checkbox = page.locator(`label:has-text('${label}')`)
   switch (status) {
     case 'checked': {
@@ -30,32 +34,23 @@ const assertCheckboxStatus = async (page, label, status = 'checked') => {
   }
 }
 
-const changeContentType = async (page, to) => {
+export const changeContentType = async (
+  page: Page,
+  to: 'Audio' | 'Images' | 'All content'
+) => {
   await page.click(
     `button[aria-controls="content-switcher-popover"], button[aria-controls="content-switcher-modal"]`
   )
   await page.click(`a:has-text("${to}")`)
 }
+
 /**
  * Finds a button with a popup to the left of the filters button which doesn't have a 'menu' label
- * @param page
- * @returns {Promise<string>}
+ * @param page - The current page
  */
-const currentContentType = async (page) => {
+export const currentContentType = async (page: Page) => {
   const contentSwitcherButton = await page.locator(
     `button[aria-controls="content-switcher-popover"], button[aria-controls="content-switcher-modal"]`
   )
   return contentSwitcherButton.textContent()
-}
-
-const mockProviderApis = async (context) => {
-  await context.route('**.jamendo.com**', (route) => route.abort())
-}
-
-module.exports = {
-  openFilters,
-  changeContentType,
-  currentContentType,
-  assertCheckboxStatus,
-  mockProviderApis,
 }

@@ -1,13 +1,13 @@
-const { test, expect } = require('@playwright/test')
+import { test, expect, Page } from '@playwright/test'
 
-const { mockProviderApis } = require('./utils')
+import { mockProviderApis } from '~~/test/playwright/utils/route'
 
-const goToCustomImagePage = async (page) => {
+const goToCustomImagePage = async (page: Page) => {
   // Test in a custom image detail page, it should apply the same for any image.
   await page.goto('image/e9d97a98-621b-4ec2-bf70-f47a74380452')
 }
 
-const showsErrorPage = async (page) => {
+const showsErrorPage = async (page: Page) => {
   await expect(page.locator('h1')).toHaveText(
     /The content you’re looking for seems to have disappeared/
   )

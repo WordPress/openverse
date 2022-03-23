@@ -68,66 +68,12 @@ The Openverse frontend is a Nuxt SSR application. This means the initial Vue pag
 
 Please note that these are non-expert and non-exhaustive recommendations. Spend time reading the [WAI-ARIA spec](https://www.w3.org/TR/wai-aria/) and other web accessibility materials. Even just knowing about specific roles and interactions that exist and are meant to be developed in consistent ways is a good first step to learning what to look out for when testing.
 
-## Running the tests
+# Automated tests
 
-Openverse uses [Vue Testing Library](https://testing-library.com/docs/vue-testing-library/intro/) for unit testing, and [Playwright](https://playwright.dev) for End-to-End (e2e) testing.
+Openverse uses [Vue Testing Library](https://testing-library.com/docs/vue-testing-library/intro/) for unit testing with [Jest](https://jestjs.io/docs/), and [Playwright](https://playwright.dev) for end-to-end and visual-regression testing.
 
 There are also legacy unit tests written in [Vue Test Utils](https://vue-test-utils.vuejs.org/) but those are slated to be re-written using testing library.
 
-### End-to-end tests
+### Playwright tests
 
-Our end-to-end test suite runs inside a Playwright docker container in order to prevent cross-platform browser differences from creating flaky test behavior.
-
-Having docker and docker-compose is a pre-requisite to running the end-to-end tests locally. Please follow [the relevant instructions for your operating system for how to install docker and docker-compose](https://docs.docker.com/get-docker/). If you're on Windows 10 Home Edition, please note that you'll need to [install and run docker inside WSL2](https://www.freecodecamp.org/news/how-to-run-docker-on-windows-10-home-edition/).
-
-If it's not possible for you to run docker locally, don't fret! Our CI will run it on every pull request and another contributor who is able to run the tests locally can help you develop new or update existing tests for your changes.
-
-The Playwright docker container runs everything needed for the end-to-end tests, including the Nuxt server and a [Talkback proxy](https://github.com/ijpiantanida/talkback) for the API.
-
-To run the end-to-end tests, after having installed docker, run the following:
-
-```bash
-pnpm test:e2e
-```
-
-If you've added new tests or updated existing ones, you may get errors about API responses not being found. To remedy this, you'll need to update the tapes:
-
-```bash
-pnpm test:e2e:update-tapes
-```
-
-If for some reason you find yourself needing to completely recreate the tapes, you may do so using the `test:e2e:recreate-tapes` script. Please use this sparingly as it creates massive diffs in PRs (tens of thousands of lines across over literally hundreds of JSON files). Note that you may be rate-limited by the upstream production API if you do this. There is no official workaround for this at the moment.
-
-Additional debugging may be accomplished in two ways. You may inspect the trace output of failed tests by finding the `trace.zip` for the relevant test in the `test-results` folder. Traces are only saved for failed tests. You can use the [Playwright Trace Viewer](https://playwright.dev/docs/trace-viewer) to inspect these (or open the zip yourself and poke around the files on your own).
-
-Additionally, you can run run the tests in debug mode. This will run the tests with a headed browser as opposed to a headless (invisible) one and allow you to watch the test happen in real time. It's not possible for a headed browser to run inside the docker container, however, so be aware that when debugging the environment will be slightly different. For example, if you're on any OS other than Linux, the browser you're running will have small differences in how it renders the page compared to the docker container.
-
-To run the debug tests:
-
-```bash
-pnpm test:e2e:debug
-```
-
-Note that this still runs the talkback proxy and the Nuxt server for you. If you'd like to avoid this, simply run the Nuxt server before you run the `test:e2e:debug` script and Playwright will automatically prefer your previously running Nuxt server.
-
-<aside>
-For some reason the following two tests are consistently flaky when updating tapes but appear to be stable when running the e2e tapes with pre-existing tapes.
-
-```
-search-types.spec.js:102:3 › Can open All content page client-side
-search-types.spec.js:102:3 › Can open Images page client-side
-```
-
-Don't be alarmed if you notice this.
-
-</aside>
-
-When writing e2e tests, it can be helpful to use Playwright [codegen](https://playwright.dev/docs/cli#generate-code) to generate the tests by performing actions in the browser:
-
-```
-pnpm run generate-playwright-tests
-```
-
-This will open the app in a new browser window, and record any actions you take in a format that can be used in e2e tests.
-
-Note that this does _not_ run the server for you; you must run the Nuxt server using `pnpm start` or `pnpm dev` separately before running the codegen script.
+Please see the [Playwright test README.md](./test/playwright/README.md) for instructions on running and maintaining the Playwright test suite.
