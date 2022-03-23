@@ -94,8 +94,9 @@ The rest of our services all have relevant exporters available, either official 
 
 It's hard to get into specifics about this, but there are a some scenarios up-front that we can anticipate wanting monitors for.
 
-* Sustained periods of time (60 seconds?) where count_req_total == count_5xx_total
-* Each view has a version of the above relative to request frequency. Views with lower overall requests per second will require longer windows of time before alerting. We could also configure something like "view_request_count > threshold && view_5xx_count == view_request_count" to filter out cases where only a small number of requests have occurred against a view that happened to fail; though this is risky. I think in those cases we'd not want an _alarm_ _per se_ but would still want to be closely monitoring these types of occurrences through some low-priority alert and active dashboard viewing.
+* Sustained periods of time (60 seconds?) where `count_req_total == count_5xx_total` or `count_req_total >= (count_5xx_total / threshold)`
+    * Note, queries are rarely that intutive to write and have at least two moving parts that dictate how the alarm works, the query and then the alarm condition.
+* Each view has a version of the above relative to request frequency. Views with lower overall requests per second will require longer windows of time before alerting. We could also configure something like `view_request_count > threshold && view_5xx_count == view_request_count` to filter out cases where only a small number of requests have occurred against a view that happened to fail; though this is risky. I think in those cases we'd not want an _alarm_ _per se_ but would still want to be closely monitoring these types of occurrences through some low-priority alert and active dashboard viewing.
 
 Additionally, we'll eventually be able to incorporate anomaly monitors. Anomaly monitoring boils down to determining whether there are any statistically significant periods of time where any given metric is an unexpected standard deviation away from seasonal-mean[^2] for the metric. For example, if we normally mean 1200 2xx response codes per second, with a standard deviation of 100 and our 2xx response codes drop to 1000 per second for a sustained period of time, then we'd want an alarm to be raised.
 
