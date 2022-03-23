@@ -225,12 +225,14 @@ Do we want to use Prometheus for alerting or Grafana?
 
 Pros for Prometheus:
 - It is possible and potentially even trivial to provision alerts based on configuration files
+
 Cons for Prometheus:
 - It is much harder to configure and automatically provision changes to Prometheus's configuration
 - The UI for building them does not exist so I'm not sure what the best way to write new rules is other than via yaml files which will be harder for folks to contribute to given we're not all full-time devops people with tons of time to learn how to do this without fiddling around with visual helper tools
 
 Pros for Grafana:
 - The UI for building them is nice
+
 Cons for Grafana:
 - There's no way to export or provision them so the only way to add rules is through the UI (there's no JSON version of the form either). Moving rules across environments would be hard... to be fair, developing rules with anything except production data is also very difficult (lots of guessing) so maybe this isn't a problem.
 
