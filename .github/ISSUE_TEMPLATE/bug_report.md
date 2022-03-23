@@ -15,9 +15,6 @@ title: "<Replace this with actual title>"
 3. <!-- Step 3 ... -->
 4. See error.
 
-## Expectation
-<!-- Concisely describe what you expected to happen. -->
-
 ## Screenshots
 <!-- Add screenshots to show the problem; or delete the section entirely. -->
 
