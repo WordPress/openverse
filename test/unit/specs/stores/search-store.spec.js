@@ -382,9 +382,9 @@ describe('Search Store', () => {
     it.each`
       searchType   | nextSearchType | expectedFilterCount
       ${AUDIO}     | ${IMAGE}       | ${25}
-      ${IMAGE}     | ${ALL_MEDIA}   | ${34}
+      ${IMAGE}     | ${ALL_MEDIA}   | ${37}
       ${ALL_MEDIA} | ${VIDEO}       | ${12}
-      ${VIDEO}     | ${AUDIO}       | ${21}
+      ${VIDEO}     | ${AUDIO}       | ${24}
       ${ALL_MEDIA} | ${IMAGE}       | ${25}
     `(
       'changing searchType clears all but $expectedFilterCount $nextSearchType filters ',
@@ -415,10 +415,10 @@ describe('Search Store', () => {
      */
     it.each`
       searchType   | nextSearchType | expectedFilterCount
-      ${AUDIO}     | ${ALL_MEDIA}   | ${34}
-      ${IMAGE}     | ${ALL_MEDIA}   | ${34}
-      ${ALL_MEDIA} | ${ALL_MEDIA}   | ${34}
-      ${VIDEO}     | ${ALL_MEDIA}   | ${34}
+      ${AUDIO}     | ${ALL_MEDIA}   | ${37}
+      ${IMAGE}     | ${ALL_MEDIA}   | ${37}
+      ${ALL_MEDIA} | ${ALL_MEDIA}   | ${37}
+      ${VIDEO}     | ${ALL_MEDIA}   | ${37}
     `(
       'changing searchType clears all but $expectedFilterCount ALL_MEDIA filters',
       async ({ searchType, nextSearchType, expectedFilterCount }) => {

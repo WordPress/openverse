@@ -30,7 +30,7 @@
           <div v-if="audio.category">
             <dt>{{ $t('audio-details.table.category') }}</dt>
             <dd>
-              {{ audio.category }}
+              {{ $t(`filters.audio-categories.${audio.category}`) }}
             </dd>
           </div>
           <div v-if="audio.sample_rate">

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-03-22T03:16:50+00:00\n"
+"POT-Creation-Date: 2022-03-22T20:55:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -161,26 +161,6 @@ msgstr ""
 
 msgctxt "license-readable-names.nc-sampling+"
 msgid "NonCommercial Sampling Plus"
-msgstr ""
-
-msgctxt "audio-categories.title"
-msgid "Audio Category"
-msgstr ""
-
-msgctxt "audio-categories.music"
-msgid "Music"
-msgstr ""
-
-msgctxt "audio-categories.sound"
-msgid "Sound effects"
-msgstr ""
-
-msgctxt "audio-categories.podcast"
-msgid "Podcast"
-msgstr ""
-
-msgctxt "audio-categories.pronunciation"
-msgid "Pronunciation"
 msgstr ""
 
 #: src/components/VHeader/VSearchBar/VSearchButton.vue:4
@@ -1005,16 +985,32 @@ msgctxt "filters.audio-categories.title"
 msgid "Audio category"
 msgstr ""
 
+msgctxt "filters.audio-categories.audiobook"
+msgid "Audiobook"
+msgstr ""
+
 msgctxt "filters.audio-categories.music"
 msgid "Music"
 msgstr ""
 
-msgctxt "filters.audio-categories.sound"
-msgid "Sound effects"
+msgctxt "filters.audio-categories.news"
+msgid "News"
 msgstr ""
 
 msgctxt "filters.audio-categories.podcast"
 msgid "Podcast"
+msgstr ""
+
+msgctxt "filters.audio-categories.pronunciation"
+msgid "Pronunciation"
+msgstr ""
+
+msgctxt "filters.audio-categories.sound_effect"
+msgid "Sound effects"
+msgstr ""
+
+msgctxt "filters.audio-categories.sound"
+msgid "Sound effects"
 msgstr ""
 
 msgctxt "filters.audio-providers.title"

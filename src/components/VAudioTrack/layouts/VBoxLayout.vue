@@ -17,7 +17,7 @@
               hide-name
               :license="audio.license"
             />
-            <div>{{ $t(`audio-categories.${audio.category}`) }}</div>
+            <div>{{ $t(`filters.audio-categories.${audio.category}`) }}</div>
           </div>
         </div>
 

@@ -288,9 +288,13 @@
     },
     "audio-categories": {
       "title": "Audio category",
+      "audiobook": "Audiobook",
       "music": "Music",
-      "sound": "Sound effects",
-      "podcast": "Podcast"
+      "news": "News",
+      "podcast": "Podcast",
+      "pronunciation": "Pronunciation",
+      "sound_effect": "Sound effects",
+      "sound": "Sound effects"
     },
     "image-categories": {
       "title": "Image type",
@@ -567,13 +571,6 @@
   },
   "search": {
     "search": "Search"
-  },
-  "audio-categories": {
-    "title": "Audio Category",
-    "music": "Music",
-    "sound": "Sound effects",
-    "podcast": "Podcast",
-    "pronunciation": "Pronunciation"
   },
   "license-readable-names": {
     "cc0": "Zero",

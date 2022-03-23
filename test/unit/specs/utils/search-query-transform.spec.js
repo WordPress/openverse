@@ -205,7 +205,7 @@ describe('searchQueryTransform', () => {
         {
           checked: false,
           code: 'soundEffects',
-          name: 'filters.audio-categories.sound-effects',
+          name: 'filters.audio-categories.sound_effects',
         },
         {
           checked: false,

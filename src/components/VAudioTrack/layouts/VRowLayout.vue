@@ -55,7 +55,7 @@
             </span>
 
             <span v-if="audio.category">
-              <span>{{ $t(`audio-categories.${audio.category}`) }}</span
+              <span>{{ $t(`filters.audio-categories.${audio.category}`) }}</span
               ><span class="mx-2">{{ $t('interpunct') }}</span>
             </span>
 

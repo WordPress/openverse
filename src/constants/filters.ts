@@ -61,7 +61,14 @@ export const mediaUniqueFilterKeys = deepFreeze<
 const filterCodesPerCategory = deepFreeze<Record<FilterCategory, string[]>>({
   licenses: [...ACTIVE_LICENSES],
   licenseTypes: ['commercial', 'modification'],
-  audioCategories: ['music', 'sound', 'podcast'],
+  audioCategories: [
+    'audiobook',
+    'music',
+    'news',
+    'podcast',
+    'pronunciation',
+    'sound_effect',
+  ],
   imageCategories: ['photograph', 'illustration', 'digitized_artwork'],
   audioExtensions: ['mp3', 'ogg', 'flac'],
   imageExtensions: ['jpg', 'png', 'gif', 'svg'],
