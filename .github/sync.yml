@@ -43,12 +43,7 @@ group:
   - repos: |
       WordPress/openverse-catalog
       WordPress/openverse-api
+      WordPress/openverse-infrastructure
     files:
       - source: .github/CODEOWNERS
         dest: .github/CODEOWNERS
-  # Automattic repositories
-  - repos: |
-      WordPress/openverse-infrastructure
-    files:
-      - source: .github/workflows/pr_ping.yml
-        dest: .github/workflows/pr_ping.yml
