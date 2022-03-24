@@ -252,7 +252,7 @@ export default VButton
 }
 
 a.button {
-  @apply no-underline;
+  @apply no-underline hover:no-underline;
 }
 
 .primary {

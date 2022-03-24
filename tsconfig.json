@@ -37,6 +37,7 @@
     "**/*.ts",
     "test/proxy.js",
     "src/components/VLink.vue",
+    "src/components/VContentPage.vue",
     "src/composables/types.js",
     "src/composables/use-event-listener-outside.js",
     "src/composables/use-active-audio.js",
