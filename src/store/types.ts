@@ -1,8 +1,7 @@
-import type { SupportedSearchType } from '~/constants/media'
-
 /**
  * The search result object
  */
+import type { FetchState } from '~/composables/use-fetch-state'
 
 type FrontendMediaType = MediaDetail['frontendMediaType']
 export interface MediaResult<
@@ -132,17 +131,6 @@ export interface Filters {
 }
 export type FilterCategory = keyof Filters
 
-export interface FetchState {
-  isFetching: boolean
-  fetchingError: null | string
-  isFinished?: boolean
-}
-
-export interface SearchState {
-  searchType: SupportedSearchType
-  query: Query
-}
-
 export type MediaStoreResult<T extends FrontendMediaType> = MediaResult<
   Record<MediaDetail['id'], T>
 >
@@ -152,16 +140,10 @@ export interface MediaState {
     audio: MediaStoreResult<'audio'>
     image: MediaStoreResult<'image'>
   }
-  mediaFetchState: {
+  fetchState: {
     audio: FetchState
     image: FetchState
   }
   audio: AudioDetail
   image: ImageDetail
-}
-
-export interface MediaFetchState {
-  isFetching: boolean
-  fetchingError: string | null
-  isFinished?: boolean
 }
