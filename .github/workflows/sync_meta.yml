@@ -20,7 +20,7 @@ jobs:
       - name: Run file sync
         uses: BetaHuhn/repo-file-sync-action@v1
         with:
-          GH_PAT: ${{ secrets.ACCESS_TOKEN }}
+          GH_PAT: ${{ github.token }}
           PR_LABELS: |
             🛠 goal: fix
             🤖 aspect: dx

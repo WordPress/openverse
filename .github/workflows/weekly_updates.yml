@@ -7,7 +7,7 @@ on:
     - cron: "1 0 * * 1" # just after midnight on Monday
 
 env:
-  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+  ACCESS_TOKEN: ${{ github.token }}
   MAKE_USERNAME: ${{ secrets.MAKE_USERNAME }}
   MAKE_PASSWORD: ${{ secrets.MAKE_PASSWORD }}
 

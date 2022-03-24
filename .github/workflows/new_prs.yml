@@ -19,7 +19,7 @@ jobs:
         with:
           project: Openverse PRs
           column: In progress
-          repo-token: ${{ secrets.ACCESS_TOKEN }}
+          repo-token: ${{ github.token }}
 
   add_ready:
     name: Add ready PR
@@ -31,4 +31,4 @@ jobs:
         with:
           project: Openverse PRs
           column: Needs review
-          repo-token: ${{ secrets.ACCESS_TOKEN }}
+          repo-token: ${{ github.token }}

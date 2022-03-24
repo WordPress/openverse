@@ -16,4 +16,4 @@ jobs:
         with:
           project: Openverse
           column: Backlog
-          repo-token: ${{ secrets.ACCESS_TOKEN }}
+          repo-token: ${{ github.token }}
