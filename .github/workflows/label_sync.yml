@@ -8,7 +8,7 @@ on:
 
 env:
   LOGGING_LEVEL: 20 # corresponds to INFO
-  ACCESS_TOKEN: ${{ github.token }}
+  ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   sync_labels:

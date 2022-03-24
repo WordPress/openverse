@@ -6,7 +6,7 @@ on:
       - label_pr
 
 env:
-  ACCESS_TOKEN: ${{ github.token }}
+  ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   PR_URL: ${{ github.event.client_payload.pr_url }}
 
 jobs:
