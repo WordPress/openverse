@@ -19,7 +19,7 @@ precommit:
 
 # Run pre-commit to lint and reformat all files
 lint:
-    cd python && pipenv run pre-commit run --all-files
+    cd automations/python && pipenv run pre-commit run --all-files
 
 ##########
 # Python #
@@ -27,7 +27,7 @@ lint:
 
 # Install dependencies for Python
 _py-install:
-    cd python && pipenv install --dev
+    cd automations/python && pipenv install --dev
 
 ##############
 # JavaScript #
@@ -35,4 +35,4 @@ _py-install:
 
 # Install dependencies for JavaScript
 _js-install:
-    cd js && npm install
+    cd automations/js && npm install
