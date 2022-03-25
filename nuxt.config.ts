@@ -11,6 +11,7 @@ import { sentryConfig } from './src/utils/sentry-config'
 import { env } from './src/utils/env'
 
 import type { NuxtConfig } from '@nuxt/types'
+import type { LocaleObject } from '@nuxtjs/i18n'
 
 /**
  * The default metadata for the site. Can be extended and/or overwritten per page. And even in components!
@@ -189,7 +190,7 @@ const config: NuxtConfig = {
         file: 'en.json',
       },
       ...(locales ?? []),
-    ].filter((l) => Boolean(l.iso)),
+    ].filter((l) => Boolean(l.iso)) as LocaleObject[],
     lazy: true,
     langDir: 'locales',
     defaultLocale: 'en',

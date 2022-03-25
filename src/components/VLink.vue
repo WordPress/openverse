@@ -33,9 +33,11 @@ export default defineComponent({
   },
   setup(props) {
     const { app } = useContext()
-    const hasHref = computed(
-      () => typeof props.href === 'string' && !['', '#'].includes(props.href)
-    )
+    function checkHref(p: typeof props): p is { href: string } {
+      return typeof p.href === 'string' && !['', '#'].includes(p.href)
+    }
+
+    const hasHref = computed(() => checkHref(props))
     const isInternal = computed(
       () => hasHref.value && props.href?.startsWith('/')
     )
@@ -44,7 +46,7 @@ export default defineComponent({
     )
 
     let linkProperties = computed(() =>
-      hasHref.value
+      checkHref(props)
         ? isInternal.value
           ? { to: app?.localePath(props.href) ?? props.href }
           : { ...defaultProps, href: props.href }

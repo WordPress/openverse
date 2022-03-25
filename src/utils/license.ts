@@ -5,7 +5,7 @@ import {
   PUBLIC_DOMAIN_MARKS,
 } from '~/constants/license'
 
-import type { IVueI18n } from 'vue-i18n'
+import type VueI18n from 'vue-i18n'
 
 /**
  * Get the full name of the license in a displayable format from the license
@@ -19,7 +19,7 @@ import type { IVueI18n } from 'vue-i18n'
 export const getFullLicenseName = (
   license: License,
   licenseVersion: LicenseVersion = '', // unknown version
-  i18n: IVueI18n | null = null
+  i18n: VueI18n | null = null
 ): string => {
   let licenseName
 
