@@ -14,6 +14,16 @@ def search(fixture):
     assert fixture["result_count"] > 0
 
 
+def search_by_category(media_path, category, fixture):
+    response = requests.get(f"{API_URL}/v1/{media_path}?category={category}")
+    assert response.status_code == 200
+    data = json.loads(response.text)
+    assert data["result_count"] < fixture["result_count"]
+    results = data["results"]
+    # Make sure each result is from the specified category
+    assert all(audio_item["category"] == category for audio_item in results)
+
+
 def search_all_excluded(media_path, excluded_source):
     response = requests.get(
         f"{API_URL}/v1/{media_path}?q=test&excluded_source={','.join(excluded_source)}"

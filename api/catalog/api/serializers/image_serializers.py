@@ -26,7 +26,7 @@ class ImageSearchRequestSerializer(
     fields_names = [
         *MediaSearchRequestSerializer.fields_names,
         *ImageSearchRequestSourceSerializer.field_names,
-        "categories",
+        "category",
         "aspect_ratio",
         "size",
     ]
@@ -36,8 +36,8 @@ class ImageSearchRequestSerializer(
     """
 
     # Ref: ingestion_server/ingestion_server/categorize.py#Category
-    categories = serializers.CharField(
-        label="categories",
+    category = serializers.CharField(
+        label="category",
         help_text="A comma separated list of categories; available categories "
         "include `illustration`, `photograph`, and "
         "`digitized_artwork`.",

@@ -52,7 +52,7 @@ class AudioSearchRequestSerializer(
     fields_names = [
         *MediaSearchRequestSerializer.fields_names,
         *AudioSearchRequestSourceSerializer.field_names,
-        "categories",
+        "category",
         "duration",
     ]
     """
@@ -60,8 +60,8 @@ class AudioSearchRequestSerializer(
     used to generate Swagger documentation.
     """
 
-    categories = serializers.CharField(
-        label="categories",
+    category = serializers.CharField(
+        label="category",
         help_text="A comma separated list of categories; available categories "
         "include `music`, `sound_effect`, `podcast`, `audiobook`, "
         "and `news`.",
