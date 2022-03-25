@@ -1,6 +1,6 @@
 <template>
   <VButton
-    variant="plain"
+    v-bind="buttonProps"
     size="disabled"
     class="icon-button flex flex-shrink-0 items-center justify-center border-1.5 active:shadow-ring"
     :class="[...buttonSizeClasses]"
@@ -49,6 +49,11 @@ export default {
      * documentation on `VIcon`.
      */
     iconProps: {},
+    /**
+     * props to pass down to the `VButton` component nested inside the button;
+     * See documentation on `VButton`.
+     */
+    buttonProps: {},
   },
   setup(props, { attrs }) {
     const type = attrs['type'] ?? 'button'
