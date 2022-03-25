@@ -141,6 +141,32 @@ jobs:
           name: docs
           path: api/build/html/
 
+  check-migrations:
+    name: Check for uncommited Django migrations
+    runs-on: ubuntu-latest
+    needs:
+      - build-images
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup just
+        uses: extractions/setup-just@v1
+
+      - name: Download all images
+        uses: actions/download-artifact@v2
+        with:
+          path: /tmp
+
+      - name: Load all images
+        run: |
+          docker load --input /tmp/api/api.tar
+          docker load --input /tmp/ingestion_server/ingestion_server.tar
+          docker load --input /tmp/analytics/analytics.tar
+
+      - name: Run makemigrations
+        run: just dj -T makemigrations --check --noinput
+
   push:
     name: Publish Docker images
     runs-on: ubuntu-latest
