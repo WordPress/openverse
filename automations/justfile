@@ -8,7 +8,7 @@ default:
 # Dev #
 #######
 
-# Install Python dependencies in Pipenv environments
+# Install Python dependencies in Pipenv environments and JS dependencies
 @install:
     just _py-install
     just _js-install
