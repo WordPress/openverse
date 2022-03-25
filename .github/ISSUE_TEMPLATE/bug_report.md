@@ -6,7 +6,8 @@ title: "<Replace this with actual title>"
 ---
 
 ## Description
-<!-- Concisely describe the bug. -->
+<!-- Concisely describe the bug. Compare your experience with what you expected to happen. -->
+<!-- For example: "I clicked the 'submit' button and instead of seeing a thank you message, I saw a blank page." -->
 
 ## Reproduction
 <!-- Provide detailed steps to reproduce the bug. -->
@@ -14,9 +15,6 @@ title: "<Replace this with actual title>"
 2. <!-- Step 2 ... -->
 3. <!-- Step 3 ... -->
 4. See error.
-
-## Expectation
-<!-- Concisely describe what you expected to happen. -->
 
 ## Screenshots
 <!-- Add screenshots to show the problem; or delete the section entirely. -->
