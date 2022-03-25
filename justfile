@@ -15,7 +15,7 @@ default:
 
 # Setup pre-commit as a Git hook
 precommit:
-    cd python && pipenv run pre-commit install
+    cd automations/python && pipenv run pre-commit install
 
 # Run pre-commit to lint and reformat all files
 lint:
