@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest a new feature or improvements to an existing one
-labels: "✨ goal: improvement, 🚦 status: awaiting triage, 💻 aspect: code, 🟩 priority: low"
+labels: "✨ goal: improvement, 🚦 status: awaiting triage"
 title: "<Replace this with actual title>"
 ---
 
