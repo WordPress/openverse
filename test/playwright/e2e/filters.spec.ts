@@ -44,7 +44,7 @@ for (const searchType of supportedSearchTypes) {
     page,
   }) => {
     const searchTypePath = searchType === ALL_MEDIA ? '' : searchType
-    const searchUrl = `/search/${searchTypePath}/?q=cat`
+    const searchUrl = `/search/${searchTypePath}?q=cat`
     await page.goto(searchUrl)
 
     await openFilters(page)
