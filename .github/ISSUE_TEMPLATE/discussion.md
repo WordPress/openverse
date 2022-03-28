@@ -1,6 +1,6 @@
 ---
 name: Discussion
-about: Encourage conversation amongst contributors
+about: Encourage conversation among contributors
 labels: "💬 talk: discussion"
 title: "Discuss <Replace this with actual title>"
 ---
