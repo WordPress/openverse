@@ -275,7 +275,7 @@ class AbstractAltFile:
 
     @property
     def size_in_mib(self):  # ~ MiB or mibibytes
-        return self.filesize / 2 ** 20
+        return self.filesize / 2**20
 
     @property
     def size_in_mb(self):  # ~ MB or megabytes
