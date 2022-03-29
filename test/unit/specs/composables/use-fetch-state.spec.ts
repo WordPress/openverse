@@ -39,14 +39,16 @@ describe('useFetchState', () => {
     fetchState.endFetching('Server Error')
     expect(fetchState.fetchState).toEqual({
       isFetching: false,
-      isFinished: false,
+      isFinished: true,
       fetchingError: 'Server Error',
       canFetch: false,
       hasStarted: true,
     })
   })
-  it('should set fetching to finished', () => {
+  it('setFinished should set isFinished to true, and isFetching to false', () => {
     const fetchState = useFetchState()
+    fetchState.startFetching()
+    fetchState.endFetching()
     fetchState.setFinished()
     expect(fetchState.fetchState).toEqual({
       isFetching: false,

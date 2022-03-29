@@ -1,6 +1,6 @@
 export const propTypes = {
   resultItems: {
-    type: /** @type {import('../../store/types').MediaDetail[]} */ (Object),
+    type: /** @type {import('../../store/types').Media[]} */ (Object),
     required: true,
   },
   fetchState: {

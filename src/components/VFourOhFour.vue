@@ -55,9 +55,7 @@ import {
   useRouter,
 } from '@nuxtjs/composition-api'
 
-import { MEDIA } from '~/constants/store-modules'
-import { FETCH_MEDIA } from '~/constants/action-types'
-
+import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
 
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
@@ -78,8 +76,9 @@ const VFourOhFour = defineComponent({
   },
   props: ['error'],
   setup() {
+    const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-    const { app, store } = useContext()
+    const { app } = useContext()
     const router = useRouter()
 
     const searchTerm = ref('')
@@ -91,9 +90,7 @@ const VFourOhFour = defineComponent({
       if (searchTerm.value === '') return
 
       searchStore.setSearchTerm(searchTerm.value)
-      await store.dispatch(`${MEDIA}/${FETCH_MEDIA}`, {
-        query: { q: searchTerm.value },
-      })
+      await mediaStore.fetchMedia()
 
       router.push(
         app.localePath({

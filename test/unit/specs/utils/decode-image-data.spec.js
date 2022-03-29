@@ -16,6 +16,6 @@ describe('decodeImageData', () => {
       frontendMediaType: IMAGE,
     }
 
-    expect(decodeMediaData(data)).toEqual(expected)
+    expect(decodeMediaData(data, IMAGE)).toEqual(expected)
   })
 })

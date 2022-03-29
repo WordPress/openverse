@@ -91,7 +91,7 @@ test('common filters are retained when media type changes from single type to al
   page,
 }) => {
   await page.goto(
-    '/search/audio?q=cat&license_type=commercial&license=cc0&searchBy=creator'
+    '/search/image?q=cat&license_type=commercial&license=cc0&searchBy=creator'
   )
   await openFilters(page)
 
@@ -132,6 +132,15 @@ test('selecting some filters can disable dependent filters', async ({
   }
 })
 
+/**
+ * When the search type changes:
+ * - image-specific filter (aspect_ration=tall) is discarded
+ * - common filter (license_type=CC0) is kept
+ * - filter button text updates
+ * - URL updates
+ * Tests for the missing checkbox with `toHaveCount` are flaky, so we use filter button
+ * text and the URL instead.
+ */
 test('filters are updated when media type changes', async ({ page }) => {
   await page.goto('/search/image?q=cat&aspect_ratio=tall&license=cc0')
   await openFilters(page)
@@ -141,10 +150,11 @@ test('filters are updated when media type changes', async ({ page }) => {
 
   await changeContentType(page, 'Audio')
 
-  await expect(page.locator('label:has-text("Tall")')).toHaveCount(0, {
-    timeout: 300,
-  })
+  // Only CC0 checkbox is checked, and the filter button label is '1 Filter'
   await assertCheckboxStatus(page, 'cc0')
+  const filterButtonSelector =
+    '[aria-controls="filter-sidebar"], [aria-controls="filter-modal"]'
+  await expect(page.locator(filterButtonSelector)).toHaveText('1 Filter')
 
   await expect(page).toHaveURL('/search/audio?q=cat&license=cc0')
 })

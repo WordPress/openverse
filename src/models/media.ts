@@ -21,8 +21,43 @@ export interface Media {
   license: string
   license_version: string
   license_url: string
+  attribution: string
 
   frontendMediaType: SupportedMediaType
 
+  provider: string
+  source?: string
+  thumbnail?: string
+
+  filesize?: string
+  filetype?: string
+
+  detail_url: string
+  related_url: string
+
   tags: Tag[]
+  fields_matched?: string[]
 }
+
+export interface ImageDetail extends Media {
+  frontendMediaType: 'image'
+
+  height?: number
+  width?: number
+}
+
+export interface AudioDetail extends Media {
+  frontendMediaType: 'audio'
+
+  audio_set?: string
+  genres?: string[]
+  duration?: number
+  bit_rate?: number
+  sample_rate?: number
+  alt_files?: { provider: string; filetype: string }[]
+  peaks?: number[]
+  waveform?: string
+}
+
+export type DetailFromMediaType<T extends SupportedMediaType> =
+  T extends 'audio' ? AudioDetail : ImageDetail

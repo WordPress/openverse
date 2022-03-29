@@ -15,7 +15,6 @@ import type {
   FilterCategory,
   FilterItem,
   Filters,
-  QueryKey,
 } from '~/store/types'
 
 const filterPropertyMappings: Record<FilterCategory, ApiQueryKeys> = {
@@ -233,7 +232,7 @@ export const areQueriesEqual = (
   oldQuery: ApiQueryParams
 ): boolean => {
   const queryKeys = (query: ApiQueryParams) =>
-    Object.keys(query).filter((k) => k !== 'q') as QueryKey[]
+    Object.keys(query).filter((k) => k !== 'q') as (keyof ApiQueryParams)[]
   const oldQueryKeys = queryKeys(oldQuery)
   const newQueryKeys = queryKeys(newQuery)
   if (oldQueryKeys.length !== newQueryKeys.length) return false

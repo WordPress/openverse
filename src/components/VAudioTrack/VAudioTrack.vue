@@ -42,7 +42,6 @@ import {
   computed,
   defineComponent,
   ref,
-  useStore,
   watch,
   onUnmounted,
   useRoute,
@@ -51,8 +50,10 @@ import {
 import { useActiveAudio } from '~/composables/use-active-audio'
 import { defaultRef } from '~/composables/default-ref'
 
-import { MEDIA } from '~/constants/store-modules'
 import { useActiveMediaStore } from '~/stores/active-media'
+import { useMediaStore } from '~/stores/media'
+
+import { AUDIO } from '~/constants/media'
 
 import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
 import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
@@ -120,7 +121,6 @@ export default defineComponent({
   props: propTypes,
   setup(props, { emit }) {
     const activeMediaStore = useActiveMediaStore()
-    const store = useStore()
     const route = useRoute()
 
     const activeAudio = useActiveAudio()
@@ -254,10 +254,10 @@ export default defineComponent({
       localAudio.removeEventListener('ended', setPlayed)
       localAudio.removeEventListener('timeupdate', setTimeWhenPaused)
       localAudio.removeEventListener('durationchange', setDuration)
-
+      const mediaStore = useMediaStore()
       if (
         route.value.params.id === props.audio.id ||
-        store.getters[`${MEDIA}/results`]?.items?.[props.audio.id]
+        mediaStore.getItemById(AUDIO, props.audio.id)
       ) {
         /**
          * If switching to any route other than the single result

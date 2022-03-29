@@ -21,13 +21,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { computed } from '@nuxtjs/composition-api'
 
-import { FETCH_MEDIA_ITEM } from '~/constants/action-types'
 import { AUDIO } from '~/constants/media'
-import { MEDIA } from '~/constants/store-modules'
 import getAttributionHtml from '~/utils/attribution-html'
 import { getFullLicenseName } from '~/utils/license'
+import { useMediaStore } from '~/stores/media'
 
 import VAudioDetails from '~/components/VAudioDetails/VAudioDetails.vue'
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
@@ -49,8 +48,13 @@ const AudioDetailPage = {
       showBackToSearchLink: false,
     }
   },
+  setup() {
+    const mediaStore = useMediaStore()
+    const audio = computed(() => mediaStore.state.audio)
+
+    return { audio }
+  },
   computed: {
-    ...mapState(MEDIA, ['audio']),
     fullLicenseName() {
       return getFullLicenseName(
         this.audio.license,
@@ -67,9 +71,10 @@ const AudioDetailPage = {
       this.id = newAudio.id
     },
   },
-  async asyncData({ store, route, error, app }) {
+  async asyncData({ route, error, app, $pinia }) {
     try {
-      await store.dispatch(`${MEDIA}/${FETCH_MEDIA_ITEM}`, {
+      const mediaStore = useMediaStore($pinia)
+      await mediaStore.fetchMediaItem({
         id: route.params.id,
         mediaType: AUDIO,
       })

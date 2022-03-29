@@ -35,7 +35,6 @@ import type {
   FilterCategory,
   FilterItem,
   Filters,
-  QueryKey,
 } from '~/store/types'
 
 export const useSearchStore = defineStore('search', () => {
@@ -74,9 +73,9 @@ export const useSearchStore = defineStore('search', () => {
   ) => {
     const query = { ...filtersToQueryData(filters, searchType) }
 
-    const queryKeys = Object.keys(query) as QueryKey[]
+    const queryKeys = Object.keys(query) as (keyof ApiQueryParams)[]
     return queryKeys.reduce(
-      (obj, key: QueryKey) => {
+      (obj, key: keyof ApiQueryParams) => {
         if (key !== 'q' && query[key]?.length) {
           obj[key] = query[key]
         }

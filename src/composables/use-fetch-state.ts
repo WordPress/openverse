@@ -11,12 +11,11 @@ export interface FetchState {
 /* Constants */
 
 /**
- * Statuses of requests:
+ * Mutually exclusive request statuses:
  * - `idle`: the current request has never been sent yet, for example,
  * on the first app load, or after a change in search filters or search term.
  * - `fetching`: the request was sent, but no response was received yet.
  * - `success`: a successful response was received for the current request.
- * - `finished`: for multi-page requests, this is true when no more pages are left.
  * - `error`: an error response was received.
  */
 const statuses = Object.freeze({
@@ -24,7 +23,6 @@ const statuses = Object.freeze({
   FETCHING: 'fetching',
   SUCCESS: 'success',
   ERROR: 'error',
-  FINISHED: 'finished',
 } as const)
 
 type Status = typeof statuses[keyof typeof statuses]
@@ -47,6 +45,7 @@ const canFetchStatuses: Status[] = [statuses.IDLE, statuses.SUCCESS]
 export const useFetchState = (initialState = statuses.IDLE) => {
   const fetchStatus: Ref<Status> = ref(initialState)
   const fetchError: Ref<string | null> = ref(null)
+  const isFinished: Ref<boolean> = ref(false)
 
   watch(fetchStatus, () => {
     if (nonErrorStatuses.includes(fetchStatus.value)) {
@@ -68,12 +67,17 @@ export const useFetchState = (initialState = statuses.IDLE) => {
     if (errorMessage) {
       fetchStatus.value = statuses.ERROR
       fetchError.value = errorMessage
+      isFinished.value = true
     } else {
       fetchStatus.value = statuses.SUCCESS
     }
   }
+  /**
+   * Used for paginated requests, `isFinished` means there are no more pages left.
+   * It does not change the fetchStatus, which should be handled separately.
+   */
   const setFinished = () => {
-    fetchStatus.value = statuses.FINISHED
+    isFinished.value = true
   }
 
   /**
@@ -86,11 +90,9 @@ export const useFetchState = (initialState = statuses.IDLE) => {
    * Whether a new request for the same parameters with a new page can be sent.
    * Use this to ensure that prevent racing requests.
    */
-  const canFetch = computed(() => canFetchStatuses.includes(fetchStatus.value))
-  /**
-   * Used for paginated requests, `isFinished` means there are no more pages left.
-   */
-  const isFinished = computed(() => fetchStatus.value === statuses.FINISHED)
+  const canFetch = computed(
+    () => canFetchStatuses.includes(fetchStatus.value) && !isFinished.value
+  )
   const fetchingError = computed(() => fetchError.value)
 
   const fetchState: FetchState = reactive({

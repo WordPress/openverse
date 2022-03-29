@@ -61,13 +61,12 @@ import {
   watch,
 } from '@nuxtjs/composition-api'
 
-import { MEDIA } from '~/constants/store-modules'
-import { CLEAR_MEDIA, FETCH_MEDIA } from '~/constants/action-types'
-import { ALL_MEDIA, supportedMediaTypes } from '~/constants/media'
+import { ALL_MEDIA } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useMatchSearchRoutes } from '~/composables/use-match-routes'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
+import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
 
 import VLogoButton from '~/components/VHeader/VLogoButton.vue'
@@ -91,8 +90,9 @@ const VHeader = defineComponent({
     VSearchBar,
   },
   setup() {
+    const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-    const { app, i18n, store } = useContext()
+    const { app, i18n } = useContext()
     const router = useRouter()
 
     const { matches: isSearchRoute } = useMatchSearchRoutes()
@@ -135,11 +135,11 @@ const VHeader = defineComponent({
 
     /**  @type {import('@nuxtjs/composition-api').ComputedRef<boolean>} */
     const isFetching = computed(() => {
-      return store.getters['media/fetchState'].isFetching
+      return mediaStore.fetchState.isFetching
     })
 
     /** @type {import('@nuxtjs/composition-api').ComputedRef<number>} */
-    const resultsCount = computed(() => store.getters['media/resultCount'])
+    const resultsCount = computed(() => mediaStore.resultCount)
     const { getI18nCount } = useI18nResultsCount()
     /**
      * Additional text at the end of the search bar.
@@ -182,6 +182,7 @@ const VHeader = defineComponent({
      *     update query `q` param, fetch new media.
      */
     const handleSearch = async () => {
+      const mediaStore = useMediaStore()
       const searchStore = useSearchStore()
       const searchType = isSearchRoute.value
         ? searchStore.searchType
@@ -192,11 +193,8 @@ const VHeader = defineComponent({
       )
         return
       if (searchTermChanged.value) {
-        await Promise.all(
-          supportedMediaTypes.map((mediaType) =>
-            store.dispatch(`${MEDIA}/${CLEAR_MEDIA}`, { mediaType })
-          )
-        )
+        await mediaStore.clearMedia()
+
         searchStore.setSearchTerm(searchTerm.value)
         searchStore.setSearchType(searchType)
       }
@@ -205,9 +203,7 @@ const VHeader = defineComponent({
         query: searchStore.searchQueryParams,
       })
       router.push(newPath)
-      await store.dispatch(`${MEDIA}/${FETCH_MEDIA}`, {
-        ...searchStore.searchQueryParams,
-      })
+      await mediaStore.fetchMedia()
     }
 
     return {

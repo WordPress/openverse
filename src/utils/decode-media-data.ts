@@ -1,9 +1,7 @@
 import { title } from 'case'
 
 import { decodeData as decodeString } from '~/utils/decode-data'
-import type { SupportedMediaType } from '~/constants/media'
-import { IMAGE } from '~/constants/media'
-import type { Media } from '~/models/media'
+import type { Media, Tag } from '~/models/media'
 
 /**
  * This interface is a subset of `Media` that types dictionaries sent by the API
@@ -21,17 +19,18 @@ interface ApiMedia extends Omit<Media, 'frontendMediaType' | 'title'> {
  * @param mediaType - the type of the media
  * @returns the given media object with the text fields decoded
  */
-export const decodeMediaData = (
+export const decodeMediaData = <T extends Media>(
   media: ApiMedia,
-  mediaType: SupportedMediaType = IMAGE
-): Media => ({
-  ...media,
-  frontendMediaType: mediaType,
-  title: decodeString(media.title) || title(mediaType),
-  creator: decodeString(media.creator),
-  // TODO: remove `?? []`
-  tags: (media.tags ?? []).map((tag) => ({
-    ...tag,
-    name: decodeString(tag.name),
-  })),
-})
+  mediaType: T['frontendMediaType']
+): T =>
+  ({
+    ...media,
+    frontendMediaType: mediaType,
+    title: decodeString(media.title) || title(mediaType),
+    creator: decodeString(media.creator),
+    // TODO: remove `?? []`
+    tags: (media.tags ?? ([] as Tag[])).map((tag) => ({
+      ...tag,
+      name: decodeString(tag.name),
+    })),
+  } as T)

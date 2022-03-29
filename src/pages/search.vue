@@ -27,16 +27,14 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
 import { isShallowEqualObjects } from '@wordpress/is-shallow-equal'
 import { computed, inject } from '@nuxtjs/composition-api'
 
-import { FETCH_MEDIA } from '~/constants/action-types'
 import { supportedSearchTypes } from '~/constants/media'
-import { MEDIA } from '~/constants/store-modules'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 
+import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
 
 import VSearchGrid from '~/components/VSearchGrid.vue'
@@ -54,6 +52,7 @@ const BrowsePage = {
     const isMinScreenMd = isMinScreen('md')
     const { isVisible } = useFilterSidebarVisibility()
     const showScrollButton = inject('showScrollButton')
+    const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
     const searchTerm = computed(() => searchStore.searchTerm)
@@ -62,6 +61,9 @@ const BrowsePage = {
     const supported = computed(() =>
       supportedSearchTypes.includes(searchType.value)
     )
+    const resultCount = computed(() => mediaStore.resultCount)
+    const fetchState = computed(() => mediaStore.fetchState)
+    const resultItems = computed(() => mediaStore.resultItems)
 
     return {
       isMinScreenMd,
@@ -71,13 +73,18 @@ const BrowsePage = {
       searchType,
       supported,
       query,
+
+      resultCount,
+      fetchState,
+      resultItems,
+      fetchMedia: mediaStore.fetchMedia,
       setSearchStateFromUrl: searchStore.setSearchStateFromUrl,
     }
   },
   scrollToTop: false,
   async fetch() {
     if (this.supported && !this.resultCount && this.searchTerm.trim() !== '') {
-      await this.fetchMedia({})
+      await this.fetchMedia()
     }
   },
   asyncData({ route, $pinia }) {
@@ -90,7 +97,6 @@ const BrowsePage = {
     }
   },
   computed: {
-    ...mapGetters(MEDIA, ['resultCount', 'fetchState', 'resultItems']),
     /**
      * Number of search results. Returns 0 for unsupported types.
      * @returns {number}
@@ -98,9 +104,6 @@ const BrowsePage = {
     resultsCount() {
       return this.supported ? this.resultCount : 0 ?? 0
     },
-  },
-  methods: {
-    ...mapActions(MEDIA, { fetchMedia: FETCH_MEDIA }),
   },
   watch: {
     /**
@@ -115,7 +118,7 @@ const BrowsePage = {
       ) {
         const { query, path } = newRoute
         await this.setSearchStateFromUrl({ urlQuery: query, path })
-        this.fetchMedia(this.searchQueryParams)
+        this.fetchMedia()
       }
     },
   },

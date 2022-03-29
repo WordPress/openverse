@@ -135,13 +135,12 @@
 </template>
 
 <script>
-import { ref, useContext, useRouter, useStore } from '@nuxtjs/composition-api'
+import { ref, useContext, useRouter } from '@nuxtjs/composition-api'
 
-import { FETCH_MEDIA } from '~/constants/action-types'
-import { MEDIA } from '~/constants/store-modules'
 import { ALL_MEDIA, supportedSearchTypes } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
 
+import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
 
 import VLink from '~/components/VLink.vue'
@@ -178,8 +177,8 @@ const HomePage = {
   setup() {
     const { app } = useContext()
     const router = useRouter()
+    const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-    const store = useStore()
 
     const featuredSearches = imageInfo.sets.map((setItem) => ({
       ...setItem,
@@ -223,7 +222,7 @@ const HomePage = {
       })
       router.push(newPath)
 
-      await store.dispatch(`${MEDIA}/${FETCH_MEDIA}`, { ...query })
+      await mediaStore.fetchMedia()
     }
 
     return {

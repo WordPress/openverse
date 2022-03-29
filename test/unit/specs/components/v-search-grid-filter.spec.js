@@ -6,8 +6,6 @@ import { createPinia, PiniaVuePlugin } from 'pinia'
 
 import messages from '~/locales/en.json'
 
-import { FETCH_MEDIA } from '~/constants/action-types'
-
 import { useSearchStore } from '~/stores/search'
 
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
@@ -38,9 +36,6 @@ describe('VSearchGridFilter', () => {
           namespaced: true,
           state: {
             imagesCount: 2,
-          },
-          actions: {
-            [FETCH_MEDIA]: jest.fn(),
           },
         },
       },

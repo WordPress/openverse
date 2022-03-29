@@ -1,11 +1,11 @@
 import { ref, useFetch } from '@nuxtjs/composition-api'
 
-import { mediaServices } from '~/store/media'
+import { services } from '~/stores/media/services'
 
 export default function useRelated({
   mediaType,
   mediaId,
-  service = mediaServices[mediaType],
+  service = services[mediaType],
 }) {
   const media = ref([])
   // fetch and fetchState are available as this.$fetch and this.$fetchState

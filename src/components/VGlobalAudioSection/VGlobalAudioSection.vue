@@ -11,12 +11,12 @@
 </template>
 
 <script>
-import { useStore, useRoute, watch, computed } from '@nuxtjs/composition-api'
+import { useRoute, watch, computed } from '@nuxtjs/composition-api'
 
 import { useActiveAudio } from '~/composables/use-active-audio'
-
 import { useActiveMediaStore } from '~/stores/active-media'
 import { AUDIO } from '~/constants/media'
+import { useMediaStore } from '~/stores/media'
 
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
 import VGlobalAudioTrack from '~/components/VAudioTrack/VGlobalAudioTrack.vue'
@@ -31,7 +31,7 @@ export default {
   },
   setup() {
     const activeMediaStore = useActiveMediaStore()
-    const store = useStore()
+    const mediaStore = useMediaStore()
     const route = useRoute()
 
     const activeAudio = useActiveAudio()
@@ -41,7 +41,7 @@ export default {
     const audio = computed(() => {
       const trackId = activeMediaStore.id
       if (trackId) {
-        return store.getters['media/getItemById'](AUDIO, trackId)
+        return mediaStore.getItemById(AUDIO, trackId)
       }
       return null
     })

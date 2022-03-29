@@ -5,15 +5,11 @@ import {
   ref,
   useContext,
   useRouter,
-  useStore,
 } from '@nuxtjs/composition-api'
 
-import useSearchType from '~/composables/use-search-type'
-
 import { ALL_MEDIA, supportedMediaTypes } from '~/constants/media'
-import { FETCH_MEDIA } from '~/constants/action-types'
-import { MEDIA } from '~/constants/store-modules'
-
+import useSearchType from '~/composables/use-search-type'
+import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
 
 import VMobileMenuModal from '~/components/VContentSwitcher/VMobileMenuModal.vue'
@@ -42,8 +38,8 @@ export default {
     const menuModalRef = ref(null)
     const content = useSearchType()
     const { app } = useContext()
+    const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-    const store = useStore()
     const router = useRouter()
 
     const isMounted = ref(false)
@@ -61,7 +57,7 @@ export default {
       router.push(newPath)
 
       function typeWithoutMedia(mediaType) {
-        return store.getters['media/resultCountsPerMediaType'][mediaType] === 0
+        return mediaStore.resultCountsPerMediaType[mediaType] === 0
       }
 
       const shouldFetchMedia =
@@ -70,9 +66,7 @@ export default {
           : typeWithoutMedia(type)
 
       if (shouldFetchMedia) {
-        await store.dispatch(`${MEDIA}/${FETCH_MEDIA}`, {
-          ...searchStore.searchQueryParams,
-        })
+        await mediaStore.fetchMedia()
       }
     }
 

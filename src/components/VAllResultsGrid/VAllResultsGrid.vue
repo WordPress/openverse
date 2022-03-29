@@ -53,6 +53,8 @@
 <script>
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 
+import { useMediaStore } from '~/stores/media'
+
 import VImageCellSquare from '~/components/VAllResultsGrid/VImageCellSquare.vue'
 import VAudioCell from '~/components/VAllResultsGrid/VAudioCell.vue'
 import VLoadMore from '~/components/VLoadMore.vue'
@@ -70,7 +72,8 @@ export default defineComponent({
   },
   props: ['canLoadMore'],
   setup(_, { emit }) {
-    const { i18n, store } = useContext()
+    const { i18n } = useContext()
+    const mediaStore = useMediaStore()
 
     const onLoadMore = () => {
       emit('load-more')
@@ -79,33 +82,27 @@ export default defineComponent({
     /** @type {import('@nuxtjs/composition-api').ComputedRef<boolean>} */
     const resultsLoading = computed(() => {
       return (
-        Boolean(store.getters['media/fetchState'].fetchingError) ||
-        store.getters['media/fetchState'].isFetching
+        Boolean(mediaStore.fetchState.fetchingError) ||
+        mediaStore.fetchState.isFetching
       )
     })
 
     /**
-     * @type { ComputedRef<import('../../store/types').MediaDetail[]> }
+     * @type { ComputedRef<import('../../store/types').Media[]> }
      */
-    const allMedia = computed(() => store.getters['media/allMedia'])
+    const allMedia = computed(() => mediaStore.allMedia)
 
-    const isError = computed(
-      () => !!store.getters['media/fetchState'].fetchingError
-    )
+    const isError = computed(() => !!mediaStore.fetchState.fetchingError)
 
     /** @type {import('@nuxtjs/composition-api').ComputedRef<import('../../store/types').FetchState>} */
-    const fetchState = computed(() => {
-      return store.getters['media/fetchState']
-    })
+    const fetchState = computed(() => mediaStore.fetchState)
 
     const errorHeader = computed(() => {
       const type = i18n.t('browse-page.search-form.audio')
       return i18n.t('browse-page.fetching-error', { type })
     })
 
-    const resultCounts = computed(() => {
-      return store.getters['media/resultCountsPerMediaType']
-    })
+    const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
 
     const noResults = computed(
       () => fetchState.value.isFinished && allMedia.value.length === 0
