@@ -2,7 +2,7 @@
 name: Discussion
 about: Encourage conversation among contributors
 labels: "💬 talk: discussion"
-title: "Discuss <Replace this with actual title>"
+title: "<Replace this with actual title>"
 ---
 
 <!-- Consider how soon we need the discussion resolved vs. giving everyone an opportunity to participate.  -->
