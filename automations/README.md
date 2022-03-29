@@ -11,4 +11,4 @@ This directory contains automations for managing the Openverse repositories and 
 
 ## Installing Dependencies
 
-Use `just install` in this directory to set up Python and JavaScript dependencies.
+Run `just install` to set up Python and JavaScript dependencies.
