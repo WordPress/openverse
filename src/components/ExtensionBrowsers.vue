@@ -51,13 +51,12 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .browser-button {
-  background-color: $color-white;
+  @apply bg-white;
+}
 
-  img {
-    height: 1.5em;
-    width: 1.5em;
-  }
+.browser-button img {
+  @apply w-6 h-6;
 }
 </style>

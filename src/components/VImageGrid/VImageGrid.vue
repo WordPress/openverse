@@ -65,7 +65,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .image-grid:after {
   /**
    * This keeps the last item in the results from expanding to fill

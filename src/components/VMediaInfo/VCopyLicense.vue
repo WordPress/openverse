@@ -121,7 +121,7 @@
         </i18n>
       </div>
 
-      <CopyButton
+      <VCopyButton
         :id="`copyattr-${tab}`"
         :el="`#attribution-${tab}`"
         class="mt-6"
@@ -137,11 +137,11 @@ import getAttributionHtml from '~/utils/attribution-html'
 import { isPublicDomain } from '~/utils/license'
 
 import VLink from '~/components/VLink.vue'
-import CopyButton from '~/components/CopyButton.vue'
+import VCopyButton from '~/components/VCopyButton.vue'
 
 const VCopyLicense = defineComponent({
   name: 'VCopyLicense',
-  components: { CopyButton, VLink },
+  components: { VCopyButton, VLink },
   props: {
     media: {
       type: Object,

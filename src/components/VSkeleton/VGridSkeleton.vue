@@ -58,7 +58,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .square {
   aspect-ratio: 1 / 1;
 }

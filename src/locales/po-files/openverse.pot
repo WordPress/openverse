@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-03-23T10:00:02+00:00\n"
+"POT-Creation-Date: 2022-03-29T03:57:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -596,12 +596,12 @@ msgctxt "media-details.reuse.copy-license.plain"
 msgid "Plain text"
 msgstr ""
 
-#: src/components/CopyButton.vue:9
+#: src/components/VCopyButton.vue:11
 msgctxt "media-details.reuse.copy-license.copy-text"
 msgid "Copy text"
 msgstr ""
 
-#: src/components/CopyButton.vue:12
+#: src/components/VCopyButton.vue:14
 msgctxt "media-details.reuse.copy-license.copied"
 msgid "Copied!"
 msgstr ""
@@ -1866,15 +1866,6 @@ msgstr ""
 
 msgctxt "hero.aria.search-type"
 msgid "search type"
-msgstr ""
-
-#: src/components/LocaleSelector.vue:3
-msgctxt "hero.locale.label"
-msgid "Languages available"
-msgstr ""
-
-msgctxt "hero.locale.icon"
-msgid "locale"
 msgstr ""
 
 msgctxt "hero.license-filter.label"

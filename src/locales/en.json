@@ -16,10 +16,6 @@
     "license-filter": {
       "label": "I want something I can"
     },
-    "locale": {
-      "label": "Languages available",
-      "icon": "locale"
-    },
     "aria": {
       "search": "search",
       "search-type": "search type"

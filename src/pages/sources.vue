@@ -194,8 +194,7 @@ const SourcePage = {
 export default SourcePage
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
+<style scoped>
 .table {
   table-layout: fixed;
   width: 100%;

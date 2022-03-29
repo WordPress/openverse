@@ -107,14 +107,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 dl {
-  @apply grid gap-4;
+  @apply grid gap-4 lg:gap-5;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-
-  @screen lg {
-    @apply gap-5;
-  }
 }
 dl div {
   display: flex;

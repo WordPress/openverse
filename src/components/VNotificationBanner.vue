@@ -40,8 +40,8 @@ const VNotificationBanner = defineComponent({
 export default VNotificationBanner
 </script>
 
-<style scoped lang="scss">
-// Styles from learn.wordpress.org
+<style scoped>
+/** Styles from learn.wordpress.org **/
 .wrapper {
   background-color: #fff8e5;
   border-left: 0.25rem solid #ffb900;

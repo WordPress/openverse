@@ -583,7 +583,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="css">
+<style scoped>
 .waveform {
   --v-background-color: var(
     --waveform-background-color,
