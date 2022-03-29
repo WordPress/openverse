@@ -28,7 +28,7 @@ def humanize_time_duration(seconds):
     return ", ".join(parts)
 
 
-def report_completion(provider_name, media_type, duration, record_count):
+def report_completion(provider_name, duration, record_counts_by_media_type):
     """
     Send a Slack notification when the load_data task has completed.
     Messages are only sent out in production and if a Slack connection is defined.
@@ -38,11 +38,18 @@ def report_completion(provider_name, media_type, duration, record_count):
     if isinstance(duration, float):
         duration = humanize_time_duration(duration)
 
+    # List record count per media type
+    media_type_reports = "\n".join(
+        f"  - `{media_type}`: {record_count or '_No data_'}"
+        for media_type, record_count in record_counts_by_media_type.items()
+    )
+
+    # Collect data into a single message
     message = f"""
 *Provider*: `{provider_name}`
-*Media Type*: `{media_type}`
-*Number of Records Upserted*: {record_count}
-*Duration of data pull task*: {duration or "_No data_"}
+*Duration of data pull task*: {duration or '_No data_'}
+*Number of records upserted per media type*:
+{media_type_reports}
 
 * _Duration includes time taken to pull data of all media types._
 """

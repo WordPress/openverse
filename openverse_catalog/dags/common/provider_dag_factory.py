@@ -216,6 +216,8 @@ def create_provider_api_workflow(
             retries=0,
         )
 
+        load_tasks = []
+        record_counts_by_media_type = {}
         for media_type in media_types:
             with TaskGroup(group_id=f"load_{media_type}_data") as load_data:
                 create_loading_table = PythonOperator(
@@ -257,20 +259,6 @@ def create_provider_api_workflow(
                         "identifier": identifier,
                     },
                 )
-                report_load_completion = PythonOperator(
-                    task_id="report_load_completion",
-                    python_callable=reporting.report_completion,
-                    op_kwargs={
-                        "provider_name": provider_name,
-                        "media_type": media_type,
-                        "duration": XCOM_PULL_TEMPLATE.format(
-                            pull_data.task_id, "duration"
-                        ),
-                        "record_count": XCOM_PULL_TEMPLATE.format(
-                            load_from_s3.task_id, "return_value"
-                        ),
-                    },
-                )
                 drop_loading_table = PythonOperator(
                     task_id="drop_loading_table",
                     python_callable=sql.drop_load_table,
@@ -282,9 +270,25 @@ def create_provider_api_workflow(
                     trigger_rule=TriggerRule.ALL_DONE,
                 )
                 [create_loading_table, copy_to_s3] >> load_from_s3
-                load_from_s3 >> [report_load_completion, drop_loading_table]
+                load_from_s3 >> drop_loading_table
 
-            pull_data >> load_data
+                record_counts_by_media_type[media_type] = XCOM_PULL_TEMPLATE.format(
+                    load_from_s3.task_id, "return_value"
+                )
+                load_tasks.append(load_data)
+
+        report_load_completion = PythonOperator(
+            task_id="report_load_completion",
+            python_callable=reporting.report_completion,
+            op_kwargs={
+                "provider_name": provider_name,
+                "duration": XCOM_PULL_TEMPLATE.format(pull_data.task_id, "duration"),
+                "record_counts_by_media_type": record_counts_by_media_type,
+            },
+            trigger_rule=TriggerRule.ALL_DONE,
+        )
+
+        pull_data >> load_tasks >> report_load_completion
 
     return dag
 
