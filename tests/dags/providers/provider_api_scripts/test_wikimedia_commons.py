@@ -426,3 +426,15 @@ def test_parse_audio_file_data_parses_wav_audio_data():
         "meta_data": {"channels": 1},
     }
     assert actual_parsed_data == expected_parsed_data
+
+
+def test_parse_audio_file_data_parses_wav_audio_data_missing_streams():
+    with open(RESOURCES / "audio_filedata_wav.json") as f:
+        file_metadata = json.load(f)
+    # Remove any actual audio metadata
+    file_metadata = file_metadata[:5] + file_metadata[6:]
+    original_data = {"meta_data": {}}
+    actual_parsed_data = wmc._parse_audio_file_data(original_data, file_metadata)
+
+    # No data is available, so nothing should be added
+    assert actual_parsed_data == original_data

@@ -283,10 +283,10 @@ def _get_value_by_names(key_value_list: list, prop_names: list):
 
 def _parse_audio_file_data(parsed_data: dict, file_metadata: list) -> dict:
     streams = _get_value_by_name(file_metadata, "streams")
-    if not streams:
-        audio = _get_value_by_name(file_metadata, "audio")
-        streams = _get_value_by_name(audio, "streams")
     try:
+        if not streams:
+            audio = _get_value_by_name(file_metadata, "audio")
+            streams = _get_value_by_name(audio, "streams")
         streams_data = [stream["value"] for stream in streams][0]
         file_data = _get_value_by_name(streams_data, "header")
         if not file_data:
