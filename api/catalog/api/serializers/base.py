@@ -16,4 +16,9 @@ class SchemableHyperlinkedIdentityField(serializers.HyperlinkedIdentityField):
 
     def get_url(self, *args, **kwargs):
         url = super().get_url(*args, **kwargs)
-        return re.sub(r"^\w+://", f"{self.scheme}://", url, 1)
+
+        # Only rewrite URLs if a fixed scheme is provided
+        if self.scheme is not None:
+            re.sub(r"^\w+://", f"{self.scheme}://", url, 1)
+
+        return url

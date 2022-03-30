@@ -81,6 +81,13 @@ precommit:
 lint:
     cd api && pipenv run pre-commit run --all-files
 
+# Make locally trusted certificates
+cert:
+    mkdir -p nginx/certs/
+    mkcert \
+      -cert-file nginx/certs/openverse.crt \
+      -key-file nginx/certs/openverse.key \
+      dev.openverse.test localhost 127.0.0.1 ::1
 
 #################
 # Elasticsearch #

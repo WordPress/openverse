@@ -6,6 +6,9 @@
 - [Docker](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [Just](https://github.com/casey/just)
+- [mkcert](https://github.com/FiloSottile/mkcert)
+
+Ensure that you have installed `mkcert` (and the corresponding NSS tools). You can run `mkcert -install` to verify your installation.
 
 ## Steps
 
@@ -17,20 +20,25 @@
    cd openverse-api/
    ```
 
-3. From the monorepo root, bring up the Docker Compose system. Docker Compose will automatically read the necessary environment variables from `env.docker` files from project directories.
+3. Generate locally-trusted certificates. These will be used by the NGINX proxy to serve the API over `https`.
+    ```bash
+    just cert
+    ```
+
+4. From the monorepo root, bring up the Docker Compose system. Docker Compose will automatically read the necessary environment variables from `env.docker` files from project directories.
    ```bash
    just up
    ```
 
-4. Point your browser to `http://localhost:8000`. You should be able to see the API documentation.
+5. Point your browser to `http://localhost:8000`. You should be able to see the API documentation.
    ![API ReDoc](/_static/api_redoc.png)
 
-5. Load the sample data. This could take a couple of minutes.
+6. Load the sample data. This could take a couple of minutes.
    ```bash
    just init
    ```
 
-6. Make an API request using cURL. You should receive a JSON response.
+7. Make an API request using cURL. You should receive a JSON response.
    ```bash
    just stats
    ```
@@ -50,13 +58,13 @@
    }
    ```
 
-7. When done, bring the system down. To remove all volumes as well, pass the `-v` flag.
+8. When done, bring the system down. To remove all volumes as well, pass the `-v` flag.
    ```bash
    just down
    just down -v # removes volumes
    ```
 
-8. Use the `logs` command access the logs from all services. To isolate a service, pass the service name as an argument.
+9. Use the `logs` command access the logs from all services. To isolate a service, pass the service name as an argument.
    ```bash
    just logs
    just logs web # only shows logs web service
@@ -72,6 +80,7 @@ The command `just up` spawns the following services:
 - [Elasticsearch](https://www.elastic.co/elasticsearch/)
 - [Redis](https://redis.io/)
 - [imageproxy](https://github.com/willnorris/imageproxy)
+- [NGINX](http://nginx.org)
 - **web** (`api/`)
 - **ingestion_server** and **indexer_worker** (`ingestion_server/`)
 - **analytics** (`analytics/`)

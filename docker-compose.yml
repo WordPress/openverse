@@ -123,6 +123,16 @@ services:
     env_file:
       - ./analytics/env.docker
 
+  proxy:
+    image: nginx:alpine
+    ports:
+      - "9080:9080"
+      - "9443:9443"
+    depends_on:
+      - web
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+
 volumes:
   api-postgres:
   catalog-postgres:
