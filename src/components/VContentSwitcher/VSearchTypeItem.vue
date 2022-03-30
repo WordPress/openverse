@@ -5,10 +5,10 @@
     v-bind="component"
     @click.native="$emit('click', item)"
   >
-    <div class="flex flex-row items-center text-base">
-      <VIcon :icon-path="icon" class="me-2 my-2" />
-      <span class="pe-20 font-semibold">{{ $t(`search-type.${item}`) }}</span>
-      <VPill v-if="status === 'beta'">{{
+    <div class="flex flex-row items-center text-base gap-2 py-2 w-full">
+      <VIcon :icon-path="icon" />
+      <span class="font-semibold">{{ $t(`search-type.${item}`) }}</span>
+      <VPill v-if="status === 'beta'" class="ms-auto">{{
         $t('search-type.status-beta')
       }}</VPill>
     </div>

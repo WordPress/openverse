@@ -1,17 +1,25 @@
 import { computed, ref } from '@nuxtjs/composition-api'
 
-import { supportedSearchTypes } from '~/constants/media'
+import {
+  supportedSearchTypes,
+  ALL_MEDIA,
+  AUDIO,
+  IMAGE,
+  MODEL_3D,
+} from '~/constants/media'
 
 import { useSearchStore } from '~/stores/search'
 
 import allIcon from '~/assets/icons/all-content.svg'
 import audioIcon from '~/assets/icons/audio-content.svg'
 import imageIcon from '~/assets/icons/image-content.svg'
+import model3dIcon from '~/assets/icons/model-3d.svg'
 
 const icons = {
-  all: allIcon,
-  audio: audioIcon,
-  image: imageIcon,
+  [ALL_MEDIA]: allIcon,
+  [AUDIO]: audioIcon,
+  [IMAGE]: imageIcon,
+  [MODEL_3D]: model3dIcon,
 }
 const searchTypes = [...supportedSearchTypes]
 

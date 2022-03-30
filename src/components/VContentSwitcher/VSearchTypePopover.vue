@@ -3,7 +3,7 @@
     ref="contentMenuPopover"
     class="flex items-stretch"
     :label="$t('search-type.label')"
-    placement="bottom-start"
+    placement="bottom-end"
   >
     <template #trigger="{ a11yProps }">
       <VSearchTypeButton

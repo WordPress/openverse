@@ -3,12 +3,13 @@
 export const IMAGE = 'image'
 export const AUDIO = 'audio'
 export const VIDEO = 'video'
+export const MODEL_3D = 'model_3d'
 export const ALL_MEDIA = 'all'
 
 /**
  * all existing media types
  */
-export const mediaTypes = [IMAGE, AUDIO, VIDEO] as const
+export const mediaTypes = [IMAGE, AUDIO, VIDEO, MODEL_3D] as const
 
 export type MediaType = typeof mediaTypes[number]
 

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-03-27T04:48:51+00:00\n"
+"POT-Creation-Date: 2022-03-30T13:22:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -39,14 +39,21 @@ msgctxt "search-type.video"
 msgid "Videos"
 msgstr ""
 
+msgctxt "search-type.model_3d"
+msgid "3D Models"
+msgstr ""
+
 #: src/components/VContentSwitcher/VSearchTypePopover.vue:5
 msgctxt "search-type.label"
 msgid "Type of content to search"
 msgstr ""
 
-#: src/components/VContentSwitcher/VSearchTypes.vue:6
 msgctxt "search-type.heading"
 msgid "Content types"
+msgstr ""
+
+msgctxt "search-type.additional"
+msgid "Additional sources"
 msgstr ""
 
 #: src/components/VContentSwitcher/VSearchTypeItem.vue:12
@@ -767,6 +774,10 @@ msgstr ""
 
 msgctxt "browse-page.search-form.video"
 msgid "videos"
+msgstr ""
+
+msgctxt "browse-page.search-form.model_3d"
+msgid "3D Models"
 msgstr ""
 
 msgctxt "browse-page.search-form.all"
