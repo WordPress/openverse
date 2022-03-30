@@ -9,6 +9,7 @@ group:
       WordPress/openverse-api
       WordPress/openverse-frontend
       WordPress/openverse-browser-extension
+      WordPress/openverse-infrastructure
     files:
       # Synced workflows
       - source: .github/workflows/new_issues.yml
@@ -42,12 +43,7 @@ group:
   - repos: |
       WordPress/openverse-catalog
       WordPress/openverse-api
+      WordPress/openverse-infrastructure
     files:
       - source: .github/CODEOWNERS
         dest: .github/CODEOWNERS
-  # Automattic repositories
-  - repos: |
-      Automattic/openverse-infrastructure
-    files:
-      - source: .github/workflows/pr_ping.yml
-        dest: .github/workflows/pr_ping.yml
