@@ -8,7 +8,7 @@ on:
 
 env:
   LOGGING_LEVEL: 20 # corresponds to INFO
-  ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # Can't search in the private infra repo with GITHUB_TOKEN
 
 jobs:
   move_issues:
