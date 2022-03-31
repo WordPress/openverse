@@ -75,6 +75,8 @@ jobs:
         run: chmod -R 777 openverse_catalog/ tests/
 
       - name: Test
+        # The containers must be rebuilt here because we need the dev dependencies
+        # rather than the production ones
         run: |
           just build
           just test
