@@ -20,7 +20,7 @@ jobs:
       - name: Run file sync
         uses: BetaHuhn/repo-file-sync-action@v1
         with:
-          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.ACCESS_TOKEN }} # Can't use GITHUB_TOKEN to make PRs on other repos
           PR_LABELS: |
             🛠 goal: fix
             🤖 aspect: dx
