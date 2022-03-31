@@ -106,6 +106,8 @@ def process_waveform_output(json_out):
     for idx, val in enumerate(data):
         if idx % 2 == 0:
             continue
+        if val < 0:  # Any other odd values are negligible and can be ignored
+            val = 0
         transformed_data.append(val)
         if val > max_val:
             max_val = val
