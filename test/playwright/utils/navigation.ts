@@ -41,7 +41,11 @@ export const changeContentType = async (
   await page.click(
     `button[aria-controls="content-switcher-popover"], button[aria-controls="content-switcher-modal"]`
   )
-  await page.click(`a:has-text("${to}")`)
+  // Ensure that the asynchronous navigation is finished before next steps
+  await Promise.all([
+    page.waitForNavigation(),
+    page.locator(`#content-switcher-popover a:has-text("${to}")`).click(),
+  ])
 }
 
 /**

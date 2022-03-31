@@ -15,7 +15,7 @@ import VTranslationStatusBanner from '~/components/VTranslationStatusBanner.vue'
 import VMigrationNotice from '~/components/VMigrationNotice.vue'
 
 export default defineComponent({
-  name: 'Blank',
+  name: 'BlankLayout',
   components: { VMigrationNotice, VTranslationStatusBanner },
   setup() {
     const navStore = useNavStore()

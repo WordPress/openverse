@@ -35,11 +35,6 @@
       </div>
     </div>
 
-    <template v-if="isError" class="m-auto w-1/2 text-center pt-6">
-      <h5>{{ errorHeader }}</h5>
-      <p>{{ fetchState.fetchingError }}</p>
-    </template>
-
     <VLoadMore
       v-if="canLoadMore && !fetchState.isFinished"
       class="mt-4"
