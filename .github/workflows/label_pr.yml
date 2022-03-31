@@ -6,7 +6,7 @@ on:
       - label_pr
 
 env:
-  ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # Can't use GITHUB_TOKEN to access PRs in other repos
   PR_URL: ${{ github.event.client_payload.pr_url }}
 
 jobs:
