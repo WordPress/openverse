@@ -19,6 +19,7 @@ jobs:
         with:
           project: Openverse PRs
           column: In progress
+          # TODO: Switch to GITHUB_TOKEN if the project is moved to a repo
           repo-token: ${{ secrets.ACCESS_TOKEN }}
 
   add_ready:
@@ -31,4 +32,5 @@ jobs:
         with:
           project: Openverse PRs
           column: Needs review
+          # TODO: Switch to GITHUB_TOKEN if the project is moved to a repo
           repo-token: ${{ secrets.ACCESS_TOKEN }}
