@@ -317,6 +317,10 @@ if config("IS_PROXIED", default=True, cast=bool):
     # https://docs.djangoproject.com/en/4.0/ref/settings/#secure-proxy-ssl-header
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+# Trusted origins for CSRF
+# https://docs.djangoproject.com/en/4.0/releases/4.0/#csrf-trusted-origins-changes-4-0
+CSRF_TRUSTED_ORIGINS = ["https://*.openverse.engineering"]
+
 SENTRY_DSN = config(
     "SENTRY_DSN",
     default="https://08f4706d16004f57bcd37eb907bfc2e7@o787041.ingest.sentry.io/6107216",
