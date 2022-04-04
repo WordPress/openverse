@@ -16,4 +16,5 @@ jobs:
         with:
           project: Openverse
           column: Backlog
+          # TODO: Switch to GITHUB_TOKEN if the project is moved to a repo
           repo-token: ${{ secrets.ACCESS_TOKEN }}
