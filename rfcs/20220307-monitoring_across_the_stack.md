@@ -4,7 +4,7 @@ Note: Because I had to spend a good deal of time sketching out how this stuff wo
 
 ## Reviewers
 
-- [ ] @rbadillap
+- [ ] @zackkrida (Infrastructure sign off)
 - [ ] Approver TBD (Catalog/API person)
 - [ ] Approver TBD (API/Frontend person)
 
@@ -47,16 +47,9 @@ Additionally, both are free software. Prometheus is Apache 2 licensed and Grafan
 
 ## Self-hosted vs. hosted
 
-I will defer this decision to @rbadillap because he has way more knowledge about what will be affordable for us both from a raw cost perspective and from a time-spent-maintaining perspective. My gut says that in the interest of getting monitoring sooner than later we could pay for hosted Prometheus and Grafana to start with and eventually migrate to self-hosted. AWS has hosted offerrings for both. I believe we could use our existing Postgres RDS instance for them as well. I'm assuming that AWS hasn't added anything that would lock us into their hosted version of these services, but I could be wrong about that.
+We will seslf-host and use a new Postgres RDS instance for Grafana.
 
-<aside>
-We could potentially just use SQLite for Prometheus. I don't know if AWS's hosted offerring supports that. Waiting to hear from Ronny about whether we should jump straight to using Postgres instead though.
-
-</aside>
-
-My understanding is that the hosted versions of these services are less expensive to start off with than self-hosting but then gradually balloon in price as time goes on, making self-hosting the more affordable option.
-
-Ultimately whether we go with self-hosting or letting someone else host it for us comes down to Ronny's tolerance for configuring and deploying these services for us, whether there's time to set up the self-hosted stuff or whether the cost difference between the two makes sense (even temporarily). I don't know what our hosting budget really is and I'm not sure how to find out.
+To simplify the hosting situation, let's try to deploy this using ECS from the beginning.
 
 ## What will we monitor
 
@@ -191,7 +184,7 @@ The first one also seems complicated but I believe it's also easier. Remember th
 
 I'm not sure where the best place to put the monitoring docker-compose is. I think I'd like to propose putting it in WordPress/openverse under a `monitoring` directory that would include the `docker-compose.yml` as well as documentation about how to configure monitors, our own best practices, etc. It doesn't make sense to me for us to just pick one of the three application repositories to put it in. The monitoring stack also fits in with the "meta"/"overview" nature of the WordPress/openverse repository.
 
-As for the cloud infrastructure side, I'll have to defer to Ronny, as I said above in the discussion about hosted vs self-hosted. It'd be nice if we could share configurations between local and development, and maybe there are some parts that we can, but overall due to the nature of how the production infrastructure is organized inside VPCs and such, I imagine there are probably some significant differences.
+The major difference between the production stack and the local stack will be the lack of a dedicated Postgres instance locally. Grafana will happily run on SQLite locally and there's no reason to complicate that for us locally (especially because we already have several other Postgres instances running locally elsewhere in the stack). We can follow the standard `docker-compose.overrides.yml` pattern we have followed to make changes in our stack between local and production. This will mostly involve passing environment variables to Grafana and Prometheus to configure them for production.
 
 Aside from service configuration, however, there is also the issue of how to store our Prometheus query, alerting, and other configuations locally. Likewise we need to address that for Grafana dashboards. For example, we don't want to have to manually copy the configurations for our anomaly monitors from production. Even if we develop these monitors in a live staging environment (more on that in the section below on the monitor development workflow) we'll still want to store those in code to have them committed to production, rather than manually copying them to prod. As long as the code they're saved to is accessible to the local monitoring stack, we should be able to seed the local stack with the same base monitors and dashboards present in production.
 
@@ -288,7 +281,7 @@ Prometheus is configured via a single `prometheus.yml` file. I've created a Pyth
     * This will be more work as we'll have to write our own middlware for it.
     * There are some existing Nuxt Prometheus modules like [this one](https://github.com/franckaragao/nuxt-prometheus-module) but they're not maintained and far more basic than what we actually want to get. We could fork those and create our own `@openverse/nuxt-prometheus-module` or something with better defaults more akin to the level of visibility that the `django-prometheus` module provides for Django.
     * Configure Prometheus to be able to scrape the `/metrics` endpoint and update configurations for each environment.
-1. Continue the above for each service. Some things will need to be researched by any team member but then implemented by Ronny I think. At least the first time, given we won't have any concrete examples in Terraform for how to get these things working.
+1. Continue the above for each service.
 1. Let metrics gather for around 3-6 weeks then begin identifying areas we can create our first alerts around. Once we reach that milestone, create issues for creating alarms and writing runbooks for them.
 
 <hr />
@@ -334,7 +327,7 @@ As long as you're comfortable with AWS IAM credentials management, it is also ea
 
 However, as it is a proprietary AWS offering, it is targeted at large enterprise clients, most of whom have multiple teams dedicated to managing their infrastructure. These teams are often staffed with engineers who are trained specifically in AWS and will have enterprise level support accounts to lean on to fill in knowledge gaps.
 
-We have exactly one person on our team who would fall under that qualification, Ronny. But, he's a single person and if we want to be able to spread the responsibility of building and maintaining our monitors across the team then we'll need to be able to work independently. We also don't want to create a risky bus factor in our monitoring infrastructure.
+We don't have anyone on the team who has dedicated AWS knowledge.
 
 AWS's documentation for CloudWatch is downright cryptic. There are decent overviews about the _concepts_, but implementing new monitors in Python or JavaScript might as well be esoteric knowledge. The libraries are extremely low-level for what they're doing and require you to manage batched event reporting by hand, something other client libraries for competing services like Prometheu's clients or statsd for Graphite handle out of the box.
 
