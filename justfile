@@ -56,7 +56,6 @@ logs services="" args="-f":
 env:
     cp api/env.template api/.env
     cp ingestion_server/env.template ingestion_server/.env
-    cp analytics/env.template analytics/.env
 
 # Load sample data into the Docker Compose services
 init: up wait-for-es wait-for-ing wait-for-web
@@ -197,18 +196,6 @@ stats media="images":
 # Attach to ipython
 ipython:
     docker-compose exec web ipython
-
-
-#############
-# Analytics #
-#############
-
-# Install dependencies for analytics
-_nl-install:
-    cd analytics && pipenv install --dev
-
-nl-test args="":
-    docker-compose exec {{ args }} analytics ./test/run_test.sh
 
 
 ##########

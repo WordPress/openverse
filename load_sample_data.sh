@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 WEB_SERVICE_NAME="${WEB_SERVICE_NAME:-web}"
-ANALYTICS_SERVICE_NAME="${ANALYTICS_SERVICE_NAME:-analytics}"
 CACHE_SERVICE_NAME="${CACHE_SERVICE_NAME:-cache}"
 UPSTREAM_DB_SERVICE_NAME="${UPSTREAM_DB_SERVICE_NAME:-upstream_db}"
 DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
@@ -23,9 +22,6 @@ docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py shell
 	        user = User.objects.create_user(username, f'{username}@example.com', 'deploy')
 	    user.save()
 	EOF"
-
-# Migrate analytics
-docker-compose exec -T "$ANALYTICS_SERVICE_NAME" /bin/bash -c "alembic upgrade head"
 
 # Load content providers
 docker-compose exec -T "$DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF

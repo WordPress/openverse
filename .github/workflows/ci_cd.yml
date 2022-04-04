@@ -38,7 +38,6 @@ jobs:
         image:
           - api
           - ingestion_server
-          - analytics
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -124,14 +123,11 @@ jobs:
         run: |
           docker load --input /tmp/api/api.tar
           docker load --input /tmp/ingestion_server/ingestion_server.tar
-          docker load --input /tmp/analytics/analytics.tar
 
       - name: Start API, ingest and index test data
         run: just init
       - name: Run API tests
         run: just api-test -T
-      - name: Run analytics tests
-        run: just nl-test -T
 
       - name: Make developer docs
         run: just sphinx-make -T
@@ -162,7 +158,6 @@ jobs:
         run: |
           docker load --input /tmp/api/api.tar
           docker load --input /tmp/ingestion_server/ingestion_server.tar
-          docker load --input /tmp/analytics/analytics.tar
 
       - name: Run makemigrations
         run: just dj -T makemigrations --check --noinput
@@ -182,7 +177,6 @@ jobs:
         image:
           - api
           - ingestion_server
-          - analytics
     steps:
       - name: Log in to GitHub Docker Registry
         uses: docker/login-action@v1

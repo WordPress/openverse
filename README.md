@@ -24,7 +24,6 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 - **api/**: a Django Rest Framework API server
   For a full description of its capabilities, please see the [browsable documentation](https://api.openverse.engineering).
 - **ingestion_server/**: a service for downloading and indexing search data once it has been prepared by the Openverse Catalog
-- **analytics/**: a Falcon REST API for collecting usage data
 
 ## Troubleshooting
 

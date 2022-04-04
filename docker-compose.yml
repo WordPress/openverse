@@ -113,16 +113,6 @@ services:
     stdin_open: true
     tty: true
 
-  analytics:
-    build: ./analytics/
-    image: openverse-analytics
-    ports:
-      - "8090:8090"
-    volumes:
-      - ./analytics:/analytics
-    env_file:
-      - ./analytics/env.docker
-
   proxy:
     image: nginx:alpine
     ports:
