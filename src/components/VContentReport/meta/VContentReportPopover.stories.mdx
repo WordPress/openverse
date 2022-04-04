@@ -13,10 +13,12 @@ import VContentReportPopover from '~/components/VContentReport/VContentReportPop
   component={VContentReportPopover}
 />
 
-export const Template = (args, { argTypes }) => ({
-  template: `<VContentReportPopover v-bind="$props" class="float-right"/>`,
+export const Template = (args) => ({
+  template: `<VContentReportPopover v-bind="args" class="float-right"/>`,
   components: { VContentReportPopover },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 # VContentReportPopover

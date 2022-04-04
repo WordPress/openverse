@@ -22,10 +22,12 @@ import { ALL_LICENSES } from '~/constants/license'
   }}
 />
 
-export const Template = (args, { argTypes }) => ({
-  template: `<VLicenseExplanation v-bind="$props" v-on="$props"/>`,
+export const Template = (args) => ({
+  template: `<VLicenseExplanation v-bind="args" v-on="args"/>`,
   components: { VLicenseExplanation },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 # VLicenseExplanation

@@ -18,10 +18,12 @@ import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
   }}
 />
 
-export const Template = (args, { argTypes }) => ({
-  template: `<VWaveform class="w-full h-30" v-bind="$props" v-on="$props"/>`,
+export const Template = (args) => ({
+  template: `<VWaveform class="w-full h-30" v-bind="args" v-on="args"/>`,
   components: { VWaveform },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 # Waveform

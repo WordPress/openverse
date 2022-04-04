@@ -25,20 +25,22 @@ import { NO_RESULT, SERVER_TIMEOUT } from '~/constants/errors'
 
 This section appears when a search returns no hits.
 
-export const NoResultsTemplate = (args, { argTypes }) => ({
+export const NoResultsTemplate = (args) => ({
   template: `
     <VErrorSection>
       <template #image>
-       <VErrorImage :error-code="errorCode" />
+       <VErrorImage :error-code="args.errorCode" />
       </template>
-      <VNoResults :type="type" :query="query"/>
+      <VNoResults :type="args.type" :query="args.query"/>
     </VErrorSection>
     `,
   data: () => ({
     NO_RESULT,
   }),
   components: { VErrorSection, VErrorImage, VNoResults },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 <Canvas>
@@ -64,21 +66,23 @@ export const NoResultsTemplate = (args, { argTypes }) => ({
 
 This result appears when an API request times out.
 
-export const ServerTimeoutTemplate = (args, { argTypes }) => ({
+export const ServerTimeoutTemplate = (args) => ({
   template: `
     <VErrorSection>
       <template #image>
         <!-- On large screens, image is in the left pane. -->
-        <VErrorImage class="hidden md:block" :error-code="errorCode" />
+        <VErrorImage class="hidden md:block" :error-code="args.errorCode" />
       </template>
       <VServerTimeout/>
       <!-- On small screens, image is below error message. -->
-      <VErrorImage class="md:hidden mt-10" :error-code="errorCode" />
+      <VErrorImage class="md:hidden mt-10" :error-code="args.errorCode" />
     </VErrorSection>
   `,
   data: () => ({ SERVER_TIMEOUT }),
   components: { VErrorSection, VErrorImage, VServerTimeout },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 <Canvas>

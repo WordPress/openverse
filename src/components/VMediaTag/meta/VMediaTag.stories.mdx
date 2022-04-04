@@ -10,10 +10,12 @@ import VMediaTag from '~/components/VMediaTag/VMediaTag'
 
 <Meta title="Components/VMediaTag" component={VMediaTag} />
 
-export const Template = (args, { argTypes }) => ({
-  template: `<VMediaTag v-bind="$props">Hello</VMediaTag>`,
+export const Template = (args) => ({
+  template: `<VMediaTag v-bind="args">Hello</VMediaTag>`,
   components: { VMediaTag },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 # Media tag

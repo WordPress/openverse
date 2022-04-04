@@ -18,14 +18,16 @@ import VInputField from '~/components/VInputField/VInputField.vue'
   }}
 />
 
-export const Template = (args, { argTypes }) => ({
+export const Template = (args) => ({
   template: `
-    <VInputField v-bind="$props" v-on="$props" label-text="Test label">
+    <VInputField v-bind="args" v-on="args" label-text="Test label">
       Extra info
     </VInputField>
   `,
   components: { VInputField },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 # Input field

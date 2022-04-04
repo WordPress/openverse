@@ -20,11 +20,13 @@ import VHeader from '~/components/VHeader/VHeader.vue'
   }}
 />
 
-export const Template = (args, { argTypes }) => ({
+export const Template = (args) => ({
   template: `
-    <VHeader v-bind="$props" v-on="$props" />`,
+    <VHeader v-bind="args" v-on="args" />`,
   components: { VHeader },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 # VHeader

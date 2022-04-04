@@ -5,6 +5,7 @@ import {
   Meta,
   Story,
 } from '@storybook/addon-docs'
+import { computed } from '@nuxtjs/composition-api'
 
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 
@@ -78,17 +79,15 @@ export const formatExamples = {
   },
 }
 
-export const Template = (args, { argTypes }) => ({
-  template: `<VAudioTrack v-bind="$props" :audio="audioObj"/>`,
+export const Template = (args) => ({
+  template: `<VAudioTrack v-bind="args" :audio="audioObj"/>`,
   components: { VAudioTrack },
-  props: Object.keys(argTypes),
-  computed: {
-    audioObj() {
-      return {
-        ...commonAttrs(),
-        ...formatExamples[this.format],
-      }
-    },
+  setup() {
+    const audioObj = computed(() => ({
+      ...commonAttrs(),
+      ...formatExamples[args.format],
+    }))
+    return { args, audioObj }
   },
 })
 
@@ -277,16 +276,9 @@ export const Multiple = () => ({
     </div>
   `,
   components: { VAudioTrack },
-  data() {
-    return { formatExamples }
-  },
-  methods: {
-    audioObj(audio) {
-      return {
-        ...commonAttrs(),
-        ...audio,
-      }
-    },
+  setup() {
+    const audioObj = (audio) => ({ ...commonAttrs(), ...audio })
+    return { formatExamples, audioObj }
   },
 })
 

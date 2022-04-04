@@ -14,6 +14,7 @@ import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
   argTypes={{
     status: {
       options: ['playing', 'paused', 'played'],
+      defaultValue: 'paused',
       control: 'select',
     },
     size: {
@@ -27,10 +28,12 @@ import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
   }}
 />
 
-export const Template = (args, { argTypes }) => ({
-  template: `<VPlayPause v-bind="$props" v-on="$props"/>`,
+export const Template = (args) => ({
+  template: `<VPlayPause v-bind="args" v-on="args"/>`,
   components: { VPlayPause },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 # Play-pause toggle

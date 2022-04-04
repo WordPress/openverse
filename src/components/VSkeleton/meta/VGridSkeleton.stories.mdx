@@ -10,10 +10,12 @@ import VGridSkeleton from '~/components/VSkeleton/VGridSkeleton.vue'
 
 <Meta title="Components/Skeleton" component={VGridSkeleton} />
 
-export const Template = (args, { argTypes }) => ({
-  template: `<VGridSkeleton v-bind="$props" />`,
+export const Template = (args) => ({
+  template: `<VGridSkeleton v-bind="args" />`,
   components: { VGridSkeleton },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 # Skeleton

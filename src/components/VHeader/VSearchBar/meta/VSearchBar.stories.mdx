@@ -20,13 +20,15 @@ import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
   }}
 />
 
-export const Template = (args, { argTypes }) => ({
+export const Template = (args) => ({
   template: `
-    <VSearchBar v-bind="$props" v-on="$props">
+    <VSearchBar v-bind="args" v-on="args">
       12,345 results
     </VSearchBar>`,
   components: { VSearchBar },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 # Search bar

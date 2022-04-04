@@ -22,12 +22,14 @@ import replayIcon from '~/assets/icons/replay.svg'
   }}
 />
 
-export const Template = (args, { argTypes }) => ({
+export const Template = (args) => ({
   template: `
-    <VIconButton class="text-white bg-dark-charcoal border-dark-charcoal" v-bind="$props"/>
+    <VIconButton class="text-white bg-dark-charcoal border-dark-charcoal" v-bind="args"/>
   `,
   components: { VIconButton },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 # Icon Button

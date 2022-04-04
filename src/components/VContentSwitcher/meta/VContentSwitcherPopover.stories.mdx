@@ -20,10 +20,12 @@ import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover
   }}
 />
 
-export const Template = (args, { argTypes }) => ({
-  template: `<VSearchTypePopover active-item="image" v-bind="$props" v-on="$props"/>`,
+export const Template = (args) => ({
+  template: `<VSearchTypePopover active-item="image" v-bind="args" v-on="args"/>`,
   components: { VSearchTypePopover },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 # VSearchTypePopover

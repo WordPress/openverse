@@ -26,14 +26,14 @@ export default {
   },
 }
 
-const DefaultStory = (args, { argTypes }) => ({
+const DefaultStory = (args) => ({
   template: `
     <div>
       <p>
         This is a "radio" style list group. Only a single element can be selected at a time.
       </p>
       <div style="width: 300px">
-        <VItemGroup v-bind="$props" type="radiogroup">
+        <VItemGroup v-bind="args" type="radiogroup">
           <VItem
             v-for="(item, idx) in items"
             :key="item.id"
@@ -49,7 +49,6 @@ const DefaultStory = (args, { argTypes }) => ({
     </div>
   `,
   components: { VItemGroup, VItem, VIcon },
-  props: Object.keys(argTypes),
   setup() {
     const items = new Array(icons.length).fill(null).map((_, i) => ({
       id: i,
@@ -59,7 +58,7 @@ const DefaultStory = (args, { argTypes }) => ({
 
     const selectedItem = ref({})
 
-    return { items, selectedItem }
+    return { args, items, selectedItem }
   },
 })
 
@@ -69,14 +68,14 @@ Default.args = {
   bordered: true,
 }
 
-const MenuStory = (args, { argTypes }) => ({
+const MenuStory = (args) => ({
   template: `
     <div>
       <p>
         This is a "menu" style item group. Multiple items can be active at a time and all have the "menuitemcheckbox" role.
       </p>
       <div style="width: 300px">
-        <VItemGroup v-bind="$props" type="menu">
+        <VItemGroup v-bind="args" type="menu">
           <VItem
             v-for="(item, idx) in items"
             :key="item.id"
@@ -92,7 +91,6 @@ const MenuStory = (args, { argTypes }) => ({
     </div>
   `,
   components: { VItemGroup, VItem, VIcon },
-  props: Object.keys(argTypes),
   setup() {
     const items = new Array(icons.length).fill(null).map((_, i) => ({
       id: i,
@@ -110,7 +108,7 @@ const MenuStory = (args, { argTypes }) => ({
       }
     }
 
-    return { items, selectedItemIds, toggleItem }
+    return { args, items, selectedItemIds, toggleItem }
   },
 })
 
@@ -120,14 +118,14 @@ Menu.args = {
   bordered: true,
 }
 
-const PopoverStory = (args, { argTypes }) => ({
+const PopoverStory = (args) => ({
   template: `
     <VPopover>
       <template #trigger="{ a11yProps, visible }">
         <VButton v-bind="a11yProps" :pressed="visible">{{ visible ? 'Close menu' : 'Open menu' }}</VButton>
       </template>
 
-      <VItemGroup v-bind="$props" type="menu">
+      <VItemGroup v-bind="args" type="menu">
         <VItem
           v-for="(item, idx) in items"
           :key="item.id"
@@ -136,13 +134,12 @@ const PopoverStory = (args, { argTypes }) => ({
           @click="toggleItem(item)"
           size="medium"
         >
-          <VIcon :icon-path="item.icon" /><span :class="{ 'pe-2': $props.direction === 'vertical' }">{{ item.label }}</span>
+          <VIcon :icon-path="item.icon" /><span :class="{ 'pe-2': args.direction === 'vertical' }">{{ item.label }}</span>
         </VItem>
     </VItemGroup>
     </VPopover>
   `,
   components: { VButton, VPopover, VItem, VItemGroup, VIcon },
-  props: Object.keys(argTypes),
   setup() {
     const items = new Array(icons.length).fill(null).map((_, i) => ({
       id: i,
@@ -160,7 +157,7 @@ const PopoverStory = (args, { argTypes }) => ({
       }
     }
 
-    return { items, selectedItemIds, toggleItem }
+    return { args, items, selectedItemIds, toggleItem }
   },
 })
 
