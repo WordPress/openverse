@@ -114,9 +114,9 @@
             attribution: '"Honey" by quisnovus is licensed under CC-BY-NC 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc/2.0/.',
             height: 548,
             width: 1024,
-            thumbnail: 'http://localhost:49152/v1/images/ea7e24ee-1374-4c49-9f6f-5c4529b701d8/thumb/',
-            detail_url: 'http://localhost:49152/v1/images/ea7e24ee-1374-4c49-9f6f-5c4529b701d8/',
-            related_url: 'http://localhost:49152/v1/images/ea7e24ee-1374-4c49-9f6f-5c4529b701d8/related/',
+            thumbnail: 'http://localhost:49153/v1/images/ea7e24ee-1374-4c49-9f6f-5c4529b701d8/thumb/',
+            detail_url: 'http://localhost:49153/v1/images/ea7e24ee-1374-4c49-9f6f-5c4529b701d8/',
+            related_url: 'http://localhost:49153/v1/images/ea7e24ee-1374-4c49-9f6f-5c4529b701d8/related/',
         },
     },
 }

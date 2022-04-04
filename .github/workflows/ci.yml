@@ -27,11 +27,8 @@ jobs:
 
       - uses: ./.github/actions/setup-node-env
 
-      - name: ESLint
+      - name: Lint with ESLint and Prettier
         run: pnpm lint
-
-      - name: Prettier
-        run: pnpm format:test
 
   i18n:
     name: Check translation files
@@ -43,7 +40,7 @@ jobs:
       - uses: ./.github/actions/setup-node-env
 
       - name: Check extracted strings
-        run: pnpm vue-i18n-check
+        run: pnpm i18n:check
 
       - name: Check POT files are updated
         shell: bash
@@ -59,7 +56,7 @@ jobs:
       - uses: ./.github/actions/setup-node-env
 
       - name: Run unit tests
-        run: pnpm ci:unit-test
+        run: pnpm test:unit
 
   playwright:
     name: Playwright tests
@@ -89,7 +86,7 @@ jobs:
       - uses: ./.github/actions/setup-node-env
 
       - name: Run Storybook smoke-test
-        run: pnpm storybook -- --ci --smoke-test
+        run: pnpm storybook:smoke
 
   build:
     name: Check Nuxt build

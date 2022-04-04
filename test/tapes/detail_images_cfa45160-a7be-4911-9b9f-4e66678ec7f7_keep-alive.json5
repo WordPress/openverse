@@ -185,9 +185,9 @@
             attribution: '"Mandala Base" is licensed under CC-CC0 1.0. To view a copy of this license, visit https://creativecommons.org/licenses/cc0/1.0/.',
             height: 893,
             width: 1054,
-            thumbnail: 'http://localhost:49152/v1/images/cfa45160-a7be-4911-9b9f-4e66678ec7f7/thumb/',
-            detail_url: 'http://localhost:49152/v1/images/cfa45160-a7be-4911-9b9f-4e66678ec7f7/',
-            related_url: 'http://localhost:49152/v1/images/cfa45160-a7be-4911-9b9f-4e66678ec7f7/related/',
+            thumbnail: 'http://localhost:49153/v1/images/cfa45160-a7be-4911-9b9f-4e66678ec7f7/thumb/',
+            detail_url: 'http://localhost:49153/v1/images/cfa45160-a7be-4911-9b9f-4e66678ec7f7/',
+            related_url: 'http://localhost:49153/v1/images/cfa45160-a7be-4911-9b9f-4e66678ec7f7/related/',
         },
     },
 }

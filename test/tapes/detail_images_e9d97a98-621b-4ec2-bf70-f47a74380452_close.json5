@@ -100,9 +100,9 @@
             attribution: '"bubbles in honey" by mutednarayan is licensed under CC-BY-SA 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/2.0/.',
             height: 375,
             width: 500,
-            thumbnail: 'http://localhost:49152/v1/images/e9d97a98-621b-4ec2-bf70-f47a74380452/thumb/',
-            detail_url: 'http://localhost:49152/v1/images/e9d97a98-621b-4ec2-bf70-f47a74380452/',
-            related_url: 'http://localhost:49152/v1/images/e9d97a98-621b-4ec2-bf70-f47a74380452/related/',
+            thumbnail: 'http://localhost:49153/v1/images/e9d97a98-621b-4ec2-bf70-f47a74380452/thumb/',
+            detail_url: 'http://localhost:49153/v1/images/e9d97a98-621b-4ec2-bf70-f47a74380452/',
+            related_url: 'http://localhost:49153/v1/images/e9d97a98-621b-4ec2-bf70-f47a74380452/related/',
         },
     },
 }

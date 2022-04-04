@@ -112,9 +112,9 @@
             attribution: '"Olympic Games Seoul ´88" by Numerius is licensed under CC-BY-ND 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nd/2.0/.',
             height: 1024,
             width: 651,
-            thumbnail: 'http://localhost:49152/v1/images/53841492-9703-4892-96b4-10297dd84ed0/thumb/',
-            detail_url: 'http://localhost:49152/v1/images/53841492-9703-4892-96b4-10297dd84ed0/',
-            related_url: 'http://localhost:49152/v1/images/53841492-9703-4892-96b4-10297dd84ed0/related/',
+            thumbnail: 'http://localhost:49153/v1/images/53841492-9703-4892-96b4-10297dd84ed0/thumb/',
+            detail_url: 'http://localhost:49153/v1/images/53841492-9703-4892-96b4-10297dd84ed0/',
+            related_url: 'http://localhost:49153/v1/images/53841492-9703-4892-96b4-10297dd84ed0/related/',
         },
     },
 }

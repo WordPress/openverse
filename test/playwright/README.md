@@ -96,7 +96,7 @@ Don't be alarmed if you notice this.
 When writing end-to-end tests, it can be helpful to use Playwright [codegen](https://playwright.dev/docs/cli#generate-code) to generate the tests by performing actions in the browser:
 
 ```
-pnpm run generate-playwright-tests
+pnpm run test:playwright:gen
 ```
 
 This will open the app in a new browser window, and record any actions you take in a format that can be used in end-to-end tests.

@@ -31,13 +31,8 @@ volta install pnpm
 Run the following commands in order to have the code up and running on your machine:
 
 ```bash
-# installs dependencies
-pnpm install
-
-# sets up required i18n files
-pnpm i18n:get-translations
-
 # Builds and serves assets with hot-reload
+# Automatically invokes pnpm install and pnpm i18n
 pnpm dev
 
 ```
@@ -51,7 +46,7 @@ localhost+1-key.pem # The private key file
 localhost+1.pem # The certificate file
 ```
 
-The easiest way to create these files is with a local development tool called [mkcrt](https://github.com/FiloSottile/mkcert). First make sure you have [mkcert installed](https://github.com/FiloSottile/mkcert#installation) and activated with `mkcert -install`. Then use `mkcert` to create a certificate for `localhost` and for the external IP address used by Nuxt's development process. That command looks like this:
+The easiest way to create these files is with a local development tool called [mkcert](https://github.com/FiloSottile/mkcert). First make sure you have [mkcert installed](https://github.com/FiloSottile/mkcert#installation) and activated with `mkcert -install`. Then use `mkcert` to create a certificate for `localhost` and for the external IP address used by Nuxt's development process. That command looks like this:
 
 ```shell
 mkcert localhost 192.168.50.119
@@ -98,21 +93,7 @@ The standalone mode which has a large header with logo and a footer, can be enab
 
 ### Running tests
 
-You can run the unit tests by executing:
-
-```bash
-pnpm test
-```
-
-To run the e2e tests, run:
-
-```bash
-pnpm test:e2e
-```
-
-You might have to run `npx playwright install` to get the browsers installed if e2e tests fail.
-
-When writing e2e tests, you can also use `pnpm generate-e2e-tests` to generate tests and test selectors.
+Refer to the [`TESTING_GUIDELINES.md` file](./TESTING_GUIDELINES.md) for instructions on how to run tests.
 
 ### localhost tunneling
 
@@ -133,7 +114,7 @@ ngrok http 8443 -host-header="localhost:8443"
 
 ## Formatting and Linting
 
-The code in this repository is formatted using `prettier`. If you have prettier setup in your code editor it should work out of the box; otherwise you can use the `pnpm lintfix` script to format and fix lint errors in your code. Checks are run to lint your code and validate the formatting on git precommit using [husky](https://github.com/typicode/husky).
+The code in this repository is formatted using `prettier`. If you have prettier setup in your code editor it should work out of the box; otherwise you can use the `pnpm lint:fix` script to format and fix lint errors in your code. Checks are run to lint your code and validate the formatting on git precommit using [husky](https://github.com/typicode/husky).
 
 You will need to fix any linting issues before committing. We recommend formatting your JavaScript files on save in your text editor. You can learn how to do this in Visual Studio Code [here](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode#format-on-save).
 

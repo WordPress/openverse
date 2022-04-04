@@ -27,7 +27,7 @@ COPY . /usr/app
 ENV NUXT_TELEMETRY_DISABLED=1
 
 # build the application and generate a distribution package
-RUN pnpm run build
+RUN pnpm build
 
 # ==
 # development

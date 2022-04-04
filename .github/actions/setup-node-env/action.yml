@@ -36,4 +36,4 @@ runs:
 
     - name: Get locales
       shell: bash
-      run: "pnpm i18n:create-locales-list && pnpm i18n:update-locales && pnpm i18n:get-translations"
+      run: "pnpm i18n"

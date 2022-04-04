@@ -17,10 +17,10 @@ jobs:
       - uses: ./.github/actions/setup-node-env
 
       - name: Fetch translation files
-        run: pnpm i18n:get-translations
+        run: pnpm i18n
 
       - name: Build Storybook
-        run: pnpm nuxt storybook build
+        run: pnpm storybook:build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@bbdfb200618d235585ad98e965f4aafc39b4c501 # v3.7.3

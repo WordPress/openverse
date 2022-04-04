@@ -22,7 +22,7 @@ const talkback = require('talkback')
 /** @typedef {Required<typeof talkback['Options']['Default']>} TalkbackOptions */
 /** @typedef {ReturnType<TalkbackOptions['tapeDecorator']>} Tape */
 
-const port = 49152
+const port = 49153
 const host = 'https://api.openverse.engineering'
 
 const urlPatterns = {
