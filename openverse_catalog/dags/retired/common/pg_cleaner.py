@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger(image.__name__).setLevel(logging.WARNING)
 logging.getLogger(urls.__name__).setLevel(logging.WARNING)
 
-MAX_DIR_SIZE = 8 * 1024 ** 3
+MAX_DIR_SIZE = 8 * 1024**3
 OUTPUT_DIR = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
 OVERWRITE_DIR = "overwrite/"
 OUTPUT_PATH = os.path.join(OUTPUT_DIR, OVERWRITE_DIR)

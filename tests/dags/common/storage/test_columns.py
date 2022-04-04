@@ -199,7 +199,7 @@ def test_JSONColumn_prepare_string_returns_json_string():
 
 def test_JSONColumn_prepare_string_returns_unicode_json_string():
     jc = columns.JSONColumn("test", False)
-    D = {"test": u"A unicode \u018e string \xf1"}
+    D = {"test": "A unicode \u018e string \xf1"}
     actual_json = jc.prepare_string(D)
     expect_json = '{"test": "A unicode Ǝ string ñ"}'
     assert actual_json == expect_json
