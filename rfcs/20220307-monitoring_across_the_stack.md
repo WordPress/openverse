@@ -256,10 +256,11 @@ Prometheus is configured via a single `prometheus.yml` file. I've created a Pyth
 
 ## Overview of proposed changes
 
-* Use Docker to deploy the following services in production:
+* Use ECS to deploy the following services in production:
     * Prometheus
     * Grafana
     * GNU Mailman
+* Use a new, small RDS instance for Grafana's Postgres DB.
 * Rely on Prometheus primarily as a metrics aggregator and time series database. Do not use it for rule and alarm configuration.
 * Rely on Grafana for visbility and alarming upstream from Prometheus.
 * Create separate alarm streams per service in Mailman and aggregate all alarms into a Slack channel for extra visibility and redundancy.
