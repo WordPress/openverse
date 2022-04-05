@@ -174,7 +174,7 @@ _api-install:
 
 # Run API tests inside Docker
 @api-test docker_args="" tests="": _api-up
-    docker-compose exec {{ docker_args }} ./test/run_test.sh {{ tests }}
+    docker-compose exec {{ docker_args }} web ./test/run_test.sh {{ tests }}
 
 # Run API tests locally
 api-testlocal args="":
