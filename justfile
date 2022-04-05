@@ -70,7 +70,6 @@ init: up wait-for-es wait-for-ing wait-for-web
 @install:
     just _api-install
     just _ing-install
-    just _nl-install
 
 # Setup pre-commit as a Git hook
 precommit:
