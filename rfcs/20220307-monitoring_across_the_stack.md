@@ -47,7 +47,7 @@ Additionally, both are free software. Prometheus is Apache 2 licensed and Grafan
 
 ## Self-hosted vs. hosted
 
-We will seslf-host and use a new Postgres RDS instance for Grafana.
+We will self-host and use a new Postgres RDS instance for Grafana.
 
 To simplify the hosting situation, let's try to deploy this using ECS from the beginning.
 
