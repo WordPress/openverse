@@ -129,6 +129,7 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
         **data_refresh.default_args,
         "pool": DATA_REFRESH_POOL,
     }
+    poke_interval = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 15))
     dag = DAG(
         dag_id=data_refresh.dag_id,
         default_args=default_args,
@@ -147,7 +148,7 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
             external_dag_ids=external_dag_ids,
             check_existence=True,
             dag=dag,
-            poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 15)),
+            poke_interval=poke_interval,
             mode="reschedule",
         )
 
@@ -179,6 +180,9 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
             method="GET",
             response_check=response_check_wait_for_completion,
             dag=dag,
+            mode="reschedule",
+            poke_interval=poke_interval,
+            timeout=(60 * 60 * 24 * 3),  # 3 days
         )
 
         wait_for_data_refresh >> trigger_data_refresh >> wait_for_completion
