@@ -160,6 +160,7 @@ def test_build_query_param_dict_default():
     expect_query_param_dict = {
         "method": "flickr.photos.search",
         "media": "photos",
+        "safe_search": 1,
         "extras": (
             "description,license,date_upload,date_taken,owner_name,tags,"
             "o_dims,url_t,url_s,url_m,url_l,views,content_type"
