@@ -5,7 +5,7 @@ Note: Because I had to spend a good deal of time sketching out how this stuff wo
 ## Reviewers
 
 - [ ] @zackkrida (Infrastructure sign off)
-- [ ] Approver TBD (Catalog/API person)
+- [x] @AetherUnbound
 - [ ] Approver TBD (API/Frontend person)
 
 ## Milestone
