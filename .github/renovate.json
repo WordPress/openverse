@@ -1,0 +1,15 @@
+{
+  "extends": ["config:base", "schedule:monthly"],
+  "labels": [
+    "dependencies",
+    "💻 aspect: code",
+    "🧰 goal: internal improvement",
+    "🟩 priority: low"
+  ],
+  "js": {
+    "labels": ["🟨 tech: javascript"]
+  },
+  "docker": {
+    "labels": ["🐳 tech: docker"]
+  }
+}
