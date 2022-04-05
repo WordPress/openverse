@@ -4,7 +4,7 @@
     :aria-label="$t('search.search')"
     size="disabled"
     :variant="isIcon ? 'plain' : 'primary'"
-    class="transition-none inline-block rounded-s-none font-semibold text-2xl hover:text-white group-hover:text-white hover:bg-pink group-hover:bg-pink"
+    class="transition-none inline-block rounded-s-none font-semibold text-2xl hover:text-white group-hover:text-white hover:bg-pink group-hover:bg-pink focus-visible:ring focus-visible:ring-pink"
     :class="[
       isIcon
         ? 'search-button focus-visible:bg-pink focus-visible:text-white p-[0.5px] ps-[1.5px]'
@@ -32,7 +32,6 @@ import { isMinScreen } from '~/composables/use-media-query'
 import { useBrowserIsMobile } from '~/composables/use-browser-detection'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
-
 import VButton from '~/components/VButton.vue'
 
 import searchIcon from '~/assets/icons/search.svg'

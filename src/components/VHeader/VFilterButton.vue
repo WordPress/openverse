@@ -2,7 +2,7 @@
   <VButton
     :variant="variant"
     size="disabled"
-    class="self-center gap-2 align-center font-semibold py-2 flex-shrink-0"
+    class="self-center gap-2 align-center font-semibold py-2 flex-shrink-0 focus-visible:border-tx focus-visible:ring focus-visible:ring-pink"
     :class="{
       'px-3': !isIconButton,
       'w-10 h-10 px-0': isIconButton,

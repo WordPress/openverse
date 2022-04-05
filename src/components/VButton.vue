@@ -8,6 +8,7 @@
       $style[variant],
       isActive && $style[`${variant}-pressed`],
       $style[`size-${size}`],
+      isPlainDangerous ? '' : 'focus-visible:ring focus-visible:ring-pink',
     ]"
     :aria-pressed="pressed"
     :aria-disabled="ariaDisabledRef"
@@ -175,6 +176,11 @@ const VButton = defineComponent({
         attrs['aria-expanded']
       )
     })
+
+    const isPlainDangerous = computed(() => {
+      return propsRef.variant.value === 'plain-dangerous'
+    })
+
     watch(
       [propsRef.disabled, propsRef.focusableWhenDisabled],
       ([disabled, focusableWhenDisabled]) => {
@@ -220,6 +226,7 @@ const VButton = defineComponent({
       ariaDisabledRef,
       typeRef,
       isActive,
+      isPlainDangerous,
     }
   },
 })
@@ -228,12 +235,6 @@ export default VButton
 </script>
 
 <style module>
-/**
- * Classnames in this file are duplicated to increase specificity.
- * This is currently necessary due to a bug with the order of CSS files
- * that only appears in development.
- */
-
 .button[disabled='disabled'],
 .button[aria-disabled='true'] {
   @apply opacity-50;
@@ -256,7 +257,7 @@ a.button {
 }
 
 .primary {
-  @apply bg-pink text-white focus-visible:ring focus-visible:ring-pink hover:bg-dark-pink hover:text-white;
+  @apply bg-pink text-white  hover:bg-dark-pink hover:text-white;
 }
 
 .primary-pressed {
@@ -264,7 +265,7 @@ a.button {
 }
 
 .secondary {
-  @apply bg-dark-charcoal text-white font-bold focus-visible:ring focus-visible:ring-pink hover:bg-dark-charcoal-80 hover:text-white;
+  @apply bg-dark-charcoal text-white font-bold hover:bg-dark-charcoal-80 hover:text-white;
 }
 
 .secondary-pressed {
@@ -272,7 +273,7 @@ a.button {
 }
 
 .tertiary {
-  @apply bg-white text-dark-charcoal border border-dark-charcoal-20 focus-visible:border-tx focus-visible:ring focus-visible:ring-pink ring-offset-0;
+  @apply bg-white text-dark-charcoal border border-dark-charcoal-20 focus-visible:border-tx ring-offset-0;
 }
 
 .tertiary-pressed {
@@ -280,11 +281,11 @@ a.button {
 }
 
 .action-menu {
-  @apply bg-white text-dark-charcoal border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
+  @apply bg-white text-dark-charcoal border border-tx hover:border-dark-charcoal-20;
 }
 
 .action-menu-secondary {
-  @apply bg-white text-dark-charcoal border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
+  @apply bg-white text-dark-charcoal border border-tx hover:border-dark-charcoal-20;
 }
 
 .action-menu-secondary-pressed {
@@ -296,22 +297,18 @@ a.button {
 }
 
 .action-menu-muted {
-  @apply bg-dark-charcoal-10 text-dark-charcoal border border-tx hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
+  @apply bg-dark-charcoal-10 text-dark-charcoal border border-tx hover:border-dark-charcoal-20;
 }
 
 .action-menu-muted-pressed {
-  @apply border border-tx bg-dark-charcoal text-white focus-visible:ring focus-visible:ring-pink;
+  @apply border border-tx bg-dark-charcoal text-white;
 }
 
 .full {
-  @apply w-full font-semibold bg-dark-charcoal-06 focus-visible:ring focus-visible:ring-pink hover:bg-dark-charcoal-40 hover:text-white;
+  @apply w-full font-semibold bg-dark-charcoal-06 hover:bg-dark-charcoal-40 hover:text-white;
 }
 
 .full-pressed {
   @apply w-full font-semibold bg-dark-charcoal-06 text-dark-charcoal;
-}
-
-.plain {
-  @apply focus-visible:ring focus-visible:ring-pink;
 }
 </style>

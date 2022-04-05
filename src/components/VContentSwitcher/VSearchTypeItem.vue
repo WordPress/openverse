@@ -1,5 +1,6 @@
 <template>
   <VItem
+    class="md:mb-1"
     :selected="selected"
     :is-first="itemId === 0"
     v-bind="component"

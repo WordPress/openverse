@@ -40,12 +40,7 @@
     >
       <div
         class="flex-grow whitespace-nowrap my-0 rounded-sm px-2"
-        :class="[
-          contextProps.size === 'small' &&
-            !contextProps.bordered &&
-            'group-focus-visible:ring group-focus-visible:ring-pink',
-          $style[`${contextProps.direction}-content`],
-        ]"
+        :class="[$style[`${contextProps.direction}-content`]]"
       >
         <slot name="default" />
       </div>
