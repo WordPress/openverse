@@ -35,14 +35,14 @@
         <template #break>
           <br />
         </template>
-        <template #filter>{{ unsupportedByUsefilter }}</template>
+        <template #filter>{{ unsupportedByUseFilter }}</template>
       </i18n>
     </header>
 
     <VMetaSourceList
       class="md:justify-center mt-6 mb-10"
       :type="type"
-      :query="metaQuery"
+      :query="query"
     />
 
     <p class="caption font-semibold max-w-3xl my-0 mx-auto">
@@ -51,44 +51,39 @@
   </section>
 </template>
 
-<script>
-import { AUDIO, IMAGE, VIDEO } from '~/constants/media'
+<script lang="ts">
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+
+import type { MediaType } from '~/constants/media'
+
+import type { ApiQueryParams } from '~/store/types'
+
+import { getAdditionalSourceBuilders } from '~/utils/get-additional-sources'
 
 import VMetaSourceList from './VMetaSourceList.vue'
 
-export default {
+export default defineComponent({
   name: 'VMetaSearchForm',
   components: {
     VMetaSourceList,
   },
   props: {
-    query: { type: Object, required: true },
-    type: { type: String, required: true },
+    query: { type: Object as PropType<ApiQueryParams>, required: true },
+    type: { type: String as PropType<MediaType>, required: true },
     isSupported: { type: Boolean, default: false },
     hasNoResults: { type: Boolean, required: true },
   },
-  computed: {
-    unsupportedByUsefilter() {
-      if (this.type === AUDIO) {
-        return 'CC Mixter'
-      }
-      if (this.type === VIDEO) return 'Wikimedia Commons or Youtube'
-      if (this.type === IMAGE) return 'Google Images'
-      return ''
-    },
-    metaQuery() {
-      return {
-        q: this.query.q,
-        filters: {
-          commercial: this.query.license_type
-            ? this.query.license_type.includes('commercial')
-            : false,
-          modify: this.query.license_type
-            ? this.query.license_type.includes('modification')
-            : false,
-        },
-      }
-    },
+  setup(props) {
+    const unsupportedByUseFilter = computed(() =>
+      getAdditionalSourceBuilders(props.type)
+        .filter((source) => !source.supportsUseFilters)
+        .map((source) => source.name)
+        .join(', ')
+    )
+
+    return {
+      unsupportedByUseFilter,
+    }
   },
-}
+})
 </script>

@@ -11,13 +11,15 @@
   </svg>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from '@nuxtjs/composition-api'
+
 import { isTest } from '~/utils/node-env'
 
 /**
  * Displays the given icon in a 24px × 24px square.
  */
-export default {
+export default defineComponent({
   name: 'VIcon',
   props: {
     /**
@@ -55,7 +57,7 @@ export default {
     size: {
       type: Number,
       default: 6,
-      validator: (val) => [4, 5, 6].includes(val),
+      validator: (val: number) => [4, 5, 6].includes(val),
     },
     /**
      * whether to flip the icon for RTL languages; This generally makes sense
@@ -66,7 +68,7 @@ export default {
       default: false,
     },
   },
-}
+})
 </script>
 
 <style scoped>

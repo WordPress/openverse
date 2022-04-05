@@ -1,0 +1,81 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import VMetaSourceList from '~/components/VMetaSearch/VMetaSourceList.vue'
+
+<Meta title="Components/VMetaSourceList" component={VMetaSourceList} />
+
+export const Template = (args) => ({
+  template: `<VMetaSourceList v-bind="args"/>`,
+  components: { VMetaSourceList },
+  setup() {
+    return { args }
+  },
+})
+
+# VMetaSourceList
+
+<Description of={VMetaSourceList} />
+
+<ArgsTable of={VMetaSourceList} />
+
+## Images
+
+<Canvas>
+  <Story
+    name="Images"
+    args={{
+      type: 'image',
+      query: { q: 'cat' },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Audio
+
+<Canvas>
+  <Story
+    name="Audio"
+    args={{
+      type: 'audio',
+      query: { q: 'cat' },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Video
+
+<Canvas>
+  <Story
+    name="Video"
+    args={{
+      type: 'video',
+      query: { q: 'cat' },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## 3D models
+
+<Canvas>
+  <Story
+    name="3D models"
+    args={{
+      type: 'model_3d',
+      query: { q: 'cat' },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
