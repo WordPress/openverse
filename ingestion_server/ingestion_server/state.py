@@ -12,6 +12,7 @@ import datetime
 import enum
 import logging as log
 import shelve
+from typing import NamedTuple
 
 from decouple import config
 from filelock import FileLock
@@ -24,9 +25,17 @@ shelf_path = config("SHELF_PATH", default="db")
 class WorkerStatus(enum.Enum):
     RUNNING = 0
     FINISHED = 1
+    ERROR = 2
 
 
-def register_indexing_job(worker_ips, target_index):
+class TaskData(NamedTuple):
+    target_index: int
+    task_id: str
+    percent_successful: float
+    percent_completed: float
+
+
+def register_indexing_job(worker_ips, target_index, task_id):
     """
     Track the hosts that are running indexing jobs. Only one indexing job can
     run at a time.
@@ -35,6 +44,7 @@ def register_indexing_job(worker_ips, target_index):
     of relevant indexer-worker instances.
     :param target_index: The name of the Elasticsearch index that will be
     promoted to production after indexing is complete
+    :param task_id: The id of the data_refresh task scheduling these workers.
     :return: Return True if scheduling succeeds
     """
     with FileLock(lock_path), shelve.open(shelf_path, writeback=True) as db:
@@ -55,31 +65,47 @@ def register_indexing_job(worker_ips, target_index):
         db["worker_statuses"] = worker_statuses
         db["start_time"] = datetime.datetime.now()
         db["target_index"] = target_index
+        db["task_id"] = task_id
         return True
 
 
-def worker_finished(worker_ip):
+def worker_finished(worker_ip, error):
     """
     The scheduler received a notification indicating an indexing worker has
     finished its task.
     :param worker_ip: The private IP of the worker.
-    :return: The target index if all workers are finished, else False.
+    :param error: Whether this worker had an error during processing.
+    :return: TaskData namedtuple containing the target index, task_id, and the
+    percent of workers that have completed and that were successful.
     """
     with FileLock(lock_path), shelve.open(shelf_path, writeback=True) as db:
         try:
             _ = db["worker_statuses"][worker_ip]
-            db["worker_statuses"][worker_ip] = WorkerStatus.FINISHED
+            db["worker_statuses"][worker_ip] = (
+                WorkerStatus.FINISHED if not error else WorkerStatus.ERROR
+            )
             log.info(f"Received worker_finished signal from {worker_ip}")
         except KeyError:
             log.error(
                 "An indexer worker notified us it finished its task, but "
                 "we are not tracking it."
             )
+        total_workers = len(db["worker_statuses"])
+        completed_workers = 0
+        running_workers = 0
         for worker_key in db["worker_statuses"]:
-            if db["worker_statuses"][worker_key] == WorkerStatus.RUNNING:
+            status = db["worker_statuses"][worker_key]
+            if status == WorkerStatus.RUNNING:
                 log.info(f"{worker_key} is still indexing")
-                return False
-        return db["target_index"]
+                running_workers += 1
+            elif status == WorkerStatus.FINISHED:
+                completed_workers += 1
+        return TaskData(
+            target_index=db["target_index"],
+            task_id=db["task_id"],
+            percent_successful=(completed_workers / total_workers) * 100,
+            percent_completed=((total_workers - running_workers) / total_workers) * 100,
+        )
 
 
 def clear_state():

@@ -24,9 +24,9 @@ from ingestion_server.state import register_indexing_job
 client = boto3.client("ec2", region_name=config("AWS_REGION", default="us-east-1"))
 
 
-def schedule_distributed_index(db_conn, target_index):
+def schedule_distributed_index(db_conn, target_index, task_id):
     workers = _prepare_workers()
-    registered = register_indexing_job(workers, target_index)
+    registered = register_indexing_job(workers, target_index, task_id)
     if registered:
         _assign_work(db_conn, workers, target_index)
 

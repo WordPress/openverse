@@ -167,13 +167,23 @@ def get_last_item_ids(table):
 
 
 class TableIndexer:
-    def __init__(self, es_instance, tables, progress=None, finish_time=None):
+    def __init__(
+        self,
+        es_instance,
+        tables,
+        task_id=None,
+        progress=None,
+        finish_time=None,
+        active_workers=None,
+    ):
         self.es = es_instance
         connections.connections.add_connection("default", self.es)
         self.tables_to_watch = tables
         # Optional multiprocessing.Values for examining indexing progress
+        self.task_id = task_id
         self.progress = progress
         self.finish_time = finish_time
+        self.active_workers = active_workers
 
     def _index_table(self, table, dest_idx=None):
         """
@@ -337,7 +347,7 @@ class TableIndexer:
         return delta < max_delta
 
     @staticmethod
-    def go_live(write_index, live_alias):
+    def go_live(write_index, live_alias, active_workers=None):
         """
         Point the live index alias at the index we just created. Delete the
         previous one.
@@ -377,6 +387,9 @@ class TableIndexer:
         else:
             es.indices.put_alias(index=write_index, name=live_alias)
             log.info(f"Created '{live_alias}' index alias pointing to {write_index}")
+        # If there were any active workers for this task, we should mark them complete.
+        if active_workers:
+            active_workers.value = int(False)
         slack.info(
             f"`{write_index}`: ES index promoted - data refresh complete! :tada:"
         )
@@ -411,7 +424,10 @@ class TableIndexer:
             self.es.indices.create(
                 index=destination_index, body=index_settings(model_name)
             )
-            schedule_distributed_index(database_connect(), destination_index)
+            self.active_workers.value = int(True)
+            schedule_distributed_index(
+                database_connect(), destination_index, self.task_id
+            )
         else:
             self._index_table(model_name, dest_idx=destination_index)
             slack.verbose(

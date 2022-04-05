@@ -8,7 +8,7 @@ data has been indexed, notify Ingestion Server and stop the instance.
 
 import logging as log
 import sys
-from multiprocessing import Process, Value
+from multiprocessing import Process
 
 import boto3
 import falcon
@@ -16,6 +16,7 @@ import requests
 from decouple import config
 from psycopg2.sql import SQL, Identifier, Literal
 
+from ingestion_server import slack
 from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.indexer import TableIndexer, elasticsearch_connect
 from ingestion_server.queries import get_existence_queries
@@ -52,8 +53,6 @@ def _execute_indexing_task(target_index, start_id, end_id, notify_url):
     if table_name not in MEDIA_TYPES:
         table_name = "image"
     elasticsearch = elasticsearch_connect()
-    progress = Value("d", 0.0)
-    finish_time = Value("d", 0.0)
 
     deleted, mature = get_existence_queries(table_name)
     query = SQL(
@@ -68,7 +67,7 @@ def _execute_indexing_task(target_index, start_id, end_id, notify_url):
         end_id=Literal(end_id),
     )
     log.info(f"Querying {query}")
-    indexer = TableIndexer(elasticsearch, table_name, progress, finish_time)
+    indexer = TableIndexer(elasticsearch, table_name)
     p = Process(
         target=_launch_reindex,
         args=(table_name, target_index, query, indexer, notify_url),
@@ -78,13 +77,21 @@ def _execute_indexing_task(target_index, start_id, end_id, notify_url):
 
 
 def _launch_reindex(table, target_index, query, indexer, notify_url):
+    worker_error = False
     try:
         indexer.replicate(table, target_index, query)
-    except Exception:
+    except Exception as err:
+        exception_type = f"{err.__class__.__module__}.{err.__class__.__name__}"
+        slack.error(
+            f":x_red: Error in worker while reindexing `{target_index}`"
+            f"(`{exception_type}`): \n"
+            f"```\n{err}\n```"
+        )
         log.error("Indexing error occurred: ", exc_info=True)
+        worker_error = True
 
     log.info(f"Notifying {notify_url}")
-    requests.post(notify_url)
+    requests.post(notify_url, json={"error": worker_error})
     _self_destruct()
     return
 

@@ -35,14 +35,16 @@ class TaskTracker:
         self.id_progress = {}
         self.id_start_time = {}
         self.id_finish_time = {}
+        self.id_active_workers = {}
 
-    def add_task(self, task, task_id, action, progress, finish_time):
+    def add_task(self, task, task_id, action, progress, finish_time, active_workers):
         self._prune_old_tasks()
         self.id_task[task_id] = task
         self.id_action[task_id] = action
         self.id_progress[task_id] = progress
         self.id_start_time[task_id] = dt.datetime.utcnow().timestamp()
         self.id_finish_time[task_id] = finish_time
+        self.id_active_workers[task_id] = active_workers
         return task_id
 
     def _prune_old_tasks(self):
@@ -56,6 +58,7 @@ class TaskTracker:
             active = task.is_alive()
             start_time = self.id_start_time[_id]
             finish_time = self.id_finish_time[_id].value
+            active_workers = self.id_active_workers[_id].value
             results.append(
                 {
                     "task_id": _id,
@@ -65,6 +68,7 @@ class TaskTracker:
                     "error": percent_completed < 100 and not active,
                     "start_time": start_time,
                     "finish_time": finish_time,
+                    "active_workers": bool(active_workers),
                 }
             )
         sorted_results = sorted(results, key=lambda x: x["finish_time"])
@@ -86,7 +90,15 @@ class TaskTracker:
 
 class Task(Process):
     def __init__(
-        self, model, task_type, since_date, progress, task_id, finish_time, callback_url
+        self,
+        model,
+        task_type,
+        since_date,
+        progress,
+        task_id,
+        finish_time,
+        active_workers,
+        callback_url,
     ):
         Process.__init__(self)
         self.model = model
@@ -95,6 +107,7 @@ class Task(Process):
         self.progress = progress
         self.task_id = task_id
         self.finish_time = finish_time
+        self.active_workers = active_workers
         self.callback_url = callback_url
 
     def run(self):
@@ -102,7 +115,12 @@ class Task(Process):
             # Map task types to actions.
             elasticsearch = elasticsearch_connect()
             indexer = TableIndexer(
-                elasticsearch, self.model, self.progress, self.finish_time
+                elasticsearch,
+                self.model,
+                self.task_id,
+                self.progress,
+                self.finish_time,
+                self.active_workers,
             )
             if self.task_type == TaskTypes.REINDEX:
                 slack.verbose(f"`{self.model}`: Beginning Elasticsearch reindex")
