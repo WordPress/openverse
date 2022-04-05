@@ -24,7 +24,7 @@
     "start": "nuxt start",
     "prod": "pnpm build:only && pnpm start",
     "storybook": "nuxt storybook",
-    "storybook:build": "pnpm storybook -- --build",
+    "storybook:build": "pnpm storybook -- build",
     "storybook:smoke": "pnpm storybook -- --ci --smoke-test",
     "talkback": "node ./test/proxy.js",
     "pretest": "pnpm install",
