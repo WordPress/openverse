@@ -1,3 +1,6 @@
+import socket
+from urllib.parse import urlparse
+
 import boto3
 import pytest
 
@@ -9,6 +12,18 @@ def _delete_bucket(bucket):
     if len(list(bucket.objects.all())) > 0:
         bucket.delete_objects(Delete={"Objects": key_list})
         bucket.delete()
+
+
+def pytest_configure(config):
+    """
+    Dynamically allow the S3 host during testing. This is required because:
+    * Docker will use different internal ports depending on what's available
+    * Boto3 will open a socket with the IP address directly rather than the hostname
+    * We can't add the allow_hosts mark to the empty_s3_bucket fixture directly
+        (see: https://github.com/pytest-dev/pytest/issues/1368)
+    """
+    s3_host = socket.gethostbyname(urlparse(S3_LOCAL_ENDPOINT).hostname)
+    config.__socket_allow_hosts = ["s3", "postgres", s3_host]
 
 
 @pytest.fixture

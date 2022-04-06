@@ -7,8 +7,10 @@ import re
 from functools import lru_cache
 from urllib.parse import urlparse
 
-import requests
 import tldextract
+
+# This import is aliased for easier test mocking
+from requests import get as requests_get
 
 
 logger = logging.getLogger(__name__)
@@ -62,7 +64,7 @@ def rewrite_redirected_url(url_string):
     requests.
     """
     try:
-        response = requests.get(url_string)
+        response = requests_get(url_string)
         if response.ok:
             rewritten_url = response.url
             if rewritten_url != url_string:
@@ -115,7 +117,7 @@ def _test_domain_for_tls_support(domain):
     logger.info(f"Testing {domain} for TLS support")
     tls_supported = False
     try:
-        requests.get(f"https://{domain}", timeout=2)
+        requests_get(f"https://{domain}", timeout=2)
         logger.info(f"{domain} supports TLS.")
         tls_supported = True
     except Exception as e:

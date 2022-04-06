@@ -1,5 +1,6 @@
 import logging
 import unittest
+import warnings
 
 import pytest
 from airflow.exceptions import AirflowException
@@ -100,7 +101,12 @@ class TestExternalDAGsSensor(unittest.TestCase):
 
     def test_fails_if_external_dag_missing_sensor_task(self):
         # Loads an example DAG which does not have a Sensor task.
-        dagbag = DagBag(dag_folder=DEV_NULL, include_examples=True)
+        with warnings.catch_warnings():
+            # TODO: As of 2.2.4, initializing the example DAGs emits deprecation
+            # warnings for...(drumroll) Airflow operators 🙃 hopefully this is fixed
+            # in 2.2.5 or something.
+            warnings.simplefilter("ignore", category=DeprecationWarning)
+            dagbag = DagBag(dag_folder=DEV_NULL, include_examples=True)
         bash_dag = dagbag.dags["example_bash_operator"]
         bash_dag.sync_to_db()
 
