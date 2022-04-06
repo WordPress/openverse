@@ -20,11 +20,7 @@
         selected && 'bg-dark-charcoal-10 ring-offset-dark-charcoal-10',
         as === 'VLink' && 'text-dark-charcoal',
       ]"
-      :variant="
-        contextProps.size === 'small' && !contextProps.bordered
-          ? 'plain-dangerous'
-          : 'plain'
-      "
+      variant="plain"
       size="disabled"
       :pressed="selected"
       :role="contextProps.type === 'radiogroup' ? 'radio' : 'menuitemcheckbox'"
