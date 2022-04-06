@@ -82,6 +82,13 @@ groups:
         description: Bug fix
         emoji: "🛠"
 
+  - name: tooling
+    labels:
+      - name: sentry
+        color: "#362D59"
+        description: Sentry issue
+        emoji: "🐛"
+
   - name: aspect
     color: "04338c"
     is_required: true
