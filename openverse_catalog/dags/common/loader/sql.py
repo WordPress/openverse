@@ -48,6 +48,7 @@ TSV_COLUMNS = {
     IMAGE: CURRENT_IMAGE_TSV_COLUMNS,
 }
 CURRENT_TSV_VERSION = "001"
+RETURN_ROW_COUNT = lambda c: c.rowcount  # noqa: E731
 
 
 def create_column_definitions(table_columns: List[Column], is_loading=True):
@@ -134,12 +135,12 @@ def load_s3_data_to_intermediate_table(
     s3_key,
     identifier,
     media_type=IMAGE,
-):
+) -> tuple[int, int]:
     load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f"Loading {s3_key} from S3 Bucket {bucket} into {load_table}")
 
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    postgres.run(
+    loaded_count = postgres.run(
         dedent(
             f"""
             SELECT aws_s3.table_import_from_s3(
@@ -151,12 +152,15 @@ def load_s3_data_to_intermediate_table(
               'us-east-1'
             );
             """
-        )
+        ),
+        handler=lambda c: c.fetchone()[0],
     )
-    _clean_intermediate_table_data(postgres, load_table)
+    logger.info(f"Succesfully loaded {loaded_count} records from S3")
+    cleaned_count = _clean_intermediate_table_data(postgres, load_table)
+    return loaded_count, cleaned_count
 
 
-def _clean_intermediate_table_data(postgres_hook, load_table):
+def _clean_intermediate_table_data(postgres_hook, load_table) -> int:
     """
     Necessary for old TSV files that have not been cleaned up,
     using `MediaStore` class:
@@ -165,9 +169,13 @@ def _clean_intermediate_table_data(postgres_hook, load_table):
     Also removes any duplicate rows that have the same `provider`
     and `foreign_id`.
     """
+    affected_count = 0
     for column in required_columns:
-        postgres_hook.run(f"DELETE FROM {load_table} WHERE {column.db_name} IS NULL;")
-    postgres_hook.run(
+        affected_count += postgres_hook.run(
+            f"DELETE FROM {load_table} WHERE {column.db_name} IS NULL;",
+            handler=RETURN_ROW_COUNT,
+        )
+    affected_count += postgres_hook.run(
         dedent(
             f"""
             DELETE FROM {load_table} p1
@@ -177,8 +185,11 @@ def _clean_intermediate_table_data(postgres_hook, load_table):
               AND p1.{col.PROVIDER.db_name} = p2.{col.PROVIDER.db_name}
               AND p1.{col.FOREIGN_ID.db_name} = p2.{col.FOREIGN_ID.db_name};
             """
-        )
+        ),
+        handler=RETURN_ROW_COUNT,
     )
+    logger.info(f"Cleaned {affected_count} rows")
+    return affected_count
 
 
 def _is_tsv_column_from_different_version(
@@ -265,7 +276,7 @@ def upsert_records_to_db_table(
         {upsert_conflict_string}
         """
     )
-    return postgres.run(upsert_query, handler=lambda c: c.rowcount)
+    return postgres.run(upsert_query, handler=RETURN_ROW_COUNT)
 
 
 def drop_load_table(
