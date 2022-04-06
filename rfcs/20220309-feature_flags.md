@@ -9,7 +9,7 @@
 
 ## Rationale
 
-So far we have built features on a branch other than `main` and kept those branches separate till the features were ready to be visible. This has worked out so far but it is
+So far we have built features on a branch other than `main` and kept those branches separate until the features were ready to be visible. This has worked out so far but it is
 
 - **untenable**
 
