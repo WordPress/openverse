@@ -83,10 +83,10 @@ groups:
         emoji: "🛠"
 
   - name: tooling
-    color: "#362D59"
     is_required: true
     labels:
       - name: sentry
+        color: "#362D59"
         description: Sentry issue
         emoji: "🐛"
 
