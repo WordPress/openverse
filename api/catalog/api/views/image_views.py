@@ -1,7 +1,6 @@
 import io
 import logging
 
-import libxmp
 import piexif
 import requests
 from catalog.api.docs.image_docs import (
@@ -21,7 +20,6 @@ from catalog.api.serializers.image_serializers import (
     OembedSerializer,
     WatermarkRequestSerializer,
 )
-from catalog.api.utils import ccrel
 from catalog.api.utils.exceptions import get_api_exception
 from catalog.api.utils.throttle import OneThousandPerMinute
 from catalog.api.utils.watermark import watermark
@@ -142,6 +140,11 @@ class ImageViewSet(MediaViewSet):
                 "work_landing_page": image.foreign_landing_url,
                 "identifier": str(image.identifier),
             }
+
+            # Import inside a function to allow server run without Exempi library
+            import libxmp
+            from catalog.api.utils import ccrel
+
             try:
                 with_xmp = ccrel.embed_xmp_bytes(img_bytes, work_properties)
                 return FileResponse(with_xmp, content_type="image/jpeg")
