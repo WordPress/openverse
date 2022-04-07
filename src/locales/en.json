@@ -388,9 +388,9 @@
       "nc": "Noncommercial uses only.",
       "nd": "No derivatives or adaptations permitted.",
       "sa": "Share adaptations under the same terms.",
-      "cc0": "This work has been marked as dedicated to the public domain.",
-      "pdm": "This work is marked as being in the public domain.",
-      "sampling+": "Samples, mash-ups, creative transformations permitted."
+      "zero": "This work has been marked as dedicated to the public domain.",
+      "pd": "This work is marked as being in the public domain.",
+      "sampling-plus": "Samples, mash-ups, creative transformations permitted."
     },
     "aria": {
       "close": "close",
@@ -417,11 +417,11 @@
         "link": "here"
       },
       "credit": {
-        "text": "\"{title}\"{creator}{marked-licensed}{license}{view-legal}",
+        "text": "\"{title}\"{creator}{marked-licensed}{license}. {view-legal}",
         "creator-text": " by {creator-name}",
-        "marked": "is marked with",
-        "licensed": "is licensed under",
-        "view-legal-text": ". To view {terms-copy}visit {URL}",
+        "marked": " is marked with ",
+        "licensed": " is licensed under ",
+        "view-legal-text": "To view {terms-copy} visit {URL}.",
         "terms-text": "the terms,",
         "copy-text": "a copy of this license,"
       },

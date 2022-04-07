@@ -7,13 +7,7 @@
     <div
       class="mt-10 lg:mt-16 flex flex-col gap-10 lg:gap-16 px-4 lg:px-0 lg:max-w-5xl mx-auto"
     >
-      <VMediaReuse
-        data-testid="audio-attribution"
-        :media="audio"
-        :license-url="licenseUrl"
-        :full-license-name="fullLicenseName"
-        :attribution-html="attributionHtml()"
-      />
+      <VMediaReuse data-testid="audio-attribution" :media="audio" />
       <VAudioDetails data-testid="audio-info" :audio="audio" />
       <VRelatedAudio v-if="audio.id" :audio-id="audio.id" />
     </div>
@@ -24,8 +18,6 @@
 import { computed } from '@nuxtjs/composition-api'
 
 import { AUDIO } from '~/constants/media'
-import getAttributionHtml from '~/utils/attribution-html'
-import { getFullLicenseName } from '~/utils/license'
 import { useMediaStore } from '~/stores/media'
 
 import VAudioDetails from '~/components/VAudioDetails/VAudioDetails.vue'
@@ -53,18 +45,6 @@ const AudioDetailPage = {
     const audio = computed(() => mediaStore.state.audio)
 
     return { audio }
-  },
-  computed: {
-    fullLicenseName() {
-      return getFullLicenseName(
-        this.audio.license,
-        this.audio.license_version,
-        this.$i18n
-      )
-    },
-    licenseUrl() {
-      return `${this.audio.license_url}?ref=openverse`
-    },
   },
   watch: {
     audio(newAudio) {
@@ -100,12 +80,6 @@ const AudioDetailPage = {
         _this.showBackToSearchLink = true
       }
     })
-  },
-  methods: {
-    attributionHtml() {
-      const licenseUrl = `${this.licenseUrl}&atype=html`
-      return getAttributionHtml(this.audio, licenseUrl, this.fullLicenseName)
-    },
   },
   head() {
     const title = this.audio.title

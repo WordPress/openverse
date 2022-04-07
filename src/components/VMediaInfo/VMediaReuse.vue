@@ -9,7 +9,7 @@
         :license-url="media.license_url"
         :full-license-name="fullLicenseName"
       />
-      <VCopyLicense :media="media" :full-license-name="fullLicenseName" />
+      <VCopyLicense :media="media" />
     </div>
   </section>
 </template>

@@ -1,8 +1,11 @@
-import type { License, LicenseVersion } from '~/constants/license'
+import type {
+  License,
+  LicenseVersion,
+  LicenseElement,
+} from '~/constants/license'
 import {
   CC_LICENSES,
   DEPRECATED_CC_LICENSES,
-  LicenseElement,
   PUBLIC_DOMAIN_MARKS,
 } from '~/constants/license'
 
@@ -89,8 +92,30 @@ export const isCc = (license: License): boolean =>
   (DEPRECATED_CC_LICENSES as ReadonlyArray<License>).includes(license)
 
 /**
- * Splits license slug by `-` and returns an array of license elements
- * @param license - the license slug
+ * Get the list of elements that comprise the given license or mark.
+ *
+ * @param license - the license for which to get the elements
  */
-export const licenseToElements = (license: License) =>
-  (license as string).split(/[-\s]/) as LicenseElement[]
+export const getElements = (license: License): LicenseElement[] => {
+  if (license === 'pdm') {
+    return ['pd']
+  }
+
+  const icons: LicenseElement[] = ['cc']
+  if (license === 'cc0') {
+    icons.push('zero')
+  } else {
+    const replacements: Record<string, LicenseElement> = {
+      'sampling+': 'sampling-plus',
+    }
+    const elements = license
+      .split('-')
+      .map((element) =>
+        element in replacements
+          ? replacements[element]
+          : (element as LicenseElement)
+      )
+    icons.push(...elements)
+  }
+  return icons
+}

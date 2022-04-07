@@ -1,6 +1,6 @@
 import Vuei18n from 'vue-i18n'
 
-import { getFullLicenseName } from '~/utils/license'
+import { getFullLicenseName, getElements } from '~/utils/license'
 import type { License, LicenseVersion } from '~/constants/license'
 import enMessages from '~/locales/en.json'
 
@@ -36,6 +36,27 @@ describe('getFullLicenseName', () => {
       expect(
         getFullLicenseName(license, licenseVersion, sendI18n ? i18n : null)
       ).toBe(fullName)
+    }
+  )
+})
+
+describe('getElements', () => {
+  it.each`
+    license           | icons
+    ${'by'}           | ${['cc', 'by']}
+    ${'by-sa'}        | ${['cc', 'by', 'sa']}
+    ${'by-nd'}        | ${['cc', 'by', 'nd']}
+    ${'by-nc'}        | ${['cc', 'by', 'nc']}
+    ${'by-nc-sa'}     | ${['cc', 'by', 'nc', 'sa']}
+    ${'by-nc-nd'}     | ${['cc', 'by', 'nc', 'nd']}
+    ${'nc-sampling+'} | ${['cc', 'nc', 'sampling-plus']}
+    ${'sampling+'}    | ${['cc', 'sampling-plus']}
+    ${'pdm'}          | ${['pd']}
+    ${'cc0'}          | ${['cc', 'zero']}
+  `(
+    'returns $icons for $license',
+    ({ license, icons }: { license: License; icons: string[] }) => {
+      expect(getElements(license)).toEqual(icons)
     }
   )
 })

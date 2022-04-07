@@ -41,7 +41,7 @@
 <script>
 import { isLicense } from '~/utils/license'
 
-import VLicenseElements from '~/components/VLicenseElements.vue'
+import VLicenseElements from '~/components/VLicense/VLicenseElements.vue'
 import VLink from '~/components/VLink.vue'
 
 export default {

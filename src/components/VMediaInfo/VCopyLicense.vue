@@ -34,91 +34,27 @@
       :class="{ hidden: activeTab !== tab }"
     >
       <div class="overflow-y-scroll">
-        <i18n
+        <!-- Disable reason: We control the attribution HTML generation so this is safe and will not lead to XSS attacks -->
+        <!-- eslint-disable vue/no-v-html -->
+        <div
           v-if="tab === 'rich'"
           id="attribution-rich"
-          path="media-details.reuse.credit.text"
-          tag="p"
-        >
-          <template #title
-            ><VLink :href="media.foreign_landing_url">{{
-              media.title
-            }}</VLink></template
-          >
-          <template #creator>
-            <i18n
-              v-if="media.creator"
-              path="media-details.reuse.credit.creator-text"
-              tag="span"
-            >
-              <template #creator-name>
-                <VLink v-if="media.creator_url" :href="media.creator_url">{{
-                  media.creator
-                }}</VLink>
-                <span v-else>{{ media.creator }}</span>
-              </template>
-            </i18n>
-          </template>
-          <template #marked-licensed>
-            {{
-              isPDM
-                ? $t('media-details.reuse.credit.marked')
-                : $t('media-details.reuse.credit.licensed')
-            }}
-          </template>
-          <template #license>
-            <VLink class="uppercase" :href="licenseUrl">{{
-              fullLicenseName
-            }}</VLink
-            >{{ period }}
-          </template>
-        </i18n>
+          v-html="getAttributionMarkup({ includeIcons: false })"
+        />
+        <!-- eslint-enable vue/no-v-html -->
+
         <p
           v-if="tab === 'html'"
           id="attribution-html"
           class="font-mono break-all"
           dir="ltr"
         >
-          {{ attributionHtml }}
+          {{ getAttributionMarkup() }}
         </p>
-        <i18n
-          v-if="tab === 'plain'"
-          id="attribution-plain"
-          path="media-details.reuse.credit.text"
-          tag="p"
-        >
-          <template #title>{{ media.title }}</template>
-          <template #creator>
-            <i18n
-              v-if="media.creator"
-              path="media-details.reuse.credit.creator-text"
-            >
-              <template #creator-name>{{ media.creator }}</template>
-            </i18n>
-          </template>
-          <template #marked-licensed>
-            {{
-              isPDM
-                ? $t('media-details.reuse.credit.marked')
-                : $t('media-details.reuse.credit.licensed')
-            }}
-          </template>
-          <template #license> {{ fullLicenseName }}</template>
-          <template #view-legal>
-            <i18n path="media-details.reuse.credit.view-legal-text">
-              <template #terms-copy>
-                {{
-                  isPDM
-                    ? $t('media-details.reuse.credit.terms-text')
-                    : $t('media-details.reuse.credit.copy-text')
-                }}
-              </template>
-              <template v-if="licenseUrl" #URL>
-                {{ licenseUrl }}
-              </template>
-            </i18n>
-          </template>
-        </i18n>
+
+        <div v-if="tab === 'plain'" id="attribution-plain">
+          {{ getAttributionMarkup({ isPlaintext: true }) }}
+        </div>
       </div>
 
       <VCopyButton
@@ -131,52 +67,37 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+import { defineComponent, ref, useContext } from '@nuxtjs/composition-api'
 
-import getAttributionHtml from '~/utils/attribution-html'
-import { isPublicDomain } from '~/utils/license'
+import { getAttribution } from '~/utils/attribution-html'
 
-import VLink from '~/components/VLink.vue'
 import VCopyButton from '~/components/VCopyButton.vue'
 
 const VCopyLicense = defineComponent({
   name: 'VCopyLicense',
-  components: { VCopyButton, VLink },
+  components: { VCopyButton },
   props: {
     media: {
       type: Object,
     },
-    fullLicenseName: {
-      type: String,
-    },
   },
   setup(props) {
+    const { i18n } = useContext()
+
     const activeTab = ref('rich')
     const tabs = ['rich', 'html', 'plain']
 
     const setActiveTab = (tabIdx) => (activeTab.value = tabIdx)
 
-    const licenseUrl = computed(
-      () => `${props.media.license_url}?ref=openverse`
-    )
-
-    const isPDM = () => isPublicDomain(props.fullLicenseName)
-
-    const attributionHtml = computed(() => {
-      const licenseUrl = `${props.media.license_url}&atype=html`
-      return getAttributionHtml(props.media, licenseUrl, props.fullLicenseName)
-    })
-
-    const period = '.'
+    const getAttributionMarkup = (options) =>
+      getAttribution(props.media, i18n, options)
 
     return {
       activeTab,
-      attributionHtml,
-      isPDM,
-      licenseUrl,
       tabs,
       setActiveTab,
-      period,
+
+      getAttributionMarkup,
     }
   },
 })

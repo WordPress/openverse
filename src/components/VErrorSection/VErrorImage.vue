@@ -11,7 +11,7 @@
 import { computed } from '@nuxtjs/composition-api'
 
 import { errorCodes } from '~/constants/errors'
-import { getAttributionMarkup } from '~/utils/attribution-html'
+import { getAttribution } from '~/utils/attribution-html'
 
 import imageInfo from '~/assets/error_images/image_info.json'
 
@@ -35,7 +35,7 @@ export default {
           ...image,
           src: require(`~/assets/error_images/${image.file}.jpg`),
           alt: `error-images.${image.id}`,
-          attribution: getAttributionMarkup(image),
+          attribution: getAttribution(image),
         }
         return [errorItem.error, image]
       })

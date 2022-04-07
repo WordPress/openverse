@@ -2,11 +2,11 @@
   <div class="license flex flex-row items-center gap-2">
     <div class="flex gap-1">
       <VIcon
-        v-for="(name, index) in icons"
+        v-for="(name, index) in iconNames"
         :key="index"
         :class="['icon', bgFilled ? 'bg-filled text-black' : '']"
         view-box="0 0 30 30"
-        :icon-path="svgs[name]"
+        :icon-path="icons[name]"
         :size="4"
       />
     </div>
@@ -24,13 +24,11 @@ import {
   useContext,
 } from '@nuxtjs/composition-api'
 
-import { ALL_LICENSES, License, licenseIcons } from '~/constants/license'
+import { ALL_LICENSES, License, LICENSE_ICONS } from '~/constants/license'
 
-import { isCc, getFullLicenseName, licenseToElements } from '~/utils/license'
+import { getFullLicenseName, getElements } from '~/utils/license'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
-
-import ccLogo from '~/assets/licenses/cc-logo.svg'
 
 /**
  * Displays the icons for the license along with a readable display name for the
@@ -47,7 +45,7 @@ export default defineComponent({
     license: {
       type: String as PropType<License>,
       required: true,
-      validator: (val: string) => ALL_LICENSES.includes(val as License),
+      validator: (val: License) => ALL_LICENSES.includes(val as License),
     },
     /**
      * Whether to display icons filled with a white background or leave them transparent.
@@ -67,16 +65,7 @@ export default defineComponent({
   setup(props) {
     const { i18n } = useContext()
 
-    const isCcLicense = computed(() => isCc(props.license))
-
-    const icons = computed(() => {
-      if (isCcLicense.value) {
-        return ['ccLogo', ...licenseToElements(props.license)] as const
-      } else {
-        return [...licenseToElements(props.license)] as const
-      }
-    })
-
+    const iconNames = computed(() => getElements(props.license))
     const licenseName = computed(() => {
       return {
         readable: i18n.t(`license-readable-names.${props.license}`).toString(),
@@ -85,11 +74,8 @@ export default defineComponent({
     })
 
     return {
-      ccLogo,
-      svgs: { ...licenseIcons, ccLogo },
-
-      icons,
-      isCcLicense,
+      icons: LICENSE_ICONS,
+      iconNames,
       licenseName,
     }
   },

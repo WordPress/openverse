@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li
-      v-for="element in elements"
+      v-for="element in elementNames"
       :key="element"
       class="flex items-center gap-3 mb-2 text-sm md:text-base"
     >
@@ -10,7 +10,7 @@
         :size="isSmall ? 5 : 6"
         :icon-path="icons[element]"
       />
-      <span v-if="elements.length > 1" class="sr-only">{{
+      <span v-if="elementNames.length > 1" class="sr-only">{{
         element.toUpperCase()
       }}</span>
       <p :class="{ 'text-sm': isSmall }">
@@ -24,8 +24,9 @@
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import type { License } from '~/constants/license'
-import { licenseIcons } from '~/constants/license'
-import { licenseToElements } from '~/utils/license'
+import { ALL_LICENSES, LICENSE_ICONS } from '~/constants/license'
+
+import { getElements } from '~/utils/license'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 
@@ -33,24 +34,34 @@ export default defineComponent({
   name: 'VLicenseElements',
   components: { VIcon },
   props: {
+    /**
+     * the slug of the license
+     * @values ALL_LICENSES
+     */
     license: {
       type: String as PropType<License>,
       required: true,
+      validator: (val: License) => ALL_LICENSES.includes(val),
     },
+    /**
+     * the size of the icons and text
+     */
     size: {
       type: String as PropType<'big' | 'small'>,
       default: 'big',
-      validator: (val: string) => ['big', 'small'].includes(val),
+      validator: (val: 'big' | 'small') => ['big', 'small'].includes(val),
     },
   },
   setup(props) {
-    const elements = computed(() => licenseToElements(props.license))
+    const elementNames = computed(() =>
+      getElements(props.license).filter((icon) => icon !== 'cc')
+    )
 
     const isSmall = computed(() => props.size === 'small')
 
     return {
-      icons: licenseIcons,
-      elements,
+      icons: LICENSE_ICONS,
+      elementNames,
       isSmall,
     }
   },

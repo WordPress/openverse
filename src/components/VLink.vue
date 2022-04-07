@@ -27,7 +27,7 @@ export default defineComponent({
     href: {
       type: String,
       required: false,
-      validator: (v: unknown) =>
+      validator: (v: string | undefined) =>
         (typeof v === 'string' && v.length > 0) || typeof v === 'undefined',
     },
   },
