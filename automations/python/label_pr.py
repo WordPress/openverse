@@ -150,7 +150,9 @@ def main():
             break
         # check whether the word "sentry" is in issue body. 
         elif "sentry" in issue.body:
-            pr.set_labels(get_label_of_cat("tooling", labels))
+            tooling = get_label_of_cat("tooling", labels)
+            log.info(f"Tooling label: {tooling}")
+            pr.set_labels(tooling)
     else:
         log.info("Could not find properly labelled issue")
         pr.set_labels("🚦 status: awaiting triage")
