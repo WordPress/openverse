@@ -110,7 +110,6 @@ def get_label_of_cat(cat: str, labels: list[Label]) -> Optional[Label]:
             return label
     return None
 
-
 def main():
     configure_logger()
 
@@ -149,6 +148,9 @@ def main():
             log.info(f"Goal label: {goal}")
             pr.set_labels(aspect, priority, goal)
             break
+        # check whether the word "sentry" is in issue body. 
+        elif "sentry" in issue.body:
+            pr.set_labels(get_label_of_cat("tooling", labels))
     else:
         log.info("Could not find properly labelled issue")
         pr.set_labels("🚦 status: awaiting triage")
