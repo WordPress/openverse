@@ -9,7 +9,7 @@
     {{ buttonLabel }}
   </VButton>
 </template>
-<script>
+<script lang="ts">
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 
 import VButton from '~/components/VButton.vue'
@@ -25,7 +25,7 @@ export default defineComponent({
       default: true,
     },
   },
-  setup(props, { emit }) {
+  setup(_, { emit }) {
     const { i18n } = useContext()
 
     const buttonLabel = computed(() => {

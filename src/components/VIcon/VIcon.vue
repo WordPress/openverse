@@ -16,6 +16,15 @@ import { defineComponent } from '@nuxtjs/composition-api'
 
 import { isTest } from '~/utils/node-env'
 
+export type IconPath = string
+export type IconProps = {
+  iconPath: IconPath
+  viewBox?: string
+  gId?: string
+  size?: number
+  rtlFlip?: boolean
+}
+
 /**
  * Displays the given icon in a 24px × 24px square.
  */

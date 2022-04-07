@@ -31,7 +31,6 @@ import {
   toRefs,
   computed,
   PropType,
-  Ref,
 } from '@nuxtjs/composition-api'
 
 import { warn } from '~/utils/console'
@@ -51,6 +50,7 @@ const buttonVariants = [
   'action-menu-muted',
   'plain',
   'plain-dangerous',
+  'full',
 ] as const
 
 type ButtonVariant = typeof buttonVariants[number]
@@ -61,7 +61,7 @@ type ButtonSize = typeof buttonSizes[number]
 
 const buttonTypes = ['button', 'submit', 'reset'] as const
 
-type ButtonType = typeof buttonTypes[number]
+export type ButtonType = typeof buttonTypes[number]
 
 /**
  * A button component that behaves just like a regular HTML `button` element
@@ -108,7 +108,7 @@ const VButton = defineComponent({
     variant: {
       type: String as PropType<ButtonVariant>,
       default: 'primary',
-      validate: (val: ButtonVariant) => buttonVariants.includes(val),
+      validate: (v: ButtonVariant) => buttonVariants.includes(v),
     },
     /**
      * Allows for programmatically setting the pressed state of a button,
@@ -163,17 +163,17 @@ const VButton = defineComponent({
     type: {
       type: String as PropType<ButtonType>,
       default: 'button',
-      validate: (val: ButtonType) => buttonTypes.includes(val),
+      validate: (v: ButtonType) => buttonTypes.includes(v),
     },
   },
   setup(props, { attrs }) {
     const propsRef = toRefs(props)
-    const disabledAttributeRef: Ref<boolean | undefined> = ref(
+    const disabledAttributeRef = ref<boolean | undefined>(
       propsRef.disabled.value
     )
-    const ariaDisabledRef = ref()
-    const trulyDisabledRef = ref()
-    const typeRef: Ref<ButtonType | undefined> = ref(propsRef.type.value)
+    const ariaDisabledRef = ref<boolean>()
+    const trulyDisabledRef = ref<boolean>()
+    const typeRef = ref<ButtonType | undefined>(propsRef.type.value)
     const supportsDisabledAttributeRef = ref(true)
 
     const isActive = computed(() => {

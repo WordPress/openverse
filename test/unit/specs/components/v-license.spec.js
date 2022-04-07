@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/vue'
 
-import VLicense from '~/components/License/VLicense.vue'
+import VLicense from '~/components/VLicense/VLicense.vue'
 
 describe('VLicense', () => {
   let options = {

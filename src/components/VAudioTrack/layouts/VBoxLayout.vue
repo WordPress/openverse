@@ -33,7 +33,7 @@
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 
-import VLicense from '~/components/License/VLicense.vue'
+import VLicense from '~/components/VLicense/VLicense.vue'
 
 export default defineComponent({
   name: 'VBoxLayout',

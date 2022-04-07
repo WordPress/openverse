@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import VLicense from '~/components/License/VLicense.vue'
+import VLicense from '~/components/VLicense/VLicense.vue'
 import VLink from '~/components/VLink.vue'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

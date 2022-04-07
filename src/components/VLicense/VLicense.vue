@@ -16,29 +16,27 @@
   </div>
 </template>
 
-<script>
-import { computed, useContext } from '@nuxtjs/composition-api'
+<script lang="ts">
+import {
+  computed,
+  defineComponent,
+  PropType,
+  useContext,
+} from '@nuxtjs/composition-api'
 
-import { ALL_LICENSES } from '~/constants/license'
+import { ALL_LICENSES, License, licenseIcons } from '~/constants/license'
 
-import { isCc, getFullLicenseName } from '~/utils/license'
+import { isCc, getFullLicenseName, licenseToElements } from '~/utils/license'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 
-import by from '~/assets/licenses/by.svg'
-import cc0 from '~/assets/licenses/cc0.svg'
 import ccLogo from '~/assets/licenses/cc-logo.svg'
-import nc from '~/assets/licenses/nc.svg'
-import nd from '~/assets/licenses/nd.svg'
-import pdm from '~/assets/licenses/pdm.svg'
-import sa from '~/assets/licenses/sa.svg'
-import samplingPlus from '~/assets/licenses/sampling-plus.svg'
 
 /**
  * Displays the icons for the license along with a readable display name for the
  * license.
  */
-export default {
+export default defineComponent({
   name: 'VLicense',
   components: { VIcon },
   props: {
@@ -47,9 +45,9 @@ export default {
      * @values
      */
     license: {
-      type: String,
+      type: String as PropType<License>,
       required: true,
-      validator: (val) => ALL_LICENSES.includes(val),
+      validator: (val: string) => ALL_LICENSES.includes(val as License),
     },
     /**
      * Whether to display icons filled with a white background or leave them transparent.
@@ -72,37 +70,30 @@ export default {
     const isCcLicense = computed(() => isCc(props.license))
 
     const icons = computed(() => {
-      let iconList = props.license.split(/[-\s]/)
-      if (isCcLicense.value) iconList = ['ccLogo', ...iconList]
-      return iconList
+      if (isCcLicense.value) {
+        return ['ccLogo', ...licenseToElements(props.license)] as const
+      } else {
+        return [...licenseToElements(props.license)] as const
+      }
     })
 
     const licenseName = computed(() => {
       return {
-        readable: i18n.t(`license-readable-names.${props.license}`),
+        readable: i18n.t(`license-readable-names.${props.license}`).toString(),
         full: getFullLicenseName(props.license, '', i18n),
       }
     })
 
     return {
       ccLogo,
-      svgs: {
-        ccLogo,
-        by,
-        cc0,
-        nc,
-        nd,
-        pdm,
-        sa,
-        'sampling+': samplingPlus,
-      },
+      svgs: { ...licenseIcons, ccLogo },
 
       icons,
       isCcLicense,
       licenseName,
     }
   },
-}
+})
 </script>
 
 <style scoped>

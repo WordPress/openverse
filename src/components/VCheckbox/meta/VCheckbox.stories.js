@@ -1,5 +1,5 @@
 import VCheckbox from '~/components/VCheckbox/VCheckbox.vue'
-import VLicense from '~/components/License/VLicense.vue'
+import VLicense from '~/components/VLicense/VLicense.vue'
 
 export default {
   title: 'Components/VCheckbox',

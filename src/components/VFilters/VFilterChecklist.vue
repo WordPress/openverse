@@ -60,7 +60,7 @@ import { useSearchStore } from '~/stores/search'
 
 import VLicenseExplanation from '~/components/VFilters/VLicenseExplanation.vue'
 import VCheckbox from '~/components/VCheckbox/VCheckbox.vue'
-import VLicense from '~/components/License/VLicense.vue'
+import VLicense from '~/components/VLicense/VLicense.vue'
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VIconButton from '~/components/VIconButton/VIconButton.vue'

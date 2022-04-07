@@ -2,6 +2,7 @@ import type { License, LicenseVersion } from '~/constants/license'
 import {
   CC_LICENSES,
   DEPRECATED_CC_LICENSES,
+  LicenseElement,
   PUBLIC_DOMAIN_MARKS,
 } from '~/constants/license'
 
@@ -86,3 +87,10 @@ export const isCc = (license: License): boolean =>
   license == 'cc0' ||
   (CC_LICENSES as ReadonlyArray<License>).includes(license) ||
   (DEPRECATED_CC_LICENSES as ReadonlyArray<License>).includes(license)
+
+/**
+ * Splits license slug by `-` and returns an array of license elements
+ * @param license - the license slug
+ */
+export const licenseToElements = (license: License) =>
+  (license as string).split(/[-\s]/) as LicenseElement[]

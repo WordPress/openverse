@@ -15,13 +15,32 @@
   </VButton>
 </template>
 
-<script>
-import { computed } from '@nuxtjs/composition-api'
+<script lang="ts">
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
-import VIcon from '~/components/VIcon/VIcon.vue'
+import VIcon, { IconProps } from '~/components/VIcon/VIcon.vue'
 import VButton from '~/components/VButton.vue'
+import type { ButtonType } from '~/components/VButton.vue'
 
-export default {
+const SIZE_MAP = Object.freeze({
+  tiny: { icon: ['w-6', 'h-6'], button: ['w-6', 'h-6'] },
+  small: { icon: ['w-6', 'h-6'], button: ['w-10', 'h-10'] },
+  'search-small': {
+    icon: ['w-6', 'h-6'],
+    button: ['w-10', 'md:w-12', 'h-10', 'md:h-12'],
+  },
+  'search-medium': { icon: ['w-6', 'h-6'], button: ['w-12', 'h-12'] },
+  'search-large': { icon: ['w-6', 'h-6'], button: ['w-14', 'h-14'] },
+  'search-standalone': {
+    icon: ['w-6', 'h-6'],
+    button: ['w-14', 'md:w-[69px]', 'h-14', 'md:h-[69px]'],
+  },
+  medium: { icon: ['w-8', 'h-8'], button: ['w-14', 'h-14'] },
+  large: { icon: ['w-12', 'h-12'], button: ['w-20', 'h-20'] },
+} as const)
+type Size = keyof typeof SIZE_MAP
+
+export default defineComponent({
   name: 'VIconButton',
   components: { VIcon, VButton },
   props: {
@@ -30,25 +49,18 @@ export default {
      * itself and the icon inside it.
      */
     size: {
-      type: String,
+      type: String as PropType<Size>,
       default: 'medium',
-      validator: (val) =>
-        [
-          'tiny',
-          'small',
-          'search-small',
-          'search-medium',
-          'search-large',
-          'search-standalone',
-          'medium',
-          'large',
-        ].includes(val),
+      validator: (val: string) => Object.keys(SIZE_MAP).includes(val),
     },
     /**
      * props to pass down to the `VIcon` component nested inside the button; See
      * documentation on `VIcon`.
      */
-    iconProps: {},
+    iconProps: {
+      type: Object as PropType<IconProps>,
+      required: true,
+    },
     /**
      * props to pass down to the `VButton` component nested inside the button;
      * See documentation on `VButton`.
@@ -56,31 +68,10 @@ export default {
     buttonProps: {},
   },
   setup(props, { attrs }) {
-    const type = attrs['type'] ?? 'button'
+    const type = (attrs['type'] ?? 'button') as ButtonType
 
-    const buttonSizeClasses = computed(
-      () =>
-        ({
-          tiny: ['w-6', 'h-6'],
-          small: ['w-10', 'h-10'],
-          'search-small': ['w-10', 'md:w-12', 'h-10', 'md:h-12'],
-          'search-medium': ['w-12', 'h-12'],
-          'search-large': ['w-14', 'h-14'],
-          'search-standalone': ['w-14', 'md:w-[69px]', 'h-14', 'md:h-[69px]'],
-          medium: ['w-14', 'h-14'],
-          large: ['w-20', 'h-20'],
-        }[props.size])
-    )
-    const iconSizeClasses = computed(
-      () =>
-        ({
-          tiny: ['w-6', 'h-6'],
-          small: ['w-6', 'h-6'],
-          search: ['w-6', 'h-6'],
-          medium: ['w-8', 'h-8'],
-          large: ['w-12', 'h-12'],
-        }[props.size])
-    )
+    const buttonSizeClasses = computed(() => SIZE_MAP[props.size].button)
+    const iconSizeClasses = computed(() => SIZE_MAP[props.size].icon)
 
     return {
       type,
@@ -89,5 +80,5 @@ export default {
       iconSizeClasses,
     }
   },
-}
+})
 </script>

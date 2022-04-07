@@ -34,7 +34,7 @@
 
 <script>
 import VLink from '~/components/VLink.vue'
-import VLicense from '~/components/License/VLicense.vue'
+import VLicense from '~/components/VLicense/VLicense.vue'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const errorImage = require('~/assets/image_not_available_placeholder.png')
