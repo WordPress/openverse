@@ -157,6 +157,12 @@ groups:
       - name: typescript
         description: Requires familiarity with TypeScript
         emoji: "⌨️"
+      - name: terraform
+        description: Requires familiarity with Terraform
+        emoji: "🏞"
+      - name: aws
+        description: Requires familiarity with AWS cloud infrastructure
+        emoji: "☁"
 
   - name: friendliness
     color: "7f0799"
