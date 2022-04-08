@@ -159,10 +159,10 @@ groups:
         emoji: "⌨️"
       - name: terraform
         description: Requires familiarity with Terraform
-        emoji: "🏞"
+        emoji: "🏞️"
       - name: aws
         description: Requires familiarity with AWS cloud infrastructure
-        emoji: "☁"
+        emoji: "☁️"
 
   - name: friendliness
     color: "7f0799"
