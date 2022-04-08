@@ -129,18 +129,31 @@ def load_local_data_to_intermediate_table(
     _clean_intermediate_table_data(postgres, load_table)
 
 
+def _handle_s3_load_result(cursor) -> int:
+    """
+    Handle the results of the aws_s3.table_import_from_s3 function. Locally this will
+    return an integer, but on AWS infrastructure it will return a string similar to:
+
+    500 rows imported into relation "..." from file ... of ... bytes
+    """
+    result = cursor.fetchone()[0]
+    if isinstance(result, str):
+        result = int(result.split(" ", maxsplit=1)[0])
+    return result
+
+
 def load_s3_data_to_intermediate_table(
     postgres_conn_id,
     bucket,
     s3_key,
     identifier,
     media_type=IMAGE,
-) -> tuple[int, int]:
+) -> tuple[int, int, int]:
     load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f"Loading {s3_key} from S3 Bucket {bucket} into {load_table}")
 
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    loaded_count = postgres.run(
+    loaded = postgres.run(
         dedent(
             f"""
             SELECT aws_s3.table_import_from_s3(
@@ -153,14 +166,16 @@ def load_s3_data_to_intermediate_table(
             );
             """
         ),
-        handler=lambda c: c.fetchone()[0],
+        handler=_handle_s3_load_result,
     )
-    logger.info(f"Succesfully loaded {loaded_count} records from S3")
-    cleaned_count = _clean_intermediate_table_data(postgres, load_table)
-    return loaded_count, cleaned_count
+    logger.info(f"Successfully loaded {loaded} records from S3")
+    missing_columns, foreign_id_dup = _clean_intermediate_table_data(
+        postgres, load_table
+    )
+    return loaded, missing_columns, foreign_id_dup
 
 
-def _clean_intermediate_table_data(postgres_hook, load_table) -> int:
+def _clean_intermediate_table_data(postgres_hook, load_table) -> tuple[int, int]:
     """
     Necessary for old TSV files that have not been cleaned up,
     using `MediaStore` class:
@@ -169,13 +184,13 @@ def _clean_intermediate_table_data(postgres_hook, load_table) -> int:
     Also removes any duplicate rows that have the same `provider`
     and `foreign_id`.
     """
-    affected_count = 0
+    missing_columns = 0
     for column in required_columns:
-        affected_count += postgres_hook.run(
+        missing_columns += postgres_hook.run(
             f"DELETE FROM {load_table} WHERE {column.db_name} IS NULL;",
             handler=RETURN_ROW_COUNT,
         )
-    affected_count += postgres_hook.run(
+    foreign_id_dup = postgres_hook.run(
         dedent(
             f"""
             DELETE FROM {load_table} p1
@@ -188,8 +203,11 @@ def _clean_intermediate_table_data(postgres_hook, load_table) -> int:
         ),
         handler=RETURN_ROW_COUNT,
     )
-    logger.info(f"Cleaned {affected_count} rows")
-    return affected_count
+    logger.info(
+        f"{missing_columns} records missing columns, "
+        f"{foreign_id_dup} records with duplicate foreign_ids"
+    )
+    return missing_columns, foreign_id_dup
 
 
 def _is_tsv_column_from_different_version(

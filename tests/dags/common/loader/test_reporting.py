@@ -1,7 +1,11 @@
 from unittest import mock
 
 import pytest
-from common.loader.reporting import humanize_time_duration, report_completion
+from common.loader.reporting import (
+    RecordMetrics,
+    humanize_time_duration,
+    report_completion,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -18,7 +22,7 @@ def test_report_completion(should_send_message):
     with mock.patch(
         "common.slack.should_send_message", return_value=should_send_message
     ):
-        report_completion("Jamendo", None, {"audio": (100, 100, 100)})
+        report_completion("Jamendo", None, {"audio": RecordMetrics(100, 0, 0, 0)})
         # Send message is only called if `should_send_message` is True.
         send_message_mock.called = should_send_message
 
@@ -26,26 +30,54 @@ def test_report_completion(should_send_message):
 def _make_report_completion_contents_data(media_type: str):
     return [
         # Happy path
-        ({media_type: (100, 0, 100)}, f"  - `{media_type}`: 100"),
-        # Cleaned detected
-        ({media_type: (100, 10, 90)}, f"  - `{media_type}`: 90 _(10 cleaned)_"),
-        # Duplicates detected
-        ({media_type: (100, 0, 90)}, f"  - `{media_type}`: 90 _(10 duplicates)_"),
-        # Cleaned and duplicates detected
+        ({media_type: RecordMetrics(100, 0, 0, 0)}, f"  - `{media_type}`: 100"),
+        # Missing columns detected
         (
-            {media_type: (100, 10, 75)},
-            f"  - `{media_type}`: 75 _(10 cleaned, 15 duplicates)_",
+            {media_type: RecordMetrics(90, 10, 0, 0)},
+            f"  - `{media_type}`: 90 _(10 missing columns)_",
         ),
-        # Cleaned and duplicates, large numbers
+        # Foreign ID duplicates detected
         (
-            {media_type: (100_000, 10_000, 75_000)},
-            f"  - `{media_type}`: 75,000 _(10,000 cleaned, 15,000 duplicates)_",
+            {media_type: RecordMetrics(90, 0, 10, 0)},
+            f"  - `{media_type}`: 90 _(10 duplicate foreign IDs)_",
+        ),
+        # URL duplicates detected
+        (
+            {media_type: RecordMetrics(90, 0, 0, 10)},
+            f"  - `{media_type}`: 90 _(10 duplicate URLs)_",
+        ),
+        # Missing columns and foreign ID duplicates detected
+        (
+            {media_type: RecordMetrics(75, 10, 15, 0)},
+            f"  - `{media_type}`: 75 _(10 missing columns, 15 duplicate foreign IDs)_",
+        ),
+        # Both duplicates detected, large numbers
+        (
+            {media_type: RecordMetrics(75_000, 0, 10_000, 15_000)},
+            f"  - `{media_type}`: 75,000 _(10,000 duplicate foreign IDs, "
+            f"15,000 duplicate URLs)_",
         ),
         # Cases with missing data
-        ({media_type: (None, None, None)}, f"  - `{media_type}`: _No data_"),
-        ({media_type: (100, None, None)}, f"  - `{media_type}`: _No data_"),
-        ({media_type: (None, 100, None)}, f"  - `{media_type}`: _No data_"),
-        ({media_type: (None, None, 100)}, f"  - `{media_type}`: 100"),
+        (
+            {media_type: RecordMetrics(None, None, None, None)},
+            f"  - `{media_type}`: _No data_",
+        ),
+        (
+            {media_type: RecordMetrics(100, None, None, None)},
+            f"  - `{media_type}`: 100",
+        ),
+        (
+            {media_type: RecordMetrics(None, 100, None, None)},
+            f"  - `{media_type}`: _No data_",
+        ),
+        (
+            {media_type: RecordMetrics(None, None, 100, None)},
+            f"  - `{media_type}`: _No data_",
+        ),
+        (
+            {media_type: RecordMetrics(None, None, None, 100)},
+            f"  - `{media_type}`: _No data_",
+        ),
     ]
 
 

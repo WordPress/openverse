@@ -1307,3 +1307,17 @@ def test_image_expiration(
             assert not actual_row[removed_idx]
         else:
             assert actual_row[fid_idx] == "b" and actual_row[removed_idx]
+
+
+@pytest.mark.parametrize(
+    "value, expected",
+    [
+        (123, 123),
+        ("500 rows imported into relation '...' from file ... of ... bytes", 500),
+    ],
+)
+def test_handle_s3_load_result(value, expected):
+    cursor_mock = mock.Mock()
+    cursor_mock.fetchone.return_value = (value,)
+    actual = sql._handle_s3_load_result(cursor_mock)
+    assert actual == expected

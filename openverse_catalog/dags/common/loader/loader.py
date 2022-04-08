@@ -1,5 +1,6 @@
 from common.loader import paths, s3, sql
 from common.loader.paths import _extract_media_type
+from common.loader.reporting import RecordMetrics
 
 
 def copy_to_s3(output_dir, bucket, identifier, aws_conn_id):
@@ -40,14 +41,12 @@ def load_from_s3(
     media_type,
     tsv_version,
     identifier,
-    ti,
-):
-    loaded_count, cleaned_count = sql.load_s3_data_to_intermediate_table(
+) -> RecordMetrics:
+    loaded, missing_columns, foreign_id_dup = sql.load_s3_data_to_intermediate_table(
         postgres_conn_id, bucket, key, identifier, media_type
     )
-    upserted_count = sql.upsert_records_to_db_table(
+    upserted = sql.upsert_records_to_db_table(
         postgres_conn_id, identifier, media_type=media_type, tsv_version=tsv_version
     )
-    ti.xcom_push(key="loaded_count", value=loaded_count)
-    ti.xcom_push(key="cleaned_count", value=cleaned_count)
-    ti.xcom_push(key="upserted_count", value=upserted_count)
+    url_dup = loaded - missing_columns - foreign_id_dup - upserted
+    return RecordMetrics(upserted, missing_columns, foreign_id_dup, url_dup)
