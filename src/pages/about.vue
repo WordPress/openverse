@@ -8,16 +8,13 @@
     </p>
 
     <i18n path="about.collection.content" tag="p">
-      <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
       <template #openverse>Openverse</template>
       <template #common-crawl>
-        <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
         <VLink href="https://commoncrawl.org/">Common Crawl</VLink>
       </template>
     </i18n>
 
     <i18n path="about.planning.content" tag="p">
-      <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
       <template #openverse>Openverse</template>
       <template #meta>
         <VLink href="/meta-search">{{ $t('about.planning.meta') }}</VLink>
@@ -49,7 +46,6 @@
       </template>
     </i18n>
 
-    <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
     <i18n path="about.transfer.content" tag="p">
       <template #openverse>Openverse</template>
       <template #creative-commons>
@@ -64,10 +60,8 @@
         >
       </template>
     </i18n>
-    <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
 
     <i18n path="about.declaration.content" tag="p">
-      <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
       <template #openverse>Openverse</template>
       <template #terms>
         <VLink href="https://creativecommons.org/terms/">{{

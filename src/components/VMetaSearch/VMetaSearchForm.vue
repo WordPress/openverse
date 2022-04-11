@@ -15,7 +15,6 @@
         tag="h4"
         class="b-header mb-2"
       >
-        <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
         <template #openverse>Openverse</template>
         <template #type>
           {{ type }}

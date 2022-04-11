@@ -5,7 +5,6 @@
     </h1>
 
     <i18n path="meta-search-page.intro" tag="p">
-      <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
       <template #openverse>Openverse</template>
       <template #link>
         <VLink href="/sources">{{ $t('meta-search-page.link') }}</VLink>

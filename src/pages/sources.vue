@@ -12,7 +12,6 @@
     </p>
     <i18n path="sources.cc-content.provider" tag="p">
       <template #flickr>
-        <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
         <VLink href="https://www.flickr.com/">Flickr</VLink>
       </template>
       <template #smithsonian>
@@ -22,10 +21,8 @@
       </template>
     </i18n>
     <i18n path="sources.cc-content.europeana" tag="p">
-      <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
       <template #openverse>Openverse</template>
       <template #link>
-        <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
         <VLink href="https://www.europeana.eu/en">Europeana</VLink>
       </template>
       <template #link-api>
