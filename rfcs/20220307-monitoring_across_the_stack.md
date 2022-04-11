@@ -6,7 +6,7 @@ Note: Because I had to spend a good deal of time sketching out how this stuff wo
 
 - [x] @zackkrida (Infrastructure sign off)
 - [x] @AetherUnbound
-- [x] @obulat 
+- [x] @obulat
 
 ## Milestone
 
