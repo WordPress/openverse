@@ -2,6 +2,7 @@ import logging as log
 import secrets
 import smtplib
 
+from catalog.api.docs.media_docs import refer_sample
 from catalog.api.models import OAuth2Verification, ThrottledApplication
 from catalog.api.serializers.error_serializers import (
     ForbiddenErrorSerializer,
@@ -33,24 +34,22 @@ from rest_framework.views import APIView
 
 class Register(APIView):
     swagger_schema = CustomAutoSchema
-    register_api_oauth2_description = """
-    register_api_oauth2 is an API endpoint to register access to the API via OAuth2.
+    register_api_oauth2_description = f"""
+register_api_oauth2 is an API endpoint to register access to the API via OAuth2.
 
-    Upon registering, you will receive a `client_id` and `client_secret`,
-    which you can then use to authenticate using the standard OAuth2 Client
-    Credentials flow. See the Register and Authenticate section for instructions on registering access to the API via OAuth2.
-    <br>
-    <blockquote>
-        <b>WARNING :</b> You must keep <code>client_secret</code> confidential,
-        as anybody with your <code>client_secret</code> can impersonate your application.
-    </blockquote>
+Upon registering, you will receive a `client_id` and `client_secret`, which you can then
+use to authenticate using the standard OAuth2 Client Credentials flow. See the Register
+and Authenticate section for instructions on registering access to the API via OAuth2.
 
-    Authenticated users have higher rate limits than anonymous users.
-    Additionally, by identifying yourself, you can request Openverse to
-    adjust your personal rate limit depending on your organization's needs.
+> **WARNING:** You must keep `client_secret` confidential, as anybody with your
+> `client_secret` can impersonate your application.
 
-    You can also refer to Bash's Request Samples for examples on how to use this endpoint.
-    """  # noqa
+Authenticated users have higher rate limits than anonymous users. Additionally, by
+identifying yourself, you can request Openverse to adjust your personal rate limit
+depending on your organization's needs.
+
+{refer_sample}"""
+
     throttle_classes = (TenPerDay,)
     register_api_oauth2_response = {
         "201": openapi.Response(
@@ -61,9 +60,13 @@ class Register(APIView):
     }
 
     register_api_oauth2_bash = """
-        # Register for a key
-        curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access Openverse API", "email": "user@example.com"}' https://api.openverse.engineering/v1/auth_tokens/register
-        """  # noqa
+# Register for a key
+curl \\
+  -X POST \\
+  -H "Content-Type: application/json" \\
+  -d '{"name": "My amazing project", "description": "To access Openverse API", "email": "user@example.com"}' \\
+  https://api.openverse.engineering/v1/auth_tokens/register
+"""  # noqa: E501
 
     register_api_oauth2_request = openapi.Schema(
         type=openapi.TYPE_OBJECT,
@@ -202,21 +205,16 @@ class VerifyEmail(APIView):
 
 class CheckRates(APIView):
     swagger_schema = CustomAutoSchema
-    key_info_description = """
-        key_info is an API endpoint to get information about your API key.
+    key_info_description = f"""
+key_info is an API endpoint to get information about your API key.
 
-        You can use this endpoint to get information about your API key such as
-        requests_this_minute, requests_today, and rate_limit_model.
+You can use this endpoint to get information about your API key such as
+`requests_this_minute`, `requests_today`, and `rate_limit_model`.
 
-        <blockquote>
-            <b>NOTE :</b> If you get a 403 Forbidden response, it means your
-            access token has expired.
-        </blockquote>
+> **NOTE:** If you get a 403 Forbidden response, it means your access token has expired.
 
-        <br>
-        You can refer to Bash's Request Samples for example on how to use
-        this endpoint.
-        """  # noqa
+{refer_sample}"""
+
     throttle_classes = (OnePerSecond,)
 
     key_info_response = {
@@ -236,9 +234,10 @@ class CheckRates(APIView):
     }
 
     key_info_bash = """
-        # Get information about your API key
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/rate_limit
-        """  # noqa
+curl \\
+  -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" \\
+  http://api.openverse.engineering/v1/rate_limit
+"""
 
     @swagger_auto_schema(
         operation_id="key_info",

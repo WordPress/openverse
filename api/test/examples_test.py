@@ -10,7 +10,7 @@ os.environ["AUDIO_REQ_TOKEN"] = ""
 os.environ["AUDIO_REQ_ORIGIN"] = API_URL
 os.environ["AUDIO_REQ_IDX"] = "8624ba61-57f1-4f98-8a85-ece206c319cf"
 
-from catalog.api.examples import (  # noqa | Set env vars before import
+from catalog.api.examples import (  # noqa: E402 | Set env vars before import
     audio_mappings,
     image_mappings,
 )

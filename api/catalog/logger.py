@@ -26,7 +26,7 @@ LOGGING = {
             "style": "{",
         },
         "console": {
-            "format": "[%(asctime)s - %(name)s - %(lineno)3d][%(levelname)s] %(message)s",  # noqa
+            "format": "[%(asctime)s - %(name)s - %(lineno)3d][%(levelname)s] %(message)s",  # noqa: E501
         },
     },
     "handlers": {

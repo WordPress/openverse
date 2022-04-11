@@ -39,11 +39,11 @@ class AudioSearch(MediaSearch):
     desc = f"""
 audio_search is an API endpoint to search audio files using a query string.
 
-By using this endpoint, you can obtain search results based on specified
-query and optionally filter results by
+By using this endpoint, you can obtain search results based on specified query and
+optionally filter results by
 {fields_to_md(AudioSearchRequestSerializer.fields_names)}.
 
-{MediaSearch.desc}"""  # noqa
+{MediaSearch.desc}"""
 
     responses = {
         "200": openapi.Response(
@@ -79,7 +79,7 @@ class AudioStats(MediaStats):
 audio_stats is an API endpoint to get a list of all content providers and their
 respective number of audio files in the Openverse catalog.
 
-{MediaStats.desc}"""  # noqa
+{MediaStats.desc}"""
 
     responses = {
         "200": openapi.Response(
@@ -111,7 +111,7 @@ audio_detail is an API endpoint to get the details of a specified audio ID.
 By using this endpoint, you can get audio details such as
 {fields_to_md(AudioSerializer.fields_names)}.
 
-{MediaDetail.desc}"""  # noqa
+{MediaDetail.desc}"""
 
     responses = {
         "200": openapi.Response(
@@ -141,13 +141,13 @@ By using this endpoint, you can get audio details such as
 
 class AudioRelated(MediaRelated):
     desc = f"""
-recommendations_audio_read is an API endpoint to get related audio files
-for a specified audio ID.
+recommendations_audio_read is an API endpoint to get related audio files for a specified
+audio ID.
 
 By using this endpoint, you can get the details of related audio such as
 {fields_to_md(AudioSerializer.fields_names)}.
 
-{MediaRelated.desc}"""  # noqa
+{MediaRelated.desc}"""
 
     responses = {
         "200": openapi.Response(
@@ -177,13 +177,13 @@ By using this endpoint, you can get the details of related audio such as
 
 class AudioComplain(MediaComplain):
     desc = f"""
-audio_report_create is an API endpoint to report an issue about a specified
-audio ID to Openverse.
+audio_report_create is an API endpoint to report an issue about a specified audio ID to
+Openverse.
 
-By using this endpoint, you can report an audio file if it infringes copyright,
-contains mature or sensitive content and others.
+By using this endpoint, you can report an audio file if it infringes copyright, contains
+mature or sensitive content and others.
 
-{MediaComplain.desc}"""  # noqa
+{MediaComplain.desc}"""
 
     responses = {
         "201": openapi.Response(

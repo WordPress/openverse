@@ -15,7 +15,7 @@ import django
 sys.path.append(os.path.abspath(".."))
 django.setup()
 
-from django.conf import settings  # noqa: E402
+from django.conf import settings  # noqa: E402 | Run ``setup`` before ``import``
 
 
 # Project information

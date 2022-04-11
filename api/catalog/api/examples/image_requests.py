@@ -23,29 +23,39 @@ syntax_examples = {
 image_search_list_curl = "\n".join(
     f"""
 # Example {index}: Search for images {purpose}
-curl {auth} "{origin}/v1/images/?q={syntax}"
+curl \\
+  {auth} \\
+  "{origin}/v1/images/?q={syntax}"
 """
     for (index, (purpose, syntax)) in enumerate(syntax_examples.items())
 )
 
 image_search_curl = f"""
 # Search for images titled "Bust" by Talbot
-curl {auth} "{origin}/v1/images/?title=Train&creator=Trolle"
+curl \\
+  {auth} \\
+  "{origin}/v1/images/?title=Train&creator=Trolle"
 """
 
 image_stats_curl = f"""
 # Get the statistics for image sources
-curl {auth} "{origin}/v1/images/stats/"
+curl \\
+  {auth} \\
+  "{origin}/v1/images/stats/"
 """
 
 image_detail_curl = f"""
 # Get the details of image ID {identifier}
-curl {auth} "{origin}/v1/images/{identifier}/"
+curl \\
+  {auth} \\
+  "{origin}/v1/images/{identifier}/"
 """
 
 image_related_curl = f"""
 # Get related images for image ID {identifier}
-curl {auth} "{origin}/v1/images/{identifier}/related/"
+curl \\
+  {auth} \\
+  "{origin}/v1/images/{identifier}/related/"
 """
 
 image_complain_curl = f"""
@@ -54,11 +64,13 @@ curl \\
   -X POST \\
   -H "Content-Type: application/json" \\
   {auth} \\
-  -d '{{"reason": "mature", "description": "This image contains sensitive content"}}' \\
+  -d '{{"reason": "mature", "description": "Image contains sensitive content"}}' \\
   "{origin}/v1/images/{identifier}/report/"
-"""  # noqa
+"""
 
 image_oembed_curl = f"""
-# Retrieve embedded content from image URL (https://wordpress.org/openverse/photos/{identifier})
-curl {auth} "{origin}/v1/images/oembed/?url=https://wordpress.org/openverse/photos/{identifier}"
-"""  # noqa
+# Retrieve embedded content from an image's URL
+curl \\
+  {auth} \\
+  "{origin}/v1/images/oembed/?url=https://wordpress.org/openverse/photos/{identifier}"
+"""

@@ -19,37 +19,32 @@ def fields_to_md(field_names):
 
 
 class MediaSearch:
-    desc = (
-        """
-Results are ranked in order of relevance and paginated on the basis of the
-`page` param. The `page_size` param controls the total number of pages.
+    desc = f"""
+Results are ranked in order of relevance and paginated on the basis of the `page` param.
+The `page_size` param controls the total number of pages.
 
-Although there may be millions of relevant records, only the most
-relevant several thousand records can be viewed. This is by design:
-the search endpoint should be used to find the top 10,000 most relevant
-results, not for exhaustive search or bulk download of every barely
-relevant result. As such, the caller should not try to access pages
-beyond `page_count`, or else the server will reject the query.
+Although there may be millions of relevant records, only the most relevant several
+thousand records can be viewed. This is by design: the search endpoint should be used to
+find the top 10,000 most relevant results, not for exhaustive search or bulk download of
+every barely relevant result. As such, the caller should not try to access pages beyond
+`page_count`, or else the server will reject the query.
 
 For more precise results, you can go to the
 [Openverse Syntax Guide](https://search.creativecommons.org/search-help)
 for information about creating queries and
 [Apache Lucene Syntax Guide](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
 for information on structuring advanced searches.
-"""  # noqa
-        f"{refer_sample}"
-    )
+
+{refer_sample}"""  # noqa: E501
 
 
 class MediaStats:
-    desc = (
-        """
-You can use this endpoint to get details about content providers such as
-`source_name`, `display_name`, and `source_url` along with a count of the number
-of individual items indexed from them.
-"""  # noqa
-        f"{refer_sample}"
-    )
+    desc = f"""
+You can use this endpoint to get details about content providers such as `source_name`,
+`display_name`, and `source_url` along with a count of the number of individual items
+indexed from them.
+
+{refer_sample}"""
 
 
 class MediaDetail:
@@ -61,10 +56,8 @@ class MediaRelated:
 
 
 class MediaComplain:
-    desc = (
-        """
-By using this endpoint, you can report a file if it infringes copyright,
-contains mature or sensitive content and others.
-"""  # noqa
-        f"{refer_sample}"
-    )
+    desc = f"""
+By using this endpoint, you can report a file if it infringes copyright, contains mature
+or sensitive content and others.
+
+{refer_sample}"""

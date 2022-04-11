@@ -45,11 +45,11 @@ class ImageSearch(MediaSearch):
     desc = f"""
 image_search is an API endpoint to search images using a query string.
 
-By using this endpoint, you can obtain search results based on specified query
-and optionally filter results by
+By using this endpoint, you can obtain search results based on specified query and
+optionally filter results by
 {fields_to_md(ImageSearchRequestSerializer.fields_names)}.
 
-{MediaSearch.desc}"""  # noqa
+{MediaSearch.desc}"""
 
     responses = {
         "200": openapi.Response(
@@ -85,7 +85,7 @@ class ImageStats(MediaStats):
 image_stats is an API endpoint to get a list of all content providers and their
 respective number of images in the Openverse catalog.
 
-{MediaStats.desc}"""  # noqa
+{MediaStats.desc}"""
 
     responses = {
         "200": openapi.Response(
@@ -117,7 +117,7 @@ image_detail is an API endpoint to get the details of a specified image ID.
 By using this endpoint, you can image details such as
 {fields_to_md(ImageSerializer.fields_names)}.
 
-{MediaDetail.desc}"""  # noqa
+{MediaDetail.desc}"""
 
     responses = {
         "200": openapi.Response(
@@ -142,13 +142,13 @@ By using this endpoint, you can image details such as
 
 class ImageRelated(MediaRelated):
     desc = f"""
-recommendations_images_read is an API endpoint to get related images
-for a specified image ID.
+recommendations_images_read is an API endpoint to get related images for a specified
+image ID.
 
 By using this endpoint, you can get the details of related images such as
 {fields_to_md(ImageSerializer.fields_names)}.
 
-{MediaRelated.desc}"""  # noqa
+{MediaRelated.desc}"""
 
     responses = {
         "200": openapi.Response(
@@ -173,13 +173,13 @@ By using this endpoint, you can get the details of related images such as
 
 class ImageComplain(MediaComplain):
     desc = f"""
-images_report_create is an API endpoint to report an issue about a specified
-image ID to Openverse.
+images_report_create is an API endpoint to report an issue about a specified image ID to
+Openverse.
 
-By using this endpoint, you can report an image if it infringes copyright,
-contains mature or sensitive content and others.
+By using this endpoint, you can report an image if it infringes copyright, contains
+mature or sensitive content and others.
 
-{MediaComplain.desc}"""  # noqa
+{MediaComplain.desc}"""
 
     responses = {
         "201": openapi.Response(
@@ -206,14 +206,12 @@ contains mature or sensitive content and others.
 
 class ImageOembed:
     desc = f"""
-oembed_list is an API endpoint to retrieve embedded content from a
-specified image URL.
+oembed_list is an API endpoint to retrieve embedded content from a specified image URL.
 
-By using this endpoint, you can retrieve embedded content such as `version`,
-`type`, `width`, `height`, `title`, `author_name`, `author_url` and
-`license_url`.
+By using this endpoint, you can retrieve embedded content such as `version`, `type`,
+`width`, `height`, `title`, `author_name`, `author_url` and `license_url`.
 
-{refer_sample}"""  # noqa
+{refer_sample}"""
 
     responses = {
         "200": openapi.Response(

@@ -56,7 +56,7 @@ image_search_200_example = {
 image_search_400_example = {
     "application/json": {
         "error": "InputError",
-        "detail": "Invalid input given for fields. 'license' -> License 'PDMNBCG' does not exist.",  # noqa
+        "detail": "Invalid input given for fields. 'license' -> License 'PDMNBCG' does not exist.",  # noqa: E501
         "fields": ["license"],
     }
 }
@@ -83,7 +83,7 @@ image_stats_200_example = {
 image_detail_200_example = {
     "application/json": base_image
     | {
-        "attribution": '"Train area in Copenhagen South / Tog område i Syd København" by Kristoffer Trolle is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.',  # noqa
+        "attribution": '"Train area in Copenhagen South / Tog område i Syd København" by Kristoffer Trolle is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.',  # noqa: E501
         "height": 683,
         "width": 1024,
         "filesize": "157497",
@@ -104,16 +104,16 @@ image_related_200_example = {
                 "creator": "Sean MacEntee",
                 "creator_url": "https://www.flickr.com/photos/18090920@N07",
                 "tags": [{"name": "exam"}, {"name": "tactics"}],
-                "url": "https://live.staticflickr.com/4065/4459771899_07595dc42e.jpg",  # noqa
-                "thumbnail": "https://api.openverse.engineering/v1/thumbs/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa
+                "url": "https://live.staticflickr.com/4065/4459771899_07595dc42e.jpg",  # noqa: E501
+                "thumbnail": "https://api.openverse.engineering/v1/thumbs/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa: E501
                 "provider": "flickr",
                 "source": "flickr",
                 "license": "by",
                 "license_version": "2.0",
                 "license_url": "https://creativecommons.org/licenses/by/2.0/",
-                "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/4459771899",  # noqa
-                "detail_url": "http://api.openverse.engineering/v1/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa
-                "related_url": "http://api.openverse.engineering/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa
+                "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/4459771899",  # noqa: E501
+                "detail_url": "http://api.openverse.engineering/v1/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa: E501
+                "related_url": "http://api.openverse.engineering/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa: E501
             }
         ],
     }
@@ -144,6 +144,6 @@ image_complain_201_example = {
     "application/json": {
         "identifier": identifier,
         "reason": "mature",
-        "description": "This image contains sensitive content",
+        "description": "Image contains sensitive content",
     }
 }

@@ -63,7 +63,7 @@ image_stats_description = \
 
   You can refer to Bash's Request Samples for example on how to use
   this endpoint.
-  """  # noqa
+  """
 
 @swagger_auto_schema(operation_id='image_stats',
                      operation_description=image_stats_description)
@@ -168,7 +168,7 @@ image_stats_bash = \
   """
   # Get a list of content providers and their image count
   curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/sources
-  """  # noqa
+  """
 
 @swagger_auto_schema(operation_id='image_stats',
                      operation_description=image_stats_description,
