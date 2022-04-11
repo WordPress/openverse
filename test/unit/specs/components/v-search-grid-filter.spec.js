@@ -1,18 +1,16 @@
-import Vuex from 'vuex'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { createLocalVue } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 
-import messages from '~/locales/en.json'
-
 import { useSearchStore } from '~/stores/search'
+
+import messages from '~/locales/en.json'
 
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 
 describe('VSearchGridFilter', () => {
   let options = {}
-  let storeMock
   let localVue
   let pinia
   let searchStore
@@ -21,25 +19,15 @@ describe('VSearchGridFilter', () => {
 
   beforeEach(() => {
     localVue = createLocalVue()
-    localVue.use(Vuex)
     localVue.use(PiniaVuePlugin)
-    pinia = createPinia()
     localVue.use(VueI18n)
+
     const i18n = new VueI18n({
       locale: 'en',
       fallbackLocale: 'en',
       messages: { en: messages },
     })
-    storeMock = new Vuex.Store({
-      modules: {
-        media: {
-          namespaced: true,
-          state: {
-            imagesCount: 2,
-          },
-        },
-      },
-    })
+    pinia = createPinia()
 
     options = {
       localVue,
@@ -48,12 +36,10 @@ describe('VSearchGridFilter', () => {
       mocks: {
         $route: routeMock,
         $router: routerMock,
-        $store: storeMock,
         $nuxt: {
           context: {
             app: { localePath: jest.fn() },
             i18n: { t: (s) => s },
-            store: storeMock,
           },
         },
       },

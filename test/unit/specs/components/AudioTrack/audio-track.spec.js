@@ -1,6 +1,5 @@
 import { render } from '@testing-library/vue'
 import Vuei18n from 'vue-i18n'
-import Vuex from 'vuex'
 import { setActivePinia, createPinia, PiniaVuePlugin } from 'pinia'
 
 import { useActiveMediaStore } from '~/stores/active-media'
@@ -27,7 +26,6 @@ const useVueI18n = (vue) => {
   }
 }
 const useStore = (vue) => {
-  vue.use(Vuex)
   vue.use(PiniaVuePlugin)
   const pinia = createPinia()
   const activeMediaStore = useActiveMediaStore(pinia)

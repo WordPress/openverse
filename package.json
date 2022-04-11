@@ -84,7 +84,7 @@
     "lodash.throttle": "^4.1.1",
     "node-html-parser": "^5.1.0",
     "nuxt": "^2.15.4",
-    "pinia": "^2.0.11",
+    "pinia": "^2.0.13",
     "postcss-focus-visible": "^6.0.4",
     "reakit-utils": "^0.15.2",
     "seeded-rand": "^2.0.1",

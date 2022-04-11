@@ -2,7 +2,6 @@ import Vue from 'vue'
 import { fireEvent, render, screen } from '@testing-library/vue'
 
 import VCheckbox from '~/components/VCheckbox/VCheckbox.vue'
-import VLicense from '~/components/VLicense/VLicense.vue'
 
 const TestWrapperStringLabel = ({
   id = 'simple',
@@ -36,14 +35,6 @@ const TestWrapperStringLabel = ({
     template: `<div><span>{{status}}</span><VCheckbox v-bind="attrs" @change="updateStatus">${defaultSlot}</VCheckbox></div>`,
   })
 }
-
-// eslint-disable-next-line vue/one-component-per-file
-const TestWrapperLicenseLabel = Vue.component('TestWrapperLicenseLabel', {
-  // This still raises an error `Unknown custom element: <Licence>`
-  components: { VCheckbox, VLicense },
-  template: `<VCheckbox id="license" name="licenseType">
-  <VLicence class="license" license="by-sa" /></VCheckbox>`,
-})
 
 describe('VCheckbox', () => {
   it('should render a checkbox with a string label', async () => {
@@ -89,11 +80,5 @@ describe('VCheckbox', () => {
 
     expect(checkboxes).toHaveLength(1)
     expect(checkboxes[0]).toHaveAttribute('disabled', 'disabled')
-  })
-
-  it('should render another component in the default slot', async () => {
-    const { container } = render(TestWrapperLicenseLabel)
-
-    expect(container.querySelectorAll('.license')).toHaveLength(1)
   })
 })
