@@ -64,7 +64,7 @@ There are three key aspects of the application services I think we should monito
 
 These would be gathered from Airflow, API, Thumbnail proxy, Postgres and Nuxt. These metrics need to be retrieved from AWS. I _think_ that [this page describes how to do that](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Agent-PrometheusEC2.html) but AWS's language around this stuff is so cryptic to me I can't say with confidence it's the right documentation page for it.
 
-It would also be nice if we could integrate Cloudflare data into Grafana so that our visualizations are all in once place. Cache hits and other relevant information from Cloudflare would be excellent to monitor within our greater monitoring stack.
+It would also be nice if we could integrate Cloudflare data into Grafana so that our visualizations are all in one place. Cache hits and other relevant information from Cloudflare would be excellent to monitor within our greater monitoring stack.
 
 ### Application level metrics
 
