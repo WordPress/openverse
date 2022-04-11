@@ -2,10 +2,10 @@ import Vue from 'vue'
 import { render, screen, fireEvent } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 
-import DropdownButton from '~/components/DropdownButton.vue'
+import VDropdownButton from '~/components/VDropdownButton.vue'
 
 const TestWrapper = Vue.component('TestWrapper', {
-  components: { DropdownButton },
+  components: { VDropdownButton },
   data: () => ({
     items: new Array(4)
       .fill(null)
@@ -25,7 +25,7 @@ const TestWrapper = Vue.component('TestWrapper', {
     },
   },
   template: `
-    <DropdownButton>
+    <VDropdownButton>
       <template #default="{ buttonProps }">
         <button v-bind="buttonProps">Action {{ activeItem?.name ?? '' }}</button>
       </template>
@@ -37,11 +37,11 @@ const TestWrapper = Vue.component('TestWrapper', {
           </li>
         </ul>
       </template>
-    </DropdownButton>
+    </VDropdownButton>
   `,
 })
 
-const getDropdownButton = () =>
+const getVDropdownButton = () =>
   screen.getByLabelText('dropdown-button.aria.arrow-label')
 const getDropdownContainer = () => screen.queryByRole('menu')
 const getFirstDropdownItem = () => screen.getAllByRole('menuitem')[0]
@@ -51,12 +51,12 @@ const getDropdownItem = (idx) => screen.getAllByRole('menuitem')[idx]
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const openDropdown = async () => {
-  await fireEvent.click(getDropdownButton())
+  await fireEvent.click(getVDropdownButton())
   // sleep for 1 ms to allow focus to settle
   await sleep(1)
 }
 
-describe('DropdownButton', () => {
+describe('VDropdownButton', () => {
   it('should render a clickable dropdown button', async () => {
     render(TestWrapper)
     await openDropdown()
@@ -111,12 +111,12 @@ describe('DropdownButton', () => {
     expect(getFirstDropdownItem()).toHaveFocus()
     await userEvent.keyboard('{escape}')
     await sleep(1)
-    expect(getDropdownButton()).toHaveFocus()
+    expect(getVDropdownButton()).toHaveFocus()
   })
 
   it('should open the dropdown with space', async () => {
     render(TestWrapper)
-    getDropdownButton().focus()
+    getVDropdownButton().focus()
     await userEvent.keyboard('{space}')
     await sleep(1)
     expect(getDropdownContainer()).not.toBe(null)
@@ -125,7 +125,7 @@ describe('DropdownButton', () => {
   // This test doesn't work for some reason, but testing in storybook confirms it should pass
   it.skip('should open the dropdown with enter', async () => {
     render(TestWrapper)
-    getDropdownButton().focus()
+    getVDropdownButton().focus()
     await userEvent.keyboard('{enter}')
     await sleep(1)
     expect(getDropdownContainer()).not.toBe(null)

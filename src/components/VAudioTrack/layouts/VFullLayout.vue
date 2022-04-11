@@ -58,7 +58,7 @@
         </div>
       </div>
 
-      <DownloadButton
+      <VDownloadButton
         class="ms-auto order-1 lg:order-2"
         :formats="getFormats(audio)"
         :size="isSmall ? 'small' : 'medium'"
@@ -70,15 +70,12 @@
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 
-import DownloadButton from '~/components/DownloadButton.vue'
+import VDownloadButton from '~/components/VDownloadButton.vue'
 import VLink from '~/components/VLink.vue'
 
 export default defineComponent({
   name: 'VFullLayout',
-  components: {
-    DownloadButton,
-    VLink,
-  },
+  components: { VDownloadButton, VLink },
   props: ['audio', 'size', 'status', 'currentTime'],
   setup(props) {
     /**
@@ -114,7 +111,7 @@ export default defineComponent({
 
     /**
      * Creates a list of { extension_name, download_url } objects
-     * for DownloadButton.
+     * for VDownloadButton.
      *
      * If there are `alt_files` then just use that list. Otherwise,
      * create one using the preview URL.

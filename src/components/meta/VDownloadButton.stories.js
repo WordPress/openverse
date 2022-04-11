@@ -1,13 +1,13 @@
-import DownloadButton from '~/components/DownloadButton.vue'
+import VDownloadButton from '~/components/VDownloadButton.vue'
 
 export default {
-  title: 'Components/DownloadButton',
-  component: DownloadButton,
+  title: 'Components/VDownloadButton',
+  component: VDownloadButton,
 }
 
 export const Default = () => ({
-  template: `<DownloadButton :formats="formats" />`,
-  components: { DownloadButton },
+  template: `<VDownloadButton :formats="formats" />`,
+  components: { VDownloadButton },
   data: () => ({
     formats: [
       {

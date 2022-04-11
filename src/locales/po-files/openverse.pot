@@ -98,12 +98,12 @@ msgctxt "modal.close"
 msgid "Close"
 msgstr ""
 
-#: src/components/DownloadButton.vue:15
+#: src/components/VDownloadButton.vue:15
 msgctxt "download-button.download"
 msgid "Download"
 msgstr ""
 
-#: src/components/DownloadButton.vue:4
+#: src/components/VDownloadButton.vue:4
 msgctxt "download-button.aria.dropdown-label"
 msgid "Select the download file format"
 msgstr ""
@@ -125,7 +125,7 @@ msgctxt "migration-notice.read"
 msgid "Read more"
 msgstr ""
 
-#: src/components/DropdownButton.vue:87
+#: src/components/VDropdownButton.vue:88
 msgctxt "dropdown-button.aria.arrow-label"
 msgid "Dropdown"
 msgstr ""

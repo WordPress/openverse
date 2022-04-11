@@ -1,10 +1,10 @@
 import { log } from '~/utils/console'
 
-import DropdownButton from '~/components/DropdownButton.vue'
+import VDropdownButton from '~/components/VDropdownButton.vue'
 
 export default {
-  title: 'Components/DropdownButton',
-  component: DropdownButton,
+  title: 'Components/VDropdownButton',
+  component: VDropdownButton,
   argTypes: {
     size: {
       type: 'select',
@@ -16,7 +16,7 @@ export default {
 export const Default = (args, { argTypes }) => ({
   template: `
     <div>
-      <DropdownButton v-bind="$props">
+      <VDropdownButton v-bind="$props">
         <template #default="{ buttonProps }">
           <button v-bind="buttonProps" class="whitespace-nowrap" @click="onClick">Download {{ activeItem?.name ?? '' }}</button>
         </template>
@@ -28,7 +28,7 @@ export const Default = (args, { argTypes }) => ({
             </li>
           </ul>
         </template>
-      </DropdownButton>
+      </VDropdownButton>
       Test element below
     </div>
   `,

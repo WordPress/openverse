@@ -25,9 +25,7 @@
         @click="toggleOpen"
         @keydown.space.prevent="toggleOpen"
       >
-        <svg class="h-2 w-4 pointer-events-none">
-          <use :href="`${icons.caretDown}#icon`" />
-        </svg>
+        <VIcon :icon-path="icons.caretDown" />
       </button>
     </div>
 
@@ -56,10 +54,13 @@ import { defineComponent } from '@nuxtjs/composition-api'
 
 import { keycodes } from '~/constants/key-codes'
 
+import VIcon from '~/components/VIcon/VIcon.vue'
+
 import caretDown from '~/assets/icons/caret-down.svg'
 
-const DropdownButton = defineComponent({
-  name: 'DropdownButton',
+const VDropdownButton = defineComponent({
+  name: 'VDropdownButton',
+  components: { VIcon },
   props: {
     dropdownAriaLabel: {
       type: String,
@@ -167,7 +168,7 @@ const DropdownButton = defineComponent({
   },
 })
 
-export default DropdownButton
+export default VDropdownButton
 </script>
 
 <style scoped>
@@ -185,7 +186,7 @@ Note the bespoke `py-[0.86rem]` class used below is necessary
 to match the height of the small Audio play/pause button.
 
 This is currently the only application of the DropdownButton
-component (via the DownloadButton component) so as a stop-gap
+component (via the VDownloadButton component) so as a stop-gap
 solution to get the redesign out the door in a timely manner it
 is necessary.
 

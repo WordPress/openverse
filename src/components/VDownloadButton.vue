@@ -1,5 +1,5 @@
 <template>
-  <DropdownButton
+  <VDropdownButton
     v-if="filesizes"
     :dropdown-aria-label="$t('download-button.aria.dropdown-label')"
     :is-single-item="formats.length === 1"
@@ -55,7 +55,7 @@
         </li>
       </ul>
     </template>
-  </DropdownButton>
+  </VDropdownButton>
 </template>
 
 <script>
@@ -64,14 +64,14 @@ import axios from 'axios'
 
 import local from '~/utils/local'
 
-import DropdownButton from '~/components/DropdownButton.vue'
+import VDropdownButton from '~/components/VDropdownButton.vue'
 import VLink from '~/components/VLink.vue'
 
 const LS_DOWNLOAD_FORMAT_EXTENSION_KEY = 'openverse:download-format-extension'
 
 export default {
-  name: 'DownloadButton',
-  components: { DropdownButton, VLink },
+  name: 'VDownloadButton',
+  components: { VDropdownButton, VLink },
   props: {
     formats: {
       type: Array,

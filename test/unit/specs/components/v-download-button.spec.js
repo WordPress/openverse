@@ -4,7 +4,7 @@ import MockAdapter from 'axios-mock-adapter'
 
 import local from '~/utils/local'
 
-import DownloadButton from '~/components/DownloadButton.vue'
+import VDownloadButton from '~/components/VDownloadButton.vue'
 
 import render from '../../test-utils/render'
 
@@ -52,12 +52,12 @@ formats.forEach((format) =>
 )
 
 const doRender = async () => {
-  const wrapper = render(DownloadButton, { propsData: { formats } }, mount)
-  await DownloadButton.fetch.call(wrapper.vm)
+  const wrapper = render(VDownloadButton, { propsData: { formats } }, mount)
+  await VDownloadButton.fetch.call(wrapper.vm)
   return wrapper
 }
 
-describe('DownloadButton', () => {
+describe('VDownloadButton', () => {
   beforeEach(() => {
     mockAxios.resetHistory()
   })
