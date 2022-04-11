@@ -122,9 +122,9 @@
           <td>
             {{ imageProvider.display_name }}
           </td>
-          <td class="font-semibold">
+          <td class="font-semibold truncate">
             <VLink :href="imageProvider.source_url">
-              {{ imageProvider.source_url }}
+              {{ cleanSourceUrlForPresentation(imageProvider.source_url) }}
             </VLink>
           </td>
           <td class="number-cell">
@@ -182,6 +182,14 @@ const SourcePage = {
       }
 
       this.sort = { direction, field }
+    },
+    cleanSourceUrlForPresentation(url) {
+      const stripProtocol = (s) => s.replace(/https?:\/\//, '')
+      const stripLeadingWww = (s) =>
+        s.startsWith('www.') ? s.replace('www.', '') : s
+      const stripTrailingSlash = (s) => (s.endsWith('/') ? s.slice(0, -1) : s)
+
+      return stripTrailingSlash(stripLeadingWww(stripProtocol(url)))
     },
   },
   head() {

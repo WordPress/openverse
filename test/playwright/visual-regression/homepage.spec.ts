@@ -1,6 +1,7 @@
 import { test, Page } from '@playwright/test'
 
 import breakpoints from '~~/test/playwright/utils/breakpoints'
+import { hideInputCursors } from '~~/test/playwright/utils/page'
 
 const deleteImageCarousel = async (page: Page) => {
   const element = await page.$('[data-testid="image-carousel"]')
@@ -32,6 +33,7 @@ test.describe('homepage snapshots', () => {
 
         test('focused', async ({ page }) => {
           await page.focus('input')
+          await hideInputCursors(page)
           await expectSnapshot(
             'focused-search-ltr',
             page.locator('form:has(input)')
@@ -64,6 +66,7 @@ test.describe('homepage snapshots', () => {
 
         test('focused', async ({ page }) => {
           await page.focus('input')
+          await hideInputCursors(page)
           await expectSnapshot(
             'focused-search-rtl',
             page.locator('form:has(input)')

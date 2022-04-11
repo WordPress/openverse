@@ -8,10 +8,15 @@ import {
 type Breakpoint = Exclude<AllBreakpoints, 'mob'>
 
 type ScreenshotAble = {
-  screenshot(): Promise<Buffer>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  screenshot(...args: any[]): Promise<Buffer>
 }
 
-type ExpectSnapshot = (name: string, s: ScreenshotAble) => Promise<Buffer>
+type ExpectSnapshot = <T extends ScreenshotAble>(
+  name: string,
+  s: T,
+  options?: Parameters<T['screenshot']>[0]
+) => Promise<Buffer>
 
 type BreakpointBlock = (options: {
   getConfigValues: (name: string) => {
@@ -46,15 +51,20 @@ const makeBreakpointDescribe =
           viewport: { width: screenWidth, height: 700 },
           userAgent: mockUaStrings[breakpoint],
         })
+
         const getConfigValues = (name: string) => ({
           name: `${name}-${breakpoint}.png` as const,
         })
-        const expectSnapshot = async (
+
+        const expectSnapshot = async <T extends ScreenshotAble>(
           name: string,
-          screenshotAble: ScreenshotAble
+          screenshotAble: T,
+          options?: Parameters<T['screenshot']>[0]
         ) => {
           const { name: snapshotName } = getConfigValues(name)
-          return expect(await screenshotAble.screenshot()).toMatchSnapshot({
+          return expect(
+            await screenshotAble.screenshot(options)
+          ).toMatchSnapshot({
             name: snapshotName,
           })
         }

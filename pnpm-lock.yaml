@@ -20,7 +20,7 @@ specifiers:
   '@nuxtjs/svg': ^0.3.0
   '@pinia/nuxt': ^0.1.8
   '@pinia/testing': ^0.0.11
-  '@playwright/test': ^1.16.2
+  '@playwright/test': ^1.20.2
   '@popperjs/core': ^2.11.2
   '@tailwindcss/line-clamp': ^0.3.1
   '@tailwindcss/typography': ^0.5.2

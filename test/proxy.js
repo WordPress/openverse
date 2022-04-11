@@ -152,7 +152,7 @@ const opts = /** @type {Partial<TalkbackOptions>} */ ({
   record: recordMode,
   fallbackMode: talkback.Options.FallbackMode.NOT_FOUND,
   ignoreBody: true,
-  ignoreHeaders: ['user-agent', 'origin', 'referrer', 'content-length', 'host'],
+  allowHeaders: ['connection'],
   name: 'Openverse e2e proxy',
   summary: false,
   tapeNameGenerator,

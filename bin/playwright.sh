@@ -10,4 +10,4 @@ export PLAYWRIGHT_VERSION=$(version)
 
 echo Running Playwright v$PLAYWRIGHT_VERSION as $USER_ID with Playwright arguments $PLAYWRIGHT_ARGS
 
-docker-compose -f docker-compose.playwright.yml up --abort-on-container-exit --exit-code-from playwright
+docker-compose -f docker-compose.playwright.yml up --build --force-recreate --abort-on-container-exit --exit-code-from playwright
