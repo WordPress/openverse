@@ -76,9 +76,9 @@ _monitor-dc environment="local" *args="": (_monitor-env environment)
     just _monitor-dc "logs {{ service }}"
 
 # Recreate the local monitoring stack
-@remonitor:
+@remonitor environment="local":
     just _monitor-dc "down -v"
-    just monitor "--force-recreate --build"
+    just monitor {{ environment }} "--force-recreate --build"
 
 # Execute a command in the grafana cli
 @grafana-cli +args="":
