@@ -31,7 +31,7 @@ Without measuring _current_ performance, we can't make decisions about how to im
 
 ## Purpose
 
-This RFC proposes we introduce [Prometheus](https://prometheus.io) and [Grafana](https://grafana.com/) to monitor our infrastructure. It also proposes that we use our existing Postgres instance for storing the gathered metrics.
+This RFC proposes we introduce [Prometheus](https://prometheus.io) and [Grafana](https://grafana.com/) to monitor our infrastructure. It also proposes that we create a new RDS Postgres instance for Grafana.
 
 Prometheus is a time series database with an advanced query language and the ability to configure aggregate data transformations (for example, based on a given metric you can also tell Prometheus to calculate a running mean of the metric from over the last 5 minutes, or any other span of time). It includes anomaly detection as well as integration with many tools you can use for alerting like Slack, PagerDuty, or email. There are [official and unofficial client libraries](https://prometheus.io/docs/instrumenting/clientlibs/) for all the langauges we currently use or could conceivably use in the future including Python, Node.js, Go, PHP, and JVM languages.
 
