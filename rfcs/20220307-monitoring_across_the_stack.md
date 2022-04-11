@@ -256,9 +256,9 @@ Prometheus is configured via a single `prometheus.yml` file. I've created a Pyth
 
 ## Overview of proposed changes
 
+* Use the existing Grafana instance in production
 * Use ECS to deploy the following services in production:
     * Prometheus
-    * Grafana
     * GNU Mailman
 * Use a new, small RDS instance for Grafana's Postgres DB.
 * Rely on Prometheus primarily as a metrics aggregator and time series database. Do not use it for rule and alarm configuration.
