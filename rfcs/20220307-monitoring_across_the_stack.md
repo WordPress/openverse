@@ -6,7 +6,7 @@ Note: Because I had to spend a good deal of time sketching out how this stuff wo
 
 - [x] @zackkrida (Infrastructure sign off)
 - [x] @AetherUnbound
-- [ ] Approver TBD (API/Frontend person)
+- [x] @obulat 
 
 ## Milestone
 
