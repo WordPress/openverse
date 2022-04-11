@@ -151,7 +151,7 @@ The general purpose Webhook integration is useful for a future where we migrate 
 
 #### Runbooks
 
-Runbooks are the expected steps for addressing a particular alarm. As I mentioned elsewhere, alarms should be actionable. If they're not actionable then they're just noise and should be demoted to a warning until they're more accurate (less false positives). The _actions_ you take for any given alarm are directed by an alarm's accomanying runbook.
+Runbooks are the expected steps for addressing a particular alarm. As I mentioned elsewhere, alarms should be actionable. If they're not actionable then they're just noise and should be demoted to a warning until they're more accurate (less false positives). The _actions_ you take for any given alarm are directed by an alarm's accompanying runbook.
 
 All alarms should have a relevant runbook linked in the alarm body. Ideally these would just be flat Markdown files but it'd be best if they could be hosted in the Openverse handbook on WordPress.org as well for redundancy and accessibility.
 
