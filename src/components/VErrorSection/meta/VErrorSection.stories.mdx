@@ -34,9 +34,6 @@ export const NoResultsTemplate = (args) => ({
       <VNoResults :type="args.type" :query="args.query"/>
     </VErrorSection>
     `,
-  data: () => ({
-    NO_RESULT,
-  }),
   components: { VErrorSection, VErrorImage, VNoResults },
   setup() {
     return { args }
