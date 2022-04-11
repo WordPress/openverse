@@ -58,8 +58,8 @@ jobs:
       - name: Run unit tests
         run: pnpm test:unit
 
-  playwright:
-    name: Playwright tests
+  nuxt-playwright:
+    name: Nuxt Playwright tests
     runs-on: ubuntu-latest
 
     steps:
@@ -67,8 +67,26 @@ jobs:
 
       - uses: ./.github/actions/setup-node-env
 
-      - name: Run playwright tests
+      - name: Run Nuxt Playwright tests
         run: pnpm test:playwright
+
+      - uses: actions/upload-artifact@v3
+        if: ${{ failure() }}
+        with:
+          name: test-results
+          path: test-results
+
+  storybook-playwright:
+    name: Storybook Playwright tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/setup-node-env
+
+      - name: Run Storybook Playwright tests
+        run: pnpm test:storybook
 
       - uses: actions/upload-artifact@v3
         if: ${{ failure() }}

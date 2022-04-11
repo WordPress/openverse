@@ -1,5 +1,7 @@
 # Playwright tests
 
+## Dockerization
+
 Our Playwright test suite runs inside a docker container in order to prevent cross-platform browser differences from creating flaky test behavior. We run both end-to-end and visual-regression tests in the same container to save from having to run the Nuxt production build twice.
 
 Having docker and docker-compose is a pre-requisite to running the playwright tests locally. Please follow [the relevant instructions for your operating system for how to install docker and docker-compose](https://docs.docker.com/get-docker/). If you're on Windows 10 Home Edition, please note that you'll need to [install and run docker inside WSL2](https://www.freecodecamp.org/news/how-to-run-docker-on-windows-10-home-edition/). We strongly recommend (and only plan to support) Windows users run everything inside of WSL.
