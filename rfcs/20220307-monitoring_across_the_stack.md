@@ -169,7 +169,7 @@ The discussion about Prometheus configuration and infrastructure go hand in hand
 
 Prometheus works by scraping HTTP endpoints on services that provide a formatted set of metrics data. Essentially services don't need to worry about whether Prometheus is running or concern themselves with how long to wait between sending batched event lists. Each service just writes to a file (or some other storage) that is served to Prometheus over HTTP whenever it requests it.
 
-That has some really nice properties in that each service doesn't need to worry about what Prometheus is doing. We don't need to worry about it's tolerances for getting new events, rate limits, handling bad requests or timeouts if Prometheus is temporarily unavailable, anything like that. We (or rather the client librariy) just write and serve the metric data in the appropriate format and Prometheus handles the rest.
+That has some really nice properties in that each service doesn't need to worry about what Prometheus is doing. We don't need to worry about it's tolerances for getting new events, rate limits, handling bad requests or timeouts if Prometheus is temporarily unavailable, anything like that. We (or rather the client library) just write and serve the metric data in the appropriate format and Prometheus handles the rest.
 
 This does have the effect of centralizing a ton of decisions about how to organize things directly into Prometheus's configuration. I don't know where we would want to store this information necessarily. Ideally it'd be somewhere central like our infrastructure repository so that we don't have to duplicate or aggregate various configurations during deployments.
 
