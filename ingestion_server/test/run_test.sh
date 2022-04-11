@@ -18,8 +18,6 @@ succeeded=$?
 if [[ $succeeded -eq 0 ]]; then
 	printf "${green}:-) All tests passed${endcol}\n"
 else
-  printf "Full system logs:\n"
-  cat test/ingestion_logs.txt
 	printf "${red}:'( Some tests did not pass${endcol}\n"
 fi
 exit $succeeded

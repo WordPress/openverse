@@ -1,5 +1,7 @@
 set dotenv-load := false
 
+IS_CI := env_var_or_default("CI", "")
+
 # Show all available recipes
 default:
   @just --list --unsorted
@@ -48,7 +50,7 @@ recreate:
     @just up "--force-recreate --build"
 
 # Show logs of all, or named, Docker services
-logs services="" args="-f":
+logs services="" args=(if IS_CI != "" { "" } else { "-f" }):
     docker-compose {{ DOCKER_FILE }} logs {{ args }} {{ services }}
 
 
