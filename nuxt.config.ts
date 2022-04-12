@@ -137,9 +137,9 @@ const config: NuxtConfig = {
     { path: '~/components', extensions: ['vue'], pathPrefix: false },
   ],
   plugins: [
-    { src: '~/plugins/url-change.js' },
-    { src: '~/plugins/migration-notice.js' },
-    { src: '~/plugins/ua-parse.js' },
+    { src: '~/plugins/url-change' },
+    { src: '~/plugins/migration-notice' },
+    { src: '~/plugins/ua-parse' },
     { src: '~/plugins/focus-visible', mode: 'client' },
   ],
   css: [
@@ -206,7 +206,7 @@ const config: NuxtConfig = {
      * - [Browser language detection info](https://i18n.nuxtjs.org/browser-language-detection)
      * */
     detectBrowserLanguage: false,
-    vueI18n: '~/plugins/vue-i18n.js',
+    vueI18n: '~/plugins/vue-i18n',
   },
   /**
    * Map the old route for /photos/_id page to /image/_id permanently to keep links working.

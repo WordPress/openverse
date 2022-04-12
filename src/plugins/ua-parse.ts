@@ -1,6 +1,8 @@
 import useragent from 'express-useragent'
 
-export default function (context, inject) {
+import type { Plugin } from '@nuxt/types'
+
+const uaParsePlugin: Plugin = (context, inject) => {
   let userAgent
 
   if (typeof context.req !== 'undefined') {
@@ -9,7 +11,7 @@ export default function (context, inject) {
     userAgent = navigator.userAgent
   }
   let ua
-  if (userAgent !== null || userAgent !== undefined) {
+  if (typeof userAgent == 'string') {
     ua = useragent.parse(userAgent)
   } else {
     ua = null
@@ -18,3 +20,5 @@ export default function (context, inject) {
   context.$ua = ua
   inject('ua', ua)
 }
+
+export default uaParsePlugin

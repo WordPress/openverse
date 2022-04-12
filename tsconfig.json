@@ -25,7 +25,7 @@
     /* Module Resolution Options */
     "moduleResolution": "Node",
     "resolveJsonModule": true,
-    "types": ["@types/jest", "@nuxt/types", "@nuxtjs/i18n"],
+    "types": ["@types/jest", "@nuxt/types", "@nuxtjs/i18n", "@pinia/nuxt"],
     "typeRoots": ["./typings", "./node_modules/@types"],
     "paths": {
       "~/*": ["./src/*"],
