@@ -8,7 +8,7 @@
    ```
    This step is a part of the {doc}`"Quickstart" <./quickstart>` process.
 
-3. Run the tests in an interactive TTY connected to a `web` container.
+2. Run the tests in an interactive TTY connected to a `web` container.
    ```bash
    just api-test
    ```

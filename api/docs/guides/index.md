@@ -11,5 +11,6 @@ quickstart
 run
 test
 document
+publish
 deploy
 ```
