@@ -79,7 +79,7 @@ The command `just up` spawns the following services:
   - API application database
 - [Elasticsearch](https://www.elastic.co/elasticsearch/)
 - [Redis](https://redis.io/)
-- [imageproxy](https://github.com/willnorris/imageproxy)
+- [imaginary](https://github.com/h2non/imaginary)
 - [NGINX](http://nginx.org)
 - **web** (`api/`)
 - **ingestion_server** and **indexer_worker** (`ingestion_server/`)

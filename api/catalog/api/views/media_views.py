@@ -1,5 +1,8 @@
+import json
+import logging as log
 from urllib.error import HTTPError
-from urllib.request import urlopen
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 from catalog.api.controllers import search_controller
 from catalog.api.models import ContentProvider
@@ -124,6 +127,15 @@ class MediaViewSet(ReadOnlyModelViewSet):
         serializer = self.get_serializer(report)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
+    def thumbnail(self, image_url, request, *_, **__):
+        serializer = self.get_serializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        return self._get_proxied_image(
+            image_url,
+            accept_header=request.headers.get("Accept", "image/*"),
+            **serializer.validated_data,
+        )
+
     # Helper functions
 
     @staticmethod
@@ -143,24 +155,71 @@ class MediaViewSet(ReadOnlyModelViewSet):
         return ip
 
     @staticmethod
-    def _get_proxied_image(image_url, width=settings.THUMBNAIL_WIDTH_PX):
-        if width is None:  # full size
-            proxy_upstream = f"{settings.THUMBNAIL_PROXY_URL}/{image_url}"
-        else:
-            proxy_upstream = (
-                f"{settings.THUMBNAIL_PROXY_URL}/"
-                f"{settings.THUMBNAIL_WIDTH_PX},fit/"
-                f"{image_url}"
-            )
+    def _thumbnail_proxy_comm(
+        path: str,
+        params: dict,
+        headers: tuple[tuple[str, str]] = (),
+    ):
+        proxy_url = settings.THUMBNAIL_PROXY_URL
+        query_string = urlencode(params)
+        upstream_url = f"{proxy_url}/{path}?{query_string}"
+        log.debug(f"Image proxy upstream URL: {upstream_url}")
+
         try:
-            upstream_response = urlopen(proxy_upstream)
-            status = upstream_response.status
+            req = Request(upstream_url)
+            for key, val in headers:
+                req.add_header(key, val)
+            upstream_response = urlopen(req, timeout=5)
+
+            res_status = upstream_response.status
             content_type = upstream_response.headers.get("Content-Type")
-        except HTTPError:
-            raise get_api_exception("Failed to render thumbnail.")
+            log.debug(
+                "Image proxy response "
+                f"status: {res_status}, content-type: {content_type}"
+            )
 
-        response = HttpResponse(
-            upstream_response.read(), status=status, content_type=content_type
+            return upstream_response, res_status, content_type
+        except HTTPError as exc:
+            raise get_api_exception(f"Failed to render thumbnail: {exc}")
+
+    @staticmethod
+    def _get_proxied_image(
+        image_url: str,
+        accept_header: str = "image/*",
+        is_full_size: bool = False,
+        is_compressed: bool = True,
+    ):
+        width = settings.THUMBNAIL_WIDTH_PX
+        if is_full_size:
+            info_res, *_ = MediaViewSet._thumbnail_proxy_comm(
+                "info", {"url": image_url}
+            )
+            info = json.loads(info_res.read())
+            width = info["width"]
+
+        params = {
+            "url": image_url,
+            "width": width,
+        }
+
+        if is_compressed:
+            params |= {
+                "quality": settings.THUMBNAIL_JPG_QUALITY,
+                "compression": settings.THUMBNAIL_PNG_COMPRESSION,
+            }
+        else:
+            params |= {
+                "quality": 100,
+                "compression": 0,
+            }
+
+        if "webp" in accept_header:
+            params["type"] = "auto"  # Use ``Accept`` header to determine output type.
+
+        img_res, res_status, content_type = MediaViewSet._thumbnail_proxy_comm(
+            "resize", params, (("Accept", accept_header),)
         )
-
+        response = HttpResponse(
+            img_res.read(), status=res_status, content_type=content_type
+        )
         return response

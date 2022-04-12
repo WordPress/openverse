@@ -11,11 +11,14 @@ services:
     volumes:
       - api-postgres:/var/lib/postgresql/data
 
-  thumbs:
-    image: willnorris/imageproxy
+  thumbnails:
+    image: ghcr.io/wordpress/openverse-imaginary:latest
     ports:
       - "8222:8222"
-    command: ["-addr", "0.0.0.0:8222"]
+    environment:
+      PORT: 8222
+      MALLOC_ARENA_MAX: 2
+    command: ["-enable-url-source"]
 
   upstream_db:
     image: postgres:13.2-alpine

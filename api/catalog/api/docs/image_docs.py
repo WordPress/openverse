@@ -37,6 +37,7 @@ from catalog.api.serializers.image_serializers import (
     OembedRequestSerializer,
     OembedSerializer,
 )
+from catalog.api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from catalog.api.serializers.provider_serializers import ProviderSerializer
 from drf_yasg import openapi
 
@@ -237,4 +238,18 @@ By using this endpoint, you can retrieve embedded content such as `version`, `ty
         "query_serializer": OembedRequestSerializer,
         "responses": responses,
         "code_examples": code_examples,
+    }
+
+
+class ImageThumbnail:
+    desc = f"""
+thumbnail is an API endpoint to retrieve the scaled down and compressed thumbnail
+of an image.
+
+{refer_sample}"""
+
+    swagger_setup = {
+        "operation_id": "image_thumbnail",
+        "operation_description": desc,
+        "query_serializer": MediaThumbnailRequestSerializer,
     }

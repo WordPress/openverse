@@ -184,7 +184,9 @@ CACHES = {
 # Produce CC-hosted thumbnails dynamically through a proxy.
 THUMBNAIL_PROXY_URL = config("THUMBNAIL_PROXY_URL", default="http://localhost:8222")
 
-THUMBNAIL_WIDTH_PX = 600
+THUMBNAIL_WIDTH_PX = config("THUMBNAIL_WIDTH_PX", cast=int, default=600)
+THUMBNAIL_JPG_QUALITY = config("THUMBNAIL_JPG_QUALITY", cast=int, default=80)
+THUMBNAIL_PNG_COMPRESSION = config("THUMBNAIL_PNG_COMPRESSION", cast=int, default=6)
 
 AUTHENTICATION_BACKENDS = (
     "oauth2_provider.backends.OAuth2Backend",

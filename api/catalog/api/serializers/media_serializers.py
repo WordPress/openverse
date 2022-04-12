@@ -420,3 +420,30 @@ class MediaSearchSerializer(serializers.Serializer):
     page = serializers.IntegerField(
         help_text="The current page number returned in the response."
     )
+
+
+class MediaThumbnailRequestSerializer(serializers.Serializer):
+    """
+    This serializer parses and validates thumbnail query string parameters.
+    """
+
+    full_size = serializers.BooleanField(
+        source="is_full_size",
+        allow_null=True,
+        required=False,
+        default=False,
+        help_text="whether to render the actual image and not a thumbnail version",
+    )
+    compressed = serializers.BooleanField(
+        source="is_compressed",
+        allow_null=True,
+        default=None,
+        required=False,
+        help_text="whether to compress the output image to reduce file size,"
+        "defaults to opposite of `full_size`",
+    )
+
+    def validate(self, data):
+        if data.get("is_compressed") is None:
+            data["is_compressed"] = not data["is_full_size"]
+        return data

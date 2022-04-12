@@ -6,6 +6,7 @@ from catalog.api.docs.audio_docs import (
     AudioRelated,
     AudioSearch,
     AudioStats,
+    AudioThumbnail,
 )
 from catalog.api.models import Audio
 from catalog.api.serializers.audio_serializers import (
@@ -14,6 +15,7 @@ from catalog.api.serializers.audio_serializers import (
     AudioSerializer,
     AudioWaveformSerializer,
 )
+from catalog.api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from catalog.api.utils.exceptions import get_api_exception
 from catalog.api.utils.throttle import OneThousandPerMinute
 from catalog.api.views.media_views import MediaViewSet
@@ -31,7 +33,7 @@ log = logging.getLogger(__name__)
 @method_decorator(swagger_auto_schema(**AudioDetail.swagger_setup), "retrieve")
 @method_decorator(swagger_auto_schema(**AudioRelated.swagger_setup), "related")
 @method_decorator(swagger_auto_schema(**AudioComplain.swagger_setup), "report")
-@method_decorator(swagger_auto_schema(auto_schema=None), "thumbnail")
+@method_decorator(swagger_auto_schema(**AudioThumbnail.swagger_setup), "thumbnail")
 @method_decorator(swagger_auto_schema(auto_schema=None), "waveform")
 class AudioViewSet(MediaViewSet):
     """
@@ -51,6 +53,7 @@ class AudioViewSet(MediaViewSet):
         detail=True,
         url_path="thumb",
         url_name="thumb",
+        serializer_class=MediaThumbnailRequestSerializer,
         throttle_classes=[OneThousandPerMinute],
     )
     def thumbnail(self, request, *_, **__):
@@ -64,11 +67,7 @@ class AudioViewSet(MediaViewSet):
         if not image_url:
             raise get_api_exception("Could not find artwork.", 404)
 
-        is_full_size = request.query_params.get("full_size", False)
-        if is_full_size:
-            return self._get_proxied_image(image_url, None)
-        else:
-            return self._get_proxied_image(image_url)
+        return super().thumbnail(image_url, request)
 
     @action(
         detail=True,
