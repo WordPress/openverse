@@ -7,7 +7,7 @@ on:
     - cron: "1 0 * * 1" # just after midnight on Monday
 
 env:
-  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+  ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   MAKE_USERNAME: ${{ secrets.MAKE_USERNAME }}
   MAKE_PASSWORD: ${{ secrets.MAKE_PASSWORD }}
 
@@ -25,9 +25,9 @@ jobs:
           node-version: 14
 
       - name: Install dependencies
-        working-directory: ./js
+        working-directory: ./automations/js
         run: npm ci
 
       - name: Create draft post
-        working-directory: ./js
+        working-directory: ./automations/js
         run: node src/last_week_tonight.js

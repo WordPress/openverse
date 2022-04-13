@@ -9,3 +9,5 @@ env/
 # Editor/IDE configs
 .idea/
 .vscode/
+
+grafana.db

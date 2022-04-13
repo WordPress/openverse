@@ -8,7 +8,7 @@ on:
 
 env:
   LOGGING_LEVEL: 20 # corresponds to INFO
-  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # Can't search in the private infra repo with GITHUB_TOKEN
 
 jobs:
   move_issues:
@@ -21,17 +21,17 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.9"
+          python-version: "3.10"
 
       - name: Install dependencies
-        working-directory: ./python
+        working-directory: ./automations/python
         run: |
           python -m pip install --user --upgrade pip
           python -m pip install --user pipenv
           pipenv install --deploy
 
       - name: Move issues from "To do"
-        working-directory: ./python
+        working-directory: ./automations/python
         run: |
           pipenv run python issues_with_prs.py \
           --project-number 3 \
@@ -39,7 +39,7 @@ jobs:
           --target-column "In progress"
 
       - name: Move issues from "Backlog"
-        working-directory: ./python
+        working-directory: ./automations/python
         run: |
           pipenv run python issues_with_prs.py \
           --project-number 3 \
