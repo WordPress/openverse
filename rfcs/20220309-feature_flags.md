@@ -5,7 +5,7 @@
 ## Reviewers
 
 - [x] @sarayourfriend
-- [ ] ?
+- [x] @zackkrida
 
 ## Rationale
 
@@ -82,6 +82,96 @@ the user (if status is switchable), the feature can have two states.
   - status is "disabled"
   - status is "switchable" and preference is "off"
 
+### Sources
+
+The feature flag state is determined in two steps.
+
+#### Conf files
+
+Conf files are JSON files that define the feature flags. Here is a sample of what the schema of this file looks like:
+
+```json5
+{
+  "features": {
+    "feature_name_1": { // feature flag name
+      "status": "enabled", // enabled | disabled | switchable
+      "description": "Feature 1 does ...", // what the feature does
+      "data": { // optional, any data you want to store related to this feature
+        "release_date": "2023-01-01"
+      }
+    },
+    "feature_name_2": {
+      "status": "switchable",
+      "default": "on", // whether the feature is opt-in or opt-out
+      "description": "Feature 2 does ...",
+    }
+  }
+}
+```
+
+Conf files being JSON can be read in any part of the codebase, without any additional libraries. Note that conf files only define the status of the flag and not the final state of the feature.
+
+#### Cookies
+
+For flags that are set to switchable in the conf files, we use the state in the cookie to determine whether the flag is set to on or off. This cookie has the following schema.
+
+```json5
+{
+  "features": {
+    "feature_name_1": "on",
+    "feature_name_2": "off"
+  }
+}
+```
+
+The cookie is only referred to for flags that are set to switchable, any other feature definitions in the cookie should be dropped or ignored. If the cookie does not mention the flag, the `default` value from the config is read.
+
+Regardless of the storage mechanism we will need a few other key things.
+
+### Store
+
+To prevent feature flags from being all over the place, we can keep them store in a Pinia store and just use the store wherever there is a check. This allows us to toggle features from a centralised place.
+
+Since keys will be added and removed periodically, the store must not expose feature flags directly but rather expose a getter that can handle fallback-to-default.
+
+The flags can be populated in the store from whatever source we choose.
+
+### Utilities
+
+A composable can be provided that interacts with the Pinia store to provide `isFeatureEnabled` functionality. The composable can directly be pulled into a component and used as a boolean `ref`.
+
+### Directive
+
+To prevent a lot of `v-if="isFeatureEnabled(feature)"` statements in the templates, we can create a new directive.
+
+```
+v-flag:{feature_name: str}="{flag_state: str}"
+```
+
+This directive takes the `feature_name: str` argument and the `flag_state: boolean` value. The component is only rendered when the state of the feature flag matches the given value.
+
+The component is shown if the flag is
+
+- enabled
+- switchable (with the user having chosen to enable it)
+
+It internally intefaces with the utility to evaluate whether the component is rendered or not. Here is [some code](https://github.com/mblarsen/vue-browser-acl/blob/4e3bb90d2ba4fcc3edd30b27737f4531dc464329/index.js#L136-L163) that can be used to avoid rendering.
+
+### Drawbacks
+
+ This implementation has the main drawback of leaving `v-flag` directives around the codebase that are equivalent `v-if="true"` when the feature has been permanently enabled. Similarly a script utility `isFeatureEnabled` that always evaluates to `true` is another a no-op.
+
+We can periodically clean them up or create tickets to remove them after a feature is completely and irreversibly live. This is important to prevent cruft from accumulating in in the codebase.
+
+## Proof-of-concept
+
+WIP. There is some discussion to be had here.
+
+## Disqualified alternatives
+
+One alternative to feature flags is what we have been doing in that past which is working on a branch that gets merged into `main` later. This is bad for reasons listed above in [§Rationale](#rationale).
+
+Another terrible alternative it to just work on `main` and never deploy till the feature is ready. This might work if the site didn't have any bugs or pressing issues (that need to be solved and deployed fast) or if features were getting ready super-fast (allowing us to deploy them with the fixes). Neither is true for us.
 
 ### Binned sources
 
@@ -210,94 +300,3 @@ For example, we can have a feature flag which is set to switchable via a config 
 
   </div>
 </details>
-
-### Sources
-
-The feature flag state is determined in two steps.
-
-#### Conf files
-
-Conf files are JSON files that define the feature flags. Here is a sample of what the schema of this file looks like:
-
-```json
-{
-  "features": {
-    "feature_name_1": { // feature flag name
-      "status": "enabled", // enabled | disabled | switchable
-      "description": "Feature 1 does ...", // what the feature does
-      "data": { // optional, any data you want to store related to this feature
-        "release_date": "2023-01-01"
-      }
-    },
-    "feature_name_2": {
-      "status": "switchable",
-      "default": "on", // whether the feature is opt-in or opt-out
-      "description": "Feature 2 does ...",
-    }
-  }
-}
-```
-
-Conf files being JSON can be read in any part of the codebase, without any additional libraries. Note that conf files only define the status of the flag and not the final state of the feature.
-
-#### Cookies
-
-For flags that are set to switchable in the conf files, we use the state in the cookie to determine whether the flag is set to on or off. This cookie has the following schema.
-
-```json
-{
-  "features": {
-    "feature_name_1": "on",
-    "feature_name_2": "off"
-  }
-}
-```
-
-The cookie is only referred to for flags that are set to switchable, any other feature definitions in the cookie should be dropped or ignored. If the cookie does not mention the flag, the `default` value from the config is read.
-
-Regardless of the storage mechanism we will need a few other key things.
-
-### Store
-
-To prevent feature flags from being all over the place, we can keep them store in a Pinia store and just use the store wherever there is a check. This allows us to toggle features from a centralised place.
-
-Since keys will be added and removed periodically, the store must not expose feature flags directly but rather expose a getter that can handle fallback-to-default.
-
-The flags can be populated in the store from whatever source we choose.
-
-### Utilities
-
-A composable can be provided that interacts with the Pinia store to provide `isFeatureEnabled` functionality. The composable can directly be pulled into a component and used as a boolean `ref`.
-
-### Directive
-
-To prevent a lot of `v-if="isFeatureEnabled(feature)"` statements in the templates, we can create a new directive.
-
-```
-v-flag:{feature_name: str}="{flag_state: str}"
-```
-
-This directive takes the `feature_name: str` argument and the `flag_state: boolean` value. The component is only rendered when the state of the feature flag matches the given value.
-
-The component is shown if the flag is
-
-- enabled
-- switchable (with the user having chosen to enable it)
-
-It internally intefaces with the utility to evaluate whether the component is rendered or not. Here is [some code](https://github.com/mblarsen/vue-browser-acl/blob/4e3bb90d2ba4fcc3edd30b27737f4531dc464329/index.js#L136-L163) that can be used to avoid rendering.
-
-### Drawbacks
-
- This implementation has the main drawback of leaving `v-flag` directives around the codebase that are equivalent `v-if="true"` when the feature has been permanently enabled. Similarly a script utility `isFeatureEnabled` that always evaluates to `true` is another a no-op.
-
-We can periodically clean them up or create tickets to remove them after a feature is completely and irreversibly live. This is important to prevent cruft from accumulating in in the codebase.
-
-## Proof-of-concept
-
-WIP. There is some discussion to be had here.
-
-## Disqualified alternatives
-
-One alternative to feature flags is what we have been doing in that past which is working on a branch that gets merged into `main` later. This is bad for reasons listed above in [§Rationale](#rationale).
-
-Another terrible alternative it to just work on `main` and never deploy till the feature is ready. This might work if the site didn't have any bugs or pressing issues (that need to be solved and deployed fast) or if features were getting ready super-fast (allowing us to deploy them with the fixes). Neither is true for us.
