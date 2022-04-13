@@ -9,7 +9,11 @@
     >
       <VMediaReuse data-testid="audio-attribution" :media="audio" />
       <VAudioDetails data-testid="audio-info" :audio="audio" />
-      <VRelatedAudio v-if="audio.id" :audio-id="audio.id" />
+      <VRelatedAudio
+        v-if="audio.id"
+        :media="relatedMedia"
+        :fetch-state="relatedFetchState"
+      />
     </div>
   </main>
 </template>
@@ -19,6 +23,7 @@ import { computed } from '@nuxtjs/composition-api'
 
 import { AUDIO } from '~/constants/media'
 import { useMediaStore } from '~/stores/media'
+import { useRelatedMediaStore } from '~/stores/media/related-media'
 
 import VAudioDetails from '~/components/VAudioDetails/VAudioDetails.vue'
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
@@ -42,14 +47,13 @@ const AudioDetailPage = {
   },
   setup() {
     const mediaStore = useMediaStore()
+    const relatedMediaStore = useRelatedMediaStore()
     const audio = computed(() => mediaStore.state.audio)
 
-    return { audio }
-  },
-  watch: {
-    audio(newAudio) {
-      this.id = newAudio.id
-    },
+    const relatedMedia = computed(() => relatedMediaStore.media)
+    const relatedFetchState = computed(() => relatedMediaStore.fetchState)
+
+    return { audio, relatedMedia, relatedFetchState }
   },
   async asyncData({ route, error, app, $pinia }) {
     try {
@@ -58,6 +62,8 @@ const AudioDetailPage = {
         id: route.params.id,
         mediaType: AUDIO,
       })
+      const relatedMediaStore = useRelatedMediaStore($pinia)
+      await relatedMediaStore.fetchMedia(AUDIO, route.params.id)
       return {
         id: route.params.id,
       }

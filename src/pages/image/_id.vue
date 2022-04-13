@@ -69,7 +69,7 @@
       :image-height="imageHeight"
       :image-type="imageType"
     />
-    <VRelatedImages :image-id="imageId" />
+    <VRelatedImages :media="relatedMedia" :fetch-state="relatedFetchState" />
   </div>
 </template>
 
@@ -80,6 +80,7 @@ import { computed } from '@nuxtjs/composition-api'
 
 import { IMAGE } from '~/constants/media'
 import { useMediaStore } from '~/stores/media'
+import { useRelatedMediaStore } from '~/stores/media/related-media'
 
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
@@ -114,8 +115,13 @@ const VImageDetailsPage = {
   },
   setup() {
     const mediaStore = useMediaStore()
+    const relatedMediaStore = useRelatedMediaStore()
+
     const image = computed(() => mediaStore.state.image)
-    return { image }
+
+    const relatedMedia = computed(() => relatedMediaStore.media)
+    const relatedFetchState = computed(() => relatedMediaStore.fetchState)
+    return { image, relatedMedia, relatedFetchState }
   },
   computed: {
     sketchFabUid() {
@@ -130,11 +136,13 @@ const VImageDetailsPage = {
   async asyncData({ app, error, route, $pinia }) {
     const imageId = route.params.id
     const mediaStore = useMediaStore($pinia)
+    const relatedMediaStore = useRelatedMediaStore($pinia)
     try {
       await mediaStore.fetchMediaItem({
         id: imageId,
         mediaType: IMAGE,
       })
+      await relatedMediaStore.fetchMedia(IMAGE, imageId)
       return {
         imageId: imageId,
       }

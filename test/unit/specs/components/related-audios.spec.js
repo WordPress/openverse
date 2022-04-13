@@ -7,9 +7,6 @@ import VRelatedAudio from '~/components/VAudioDetails/VRelatedAudio.vue'
 import render from '../../test-utils/render'
 
 const audioResults = [{ id: 'audio1' }, { id: 'audio2' }]
-const serviceMock = {
-  getRelatedMedia: jest.fn(() => Promise.resolve({ results: audioResults })),
-}
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -23,8 +20,10 @@ const doRender = async () => {
     VRelatedAudio,
     {
       localVue,
-      propsData: { audioId: 'foo', service: serviceMock },
-      mocks: { $fetchState: { pending: false, error: null, timestamp: null } },
+      propsData: {
+        media: audioResults,
+        fetchState: { isFetching: false, isError: false },
+      },
       stubs: { LoadingIcon: true, VAudioTrack: true },
     },
     mount
@@ -40,7 +39,5 @@ describe('RelatedAudios', () => {
 
     const audioTracks = wrapper.findAll('vaudiotrack-stub')
     expect(audioTracks.length).toEqual(audioResults.length)
-
-    expect(serviceMock.getRelatedMedia).toHaveBeenCalledTimes(1)
   })
 })

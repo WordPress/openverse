@@ -257,12 +257,12 @@ export default defineComponent({
       const mediaStore = useMediaStore()
       if (
         route.value.params.id === props.audio.id ||
-        mediaStore.getItemById(AUDIO, props.audio.id)
+        mediaStore.getItemById(props.audio.id, AUDIO)
       ) {
         /**
          * If switching to any route other than the single result
          * route for this track, pause it. Otherwise, let it keep
-         * playing to introduce a "seamless" feeling beween the
+         * playing to introduce a "seamless" feeling between the
          * search results page and the single result page.
          *
          * This handles going from the search page to the single

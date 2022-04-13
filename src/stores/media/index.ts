@@ -70,7 +70,7 @@ export const useMediaStore = defineStore('media', () => {
 
   /* Getters */
 
-  const getItemById = (mediaType: SupportedMediaType, id: string) => {
+  const getItemById = (id: string, mediaType: SupportedMediaType) => {
     return state.results[mediaType].items[id]
   }
   /**
