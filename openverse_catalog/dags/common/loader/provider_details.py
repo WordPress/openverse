@@ -63,7 +63,6 @@ EUROPEANA_SUB_PROVIDERS = {"wellcome_collection": "Wellcome Collection"}
 # Smithsonian parameters
 SMITHSONIAN_SUB_PROVIDERS = {
     "smithsonian_national_museum_of_natural_history": {
-        "NMNHANTHRO",  # NMNH - Paleobiology Dept.
         "NMNHBIRDS",  # NMNH - Vertebrate Zoology - Birds Division
         "NMNHBOTANY",  # NMNH - Botany Dept.
         "NMNHEDUCATION",  # NMNH - Education & Outreach
@@ -88,9 +87,6 @@ SMITHSONIAN_SUB_PROVIDERS = {
         "OFEO-SG",  # Office of Facilities Engineering and Operations
     },
     "smithsonian_hirshhorn_museum": {"HMSG"},  # Hirshhorn Museum and Sculpture Garden
-    "smithsonian_anthropological_archives": {
-        "NAA"  # National Anthropological Archives
-    },
     "smithsonian_air_and_space_museum": {"NASM"},  # National Air and Space Museum
     "smithsonian_african_american_history_museum": {
         "NMAAHC"  # National Museum of African American History and Culture

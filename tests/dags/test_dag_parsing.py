@@ -14,7 +14,6 @@ PROVIDER_WORKFLOWS = [
     DAG_FOLDER / "providers" / workflow
     for workflow in [
         "brooklyn_museum_workflow.py",
-        "check_new_smithsonian_unit_codes_workflow.py",
         "cleveland_museum_workflow.py",
         "europeana_ingestion_workflow.py",
         "europeana_workflow.py",

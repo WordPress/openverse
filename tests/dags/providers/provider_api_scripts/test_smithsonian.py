@@ -4,6 +4,7 @@ import os
 from unittest.mock import call, patch
 
 import pytest
+from airflow.exceptions import AirflowException
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts import smithsonian as si
 
@@ -46,6 +47,47 @@ def test_get_hash_prefixes_with_len_one():
     ]
     actual_prefix_list = list(si._get_hash_prefixes(1))
     assert actual_prefix_list == expect_prefix_list
+
+
+def test_alert_new_unit_codes():
+    unit_code_set = {"a", "b", "c", "d"}
+    sub_prov_dict = {"sub_prov1": {"a", "c"}, "sub_prov2": {"b"}, "sub_prov3": {"e"}}
+
+    assert si.get_new_and_outdated_unit_codes(unit_code_set, sub_prov_dict) == (
+        {"d"},
+        {"e"},
+    )
+
+
+@pytest.mark.parametrize(
+    "new_unit_codes, outdated_unit_codes",
+    [
+        ({"d"}, {"e"}),
+        ({"d"}, set()),
+        (set(), {"e"}),
+    ],
+)
+def test_validate_unit_codes_from_api_raises_exception(
+    new_unit_codes, outdated_unit_codes
+):
+    with patch.object(si.delayed_requester, "get_response_json"), patch.object(
+        si,
+        "get_new_and_outdated_unit_codes",
+        return_value=(new_unit_codes, outdated_unit_codes),
+    ):
+        with pytest.raises(
+            AirflowException,
+            match="^\n\\*Updates needed to the SMITHSONIAN_SUB_PROVIDERS dictionary\\**",
+        ):
+            si.validate_unit_codes_from_api()
+
+
+def test_validate_unit_codes_from_api():
+    with patch.object(si.delayed_requester, "get_response_json"), patch.object(
+        si, "get_new_and_outdated_unit_codes", return_value=(set(), set())
+    ):
+        # Validation should run without raising an exception
+        si.validate_unit_codes_from_api()
 
 
 @pytest.mark.parametrize(
