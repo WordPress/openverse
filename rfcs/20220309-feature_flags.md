@@ -4,7 +4,7 @@
 
 ## Reviewers
 
-- [x] @sarayourfriend 
+- [x] @sarayourfriend
 - [ ] ?
 
 ## Rationale
