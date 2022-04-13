@@ -288,7 +288,7 @@ It internally intefaces with the utility to evaluate whether the component is re
 
 ### Drawbacks
 
-This implementation has the main drawback of leaving `v-flag` directives around the codebase that are equivalent `v-if="true"` when the feature has been permanently enabled. Similarly a script utilitiy `isFeatureEnabled` that always evaluates to `true` is another a no-op.
+ This implementation has the main drawback of leaving `v-flag` directives around the codebase that are equivalent `v-if="true"` when the feature has been permanently enabled. Similarly a script utility `isFeatureEnabled` that always evaluates to `true` is another a no-op.
 
 We can periodically clean them up or create tickets to remove them after a feature is completely and irreversibly live. This is important to prevent cruft from accumulating in in the codebase.
 
