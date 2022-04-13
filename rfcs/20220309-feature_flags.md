@@ -35,7 +35,7 @@ These features are strict requirements and solutions not providing them will be 
    1. Allow code for both live and in-dev features to coexist.
    1. Deployments to prod such as fixes should not be blocked.
 1. Keep the code separate from the feature visibility configuration[^separate].
-1. Toggle the visibility of features based on the environment.
+1. Toggle the state (enabled, disabled, switchable) of features based on the environment.
 
 [^separate]: Separate not in the sense of being placed somewhere else, just being untangled or decoupled.
 
@@ -53,25 +53,47 @@ This RFC considers feature flags for the frontend. The API can just use `beta/` 
 
 ### States
 
-Each flag can have 3 states.
+Each flag can have 3 statuses.
 
-- **enabled** (`on`)
+- **enabled**
 
   There is no fencing, everyone can access the feature, even if they don't like or want it.
 
-- **switchable** (`any`)
+- **disabled**
 
-  The feature is fenced by default but a user can opt-in. Preferences may be recorded.
+  The feature is not visible and accessible, and trying to access it should yield an error message.
 
-- **disabled** (`off`)
+- **switchable**
 
-  The feature is fenced and inaccessible, at least not visible. What's ever hidden in open-source?
+  The feature can be turned on or off by the user. Preferences may be recorded in a cookie.
 
-### Sources
+Based on the one of the three statuses of the flag above, and the preference of
+the user (if status is switchable), the feature can have two states.
 
-Flags must first be defined somewhere from where they can be loaded into the application.
+- **on**
+
+  When either
+  - status is "enabled"
+  - status is "switchable" and preference is "on"
+
+- **off**
+
+  When either
+  - status is "disabled"
+  - status is "switchable" and preference is "off"
+
+
+### Binned sources
+
+Just skip this section and proceed to [§Sources](#sources).
 
 #### 1. Environment variables
+
+<details>
+  <summary>
+    Feature flag env vars can be prefixed with a string like <code>FF_</code> to separate them from the other env vars.
+  </summary>
+  <div>
 
 ##### Pros
 
@@ -98,32 +120,16 @@ The limitation for the data to be a string means any extra metadata must be JSON
 
 Nesting flags will use hacks like artificial separators e.g. `FF_PARENT__CHILD`. Looks ugly and confusing.
 
-#### 2. Query params
+  </div>
+</details>
 
-##### Pros
+#### 2. Growthbook
 
-1. Even more effortless to set up.
-1. We've done this before for the embedded mode, [_remember_](https://github.com/WordPress/openverse-frontend/pull/65)?
-1. Testing is easy because tests can append the right flag param to the URL.
-
-##### Cons
-
-1. Configuration will need to live in the codebase so change of state will need deployment.
-1. Exposes half-baked features to users who know the flag.
-1. Transient, so flags must be set on every URL or stored in cookies.
-1. Flags will be primitive and will not allow complex data. Even stringified JSON would be bad in URLs.
-
-##### Considerations
-
-We can clearly demarcate feature flag params with a prefix such as `ff_` (or `feature/` 🚳) to separate them from the actual query params and process them separately.
-
-Due to their nature being run-time rather than build-time, they are best used in pairing with another storage (as an override for the default) rather than on their own.
-
-For example, we can have a feature flag which is set to disabled via a config file. This prevents users from accessing this feature. However, a developer who still wants to use this feature can send the query param as true and access it.
-
-#### 3. Growthbook
-
-GrowthBook is an open-source platform for feature flagging. It provides SDKs and a UI to manage feature flags.
+<details>
+  <summary>
+    GrowthBook is an open-source platform for feature flagging. It provides SDKs and a UI to manage feature flags.
+  </summary>
+  <div>
 
 ##### Pros
 
@@ -147,9 +153,16 @@ GrowthBook is an open-source platform for feature flagging. It provides SDKs and
 - [Home](https://www.growthbook.io)
 - [Docs](https://docs.growthbook.io)
 
-#### 4. API
+  </div>
+</details>
 
-Our API could serve as a decent source of feature flag statuses by storing them as Django model.
+#### 3. API
+
+<details>
+  <summary>
+    Our API could serve as a decent source of feature flag statuses by storing them as Django model.
+  </summary>
+  <div>
 
 ##### Pros
 
@@ -163,23 +176,84 @@ Our API could serve as a decent source of feature flag statuses by storing them 
 1. Need to mock the API calls in dev environments.
 1. Adds coupling between frontend features and the API.
 
-#### 5. Conf files
+  </div>
+</details>
 
-This is functionally similar to the evironment variables storage option, but has many advantages.
+#### 4. Query params
 
-Conf files could be JSON/YAML files that list the names of features and their values. They can live separate from the codebase, athough there's really no advantage or disadvantage to them being with or separate from the code.
+<details>
+  <summary>
+    We can clearly demarcate feature flag params with a prefix such as <code>ff_</code>
+  </summary>
+  <div>
 
 ##### Pros
 
-1. Simple configuration.
-1. Prevents lots of API calls.
-1. Can store complex configurations and nesting, which environment variables cannot.
-1. Easier to manage being persistent files rather than machine/container state.
+1. Even more effortless to set up.
+1. We've done this before for the embedded mode, [_remember_](https://github.com/WordPress/openverse-frontend/pull/65)?
+1. Testing is easy because tests can append the right flag param to the URL.
 
 ##### Cons
 
-1. YAML is easier to write by hand but needs a separate library to read.
-1. JSON is easier to read but is not designed for writing manually.
+1. Configuration will need to live in the codebase so change of state will need deployment.
+1. Exposes half-baked features to users who know the flag.
+1. Transient, so switchable flags must be set on every URL or stored in cookies.
+1. Flags will be primitive and will not allow complex data. Even stringified JSON would be bad in URLs.
+
+##### Considerations
+
+We can clearly demarcate feature flag params with a prefix such as `ff_` (or `feature/` 🚳) to separate them from the actual query params and process them separately.
+
+Due to their nature being run-time rather than build-time, they are best used in pairing with another storage (as an override for the default) rather than on their own.
+
+For example, we can have a feature flag which is set to switchable via a config file. This prevents users from accessing this feature. However, a developer who still wants to use this feature can send the query param as true and access it.
+
+  </div>
+</details>
+
+### Sources
+
+The feature flag state is determined in two steps.
+
+#### Conf files
+
+Conf files are JSON files that define the feature flags. Here is a sample of what the schema of this file looks like:
+
+```json
+{
+  "features": {
+    "feature_name_1": { // feature flag name
+      "status": "enabled", // enabled | disabled | switchable
+      "description": "Feature 1 does ...", // what the feature does
+      "data": { // optional, any data you want to store related to this feature
+        "release_date": "2023-01-01"
+      }
+    },
+    "feature_name_2": {
+      "status": "switchable",
+      "default": "on", // whether the feature is opt-in or opt-out
+      "description": "Feature 2 does ...",
+    }
+  }
+}
+```
+
+Conf files being JSON can be read in any part of the codebase, without any additional libraries. Note that conf files only define the status of the flag and not the final state of the feature.
+
+#### Cookies
+
+For flags that are set to switchable in the conf files, we use the state in the cookie to determine whether the flag is set to on or off. This cookie has the following schema.
+
+```json
+{
+  "features": {
+    "feature_name_1": "on",
+    "feature_name_2": "off"
+  }
+}
+```
+
+The cookie is only referred to for flags that are set to switchable, any other feature definitions in the cookie should be dropped or ignored. If the cookie does not mention the flag, the `default` value from the config is read.
 
 Regardless of the storage mechanism we will need a few other key things.
 
