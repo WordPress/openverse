@@ -107,14 +107,14 @@ jobs:
         run: just ing-testlocal
 
       - name: Upload ingestion test logs
-        if: ${{ always() }}
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: ing_logs
           path: ingestion_server/test/ingestion_logs.txt
 
       - name: Print ingestion test logs
-        if: ${{ always() }}
+        if: always()
         run: cat ingestion_server/test/ingestion_logs.txt
 
   test-api:
@@ -146,22 +146,24 @@ jobs:
         run: just api-test -T
 
       - name: Print API test logs
-        if: ${{ always() }}
+        if: always()
         run: |
           just logs > api_logs
           cat api_logs
 
       - name: Upload API test logs
-        if: ${{ always() }}
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: api_logs
           path: api_logs
 
       - name: Make developer docs
+        if: github.event_name == 'push' && github.repository == 'WordPress/openverse-api'
         run: just sphinx-make -T
 
       - name: Upload developer docs
+        if: github.event_name == 'push' && github.repository == 'WordPress/openverse-api'
         uses: actions/upload-artifact@v2
         with:
           name: docs
