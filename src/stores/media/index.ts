@@ -13,6 +13,7 @@ import {
 import type { Media, DetailFromMediaType } from '~/models/media'
 import { hash, rand as prng } from '~/utils/prng'
 import { services } from '~/stores/media/services'
+import { useProviderStore } from '~/stores/provider'
 import { useSearchStore } from '~/stores/search'
 import { FetchState, useFetchState } from '~/composables/use-fetch-state'
 
@@ -337,10 +338,26 @@ export const useMediaStore = defineStore('media', () => {
   }) => {
     const { mediaType } = params
     try {
-      // TODO: Fix this!
+      const mediaDetail = await services[mediaType].getMediaDetail(params.id)
+      const providerStore = useProviderStore()
+      mediaDetail.providerName = providerStore.getProviderName(
+        mediaDetail.provider,
+        mediaType
+      )
+      if (mediaDetail.source) {
+        mediaDetail.sourceName = providerStore.getProviderName(
+          mediaDetail.source,
+          mediaType
+        )
+      }
+      /**
+       * TODO: Fix this! Reason for disabling: TS incorrectly interprets the type of value with a
+       * dynamic key as `null` instead of Media|null. Replacing with state.image solves the typing
+       * error, but isn't flexible.
+       */
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      state[mediaType] = await services[mediaType].getMediaDetail(params.id)
+      state[mediaType] = mediaDetail
     } catch (error: unknown) {
       state[mediaType] = null
       if (axios.isAxiosError(error) && error.response?.status === 404) {

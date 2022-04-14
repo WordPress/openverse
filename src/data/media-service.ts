@@ -1,12 +1,22 @@
 import { decodeMediaData } from '~/utils/decode-media-data'
 import { VersionedApiService } from '~/data/api-service'
 
-import type { ApiQueryParams, MediaResult } from '~/store/types'
+import type { ApiQueryParams } from '~/store/types'
 import type { DetailFromMediaType, Media } from '~/models/media'
 
 import type { SupportedMediaType } from '~/constants/media'
 
 import type { AxiosResponse } from 'axios'
+
+export interface MediaResult<
+  T extends Media | Media[] | Record<string, Media>
+> {
+  result_count: number
+  page_count: number
+  page_size: number
+  page: number
+  results: T
+}
 
 class MediaService<T extends Media> {
   private readonly mediaType: T['frontendMediaType']

@@ -19,15 +19,15 @@
         <dt>{{ $t('image-details.information.type') }}</dt>
         <dd class="uppercase">{{ imgType }}</dd>
       </div>
-      <div v-if="providerName !== sourceName">
+      <div v-if="image.providerName !== image.sourceName">
         <dt>{{ $t('image-details.information.provider') }}</dt>
-        <dd>{{ providerName }}</dd>
+        <dd>{{ image.providerName }}</dd>
       </div>
       <div>
         <dt>{{ $t('image-details.information.source') }}</dt>
         <dd>
           <VLink :href="image.foreign_landing_url" class="text-pink">{{
-            sourceName
+            image.sourceName
           }}</VLink>
         </dd>
       </div>
@@ -69,7 +69,7 @@ const VImageDetails = defineComponent({
     },
   },
   setup(props) {
-    const { store, i18n } = useContext()
+    const { i18n } = useContext()
 
     const imgType = computed(() => {
       if (props.imageType) {
@@ -81,15 +81,7 @@ const VImageDetails = defineComponent({
       return i18n.t('image-details.information.unknown')
     })
 
-    function getProviderName(nameCode) {
-      return nameCode ? store.getters['provider/getProviderName'](nameCode) : ''
-    }
-
-    const providerName = computed(() => getProviderName(props.image.provider))
-
-    const sourceName = computed(() => getProviderName(props.image.source))
-
-    return { imgType, providerName, sourceName }
+    return { imgType }
   },
 })
 export default VImageDetails

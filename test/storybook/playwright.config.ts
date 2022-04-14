@@ -20,7 +20,7 @@ const config: PlaywrightTestConfig = {
     baseURL: 'http://localhost:54000',
     trace: 'retain-on-failure',
   },
-  timeout: 60 * 1e3,
+  timeout: 2 * 60 * 1e3,
 }
 
 export default config

@@ -19,7 +19,7 @@
         <VContentReportForm
           :close-fn="close"
           :media="media"
-          :provider-name="providerName"
+          :provider-name="media.providerName"
         />
       </div>
     </template>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { computed, useStore, defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from '@nuxtjs/composition-api'
 
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
 import VPopover from '~/components/VPopover/VPopover.vue'
@@ -54,17 +54,9 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
-    const store = useStore()
-
-    const getProviderName = (nameCode) =>
-      store.getters['provider/getProviderName'](nameCode)
-    const providerName = computed(() => getProviderName(props.media.provider))
-
+  setup() {
     return {
       icons: { flag: flagIcon, closeSmall: closeSmallIcon },
-
-      providerName,
     }
   },
 })

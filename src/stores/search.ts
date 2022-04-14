@@ -25,17 +25,15 @@ import {
   queryToFilterData,
 } from '~/utils/search-query-transform'
 import {
+  FilterCategory,
+  FilterItem,
+  Filters,
   filterData,
   mediaFilterKeys,
   mediaUniqueFilterKeys,
 } from '~/constants/filters'
 import type { SupportedSearchType } from '~/constants/media'
-import type {
-  ApiQueryParams,
-  FilterCategory,
-  FilterItem,
-  Filters,
-} from '~/store/types'
+import type { ApiQueryParams } from '~/store/types'
 
 export const useSearchStore = defineStore('search', () => {
   const state: {

@@ -55,16 +55,16 @@
             </dt>
             <dd>
               <VLink :href="audio.foreign_landing_url">
-                {{ providerName }}
+                {{ audio.providerName }}
               </VLink>
             </dd>
           </div>
-          <div v-if="audio.source && sourceName !== providerName">
+          <div v-if="audio.source && audio.sourceName !== audio.providerName">
             <dt>
               {{ $t('audio-details.table.source') }}
             </dt>
             <dd>
-              {{ sourceName }}
+              {{ audio.sourceName }}
             </dd>
           </div>
           <div v-if="audio.genres && audio.genres.length > 0">
@@ -82,10 +82,6 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
-
-import { PROVIDER } from '~/constants/store-modules'
-
 import VLink from '~/components/VLink.vue'
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
 import VMediaTag from '~/components/VMediaTag/VMediaTag.vue'
@@ -94,16 +90,6 @@ export default {
   name: 'VAudioDetails',
   components: { VAudioThumbnail, VLink, VMediaTag },
   props: ['audio'],
-  computed: {
-    ...mapState(PROVIDER, ['audioProviders']),
-    ...mapGetters(PROVIDER, ['getProviderName']),
-    providerName() {
-      return this.getProviderName(this.$props.audio.provider)
-    },
-    sourceName() {
-      return this.getProviderName(this.$props.audio.source)
-    },
-  },
 }
 </script>
 

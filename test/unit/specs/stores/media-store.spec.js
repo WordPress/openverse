@@ -53,7 +53,10 @@ const testResult = (mediaType) => ({
   pageCount: 20,
 })
 
-const detailData = { [AUDIO]: 'audioDetails', [IMAGE]: 'imageDetails' }
+const detailData = {
+  [AUDIO]: { title: 'audioDetails' },
+  [IMAGE]: { title: 'ImageDetail' },
+}
 const searchResults = (mediaType) => ({
   results: testResultItems(mediaType),
   result_count: 22,

@@ -4,7 +4,12 @@
 // @ts-ignore
 import clonedeep from 'lodash.clonedeep'
 
-import { mediaFilterKeys } from '~/constants/filters'
+import {
+  FilterCategory,
+  FilterItem,
+  Filters,
+  mediaFilterKeys,
+} from '~/constants/filters'
 import { ALL_MEDIA, SupportedSearchType } from '~/constants/media'
 
 import { getParameterByName } from '~/utils/url-params'
@@ -12,9 +17,6 @@ import type {
   ApiQueryFilters,
   ApiQueryKeys,
   ApiQueryParams,
-  FilterCategory,
-  FilterItem,
-  Filters,
 } from '~/store/types'
 
 const filterPropertyMappings: Record<FilterCategory, ApiQueryKeys> = {

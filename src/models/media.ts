@@ -28,6 +28,8 @@ export interface Media {
 
   provider: string
   source?: string
+  providerName?: string
+  sourceName?: string
   thumbnail?: string
 
   filesize?: string

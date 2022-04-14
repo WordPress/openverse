@@ -135,9 +135,9 @@
 
 <script>
 import sortBy from 'lodash.sortby'
-import { mapState } from 'vuex'
+import { computed } from '@nuxtjs/composition-api'
 
-import { PROVIDER } from '~/constants/store-modules'
+import { useProviderStore } from '~/stores/provider'
 import { useGetLocaleFormattedNumber } from '~/composables/use-get-locale-formatted-number'
 
 import VButton from '~/components/VButton.vue'
@@ -161,11 +161,12 @@ const SourcePage = {
   },
   setup() {
     const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
+    const providerStore = useProviderStore()
+    const imageProviders = computed(() => providerStore.providers.image)
 
-    return { getLocaleFormattedNumber, externalLinkIcon }
+    return { getLocaleFormattedNumber, externalLinkIcon, imageProviders }
   },
   computed: {
-    ...mapState(PROVIDER, ['imageProviders']),
     sortedProviders() {
       const sorted = sortBy(this.imageProviders, [this.sort.field])
       return this.sort.direction === 'asc' ? sorted : sorted.reverse()

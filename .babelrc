@@ -11,7 +11,8 @@
           }
         ],
         "@babel/preset-typescript"
-      ]
+      ],
+      "plugins": ["@nuxtjs/composition-api/dist/babel-plugin"]
     }
   }
 }
