@@ -40,6 +40,7 @@
     "src/components/VContentPage.vue",
     "src/components/VMetaSearch/*.vue",
     "src/components/VLicenseElements.vue",
+    "src/components/VWarningSuppressor.vue",
     "src/components/VLink.vue",
     "src/components/VLoadMore.vue",
     "src/components/VIcon/VIcon.vue",

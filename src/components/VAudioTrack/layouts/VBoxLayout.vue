@@ -2,7 +2,7 @@
   <div :style="{ width }">
     <!-- The width is determined by the parent element if the 'size' property is not specified. -->
     <div
-      class="box-track group relative bg-yellow h-0 w-full pt-full rounded-sm"
+      class="box-track group relative bg-yellow h-0 w-full pt-full rounded-sm text-dark-blue"
     >
       <div class="absolute inset-0 flex flex-col">
         <div class="info flex-grow flex flex-col justify-between p-4">

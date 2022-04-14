@@ -550,7 +550,8 @@
     "alt": "Cover art for \"{title}\" by {creator}"
   },
   "audio-track": {
-    "aria-label": "Audio Player",
+    "aria-label": "{title} - Audio Player",
+    "aria-label-interactive": "{title} - audio player - press the spacebar to play and pause a preview of the audio",
     "messages": {
       "blink_seek_disabled": "Seeking for Jamendo tracks is limited to Firefox and Safari.",
       "err_aborted": "You aborted playback.",

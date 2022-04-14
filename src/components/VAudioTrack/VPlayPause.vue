@@ -6,7 +6,7 @@
     :icon-props="{ iconPath: icon }"
     :aria-label="$t(label)"
     :button-props="{ variant: 'plain-dangerous' }"
-    @click="handleClick"
+    @click.stop.prevent="handleClick"
   />
 </template>
 

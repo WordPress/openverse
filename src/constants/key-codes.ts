@@ -22,4 +22,5 @@ export const keycodes = Object.freeze({
   PageUp: 'PageUp',
   PageDown: 'PageDown',
   Tab: 'Tab',
+  Enter: 'Enter',
 } as const)
