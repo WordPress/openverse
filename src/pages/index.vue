@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import { ref, useContext, useRouter } from '@nuxtjs/composition-api'
+import { onMounted, ref, useContext, useRouter } from '@nuxtjs/composition-api'
 
 import { ALL_MEDIA, supportedSearchTypes } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
@@ -176,6 +176,13 @@ const HomePage = {
     const router = useRouter()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
+
+    /**
+     * Reset the search type, search term and filters when the user navigates [back] to the homepage.
+     */
+    onMounted(() => {
+      searchStore.$reset()
+    })
 
     const featuredSearches = imageInfo.sets.map((setItem) => ({
       ...setItem,

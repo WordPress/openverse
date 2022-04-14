@@ -382,7 +382,7 @@ describe('Search Store', () => {
     it.each`
       searchType   | nextSearchType | expectedFilterCount
       ${AUDIO}     | ${IMAGE}       | ${25}
-      ${IMAGE}     | ${ALL_MEDIA}   | ${37}
+      ${IMAGE}     | ${ALL_MEDIA}   | ${12}
       ${ALL_MEDIA} | ${VIDEO}       | ${12}
       ${VIDEO}     | ${AUDIO}       | ${24}
       ${ALL_MEDIA} | ${IMAGE}       | ${25}
@@ -405,38 +405,6 @@ describe('Search Store', () => {
             (key) => searchStore.filters[key].filter((f) => f.checked).length
           )
           .reduce((partialSum, count) => partialSum + count, 0)
-        expect(checkedFilterCount).toEqual(expectedFilterCount)
-      }
-    )
-
-    /**
-     * Changing the search type to ALL_MEDIA does not fire the watcher that clears the filters
-     * in tests, but does fire it in the app. TODO: Figure out why???
-     */
-    it.each`
-      searchType   | nextSearchType | expectedFilterCount
-      ${AUDIO}     | ${ALL_MEDIA}   | ${37}
-      ${IMAGE}     | ${ALL_MEDIA}   | ${37}
-      ${ALL_MEDIA} | ${ALL_MEDIA}   | ${37}
-      ${VIDEO}     | ${ALL_MEDIA}   | ${37}
-    `(
-      'changing searchType clears all but $expectedFilterCount ALL_MEDIA filters',
-      async ({ searchType, nextSearchType, expectedFilterCount }) => {
-        const searchStore = useSearchStore()
-        searchStore.setSearchType(searchType)
-        // Set all filters to checked
-        for (let [fc, filter_items] of Object.entries(searchStore.filters)) {
-          for (let f of filter_items) {
-            searchStore.toggleFilter({ filterType: fc, code: f.code })
-          }
-        }
-        searchStore.setSearchType(nextSearchType)
-        const checkedFilterCount = Object.keys(searchStore.filters)
-          .map(
-            (key) => searchStore.filters[key].filter((f) => f.checked).length
-          )
-          .reduce((partialSum, count) => partialSum + count, 0)
-
         expect(checkedFilterCount).toEqual(expectedFilterCount)
       }
     )
