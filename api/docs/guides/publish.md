@@ -27,19 +27,23 @@ The workflow file for this action can be found here: [`push_docker_image.yml`](h
 
 This action **will only publish & tag a service's image with the commit SHA** (i.e. it will not tag with `latest` or the git reference name).
 This is useful for cases where one or more Docker images need to be tested on a staging environment before being merged and cut with a release.
-Note that this action can only run on branches/commits/tags that were made within the last 90 days [due to GitHub's default artifact retention policy](https://docs.github.com/en/organizations/managing-organization-settings/configuring-the-retention-period-for-github-actions-artifacts-and-logs-in-your-organization).
+This action also **requires that the CI/CD workflow has previously run on the specified commit**.
+This typically requires a PR in order to initiate.
+
+Note that this action can only run on commits that had successful CI/CD runs in the last 90 days [due to GitHub's default artifact retention policy](https://docs.github.com/en/organizations/managing-organization-settings/configuring-the-retention-period-for-github-actions-artifacts-and-logs-in-your-organization).
 
 ### Steps
 
 _Note: [GitHub's documentation provides screenshots for the various steps](https://github.blog/changelog/2020-07-06-github-actions-manual-triggers-with-workflow_dispatch)_
 
-% TODO: Add screenshots to the below steps once the button is available in the GitHub UI
-
 1. Navigate to the `openverse-api` "Actions" tab in GitHub: [github.com/WordPress/openverse-api/actions](https://github.com/WordPress/openverse-api/actions).
 2. Select the "Publish Docker images on-demand" workflow.
 3. Click the "Run workflow" button.
-4. Select the target branch to build (this can also be `main`).
-5. For the `image` parameter, specify either `api` or `ingestion_server`.
-6. Click the green "Run workflow" button.
+   1. (Optional) change the branch _that the workflow is running from_ (this does not change anything about the target commit)
+   2. For the `image` parameter, specify either `api` or `ingestion_server`.
+   3. For the `commit` parameter, specify the commit that the built Docker image artifact should be pulled from.
+5. Click the green "Run workflow" button.
 
 The newest run should appear in the Action list, and its status can be tracked from there.
+
+![Example Screenshot](/_static/publish_action_example.png)
