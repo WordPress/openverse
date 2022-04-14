@@ -13,7 +13,7 @@
             : 'meta-search.form.unsupported-title'
         "
         tag="h4"
-        class="b-header mb-2"
+        class="text-4xl mb-2"
       >
         <template #openverse>Openverse</template>
         <template #type>
@@ -24,7 +24,7 @@
         v-else
         path="meta-search.form.no-results-title"
         tag="h4"
-        class="b-header mb-2"
+        class="text-4xl mb-2"
       >
         <template #type>{{ type }}</template>
         <template #query>{{ query.q }}</template>
@@ -44,7 +44,7 @@
       :query="query"
     />
 
-    <p class="caption font-semibold max-w-3xl my-0 mx-auto">
+    <p class="text-sm font-semibold max-w-3xl my-0 mx-auto">
       {{ $t('meta-search.caption', { openverse: 'Openverse' }) }}
     </p>
   </section>
