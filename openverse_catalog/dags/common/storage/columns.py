@@ -639,6 +639,7 @@ ALT_FILES = JSONColumn(
     # Alternative files: url, filesize, bit_rate, sample_rate
     name="alt_files",
     required=False,
+    upsert_strategy=UpsertStrategy.merge_jsonb_arrays,
 )
 
 IDENTIFIER = UUIDColumn(

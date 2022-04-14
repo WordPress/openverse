@@ -102,7 +102,7 @@ def _get_items(license_name, date):
     default_query_params = copy.deepcopy(DEFAULT_QUERY_PARAMS)
     try:
         start_date = datetime.strftime(
-            datetime.fromisoformat(date), "%Y-%m-%dT%H:%M:%S.%3NZ"
+            datetime.fromisoformat(date), "%Y-%m-%dT%H:%M:%SZ"
         )
     except ValueError:
         start_date = "*"
