@@ -257,7 +257,7 @@ export default defineComponent({
       const mediaStore = useMediaStore()
       if (
         route.value.params.id === props.audio.id ||
-        mediaStore.getItemById(props.audio.id, AUDIO)
+        mediaStore.getItemById(AUDIO, props.audio.id)
       ) {
         /**
          * If switching to any route other than the single result

@@ -79,7 +79,7 @@ import axios from 'axios'
 import { computed } from '@nuxtjs/composition-api'
 
 import { IMAGE } from '~/constants/media'
-import { useMediaStore } from '~/stores/media'
+import { useSingleResultStore } from '~/stores/media/single-result'
 import { useRelatedMediaStore } from '~/stores/media/related-media'
 
 import VButton from '~/components/VButton.vue'
@@ -114,14 +114,12 @@ const VImageDetailsPage = {
     }
   },
   setup() {
-    const mediaStore = useMediaStore()
     const relatedMediaStore = useRelatedMediaStore()
-
-    const image = computed(() => mediaStore.state.image)
 
     const relatedMedia = computed(() => relatedMediaStore.media)
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
-    return { image, relatedMedia, relatedFetchState }
+
+    return { relatedMedia, relatedFetchState }
   },
   computed: {
     sketchFabUid() {
@@ -135,16 +133,12 @@ const VImageDetailsPage = {
   },
   async asyncData({ app, error, route, $pinia }) {
     const imageId = route.params.id
-    const mediaStore = useMediaStore($pinia)
-    const relatedMediaStore = useRelatedMediaStore($pinia)
+    const singleResultStore = useSingleResultStore($pinia)
     try {
-      await mediaStore.fetchMediaItem({
-        id: imageId,
-        mediaType: IMAGE,
-      })
-      await relatedMediaStore.fetchMedia(IMAGE, imageId)
+      await singleResultStore.fetchMediaItem(IMAGE, imageId)
+      const image = singleResultStore.mediaItem
       return {
-        imageId: imageId,
+        image,
       }
     } catch (err) {
       const errorMessage = app.i18n.t('error.image-not-found', {

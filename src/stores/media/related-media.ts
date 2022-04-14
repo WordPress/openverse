@@ -6,7 +6,7 @@ import {
   updateFetchState,
 } from '~/composables/use-fetch-state'
 import { services } from '~/stores/media/services'
-import type { DetailFromMediaType, Media } from '~/models/media'
+import type { Media } from '~/models/media'
 import type { SupportedMediaType } from '~/constants/media'
 
 interface RelatedMediaState {
@@ -23,17 +23,19 @@ export const useRelatedMediaStore = defineStore('related-media', {
   }),
 
   getters: {
-    getItemById: (state) => (id: string) =>
-      state.media.find((item) => item.id === id),
+    getItemById:
+      (state) =>
+      (id: string): Media | undefined =>
+        state.media.find((item) => item.id === id),
   },
 
   actions: {
     async fetchMedia(mediaType: SupportedMediaType, id: string) {
       this.mainMediaId = id
       this.fetchState = updateFetchState(this.fetchState, 'start')
-      let media: DetailFromMediaType<typeof mediaType>[] = []
+      this.media = []
       try {
-        media = (
+        this.media = (
           await services[mediaType].getRelatedMedia<typeof mediaType>(id)
         ).results
         this.fetchState = updateFetchState(this.fetchState, 'end')
@@ -43,8 +45,6 @@ export const useRelatedMediaStore = defineStore('related-media', {
           'end',
           `Could not fetch related ${mediaType} for id ${id}`
         )
-      } finally {
-        this.media = media
       }
     },
   },

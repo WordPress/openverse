@@ -182,6 +182,7 @@ const HomePage = {
      */
     onMounted(() => {
       searchStore.$reset()
+      mediaStore.$reset()
     })
 
     const featuredSearches = imageInfo.sets.map((setItem) => ({
