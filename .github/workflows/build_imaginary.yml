@@ -36,7 +36,7 @@ jobs:
       - name: Update modules # https://github.com/h2non/imaginary/issues/387
         working-directory: imaginary
         run: |
-          sed -i 's/bimg v1.1.4/bimg v1.1.7/' go.mod
+          sed -i 's/bimg v1.1.4/bimg v1.1.9/' go.mod
           go mod tidy
 
       - name: Skip tests # https://github.com/golang/go/issues/29948
