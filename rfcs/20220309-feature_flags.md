@@ -165,7 +165,7 @@ We can periodically clean them up or create tickets to remove them after a featu
 
 ## Proof-of-concept
 
-WIP. There is some discussion to be had here.
+[Link to `WordPress/openverse-frontend` PR](https://github.com/WordPress/openverse-frontend/pull/1270)
 
 ## Disqualified alternatives
 
