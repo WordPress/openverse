@@ -1,5 +1,5 @@
 import { sendWindowMessage } from '~/utils/send-message'
-import { useNavStore } from '~/stores/nav'
+import { useNavigationStore } from '~/stores/navigation'
 
 import type { Plugin } from '@nuxt/types'
 
@@ -11,7 +11,7 @@ import type { Plugin } from '@nuxt/types'
  */
 const urlChangePlugin: Plugin = ({ app, $pinia }): void => {
   app.router?.onReady(() => {
-    const isEmbedded = useNavStore($pinia).isEmbedded
+    const isEmbedded = useNavigationStore($pinia).isEmbedded
     if (process.client && isEmbedded && app.router) {
       sendWindowMessage({
         type: 'urlChange',

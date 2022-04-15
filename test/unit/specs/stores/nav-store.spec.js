@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia'
 
-import { useNavStore } from '~/stores/nav'
+import { useNavigationStore } from '~/stores/navigation'
 
 const initialState = {
   isEmbedded: true,
@@ -12,27 +12,29 @@ describe('Nav Store', () => {
     setActivePinia(createPinia())
   })
   it('sets the initial state correctly', () => {
-    const navStore = useNavStore()
-    expect(navStore.isEmbedded).toEqual(initialState.isEmbedded)
-    expect(navStore.isReferredFromCc).toEqual(initialState.isReferredFromCc)
+    const navigationStore = useNavigationStore()
+    expect(navigationStore.isEmbedded).toEqual(initialState.isEmbedded)
+    expect(navigationStore.isReferredFromCc).toEqual(
+      initialState.isReferredFromCc
+    )
   })
 
   it.each([true, false, undefined])('sets isEmbedded', (embedded) => {
-    const navStore = useNavStore()
-    navStore.setIsEmbedded(embedded)
+    const navigationStore = useNavigationStore()
+    navigationStore.setIsEmbedded(embedded)
     const expectedValue = embedded ?? true
 
-    expect(navStore.isEmbedded).toEqual(expectedValue)
+    expect(navigationStore.isEmbedded).toEqual(expectedValue)
   })
 
   it.each([true, false, undefined])(
     'sets isReferredFromCc',
     (isReferredFromCc) => {
-      const navStore = useNavStore()
-      navStore.setIsReferredFromCc(isReferredFromCc)
+      const navigationStore = useNavigationStore()
+      navigationStore.setIsReferredFromCc(isReferredFromCc)
       const expectedValue = isReferredFromCc ?? true
 
-      expect(navStore.isReferredFromCc).toEqual(expectedValue)
+      expect(navigationStore.isReferredFromCc).toEqual(expectedValue)
     }
   )
 })

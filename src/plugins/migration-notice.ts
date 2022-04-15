@@ -1,4 +1,4 @@
-import { useNavStore } from '~/stores/nav'
+import { useNavigationStore } from '~/stores/navigation'
 
 import type { Plugin } from '@nuxt/types'
 
@@ -9,7 +9,7 @@ import type { Plugin } from '@nuxt/types'
  */
 const migrationNoticePlugin: Plugin = ({ query }) => {
   if (query.referrer) {
-    useNavStore().setIsReferredFromCc(
+    useNavigationStore().setIsReferredFromCc(
       query.referrer.includes('creativecommons.org')
     )
   }

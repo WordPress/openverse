@@ -9,7 +9,7 @@
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 
-import { useNavStore } from '~/stores/nav'
+import { useNavigationStore } from '~/stores/navigation'
 
 import VTranslationStatusBanner from '~/components/VTranslationStatusBanner.vue'
 import VMigrationNotice from '~/components/VMigrationNotice.vue'
@@ -18,8 +18,8 @@ export default defineComponent({
   name: 'BlankLayout',
   components: { VMigrationNotice, VTranslationStatusBanner },
   setup() {
-    const navStore = useNavStore()
-    const isReferredFromCc = computed(() => navStore.isReferredFromCc)
+    const navigationStore = useNavigationStore()
+    const isReferredFromCc = computed(() => navigationStore.isReferredFromCc)
     return { isReferredFromCc }
   },
   head() {
