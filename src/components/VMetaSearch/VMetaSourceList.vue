@@ -28,9 +28,7 @@
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import { getAdditionalSources } from '~/utils/get-additional-sources'
-
-import type { ApiQueryParams } from '~/store/types'
-
+import type { ApiQueryParams } from '~/utils/search-query-transform'
 import type { MediaType } from '~/constants/media'
 
 import VButton from '~/components/VButton.vue'

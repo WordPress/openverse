@@ -83,8 +83,8 @@ export default {
     watch(
       () => searchStore.searchQueryParams,
       /**
-       * @param {import('../../store/types').ApiQueryParams} newQuery
-       * @param {import('../../store/types').ApiQueryParams} oldQuery
+       * @param {import('~/utils/search-query-transform').ApiQueryParams} newQuery
+       * @param {import('~/utils/search-query-transform').ApiQueryParams} oldQuery
        */
       (newQuery, oldQuery) => {
         if (!areQueriesEqual(newQuery, oldQuery)) {

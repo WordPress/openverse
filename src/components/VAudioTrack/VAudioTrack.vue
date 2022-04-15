@@ -72,7 +72,7 @@ const propTypes = {
    * the information about the track, typically from a track's detail endpoint
    */
   audio: {
-    type: /** @type {import('@nuxtjs/composition-api').PropType<import('~/store/types').AudioDetail>} */ (
+    type: /** @type {import('@nuxtjs/composition-api').PropType<import('~/models/media').AudioDetail>} */ (
       Object
     ),
     required: /** @type {true} */ (true),

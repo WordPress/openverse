@@ -1,9 +1,7 @@
 import { decodeMediaData } from '~/utils/decode-media-data'
+import type { ApiQueryParams } from '~/utils/search-query-transform'
 import { VersionedApiService } from '~/data/api-service'
-
-import type { ApiQueryParams } from '~/store/types'
 import type { DetailFromMediaType, Media } from '~/models/media'
-
 import type { SupportedMediaType } from '~/constants/media'
 
 import type { AxiosResponse } from 'axios'

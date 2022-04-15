@@ -15,6 +15,7 @@ import {
   supportedSearchTypes,
 } from '~/constants/media'
 import {
+  ApiQueryParams,
   filtersToQueryData,
   queryStringToSearchType,
   queryToFilterData,
@@ -27,7 +28,6 @@ import {
   mediaFilterKeys,
   mediaUniqueFilterKeys,
 } from '~/constants/filters'
-import type { ApiQueryParams } from '~/store/types'
 
 export interface SearchState {
   searchType: SupportedSearchType

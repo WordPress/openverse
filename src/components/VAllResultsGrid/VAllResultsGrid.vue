@@ -83,13 +83,13 @@ export default defineComponent({
     })
 
     /**
-     * @type { ComputedRef<import('../../store/types').Media[]> }
+     * @type { ComputedRef<import('~/models/media').Media[]> }
      */
     const allMedia = computed(() => mediaStore.allMedia)
 
     const isError = computed(() => !!mediaStore.fetchState.fetchingError)
 
-    /** @type {import('@nuxtjs/composition-api').ComputedRef<import('../../store/types').FetchState>} */
+    /** @type {import('@nuxtjs/composition-api').ComputedRef<import('~/composables/use-fetch-state').FetchState>} */
     const fetchState = computed(() => mediaStore.fetchState)
 
     const errorHeader = computed(() => {

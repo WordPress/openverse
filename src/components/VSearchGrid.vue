@@ -68,7 +68,7 @@ export default {
       required: true,
     },
     searchType: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<import('../store/types').SupportedSearchType>} */ (
+      type: /** @type {import('@nuxtjs/composition-api').PropType<import('~/constants/media').SupportedSearchType>} */ (
         String
       ),
       required: true,

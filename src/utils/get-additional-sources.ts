@@ -1,7 +1,7 @@
 import buildUrl from 'build-url'
 
 import type { MediaType } from '~/constants/media'
-import type { ApiQueryParams } from '~/store/types'
+import type { ApiQueryParams } from '~/utils/search-query-transform'
 
 import type { BuildUrlOptions } from 'build-url'
 

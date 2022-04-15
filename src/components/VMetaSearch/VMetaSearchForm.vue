@@ -54,9 +54,7 @@
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import type { MediaType } from '~/constants/media'
-
-import type { ApiQueryParams } from '~/store/types'
-
+import type { ApiQueryParams } from '~/utils/search-query-transform'
 import { getAdditionalSourceBuilders } from '~/utils/get-additional-sources'
 
 import VMetaSourceList from './VMetaSourceList.vue'
