@@ -2,7 +2,7 @@
   <div class="app grid h-screen overflow-hidden relative">
     <div>
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
-      <VMigrationNotice v-show="isReferredFromCc" />
+      <VMigrationNotice />
       <VTranslationStatusBanner />
       <VHeader />
     </div>
@@ -24,8 +24,6 @@ import { useScroll } from '~/composables/use-scroll'
 import { useMatchSearchRoutes } from '~/composables/use-match-routes'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
-
-import { useNavigationStore } from '~/stores/navigation'
 
 import VMigrationNotice from '~/components/VMigrationNotice.vue'
 import VTranslationStatusBanner from '~/components/VTranslationStatusBanner.vue'
@@ -53,9 +51,6 @@ const embeddedPage = {
   setup() {
     const mainContentRef = ref(null)
     const mainRef = ref(null)
-
-    const navigationStore = useNavigationStore()
-    const isReferredFromCc = computed(() => navigationStore.isReferredFromCc)
 
     const { isVisible: isFilterVisible } = useFilterSidebarVisibility()
     const isMinScreenMd = isMinScreen('md')
@@ -88,7 +83,6 @@ const embeddedPage = {
     return {
       isHeaderScrolled,
       isMinScreenMd,
-      isReferredFromCc,
       isSidebarVisible,
       isSearchRoute,
       headerHasTwoRows,

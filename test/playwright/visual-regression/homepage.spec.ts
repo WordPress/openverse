@@ -15,7 +15,7 @@ test.describe('homepage snapshots', () => {
       await page.goto('/')
     })
 
-    breakpoints.describeEachDesktop(({ expectSnapshot }) =>
+    breakpoints.describeEvery(({ expectSnapshot }) =>
       test('full page', async ({ page }) => {
         await deleteImageCarousel(page)
         await expectSnapshot('index-ltr', page)
@@ -48,7 +48,7 @@ test.describe('homepage snapshots', () => {
       await page.goto('/ar')
     })
 
-    breakpoints.describeEachDesktop(({ expectSnapshot }) =>
+    breakpoints.describeEvery(({ expectSnapshot }) =>
       test('full page', async ({ page }) => {
         await deleteImageCarousel(page)
         await expectSnapshot('index-rtl', page)

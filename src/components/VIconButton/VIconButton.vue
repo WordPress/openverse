@@ -2,8 +2,8 @@
   <VButton
     v-bind="buttonProps"
     size="disabled"
-    class="icon-button flex flex-shrink-0 items-center justify-center border-1.5 active:shadow-ring"
-    :class="[...buttonSizeClasses]"
+    class="icon-button flex flex-shrink-0 items-center justify-center active:shadow-ring border-1.5"
+    :class="buttonSizeClasses"
     :type="type"
     v-on="$listeners"
   >

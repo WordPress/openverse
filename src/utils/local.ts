@@ -6,23 +6,33 @@ import { warn } from '~/utils/console'
 
 const localStorageExists = () => process.client && window.localStorage !== null
 
-const local = {
-  get(key: string) {
-    try {
-      return localStorageExists() ? localStorage.getItem(key) : null
-    } catch (e) {
-      // Probably a `SecurityError`
-      warn('`localStorage` access denied', e)
-      return null
-    }
+const tryUse = <R>(fn: () => R, def: R) => {
+  try {
+    return localStorageExists() ? fn() : def
+  } catch (e) {
+    warn('`localStorage` access denied', e)
+    return def
+  }
+}
+
+const local: typeof localStorage = {
+  get length() {
+    return tryUse(() => localStorage.length, 0)
   },
-  set(key: string, value: string) {
-    try {
-      if (localStorageExists()) localStorage.setItem(key, value)
-    } catch (e) {
-      // Probably a `SecurityError`
-      warn('`localStorage` access denied', e)
-    }
+  getItem(key: string) {
+    return tryUse(() => localStorage.getItem(key), null)
+  },
+  setItem(key: string, value: string) {
+    tryUse(() => localStorage.setItem(key, value), undefined)
+  },
+  clear() {
+    tryUse(() => localStorage.clear(), undefined)
+  },
+  removeItem(key) {
+    tryUse(() => localStorage.removeItem(key), undefined)
+  },
+  key(index) {
+    return tryUse(() => localStorage.key(index), null)
   },
 }
 

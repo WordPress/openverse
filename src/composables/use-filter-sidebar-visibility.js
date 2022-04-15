@@ -28,12 +28,12 @@ export function useFilterSidebarVisibility({ mediaQuery } = {}) {
    */
   const setVisibility = (val) => {
     isVisible.value = val
-    local.set(process.env.filterStorageKey, val)
+    local.setItem(process.env.filterStorageKey, val)
   }
 
   onMounted(() => {
     const localFilterState = () =>
-      local.get(process.env.filterStorageKey) === 'true'
+      local.getItem(process.env.filterStorageKey) === 'true'
     setVisibility(mediaQuery.value && localFilterState())
   })
 

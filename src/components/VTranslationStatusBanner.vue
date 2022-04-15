@@ -1,5 +1,9 @@
 <template>
-  <VNotificationBanner v-show="!shouldHideBanner" @close="dismissBanner">
+  <VNotificationBanner
+    :id="bannerKey"
+    :enabled="needsTranslationBanner"
+    variant="informational"
+  >
     {{
       // eslint-disable-next-line @intlify/vue-i18n/no-raw-text
       '⚠️'
@@ -11,33 +15,37 @@
         }}</VLink>
       </template>
       <template #locale>
-        {{ bannerLocale.name }}
+        {{ name }}
       </template>
     </i18n>
   </VNotificationBanner>
 </template>
-<script>
-import useI18nSync from '~/composables/use-i18n-sync'
+
+<script lang="ts">
+import { computed, defineComponent } from '@nuxtjs/composition-api'
+
+import { useI18nSync } from '~/composables/use-i18n-sync'
 
 import VLink from '~/components/VLink.vue'
 import VNotificationBanner from '~/components/VNotificationBanner.vue'
 
-export default {
+export default defineComponent({
   name: 'VTranslationStatusBanner',
   components: {
     VLink,
     VNotificationBanner,
   },
   setup() {
-    const { shouldHideBanner, bannerLocale, translationLink, dismissBanner } =
+    const { currentLocale, translationLink, needsTranslationBanner } =
       useI18nSync()
-
+    const bannerKey = `translation-${currentLocale.value?.code ?? 'en'}`
+    const name = computed(() => currentLocale.value?.name ?? '')
     return {
-      dismissBanner,
-      shouldHideBanner,
-      bannerLocale,
+      needsTranslationBanner,
+      bannerKey,
+      name,
       translationLink,
     }
   },
-}
+})
 </script>

@@ -1,5 +1,9 @@
 <template>
-  <VNoticeBar class="cc-ov-migration">
+  <VNotificationBanner
+    id="cc-referral"
+    :enabled="isReferredFromCc"
+    variant="announcement"
+  >
     {{
       $t('migration-notice.intro', {
         'cc-search': 'CC Search',
@@ -10,21 +14,30 @@
     <i18n tag="span" path="migration-notice.more">
       <template #read-more>
         <VLink
-          class="text-dark-blue hover:text-dark-blue underline"
+          class="text-white font-bold underline"
           href="https://wordpress.org/news/2021/05/welcome-to-openverse/"
           >{{ $t('migration-notice.read') }}</VLink
         >
       </template>
     </i18n>
-  </VNoticeBar>
+  </VNotificationBanner>
 </template>
 
-<script>
-import VNoticeBar from '~/components/VNoticeBar/VNoticeBar.vue'
+<script lang="ts">
+import { defineComponent, computed } from '@nuxtjs/composition-api'
+
+import { useNavigationStore } from '~/stores/navigation'
+
+import VNotificationBanner from '~/components/VNotificationBanner.vue'
 import VLink from '~/components/VLink.vue'
 
-export default {
+export default defineComponent({
   name: 'VMigrationNotice',
-  components: { VLink, VNoticeBar },
-}
+  components: { VLink, VNotificationBanner },
+  setup() {
+    const navigationStore = useNavigationStore()
+    const isReferredFromCc = computed(() => navigationStore.isReferredFromCc)
+    return { isReferredFromCc }
+  },
+})
 </script>

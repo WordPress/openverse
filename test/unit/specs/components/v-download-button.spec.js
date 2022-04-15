@@ -9,8 +9,8 @@ import VDownloadButton from '~/components/VDownloadButton.vue'
 import render from '../../test-utils/render'
 
 jest.mock('~/utils/local', () => ({
-  get: jest.fn(),
-  set: jest.fn(),
+  getItem: jest.fn(),
+  setItem: jest.fn(),
 }))
 
 const mockFilesizes = {
@@ -70,7 +70,7 @@ describe('VDownloadButton', () => {
   })
 
   it('should use the local storage default on first render', async () => {
-    local.get.mockImplementationOnce(() => formats[1].extension_name)
+    local.getItem.mockImplementationOnce(() => formats[1].extension_name)
     const wrapper = await doRender()
     const downloadLink = wrapper.element.querySelector('a')
     expect(downloadLink.getAttribute('href')).toEqual(formats[1].download_url)
@@ -80,7 +80,7 @@ describe('VDownloadButton', () => {
     const wrapper = await doRender()
     wrapper.find('[aria-haspopup="menu"]').trigger('click')
     wrapper.findAll('[role="menuitem"]').wrappers[1].trigger('click')
-    expect(local.set).toHaveBeenCalledWith(
+    expect(local.setItem).toHaveBeenCalledWith(
       expect.any(String),
       formats[1].extension_name
     )

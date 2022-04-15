@@ -91,7 +91,7 @@ export default {
   },
   data() {
     const savedFormatExtension =
-      local.get(LS_DOWNLOAD_FORMAT_EXTENSION_KEY) ?? null
+      local.getItem(LS_DOWNLOAD_FORMAT_EXTENSION_KEY) ?? null
     let format = this.formats[0]
     if (savedFormatExtension) {
       const found = this.formats.find(
@@ -132,7 +132,7 @@ export default {
       return filesize(size, { locale: this.$i18n.locale })
     },
     setSelectedFormat(format) {
-      local.set(LS_DOWNLOAD_FORMAT_EXTENSION_KEY, format.extension_name)
+      local.setItem(LS_DOWNLOAD_FORMAT_EXTENSION_KEY, format.extension_name)
       this.selectedFormat = format
     },
   },

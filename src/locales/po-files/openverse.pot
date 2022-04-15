@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-04-14T15:48:23+00:00\n"
+"POT-Creation-Date: 2022-04-15T05:40:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -109,18 +109,18 @@ msgid "Select the download file format"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMigrationNotice.vue:4
+#: src/components/VMigrationNotice.vue:8
 msgctxt "migration-notice.intro"
 msgid "###cc-search### is now called ###openverse### and joins ###wordpress### as an open source project."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMigrationNotice.vue:10
+#: src/components/VMigrationNotice.vue:14
 msgctxt "migration-notice.more"
 msgid "###read-more### about this announcement."
 msgstr ""
 
-#: src/components/VMigrationNotice.vue:15
+#: src/components/VMigrationNotice.vue:19
 msgctxt "migration-notice.read"
 msgid "Read more"
 msgstr ""
@@ -1856,12 +1856,12 @@ msgid "search button"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VTranslationStatusBanner.vue:7
+#: src/components/VTranslationStatusBanner.vue:11
 msgctxt "notification.translation.text"
 msgid "The translation for ###locale### locale is incomplete. Help us get to 100 percent by ###link###."
 msgstr ""
 
-#: src/components/VTranslationStatusBanner.vue:10
+#: src/components/VTranslationStatusBanner.vue:14
 msgctxt "notification.translation.link"
 msgid "contributing a translation"
 msgstr ""
