@@ -43,6 +43,7 @@ function computeQueryParams(
   const query = { ...filtersToQueryData(filters, searchType) }
 
   const queryKeys = Object.keys(query) as (keyof ApiQueryParams)[]
+
   return queryKeys.reduce(
     (obj, key) => {
       if (key !== 'q' && query[key]?.length) {

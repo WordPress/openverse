@@ -48,7 +48,7 @@ test('selecting `audio` on homepage, you can search for audio', async ({
 test('url filter parameters not used by current mediaType are discarded', async ({
   page,
 }) => {
-  await page.goto('/search/image?q=cat&categories=photograph')
+  await page.goto('/search/image?q=cat&category=photograph')
 
   await changeContentType(page, 'Audio')
   await expect(page).toHaveURL('/search/audio?q=cat')

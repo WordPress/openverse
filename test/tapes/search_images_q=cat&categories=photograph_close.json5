@@ -9,7 +9,7 @@
             accept: 'application/json, text/plain, */*',
             connection: 'close',
         },
-        url: '/v1/images/?q=cat&categories=photograph',
+        url: '/v1/images/?q=cat&category=photograph',
         method: 'GET',
         body: '',
     },
