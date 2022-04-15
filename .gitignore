@@ -31,6 +31,7 @@ storybook-static
 /src/locales/scripts/untranslated-locales.json
 /src/locales/scripts/wp-locales.json
 .zshrc
+.tcv-export
 
 # Playwright creates these two folders
 test-results

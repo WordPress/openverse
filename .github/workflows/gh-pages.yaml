@@ -1,4 +1,4 @@
-name: Storybook GitHub Pages
+name: GitHub Pages
 
 on:
   push:
@@ -21,6 +21,13 @@ jobs:
 
       - name: Build Storybook
         run: pnpm storybook:build
+
+      - name: Build Tailwind Config Viewer
+        run: pnpm tcv:build
+
+      # This makes the TCV available at the `/tailwind` directory in the gh-pages
+      - name: Merge TCV and Storybook builds
+        run: mv .tcv-export ./storybook-static/tailwind
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@bbdfb200618d235585ad98e965f4aafc39b4c501 # v3.7.3
