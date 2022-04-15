@@ -298,7 +298,7 @@ def _parse_audio_file_data(parsed_data: dict, file_metadata: list) -> dict:
     ):
         parsed_data["sample_rate"] = sample_rate
     if bit_rate := _get_value_by_names(file_data, ["bitrate_nominal", "bitrate"]):
-        parsed_data["bit_rate"] = bit_rate
+        parsed_data["bit_rate"] = bit_rate if bit_rate <= 2147483647 else None
     if channels := _get_value_by_names(file_data, ["audio_channels", "channels"]):
         parsed_data["meta_data"]["channels"] = channels
     return parsed_data

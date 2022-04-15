@@ -438,3 +438,18 @@ def test_parse_audio_file_data_parses_wav_audio_data_missing_streams():
 
     # No data is available, so nothing should be added
     assert actual_parsed_data == original_data
+
+
+def test_parse_audio_file_data_parses_wav_invalid_bit_rate():
+    with open(RESOURCES / "audio_filedata_wav.json") as f:
+        file_metadata = json.load(f)
+    # Set the bit rate higher than the int max
+    file_metadata[5]["value"][3]["value"][0]["value"][3]["value"] = 4294967294
+    original_data = {"meta_data": {}}
+    expected_parsed_data = {
+        "bit_rate": None,
+        "sample_rate": 48000,
+        "meta_data": {"channels": 1},
+    }
+    actual_parsed_data = wmc._parse_audio_file_data(original_data, file_metadata)
+    assert actual_parsed_data == expected_parsed_data
