@@ -1,12 +1,12 @@
 <template>
   <VButton
     variant="plain"
-    class="report-button font-semibold text-dark-charcoal"
+    class="report-button font-semibold text-dark-charcoal-70"
   >
-    <span class="md:hidden">{{
+    <span class="text-sr md:text-base md:hidden">{{
       $t('media-details.content-report.short')
     }}</span>
-    <span class="hidden md:inline">{{
+    <span class="text-sr md:text-base hidden md:inline">{{
       $t('media-details.content-report.long')
     }}</span>
     <VIcon :icon-path="icons.flag" class="ms-2" />

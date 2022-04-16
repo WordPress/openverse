@@ -55,6 +55,7 @@ describe('VContentReportForm', () => {
         id: '0aff3595-8168-440b-83ff-7a80b65dea42',
         foreign_landing_url: 'https://wordpress.org/openverse/',
         provider: 'provider',
+        frontendMediaType: 'image',
       },
       providerName: 'Provider',
       closeFn: jest.fn(),
@@ -127,6 +128,7 @@ describe('VContentReportForm', () => {
     expect(serviceMock.sendReport).toHaveBeenCalledWith({
       identifier: props.media.id,
       reason: 'mature',
+      mediaType: props.media.frontendMediaType,
       description: '',
     })
   })
@@ -145,6 +147,7 @@ describe('VContentReportForm', () => {
     expect(serviceMock.sendReport).toHaveBeenCalledWith({
       identifier: props.media.id,
       reason: 'other',
+      mediaType: 'image',
       description,
     })
   })

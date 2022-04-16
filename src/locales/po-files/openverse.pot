@@ -324,42 +324,42 @@ msgctxt "audio-details.related-audios"
 msgid "Related audio"
 msgstr ""
 
-#: src/components/VAudioDetails/VAudioDetails.vue:4
+#: src/components/VAudioDetails/VAudioDetails.vue:5
 msgctxt "audio-details.information"
 msgid "Audio information"
 msgstr ""
 
-#: src/components/VAudioDetails/VAudioDetails.vue:23
+#: src/components/VAudioDetails/VAudioDetails.vue:27
 msgctxt "audio-details.table.album"
 msgid "Album"
 msgstr ""
 
-#: src/components/VAudioDetails/VAudioDetails.vue:31
+#: src/components/VAudioDetails/VAudioDetails.vue:35
 msgctxt "audio-details.table.category"
 msgid "Type"
 msgstr ""
 
-#: src/components/VAudioDetails/VAudioDetails.vue:38
+#: src/components/VAudioDetails/VAudioDetails.vue:42
 msgctxt "audio-details.table.sample-rate"
 msgid "Sample Rate"
 msgstr ""
 
-#: src/components/VAudioDetails/VAudioDetails.vue:46
+#: src/components/VAudioDetails/VAudioDetails.vue:50
 msgctxt "audio-details.table.filetype"
 msgid "Format"
 msgstr ""
 
-#: src/components/VAudioDetails/VAudioDetails.vue:54
+#: src/components/VAudioDetails/VAudioDetails.vue:58
 msgctxt "audio-details.table.provider"
 msgid "Provider"
 msgstr ""
 
-#: src/components/VAudioDetails/VAudioDetails.vue:64
+#: src/components/VAudioDetails/VAudioDetails.vue:68
 msgctxt "audio-details.table.source"
 msgid "Source"
 msgstr ""
 
-#: src/components/VAudioDetails/VAudioDetails.vue:72
+#: src/components/VAudioDetails/VAudioDetails.vue:76
 msgctxt "audio-details.table.genre"
 msgid "Genre"
 msgstr ""
@@ -492,7 +492,7 @@ msgctxt "media-details.content-report.form.question"
 msgid "What is the reason?"
 msgstr ""
 
-#: src/components/VContentReport/VContentReportForm.vue:101
+#: src/components/VContentReport/VContentReportForm.vue:100
 msgctxt "media-details.content-report.form.submit"
 msgid "Report"
 msgstr ""

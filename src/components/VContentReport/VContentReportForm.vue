@@ -40,7 +40,7 @@
         }}
       </p>
 
-      <form class="text-sm">
+      <form class="text-sm" @submit="handleSubmit">
         <fieldset class="flex flex-col">
           <legend class="font-semibold mb-4">
             {{ $t('media-details.content-report.form.question') }}
@@ -93,10 +93,11 @@
           <VButton
             v-else
             key="non-dmca"
+            type="submit"
             :disabled="isSubmitDisabled"
             :focusable-when-disabled="true"
             variant="secondary"
-            @click="handleSubmit"
+            :value="$t('media-details.content-report.form.submit')"
           >
             {{ $t('media-details.content-report.form.submit') }}
           </VButton>
@@ -166,11 +167,13 @@ export default defineComponent({
     const isSubmitDisabled = computed(
       () => selectedReason.value === OTHER && description.value.length < 20
     )
-    const handleSubmit = async () => {
+    const handleSubmit = async (event) => {
+      event.preventDefault()
       if (selectedReason.value === DMCA) return
       // Submit report
       try {
         await service.sendReport({
+          mediaType: props.media.frontendMediaType,
           identifier: props.media.id,
           reason: selectedReason.value,
           description: description.value,

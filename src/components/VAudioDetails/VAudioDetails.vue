@@ -1,8 +1,12 @@
 <template>
   <section class="audio-info">
-    <h4 class="text-base lg:text-3xl mb-6">
-      {{ $t('audio-details.information') }}
-    </h4>
+    <header class="flex flex-row justify-between items-center mb-6">
+      <h4 class="text-base lg:text-3xl">
+        {{ $t('audio-details.information') }}
+      </h4>
+      <VContentReportPopover :media="audio" />
+    </header>
+
     <div class="flex flex-col md:flex-row items-start gap-6">
       <div class="w-[75px] h-[75px] lg:w-30 lg:h-30 rounded-sm overflow-hidden">
         <VAudioThumbnail :audio="audio" />
