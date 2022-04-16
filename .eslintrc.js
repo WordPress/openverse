@@ -69,9 +69,9 @@ module.exports = {
         math: 'always',
       },
     ],
-    'vuejs-accessibility/aria-role': 'warn',
+    'vuejs-accessibility/aria-role': 'error',
     'vuejs-accessibility/label-has-for': [
-      'warn',
+      'error',
       { required: { some: ['nesting', 'id'] } },
     ],
     /**
@@ -96,7 +96,6 @@ module.exports = {
     ],
     'no-restricted-syntax': ['error', ...i18nDestructureRules],
     'unicorn/filename-case': ['error', { case: 'kebabCase' }],
-    '@typescript-eslint/ban-ts-comment': ['warn'],
     '@typescript-eslint/no-var-requires': ['off'],
     'import/no-unresolved': [
       'error',
@@ -180,7 +179,7 @@ module.exports = {
     {
       files: ['*.ts'],
       rules: {
-        'tsdoc/syntax': 'warn',
+        'tsdoc/syntax': 'error',
       },
     },
     {
