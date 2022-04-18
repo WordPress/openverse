@@ -65,9 +65,9 @@
       </div>
 
       <div
+        v-show="!isSmall"
         class="flex flex-row"
         :class="{
-          hidden: isSmall,
           'flex-grow': isMedium,
         }"
       >

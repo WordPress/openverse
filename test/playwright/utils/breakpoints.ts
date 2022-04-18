@@ -42,14 +42,39 @@ const mockUaStrings: Readonly<Record<Breakpoint, string | undefined>> =
     ])
   )
 
+interface Options {
+  /**
+   * Whether to mock the UA for mobile browsers.
+   *
+   * @defaultValue true
+   */
+  uaMocking: boolean
+}
+
+const defaultOptions = Object.freeze({
+  uaMocking: true,
+})
+
 const makeBreakpointDescribe =
-  (breakpoint: Breakpoint, screenWidth: number) => (block: BreakpointBlock) => {
+  (breakpoint: Breakpoint, screenWidth: number) =>
+  <T extends BreakpointBlock | Options>(
+    blockOrOptions: T,
+    block?: T extends Record<string, unknown> ? BreakpointBlock : undefined
+  ) => {
     test.describe(
       `screen at breakpoint ${breakpoint} with width ${screenWidth}`,
       () => {
+        const _block = (
+          typeof blockOrOptions === 'function' ? blockOrOptions : block
+        ) as BreakpointBlock
+        const options =
+          typeof blockOrOptions !== 'function'
+            ? { ...defaultOptions, ...blockOrOptions }
+            : defaultOptions
+
         test.use({
           viewport: { width: screenWidth, height: 700 },
-          userAgent: mockUaStrings[breakpoint],
+          userAgent: options.uaMocking ? mockUaStrings[breakpoint] : undefined,
         })
 
         const getConfigValues = (name: string) => ({
@@ -69,7 +94,7 @@ const makeBreakpointDescribe =
           })
         }
 
-        block({ breakpoint, getConfigValues, expectSnapshot })
+        _block({ breakpoint, getConfigValues, expectSnapshot })
       }
     )
   }
@@ -92,14 +117,18 @@ const breakpointTests = Array.from(SCREEN_SIZES.entries()).reduce(
 )
 
 const describeEachBreakpoint =
-  (breakpoints: readonly Breakpoint[]) => (block: BreakpointBlock) => {
+  (breakpoints: readonly Breakpoint[]) =>
+  <T extends BreakpointBlock | Options>(
+    blockOrOptions: T,
+    block?: T extends Record<string, unknown> ? BreakpointBlock : undefined
+  ) => {
     Object.entries(breakpointTests).forEach(([bp, describe]) => {
       if (
         breakpoints.includes(
           bp.replace('describe', '').toLowerCase() as Breakpoint
         )
       )
-        describe(block)
+        describe(blockOrOptions, block)
     })
   }
 

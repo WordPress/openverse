@@ -45,6 +45,12 @@ The describe blocks are passed the following helpers:
 - `getConfigValues`: Returns useful configuration values if running a snapshot test manually.
 - `expectSnapshot`: A function accepting an identifier and a screenshot-able object. This will generate the screenshot and match it against a snapshot matching the name passed. Remember to `await` this function or else the `expect` will not be fired within the context of the test (you'll get a nasty error in this case).
 
+Optionally, you may pass a configuration object as the first argument to the `breakpoints.describe*` functions. If you do this, then the describe block is the second argument.
+
+The configuration object currently supports the following options:
+
+- `uaMocking`: This `boolean` option defaults to `true`. When enabled, it will use a mock mobile browser user agent string for narrow viewports. Setting it to `false` for viewport widths above `md` (inclusive) is a no-op.
+
 Please see the [`homepage.spec.ts` visual-regression tests](./visual-regression/homepage.spec.ts) as an example of how to use these helpers.
 
 ### What to test for visual regression

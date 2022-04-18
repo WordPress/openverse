@@ -56,12 +56,12 @@ const AudioSearch = defineComponent({
 
     const results = computed(() => props.resultItems.audio)
 
-    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: false })
+    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
 
     // On SSR, we set the size to small if the User Agent is mobile, otherwise we set the size to medium.
     const isMobile = useBrowserIsMobile()
     const audioTrackSize = computed(() => {
-      return !isMinScreenMd.value && isMobile
+      return !isMinScreenMd.value || isMobile
         ? 's'
         : props.isFilterVisible
         ? 'l'
