@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-04-15T05:40:30+00:00\n"
+"POT-Creation-Date: 2022-04-18T13:47:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -98,12 +98,11 @@ msgctxt "modal.close"
 msgid "Close"
 msgstr ""
 
-#: src/components/VDownloadButton.vue:15
+#: src/components/VAudioTrack/layouts/VFullLayout.vue:67
 msgctxt "download-button.download"
 msgid "Download"
 msgstr ""
 
-#: src/components/VDownloadButton.vue:4
 msgctxt "download-button.aria.dropdown-label"
 msgid "Select the download file format"
 msgstr ""
@@ -125,7 +124,6 @@ msgctxt "migration-notice.read"
 msgid "Read more"
 msgstr ""
 
-#: src/components/VDropdownButton.vue:88
 msgctxt "dropdown-button.aria.arrow-label"
 msgid "Dropdown"
 msgstr ""

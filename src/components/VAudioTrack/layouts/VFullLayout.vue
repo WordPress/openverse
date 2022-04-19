@@ -58,11 +58,14 @@
         </div>
       </div>
 
-      <VDownloadButton
-        class="ms-auto order-1 lg:order-2"
-        :formats="getFormats(audio)"
+      <VButton
+        as="VLink"
+        :href="audio.foreign_landing_url"
         :size="isSmall ? 'small' : 'medium'"
-      />
+        class="ms-auto order-1 lg:order-2 font-bold"
+      >
+        {{ $t('download-button.download') }}
+      </VButton>
     </div>
   </div>
 </template>
@@ -70,13 +73,30 @@
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 
-import VDownloadButton from '~/components/VDownloadButton.vue'
+import VButton from '~/components/VButton.vue'
 import VLink from '~/components/VLink.vue'
 
 export default defineComponent({
   name: 'VFullLayout',
-  components: { VDownloadButton, VLink },
-  props: ['audio', 'size', 'status', 'currentTime'],
+  components: { VButton, VLink },
+  props: {
+    audio: {
+      type: Object,
+      required: true,
+    },
+    size: {
+      type: String,
+      validation: (v) => ['s', 'm', 'l'].includes(v),
+    },
+    status: {
+      type: String,
+      validation: (v) => ['playing', 'played', 'paused'].includes(v),
+    },
+    currentTime: {
+      type: Number,
+      required: true,
+    },
+  },
   setup(props) {
     /**
      * Format the time as hh:mm:ss, dropping the hour part if it is zero.
@@ -92,53 +112,10 @@ export default defineComponent({
       return '--:--'
     }
 
-    /**
-     * Returns specific display name for file format if there is a mapping for
-     * provider's format display names (like Jamendo's `mp32` -> `MP3 V0`).
-     * Otherwise, returns UpperCase format or ''
-     * @param {string} provider
-     * @param {string} [format]
-     */
-    const displayFormat = (provider, format) => {
-      const filetypeMappings = {
-        jamendo: { mp31: 'MP3 96kbs', mp32: 'MP3 V0' },
-      }
-      if (filetypeMappings[provider] && filetypeMappings[provider][format]) {
-        return filetypeMappings[provider][format]
-      }
-      return format ? format.toUpperCase() : ''
-    }
-
-    /**
-     * Creates a list of { extension_name, download_url } objects
-     * for VDownloadButton.
-     *
-     * If there are `alt_files` then just use that list. Otherwise,
-     * create one using the preview URL.
-     *
-     * @param {AudioDetail} audio
-     */
-    const getFormats = (audio) => {
-      if (audio.alt_files?.length) {
-        return audio.alt_files.map((altFile) => ({
-          extension_name: displayFormat(audio.provider, altFile.filetype),
-          download_url: altFile.url,
-        }))
-      }
-
-      return [
-        {
-          extension_name: displayFormat(audio.provider, audio.filetype),
-          download_url: audio.url,
-        },
-      ]
-    }
-
     const isSmall = computed(() => props.size === 's')
 
     return {
       timeFmt,
-      getFormats,
 
       isSmall,
     }

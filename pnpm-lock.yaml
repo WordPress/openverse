@@ -56,7 +56,6 @@ specifiers:
   eslint-plugin-vue: ^8.6.0
   eslint-plugin-vuejs-accessibility: ^1.1.1
   express-useragent: ^1.0.15
-  filesize: ^8.0.2
   focus-trap: ^6.7.1
   focus-trap-vue: 1.1.1
   focus-visible: ^5.2.0
@@ -119,7 +118,6 @@ dependencies:
   clipboard: 2.0.8
   core-js: 3.21.1
   express-useragent: 1.0.15
-  filesize: 8.0.6
   focus-trap: 6.7.1
   focus-trap-vue: 1.1.1_focus-trap@6.7.1
   focus-visible: 5.2.0
@@ -9976,11 +9974,6 @@ packages:
 
   /file-uri-to-path/1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
-
-  /filesize/8.0.6:
-    resolution: {integrity: sha512-sHvRqTiwdmcuzqet7iVwsbwF6UrV3wIgDf2SHNdY1Hgl8PC45HZg/0xtdw6U2izIV4lccnrY9ftl6wZFNdjYMg==}
-    engines: {node: '>= 0.4.0'}
-    dev: false
 
   /fill-range/4.0.0:
     resolution: {integrity: sha1-1USBHUKPmOsGpj3EAtJAPDKMOPc=}
