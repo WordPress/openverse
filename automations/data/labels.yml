@@ -108,6 +108,9 @@ groups:
       - name: a11y
         description: Concerns related to the project's accessibility
         emoji: "♿️"
+      - name: design
+        description: Concerns related to design
+        emoji: "🖼️"
 
   - name: talk
     color: "f9bbe5"
