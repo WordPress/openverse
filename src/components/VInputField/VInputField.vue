@@ -1,6 +1,6 @@
 <template>
   <div
-    class="input-field group flex flex-row items-center hover:bg-dark-charcoal-06 focus-within:bg-dark-charcoal-06 group-hover:bg-dark-charcoal-06 p-0.5px focus-within:p-0 border focus-within:border-1.5 border-dark-charcoal-20 rounded-sm overflow-hidden focus-within:border-pink"
+    class="input-field group flex flex-row items-center focus-within:bg-dark-charcoal-06 group-hover:bg-dark-charcoal-06 p-0.5px focus-within:p-0 border focus-within:border-1.5 border-dark-charcoal-20 rounded-sm overflow-hidden focus-within:border-pink"
     :class="[
       {
         // Padding is set to 1.5px to accommodate the border that will appear later.
@@ -26,20 +26,20 @@
   </div>
 </template>
 
-<script>
-import { computed } from '@nuxtjs/composition-api'
+<script lang="ts">
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
-const FIELD_SIZES = {
+export const FIELD_SIZES = {
   small: 'h-10 text-md',
   medium: 'h-12',
   large: 'h-14',
   standalone: 'h-14 md:h-[69px]',
-}
+} as const
 
 /**
  * Provides a control to enter text as input.
  */
-export default {
+export default defineComponent({
   name: 'VInputField',
   inheritAttrs: false,
   model: {
@@ -76,7 +76,8 @@ export default {
     connectionSides: {
       type: Array,
       default: () => [],
-      validator: (v) => v.every((item) => ['start', 'end'].includes(item)),
+      validator: (v: string[]) =>
+        v.every((item) => ['start', 'end'].includes(item)),
     },
     /**
      *  Small size is for mobile header/scrolled
@@ -85,18 +86,18 @@ export default {
      *  Standalone size is for homepage
      */
     size: {
-      type: String,
+      type: String as PropType<keyof typeof FIELD_SIZES>,
       required: true,
-      validator: (v) => ['small', 'medium', 'large', 'standalone'].includes(v),
+      validator: (v: string) => Object.keys(FIELD_SIZES).includes(v),
     },
   },
   // using non-native event name to ensure the two are not mixed
   emits: ['update:modelValue'],
   setup(props, { emit, attrs }) {
-    const type = attrs['type'] ?? 'text'
+    const type = typeof attrs['type'] === 'string' ? attrs['type'] : 'text'
 
-    const updateModelValue = (event) => {
-      emit('update:modelValue', event.target.value)
+    const updateModelValue = (event: Event) => {
+      emit('update:modelValue', (event.target as HTMLInputElement).value)
     }
     const sizeClass = computed(() => FIELD_SIZES[props.size])
 
@@ -108,7 +109,7 @@ export default {
       updateModelValue,
     }
   },
-}
+})
 </script>
 
 <style scoped>

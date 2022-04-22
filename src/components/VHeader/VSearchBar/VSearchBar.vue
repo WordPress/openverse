@@ -24,12 +24,14 @@
   </form>
 </template>
 
-<script>
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+<script lang="ts">
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import { useMatchHomeRoute } from '~/composables/use-match-routes'
 
-import VInputField from '~/components/VInputField/VInputField.vue'
+import VInputField, {
+  FIELD_SIZES,
+} from '~/components/VInputField/VInputField.vue'
 import VSearchButton from '~/components/VHeader/VSearchBar/VSearchButton.vue'
 
 /**
@@ -50,9 +52,9 @@ const VSearchBar = defineComponent({
       default: '',
     },
     size: {
-      type: String,
+      type: String as PropType<keyof typeof FIELD_SIZES>,
       required: true,
-      validator: (v) => ['small', 'medium', 'large', 'standalone'].includes(v),
+      validator: (v: string) => Object.keys(FIELD_SIZES).includes(v),
     },
     placeholder: {
       type: String,
@@ -64,7 +66,8 @@ const VSearchBar = defineComponent({
     const { matches: isHomeRoute } = useMatchHomeRoute()
 
     const searchText = computed(() => props.value)
-    const updateSearchText = (val) => {
+
+    const updateSearchText = (val: string) => {
       emit('input', val)
     }
 

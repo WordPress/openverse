@@ -51,7 +51,10 @@ const tapeNameGenerator = (tapeNumber, tape) => {
   if (typeMatch && typeMatch.type) {
     const groups = typeMatch.match.groups
     const prefix = `${typeMatch.type}_${groups.mediaType}`
-    const suffix = tape.req.headers.connection
+    let suffix = `${tape.req.headers.connection}`
+    if (tape.req.method !== 'GET') {
+      suffix = `${suffix}_${tape.req.method}`
+    }
     if (typeMatch.type === 'search') {
       return `${prefix}_${groups.query}_${suffix}`
     } else {
