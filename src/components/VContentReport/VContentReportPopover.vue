@@ -9,11 +9,15 @@
       <VContentReportButton v-bind="a11yProps" />
     </template>
     <template #default="{ close }">
-      <div class="relative">
+      <div class="relative" data-testid="content-report-popover">
         <VIconButton
-          class="absolute top-0 end-0 border-none"
+          class="absolute top-0 end-0 border-none text-dark-charcoal-70"
           size="search-medium"
           :icon-props="{ iconPath: icons.closeSmall }"
+          :button-props="{
+            'aria-label': $t('modal.close').toString(),
+            variant: 'plain',
+          }"
           @click="close"
         />
         <VContentReportForm

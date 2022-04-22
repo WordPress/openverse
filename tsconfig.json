@@ -54,6 +54,7 @@
     "src/components/VVariations.vue",
     "src/components/VInputField/VInputField.vue",
     "src/components/VHeader/VSearchBar/VSearchBar.vue",
+    "src/components/VAudioTrack/VPlayPause.vue",
     "src/composables/types.js",
     "src/composables/use-event-listener-outside.js",
     "src/composables/use-active-audio.js",

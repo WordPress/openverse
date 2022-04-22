@@ -19,7 +19,7 @@
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import VIcon, { IconProps } from '~/components/VIcon/VIcon.vue'
-import VButton from '~/components/VButton.vue'
+import VButton, { ButtonProps } from '~/components/VButton.vue'
 import type { ButtonType } from '~/components/VButton.vue'
 
 const SIZE_MAP = Object.freeze({
@@ -65,7 +65,10 @@ export default defineComponent({
      * props to pass down to the `VButton` component nested inside the button;
      * See documentation on `VButton`.
      */
-    buttonProps: {},
+    buttonProps: {
+      type: Object as PropType<ButtonProps>,
+      default: () => ({ variant: 'plain' }),
+    },
   },
   setup(props, { attrs }) {
     const type = (attrs['type'] ?? 'button') as ButtonType

@@ -1,0 +1,114 @@
+{
+    meta: {
+        createdAt: '2022-04-11T12:31:19.362Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+    },
+    req: {
+        headers: {
+            accept: 'application/json, text/plain, */*',
+            connection: 'close',
+        },
+        url: '/v1/images/feb91b13-422d-46fa-8ef4-cbf1e6ddee9b/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Mon, 11 Apr 2022 12:31:19 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'close',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '533',
+            ],
+            'last-modified': [
+                'Mon, 11 Apr 2022 12:22:26 GMT',
+            ],
+            'expect-ct': [
+                'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '6fa3bd128beb0e12-MXP',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            id: 'feb91b13-422d-46fa-8ef4-cbf1e6ddee9b',
+            title: 'Galah in Darwin (Eolophus roseicapilla)',
+            foreign_landing_url: 'https://www.flickr.com/photos/126953422@N04/40593461235',
+            creator: 'Graham Winterflood',
+            creator_url: 'https://www.flickr.com/photos/126953422@N04',
+            url: 'https://live.staticflickr.com/894/40593461235_b72593df28_b.jpg',
+            filesize: null,
+            filetype: null,
+            license: 'by-sa',
+            license_version: '2.0',
+            license_url: 'https://creativecommons.org/licenses/by-sa/2.0/',
+            provider: 'flickr',
+            source: 'flickr',
+            category: null,
+            tags: [
+                {
+                    name: 'bird',
+                },
+                {
+                    name: 'canoneos7d',
+                },
+                {
+                    name: 'eolophusroseicapilla',
+                },
+                {
+                    name: 'galah',
+                },
+            ],
+            attribution: '"Galah in Darwin (Eolophus roseicapilla)" by Graham Winterflood is licensed under CC-BY-SA 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/2.0/.',
+            height: 683,
+            width: 1024,
+            thumbnail: 'http://localhost:49153/v1/images/feb91b13-422d-46fa-8ef4-cbf1e6ddee9b/thumb/',
+            detail_url: 'http://localhost:49153/v1/images/feb91b13-422d-46fa-8ef4-cbf1e6ddee9b/',
+            related_url: 'http://localhost:49153/v1/images/feb91b13-422d-46fa-8ef4-cbf1e6ddee9b/related/',
+        },
+    },
+}

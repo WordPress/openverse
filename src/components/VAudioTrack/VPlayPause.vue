@@ -10,8 +10,8 @@
   />
 </template>
 
-<script>
-import { defineComponent } from '@nuxtjs/composition-api'
+<script lang="ts">
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
 
@@ -36,22 +36,20 @@ export default defineComponent({
      * the current play status of the audio
      */
     status: {
-      type: String,
-      validator: (val) => ['playing', 'paused', 'played'].includes(val),
+      type: String as PropType<'playing' | 'paused' | 'played'>,
+      required: true,
+      validator: (val: unknown) =>
+        ['playing', 'paused', 'played'].includes(val as string),
     },
     /**
      * The parent audio layout currently in use
      * @todo This type def should be extracted for reuse across components
      */
     layout: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<'full' | 'box' | 'row' | 'global'>} */ (
-        String
-      ),
+      type: String as PropType<'full' | 'box' | 'row' | 'global'>,
       default: 'full',
-      /**
-       * @param {string} val
-       */
-      validator: (val) => ['full', 'box', 'row', 'global'].includes(val),
+      validator: (val: unknown) =>
+        ['full', 'box', 'row', 'global'].includes(val as string),
     },
   },
   data() {
@@ -69,19 +67,19 @@ export default defineComponent({
     }
   },
   computed: {
-    isPlaying() {
+    isPlaying(): boolean {
       return this.status === 'playing'
     },
     /**
      * Get the button label based on the current status of the player.
      */
-    label() {
+    label(): string {
       return `play-pause.${this.statusVerbMap[this.status]}`
     },
     /**
      * Get the button icon based on the current status of the player.
      */
-    icon() {
+    icon(): string {
       return this.statusIconMap[this.status]
     },
   },

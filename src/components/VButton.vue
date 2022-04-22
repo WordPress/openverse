@@ -35,6 +35,8 @@ import {
 
 import { warn } from '~/utils/console'
 
+import type { ProperlyExtractPropTypes } from '~/types/prop-extraction'
+
 import VLink from '~/components/VLink.vue'
 
 const buttonForms = ['VLink', 'button'] as const
@@ -62,6 +64,10 @@ type ButtonSize = typeof buttonSizes[number]
 const buttonTypes = ['button', 'submit', 'reset'] as const
 
 export type ButtonType = typeof buttonTypes[number]
+
+export type ButtonProps = ProperlyExtractPropTypes<
+  NonNullable<typeof VButton['props']>
+>
 
 /**
  * A button component that behaves just like a regular HTML `button` element
