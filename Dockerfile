@@ -64,7 +64,7 @@ ENTRYPOINT [ "pnpm", "run", "dev" ]
 # production
 # ==
 # application package (for production)
-FROM node:alpine AS app
+FROM node:16-alpine AS app
 
 WORKDIR /usr/app
 
