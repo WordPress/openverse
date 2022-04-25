@@ -43,6 +43,11 @@ def test_search_category_filtering(audio_fixture):
     search_by_category("audio", "pronunciation", audio_fixture)
 
 
+def test_search_category_filtering_fails(audio_fixture):
+    with pytest.raises(AssertionError):
+        search_by_category("audio", "not_valid", audio_fixture)
+
+
 def test_search_all_excluded():
     search_all_excluded("audio", ["jamendo", "wikimedia_audio"])
 

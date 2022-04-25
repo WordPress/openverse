@@ -1,3 +1,8 @@
+from catalog.api.constants.field_values import (
+    ASPECT_RATIOS,
+    IMAGE_CATEGORIES,
+    IMAGE_SIZES,
+)
 from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import Image, ImageReport
 from catalog.api.serializers.base import SchemableHyperlinkedIdentityField
@@ -9,6 +14,7 @@ from catalog.api.serializers.media_serializers import (
     _validate_enum,
     get_search_request_source_serializer,
 )
+from catalog.api.utils.help_text import make_comma_separated_help_text
 from rest_framework import serializers
 
 
@@ -38,34 +44,33 @@ class ImageSearchRequestSerializer(
     # Ref: ingestion_server/ingestion_server/categorize.py#Category
     category = serializers.CharField(
         label="category",
-        help_text="A comma separated list of categories; available categories "
-        "include `illustration`, `photograph`, and "
-        "`digitized_artwork`.",
+        help_text=make_comma_separated_help_text(IMAGE_CATEGORIES, "categories"),
         required=False,
     )
     aspect_ratio = serializers.CharField(
         label="aspect_ratio",
-        help_text="A comma separated list of aspect ratios; available aspect "
-        "ratios include `tall`, `wide`, and `square`.",
+        help_text=make_comma_separated_help_text(ASPECT_RATIOS, "aspect ratios"),
         required=False,
     )
     size = serializers.CharField(
         label="size",
-        help_text="A comma separated list of image sizes; available sizes"
-        " include `small`, `medium`, or `large`.",
+        help_text=make_comma_separated_help_text(IMAGE_SIZES, "image sizes"),
         required=False,
     )
 
     @staticmethod
-    def validate_categories(value):
-        valid_categories = {"illustration", "digitized_artwork", "photograph"}
-        _validate_enum("category", valid_categories, value)
+    def validate_category(value):
+        _validate_enum("category", IMAGE_CATEGORIES, value)
         return value.lower()
 
     @staticmethod
     def validate_aspect_ratio(value):
-        valid_ratios = {"tall", "wide", "square"}
-        _validate_enum("aspect ratio", valid_ratios, value)
+        _validate_enum("aspect ratio", ASPECT_RATIOS, value)
+        return value.lower()
+
+    @staticmethod
+    def validate_size(value):
+        _validate_enum("size", IMAGE_SIZES, value)
         return value.lower()
 
 

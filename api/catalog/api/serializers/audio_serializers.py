@@ -1,3 +1,4 @@
+from catalog.api.constants.field_values import AUDIO_CATEGORIES, DURATION
 from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import AudioReport
 from catalog.api.models.audio import Audio
@@ -9,6 +10,7 @@ from catalog.api.serializers.media_serializers import (
     _validate_enum,
     get_search_request_source_serializer,
 )
+from catalog.api.utils.help_text import make_comma_separated_help_text
 from elasticsearch_dsl.response import Hit
 from rest_framework import serializers
 
@@ -62,35 +64,23 @@ class AudioSearchRequestSerializer(
 
     category = serializers.CharField(
         label="category",
-        help_text="A comma separated list of categories; available categories "
-        "include `music`, `sound_effect`, `podcast`, `audiobook`, "
-        "and `news`.",
+        help_text=make_comma_separated_help_text(AUDIO_CATEGORIES, "categories"),
         required=False,
     )
     duration = serializers.CharField(
         label="duration",
-        help_text="A comma separated list of audio lengths; available lengths "
-        "include `short`, and `long`.",
+        help_text=make_comma_separated_help_text(DURATION, "audio lengths"),
         required=False,
     )
 
     @staticmethod
-    def validate_categories(value):
-        valid_categories = {
-            "music",
-            "sound_effect",
-            "podcast",
-            "news",
-            "audiobook",
-            "pronunciation",
-        }
-        _validate_enum("category", valid_categories, value)
+    def validate_category(value):
+        _validate_enum("category", AUDIO_CATEGORIES, value)
         return value.lower()
 
     @staticmethod
     def validate_duration(value):
-        valid_durations = {"short", "long"}  # TODO: Finalise duration filters
-        _validate_enum("duration", valid_durations, value)
+        _validate_enum("duration", DURATION, value)
         return value.lower()
 
 

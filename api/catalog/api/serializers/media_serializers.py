@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 
 import catalog.api.licenses as license_helpers
 from catalog.api.controllers.search_controller import get_sources
+from catalog.api.utils.help_text import make_comma_separated_help_text
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
@@ -103,9 +104,8 @@ def get_search_request_source_serializer(media_type):
         """
 
         _field_attrs = {
-            "help_text": (
-                "A comma separated list of data sources to search. "
-                f"Valid inputs: {format_enums(get_sources(media_type).keys())}"
+            "help_text": make_comma_separated_help_text(
+                get_sources(media_type).keys(), "data sources"
             ),
             "required": False,
         }
@@ -172,21 +172,21 @@ class MediaSearchRequestSerializer(serializers.Serializer):
 
     q = serializers.CharField(
         label="query",
-        help_text="A query string that should not exceed 200 characters in " "length",
+        help_text="A query string that should not exceed 200 characters in length",
         required=False,
     )
     license = serializers.CharField(
         label="licenses",
-        help_text="A comma-separated list of licenses. Example: `by,cc0`. "
-        "Valid inputs: "
-        f"`{list(license_helpers.LICENSE_GROUPS['all'])}`",
+        help_text=make_comma_separated_help_text(
+            license_helpers.LICENSE_GROUPS["all"], "licenses"
+        ),
         required=False,
     )
     license_type = serializers.CharField(
         label="license type",
-        help_text="A list of license types. "
-        "Valid inputs: "
-        f"`{list(license_helpers.LICENSE_GROUPS.keys())}`",
+        help_text=make_comma_separated_help_text(
+            license_helpers.LICENSE_GROUPS.keys(), "license types"
+        ),
         required=False,
     )
     creator = serializers.CharField(
