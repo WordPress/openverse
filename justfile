@@ -1,5 +1,6 @@
 set dotenv-load := false
 
+IS_PROD := env_var_or_default("PROD", "")
 IS_CI := env_var_or_default("CI", "")
 
 # Show all available recipes
@@ -26,10 +27,9 @@ default:
 # Docker #
 ##########
 
-IS_PROD := env_var_or_default("IS_PROD", "")
 DOCKER_FILE := "-f " + (
-    if IS_PROD == "true" {"ingestion_server/docker-compose.yml"}
-    else {"docker-compose.yml"}
+    if IS_PROD == "true" { "ingestion_server/docker-compose.yml" }
+    else { "docker-compose.yml" }
 )
 
 # Build all (or specified) services
@@ -53,6 +53,11 @@ recreate:
 logs services="" args=(if IS_CI != "" { "" } else { "-f" }):
     docker-compose {{ DOCKER_FILE }} logs {{ args }} {{ services }}
 
+EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
+
+# Execute statement in service containers using Docker Compose
+exec +args:
+    docker-compose exec {{ EXEC_DEFAULTS }} {{ args }}
 
 ########
 # Init #
@@ -179,8 +184,8 @@ _api-install:
     exit 0
 
 # Run API tests inside Docker
-@api-test docker_args="" tests="": _api-up
-    docker-compose exec {{ docker_args }} web ./test/run_test.sh {{ tests }}
+@api-test tests="": _api-up
+    just exec web ./test/run_test.sh {{ tests }}
 
 # Run API tests locally
 api-testlocal args="":
@@ -191,16 +196,16 @@ dj-local +args:
     cd api && pipenv run python manage.py {{ args }}
 
 # Run Django administrative commands in the docker container
-@dj docker_args="" +args="": _api-up
-    docker-compose exec {{ docker_args }} web python manage.py {{ args }}
+@dj +args="": _api-up
+    just exec web python manage.py {{ args }}
 
 # Make a test cURL request to the API
 stats media="images":
     curl "http://localhost:8000/v1/{{ media }}/stats/"
 
-# Attach to ipython
+# Get Django shell with IPython
 ipython:
-    docker-compose exec web ipython
+    just dj shell
 
 
 ##########
@@ -208,12 +213,12 @@ ipython:
 ##########
 
 # Compile Sphinx documentation into HTML output
-sphinx-make args="" service="web": up wait-for-es wait-for-ing wait-for-web
-    docker-compose exec {{ args }} {{ service }} sphinx-build -M html docs/ build/
+sphinx-make: up wait-for-es wait-for-ing wait-for-web
+    just exec web sphinx-build -M html docs/ build/
 
 # Serve Sphinx documentation via a live-reload server
-sphinx-live service="web" port="3000": up wait-for-es wait-for-ing wait-for-web
-    docker-compose exec {{ service }} sphinx-autobuild --host 0.0.0.0 --port {{ port }} docs/ build/html/
+sphinx-live port="3000": up wait-for-es wait-for-ing wait-for-web
+    just exec web sphinx-autobuild --host 0.0.0.0 --port {{ port }} docs/ build/html/
 
 # Serve the Sphinx documentation from the HTML output directory
 sphinx-serve dir="api" port="3001":
