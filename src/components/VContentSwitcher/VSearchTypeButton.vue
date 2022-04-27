@@ -3,7 +3,7 @@
     class="flex flex-row font-semibold py-2 text-sr md:text-base"
     :class="[
       sizeClasses,
-      showLabel ? 'max-w-[10rem] sm:max-w-[20rem] md:max-w-[16rem]' : '',
+      isHeaderScrolled ? 'max-w-[10rem] sm:max-w-[20rem] md:max-w-[16rem]' : '',
     ]"
     :variant="buttonVariant"
     size="disabled"
@@ -13,9 +13,8 @@
   >
     <VIcon :icon-path="icon" />
     <span
-      v-show="showLabel"
-      class="hidden xs:block"
-      :class="{ 'ms-2 truncate text-left': showLabel }"
+      class="md:block md:ms-2 md:truncate md:text-left"
+      :class="isHeaderScrolled ? 'hidden' : 'block ms-2 truncate text-left'"
       >{{ buttonLabel }}</span
     >
     <VIcon
@@ -103,16 +102,12 @@ export default defineComponent({
       }[props.activeItem]
       return i18n.t(labelKey)
     })
-    const showLabel = computed(
-      () => isMinScreenMd.value || !isHeaderScrolled?.value
-    )
 
     return {
       buttonVariant,
       sizeClasses,
       buttonLabel,
       caretDownIcon,
-      showLabel,
       isHeaderScrolled,
       isMinScreenMd,
       icon: computed(() => icons[activeItem.value]),

@@ -3,27 +3,35 @@
     :variant="variant"
     size="disabled"
     class="self-center gap-2 align-center font-semibold py-2 flex-shrink-0 focus-visible:border-tx focus-visible:ring focus-visible:ring-pink"
-    :class="{
-      'px-3': !isIconButton,
-      'w-10 h-10 px-0': isIconButton,
-    }"
+    :class="
+      filtersAreApplied
+        ? 'px-3 flex-shrink-0'
+        : 'w-10 md:w-auto h-10 md:h-auto px-0 md:px-3'
+    "
     :pressed="pressed"
-    aria-controls="filter-sidebar"
-    :aria-label="label"
-    @click="toggleFilters"
+    aria-controls="filters"
+    :aria-label="mdMinLabel"
+    @click="$emit('toggle')"
   >
-    <VIcon v-show="showIcon" :icon-path="filterIcon" />
-    <span v-show="showLabel" data-testid="filterbutton-label">{{ label }}</span>
+    <VIcon
+      :class="filtersAreApplied ? 'hidden' : 'block'"
+      :icon-path="filterIcon"
+    />
+    <span class="hidden md:inline-block">{{ mdMinLabel }}</span>
+    <span class="md:hidden" :class="!filtersAreApplied && 'hidden'">{{
+      smMaxLabel
+    }}</span>
   </VButton>
 </template>
 
-<script>
+<script lang="ts">
 import {
   computed,
   defineComponent,
   inject,
   toRefs,
   useContext,
+  ref,
 } from '@nuxtjs/composition-api'
 
 import { useSearchStore } from '~/stores/search'
@@ -45,12 +53,13 @@ const VFilterButton = defineComponent({
       default: false,
     },
   },
-  setup(props, { emit }) {
+  emits: ['toggle'],
+  setup(props) {
     const { i18n } = useContext()
     const searchStore = useSearchStore()
     const { pressed } = toRefs(props)
-    const isMinScreenMd = inject('isMinScreenMd', false)
-    const isHeaderScrolled = inject('isHeaderScrolled', false)
+    const isMinScreenMd = inject('isMinScreenMd', ref(false))
+    const isHeaderScrolled = inject('isHeaderScrolled', ref(false))
     const filterCount = computed(() => searchStore.appliedFilterCount)
     const filtersAreApplied = computed(() => filterCount.value > 0)
 
@@ -75,58 +84,32 @@ const VFilterButton = defineComponent({
       return value
     })
 
-    const label = computed(() => {
-      // Below medium viewport logic
-      if (!isMinScreenMd.value) {
-        return isHeaderScrolled.value
-          ? filterCount.value
-          : i18n.tc('header.filter-button.with-count', filterCount.value)
-      }
-      // Above the medium viewport, show the count when filters are applied.
-      return filtersAreApplied.value
+    /**
+     * This label's verbosity makes it useful for the aria-label
+     * where it is also used, especially on mobile where the
+     * label would just be the number of applied filters, and therefore
+     * basically useless as far as a label is concerned!
+     */
+    const mdMinLabel = computed(() =>
+      filtersAreApplied.value
         ? i18n.tc('header.filter-button.with-count', filterCount.value)
         : i18n.t('header.filter-button.simple')
-    })
-
-    /**
-     * Whether to show the filter icon,
-     * based on viewport and the application of filters.
-     */
-    const showIcon = computed(() => {
-      // When filters are applied, hide the icon
-      if (filtersAreApplied.value) {
-        return false
-      }
-      // Below the medium viewport, only show when there's no filters applied.
-      if (!isMinScreenMd.value) {
-        return !isHeaderScrolled.value || !filtersAreApplied.value
-      }
-      return true
-    })
-
-    // Hide the label entirely when no filters are applied on mobile.
-    const showLabel = computed(() => {
-      return !(!isMinScreenMd.value && !filtersAreApplied.value)
-    })
-    const isIconButton = computed(
-      () =>
-        !isMinScreenMd.value &&
-        (!filtersAreApplied.value ||
-          (filtersAreApplied.value && isHeaderScrolled.value))
     )
+
+    const smMaxLabel = computed(() =>
+      isHeaderScrolled.value
+        ? filterCount.value
+        : i18n.tc('header.filter-button.with-count', filterCount.value)
+    )
+
     return {
       filterCount,
       filterIcon,
-      label,
-      showIcon,
-      showLabel,
-      toggleFilters: () => {
-        emit('toggle')
-      },
+      mdMinLabel,
+      smMaxLabel,
       variant,
-      isMinScreenMd,
       isHeaderScrolled,
-      isIconButton,
+      filtersAreApplied,
     }
   },
 })

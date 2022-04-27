@@ -1,8 +1,7 @@
 import { expect, Page } from '@playwright/test'
 
 export const openFilters = async (page: Page) => {
-  const filterButtonSelector =
-    '[aria-controls="filter-sidebar"], [aria-controls="filter-modal"]'
+  const filterButtonSelector = '[aria-controls="filters"]'
   const isPressed = async () =>
     await page.getAttribute(filterButtonSelector, 'aria-pressed')
   if ((await isPressed()) !== 'true') {

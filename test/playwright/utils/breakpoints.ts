@@ -1,11 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-import {
-  Breakpoints as AllBreakpoints,
-  SCREEN_SIZES,
-} from '~/constants/screens'
-
-type Breakpoint = Exclude<AllBreakpoints, 'mob'>
+import { Breakpoint, VIEWPORTS } from '~/constants/screens'
 
 type ScreenshotAble = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -102,12 +97,20 @@ const makeBreakpointDescribe =
 const capitalize = (s: string): Capitalize<typeof s> =>
   `${s[0].toUpperCase()}${s.slice(1)}`
 
-const breakpointTests = Array.from(SCREEN_SIZES.entries()).reduce(
-  (tests, [breakpoint, screenWidth]) =>
+const breakpointTests = Array.from(Object.entries(VIEWPORTS)).reduce(
+  (
+    tests,
+    [
+      breakpoint,
+      {
+        styles: { width },
+      },
+    ]
+  ) =>
     Object.assign(tests, {
       [`describe${capitalize(breakpoint)}`]: makeBreakpointDescribe(
-        breakpoint,
-        screenWidth
+        breakpoint as Breakpoint,
+        parseFloat(width.replace('px', ''))
       ),
     }),
   {} as Record<
@@ -132,7 +135,9 @@ const describeEachBreakpoint =
     })
   }
 
-const describeEvery = describeEachBreakpoint(Array.from(SCREEN_SIZES.keys()))
+const describeEvery = describeEachBreakpoint(
+  Object.keys(VIEWPORTS) as Breakpoint[]
+)
 const describeEachDesktop = describeEachBreakpoint(desktopBreakpoints)
 const describeEachMobile = describeEachBreakpoint(mobileBreakpoints)
 

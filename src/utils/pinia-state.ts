@@ -1,4 +1,4 @@
-import { isClient } from '~/composables/window'
+import { isClient } from '~/constants/window'
 
 import type { StateTree } from 'pinia'
 

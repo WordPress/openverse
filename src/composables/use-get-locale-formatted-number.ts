@@ -21,13 +21,8 @@ const WESTERN_ARABIC_NUMERALS = [
 export const useGetLocaleFormattedNumber = () => {
   const { i18n } = useContext()
 
-  /**
-   * @param {number} n The number to format
-   */
-  return (n) => {
-    let { locale } = i18n
-
-    const testFormat = n.toLocaleString(locale)
+  return (n: number) => {
+    const testFormat = n.toLocaleString(i18n.locale)
 
     if (
       WESTERN_ARABIC_NUMERALS.some((numeral) => testFormat.includes(numeral))

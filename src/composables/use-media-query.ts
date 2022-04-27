@@ -2,23 +2,21 @@
  which, in turn, is ported from https://github.com/logaretm/vue-use-web by Abdelrahman Awad */
 import { onBeforeUnmount, ref } from '@nuxtjs/composition-api'
 
-import { SCREEN_SIZES } from '~/constants/screens'
-import { defaultWindow } from '~/composables/window'
+import { SCREEN_SIZES, Breakpoint } from '~/constants/screens'
+import { defaultWindow } from '~/constants/window'
 
-/**
- * @typedef Options
- * @property {boolean} [shouldPassInSSR]
- * @property {Window} [window]
- */
+interface Options {
+  shouldPassInSSR?: boolean
+  window?: Window
+}
 
 /**
  * Reactive Media Query.
- *
- * @param {string} query
- * @param {Options} [options]
  */
-export function useMediaQuery(query, options = { shouldPassInSSR: false }) {
-  /** @type {import('@nuxtjs/composition-api').Ref<boolean>} */
+export function useMediaQuery(
+  query: string,
+  options: Options = { shouldPassInSSR: false }
+) {
   const matches = ref(false)
   const { window = defaultWindow } = options
   if (!window) {
@@ -29,7 +27,7 @@ export function useMediaQuery(query, options = { shouldPassInSSR: false }) {
   const mediaQuery = window.matchMedia(query)
   matches.value = mediaQuery.matches
 
-  const handler = (/** @type MediaQueryListEvent */ event) => {
+  const handler = (event: MediaQueryListEvent) => {
     matches.value = event.matches
   }
   // Before Safari 14, MediaQueryList is based on EventTarget,
@@ -54,11 +52,13 @@ export function useMediaQuery(query, options = { shouldPassInSSR: false }) {
 /**
  * Check whether the current screen meets
  * or exceeds the provided breakpoint size.
- * @param {'sm'|'md'|'lg'|'xl'|'2xl'} breakpointName
- * @param {Options} [options]
- * @returns {import('@nuxtjs/composition-api').Ref<boolean>}
  */
-export const isMinScreen = (breakpointName, options) => {
+export const isMinScreen = (breakpointName: Breakpoint, options?: Options) => {
+  if (breakpointName === 'xs') {
+    // `xs` is the "minimum" so it is always true
+    return ref(true)
+  }
+
   return useMediaQuery(
     `(min-width: ${SCREEN_SIZES.get(breakpointName)}px)`,
     options
@@ -67,9 +67,7 @@ export const isMinScreen = (breakpointName, options) => {
 
 /**
  * Check if the user prefers reduced motion or not.
- * @param {Options} options
- * @returns {import('@nuxtjs/composition-api').Ref<boolean>}
  */
-export function useReducedMotion(options) {
+export function useReducedMotion(options: Options) {
   return useMediaQuery('(prefers-reduced-motion: reduce)', options)
 }

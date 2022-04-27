@@ -2,7 +2,7 @@
 import throttle from 'lodash.throttle'
 import { ref } from '@nuxtjs/composition-api'
 
-import { defaultWindow } from '~/composables/window'
+import { defaultWindow } from '~/constants/window'
 import { useEventListener } from '~/composables/use-event-listener'
 
 /**

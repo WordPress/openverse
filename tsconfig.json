@@ -41,6 +41,7 @@
     "src/components/VMetaSearch/*.vue",
     "src/components/VLicenseElements.vue",
     "src/components/VWarningSuppressor.vue",
+    "src/components/VHeader/VFilterButton.vue",
     "src/components/VLink.vue",
     "src/components/VLoadMore.vue",
     "src/components/VIcon/VIcon.vue",
@@ -57,13 +58,9 @@
     "src/components/VAudioTrack/VPlayPause.vue",
     "src/composables/types.js",
     "src/composables/use-event-listener-outside.js",
-    "src/composables/use-active-audio.js",
-    "src/composables/use-get-locale-formatted-number.js",
-    "src/composables/use-browser-detection.js",
-    "src/composables/use-media-query.js",
-    "src/composables/window.js",
-    "src/constants/screens.js",
-    "src/utils/deep-freeze.js"
+
+    // This section cannot be converted to TypeScript because it's used in non-TS contexts (like Tailwind configuration)
+    "src/constants/screens.js"
   ],
   "exclude": ["node_modules"],
   "vueCompilerOptions": {
