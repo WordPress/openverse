@@ -15,7 +15,7 @@
         <!-- eslint-disable -->
         <VLink
           :aria-label="$t('search-guide.exact.aria-label')"
-          href='https://search.creativecommons.org/search?q="Claude%20Monet"'
+          :href="pathFromQuery('Claude Monet', true)"
         >
           <em>{{ $t('search-guide.exact.claude-monet') }}</em>
         </VLink>
@@ -34,7 +34,8 @@
       <i18n path="search-guide.combine.and" tag="li">
         <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
         <template #symbol>
-          <code :aria-label="$t('search-guide.combine.aria-labels.plus')"
+          <code
+            :aria-label="$t('search-guide.combine.aria-labels.plus').toString()"
             >+
           </code>
         </template>
@@ -42,40 +43,53 @@
       <i18n path="search-guide.combine.or" tag="li">
         <template #symbol>
           <code
-            :aria-label="$t('search-guide.combine.aria-labels.vertical-bar')"
+            :aria-label="
+              $t('search-guide.combine.aria-labels.vertical-bar').toString()
+            "
             >|
           </code>
         </template>
       </i18n>
       <i18n path="search-guide.combine.negate" tag="li">
         <template #symbol>
-          <code :aria-label="$t('search-guide.combine.aria-labels.minus')"
+          <code
+            :aria-label="
+              $t('search-guide.combine.aria-labels.minus').toString()
+            "
             >-
           </code>
         </template>
       </i18n>
       <i18n path="search-guide.combine.prefix" tag="li">
         <template #symbol>
-          <code :aria-label="$t('search-guide.combine.aria-labels.star')"
+          <code
+            :aria-label="$t('search-guide.combine.aria-labels.star').toString()"
             >*
           </code>
         </template>
       </i18n>
       <i18n path="search-guide.combine.precedence" tag="li">
         <template #open>
-          <code :aria-label="$t('search-guide.combine.aria-labels.open')"
+          <code
+            :aria-label="$t('search-guide.combine.aria-labels.open').toString()"
             >(
           </code>
         </template>
         <template #close>
-          <code :aria-label="$t('search-guide.combine.aria-labels.close')"
+          <code
+            :aria-label="
+              $t('search-guide.combine.aria-labels.close').toString()
+            "
             >)
           </code>
         </template>
       </i18n>
       <i18n path="search-guide.combine.fuzziness" tag="li">
         <template #symbol>
-          <code :aria-label="$t('search-guide.combine.aria-labels.fuzziness')"
+          <code
+            :aria-label="
+              $t('search-guide.combine.aria-labels.fuzziness').toString()
+            "
             >~N
           </code>
         </template>
@@ -85,8 +99,8 @@
     <i18n path="search-guide.example.and.description" tag="p">
       <template #link>
         <VLink
-          :aria-label="$t('search-guide.example.and.aria-label')"
-          href="https://search.creativecommons.org/search?q=dog%2Bcat"
+          :aria-label="$t('search-guide.example.and.aria-label').toString()"
+          :href="pathFromQuery('dog%2Bcat')"
         >
           <em>{{ $t('search-guide.example.and.example') }}</em>
         </VLink>
@@ -100,9 +114,9 @@
       <template #link>
         <VLink
           :aria-label="$t('search-guide.example.or.aria-label')"
-          href="https://search.creativecommons.org/search?q=dog%7Ccat"
+          :href="pathFromQuery('dog%7Ccat')"
         >
-          <em>{{ $t('search-guide.example.or.example') }}</em>
+          <em>{{ $t('search-guide.example.or.example').toString() }}</em>
         </VLink>
       </template>
       <template #br>
@@ -112,8 +126,12 @@
 
     <i18n path="search-guide.example.negate.description" tag="p" class="mt-4">
       <template #operator>
-        <em :aria-label="$t('search-guide.example.negate.operator-aria-label')"
-          >- {{ $t('search-guide.example.negate.operator-name') }}</em
+        <em
+          :aria-label="
+            $t('search-guide.example.negate.operator-aria-label').toString()
+          "
+          >-
+          {{ $t('search-guide.example.negate.operator-name').toString() }}</em
         >
       </template>
     </i18n>
@@ -122,7 +140,7 @@
       <template #link>
         <VLink
           :aria-label="$t('search-guide.example.negate.aria-label')"
-          href="https://search.creativecommons.org/search?q=dog%20-pug"
+          :href="pathFromQuery('dog%20-pug')"
         >
           <em>{{ $t('search-guide.example.negate.example') }}</em>
         </VLink>
@@ -134,8 +152,10 @@
 
     <i18n path="search-guide.example.prefix.description" tag="p" class="mt-4">
       <template #operator>
-        <em :aria-label="$t('search-guide.example.prefix.aria-label')"
-          >* {{ $t('search-guide.example.prefix.operator-name') }}</em
+        <em
+          :aria-label="$t('search-guide.example.prefix.aria-label').toString()"
+          >*
+          {{ $t('search-guide.example.prefix.operator-name').toString() }}</em
         >
       </template>
     </i18n>
@@ -144,7 +164,7 @@
       <template #link>
         <VLink
           :aria-label="$t('search-guide.example.prefix.aria-label')"
-          href="https://search.creativecommons.org/search?q=net%2a"
+          :href="pathFromQuery('net%2a')"
         >
           <em>{{ $t('search-guide.example.prefix.example') }}</em>
         </VLink>
@@ -164,7 +184,7 @@
       <template #link>
         <VLink
           :aria-label="$t('search-guide.example.precedence.aria-label')"
-          href="https://search.creativecommons.org/search?q=dogs%20%2B%20%28corgis%20%7C%20labrador%29"
+          :href="pathFromQuery('dogs%20%2B%20%28corgis%20%7C%20labrador%29')"
         >
           <em>{{ $t('search-guide.example.precedence.example') }}</em>
         </VLink>
@@ -179,7 +199,7 @@
         <em aria-label="tilde N">~N</em>
       </template>
       <template #link>
-        <VLink href="http://en.wikipedia.org/wiki/Levenshtein_distance">
+        <VLink href="https://en.wikipedia.org/wiki/Levenshtein_distance">
           {{ $t('search-guide.example.fuzziness.link-text') }}
         </VLink>
       </template>
@@ -189,7 +209,7 @@
       <template #link>
         <VLink
           :aria-label="$t('search-guide.example.fuzziness.aria-label')"
-          href="https://search.creativecommons.org/search?q=theatre~1"
+          :href="pathFromQuery('theatre~1')"
         >
           <em>{{ $t('search-guide.example.fuzziness.example') }}</em>
         </VLink>
@@ -202,17 +222,29 @@
   </VContentPage>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, useContext } from '@nuxtjs/composition-api'
+
 import VLink from '~/components/VLink.vue'
 import VContentPage from '~/components/VContentPage.vue'
 
-const SearchHelpPage = {
-  name: 'search-help-page',
+export default defineComponent({
+  name: 'VSearchHelpPage',
   components: { VLink, VContentPage },
-  methods: {
-    providerSearchLink(providerCode) {
+  setup() {
+    const { app } = useContext()
+    const pathFromQuery = (queryString: string, quote = false) => {
+      return app.localePath({
+        path: 'search',
+        query: {
+          q: quote ? `"${queryString}"` : queryString,
+        },
+      })
+    }
+    const providerSearchLink = (providerCode: string) => {
       return `https://search.creativecommons.org/search?q=provider%3A%20"${providerCode}"`
-    },
+    }
+    return { pathFromQuery, providerSearchLink }
   },
   head() {
     return {
@@ -221,7 +253,5 @@ const SearchHelpPage = {
       })} | Openverse`,
     }
   },
-}
-
-export default SearchHelpPage
+})
 </script>
