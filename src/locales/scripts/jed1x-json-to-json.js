@@ -1,4 +1,4 @@
-const set = require('lodash.set')
+const { setToValue } = require('./utils')
 
 /**
  * Convert a Jed1x-Translate object to a nested JSON object.
@@ -37,7 +37,7 @@ function jed1xJsonToJson(jed1xObject) {
     const cleanedKey = key.slice(0, key.indexOf(SPLIT_CHAR))
     if (value.length > 0) {
       const cleanedValue = value.length === 1 ? value[0] : value.join('|')
-      return set(result, cleanedKey, cleanedValue)
+      return setToValue(result, cleanedKey, cleanedValue)
     }
   })
   return result

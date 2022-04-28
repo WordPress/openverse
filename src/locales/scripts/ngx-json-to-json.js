@@ -1,4 +1,4 @@
-const set = require('lodash.set')
+const { setToValue } = require('./utils')
 
 /**
  * Convert an NGX-Translate object to a nested JSON object
@@ -26,7 +26,7 @@ const set = require('lodash.set')
 function ngxJsonToJson(ngxObject) {
   const result = {}
   Object.entries(ngxObject).forEach(
-    ([key, value]) => value && set(result, key, value)
+    ([key, value]) => value && setToValue(result, key, value)
   )
   return result
 }
