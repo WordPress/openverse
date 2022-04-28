@@ -40,7 +40,7 @@ def main():
     while condition:
         query_param = _get_query_param(offset=offset)
         objects_batch = _get_object_json(query_param=query_param)
-        logger.debug(len(objects_batch))
+        logger.debug(f"Number of batches: {len(objects_batch or [])}")
         if type(objects_batch) == list and len(objects_batch) > 0:
             _process_objects_batch(objects_batch)
             logger.debug(f"Images till now {image_store.total_items}")

@@ -78,6 +78,12 @@ def _make_report_completion_contents_data(media_type: str):
             {media_type: RecordMetrics(None, None, None, 100)},
             f"  - `{media_type}`: _No data_",
         ),
+        # Cases for when a load_to_s3 task skips due to a lack of records.
+        # The task doesn't produce any XComs, so the RecordMetrics object is None.
+        (
+            {media_type: None},
+            f"  - `{media_type}`: _No data_",
+        ),
     ]
 
 

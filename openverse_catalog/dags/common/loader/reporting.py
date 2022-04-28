@@ -72,12 +72,12 @@ def report_completion(
     # List record count per media type
     media_type_reports = ""
     for media_type, counts in record_counts_by_media_type.items():
-        if not counts.upserted:
+        if counts is None or not counts.upserted:
             upserted_human_readable = "_No data_"
         else:
             upserted_human_readable = f"{counts.upserted:,}"
         media_type_reports += f"  - `{media_type}`: {upserted_human_readable}"
-        if any([count is None for count in counts]):
+        if counts is None or any([count is None for count in counts]):
             # Can't make calculation without data
             continue
         extras = []
