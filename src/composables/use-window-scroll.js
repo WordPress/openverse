@@ -1,5 +1,5 @@
 // code taken from Vueuse
-import throttle from 'lodash.throttle'
+import { throttle } from 'throttle-debounce'
 import { ref } from '@nuxtjs/composition-api'
 
 import { defaultWindow } from '~/constants/window'
@@ -44,7 +44,7 @@ export function useWindowScroll({
   }
 
   const handler = throttleMs
-    ? throttle(scrollHandler, throttleMs)
+    ? throttle(throttleMs, scrollHandler)
     : scrollHandler
 
   useEventListener(window, 'scroll', handler, {
