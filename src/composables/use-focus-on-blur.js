@@ -1,7 +1,8 @@
-import { getDocument } from 'reakit-utils/getDocument'
 import { getActiveElement } from 'reakit-utils/getActiveElement'
 import { getNextActiveElementOnBlur } from 'reakit-utils/getNextActiveElementOnBlur'
 import { ref, watch } from '@nuxtjs/composition-api'
+
+import { getDocument } from '~/utils/dom/get-document'
 
 /**
  * @typedef Props

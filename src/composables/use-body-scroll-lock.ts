@@ -1,15 +1,13 @@
-import { ref } from '@nuxtjs/composition-api'
-import { getDocument } from 'reakit-utils/getDocument'
+import { Ref, ref } from '@nuxtjs/composition-api'
+
+import { getDocument } from '~/utils/dom/get-document'
 
 /**
  * Creates a utility for locking body scrolling for a particular node.
- *
- * @param {object} props
- * @param {import('@nuxtjs/composition-api').Ref<HTMLElement>} props.nodeRef
  */
-export function useBodyScrollLock({ nodeRef }) {
+export function useBodyScrollLock({ nodeRef }: { nodeRef: Ref<HTMLElement> }) {
   const locked = ref(false)
-  let scrollY = null
+  let scrollY: number | null = null
 
   const lock = () => {
     if (!nodeRef.value) {
@@ -36,8 +34,10 @@ export function useBodyScrollLock({ nodeRef }) {
     const document = getDocument(nodeRef.value)
     document.body.style.position = ''
     document.body.style.top = ''
-    window.scrollTo(0, scrollY)
-    scrollY = null
+    if (scrollY) {
+      window.scrollTo(0, scrollY)
+      scrollY = null
+    }
   }
 
   return { locked, lock, unlock }
