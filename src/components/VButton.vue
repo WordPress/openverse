@@ -39,11 +39,11 @@ import type { ProperlyExtractPropTypes } from '~/types/prop-extraction'
 
 import VLink from '~/components/VLink.vue'
 
-const buttonForms = ['VLink', 'button'] as const
+export const buttonForms = ['VLink', 'button'] as const
 
 type ButtonForm = typeof buttonForms[number]
 
-const buttonVariants = [
+export const buttonVariants = [
   'primary',
   'secondary',
   'tertiary',
@@ -57,7 +57,7 @@ const buttonVariants = [
 
 type ButtonVariant = typeof buttonVariants[number]
 
-const buttonSizes = ['large', 'medium', 'small', 'disabled'] as const
+export const buttonSizes = ['large', 'medium', 'small', 'disabled'] as const
 
 type ButtonSize = typeof buttonSizes[number]
 
@@ -114,7 +114,6 @@ const VButton = defineComponent({
     variant: {
       type: String as PropType<ButtonVariant>,
       default: 'primary',
-      validate: (v: ButtonVariant) => buttonVariants.includes(v),
     },
     /**
      * Allows for programmatically setting the pressed state of a button,
@@ -135,7 +134,6 @@ const VButton = defineComponent({
     size: {
       type: String as PropType<ButtonSize>,
       default: 'medium',
-      validate: (val: ButtonSize) => buttonSizes.includes(val),
     },
     /**
      * Whether the button is disabled. Used alone this will only
@@ -169,7 +167,6 @@ const VButton = defineComponent({
     type: {
       type: String as PropType<ButtonType>,
       default: 'button',
-      validate: (v: ButtonType) => buttonTypes.includes(v),
     },
   },
   setup(props, { attrs }) {
@@ -294,7 +291,7 @@ a.button {
 }
 
 .action-menu {
-  @apply bg-white text-dark-charcoal border border-tx hover:border-dark-charcoal-20;
+  @apply bg-tx text-dark-charcoal border border-tx hover:border-dark-charcoal-20;
 }
 
 .action-menu-secondary {

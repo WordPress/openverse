@@ -1,0 +1,111 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import VButton, {
+  buttonForms,
+  buttonSizes,
+  buttonVariants,
+} from '~/components/VButton.vue'
+import { capital } from 'case'
+
+<Meta title="Components/VButton" components={VButton} />
+
+export const Template = (args) => ({
+  template: `
+    <VButton v-bind="args" @click="onClick" href="/">
+      Code is Poetry
+    </VButton>
+  `,
+  components: { VButton },
+  methods: {
+    onClick() {
+      window.alert('hello!')
+    },
+  },
+  setup() {
+    return { args }
+  },
+})
+
+# VButton
+
+<Description of={VButton} />
+
+<ArgsTable of={VButton} />
+
+<Canvas>
+  <Story
+    name="VButton"
+    args={{}}
+    argTypes={{
+      as: {
+        options: buttonForms,
+        control: { type: 'radio' },
+      },
+      variant: {
+        options: buttonVariants,
+        control: { type: 'select' },
+      },
+      pressed: { control: 'boolean' },
+      size: {
+        options: buttonSizes,
+        control: { type: 'radio' },
+      },
+      disabled: { control: 'boolean' },
+      focusableWhenDisabled: { control: 'boolean' },
+      type: { control: 'text' },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Button variants
+
+export const variants = buttonVariants
+
+export const VariantsTemplate = (args) => ({
+  template: `
+<div class="flex gap-4 flex-wrap">
+<VButton v-for="variant in buttonVariants"
+    :variant="variant"
+    :key="variant"
+    :v-bind="args">
+    {{ capitalize(variant) }}
+    </VButton>
+  </div>`,
+  components: { VButton },
+  data: () => ({
+    buttonVariants,
+  }),
+  methods: {
+    capitalize(str) {
+      return capital(str)
+    },
+  },
+  setup() {
+    return { args }
+  },
+})
+
+<Canvas>
+  <Story
+    name="VButton Variants"
+    args={{}}
+    argTypes={{
+      pressed: { control: 'boolean' },
+      size: {
+        options: buttonSizes,
+        control: { type: 'radio' },
+      },
+      disabled: { control: 'boolean' },
+    }}
+  >
+    {VariantsTemplate.bind({})}
+  </Story>
+</Canvas>
