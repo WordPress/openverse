@@ -49,7 +49,7 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, () => {
   }: {
     type: SupportedMediaType
     id: Media['id']
-    status: MediaStatus
+    status?: MediaStatus
   }) {
     state.type = type
     state.id = id

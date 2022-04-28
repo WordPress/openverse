@@ -2,14 +2,11 @@
   <div
     ref="el"
     class="waveform group relative bg-background-var focus:outline-none overflow-hidden"
-    :style="{
-      '--usable-height': `${Math.floor(usableFrac * 100)}%`,
-      '--unusable-height': `${Math.floor((1 - usableFrac) * 100)}%`,
-    }"
+    :style="heightProperties"
     :tabIndex="isInteractive ? 0 : -1"
-    :role="isInteractive ? 'slider' : null"
+    :role="isInteractive ? 'slider' : undefined"
     :aria-disabled="!isInteractive"
-    :aria-label="$t('waveform.label')"
+    :aria-label="$t('waveform.label').toString()"
     aria-orientation="horizontal"
     aria-valuemin="0"
     :aria-valuemax="duration"
@@ -120,7 +117,7 @@
               ? ['bg-background-var']
               : ['bg-yellow', '-translate-x-full']),
           ]"
-          :style="{ '--progress-time-left': `${progressBarWidth}px` }"
+          :style="progressTimeLeft"
         >
           {{ timeFmt(progressTimestamp) }}
         </div>
@@ -129,7 +126,7 @@
           ref="seekTimestampEl"
           class="seek timestamp transform"
           :class="{ '-translate-x-full': !isSeekTimestampCutoff }"
-          :style="{ '--seek-time-left': `${seekBarWidth}px` }"
+          :style="seekTimeLeft"
         >
           {{ timeFmt(seekTimestamp) }}
         </div>
@@ -160,18 +157,22 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {
   computed,
   defineComponent,
   onBeforeUnmount,
   onMounted,
+  PropType,
   ref,
 } from '@nuxtjs/composition-api'
 
 import { downsampleArray, upsampleArray } from '~/utils/resampling'
-
 import { keycodes } from '~/constants/key-codes'
+
+import type { AudioFeature } from '~/constants/audio'
+
+import type { CSSProperties } from '@vue/runtime-dom'
 
 /**
  * Renders an SVG representation of the waveform given a list of heights for the
@@ -185,9 +186,10 @@ export default defineComponent({
      * bars of random length if the prop is not provided.
      */
     peaks: {
-      type: Array,
+      type: Array as PropType<number[]>,
       required: false,
-      validator: (val) => val.every((item) => typeof item === 'number'),
+      validator: (val: unknown[]) =>
+        val.every((item) => typeof item === 'number'),
     },
     /**
      * the message to display instead of the waveform; This is useful when
@@ -207,7 +209,7 @@ export default defineComponent({
      * the total play time of the audio track
      */
     duration: {
-      type: Number,
+      type: Number as PropType<number>,
       default: 0,
     },
     /**
@@ -220,18 +222,18 @@ export default defineComponent({
     },
     /**
      * selectively enable features in the waveform; Available features are
-     * `'timestamp'`, `'duration'`, `'seek'`.
+     * `'timestamps'`, `'duration'`, `'seek'`.
      */
     features: {
-      type: Array,
+      type: Array as PropType<AudioFeature[]>,
       default: () => ['timestamps', 'seek'],
     },
     /**
      * An object of notices to display when a feature is disabled.
-     * `'timestamp'`, `'duration'`, `'seek'`.
+     * `'timestamps'`, `'duration'`, `'seek'`.
      */
     featureNotices: {
-      type: Object,
+      type: Object as PropType<Record<AudioFeature, boolean>>,
       default: () => ({}),
     },
   },
@@ -251,10 +253,10 @@ export default defineComponent({
 
     /**
      * Format the time as hh:mm:ss, dropping the hour part if it is zero.
-     * @param {number} seconds - the number of seconds in the duration
-     * @returns {string} the duration in a human-friendly format
+     * @param seconds - the number of seconds in the duration
+     * @returns the duration in a human-friendly format
      */
-    const timeFmt = (seconds) => {
+    const timeFmt = (seconds: number): string => {
       const date = new Date(0)
       date.setSeconds(seconds)
       return date.toISOString().substr(11, 8).replace(/^00:/, '')
@@ -262,44 +264,46 @@ export default defineComponent({
     /**
      * Get the x-coordinate of the event with respect to the bounding box of the
      * waveform.
-     * @param {MouseEvent} event - the event from which to get the position
-     * @returns {number} the x-position of the event inside the waveform
+     * @param event - the event from which to get the position
+     * @returns the x-position of the event inside the waveform
      */
-    const getPosition = (event) => {
-      return event.clientX - el.value.getBoundingClientRect().x
+    const getPosition = (event: MouseEvent): number => {
+      return el.value
+        ? event.clientX - el.value.getBoundingClientRect().x
+        : event.clientX
     }
     /**
      * Get the x-position of the event with respect to the bounding box of the
      * waveform, as a fraction of the waveform width.
-     * @param {MouseEvent} event - the event from which to get the position
-     * @returns {number} the x-position of the event as a fraction
+     * @param event - the event from which to get the position
+     * @returns the x-position of the event as a fraction
      */
-    const getPositionFrac = (event) => {
+    const getPositionFrac = (event: MouseEvent): number => {
       const xPos = getPosition(event)
       return xPos / waveformDimens.value.width
     }
     /**
      * Get the number of peaks that will fit within the given width.
-     * @param {number} width - the number of pixels inside which to count peaks
-     * @returns {number} the number of peaks that can be accommodated
+     * @param width - the number of pixels inside which to count peaks
+     * @returns the number of peaks that can be accommodated
      */
-    const getPeaksInWidth = (width) => {
+    const getPeaksInWidth = (width: number): number => {
       return Math.floor((width - barGap) / (barWidth + barGap))
     }
 
     /* Element dimensions */
 
-    const el = ref(null) // template ref
+    const el = ref<HTMLElement | null>(null) // template ref
     const waveformDimens = ref({ width: 0, height: 0 })
     const updateWaveformDimens = () => {
       waveformDimens.value = {
-        width: el.value.clientWidth,
-        height: el.value.clientHeight,
+        width: el.value?.clientWidth || 0,
+        height: el.value?.clientHeight || 0,
       }
     }
-    let observer
+    let observer: ResizeObserver | undefined
     onMounted(() => {
-      if (window.ResizeObserver) {
+      if (window.ResizeObserver && el.value) {
         observer = new ResizeObserver(updateWaveformDimens)
         observer.observe(el.value)
       }
@@ -358,8 +362,8 @@ export default defineComponent({
     const viewBox = computed(() =>
       [0, 0, waveformDimens.value.width, waveformDimens.value.height].join(' ')
     )
-    const spaceBefore = (index) => index * barWidth + index * barGap
-    const spaceAbove = (index) =>
+    const spaceBefore = (index: number) => index * barWidth + index * barGap
+    const spaceAbove = (index: number) =>
       waveformDimens.value.height - normalizedPeaks.value[index]
 
     /* Progress bar */
@@ -368,13 +372,13 @@ export default defineComponent({
       isReady.value ? props.currentTime / props.duration : 0
     )
     const progressBarWidth = computed(() => {
-      const frac = isDragging.value ? seekFrac.value : currentFrac.value
+      const frac = isDragging.value ? seekFrac.value ?? 0 : currentFrac.value
       return waveformDimens.value.width * frac
     })
 
     /* Progress timestamp */
 
-    const progressTimestampEl = ref(null)
+    const progressTimestampEl = ref<HTMLElement>()
     const progressTimestamp = computed(() =>
       isDragging.value ? seekTimestamp.value : props.currentTime
     )
@@ -387,7 +391,7 @@ export default defineComponent({
 
     /* Seek bar */
 
-    const seekFrac = ref(null)
+    const seekFrac = ref<number | null>(null)
     const seekBarWidth = computed(() => {
       const frac = seekFrac.value ?? currentFrac.value
       return waveformDimens.value.width * frac
@@ -396,8 +400,10 @@ export default defineComponent({
 
     /* Seek timestamp */
 
-    const seekTimestampEl = ref(null)
-    const seekTimestamp = computed(() => seekFrac.value * props.duration)
+    const seekTimestampEl = ref<HTMLElement | null>(null)
+    const seekTimestamp = computed(() =>
+      seekFrac.value ? seekFrac.value * props.duration : props.duration
+    )
     const isSeekTimestampCutoff = computed(() => {
       if (!seekTimestampEl.value) return false
       const barWidth = seekBarWidth.value
@@ -418,27 +424,27 @@ export default defineComponent({
     const modSeekDeltaFrac = computed(() =>
       isReady.value ? modSeekDelta / props.duration : 0
     )
-    const setSeekProgress = (event) => {
+    const setSeekProgress = (event: MouseEvent) => {
       seekFrac.value = getPositionFrac(event)
     }
     const clearSeekProgress = () => {
       seekFrac.value = null
     }
-    const seek = (event) => {
+    const seek = (event: MouseEvent) => {
       emit('seeked', getPositionFrac(event))
     }
 
     /* Dragging */
 
     const dragThreshold = 2 // px
-    let startPos = null
+    let startPos: null | number = null
     const isDragging = ref(false)
-    const handleMouseDown = (event) => {
+    const handleMouseDown = (event: MouseEvent) => {
       isDragging.value = false
       startPos = getPosition(event)
       setSeekProgress(event)
     }
-    const handleMouseMove = (event) => {
+    const handleMouseMove = (event: MouseEvent) => {
       if (startPos) {
         const clickPos = getPosition(event)
         if (Math.abs(clickPos - startPos) > dragThreshold) {
@@ -447,7 +453,7 @@ export default defineComponent({
       }
       setSeekProgress(event)
     }
-    const handleMouseUp = (event) => {
+    const handleMouseUp = (event: MouseEvent) => {
       isDragging.value = false
       startPos = null
       seek(event)
@@ -458,11 +464,11 @@ export default defineComponent({
 
     /* Keyboard */
 
-    const handlePosKeys = (frac) => {
+    const handlePosKeys = (frac: number) => {
       clearSeekProgress()
       emit('seeked', frac)
     }
-    const handleArrowKeys = (event) => {
+    const handleArrowKeys = (event: KeyboardEvent) => {
       const { key, shiftKey, metaKey } = event
       if (metaKey) {
         // Always false on Windows
@@ -483,25 +489,31 @@ export default defineComponent({
     }
 
     /**
-     * @param {KeyboardEvent} event
+     * @param event
      */
-    const willBeHandled = (event) =>
-      [
-        keycodes.ArrowLeft,
-        keycodes.ArrowRight,
-        keycodes.Home,
-        keycodes.End,
-        keycodes.Spacebar,
-      ].includes(event.key)
+    const willBeHandled = (event: KeyboardEvent) =>
+      (
+        [
+          keycodes.ArrowLeft,
+          keycodes.ArrowRight,
+          keycodes.Home,
+          keycodes.End,
+          keycodes.Spacebar,
+        ] as string[]
+      ).includes(event.key)
 
     /**
-     * @param {KeyboardEvent} event
+     * @param event
      */
-    const handleKeys = (event) => {
+    const handleKeys = (event: KeyboardEvent) => {
       if (!willBeHandled(event)) return
 
       event.preventDefault()
-      if ([keycodes.ArrowLeft, keycodes.ArrowRight].includes(event.key))
+      if (
+        ([keycodes.ArrowLeft, keycodes.ArrowRight] as string[]).includes(
+          event.key
+        )
+      )
         return handleArrowKeys(event)
       if (event.key === keycodes.Home) return handlePosKeys(0)
       if (event.key === keycodes.End) return handlePosKeys(1)
@@ -523,6 +535,19 @@ export default defineComponent({
         return {}
       }
     })
+
+    const heightProperties = computed<CSSProperties>(() => ({
+      '--usable-height': `${Math.floor(props.usableFrac * 100)}%`,
+      '--unusable-height': `${Math.floor((1 - props.usableFrac) * 100)}%`,
+    }))
+
+    const progressTimeLeft = computed<CSSProperties>(() => ({
+      '--progress-time-left': `${progressBarWidth.value}px`,
+    }))
+
+    const seekTimeLeft = computed<CSSProperties>(() => ({
+      '--seek-time-left': `${seekBarWidth}px`,
+    }))
 
     return {
       timeFmt,
@@ -568,6 +593,10 @@ export default defineComponent({
       handleArrowKeys,
 
       eventHandlers,
+
+      heightProperties,
+      progressTimeLeft,
+      seekTimeLeft,
     }
   },
   computed: {
@@ -575,9 +604,9 @@ export default defineComponent({
      * the waveform current time as a text string; This function was placed
      * outside because `this` is not accessible inside the `setup`.
      */
-    currentTimeText() {
+    currentTimeText(): string {
       const time = this.timeFmt(this.currentTime)
-      return this.$t('waveform.current-time', { time })
+      return this.$t('waveform.current-time', { time }).toString()
     },
   },
 })

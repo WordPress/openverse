@@ -17,8 +17,10 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from '@nuxtjs/composition-api'
+<script lang="ts">
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
+
+import type { AudioDetail } from '~/models/media'
 
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
 
@@ -27,7 +29,12 @@ export default defineComponent({
   components: {
     VAudioThumbnail,
   },
-  props: ['audio'],
+  props: {
+    audio: {
+      type: Object as PropType<AudioDetail>,
+      required: true,
+    },
+  },
 })
 </script>
 

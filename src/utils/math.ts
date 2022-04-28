@@ -2,7 +2,7 @@
  * Math utilities
  */
 
-type Point = [number, number]
+export type Point = [number, number]
 
 /**
  * Perform linear interpolation to find a value that is fractionally between

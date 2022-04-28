@@ -27,16 +27,23 @@
   </div>
 </template>
 
-<script>
-import { ref, onMounted, useContext, computed } from '@nuxtjs/composition-api'
+<script lang="ts">
+import {
+  ref,
+  onMounted,
+  useContext,
+  defineComponent,
+  PropType,
+} from '@nuxtjs/composition-api'
 
 import { rand, hash } from '~/utils/prng'
-import { lerp, dist, bezier } from '~/utils/math'
+import { lerp, dist, bezier, Point } from '~/utils/math'
+import type { AudioDetail } from '~/models/media'
 
 /**
  * Displays the cover art for the audio in a square aspect ratio.
  */
-export default {
+export default defineComponent({
   name: 'VAudioThumbnail',
   props: {
     /**
@@ -44,28 +51,28 @@ export default {
      * `thumbnail`, `title` and `creator` are used.
      */
     audio: {
-      type: Object,
+      type: Object as PropType<AudioDetail>,
       required: true,
     },
   },
   setup(props) {
     const { i18n } = useContext()
-    const helpText = computed(() =>
-      i18n.t('audio-thumbnail.alt', {
+    const helpText = i18n
+      .t('audio-thumbnail.alt', {
         title: props.audio.title,
         creator: props.audio.creator,
       })
-    )
+      ?.toString()
 
     /* Switching */
 
-    const imgEl = ref(null)
+    const imgEl = ref<HTMLImageElement | null>(null)
     const isOk = ref(false)
     const handleLoad = () => {
       isOk.value = true
     }
     onMounted(() => {
-      isOk.value = imgEl.value.complete && imgEl.value.naturalWidth
+      isOk.value = Boolean(imgEl.value?.complete && imgEl.value?.naturalWidth)
     })
 
     /* Artwork */
@@ -76,18 +83,18 @@ export default {
     const maxRadius = 27
 
     const random = rand(hash(props.audio.title ?? ''))
-    const ctrlPts = Array.from({ length: 4 }, (_, idx) => [
-      random() * canvasSize,
-      (idx / 3) * canvasSize,
-    ])
+    const ctrlPts = Array.from(
+      { length: 4 },
+      (_, idx) => [random() * canvasSize, (idx / 3) * canvasSize] as Point
+    )
 
     const pointCount = dotCount + 1
     const bezierPoints = bezier(ctrlPts, pointCount)
 
-    const offset = (i) => {
+    const offset = (i: number) => {
       return i * (canvasSize / (dotCount + 1))
     }
-    const radius = (i, j) => {
+    const radius = (i: number, j: number) => {
       const bezierPoint = bezierPoints[i]
       const distance = dist([0, bezierPoint], [0, offset(j)])
       const maxFeasibleDistance = canvasSize * ((dotCount - 1) / (dotCount + 1))
@@ -106,5 +113,5 @@ export default {
       helpText,
     }
   },
-}
+})
 </script>

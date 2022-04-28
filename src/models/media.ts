@@ -26,6 +26,7 @@ export interface Media {
 
   frontendMediaType: SupportedMediaType
 
+  category: string | null
   provider: string
   source?: string
   providerName?: string

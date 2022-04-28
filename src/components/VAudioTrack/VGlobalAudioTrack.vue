@@ -1,17 +1,17 @@
 <template>
   <div
     class="audio-track"
-    :aria-label="$t('audio-track.aria-label')"
+    :aria-label="$t('audio-track.aria-label').toString()"
     role="region"
   >
-    <Component :is="layoutComponent" :audio="audio" :size="size">
+    <VGlobalLayout :audio="audio" size="m">
       <template #controller="waveformProps">
         <VWaveform
           v-bind="waveformProps"
           :peaks="audio.peaks"
           :current-time="currentTime"
           :duration="duration"
-          :message="message ? $t(`audio-track.messages.${message}`) : null"
+          :message="message"
           @seeked="handleSeeked"
           @toggle-playback="handleToggle"
         />
@@ -24,63 +24,31 @@
           @toggle="handleToggle"
         />
       </template>
-    </Component>
+    </VGlobalLayout>
   </div>
 </template>
 
-<script>
-import { computed, defineComponent, ref, watch } from '@nuxtjs/composition-api'
+<script lang="ts">
+import {
+  computed,
+  defineComponent,
+  PropType,
+  ref,
+  watch,
+} from '@nuxtjs/composition-api'
 
 import { useActiveAudio } from '~/composables/use-active-audio'
 import { defaultRef } from '~/composables/default-ref'
+import { useI18n } from '~/composables/use-i18n'
 
 import { useActiveMediaStore } from '~/stores/active-media'
 
+import type { AudioDetail } from '~/models/media'
+import type { AudioStatus } from '~/constants/audio'
+
 import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
 import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
-import VFullLayout from '~/components/VAudioTrack/layouts/VFullLayout.vue'
-import VRowLayout from '~/components/VAudioTrack/layouts/VRowLayout.vue'
-import VBoxLayout from '~/components/VAudioTrack/layouts/VBoxLayout.vue'
 import VGlobalLayout from '~/components/VAudioTrack/layouts/VGlobalLayout.vue'
-
-const propTypes = {
-  /**
-   * the information about the track, typically from a track's detail endpoint
-   */
-  audio: {
-    type: Object,
-    required: true,
-  },
-  /**
-   * the arrangement of the contents on the canvas; This determines the
-   * overall L&F of the audio component.
-   * @todo This type def should be extracted for reuse across components
-   */
-  layout: {
-    type: /** @type {import('@nuxtjs/composition-api').PropType<'full' | 'box' | 'row' | 'global'>} */ (
-      String
-    ),
-    default: 'full',
-    /**
-     * @param {string} val
-     */
-    validator: (val) => ['full', 'box', 'row', 'global'].includes(val),
-  },
-  /**
-   * the size of the component; Both 'box' and 'row' layouts offer multiple
-   * sizes to choose from.
-   */
-  size: {
-    type: /** @type {import('@nuxtjs/composition-api').PropType<'s' | 'm' | 'l'>} */ (
-      String
-    ),
-    default: 'm',
-    /**
-     * @param {string} val
-     */
-    validator: (val) => ['s', 'm', 'l'].includes(val),
-  },
-}
 
 /**
  * Displays the waveform and basic information about the track, along with
@@ -91,22 +59,23 @@ export default defineComponent({
   components: {
     VPlayPause,
     VWaveform,
-
-    // Layouts
-    VFullLayout,
-    VRowLayout,
-    VBoxLayout,
     VGlobalLayout,
   },
-  props: propTypes,
-  /**
-   * @param {import('@nuxtjs/composition-api').ExtractPropTypes<typeof propTypes>} props
-   */
+  props: {
+    /**
+     * the information about the track, typically from a track's detail endpoint
+     */
+    audio: {
+      type: Object as PropType<AudioDetail>,
+      required: true,
+    },
+  },
   setup(props) {
+    const i18n = useI18n()
     const activeMediaStore = useActiveMediaStore()
     const activeAudio = useActiveAudio()
 
-    const status = ref('paused')
+    const status = ref<AudioStatus>('paused')
     const currentTime = ref(0)
     const duration = defaultRef(() => {
       if (typeof props.audio?.duration === 'number')
@@ -120,13 +89,10 @@ export default defineComponent({
     }
     const setPaused = () => (status.value = 'paused')
     const setPlayed = () => (status.value = 'played')
-    /**
-     * @param {Event} event
-     */
-    const setTimeWhenPaused = (event) => {
+
+    const setTimeWhenPaused = (event: Event) => {
       if (status.value !== 'playing' && event.target) {
-        currentTime.value =
-          /** @type {HTMLAudioElement} */ (event.target).currentTime ?? 0
+        currentTime.value = (event.target as HTMLAudioElement).currentTime ?? 0
         if (status.value === 'played') {
           // Set to pause to remove replay icon
           status.value = 'paused'
@@ -167,7 +133,7 @@ export default defineComponent({
          * set to `playing` as the active audio is only updated when
          * a new track is set to play. But for good measure we might
          * as well do this robustly and make sure that the status is
-         * always synced any time the active audio hanges.
+         * always synced any time the active audio hangs.
          */
         if (audio.paused) {
           if (audio.ended) {
@@ -194,14 +160,15 @@ export default defineComponent({
     const pause = () => activeAudio.obj.value?.pause()
 
     /* Timekeeping */
-    const message = computed(() => activeMediaStore.message)
+    const message = computed<string | undefined>(() =>
+      activeMediaStore.message
+        ? i18n.t(`audio-track.messages.${activeMediaStore.message}`).toString()
+        : undefined
+    )
 
     /* Interface with VPlayPause */
 
-    /**
-     * @param {'playing' | 'paused'} [state]
-     */
-    const handleToggle = (state) => {
+    const handleToggle = (state: 'playing' | 'paused') => {
       if (!state) {
         switch (status.value) {
           case 'playing':
@@ -226,24 +193,11 @@ export default defineComponent({
 
     /* Interface with VWaveform */
 
-    /**
-     * @param {number} frac
-     */
-    const handleSeeked = (frac) => {
+    const handleSeeked = (frac: number) => {
       if (activeAudio.obj.value) {
         activeAudio.obj.value.currentTime = frac * duration.value
       }
     }
-
-    /* Layout */
-
-    const layoutMappings = {
-      full: 'VFullLayout',
-      row: 'VRowLayout',
-      box: 'VBoxLayout',
-      global: 'VGlobalLayout',
-    }
-    const layoutComponent = computed(() => layoutMappings[props.layout])
 
     return {
       status,
@@ -253,8 +207,6 @@ export default defineComponent({
 
       currentTime,
       duration,
-
-      layoutComponent,
     }
   },
 })

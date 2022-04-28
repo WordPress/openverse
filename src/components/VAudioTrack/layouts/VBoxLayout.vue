@@ -32,8 +32,16 @@
   </div>
 </template>
 
-<script>
-import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
+<script lang="ts">
+import {
+  computed,
+  defineComponent,
+  PropType,
+  useContext,
+} from '@nuxtjs/composition-api'
+
+import type { AudioDetail } from '~/models/media'
+import type { AudioSize } from '~/constants/audio'
 
 import VLicense from '~/components/VLicense/VLicense.vue'
 
@@ -44,13 +52,12 @@ export default defineComponent({
   },
   props: {
     audio: {
-      type: /** @type {import('~/models/media').AudioDetail} */ (Object),
+      type: Object as PropType<AudioDetail>,
       required: true,
     },
     size: {
-      type: String,
-      required: true,
-      validator: (v) => ['s', 'm', 'l'].includes(v),
+      type: String as PropType<AudioSize>,
+      required: false,
     },
   },
   setup(props) {
@@ -58,13 +65,13 @@ export default defineComponent({
     const isSmall = computed(() => props.size === 's')
 
     const width = computed(() => {
-      const magnitude = {
+      const magnitudes = {
         l: 13.25,
         m: 12.25,
         s: 9.75,
-      }[props.size]
+      }
 
-      return props.size ? `${magnitude}rem` : null
+      return props.size ? `${magnitudes[props.size]}rem` : undefined
     })
     const categoryLabel = computed(() =>
       i18n.t(`filters.audio-categories.${props.audio.category}`).toString()

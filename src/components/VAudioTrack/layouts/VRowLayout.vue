@@ -50,7 +50,7 @@
             <span v-show="isSmall">
               <span
                 class="inline-block text-dark-charcoal font-semibold bg-dark-charcoal-06 p-1 rounded-sm"
-                >{{ timeFmt(audio.duration) }}</span
+                >{{ timeFmt(audio.duration || 0) }}</span
               ><span class="mx-2">{{ $t('interpunct') }}</span>
             </span>
 
@@ -82,10 +82,19 @@
   </article>
 </template>
 
-<script>
-import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
+<script lang="ts">
+import {
+  computed,
+  defineComponent,
+  PropType,
+  useContext,
+} from '@nuxtjs/composition-api'
 
 import { useBrowserIsBlink } from '~/composables/use-browser-detection'
+
+import type { AudioDetail } from '~/models/media'
+
+import type { AudioSize } from '~/constants/audio'
 
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
 import VLicense from '~/components/VLicense/VLicense.vue'
@@ -98,25 +107,40 @@ export default defineComponent({
     VLicense,
     VLink,
   },
-  props: ['audio', 'size'],
+  props: {
+    audio: {
+      type: Object as PropType<AudioDetail>,
+      required: true,
+    },
+    size: {
+      type: String as PropType<AudioSize>,
+      required: false,
+    },
+  },
   setup(props) {
     /* Utils */
     const browserIsBlink = useBrowserIsBlink()
     const { i18n } = useContext()
 
-    const featureNotices = {}
+    const featureNotices: {
+      timestamps?: string
+      duration?: string
+      seek?: string
+    } = {}
     const features = ['timestamps', 'duration', 'seek']
     if (browserIsBlink && props.audio.source === 'jamendo') {
       features.pop()
-      featureNotices.seek = i18n.t('audio-track.messages.blink_seek_disabled')
+      featureNotices.seek = i18n
+        .t('audio-track.messages.blink_seek_disabled')
+        .toString()
     }
 
     /**
      * Format the time as hh:mm:ss, dropping the hour part if it is zero.
-     * @param {number} ms - the number of milliseconds in the duration
-     * @returns {string} the duration in a human-friendly format
+     * @param ms - the number of milliseconds in the duration
+     * @returns the duration in a human-friendly format
      */
-    const timeFmt = (ms) => {
+    const timeFmt = (ms: number): string => {
       if (ms) {
         const date = new Date(0)
         date.setSeconds(ms / 1e3)

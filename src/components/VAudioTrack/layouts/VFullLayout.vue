@@ -12,11 +12,7 @@
         aria-hidden
       />
       <div class="md:mx-4 lg:mx-10">
-        <slot
-          name="controller"
-          :features="['timestamps', 'duration', 'seek']"
-          :usable-frac="0.8"
-        />
+        <slot name="controller" :features="audioFeatures" :usable-frac="0.8" />
       </div>
     </div>
     <div
@@ -54,7 +50,7 @@
             $t('interpunct')
           }}</span>
 
-          <div>{{ timeFmt(audio.duration) }}</div>
+          <div>{{ timeFmt(audio.duration || 0) }}</div>
         </div>
       </div>
 
@@ -70,8 +66,11 @@
   </div>
 </template>
 
-<script>
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+<script lang="ts">
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+
+import type { AudioDetail } from '~/models/media'
+import { AudioSize, AudioStatus, audioFeatures } from '~/constants/audio'
 
 import VButton from '~/components/VButton.vue'
 import VLink from '~/components/VLink.vue'
@@ -81,16 +80,14 @@ export default defineComponent({
   components: { VButton, VLink },
   props: {
     audio: {
-      type: Object,
+      type: Object as PropType<AudioDetail>,
       required: true,
     },
     size: {
-      type: String,
-      validation: (v) => ['s', 'm', 'l'].includes(v),
+      type: String as PropType<AudioSize>,
     },
     status: {
-      type: String,
-      validation: (v) => ['playing', 'played', 'paused'].includes(v),
+      type: String as PropType<AudioStatus>,
     },
     currentTime: {
       type: Number,
@@ -100,10 +97,10 @@ export default defineComponent({
   setup(props) {
     /**
      * Format the time as hh:mm:ss, dropping the hour part if it is zero.
-     * @param {number} ms - the number of milliseconds in the duration
-     * @returns {string} the duration in a human-friendly format
+     * @param ms - the number of milliseconds in the duration
+     * @returns the duration in a human-friendly format
      */
-    const timeFmt = (ms) => {
+    const timeFmt = (ms: number): string => {
       if (ms) {
         const date = new Date(0)
         date.setSeconds(ms / 1e3)
@@ -118,6 +115,7 @@ export default defineComponent({
       timeFmt,
 
       isSmall,
+      audioFeatures,
     }
   },
 })

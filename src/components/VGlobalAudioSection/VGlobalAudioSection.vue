@@ -10,8 +10,13 @@
   </div>
 </template>
 
-<script>
-import { useRoute, watch, computed } from '@nuxtjs/composition-api'
+<script lang="ts">
+import {
+  useRoute,
+  watch,
+  computed,
+  defineComponent,
+} from '@nuxtjs/composition-api'
 
 import { AUDIO } from '~/constants/media'
 import { useActiveAudio } from '~/composables/use-active-audio'
@@ -19,12 +24,14 @@ import { useActiveMediaStore } from '~/stores/active-media'
 import { useMediaStore } from '~/stores/media'
 import { useSingleResultStore } from '~/stores/media/single-result'
 
+import type { AudioDetail } from '~/models/media'
+
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
 import VGlobalAudioTrack from '~/components/VAudioTrack/VGlobalAudioTrack.vue'
 
 import closeIcon from '~/assets/icons/close-small.svg'
 
-export default {
+export default defineComponent({
   name: 'VGlobalAudioSection',
   components: {
     VGlobalAudioTrack,
@@ -38,15 +45,16 @@ export default {
     const activeAudio = useActiveAudio()
 
     /* Active audio track */
-    const getAudioItemById = (trackId) => {
+    const getAudioItemById = (trackId: string): AudioDetail | null => {
       const audioFromMediaStore = mediaStore.getItemById(AUDIO, trackId)
       if (audioFromMediaStore) {
-        return audioFromMediaStore
+        return audioFromMediaStore as AudioDetail
       }
       const singleResultStore = useSingleResultStore()
       if (singleResultStore.mediaItem?.id === trackId) {
-        return singleResultStore.mediaItem
+        return singleResultStore.mediaItem as AudioDetail
       }
+      return null
     }
     const audio = computed(() => {
       const trackId = activeMediaStore.id
@@ -58,8 +66,13 @@ export default {
 
     /* Message */
 
-    const handleError = (event) => {
+    const handleError = (event: Event) => {
+      if (!(event.target instanceof HTMLAudioElement)) {
+        activeMediaStore.setMessage({ message: 'err_unknown' })
+        return
+      }
       const error = event.target.error
+      if (!error) return
       let errorMsg
       switch (error.code) {
         case error.MEDIA_ERR_ABORTED:
@@ -74,6 +87,8 @@ export default {
         case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
           errorMsg = 'err_unsupported'
           break
+        default:
+          errorMsg = 'err_unknown'
       }
       activeMediaStore.setMessage({ message: errorMsg })
     }
@@ -91,15 +106,19 @@ export default {
       { immediate: true }
     )
 
-    const handleClose = activeMediaStore.ejectActiveMediaItem
+    const handleClose = () => {
+      activeAudio.obj.value?.pause()
+      activeAudio.obj.value = undefined
+      activeMediaStore.ejectActiveMediaItem()
+    }
 
     /* Router observation */
 
     const routeName = computed(() => route.value.name)
     watch(routeName, (routeNameVal, oldRouteNameVal) => {
       if (
-        oldRouteNameVal.includes('audio') &&
-        !routeNameVal.includes('audio')
+        oldRouteNameVal?.includes('audio') &&
+        !routeNameVal?.includes('audio')
       ) {
         activeAudio.obj.value?.pause()
         activeMediaStore.ejectActiveMediaItem()
@@ -117,5 +136,5 @@ export default {
       handleClose,
     }
   },
-}
+})
 </script>
