@@ -88,13 +88,11 @@ const BrowsePage = {
     }
   },
   asyncData({ route, $pinia }) {
-    if (process.server) {
-      const searchStore = useSearchStore($pinia)
-      searchStore.setSearchStateFromUrl({
-        path: route.path,
-        urlQuery: route.query,
-      })
-    }
+    const searchStore = useSearchStore($pinia)
+    searchStore.setSearchStateFromUrl({
+      path: route.path,
+      urlQuery: route.query,
+    })
   },
   computed: {
     /**
