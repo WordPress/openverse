@@ -108,6 +108,26 @@ const head = {
   ],
 }
 
+const baseProdName = process.env.CI ? '[name]' : '[contenthash:7]'
+
+const filenames: NonNullable<NuxtConfig['build']>['filenames'] = {
+  app: ({ isDev, isModern }) =>
+    isDev
+      ? `[name]${isModern ? '.modern' : ''}.js`
+      : `${baseProdName}${isModern ? '.modern' : ''}.js`,
+  chunk: ({ isDev, isModern }) =>
+    isDev
+      ? `[name]${isModern ? '.modern' : ''}.js`
+      : `${baseProdName}${isModern ? '.modern' : ''}.js`,
+  css: ({ isDev }) => (isDev ? '[name].css' : `css/${baseProdName}.css`),
+  img: ({ isDev }) =>
+    isDev ? '[path][name].[ext]' : `img/${baseProdName}.[ext]`,
+  font: ({ isDev }) =>
+    isDev ? '[path][name].[ext]' : `fonts/${baseProdName}.[ext]`,
+  video: ({ isDev }) =>
+    isDev ? '[path][name].[ext]' : `videos/${baseProdName}.[ext]`,
+}
+
 const config: NuxtConfig = {
   // eslint-disable-next-line no-undef
   version: pkg.version, // used to purge cache :)
@@ -225,6 +245,7 @@ const config: NuxtConfig = {
         dst: 'index.js',
       },
     ],
+    filenames,
     friendlyErrors: false,
     postcss: {
       plugins: {
