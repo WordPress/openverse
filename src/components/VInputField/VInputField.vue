@@ -29,6 +29,8 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
+import { defineEvent } from '~/types/emits'
+
 export const FIELD_SIZES = {
   small: 'h-10 text-md',
   medium: 'h-12',
@@ -92,7 +94,9 @@ export default defineComponent({
     },
   },
   // using non-native event name to ensure the two are not mixed
-  emits: ['update:modelValue'],
+  emits: {
+    'update:modelValue': defineEvent<[string]>(),
+  },
   setup(props, { emit, attrs }) {
     const type = typeof attrs['type'] === 'string' ? attrs['type'] : 'text'
 

@@ -29,6 +29,8 @@ import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import { useMatchHomeRoute } from '~/composables/use-match-routes'
 
+import { defineEvent } from '~/types/emits'
+
 import VInputField, {
   FIELD_SIZES,
 } from '~/components/VInputField/VInputField.vue'
@@ -61,7 +63,10 @@ const VSearchBar = defineComponent({
       required: false,
     },
   },
-  emits: ['input', 'submit'],
+  emits: {
+    input: defineEvent<[string]>(),
+    submit: defineEvent(),
+  },
   setup(props, { emit }) {
     const { matches: isHomeRoute } = useMatchHomeRoute()
 

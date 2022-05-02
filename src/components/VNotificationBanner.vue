@@ -29,6 +29,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@nuxtjs/composition-api'
 
+import { defineEvent } from '~/types/emits'
 import { useI18n } from '~/composables/use-i18n'
 import { useStorage } from '~/composables/use-storage'
 
@@ -55,7 +56,9 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['close'],
+  emits: {
+    close: defineEvent(),
+  },
   setup(props, { emit }) {
     const i18n = useI18n()
     const shouldShow = useStorage(`banner:show-${props.id}`, true)
