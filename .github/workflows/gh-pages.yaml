@@ -30,8 +30,8 @@ jobs:
         run: mv .tcv-export ./storybook-static/tailwind
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@bbdfb200618d235585ad98e965f4aafc39b4c501 # v3.7.3
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./storybook-static
-          force_orphan: true
+          keep_files: true

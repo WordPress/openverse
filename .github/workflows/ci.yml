@@ -117,3 +117,77 @@ jobs:
 
       - name: Run build
         run: pnpm build
+
+  gh-pages:
+    name: PR Storybook and Tailwind Preview
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: peter-evans/find-comment@v2
+        id: preview-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Storybook and Tailwind configuration previews
+
+      - uses: peter-evans/create-or-update-comment@v2
+        if: steps.preview-comment.outputs.comment-id != 0
+        with:
+          comment-id: ${{ steps.preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            **Storybook and Tailwind configuration previews**: _Updating_
+            (This comment will be automatically updated with the preview URLs once they are ready)
+
+      - uses: peter-evans/create-or-update-comment@v2
+        if: steps.preview-comment.outputs.comment-id == 0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            **Storybook and Tailwind configuration previews**: _Updating_
+            (This comment will be automatically updated with the preview URLs once they are ready)
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: ./.github/actions/setup-node-env
+
+      - name: Fetch translation files
+        run: pnpm i18n
+
+      - name: Build Storybook
+        run: pnpm storybook:build
+
+      - name: Build Tailwind Config Viewer
+        run: pnpm tcv:build
+
+      # This makes the TCV available at the `/tailwind` directory in the gh-pages
+      - name: Merge TCV and Storybook builds
+        run: mv .tcv-export ./storybook-static/tailwind
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./storybook-static
+          destination_dir: ${{ github.event.pull_request.number }}
+          keep_files: true
+
+      - uses: peter-evans/find-comment@v2
+        id: final-preview-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Storybook and Tailwind configuration previews
+
+      - uses: peter-evans/create-or-update-comment@v2
+        with:
+          comment-id: ${{ steps.final-preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            **Storybook and Tailwind configuration previews**: _Ready_
+
+            **Storybook:** <https://wordpress.github.io/openverse-frontend/${{ github.event.pull_request.number }}>
+            **Tailwind:** <https://wordpress.github.io/openverse-frontend/${{ github.event.pull_request.number }}/tailwind>
+
+            Please note that GitHub pages takes a little time to deploy newly pushed code, if the links above don't work or you see old versions, wait 5 minutes and try again.
+
+            You can check [the GitHub pages deployment action list](https://github.com/WordPress/openverse-frontend/actions/workflows/pages/pages-build-deployment) to see the current status of the deployments.

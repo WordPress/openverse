@@ -1,0 +1,26 @@
+name: PR Closed
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  clean-gh-pages:
+    name: Clean Storybook and Tailwind preview
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+
+      - name: Remove PR preview
+        run: rm -rf ${{ github.event.pull_request.number }}
+
+      - name: Push cleaned branch
+        run: |
+          git config --global user.name 'PR Closed action'
+          git config --global user.email 'openverse@wordpress.org'
+          git commit -am 'Clean preview for PR ${{ github.event.pull_request.number }}'
+          git push
