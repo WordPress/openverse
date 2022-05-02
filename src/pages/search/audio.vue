@@ -12,12 +12,7 @@
       :size="audioTrackSize"
       layout="row"
     />
-    <VLoadMore
-      v-if="canLoadMore && !fetchState.isFinished"
-      :is-fetching="fetchState.isFetching"
-      data-testid="load-more"
-      @onLoadMore="onLoadMore"
-    />
+    <VLoadMore />
   </section>
 </template>
 

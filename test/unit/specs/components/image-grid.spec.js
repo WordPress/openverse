@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/vue'
 import VueI18n from 'vue-i18n'
+import { createPinia, PiniaVuePlugin } from 'pinia'
+import { createLocalVue } from '@vue/test-utils'
 
 import messages from '~/locales/en.json'
 
@@ -17,43 +19,34 @@ const propsData = {
     { id: 'i2', url: 'http://localhost:8080/i2.jpg', title: 'image2' },
     { id: 'i3', url: 'http://localhost:8080/i3.svg', title: 'image3' },
   ],
-  canLoadMore: false,
   fetchState: {
     isFetching: false,
     fetchingError: null,
   },
 }
-const options = {
-  props: propsData,
-  stubs: ['NuxtLink', 'VLicense'],
-  mocks: {
-    $nuxt: {
-      context: {
-        i18n,
-      },
-    },
-  },
-}
-describe('VImageGrid', () => {
-  it('renders images without load more button if canLoadMore is false', () => {
-    options.props.canLoadMore = false
-    render(VImageGrid, options)
-    expect(screen.queryAllByRole('img').length).toEqual(propsData.images.length)
-    expect(screen.queryAllByRole('figure').length).toEqual(
-      propsData.images.length
-    )
-    expect(screen.queryByTestId('load-more')).not.toBeInTheDocument()
-  })
 
-  it('renders images and load more button if canLoadMore is true', async () => {
-    options.props.canLoadMore = true
+describe('VImageGrid', () => {
+  let localVue
+  let pinia
+  let options
+  beforeEach(() => {
+    localVue = createLocalVue()
+    localVue.use(PiniaVuePlugin)
+    pinia = createPinia()
+    options = {
+      localVue,
+      pinia,
+      props: propsData,
+      stubs: ['NuxtLink', 'VLicense'],
+      mocks: { $nuxt: { context: { i18n } } },
+    }
+  })
+  it('renders images without load more button', () => {
     render(VImageGrid, options)
     expect(screen.queryAllByRole('img').length).toEqual(propsData.images.length)
     expect(screen.queryAllByRole('figure').length).toEqual(
       propsData.images.length
     )
-    const loadMoreButton = screen.queryByTestId('load-more')
-    expect(loadMoreButton).toBeVisible()
-    expect(loadMoreButton).toHaveTextContent(messages['browse-page'].load)
+    expect(screen.queryByTestId('load-more')).not.toBeVisible()
   })
 })

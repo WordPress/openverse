@@ -678,13 +678,13 @@ msgid_plural "Over ###localeCount### results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/components/VLoadMore.vue:32
+#: src/components/VLoadMore.vue:46
 msgctxt "browse-page.load"
 msgid "Load more results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAllResultsGrid/VAllResultsGrid.vue:97
+#: src/components/VAllResultsGrid/VAllResultsGrid.vue:91
 msgctxt "browse-page.fetching-error"
 msgid "Error fetching ###type###:"
 msgstr ""
@@ -760,12 +760,12 @@ msgctxt "browse-page.search-form.placeholder"
 msgid "Search all ###type###"
 msgstr ""
 
-#: src/components/VImageGrid/VImageGrid.vue:56
+#: src/components/VImageGrid/VImageGrid.vue:51
 msgctxt "browse-page.search-form.image"
 msgid "images"
 msgstr ""
 
-#: src/components/VAllResultsGrid/VAllResultsGrid.vue:96
+#: src/components/VAllResultsGrid/VAllResultsGrid.vue:90
 msgctxt "browse-page.search-form.audio"
 msgid "audio"
 msgstr ""
