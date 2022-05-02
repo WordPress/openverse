@@ -111,7 +111,7 @@ export const getAttribution = (
   /* Creator */
 
   let creatorLink = mediaItem.creator || ''
-  if (!isPlaintext && mediaItem.creator_url)
+  if (!isPlaintext && mediaItem.creator_url && creatorLink)
     creatorLink = extLink(mediaItem.creator_url, creatorLink)
 
   /* License */
@@ -145,11 +145,13 @@ export const getAttribution = (
   if (i18n) {
     let fillers: Record<string, string> = {
       title: titleLink,
-      creator: i18n
-        .t(`${i18nBase}.creator-text`, {
-          'creator-name': creatorLink,
-        })
-        .toString(),
+      creator: creatorLink
+        ? i18n
+            .t(`${i18nBase}.creator-text`, {
+              'creator-name': creatorLink,
+            })
+            .toString()
+        : '',
       'marked-licensed': i18n
         .t(`${i18nBase}.${isPd ? 'marked' : 'licensed'}`)
         .toString(),
@@ -170,24 +172,21 @@ export const getAttribution = (
     }
     attribution = i18n.t(`${i18nBase}.text`, fillers).toString()
   } else {
-    let attributionParts = [
-      `"${titleLink}"`,
-      ' by ',
-      creatorLink,
+    const attributionParts = [`"${titleLink}"`]
+    if (creatorLink) attributionParts.push(' by ', creatorLink)
+    attributionParts.push(
       isPd ? ' is marked with ' : ' is licensed under ',
       licenseLink,
-      '.',
-    ]
-    if (isPlaintext) {
-      attributionParts = [
-        ...attributionParts,
+      '.'
+    )
+    if (isPlaintext)
+      attributionParts.push(
         ' To view ',
         isPd ? 'the terms,' : 'a copy of this license,',
         ' visit',
         mediaItem.license_url,
-        '.',
-      ]
-    }
+        '.'
+      )
 
     attribution = attributionParts.join('')
   }

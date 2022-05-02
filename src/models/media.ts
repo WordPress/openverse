@@ -13,7 +13,7 @@ export interface Media {
   id: string
   title: string
 
-  creator: string
+  creator?: string
   creator_url?: string
 
   url: string
