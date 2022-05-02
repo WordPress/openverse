@@ -258,7 +258,7 @@ export default defineComponent({
      */
     const timeFmt = (seconds: number): string => {
       const date = new Date(0)
-      date.setSeconds(seconds)
+      date.setSeconds(Number.isFinite(seconds) ? seconds : 0)
       return date.toISOString().substr(11, 8).replace(/^00:/, '')
     }
     /**
