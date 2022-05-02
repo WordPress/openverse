@@ -134,7 +134,7 @@ export const initFilters = () =>
         checked: false,
       })),
     }),
-    {} as Record<FilterCategory, FilterItem>
+    {} as Filters
   )
 
 export const filterData = deepFreeze(initFilters())

@@ -1,5 +1,4 @@
-import clonedeep from 'lodash.clonedeep'
-
+import { deepClone } from '~/utils/clone'
 import {
   filtersToQueryData,
   queryToFilterData,
@@ -258,7 +257,7 @@ describe('searchQueryTransform', () => {
       searchBy: 'creator',
       mature: 'true',
     }
-    const testFilters = clonedeep(filters)
+    const testFilters = deepClone(filters)
     testFilters.audioProviders = [
       { code: 'jamendo', checked: true },
       { code: 'wikimedia', checked: true },
@@ -300,7 +299,7 @@ describe('searchQueryTransform', () => {
       searchBy: 'creator',
       mature: 'true',
     }
-    const expectedFilters = clonedeep(filters)
+    const expectedFilters = deepClone(filters)
     const setChecked = (code, filterCategory) => {
       const idx = expectedFilters[filterCategory].findIndex(
         (item) => item.code === code
