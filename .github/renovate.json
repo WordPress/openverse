@@ -1,5 +1,5 @@
 {
-  "extends": ["config:base", "schedule:monthly"],
+  "extends": ["config:base", ":preserveSemverRanges", "schedule:monthly"],
   "labels": [
     "dependencies",
     "💻 aspect: code",
