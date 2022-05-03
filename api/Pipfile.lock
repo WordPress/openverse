@@ -1260,11 +1260,11 @@
         },
         "furo": {
             "hashes": [
-                "sha256:6c718293ebf87755f0b9f148b1e697c9e3aabd7af955644d4bcaee5ce75db781",
-                "sha256:7660267cc67b2828fd0e17bc07adeb612c47b2eba5a6de07049a1569e6044aa8"
+                "sha256:7f3e3d2fb977483590f8ecb2c2cd511bd82661b79c18efb24de9558bc9cdf2d7",
+                "sha256:96204ab7cd047e4b6c523996e0279c4c629a8fc31f4f109b2efd470c17f49c80"
             ],
             "index": "pypi",
-            "version": "==2022.3.4"
+            "version": "==2022.4.7"
         },
         "gevent": {
             "hashes": [
