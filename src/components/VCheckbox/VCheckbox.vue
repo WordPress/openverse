@@ -132,6 +132,7 @@ export default VCheckbox
   @apply focus:outline-none focus:ring focus:ring-offset-2 focus:ring-pink;
   @apply disabled:bg-dark-charcoal-10 disabled:border-dark-charcoal-40;
   @apply checked:bg-dark-charcoal;
+  @apply checked:disabled:bg-dark-charcoal-40;
 }
 .checkmark {
   @apply absolute start-0 w-5 h-5 text-white;

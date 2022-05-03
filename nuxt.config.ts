@@ -192,6 +192,7 @@ const config: NuxtConfig = {
     '@nuxtjs/redirect-module',
     '@nuxtjs/sentry',
     '@nuxtjs/sitemap',
+    'cookie-universal-nuxt',
   ],
   serverMiddleware: [
     { path: '/healthcheck', handler: '~/server-middleware/healthcheck.js' },

@@ -75,6 +75,7 @@
     "build-url": "^6.0.1",
     "case": "^1.6.3",
     "clipboard": "^2.0.8",
+    "cookie-universal-nuxt": "^2.1.5",
     "core-js": "^3.16.1",
     "express-useragent": "^1.0.15",
     "focus-trap": "^6.7.1",

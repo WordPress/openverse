@@ -45,6 +45,7 @@ specifiers:
   build-url: ^6.0.1
   case: ^1.6.3
   clipboard: ^2.0.8
+  cookie-universal-nuxt: ^2.1.5
   core-js: ^3.16.1
   eslint: ^8.11.0
   eslint-config-prettier: ^8.5.0
@@ -115,6 +116,7 @@ dependencies:
   build-url: 6.0.1
   case: 1.6.3
   clipboard: 2.0.8
+  cookie-universal-nuxt: 2.1.5
   core-js: 3.21.1
   express-useragent: 1.0.15
   focus-trap: 6.7.1
@@ -5566,6 +5568,10 @@ packages:
       '@types/node': 16.11.13
     dev: true
 
+  /@types/cookie/0.3.3:
+    resolution: {integrity: sha512-LKVP3cgXBT9RYj+t+9FDKwS5tdI+rPBXaNSkma7hvqy35lc7mAokC2zsqWJH0LaqIt3B962nuYI77hsJoT1gow==}
+    dev: false
+
   /@types/eslint/7.29.0:
     resolution: {integrity: sha512-VNcvioYDH8/FxaeTKkM4/TiTwt6pBV9E3OfGmvaw8tPl0rrHCJ4Ll15HRT+pMiFAf/MLQvAzC+6RzUMEL9Ceng==}
     dependencies:
@@ -8212,6 +8218,20 @@ packages:
   /cookie-signature/1.0.6:
     resolution: {integrity: sha1-4wOogrNCzD7oylE6eZmXNNqzriw=}
     dev: true
+
+  /cookie-universal-nuxt/2.1.5:
+    resolution: {integrity: sha512-P0WCTKIyemWNtHi9lxrS5cxZmieOIEjt28B7Alu6cdSB9RqtUtpkqYyV9PRK6oJrT5eIPDYjHsJQlh6SUrFJOg==}
+    dependencies:
+      '@types/cookie': 0.3.3
+      cookie-universal: 2.1.5
+    dev: false
+
+  /cookie-universal/2.1.5:
+    resolution: {integrity: sha512-nqOOmEkovCQxNYGIyzhcwsmh4c7xnxe7RWdiYFOoml9MP4L32IlU3LdPC7r7nQEnnM+9Uxlk/UhtvBl5is6M/w==}
+    dependencies:
+      '@types/cookie': 0.3.3
+      cookie: 0.4.2
+    dev: false
 
   /cookie/0.3.1:
     resolution: {integrity: sha1-5+Ch+e9DtMi6klxcWpboBtFoc7s=}

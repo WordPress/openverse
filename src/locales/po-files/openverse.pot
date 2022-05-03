@@ -23,6 +23,43 @@ msgctxt "skip-to-content"
 msgid "Skip to content"
 msgstr ""
 
+#: src/pages/preferences.vue:3
+msgctxt "pref-page.title"
+msgid "Preferences"
+msgstr ""
+
+#: src/pages/preferences.vue:37
+msgctxt "pref-page.store-state"
+msgid "Store state"
+msgstr ""
+
+#: src/pages/preferences.vue:40
+msgctxt "pref-page.content-filtering"
+msgid "Content filtering"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/preferences.vue:44
+msgctxt "pref-page.explanation"
+msgid "Shown because ###feat-name### is ###feat-state###"
+msgstr ""
+
+msgctxt "pref-page.switchable.title"
+msgid "Switchable features"
+msgstr ""
+
+msgctxt "pref-page.switchable.desc"
+msgid "You can toggle these features on or off as you like and your preferences will be saved in a cookie."
+msgstr ""
+
+msgctxt "pref-page.non-switchable.title"
+msgid "Non-switchable features"
+msgstr ""
+
+msgctxt "pref-page.non-switchable.desc"
+msgid "You cannot modify the status of these features."
+msgstr ""
+
 msgctxt "search-type.image"
 msgid "Images"
 msgstr ""
