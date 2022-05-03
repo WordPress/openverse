@@ -20,6 +20,7 @@
     "prebuild": "pnpm install && pnpm i18n",
     "build": "pnpm build:only",
     "build:only": "nuxt build",
+    "build:clean": "rm -rf .nuxt",
     "generate": "nuxt generate",
     "start": "nuxt start",
     "prod": "pnpm build:only && pnpm start",
