@@ -11,6 +11,7 @@ DEFAULT_PERCENTILE = 0.85
 
 IMAGE_VIEW_NAME = "image_view"
 AUDIO_VIEW_NAME = "audio_view"
+AUDIOSET_VIEW_NAME = "audioset_view"
 IMAGE_POPULARITY_CONSTANTS_VIEW = "image_popularity_constants"
 AUDIO_POPULARITY_CONSTANTS_VIEW = "audio_popularity_constants"
 IMAGE_POPULARITY_PERCENTILE_FUNCTION = "image_popularity_percentile"
@@ -299,6 +300,31 @@ def create_standardized_media_popularity_function(
     postgres.run(query)
 
 
+def create_audioset_view_query():
+    """
+    Returns SQL to create the audioset_view.
+    """
+    return dedent(
+        f"""
+        CREATE VIEW public.{AUDIOSET_VIEW_NAME}
+        AS
+        SELECT DISTINCT
+            (audio_set ->> 'foreign_identifier')  :: varchar(1000) as foreign_identifier,
+            (audio_set ->> 'title')               :: varchar(2000) as title,
+            (audio_set ->> 'foreign_landing_url') :: varchar(1000) as foreign_landing_url,
+            (audio_set ->> 'creator')             :: varchar(2000) as creator,
+            (audio_set ->> 'creator_url')         :: varchar(2000) as creator_url,
+            (audio_set ->> 'url')                 :: varchar(1000) as url,
+            (audio_set ->> 'filesize')            :: integer       as filesize,
+            (audio_set ->> 'filetype')            :: varchar(80)   as filetype,
+            (audio_set ->> 'thumbnail')           :: varchar(1000) as thumbnail,
+            provider
+        FROM public.{AUDIO_VIEW_NAME}
+        WHERE audio_set IS NOT NULL;
+        """  # noqa: E501
+    )
+
+
 def create_media_view(
     postgres_conn_id,
     media_type=IMAGE,
@@ -338,6 +364,8 @@ def create_media_view(
     )
     postgres.run(create_view_query)
     postgres.run(add_idx_query)
+    if media_type == AUDIO:
+        postgres.run(create_audioset_view_query())
 
 
 def update_db_view(
