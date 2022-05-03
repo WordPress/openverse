@@ -94,8 +94,8 @@
     "cc-content": {
       "where": "Where does the content on {openverse} come from?",
       "content": "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through {openverse}.",
-      "provider": "Some providers have multiple different groupings of content within them. {flickr} has sources ranging from NASA to personal photography. The {smithsonian} comprises a dozen, diverse collections. Wikimedia Commons runs the gamut in terms of content, and is used by several Galleries, Libraries, Archives, and Museums highlighting some or all of their digitized collections.",
-      "europeana": "{openverse} is especially grateful for the work of {link}, an organization that works to digitize and make discoverable cultural heritage works across Europe. {openverse} is able to index hundreds of valuable sources, through a single integration with the {link-api}.",
+      "provider": "Some providers have multiple different groupings of content within them. {flickr} has sources ranging from NASA to personal photography. The {smithsonian} comprises a dozen diverse collections. Wikimedia Commons runs the gamut in terms of content, and is used by several Galleries, Libraries, Archives, and Museums highlighting some or all of their digitized collections.",
+      "europeana": "{openverse} is especially grateful for the work of {link}, an organization that works to digitize and make discoverable cultural heritage works across Europe. {openverse} is able to index hundreds of valuable sources through a single integration with the {link-api}.",
       "europeana-api": "Europeana API",
       "smithsonian": "Smithsonian Institute"
     },
@@ -108,7 +108,11 @@
     },
     "suggestions": "We appreciate suggestions for new sources from our community of users.",
     "issue-button": "Suggest a new source",
-    "aria": { "table": "sources table" }
+    "aria": { "table": "sources table" },
+    "heading": {
+      "image": "Image Sources",
+      "audio": "Audio Sources"
+    }
   },
   "meta-search-page": {
     "title": "Meta Search",

@@ -29,6 +29,7 @@ specifiers:
   '@testing-library/vue': ^5.8.2
   '@types/express-useragent': ^1.0.2
   '@types/jest': ^26.0.22
+  '@types/lodash.sortby': ^4.7.7
   '@types/module-alias': ^2.0.1
   '@types/uuid': ^8.3.4
   '@typescript-eslint/eslint-plugin': ^5.17.0
@@ -149,6 +150,7 @@ devDependencies:
   '@testing-library/vue': 5.8.2
   '@types/express-useragent': 1.0.2
   '@types/jest': 26.0.24
+  '@types/lodash.sortby': 4.7.7
   '@types/module-alias': 2.0.1
   '@types/uuid': 8.3.4
   '@typescript-eslint/eslint-plugin': 5.17.0_19abd711d85a5efffc505795b0ac8452
@@ -5676,6 +5678,16 @@ packages:
 
   /@types/less/3.0.2:
     resolution: {integrity: sha512-62vfe65cMSzYaWmpmhqCMMNl0khen89w57mByPi1OseGfcV/LV03fO8YVrNj7rFQsRWNJo650WWyh6m7p8vZmA==}
+    dev: true
+
+  /@types/lodash.sortby/4.7.7:
+    resolution: {integrity: sha512-J/4IS+jQopGBrrRetBXDCX0KnSeXJZ0rOTmGAxR9MWGV24YdHxX8IRi9LCGAU9GKWlBov9KRSfQpuup9PReqrw==}
+    dependencies:
+      '@types/lodash': 4.14.182
+    dev: true
+
+  /@types/lodash/4.14.182:
+    resolution: {integrity: sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==}
     dev: true
 
   /@types/mdast/3.0.10:

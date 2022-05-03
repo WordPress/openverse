@@ -74,178 +74,35 @@
         </strong>
       </template>
     </i18n>
-
-    <table
-      :aria-label="$t('sources.aria.table')"
-      role="region"
-      class="table is-striped mt-4 mb-10 border border-dark-charcoal-06 not-prose text-base"
-    >
-      <thead>
-        <tr>
-          <th
-            tabindex="0"
-            @click="sortTable('display_name')"
-            @keypress.enter="sortTable('display_name')"
-          >
-            <span class="w-full flex flex-row items-center justify-between">
-              {{ $t('sources.providers.source') }}
-              <TableSortIcon :active="sort.field === 'display_name'" />
-            </span>
-          </th>
-          <th
-            tabindex="0"
-            @click="sortTable('source_url')"
-            @keypress.enter="sortTable('source_url')"
-          >
-            <span class="w-full flex flex-row items-center justify-between">
-              {{ $t('sources.providers.domain') }}
-              <TableSortIcon :active="sort.field === 'source_url'" />
-            </span>
-          </th>
-          <th
-            tabindex="0"
-            @click="sortTable('media_count')"
-            @keypress.enter="sortTable('media_count')"
-          >
-            <span class="w-full flex flex-row items-center justify-between">
-              {{ $t('sources.providers.item') }}
-              <TableSortIcon :active="sort.field === 'media_count'" />
-            </span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(imageProvider, index) in sortedProviders" :key="index">
-          <td>
-            {{ imageProvider.display_name }}
-          </td>
-          <td class="font-semibold truncate">
-            <VLink :href="imageProvider.source_url">
-              {{ cleanSourceUrlForPresentation(imageProvider.source_url) }}
-            </VLink>
-          </td>
-          <td class="number-cell">
-            {{ getLocaleFormattedNumber(imageProvider.media_count || 0) }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <h5>{{ $t('sources.heading.image') }}</h5>
+    <VSourcesTable media="image" />
+    <h5>{{ $t('sources.heading.audio') }}</h5>
+    <VSourcesTable media="audio" />
   </VContentPage>
 </template>
 
-<script>
-import sortBy from 'lodash.sortby'
-import { computed } from '@nuxtjs/composition-api'
-
-import { useProviderStore } from '~/stores/provider'
-import { useGetLocaleFormattedNumber } from '~/composables/use-get-locale-formatted-number'
+<script lang="ts">
+import { defineComponent } from '@nuxtjs/composition-api'
 
 import VButton from '~/components/VButton.vue'
 import VLink from '~/components/VLink.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
-import TableSortIcon from '~/components/TableSortIcon.vue'
 import VContentPage from '~/components/VContentPage.vue'
+import VSourcesTable from '~/components/VSourcesTable.vue'
 
 import externalLinkIcon from '~/assets/icons/external-link.svg'
 
-const SourcePage = {
-  name: 'source-page',
-  components: { VButton, VContentPage, VIcon, VLink, TableSortIcon },
-  data() {
-    return {
-      sort: {
-        direction: 'asc',
-        field: 'display_name',
-      },
-    }
-  },
+export default defineComponent({
+  name: 'SourcePage',
+  components: { VButton, VContentPage, VIcon, VLink, VSourcesTable },
   setup() {
-    const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
-    const providerStore = useProviderStore()
-    const imageProviders = computed(() => providerStore.providers.image)
-
-    return { getLocaleFormattedNumber, externalLinkIcon, imageProviders }
+    return { externalLinkIcon }
   },
-  computed: {
-    sortedProviders() {
-      const sorted = sortBy(this.imageProviders, [this.sort.field])
-      return this.sort.direction === 'asc' ? sorted : sorted.reverse()
-    },
-  },
-  methods: {
-    sortTable(field) {
-      let direction = 'asc'
-      if (field === this.sort.field) {
-        direction = this.sort.direction === 'asc' ? 'desc' : 'asc'
-      }
 
-      this.sort = { direction, field }
-    },
-    cleanSourceUrlForPresentation(url) {
-      const stripProtocol = (s) => s.replace(/https?:\/\//, '')
-      const stripLeadingWww = (s) =>
-        s.startsWith('www.') ? s.replace('www.', '') : s
-      const stripTrailingSlash = (s) => (s.endsWith('/') ? s.slice(0, -1) : s)
-
-      return stripTrailingSlash(stripLeadingWww(stripProtocol(url)))
-    },
-  },
   head() {
     return {
       title: `${this.$t('sources.title')} | Openverse`,
     }
   },
-}
-
-export default SourcePage
+})
 </script>
-
-<style scoped>
-.table {
-  table-layout: fixed;
-  width: 100%;
-}
-
-.table.is-bordered td {
-  word-break: break-all;
-}
-
-.button.is-primary {
-  font-size: 1.1875rem;
-  font-weight: 700;
-}
-.table.is-striped th {
-  cursor: pointer;
-}
-.table.is-striped svg {
-  margin-top: -4px;
-}
-
-.table.is-striped th:not(:first-child),
-.table.is-striped td:not(:first-child) {
-  @apply border border-dark-charcoal-06;
-}
-.table.is-striped td,
-.table.is-striped th {
-  word-break: initial;
-  border-bottom: none;
-  border-top: none;
-}
-.table.is-striped {
-  --table-border-radius: 2px;
-  /* The following are styles for rounding the table's corners */
-  border-collapse: separate;
-  border-radius: var(table-border-radius);
-}
-
-.table.is-striped th:first-child {
-  border-top-left-radius: var(--table-border-radius);
-}
-.table.is-striped th:last-child {
-  border-top-right-radius: var(--table-border-radius);
-}
-.table.is-striped tr:last-child td:first-child,
-.table.is-striped tr:last-child td:last-child {
-  border-bottom-left-radius: var(--table-border-radius);
-}
-</style>

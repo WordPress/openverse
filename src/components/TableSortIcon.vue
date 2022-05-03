@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col" :class="[active ? activeClass : inactiveClass]">
+  <div class="flex flex-col" :class="[active ? 'text-dark-blue' : 'text-gray']">
     <svg
       width="12"
       height="6"
@@ -24,8 +24,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from '@nuxtjs/composition-api'
+
+export default defineComponent({
   name: 'TableSortIcon',
   props: {
     active: {
@@ -33,11 +35,5 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      activeClass: 'text-dark-blue',
-      inactiveClass: 'text-gray',
-    }
-  },
-}
+})
 </script>

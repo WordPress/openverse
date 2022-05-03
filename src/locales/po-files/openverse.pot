@@ -1606,7 +1606,17 @@ msgctxt "sources.issue-button"
 msgid "Suggest a new source"
 msgstr ""
 
+#: src/pages/sources.vue:77
+msgctxt "sources.heading.image"
+msgid "Image Sources"
+msgstr ""
+
 #: src/pages/sources.vue:79
+msgctxt "sources.heading.audio"
+msgid "Audio Sources"
+msgstr ""
+
+#: src/components/VSourcesTable.vue:3
 msgctxt "sources.aria.table"
 msgid "sources table"
 msgstr ""
@@ -1651,13 +1661,13 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/sources.vue:13
 msgctxt "sources.cc-content.provider"
-msgid "Some providers have multiple different groupings of content within them. ###flickr### has sources ranging from NASA to personal photography. The ###smithsonian### comprises a dozen, diverse collections. Wikimedia Commons runs the gamut in terms of content, and is used by several Galleries, Libraries, Archives, and Museums highlighting some or all of their digitized collections."
+msgid "Some providers have multiple different groupings of content within them. ###flickr### has sources ranging from NASA to personal photography. The ###smithsonian### comprises a dozen diverse collections. Wikimedia Commons runs the gamut in terms of content, and is used by several Galleries, Libraries, Archives, and Museums highlighting some or all of their digitized collections."
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/sources.vue:23
 msgctxt "sources.cc-content.europeana"
-msgid "###openverse### is especially grateful for the work of ###link###, an organization that works to digitize and make discoverable cultural heritage works across Europe. ###openverse### is able to index hundreds of valuable sources, through a single integration with the ###link-api###."
+msgid "###openverse### is especially grateful for the work of ###link###, an organization that works to digitize and make discoverable cultural heritage works across Europe. ###openverse### is able to index hundreds of valuable sources through a single integration with the ###link-api###."
 msgstr ""
 
 #: src/pages/sources.vue:30
@@ -1670,17 +1680,17 @@ msgctxt "sources.cc-content.smithsonian"
 msgid "Smithsonian Institute"
 msgstr ""
 
-#: src/pages/sources.vue:91
+#: src/components/VSourcesTable.vue:15
 msgctxt "sources.providers.source"
 msgid "Source"
 msgstr ""
 
-#: src/pages/sources.vue:101
+#: src/components/VSourcesTable.vue:25
 msgctxt "sources.providers.domain"
 msgid "Domain"
 msgstr ""
 
-#: src/pages/sources.vue:111
+#: src/components/VSourcesTable.vue:35
 msgctxt "sources.providers.item"
 msgid "Total items"
 msgstr ""
