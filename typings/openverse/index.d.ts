@@ -3,8 +3,8 @@ declare module '*.svg' {
   export default SVG
 }
 
-declare module '*.svg!inline' {
-  const SVG: string
+declare module '*.svg?inline' {
+  const SVG: unknown
   export default SVG
 }
 

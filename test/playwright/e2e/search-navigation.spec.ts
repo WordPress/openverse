@@ -46,3 +46,50 @@ test.describe('search history navigation', () => {
     expect(await page.locator('text=See all audio').isVisible()).toBe(true)
   })
 })
+
+test('navigates to the image detail page correctly', async ({ page }) => {
+  await page.goto('/search/image?q=honey')
+  const figure = page.locator('figure').first()
+  const imgTitle = await figure.locator('img').getAttribute('alt')
+
+  await page.locator('a[href^="/image"]').first().click()
+  // Until the image is loaded, the heading is 'Image' instead of the actual title
+  await page.locator('#main-image').waitFor()
+
+  const headingText = await page.locator('h1').textContent()
+  expect(headingText?.trim().toLowerCase()).toEqual(imgTitle?.toLowerCase())
+})
+
+test.describe('back to search results link', () => {
+  test('is visible in breadcrumb when navigating to image details page and returns to the search page', async ({
+    page,
+  }) => {
+    const url = '/search/?q=galah'
+    await page.goto(url)
+    await page.locator('a[href^="/image"]').first().click()
+    const link = page.locator('text="Back to search results"')
+    await expect(link).toBeVisible()
+    await link.click()
+    await expect(page).toHaveURL(url)
+  })
+
+  test('is visible in breadcrumb when navigating to localized image details page', async ({
+    page,
+  }) => {
+    await page.goto('/es/search/?q=galah')
+    await page.locator('a[href^="/es/image"]').first().click()
+    await expect(
+      page.locator('text="Volver a los resultados de búsqueda"')
+    ).toBeVisible()
+  })
+
+  test('is visible in breadcrumb when navigating to localized audio details page', async ({
+    page,
+  }) => {
+    await page.goto('/es/search/?q=galah')
+    await page.locator('a[href^="/es/audio"]').first().click()
+    await expect(
+      page.locator('text="Volver a los resultados de búsqueda"')
+    ).toBeVisible()
+  })
+})
