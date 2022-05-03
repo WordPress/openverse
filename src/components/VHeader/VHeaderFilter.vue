@@ -35,7 +35,7 @@ import VTeleport from '~/components/VTeleport/VTeleport.vue'
 import VFilterButton from '~/components/VHeader/VFilterButton.vue'
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 import VSidebarContent from '~/components/VHeader/VSidebarContent.vue'
-import VMobileModalContent from '~/components/VModal/VMobileModalContent.vue'
+import VModalContent from '~/components/VModal/VModalContent.vue'
 
 export default {
   name: 'VHeaderFilter',
@@ -43,7 +43,7 @@ export default {
     VFilterButton,
     VSearchGridFilter,
     VSidebarContent,
-    VMobileModalContent,
+    VModalContent,
     VTeleport,
   },
   emits: [
@@ -72,7 +72,7 @@ export default {
     const isHeaderScrolled = inject('isHeaderScrolled')
 
     /** @type { import('@nuxtjs/composition-api').Ref<import('@nuxtjs/composition-api').Component> } */
-    const filterComponent = ref(VMobileModalContent)
+    const filterComponent = ref(VModalContent)
 
     const triggerA11yProps = reactive({
       'aria-expanded': false,
@@ -136,7 +136,7 @@ export default {
           filterComponent.value = VSidebarContent
           options.value = desktopOptions
         } else {
-          filterComponent.value = VMobileModalContent
+          filterComponent.value = VModalContent
           options.value = mobileOptions
         }
       },

@@ -9,7 +9,7 @@
       <!-- eslint-enable vuejs-accessibility/click-events-have-key-events -->
       <VPageMenuButton :a11y-props="triggerA11yProps" />
     </div>
-    <VMobileModalContent
+    <VModalContent
       :visible="visibleRef"
       :trigger-element="triggerRef"
       :hide="close"
@@ -18,7 +18,7 @@
       <nav class="p-4">
         <VPageList layout="columns" @click="closeMenu" />
       </nav>
-    </VMobileModalContent>
+    </VModalContent>
   </div>
 </template>
 
@@ -27,13 +27,13 @@ import { computed, reactive, ref, watch } from '@nuxtjs/composition-api'
 
 import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 
-import VMobileModalContent from '~/components/VModal/VMobileModalContent.vue'
+import VModalContent from '~/components/VModal/VModalContent.vue'
 import VPageMenuButton from '~/components/VHeader/VPageMenu/VPageMenuButton.vue'
 import VPageList from '~/components/VHeader/VPageMenu/VPageList.vue'
 
 export default {
   name: 'VMobilePageMenu',
-  components: { VMobileModalContent, VPageMenuButton, VPageList },
+  components: { VModalContent, VPageMenuButton, VPageList },
   setup(_, { emit }) {
     const modalRef = ref(null)
 

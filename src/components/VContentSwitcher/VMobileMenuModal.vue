@@ -8,7 +8,7 @@
         aria-controls="content-switcher-modal"
       />
     </div>
-    <VMobileModalContent
+    <VModalContent
       :visible="visibleRef"
       :trigger-element="triggerRef"
       :hide="close"
@@ -29,7 +29,7 @@
         />
         <VPageList layout="columns" class="mt-10" />
       </nav>
-    </VMobileModalContent>
+    </VModalContent>
   </div>
 </template>
 
@@ -47,7 +47,7 @@ import usePages from '~/composables/use-pages'
 import useSearchType from '~/composables/use-search-type'
 import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 
-import VMobileModalContent from '~/components/VModal/VMobileModalContent.vue'
+import VModalContent from '~/components/VModal/VModalContent.vue'
 import VSearchTypes from '~/components/VContentSwitcher/VSearchTypes.vue'
 import VPageList from '~/components/VHeader/VPageMenu/VPageList.vue'
 import VSearchTypeButton from '~/components/VContentSwitcher/VSearchTypeButton.vue'
@@ -55,7 +55,7 @@ import VSearchTypeButton from '~/components/VContentSwitcher/VSearchTypeButton.v
 export default defineComponent({
   name: 'VMobileMenuModal',
   components: {
-    VMobileModalContent,
+    VModalContent,
     VSearchTypes,
     VPageList,
     VSearchTypeButton,
