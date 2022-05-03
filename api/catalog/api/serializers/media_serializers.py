@@ -361,7 +361,7 @@ class MediaSerializer(serializers.Serializer):
     )
 
     tags = TagSerializer(
-        default=[],
+        allow_null=True,
         many=True,
         help_text="Tags with detailed metadata, such as accuracy.",
     )
@@ -402,6 +402,12 @@ class MediaSerializer(serializers.Serializer):
 
     def validate_foreign_landing_url(self, value):
         return _add_protocol(value)
+
+    def to_representation(self, *args, **kwargs):
+        repr = super().to_representation(*args, **kwargs)
+        if repr["tags"] is None:
+            repr["tags"] = []  # ``tags`` should always be a list, even if empty
+        return repr
 
 
 class MediaSearchSerializer(serializers.Serializer):
