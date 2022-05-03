@@ -17,61 +17,54 @@
       <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
     </i18n>
     <section>
-      <div role="tablist" :aria-label="$t('feedback.title')">
-        <button
-          v-for="(name, index) in tabs"
-          :id="name"
-          :key="index"
-          role="tab"
-          :aria-selected="activeTab === index"
-          :aria-controls="`tab-${name}`"
-          @click.prevent="setActiveTab(index)"
-          @keyup.enter.prevent="setActiveTab(index)"
-        >
-          {{ $t(`feedback.${name}`) }}
-        </button>
-      </div>
-      <div
-        v-for="(name, index) in tabs"
-        :id="`tab-${name}`"
-        :key="index"
-        :aria-labelledby="name"
-        role="tabpanel"
-        tabindex="0"
-      >
-        <iframe
-          class="form-iframe"
-          :aria-label="$t(`feedback.aria.${name}`)"
-          :src="forms[name]"
-          :title="`${name} form`"
-        >
-          {{ $t('feedback.loading') }}
-        </iframe>
-      </div>
+      <VTabs label="#feedback" variant="plain" manual>
+        <template #tabs>
+          <VTab v-for="tab in tabs" :id="tab" :key="tab">
+            {{ $t(`feedback.${tab}`) }}
+          </VTab>
+        </template>
+        <VTabPanel v-for="tab in tabs" :id="tab" :key="tab">
+          <iframe
+            class="w-full h-[1200px] border-0"
+            :src="forms[tab]"
+            :aria-label="$t(`feedback.aria.${tab}`).toString()"
+            :title="$t(`feedback.aria.${tab}`).toString()"
+          >
+            {{ $t('feedback.loading') }}
+          </iframe>
+        </VTabPanel>
+      </VTabs>
     </section>
   </VContentPage>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from '@nuxtjs/composition-api'
+
 import VLink from '~/components/VLink.vue'
 import VContentPage from '~/components/VContentPage.vue'
+import VTabs from '~/components/VTabs/VTabs.vue'
+import VTab from '~/components/VTabs/VTab.vue'
+import VTabPanel from '~/components/VTabs/VTabPanel.vue'
 
 const bugForm =
   'https://docs.google.com/forms/d/e/1FAIpQLSenCn-3HoZlCz4vlL2621wjezfu1sPZDaWGe_FtQ1R5-5qR4Q/viewform'
 const suggestionForm =
   'https://docs.google.com/forms/d/e/1FAIpQLSfGC7JWbNjGs-_pUNe3B2nzBW-YrIrmRd92t-7u0y7s8jMjzQ/viewform'
 
-export const FeedbackPage = {
-  name: 'feedback-page',
-  components: { VLink, VContentPage },
-  data() {
+const forms = {
+  report: `${bugForm}?embedded=true`,
+  improve: `${suggestionForm}?embedded=true`,
+} as const
+const tabs = Object.keys(forms) as (keyof typeof forms)[]
+
+export default defineComponent({
+  name: 'FeedbackPage',
+  components: { VLink, VContentPage, VTabs, VTab, VTabPanel },
+  setup() {
     return {
-      activeTab: 0,
-      tabs: ['improve', 'report'],
-      forms: {
-        report: `${bugForm}?embedded=true`,
-        improve: `${suggestionForm}?embedded=true`,
-      },
+      forms,
+      tabs,
     }
   },
   head() {
@@ -79,26 +72,5 @@ export const FeedbackPage = {
       title: `${this.$t('feedback.title')} | Openverse`,
     }
   },
-  methods: {
-    tabClass(tabIdx, tabClass) {
-      return {
-        [tabClass]: true,
-        'is-active': tabIdx === this.activeTab,
-      }
-    },
-    setActiveTab(tabIdx) {
-      this.activeTab = tabIdx
-    },
-  },
-}
-
-export default FeedbackPage
+})
 </script>
-
-<style scoped>
-.form-iframe {
-  width: 100%;
-  height: 1200px;
-  border: none;
-}
-</style>

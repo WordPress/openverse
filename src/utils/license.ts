@@ -54,8 +54,8 @@ export const getFullLicenseName = (
  * @param license - the license slug to check
  * @returns `false` if `license` is 'cc0' or 'pdm', `true` otherwise
  */
-export const isLicense = (license: License): boolean =>
-  !(PUBLIC_DOMAIN_MARKS as ReadonlyArray<License>).includes(license)
+export const isLicense = (license: string): boolean =>
+  !(PUBLIC_DOMAIN_MARKS as ReadonlyArray<string>).includes(license)
 
 /**
  * CC licenses have different legal status from the public domain marks

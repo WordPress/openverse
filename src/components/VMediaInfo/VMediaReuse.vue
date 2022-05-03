@@ -1,5 +1,8 @@
 <template>
-  <section :aria-label="$t('media-details.reuse.title')">
+  <section
+    :aria-label="$t('media-details.reuse.title').toString()"
+    class="media-reuse"
+  >
     <h3 class="text-2xl md:text-3xl mb-6">
       {{ $t('media-details.reuse.title') }}
     </h3>
@@ -14,10 +17,17 @@
   </section>
 </template>
 
-<script>
-import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
+<script lang="ts">
+import {
+  computed,
+  defineComponent,
+  PropType,
+  useContext,
+} from '@nuxtjs/composition-api'
 
 import { getFullLicenseName } from '~/utils/license'
+
+import type { Media } from '~/models/media'
 
 import VCopyLicense from '~/components/VMediaInfo/VCopyLicense.vue'
 import VMediaLicense from '~/components/VMediaInfo/VMediaLicense.vue'
@@ -27,7 +37,7 @@ const VMediaReuse = defineComponent({
   components: { VCopyLicense, VMediaLicense },
   props: {
     media: {
-      type: Object,
+      type: Object as PropType<Media>,
       required: true,
     },
   },

@@ -16,11 +16,11 @@
           </VLink>
         </template>
       </i18n>
-      <VLicenseElements v-if="license" :license="license" />
+      <VLicenseElements :license="license" />
     </template>
 
     <template v-else>
-      <VLicenseElements v-if="license" :license="license" />
+      <VLicenseElements :license="license" />
       <i18n
         path="media-details.reuse.tool.content"
         tag="span"
@@ -38,28 +38,45 @@
   </div>
 </template>
 
-<script>
-import { isLicense } from '~/utils/license'
+<script lang="ts">
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+
+import { isLicense as isLicenseFn } from '~/utils/license'
+import { useI18n } from '~/composables/use-i18n'
+
+import type { License } from '~/constants/license'
 
 import VLicenseElements from '~/components/VLicense/VLicenseElements.vue'
 import VLink from '~/components/VLink.vue'
 
-export default {
+export default defineComponent({
   name: 'VMediaLicense',
   components: { VLicenseElements, VLink },
   props: {
-    fullLicenseName: String,
-    license: String,
-    licenseUrl: String,
-  },
-  computed: {
-    isLicense() {
-      return isLicense(this.license)
+    fullLicenseName: {
+      type: String,
+      required: true,
     },
-    headerText() {
-      const licenseOrTool = this.isLicense ? 'license' : 'tool'
-      return this.$t(`media-details.reuse.${licenseOrTool}-header`)
+    license: {
+      type: String as PropType<License>,
+      required: true,
+    },
+    licenseUrl: {
+      type: String,
+      required: true,
     },
   },
-}
+  setup(props) {
+    const i18n = useI18n()
+    const isLicense = computed(() => isLicenseFn(props.license))
+    const headerText = computed(() => {
+      const licenseOrTool = isLicense.value ? 'license' : 'tool'
+      return i18n.t(`media-details.reuse.${licenseOrTool}-header`)
+    })
+    return {
+      isLicense,
+      headerText,
+    }
+  },
+})
 </script>

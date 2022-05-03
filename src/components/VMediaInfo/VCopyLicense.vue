@@ -1,101 +1,64 @@
 <template>
   <div>
-    <h5 class="mb-4 text-base md:text-2xl font-semibold">
+    <h5
+      id="copy-license-title"
+      class="mb-4 text-base md:text-2xl font-semibold"
+    >
       {{ $t('media-details.reuse.copy-license.title') }}
     </h5>
 
-    <nav class="flex border-b-none" role="tablist">
-      <button
-        v-for="(tab, idx) in tabs"
-        :key="idx"
-        role="tab"
-        :aria-controls="`tab-${tab}`"
-        :aria-selected="activeTab === tab"
-        class="py-3 md:py-4 px-4 md:px-6 border-t border-x rounded-t-sm bg-white text-sm md:text-base font-semibold relative focus:border-tx focus:outline-none focus:shadow-[0_0_0_1.5px_#c52b9b_inset]"
-        :class="[
-          activeTab === tab
-            ? 'border-t-dark-charcoal-20 border-x-dark-charcoal-20 -mb-[1px]'
-            : 'border-tx',
-        ]"
-        @click.prevent="setActiveTab(tab)"
-      >
-        {{ $t(`media-details.reuse.copy-license.${tab}`) }}
-      </button>
-    </nav>
-
-    <div
-      v-for="(tab, idx) in tabs"
-      :id="`tab-${tab}`"
-      :key="idx"
-      :aria-labelledby="tab"
-      role="tabpanel"
-      tabindex="0"
-      class="border border-dark-charcoal-20 p-4 md:p-6 text-sm md:text-base focus:border-tx focus:outline-none focus:shadow-[0_0_0_1.5px_#c52b9b_inset] h-[190px] flex flex-col justify-between items-start"
-      :class="{ hidden: activeTab !== tab }"
-    >
-      <div class="overflow-y-scroll">
+    <VTabs label="#copy-license-title">
+      <template #tabs>
+        <VTab v-for="tab in tabs" :id="tab" :key="tab">
+          {{ $t(`media-details.reuse.copy-license.${tab}`) }}
+        </VTab>
+      </template>
+      <VLicenseTabPanel :tab="tabs[0]">
         <!-- Disable reason: We control the attribution HTML generation so this is safe and will not lead to XSS attacks -->
         <!-- eslint-disable vue/no-v-html -->
-        <div
-          v-if="tab === 'rich'"
-          id="attribution-rich"
-          v-html="getAttributionMarkup({ includeIcons: false })"
-        />
+        <div v-html="getAttributionMarkup({ includeIcons: false })" />
         <!-- eslint-enable vue/no-v-html -->
-
-        <p
-          v-if="tab === 'html'"
-          id="attribution-html"
-          class="font-mono break-all"
-          dir="ltr"
-        >
+      </VLicenseTabPanel>
+      <VLicenseTabPanel :tab="tabs[1]">
+        <p id="attribution-html" class="font-mono break-all" dir="ltr">
           {{ getAttributionMarkup() }}
         </p>
-
-        <div v-if="tab === 'plain'" id="attribution-plain">
-          {{ getAttributionMarkup({ isPlaintext: true }) }}
-        </div>
-      </div>
-
-      <VCopyButton
-        :id="`copyattr-${tab}`"
-        :el="`#attribution-${tab}`"
-        class="mt-6"
-      />
-    </div>
+      </VLicenseTabPanel>
+      <VLicenseTabPanel :tab="tabs[2]">
+        {{ getAttributionMarkup({ isPlaintext: true }) }}
+      </VLicenseTabPanel>
+    </VTabs>
   </div>
 </template>
 
-<script>
-import { defineComponent, ref, useContext } from '@nuxtjs/composition-api'
+<script lang="ts">
+import { defineComponent, PropType, useContext } from '@nuxtjs/composition-api'
 
-import { getAttribution } from '~/utils/attribution-html'
+import { AttributionOptions, getAttribution } from '~/utils/attribution-html'
 
-import VCopyButton from '~/components/VCopyButton.vue'
+import type { Media } from '~/models/media'
+
+import VTabs from '~/components/VTabs/VTabs.vue'
+import VTab from '~/components/VTabs/VTab.vue'
+import VLicenseTabPanel from '~/components/VMediaInfo/VLicenseTabPanel.vue'
+
+const tabs = ['rich', 'html', 'plain']
 
 const VCopyLicense = defineComponent({
   name: 'VCopyLicense',
-  components: { VCopyButton },
+  components: { VTabs, VTab, VLicenseTabPanel },
   props: {
     media: {
-      type: Object,
+      type: Object as PropType<Media>,
+      required: true,
     },
   },
   setup(props) {
     const { i18n } = useContext()
-
-    const activeTab = ref('rich')
-    const tabs = ['rich', 'html', 'plain']
-
-    const setActiveTab = (tabIdx) => (activeTab.value = tabIdx)
-
-    const getAttributionMarkup = (options) =>
+    const getAttributionMarkup = (options?: AttributionOptions) =>
       getAttribution(props.media, i18n, options)
-
     return {
-      activeTab,
       tabs,
-      setActiveTab,
 
       getAttributionMarkup,
     }

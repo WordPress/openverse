@@ -77,7 +77,7 @@ export type AttributableMedia = Pick<
  * This interface describes the options that the `getAttribution` function can
  * take to customise its output.
  */
-interface AttributionOptions {
+export interface AttributionOptions {
   includeIcons?: boolean
   isPlaintext?: boolean
 }

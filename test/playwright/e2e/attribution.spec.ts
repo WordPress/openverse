@@ -6,7 +6,7 @@ test.beforeEach(async ({ context }) => {
 
 test('can copy rich text attribution', async ({ page }) => {
   await page.goto('image/e9d97a98-621b-4ec2-bf70-f47a74380452')
-  await page.click('[aria-controls="tab-rich"]')
+  await page.click('[aria-controls="panel-rich"]')
   await page.click('[id="copyattr-rich"]')
   const clippedText = await page.evaluate(async () => {
     return navigator.clipboard.readText()
@@ -17,7 +17,7 @@ test('can copy rich text attribution', async ({ page }) => {
 
 test('can copy HTML attribution', async ({ page }) => {
   await page.goto('image/e9d97a98-621b-4ec2-bf70-f47a74380452')
-  await page.click('[aria-controls="tab-html"]')
+  await page.click('[aria-controls="panel-html"]')
   await page.click('[id="copyattr-html"]')
   const clippedText = await page.evaluate(async () => {
     return navigator.clipboard.readText()
@@ -34,7 +34,7 @@ test('can copy HTML attribution', async ({ page }) => {
 
 test('can copy plain text attribution', async ({ page }) => {
   await page.goto('image/e9d97a98-621b-4ec2-bf70-f47a74380452')
-  await page.click('[aria-controls="tab-plain"]')
+  await page.click('[aria-controls="panel-plain"]')
   await page.click('[id="copyattr-plain"]')
   const clippedText = await page.evaluate(async () => {
     return navigator.clipboard.readText()
