@@ -1,9 +1,10 @@
 from test.factory.faker import Faker
 
 import factory
-from catalog.api.models.oauth import ThrottledApplication
 from factory.django import DjangoModelFactory
 from oauth2_provider.models import AccessToken
+
+from catalog.api.models.oauth import ThrottledApplication
 
 
 class ThrottledApplicationFactory(DjangoModelFactory):

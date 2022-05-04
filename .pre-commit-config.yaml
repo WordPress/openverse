@@ -29,14 +29,6 @@ repos:
       - id: isort
         files: \.py$
         exclude: ^build/.*$|^.tox/.*$|^venv/.*$
-        args:
-          - --lines-after-imports=2
-          - --multi-line=3
-          - --trailing-comma
-          - --force-grid-wrap=0
-          - --use-parentheses
-          - --ensure-newline-before-comments
-          - --line-length=88
 
   - repo: https://github.com/PyCQA/flake8
     rev: 3.9.2

@@ -1,6 +1,7 @@
+from django.db import models
+
 from catalog.api.constants.media_types import MEDIA_TYPES
 from catalog.api.models.base import OpenLedgerModel
-from django.db import models
 
 
 class ContentProvider(models.Model):

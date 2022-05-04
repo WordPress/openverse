@@ -11,10 +11,12 @@ inside of the cache (shared by all instances of `api`).
 import logging as log
 import time
 
-from catalog.api.models import Image
 from django.core.exceptions import ObjectDoesNotExist
+
 from django_cron import CronJobBase, Schedule
 from django_redis import get_redis_connection
+
+from catalog.api.models import Image
 
 
 model_name_to_instance = {"Image": Image}

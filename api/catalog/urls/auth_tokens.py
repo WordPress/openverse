@@ -1,5 +1,6 @@
-from catalog.api.views.oauth2_views import Register, VerifyEmail
 from django.urls import include, path
+
+from catalog.api.views.oauth2_views import Register, VerifyEmail
 
 
 urlpatterns = [

@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.urls import re_path
+from rest_framework.permissions import AllowAny
+
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
-from rest_framework.permissions import AllowAny
 
 
 description_path = settings.BASE_DIR.joinpath(

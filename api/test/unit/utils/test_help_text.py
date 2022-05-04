@@ -1,4 +1,5 @@
 import pytest
+
 from catalog.api.utils.help_text import make_comma_separated_help_text
 
 

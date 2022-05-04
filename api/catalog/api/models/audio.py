@@ -1,3 +1,8 @@
+from django.contrib.postgres.fields import ArrayField
+from django.db import models
+
+from uuslug import uuslug
+
 import catalog.api.controllers.search_controller as search_controller
 from catalog.api.models import OpenLedgerModel
 from catalog.api.models.media import (
@@ -10,9 +15,6 @@ from catalog.api.models.media import (
 )
 from catalog.api.models.mixins import FileMixin, ForeignIdentifierMixin, MediaMixin
 from catalog.api.utils.waveform import generate_peaks
-from django.contrib.postgres.fields import ArrayField
-from django.db import models
-from uuslug import uuslug
 
 
 class AltAudioFile(AbstractAltFile):

@@ -4,12 +4,14 @@ from test.factory.faker import WaveformProvider
 from test.factory.models.audio import AudioAddOnFactory, AudioFactory
 from unittest import mock
 
-import psycopg2
-import pytest
-from catalog.api.models.audio import Audio, AudioAddOn
 from django.core.management import call_command
 from django.db import connections
 from django.test.utils import CaptureQueriesContext
+
+import psycopg2
+import pytest
+
+from catalog.api.models.audio import Audio, AudioAddOn
 
 
 @mock.patch("catalog.api.models.audio.generate_peaks")

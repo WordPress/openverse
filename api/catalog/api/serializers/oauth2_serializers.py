@@ -1,6 +1,8 @@
-from catalog.api.models import OAuth2Registration
-from oauth2_provider.models import Application
 from rest_framework import serializers
+
+from oauth2_provider.models import Application
+
+from catalog.api.models import OAuth2Registration
 
 
 class OAuth2RegistrationSerializer(serializers.ModelSerializer):

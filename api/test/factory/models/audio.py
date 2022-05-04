@@ -1,8 +1,9 @@
 from test.factory.faker import Faker
 from test.factory.models.media import IdentifierFactory, MediaFactory
 
-from catalog.api.models.audio import Audio, AudioAddOn
 from factory.django import DjangoModelFactory
+
+from catalog.api.models.audio import Audio, AudioAddOn
 
 
 class AudioFactory(MediaFactory):

@@ -1,3 +1,7 @@
+from rest_framework import serializers
+
+from elasticsearch_dsl.response import Hit
+
 from catalog.api.constants.field_values import AUDIO_CATEGORIES, DURATION
 from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import AudioReport
@@ -11,8 +15,6 @@ from catalog.api.serializers.media_serializers import (
     get_search_request_source_serializer,
 )
 from catalog.api.utils.help_text import make_comma_separated_help_text
-from elasticsearch_dsl.response import Hit
-from rest_framework import serializers
 
 
 class AudioSetSerializer(serializers.Serializer):

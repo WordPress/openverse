@@ -2,6 +2,16 @@ import logging as log
 import secrets
 import smtplib
 
+from django.conf import settings
+from django.core.cache import cache
+from django.core.mail import send_mail
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from rest_framework.views import APIView
+
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 from catalog.api.docs.media_docs import refer_sample
 from catalog.api.models import OAuth2Verification, ThrottledApplication
 from catalog.api.serializers.error_serializers import (
@@ -22,14 +32,6 @@ from catalog.example_responses import (
     key_info_500_example,
     register_api_oauth2_201_example,
 )
-from django.conf import settings
-from django.core.cache import cache
-from django.core.mail import send_mail
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
-from rest_framework.views import APIView
 
 
 class Register(APIView):

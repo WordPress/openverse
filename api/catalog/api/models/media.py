@@ -1,5 +1,9 @@
 import mimetypes
 
+from django.contrib.postgres.fields import ArrayField
+from django.db import models
+from django.utils.html import format_html
+
 import catalog.api.controllers.search_controller as search_controller
 from catalog.api.licenses import ATTRIBUTION, get_license_url
 from catalog.api.models.base import OpenLedgerModel
@@ -8,9 +12,6 @@ from catalog.api.models.mixins import (
     IdentifierMixin,
     MediaMixin,
 )
-from django.contrib.postgres.fields import ArrayField
-from django.db import models
-from django.utils.html import format_html
 
 
 PENDING = "pending_review"

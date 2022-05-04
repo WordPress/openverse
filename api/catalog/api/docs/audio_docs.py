@@ -1,3 +1,5 @@
+from drf_yasg import openapi
+
 from catalog.api.docs.media_docs import (
     MediaComplain,
     MediaDetail,
@@ -34,7 +36,6 @@ from catalog.api.serializers.error_serializers import (
 )
 from catalog.api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from catalog.api.serializers.provider_serializers import ProviderSerializer
-from drf_yasg import openapi
 
 
 class AudioSearch(MediaSearch):

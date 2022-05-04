@@ -1,3 +1,5 @@
+from django.contrib import admin
+
 from catalog.api.models import (
     PENDING,
     ContentProvider,
@@ -6,7 +8,6 @@ from catalog.api.models import (
     MatureImage,
     SourceLogo,
 )
-from django.contrib import admin
 
 
 @admin.register(ImageReport)

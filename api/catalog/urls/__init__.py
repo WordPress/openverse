@@ -14,6 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from django.conf.urls import include
+from django.contrib import admin
+from django.urls import path, re_path
+from django.views.generic import RedirectView
+from rest_framework.routers import SimpleRouter
+
 from catalog.api.utils.status_code_view import get_status_code_view
 from catalog.api.views.audio_views import AudioViewSet
 from catalog.api.views.health_views import HealthCheck
@@ -21,11 +27,6 @@ from catalog.api.views.image_views import ImageViewSet
 from catalog.api.views.oauth2_views import CheckRates
 from catalog.urls.auth_tokens import urlpatterns as auth_tokens_patterns
 from catalog.urls.swagger import urlpatterns as swagger_patterns
-from django.conf.urls import include
-from django.contrib import admin
-from django.urls import path, re_path
-from django.views.generic import RedirectView
-from rest_framework.routers import SimpleRouter
 
 
 discontinuation_message = {

@@ -13,6 +13,7 @@ monkey.patch_all()
 import os
 
 from django.core.wsgi import get_wsgi_application
+
 from wsgi_basic_auth import BasicAuth
 
 

@@ -1,9 +1,10 @@
 import logging
 import subprocess
 
-from catalog.api.models.audio import Audio, AudioAddOn
 from django_tqdm import BaseCommand
 from limit import limit
+
+from catalog.api.models.audio import Audio, AudioAddOn
 
 
 def paginate_reducing_query(get_query_set, page_size=10):

@@ -1,6 +1,7 @@
-from catalog.api.utils.exceptions import get_api_exception
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+
+from catalog.api.utils.exceptions import get_api_exception
 
 
 class StandardPagination(PageNumberPagination):

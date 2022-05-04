@@ -1,8 +1,9 @@
 import datetime as dt
 import logging
 
-from catalog.api.models import ThrottledApplication
 from oauth2_provider.models import AccessToken
+
+from catalog.api.models import ThrottledApplication
 
 
 log = logging.getLogger(__name__)

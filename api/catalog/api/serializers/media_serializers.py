@@ -1,11 +1,13 @@
 from collections import namedtuple
 from urllib.parse import urlparse
 
-import catalog.api.licenses as license_helpers
-from catalog.api.controllers.search_controller import get_sources
-from catalog.api.utils.help_text import make_comma_separated_help_text
-from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
+
+from drf_yasg.utils import swagger_serializer_method
+
+import catalog.api.licenses as license_helpers
+from catalog.api.controllers import search_controller
+from catalog.api.utils.help_text import make_comma_separated_help_text
 
 
 def _validate_enum(enum_name, valid_values: set, given_values: str):
@@ -105,7 +107,7 @@ def get_search_request_source_serializer(media_type):
 
         _field_attrs = {
             "help_text": make_comma_separated_help_text(
-                get_sources(media_type).keys(), "data sources"
+                search_controller.get_sources(media_type).keys(), "data sources"
             ),
             "required": False,
         }
@@ -117,7 +119,7 @@ def get_search_request_source_serializer(media_type):
 
         @staticmethod
         def validate_source_field(input_sources):
-            allowed_sources = list(get_sources(media_type).keys())
+            allowed_sources = list(search_controller.get_sources(media_type).keys())
             input_sources = input_sources.split(",")
             input_sources = [x for x in input_sources if x in allowed_sources]
             input_sources = ",".join(input_sources)

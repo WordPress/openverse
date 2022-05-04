@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from catalog.api.constants.field_values import (
     ASPECT_RATIOS,
     IMAGE_CATEGORIES,
@@ -15,7 +17,6 @@ from catalog.api.serializers.media_serializers import (
     get_search_request_source_serializer,
 )
 from catalog.api.utils.help_text import make_comma_separated_help_text
-from rest_framework import serializers
 
 
 ImageSearchRequestSourceSerializer = get_search_request_source_serializer(

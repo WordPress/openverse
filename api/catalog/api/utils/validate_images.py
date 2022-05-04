@@ -3,6 +3,7 @@ import time
 
 import django_redis
 import grequests
+
 from catalog.api.utils.dead_link_mask import get_query_mask, save_query_mask
 
 

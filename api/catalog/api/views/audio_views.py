@@ -1,5 +1,11 @@
 import logging
 
+from django.utils.decorators import method_decorator
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+from drf_yasg.utils import swagger_auto_schema
+
 from catalog.api.docs.audio_docs import (
     AudioComplain,
     AudioDetail,
@@ -19,10 +25,6 @@ from catalog.api.serializers.media_serializers import MediaThumbnailRequestSeria
 from catalog.api.utils.exceptions import get_api_exception
 from catalog.api.utils.throttle import OneThousandPerMinute
 from catalog.api.views.media_views import MediaViewSet
-from django.utils.decorators import method_decorator
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import action
-from rest_framework.response import Response
 
 
 log = logging.getLogger(__name__)

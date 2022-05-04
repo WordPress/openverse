@@ -1,3 +1,7 @@
+from django.db import models
+
+from uuslug import uuslug
+
 import catalog.api.controllers.search_controller as search_controller
 from catalog.api.models.media import (
     AbstractDeletedMedia,
@@ -7,8 +11,6 @@ from catalog.api.models.media import (
     AbstractMediaReport,
 )
 from catalog.api.models.mixins import FileMixin
-from django.db import models
-from uuslug import uuslug
 
 
 class ImageFileMixin(FileMixin):

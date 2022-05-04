@@ -2,10 +2,12 @@ import time
 import uuid
 from test.constants import API_URL
 
-import pytest
-from catalog.api.models import OAuth2Verification
 from django.urls import reverse
 from django.utils.http import urlencode
+
+import pytest
+
+from catalog.api.models import OAuth2Verification
 
 
 @pytest.mark.django_db

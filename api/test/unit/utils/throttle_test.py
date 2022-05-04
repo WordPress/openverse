@@ -1,6 +1,12 @@
 from test.factory.models.oauth2 import AccessTokenFactory
 
+from rest_framework.response import Response
+from rest_framework.test import APIRequestFactory, force_authenticate
+from rest_framework.views import APIView
+
 import pytest
+from fakeredis import FakeRedis
+
 from catalog.api.utils.oauth2_helper import get_token_info
 from catalog.api.utils.throttle import (
     ApiKeyExemption,
@@ -8,10 +14,6 @@ from catalog.api.utils.throttle import (
     InternalNetworkExemption,
     ThrottleExemption,
 )
-from fakeredis import FakeRedis
-from rest_framework.response import Response
-from rest_framework.test import APIRequestFactory, force_authenticate
-from rest_framework.views import APIView
 
 
 class HardThrottle(ExemptionAwareThrottle):

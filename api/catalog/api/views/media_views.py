@@ -4,18 +4,19 @@ from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from catalog.api.controllers import search_controller
-from catalog.api.models import ContentProvider
-from catalog.api.serializers.provider_serializers import ProviderSerializer
-from catalog.api.utils.exceptions import get_api_exception
-from catalog.api.utils.pagination import StandardPagination
-from catalog.custom_auto_schema import CustomAutoSchema
 from django.conf import settings
 from django.http.response import HttpResponse
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
+
+from catalog.api.controllers import search_controller
+from catalog.api.models import ContentProvider
+from catalog.api.serializers.provider_serializers import ProviderSerializer
+from catalog.api.utils.exceptions import get_api_exception
+from catalog.api.utils.pagination import StandardPagination
+from catalog.custom_auto_schema import CustomAutoSchema
 
 
 class MediaViewSet(ReadOnlyModelViewSet):

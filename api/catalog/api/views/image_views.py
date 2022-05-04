@@ -1,8 +1,17 @@
 import io
 import logging
 
+from django.conf import settings
+from django.http.response import FileResponse, Http404, HttpResponse
+from django.utils.decorators import method_decorator
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 import piexif
 import requests
+from drf_yasg.utils import swagger_auto_schema
+from PIL import Image as PILImage
+
 from catalog.api.docs.image_docs import (
     ImageComplain,
     ImageDetail,
@@ -26,13 +35,6 @@ from catalog.api.utils.exceptions import get_api_exception
 from catalog.api.utils.throttle import OneThousandPerMinute
 from catalog.api.utils.watermark import watermark
 from catalog.api.views.media_views import MediaViewSet
-from django.conf import settings
-from django.http.response import FileResponse, Http404, HttpResponse
-from django.utils.decorators import method_decorator
-from drf_yasg.utils import swagger_auto_schema
-from PIL import Image as PILImage
-from rest_framework.decorators import action
-from rest_framework.response import Response
 
 
 log = logging.getLogger(__name__)
@@ -142,6 +144,7 @@ class ImageViewSet(MediaViewSet):
 
             # Import inside a function to allow server run without Exempi library
             import libxmp
+
             from catalog.api.utils import ccrel
 
             try:

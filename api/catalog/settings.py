@@ -14,9 +14,10 @@ from pathlib import Path
 from socket import gethostbyname, gethostname
 
 import sentry_sdk
-from catalog.logger import LOGGING as LOGGING_CONF
 from decouple import config
 from sentry_sdk.integrations.django import DjangoIntegration
+
+from catalog.logger import LOGGING as LOGGING_CONF
 
 
 # Build paths inside the project like this: BASE_DIR.join('dir', 'subdir'...)
