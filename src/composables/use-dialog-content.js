@@ -19,7 +19,7 @@ import { useFocusOnBlur } from '~/composables/use-focus-on-blur'
 /** @typedef {import('./types').ToRefs<InnerProps> & { emit: import('@nuxtjs/composition-api').SetupContext['emit']}} Props */
 
 /**
- * @param {Props} props
+ * @param {Props} params
  */
 export function useDialogContent({ emit, ...props }) {
   const focusOnBlur = useFocusOnBlur(props)

@@ -92,7 +92,7 @@ const VModalContent = defineComponent({
     },
     hideOnClickOutside: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     autoFocusOnShow: {
       type: Boolean,
