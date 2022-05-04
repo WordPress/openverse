@@ -10,7 +10,7 @@
     <h5 v-if="isError && !fetchState.isFinished" class="py-4">
       {{ fetchState.fetchingError }}
     </h5>
-    <footer class="pt-4">
+    <footer v-if="showLoadMore" class="pt-4">
       <VLoadMore />
     </footer>
   </section>
@@ -34,7 +34,11 @@ export default {
     images: {
       default: () => [],
     },
-    canLoadMore: {
+    /**
+     * Whether to show the 'Load More' button.
+     * Is false for related images
+     */
+    showLoadMore: {
       type: Boolean,
       default: true,
     },
@@ -46,10 +50,6 @@ export default {
   computed: {
     isError() {
       return !!this.fetchState.fetchingError
-    },
-    fetchingErrorHeading() {
-      const type = this.$t('browse-page.search-form.image')
-      return this.$t('browse-page.fetching-error', { type })
     },
   },
   methods: {

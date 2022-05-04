@@ -36,7 +36,7 @@ describe('Media Item Store', () => {
       const singleResultStore = useSingleResultStore()
       expect(singleResultStore.fetchState).toEqual(initialFetchState)
       expect(singleResultStore.mediaItem).toEqual(null)
-      expect(singleResultStore.mediaType).toEqual(IMAGE)
+      expect(singleResultStore.mediaType).toEqual(null)
     })
   })
 

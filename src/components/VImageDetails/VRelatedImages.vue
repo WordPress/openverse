@@ -5,7 +5,7 @@
     </h3>
     <VImageGrid
       :images="media"
-      :can-load-more="false"
+      :show-load-more="false"
       :fetch-state="fetchState"
     />
   </aside>

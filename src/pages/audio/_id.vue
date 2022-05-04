@@ -18,11 +18,11 @@
   </main>
 </template>
 
-<script>
-import { computed } from '@nuxtjs/composition-api'
+<script lang="ts">
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 
 import { AUDIO } from '~/constants/media'
-
+import type { AudioDetail } from '~/models/media'
 import { useRelatedMediaStore } from '~/stores/media/related-media'
 import { useSingleResultStore } from '~/stores/media/single-result'
 
@@ -32,7 +32,9 @@ import VBackToSearchResultsLink from '~/components/VBackToSearchResultsLink.vue'
 import VRelatedAudio from '~/components/VAudioDetails/VRelatedAudio.vue'
 import VMediaReuse from '~/components/VMediaInfo/VMediaReuse.vue'
 
-const AudioDetailPage = {
+import type { NuxtApp } from '@nuxt/types/app'
+
+export default defineComponent({
   name: 'AudioDetailPage',
   components: {
     VAudioDetails,
@@ -41,30 +43,41 @@ const AudioDetailPage = {
     VMediaReuse,
     VRelatedAudio,
   },
-  data() {
-    return {
-      backToSearchPath: '',
-    }
+  beforeRouteEnter(to, from, nextPage) {
+    nextPage((_this) => {
+      // `_this` is the component instance that also has nuxt app properties injected
+      const localeRoute = (_this as NuxtApp).localeRoute
+      if (
+        from.name === localeRoute({ path: '/search/' }).name ||
+        from.name === localeRoute({ path: '/search/audio' }).name
+      ) {
+        // I don't know how to type `_this` here
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        _this.backToSearchPath = from.fullPath
+      }
+    })
   },
   setup() {
+    const singleResultStore = useSingleResultStore()
     const relatedMediaStore = useRelatedMediaStore()
 
+    const audio = computed(() =>
+      singleResultStore.mediaType === AUDIO
+        ? (singleResultStore.mediaItem as AudioDetail)
+        : null
+    )
     const relatedMedia = computed(() => relatedMediaStore.media)
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
 
-    return { relatedMedia, relatedFetchState }
+    return { audio, relatedMedia, relatedFetchState }
   },
   async asyncData({ route, error, app, $pinia }) {
     const audioId = route.params.id
     const singleResultStore = useSingleResultStore($pinia)
 
     try {
-      await singleResultStore.fetchMediaItem(AUDIO, audioId)
-      const audio = singleResultStore.mediaItem
-
-      return {
-        audio,
-      }
+      await singleResultStore.fetch(AUDIO, audioId)
     } catch (err) {
       error({
         statusCode: 404,
@@ -75,15 +88,10 @@ const AudioDetailPage = {
       })
     }
   },
-  beforeRouteEnter(to, from, nextPage) {
-    nextPage((_this) => {
-      if (
-        from.name === _this.localeRoute({ path: '/search/' }).name ||
-        from.name === _this.localeRoute({ path: '/search/audio' }).name
-      ) {
-        _this.backToSearchPath = from.fullPath
-      }
-    })
+  data() {
+    return {
+      backToSearchPath: '',
+    }
   },
   head() {
     const title = this.audio.title
@@ -98,9 +106,7 @@ const AudioDetailPage = {
       ],
     }
   },
-}
-
-export default AudioDetailPage
+})
 </script>
 <style>
 .audio-page {
