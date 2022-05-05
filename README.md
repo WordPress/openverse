@@ -25,7 +25,7 @@ We use [Volta](https://volta.sh/) to manage our local environment tools. Please 
 Once you have volta installed, manually install `pnpm` using volta. [Volta does not currently officially support `pnpm`](https://github.com/volta-cli/volta/issues/737) so this is a stop gap solution until that support is implemented:
 
 ```bash
-volta install pnpm
+volta install pnpm@$(cat .pnpm-version)
 ```
 
 Run the following commands in order to have the code up and running on your machine:
@@ -74,17 +74,13 @@ You can find the local IP address Nuxt uses by looking at the output of `nuxt de
 
 You will need to regenerate the certificate if this IP address changes for any reason, like by enabling a VPN or changing networks.
 
-### Docker setup
+### Choosing which API to use
 
-Alternatively, you can use Docker to build and run the application. You just have to run:
+You don't need to have the Openverse API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [production API](https://api.openverse.engineering) that's already publicly available. If you need to test against changes in your local API, set the `API_URL` environment variable when run the development server.
 
-```bash
-docker-compose up
+```shell
+API_URL=http://localhost:8000 pnpm dev
 ```
-
-You should now have the application running and accessible at http://localhost:8443.
-
-You don't need to have the Openverse API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [API](https://api.openverse.engineering) that's already publicly available. If you wish, you can change the URL of the API that's used during development by setting the `API_URL` environment variable.
 
 ### Standalone and embedded modes
 
@@ -111,6 +107,26 @@ If you need to run an HTTP version (for example, if you're testing against third
 ```
 ngrok http 8443 -host-header="localhost:8443"
 ```
+
+## Docker and Openverse frontend
+
+We do not currently support local development using Docker or `docker-compose`. It was supported in the past, but it was not used by the core contributors. It remained broken for many months without ever being noticed, so the assumption is that it was also not being used active community members. Local `nuxt` development is still easy across platforms, so maintaining a separate Docker development stack for the frontend did not make sense.
+
+However, we do build and actively deploy the frontend using Docker images. If you wish to build the production image for yourself, run the following:
+
+```shell
+docker build . --build-arg PNPM_VERSION=$(cat .pnpm-version) -t openverse-frontend:latest
+```
+
+You can also find the latest `openverse-frontend` images on our [GitHub packages page](https://github.com/WordPress/openverse-frontend/pkgs/container/openverse-frontend).
+
+You can then run using either the locally built image or the `ghcr.io` image from the link above:
+
+```shell
+docker run -it -p 127.0.0.1:8443:8443/tcp openverse-frontend:latest
+```
+
+The app will be available at http://localhost:8443.
 
 ## Formatting and Linting
 
