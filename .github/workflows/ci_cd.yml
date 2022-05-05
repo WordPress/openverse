@@ -285,6 +285,7 @@ jobs:
   docs-preview:
     name: Publish preview of developer docs for the branch
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
     needs:
       - build-images
 
