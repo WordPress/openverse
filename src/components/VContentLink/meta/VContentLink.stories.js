@@ -21,10 +21,12 @@ export default {
   },
 }
 
-const VContentLinkStory = (args, { argTypes }) => ({
-  template: `<VContentLink v-bind="$props" />`,
+const VContentLinkStory = (args) => ({
+  template: `<VContentLink v-bind="args" />`,
   components: { VContentLink },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 const TwoVContentLinkStory = () => ({
@@ -62,10 +64,12 @@ Default.args = {
   isSelected: false,
 }
 
-const VContentLinkHorizontalStory = (args, { argTypes }) => ({
-  template: `<div class="max-w-md"><VContentLink v-bind="$props" /></div>`,
+const VContentLinkHorizontalStory = (args) => ({
+  template: `<div class="max-w-md"><VContentLink v-bind="args" /></div>`,
   components: { VContentLink },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 export const Horizontal = VContentLinkHorizontalStory.bind({})
