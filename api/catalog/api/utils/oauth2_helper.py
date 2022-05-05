@@ -3,7 +3,7 @@ import logging
 
 from oauth2_provider.models import AccessToken
 
-from catalog.api.models import ThrottledApplication
+from catalog.api import models
 
 
 log = logging.getLogger(__name__)
@@ -25,11 +25,11 @@ def get_token_info(token: str):
         return None, None, None
     if token.expires >= dt.datetime.now(token.expires.tzinfo):
         try:
-            application = ThrottledApplication.objects.get(accesstoken=token)
+            application = models.ThrottledApplication.objects.get(accesstoken=token)
             client_id = str(application.client_id)
             rate_limit_model = application.rate_limit_model
             verified = application.verified
-        except ThrottledApplication.DoesNotExist:
+        except models.ThrottledApplication.DoesNotExist:
             log.warning("Failed to find application associated with access token.")
             client_id = None
             rate_limit_model = None
