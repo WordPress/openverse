@@ -7,6 +7,11 @@ on:
   release:
     types:
       - 'released'
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Git commit from which to build the new stable image.
+        required: true
 
 jobs:
   push:
@@ -20,6 +25,8 @@ jobs:
       # download the source code into the runner
       - name: checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.sha || 'main' }}
 
       # build a new docker image and push it into the repository
       - name: docker build
