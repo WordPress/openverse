@@ -421,7 +421,9 @@
         "link": "here"
       },
       "credit": {
-        "text": "\"{title}\"{creator}{marked-licensed}{license}. {view-legal}",
+        "generic-title": "This work",
+        "actual-title": "\"{title}\"",
+        "text": "{title}{creator}{marked-licensed}{license}. {view-legal}",
         "creator-text": " by {creator-name}",
         "marked": " is marked with ",
         "licensed": " is licensed under ",

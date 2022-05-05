@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-05-03T16:18:32+00:00\n"
+"POT-Creation-Date: 2022-05-04T11:38:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -655,9 +655,18 @@ msgctxt "media-details.reuse.copy-license.copied"
 msgid "Copied!"
 msgstr ""
 
+msgctxt "media-details.reuse.credit.generic-title"
+msgid "This work"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "media-details.reuse.credit.actual-title"
+msgid "\"###title###\""
+msgstr ""
+
 #. Do not translate words between ### ###.
 msgctxt "media-details.reuse.credit.text"
-msgid "\"###title###\"###creator######marked-licensed######license###. ###view-legal###"
+msgid "###title######creator######marked-licensed######license###. ###view-legal###"
 msgstr ""
 
 #. Do not translate words between ### ###.

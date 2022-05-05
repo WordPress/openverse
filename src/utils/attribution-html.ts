@@ -105,7 +105,7 @@ export const getAttribution = (
   /* Title */
 
   let titleLink = mediaItem.title || ''
-  if (!isPlaintext && mediaItem.foreign_landing_url)
+  if (!isPlaintext && mediaItem.foreign_landing_url && titleLink)
     titleLink = extLink(mediaItem.foreign_landing_url, titleLink)
 
   /* Creator */
@@ -144,7 +144,9 @@ export const getAttribution = (
   let attribution: string
   if (i18n) {
     let fillers: Record<string, string> = {
-      title: titleLink,
+      title: titleLink
+        ? i18n.t(`${i18nBase}.actual-title`, { title: titleLink }).toString()
+        : i18n.t(`${i18nBase}.generic-title`).toString(),
       creator: creatorLink
         ? i18n
             .t(`${i18nBase}.creator-text`, {
@@ -172,7 +174,8 @@ export const getAttribution = (
     }
     attribution = i18n.t(`${i18nBase}.text`, fillers).toString()
   } else {
-    const attributionParts = [`"${titleLink}"`]
+    const attributionParts = []
+    attributionParts.push(titleLink ? `"${titleLink}"` : 'This work')
     if (creatorLink) attributionParts.push(' by ', creatorLink)
     attributionParts.push(
       isPd ? ' is marked with ' : ' is licensed under ',
