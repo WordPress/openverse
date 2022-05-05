@@ -109,6 +109,7 @@ def test_report_completion_contents(
 @pytest.mark.parametrize(
     "seconds, expected",
     [
+        (0.1, "less than 1 sec"),
         (1, "1 sec"),
         (10, "10 secs"),
         (100, "1 min, 40 secs"),

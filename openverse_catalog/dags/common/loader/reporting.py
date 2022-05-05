@@ -33,6 +33,8 @@ MediaTypeRecordMetrics = dict[str, RecordMetrics]
 def humanize_time_duration(seconds: float) -> str:
     if seconds == 0:
         return "inf"
+    elif seconds < 1:
+        return "less than 1 sec"
     parts = []
     for unit, div in TIME_DURATION_UNITS:
         amount, seconds = divmod(int(seconds), div)
