@@ -9,6 +9,7 @@ This documentation is focused towards developers who are building the Openverse 
 
 guides/index
 reference/index
+terms_of_service
 ```
 
 ```{toctree}
