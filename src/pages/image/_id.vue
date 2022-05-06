@@ -1,6 +1,6 @@
 <template>
   <div>
-    <figure class="w-full mb-4 pt-8 md:pt-12 px-6 bg-dark-charcoal-06 relative">
+    <figure class="w-full mb-4 pt-12 px-6 bg-dark-charcoal-06 relative">
       <div
         v-if="backToSearchPath"
         class="absolute left-0 top-0 right-0 z-40 w-full px-2"
