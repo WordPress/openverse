@@ -57,7 +57,6 @@
 </template>
 
 <script lang="ts">
-import sortBy from 'lodash.sortby'
 import {
   computed,
   defineComponent,
@@ -69,6 +68,7 @@ import { useProviderStore } from '~/stores/provider'
 import { useGetLocaleFormattedNumber } from '~/composables/use-get-locale-formatted-number'
 
 import type { SupportedMediaType } from '~/constants/media'
+import type { MediaProvider } from '~/models/media-provider'
 
 import TableSortIcon from '~/components/TableSortIcon.vue'
 import VLink from '~/components/VLink.vue'
@@ -90,10 +90,10 @@ export default defineComponent({
   setup(props) {
     const sorting = reactive({
       direction: 'asc',
-      field: 'display_name',
+      field: 'display_name' as keyof Omit<MediaProvider, 'logo_url'>,
     })
 
-    function sortTable(field: string) {
+    function sortTable(field: keyof Omit<MediaProvider, 'logo_url'>) {
       let direction = 'asc'
       if (field === sorting.field) {
         direction = sorting.direction === 'asc' ? 'desc' : 'asc'
@@ -102,6 +102,7 @@ export default defineComponent({
       sorting.direction = direction
       sorting.field = field
     }
+
     function cleanSourceUrlForPresentation(url: string) {
       const stripProtocol = (s: string) => s.replace(/https?:\/\//, '')
       const stripLeadingWww = (s: string) =>
@@ -110,15 +111,28 @@ export default defineComponent({
 
       return removeAfterSlash(stripLeadingWww(stripProtocol(url)))
     }
+
     const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
     const providerStore = useProviderStore()
 
+    function compareProviders(prov1: MediaProvider, prov2: MediaProvider) {
+      let field1 = prov1[sorting.field]
+      let field2 = prov2[sorting.field]
+      if (sorting.field === 'source_url') {
+        field1 = cleanSourceUrlForPresentation(field1 as string)
+        field2 = cleanSourceUrlForPresentation(field2 as string)
+      }
+      if (field1 > field2) return 1
+      if (field1 < field2) return -1
+      return 0
+    }
+
     const sortedProviders = computed(() => {
-      const sorted = sortBy(providerStore.providers[props.media], [
-        sorting.field,
-      ])
-      return sorting.direction === 'asc' ? sorted : sorted.reverse()
+      const providers = providerStore.providers[props.media]
+      providers.sort(compareProviders)
+      return sorting.direction === 'asc' ? providers : providers.reverse()
     })
+
     return {
       getLocaleFormattedNumber,
       externalLinkIcon,

@@ -51,6 +51,7 @@ const doOpen = async () => {
 // Eventually we'll want to abstract those tests out but for now it's not worth
 // the work.
 describe('VModal', () => {
+  let options
   let _scrollTo
   beforeAll(() => {
     _scrollTo = window.scrollTo
@@ -61,11 +62,15 @@ describe('VModal', () => {
   })
 
   beforeEach(() => {
+    options = {
+      props: { useCustomInitialFocus: false },
+      stubs: ['NuxtLink'],
+    }
     jest.resetAllMocks()
   })
 
   it('should render a close button that hides the modal', async () => {
-    render(TestWrapper)
+    render(TestWrapper, options)
     await doOpen()
 
     expect(getDialog()).toBeVisible()
@@ -77,7 +82,7 @@ describe('VModal', () => {
   })
 
   it('should scroll lock the body when modal opens and unlock when modal closes', async () => {
-    const { container } = render(TestWrapper)
+    const { container } = render(TestWrapper, options)
     const scrollY = 10
     window.scrollY = scrollY
     await doOpen()
@@ -94,7 +99,7 @@ describe('VModal', () => {
   })
 
   it('should focus the close button by default', async () => {
-    render(TestWrapper)
+    render(TestWrapper, options)
     await doOpen()
 
     expect(getDialog()).toBeVisible()
@@ -102,7 +107,8 @@ describe('VModal', () => {
   })
 
   it('should focus the explicit initial focus element when specified', async () => {
-    render(TestWrapper, { props: { useCustomInitialFocus: true } })
+    options.props = { useCustomInitialFocus: true }
+    render(TestWrapper, options)
     await doOpen()
 
     expect(getDialog()).toBeVisible()
