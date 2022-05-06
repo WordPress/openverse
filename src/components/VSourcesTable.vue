@@ -138,7 +138,7 @@ export default defineComponent({
 
 @layer components {
   .table {
-    @apply border-0 rounded-sm border-separate border-dark-charcoal-20;
+    @apply border-0 rounded-sm border-dark-charcoal-20;
   }
   .table th,
   .table td {

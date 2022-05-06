@@ -79,8 +79,6 @@ specifiers:
   reakit-utils: ^0.15.2
   rfdc: ^1.3.0
   rimraf: ^3.0.2
-  sass: ^1.49.9
-  sass-loader: ^10.2.1
   seeded-rand: ^2.0.1
   tailwind-config-viewer: ^1.6.3
   tailwindcss: ^3.0.23
@@ -140,7 +138,7 @@ devDependencies:
   '@babel/preset-typescript': 7.16.7
   '@babel/runtime-corejs3': 7.16.5
   '@intlify/eslint-plugin-vue-i18n': 1.4.0_eslint@8.12.0
-  '@nuxt/types': 2.15.8_sass@1.49.9
+  '@nuxt/types': 2.15.8
   '@nuxt/typescript-build': 2.1.0_@nuxt+types@2.15.8+eslint@8.12.0
   '@nuxtjs/eslint-module': 3.0.2_eslint@8.12.0
   '@nuxtjs/storybook': 4.3.0_eslint@8.12.0+typescript@4.6.2
@@ -180,8 +178,6 @@ devDependencies:
   postcss: 8.4.12
   prettier: 2.6.0
   rimraf: 3.0.2
-  sass: 1.49.9
-  sass-loader: 10.2.1_sass@1.49.9
   tailwind-config-viewer: 1.6.3_tailwindcss@3.0.23
   tailwindcss: 3.0.23_cf30258013438338cbfd2cf01b956a45
   tailwindcss-rtl: 0.9.0
@@ -3037,7 +3033,7 @@ packages:
       - encoding
     dev: false
 
-  /@nuxt/types/2.15.8_sass@1.49.9:
+  /@nuxt/types/2.15.8:
     resolution: {integrity: sha512-zBAG5Fy+SIaZIerOVF1vxy1zz16ZK07QSbsuQAjdtEFlvr+vKK+0AqCv8r8DBY5IVqdMIaw5FgNUz5py0xWdPg==}
     dependencies:
       '@types/autoprefixer': 9.7.2
@@ -3058,7 +3054,7 @@ packages:
       '@types/webpack-bundle-analyzer': 3.9.3
       '@types/webpack-dev-middleware': 4.1.2
       '@types/webpack-hot-middleware': 2.25.4
-      sass-loader: 10.1.1_sass@1.49.9
+      sass-loader: 10.1.1
     transitivePeerDependencies:
       - fibers
       - node-sass
@@ -3071,7 +3067,7 @@ packages:
     peerDependencies:
       '@nuxt/types': '>=2.13.1'
     dependencies:
-      '@nuxt/types': 2.15.8_sass@1.49.9
+      '@nuxt/types': 2.15.8
       consola: 2.15.3
       fork-ts-checker-webpack-plugin: 6.5.0_eslint@8.12.0+typescript@4.6.2
       ts-loader: 8.3.0_typescript@4.6.2
@@ -11069,10 +11065,6 @@ packages:
     resolution: {integrity: sha1-nbHb0Pr43m++D13V5Wu2BigN5ps=}
     dev: false
 
-  /immutable/4.0.0:
-    resolution: {integrity: sha512-zIE9hX70qew5qTUjSS7wi1iwj/l7+m54KWU247nhM3v806UdGj1yDndXj+IOYxxtW9zyLI+xqFNZjTuDaLUqFw==}
-    dev: true
-
   /import-cwd/2.1.0:
     resolution: {integrity: sha1-qmzzbnInYShcs3HsZRn1PiQ1sKk=}
     engines: {node: '>=4'}
@@ -16275,7 +16267,7 @@ packages:
       walker: 1.0.8
     dev: true
 
-  /sass-loader/10.1.1_sass@1.49.9:
+  /sass-loader/10.1.1:
     resolution: {integrity: sha512-W6gVDXAd5hR/WHsPicvZdjAWHBcEJ44UahgxcIE196fW2ong0ZHMPO1kZuI5q0VlvMQZh32gpv69PLWQm70qrw==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -16294,31 +16286,6 @@ packages:
       klona: 2.0.5
       loader-utils: 2.0.2
       neo-async: 2.6.2
-      sass: 1.49.9
-      schema-utils: 3.1.1
-      semver: 7.3.5
-    dev: true
-
-  /sass-loader/10.2.1_sass@1.49.9:
-    resolution: {integrity: sha512-RRvWl+3K2LSMezIsd008ErK4rk6CulIMSwrcc2aZvjymUgKo/vjXGp1rSWmfTUX7bblEOz8tst4wBwWtCGBqKA==}
-    engines: {node: '>= 10.13.0'}
-    peerDependencies:
-      fibers: '>= 3.1.0'
-      node-sass: ^4.0.0 || ^5.0.0 || ^6.0.0
-      sass: ^1.3.0
-      webpack: ^4.36.0 || ^5.0.0
-    peerDependenciesMeta:
-      fibers:
-        optional: true
-      node-sass:
-        optional: true
-      sass:
-        optional: true
-    dependencies:
-      klona: 2.0.5
-      loader-utils: 2.0.2
-      neo-async: 2.6.2
-      sass: 1.49.9
       schema-utils: 3.1.1
       semver: 7.3.5
     dev: true
@@ -16330,16 +16297,6 @@ packages:
       chalk: 4.1.2
       glob: 7.2.0
       loader-utils: 2.0.2
-    dev: true
-
-  /sass/1.49.9:
-    resolution: {integrity: sha512-YlYWkkHP9fbwaFRZQRXgDi3mXZShslVmmo+FVK3kHLUELHHEYrCmL1x6IUjC7wLS6VuJSAFXRQS/DxdsC4xL1A==}
-    engines: {node: '>=12.0.0'}
-    hasBin: true
-    dependencies:
-      chokidar: 3.5.3
-      immutable: 4.0.0
-      source-map-js: 1.0.2
     dev: true
 
   /sax/1.2.4:

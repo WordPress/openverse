@@ -7,7 +7,6 @@ on:
       - "**.js"
       - "**.vue"
       - "**.css"
-      - "**.scss"
       # Changes to any dependency
       - "pnpm-lock.yaml"
       # This file configures ESLint. Changes could affect the outcome.

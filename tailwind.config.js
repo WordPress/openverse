@@ -43,8 +43,8 @@ module.exports = {
       // Dark Charcoal
       'dark-charcoal': {
         DEFAULT: '#30272e',
-        '06': '#f3f2f2',
-        10: '#eae9ea',
+        '06': '#f3f2f2', // rgb(243, 242, 242)
+        10: '#eae9ea', // rgb(234, 233, 234)
         20: '#d6d4d5',
         30: '#c1bec0',
         40: '#aca9ab',
@@ -192,6 +192,7 @@ module.exports = {
       ],
       heading: ['"Inter"', 'sans-serif'],
       mono: ['"JetBrains Mono"', 'monospace'],
+      sans: ['"Inter"', 'sans-serif'],
       serif: ['Times New Roman'],
       icons: ['"Vocabulary Icons"'],
     },

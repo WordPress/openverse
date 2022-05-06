@@ -1,16 +1,14 @@
 <template>
-  <div dir="ltr">
-    <div class="hero-section border-b">
-      <div class="container pt-16">
-        <div class="intro text-center mx-auto">
-          <h2 class="text-5xl mb-10">
-            {{ $t('extension.description.intro') }}
-          </h2>
-        </div>
-        <ExtensionBrowsers />
+  <section dir="ltr">
+    <div class="border-b border-dark-charcoal-30 bg-dark-charcoal-06">
+      <div class="flex flex-col items-center pt-20">
+        <h2 class="text-5xl text-center mb-10 max-w-[700px]">
+          {{ $t('extension.description.intro') }}
+        </h2>
+        <ExtensionBrowsers class="mb-16" />
         <video
           ref="heroVid"
-          class="max-w-7xl block w-full mx-auto"
+          class="max-w-7xl block w-full"
           autoplay
           loop
           muted
@@ -25,7 +23,7 @@
       </div>
     </div>
     <div
-      class="features max-w-6xl grid grid-cols-1 tab:grid-cols-2 gap-x-12 gap-y-30 py-30 mx-auto"
+      class="features md:max-w-3xl lg:max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-30 py-30 md:px-6 mx-auto"
     >
       <template v-for="(feature, index) in features">
         <figure
@@ -37,83 +35,73 @@
           <img
             class="max-w-7xl w-full rounded border"
             :src="feature.image"
-            :alt="$t(`extension.features.${feature.key}.heading`)"
+            :alt="$t(`extension.features.${feature.key}.heading`).toString()"
           />
         </figure>
         <div
           :key="`description-${index}`"
           :data-index="index"
-          class="description flex flex-col justify-center items-center"
+          class="description flex flex-col justify-center items-center text-left"
           :style="{ '--cell-idx': index * 2 + 1 }"
         >
-          <h2 class="text-5xl">
+          <h2 class="text-5xl mb-4 max-w=[30rem]">
             {{ $t(`extension.features.${feature.key}.heading`) }}
           </h2>
-          <p class="mt-4">
+          <p class="max-w=[30rem]">
             {{ $t(`extension.features.${feature.key}.content`) }}
           </p>
         </div>
       </template>
     </div>
-    <div class="section">
-      <div class="container conclusion mb-24">
-        <h2 class="text-center mx-auto">{{ $t('extension.conclusion') }}</h2>
-        <ExtensionBrowsers class="mt-6" />
-      </div>
+    <div class="flex flex-col items-center mb-30">
+      <h2 class="text-6xl text-center max-w-[40rem]">
+        {{ $t('extension.conclusion') }}
+      </h2>
+      <ExtensionBrowsers class="mt-6" />
     </div>
-  </div>
+  </section>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, ref } from '@nuxtjs/composition-api'
+
 import ExtensionBrowsers from '~/components/ExtensionBrowsers.vue'
 
 import feature1 from '~/assets/screenshots/extension_feat_1.png'
 import feature2 from '~/assets/screenshots/extension_feat_2.png'
 import feature3 from '~/assets/screenshots/extension_feat_3.png'
 
-const AboutPage = {
-  name: 'about-page',
+export default defineComponent({
+  name: 'AboutPage',
   components: { ExtensionBrowsers },
-  data() {
+  setup() {
+    const heroVid = ref<HTMLVideoElement>()
     const features = [
       { key: 'search', image: feature1 },
       { key: 'bookmark', image: feature2 },
       { key: 'use', image: feature3 },
     ]
-    return {
-      features,
-      isPlaying: true,
+    const isPlaying = ref(true)
+
+    const togglePlay = () => {
+      if (isPlaying.value) {
+        heroVid.value?.pause()
+      } else {
+        heroVid.value?.play()
+      }
+      isPlaying.value = !isPlaying.value
     }
+    return { heroVid, togglePlay, features, isPlaying }
   },
   head() {
     return {
       title: `${this.$t('extension.title')} | Openverse`,
     }
   },
-  methods: {
-    togglePlay() {
-      if (this.isPlaying) {
-        this.$refs.heroVid.pause()
-      } else {
-        this.$refs.heroVid.play()
-      }
-      this.isPlaying = !this.isPlaying
-    },
-  },
-}
-
-export default AboutPage
+})
 </script>
 
 <style scoped>
-.container .intro {
-  max-width: 880px;
-}
-
-.hero-section {
-  @apply border-dark-charcoal-30 bg-[#f6f7f7];
-}
-
 .features figure,
 .features .description {
   order: var(--cell-idx);
@@ -139,11 +127,6 @@ figure img {
   max-width: 30rem;
 }
 
-.description h2,
-.description p {
-  max-width: 30rem;
-}
-
 @screen md {
   /** Rearrange middle row on two column layouts for zig-zag appearance **/
   figure[data-index='1'] {
@@ -153,9 +136,5 @@ figure img {
   .description[data-index='1'] {
     order: 3;
   }
-}
-
-.conclusion h2 {
-  max-width: 40rem;
 }
 </style>

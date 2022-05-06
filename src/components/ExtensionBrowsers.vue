@@ -1,28 +1,36 @@
 <template>
-  <ul class="buttons is-centered">
+  <ul class="flex flex-wrap justify-center items-center">
     <li v-for="(browser, key) in browsers" :key="key">
-      <VLink
+      <VButton
+        as="VLink"
+        variant="tertiary"
         :href="browser.extUrl"
-        class="browser-button button small me-2 is-opaque"
+        class="me-2"
       >
         {{ $t(`browsers.${key}`) }}
-        <img class="ms-2" :src="browser.logo" :alt="$t(`browsers.${key}`)" />
-      </VLink>
+        <img
+          class="ms-2 w-6 h-6"
+          :src="browser.logo"
+          :alt="$t(`browsers.${key}`).toString()"
+        />
+      </VButton>
     </li>
   </ul>
 </template>
 
-<script>
-import VLink from '~/components/VLink.vue'
+<script lang="ts">
+import { defineComponent } from '@nuxtjs/composition-api'
+
+import VButton from '~/components/VButton.vue'
 
 import chromeLogo from '~/assets/browsers/chrome.svg'
 import edgeLogo from '~/assets/browsers/edge.svg'
 import firefoxLogo from '~/assets/browsers/firefox.svg'
 import operaLogo from '~/assets/browsers/opera.svg'
 
-export default {
+export default defineComponent({
   name: 'ExtensionBrowsers',
-  components: { VLink },
+  components: { VButton },
   data() {
     return {
       browsers: {
@@ -48,15 +56,5 @@ export default {
       },
     }
   },
-}
+})
 </script>
-
-<style scoped>
-.browser-button {
-  @apply bg-white;
-}
-
-.browser-button img {
-  @apply w-6 h-6;
-}
-</style>

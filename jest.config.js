@@ -18,8 +18,7 @@ module.exports = {
   transform: {
     '^.+\\.(j|t)s$': 'babel-jest',
     '.*\\.(vue)$': 'vue-jest',
-    '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$':
-      'jest-transform-stub',
+    '.+\\.(css|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
     '^.+\\.svg$': '<rootDir>/test/unit/svg-transform.js',
   },
   testPathIgnorePatterns: ['/playwright/', '/storybook/'],

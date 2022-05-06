@@ -74,15 +74,17 @@
         </strong>
       </template>
     </i18n>
-    <h5>{{ $t('sources.heading.image') }}</h5>
-    <VSourcesTable media="image" />
-    <h5>{{ $t('sources.heading.audio') }}</h5>
-    <VSourcesTable media="audio" />
+    <template v-for="mediaType in supportedMediaTypes">
+      <h3 :key="mediaType">{{ $t(`sources.heading.${mediaType}`) }}</h3>
+      <VSourcesTable :key="mediaType" :media="mediaType" />
+    </template>
   </VContentPage>
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
+
+import { supportedMediaTypes } from '~/constants/media'
 
 import VButton from '~/components/VButton.vue'
 import VLink from '~/components/VLink.vue'
@@ -96,7 +98,7 @@ export default defineComponent({
   name: 'SourcePage',
   components: { VButton, VContentPage, VIcon, VLink, VSourcesTable },
   setup() {
-    return { externalLinkIcon }
+    return { externalLinkIcon, supportedMediaTypes }
   },
 
   head() {
