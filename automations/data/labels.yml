@@ -18,7 +18,7 @@ groups:
     labels:
       - name: critical
         color: "UNFAVOURABLE"
-        description: Must be fixed ASAP
+        description: Must be addressed ASAP
         emoji: "🟥"
       - name: high
         color: "NEGATIVE"
@@ -26,7 +26,7 @@ groups:
         emoji: "🟧"
       - name: medium
         color: "NEUTRAL"
-        description: Not blocking but should be fixed soon
+        description: Not blocking but should be addressed soon
         emoji: "🟨"
       - name: low
         color: "POSITIVE"
