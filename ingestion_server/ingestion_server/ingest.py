@@ -336,11 +336,13 @@ def reload_upstream(
         # Step 5: Clean the data
         log.info("Cleaning data...")
         clean_image_data(table)
+        log.info("Cleaning completed!")
         slack.verbose(
             f"`{table}`: Data cleaning complete | "
             f"_Next: re-applying indices & constraints_"
         )
 
+    log.info("Starting post-cleaning work...")
     with downstream_db, downstream_db.cursor() as downstream_cur:
         # Step 6: Recreate indices from the original table
         log.info("Copying finished! Recreating database indices...")
