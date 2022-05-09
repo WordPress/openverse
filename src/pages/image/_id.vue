@@ -16,7 +16,7 @@
         class="h-full max-h-[500px] mx-auto rounded-t-sm"
         @load="onImageLoaded"
       />
-      <SketchFabViewer
+      <VSketchFabViewer
         v-if="sketchFabUid"
         :uid="sketchFabUid"
         class="mx-auto rounded-t-sm"
@@ -88,7 +88,7 @@ import VLink from '~/components/VLink.vue'
 import VImageDetails from '~/components/VImageDetails/VImageDetails.vue'
 import VMediaReuse from '~/components/VMediaInfo/VMediaReuse.vue'
 import VRelatedImages from '~/components/VImageDetails/VRelatedImages.vue'
-import SketchFabViewer from '~/components/SketchFabViewer.vue'
+import VSketchFabViewer from '~/components/VSketchFabViewer.vue'
 import VBackToSearchResultsLink from '~/components/VBackToSearchResultsLink.vue'
 
 import type { NuxtApp } from '@nuxt/types/app'
@@ -101,7 +101,7 @@ export default defineComponent({
     VImageDetails,
     VMediaReuse,
     VRelatedImages,
-    SketchFabViewer,
+    VSketchFabViewer,
     VBackToSearchResultsLink,
   },
   beforeRouteEnter(_to, from, nextPage) {

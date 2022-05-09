@@ -646,5 +646,6 @@
     "store-state": "Store state",
     "content-filtering": "Content filtering",
     "explanation": "Shown because {feat-name} is {feat-state}"
-  }
+  },
+  "sketchfab-iframe-title": "{sketchfab} viewer"
 }

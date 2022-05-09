@@ -64,6 +64,7 @@
     "src/components/VTabs/**.vue",
     "src/components/VCopyButton.vue",
     "src/components/VMediaInfo/**.vue",
+    "src/components/VSketchFabViewer.vue",
     "src/pages/feedback.vue",
     "src/pages/search-help.vue",
     "src/pages/extension.vue",
