@@ -25,6 +25,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Get pnpm-version
+      id: pnpm-version
+      run: |
+        echo "::set-output name=val::$(cat .pnpm-version)"
+
     # setup docker buildx
     - name: setup docker buildx
       uses: docker/setup-buildx-action@v1
@@ -61,6 +66,8 @@ runs:
         tags: ${{ steps.metadata_staging.outputs.tags }}
         labels: ${{ steps.metadata_staging.outputs.labels }}
         push: true
+        build-args: |
+          PNPM_VERSION=${{ steps.pnpm-version.outputs.val }}
 
     # for production
     # gather metadata from git & github actions to reference in docker
@@ -86,3 +93,5 @@ runs:
         tags: ${{ steps.metadata_production.outputs.tags }}
         labels: ${{ steps.metadata_production.outputs.labels }}
         push: true
+        build-args: |
+          PNPM_VERSION=${{ steps.pnpm-version.outputs.val }}
