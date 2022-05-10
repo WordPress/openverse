@@ -2,7 +2,7 @@ FROM node:16-alpine
 
 ARG PNPM_VERSION
 
-RUN npm install -g pnpm@${PNPM_VERSION}
+RUN npm install -g pnpm@${PNPM_VERSION} pm2@5.2.0
 
 USER node
 
@@ -29,11 +29,10 @@ RUN pnpm i18n
 # build the application and generate a distribution package
 RUN pnpm build:only
 
+COPY ecosystem.config.js /home/node/app/ecosystem.config.js
+
 # set app serving to permissive / assigned
 ENV NUXT_HOST=0.0.0.0
-
-# set app port
-ENV NUXT_PORT=8443
 
 # set application port
 ENV PORT=8443
@@ -41,5 +40,4 @@ ENV PORT=8443
 # expose port 8443 by default
 EXPOSE 8443
 
-# run the application in static mode
-ENTRYPOINT ["pnpm", "run", "start"]
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]
