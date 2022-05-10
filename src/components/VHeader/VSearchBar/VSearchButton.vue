@@ -4,7 +4,7 @@
     :aria-label="$t('search.search')"
     size="disabled"
     :variant="isIcon ? 'plain' : 'primary'"
-    class="transition-none inline-block rounded-s-none font-semibold text-2xl hover:text-white group-hover:text-white group-hover:border-pink hover:bg-pink group-hover:bg-pink focus-visible:ring focus-visible:ring-pink"
+    class="transition-none flex-shrink-0 rounded-s-none font-semibold text-2xl hover:text-white group-hover:text-white group-hover:border-pink hover:bg-pink group-hover:bg-pink focus-visible:ring focus-visible:ring-pink"
     :class="[
       isIcon
         ? 'search-button focus-visible:bg-pink focus-visible:text-white p-[0.5px] ps-[1.5px]'

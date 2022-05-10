@@ -88,3 +88,9 @@ export const currentContentType = async (page: Page) => {
   )
   return contentSwitcherButton.textContent()
 }
+
+export const dismissTranslationBanner = async (page: Page) => {
+  await page
+    .locator('[data-testid="banner-translation-ar"] [aria-label="Close"]')
+    .click()
+}

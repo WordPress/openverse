@@ -90,7 +90,7 @@
     <!-- Focus bar -->
     <div
       v-if="isInteractive"
-      class="focus-indicator hidden absolute z-30 top-0 flex flex-col items-center justify-between bg-black h-full"
+      class="focus-indicator hidden absolute z-20 top-0 flex flex-col items-center justify-between bg-black h-full"
       :style="{ width: `${barWidth}px`, left: `${progressBarWidth}px` }"
     >
       <div

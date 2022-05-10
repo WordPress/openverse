@@ -16,8 +16,9 @@
         <VLink
           class="text-white font-bold underline"
           href="https://wordpress.org/news/2021/05/welcome-to-openverse/"
-          >{{ $t('migration-notice.read') }}</VLink
         >
+          {{ $t('migration-notice.read') }}
+        </VLink>
       </template>
     </i18n>
   </VNotificationBanner>

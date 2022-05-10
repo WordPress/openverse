@@ -20,29 +20,24 @@
 </template>
 
 <script>
-import { computed } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 
 const positionWithoutSidebar = 'ltr:right-4 rtl:left-4'
 const positionWithSidebar = 'ltr:right-[21rem] rtl:left-[21rem]'
-export default {
+
+export default defineComponent({
   name: 'VScrollButton',
   setup() {
     const { isVisible: isFilterVisible } = useFilterSidebarVisibility()
     const hClass = computed(() =>
       isFilterVisible.value ? positionWithSidebar : positionWithoutSidebar
     )
-    return { hClass, isFilterVisible }
+    const scrollToTop = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    }
+    return { hClass, isFilterVisible, scrollToTop }
   },
-  methods: {
-    scrollToTop() {
-      this.$el.parentElement.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth',
-      })
-    },
-  },
-}
+})
 </script>

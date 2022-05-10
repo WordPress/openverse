@@ -83,19 +83,22 @@ export default {
     watch([visibleRef], ([visible]) => {
       triggerA11yProps['aria-expanded'] = visible
       filterSidebar.setVisibility(visible)
-      if (!isMinScreenMd) {
-        visible ? lock() : unlock()
-      }
     })
 
     const open = () => {
       visibleRef.value = true
       emit('open')
+      if (!isMinScreenMd.value) {
+        lock()
+      }
     }
 
     const close = () => {
       visibleRef.value = false
       emit('close')
+      if (!isMinScreenMd.value) {
+        unlock()
+      }
     }
 
     const onTriggerClick = () => {

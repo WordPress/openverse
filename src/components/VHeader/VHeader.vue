@@ -1,14 +1,12 @@
 <template>
   <header
-    class="main-header flex px-4 md:px-7 items-center md:items-stretch z-40 w-screen bg-white gap-x-2 gap-y-4"
+    class="main-header flex px-4 py-3 md:py-4 md:px-7 items-center md:items-stretch z-30 w-full bg-white justify-between gap-x-2 gap-y-4"
     :class="{
-      'py-3 ': isHeaderScrolled,
-      'py-4 flex-wrap md:flex-nowrap': !isHeaderScrolled,
+      'flex-wrap md:flex-nowrap': !isHeaderScrolled,
       'border-b border-white': !isHeaderScrolled && !isMenuOpen,
       'border-b border-dark-charcoal-20':
         isSearchRoute && (isHeaderScrolled || isMenuOpen),
-      'justify-between': isSearchRoute,
-      'justify-between md:justify-start': !isSearchRoute,
+      'md:justify-start': !isSearchRoute,
       'flex-nowrap': !isSearchRoute && isHeaderScrolled,
     }"
   >
@@ -24,13 +22,12 @@
       :size="isMinScreenMd ? 'medium' : isHeaderScrolled ? 'small' : 'large'"
       :class="{
         'order-4 md:order-none w-full md:w-auto': !isHeaderScrolled,
-        'search-bar-mobile-scrolled': isSearchRoute && isHeaderScrolled,
       }"
       @submit="handleSearch"
     >
       <span
         v-show="searchStatus"
-        class="hidden lg:block info font-semibold text-xs text-dark-charcoal-70 group-hover:text-dark-charcoal group-focus:text-dark-charcoal mx-4"
+        class="hidden lg:block info font-semibold text-xs text-dark-charcoal-70 group-hover:text-dark-charcoal group-focus:text-dark-charcoal mx-4 whitespace-nowrap"
       >
         {{ searchStatus }}
       </span>
@@ -81,7 +78,7 @@ const menus = {
   CONTENT_SWITCHER: 'content-switcher',
 }
 
-const VHeader = defineComponent({
+export default defineComponent({
   name: 'VHeader',
   components: {
     VLogoButton,
@@ -231,6 +228,4 @@ const VHeader = defineComponent({
     }
   },
 })
-
-export default VHeader
 </script>

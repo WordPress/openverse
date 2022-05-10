@@ -1,7 +1,7 @@
 <template>
-  <VTeleport v-if="visible" :to="to"
-    ><VSearchGridFilter @close="$emit('close')"
-  /></VTeleport>
+  <VTeleport v-if="visible" :to="to">
+    <VSearchGridFilter @close="$emit('close')" />
+  </VTeleport>
 </template>
 
 <script>

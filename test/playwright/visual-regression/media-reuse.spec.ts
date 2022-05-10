@@ -1,6 +1,7 @@
 import { test } from '@playwright/test'
 
 import breakpoints from '~~/test/playwright/utils/breakpoints'
+import { dismissTranslationBanner } from '~~/test/playwright/utils/navigation'
 
 const tabs = [
   { id: 'rich', name: 'Rich Text' },
@@ -32,6 +33,7 @@ test.describe('media-reuse', () => {
   test.describe('rtl', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/ar/image/f9384235-b72e-4f1e-9b05-e1b116262a29')
+      await dismissTranslationBanner(page)
     })
 
     for (const tab of tabs) {

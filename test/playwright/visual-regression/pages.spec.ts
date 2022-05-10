@@ -2,6 +2,7 @@ import { test } from '@playwright/test'
 
 import breakpoints from '~~/test/playwright/utils/breakpoints'
 import { removeHiddenOverflow } from '~~/test/playwright/utils/page'
+import { dismissTranslationBanner } from '~~/test/playwright/utils/navigation'
 
 const contentPages = ['extension', 'about', 'meta-search', 'search-help']
 for (const contentPage of contentPages) {
@@ -22,9 +23,7 @@ for (const contentPage of contentPages) {
     test.describe('rtl', () => {
       test.beforeEach(async ({ page }) => {
         await page.goto(`/ar/${contentPage}`)
-        await page
-          .locator('[data-testid="banner-translation-ar"] [aria-label="Close"]')
-          .click()
+        await dismissTranslationBanner(page)
       })
 
       breakpoints.describeEvery(({ expectSnapshot }) => {

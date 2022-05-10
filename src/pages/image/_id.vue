@@ -3,7 +3,7 @@
     <figure class="w-full mb-4 pt-12 px-6 bg-dark-charcoal-06 relative">
       <div
         v-if="backToSearchPath"
-        class="absolute left-0 top-0 right-0 z-40 w-full px-2"
+        class="absolute left-0 top-0 right-0 w-full px-2"
       >
         <VBackToSearchResultsLink :path="backToSearchPath" />
       </div>
@@ -237,7 +237,7 @@ export default defineComponent({
 <style scoped>
 section,
 aside {
-  @apply px-6 md:px-16 mb-10 md:mb-16 md:max-w-screen-lg lg:mx-auto;
+  @apply w-full px-6 md:px-16 mb-10 md:mb-16 md:max-w-screen-lg lg:mx-auto;
 }
 
 .btn-main {

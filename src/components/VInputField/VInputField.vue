@@ -14,7 +14,7 @@
       :id="fieldId"
       v-bind="$attrs"
       :type="type"
-      class="flex-1 leading-none font-semibold bg-tx placeholder-dark-charcoal-70 ms-4 h-full appearance-none rounded-none focus:outline-none text-2xl md:text-base"
+      class="w-full leading-none font-semibold bg-tx placeholder-dark-charcoal-70 ms-4 h-full appearance-none rounded-none focus:outline-none text-2xl md:text-base"
       :value="modelValue"
       :aria-label="labelText"
       @input="updateModelValue"

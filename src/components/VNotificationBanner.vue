@@ -5,7 +5,7 @@
     :class="$style[variant]"
     :data-testid="`banner-${id}`"
   >
-    <p class="text-left">
+    <p class="leading-tight md:leading-normal text-sr md:text-base text-left">
       <slot name="default" />
     </p>
     <div class="flex">
@@ -87,5 +87,6 @@ export default defineComponent({
 
 .announcement {
   @apply bg-trans-blue text-white;
+  border-left: 0.25rem solid transparent;
 }
 </style>
