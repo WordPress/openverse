@@ -606,7 +606,8 @@
   },
   "interpunct": "•",
   "modal": {
-    "close": "Close"
+    "close": "Close",
+    "close-named": "Close {name}"
   },
   "error-images": {
     "depressed-musician": "A depressed pianist rests their head in their hands.",

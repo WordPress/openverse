@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-05-09T13:20:52+00:00\n"
+"POT-Creation-Date: 2022-05-10T15:31:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -139,6 +139,12 @@ msgstr ""
 #: src/components/VContentReport/VContentReportPopover.vue:18
 msgctxt "modal.close"
 msgid "Close"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/components/VFilters/VFilterChecklist.vue:125
+msgctxt "modal.close-named"
+msgid "Close ###name###"
 msgstr ""
 
 #: src/components/VAudioTrack/layouts/VFullLayout.vue:63
@@ -920,7 +926,7 @@ msgctxt "filters.license-explanation.more.read-more"
 msgid "Read more"
 msgstr ""
 
-#: src/components/VFilters/VFilterChecklist.vue:97
+#: src/components/VFilters/VFilterChecklist.vue:98
 msgctxt "filters.search-by.title"
 msgid "Search By"
 msgstr ""

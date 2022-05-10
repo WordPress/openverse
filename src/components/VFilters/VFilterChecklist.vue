@@ -41,7 +41,7 @@
         <template #default="{ close }">
           <div class="relative">
             <VIconButton
-              :aria-label="$t('modal.close')"
+              :aria-label="getLicenseExplanationCloseAria(item.code)"
               class="absolute top-0 end-0 border-none text-dark-charcoal-70"
               size="small"
               :icon-props="{ iconPath: icons.closeSmall }"
@@ -57,6 +57,7 @@
 
 <script>
 import { useSearchStore } from '~/stores/search'
+import { getElements } from '~/utils/license'
 
 import VLicenseExplanation from '~/components/VFilters/VLicenseExplanation.vue'
 import VCheckbox from '~/components/VCheckbox/VCheckbox.vue'
@@ -115,6 +116,16 @@ export default {
         useSearchStore().isFilterDisabled(item, this.filterType) ??
         this.disabled
       )
+    },
+    getLicenseExplanationCloseAria(license) {
+      const elements = getElements(license).filter((icon) => icon !== 'cc')
+      const descriptions = elements
+        .map((element) => this.$t(`browse-page.license-description.${element}`))
+        .join(' ')
+      const close = this.$t('modal.close-named', {
+        name: this.$t('browse-page.aria.license-explanation'),
+      })
+      return `${descriptions} - ${close}`
     },
   },
 }
