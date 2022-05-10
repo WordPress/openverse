@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 test.describe('v-checkbox', () => {
   test.describe('default', () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto('/iframe.html?id=components-vcheckbox--default')
+      await page.goto('/iframe.html?id=components-vcheckbox--default-story')
     })
 
     test('default', async ({ page }) => {

@@ -51,6 +51,7 @@
     "src/components/VSourcesTable.vue",
     "src/components/TableSortIcon.vue",
     "src/components/VIcon/VIcon.vue",
+    "src/components/VCheckbox/VCheckbox.vue",
     "src/components/VIconButton/VIconButton.vue",
     "src/components/VLicense/VLicense.vue",
     "src/components/VContentReport/VReportDescForm.vue",
