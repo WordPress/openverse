@@ -13,7 +13,9 @@
         id="main-image"
         :src="isLoadingFullImage ? image.thumbnail : image.url"
         :alt="image.title"
-        class="h-full max-h-[500px] mx-auto rounded-t-sm"
+        class="h-full w-full max-h-[500px] mx-auto rounded-t-sm object-contain"
+        :width="imageWidth"
+        :height="imageHeight"
         @load="onImageLoaded"
       />
       <VSketchFabViewer
