@@ -24,6 +24,7 @@
       <!-- License explanation -->
       <VPopover
         v-if="filterType === 'licenses'"
+        strategy="fixed"
         :label="$t('browse-page.aria.license-explanation').toString()"
       >
         <template #trigger="{ a11yProps }">

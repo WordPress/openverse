@@ -23,6 +23,7 @@
       :visible="visibleRef"
       :trigger-element="triggerRef"
       :placement="placement"
+      :strategy="strategy"
       :hide-on-esc="hideOnEsc"
       :hide-on-click-outside="hideOnClickOutside"
       :auto-focus-on-show="autoFocusOnShow"
@@ -96,6 +97,19 @@ export default defineComponent({
      */
     placement: {
       type: /** @type {import('@nuxtjs/composition-api').PropType<import('@popperjs/core').Placement>} */ (
+        String
+      ),
+    },
+    /**
+     * The positioning strategy of the popover. If your reference element is in a fixed container
+     * use the fixed strategy; otherwise use the default, absolute strategy.
+     *
+     * @see https://popper.js.org/docs/v2/constructors/#strategy
+     *
+     * @default 'absolute'
+     */
+    strategy: {
+      type: /** @type {import('@nuxtjs/composition-api').PropType<import('@popperjs/core').PositioningStrategy>} */ (
         String
       ),
     },

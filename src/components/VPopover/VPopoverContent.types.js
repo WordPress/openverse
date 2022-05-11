@@ -39,6 +39,15 @@ export const propTypes = {
     default: 'bottom-end',
     validate: (v) => popoverPlacements.includes(v),
   },
+  strategy: {
+    type: /** @type {import('@nuxtjs/composition-api').PropType<import('@popperjs/core').PositioningStrategy>} */ (
+      String
+    ),
+    default: 'absolute',
+    // todo: Use the actual PositioningStrategy type instead of manually writing these values,
+    // when this file is updated to TypeScript.
+    validate: (v) => ['absolute', 'fixed'].includes(v),
+  },
   zIndex: {
     type: Number,
   },
