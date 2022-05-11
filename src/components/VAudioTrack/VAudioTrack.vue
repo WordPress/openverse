@@ -5,7 +5,8 @@
     :aria-label="ariaLabel"
     role="region"
     v-bind="layoutBasedProps"
-    @keydown.native="handleKeydown"
+    @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
+    @keydown.native.space="handleSpace"
   >
     <Component
       :is="layoutComponent"
@@ -57,7 +58,6 @@ import { useActiveMediaStore } from '~/stores/active-media'
 import { useMediaStore } from '~/stores/media'
 
 import { AUDIO } from '~/constants/media'
-import { keycodes } from '~/constants/key-codes'
 
 import type { AudioDetail } from '~/models/media'
 import {
@@ -385,8 +385,8 @@ export default defineComponent({
         : i18n.t('audio-track.aria-label', { title: props.audio.title })
     )
 
-    const handleKeydown = (event: KeyboardEvent) => {
-      if (!isBoxed.value || event.key !== keycodes.Spacebar) return
+    const handleSpace = (event: KeyboardEvent) => {
+      if (!isBoxed.value) return
       event.preventDefault()
       status.value = status.value === 'playing' ? 'paused' : 'playing'
       handleToggle(status.value)
@@ -398,7 +398,7 @@ export default defineComponent({
       ariaLabel,
       handleToggle,
       handleSeeked,
-      handleKeydown,
+      handleSpace,
 
       currentTime,
       duration,

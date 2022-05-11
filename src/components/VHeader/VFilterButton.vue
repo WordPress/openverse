@@ -1,5 +1,6 @@
 <template>
   <VButton
+    id="filter-button"
     :variant="variant"
     size="disabled"
     class="self-center gap-2 align-center font-semibold py-2 flex-shrink-0 focus-visible:border-tx focus-visible:ring focus-visible:ring-pink"
@@ -12,6 +13,7 @@
     aria-controls="filters"
     :aria-label="mdMinLabel"
     @click="$emit('toggle')"
+    @keydown.tab.exact="$emit('tab', $event)"
   >
     <VIcon
       :class="filtersAreApplied ? 'hidden' : 'block'"
@@ -35,6 +37,7 @@ import {
 } from '@nuxtjs/composition-api'
 
 import { useSearchStore } from '~/stores/search'
+import { defineEvent } from '~/types/emits'
 
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
@@ -53,7 +56,10 @@ const VFilterButton = defineComponent({
       default: false,
     },
   },
-  emits: ['toggle'],
+  emits: {
+    tab: defineEvent<[KeyboardEvent]>(),
+    toggle: defineEvent(),
+  },
   setup(props) {
     const { i18n } = useContext()
     const searchStore = useSearchStore()

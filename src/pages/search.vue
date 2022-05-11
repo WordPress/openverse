@@ -3,12 +3,14 @@
     class="browse-page flex flex-col px-4 md:px-10 w-full"
   >
     <VSearchGrid
+      ref="searchGridRef"
       :fetch-state="fetchState"
       :query="query"
       :supported="supported"
       :search-type="searchType"
       :results-count="resultsCount"
       data-testid="search-grid"
+      @tab="handleTab($event, 'search-grid')"
     >
       <template #media>
         <NuxtChild
@@ -22,18 +24,22 @@
         />
       </template>
     </VSearchGrid>
-    <VScrollButton v-show="showScrollButton" data-testid="scroll-button" />
+    <VScrollButton
+      v-show="showScrollButton"
+      data-testid="scroll-button"
+      @tab="handleTab($event, 'scroll-button')"
+    />
   </VSkipToContentContainer>
 </template>
 
-<script>
+<script lang="ts">
 import { isShallowEqualObjects } from '@wordpress/is-shallow-equal'
-import { computed, inject } from '@nuxtjs/composition-api'
+import { computed, defineComponent, inject, ref } from '@nuxtjs/composition-api'
 
 import { supportedSearchTypes } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
-
+import { Focus, focusIn } from '~/utils/focus-management'
 import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
 
@@ -41,14 +47,16 @@ import VSearchGrid from '~/components/VSearchGrid.vue'
 import VSkipToContentContainer from '~/components/VSkipToContentContainer.vue'
 import VScrollButton from '~/components/VScrollButton.vue'
 
-const BrowsePage = {
-  name: 'browse-page',
+export default defineComponent({
+  name: 'BrowsePage',
   components: {
     VScrollButton,
     VSearchGrid,
     VSkipToContentContainer,
   },
+  scrollToTop: false,
   setup() {
+    const searchGridRef = ref(null)
     const isMinScreenMd = isMinScreen('md')
     const { isVisible: isFilterSidebarVisible } = useFilterSidebarVisibility()
     const showScrollButton = inject('showScrollButton')
@@ -65,7 +73,14 @@ const BrowsePage = {
     const fetchState = computed(() => mediaStore.fetchState)
     const resultItems = computed(() => mediaStore.resultItems)
 
+    const handleTab = (event: KeyboardEvent, element: string) => {
+      if (showScrollButton.value && element !== 'scroll-button') {
+        return
+      }
+      focusIn(document.getElementById('__layout'), Focus.First)
+    }
     return {
+      searchGridRef,
       isMinScreenMd,
       isFilterSidebarVisible,
       showScrollButton,
@@ -79,12 +94,7 @@ const BrowsePage = {
       resultItems,
       fetchMedia: mediaStore.fetchMedia,
       setSearchStateFromUrl: searchStore.setSearchStateFromUrl,
-    }
-  },
-  scrollToTop: false,
-  async fetch() {
-    if (this.supported && !this.resultCount && this.searchTerm.trim() !== '') {
-      await this.fetchMedia()
+      handleTab,
     }
   },
   asyncData({ route, $pinia }) {
@@ -93,6 +103,11 @@ const BrowsePage = {
       path: route.path,
       urlQuery: route.query,
     })
+  },
+  async fetch() {
+    if (this.supported && !this.resultCount && this.searchTerm.trim() !== '') {
+      await this.fetchMedia()
+    }
   },
   computed: {
     /**
@@ -120,7 +135,5 @@ const BrowsePage = {
       }
     },
   },
-}
-
-export default BrowsePage
+})
 </script>

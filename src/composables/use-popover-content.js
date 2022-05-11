@@ -5,7 +5,7 @@ import { useDialogContent } from './use-dialog-content'
 /**
  * @typedef Props
  * @property {import('./types').Ref<HTMLElement>} popoverRef
- * @property {import('./types').ToRefs<import('../components/VPopover/VPopoverContent.types').Props>} popoverPropsRefs
+ * @property {import('./types').ToRefs<import('~/components/VPopover/VPopoverContent.types').Props>} popoverPropsRefs
  * @property {import('@nuxtjs/composition-api').SetupContext['emit']} emit
  */
 

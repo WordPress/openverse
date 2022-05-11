@@ -5,12 +5,13 @@
       class="results-grid grid grid-cols-2 lg:grid-cols-5 2xl:grid-cols-6 gap-4 mb-4"
     >
       <VContentLink
-        v-for="[mediaType, count] in resultCounts"
+        v-for="([mediaType, count], i) in resultCounts"
         :key="mediaType"
         :media-type="mediaType"
         :results-count="count"
         :to="localePath({ path: `/search/${mediaType}`, query: $route.query })"
         class="lg:col-span-2"
+        @shift-tab="handleShiftTab($event, i)"
       />
     </div>
     <VGridSkeleton
@@ -39,10 +40,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 
 import { useMediaStore } from '~/stores/media'
+import { useFocusFilters } from '~/composables/use-focus-filters'
+import { Focus } from '~/utils/focus-management'
 
 import VImageCellSquare from '~/components/VAllResultsGrid/VImageCellSquare.vue'
 import VAudioCell from '~/components/VAllResultsGrid/VAudioCell.vue'
@@ -59,16 +62,10 @@ export default defineComponent({
     VGridSkeleton,
     VContentLink,
   },
-  props: ['canLoadMore'],
-  setup(_, { emit }) {
+  setup() {
     const { i18n } = useContext()
     const mediaStore = useMediaStore()
 
-    const onLoadMore = () => {
-      emit('load-more')
-    }
-
-    /** @type {import('@nuxtjs/composition-api').ComputedRef<boolean>} */
     const resultsLoading = computed(() => {
       return (
         Boolean(mediaStore.fetchState.fetchingError) ||
@@ -76,14 +73,10 @@ export default defineComponent({
       )
     })
 
-    /**
-     * @type { ComputedRef<import('~/models/media').Media[]> }
-     */
     const allMedia = computed(() => mediaStore.allMedia)
 
     const isError = computed(() => !!mediaStore.fetchState.fetchingError)
 
-    /** @type {import('@nuxtjs/composition-api').ComputedRef<import('~/composables/use-fetch-state').FetchState>} */
     const fetchState = computed(() => mediaStore.fetchState)
 
     const errorHeader = computed(() => {
@@ -96,16 +89,27 @@ export default defineComponent({
     const noResults = computed(
       () => fetchState.value.isFinished && allMedia.value.length === 0
     )
+    const focusFilters = useFocusFilters()
+    /**
+     * Move focus to the filters sidebar if shift-tab is pressed on the first content link.
+     * @param i - the index of the content link.
+     * @param event - keydown event
+     */
+    const handleShiftTab = (event: KeyboardEvent, i: number) => {
+      if (i === 0) {
+        focusFilters.focusFilterSidebar(event, Focus.Last)
+      }
+    }
 
     return {
       isError,
       errorHeader,
       allMedia,
-      onLoadMore,
       fetchState,
       resultsLoading,
       resultCounts,
       noResults,
+      handleShiftTab,
     }
   },
 })

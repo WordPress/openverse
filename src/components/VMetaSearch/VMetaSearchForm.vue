@@ -1,8 +1,10 @@
 <template>
   <section
     :key="type"
+    ref="sectionRef"
     class="p-6 meta-search text-center mt-12"
     data-testid="meta-search-form"
+    @keydown.tab.exact="handleTab"
   >
     <header class="mb-10">
       <i18n
@@ -51,11 +53,18 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  PropType,
+  ref,
+} from '@nuxtjs/composition-api'
 
 import type { MediaType } from '~/constants/media'
 import type { ApiQueryParams } from '~/utils/search-query-transform'
 import { getAdditionalSourceBuilders } from '~/utils/get-additional-sources'
+import { getFocusableElements } from '~/utils/focus-management'
+import { defineEvent } from '~/types/emits'
 
 import VMetaSourceList from './VMetaSourceList.vue'
 
@@ -70,7 +79,11 @@ export default defineComponent({
     isSupported: { type: Boolean, default: false },
     hasNoResults: { type: Boolean, required: true },
   },
-  setup(props) {
+  emits: {
+    tab: defineEvent<[KeyboardEvent]>(),
+  },
+  setup(props, { emit }) {
+    const sectionRef = ref<HTMLElement>()
     const unsupportedByUseFilter = computed(() =>
       getAdditionalSourceBuilders(props.type)
         .filter((source) => !source.supportsUseFilters)
@@ -78,8 +91,25 @@ export default defineComponent({
         .join(', ')
     )
 
+    /**
+     * Find the last focusable element in VSearchGridFilter to add a 'Tab' keydown event
+     * handler to it.
+     * We could actually hard-code this because 'searchBy' is always the last now.
+     */
+    const lastFocusableElement = computed<HTMLElement>(() => {
+      const focusable = getFocusableElements(sectionRef.value)
+      return focusable[focusable.length - 1]
+    })
+
+    const handleTab = (event: KeyboardEvent) => {
+      if (event.target === lastFocusableElement.value) {
+        emit('tab', event)
+      }
+    }
     return {
+      sectionRef,
       unsupportedByUseFilter,
+      handleTab,
     }
   },
 })

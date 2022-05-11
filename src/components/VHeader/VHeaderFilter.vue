@@ -10,69 +10,76 @@
       :pressed="visibleRef"
       v-bind="triggerA11yProps"
       @toggle="onTriggerClick"
+      @tab="onTab"
     />
-    <Component :is="filterComponent" v-bind="options" @close="onTriggerClick">
+    <Component
+      :is="filterComponent"
+      v-bind="options"
+      :visible="visibleRef"
+      @close="onTriggerClick"
+    >
       <VSearchGridFilter @close="onTriggerClick" />
     </Component>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {
+  defineComponent,
   ref,
   watch,
   reactive,
   computed,
   onMounted,
-  useContext,
   inject,
+  Ref,
 } from '@nuxtjs/composition-api'
 
-import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
+import { useI18n } from '~/composables/use-i18n'
+import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
+import { useFocusFilters } from '~/composables/use-focus-filters'
+
+import { Focus } from '~/utils/focus-management'
+import { defineEvent } from '~/types/emits'
 
 import VTeleport from '~/components/VTeleport/VTeleport.vue'
 import VFilterButton from '~/components/VHeader/VFilterButton.vue'
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
-import VSidebarContent from '~/components/VHeader/VSidebarContent.vue'
-import VModalContent from '~/components/VModal/VModalContent.vue'
 
-export default {
+export default defineComponent({
   name: 'VHeaderFilter',
   components: {
     VFilterButton,
     VSearchGridFilter,
-    VSidebarContent,
-    VModalContent,
     VTeleport,
   },
-  emits: [
+  emits: {
     /**
      * Fires when the popover opens, regardless of reason. There are no extra parameters.
      */
-    'open',
+    open: defineEvent(),
     /**
      * Fires when the popover closes, regardless of reason. There are no extra parameters.
      */
-    'close',
-  ],
+    close: defineEvent(),
+  },
   setup(_, { emit }) {
-    const modalRef = ref(null)
-    /** @type { import('@nuxtjs/composition-api').Ref<boolean> } */
+    const modalRef = ref<HTMLElement | null>(null)
+    const nodeRef = ref<HTMLElement | null>(null)
+    const buttonRef = ref<HTMLElement | null>(null)
+
     const visibleRef = ref(false)
-    const nodeRef = ref(null)
-
-    /** @type { import('@nuxtjs/composition-api').Ref<HTMLElement | undefined> } */
-    const buttonRef = ref()
     const filterSidebar = useFilterSidebarVisibility()
-    const { i18n } = useContext()
-    /** @type { import('@nuxtjs/composition-api').Ref<boolean> } */
-    const isMinScreenMd = inject('isMinScreenMd')
-    /** @type { import('@nuxtjs/composition-api').Ref<boolean> } */
-    const isHeaderScrolled = inject('isHeaderScrolled')
+    const i18n = useI18n()
 
-    /** @type { import('@nuxtjs/composition-api').Ref<import('@nuxtjs/composition-api').Component> } */
-    const filterComponent = ref(VModalContent)
+    const isMinScreenMd: Ref<boolean> = inject('isMinScreenMd', ref(true))
+    const isHeaderScrolled: Ref<boolean> = inject(
+      'isHeaderScrolled',
+      ref(false)
+    )
+
+    const filterComponent = ref('VModalContent')
 
     const triggerA11yProps = reactive({
       'aria-expanded': false,
@@ -102,29 +109,42 @@ export default {
     }
 
     const onTriggerClick = () => {
-      if (visibleRef.value === true) {
-        close()
-      } else {
-        open()
-      }
+      visibleRef.value === true ? close() : open()
+    }
+    const focusFilters = useFocusFilters()
+    /**
+     * Focus the first element in the sidebar when navigating from the VFilterButton
+     * using keyboard `Tab` key.
+     */
+    const onTab = (event: KeyboardEvent) => {
+      focusFilters.focusFilterSidebar(event, Focus.First)
+    }
+
+    type MobileFilterOptions = {
+      'aria-label': string
+      hide: () => void
+    }
+    type DesktopFilterOptions = {
+      to: string
     }
 
     const mobileOptions = {
-      visible: visibleRef,
-      'trigger-element': computed(() => nodeRef?.value?.firstChild),
+      triggerElement: computed(() =>
+        nodeRef.value?.firstChild
+          ? (nodeRef.value?.firstChild as HTMLElement)
+          : null
+      ),
+      'aria-label': i18n.t('header.filter-button.simple'),
       hide: close,
-      'aria-label': i18n.t('header.filter-button.simple').toString(),
-      mode: 'mobile',
     }
 
     const desktopOptions = {
       to: 'sidebar',
-      visible: visibleRef,
     }
-    /**
-     * @type { import('@nuxtjs/composition-api').Ref<{'trigger-element'?: import('@nuxtjs/composition-api').ComputedRef<HTMLElement|null>, hide?: () => void, visible: import('@nuxtjs/composition-api').Ref<boolean>, 'aria-label'?: string, to?: string, mode?: string, hideOnClickOutside?: boolean }> }
-     */
-    const options = ref(mobileOptions)
+
+    const options: Ref<MobileFilterOptions | DesktopFilterOptions> =
+      ref(mobileOptions)
+
     onMounted(() => {
       if (isMinScreenMd.value && filterSidebar.isVisible.value) {
         open()
@@ -134,10 +154,10 @@ export default {
       [isMinScreenMd],
       ([isMinScreenMd]) => {
         if (isMinScreenMd) {
-          filterComponent.value = VSidebarContent
+          filterComponent.value = 'VSidebarContent'
           options.value = desktopOptions
         } else {
-          filterComponent.value = VModalContent
+          filterComponent.value = 'VModalContent'
           options.value = mobileOptions
         }
       },
@@ -151,13 +171,15 @@ export default {
       isHeaderScrolled,
       nodeRef,
       visibleRef,
+
       open,
       close,
       onTriggerClick,
+      onTab,
       triggerA11yProps,
       isMinScreenMd,
       options,
     }
   },
-}
+})
 </script>

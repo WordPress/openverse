@@ -7,6 +7,7 @@
       containerAspect * widthBasis
     }`"
     @click="onGotoDetailPage($event, image)"
+    @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
   >
     <figure
       class="absolute w-full"

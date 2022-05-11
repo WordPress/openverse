@@ -64,7 +64,7 @@ export const FocusResult = Object.freeze({
   Underflow: 'Underflow' as const,
 })
 
-export const Direction = Object.freeze({ Next: -1, Previous: 1 })
+export const Direction = Object.freeze({ Next: 1, Previous: -1 })
 
 export function getFocusableElements(
   container: HTMLElement | null = document.body

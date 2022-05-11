@@ -54,6 +54,7 @@
     "src/components/VCheckbox/VCheckbox.vue",
     "src/components/VIconButton/VIconButton.vue",
     "src/components/VLicense/VLicense.vue",
+    "src/components/VContentLink/VContentLink.vue",
     "src/components/VContentReport/VReportDescForm.vue",
     "src/components/VErrorSection/VErrorImage.vue",
     "src/components/VAudioTrack/**.vue",

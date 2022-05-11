@@ -26,6 +26,8 @@ import {
   mediaUniqueFilterKeys,
 } from '~/constants/filters'
 
+import type { Dictionary } from 'vue-router/types/router'
+
 export interface SearchState {
   searchType: SupportedSearchType
   searchTerm: string
@@ -245,9 +247,9 @@ export const useSearchStore = defineStore('search', {
       urlQuery,
     }: {
       path: string
-      urlQuery: Record<string, string>
+      urlQuery: Dictionary<string | (string | null)[]>
     }) {
-      if (urlQuery.q) {
+      if (urlQuery.q && typeof urlQuery.q === 'string') {
         this.setSearchTerm(urlQuery.q.trim())
       }
       this.searchType = queryStringToSearchType(path)
@@ -261,7 +263,7 @@ export const useSearchStore = defineStore('search', {
       }
 
       const newFilterData = queryToFilterData({
-        query,
+        query: query as Record<string, string>,
         searchType: this.searchType,
         defaultFilters: this.getBaseFiltersWithProviders(),
       })

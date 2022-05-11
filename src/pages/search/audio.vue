@@ -5,18 +5,19 @@
       is-for-tab="audio"
     />
     <VAudioTrack
-      v-for="audio in results"
+      v-for="(audio, i) in results"
       :key="audio.id"
       class="mb-8 md:mb-10"
       :audio="audio"
       :size="audioTrackSize"
       layout="row"
+      @shift-tab="handleShiftTab($event, i)"
     />
     <VLoadMore />
   </section>
 </template>
 
-<script>
+<script lang="ts">
 import {
   computed,
   defineComponent,
@@ -27,16 +28,16 @@ import {
 import { useLoadMore } from '~/composables/use-load-more'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useBrowserIsMobile } from '~/composables/use-browser-detection'
+import { useFocusFilters } from '~/composables/use-focus-filters'
+import { Focus } from '~/utils/focus-management'
 
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
-
 import VLoadMore from '~/components/VLoadMore.vue'
-
 import VGridSkeleton from '~/components/VSkeleton/VGridSkeleton.vue'
 
 import { propTypes } from './search-page.types'
 
-const AudioSearch = defineComponent({
+export default defineComponent({
   name: 'AudioSearch',
   components: {
     VAudioTrack,
@@ -69,6 +70,13 @@ const AudioSearch = defineComponent({
       return i18n.t('browse-page.fetching-error', { type })
     })
 
+    const focusFilters = useFocusFilters()
+    const handleShiftTab = (event: KeyboardEvent, i: number) => {
+      if (i === 0) {
+        focusFilters.focusFilterSidebar(event, Focus.Last)
+      }
+    }
+
     const { canLoadMore, onLoadMore } = useLoadMore(props)
 
     return {
@@ -77,11 +85,11 @@ const AudioSearch = defineComponent({
       isError,
       errorHeader,
 
+      handleShiftTab,
       canLoadMore,
       onLoadMore,
     }
   },
   head: {},
 })
-export default AudioSearch
 </script>

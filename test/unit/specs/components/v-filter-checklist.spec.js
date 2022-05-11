@@ -3,7 +3,13 @@ import { fireEvent, render, screen } from '@testing-library/vue'
 
 import { PiniaVuePlugin, createPinia } from 'pinia'
 
+import { useI18n } from '~/composables/use-i18n'
+
 import FilterChecklist from '~/components/VFilters/VFilterChecklist.vue'
+
+jest.mock('~/composables/use-i18n', () => ({
+  useI18n: jest.fn(),
+}))
 
 describe('FilterChecklist', () => {
   let options = {}
@@ -15,6 +21,7 @@ describe('FilterChecklist', () => {
     localVue = createLocalVue()
     localVue.use(PiniaVuePlugin)
     pinia = createPinia()
+    useI18n.mockImplementation(() => ({ t: (v) => v }))
 
     props = {
       options: [{ code: 'foo', name: 'bar', checked: false }],

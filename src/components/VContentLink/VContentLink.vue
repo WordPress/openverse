@@ -2,6 +2,7 @@
   <VLink
     :href="to"
     class="text-dark-charcoal bg-white border border-dark-charcoal/20 rounded-sm flex flex-col md:flex-row md:justify-between items-start md:items-center hover:bg-dark-charcoal hover:text-white hover:no-underline focus:border-tx overflow-hidden py-4 ps-4 pe-12 w-full md:p-6 focus:outline-none focus-visible:ring focus-visible:ring-pink"
+    @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
   >
     <div class="flex flex-col items-start md:flex-row md:items-center">
       <VIcon :icon-path="iconPath" />
@@ -16,11 +17,13 @@
   </VLink>
 </template>
 
-<script>
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+<script lang="ts">
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
-import { AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
+import { AUDIO, IMAGE, SupportedMediaType } from '~/constants/media'
+
+import { defineEvent } from '~/types/emits'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VLink from '~/components/VLink.vue'
@@ -41,9 +44,8 @@ export default defineComponent({
      * One of the media types supported.
      */
     mediaType: {
-      type: String,
+      type: String as PropType<SupportedMediaType>,
       required: true,
-      validator: (val) => supportedMediaTypes.includes(val),
     },
     /**
      * The number of results that the search returned.
@@ -58,6 +60,9 @@ export default defineComponent({
     to: {
       type: String,
     },
+  },
+  emits: {
+    'shift-tab': defineEvent<[KeyboardEvent]>(),
   },
   setup(props) {
     const iconPath = computed(() => iconMapping[props.mediaType])
