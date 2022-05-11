@@ -285,7 +285,7 @@ jobs:
   docs-preview:
     name: Publish preview of developer docs for the branch
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && github.repository == 'WordPress/openverse-api'
     needs:
       - build-images
 
