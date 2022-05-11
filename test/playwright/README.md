@@ -75,6 +75,8 @@ If for some reason you find yourself needing to completely recreate the tapes, y
 
 Additional debugging may be accomplished in two ways. You may inspect the trace output of failed tests by finding the `trace.zip` for the relevant test in the `test-results` folder. Traces are only saved for failed tests. You can use the [Playwright Trace Viewer](https://playwright.dev/docs/trace-viewer) to inspect these (or open the zip yourself and poke around the files on your own).
 
+For Playwright tests failing in CI, a GitHub comment will appear with a link to download an artifact of the `test-results` folder.
+
 Visual regression tests that fail to match the existing snapshots will also have `expected`, `actual` and `diff` files generated that are helpful for understanding why intermittent failures are happening. These are generated automatically by Playwright and will be placed in the `test-results` folder under the fully qualified name of the test that failed (with every parent describe block included).
 
 Additionally, you can run run the tests in debug mode. This will run the tests with a headed browser as opposed to a headless (invisible) one and allow you to watch the test happen in real time. It's not possible for a headed browser to run inside the docker container, however, so be aware that when debugging the environment will be slightly different. For example, if you're on any OS other than Linux, the browser you're running will have small differences in how it renders the page compared to the docker container.

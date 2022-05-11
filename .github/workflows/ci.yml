@@ -59,6 +59,28 @@ jobs:
       - name: Run unit tests
         run: pnpm test:unit
 
+  clean-playwright-failure-comment:
+    name: Remove previous Playwright test failure comments
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: peter-evans/find-comment@v2
+        id: test-results-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Playwright Failure Test Results
+
+      - uses: actions/github-script@v6
+        if: steps.test-results-comment.outputs.comment-id != 0
+        with:
+          script: |
+            await github.rest.issues.deleteComment({
+              repo: context.repo.repo,
+              owner: context.repo.owner,
+              comment_id: ${{ steps.test-results-comment.outputs.comment-id }}
+            })
+            console.log('Deleted comment with ID ${{ steps.test-results-comment.outputs.comment-id }}')
+
   nuxt-playwright:
     name: Nuxt Playwright tests
     runs-on: ubuntu-latest
@@ -72,9 +94,9 @@ jobs:
         run: pnpm test:playwright
 
       - uses: actions/upload-artifact@v3
-        if: ${{ failure() }}
+        if: failure()
         with:
-          name: test-results
+          name: nuxt-test-results
           path: test-results
 
   storybook-playwright:
@@ -90,10 +112,47 @@ jobs:
         run: pnpm test:storybook
 
       - uses: actions/upload-artifact@v3
-        if: ${{ failure() }}
+        if: failure()
+        id: test-results
         with:
-          name: test-results
+          name: storybook-test-results
           path: test-results
+
+  playwright-test-failure-comment:
+    name: Share Playwright test debugging instructions
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - nuxt-playwright
+      - storybook-playwright
+
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          path: test-results
+
+      - name: Check if test results exist
+        id: check-results
+        run: |
+          has_results=$(stat test-results/nuxt-test-results || stat test-results/storybook-test-results) || false
+          if [[ $has_results ]]; then
+            echo "::set-output name=has-failure::true"
+          fi
+
+      - uses: peter-evans/create-or-update-comment@v2
+        if: steps.check-results.outputs.has-failure
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            **Playwright Failure Test Results**
+
+            It looks like some of the Playwright tests failed. You can download the Playwright trace
+            output for both Storybook and Nuxt Playwright tests that have failed at the bottom of this
+            page, under the "Artifacts" section:
+
+            <https://github.com/WordPress/openverse-frontend/actions/runs/${{ github.run_id }}>
+
+            Read more about how to use this artifact here: <https://github.com/WordPress/openverse-frontend/blob/main/test/playwright/README.md#debugging>
 
   storybook:
     name: Check Storybook build
