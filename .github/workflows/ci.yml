@@ -2,7 +2,8 @@ name: CI
 
 on:
   push:
-    branches: -main
+    branches:
+      - main
   pull_request:
 
 jobs:
@@ -120,6 +121,7 @@ jobs:
 
   gh-pages:
     name: PR Storybook and Tailwind Preview
+    if: github.repository == 'WordPress/openverse-frontend'
     runs-on: ubuntu-latest
 
     steps:

@@ -12,6 +12,7 @@ jobs:
   push-to-ghcr:
     name: Build and push image for commit
     runs-on: ubuntu-latest
+    if: github.repository == 'WordPress/openverse-frontend'
 
     steps:
       - uses: actions/checkout@v2

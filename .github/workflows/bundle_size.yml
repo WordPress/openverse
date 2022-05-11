@@ -33,6 +33,7 @@ jobs:
   build:
     name: Check
     runs-on: ubuntu-latest
+    if: github.repository == 'WordPress/openverse-frontend'
 
     steps:
       - uses: actions/checkout@v2

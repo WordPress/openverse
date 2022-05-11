@@ -8,8 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.repository == 'WordPress/openverse-frontend' }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
