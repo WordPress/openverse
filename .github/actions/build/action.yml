@@ -26,6 +26,7 @@ runs:
   using: "composite"
   steps:
     - name: Get pnpm-version
+      shell: bash
       id: pnpm-version
       run: |
         echo "::set-output name=val::$(cat .pnpm-version)"
