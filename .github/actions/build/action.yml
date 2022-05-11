@@ -30,7 +30,6 @@ runs:
       id: pnpm-version
       run: |
         echo "::set-output name=val::$(cat .pnpm-version)"
-      shell: bash
 
     # setup docker buildx
     - name: setup docker buildx
