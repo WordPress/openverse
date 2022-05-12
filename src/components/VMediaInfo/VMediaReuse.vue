@@ -18,16 +18,13 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  PropType,
-  useContext,
-} from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import { getFullLicenseName } from '~/utils/license'
 
 import type { Media } from '~/models/media'
+
+import { useI18n } from '~/composables/use-i18n'
 
 import VCopyLicense from '~/components/VMediaInfo/VCopyLicense.vue'
 import VMediaLicense from '~/components/VMediaInfo/VMediaLicense.vue'
@@ -42,7 +39,7 @@ const VMediaReuse = defineComponent({
     },
   },
   setup(props) {
-    const { i18n } = useContext()
+    const i18n = useI18n()
 
     const fullLicenseName = computed(() =>
       getFullLicenseName(props.media.license, props.media.license_version, i18n)

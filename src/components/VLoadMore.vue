@@ -11,10 +11,11 @@
   </VButton>
 </template>
 <script lang="ts">
-import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 
 import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
+import { useI18n } from '~/composables/use-i18n'
 
 import VButton from '~/components/VButton.vue'
 
@@ -24,7 +25,7 @@ export default defineComponent({
     VButton,
   },
   setup() {
-    const { i18n } = useContext()
+    const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 

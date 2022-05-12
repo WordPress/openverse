@@ -23,7 +23,6 @@ import {
 } from '@nuxtjs/composition-api'
 
 import { useI18n } from '~/composables/use-i18n'
-
 import { loadScript } from '~/utils/load-script'
 
 const sketchfabUrl =

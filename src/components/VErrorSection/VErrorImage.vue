@@ -12,16 +12,12 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  PropType,
-  useContext,
-} from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import type { License, LicenseVersion } from '~/constants/license'
 import { ErrorCode, errorCodes } from '~/constants/errors'
 import { AttributableMedia, getAttribution } from '~/utils/attribution-html'
+import { useI18n } from '~/composables/use-i18n'
 
 import imageInfo from '~/assets/error_images/image_info.json'
 
@@ -48,7 +44,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { i18n } = useContext()
+    const i18n = useI18n()
 
     const images = Object.fromEntries(
       imageInfo.errors.map((errorItem) => {

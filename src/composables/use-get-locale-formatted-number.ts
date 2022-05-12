@@ -1,4 +1,4 @@
-import { useContext } from '@nuxtjs/composition-api'
+import { useI18n } from '~/composables/use-i18n'
 
 const WESTERN_ARABIC_NUMERALS = [
   '0',
@@ -19,7 +19,7 @@ const WESTERN_ARABIC_NUMERALS = [
  * the locale preferences for delimiters.
  */
 export const useGetLocaleFormattedNumber = () => {
-  const { i18n } = useContext()
+  const i18n = useI18n()
 
   return (n: number) => {
     const testFormat = n.toLocaleString(i18n.locale)

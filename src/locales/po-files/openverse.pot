@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-05-11T19:21:48+00:00\n"
+"POT-Creation-Date: 2022-05-12T05:53:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,7 +24,7 @@ msgid "Skip to content"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSketchFabViewer.vue:55
+#: src/components/VSketchFabViewer.vue:54
 msgctxt "sketchfab-iframe-title"
 msgid "###sketchfab### viewer"
 msgstr ""
@@ -252,7 +252,7 @@ msgctxt "audio-track.creator"
 msgid "by ###creator###"
 msgstr ""
 
-#: src/components/VAudioTrack/layouts/VRowLayout.vue:134
+#: src/components/VAudioTrack/layouts/VRowLayout.vue:128
 msgctxt "audio-track.messages.blink_seek_disabled"
 msgid "Seeking for Jamendo tracks is limited to Firefox and Safari."
 msgstr ""
@@ -462,7 +462,7 @@ msgctxt "image-details.information.pixels"
 msgid "pixels"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:81
+#: src/components/VImageDetails/VImageDetails.vue:83
 msgctxt "image-details.information.unknown"
 msgid "Unknown"
 msgstr ""
@@ -736,13 +736,13 @@ msgid_plural "Over ###localeCount### results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/components/VLoadMore.vue:46
+#: src/components/VLoadMore.vue:47
 msgctxt "browse-page.load"
 msgid "Load more results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAllResultsGrid/VAllResultsGrid.vue:84
+#: src/components/VAllResultsGrid/VAllResultsGrid.vue:86
 msgctxt "browse-page.fetching-error"
 msgid "Error fetching ###type###:"
 msgstr ""
@@ -822,7 +822,7 @@ msgctxt "browse-page.search-form.image"
 msgid "images"
 msgstr ""
 
-#: src/components/VAllResultsGrid/VAllResultsGrid.vue:83
+#: src/components/VAllResultsGrid/VAllResultsGrid.vue:85
 msgctxt "browse-page.search-form.audio"
 msgid "audio"
 msgstr ""
@@ -1871,7 +1871,7 @@ msgctxt "header.api-nav-item"
 msgid "API"
 msgstr ""
 
-#: src/components/VHeader/VHeader.vue:140
+#: src/components/VHeader/VHeader.vue:142
 msgctxt "header.loading"
 msgid "Loading..."
 msgstr ""

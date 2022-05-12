@@ -83,17 +83,11 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  PropType,
-  useContext,
-} from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import { useBrowserIsBlink } from '~/composables/use-browser-detection'
-
+import { useI18n } from '~/composables/use-i18n'
 import type { AudioDetail } from '~/models/media'
-
 import type { AudioSize } from '~/constants/audio'
 
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
@@ -120,7 +114,7 @@ export default defineComponent({
   setup(props) {
     /* Utils */
     const browserIsBlink = useBrowserIsBlink()
-    const { i18n } = useContext()
+    const i18n = useI18n()
 
     const featureNotices: {
       timestamps?: string

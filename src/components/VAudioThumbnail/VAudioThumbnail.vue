@@ -31,7 +31,6 @@
 import {
   ref,
   onMounted,
-  useContext,
   defineComponent,
   PropType,
 } from '@nuxtjs/composition-api'
@@ -39,6 +38,7 @@ import {
 import { rand, hash } from '~/utils/prng'
 import { lerp, dist, bezier, Point } from '~/utils/math'
 import type { AudioDetail } from '~/models/media'
+import { useI18n } from '~/composables/use-i18n'
 
 /**
  * Displays the cover art for the audio in a square aspect ratio.
@@ -56,7 +56,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { i18n } = useContext()
+    const i18n = useI18n()
     const helpText = i18n
       .t('audio-thumbnail.alt', {
         title: props.audio.title,

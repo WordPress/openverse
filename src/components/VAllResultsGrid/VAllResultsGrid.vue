@@ -41,11 +41,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 
 import { useMediaStore } from '~/stores/media'
 import { useFocusFilters } from '~/composables/use-focus-filters'
 import { Focus } from '~/utils/focus-management'
+
+import { useI18n } from '~/composables/use-i18n'
 
 import VImageCellSquare from '~/components/VAllResultsGrid/VImageCellSquare.vue'
 import VAudioCell from '~/components/VAllResultsGrid/VAudioCell.vue'
@@ -63,7 +65,7 @@ export default defineComponent({
     VContentLink,
   },
   setup() {
-    const { i18n } = useContext()
+    const i18n = useI18n()
     const mediaStore = useMediaStore()
 
     const resultsLoading = computed(() => {
