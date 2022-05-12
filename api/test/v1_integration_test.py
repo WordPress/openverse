@@ -9,7 +9,7 @@ from test.constants import API_URL
 import pytest
 import requests
 
-from catalog.api.licenses import LICENSE_GROUPS
+from catalog.api.constants.licenses import LICENSE_GROUPS
 from catalog.api.models import Image
 from catalog.api.utils.watermark import watermark
 
@@ -76,7 +76,7 @@ def test_license_type_filtering():
     )
     parsed = json.loads(response.text)
     for result in parsed["results"]:
-        assert result["license"].upper() in commercial_and_modification
+        assert result["license"] in commercial_and_modification
 
 
 def test_single_license_type_filtering():
@@ -86,7 +86,7 @@ def test_single_license_type_filtering():
     )
     parsed = json.loads(response.text)
     for result in parsed["results"]:
-        assert result["license"].upper() in commercial
+        assert result["license"] in commercial
 
 
 def test_specific_license_filter():

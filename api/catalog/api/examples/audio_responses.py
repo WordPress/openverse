@@ -81,7 +81,7 @@ audio_stats_200_example = {
 audio_detail_200_example = {
     "application/json": base_audio
     | {
-        "attribution": '"Wish You Were Here" by The.madpix.project is licensed under CC-BY-NC-SA 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/.',  # noqa: E501
+        "attribution": '"Wish You Were Here" by The.madpix.project is licensed under CC BY-NC-SA 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/.',  # noqa: E501
         "audio_set": {
             "title": "Wish You Were Here",
             "foreign_landing_url": "https://www.jamendo.com/album/145774/wish-you-were-here",  # noqa: E501

@@ -3,9 +3,7 @@ from urllib.parse import urlparse
 
 from rest_framework import serializers
 
-from drf_yasg.utils import swagger_serializer_method
-
-import catalog.api.licenses as license_helpers
+from catalog.api.constants.licenses import LICENSE_GROUPS
 from catalog.api.controllers import search_controller
 from catalog.api.utils.help_text import make_comma_separated_help_text
 
@@ -18,41 +16,13 @@ def _validate_enum(enum_name, valid_values: set, given_values: str):
     :param given_values: A comma separated list of values.
     :return: whether the input is valid
     """
-    input_values = [x.lower() for x in given_values.split(",")]
+    input_values = given_values.lower().split(",")
     for value in input_values:
         if value not in valid_values:
             raise serializers.ValidationError(
                 f"Invalid {enum_name}: {value}." f" Available options: {valid_values}"
             )
     return given_values.lower()
-
-
-def _validate_lt(value):
-    license_types = [x.lower() for x in value.split(",")]
-    license_groups = []
-    for _type in license_types:
-        if _type not in license_helpers.LICENSE_GROUPS:
-            raise serializers.ValidationError(f"License type '{_type}' does not exist.")
-        license_groups.append(license_helpers.LICENSE_GROUPS[_type])
-    intersected = set.intersection(*license_groups)
-    cleaned = {_license.lower() for _license in intersected}
-
-    return ",".join(list(cleaned))
-
-
-def _validate_li(value):
-    licenses = [x.upper() for x in value.split(",")]
-    for _license in licenses:
-        if _license not in license_helpers.LICENSE_GROUPS["all"]:
-            raise serializers.ValidationError(f"License '{_license}' does not exist.")
-    return value.lower()
-
-
-def _validate_page(value):
-    if value < 1:
-        return 1
-    else:
-        return value
 
 
 def _add_protocol(url: str):
@@ -179,15 +149,13 @@ class MediaSearchRequestSerializer(serializers.Serializer):
     )
     license = serializers.CharField(
         label="licenses",
-        help_text=make_comma_separated_help_text(
-            license_helpers.LICENSE_GROUPS["all"], "licenses"
-        ),
+        help_text=make_comma_separated_help_text(LICENSE_GROUPS["all"], "licenses"),
         required=False,
     )
     license_type = serializers.CharField(
         label="license type",
         help_text=make_comma_separated_help_text(
-            license_helpers.LICENSE_GROUPS.keys(), "license types"
+            LICENSE_GROUPS.keys(), "license types"
         ),
         required=False,
     )
@@ -245,12 +213,29 @@ class MediaSearchRequestSerializer(serializers.Serializer):
     @staticmethod
     def validate_license(value):
         """Checks whether license is a valid license code."""
-        return _validate_li(value)
+
+        licenses = value.lower().split(",")
+        for _license in licenses:
+            if _license not in LICENSE_GROUPS["all"]:
+                raise serializers.ValidationError(
+                    f"License '{_license}' does not exist."
+                )
+        return value.lower()
 
     @staticmethod
     def validate_license_type(value):
         """Checks whether license type is a known collection of licenses."""
-        return _validate_lt(value)
+
+        license_types = value.lower().split(",")
+        license_groups = []
+        for _type in license_types:
+            if _type not in LICENSE_GROUPS:
+                raise serializers.ValidationError(
+                    f"License type '{_type}' does not exist."
+                )
+            license_groups.append(LICENSE_GROUPS[_type])
+        intersected = set.intersection(*license_groups)
+        return ",".join(intersected)
 
     def validate_creator(self, value):
         return self._truncate(value)
@@ -348,9 +333,7 @@ class MediaSerializer(serializers.Serializer):
     license_version = serializers.CharField(
         required=False, help_text="The type of license for the media."
     )
-    license_url = serializers.SerializerMethodField(
-        help_text="A direct link to the media license."
-    )
+    license_url = serializers.URLField(help_text="A direct link to the media license.")
 
     provider = serializers.CharField(required=False, help_text="The content provider.")
     source = serializers.CharField(
@@ -375,26 +358,12 @@ class MediaSerializer(serializers.Serializer):
     )
     attribution = serializers.CharField(
         required=False,
-        help_text="The Creative Commons attribution of the work. Use this to "
-        "give credit to creators to their works and fulfill "
-        "legal attribution requirements.",
+        help_text="The attribution of the work in English as plain-text. Use this to"
+        "credit creators for their work and fulfill legal attribution requirements.",
     )
 
     def get_license(self, obj):
         return obj.license.lower()
-
-    @swagger_serializer_method(serializer_or_field=serializers.URLField)
-    def get_license_url(self, obj):
-        if hasattr(obj, "meta_data"):
-            return license_helpers.get_license_url(
-                obj.license, obj.license_version, obj.meta_data
-            )
-        elif hasattr(obj, "license_url") and obj.license_url is not None:
-            return obj.license_url
-        else:
-            return license_helpers.get_license_url(
-                obj.license, obj.license_version, None
-            )
 
     def validate_url(self, value):
         return _add_protocol(value)

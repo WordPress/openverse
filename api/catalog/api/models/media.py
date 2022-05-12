@@ -5,13 +5,14 @@ from django.db import models
 from django.utils.html import format_html
 
 import catalog.api.controllers.search_controller as search_controller
-from catalog.api.licenses import ATTRIBUTION, get_license_url
 from catalog.api.models.base import OpenLedgerModel
 from catalog.api.models.mixins import (
     ForeignIdentifierMixin,
     IdentifierMixin,
     MediaMixin,
 )
+from catalog.api.utils.attribution import get_attribution_text
+from catalog.api.utils.licenses import get_license_url
 
 
 PENDING = "pending_review"
@@ -70,30 +71,27 @@ class AbstractMedia(
 
     @property
     def license_url(self):
-        _license = str(self.license)
-        license_version = str(self.license_version)
-        return get_license_url(_license, license_version)
+        if self.meta_data and (url := self.meta_data.get("license_url")):
+            return url
+        else:
+            return get_license_url(self.license.lower(), self.license_version)
 
     @property
     def attribution(self):
-        _license = str(self.license)
-        license_version = str(self.license_version)
-        if self.title:
-            title = f'"{self.title}"'
-        else:
-            title = "This work"
-        if self.creator:
-            creator = f"by {self.creator} "
-        else:
-            creator = ""
-        attribution = ATTRIBUTION.format(
-            title=title,
-            creator=creator,
-            _license=_license.upper(),
-            version=license_version,
-            license_url=str(self.license_url),
+        """
+        Get the plain-text English attribution for a media item. Refer to the frontend
+        source code for an internationalised implementation.
+
+        :return: the plain-text English-language attribution for a creative work
+        """
+
+        return get_attribution_text(
+            self.title,
+            self.creator,
+            self.license.lower(),
+            self.license_version,
+            self.license_url,
         )
-        return attribution
 
     class Meta:
         """

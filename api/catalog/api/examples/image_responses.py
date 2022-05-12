@@ -83,7 +83,7 @@ image_stats_200_example = {
 image_detail_200_example = {
     "application/json": base_image
     | {
-        "attribution": '"Train area in Copenhagen South / Tog område i Syd København" by Kristoffer Trolle is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.',  # noqa: E501
+        "attribution": '"Train area in Copenhagen South / Tog område i Syd København" by Kristoffer Trolle is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.',  # noqa: E501
         "height": 683,
         "width": 1024,
         "filesize": "157497",
