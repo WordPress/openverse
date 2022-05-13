@@ -170,7 +170,7 @@ jobs:
 
   gh-pages:
     name: PR Storybook and Tailwind Preview
-    if: github.repository == 'WordPress/openverse-frontend'
+    if: github.repository == 'WordPress/openverse-frontend' && github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
