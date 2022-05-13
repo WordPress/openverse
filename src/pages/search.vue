@@ -8,7 +8,7 @@
       :query="query"
       :supported="supported"
       :search-type="searchType"
-      :results-count="resultsCount"
+      :results-count="resultCount"
       data-testid="search-grid"
       @tab="handleTab($event, 'search-grid')"
     >
@@ -36,7 +36,6 @@
 import { isShallowEqualObjects } from '@wordpress/is-shallow-equal'
 import { computed, defineComponent, inject, ref } from '@nuxtjs/composition-api'
 
-import { supportedSearchTypes } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { Focus, focusIn } from '~/utils/focus-management'
@@ -66,9 +65,7 @@ export default defineComponent({
     const searchTerm = computed(() => searchStore.searchTerm)
     const searchType = computed(() => searchStore.searchType)
     const query = computed(() => searchStore.searchQueryParams)
-    const supported = computed(() =>
-      supportedSearchTypes.includes(searchType.value)
-    )
+    const supported = computed(() => searchStore.searchTypeIsSupported)
     const resultCount = computed(() => mediaStore.resultCount)
     const fetchState = computed(() => mediaStore.fetchState)
     const resultItems = computed(() => mediaStore.resultItems)
@@ -97,26 +94,20 @@ export default defineComponent({
       handleTab,
     }
   },
-  asyncData({ route, $pinia }) {
+  async asyncData({ route, $pinia }) {
     const searchStore = useSearchStore($pinia)
+    const mediaStore = useMediaStore($pinia)
     searchStore.setSearchStateFromUrl({
       path: route.path,
       urlQuery: route.query,
     })
-  },
-  async fetch() {
-    if (this.supported && !this.resultCount && this.searchTerm.trim() !== '') {
-      await this.fetchMedia()
+    if (
+      searchStore.searchTypeIsSupported &&
+      !mediaStore.resultCount &&
+      searchStore.searchTerm.trim() !== ''
+    ) {
+      await mediaStore.fetchMedia()
     }
-  },
-  computed: {
-    /**
-     * Number of search results. Returns 0 for unsupported types.
-     * @returns {number}
-     */
-    resultsCount() {
-      return this.supported ? this.resultCount : 0 ?? 0
-    },
   },
   watch: {
     /**

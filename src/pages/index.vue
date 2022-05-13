@@ -226,8 +226,6 @@ const HomePage = {
         query,
       })
       router.push(newPath)
-
-      await mediaStore.fetchMedia()
     }
 
     return {

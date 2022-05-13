@@ -121,7 +121,7 @@ jobs:
   playwright-test-failure-comment:
     name: Share Playwright test debugging instructions
     runs-on: ubuntu-latest
-    if: ${{ always() }}
+    if: always() && (needs.nuxt-playwright.result == 'failure' || needs.storybook-playwright.result == 'failure')
     needs:
       - nuxt-playwright
       - storybook-playwright

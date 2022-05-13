@@ -113,6 +113,12 @@ export const useSearchStore = defineStore('search', {
           filterKey !== 'mature' && filterItems.some((filter) => filter.checked)
       )
     },
+    /**
+     * Returns whether the current `seartchType` is a supported media type for search.
+     */
+    searchTypeIsSupported(state) {
+      return supportedSearchTypes.includes(state.searchType)
+    },
   },
   actions: {
     setSearchType(type: SupportedSearchType) {
