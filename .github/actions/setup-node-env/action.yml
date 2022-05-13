@@ -9,14 +9,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: pnpm/action-setup@v2.0.1
-      with:
-        version: 6.30.1
+    - uses: pnpm/action-setup@v2.2.1
 
     - name: Cache pnpm modules
       uses: actions/cache@v2
       with:
-        path: ~/.pnpm-store
+        path: ~/.local/share/pnpm/store
         key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
         restore-keys: |
           ${{ runner.os }}-

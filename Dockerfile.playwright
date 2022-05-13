@@ -1,6 +1,5 @@
 ARG PLAYWRIGHT_VERSION
-ARG PNPM_VERSION
 
 FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-focal
 
-RUN npm install -g pnpm@${PNPM_VERSION}
+RUN npm install -g pnpm

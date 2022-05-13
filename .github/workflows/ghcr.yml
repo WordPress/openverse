@@ -35,16 +35,9 @@ jobs:
             type=sha
             type=ref,event=tag
 
-      - name: Get pnpm-version
-        id: pnpm-version
-        run: |
-          echo "::set-output name=val::$(cat .pnpm-version)"
-
       - uses: docker/build-push-action@v2
         with:
           context: .
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           push: true
-          build-args: |
-            PNPM_VERSION=${{ steps.pnpm-version.outputs.val }}

@@ -6,7 +6,6 @@ services:
       dockerfile: Dockerfile.playwright
       args:
         - PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}
-        - PNPM_VERSION=${PNPM_VERSION}
     volumes:
       - .:/app
     user: ${USER_ID}

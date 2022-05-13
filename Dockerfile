@@ -1,8 +1,6 @@
 FROM node:16-alpine
 
-ARG PNPM_VERSION
-
-RUN npm install -g pnpm@${PNPM_VERSION} pm2@5.2.0
+RUN npm install -g pnpm pm2@5.2.0
 
 USER node
 
