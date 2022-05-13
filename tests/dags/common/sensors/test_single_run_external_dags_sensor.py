@@ -6,7 +6,6 @@ import pytest
 from airflow.exceptions import AirflowException
 from airflow.models import DagBag, DagRun, Pool, TaskInstance
 from airflow.models.dag import DAG
-from airflow.utils.db import add_default_pool_if_not_exists
 from airflow.utils.session import create_session
 from airflow.utils.state import State
 from airflow.utils.timezone import datetime
@@ -25,8 +24,7 @@ def clean_db():
     with create_session() as session:
         session.query(DagRun).delete()
         session.query(TaskInstance).delete()
-        session.query(Pool).delete()
-        add_default_pool_if_not_exists(session)
+        session.query(Pool).filter(id == TEST_POOL).delete()
 
 
 def run_sensor(sensor):
