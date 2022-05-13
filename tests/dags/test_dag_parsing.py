@@ -41,8 +41,6 @@ ADDITIONAL_DAGS = [
     "commoncrawl/commoncrawl_etl.py",
     "database/loader_workflow.py",
     "database/recreate_image_popularity_calculation.py",
-    "database/refresh_all_image_popularity_data.py",
-    "database/refresh_image_view_data.py",
     "oauth2/authorize_dag.py",
     "oauth2/token_refresh_dag.py",
 ]

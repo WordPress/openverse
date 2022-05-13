@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 
 from common import slack
@@ -18,3 +19,5 @@ DAG_DEFAULT_ARGS = {
     "on_failure_callback": slack.on_failure_callback,
 }
 XCOM_PULL_TEMPLATE = "{{{{ ti.xcom_pull(task_ids='{}', key='{}') }}}}"
+
+POSTGRES_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")
