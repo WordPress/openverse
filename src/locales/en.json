@@ -423,13 +423,13 @@
       "credit": {
         "generic-title": "This work",
         "actual-title": "\"{title}\"",
-        "text": "{title}{creator}{marked-licensed}{license}. {view-legal}",
-        "creator-text": " by {creator-name}",
-        "marked": " is marked with ",
-        "licensed": " is licensed under ",
-        "view-legal-text": "To view {terms-copy} visit {URL}.",
-        "terms-text": "the terms,",
-        "copy-text": "a copy of this license,"
+        "text": "{title} {creator} {marked-licensed} {license}. {view-legal}",
+        "creator-text": "by {creator-name}",
+        "marked": "is marked with",
+        "licensed": "is licensed under",
+        "view-legal-text": "To view {terms-copy}, visit {url}.",
+        "terms-text": "the terms",
+        "copy-text": "a copy of this license"
       },
       "copy-license": {
         "title": "Credit the creator",

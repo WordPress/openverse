@@ -1,7 +1,7 @@
 <template>
   <div class="license-explanation w-full max-w-xs p-6">
     <h5 class="text-base font-semibold">
-      <template v-if="isTechnicallyLicense">{{
+      <template v-if="isLicense(license)">{{
         $t('filters.license-explanation.license-definition')
       }}</template>
       <template v-else>{{
@@ -20,13 +20,13 @@
 
     <i18n
       :path="`filters.license-explanation.more.${
-        isTechnicallyLicense ? 'license' : 'mark'
+        isLicense(license) ? 'license' : 'mark'
       }`"
       tag="p"
       class="text-sm"
     >
       <template #read-more>
-        <VLink :href="`${getLicenseDeedLink(license)}`">{{
+        <VLink :href="`${getLicenseUrl(license)}`">{{
           $t('filters.license-explanation.more.read-more')
         }}</VLink>
       </template>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { isLicense, isDeprecated } from '~/utils/license'
+import { isLicense, getLicenseUrl } from '~/utils/license'
 
 import VLicenseElements from '~/components/VLicense/VLicenseElements.vue'
 import VLink from '~/components/VLink.vue'
@@ -60,29 +60,11 @@ export default {
       required: true,
     },
   },
-  computed: {
-    /**
-     * Public domain marks such as CC0 and PDM are not technically licenses.
-     * @return {boolean} true if the license is not CC0 or PDM, false otherwise
-     */
-    isTechnicallyLicense() {
-      return isLicense(this.license)
-    },
-  },
-  methods: {
-    getLicenseDeedLink(licenseTerm) {
-      let fragment
-      if (licenseTerm === 'cc0') {
-        fragment = 'publicdomain/zero/1.0'
-      } else if (licenseTerm === 'pdm') {
-        fragment = 'publicdomain/mark/1.0'
-      } else if (isDeprecated(licenseTerm)) {
-        fragment = `licenses/${licenseTerm}/1.0`
-      } else {
-        fragment = `licenses/${licenseTerm}/4.0`
-      }
-      return `https://creativecommons.org/${fragment}/?ref=openverse`
-    },
+  setup() {
+    return {
+      isLicense,
+      getLicenseUrl,
+    }
   },
 }
 </script>

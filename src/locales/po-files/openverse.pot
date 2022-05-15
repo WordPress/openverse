@@ -678,33 +678,33 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "media-details.reuse.credit.text"
-msgid "###title######creator######marked-licensed######license###. ###view-legal###"
+msgid "###title### ###creator### ###marked-licensed### ###license###. ###view-legal###"
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "media-details.reuse.credit.creator-text"
-msgid " by ###creator-name###"
+msgid "by ###creator-name###"
 msgstr ""
 
 msgctxt "media-details.reuse.credit.marked"
-msgid " is marked with "
+msgid "is marked with"
 msgstr ""
 
 msgctxt "media-details.reuse.credit.licensed"
-msgid " is licensed under "
+msgid "is licensed under"
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "media-details.reuse.credit.view-legal-text"
-msgid "To view ###terms-copy### visit ###URL###."
+msgid "To view ###terms-copy###, visit ###url###."
 msgstr ""
 
 msgctxt "media-details.reuse.credit.terms-text"
-msgid "the terms,"
+msgid "the terms"
 msgstr ""
 
 msgctxt "media-details.reuse.credit.copy-text"
-msgid "a copy of this license,"
+msgid "a copy of this license"
 msgstr ""
 
 #. Do not translate words between ### ###.

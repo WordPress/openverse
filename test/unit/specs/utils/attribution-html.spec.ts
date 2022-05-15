@@ -78,6 +78,15 @@ describe('getAttribution', () => {
     expect(attrText).toEqual(expectation)
   })
 
+  it('skips the link if URL is missing', () => {
+    const mediaItemNoLicenseUrl = { ...mediaItem, license_url: undefined }
+    const attrText = getAttribution(mediaItemNoLicenseUrl, i18n, {
+      isPlaintext: true,
+    })
+    const antiExpectation = 'To view'
+    expect(attrText).not.toContain(antiExpectation)
+  })
+
   it('does not add license element icons in no-icons mode', () => {
     document.body.innerHTML = getAttribution(mediaItem, i18n)
     expect(document.getElementsByTagName('img').length !== 0)

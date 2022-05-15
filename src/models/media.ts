@@ -21,7 +21,7 @@ export interface Media {
 
   license: License
   license_version: LicenseVersion
-  license_url: string
+  license_url?: string
   attribution: string
 
   frontendMediaType: SupportedMediaType
