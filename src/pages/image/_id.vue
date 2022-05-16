@@ -78,7 +78,12 @@
 <script lang="ts">
 import axios from 'axios'
 
-import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  ref,
+  useRoute,
+} from '@nuxtjs/composition-api'
 
 import { IMAGE } from '~/constants/media'
 import { useSingleResultStore } from '~/stores/media/single-result'
@@ -93,8 +98,6 @@ import VRelatedImages from '~/components/VImageDetails/VRelatedImages.vue'
 import VSketchFabViewer from '~/components/VSketchFabViewer.vue'
 import VBackToSearchResultsLink from '~/components/VBackToSearchResultsLink.vue'
 
-import type { NuxtApp } from '@nuxt/types/app'
-
 export default defineComponent({
   name: 'VImageDetailsPage',
   components: {
@@ -106,22 +109,15 @@ export default defineComponent({
     VSketchFabViewer,
     VBackToSearchResultsLink,
   },
-  beforeRouteEnter(_to, from, nextPage) {
-    nextPage((_this) => {
-      // `_this` is the component instance that also has nuxt app properties injected
-      const localeRoute = (_this as NuxtApp).localeRoute
-      if (
-        from.name === localeRoute({ path: '/search/' })?.name ||
-        from.name === localeRoute({ path: '/search/image' })?.name
-      ) {
-        // I don't know how to type `this` here
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        _this.backToSearchPath = from.fullPath
-      }
-    })
+  beforeRouteEnter(to, from, next) {
+    if (from.path.includes('/search/')) {
+      to.meta.backToSearchPath = from.fullPath
+    }
+    next()
   },
   setup() {
+    const route = useRoute()
+
     const singleResultStore = useSingleResultStore()
     const relatedMediaStore = useRelatedMediaStore()
     const image = computed(() =>
@@ -130,6 +126,7 @@ export default defineComponent({
         : null
     )
 
+    const backToSearchPath = computed(() => route.value.meta?.backToSearchPath)
     const relatedMedia = computed(() => relatedMediaStore.media)
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
 
@@ -165,7 +162,7 @@ export default defineComponent({
             })
             .catch(() => {
               /**
-               * Do nothing. This avoid the console warning "Uncaught (in promise) Error:
+               * Do nothing. This avoids the console warning "Uncaught (in promise) Error:
                * Network Error" in Firefox in development mode.
                */
             })
@@ -185,6 +182,7 @@ export default defineComponent({
       sketchFabfailure,
       sketchFabUid,
       onImageLoaded,
+      backToSearchPath,
     }
   },
   async asyncData({ app, error, route, $pinia }) {
@@ -204,9 +202,6 @@ export default defineComponent({
       })
     }
   },
-  data: () => ({
-    backToSearchPath: '',
-  }),
   head() {
     const title = `${this.image.title} | Openverse`
 

@@ -20,14 +20,17 @@ export const useMatchRoute = (
   const { app } = useContext()
   const route = useRoute()
   const router = useRouter()
+
   const localizedRoutes = routes.map(
     (route) => app.localeRoute({ name: route })?.name
   )
   const matches = ref(localizedRoutes.includes(route.value.name))
+
   router.beforeEach((to, _from, next) => {
     matches.value = localizedRoutes.includes(to.name)
     next()
   })
+
   return { matches }
 }
 

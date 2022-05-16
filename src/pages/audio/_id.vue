@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useRoute } from '@nuxtjs/composition-api'
 
 import { AUDIO } from '~/constants/media'
 import type { AudioDetail } from '~/models/media'
@@ -32,8 +32,6 @@ import VBackToSearchResultsLink from '~/components/VBackToSearchResultsLink.vue'
 import VRelatedAudio from '~/components/VAudioDetails/VRelatedAudio.vue'
 import VMediaReuse from '~/components/VMediaInfo/VMediaReuse.vue'
 
-import type { NuxtApp } from '@nuxt/types/app'
-
 export default defineComponent({
   name: 'AudioDetailPage',
   components: {
@@ -43,22 +41,14 @@ export default defineComponent({
     VMediaReuse,
     VRelatedAudio,
   },
-  beforeRouteEnter(to, from, nextPage) {
-    nextPage((_this) => {
-      // `_this` is the component instance that also has nuxt app properties injected
-      const localeRoute = (_this as NuxtApp).localeRoute
-      if (
-        from.name === localeRoute({ path: '/search/' }).name ||
-        from.name === localeRoute({ path: '/search/audio' }).name
-      ) {
-        // I don't know how to type `_this` here
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        _this.backToSearchPath = from.fullPath
-      }
-    })
+  beforeRouteEnter(to, from, next) {
+    if (from.path.includes('/search/')) {
+      to.meta.backToSearchPath = from.fullPath
+    }
+    next()
   },
   setup() {
+    const route = useRoute()
     const singleResultStore = useSingleResultStore()
     const relatedMediaStore = useRelatedMediaStore()
 
@@ -69,8 +59,9 @@ export default defineComponent({
     )
     const relatedMedia = computed(() => relatedMediaStore.media)
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
+    const backToSearchPath = computed(() => route.value.meta?.backToSearchPath)
 
-    return { audio, relatedMedia, relatedFetchState }
+    return { audio, backToSearchPath, relatedMedia, relatedFetchState }
   },
   async asyncData({ route, error, app, $pinia }) {
     const audioId = route.params.id
@@ -86,11 +77,6 @@ export default defineComponent({
           id: route.params.id,
         }),
       })
-    }
-  },
-  data() {
-    return {
-      backToSearchPath: '',
     }
   },
   head() {
