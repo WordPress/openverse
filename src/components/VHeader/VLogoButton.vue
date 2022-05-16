@@ -29,7 +29,7 @@ import VButton from '~/components/VButton.vue'
 
 import OpenverseLogoText from '~/assets/icons/openverse-logo-text.svg?inline'
 
-const VLogoButton = defineComponent({
+export default defineComponent({
   name: 'VLogoButton',
   components: { OpenverseLogoText, VLogoLoader, VButton },
   props: {
@@ -51,5 +51,4 @@ const VLogoButton = defineComponent({
     },
   },
 })
-export default VLogoButton
 </script>

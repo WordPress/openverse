@@ -150,9 +150,8 @@ import imageInfo from '~/assets/homepage_images/image_info.json'
 import OpenverseLogo from '~/assets/logo.svg?inline'
 import OpenverseBrand from '~/assets/brand.svg?inline'
 
-const HomePage = {
-  name: 'home-page',
-  layout: 'blank',
+export default {
+  name: 'HomePage',
   components: {
     OpenverseLogo,
     OpenverseBrand,
@@ -162,15 +161,7 @@ const HomePage = {
     VLink,
     VLogoButton,
   },
-  head: {
-    meta: [
-      {
-        hid: 'theme-color',
-        name: 'theme-color',
-        content: '#ffe033',
-      },
-    ],
-  },
+  layout: 'blank',
   setup() {
     const { app } = useContext()
     const router = useRouter()
@@ -242,9 +233,16 @@ const HomePage = {
       handleSearch,
     }
   },
+  head: {
+    meta: [
+      {
+        hid: 'theme-color',
+        name: 'theme-color',
+        content: '#ffe033',
+      },
+    ],
+  },
 }
-
-export default HomePage
 </script>
 
 <style>

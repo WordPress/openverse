@@ -6,7 +6,7 @@
     <h3 class="text-2xl md:text-3xl mb-6">
       {{ $t('media-details.reuse.title') }}
     </h3>
-    <div class="grid md:grid-cols-2 gap-6">
+    <div v-if="media.license_url" class="grid md:grid-cols-2 gap-6">
       <VMediaLicense
         :license="media.license"
         :license-url="media.license_url"
@@ -29,7 +29,7 @@ import { useI18n } from '~/composables/use-i18n'
 import VCopyLicense from '~/components/VMediaInfo/VCopyLicense.vue'
 import VMediaLicense from '~/components/VMediaInfo/VMediaLicense.vue'
 
-const VMediaReuse = defineComponent({
+export default defineComponent({
   name: 'VMediaReuse',
   components: { VCopyLicense, VMediaLicense },
   props: {
@@ -48,5 +48,4 @@ const VMediaReuse = defineComponent({
     return { fullLicenseName }
   },
 })
-export default VMediaReuse
 </script>

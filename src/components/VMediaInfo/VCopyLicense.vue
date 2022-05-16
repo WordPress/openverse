@@ -46,7 +46,7 @@ import VLicenseTabPanel from '~/components/VMediaInfo/VLicenseTabPanel.vue'
 
 const tabs = ['rich', 'html', 'plain']
 
-const VCopyLicense = defineComponent({
+export default defineComponent({
   name: 'VCopyLicense',
   components: { VTabs, VTab, VLicenseTabPanel },
   props: {
@@ -66,5 +66,4 @@ const VCopyLicense = defineComponent({
     }
   },
 })
-export default VCopyLicense
 </script>

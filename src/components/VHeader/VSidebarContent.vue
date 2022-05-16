@@ -13,7 +13,7 @@ import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 /**
  * Renders the inner content of the sidebar and manages focus.
  */
-const VSidebarContent = defineComponent({
+export default defineComponent({
   name: 'VSidebarContent',
   components: { VTeleport, VSearchGridFilter },
   props: {
@@ -27,6 +27,4 @@ const VSidebarContent = defineComponent({
     },
   },
 })
-
-export default VSidebarContent
 </script>

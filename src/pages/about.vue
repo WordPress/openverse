@@ -78,7 +78,7 @@ import { defineComponent } from '@nuxtjs/composition-api'
 import VLink from '~/components/VLink.vue'
 import VContentPage from '~/components/VContentPage.vue'
 
-const AboutPage = defineComponent({
+export default defineComponent({
   name: 'AboutPage',
   components: { VLink, VContentPage },
   head() {
@@ -89,6 +89,4 @@ const AboutPage = defineComponent({
     }
   },
 })
-
-export default AboutPage
 </script>

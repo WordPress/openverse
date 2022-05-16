@@ -62,7 +62,7 @@ import Oops from '~/assets/oops.svg?inline'
 import OpenverseLogo from '~/assets/logo.svg?inline'
 import OpenverseBrand from '~/assets/brand.svg?inline'
 
-const VFourOhFour = defineComponent({
+export default defineComponent({
   name: 'VFourOhFour',
   components: {
     OpenverseLogo,
@@ -113,7 +113,6 @@ const VFourOhFour = defineComponent({
     ],
   },
 })
-export default VFourOhFour
 </script>
 
 <style>

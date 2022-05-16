@@ -50,18 +50,19 @@ export const buttonVariants = [
   'action-menu',
   'action-menu-secondary',
   'action-menu-muted',
+  'action-menu-muted-pressed',
   'plain',
   'plain-dangerous',
   'full',
 ] as const
 
-type ButtonVariant = typeof buttonVariants[number]
+export type ButtonVariant = typeof buttonVariants[number]
 
 export const buttonSizes = ['large', 'medium', 'small', 'disabled'] as const
 
-type ButtonSize = typeof buttonSizes[number]
+export type ButtonSize = typeof buttonSizes[number]
 
-const buttonTypes = ['button', 'submit', 'reset'] as const
+export const buttonTypes = ['button', 'submit', 'reset'] as const
 
 export type ButtonType = typeof buttonTypes[number]
 

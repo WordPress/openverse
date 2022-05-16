@@ -10,7 +10,7 @@ import { propTypes } from '~/pages/search/search-page.types'
 
 import VAllResultsGrid from '~/components/VAllResultsGrid/VAllResultsGrid.vue'
 
-const SearchIndex = defineComponent({
+export default defineComponent({
   name: 'SearchIndex',
   components: { VAllResultsGrid },
   props: propTypes,
@@ -30,5 +30,4 @@ const SearchIndex = defineComponent({
     ],
   },
 })
-export default SearchIndex
 </script>

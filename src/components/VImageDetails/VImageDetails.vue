@@ -52,7 +52,7 @@ import VContentReportPopover from '~/components/VContentReport/VContentReportPop
 import VLink from '~/components/VLink.vue'
 import VMediaTag from '~/components/VMediaTag/VMediaTag.vue'
 
-const VImageDetails = defineComponent({
+export default defineComponent({
   name: 'VImageDetails',
   components: { VContentReportPopover, VLink, VMediaTag },
   props: {
@@ -86,7 +86,6 @@ const VImageDetails = defineComponent({
     return { imgType }
   },
 })
-export default VImageDetails
 </script>
 
 <style scoped>

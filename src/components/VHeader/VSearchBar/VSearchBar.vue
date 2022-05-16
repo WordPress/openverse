@@ -41,7 +41,7 @@ import VSearchButton from '~/components/VHeader/VSearchBar/VSearchButton.vue'
  * that fires a search request. The loading state and number of hits are also
  * displayed in the bar itself.
  */
-const VSearchBar = defineComponent({
+export default defineComponent({
   name: 'VSearchBar',
   components: { VInputField, VSearchButton },
   inheritAttrs: false,
@@ -88,7 +88,6 @@ const VSearchBar = defineComponent({
     }
   },
 })
-export default VSearchBar
 </script>
 
 <style>

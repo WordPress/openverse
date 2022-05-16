@@ -14,7 +14,7 @@ const sizes = {
   DEFAULT: 'default',
   LARGE: 'large',
 }
-const VSearchResultsTitle = defineComponent({
+export default defineComponent({
   name: 'VSearchResultsTitle',
   props: {
     size: {
@@ -24,7 +24,6 @@ const VSearchResultsTitle = defineComponent({
     },
   },
 })
-export default VSearchResultsTitle
 </script>
 
 <style scoped>

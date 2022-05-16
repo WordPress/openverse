@@ -72,7 +72,7 @@ import closeIcon from '~/assets/icons/close.svg'
 /**
  * Renders the inner content of a modal and manages focus.
  */
-const VModalContent = defineComponent({
+export default defineComponent({
   name: 'VModalContent',
   components: { VTeleport, VButton, VIcon, FocusTrap, VLogoButton },
   props: {
@@ -147,8 +147,6 @@ const VModalContent = defineComponent({
     }
   },
 })
-
-export default VModalContent
 </script>
 
 <style module></style>
