@@ -17,6 +17,7 @@ import {
 } from '@nuxtjs/composition-api'
 
 import { tabsContextKey, TabsState } from '~/models/tabs'
+import { defineEvent } from '~/types/emits'
 
 /**
  * VTabs is an accessible implementation of tabs component that displays one panel at a time.
@@ -60,14 +61,25 @@ export default defineComponent({
       type: String as PropType<TabsState['variant']['value'][number]>,
       default: 'bordered',
     },
+    /**
+     * To ensure that a panel is visible on SSR, before we can run `onMounted` hook to register panel.
+     */
+    selectedId: {
+      type: String,
+      required: true,
+    },
   },
-  emits: ['change'],
+  emits: {
+    change: defineEvent<[number]>(),
+  },
   setup(props, { emit }) {
     const selectedIndex = ref<TabsState['selectedIndex']['value']>(0)
     const tabs = ref<TabsState['tabs']['value']>([])
     const panels = ref<TabsState['panels']['value']>([])
+
     const tabGroupContext: TabsState = {
       selectedIndex,
+      initiallySelectedId: props.selectedId,
       activation: computed(() => (props.manual ? 'manual' : 'auto')),
       variant: computed(() =>
         props.variant === 'bordered' ? 'bordered' : 'plain'

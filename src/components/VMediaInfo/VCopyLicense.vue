@@ -7,7 +7,7 @@
       {{ $t('media-details.reuse.copy-license.title') }}
     </h5>
 
-    <VTabs label="#copy-license-title">
+    <VTabs label="#copy-license-title" :selected-id="tabs[0]">
       <template #tabs>
         <VTab v-for="tab in tabs" :id="tab" :key="tab">
           {{ $t(`media-details.reuse.copy-license.${tab}`) }}

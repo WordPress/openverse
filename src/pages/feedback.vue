@@ -17,7 +17,7 @@
       <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
     </i18n>
     <section>
-      <VTabs label="#feedback" variant="plain" manual>
+      <VTabs label="#feedback" variant="plain" :selected-id="tabs[0]" manual>
         <template #tabs>
           <VTab v-for="tab in tabs" :id="tab" :key="tab">
             {{ $t(`feedback.${tab}`) }}

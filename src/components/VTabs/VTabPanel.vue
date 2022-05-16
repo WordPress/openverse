@@ -35,7 +35,7 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     const tabContext = inject(tabsContextKey)
     if (!tabContext) {
       throw new Error(`Could not resolve tabContext in VTabPanel`)
@@ -50,9 +50,19 @@ export default defineComponent({
     const panelIndex = computed(() =>
       tabContext.panels.value.indexOf(internalPanelRef)
     )
-    const isSelected = computed(
-      () => panelIndex.value === tabContext.selectedIndex.value
+
+    /**
+     * On SSR, when internalPanelRef is null, we determine if the Panel is selected
+     * by its id. It is selected if it's equal the VTabs' selectedId.
+     * After VTabs had mounted, the panels and tabs are registered and `selected`
+     * status is managed by the `tabContext`.
+     */
+    const isSelected = computed(() =>
+      internalPanelRef.value === null
+        ? props.id === tabContext.initiallySelectedId
+        : panelIndex.value === tabContext.selectedIndex.value
     )
+
     const panelVariantStyle = computed(() =>
       tabContext.variant.value === 'bordered'
         ? 'border rounded-sm first:rounded-tl-none'
