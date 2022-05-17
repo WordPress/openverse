@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check aspect label
-        uses: sugarshin/required-labels-action@v0.3.1
+        uses: sugarshin/required-labels-action@v0.3.2
         with:
           required_oneof: "🚦 status: awaiting triage,💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface,♿️ aspect: a11y"
 
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check goal label
-        uses: sugarshin/required-labels-action@v0.3.1
+        uses: sugarshin/required-labels-action@v0.3.2
         with:
           required_oneof: "🚦 status: awaiting triage,🌟 goal: addition,🛠 goal: fix,✨ goal: improvement,🧰 goal: internal improvement"
 
@@ -31,6 +31,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check priority label
-        uses: sugarshin/required-labels-action@v0.3.1
+        uses: sugarshin/required-labels-action@v0.3.2
         with:
           required_oneof: "🚦 status: awaiting triage,🟩 priority: low,🟨 priority: medium,🟧 priority: high,🟥 priority: critical"
