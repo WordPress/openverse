@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@octokit/rest": "^18.9.0",
+    "@octokit/rest": "18.12.0",
     "js-yaml": "^4.1.0",
     "node-fetch": "^2.6.7"
   },
