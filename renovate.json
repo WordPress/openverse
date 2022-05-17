@@ -6,23 +6,8 @@
   ],
   "labels": [
     "dependencies",
-    "💻 aspect: code",
-    "🧰 goal: internal improvement",
-    "🟩 priority: low"
-  ],
-  "js": {
-    "labels": [
-      "🟨 tech: javascript"
-    ]
-  },
-  "docker": {
-    "labels": [
-      "🐳 tech: docker"
-    ]
-  },
-  "python": {
-    "labels": [
-      "🐍 tech: python"
-    ]
-  }
+    "\ud83d\udcbb aspect: code",
+    "\ud83e\uddf0 goal: internal improvement",
+    "\ud83d\udfe9 priority: low"
+  ]
 }
