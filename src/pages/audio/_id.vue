@@ -25,6 +25,7 @@ import { AUDIO } from '~/constants/media'
 import type { AudioDetail } from '~/models/media'
 import { useRelatedMediaStore } from '~/stores/media/related-media'
 import { useSingleResultStore } from '~/stores/media/single-result'
+import { createDetailPageMeta } from '~/utils/og'
 
 import VAudioDetails from '~/components/VAudioDetails/VAudioDetails.vue'
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
@@ -80,17 +81,7 @@ export default defineComponent({
     }
   },
   head() {
-    const title = this.audio.title
-    return {
-      title: `${title} | Openverse`,
-      meta: [
-        {
-          hid: 'robots',
-          name: 'robots',
-          content: 'noindex',
-        },
-      ],
-    }
+    return createDetailPageMeta(this.audio.title, this.audio.thumbnail)
   },
 })
 </script>

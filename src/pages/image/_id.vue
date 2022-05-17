@@ -89,6 +89,7 @@ import { IMAGE } from '~/constants/media'
 import { useSingleResultStore } from '~/stores/media/single-result'
 import { useRelatedMediaStore } from '~/stores/media/related-media'
 import type { ImageDetail } from '~/models/media'
+import { createDetailPageMeta } from '~/utils/og'
 
 import VButton from '~/components/VButton.vue'
 import VLink from '~/components/VLink.vue'
@@ -203,28 +204,7 @@ export default defineComponent({
     }
   },
   head() {
-    const title = `${this.image.title} | Openverse`
-
-    return {
-      title,
-      meta: [
-        {
-          hid: 'robots',
-          name: 'robots',
-          content: 'noindex',
-        },
-        {
-          hid: 'og:title',
-          name: 'og:title',
-          content: title,
-        },
-        {
-          hid: 'og:image',
-          name: 'og:image',
-          content: this.image.url,
-        },
-      ],
-    }
+    return createDetailPageMeta(this.image.title, this.image.url)
   },
 })
 </script>
