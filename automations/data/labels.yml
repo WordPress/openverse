@@ -43,7 +43,7 @@ groups:
       - name: blocked
         color: "MEDIUM"
         description: Blocked & therefore, not ready for work
-        emoji: "🚧"
+        emoji: "⛔"
       - name: ticket work required
         color: "DARK"
         description: Needs more details before it can be worked on
