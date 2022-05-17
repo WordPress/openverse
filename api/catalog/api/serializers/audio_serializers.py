@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from elasticsearch_dsl.response import Hit
 
-from catalog.api.constants.field_values import AUDIO_CATEGORIES, DURATION
+from catalog.api.constants.field_values import AUDIO_CATEGORIES, LENGTHS
 from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import AudioReport
 from catalog.api.models.audio import Audio
@@ -57,7 +57,7 @@ class AudioSearchRequestSerializer(
         *MediaSearchRequestSerializer.fields_names,
         *AudioSearchRequestSourceSerializer.field_names,
         "category",
-        "duration",
+        "length",
     ]
     """
     Keep the fields names in sync with the actual fields below as this list is
@@ -69,9 +69,9 @@ class AudioSearchRequestSerializer(
         help_text=make_comma_separated_help_text(AUDIO_CATEGORIES, "categories"),
         required=False,
     )
-    duration = serializers.CharField(
-        label="duration",
-        help_text=make_comma_separated_help_text(DURATION, "audio lengths"),
+    length = serializers.CharField(
+        label="length",
+        help_text=make_comma_separated_help_text(LENGTHS, "audio lengths"),
         required=False,
     )
 
@@ -81,8 +81,8 @@ class AudioSearchRequestSerializer(
         return value.lower()
 
     @staticmethod
-    def validate_duration(value):
-        _validate_enum("duration", DURATION, value)
+    def validate_length(value):
+        _validate_enum("length", LENGTHS, value)
         return value.lower()
 
 

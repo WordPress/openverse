@@ -304,9 +304,10 @@ class Audio(Media):
         api/catalog/api/serializers/audio_serializers.py.
         """
 
-        SHORT = 4 * 60 * 1e3  # under 4 minutes
-        MEDIUM = 20 * 60 * 1e3  # 4 - 20 minutes
-        LONG = float("inf")  # longer than 20 minutes
+        SHORTEST = 30 * 1e3  # under 30 seconds
+        SHORT = 2 * 60 * 1e3  # 30 seconds - 2 minutes
+        MEDIUM = 10 * 60 * 1e3  # 2 - 10 minutes
+        LONG = float("inf")  # longer than 10 minutes
 
     class Index:
         name = "audio"
@@ -320,12 +321,15 @@ class Audio(Media):
         attrs = Audio.get_instance_attrs(row, schema)
         popularity = attrs["standardized_popularity"]
 
+        length = Audio.get_length(row[schema["duration"]])
+
         return Audio(
             bit_rate=row[schema["bit_rate"]],
             sample_rate=row[schema["sample_rate"]],
             genres=row[schema["genres"]],
             category=row[schema["category"]],
             duration=row[schema["duration"]],
+            length=length,
             authority_boost=authority_boost,
             max_boost=max(popularity or 1, authority_boost or 1),
             min_boost=min(popularity or 1, authority_boost or 1),
@@ -333,7 +337,7 @@ class Audio(Media):
         )
 
     @staticmethod
-    def get_duration(duration):
+    def get_length(duration):
         if not duration:
             return None
         for length in Audio.Durations:

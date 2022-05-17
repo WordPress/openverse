@@ -240,6 +240,7 @@ def search(
         ("extension", None),
         ("category", None),
         ("categories", "category"),
+        ("length", None),
         ("aspect_ratio", None),
         ("size", None),
         ("source", None),

@@ -137,6 +137,7 @@ def index_settings(table_name):
             "sample_rate": {"type": "integer"},
             "genres": {"fields": {"keyword": {"type": "keyword"}}, "type": "text"},
             "duration": {"type": "integer"},
+            "length": {"type": "keyword"},
         },
     }
     media_mappings = common_mappings.copy()
