@@ -1,6 +1,9 @@
-
 {
-  "extends": ["config:base", ":preserveSemverRanges", "schedule:monthly"],
+  "extends": [
+    "config:base",
+    ":preserveSemverRanges",
+    "schedule:monthly"
+  ],
   "labels": [
     "dependencies",
     "💻 aspect: code",
@@ -8,9 +11,18 @@
     "🟩 priority: low"
   ],
   "js": {
-    "labels": ["🟨 tech: javascript"]
+    "labels": [
+      "🟨 tech: javascript"
+    ]
   },
   "docker": {
-    "labels": ["🐳 tech: docker"]
+    "labels": [
+      "🐳 tech: docker"
+    ]
+  },
+  "python": {
+    "labels": [
+      "🐍 tech: python"
+    ]
   }
 }
