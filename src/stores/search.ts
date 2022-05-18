@@ -7,6 +7,7 @@ import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
+  SearchType,
   SupportedMediaType,
   SupportedSearchType,
   supportedSearchTypes,
@@ -28,8 +29,14 @@ import {
 
 import type { Dictionary } from 'vue-router/types/router'
 
+export const isSearchTypeSupported = (
+  st: SearchType
+): st is SupportedSearchType => {
+  return supportedSearchTypes.includes(st as SupportedSearchType)
+}
+
 export interface SearchState {
-  searchType: SupportedSearchType
+  searchType: SearchType
   searchTerm: string
   filters: Filters
 }
@@ -70,11 +77,15 @@ export const useSearchStore = defineStore('search', {
      * drops all parameters with blank values.
      */
     searchQueryParams(state) {
-      return computeQueryParams(
-        state.searchType,
-        state.filters,
-        state.searchTerm
-      )
+      if (isSearchTypeSupported(state.searchType)) {
+        return computeQueryParams(
+          state.searchType,
+          state.filters,
+          state.searchTerm
+        )
+      } else {
+        return { q: state.searchTerm }
+      }
     },
     /**
      * Returns the number of checked filters, excluding the `mature` filter.
@@ -114,10 +125,10 @@ export const useSearchStore = defineStore('search', {
       )
     },
     /**
-     * Returns whether the current `seartchType` is a supported media type for search.
+     * Returns whether the current `searchType` is a supported media type for search.
      */
     searchTypeIsSupported(state) {
-      return supportedSearchTypes.includes(state.searchType)
+      return isSearchTypeSupported(state.searchType)
     },
   },
   actions: {
@@ -259,6 +270,7 @@ export const useSearchStore = defineStore('search', {
         this.setSearchTerm(urlQuery.q.trim())
       }
       this.searchType = queryStringToSearchType(path)
+      if (!isSearchTypeSupported(this.searchType)) return
       // When setting filters from URL query, 'mature' has a value of 'true',
       // but we need the 'mature' code. Creating a local shallow copy to prevent mutation.
       const query = { ...urlQuery }

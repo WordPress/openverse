@@ -38,10 +38,9 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
-import { ALL_MEDIA, IMAGE, SupportedSearchType } from '~/constants/media'
+import { ALL_MEDIA, IMAGE, SearchType, mediaTypes } from '~/constants/media'
 import { NO_RESULT } from '~/constants/errors'
 import { defineEvent } from '~/types/emits'
-
 import type { ApiQueryParams } from '~/utils/search-query-transform'
 import type { FetchState } from '~/composables/use-fetch-state'
 
@@ -70,7 +69,7 @@ export default defineComponent({
       required: true,
     },
     searchType: {
-      type: String as PropType<SupportedSearchType>,
+      type: String as PropType<SearchType>,
       required: true,
     },
     fetchState: {
@@ -93,9 +92,17 @@ export default defineComponent({
         ? props.query.q !== '' && props.resultsCount === 0
         : false
     })
+
+    /**
+     * Metasearch form shows the external sources for current search type, or for images if the search type is 'All Content'.
+     */
     const metaSearchFormType = computed(() => {
-      return props.searchType === ALL_MEDIA ? IMAGE : props.searchType
+      if (mediaTypes.includes(props.searchType)) {
+        return props.searchType
+      }
+      return IMAGE
     })
+
     const isAllView = computed(() => {
       return props.searchType === ALL_MEDIA
     })

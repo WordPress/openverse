@@ -10,22 +10,24 @@
   </div>
 </template>
 
-<script>
-import { isValidSearchType } from '~/utils/prop-validators'
+<script lang="ts">
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
+
+import type { MediaType } from '~/constants/media'
+import type { ApiQueryParams } from '~/utils/search-query-transform'
 
 import VMetaSourceList from '~/components/VMetaSearch/VMetaSourceList.vue'
 
-export default {
+export default defineComponent({
   name: 'VNoResults',
   components: { VMetaSourceList },
   props: {
     type: {
-      type: String,
-      validator: isValidSearchType,
+      type: String as PropType<MediaType>,
     },
     query: {
-      type: Object,
+      type: Object as PropType<ApiQueryParams>,
     },
   },
-}
+})
 </script>

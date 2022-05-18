@@ -2,7 +2,7 @@
   <VPopover
     ref="contentMenuPopover"
     class="flex items-stretch"
-    :label="$t('search-type.label')"
+    :label="$t('search-type.label').toString()"
     placement="bottom-end"
   >
     <template #trigger="{ a11yProps }">
@@ -28,10 +28,18 @@
   </VPopover>
 </template>
 
-<script>
-import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+<script lang="ts">
+import {
+  ComponentInstance,
+  computed,
+  defineComponent,
+  PropType,
+  ref,
+} from '@nuxtjs/composition-api'
 
 import useSearchType from '~/composables/use-search-type'
+import type { SearchType } from '~/constants/media'
+import { defineEvent } from '~/types/emits'
 
 import VPopover from '~/components/VPopover/VPopover.vue'
 import VSearchTypeButton from '~/components/VContentSwitcher/VSearchTypeButton.vue'
@@ -52,23 +60,25 @@ export default defineComponent({
   },
   props: {
     activeItem: {
-      type: String,
+      type: String as PropType<SearchType>,
       required: true,
     },
     placement: {
-      type: String,
+      type: String as PropType<'header' | 'searchbar'>,
       default: 'header',
     },
+  },
+  emits: {
+    select: defineEvent<SearchType>(),
   },
   setup(props, { emit }) {
     const content = useSearchType()
 
-    const contentMenuPopover = ref(null)
+    const contentMenuPopover = ref<ComponentInstance | null>(null)
 
     /**
      * When in the searchbar, content switcher button has a border when the
      * search bar group is hovered on.
-     * @type {ComputedRef<boolean>}
      */
     const isInSearchBar = computed(() => props.placement === 'searchbar')
 
@@ -81,7 +91,7 @@ export default defineComponent({
       }
     }
 
-    const selectItem = (item) => {
+    const selectItem = (item: SearchType) => {
       emit('select', item)
     }
 

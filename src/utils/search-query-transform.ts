@@ -4,7 +4,13 @@ import {
   Filters,
   mediaFilterKeys,
 } from '~/constants/filters'
-import { ALL_MEDIA, SupportedSearchType } from '~/constants/media'
+import {
+  ALL_MEDIA,
+  mediaTypes,
+  SearchType,
+  SupportedSearchType,
+  supportedSearchTypes,
+} from '~/constants/media'
 import { getParameterByName } from '~/utils/url-params'
 import { deepClone } from '~/utils/clone'
 
@@ -47,17 +53,11 @@ const filterPropertyMappings: Record<FilterCategory, ApiQueryKeys> = {
   mature: 'mature',
 }
 
-const getMediaFilterTypes = (searchType: SupportedSearchType) => [
-  ...mediaFilterKeys[searchType],
-]
-// {
-//   license: 'cc0,pdm,by,by-sa,by-nc,by-nd,by-nc-sa,by-nc-nd',
-//   imageCategories: 'photograph,illustration,digitized_artwork',
-//   imageExtension: 'jpg,png',
-//   aspect_ratio: 'square',
-//   size: 'small',
-//   source: 'animaldiversity,bio_diversity,brooklynmuseum,CAPL,clevelandmuseum,deviantart'
-// }
+const getMediaFilterTypes = (searchType: SearchType) => {
+  return supportedSearchTypes.includes(searchType as SupportedSearchType)
+    ? [...mediaFilterKeys[searchType]]
+    : []
+}
 
 /**
  * Joins all the filters which have the checked property `true`
@@ -99,19 +99,15 @@ export const filtersToQueryData = (
 
 /**
  * Extract search type from the url. Returns the last part
- * of the path between `/search/` and query, or `all` by default.
- * `/search/?q=test`: all
- * `/search/image?q=test`: image
- * @param queryString - the query string from the url
+ * of the path after `/search/`, or `all` by default.
+ * `/search/`: all
+ * `/search/image`: image
+ * @param queryString - the query path string from the url
  */
-export const queryStringToSearchType = (
-  queryString: string
-): SupportedSearchType => {
-  const searchTypePattern = /\/search\/(image|audio|video)\?*/
+export const queryStringToSearchType = (queryString: string): SearchType => {
+  const searchTypePattern = new RegExp(`/search/(${mediaTypes.join('|')})`)
   const matchedType = queryString.match(searchTypePattern)
-  return matchedType === null
-    ? ALL_MEDIA
-    : (matchedType[1] as SupportedSearchType)
+  return matchedType === null ? ALL_MEDIA : (matchedType[1] as SearchType)
 }
 
 /**
@@ -233,6 +229,7 @@ export const queryStringToQueryData = (queryString: string) => {
       queryString
     )
   })
+
   queryDataObject.q = getParameterByName('q', queryString)
 
   return queryDataObject

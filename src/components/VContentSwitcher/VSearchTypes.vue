@@ -35,12 +35,12 @@
     </div>
   </VItemGroup>
 </template>
-<script>
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+<script lang="ts">
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import { isDev } from '~/utils/node-env'
 
-import { supportedSearchTypes } from '~/constants/media'
+import type { SearchType } from '~/constants/media'
 import useSearchType from '~/composables/use-search-type'
 
 import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
@@ -55,14 +55,12 @@ export default defineComponent({
      * 'medium' size for larger screens.
      */
     size: {
-      type: String,
+      type: String as PropType<'small' | 'medium'>,
       default: 'small',
-      validator: (val) => ['small', 'medium'].includes(val),
     },
     activeItem: {
-      type: String,
+      type: String as PropType<SearchType>,
       required: true,
-      validator: (val) => supportedSearchTypes.includes(val),
     },
     useLinks: {
       type: Boolean,
