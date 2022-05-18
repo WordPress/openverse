@@ -59,6 +59,17 @@ def test_alert_new_unit_codes():
     )
 
 
+def test_get_unit_codes_from_api_retries():
+    mock_response = {"terms": []}
+    # Patch the sleep function so it doesn't take long
+    with patch.object(
+        si.delayed_requester, "get_response_json", return_value=mock_response
+    ) as request_patch, patch("time.sleep"):
+        with pytest.raises(ValueError, match="No unit codes received."):
+            si.get_unit_codes_from_api()
+        assert request_patch.call_count == 3
+
+
 @pytest.mark.parametrize(
     "new_unit_codes, outdated_unit_codes",
     [
@@ -70,7 +81,7 @@ def test_alert_new_unit_codes():
 def test_validate_unit_codes_from_api_raises_exception(
     new_unit_codes, outdated_unit_codes
 ):
-    with patch.object(si.delayed_requester, "get_response_json"), patch.object(
+    with patch.object(si, "get_unit_codes_from_api"), patch.object(
         si,
         "get_new_and_outdated_unit_codes",
         return_value=(new_unit_codes, outdated_unit_codes),
@@ -83,7 +94,7 @@ def test_validate_unit_codes_from_api_raises_exception(
 
 
 def test_validate_unit_codes_from_api():
-    with patch.object(si.delayed_requester, "get_response_json"), patch.object(
+    with patch.object(si, "get_unit_codes_from_api"), patch.object(
         si, "get_new_and_outdated_unit_codes", return_value=(set(), set())
     ):
         # Validation should run without raising an exception
