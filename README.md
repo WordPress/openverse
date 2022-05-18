@@ -38,7 +38,7 @@ to the project with our
 
 ### Helpful links for new contributors
 
-- [Good first issues](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AWordPress%2Fopenverse-catalog+repo%3AWordPress%2Fopenverse+repo%3AWordPress%2Fopenverse-api+repo%3AWordPress%2Fopenverse-frontend+archived%3Afalse+label%3A%22good+first+issue%22+label%3A%22help+wanted%22)
+- [Good first issues](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AWordPress%2Fopenverse-catalog+repo%3AWordPress%2Fopenverse+repo%3AWordPress%2Fopenverse-api+repo%3AWordPress%2Fopenverse-frontend+label%3A%22good+first+issue%22+label%3A%22help+wanted%22)
 - [Openverse handbook](https://make.wordpress.org/openverse/handbook/openverse-handbook/)
 
 ## What *is* in this repo, then?
