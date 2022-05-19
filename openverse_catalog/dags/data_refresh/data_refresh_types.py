@@ -21,20 +21,25 @@ class DataRefresh:
 
     Optional Constructor Arguments:
 
-    default_args:            dictionary which is passed to the airflow.dag.DAG
-                             __init__ method.
-    start_date:              datetime.datetime giving the
-                             first valid execution_date of the DAG.
-    schedule_interval:       string giving the schedule on which the DAG should
-                             be run.  Passed to the airflow.dag.DAG __init__
-                             method.
-    data_refresh_timeout:    int giving the amount of time in seconds a given
-                             data pull may take.
-    refresh_metrics_timeout: timedelta expressing amount of time the refresh
-                             popularity metrics tasks may take.
-    refresh_matview_timeout: timedelta expressing amount of time the refresh
-                             of the popularity matview may take.
-    doc_md:                  str used for the DAG's documentation markdown
+    default_args:                      dictionary which is passed to the
+                                       airflow.dag.DAG __init__ method.
+    start_date:                        datetime.datetime giving the
+                                       first valid execution_date of the DAG.
+    schedule_interval:                 string giving the schedule on which the DAG
+                                       should be run.  Passed to the
+                                       airflow.dag.DAG __init__ method.
+    data_refresh_timeout:              int giving the amount of time in seconds a
+                                       given data pull may take.
+    refresh_metrics_timeout:           timedelta expressing amount of time the
+                                       refresh popularity metrics tasks may take.
+    refresh_matview_timeout:           timedelta expressing amount of time the
+                                       refresh of the popularity matview may take.
+    create_pop_constants_view_timeout: timedelta expressing amount of time the
+                                       creation of the popularity constants view
+                                       may take
+    create_materialized_view_timeout:  timedelta expressing amount of time the
+                                       creation of the matview may take
+    doc_md:                            str used for the DAG's documentation markdown
     """
 
     dag_id: str = field(init=False)
@@ -45,6 +50,8 @@ class DataRefresh:
     data_refresh_timeout: int = 24 * 60 * 60  # 1 day
     refresh_metrics_timeout: timedelta = timedelta(hours=1)
     refresh_matview_timeout: timedelta = timedelta(hours=1)
+    create_pop_constants_view_timeout: timedelta = timedelta(hours=1)
+    create_materialized_view_timeout: timedelta = timedelta(hours=1)
 
     def __post_init__(self):
         self.dag_id = f"{self.media_type}_data_refresh"
@@ -56,6 +63,8 @@ DATA_REFRESH_CONFIGS = [
         data_refresh_timeout=3 * 24 * 60 * 60,  # 3 days,
         refresh_metrics_timeout=timedelta(hours=24),
         refresh_matview_timeout=timedelta(hours=24),
+        create_pop_constants_view_timeout=timedelta(hours=8),
+        create_materialized_view_timeout=timedelta(hours=5),
     ),
     DataRefresh(media_type="audio"),
 ]
