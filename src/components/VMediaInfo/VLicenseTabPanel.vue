@@ -3,10 +3,14 @@
     :id="tab"
     class="h-[190px] flex flex-col justify-between items-start text-sm md:text-base"
   >
-    <div class="overflow-y-auto">
+    <div :id="`panel-slot-${tab}`" class="overflow-y-auto">
       <slot />
     </div>
-    <VCopyButton :id="`copyattr-${tab}`" :el="`#panel-${tab}`" class="mt-6" />
+    <VCopyButton
+      :id="`copyattr-${tab}`"
+      :el="`#panel-slot-${tab}`"
+      class="mt-6"
+    />
   </VTabPanel>
 </template>
 
