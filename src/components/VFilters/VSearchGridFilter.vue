@@ -15,7 +15,7 @@
         v-if="isAnyFilterApplied"
         id="clear-filter-button"
         variant="plain"
-        class="text-sm font-semibold py-2 px-4 text-pink hover:ring hover:ring-pink"
+        class="text-sm font-semibold py-1 px-4 text-pink hover:ring hover:ring-pink"
         @click="clearFilters"
         @keydown.shift.tab.exact="focusFilterButton"
       >
