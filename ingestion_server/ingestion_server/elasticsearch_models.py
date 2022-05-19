@@ -214,8 +214,8 @@ class Image(Media):
 
     class AspectRatios(Enum):
         """
-        These aspect ratios are also hardcoded in the `aspect_ratio` field in
-        api/catalog/api/serializers/image_serializers.py.
+        These aspect ratios are also defined in
+        ``api/catalog/api/constants/field_values.py.``
         """
 
         TALL = auto()
@@ -226,8 +226,8 @@ class Image(Media):
         """
         Maximum threshold for each image size band
 
-        These sizes are also hardcoded in the `aspect_ratio` field in
-        api/catalog/api/serializers/image_serializers.py.
+        These sizes are also defined in
+        ``api/catalog/api/constants/field_values.py.``
         """
 
         SMALL = 640 * 480
@@ -300,8 +300,8 @@ class Audio(Media):
         """
         Maximum threshold for each audio duration band
 
-        These durations are also hardcoded in the `duration` field in
-        api/catalog/api/serializers/audio_serializers.py.
+        These durations are also defined in
+        ``api/catalog/api/constants/field_values.py.``
         """
 
         SHORTEST = 30 * 1e3  # under 30 seconds

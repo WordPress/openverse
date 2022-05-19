@@ -35,8 +35,16 @@ class AbstractMedia(
 
     watermarked = models.BooleanField(blank=True, null=True)
 
-    license = models.CharField(max_length=50)
-    license_version = models.CharField(max_length=25, blank=True, null=True)
+    license = models.CharField(
+        max_length=50,
+        help_text="The name of license for the media.",
+    )
+    license_version = models.CharField(
+        max_length=25,
+        blank=True,
+        null=True,
+        help_text="The version of the media license.",
+    )
 
     source = models.CharField(
         max_length=80,
@@ -56,8 +64,17 @@ class AbstractMedia(
         default=0,
     )
 
-    tags = models.JSONField(blank=True, null=True)
-    tags_list = ArrayField(models.CharField(max_length=255), blank=True, null=True)
+    tags = models.JSONField(
+        blank=True,
+        null=True,
+        help_text="Tags with detailed metadata, such as accuracy.",
+    )
+    tags_list = ArrayField(
+        base_field=models.CharField(max_length=255),
+        blank=True,
+        null=True,
+        help_text="List of tags names without detailed metadata.",
+    )
 
     category = models.CharField(
         max_length=80,
@@ -70,19 +87,19 @@ class AbstractMedia(
     meta_data = models.JSONField(blank=True, null=True)
 
     @property
-    def license_url(self):
+    def license_url(self) -> str:
+        """A direct link to the license deed or legal terms."""
+
         if self.meta_data and (url := self.meta_data.get("license_url")):
             return url
         else:
             return get_license_url(self.license.lower(), self.license_version)
 
     @property
-    def attribution(self):
+    def attribution(self) -> str:
         """
-        Get the plain-text English attribution for a media item. Refer to the frontend
-        source code for an internationalised implementation.
-
-        :return: the plain-text English-language attribution for a creative work
+        The plain-text English attribution for a media item. Use this to credit creators
+        for their work and fulfill legal attribution requirements.
         """
 
         return get_attribution_text(

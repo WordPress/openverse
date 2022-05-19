@@ -19,8 +19,16 @@ class ImageFileMixin(FileMixin):
     mixin. Do not use this as the sole base class.
     """
 
-    width = models.IntegerField(blank=True, null=True)
-    height = models.IntegerField(blank=True, null=True)
+    width = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text="The width of the image in pixels. Not always available.",
+    )
+    height = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text="The height of the image in pixels. Not always available.",
+    )
 
     @property
     def resolution_in_mp(self):  # ~ MP or megapixels

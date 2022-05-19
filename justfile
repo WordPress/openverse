@@ -184,11 +184,11 @@ _api-install:
     exit 0
 
 # Run API tests inside Docker
-@api-test tests="": _api-up
-    just exec web ./test/run_test.sh {{ tests }}
+@api-test *args: _api-up
+    just exec web ./test/run_test.sh {{ args }}
 
 # Run API tests locally
-api-testlocal args="":
+api-testlocal *args:
     cd api && pipenv run ./test/run_test.sh {{ args }}
 
 # Run Django administrative commands locally

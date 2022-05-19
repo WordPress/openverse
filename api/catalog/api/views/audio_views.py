@@ -16,7 +16,7 @@ from catalog.api.docs.audio_docs import (
 )
 from catalog.api.models import Audio
 from catalog.api.serializers.audio_serializers import (
-    AudioReportSerializer,
+    AudioReportRequestSerializer,
     AudioSearchRequestSerializer,
     AudioSerializer,
     AudioWaveformSerializer,
@@ -87,6 +87,10 @@ class AudioViewSet(MediaViewSet):
         except Exception as e:
             raise get_api_exception(getattr(e, "message", str(e)))
 
-    @action(detail=True, methods=["post"], serializer_class=AudioReportSerializer)
+    @action(
+        detail=True,
+        methods=["post"],
+        serializer_class=AudioReportRequestSerializer,
+    )
     def report(self, *args, **kwargs):
         return super().report(*args, **kwargs)

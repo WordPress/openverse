@@ -9,15 +9,17 @@ base_image = {
     "id": identifier,
     "title": "Train area in Copenhagen South / Tog område i Syd København",
     "foreign_landing_url": "https://www.flickr.com/photos/126744325@N07/51745389858",
+    "url": "https://live.staticflickr.com/65535/51745389858_c10358e1a3_b.jpg",
     "creator": "Kristoffer Trolle",
     "creator_url": "https://www.flickr.com/photos/126744325@N07",
-    "url": "https://live.staticflickr.com/65535/51745389858_c10358e1a3_b.jpg",
     "license": "by",
     "license_version": "2.0",
     "license_url": "https://creativecommons.org/licenses/by/2.0/",
     "provider": "flickr",
     "source": "flickr",
     "category": "photograph",
+    "filesize": 157497,
+    "filetype": "jpg",
     "tags": [
         {"name": "copenhagen"},
         {"name": "danmark"},
@@ -33,6 +35,11 @@ base_image = {
         {"name": "tog"},
         {"name": "train"},
     ],
+    "attribution": '"Train area in Copenhagen South / Tog område i Syd København" by Kristoffer Trolle is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.',  # noqa: E501
+    "fields_matched": [],
+    "mature": None,
+    "height": 683,
+    "width": 1024,
     "thumbnail": f"{origin}/v1/images/{identifier}/thumb/",
     "detail_url": f"{origin}/v1/images/{identifier}/",
     "related_url": f"{origin}/v1/images/{identifier}/related/",
@@ -48,6 +55,12 @@ image_search_200_example = {
             base_image
             | {
                 "fields_matched": ["title"],
+                "mature": False,
+                "height": None,
+                "width": None,
+                "attribution": None,
+                "filesize": None,
+                "filetype": None,
             }
         ],
     },
@@ -80,16 +93,7 @@ image_stats_200_example = {
     ]
 }
 
-image_detail_200_example = {
-    "application/json": base_image
-    | {
-        "attribution": '"Train area in Copenhagen South / Tog område i Syd København" by Kristoffer Trolle is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.',  # noqa: E501
-        "height": 683,
-        "width": 1024,
-        "filesize": "157497",
-        "filetype": "jpg",
-    }
-}
+image_detail_200_example = {"application/json": base_image}
 
 image_detail_404_example = {"application/json": {"detail": "Not found."}}
 

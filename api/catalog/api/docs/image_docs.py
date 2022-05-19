@@ -32,7 +32,7 @@ from catalog.api.serializers.error_serializers import (
     NotFoundErrorSerializer,
 )
 from catalog.api.serializers.image_serializers import (
-    ImageReportSerializer,
+    ImageReportRequestSerializer,
     ImageSearchRequestSerializer,
     ImageSearchSerializer,
     ImageSerializer,
@@ -117,7 +117,7 @@ class ImageDetail(MediaDetail):
 image_detail is an API endpoint to get the details of a specified image ID.
 
 By using this endpoint, you can image details such as
-{fields_to_md(ImageSerializer.fields_names)}.
+{fields_to_md(ImageSerializer.Meta.fields)}.
 
 {MediaDetail.desc}"""
 
@@ -148,7 +148,7 @@ recommendations_images_read is an API endpoint to get related images for a speci
 image ID.
 
 By using this endpoint, you can get the details of related images such as
-{fields_to_md(ImageSerializer.fields_names)}.
+{fields_to_md(ImageSerializer.Meta.fields)}.
 
 {MediaRelated.desc}"""
 
@@ -187,7 +187,7 @@ mature or sensitive content and others.
         "201": openapi.Response(
             description="OK",
             examples=image_complain_201_example,
-            schema=ImageReportSerializer,
+            schema=ImageReportRequestSerializer,
         )
     }
 

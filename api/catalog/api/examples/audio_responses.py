@@ -9,14 +9,18 @@ base_audio = {
     "id": identifier,
     "title": "Wish You Were Here",
     "foreign_landing_url": "https://www.jamendo.com/track/1214935",
+    "url": "https://mp3d.jamendo.com/download/track/1214935/mp32",
     "creator": "The.madpix.project",
     "creator_url": "https://www.jamendo.com/artist/441585/the.madpix.project",
-    "url": "https://mp3d.jamendo.com/download/track/1214935/mp32",
     "license": "by-nc-sa",
     "license_version": "3.0",
     "license_url": "https://creativecommons.org/licenses/by-nc-sa/3.0/",
     "provider": "jamendo",
     "source": "jamendo",
+    "category": "music",
+    "genres": ["dance", "electronic", "house"],
+    "filesize": 7139840,
+    "filetype": "mp3",
     "tags": [
         {"name": "vocal"},
         {"name": "female"},
@@ -29,13 +33,26 @@ base_audio = {
         {"name": "voice"},
         {"name": "funkyhouse"},
     ],
-    "genres": ["dance", "electronic", "house"],
+    "alt_files": None,
+    "attribution": '"Wish You Were Here" by The.madpix.project is licensed under CC BY-NC-SA 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/.',  # noqa: E501,
+    "fields_matched": [],
+    "mature": None,
+    "audio_set": {
+        "title": "Wish You Were Here",
+        "foreign_landing_url": "https://www.jamendo.com/album/145774/wish-you-were-here",  # noqa: E501
+        "creator": "The.madpix.project",
+        "creator_url": "https://www.jamendo.com/artist/441585/the.madpix.project",
+        "url": "https://usercontent.jamendo.com?type=album&id=145774&width=200",
+        "filesize": None,
+        "filetype": None,
+    },
+    "duration": 270000,
+    "bit_rate": 128000,
+    "sample_rate": 44100,
     "thumbnail": f"{origin}/v1/audio/{identifier}/thumb/",
-    "waveform": f"{origin}/v1/audio/{identifier}/waveform/",
     "detail_url": f"{origin}/v1/audio/{identifier}/",
     "related_url": f"{origin}/v1/audio/{identifier}/related/",
-    "category": "music",
-    "duration": 270000,
+    "waveform": f"{origin}/v1/audio/{identifier}/waveform/",
     "peaks": [],
 }
 
@@ -46,7 +63,15 @@ audio_search_200_example = {
         "page_size": 20,
         "page": 1,
         "results": [
-            base_audio | {"fields_matched": ["title"]},
+            base_audio
+            | {
+                "fields_matched": ["title"],
+                "mature": False,
+                "audio_set": None,
+                "attribution": None,
+                "filesize": None,
+                "filetype": None,
+            },
         ],
     },
 }
@@ -78,27 +103,7 @@ audio_stats_200_example = {
     ]
 }
 
-audio_detail_200_example = {
-    "application/json": base_audio
-    | {
-        "attribution": '"Wish You Were Here" by The.madpix.project is licensed under CC BY-NC-SA 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/.',  # noqa: E501
-        "audio_set": {
-            "title": "Wish You Were Here",
-            "foreign_landing_url": "https://www.jamendo.com/album/145774/wish-you-were-here",  # noqa: E501
-            "creator": "The.madpix.project",
-            "creator_url": "https://www.jamendo.com/artist/441585/the.madpix.project",
-            "url": "https://usercontent.jamendo.com?type=album&id=145774&width=200",
-            "filesize": None,
-            "filetype": None,
-        },
-        "duration": 270000,
-        "bit_rate": None,
-        "sample_rate": None,
-        "alt_files": None,
-        "filesize": None,
-        "filetype": "mp3",
-    },
-}
+audio_detail_200_example = {"application/json": base_audio}
 
 audio_detail_404_example = {"application/json": {"detail": "Not found."}}
 

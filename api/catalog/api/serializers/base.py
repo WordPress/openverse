@@ -1,24 +1,25 @@
-import re
-
-from django.conf import settings
 from rest_framework import serializers
 
 
-class SchemableHyperlinkedIdentityField(serializers.HyperlinkedIdentityField):
+class BaseModelSerializer(serializers.ModelSerializer):
     """
-    This field returns the link but allows the option to replace the URL scheme.
+    Extends model serializer to use docstring of properties as help text.
     """
 
-    def __init__(self, scheme=settings.API_LINK_SCHEME, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def build_property_field(self, field_name, model_class):
+        """
+        Overrides the built-in property field builder to use docstrings as the Swagger
+        help text for fields.
 
-        self.scheme = scheme
+        :param field_name: the name of the property for which the field is being built
+        :param model_class: the ``class`` instance for the Django model
+        :return: the Field subclass to use and the keyword arguments to pass to it
+        """
 
-    def get_url(self, *args, **kwargs):
-        url = super().get_url(*args, **kwargs)
-
-        # Only rewrite URLs if a fixed scheme is provided
-        if self.scheme is not None:
-            url = re.sub(r"^\w+://", f"{self.scheme}://", url, 1)
-
-        return url
+        klass, kwargs = super().build_property_field(field_name, model_class)
+        kwargs |= {
+            "allow_null": True,  # model computed properties are not present in ``Hit``
+        }
+        if doc := getattr(model_class, field_name).__doc__:
+            kwargs.setdefault("help_text", doc)
+        return klass, kwargs

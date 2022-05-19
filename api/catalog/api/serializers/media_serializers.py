@@ -1,116 +1,19 @@
 from collections import namedtuple
-from urllib.parse import urlparse
 
 from rest_framework import serializers
 
 from catalog.api.constants.licenses import LICENSE_GROUPS
 from catalog.api.controllers import search_controller
+from catalog.api.models.media import AbstractMedia
+from catalog.api.serializers.base import BaseModelSerializer
+from catalog.api.serializers.fields import SchemableHyperlinkedIdentityField
 from catalog.api.utils.help_text import make_comma_separated_help_text
+from catalog.api.utils.url import add_protocol
 
 
-def _validate_enum(enum_name, valid_values: set, given_values: str):
-    """
-    Validate whether the given values are all members of the given enum.
-
-    :param valid_values: Allowed values for an enum
-    :param given_values: A comma separated list of values.
-    :return: whether the input is valid
-    """
-    input_values = given_values.lower().split(",")
-    for value in input_values:
-        if value not in valid_values:
-            raise serializers.ValidationError(
-                f"Invalid {enum_name}: {value}." f" Available options: {valid_values}"
-            )
-    return given_values.lower()
-
-
-def _add_protocol(url: str):
-    """
-    Some fields in the database contain incomplete URLs, leading to unexpected
-    behavior in downstream consumers. This helper verifies that we always return
-    fully formed URLs in such situations.
-    """
-    parsed = urlparse(url)
-    if parsed.scheme == "":
-        return f"https://{url}"
-    else:
-        return url
-
-
-def format_enums(values: list[str]) -> str:
-    """
-    Format a list of strings into a combined string where items are comma separated and
-    surrounded by backticks.
-
-    :param values: the list of valid values
-    :return: a string representation of these values
-    """
-
-    return ",".join([f"`{value}`" for value in values])
-
-
-class TagSerializer(serializers.Serializer):
-    name = serializers.CharField(required=True, help_text="The name of a detailed tag.")
-    accuracy = serializers.FloatField(
-        required=False,
-        help_text="The accuracy of a machine-generated tag. Human-generated "
-        "tags do not have an accuracy field.",
-    )
-
-
-def get_search_request_source_serializer(media_type):
-    class MediaSearchRequestSourceSerializer(serializers.Serializer):
-        """
-        This serializer parses and validates the source/not_source fields from the query
-        parameters.
-        """
-
-        field_names = [
-            "source",
-            "excluded_source",
-        ]
-        """
-        Keep the fields names in sync with the actual fields below as this list is
-        used to generate Swagger documentation.
-        """
-
-        _field_attrs = {
-            "help_text": make_comma_separated_help_text(
-                search_controller.get_sources(media_type).keys(), "data sources"
-            ),
-            "required": False,
-        }
-
-        source = serializers.CharField(label="provider", **_field_attrs)
-        excluded_source = serializers.CharField(
-            label="excluded_provider", **_field_attrs
-        )
-
-        @staticmethod
-        def validate_source_field(input_sources):
-            allowed_sources = list(search_controller.get_sources(media_type).keys())
-            input_sources = input_sources.split(",")
-            input_sources = [x for x in input_sources if x in allowed_sources]
-            input_sources = ",".join(input_sources)
-            return input_sources.lower()
-
-        def validate_source(self, input_sources):
-            return self.validate_source_field(input_sources)
-
-        def validate_excluded_source(self, input_sources):
-            return self.validate_source(input_sources)
-
-        def validate(self, data):
-            data = super().validate(data)
-            if "source" in self.initial_data and "excluded_source" in self.initial_data:
-                raise serializers.ValidationError(
-                    "Cannot set both 'source' and 'excluded_source'. "
-                    "Use exactly one of these."
-                )
-            return data
-
-    return MediaSearchRequestSourceSerializer
+#######################
+# Request serializers #
+#######################
 
 
 class MediaSearchRequestSerializer(serializers.Serializer):
@@ -220,7 +123,7 @@ class MediaSearchRequestSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     f"License '{_license}' does not exist."
                 )
-        return value.lower()
+        return value
 
     @staticmethod
     def validate_license_type(value):
@@ -264,141 +167,6 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         return data
 
 
-class MediaSerializer(serializers.Serializer):
-    """
-    This serializer serializes a single media file. The class should be
-    inherited by all individual media serializers.
-    """
-
-    fields_names = [
-        "id",
-        "title",
-        "foreign_landing_url",
-        "creator",
-        "creator_url",
-        "url",
-        "filesize",
-        "filetype",
-        "license",
-        "license_version",
-        "license_url",
-        "provider",
-        "source",
-        "category",
-        "tags",
-        "fields_matched",
-        "attribution",
-    ]
-    """
-    Keep the fields names in sync with the actual fields below as this list is
-    used to generate Swagger documentation.
-    """
-
-    requires_context = True
-
-    # Fields corresponding to IdentifierMixin
-    id = serializers.CharField(
-        required=True,
-        help_text="Our unique identifier for an open-licensed work.",
-        source="identifier",
-    )
-
-    # Fields corresponding to MediaMixin
-    title = serializers.CharField(help_text="The name of the media.", required=False)
-    foreign_landing_url = serializers.URLField(
-        required=False, help_text="A foreign landing link for the image."
-    )
-
-    creator = serializers.CharField(
-        help_text="The name of the media creator.", required=False, allow_blank=True
-    )
-    creator_url = serializers.URLField(
-        required=False, help_text="A direct link to the media creator."
-    )
-
-    # Fields corresponding to FileMixin
-    url = serializers.URLField(help_text="The actual URL to the media file.")
-    filesize = serializers.CharField(
-        required=False, help_text="Number in bytes, e.g. 1024."
-    )
-    filetype = serializers.CharField(
-        required=False,
-        help_text="The type of the file, related to the file extension.",
-    )
-
-    # Fields corresponding to AbstractMedia
-    license = serializers.SerializerMethodField(
-        help_text="The name of license for the media."
-    )
-    license_version = serializers.CharField(
-        required=False, help_text="The type of license for the media."
-    )
-    license_url = serializers.URLField(help_text="A direct link to the media license.")
-
-    provider = serializers.CharField(required=False, help_text="The content provider.")
-    source = serializers.CharField(
-        required=False,
-        help_text="The source of the data, meaning a particular dataset.",
-    )
-
-    category = serializers.CharField(
-        required=True, allow_null=True, help_text="The category of the media."
-    )
-
-    tags = TagSerializer(
-        allow_null=True,
-        many=True,
-        help_text="Tags with detailed metadata, such as accuracy.",
-    )
-
-    # Additional fields
-    fields_matched = serializers.ListField(
-        required=False,
-        help_text="List the fields that matched the query for this result.",
-    )
-    attribution = serializers.CharField(
-        required=False,
-        help_text="The attribution of the work in English as plain-text. Use this to"
-        "credit creators for their work and fulfill legal attribution requirements.",
-    )
-
-    def get_license(self, obj):
-        return obj.license.lower()
-
-    def validate_url(self, value):
-        return _add_protocol(value)
-
-    def validate_creator_url(self, value):
-        return _add_protocol(value)
-
-    def validate_foreign_landing_url(self, value):
-        return _add_protocol(value)
-
-    def to_representation(self, *args, **kwargs):
-        repr = super().to_representation(*args, **kwargs)
-        if repr["tags"] is None:
-            repr["tags"] = []  # ``tags`` should always be a list, even if empty
-        return repr
-
-
-class MediaSearchSerializer(serializers.Serializer):
-    """
-    This serializer serializes the full media search response. The class should
-    be inherited by all individual media serializers.
-    """
-
-    result_count = serializers.IntegerField(
-        help_text="The total number of items returned by search result."
-    )
-    page_count = serializers.IntegerField(
-        help_text="The total number of pages returned by search result."
-    )
-    page_size = serializers.IntegerField(help_text="The number of items per page.")
-    page = serializers.IntegerField(
-        help_text="The current page number returned in the response."
-    )
-
-
 class MediaThumbnailRequestSerializer(serializers.Serializer):
     """
     This serializer parses and validates thumbnail query string parameters.
@@ -424,3 +192,240 @@ class MediaThumbnailRequestSerializer(serializers.Serializer):
         if data.get("is_compressed") is None:
             data["is_compressed"] = not data["is_full_size"]
         return data
+
+
+class MediaReportRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = None
+        fields = ["identifier", "reason", "description"]
+        read_only_fields = ["identifier"]
+
+    def validate(self, attrs):
+        if (
+            attrs["reason"] == "other"
+            and ("description" not in attrs or len(attrs["description"])) < 20
+        ):
+            raise serializers.ValidationError(
+                "Description must be at least be 20 characters long"
+            )
+        return attrs
+
+
+########################
+# Response serializers #
+########################
+
+
+class TagSerializer(serializers.Serializer):
+    """
+    This output serializer serializes a singular tag.
+    """
+
+    name = serializers.CharField(
+        help_text="The name of a detailed tag.",
+    )
+    accuracy = serializers.FloatField(
+        required=False,
+        help_text="The accuracy of a machine-generated tag. Human-generated "
+        "tags do not have an accuracy field.",
+    )
+
+
+class MediaSearchSerializer(serializers.Serializer):
+    """
+    This serializer serializes the full media search response. The class should
+    be inherited by all individual media serializers.
+    """
+
+    result_count = serializers.IntegerField(
+        help_text="The total number of items returned by search result.",
+    )
+    page_count = serializers.IntegerField(
+        help_text="The total number of pages returned by search result.",
+    )
+    page_size = serializers.IntegerField(
+        help_text="The number of items per page.",
+    )
+    page = serializers.IntegerField(
+        help_text="The current page number returned in the response.",
+    )
+    # ``results`` field added by child serializers
+
+
+class MediaSerializer(BaseModelSerializer):
+    """
+    This serializer serializes a single media file. The class should be
+    inherited by all individual media serializers.
+    """
+
+    class Meta:
+        model = AbstractMedia
+        fields = [
+            "id",
+            "title",
+            "foreign_landing_url",
+            "url",
+            "creator",
+            "creator_url",
+            "license",
+            "license_version",
+            "license_url",  # property
+            "provider",
+            "source",
+            "category",
+            "filesize",
+            "filetype",
+            "tags",
+            "attribution",  # property
+            "fields_matched",
+            "mature",
+        ]
+        """
+        Keep the fields names in sync with the actual fields below as this list is
+        used to generate Swagger documentation.
+        """
+
+    id = serializers.CharField(
+        help_text="Our unique identifier for an open-licensed work.",
+        source="identifier",
+    )
+
+    tags = TagSerializer(
+        allow_null=True,  # replaced with ``[]`` in ``to_representation`` below
+        many=True,
+        help_text="Tags with detailed metadata, such as accuracy.",
+    )
+
+    fields_matched = serializers.ListField(
+        allow_null=True,  # replaced with ``[]`` in ``to_representation`` below
+        help_text="List the fields that matched the query for this result.",
+    )
+
+    mature = serializers.BooleanField(
+        allow_null=True,  # present in ``Hit`` but not in Django media models
+        help_text="Whether the media item is marked as mature",
+    )
+
+    def to_representation(self, *args, **kwargs):
+        output = super().to_representation(*args, **kwargs)
+
+        # Ensure lists are ``[]`` instead of ``None``
+        # TODO: These fields are still marked 'Nullable' in the API docs
+        list_fields = ["tags", "fields_matched"]
+        for list_field in list_fields:
+            if output[list_field] is None:
+                output[list_field] = []
+
+        # Ensure license is lowercase
+        output["license"] = output["license"].lower()
+
+        # Ensure URLs have scheme
+        url_fields = ["url", "creator_url", "foreign_landing_url"]
+        for url_field in url_fields:
+            output[url_field] = add_protocol(output[url_field])
+
+        return output
+
+
+#######################
+# Dynamic serializers #
+#######################
+
+
+def get_search_request_source_serializer(media_type):
+    class MediaSearchRequestSourceSerializer(serializers.Serializer):
+        """
+        This serializer parses and validates the source/not_source fields from the query
+        parameters.
+        """
+
+        field_names = [
+            "source",
+            "excluded_source",
+        ]
+        """
+        Keep the fields names in sync with the actual fields below as this list is
+        used to generate Swagger documentation.
+        """
+
+        _field_attrs = {
+            "help_text": make_comma_separated_help_text(
+                search_controller.get_sources(media_type).keys(), "data sources"
+            ),
+            "required": False,
+        }
+
+        source = serializers.CharField(
+            label="provider",
+            **_field_attrs,
+        )
+        excluded_source = serializers.CharField(
+            label="excluded_provider",
+            **_field_attrs,
+        )
+
+        @staticmethod
+        def validate_source_field(value):
+            """Checks whether source is a valid source."""
+
+            allowed_sources = list(search_controller.get_sources(media_type).keys())
+            sources = value.lower().split(",")
+            sources = [source for source in sources if source in allowed_sources]
+            value = ",".join(sources)
+            return value
+
+        def validate_source(self, input_sources):
+            return self.validate_source_field(input_sources)
+
+        def validate_excluded_source(self, input_sources):
+            return self.validate_source(input_sources)
+
+        def validate(self, data):
+            data = super().validate(data)
+            if "source" in self.initial_data and "excluded_source" in self.initial_data:
+                raise serializers.ValidationError(
+                    "Cannot set both 'source' and 'excluded_source'. "
+                    "Use exactly one of these."
+                )
+            return data
+
+    return MediaSearchRequestSourceSerializer
+
+
+def get_hyperlinks_serializer(media_type):
+    class MediaHyperlinksSerializer(serializers.Serializer):
+        """
+        This serializer creates URLs pointing to other endpoints related with this media
+        item such as details and related media.
+        """
+
+        field_names = [
+            "thumbnail",  # Not suffixed with `_url` because it points to an image
+            "detail_url",
+            "related_url",
+        ]
+        """
+        Keep the fields names in sync with the actual fields below as this list is
+        used to generate Swagger documentation.
+        """
+
+        thumbnail = SchemableHyperlinkedIdentityField(
+            read_only=True,
+            view_name=f"{media_type}-thumb",
+            lookup_field="identifier",
+            help_text="A direct link to the miniature artwork.",
+        )
+        detail_url = SchemableHyperlinkedIdentityField(
+            read_only=True,
+            view_name=f"{media_type}-detail",
+            lookup_field="identifier",
+            help_text="A direct link to the detail view of this audio file.",
+        )
+        related_url = SchemableHyperlinkedIdentityField(
+            read_only=True,
+            view_name=f"{media_type}-related",
+            lookup_field="identifier",
+            help_text="A link to an endpoint that provides similar audio files.",
+        )
+
+    return MediaHyperlinksSerializer

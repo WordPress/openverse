@@ -25,7 +25,7 @@ from catalog.api.examples import (
     audio_stats_curl,
 )
 from catalog.api.serializers.audio_serializers import (
-    AudioReportSerializer,
+    AudioReportRequestSerializer,
     AudioSearchRequestSerializer,
     AudioSearchSerializer,
     AudioSerializer,
@@ -112,7 +112,7 @@ class AudioDetail(MediaDetail):
 audio_detail is an API endpoint to get the details of a specified audio ID.
 
 By using this endpoint, you can get audio details such as
-{fields_to_md(AudioSerializer.fields_names)}.
+{fields_to_md(AudioSerializer.Meta.fields)}.
 
 {MediaDetail.desc}"""
 
@@ -148,7 +148,7 @@ recommendations_audio_read is an API endpoint to get related audio files for a s
 audio ID.
 
 By using this endpoint, you can get the details of related audio such as
-{fields_to_md(AudioSerializer.fields_names)}.
+{fields_to_md(AudioSerializer.Meta.fields)}.
 
 {MediaRelated.desc}"""
 
@@ -192,7 +192,7 @@ mature or sensitive content and others.
         "201": openapi.Response(
             description="OK",
             examples=audio_complain_201_example,
-            schema=AudioReportSerializer,
+            schema=AudioReportRequestSerializer,
         )
     }
 

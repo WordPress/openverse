@@ -9,8 +9,8 @@ class IdentifierMixin(models.Model):
     any model. Do not use this as the sole base class.
 
     The mixins adds
+
     - identifier: UUIDField
-    - foreign_identifier: CharField
     """
 
     identifier = models.UUIDField(
@@ -27,6 +27,10 @@ class ForeignIdentifierMixin(models.Model):
     """
     This mixin adds fields related to the external unique ID to any model. Do
     not use this as the sole base class.
+
+    This mixin adds
+
+    - foreign_identifier: CharField
     """
 
     foreign_identifier = models.CharField(
@@ -47,13 +51,21 @@ class MediaMixin(models.Model):
     the work and info about the artist. Do not use this as the sole base class.
 
     The mixin adds
+
     - title: CharField
     - foreign_landing_url: CharField
     - creator: CharField
     - creator_url: CharField
+    - thumbnail: URLField
+    - provider: CharField
     """
 
-    title = models.CharField(max_length=2000, blank=True, null=True)
+    title = models.CharField(
+        max_length=2000,
+        blank=True,
+        null=True,
+        help_text="The name of the media.",
+    )
     foreign_landing_url = models.CharField(
         max_length=1000,
         blank=True,
@@ -61,12 +73,27 @@ class MediaMixin(models.Model):
         help_text="The landing page of the work.",
     )
 
-    creator = models.CharField(max_length=2000, blank=True, null=True)
-    creator_url = models.URLField(max_length=2000, blank=True, null=True)
+    creator = models.CharField(
+        max_length=2000,
+        blank=True,
+        null=True,
+        help_text="The name of the media creator.",
+    )
+    creator_url = models.URLField(
+        max_length=2000,
+        blank=True,
+        null=True,
+        help_text="A direct link to the media creator.",
+    )
 
     # Because all forms of media have a thumbnail for visual representation
+    # For images, this field is not used as images are generated using ``imaginary``.
+    # For audio, this field points to the artwork, or is ``null``.
     thumbnail = models.URLField(
-        max_length=1000, blank=True, null=True, help_text="The thumbnail for the media."
+        max_length=1000,
+        blank=True,
+        null=True,
+        help_text="The thumbnail for the media.",
     )
 
     # This is different from ``source`` (see ``AbstractMedia``)
@@ -86,6 +113,12 @@ class FileMixin(models.Model):
     """
     This mixin adds fields related to file such as the file URL and size to any
     model. Do not use this as the sole base class.
+
+    This mixin adds
+
+    - url: URLField
+    - filesize: IntegerField
+    - filetype: CharField
     """
 
     url = models.URLField(

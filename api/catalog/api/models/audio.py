@@ -158,8 +158,9 @@ class Audio(AudioFileMixin, AbstractMedia):
         ),
         null=True,
         db_index=True,
-        help_text="The artistic style of this audio file, "
-        "eg. hip-hop (music) / tech (podcasts).",
+        help_text="An array of audio genres such as "
+        "`rock`, `electronic` for `music` category, or "
+        "`politics`, `sport`, `education` for `podcast` category",
     )
 
     duration = models.IntegerField(

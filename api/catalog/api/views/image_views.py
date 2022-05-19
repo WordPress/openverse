@@ -23,7 +23,7 @@ from catalog.api.docs.image_docs import (
 )
 from catalog.api.models import Image
 from catalog.api.serializers.image_serializers import (
-    ImageReportSerializer,
+    ImageReportRequestSerializer,
     ImageSearchRequestSerializer,
     ImageSerializer,
     OembedRequestSerializer,
@@ -160,7 +160,11 @@ class ImageViewSet(MediaViewSet):
             self._save_wrapper(watermarked, exif_bytes, response)
             return response
 
-    @action(detail=True, methods=["post"], serializer_class=ImageReportSerializer)
+    @action(
+        detail=True,
+        methods=["post"],
+        serializer_class=ImageReportRequestSerializer,
+    )
     def report(self, *args, **kwargs):
         return super().report(*args, **kwargs)
 
