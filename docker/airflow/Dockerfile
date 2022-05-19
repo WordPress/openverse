@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 # Build-time arguments, with sensible defaults
 ARG REQUIREMENTS_FILE=requirements_prod.txt
@@ -37,7 +37,7 @@ RUN useradd -m -d ${AIRFLOW_HOME} airflow && \
     chown airflow:airflow ${OUTPUT_DIR}
 USER airflow
 
-ARG AIRFLOW_VERSION=2.2.4
+ARG AIRFLOW_VERSION=2.3.0
 WORKDIR  ${AIRFLOW_HOME}
 # Always add the prod req because the dev reqs depend on it for deduplication
 COPY ${REQUIREMENTS_FILE} requirements_prod.txt ${AIRFLOW_HOME}/

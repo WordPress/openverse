@@ -61,7 +61,7 @@ from typing import Callable, Dict, List, Optional, Sequence
 from airflow import DAG
 from airflow.models import TaskInstance
 from airflow.models.baseoperator import cross_downstream
-from airflow.operators.dummy import DummyOperator
+from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
@@ -393,7 +393,7 @@ def create_day_partitioned_ingestion_dag(
             reingestion_day_list_list, main_function, ingestion_task_timeout
         )
         for i in range(len(ingest_operator_list_list) - 1):
-            wait_operator = DummyOperator(
+            wait_operator = EmptyOperator(
                 task_id=f"wait_L{i}", trigger_rule=TriggerRule.ALL_DONE
             )
             cross_downstream(ingest_operator_list_list[i], [wait_operator])

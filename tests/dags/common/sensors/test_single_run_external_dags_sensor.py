@@ -101,8 +101,9 @@ class TestExternalDAGsSensor(unittest.TestCase):
         # Loads an example DAG which does not have a Sensor task.
         with warnings.catch_warnings():
             # TODO: As of 2.2.4, initializing the example DAGs emits deprecation
-            # warnings for...(drumroll) Airflow operators 🙃 hopefully this is fixed
-            # in 2.2.5 or something.
+            # TODO: warnings for...(drumroll) Airflow operators 🙃 hopefully this is
+            # TODO: fixed in 2.2.5 or something.
+            # TODO: Update: 2022-05-06/v2.3.0, still an issue!
             warnings.simplefilter("ignore", category=DeprecationWarning)
             dagbag = DagBag(dag_folder=DEV_NULL, include_examples=True)
         bash_dag = dagbag.dags["example_bash_operator"]

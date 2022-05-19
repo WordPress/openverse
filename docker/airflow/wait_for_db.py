@@ -13,7 +13,7 @@ logging.basicConfig(
 logger = logging.getLogger(__file__)
 
 TRIES = 10
-CONN_ID = os.getenv("AIRFLOW__CORE__SQL_ALCHEMY_CONN")
+CONN_ID = os.getenv("AIRFLOW__DATABASE__SQL_ALCHEMY_CONN")
 
 
 def main():
@@ -26,6 +26,8 @@ def main():
 
 
 def _wait_for_db(tries=TRIES, conn_id=CONN_ID):
+    if not conn_id:
+        raise ValueError("MetaDB connection ID not provided")
     engine = db.create_engine(conn_id)
     success = False
     logger.info(f"Testing DB connection {conn_id}")
