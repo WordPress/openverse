@@ -1,16 +1,19 @@
 import path from 'path'
 import fs from 'fs'
 
+import promBundle from 'express-prom-bundle'
+
 import pkg from './package.json'
 import locales from './src/locales/scripts/valid-locales.json'
 
+import { searchTypes } from './src/constants/media'
 import { VIEWPORTS } from './src/constants/screens'
 
 import { isProd } from './src/utils/node-env'
 import { sentryConfig } from './src/utils/sentry-config'
 import { env } from './src/utils/env'
 
-import type { NuxtConfig } from '@nuxt/types'
+import type { NuxtConfig, ServerMiddleware } from '@nuxt/types'
 import type { LocaleObject } from '@nuxtjs/i18n'
 
 /**
@@ -226,6 +229,75 @@ const config: NuxtConfig = {
    */
   redirect: [{ from: '^/photos/(.*)$', to: '/image/$1', statusCode: 301 }],
   sentry: sentryConfig,
+  hooks: {
+    render: {
+      /**
+       * When modifying this function in development with automatic rebuilds enabled
+       * it _will_ crash your server with an error about duplicate metric name registration.
+       * To debug this function's behavior locally you will have to tolerate stopping and
+       * starting `pnpm dev` between each change to nuxt.config.ts. To prevent this from
+       * being a _general_ problem the metrics middleware is disabled in development
+       * mode, otherwise any change to `nuxt.config.ts` would cause this crash. If you
+       * need to debug metrics locally, comment out the early return in development.
+       */
+      setupMiddleware: (app) => {
+        if (process.env.NODE_ENV === 'development') return
+
+        const bypassMetricsPathParts = [
+          /**
+           * Exclude static paths. Remove once we've moved static file
+           * hosting out of the SSR server's responsibilities.
+           */
+          '_nuxt',
+          /**
+           * Only include these paths in development. They do not exist in production
+           * so we can happily skip the extra iterations these path parts introduce.
+           */
+          ...(process.env.NODE_ENV === 'development'
+            ? ['__webpack', 'sse']
+            : []),
+        ]
+        /**
+         * Register this here so that it's registered at the absolute top
+         * of the middleware stack. Using server-middleware puts it
+         * after a whole host of stuff.
+         *
+         * Note: The middleware only has access to server side navigations,
+         * as it is indeed an express middleware, not a Nuxt page middleware.
+         * There's no safe way to pipe client side metrics to Prometheus with
+         * this set up and if we wanted that anyway we'll want to invest into
+         * an actual RUM solution, not a systems monitoring solution like
+         * Prometheus. The implication of this is that the metrics will only
+         * include SSR'd requests. SPA navigations or anything else that
+         * happens exclusively on the client will not be measured. This is the
+         * expected behavior!
+         *
+         * @see {@link https://github.com/nuxt/nuxt.js/blob/dev/packages/server/src/server.js#L70-L138}
+         */
+        app.use(
+          promBundle({
+            bypass: (req) =>
+              bypassMetricsPathParts.some((p) => req.originalUrl.includes(p)),
+            includeMethod: true,
+            includePath: true,
+            normalizePath: [
+              ...searchTypes.map(
+                // Normalize single result pages with IDs in the path
+                (t) => [`/${t}/.*`, `/${t}/#id`] as [string, string]
+              ),
+            ],
+            /**
+             * promBundle creates an Express middleware function, which is type-incompatible
+             * with Nuxt's "connect" middleware functions. I guess they _are_ compatible,
+             * in actual code, or maybe just in the particular implementation of the prometheus
+             * bundle middleware. In any case, this cast is necessary to appeas TypeScript
+             * without an ugly ts-ignore.
+             */
+          }) as unknown as ServerMiddleware
+        )
+      },
+    },
+  },
   build: {
     templates: [
       {
