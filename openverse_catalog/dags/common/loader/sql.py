@@ -36,7 +36,7 @@ OLDEST_PER_PROVIDER = {
     prov.NYPL_DEFAULT_PROVIDER: "1 month 3 days",
     prov.RAWPIXEL_DEFAULT_PROVIDER: "1 month 3 days",
     prov.SCIENCE_DEFAULT_PROVIDER: "1 month 3 days",
-    prov.STATENS_DEFAULT_PROVIDER: "1 month 3 days",
+    prov.SMK_DEFAULT_PROVIDER: "1 month 3 days",
 }
 
 DB_COLUMNS = {

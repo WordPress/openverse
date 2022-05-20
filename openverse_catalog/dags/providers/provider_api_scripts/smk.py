@@ -14,10 +14,10 @@ logger = logging.getLogger(__name__)
 LIMIT = 2000
 DELAY = 5
 RETRIES = 3
-PROVIDER = prov.STATENS_DEFAULT_PROVIDER
+PROVIDER = prov.SMK_DEFAULT_PROVIDER
 ENDPOINT = "https://api.smk.dk/api/v1/art/search/"
 LANDING_PAGE_BASE_URL = "https://open.smk.dk/en/artwork/image/"
-IMAGE_SIZE = "max"
+IMAGE_SIZE = 2048
 THUMBNAIL_SIZE = 400
 
 delay_request = DelayedRequester(delay=DELAY)
@@ -102,7 +102,7 @@ def _handle_items_data(
         for img in images:
             license_info = get_license_info(license_=license_, license_version=version)
             image_count = image_store.add_item(
-                foreign_identifier=img.get("iiif_id"),
+                foreign_identifier=img.get("id"),
                 foreign_landing_url=foreign_landing_url,
                 image_url=img.get("image_url"),
                 height=img.get("height"),
@@ -118,14 +118,26 @@ def _handle_items_data(
 
 def _get_images(item):
     images = []
-    if item.get("image_iiif_id") is not None:
-        iiif_id = item.get("image_iiif_id")
-        image_url, thumbnail_url = _get_image_url(iiif_id)
+
+    # Legacy images do not have an iiif_id; fall back to the ID from the
+    # collection DB.
+    iiif_id = item.get("image_iiif_id")
+    id = iiif_id or item.get("id")
+
+    if id is not None:
+        if iiif_id is None:
+            # Legacy images do not have IIIF links.
+            image_url = item.get("image_native")
+            thumbnail_url = item.get("image_thumbnail")
+        else:
+            image_url, thumbnail_url = _get_image_urls(iiif_id)
+
         height = item.get("image_height")
         width = item.get("image_width")
+
         images.append(
             {
-                "iiif_id": iiif_id,
+                "id": id,
                 "image_url": image_url,
                 "thumbnail": thumbnail_url,
                 "height": height,
@@ -139,13 +151,15 @@ def _get_images(item):
             if type(alt_img) == dict:
                 iiif_id = alt_img.get("iiif_id")
                 if iiif_id is None:
+                    # The API for alternative images does not include the
+                    # 'id', so we must skip if `iiif_id` is not present.
                     continue
-                image_url, thumbnail_url = _get_image_url(iiif_id)
+                image_url, thumbnail_url = _get_image_urls(iiif_id)
                 height = alt_img.get("height")
                 width = alt_img.get("width")
                 images.append(
                     {
-                        "iiif_id": iiif_id,
+                        "id": iiif_id,
                         "image_url": image_url,
                         "thumbnail": thumbnail_url,
                         "height": height,
@@ -155,8 +169,12 @@ def _get_images(item):
     return images
 
 
-def _get_image_url(image_iiif_id, image_size=IMAGE_SIZE, thumbnail_size=THUMBNAIL_SIZE):
-    image_url = image_iiif_id + f"/full/{image_size}/0/default.jpg"
+def _get_image_urls(
+    image_iiif_id, image_size=IMAGE_SIZE, thumbnail_size=THUMBNAIL_SIZE
+):
+    # For high quality IIIF-enabled images, restrict the image size to prevent loading
+    # very large files.
+    image_url = image_iiif_id + f"/full/!{image_size},/0/default.jpg"
     thumbnail_url = image_iiif_id + f"/full/!{thumbnail_size},/0/default.jpg"
 
     return image_url, thumbnail_url

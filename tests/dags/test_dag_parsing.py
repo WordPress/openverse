@@ -28,7 +28,7 @@ PROVIDER_WORKFLOWS = [
         "rawpixel_workflow.py",
         "science_museum_workflow.py",
         "smithsonian_workflow.py",
-        "statens_museum_workflow.py",
+        "smk_workflow.py",
         "walters_workflow.py",
         "wikimedia_ingestion_workflow.py",
         "wikimedia_workflow.py",

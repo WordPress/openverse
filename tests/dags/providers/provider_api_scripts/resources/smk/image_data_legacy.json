@@ -12,9 +12,10 @@
       "width": 4073
     }
   ],
+  "id": "1170012466_object",
   "image_height": 1059,
-  "image_iiif_id": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.reconstructed.tif.jp2",
-  "image_iiif_info": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.reconstructed.tif.jp2/info.json",
+  "image_native": "https://api.smk.dk/api/v1/thumbnail/52f00edc-936e-42a7-950b-d0cd0df3864b.jpg",
   "image_size": 11784886,
+  "image_thumbnail": "https://api.smk.dk/api/v1/thumbnail/52f00edc-936e-42a7-950b-d0cd0df3864b.jpg",
   "image_width": 3887
 }
