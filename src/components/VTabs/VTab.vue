@@ -66,18 +66,12 @@ export default defineComponent({
     onMounted(() => tabContext.registerTab(internalTabRef))
     onUnmounted(() => tabContext.unregisterTab(internalTabRef))
 
-    const tabIndex = computed(() =>
-      tabContext.tabs.value.indexOf(internalTabRef)
-    )
-
-    const isSelected = computed(
-      () => tabIndex.value === tabContext.selectedIndex.value
-    )
+    const isSelected = computed(() => tabContext.selectedId.value === props.id)
 
     const handleFocus = () => {
       if (props.disabled) return
       if (tabContext.activation.value === 'auto') {
-        tabContext.setSelectedIndex(tabIndex.value)
+        tabContext.setSelectedId(props.id)
       }
       getDomElement(internalTabRef)?.focus()
     }
@@ -85,7 +79,7 @@ export default defineComponent({
     const handleSelection = () => {
       if (props.disabled) return
       getDomElement(internalTabRef)?.focus()
-      tabContext.setSelectedIndex(tabIndex.value)
+      tabContext.setSelectedId(props.id)
     }
 
     /**
@@ -139,7 +133,7 @@ export default defineComponent({
       switch (event.key) {
         case keycodes.Spacebar:
         case keycodes.Enter:
-          tabContext.setSelectedIndex(tabIndex.value)
+          tabContext.setSelectedId(props.id)
           break
         case keycodes.Home:
         case keycodes.PageUp:
@@ -167,14 +161,13 @@ export default defineComponent({
           break
       }
     }
-    const controlledPanel = computed(
-      () => tabContext.panels.value[tabIndex.value]?.value?.id
-    )
+
     const tabProps = computed(() => ({
-      'aria-controls': controlledPanel.value,
+      'aria-controls': `panel-${props.id}`,
       'aria-selected': isSelected.value,
       disabled: props.disabled ? true : undefined,
     }))
+
     const isManual = computed(() => tabContext.activation.value === 'manual')
 
     return {

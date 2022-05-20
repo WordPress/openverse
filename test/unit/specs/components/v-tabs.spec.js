@@ -28,7 +28,7 @@ const TestVTabsComponent = (manual = false) => {
     data() {
       return { manual }
     },
-    template: `<VTabs label="tabs" :manual="manual"><template #tabs>
+    template: `<VTabs label="tabs" :manual="manual" selected-id="1"><template #tabs>
       <VTab id='1'>Tab1</VTab><VTab id='2'>Tab2</VTab><VTab id='3'>Tab3</VTab>
     </template>
     <VTabPanel id='1'>Panel 1 content</VTabPanel>

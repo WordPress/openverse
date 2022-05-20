@@ -26,6 +26,8 @@ import { defineEvent } from '~/types/emits'
  * that can be displayed instantly, without fetching any data. For tab panels that fetch data
  * from the internet or require expensive computation, set `manual` to true to activate the tabs
  * by clicking `Enter` or `Space` after focusing on them using `Tab`.
+ *
+ * To link the VTab to VTabPanel, make sure to pass the same `id` to both.
  */
 export default defineComponent({
   name: 'VTabs',
@@ -70,26 +72,25 @@ export default defineComponent({
     },
   },
   emits: {
-    change: defineEvent<[number]>(),
+    change: defineEvent<[string]>(),
   },
   setup(props, { emit }) {
-    const selectedIndex = ref<TabsState['selectedIndex']['value']>(0)
+    const selectedId = ref<TabsState['selectedId']['value']>(props.selectedId)
     const tabs = ref<TabsState['tabs']['value']>([])
     const panels = ref<TabsState['panels']['value']>([])
 
     const tabGroupContext: TabsState = {
-      selectedIndex,
-      initiallySelectedId: props.selectedId,
+      selectedId,
       activation: computed(() => (props.manual ? 'manual' : 'auto')),
       variant: computed(() =>
         props.variant === 'bordered' ? 'bordered' : 'plain'
       ),
       tabs,
       panels,
-      setSelectedIndex(index: number) {
-        if (selectedIndex.value === index) return
-        selectedIndex.value = index
-        emit('change', index)
+      setSelectedId(id: string) {
+        if (selectedId.value === id) return
+        selectedId.value = id
+        emit('change', id)
       },
       registerTab(tab: typeof tabs['value'][number]) {
         if (!tabs.value.includes(tab)) tabs.value.push(tab)
@@ -115,6 +116,7 @@ export default defineComponent({
     )
     return {
       accessibleLabel,
+      selectedTabId: tabGroupContext.selectedId,
     }
   },
 })

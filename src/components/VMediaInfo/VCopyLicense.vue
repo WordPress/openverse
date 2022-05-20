@@ -35,9 +35,7 @@
 import { defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import { AttributionOptions, getAttribution } from '~/utils/attribution-html'
-
 import type { Media } from '~/models/media'
-
 import { useI18n } from '~/composables/use-i18n'
 
 import VTabs from '~/components/VTabs/VTabs.vue'

@@ -57,11 +57,7 @@ export default defineComponent({
      * After VTabs had mounted, the panels and tabs are registered and `selected`
      * status is managed by the `tabContext`.
      */
-    const isSelected = computed(() =>
-      internalPanelRef.value === null
-        ? props.id === tabContext.initiallySelectedId
-        : panelIndex.value === tabContext.selectedIndex.value
-    )
+    const isSelected = computed(() => props.id === tabContext.selectedId.value)
 
     const panelVariantStyle = computed(() =>
       tabContext.variant.value === 'bordered'
