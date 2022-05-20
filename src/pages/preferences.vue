@@ -12,7 +12,7 @@
       <ul class="!ps-0">
         <template v-for="(feature, name) in flags">
           <li
-            v-if="(feature.status === SWITCHABLE) === isSwitchable"
+            v-if="(getFlagStatus(feature) === SWITCHABLE) === isSwitchable"
             :key="name"
             class="flex flex-row items-center"
           >
@@ -62,10 +62,10 @@
         tag="li"
       >
         <template #feat-name
-          ><code>{{ $t('feat_nonexistent') }}</code></template
+          ><code>{{ $t('flag-status.nonexistent') }}</code></template
         >
         <template #feat-state
-          ><code>{{ $t(ON) }}</code></template
+          ><code>{{ $t(`flag-status.${ON}`) }}</code></template
         >
       </i18n>
     </ul>
@@ -75,7 +75,7 @@
 <script lang="ts">
 import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
 
-import { useFeatureFlagStore } from '~/stores/feature-flag'
+import { useFeatureFlagStore, getFlagStatus } from '~/stores/feature-flag'
 import { SWITCHABLE, ON, OFF, FEATURE_STATES } from '~/constants/feature-flag'
 
 import VContentPage from '~/components/VContentPage.vue'
@@ -119,6 +119,7 @@ export default defineComponent({
       featureState: featureFlagStore.featureState,
 
       handleChange,
+      getFlagStatus,
     }
   },
 })

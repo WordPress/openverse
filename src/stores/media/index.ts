@@ -16,6 +16,7 @@ import {
   IMAGE,
   SupportedMediaType,
   supportedMediaTypes,
+  isAdditionalSearchType,
 } from '~/constants/media'
 import { services } from '~/stores/media/services'
 import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
@@ -61,8 +62,11 @@ export const useMediaStore = defineStore('media', {
 
   getters: {
     _searchType() {
-      const searchStore = useSearchStore()
-      return searchStore.searchType
+      const searchType = useSearchStore().searchType
+      if (isAdditionalSearchType(searchType)) {
+        return ALL_MEDIA
+      }
+      return searchType
     },
     getItemById: (state) => {
       return (mediaType: SupportedMediaType, id: string): Media | undefined => {

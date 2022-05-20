@@ -18,9 +18,7 @@
         class="text-4xl mb-2"
       >
         <template #openverse>Openverse</template>
-        <template #type>
-          {{ type }}
-        </template>
+        <template #type>{{ $t(`meta-search.form.types.${type}`) }}</template>
       </i18n>
       <i18n
         v-else
@@ -28,11 +26,13 @@
         tag="h4"
         class="text-4xl mb-2"
       >
-        <template #type>{{ type }}</template>
+        <template #type>{{ $t(`meta-search.form.types.${type}`) }}</template>
         <template #query>{{ query.q }}</template>
       </i18n>
       <i18n path="meta-search.form.caption" tag="p">
-        <template #type>{{ type }}</template>
+        <template #type>{{
+          $t(`meta-search.form.types-plural.${type}`)
+        }}</template>
         <template #break>
           <br />
         </template>

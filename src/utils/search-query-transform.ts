@@ -82,7 +82,7 @@ const filterToString = (filterItem: FilterItem[]) => {
  */
 export const filtersToQueryData = (
   filters: Filters,
-  searchType: SupportedSearchType = ALL_MEDIA,
+  searchType: Parameters<typeof getMediaFilterTypes>[0] = ALL_MEDIA,
   hideEmpty = true
 ): ApiQueryFilters => {
   const mediaFilterTypes = getMediaFilterTypes(searchType)

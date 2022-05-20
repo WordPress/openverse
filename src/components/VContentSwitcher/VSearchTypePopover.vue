@@ -30,14 +30,12 @@
 
 <script lang="ts">
 import {
-  ComponentInstance,
   computed,
   defineComponent,
   PropType,
   ref,
 } from '@nuxtjs/composition-api'
 
-import useSearchType from '~/composables/use-search-type'
 import type { SearchType } from '~/constants/media'
 import { defineEvent } from '~/types/emits'
 
@@ -72,9 +70,7 @@ export default defineComponent({
     select: defineEvent<SearchType>(),
   },
   setup(props, { emit }) {
-    const content = useSearchType()
-
-    const contentMenuPopover = ref<ComponentInstance | null>(null)
+    const contentMenuPopover = ref(null)
 
     /**
      * When in the searchbar, content switcher button has a border when the
@@ -96,7 +92,6 @@ export default defineComponent({
     }
 
     return {
-      content,
       checkIcon,
       selectItem,
       contentMenuPopover,

@@ -5,8 +5,9 @@ import featureData from '~~/feat/feature-flags.json'
 import { warn } from '~/utils/console'
 
 import type { FeatureFlag } from '~/types/feature-flag'
-import type { FeatureState, FlagStatus } from '~/constants/feature-flag'
 import {
+  FeatureState,
+  FlagStatus,
   ENABLED,
   SWITCHABLE,
   ON,
@@ -15,8 +16,9 @@ import {
 } from '~/constants/feature-flag'
 import { LOCAL, DEPLOY_ENVS, DeployEnv } from '~/constants/deploy-env'
 
+type FlagName = keyof typeof featureData['features']
 export interface FeatureFlagState {
-  flags: Record<keyof typeof featureData['features'], FeatureFlag>
+  flags: Record<FlagName, FeatureFlag>
 }
 
 const FEATURE_FLAG = 'feature_flag'
@@ -62,16 +64,28 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
   getters: {
     /**
      * Get the state of the named feature, based on config and cookie.
+     *
+     * Prefer `isOn` for most use cases.
      */
     featureState:
       (state: FeatureFlagState) =>
-      (name: keyof typeof featureData['features']): FeatureState => {
+      (name: FlagName): FeatureState => {
         if (name in state.flags) return getFeatureState(state.flags[name])
         else {
           warn(`Invalid feature flag accessed: ${name}`)
           return ON
         }
       },
+    /**
+     * Proxy for `featureState` to simplify the majority of flag state checks.
+     *
+     * Prefer this for most use cases over using `featureState` directly.
+     *
+     * @returns `true` if the flag is on, false otherwise
+     */
+    isOn() {
+      return (name: FlagName): boolean => this.featureState(name) === ON
+    },
     /**
      * Get the mapping of switchable features to their preferred states.
      */
@@ -103,10 +117,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      * @param name - the name of the flag to toggle
      * @param targetState - the desired state of the feature flag
      */
-    toggleFeature(
-      name: keyof typeof featureData['features'],
-      targetState: FeatureState
-    ) {
+    toggleFeature(name: FlagName, targetState: FeatureState) {
       const flag = this.flags[name]
       if (getFlagStatus(flag) === SWITCHABLE) flag.preferredState = targetState
       else warn(`Cannot set preferred state for non-switchable flag: ${name}`)

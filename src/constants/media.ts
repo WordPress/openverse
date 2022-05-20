@@ -3,7 +3,7 @@
 export const IMAGE = 'image'
 export const AUDIO = 'audio'
 export const VIDEO = 'video'
-export const MODEL_3D = 'model_3d'
+export const MODEL_3D = 'model-3d'
 export const ALL_MEDIA = 'all'
 
 /**
@@ -35,6 +35,19 @@ export const supportedSearchTypes = [ALL_MEDIA, ...supportedMediaTypes] as const
 
 export type SupportedSearchType = typeof supportedSearchTypes[number]
 
+export type AdditionalSearchType = Exclude<SearchType, SupportedSearchType>
+
+export const additionalSearchTypes: readonly AdditionalSearchType[] = [
+  VIDEO,
+  MODEL_3D,
+] as const
+
+export function isAdditionalSearchType(
+  searchType: SearchType
+): searchType is AdditionalSearchType {
+  return (additionalSearchTypes as readonly string[]).includes(searchType)
+}
+
 /* Media support */
 
 const SUPPORTED = 'supported' // Native search
@@ -46,4 +59,5 @@ export const contentStatus = Object.freeze({
   [IMAGE]: SUPPORTED,
   [AUDIO]: BETA,
   [VIDEO]: ADDITIONAL,
+  [MODEL_3D]: ADDITIONAL,
 } as const)

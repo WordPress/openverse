@@ -58,6 +58,7 @@ describe('Feature flag store', () => {
     ({ flagName, featureState }) => {
       const featureFlagStore = useFeatureFlagStore()
       expect(featureFlagStore.featureState(flagName)).toEqual(featureState)
+      expect(featureFlagStore.isOn(flagName)).toEqual(featureState === 'on')
     }
   )
 
@@ -77,6 +78,7 @@ describe('Feature flag store', () => {
           feat_switchable_optin: ON,
         })
       expect(featureFlagStore.featureState(flagName)).toEqual(featureState)
+      expect(featureFlagStore.isOn(flagName)).toEqual(featureState === 'on')
     }
   )
 
@@ -95,6 +97,9 @@ describe('Feature flag store', () => {
       const featureFlagStore = useFeatureFlagStore()
       expect(featureFlagStore.featureState('feat_env_specific')).toEqual(
         featureState
+      )
+      expect(featureFlagStore.isOn('feat_env_specific')).toEqual(
+        featureState === 'on'
       )
 
       // Restore `DEPLOYMENT_ENV` value

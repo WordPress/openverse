@@ -1,5 +1,13 @@
 {
   "features": {
+    "external_sources": {
+      "status": {
+        "staging": "switchable",
+        "production": "disabled"
+      },
+      "description": "Toggle the external sources in the header's search type switcher.",
+      "defaultState": "off"
+    },
     "feat_disabled": {
       "status": "disabled",
       "description": "Will always be disabled"

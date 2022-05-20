@@ -92,14 +92,7 @@ export default defineComponent({
       }
     })
     const buttonLabel = computed(() => {
-      const labelKey = {
-        image: 'search-type.image',
-        audio: 'search-type.audio',
-        all: 'search-type.all',
-        video: 'search-type.video',
-        model_3d: 'search-type.model_3d',
-      }[props.activeItem]
-      return i18n.t(labelKey)
+      return i18n.t(`search-type.${props.activeItem}`)
     })
 
     return {

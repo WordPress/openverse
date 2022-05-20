@@ -381,7 +381,7 @@
       "image": "images",
       "audio": "audio",
       "video": "videos",
-      "model_3d": "3D Models",
+      "model-3d": "3D Models",
       "all": "content",
       "collection-placeholder": "Search this collection",
       "button": "Search"
@@ -539,7 +539,19 @@
       "unsupported-title": "{openverse} does not yet support built-in {type} search.",
       "supported-title": "Not finding what you're looking for? Try additional {type} sources.",
       "no-results-title": "No {type} results for \"{query}\".",
-      "caption": "Click on a source below to directly search other collections of CC-licensed {type}.{break}Please note that Use filters are not supported for {filter}."
+      "caption": "Click on a source below to directly search other collections of CC-licensed {type}.{break}Please note that \"Use\" filters are not supported for {filter}.",
+      "types": {
+        "image": "image",
+        "audio": "audio",
+        "video": "video",
+        "model-3d": "3D model"
+      },
+      "types-plural": {
+        "image": "images",
+        "audio": "audios",
+        "video": "videos",
+        "model-3d": "3D models"
+      }
     }
   },
   "browsers": {
@@ -625,7 +637,7 @@
     "audio": "Audio",
     "all": "All content",
     "video": "Videos",
-    "model_3d": "3D Models",
+    "model-3d": "3D Models",
     "label": "Type of content to search",
     "heading": "Content types",
     "additional": "Additional sources",
@@ -648,5 +660,10 @@
     "content-filtering": "Content filtering",
     "explanation": "Shown because {feat-name} is {feat-state}"
   },
-  "sketchfab-iframe-title": "{sketchfab} viewer"
+  "sketchfab-iframe-title": "{sketchfab} viewer",
+  "flag-status": {
+    "nonexistent": "Nonexistent",
+    "on": "On",
+    "off": "Off"
+  }
 }

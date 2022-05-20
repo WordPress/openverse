@@ -3,6 +3,8 @@ import buildUrl from 'build-url'
 import type { MediaType } from '~/constants/media'
 import type { ApiQueryParams } from '~/utils/search-query-transform'
 
+import { MODEL_3D } from '~/constants/media'
+
 import type { BuildUrlOptions } from 'build-url'
 
 /**
@@ -246,7 +248,7 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   {
     name: 'Sketchfab',
     supportsUseFilters: false,
-    model_3d(search) {
+    [MODEL_3D](search) {
       // TODO: Use actual license from filters
       const licenseCodes: string[] = [
         '322a749bcfa841b29dff1e8a1bb74b0b', // CC BY
@@ -270,7 +272,7 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   {
     name: 'Thingiverse',
     supportsUseFilters: false,
-    model_3d(search) {
+    [MODEL_3D](search) {
       return {
         url: 'https://www.thingiverse.com/search',
         queryParams: {

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-05-17T14:42:04+00:00\n"
+"POT-Creation-Date: 2022-05-20T19:29:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,6 +27,19 @@ msgstr ""
 #: src/components/VSketchFabViewer.vue:54
 msgctxt "sketchfab-iframe-title"
 msgid "###sketchfab### viewer"
+msgstr ""
+
+#: src/pages/preferences.vue:65
+msgctxt "flag-status.nonexistent"
+msgid "Nonexistent"
+msgstr ""
+
+msgctxt "flag-status.on"
+msgid "On"
+msgstr ""
+
+msgctxt "flag-status.off"
+msgid "Off"
 msgstr ""
 
 #: src/pages/preferences.vue:3
@@ -82,7 +95,7 @@ msgctxt "search-type.video"
 msgid "Videos"
 msgstr ""
 
-msgctxt "search-type.model_3d"
+msgctxt "search-type.model-3d"
 msgid "3D Models"
 msgstr ""
 
@@ -336,9 +349,41 @@ msgid "No ###type### results for \"###query###\"."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMetaSearch/VMetaSearchForm.vue:34
+#: src/components/VMetaSearch/VMetaSearchForm.vue:32
 msgctxt "meta-search.form.caption"
-msgid "Click on a source below to directly search other collections of CC-licensed ###type###.###break###Please note that Use filters are not supported for ###filter###."
+msgid "Click on a source below to directly search other collections of CC-licensed ###type###.###break###Please note that \"Use\" filters are not supported for ###filter###."
+msgstr ""
+
+msgctxt "meta-search.form.types-plural.image"
+msgid "images"
+msgstr ""
+
+msgctxt "meta-search.form.types-plural.audio"
+msgid "audios"
+msgstr ""
+
+msgctxt "meta-search.form.types-plural.video"
+msgid "videos"
+msgstr ""
+
+msgctxt "meta-search.form.types-plural.model-3d"
+msgid "3D models"
+msgstr ""
+
+msgctxt "meta-search.form.types.image"
+msgid "image"
+msgstr ""
+
+msgctxt "meta-search.form.types.audio"
+msgid "audio"
+msgstr ""
+
+msgctxt "meta-search.form.types.video"
+msgid "video"
+msgstr ""
+
+msgctxt "meta-search.form.types.model-3d"
+msgid "3D model"
 msgstr ""
 
 msgctxt "meta-search.card.search"
@@ -831,7 +876,7 @@ msgctxt "browse-page.search-form.video"
 msgid "videos"
 msgstr ""
 
-msgctxt "browse-page.search-form.model_3d"
+msgctxt "browse-page.search-form.model-3d"
 msgid "3D Models"
 msgstr ""
 

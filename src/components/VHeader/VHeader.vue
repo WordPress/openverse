@@ -65,7 +65,7 @@ import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-vis
 import { useI18n } from '~/composables/use-i18n'
 import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
 import { useMediaStore } from '~/stores/media'
-import { useSearchStore } from '~/stores/search'
+import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
 
 import VLogoButton from '~/components/VHeader/VLogoButton.vue'
 import VHeaderFilter from '~/components/VHeader/VHeaderFilter.vue'
@@ -189,13 +189,15 @@ export default defineComponent({
         searchStore.setSearchTerm(searchTerm.value)
         searchStore.setSearchType(searchType)
       }
-      const newPath = app.localePath({
-        path: `/search/${searchType === 'all' ? '' : searchType}`,
-        query: searchStore.searchQueryParams,
-      })
-      router.push(newPath)
       document.activeElement?.blur()
-      await mediaStore.fetchMedia()
+      if (isSearchTypeSupported(searchType)) {
+        const newPath = app.localePath({
+          path: `/search/${searchType === 'all' ? '' : searchType}`,
+          query: searchStore.searchQueryParams,
+        })
+        router.push(newPath)
+        await mediaStore.fetchMedia()
+      }
     }
 
     return {

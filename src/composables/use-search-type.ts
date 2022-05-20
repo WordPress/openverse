@@ -7,9 +7,12 @@ import {
   IMAGE,
   MODEL_3D,
   VIDEO,
+  additionalSearchTypes,
+  SearchType,
 } from '~/constants/media'
 
 import { useSearchStore } from '~/stores/search'
+import { useFeatureFlagStore } from '~/stores/feature-flag'
 
 import allIcon from '~/assets/icons/all-content.svg'
 import audioIcon from '~/assets/icons/audio-content.svg'
@@ -24,22 +27,30 @@ const icons = {
   [VIDEO]: videoIcon,
   [MODEL_3D]: model3dIcon,
 }
-const searchTypes = [...supportedSearchTypes]
 
 export default function useSearchType() {
   const activeType = computed(() => useSearchStore().searchType)
 
   const previousSearchType = ref(activeType.value)
 
-  const setActiveType = (searchType) => {
+  const featureFlagStore = useFeatureFlagStore()
+
+  const additionalTypes = computed(() =>
+    featureFlagStore.isOn('external_sources') ? additionalSearchTypes : []
+  )
+  const searchTypes = [...supportedSearchTypes]
+
+  const setActiveType = (searchType: SearchType) => {
     if (previousSearchType.value === searchType) return
     useSearchStore().setSearchType(searchType)
     previousSearchType.value = searchType
   }
+
   return {
     setActiveType,
     activeType,
     types: searchTypes,
     icons,
+    additionalTypes,
   }
 }
