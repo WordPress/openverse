@@ -2,7 +2,7 @@
   "dependencies": {
     "@octokit/rest": "18.12.0",
     "js-yaml": "^4.1.0",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^3.0.0"
   },
   "volta": {
     "node": "16.15.0"
