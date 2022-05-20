@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="audio-track"
-    :aria-label="$t('audio-track.aria-label').toString()"
-    role="region"
-  >
-    <VGlobalLayout :audio="audio" size="m">
+  <div class="audio-track" :aria-label="ariaLabel" role="region">
+    <VGlobalLayout :audio="audio">
       <template #controller="waveformProps">
         <VWaveform
           v-bind="waveformProps"
@@ -74,6 +70,10 @@ export default defineComponent({
     const i18n = useI18n()
     const activeMediaStore = useActiveMediaStore()
     const activeAudio = useActiveAudio()
+
+    const ariaLabel = computed(() =>
+      i18n.t('audio-track.aria-label', { title: props.audio.title }).toString()
+    )
 
     const status = ref<AudioStatus>('paused')
     const currentTime = ref(0)
@@ -209,6 +209,7 @@ export default defineComponent({
 
       currentTime,
       duration,
+      ariaLabel,
     }
   },
 })

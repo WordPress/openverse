@@ -2,7 +2,7 @@
   <div class="global-track flex flex-row w-full">
     <div class="flex-shrink-0">
       <VAudioThumbnail :audio="audio" />
-      <slot name="play-pause" size="medium" />
+      <slot name="play-pause" size="medium" layout="global" />
     </div>
 
     <div class="relative flex-grow">

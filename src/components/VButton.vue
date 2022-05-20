@@ -6,6 +6,7 @@
     :class="[
       $style.button,
       $style[variant],
+      isConnected && $style[`connection-${connections}`],
       isActive && $style[`${variant}-pressed`],
       $style[`size-${size}`],
       isPlainDangerous ? '' : 'focus-visible:ring focus-visible:ring-pink',
@@ -55,16 +56,16 @@ export const buttonVariants = [
   'plain-dangerous',
   'full',
 ] as const
-
 export type ButtonVariant = typeof buttonVariants[number]
 
 export const buttonSizes = ['large', 'medium', 'small', 'disabled'] as const
-
 export type ButtonSize = typeof buttonSizes[number]
 
 export const buttonTypes = ['button', 'submit', 'reset'] as const
-
 export type ButtonType = typeof buttonTypes[number]
+
+export const buttonConnections = ['start', 'end', 'none', 'all'] as const
+export type ButtonConnections = typeof buttonConnections[number]
 
 export type ButtonProps = ProperlyExtractPropTypes<
   NonNullable<typeof VButton['props']>
@@ -169,6 +170,17 @@ const VButton = defineComponent({
       type: String as PropType<ButtonType>,
       default: 'button',
     },
+    /**
+     * Whether the button is connected to another control and needs to have no rounded
+     * borders at that edge.
+     * `all` means that the button is not rounded.
+     *
+     * @default 'none'
+     */
+    connections: {
+      type: String as PropType<ButtonConnections>,
+      default: 'none',
+    },
   },
   setup(props, { attrs }) {
     const propsRef = toRefs(props)
@@ -179,6 +191,8 @@ const VButton = defineComponent({
     const trulyDisabledRef = ref<boolean>()
     const typeRef = ref<ButtonType | undefined>(propsRef.type.value)
     const supportsDisabledAttributeRef = ref(true)
+
+    const isConnected = computed(() => props.connections !== 'none')
 
     const isActive = computed(() => {
       return (
@@ -237,6 +251,7 @@ const VButton = defineComponent({
       ariaDisabledRef,
       typeRef,
       isActive,
+      isConnected,
       isPlainDangerous,
     }
   },
@@ -321,5 +336,15 @@ a.button {
 
 .full-pressed {
   @apply w-full font-semibold bg-dark-charcoal-06 text-dark-charcoal;
+}
+
+.connection-start {
+  @apply rounded-s-none;
+}
+.connection-end {
+  @apply rounded-e-none;
+}
+.connection-all {
+  @apply rounded-none;
 }
 </style>

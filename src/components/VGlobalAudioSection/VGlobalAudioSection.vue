@@ -1,9 +1,9 @@
 <template>
   <div class="global-audio sticky sm:hidden bottom-0">
-    <VGlobalAudioTrack v-if="audio" layout="global" :audio="audio" />
+    <VGlobalAudioTrack v-if="audio" :audio="audio" />
     <VIconButton
       v-if="audio"
-      class="absolute top-0 rtl:left-0 ltr:right-0 border-none z-10"
+      class="absolute top-0 rtl:left-0 ltr:right-0 border-none z-20"
       :icon-props="{ iconPath: icons.closeIcon }"
       @click="handleClose"
     />

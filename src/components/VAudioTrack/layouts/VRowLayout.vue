@@ -9,7 +9,7 @@
     >
       <VAudioThumbnail :audio="audio" />
       <div v-show="isSmall" class="absolute bottom-0 rtl:left-0 ltr:right-0">
-        <slot name="play-pause" size="tiny" />
+        <slot name="play-pause" size="tiny" layout="row" />
       </div>
     </div>
 
@@ -71,7 +71,11 @@
           'flex-grow': isMedium,
         }"
       >
-        <slot name="play-pause" :size="isLarge ? 'medium' : 'large'" />
+        <slot
+          name="play-pause"
+          :size="isLarge ? 'medium' : 'large'"
+          :layout="'row'"
+        />
         <slot
           name="controller"
           :features="features"
