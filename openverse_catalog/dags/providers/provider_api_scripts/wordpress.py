@@ -37,6 +37,7 @@ DEFAULT_QUERY_PARAMS = {
     "format": "json",
     "page": 1,
     "per_page": LIMIT,
+    "_embed": "true",
 }
 
 delayed_requester = DelayedRequester(DELAY)
@@ -44,14 +45,6 @@ image_store = ImageStore(provider=PROVIDER)
 
 license_url = "https://creativecommons.org/publicdomain/zero/1.0/"
 license_info = get_license_info(license_url=license_url)
-
-IMAGE_RELATED_RESOURCES = {
-    "users": {},  # authors
-    "photo-categories": {},
-    "photo-colors": {},
-    "photo-orientations": {},
-    "photo-tags": {},
-}
 
 
 def main():
@@ -61,53 +54,10 @@ def main():
     """
 
     logger.info("Begin: WordPress Photo Directory script")
-    _prefetch_image_related_data()
     image_count = _get_images()
     image_store.commit()
     logger.info(f"Total images pulled: {image_count}")
     logger.info("Terminated!")
-
-
-def _prefetch_image_related_data():
-    for resource in IMAGE_RELATED_RESOURCES.keys():
-        collection = _get_resources(resource)
-        IMAGE_RELATED_RESOURCES[resource] = collection
-    logger.info("Prefetch of image-related data completed.")
-
-
-def _get_resources(resource_type):
-    total_pages = page = 1
-    endpoint = f"{ENDPOINT}/{resource_type}"
-    collection = {}
-    while total_pages >= page:
-        query_params = _get_query_params(page=page)
-        batch_data, total_pages = _get_item_page(endpoint, query_params=query_params)
-        if isinstance(batch_data, list) and len(batch_data) > 0:
-            collection_page = _process_resource_batch(resource_type, batch_data)
-            collection = collection | collection_page
-            page += 1
-    return collection
-
-
-def _process_resource_batch(resource_type, batch_data):
-    collected_page = {}
-    for item in batch_data:
-        item_id, name, url = None, None, None
-        try:
-            item_id = item["id"]
-            name = item["name"]
-            if resource_type == "users":
-                # 'url' is the website of the author and 'link' would be their wp.org
-                # profile, so at least the last must always be present
-                url = item["url"] or item["link"]
-        except Exception as e:
-            logger.error(f"Couldn't save resource({resource_type}) info due to {e}")
-            continue
-        if resource_type == "users":
-            collected_page[item_id] = {"name": name, "url": url}
-        else:
-            collected_page[item_id] = name
-    return collected_page
 
 
 def _get_query_params(page=1, default_query_params=None):
@@ -168,15 +118,6 @@ def _process_image_batch(image_batch):
     return image_store.total_items
 
 
-def _get_image_details(media_data):
-    try:
-        url = media_data.get("_links").get("wp:featuredmedia")[0].get("href")
-        response_json = _get_response_json(url, RETRIES, allow_redirects=False)
-        return response_json
-    except (KeyError, AttributeError):
-        return None
-
-
 def _get_response_json(endpoint, retries=0, query_params=None, **kwargs):
     """
     Function copied from common.requester.DelayedRequester class to allow responses
@@ -217,79 +158,105 @@ def _extract_image_data(media_data):
     """
     Extract data for individual item.
     """
+    foreign_identifier = media_data.get("slug")
+    if foreign_identifier is None:
+        return None
+    foreign_landing_url = media_data.get("link")
+
     try:
-        foreign_identifier = media_data["slug"]
-        foreign_landing_url = media_data["link"]
-    except (TypeError, KeyError, AttributeError):
+        media_details = (
+            media_data.get("_embedded", {})
+            .get("wp:featuredmedia", {})[0]
+            .get("media_details", {})
+        )
+    except (KeyError, IndexError):
         return None
-    title = _get_title(media_data)
-    image_details = _get_image_details(media_data)
-    if image_details is None:
-        return None
-    image_url, height, width, filetype = _get_file_info(image_details)
+
+    image_url, height, width, filetype, filesize = _get_file_info(media_details)
     if image_url is None:
         return None
-    thumbnail = _get_thumbnail_url(image_details)
-    metadata = _get_metadata(media_data, image_details)
-    creator, creator_url = _get_creator_data(media_data)
-    tags = _get_related_data("tags", media_data)
+
+    title = _get_title(media_data)
+    author, author_url = _get_author_data(media_data)
+    metadata, tags = _get_metadata(media_data, media_details)
 
     return {
         "title": title,
-        "creator": creator,
-        "creator_url": creator_url,
+        "creator": author,
+        "creator_url": author_url,
         "foreign_identifier": foreign_identifier,
         "foreign_landing_url": foreign_landing_url,
         "image_url": image_url,
         "height": height,
         "width": width,
-        "thumbnail_url": thumbnail,
         "filetype": filetype,
+        "filesize": filesize,
         "license_info": license_info,
         "meta_data": metadata,
         "raw_tags": tags,
     }
 
 
-def _get_file_info(image_details):
-    file_details = (
-        image_details.get("media_details", {}).get("sizes", {}).get("full", {})
-    )
-    image_url = file_details.get("source_url")
-    height = file_details.get("height")
-    width = file_details.get("width")
-    filetype = None
-    if filename := file_details.get("file"):
-        filetype = Path(filename).suffix.replace(".", "")
-    return image_url, height, width, filetype
+def _get_file_info(media_details):
+    preferred_sizes = ["2048x2048", "1536x1536", "medium_large", "large", "full"]
+    for size in preferred_sizes:
+        file_details = media_details.get("sizes", {}).get(size, {})
+        image_url = file_details.get("source_url")
+        if not image_url or image_url == "":
+            continue
+
+        height = file_details.get("height")
+        width = file_details.get("width")
+        filetype = None
+        if filename := file_details.get("file"):
+            filetype = Path(filename).suffix.replace(".", "")
+
+        filesize = (
+            media_details.get("filesize", 0)
+            if size == "full"
+            else file_details.get("filesize", 0)
+        )
+        if not filesize or int(filesize) == 0:
+            filesize = _get_filesize(image_url)
+
+        return image_url, height, width, filetype, filesize
+    return None, None, None, None, None
 
 
-def _get_thumbnail_url(image_details):
-    return (
-        image_details.get("media_details", {})
-        .get("sizes", {})
-        .get("thumbnail", {})
-        .get("source_url")
-    )
+def _get_filesize(image_url):
+    resp = delayed_requester.get(image_url)
+    if resp:
+        filesize = int(resp.headers.get("Content-Length", 0))
+        return filesize if filesize != 0 else None
 
 
-def _get_creator_data(image):
-    creator, creator_url = None, None
-    if author_id := image.get("author"):
-        creator = IMAGE_RELATED_RESOURCES.get("users").get(author_id, {}).get("name")
-        creator_url = IMAGE_RELATED_RESOURCES.get("users").get(author_id, {}).get("url")
-    return creator, creator_url
+def _get_author_data(image):
+    try:
+        raw_author = image.get("_embedded", {}).get("author", [])[0]
+    except IndexError:
+        return None, None
+    author = raw_author.get("name")
+    if author is None or author == "":
+        author = raw_author.get("slug")
+    author_url = raw_author.get("url")
+    if author_url == "":
+        author_url = raw_author.get("link")
+    return author, author_url
 
 
 def _get_title(image):
     if title := image.get("content", {}).get("rendered"):
-        title = html.fromstring(title).text_content()
+        try:
+            title = html.fromstring(title).text_content()
+        except UnicodeDecodeError as e:
+            logger.warning(f"Can't save the image's title ('{title}') due to {e}")
+            return None
     return title
 
 
-def _get_metadata(image, image_details):
-    raw_metadata = image_details.get("media_details", {}).get("image_meta", {})
-    metadata = {}
+def _get_metadata(media_data, media_details):
+    raw_metadata = media_details.get("image_meta", {})
+    metadata, tags = {}, []
     extras = [
         "aperture",
         "camera",
@@ -303,25 +270,26 @@ def _get_metadata(image, image_details):
         if value not in [None, ""]:
             metadata[key] = value
 
-    if published_date := image_details.get("date"):
-        metadata["published_date"] = published_date
-
-    # these fields require looking up additional queried data
-    resource_extras = ["categories", "colors", "orientations"]
-    for resource in resource_extras:
-        metadata[resource] = sorted(_get_related_data(resource, image))
-    return metadata
-
-
-def _get_related_data(resource_type, image):
-    resource_type = f"photo-{resource_type}"
-    ids = image.get(resource_type)
-    resource_names = set()
-    resources_ids = IMAGE_RELATED_RESOURCES[resource_type].keys()
-    for rid in ids:
-        if rid in resources_ids:
-            resource_names.add(IMAGE_RELATED_RESOURCES[resource_type][rid])
-    return list(resource_names)
+    raw_related_resources = media_data.get("_embedded", {}).get("wp:term", [])
+    resource_mapping = {
+        "photo_category": "categories",
+        "photo_color": "colors",
+        "photo_orientation": "orientation",
+        "photo_tag": "tags",
+    }
+    for resource_arr in raw_related_resources:
+        for resource in resource_arr:
+            if (txy := resource.get("taxonomy")) in resource_mapping.keys():
+                resource_key = resource_mapping[txy]
+                resource_val = resource.get("name")
+                if txy == "photo_tag":
+                    tags.append(resource_val)
+                elif txy == "photo_orientation":
+                    metadata["orientation"] = resource_val
+                else:
+                    metadata.setdefault(resource_key, [])
+                    metadata[resource_key].append(resource_val)
+    return metadata, tags
 
 
 if __name__ == "__main__":
