@@ -11,7 +11,7 @@ def _delete_bucket(bucket):
     key_list = [{"Key": obj.key} for obj in bucket.objects.all()]
     if len(list(bucket.objects.all())) > 0:
         bucket.delete_objects(Delete={"Objects": key_list})
-        bucket.delete()
+    bucket.delete()
 
 
 def pytest_configure(config):

@@ -178,7 +178,7 @@ def _load_local_tsv(tmpdir, bucket, tsv_file_name, identifier):
 
 def _load_s3_tsv(tmpdir, bucket, tsv_file_name, identifier):
     tsv_file_path = os.path.join(RESOURCES, tsv_file_name)
-    key = "path/to/object/{tsv_file_name}"
+    key = f"path/to/object/{tsv_file_name}"
     bucket.upload_file(tsv_file_path, key)
     sql.load_s3_data_to_intermediate_table(
         POSTGRES_CONN_ID, bucket.name, key, identifier

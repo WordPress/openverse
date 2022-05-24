@@ -146,15 +146,18 @@ def test_copy_file_to_s3_no_actual_file():
         s3.copy_file_to_s3("does_not_exist", "foo", "bar", "baz", None)
 
 
-def test_copy_file_to_s3(tmp_path, mock_s3_load_file, empty_s3_bucket):
+def test_copy_file_to_s3(tmp_path, empty_s3_bucket):
     tsv = tmp_path / "random_media_file.tsv"
     tsv.touch()
     version = "9000"
     ti_mock = mock.MagicMock(spec=TaskInstance)
     with mock.patch.object(s3.paths, "get_tsv_version", return_value=version):
-        s3.copy_file_to_s3(tsv, empty_s3_bucket, "fake-prefix", AWS_CONN_ID, ti_mock)
+        s3.copy_file_to_s3(
+            tsv, empty_s3_bucket.name, "fake-prefix", AWS_CONN_ID, ti_mock
+        )
     assert not tsv.exists()
     assert ti_mock.xcom_push.call_args_list == [
         mock.call(key="tsv_version", value=version),
         mock.call(key="s3_key", value="fake-prefix/random_media_file.tsv"),
     ]
+    assert len(list(empty_s3_bucket.objects.all())) > 0
