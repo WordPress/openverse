@@ -586,7 +586,8 @@
     "replay": "Replay"
   },
   "search": {
-    "search": "Search"
+    "search": "Search",
+    "search-bar-label": "Search for content in {openverse}"
   },
   "license-readable-names": {
     "cc0": "Zero",

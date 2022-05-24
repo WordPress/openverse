@@ -8,7 +8,9 @@
       v-bind="$attrs"
       class="flex-grow search-field"
       :class="{ 'border-transparent': isHomeRoute }"
-      label-text="Openverse"
+      :label-text="
+        $t('search.search-bar-label', { openverse: 'Openverse' }).toString()
+      "
       :connection-sides="['end']"
       :size="size"
       field-id="search-bar"

@@ -173,6 +173,7 @@ export default defineComponent({
      *     update query `q` param, fetch new media.
      */
     const handleSearch = async () => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
       const mediaStore = useMediaStore()
       const searchStore = useSearchStore()
       const searchType = isSearchRoute.value
