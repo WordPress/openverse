@@ -109,5 +109,6 @@ just ingest-upstream "image"
 just wait-for-index "image"
 
 # Clear source cache since it's out of date after data has been loaded
+# See `api/catalog/api/controllers/elasticsearch/stats.py`
 docker-compose exec -T "$CACHE_SERVICE_NAME" /bin/bash -c "echo \"del :1:sources-image\" | redis-cli"
 docker-compose exec -T "$CACHE_SERVICE_NAME" /bin/bash -c "echo \"del :1:sources-audio\" | redis-cli"
