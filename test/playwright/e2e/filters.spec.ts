@@ -178,3 +178,19 @@ test('new media request is sent when a filter is selected', async ({
   const queryString = response.url().split('/images/')[1]
   expect(queryString).toEqual('?q=cat&license=cc0')
 })
+
+for (const [searchType, source] of [
+  ['audio', 'Freesound'],
+  ['image', 'Flickr'],
+]) {
+  test(`Provider filters are correctly initialized from the URL: ${source} - ${searchType}`, async ({
+    page,
+  }) => {
+    await page.goto(
+      `/search/${searchType}?q=birds&source=${source.toLowerCase()}`
+    )
+    await openFilters(page)
+
+    await assertCheckboxStatus(page, source, 'checked')
+  })
+}

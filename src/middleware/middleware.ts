@@ -38,7 +38,6 @@ const middleware: Middleware = async ({ app, query, route, $pinia }) => {
   }
 
   /* Provider store */
-
   const providerStore = useProviderStore($pinia)
   await providerStore.fetchMediaProviders()
 

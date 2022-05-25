@@ -97,6 +97,7 @@ export default defineComponent({
   async asyncData({ route, $pinia }) {
     const searchStore = useSearchStore($pinia)
     const mediaStore = useMediaStore($pinia)
+    await searchStore.initProviderFilters()
     searchStore.setSearchStateFromUrl({
       path: route.path,
       urlQuery: route.query,

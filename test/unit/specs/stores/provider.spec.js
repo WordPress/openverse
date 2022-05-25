@@ -95,34 +95,12 @@ describe('Provider Store', () => {
   )
 
   it('fetchMediaProviders on success', async () => {
-    const searchStore = useSearchStore()
-    searchStore.setSearchType(IMAGE)
-
-    const expectedFilters = [
-      {
-        checked: false,
-        code: 'test_source',
-        name: '',
-      },
-      {
-        checked: false,
-        code: 'wikimedia',
-        name: 'Wikimedia Commons',
-      },
-      {
-        checked: false,
-        code: 'wordpress',
-        name: 'WP Photo Directory',
-      },
-    ]
     await providerStore.fetchMediaProviders()
     expect(providerStore.fetchState[IMAGE]).toEqual({
       ...initialFetchState,
       hasStarted: true,
     })
     expect(providerStore.providers[IMAGE]).toEqual(mockData)
-
-    expect(searchStore.filters[`${IMAGE}Providers`]).toEqual(expectedFilters)
   })
 
   it('fetchMediaProviders on error', async () => {

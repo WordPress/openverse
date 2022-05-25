@@ -18,7 +18,6 @@ import {
   initialFetchState,
   updateFetchState,
 } from '~/composables/use-fetch-state'
-import { useSearchStore } from '~/stores/search'
 
 export interface ProviderState {
   providers: {
@@ -62,6 +61,11 @@ export const useProviderStore = defineStore('provider', {
   }),
 
   actions: {
+    async getProviders() {
+      await this.fetchMediaProviders()
+      return this.providers
+    },
+
     _updateFetchState(
       mediaType: SupportedMediaType,
       action: 'end' | 'start',
@@ -103,8 +107,8 @@ export const useProviderStore = defineStore('provider', {
     },
 
     /**
-     * Fetches providers for a set media type, and initializes the provider filters
-     * by calling the search store `initProviderFilters` method.
+     * Fetches provider stats for a set media type.
+     * Does not update provider stats if there's an error.
      */
     async fetchMediaTypeProviders(
       mediaType: SupportedMediaType
@@ -114,11 +118,6 @@ export const useProviderStore = defineStore('provider', {
       try {
         const res = await providerServices[mediaType].getProviderStats()
         sortedProviders = sortProviders(res.data)
-        const searchStore = useSearchStore()
-        searchStore.initProviderFilters({
-          mediaType,
-          providers: sortedProviders,
-        })
         this._updateFetchState(mediaType, 'end')
       } catch (error: unknown) {
         let errorMessage = `There was an error fetching media providers for ${mediaType}`
@@ -129,6 +128,8 @@ export const useProviderStore = defineStore('provider', {
               : `${errorMessage}: ${error?.message}`
         }
         warn(errorMessage)
+        // Fallback on existing providers if there was an error
+        sortedProviders = this.providers[mediaType]
         this._updateFetchState(mediaType, 'end', errorMessage)
       } finally {
         this.providers[mediaType] = sortedProviders

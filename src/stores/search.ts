@@ -9,6 +9,7 @@ import {
   IMAGE,
   SearchType,
   SupportedMediaType,
+  supportedMediaTypes,
   SupportedSearchType,
   supportedSearchTypes,
   isAdditionalSearchType,
@@ -27,6 +28,7 @@ import {
   mediaFilterKeys,
   mediaUniqueFilterKeys,
 } from '~/constants/filters'
+import { useProviderStore } from '~/stores/provider'
 
 import { useFeatureFlagStore } from '~/stores/feature-flag'
 
@@ -177,11 +179,23 @@ export const useSearchStore = defineStore('search', {
         imageProviders: resetProviders(IMAGE),
       }
     },
+
+    async initProviderFilters() {
+      const providerStore = useProviderStore()
+      const providers = await providerStore.getProviders()
+
+      for (const mediaType of supportedMediaTypes) {
+        this.updateProviderFilters({
+          mediaType,
+          providers: providers[mediaType],
+        })
+      }
+    },
     /**
      * Merge providers from API response with the filters that came from the browse URL search query string
      * and match the checked properties in the store.
      */
-    initProviderFilters({
+    updateProviderFilters({
       mediaType,
       providers,
     }: {
