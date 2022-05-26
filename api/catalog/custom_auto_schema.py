@@ -4,6 +4,14 @@ from drf_yasg.utils import filter_none, force_real_str
 
 
 class CustomAutoSchema(SwaggerAutoSchema):
+    def get_pagination_parameters(self):
+        """
+        Since the pagination params are a part of the ``MediaSearchRequestSerializer``,
+        they need not be added again as pagination params.
+        """
+
+        return []
+
     def get_operation(self, operation_keys=None):
         operation_keys = operation_keys or self.operation_keys
 

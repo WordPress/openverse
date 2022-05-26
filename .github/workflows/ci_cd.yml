@@ -142,6 +142,10 @@ jobs:
       - name: Start API, ingest and index test data
         run: just init
 
+      - name: Smoke test ReDoc site
+        run: |
+          curl --fail 'http://localhost:8000/v1/?format=openapi'
+
       - name: Run API tests
         run: just api-test
 
