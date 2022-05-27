@@ -92,12 +92,12 @@ def get_authenticated_html(url: str) -> str:
     browser = mechanize.Browser()
     browser.set_cookiejar(CookieJar())
     browser.open("https://github.com/login/")
-    browser.select_form(nr=0)
+    browser.select_form(nr=0)  # focus on the first (and only) form on the page
     browser.form["login"] = os.getenv("GH_LOGIN")
     browser.form["password"] = os.getenv("GH_PASSWORD")
     browser.submit()
 
-    browser.select_form(nr=0)
+    browser.select_form(nr=0)  # focus on the first (and only) form on the page
     browser.form["otp"] = pyotp.TOTP(os.getenv("GH_2FA_SECRET")).now()
     browser.submit()
 
