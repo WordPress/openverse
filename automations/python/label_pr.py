@@ -122,10 +122,10 @@ def get_linked_issues(url: str) -> list[str]:
     res = requests.get(url)
     if res.status_code == 404:
         text = get_authenticated_html(url)
-    elif res.status_code != 200:
-        return []
-    else:
+    elif res.status_code == 200:
         text = res.text
+    else:
+        return []
 
     soup = BeautifulSoup(text, "html.parser")
     divs = soup.find_all("div", **{"class": re.compile("css-truncate my-1")})
