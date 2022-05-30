@@ -35,8 +35,9 @@ export const FIELD_SIZES = {
   small: 'h-10 text-md',
   medium: 'h-12',
   large: 'h-14',
-  standalone: 'h-14 md:h-[69px]',
+  standalone: 'h-full',
 } as const
+export type FieldSize = keyof typeof FIELD_SIZES
 
 /**
  * Provides a control to enter text as input.

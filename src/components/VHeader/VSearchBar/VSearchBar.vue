@@ -30,7 +30,6 @@
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import { useMatchHomeRoute } from '~/composables/use-match-routes'
-
 import { defineEvent } from '~/types/emits'
 
 import VInputField, {
@@ -58,7 +57,6 @@ export default defineComponent({
     size: {
       type: String as PropType<keyof typeof FIELD_SIZES>,
       required: true,
-      validator: (v: string) => Object.keys(FIELD_SIZES).includes(v),
     },
     placeholder: {
       type: String,
