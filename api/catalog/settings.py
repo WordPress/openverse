@@ -14,10 +14,7 @@ from pathlib import Path
 from socket import gethostbyname, gethostname
 
 import sentry_sdk
-from aws_requests_auth.aws_auth import AWSRequestsAuth
 from decouple import config
-from elasticsearch import Elasticsearch, RequestsHttpConnection
-from elasticsearch_dsl import connections
 from sentry_sdk.integrations.django import DjangoIntegration
 
 from catalog.logger import LOGGING as LOGGING_CONF
@@ -343,38 +340,3 @@ if not DEBUG:
         send_default_pii=False,
         environment=ENVIRONMENT,
     )
-
-
-# Elasticsearch connection
-
-
-def _elasticsearch_connect():
-    """
-    Connect to configured Elasticsearch domain.
-
-    :return: An Elasticsearch connection object.
-    """
-    auth = AWSRequestsAuth(
-        aws_access_key=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-        aws_host=ELASTICSEARCH_URL,
-        aws_region=ELASTICSEARCH_AWS_REGION,
-        aws_service="es",
-    )
-    auth.encode = lambda x: bytes(x.encode("utf-8"))
-    _es = Elasticsearch(
-        host=ELASTICSEARCH_URL,
-        port=ELASTICSEARCH_PORT,
-        connection_class=RequestsHttpConnection,
-        timeout=10,
-        max_retries=1,
-        retry_on_timeout=True,
-        http_auth=auth,
-        wait_for_status="yellow",
-    )
-    _es.info()
-    return _es
-
-
-ES = _elasticsearch_connect()
-connections.add_connection("default", ES)

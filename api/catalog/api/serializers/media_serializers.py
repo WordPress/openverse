@@ -3,7 +3,7 @@ from collections import namedtuple
 from rest_framework import serializers
 
 from catalog.api.constants.licenses import LICENSE_GROUPS
-from catalog.api.controllers.elasticsearch.stats import get_stats
+from catalog.api.controllers import search_controller
 from catalog.api.models.media import AbstractMedia
 from catalog.api.serializers.base import BaseModelSerializer
 from catalog.api.serializers.fields import SchemableHyperlinkedIdentityField
@@ -104,22 +104,11 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         required=False,
         default=False,
     )
-    page = serializers.IntegerField(
-        min_value=1,
-        default=1,
-        help_text="The index of the page of the results to show.",
-    )
-    page_size = serializers.IntegerField(
-        min_value=1,
-        max_value=500,
-        default=20,
-        help_text="The number of results to show in one page.",
-    )
 
     @staticmethod
     def _truncate(value):
         max_length = 200
-        return value[:max_length]
+        return value if len(value) <= max_length else value[:max_length]
 
     def validate_q(self, value):
         return self._truncate(value)
@@ -361,7 +350,7 @@ def get_search_request_source_serializer(media_type):
 
         _field_attrs = {
             "help_text": make_comma_separated_help_text(
-                get_stats(media_type).keys(), "data sources"
+                search_controller.get_sources(media_type).keys(), "data sources"
             ),
             "required": False,
         }
@@ -379,7 +368,7 @@ def get_search_request_source_serializer(media_type):
         def validate_source_field(value):
             """Checks whether source is a valid source."""
 
-            allowed_sources = list(get_stats(media_type).keys())
+            allowed_sources = list(search_controller.get_sources(media_type).keys())
             sources = value.lower().split(",")
             sources = [source for source in sources if source in allowed_sources]
             value = ",".join(sources)
