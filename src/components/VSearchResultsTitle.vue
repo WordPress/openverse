@@ -1,6 +1,6 @@
 <template>
   <h1
-    class="leading-tight sr-only md:not-sr-only"
+    class="leading-tight sr-only md:not-sr-only break-words"
     :class="[size === 'large' ? 'text-[90px]' : 'text-6xl']"
   >
     <slot default />

@@ -1,6 +1,6 @@
 <template>
   <div class="no-results text-center md:text-left">
-    <h5 class="text-5xl">
+    <h5 class="text-5xl break-words">
       {{ $t('no-results.heading', { query: query.q }) }}
     </h5>
     <h6 class="text-3xl font-normal md:font-bold mt-10 md:mt-16">
