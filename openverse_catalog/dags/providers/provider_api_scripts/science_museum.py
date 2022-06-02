@@ -145,7 +145,6 @@ def _handle_object_data(batch_data):
             license_, version = license_version.lower().split(" ")
             license_ = license_.replace("cc-", "")
             license_info = get_license_info(license_=license_, license_version=version)
-            thumbnail_url = _get_thumbnail_url(processed)
             image_count = image_store.add_item(
                 foreign_identifier=foreign_id,
                 foreign_landing_url=foreign_landing_url,
@@ -153,7 +152,6 @@ def _handle_object_data(batch_data):
                 height=height,
                 width=width,
                 license_info=license_info,
-                thumbnail_url=thumbnail_url,
                 creator=creator,
                 title=title,
                 meta_data=metadata,
@@ -186,19 +184,6 @@ def _get_image_info(processed):
     image = check_url(image)
     height, width = _get_dimensions(measurements)
     return image, height, width
-
-
-def _get_thumbnail_url(processed):
-    if processed.get("large_thumbnail"):
-        image = processed.get("large_thumbnail").get("location")
-    elif processed.get("medium_thumbnail"):
-        image = processed.get("medium_thumbnail").get("location")
-    elif processed.get("small_thumbnail"):
-        image = processed.get("small_thumbnail").get("location")
-    else:
-        image = None
-    thumbnail_url = check_url(image)
-    return thumbnail_url
 
 
 def check_url(image_url):

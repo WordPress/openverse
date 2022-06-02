@@ -41,7 +41,6 @@ def _process_row(tsv_row):
     image_store.add_item(
         foreign_landing_url=row_image.foreign_landing_url,
         image_url=row_image.url,
-        thumbnail_url=row_image.thumbnail_url,
         license_info=get_license_info(
             license_url=get_license_url(row_meta_data),
             license_=row_image.license_,

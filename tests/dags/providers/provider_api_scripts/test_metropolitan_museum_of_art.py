@@ -129,9 +129,6 @@ def test_get_data_for_image_returns_response_json_when_all_ok(monkeypatch):
             "medium": "Porcelain painted in underglaze blue",
             "credit_line": "Purchase by subscription, 1879",
         },
-        thumbnail_url=(
-            "https://images.metmuseum.org/CRDImages/as/web-large/79_2_414b_S1" "_sf.jpg"
-        ),
         title="Cover",
     )
 
@@ -161,7 +158,7 @@ def test_get_data_for_image_returns_response_json_with_additional_images(monkeyp
         foreign_landing_url=(
             "https://wwwstg.metmuseum.org/art/collection/search/45734"
         ),
-        image_url=("https://images.metmuseum.org/CRDImages/as/original/DP251120.jpg"),
+        image_url="https://images.metmuseum.org/CRDImages/as/original/DP251120.jpg",
         license_info=(
             LicenseInfo(
                 "cc0", "1.0", "https://creativecommons.org/publicdomain/zero/1.0/", None
@@ -177,7 +174,6 @@ def test_get_data_for_image_returns_response_json_with_additional_images(monkeyp
                 "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936"
             ),
         },
-        thumbnail_url=None,
         title="Quail and Millet",
     )
 

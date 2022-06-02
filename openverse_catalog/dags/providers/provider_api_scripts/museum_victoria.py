@@ -113,7 +113,6 @@ def _handle_batch_objects(objects, landing_page=LANDING_PAGE):
                 height=img.get("height"),
                 width=img.get("width"),
                 license_info=license_info,
-                thumbnail_url=img.get("thumbnail"),
                 title=title,
                 creator=img.get("creators"),
                 meta_data=meta_data,
@@ -129,7 +128,6 @@ def _get_media_info(media_data):
             image_id = media.get("id")
             image_url, height, width = _get_image_data(media)
             license_url = _get_license_url(media)
-            thumbnail_url = media.get("thumbnail", {}).get("uri")
             if image_url is None or image_id is None or license_url is None:
                 continue
             creators = _get_creator(media)
@@ -140,7 +138,6 @@ def _get_media_info(media_data):
                     "height": height,
                     "width": width,
                     "license_url": license_url,
-                    "thumbnail": thumbnail_url,
                     "creators": creators,
                 }
             )

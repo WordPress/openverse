@@ -152,17 +152,13 @@ def test_get_image_none():
 
 def test_get_image_urls():
     image_iif_id = "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2"
-    actual_image_url, actual_thumbnail = smk._get_image_urls(image_iif_id)
+    actual_image_url = smk._get_image_url(image_iif_id)
 
     expected_image_url = (
         "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/!2048,/0/default.jpg"
     )
-    expected_thumbnail = (
-        "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/!400,/0/" "default.jpg"
-    )
 
     assert actual_image_url == expected_image_url
-    assert actual_thumbnail == expected_thumbnail
 
 
 def test_get_license_info_success():

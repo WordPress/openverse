@@ -78,7 +78,7 @@ def test_get_image_properties():
     r = _get_resource_json("total_images_example.json")
     with patch.object(rwp, "_request_content", return_value=r):
         result = rwp._get_image_list()[1]
-        img_url, width, height, thumbnail = rwp._get_image_properties(
+        img_url, width, height = rwp._get_image_properties(
             image=result[0], foreign_url=""
         )
         assert img_url == (
@@ -91,13 +91,6 @@ def test_get_image_properties():
         )
         assert width == "1200"
         assert height == "630"
-        assert thumbnail == (
-            "https://img.rawpixel.com/s3fs-private/rawpixel_images/"
-            "website_content/pdmaps-loc-06-nam_1.jpg?w=400&dpr=1&fit"
-            "=default&crop=default&auto=format&fm=pjpg&q=75&vib=3&con="
-            "3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=6f33bfab36227436a0f9ad230"
-            "fc1d64a"
-        )
 
 
 def test_get_title_owner():

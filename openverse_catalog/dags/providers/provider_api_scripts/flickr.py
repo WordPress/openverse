@@ -260,7 +260,6 @@ def _process_image_data(image_data, sub_providers=SUB_PROVIDERS, provider=PROVID
     return image_store.add_item(
         foreign_landing_url=foreign_landing_url,
         image_url=image_url,
-        thumbnail_url=image_data.get("url_s"),
         license_info=get_license_info(
             license_=license_, license_version=license_version
         ),

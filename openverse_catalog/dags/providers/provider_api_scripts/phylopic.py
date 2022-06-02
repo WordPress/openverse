@@ -88,24 +88,7 @@ def _add_data_to_buffer(**kwargs):
         if id_ is not None:
             details = _get_meta_data(id_)
             if details is not None:
-                kwargs = _create_args(details, id_)
-                image_store.add_item(**kwargs)
-
-
-def _create_args(details, id_):
-    args = {
-        "foreign_landing_url": details[1],
-        "image_url": details[2],
-        "thumbnail_url": details[3],
-        "license_info": get_license_info(license_url=details[6]),
-        "width": details[4],
-        "height": details[5],
-        "creator": details[7],
-        "title": details[8],
-        "meta_data": details[9],
-        "foreign_identifier": id_,
-    }
-    return args
+                image_store.add_item(**details)
 
 
 def _get_total_images():
@@ -185,23 +168,23 @@ def _get_meta_data(_uuid):
         result
     )
 
-    img_url, width, height, thumbnail = _get_image_info(result, _uuid)
-    foreign_id = img_url
+    img_url, width, height = _get_image_info(result, _uuid)
+
     if img_url is None:
         return None
 
-    return [
-        foreign_id,
-        foreign_url,
-        img_url,
-        thumbnail,
-        str(width),
-        str(height),
-        license_url,
-        creator,
-        title,
-        meta_data,
-    ]
+    details = {
+        "foreign_identifier": _uuid,
+        "foreign_landing_url": foreign_url,
+        "image_url": img_url,
+        "license_info": get_license_info(license_url=license_url),
+        "width": str(width),
+        "height": str(height),
+        "creator": creator,
+        "title": title,
+        "meta_data": meta_data,
+    }
+    return details
 
 
 def _get_creator_details(result):
@@ -240,17 +223,14 @@ def _get_taxa_details(result):
 def _get_image_info(result, _uuid):
     base_url = "http://phylopic.org"
     img_url = ""
-    thumbnail = ""
     width = ""
     height = ""
 
     image_info = result.get("pngFiles")
     img = []
-    thb = []
     if image_info:
         img = list(filter(lambda x: (int(str(x.get("width", "0"))) >= 257), image_info))
         img = sorted(img, key=lambda x: x["width"], reverse=True)
-        thb = list(filter(lambda x: str(x.get("width", "")) == "256", image_info))
 
     if len(img) > 0:
         img_url = img[0].get("url")
@@ -258,16 +238,11 @@ def _get_image_info(result, _uuid):
         width = img[0].get("width")
         height = img[0].get("height")
 
-    if len(thb) > 0:
-        thumbnail_info = thb[0].get("url")
-        if thumbnail_info is not None:
-            thumbnail = f"{base_url}{thumbnail_info}"
-
     if img_url == "":
         logging.warning(f"Image not detected in url: {base_url}/image/{_uuid}")
-        return None, None, None, None
+        return None, None, None
     else:
-        return img_url, width, height, thumbnail
+        return img_url, width, height
 
 
 def _compute_date_range(date_start: str, days: int = DEFAULT_PROCESS_DAYS) -> str:

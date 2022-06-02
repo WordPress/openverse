@@ -82,24 +82,19 @@ def test_request_handler_failure():
 
 def test_get_images_success():
     images = _get_resource_json("images.json")
-    actual_image_url, actual_thumbnail = np._get_images(images)
+    actual_image_url = np._get_image_url(images)
 
     assert actual_image_url == (
         "http://images.nypl.org/index.php?id=56738462&t=g&suffix=0cabe3d0-"
-        "3d50-0134-a8e0-00505686a51c.001"
-    )
-    assert actual_thumbnail == (
-        "http://images.nypl.org/index.php?id=56738462&t=w&suffix=0cabe3d0-"
         "3d50-0134-a8e0-00505686a51c.001"
     )
 
 
 def test_get_image_failure():
     images = []
-    actual_image_url, actual_thumbnail = np._get_images(images)
+    actual_image_url = np._get_image_url(images)
 
     assert actual_image_url is None
-    assert actual_thumbnail is None
 
 
 def test_get_title_success():

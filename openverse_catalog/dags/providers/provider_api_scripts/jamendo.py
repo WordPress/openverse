@@ -113,8 +113,7 @@ def _get_batch_json(
     if response_json is None:
         return None
     else:
-        results = response_json.get("results")
-        return results
+        return response_json.get("results")
 
 
 def _process_item_batch(items_batch):

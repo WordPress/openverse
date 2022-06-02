@@ -110,6 +110,7 @@ def test_ImageStore_get_image_places_given_args(
     args_dict["license_"] = args_dict.get("license_info").license
     args_dict["license_version"] = args_dict.pop("license_info").version
     args_dict["url"] = args_dict.pop("image_url")
+    args_dict["thumbnail_url"] = None
 
     assert actual_image == image.Image(**args_dict)
 

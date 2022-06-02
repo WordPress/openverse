@@ -76,8 +76,7 @@ def _get_image_properties(image, foreign_url):
         query_params = urlparse(img_url)
         width = parse_qs(query_params.query).get("w", [])[0]
         height = parse_qs(query_params.query).get("h", [])[0]
-        thumbnail = image.get("image_400", "")
-        return [img_url, width, height, thumbnail]
+        return [img_url, width, height]
     else:
         logger.warning(f"Image not detected in URL: {foreign_url}")
         return [None, None, None, None]
@@ -120,7 +119,7 @@ def _process_image_data(image):
     foreign_id, foreign_url = _get_foreign_id_url(image)
     if not foreign_url:
         return None
-    img_url, width, height, thumbnail = _get_image_properties(image, foreign_url)
+    img_url, width, height = _get_image_properties(image, foreign_url)
     if not img_url:
         return None
     title, owner = _get_title_owner(image)
@@ -143,7 +142,6 @@ def _process_image_data(image):
         meta_data=meta_data,
         raw_tags=tags,
         creator=owner,
-        thumbnail_url=thumbnail,
     )
 
 

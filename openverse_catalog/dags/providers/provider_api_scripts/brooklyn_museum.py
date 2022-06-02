@@ -101,7 +101,7 @@ def _handle_object_data(data, license_url):
 
         for image in image_info:
             foreign_id = image.get("id", "")
-            image_url, thumbnail_url = _get_images(image)
+            image_url = _get_image_url(image)
             if image_url is None:
                 continue
             height, width = _get_image_sizes(image)
@@ -114,7 +114,6 @@ def _handle_object_data(data, license_url):
                 width=width,
                 height=height,
                 title=title,
-                thumbnail_url=thumbnail_url,
                 meta_data=metadata,
                 creator=creators,
             )
@@ -171,16 +170,11 @@ def _get_creators(data):
     return creator
 
 
-def _get_images(image):
-    image_url, thumbnail_url = None, None
+def _get_image_url(image):
     image_url = image.get("largest_derivative_url")
-    if image_url:
-        if "http" not in image_url:
-            image_url = "https://" + image_url
-        thumbnail_url = image.get("thumbnail_url", "")
-        if "http" not in thumbnail_url and thumbnail_url:
-            thumbnail_url = "https://" + thumbnail_url
-    return image_url, thumbnail_url
+    if image_url and not image_url.startswith("http"):
+        image_url = "https://" + image_url
+    return image_url
 
 
 if __name__ == "__main__":

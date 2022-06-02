@@ -36,8 +36,6 @@ HEADERS = {"Authorization": TOKEN}
 
 IMAGE_URL_DIMENSIONS = ["g", "v", "q", "w", "r"]
 
-THUMBNAIL_DIMENSIONS = ["w", "r", "q", "f", "v", "g"]
-
 
 def main():
     page = 1
@@ -121,9 +119,7 @@ def _get_capture_details(captures=None, metadata=None, creator=None, title=None)
         image_id = img.get("imageID", {}).get("$")
         if image_id is None:
             continue
-        image_url, thumbnail_url = _get_images(
-            img.get("imageLinks", {}).get("imageLink", [])
-        )
+        image_url = _get_image_url(img.get("imageLinks", {}).get("imageLink", []))
         foreign_landing_url = img.get("itemLink", {}).get("$")
         license_url = img.get("rightsStatementURI", {}).get("$")
         if image_url is None or foreign_landing_url is None or license_url is None:
@@ -134,7 +130,6 @@ def _get_capture_details(captures=None, metadata=None, creator=None, title=None)
             foreign_landing_url=foreign_landing_url,
             image_url=image_url,
             license_info=get_license_info(license_url=license_url),
-            thumbnail_url=thumbnail_url,
             title=title,
             creator=creator,
             meta_data=metadata,
@@ -165,9 +160,7 @@ def _get_creators(creatorinfo):
     return creator
 
 
-def _get_images(images, image_url_dimensions=None, thumbnail_dimensions=None):
-    if thumbnail_dimensions is None:
-        thumbnail_dimensions = THUMBNAIL_DIMENSIONS
+def _get_image_url(images, image_url_dimensions=None):
     if image_url_dimensions is None:
         image_url_dimensions = IMAGE_URL_DIMENSIONS
     image_type = {
@@ -175,9 +168,8 @@ def _get_images(images, image_url_dimensions=None, thumbnail_dimensions=None):
     }
 
     image_url = _get_preferred_image(image_type, image_url_dimensions)
-    thumbnail_url = _get_preferred_image(image_type, thumbnail_dimensions)
 
-    return image_url, thumbnail_url
+    return image_url
 
 
 def _get_preferred_image(image_type, dimension_list):

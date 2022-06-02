@@ -18,7 +18,6 @@ PROVIDER = prov.SMK_DEFAULT_PROVIDER
 ENDPOINT = "https://api.smk.dk/api/v1/art/search/"
 LANDING_PAGE_BASE_URL = "https://open.smk.dk/en/artwork/image/"
 IMAGE_SIZE = 2048
-THUMBNAIL_SIZE = 400
 
 delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)
@@ -108,7 +107,6 @@ def _handle_items_data(
                 height=img.get("height"),
                 width=img.get("width"),
                 license_info=license_info,
-                thumbnail_url=img.get("thumbnail"),
                 creator=creator,
                 title=title,
                 meta_data=meta_data,
@@ -128,9 +126,8 @@ def _get_images(item):
         if iiif_id is None:
             # Legacy images do not have IIIF links.
             image_url = item.get("image_native")
-            thumbnail_url = item.get("image_thumbnail")
         else:
-            image_url, thumbnail_url = _get_image_urls(iiif_id)
+            image_url = _get_image_url(iiif_id)
 
         height = item.get("image_height")
         width = item.get("image_width")
@@ -139,7 +136,6 @@ def _get_images(item):
             {
                 "id": id,
                 "image_url": image_url,
-                "thumbnail": thumbnail_url,
                 "height": height,
                 "width": width,
             }
@@ -154,14 +150,13 @@ def _get_images(item):
                     # The API for alternative images does not include the
                     # 'id', so we must skip if `iiif_id` is not present.
                     continue
-                image_url, thumbnail_url = _get_image_urls(iiif_id)
+                image_url = _get_image_url(iiif_id)
                 height = alt_img.get("height")
                 width = alt_img.get("width")
                 images.append(
                     {
                         "id": iiif_id,
                         "image_url": image_url,
-                        "thumbnail": thumbnail_url,
                         "height": height,
                         "width": width,
                     }
@@ -169,15 +164,12 @@ def _get_images(item):
     return images
 
 
-def _get_image_urls(
-    image_iiif_id, image_size=IMAGE_SIZE, thumbnail_size=THUMBNAIL_SIZE
-):
+def _get_image_url(image_iiif_id, image_size=IMAGE_SIZE):
     # For high quality IIIF-enabled images, restrict the image size to prevent loading
     # very large files.
     image_url = image_iiif_id + f"/full/!{image_size},/0/default.jpg"
-    thumbnail_url = image_iiif_id + f"/full/!{thumbnail_size},/0/default.jpg"
 
-    return image_url, thumbnail_url
+    return image_url
 
 
 def _get_license_info(rights):

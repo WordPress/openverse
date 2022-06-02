@@ -5,7 +5,7 @@ from functools import partial
 from unittest.mock import patch
 
 import pytest
-from common.licenses import LicenseInfo
+from common.licenses import get_license_info
 from providers.provider_api_scripts import phylopic as pp
 
 
@@ -92,38 +92,36 @@ def test_get_meta_data_for_none_response():
         assert meta_data is None
 
 
+cc0_license = get_license_info(
+    license_url="http://creativecommons.org/publicdomain/zero/1.0/"
+)
+
+
 def test_get_meta_data_correct():
     with open(os.path.join(RESOURCES, "correct_meta_data_example.json")) as f:
         r = json.load(f)
     with patch.object(pp.delayed_requester, "get_response_json", return_value=r):
         actual_meta_data = pp._get_meta_data("e9df48fe-68ea-419e-b9df-441e0b208335")
-        expect_meta_data = [
-            (
+        expect_meta_data = {
+            "foreign_identifier": "e9df48fe-68ea-419e-b9df-441e0b208335",
+            "image_url": (
                 "http://phylopic.org/assets/images/submissions/e9df48fe-68ea-"
                 "419e-b9df-441e0b208335.1024.png"
             ),
-            "http://phylopic.org/image/e9df48fe-68ea-419e-b9df-441e0b208335",
-            (
-                "http://phylopic.org/assets/images/submissions/e9df48fe-68ea-"
-                "419e-b9df-441e0b208335.1024.png"
-            ),
-            "",
-            "847",
-            "1024",
-            "http://creativecommons.org/publicdomain/zero/1.0/",
-            "Jonathan Wells",
-            ("Chondrus crispus NODC Taxonomic Code, database " "(version 8.0) 1996"),
-            {
+            "foreign_landing_url": "http://phylopic.org/image/e9df48fe-68ea-419e-b9df-441e0b208335",
+            "width": "847",
+            "height": "1024",
+            "license_info": cc0_license,
+            "creator": "Jonathan Wells",
+            "title": "Chondrus crispus NODC Taxonomic Code, database (version 8.0) 1996",
+            "meta_data": {
                 "taxa": [
-                    (
-                        "Chondrus crispus NODC Taxonomic Code, database "
-                        "(version 8.0) 1996"
-                    )
+                    "Chondrus crispus NODC Taxonomic Code, database (version 8.0) 1996"
                 ],
                 "credit_line": "Jonathan Wells",
                 "pub_date": "2020-02-26 11:59:53",
             },
-        ]
+        }
         assert actual_meta_data == expect_meta_data
 
 
@@ -148,7 +146,7 @@ def test_get_taxa_details():
         result = r["result"]
         actual_taxa = pp._get_taxa_details(result)
         expect_taxa = (
-            [("Chondrus crispus NODC Taxonomic Code, database " "(version 8.0) 1996")],
+            ["Chondrus crispus NODC Taxonomic Code, database (version 8.0) 1996"],
             "Chondrus crispus NODC Taxonomic Code, database (version 8.0) 1996",
         )
         assert actual_taxa == expect_taxa
@@ -169,7 +167,6 @@ def test_get_image_info():
             ),
             847,
             1024,
-            "",
         )
         assert actual_img_info == expect_img_info
 
@@ -182,91 +179,8 @@ def test_get_image_info_with_no_img_url():
         actual_img_info = list(
             pp._get_image_info(result, "7f7431c6-8f78-498b-92e2-ebf8882a8923")
         )
-        expect_img_info = [None, None, None, None]
+        expect_img_info = [None, None, None]
         assert actual_img_info == expect_img_info
-
-
-def test_create_args():
-    id_ = "e6014244-4dd5-4785-bf2e-c67dc4d05ca8"
-    d = [
-        (
-            "http://phylopic.org/assets/images/submissions/e6014244-4dd5-"
-            "4785-bf2e-c67dc4d05ca8.1024.png"
-        ),
-        "http://phylopic.org/image/e6014244-4dd5-4785-bf2e-c67dc4d05ca8",
-        (
-            "http://phylopic.org/assets/images/submissions/e6014244-4dd5-"
-            "4785-bf2e-c67dc4d05ca8.1024.png"
-        ),
-        (
-            "http://phylopic.org/assets/images/submissions/e6014244-4dd5-4785-"
-            "bf2e-c67dc4d05ca8.256.png"
-        ),
-        "1024",
-        "1024",
-        "http://creativecommons.org/publicdomain/zero/1.0/",
-        "Jonathan Wells",
-        "Apicomplexa",
-        {
-            "taxa": [
-                "Apicomplexa",
-                "Plasmodiidae Mesnil 1903",
-                "Sporozoa",
-                "Plasmodium Marchiafava & Celli 1885",
-                "Plasmodium falciparum",
-                "Plasmodium (Laverania)",
-                "Haemospororida Danilewsky",
-                "Aconoidasida Mehlhorn, Peters & Haberkorn 1980",
-            ],
-            "credit_line": "Jonathan Wells",
-            "pub_date": "2020-02-26 13:07:08",
-        },
-    ]
-    actual_args = pp._create_args(d, id_)
-    expect_args = {
-        "foreign_landing_url": (
-            "http://phylopic.org/image/e6014244-4dd5-" "4785-bf2e-c67dc4d05ca8"
-        ),
-        "image_url": (
-            "http://phylopic.org/assets/images/submissions/e6014244"
-            "-4dd5-4785-bf2e-c67dc4d05ca8.1024.png"
-        ),
-        "thumbnail_url": (
-            "http://phylopic.org/assets/images/submissions/"
-            "e6014244-4dd5-4785-bf2e-c67dc4d05ca8.256.png"
-        ),
-        "license_info": (
-            LicenseInfo(
-                license="cc0",
-                version="1.0",
-                url="https://creativecommons.org/publicdomain/zero/1.0/",
-                raw_url="http://creativecommons.org/publicdomain/zero/1.0/",
-            )
-        ),
-        "width": "1024",
-        "height": "1024",
-        "creator": "Jonathan Wells",
-        "title": "Apicomplexa",
-        "meta_data": {
-            "taxa": (
-                [
-                    "Apicomplexa",
-                    "Plasmodiidae Mesnil 1903",
-                    "Sporozoa",
-                    "Plasmodium Marchiafava & Celli 1885",
-                    "Plasmodium falciparum",
-                    "Plasmodium (Laverania)",
-                    "Haemospororida Danilewsky",
-                    ("Aconoidasida Mehlhorn, " "Peters & Haberkorn 1980"),
-                ]
-            ),
-            "credit_line": "Jonathan Wells",
-            "pub_date": "2020-02-26 13:07:08",
-        },
-        "foreign_identifier": "e6014244-4dd5-4785-bf2e-c67dc4d05ca8",
-    }
-    assert actual_args == expect_args
-    assert len(actual_args) == 10
 
 
 @pytest.mark.parametrize(

@@ -146,7 +146,6 @@ def test_process_image_returns_expected_output_given_right_input():
     mock_add_item.assert_called_once_with(
         foreign_landing_url="http://art.thewalters.org/detail/2",
         image_url="http://static.thewalters.org/images/CPS_W.569.4a_Fp_DD.jpg",
-        thumbnail_url="http://static.thewalters.org/images/CPS_W.569.4a_Fp_DD.jpg?width=100",
         license_url="https://creativecommons.org/publicdomain/zero/1.0/",
         foreign_identifier="W.569.4A",
         creator="Iranian",

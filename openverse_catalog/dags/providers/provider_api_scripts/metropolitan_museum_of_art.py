@@ -95,18 +95,16 @@ def _get_data_for_image(object_id):
         return
 
     main_image = object_json.get("primaryImage")
-    main_thumbnail = object_json.get("primaryImageSmall")
     other_images = object_json.get("additionalImages", [])
-    image_list = [(main_image, main_thumbnail)] + [(i, None) for i in other_images]
+    image_list = [main_image] + other_images
 
     meta_data = _create_meta_data(object_json)
 
-    for img, thumb in image_list:
+    for img in image_list:
         foreign_id = _build_foreign_id(object_id, img)
         image_store.add_item(
             foreign_landing_url=object_json.get("objectURL"),
             image_url=img,
-            thumbnail_url=thumb,
             license_info=DEFAULT_LICENSE_INFO,
             foreign_identifier=foreign_id,
             creator=object_json.get("artistDisplayName"),

@@ -149,7 +149,6 @@ def _process_image(img):
 
     foreign_landing_url = img.get("ResourceURL")
     image_url = img.get("PrimaryImage", {}).get("Raw")
-    thumbnail_url = img.get("PrimaryImage", {}).get("Small")
     license_url = "https://creativecommons.org/publicdomain/zero/1.0/"
     foreign_identifier = img.get("ObjectNumber")
     creator, creator_url = _get_creator_info(img)
@@ -159,7 +158,6 @@ def _process_image(img):
     return image_store.add_item(
         foreign_landing_url=foreign_landing_url,
         image_url=image_url,
-        thumbnail_url=thumbnail_url,
         license_url=license_url,
         foreign_identifier=foreign_identifier,
         creator=creator,

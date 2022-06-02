@@ -799,7 +799,6 @@ def test_check_type_with_bad_inputs(required_type, good_indices, default):
                 call(
                     foreign_landing_url="https://foreignlanding.url",
                     image_url="https://image.url.one",
-                    thumbnail_url="https://thumbnail.one",
                     license_info=LicenseInfo(
                         "cc0",
                         "1.0",
@@ -816,7 +815,6 @@ def test_check_type_with_bad_inputs(required_type, good_indices, default):
                 call(
                     foreign_landing_url="https://foreignlanding.url",
                     image_url="https://image.url.two",
-                    thumbnail_url="https://thumbnail.two",
                     license_info=LicenseInfo(
                         "cc0",
                         "1.0",
@@ -855,7 +853,6 @@ def test_check_type_with_bad_inputs(required_type, good_indices, default):
                 call(
                     foreign_landing_url="https://foreignlanding.url",
                     image_url="https://image.url.two",
-                    thumbnail_url="https://thumbnail.two",
                     license_info=LicenseInfo(
                         "cc0",
                         "1.0",
@@ -894,7 +891,6 @@ def test_check_type_with_bad_inputs(required_type, good_indices, default):
                 call(
                     foreign_landing_url="https://foreignlanding.url",
                     image_url="https://image.url.one",
-                    thumbnail_url="https://thumbnail.one",
                     license_info=LicenseInfo(
                         "cc0",
                         "1.0",
@@ -940,9 +936,6 @@ def test_process_image_data_with_sub_provider():
     mock_add_item.assert_called_once_with(
         foreign_landing_url=None,
         image_url="https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-2358",
-        thumbnail_url=(
-            "https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-" "2358&max=150"
-        ),
         license_info=(
             LicenseInfo(
                 "cc0",

@@ -162,12 +162,7 @@ def test_process_image_data_with_real_example():
                 "http://creativecommons.org/publicdomain/zero/1.0/",
             )
         ),
-        thumbnail_url=(
-            "https://api.europeana.eu/api/v2/thumbnail-by-url.json?uri=http"
-            "%3A%2F%2Fbibliotecadigital.jcyl.es%2Fi18n%2Fcatalogo_imagenes%2"
-            "Fimagen_id.cmd%3FidImagen%3D102620362&type=IMAGE"
-        ),
-        foreign_identifier=("/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1"),
+        foreign_identifier="/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1",
         title=(
             "Claustro del Monasterio de S. Salvador en Oña [Material gráfico]"
             "= Cloître du Monastère de S. Salvador à Oña"
@@ -304,11 +299,6 @@ def test_process_image_data_with_sub_provider():
             "4.0",
             "https://creativecommons.org/licenses/by/4.0/",
             "http://creativecommons.org/licenses/by/4.0/",
-        ),
-        thumbnail_url=(
-            "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%"
-            "2Fiiif.wellcomecollection.org%2Fimage%2FV0013398.jpg%2Ffull%2F"
-            "500%2C%2F0%2Fdefault.jpg&type=IMAGE"
         ),
         foreign_identifier="/9200579/zzwnbyhb",
         title=(

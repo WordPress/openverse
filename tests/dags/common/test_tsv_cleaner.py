@@ -30,7 +30,6 @@ def test_clean_tsv_cleans_tsv_rows(tmpdir):
         call().add_item(
             foreign_landing_url="https://example.com/landing1",
             image_url="https://example.com/image1",
-            thumbnail_url="https://example.com/thumbnail1",
             license_info=by_license,
             foreign_identifier="one",
             width="1000",
@@ -55,7 +54,6 @@ def test_clean_tsv_cleans_tsv_rows(tmpdir):
         call().add_item(
             foreign_landing_url="https://example.com/landing2",
             image_url="https://example.com/image2",
-            thumbnail_url="https://example.com/thumbnail2",
             license_info=by_nc_license,
             foreign_identifier="two",
             width="1000",

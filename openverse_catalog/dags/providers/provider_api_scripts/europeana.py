@@ -162,7 +162,6 @@ def _process_image_data(image_data, sub_providers=SUB_PROVIDERS, provider=PROVID
     image_url = image_data.get("edmIsShownBy")[0]
     foreign_landing_url = _get_foreign_landing_url(image_data)
     foreign_id = image_data.get("id")
-    thumbnail_url = image_data.get("edmPreview")[0]
     title = image_data.get("title")[0]
     meta_data = _create_meta_data_dict(image_data)
 
@@ -185,7 +184,6 @@ def _process_image_data(image_data, sub_providers=SUB_PROVIDERS, provider=PROVID
         foreign_landing_url=foreign_landing_url,
         image_url=image_url,
         license_info=license_info,
-        thumbnail_url=thumbnail_url,
         foreign_identifier=foreign_id,
         title=title,
         meta_data=meta_data,
