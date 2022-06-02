@@ -3,46 +3,63 @@ import os
 
 origin = os.getenv("AUDIO_REQ_ORIGIN", "https://api.openverse.engineering")
 
-identifier = "cdbd3bf6-1745-45bb-b399-61ee149cd58a"
+identifier = "4bc43a04-ef46-4544-a0c1-63c63f56e276"
 
 base_image = {
     "id": identifier,
-    "title": "Train area in Copenhagen South / Tog område i Syd København",
-    "foreign_landing_url": "https://www.flickr.com/photos/126744325@N07/51745389858",
-    "url": "https://live.staticflickr.com/65535/51745389858_c10358e1a3_b.jpg",
-    "creator": "Kristoffer Trolle",
-    "creator_url": "https://www.flickr.com/photos/126744325@N07",
-    "license": "by",
-    "license_version": "2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0/",
-    "provider": "flickr",
-    "source": "flickr",
+    "title": "Tree Bark Photo",
+    "foreign_landing_url": "https://stocksnap.io/photo/XNVBVXO3B7",
+    "url": "https://cdn.stocksnap.io/img-thumbs/960w/XNVBVXO3B7.jpg",
+    "creator": "Tim Sullivan",
+    "creator_url": "https://www.secretagencygroup.com",
+    "license": "cc0",
+    "license_version": "1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "provider": "stocksnap",
+    "source": "stocksnap",
     "category": "photograph",
-    "filesize": 157497,
-    "filetype": "jpg",
+    "filesize": None,
+    "filetype": None,
     "tags": [
-        {"name": "copenhagen"},
-        {"name": "danmark"},
-        {"name": "denmark"},
-        {"name": "dsb"},
-        {"name": "fujifilmxf35mmf2rwr"},
-        {"name": "fujifilmxh1"},
-        {"name": "københavn"},
-        {"name": "område"},
-        {"name": "south"},
-        {"name": "syd"},
-        {"name": "tiffenblackpromist14filter"},
-        {"name": "tog"},
-        {"name": "train"},
+        {"name": "tree"},
+        {"name": "bark"},
+        {"name": "texture"},
+        {"name": "wood"},
+        {"name": "nature"},
+        {"name": "pattern"},
+        {"name": "rough"},
+        {"name": "surface"},
+        {"name": "brown"},
+        {"name": "old"},
+        {"name": "background"},
+        {"name": "trunk"},
+        {"name": "natural"},
+        {"name": "forest"},
+        {"name": "detail"},
+        {"name": "lumber"},
+        {"name": "weathered"},
+        {"name": "timber"},
+        {"name": "stump"},
+        {"name": "closeup"},
+        {"name": "root"},
     ],
-    "attribution": '"Train area in Copenhagen South / Tog område i Syd København" by Kristoffer Trolle is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.',  # noqa: E501
+    "attribution": None,
     "fields_matched": [],
-    "mature": None,
-    "height": 683,
-    "width": 1024,
+    "mature": False,
+    "height": None,
+    "width": None,
     "thumbnail": f"{origin}/v1/images/{identifier}/thumb/",
     "detail_url": f"{origin}/v1/images/{identifier}/",
     "related_url": f"{origin}/v1/images/{identifier}/related/",
+}
+
+detailed_image = base_image | {
+    "attribution": '"Tree Bark Photo" by Tim Sullivan is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.',  # noqa: E501
+    "height": 4016,
+    "filesize": 896128,
+    "filetype": "jpg",
+    "width": 6016,
+    "mature": None,
 }
 
 image_search_200_example = {
@@ -93,7 +110,7 @@ image_stats_200_example = {
     ]
 }
 
-image_detail_200_example = {"application/json": base_image}
+image_detail_200_example = {"application/json": detailed_image}
 
 image_detail_404_example = {"application/json": {"detail": "Not found."}}
 
@@ -131,12 +148,12 @@ image_oembed_200_example = {
     "application/json": {
         "version": "1.0",
         "type": "photo",
-        "width": 1024,
-        "height": 683,
-        "title": "Train area in Copenhagen South / Tog område i Syd København",
-        "author_name": "Kristoffer Trolle",
-        "author_url": "https://www.flickr.com/photos/126744325@N07",
-        "license_url": "https://creativecommons.org/licenses/by/2.0/",
+        "width": 6016,
+        "height": 4016,
+        "title": "Tree Bark Photo",
+        "author_name": "Tim Sullivan",
+        "author_url": "https://www.secretagencygroup.com",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
     }
 }
 
