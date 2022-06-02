@@ -7,11 +7,10 @@ import { defineComponent } from '@nuxtjs/composition-api'
 
 import VFourOhFour from '~/components/VFourOhFour.vue'
 
-const Error = defineComponent({
+export default defineComponent({
   name: 'ErrorPage',
   components: { VFourOhFour },
   layout: 'blank',
   props: ['error'],
 })
-export default Error
 </script>

@@ -72,7 +72,7 @@
   </VContentPage>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
 
 import VLink from '~/components/VLink.vue'

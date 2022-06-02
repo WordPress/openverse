@@ -68,6 +68,6 @@ export const isMinScreen = (breakpointName: Breakpoint, options?: Options) => {
 /**
  * Check if the user prefers reduced motion or not.
  */
-export function useReducedMotion(options: Options) {
+export function useReducedMotion(options?: Options) {
   return useMediaQuery('(prefers-reduced-motion: reduce)', options)
 }
