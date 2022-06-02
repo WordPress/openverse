@@ -56,7 +56,7 @@ def _get_response(query_param, endpoint=ENDPOINT, retries=RETRIES):
     response_json, total_images, tries = None, 0, 0
     for tries in range(retries):
         response = delay_request.get(endpoint, query_param)
-        if response.status_code == 200 and response is not None:
+        if response is not None and response.status_code == 200:
             try:
                 response_json = response.json()
                 total_images = len(response_json["data"])

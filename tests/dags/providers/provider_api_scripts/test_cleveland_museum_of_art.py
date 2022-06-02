@@ -143,6 +143,17 @@ def test_get_response_failure():
     assert mock_get.call_count == 3
 
 
+def test_get_response_None():
+    query_param = {"cc": 1, "has_image": 1, "limit": 1, "skip": -1}
+    with patch.object(clm.delay_request, "get", return_value=None) as mock_get:
+        response_json, total_images = clm._get_response(query_param)
+
+    assert response_json is None
+    assert total_images == 0
+    # Retries
+    assert mock_get.call_count == 3
+
+
 def test_handle_response():
     response_json = _get_resource_json("handle_response_data.json")
     data = response_json["data"]
