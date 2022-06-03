@@ -263,10 +263,10 @@
         },
         "django-tqdm": {
             "hashes": [
-                "sha256:251b01cfbbf2665703a019ffe8e05893b0385f7ecefcb303cce2147c4c5bbb65"
+                "sha256:30a7e241bb7df570a65179f9d328b904237a492448ac64b824ff0a97f3dac79d"
             ],
             "index": "pypi",
-            "version": "==1.1.0"
+            "version": "==1.2.0"
         },
         "django-uuslug": {
             "hashes": [
