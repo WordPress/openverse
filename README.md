@@ -27,14 +27,7 @@ felt it best to keep them distinct.
 
 ## Contributing
 
-Pull requests are welcome! Feel free to
-[join us on Slack](https://make.wordpress.org/chat/) and discuss the project
-with the engineers and community members in the #openverse channel.
-
-You can also keep in touch with
-[progress](https://github.com/orgs/WordPress/projects/3) and the latest updates
-to the project with our
-[WordPress contributor group](https://make.wordpress.org/openverse/).
+[For information on how to start contributing to Openverse please read the CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ### Helpful links for new contributors
 
