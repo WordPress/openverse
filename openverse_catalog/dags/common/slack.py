@@ -253,6 +253,21 @@ def should_send_message(http_conn_id=SLACK_NOTIFICATIONS_CONN_ID):
     return environment == "prod" or force_message
 
 
+def send_alert(
+    text: str,
+    username: str = "Airflow Alert",
+    icon_emoji: str = ":airflow:",
+    markdown: bool = True,
+):
+    """
+    Wrapper for send_message that allows sending a message to the configured alerts
+    channel instead of the default notification channel.
+    """
+    send_message(
+        text, username, icon_emoji, markdown, http_conn_id=SLACK_ALERTS_CONN_ID
+    )
+
+
 def on_failure_callback(context: dict) -> None:
     """
     Send an alert out regarding a failure to Slack.

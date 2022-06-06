@@ -4,8 +4,10 @@ from unittest import mock
 import pytest
 from airflow.exceptions import AirflowNotFoundException
 from common.slack import (
+    SLACK_ALERTS_CONN_ID,
     SlackMessage,
     on_failure_callback,
+    send_alert,
     send_message,
     should_send_message,
 )
@@ -326,6 +328,18 @@ def test_send_message_does_not_send_if_checks_fail(http_hook_mock):
     with mock.patch("common.slack.should_send_message", return_value=False):
         send_message("Sample text", username="DifferentUser")
         http_hook_mock.run.assert_not_called()
+
+
+def test_send_alert():
+    with mock.patch("common.slack.send_message") as send_message_mock:
+        send_alert("Sample text", username="DifferentUser")
+        send_message_mock.assert_called_with(
+            "Sample text",
+            "DifferentUser",
+            ":airflow:",
+            True,
+            http_conn_id=SLACK_ALERTS_CONN_ID,
+        )
 
 
 @pytest.mark.parametrize(
