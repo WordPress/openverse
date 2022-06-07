@@ -66,10 +66,10 @@ Skip any steps you've already completed on your own. This is meant as an exhaust
     * On the page for your fork, find the "<> Code" dropdown button. Click it and copy the link provided under the "Local" tab of the dropdown.
     * Open up your terminal app and type `git clone <copied URL>` replacing `<copied URL>` with the URL you copied from the GitHub website.
 9. Follow the environment set up instructions in the README or CONTRIBUTING document in the repository
-10. Start working on the issue you chose 🎉 
+10. Start working on the issue you chose 🎉
 
  ## 🏃 Good first issues
- 
+
 Most of these issues are potentially able to be completed in less than 4 hours, development environment set up included. It may take significantly more or less than 4 hours depending on experience and how smoothly development environment set up goes. Unfortunately sometimes dev env set up can sometimes be tricky! In these cases it would be helpful to the Openverse project to share your experience in an issue so we can try to remove any roadblocks for future contributors. **You can make meaningful contributions to the project in the form of valuable feedback about the development experience!**
 
 [List of Good First Issues](https://github.com/search?q=label%3A%22good+first+issue%22+state%3Aopen+is%3Aissue+repo%3Awordpress%2Fopenverse+repo%3Awordpress%2Fopenverse-frontend+repo%3Awordpress%2Fopenverse-api+repo%3Awordpress%2Fopenverse-catalog+label%3A%22good+first+issue%22+state%3Aopen+repo%3Awordpress%2Fopenverse&type=Issues)
