@@ -10,22 +10,19 @@ from datetime import datetime
 import oauth2
 from airflow.models import DAG
 from airflow.operators.python import PythonOperator
-from common import slack
+from common.constants import DAG_DEFAULT_ARGS
 
 
 dag = DAG(
     dag_id="oauth2_token_refresh",
     schedule_interval="0 */12 * * *",
+    start_date=datetime(2021, 1, 1),
     description="Refresh tokens for all Oauth2 providers",
     max_active_runs=1,
     catchup=False,
     default_args={
-        "owner": "data-eng-admin",
-        "depends_on_past": False,
-        "start_date": datetime(2021, 1, 1),
-        "email_on_retry": False,
+        **DAG_DEFAULT_ARGS,
         "retries": 0,
-        "on_failure_callback": slack.on_failure_callback,
     },
     tags=["oauth"],
 )

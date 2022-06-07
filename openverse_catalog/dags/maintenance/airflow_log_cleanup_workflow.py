@@ -21,7 +21,8 @@ import jinja2
 from airflow.configuration import conf
 from airflow.models import DAG
 from airflow.operators.python import PythonOperator
-from common import log_cleanup, slack
+from common import log_cleanup
+from common.constants import DAG_DEFAULT_ARGS
 
 
 DAG_ID = "airflow_log_cleanup"
@@ -33,50 +34,33 @@ ENABLE_DELETE = True
 MAX_ACTIVE_TASKS = 1
 # should we send someone an email when this DAG fails?
 ALERT_EMAIL_ADDRESSES = ""
-DAG_DEFAULT_ARGS = {
-    "owner": "data-eng-admin",
-    "depends_on_past": False,
-    "start_date": datetime(2020, 6, 15),
-    "template_undefined": jinja2.Undefined,
-    "email_on_retry": False,
-    "retries": 2,
-    "retry_delay": timedelta(minutes=1),
-    "on_failure_callback": slack.on_failure_callback,
-}
 
-
-def create_dag(
+dag = DAG(
     dag_id=DAG_ID,
-    args=DAG_DEFAULT_ARGS,
+    default_args={
+        **DAG_DEFAULT_ARGS,
+        "retry_delay": timedelta(minutes=1),
+        "template_undefined": jinja2.Undefined,
+    },
+    start_date=datetime(2020, 6, 15),
+    schedule_interval="@weekly",
     max_active_tasks=MAX_ACTIVE_TASKS,
     max_active_runs=MAX_ACTIVE_TASKS,
-):
-    dag = DAG(
-        dag_id=dag_id,
-        default_args=args,
-        max_active_tasks=max_active_tasks,
-        schedule_interval="@weekly",
-        max_active_runs=max_active_runs,
-        # If this was True, airflow would run this DAG in the beginning
-        # for each day from the start day to now
-        catchup=False,
-        # Use the docstring at the top of the file as md docs in the UI
-        doc_md=__doc__,
-        tags=["maintenance"],
+    # If this was True, airflow would run this DAG in the beginning
+    # for each day from the start day to now
+    catchup=False,
+    # Use the docstring at the top of the file as md docs in the UI
+    doc_md=__doc__,
+    tags=["maintenance"],
+)
+
+with dag:
+    PythonOperator(
+        task_id="log_cleaner_operator",
+        python_callable=log_cleanup.clean_up,
+        op_args=[
+            BASE_LOG_FOLDER,
+            "{{ params.get('maxLogAgeInDays') }}",
+            "{{ params.get('enableDelete') }}",
+        ],
     )
-
-    with dag:
-        PythonOperator(
-            task_id="log_cleaner_operator",
-            python_callable=log_cleanup.clean_up,
-            op_args=[
-                BASE_LOG_FOLDER,
-                "{{ params.get('maxLogAgeInDays') }}",
-                "{{ params.get('enableDelete') }}",
-            ],
-        )
-
-    return dag
-
-
-globals()[DAG_ID] = create_dag()

@@ -10,6 +10,7 @@ from airflow.providers.amazon.aws.operators.emr import (
 from airflow.providers.amazon.aws.sensors.emr import EmrJobFlowSensor
 from airflow.providers.amazon.aws.sensors.s3 import S3KeySensor, S3PrefixSensor
 from airflow.utils.trigger_rule import TriggerRule
+from common.constants import DAG_DEFAULT_ARGS
 from commoncrawl.commoncrawl_utils import get_load_s3_task_id, load_file_to_s3
 
 
@@ -30,14 +31,6 @@ EXTRACT_SCRIPT_LOCAL = os.path.join(
 )
 LOG_URI = f"s3://{BUCKET_V2}/logs/airflow_pipeline"
 RAW_PROCESS_JOB_FLOW_NAME = "common_crawl_etl_job_flow"
-DAG_DEFAULT_ARGS = {
-    "owner": "data-eng-admin",
-    "depends_on_past": False,
-    "start_date": datetime(2019, 1, 15),
-    "email_on_retry": False,
-    "retries": 2,
-    "retry_delay": timedelta(minutes=60),
-}
 
 CC_INDEX_TEMPLATE = "CC-MAIN-{{ execution_date.strftime('%Y-%V') }}"
 JOB_FLOW_OVERRIDES = {
@@ -161,16 +154,21 @@ JOB_FLOW_OVERRIDES = {
     "VisibleToAllUsers": True,
 }
 
-
-with DAG(
+dag = DAG(
     dag_id="commoncrawl_etl_workflow",
-    default_args=DAG_DEFAULT_ARGS,
+    default_args={
+        **DAG_DEFAULT_ARGS,
+        "retry_delay": timedelta(minutes=60),
+        "execution_timeout": None,
+    },
     start_date=datetime(1970, 1, 1),
     schedule_interval="0 0 * * 1",
     max_active_tasks=1,
     catchup=False,
     tags=["commoncrawl"],
-) as dag:
+)
+
+with dag:
     check_for_cc_index = S3PrefixSensor(
         task_id="check_for_cc_index",
         retries=0,

@@ -47,18 +47,17 @@ https://github.com/creativecommons/cccatalog/issues/334)
 
 """
 import os
-from datetime import datetime, timedelta
+from datetime import timedelta
 from textwrap import dedent as d
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
-from common import slack
+from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.loader import loader, paths, sql
 
 
 DAG_ID = "tsv_to_postgres_loader"
-DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")
 AWS_CONN_ID = os.getenv("AWS_CONN_ID", "no_aws_conn_id")
 OPENVERSE_BUCKET = os.getenv("OPENVERSE_BUCKET")
 MINIMUM_FILE_AGE_MINUTES = int(os.getenv("LOADER_FILE_AGE", 15))
@@ -71,13 +70,8 @@ OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
 dag = DAG(
     dag_id=DAG_ID,
     default_args={
-        "owner": "data-eng-admin",
-        "depends_on_past": False,
-        "start_date": datetime(2020, 1, 15),
-        "email_on_retry": False,
-        "retries": 2,
+        **DAG_DEFAULT_ARGS,
         "retry_delay": timedelta(seconds=15),
-        "on_failure_callback": slack.on_failure_callback,
     },
     max_active_tasks=MAX_ACTIVE_TASKS,
     max_active_runs=1,
@@ -111,7 +105,7 @@ with dag:
         task_id="create_loading_table",
         python_callable=sql.create_loading_table,
         op_kwargs={
-            "postgres_conn_id": DB_CONN_ID,
+            "postgres_conn_id": POSTGRES_CONN_ID,
             "identifier": TIMESTAMP_TEMPLATE,
             "media_type": media_type_xcom,
         },
@@ -139,7 +133,7 @@ with dag:
         op_kwargs={
             "bucket": OPENVERSE_BUCKET,
             "aws_conn_id": AWS_CONN_ID,
-            "postgres_conn_id": DB_CONN_ID,
+            "postgres_conn_id": POSTGRES_CONN_ID,
             "identifier": TIMESTAMP_TEMPLATE,
         },
         doc_md="Load the TSV from S3 into the database.",
@@ -160,7 +154,7 @@ with dag:
         task_id="drop_loading_table",
         python_callable=sql.drop_load_table,
         op_kwargs={
-            "postgres_conn_id": DB_CONN_ID,
+            "postgres_conn_id": POSTGRES_CONN_ID,
             "identifier": TIMESTAMP_TEMPLATE,
             "media_type": media_type_xcom,
         },
