@@ -20,6 +20,14 @@ if (!date) {
   )
 }
 
+// get auth key
+const ghKey = process.argv?.[3]
+if (!ghKey) {
+  throw new Error(
+    'Please supply a GitHub access token with public repo permissions'
+  )
+}
+
 // data
 const repos = [
   'openverse',
@@ -38,7 +46,7 @@ const authFetch = (url) =>
   fetch(url, {
     headers: {
       Authorization:
-        'Basic emFja2tyaWRhOmdocF9JVHdJM2ZGUkVqSjZkOWRBUFFBOE5pWktwNlU0dXkxRTVFak8=',
+        `Basic ${ghKey}`,
     },
   })
 const fetchRepoIssues = compose(authFetch, makeWpIssueUrl)
