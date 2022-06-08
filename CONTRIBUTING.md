@@ -4,11 +4,11 @@ Thank you for your interest in Openverse! We're so excited to bring new contribu
 
 ## ❤️ Code of Conduct
 
-Please be aware that as a project of the WordPress Foundation, all Openverse repositories follow [the WordPress Etiquette](https://wordpress.org/about/etiquette/), a code of conduct that you should read and agree to abide by before contributing to WordPress projects.
+Please be aware that as a project of the WordPress Foundation, Openverse follows [the WordPress Etiquette](https://wordpress.org/about/etiquette/), a code of conduct that you should read and agree to abide by before contributing to WordPress projects. This applies to all Openverse respositories.
 
 ## 😍 Keeping in Touch
 
-For folks who'd like to be involved in our regular development conversations, please feel free to join us in the WordPress make chat (https://make.wordpress.org/chat/). You'll find us in the #openverse channel, of course! We have weekly community meetings on Tuesdays at 15:00 UTC (https://everytimezone.com/s/d1d42c7b). All are welcome! During the meetings we discuss ongoing work and assign new issues. Attendance is not mandatory to contribute, however. Any issues labeled as "good first issue" or "help wanted" in our repositories are all up for grabs. Just `@` a maintainer in the issue with questions or requesting the issue be assigned to you when you're ready to work on it. We also regularly discuss Openverse development issues outside the meeting times (like debugging problems we're having while working through an issue).
+For folks who'd like to be involved in our regular development conversations, please feel free to join us in the WordPress make chat (https://make.wordpress.org/chat/). You'll find us in the #openverse channel, of course! We have weekly community meetings on Tuesdays at 15:00 UTC (https://everytimezone.com/s/d1d42c7b). All are welcome! During the meetings we discuss ongoing work and assign new issues. Attendance is not mandatory to contribute, however. Any issues labeled as "good first issue" or "help wanted" in our repositories are all up for grabs. Just add a comment with `@WordPress/openverse-maintainers` on the issue with questions or requesting the issue be assigned to you when you're ready to work on it. We also regularly discuss Openverse development issues outside the meeting times (like debugging problems we're having while working through an issue).
 
 You can also keep in touch with [progress](https://github.com/orgs/WordPress/projects/3) and the latest updates to the project with our [WordPress contributor group](https://make.wordpress.org/openverse/).
 
@@ -43,32 +43,35 @@ Skip any steps you've already completed on your own. This is meant as an exhaust
 1. Install `git`
     * Most Linux distributions and macOS will already have this installed. Open up your terminal app and type `which git`. If the response is anything other than `git not found` then you've already got it installed.
     * If you need to install it, follow the official instructions here: https://git-scm.com/downloads
-2. Install a text editor.
-    * [PyCascades, an event we've attended previously, has a great list of common editors](https://mentored-sprint-for-diverse-beginners.readthedocs.io/01_contributor_resources.html#text-editors). VSCode in particular is very popular for Python and JavaScript developers alike.
-3. Create a GitHub account <https://github.com/signup>
-4. Install pyenv or Anaconda
+1. Install a text editor.
+    * [VSCode](https://code.visualstudio.com/) is an option with good out-of-the-box support for our entire stack.
+    * [PyCharm](https://www.jetbrains.com/pycharm/) is another very popular option with lots of bells and whistles.
+    * [Sublime Text](https://www.sublimetext.com/) is a minimalistic option that can get you off the ground quickly with lots of room for expansion through it's package system.
+    * [vim](https://www.vim.org/) and [emacs](https://www.gnu.org/software/emacs/) are ubiquitous terminal-based options.
+1. Create a GitHub account <https://github.com/signup>
+1. Install pyenv or Anaconda
     * These tools make it simpler to manage multiple different versions of Python on a single machine. This is useful for contributing to multiple projects, each of which may be using a different specific version of Python.
     * Skip this if you only want to do a JavaScript issue
     * https://github.com/pyenv/pyenv
     * https://www.anaconda.com/products/individual
-5. Install volta
+1. Install volta
     * Similar to pyenv/Anaconda but for Node.js
     * Skip this if you only want to do a Python issue
     * https://volta.sh/
-6. Install Docker
+1. Install Docker
     * Skip this if you only want to do a JavaScript issue
-    * Windows with WSL: https://dev.to/felipecrs/simply-run-docker-on-wsl2-3o8
+    * Windows with WSL: https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers#install-docker-desktop
     * All other scenarios (macOS, Linux, Native Windows): https://docs.docker.com/engine/install/
-6. Choose an issue from the list below and add a comment as described in the second paragraph of the "Choosing an issue" section above
-7. Fork the repository for the issue you chose
+1. Choose an issue from the list below and add a comment as described in the second paragraph of the "Choosing an issue" section above
+1. Fork the repository for the issue you chose
     * Go to the repository page on GitHub and find the "Fork" button in the upper corner of the page. Click this and GitHub will guide you through the process of forking the repository
-8. Clone the repository into your computer
+1. Clone the repository into your computer
     * On the page for your fork, find the "<> Code" dropdown button. Click it and copy the link provided under the "Local" tab of the dropdown.
     * Open up your terminal app and type `git clone <copied URL>` replacing `<copied URL>` with the URL you copied from the GitHub website.
-9. Follow the environment set up instructions in the README or CONTRIBUTING document in the repository
-10. Start working on the issue you chose 🎉
+1. Follow the environment set up instructions in the README or CONTRIBUTING document in the repository
+1. Start working on the issue you chose 🎉
 
- ## 🏃 Good first issues
+## 🏃 Good first issues
 
 Most of these issues are potentially able to be completed in less than 4 hours, development environment set up included. It may take significantly more or less than 4 hours depending on experience and how smoothly development environment set up goes. Unfortunately sometimes dev env set up can sometimes be tricky! In these cases it would be helpful to the Openverse project to share your experience in an issue so we can try to remove any roadblocks for future contributors. **You can make meaningful contributions to the project in the form of valuable feedback about the development experience!**
 
