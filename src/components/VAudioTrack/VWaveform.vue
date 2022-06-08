@@ -172,6 +172,8 @@ import { keycodes } from '~/constants/key-codes'
 
 import type { AudioFeature } from '~/constants/audio'
 
+import { hash, rand as prng } from '~/utils/prng'
+
 import type { CSSProperties } from '@vue/runtime-dom'
 
 /**
@@ -235,6 +237,13 @@ export default defineComponent({
     featureNotices: {
       type: Object as PropType<Record<AudioFeature, boolean>>,
       default: () => ({}),
+    },
+    /**
+     * Audio id to make the randomly-created peaks deterministic.
+     */
+    audioId: {
+      type: String,
+      required: true,
     },
   },
   emits: [
@@ -336,10 +345,13 @@ export default defineComponent({
     const peakCount = computed(() =>
       getPeaksInWidth(waveformDimens.value.width)
     )
+
+    const createRandomPeaks = (audioId: string) => {
+      const rand = prng(hash(audioId))
+      return Array.from({ length: 100 }, () => rand())
+    }
     const peaks = computed(() =>
-      props.peaks?.length
-        ? props.peaks
-        : Array.from({ length: 100 }, () => Math.random())
+      props.peaks?.length ? props.peaks : createRandomPeaks(props.audioId)
     )
     const normalizedPeaks = computed(() => {
       let samples = peaks.value

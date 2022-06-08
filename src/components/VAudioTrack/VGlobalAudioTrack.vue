@@ -5,6 +5,7 @@
         <VWaveform
           v-bind="waveformProps"
           :peaks="audio.peaks"
+          :audio-id="audio.id"
           :current-time="currentTime"
           :duration="duration"
           :message="message"

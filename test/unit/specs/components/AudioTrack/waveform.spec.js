@@ -16,6 +16,7 @@ describe('VWaveform', () => {
   beforeEach(() => {
     props = {
       peaks: [],
+      audioId: 'test',
     }
 
     options = {
