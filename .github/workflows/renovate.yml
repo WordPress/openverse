@@ -13,4 +13,4 @@ jobs:
       - uses: renovatebot/github-action@v32.64.0
         with:
           configurationFile: .github/renovate.json
-          token: ACCESS_TOKEN
+          token: ${{ secrets.ACCESS_TOKEN }}
