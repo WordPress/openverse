@@ -22,7 +22,7 @@ if (!date) {
 
 // get auth key
 const ghKey = process.argv?.[3]
-if (!key) {
+if (!ghKey) {
   throw new Error(
     'Please supply a GitHub access token with public repo permissions'
   )
