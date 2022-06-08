@@ -1,10 +1,10 @@
 {
   "branchPrefix": "gha-renovate",
-  "username": "renovate-release",
-  "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
+  "username": "openverse-bot",
+  "gitAuthor": "Openverse Bot <openverse@wordpress.org>",
   "onboarding": false,
   "platform": "github",
-  "repositories": ["wordpress/openverse-frontend", "wordpress/openverse"],
+  "repositories": ["WordPress/openverse-frontend"],
   "extends": ["config:base", ":preserveSemverRanges", "schedule:monthly"],
   "labels": [
     "dependencies",
