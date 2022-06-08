@@ -1,0 +1,24 @@
+name: Update frontend task definition (redeploy)
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - "released"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag of the ghcr.io/wordpress/openverse-frontend image to use.
+        required: true
+
+jobs:
+  update-task-definition-and-deploy:
+    name: Update task definition and deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: ./.github/actions/frontend-deploy
+        with:
+          tag: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.sha) || (github.event_name == 'push' && 'main') || github.event.release.tag_name }}
