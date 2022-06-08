@@ -255,6 +255,7 @@ jobs:
   publish-docs:
     name: Publish developer docs
     runs-on: ubuntu-latest
+    # Push new docs when `main` is pushed to in this repository
     if: github.event_name == 'push' && github.repository == 'WordPress/openverse-api'
     needs:
       - build-images
@@ -289,7 +290,8 @@ jobs:
   docs-preview:
     name: Publish preview of developer docs for the branch
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.repository == 'WordPress/openverse-api'
+    # Check if the event is not triggered by a fork or dependabot
+    if: github.event_name == 'pull_request' && github.repository_owner == 'WordPress' && github.actor != 'dependabot[bot]'
     needs:
       - build-images
 
