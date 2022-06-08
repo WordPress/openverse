@@ -36,7 +36,7 @@ jobs:
     if: github.repository == 'WordPress/openverse-frontend'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: ./.github/actions/setup-node-env
 
