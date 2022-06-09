@@ -7,7 +7,7 @@ import {
   useRouter,
 } from '@nuxtjs/composition-api'
 
-import { ALL_MEDIA, supportedMediaTypes } from '~/constants/media'
+import { ALL_MEDIA, searchPath, supportedMediaTypes } from '~/constants/media'
 import useSearchType from '~/composables/use-search-type'
 import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
@@ -51,7 +51,7 @@ export default {
       content.setActiveType(type)
 
       const newPath = app.localePath({
-        path: `/search/${type === ALL_MEDIA ? '' : type}`,
+        path: searchPath(type),
         query: searchStore.searchQueryParams,
       })
       router.push(newPath)

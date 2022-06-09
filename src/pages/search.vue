@@ -26,6 +26,7 @@
     </VSearchGrid>
     <VScrollButton
       v-show="showScrollButton"
+      :is-filter-sidebar-visible="isFilterSidebarVisible"
       data-testid="scroll-button"
       @tab="handleTab($event, 'scroll-button')"
     />

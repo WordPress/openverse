@@ -3,6 +3,7 @@ import { onMounted, ref } from '@nuxtjs/composition-api'
 import { env } from '~/utils/env'
 import local from '~/utils/local'
 import { isMinScreen } from '~/composables/use-media-query'
+import { useSearchStore } from '~/stores/search'
 
 /**
  * This global ref is SSR safe because it will only
@@ -29,7 +30,12 @@ export const useFilterSidebarVisibility = () => {
   onMounted(() => {
     const localFilterState = () =>
       local.getItem(env.filterStorageKey) === 'true'
-    setVisibility(mediaQuery.value && localFilterState())
+    const searchStore = useSearchStore()
+    setVisibility(
+      mediaQuery.value &&
+        searchStore.searchTypeIsSupported &&
+        localFilterState()
+    )
   })
 
   return {

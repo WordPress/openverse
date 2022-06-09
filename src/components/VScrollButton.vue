@@ -24,25 +24,30 @@ import { computed, defineComponent } from '@nuxtjs/composition-api'
 
 import { defineEvent } from '~/types/emits'
 
-import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
-
 const positionWithoutSidebar = 'ltr:right-4 rtl:left-4'
 const positionWithSidebar = 'ltr:right-[21rem] rtl:left-[21rem]'
 
 export default defineComponent({
   name: 'VScrollButton',
+  props: {
+    isFilterSidebarVisible: {
+      type: Boolean,
+      default: true,
+    },
+  },
   emits: {
     tab: defineEvent<[KeyboardEvent]>(),
   },
-  setup() {
-    const { isVisible: isFilterVisible } = useFilterSidebarVisibility()
+  setup(props) {
     const hClass = computed(() =>
-      isFilterVisible.value ? positionWithSidebar : positionWithoutSidebar
+      props.isFilterSidebarVisible
+        ? positionWithSidebar
+        : positionWithoutSidebar
     )
     const scrollToTop = () => {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     }
-    return { hClass, isFilterVisible, scrollToTop }
+    return { hClass, scrollToTop }
   },
 })
 </script>

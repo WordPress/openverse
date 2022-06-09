@@ -10,6 +10,7 @@
         : 'w-10 md:w-auto h-10 md:h-auto px-0 md:px-3'
     "
     :pressed="pressed"
+    :disabled="disabled"
     aria-controls="filters"
     :aria-label="mdMinLabel"
     @click="$emit('toggle')"
@@ -52,6 +53,10 @@ export default defineComponent({
   },
   props: {
     pressed: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
       type: Boolean,
       default: false,
     },

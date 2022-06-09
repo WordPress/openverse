@@ -302,6 +302,13 @@ a.button {
   @apply bg-white text-dark-charcoal border border-dark-charcoal-20 focus-visible:border-tx ring-offset-0;
 }
 
+.tertiary[disabled='disabled'],
+.tertiary[aria-disabled='true'],
+.action-menu[disabled='disabled'],
+.action-menu[aria-disabled='true'] {
+  @apply bg-dark-charcoal-10 border-dark-charcoal-10;
+}
+
 .tertiary-pressed {
   @apply bg-dark-charcoal text-white border-tx;
 }

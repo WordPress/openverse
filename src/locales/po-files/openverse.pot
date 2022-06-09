@@ -332,7 +332,7 @@ msgid "Edge"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VMetaSearch/VMetaSearchForm.vue:50
+#: src/components/VMetaSearch/VMetaSearchForm.vue:49
 msgctxt "meta-search.caption"
 msgid "###openverse### does not currently index the sources listed above, but through this interface is offering convenient access to search services provided by other independent organizations. ###openverse### has no control over the results that are returned. Do not assume that the results displayed in this search portal are under a CC license. Always verify that the work is actually under a CC license by following the link. If you are in doubt, you should contact the copyright holder directly, or try to contact the site where you found the content."
 msgstr ""
@@ -357,7 +357,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/VMetaSearch/VMetaSearchForm.vue:32
 msgctxt "meta-search.form.caption"
-msgid "Click on a source below to directly search other collections of CC-licensed ###type###.###break###Please note that \"Use\" filters are not supported for ###filter###."
+msgid "Click on a source below to directly search other collections of CC-licensed ###type###."
 msgstr ""
 
 msgctxt "meta-search.form.types-plural.image"
@@ -1922,7 +1922,7 @@ msgctxt "header.api-nav-item"
 msgid "API"
 msgstr ""
 
-#: src/components/VHeader/VHeader.vue:142
+#: src/components/VHeader/VHeader.vue:143
 msgctxt "header.loading"
 msgid "Loading..."
 msgstr ""
@@ -1933,7 +1933,7 @@ msgid "Filters"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VFilterButton.vue:103
+#: src/components/VHeader/VFilterButton.vue:108
 msgctxt "header.filter-button.with-count"
 msgid "###count### Filter"
 msgid_plural "###count### Filters"

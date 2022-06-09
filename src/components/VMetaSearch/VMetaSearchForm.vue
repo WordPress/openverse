@@ -36,7 +36,6 @@
         <template #break>
           <br />
         </template>
-        <template #filter>{{ unsupportedByUseFilter }}</template>
       </i18n>
     </header>
 
@@ -62,7 +61,6 @@ import {
 
 import type { MediaType } from '~/constants/media'
 import type { ApiQueryParams } from '~/utils/search-query-transform'
-import { getAdditionalSourceBuilders } from '~/utils/get-additional-sources'
 import { getFocusableElements } from '~/utils/focus-management'
 import { defineEvent } from '~/types/emits'
 
@@ -82,14 +80,8 @@ export default defineComponent({
   emits: {
     tab: defineEvent<[KeyboardEvent]>(),
   },
-  setup(props, { emit }) {
+  setup(_, { emit }) {
     const sectionRef = ref<HTMLElement>()
-    const unsupportedByUseFilter = computed(() =>
-      getAdditionalSourceBuilders(props.type)
-        .filter((source) => !source.supportsUseFilters)
-        .map((source) => source.name)
-        .join(', ')
-    )
 
     /**
      * Find the last focusable element in VSearchGridFilter to add a 'Tab' keydown event
@@ -108,7 +100,6 @@ export default defineComponent({
     }
     return {
       sectionRef,
-      unsupportedByUseFilter,
       handleTab,
     }
   },

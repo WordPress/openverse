@@ -40,6 +40,7 @@
     />
     <VHeaderFilter
       v-if="isSearchRoute"
+      :disabled="areFiltersDisabled"
       @open="openMenuModal(menus.FILTERS)"
       @close="close()"
     />
@@ -58,7 +59,7 @@ import {
   watch,
 } from '@nuxtjs/composition-api'
 
-import { ALL_MEDIA } from '~/constants/media'
+import { ALL_MEDIA, searchPath } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useMatchSearchRoutes } from '~/composables/use-match-routes'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
@@ -193,13 +194,16 @@ export default defineComponent({
       document.activeElement?.blur()
       if (isSearchTypeSupported(searchType)) {
         const newPath = app.localePath({
-          path: `/search/${searchType === 'all' ? '' : searchType}`,
+          path: searchPath(searchType),
           query: searchStore.searchQueryParams,
         })
         router.push(newPath)
         await mediaStore.fetchMedia()
       }
     }
+    const areFiltersDisabled = computed(
+      () => !searchStore.searchTypeIsSupported
+    )
 
     return {
       closeIcon,
@@ -209,6 +213,7 @@ export default defineComponent({
       isMinScreenMd,
       isSearchRoute,
       headerHasTwoRows,
+      areFiltersDisabled,
 
       menuModalRef,
 

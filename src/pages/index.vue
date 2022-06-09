@@ -142,7 +142,7 @@ import {
   useRouter,
 } from '@nuxtjs/composition-api'
 
-import { ALL_MEDIA, supportedSearchTypes } from '~/constants/media'
+import { ALL_MEDIA, searchPath, supportedSearchTypes } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
 
 import { useMediaStore } from '~/stores/media'
@@ -219,9 +219,7 @@ export default defineComponent({
       searchStore.setSearchType(searchType.value)
       const query = searchStore.searchQueryParams
       const newPath = app.localePath({
-        path: `/search/${
-          searchType.value === ALL_MEDIA ? '' : searchType.value
-        }`,
+        path: searchPath(searchType.value),
         query,
       })
       router.push(newPath)

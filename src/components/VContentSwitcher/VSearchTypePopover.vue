@@ -70,7 +70,7 @@ export default defineComponent({
     select: defineEvent<SearchType>(),
   },
   setup(props, { emit }) {
-    const contentMenuPopover = ref(null)
+    const contentMenuPopover = ref<HTMLElement | null>(null)
 
     /**
      * When in the searchbar, content switcher button has a border when the

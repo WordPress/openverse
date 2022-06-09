@@ -13,10 +13,6 @@ import type { BuildUrlOptions } from 'build-url'
  */
 interface AdditionalSearchQuery {
   q: string
-  filters: {
-    commercial: boolean
-    modify: boolean
-  }
 }
 
 /**
@@ -30,10 +26,6 @@ const transformSearchQuery = (
   query: ApiQueryParams
 ): AdditionalSearchQuery => ({
   q: query.q ?? '',
-  filters: {
-    commercial: query.license_type?.includes('commercial') ?? false,
-    modify: query.license_type?.includes('modification') ?? false,
-  },
 })
 
 type SearchFunctions = {
@@ -49,7 +41,6 @@ type SearchFunctions = {
  */
 interface AdditionalSourceBuilder extends SearchFunctions {
   name: string
-  supportsUseFilters: boolean
 }
 
 /**
@@ -70,7 +61,6 @@ interface AdditionalSource {
 const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   {
     name: 'Centre For Ageing Better',
-    supportsUseFilters: false,
     image: (search) => ({
       url: 'https://ageingbetter.resourcespace.com/pages/search.php',
       queryParams: {
@@ -80,7 +70,6 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
   {
     name: 'EDU images',
-    supportsUseFilters: false,
     image: (search) => ({
       url: 'https://images.all4ed.org',
       queryParams: {
@@ -90,7 +79,6 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
   {
     name: 'Google Images',
-    supportsUseFilters: false,
     image: (search) => ({
       url: 'https://www.google.com/search',
       queryParams: {
@@ -102,7 +90,6 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
   {
     name: 'Images of Empowerment',
-    supportsUseFilters: false,
     image: (search) => ({
       url: 'https://www.imagesofempowerment.org/',
       queryParams: {
@@ -112,7 +99,6 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
   {
     name: 'Open Clip Art Library',
-    supportsUseFilters: false,
     image: (search) => ({
       url: 'http://www.openclipart.org/search/',
       queryParams: {
@@ -122,7 +108,6 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
   {
     name: 'Nappy',
-    supportsUseFilters: false,
     image: (search) => ({
       url: 'https://www.nappy.co/',
       queryParams: {
@@ -132,7 +117,6 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
   {
     name: 'The Greats',
-    supportsUseFilters: false,
     image: (search) => ({
       url: 'https://www.thegreats.co/artworks/',
       queryParams: {
@@ -143,7 +127,6 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
   {
     name: 'ccMixter',
-    supportsUseFilters: false,
     audio: (search) => ({
       // no https :(
       url: 'http://dig.ccmixter.org/search',
@@ -155,65 +138,43 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
   {
     name: 'SoundCloud',
-    supportsUseFilters: true,
     audio: (search) => {
-      let license = 'to_share'
-
-      if (search.filters && search.filters.commercial) {
-        if (search.filters.commercial) license = 'to_use_commercially'
-        if (search.filters.modify) license = 'to_modify_commercially'
-      }
-
       return {
         url: 'https://soundcloud.com/search/sounds',
         queryParams: {
           q: search.q,
-          'filter.license': license, // @todo: choose which type from the search object
+          'filter.license': 'to_share', // @todo: choose which type from the search object
         },
       }
     },
   },
   {
     name: 'Europeana',
-    supportsUseFilters: true,
     audio: (search) => {
-      let query = `${search.q} AND RIGHTS:*creative*` // search cc licensed works
-
-      if (search.filters && search.filters.commercial) {
-        if (search.filters.commercial) query = `${query} AND NOT RIGHTS:*nc*`
-        if (search.filters.modify) query = `${query} AND NOT RIGHTS:*nd*`
-      }
-
       return {
         url: 'https://www.europeana.eu/en/search',
         queryParams: {
           page: '1',
           qf: 'TYPE:"SOUND"',
-          query,
+          // search cc licensed works
+          query: `${search.q} AND RIGHTS:*creative*`,
         },
       }
     },
     video(search) {
-      let query = `${search.q} AND RIGHTS:*creative*` // search cc licensed works
-
-      if (search.filters && search.filters.commercial) {
-        if (search.filters.commercial) query = `${query} AND NOT RIGHTS:*nc*`
-        if (search.filters.modify) query = `${query} AND NOT RIGHTS:*nd*`
-      }
-
       return {
         url: 'https://www.europeana.eu/en/search',
         queryParams: {
           page: '1',
           qf: 'TYPE:"VIDEO"',
-          query,
+          // search cc licensed works
+          query: `${search.q} AND RIGHTS:*creative*`,
         },
       }
     },
   },
   {
     name: 'Vimeo',
-    supportsUseFilters: false,
     video: (search) => ({
       url: 'https://vimeo.com/search',
       queryParams: {
@@ -224,7 +185,6 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
   {
     name: 'Wikimedia Commons',
-    supportsUseFilters: false,
     video: (search) => ({
       url: 'https://commons.wikimedia.org/w/index.php',
       queryParams: {
@@ -236,7 +196,6 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
   {
     name: 'YouTube',
-    supportsUseFilters: false,
     video: (search) => ({
       url: 'https://www.youtube.com/results',
       queryParams: {
@@ -247,7 +206,6 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
   {
     name: 'Sketchfab',
-    supportsUseFilters: false,
     [MODEL_3D](search) {
       // TODO: Use actual license from filters
       const licenseCodes: string[] = [
@@ -271,7 +229,6 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
   {
     name: 'Thingiverse',
-    supportsUseFilters: false,
     [MODEL_3D](search) {
       return {
         url: 'https://www.thingiverse.com/search',
@@ -316,6 +273,5 @@ export const getAdditionalSources = (
     return {
       url: buildUrl(urlInfo.url, urlInfo),
       name: source.name,
-      supportsUseFilters: source.supportsUseFilters,
     }
   }) as AdditionalSource[]

@@ -1,13 +1,13 @@
 import { computed, ref } from '@nuxtjs/composition-api'
 
 import {
-  supportedSearchTypes,
   ALL_MEDIA,
   AUDIO,
   IMAGE,
   MODEL_3D,
   VIDEO,
   additionalSearchTypes,
+  supportedSearchTypes,
   SearchType,
 } from '~/constants/media'
 

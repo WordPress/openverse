@@ -8,6 +8,7 @@
       class="self-stretch"
       :class="visibleRef ? 'hidden md:flex' : 'flex'"
       :pressed="visibleRef"
+      :disabled="disabled"
       v-bind="triggerA11yProps"
       @toggle="onTriggerClick"
       @tab="onTab"
@@ -54,6 +55,12 @@ export default defineComponent({
     VSearchGridFilter,
     VTeleport,
   },
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
   emits: {
     /**
      * Fires when the popover opens, regardless of reason. There are no extra parameters.
@@ -64,7 +71,7 @@ export default defineComponent({
      */
     close: defineEvent(),
   },
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     const modalRef = ref<HTMLElement | null>(null)
     const nodeRef = ref<HTMLElement | null>(null)
     const buttonRef = ref<HTMLElement | null>(null)
@@ -79,7 +86,9 @@ export default defineComponent({
       ref(false)
     )
 
-    const filterComponent = ref('VModalContent')
+    const filterComponent = ref<'VModalContent' | 'VSidebarContent'>(
+      'VModalContent'
+    )
 
     const triggerA11yProps = reactive({
       'aria-expanded': false,
@@ -108,9 +117,18 @@ export default defineComponent({
       }
     }
 
+    watch(
+      () => props.disabled,
+      (disabled) => {
+        if (disabled && visibleRef.value) {
+          onTriggerClick()
+        }
+      }
+    )
     const onTriggerClick = () => {
       visibleRef.value === true ? close() : open()
     }
+
     const focusFilters = useFocusFilters()
     /**
      * Focus the first element in the sidebar when navigating from the VFilterButton
@@ -146,7 +164,7 @@ export default defineComponent({
       ref(mobileOptions)
 
     onMounted(() => {
-      if (isMinScreenMd.value && filterSidebar.isVisible.value) {
+      if (filterSidebar.isVisible.value) {
         open()
       }
     })
