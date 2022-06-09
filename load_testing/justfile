@@ -1,0 +1,14 @@
+set dotenv-load := false
+
+build:
+    docker-compose build
+
+dc locustfile host +options="": build
+    #! /usr/bin/env sh
+    export HOST={{host}}
+    export LOCUSTFILE={{locustfile}}
+    export ARGS="{{options}}"
+    docker-compose up --force-recreate --abort-on-container-exit --exit-code-from control
+
+api host="http://172.17.0.1:8000" +args="": build
+    just dc api.py {{ host }} --users 10 --spawn-rate 10 {{ args }}
