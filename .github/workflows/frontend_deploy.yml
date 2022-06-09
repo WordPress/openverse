@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v3
+
       - uses: ./.github/actions/frontend-deploy
         with:
           tag: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.sha) || (github.event_name == 'push' && 'main') || github.event.release.tag_name }}
