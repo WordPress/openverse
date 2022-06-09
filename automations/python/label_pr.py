@@ -3,9 +3,13 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
 import re
+from http.cookiejar import CookieJar
 from typing import Optional
 
+import mechanize
+import pyotp
 import requests
 from bs4 import BeautifulSoup
 from github import Github
@@ -76,21 +80,54 @@ def get_pull_request(gh: Github, html_url: str) -> PullRequest:
     return gh.get_organization(org).get_repo(repo).get_pull(pr_num)
 
 
+def get_authenticated_html(url: str) -> str:
+    """
+    Login to the GitHub UI using the username and password, followed by 2FA. Then
+    navigate to the specified URL as the authenticated user and scrape the text body.
+
+    :param url: the URL to scrape after authenticating in GitHub
+    :return: the text content of the scraped page
+    """
+
+    browser = mechanize.Browser()
+    browser.set_cookiejar(CookieJar())
+    browser.open("https://github.com/login/")
+    browser.select_form(nr=0)  # focus on the first (and only) form on the page
+    browser.form["login"] = os.getenv("GH_LOGIN")
+    browser.form["password"] = os.getenv("GH_PASSWORD")
+    browser.submit()
+
+    browser.select_form(nr=0)  # focus on the first (and only) form on the page
+    browser.form["otp"] = pyotp.TOTP(os.getenv("GH_2FA_SECRET")).now()
+    browser.submit()
+
+    browser.open(url)
+    return browser.response().read()
+
+
 def get_linked_issues(url: str) -> list[str]:
     """
     Get the list of linked issues from the GitHub UI by parsing the HTML. This is a
     workaround because GitHub API does not provide a reliable way to find the linked
     issues for a PR.
 
+    If the page returns a 404 response, it is assumed that the page belongs to a private
+    repository and needs authentication. In these cases, ``get_authenticated_html`` is
+    used to scrape the page.
+
     :param url: the URL to the GitHub UI for a PR
     :return: the list of HTML URLs for linked issues
     """
 
     res = requests.get(url)
-    if res.status_code != 200:
+    if res.status_code == 404:
+        text = get_authenticated_html(url)
+    elif res.status_code == 200:
+        text = res.text
+    else:
         return []
 
-    soup = BeautifulSoup(res.text, "html.parser")
+    soup = BeautifulSoup(text, "html.parser")
     divs = soup.find_all("div", **{"class": re.compile("css-truncate my-1")})
     anchors = [div.a["href"] for div in divs]
     return anchors

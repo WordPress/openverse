@@ -8,6 +8,8 @@ pygithub = "*"
 pyyaml = "*"
 beautifulsoup4 = "*"
 requests = "*"
+mechanize = "*"
+pyotp = "*"
 
 [dev-packages]
 ipython = "*"
