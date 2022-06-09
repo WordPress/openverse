@@ -1,13 +1,15 @@
 from pathlib import Path
-from typing import Iterable
 from random import Random
+from typing import Iterable
 
-with open(Path('/') / 'usr' / 'share' / 'dict' / 'american-english') as dictionary:
+
+with open(Path("/") / "usr" / "share" / "dict" / "american-english") as dictionary:
     words: list[str] = dictionary.readlines()
 
 random = Random()
 
-def random_words(count=float('inf')) -> Iterable[str]:
+
+def random_words(count=float("inf")) -> Iterable[str]:
     yielded = 0
     i = 0
     while yielded < count and i < len(words):

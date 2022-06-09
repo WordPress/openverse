@@ -1,15 +1,15 @@
-version: '3'
+version: "3"
 
 services:
   control:
     build: .
     image: locust
     ports:
-     - "8089:8089"
+      - "8089:8089"
     volumes:
       - ./:/mnt/locust
     command: -f /mnt/locust/${LOCUSTFILE} --master -H ${HOST} ${ARGS}
-  
+
   worker-0:
     build: .
     image: locust

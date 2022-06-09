@@ -1,7 +1,8 @@
-from locust import HttpUser, task
-
-from utils.dictionary import random_words
 from random import randrange
+
+from locust import HttpUser, task
+from utils.dictionary import random_words
+
 
 class APIUser(HttpUser):
     @task
