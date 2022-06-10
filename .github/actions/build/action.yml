@@ -54,7 +54,7 @@ runs:
 
     # build a docker image
     - name: build docker image
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v3
       if: ${{ github.event.inputs.is_production == false }}
       with:
         context: .
@@ -79,7 +79,7 @@ runs:
 
     # build a docker image
     - name: build docker image
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v3
       if: ${{ github.event.inputs.is_production == true }}
       with:
         context: .
