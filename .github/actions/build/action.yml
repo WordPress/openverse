@@ -44,7 +44,7 @@ runs:
     # gather metadata from git & github actions to reference in docker
     - name: git & github metadata staging
       id: metadata_staging
-      uses: docker/metadata-action@v3
+      uses: docker/metadata-action@v4
       if: ${{ github.event.inputs.is_production == false }}
       with:
         images: ${{ inputs.aws_account_id }}.dkr.ecr.${{ inputs.aws_region }}.amazonaws.com/openverse/frontend
@@ -66,7 +66,7 @@ runs:
     # gather metadata from git & github actions to reference in docker
     - name: git & github metadata production
       id: metadata_production
-      uses: docker/metadata-action@v3
+      uses: docker/metadata-action@v4
       if: ${{ github.event.inputs.is_production == true }}
       with:
         images: ${{ inputs.aws_account_id }}.dkr.ecr.${{ inputs.aws_region }}.amazonaws.com/openverse/frontend

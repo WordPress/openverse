@@ -27,7 +27,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: docker/metadata-action@v3
+      - uses: docker/metadata-action@v4
         id: metadata
         with:
           images: ghcr.io/wordpress/openverse-frontend
