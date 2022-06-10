@@ -9,6 +9,8 @@ jobs:
   clean-gh-pages:
     name: Clean API developer docs preview
     runs-on: ubuntu-latest
+    # Check if the event is not triggered by a fork or dependabot
+    if: github.event_name == 'pull_request' && github.repository_owner == 'WordPress' && github.actor != 'dependabot[bot]'
 
     steps:
       - uses: actions/checkout@v3
