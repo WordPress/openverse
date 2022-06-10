@@ -5,7 +5,7 @@
     </div>
     <VAudioTrack layout="full" :audio="audio" class="main-track" />
     <div
-      class="mt-10 lg:mt-16 flex flex-col gap-10 lg:gap-16 px-4 lg:px-0 lg:max-w-5xl mx-auto"
+      class="mt-10 lg:mt-16 flex flex-col gap-10 lg:gap-16 px-6 lg:max-w-5xl mx-auto"
     >
       <VMediaReuse data-testid="audio-attribution" :media="audio" />
       <VAudioDetails data-testid="audio-info" :audio="audio" />

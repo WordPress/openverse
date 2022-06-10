@@ -16,7 +16,7 @@
       </div>
     </div>
     <div
-      class="flex flex-row flex-wrap lg:flex-nowrap items-top px-4 lg:px-0 lg:max-w-5xl mx-auto gap-6 mt-6"
+      class="flex flex-row flex-wrap lg:flex-nowrap items-top px-6 lg:max-w-5xl mx-auto gap-6 mt-6"
     >
       <slot name="play-pause" :size="isSmall ? 'small' : 'medium'" />
 
