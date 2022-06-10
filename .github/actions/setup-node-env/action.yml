@@ -12,7 +12,7 @@ runs:
     - uses: pnpm/action-setup@v2.2.1
 
     - name: Cache pnpm modules
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.local/share/pnpm/store
         key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
