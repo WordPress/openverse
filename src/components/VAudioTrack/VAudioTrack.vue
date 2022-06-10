@@ -189,10 +189,13 @@ export default defineComponent({
         : undefined
 
     const updateTimeLoop = () => {
-      if (localAudio && status.value === 'playing') {
-        currentTime.value = localAudio.currentTime
-        window.requestAnimationFrame(updateTimeLoop)
-      }
+      if (localAudio)
+        if (status.value === 'playing') {
+          currentTime.value = localAudio.currentTime
+          window.requestAnimationFrame(updateTimeLoop)
+        } else {
+          currentTime.value = localAudio.currentTime
+        }
     }
 
     const setPlaying = () => {
