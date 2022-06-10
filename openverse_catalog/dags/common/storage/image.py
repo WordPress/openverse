@@ -143,8 +143,10 @@ class ImageStore(MediaStore):
         image_metadata = self.clean_media_metadata(**kwargs)
         if image_metadata is None:
             return None
-        if image_metadata["thumbnail_url"] is not None:
-            image_metadata["thumbnail_url"] = None
+        # Set the thumbnail to None to make sure no image provider scripts
+        # write a value, and to make testing easier by not having to provide
+        # the value.
+        image_metadata["thumbnail_url"] = None
         # Convert the `image_url` key used in ImageStore, TSV and
         # provider API scripts into `url` key used in db
         image_metadata["url"] = image_metadata.pop("image_url")
@@ -155,6 +157,9 @@ class MockImageStore(ImageStore):
     """
     A class that mocks the role of the ImageStore class. This class replaces
     all functionality of ImageStore that calls the internet.
+    It also allows for easy introspection into the images added to the
+    media_buffer by making it a public attribute, and not converting the
+    images to TSV.
 
     For information about all arguments other than license_info refer to
     ImageStore class.
@@ -163,6 +168,23 @@ class MockImageStore(ImageStore):
     license_info:       A named tuple consisting of valid license info from
                         the test script in which MockImageStore is being used.
     """
+
+    NULLABLE_FIELDS = [
+        "filesize",
+        "filetype",
+        "foreign_identifier",
+        "width",
+        "height",
+        "creator",
+        "creator_url",
+        "title",
+        "meta_data",
+        "raw_tags",
+        "category",
+        "watermarked",
+        "source",
+        "ingestion_type",
+    ]
 
     def __init__(
         self,
@@ -175,3 +197,14 @@ class MockImageStore(ImageStore):
         logger.info(f"Initialized with provider {provider}")
         super().__init__(provider=provider)
         self.license_info = license_info
+        self.media_buffer = []
+
+    def add_item(self, **kwargs):
+        image_data = kwargs | {"thumbnail_url": None}
+        for field in MockImageStore.NULLABLE_FIELDS:
+            if field not in image_data:
+                image_data[field] = None
+        image = self._get_image(**image_data)
+        if image is not None:
+            self.media_buffer.append(image)
+        return len(self.media_buffer)

@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 from typing import Optional, Union
 
+from common.extensions import extract_filetype
 from common.licenses import is_valid_license_info
 from common.storage import util
 from common.storage.tsv_columns import CURRENT_VERSION
@@ -34,6 +35,8 @@ TAG_CONTAINS_BLACKLIST = {
 
 COMMON_CRAWL = "commoncrawl"
 PROVIDER_API = "provider_api"
+
+FILETYPE_EQUIVALENTS = {"jpeg": "jpg", "tif": "tiff"}
 
 
 class MediaStore(metaclass=abc.ABCMeta):
@@ -103,6 +106,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         Returns a dictionary: media_type-specific fields are untouched,
         and for common metadata we:
         - validate `license_info`
+        - validate `filetype`
         - enrich `metadata`,
         - replace `raw_tags` with enriched `tags`,
         - validate `source`,
@@ -123,6 +127,10 @@ class MediaStore(metaclass=abc.ABCMeta):
                 media_data["ingestion_type"] = "commoncrawl"
             else:
                 media_data["ingestion_type"] = "provider_api"
+
+        media_data["filetype"] = self._validate_filetype(
+            media_data["filetype"], media_data[f"{self.media_type}_url"]
+        )
 
         media_data["tags"] = self._enrich_tags(media_data.pop("raw_tags", None))
         media_data["meta_data"] = self._enrich_meta_data(
@@ -276,3 +284,16 @@ class MediaStore(metaclass=abc.ABCMeta):
         else:
             logger.debug(f"Enriching tag: {tag}")
             return {"name": tag, "provider": self.provider}
+
+    def _validate_filetype(self, filetype: str | None, url: str) -> str | None:
+        """
+        Extracts filetype from the media URL if filetype is None.
+        Unifies filetypes that have variants such as jpg/jpeg and tiff/tif.
+        :param filetype: Optional filetype string.
+        :return: filetype string or None
+        """
+        if filetype is None:
+            filetype = extract_filetype(url, self.media_type)
+        if self.media_type != "image":
+            return filetype
+        return FILETYPE_EQUIVALENTS.get(filetype, filetype)
