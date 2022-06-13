@@ -6,7 +6,7 @@
   "platform": "github",
   "repositories": ["WordPress/openverse-frontend"],
   "extends": ["config:base", ":preserveSemverRanges", "schedule:monthly"],
-  "prCommitsPerRunLimit": "3",
+  "prCommitsPerRunLimit": 3,
   "labels": [
     "dependencies",
     "💻 aspect: code",
