@@ -8,6 +8,9 @@ on:
 env:
   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # Can't use GITHUB_TOKEN to access PRs in other repos
   PR_URL: ${{ github.event.client_payload.pr_url }}
+  GH_LOGIN: ${{ secrets.GH_LOGIN }}
+  GH_PASSWORD: ${{ secrets.GH_PASSWORD }}
+  GH_2FA_SECRET: ${{ secrets.GH_2FA_SECRET }}
 
 jobs:
   label_pr:
