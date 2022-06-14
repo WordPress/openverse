@@ -138,7 +138,7 @@ def _is_foreign_key(_statement, table):
     return f"REFERENCES {table}(" in _statement
 
 
-def _remap_constraint(name, con_table, fk_statement, table):
+def _remap_constraint(name, con_table, fk_statement, table) -> list[SQL]:
     """Produce ALTER TABLE ... statements for each constraint."""
     alterations = [
         SQL("ALTER TABLE {con_table} DROP CONSTRAINT {name}").format(
@@ -200,7 +200,7 @@ def _generate_delete_orphans(fk_statement, fk_table):
     return del_orphans
 
 
-def _generate_constraints(conn, table: str):
+def _generate_constraints(conn, table: str) -> list[SQL]:
     """
     Using the existing table as a template, generate ALTER TABLE ADD CONSTRAINT
     statements pointing to the new table.
@@ -349,19 +349,23 @@ def reload_upstream(
         create_indices, index_mapping = _generate_indices(downstream_db, table)
         _update_progress(progress, 50.0)
         if create_indices != "":
-            downstream_cur.execute(";\n".join(create_indices))
+            for create_index in create_indices:
+                log.info(f"Running: {create_index}")
+                downstream_cur.execute(create_index)
+        log.info("Done creating indices! Remapping constraints...")
         _update_progress(progress, 70.0)
 
         # Step 7: Recreate constraints from the original table
-        log.info("Done creating indices! Remapping constraints...")
-        remap_constraints = SQL(";\n").join(_generate_constraints(downstream_db, table))
-        if len(remap_constraints.seq) != 0:
-            downstream_cur.execute(remap_constraints)
+        remap_constraints = _generate_constraints(downstream_db, table)
+        if len(remap_constraints):
+            for remap_constraint in remap_constraints:
+                log.info(f"Running: {remap_constraint.as_string(downstream_cur)}")
+                downstream_cur.execute(remap_constraint)
+        log.info("Done remapping constraints! Going live with new table...")
         _update_progress(progress, 99.0)
         slack.verbose(f"`{table}`: Indices & constraints applied | _Next: go-live_")
 
         # Step 8: Promote the temporary table and delete the original
-        log.info("Done remapping constraints! Going live with new table...")
         go_live = get_go_live_query(table, index_mapping)
         log.info(f"Running go-live: \n{go_live.as_string(downstream_cur)}")
         downstream_cur.execute(go_live)

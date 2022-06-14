@@ -296,7 +296,7 @@ class TestIngestion(unittest.TestCase):
         log_output = compose_path.parent / "ingestion_logs.txt"
         with log_output.open("w") as file:
             subprocess.run(
-                ["docker-compose", "-f", compose_path.name, "logs"],
+                ["docker-compose", "-f", compose_path.name, "logs", "--no-color"],
                 cwd=compose_path.parent,
                 check=True,
                 stderr=subprocess.STDOUT,
