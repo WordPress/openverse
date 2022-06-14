@@ -26,10 +26,12 @@ const port = 49153
 const host = 'https://api.openverse.engineering'
 
 const urlPatterns = {
-  search: /\/(?<mediaType>images|audio)\/*\?(?<query>[\w&=]+)/,
-  thumb: /\/(?<mediaType>images|audio)\/(?<uuid>[\w-]{32,})\/thumb/,
-  related: /\/(?<mediaType>images|audio)\/(?<uuid>[\w-]{32,})\/related/,
-  detail: /\/(?<mediaType>images|audio)\/(?<uuid>[\w-]{32,})\//,
+  search: /\/(?<mediaType>images|audio|video|model-3d)\/*\?(?<query>[\w&=]+)/,
+  thumb:
+    /\/(?<mediaType>images|audio|video|model-3d)\/(?<uuid>[\w-]{32,})\/thumb/,
+  related:
+    /\/(?<mediaType>images|audio|video|model-3d)\/(?<uuid>[\w-]{32,})\/related/,
+  detail: /\/(?<mediaType>images|audio|video|model-3d)\/(?<uuid>[\w-]{32,})\//,
 }
 
 /**
@@ -50,15 +52,15 @@ const tapeNameGenerator = (tapeNumber, tape) => {
   const typeMatch = findTypeMatch(tape.req.url)
   if (typeMatch && typeMatch.type) {
     const groups = typeMatch.match.groups
-    const prefix = `${typeMatch.type}_${groups.mediaType}`
+    const prefix = `${typeMatch.type}/${groups.mediaType}`
     let suffix = `${tape.req.headers.connection}`
     if (tape.req.method !== 'GET') {
       suffix = `${suffix}_${tape.req.method}`
     }
     if (typeMatch.type === 'search') {
-      return `${prefix}_${groups.query}_${suffix}`
+      return `${prefix}/${groups.query}_${suffix}`
     } else {
-      return `${prefix}_${groups.uuid}_${suffix}`
+      return `${prefix}/${groups.uuid}_${suffix}`
     }
   } else {
     return `response-${tapeNumber}`

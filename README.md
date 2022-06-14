@@ -59,7 +59,7 @@ Be sure to replace the IP address in the example with your own. See the next sec
 You can find the local IP address Nuxt uses by looking at the output of `nuxt dev`. Look in your console for a box of configuration details that looks like this:
 
 ```bash
-#  ╭────────────────────────────────────────────╮
+#  ╭───────────────────────────────────────────╮
 #  │                                           │
 #  │   Nuxt @ v2.15.8                          │
 #  │                                           │
@@ -69,7 +69,7 @@ You can find the local IP address Nuxt uses by looking at the output of `nuxt de
 #  │                                           │
 #  │   Listening: http://192.168.50.119:8443/  │ # <-- Use this IP Address
 #  │                                           │
-#  ╰────────────────────────────────────────────╯
+#  ╰───────────────────────────────────────────╯
 ```
 
 You will need to regenerate the certificate if this IP address changes for any reason, like by enabling a VPN or changing networks.

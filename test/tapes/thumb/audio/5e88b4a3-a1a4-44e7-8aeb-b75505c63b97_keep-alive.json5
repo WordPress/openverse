@@ -1,14 +1,14 @@
 {
     meta: {
-        createdAt: '2022-05-03T03:47:07.638Z',
+        createdAt: '2022-06-09T04:44:27.232Z',
         host: 'https://api.openverse.engineering',
         resHumanReadable: true,
     },
     req: {
         headers: {
-            connection: 'close',
+            connection: 'keep-alive',
         },
-        url: '/v1/images/foo/related/',
+        url: '/v1/audio/5e88b4a3-a1a4-44e7-8aeb-b75505c63b97/thumb/',
         method: 'GET',
         body: '',
     },
@@ -16,19 +16,22 @@
         status: 404,
         headers: {
             date: [
-                'Tue, 03 May 2022 03:47:08 GMT',
+                'Thu, 09 Jun 2022 04:44:28 GMT',
             ],
             'content-type': [
-                'text/html; charset=utf-8',
+                'application/json',
             ],
-            'transfer-encoding': [
-                'chunked',
+            'content-length': [
+                '36',
             ],
             connection: [
-                'close',
+                'keep-alive',
             ],
             vary: [
-                'Authorization, Origin',
+                'Accept, Authorization, Origin, Accept-Encoding',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
             ],
             'x-frame-options': [
                 'DENY',
@@ -58,12 +61,14 @@
                 'cloudflare',
             ],
             'cf-ray': [
-                '705603761f2da81c-IST',
+                '71873650ab316259-OTP',
             ],
             'alt-svc': [
                 'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
             ],
         },
-        body: '\n<!doctype html>\n<html lang="en">\n<head>\n  <title>Not Found</title>\n</head>\n<body>\n  <h1>Not Found</h1><p>The requested resource was not found on this server.</p>\n<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v652eace1692a40cfa3763df669d7439c1639079717194" integrity="sha512-Gi7xpJR8tSkrpF7aordPZQlW2DLtzUlZcumS8dMQjwDHEnw9I7ZLyiOj/6tZStRBGtGgN6ceN6cMH8z7etPGlw==" data-cf-beacon=\'{"rayId":"705603761f2da81c","token":"b84c1fc0e0174d7bafb20aa9869dd416","version":"2021.12.0","si":100}\' crossorigin="anonymous"></script>\n</body>\n</html>\n',
+        body: {
+            detail: 'Could not find artwork.',
+        },
     },
 }
