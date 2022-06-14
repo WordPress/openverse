@@ -77,7 +77,23 @@ export const useSingleResultStore = defineStore('single-result', {
       } else {
         await this.fetchMediaItem(type, id)
       }
-      await useRelatedMediaStore().fetchMedia(type, id)
+      /**
+       * On the server, we await the related media to make sure it's rendered on the page.
+       * On the client, we don't await it to render the whole page while the related media are loading.
+       */
+      if (process.server) {
+        try {
+          await useRelatedMediaStore().fetchMedia(type, id)
+        } catch (error) {
+          console.warn('Could not load related media: ', error)
+        }
+      } else {
+        useRelatedMediaStore()
+          .fetchMedia(type, id)
+          .catch((error) =>
+            console.warn('Could not load related media: ', error)
+          )
+      }
     },
     /**
      * Fetches a media item from the API.

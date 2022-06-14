@@ -45,6 +45,7 @@ export const useRelatedMediaStore = defineStore('related-media', {
           'end',
           `Could not fetch related ${mediaType} for id ${id}`
         )
+        throw new Error(`Could not fetch related ${mediaType} for id ${id}`)
       }
     },
   },
