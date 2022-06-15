@@ -81,6 +81,14 @@ def test_audio_thumb(audio_fixture):
     thumb(audio_fixture)
 
 
+def test_audio_without_thumb():
+    """The first audio of this search should not have a thumbnail."""
+    resp = requests.get(f"{API_URL}/v1/audio?q=zaus&filter_dead=false")
+    assert resp.status_code == 200
+    parsed = json.loads(resp.text)
+    assert parsed["results"][0]["thumbnail"] is None
+
+
 def test_audio_thumb_compression(audio_fixture):
     thumb_compression(audio_fixture)
 
