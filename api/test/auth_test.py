@@ -25,7 +25,6 @@ def test_auth_tokens_registration(client):
     )
     assert res.status_code == 201
     res_data = res.json()
-    print(res_data)
     return res_data
 
 
@@ -49,7 +48,6 @@ def test_auth_token_exchange(client, test_auth_tokens_registration):
     )
     res_data = res.json()
     assert "access_token" in res_data
-    print(res_data)
     return res_data
 
 
@@ -80,3 +78,26 @@ def test_auth_rate_limit_reporting(client, test_auth_token_exchange, verified=Fa
     else:
         assert res_data["rate_limit_model"] == "standard"
         assert res_data["verified"] is False
+
+
+@pytest.mark.django_db
+def test_pase_size_limit_unauthed(client):
+    query_params = {"filter_dead": False, "page_size": 20}
+    res = client.get("/v1/images/", query_params)
+    assert res.status_code == 200
+    query_params["page_size"] = 21
+    res = client.get("/v1/images/", query_params)
+    assert res.status_code == 401
+
+
+@pytest.mark.django_db
+def test_page_size_limit_authed(client, test_auth_token_exchange):
+    time.sleep(1)
+    token = test_auth_token_exchange["access_token"]
+    query_params = {"filter_dead": False, "page_size": 21}
+    res = client.get("/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}")
+    assert res.status_code == 200
+
+    query_params = {"filter_dead": False, "page_size": 500}
+    res = client.get("/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}")
+    assert res.status_code == 200

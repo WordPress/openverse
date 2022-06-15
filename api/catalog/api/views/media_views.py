@@ -57,7 +57,9 @@ class MediaViewSet(ReadOnlyModelViewSet):
         self.paginator.page = request.query_params.get("page")
         page = self.paginator.page
 
-        params = self.query_serializer_class(data=request.query_params)
+        params = self.query_serializer_class(
+            data=request.query_params, context={"request": request}
+        )
         params.is_valid(raise_exception=True)
 
         hashed_ip = hash(self._get_user_ip(request))

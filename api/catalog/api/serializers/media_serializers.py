@@ -7,6 +7,7 @@ from catalog.api.controllers import search_controller
 from catalog.api.models.media import AbstractMedia
 from catalog.api.serializers.base import BaseModelSerializer
 from catalog.api.serializers.fields import SchemableHyperlinkedIdentityField
+from catalog.api.utils.exceptions import get_api_exception
 from catalog.api.utils.help_text import make_comma_separated_help_text
 from catalog.api.utils.url import add_protocol
 
@@ -39,6 +40,7 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         "extension",
         "mature",
         "qa",
+        "page_size",
     ]
     """
     Keep the fields names in sync with the actual fields below as this list is
@@ -104,6 +106,11 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         required=False,
         default=False,
     )
+    page_size = serializers.IntegerField(
+        label="page_size",
+        help_text="Number of results to return per page.",
+        required=False,
+    )
 
     @staticmethod
     def _truncate(value):
@@ -148,6 +155,15 @@ class MediaSearchRequestSerializer(serializers.Serializer):
 
     def validate_title(self, value):
         return self._truncate(value)
+
+    def validate_page_size(self, value):
+        request = self.context.get("request")
+        is_anonymous = bool(request and request.user and request.user.is_anonymous)
+        if is_anonymous and value > 20:
+            raise get_api_exception(
+                "Page size must be between 1 & 20 for unauthenticated requests.", 401
+            )
+        return value
 
     @staticmethod
     def validate_extension(value):

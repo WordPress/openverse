@@ -39,7 +39,7 @@ def _patch_grequests():
 @_patch_grequests()
 def test_dead_link_filtering(mocked_map, _, client):
     path = "/v1/images/"
-    query_params = {"q": "*", "page_size": 100}
+    query_params = {"q": "*", "page_size": 20}
 
     # Make a request that does not filter dead links...
     res_with_dead_links = client.get(
@@ -103,10 +103,10 @@ def test_page_size_removing_dead_links(search_without_dead_links):
     wildcard operator.
 
     Test whether the number of results returned is equal to the requested
-    page_size of 100.
+    page_size of 20.
     """
-    data = search_without_dead_links(q="*", page_size=100)
-    assert len(data["results"]) == 100
+    data = search_without_dead_links(q="*", page_size=20)
+    assert len(data["results"]) == 20
 
 
 @pytest.mark.django_db
