@@ -583,7 +583,8 @@
   "play-pause": {
     "play": "Play",
     "pause": "Pause",
-    "replay": "Replay"
+    "replay": "Replay",
+    "loading": "Loading"
   },
   "search": {
     "search": "Search",

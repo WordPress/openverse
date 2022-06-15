@@ -57,7 +57,7 @@
     "src/components/VContentLink/VContentLink.vue",
     "src/components/VContentReport/VReportDescForm.vue",
     "src/components/VErrorSection/VErrorImage.vue",
-    "src/components/VAudioTrack/**.vue",
+    "src/components/VAudioTrack/**/*.vue",
     "src/components/VAudioThumbnail/VAudioThumbnail.vue",
     "src/components/VGlobalAudioSection/VGlobalAudioSection.vue",
     "src/components/VInputField/VInputField.vue",

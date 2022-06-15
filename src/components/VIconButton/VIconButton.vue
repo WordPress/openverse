@@ -7,9 +7,11 @@
     :type="type"
     v-on="$listeners"
   >
+    <slot name="default" :icon-size-classes="iconSizeClasses" />
     <VIcon
+      v-if="iconProps"
       class="pointer-events-none"
-      :class="[...iconSizeClasses]"
+      :class="iconSizeClasses"
       v-bind="iconProps"
     />
   </VButton>
@@ -59,7 +61,7 @@ export default defineComponent({
      */
     iconProps: {
       type: Object as PropType<IconProps>,
-      required: true,
+      required: false,
     },
     /**
      * props to pass down to the `VButton` component nested inside the button;

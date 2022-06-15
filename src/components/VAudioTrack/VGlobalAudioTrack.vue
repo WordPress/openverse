@@ -16,8 +16,8 @@
 
       <template #play-pause="playPauseProps">
         <VPlayPause
-          :status="status"
           v-bind="playPauseProps"
+          :status="status"
           @toggle="handleToggle"
         />
       </template>
@@ -85,7 +85,11 @@ export default defineComponent({
     })
 
     const setPlaying = () => {
-      status.value = 'playing'
+      if (hasLoaded) {
+        status.value = 'playing'
+      } else {
+        status.value = 'loading'
+      }
       updateTimeLoop()
     }
     const setPaused = () => (status.value = 'paused')
@@ -105,21 +109,43 @@ export default defineComponent({
     }
 
     const updateTimeLoop = () => {
-      if (activeAudio.obj.value && status.value === 'playing') {
+      if (
+        activeAudio.obj.value &&
+        (status.value === 'playing' || status.value === 'loading')
+      ) {
         currentTime.value = activeAudio.obj.value.currentTime
         window.requestAnimationFrame(updateTimeLoop)
       }
     }
 
+    let hasLoaded = false
+    const setLoaded = () => {
+      hasLoaded = true
+      status.value = 'playing'
+    }
+    const setWaiting = () => {
+      status.value = 'loading'
+    }
+
+    const eventMap = {
+      play: setPlaying,
+      pause: setPaused,
+      ended: setPlayed,
+      timeupdate: setTimeWhenPaused,
+      durationchange: setDuration,
+      waiting: setWaiting,
+      playing: setLoaded,
+    } as const
+
     watch(
       activeAudio.obj,
       (audio, _, onInvalidate) => {
         if (!audio) return
-        audio.addEventListener('play', setPlaying)
-        audio.addEventListener('pause', setPaused)
-        audio.addEventListener('ended', setPlayed)
-        audio.addEventListener('timeupdate', setTimeWhenPaused)
-        audio.addEventListener('durationchange', setDuration)
+
+        Object.entries(eventMap).forEach(([name, fn]) =>
+          audio.addEventListener(name, fn)
+        )
+
         currentTime.value = audio.currentTime
         if (audio.duration && !isNaN(audio.duration)) {
           duration.value = audio.duration
@@ -149,11 +175,9 @@ export default defineComponent({
         }
 
         onInvalidate(() => {
-          audio.removeEventListener('play', setPlaying)
-          audio.removeEventListener('pause', setPaused)
-          audio.removeEventListener('ended', setPlayed)
-          audio.removeEventListener('timeupdate', setTimeWhenPaused)
-          audio.removeEventListener('durationchange', setDuration)
+          Object.entries(eventMap).forEach(([name, fn]) =>
+            audio.removeEventListener(name, fn)
+          )
         })
       },
       { immediate: true }

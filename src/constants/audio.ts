@@ -1,6 +1,6 @@
 export const audioLayouts = ['full', 'box', 'row', 'global'] as const
 export const audioSizes = ['s', 'm', 'l'] as const
-export const audioStatuses = ['playing', 'paused', 'played'] as const
+export const audioStatuses = ['playing', 'paused', 'played', 'loading'] as const
 export const audioFeatures = ['timestamps', 'duration', 'seek'] as const
 
 export type AudioLayout = typeof audioLayouts[number]
