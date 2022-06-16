@@ -8,7 +8,7 @@
       v-for="(page, idx) in pages.all"
       :key="page.id"
       class="md:w-full w-1/2"
-      :selected="page.id === pages.current"
+      :selected="page.id === pages.current.value"
       :is-first="idx === 0"
       v-bind="getLinkProps(page)"
       @click="$emit('click')"
@@ -25,7 +25,9 @@
     </VItem>
   </VItemGroup>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
+
 import usePages from '~/composables/use-pages'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
@@ -34,14 +36,13 @@ import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
 
 import externalLinkIcon from '~/assets/icons/external-link.svg'
 
-export default {
+export default defineComponent({
   name: 'VPageMenuPopover',
   components: { VIcon, VItem, VItemGroup },
   props: {
     layout: {
-      type: String,
+      type: String as PropType<'vertical' | 'columns'>,
       default: 'vertical',
-      validator: (val) => ['vertical', 'columns'].includes(val),
     },
   },
   setup() {
@@ -57,5 +58,5 @@ export default {
       pages,
     }
   },
-}
+})
 </script>

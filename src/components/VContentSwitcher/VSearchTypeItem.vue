@@ -17,8 +17,7 @@
 </template>
 
 <script>
-import { computed, useContext } from '@nuxtjs/composition-api'
-import { defineComponent } from '@vue/composition-api'
+import { computed, useContext, defineComponent } from '@nuxtjs/composition-api'
 
 import { ALL_MEDIA, contentStatus } from '~/constants/media'
 import { useSearchStore } from '~/stores/search'

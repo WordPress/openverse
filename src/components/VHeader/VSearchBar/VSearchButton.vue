@@ -51,9 +51,6 @@ export default defineComponent({
       default: false,
     },
   },
-  /**
-   * @param {Props} props
-   */
   setup(props) {
     const isMobile = useBrowserIsMobile()
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: !isMobile })

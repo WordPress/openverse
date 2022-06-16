@@ -40,6 +40,7 @@ import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import type { SearchType } from '~/constants/media'
 import useSearchType from '~/composables/use-search-type'
+import { defineEvent } from '~/types/emits'
 
 import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
 import VSearchTypeItem from '~/components/VContentSwitcher/VSearchTypeItem.vue'
@@ -64,6 +65,9 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+  },
+  emits: {
+    select: defineEvent<[SearchType]>(),
   },
   setup(props, { emit }) {
     const content = useSearchType()
