@@ -54,6 +54,15 @@ export default defineComponent({
     VSearchGrid,
     VSkipToContentContainer,
   },
+  middleware({ route, redirect }) {
+    /**
+     * This anonymous middleware redirects any search without a query to the homepage.
+     * This is meant to block direct access to /search and all sub-routes, with
+     * an exception for the 'creator' filter. The creator filter doesn't send
+     * the search query to the API.
+     */
+    if (!route.query.q && !route.query.searchBy) return redirect('/')
+  },
   scrollToTop: false,
   setup() {
     const searchGridRef = ref(null)
