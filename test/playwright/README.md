@@ -29,10 +29,10 @@ To run the end-to-end tests, after having installed docker, run the following:
 pnpm test:playwright
 ```
 
-You may pass arguments to playwright after a `--`, for example `-u` to update snapshots or a filter.
+You may pass arguments to playwright directly, for example `-u` to update snapshots or a filter.
 
 ```bash
-pnpm test:playwright -- visual-regression -u
+pnpm test:playwright visual-regression -u
 ```
 
 The above will run only test files with `visual-regression` in the path and will update any snapshot tests due to the `-u` flag.

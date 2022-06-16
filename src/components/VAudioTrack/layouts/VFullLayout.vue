@@ -24,18 +24,14 @@
         class="audio-info order-2 lg:order-1 w-full lg:w-auto flex flex-col justify-center"
       >
         <h1
-          class="text-base lg:text-3xl font-heading font-semibold lg:line-clamp-2"
+          class="text-base lg:text-3xl font-heading font-semibold lg:line-clamp-2 leading-[1.3]"
         >
           {{ audio.title }}
         </h1>
         <div
-          class="subtitle mt-1 flex flex-col lg:flex-row lg:items-center gap-2"
+          class="subtitle mt-1 flex flex-col lg:flex-row lg:items-center gap-2 text-base leading-[1.3]"
         >
-          <i18n
-            as="span"
-            path="audio-track.creator"
-            class="font-semibold leading-snug"
-          >
+          <i18n as="span" path="audio-track.creator" class="font-semibold">
             <template #creator>
               <VLink
                 class="p-px rounded-sm focus:outline-none focus:ring focus:ring-pink"
@@ -58,7 +54,7 @@
         as="VLink"
         :href="audio.foreign_landing_url"
         :size="isSmall ? 'small' : 'medium'"
-        class="ms-auto order-1 lg:order-2 font-bold"
+        class="ms-auto order-1 lg:order-2 text-sr lg:text-2xl font-semibold"
       >
         {{ $t('download-button.download') }}
       </VButton>

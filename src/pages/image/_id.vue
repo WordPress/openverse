@@ -33,20 +33,17 @@
       <VButton
         as="VLink"
         :href="image.foreign_landing_url"
-        class="btn-main flex-initial w-full md:w-max mb-4 md:mb-0"
+        class="btn-main flex-initial w-full md:w-max mb-4 md:mb-0 leading-[1.3]"
         size="large"
         >{{ $t('image-details.weblink') }}</VButton
       >
-      <span class="flex-1 flex flex-col justify-center">
-        <h1 class="text-base md:text-3xl font-semibold leading-[130%]">
+      <div
+        class="flex-1 flex flex-col justify-center font-semibold text-base leading-[1.3]"
+      >
+        <h1 class="md:text-3xl font-semibold">
           {{ image.title }}
         </h1>
-        <i18n
-          v-if="image.creator"
-          path="image-details.creator"
-          tag="span"
-          class="font-semibold leading-[130%]"
-        >
+        <i18n v-if="image.creator" path="image-details.creator" tag="span">
           <template #name>
             <VLink
               v-if="image.creator_url"
@@ -61,7 +58,7 @@
             <span v-else>{{ image.creator }}</span>
           </template>
         </i18n>
-      </span>
+      </div>
     </section>
 
     <VMediaReuse :media="image" />

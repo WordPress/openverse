@@ -1,6 +1,6 @@
 <template>
   <aside :aria-label="$t('audio-details.related-audios')">
-    <h4 class="text-base lg:text-3xl mb-6">
+    <h4 class="text-2xl lg:text-3xl mb-6">
       {{ $t('audio-details.related-audios') }}
     </h4>
     <div v-if="!fetchState.isError" class="flex flex-col gap-8 lg:gap-12 mb-12">

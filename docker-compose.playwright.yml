@@ -10,7 +10,7 @@ services:
       - .:/app
     user: ${USER_ID}
     working_dir: /app
-    command: pnpm ${TEST_COMMAND} -- ${PLAYWRIGHT_ARGS:-}
+    command: pnpm ${TEST_COMMAND} ${PLAYWRIGHT_ARGS:-}
     environment:
       # This makes the webserver that Playwright runs show the build
       - DEBUG=pw:webserver
