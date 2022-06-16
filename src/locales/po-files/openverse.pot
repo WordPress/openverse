@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-06-15T20:45:14+00:00\n"
+"POT-Creation-Date: 2022-06-16T13:55:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -236,7 +236,7 @@ msgid "Search"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VSearchBar/VSearchBar.vue:12
+#: src/components/VHeader/VSearchBar/VSearchBar.vue:13
 msgctxt "search.search-bar-label"
 msgid "Search for content in ###openverse###"
 msgstr ""
@@ -2012,7 +2012,7 @@ msgctxt "hero.disclaimer.license"
 msgid "Creative Commons license"
 msgstr ""
 
-#: src/components/VHeader/VSearchBar/VSearchBar.vue:7
+#: src/components/VHeader/VSearchBar/VSearchBar.vue:8
 msgctxt "hero.search.placeholder"
 msgid "Search for content"
 msgstr ""

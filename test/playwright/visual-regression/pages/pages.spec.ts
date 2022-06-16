@@ -4,7 +4,13 @@ import breakpoints from '~~/test/playwright/utils/breakpoints'
 import { removeHiddenOverflow } from '~~/test/playwright/utils/page'
 import { dismissTranslationBanner } from '~~/test/playwright/utils/navigation'
 
-const contentPages = ['extension', 'about', 'meta-search', 'search-help']
+const contentPages = [
+  'extension',
+  'about',
+  'meta-search',
+  'search-help',
+  'non-existent',
+]
 for (const contentPage of contentPages) {
   test.describe(`${contentPage} page snapshots`, () => {
     test.describe('ltr', () => {

@@ -43,7 +43,7 @@
         </div>
         <VSearchBar
           v-model.trim="searchTerm"
-          class="max-w-[40rem] mt-4 lg:mt-8 group h-[57px] md:h-[69px]"
+          class="max-w-[40rem] mt-4 lg:mt-8 group"
           size="standalone"
           @submit="handleSearch"
         >
