@@ -4,7 +4,7 @@ import os
 from unittest.mock import MagicMock, patch
 
 import requests
-from providers.provider_api_scripts import walters_art_museum as wam
+from providers.provider_api_scripts import walters as wam
 
 
 RESOURCES = os.path.join(

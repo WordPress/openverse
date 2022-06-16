@@ -135,12 +135,13 @@ def create_provider_api_workflow(
     main_function: Callable,
     default_args: Optional[Dict] = None,
     start_date: datetime = datetime(1970, 1, 1),
+    max_active_runs: int = 1,
     max_active_tasks: int = 1,
     schedule_string: str = "@daily",
     dated: bool = True,
     day_shift: int = 0,
     execution_timeout: timedelta = timedelta(hours=12),
-    doc_md: str = "",
+    doc_md: Optional[str] = "",
     media_types: Sequence[str] = ("image",),
 ):
     """
@@ -159,12 +160,14 @@ def create_provider_api_workflow(
     Optional Arguments:
 
     default_args:      dictionary which is passed to the airflow.dag.DAG
-                       __init__ method.
+                       __init__ method and used to optionally override the
+                       DAG_DEFAULT_ARGS.
     start_date:        datetime.datetime giving the first valid execution
                        date of the DAG.
+    max_active_runs:   integer that sets the number of dagruns for this DAG
+                       which can be run in parallel.
     max_active_tasks:  integer that sets the number of tasks which can
-                       run simultaneously for this DAG, and the number of
-                       dagruns of this DAG which can be run in parallel.
+                       run simultaneously for this DAG.
                        It's important to keep the rate limits of the
                        Provider API in mind when setting this parameter.
     schedule_string:   string giving the schedule on which the DAG should
@@ -182,7 +185,7 @@ def create_provider_api_workflow(
     media_types:       list describing the media type(s) that this provider handles
                        (e.g. `["audio"]`, `["image", "audio"]`, etc.)
     """
-    default_args = default_args or DAG_DEFAULT_ARGS
+    default_args = {**DAG_DEFAULT_ARGS, **(default_args or {})}
     media_type_name = "mixed" if len(media_types) > 1 else media_types[0]
     provider_name = dag_id.replace("_workflow", "")
     identifier = f"{provider_name}_{{{{ ts_nodash }}}}"
@@ -191,7 +194,7 @@ def create_provider_api_workflow(
         dag_id=dag_id,
         default_args={**default_args, "start_date": start_date},
         max_active_tasks=max_active_tasks,
-        max_active_runs=max_active_tasks,
+        max_active_runs=max_active_runs,
         start_date=start_date,
         schedule_interval=schedule_string,
         catchup=False,
@@ -294,14 +297,15 @@ def create_provider_api_workflow(
 
 
 def create_day_partitioned_ingestion_dag(
-    dag_id,
-    main_function,
-    reingestion_day_list_list,
-    start_date=datetime(1970, 1, 1),
-    max_active_tasks=1,
-    default_args=None,
-    dagrun_timeout=timedelta(hours=23),
-    ingestion_task_timeout=timedelta(hours=2),
+    dag_id: str,
+    main_function: Callable,
+    reingestion_day_list_list: List[List[int]],
+    start_date: datetime = datetime(1970, 1, 1),
+    max_active_runs: int = 1,
+    max_active_tasks: int = 1,
+    default_args: Optional[Dict] = None,
+    dagrun_timeout: timedelta = timedelta(hours=23),
+    ingestion_task_timeout: timedelta = timedelta(hours=2),
 ):
     """
     Given a `main_function` and `reingestion_day_list_list`, this
@@ -334,7 +338,8 @@ def create_day_partitioned_ingestion_dag(
                              Provider API in mind when setting this
                              parameter.
     default_args:            dictionary which is passed to the
-                             airflow.dag.DAG __init__ method.
+                             airflow.dag.DAG __init__ method and used to
+                             optionally override the DAG_DEFAULT_ARGS.
     dagrun_timeout:          datetime.timedelta giving the total amount
                              of time a given dagrun may take.
     ingestion_task_timeout:  datetime.timedelta giving the amount of
@@ -376,12 +381,12 @@ def create_day_partitioned_ingestion_dag(
     executions of the `main_function` allowed; that is set by the
     `max_active_tasks` parameter.
     """
-    default_args = default_args or DAG_DEFAULT_ARGS
+    default_args = {**DAG_DEFAULT_ARGS, **(default_args or {})}
     dag = DAG(
         dag_id=dag_id,
         default_args={**default_args, "start_date": start_date},
         max_active_tasks=max_active_tasks,
-        max_active_runs=max_active_tasks,
+        max_active_runs=max_active_runs,
         dagrun_timeout=dagrun_timeout,
         schedule_interval="@daily",
         start_date=start_date,

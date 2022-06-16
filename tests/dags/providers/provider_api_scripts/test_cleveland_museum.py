@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 import requests
 from common.licenses import LicenseInfo
 from common.storage.image import MockImageStore
-from providers.provider_api_scripts import cleveland_museum_of_art as clm
+from providers.provider_api_scripts import cleveland_museum as clm
 
 
 _license_info = (
