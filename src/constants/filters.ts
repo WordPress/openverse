@@ -20,7 +20,7 @@ export interface Filters {
   audioExtensions: FilterItem[]
   imageExtensions: FilterItem[]
   aspectRatios: FilterItem[]
-  durations: FilterItem[]
+  lengths: FilterItem[]
   sizes: FilterItem[]
   audioProviders: FilterItem[]
   imageProviders: FilterItem[]
@@ -52,7 +52,7 @@ export const mediaFilterKeys = deepFreeze<Record<SearchType, FilterCategory[]>>(
       'licenses',
       'audioCategories',
       'audioExtensions',
-      'durations',
+      'lengths',
       'audioProviders',
       'searchBy',
       'mature',
@@ -78,12 +78,7 @@ export const mediaUniqueFilterKeys = deepFreeze<
     'sizes',
     'imageProviders',
   ],
-  [AUDIO]: [
-    'audioCategories',
-    'audioExtensions',
-    'durations',
-    'audioProviders',
-  ],
+  [AUDIO]: ['audioCategories', 'audioExtensions', 'lengths', 'audioProviders'],
   [VIDEO]: [],
   [MODEL_3D]: [],
 })
@@ -103,7 +98,7 @@ const filterCodesPerCategory = deepFreeze<Record<FilterCategory, string[]>>({
   audioExtensions: ['mp3', 'ogg', 'flac'],
   imageExtensions: ['jpg', 'png', 'gif', 'svg'],
   aspectRatios: ['tall', 'wide', 'square'],
-  durations: ['short', 'medium', 'long'],
+  lengths: ['shortest', 'short', 'medium', 'long'],
   sizes: ['small', 'medium', 'large'],
   audioProviders: [],
   imageProviders: [],

@@ -55,6 +55,7 @@ export interface AudioDetail extends Media {
 
   audio_set?: string
   genres?: string[]
+  length?: string
   duration?: number
   bit_rate?: number
   sample_rate?: number

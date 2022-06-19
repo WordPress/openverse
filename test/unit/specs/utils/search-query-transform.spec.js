@@ -154,21 +154,26 @@ describe('searchQueryTransform', () => {
           checked: false,
         },
       ],
-      durations: [
+      lengths: [
+        {
+          checked: false,
+          code: 'shortest',
+          name: 'filters.lengths.shortest',
+        },
         {
           checked: false,
           code: 'short',
-          name: 'filters.durations.short',
+          name: 'filters.lengths.short',
         },
         {
           checked: true,
           code: 'medium',
-          name: 'filters.durations.medium',
+          name: 'filters.lengths.medium',
         },
         {
           checked: false,
           code: 'long',
-          name: 'filters.durations.long',
+          name: 'filters.lengths.long',
         },
       ],
       imageExtensions: [
@@ -252,7 +257,7 @@ describe('searchQueryTransform', () => {
       license_type: 'commercial',
       category: 'music',
       extension: 'mp3',
-      duration: 'medium',
+      length: 'medium',
       source: 'jamendo',
       searchBy: 'creator',
       mature: 'true',
@@ -294,7 +299,7 @@ describe('searchQueryTransform', () => {
       license_type: 'commercial',
       category: 'photograph',
       extension: 'svg',
-      duration: 'medium',
+      length: 'medium',
       source: 'animaldiversity,wikimedia,nonexistent,wikimedia_audio,jamendo',
       searchBy: 'creator',
       mature: 'true',
@@ -308,7 +313,7 @@ describe('searchQueryTransform', () => {
     }
     setChecked('cc0', 'licenses')
     setChecked('commercial', 'licenseTypes')
-    setChecked('medium', 'durations')
+    setChecked('medium', 'lengths')
     setChecked('creator', 'searchBy')
     setChecked('mature', 'mature')
     setChecked('jamendo', 'audioProviders')

@@ -37,7 +37,7 @@ describe('Search Store', () => {
       ${{ licenses: ['by'], mature: ['mature'] }}    | ${IMAGE}     | ${1}
       ${{ licenses: ['by'], searchBy: ['creator'] }} | ${ALL_MEDIA} | ${2}
       ${{ licenses: ['cc0', 'pdm', 'by', 'by-nc'] }} | ${ALL_MEDIA} | ${4}
-      ${{ durations: ['medium'] }}                   | ${AUDIO}     | ${1}
+      ${{ lengths: ['medium'] }}                     | ${AUDIO}     | ${1}
       ${{ imageExtensions: ['svg'] }}                | ${IMAGE}     | ${1}
       ${{ audioExtensions: ['mp3'] }}                | ${AUDIO}     | ${1}
     `(
@@ -98,7 +98,7 @@ describe('Search Store', () => {
       ${{ license: '', mature: '' }}                      | ${IMAGE}
       ${{ q: 'cat', license: 'by', searchBy: 'creator' }} | ${ALL_MEDIA}
       ${{ q: 'cat', license: 'pdm,cc0,by,by-nc' }}        | ${ALL_MEDIA}
-      ${{ q: 'cat', duration: 'medium' }}                 | ${AUDIO}
+      ${{ q: 'cat', length: 'medium' }}                   | ${AUDIO}
       ${{ q: 'cat', extension: 'svg' }}                   | ${IMAGE}
       ${{ q: 'cat', extension: 'svg' }}                   | ${AUDIO}
       ${{ q: 'cat', extension: 'mp3' }}                   | ${AUDIO}
@@ -170,7 +170,7 @@ describe('Search Store', () => {
       ${{ license: 'cc0,by', q: 'cat' }}   | ${'/search/'}       | ${ALL_MEDIA}
       ${{ searchBy: 'creator', q: 'dog' }} | ${'/search/image/'} | ${IMAGE}
       ${{ mature: 'true', q: 'galah' }}    | ${'/search/audio/'} | ${AUDIO}
-      ${{ duration: 'medium' }}            | ${'/search/image'}  | ${IMAGE}
+      ${{ length: 'medium' }}              | ${'/search/image'}  | ${IMAGE}
     `(
       "`setSearchStateFromUrl` should set '$searchType' from query  $query and path '$path'",
       ({ query, path, searchType }) => {
@@ -178,7 +178,7 @@ describe('Search Store', () => {
         const expectedQuery = { ...searchStore.searchQueryParams, ...query }
         // The values that are not applicable for the search type should be discarded
         if (searchType === IMAGE) {
-          delete expectedQuery.duration
+          delete expectedQuery.length
         }
 
         searchStore.setSearchStateFromUrl({ path: path, urlQuery: query })
@@ -387,8 +387,9 @@ describe('Search Store', () => {
       searchType   | nextSearchType | expectedFilterCount
       ${AUDIO}     | ${IMAGE}       | ${25}
       ${IMAGE}     | ${ALL_MEDIA}   | ${12}
+      ${IMAGE}     | ${AUDIO}       | ${25}
       ${ALL_MEDIA} | ${VIDEO}       | ${12}
-      ${VIDEO}     | ${AUDIO}       | ${24}
+      ${VIDEO}     | ${AUDIO}       | ${25}
       ${ALL_MEDIA} | ${IMAGE}       | ${25}
     `(
       'changing searchType clears all but $expectedFilterCount $nextSearchType filters ',
