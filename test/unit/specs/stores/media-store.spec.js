@@ -119,8 +119,6 @@ describe('Media Store', () => {
         imageItems[1],
         imageItems[2],
         imageItems[3],
-        audioItems[2],
-        audioItems[3],
       ])
     })
 
@@ -137,6 +135,7 @@ describe('Media Store', () => {
         audioItems[0],
         audioItems[1],
         audioItems[2],
+        audioItems[3],
       ])
     })
     it('resultCountsPerMediaType returns correct items for %s', () => {
