@@ -170,7 +170,7 @@ jobs:
 
   gh-pages:
     name: PR Storybook and Tailwind Preview
-    if: github.repository == 'WordPress/openverse-frontend' && github.ref != 'refs/heads/main'
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.owner.login == 'WordPress'
     runs-on: ubuntu-latest
 
     steps:
