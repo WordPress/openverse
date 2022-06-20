@@ -16,7 +16,7 @@ from requests import get as requests_get
 logger = logging.getLogger(__name__)
 
 
-def validate_url_string(url_string):
+def validate_url_string(url_string, strip_slash: bool = True):
     """
     Determines whether the given `url_string` is a valid URL with an https
     scheme.
@@ -27,14 +27,17 @@ def validate_url_string(url_string):
     If all attempts to save the input string fail, returns None
 
     Required Arguments:
-
     url_string:  URL (string) which will be validated and/or repaired.
+
+    Optional Arguments:
+    strip_slash: Flag (bool) decides whether to strip slashes in URL or not,
+    Default value is `True`
     """
     logger.debug(f"Validating_url {url_string}")
     if not type(url_string) == str or not url_string:
         return
     else:
-        upgraded_url = _add_best_scheme(url_string)
+        upgraded_url = _add_best_scheme(url_string, strip_slash)
 
     parse_result = urlparse(upgraded_url)
     tld = tldextract.extract(upgraded_url)
@@ -81,33 +84,42 @@ def rewrite_redirected_url(url_string):
     return rewritten_url
 
 
-def add_url_scheme(url_string, scheme="http"):
+def add_url_scheme(url_string, scheme="http", strip_slash: bool = True):
     """
     Replaces the scheme of `url_string` with `scheme`,
     or adds the given `scheme` if necessary.
+
+    Only strip the leading/trailing slash of url if flag is True.
     """
     logger.debug(f"Adding or changing scheme of {url_string} to {scheme}")
     stripped_url = url_string.strip()
     scheme_pattern = re.compile("https*:/*")
     scheme_match = scheme_pattern.match(stripped_url)
     if scheme_match is not None:
-        url_no_scheme = stripped_url[scheme_match.end() :].strip("/")
+        url_no_scheme = stripped_url[scheme_match.end() :]
     else:
-        url_no_scheme = stripped_url.strip("/")
+        url_no_scheme = stripped_url
+
+    url_no_scheme = url_no_scheme.strip("/") if strip_slash else url_no_scheme
+
     url_with_scheme = f"{scheme}://{url_no_scheme}"
     logger.debug(f"URL with scheme: {url_with_scheme}")
     return url_with_scheme
 
 
-def _add_best_scheme(url_string):
+def _add_best_scheme(url_string, strip_slash: bool = True):
     domain_key = tldextract.extract(url_string).fqdn
     if not domain_key:
         domain_key = tldextract.extract(url_string).ipv4
 
     if _test_domain_for_tls_support(domain_key):
-        upgraded_url = add_url_scheme(url_string, scheme="https")
+        upgraded_url = add_url_scheme(
+            url_string, scheme="https", strip_slash=strip_slash
+        )
     else:
-        upgraded_url = add_url_scheme(url_string, scheme="http")
+        upgraded_url = add_url_scheme(
+            url_string, scheme="http", strip_slash=strip_slash
+        )
 
     return upgraded_url
 
