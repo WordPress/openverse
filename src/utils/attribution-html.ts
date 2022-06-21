@@ -114,7 +114,7 @@ const extLink = (href: string, text: string) =>
  */
 export type AttributableMedia = Pick<
   Media,
-  | 'title'
+  | 'originalTitle'
   | 'foreign_landing_url'
   | 'creator'
   | 'creator_url'
@@ -162,10 +162,10 @@ export const getAttribution = (
 
   /* Title */
 
-  let title = mediaItem.title || tFn('generic-title')
+  let title = mediaItem.originalTitle || tFn('generic-title')
   if (!isPlaintext && mediaItem.foreign_landing_url)
     title = extLink(mediaItem.foreign_landing_url, title)
-  if (mediaItem.title) title = tFn('actual-title', { title })
+  if (mediaItem.originalTitle) title = tFn('actual-title', { title })
 
   /* License */
 

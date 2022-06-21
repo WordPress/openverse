@@ -11,7 +11,7 @@ const i18n = new Vuei18n({
 })
 
 const mediaItem: AttributableMedia = {
-  title: 'Title',
+  originalTitle: 'Title',
   foreign_landing_url: 'https://foreign.landing/url',
   creator: 'Creator',
   creator_url: 'https://creator/url',
@@ -44,7 +44,7 @@ describe('getAttribution', () => {
   )
 
   it('uses generic title if not known', () => {
-    const mediaItemNoTitle = { ...mediaItem, title: '' }
+    const mediaItemNoTitle = { ...mediaItem, originalTitle: '' }
     const attrText = getAttribution(mediaItemNoTitle, i18n, {
       isPlaintext: true,
     })

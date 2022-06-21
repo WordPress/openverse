@@ -12,6 +12,7 @@ export interface Tag {
 export interface Media {
   id: string
   title: string
+  originalTitle: string
 
   creator?: string
   creator_url?: string
