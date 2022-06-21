@@ -118,6 +118,9 @@ OAUTH2_PROVIDER = {
 
 OAUTH2_PROVIDER_APPLICATION_MODEL = "api.ThrottledApplication"
 
+THROTTLE_ANON_BURST = config("THROTTLE_ANON_BURST", default="5/hour")
+THROTTLE_ANON_SUSTAINED = config("THROTTLE_ANON_SUSTAINED", default="100/day")
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
@@ -137,8 +140,8 @@ REST_FRAMEWORK = {
         "catalog.api.utils.throttle.EnhancedOAuth2IdThrottleBurstRate",
     ),
     "DEFAULT_THROTTLE_RATES": {
-        "anon_burst": "60/min",
-        "anon_sustained": "5000/day",
+        "anon_burst": THROTTLE_ANON_BURST,
+        "anon_sustained": THROTTLE_ANON_SUSTAINED,
         "oauth2_client_credentials_sustained": "10000/day",
         "oauth2_client_credentials_burst": "100/min",
         "enhanced_oauth2_client_credentials_sustained": "20000/day",

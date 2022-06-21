@@ -10,8 +10,8 @@ of openly-licensed works, including articles, songs, videos, photographs,
 paintings, and more. Using this API, developers will be able to access the
 digital commons in their own applications.
 
-Please note that there is a rate limit of 5000 requests per day and 60 requests
-per minute rate limit in place for anonymous users. This is fine for introducing
+Please note that there is a rate limit of 100 requests per day and 5 requests
+per hour rate limit in place for anonymous users. This is fine for introducing
 yourself to the API, but we strongly recommend that you obtain an API key as
 soon as possible. Authorized clients have a higher rate limit of 10000 requests
 per day and 100 requests per minute. Additionally, Openverse can give your key
