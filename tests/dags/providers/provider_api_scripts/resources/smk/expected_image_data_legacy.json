@@ -1,11 +1,13 @@
 [
   {
+    "filesize": 11784886,
     "height": 1059,
     "id": "1170012466_object",
     "image_url": "https://api.smk.dk/api/v1/thumbnail/52f00edc-936e-42a7-950b-d0cd0df3864b.jpg",
     "width": 3887
   },
   {
+    "filesize": 19269857,
     "height": 1576,
     "id": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2",
     "image_url": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/!2048,/0/default.jpg",

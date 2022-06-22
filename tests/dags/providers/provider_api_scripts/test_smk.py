@@ -1,21 +1,29 @@
 import json
 import logging
-import os
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import requests
+from common.licenses import LicenseInfo
 from providers.provider_api_scripts import smk
 
 
-RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "resources/smk")
+RESOURCES = Path(__file__).parent.resolve() / "resources/smk"
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
 )
 
+CC0 = LicenseInfo(
+    "cc0",
+    "1.0",
+    "https://creativecommons.org/publicdomain/zero/1.0/",
+    None,
+)
+
 
 def _get_resource_json(json_name):
-    with open(os.path.join(RESOURCES, json_name)) as f:
+    with open(RESOURCES / json_name) as f:
         resource_json = json.load(f)
     return resource_json
 
@@ -104,6 +112,48 @@ def test_handle_items_data_success():
 
     assert mock_add_item.call_count == 1
     assert actual_image_count == 1
+
+
+def test_handle_items_data_success_data():
+    items = _get_resource_json("items_batch.json")
+    with patch.object(smk.image_store, "save_item") as mock_save_item:
+        smk._handle_items_data(items)
+
+    args, kwargs = mock_save_item.call_args
+    expected_image = {
+        "foreign_identifier": "https://iip.smk.dk/iiif/jp2/kks1615.tif.jp2",
+        "foreign_landing_url": "https://open.smk.dk/en/artwork/image/KKS1615",
+        "url": "https://iip.smk.dk/iiif/jp2/kks1615.tif.jp2/full/!2048,/0/default.jpg",
+        "height": 5141,
+        "width": 3076,
+        "filesize": 47466428,
+        "filetype": "jpg",
+        "license_version": CC0.version,
+        "license_": CC0.license,
+        "creator": "Altdorfer, Albrecht",
+        "title": "Jomfru Maria med barnet og Sankt Anne ved vuggen",
+        "meta_data": {
+            "created_date": "2020-03-21T10:18:17Z",
+            "collection": "Gammel bestand",
+            "techniques": "Kobberstik",
+            "license_url": CC0.url,
+            "raw_license_url": None,
+        },
+    }
+    actual_image = args[0]
+    for key, value in expected_image.items():
+        assert getattr(actual_image, key) == expected_image[key]
+
+
+def test_filesize_set_to_none_when_none_given():
+    items = _get_resource_json("items_batch.json")
+    items[0].pop("image_size", None)
+    with patch.object(smk.image_store, "save_item") as mock_save_item:
+        smk._handle_items_data(items)
+
+    args, kwargs = mock_save_item.call_args
+    actual_image = args[0]
+    assert actual_image.filesize is None
 
 
 def test_handle_items_data_failure():
