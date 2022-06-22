@@ -1,4 +1,5 @@
 import logging
+from typing import Dict, List
 
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
@@ -11,6 +12,7 @@ DELAY = 5.0
 RETRIES = 3
 PROVIDER = prov.CLEVELAND_DEFAULT_PROVIDER
 ENDPOINT = "http://openaccess-api.clevelandart.org/api/artworks/"
+CC0_LICENSE = get_license_info(license_="cc0", license_version="1.0")
 
 delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)
@@ -78,64 +80,67 @@ def _get_response(query_param, endpoint=ENDPOINT, retries=RETRIES):
         return response_json, total_images
 
 
-def _handle_response(batch):
+def get_int_value(data: Dict, key: str) -> int | None:
+    """
+    Converts the value of the key `key` in `data` to an integer.
+    Returns None if the value is not convertible to an integer, or
+    if the value doesn't exist.
+    """
+    value = data.get(key)
+    if bool(value):
+        if isinstance(value, str) and value.isdigit():
+            return int(value)
+        elif isinstance(value, int):
+            return value
+    return None
+
+
+def _handle_batch_item(data: Dict) -> Dict | None:
+    license_ = data.get("share_license_status", "").lower()
+    if license_ != "cc0":
+        return None
+    foreign_id = data.get("id")
+    if foreign_id is None:
+        return None
+    image = _get_image_type(data.get("images", {}))
+    if image is None or image.get("url") is None:
+        return None
+
+    if data.get("creators"):
+        creator_name = data.get("creators")[0].get("description", "")
+    else:
+        creator_name = ""
+
+    return {
+        "foreign_identifier": f"{foreign_id}",
+        "foreign_landing_url": data.get("url"),
+        "title": data.get("title", None),
+        "creator": creator_name,
+        "image_url": image["url"],
+        "width": get_int_value(image, "width"),
+        "height": get_int_value(image, "height"),
+        "filesize": get_int_value(image, "filesize"),
+        "license_info": CC0_LICENSE,
+        "meta_data": _get_metadata(data),
+    }
+
+
+def _handle_response(batch: List):
     total_images = 0
     for data in batch:
-        license_ = data.get("share_license_status", "").lower()
-        if license_ != "cc0":
-            logger.error("Wrong license image")
-            continue
-        license_version = "1.0"
+        item = _handle_batch_item(data)
+        if item is not None:
+            total_images = image_store.add_item(**item)
 
-        foreign_id = data.get("id")
-        foreign_landing_url = data.get("url", None)
-        image_data = data.get("images", None)
-        if image_data is not None:
-            image_url, key = _get_image_type(image_data)
-        else:
-            image_url, key = None, None
-
-        if image_url is not None:
-            width = image_data[key]["width"]
-            height = image_data[key]["height"]
-        else:
-            width, height = None, None
-
-        title = data.get("title", None)
-        metadata = _get_metadata(data)
-        if data.get("creators"):
-            creator_name = data.get("creators")[0].get("description", "")
-        else:
-            creator_name = ""
-        license_info = get_license_info(
-            license_=license_, license_version=license_version
-        )
-        total_images = image_store.add_item(
-            foreign_landing_url=foreign_landing_url,
-            image_url=image_url,
-            license_info=license_info,
-            foreign_identifier=foreign_id,
-            width=width,
-            height=height,
-            title=title,
-            creator=creator_name,
-            meta_data=metadata,
-        )
     return total_images
 
 
 def _get_image_type(image_data):
-    key, image_url = None, None
-    if image_data.get("web"):
-        key = "web"
-        image_url = image_data.get("web").get("url", None)
-    elif image_data.get("print"):
-        key = "print"
-        image_url = image_data.get("print").get("url", None)
-    elif image_data.get("full"):
-        key = "full"
-        image_url = image_data.get("full").get("url", None)
-    return image_url, key
+    # Returns the image url and key for the image in `image_data` dict.
+    for key in ["web", "print", "full"]:
+        if keyed_image := image_data.get(key):
+            return keyed_image
+    return None
 
 
 def _get_metadata(data):

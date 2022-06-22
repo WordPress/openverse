@@ -608,6 +608,11 @@ def test_MediaStore_get_image_nones_nonlist_tags():
     assert actual_image.tags is None
 
 
+# Extracts `jpg` extension from the url.
+# Converts `jpeg` to `jpg` to use the standard extension.
+# Extracts `tif` extension, and converts it to the standard, `tiff`.
+# Does not use extracted extension if it's not a valid image extension.
+# Uses the `filetype` even if the `url` extension is different.
 @pytest.mark.parametrize(
     "filetype, image_url, expected_filetype",
     [
