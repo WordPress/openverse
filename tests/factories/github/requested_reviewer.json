@@ -1,0 +1,20 @@
+{
+  "avatar_url": "https://avatars.githubusercontent.com/u/redacted",
+  "events_url": "https://api.github.com/users/example-user/events{/privacy}",
+  "followers_url": "https://api.github.com/users/example-user/followers",
+  "following_url": "https://api.github.com/users/example-user/following{/other_user}",
+  "gists_url": "https://api.github.com/users/example-user/gists{/gist_id}",
+  "gravatar_id": "",
+  "html_url": "https://github.com/example-user",
+  "id": 0,
+  "login": "example-user",
+  "node_id": "0",
+  "organizations_url": "https://api.github.com/users/example-user/orgs",
+  "received_events_url": "https://api.github.com/users/example-user/received_events",
+  "repos_url": "https://api.github.com/users/example-user/repos",
+  "site_admin": false,
+  "starred_url": "https://api.github.com/users/example-user/starred{/owner}{/repo}",
+  "subscriptions_url": "https://api.github.com/users/example-user/subscriptions",
+  "type": "User",
+  "url": "https://api.github.com/users/example-user"
+}

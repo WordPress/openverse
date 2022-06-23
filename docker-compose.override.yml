@@ -61,6 +61,8 @@ services:
     command: init
     volumes:
       - ./openverse_catalog:/usr/local/airflow/openverse_catalog
+    stdin_open: true
+    tty: true
 
 volumes:
   postgres:
