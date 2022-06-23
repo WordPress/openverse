@@ -116,6 +116,9 @@ class MediaViewSet(ReadOnlyModelViewSet):
             self.paginator.page_size = 10
         except ValueError as e:
             raise get_api_exception(getattr(e, "message", str(e)))
+        # If there are no hits in the search controller
+        except IndexError:
+            raise get_api_exception("Could not find items.", 404)
 
         serializer = self.get_serializer(results, many=True)
         return self.get_paginated_response(serializer.data)

@@ -446,6 +446,13 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
     assert no_duplicates(ids)
 
 
+def test_related_does_not_break():
+    response = requests.get(
+        f"{API_URL}/image/related/000000000000000000000000000000000000", verify=False
+    )
+    assert response.status_code == 404
+
+
 @pytest.fixture
 def related_factory():
     """
