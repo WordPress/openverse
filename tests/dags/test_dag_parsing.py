@@ -17,6 +17,7 @@ DAG_FOLDER = Path(__file__).parents[2] / "openverse_catalog" / "dags"
 DAG_PATHS = [
     "providers/provider_workflow_dag_factory.py",
     "maintenance/airflow_log_cleanup_workflow.py",
+    "maintenance/pr_review_reminders/pr_review_reminders_dag.py",
     "commoncrawl/sync_commoncrawl_workflow.py",
     "commoncrawl/commoncrawl_etl.py",
     "database/loader_workflow.py",

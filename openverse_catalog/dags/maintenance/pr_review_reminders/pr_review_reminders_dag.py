@@ -23,8 +23,8 @@ from datetime import datetime, timedelta
 
 from airflow.models import DAG, Variable
 from airflow.operators.python import PythonOperator
-from common import pr_review_reminders
 from common.constants import DAG_DEFAULT_ARGS
+from maintenance.pr_review_reminders import pr_review_reminders
 
 
 DAG_ID = "pr_review_reminders"
