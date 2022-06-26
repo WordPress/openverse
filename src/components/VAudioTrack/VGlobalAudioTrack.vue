@@ -39,6 +39,7 @@ import { defaultRef } from '~/composables/default-ref'
 import { useI18n } from '~/composables/use-i18n'
 
 import { useActiveMediaStore } from '~/stores/active-media'
+import { useMediaStore } from '~/stores/media'
 
 import type { AudioDetail } from '~/models/media'
 import type { AudioStatus } from '~/constants/audio'
@@ -85,7 +86,7 @@ export default defineComponent({
     })
 
     const setPlaying = () => {
-      if (hasLoaded) {
+      if (props.audio.hasLoaded) {
         status.value = 'playing'
       } else {
         status.value = 'loading'
@@ -118,9 +119,11 @@ export default defineComponent({
       }
     }
 
-    let hasLoaded = false
+    const mediaStore = useMediaStore()
     const setLoaded = () => {
-      hasLoaded = true
+      mediaStore.setMediaProperties('audio', props.audio.id, {
+        hasLoaded: true,
+      })
       status.value = 'playing'
     }
     const setWaiting = () => {

@@ -63,6 +63,9 @@ export interface AudioDetail extends Media {
   alt_files?: { provider: string; filetype: string }[]
   peaks?: number[]
   waveform?: string
+
+  // Set and managed by the frontend client-side
+  hasLoaded?: boolean
 }
 
 export type DetailFromMediaType<T extends SupportedMediaType> =

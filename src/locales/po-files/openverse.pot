@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2022-06-18T04:57:35+00:00\n"
+"POT-Creation-Date: 2022-06-22T23:37:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -258,13 +258,13 @@ msgid "Loading"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:416
+#: src/components/VAudioTrack/VAudioTrack.vue:417
 msgctxt "audio-track.aria-label"
 msgid "###title### - Audio Player"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:413
+#: src/components/VAudioTrack/VAudioTrack.vue:414
 msgctxt "audio-track.aria-label-interactive"
 msgid "###title### - audio player - press the spacebar to play and pause a preview of the audio"
 msgstr ""

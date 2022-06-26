@@ -1,5 +1,7 @@
 import { createPinia, setActivePinia } from 'pinia'
 
+import { deepClone } from '~/utils/clone'
+
 import { initialResults, useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
 import { ALL_MEDIA, AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
@@ -392,6 +394,26 @@ describe('Media Store', () => {
       await expect(
         mediaStore.handleMediaError({ mediaType: AUDIO, error })
       ).rejects.toThrow(error.message)
+    })
+
+    describe('setMediaProperties', () => {
+      it('merges the existing media item together with the properties passed in allowing overwriting', () => {
+        const mediaStore = useMediaStore()
+        mediaStore.results.audio = testResult(AUDIO)
+
+        const existingMediaItem = deepClone(
+          mediaStore.getItemById(AUDIO, uuids[0])
+        )
+        const hasLoaded = Symbol()
+        mediaStore.setMediaProperties(AUDIO, uuids[0], {
+          hasLoaded,
+        })
+
+        expect(mediaStore.getItemById(AUDIO, uuids[0])).toMatchObject({
+          ...existingMediaItem,
+          hasLoaded,
+        })
+      })
     })
   })
 })
