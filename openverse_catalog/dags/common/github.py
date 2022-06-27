@@ -40,7 +40,7 @@ class GitHubAPI:
         return self._make_request(
             "POST",
             f"repos/{owner}/{repo}/issues/{issue_number}/comments",
-            data={"body": comment_body},
+            json={"body": comment_body},
         )
 
     def get_issue_comments(
