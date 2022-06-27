@@ -4,6 +4,7 @@ import {
   assertCheckboxStatus,
   openFilters,
   changeContentType,
+  goToSearchTerm,
 } from '~~/test/playwright/utils/navigation'
 
 import { mockProviderApis } from '~~/test/playwright/utils/route'
@@ -43,9 +44,7 @@ for (const searchType of supportedSearchTypes) {
   test(`correct total number of filters is displayed for ${searchType}`, async ({
     page,
   }) => {
-    const searchTypePath = searchType === ALL_MEDIA ? '' : searchType
-    const searchUrl = `/search/${searchTypePath}?q=cat`
-    await page.goto(searchUrl)
+    await goToSearchTerm(page, 'cat', { searchType })
 
     await openFilters(page)
 

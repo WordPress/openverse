@@ -1,24 +1,27 @@
 import { expect, test } from '@playwright/test'
 
-import { openFilters } from '~~/test/playwright/utils/navigation'
+import {
+  goToSearchTerm,
+  openFilters,
+} from '~~/test/playwright/utils/navigation'
 import { mockProviderApis } from '~~/test/playwright/utils/route'
 
 test.beforeEach(async ({ context }) => {
-  mockProviderApis(context)
+  await mockProviderApis(context)
 })
 
 test.describe('search history navigation', () => {
   test('should update search results when back navigation changes filters', async ({
     page,
   }) => {
-    await page.goto('/search/?q=galah')
+    await goToSearchTerm(page, 'galah')
     // Open filter sidebar
     await openFilters(page)
 
     // Apply a filter
     await page.click('#modification')
 
-    // Verify the filter is appled to the URL and the checkbox is checked
+    // Verify the filter is applied to the URL and the checkbox is checked
     // Note: Need to add that a search was actually executed with the new
     // filters and that the page results have been updated for the new filters
     // @todo(sarayourfriend): ^?
@@ -36,7 +39,7 @@ test.describe('search history navigation', () => {
   test('should update search results when back button updates search type', async ({
     page,
   }) => {
-    await page.goto('/search?q=galah')
+    await goToSearchTerm(page, 'galah')
     await page.click('text=See all images')
     await page.waitForSelector('text=See all images', { state: 'hidden' })
     expect(page.url()).toContain('/search/image')
@@ -48,7 +51,7 @@ test.describe('search history navigation', () => {
 })
 
 test('navigates to the image detail page correctly', async ({ page }) => {
-  await page.goto('/search/image?q=honey')
+  await goToSearchTerm(page, 'honey')
   const figure = page.locator('figure').first()
   const imgTitle = await figure.locator('img').getAttribute('alt')
 

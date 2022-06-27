@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test'
 
 import {
   closeMobileMenu,
+  goToSearchTerm,
   openFilters,
   openMobileMenu,
 } from '~~/test/playwright/utils/navigation'
@@ -33,7 +34,7 @@ test('Can open filters menu on mobile at least twice', async ({ page }) => {
 })
 
 test('Can open mobile menu at least twice', async ({ page }) => {
-  await page.goto('/search/?q=cat')
+  await goToSearchTerm(page, 'cat')
   await openMobileMenu(page)
   await expect(page.locator('button', { hasText: 'Close' })).toBeVisible()
   await closeMobileMenu(page)

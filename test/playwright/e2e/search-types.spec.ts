@@ -1,6 +1,11 @@
 import { test, expect, Page } from '@playwright/test'
 
-import { changeContentType } from '~~/test/playwright/utils/navigation'
+import {
+  changeContentType,
+  goToSearchTerm,
+  searchTypePath,
+} from '~~/test/playwright/utils/navigation'
+import { mockProviderApis } from '~~/test/playwright/utils/route'
 
 /**
  * Using SSR:
@@ -19,8 +24,7 @@ import { changeContentType } from '~~/test/playwright/utils/navigation'
  */
 
 test.beforeEach(async ({ context }) => {
-  // Block any audio (jamendo.com) requests for each test in this file.
-  await context.route('**.jamendo.com**', (route) => route.abort())
+  await mockProviderApis(context)
 })
 
 const allContentConfig = {
@@ -81,7 +85,7 @@ async function checkSearchMetadata(page: Page, searchType: SearchTypeConfig) {
 }
 
 async function checkPageMeta(page: Page, searchType: SearchTypeConfig) {
-  const urlParam = searchType.id === 'all' ? '' : searchType.id
+  const urlParam = searchTypePath(searchType.id)
 
   const expectedTitle = `birds | Openverse`
   const expectedURL = `/search/${urlParam}?q=birds`
@@ -98,7 +102,7 @@ async function checkSearchResult(page: Page, searchType: SearchTypeConfig) {
 
 for (const searchType of searchTypes) {
   test(`Can open ${searchType.name} search page on SSR`, async ({ page }) => {
-    await page.goto(searchType.url)
+    await goToSearchTerm(page, 'birds', { searchType: searchType.id })
 
     await checkSearchResult(page, searchType)
   })

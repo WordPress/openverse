@@ -1,11 +1,14 @@
 import { test, expect } from '@playwright/test'
 
 import {
-  openFilters,
-  currentContentType,
   assertCheckboxStatus,
+  currentContentType,
+  goToSearchTerm,
+  openFilters,
 } from '~~/test/playwright/utils/navigation'
 import { mockProviderApis } from '~~/test/playwright/utils/route'
+
+import { AUDIO, IMAGE } from '~/constants/media'
 
 /**
  * URL is correctly converted into search state:
@@ -24,9 +27,9 @@ test.beforeEach(async ({ context }) => {
 })
 
 test('q query parameter is set as the search term', async ({ page }) => {
-  await page.goto(
-    '/search/?q=cat&license=cc0&license_type=commercial&searchBy=creator'
-  )
+  await goToSearchTerm(page, 'cat', {
+    query: 'license=cc0&license_type=commercial&searchBy=creator',
+  })
 
   const searchInput = page.locator('input[type="search"]')
   await expect(searchInput).toHaveValue('cat')
@@ -46,8 +49,7 @@ test('url path /search/ is used to select `all` search tab', async ({
 test('url path /search/audio is used to select `audio` search tab', async ({
   page,
 }) => {
-  const audioSearchUrl = '/search/audio?q=cat'
-  await page.goto(audioSearchUrl)
+  await goToSearchTerm(page, 'cat', { searchType: AUDIO })
 
   const contentType = await currentContentType(page)
   expect(contentType?.trim()).toEqual('Audio')
@@ -56,9 +58,9 @@ test('url path /search/audio is used to select `audio` search tab', async ({
 test('url query to filter, all tab, one parameter per filter type', async ({
   page,
 }) => {
-  await page.goto(
-    '/search/?q=cat&license=cc0&license_type=commercial&searchBy=creator'
-  )
+  await goToSearchTerm(page, 'cat', {
+    query: 'license=cc0&license_type=commercial&searchBy=creator',
+  })
 
   await openFilters(page)
   for (const checkbox of ['cc0', 'commercial', 'creator']) {
@@ -69,9 +71,10 @@ test('url query to filter, all tab, one parameter per filter type', async ({
 test('url query to filter, image tab, several filters for one filter type selected', async ({
   page,
 }) => {
-  await page.goto(
-    '/search/image?q=cat&searchBy=creator&extension=jpg,png,gif,svg'
-  )
+  await goToSearchTerm(page, 'cat', {
+    searchType: IMAGE,
+    query: 'searchBy=creator&extension=jpg,png,gif,svg',
+  })
   await openFilters(page)
   const checkboxes = ['jpeg', 'png', 'gif', 'svgs']
   for (const checkbox of checkboxes) {
@@ -82,7 +85,7 @@ test('url query to filter, image tab, several filters for one filter type select
 test.skip('url mature query is set, and can be unchecked using the Safer Browsing popup', async ({
   page,
 }) => {
-  await page.goto('/search/image?q=cat&mature=true')
+  await goToSearchTerm(page, 'cat', { searchType: IMAGE, query: 'mature=true' })
 
   await page.click('button:has-text("Safer Browsing")')
 

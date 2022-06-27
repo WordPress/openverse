@@ -1,6 +1,12 @@
 import { test, expect, Page, BrowserContext } from '@playwright/test'
 
 import { mockProviderApis } from '~~/test/playwright/utils/route'
+import {
+  goToSearchTerm,
+  searchTypeNames,
+} from '~~/test/playwright/utils/navigation'
+
+import { supportedMediaTypes } from '~/constants/media'
 
 /**
  * Some helpers for repeated actions.
@@ -78,7 +84,6 @@ test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })
 
-const mediaTypes = ['Images', 'Audio']
 const reports = {
   dmca: submitDmcaReport,
   mature: submitMatureContentReport,
@@ -89,18 +94,12 @@ const reports = {
  * Iterate through all the media types and supported reports
  * to make sure every permutation works correctly.
  */
-mediaTypes.forEach((mediaType) => {
+supportedMediaTypes.forEach((mediaType) => {
   Object.entries(reports).forEach(([reportName, reportAssertion]) => {
-    test(`Files ${reportName} report for ${mediaType.toLowerCase()}`, async ({
-      page,
-      context,
-    }) => {
-      await page.goto('/')
-      await page.click(`[aria-label="All content"]`)
-      await page.click(`button[role="radio"]:has-text("${mediaType}")`)
-      const searchInput = page.locator('main input[type="search"]')
-      await searchInput.type('cat')
-      await page.click('[aria-label="Search"]')
+    test(`Files ${reportName} report for ${searchTypeNames[
+      mediaType
+    ].toLowerCase()}`, async ({ page, context }) => {
+      await goToSearchTerm(page, 'cat', { searchType: mediaType })
       await visitFirstResult(page)
       await openReportModal(page)
       await reportAssertion(page, context)
