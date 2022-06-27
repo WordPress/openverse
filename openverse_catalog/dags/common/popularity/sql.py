@@ -341,11 +341,14 @@ def create_media_view(
         db_view_provider_fid_idx = AUDIO_VIEW_PROVIDER_FID_IDX
         standardized_popularity_func = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    audio_set_id_str = (
+        "\naudio_set ->> 'foreign_identifier' AS audio_set_foreign_identifier,"
+    )
     create_view_query = dedent(
         f"""
         CREATE MATERIALIZED VIEW public.{db_view_name} AS
           SELECT
-            *,
+            *,{audio_set_id_str if media_type == AUDIO else ""}
             {standardized_popularity_func}(
               {table_name}.{PARTITION},
               {table_name}.{METADATA_COLUMN}

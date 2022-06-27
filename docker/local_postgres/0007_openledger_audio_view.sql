@@ -79,6 +79,7 @@ CREATE MATERIALIZED VIEW audio_view AS
     watermarked,
     last_synced_with_source,
     removed_from_source,
+    audio_set ->> 'foreign_identifier' AS audio_set_foreign_identifier,
     standardized_audio_popularity(
       audio.provider, audio.meta_data
     ) AS standardized_popularity
