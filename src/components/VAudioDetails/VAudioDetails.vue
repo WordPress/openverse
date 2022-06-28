@@ -26,8 +26,8 @@
           <div v-if="audio.audio_set">
             <dt>{{ $t('audio-details.table.album') }}</dt>
             <dd>
-              <VLink :href="audio.audio_set.url">{{
-                audio.audio_set.name
+              <VLink :href="audio.audio_set.foreign_landing_url">{{
+                audio.audio_set.title
               }}</VLink>
             </dd>
           </div>
@@ -85,16 +85,26 @@
   </section>
 </template>
 
-<script>
-import VLink from '~/components/VLink.vue'
+<script lang="ts">
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
+
+import type { AudioDetail } from '~/models/media'
+
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
+import VContentReportPopover from '~/components/VContentReport/VContentReportPopover.vue'
+import VLink from '~/components/VLink.vue'
 import VMediaTag from '~/components/VMediaTag/VMediaTag.vue'
 
-export default {
+export default defineComponent({
   name: 'VAudioDetails',
-  components: { VAudioThumbnail, VLink, VMediaTag },
-  props: ['audio'],
-}
+  components: { VAudioThumbnail, VContentReportPopover, VLink, VMediaTag },
+  props: {
+    audio: {
+      type: Object as PropType<AudioDetail>,
+      required: true,
+    },
+  },
+})
 </script>
 
 <style scoped>
