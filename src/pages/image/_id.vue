@@ -11,12 +11,13 @@
       <img
         v-if="!sketchFabUid"
         id="main-image"
-        :src="isLoadingFullImage ? image.thumbnail : image.url"
+        :src="imageSrc"
         :alt="image.title"
         class="h-full w-full max-h-[500px] mx-auto rounded-t-sm object-contain"
         :width="imageWidth"
         :height="imageHeight"
         @load="onImageLoaded"
+        @error="onImageError"
       />
       <VSketchFabViewer
         v-if="sketchFabUid"
@@ -83,9 +84,9 @@ import {
 } from '@nuxtjs/composition-api'
 
 import { IMAGE } from '~/constants/media'
+import type { ImageDetail } from '~/models/media'
 import { useSingleResultStore } from '~/stores/media/single-result'
 import { useRelatedMediaStore } from '~/stores/media/related-media'
-import type { ImageDetail } from '~/models/media'
 import { createDetailPageMeta } from '~/utils/og'
 
 import VButton from '~/components/VButton.vue'
@@ -95,6 +96,8 @@ import VMediaReuse from '~/components/VMediaInfo/VMediaReuse.vue'
 import VRelatedImages from '~/components/VImageDetails/VRelatedImages.vue'
 import VSketchFabViewer from '~/components/VSketchFabViewer.vue'
 import VBackToSearchResultsLink from '~/components/VBackToSearchResultsLink.vue'
+
+import errorImage from '~/assets/image_not_available_placeholder.png'
 
 export default defineComponent({
   name: 'VImageDetailsPage',
@@ -131,7 +134,12 @@ export default defineComponent({
     const imageWidth = ref(0)
     const imageHeight = ref(0)
     const imageType = ref('Unknown')
-    const isLoadingFullImage = ref(true)
+    /**
+     * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
+     * and then replace it with the provider image once it is loaded.
+     */
+    const imageSrc = ref(image.value.thumbnail)
+    const isLoadingMainImage = ref(true)
     const sketchFabfailure = ref(false)
 
     const sketchFabUid = computed(() => {
@@ -143,16 +151,36 @@ export default defineComponent({
         .split('/')[0]
     })
 
+    /**
+     * On image error, fall back on image thumbnail or the error image.
+     * @param event - image load error event.
+     */
+    const onImageError = (event: Event) => {
+      if (!(event.target instanceof HTMLImageElement)) {
+        return
+      }
+      imageSrc.value =
+        event.target.src === image.value.url
+          ? image.value.thumbnail
+          : errorImage
+    }
+    /**
+     * When the load event is fired for the thumbnail image, we set the dimensions
+     * of the image, and replace the image src attribute with the `image.url`
+     * to load the original provider image.
+     * @param event - the image load event.
+     */
     const onImageLoaded = (event: Event) => {
       if (!(event.target instanceof HTMLImageElement)) {
         return
       }
-      imageWidth.value = image.value?.width || event.target.naturalWidth
-      imageHeight.value = image.value?.height || event.target.naturalHeight
-      if (image.value?.filetype) {
-        imageType.value = image.value.filetype
-      } else {
-        if (event.target) {
+      if (isLoadingMainImage.value) {
+        imageWidth.value = image.value?.width || event.target.naturalWidth
+        imageHeight.value = image.value?.height || event.target.naturalHeight
+
+        if (image.value?.filetype) {
+          imageType.value = image.value.filetype
+        } else {
           axios
             .head(event.target.src)
             .then((res) => {
@@ -165,21 +193,22 @@ export default defineComponent({
                */
             })
         }
+        imageSrc.value = image.value.url
+        isLoadingMainImage.value = false
       }
-      isLoadingFullImage.value = false
     }
-
     return {
       image,
       relatedMedia,
       relatedFetchState,
       imageWidth,
       imageHeight,
+      imageSrc,
       imageType,
-      isLoadingFullImage,
       sketchFabfailure,
       sketchFabUid,
       onImageLoaded,
+      onImageError,
       backToSearchPath,
     }
   },

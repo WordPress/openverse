@@ -7,7 +7,7 @@
   >
     <figure
       itemprop="image"
-      itemscope=""
+      itemscope
       itemtype="https://schema.org/ImageObject"
       class="aspect-square relative rounded-sm"
     >
@@ -16,11 +16,11 @@
         class="w-full h-full object-cover rounded-sm bg-dark-charcoal-10 text-dark-charcoal-10"
         loading="lazy"
         :alt="image.title"
-        :src="getImageUrl(image)"
+        :src="getImageUrl()"
         :width="250"
         :height="250"
         itemprop="thumbnailUrl"
-        @error="onImageLoadError($event, image)"
+        @error="onImageLoadError($event)"
       />
       <figcaption
         class="absolute left-0 bottom-0 invisible group-hover:visible group-focus:visible bg-white p-1 text-dark-charcoal"
@@ -32,44 +32,54 @@
   </VLink>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
+
+import type { ImageDetail } from '~/models/media'
+
 import VLink from '~/components/VLink.vue'
 import VLicense from '~/components/VLicense/VLicense.vue'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const errorImage = require('~/assets/image_not_available_placeholder.png')
+import errorImage from '~/assets/image_not_available_placeholder.png'
 
-const toAbsolutePath = (url, prefix = 'https://') => {
+const toAbsolutePath = (url: string, prefix = 'https://') => {
   if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
     return url
   }
   return `${prefix}${url}`
 }
 
-export default {
+export default defineComponent({
   name: 'VImageCell',
   components: { VLink, VLicense },
-  props: ['image'],
-  methods: {
-    getImageUrl(image) {
-      if (!image) return ''
-      const url = image.thumbnail || image.url
+  props: {
+    image: {
+      type: Object as PropType<ImageDetail>,
+      required: true,
+    },
+  },
+  setup(props) {
+    const getImageUrl = () => {
+      if (!props.image) return ''
+      const url = props.image.thumbnail || props.image.url
       return toAbsolutePath(url)
-    },
-    getImageForeignUrl(image) {
-      return toAbsolutePath(image.foreign_landing_url)
-    },
-    onImageLoadError(event, image) {
-      const element = event.target
-      if (element.src !== image.url) {
-        element.src = image.url
+    }
+    const getImageForeignUrl = () =>
+      toAbsolutePath(props.image.foreign_landing_url)
+
+    const onImageLoadError = (event: Event) => {
+      const element = event.target as HTMLImageElement
+      if (element.src !== props.image.url) {
+        element.src = props.image.url
       } else {
         element.src = errorImage
       }
-    },
-    onFocusLeave(event) {
-      this.$emit('focus-leave', event)
-    },
+    }
+    return {
+      getImageUrl,
+      getImageForeignUrl,
+      onImageLoadError,
+    }
   },
-}
+})
 </script>
