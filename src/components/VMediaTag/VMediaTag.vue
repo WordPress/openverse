@@ -9,12 +9,14 @@
   </Component>
 </template>
 
-<script>
+<script lang="ts">
 /**
  * Displays a tag associated with a media item. If set up as a link, it can be
  * used as a link to find other items that are similarly tagged.
  */
-export default {
+import { defineComponent } from '@nuxtjs/composition-api'
+
+export default defineComponent({
   name: 'MediaTag',
   props: {
     /**
@@ -26,5 +28,5 @@ export default {
       default: 'span',
     },
   },
-}
+})
 </script>

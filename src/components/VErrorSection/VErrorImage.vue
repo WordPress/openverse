@@ -15,7 +15,7 @@
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import type { License, LicenseVersion } from '~/constants/license'
-import { ErrorCode, errorCodes } from '~/constants/errors'
+import type { ErrorCode } from '~/constants/errors'
 import { AttributableMedia, getAttribution } from '~/utils/attribution-html'
 import { useI18n } from '~/composables/use-i18n'
 
@@ -40,7 +40,6 @@ export default defineComponent({
     errorCode: {
       type: String as PropType<ErrorCode>,
       required: true,
-      validator: (val: ErrorCode) => errorCodes.includes(val),
     },
   },
   setup(props) {

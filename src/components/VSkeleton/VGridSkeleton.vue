@@ -22,22 +22,25 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
 /**
  * Display placeholder elements while waiting for the actual elements to be
  * loaded in the results views.
  */
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
+
+import type { SupportedSearchType } from '~/constants/media'
+
 import VAudioTrackSkeleton from '~/components/VSkeleton/VAudioTrackSkeleton.vue'
 import VBone from '~/components/VSkeleton/VBone.vue'
 
-export default {
+export default defineComponent({
   name: 'VGridSkeleton',
   components: { VAudioTrackSkeleton, VBone },
   props: {
     isForTab: {
-      type: String,
+      type: String as PropType<SupportedSearchType>,
       default: 'image',
-      validator: (val) => ['all', 'image', 'audio'].includes(val),
     },
     numElems: {
       type: Number,
@@ -55,7 +58,7 @@ export default {
 
     return { getRandomSize }
   },
-}
+})
 </script>
 
 <style scoped>

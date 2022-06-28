@@ -24,7 +24,7 @@
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import type { License } from '~/constants/license'
-import { ALL_LICENSES, LICENSE_ICONS } from '~/constants/license'
+import { LICENSE_ICONS } from '~/constants/license'
 
 import { getElements } from '~/utils/license'
 
@@ -41,7 +41,6 @@ export default defineComponent({
     license: {
       type: String as PropType<License>,
       required: true,
-      validator: (val: License) => ALL_LICENSES.includes(val),
     },
     /**
      * the size of the icons and text
@@ -49,7 +48,6 @@ export default defineComponent({
     size: {
       type: String as PropType<'big' | 'small'>,
       default: 'big',
-      validator: (val: 'big' | 'small') => ['big', 'small'].includes(val),
     },
   },
   setup(props) {

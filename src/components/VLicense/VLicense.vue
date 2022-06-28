@@ -19,7 +19,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
-import { ALL_LICENSES, License, LICENSE_ICONS } from '~/constants/license'
+import { License, LICENSE_ICONS } from '~/constants/license'
 import { getFullLicenseName, getElements } from '~/utils/license'
 import { useI18n } from '~/composables/use-i18n'
 
@@ -40,7 +40,6 @@ export default defineComponent({
     license: {
       type: String as PropType<License>,
       required: true,
-      validator: (val: License) => ALL_LICENSES.includes(val as License),
     },
     /**
      * Whether to display icons filled with a white background or leave them transparent.

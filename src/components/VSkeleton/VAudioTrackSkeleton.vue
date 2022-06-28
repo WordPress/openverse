@@ -30,15 +30,17 @@
   </article>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from '@nuxtjs/composition-api'
+
+export default defineComponent({
   name: 'VAudioTrackSkeleton',
   methods: {
     getRandomSize(max = 250, min = 70) {
       return Math.floor(Math.random() * (max - min) + min)
     },
   },
-}
+})
 </script>
 
 <style scoped>

@@ -2,11 +2,13 @@
   <div :class="['bg-dark-charcoal-10', shimmer ? 'shimmering' : '']" />
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from '@nuxtjs/composition-api'
+
+export default defineComponent({
   name: 'VBone',
   props: { shimmer: { type: Boolean, default: true } },
-}
+})
 </script>
 
 <style scoped>

@@ -35,8 +35,12 @@
   </div>
 </template>
 
-<script>
-import { isLicense, getLicenseUrl } from '~/utils/license'
+<script lang="ts">
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
+
+import { getLicenseUrl, isLicense } from '~/utils/license'
+
+import type { License } from '~/constants/license'
 
 import VLicenseElements from '~/components/VLicense/VLicenseElements.vue'
 import VLink from '~/components/VLink.vue'
@@ -45,7 +49,7 @@ import VLink from '~/components/VLink.vue'
  * Renders the explanation of the license passed to it by breaking it down to
  * its constituent clauses.
  */
-export default {
+export default defineComponent({
   name: 'VLicenseExplanation',
   components: {
     VLicenseElements,
@@ -56,7 +60,7 @@ export default {
      * the code of the license whose elements need to be explained
      */
     license: {
-      type: String,
+      type: String as PropType<License>,
       required: true,
     },
   },
@@ -66,5 +70,5 @@ export default {
       getLicenseUrl,
     }
   },
-}
+})
 </script>
