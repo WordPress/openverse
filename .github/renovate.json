@@ -13,9 +13,6 @@
     "🧰 goal: internal improvement",
     "🟩 priority: low"
   ],
-  "js": {
-    "labels": ["🟨 tech: javascript"]
-  },
   "docker": {
     "labels": ["🐳 tech: docker"]
   },
@@ -25,6 +22,7 @@
     ".github/workflows/new_isssues.yml",
     ".github/workflows/new_prs.yml",
     ".github/workflows/pr_label_check.yml",
-    ".github/workflows/pr_ping.yml"
+    ".github/workflows/pr_ping.yml",
+    "package.json"
   ]
 }
