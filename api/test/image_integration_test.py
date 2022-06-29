@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 from test.constants import API_URL
 from test.media_integration import (
     detail,
+    license_filter_case_insensitivity,
     report,
     search,
     search_all_excluded,
@@ -127,3 +128,7 @@ def test_oembed_endpoint_for_xml():
         xml_tree.find("license_url").text
         == "https://creativecommons.org/licenses/by/2.0/"
     )
+
+
+def test_image_license_filter_case_insensitivity():
+    license_filter_case_insensitivity("images")

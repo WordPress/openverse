@@ -7,6 +7,7 @@ import json
 from test.constants import API_URL
 from test.media_integration import (
     detail,
+    license_filter_case_insensitivity,
     report,
     search,
     search_all_excluded,
@@ -110,3 +111,7 @@ def test_audio_thumb_full_size(audio_fixture):
 
 def test_audio_report(audio_fixture):
     report("audio", audio_fixture)
+
+
+def test_audio_license_filter_case_insensitivity():
+    license_filter_case_insensitivity("audio")
