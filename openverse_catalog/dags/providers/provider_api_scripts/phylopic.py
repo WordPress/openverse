@@ -13,6 +13,7 @@ Notes:                  http://phylopic.org/api/
 import argparse
 import logging
 from datetime import date, timedelta
+from typing import Dict
 
 from common.licenses import get_license_info
 from common.requester import DelayedRequester
@@ -83,15 +84,22 @@ def main(date_start: str = "all", date_end: str = None):
 def _add_data_to_buffer(**kwargs):
     endpoint = _create_endpoint_for_IDs(**kwargs)
     IDs = _get_image_IDs(endpoint)
+    if IDs is None:
+        return
 
     for id_ in IDs:
-        if id_ is not None:
-            details = _get_meta_data(id_)
-            if details is not None:
-                image_store.add_item(**details)
+        item_data = _get_object_json(id_)
+        if item_data:
+            _process_item(item_data)
 
 
-def _get_total_images():
+def _process_item(item_data: Dict) -> None:
+    details = _get_meta_data(item_data)
+    if details is not None:
+        image_store.add_item(**details)
+
+
+def _get_total_images() -> int:
     # Get the total number of PhyloPic images
     total = 0
     endpoint = "http://phylopic.org/api/a/image/count"
@@ -124,7 +132,7 @@ def _create_endpoint_for_IDs(**kwargs):
     return endpoint
 
 
-def _get_image_IDs(_endpoint):
+def _get_image_IDs(_endpoint) -> list | None:
     result = delayed_requester.get_response_json(_endpoint, retries=2)
     image_IDs = []
 
@@ -132,32 +140,35 @@ def _get_image_IDs(_endpoint):
         data = list(result.get("result"))
 
         if len(data) > 0:
-            for i in range(len(data)):
-                image_IDs.append(data[i].get("uid"))
+            for item in data:
+                image_IDs.append(item.get("uid"))
 
     if not image_IDs:
         logger.warning("No content available!")
-        return [None]
+        return None
 
     return image_IDs
 
 
-def _get_meta_data(_uuid):
+def _get_object_json(_uuid: str) -> Dict | None:
     logger.info(f"Processing UUID: {_uuid}")
 
-    base_url = "http://phylopic.org"
-    meta_data = {}
     endpoint = (
         f"http://phylopic.org/api/a/image/{_uuid}?options=credit+"
         "licenseURL+pngFiles+submitted+submitter+taxa+canonicalName"
         "+string+firstName+lastName"
     )
+    result = None
     request = delayed_requester.get_response_json(endpoint, retries=2)
     if request and request.get("success") is True:
         result = request["result"]
-    else:
-        return None
+    return result
 
+
+def _get_meta_data(result: Dict) -> Dict:
+    base_url = "http://phylopic.org"
+    meta_data = {}
+    _uuid = result.get("uid")
     license_url = result.get("licenseURL")
 
     meta_data["taxa"], title = _get_taxa_details(result)
@@ -178,8 +189,8 @@ def _get_meta_data(_uuid):
         "foreign_landing_url": foreign_url,
         "image_url": img_url,
         "license_info": get_license_info(license_url=license_url),
-        "width": str(width),
-        "height": str(height),
+        "width": width,
+        "height": height,
         "creator": creator,
         "title": title,
         "meta_data": meta_data,
@@ -222,27 +233,26 @@ def _get_taxa_details(result):
 
 def _get_image_info(result, _uuid):
     base_url = "http://phylopic.org"
-    img_url = ""
-    width = ""
-    height = ""
+    img_url = None
+    width = None
+    height = None
 
     image_info = result.get("pngFiles")
-    img = []
     if image_info:
-        img = list(filter(lambda x: (int(str(x.get("width", "0"))) >= 257), image_info))
-        img = sorted(img, key=lambda x: x["width"], reverse=True)
+        images = list(
+            filter(lambda x: (int(str(x.get("width", "0"))) >= 257), image_info)
+        )
+        if len(images) > 0:
+            image = sorted(images, key=lambda x: x["width"], reverse=True)[0]
+            img_url = image.get("url")
+            if not img_url:
+                logging.warning(f"Image not detected in url: {base_url}/image/{_uuid}")
+            else:
+                img_url = f"{base_url}{img_url}"
+                width = image.get("width")
+                height = image.get("height")
 
-    if len(img) > 0:
-        img_url = img[0].get("url")
-        img_url = f"{base_url}{img_url}"
-        width = img[0].get("width")
-        height = img[0].get("height")
-
-    if img_url == "":
-        logging.warning(f"Image not detected in url: {base_url}/image/{_uuid}")
-        return None, None, None
-    else:
-        return img_url, width, height
+    return img_url, width, height
 
 
 def _compute_date_range(date_start: str, days: int = DEFAULT_PROCESS_DAYS) -> str:
