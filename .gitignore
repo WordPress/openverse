@@ -39,3 +39,6 @@ test/Default
 
 # Ignore local certificates
 *.pem
+
+# Ignore generated translation files
+*.pot
