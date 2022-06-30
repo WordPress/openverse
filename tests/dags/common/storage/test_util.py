@@ -1,6 +1,9 @@
 import logging
 
+import pytest
 from common.storage import util
+from common.storage.audio import AudioStore
+from common.storage.image import ImageStore
 
 
 logging.basicConfig(
@@ -8,25 +11,11 @@ logging.basicConfig(
 )
 
 
-def test_get_source_preserves_given_both():
-    expect_source = "Source"
-    actual_source = util.get_source(expect_source, "test_provider")
-    assert actual_source == expect_source
+def test_get_media_store_class():
+    assert util.get_media_store_class("image") == ImageStore
+    assert util.get_media_store_class("audio") == AudioStore
 
 
-def test_get_source_preserves_source_without_provider():
-    input_provider, expect_source = None, "Source"
-    actual_source = util.get_source(expect_source, input_provider)
-    assert actual_source == expect_source
-
-
-def test_get_source_fills_source_if_none_given():
-    input_provider, input_source = "Provider", None
-    actual_source = util.get_source(input_source, input_provider)
-    expect_source = "Provider"
-    assert actual_source == expect_source
-
-
-def test_get_source_nones_if_none_given():
-    actual_source = util.get_source(None, None)
-    assert actual_source is None
+def test_get_media_store_class_raises_error_for_undefined_class():
+    with pytest.raises(ValueError, match="No MediaStore is configured for type: foo"):
+        util.get_media_store_class("foo")

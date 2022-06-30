@@ -3,7 +3,7 @@ import logging
 import pytest
 from common import urls
 from common.licenses import LicenseInfo
-from common.storage import image, util
+from common.storage import image
 
 
 logging.basicConfig(
@@ -96,7 +96,7 @@ def test_ImageStore_get_image_places_given_args(
     def mock_get_source(source, provider):
         return source
 
-    monkeypatch.setattr(util, "get_source", mock_get_source)
+    monkeypatch.setattr(image_store, "_get_source", mock_get_source)
 
     def mock_enrich_tags(tags):
         return tags

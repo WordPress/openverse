@@ -56,6 +56,7 @@ import logging
 import os
 import time
 from datetime import datetime, timedelta
+from types import FunctionType
 from typing import Callable, Dict, List, Optional, Sequence
 
 from airflow import DAG
@@ -80,7 +81,7 @@ DATE_RANGE_ARG_TEMPLATE = "{{{{ macros.ds_add(ds, -{}) }}}}"
 
 
 def _push_output_paths_wrapper(
-    func: Callable,
+    ingestion_callable: Callable,
     media_types: List[str],
     ti: TaskInstance,
     args: Sequence = None,
@@ -96,43 +97,68 @@ def _push_output_paths_wrapper(
     """
     args = args or []
     logger.info("Pushing available store paths to XComs")
-    module = inspect.getmodule(func)
-    stores = {}
 
-    # Stores exist at the module level, so in order to retrieve the output values we
-    # must first pull the stores from the module.
-    for media_type in media_types:
-        if not (store := getattr(module, f"{media_type}_store", None)):
-            continue
-        stores[media_type] = store
+    # TODO: This entire branch can be removed when all of the provider scripts have been
+    # refactored to subclass ProviderDataIngester.
+    if isinstance(ingestion_callable, FunctionType):
+        # Stores exist at the module level, so in order to retrieve the output values we
+        # must first pull the stores from the module.
+        module = inspect.getmodule(ingestion_callable)
+        stores = {}
+        for media_type in media_types:
+            store = getattr(module, f"{media_type}_store", None)
+            if not store:
+                continue
+            stores[media_type] = store
 
-    if len(stores) != len(media_types):
-        raise ValueError(
-            f"Expected stores in {module.__name__} were missing: "
-            f"{list(set(media_types) - set(stores))}"
-        )
+        if len(stores) != len(media_types):
+            raise ValueError(
+                f"Expected stores in {module.__name__} were missing: "
+                f"{list(set(media_types) - set(stores))}"
+            )
 
-    for media_type, store in stores.items():
-        logger.info(f"{media_type.capitalize()} store location: {store.output_path}")
-        ti.xcom_push(key=f"{media_type}_tsv", value=store.output_path)
+        for media_type, store in stores.items():
+            logger.info(
+                f"{media_type.capitalize()} store location: {store.output_path}"
+            )
+            ti.xcom_push(key=f"{media_type}_tsv", value=store.output_path)
 
-    logger.info("Running provider function")
+        logger.info("Running provider function")
 
-    start_time = time.perf_counter()
-    # Not passing kwargs here because Airflow throws a bunch of stuff in there that none
-    # of our provider scripts are expecting.
-    data = func(*args)
-    end_time = time.perf_counter()
+        start_time = time.perf_counter()
+        # Not passing kwargs here because Airflow throws a bunch of stuff in there that
+        # none of our provider scripts are expecting.
+        data = ingestion_callable(*args)
+        end_time = time.perf_counter()
 
+    else:
+        # A ProviderDataIngester class was passed instead. First we initialize the
+        # class, which will initialize the media stores and DelayedRequester.
+        logger.info(f"Initializing ProviderIngester {ingestion_callable.__name__}")
+        ingester = ingestion_callable(*args)
+
+        # Push the media store output directories to XComs.
+        for store in ingester.media_stores.values():
+            logger.info(
+                f"{store.media_type.capitalize()} store location: {store.output_path}"
+            )
+            ti.xcom_push(key=f"{store.media_type}_tsv", value=store.output_path)
+
+        # Run the `ingest_records` function to perform ingestion.
+        logger.info("Running ingestion function")
+        start_time = time.perf_counter()
+        data = ingester.ingest_records(*args)
+        end_time = time.perf_counter()
+
+    # Report duration
     duration = end_time - start_time
     ti.xcom_push(key="duration", value=duration)
-
     return data
 
 
 def create_provider_api_workflow(
     dag_id: str,
-    main_function: Callable,
+    ingestion_callable: Callable,
     default_args: Optional[Dict] = None,
     start_date: datetime = datetime(1970, 1, 1),
     max_active_runs: int = 1,
@@ -150,12 +176,12 @@ def create_provider_api_workflow(
 
     Required Arguments:
 
-    dag_id:         string giving a unique id of the DAG to be created.
-    main_function:  python function to be run. If the optional argument
-                    `dated` is True, then the function must take a
-                    single parameter (date) which will be a string of
-                    the form 'YYYY-MM-DD'. Otherwise, the function
-                    should take no arguments.
+    dag_id:             string giving a unique id of the DAG to be created.
+    ingestion_callable: python function to be run, or a ProviderDataIngester class
+                        whose `ingest_records` method is to be run. If the optional
+                        argument `dated` is True, then the function must take a
+                        single parameter (date) which will be a string of
+                        the form 'YYYY-MM-DD'.
 
     Optional Arguments:
 
@@ -204,7 +230,10 @@ def create_provider_api_workflow(
     )
 
     with dag:
-        pull_kwargs = {"func": main_function, "media_types": media_types}
+        pull_kwargs = {
+            "ingestion_callable": ingestion_callable,
+            "media_types": media_types,
+        }
         if dated:
             pull_kwargs["args"] = [DATE_RANGE_ARG_TEMPLATE.format(day_shift)]
 

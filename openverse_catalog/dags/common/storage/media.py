@@ -6,7 +6,6 @@ from typing import Optional, Union
 
 from common.extensions import extract_filetype
 from common.licenses import is_valid_license_info
-from common.storage import util
 from common.storage.tsv_columns import CURRENT_VERSION
 
 
@@ -119,7 +118,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         ):
             logger.debug("Discarding media due to invalid license")
             return None
-        media_data["source"] = util.get_source(media_data.get("source"), self.provider)
+        media_data["source"] = self._get_source(media_data.get("source"), self.provider)
         # Add ingestion_type column value based on `source`.
         # The implementation is based on `ingestion_column`
         if media_data.get("ingestion_type") is None:
@@ -297,3 +296,13 @@ class MediaStore(metaclass=abc.ABCMeta):
         if self.media_type != "image":
             return filetype
         return FILETYPE_EQUIVALENTS.get(filetype, filetype)
+
+    @staticmethod
+    def _get_source(source, provider):
+        """
+        Returns `source` if given, otherwise `provider`
+        """
+        if not source:
+            source = provider
+
+        return source

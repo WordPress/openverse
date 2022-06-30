@@ -3,7 +3,7 @@ from unittest import mock
 import pytest
 import requests
 from airflow.models import TaskInstance
-from common import provider_dag_factory
+from providers import provider_dag_factory
 
 from tests.dags.common.test_resources import fake_provider_module
 

@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Dict, Optional, Sequence
+from typing import Dict, Optional, Sequence, Type
+
+from providers.provider_api_scripts.cleveland_museum import ClevelandDataIngester
+from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
 @dataclass
@@ -48,6 +51,7 @@ class ProviderWorkflow:
     """
 
     provider_script: str
+    ingester_class: Optional[Type[ProviderDataIngester]] = None
     dag_id: str = ""
     default_args: Optional[Dict] = None
     start_date: datetime = datetime(1970, 1, 1)
@@ -72,6 +76,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="cleveland_museum",
+        ingester_class=ClevelandDataIngester,
         start_date=datetime(2020, 1, 15),
         execution_timeout=timedelta(hours=12),
     ),

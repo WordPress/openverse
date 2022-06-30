@@ -1,4 +1,18 @@
 {
+  "full": {
+    "filename": "1335.1917_full.tif",
+    "filesize": "40263224",
+    "height": "4339",
+    "url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_full.tif",
+    "width": "3091"
+  },
+  "print": {
+    "filename": "1335.1917_print.jpg",
+    "filesize": "1225285",
+    "height": "3400",
+    "url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_print.jpg",
+    "width": "2422"
+  },
   "web": {
     "filename": "1335.1917_web.jpg",
     "filesize": "716717",
