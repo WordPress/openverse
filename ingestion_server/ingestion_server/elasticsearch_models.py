@@ -107,7 +107,6 @@ class Media(SyncableDocType):
             "creator": row[schema["creator"]],
             "creator_url": row[schema["creator_url"]],
             "url": row[schema["url"]],
-            "extension": Media.get_extension(row[schema["url"]]),
             "license": row[schema["license"]].lower(),
             "license_version": row[schema["license_version"]],
             "license_url": Media.get_license_url(meta),
@@ -131,17 +130,6 @@ class Media(SyncableDocType):
                 return metadata_field["description"][:2000]
         except TypeError:
             return None
-
-    @staticmethod
-    def get_extension(url):
-        """
-        Get the extension from the last segment of the URL separated by a dot.
-        """
-        extension = url.split(".")[-1].lower()
-        if "/" in extension or extension is None:
-            return None
-        else:
-            return extension
 
     @staticmethod
     def get_license_url(meta_data):
@@ -261,6 +249,7 @@ class Image(Media):
             thumbnail=row[schema["thumbnail"]],
             category=category,
             aspect_ratio=aspect_ratio,
+            extension=extension,
             size=size,
             authority_boost=authority_boost,
             max_boost=max(popularity or 1, authority_boost or 1),
@@ -279,6 +268,19 @@ class Image(Media):
         else:
             aspect_ratio = Image.AspectRatios.SQUARE.name
         return aspect_ratio.lower()
+
+    @staticmethod
+    def get_extension(url):
+        """
+        Get the extension from the last segment of the URL separated by a dot.
+        TODO: Use the `filetype` field once the following issue is completed:
+        https://github.com/WordPress/openverse-catalog/issues/536
+        """
+        extension = url.split(".")[-1].lower()
+        if not extension or "/" in extension:
+            return None
+        else:
+            return extension
 
     @staticmethod
     def get_size(height, width):
@@ -314,6 +316,10 @@ class Audio(Media):
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
+        alt_files = row[schema["alt_files"]]
+        filetype = row[schema["filetype"]]
+        extension = Audio.get_extensions(filetype, alt_files)
+
         meta = row[schema["meta_data"]]
         provider = row[schema["provider"]]
         authority_boost = Audio.get_authority_boost(meta, provider)
@@ -330,11 +336,20 @@ class Audio(Media):
             category=row[schema["category"]],
             duration=row[schema["duration"]],
             length=length,
+            filetype=filetype,
+            extension=extension,
             authority_boost=authority_boost,
             max_boost=max(popularity or 1, authority_boost or 1),
             min_boost=min(popularity or 1, authority_boost or 1),
             **attrs,
         )
+
+    @staticmethod
+    def get_extensions(filetype, alt_files):
+        if not alt_files:
+            return filetype
+
+        return [file["filetype"] for file in alt_files]
 
     @staticmethod
     def get_length(duration):

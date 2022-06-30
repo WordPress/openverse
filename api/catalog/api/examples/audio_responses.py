@@ -70,7 +70,6 @@ audio_search_200_example = {
                 "audio_set": None,
                 "attribution": None,
                 "filesize": None,
-                "filetype": None,
             },
         ],
     },
@@ -87,6 +86,13 @@ audio_search_400_example = {
 audio_stats_200_example = {
     "application/json": [
         {
+            "source_name": "freesound",
+            "display_name": "Freesound",
+            "source_url": "https://freesound.org/",
+            "logo_url": None,
+            "media_count": 828,
+        },
+        {
             "source_name": "jamendo",
             "display_name": "Jamendo",
             "source_url": "https://www.jamendo.com",
@@ -98,7 +104,7 @@ audio_stats_200_example = {
             "display_name": "Wikimedia",
             "source_url": "https://commons.wikimedia.org",
             "logo_url": None,
-            "media_count": 4820,
+            "media_count": 3992,
         },
     ]
 }

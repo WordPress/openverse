@@ -31,6 +31,7 @@ docker-compose exec -T "$DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openle
 	VALUES
 		(now(), 'flickr', 'Flickr', 'https://www.flickr.com', false, 'image'),
 		(now(), 'stocksnap', 'StockSnap', 'https://stocksnap.io', false, 'image'),
+		(now(), 'freesound', 'Freesound', 'https://freesound.org/', false, 'audio'),
 		(now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio'),
 		(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio');
 	EOF"

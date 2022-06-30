@@ -50,7 +50,7 @@ def test_search_category_filtering_fails(audio_fixture):
 
 
 def test_search_all_excluded():
-    search_all_excluded("audio", ["jamendo", "wikimedia_audio"])
+    search_all_excluded("audio", ["freesound", "jamendo", "wikimedia_audio"])
 
 
 def test_search_source_and_excluded():
@@ -83,7 +83,7 @@ def test_audio_thumb(audio_fixture):
 
 
 def test_audio_detail_without_thumb():
-    resp = requests.get(f"{API_URL}/v1/audio/00289ffb-0c74-4008-8388-0bf6d8173dee")
+    resp = requests.get(f"{API_URL}/v1/audio/44540200-91eb-483d-9e99-38ce86a52fb6")
     assert resp.status_code == 200
     parsed = json.loads(resp.text)
     assert parsed["thumbnail"] is None
