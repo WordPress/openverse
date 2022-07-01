@@ -53,6 +53,7 @@ gunicorn = "*"
 sentry-sdk = "*"
 django-tqdm = "*"
 limit = "*"
+django-log-request-id = "*"
 
 [requires]
 python_version = "3.10"

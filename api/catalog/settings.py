@@ -95,7 +95,14 @@ if USE_S3:
     AWS_S3_SIGNATURE_VERSION = "s3v4"
     INSTALLED_APPS.append("storages")
 
+# https://github.com/dabapps/django-log-request-id#logging-all-requests
+LOG_REQUESTS = True
+# https://github.com/dabapps/django-log-request-id#installation-and-usage
+REQUEST_ID_RESPONSE_HEADER = "X-Request-Id"
+
 MIDDLEWARE = [
+    # https://github.com/dabapps/django-log-request-id
+    "log_request_id.middleware.RequestIDMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
