@@ -1,4 +1,4 @@
-name: Generate translation POT file
+name: Generate translation PO file
 
 on:
   push:
@@ -11,21 +11,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          ref: main
 
       - uses: ./.github/actions/setup-node-env
 
-      - name: Generate POT
+      - name: Generate PO
         run: pnpm i18n:generate-pot
 
       - name: Copy to root
         run: cp ./openverse.pot /tmp/openverse.pot
 
-      - name: Update POT on translations branch
+      - name: Checkout `translations` branch
+        uses: actions/checkout@v3
+        with:
+          ref: translations
+
+      - name: Update POT on `translations` branch
         run: |
-          git checkout translations
           rm openverse.pot
           cp /tmp/openverse.pot openverse.pot
           git config --global user.name 'POT Updater'
           git config --global user.email 'openverse@wordpress.org'
           git commit -am 'Update POT file'
           git push
+
+      - name: Re-checkout `main` branch to allow for cleanup to work
+        uses: actions/checkout@v3
+        with:
+          ref: main
