@@ -11,7 +11,7 @@ Our API documentation can also be found at [https://api.openverse.engineering](h
 
 ## System architecture
 
-![System architecture](readme_assets/system_architecture.png)
+![System architecture](readme_assets/system_diagram/system_architecture.png)
 
 ### Basic flow of data
 
