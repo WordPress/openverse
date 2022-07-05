@@ -370,6 +370,7 @@
     "all-result-count": "{localeCount} result|{localeCount} results",
     "all-result-count-more": "Over {localeCount} result|Over {localeCount} results",
     "load": "Load more results",
+    "loading": "Loading...",
     "fetching-error": "Error fetching {type}:",
     "search-rating": {
       "content": "Are these results relevant?",

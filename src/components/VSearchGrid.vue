@@ -19,7 +19,6 @@
     <slot name="media" />
 
     <VMetaSearchForm
-      v-if="!fetchState.isFetching"
       :type="metaSearchFormType"
       :has-no-results="hasNoResults"
       :query="query"

@@ -1,9 +1,9 @@
 <template>
   <VButton
-    v-show="canLoadMore"
+    v-show="!endOfResults"
     size="large"
     variant="full"
-    :disabled="isFetching"
+    :disabled="!canLoadMore || isFetching"
     data-testid="load-more"
     @click="onLoadMore"
   >
@@ -43,14 +43,20 @@ export default defineComponent({
       })
     }
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
+    const endOfResults = computed(
+      () => !(canLoadMore.value || isFetching.value)
+    )
 
-    const buttonLabel = computed(() => i18n.t('browse-page.load'))
+    const buttonLabel = computed(() =>
+      i18n.t(`browse-page.${isFetching.value ? 'loading' : 'load'}`)
+    )
 
     return {
       buttonLabel,
       isFetching,
       onLoadMore,
       canLoadMore,
+      endOfResults,
     }
   },
 })
