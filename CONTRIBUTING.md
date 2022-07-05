@@ -10,7 +10,7 @@ Please be aware that as a project of the WordPress Foundation, Openverse follows
 
 ### How to contribute with design
 
-If you'd like to contribute to the design or front-end, feel free to propose a solution to an existing problem labeled with [Needs Design](https://github.com/WordPress/openverse-frontend/issues?q=is%3Aopen+is%3Aissue+label%3A%22needs+design%22), or share an idea you think it adds value to the Openverse goal.
+If you'd like to contribute to the design or front-end, feel free to propose a solution to an existing problem labeled with [Needs Design](https://github.com/WordPress/openverse-frontend/issues?q=is%3Aopen+is%3Aissue+label%3A%22needs+design%22), or share an idea if you think it meets Openverse's goals.
 
 The [WordPress Design team](http://make.wordpress.org/design/) uses [Figma](https://www.figma.com/) to collaborate and share work for all WordPress projects. If you are not familiar with designing for WordPress, please carefully read the [design handbook](https://make.wordpress.org/design/handbook/). Once you have a [WordPress Slack](https://make.wordpress.org/chat/) account, join the [#design channel](http://wordpress.slack.com/messages/design/) and ask the team to set you up with a free Figma account.
 
