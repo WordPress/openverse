@@ -332,11 +332,11 @@
       "enable": "Enable Mature Content"
     },
     "lengths": {
-      "title": "Durations",
-      "shortest": "Shortest",
-      "short": "Short",
-      "medium": "Medium",
-      "long": "Long"
+      "title": "Duration",
+      "shortest": "< 30 sec",
+      "short": "30 sec-2 min",
+      "medium": "2-10 min",
+      "long": "> 10 min"
     },
     "creator": {
       "title": "Search by Creator"
