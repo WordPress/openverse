@@ -9,6 +9,7 @@ from django.conf import settings
 
 from elasticsearch.exceptions import RequestError
 from elasticsearch_dsl import Q, Search
+from elasticsearch_dsl.query import EMPTY_QUERY
 from elasticsearch_dsl.response import Hit
 
 from catalog.api.controllers.elasticsearch.utils import (
@@ -161,7 +162,7 @@ def perform_search(
         rank_queries = []
         for field, boost in feature_boost.items():
             rank_queries.append(Q("rank_feature", field=field, boost=boost))
-        s.query = Q("bool", must=s.query, should=rank_queries)
+        s.query = Q("bool", must=s.query or EMPTY_QUERY, should=rank_queries)
 
     # Use highlighting to determine which fields contribute to the selection of
     # top results.
