@@ -1,18 +1,5 @@
-FROM debian:11-slim as words
+FROM python:3.10-slim
 
-RUN apt-get update && apt-get install -y wamerican
+RUN apt-get update && apt-get install -y wamerican apache2-utils
 
-FROM locustio/locust:2.9.0
-
-COPY --from=words /usr/share/dict/american-english /usr/share/dict/american-english
-
-RUN pip install --upgrade pipenv
-
-COPY Pipfile .
-COPY Pipfile.lock .
-
-COPY Pipfile Pipfile.lock ./
-
-RUN pipenv install --system --deploy --dev
-
-ENTRYPOINT ["locust", "--headless"]
+WORKDIR /app

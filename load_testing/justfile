@@ -1,14 +1,10 @@
 set dotenv-load := false
 
 build:
-    docker-compose build
+    docker build . -t openverse-load-testing:latest
 
-dc locustfile host +options="": build
-    #! /usr/bin/env sh
-    export HOST={{host}}
-    export LOCUSTFILE={{locustfile}}
-    export ARGS="{{options}}"
-    docker-compose up --force-recreate --abort-on-container-exit --exit-code-from control
+run script host: build
+    docker run -it -v {{invocation_directory()}}:/app openverse-load-testing:latest ./{{ script }}.sh {{ host }}
 
-api host="http://172.17.0.1:8000" +args="": build
-    just dc api.py {{ host }} --users 10 --spawn-rate 10 {{ args }}
+api host="http://172.17.0.1:8000":
+    @just run api {{ host }}
