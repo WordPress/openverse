@@ -76,9 +76,10 @@ test('url query to filter, image tab, several filters for one filter type select
     query: 'searchBy=creator&extension=jpg,png,gif,svg',
   })
   await openFilters(page)
-  const checkboxes = ['jpeg', 'png', 'gif', 'svgs']
+  const checkboxes = ['jpeg', 'png', 'gif', 'svg']
   for (const checkbox of checkboxes) {
-    await assertCheckboxStatus(page, checkbox)
+    const forValue = checkbox === 'jpeg' ? 'jpg' : checkbox
+    await assertCheckboxStatus(page, checkbox, forValue)
   }
 })
 

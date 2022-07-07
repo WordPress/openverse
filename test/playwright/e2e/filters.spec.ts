@@ -36,7 +36,7 @@ const assertCheckboxCount = async (
 
 const FILTER_COUNTS = {
   [ALL_MEDIA]: 11,
-  [AUDIO]: 27,
+  [AUDIO]: 32,
   [IMAGE]: 70,
 }
 
@@ -118,16 +118,16 @@ test('selecting some filters can disable dependent filters', async ({
   const byNc = page.locator('input[value="by-nc"]')
   await expect(byNc).toBeDisabled()
   for (const checkbox of ['by-nc-sa', 'by-nc-nd']) {
-    await assertCheckboxStatus(page, checkbox, 'disabled')
+    await assertCheckboxStatus(page, checkbox, '', 'disabled')
   }
   await assertCheckboxStatus(page, 'commercial')
 
   await page.click('label:has-text("commercial")')
 
-  await assertCheckboxStatus(page, 'commercial', 'unchecked')
+  await assertCheckboxStatus(page, 'commercial', '', 'unchecked')
   await expect(byNc).not.toBeDisabled()
   for (const checkbox of ['commercial', 'by-nc-sa', 'by-nc-nd']) {
-    await assertCheckboxStatus(page, checkbox, 'unchecked')
+    await assertCheckboxStatus(page, checkbox, '', 'unchecked')
   }
 })
 
@@ -164,7 +164,7 @@ test('new media request is sent when a filter is selected', async ({
   await page.goto('/search/image?q=cat')
   await openFilters(page)
 
-  await assertCheckboxStatus(page, 'cc0', 'unchecked')
+  await assertCheckboxStatus(page, 'cc0', '', 'unchecked')
 
   const [response] = await Promise.all([
     page.waitForResponse((response) => response.url().includes('cc0')),
@@ -190,6 +190,6 @@ for (const [searchType, source] of [
     )
     await openFilters(page)
 
-    await assertCheckboxStatus(page, source, 'checked')
+    await assertCheckboxStatus(page, source, '', 'checked')
   })
 }

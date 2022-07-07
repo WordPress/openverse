@@ -75,9 +75,14 @@ export const closeMobileMenu = async (page: Page) => {
 export const assertCheckboxStatus = async (
   page: Page,
   label: string,
+  forValue = '',
   status: 'checked' | 'unchecked' | 'disabled' = 'checked'
 ) => {
-  const checkbox = page.locator(`label:has-text('${label}')`)
+  const selector =
+    forValue === ''
+      ? `label:has-text('${label}')`
+      : `label[for="${forValue}"]:has-text('${label}')`
+  const checkbox = page.locator(selector)
   switch (status) {
     case 'checked': {
       await expect(checkbox).not.toBeDisabled()

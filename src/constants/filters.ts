@@ -95,7 +95,7 @@ const filterCodesPerCategory = deepFreeze<Record<FilterCategory, string[]>>({
     'sound_effect',
   ],
   imageCategories: ['photograph', 'illustration', 'digitized_artwork'],
-  audioExtensions: ['mp3', 'ogg', 'flac'],
+  audioExtensions: ['flac', 'mid', 'mp3', 'oga', 'ogg', 'opus', 'wav', 'webm'],
   imageExtensions: ['jpg', 'png', 'gif', 'svg'],
   aspectRatios: ['tall', 'wide', 'square'],
   lengths: ['shortest', 'short', 'medium', 'long'],

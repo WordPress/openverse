@@ -387,12 +387,12 @@ describe('Search Store', () => {
       searchType   | nextSearchType | expectedFilterCount
       ${AUDIO}     | ${IMAGE}       | ${25}
       ${IMAGE}     | ${ALL_MEDIA}   | ${12}
-      ${IMAGE}     | ${AUDIO}       | ${25}
+      ${IMAGE}     | ${AUDIO}       | ${30}
       ${ALL_MEDIA} | ${VIDEO}       | ${12}
-      ${VIDEO}     | ${AUDIO}       | ${25}
+      ${VIDEO}     | ${AUDIO}       | ${30}
       ${ALL_MEDIA} | ${IMAGE}       | ${25}
     `(
-      'changing searchType clears all but $expectedFilterCount $nextSearchType filters ',
+      'changing searchType from $searchType clears all but $expectedFilterCount $nextSearchType filters',
       async ({ searchType, nextSearchType, expectedFilterCount }) => {
         const searchStore = useSearchStore()
         searchStore.setSearchType(searchType)
