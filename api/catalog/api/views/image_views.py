@@ -1,5 +1,4 @@
 import io
-import logging
 
 from django.conf import settings
 from django.http.response import FileResponse, Http404, HttpResponse
@@ -35,9 +34,6 @@ from catalog.api.utils.exceptions import get_api_exception
 from catalog.api.utils.throttle import OneThousandPerMinute
 from catalog.api.utils.watermark import watermark
 from catalog.api.views.media_views import MediaViewSet
-
-
-log = logging.getLogger(__name__)
 
 
 @method_decorator(swagger_auto_schema(**ImageSearch.swagger_setup), "list")

@@ -14,4 +14,5 @@ https
 document
 publish
 deploy
+logging
 ```

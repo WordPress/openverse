@@ -1,9 +1,14 @@
 from logging import LogRecord
 
+from decouple import config
+
 
 def health_check_filter(record: LogRecord) -> bool:
     # Filter out health checks from the logs, they're verbose and happen frequently
     return not ("GET /healthcheck" in record.getMessage() and record.status_code == 200)
+
+
+LOG_LEVEL = config("LOG_LEVEL", default="INFO").upper()
 
 
 # Logging configuration
@@ -33,7 +38,7 @@ LOGGING = {
     "handlers": {
         # Default console logger
         "console": {
-            "level": "INFO",
+            "level": LOG_LEVEL,
             "filters": ["require_debug_true", "request_id"],
             "class": "logging.StreamHandler",
             "formatter": "console",
@@ -47,14 +52,14 @@ LOGGING = {
         },
         # Handler for all other logging
         "general_console": {
-            "level": "INFO",
+            "level": LOG_LEVEL,
             "filters": ["request_id"],
             "class": "logging.StreamHandler",
             "formatter": "console",
         },
         # Default server logger
         "django.server": {
-            "level": "INFO",
+            "level": LOG_LEVEL,
             "filters": ["request_id"],
             "class": "logging.StreamHandler",
             "formatter": "django.server",
@@ -69,6 +74,8 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["console", "console_prod", "mail_admins"],
+            # Keep this at info to avoid django internal debug logs;
+            # we just want our own debug logs when log level is set to debug
             "level": "INFO",
             "propagate": False,
         },
@@ -76,14 +83,14 @@ LOGGING = {
             "handlers": ["django.server"],
             # Filter health check logs
             "filters": ["health_check", "request_id"],
-            "level": "INFO",
+            "level": LOG_LEVEL,
             "propagate": False,
         },
         # Default handler for all other loggers
         "": {
             "handlers": ["general_console"],
             "filters": ["request_id"],
-            "level": "INFO",
+            "level": LOG_LEVEL,
         },
     },
 }

@@ -7,7 +7,7 @@ import grequests
 from catalog.api.utils.dead_link_mask import get_query_mask, save_query_mask
 
 
-log = logging.getLogger(__name__)
+parent_logger = logging.getLogger(__name__)
 
 
 def validate_images(query_hash, start_slice, results, image_urls):
@@ -19,8 +19,12 @@ def validate_images(query_hash, start_slice, results, image_urls):
     Results are cached in redis and shared amongst all API servers in the
     cluster.
     """
+    logger = parent_logger.getChild("validate_images")
     if not image_urls:
+        logger.info("no image urls to validate")
         return
+
+    logger.debug("starting validation")
     start_time = time.time()
     # Pull matching images from the cache.
     redis = django_redis.get_redis_connection("default")
@@ -29,11 +33,13 @@ def validate_images(query_hash, start_slice, results, image_urls):
     cached_statuses = [
         int(b.decode("utf-8")) if b is not None else None for b in cached_statuses
     ]
+    logger.debug(f"len(cached_statuses)={len(cached_statuses)}")
     # Anything that isn't in the cache needs to be validated via HEAD request.
     to_verify = {}
     for idx, url in enumerate(image_urls):
         if cached_statuses[idx] is None:
             to_verify[url] = idx
+    logger.debug(f"len(to_verify)={len(to_verify)}")
     reqs = (
         grequests.head(u, allow_redirects=False, timeout=2, verify=False)
         for u in to_verify.keys()
@@ -58,11 +64,14 @@ def validate_images(query_hash, start_slice, results, image_urls):
     for key, status in to_cache.items():
         # Cache successful links for a day, and broken links for 120 days.
         if status == 200:
+            logger.debug("healthy link " f"key={key} ")
             pipe.expire(key, twenty_four_hours_seconds)
         elif status == -1:
+            logger.debug("no response from provider " f"key={key}")
             # Content provider failed to respond; try again in a short interval
             pipe.expire(key, thirty_minutes)
         else:
+            logger.debug("broken link " f"key={key} ")
             pipe.expire(key, twenty_four_hours_seconds * 120)
     pipe.execute()
 
@@ -81,14 +90,16 @@ def validate_images(query_hash, start_slice, results, image_urls):
         del_idx = len(cached_statuses) - idx - 1
         status = cached_statuses[del_idx]
         if status == 429 or status == 403:
-            log.warning(
+            logger.warning(
                 "Image validation failed due to rate limiting or blocking. "
-                f"Affected URL: {image_urls[idx]}"
+                f"url={image_urls[idx]} "
+                f"status={status} "
             )
         elif status != 200:
-            log.info(
-                f"Deleting broken image with ID "
-                f"{results[del_idx]['identifier']} from results."
+            logger.info(
+                "Deleting broken image from results "
+                f"id={results[del_idx]['identifier']} "
+                f"status={status} "
             )
             del results[del_idx]
             new_mask[del_idx] = 0
@@ -100,8 +111,14 @@ def validate_images(query_hash, start_slice, results, image_urls):
     save_query_mask(query_hash, new_mask)
 
     end_time = time.time()
-    log.info(f"Validated images in {end_time - start_time} ")
+    logger.debug(
+        "end validation "
+        f"end_time={end_time} "
+        f"start_time={start_time} "
+        f"delta={end_time - start_time} "
+    )
 
 
 def _validation_failure(request, exception):
-    log.warning(f"Failed to validate image! Reason: {exception}")
+    logger = parent_logger.getChild("_validation_failure")
+    logger.warning(f"Failed to validate image! Reason: {exception}")

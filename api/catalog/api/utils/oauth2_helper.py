@@ -6,7 +6,7 @@ from oauth2_provider.models import AccessToken
 from catalog.api import models
 
 
-log = logging.getLogger(__name__)
+parent_logger = logging.getLogger(__name__)
 
 
 def get_token_info(token: str):
@@ -19,6 +19,7 @@ def get_token_info(token: str):
     token, rate limit model, and email verification status as a tuple; else
     return (None, None, None).
     """
+    logger = parent_logger.getChild("get_token_info")
     try:
         token = AccessToken.objects.get(token=token)
     except AccessToken.DoesNotExist:
@@ -30,11 +31,11 @@ def get_token_info(token: str):
             rate_limit_model = application.rate_limit_model
             verified = application.verified
         except models.ThrottledApplication.DoesNotExist:
-            log.warning("Failed to find application associated with access token.")
+            logger.warning("Failed to find application associated with access token.")
             client_id = None
             rate_limit_model = None
             verified = None
         return client_id, rate_limit_model, verified
     else:
-        log.warning("Rejected expired access token.")
+        logger.warning("Rejected expired access token.")
         return None, None, None

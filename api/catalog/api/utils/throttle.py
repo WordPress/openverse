@@ -1,14 +1,10 @@
 import abc
-import logging
 
 from rest_framework.throttling import SimpleRateThrottle
 
 from django_redis import get_redis_connection
 
 from catalog.api.utils.oauth2_helper import get_token_info
-
-
-log = logging.getLogger(__name__)
 
 
 class ThrottleExemption(abc.ABC):
