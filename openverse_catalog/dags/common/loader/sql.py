@@ -198,7 +198,7 @@ def _clean_intermediate_table_data(postgres_hook, load_table) -> tuple[int, int]
             WHERE
               p1.ctid < p2.ctid
               AND p1.{col.PROVIDER.db_name} = p2.{col.PROVIDER.db_name}
-              AND p1.{col.FOREIGN_ID.db_name} = p2.{col.FOREIGN_ID.db_name};
+              AND MD5(p1.{col.FOREIGN_ID.db_name}) = MD5(p2.{col.FOREIGN_ID.db_name});
             """
         ),
         handler=RETURN_ROW_COUNT,
@@ -287,7 +287,7 @@ def upsert_records_to_db_table(
         WHERE NOT EXISTS (
             SELECT {col.DIRECT_URL.name} from {db_table}
             WHERE {col.DIRECT_URL.name} = new.{col.DIRECT_URL.name} AND
-                {col.FOREIGN_ID.name} <> new.{col.FOREIGN_ID.name}
+                MD5({col.FOREIGN_ID.name}) <> MD5(new.{col.FOREIGN_ID.name})
         )
         ON CONFLICT ({col.PROVIDER.db_name}, md5({col.FOREIGN_ID.db_name}))
         DO UPDATE SET
