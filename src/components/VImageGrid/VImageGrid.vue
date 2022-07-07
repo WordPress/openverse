@@ -3,7 +3,7 @@
     <div class="image-grid flex flex-wrap gap-4">
       <VImageCell
         v-for="(image, index) in images"
-        :key="index"
+        :key="image.id"
         :image="image"
         @shift-tab="handleShiftTab($event, index)"
       />
