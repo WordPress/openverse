@@ -9,7 +9,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: pnpm/action-setup@v2.2.1
+    - uses: pnpm/action-setup@v2.2.2
 
     - name: Cache pnpm modules
       uses: actions/cache@v3
