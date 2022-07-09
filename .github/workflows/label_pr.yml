@@ -33,4 +33,4 @@ jobs:
         working-directory: ./automations/python
         run: |
           pipenv run python label_pr.py \
-            --pr-url $PR_URL
+            --pr-url "$PR_URL"
