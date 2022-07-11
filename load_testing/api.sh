@@ -4,7 +4,7 @@ set -e
 
 source ./.env.sh || (echo 'Please create a `.env.sh` file based on the `.env.sh.template` file.' > /dev/stderr && false)
 
-host=${1:-http://localhost:8080}
+host=$1
 
 auth_header="Authorization: Bearer $ACCESS_TOKEN"
 
