@@ -37,7 +37,7 @@ jobs:
         env:
           INPUT_IMAGE: ${{ github.event.inputs.image }}
         run: |
-          docker load --input /tmp/$INPUT_IMAGE.tar
-          docker tag openverse-$INPUT_IMAGE \
-            ghcr.io/wordpress/openverse-$INPUT_IMAGE:${{ github.event.inputs.commit }}
-          docker push --all-tags ghcr.io/wordpress/openverse-$INPUT_IMAGE
+          docker load --input "/tmp/$INPUT_IMAGE.tar"
+          docker tag "openverse-$INPUT_IMAGE" \
+            "ghcr.io/wordpress/openverse-$INPUT_IMAGE:${{ github.event.inputs.commit }}"
+          docker push --all-tags "ghcr.io/wordpress/openverse-$INPUT_IMAGE"
