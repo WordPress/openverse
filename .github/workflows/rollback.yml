@@ -1,0 +1,51 @@
+name: Rollback Frontend
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        description: The environment to roll back. `staging` or `production`.
+      tag:
+        required: true
+        description: The GHCR image tag to which the environment should be rolled back
+
+jobs:
+  rollback:
+    name: Perform Rollback
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Validate `tag` input
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: versions } = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
+              package_type: 'container',
+              package_name: 'openverse-frontend',
+              org: 'WordPress',
+            })
+
+            const exists = versions.some(v => v.name === "${{ inputs.tag }}")
+
+            if (!exists) {
+              throw new Error("`${{ inputs.tag }}` does not appear to be a valid tag for the ghcr.io/wordpress/openverse-frontend image.")
+            }
+
+      - uses: ./github/actions/production-frontend-deploy
+        if: inputs.environment == 'production'
+        with:
+          ref: ${{ inputs.tag }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - uses: ./github/actions/staging-frontend-deploy
+        if: inputs.environment == 'staging'
+        with:
+          ref: ${{ inputs.tag }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}

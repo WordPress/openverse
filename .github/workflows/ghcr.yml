@@ -1,4 +1,4 @@
-name: GitHub Container Registry
+name: GitHub Container Registry & Deployment
 
 on:
   push:
@@ -7,15 +7,33 @@ on:
   pull_request:
     branches:
       - main
+  release:
+    types: [published]
+
+# Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for pull requests
+  # or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
 
 jobs:
   push-to-ghcr:
     name: Build and push image for commit
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.owner.login == 'WordPress'
+    # prevent running on fork PRs
+    if: github.event_name == 'push' || github.event_name == 'release' || github.event.pull_request.head.repo.owner.login == 'WordPress'
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout branch or push to main
+        uses: actions/checkout@v3
+        if: github.event_name != 'release'
+
+      - name: Checkout release
+        uses: actions/checkout@v3
+        if: github.event_name == 'release'
+        with:
+          ref: ${{ github.event.release.tag_name }}
 
       - uses: docker/setup-buildx-action@v2
         with:
@@ -34,7 +52,22 @@ jobs:
           tags: |
             type=sha
             type=ref,event=tag
-            ${{ github.event_name == 'push' && 'type=raw,value=main' || '' }}
+            type=raw,value=main,enabled=${{ github.event_name == 'push' }}
+
+      - name: Get relevant tag for internal image version
+        id: get-version
+        shell: python
+        run: |
+          import json
+          metadata = json.loads('${{ steps.metadata.outputs.json }}')
+          version = metadata["labels"]["org.opencontainers.image.version"]
+          if version == "main":
+              # get first version that isn't main
+              for tag in metadata["tags"]:
+                  if ":main" not in tag:
+                      version = tag.split(":")[1]
+
+          print(f"::set-output name=version::{version}")
 
       - uses: docker/build-push-action@v3
         with:
@@ -42,3 +75,39 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           push: true
+          build-args: |
+            RELEASE=${{ steps.get-version.outputs.version }}
+
+  deploy-staging:
+    name: Deploy staging frontend
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs: push-to-ghcr
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/staging-frontend-deploy
+        with:
+          tag: "main"
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  deploy-production:
+    name: Deploy production frontend
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    needs: push-to-ghcr
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - uses: ./.github/actions/production-frontend-deploy
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}

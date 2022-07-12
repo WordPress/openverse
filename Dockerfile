@@ -6,13 +6,13 @@ USER node
 
 WORKDIR /home/node/app
 
-COPY pnpm-lock.yaml .
+COPY --chown=node:node pnpm-lock.yaml .
 
 # install dependencies including local development tools
 RUN pnpm fetch
 
 # copy the rest of the content
-COPY --chmod=777 . /home/node/app
+COPY --chown=node:node . /home/node/app
 
 RUN pnpm install -r --offline
 
@@ -22,9 +22,11 @@ ENV NUXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
 ARG API_URL
+ARG RELEASE
+
+RUN echo "{\"release\":\"${RELEASE}\"}" > /home/node/app/src/static/version.json
 
 RUN pnpm i18n
-# build the application and generate a distribution package
 RUN pnpm build:only
 
 COPY ecosystem.config.js /home/node/app/ecosystem.config.js
