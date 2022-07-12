@@ -20,7 +20,7 @@ Before designing a proposal, browse the [Design Library](https://www.figma.com/f
 
 Once you are done and ready to share your idea, create a design issue and fill the content structure template. Please be as specific and concise as possible and feel free to add mockups, prototypes, videos, sketches, and anything that makes your idea easy to understand.
 
-After creating the issue, this will be labeled with `aspect: design`. The [current issues](https://github.com/WordPress/openverse-frontend/issues?q=is%3Aopen+is%3Aissue+label%3A%22%F0%9F%96%BC%EF%B8%8F+aspect%3A+design%22) can also guide you on how to describe your solution and how the discussion evolves before starting the implementation.
+After creating the issue, it will be labeled with `aspect: design`. Please reference [existing design issues](https://github.com/WordPress/openverse-frontend/issues?q=is%3Aopen+is%3Aissue+label%3A%22%F0%9F%96%BC%EF%B8%8F+aspect%3A+design%22) as a guide for how to describe your solution and to understand how the discussion evolves before implementation begins.
 
 ## 💻️ Code contributions
 
