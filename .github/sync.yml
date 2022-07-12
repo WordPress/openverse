@@ -22,6 +22,10 @@ group:
         dest: .github/workflows/pr_label_check.yml
       - source: .github/workflows/pr_ping.yml
         dest: .github/workflows/pr_ping.yml
+      - source: .github/workflows/actionlint.yml
+        dest: .github/workflows/actionlint.yml
+      - source: .github/actionlint-matcher.json
+        dest: .github/actionlint-matcher.json
       # Downstream workflows
       - source: .github/workflows_downstream/draft_release.yml
         dest: .github/workflows/draft_release.yml

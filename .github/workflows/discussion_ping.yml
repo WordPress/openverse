@@ -21,7 +21,7 @@ jobs:
       - name: Send notification for new discussion
         run: |
           curl \
-            $slack_url \
+            "$slack_url" \
             -X POST \
             -H 'Content-Type: application/json' \
             -d '{"text":"New discussion opened by '"$discussion_author"' in '"$discussion_repo"': #'"$discussion_number"' - '"$discussion_title"'","blocks":[{"type":"section","text":{"type":"mrkdwn","text":":github: New discussion opened by *'"$discussion_author"'* in `'"$discussion_repo"'`:\n<'"$discussion_url"'|#'"$discussion_number"' - '"$discussion_title"'>"}}]}'
