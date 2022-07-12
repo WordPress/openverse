@@ -10,7 +10,7 @@ Please be aware that as a project of the WordPress Foundation, Openverse follows
 
 ### How to contribute with design
 
-If you'd like to contribute to the design or front-end, feel free to propose a solution to an existing problem labeled with [Needs Design](https://github.com/WordPress/openverse-frontend/issues?q=is%3Aopen+is%3Aissue+label%3A%22needs+design%22), or share an idea if you think it meets Openverse's goals.
+If you'd like to contribute to the design, feel free to propose a solution to an existing problem labeled with [Needs Design](https://github.com/WordPress/openverse-frontend/issues?q=is%3Aopen+is%3Aissue+label%3A%22needs+design%22), or share an idea if you think it meets Openverse's goals.
 
 The [WordPress Design team](http://make.wordpress.org/design/) uses [Figma](https://www.figma.com/) to collaborate and share work for all WordPress projects. If you are not familiar with designing for WordPress, please carefully read the [design handbook](https://make.wordpress.org/design/handbook/). Once you have a [WordPress Slack](https://make.wordpress.org/chat/) account, join the [#design channel](http://wordpress.slack.com/messages/design/) and ask the team to set you up with a free Figma account.
 
@@ -21,6 +21,14 @@ Before designing a proposal, browse the [Design Library](https://www.figma.com/f
 Once you are done and ready to share your idea, [create an issue with the `design` label and fill in the template](https://github.com/WordPress/openverse-frontend/issues/new?assignees=&labels=🖼️+aspect%3A+design%2C✨+goal%3A+improvement%2C+🚦+status%3A+awaiting+triage&template=feature_request.md&title=<Replace+this+with+actual+title>). Please be as specific and concise as possible and feel free to add mockups, prototypes, videos, sketches, and anything that makes your idea easier to understand.
 
 After creating the issue, it will be labeled with `aspect: design`. Please reference [existing design issues](https://github.com/WordPress/openverse-frontend/issues?q=is%3Aopen+is%3Aissue+label%3A%22%F0%9F%96%BC%EF%B8%8F+aspect%3A+design%22) as a guide for how to describe your solution and to understand how the discussion evolves before implementation begins.
+
+## 📖 Translation contributions
+
+You can also contribute to Openverse by translating it.
+
+An overview of Openverse translations is here: [https://translate.wordpress.org/projects/meta/openverse/](https://translate.wordpress.org/projects/meta/openverse/)
+
+A getting started guide for translating on GlotPress (the software behind [translate.wordpress.org](http://translate.wordpress.org)) is here: [https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started](https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started)
 
 ## 💻️ Code contributions
 
@@ -90,11 +98,3 @@ Skip any steps you've already completed on your own. This is meant as an exhaust
 Most of these issues are potentially able to be completed in less than 4 hours, development environment set up included. It may take significantly more or less than 4 hours depending on experience and how smoothly development environment set up goes. Unfortunately sometimes dev env set up can sometimes be tricky! In these cases it would be helpful to the Openverse project to share your experience in an issue so we can try to remove any roadblocks for future contributors. **You can make meaningful contributions to the project in the form of valuable feedback about the development experience!**
 
 [List of Good First Issues](https://github.com/search?q=label%3A%22good+first+issue%22+state%3Aopen+is%3Aissue+repo%3Awordpress%2Fopenverse+repo%3Awordpress%2Fopenverse-frontend+repo%3Awordpress%2Fopenverse-api+repo%3Awordpress%2Fopenverse-catalog+label%3A%22good+first+issue%22+state%3Aopen+repo%3Awordpress%2Fopenverse&type=Issues)
-
-## 📖 Translation contributions
-
-You can also contribute to Openverse by translating it.
-
-An overview of Openverse translations is here: [https://translate.wordpress.org/projects/meta/openverse/](https://translate.wordpress.org/projects/meta/openverse/)
-
-A getting started guide for translating on GlotPress (the software behind [translate.wordpress.org](http://translate.wordpress.org)) is here: [https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started](https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started)
