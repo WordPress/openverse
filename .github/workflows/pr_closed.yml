@@ -10,8 +10,7 @@ jobs:
     name: Clean API developer docs preview
     runs-on: ubuntu-latest
     # Check if the event is not triggered by a fork or dependabot
-    if: github.event_name == 'pull_request' && github.repository_owner == 'WordPress' && github.actor != 'dependabot[bot]'
-
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.owner.login == 'WordPress' && github.actor != 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v3
         with:
