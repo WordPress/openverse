@@ -1,6 +1,6 @@
 set dotenv-load := false
 
-DOCKER_HOST := if os() == "darwin" { "host.docker.internal" } else { "172.17.0.1" }
+DOCKER_HOST := if os() == "macos" { "host.docker.internal" } else { "172.17.0.1" }
 
 build:
     docker build . -t openverse-load-testing:latest
