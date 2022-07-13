@@ -5,7 +5,7 @@ labels: "🛠 goal: fix, 🚦 status: awaiting triage"
 title: "<Replace this with actual title>"
 ---
 
-## Problem
+## Sentry link
 
 <!-- The public (aka "share") Sentry issue link. -->
 
