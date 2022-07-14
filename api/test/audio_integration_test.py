@@ -21,6 +21,7 @@ from test.media_integration import (
     thumb_compression,
     thumb_full_size,
     thumb_webp,
+    uuid_validation,
 )
 
 import pytest
@@ -115,3 +116,9 @@ def test_audio_report(audio_fixture):
 
 def test_audio_license_filter_case_insensitivity():
     license_filter_case_insensitivity("audio")
+
+
+def test_audio_uuid_validation():
+    uuid_validation("audio", "123456789123456789123456789123456789")
+    uuid_validation("audio", "12345678-1234-5678-1234-1234567891234")
+    uuid_validation("audio", "abcd")

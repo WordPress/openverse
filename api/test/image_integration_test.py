@@ -21,6 +21,7 @@ from test.media_integration import (
     thumb_compression,
     thumb_full_size,
     thumb_webp,
+    uuid_validation,
 )
 from urllib.parse import urlencode
 
@@ -132,3 +133,9 @@ def test_oembed_endpoint_for_xml():
 
 def test_image_license_filter_case_insensitivity():
     license_filter_case_insensitivity("images")
+
+
+def test_image_uuid_validation():
+    uuid_validation("images", "123456789123456789123456789123456789")
+    uuid_validation("images", "12345678-1234-5678-1234-1234567891234")
+    uuid_validation("images", "abcd")
