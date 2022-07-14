@@ -44,9 +44,7 @@ DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
 
 ENVIRONMENT = config("ENVIRONMENT", default="local")
 
-ALLOWED_HOSTS = [
-    "api-dev.openverse.engineering",
-    "api.openverse.engineering",
+ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",") + [
     gethostname(),
     gethostbyname(gethostname()),
 ]
