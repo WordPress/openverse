@@ -16,6 +16,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            const { data: members } = await github.rest.teams.listMembersInOrg({
+              org: 'WordPress',
+              team_slug: 'openverse-maintainers',
+            });
+
+            const isAllowed = members.some(m => m.login === "${{ github.actor }}")
+
+            if (!isAllowed) {
+              throw new Error(
+                "Only GitHub users in the @WordPress/openverse-maintainers "
+                + "team are allowed to run this workflow. If you need to run "
+                + "this workflow, please reach out to that group for help."
+              )
+            }
+
       - uses: actions/checkout@v3
 
       - name: Validate `tag` input
@@ -34,18 +53,18 @@ jobs:
               throw new Error("`${{ inputs.tag }}` does not appear to be a valid tag for the ghcr.io/wordpress/openverse-frontend image.")
             }
 
-      - uses: ./github/actions/production-frontend-deploy
+      - uses: ./.github/actions/production-frontend-deploy
         if: inputs.environment == 'production'
         with:
-          ref: ${{ inputs.tag }}
+          tag: ${{ inputs.tag }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - uses: ./github/actions/staging-frontend-deploy
+      - uses: ./.github/actions/staging-frontend-deploy
         if: inputs.environment == 'staging'
         with:
-          ref: ${{ inputs.tag }}
+          tag: ${{ inputs.tag }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
