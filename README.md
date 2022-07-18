@@ -25,20 +25,6 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
   For a full description of its capabilities, please see the [browsable documentation](https://api.openverse.engineering).
 - **ingestion_server/**: a service for downloading and indexing search data once it has been prepared by the Openverse Catalog
 
-## Troubleshooting
-
-### Diagnosing local Elasticsearch issues
-
-If the API server container failed to start, there's a good chance that Elasticsearch failed to start on your machine. Ensure that you have allocated enough memory to Docker applications, otherwise the container will instantly exit with an error. Also, if the logs mention "insufficient max map count", increase the number of open files allowed on your system. For most Linux machines, you can fix this by adding the following line to `/etc/sysctl.conf`:
-```ini
-vm.max_map_count=262144
-```
-
-To make this setting take effect, update kernel state.
-```bash
-sudo sysctl -p
-```
-
 ## Contributing
 
 Pull requests are welcome! Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community members on #openverse.
