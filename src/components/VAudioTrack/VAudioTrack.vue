@@ -65,6 +65,7 @@ import {
   AudioLayout,
   AudioSize,
   AudioStatus,
+  activeAudioStatus,
   layoutMappings,
 } from '~/constants/audio'
 
@@ -192,7 +193,7 @@ export default defineComponent({
 
     const updateTimeLoop = () => {
       if (localAudio) {
-        if (status.value === 'playing' || status.value === 'loading') {
+        if (activeAudioStatus.includes(status.value)) {
           currentTime.value = localAudio.currentTime
           window.requestAnimationFrame(updateTimeLoop)
         } else {
@@ -334,7 +335,11 @@ export default defineComponent({
 
     /* Interface with VPlayPause */
 
-    const handleToggle = (state?: 'playing' | 'paused') => {
+    /**
+     * This function can safely ignore the `loading` status because
+     * that status is never toggled _to_.
+     */
+    const handleToggle = (state?: 'playing' | 'paused' | 'played') => {
       if (!state) {
         switch (status.value) {
           case 'playing':
@@ -420,7 +425,9 @@ export default defineComponent({
     const handleSpace = (event: KeyboardEvent) => {
       if (!isBoxed.value) return
       event.preventDefault()
-      status.value = status.value === 'playing' ? 'paused' : 'playing'
+      status.value = activeAudioStatus.includes(status.value)
+        ? 'paused'
+        : 'playing'
       handleToggle(status.value)
     }
 

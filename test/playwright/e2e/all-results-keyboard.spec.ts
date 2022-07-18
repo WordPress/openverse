@@ -1,13 +1,10 @@
 import { test, expect, Page } from '@playwright/test'
 
+import audio from '~~/test/playwright/utils/audio'
+
 import { keycodes } from '~/constants/key-codes'
 
-const walkToType = async (type: 'image' | 'audio', page: Page) => {
-  // Go to skip to content button
-  await page.keyboard.press(keycodes.Tab)
-  // Skip to content
-  await page.keyboard.press(keycodes.Enter)
-
+const walkToNextOfType = async (type: 'image' | 'audio', page: Page) => {
   const isActiveElementOfType = () => {
     return page.evaluate(
       ([contextType]) =>
@@ -24,6 +21,15 @@ const walkToType = async (type: 'image' | 'audio', page: Page) => {
   while (!(await isActiveElementOfType())) {
     await page.keyboard.press(keycodes.Tab)
   }
+}
+
+const walkToType = async (type: 'image' | 'audio', page: Page) => {
+  // Go to skip to content button
+  await page.keyboard.press(keycodes.Tab)
+  // Skip to content
+  await page.keyboard.press(keycodes.Enter)
+
+  await walkToNextOfType(type, page)
 }
 
 const locateFocusedResult = async (page: Page) => {
@@ -74,15 +80,13 @@ test.describe('all results grid keyboard accessibility test', () => {
   }) => {
     await walkToType('audio', page)
     const focusedResult = await locateFocusedResult(page)
-    const playButton = focusedResult.locator('[aria-label="Play"]')
+    const playButton = await audio.getInactive(focusedResult)
     await playButton.click()
-
     // should not navigate
     expect(page.url()).toMatch(/\/search\?q=birds$/)
 
-    const pauseButton = focusedResult.locator('[aria-label="Pause"]')
-    await expect(pauseButton).toBeVisible()
-    await pauseButton.click()
+    const pauseButton = await audio.getActive(focusedResult)
+    pauseButton.click()
     await expect(playButton).toBeVisible()
   })
 
@@ -92,8 +96,27 @@ test.describe('all results grid keyboard accessibility test', () => {
     await walkToType('audio', page)
     await page.keyboard.press(keycodes.Spacebar)
     const focusedResult = await locateFocusedResult(page)
-    await expect(focusedResult.locator('[aria-label="Pause"]')).toBeVisible()
+    await expect(await audio.getActive(focusedResult)).toBeVisible()
     await page.keyboard.press(keycodes.Spacebar)
-    await expect(focusedResult.locator('[aria-label="Play"]')).toBeVisible()
+    await expect(await audio.getInactive(focusedResult)).toBeVisible()
+  })
+
+  test('should pause audio after playing another', async ({ page }) => {
+    await walkToType('audio', page)
+    const focusedResult = await locateFocusedResult(page)
+    const playButton = await audio.getInactive(focusedResult)
+    await playButton.click()
+    const pauseButton = await audio.getActive(focusedResult)
+
+    await page.keyboard.press(keycodes.Tab)
+    await walkToNextOfType('audio', page)
+
+    const nextFocusedResult = await locateFocusedResult(page)
+    const nextPlayButton = await audio.getInactive(nextFocusedResult)
+    await nextPlayButton.click()
+    await audio.getActive(nextFocusedResult)
+
+    await expect(playButton).toBeVisible()
+    await expect(pauseButton).not.toBeVisible()
   })
 })

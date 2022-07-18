@@ -31,7 +31,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
-import type { AudioLayout, AudioStatus } from '~/constants/audio'
+import { AudioLayout, AudioStatus, statusVerbMap } from '~/constants/audio'
 import { defineEvent } from '~/types/emits'
 
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
@@ -40,13 +40,6 @@ import type { ButtonConnections, ButtonVariant } from '~/components/VButton.vue'
 import playIcon from '~/assets/icons/play.svg'
 import pauseIcon from '~/assets/icons/pause.svg'
 import replayIcon from '~/assets/icons/replay.svg'
-
-const statusVerbMap = {
-  playing: 'pause',
-  paused: 'play',
-  played: 'replay',
-  loading: 'loading',
-} as const
 
 const statusIconMap = {
   playing: pauseIcon,
