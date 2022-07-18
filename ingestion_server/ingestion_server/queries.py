@@ -7,26 +7,30 @@ from psycopg2.sql import Literal as PgLiteral
 from ingestion_server.constants.internal_types import ApproachType
 
 
-def get_existence_queries(table):
+def get_existence_queries(model: str, table: str = None) -> tuple[SQL, SQL]:
     """
     Get the query for checking whether an identifier exists in the deleted or
     the mature tables for the media. The media tables are assumed to be named
     with the prefixes "api_deleted" and "api_mature" respectively.
 
+    :param model: the name to use for the deleted and mature tables
     :param table: the name of the media table to check entries in
     :return: the queries to check if for presence in the deleted/mature table
     """
+
+    if not table:
+        table = model  # By default, tables are named after the model.
 
     exists_in_table = (
         "EXISTS(SELECT 1 FROM {table} " "WHERE identifier = {identifier}) AS {name}"
     )
     exists_in_deleted_table = SQL(exists_in_table).format(
-        table=Identifier(f"api_deleted{table}"),
+        table=Identifier(f"api_deleted{model}"),
         identifier=Identifier(table, "identifier"),
         name=Identifier("deleted"),
     )
     exists_in_mature_table = SQL(exists_in_table).format(
-        table=Identifier(f"api_mature{table}"),
+        table=Identifier(f"api_mature{model}"),
         identifier=Identifier(table, "identifier"),
         name=Identifier("mature"),
     )

@@ -15,26 +15,27 @@ it will actively monitor Postgres for updates and index them automatically. This
 is useful for local development environments.
 """
 
-import argparse
-import datetime
 import logging as log
-import sys
 import time
 import uuid
 from collections import deque
+from multiprocessing import Value
+from typing import Optional
 
 import elasticsearch
 import psycopg2
+import requests
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from decouple import config
 from elasticsearch import Elasticsearch, NotFoundError, RequestsHttpConnection, helpers
 from elasticsearch.exceptions import ConnectionError as ESConnectionError
-from elasticsearch_dsl import Search, connections
+from elasticsearch_dsl import connections
 from psycopg2.sql import SQL, Identifier, Literal
+from requests import RequestException
 
 from ingestion_server import slack
 from ingestion_server.distributed_reindex_scheduler import schedule_distributed_index
-from ingestion_server.elasticsearch_models import database_table_to_elasticsearch_model
+from ingestion_server.elasticsearch_models import media_type_to_elasticsearch_model
 from ingestion_server.es_mapping import index_settings
 from ingestion_server.qa import create_search_qa_index
 from ingestion_server.queries import get_existence_queries
@@ -69,33 +70,34 @@ REP_TABLES = config(
 TWELVE_HOURS_SEC = 60 * 60 * 12
 
 
-def elasticsearch_connect(timeout=300):
+def elasticsearch_connect(timeout: int = 300) -> Elasticsearch:
     """
     Repeatedly try to connect to Elasticsearch until successful.
-    :return: An Elasticsearch connection object.
+
+    :param timeout: the amount of time in seconds to wait for a successful connection
+    :return: an Elasticsearch client.
     """
-    while True:
+
+    while timeout > 0:
         try:
             return _elasticsearch_connect()
-        except ESConnectionError as e:
-            log.exception(e)
-            log.error("Reconnecting to Elasticsearch in 5 seconds. . .")
+        except ESConnectionError as err:
+            log.exception(err)
+            log.error("Reconnecting to Elasticsearch in 5 seconds...")
+            timeout -= 5
             time.sleep(5)
             continue
 
 
-def _elasticsearch_connect():
+def _elasticsearch_connect() -> Elasticsearch:
     """
-    Connect to configured Elasticsearch domain.
+    Connect to an Elasticsearch indices at the configured domain. This method also
+    handles AWS authentication using the AWS access key ID and the secret access key.
 
-    :param timeout: How long to wait before ANY request to Elasticsearch times
-    out. Because we use parallel bulk uploads (which sometimes wait long periods
-    of time before beginning execution), a value of at least 30 seconds is
-    recommended.
-    :return: An Elasticsearch connection object.
+    :return: an Elasticsearch client
     """
 
-    log.info("Connecting to %s %s with AWS auth", ELASTICSEARCH_URL, ELASTICSEARCH_PORT)
+    log.info(f"Connecting to {ELASTICSEARCH_URL}:{ELASTICSEARCH_PORT} with AWS auth")
     auth = AWSRequestsAuth(
         aws_access_key=AWS_ACCESS_KEY_ID,
         aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
@@ -169,64 +171,46 @@ def get_last_item_ids(table):
 class TableIndexer:
     def __init__(
         self,
-        es_instance,
-        tables,
-        task_id=None,
-        progress=None,
-        finish_time=None,
-        active_workers=None,
+        es_instance: Elasticsearch,
+        task_id: Optional[str] = None,
+        callback_url: Optional[str] = None,
+        progress: Optional[Value] = None,
+        active_workers: Optional[Value] = None,
     ):
         self.es = es_instance
         connections.connections.add_connection("default", self.es)
-        self.tables_to_watch = tables
-        # Optional multiprocessing.Values for examining indexing progress
+
         self.task_id = task_id
+        self.callback_url = callback_url
         self.progress = progress
-        self.finish_time = finish_time
         self.active_workers = active_workers
 
-    def _index_table(self, table, dest_idx=None):
-        """
-        Check that the database tables are in sync with Elasticsearch. If not,
-        begin replication.
-        """
-        last_pg_id, _ = get_last_item_ids(table)
-        if not last_pg_id:
-            log.warning(f"Tried to sync {table} but it was empty.")
-            return
-        # Find the last document inserted into elasticsearch
-        destination = dest_idx if dest_idx else table
-        s = Search(using=self.es, index=destination)
-        s.aggs.bucket("highest_pg_id", "max", field="id")
-        try:
-            es_res = s.execute()
-            last_es_id = int(es_res.aggregations["highest_pg_id"]["value"])
-        except (TypeError, NotFoundError):
-            log.info(
-                "No matching documents found in elasticsearch. "
-                "Replicating everything."
-            )
-            last_es_id = 0
-        log.info(f"highest_db_id, highest_es_id: {last_pg_id}, {last_es_id}")
-        # Select all documents in-between and replicate to Elasticsearch.
-        if last_pg_id > last_es_id:
-            log.info(f"Replicating range {last_es_id}-{last_pg_id}")
+    # Helpers
+    # =======
 
-            deleted, mature = get_existence_queries(table)
-            query = SQL(
-                "SELECT *, {deleted}, {mature} "
-                "FROM {table} "
-                "WHERE id BETWEEN {last_es_id} AND {last_pg_id} "
-                "AND license_version IS NOT NULL;"
-            ).format(
-                deleted=deleted,
-                mature=mature,
-                table=Identifier(table),
-                last_es_id=Literal(last_es_id),
-                last_pg_id=Literal(last_pg_id),
-            )
-            self.es.indices.create(index=dest_idx, body=index_settings(table))
-            self.replicate(table, dest_idx, query)
+    @staticmethod
+    def pg_chunk_to_es(pg_chunk, columns, model_name, dest_index):
+        """
+        Given a list of psycopg2 results, convert them all to Elasticsearch
+        documents.
+        """
+        # Map column names to locations in the row tuple
+        schema = {col[0]: idx for idx, col in enumerate(columns)}
+        model = media_type_to_elasticsearch_model.get(model_name)
+        if model is None:
+            log.error(f"Table {model_name} is not defined in elasticsearch_models.")
+            return []
+
+        documents = []
+        for row in pg_chunk:
+            if not (row[schema["removed_from_source"]] or row[schema["deleted"]]):
+                converted = model.database_row_to_elasticsearch_doc(row, schema)
+                converted = converted.to_dict(include_meta=True)
+                if dest_index:
+                    converted["_index"] = dest_index
+                documents.append(converted)
+
+        return documents
 
     def _bulk_upload(self, es_batch):
         max_attempts = 4
@@ -252,16 +236,20 @@ class TableIndexer:
                 continue
             break
 
-    def replicate(self, table, dest_index, query):
-        """
-        Replicate records from a given query.
+    # Job components
+    # ==============
 
-        :param table: The table to replicate the data from.
-        :param dest_index: The destination index to copy the data to.
-        :param query: The SQL query used to select data to copy.
-        :return:
+    def replicate(self, model_name: str, table_name: str, index_name: str, query: str):
         """
-        cursor_name = table + "_indexing_cursor"
+        Copy data from the given PostgreSQL table to the given Elasticsearch index.
+
+        :param model_name: the name of the ES models to use to generate the ES docs
+        :param table_name: the name of the PostgreSQL table from which to copy data
+        :param index_name: the name of the Elasticsearch index to which to upload data
+        :param query: the SQL query to use to select rows from the table
+        """
+
+        cursor_name = f"{table_name}_indexing_cursor"
         # Enable writing to Postgres so we can create a server-side cursor.
         pg_conn = database_connect()
         total_indexed_so_far = 0
@@ -286,8 +274,8 @@ class TableIndexer:
                 es_batch = self.pg_chunk_to_es(
                     pg_chunk=chunk,
                     columns=server_cur.description,
-                    origin_table=table,
-                    dest_index=dest_index,
+                    model_name=model_name,
+                    dest_index=index_name,
                 )
                 push_start_time = time.time()
                 num_docs = len(es_batch)
@@ -309,135 +297,89 @@ class TableIndexer:
                     self.progress.value = (total_indexed_so_far / num_to_index) * 100
             log.info(
                 f"Synchronized {num_converted_documents} from "
-                f"table '{table}' to Elasticsearch"
+                f"table '{table_name}' to Elasticsearch"
             )
-            if self.finish_time is not None:
-                self.finish_time.value = datetime.datetime.utcnow().timestamp()
         pg_conn.commit()
         pg_conn.close()
 
-    @staticmethod
-    def consistency_check(new_index, live_alias):
+    def refresh(self, index_name: str, change_settings: bool = False):
         """
-        Indexing can fail for a number of reasons, such as a full disk inside of
-        the Elasticsearch cluster, network errors that occurred during
-        synchronization, and numerous other scenarios. This function does some
-        basic comparison between the new search index and the database. If this
-        check fails, an alert gets raised and the old index will be left in
-        place. An operator must then investigate and either manually set the
-        alias or remediate whatever circumstances interrupted the indexing job
-        before running the indexing job once more.
+        Re-enable replicas and refresh the given index.
 
-        :param new_index: The newly created but not yet live index
-        :param live_alias: The name of the live index
-        :return: bool
+        :param index_name: the name of the index to replicate and refresh
+        :param change_settings: whether to set replication settings
         """
-        es = elasticsearch_connect()
-        if not es.indices.exists(index=live_alias):
-            return True
-        log.info("Refreshing and performing sanity check...")
-        # Make sure there are roughly as many documents in Elasticsearch
-        # as there are in our database.
-        es.indices.refresh(index=new_index)
-        _id, _ = get_last_item_ids(live_alias)
-        new_count = Search(using=es, index=new_index).count()
-        max_delta = 100
-        delta = abs(_id - new_count)
-        log.info(f"delta, max_delta: {delta}, {max_delta}")
-        return delta < max_delta
 
-    @staticmethod
-    def go_live(write_index, live_alias, active_workers=None):
+        self.es.indices.refresh(index=index_name)
+        if change_settings:
+            self.es.indices.put_settings(
+                index=index_name,
+                body={"index": {"number_of_replicas": 1}},
+            )
+
+    def ping_callback(self):
         """
-        Point the live index alias at the index we just created. Delete the
-        previous one.
+        Send a request to the callback URL indicating the completion of the task.
         """
-        es = elasticsearch_connect()
-        indices = set(es.indices.get("*"))
-        # Re-enable replicas and refresh.
-        es.indices.refresh(index=write_index)
-        es.indices.put_settings(
-            index=write_index, body={"index": {"number_of_replicas": 1}}
+
+        if not self.callback_url:
+            return
+
+        try:
+            log.info("Sending callback request")
+            res = requests.post(self.callback_url)
+            log.info(f"Response: {res.text}")
+        except RequestException as err:
+            log.error("Failed to send callback!")
+            log.error(err)
+
+    # Public API
+    # ==========
+
+    def reindex(
+        self, model_name: str, table_name: str = None, index_suffix: str = None, **_
+    ):
+        """
+        Copy contents of the database to a new Elasticsearch index.
+
+        :param model_name: the name of the media type
+        :param table_name: the name of the DB table, if different from model name
+        :param index_suffix: the unique suffix to add to the index name
+        """
+
+        if not index_suffix:
+            index_suffix = uuid.uuid4().hex
+        if not table_name:
+            table_name = model_name
+        destination_index = f"{model_name}-{index_suffix}"
+
+        log.info(
+            f"Creating index {destination_index} for model {model_name} "
+            f"from table {table_name}."
         )
-        # Cluster status will always be yellow in development environments
-        # because there will only be one node available. In production, there
-        # are many nodes, and the index should not be promoted until all
-        # shards have been initialized.
-        environment = config("ENVIRONMENT", default="local")
-        if environment != "local":
-            log.info("Waiting for replica shards. . .")
-            es.cluster.health(index=write_index, wait_for_status="green", timeout="12h")
-        # If the index exists already and it's not an alias, delete it.
-        if live_alias in indices:
-            log.warning("Live index already exists. Deleting and realiasing.")
-            es.indices.delete(index=live_alias)
-        # Create or update the alias so it points to the new index.
-        if es.indices.exists_alias(live_alias):
-            old = list(es.indices.get(live_alias).keys())[0]
-            index_update = {
-                "actions": [
-                    {"remove": {"index": old, "alias": live_alias}},
-                    {"add": {"index": write_index, "alias": live_alias}},
-                ]
-            }
-            es.indices.update_aliases(index_update)
-            log.info(f"Updated '{live_alias}' index alias to point to {write_index}")
-            log.info(f"Deleting old index {old}")
-            es.indices.delete(index=old)
-        else:
-            es.indices.put_alias(index=write_index, name=live_alias)
-            log.info(f"Created '{live_alias}' index alias pointing to {write_index}")
-        # If there were any active workers for this task, we should mark them complete.
-        if active_workers:
-            active_workers.value = int(False)
-        slack.info(
-            f"`{write_index}`: ES index promoted - data refresh complete! :tada:"
+        self.es.indices.create(
+            index=destination_index,
+            body=index_settings(model_name),
         )
 
-    def listen(self, poll_interval=10):
-        """
-        Poll the database for changes every poll_interval seconds. If new data
-        has been added to the database, index it.
+        log.info("Running distributed index using indexer workers.")
+        self.active_workers.value = int(True)
+        schedule_distributed_index(
+            database_connect(), model_name, table_name, destination_index, self.task_id
+        )
 
-        :arg poll_interval: The number of seconds to wait before polling the
-        database for changes.
+    def update_index(self, model_name: str, index_suffix: str, since_date: str, **_):
         """
-        while True:
-            log.info("Listening for updates...")
-            try:
-                for table in self.tables_to_watch:
-                    self._index_table(table)
-            except ESConnectionError:
-                self.es = elasticsearch_connect()
-            time.sleep(poll_interval)
+        Update index based on changes in the database after the given date.
 
-    def reindex(self, model_name: str, distributed=None):
+        :param model_name: the name of the media type
+        :param index_suffix: the unique suffix of the index to update
+        :param since_date: the date after which to update the records
         """
-        Copy contents of the database to a new Elasticsearch index. Create an
-        index alias to make the new index the "live" index when finished.
-        """
-        suffix = uuid.uuid4().hex
-        destination_index = f"{model_name}-{suffix}"
-        if distributed is None:
-            distributed = config("ENVIRONMENT", default="local") != "local"
-        if distributed:
-            self.es.indices.create(
-                index=destination_index, body=index_settings(model_name)
-            )
-            self.active_workers.value = int(True)
-            schedule_distributed_index(
-                database_connect(), destination_index, self.task_id
-            )
-        else:
-            self._index_table(model_name, dest_idx=destination_index)
-            slack.verbose(
-                f"`{model_name}`: Elasticsearch reindex complete | "
-                f"_Next: promote index as primary_"
-            )
-            self.go_live(destination_index, model_name)
 
-    def update(self, model_name: str, since_date):
-        log.info(f"Updating index {model_name} with changes since {since_date}")
+        destination_index = f"{model_name}-{index_suffix}"
+
+        log.info(f"Updating index {destination_index} with changes since {since_date}.")
         deleted, mature = get_existence_queries(model_name)
         query = SQL(
             "SELECT *, {deleted}, {mature} "
@@ -449,69 +391,81 @@ class TableIndexer:
             model_name=Identifier(model_name),
             since_date=Literal(since_date),
         )
-        self.replicate(model_name, model_name, query)
+        self.replicate(model_name, model_name, destination_index, query)
+        self.refresh(destination_index)
+        self.ping_callback()
 
-    @staticmethod
-    def load_test_data(table):
-        """Create test indices in Elasticsearch for QA."""
-        create_search_qa_index(table)
+    def load_test_data(self, model_name: str, **_):
+        """
+        Create test indices in Elasticsearch for QA.
 
-    @staticmethod
-    def pg_chunk_to_es(pg_chunk, columns, origin_table, dest_index):
+        :param model_name: the name of the media type
         """
-        Given a list of psycopg2 results, convert them all to Elasticsearch
-        documents.
+
+        create_search_qa_index(model_name)
+        if self.progress is not None:
+            self.progress.value = 100  # mark job as completed
+
+    def point_alias(self, model_name: str, index_suffix: str, alias: str, **_):
         """
-        # Map column names to locations in the row tuple
-        schema = {col[0]: idx for idx, col in enumerate(columns)}
+        Map the given index to the given alias.
+
+        :param model_name: the name of the media type
+        :param index_suffix: the suffix of the index for which to assign the alias
+        :param alias: the name of the alias to assign to the index
+        """
+
+        dest_index = f"{model_name}-{index_suffix}"
+
+        environment = config("ENVIRONMENT", default="local")
+        if environment != "local":
+            # Cluster status will always be yellow in development environments
+            # because there will only be one node available. In production, there
+            # are many nodes, and the index should not be promoted until all
+            # shards have been initialized.
+            log.info("Waiting for replica shards. . .")
+            self.es.cluster.health(
+                index=dest_index,
+                wait_for_status="green",
+                timeout="12h",
+            )
+
         try:
-            model = database_table_to_elasticsearch_model[origin_table]
-        except KeyError:
-            log.error(f"Table {origin_table} is not defined in elasticsearch_models.")
-            return []
+            curr_index = list(self.es.indices.get(index=alias).keys())[0]
+            if curr_index == alias:
+                # Alias is an index, this is fatal.
+                message = f"There is an index named {alias}, cannot proceed."
+                log.error(message)
+                slack.error(message)
+                return
+            elif curr_index != dest_index:
+                # Alias is in use, atomically remap it to the new index.
+                self.es.indices.update_aliases(
+                    body={
+                        "actions": [
+                            # unlink alias from the old index
+                            {"remove": {"index": curr_index, "alias": alias}},
+                            # link alias to the new index
+                            {"add": {"index": dest_index, "alias": alias}},
+                        ]
+                    }
+                )
+                message = (
+                    f"Migrated alias {alias} "
+                    f"from index {curr_index} to index {dest_index}."
+                )
+                log.info(message)
+                slack.info(message)
+            else:
+                # Alias is already mapped.
+                log.info(f"Alias {alias} already points to index {dest_index}.")
+        except NotFoundError:
+            # Alias does not exist, create it.
+            self.es.indices.put_alias(index=dest_index, name=alias)
+            message = f"Created alias {alias} pointing to index {dest_index}."
+            log.info(message)
+            slack.info(message)
 
-        documents = []
-        for row in pg_chunk:
-            if not (row[schema["removed_from_source"]] or row[schema["deleted"]]):
-                converted = model.database_row_to_elasticsearch_doc(row, schema)
-                converted = converted.to_dict(include_meta=True)
-                if dest_index:
-                    converted["_index"] = dest_index
-                documents.append(converted)
-
-        return documents
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--reindex",
-        default=None,
-        help="Reindex data from a specific model in the database. Data is "
-        "copied to a new index and then made 'live' using index aliases,"
-        " making it possible to reindex without downtime.",
-    )
-    parser.add_argument(
-        "--update",
-        nargs=2,
-        default=None,
-        help="Update the Elasticsearch index with all changes since a UTC date."
-        "ex: --update image 2018-11-09",
-    )
-    parsed = parser.parse_args()
-    fmt = "%(asctime)s %(message)s"
-    log.basicConfig(stream=sys.stdout, level=log.INFO, format=fmt)
-    log.getLogger(TableIndexer.__name__).setLevel(log.INFO)
-    log.info("Connecting to Elasticsearch")
-    elasticsearch_client = elasticsearch_connect()
-    syncer = TableIndexer(elasticsearch_client, REP_TABLES)
-    if parsed.reindex:
-        log.info(f"Reindexing {parsed.reindex}")
-        syncer.reindex(parsed.reindex)
-    elif parsed.update:
-        index, date = parsed.update
-        syncer.update(index, date)
-        log.info("Update finished.")
-    else:
-        log.info("Beginning indexer in daemon mode")
-        syncer.listen(SYNCER_POLL_INTERVAL)
+        if self.progress is not None:
+            self.progress.value = 100  # mark job as completed
+        self.ping_callback()

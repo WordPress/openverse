@@ -213,7 +213,7 @@ class TestIngestion(unittest.TestCase):
             cursor.execute(constraint_sql)
             return {constraint: name for name, constraint in cursor}
 
-    def _ingest_upstream(self, model):
+    def _ingest_upstream(self, model, suffix="integration"):
         """
         Check that INGEST_UPSTREAM task completes successfully and responds
         with a callback.
@@ -223,6 +223,7 @@ class TestIngestion(unittest.TestCase):
         req = {
             "model": model,
             "action": "INGEST_UPSTREAM",
+            "index_suffix": suffix,
             "callback_url": bottle_url,
         }
         res = requests.post(f"{ingestion_server}/task", json=req)
@@ -241,6 +242,30 @@ class TestIngestion(unittest.TestCase):
         assert (
             before_constraints == after_constraints
         ), "Constraints in DB don't match the names they had before the go-live"
+
+    def _promote(self, model, suffix="integration", alias=None):
+        """
+        Check that PROMOTE task completes successfully and configures alias mapping
+        in Elasticsearch.
+        """
+        if alias is None:
+            alias = model
+        req = {
+            "model": model,
+            "action": "PROMOTE",
+            "index_suffix": suffix,
+            "alias": alias,
+            "callback_url": bottle_url,
+        }
+        res = requests.post(f"{ingestion_server}/task", json=req)
+        stat_msg = "The job should launch successfully and return 202 ACCEPTED."
+        self.assertEqual(res.status_code, 202, msg=stat_msg)
+
+        # Wait for the task to send us a callback.
+        assert self.__class__.cb_queue.get(timeout=120) == "CALLBACK!"
+
+        es = self._get_es()
+        assert list(es.indices.get(index=alias).keys())[0] == f"{model}-{suffix}"
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -325,7 +350,7 @@ class TestIngestion(unittest.TestCase):
 
     @pytest.mark.order(2)
     def test_image_ingestion_succeeds(self):
-        self._ingest_upstream("image")
+        self._ingest_upstream("image", "integration")
 
     @pytest.mark.order(3)
     def test_task_count_after_one(self):
@@ -336,7 +361,7 @@ class TestIngestion(unittest.TestCase):
 
     @pytest.mark.order(4)
     def test_audio_ingestion_succeeds(self):
-        self._ingest_upstream("audio")
+        self._ingest_upstream("audio", "integration")
 
     @pytest.mark.order(5)
     def test_task_count_after_two(self):
@@ -358,6 +383,14 @@ class TestIngestion(unittest.TestCase):
         )
 
     @pytest.mark.order(6)
+    def test_promote_images(self):
+        self._promote("image", "integration", "image-main")
+
+    @pytest.mark.order(7)
+    def test_promote_audio(self):
+        self._promote("audio", "integration", "audio-main")
+
+    @pytest.mark.order(8)
     def test_upstream_indexed_images(self):
         """
         Check that the image data has been successfully indexed in
@@ -366,13 +399,12 @@ class TestIngestion(unittest.TestCase):
         """
 
         es = self._get_es()
-        es_query = {"query": {"match_all": {}}}
-        es.indices.refresh(index="image")
-        search_response = es.search(index="image", body=es_query)
+        es.indices.refresh(index="image-integration")
+        count = es.count(index="image-integration")["count"]
         msg = "There should be 5000 images in Elasticsearch after ingestion."
-        self.assertEquals(search_response["hits"]["total"]["value"], 5000, msg)
+        self.assertEquals(count, 5000, msg)
 
-    @pytest.mark.order(7)
+    @pytest.mark.order(9)
     def test_upstream_indexed_audio(self):
         """
         Check that the audio data has been successfully indexed in
@@ -381,13 +413,12 @@ class TestIngestion(unittest.TestCase):
         """
 
         es = self._get_es()
-        es_query = {"query": {"match_all": {}}}
-        es.indices.refresh(index="audio")
-        search_response = es.search(index="audio", body=es_query)
+        es.indices.refresh(index="audio-integration")
+        count = es.count(index="audio-integration")["count"]
         msg = "There should be 5000 audio tracks in Elasticsearch after ingestion."
-        self.assertEquals(search_response["hits"]["total"]["value"], 5000, msg)
+        self.assertEquals(count, 5000, msg)
 
-    @pytest.mark.order(8)
+    @pytest.mark.order(10)
     def test_update_index_images(self):
         """
         Check that the image data can be updated from the API database into
@@ -397,6 +428,7 @@ class TestIngestion(unittest.TestCase):
             "model": "image",
             "action": "UPDATE_INDEX",
             "since_date": "1999-01-01",
+            "index_suffix": "integration",
             "callback_url": bottle_url,
         }
         res = requests.post(f"{ingestion_server}/task", json=req)
@@ -406,7 +438,7 @@ class TestIngestion(unittest.TestCase):
         # Wait for the task to send us a callback.
         assert self.__class__.cb_queue.get(timeout=120) == "CALLBACK!"
 
-    @pytest.mark.order(9)
+    @pytest.mark.order(11)
     def test_update_index_audio(self):
         """
         Check that the audio data can be updated from the API database into
@@ -416,6 +448,7 @@ class TestIngestion(unittest.TestCase):
             "model": "audio",
             "action": "UPDATE_INDEX",
             "since_date": "1999-01-01",
+            "index_suffix": "integration",
             "callback_url": bottle_url,
         }
         res = requests.post(f"{ingestion_server}/task", json=req)

@@ -22,6 +22,7 @@ filelock = "*"
 pytest = "*"
 tldextract = "*"
 python-decouple = "*"
+jsonschema = "*"
 
 [requires]
 python_version = "3.10"

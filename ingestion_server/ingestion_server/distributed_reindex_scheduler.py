@@ -17,28 +17,23 @@ import boto3
 import requests
 from decouple import config
 
-from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.state import register_indexing_job
 
 
 client = boto3.client("ec2", region_name=config("AWS_REGION", default="us-east-1"))
 
 
-def schedule_distributed_index(db_conn, target_index, task_id):
+def schedule_distributed_index(db_conn, model_name, table_name, target_index, task_id):
     workers = _prepare_workers()
     registered = register_indexing_job(workers, target_index, task_id)
     if registered:
-        _assign_work(db_conn, workers, target_index)
+        _assign_work(db_conn, workers, model_name, table_name, target_index)
 
 
-def _assign_work(db_conn, workers, target_index):
+def _assign_work(db_conn, workers, model_name, table_name, target_index):
     """
     Target index has a form of `<media_type>-<uuid>`
     """
-    table_name = target_index.split("-")[0]
-    # Defaulting to 'image' for backward compatibility
-    if not table_name or table_name not in MEDIA_TYPES:
-        table_name = "image"
     est_records_query = f"SELECT id FROM {table_name} ORDER BY id DESC LIMIT 1"
     with db_conn.cursor() as cur:
         cur.execute(est_records_query)
@@ -55,6 +50,8 @@ def _assign_work(db_conn, workers, target_index):
     for idx, worker in enumerate(workers):
         worker_url = worker_url_template.format(worker)
         params = {
+            "model_name": model_name,
+            "table_name": table_name,
             "start_id": idx * records_per_worker,
             "end_id": (1 + idx) * records_per_worker,
             "target_index": target_index,
@@ -72,7 +69,8 @@ def _prepare_workers():
     """
     environment = config("ENVIRONMENT", default="local")
     if environment == "local":
-        return [socket.gethostbyname("indexer-worker")]
+        indexer_worker_host = config("INDEXER_WORKER_HOST", default="localhost")
+        return [socket.gethostbyname(indexer_worker_host)]
     instance_filters = [
         {"Name": "tag:Name", "Values": ["indexer-worker-" + environment + "*"]},
         {"Name": "instance-state-name", "Values": ["stopped", "running"]},

@@ -3,7 +3,6 @@ A small RPC API server for scheduling ingestion of upstream data and
 Elasticsearch indexing tasks.
 """
 
-import json
 import logging
 import sys
 import time
@@ -12,12 +11,13 @@ from multiprocessing import Process, Value
 from urllib.parse import urlparse
 
 import falcon
+from falcon.media.validators import jsonschema
 
-import ingestion_server.indexer as indexer
 from ingestion_server import slack
-from ingestion_server.constants.media_types import MEDIA_TYPES
+from ingestion_server.constants.media_types import MEDIA_TYPES, MediaType
+from ingestion_server.indexer import TableIndexer, elasticsearch_connect
 from ingestion_server.state import clear_state, worker_finished
-from ingestion_server.tasks import Task, TaskTracker, TaskTypes
+from ingestion_server.tasks import TaskTracker, TaskTypes, perform_task
 
 
 MODEL = "model"
@@ -47,140 +47,200 @@ class TaskResource(BaseTaskResource):
         parsed = urlparse(req.url)
         return parsed.scheme + "://" + parsed.netloc
 
-    @staticmethod
-    def _validate_create_task(request):
+    @jsonschema.validate(
+        req_schema={
+            "type": "object",
+            "properties": {
+                "model": {"type": "string", "enum": MEDIA_TYPES},
+                "action": {
+                    "type": "string",
+                    "enum": list(task_type.name for task_type in TaskTypes),
+                },
+                # Accepts all forms described in the PostgreSQL documentation:
+                # https://www.postgresql.org/docs/current/datatype-datetime.html
+                "since_date": {"type": "string"},
+                "index_suffix": {"type": "string"},
+                "alias": {"type": "string"},
+            },
+            "required": ["model", "action"],
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {"action": {"const": TaskTypes.POINT_ALIAS.name}}
+                    },
+                    "then": {"required": ["index_suffix", "alias"]},
+                },
+                {
+                    "if": {"properties": {"action": {"const": TaskTypes.PROMOTE.name}}},
+                    "then": {"required": ["index_suffix", "alias"]},
+                },
+                # TODO: delete eventually, rarely used
+                {
+                    "if": {
+                        "properties": {"action": {"const": TaskTypes.UPDATE_INDEX.name}}
+                    },
+                    "then": {"required": ["index_suffix", "since_date"]},
+                },
+            ],
+        }
+    )
+    def on_post(self, req, res):
         """
-        Validate an index creation task.
-        :return: None if valid else a string containing an error message.
+        Handles an incoming POST request. Schedules the specified task.
+
+        :param req: the incoming request
+        :param res: the appropriate response
         """
-        if request == b"":
-            return "Expected JSON request body but found nothing."
-        request = json.loads(request.decode("utf-8"))
-        if MODEL not in request:
-            return "No model supplied in request body."
-        if ACTION not in request:
-            return "No action supplied in request body."
-        if request[ACTION] not in [x.name for x in TaskTypes]:
-            return "Invalid action."
-        if request[ACTION] == TaskTypes.UPDATE_INDEX.name and SINCE_DATE not in request:
-            return "Received UPDATE request but no since_date."
 
-        return None
+        body = req.get_media()
 
-    def on_post(self, req, resp):
-        """Create a task."""
-        raw_body = req.stream.read()
-        request_error = self._validate_create_task(raw_body)
-        if request_error:
-            logging.warning(f"Invalid request made. Reason: {request_error}")
-            resp.status = falcon.HTTP_400
-            resp.media = {"message": request_error}
-            return
-        body = json.loads(raw_body.decode("utf-8"))
-        model = body[MODEL]
-        action = body[ACTION]
-        callback_url = None
-        if CALLBACK_URL in body:
-            callback_url = body[CALLBACK_URL]
-        since_date = body[SINCE_DATE] if SINCE_DATE in body else None
-        task_id = str(uuid.uuid4())
-        # Inject shared memory
+        # Generated fields
+        task_id = uuid.uuid4().hex  # no hyphens
+
+        # Required fields
+
+        model: MediaType = body[MODEL]
+        action = TaskTypes[body[ACTION]]
+
+        # Optional fields
+        callback_url = body.get("callback_url")
+        since_date = body.get("since_date")
+        index_suffix = body.get("index_suffix", task_id)
+        alias = body.get("alias")
+
+        # Shared memory
         progress = Value("d", 0.0)
         finish_time = Value("d", 0.0)
-        active_workers = Value(
-            "i", int(False)
-        )  # Tracks whether the task has any active distributed workers
-        task = Task(
-            model=model,
-            task_type=TaskTypes[action],
-            since_date=since_date,
-            progress=progress,
-            task_id=task_id,
-            finish_time=finish_time,
-            active_workers=active_workers,
-            callback_url=callback_url,
+        active_workers = Value("i", int(False))
+
+        task = Process(
+            target=perform_task,
+            kwargs={
+                "task_id": task_id,
+                "model": model,
+                "action": action,
+                "callback_url": callback_url,
+                "progress": progress,
+                "finish_time": finish_time,
+                "active_workers": active_workers,
+                # Task-specific keyword arguments
+                "since_date": since_date,
+                "index_suffix": index_suffix,
+                "alias": alias,
+            },
         )
         task.start()
-        task_id = self.tracker.add_task(
-            task, task_id, action, progress, finish_time, active_workers
+
+        self.tracker.add_task(
+            task_id,
+            task=task,
+            model=model,
+            action=action,
+            callback_url=callback_url,
+            progress=progress,
+            finish_time=finish_time,
+            active_workers=active_workers,
         )
+
         base_url = self._get_base_url(req)
         status_url = f"{base_url}/task/{task_id}"
+
         # Give the task a moment to start so we can detect immediate failure.
         # TODO: Use IPC to detect if the job launched successfully instead
         # of giving it 100ms to crash. This is prone to race conditions.
         time.sleep(0.1)
         if task.is_alive():
-            resp.status = falcon.HTTP_202
-            resp.media = {
+            res.status = falcon.HTTP_202
+            res.media = {
                 "message": "Successfully scheduled task",
                 "task_id": task_id,
                 "status_check": status_url,
             }
-            return
+        elif progress.value == 100:
+            res.status = falcon.HTTP_202
+            res.media = {
+                "message": "Successfully completed task",
+                "task_id": task_id,
+                "status_check": status_url,
+            }
         else:
-            resp.status = falcon.HTTP_500
-            resp.media = {
+            res.status = falcon.HTTP_500
+            res.media = {
                 "message": "Failed to schedule task due to an internal server "
                 "error. Check scheduler logs."
             }
-            return
 
-    def on_get(self, req, resp):
-        """List all indexing tasks."""
-        resp.media = self.tracker.list_task_statuses()
+    def on_get(self, _, res):
+        """
+        Handles an incoming GET request. Provides information about all past tasks.
+
+        :param _: the incoming request
+        :param res: the appropriate response
+        """
+
+        res.media = self.tracker.list_task_statuses()
 
 
 class TaskStatus(BaseTaskResource):
-    def on_get(self, req, resp, task_id):
-        """Check the status of a single task."""
-        task = self.tracker.id_task.get(task_id)
-        if task is None:
-            resp.status = falcon.HTTP_404
-            resp.media = {"message": f"No task found with id {task_id}"}
-            return
+    def on_get(self, _, res, task_id):
+        """
+        Handles an incoming GET request. Provides information about a single task.
 
-        percent_completed = self.tracker.id_progress[task_id].value
-        active_workers = bool(self.tracker.id_active_workers[task_id].value)
-        active = task.is_alive() or active_workers
+        :param _: the incoming request
+        :param res: the appropriate response
+        :param task_id: the ID of the task for which to get the information
+        """
 
-        resp.media = {
-            "active": active,
-            "percent_completed": percent_completed,
-            "error": percent_completed < 100 and not active,
-        }
+        try:
+            result = self.tracker.get_task_status(task_id)
+            res.media = result
+        except KeyError:
+            res.status = falcon.HTTP_404
+            res.media = {"message": f"No task found with id {task_id}."}
 
 
 class WorkerFinishedResource(BaseTaskResource):
-    """
-    For notifying ingestion server that an indexing worker has finished its
-    task.
-    """
-
     def on_post(self, req, _):
+        """
+        Handles an incoming POST request. Records messages sent from indexer workers.
+
+        :param req: the incoming request
+        :param _: the appropriate response
+        """
+
         task_data = worker_finished(str(req.remote_addr), req.media["error"])
         task_id = task_data.task_id
         target_index = task_data.target_index
-        active_workers = self.tracker.id_active_workers[task_id]
+        task_info = self.tracker.tasks[task_id]
+        active_workers = task_info["active_workers"]
 
         # Update global task progress based on worker results
-        self.tracker.id_progress[task_id].value = task_data.percent_successful
+        task_info["progress"].value = task_data.percent_successful
 
         if task_data.percent_successful == 100:
-            logging.info(
-                "All indexer workers succeeded! Attempting to promote index "
-                f"{target_index}"
-            )
+            logging.info(f"All indexer workers succeeded! New index: {target_index}")
             index_type = target_index.split("-")[0]
             if index_type not in MEDIA_TYPES:
                 index_type = "image"
-            slack.verbose(
-                f"`{index_type}`: Elasticsearch reindex complete | "
-                f"_Next: promote index as primary_"
+            slack.verbose(f"`{index_type}`: Elasticsearch reindex complete")
+
+            elasticsearch = elasticsearch_connect()
+            indexer = TableIndexer(
+                elasticsearch,
+                task_id,
+                task_info["callback_url"],
+                task_info["progress"],
+                task_info["active_workers"],
             )
-            f = indexer.TableIndexer.go_live
-            p = Process(target=f, args=(target_index, index_type, active_workers))
-            p.start()
+            task = Process(
+                target=indexer.refresh,
+                kwargs={
+                    "index_name": target_index,
+                    "change_settings": True,
+                },
+            )
+            task.start()
+            indexer.ping_callback()
         elif task_data.percent_completed == 100:
             # All workers finished, but not all were successful. Mark
             # workers as complete and do not attempt to go live with the new

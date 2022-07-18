@@ -17,7 +17,6 @@ from decouple import config
 from psycopg2.sql import SQL, Identifier, Literal
 
 from ingestion_server import slack
-from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.indexer import TableIndexer, elasticsearch_connect
 from ingestion_server.queries import get_existence_queries
 
@@ -33,11 +32,15 @@ ec2_client = boto3.client(
 class IndexingJobResource:
     def on_post(self, req, resp):
         j = req.media
+        model_name = j["model_name"]
+        table_name = j["table_name"]
         start_id = j["start_id"]
         end_id = j["end_id"]
         target_index = j["target_index"]
         notify_url = f"http://{req.remote_addr}:8001/worker_finished"
-        _execute_indexing_task(target_index, start_id, end_id, notify_url)
+        _execute_indexing_task(
+            model_name, table_name, target_index, start_id, end_id, notify_url
+        )
         log.info(f"Received indexing request for records {start_id}-{end_id}")
         resp.status = falcon.HTTP_201
 
@@ -47,14 +50,12 @@ class HealthcheckResource:
         resp.status = falcon.HTTP_200
 
 
-def _execute_indexing_task(target_index, start_id, end_id, notify_url):
-    # Defaulting to 'image' for backward compatibility
-    table_name = target_index.split("-")[0]
-    if table_name not in MEDIA_TYPES:
-        table_name = "image"
+def _execute_indexing_task(
+    model_name, table_name, target_index, start_id, end_id, notify_url
+):
     elasticsearch = elasticsearch_connect()
 
-    deleted, mature = get_existence_queries(table_name)
+    deleted, mature = get_existence_queries(model_name, table_name)
     query = SQL(
         "SELECT *, {deleted}, {mature} "
         "FROM {table_name} "
@@ -67,19 +68,19 @@ def _execute_indexing_task(target_index, start_id, end_id, notify_url):
         end_id=Literal(end_id),
     )
     log.info(f"Querying {query}")
-    indexer = TableIndexer(elasticsearch, table_name)
+    indexer = TableIndexer(elasticsearch)
     p = Process(
         target=_launch_reindex,
-        args=(table_name, target_index, query, indexer, notify_url),
+        args=(model_name, table_name, target_index, query, indexer, notify_url),
     )
     p.start()
     log.info("Started indexing task")
 
 
-def _launch_reindex(table, target_index, query, indexer, notify_url):
+def _launch_reindex(model, table, target_index, query, indexer, notify_url):
     worker_error = False
     try:
-        indexer.replicate(table, target_index, query)
+        indexer.replicate(model, table, target_index, query)
     except Exception as err:
         exception_type = f"{err.__class__.__module__}.{err.__class__.__name__}"
         slack.error(

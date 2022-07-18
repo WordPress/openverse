@@ -2,155 +2,212 @@
 Simple in-memory tracking of executed tasks.
 """
 
-import datetime as dt
+import datetime
 import logging
-from enum import Enum
-from multiprocessing import Process
-
-import requests
+from enum import Enum, auto
+from multiprocessing import Value
+from typing import Optional
 
 from ingestion_server import slack
+from ingestion_server.constants.media_types import MediaType
 from ingestion_server.indexer import TableIndexer, elasticsearch_connect
-from ingestion_server.ingest import reload_upstream
+from ingestion_server.ingest import promote_api_table, refresh_api_table
 
 
 class TaskTypes(Enum):
-    # Completely reindex all data for a given model.
-    REINDEX = 0
-    # Reindex updates to a model from the database since a certain date.
-    UPDATE_INDEX = 1
-    # Download the latest copy of the data from the upstream database, then
-    # completely reindex the newly imported data.
-    INGEST_UPSTREAM = 2
-    # Create indices in Elasticsearch for QA tests.
-    # This is not intended for production use, but can be safely executed in a
-    # production environment without consequence.
-    LOAD_TEST_DATA = 3
+    @staticmethod
+    def _generate_next_value_(name: str, *args, **kwargs) -> str:
+        """
+        Generates the value for ``auto()`` given the name of the enum item. Therefore,
+        this function must be defined before any of the enum items.
+
+        :param name: the enum variable name
+        :return: the enum value
+        """
+
+        return name.lower()
+
+    # Major index update
+
+    REINDEX = auto()
+    """create a new index for a given model in Elasticsearch"""
+
+    POINT_ALIAS = auto()
+    """map a given index to a given alias, used when going live with an index"""
+
+    # Periodic data refresh
+
+    INGEST_UPSTREAM = auto()  # includes `REINDEX`
+    """refresh the API tables from the upstream database, then ``REINDEX``"""
+
+    PROMOTE = auto()  # includes `POINT_ALIAS`
+    """promote the refreshed table, then ``POINT_ALIAS``"""
+
+    # Other
+
+    UPDATE_INDEX = auto()  # TODO: delete eventually, rarely used
+    """reindex updates to a model from the database since the given date"""
+
+    LOAD_TEST_DATA = auto()
+    """create indices in ES for QA tests; this is not intended to run in production but
+    can be run without negative consequences"""
+
+    def __str__(self):
+        """
+        Get the string representation of this enum. Unlike other objects, this
+        does not default to ``__repr__``.
+
+        :return: the string representation
+        """
+
+        return self.name
 
 
 class TaskTracker:
     def __init__(self):
-        self.id_task = {}
-        self.id_action = {}
-        self.id_progress = {}
-        self.id_start_time = {}
-        self.id_finish_time = {}
-        self.id_active_workers = {}
-
-    def add_task(self, task, task_id, action, progress, finish_time, active_workers):
-        self._prune_old_tasks()
-        self.id_task[task_id] = task
-        self.id_action[task_id] = action
-        self.id_progress[task_id] = progress
-        self.id_start_time[task_id] = dt.datetime.utcnow().timestamp()
-        self.id_finish_time[task_id] = finish_time
-        self.id_active_workers[task_id] = active_workers
-        return task_id
+        self.tasks = {}
 
     def _prune_old_tasks(self):
+        # TODO: Populate, document or delete function stub
         pass
 
-    def list_task_statuses(self):
+    def add_task(self, task_id: str, **kwargs):
+        """
+        Store information about a new task in memory.
+        :param task: the task being performed
+        :param task_id: the UUID of the task
+        """
+
         self._prune_old_tasks()
-        results = []
-        for _id, task in self.id_task.items():
-            percent_completed = self.id_progress[_id].value
-            active = task.is_alive()
-            start_time = self.id_start_time[_id]
-            finish_time = self.id_finish_time[_id].value
-            active_workers = self.id_active_workers[_id].value
-            results.append(
-                {
-                    "task_id": _id,
-                    "active": active,
-                    "action": self.id_action[_id],
-                    "progress": percent_completed,
-                    "error": percent_completed < 100 and not active,
-                    "start_time": start_time,
-                    "finish_time": finish_time,
-                    "active_workers": bool(active_workers),
-                }
-            )
-        sorted_results = sorted(results, key=lambda x: x["finish_time"])
 
-        to_utc = dt.datetime.utcfromtimestamp
+        self.tasks[task_id] = {
+            "start_time": datetime.datetime.utcnow().timestamp(),
+        } | kwargs
 
-        def render_date(x):
-            return to_utc(x) if x != 0.0 else None
+    @staticmethod
+    def serialize_task_info(task_info: dict) -> dict:
+        """
+        Generate a response dictionary containing all relevant information about a task.
+        :param task_info: the stored information about the task
+        :return: the details of the task to show to the user
+        """
 
-        # Convert date to a readable format
-        for idx, task in enumerate(sorted_results):
-            start_time = task["start_time"]
-            finish_time = task["finish_time"]
-            sorted_results[idx]["start_time"] = str(render_date(start_time))
-            sorted_results[idx]["finish_time"] = str(render_date(finish_time))
+        def _time_fmt(timestamp: int) -> Optional[str]:
+            """
+            Format the timestamp into a human-readable date and time notation.
+            :param timestamp: the timestamp to format
+            :return: the human-readable form of the timestamp
+            """
 
-        return sorted_results
+            if timestamp == 0:
+                return None
+            return str(datetime.datetime.utcfromtimestamp(timestamp))
+
+        active = task_info["task"].is_alive()
+        start_time = task_info["start_time"]
+        finish_time = task_info["finish_time"].value
+        progress = task_info["progress"].value
+        active_workers = task_info["active_workers"].value
+        return {
+            "active": active,
+            "model": task_info["model"],
+            "action": str(task_info["action"]),
+            "progress": progress,
+            "start_timestamp": start_time,
+            "start_time": _time_fmt(start_time),
+            "finish_timestamp": finish_time,
+            "finish_time": _time_fmt(finish_time),
+            "active_workers": bool(active_workers),
+            "error": progress < 100 and not active,
+        }
+
+    def list_task_statuses(self) -> list:
+        """
+        Get the statuses of all tasks.
+        :return: the statuses of all tasks
+        """
+
+        results = [self.get_task_status(task_id) for task_id in self.tasks.keys()]
+        results.sort(key=lambda task: task["finish_timestamp"])
+        return results
+
+    def get_task_status(self, task_id) -> dict:
+        """
+        Get the status of a single task with the given task ID.
+        :param task_id: the ID of the task to get the status for
+        :return: the status of the task
+        """
+
+        self._prune_old_tasks()
+
+        task_info = self.tasks[task_id]
+        return {"task_id": task_id} | self.serialize_task_info(task_info)
 
 
-class Task(Process):
-    def __init__(
-        self,
-        model,
-        task_type,
-        since_date,
-        progress,
+def perform_task(
+    task_id: str,
+    model: MediaType,
+    action: TaskTypes,
+    callback_url: Optional[str],
+    progress: Value,
+    finish_time: Value,
+    active_workers: Value,
+    **kwargs,
+):
+    """
+    Perform the task defined by the API request by invoking the task function with the
+    correct arguments. Any additional keyword arguments will be forwarded to the
+    appropriate task functions.
+
+    :param task_id: the UUID assigned to the task for tracking
+    :param model: the media type for which the action is being performed
+    :param action: the name of the action being performed
+    :param callback_url: the URL to which to make a request after the task is completed
+    :param progress: shared memory for tracking the task's progress
+    :param finish_time: shared memory for tracking the finish time of the task
+    :param active_workers: shared memory for counting workers assigned to the task
+    """
+
+    elasticsearch = elasticsearch_connect()
+    indexer = TableIndexer(
+        elasticsearch,
         task_id,
-        finish_time,
-        active_workers,
         callback_url,
-    ):
-        Process.__init__(self)
-        self.model = model
-        self.task_type = task_type
-        self.since_date = since_date
-        self.progress = progress
-        self.task_id = task_id
-        self.finish_time = finish_time
-        self.active_workers = active_workers
-        self.callback_url = callback_url
+        progress,
+        active_workers,
+    )
 
-    def run(self):
-        try:
-            # Map task types to actions.
-            elasticsearch = elasticsearch_connect()
-            indexer = TableIndexer(
-                elasticsearch,
-                self.model,
-                self.task_id,
-                self.progress,
-                self.finish_time,
-                self.active_workers,
-            )
-            if self.task_type == TaskTypes.REINDEX:
-                slack.verbose(f"`{self.model}`: Beginning Elasticsearch reindex")
-                indexer.reindex(self.model)
-            elif self.task_type == TaskTypes.UPDATE_INDEX:
-                indexer.update(self.model, self.since_date)
-            elif self.task_type == TaskTypes.INGEST_UPSTREAM:
-                reload_upstream(self.model)
-                if self.model == "audio":
-                    reload_upstream("audioset", approach="basic")
-                indexer.reindex(self.model)
-            elif self.task_type == TaskTypes.LOAD_TEST_DATA:
-                indexer.load_test_data(self.model)
-            logging.info(f"Task {self.task_id} exited.")
-            if self.callback_url:
-                try:
-                    logging.info("Sending callback request")
-                    res = requests.post(self.callback_url)
-                    logging.info(f"Response: {res.text}")
-                except requests.exceptions.RequestException as e:
-                    logging.error("Failed to send callback!")
-                    logging.error(e)
-        except Exception as err:
-            exception_type = f"{err.__class__.__module__}.{err.__class__.__name__}"
-            logging.error(
-                f"Error processing task `{self.task_type}` for `{self.model}`: {err}"
-            )
-            slack.error(
-                f":x_red: Error processing task `{self.task_type}` for `{self.model}` "
-                f"(`{exception_type}`): \n"
-                f"```\n{err}\n```"
-            )
-            raise
+    # Task functions
+    # ==============
+    # These functions must have a signature of ``Callable[[], None]``.
+
+    def ingest_upstream():  # includes ``reindex``
+        refresh_api_table(model, progress)
+        if model == "audio":
+            refresh_api_table("audioset", progress, approach="basic")
+        indexer.reindex(model, f"temp_import_{model}", **kwargs)
+
+    def promote():  # includes point alias
+        promote_api_table(model, progress)
+        if model == "audio":
+            promote_api_table("audioset", progress)
+        indexer.point_alias(model, **kwargs)
+
+    try:
+        locs = locals()  # contains all the task functions defined above
+        if func := locs.get(action.value):
+            func()  # Run the task function if it is defined
+        elif func := getattr(indexer, action.value):
+            func(model, **kwargs)  # Directly invoke indexer methods if no task function
+    except Exception as err:
+        exception_type = f"{err.__class__.__module__}.{err.__class__.__name__}"
+        logging.error(f"Error processing task `{action}` for `{model}`: {err}")
+        slack.error(
+            f":x_red: Error processing task `{action}` for `{model}` "
+            f"(`{exception_type}`): \n"
+            f"```\n{err}\n```"
+        )
+        raise
+
+    finish_time.value = datetime.datetime.utcnow().timestamp()
+    logging.info(f"Task {task_id} completed.")

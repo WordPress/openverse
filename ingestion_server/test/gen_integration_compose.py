@@ -32,7 +32,7 @@ def _prune_services(conf: dict):
     :param conf: the Docker Compose configuration
     """
 
-    services_to_keep = {"es", "ingestion_server", "db", "upstream_db"}
+    services_to_keep = {"es", "ingestion_server", "indexer_worker", "db", "upstream_db"}
     for service_name in dict(conf["services"]):
         if service_name not in services_to_keep:
             del conf["services"][service_name]
@@ -64,7 +64,8 @@ def _fixup_env(conf: dict):
         env_files = conf["services"][service]["env_file"]
         env_files = [str(src_dc_path.parent.joinpath(path)) for path in env_files]
         conf["services"][service]["env_file"] = env_files
-    conf["services"]["ingestion_server"]["env_file"] = ["env.integration"]
+    for service in {"ingestion_server", "indexer_worker"}:
+        conf["services"][service]["env_file"] = ["env.integration"]
 
 
 def _remove_volumes(conf: dict):
@@ -94,8 +95,9 @@ def _change_directories(conf: dict):
     :param conf: the Docker Compose configuration
     """
 
-    conf["services"]["ingestion_server"]["volumes"] = ["../:/ingestion_server"]
-    conf["services"]["ingestion_server"]["build"] = "../"
+    for service in {"ingestion_server", "indexer_worker"}:
+        conf["services"][service]["volumes"] = ["../:/ingestion_server"]
+        conf["services"][service]["build"] = "../"
 
     conf["services"]["upstream_db"]["volumes"] = ["./mock_data:/mock_data"]
 
@@ -111,10 +113,11 @@ def _rename_services(conf: dict):
         conf["services"][f"integration_{service_name}"] = service
         del conf["services"][service_name]
 
-    conf["services"]["integration_ingestion_server"]["depends_on"] = [
-        "integration_db",
-        "integration_es",
-    ]
+    for service in {"ingestion_server", "indexer_worker"}:
+        conf["services"][f"integration_{service}"]["depends_on"] = [
+            "integration_db",
+            "integration_es",
+        ]
 
 
 def gen_integration_compose():

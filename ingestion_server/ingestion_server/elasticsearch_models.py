@@ -361,7 +361,7 @@ class Audio(Media):
 
 
 # Table name -> Elasticsearch model
-database_table_to_elasticsearch_model = {
+media_type_to_elasticsearch_model = {
     "image": Image,
     "audio": Audio,
 }

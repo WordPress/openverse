@@ -15,7 +15,6 @@ table to replace the old data. This strategy is far faster than updating the
 data in place.
 """
 
-import datetime
 import logging as log
 import multiprocessing
 
@@ -249,10 +248,9 @@ def _update_progress(progress, new_value):
         progress.value = new_value
 
 
-def reload_upstream(
+def refresh_api_table(
     table: str,
     progress: multiprocessing.Value = None,
-    finish_time: multiprocessing.Value = None,
     approach: ApproachType = "advanced",
 ):
     """
@@ -264,15 +262,11 @@ def reload_upstream(
     3. Create FDW for the data transfer: ``get_fdw_query``
     4. Import data into a temporary table: ``get_copy_data_query``
     5. Clean the data: ``clean_image_data``
-    6. Recreate indices from the original table: ``_generate_indices``
-    7. Recreate constraints from the original table: ``_generate_constraints``
-    8. Promote the temp table and delete the original: ``get_go_live_query``
 
     This is the main function of this module.
 
     :param table: The upstream table to copy.
     :param progress: multiprocessing.Value float for sharing task progress
-    :param finish_time: multiprocessing.Value int for sharing finish timestamp
     :param approach: whether to use advanced logic specific to media ingestion
     """
 
@@ -326,11 +320,11 @@ def reload_upstream(
         downstream_cur.execute(copy_data)
 
     next_step = (
-        "starting data cleaning"
+        "_Next: {starting data cleaning}_"
         if table == "image"
-        else "re-applying indices & constraints"
+        else "Finished refreshing table"
     )
-    slack.verbose(f"`{table}`: Data copy complete | _Next: {next_step}_")
+    slack.verbose(f"`{table}`: Data copy complete | {next_step}")
 
     if table == "image":
         # Step 5: Clean the data
@@ -338,14 +332,35 @@ def reload_upstream(
         clean_image_data(table)
         log.info("Cleaning completed!")
         slack.verbose(
-            f"`{table}`: Data cleaning complete | "
-            f"_Next: re-applying indices & constraints_"
+            f"`{table}`: Data cleaning complete | " f"Finished refreshing table"
         )
 
-    log.info("Starting post-cleaning work...")
+    downstream_db.close()
+    log.info(f"Finished refreshing table '{table}'.")
+    _update_progress(progress, 100.0)
+
+
+def promote_api_table(
+    table: str,
+    progress: multiprocessing.Value = None,
+):
+    """
+    This runs after ``refresh_api_table``. The process involves the following steps.
+
+    6. Recreate indices from the original table: ``_generate_indices``
+    7. Recreate constraints from the original table: ``_generate_constraints``
+    8. Promote the temp table and delete the original: ``get_go_live_query``
+
+    :param table: the upstream table to copy
+    :param progress: multiprocessing.Value float for sharing task progress
+    """
+
+    log.info(f"`{table}`: Starting table promotion | _Next: recreate-indices_")
+    downstream_db = database_connect()
+
     with downstream_db, downstream_db.cursor() as downstream_cur:
         # Step 6: Recreate indices from the original table
-        log.info("Copying finished! Recreating database indices...")
+        log.info("Recreating database indices...")
         create_indices, index_mapping = _generate_indices(downstream_db, table)
         _update_progress(progress, 50.0)
         if create_indices != "":
@@ -363,17 +378,19 @@ def reload_upstream(
                 downstream_cur.execute(remap_constraint)
         log.info("Done remapping constraints! Going live with new table...")
         _update_progress(progress, 99.0)
-        slack.verbose(f"`{table}`: Indices & constraints applied | _Next: go-live_")
+        slack.verbose(
+            f"`{table}`: Indices & constraints applied, finished refreshing table | "
+            f"_Next: Elasticsearch reindex_"
+        )
 
         # Step 8: Promote the temporary table and delete the original
         go_live = get_go_live_query(table, index_mapping)
         log.info(f"Running go-live: \n{go_live.as_string(downstream_cur)}")
         downstream_cur.execute(go_live)
+        slack.verbose(
+            f"`{table}`: Finished table promotion | " f"_Next: Elasticsearch promotion_"
+        )
 
     downstream_db.close()
-    log.info(f"Finished refreshing table '{table}'.")
+    log.info(f"Finished promoting table {table}")
     _update_progress(progress, 100.0)
-    slack.verbose(f"`{table}`: Finished table refresh | _Next: Elasticsearch reindex_")
-
-    if finish_time:
-        finish_time.value = datetime.datetime.utcnow().timestamp()
