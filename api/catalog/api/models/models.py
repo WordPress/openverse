@@ -1,6 +1,6 @@
 from django.db import models
 
-from catalog.api.constants.media_types import MEDIA_TYPES
+from catalog.api.constants.media_types import MEDIA_TYPE_CHOICES
 from catalog.api.models.base import OpenLedgerModel
 
 
@@ -29,7 +29,7 @@ class ContentProvider(models.Model):
     notes = models.TextField(null=True)
     media_type = models.CharField(
         max_length=80,
-        choices=MEDIA_TYPES,
+        choices=MEDIA_TYPE_CHOICES,
     )
 
     class Meta:

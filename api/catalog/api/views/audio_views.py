@@ -1,9 +1,11 @@
+from django.conf import settings
 from django.utils.decorators import method_decorator
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from drf_yasg.utils import swagger_auto_schema
 
+from catalog.api.constants.media_types import AUDIO_TYPE
 from catalog.api.docs.audio_docs import (
     AudioComplain,
     AudioDetail,
@@ -39,7 +41,7 @@ class AudioViewSet(MediaViewSet):
 
     model_class = Audio
     query_serializer_class = AudioSearchRequestSerializer
-    default_index = "audio"
+    default_index = settings.MEDIA_INDEX_MAPPING[AUDIO_TYPE]
     qa_index = "search-qa-audio"
 
     serializer_class = AudioSerializer

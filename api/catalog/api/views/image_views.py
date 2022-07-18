@@ -11,6 +11,7 @@ import requests
 from drf_yasg.utils import swagger_auto_schema
 from PIL import Image as PILImage
 
+from catalog.api.constants.media_types import IMAGE_TYPE
 from catalog.api.docs.image_docs import (
     ImageComplain,
     ImageDetail,
@@ -51,7 +52,7 @@ class ImageViewSet(MediaViewSet):
 
     model_class = Image
     query_serializer_class = ImageSearchRequestSerializer
-    default_index = "image"
+    default_index = settings.MEDIA_INDEX_MAPPING[IMAGE_TYPE]
     qa_index = "search-qa-image"
 
     serializer_class = ImageSerializer

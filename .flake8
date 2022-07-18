@@ -10,4 +10,6 @@ per-file-ignores =
     *__init__*:F401
     # https://www.flake8rules.com/rules/E402.html; patches are applied before all imports are finished
     *wsgi.py:E402
+    # https://www.flake8rules.com/rules/F401.html; django settings holds global values
+    *settings.py:F401
 max-line-length = 88

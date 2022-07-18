@@ -14,13 +14,12 @@ from pathlib import Path
 from socket import gethostbyname, gethostname
 
 import sentry_sdk
-from aws_requests_auth.aws_auth import AWSRequestsAuth
 from decouple import config
-from elasticsearch import Elasticsearch, RequestsHttpConnection
-from elasticsearch_dsl import connections
 from sentry_sdk.integrations.django import DjangoIntegration
 
-from catalog.logger import LOGGING as LOGGING_CONF
+from catalog.configuration.aws import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+from catalog.configuration.elasticsearch import ES, MEDIA_INDEX_MAPPING
+from catalog.configuration.logging import LOGGING
 
 
 # Build paths inside the project like this: BASE_DIR.join('dir', 'subdir'...)
@@ -69,8 +68,6 @@ SHORT_URL_WHITELIST = {
 SHORT_URL_PATH_WHITELIST = ["/v1/list", "/v1/images/"]
 
 USE_S3 = config("USE_S3", default=False, cast=bool)
-
-LOGGING = LOGGING_CONF
 
 # Application definition
 
@@ -298,14 +295,6 @@ CONTACT_EMAIL = config("CONTACT_EMAIL", default="openverse@wordpress.org")
 
 WATERMARK_ENABLED = config("WATERMARK_ENABLED", default=False, cast=bool)
 
-ELASTICSEARCH_URL = config("ELASTICSEARCH_URL", default="localhost")
-ELASTICSEARCH_PORT = config("ELASTICSEARCH_PORT", default=9200, cast=int)
-ELASTICSEARCH_AWS_REGION = config("ELASTICSEARCH_AWS_REGION", default="us-east-1")
-
-# Additional settings for dev/prod environments
-AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default="")
-AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", default="")
-
 EMAIL_SENDER = config("EMAIL_SENDER", default="")
 EMAIL_HOST = config("EMAIL_HOST", default="")
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
@@ -354,38 +343,3 @@ if not DEBUG:
         send_default_pii=False,
         environment=ENVIRONMENT,
     )
-
-
-# Elasticsearch connection
-
-
-def _elasticsearch_connect():
-    """
-    Connect to configured Elasticsearch domain.
-
-    :return: An Elasticsearch connection object.
-    """
-    auth = AWSRequestsAuth(
-        aws_access_key=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-        aws_host=ELASTICSEARCH_URL,
-        aws_region=ELASTICSEARCH_AWS_REGION,
-        aws_service="es",
-    )
-    auth.encode = lambda x: bytes(x.encode("utf-8"))
-    _es = Elasticsearch(
-        host=ELASTICSEARCH_URL,
-        port=ELASTICSEARCH_PORT,
-        connection_class=RequestsHttpConnection,
-        timeout=10,
-        max_retries=1,
-        retry_on_timeout=True,
-        http_auth=auth,
-        wait_for_status="yellow",
-    )
-    _es.info()
-    return _es
-
-
-ES = _elasticsearch_connect()
-connections.add_connection("default", ES)
