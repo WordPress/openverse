@@ -108,8 +108,18 @@ just wait-for-index "audio-init"
 just promote "audio" "init" "audio"
 just wait-for-index "audio"
 
-just ingest-upstream "image" "init"
-just wait-for-index "image-init"
+# Image ingestion is flaky; but usally works on the next attempt
+set +e
+while true; do
+	just ingest-upstream "image" "init"
+	just wait-for-index "image-init"
+	if [$? -eq 0 ]; then
+		break
+	fi
+	((c++)) && ((c==3)) && break
+done
+set -e
+
 just promote "image" "init" "image"
 just wait-for-index "image"
 
