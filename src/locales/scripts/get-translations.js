@@ -5,7 +5,7 @@
 const { writeFile } = require('fs/promises')
 const os = require('os')
 
-const axios = require('axios')
+const axios = require('./axios')
 
 const jed1xJsonToJson = require('./jed1x-json-to-json')
 const localeJSON = require('./wp-locales.json')

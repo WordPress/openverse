@@ -6,7 +6,7 @@ This script extracts data for locales available in GlotPress and translate.wp.or
 
 const fs = require('fs')
 
-const axios = require('axios')
+const axios = require('./axios')
 
 const { addFetchedTranslationStatus } = require('./get-translations-status')
 

@@ -4,10 +4,11 @@
  * Update the GP locales object with this data, and removes any of the GP
  * locales that are not available on translate.wordpress.org.
  */
-const axios = require('axios')
 const parser = require('node-html-parser')
 
-const baseUrl = `https://translate.wordpress.org/projects/meta/openverse`
+const axios = require('./axios')
+
+const baseUrl = 'https://translate.wordpress.org/projects/meta/openverse/'
 
 function parseRow(row, locales) {
   const cells = row.querySelectorAll('td')
