@@ -110,7 +110,7 @@ SMITHSONIAN_SUB_PROVIDERS = {
 
 # User-Agent header for APIs that require it
 CONTACT_EMAIL = os.getenv("CONTACT_EMAIL")
-UA_STRING = f"Openverse/0.1 (https://wordpress.com/openverse; {CONTACT_EMAIL})"
+UA_STRING = f"Openverse/0.1 (https://wordpress.org/openverse; {CONTACT_EMAIL})"
 
 
 class ImageCategory(Enum):
