@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "81d10a489b094a0af9a04fb279369606602d05562546088c69be4e4117aae712"
+            "sha256": "2832f6faa6ba508df60afe298a8c82423b73d1a35cbd529035a90f7032757b34"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -249,11 +249,10 @@
         },
         "django-oauth-toolkit": {
             "hashes": [
-                "sha256:37b690fa53f340c7391bdbc0fdbb32fd9ef8a7c012e72ee8754c331a2d7b4adb",
-                "sha256:756e44421d0993f27705736b6c33a3d89018393859a31ac926296950f76e4433"
+                "sha256:642598d7462e92232a237faa399f9a2361aae1177e15f710b93559d111e12aef"
             ],
             "index": "pypi",
-            "version": "==1.7.1"
+            "version": "==2.1.0"
         },
         "django-redis": {
             "hashes": [

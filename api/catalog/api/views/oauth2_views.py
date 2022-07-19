@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from oauth2_provider.generators import generate_client_secret
 
 from catalog.api.docs.media_docs import refer_sample
 from catalog.api.models import OAuth2Verification, ThrottledApplication
@@ -127,12 +128,14 @@ curl \\
 
         # Produce a client ID, client secret, and authorize the application in
         # the OAuth2 backend.
+        client_secret = generate_client_secret()
         new_application = ThrottledApplication(
             name=serialized.validated_data["name"],
             skip_authorization=False,
             client_type="Confidential",
             authorization_grant_type="client-credentials",
             verified=False,
+            client_secret=client_secret,
         )
         new_application.save()
         # Send a verification email.
@@ -167,7 +170,7 @@ If you believe you received this message in error, please disregard it.
             status=201,
             data={
                 "client_id": new_application.client_id,
-                "client_secret": new_application.client_secret,
+                "client_secret": client_secret,
                 "name": new_application.name,
                 "msg": "Check your email for a verification link.",
             },
