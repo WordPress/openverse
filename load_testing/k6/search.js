@@ -4,7 +4,7 @@ import {API_URL, getUrlBatch, makeResponseFailedCheck, REQUEST_HEADERS, SLEEP_DU
 
 
 export const searchBy = (param, page, media_type, page_size, followLinks) => {
-    let url = `${API_URL}${media_type}/?${param}&page=${page}&page_size=${page_size}`;
+    let url = `${API_URL}${media_type}/?${param}&page=${page}&page_size=${page_size}&filter_dead=false`;
     const response = http.get(url, { headers: REQUEST_HEADERS });
 
     const responseFailed = makeResponseFailedCheck(param, page)
@@ -21,6 +21,7 @@ export const searchBy = (param, page, media_type, page_size, followLinks) => {
 
     let extraFailed = false;
 
+    // Don't view details/related if not requested
     if (!followLinks) {return pageCount}
 
     group("Details requests", () => {
