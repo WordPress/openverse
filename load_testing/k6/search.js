@@ -46,5 +46,3 @@ export const searchBy = (param, page, media_type, page_size, followLinks) => {
 
     return pageCount
 };
-
-
