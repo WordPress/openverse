@@ -1,4 +1,5 @@
 import {check} from "k6";
+import http from "k6/http";
 import {randomItem} from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
 
 export const API_URL = __ENV.API_URL || "https://api-dev.openverse.engineering/v1/";
@@ -8,6 +9,13 @@ const WORDS = open("/usr/share/dict/words").split("\n").filter(w => !w.endsWith(
 
 
 export const getRandomWord = () => randomItem(WORDS);
+
+export const getProvider = (media_type) => {
+    let url = `${API_URL}${media_type}/stats`;
+    const response = http.get(url, { headers: REQUEST_HEADERS });
+    let providers = JSON.parse(response.body);
+    return randomItem(providers).source_name;
+}
 
 
 export const REQUEST_HEADERS = {
@@ -22,13 +30,13 @@ export const getUrlBatch = (urls, type = "detail_url") => {
     });
 };
 
-export const makeResponseFailedCheck = (word, page) => {
+export const makeResponseFailedCheck = (param, page) => {
     return (response, action) => {
         if (check(response, {"status was 200": (r) => r.status === 200})) {
-            console.log(`Checked status 200 ✓ for word "${word}" at page ${page} for ${action}.`);
+            console.log(`Checked status 200 ✓ for param "${param}" at page ${page} for ${action}.`);
             return false;
         } else {
-            console.error(`Request failed ⨯ for word "${word}" at page ${page} for ${action}: ${response.body}`);
+            console.error(`Request failed ⨯ for param "${param}" at page ${page} for ${action}: ${response.body}`);
             return true;
         }
     }
