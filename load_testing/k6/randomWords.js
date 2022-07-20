@@ -17,6 +17,7 @@ export const searchByWord = (word, page, media_type, page_size) => {
     const responseFailed = makeResponseFailedCheck(word, page)
 
     if (responseFailed(response, "search")) {
+        console.error(`Failed URL: ${url}`)
         return 0;
     }
 
@@ -53,10 +54,10 @@ export const searchByWord = (word, page, media_type, page_size) => {
 export default function () {
     const MEDIA_TYPE = __ENV.MEDIA_TYPE;
     const PAGE_SIZE = __ENV.PAGE_SIZE;
-    console.log(`VU: ${vu.idInTest}  -  ITER: ${__ITER}`);
+    console.log(`VU: ${vu.idInInstance}  -  ITER: ${__ITER}`);
     const VU_WORD = getRandomWord()
 
-    group(`${MEDIA_TYPE} search (using '${VU_WORD}')`, () => {
+    group(`${MEDIA_TYPE} search of ${PAGE_SIZE} items (using '${VU_WORD}')`, () => {
         let page = 1;
         let page_count = 1;
         while (page <= page_count) {
