@@ -1,25 +1,23 @@
-import {vu} from "k6/execution";
-import {group} from "k6";
-import {searchByWord} from "./randomWords.js"
+import {default as randomWordsTest} from  "./randomWords.js"
 
 export const options = {
-  vus: 5,
-  iterations: 5,
+  scenarios: {
+    random_word_image_page_20: {
+      executor: 'per-vu-iterations',
+      env: {
+        MEDIA_TYPE: "images",
+        PAGE_SIZE: "20",
+      },
+      exec: "randomWords",
+      vus: 5,
+      iterations: 5
+    }
+  }
 };
 
-const WORDS = ["honey", "duck", "hummingbird", "dog", "hedgehog"];
+
+export const randomWords = randomWordsTest;
 
 
-export default function () {
-  console.log(`VU: ${vu.idInTest}  -  ITER: ${__ITER}`);
-  const VU_WORD = WORDS[vu.idInTest - 1];
-
-  group(`Image search`, () => {
-    let page = 1;
-    let page_count = 1;
-    while (page <= page_count) {
-      page_count = searchByWord(VU_WORD, page, "images", 20);
-      page++;
-    }
-  });
+export default function() {
 }

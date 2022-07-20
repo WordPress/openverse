@@ -1,7 +1,8 @@
 import http from "k6/http";
+import vu from "k6/execution";
 import {group, sleep} from "k6";
 import {
-    API_URL,
+    API_URL, getRandomWord,
     getUrlBatch,
     makeResponseFailedCheck,
     REQUEST_HEADERS,
@@ -47,3 +48,20 @@ export const searchByWord = (word, page, media_type, page_size) => {
 
     return response.json("page_count");
 };
+
+
+export default function () {
+    const MEDIA_TYPE = __ENV.MEDIA_TYPE;
+    const PAGE_SIZE = __ENV.PAGE_SIZE;
+    console.log(`VU: ${vu.idInTest}  -  ITER: ${__ITER}`);
+    const VU_WORD = getRandomWord()
+
+    group(`${MEDIA_TYPE} search (using '${VU_WORD}')`, () => {
+        let page = 1;
+        let page_count = 1;
+        while (page <= page_count) {
+            page_count = searchByWord(VU_WORD, page, MEDIA_TYPE, PAGE_SIZE);
+            page++;
+        }
+    });
+}
