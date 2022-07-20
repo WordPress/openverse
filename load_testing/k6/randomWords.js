@@ -54,7 +54,7 @@ export const searchByWord = (word, page, media_type, page_size) => {
 export default function () {
     const MEDIA_TYPE = __ENV.MEDIA_TYPE;
     const PAGE_SIZE = __ENV.PAGE_SIZE;
-    console.log(`VU: ${vu.idInInstance}  -  ITER: ${__ITER}`);
+    console.log(`VU: ${__VU}  -  ITER: ${__ITER}`);
     const VU_WORD = getRandomWord()
 
     group(`${MEDIA_TYPE} search of ${PAGE_SIZE} items (using '${VU_WORD}')`, () => {
