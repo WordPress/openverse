@@ -24,14 +24,27 @@ const getUrlBatch = (urls, type = "detail_url") => {
   });
 };
 
+
+const makeResponseFailedCheck = (word, page) => {
+  return (response, action) => {
+    if (check(response, { "status was 200": (r) => r.status === 200 })) {
+      console.log(`Checked status 200 ✓ for word "${word}" at page ${page} for ${action}.`);
+      return false;
+    } else {
+      console.error(`Request failed ⨯ for word "${word}" at page ${page} for ${action}.`);
+      return true;
+    }
+  }
+}
+
+
 const searchByWord = (word, page) => {
   let url = `${API_URL}${MEDIA_TYPE}/?q=${word}&page=${page}&page_size=${PAGE_SIZE}`;
   const response = http.get(url, { headers: REQUEST_HEADERS });
 
-  if (check(response, { "status was 200": (r) => r.status === 200 })) {
-    console.log(`Checked status 200 ✓ for word "${word}" at page ${page}.`);
-  } else {
-    console.error(`Request failed ⨯ for word "${word}" at page ${page}.`);
+  const responseFailed = makeResponseFailedCheck(word, page)
+
+  if (responseFailed(response, "search")) {
     return 0;
   }
 
@@ -39,11 +52,14 @@ const searchByWord = (word, page) => {
   const detailUrls = parsedResp["results"].map((i) => i.detail_url);
   const relatedUrls = parsedResp["results"].map((i) => i.related_url);
 
+  let extraFailed = false;
+
   group("Details requests", () => {
     console.info(
       `Requesting all ${MEDIA_TYPE} details from "${word}" at page ${page}`
     );
     const responses = http.batch(getUrlBatch(detailUrls));
+    extraFailed = responses.map((r) => responseFailed(r, "details")).some(f => f)
   });
 
   sleep(SLEEP_DURATION);
@@ -53,6 +69,7 @@ const searchByWord = (word, page) => {
       `Requesting all ${MEDIA_TYPE} related from "${word}" at page ${page}`
     );
     const responses = http.batch(getUrlBatch(relatedUrls, "related_url"));
+    extraFailed = responses.map((r) => responseFailed(r, "related")).some(f => f)
   });
 
   sleep(SLEEP_DURATION);
