@@ -22,6 +22,9 @@ export const options = {
     random_word_audio_page_20: createScenario("audio", "20", "searchByRandomWord"),
     random_word_image_page_500: createScenario("images", "500", "searchByRandomWord"),
     random_word_audio_page_500: createScenario("audio", "500", "searchByRandomWord"),
+    provider_image_page_20: createScenario("image", "20", "searchByProvider"),
+    provider_image_page_500: createScenario("image", "500", "searchByProvider"),
+    provider_audio_page_20: createScenario("audio", "20", "searchByProvider"),
     provider_audio_page_500: createScenario("audio", "500", "searchByProvider"),
   }
 };
