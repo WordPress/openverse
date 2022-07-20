@@ -28,7 +28,7 @@ export const makeResponseFailedCheck = (word, page) => {
             console.log(`Checked status 200 ✓ for word "${word}" at page ${page} for ${action}.`);
             return false;
         } else {
-            console.error(`Request failed ⨯ for word "${word}" at page ${page} for ${action}.`);
+            console.error(`Request failed ⨯ for word "${word}" at page ${page} for ${action}: ${response.body}`);
             return true;
         }
     }
