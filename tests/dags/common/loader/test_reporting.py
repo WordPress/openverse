@@ -95,15 +95,45 @@ def _make_report_completion_contents_data(media_type: str):
 @pytest.mark.parametrize(
     "image_data, image_expected", _make_report_completion_contents_data("image")
 )
+@pytest.mark.parametrize(
+    "dated, date_range_start, date_range_end, expected_date_range",
+    [
+        # Not dated, no date range
+        (False, None, None, "all"),
+        # Not dated, but date range supplied
+        (False, "2022-01-01", "2022-05-01", "all"),
+        # Schedule interval and date range supplied
+        (True, "2022-01-01", "2022-01-02", "2022-01-01 -> 2022-01-02"),
+    ],
+)
 def test_report_completion_contents(
-    audio_data, audio_expected, image_data, image_expected
+    audio_data,
+    audio_expected,
+    image_data,
+    image_expected,
+    dated,
+    date_range_start,
+    date_range_end,
+    expected_date_range,
 ):
-    with mock.patch("common.loader.reporting.send_message") as send_message_mock:
-        report_completion("Jamendo", None, {**audio_data, **image_data})
+    with mock.patch("common.loader.reporting.send_message"):
+        message = report_completion(
+            "Jamendo",
+            None,
+            {**audio_data, **image_data},
+            dated,
+            date_range_start,
+            date_range_end,
+        )
         for expected in [audio_expected, image_expected]:
             assert (
-                expected in send_message_mock.call_args.args[0]
+                expected in message
             ), "Completion message doesn't contain expected text"
+        # Split message into "sections"
+        parts = message.strip().split("\n")
+        # Get the date section
+        date_part = parts[1]
+        assert expected_date_range in date_part
 
 
 @pytest.mark.parametrize(

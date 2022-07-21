@@ -47,7 +47,10 @@ def report_completion(
     provider_name: str,
     duration: float | str | None,
     record_counts_by_media_type: MediaTypeRecordMetrics,
-) -> None:
+    dated: bool = False,
+    date_range_start: str | None = None,
+    date_range_end: str | None = None,
+) -> str:
     """
     Send a Slack notification when the load_data task has completed.
     Messages are only sent out in production and if a Slack connection is defined.
@@ -66,6 +69,8 @@ def report_completion(
           discrete references to the same source media within their API.
         - `upserted`: The final number of records that made it into the media table
           within the catalog database.
+        - `date_range`: The range of time this ingestion covers. If the ingestion covers
+          the entire provided dataset, "all" is provided
     """
     # Truncate the duration value if it's provided
     if isinstance(duration, float):
@@ -93,11 +98,17 @@ def report_completion(
             media_type_reports += f" _({', '.join(extras)})_"
         media_type_reports += "\n"
 
+    date_range = "_all_"
+    if dated:
+        date_range = f"{date_range_start} -> {date_range_end}"
+
     # Collect data into a single message
     message = f"""
 *Provider*: `{provider_name}`
+*Date range*: {date_range}
 *Duration of data pull task*: {duration or '_No data_'}
 *Number of records upserted per media type*:
 {media_type_reports}"""
     send_message(message, username="Airflow DAG Load Data Complete")
     logger.info(message)
+    return message
