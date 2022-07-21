@@ -11,7 +11,7 @@ export const sentryConfig: ModuleConfiguration = {
   dsn:
     process.env.SENTRY_DSN ||
     'https://53da8fbcebeb48a6bf614a212629df6b@o787041.ingest.sentry.io/5799642',
-  disabled: !isProd,
+  disabled: process.env.DISABLE_SENTRY ? true : !isProd,
   lazy: true,
   clientConfig: {
     // Only allow errors that come from an actual openverse.engineering subdomain

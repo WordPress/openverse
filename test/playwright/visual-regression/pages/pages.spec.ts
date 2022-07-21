@@ -8,6 +8,8 @@ import {
   languageDirections,
 } from '~~/test/playwright/utils/navigation'
 
+test.describe.configure({ mode: 'parallel' })
+
 const contentPages = [
   'extension',
   'about',

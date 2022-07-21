@@ -2,6 +2,8 @@ import { test } from '@playwright/test'
 
 import breakpoints from '~~/test/playwright/utils/breakpoints'
 
+test.describe.configure({ mode: 'parallel' })
+
 test.describe('audio results', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/search/audio?q=birds')

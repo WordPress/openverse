@@ -8,8 +8,10 @@ import {
   languageDirections,
 } from '~~/test/playwright/utils/navigation'
 
+test.describe.configure({ mode: 'parallel' })
+
 /**
- * Remove the randomly-selected images from the homepage .
+ * Remove the randomly-selected images from the homepage.
  */
 const deleteImageCarousel = async (page: Page) => {
   const element = await page.$('[data-testid="image-carousel"]')

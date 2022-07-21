@@ -9,6 +9,8 @@ import {
   sleep,
 } from '~~/test/playwright/utils/navigation'
 
+test.describe.configure({ mode: 'parallel' })
+
 const headerSelector = '.main-header'
 const loadMoreSelector = 'button:has-text("Load more")'
 

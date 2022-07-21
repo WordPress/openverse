@@ -7,6 +7,8 @@ import {
   languageDirections,
 } from '~~/test/playwright/utils/navigation'
 
+test.describe.configure({ mode: 'parallel' })
+
 test.describe('sources page snapshots', () => {
   for (const dir of languageDirections) {
     test.describe(dir, () => {

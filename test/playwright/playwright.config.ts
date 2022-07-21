@@ -9,6 +9,8 @@ addAliases({
   '~~': process.cwd(),
 })
 
+const UPDATE_TAPES = process.env.UPDATE_TAPES || 'false'
+
 const config: PlaywrightTestConfig = {
   webServer: {
     /**
@@ -32,7 +34,7 @@ const config: PlaywrightTestConfig = {
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === '1',
     env: {
       API_URL: 'http://localhost:49153/',
-      UPDATE_TAPES: process.env.UPDATE_TAPES || '',
+      UPDATE_TAPES: UPDATE_TAPES,
     },
   },
   use: {
@@ -49,7 +51,7 @@ const config: PlaywrightTestConfig = {
    * tapes then we can avoid this problem. Defaulting to `undefined` means the
    * Playwright default of using 1/2 of the number of CPU cores continues to work otherwise.
    */
-  workers: process.env.UPDATE_TAPES ? 1 : undefined,
+  workers: UPDATE_TAPES === 'true' ? 1 : undefined,
 }
 
 export default config

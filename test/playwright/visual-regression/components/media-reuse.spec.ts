@@ -7,6 +7,8 @@ import {
   languageDirections,
 } from '~~/test/playwright/utils/navigation'
 
+test.describe.configure({ mode: 'parallel' })
+
 const tabs = [
   { id: 'rich', name: 'Rich Text' },
   { id: 'html', name: 'HTML' },

@@ -8,6 +8,8 @@ import {
 
 import { supportedMediaTypes } from '~/constants/media'
 
+test.describe.configure({ mode: 'parallel' })
+
 /**
  * Some helpers for repeated actions.
  */

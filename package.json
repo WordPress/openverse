@@ -36,7 +36,7 @@
     "test:unit": "jest",
     "test:unit:watch": "pnpm test:unit --collectCoverage=false --watch",
     "test:playwright": "./bin/playwright.sh",
-    "test:playwright:local": "playwright test -c test/playwright",
+    "test:playwright:local": "DISABLE_SENTRY=true playwright test -c test/playwright",
     "test:playwright:debug": "PWDEBUG=1 pnpm test:playwright:local",
     "test:playwright:recreate-tapes": "rimraf test/tapes && pnpm test:playwright:update-tapes",
     "test:playwright:update-tapes": "UPDATE_TAPES=true pnpm test:playwright",

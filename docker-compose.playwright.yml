@@ -14,4 +14,6 @@ services:
     environment:
       # This makes the webserver that Playwright runs show the build
       - DEBUG=pw:webserver
+      - DISABLE_SENTRY=true
       - UPDATE_TAPES=${UPDATE_TAPES:-false}
+    cpus: 0.000

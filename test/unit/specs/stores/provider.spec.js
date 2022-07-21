@@ -1,5 +1,6 @@
 import { createPinia, setActivePinia } from 'pinia'
 
+import { warn } from '~/utils/console'
 import { AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
 import { useSearchStore } from '~/stores/search'
 import { useProviderStore } from '~/stores/provider'
@@ -14,6 +15,8 @@ jest.mock('@nuxtjs/composition-api', () => ({
   ...jest.requireActual('@nuxtjs/composition-api'),
   ssrRef: (v) => jest.fn(v),
 }))
+jest.mock('~/utils/console', () => ({ warn: jest.fn(), log: jest.fn() }))
+
 process.env.providerUpdateFrequency = '0'
 
 const mockData = [
@@ -68,6 +71,10 @@ describe('Provider Store', () => {
     providerServices.audio.getProviderStats.mockClear()
     providerServices.image.getProviderStats.mockClear()
   })
+  afterAll(() => {
+    warn.mockReset()
+  })
+
   it('sets the default state', () => {
     expect(providerStore.providers).toEqual({
       [AUDIO]: [],
