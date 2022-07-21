@@ -1,6 +1,13 @@
 catalog.api package
 ===================
 
+Concepts
+--------
+
+.. toctree::
+
+   authentication_and_throttling.md
+
 Subpackages
 -----------
 

@@ -19,7 +19,6 @@ from catalog.api.models.oauth import (
     OAuth2Verification,
     ThrottledApplication,
 )
-from catalog.api.utils.throttle import ExemptionAwareThrottle
 from catalog.api.views.oauth2_views import Register
 
 
@@ -339,7 +338,8 @@ def register_with_email_times(email: str, times: int) -> list:
     ]
 
     view = Register.as_view()
-    return [view(request) for request in requests]
+    with mock.patch.object(Register, "throttle_classes", ()):
+        return [view(request) for request in requests]
 
 
 @pytest.mark.django_db
@@ -351,13 +351,10 @@ def test_create_tokens_with_view(captured_emails):
     ]
 
     with mock.patch("catalog.api.views.oauth2_views.send_mail"):
-        with mock.patch.object(
-            ExemptionAwareThrottle, "allow_request", return_value=True
-        ):
-            for email in emails:
-                responses = register_with_email_times(email, 10)
-                for response in responses:
-                    assert response.status_code == 201
+        for email in emails:
+            responses = register_with_email_times(email, 10)
+            for response in responses:
+                assert response.status_code == 201
 
     # assert everything was created in the registration view
     for email in emails:

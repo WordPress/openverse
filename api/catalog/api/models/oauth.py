@@ -33,8 +33,10 @@ class ThrottledApplication(AbstractApplication):
 
     RATE_LIMIT_MODELS = [
         ("standard", "standard"),  # Default rate limit for all API keys.
-        ("enhanced", "enhanced")  # Rate limits for "super" keys, granted on a
+        ("enhanced", "enhanced"),  # Rate limits for "super" keys, granted on a
         # case-by-case basis.
+        ("exempt", "exempt"),  # Rate limits used for internal infrastructure to
+        # by-pass rate limiting entirely.
     ]
     rate_limit_model = models.CharField(
         max_length=20, choices=RATE_LIMIT_MODELS, default="standard"

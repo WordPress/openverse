@@ -142,10 +142,11 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_CLASSES": (
         "catalog.api.utils.throttle.BurstRateThrottle",
         "catalog.api.utils.throttle.SustainedRateThrottle",
-        "catalog.api.utils.throttle.OAuth2IdThrottleSustainedRate",
-        "catalog.api.utils.throttle.OAuth2IdThrottleBurstRate",
-        "catalog.api.utils.throttle.EnhancedOAuth2IdThrottleSustainedRate",
-        "catalog.api.utils.throttle.EnhancedOAuth2IdThrottleBurstRate",
+        "catalog.api.utils.throttle.OAuth2IdSustainedRateThrottle",
+        "catalog.api.utils.throttle.OAuth2IdBurstRateThrottle",
+        "catalog.api.utils.throttle.EnhancedOAuth2IdSustainedRateThrottle",
+        "catalog.api.utils.throttle.EnhancedOAuth2IdBurstRateThrottle",
+        "catalog.api.utils.throttle.ExemptOAuth2IdRateThrottle",
     ),
     "DEFAULT_THROTTLE_RATES": {
         "anon_burst": THROTTLE_ANON_BURST,
@@ -154,12 +155,18 @@ REST_FRAMEWORK = {
         "oauth2_client_credentials_burst": "100/min",
         "enhanced_oauth2_client_credentials_sustained": "20000/day",
         "enhanced_oauth2_client_credentials_burst": "200/min",
+        # ``None`` completely by-passes the rate limiting
+        "exempt_oauth2_client_credentials": None,
     },
     "EXCEPTION_HANDLER": "catalog.api.utils.exceptions.exception_handler",
 }
 
 if config("DISABLE_GLOBAL_THROTTLING", default=True, cast=bool):
-    del REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"]
+    # Set all to ``None`` rather than deleting so that explicitly configured
+    # throttled views in tests still have the default rates to fall back onto
+    REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"].update(
+        **{k: None for k, _ in REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"].items()}
+    )
     del REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"]
 
 REDIS_HOST = config("REDIS_HOST", default="localhost")
