@@ -2,6 +2,7 @@ import json
 import logging
 
 from elasticsearch_dsl import Search
+from elasticsearch_dsl.response import Hit
 
 from catalog.api.controllers.elasticsearch.utils import (
     exclude_filtered_providers,
@@ -51,9 +52,16 @@ def related_media(uuid, index, filter_dead):
 
     result_count, _ = get_result_and_page_count(response, results, page_size)
 
+    dumpable_results = (
+        results.to_dict()
+        if isinstance(results, Hit)
+        else [r.to_dict() for r in results]
+    )
+
     logger.debug(
         "finished post processing and returning related "
         f"result_count={result_count} "
-        f"results={json.dumps(results)}"
+        f"results={json.dumps(dumpable_results)}"
     )
+
     return results, result_count

@@ -169,3 +169,9 @@ def license_filter_case_insensitivity(media_type):
 def uuid_validation(media_type, identifier):
     response = requests.get(f"{API_URL}/v1/{media_type}/{identifier}", verify=False)
     assert response.status_code == 404
+
+
+def related(fixture):
+    related_url = fixture["results"][0]["related_url"]
+    response = requests.get(related_url)
+    assert response.status_code == 200

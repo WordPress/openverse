@@ -8,6 +8,7 @@ from test.constants import API_URL
 from test.media_integration import (
     detail,
     license_filter_case_insensitivity,
+    related,
     report,
     search,
     search_all_excluded,
@@ -122,3 +123,7 @@ def test_audio_uuid_validation():
     uuid_validation("audio", "123456789123456789123456789123456789")
     uuid_validation("audio", "12345678-1234-5678-1234-1234567891234")
     uuid_validation("audio", "abcd")
+
+
+def test_image_related(audio_fixture):
+    related(audio_fixture)
