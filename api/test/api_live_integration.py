@@ -228,7 +228,7 @@ def test_oauth2_registration():
         "description": "A key for testing the OAuth2 registration process.",
         "email": "example@example.org",
     }
-    response = requests.post(f"{API_URL}/oauth2/register", json=payload, verify=False)
+    response = requests.post(f"{API_URL}/oauth2/register/", json=payload, verify=False)
     parsed_response = json.loads(response.text)
     assert response.status_code == 201
     return parsed_response

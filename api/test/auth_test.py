@@ -19,7 +19,7 @@ def test_auth_tokens_registration(client):
         "email": "example@example.org",
     }
     res = client.post(
-        "/v1/auth_tokens/register",
+        "/v1/auth_tokens/register/",
         data,
         verify=False,
     )
@@ -70,7 +70,7 @@ def test_auth_rate_limit_reporting(client, test_auth_token_exchange, verified=Fa
     # the token.
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
-    res = client.get("/v1/rate_limit", HTTP_AUTHORIZATION=f"Bearer {token}")
+    res = client.get("/v1/rate_limit/", HTTP_AUTHORIZATION=f"Bearer {token}")
     res_data = res.json()
     if verified:
         assert res_data["rate_limit_model"] == "standard"

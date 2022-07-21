@@ -68,7 +68,7 @@ curl \\
   -X POST \\
   -H "Content-Type: application/json" \\
   -d '{"name": "My amazing project", "description": "To access Openverse API", "email": "user@example.com"}' \\
-  https://api.openverse.engineering/v1/auth_tokens/register
+  https://api.openverse.engineering/v1/auth_tokens/register/
 """  # noqa: E501
 
     register_api_oauth2_request = openapi.Schema(
@@ -241,7 +241,7 @@ You can use this endpoint to get information about your API key such as
     key_info_bash = """
 curl \\
   -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" \\
-  http://api.openverse.engineering/v1/rate_limit
+  http://api.openverse.engineering/v1/rate_limit/
 """
 
     @swagger_auto_schema(

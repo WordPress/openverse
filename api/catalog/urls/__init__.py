@@ -35,7 +35,7 @@ discontinuation_message = {
 }
 
 versioned_paths = [
-    path("rate_limit", CheckRates.as_view(), name="key_info"),
+    path("rate_limit/", CheckRates.as_view(), name="key_info"),
     path("auth_tokens/", include(auth_tokens_patterns)),
     # Deprecated, redirects to new URL
     path(
