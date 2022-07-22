@@ -6,7 +6,10 @@ build:
     docker build . -t openverse-load-testing:latest
 
 run script host: build
-    docker run -it -v {{invocation_directory()}}:/app openverse-load-testing:latest ./{{ script }}.sh {{ host }}
+    docker run -it -v {{ invocation_directory() }}:/app openverse-load-testing:latest ./{{ script }}.sh {{ host }}
 
 api host=("http://" + DOCKER_HOST + ":8000"):
     @just run api {{ host }}
+
+k6 envvars="API_URL=https://api-dev.openverse.engineering/v1/":
+    docker run --rm --env {{ envvars }} -v {{ invocation_directory() }}/k6:/home/k6 grafana/k6 run main.js
