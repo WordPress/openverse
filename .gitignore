@@ -144,3 +144,6 @@ si_samples_*
 
 # Vim detritus
 *.swp
+
+# macOS
+.DS_Store
