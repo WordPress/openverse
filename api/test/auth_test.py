@@ -6,8 +6,9 @@ from django.urls import reverse
 from django.utils.http import urlencode
 
 import pytest
+from oauth2_provider.models import AccessToken
 
-from catalog.api.models import OAuth2Verification
+from catalog.api.models import OAuth2Verification, ThrottledApplication
 
 
 @pytest.mark.django_db
@@ -52,7 +53,11 @@ def test_auth_token_exchange(client, test_auth_tokens_registration):
 
 
 @pytest.mark.django_db
-def test_auth_email_verification(client, test_auth_token_exchange):
+@pytest.mark.parametrize(
+    "rate_limit_model",
+    [x[0] for x in ThrottledApplication.RATE_LIMIT_MODELS],
+)
+def test_auth_email_verification(client, rate_limit_model, test_auth_token_exchange):
     # This test needs to cheat by looking in the database, so it will be
     # skipped in non-local environments.
     if API_URL == "http://localhost:8000":
@@ -61,22 +66,33 @@ def test_auth_email_verification(client, test_auth_token_exchange):
         path = reverse("verify-email", args=[code])
         res = client.get(path)
         assert res.status_code == 200
-        test_auth_rate_limit_reporting(client, test_auth_token_exchange, verified=True)
+        test_auth_rate_limit_reporting(
+            client, rate_limit_model, test_auth_token_exchange, verified=True
+        )
 
 
 @pytest.mark.django_db
-def test_auth_rate_limit_reporting(client, test_auth_token_exchange, verified=False):
+@pytest.mark.parametrize(
+    "rate_limit_model",
+    [x[0] for x in ThrottledApplication.RATE_LIMIT_MODELS],
+)
+def test_auth_rate_limit_reporting(
+    client, rate_limit_model, test_auth_token_exchange, verified=False
+):
     # We're anonymous still, so we need to wait a second before exchanging
     # the token.
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
+    application = AccessToken.objects.get(token=token).application
+    application.rate_limit_model = rate_limit_model
+    application.save()
     res = client.get("/v1/rate_limit/", HTTP_AUTHORIZATION=f"Bearer {token}")
     res_data = res.json()
     if verified:
-        assert res_data["rate_limit_model"] == "standard"
+        assert res_data["rate_limit_model"] == rate_limit_model
         assert res_data["verified"] is True
     else:
-        assert res_data["rate_limit_model"] == "standard"
+        assert res_data["rate_limit_model"] == rate_limit_model
         assert res_data["verified"] is False
 
 
