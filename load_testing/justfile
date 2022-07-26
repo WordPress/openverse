@@ -11,5 +11,5 @@ run script host: build
 api host=("http://" + DOCKER_HOST + ":8000"):
     @just run api {{ host }}
 
-k6 envvars="API_URL=https://api-dev.openverse.engineering/v1/":
-    docker run --rm --env {{ envvars }} -v {{ invocation_directory() }}/k6:/home/k6 grafana/k6 run main.js
+k6 env="API_URL=https://api-dev.openverse.engineering/v1/": build
+    docker run --rm --env {{ env }} -v {{ invocation_directory() }}/k6:/app openverse-load-testing:latest k6 run main.js
