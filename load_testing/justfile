@@ -11,5 +11,5 @@ run script host: build
 api host=("http://" + DOCKER_HOST + ":8000"):
     @just run api {{ host }}
 
-k6 env="-e API_TOKEN=$API_TOKEN": build
-    docker run --rm {{ env }} -v {{ invocation_directory() }}/k6:/app openverse-load-testing:latest k6 run main.js
+k6 url="https://api-dev.openverse.engineering" +extra_args="": build
+    docker run --rm -e API_TOKEN=$API_TOKEN -e API_URL={{ url }} -v {{ invocation_directory() }}/k6:/app {{ extra_args }} openverse-load-testing:latest k6 run main.js
