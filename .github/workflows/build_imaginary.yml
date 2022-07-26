@@ -7,15 +7,15 @@ on:
         default: null
         description: The environment to deploy to, if a deploy is desired. Currently only `staging` is available.
 
-      deploy-only:
+      build:
         type: boolean
-        default: false
-        description: Set to `true` to trigger _just_ a redeployment
+        default: true
+        description: Set to `false` to trigger _just_ a redeployment
 
 jobs:
   build:
     name: Build
-    if: github.event.inputs.deploy-only == false
+    if: github.event.inputs.build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout h2non/imaginary repository
