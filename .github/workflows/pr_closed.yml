@@ -16,11 +16,11 @@ jobs:
           ref: gh-pages
 
       - name: Remove PR preview
-        run: rm -rf ${{ github.event.pull_request.number }}
+        run: rm -rf _preview/${{ github.event.pull_request.number }}
 
       - name: Push cleaned branch
         run: |
           git config --global user.name 'PR Closed action'
           git config --global user.email 'openverse@wordpress.org'
-          git commit -am 'Clean preview for PR ${{ github.event.pull_request.number }}'
-          git push
+          git reset "$(git commit-tree 'HEAD^{tree}' -m 'Clean preview for PR #${{ github.event.pull_request.number }}')"
+          git push --force

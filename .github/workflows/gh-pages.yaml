@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          ref: main
 
       - uses: ./.github/actions/setup-node-env
 
@@ -25,11 +27,27 @@ jobs:
 
       # This makes the TCV available at the `/tailwind` directory in the gh-pages
       - name: Merge TCV and Storybook builds
-        run: mv .tcv-export ./storybook-static/tailwind
+        run: |
+          mv .tcv-export ./storybook-static/tailwind
+          mv storybook-static /tmp/gh-pages
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+
+      - name: Preserve previews
+        run: mv _preview /tmp/gh-pages/_preview
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./storybook-static
-          keep_files: true
+          publish_dir: /tmp/gh-pages
+          force_orphan: true
+
+      - name: Checkout branch again to enable cleaning
+        if: always()
+        uses: actions/checkout@v3
+        with:
+          ref: main

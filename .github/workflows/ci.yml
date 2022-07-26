@@ -256,15 +256,38 @@ jobs:
 
       # This makes the TCV available at the `/tailwind` directory in the gh-pages
       - name: Merge TCV and Storybook builds
-        run: mv .tcv-export ./storybook-static/tailwind
+        run: |
+          mv .tcv-export ./storybook-static/tailwind
+          mv ./storybook-static /tmp/preview
+
+      # Otherwise we end up with `node_modules` and other things only necessary for building
+      # but not necessary for deploying the `gh-pages` branch
+      - name: Recreate working directory to avoid supurflouous files
+        run: |
+          cd ..
+          rm -rf openverse-frontend
+          mkdir openverse-frontend
+
+      - uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+
+      - name: Merge preview with existing gh-pages
+        run: |
+          cd ..
+          cp -r ./openverse-frontend /tmp/gh-pages
+          # trash the existing preview folder and replace it with the newly generated one
+          # if the preview hasn't been pushed yet this will still exit(0)
+          rm -rf /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
+          mv /tmp/preview /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
+          cd openverse-frontend
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./storybook-static
-          destination_dir: ${{ github.event.pull_request.number }}
-          keep_files: true
+          publish_dir: /tmp/gh-pages
+          force_orphan: true
 
       - uses: peter-evans/find-comment@v2
         id: final-preview-comment
@@ -279,9 +302,13 @@ jobs:
           body: |
             **Storybook and Tailwind configuration previews**: _Ready_
 
-            **Storybook:** <https://wordpress.github.io/openverse-frontend/${{ github.event.pull_request.number }}>
-            **Tailwind:** <https://wordpress.github.io/openverse-frontend/${{ github.event.pull_request.number }}/tailwind>
+            **Storybook:** <https://wordpress.github.io/openverse-frontend/_preview/${{ github.event.pull_request.number }}>
+            **Tailwind:** <https://wordpress.github.io/openverse-frontend/_preview/${{ github.event.pull_request.number }}/tailwind>
 
             Please note that GitHub pages takes a little time to deploy newly pushed code, if the links above don't work or you see old versions, wait 5 minutes and try again.
 
             You can check [the GitHub pages deployment action list](https://github.com/WordPress/openverse-frontend/actions/workflows/pages/pages-build-deployment) to see the current status of the deployments.
+
+      - name: Checkout branch again to enable cleaning
+        uses: actions/checkout@v3
+        if: always()
