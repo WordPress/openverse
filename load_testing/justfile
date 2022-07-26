@@ -1,4 +1,4 @@
-set dotenv-load := false
+set dotenv-load := true
 
 DOCKER_HOST := if os() == "macos" { "host.docker.internal" } else { "172.17.0.1" }
 
