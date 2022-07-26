@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="!noResults"
-      class="results-grid grid grid-cols-2 lg:grid-cols-5 2xl:grid-cols-6 gap-4 mb-4"
+      class="results-grid mb-4 grid grid-cols-2 gap-4 lg:grid-cols-5 2xl:grid-cols-6"
     >
       <VContentLink
         v-for="([mediaType, count], i) in resultCounts"
@@ -20,7 +20,7 @@
     />
     <div
       v-else
-      class="results-grid grid grid-cols-2 lg:grid-cols-5 2xl:grid-cols-6 gap-4"
+      class="results-grid grid grid-cols-2 gap-4 lg:grid-cols-5 2xl:grid-cols-6"
     >
       <div v-for="item in allMedia" :key="item.id">
         <VImageCellSquare

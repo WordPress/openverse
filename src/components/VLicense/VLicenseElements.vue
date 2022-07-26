@@ -3,7 +3,7 @@
     <li
       v-for="element in elementNames"
       :key="element"
-      class="flex items-center gap-3 mb-2 text-sm md:text-base"
+      class="mb-2 flex items-center gap-3 text-sm md:text-base"
     >
       <VIcon
         view-box="0 0 30 30"

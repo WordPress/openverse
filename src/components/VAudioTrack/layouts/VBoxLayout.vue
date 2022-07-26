@@ -2,12 +2,12 @@
   <div :style="{ width }">
     <!-- The width is determined by the parent element if the 'size' property is not specified. -->
     <div
-      class="box-track group relative bg-yellow h-0 w-full pt-full rounded-sm text-dark-blue"
+      class="box-track group relative h-0 w-full rounded-sm bg-yellow pt-full text-dark-blue"
     >
       <div class="absolute inset-0 flex flex-col">
-        <div class="info flex-grow flex flex-col justify-between p-4">
+        <div class="info flex flex-grow flex-col justify-between p-4">
           <h2
-            class="font-heading font-semibold leading-snug line-clamp-3 text-base"
+            class="font-heading text-base font-semibold leading-snug line-clamp-3"
           >
             {{ audio.title }}
           </h2>
@@ -23,7 +23,7 @@
           </div>
         </div>
 
-        <div class="hidden player md:flex flex-row">
+        <div class="player hidden flex-row md:flex">
           <slot name="play-pause" size="small" layout="box" />
           <slot name="controller" :features="[]" />
         </div>
@@ -90,7 +90,7 @@ export default defineComponent({
 }
 
 .box-track .play-pause {
-  @apply text-dark-charcoal bg-yellow border-yellow focus:border-pink;
+  @apply border-yellow bg-yellow text-dark-charcoal focus:border-pink;
 }
 
 .box-track .waveform {

@@ -82,6 +82,6 @@ export default defineComponent({
 
 <style scoped>
 [dir='rtl'] .v-icon.rtl-flip {
-  @apply transform -scale-x-100;
+  @apply -scale-x-100 transform;
 }
 </style>

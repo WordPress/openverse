@@ -4,11 +4,11 @@
     :class="[`size-${size}`, { 'items-start': isSmall }]"
   >
     <div
-      class="relative flex-shrink-0 rounded-sm overflow-hidden"
+      class="relative flex-shrink-0 overflow-hidden rounded-sm"
       :class="isLarge ? 'w-30 me-6' : 'w-20 me-4'"
     >
       <VAudioThumbnail :audio="audio" />
-      <div v-show="isSmall" class="absolute bottom-0 rtl:left-0 ltr:right-0">
+      <div v-show="isSmall" class="absolute bottom-0 ltr:right-0 rtl:left-0">
         <slot name="play-pause" size="tiny" layout="row" />
       </div>
     </div>
@@ -23,7 +23,7 @@
       <div class="flex-shrink-0" :class="{ 'w-70': isMedium }">
         <VLink
           :href="`/audio/${audio.id}`"
-          class="block font-heading font-semibold line-clamp-2 md:line-clamp-1 text-dark-charcoal hover:text-dark-charcoal p-px rounded-sm focus:outline-none focus:ring focus:ring-pink"
+          class="block rounded-sm p-px font-heading font-semibold text-dark-charcoal line-clamp-2 hover:text-dark-charcoal focus:outline-none focus:ring focus:ring-pink md:line-clamp-1"
           :class="{
             'text-2xl': isMedium || isLarge,
             'leading-snug': isSmall,
@@ -32,7 +32,7 @@
         >
 
         <div
-          class="flex text-dark-charcoal-70 mt-2"
+          class="mt-2 flex text-dark-charcoal-70"
           :class="{
             'text-sr': isSmall,
             'leading-snug': isMedium || isLarge,
@@ -49,7 +49,7 @@
           <div class="part-b inline-flex flex-row items-center">
             <span v-show="isSmall">
               <span
-                class="inline-block text-dark-charcoal font-semibold bg-dark-charcoal-06 p-1 rounded-sm"
+                class="inline-block rounded-sm bg-dark-charcoal-06 p-1 font-semibold text-dark-charcoal"
                 >{{ timeFmt(audio.duration || 0) }}</span
               ><span class="mx-2">{{ $t('interpunct') }}</span>
             </span>
@@ -167,7 +167,7 @@ export default defineComponent({
 
 <style>
 .row-track .play-pause {
-  @apply rounded-ts-sm rounded-bs-sm flex-shrink-0;
+  @apply flex-shrink-0 rounded-ts-sm rounded-bs-sm;
 }
 
 .row-track .waveform {

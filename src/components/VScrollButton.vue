@@ -2,7 +2,7 @@
   <button
     :aria-label="$t('browse-page.aria.scroll')"
     type="button"
-    class="scroll text-white bg-pink hover:bg-dark-pink transition-all duration-100 ease-linear fixed bottom-4 w-14 h-14 hover:shadow-md rounded-full text-center"
+    class="scroll fixed bottom-4 h-14 w-14 rounded-full bg-pink text-center text-white transition-all duration-100 ease-linear hover:bg-dark-pink hover:shadow-md"
     :class="hClass"
     @click="scrollToTop"
     @keydown.tab.exact="$emit('tab', $event)"
@@ -12,7 +12,7 @@
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
       focusable="false"
-      class="w-full h-full fill-curr"
+      class="h-full w-full fill-curr"
     >
       <path d="M6.5 12.4L12 8l5.5 4.4-.9 1.2L12 10l-4.5 3.6-1-1.2z" />
     </svg>

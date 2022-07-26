@@ -3,11 +3,11 @@
     id="filter-button"
     :variant="variant"
     size="disabled"
-    class="self-center gap-2 align-center font-semibold py-2 flex-shrink-0 focus-visible:border-tx focus-visible:ring focus-visible:ring-pink"
+    class="align-center flex-shrink-0 gap-2 self-center py-2 font-semibold focus-visible:border-tx focus-visible:ring focus-visible:ring-pink"
     :class="
       filtersAreApplied
-        ? 'px-3 flex-shrink-0'
-        : 'w-10 md:w-auto h-10 md:h-auto px-0 md:px-3'
+        ? 'flex-shrink-0 px-3'
+        : 'h-10 w-10 px-0 md:h-auto md:w-auto md:px-3'
     "
     :pressed="pressed"
     :disabled="disabled"

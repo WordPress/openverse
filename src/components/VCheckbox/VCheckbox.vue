@@ -9,7 +9,7 @@
     />
     <VIcon
       v-show="localCheckedState"
-      class="absolute start-0 text-white"
+      class="absolute text-white start-0"
       :icon-path="checkmark"
       view-box="0 0 20 20"
       :size="5"
@@ -150,9 +150,9 @@ export default defineComponent({
   @apply relative flex text-sm leading-5;
 }
 .checkbox {
-  @apply appearance-none w-5 h-5 border-dark-charcoal border rounded-sm me-3 flex-shrink-0 relative;
-  @apply focus:outline-none focus:ring focus:ring-offset-2 focus:ring-pink;
-  @apply disabled:bg-dark-charcoal-10 disabled:border-dark-charcoal-40;
+  @apply relative h-5 w-5 flex-shrink-0 appearance-none rounded-sm border border-dark-charcoal me-3;
+  @apply focus:outline-none focus:ring focus:ring-pink focus:ring-offset-2;
+  @apply disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10;
   @apply checked:bg-dark-charcoal;
   @apply checked:disabled:bg-dark-charcoal-40;
 }

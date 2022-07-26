@@ -1,7 +1,7 @@
 <template>
   <VTabPanel
     :id="tab"
-    class="h-[190px] flex flex-col justify-between items-start text-sm md:text-base"
+    class="flex h-[190px] flex-col items-start justify-between text-sm md:text-base"
   >
     <div :id="`panel-slot-${tab}`" class="overflow-y-auto">
       <slot />

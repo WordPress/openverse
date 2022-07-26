@@ -1,13 +1,13 @@
 <template>
   <form
-    class="search-bar group flex flex-row items-center bg-white rounded-sm"
+    class="search-bar group flex flex-row items-center rounded-sm bg-white"
     :class="{ 'h-[57px] md:h-[69px]': size === 'standalone' }"
     @submit.prevent="handleSearch"
   >
     <VInputField
       :placeholder="placeholder || $t('hero.search.placeholder')"
       v-bind="$attrs"
-      class="flex-grow search-field"
+      class="search-field flex-grow"
       :class="{ 'border-transparent': isHomeRoute }"
       :label-text="
         $t('search.search-bar-label', { openverse: 'Openverse' }).toString()

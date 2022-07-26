@@ -2,7 +2,7 @@
   <table
     :aria-label="$t('sources.aria.table').toString()"
     role="region"
-    class="table table-fixed w-full mt-4 mb-10 not-prose text-base"
+    class="not-prose mt-4 mb-10 table w-full table-fixed text-base"
   >
     <thead>
       <tr>
@@ -11,7 +11,7 @@
           @click="sortTable('display_name')"
           @keypress.enter="sortTable('display_name')"
         >
-          <span class="w-full flex flex-row items-center justify-between">
+          <span class="flex w-full flex-row items-center justify-between">
             {{ $t('sources.providers.source') }}
             <TableSortIcon :active="sorting.field === 'display_name'" />
           </span>
@@ -21,7 +21,7 @@
           @click="sortTable('source_url')"
           @keypress.enter="sortTable('source_url')"
         >
-          <span class="w-full flex flex-row items-center justify-between">
+          <span class="flex w-full flex-row items-center justify-between">
             {{ $t('sources.providers.domain') }}
             <TableSortIcon :active="sorting.field === 'source_url'" />
           </span>
@@ -31,7 +31,7 @@
           @click="sortTable('media_count')"
           @keypress.enter="sortTable('media_count')"
         >
-          <span class="w-full flex flex-row items-center justify-between">
+          <span class="flex w-full flex-row items-center justify-between">
             {{ $t('sources.providers.item') }}
             <TableSortIcon :active="sorting.field === 'media_count'" />
           </span>
@@ -43,7 +43,7 @@
         <td>
           {{ provider.display_name }}
         </td>
-        <td class="font-semibold truncate">
+        <td class="truncate font-semibold">
           <VLink :href="provider.source_url">
             {{ cleanSourceUrlForPresentation(provider.source_url) }}
           </VLink>
@@ -152,7 +152,7 @@ export default defineComponent({
 
 @layer components {
   .table {
-    @apply border-0 rounded-sm border-dark-charcoal-20;
+    @apply rounded-sm border-0 border-dark-charcoal-20;
   }
   .table th,
   .table td {
@@ -162,11 +162,11 @@ export default defineComponent({
     @apply text-pink hover:underline;
   }
   .table th {
-    @apply bg-dark-charcoal-10 border-t cursor-pointer;
+    @apply cursor-pointer border-t bg-dark-charcoal-10;
   }
   .table th,
   .table td {
-    @apply p-4 border-r first:border-l;
+    @apply border-r p-4 first:border-l;
   }
   .table td {
     @apply break-normal border-y-0;
@@ -181,7 +181,7 @@ export default defineComponent({
   }
 
   .table tr:last-child td {
-    @apply first:rounded-bl-sm last:rounded-br-sm border-b;
+    @apply border-b first:rounded-bl-sm last:rounded-br-sm;
   }
 }
 </style>

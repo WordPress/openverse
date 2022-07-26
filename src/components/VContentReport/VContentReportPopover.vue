@@ -11,7 +11,7 @@
     <template #default="{ close }">
       <div class="relative" data-testid="content-report-popover">
         <VIconButton
-          class="absolute top-0 end-0 border-none text-dark-charcoal-70"
+          class="absolute top-0 border-none text-dark-charcoal-70 end-0"
           size="search-medium"
           :icon-props="{ iconPath: icons.closeSmall }"
           :button-props="{

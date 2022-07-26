@@ -7,7 +7,7 @@
     size="disabled"
     variant="plain-dangerous"
     v-bind="tabProps"
-    class="py-3 px-4 md:px-6 bg-white text-base font-semibold focus-visible:shadow-[0_0_0_1.5px_#c52b9b_inset] border-0 rounded-none"
+    class="rounded-none border-0 bg-white py-3 px-4 text-base font-semibold focus-visible:shadow-[0_0_0_1.5px_#c52b9b_inset] md:px-6"
     :class="[$style[variant], isSelected && $style[`${variant}-selected`]]"
     @click="handleSelection"
     @focus="handleFocus"
@@ -188,15 +188,15 @@ export default defineComponent({
 
 <style module>
 .bordered {
-  @apply border-t border-x border-tx rounded-t-sm;
+  @apply rounded-t-sm border-x border-t border-tx;
 }
 .plain {
-  @apply border-tx border-b-3;
+  @apply border-b-3 border-tx;
 }
 .bordered-selected {
-  @apply border border-x-dark-charcoal-20 border-t-dark-charcoal-20 border-b-white -mb-[1px] bg-white;
+  @apply -mb-[1px] border border-x-dark-charcoal-20 border-t-dark-charcoal-20 border-b-white bg-white;
 }
 .plain-selected {
-  @apply border-dark-charcoal rounded-none;
+  @apply rounded-none border-dark-charcoal;
 }
 </style>

@@ -1,12 +1,12 @@
 <template>
   <section class="w-full">
-    <div class="flex flex-row justify-between items-center mb-6">
+    <div class="mb-6 flex flex-row items-center justify-between">
       <h3 class="text-2xl md:text-3xl">
         {{ $t('image-details.information.title') }}
       </h3>
       <VContentReportPopover :media="image" />
     </div>
-    <ul v-if="image && image.tags" class="flex flex-wrap gap-2 mb-6">
+    <ul v-if="image && image.tags" class="mb-6 flex flex-wrap gap-2">
       <VMediaTag
         v-for="(tag, index) in image.tags.filter((i) => !!i)"
         :key="index"
@@ -101,6 +101,6 @@ dd {
 }
 
 dd {
-  @apply font-bold mt-2;
+  @apply mt-2 font-bold;
 }
 </style>

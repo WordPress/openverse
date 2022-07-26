@@ -1,6 +1,6 @@
 <template>
   <VButton
-    class="flex flex-row font-semibold py-2 text-sr md:text-base"
+    class="flex flex-row py-2 text-sr font-semibold md:text-base"
     :class="[
       sizeClasses,
       isHeaderScrolled ? 'max-w-[10rem] sm:max-w-[20rem] md:max-w-[16rem]' : '',
@@ -13,12 +13,12 @@
   >
     <VIcon :icon-path="icon" />
     <span
-      class="md:block md:ms-2 md:truncate md:text-left"
-      :class="isHeaderScrolled ? 'hidden' : 'block ms-2 truncate text-left'"
+      class="md:block md:truncate md:text-left md:ms-2"
+      :class="isHeaderScrolled ? 'hidden' : 'ms-2 block truncate text-left'"
       >{{ buttonLabel }}</span
     >
     <VIcon
-      class="hidden md:block text-dark-charcoal-40 md:ms-2"
+      class="hidden text-dark-charcoal-40 md:block md:ms-2"
       :icon-path="caretDownIcon"
     />
   </VButton>

@@ -4,14 +4,14 @@
     :aria-label="$t('search.search')"
     size="disabled"
     :variant="isIcon ? 'plain' : 'primary'"
-    class="transition-none flex-shrink-0 rounded-s-none font-semibold text-2xl hover:text-white group-hover:text-white group-hover:border-pink hover:bg-pink group-hover:bg-pink focus-visible:ring focus-visible:ring-pink"
+    class="flex-shrink-0 text-2xl font-semibold transition-none rounded-s-none hover:bg-pink hover:text-white focus-visible:ring focus-visible:ring-pink group-hover:border-pink group-hover:bg-pink group-hover:text-white"
     :class="[
       isIcon
-        ? 'search-button focus-visible:bg-pink focus-visible:text-white p-[0.5px] ps-[1.5px]'
-        : 'py-6 px-10 whitespace-nowrap h-full',
+        ? 'search-button ps-[1.5px] p-[0.5px] focus-visible:bg-pink focus-visible:text-white'
+        : 'h-full whitespace-nowrap py-6 px-10',
       sizeClasses,
       isHomeRoute
-        ? 'bg-pink border-b border-b-pink text-white border-tx'
+        ? 'border-b border-tx border-b-pink bg-pink text-white'
         : 'border-dark-charcoal-20',
     ]"
     v-on="$listeners"

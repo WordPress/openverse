@@ -1,6 +1,6 @@
 <template>
   <div>
-    <figure class="w-full mb-4 pt-12 px-6 bg-dark-charcoal-06 relative">
+    <figure class="relative mb-4 w-full bg-dark-charcoal-06 px-6 pt-12">
       <div
         v-if="backToSearchPath"
         class="absolute left-0 top-0 right-0 w-full px-2"
@@ -13,7 +13,7 @@
         id="main-image"
         :src="imageSrc"
         :alt="image.title"
-        class="h-full w-full max-h-[500px] mx-auto rounded-t-sm object-contain"
+        class="mx-auto h-full max-h-[500px] w-full rounded-t-sm object-contain"
         :width="imageWidth"
         :height="imageHeight"
         @load="onImageLoaded"
@@ -29,19 +29,19 @@
 
     <section
       id="title-button"
-      class="flex flex-row md:flex-row-reverse flex-wrap justify-between md:mt-6"
+      class="flex flex-row flex-wrap justify-between md:mt-6 md:flex-row-reverse"
     >
       <VButton
         as="VLink"
         :href="image.foreign_landing_url"
-        class="btn-main flex-initial w-full md:w-max mb-4 md:mb-0 leading-[1.3]"
+        class="btn-main mb-4 w-full flex-initial leading-[1.3] md:mb-0 md:w-max"
         size="large"
         >{{ $t('image-details.weblink') }}</VButton
       >
       <div
-        class="flex-1 flex flex-col justify-center font-semibold text-base leading-[1.3]"
+        class="flex flex-1 flex-col justify-center text-base font-semibold leading-[1.3]"
       >
-        <h1 class="md:text-3xl font-semibold">
+        <h1 class="font-semibold md:text-3xl">
           {{ image.title }}
         </h1>
         <i18n v-if="image.creator" path="image-details.creator" tag="span">
@@ -238,10 +238,10 @@ export default defineComponent({
 <style scoped>
 section,
 aside {
-  @apply w-full px-6 md:px-16 mb-10 md:mb-16 md:max-w-screen-lg lg:mx-auto;
+  @apply mb-10 w-full px-6 md:mb-16 md:max-w-screen-lg md:px-16 lg:mx-auto;
 }
 
 .btn-main {
-  @apply py-3 md:py-4 md:px-6 text-sr md:text-2xl font-semibold;
+  @apply py-3 text-sr font-semibold md:py-4 md:px-6 md:text-2xl;
 }
 </style>

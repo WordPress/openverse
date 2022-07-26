@@ -3,7 +3,7 @@
     <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
     <div
       ref="triggerContainerRef"
-      class="flex items-stretch flex-shrink-0"
+      class="flex flex-shrink-0 items-stretch"
       @click="onTriggerClick"
     >
       <!-- eslint-enable vuejs-accessibility/click-events-have-key-events -->

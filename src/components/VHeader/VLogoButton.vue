@@ -4,7 +4,7 @@
     href="/"
     variant="plain"
     size="disabled"
-    class="max-w-min hover:bg-yellow text-dark-charcoal"
+    class="max-w-min text-dark-charcoal hover:bg-yellow"
   >
     <VLogoLoader
       :status="isFetching ? 'loading' : 'idle'"

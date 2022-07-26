@@ -4,20 +4,20 @@
     :size="size"
     :bordered="bordered"
     type="radiogroup"
-    class="z-10 md:w-[260px] max-w-full"
+    class="z-10 max-w-full md:w-[260px]"
   >
     <div
       v-for="(category, index) in contentTypeGroups"
       :key="index"
       :class="{
         'mt-2': index > 0,
-        'bg-dark-charcoal-06 border-t border-dark-charcoal-20':
+        'border-t border-dark-charcoal-20 bg-dark-charcoal-06':
           index > 0 && !bordered,
       }"
     >
       <h4
         :class="bordered ? 'ps-0' : 'ps-6'"
-        class="text-sr pt-6 pe-6 pb-4 uppercase font-semibold"
+        class="pt-6 pb-4 text-sr font-semibold uppercase pe-6"
       >
         {{ $t(`search-type.${category.heading}`) }}
       </h4>

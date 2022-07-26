@@ -25,7 +25,7 @@
         </template>
         <VTabPanel v-for="tab in tabs" :id="tab" :key="tab">
           <iframe
-            class="w-full h-[1200px] border-0"
+            class="h-[1200px] w-full border-0"
             :src="forms[tab]"
             :aria-label="$t(`feedback.aria.${tab}`).toString()"
             :title="$t(`feedback.aria.${tab}`).toString()"

@@ -138,6 +138,6 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 figure {
-  @apply mx-auto md:w-[800px] max-w-full border border-black;
+  @apply mx-auto max-w-full border border-black md:w-[800px];
 }
 </style>

@@ -1,14 +1,14 @@
 <template>
   <div
     v-show="visible"
-    class="w-0 h-0"
+    class="h-0 w-0"
     :aria-hidden="!visible"
     v-on="$listeners"
     @keydown="onKeyDown"
   >
     <div
       ref="popoverRef"
-      class="bg-white border border-light-gray rounded-sm shadow max-w-max"
+      class="max-w-max rounded-sm border border-light-gray bg-white shadow"
       :style="{ zIndex }"
       :tabindex="-1"
       @blur="onBlur"

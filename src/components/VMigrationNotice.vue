@@ -14,7 +14,7 @@
     <i18n tag="span" path="migration-notice.more">
       <template #read-more>
         <VLink
-          class="text-white font-bold underline"
+          class="font-bold text-white underline"
           href="https://wordpress.org/news/2021/05/welcome-to-openverse/"
         >
           {{ $t('migration-notice.read') }}

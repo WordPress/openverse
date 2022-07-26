@@ -3,10 +3,10 @@
     variant="plain"
     class="report-button font-semibold text-dark-charcoal-70"
   >
-    <span class="text-sr md:text-base md:hidden">{{
+    <span class="text-sr md:hidden md:text-base">{{
       $t('media-details.content-report.short')
     }}</span>
-    <span class="text-sr md:text-base hidden md:inline">{{
+    <span class="hidden text-sr md:inline md:text-base">{{
       $t('media-details.content-report.long')
     }}</span>
     <VIcon :icon-path="icons.flag" class="ms-2" />

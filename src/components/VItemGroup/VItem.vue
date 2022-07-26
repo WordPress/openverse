@@ -14,7 +14,7 @@
     <VButton
       data-item-group-item
       :as="as"
-      class="flex justify-between min-w-full group relative hover:bg-dark-charcoal-10 px-2 py-2 focus:z-10"
+      class="group relative flex min-w-full justify-between px-2 py-2 hover:bg-dark-charcoal-10 focus:z-10"
       :class="[
         $style[`${contextProps.direction}-button`],
         selected && 'bg-dark-charcoal-10 ring-offset-dark-charcoal-10',
@@ -35,7 +35,7 @@
       @click.native="$emit('click')"
     >
       <div
-        class="flex-grow whitespace-nowrap my-0 rounded-sm px-2"
+        class="my-0 flex-grow whitespace-nowrap rounded-sm px-2"
         :class="[$style[`${contextProps.direction}-content`]]"
       >
         <slot name="default" />
@@ -205,7 +205,7 @@ export default defineComponent({
 }
 
 .horizontal-bordered {
-  @apply border-s-0 border-e border-dark-charcoal-20;
+  @apply border-dark-charcoal-20 border-s-0 border-e;
 }
 
 .horizontal:first-of-type {

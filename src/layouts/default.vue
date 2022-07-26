@@ -1,6 +1,6 @@
 <template>
-  <div class="app grid relative">
-    <div class="sticky top-0 block z-40">
+  <div class="app relative grid">
+    <div class="sticky top-0 z-40 block">
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
       <VMigrationNotice />
       <VTranslationStatusBanner />
@@ -10,10 +10,10 @@
       class="main embedded w-screen md:w-full"
       :class="{ 'has-sidebar': isSidebarVisible }"
     >
-      <Nuxt class="min-w-0 main-page" />
+      <Nuxt class="main-page min-w-0" />
       <VSidebarTarget
-        class="sidebar fixed end-0 bg-dark-charcoal-06 overflow-y-auto"
-        :class="{ 'border-s border-dark-charcoal-20': isSidebarVisible }"
+        class="sidebar fixed overflow-y-auto bg-dark-charcoal-06 end-0"
+        :class="{ 'border-dark-charcoal-20 border-s': isSidebarVisible }"
       />
     </main>
     <VModalTarget class="modal" />

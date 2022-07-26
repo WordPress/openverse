@@ -2,13 +2,13 @@
   <section dir="ltr">
     <div class="border-b border-dark-charcoal-30 bg-dark-charcoal-06">
       <div class="flex flex-col items-center pt-20">
-        <h2 class="text-5xl text-center mb-10 max-w-[700px]">
+        <h2 class="mb-10 max-w-[700px] text-center text-5xl">
           {{ $t('extension.description.intro') }}
         </h2>
         <ExtensionBrowsers class="mb-16" />
         <video
           ref="heroVid"
-          class="max-w-7xl block w-full"
+          class="block w-full max-w-7xl"
           autoplay
           loop
           muted
@@ -23,17 +23,17 @@
       </div>
     </div>
     <div
-      class="features md:max-w-3xl lg:max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-30 py-30 md:px-6 mx-auto"
+      class="features mx-auto grid grid-cols-1 gap-x-12 gap-y-30 py-30 md:max-w-3xl md:grid-cols-2 md:px-6 lg:max-w-6xl"
     >
       <template v-for="(feature, index) in features">
         <figure
           :key="`figure-${index}`"
           :data-index="index"
-          class="flex flex-col justify-center items-center"
+          class="flex flex-col items-center justify-center"
           :style="{ '--cell-idx': index * 2 }"
         >
           <img
-            class="max-w-7xl w-full rounded border"
+            class="w-full max-w-7xl rounded border"
             :src="feature.image"
             :alt="$t(`extension.features.${feature.key}.heading`).toString()"
           />
@@ -41,10 +41,10 @@
         <div
           :key="`description-${index}`"
           :data-index="index"
-          class="description flex flex-col justify-center items-center text-left"
+          class="description flex flex-col items-center justify-center text-left"
           :style="{ '--cell-idx': index * 2 + 1 }"
         >
-          <h2 class="text-5xl mb-4 max-w=[30rem]">
+          <h2 class="max-w=[30rem] mb-4 text-5xl">
             {{ $t(`extension.features.${feature.key}.heading`) }}
           </h2>
           <p class="max-w=[30rem]">
@@ -53,8 +53,8 @@
         </div>
       </template>
     </div>
-    <div class="flex flex-col items-center mb-30">
-      <h2 class="text-6xl text-center max-w-[40rem]">
+    <div class="mb-30 flex flex-col items-center">
+      <h2 class="max-w-[40rem] text-center text-6xl">
         {{ $t('extension.conclusion') }}
       </h2>
       <ExtensionBrowsers class="mt-6" />
@@ -111,12 +111,12 @@ export default defineComponent({
 @screen md {
   .features figure:nth-of-type(odd),
   .features .description:nth-of-type(odd) {
-    @apply text-left items-start;
+    @apply items-start text-left;
   }
 
   .features figure:nth-of-type(even),
   .features .description:nth-of-type(even) {
-    @apply text-right items-end;
+    @apply items-end text-right;
   }
 }
 

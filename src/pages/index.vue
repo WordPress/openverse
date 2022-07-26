@@ -1,21 +1,21 @@
 <template>
   <main
-    class="flex flex-col lg:flex-row justify-center gap-6 lg:gap-0 bg-yellow h-screen overflow-hidden"
+    class="flex h-screen flex-col justify-center gap-6 overflow-hidden bg-yellow lg:flex-row lg:gap-0"
   >
     <!-- TODO: Refine min-width for different breakpoints, remove magic numbers -->
     <header
-      class="flex-grow w-full lg:w-auto lg:min-w-[32rem] xl:min-w-[64rem] box-border flex flex-col justify-between lg:justify-center"
+      class="box-border flex w-full flex-grow flex-col justify-between lg:w-auto lg:min-w-[32rem] lg:justify-center xl:min-w-[64rem]"
     >
       <VLogoButton
-        class="lg:hidden ms-3"
+        class="ms-3 lg:hidden"
         :auto-resize-logo="false"
         :is-search-route="false"
       />
 
-      <div class="px-6 lg:ps-30 lg:pe-0 xl:px-40 mx-auto w-full lg:w-auto z-10">
+      <div class="z-10 mx-auto w-full px-6 lg:w-auto lg:pe-0 lg:ps-30 xl:px-40">
         <VLink
           href="/"
-          class="relative hidden lg:block -left-[6.25rem] rtl:-right-[6.25rem]"
+          class="relative -left-[6.25rem] hidden rtl:-right-[6.25rem] lg:block"
         >
           <h1>
             <span class="sr-only">Openverse</span>
@@ -24,15 +24,15 @@
               aria-hidden="true"
               class="flex flex-row items-center text-dark-charcoal"
             >
-              <OpenverseLogo class="w-[70px] h-[70px] me-6 xl:me-7" />
-              <OpenverseBrand class="w-[315px] h-[60px]" />
+              <OpenverseLogo class="h-[70px] w-[70px] me-6 xl:me-7" />
+              <OpenverseBrand class="h-[60px] w-[315px]" />
             </span>
           </h1>
         </VLink>
-        <h2 class="text-4xl lg:text-6xl mt-auto lg:mt-6">
+        <h2 class="mt-auto text-4xl lg:mt-6 lg:text-6xl">
           {{ $t('hero.subtitle') }}
         </h2>
-        <div class="flex justify-start gap-4 mt-4 md:hidden">
+        <div class="mt-4 flex justify-start gap-4 md:hidden">
           <VSearchTypeRadio
             v-for="type in supportedSearchTypes"
             :key="type"
@@ -43,7 +43,7 @@
         </div>
         <VSearchBar
           v-model.trim="searchTerm"
-          class="max-w-[40rem] mt-4 lg:mt-8 group"
+          class="group mt-4 max-w-[40rem] lg:mt-8"
           size="standalone"
           @submit="handleSearch"
         >
@@ -63,13 +63,13 @@
         <i18n
           path="hero.disclaimer.content"
           tag="p"
-          class="hidden lg:block text-sr mt-4"
+          class="mt-4 hidden text-sr lg:block"
         >
           <template #openverse>Openverse</template>
           <template #license>
             <VLink
               href="https://creativecommons.org/licenses/"
-              class="text-dark-charcoal hover:text-dark-charcoal underline"
+              class="text-dark-charcoal underline hover:text-dark-charcoal"
               >{{ $t('hero.disclaimer.license') }}</VLink
             >
           </template>
@@ -79,13 +79,13 @@
 
     <!-- Image carousel -->
     <div
-      class="flex-grow overflow-hidden w-full lg:w-auto lg:h-full px-6"
+      class="w-full flex-grow overflow-hidden px-6 lg:h-full lg:w-auto"
       data-testid="image-carousel"
     >
       <!-- Height is 114.286vh i.e. 100vh * 8/7 (so that 0.75, 1, 1, 0.75 circles are visible) -->
       <!-- Width is 57.143vh i.e. half of height (because grid dimensions are 4 ⨯ 2) -->
       <div
-        class="homepage-images flex flex-row gap-4 lg:gap-0 items-center lg:grid lg:grid-cols-2 lg:grid-rows-4 lg:w-[57.143vh] lg:h-[114.286vh] min-h-[120px]"
+        class="homepage-images flex min-h-[120px] flex-row items-center gap-4 lg:grid lg:h-[114.286vh] lg:w-[57.143vh] lg:grid-cols-2 lg:grid-rows-4 lg:gap-0"
         aria-hidden
       >
         <ClientOnly>
@@ -98,11 +98,11 @@
           >
             <VLink
               :href="image.url"
-              class="homepage-image block aspect-square h-30 w-30 lg:h-auto lg:w-auto lg:m-[2vh] rounded-full"
+              class="homepage-image block aspect-square h-30 w-30 rounded-full lg:m-[2vh] lg:h-auto lg:w-auto"
               :style="{ '--transition-index': `${index * 0.05}s` }"
             >
               <img
-                class="object-cover h-full w-full rounded-full aspect-square"
+                class="aspect-square h-full w-full rounded-full object-cover"
                 :src="image.src"
                 :alt="image.title"
                 width="120"
@@ -119,13 +119,13 @@
     <i18n
       path="hero.disclaimer.content"
       tag="p"
-      class="lg:hidden text-sr p-6 mt-auto"
+      class="mt-auto p-6 text-sr lg:hidden"
     >
       <template #openverse>Openverse</template>
       <template #license>
         <VLink
           href="https://creativecommons.org/licenses/"
-          class="text-dark-charcoal hover:text-dark-charcoal underline"
+          class="text-dark-charcoal underline hover:text-dark-charcoal"
           >{{ $t('hero.disclaimer.license') }}</VLink
         >
       </template>

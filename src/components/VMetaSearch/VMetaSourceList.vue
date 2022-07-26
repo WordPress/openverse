@@ -1,6 +1,6 @@
 <template>
   <ul
-    class="meta-sources flex flex-col md:flex-row flex-wrap items-stretch gap-4 w-full"
+    class="meta-sources flex w-full flex-col flex-wrap items-stretch gap-4 md:flex-row"
   >
     <li v-for="source in sources" :key="source.name">
       <VButton
@@ -8,7 +8,7 @@
         variant="tertiary"
         size="disabled"
         :href="source.url"
-        class="w-full md:w-auto text-sr font-bold p-4 md:py-2 md:px-3"
+        class="w-full p-4 text-sr font-bold md:w-auto md:py-2 md:px-3"
       >
         {{ source.name }}
         <sup class="top-0">

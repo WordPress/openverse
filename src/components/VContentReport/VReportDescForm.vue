@@ -1,6 +1,6 @@
 <template>
   <label class="other-form block" for="description">
-    <span class="flex flex-row justify-between items-center">
+    <span class="flex flex-row items-center justify-between">
       <span>{{ $t('media-details.content-report.form.other.note') }}</span>
       <span>{{
         $t(`media-details.content-report.form.${reason}.sub-label`)
@@ -9,7 +9,7 @@
     <textarea
       id="description"
       v-model="text"
-      class="h-20 w-full border border-dark-charcoal-20 placeholder-dark-charcoal-70 mt-2 p-2"
+      class="mt-2 h-20 w-full border border-dark-charcoal-20 p-2 placeholder-dark-charcoal-70"
       :placeholder="
         $t(`media-details.content-report.form.${reason}.placeholder`).toString()
       "

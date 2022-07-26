@@ -1,11 +1,11 @@
 <template>
   <div
     v-show="enabled && shouldShow"
-    class="px-4 md:px-7 py-2 flex items-center justify-between"
+    class="flex items-center justify-between px-4 py-2 md:px-7"
     :class="$style[variant]"
     :data-testid="`banner-${id}`"
   >
-    <p class="leading-tight md:leading-normal text-sr md:text-base text-left">
+    <p class="text-left text-sr leading-tight md:text-base md:leading-normal">
       <slot name="default" />
     </p>
     <div class="flex">

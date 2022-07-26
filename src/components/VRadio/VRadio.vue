@@ -4,13 +4,13 @@
       :id="id"
       v-bind="$attrs"
       :value="value"
-      class="radio appearance-none relative flex-shrink-0 bg-white w-5 h-5 border border-dark-charcoal rounded-full me-3 focus:outline-none focus:ring focus:ring-offset-2 focus:ring-pink disabled:bg-dark-charcoal-10 disabled:border-dark-charcoal-40"
+      class="radio relative h-5 w-5 flex-shrink-0 appearance-none rounded-full border border-dark-charcoal bg-white me-3 focus:outline-none focus:ring focus:ring-pink focus:ring-offset-2 disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10"
       type="radio"
       :checked="isChecked"
       @input="handleInput"
     />
     <Radiomark
-      class="radiomark absolute start-0 w-5 h-5 text-dark-charcoal opacity-0 transition-opacity"
+      class="radiomark absolute h-5 w-5 text-dark-charcoal opacity-0 transition-opacity start-0"
       focusable="false"
       width="20"
       height="20"

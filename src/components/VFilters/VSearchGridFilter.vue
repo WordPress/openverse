@@ -4,10 +4,10 @@
     aria-labelledby="filters-heading"
     class="filters py-8 px-10"
   >
-    <div class="flex items-center justify-between mt-2 mb-6">
+    <div class="mt-2 mb-6 flex items-center justify-between">
       <h4
         id="filters-heading"
-        class="text-sr font-semibold py-2 uppercase leading-8"
+        class="py-2 text-sr font-semibold uppercase leading-8"
       >
         {{ $t('filter-list.filter-by') }}
       </h4>
@@ -15,7 +15,7 @@
         v-if="isAnyFilterApplied"
         id="clear-filter-button"
         variant="plain"
-        class="text-sm font-semibold py-1 px-4 text-pink hover:ring hover:ring-pink"
+        class="py-1 px-4 text-sm font-semibold text-pink hover:ring hover:ring-pink"
         @click="clearFilters"
         @keydown.shift.tab.exact="focusFilterButton"
       >
@@ -37,7 +37,7 @@
         @toggle-filter="toggleFilter"
       />
     </form>
-    <footer v-if="isAnyFilterApplied" class="md:hidden flex justify-between">
+    <footer v-if="isAnyFilterApplied" class="flex justify-between md:hidden">
       <VButton variant="primary" @click="$emit('close')">
         {{ $t('filter-list.show') }}
       </VButton>

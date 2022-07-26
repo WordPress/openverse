@@ -3,17 +3,17 @@
     itemprop="contentUrl"
     :title="image.title"
     :href="'/image/' + image.id"
-    class="group block focus:ring-[3px] focus:ring-pink focus:ring-offset-[3px] focus:outline-none rounded-sm"
+    class="group block rounded-sm focus:outline-none focus:ring-[3px] focus:ring-pink focus:ring-offset-[3px]"
   >
     <figure
       itemprop="image"
       itemscope
       itemtype="https://schema.org/ImageObject"
-      class="aspect-square relative rounded-sm"
+      class="relative aspect-square rounded-sm"
     >
       <img
         ref="img"
-        class="w-full h-full object-cover rounded-sm bg-dark-charcoal-10 text-dark-charcoal-10"
+        class="h-full w-full rounded-sm bg-dark-charcoal-10 object-cover text-dark-charcoal-10"
         loading="lazy"
         :alt="image.title"
         :src="getImageUrl()"
@@ -23,7 +23,7 @@
         @error="onImageLoadError($event)"
       />
       <figcaption
-        class="absolute left-0 bottom-0 invisible group-hover:visible group-focus:visible bg-white p-1 text-dark-charcoal"
+        class="invisible absolute left-0 bottom-0 bg-white p-1 text-dark-charcoal group-hover:visible group-focus:visible"
       >
         <span class="sr-only">{{ image.title }}</span>
         <VLicense :license="image.license" :hide-name="true" />

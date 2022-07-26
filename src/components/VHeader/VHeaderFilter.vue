@@ -1,7 +1,7 @@
 <template>
   <div
     ref="nodeRef"
-    class="flex justify-end items-stretch text-sr md:text-base"
+    class="flex items-stretch justify-end text-sr md:text-base"
   >
     <VFilterButton
       ref="buttonRef"

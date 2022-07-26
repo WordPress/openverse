@@ -2,7 +2,7 @@
   <Component
     :is="as"
     :type="typeRef"
-    class="flex items-center rounded-sm justify-center transition-shadow duration-100 ease-linear disabled:opacity-70 no-underline appearance-none ring-offset-1 focus:outline-none"
+    class="flex appearance-none items-center justify-center rounded-sm no-underline ring-offset-1 transition-shadow duration-100 ease-linear focus:outline-none disabled:opacity-70"
     :class="[
       $style.button,
       $style[variant],
@@ -291,34 +291,34 @@ a.button {
 }
 
 .secondary {
-  @apply bg-dark-charcoal text-white font-bold hover:bg-dark-charcoal-80 hover:text-white;
+  @apply bg-dark-charcoal font-bold text-white hover:bg-dark-charcoal-80 hover:text-white;
 }
 
 .secondary-pressed {
-  @apply bg-dark-charcoal-80 border border-tx hover:border-tx;
+  @apply border border-tx bg-dark-charcoal-80 hover:border-tx;
 }
 
 .tertiary {
-  @apply bg-white text-dark-charcoal border border-dark-charcoal-20 focus-visible:border-tx ring-offset-0;
+  @apply border border-dark-charcoal-20 bg-white text-dark-charcoal ring-offset-0 focus-visible:border-tx;
 }
 
 .tertiary[disabled='disabled'],
 .tertiary[aria-disabled='true'],
 .action-menu[disabled='disabled'],
 .action-menu[aria-disabled='true'] {
-  @apply bg-dark-charcoal-10 border-dark-charcoal-10;
+  @apply border-dark-charcoal-10 bg-dark-charcoal-10;
 }
 
 .tertiary-pressed {
-  @apply bg-dark-charcoal text-white border-tx;
+  @apply border-tx bg-dark-charcoal text-white;
 }
 
 .action-menu {
-  @apply bg-tx text-dark-charcoal border border-tx hover:border-dark-charcoal-20;
+  @apply border border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal-20;
 }
 
 .action-menu-secondary {
-  @apply bg-white text-dark-charcoal border border-tx hover:border-dark-charcoal-20;
+  @apply border border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
 }
 
 .action-menu-secondary-pressed {
@@ -326,11 +326,11 @@ a.button {
 }
 
 .action-menu-pressed {
-  @apply border-tx hover:border-tx bg-dark-charcoal text-white;
+  @apply border-tx bg-dark-charcoal text-white hover:border-tx;
 }
 
 .action-menu-muted {
-  @apply bg-dark-charcoal-10 text-dark-charcoal border border-tx hover:border-dark-charcoal-20;
+  @apply border border-tx bg-dark-charcoal-10 text-dark-charcoal hover:border-dark-charcoal-20;
 }
 
 .action-menu-muted-pressed {
@@ -338,11 +338,11 @@ a.button {
 }
 
 .full {
-  @apply w-full font-semibold bg-dark-charcoal-06 hover:bg-dark-charcoal-40 hover:text-white;
+  @apply w-full bg-dark-charcoal-06 font-semibold hover:bg-dark-charcoal-40 hover:text-white;
 }
 
 .full-pressed {
-  @apply w-full font-semibold bg-dark-charcoal-06 text-dark-charcoal;
+  @apply w-full bg-dark-charcoal-06 font-semibold text-dark-charcoal;
 }
 
 .connection-start {

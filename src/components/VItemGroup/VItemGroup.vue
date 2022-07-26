@@ -1,7 +1,7 @@
 <template>
   <div
     ref="nodeRef"
-    class="w-full flex"
+    class="flex w-full"
     :role="type"
     :class="{
       'flex-col': direction === 'vertical',

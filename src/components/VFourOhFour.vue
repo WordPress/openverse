@@ -1,9 +1,9 @@
 <template>
-  <main class="bg-yellow h-screen relative page-404 overflow-x-hidden">
+  <main class="page-404 relative h-screen overflow-x-hidden bg-yellow">
     <VLink href="/" class="relative z-10 text-dark-charcoal">
       <span class="sr-only">Openverse</span>
       <span
-        class="flex flex-row pt-6 lg:pt-8 ms-6 lg:ms-10 h-auto w-30 text-dark-charcoal"
+        class="flex h-auto w-30 flex-row pt-6 text-dark-charcoal ms-6 lg:pt-8 lg:ms-10"
         aria-hidden="true"
       >
         <OpenverseLogo />
@@ -12,19 +12,19 @@
     </VLink>
     <Oops
       aria-hidden="true"
-      class="absolute opacity-5 fill-dark-charcoal -mt-[10%] -ml-[20%] lg:mx-auto w-[140%] lg:w-full px-6 lg:px-16 z-0 pointer-events-none"
+      class="pointer-events-none absolute z-0 -mt-[10%] -ml-[20%] w-[140%] fill-dark-charcoal px-6 opacity-5 lg:mx-auto lg:w-full lg:px-16"
     />
     <header
-      class="absolute lg:max-w-2xl space-y-4 lg:space-y-6 top-1/4 z-10 left-0 right-0 mx-auto px-6 lg:px-0"
+      class="absolute top-1/4 left-0 right-0 z-10 mx-auto space-y-4 px-6 lg:max-w-2xl lg:space-y-6 lg:px-0"
     >
-      <h1 class="mb-6 lg:mb-10 lg:leading-tight text-3xl lg:text-6xl">
+      <h1 class="mb-6 text-3xl lg:mb-10 lg:text-6xl lg:leading-tight">
         {{ $t('404.title') }}
       </h1>
       <p class="font-semibold">
         <i18n path="404.main">
           <template #link>
             <VLink
-              class="underline text-current hover:text-current active:text-current"
+              class="text-current underline hover:text-current active:text-current"
               href="/"
               >Openverse</VLink
             >

@@ -1,11 +1,11 @@
 <template>
   <div
-    class="input-field group flex flex-row items-center focus-within:bg-dark-charcoal-06 group-hover:bg-dark-charcoal-06 p-0.5px focus-within:p-0 border focus-within:border-1.5 border-dark-charcoal-20 rounded-sm overflow-hidden focus-within:border-pink"
+    class="input-field group flex flex-row items-center overflow-hidden rounded-sm border border-dark-charcoal-20 p-0.5px focus-within:border-1.5 focus-within:border-pink focus-within:bg-dark-charcoal-06 focus-within:p-0 group-hover:bg-dark-charcoal-06"
     :class="[
       {
         // Padding is set to 1.5px to accommodate the border that will appear later.
-        'border-s-0 ps-1.5px rounded-s-none': connectionSides.includes('start'),
-        'border-e-0 pe-1.5px rounded-e-none': connectionSides.includes('end'),
+        'ps-1.5px rounded-s-none border-s-0': connectionSides.includes('start'),
+        'pe-1.5px rounded-e-none border-e-0': connectionSides.includes('end'),
       },
       sizeClass,
     ]"
@@ -14,7 +14,7 @@
       :id="fieldId"
       v-bind="$attrs"
       :type="type"
-      class="w-full leading-none font-semibold bg-tx placeholder-dark-charcoal-70 ms-4 h-full appearance-none rounded-none focus:outline-none text-2xl md:text-base"
+      class="h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none placeholder-dark-charcoal-70 ms-4 focus:outline-none md:text-base"
       :value="modelValue"
       :aria-label="labelText"
       @input="updateModelValue"

@@ -1,13 +1,13 @@
 <template>
   <VItemGroup
     :direction="layout"
-    class="mt-10 md:mt-2 min-w-[200px] text-base"
+    class="mt-10 min-w-[200px] text-base md:mt-2"
     :bordered="false"
   >
     <VItem
       v-for="(page, idx) in pages.all"
       :key="page.id"
-      class="md:w-full w-1/2"
+      class="w-1/2 md:w-full"
       :selected="page.id === pages.current.value"
       :is-first="idx === 0"
       v-bind="getLinkProps(page)"
@@ -19,7 +19,7 @@
           v-if="isLinkExternal(page)"
           :icon-path="externalLinkIcon"
           :size="5"
-          class="self-center mb-0.5"
+          class="mb-0.5 self-center"
         />
       </div>
     </VItem>

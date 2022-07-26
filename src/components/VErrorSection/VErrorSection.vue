@@ -1,6 +1,6 @@
 <template>
-  <div class="error-section flex flex-row items-center max-w-screen-xl mx-auto">
-    <div class="image-pane hidden md:block flex-grow max-w-[432px]">
+  <div class="error-section mx-auto flex max-w-screen-xl flex-row items-center">
+    <div class="image-pane hidden max-w-[432px] flex-grow md:block">
       <!-- @slot Error image goes here -->
       <slot name="image" />
     </div>

@@ -6,7 +6,7 @@
       viewBox="0 0 12 6"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      class="stroke-current mb-2"
+      class="mb-2 stroke-current"
     >
       <path d="M11 5L6 0.999999L1 5" stroke-width="1.5" />
     </svg>

@@ -1,6 +1,6 @@
 <template>
   <VSkipToContentContainer
-    class="browse-page flex flex-col px-4 md:px-10 w-full"
+    class="browse-page flex w-full flex-col px-4 md:px-10"
   >
     <VSearchGrid
       ref="searchGridRef"

@@ -3,12 +3,12 @@
     <!-- Prevent FocusTrap from trying to focus the first element. We already do that in a more flexible, adaptive way in our Dialog composables. -->
     <FocusTrap :initial-focus="() => false">
       <div
-        class="flex justify-center z-40 fixed inset-0 bg-dark-charcoal bg-opacity-75 min-h-screen overflow-y-auto"
+        class="fixed inset-0 z-40 flex min-h-screen justify-center overflow-y-auto bg-dark-charcoal bg-opacity-75"
       >
         <div
           ref="dialogRef"
           v-bind="$attrs"
-          class="w-full md:max-w-[768px] lg:w-[768px] xl:max-w-[1024px] xl:w-[1024px] flex flex-col"
+          class="flex w-full flex-col md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]"
           role="dialog"
           aria-modal="true"
           v-on="$listeners"
@@ -23,7 +23,7 @@
               jarring "shifting" effect when opening the mobile modal.
             -->
             <div
-              class="w-full flex justify-between md:justify-end bg-white md:bg-tx ps-4 pe-3 md:px-0 py-4 md:py-3 shrink-0"
+              class="flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
             >
               <VLogoButton
                 class="md:hidden"
@@ -35,7 +35,7 @@
                 ref="closeButton"
                 size="disabled"
                 variant="plain"
-                class="md:text-white text-sr md:text-base"
+                class="text-sr md:text-base md:text-white"
                 @click="hide()"
               >
                 {{ $t('modal.close') }}
@@ -45,7 +45,7 @@
           </slot>
 
           <div
-            class="w-full flex-grow align-bottom bg-white md:rounded-t-md text-left"
+            class="w-full flex-grow bg-white text-left align-bottom md:rounded-t-md"
           >
             <slot />
           </div>

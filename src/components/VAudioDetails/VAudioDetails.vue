@@ -1,17 +1,17 @@
 <template>
   <section class="audio-info">
-    <header class="flex flex-row justify-between items-center mb-6">
+    <header class="mb-6 flex flex-row items-center justify-between">
       <h4 class="text-2xl lg:text-3xl">
         {{ $t('audio-details.information') }}
       </h4>
       <VContentReportPopover :media="audio" />
     </header>
 
-    <div class="flex flex-col md:flex-row items-start gap-6">
-      <div class="w-[75px] h-[75px] lg:w-30 lg:h-30 rounded-sm overflow-hidden">
+    <div class="flex flex-col items-start gap-6 md:flex-row">
+      <div class="h-[75px] w-[75px] overflow-hidden rounded-sm lg:h-30 lg:w-30">
         <VAudioThumbnail :audio="audio" />
       </div>
-      <div class="flex flex-col gap-4 lg:gap-6 flex-grow">
+      <div class="flex flex-grow flex-col gap-4 lg:gap-6">
         <p v-if="audio.description" class="mb-6">{{ audio.description }}</p>
         <ul class="flex flex-wrap gap-2">
           <VMediaTag

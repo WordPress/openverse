@@ -1,14 +1,14 @@
 <template>
   <div class="full-track w-full">
-    <div class="bg-dark-charcoal-06 relative">
+    <div class="relative bg-dark-charcoal-06">
       <span
         v-if="currentTime > 0"
-        class="pointer-events-none absolute h-full hidden md:block w-4 lg:w-10 left-0 bg-yellow"
+        class="pointer-events-none absolute left-0 hidden h-full w-4 bg-yellow md:block lg:w-10"
         aria-hidden
       />
       <span
         v-if="status === 'played'"
-        class="pointer-events-none absolute h-full hidden md:block w-4 lg:w-10 right-0 bg-yellow"
+        class="pointer-events-none absolute right-0 hidden h-full w-4 bg-yellow md:block lg:w-10"
         aria-hidden
       />
       <div class="md:mx-4 lg:mx-10">
@@ -16,25 +16,25 @@
       </div>
     </div>
     <div
-      class="flex flex-row flex-wrap lg:flex-nowrap items-top px-6 lg:max-w-5xl mx-auto gap-6 mt-6"
+      class="items-top mx-auto mt-6 flex flex-row flex-wrap gap-6 px-6 lg:max-w-5xl lg:flex-nowrap"
     >
       <slot name="play-pause" :size="isSmall ? 'small' : 'medium'" />
 
       <div
-        class="audio-info order-2 lg:order-1 w-full lg:w-auto flex flex-col justify-center"
+        class="audio-info order-2 flex w-full flex-col justify-center lg:order-1 lg:w-auto"
       >
         <h1
-          class="text-base lg:text-3xl font-heading font-semibold lg:line-clamp-2 leading-[1.3]"
+          class="font-heading text-base font-semibold leading-[1.3] lg:text-3xl lg:line-clamp-2"
         >
           {{ audio.title }}
         </h1>
         <div
-          class="subtitle mt-1 flex flex-col lg:flex-row lg:items-center gap-2 text-base leading-[1.3]"
+          class="subtitle mt-1 flex flex-col gap-2 text-base leading-[1.3] lg:flex-row lg:items-center"
         >
           <i18n as="span" path="audio-track.creator" class="font-semibold">
             <template #creator>
               <VLink
-                class="p-px rounded-sm focus:outline-none focus:ring focus:ring-pink"
+                class="rounded-sm p-px focus:outline-none focus:ring focus:ring-pink"
                 :href="audio.creator_url"
               >
                 {{ audio.creator }}
@@ -42,7 +42,7 @@
             </template>
           </i18n>
 
-          <span class="hidden lg:block text-dark-charcoal-70">{{
+          <span class="hidden text-dark-charcoal-70 lg:block">{{
             $t('interpunct')
           }}</span>
 
@@ -54,7 +54,7 @@
         as="VLink"
         :href="audio.foreign_landing_url"
         :size="isSmall ? 'small' : 'medium'"
-        class="ms-auto order-1 lg:order-2 text-sr lg:text-2xl font-semibold"
+        class="order-1 text-sr font-semibold ms-auto lg:order-2 lg:text-2xl"
       >
         {{ $t('download-button.download') }}
       </VButton>

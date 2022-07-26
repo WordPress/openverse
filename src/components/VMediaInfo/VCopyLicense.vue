@@ -2,7 +2,7 @@
   <div>
     <h5
       id="copy-license-title"
-      class="mb-4 text-base md:text-2xl font-semibold"
+      class="mb-4 text-base font-semibold md:text-2xl"
     >
       {{ $t('media-details.reuse.copy-license.title') }}
     </h5>
@@ -20,7 +20,7 @@
         <!-- eslint-enable vue/no-v-html -->
       </VLicenseTabPanel>
       <VLicenseTabPanel :tab="tabs[1]">
-        <p id="attribution-html" class="font-mono break-all" dir="ltr">
+        <p id="attribution-html" class="break-all font-mono" dir="ltr">
           {{ getAttributionMarkup() }}
         </p>
       </VLicenseTabPanel>

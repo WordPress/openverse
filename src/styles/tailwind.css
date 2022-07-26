@@ -8,7 +8,7 @@
   }
 
   html {
-    @apply text-dark-charcoal m-0 font-normal leading-loose;
+    @apply m-0 font-normal leading-loose text-dark-charcoal;
     font-display: swap;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

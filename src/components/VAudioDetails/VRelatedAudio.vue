@@ -1,9 +1,9 @@
 <template>
   <aside :aria-label="$t('audio-details.related-audios')">
-    <h4 class="text-2xl lg:text-3xl mb-6">
+    <h4 class="mb-6 text-2xl lg:text-3xl">
       {{ $t('audio-details.related-audios') }}
     </h4>
-    <div v-if="!fetchState.isError" class="flex flex-col gap-8 lg:gap-12 mb-12">
+    <div v-if="!fetchState.isError" class="mb-12 flex flex-col gap-8 lg:gap-12">
       <VAudioTrack
         v-for="audio in media"
         :key="audio.id"

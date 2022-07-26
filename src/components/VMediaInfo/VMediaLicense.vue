@@ -1,6 +1,6 @@
 <template>
   <div class="media-attribution">
-    <h5 class="mb-4 text-base md:text-2xl font-semibold">
+    <h5 class="mb-4 text-base font-semibold md:text-2xl">
       {{ headerText }}
     </h5>
 
@@ -8,7 +8,7 @@
       <i18n
         path="media-details.reuse.attribution"
         tag="span"
-        class="block text-sm md:text-base mb-2"
+        class="mb-2 block text-sm md:text-base"
       >
         <template #link>
           <VLink class="uppercase" :href="licenseUrl">

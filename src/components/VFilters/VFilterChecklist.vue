@@ -6,7 +6,7 @@
     <div
       v-for="(item, index) in options"
       :key="index"
-      class="flex justify-between items-center mt-4"
+      class="mt-4 flex items-center justify-between"
     >
       <VCheckbox
         :id="item.code"
@@ -43,7 +43,7 @@
           <div class="relative">
             <VIconButton
               :aria-label="getLicenseExplanationCloseAria(item.code)"
-              class="absolute top-0 end-0 border-none text-dark-charcoal-70"
+              class="absolute top-0 border-none text-dark-charcoal-70 end-0"
               size="small"
               :icon-props="{ iconPath: icons.closeSmall }"
               @click="close"

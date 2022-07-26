@@ -1,6 +1,6 @@
 <template>
   <!-- Should be wrapped by a fixed-width parent -->
-  <div class="relative h-0 w-full pt-full bg-yellow" :title="helpText">
+  <div class="relative h-0 w-full bg-yellow pt-full" :title="helpText">
     <!-- Programmatic thumbnail -->
     <svg class="absolute inset-0" :viewBox="`0 0 ${canvasSize} ${canvasSize}`">
       <template v-for="i in dotCount">
@@ -18,7 +18,7 @@
     <div v-show="audio.thumbnail && isOk" class="thumbnail absolute inset-0">
       <img
         ref="imgEl"
-        class="h-full w-full object-cover object-center overflow-clip"
+        class="h-full w-full overflow-clip object-cover object-center"
         :src="audio.thumbnail"
         :alt="helpText"
         @load="handleLoad"

@@ -1,31 +1,31 @@
 <template>
-  <article class="flex flex-row w-full mb-14">
+  <article class="mb-14 flex w-full flex-row">
     <!-- Thumbnail skeleton -->
     <div
-      class="flex-shrink-0 h-20 w-20 mr-4 bg-dark-charcoal-10 rounded shimmering"
+      class="shimmering mr-4 h-20 w-20 flex-shrink-0 rounded bg-dark-charcoal-10"
     />
 
-    <div class="flex flex-row gap-6 h-20 w-full">
+    <div class="flex h-20 w-full flex-row gap-6">
       <!-- Track info skeleton -->
-      <div class="flex-shrink-0 w-70">
-        <div class="flex flex-col h-full justify-around">
+      <div class="w-70 flex-shrink-0">
+        <div class="flex h-full flex-col justify-around">
           <div
             v-for="idx in 2"
             :key="idx"
-            class="row-line bg-dark-charcoal-10 h-3 rounded shimmering"
+            class="row-line shimmering h-3 rounded bg-dark-charcoal-10"
             :style="{ width: `${getRandomSize()}px` }"
           />
-          <div class="inline-flex space-x-1 gap-2">
-            <div class="h-3 w-14 bg-dark-charcoal-10 rounded shimmering" />
-            <div class="rounded-full h-3 w-3 bg-dark-charcoal-10 shimmering" />
+          <div class="inline-flex gap-2 space-x-1">
+            <div class="shimmering h-3 w-14 rounded bg-dark-charcoal-10" />
+            <div class="shimmering h-3 w-3 rounded-full bg-dark-charcoal-10" />
             <div
-              class="row-line h-3 w-30 bg-dark-charcoal-10 rounded shimmering"
+              class="row-line shimmering h-3 w-30 rounded bg-dark-charcoal-10"
             />
           </div>
         </div>
       </div>
       <!-- Waveform skeleton -->
-      <div class="w-full bg-dark-charcoal-10 rounded shimmering" />
+      <div class="shimmering w-full rounded bg-dark-charcoal-10" />
     </div>
   </article>
 </template>

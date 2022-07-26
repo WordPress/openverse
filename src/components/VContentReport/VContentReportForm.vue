@@ -1,7 +1,7 @@
 <template>
   <div id="content-report-form" class="w-80 p-6">
     <div v-if="status === SENT">
-      <p class="font-semibold text-2xl mb-4">
+      <p class="mb-4 text-2xl font-semibold">
         {{ $t('media-details.content-report.success.title') }}
       </p>
       <i18n
@@ -18,7 +18,7 @@
     </div>
 
     <div v-else-if="status === FAILED">
-      <p class="font-semibold text-2xl mb-4">
+      <p class="mb-4 text-2xl font-semibold">
         {{ $t('media-details.content-report.failure.title') }}
       </p>
       <p class="text-sm">
@@ -28,11 +28,11 @@
 
     <!-- Main form -->
     <div v-else>
-      <div class="font-semibold text-2xl mb-4">
+      <div class="mb-4 text-2xl font-semibold">
         {{ $t('media-details.content-report.long') }}
       </div>
 
-      <p class="text-sm mb-4">
+      <p class="mb-4 text-sm">
         {{
           $t('media-details.content-report.form.disclaimer', {
             openverse: 'Openverse',
@@ -42,7 +42,7 @@
 
       <form class="text-sm" @submit="handleSubmit">
         <fieldset class="flex flex-col">
-          <legend class="font-semibold mb-4">
+          <legend class="mb-4 font-semibold">
             {{ $t('media-details.content-report.form.question') }}
           </legend>
           <VRadio

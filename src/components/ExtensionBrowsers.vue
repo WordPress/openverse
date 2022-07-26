@@ -1,5 +1,5 @@
 <template>
-  <ul class="flex flex-wrap justify-center items-center">
+  <ul class="flex flex-wrap items-center justify-center">
     <li v-for="(browser, key) in browsers" :key="key">
       <VButton
         as="VLink"
@@ -9,7 +9,7 @@
       >
         {{ $t(`browsers.${key}`) }}
         <img
-          class="ms-2 w-6 h-6"
+          class="h-6 w-6 ms-2"
           :src="browser.logo"
           :alt="$t(`browsers.${key}`).toString()"
         />
