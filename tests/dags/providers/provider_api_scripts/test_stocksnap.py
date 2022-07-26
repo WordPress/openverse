@@ -3,6 +3,7 @@ import logging
 import os
 from unittest.mock import patch
 
+import pytest
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.storage.image import ImageStore
@@ -28,6 +29,12 @@ def _get_resource_json(json_name):
     with open(os.path.join(RESOURCES, json_name)) as f:
         resource_json = json.load(f)
         return resource_json
+
+
+@pytest.fixture(autouse=True)
+def filesize_mock():
+    with patch.object(stocksnap, "_get_filesize") as get_filesize_mock:
+        yield get_filesize_mock
 
 
 def test_get_media_type():
@@ -172,12 +179,10 @@ def test_get_creator_data_returns_none_when_no_author():
     assert actual_creator_url is None
 
 
-def test_get_record_data_handles_example_dict():
-    with open(os.path.join(RESOURCES, "full_item.json")) as f:
-        image_data = json.load(f)
-
-    with patch.object(stocksnap, "_get_filesize", return_value=123456):
-        actual_image_info = stocksnap.get_record_data(image_data)
+def test_get_record_data_handles_example_dict(filesize_mock):
+    image_data = _get_resource_json("full_item.json")
+    filesize_mock.return_value = 123456
+    actual_image_info = stocksnap.get_record_data(image_data)
     image_url = "https://cdn.stocksnap.io/img-thumbs/960w/7VAQUG1X3B.jpg"
     expected_image_info = {
         "title": "Female Fitness",
