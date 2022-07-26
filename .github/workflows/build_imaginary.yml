@@ -1,10 +1,21 @@
 name: Build imaginary
 on:
   workflow_dispatch:
+    inputs:
+      deploy-to:
+        type: string
+        default: null
+        description: The environment to deploy to, if a deploy is desired. Currently only `staging` is available.
+
+      deploy-only:
+        type: boolean
+        default: false
+        description: Set to `true` to trigger _just_ a redeployment
 
 jobs:
   build:
     name: Build
+    if: github.event.inputs.deploy-only == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout h2non/imaginary repository
@@ -55,3 +66,39 @@ jobs:
           push: true
           tags: |
             ghcr.io/wordpress/openverse-imaginary:latest
+
+  deploy:
+    name: Deploy Imaginary
+    runs-on: ubuntu-latest
+    if: github.event.inputs.deploy-to != null
+    needs: [build]
+
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            const { data: members } = await github.rest.teams.listMembersInOrg({
+              org: 'WordPress',
+              team_slug: 'openverse-maintainers',
+            });
+
+            const isAllowed = members.some(m => m.login === "${{ github.actor }}")
+
+            if (!isAllowed) {
+              throw new Error(
+                "Only GitHub users in the @WordPress/openverse-maintainers "
+                + "team are allowed to run this workflow. If you need to run "
+                + "this workflow, please reach out to that group for help."
+              )
+            }
+
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/staging-thumbnails-deploy
+        if: github.event.inputs.deploy-to == 'staging'
+        with:
+          tag: latest
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
