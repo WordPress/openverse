@@ -223,7 +223,7 @@ def create_provider_api_workflow(
         max_active_runs=max_active_runs,
         start_date=start_date,
         schedule_interval=schedule_string,
-        catchup=False,
+        catchup=dated,  # catchup is turned on for dated DAGs to allow backfilling
         doc_md=doc_md,
         tags=["provider"] + [f"provider: {media_type}" for media_type in media_types],
         render_template_as_native_obj=True,
