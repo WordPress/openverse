@@ -25,10 +25,8 @@ from typing import Optional
 import elasticsearch
 import psycopg2
 import requests
-from aws_requests_auth.aws_auth import AWSRequestsAuth
 from decouple import config
-from elasticsearch import Elasticsearch, NotFoundError, RequestsHttpConnection, helpers
-from elasticsearch.exceptions import ConnectionError as ESConnectionError
+from elasticsearch import Elasticsearch, helpers
 from elasticsearch_dsl import connections
 from psycopg2.sql import SQL, Identifier, Literal
 from requests import RequestException
@@ -36,19 +34,11 @@ from requests import RequestException
 from ingestion_server import slack
 from ingestion_server.distributed_reindex_scheduler import schedule_distributed_index
 from ingestion_server.elasticsearch_models import media_type_to_elasticsearch_model
+from ingestion_server.es_helpers import get_stat
 from ingestion_server.es_mapping import index_settings
 from ingestion_server.qa import create_search_qa_index
 from ingestion_server.queries import get_existence_queries
 
-
-# For AWS IAM access to Elasticsearch
-AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default="")
-AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", default="")
-
-ELASTICSEARCH_URL = config("ELASTICSEARCH_URL", default="localhost")
-ELASTICSEARCH_PORT = config("ELASTICSEARCH_PORT", default=9200, cast=int)
-
-AWS_REGION = config("AWS_REGION", "us-east-1")
 
 DATABASE_HOST = config("DATABASE_HOST", default="localhost")
 DATABASE_PORT = config("DATABASE_PORT", default=5432, cast=int)
@@ -66,55 +56,6 @@ SYNCER_POLL_INTERVAL = config("SYNCER_POLL_INTERVAL", default=60, cast=int)
 REP_TABLES = config(
     "COPY_TABLES", default="image", cast=lambda var: [s.strip() for s in var.split(",")]
 )
-
-TWELVE_HOURS_SEC = 60 * 60 * 12
-
-
-def elasticsearch_connect(timeout: int = 300) -> Elasticsearch:
-    """
-    Repeatedly try to connect to Elasticsearch until successful.
-
-    :param timeout: the amount of time in seconds to wait for a successful connection
-    :return: an Elasticsearch client.
-    """
-
-    while timeout > 0:
-        try:
-            return _elasticsearch_connect()
-        except ESConnectionError as err:
-            log.exception(err)
-            log.error("Reconnecting to Elasticsearch in 5 seconds...")
-            timeout -= 5
-            time.sleep(5)
-            continue
-
-
-def _elasticsearch_connect() -> Elasticsearch:
-    """
-    Connect to an Elasticsearch indices at the configured domain. This method also
-    handles AWS authentication using the AWS access key ID and the secret access key.
-
-    :return: an Elasticsearch client
-    """
-
-    log.info(f"Connecting to {ELASTICSEARCH_URL}:{ELASTICSEARCH_PORT} with AWS auth")
-    auth = AWSRequestsAuth(
-        aws_access_key=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-        aws_host=ELASTICSEARCH_URL,
-        aws_region=AWS_REGION,
-        aws_service="es",
-    )
-    auth.encode = lambda x: bytes(x.encode("utf-8"))
-    es = Elasticsearch(
-        host=ELASTICSEARCH_URL,
-        port=ELASTICSEARCH_PORT,
-        connection_class=RequestsHttpConnection,
-        http_auth=auth,
-        timeout=TWELVE_HOURS_SEC,
-    )
-    es.info()
-    return es
 
 
 def database_connect(autocommit=False):
@@ -176,6 +117,7 @@ class TableIndexer:
         callback_url: Optional[str] = None,
         progress: Optional[Value] = None,
         active_workers: Optional[Value] = None,
+        is_bad_request: Optional[Value] = None,
     ):
         self.es = es_instance
         connections.connections.add_connection("default", self.es)
@@ -184,6 +126,7 @@ class TableIndexer:
         self.callback_url = callback_url
         self.progress = progress
         self.active_workers = active_workers
+        self.is_bad_request = is_bad_request
 
     # Helpers
     # =======
@@ -430,15 +373,16 @@ class TableIndexer:
                 timeout="12h",
             )
 
-        try:
-            curr_index = list(self.es.indices.get(index=alias).keys())[0]
-            if curr_index == alias:
+        alias_stat = get_stat(self.es, alias)
+        curr_index = alias_stat.alt_names
+        if alias_stat.exists:
+            if not alias_stat.is_alias:
                 # Alias is an index, this is fatal.
                 message = f"There is an index named {alias}, cannot proceed."
                 log.error(message)
                 slack.error(message)
                 return
-            elif curr_index != dest_index:
+            elif alias_stat.is_alias and curr_index != dest_index:
                 # Alias is in use, atomically remap it to the new index.
                 self.es.indices.update_aliases(
                     body={
@@ -459,7 +403,7 @@ class TableIndexer:
             else:
                 # Alias is already mapped.
                 log.info(f"Alias {alias} already points to index {dest_index}.")
-        except NotFoundError:
+        else:
             # Alias does not exist, create it.
             self.es.indices.put_alias(index=dest_index, name=alias)
             message = f"Created alias {alias} pointing to index {dest_index}."
@@ -468,4 +412,68 @@ class TableIndexer:
 
         if self.progress is not None:
             self.progress.value = 100  # mark job as completed
+        self.ping_callback()
+
+    def delete_index(
+        self,
+        model_name: str,
+        index_suffix: Optional[str] = None,
+        alias: Optional[str] = None,
+        force_delete: bool = False,
+        **_,
+    ):
+        """
+        Delete the given index ensuring that it is not in use.
+
+        :param model_name: the name of the media type
+        :param index_suffix: the suffix of the index to delete
+        :param alias: the alias to delete, including the index it points to
+        :param force_delete: whether to delete the index even if it is in use
+        """
+
+        target = alias if alias is not None else f"{model_name}-{index_suffix}"
+
+        target_stat = get_stat(self.es, target)
+        if target_stat.exists:
+            if target_stat.is_alias:
+                if not force_delete:
+                    # Alias cannot be deleted unless forced.
+                    if self.is_bad_request is not None:
+                        self.is_bad_request.value = 1
+                    message = (
+                        f"Alias {target} might be in use so it cannot be deleted. "
+                        f"Verify that the API does not use this alias and then use the "
+                        f"`force_delete` parameter."
+                    )
+                    log.error(message)
+                    slack.error(message)
+                    return
+                target = target_stat.alt_names
+            else:
+                if target_stat.alt_names:
+                    # Index mapped to alias cannot be deleted.
+                    if self.is_bad_request is not None:
+                        self.is_bad_request.value = 1
+                    message = (
+                        f"Index {target} is associated with aliases "
+                        f"{target_stat.alt_names}, cannot delete. Delete aliases first."
+                    )
+                    log.error(message)
+                    slack.error(message)
+                    return
+
+            self.es.indices.delete(index=target)
+            message = f"Index {target} was deleted."
+            log.info(message)
+            slack.info(message)
+        else:
+            # Cannot delete as target does not exist.
+            if self.is_bad_request is not None:
+                self.is_bad_request.value = 1
+            message = f"Target {target} does not exist and cannot be deleted."
+            log.info(message)
+            slack.info(message)
+
+        if self.progress is not None:
+            self.progress.value = 100
         self.ping_callback()

@@ -10,7 +10,8 @@ from typing import Optional
 
 from ingestion_server import slack
 from ingestion_server.constants.media_types import MediaType
-from ingestion_server.indexer import TableIndexer, elasticsearch_connect
+from ingestion_server.es_helpers import elasticsearch_connect
+from ingestion_server.indexer import TableIndexer
 from ingestion_server.ingest import promote_api_table, refresh_api_table
 
 
@@ -47,6 +48,9 @@ class TaskTypes(Enum):
 
     UPDATE_INDEX = auto()  # TODO: delete eventually, rarely used
     """reindex updates to a model from the database since the given date"""
+
+    DELETE_INDEX = auto()
+    """delete the given index after it has been superseded by a new one"""
 
     LOAD_TEST_DATA = auto()
     """create indices in ES for QA tests; this is not intended to run in production but
@@ -108,6 +112,7 @@ class TaskTracker:
         finish_time = task_info["finish_time"].value
         progress = task_info["progress"].value
         active_workers = task_info["active_workers"].value
+        is_bad_request = task_info["is_bad_request"].value
         return {
             "active": active,
             "model": task_info["model"],
@@ -119,6 +124,7 @@ class TaskTracker:
             "finish_time": _time_fmt(finish_time),
             "active_workers": bool(active_workers),
             "error": progress < 100 and not active,
+            "is_bad_request": bool(is_bad_request),
         }
 
     def list_task_statuses(self) -> list:
@@ -152,6 +158,7 @@ def perform_task(
     progress: Value,
     finish_time: Value,
     active_workers: Value,
+    is_bad_request: Value,
     **kwargs,
 ):
     """
@@ -166,6 +173,7 @@ def perform_task(
     :param progress: shared memory for tracking the task's progress
     :param finish_time: shared memory for tracking the finish time of the task
     :param active_workers: shared memory for counting workers assigned to the task
+    :param is_bad_request: shared memory that flags tasks that fail due to bad requests
     """
 
     elasticsearch = elasticsearch_connect()
@@ -175,6 +183,7 @@ def perform_task(
         callback_url,
         progress,
         active_workers,
+        is_bad_request,
     )
 
     # Task functions

@@ -17,7 +17,8 @@ from decouple import config
 from psycopg2.sql import SQL, Identifier, Literal
 
 from ingestion_server import slack
-from ingestion_server.indexer import TableIndexer, elasticsearch_connect
+from ingestion_server.es_helpers import elasticsearch_connect
+from ingestion_server.indexer import TableIndexer
 from ingestion_server.queries import get_existence_queries
 
 

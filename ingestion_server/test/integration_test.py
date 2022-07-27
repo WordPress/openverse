@@ -18,7 +18,7 @@ import requests
 
 # Uses Bottle because, unlike Falcon, it can be run from within the test suite.
 from bottle import Bottle
-from elasticsearch import Elasticsearch, RequestsHttpConnection
+from elasticsearch import Elasticsearch, NotFoundError, RequestsHttpConnection
 
 from .gen_integration_compose import gen_integration_compose
 from .test_constants import service_ports
@@ -213,6 +213,10 @@ class TestIngestion(unittest.TestCase):
             cursor.execute(constraint_sql)
             return {constraint: name for name, constraint in cursor}
 
+    def check_index_exists(self, index_name):
+        es = self._get_es()
+        assert es.indices.get(index=index_name) is not None
+
     def _ingest_upstream(self, model, suffix="integration"):
         """
         Check that INGEST_UPSTREAM task completes successfully and responds
@@ -266,6 +270,51 @@ class TestIngestion(unittest.TestCase):
 
         es = self._get_es()
         assert list(es.indices.get(index=alias).keys())[0] == f"{model}-{suffix}"
+
+    def _delete_index(self, model, suffix="integration", alias=None):
+        req = {
+            "model": model,
+            "action": "DELETE_INDEX",
+            "callback_url": bottle_url,
+        }
+        if alias is None:
+            req |= {"index_suffix": suffix}
+        else:
+            req |= {
+                "alias": alias,
+                "force_delete": True,
+            }
+        res = requests.post(f"{ingestion_server}/task", json=req)
+        stat_msg = "The job should launch successfully and return 202 ACCEPTED."
+        self.assertEqual(res.status_code, 202, msg=stat_msg)
+
+        # Wait for the task to send us a callback.
+        assert self.__class__.cb_queue.get(timeout=120) == "CALLBACK!"
+
+        es = self._get_es()
+        with pytest.raises(NotFoundError):
+            es.indices.get(index=f"{model}-{suffix}")
+
+    def _soft_delete_index(
+        self, model, alias, suffix="integration", omit_force_delete=False
+    ):
+        """
+        Deleting without the ``force_delete`` flag set to ``True`` is
+        considered a soft-delete because it will be declined if the target is
+        an alias. Not providing the flag is equivalent to setting it to
+        ``False``.
+        """
+        req = {
+            "model": model,
+            "action": "DELETE_INDEX",
+            "alias": alias,
+        }
+        if not omit_force_delete:
+            req |= {"force_delete": False}
+        res = requests.post(f"{ingestion_server}/task", json=req)
+        stat_msg = "The job should fail fast and return 400 BAD REQUEST."
+        self.assertEqual(res.status_code, 400, msg=stat_msg)
+        self.check_index_exists(f"{model}-{suffix}")
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -457,3 +506,45 @@ class TestIngestion(unittest.TestCase):
 
         # Wait for the task to send us a callback.
         assert self.__class__.cb_queue.get(timeout=120) == "CALLBACK!"
+
+    @pytest.mark.order(12)
+    def test_index_deletion_succeeds(self):
+        self._ingest_upstream("audio", "temporary")
+        self._delete_index("audio", "temporary")
+
+    @pytest.mark.order(13)
+    def test_alias_force_deletion_succeeds(self):
+        self._ingest_upstream("audio", "temporary")
+        self._promote("audio", "temporary", "audio-temp")
+        self._delete_index("audio", "temporary", "audio-temp")
+
+    @pytest.mark.order(14)
+    def test_alias_soft_deletion_fails(self):
+        self._ingest_upstream("audio", "temporary")
+        self._promote("audio", "temporary", "audio-temp")
+        self._soft_delete_index("audio", "audio-temp", "temporary")
+
+    @pytest.mark.order(15)
+    def test_alias_ambiguous_deletion_fails(self):
+        # No need to ingest or promote, index and alias exist
+        self._soft_delete_index("audio", "audio-temp", "temporary", True)
+
+    @pytest.mark.order(16)
+    def test_stat_endpoint_for_index(self):
+        res = requests.get(f"{ingestion_server}/stat/audio-integration")
+        data = res.json()
+        assert data["exists"]
+        assert data["alt_names"] == ["audio-main"]
+
+    @pytest.mark.order(17)
+    def test_stat_endpoint_for_alias(self):
+        res = requests.get(f"{ingestion_server}/stat/audio-main")
+        data = res.json()
+        assert data["exists"]
+        assert data["alt_names"] == "audio-integration"
+
+    @pytest.mark.order(18)
+    def test_stat_endpoint_for_non_existent(self):
+        res = requests.get(f"{ingestion_server}/stat/non-existent")
+        data = res.json()
+        assert not data["exists"]
