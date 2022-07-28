@@ -5,6 +5,16 @@ import oauth2
 import requests
 
 
+# pytest_socket will not be available in production, so we must create a shim for
+# that specific exception so this code does not error out.
+try:
+    from pytest_socket import SocketConnectBlockedError
+except ImportError:
+
+    class SocketConnectBlockedError(Exception):
+        pass
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -51,6 +61,10 @@ class DelayedRequester:
                     f"Status code: {response.status_code}"
                 )
             return response
+        except SocketConnectBlockedError:
+            # This exception will only be raised during testing, and it *must*
+            # be re-raised and bubbled up the stack
+            raise
         except Exception as e:
             logger.error(f"Error with the request for URL: {url}.")
             logger.info(f"{type(e).__name__}: {e}")
