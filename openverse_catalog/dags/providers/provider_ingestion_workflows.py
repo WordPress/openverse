@@ -45,7 +45,7 @@ PROVIDER_INGESTION_WORKFLOWS = [
         provider_script="europeana",
         start_date=datetime(2013, 11, 21),
         max_active_tasks=3,
-        execution_timeout=timedelta(hours=12),
+        pull_timeout=timedelta(hours=12),
         daily_list_length=7,
         one_month_list_length=12,
         three_month_list_length=40,
@@ -53,7 +53,7 @@ PROVIDER_INGESTION_WORKFLOWS = [
     ProviderIngestionWorkflow(
         dag_id="flickr_ingestion_workflow",
         provider_script="flickr",
-        execution_timeout=timedelta(minutes=30),
+        pull_timeout=timedelta(minutes=30),
         daily_list_length=7,
         weekly_list_length=12,
         fortnightly_list_length=20,
@@ -64,7 +64,7 @@ PROVIDER_INGESTION_WORKFLOWS = [
     ProviderIngestionWorkflow(
         dag_id="wikimedia_ingestion_workflow",
         provider_script="wikimedia_commons",
-        execution_timeout=timedelta(minutes=90),
+        pull_timeout=timedelta(minutes=90),
         media_types=("image", "audio"),
         max_active_tasks=2,
         daily_list_length=6,

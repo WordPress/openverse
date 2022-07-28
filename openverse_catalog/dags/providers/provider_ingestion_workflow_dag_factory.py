@@ -42,5 +42,5 @@ for config in PROVIDER_INGESTION_WORKFLOWS:
         config.max_active_tasks,
         config.default_args,
         config.dagrun_timeout,
-        config.execution_timeout,
+        config.pull_timeout,
     )

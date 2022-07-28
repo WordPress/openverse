@@ -44,8 +44,10 @@ class ProviderWorkflow:
     day_shift:         integer giving the number of days before the
                        current execution date the `main_function` should
                        be run (if `dated=True`).
-    execution_timeout: datetime.timedelta giving the amount of time a given data
+    pull_timeout:      datetime.timedelta giving the amount of time a given data
                        pull may take.
+    load_timeout:      datetime.timedelta giving the amount of time the load_data
+                       task may take.
     doc_md:            string which should be used for the DAG's documentation markdown
     media_types:       list describing the media type(s) that this provider handles
                        (e.g. `["audio"]`, `["image", "audio"]`, etc.)
@@ -61,7 +63,8 @@ class ProviderWorkflow:
     schedule_string: str = "@monthly"
     dated: bool = False
     day_shift: int = 0
-    execution_timeout: timedelta = timedelta(hours=24)
+    pull_timeout: timedelta = timedelta(hours=24)
+    load_timeout: timedelta = timedelta(hours=1)
     doc_md: str = ""
     media_types: Sequence[str] = ("image",)
 
@@ -79,7 +82,7 @@ PROVIDER_WORKFLOWS = [
         provider_script="cleveland_museum",
         ingester_class=ClevelandDataIngester,
         start_date=datetime(2020, 1, 15),
-        execution_timeout=timedelta(hours=12),
+        pull_timeout=timedelta(hours=12),
     ),
     ProviderWorkflow(
         provider_script="europeana",
@@ -90,7 +93,8 @@ PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
         provider_script="finnish_museums",
         start_date=datetime(2020, 9, 1),
-        execution_timeout=timedelta(days=3),
+        pull_timeout=timedelta(days=5),
+        load_timeout=timedelta(days=5),
     ),
     ProviderWorkflow(
         provider_script="flickr",
@@ -111,7 +115,7 @@ PROVIDER_WORKFLOWS = [
         start_date=datetime(2016, 9, 1),
         schedule_string="@daily",
         dated=True,
-        execution_timeout=timedelta(hours=12),
+        pull_timeout=timedelta(hours=12),
     ),
     ProviderWorkflow(
         provider_script="museum_victoria",
@@ -126,11 +130,11 @@ PROVIDER_WORKFLOWS = [
         start_date=datetime(2011, 1, 1),
         schedule_string="@weekly",
         dated=True,
-        execution_timeout=timedelta(hours=12),
+        pull_timeout=timedelta(hours=12),
     ),
     ProviderWorkflow(
         provider_script="rawpixel",
-        execution_timeout=timedelta(hours=12),
+        pull_timeout=timedelta(hours=12),
     ),
     ProviderWorkflow(
         provider_script="science_museum",
@@ -140,6 +144,7 @@ PROVIDER_WORKFLOWS = [
         provider_script="smithsonian",
         start_date=datetime(2020, 1, 1),
         schedule_string="@weekly",
+        load_timeout=timedelta(hours=4),
     ),
     ProviderWorkflow(
         provider_script="smk",
@@ -158,11 +163,11 @@ PROVIDER_WORKFLOWS = [
         start_date=datetime(2020, 11, 1),
         schedule_string="@daily",
         dated=True,
-        execution_timeout=timedelta(hours=12),
+        pull_timeout=timedelta(hours=12),
         media_types=("image", "audio"),
     ),
     ProviderWorkflow(
         provider_script="wordpress",
-        execution_timeout=timedelta(hours=12),
+        pull_timeout=timedelta(hours=12),
     ),
 ]

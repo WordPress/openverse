@@ -87,7 +87,8 @@ def create_provider_api_workflow(
     schedule_string: str = "@daily",
     dated: bool = True,
     day_shift: int = 0,
-    execution_timeout: timedelta = timedelta(hours=12),
+    pull_timeout: timedelta = timedelta(hours=12),
+    load_timeout: timedelta = timedelta(hours=1),
     doc_md: Optional[str] = "",
     media_types: Sequence[str] = ("image",),
 ):
@@ -126,8 +127,10 @@ def create_provider_api_workflow(
     day_shift:         integer giving the number of days before the
                        current execution date the `main_function` should
                        be run (if `dated=True`).
-    execution_timeout: datetime.timedelta giving the amount of time a given data
+    pull_timeout:      datetime.timedelta giving the amount of time a given data
                        pull may take.
+    load_timeout:      datetime.timedelta giving the amount of time a given load_data
+                       task may take.
     doc_md:            string which should be used for the DAG's documentation markdown
     media_types:       list describing the media type(s) that this provider handles
                        (e.g. `["audio"]`, `["image", "audio"]`, etc.)
@@ -178,7 +181,7 @@ def create_provider_api_workflow(
                 ],
             },
             depends_on_past=False,
-            execution_timeout=execution_timeout,
+            execution_timeout=pull_timeout,
             # If the data pull fails, we want to load all data that's been retrieved
             # thus far before we attempt again
             retries=0,
@@ -215,6 +218,8 @@ def create_provider_api_workflow(
                 )
                 load_from_s3 = PythonOperator(
                     task_id="load_from_s3",
+                    execution_timeout=load_timeout,
+                    retries=1,
                     python_callable=loader.load_from_s3,
                     op_kwargs={
                         "bucket": OPENVERSE_BUCKET,

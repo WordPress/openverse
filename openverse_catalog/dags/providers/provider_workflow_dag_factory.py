@@ -29,7 +29,8 @@ for provider_workflow in PROVIDER_WORKFLOWS:
         provider_workflow.schedule_string,
         provider_workflow.dated,
         provider_workflow.day_shift,
-        provider_workflow.execution_timeout,
+        provider_workflow.pull_timeout,
+        provider_workflow.load_timeout,
         provider_script.__doc__,
         provider_workflow.media_types,
     )
