@@ -17,15 +17,15 @@ class ClevelandDataIngester(ProviderDataIngester):
     batch_limit = 1000
     delay = 5
 
-    def get_next_query_params(self, old_query_params, **kwargs):
-        if not old_query_params:
+    def get_next_query_params(self, prev_query_params, **kwargs):
+        if not prev_query_params:
             # Return default query params on the first request
             return {"cc": "1", "has_image": "1", "limit": self.batch_limit, "skip": 0}
         else:
             # Increment `skip` by the batch limit.
             return {
-                **old_query_params,
-                "skip": old_query_params["skip"] + self.batch_limit,
+                **prev_query_params,
+                "skip": prev_query_params["skip"] + self.batch_limit,
             }
 
     def get_media_type(self, record):

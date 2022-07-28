@@ -119,16 +119,18 @@ class ProviderDataIngester(ABC):
         self.commit_records()
 
     @abstractmethod
-    def get_next_query_params(self, old_query_params: Optional[Dict], **kwargs) -> Dict:
+    def get_next_query_params(
+        self, prev_query_params: Optional[Dict], **kwargs
+    ) -> Dict:
         """
         Given the last set of query params, return the query params
         for the next request. Depending on the API, this may involve incrementing
         an `offset` or `page` param, for example.
 
         Required arguments:
-        old_query_params: Dictionary of query string params used in the previous
-                          request. If None, this is the first request.
-        **kwargs:         Optional kwargs passed through from `ingest_records`.
+        prev_query_params: Dictionary of query string params used in the previous
+                           request. If None, this is the first request.
+        **kwargs:          Optional kwargs passed through from `ingest_records`.
 
         """
         pass

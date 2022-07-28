@@ -25,7 +25,7 @@ class MockProviderDataIngester(ProviderDataIngester):
     providers = {"audio": AUDIO_PROVIDER, "image": IMAGE_PROVIDER}
     endpoint = ENDPOINT
 
-    def get_next_query_params(self, old_query_params):
+    def get_next_query_params(self, prev_query_params):
         return DEFAULT_QUERY_PARAMS
 
     def get_batch_data(self, response_json):
