@@ -12,3 +12,6 @@ env/
 
 grafana.db
 __pycache__
+
+# Node.js
+node_modules/
