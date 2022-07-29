@@ -1,37 +1,19 @@
 import logging
+import re
+from typing import Dict, Optional, Tuple
 
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
-from common.requester import DelayedRequester
-from common.storage.image import ImageStore
+from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
-)
 logger = logging.getLogger(__name__)
 
 LIMIT = 100
-DELAY = 5.0
-RETRIES = 3
-PROVIDER = prov.SCIENCE_DEFAULT_PROVIDER
-ENDPOINT = "https://collection.sciencemuseumgroup.org.uk/search/"
 
-delay_request = DelayedRequester(delay=DELAY)
-image_store = ImageStore(provider=PROVIDER)
+CC0_LICENSE = get_license_info(license_="cc0", license_version="1.0")
 
-HEADERS = {"Accept": "application/json"}
-
-DEFAULT_QUERY_PARAMS = {
-    "has_image": 1,
-    "image_license": "CC",
-    "page[size]": LIMIT,
-    "page[number]": 0,
-    "date[from]": 0,
-    "date[to]": 1500,
-}
-
-YEAR_RANGE = [
+YEAR_RANGES = [
     (0, 1500),
     (1500, 1750),
     (1750, 1825),
@@ -45,198 +27,205 @@ YEAR_RANGE = [
     (1990, 2020),
 ]
 
-# global variable to keep track of records pulled
-RECORD_IDS = []
 
+class ScienceMuseumDataIngester(ProviderDataIngester):
+    providers = {"image": prov.SCIENCE_DEFAULT_PROVIDER}
+    endpoint = "https://collection.sciencemuseumgroup.org.uk/search/"
+    batch_limit = 1000
+    delay = 5
+    headers = {"Accept": "application/json"}
 
-def main():
-    logger.info("Begin: Science Museum script")
-    for year_range in YEAR_RANGE:
-        logger.info(f"Running for years {year_range}")
-        from_year, to_year = year_range
-        image_count = _page_records(from_year=from_year, to_year=to_year)
-        logger.info(f"Images pulled till now {image_count}")
-    image_count = image_store.commit()
-    logger.info(f"Total images pulled {image_count}")
+    def __init__(self):
 
+        super().__init__()
+        # instance variable to prevent duplicate records
+        self.RECORD_IDS = set()
 
-def _page_records(from_year, to_year):
-    image_count = 0
-    page_number = 0
-    condition = True
-    while condition:
-        query_param = _get_query_param(
-            page_number=page_number, from_year=from_year, to_year=to_year
-        )
-        batch_data = _get_batch_objects(query_param=query_param)
-        if type(batch_data) == list:
-            if len(batch_data) > 0:
-                image_count = _handle_object_data(batch_data)
-                page_number += 1
-            else:
-                condition = False
+    def ingest_records(self, **kwargs):
+        for year_range in YEAR_RANGES:
+            logger.info(f"==Starting on year range: {year_range}==")
+            super().ingest_records(year_range=year_range)
+
+    def get_next_query_params(self, prev_query_params, **kwargs):
+        from_, to_ = kwargs["year_range"]
+        if not prev_query_params:
+            # Return default query params on the first request
+            return {
+                "has_image": 1,
+                "image_license": "CC",
+                "page[size]": LIMIT,
+                "page[number]": 0,
+                "date[from]": from_,
+                "date[to]": to_,
+            }
         else:
-            condition = False
-    return image_count
+            # Increment `skip` by the batch limit.
+            return {
+                **prev_query_params,
+                "date[from]": from_,
+                "date[to]": to_,
+                "page[number]": prev_query_params["page[number]"] + 1,
+            }
 
+    def get_media_type(self, record):
+        # This provider only supports Images.
+        return "image"
 
-def _get_query_param(
-    page_number=0, from_year=0, to_year=1500, default_query_param=None
-):
-    if default_query_param is None:
-        default_query_param = DEFAULT_QUERY_PARAMS
-    query_param = default_query_param.copy()
-    query_param["page[number]"] = page_number
-    query_param["date[from]"] = from_year
-    query_param["date[to]"] = to_year
-    return query_param
+    def get_batch_data(self, response_json):
+        if response_json:
+            return response_json.get("data")
+        return None
 
-
-def _get_batch_objects(
-    endpoint=ENDPOINT, headers=None, retries=RETRIES, query_param=None
-):
-    if headers is None:
-        headers = HEADERS.copy()
-    data = None
-    for retry in range(retries):
-        response = delay_request.get(endpoint, query_param, headers=headers)
-        try:
-            response_json = response.json()
-            if "data" in response_json.keys():
-                data = response_json.get("data")
-                break
-        except Exception as e:
-            logger.error(f"Failed to due to {e}")
-    return data
-
-
-def _handle_object_data(batch_data):
-    image_count = 0
-    for obj_ in batch_data:
-        id_ = obj_.get("id")
-        if id_ in RECORD_IDS:
-            continue
-        RECORD_IDS.append(id_)
-        foreign_landing_url = obj_.get("links", {}).get("self")
+    def get_record_data(self, record):
+        id_ = record.get("id")
+        if id_ in self.RECORD_IDS:
+            return None
+        self.RECORD_IDS.add(id_)
+        foreign_landing_url = record.get("links", {}).get("self")
         if foreign_landing_url is None:
-            continue
-        obj_attributes = obj_.get("attributes")
-        if obj_attributes is None:
-            continue
-        title = obj_attributes.get("summary_title")
-        creator = _get_creator_info(obj_attributes)
-        metadata = _get_metadata(obj_attributes)
-        multimedia = obj_attributes.get("multimedia")
-        if multimedia is None:
-            continue
+            return None
+        attributes = record.get("attributes")
+        if attributes is None:
+            return None
+        title = attributes.get("summary_title")
+        creator = self._get_creator_info(attributes)
+
+        metadata = self._get_metadata(attributes)
+        multimedia = attributes.get("multimedia")
+        if not multimedia:
+            return None
+        images = []
         for image_data in multimedia:
             foreign_id = image_data.get("admin", {}).get("uid")
             if foreign_id is None:
                 continue
             processed = image_data.get("processed")
-            source = image_data.get("source")
-            image_url, height, width = _get_image_info(processed)
+            (
+                image_url,
+                height,
+                width,
+                filetype,
+            ) = self._get_image_info(processed)
             if image_url is None:
                 continue
 
-            license_version = _get_license_version(source)
-            if license_version is None:
+            license_pair = self._get_license(image_data)
+            if license_pair is None:
+                # some items do not return license anywhere, but in the UI
+                # they look like CC
                 continue
-            license_, version = license_version.lower().split(" ")
-            license_ = license_.replace("cc-", "")
+            license_, version = license_pair
             license_info = get_license_info(license_=license_, license_version=version)
-            image_count = image_store.add_item(
-                foreign_identifier=foreign_id,
-                foreign_landing_url=foreign_landing_url,
-                image_url=image_url,
-                height=height,
-                width=width,
-                license_info=license_info,
-                creator=creator,
-                title=title,
-                meta_data=metadata,
-            )
-    return image_count
+            image = {
+                "foreign_identifier": foreign_id,
+                "foreign_landing_url": foreign_landing_url,
+                "image_url": image_url,
+                "height": height,
+                "width": width,
+                "filetype": filetype,
+                "license_info": license_info,
+                "creator": creator,
+                "title": title,
+                "meta_data": metadata,
+            }
+            images.append(image)
+        return images
 
+    @staticmethod
+    def _get_creator_info(attributes):
+        creator_info = None
+        if (life_cycle := attributes.get("lifecycle")) is not None:
+            creation = life_cycle.get("creation")
+            if isinstance(creation, list):
+                maker = creation[0].get("maker")
+                if isinstance(maker, list):
+                    creator_info = maker[0].get("summary_title")
+        return creator_info
 
-def _get_creator_info(obj_attr):
-    creator_info = None
-    life_cycle = obj_attr.get("lifecycle")
-    if life_cycle:
-        creation = life_cycle.get("creation")
-        if type(creation) == list:
-            maker = creation[0].get("maker")
-            if type(maker) == list:
-                creator_info = maker[0].get("summary_title")
-    return creator_info
+    @staticmethod
+    def check_url(image_url: str | None) -> str | None:
+        if not image_url:
+            return None
+        if image_url.startswith("http"):
+            return image_url
+        return f"https://coimages.sciencemuseumgroup.org.uk/images/{image_url}"
 
-
-def _get_image_info(processed):
-    if processed.get("large"):
-        image = processed.get("large").get("location")
-        measurements = processed.get("large").get("measurements")
-    elif processed.get("medium"):
-        image = processed.get("medium").get("location")
-        measurements = processed.get("medium").get("measurements")
-    else:
-        image = None
-        measurements = None
-    image = check_url(image)
-    height, width = _get_dimensions(measurements)
-    return image, height, width
-
-
-def check_url(image_url):
-    base_url = "https://coimages.sciencemuseumgroup.org.uk/images/"
-    if image_url:
-        if "http" in image_url:
-            checked_url = image_url
-        else:
-            checked_url = base_url + image_url
-    else:
-        checked_url = None
-    return checked_url
-
-
-def _get_dimensions(measurements):
-    height_width = {}
-    if measurements:
-        dimensions = measurements.get("dimensions")
+    @staticmethod
+    def _get_dimensions(image_data: Dict) -> Tuple[int | None, int | None]:
+        """
+        Returns the height and width of the image from "image_data"."measurements"
+        with keys of "dimension", "units", "value".
+        """
+        size = {}
+        dimensions = image_data.get("measurements", {}).get("dimensions")
         if dimensions:
             for dim in dimensions:
-                height_width[dim.get("dimension")] = dim.get("value")
-    return height_width.get("height"), height_width.get("width")
+                size[dim.get("dimension")] = (
+                    dim.get("value") if dim.get("units") == "pixels" else None
+                )
+        return size.get("height"), size.get("width")
+
+    @staticmethod
+    def _get_image_info(
+        processed: Dict,
+    ) -> Tuple[Optional[str], Optional[int], Optional[int], Optional[str]]:
+        height, width, filetype = None, None, None
+        image_data = processed.get("large")
+        if image_data is None:
+            image_data = processed.get("medium", {})
+
+        image_url = ScienceMuseumDataIngester.check_url(image_data.get("location"))
+        if image_url:
+            filetype = image_data.get("format")
+            height, width = ScienceMuseumDataIngester._get_dimensions(image_data)
+        return image_url, height, width, filetype
+
+    @staticmethod
+    def _get_first_list_value(key: str, attributes: Dict) -> str | None:
+        val = attributes.get(key)
+        if isinstance(val, list):
+            return val[0].get("value")
+        return None
+
+    @staticmethod
+    def _get_metadata(attributes):
+        metadata = {}
+        for attr_key, metadata_key in [
+            ("identifier", "accession number"),
+            ("name", "name"),
+            ("categories", "category"),
+            ("description", "description"),
+        ]:
+            val = ScienceMuseumDataIngester._get_first_list_value(attr_key, attributes)
+            if val is not None:
+                metadata[metadata_key] = val
+
+        creditline = attributes.get("legal")
+        if isinstance(creditline, dict):
+            line = creditline.get("credit_line")
+            if line is not None:
+                metadata["creditline"] = line
+
+        return metadata
+
+    @staticmethod
+    def _get_license(image_data):
+        rights = image_data.get("source", {}).get("legal", {}).get("rights")
+        if isinstance(rights, list):
+            license_name = rights[0].get("usage_terms")
+            if not license_name:
+                return None
+            license_name = license_name.lower()
+            license_name = re.sub("^cc[ -]", "", license_name)
+            license_, version = license_name.split(" ")
+            return license_, version
+        return None
 
 
-def _get_license_version(source):
-    license_version = None
-    if source:
-        legal = source.get("legal")
-        if legal:
-            rights = legal.get("rights")
-            if type(rights) == list:
-                license_version = rights[0].get("usage_terms")
-    return license_version
-
-
-def _get_metadata(obj_attr):
-    metadata = {}
-    identifier = obj_attr.get("identifier")
-    if type(identifier) == list:
-        metadata["accession number"] = identifier[0].get("value")
-    name = obj_attr.get("name")
-    if type(name) == list:
-        metadata["name"] = name[0].get("value")
-    category = obj_attr.get("categories")
-    if type(category) == list:
-        metadata["category"] = category[0].get("value")
-    creditline = obj_attr.get("legal")
-    if type(creditline) == dict:
-        metadata["creditline"] = creditline.get("credit_line")
-    description = obj_attr.get("description")
-    if type(description) == list:
-        metadata["description"] = description[0].get("value")
-    return metadata
+def main():
+    logger.info("Begin: Science Museum data ingestion")
+    ingester = ScienceMuseumDataIngester()
+    ingester.ingest_records()
 
 
 if __name__ == "__main__":

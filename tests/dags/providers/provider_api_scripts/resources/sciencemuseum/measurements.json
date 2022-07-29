@@ -1,14 +1,16 @@
 {
-  "dimensions": [
-    {
-      "dimension": "height",
-      "units": "pixels",
-      "value": 1022
-    },
-    {
-      "dimension": "width",
-      "units": "pixels",
-      "value": 1536
-    }
-  ]
+  "measurements": {
+    "dimensions": [
+      {
+        "dimension": "height",
+        "units": "pixels",
+        "value": 1022
+      },
+      {
+        "dimension": "width",
+        "units": "pixels",
+        "value": 1536
+      }
+    ]
+  }
 }

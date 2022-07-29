@@ -1,44 +1,75 @@
 import json
 import logging
 import os
-from unittest.mock import MagicMock, patch
+from pathlib import Path
+from unittest.mock import patch
 
-import requests
+import pytest
 from common.licenses import LicenseInfo
-from common.storage.image import MockImageStore
-from providers.provider_api_scripts import science_museum as sm
+from common.loader import provider_details as prov
+from common.storage.image import ImageStore
+from providers.provider_api_scripts.science_museum import ScienceMuseumDataIngester
 
 
-_license_info = (
+BY_NC_SA = LicenseInfo(
     "by-nc-sa",
     "4.0",
     "https://creativecommons.org/licenses/by-nc-sa/4.0/",
     None,
 )
-license_info = LicenseInfo(*_license_info)
-sm.image_store = MockImageStore(provider=sm.PROVIDER, license_info=license_info)
-
-RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), "resources/sciencemuseum"
+BY_SA = LicenseInfo(
+    license="by-sa",
+    version="4.0",
+    url="https://creativecommons.org/licenses/by-sa/4.0/",
+    raw_url=None,
 )
+sm = ScienceMuseumDataIngester()
+image_store = ImageStore(provider=prov.SCIENCE_DEFAULT_PROVIDER)
+sm.media_stores = {"image": image_store}
+RESOURCES = Path(__file__).parent / "resources/sciencemuseum"
+
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
 )
 
 
+@pytest.fixture(autouse=True)
+def after_test():
+    yield
+    sm.RECORD_IDS = set()
+
+
 def _get_resource_json(json_name):
     with open(os.path.join(RESOURCES, json_name)) as f:
         resource_json = json.load(f)
-    return resource_json
+        return resource_json
+
+
+@pytest.fixture
+def object_data():
+    yield _get_resource_json("object_data.json")
+
+
+@pytest.fixture
+def single_image_data():
+    object_data = _get_resource_json("object_data.json")
+    object_data["attributes"]["multimedia"] = object_data["attributes"]["multimedia"][
+        :1
+    ]
+    yield object_data
+
+
+default_params = {
+    "has_image": 1,
+    "image_license": "CC",
+    "page[size]": 100,
+}
 
 
 def test_get_query_param_default():
-    actual_param = sm._get_query_param()
-    expected_param = {
-        "has_image": 1,
-        "image_license": "CC",
-        "page[size]": 100,
+    actual_param = sm.get_next_query_params({}, **{"year_range": (0, 1500)})
+    expected_param = default_params | {
         "page[number]": 0,
         "date[from]": 0,
         "date[to]": 1500,
@@ -48,12 +79,11 @@ def test_get_query_param_default():
 
 
 def test_get_query_param_offset_page_number():
-    actual_param = sm._get_query_param(page_number=10, from_year=1500, to_year=2000)
-    expected_param = {
-        "has_image": 1,
-        "image_license": "CC",
-        "page[size]": 100,
-        "page[number]": 10,
+    actual_param = sm.get_next_query_params(
+        default_params | {"page[number]": 10}, **{"year_range": (1500, 2000)}
+    )
+    expected_param = default_params | {
+        "page[number]": 11,
         "date[from]": 1500,
         "date[to]": 2000,
     }
@@ -61,117 +91,81 @@ def test_get_query_param_offset_page_number():
     assert actual_param == expected_param
 
 
-def test_page_record_empty():
-    with patch.object(sm, "_get_batch_objects", return_value=[]) as mock_call:
-        with patch.object(sm, "_handle_object_data", return_value=None) as mock_handle:
-            sm._page_records(from_year=0, to_year=1500)
+def test_get_record_data_success(object_data):
+    actual_record_data = sm.get_record_data(object_data)
+    actual_image_data = actual_record_data[0]
+    assert len(actual_record_data) == 12
 
-    assert mock_call.call_count == 1
-    assert mock_handle.call_count == 0
-
-
-def test_page_record_failure():
-    with patch.object(sm, "_get_batch_objects", return_value=None) as mock_call:
-        with patch.object(sm, "_handle_object_data", return_value=None) as mock_handle:
-            sm._page_records(from_year=0, to_year=1500)
-
-    assert mock_call.call_count == 1
-    assert mock_handle.call_count == 0
-
-
-def test_get_batch_object_success():
-    query_param = {
-        "has_image": 1,
-        "image_license": "CC",
-        "page[size]": 1,
-        "page[number]": 1,
-        "date[from]": 0,
-        "date[to]": 1500,
+    expected_image_data = {
+        "foreign_identifier": "i4453",
+        "foreign_landing_url": "https://collection.sciencemuseumgroup.org.uk/objects/co56202/telescope-by-galileo-replica-telescope-galilean-telescope-refracting-replica",
+        "image_url": "https://coimages.sciencemuseumgroup.org.uk/images/4/453/large_1923_0668__0002_.jpg",
+        "height": 1151,
+        "width": 1536,
+        "filetype": "jpeg",
+        "license_info": BY_SA,
+        "creator": "Galileo Galilei",
+        "title": "Telescope by Galileo (replica) (telescope - Galilean; telescope - refracting; replica)",
+        "meta_data": {
+            "accession number": "1923-668",
+            "category": "SCM - Astronomy",
+            "description": "Facsimile of telescope by Galileo with main tube measuring  2-foot, 8 1/2-inches "
+            "and magnification of 21 times.  Made by Cipriani and purchased from the Museo di "
+            "Fisica e Storia Naturale, Florence, Italy in 1923.",
+            "name": "telescope - refracting",
+        },
     }
-    response = _get_resource_json("response_success.json")
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=response)
-    with patch.object(sm.delay_request, "get", return_value=r) as mock_call:
-        actual_response = sm._get_batch_objects(query_param=query_param)
-
-    expected_response = response.get("data")
-
-    assert mock_call.call_count == 1
-    assert actual_response == expected_response
+    for key, value in expected_image_data.items():
+        assert key and value == actual_image_data[key]
+    assert actual_image_data == expected_image_data
 
 
-def test_get_batch_object_failure():
-    query_param = {
-        "has_image": 1,
-        "image_license": "CC",
-        "page[size]": 1,
-        "page[number]": 51,
-        "date[from]": 0,
-        "date[to]": 1500,
-    }
-    response = _get_resource_json("response_failure.json")
-    r = requests.Response()
-    r.status_code = 400
-    r.json = MagicMock(return_value=response)
-    with patch.object(sm.delay_request, "get", return_value=r) as mock_call:
-        actual_response = sm._get_batch_objects(query_param=query_param)
-
-    assert mock_call.call_count == 3
-    assert actual_response is None
+def test_save_item_adds_filetype(single_image_data):
+    with patch.object(sm.media_stores["image"], "save_item") as mock_save:
+        sm.process_batch([single_image_data])
+    actual_image = mock_save.call_args[0][0]
+    assert "jpg" == actual_image.filetype
 
 
-def test_get_batch_object_no_response():
-    query_param = {
-        "has_image": 1,
-        "image_license": "CC",
-        "page[size]": 1,
-        "page[number]": 1,
-        "date[from]": 0,
-        "date[to]": 1500,
-    }
-    response = None
-    with patch.object(sm.delay_request, "get", return_value=response) as mock_call:
-        actual_response = sm._get_batch_objects(query_param=query_param)
+def test_creator_info_success(object_data):
+    attributes = object_data["attributes"]
+    actual_creator = sm._get_creator_info(attributes)
 
-    assert mock_call.call_count == 3
-    assert actual_response is None
+    assert actual_creator == "Galileo Galilei"
 
 
-def test_creator_info_success():
-    obj_attr = _get_resource_json("object_attr.json")
-    actual_creator = sm._get_creator_info(obj_attr)
-    expected_creator = "W D and H O Wills Limited"
+def test_creator_info_fail(object_data):
+    attributes = object_data["attributes"]
+    attributes["lifecycle"]["creation"][0].pop("maker", None)
+    actual_creator = sm._get_creator_info(attributes)
 
-    assert actual_creator == expected_creator
-
-
-def test_creator_info_fail():
-    obj_attr = {}
-    actual_creator = sm._get_creator_info(obj_attr)
-    expected_creator = None
-
-    assert actual_creator == expected_creator
+    assert actual_creator is None
 
 
 def test_image_info_large():
     large_image = _get_resource_json("large_image.json")
-    actual_image, actual_height, actual_width = sm._get_image_info(large_image)
+    actual_image, actual_height, actual_width, actual_filetype = sm._get_image_info(
+        large_image
+    )
     expected_image = (
         "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
         "large_1999_0299_0001__0002_.jpg"
     )
     expected_height = 1022
     expected_width = 1536
+    expected_filetype = "jpeg"
 
     assert actual_image == expected_image
     assert actual_height == expected_height
     assert actual_width == expected_width
+    assert actual_filetype == expected_filetype
 
 
 def test_image_info_medium():
     medium_image = _get_resource_json("medium_image.json")
-    actual_image, actual_height, actual_width = sm._get_image_info(medium_image)
+    actual_url, actual_height, actual_width, actual_filetype = sm._get_image_info(
+        medium_image
+    )
 
     expected_image = (
         "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
@@ -180,17 +174,19 @@ def test_image_info_medium():
     expected_height = 576
     expected_width = 866
 
-    assert actual_image == expected_image
+    assert actual_url == expected_image
     assert actual_height == expected_height
     assert actual_width == expected_width
+    assert actual_filetype == "jpeg"
 
 
 def test_image_info_failure():
-    actual_image, actual_height, actual_width = sm._get_image_info({})
+    actual_url, actual_height, actual_width, actual_filetype = sm._get_image_info({})
 
-    assert actual_image is None
+    assert actual_url is None
     assert actual_height is None
     assert actual_width is None
+    assert actual_filetype is None
 
 
 def test_check_relative_url():
@@ -232,8 +228,8 @@ def test_get_dimensions():
 
 
 def test_get_dimensions_none():
-    measurements = None
-    actual_height, actual_width = sm._get_dimensions(measurements)
+    image_data = {}
+    actual_height, actual_width = sm._get_dimensions(image_data)
 
     assert actual_height is None
     assert actual_width is None
@@ -241,29 +237,38 @@ def test_get_dimensions_none():
 
 def test_get_license():
     source = _get_resource_json("license_source.json")
-    actual_license_version = sm._get_license_version(source)
-    expected_license_version = "CC-BY-NC-SA 4.0"
+    actual_license = sm._get_license(source)
+    expected_license = ("by-nc-sa", "4.0")
 
-    assert actual_license_version == expected_license_version
+    assert actual_license == expected_license
+
+
+def test_get_license_with_space():
+    source = _get_resource_json("license_source.json")
+    source["source"]["legal"]["rights"][0]["usage_terms"] = "CC BY-NC-SA 4.0"
+    actual_license = sm._get_license(source)
+    expected_license = ("by-nc-sa", "4.0")
+
+    assert actual_license == expected_license
 
 
 def test_get_license_none_type1():
-    source = None
-    actual_license_version = sm._get_license_version(source)
+    image_data = {}
+    actual_license_version = sm._get_license(image_data)
 
     assert actual_license_version is None
 
 
 def test_get_license_none_type2():
-    source = {}
-    actual_license_version = sm._get_license_version(source)
+    image_data = _get_resource_json("no_license_no_legal.json")
+    actual_license_version = sm._get_license(image_data)
 
     assert actual_license_version is None
 
 
 def test_get_license_none_type3():
-    source = _get_resource_json("no_license.json")
-    actual_license_version = sm._get_license_version(source)
+    image_data = _get_resource_json("no_license_no_usage_terms.json")
+    actual_license_version = sm._get_license(image_data)
 
     assert actual_license_version is None
 
@@ -276,15 +281,8 @@ def test_get_metadata():
     assert actual_metadata == expected_metadata
 
 
-def test_handle_obj_data():
-    object_data = _get_resource_json("objects_data.json")
-    actual_image_count = sm._handle_object_data(object_data)
+def test_handle_obj_data_none(object_data):
+    object_data["attributes"]["multimedia"] = []
+    actual_images = sm.get_record_data(object_data)
 
-    assert actual_image_count == 2
-
-
-def test_handle_obj_data_none():
-    object_data = []
-    actual_image_count = sm._handle_object_data(object_data)
-
-    assert actual_image_count == 0
+    assert actual_images is None
