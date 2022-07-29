@@ -1,203 +1,183 @@
 import logging
+from typing import Dict, Optional, Tuple, TypedDict
 
-from common.licenses import get_license_info
+from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
-from common.requester import DelayedRequester
-from common.storage.image import ImageStore
+from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
-)
 logger = logging.getLogger(__name__)
 
-LIMIT = 100
-DELAY = 5.0
-RETRIES = 3
-PROVIDER = prov.VICTORIA_DEFAULT_PROVIDER
-ENDPOINT = "https://collections.museumsvictoria.com.au/api/search"
-LANDING_PAGE = "https://collections.museumsvictoria.com.au/"
 
-delay_request = DelayedRequester(delay=DELAY)
-image_store = ImageStore(provider=PROVIDER)
+class ImageDetails(TypedDict, total=False):
+    foreign_identifier: str
+    image_url: str
+    license_info: LicenseInfo
+    foreign_landing_url: str
+    title: str
+    meta_data: Dict
+    height: int | None
+    width: int | None
+    creator: str | None
 
-HEADERS = {"User-Agent": prov.UA_STRING, "Accept": "application/json"}
 
-DEFAULT_QUERY_PARAMS = {
-    "hasimages": "yes",
-    "perpage": LIMIT,
-    "imagelicence": "cc by",
-    "page": 0,
-}
+class VictoriaDataIngester(ProviderDataIngester):
+    providers = {"image": prov.VICTORIA_DEFAULT_PROVIDER}
+    endpoint = "https://collections.museumsvictoria.com.au/api/search"
+    headers = {"User-Agent": prov.UA_STRING, "Accept": "application/json"}
+    batch_limit = 100
+    delay = 5
+    LANDING_PAGE = "https://collections.museumsvictoria.com.au/"
+    LICENSE_LIST = [
+        "public domain",
+        "cc by",
+        "cc by-nc",
+        "cc by-nc-sa",
+        "cc by-nc-nd",
+        "cc by-sa",
+    ]
 
-LICENSE_LIST = [
-    "cc by-nc-nd",
-    "cc by",
-    "public domain",
-    "cc by-nc",
-    "cc by-nc-sa",
-    "cc by-sa",
-]
+    def __init__(self):
 
-RECORDS_IDS = []
+        super().__init__()
+
+        # This set is used to prevent duplicate images of the same items
+        self.RECORDS_IDS = set()
+
+    def ingest_records(self, **kwargs):
+        for license_ in self.LICENSE_LIST:
+            super().ingest_records(license_=license_)
+
+    def get_batch_data(self, response_json):
+        return response_json or None
+
+    def get_next_query_params(
+        self, prev_query_params: Optional[Dict], **kwargs
+    ) -> Dict:
+        if not prev_query_params:
+            return {
+                "hasimages": "yes",
+                "perpage": self.batch_limit,
+                "imagelicense": kwargs["license_"],
+                "page": 0,
+            }
+        else:
+            return {
+                **prev_query_params,
+                "page": prev_query_params["page"] + 1,
+            }
+
+    def get_record_data(self, data: Dict):
+        object_id = data.get("id")
+        if object_id in self.RECORDS_IDS:
+            return None
+        self.RECORDS_IDS.add(object_id)
+        foreign_landing_url = f"{self.LANDING_PAGE}{object_id}"
+
+        if (media_data := data.get("media")) is None:
+            return None
+        images = self._get_images(media_data)
+        if len(images) == 0:
+            return None
+        meta_data = self._get_metadata(data)
+        title = data.get("displayTitle")
+        image_data = {
+            "foreign_landing_url": foreign_landing_url,
+            "title": title,
+            "meta_data": meta_data,
+        }
+
+        record_images = []
+        for image in images:
+            image.update(image_data)
+            record_images.append(image)
+
+        return record_images
+
+    @staticmethod
+    def _get_images(media_data) -> list[ImageDetails]:
+        images = []
+        for media in media_data:
+            if media.get("type") != "image":
+                continue
+            image_id = media.get("id")
+            image_url, height, width, filesize = VictoriaDataIngester._get_image_data(
+                media
+            )
+            license_info = VictoriaDataIngester._get_license_info(media)
+            if image_url is None or image_id is None or license_info is None:
+                continue
+            creator = VictoriaDataIngester._get_creator(media)
+
+            image: ImageDetails = {
+                "foreign_identifier": image_id,
+                "image_url": image_url,
+                "height": height,
+                "width": width,
+                "license_info": license_info,
+                "creator": creator,
+            }
+            images.append(image)
+        return images
+
+    def get_media_type(self, record: dict) -> str:
+        return "image"
+
+    @staticmethod
+    def _get_image_data(
+        media: Dict,
+    ) -> Tuple[str | None, int | None, int | None, int | None]:
+        height, width, filesize = None, None, None
+        media_data = {}
+        for size in ["large", "medium", "small"]:
+            if size in media:
+                media_data = media[size]
+                break
+        image_url = media_data.get("uri")
+        if image_url is not None:
+            height = media_data.get("height")
+            width = media_data.get("width")
+            filesize = media_data.get("size")
+        return image_url, height, width, filesize
+
+    @staticmethod
+    def _get_creator(media) -> str | None:
+        creators = media.get("creators")
+        if isinstance(creators, list):
+            creators = ",".join(media.get("creators"))
+        return creators
+
+    @staticmethod
+    def join_string_list(object_key, obj):
+        data = obj.get(object_key)
+        return ",".join(data) if isinstance(data, list) else None
+
+    @staticmethod
+    def _get_metadata(obj):
+        meta_data = {
+            "datemodified": obj.get("dateModified"),
+            "category": obj.get("category"),
+            "description": obj.get("physicalDescription"),
+            "keywords": VictoriaDataIngester.join_string_list("keywords", obj),
+            "classifications": VictoriaDataIngester.join_string_list(
+                "classifications", obj
+            ),
+        }
+
+        return {key: value for key, value in meta_data.items() if value is not None}
+
+    @staticmethod
+    def _get_license_info(media: Dict) -> LicenseInfo | None:
+        license_uri = media.get("licence", {}).get("uri", {})
+        if "creativecommons" in license_uri:
+            return get_license_info(license_url=license_uri)
+        return None
 
 
 def main():
-    for license_ in LICENSE_LIST:
-        logger.info(f"querying for license {license_}")
-        condition = True
-        page = 0
-        while condition:
-            query_params = _get_query_params(license_type=license_, page=page)
-            results = _get_batch_objects(params=query_params)
-
-            if type(results) == list:
-                if len(results) > 0:
-                    _handle_batch_objects(results)
-                    page += 1
-                else:
-                    condition = False
-            else:
-                condition = False
-    image_count = image_store.commit()
-    logger.info(f"Total images {image_count}")
-
-
-def _get_query_params(default_query_params=None, license_type="cc by", page=0):
-    if default_query_params is None:
-        default_query_params = DEFAULT_QUERY_PARAMS
-    query_params = default_query_params.copy()
-    query_params["imagelicence"] = license_type
-    query_params["page"] = page
-    return query_params
-
-
-def _get_batch_objects(endpoint=ENDPOINT, params=None, headers=None, retries=RETRIES):
-    if headers is None:
-        headers = HEADERS.copy()
-    data = None
-    for retry in range(retries):
-        response = delay_request.get(endpoint, params, headers=headers)
-        try:
-            response_json = response.json()
-            if type(response_json) == list:
-                data = response_json
-                break
-        except Exception:
-            data = None
-    return data
-
-
-def _handle_batch_objects(objects, landing_page=LANDING_PAGE):
-    image_count = 0
-    for obj in objects:
-        object_id = obj.get("id")
-        if object_id in RECORDS_IDS:
-            continue
-        RECORDS_IDS.append(object_id)
-        foreign_landing_url = landing_page + object_id
-        media_data = obj.get("media")
-        if media_data is None:
-            continue
-        image_data = _get_media_info(media_data)
-        if len(image_data) == 0:
-            continue
-        meta_data = _get_metadata(obj)
-        title = obj.get("displayTitle")
-        for img in image_data:
-            license_info = get_license_info(license_url=img.get("license_url"))
-            image_count = image_store.add_item(
-                foreign_identifier=img.get("image_id"),
-                foreign_landing_url=foreign_landing_url,
-                image_url=img.get("image_url"),
-                height=img.get("height"),
-                width=img.get("width"),
-                license_info=license_info,
-                title=title,
-                creator=img.get("creators"),
-                meta_data=meta_data,
-            )
-    return image_count
-
-
-def _get_media_info(media_data):
-    image_data = []
-    for media in media_data:
-        media_type = media.get("type")
-        if media_type == "image":
-            image_id = media.get("id")
-            image_url, height, width = _get_image_data(media)
-            license_url = _get_license_url(media)
-            if image_url is None or image_id is None or license_url is None:
-                continue
-            creators = _get_creator(media)
-            image_data.append(
-                {
-                    "image_id": image_id,
-                    "image_url": image_url,
-                    "height": height,
-                    "width": width,
-                    "license_url": license_url,
-                    "creators": creators,
-                }
-            )
-    return image_data
-
-
-def _get_image_data(media):
-    image_url = None
-    height, width = None, None
-    if "large" in media.keys():
-        image_url = media.get("large").get("uri")
-        height = media.get("large").get("height")
-        width = media.get("large").get("width")
-
-    elif "medium" in media.keys():
-        image_url = media.get("medium").get("uri")
-        height = media.get("medium").get("height")
-        width = media.get("medium").get("width")
-
-    elif "small" in media.keys():
-        image_url = media.get("small").get("uri")
-        height = media.get("small").get("height")
-        width = media.get("small").get("width")
-
-    return image_url, height, width
-
-
-def _get_license_url(media):
-    license_url = None
-    license_ = media.get("licence")
-    if license_ is not None:
-        uri = license_.get("uri")
-        if "creativecommons" in uri:
-            license_url = uri
-    return license_url
-
-
-def _get_metadata(obj):
-    metadata = {}
-
-    metadata["datemodified"] = obj.get("dateModified")
-    metadata["category"] = obj.get("category")
-    metadata["description"] = obj.get("physicalDescription")
-
-    keywords = obj.get("keywords")
-    if type(keywords) == list:
-        metadata["keywords"] = ",".join(keywords)
-
-    classifications = obj.get("classifications")
-    if type(classifications) == list:
-        metadata["classifications"] = ",".join(classifications)
-
-    return metadata
-
-
-def _get_creator(media):
-    creators = None
-    if type(media.get("creators")) == list:
-        creators = ",".join(media.get("creators"))
-    return creators
+    logger.info("Begin: Victoria Museum data ingestion")
+    ingester = VictoriaDataIngester()
+    ingester.ingest_records()
 
 
 if __name__ == "__main__":

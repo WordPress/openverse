@@ -1,41 +1,39 @@
-[
-  {
-    "alternativeText": null,
-    "caption": "Diary - David Yuile, 'City of Dunedin' & S.S. 'Albion', 1872",
-    "creators": [],
-    "credit": null,
-    "dateModified": "2018-02-08T05:30:00Z",
-    "large": {
-      "height": 3000,
-      "size": 895360,
-      "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-large.jpg",
-      "width": 2387
-    },
-    "licence": {
-      "name": "All Rights Reserved",
-      "shortName": "All Rights Reserved",
-      "uri": ""
-    },
-    "medium": {
-      "height": 1500,
-      "size": 207241,
-      "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-medium.jpg",
-      "width": 1194
-    },
-    "rightsStatement": "In Copyright / All Rights Reserved",
-    "small": {
-      "height": 500,
-      "size": 35208,
-      "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-small.jpg",
-      "width": 398
-    },
-    "sources": [],
-    "thumbnail": {
-      "height": 250,
-      "size": 11371,
-      "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-thumbnail.jpg",
-      "width": 250
-    },
-    "type": "image"
-  }
-]
+{
+  "alternativeText": null,
+  "caption": "Diary - David Yuile, 'City of Dunedin' & S.S. 'Albion', 1872",
+  "creators": [],
+  "credit": null,
+  "dateModified": "2018-02-08T05:30:00Z",
+  "large": {
+    "height": 3000,
+    "size": 895360,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-large.jpg",
+    "width": 2387
+  },
+  "licence": {
+    "name": "All Rights Reserved",
+    "shortName": "All Rights Reserved",
+    "uri": ""
+  },
+  "medium": {
+    "height": 1500,
+    "size": 207241,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-medium.jpg",
+    "width": 1194
+  },
+  "rightsStatement": "In Copyright / All Rights Reserved",
+  "small": {
+    "height": 500,
+    "size": 35208,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-small.jpg",
+    "width": 398
+  },
+  "sources": [],
+  "thumbnail": {
+    "height": 250,
+    "size": 11371,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-thumbnail.jpg",
+    "width": 250
+  },
+  "type": "image"
+}

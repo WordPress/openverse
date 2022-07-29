@@ -93,7 +93,9 @@ class DelayedRequester:
                 logger.warning(f"Could not get response_json.\n{e}")
                 response_json = None
 
-        if response_json is None or response_json.get("error") is not None:
+        if response_json is None or (
+            isinstance(response_json, dict) and response_json.get("error") is not None
+        ):
             logger.warning(f"Bad response_json:  {response_json}")
             logger.warning(
                 "Retrying:\n_get_response_json(\n"

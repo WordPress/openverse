@@ -4,6 +4,7 @@ from typing import Dict, Optional, Sequence, Type
 
 from providers.provider_api_scripts.cleveland_museum import ClevelandDataIngester
 from providers.provider_api_scripts.finnish_museums import FinnishMuseumsDataIngester
+from providers.provider_api_scripts.museum_victoria import VictoriaDataIngester
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 from providers.provider_api_scripts.stocksnap import StockSnapDataIngester
 
@@ -121,6 +122,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="museum_victoria",
+        ingester_class=VictoriaDataIngester,
         start_date=datetime(2020, 1, 1),
     ),
     ProviderWorkflow(

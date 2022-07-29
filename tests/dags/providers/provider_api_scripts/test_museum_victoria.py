@@ -1,33 +1,44 @@
 import json
 import logging
-import os
-from unittest.mock import MagicMock, patch
+from pathlib import Path
+from unittest.mock import patch
 
-import requests
-from providers.provider_api_scripts import museum_victoria as mv
+import pytest
+from common.licenses import LicenseInfo, get_license_info
+from common.loader import provider_details as prov
+from common.storage.image import ImageStore
+from providers.provider_api_scripts.museum_victoria import VictoriaDataIngester
 
 
-RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), "resources/museumvictoria"
-)
+RESOURCES = Path(__file__).parent / "resources/museumvictoria"
+
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
 )
+mv = VictoriaDataIngester()
+image_store = ImageStore(provider=prov.VICTORIA_DEFAULT_PROVIDER)
+mv.media_stores = {"image": image_store}
+
+
+@pytest.fixture(autouse=True)
+def after_test():
+    yield
+    mv.RECORDS_IDS = set()
 
 
 def _get_resource_json(json_name):
-    with open(os.path.join(RESOURCES, json_name)) as f:
+    with open(RESOURCES / json_name) as f:
         resource_json = json.load(f)
-    return resource_json
+        return resource_json
 
 
 def test_get_query_param_default():
-    actual_param = mv._get_query_params()
+    actual_param = mv.get_next_query_params(None, **{"license_": mv.LICENSE_LIST[0]})
     expected_param = {
         "hasimages": "yes",
         "perpage": 100,
-        "imagelicence": "cc by",
+        "imagelicense": "public domain",
         "page": 0,
     }
 
@@ -35,90 +46,105 @@ def test_get_query_param_default():
 
 
 def test_get_query_param_offset():
-    actual_param = mv._get_query_params(license_type="public domain", page=10)
+    actual_param = mv.get_next_query_params(
+        {
+            "hasimages": "yes",
+            "perpage": 100,
+            "imagelicense": "public domain",
+            "page": 10,
+        }
+    )
 
     expected_param = {
         "hasimages": "yes",
         "perpage": 100,
-        "imagelicence": "public domain",
-        "page": 10,
+        "imagelicense": "public domain",
+        "page": 11,
     }
 
     assert actual_param == expected_param
 
 
-def test_get_batch_objects_success():
-    query_param = {
-        "hasimages": "yes",
-        "perpage": 100,
-        "imagelicence": "cc+by",
-        "page": 0,
+def test_get_record_data():
+    media = _get_resource_json("record_data.json")
+    actual_image_data = mv.get_record_data(media)
+    assert len(actual_image_data) == 2
+
+    expected_image_data = {
+        "foreign_identifier": "media/488013",
+        "image_url": "https://collections.museumsvictoria.com.au/content/media/13/488013-large.jpg",
+        "height": 1753,
+        "width": 3000,
+        "creator": "",
+        "license_info": LicenseInfo(
+            "by",
+            "4.0",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://creativecommons.org/licenses/by/4.0",
+        ),
+        "foreign_landing_url": "https://collections.museumsvictoria.com.au/items/415715",
+        "title": "Baggage Label - ICEM, Sailing Details, 15 Mar 1957",
+        "meta_data": {
+            "datemodified": "2017-12-12T05:56:00Z",
+            "category": "History & Technology",
+            "description": "Rectangular white blue and grey cardboard baggage label.",
+            "keywords": "Immigrant Shipping,Immigrant Voyages,Immigration,Shipping,Station Pier,Women's Work",
+            "classifications": "Migration,Processing - planning & departure,Luggage handling",
+        },
     }
 
-    response_success = _get_resource_json("response_success.json")
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=response_success)
-
-    with patch.object(mv.delay_request, "get", return_value=r) as mock_call:
-        actual_response = mv._get_batch_objects(params=query_param)
-
-    expected_response = response_success
-
-    assert actual_response == expected_response
-    assert mock_call.call_count == 1
+    assert actual_image_data[0] == expected_image_data
 
 
-def test_get_batch_objects_empty():
-    query_param = {
-        "hasimages": "yes",
-        "perpage": 1,
-        "imagelicence": "cc by",
-        "page": 1000,
-    }
-    response_empty = json.loads("[]")
-    with patch.object(
-        mv.delay_request, "get", return_value=response_empty
-    ) as mock_call:
-        actual_response = mv._get_batch_objects(params=query_param)
+def test_filetype_gets_added_by_image_store():
+    media = _get_resource_json("record_data.json")
+    with patch.object(mv.media_stores["image"], "save_item") as mock_save:
+        mv.process_batch([media])
 
-    assert mock_call.call_count == 3
-    assert actual_response is None
+    actual_image = mock_save.call_args[0][0]
+
+    assert "jpg" == actual_image.filetype
 
 
-def test_get_batch_objects_error():
-    query_param = {"hasimages": "yes", "perpage": 1, "imagelicence": "cc by", "page": 0}
+def test_no_duplicate_records():
+    media = _get_resource_json("record_data.json")
+    mv.RECORDS_IDS.add("items/415715")
+    actual_image_data = mv.get_record_data(media)
 
-    r = requests.Response()
-    r.status_code = 404
-
-    with patch.object(mv.delay_request, "get", return_value=r) as mock_call:
-        actual_response = mv._get_batch_objects(query_param)
-
-    assert actual_response is None
-    assert mock_call.call_count == 3
+    assert actual_image_data is None
 
 
-def test_get_media_info_success():
+def test_get_images_success():
     media = _get_resource_json("media_data_success.json")
-    actual_image_data = mv._get_media_info(media)
+    actual_image_data = mv._get_images([media])
 
-    expected_image_data = _get_resource_json("image_data_success.json")
+    expected_image_data = {
+        "creator": "Photographer: Deb Tout-Smith",
+        "foreign_identifier": "media/329745",
+        "image_url": "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg",
+        "license_info": get_license_info(
+            license_url="https://creativecommons.org/licenses/by/4.0"
+        ),
+        "width": 2785,
+        "height": 2581,
+    }
 
-    assert actual_image_data == expected_image_data
+    assert actual_image_data[0] == expected_image_data
 
 
 def test_get_media_info_failure():
     media = _get_resource_json("media_data_failure.json")
-    actual_image_data = mv._get_media_info(media)
+    actual_image_data = mv.get_record_data(media)
 
-    assert len(actual_image_data) == 0
+    assert actual_image_data is None
 
 
 def test_get_image_data_large():
     image_data = _get_resource_json("large_image_data.json")
 
-    actual_image_url, actual_height, actual_width = mv._get_image_data(image_data)
+    actual_image_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
+        image_data
+    )
 
     assert actual_image_url == (
         "https://collections.museumsvictoria.com.au/content/media/45/"
@@ -126,12 +152,15 @@ def test_get_image_data_large():
     )
     assert actual_height == 2581
     assert actual_width == 2785
+    assert actual_filesize == 890933
 
 
 def test_get_image_data_medium():
     image_data = _get_resource_json("medium_image_data.json")
 
-    actual_image_url, actual_height, actual_width = mv._get_image_data(image_data)
+    actual_image_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
+        image_data
+    )
 
     assert actual_image_url == (
         "https://collections.museumsvictoria.com.au/content/media/45/"
@@ -139,12 +168,15 @@ def test_get_image_data_medium():
     )
     assert actual_height == 1390
     assert actual_width == 1500
+    assert actual_filesize == 170943
 
 
 def test_get_image_data_small():
     image_data = _get_resource_json("small_image_data.json")
 
-    actual_image_url, actual_height, actual_width = mv._get_image_data(image_data)
+    actual_image_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
+        image_data
+    )
 
     assert actual_image_url == (
         "https://collections.museumsvictoria.com.au/content/media/45/"
@@ -152,31 +184,35 @@ def test_get_image_data_small():
     )
     assert actual_height == 500
     assert actual_width == 540
+    assert actual_filesize == 20109
 
 
 def test_get_image_data_none():
     image_data = {}
 
-    actual_image_url, actual_height, actual_width = mv._get_image_data(image_data)
+    actual_image_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
+        image_data
+    )
 
     assert actual_image_url is None
     assert actual_height is None
     assert actual_width is None
+    assert actual_filesize is None
 
 
-def test_get_license_url():
+def test_get_license_info():
     media = _get_resource_json("cc_image_data.json")
-    actual_license_url = mv._get_license_url(media)
-    expected_license_url = "https://creativecommons.org/licenses/by/4.0"
+    actual_license = mv._get_license_info(media)
+    expected_license_url = "https://creativecommons.org/licenses/by/4.0/"
 
-    assert actual_license_url == expected_license_url
+    assert actual_license.url == expected_license_url
 
 
-def test_get_license_url_failure():
+def test_get_license_info_failure():
     media = _get_resource_json("media_data_failure.json")
-    actual_license_url = mv._get_license_url(media[0])
+    actual_license = mv._get_license_info(media)
 
-    assert actual_license_url is None
+    assert actual_license is None
 
 
 def test_get_metadata():
@@ -192,11 +228,3 @@ def test_get_creator():
     actual_creator = mv._get_creator(media)
 
     assert actual_creator == "Photographer: Deb Tout-Smith"
-
-
-def test_handle_batch_objects_success():
-    batch_objects = _get_resource_json("batch_objects.json")
-
-    with patch.object(mv.image_store, "add_item") as mock_item:
-        mv._handle_batch_objects(batch_objects)
-    assert mock_item.call_count == 1
