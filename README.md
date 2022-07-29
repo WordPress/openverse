@@ -187,6 +187,9 @@ At this stage, you can run the tests via:
 
 ```shell
 just test
+
+# Alternatively, run all tests including longer-running ones
+just test --extended
 ```
 
 Edits to the source files or tests can be made on your local machine, then tests

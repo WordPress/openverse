@@ -304,7 +304,7 @@ def drop_load_table(
 ):
     load_table = _get_load_table_name(identifier, media_type=media_type)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    postgres.run(f"DROP TABLE {load_table};")
+    postgres.run(f"DROP TABLE IF EXISTS {load_table};")
 
 
 def _get_load_table_name(

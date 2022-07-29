@@ -79,7 +79,7 @@ jobs:
         # rather than the production ones
         run: |
           just build
-          just test
+          just test --extended
 
   push:
     name: Publish Docker images
