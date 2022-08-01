@@ -1,5 +1,5 @@
 {
-  "packageManager": "pnpm@7.1.0",
+  "packageManager": "pnpm@7.8.0",
   "dependencies": {
     "@octokit/rest": "18.12.0",
     "js-yaml": "^4.1.0",
@@ -8,7 +8,7 @@
   },
   "engines": {
     "node": ">= 16.0.0 <17",
-    "pnpm": ">= 7.1.0"
+    "pnpm": ">= 7.8.0"
   },
   "volta": {
     "node": "16.16.0"
