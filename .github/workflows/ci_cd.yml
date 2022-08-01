@@ -373,7 +373,7 @@ jobs:
           cp -r ./openverse-api /tmp/gh-pages
           # trash the existing preview folder and replace it with the newly generated one
           # if the preview hasn't been pushed yet this will still exit(0)
-          rm -rf /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
+          sudo rm -rf /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
           mv /tmp/preview /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
           cd openverse-api
 
