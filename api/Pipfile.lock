@@ -310,11 +310,11 @@
         },
         "drf-yasg": {
             "hashes": [
-                "sha256:8b72e5b1875931a8d11af407be3a9a5ba8776541492947a0df5bafda6b7f8267",
-                "sha256:d50f197c7f02545d0b736df88c6d5cf874f8fea2507ad85ad7de6ae5bf2d9e5a"
+                "sha256:85899b8b173cac7d39af3fea205bdc1a599aed8de3389a3bcccc29b37b9b983e",
+                "sha256:b2eebb438fa641503a08dac791be24183ea26dbcfe371a9824ea91f6e3a988aa"
             ],
             "index": "pypi",
-            "version": "==1.20.0"
+            "version": "==1.21.3"
         },
         "elasticsearch": {
             "hashes": [
