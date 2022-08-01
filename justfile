@@ -48,6 +48,7 @@ down flags="":
 recreate:
     @just down -v
     @just up "--force-recreate --build"
+    @just init
 
 # Show logs of all, or named, Docker services
 logs services="" args=(if IS_CI != "" { "" } else { "-f" }):
