@@ -110,7 +110,7 @@
       </template>
     </i18n>
 
-    <i18n path="search-guide.example.or" tag="p">
+    <i18n path="search-guide.example.or.description" tag="p">
       <template #link>
         <VLink
           :aria-label="$t('search-guide.example.or.aria-label')"

@@ -54,7 +54,7 @@
     "i18n:get-translations": "node src/locales/scripts/get-translations",
     "i18n:update-locales": "node src/locales/scripts/get-validated-locales",
     "i18n:generate-pot": "node src/locales/scripts/json-to-pot",
-    "i18n:check": "vue-i18n-extract report --vueFiles './src/**/*.?(js|ts|vue)' --languageFiles './src/locales/*.?(json)'"
+    "i18n:check": "vue-i18n-extract report --vueFiles './src/*/**.?(js|ts|vue)' --languageFiles './src/locales/en.json'"
   },
   "dependencies": {
     "@nuxt/components": "^2.1.6",
@@ -155,7 +155,7 @@
     "talkback": "^3.0.1",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.2",
-    "vue-i18n-extract": "^2.0.0",
+    "vue-i18n-extract": "^2.0.7",
     "vue-jest": "^3.0.7",
     "vue-template-compiler": "^2.6.14",
     "vue-tsc": "^0.34.7",

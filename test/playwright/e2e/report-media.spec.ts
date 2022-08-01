@@ -1,10 +1,7 @@
 import { test, expect, Page, BrowserContext } from '@playwright/test'
 
 import { mockProviderApis } from '~~/test/playwright/utils/route'
-import {
-  goToSearchTerm,
-  searchTypeNames,
-} from '~~/test/playwright/utils/navigation'
+import { goToSearchTerm } from '~~/test/playwright/utils/navigation'
 
 import { supportedMediaTypes } from '~/constants/media'
 
@@ -23,13 +20,13 @@ export const openReportModal = (page: Page) =>
 
 // Mock a successful reporting response
 export const mockReportingEndpoint = (context: BrowserContext) =>
-  context.route(reportingEndpoint, (route) => {
+  context.route(reportingEndpoint, (route) =>
     route.fulfill({
       status: 200,
       contentType: 'text/json',
       headers: { 'access-control-allow-origin': '*' },
     })
-  })
+  )
 
 // Submit the content form and return the network response
 export const submitApiReport = (page: Page) =>
@@ -98,9 +95,10 @@ const reports = {
  */
 supportedMediaTypes.forEach((mediaType) => {
   Object.entries(reports).forEach(([reportName, reportAssertion]) => {
-    test(`Files ${reportName} report for ${searchTypeNames[
-      mediaType
-    ].toLowerCase()}`, async ({ page, context }) => {
+    test(`Files ${reportName} report for ${mediaType}`, async ({
+      page,
+      context,
+    }) => {
       await goToSearchTerm(page, 'cat', { searchType: mediaType })
       await visitFirstResult(page)
       await openReportModal(page)

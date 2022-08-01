@@ -96,7 +96,7 @@ specifiers:
   uuid: ^8.3.2
   vue: ^2.6.14
   vue-i18n: ^8.26.7
-  vue-i18n-extract: ^2.0.0
+  vue-i18n-extract: ^2.0.7
   vue-jest: ^3.0.7
   vue-template-compiler: ^2.6.14
   vue-tsc: ^0.34.7
@@ -200,7 +200,7 @@ devDependencies:
   talkback: 3.0.1
   ts-node: 10.7.0_cbygeln5s5sjlseyk3kbidkfny
   typescript: 4.6.2
-  vue-i18n-extract: 2.0.4
+  vue-i18n-extract: 2.0.7
   vue-jest: 3.0.7_emdz5kfrc5cn55r4a24jgpa35q
   vue-template-compiler: 2.6.14
   vue-tsc: 0.34.12_typescript@4.6.2
@@ -7773,7 +7773,6 @@ packages:
     resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
     dependencies:
       balanced-match: 1.0.2
-    dev: false
 
   /braces/2.3.2:
     resolution: {integrity: sha512-aNdbnj9P8PjdXU4ybaWLK2IF3jc/EoDYbC7AazW6to3TRsfXxscC9UXOB5iDiEQrkyIbWp2SLQda4+QAa7nc3w==}
@@ -11311,7 +11310,6 @@ packages:
       minimatch: 5.0.1
       once: 1.4.0
       path-is-absolute: 1.0.1
-    dev: false
 
   /global/4.4.0:
     resolution: {integrity: sha512-wv/LAoHdRE3BeTGz53FAamhGlPLhlssK45usmGFThIi4XqnBmjKQ16u+RNbP7WvigRZDxUsM0J3gcQ5yicaL0w==}
@@ -12367,7 +12365,7 @@ packages:
     dev: true
 
   /is-valid-glob/1.0.0:
-    resolution: {integrity: sha1-Kb8+/3Ab4tTTFdusw5vDn+j2Aao=}
+    resolution: {integrity: sha512-AhiROmoEFDSsjx8hW+5sGwgKVIORcXnrlAx/R0ZSeaPw70Vw0CqkGBBhHGL58Uox2eXnU1AnvXJl1XlyedO5bA==}
     engines: {node: '>=0.10.0'}
     dev: true
 
@@ -13944,7 +13942,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       brace-expansion: 2.0.1
-    dev: false
 
   /minimist/1.2.5:
     resolution: {integrity: sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==}
@@ -19218,13 +19215,13 @@ packages:
   /vue-hot-reload-api/2.3.4:
     resolution: {integrity: sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==}
 
-  /vue-i18n-extract/2.0.4:
-    resolution: {integrity: sha512-a2N9HBp1sSNErvjGDnRHWvXxKAy4DypoN91Pc4Seu9nDx4axBFY1ZGzlwUsL19HDR1n7YC7C233h/bAEnReK6Q==}
+  /vue-i18n-extract/2.0.7:
+    resolution: {integrity: sha512-i1NW5R58S720iQ1BEk+6ILo3hT6UA8mtYNNolSH4rt9345qvXdvA6GHy2+jHozdDAKHwlu9VvS/+vIMKs1UYQw==}
     hasBin: true
     dependencies:
       cac: 6.7.12
       dot-object: 2.1.4
-      glob: 7.2.0
+      glob: 8.0.1
       is-valid-glob: 1.0.0
       js-yaml: 4.1.0
     dev: true

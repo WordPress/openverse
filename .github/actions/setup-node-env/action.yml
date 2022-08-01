@@ -5,10 +5,6 @@ inputs:
   install:
     default: true
     description: Whether to install dependencies.
-  downloadLocales:
-    required: false
-    default: "false"
-    description: Whether to download locales artifact.
 
 runs:
   using: "composite"
@@ -36,8 +32,6 @@ runs:
       shell: bash
       run: "pnpm install"
 
-    - uses: actions/download-artifact@v3
-      if: inputs.downloadLocales == 'true'
-      with:
-        name: locales
-        path: src/locales
+    - name: Copy locale files
+      shell: bash
+      run: "cp -r test/locales/* src/locales"

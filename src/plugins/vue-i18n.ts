@@ -4,7 +4,7 @@ export default () => {
     silentFallbackWarn: true,
     pluralizationRules: {
       /**
-       * @param choice - a choice index given by the input to $tc: `$tc('path.to.rule', choiceIndex)`
+       * @param choice - a choice index given by the input to $tc: $tc('header.filter-button.with-count', choiceIndex)
        * @param choicesLength - an overall amount of available choices
        * @returns a final choice index to select plural word by
        */
