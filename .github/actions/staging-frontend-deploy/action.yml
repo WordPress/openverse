@@ -24,7 +24,7 @@ runs:
 
   steps:
     - name: Notify deployment start
-      uses: slackapi/slack-github-action@v1.19.0
+      uses: slackapi/slack-github-action@v1.21.0
       with:
         payload: |
           {
@@ -81,7 +81,7 @@ runs:
         wait-for-service-stability: true
 
     - name: Notify deployment finished
-      uses: slackapi/slack-github-action@v1.19.0
+      uses: slackapi/slack-github-action@v1.21.0
       with:
         payload: |
           {
@@ -109,7 +109,7 @@ runs:
 
     - name: Notify deployment failure
       if: failure()
-      uses: slackapi/slack-github-action@v1.19.0
+      uses: slackapi/slack-github-action@v1.21.0
       with:
         payload: |
           {
