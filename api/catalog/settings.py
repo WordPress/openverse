@@ -16,6 +16,7 @@ from socket import gethostbyname, gethostname
 import sentry_sdk
 from decouple import config
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import ignore_logger
 
 from catalog.configuration.aws import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 from catalog.configuration.elasticsearch import ES, MEDIA_INDEX_MAPPING
@@ -350,3 +351,9 @@ if not DEBUG:
         send_default_pii=False,
         environment=ENVIRONMENT,
     )
+
+    # ALLOW_HOSTS is correctly configured so ignore this to prevent
+    # spammy bots like https://github.com/robertdavidgraham/masscan
+    # from pushing un-actionable alerts to Sentry like
+    # https://sentry.io/share/issue/9af3cdf8ef74420aa7bbb6697760a82c/
+    ignore_logger("django.security.DisallowedHost")
