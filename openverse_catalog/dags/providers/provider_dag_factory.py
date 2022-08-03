@@ -64,7 +64,11 @@ from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 from common.constants import DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
 from common.loader import loader, reporting, s3, sql
-from providers.factory_utils import generate_tsv_filenames, pull_media_wrapper
+from providers.factory_utils import (
+    date_partition_for_prefix,
+    generate_tsv_filenames,
+    pull_media_wrapper,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -75,6 +79,7 @@ AWS_CONN_ID = os.getenv("AWS_CONN_ID", "no_aws_conn_id")
 OPENVERSE_BUCKET = os.getenv("OPENVERSE_BUCKET")
 OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
 DATE_RANGE_ARG_TEMPLATE = "{{{{ macros.ds_add(ds, -{}) }}}}"
+DATE_PARTITION_ARG_TEMPLATE = "{media_type}/{provider_name}/{{{{ date_partition_for_prefix(dag.schedule_interval, dag_run.logical_date) }}}}"  # noqa
 
 
 def create_provider_api_workflow(
@@ -151,6 +156,7 @@ def create_provider_api_workflow(
         doc_md=doc_md,
         tags=["provider"] + [f"provider: {media_type}" for media_type in media_types],
         render_template_as_native_obj=True,
+        user_defined_macros={"date_partition_for_prefix": date_partition_for_prefix},
     )
 
     with dag:
@@ -211,7 +217,10 @@ def create_provider_api_workflow(
                             generate_filenames.task_id, f"{media_type}_tsv"
                         ),
                         "s3_bucket": OPENVERSE_BUCKET,
-                        "s3_prefix": f"{media_type}/{provider_name}",
+                        "s3_prefix": DATE_PARTITION_ARG_TEMPLATE.format(
+                            media_type=media_type,
+                            provider_name=provider_name,
+                        ),
                         "aws_conn_id": AWS_CONN_ID,
                     },
                     trigger_rule=TriggerRule.NONE_SKIPPED,

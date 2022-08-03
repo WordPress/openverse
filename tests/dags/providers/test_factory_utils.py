@@ -3,6 +3,7 @@ from unittest import mock
 import pytest
 import requests
 from airflow.models import TaskInstance
+from pendulum import datetime
 from providers import factory_utils
 
 from tests.dags.common.test_resources import fake_provider_module
@@ -208,3 +209,30 @@ def test_pull_media_wrapper(
 
     # Check that the function itself was called with the provided args
     internal_func_mock.assert_called_once_with(value)
+
+
+@pytest.mark.parametrize(
+    "schedule_interval, expected",
+    [
+        # Hourly should have year/month/day
+        ("@hourly", "year=2022/month=02/day=03"),
+        ("0 * * * *", "year=2022/month=02/day=03"),
+        # Daily should only have year/month
+        ("@daily", "year=2022/month=02"),
+        ("0 0 * * *", "year=2022/month=02"),
+        # Everything else is year only
+        ("@weekly", "year=2022"),
+        ("@monthly", "year=2022"),
+        ("@quarterly", "year=2022"),
+        ("@yearly", "year=2022"),
+        ("0 */5 * * *", "year=2022"),
+        ("🪄", "year=2022"),
+        (None, "year=2022"),
+    ],
+)
+def test_date_partition_for_prefix(schedule_interval, expected):
+    actual = factory_utils.date_partition_for_prefix(
+        schedule_interval,
+        datetime(2022, 2, 3),
+    )
+    assert actual == expected

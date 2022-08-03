@@ -5,8 +5,10 @@ from types import FunctionType
 from typing import Callable, Sequence
 
 from airflow.models import TaskInstance
+from airflow.utils.dates import cron_presets
 from common.constants import MediaType
 from common.storage.media import MediaStore
+from pendulum import datetime
 
 
 logger = logging.getLogger(__name__)
@@ -138,3 +140,35 @@ def pull_media_wrapper(
     duration = end_time - start_time
     ti.xcom_push(key="duration", value=duration)
     return data
+
+
+def date_partition_for_prefix(
+    schedule_interval: str | None, logical_date: datetime
+) -> str:
+    """
+    Given a schedule interval and the logical date for a DAG run, determine an
+    appropriate partition for the run. This partition will be used as part of the S3
+    key prefix for a given TSV.
+
+    Prefix mapping (schedule interval to partition):
+        - Hourly -> `year=YYYY/month=MM/day=DD`
+        - Daily -> `year=YYYY/month=MM`
+        - None/yearly/monthly/weekly/other -> `year=YYYY`
+    """
+    hourly_airflow = "@hourly"
+    hourly_cron = cron_presets[hourly_airflow]
+    daily_airflow = "@daily"
+    daily_cron = cron_presets[daily_airflow]
+
+    # Always partition by year
+    prefix = f"year={logical_date.year}"
+
+    # Add month in daily/hourly cases
+    if schedule_interval in {hourly_airflow, hourly_cron, daily_airflow, daily_cron}:
+        prefix += f"/month={logical_date.month:02}"
+
+    # Add day to hourly cases
+    if schedule_interval in {hourly_airflow, hourly_cron}:
+        prefix += f"/day={logical_date.day:02}"
+
+    return prefix
