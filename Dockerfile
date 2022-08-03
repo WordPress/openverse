@@ -1,6 +1,7 @@
-FROM node:16-alpine
+FROM node:16-alpine as builder
 
-RUN npm install -g pnpm pm2@5.2.0
+RUN apk add --no-cache --virtual .gyp python3 make g++ \
+    && npm install -g pnpm pm2@5.2.0
 
 USER node
 
@@ -30,6 +31,20 @@ RUN pnpm i18n
 RUN pnpm build:only
 
 COPY ecosystem.config.js /home/node/app/ecosystem.config.js
+
+###################
+#    Nuxt app
+###################
+
+FROM node:alpine as app
+
+WORKDIR /home/node/app
+
+RUN npm install -g pm2@5.2.0
+
+USER node
+
+COPY --from=builder --chown=node:node /home/node/app .
 
 # set app serving to permissive / assigned
 ENV NUXT_HOST=0.0.0.0
