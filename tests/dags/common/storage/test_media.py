@@ -8,6 +8,7 @@ from unittest.mock import patch
 import pytest
 from common import urls
 from common.licenses import LicenseInfo, get_license_info
+from common.loader import provider_details as prov
 from common.storage import image
 
 
@@ -171,6 +172,7 @@ def test_MediaStore_clean_media_metadata_does_not_change_required_media_argument
         "filetype": None,
         "thumbnail_url": None,
         "foreign_identifier": None,
+        "category": None,
     }
     cleaned_data = image_store.clean_media_metadata(**image_data)
 
@@ -188,6 +190,7 @@ def test_MediaStore_clean_media_metadata_adds_provider(
         "foreign_landing_url": TEST_FOREIGN_LANDING_URL,
         "image_url": TEST_IMAGE_URL,
         "filetype": None,
+        "category": None,
     }
     cleaned_data = image_store.clean_media_metadata(**image_data)
 
@@ -205,6 +208,7 @@ def test_MediaStore_clean_media_metadata_removes_license_urls(
         "thumbnail_url": None,
         "foreign_identifier": None,
         "filetype": None,
+        "category": None,
     }
     cleaned_data = image_store.clean_media_metadata(**image_data)
 
@@ -220,6 +224,7 @@ def test_MediaStore_clean_media_metadata_replaces_license_url_with_license_info(
         "license_info": BY_LICENSE_INFO,
         "filetype": None,
         "image_url": TEST_IMAGE_URL,
+        "category": None,
     }
     cleaned_data = image_store.clean_media_metadata(**image_data)
 
@@ -228,6 +233,36 @@ def test_MediaStore_clean_media_metadata_replaces_license_url_with_license_info(
     assert cleaned_data["license_"] == expected_license
     assert cleaned_data["license_version"] == expected_version
     assert "license_url" not in cleaned_data
+
+
+def test_MediaStore_clean_media_metadata_adds_default_provider_category(
+    monkeypatch,
+):
+    image_store = image.ImageStore(provider=prov.CLEVELAND_DEFAULT_PROVIDER)
+    image_data = {
+        "license_info": BY_LICENSE_INFO,
+        "filetype": None,
+        "image_url": TEST_IMAGE_URL,
+        "category": None,
+    }
+    cleaned_data = image_store.clean_media_metadata(**image_data)
+
+    assert cleaned_data["category"] == prov.ImageCategory.DIGITIZED_ARTWORK.value
+
+
+def test_MediaStore_clean_media_metadata_does_not_replace_category_with_default(
+    monkeypatch,
+):
+    image_store = image.ImageStore(provider=prov.CLEVELAND_DEFAULT_PROVIDER)
+    image_data = {
+        "license_info": BY_LICENSE_INFO,
+        "filetype": None,
+        "image_url": TEST_IMAGE_URL,
+        "category": prov.ImageCategory.PHOTOGRAPH.value,
+    }
+    cleaned_data = image_store.clean_media_metadata(**image_data)
+
+    assert cleaned_data["category"] == prov.ImageCategory.PHOTOGRAPH.value
 
 
 def test_MediaStore_clean_media_metadata_adds_license_urls_to_meta_data(
@@ -249,6 +284,7 @@ def test_MediaStore_clean_media_metadata_adds_license_urls_to_meta_data(
         "thumbnail_url": None,
         "foreign_identifier": None,
         "ingestion_type": "provider_api",
+        "category": None,
     }
     cleaned_data = image_store.clean_media_metadata(**image_data)
 

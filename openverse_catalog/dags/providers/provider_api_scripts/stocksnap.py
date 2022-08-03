@@ -112,7 +112,6 @@ class StockSnapDataIngester(ProviderDataIngester):
             "license_info": self.license_info,
             "meta_data": metadata,
             "raw_tags": tags,
-            "category": prov.DEFAULT_IMAGE_CATEGORY[PROVIDER],
         }
 
     @staticmethod

@@ -18,6 +18,7 @@ import lxml.html as html
 from airflow.models import Variable
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
+from common.loader.provider_details import ImageCategory
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
 
@@ -91,7 +92,7 @@ def _derive_timestamp_pair_list(date, day_division=DAY_DIVISION):
     day_seconds = 86400
     default_day_division = 48
     portion = int(day_seconds / day_division)
-    # We double check the day can be evenly divided by the requested division
+    # We double-check the day can be evenly divided by the requested division
     try:
         assert portion == day_seconds / day_division
     except AssertionError:
@@ -394,7 +395,8 @@ def _get_category(image_data):
     Treating everything different from photos as unknown.
     """
     if "content_type" in image_data and image_data["content_type"] == "0":
-        return prov.DEFAULT_IMAGE_CATEGORY[PROVIDER]
+        return ImageCategory.PHOTOGRAPH.value
+    return None
 
 
 if __name__ == "__main__":

@@ -230,7 +230,6 @@ def test_get_record_data_handles_example_dict(filesize_mock):
             "lifestyle",
             "squat",
         ],
-        "category": "photograph",
     }
     assert actual_image_info == expected_image_info
 

@@ -6,6 +6,7 @@ from typing import Optional, Union
 
 from common.extensions import extract_filetype
 from common.licenses import is_valid_license_info
+from common.loader import provider_details as prov
 from common.storage.tsv_columns import CURRENT_VERSION
 
 
@@ -110,6 +111,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         - replace `raw_tags` with enriched `tags`,
         - validate `source`,
         - add `provider`,
+        - add default `category`, if available.
 
         Returns None if license is invalid
         """
@@ -142,6 +144,9 @@ class MediaStore(metaclass=abc.ABCMeta):
 
         media_data.pop("license_info", None)
         media_data["provider"] = self.provider
+        media_data["category"] = media_data[
+            "category"
+        ] or prov.DEFAULT_IMAGE_CATEGORY.get(self.provider)
         return media_data
 
     def commit(self):
