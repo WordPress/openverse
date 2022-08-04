@@ -20,13 +20,17 @@ from airflow.models import TaskInstance
 from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from common import slack
-from common.constants import DAG_DEFAULT_ARGS, MEDIA_TYPES, XCOM_PULL_TEMPLATE
+from common.constants import (
+    DAG_DEFAULT_ARGS,
+    MEDIA_TYPES,
+    OPENLEDGER_API_CONN_ID,
+    XCOM_PULL_TEMPLATE,
+)
 
 
 logger = logging.getLogger(__name__)
 
 DAG_ID = "report_pending_reported_media"
-DB_CONN_ID = os.getenv("OPENLEDGER_API_CONN_ID", "postgres_openledger_api")
 ADMIN_URL = os.getenv("DJANGO_ADMIN_URL", "http://localhost:8000/admin")
 
 REPORTS_TABLES = {
@@ -146,7 +150,10 @@ def create_dag():
             get_reports = PythonOperator(
                 task_id=f"get_pending_{media_type}_reports",
                 python_callable=get_pending_report_counts,
-                op_kwargs={"db_conn_id": DB_CONN_ID, "media_type": media_type},
+                op_kwargs={
+                    "db_conn_id": OPENLEDGER_API_CONN_ID,
+                    "media_type": media_type,
+                },
             )
 
             report_counts_by_media_type[media_type] = XCOM_PULL_TEMPLATE.format(

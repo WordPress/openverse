@@ -8,7 +8,7 @@ success or failure of that task.
 Popularity data for each media type is collated in a materialized view. Before
 initiating a data refresh, the DAG will first refresh the view in order to
 update popularity data for records that have been ingested since the last refresh.
-On the first run of the the month, the DAG will also refresh the underlying tables,
+On the first run of the month, the DAG will also refresh the underlying tables,
 including the percentile values and any new popularity metrics. The DAG can also
 be run with the `force_refresh_metrics` option to run this refresh after the first
 of the month.
@@ -36,13 +36,19 @@ from typing import Sequence
 
 from airflow import DAG
 from airflow.models.dagrun import DagRun
-from airflow.operators.python import BranchPythonOperator
+from airflow.operators.python import BranchPythonOperator, PythonOperator
 from airflow.settings import SASession
 from airflow.utils.session import provide_session
 from airflow.utils.state import State
-from common.constants import DAG_DEFAULT_ARGS
+from common.constants import (
+    DAG_DEFAULT_ARGS,
+    OPENLEDGER_API_CONN_ID,
+    XCOM_PULL_TEMPLATE,
+)
+from common.operators.postgres_result import PostgresResultOperator
 from data_refresh.data_refresh_task_factory import create_data_refresh_task_group
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
+from data_refresh.record_reporting import report_record_difference
 from data_refresh.refresh_popularity_metrics_task_factory import (
     GROUP_ID as REFRESH_POPULARITY_METRICS_GROUP_ID,
 )
@@ -64,6 +70,14 @@ REFRESH_POPULARITY_METRICS_TASK_ID = (
     f"{REFRESH_POPULARITY_METRICS_GROUP_ID}"
     f".{UPDATE_MEDIA_POPULARITY_METRICS_TASK_ID}"
 )
+
+
+def _single_value(cursor):
+    try:
+        row = cursor.fetchone()
+        return row[0]
+    except Exception as e:
+        raise ValueError("Unable to extract expected row data from cursor") from e
 
 
 @provide_session
@@ -151,6 +165,20 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
     )
 
     with dag:
+        # Count estimate SQL for determining the number of rows in the API table. While
+        # this query is not exact, it is close to accurate since the API media table
+        # does not receive many (if any) updates/insertions/deletions once the data
+        # refresh is complete. In testing this was shown to be accurate and fast
+        # (~0.000002% off and 1/14000th of the execution time). However, the reality is
+        # that this count is *not* exact, so we show it as an estimate in reports.
+        count_sql = f"""
+        SELECT c.reltuples::bigint AS estimate
+        FROM   pg_class c
+        JOIN   pg_namespace n ON n.oid = c.relnamespace
+        WHERE  c.relname = '{data_refresh.media_type}'
+        AND    n.nspname = 'public';
+        """
+
         # Check if this is the first DagRun of the month for this DAG.
         month_check = BranchPythonOperator(
             task_id="month_check",
@@ -158,6 +186,14 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
             op_kwargs={
                 "dag_id": data_refresh.dag_id,
             },
+        )
+
+        # Get the current number of records in the target API table
+        before_record_count = PostgresResultOperator(
+            task_id="get_before_record_count",
+            postgres_conn_id=OPENLEDGER_API_CONN_ID,
+            sql=count_sql,
+            handler=_single_value,
         )
 
         # Refresh underlying popularity tables. This is required infrequently in order
@@ -177,9 +213,34 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
             data_refresh, external_dag_ids
         )
 
+        # Get the final number of records in the API table after the refresh
+        after_record_count = PostgresResultOperator(
+            task_id="get_after_record_count",
+            postgres_conn_id=OPENLEDGER_API_CONN_ID,
+            sql=count_sql,
+            handler=_single_value,
+        )
+
+        # Report the count difference to Slack
+        report_counts = PythonOperator(
+            task_id="report_record_counts",
+            python_callable=report_record_difference,
+            op_kwargs={
+                "before": XCOM_PULL_TEMPLATE.format(
+                    before_record_count.task_id, "return_value"
+                ),
+                "after": XCOM_PULL_TEMPLATE.format(
+                    after_record_count.task_id, "return_value"
+                ),
+                "media_type": data_refresh.media_type,
+            },
+        )
+
         # Set up task dependencies
         month_check >> [refresh_popularity_metrics, refresh_matview]
+        before_record_count >> data_refresh_group
         refresh_popularity_metrics >> refresh_matview >> data_refresh_group
+        data_refresh_group >> after_record_count >> report_counts
 
     return dag
 
