@@ -10,38 +10,44 @@ import { useEventListener } from '~/composables/use-event-listener'
  *
  * This global ref is SSR safe because it will only
  * change internal value based on client side interaction.
- *
- * @type {import('@nuxtjs/composition-api').Ref<boolean>}
  */
 const isScrolled = ref(false)
 
-/**
- *
- * @param {object} options
- * @param {Window} [options.window]
- * @param {number} [options.throttleMs] - time to throttle the scroll handler.
- * Set to 0 to remove throttling
- */
+interface UseWindowScrollOptions {
+  /**
+   * Window from which to read and track scroll position
+   */
+  window?: typeof defaultWindow | undefined
+  /**
+   * Time to throttle the scroll handler.
+   * Set to 0 to remove throttling.
+   */
+  throttleMs?: number
+}
+
 export function useWindowScroll({
   window = defaultWindow,
   throttleMs = 200,
-} = {}) {
+}: UseWindowScrollOptions = {}) {
   if (!window) {
-    return {
+    // In SSR, no need to track anything.
+    return Object.freeze({
       x: ref(0),
       y: ref(0),
       isScrolled,
-    }
+    })
   }
 
-  const x = ref(window.pageXOffset)
-  const y = ref(window.pageYOffset)
+  const x = ref(0)
+  const y = ref(0)
 
   const scrollHandler = () => {
-    x.value = window.pageXOffset
-    y.value = window.pageYOffset
+    x.value = window.scrollX
+    y.value = window.scrollY
     isScrolled.value = y.value > 0
   }
+
+  scrollHandler()
 
   const handler = throttleMs
     ? throttle(throttleMs, scrollHandler)
@@ -52,5 +58,5 @@ export function useWindowScroll({
     passive: true,
   })
 
-  return { x, y, isScrolled }
+  return Object.freeze({ x, y, isScrolled })
 }
