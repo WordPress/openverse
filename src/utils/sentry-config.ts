@@ -27,6 +27,9 @@ export const sentryConfig: ModuleConfiguration = {
 
       // Cloudflare
       /sendBeacon/,
+
+      // Local errors
+      /__webpack_hmr\/modern/,
     ],
   },
 }
