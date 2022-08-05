@@ -19,7 +19,7 @@ import {
   supportedMediaTypes,
   isAdditionalSearchType,
 } from '~/constants/media'
-import { services } from '~/stores/media/services'
+import { initServices } from '~/stores/media/services'
 import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
 import { useRelatedMediaStore } from '~/stores/media/related-media'
 import { deepFreeze } from '~/utils/deep-freeze'
@@ -346,8 +346,9 @@ export const useMediaStore = defineStore('media', {
       }
       this._updateFetchState(mediaType, 'start')
       try {
-        const data = await services[mediaType].search(queryParams)
-
+        const accessToken = this.$nuxt.$openverseApiToken
+        const service = initServices[mediaType](accessToken)
+        const data = await service.search(queryParams)
         const mediaCount = data.result_count
         let errorMessage
         if (!mediaCount) {

@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 import { warn } from '~/utils/console'
 import { AUDIO, IMAGE } from '~/constants/media'
@@ -15,6 +15,7 @@ export const getResourceSlug = (resource: string): string => {
   const slug = { [AUDIO]: 'audio', [IMAGE]: 'images' }[resource] ?? resource
   return `${slug}/`
 }
+
 /**
  * @param errorCondition - if true, the `message` warning is logged in the console
  * @param message - message to display if there is an error in request
@@ -34,14 +35,62 @@ Please check the url: ${config.baseURL}${config.url}`
 }
 
 /**
- *
- * @param baseUrl - the optional base url to override the `env.apiUrl`
+ * the list of options that can be passed when instantiating a new API service.
  */
-export const createApiService = (baseUrl = process.env.apiUrl) => {
-  const client = axios.create({
-    baseURL: baseUrl,
+export interface ApiServiceConfig {
+  /** to use a different base URL than configured for the environment */
+  baseUrl?: string
+  /** to make authenticated requests to the API */
+  accessToken?: string
+  /** whether to use the `'v1/'` prefix after the base URL */
+  isVersioned?: boolean
+}
+
+/**
+ * the schema of the API service
+ */
+export interface ApiService {
+  client: AxiosInstance
+  query<T = unknown>(
+    resource: string,
+    params: Record<string, string>
+  ): Promise<AxiosResponse<T>>
+  get<T = unknown>(resource: string, slug: string): Promise<AxiosResponse<T>>
+  post<T = unknown>(
+    resource: string,
+    data: Parameters<AxiosInstance['post']>[1],
+    headers?: AxiosRequestConfig['headers']
+  ): Promise<AxiosResponse<T>>
+  update<T = unknown>(
+    resource: string,
+    slug: string,
+    data: Parameters<AxiosInstance['put']>[1],
+    headers: AxiosRequestConfig['headers']
+  ): Promise<AxiosResponse<T>>
+  put<T = unknown>(
+    resource: string,
+    params: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>>
+  delete<T = unknown>(
+    resource: string,
+    slug: string,
+    headers: AxiosRequestConfig['headers']
+  ): Promise<AxiosResponse<T>>
+}
+
+export const createApiService = ({
+  baseUrl = process.env.apiUrl,
+  accessToken = undefined,
+  isVersioned = true,
+}: ApiServiceConfig = {}): ApiService => {
+  const axiosParams: AxiosRequestConfig = {
+    baseURL: isVersioned ? `${baseUrl}v1/` : baseUrl,
     timeout: DEFAULT_REQUEST_TIMEOUT,
-  })
+  }
+  if (accessToken) {
+    axiosParams.headers = { Authorization: `Bearer ${accessToken}` }
+  }
+  const client = axios.create(axiosParams)
   client.interceptors.request.use(function (config) {
     validateRequest(
       !config.url?.endsWith('/'),
@@ -71,6 +120,8 @@ export const createApiService = (baseUrl = process.env.apiUrl) => {
   )
 
   return {
+    client,
+
     /**
      * @param resource - The endpoint of the resource
      * @param params - Url parameter object
@@ -130,10 +181,10 @@ export const createApiService = (baseUrl = process.env.apiUrl) => {
      * @param params - Url parameter object
      * @returns Response The API response object
      */
-    put(
+    put<T = unknown>(
       resource: string,
       params: AxiosRequestConfig
-    ): Promise<AxiosResponse<unknown>> {
+    ): Promise<AxiosResponse<T>> {
       return client.put(getResourceSlug(resource), params)
     },
 
@@ -143,15 +194,12 @@ export const createApiService = (baseUrl = process.env.apiUrl) => {
      * @param headers - Headers object
      * @returns Response The API response object
      */
-    delete(
+    delete<T = unknown>(
       resource: string,
       slug: string,
       headers: AxiosRequestConfig['headers']
-    ): Promise<AxiosResponse<unknown>> {
+    ): Promise<AxiosResponse<T>> {
       return client.delete(`${getResourceSlug(resource)}${slug}`, { headers })
     },
   }
 }
-
-export const VersionedApiService = createApiService(`${process.env.apiUrl}v1/`)
-export const NonversionedApiService = createApiService(`${process.env.apiUrl}`)

@@ -163,14 +163,19 @@ const config: NuxtConfig = {
     { path: '~/components', extensions: ['vue'], pathPrefix: false },
   ],
   plugins: [
-    { src: '~/plugins/url-change' },
-    { src: '~/plugins/migration-notice' },
-    { src: '~/plugins/ua-parse' },
-    { src: '~/plugins/focus-visible', mode: 'client' },
+    '~/plugins/url-change.ts',
+    '~/plugins/migration-notice.ts',
+    '~/plugins/ua-parse.ts',
+    '~/plugins/focus-visible.client.ts',
+    '~/plugins/api-token.server.ts',
   ],
   css: ['~/styles/tailwind.css', '~/assets/fonts.css', '~/styles/accent.css'],
   head,
-  env,
+  env, // TODO: Replace with `publicRuntimeConfig`
+  privateRuntimeConfig: {
+    apiClientId: process.env.API_CLIENT_ID,
+    apiClientSecret: process.env.API_CLIENT_SECRET,
+  },
   dev: !isProd,
   buildModules: [
     '@nuxt/typescript-build',

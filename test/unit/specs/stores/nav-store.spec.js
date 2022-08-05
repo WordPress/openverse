@@ -1,4 +1,4 @@
-import { setActivePinia, createPinia } from 'pinia'
+import { setActivePinia, createPinia } from '~~/test/unit/test-utils/pinia'
 
 import { useNavigationStore } from '~/stores/navigation'
 

@@ -1,7 +1,7 @@
 import { createLocalVue } from '@vue/test-utils'
 import { fireEvent, render, screen } from '@testing-library/vue'
 
-import { PiniaVuePlugin, createPinia } from 'pinia'
+import { PiniaVuePlugin, createPinia } from '~~/test/unit/test-utils/pinia'
 
 import { useI18n } from '~/composables/use-i18n'
 

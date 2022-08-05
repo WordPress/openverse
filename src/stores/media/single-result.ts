@@ -9,7 +9,7 @@ import {
   initialFetchState,
   updateFetchState,
 } from '~/composables/use-fetch-state'
-import { services } from '~/stores/media/services'
+import { initServices } from '~/stores/media/services'
 import { useMediaStore } from '~/stores/media/index'
 import { useRelatedMediaStore } from '~/stores/media/related-media'
 import { useProviderStore } from '~/stores/provider'
@@ -104,9 +104,9 @@ export const useSingleResultStore = defineStore('single-result', {
     async fetchMediaItem(type: SupportedMediaType, id: string) {
       try {
         this._updateFetchState('start')
-        this.mediaItem = this._addProviderName(
-          await services[type].getMediaDetail(id)
-        )
+        const accessToken = this.$nuxt.$openverseApiToken
+        const service = initServices[type](accessToken)
+        this.mediaItem = this._addProviderName(await service.getMediaDetail(id))
         this.mediaType = type
 
         this._updateFetchState('end')

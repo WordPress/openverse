@@ -1,8 +1,11 @@
 import { AUDIO, IMAGE } from '~/constants/media'
 import MediaService from '~/data/media-service'
 import type { AudioDetail, ImageDetail } from '~/models/media'
+import { createApiService } from '~/data/api-service'
 
-export const services = {
-  [AUDIO]: new MediaService<AudioDetail>(AUDIO),
-  [IMAGE]: new MediaService<ImageDetail>(IMAGE),
-} as const
+export const initServices = {
+  [AUDIO]: (accessToken?: string) =>
+    new MediaService<AudioDetail>(createApiService({ accessToken }), AUDIO),
+  [IMAGE]: (accessToken?: string) =>
+    new MediaService<ImageDetail>(createApiService({ accessToken }), IMAGE),
+}

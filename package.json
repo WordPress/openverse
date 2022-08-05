@@ -71,6 +71,7 @@
     "@tailwindcss/line-clamp": "^0.3.1",
     "@tailwindcss/typography": "^0.5.2",
     "@wordpress/is-shallow-equal": "^4.6.0",
+    "async-mutex": "^0.3.2",
     "axios": "^0.27.0",
     "axios-mock-adapter": "^1.20.0",
     "babel-core": "^7.0.0-bridge.0",

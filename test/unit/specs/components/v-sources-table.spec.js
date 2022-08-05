@@ -1,8 +1,10 @@
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
-import { PiniaVuePlugin } from 'pinia'
+
 import { createTestingPinia } from '@pinia/testing'
 import VueI18n from 'vue-i18n'
+
+import { PiniaVuePlugin } from '~~/test/unit/test-utils/pinia'
 
 import VSourcesTableVue from '~/components/VSourcesTable.vue'
 

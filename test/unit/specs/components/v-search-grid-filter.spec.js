@@ -1,7 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { createLocalVue } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
-import { createPinia, PiniaVuePlugin } from 'pinia'
+
+import { PiniaVuePlugin, createPinia } from '~~/test/unit/test-utils/pinia'
 
 import { useSearchStore } from '~/stores/search'
 

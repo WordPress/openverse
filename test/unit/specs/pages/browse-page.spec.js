@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/vue'
 import { createLocalVue } from '@vue/test-utils'
 import { ref } from '@nuxtjs/composition-api'
-import { createPinia, PiniaVuePlugin } from 'pinia'
+
+import { createPinia, PiniaVuePlugin } from '~~/test/unit/test-utils/pinia'
 
 import SearchIndex from '~/pages/search.vue'
 import { IMAGE } from '~/constants/media'

@@ -1,7 +1,8 @@
 import VueI18n from 'vue-i18n'
 import { createLocalVue } from '@vue/test-utils'
 import { render, screen } from '@testing-library/vue'
-import { createPinia, PiniaVuePlugin } from 'pinia'
+
+import { PiniaVuePlugin, createPinia } from '~~/test/unit/test-utils/pinia'
 
 import messages from '~/locales/en.json'
 

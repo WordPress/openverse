@@ -1,6 +1,11 @@
 import { render } from '@testing-library/vue'
 import Vuei18n from 'vue-i18n'
-import { setActivePinia, createPinia, PiniaVuePlugin } from 'pinia'
+
+import {
+  setActivePinia,
+  createPinia,
+  PiniaVuePlugin,
+} from '~~/test/unit/test-utils/pinia'
 
 import { getAudioObj } from '~~/test/unit/fixtures/audio'
 

@@ -1,6 +1,6 @@
 import { decodeMediaData } from '~/utils/decode-media-data'
 import type { ApiQueryParams } from '~/utils/search-query-transform'
-import { VersionedApiService } from '~/data/api-service'
+import type { ApiService } from '~/data/api-service'
 import type { DetailFromMediaType, Media } from '~/models/media'
 import type { SupportedMediaType } from '~/constants/media'
 
@@ -17,9 +17,11 @@ export interface MediaResult<
 }
 
 class MediaService<T extends Media> {
+  private readonly apiService: ApiService
   private readonly mediaType: T['frontendMediaType']
 
-  constructor(mediaType: T['frontendMediaType']) {
+  constructor(apiService: ApiService, mediaType: T['frontendMediaType']) {
+    this.apiService = apiService
     this.mediaType = mediaType
   }
 
@@ -47,7 +49,7 @@ class MediaService<T extends Media> {
   async search(
     params: ApiQueryParams
   ): Promise<MediaResult<Record<string, Media>>> {
-    const res = await VersionedApiService.query<MediaResult<T[]>>(
+    const res = await this.apiService.query<MediaResult<T[]>>(
       this.mediaType,
       params as unknown as Record<string, string>
     )
@@ -65,7 +67,7 @@ class MediaService<T extends Media> {
         `MediaService.getMediaDetail() id parameter required to retrieve ${this.mediaType} details.`
       )
     }
-    const res = await VersionedApiService.get<T>(this.mediaType, id)
+    const res = await this.apiService.get<T>(this.mediaType, id)
     return decodeMediaData(res.data, this.mediaType)
   }
 
@@ -81,7 +83,7 @@ class MediaService<T extends Media> {
         `MediaService.getRelatedMedia() id parameter required to retrieve related media.`
       )
     }
-    const res = (await VersionedApiService.get(
+    const res = (await this.apiService.get(
       this.mediaType,
       `${id}/related`
     )) as AxiosResponse<MediaResult<DetailFromMediaType<T>[]>>

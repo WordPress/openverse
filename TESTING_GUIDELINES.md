@@ -12,9 +12,45 @@ Staging is redeployed everytime we merge to the `main` branch, so if you're look
 
 Once you have the application running, you can visit it in your browser at http://localhost:8443.
 
-You can also access it from other devices in your same network (like a mobile phone) for additional testing. See the [finding your local IP address](./README.md#finding-your-local-ip-address) section of the README for how to identify the local IP adress Nuxt is served on. Once you have identified your local IP address, you can access the website running on your computer by visiting `https://<local IP>:8443` replacing `<local IP>` (including the brackets) with the value you found using the instructions above in your mobile devices browser.
+You can also access it from other devices in your same network (like a mobile phone) for additional testing. See the [finding your local IP address](./README.md#finding-your-local-ip-address) section of the README for how to identify the local IP adress Nuxt is served on. Once you have identified your local IP address, you can access the website running on your computer by visiting `https://<local IP>:8443` replacing `<local IP>` (including the brackets) with the value you found using the instructions above in your mobile device's browser.
 
 Testing from multiple different devices as often as possible is a great way to contribute to Openverse's frontend development.
+
+### API Authentication
+
+By default, the application will run using the production API without authentication. This means your local frontend server may be subject to the unauthenticated rate limiting, depending on your testing behavior. There are two ways to solve this:
+
+1. You can change your local Nuxt server to point to a local API server that does not have throttling enabled
+2. You can introduce the environment variables necessary for authenticating with an API
+
+For the first, [run the Openverse API locally](https://github.com/WordPress/openverse-api). Then create a `.env` file by copying the `.env.template` file and update it with the following:
+
+```shell
+API_URL="http://localhost:8000/"
+```
+
+Be sure to remove the leading `#` to uncomment the variable from the copied template.
+
+The run the dev server as usual:
+
+```shell
+pnpm dev
+```
+
+For the second, you'll need to follow [the instructions to set up an OAuth application](https://api.openverse.engineering/v1/#section/Register-and-Authenticate) and then fill in the `API_CLIENT_ID` and `API_CLIENT_SECRET` in the `.env` file copied from `.env.template`. Be sure to remove the leading `#` to uncomment these variables from the copied template.
+
+```shell
+API_CLIENT_ID=""
+API_CLIENT_SECRET=""
+```
+
+Then run the API as usual using `pnpm dev`. Nuxt automatically loads `.env` files into the environment. With these variables in the environment, all requests made by your server will be made using an access token retrieved by the `~/plugins/api-token.server.ts` plugin.
+
+Once the `.env` file is set up, you may run the development build the typical way:
+
+```shell
+pnpm build && pnpm start
+```
 
 ## Browsers
 

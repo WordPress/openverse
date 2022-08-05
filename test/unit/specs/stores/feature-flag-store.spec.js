@@ -1,4 +1,4 @@
-import { setActivePinia, createPinia } from 'pinia'
+import { setActivePinia, createPinia } from '~~/test/unit/test-utils/pinia'
 
 import { useFeatureFlagStore, getFlagStatus } from '~/stores/feature-flag'
 import { OFF, ON } from '~/constants/feature-flag'

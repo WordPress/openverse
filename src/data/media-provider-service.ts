@@ -1,22 +1,35 @@
-import { AUDIO, IMAGE, SupportedMediaType } from '~/constants/media'
-import { VersionedApiService } from '~/data/api-service'
+import { AUDIO, IMAGE } from '~/constants/media'
+import type { AudioDetail, ImageDetail, Media } from '~/models/media'
+import { ApiService, createApiService } from '~/data/api-service'
 import type { MediaProvider } from '~/models/media-provider'
 
-/**
- * Service that calls API to get Media Provider stats
- * @param mediaType - the media type of the provider.
- */
-export const MediaProviderService = (mediaType: SupportedMediaType) => ({
+export class MediaProviderService<T extends Media> {
+  private readonly apiService: ApiService
+  private readonly mediaType: T['frontendMediaType']
+
+  constructor(apiService: ApiService, mediaType: T['frontendMediaType']) {
+    this.apiService = apiService
+    this.mediaType = mediaType
+  }
+
   /**
    * Implements an endpoint to get audio provider statistics.
    * SSR-called
    */
-  getProviderStats: async (): Promise<{ data: MediaProvider[] }> => {
-    return await VersionedApiService.get(mediaType, 'stats')
-  },
-})
+  async getProviderStats(): Promise<{ data: MediaProvider[] }> {
+    return await this.apiService.get(this.mediaType, 'stats')
+  }
+}
 
-export const providerServices = {
-  [AUDIO]: MediaProviderService(AUDIO),
-  [IMAGE]: MediaProviderService(IMAGE),
-} as const
+export const initProviderServices = {
+  [AUDIO]: (accessToken?: string) =>
+    new MediaProviderService<AudioDetail>(
+      createApiService({ accessToken }),
+      AUDIO
+    ),
+  [IMAGE]: (accessToken?: string) =>
+    new MediaProviderService<ImageDetail>(
+      createApiService({ accessToken }),
+      IMAGE
+    ),
+}

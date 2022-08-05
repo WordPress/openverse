@@ -1,10 +1,9 @@
-import { createPinia, setActivePinia } from 'pinia'
+import { createPinia, setActivePinia } from '~~/test/unit/test-utils/pinia'
 
 import { initialFetchState } from '~/composables/use-fetch-state'
 import { AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
 import { useMediaStore } from '~/stores/media'
 import { useSingleResultStore } from '~/stores/media/single-result'
-import { services } from '~/stores/media/services'
 
 const detailData = {
   [AUDIO]: { title: 'audioDetails', id: 'audio1', frontendMediaType: AUDIO },
@@ -14,21 +13,32 @@ jest.mock('axios', () => ({
   ...jest.requireActual('axios'),
   isAxiosError: jest.fn((obj) => 'response' in obj),
 }))
+
+const mockImplementation = (mediaType) => () =>
+  Promise.resolve(detailData[mediaType])
+const mockGetMediaDetailAudio = jest
+  .fn()
+  .mockImplementation(mockImplementation(AUDIO))
+const mockGetMediaDetailImage = jest
+  .fn()
+  .mockImplementation(mockImplementation(IMAGE))
+const mocks = {
+  audio: mockGetMediaDetailAudio,
+  image: mockGetMediaDetailImage,
+}
 jest.mock('~/stores/media/services', () => ({
-  services: {
-    audio: /** @type {import('~/data/services').MediaService} */ ({
-      getMediaDetail: jest.fn(),
-    }),
-    image: /** @type {import('~/data/services').MediaService} */ ({
-      getMediaDetail: jest.fn(),
-    }),
+  initServices: {
+    audio: () =>
+      /** @type {import('~/data/services').MediaService} */ ({
+        getMediaDetail: mockGetMediaDetailAudio,
+      }),
+    image: () =>
+      /** @type {import('~/data/services').MediaService} */ ({
+        getMediaDetail: mockGetMediaDetailImage,
+      }),
   },
 }))
-for (const mediaType of [AUDIO, IMAGE]) {
-  services[mediaType].getMediaDetail.mockImplementation(() =>
-    Promise.resolve(detailData[mediaType])
-  )
-}
+
 describe('Media Item Store', () => {
   describe('state', () => {
     it('sets default state', () => {
@@ -44,6 +54,10 @@ describe('Media Item Store', () => {
     beforeEach(() => {
       setActivePinia(createPinia())
       useMediaStore()
+    })
+    afterEach(() => {
+      mockGetMediaDetailAudio.mockClear()
+      mockGetMediaDetailImage.mockClear()
     })
 
     it.each(supportedMediaTypes)(
@@ -73,7 +87,7 @@ describe('Media Item Store', () => {
       async (type) => {
         const expectedErrorMessage = 'error'
 
-        services[type].getMediaDetail.mockImplementationOnce(() =>
+        mocks[type].mockImplementationOnce(() =>
           Promise.reject(new Error(expectedErrorMessage))
         )
 
@@ -88,7 +102,7 @@ describe('Media Item Store', () => {
     it.each(supportedMediaTypes)(
       'fetchMediaItem on 404 sets fetchingError and throws a new error',
       async (type) => {
-        services[type].getMediaDetail.mockImplementationOnce(() =>
+        mocks[type].mockImplementationOnce(() =>
           Promise.reject({ response: { status: 404 } })
         )
         const singleResultStore = useSingleResultStore()

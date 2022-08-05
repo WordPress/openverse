@@ -90,12 +90,6 @@ export default defineComponent({
       )
     )
 
-    const handleTab = (event: KeyboardEvent, element: string) => {
-      if (showScrollButton.value && element !== 'scroll-button') {
-        return
-      }
-      focusIn(document.getElementById('__layout'), Focus.First)
-    }
     return {
       searchGridRef,
       isMinScreenMd,
@@ -110,9 +104,6 @@ export default defineComponent({
       fetchState,
       resultItems,
       needsFetching,
-      fetchMedia: mediaStore.fetchMedia,
-      setSearchStateFromUrl: searchStore.setSearchStateFromUrl,
-      handleTab,
     }
   },
   /**
@@ -145,9 +136,22 @@ export default defineComponent({
         !isShallowEqualObjects(newRoute.query, oldRoute.query)
       ) {
         const { query, path } = newRoute
-        this.setSearchStateFromUrl({ urlQuery: query, path })
+        const searchStore = useSearchStore(this.$nuxt.$pinia)
+        searchStore.setSearchStateFromUrl({ urlQuery: query, path })
         await this.fetchMedia()
       }
+    },
+  },
+  methods: {
+    handleTab(event: KeyboardEvent, element: string) {
+      if (this.showScrollButton.value && element !== 'scroll-button') {
+        return
+      }
+      focusIn(document.getElementById('__layout'), Focus.First)
+    },
+    fetchMedia(...args: unknown[]) {
+      const mediaStore = useMediaStore(this.$pinia)
+      return mediaStore.fetchMedia(...args)
     },
   },
 })

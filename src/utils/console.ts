@@ -1,7 +1,7 @@
-import { isProd } from '~/utils/node-env'
+import { isProd, isClient } from '~/utils/node-env'
 
 export const getLogger = (level: 'log' | 'warn' | 'error') =>
-  isProd
+  isProd && isClient
     ? () => {
         // do nothing
       }
@@ -9,3 +9,4 @@ export const getLogger = (level: 'log' | 'warn' | 'error') =>
 
 export const warn = getLogger('warn')
 export const log = getLogger('log')
+export const error = getLogger('error')

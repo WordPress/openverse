@@ -1,6 +1,6 @@
 import type { MediaType } from '~/constants/media'
 import type { ReportReason } from '~/constants/content-report'
-import { getResourceSlug, VersionedApiService } from '~/data/api-service'
+import { createApiService, getResourceSlug } from '~/data/api-service'
 
 interface ReportParams {
   mediaType: MediaType
@@ -8,10 +8,12 @@ interface ReportParams {
   reason: ReportReason
   description?: string
 }
+
+const apiService = createApiService()
 const ReportService = {
   sendReport(params: ReportParams) {
     const mediaType = params.mediaType
-    return VersionedApiService.post(
+    return apiService.post(
       `/${getResourceSlug(mediaType)}${params.identifier}/report`,
       params
     )
