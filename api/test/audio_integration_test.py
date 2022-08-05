@@ -125,5 +125,5 @@ def test_audio_uuid_validation():
     uuid_validation("audio", "abcd")
 
 
-def test_image_related(audio_fixture):
+def test_audio_related(audio_fixture):
     related(audio_fixture)

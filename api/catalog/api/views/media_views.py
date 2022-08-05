@@ -12,9 +12,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from catalog.api.controllers.elasticsearch.related import related_media
-from catalog.api.controllers.elasticsearch.search import perform_search
-from catalog.api.controllers.elasticsearch.stats import get_stats
+from catalog.api.controllers import search_controller
 from catalog.api.models import ContentProvider
 from catalog.api.serializers.provider_serializers import ProviderSerializer
 from catalog.api.utils.exceptions import get_api_exception
@@ -57,23 +55,30 @@ class MediaViewSet(ReadOnlyModelViewSet):
     # Standard actions
 
     def list(self, request, *_, **__):
+        self.paginator.page_size = request.query_params.get("page_size")
+        page_size = self.paginator.page_size
+        self.paginator.page = request.query_params.get("page")
+        page = self.paginator.page
+
         params = self.query_serializer_class(
             data=request.query_params, context={"request": request}
         )
         params.is_valid(raise_exception=True)
 
-        self.paginator.page_size = params.validated_data["page_size"]
-        self.paginator.page = params.validated_data["page"]
-
         hashed_ip = hash(self._get_user_ip(request))
         qa = params.validated_data["qa"]
+        filter_dead = params.validated_data["filter_dead"]
 
         search_index = self.qa_index if qa else self.default_index
         try:
-            results, num_pages, num_results = perform_search(
+            results, num_pages, num_results = search_controller.search(
                 params,
                 search_index,
+                page_size,
                 hashed_ip,
+                request,
+                filter_dead,
+                page,
             )
             self.paginator.page_count = num_pages
             self.paginator.result_count = num_results
@@ -87,7 +92,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
     @action(detail=False, serializer_class=ProviderSerializer, pagination_class=None)
     def stats(self, *_, **__):
-        source_counts = get_stats(self.default_index)
+        source_counts = search_controller.get_sources(self.default_index)
         context = self.get_serializer_context() | {
             "source_counts": source_counts,
         }
@@ -101,9 +106,10 @@ class MediaViewSet(ReadOnlyModelViewSet):
     @action(detail=True)
     def related(self, request, identifier=None, *_, **__):
         try:
-            results, num_results = related_media(
+            results, num_results = search_controller.related_media(
                 uuid=identifier,
                 index=self.default_index,
+                request=request,
                 filter_dead=True,
             )
             self.paginator.result_count = num_results
