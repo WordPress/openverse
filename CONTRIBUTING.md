@@ -38,7 +38,7 @@ Any issues labeled as "good first issue" or "help wanted" in our repositories ar
 
 ### ⛺ Keeping in Touch
 
-For folks who'd like to be involved in our regular development conversations, please feel free to join us in the WordPress make chat ([https://make.wordpress.org/chat/](https://make.wordpress.org/chat/)). You'll find us in the #openverse channel, of course! We have weekly community meetings on Tuesdays at 15:00 UTC ([https://everytimezone.com/s/d1d42c7b](https://everytimezone.com/s/d1d42c7b)). All are welcome! During the meetings we discuss ongoing work and assign new issues. Attendance is not mandatory to contribute, however.
+For folks who'd like to be involved in our regular development conversations, please feel free to join us in the WordPress make chat ([https://make.wordpress.org/chat/](https://make.wordpress.org/chat/)). You'll find us in the #openverse channel, of course! We have weekly community meetings to discuss ongoing work and assign new issues and, every four weeks, a prioritization meeting to review our current projects and roadmap. The sessions are on Tuesdays at 15:00 UTC ([https://everytimezone.com/s/d1d42c7b](https://everytimezone.com/s/d1d42c7b)) and all are welcome! Attendance is not mandatory to contribute, however.
 
 You can also keep in touch with [progress](https://github.com/orgs/WordPress/projects/3) and the latest updates to the project with our [WordPress contributor group](https://make.wordpress.org/openverse/).
 
