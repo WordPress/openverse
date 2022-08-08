@@ -1,5 +1,5 @@
 <template>
-  <div class="license-explanation w-full max-w-xs p-6">
+  <div class="license-explanation w-70 max-w-xs p-6">
     <h5 class="text-base font-semibold">
       <template v-if="isLicense(license)">{{
         $t('filters.license-explanation.license-definition')
