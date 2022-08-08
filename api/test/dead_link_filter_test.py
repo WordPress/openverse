@@ -4,6 +4,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 import requests
 
+from catalog.api.utils.pagination import MAX_TOTAL_PAGE_COUNT
+
 
 def _patch_redis():
     def redis_mget(keys, *_, **__):
@@ -115,7 +117,7 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
     Test the results returned in consecutive pages are never repeated when
     filtering out dead links.
     """
-    total_pages = 30
+    total_pages = MAX_TOTAL_PAGE_COUNT
     page_size = 5
 
     page_results = []
@@ -134,3 +136,11 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
     ids = list(map(lambda x: x["id"], page_results))
     # No results should be repeated so we should have no duplicate ids
     assert no_duplicates(ids)
+
+
+@pytest.mark.django_db
+def test_max_page_count():
+    response = requests.get(
+        f"{API_URL}/v1/images", params={"page": MAX_TOTAL_PAGE_COUNT + 1}, verify=False
+    )
+    assert response.status_code == 400

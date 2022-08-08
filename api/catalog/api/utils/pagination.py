@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from catalog.api.utils.exceptions import get_api_exception
 
 
+MAX_TOTAL_PAGE_COUNT = 20
+
+
 class StandardPagination(PageNumberPagination):
     page_size_query_param = "page_size"
     page_query_param = "page"
@@ -42,6 +45,8 @@ class StandardPagination(PageNumberPagination):
         value = int(value)  # convert str params to int
         if value <= 0:
             raise get_api_exception("Page must be greater than 0.", 400)
+        elif value > 20:
+            raise get_api_exception("Searches are limited to 20 pages.", 400)
         self._page = value
 
     def get_paginated_response(self, data):
