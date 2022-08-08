@@ -337,13 +337,11 @@ if config("IS_PROXIED", default=True, cast=bool):
 # https://docs.djangoproject.com/en/4.0/releases/4.0/#csrf-trusted-origins-changes-4-0
 CSRF_TRUSTED_ORIGINS = ["https://*.openverse.engineering"]
 
-SENTRY_DSN = config(
-    "SENTRY_DSN",
-    default="https://08f4706d16004f57bcd37eb907bfc2e7@o787041.ingest.sentry.io/6107216",
-)
+SENTRY_DSN = config("SENTRY_DSN", default="")
+
 SENTRY_SAMPLE_RATE = config("SENTRY_SAMPLE_RATE", default=1.0, cast=float)
 
-if not DEBUG:
+if not DEBUG and SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         integrations=[DjangoIntegration()],
