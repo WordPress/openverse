@@ -142,6 +142,7 @@ _ing-api data port="8001":
       -X POST \
       -H 'Content-Type: application/json' \
       -d '{{ data }}' \
+      -w "\n" \
       'http://localhost:{{ port }}/task'
 
 # Check the health of the ingestion-server

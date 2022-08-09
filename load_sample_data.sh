@@ -113,7 +113,7 @@ set +e
 while true; do
 	just ingest-upstream "image" "init"
 	just wait-for-index "image-init"
-	if [$? -eq 0 ]; then
+	if [ $? -eq 0 ]; then
 		break
 	fi
 	((c++)) && ((c==3)) && break
