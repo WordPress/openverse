@@ -11,7 +11,7 @@
     <Component
       :is="layoutComponent"
       :audio="audio"
-      :size="_size"
+      :size="layoutSize"
       :status="status"
       :current-time="currentTime"
     >
@@ -384,8 +384,8 @@ export default defineComponent({
     /**
      * Sets default size if not provided.
      */
-    const _size = computed(() => {
-      if (isBoxed && !props.size) {
+    const layoutSize = computed(() => {
+      if (isBoxed.value && !props.size) {
         return undefined
       }
       return props.size ?? 'm'
@@ -443,7 +443,7 @@ export default defineComponent({
       duration,
 
       layoutComponent,
-      _size,
+      layoutSize,
 
       isBoxed,
       layoutBasedProps,
