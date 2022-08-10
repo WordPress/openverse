@@ -1,23 +1,50 @@
 from test.constants import API_URL
 from unittest.mock import MagicMock, patch
+from uuid import uuid4
 
 import pytest
 import requests
+from fakeredis import FakeRedis
 
+from catalog.api.controllers.search_controller import DEAD_LINK_RATIO
 from catalog.api.utils.pagination import MAX_TOTAL_PAGE_COUNT
 
 
-def _patch_redis():
-    def redis_mget(keys, *_, **__):
-        """
-        Patch for ``redis.mget`` used by ``validate_images`` to use validity
-        information from the cache
-        """
-        return [None] * len(keys)
+@pytest.fixture(autouse=True)
+def redis(monkeypatch) -> FakeRedis:
+    fake_redis = FakeRedis()
 
-    mock_conn = MagicMock()
-    mock_conn.mget = MagicMock(side_effect=redis_mget)
-    return patch("django_redis.get_redis_connection", return_value=mock_conn)
+    def get_redis_connection(*args, **kwargs):
+        return fake_redis
+
+    monkeypatch.setattr(
+        "catalog.api.utils.dead_link_mask.get_redis_connection", get_redis_connection
+    )
+    monkeypatch.setattr("django_redis.get_redis_connection", get_redis_connection)
+
+    yield fake_redis
+    fake_redis.client().close()
+
+
+@pytest.fixture
+def unique_query_hash(redis, monkeypatch):
+    def get_unique_hash(*args, **kwargs):
+        return str(uuid4())
+
+    monkeypatch.setattr(
+        "catalog.api.controllers.search_controller.get_query_hash", get_unique_hash
+    )
+
+
+@pytest.fixture
+def empty_validation_cache(monkeypatch):
+    def get_empty_cached_statuses(_, image_urls):
+        return [None] * len(image_urls)
+
+    monkeypatch.setattr(
+        "catalog.api.utils.validate_images._get_cached_statuses",
+        get_empty_cached_statuses,
+    )
 
 
 def _patch_grequests():
@@ -36,10 +63,29 @@ def _patch_grequests():
     return patch("grequests.map", side_effect=grequests_map)
 
 
+def patch_link_validation_dead_for_count(count):
+    total_res_count = 0
+
+    def grequests_map(reqs, *_, **__):
+        nonlocal total_res_count
+        """
+        Patch for ``grequests.map`` used by ``validate_images`` to filter
+        and remove dead links
+        """
+        responses = []
+        for idx in range(len(list(reqs))):
+            total_res_count += 1
+            mocked_res = MagicMock()
+            mocked_res.status_code = 404 if total_res_count <= count else 200
+            responses.append(mocked_res)
+        return responses
+
+    return patch("grequests.map", side_effect=grequests_map)
+
+
 @pytest.mark.django_db
-@_patch_redis()
 @_patch_grequests()
-def test_dead_link_filtering(mocked_map, _, client):
+def test_dead_link_filtering(mocked_map, client):
     path = "/v1/images/"
     query_params = {"q": "*", "page_size": 20}
 
@@ -67,7 +113,46 @@ def test_dead_link_filtering(mocked_map, _, client):
 
     res_1_ids = set(result["id"] for result in data_with_dead_links["results"])
     res_2_ids = set(result["id"] for result in data_without_dead_links["results"])
+    # In this case, both have 20 results as the dead link filter has "back filled" the
+    # pages of dead links. See the subsequent test for the case when this does not
+    # occur (i.e., when the entire first page of links is dead).
+    assert len(res_1_ids) == 20
+    assert len(res_2_ids) == 20
     assert bool(res_1_ids - res_2_ids)
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    ("filter_dead", "page_size", "expected_result_count"),
+    (
+        (True, 20, 0),
+        (False, 20, 20),
+    ),
+)
+def test_dead_link_filtering_all_dead_links(
+    client,
+    filter_dead,
+    page_size,
+    expected_result_count,
+    unique_query_hash,
+    empty_validation_cache,
+):
+    path = "/v1/images/"
+    query_params = {"q": "*", "page_size": page_size}
+
+    with patch_link_validation_dead_for_count(page_size / DEAD_LINK_RATIO):
+        response = client.get(
+            path,
+            query_params | {"filter_dead": filter_dead},
+        )
+
+    assert response.status_code == 200
+
+    res_json = response.json()
+
+    assert len(res_json["results"]) == expected_result_count
+    if expected_result_count == 0:
+        assert res_json["result_count"] == 0
 
 
 @pytest.fixture

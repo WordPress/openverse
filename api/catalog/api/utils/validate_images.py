@@ -10,6 +10,14 @@ from catalog.api.utils.dead_link_mask import get_query_mask, save_query_mask
 parent_logger = logging.getLogger(__name__)
 
 
+CACHE_PREFIX = "valid:"
+
+
+def _get_cached_statuses(redis, image_urls):
+    cached_statuses = redis.mget([CACHE_PREFIX + url for url in image_urls])
+    return [int(b.decode("utf-8")) if b is not None else None for b in cached_statuses]
+
+
 def validate_images(query_hash, start_slice, results, image_urls):
     """
     Make sure images exist before we display them. Treat redirects as broken
@@ -28,11 +36,7 @@ def validate_images(query_hash, start_slice, results, image_urls):
     start_time = time.time()
     # Pull matching images from the cache.
     redis = django_redis.get_redis_connection("default")
-    cache_prefix = "valid:"
-    cached_statuses = redis.mget([cache_prefix + url for url in image_urls])
-    cached_statuses = [
-        int(b.decode("utf-8")) if b is not None else None for b in cached_statuses
-    ]
+    cached_statuses = _get_cached_statuses(redis, image_urls)
     logger.debug(f"len(cached_statuses)={len(cached_statuses)}")
     # Anything that isn't in the cache needs to be validated via HEAD request.
     to_verify = {}
@@ -48,7 +52,7 @@ def validate_images(query_hash, start_slice, results, image_urls):
     # Cache newly verified image statuses.
     to_cache = {}
     for idx, url in enumerate(to_verify.keys()):
-        cache_key = cache_prefix + url
+        cache_key = CACHE_PREFIX + url
         if verified[idx]:
             status = verified[idx].status_code
         # Response didn't arrive in time. Try again later.

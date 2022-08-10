@@ -44,6 +44,9 @@ def _paginate_with_dead_link_mask(
     Given a query, a page and page_size, return the start and end
     of the slice of results.
 
+    In almost all cases the ``DEAD_LINK_RATIO`` will effectively double
+    the page size (given the current configuration of 0.5).
+
     :param s: The elasticsearch Search object
     :param page_size: How big the page should be.
     :param page: The page number.
@@ -103,7 +106,7 @@ def _quote_escape(query_string):
 
 def _post_process_results(
     s, start, end, page_size, search_results, request, filter_dead
-) -> List[Hit]:
+) -> Optional[List[Hit]]:
     """
     After fetching the search results from the back end, iterate through the
     results, perform image validation, and route certain thumbnails through our
@@ -130,6 +133,10 @@ def _post_process_results(
     if filter_dead:
         query_hash = get_query_hash(s)
         validate_images(query_hash, start, results, to_validate)
+
+        if len(results) == 0:
+            # first page is all dead links
+            return None
 
         if len(results) < page_size:
             end += int(end / 2)
@@ -331,7 +338,7 @@ def search(
     result_count, page_count = _get_result_and_page_count(
         search_response, results, page_size
     )
-    return results, page_count, result_count
+    return results or [], page_count, result_count
 
 
 def related_media(uuid, index, request, filter_dead):
@@ -367,7 +374,7 @@ def related_media(uuid, index, request, filter_dead):
 
     result_count, _ = _get_result_and_page_count(response, results, page_size)
 
-    return results, result_count
+    return results or [], result_count
 
 
 def get_sources(index):
@@ -414,7 +421,7 @@ def get_sources(index):
 
 
 def _get_result_and_page_count(
-    response_obj: Response, results: List[Hit], page_size: int
+    response_obj: Response, results: Optional[List[Hit]], page_size: int
 ) -> Tuple[int, int]:
     """
     Elasticsearch does not allow deep pagination of ranked queries.
@@ -424,6 +431,9 @@ def _get_result_and_page_count(
     :param results: The list of filtered result Hits.
     :return: Result and page count.
     """
+    if results is None:
+        return 0, 1
+
     result_count = response_obj.hits.total.value
     natural_page_count = int(result_count / page_size)
     if natural_page_count % page_size != 0:
