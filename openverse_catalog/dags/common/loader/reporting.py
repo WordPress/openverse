@@ -110,5 +110,4 @@ def report_completion(
 *Number of records upserted per media type*:
 {media_type_reports}"""
     send_message(message, username="Airflow DAG Load Data Complete")
-    logger.info(message)
     return message

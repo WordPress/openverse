@@ -338,8 +338,22 @@ def test_send_alert():
             "DifferentUser",
             ":airflow:",
             True,
+            True,
+            True,
             http_conn_id=SLACK_ALERTS_CONN_ID,
         )
+
+
+def test_send_alert_skips_when_silenced():
+    mock_silenced_dags = {
+        "silenced_dag_id": "https://github.com/WordPress/openverse/issues/1"
+    }
+    with mock.patch("common.slack.send_message") as send_message_mock, mock.patch(
+        "common.slack.Variable"
+    ) as MockVariable:
+        MockVariable.get.side_effect = [mock_silenced_dags]
+        send_alert("Sample text", dag_id="silenced_dag_id")
+        send_message_mock.assert_not_called()
 
 
 @pytest.mark.parametrize(
@@ -369,10 +383,12 @@ def test_on_failure_callback(
         "task_instance": mock.Mock(),
         "execution_date": datetime.now(),
         "exception": exception,
+        "dag": mock.Mock(),
     }
     env_vars = {
         "environment": environment,
         "slack_message_override": slack_message_override,
+        "silenced_slack_alerts": [],
     }
 
     # Mock env variables

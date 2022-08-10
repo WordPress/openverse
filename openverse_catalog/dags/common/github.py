@@ -16,6 +16,9 @@ class GitHubAPI:
         response.raise_for_status()
         return response.json()
 
+    def get_issue(self, repo: str, issue_number: int, owner: str = "WordPress"):
+        return self._make_request("GET", f"repos/{owner}/{repo}/issues/{issue_number}")
+
     def get_open_prs(self, repo: str, owner: str = "WordPress"):
         return self._make_request(
             "GET",

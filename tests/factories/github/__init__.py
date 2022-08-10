@@ -91,3 +91,11 @@ def make_pr_comment(is_reminder: bool) -> dict:
     )
 
     return comment
+
+
+def make_issue(state: str) -> dict:
+    issue = _read_fixture("issue")
+
+    issue["state"] = state
+
+    return issue
