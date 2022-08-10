@@ -274,7 +274,7 @@ The docker image for the catalog (Airflow) is published to ghcr.io/WordPress/ope
 ## Contributing
 
 Pull requests are welcome! Feel free to [join us on Slack][wp_slack] and discuss the
-project with the engineers and community memebers on #openverse.
+project with the engineers and community members on #openverse.
 
 ## Acknowledgments
 
