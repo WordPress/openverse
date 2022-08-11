@@ -15,6 +15,8 @@ import {
   searchFromHeader,
 } from '~~/test/playwright/utils/navigation'
 
+test.describe.configure({ mode: 'parallel' })
+
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })

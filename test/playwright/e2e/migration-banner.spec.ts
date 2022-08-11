@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test'
 
+test.describe.configure({ mode: 'parallel' })
+
 test.describe('migration banner', () => {
   test('shows migration banner on homepage', async ({ page }) => {
     await page.goto('/?referrer=creativecommons.org')

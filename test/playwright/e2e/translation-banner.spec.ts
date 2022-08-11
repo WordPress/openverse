@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test'
 
 const russianSearchPath = '/ru/search?q=dog'
 
+test.describe.configure({ mode: 'parallel' })
+
 test.describe('translation banner', () => {
   test('Can see the translation banner and go to the correct link', async ({
     page,

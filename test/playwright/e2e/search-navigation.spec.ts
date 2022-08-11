@@ -6,6 +6,8 @@ import {
 } from '~~/test/playwright/utils/navigation'
 import { mockProviderApis } from '~~/test/playwright/utils/route'
 
+test.describe.configure({ mode: 'parallel' })
+
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })

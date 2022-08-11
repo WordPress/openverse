@@ -22,6 +22,8 @@ import { AUDIO, IMAGE } from '~/constants/media'
  * All of these tests test server-generated search page, not the one generated on the client
  */
 
+test.describe.configure({ mode: 'parallel' })
+
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })

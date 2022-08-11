@@ -1,0 +1,80 @@
+{
+    meta: {
+        createdAt: '2022-08-11T09:32:39.277Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+    },
+    req: {
+        headers: {
+            connection: 'close',
+        },
+        url: '/v1/auth_tokens/token/',
+        method: 'POST',
+        body: 'Y2xpZW50X2lkPVNCbzM1dU0wNDlvQ05ZdGtOVXdXYTZ3clFpdFF1dHNMMkZhWGo2VlkmY2xpZW50X3NlY3JldD0zVG80VzJGRXhPQnc5ZUdtbDc0Uzdib2M2c2ZUM0hFZ2xBY3VqUWdMbDBuQ0NZdUhYMThwcDRoQnEwc2ZNM2FzNkpIeDlkZG5odG5lenlYaGRYb0ZDN0JvQlZnakRheWM1OU8yUm9kclI0UkN5NnlBekRtcG91YlNOaktRaVhhbyZncmFudF90eXBlPWNsaWVudF9jcmVkZW50aWFscw==',
+    },
+    res: {
+        status: 401,
+        headers: {
+            date: [
+                'Thu, 11 Aug 2022 09:32:40 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'content-length': [
+                '27',
+            ],
+            connection: [
+                'close',
+            ],
+            'cache-control': [
+                'no-store',
+            ],
+            pragma: [
+                'no-cache',
+            ],
+            'www-authenticate': [
+                'Bearer error="invalid_client"',
+            ],
+            vary: [
+                'Authorization, Origin',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                'e8610770b47d46b99e41b38b54600063',
+            ],
+            'cf-cache-status': [
+                'DYNAMIC',
+            ],
+            'expect-ct': [
+                'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '738ff71b1876c223-VIE',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            error: 'invalid_client',
+        },
+    },
+}

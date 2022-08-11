@@ -8,6 +8,8 @@ import {
 
 import { supportedSearchTypes } from '~/constants/media'
 
+test.describe.configure({ mode: 'parallel' })
+
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })

@@ -20,6 +20,8 @@ import { AUDIO, IMAGE } from '~/constants/media'
  * All of these tests test search page on the client
  */
 
+test.describe.configure({ mode: 'parallel' })
+
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })

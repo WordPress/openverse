@@ -13,6 +13,8 @@ const showsErrorPage = async (page: Page) => {
   )
 }
 
+test.describe.configure({ mode: 'parallel' })
+
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })

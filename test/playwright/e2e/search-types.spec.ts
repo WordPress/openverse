@@ -23,6 +23,8 @@ import { mockProviderApis } from '~~/test/playwright/utils/route'
  * Results include search meta information, media grid and Meta search form, can load more media if there are more media items.
  */
 
+test.describe.configure({ mode: 'parallel' })
+
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })

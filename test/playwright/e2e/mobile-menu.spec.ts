@@ -15,6 +15,8 @@ const mobileFixture = {
 }
 test.use(mobileFixture)
 
+test.describe.configure({ mode: 'parallel' })
+
 test('Can open filters menu on mobile at least twice', async ({ page }) => {
   await page.goto('/search/?q=cat')
 

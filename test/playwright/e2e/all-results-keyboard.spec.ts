@@ -42,6 +42,8 @@ const locateFocusedResult = async (page: Page) => {
   return page.locator(`[href="${url.pathname}"]`)
 }
 
+test.describe.configure({ mode: 'parallel' })
+
 test.describe('all results grid keyboard accessibility test', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/search?q=birds')
