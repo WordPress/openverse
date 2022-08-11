@@ -1,5 +1,7 @@
 import { expect, Page } from '@playwright/test'
 
+import rtlMessages from '~~/test/locales/ar.json'
+
 import {
   ALL_MEDIA,
   AUDIO,
@@ -12,7 +14,6 @@ import {
 import { SCREEN_SIZES } from '~/constants/screens'
 
 import enMessages from '~/locales/en.json'
-import rtlMessages from '~/locales/ar.json'
 
 const messages: Record<string, Record<string, unknown>> = {
   ltr: enMessages,
