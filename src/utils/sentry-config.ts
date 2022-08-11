@@ -8,10 +8,10 @@ import type { ModuleConfiguration } from '@nuxtjs/sentry'
  * @returns the Sentry configuration to use
  */
 export const sentryConfig: ModuleConfiguration = {
-  dsn:
-    process.env.SENTRY_DSN ||
-    'https://53da8fbcebeb48a6bf614a212629df6b@o787041.ingest.sentry.io/5799642',
-  disabled: process.env.DISABLE_SENTRY ? true : !isProd,
+  dsn: process.env.SENTRY_DSN,
+  disabled: process.env.DISABLE_SENTRY
+    ? true
+    : process.env.SENTRY_DSN === undefined || !isProd,
   lazy: true,
   clientConfig: {
     // Only allow errors that come from an actual openverse.engineering subdomain

@@ -24,5 +24,6 @@
     ".github/workflows/pr_label_check.yml",
     ".github/workflows/pr_ping.yml",
     "package.json"
-  ]
+  ],
+  "includeForks": false
 }
