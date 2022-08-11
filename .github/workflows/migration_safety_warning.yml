@@ -1,0 +1,41 @@
+name: "Migration Safety Check"
+
+on:
+  pull_request:
+    paths:
+      - "**/migrations/**/*"
+
+jobs:
+  check-and-apply-labels:
+    name: "Check and Apply Labels"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: peter-evans/find-comment@v2
+        id: existing-warning
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: This PR has migrations
+
+      - uses: actions/github-script@v6
+        if: steps.existing-warning.outputs.comment-id != 0
+        with:
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            await github.rest.issues.deleteComment({
+              owner: 'WordPress',
+              repo: 'openverse-api',
+              comment_id: ${{ steps.existing-warning.outputs.comment-id }},
+            })
+
+      - uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            This PR has migrations. Please rebase it before merging to ensure that conflicting migrations are not introduced.
+
+      - uses: banyan/auto-label@1.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
