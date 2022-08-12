@@ -3,6 +3,7 @@ import time
 
 import django_redis
 import grequests
+from decouple import config
 
 from catalog.api.utils.dead_link_mask import get_query_mask, save_query_mask
 
@@ -16,6 +17,10 @@ CACHE_PREFIX = "valid:"
 def _get_cached_statuses(redis, image_urls):
     cached_statuses = redis.mget([CACHE_PREFIX + url for url in image_urls])
     return [int(b.decode("utf-8")) if b is not None else None for b in cached_statuses]
+
+
+def _get_expiry(status, default):
+    return config(f"LINK_VALIDATION_CACHE_EXPIRY__{status}", default=default, cast=int)
 
 
 def validate_images(query_hash, start_slice, results, image_urls):
@@ -69,14 +74,17 @@ def validate_images(query_hash, start_slice, results, image_urls):
         # Cache successful links for a day, and broken links for 120 days.
         if status == 200:
             logger.debug("healthy link " f"key={key} ")
-            pipe.expire(key, twenty_four_hours_seconds)
+            expiry = _get_expiry(200, twenty_four_hours_seconds * 30)
         elif status == -1:
             logger.debug("no response from provider " f"key={key}")
             # Content provider failed to respond; try again in a short interval
-            pipe.expire(key, thirty_minutes)
+            expiry = _get_expiry("_1", thirty_minutes)
         else:
             logger.debug("broken link " f"key={key} ")
-            pipe.expire(key, twenty_four_hours_seconds * 120)
+            expiry = _get_expiry("DEFAULT", twenty_four_hours_seconds * 120)
+
+        pipe.expire(key, expiry)
+
     pipe.execute()
 
     # Merge newly verified results with cached statuses
