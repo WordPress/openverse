@@ -17,13 +17,20 @@ DEFAULT_DATE = datetime(2022, 1, 1)
 TEST_TASK_ID = "wait_task"
 TEST_POOL = "single_run_external_dags_sensor_test_pool"
 DEV_NULL = "/dev/null"
+DAG_PREFIX = "sreds"  # single_run_external_dags_sensor
 
 
 @pytest.fixture(autouse=True)
 def clean_db():
     with create_session() as session:
-        session.query(DagRun).delete()
-        session.query(TaskInstance).delete()
+        # synchronize_session='fetch' required here to refresh models
+        # https://stackoverflow.com/a/51222378 CC BY-SA 4.0
+        session.query(DagRun).filter(DagRun.dag_id.startswith(DAG_PREFIX)).delete(
+            synchronize_session="fetch"
+        )
+        session.query(TaskInstance).filter(
+            TaskInstance.dag_id.startswith(DAG_PREFIX)
+        ).delete(synchronize_session="fetch")
         session.query(Pool).filter(id == TEST_POOL).delete()
 
 
@@ -45,7 +52,7 @@ def create_task(dag, task_id, external_dag_ids):
 
 def create_dag(dag_id, task_id=TEST_TASK_ID):
     with DAG(
-        dag_id,
+        f"{DAG_PREFIX}_{dag_id}",
         default_args={
             "owner": "airflow",
             "start_date": DEFAULT_DATE,
@@ -202,8 +209,8 @@ class TestExternalDAGsSensor(unittest.TestCase):
         sensor = SingleRunExternalDAGsSensor(
             task_id=TEST_TASK_ID,
             external_dag_ids=[
-                "success_dag",
-                "running_dag",
+                f"{DAG_PREFIX}_success_dag",
+                f"{DAG_PREFIX}_running_dag",
             ],
             poke_interval=5,
             mode="reschedule",
@@ -215,8 +222,9 @@ class TestExternalDAGsSensor(unittest.TestCase):
             run_sensor(sensor)
 
             assert (
-                "INFO:airflow.task.operators:Poking for DAGs ['success_dag',"
-                " 'running_dag'] ..." in sensor_logs.output
+                f"INFO:airflow.task.operators:Poking for DAGs ['"
+                f"{DAG_PREFIX}_success_dag', '{DAG_PREFIX}_running_dag'] ..."
+                in sensor_logs.output
             )
             assert (
                 "INFO:airflow.task.operators:1 DAGs are in the running state"
