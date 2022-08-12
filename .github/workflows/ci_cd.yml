@@ -74,12 +74,16 @@ jobs:
       - name: Change permissions for Docker steps
         run: chmod -R 777 openverse_catalog/ tests/
 
-      - name: Test
+      - name: Build dev container
         # The containers must be rebuilt here because we need the dev dependencies
         # rather than the production ones
-        run: |
-          just build
-          just test --extended
+        run: just build
+
+      - name: Check DAG documentation
+        run: just generate-dag-docs true
+
+      - name: Test
+        run: just test --extended
 
   push:
     name: Publish Docker images

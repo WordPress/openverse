@@ -9,11 +9,13 @@ enableDelete to `false`, and then you will see a list of log folders
 that can be deleted, but will not actually delete them.
 
 This should all go on one line:
-```airflow dags trigger --conf
-'{"maxLogAgeInDays":-1, "enableDelete": "false"}' airflow_log_cleanup```
---conf options:
-    maxLogAgeInDays:<INT> - Optional
-    enableDelete:<BOOLEAN> - Optional
+```
+airflow dags trigger --conf
+'{"maxLogAgeInDays":-1, "enableDelete": "false"}' airflow_log_cleanup
+```
+`--conf` options:
+- maxLogAgeInDays:<INT> - Optional
+- enableDelete:<BOOLEAN> - Optional
 """
 from datetime import datetime, timedelta
 

@@ -58,39 +58,8 @@ the internet.
 
 ### API Workflows
 
-Our API-based workflows run at different schedules: some daily, others monthly. Please consider which to use whenever a new DAG is written, and add your new script to one of these schedules.
-
-#### Daily
-
-Workflows that have a `schedule_string='@daily'` parameter are run daily. The DAG
-workflows run `provider_api_scripts` to load and extract media data from the APIs. The following provider scripts are run daily:
-
-- [Flickr](openverse_catalog/dags/providers/provider_api_scripts/flickr.py)
-- [Met Museum](openverse_catalog/dags/providers/provider_api_scripts/metropolitan_museum_of_art.py)
-- [PhyloPic](openverse_catalog/dags/providers/provider_api_scripts/phylopic.py)
-- [Wikimedia Commons](openverse_catalog/dags/providers/provider_api_scripts/wikimedia_commons.py)
-
-#### Monthly
-
-Some API ingestion workflows are scheduled to run on the 15th day of each
-month at 16:00 UTC. These workflows are reserved for long-running jobs or
-APIs that do not have date filtering capabilities, so the data is reprocessed
-monthly to keep the catalog updated. The following provider scripts are run monthly:
-
-- [Brooklyn Museum](openverse_catalog/dags/providers/provider_api_scripts/brooklyn_museum.py)
-- [Cleveland Museum of Art](openverse_catalog/dags/providers/provider_api_scripts/cleveland_museum_of_art.py)
-- [Common Crawl Syncer](openverse_catalog/dags/commoncrawl/commoncrawl_scripts/commoncrawl_s3_syncer/SyncImageProviders.py)
-- [NYPL](openverse_catalog/dags/providers/provider_api_scripts/nypl.py)
-- [RawPixel](openverse_catalog/dags/providers/provider_api_scripts/raw_pixel.py)
-- [StockSnap](openverse_catalog/dags/providers/provider_api_scripts/stocksnap.py)
-
-### TSV to Postgres Loader
-
-The Airflow DAG defined in [`loader_workflow.py`][db_loader] runs every minute,
-and loads the oldest file which has not been modified in the last 15 minutes
-into the upstream database. It includes some data preprocessing steps.
-
-[db_loader]: openverse_catalog/dags/database/loader_workflow.py
+To view more information about all the available workflows (DAGs) within the project,
+see [DAGs.md](DAGs.md).
 
 See each provider API script's notes in their respective [handbook][ov-handbook] entry.
 

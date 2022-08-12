@@ -90,3 +90,19 @@ run *args: (up "postgres s3")
 # Launch a pgcli shell on the postgres container (defaults to openledger) use "airflow" for airflow metastore
 db-shell args="openledger": up
     docker-compose {{ DOCKER_FILES }} exec postgres pgcli {{ args }}
+
+# Generate the DAG documentation
+generate-dag-docs fail_on_diff="false":
+    #!/bin/bash
+    set -e
+    just run python openverse_catalog/utilities/dag_doc_gen/dag_doc_generation.py
+    # Move the file to the top level, since that level is not mounted into the container
+    mv openverse_catalog/utilities/dag_doc_gen/DAGs.md DAGs.md
+    if {{ fail_on_diff }}; then
+      set +e
+      git diff --exit-code DAGs.md
+      if [ $? -ne 0 ]; then
+          printf "\n\n\e[31m!! Changes found in DAG documentation, please run 'just generate-dag-docs' locally and commit difference !!\n\n"
+          exit 1
+      fi
+    fi
