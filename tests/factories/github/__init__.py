@@ -1,10 +1,12 @@
 import datetime
 import json
 from pathlib import Path
+from typing import Literal, Optional
 
 from openverse_catalog.dags.maintenance.pr_review_reminders.pr_review_reminders import (
     COMMENT_MARKER,
     Urgency,
+    parse_gh_date,
 )
 
 
@@ -15,6 +17,10 @@ def _read_fixture(fixture: str) -> dict:
 
 def _make_label(priority: Urgency) -> dict:
     return {"name": f"priority: {priority.label}"}
+
+
+def _gh_date(d: datetime.datetime) -> str:
+    return f"{d.isoformat()}Z"
 
 
 def walk_backwards_in_time_until_weekday_count(today: datetime.datetime, count: int):
@@ -61,7 +67,7 @@ def make_pull(urgency: Urgency, past_due: bool) -> dict:
     else:
         updated_at = datetime.datetime.now()
 
-    pull["updated_at"] = f"{updated_at.isoformat()}Z"
+    pull["updated_at"] = _gh_date(updated_at)
 
     return pull
 
@@ -74,8 +80,17 @@ def make_requested_reviewer(login: str) -> dict:
     return requested_reviewer
 
 
-def make_pr_comment(is_reminder: bool) -> dict:
+_comment_count = 1
+
+
+def make_pr_comment(
+    is_reminder: bool, created_at: Optional[datetime.datetime] = None
+) -> dict:
+    global _comment_count
+
     comment = _read_fixture("comment")
+    comment["id"] = _comment_count
+    _comment_count += 1
 
     if is_reminder:
         comment["user"]["login"] = "openverse-bot"
@@ -90,6 +105,9 @@ def make_pr_comment(is_reminder: bool) -> dict:
         )
     )
 
+    if created_at:
+        comment["created_at"] = _gh_date(created_at)
+
     return comment
 
 
@@ -99,3 +117,33 @@ def make_issue(state: str) -> dict:
     issue["state"] = state
 
     return issue
+
+
+def make_current_pr_comment(pull: dict) -> dict:
+    return make_pr_comment(
+        True, parse_gh_date(pull["updated_at"]) + datetime.timedelta(minutes=1)
+    )
+
+
+def make_outdated_pr_comment(pull: dict) -> dict:
+    return make_pr_comment(
+        True, parse_gh_date(pull["updated_at"]) - datetime.timedelta(minutes=1)
+    )
+
+
+def make_review(state: Literal["APPROVED", "CHANGES_REQUESTED", "COMMENTED"]):
+    review = _read_fixture("review")
+
+    review["state"] = state
+
+    return review
+
+
+def make_branch_protection(required_reviewers: int = 2) -> dict:
+    branch_protection = _read_fixture("branch_protection")
+
+    branch_protection["required_pull_request_reviews"][
+        "required_approving_review_count"
+    ] = required_reviewers
+
+    return branch_protection

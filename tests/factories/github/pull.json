@@ -1,25 +1,25 @@
 {
   "_links": {
     "comments": {
-      "href": "https://api.github.com/repos/WordPress/openverse-frontend/issues/1234598237459283745/comments"
+      "href": "https://api.github.com/repos/WordPress/openverse-frontend/issues/0/comments"
     },
     "commits": {
-      "href": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/1234598237459283745/commits"
+      "href": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/0/commits"
     },
     "html": {
-      "href": "https://github.com/WordPress/openverse-frontend/pull/1234598237459283745"
+      "href": "https://github.com/WordPress/openverse-frontend/pull/0"
     },
     "issue": {
-      "href": "https://api.github.com/repos/WordPress/openverse-frontend/issues/1234598237459283745"
+      "href": "https://api.github.com/repos/WordPress/openverse-frontend/issues/0"
     },
     "review_comment": {
       "href": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/comments{/number}"
     },
     "review_comments": {
-      "href": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/1234598237459283745/comments"
+      "href": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/0/comments"
     },
     "self": {
-      "href": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/1234598237459283745"
+      "href": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/0"
     },
     "statuses": {
       "href": "https://api.github.com/repos/WordPress/openverse-frontend/statuses/asdfasdfasdfasdfasdfasdfasdf"
@@ -170,10 +170,10 @@
   },
   "body": "## Fixes\r\nFixes #437498349234 by @reporter",
   "closed_at": null,
-  "comments_url": "https://api.github.com/repos/WordPress/openverse-frontend/issues/1234598237459283745/comments",
-  "commits_url": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/1234598237459283745/commits",
+  "comments_url": "https://api.github.com/repos/WordPress/openverse-frontend/issues/0/comments",
+  "commits_url": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/0/commits",
   "created_at": "2022-03-30T05:41:16Z",
-  "diff_url": "https://github.com/WordPress/openverse-frontend/pull/1234598237459283745.diff",
+  "diff_url": "https://github.com/WordPress/openverse-frontend/pull/0.diff",
   "draft": false,
   "head": {
     "label": "helpful-contributor:super-sweet-feature-branch",
@@ -304,9 +304,9 @@
       "url": "https://api.github.com/users/helpful-contributor"
     }
   },
-  "html_url": "https://github.com/WordPress/openverse-frontend/pull/1234598237459283745",
+  "html_url": "https://github.com/WordPress/openverse-frontend/pull/0",
   "id": 123412341234,
-  "issue_url": "https://api.github.com/repos/WordPress/openverse-frontend/issues/1234598237459283745",
+  "issue_url": "https://api.github.com/repos/WordPress/openverse-frontend/issues/0",
   "labels": [
     {
       "color": "ffcc00",
@@ -341,17 +341,17 @@
   "merged_at": null,
   "milestone": null,
   "node_id": "PR_asdfasdfasdfasdfasdfasdf",
-  "number": 1234598237459283745,
-  "patch_url": "https://github.com/WordPress/openverse-frontend/pull/1234598237459283745.patch",
+  "number": 0,
+  "patch_url": "https://github.com/WordPress/openverse-frontend/pull/0.patch",
   "requested_reviewers": [],
   "requested_teams": [],
   "review_comment_url": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/comments{/number}",
-  "review_comments_url": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/1234598237459283745/comments",
+  "review_comments_url": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/0/comments",
   "state": "open",
   "statuses_url": "https://api.github.com/repos/WordPress/openverse-frontend/statuses/asdfasdfasdfasdfasdfasdfasdf",
   "title": "Super cool PR to add amazing new features.",
   "updated_at": "2022-06-16T11:57:28Z",
-  "url": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/1234598237459283745",
+  "url": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/0",
   "user": {
     "avatar_url": "https://avatars.githubusercontent.com/u/0?v=4",
     "events_url": "https://api.github.com/users/helpful-contributor/events{/privacy}",
