@@ -11,6 +11,7 @@ import tldextract
 
 # This import is aliased for easier test mocking
 from requests import get as requests_get
+from requests.exceptions import RequestException
 
 
 logger = logging.getLogger(__name__)
@@ -78,7 +79,7 @@ def rewrite_redirected_url(url_string):
                 f" Response Code: {response.status_code}"
             )
             rewritten_url = None
-    except Exception as e:
+    except RequestException as e:
         logger.warning(f"URL {url_string} could not be rewritten. Error: {e}")
         rewritten_url = None
     return rewritten_url
@@ -132,6 +133,6 @@ def _test_domain_for_tls_support(domain):
         requests_get(f"https://{domain}", timeout=2)
         logger.info(f"{domain} supports TLS.")
         tls_supported = True
-    except Exception as e:
+    except RequestException as e:
         logger.info(f"Could not verify TLS support for {domain}. Error was\n{e}")
     return tls_supported

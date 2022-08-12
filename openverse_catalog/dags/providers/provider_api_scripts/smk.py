@@ -4,6 +4,7 @@ from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
+from requests.exceptions import JSONDecodeError
 
 
 logging.basicConfig(
@@ -71,7 +72,7 @@ def _get_batch_items(
             if "items" in response_json.keys():
                 items = response_json.get("items")
                 break
-        except Exception as e:
+        except (AttributeError, JSONDecodeError, ValueError, TypeError) as e:
             logger.error(f"errored due to {e}")
     return items
 

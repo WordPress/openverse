@@ -209,7 +209,7 @@ def _ensure_license_version_string(license_version) -> Optional[str]:
             string_license_version = str(float(license_version))
         else:
             logger.debug("license_version is NoneType")
-    except Exception as e:
+    except (TypeError, ValueError) as e:
         logger.warning(
             f"Could not recover license_version from {license_version}!"
             f" Error was {e}"

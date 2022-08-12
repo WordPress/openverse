@@ -3,6 +3,7 @@ import os
 import unittest
 from unittest.mock import call, patch
 
+import pytest
 from common.storage.audio import AudioStore, MockAudioStore
 from common.storage.image import ImageStore, MockImageStore
 
@@ -195,6 +196,40 @@ class TestProviderDataIngester(unittest.TestCase):
                 # get_batch is not called again after the first batch
                 assert get_batch_mock.call_count == 1
                 assert process_batch_mock.call_count == 1
+
+    def test_ingest_records_commits_on_exception(self):
+        with (
+            patch.object(self.ingester, "get_batch") as get_batch_mock,
+            patch.object(
+                self.ingester, "process_batch", return_value=3
+            ) as process_batch_mock,
+            patch.object(self.ingester, "commit_records") as commit_mock,
+        ):
+            get_batch_mock.side_effect = [
+                (EXPECTED_BATCH_DATA, True),  # First batch
+                (EXPECTED_BATCH_DATA, True),  # Second batch
+                ValueError("Whoops :C"),  # Problem batch
+                (EXPECTED_BATCH_DATA, True),  # Fourth batch, should not be reached
+            ]
+
+            with pytest.raises(ValueError, match="Whoops :C"):
+                self.ingester.ingest_records()
+
+            # Check that get batch was only called thrice
+            assert get_batch_mock.call_count == 3
+
+            # process_batch is called for each successful batch
+            process_batch_mock.assert_has_calls(
+                [
+                    call(EXPECTED_BATCH_DATA),
+                    call(EXPECTED_BATCH_DATA),
+                ]
+            )
+            # process_batch is not called for a third time with exception
+            assert process_batch_mock.call_count == 2
+
+            # Even with the exception, records were still saved
+            assert commit_mock.called
 
     def test_commit_commits_all_stores(self):
         with (

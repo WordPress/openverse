@@ -6,6 +6,7 @@ from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
+from requests.exceptions import JSONDecodeError
 
 
 DELAY = 1.0  # time delay (in seconds)
@@ -34,7 +35,7 @@ def _request_content(url, query_params=None, headers=None):
             )
             return None
 
-    except Exception as e:
+    except (JSONDecodeError, TypeError, ValueError) as e:
         logger.error("There was an error with the request.")
         logger.info(f"{type(e).__name__}: {e}")
         return None

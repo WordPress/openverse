@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from json import JSONDecodeError
 
 from common.licenses import get_license_info
 from common.storage import image
@@ -67,7 +68,7 @@ def _get_image_from_row(tsv_row):
     ]
     try:
         row_image = image.Image(*exploded_row)
-    except Exception as e:
+    except (TypeError, ValueError) as e:
         logger.warning(f"Could not unpack row {tsv_row} into valid image: {e}")
         row_image = None
     return row_image
@@ -76,7 +77,7 @@ def _get_image_from_row(tsv_row):
 def _get_json_from_string(json_str):
     try:
         json_obj = json.loads(json_str)
-    except Exception as e:
+    except (TypeError, ValueError, JSONDecodeError) as e:
         logger.warning(f"Could not parse {json_str} into valid JSON: {e}")
         json_obj = None
     return json_obj
@@ -87,7 +88,7 @@ def get_license_url(meta_data):
         license_url = meta_data.get(
             "raw_license_url", meta_data.get("license_url", None)
         )
-    except Exception as e:
+    except (TypeError, ValueError) as e:
         logger.debug(f"Couldn't retrieve license URL from {meta_data}.  Error: {e}")
         license_url = None
     return license_url if license_url else None

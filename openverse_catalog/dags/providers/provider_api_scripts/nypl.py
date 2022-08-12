@@ -6,6 +6,7 @@ from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
+from requests.exceptions import JSONDecodeError
 
 
 logging.basicConfig(
@@ -80,7 +81,7 @@ def _request_handler(
                 results = response_json.get("response")
                 break
 
-            except Exception as e:
+            except JSONDecodeError as e:
                 logger.warning(f"Request failed due to {e}")
                 results = None
         else:

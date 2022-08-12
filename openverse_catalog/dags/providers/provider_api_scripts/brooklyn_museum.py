@@ -6,6 +6,7 @@ from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
+from requests.exceptions import JSONDecodeError, RequestException
 
 
 logging.basicConfig(
@@ -72,7 +73,13 @@ def _get_object_json(
             if response_json and response_json.get("message", "").lower() == "success.":
                 data = response_json.get("data")
                 break
-        except Exception as e:
+        except (
+            RequestException,
+            AttributeError,
+            JSONDecodeError,
+            ValueError,
+            TypeError,
+        ) as e:
             logger.error(f"Error due to {e}")
     return data
 

@@ -21,6 +21,7 @@ from common.loader import provider_details as prov
 from common.loader.provider_details import ImageCategory
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
+from requests.exceptions import JSONDecodeError
 
 
 logging.basicConfig(
@@ -185,7 +186,7 @@ def _extract_response_json(response):
     if response is not None and response.status_code == 200:
         try:
             response_json = response.json()
-        except Exception as e:
+        except JSONDecodeError as e:
             logger.warning(f"Could not get image_data json.\n{e}")
             response_json = None
     else:
@@ -366,7 +367,7 @@ def _create_meta_data_dict(image_data, max_description_length=MAX_DESCRIPTION_LE
                 html.fromstring(description).xpath("//text()")
             ).strip()[:max_description_length]
             meta_data["description"] = description_text
-        except Exception as e:
+        except (TypeError, ValueError, IndexError) as e:
             logger.warning(f"Could not parse description {description}!\n{e}")
 
     return {k: v for k, v in meta_data.items() if v is not None}

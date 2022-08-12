@@ -17,6 +17,7 @@ from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
+from requests.exceptions import JSONDecodeError
 
 
 logging.basicConfig(
@@ -80,7 +81,7 @@ def _get_item_page(endpoint, retries=RETRIES, query_params=None):
         try:
             response_json = response.json()
             total_pages = int(response.headers["X-WP-TotalPages"])
-        except Exception as e:
+        except (JSONDecodeError, TypeError, ValueError) as e:
             logger.warning(f"Response not captured due to {e}")
             response_json = None
 
@@ -134,7 +135,7 @@ def _get_response_json(endpoint, retries=0, query_params=None, **kwargs):
     if response is not None and response.status_code in [200, 301, 302]:
         try:
             response_json = response.json()
-        except Exception as e:
+        except JSONDecodeError as e:
             logger.warning(f"Could not get response_json.\n{e}")
             response_json = None
 

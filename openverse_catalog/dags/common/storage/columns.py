@@ -235,7 +235,7 @@ class IntegerColumn(Column):
         """
         try:
             number = str(int(float(value)))
-        except Exception as e:
+        except (TypeError, ValueError) as e:
             logger.debug(f"input {value} is not castable to an int.  The error was {e}")
             number = None
         return number

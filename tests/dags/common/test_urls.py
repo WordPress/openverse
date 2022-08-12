@@ -4,6 +4,7 @@ from unittest.mock import patch
 import pytest
 import requests
 from common import urls
+from requests import RequestException
 
 
 logging.basicConfig(
@@ -35,7 +36,7 @@ def get_good(monkeypatch):
 @pytest.fixture
 def get_bad(monkeypatch):
     def mock_get(url, timeout=60):
-        raise Exception
+        raise RequestException()
 
     monkeypatch.setattr(urls, "requests_get", mock_get)
 
@@ -132,7 +133,7 @@ def test_rewrite_redirected_url_nones_when_error_occurs(
     clear_rewriter_cache, monkeypatch
 ):
     def mock_get(*args):
-        raise Exception
+        raise RequestException()
 
     monkeypatch.setattr(urls, "requests_get", mock_get)
     actual_url = urls.rewrite_redirected_url("https://input.url")
