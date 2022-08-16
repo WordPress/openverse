@@ -9,8 +9,11 @@ from django.conf import settings
 from django.http.response import HttpResponse
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
+
+from sentry_sdk import capture_exception
 
 from catalog.api.controllers import search_controller
 from catalog.api.models import ContentProvider
@@ -18,6 +21,11 @@ from catalog.api.serializers.provider_serializers import ProviderSerializer
 from catalog.api.utils.exceptions import get_api_exception
 from catalog.api.utils.pagination import StandardPagination
 from catalog.custom_auto_schema import CustomAutoSchema
+
+
+class UpstreamThumbnailException(APIException):
+    status_code = status.HTTP_424_FAILED_DEPENDENCY
+    default_detail = "Could not render thumbnail due to upstream provider error."
 
 
 class MediaViewSet(ReadOnlyModelViewSet):
@@ -189,9 +197,11 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
             return upstream_response, res_status, content_type
         except (HTTPError, RemoteDisconnected, TimeoutError) as exc:
-            raise get_api_exception(f"Failed to render thumbnail: {exc}")
+            capture_exception(exc)
+            raise UpstreamThumbnailException(f"Failed to render thumbnail: {exc}")
         except Exception as exc:
-            raise get_api_exception(
+            capture_exception(exc)
+            raise UpstreamThumbnailException(
                 f"Failed to render thumbnail due to unidentified exception: {exc}"
             )
 
