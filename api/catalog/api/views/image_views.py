@@ -32,7 +32,10 @@ from catalog.api.serializers.image_serializers import (
 )
 from catalog.api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from catalog.api.utils.exceptions import get_api_exception
-from catalog.api.utils.throttle import OneThousandPerMinute
+from catalog.api.utils.throttle import (
+    AnonThumbnailRateThrottle,
+    OAuth2IdThumbnailRateThrottle,
+)
 from catalog.api.utils.watermark import watermark
 from catalog.api.views.media_views import MediaViewSet
 
@@ -93,7 +96,7 @@ class ImageViewSet(MediaViewSet):
         url_path="thumb",
         url_name="thumb",
         serializer_class=MediaThumbnailRequestSerializer,
-        throttle_classes=[OneThousandPerMinute],
+        throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
     )
     def thumbnail(self, request, *_, **__):
         image = self.get_object()
