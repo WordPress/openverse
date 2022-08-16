@@ -10,9 +10,24 @@ DOCKER_FILES := "--file=docker-compose.yml" + (
 )
 SERVICE := "webserver"
 
+export PROJECT_PY_VERSION := `grep '# PYTHON' requirements_prod.txt | awk -F= '{print $2}'`
+
+# Print the required Python version
+@py-version:
+    echo $PROJECT_PY_VERSION
+
+# Check the installed Python version matches the required Python version and fail if not
+check-py-version:
+    #! /usr/bin/env sh
+    installed_python_version=`python -c 'import sys; print(f"{sys.version_info[0]}.{sys.version_info[1]}")'`
+    if [ "$PROJECT_PY_VERSION" != "$installed_python_version" ]
+    then
+        printf "Detected Python version $installed_python_version but $PROJECT_PY_VERSION is required.\n" > /dev/stderr
+        exit 1
+    fi
 
 # Install dependencies into the current environment
-install:
+install: check-py-version
     pip install -r requirements.txt -r requirements_dev.txt
     pre-commit install
 

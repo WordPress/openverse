@@ -18,16 +18,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
       - uses: extractions/setup-just@v1
+
+      - name: Get Python version
+        id: python-version
+        run: echo "::set-output name=value::$(just py-version)"
+
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.9"
+          python-version: "${{ steps.python-version.outputs.value }}"
+
       - name: Cache pre-commit envs
         uses: actions/cache@v2
         with:
           path: ~/.cache/pre-commit
           key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+
       - name: Run pre-commit to lint files
         run: |
           pip install pre-commit
@@ -39,6 +47,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - uses: extractions/setup-just@v1
+
+      - name: Get Python version
+        id: python-version
+        run: echo "::set-output name=value::$(just py-version)"
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -54,6 +68,8 @@ jobs:
           cache-from: type=gha,scope=catalog
           cache-to: type=gha,scope=catalog
           outputs: type=docker,dest=/tmp/catalog.tar
+          build-args: |
+            PROJECT_PY_VERSION=${{ steps.python-version.outputs.value }}
 
       - name: Upload image
         uses: actions/upload-artifact@v2

@@ -55,6 +55,7 @@ services:
       context: .
       args:
         - REQUIREMENTS_FILE=requirements_dev.txt
+        - PROJECT_PY_VERSION=${PROJECT_PY_VERSION}
       dockerfile: docker/airflow/Dockerfile
     restart: on-failure
     # This command ensures an admin account is created on startup
