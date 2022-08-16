@@ -20,7 +20,8 @@ class MediaFactory(DjangoModelFactory):
 
     license = Faker("random_element", elements=ALL_LICENSES)
 
-    foreign_landing_url = Faker("url")
+    foreign_landing_url = Faker("globally_unique_url")
+    url = Faker("globally_unique_url")
 
 
 class IdentifierFactory(factory.SubFactory):

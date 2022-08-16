@@ -1,5 +1,8 @@
+from uuid import uuid4
+
 from factory import Faker
 from faker.providers import BaseProvider
+from faker.providers.internet import Provider as InternetProvider
 from faker.utils.distribution import choices_distribution
 
 
@@ -19,5 +22,11 @@ class WaveformProvider(BaseProvider):
         return WaveformProvider.generate_waveform()
 
 
+class GloballyUniqueUrl(InternetProvider):
+    def globally_unique_url(self) -> str:
+        return f"{self.url()}?{uuid4()}"
+
+
 Faker.add_provider(ChoiceProvider)
 Faker.add_provider(WaveformProvider)
+Faker.add_provider(GloballyUniqueUrl)
