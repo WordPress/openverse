@@ -47,7 +47,7 @@
     "test:storybook:gen": "playwright codegen localhost:54000/",
     "types": "vue-tsc --noEmit",
     "lint": "prettier --check .; eslint --ext .js,.vue,.ts --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 .",
-    "lint:fix": "prettier --write --loglevel=warn .; pnpm lint -- --fix",
+    "lint:fix": "prettier --write --loglevel=warn .; pnpm lint --fix",
     "i18n": "pnpm i18n:create-locales-list && pnpm i18n:get-translations && pnpm i18n:update-locales",
     "i18n:no-get": "pnpm i18n:create-locales-list && pnpm i18n:update-locales",
     "i18n:create-locales-list": "node src/locales/scripts/create-wp-locale-list",
