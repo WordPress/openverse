@@ -39,6 +39,17 @@ with newest (non-null) data, and merge any metadata or tags objects to preserve 
 previously downloaded data, and update any data that needs updating
 (eg. popularity metrics).
 
+Provider workflows which extend the ProviderDataIngester class support a few DagRun
+configuration variables:
+
+* `skip_ingestion_errors`: When set to true, errors encountered during ingestion will
+be caught to allow ingestion to continue. The `pull_data` task will still fail when
+ingestion is complete, and report a summary of all encountered errors. By default
+`skip_ingestion_errors` is False.
+* `initial_query_params`: An optional dict of query parameters with which to begin
+ingestion. This allows a user to manually force ingestion to resume from a particular
+batch, for example when retrying after an error.
+
 You can find more background information on the loading process in the following
 issues and related PRs:
 

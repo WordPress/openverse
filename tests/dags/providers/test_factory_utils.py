@@ -2,7 +2,7 @@ from unittest import mock
 
 import pytest
 import requests
-from airflow.models import TaskInstance
+from airflow.models import DagRun, TaskInstance
 from pendulum import datetime
 from providers import factory_utils
 
@@ -18,6 +18,11 @@ def ti_mock() -> TaskInstance:
 
 
 @pytest.fixture
+def dagrun_mock() -> DagRun:
+    return mock.MagicMock(spec=DagRun)
+
+
+@pytest.fixture
 def internal_func_mock():
     """
     This mock, along with the value, get handed into the provided function.
@@ -29,7 +34,7 @@ def internal_func_mock():
 fdi = FakeDataIngester()
 
 
-def _set_up_ingester(mock_func, value):
+def _set_up_ingester(mock_conf, mock_func, value):
     """
     Set up ingest records as a proxy for calling the mock function, then return
     the instance. This is necessary because the args are only handed in during
@@ -111,12 +116,15 @@ def test_load_provider_script(func, media_types, stores):
         (FakeDataIngesterClass, 2, list(fdi.media_stores.values())),
     ],
 )
-def test_generate_tsv_filenames(func, media_types, stores, ti_mock, internal_func_mock):
+def test_generate_tsv_filenames(
+    func, media_types, stores, ti_mock, dagrun_mock, internal_func_mock
+):
     value = 42
     factory_utils.generate_tsv_filenames(
         func,
         media_types,
         ti_mock,
+        dagrun_mock,
         args=[internal_func_mock, value],
     )
     # There should be one call to xcom_push for each provided store
@@ -189,7 +197,7 @@ def test_generate_tsv_filenames(func, media_types, stores, ti_mock, internal_fun
     ],
 )
 def test_pull_media_wrapper(
-    func, media_types, tsv_filenames, stores, ti_mock, internal_func_mock
+    func, media_types, tsv_filenames, stores, ti_mock, dagrun_mock, internal_func_mock
 ):
     value = 42
     factory_utils.pull_media_wrapper(
@@ -197,6 +205,7 @@ def test_pull_media_wrapper(
         media_types,
         tsv_filenames,
         ti_mock,
+        dagrun_mock,
         args=[internal_func_mock, value],
     )
     # We should have one XCom push for duration

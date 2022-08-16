@@ -1,7 +1,10 @@
+import json
 import logging
+import traceback
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional, Tuple
 
+from airflow.exceptions import AirflowException
 from airflow.models import Variable
 from common.requester import DelayedRequester, RetriesExceeded
 from common.storage.media import MediaStore
@@ -10,6 +13,35 @@ from requests.exceptions import JSONDecodeError, RequestException
 
 
 logger = logging.getLogger(__name__)
+
+
+class AggregateIngestionError(Exception):
+    """
+    Custom exception when multiple ingestion errors are skipped and then
+    raised in aggregate at the end of ingestion.
+    """
+
+    pass
+
+
+class IngestionError(Exception):
+    """
+    Custom exception which includes information about the query_params that
+    were being used when the error was encountered.
+    """
+
+    def __init__(self, error, traceback, query_params):
+        self.error = error
+        self.traceback = traceback
+        self.query_params = json.dumps(query_params)
+
+    def __str__(self):
+        # Append query_param info to error message
+        return f"{self.error}\nquery_params: {self.query_params}"
+
+    def repr_with_traceback(self):
+        # Append traceback
+        return f"{str(self)}\n{self.traceback}"
 
 
 class ProviderDataIngester(ABC):
@@ -51,9 +83,10 @@ class ProviderDataIngester(ABC):
         """
         pass
 
-    def __init__(self, date: str = None):
+    def __init__(self, conf: dict = None, date: str = None):
         """
         Optional Arguments:
+        conf: The configuration dict for the running DagRun
         date: Date String in the form YYYY-MM-DD. This is the date for
               which running the script will pull data
         """
@@ -74,6 +107,24 @@ class ProviderDataIngester(ABC):
         self.delayed_requester = DelayedRequester(self.delay)
         self.media_stores = self.init_media_stores()
         self.date = date
+
+        # dag_run configuration options
+        conf = conf or {}
+
+        # Used to skip over errors and continue ingestion. When enabled, errors
+        # are not reported until ingestion has completed.
+        self.skip_ingestion_errors = conf.get("skip_ingestion_errors", False)
+        self.ingestion_errors: List[IngestionError] = []  # Keep track of errors
+
+        # An optional set of initial query params from which to begin ingestion.
+        self.initial_query_params = conf.get("initial_query_params")
+
+        # An optional list of `query_params`. When provided, ingestion will be run for
+        # just these sets of params.
+        self.override_query_params = None
+        if query_params_list := conf.get("query_params_list"):
+            # Create a generator to facilitate fetching the next set of query_params.
+            self.override_query_params = (qp for qp in query_params_list)
 
     def init_media_stores(self) -> dict[str, MediaStore]:
         """
@@ -101,10 +152,14 @@ class ProviderDataIngester(ABC):
 
         logger.info(f"Begin ingestion for {self.__class__.__name__}")
 
-        try:
-            while should_continue:
-                query_params = self.get_next_query_params(query_params, **kwargs)
+        while should_continue:
+            query_params = self.get_query_params(query_params, **kwargs)
+            if query_params is None:
+                # Break out of ingestion if no query_params are supplied. This can
+                # happen when the final `override_query_params` is processed.
+                break
 
+            try:
                 batch, should_continue = self.get_batch(query_params)
 
                 if batch and len(batch) > 0:
@@ -114,12 +169,100 @@ class ProviderDataIngester(ABC):
                     logger.info("Batch complete.")
                     should_continue = False
 
-                if self.limit and record_count >= self.limit:
-                    logger.info(f"Ingestion limit of {self.limit} has been reached.")
-                    should_continue = False
-        finally:
-            total = self.commit_records()
-            logger.info(f"Committed {total} records")
+            except AirflowException as error:
+                # AirflowExceptions should not be caught, as execution should not
+                # continue when the task is being stopped by Airflow.
+
+                # If errors have already been caught during processing, raise them
+                # as well.
+                if error_summary := self.get_ingestion_errors():
+                    raise error_summary from error
+                raise
+
+            except Exception as error:
+                ingestion_error = IngestionError(
+                    error, traceback.format_exc(), query_params
+                )
+
+                if self.skip_ingestion_errors:
+                    # Add this to the errors list but continue processing
+                    self.ingestion_errors.append(ingestion_error)
+                    logger.error(f"Skipping batch due to ingestion error: {error}")
+                    continue
+
+                # Commit whatever records we were able to process, and rethrow the
+                # exception so the taskrun fails.
+                self.commit_records()
+                raise error from ingestion_error
+
+            if self.limit and record_count >= self.limit:
+                logger.info(f"Ingestion limit of {self.limit} has been reached.")
+                should_continue = False
+
+        # Commit whatever records we were able to process
+        self.commit_records()
+
+        # If errors were caught during processing, raise them now
+        if error_summary := self.get_ingestion_errors():
+            raise error_summary
+
+    def get_ingestion_errors(self) -> AggregateIngestionError | None:
+        """
+        If any errors were skipped during ingestion, log them as well as the
+        associated query parameters. Then return an AggregateIngestionError.
+
+        It there are no errors to report, returns None.
+        """
+        if self.ingestion_errors:
+            # Log the affected query_params
+            bad_query_params = ", \n".join(
+                [f"{e.query_params}" for e in self.ingestion_errors]
+            )
+            logger.info(
+                "The following query_params resulted in errors: \n"
+                f"{bad_query_params}"
+            )
+            errors_str = "\n".join(
+                e.repr_with_traceback() for e in self.ingestion_errors
+            )
+            logger.error(
+                f"The following errors were encountered during ingestion:\n{errors_str}"
+            )
+            return AggregateIngestionError(
+                f"{len(self.ingestion_errors)} query batches were skipped due to "
+                "errors during ingestion using the `skip_ingestion_errors` flag. "
+                "See the log for more details."
+            )
+        return None
+
+    def get_query_params(
+        self, prev_query_params: Optional[Dict], **kwargs
+    ) -> Optional[Dict]:
+        """
+        Returns the next set of query_params for the next request, handling
+        optional overrides via the dag_run conf.
+        """
+        # If we are getting query_params for the first batch and initial_query_params
+        # have been set, return them.
+        if prev_query_params is None and self.initial_query_params:
+            logger.info(
+                "Using initial_query_params from dag_run conf:"
+                f" {json.dumps(self.initial_query_params)}"
+            )
+            return self.initial_query_params
+
+        # If a list of query_params was provided, return the next value.
+        if self.override_query_params:
+            next_params = next(self.override_query_params, None)
+            logger.info(
+                "Using query params from `query_params_list` set in dag_run conf:"
+                f" {next_params}"
+            )
+            return next_params
+
+        # Default behavior when no conf options are provided; build the next
+        # set of query params, given the previous.
+        return self.get_next_query_params(prev_query_params, **kwargs)
 
     @abstractmethod
     def get_next_query_params(
@@ -154,18 +297,9 @@ class ProviderDataIngester(ABC):
         batch = None
         should_continue = True
 
+        # Get the API response
         try:
-            # Get the API response
             response_json = self.get_response_json(query_params)
-
-            # Build a list of records from the response
-            batch = self.get_batch_data(response_json)
-
-            # Optionally, apply some logic to the response to determine whether
-            # ingestion should continue or if should be short-circuited. By default
-            # this will return True and ingestion continues.
-            should_continue = self.get_should_continue(response_json)
-
         except (
             RequestException,
             RetriesExceeded,
@@ -173,7 +307,16 @@ class ProviderDataIngester(ABC):
             ValueError,
             TypeError,
         ) as e:
-            logger.error(f"Error getting next query parameters due to {e}")
+            logger.error(f"Error getting response due to {e}")
+            response_json = None
+
+        # Build a list of records from the response
+        batch = self.get_batch_data(response_json)
+
+        # Optionally, apply some logic to the response to determine whether
+        # ingestion should continue or if should be short-circuited. By default
+        # this will return True and ingestion continues.
+        should_continue = self.get_should_continue(response_json)
 
         return batch, should_continue
 
@@ -260,4 +403,5 @@ class ProviderDataIngester(ABC):
         total = 0
         for store in self.media_stores.values():
             total += store.commit()
+        logger.info(f"Committed {total} records")
         return total

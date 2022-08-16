@@ -4,7 +4,7 @@ import time
 from types import FunctionType
 from typing import Callable, Sequence
 
-from airflow.models import TaskInstance
+from airflow.models import DagRun, TaskInstance
 from airflow.utils.dates import cron_presets
 from common.constants import MediaType
 from common.storage.media import MediaStore
@@ -45,6 +45,7 @@ def generate_tsv_filenames(
     ingestion_callable: Callable,
     media_types: list[MediaType],
     ti: TaskInstance,
+    dag_run: DagRun,
     args: Sequence = None,
 ) -> None:
     """
@@ -71,7 +72,7 @@ def generate_tsv_filenames(
             f"Initializing ProviderIngester {ingestion_callable.__name__} in"
             f"order to generate store filenames."
         )
-        ingester = ingestion_callable(*args)
+        ingester = ingestion_callable(dag_run.conf, *args)
         stores = ingester.media_stores
 
     # Push the media store output paths to XComs.
@@ -87,6 +88,7 @@ def pull_media_wrapper(
     media_types: list[MediaType],
     tsv_filenames: list[str],
     ti: TaskInstance,
+    dag_run: DagRun,
     args: Sequence = None,
 ):
     """
@@ -116,7 +118,7 @@ def pull_media_wrapper(
         # A ProviderDataIngester class was passed instead. First we initialize the
         # class, which will initialize the media stores and DelayedRequester.
         logger.info(f"Initializing ProviderIngester {ingestion_callable.__name__}")
-        ingester = ingestion_callable(*args)
+        ingester = ingestion_callable(dag_run.conf, *args)
         stores = ingester.media_stores
         run_func = ingester.ingest_records
         # args have already been passed into the ingester, we don't need them passed
