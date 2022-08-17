@@ -18,10 +18,6 @@ from test.media_integration import (
     search_source_and_excluded,
     search_special_chars,
     stats,
-    thumb,
-    thumb_compression,
-    thumb_full_size,
-    thumb_webp,
     uuid_validation,
 )
 
@@ -122,10 +118,6 @@ def test_audio_stats():
     stats("audio")
 
 
-def test_audio_thumb(jamendo_audio_fixture):
-    thumb(jamendo_audio_fixture)
-
-
 def test_audio_detail_without_thumb():
     resp = requests.get(f"{API_URL}/v1/audio/44540200-91eb-483d-9e99-38ce86a52fb6")
     assert resp.status_code == 200
@@ -139,18 +131,6 @@ def test_audio_search_without_thumb():
     assert resp.status_code == 200
     parsed = json.loads(resp.text)
     assert parsed["results"][0]["thumbnail"] is None
-
-
-def test_audio_thumb_compression(jamendo_audio_fixture):
-    thumb_compression(jamendo_audio_fixture)
-
-
-def test_audio_thumb_webp(jamendo_audio_fixture):
-    thumb_webp(jamendo_audio_fixture)
-
-
-def test_audio_thumb_full_size(jamendo_audio_fixture):
-    thumb_full_size(jamendo_audio_fixture)
 
 
 def test_audio_report(audio_fixture):

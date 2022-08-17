@@ -18,7 +18,7 @@ services:
     environment:
       PORT: 8222
       MALLOC_ARENA_MAX: 2
-    command: ["-enable-url-source"]
+    command: ["-enable-url-source", "-forward-headers", "User-Agent"]
 
   upstream_db:
     image: postgres:13.2-alpine

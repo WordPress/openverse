@@ -1,9 +1,5 @@
-import json
-import logging as log
-from http.client import RemoteDisconnected
-from urllib.error import HTTPError
+import logging
 from urllib.parse import urlencode
-from urllib.request import Request, urlopen
 
 from django.conf import settings
 from django.http.response import HttpResponse
@@ -13,6 +9,7 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
+import requests
 from sentry_sdk import capture_exception
 
 from catalog.api.controllers import search_controller
@@ -26,6 +23,9 @@ from catalog.custom_auto_schema import CustomAutoSchema
 class UpstreamThumbnailException(APIException):
     status_code = status.HTTP_424_FAILED_DEPENDENCY
     default_detail = "Could not render thumbnail due to upstream provider error."
+
+
+parent_logger = logging.getLogger(__name__)
 
 
 class MediaViewSet(ReadOnlyModelViewSet):
@@ -171,32 +171,41 @@ class MediaViewSet(ReadOnlyModelViewSet):
             ip = request.META.get("REMOTE_ADDR")
         return ip
 
+    THUMBNAIL_PROXY_COMM_HEADERS = {
+        "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(
+            purpose="ThumbnailGeneration"
+        )
+    }
+
     @staticmethod
     def _thumbnail_proxy_comm(
         path: str,
         params: dict,
         headers: tuple[tuple[str, str]] = (),
-    ):
+    ) -> tuple[requests.Response, int, str]:
+        logger = parent_logger.getChild("_thumbnail_proxy_comm")
         proxy_url = settings.THUMBNAIL_PROXY_URL
         query_string = urlencode(params)
         upstream_url = f"{proxy_url}/{path}?{query_string}"
-        log.debug(f"Image proxy upstream URL: {upstream_url}")
+        logger.debug(f"Image proxy upstream URL: {upstream_url}")
 
         try:
-            req = Request(upstream_url)
-            for key, val in headers:
-                req.add_header(key, val)
-            upstream_response = urlopen(req, timeout=10)
+            compiled_headers = MediaViewSet.THUMBNAIL_PROXY_COMM_HEADERS | {
+                k: v for k, v in headers
+            }
+            upstream_response = requests.get(
+                upstream_url, timeout=10, headers=compiled_headers
+            )
 
-            res_status = upstream_response.status
+            res_status = upstream_response.status_code
             content_type = upstream_response.headers.get("Content-Type")
-            log.debug(
+            logger.debug(
                 "Image proxy response "
                 f"status: {res_status}, content-type: {content_type}"
             )
 
             return upstream_response, res_status, content_type
-        except (HTTPError, RemoteDisconnected, TimeoutError) as exc:
+        except requests.RequestException as exc:
             capture_exception(exc)
             raise UpstreamThumbnailException(f"Failed to render thumbnail: {exc}")
         except Exception as exc:
@@ -217,7 +226,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
             info_res, *_ = MediaViewSet._thumbnail_proxy_comm(
                 "info", {"url": image_url}
             )
-            info = json.loads(info_res.read())
+            info = info_res.json()
             width = info["width"]
 
         params = {
@@ -243,6 +252,6 @@ class MediaViewSet(ReadOnlyModelViewSet):
             "resize", params, (("Accept", accept_header),)
         )
         response = HttpResponse(
-            img_res.read(), status=res_status, content_type=content_type
+            img_res.content, status=res_status, content_type=content_type
         )
         return response

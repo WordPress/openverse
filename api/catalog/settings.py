@@ -296,6 +296,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 # The version of the API. We follow the semantic version specification.
 API_VERSION = config("SEMANTIC_VERSION", default="Version not specified")
 
+OUTBOUND_USER_AGENT_TEMPLATE = config(
+    "OUTBOUND_USER_AGENT_TEMPLATE",
+    default=f"Openverse{{purpose}}/{API_VERSION} (https://wordpress.org/openverse)",
+)
+
 # The contact email of the Openverse team
 CONTACT_EMAIL = config("CONTACT_EMAIL", default="openverse@wordpress.org")
 

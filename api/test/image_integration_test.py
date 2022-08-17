@@ -18,10 +18,6 @@ from test.media_integration import (
     search_source_and_excluded,
     search_special_chars,
     stats,
-    thumb,
-    thumb_compression,
-    thumb_full_size,
-    thumb_webp,
     uuid_validation,
 )
 from urllib.parse import urlencode
@@ -72,22 +68,6 @@ def test_image_detail(image_fixture):
 
 def test_image_stats():
     stats("images")
-
-
-def test_image_thumb(image_fixture):
-    thumb(image_fixture)
-
-
-def test_image_thumb_compression(image_fixture):
-    thumb_compression(image_fixture)
-
-
-def test_image_thumb_webp(image_fixture):
-    thumb_webp(image_fixture)
-
-
-def test_image_thumb_full_size(image_fixture):
-    thumb_full_size(image_fixture)
 
 
 def test_audio_report(image_fixture):

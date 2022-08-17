@@ -8,13 +8,15 @@ import shutil
 import subprocess
 from typing import List
 
+from django.conf import settings
+
 import requests
 
 
 parent_logger = logging.getLogger(__name__)
 
 TMP_DIR = pathlib.Path("/tmp").resolve()
-UA_STRING = "OpenverseWaveform/0.0 (https://wordpress.org/openverse)"
+UA_STRING = settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="Waveform")
 
 
 def ext_from_url(url):

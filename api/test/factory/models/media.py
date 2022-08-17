@@ -22,6 +22,7 @@ class MediaFactory(DjangoModelFactory):
 
     foreign_landing_url = Faker("globally_unique_url")
     url = Faker("globally_unique_url")
+    thumbnail = Faker("image_url")
 
 
 class IdentifierFactory(factory.SubFactory):

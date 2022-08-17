@@ -1,6 +1,8 @@
 import logging
 import time
 
+from django.conf import settings
+
 import django_redis
 import grequests
 from decouple import config
@@ -12,6 +14,9 @@ parent_logger = logging.getLogger(__name__)
 
 
 CACHE_PREFIX = "valid:"
+HEADERS = {
+    "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="LinkValidation")
+}
 
 
 def _get_cached_statuses(redis, image_urls):
@@ -50,8 +55,10 @@ def validate_images(query_hash, start_slice, results, image_urls):
             to_verify[url] = idx
     logger.debug(f"len(to_verify)={len(to_verify)}")
     reqs = (
-        grequests.head(u, allow_redirects=False, timeout=2, verify=False)
-        for u in to_verify.keys()
+        grequests.head(
+            url, headers=HEADERS, allow_redirects=False, timeout=2, verify=False
+        )
+        for url in to_verify.keys()
     )
     verified = grequests.map(reqs, exception_handler=_validation_failure)
     # Cache newly verified image statuses.

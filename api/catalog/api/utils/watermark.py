@@ -1,11 +1,18 @@
+import logging
 import os
 from enum import Flag, auto
 from io import BytesIO
 from textwrap import wrap
 
+from django.conf import settings
+
 import piexif
 import requests
 from PIL import Image, ImageDraw, ImageFont
+from sentry_sdk import capture_exception
+
+
+parent_logger = logging.getLogger(__name__)
 
 
 BREAKPOINT_DIMENSION = 400  # 400px
@@ -14,6 +21,9 @@ FONT_RATIO = 0.04  # 4%
 
 FRAME_COLOR = "#fff"  # White frame
 TEXT_COLOR = "#000"  # Black text
+HEADERS = {
+    "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="Watermark")
+}
 
 
 class Dimension(Flag):
@@ -143,9 +153,9 @@ def _open_image(url):
     :param url: the URL from where to read the image
     :return: the PIL image object with the EXIF data
     """
-
+    logger = parent_logger.getChild("_open_image")
     try:
-        response = requests.get(url)
+        response = requests.get(url, headers=HEADERS)
         img_bytes = BytesIO(response.content)
         img = Image.open(img_bytes)
         # Preserve EXIF metadata
@@ -154,8 +164,10 @@ def _open_image(url):
         else:
             exif = None
         return img, exif
-    except requests.exceptions.RequestException:
-        print("Error loading image data")
+    except requests.exceptions.RequestException as e:
+        capture_exception(e)
+        logger.error(f"Error loading image data: {e}")
+        return None, None
 
 
 def _print_attribution_on_image(img, image_info):

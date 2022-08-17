@@ -1,0 +1,20 @@
+{
+  "creator": "TheGloomWorker",
+  "headers": {
+    "Access-Control-Allow-Headers": "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Expose-Headers": "Content-Length,Content-Range",
+    "Connection": "keep-alive",
+    "Content-Length": "583491",
+    "Content-Range": "bytes 0-583490/583491",
+    "Content-Type": "audio/mpeg",
+    "Date": "Fri, 12 Aug 2022 15:18:23 GMT",
+    "ETag": "5e4e7f4d-8e743",
+    "Last-Modified": "Thu, 20 Feb 2020 12:45:01 GMT",
+    "Server": "nginx/1.18.0 (Ubuntu)"
+  },
+  "license": "CC0",
+  "license_version": "1.0",
+  "title": "Birds and City Ambience.mp3"
+}
