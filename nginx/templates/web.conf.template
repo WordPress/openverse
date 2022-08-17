@@ -3,7 +3,7 @@ server {
   server_name localhost;
 
   location / {
-    return 301 https://$host:9443$request_uri;
+    return 301 https://$host:${HTTPS_PORT}$request_uri;
   }
 }
 
@@ -19,6 +19,6 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
   }
 
-  ssl_certificate     /etc/nginx/conf.d/certs/openverse.crt;
-  ssl_certificate_key /etc/nginx/conf.d/certs/openverse.key;
+  ssl_certificate     /etc/nginx/certs/openverse.crt;
+  ssl_certificate_key /etc/nginx/certs/openverse.key;
 }

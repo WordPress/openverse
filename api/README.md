@@ -9,7 +9,7 @@ The API has two sets of documentation.
       ```bash
       just sphinx-live
       ```
-    - visiting the `https://localhost:3000/` endpoint
+    - visiting the `https://localhost:50230/` endpoint
   - contain more details on how to contribute to the API project
 
 - [Consumer docs](https://api.openverse.engineering/)

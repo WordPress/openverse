@@ -153,10 +153,6 @@ jobs:
       - name: Start API, ingest and index test data
         run: just init
 
-      - name: Smoke test ReDoc site
-        run: |
-          curl --fail 'http://localhost:8000/v1/?format=openapi'
-
       - name: Run API tests
         run: just api-test
 
@@ -172,6 +168,31 @@ jobs:
         with:
           name: api_logs
           path: api_logs
+
+  test-redoc:
+    name: Check for API consumer docs
+    runs-on: ubuntu-latest
+    needs:
+      - build-images
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup just
+        uses: extractions/setup-just@v1
+
+      - name: Download all images
+        uses: actions/download-artifact@v2
+        with:
+          path: /tmp
+
+      - name: Load all images
+        run: |
+          docker load --input /tmp/api/api.tar
+          docker load --input /tmp/ingestion_server/ingestion_server.tar
+
+      - name: Test ReDoc site
+        run: just api-doctest
 
   django-check:
     name: Run Django check

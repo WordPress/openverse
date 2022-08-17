@@ -60,14 +60,6 @@ if DEBUG:
         "0.0.0.0",
     ]
 
-# Domains that shortened links may point to
-SHORT_URL_WHITELIST = {
-    "api-dev.openverse.engineering",
-    "api.openverse.engineering",
-    "localhost:8000",
-}
-SHORT_URL_PATH_WHITELIST = ["/v1/list", "/v1/images/"]
-
 USE_S3 = config("USE_S3", default=False, cast=bool)
 
 # Application definition

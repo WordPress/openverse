@@ -12,12 +12,3 @@
    ```bash
    just api-test
    ```
-
-## On the host
-
-1. Start the Django dev server. See the {doc}`"Run" <./run>` document for instructions.
-
-2. Run the tests in a terminal on the host.
-   ```bash
-   just api-testlocal
-   ```

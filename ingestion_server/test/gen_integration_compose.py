@@ -46,11 +46,16 @@ def _map_ports(conf: dict):
     """
 
     for service_name, service in conf["services"].items():
-        ports = service["ports"]
-        ports = [
-            f"{service_ports[service_name]}:{port.split(':')[1]}" for port in ports
-        ]
-        service["ports"] = ports
+        if "ports" in service:
+            ports = service["ports"]
+            ports = [
+                f"{service_ports[service_name]}:{port.split(':')[1]}" for port in ports
+            ]
+            service["ports"] = ports
+        elif "expose" in service and service_name in service_ports:
+            exposes = service["expose"]
+            ports = [f"{service_ports[service_name]}:{expose}" for expose in exposes]
+            service["ports"] = ports
 
 
 def _fixup_env(conf: dict):
