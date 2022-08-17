@@ -32,6 +32,9 @@ DOCKER_FILE := "-f " + (
     else { "docker-compose.yml" }
 )
 
+export DOCKER_USER_ID := `id -u`
+export DOCKER_GROUP_ID := `id -g`
+
 # Build all (or specified) services
 build *args:
     docker-compose {{ DOCKER_FILE }} build {{ args }}
