@@ -35,17 +35,21 @@ DOCKER_FILE := "-f " + (
 export DOCKER_USER_ID := `id -u`
 export DOCKER_GROUP_ID := `id -g`
 
+# Run `docker-compose` configured with the correct files and environment
+dc *args:
+    docker-compose {{ DOCKER_FILE }} {{ args }}
+
 # Build all (or specified) services
 build *args:
-    docker-compose {{ DOCKER_FILE }} build {{ args }}
+    just dc build {{ args }}
 
 # Bring all Docker services up
 up flags="":
-    docker-compose {{ DOCKER_FILE }} up -d {{ flags }}
+    just dc up -d {{ flags }}
 
 # Take all Docker services down
 down flags="":
-    docker-compose {{ DOCKER_FILE }} down {{ flags }}
+    just dc down {{ flags }}
 
 # Recreate all volumes and containers from scratch
 recreate:
@@ -55,7 +59,7 @@ recreate:
 
 # Show logs of all, or named, Docker services
 logs services="" args=(if IS_CI != "" { "" } else { "-f" }):
-    docker-compose {{ DOCKER_FILE }} logs {{ args }} {{ services }}
+    just dc logs {{ args }} {{ services }}
 
 # Attach to the specificed `service`. Enables interacting with the TTY of the running service.
 attach service:
