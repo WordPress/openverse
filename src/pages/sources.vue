@@ -4,9 +4,9 @@
       {{ $t('sources.title') }}
     </h1>
 
-    <h3>
+    <h2>
       {{ $t('sources.cc-content.where', { openverse: 'Openverse' }) }}
-    </h3>
+    </h2>
     <p>
       {{ $t('sources.cc-content.content', { openverse: 'Openverse' }) }}
     </p>
@@ -32,9 +32,9 @@
       </template>
     </i18n>
 
-    <h3>
+    <h2>
       {{ $t('sources.new-content.next') }}
-    </h3>
+    </h2>
     <p>
       {{ $t('sources.new-content.integrate') }}
     </p>
@@ -50,9 +50,9 @@
       </li>
     </ul>
 
-    <h3>
+    <h2>
       {{ $t('sources.suggestions') }}
-    </h3>
+    </h2>
 
     <p class="inline-block">
       <VButton
