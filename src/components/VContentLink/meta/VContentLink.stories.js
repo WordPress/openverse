@@ -82,5 +82,5 @@ Horizontal.args = {
 
 export const Mobile = TwoVContentLinkStory.bind({})
 Mobile.parameters = {
-  viewport: { defaultViewport: 'mob' },
+  viewport: { defaultViewport: 'xs' },
 }

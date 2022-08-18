@@ -1,0 +1,47 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import VSnackbar from '~/components/VSnackbar.vue'
+
+<Meta
+  title="Components/VSnackbar"
+  components={VSnackbar}
+  argTypes={{
+    size: {
+      options: ['large', 'small'],
+      control: { type: 'radio' },
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  components: { VSnackbar },
+  template: `
+    <VSnackbar v-bind="args">
+      <template v-slot>${args.defaultSlot}</template>
+    </Vsnackbar>
+  `,
+  setup() {
+    return { args }
+  },
+})
+
+# VSnackbar
+
+<Description of={VSnackbar} />
+
+<ArgsTable of={VSnackbar} />
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{ defaultSlot: 'Your message goes here.', size: 'small' }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
