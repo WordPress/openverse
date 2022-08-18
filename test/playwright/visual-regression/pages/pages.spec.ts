@@ -11,7 +11,6 @@ import {
 test.describe.configure({ mode: 'parallel' })
 
 const contentPages = [
-  'extension',
   'about',
   'meta-search',
   'search-help',

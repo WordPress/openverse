@@ -35,7 +35,6 @@
     "privacy-nav-item": "Privacy",
     "feedback-nav-item": "Feedback",
     "support-nav-item": "Support Us",
-    "extension-nav-item": "Web extension",
     "placeholder": "Search all content",
     "aria": {
       "primary": "primary",
@@ -232,27 +231,6 @@
       "improve": "help us improve form",
       "report": "report a bug form"
     }
-  },
-  "extension": {
-    "title": "Web extension",
-    "description": {
-      "intro": "A browser extension that lets you search and use open-licensed and public domain images."
-    },
-    "features": {
-      "search": {
-        "heading": "Search and filter openly-licensed and public domain content",
-        "content": "Browse through millions of content and use filters to find what best meets your needs."
-      },
-      "bookmark": {
-        "heading": "Bookmark your favorite images without breaking your navigation",
-        "content": "Add images to your bookmarks and use them whenever you want without interrupting your navigation. "
-      },
-      "use": {
-        "heading": "Use the image and give attribution to the creator easily",
-        "content": "Download the image and paste the attribution information on compatible formats."
-      }
-    },
-    "conclusion": "Have your favourite content while browsing the web"
   },
   "error": {
     "occurred": "An error occurred",
