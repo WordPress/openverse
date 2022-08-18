@@ -1,9 +1,9 @@
 <template>
   <section class="w-full">
     <div class="mb-6 flex flex-row items-center justify-between">
-      <h3 class="text-2xl md:text-3xl">
+      <h2 class="text-2xl md:text-3xl">
         {{ $t('image-details.information.title') }}
-      </h3>
+      </h2>
       <VContentReportPopover :media="image" />
     </div>
     <ul v-if="image && image.tags" class="mb-6 flex flex-wrap gap-2">

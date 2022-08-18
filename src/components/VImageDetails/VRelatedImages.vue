@@ -1,8 +1,8 @@
 <template>
   <aside>
-    <h3 class="mb-6 text-2xl md:text-3xl">
+    <h2 class="mb-6 text-2xl md:text-3xl">
       {{ $t('image-details.related-images') }}
-    </h3>
+    </h2>
     <VLoadingIcon v-if="fetchState.isFetching" />
     <VImageGrid
       :images="media"
