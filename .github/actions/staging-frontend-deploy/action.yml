@@ -65,7 +65,7 @@ runs:
           --query taskDefinition > task-definition.json
 
         # Remove template from the family name (the render action does not support this)
-        sed 's/"family": "staging-frontend-template"/"family": "staging-frontend"/g' task-definition.json > task-definition.json
+        sed -i 's/"family": "staging-frontend-template"/"family": "staging-frontend"/g' task-definition.json
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
