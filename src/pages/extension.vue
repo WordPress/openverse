@@ -2,7 +2,7 @@
   <section dir="ltr">
     <div class="border-b border-dark-charcoal-30 bg-dark-charcoal-06">
       <div class="flex flex-col items-center pt-20">
-        <h1 class="mb-10 max-w-[700px] text-center text-3xl md:text-6xl">
+        <h1 class="mb-10 max-w-[700px] text-center text-5xl md:text-5xl">
           {{ $t('extension.description.intro') }}
         </h1>
         <ExtensionBrowsers class="mb-16" />
@@ -44,7 +44,7 @@
           class="description flex flex-col items-center justify-center text-left"
           :style="{ '--cell-idx': index * 2 + 1 }"
         >
-          <h2 class="max-w=[30rem] mb-4 text-2xl md:text-6xl">
+          <h2 class="max-w=[30rem] mb-4 text-5xl md:text-5xl">
             {{ $t(`extension.features.${feature.key}.heading`) }}
           </h2>
           <p class="max-w=[30rem]">
@@ -54,7 +54,7 @@
       </template>
     </div>
     <div class="mb-30 flex flex-col items-center">
-      <h2 class="max-w-[40rem] text-center text-3xl md:text-6xl">
+      <h2 class="max-w-[40rem] text-center text-6xl md:text-6xl">
         {{ $t('extension.conclusion') }}
       </h2>
       <ExtensionBrowsers class="mt-6" />

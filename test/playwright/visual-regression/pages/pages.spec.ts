@@ -16,6 +16,7 @@ const contentPages = [
   'meta-search',
   'search-help',
   'non-existent',
+  'sources',
 ]
 for (const contentPage of contentPages) {
   for (const dir of languageDirections) {
