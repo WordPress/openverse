@@ -62,7 +62,7 @@ runs:
       run: |
         aws ecs describe-task-definition \
           --task-definition production-frontend-template \
-          --query taskDefinition > task-defintion.json
+          --query taskDefinition > task-definition.json
 
         # Remove template from the family name (the render action does not support this)
         sed 's/"family": "production-frontend-template"/"family": "production-frontend"/g' task-definition.json > task-definition.json
