@@ -36,18 +36,3 @@ group:
         dest: .github/ISSUE_TEMPLATE/
       - source: .github/PULL_REQUEST_TEMPLATE.md
         dest: .github/PULL_REQUEST_TEMPLATE.md
-  # Frontend repositories
-  - repos: |
-      WordPress/openverse-frontend
-      WordPress/openverse-browser-extension
-    files:
-      - source: .github/CODEOWNERS_FRONTEND
-        dest: .github/CODEOWNERS
-  # Backend repositories
-  - repos: |
-      WordPress/openverse-catalog
-      WordPress/openverse-api
-      WordPress/openverse-infrastructure
-    files:
-      - source: .github/CODEOWNERS
-        dest: .github/CODEOWNERS
