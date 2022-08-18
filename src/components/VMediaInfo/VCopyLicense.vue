@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h5
+    <h3
       id="copy-license-title"
       class="mb-4 text-base font-semibold md:text-2xl"
     >
       {{ $t('media-details.reuse.copy-license.title') }}
-    </h5>
+    </h3>
 
     <VTabs label="#copy-license-title" :selected-id="tabs[0]">
       <template #tabs>

@@ -1,9 +1,9 @@
 <template>
   <section class="audio-info">
     <header class="mb-6 flex flex-row items-center justify-between">
-      <h4 class="text-2xl lg:text-3xl">
+      <h2 class="text-2xl lg:text-3xl">
         {{ $t('audio-details.information') }}
-      </h4>
+      </h2>
       <VContentReportPopover :media="audio" />
     </header>
 

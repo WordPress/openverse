@@ -1,8 +1,8 @@
 <template>
   <div class="media-attribution">
-    <h5 class="mb-4 text-base font-semibold md:text-2xl">
+    <h3 class="mb-4 text-base font-semibold md:text-2xl">
       {{ headerText }}
-    </h5>
+    </h3>
 
     <template v-if="isLicense">
       <i18n
