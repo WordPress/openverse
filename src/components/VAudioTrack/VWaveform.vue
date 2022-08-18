@@ -150,7 +150,7 @@
     <!-- Seek disabled message overlay -->
     <div
       v-if="seekDisabledNotice"
-      class="text-xsm invisible absolute inset-0 z-40 flex w-full items-center justify-center bg-yellow/75 font-bold group-hover:visible group-focus:visible"
+      class="invisible absolute inset-0 z-40 flex w-full items-center justify-center bg-yellow/75 px-4 font-bold group-hover:visible group-focus:visible md:text-xs lg:text-base"
     >
       {{ seekDisabledNotice }}
     </div>
