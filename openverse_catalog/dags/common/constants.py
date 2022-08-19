@@ -11,11 +11,14 @@ MEDIA_TYPES = [AUDIO, IMAGE]
 
 MediaType = Literal["audio", "image"]
 
+CONTACT_EMAIL = os.getenv("CONTACT_EMAIL")
+
 DAG_DEFAULT_ARGS = {
     "owner": "data-eng-admin",
     "depends_on_past": False,
     "start_date": datetime(2019, 1, 15),
     "email_on_retry": False,
+    "email": [CONTACT_EMAIL],
     "retries": 2,
     "retry_delay": timedelta(minutes=5),
     "execution_timeout": timedelta(hours=1),
