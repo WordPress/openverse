@@ -10,6 +10,11 @@ on:
         required: true
         description: The GHCR image tag to which the environment should be rolled back
 
+# Only allow a single rollback to happen at a time
+# If you need to stop an in-progress rollback to force
+# another for the same environment, you'll need to manually cancel it
+concurrency: ${{ github.workflow }}-${{ inputs.environment }}
+
 jobs:
   rollback:
     name: Perform Rollback

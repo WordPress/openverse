@@ -10,12 +10,13 @@ on:
   release:
     types: [published]
 
-# Cancels all previous workflow runs for pull requests that have not completed.
+# Prevents multiple deployments/builds from running at the same time
 concurrency:
-  # The concurrency group contains the workflow name and the branch name for pull requests
-  # or the commit hash for any other events.
-  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
-  cancel-in-progress: true
+  group: ${{ github.event_name == 'release' && 'production' || github.event_name == 'push' && 'staging' || github.event.pull_request.number }}_release
+  # Don't continue building images for a PR if the PR is updated quickly
+  # For other workflows, allow them to complete and just block on them. This
+  # ensures deployments in particular happen in series rather than parallel.
+  cancel-in-progress: ${{ github.event_name == 'push' }}
 
 jobs:
   push-to-ghcr:

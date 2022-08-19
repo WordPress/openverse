@@ -8,6 +8,10 @@ on:
       # events that will trigger the checks defined in `pr_label_check.yml`.
       - opened
 
+# Prevent API rate limiting by only allowing a single PR
+# to dispatch workflows at a time
+concurrency: ${{ github.workflow }}
+
 jobs:
   set_label:
     name: Set labels
