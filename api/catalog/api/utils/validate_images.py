@@ -44,16 +44,19 @@ def validate_images(query_hash, start_slice, results, image_urls):
 
     logger.debug("starting validation")
     start_time = time.time()
+
     # Pull matching images from the cache.
     redis = django_redis.get_redis_connection("default")
     cached_statuses = _get_cached_statuses(redis, image_urls)
     logger.debug(f"len(cached_statuses)={len(cached_statuses)}")
+
     # Anything that isn't in the cache needs to be validated via HEAD request.
     to_verify = {}
     for idx, url in enumerate(image_urls):
         if cached_statuses[idx] is None:
             to_verify[url] = idx
     logger.debug(f"len(to_verify)={len(to_verify)}")
+
     reqs = (
         grequests.head(
             url, headers=HEADERS, allow_redirects=False, timeout=2, verify=False
@@ -63,6 +66,8 @@ def validate_images(query_hash, start_slice, results, image_urls):
     verified = grequests.map(reqs, exception_handler=_validation_failure)
     # Cache newly verified image statuses.
     to_cache = {}
+    # relies on the consistenct of the order returned by `dict::keys()` which
+    # is safe as of Python 3 dot something
     for idx, url in enumerate(to_verify.keys()):
         cache_key = CACHE_PREFIX + url
         if verified[idx]:
@@ -74,9 +79,11 @@ def validate_images(query_hash, start_slice, results, image_urls):
 
     thirty_minutes = 60 * 30
     twenty_four_hours_seconds = 60 * 60 * 24
+
     pipe = redis.pipeline()
     if len(to_cache) > 0:
         pipe.mset(to_cache)
+
     for key, status in to_cache.items():
         # Cache successful links for a day, and broken links for 120 days.
         if status == 200:
@@ -104,6 +111,7 @@ def validate_images(query_hash, start_slice, results, image_urls):
 
     # Create a new dead link mask
     new_mask = [1] * len(results)
+
     # Delete broken images from the search results response.
     for idx, _ in enumerate(cached_statuses):
         del_idx = len(cached_statuses) - idx - 1
@@ -120,12 +128,17 @@ def validate_images(query_hash, start_slice, results, image_urls):
                 f"id={results[del_idx]['identifier']} "
                 f"status={status} "
             )
+            # remove the result, mutating in place
             del results[del_idx]
+            # update the result's position in the mask to indicate it is dead
             new_mask[del_idx] = 0
 
     # Merge and cache the new mask
     mask = get_query_mask(query_hash)
     if mask:
+        # skip the leading part of the mask that represents results that come before
+        # the results we've verified this time around. Overwrite everything after
+        # with our new results validation mask.
         new_mask = mask[:start_slice] + new_mask
     save_query_mask(query_hash, new_mask)
 

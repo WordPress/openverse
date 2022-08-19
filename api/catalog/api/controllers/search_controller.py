@@ -61,13 +61,37 @@ def _paginate_with_dead_link_mask(
         start = len(query_mask)
         end = ceil(page_size * page / (1 - DEAD_LINK_RATIO))
     else:
+        # query_mask is a list of 0 and 1 where 0 indicates the result position
+        # for the given query will be an invalid link. If we accumulate a query
+        # mask you end up, at each index, with the number of live results you
+        # will get back when you query that deeply.
+        # We then query for the start and end index _of the results_ in ES based
+        # on the number of results that we think will be valid based on the query mask.
+        # If we're requesting `page=2 page_size=3` and the mask is [0, 1, 0, 1, 0, 1],
+        # then we know that we have to _start_ with at least the sixth result of the
+        # overall query to skip the first page of 3 valid results. The "end" of the
+        # query will then follow the same pattern to reach the number of valid results
+        # required to fill the requested page. If the mask is not deep enough to
+        # account for the entire range, then we follow the typical assumption when
+        # a mask is not available that the end should be `page * page_size / 0.5`
+        # (i.e., double the page size)
         accu_query_mask = list(accumulate(query_mask))
         start = 0
         if page > 1:
             try:
+                # find the index at which we can skip N valid results where N = all
+                # the results that would be skipped to arrive at the start of the
+                # requested page
+                # This will effectively be the index at which we have the number of
+                # previous valid results + 1 because we don't want to include the
+                # last valid result from the previous page
                 start = accu_query_mask.index(page_size * (page - 1) + 1)
             except ValueError:
+                # Cannot fail because of the check on line 56 which verifies that
+                # the query mask already includes at least enough masked valid
+                # results to fulfill the requested page size
                 start = accu_query_mask.index(page_size * (page - 1)) + 1
+
         if page_size * page > sum(query_mask):
             end = ceil(page_size * page / (1 - DEAD_LINK_RATIO))
         else:
@@ -112,6 +136,8 @@ def _post_process_results(
     results, perform image validation, and route certain thumbnails through our
     proxy.
 
+    Keeps making new query requests until it is able to fill the page size.
+
     :param s: The Elasticsearch Search object.
     :param start: The start of the result slice.
     :param end: The end of the result slice.
@@ -139,6 +165,27 @@ def _post_process_results(
             return None
 
         if len(results) < page_size:
+            """
+            The variables in this function get updated in an interesting way.
+            Here is an example of that for a typical query. Note that ``end``
+            increases but start stays the same. This has the effect of slowly
+            increasing the size of the query we send to Elasticsearch with the
+            goal of backfilling the results until we have enough valid (live)
+            results to fulfill the requested page size.
+
+            ```
+            page_size: 20
+            page: 1
+
+            start: 0
+            end: 40 (DEAD_LINK_RATIO applied)
+
+            end gets updated to end + end/2 = 60
+
+            end = 90
+            end = 90 + 45
+            ```
+            """
             end += int(end / 2)
             if start + end > ELASTICSEARCH_MAX_RESULT_WINDOW:
                 return results
@@ -149,6 +196,7 @@ def _post_process_results(
             return _post_process_results(
                 s, start, end, page_size, search_response, request, filter_dead
             )
+
     return results[:page_size]
 
 
@@ -331,6 +379,7 @@ def search(
             log.info(pprint.pprint(search_response.to_dict()))
     except RequestError as e:
         raise ValueError(e)
+
     results = _post_process_results(
         s, start, end, page_size, search_response, request, filter_dead
     )
