@@ -1,6 +1,6 @@
 import { ref, watch, computed } from '@nuxtjs/composition-api'
 
-import { getDocument } from '~/utils/dom/get-document'
+import { getDocument } from '~/utils/reakit-utils/dom'
 
 import { useEventListenerOutside } from './use-event-listener-outside'
 

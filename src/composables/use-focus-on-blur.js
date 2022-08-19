@@ -1,8 +1,6 @@
-import { getActiveElement } from 'reakit-utils/getActiveElement'
-import { getNextActiveElementOnBlur } from 'reakit-utils/getNextActiveElementOnBlur'
 import { ref, watch } from '@nuxtjs/composition-api'
 
-import { getDocument } from '~/utils/dom/get-document'
+import { getActiveElement, getDocument } from '~/utils/reakit-utils/dom'
 
 /**
  * @typedef Props
@@ -54,7 +52,7 @@ export function useFocusOnBlur({ dialogRef, visibleRef }) {
    */
   const onBlur = (event) => {
     if (visibleRef.value) return
-    const nextActiveElement = getNextActiveElementOnBlur(event)
+    const nextActiveElement = event.relatedTarget
     if (!isActualElement(nextActiveElement)) {
       scheduleFocus()
     }

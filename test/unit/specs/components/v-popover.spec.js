@@ -109,8 +109,10 @@ describe('VPopover', () => {
       it('should focus the first tabbable element in the popover by default and not warn', async () => {
         render(TestWrapper, { props: { popoverContentTabIndex: 0 } })
         await doOpen()
-        expect(getPopover()).toHaveFocus()
-        expect(warn).not.toHaveBeenCalled()
+        await nextTick(() => {
+          expect(getPopover()).toHaveFocus()
+          expect(warn).not.toHaveBeenCalled()
+        })
       })
 
       it('should neither focus no warn when the prop is false', async () => {

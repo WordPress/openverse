@@ -1,7 +1,6 @@
 import { watch, ref } from '@nuxtjs/composition-api'
-import { contains } from 'reakit-utils/contains'
 
-import { getDocument } from '~/utils/dom/get-document'
+import { contains, getDocument } from '~/utils/reakit-utils/dom'
 
 /**
  * @param {Element} target

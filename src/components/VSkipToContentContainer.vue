@@ -15,8 +15,7 @@
 <script>
 import { defineComponent, ref } from '@nuxtjs/composition-api'
 
-import { getFirstTabbableIn } from 'reakit-utils/tabbable'
-import { ensureFocus } from 'reakit-utils/ensureFocus'
+import { ensureFocus, getFirstTabbableIn } from '~/utils/reakit-utils/focus'
 
 import VTeleport from '~/components/VTeleport/VTeleport.vue'
 import VButton from '~/components/VButton.vue'
