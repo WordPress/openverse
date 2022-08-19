@@ -13,10 +13,6 @@ import { useActiveMediaStore } from '~/stores/active-media'
 
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 
-jest.mock('~/composables/use-browser-detection', () => ({
-  useBrowserIsBlink: jest.fn(() => false),
-}))
-
 const enMessages = require('~/locales/en.json')
 
 const useVueI18n = (vue) => {

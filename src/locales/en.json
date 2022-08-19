@@ -556,7 +556,6 @@
     "aria-label": "{title} - Audio Player",
     "aria-label-interactive": "{title} - audio player - press the spacebar to play and pause a preview of the audio",
     "messages": {
-      "blink_seek_disabled": "Seeking for Jamendo tracks is limited to Firefox and Safari.",
       "err_aborted": "You aborted playback.",
       "err_network": "A network error occurred.",
       "err_decode": "Could not decode audio.",

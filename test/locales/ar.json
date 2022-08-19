@@ -97,7 +97,6 @@
     "aria-label-interactive": "{title} - مشغل الصوت - اضغط على مفتاح المسافة لتشغيل معاينة الصوت وإيقافها مؤقتًا",
     "creator": "بواسطة {creator}",
     "messages": {
-      "blink_seek_disabled": "البحث عن مسارات Jamendo يقتصر على Firefox و Safari.",
       "err_aborted": "لقد أجهضت التشغيل.",
       "err_network": "حدث خطأ في الشبكة.",
       "err_decode": "تعذر فك تشفير الصوت.",

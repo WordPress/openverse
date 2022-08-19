@@ -159,7 +159,6 @@
     "aria-label-interactive": "{title} - Reproductor de audio - Pulsa la barra de espacio para reproducir y pausar una muestra del audio",
     "aria-label": "{title} - Reproductor de audio",
     "messages": {
-      "blink_seek_disabled": "La búsqueda de pistas de Jamendo está limitada a Firefox y Safari.",
       "loading": "Cargando...",
       "err_unsupported": "Este formato de audio no es compatible con tu navegador.",
       "err_decode": "No se ha podido decodificar el audio.",
