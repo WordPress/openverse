@@ -107,6 +107,8 @@ def create_provider_api_workflow(
     load_timeout: timedelta = timedelta(hours=1),
     doc_md: Optional[str] = "",
     media_types: Sequence[str] = ("image",),
+    create_preingestion_tasks: Optional[Callable] = None,
+    create_postingestion_tasks: Optional[Callable] = None,
 ):
     """
     This factory method instantiates a DAG that will run the given
@@ -150,6 +152,10 @@ def create_provider_api_workflow(
     doc_md:            string which should be used for the DAG's documentation markdown
     media_types:       list describing the media type(s) that this provider handles
                        (e.g. `["audio"]`, `["image", "audio"]`, etc.)
+    create_preingestion_tasks and create_postingestion_tasks: callable which creates a
+                        task or task group to be run before or after (respectively) the
+                        rest of the provider workflow. Loading and dropping temporary
+                        tables is one example.
     """
     default_args = {**DAG_DEFAULT_ARGS, **(default_args or {})}
     media_type_name = "mixed" if len(media_types) > 1 else media_types[0]
@@ -285,6 +291,14 @@ def create_provider_api_workflow(
         )
 
         generate_filenames >> pull_data >> load_tasks >> report_load_completion
+
+        if create_preingestion_tasks:
+            preingestion_tasks = create_preingestion_tasks()
+            preingestion_tasks >> pull_data
+
+        if create_postingestion_tasks:
+            postingestion_tasks = create_postingestion_tasks()
+            pull_data >> postingestion_tasks
 
     return dag
 

@@ -28,7 +28,7 @@ services:
       MINIO_ROOT_PASSWORD: ${AWS_SECRET_KEY}
       # Comma separated list of buckets to create on startup
       BUCKETS_TO_CREATE: ${OPENVERSE_BUCKET},openverse-airflow-logs,commonsmapper-v2,commonsmapper
-    # Create the buckets on every container startup
+    # Create empty buckets on every container startup
     # Note: $0 is included in the exec because "/bin/bash -c" swallows the first
     # argument, so it must be re-added at the beginning of the exec call
     entrypoint: >-
@@ -45,6 +45,36 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
+
+  load_to_s3:
+    image: minio/mc:latest
+    env_file:
+      - .env
+    depends_on:
+      - s3
+    volumes:
+      # Buckets for testing provider data imported from s3 are subdirectories under
+      # /tests/s3-data/
+      - ./tests/s3-data:/data:rw
+    # Loop through subdirectories mounted to the volume and load them to s3/minio.
+    # This takes care of filesystem delays on some local dev environments that may make
+    # minio miss files included directly in the minio volume.
+    # More info here: https://stackoverflow.com/questions/72867045
+    # This does *not* allow for testing permissions issues that may come up in real AWS.
+    # And, if you remove files from /tests/s3-data, you will need to use `just down -v`
+    # and `just up` or `just recreate` to see the minio bucket without those files.
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add s3 http://s3:5000 ${AWS_ACCESS_KEY} ${AWS_SECRET_KEY};
+      cd /data;
+      for b in */ ; do
+        echo \"Loading bucket $$b\"
+        /usr/bin/mc mb --ignore-existing s3/$$b
+        /usr/bin/mc cp --r $$b s3/$$b
+        /usr/bin/mc ls s3/$$b;
+      done ;
+      exit 0;
+      "
 
   # Dev changes for the webserver container
   webserver:

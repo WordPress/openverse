@@ -81,6 +81,7 @@ The following are DAGs grouped by their primary tag:
 | `finnish_museums_workflow` | `@monthly` | `False` | image |
 | [`flickr_workflow`](#flickr_workflow) | `@daily` | `True` | image |
 | [`freesound_workflow`](#freesound_workflow) | `@monthly` | `False` | audio |
+| [`inaturalist_workflow`](#inaturalist_workflow) | `@monthly` | `False` | image |
 | [`jamendo_workflow`](#jamendo_workflow) | `@monthly` | `False` | audio |
 | [`metropolitan_museum_workflow`](#metropolitan_museum_workflow) | `@daily` | `True` | image |
 | `museum_victoria_workflow` | `@monthly` | `False` | image |
@@ -117,6 +118,7 @@ The following is documentation associated with each DAG (where available):
  1. [`flickr_workflow`](#flickr_workflow)
  1. [`freesound_workflow`](#freesound_workflow)
  1. [`image_data_refresh`](#image_data_refresh)
+ 1. [`inaturalist_workflow`](#inaturalist_workflow)
  1. [`jamendo_workflow`](#jamendo_workflow)
  1. [`metropolitan_museum_workflow`](#metropolitan_museum_workflow)
  1. [`oauth2_authorization`](#oauth2_authorization)
@@ -290,6 +292,30 @@ issues and related PRs:
 https://github.com/WordPress/openverse-catalog/issues/353)
 - [[Feature] Merge popularity calculations and data refresh into a single DAG](
 https://github.com/WordPress/openverse-catalog/issues/453)
+
+
+## `inaturalist_workflow`
+
+
+Provider:   iNaturalist
+
+Output:     TSV file containing the media metadata.
+
+Notes:      [The iNaturalist API is not intended for data scraping.]
+            (https://api.inaturalist.org/v1/docs/)
+
+            [But there is a full dump intended for sharing on S3.]
+            (https://github.com/inaturalist/inaturalist-open-data/tree/documentation/Metadata)
+
+            Because these are very large normalized tables, as opposed to more document
+            oriented API responses, we found that bringing the data into postgres first
+            was the most effective approach. [More detail in slack here.]
+            (https://wordpress.slack.com/archives/C02012JB00N/p1653145643080479?thread_ts=1653082292.714469&cid=C02012JB00N)
+
+            We use the table structure defined [here,]
+            (https://github.com/inaturalist/inaturalist-open-data/blob/main/Metadata/structure.sql)
+            except for adding ancestry tags to the taxa table.
+
 
 
 ## `jamendo_workflow`

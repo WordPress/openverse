@@ -67,8 +67,12 @@ deploy:
 lint:
     pre-commit run --all-files
 
+# Load any dependencies necessary for actions on the stack without running the webserver
+_deps:
+    @just up "postgres s3 load_to_s3"
+
 # Mount the tests directory and run a particular command
-@_mount-tests command: (up "postgres s3")
+@_mount-tests command: _deps
     # The test directory is mounted into the container only during testing
     docker-compose {{ DOCKER_FILES }} run \
         -v {{ justfile_directory() }}/tests:/usr/local/airflow/tests/ \
@@ -90,7 +94,7 @@ shell: up
     docker-compose {{ DOCKER_FILES }} exec {{ SERVICE }} /bin/bash
 
 # Launch an IPython REPL using the webserver image
-ipython: (up "postgres s3")
+ipython: _deps
     docker-compose {{ DOCKER_FILES }} run \
         --rm \
         -w /usr/local/airflow/openverse_catalog/dags \
@@ -99,7 +103,7 @@ ipython: (up "postgres s3")
         /usr/local/airflow/.local/bin/ipython
 
 # Run a given command using the webserver image
-run *args: (up "postgres s3")
+run *args: _deps
     docker-compose {{ DOCKER_FILES }} run --rm {{ SERVICE }} {{ args }}
 
 # Launch a pgcli shell on the postgres container (defaults to openledger) use "airflow" for airflow metastore

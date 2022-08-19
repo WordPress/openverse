@@ -4,6 +4,7 @@ from typing import Dict, Optional, Sequence, Type
 
 from providers.provider_api_scripts.cleveland_museum import ClevelandDataIngester
 from providers.provider_api_scripts.finnish_museums import FinnishMuseumsDataIngester
+from providers.provider_api_scripts.inaturalist import INaturalistDataIngester
 from providers.provider_api_scripts.museum_victoria import VictoriaDataIngester
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 from providers.provider_api_scripts.science_museum import ScienceMuseumDataIngester
@@ -54,6 +55,12 @@ class ProviderWorkflow:
     doc_md:            string which should be used for the DAG's documentation markdown
     media_types:       list describing the media type(s) that this provider handles
                        (e.g. `["audio"]`, `["image", "audio"]`, etc.)
+    preingestion_task_creator: callable that returns an airflow task or task group to
+                        to run any necessary pre-ingestion tasks, such as loading bulk
+                        data from S3
+    postingestion_task_creator: callable that returns an airflow task or task group to
+                        to run any necessary post-ingestion tasks, such as dropping data
+                        loaded during pre-ingestion
     """
 
     provider_script: str
@@ -70,6 +77,8 @@ class ProviderWorkflow:
     load_timeout: timedelta = timedelta(hours=1)
     doc_md: str = ""
     media_types: Sequence[str] = ("image",)
+    preingestion_task_creator: Optional[callable] = None
+    postingestion_task_creator: Optional[callable] = None
 
     def __post_init__(self):
         if not self.dag_id:
@@ -105,6 +114,13 @@ PROVIDER_WORKFLOWS = [
         start_date=datetime(2004, 2, 1),
         schedule_string="@daily",
         dated=True,
+    ),
+    ProviderWorkflow(
+        provider_script="inaturalist",
+        ingester_class=INaturalistDataIngester,
+        preingestion_task_creator=INaturalistDataIngester.create_preingestion_tasks,
+        postingestion_task_creator=INaturalistDataIngester.create_postingestion_tasks,
+        schedule_string="@monthly",
     ),
     ProviderWorkflow(
         provider_script="freesound",

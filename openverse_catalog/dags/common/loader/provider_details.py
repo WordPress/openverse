@@ -31,6 +31,7 @@ JAMENDO_DEFAULT_PROVIDER = "jamendo"
 STOCKSNAP_DEFAULT_PROVIDER = "stocksnap"
 WORDPRESS_DEFAULT_PROVIDER = "wordpress"
 FREESOUND_DEFAULT_PROVIDER = "freesound"
+INATURALIST_DEFAULT_PROVIDER = "inaturalist"
 
 # Finnish parameters
 FINNISH_SUB_PROVIDERS = {
@@ -130,6 +131,7 @@ DEFAULT_IMAGE_CATEGORY = {
     "deviantart": ImageCategory.DIGITIZED_ARTWORK.value,
     "digitaltmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
     "floraon": ImageCategory.PHOTOGRAPH.value,
+    "inaturalist": ImageCategory.PHOTOGRAPH.value,
     "mccordmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
     "met": ImageCategory.DIGITIZED_ARTWORK.value,
     "museumsvictoria": ImageCategory.DIGITIZED_ARTWORK.value,
