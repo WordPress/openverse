@@ -20,8 +20,8 @@ specifiers:
   '@nuxtjs/storybook': ^4.3.0
   '@nuxtjs/style-resources': ^1.0.0
   '@nuxtjs/svg': ^0.4.0
-  '@pinia/nuxt': ^0.1.8
-  '@pinia/testing': ^0.0.11
+  '@pinia/nuxt': 0.2.1
+  '@pinia/testing': ^0.0.12
   '@playwright/test': ^1.20.2
   '@popperjs/core': ^2.11.2
   '@tailwindcss/line-clamp': ^0.3.1
@@ -77,7 +77,7 @@ specifiers:
   node-html-parser: ^5.3.3
   npm-run-all: ^4.1.5
   nuxt: ^2.15.4
-  pinia: ^2.0.13
+  pinia: ^2.0.16
   postcss: ^8.4.12
   postcss-focus-visible: ^6.0.4
   prettier: ^2.2.1
@@ -107,12 +107,12 @@ dependencies:
   '@nuxt/postcss8': 1.1.3_webpack@4.46.0
   '@nuxt/vue-app': 2.15.8
   '@nuxtjs/composition-api': 0.32.0_efpv4fxq5hpknftnxyzfo2vyxy
-  '@nuxtjs/i18n': 7.2.0
+  '@nuxtjs/i18n': 7.2.0_vue@2.6.14
   '@nuxtjs/redirect-module': 0.3.1
   '@nuxtjs/sentry': 5.1.7
   '@nuxtjs/sitemap': 2.4.0
   '@nuxtjs/svg': 0.4.0_6s5yfuw2cucs6uldabpyypzlau
-  '@pinia/nuxt': 0.1.8_pinia@2.0.13+vue@2.6.14
+  '@pinia/nuxt': 0.2.1_pinia@2.0.20+vue@2.6.14
   '@popperjs/core': 2.11.2
   '@tailwindcss/line-clamp': 0.3.1_tailwindcss@3.0.23
   '@tailwindcss/typography': 0.5.2_tailwindcss@3.0.23
@@ -134,7 +134,7 @@ dependencies:
   glob: 8.0.1
   node-html-parser: 5.3.3
   nuxt: 2.15.8_wl2mvxm2ma5s7sz3dfofdm4k7q
-  pinia: 2.0.13_k3kegkzgmpj55t3l5d75ppieg4
+  pinia: 2.0.20_k3kegkzgmpj55t3l5d75ppieg4
   postcss-focus-visible: 6.0.4_postcss@8.4.12
   prom-client: 14.0.1
   rfdc: 1.3.0
@@ -142,7 +142,7 @@ dependencies:
   throttle-debounce: 4.0.1
   uuid: 8.3.2
   vue: 2.6.14
-  vue-i18n: 8.26.7
+  vue-i18n: 8.26.7_vue@2.6.14
 
 devDependencies:
   '@babel/core': 7.17.10
@@ -155,7 +155,7 @@ devDependencies:
   '@nuxtjs/eslint-module': 3.0.2_nufgqnzswjkgegnrzqvmbqhove
   '@nuxtjs/storybook': 4.3.0_li6sx5er3n6ni6nfyx7d3q67pi
   '@nuxtjs/style-resources': 1.2.1
-  '@pinia/testing': 0.0.11_pinia@2.0.13+vue@2.6.14
+  '@pinia/testing': 0.0.12_pinia@2.0.20+vue@2.6.14
   '@playwright/test': 1.20.2
   '@testing-library/dom': 8.13.0
   '@testing-library/jest-dom': 5.16.1
@@ -195,7 +195,7 @@ devDependencies:
   prettier-plugin-tailwindcss: 0.1.12_prettier@2.6.0
   rimraf: 3.0.2
   tailwind-config-viewer: 1.6.3_tailwindcss@3.0.23
-  tailwindcss: 3.0.23_z4yclaatiobtrs75ftybxflkiu
+  tailwindcss: 3.0.23_2len4mt2evkrddr6nmldbp7wpa
   tailwindcss-rtl: 0.9.0
   talkback: 3.0.1
   ts-node: 10.7.0_cbygeln5s5sjlseyk3kbidkfny
@@ -3162,7 +3162,7 @@ packages:
       vue-client-only: 2.1.0
       vue-meta: 2.4.0
       vue-no-ssr: 1.1.1
-      vue-router: 3.5.3
+      vue-router: 3.5.3_vue@2.6.14
       vue-template-compiler: 2.6.14
       vuex: 3.6.2_vue@2.6.14
     transitivePeerDependencies:
@@ -3337,7 +3337,7 @@ packages:
       - webpack
     dev: true
 
-  /@nuxtjs/i18n/7.2.0:
+  /@nuxtjs/i18n/7.2.0_vue@2.6.14:
     resolution: {integrity: sha512-fO/QRMxZ0t6LpYJ7ti6mHc0lsog4SMr7Xll3d45zdVSI7+5eBE1YcoG8yXv1sndGQZoq8k0iD1dXuAJA6UL5ww==}
     dependencies:
       '@babel/parser': 7.17.3
@@ -3351,9 +3351,10 @@ packages:
       klona: 2.0.5
       lodash.merge: 4.6.2
       ufo: 0.7.9
-      vue-i18n: 8.26.7
+      vue-i18n: 8.26.7_vue@2.6.14
     transitivePeerDependencies:
       - supports-color
+      - vue
     dev: false
 
   /@nuxtjs/redirect-module/0.3.1:
@@ -3523,24 +3524,24 @@ packages:
       stack-trace: 0.0.10
     dev: false
 
-  /@pinia/nuxt/0.1.8_pinia@2.0.13+vue@2.6.14:
-    resolution: {integrity: sha512-+M1GH/4XQdooOulPL7aYzli6UE1R5rWJtgcPhx2/97yYRLhKZvuIT33OauUCjYZ+tQVs8lyKfzt6S2agqzcmWg==}
+  /@pinia/nuxt/0.2.1_pinia@2.0.20+vue@2.6.14:
+    resolution: {integrity: sha512-XPsuClG2ag/zSdSDqU8FRkTxwWKVZTYD6TVTzjMon3l9QZKC9YvW+jdZWasQilLCnU+jWpmhx41YpfIoPSwMbg==}
     peerDependencies:
-      pinia: ~2.0.9
+      pinia: '>=2.0.16'
     dependencies:
-      pinia: 2.0.13_k3kegkzgmpj55t3l5d75ppieg4
+      pinia: 2.0.20_k3kegkzgmpj55t3l5d75ppieg4
       vue-demi: 0.12.1_vue@2.6.14
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
     dev: false
 
-  /@pinia/testing/0.0.11_pinia@2.0.13+vue@2.6.14:
-    resolution: {integrity: sha512-iJxUHV0Uj1jS7zvN5oVtSZ2BRI4PlG1xbqPkMeJasPtbqsnoxBmkwputDzqX5Dd1I1z9gEfyYOeE2duK3xGWpQ==}
+  /@pinia/testing/0.0.12_pinia@2.0.20+vue@2.6.14:
+    resolution: {integrity: sha512-OGJ5kZihiuNua9trREAVLiv8wAlxT2+gZAz3Cen1L4ch51MbSgY5/nbo9htYsP2my9dhbggBhecgYWlhejhRcQ==}
     peerDependencies:
-      pinia: '>=2.0.13'
+      pinia: '>=2.0.14'
     dependencies:
-      pinia: 2.0.13_k3kegkzgmpj55t3l5d75ppieg4
+      pinia: 2.0.20_k3kegkzgmpj55t3l5d75ppieg4
       vue-demi: 0.12.1_vue@2.6.14
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -5653,7 +5654,7 @@ packages:
     peerDependencies:
       tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
     dependencies:
-      tailwindcss: 3.0.23_z4yclaatiobtrs75ftybxflkiu
+      tailwindcss: 3.0.23_2len4mt2evkrddr6nmldbp7wpa
     dev: false
 
   /@tailwindcss/typography/0.5.2_tailwindcss@3.0.23:
@@ -5664,7 +5665,7 @@ packages:
       lodash.castarray: 4.4.0
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
-      tailwindcss: 3.0.23_z4yclaatiobtrs75ftybxflkiu
+      tailwindcss: 3.0.23_2len4mt2evkrddr6nmldbp7wpa
     dev: false
 
   /@testing-library/dom/7.31.2:
@@ -6720,8 +6721,8 @@ packages:
       vue: 2.6.14
     dev: false
 
-  /@vue/devtools-api/6.1.4:
-    resolution: {integrity: sha512-IiA0SvDrJEgXvVxjNkHPFfDx6SXw0b/TUkqMcDZWNg9fnCAHbTpoo59YfJ9QLFkwa3raau5vSlRVzMSLDnfdtQ==}
+  /@vue/devtools-api/6.2.1:
+    resolution: {integrity: sha512-OEgAMeQXvCoJ+1x8WyQuVZzFo0wcyCmUR3baRVLmKBo1LmYZWMlRiXlux5jd0fqVJu6PfDbOrZItVqUEzLobeQ==}
 
   /@vue/reactivity-transform/3.2.31:
     resolution: {integrity: sha512-uS4l4z/W7wXdI+Va5pgVxBJ345wyGFKvpPYtdSgvfJfX/x2Ymm6ophQlXXB6acqGHtXuBqNyyO3zVp9b1r0MOA==}
@@ -14963,8 +14964,8 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /pinia/2.0.13_k3kegkzgmpj55t3l5d75ppieg4:
-    resolution: {integrity: sha512-B7rSqm1xNpwcPMnqns8/gVBfbbi7lWTByzS6aPZ4JOXSJD4Y531rZHDCoYWBwLyHY/8hWnXljgiXp6rRyrofcw==}
+  /pinia/2.0.20_k3kegkzgmpj55t3l5d75ppieg4:
+    resolution: {integrity: sha512-fdHHumXW/0U5HhxmY1emo3I4z85p8NJPdbtFQSlmJXFe3ktuF0pYNVgVtk2q+j2zCtTufY763xzaEMx0t6T59g==}
     peerDependencies:
       '@vue/composition-api': ^1.4.0
       typescript: '>=4.4.4'
@@ -14975,7 +14976,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@vue/devtools-api': 6.1.4
+      '@vue/devtools-api': 6.2.1
       typescript: 4.6.2
       vue: 2.6.14
       vue-demi: 0.12.1_vue@2.6.14
@@ -18174,7 +18175,7 @@ packages:
       open: 7.4.2
       portfinder: 1.0.28
       replace-in-file: 6.3.2
-      tailwindcss: 3.0.23_z4yclaatiobtrs75ftybxflkiu
+      tailwindcss: 3.0.23_2len4mt2evkrddr6nmldbp7wpa
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -18183,12 +18184,13 @@ packages:
     resolution: {integrity: sha512-y7yC8QXjluDBEFMSX33tV6xMYrf0B3sa+tOB5JSQb6/G6laBU313a+Z+qxu55M1Qyn8tDMttjomsA8IsJD+k+w==}
     dev: true
 
-  /tailwindcss/3.0.23_z4yclaatiobtrs75ftybxflkiu:
+  /tailwindcss/3.0.23_2len4mt2evkrddr6nmldbp7wpa:
     resolution: {integrity: sha512-+OZOV9ubyQ6oI2BXEhzw4HrqvgcARY38xv3zKcjnWtMIZstEsXdI9xftd1iB7+RbOnj2HOEzkA0OyB5BaSxPQA==}
     engines: {node: '>=12.13.0'}
     hasBin: true
     peerDependencies:
       autoprefixer: ^10.0.2
+      postcss: ^8.0.9 || 5.2.18
     dependencies:
       arg: 5.0.1
       autoprefixer: 10.4.0_postcss@8.4.12
@@ -18739,6 +18741,7 @@ packages:
   /unified/9.2.0:
     resolution: {integrity: sha512-vx2Z0vY+a3YoTj8+pttM3tiJHCwY5UFbYdiWrwBEbHmK8pvsPj2rtAX2BFfgXen8T39CJWblWRDT4L5WGXtDdg==}
     dependencies:
+      '@types/unist': 2.0.6
       bail: 1.0.5
       extend: 3.0.2
       is-buffer: 2.0.5
@@ -19231,8 +19234,12 @@ packages:
       js-yaml: 4.1.0
     dev: true
 
-  /vue-i18n/8.26.7:
+  /vue-i18n/8.26.7_vue@2.6.14:
     resolution: {integrity: sha512-7apa5PvRg1YCLoraE3lOgpCG8hJGupLCtywQWedWsgBbvF0TOgFvhitqK9xRH0PBGG1G8aiJz9oklyNDFfDxLg==}
+    peerDependencies:
+      vue: ^2
+    dependencies:
+      vue: 2.6.14
     dev: false
 
   /vue-inbrowser-compiler-utils/4.44.17_vue@2.6.14:
@@ -19440,8 +19447,12 @@ packages:
     resolution: {integrity: sha512-ZMjqRpWabMPqPc7gIrG0Nw6vRf1+itwf0Itft7LbMXs2g3Zs/NFmevjZGN1x7K3Q95GmIjWbQZTVerxiBxI+0g==}
     dev: false
 
-  /vue-router/3.5.3:
+  /vue-router/3.5.3_vue@2.6.14:
     resolution: {integrity: sha512-FUlILrW3DGitS2h+Xaw8aRNvGTwtuaxrRkNSHWTizOfLUie7wuYwezeZ50iflRn8YPV5kxmU2LQuu3nM/b3Zsg==}
+    peerDependencies:
+      vue: ^2
+    dependencies:
+      vue: 2.6.14
     dev: false
 
   /vue-server-renderer/2.6.14:
