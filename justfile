@@ -194,7 +194,7 @@ _api-install:
 
 # Check the health of the API
 @web-health:
-    -curl -s -o /dev/null -w '%{http_code}' 'http://localhost:50280/healthcheck'
+    -curl -s -o /dev/null -w '%{http_code}' 'http://localhost:50280/healthcheck/'
 
 # Wait for the API to be healthy
 @wait-for-web:

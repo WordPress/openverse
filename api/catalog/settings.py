@@ -105,7 +105,10 @@ MIDDLEWARE = [
     "oauth2_provider.middleware.OAuth2TokenMiddleware",
 ]
 
-SWAGGER_SETTINGS = {"SECURITY_DEFINITIONS": {}}
+SWAGGER_SETTINGS = {
+    "DEFAULT_INFO": "catalog.urls.swagger.open_api_info",
+    "SECURITY_DEFINITIONS": {},
+}
 
 OAUTH2_PROVIDER = {
     "SCOPES": {

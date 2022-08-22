@@ -76,7 +76,7 @@ versioned_paths += router.urls
 urlpatterns = [
     path("", RedirectView.as_view(pattern_name="root")),
     path("admin/", admin.site.urls),
-    path("healthcheck", HealthCheck.as_view()),
+    path("healthcheck/", HealthCheck.as_view()),
     # Swagger documentation
     path("", include(swagger_patterns)),
     # API

@@ -18,16 +18,18 @@ with open(description_path, "r") as description_file:
 tos_url = "https://wordpress.github.io/openverse-api/terms_of_service.html"
 license_url = "https://github.com/WordPress/openverse-api/blob/HEAD/LICENSE"
 logo_url = "https://raw.githubusercontent.com/WordPress/openverse/HEAD/brand/logo.svg"
+open_api_info = openapi.Info(
+    title="Openverse API consumer docs",
+    default_version=settings.API_VERSION,
+    description=description,
+    contact=openapi.Contact(email=settings.CONTACT_EMAIL),
+    license=openapi.License(name="MIT License", url=license_url),
+    terms_of_service=tos_url,
+    x_logo={"url": logo_url, "backgroundColor": "#fafafa"},
+)
+
 schema_view = get_schema_view(
-    openapi.Info(
-        title="Openverse API consumer docs",
-        default_version=settings.API_VERSION,
-        description=description,
-        contact=openapi.Contact(email=settings.CONTACT_EMAIL),
-        license=openapi.License(name="MIT License", url=license_url),
-        terms_of_service=tos_url,
-        x_logo={"url": logo_url, "backgroundColor": "#fafafa"},
-    ),
+    open_api_info,
     public=True,
     permission_classes=(AllowAny,),
 )

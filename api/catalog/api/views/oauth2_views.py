@@ -80,7 +80,6 @@ curl \\
                 type=openapi.TYPE_STRING,
                 min_length=1,
                 max_length=150,
-                unique=True,
                 description="A unique human-readable name for your application "
                 "or project requiring access to the Openverse API.",
             ),

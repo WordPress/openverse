@@ -18,12 +18,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Rebase
-        if: github.event.input.rebase
-        run: |
-          git fetch main
-          git rebase main
-
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -176,7 +170,7 @@ jobs:
       - build-images
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup just
         uses: extractions/setup-just@v1
@@ -193,6 +187,35 @@ jobs:
 
       - name: Test ReDoc site
         run: just api-doctest
+
+  validate-openapi-spec:
+    name: Validate Open API spec
+    runs-on: ubuntu-latest
+    needs:
+      - build-images
+    steps:
+      - uses: actions/checkout@v3
+      - uses: extractions/setup-just@v1
+
+      - name: Download all images
+        uses: actions/download-artifact@v2
+        with:
+          path: /tmp
+
+      - name: Load all images
+        run: |
+          docker load --input /tmp/api/api.tar
+          docker load --input /tmp/ingestion_server/ingestion_server.tar
+
+      - name: Run check
+        run: just dj validateopenapischema
+
+      - name: Upload schema on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: openverse-api-openapi-schema.yaml
+          path: ./api/openapi.yaml
 
   django-check:
     name: Run Django check

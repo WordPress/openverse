@@ -17,6 +17,7 @@ furo = "*"
 myst-parser = "*"
 factory-boy = "*"
 fakeredis = "*"
+openapi-spec-validator = "*"
 
 [packages]
 aws-requests-auth = "*"
