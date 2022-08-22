@@ -9,6 +9,7 @@ from catalog.api.serializers.base import BaseModelSerializer
 from catalog.api.serializers.fields import SchemableHyperlinkedIdentityField
 from catalog.api.utils.exceptions import get_api_exception
 from catalog.api.utils.help_text import make_comma_separated_help_text
+from catalog.api.utils.licenses import get_license_url
 from catalog.api.utils.url import add_protocol
 
 
@@ -335,6 +336,11 @@ class MediaSerializer(BaseModelSerializer):
 
         # Ensure license is lowercase
         output["license"] = output["license"].lower()
+
+        if output["license_url"] is None:
+            output["license_url"] = get_license_url(
+                output["license"], output["license_version"]
+            )
 
         # Ensure URLs have scheme
         url_fields = ["url", "creator_url", "foreign_landing_url"]
