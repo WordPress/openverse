@@ -1,6 +1,7 @@
 import inspect
 import logging
 import time
+from datetime import datetime
 from types import FunctionType
 from typing import Callable, Sequence
 
@@ -8,7 +9,6 @@ from airflow.models import DagRun, TaskInstance
 from airflow.utils.dates import cron_presets
 from common.constants import MediaType
 from common.storage.media import MediaStore
-from pendulum import datetime
 
 
 logger = logging.getLogger(__name__)

@@ -1,9 +1,9 @@
+from datetime import datetime
 from unittest import mock
 
 import pytest
 import requests
 from airflow.models import DagRun, TaskInstance
-from pendulum import datetime
 from providers import factory_utils
 
 from tests.dags.common.test_resources import fake_provider_module

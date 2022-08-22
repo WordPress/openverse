@@ -5,7 +5,6 @@ https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html#unit-t
 import datetime
 import os
 
-import pendulum
 import pytest
 from airflow import DAG
 from airflow.models import DagRun, TaskInstance
@@ -15,7 +14,7 @@ from airflow.utils.types import DagRunType
 from common.operators.postgres_result import PostgresResultOperator
 
 
-DATA_INTERVAL_START = pendulum.datetime(2021, 9, 13, tz="UTC")
+DATA_INTERVAL_START = datetime.datetime(2021, 9, 13, tzinfo=datetime.timezone.utc)
 DATA_INTERVAL_END = DATA_INTERVAL_START + datetime.timedelta(days=1)
 
 TEST_DAG_ID = "test_postgres_result_dag"

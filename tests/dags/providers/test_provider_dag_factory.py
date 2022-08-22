@@ -64,6 +64,7 @@ def test_skipped_pull_data_runs_successfully(side_effect, clean_db):
             schedule_string="@once",
             dated=False,
         )
+        # Pendulum must be used here in order for Airflow to run this successfully
         dag.run(start_date=now(), executor=DebugExecutor())
 
 
