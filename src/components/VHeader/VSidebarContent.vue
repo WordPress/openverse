@@ -6,8 +6,8 @@
 
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
+import { Portal as VTeleport } from 'portal-vue'
 
-import VTeleport from '~/components/VTeleport/VTeleport.vue'
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 
 /**

@@ -35,6 +35,7 @@ import {
   inject,
   Ref,
 } from '@nuxtjs/composition-api'
+import { Portal as VTeleport } from 'portal-vue'
 
 import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 import { useI18n } from '~/composables/use-i18n'
@@ -44,7 +45,6 @@ import { useFocusFilters } from '~/composables/use-focus-filters'
 import { Focus } from '~/utils/focus-management'
 import { defineEvent } from '~/types/emits'
 
-import VTeleport from '~/components/VTeleport/VTeleport.vue'
 import VFilterButton from '~/components/VHeader/VFilterButton.vue'
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 

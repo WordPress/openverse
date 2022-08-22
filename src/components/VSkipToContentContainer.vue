@@ -14,10 +14,10 @@
 
 <script>
 import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { Portal as VTeleport } from 'portal-vue'
 
 import { ensureFocus, getFirstTabbableIn } from '~/utils/reakit-utils/focus'
 
-import VTeleport from '~/components/VTeleport/VTeleport.vue'
 import VButton from '~/components/VButton.vue'
 
 /**

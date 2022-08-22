@@ -4,8 +4,7 @@
 
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
-
-import VTeleportTarget from '~/components/VTeleport/VTeleportTarget.vue'
+import { PortalTarget as VTeleportTarget } from 'portal-vue'
 
 export default defineComponent({
   name: 'VSidebarTarget',

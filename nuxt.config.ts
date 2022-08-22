@@ -187,6 +187,7 @@ const config: NuxtConfig = {
     '@pinia/nuxt',
   ],
   modules: [
+    'portal-vue/nuxt',
     '@nuxtjs/i18n',
     '@nuxtjs/redirect-module',
     '@nuxtjs/sentry',

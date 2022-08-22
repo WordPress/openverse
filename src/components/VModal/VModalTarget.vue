@@ -1,14 +1,13 @@
 <template>
-  <VTeleportTarget name="modal" />
+  <PortalTarget name="modal" />
 </template>
 
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
-
-import VTeleportTarget from '~/components/VTeleport/VTeleportTarget.vue'
+import { PortalTarget } from 'portal-vue'
 
 export default defineComponent({
   name: 'VModalTarget',
-  components: { VTeleportTarget },
+  components: { PortalTarget },
 })
 </script>

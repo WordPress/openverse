@@ -58,11 +58,11 @@
 <script>
 import { defineComponent, toRefs, ref, computed } from '@nuxtjs/composition-api'
 import { FocusTrap } from 'focus-trap-vue'
+import { Portal as VTeleport } from 'portal-vue'
 
 import { useDialogContent } from '~/composables/use-dialog-content'
 import { warn } from '~/utils/console'
 
-import VTeleport from '~/components/VTeleport/VTeleport.vue'
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VLogoButton from '~/components/VHeader/VLogoButton.vue'

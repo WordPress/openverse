@@ -22,6 +22,7 @@
 </template>
 <script>
 import { computed, provide, ref, watch } from '@nuxtjs/composition-api'
+import { PortalTarget as VTeleportTarget } from 'portal-vue'
 
 import { useWindowScroll } from '~/composables/use-window-scroll'
 import { useMatchSearchRoutes } from '~/composables/use-match-routes'
@@ -34,7 +35,6 @@ import VHeader from '~/components/VHeader/VHeader.vue'
 import VModalTarget from '~/components/VModal/VModalTarget.vue'
 import VSidebarTarget from '~/components/VModal/VSidebarTarget.vue'
 import VGlobalAudioSection from '~/components/VGlobalAudioSection/VGlobalAudioSection.vue'
-import VTeleportTarget from '~/components/VTeleport/VTeleportTarget.vue'
 
 const embeddedPage = {
   name: 'embedded',
