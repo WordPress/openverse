@@ -121,6 +121,8 @@ PROVIDER_WORKFLOWS = [
         preingestion_task_creator=INaturalistDataIngester.create_preingestion_tasks,
         postingestion_task_creator=INaturalistDataIngester.create_postingestion_tasks,
         schedule_string="@monthly",
+        pull_timeout=timedelta(days=5),
+        load_timeout=timedelta(days=5),
     ),
     ProviderWorkflow(
         provider_script="freesound",
