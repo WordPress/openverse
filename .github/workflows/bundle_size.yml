@@ -45,3 +45,5 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           # Only measure changes in the client, we don't care much about the size of the server bundles (I don't think?)
           pattern: "./.nuxt/dist/client/**/*.{modern.js,js,css}"
+          exclude: "{./.nuxt/dist/client/lang-*.json.js,./.nuxt/dist/client/lang-*.json.modern.js}"
+          minimum-change-threshold: 10
