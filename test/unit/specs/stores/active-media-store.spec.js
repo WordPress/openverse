@@ -14,17 +14,22 @@ describe('Active Media Store', () => {
   describe('state', () => {
     it('sets initial filters to filterData', () => {
       const activeMediaStore = useActiveMediaStore()
-      expect(activeMediaStore.state).toEqual(initialState)
+      expect(activeMediaStore.type).toEqual(initialState.type)
+      expect(activeMediaStore.id).toEqual(initialState.id)
+      expect(activeMediaStore.status).toEqual(initialState.status)
+      expect(activeMediaStore.message).toEqual(initialState.message)
     })
   })
   describe('actions', () => {
-    it.each(statuses)('can set active media with status $status', (status) => {
+    it.each(statuses)(`can set active media with status $status`, (status) => {
       const activeMediaStore = useActiveMediaStore()
       const mediaItem = { type: AUDIO, id: 'audio1' }
       activeMediaStore.setActiveMediaItem({ ...mediaItem, status })
       const expectedState = { ...initialState, ...mediaItem, status }
 
-      expect(activeMediaStore.state).toEqual(expectedState)
+      expect(activeMediaStore.id).toEqual(expectedState.id)
+      expect(activeMediaStore.type).toEqual(expectedState.type)
+      expect(activeMediaStore.status).toEqual(expectedState.status)
     })
 
     it.each(statuses)('can pause an item with any status', (status) => {
@@ -32,7 +37,7 @@ describe('Active Media Store', () => {
       activeMediaStore.setActiveMediaItem({ status })
       activeMediaStore.pauseActiveMediaItem()
 
-      expect(activeMediaStore.state.status).toEqual('paused')
+      expect(activeMediaStore.status).toEqual('paused')
     })
     it('can eject an item', () => {
       const activeMediaStore = useActiveMediaStore()
@@ -44,7 +49,9 @@ describe('Active Media Store', () => {
       })
       activeMediaStore.ejectActiveMediaItem()
 
-      expect(activeMediaStore.state).toEqual(initialState)
+      expect(activeMediaStore.id).toEqual(initialState.id)
+      expect(activeMediaStore.type).toEqual(initialState.type)
+      expect(activeMediaStore.status).toEqual(initialState.status)
     })
     it('can set a message', () => {
       const activeMediaStore = useActiveMediaStore()
