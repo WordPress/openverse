@@ -28,6 +28,7 @@
     }
   },
   "header": {
+    "home-link": "Home",
     "about-nav-item": "Our Story",
     "source-nav-item": "Sources",
     "search-guide-nav-item": "Search Guide",

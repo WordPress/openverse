@@ -2,6 +2,7 @@
   <VButton
     as="VLink"
     href="/"
+    :aria-label="$t('header.home-link')"
     variant="plain"
     size="disabled"
     class="max-w-min text-dark-charcoal hover:bg-yellow"
@@ -16,6 +17,7 @@
       :class="{
         'hidden sm:block md:hidden': isSearchRoute,
       }"
+      :aria-hidden="true"
       width="95"
       height="15"
     />
