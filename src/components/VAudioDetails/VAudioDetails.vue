@@ -118,11 +118,11 @@ dl div {
 }
 
 dt {
-  font-weight: 400;
+  @apply text-base font-normal;
   display: inline-block;
 }
 
 dd {
-  font-weight: bold;
+  @apply pt-2 text-sm text-base font-semibold capitalize leading-[130%];
 }
 </style>
