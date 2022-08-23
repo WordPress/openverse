@@ -37,6 +37,20 @@ class RankFeature(Query):
     name = "rank_feature"
 
 
+def _unmasked_query_end(page_size, page):
+    """
+    Used to retrieve the upper index of results to retrieve
+    from Elasticsearch under the following conditions:
+    1. There is no query mask
+    2. The lower index is beyond the scope of the existing query mask
+    3. The lower index is within the scope of the existing query mask
+    but the upper index exceeds it
+
+    In all these cases, the query mask is not used to calculate the upper index.
+    """
+    return ceil(page_size * page / (1 - DEAD_LINK_RATIO))
+
+
 def _paginate_with_dead_link_mask(
     s: Search, page_size: int, page: int
 ) -> Tuple[int, int]:
@@ -47,6 +61,8 @@ def _paginate_with_dead_link_mask(
     In almost all cases the ``DEAD_LINK_RATIO`` will effectively double
     the page size (given the current configuration of 0.5).
 
+    The "branch X" labels are for cross-referencing with the tests.
+
     :param s: The elasticsearch Search object
     :param page_size: How big the page should be.
     :param page: The page number.
@@ -54,13 +70,13 @@ def _paginate_with_dead_link_mask(
     """
     query_hash = get_query_hash(s)
     query_mask = get_query_mask(query_hash)
-    if not query_mask:
+    if not query_mask:  # branch 1
         start = 0
-        end = ceil(page_size * page / (1 - DEAD_LINK_RATIO))
-    elif page_size * (page - 1) > sum(query_mask):
+        end = _unmasked_query_end(page_size, page)
+    elif page_size * (page - 1) > sum(query_mask):  # branch 2
         start = len(query_mask)
-        end = ceil(page_size * page / (1 - DEAD_LINK_RATIO))
-    else:
+        end = _unmasked_query_end(page_size, page)
+    else:  # branch 3
         # query_mask is a list of 0 and 1 where 0 indicates the result position
         # for the given query will be an invalid link. If we accumulate a query
         # mask you end up, at each index, with the number of live results you
@@ -78,7 +94,7 @@ def _paginate_with_dead_link_mask(
         accu_query_mask = list(accumulate(query_mask))
         start = 0
         if page > 1:
-            try:
+            try:  # branch 3_start_A
                 # find the index at which we can skip N valid results where N = all
                 # the results that would be skipped to arrive at the start of the
                 # requested page
@@ -86,15 +102,17 @@ def _paginate_with_dead_link_mask(
                 # previous valid results + 1 because we don't want to include the
                 # last valid result from the previous page
                 start = accu_query_mask.index(page_size * (page - 1) + 1)
-            except ValueError:
-                # Cannot fail because of the check on line 56 which verifies that
+            except ValueError:  # branch 3_start_B
+                # Cannot fail because of the check on branch 2 which verifies that
                 # the query mask already includes at least enough masked valid
                 # results to fulfill the requested page size
                 start = accu_query_mask.index(page_size * (page - 1)) + 1
+        # else:  branch 3_start_C
+        # Always start page=1 queries at 0
 
-        if page_size * page > sum(query_mask):
-            end = ceil(page_size * page / (1 - DEAD_LINK_RATIO))
-        else:
+        if page_size * page > sum(query_mask):  # branch 3_end_A
+            end = _unmasked_query_end(page_size, page)
+        else:  # branch 3_end_B
             end = accu_query_mask.index(page_size * page) + 1
     return start, end
 
