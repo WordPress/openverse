@@ -10,7 +10,7 @@
         ? 'search-button ps-[1.5px] p-[0.5px] focus-visible:bg-pink focus-visible:text-white'
         : 'h-full whitespace-nowrap py-6 px-10',
       sizeClasses,
-      isHomeRoute
+      route === 'home'
         ? 'border-b border-tx border-b-pink bg-pink text-white'
         : 'border-dark-charcoal-20',
     ]"
@@ -46,14 +46,16 @@ export default defineComponent({
       type: String as PropType<FieldSize>,
       required: true,
     },
-    isHomeRoute: {
-      type: Boolean,
-      default: false,
+    route: {
+      type: String as PropType<'home' | '404'>,
+      validator: (v: string) => ['home', '404'].includes(v),
     },
   },
   setup(props) {
     const isMobile = useBrowserIsMobile()
+
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: !isMobile })
+
     const isIcon = computed(() => {
       // split the evaluation of the isMinScreenMd ref
       // out to prevent short-circuiting from creating
@@ -61,18 +63,19 @@ export default defineComponent({
       const currentIsMinScreenMd = isMinScreenMd.value
 
       return (
+        props.route === '404' ||
         props.size !== 'standalone' ||
         (props.size === 'standalone' && !currentIsMinScreenMd)
       )
     })
 
     const sizeClasses = computed(() => {
-      return isIcon
+      return isIcon.value
         ? {
-            small: ['w-10', 'md:w-12', 'h-10', 'md:h-12'],
-            medium: ['w-12', 'h-12'],
-            large: ['w-14', 'h-14'],
-            standalone: ['w-14', 'md:w-auto', 'h-full'],
+            small: 'w-10 md:w-12 h-10 md:h-12',
+            medium: 'w-12 h-12',
+            large: 'w-14 h-14',
+            standalone: 'w-[57px] md:w-[69px] h-[57px] md:h-[69px]',
           }[props.size]
         : undefined
     })

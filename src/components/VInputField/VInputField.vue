@@ -1,6 +1,6 @@
 <template>
   <div
-    class="input-field group flex flex-row items-center overflow-hidden rounded-sm border border-dark-charcoal-20 p-0.5px focus-within:border-1.5 focus-within:border-pink focus-within:bg-dark-charcoal-06 focus-within:p-0 group-hover:bg-dark-charcoal-06"
+    class="input-field group flex flex-row items-center overflow-hidden rounded-sm border p-0.5px focus-within:border-1.5 focus-within:border-pink focus-within:bg-dark-charcoal-06 focus-within:p-0 focus:border-pink group-hover:bg-dark-charcoal-06"
     :class="[
       {
         // Padding is set to 1.5px to accommodate the border that will appear later.

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/vue'
 
 import { useMatchHomeRoute } from '~/composables/use-match-routes'
 
-import SearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
+import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
 
 jest.mock('~/composables/use-match-routes', () => ({
   useMatchHomeRoute: jest.fn(),
@@ -11,7 +11,7 @@ jest.mock('~/composables/use-match-routes', () => ({
 const sizes = ['small', 'medium', 'large', 'standalone']
 const defaultPlaceholder = 'Enter search query'
 
-describe('SearchBar', () => {
+describe('VSearchBar', () => {
   let options
   beforeEach(() => {
     options = {
@@ -31,7 +31,7 @@ describe('SearchBar', () => {
     (size) => {
       useMatchHomeRoute.mockImplementation(() => false)
       options.props.size = size
-      render(SearchBar, options)
+      render(VSearchBar, options)
 
       const inputElement = screen.getByPlaceholderText(defaultPlaceholder)
 
@@ -46,7 +46,7 @@ describe('SearchBar', () => {
     (size) => {
       useMatchHomeRoute.mockImplementation(() => false)
       options.props.size = size
-      render(SearchBar, options)
+      render(VSearchBar, options)
 
       const btnElement = screen.getByLabelText('search.search')
 
@@ -59,7 +59,8 @@ describe('SearchBar', () => {
   describe('placeholder', () => {
     it('should default to hero.search.placeholder', () => {
       delete options.props.placeholder
-      render(SearchBar, options)
+
+      render(VSearchBar, options)
       expect(
         screen.queryByPlaceholderText('hero.search.placeholder')
       ).not.toBeNull()
@@ -68,7 +69,7 @@ describe('SearchBar', () => {
     it('should use the prop when provided', () => {
       const placeholder = 'This is a different placeholder from the default'
       options.props.placeholder = placeholder
-      render(SearchBar, options)
+      render(VSearchBar, options)
       expect(screen.queryByPlaceholderText(placeholder)).not.toBeNull()
     })
   })

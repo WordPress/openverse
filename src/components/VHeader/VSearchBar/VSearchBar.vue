@@ -1,14 +1,14 @@
 <template>
   <form
-    class="search-bar group flex flex-row items-center rounded-sm bg-white"
+    class="search-bar group flex flex-row items-center rounded-sm border-tx bg-white"
     :class="{ 'h-[57px] md:h-[69px]': size === 'standalone' }"
     @submit.prevent="handleSearch"
   >
     <VInputField
       :placeholder="placeholder || $t('hero.search.placeholder')"
       v-bind="$attrs"
-      class="search-field flex-grow"
-      :class="{ 'border-transparent': isHomeRoute }"
+      class="search-field flex-grow focus:border-pink"
+      :class="[route === 'home' ? 'border-tx' : 'border-dark-charcoal-20']"
       :label-text="
         $t('search.search-bar-label', { openverse: 'Openverse' }).toString()
       "
@@ -23,7 +23,7 @@
       <!-- @slot Extra information such as loading message or result count goes here. -->
       <slot />
     </VInputField>
-    <VSearchButton type="submit" :size="size" :is-home-route="isHomeRoute" />
+    <VSearchButton type="submit" :size="size" :route="route" />
   </form>
 </template>
 
@@ -63,6 +63,10 @@ export default defineComponent({
       type: String,
       required: false,
     },
+    is404: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: {
     input: defineEvent<[string]>(),
@@ -70,6 +74,10 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { matches: isHomeRoute } = useMatchHomeRoute()
+
+    const route = computed(() => {
+      return isHomeRoute?.value ? 'home' : props.is404 ? '404' : undefined
+    })
 
     const searchText = computed(() => props.value)
 
@@ -83,7 +91,7 @@ export default defineComponent({
 
     return {
       handleSearch,
-      isHomeRoute,
+      route,
       searchText,
       updateSearchText,
     }

@@ -12,7 +12,7 @@
         :active-item="activeItem"
         :class="{
           '!border-tx': isInSearchBar,
-          'group-hover:!border-dark-charcoal-20':
+          '!bg-white group-hover:!border-dark-charcoal-20 group-hover:focus:!border-tx':
             isInSearchBar && !a11yProps['aria-expanded'],
         }"
         :type="placement"
