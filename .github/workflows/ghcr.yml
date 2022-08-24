@@ -24,6 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     # prevent running on fork PRs
     if: github.event_name == 'push' || github.event_name == 'release' || github.event.pull_request.head.repo.owner.login == 'WordPress'
+    outputs:
+      pushed-version: ${{ steps.get-version.outputs.version }}
 
     steps:
       - name: Checkout branch or push to main
@@ -90,7 +92,7 @@ jobs:
 
       - uses: ./.github/actions/staging-frontend-deploy
         with:
-          tag: "main"
+          tag: ${{ needs.push-to-ghcr.outputs.pushed-version }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
