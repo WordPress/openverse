@@ -277,7 +277,9 @@ def send_alert(
     known_failures = Variable.get(
         "silenced_slack_alerts", default_var={}, deserialize_json=True
     )
-    if dag_id in known_failures:
+    if dag_id in known_failures and any(
+        error.lower() in text.lower() for error in known_failures[dag_id]["errors"]
+    ):
         log.info(f"Skipping Slack alert for {dag_id}: {text}")
         return
 

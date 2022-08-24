@@ -344,16 +344,55 @@ def test_send_alert():
         )
 
 
-def test_send_alert_skips_when_silenced():
+@pytest.mark.parametrize(
+    "silenced_errors, alert, should_send",
+    [
+        # silenced errors includes alert being raised
+        (
+            [
+                "Error triggering data refresh",
+            ],
+            "Error triggering data refresh",
+            False,
+        ),
+        # alert contains substring matching a silenced error
+        (
+            [
+                "Authorization failed",
+                "data refresh",
+            ],
+            "Error triggering data refresh",
+            False,
+        ),
+        # error matches are case-insensitive
+        (
+            [
+                "kEYeRROR",
+            ],
+            "KeyError: 'image'",
+            False,
+        ),
+        # none of the silenced errors matches alert string
+        (
+            ["Authorization failed", "data refresh", "No unit codes"],
+            "Error due to invalid selection criteria",
+            True,
+        ),
+    ],
+)
+def test_send_alert_skips_when_silenced(silenced_errors, alert, should_send):
     mock_silenced_dags = {
-        "silenced_dag_id": "https://github.com/WordPress/openverse/issues/1"
+        "silenced_dag_id": {
+            "issue": "https://github.com/WordPress/openverse/issues/1",
+            "errors": silenced_errors,
+        }
     }
     with mock.patch("common.slack.send_message") as send_message_mock, mock.patch(
         "common.slack.Variable"
     ) as MockVariable:
         MockVariable.get.side_effect = [mock_silenced_dags]
-        send_alert("Sample text", dag_id="silenced_dag_id")
-        send_message_mock.assert_not_called()
+        send_alert(alert, dag_id="silenced_dag_id")
+        assert send_message_mock.called == should_send
 
 
 @pytest.mark.parametrize(

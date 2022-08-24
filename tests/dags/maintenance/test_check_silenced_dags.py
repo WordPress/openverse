@@ -23,7 +23,14 @@ from tests.factories.github import make_issue
         ),
         # One DAG to reenable
         (
-            {"dag_a_id": "https://github.com/WordPress/openverse/issues/1"},
+            {
+                "dag_a_id": {
+                    "issue": "https://github.com/WordPress/openverse/issues/1",
+                    "errors": [
+                        "Test exception",
+                    ],
+                }
+            },
             [
                 ("dag_a_id", "https://github.com/WordPress/openverse/issues/1"),
             ],
@@ -32,8 +39,18 @@ from tests.factories.github import make_issue
         # Multiple DAGs to reenable
         (
             {
-                "dag_a_id": "https://github.com/WordPress/openverse/issues/1",
-                "dag_b_id": "https://github.com/WordPress/openverse/issues/2",
+                "dag_a_id": {
+                    "issue": "https://github.com/WordPress/openverse/issues/1",
+                    "errors": [
+                        "Test exception",
+                    ],
+                },
+                "dag_b_id": {
+                    "issue": "https://github.com/WordPress/openverse/issues/2",
+                    "errors": [
+                        "A different error",
+                    ],
+                },
             },
             [
                 ("dag_a_id", "https://github.com/WordPress/openverse/issues/1"),
@@ -110,7 +127,10 @@ def test_get_dags_with_closed_issues(open_issues, closed_issues):
     ) as MockGetIssue:
         MockGetIssue.side_effect = mock_get_issue
 
-        silenced_dags = {f"dag_{issue}": issue for issue in open_issues + closed_issues}
+        silenced_dags = {
+            f"dag_{issue}": {"issue": issue, "errors": ["test"]}
+            for issue in open_issues + closed_issues
+        }
 
         dags_to_reenable = get_dags_with_closed_issues("not_set", silenced_dags)
 

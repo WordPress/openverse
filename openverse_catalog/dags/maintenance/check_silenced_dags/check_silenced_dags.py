@@ -24,7 +24,8 @@ def get_dags_with_closed_issues(github_pat, silenced_dags):
     gh = GitHubAPI(github_pat)
 
     dags_to_reenable = []
-    for dag_id, issue_url in silenced_dags.items():
+    for dag_id, conf in silenced_dags.items():
+        issue_url = conf["issue"]
         owner, repo, issue_number = get_issue_info(issue_url)
         github_issue = gh.get_issue(repo, issue_number, owner)
 
