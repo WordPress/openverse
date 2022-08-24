@@ -38,7 +38,7 @@ function useMouseDownTargetRef({
       const onMouseDown = (event) => (mouseDownTargetRef.value = event.target)
       document.addEventListener('mousedown', onMouseDown)
       onInvalidate(() => {
-        document.addEventListener('mousedown', onMouseDown)
+        document.removeEventListener('mousedown', onMouseDown)
       })
     },
     { immediate: true }
