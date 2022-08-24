@@ -53,7 +53,7 @@ export const buttonVariants = [
   'action-menu-muted',
   'action-menu-muted-pressed',
   'plain',
-  'plain-dangerous',
+  'plain--avoid',
   'full',
 ] as const
 export type ButtonVariant = typeof buttonVariants[number]
@@ -109,7 +109,7 @@ const VButton = defineComponent({
      * The variant of the button.
      *
      * Plain removes all styles except the focus ring.
-     * Plain-dangerous removes _all_ styles including the focus ring.
+     * Plain--avoid removes _all_ styles including the focus ring.
      *
      * @default 'primary'
      */
@@ -203,7 +203,7 @@ const VButton = defineComponent({
     })
 
     const isPlainDangerous = computed(() => {
-      return propsRef.variant.value === 'plain-dangerous'
+      return propsRef.variant.value === 'plain--avoid'
     })
 
     watch(

@@ -5,7 +5,7 @@
     role="tab"
     :tabindex="isSelected ? 0 : -1"
     size="disabled"
-    variant="plain-dangerous"
+    variant="plain--avoid"
     v-bind="tabProps"
     class="rounded-none border-0 bg-white py-3 px-4 text-base font-semibold focus-visible:shadow-[0_0_0_1.5px_#c52b9b_inset] md:px-6"
     :class="[$style[variant], isSelected && $style[`${variant}-selected`]]"

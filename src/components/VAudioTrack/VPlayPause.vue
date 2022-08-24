@@ -99,11 +99,11 @@ export default defineComponent({
     const icon = computed(() => statusIconMap[props.status])
 
     /**
-     * Sets the button variant to `plain-dangerous` to manually handle focus states.
+     * Sets the button variant to `plain--avoid` to manually handle focus states.
      * Sets the connections (none-rounded corners) for the button based on the layout.
      */
     const buttonProps = computed(() => {
-      const variant = 'plain-dangerous' as ButtonVariant
+      const variant = 'plain--avoid' as ButtonVariant
 
       return { variant, connections: layoutConnectionsMap[props.layout] }
     })
