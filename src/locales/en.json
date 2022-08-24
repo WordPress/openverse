@@ -481,7 +481,7 @@
   },
   "image-details": {
     "creator": "by {name}",
-    "weblink": "Go to image's website",
+    "weblink": "Use this image",
     "information": {
       "title": "Image information",
       "type": "Type",
@@ -508,7 +508,8 @@
       "source": "Source",
       "genre": "Genre"
     },
-    "information": "Audio information"
+    "information": "Audio information",
+    "weblink": "Use this audio"
   },
   "meta-search": {
     "caption": "{openverse} does not currently index the sources listed above, but through this interface is offering convenient access to search services provided by other independent organizations. {openverse} has no control over the results that are returned. Do not assume that the results displayed in this search portal are under a CC license. Always verify that the work is actually under a CC license by following the link. If you are in doubt, you should contact the copyright holder directly, or try to contact the site where you found the content.",

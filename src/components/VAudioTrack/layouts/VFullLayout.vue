@@ -53,10 +53,10 @@
       <VButton
         as="VLink"
         :href="audio.foreign_landing_url"
-        :size="isSmall ? 'small' : 'medium'"
-        class="order-1 text-sr font-semibold ms-auto lg:order-2 lg:text-2xl"
+        size="disabled"
+        class="order-1 px-6 py-3 text-sr font-semibold ms-auto md:px-6 md:py-4 md:text-2xl lg:order-2"
       >
-        {{ $t('download-button.download') }}
+        {{ $t('audio-details.weblink') }}
       </VButton>
     </div>
   </div>
