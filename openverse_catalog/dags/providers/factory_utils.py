@@ -136,11 +136,13 @@ def pull_media_wrapper(
     start_time = time.perf_counter()
     # Not passing kwargs here because Airflow throws a bunch of stuff in there that
     # none of our provider scripts are expecting.
-    data = run_func(*args)
-    end_time = time.perf_counter()
-    # Report duration
-    duration = end_time - start_time
-    ti.xcom_push(key="duration", value=duration)
+    try:
+        data = run_func(*args)
+    finally:
+        end_time = time.perf_counter()
+        # Report duration
+        duration = end_time - start_time
+        ti.xcom_push(key="duration", value=duration)
     return data
 
 

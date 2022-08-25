@@ -220,6 +220,33 @@ def test_pull_media_wrapper(
     internal_func_mock.assert_called_once_with(value)
 
 
+@pytest.mark.parametrize("func", [fake_provider_module.main, FakeDataIngesterClass])
+def test_pull_media_wrapper_always_pushes_duration(func, ti_mock, dagrun_mock):
+    error_message = "Whoops!"
+
+    def _raise_an_error(text):
+        raise ValueError(text)
+
+    with pytest.raises(ValueError, match=error_message):
+        factory_utils.pull_media_wrapper(
+            func,
+            ["image"],
+            ["file1.tsv"],
+            ti_mock,
+            dagrun_mock,
+            args=[_raise_an_error, error_message],
+        )
+    # We should have one XCom push for duration
+    assert ti_mock.xcom_push.call_count == 1
+    push_call = ti_mock.xcom_push.mock_calls[0]
+    # Check that the duration was reported
+    assert push_call.kwargs["key"] == "duration"
+    # Check that it was *not* None (it should always be recorded)
+    duration = push_call.kwargs["value"]
+    assert duration is not None
+    assert duration > 0
+
+
 @pytest.mark.parametrize(
     "schedule_interval, expected",
     [
