@@ -5,7 +5,6 @@ import { deepClone } from '~/utils/clone'
 import { initialResults, useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
 import { ALL_MEDIA, AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
-import { initialFetchState } from '~/composables/use-fetch-state'
 
 jest.mock('axios', () => ({
   ...jest.requireActual('axios'),
@@ -78,8 +77,18 @@ describe('Media Store', () => {
         audio: { ...initialResults },
       })
       expect(mediaStore.mediaFetchState).toEqual({
-        audio: initialFetchState,
-        image: initialFetchState,
+        audio: {
+          fetchingError: null,
+          hasStarted: false,
+          isFetching: false,
+          isFinished: false,
+        },
+        image: {
+          fetchingError: null,
+          hasStarted: false,
+          isFetching: false,
+          isFinished: false,
+        },
       })
     })
   })
@@ -167,9 +176,9 @@ describe('Media Store', () => {
 
     it.each`
       searchType   | fetchState
-      ${ALL_MEDIA} | ${{ canFetch: false, fetchingError: 'Error', hasStarted: true, isFetching: true, isFinished: false }}
-      ${AUDIO}     | ${{ canFetch: false, fetchingError: 'Error', hasStarted: true, isFetching: false, isFinished: true }}
-      ${IMAGE}     | ${{ canFetch: false, fetchingError: null, hasStarted: true, isFetching: true, isFinished: false }}
+      ${ALL_MEDIA} | ${{ fetchingError: 'Error', hasStarted: true, isFetching: true, isFinished: false }}
+      ${AUDIO}     | ${{ fetchingError: 'Error', hasStarted: true, isFetching: false, isFinished: true }}
+      ${IMAGE}     | ${{ fetchingError: null, hasStarted: true, isFetching: true, isFinished: false }}
     `(
       'fetchState for $searchType returns $fetchState',
       ({ searchType, fetchState }) => {
@@ -317,7 +326,6 @@ describe('Media Store', () => {
       expect(mediaStore.results[mediaType]).toEqual(initialResults)
       expect(mediaStore.fetchState).toEqual({
         isFetching: false,
-        canFetch: true,
         hasStarted: true,
         isFinished: false,
         fetchingError: `No ${mediaType} found for this query`,

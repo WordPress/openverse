@@ -32,7 +32,8 @@ export default defineComponent({
     const canLoadMore = computed(
       () =>
         searchStore.searchTerm !== '' &&
-        mediaStore.fetchState.canFetch &&
+        !mediaStore.fetchState.isFetching &&
+        !mediaStore.fetchState.fetchingError &&
         mediaStore.resultCount > 0
     )
     const onLoadMore = async () => {

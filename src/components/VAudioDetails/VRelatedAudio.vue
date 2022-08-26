@@ -3,7 +3,10 @@
     <h2 class="mb-6 text-2xl lg:text-3xl">
       {{ $t('audio-details.related-audios') }}
     </h2>
-    <div v-if="!fetchState.isError" class="mb-12 flex flex-col gap-8 lg:gap-12">
+    <div
+      v-if="!fetchState.fetchingError"
+      class="mb-12 flex flex-col gap-8 lg:gap-12"
+    >
       <VAudioTrack
         v-for="audio in media"
         :key="audio.id"
@@ -13,7 +16,7 @@
       />
       <LoadingIcon v-show="fetchState.isFetching" />
     </div>
-    <p v-show="!!fetchState.isError">
+    <p v-show="!!fetchState.fetchingError">
       {{ $t('media-details.related-error') }}
     </p>
   </aside>

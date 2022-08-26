@@ -1,10 +1,6 @@
 import { defineStore } from 'pinia'
 
-import {
-  FetchState,
-  initialFetchState,
-  updateFetchState,
-} from '~/composables/use-fetch-state'
+import type { FetchState } from '~/models/fetch-state'
 import { initServices } from '~/stores/media/services'
 import type { Media } from '~/models/media'
 import type { SupportedMediaType } from '~/constants/media'
@@ -18,7 +14,7 @@ interface RelatedMediaState {
 export const useRelatedMediaStore = defineStore('related-media', {
   state: (): RelatedMediaState => ({
     mainMediaId: null,
-    fetchState: { ...initialFetchState },
+    fetchState: { isFetching: false, hasStarted: false, fetchingError: null },
     media: [],
   }),
 
@@ -30,9 +26,26 @@ export const useRelatedMediaStore = defineStore('related-media', {
   },
 
   actions: {
+    _endFetching(error?: string) {
+      this.fetchState.fetchingError = error || null
+      this.fetchState.hasStarted = true
+      this.fetchState.isFetching = false
+    },
+    _startFetching() {
+      this.fetchState.isFetching = true
+      this.fetchState.hasStarted = true
+      this.fetchState.fetchingError = null
+    },
+    _resetFetching() {
+      this.fetchState.isFetching = false
+      this.fetchState.hasStarted = false
+      this.fetchState.fetchingError = null
+    },
+
     async fetchMedia(mediaType: SupportedMediaType, id: string) {
+      this._resetFetching()
       this.mainMediaId = id
-      this.fetchState = updateFetchState(this.fetchState, 'start')
+      this._startFetching()
       this.media = []
       try {
         const accessToken = this.$nuxt.$openverseApiToken
@@ -40,13 +53,9 @@ export const useRelatedMediaStore = defineStore('related-media', {
         this.media = (
           await service.getRelatedMedia<typeof mediaType>(id)
         ).results
-        this.fetchState = updateFetchState(this.fetchState, 'end')
+        this._endFetching()
       } catch (error) {
-        this.fetchState = updateFetchState(
-          this.fetchState,
-          'end',
-          `Could not fetch related ${mediaType} for id ${id}`
-        )
+        this._endFetching(`Could not fetch related ${mediaType} for id ${id}`)
         throw new Error(`Could not fetch related ${mediaType} for id ${id}`)
       }
     },

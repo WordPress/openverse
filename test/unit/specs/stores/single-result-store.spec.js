@@ -1,6 +1,5 @@
 import { createPinia, setActivePinia } from '~~/test/unit/test-utils/pinia'
 
-import { initialFetchState } from '~/composables/use-fetch-state'
 import { AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
 import { useMediaStore } from '~/stores/media'
 import { useSingleResultStore } from '~/stores/media/single-result'
@@ -44,7 +43,11 @@ describe('Media Item Store', () => {
     it('sets default state', () => {
       setActivePinia(createPinia())
       const singleResultStore = useSingleResultStore()
-      expect(singleResultStore.fetchState).toEqual(initialFetchState)
+      expect(singleResultStore.fetchState).toEqual({
+        hasStarted: false,
+        isFetching: false,
+        fetchingError: null,
+      })
       expect(singleResultStore.mediaItem).toEqual(null)
       expect(singleResultStore.mediaType).toEqual(null)
     })

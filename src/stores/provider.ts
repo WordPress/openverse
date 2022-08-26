@@ -13,11 +13,7 @@ import {
 import { warn } from '~/utils/console'
 import { initProviderServices } from '~/data/media-provider-service'
 import type { MediaProvider } from '~/models/media-provider'
-import {
-  FetchState,
-  initialFetchState,
-  updateFetchState,
-} from '~/composables/use-fetch-state'
+import type { FetchState } from '~/models/fetch-state'
 
 export interface ProviderState {
   providers: {
@@ -55,27 +51,39 @@ export const useProviderStore = defineStore('provider', {
       [IMAGE]: [],
     },
     fetchState: {
-      [AUDIO]: { ...initialFetchState },
-      [IMAGE]: { ...initialFetchState },
+      [AUDIO]: { isFetching: false, hasStarted: false, fetchingError: null },
+      [IMAGE]: { isFetching: false, hasStarted: false, fetchingError: null },
     },
   }),
 
   actions: {
-    async getProviders() {
-      await this.fetchMediaProviders()
-      return this.providers
+    _endFetching(mediaType: SupportedMediaType, error?: string) {
+      this.fetchState[mediaType].fetchingError = error || null
+      if (error) {
+        this.fetchState[mediaType].isFinished = true
+        this.fetchState[mediaType].hasStarted = true
+      } else {
+        this.fetchState[mediaType].hasStarted = true
+      }
+      this.fetchState[mediaType].isFetching = false
+    },
+    _startFetching(mediaType: SupportedMediaType) {
+      this.fetchState[mediaType].isFetching = true
+      this.fetchState[mediaType].hasStarted = true
     },
 
     _updateFetchState(
       mediaType: SupportedMediaType,
-      action: 'end' | 'start',
+      action: 'start' | 'end',
       option?: string
     ) {
-      this.fetchState[mediaType] = updateFetchState(
-        this.fetchState[mediaType],
-        action,
-        option
-      )
+      action === 'start'
+        ? this._startFetching(mediaType)
+        : this._endFetching(mediaType, option)
+    },
+    async getProviders() {
+      await this.fetchMediaProviders()
+      return this.providers
     },
 
     /**

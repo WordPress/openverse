@@ -5,7 +5,6 @@ import { AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
 import { useSearchStore } from '~/stores/search'
 import { useProviderStore } from '~/stores/provider'
 import { initProviderServices } from '~/data/media-provider-service'
-import { initialFetchState } from '~/composables/use-fetch-state'
 
 jest.mock('axios', () => ({
   ...jest.requireActual('axios'),
@@ -77,8 +76,8 @@ describe('Provider Store', () => {
       [IMAGE]: [],
     })
     expect(providerStore.fetchState).toEqual({
-      [AUDIO]: initialFetchState,
-      [IMAGE]: initialFetchState,
+      [AUDIO]: { hasStarted: false, isFetching: false, fetchingError: null },
+      [IMAGE]: { hasStarted: false, isFetching: false, fetchingError: null },
     })
   })
 
@@ -100,8 +99,9 @@ describe('Provider Store', () => {
   it('fetchMediaProviders on success', async () => {
     await providerStore.fetchMediaProviders()
     expect(providerStore.fetchState[IMAGE]).toEqual({
-      ...initialFetchState,
+      fetchingError: null,
       hasStarted: true,
+      isFetching: false,
     })
     expect(providerStore.providers[IMAGE]).toEqual(mockData)
   })

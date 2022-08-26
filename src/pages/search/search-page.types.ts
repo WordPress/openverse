@@ -1,6 +1,6 @@
 import type { SupportedMediaType } from '~/constants/media'
 import type { Media } from '~/models/media'
-import type { FetchState } from '~/composables/use-fetch-state'
+import type { FetchState } from '~/models/fetch-state'
 
 import type { ExtractPropTypes, PropType } from '@nuxtjs/composition-api'
 

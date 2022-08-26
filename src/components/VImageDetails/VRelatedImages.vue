@@ -16,7 +16,7 @@
 import { defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import type { ImageDetail } from '~/models/media'
-import type { FetchState } from '~/composables/use-fetch-state'
+import type { FetchState } from '~/models/fetch-state'
 
 import VImageGrid from '~/components/VImageGrid/VImageGrid.vue'
 import VLoadingIcon from '~/components/LoadingIcon.vue'
