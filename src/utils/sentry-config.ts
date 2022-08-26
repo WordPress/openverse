@@ -12,6 +12,7 @@ export const sentryConfig: ModuleConfiguration = {
   disabled: process.env.DISABLE_SENTRY
     ? true
     : process.env.SENTRY_DSN === undefined || !isProd,
+  logMockCalls: false,
   lazy: true,
   clientConfig: {
     // Only allow errors that come from an actual openverse.engineering subdomain
