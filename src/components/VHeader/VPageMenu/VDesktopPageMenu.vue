@@ -2,6 +2,7 @@
   <VPopover
     ref="pageMenuPopover"
     class="flex items-stretch"
+    :clippable="true"
     :label="$t('header.aria.menu')"
   >
     <template #trigger="{ a11yProps }">

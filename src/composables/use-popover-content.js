@@ -5,7 +5,7 @@ import { useDialogContent } from './use-dialog-content'
 /**
  * @typedef Props
  * @property {import('./types').Ref<HTMLElement>} popoverRef
- * @property {import('./types').ToRefs<import('~/components/VPopover/VPopoverContent.types').Props>} popoverPropsRefs
+ * @property {import('./types').ToRefs<import('~/composables/use-popper').PopoverContentProps>} popoverPropsRefs
  * @property {import('@nuxtjs/composition-api').SetupContext['emit']} emit
  */
 
@@ -24,10 +24,11 @@ export function usePopoverContent({ popoverRef, popoverPropsRefs, emit }) {
     hideOnEscRef: popoverPropsRefs.hideOnEsc,
     emit,
   })
-  usePopper({
+
+  const { maxHeightRef } = usePopper({
     popoverRef,
     popoverPropsRefs,
   })
 
-  return { onKeyDown, onBlur }
+  return { onKeyDown, onBlur, maxHeightRef }
 }

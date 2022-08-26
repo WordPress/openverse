@@ -4,6 +4,7 @@
     class="flex items-stretch"
     :label="$t('search-type.label').toString()"
     placement="bottom-end"
+    :clippable="true"
   >
     <template #trigger="{ a11yProps }">
       <VSearchTypeButton

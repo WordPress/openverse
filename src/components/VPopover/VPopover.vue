@@ -24,6 +24,7 @@
       :trigger-element="triggerRef"
       :placement="placement"
       :strategy="strategy"
+      :clippable="clippable"
       :hide-on-esc="hideOnEsc"
       :hide-on-click-outside="hideOnClickOutside"
       :auto-focus-on-show="autoFocusOnShow"
@@ -128,7 +129,17 @@ export default defineComponent({
     /**
      * the z-index to apply to the popover content
      */
-    zIndex: { type: Number, default: 999 },
+    zIndex: {
+      type: Number,
+      default: 50,
+      // TODO: extract valid z-indexes (these are from the tailwind config)
+      validator: (v) => [0, 10, 20, 30, 40, 50].includes(v),
+    },
+    /**
+     * Whether the popover height should be clipped and made scrollable
+     * if the window height is too small.
+     */
+    clippable: { type: Boolean, default: false },
   },
   emits: [
     /**
@@ -150,7 +161,11 @@ export default defineComponent({
       'aria-haspopup': 'dialog',
     })
 
-    const triggerRef = computed(() => triggerContainerRef.value?.firstChild)
+    const triggerRef = computed(() =>
+      triggerContainerRef.value?.firstChild
+        ? /** @type {HTMLElement} */ (triggerContainerRef.value.firstChild)
+        : undefined
+    )
 
     watch([visibleRef], ([visible]) => {
       triggerA11yProps['aria-expanded'] = visible

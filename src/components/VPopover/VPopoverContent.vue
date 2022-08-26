@@ -8,8 +8,9 @@
   >
     <div
       ref="popoverRef"
-      class="max-w-max rounded-sm border border-light-gray bg-white shadow"
-      :style="{ zIndex }"
+      class="popover-content max-w-max overflow-y-auto overflow-x-hidden rounded-sm border border-light-gray bg-white shadow"
+      :class="`z-${zIndex}`"
+      :style="heightProperties"
       :tabindex="-1"
       @blur="onBlur"
     >
@@ -18,32 +19,91 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, toRefs, ref, provide } from '@nuxtjs/composition-api'
+<script lang="ts">
+import {
+  defineComponent,
+  toRefs,
+  ref,
+  provide,
+  InjectionKey,
+  PropType,
+  computed,
+} from '@nuxtjs/composition-api'
+
+import {
+  Placement,
+  placements as popoverPlacements,
+  PositioningStrategy,
+} from '@popperjs/core'
 
 import { usePopoverContent } from '~/composables/use-popover-content'
 import { warn } from '~/utils/console'
+import { defineEvent } from '~/types/emits'
 
-import { propTypes } from './VPopoverContent.types'
+import type { CSSProperties } from '@vue/runtime-dom'
 
-/**
- * @type {import('@nuxtjs/composition-api').InjectionKey<boolean>}
- */
-export const VPopoverContentContextKey = Symbol('VPopoverContentContextKey')
+export const VPopoverContentContextKey = Symbol(
+  'VPopoverContentContextKey'
+) as InjectionKey<boolean>
 
 export default defineComponent({
-  name: 'VPopover',
-  props: propTypes,
+  name: 'VPopoverContent',
+  props: {
+    visible: {
+      type: Boolean,
+      required: true,
+    },
+    hide: {
+      type: Function as PropType<() => void>,
+      required: true,
+    },
+    hideOnEsc: {
+      type: Boolean,
+      default: true,
+    },
+    hideOnClickOutside: {
+      type: Boolean,
+      default: true,
+    },
+    autoFocusOnShow: {
+      type: Boolean,
+      default: true,
+    },
+    autoFocusOnHide: {
+      type: Boolean,
+      default: true,
+    },
+    triggerElement: {
+      type: (process.server ? Object : HTMLElement) as PropType<HTMLElement>,
+    },
+    placement: {
+      type: String as PropType<Placement>,
+      default: 'bottom-end',
+      validate: (v) => popoverPlacements.includes(v),
+    },
+    strategy: {
+      type: String as PropType<PositioningStrategy>,
+      default: 'absolute',
+      validate: (v) => ['absolute', 'fixed'].includes(v),
+    },
+    zIndex: {
+      type: Number,
+      required: true,
+      // TODO: extract valid z-indexes (these are from the tailwind config)
+      validator: (v: number | 'auto') =>
+        [0, 10, 20, 30, 40, 50, 'auto'].includes(v),
+    },
+    clippable: {
+      type: Boolean,
+      default: false,
+    },
+  },
   /**
    * This is the only documented emitted event but in reality we pass through `$listeners`
    * to the underlying element so anything and everything is emitted. `@keydown` is the
    * only one this component overrides and controls (but ultimately still emits).
    */
-  emits: ['keydown', 'blur'],
-  /**
-   * @param {import('./VPopoverContent.types').Props} props
-   * @param {import('@nuxtjs/composition-api').SetupContext} context
-   */
+  emits: { keydown: defineEvent(), blur: defineEvent() },
   setup(props, { emit, attrs }) {
     provide(VPopoverContentContextKey, true)
     if (!attrs['aria-label'] && !attrs['aria-labelledby']) {
@@ -51,14 +111,31 @@ export default defineComponent({
     }
 
     const propsRefs = toRefs(props)
-    const popoverRef = ref()
-    const { onKeyDown, onBlur } = usePopoverContent({
+    const popoverRef = ref<HTMLElement | undefined>()
+
+    const { onKeyDown, onBlur, maxHeightRef } = usePopoverContent({
       popoverRef,
       popoverPropsRefs: propsRefs,
       emit,
     })
 
-    return { popoverRef, onKeyDown, onBlur }
+    const heightProperties = computed(() => {
+      // extracting this to ensure that computed is updated when the value changes
+      const maxHeight = maxHeightRef.value
+
+      return maxHeight && props.clippable
+        ? ({ '--popover-height': `${maxHeight}px` } as CSSProperties)
+        : ({} as CSSProperties)
+    })
+
+    return { popoverRef, onKeyDown, onBlur, heightProperties }
   },
 })
 </script>
+<style>
+.popover-content {
+  height: var(--popover-height, auto);
+  scrollbar-gutter: stable;
+  overflow-x: hidden;
+}
+</style>
