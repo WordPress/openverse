@@ -13,14 +13,17 @@
       @toggle="onTriggerClick"
       @tab="onTab"
     />
-    <Component
-      :is="filterComponent"
-      v-bind="options"
-      :visible="visibleRef"
-      @close="onTriggerClick"
-    >
-      <VSearchGridFilter @close="onTriggerClick" />
-    </Component>
+    <!-- Client only here is a hotfix to mitigate frontend issue #1748 and should be removed ASAP. -->
+    <ClientOnly>
+      <Component
+        :is="filterComponent"
+        v-bind="options"
+        :visible="visibleRef"
+        @close="onTriggerClick"
+      >
+        <VSearchGridFilter @close="onTriggerClick" />
+      </Component>
+    </ClientOnly>
   </div>
 </template>
 
