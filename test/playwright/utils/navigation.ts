@@ -248,7 +248,7 @@ export const goToSearchTerm = async (
       page.waitForNavigation(),
       page.click(`[aria-label="${t('search.search', dir)}"]`),
     ])
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('load')
   }
   await scrollDownAndUp(page)
   const pageWidth = page.viewportSize()?.width
@@ -313,7 +313,7 @@ export const scrollToTop = async (page: Page) => {
  */
 export const scrollDownAndUp = async (page: Page) => {
   await scrollToBottom(page)
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('load')
   await scrollToTop(page)
 }
 

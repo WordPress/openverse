@@ -198,7 +198,7 @@ export default defineComponent({
 
     /* Interface with VPlayPause */
 
-    const handleToggle = (state: 'playing' | 'paused') => {
+    const handleToggle = (state?: 'playing' | 'paused') => {
       if (!state) {
         switch (status.value) {
           case 'playing':

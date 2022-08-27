@@ -70,13 +70,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
-::v-deep .attribution {
+::v-deep(.attribution) {
   @apply text-dark-charcoal-70;
 }
-::v-deep a {
+::v-deep(a) {
   @apply text-current underline;
 }
-::v-deep img {
+::v-deep(img) {
   @apply opacity-70; /* to match the text color */
 }
 </style>

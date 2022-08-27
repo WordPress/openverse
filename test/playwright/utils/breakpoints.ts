@@ -11,7 +11,7 @@ type ExpectSnapshot = <T extends ScreenshotAble>(
   name: string,
   s: T,
   options?: Parameters<T['screenshot']>[0]
-) => Promise<Buffer>
+) => Promise<Buffer | void>
 
 type BreakpointBlock = (options: {
   getConfigValues: (name: string) => {
