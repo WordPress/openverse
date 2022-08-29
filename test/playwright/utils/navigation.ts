@@ -95,32 +95,41 @@ export const searchTypeNames = {
   },
 }
 
-const isButtonPressed = async (page: Page, buttonSelector: string) => {
+const isButtonPressed = async (
+  page: Page,
+  buttonSelector: string
+): Promise<boolean> => {
   const viewportSize = page.viewportSize()
   if (!viewportSize) {
     return false
   }
   const pageWidth = viewportSize.width
   if (pageWidth > 640) {
-    return await page.getAttribute(buttonSelector, 'aria-pressed')
+    return (await page.getAttribute(buttonSelector, 'aria-pressed')) === 'true'
   } else {
-    return (await page.locator('button', { hasText: 'Close' }).isVisible())
-      ? 'true'
-      : 'false'
+    return await page.locator('button', { hasText: 'Close' }).isVisible()
   }
 }
 
 const openMenu = async (page: Page, button: 'filter' | 'contentSwitcher') => {
   const selector = buttonSelectors[button]
-  const expectedValue = 'true'
-  if ((await isButtonPressed(page, selector)) !== expectedValue) {
+  if (!(await isButtonPressed(page, selector))) {
     await page.click(selector)
-    expect(await isButtonPressed(page, selector)).toEqual(expectedValue)
+    expect(await isButtonPressed(page, selector)).toEqual(true)
   }
 }
 
 export const openFilters = async (page: Page) => {
   await openMenu(page, 'filter')
+}
+
+export const closeFilters = async (page: Page) => {
+  const selector = buttonSelectors['filter']
+
+  if (await isButtonPressed(page, selector)) {
+    await page.click(selector)
+    expect(await isButtonPressed(page, selector)).toEqual(false)
+  }
 }
 
 export const openMobileMenu = async (page: Page) => {

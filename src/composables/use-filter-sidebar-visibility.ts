@@ -1,9 +1,7 @@
-import { onMounted, ref } from '@nuxtjs/composition-api'
+import { ref } from '@nuxtjs/composition-api'
 
 import { env } from '~/utils/env'
 import local from '~/utils/local'
-import { isMinScreen } from '~/composables/use-media-query'
-import { useSearchStore } from '~/stores/search'
 
 /**
  * This global ref is SSR safe because it will only
@@ -16,8 +14,6 @@ const isVisible = ref<boolean>(false)
  * This composable keeps track of whether the filters (sidebar or modal) should be visible.
  */
 export const useFilterSidebarVisibility = () => {
-  const mediaQuery = isMinScreen('md')
-
   /**
    * Open or close the filter sidebar
    * @param val - whether to set the sidebar visible.
@@ -26,17 +22,6 @@ export const useFilterSidebarVisibility = () => {
     isVisible.value = val
     local.setItem(env.filterStorageKey, String(val))
   }
-
-  onMounted(() => {
-    const localFilterState = () =>
-      local.getItem(env.filterStorageKey) === 'true'
-    const searchStore = useSearchStore()
-    setVisibility(
-      mediaQuery.value &&
-        searchStore.searchTypeIsSupported &&
-        localFilterState()
-    )
-  })
 
   return {
     isVisible,

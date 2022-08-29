@@ -9,21 +9,25 @@
       :class="visibleRef ? 'hidden md:flex' : 'flex'"
       :pressed="visibleRef"
       :disabled="disabled"
-      v-bind="triggerA11yProps"
+      aria-haspopup="dialog"
+      :aria-expanded="visibleRef"
       @toggle="onTriggerClick"
       @tab="onTab"
     />
-    <!-- Client only here is a hotfix to mitigate frontend issue #1748 and should be removed ASAP. -->
-    <ClientOnly>
-      <Component
-        :is="filterComponent"
-        v-bind="options"
-        :visible="visibleRef"
-        @close="onTriggerClick"
+    <template v-if="visibleRef">
+      <VTeleport v-if="isMinScreenMd" to="sidebar">
+        <VSearchGridFilter @close="onTriggerClick" />
+      </VTeleport>
+      <VModalContent
+        v-else
+        :hide="close"
+        :visible="true"
+        :trigger-element="triggerElement"
+        :aria-label="$t('header.filter-button.simple')"
       >
         <VSearchGridFilter @close="onTriggerClick" />
-      </Component>
-    </ClientOnly>
+      </VModalContent>
+    </template>
   </div>
 </template>
 
@@ -32,24 +36,27 @@ import {
   defineComponent,
   ref,
   watch,
-  reactive,
   computed,
   onMounted,
   inject,
   Ref,
+  toRef,
 } from '@nuxtjs/composition-api'
+
 import { Portal as VTeleport } from 'portal-vue'
 
-import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
-import { useI18n } from '~/composables/use-i18n'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { useFocusFilters } from '~/composables/use-focus-filters'
 
 import { Focus } from '~/utils/focus-management'
 import { defineEvent } from '~/types/emits'
 
-import VFilterButton from '~/components/VHeader/VFilterButton.vue'
+import local from '~/utils/local'
+import { env } from '~/utils/env'
+import { useSearchStore } from '~/stores/search'
+
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
+import VFilterButton from '~/components/VHeader/VFilterButton.vue'
 
 export default defineComponent({
   name: 'VHeaderFilter',
@@ -75,61 +82,47 @@ export default defineComponent({
     close: defineEvent(),
   },
   setup(props, { emit }) {
-    const modalRef = ref<HTMLElement | null>(null)
     const nodeRef = ref<HTMLElement | null>(null)
-    const buttonRef = ref<HTMLElement | null>(null)
-
     const visibleRef = ref(false)
     const filterSidebar = useFilterSidebarVisibility()
-    const i18n = useI18n()
+    const disabledRef = toRef(props, 'disabled')
 
     const isMinScreenMd: Ref<boolean> = inject('isMinScreenMd', ref(true))
-    const isHeaderScrolled: Ref<boolean> = inject(
-      'isHeaderScrolled',
-      ref(false)
-    )
 
-    const filterComponent = ref<'VModalContent' | 'VSidebarContent'>(
-      'VModalContent'
-    )
+    const open = () => (visibleRef.value = true)
+    const close = () => (visibleRef.value = false)
 
-    const triggerA11yProps = reactive({
-      'aria-expanded': false,
-      'aria-haspopup': 'dialog',
-    })
-    const { lock, unlock } = useBodyScrollLock({ nodeRef })
-
-    watch([visibleRef], ([visible]) => {
-      triggerA11yProps['aria-expanded'] = visible
-      filterSidebar.setVisibility(visible)
-    })
-
-    const open = () => {
-      visibleRef.value = true
-      emit('open')
+    onMounted(() => {
+      // We default to show the filter on desktop, and only close it if the user has
+      // explicitly closed it before.
+      const localFilterState = !(
+        local.getItem(env.filterStorageKey) === 'false'
+      )
+      const searchStore = useSearchStore()
       if (!isMinScreenMd.value) {
-        lock()
-      }
-    }
-
-    const close = () => {
-      visibleRef.value = false
-      emit('close')
-      if (!isMinScreenMd.value) {
-        unlock()
-      }
-    }
-
-    watch(
-      () => props.disabled,
-      (disabled) => {
-        if (disabled && visibleRef.value) {
-          onTriggerClick()
+        local.setItem(env.filterStorageKey, 'false')
+      } else {
+        const visible = searchStore.searchTypeIsSupported && localFilterState
+        filterSidebar.setVisibility(visible)
+        if (visible) {
+          open()
         }
       }
-    )
+    })
+
+    watch(visibleRef, (visible) => {
+      filterSidebar.setVisibility(visible)
+      visible ? emit('open') : emit('close')
+    })
+
+    watch(disabledRef, (disabled) => {
+      if (disabled && visibleRef.value) {
+        close()
+      }
+    })
+
     const onTriggerClick = () => {
-      visibleRef.value === true ? close() : open()
+      visibleRef.value = !visibleRef.value
     }
 
     const focusFilters = useFocusFilters()
@@ -141,65 +134,22 @@ export default defineComponent({
       focusFilters.focusFilterSidebar(event, Focus.First)
     }
 
-    type MobileFilterOptions = {
-      'aria-label': string
-      hide: () => void
-    }
-    type DesktopFilterOptions = {
-      to: string
-    }
-
-    const mobileOptions = {
-      triggerElement: computed(() =>
-        nodeRef.value?.firstChild
-          ? (nodeRef.value?.firstChild as HTMLElement)
-          : null
-      ),
-      'aria-label': i18n.t('header.filter-button.simple'),
-      hide: close,
-    }
-
-    const desktopOptions = {
-      to: 'sidebar',
-    }
-
-    const options: Ref<MobileFilterOptions | DesktopFilterOptions> =
-      ref(mobileOptions)
-
-    onMounted(() => {
-      if (filterSidebar.isVisible.value) {
-        open()
-      }
-    })
-    watch(
-      [isMinScreenMd],
-      ([isMinScreenMd]) => {
-        if (isMinScreenMd) {
-          filterComponent.value = 'VSidebarContent'
-          options.value = desktopOptions
-        } else {
-          filterComponent.value = 'VModalContent'
-          options.value = mobileOptions
-        }
-      },
-      { immediate: true }
+    const triggerElement = computed(() =>
+      nodeRef.value?.firstChild
+        ? (nodeRef.value?.firstChild as HTMLElement)
+        : null
     )
 
     return {
-      filterComponent,
-      modalRef,
-      buttonRef,
-      isHeaderScrolled,
       nodeRef,
       visibleRef,
+      triggerElement,
 
       open,
       close,
       onTriggerClick,
       onTab,
-      triggerA11yProps,
       isMinScreenMd,
-      options,
     }
   },
 })

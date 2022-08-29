@@ -28,7 +28,7 @@ const config: PlaywrightTestConfig = {
      * verified that there is indeed a tape saved for the response in question,
      * switch this back to `prod` and see if your tests pass.
      */
-    command: './node_modules/.bin/npm-run-all -p -r talkback prod',
+    command: './node_modules/.bin/npm-run-all -p -r talkback prod:playwright',
     timeout: 60_000 * 5, // 5 minutes
     port: 8443,
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === '1',

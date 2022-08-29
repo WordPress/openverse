@@ -36,13 +36,13 @@
     <VHeaderMenu
       :is-search-route="isSearchRoute"
       @open="openMenuModal(menus.CONTENT_SWITCHER)"
-      @close="close()"
+      @close="close"
     />
     <VHeaderFilter
       v-if="isSearchRoute"
       :disabled="areFiltersDisabled"
       @open="openMenuModal(menus.FILTERS)"
-      @close="close()"
+      @close="close"
     />
   </header>
 </template>
@@ -56,13 +56,11 @@ import {
   ref,
   useContext,
   useRouter,
-  watch,
 } from '@nuxtjs/composition-api'
 
 import { ALL_MEDIA, searchPath } from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useMatchSearchRoutes } from '~/composables/use-match-routes'
-import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { useI18n } from '~/composables/use-i18n'
 import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
 import { useMediaStore } from '~/stores/media'
@@ -98,25 +96,15 @@ export default defineComponent({
 
     const { matches: isSearchRoute } = useMatchSearchRoutes()
 
-    const isHeaderScrolled = inject('isHeaderScrolled')
+    const isHeaderScrolled = inject('isHeaderScrolled', false)
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
     const headerHasTwoRows = inject('headerHasTwoRows')
     provide('isMinScreenMd', isMinScreenMd)
 
     const menuModalRef = ref(null)
 
-    const { isVisible: isFilterVisible } = useFilterSidebarVisibility()
-
     const openMenu = ref<null | HeaderMenu>(null)
     const isMenuOpen = computed(() => openMenu.value !== null)
-
-    /**
-     * Set the active mobile menu view to the 'filters'
-     * if the filter sidebar has been toggled open.
-     */
-    watch([isFilterVisible], ([isFilterVisible]) => {
-      openMenu.value = isFilterVisible ? menus.FILTERS : null
-    })
 
     const openMenuModal = (menuName: HeaderMenu) => {
       if (openMenu.value !== null) {
