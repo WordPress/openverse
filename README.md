@@ -12,12 +12,11 @@ This repository is the frontend UI for accessing and exploring the openly-licens
 
 You can view [the application](https://wordpress.org/openverse) live on WordPress.org.
 
-
-## Technology 
+## Technology
 
 The frontend app is built using [Vue.js](https://vuejs.org/) and [Nuxt.js](https://nuxtjs.org).
 
-## Local Development 
+## Local Development
 
 **Note for Windows users:** Please use [WSL](https://docs.microsoft.com/en-us/windows/wsl/install) for developing on the Openverse frontend. Several scripts, primarily support scripts, rely on a general \*nix type environment. Maintaining parity for cross platform scripts proved complicated without significant duplication. If you run into issues with running the Openverse frontend in WSL please let us know by opening an issue or [joining us on Slack](https://make.wordpress.org/chat/) in the `#openverse` room and ask for help.
 
@@ -38,7 +37,7 @@ pnpm dev
 
 ```
 
-### Using HTTPS Locally 
+### Using HTTPS Locally
 
 To enable SSL support in local development, use the `pnpm dev:secure` command. This requires you to have a private key and certificate in the root of the repository with the following names:
 
@@ -75,7 +74,7 @@ You can find the local IP address Nuxt uses by looking at the output of `nuxt de
 
 You will need to regenerate the certificate if this IP address changes for any reason, like by enabling a VPN or changing networks.
 
-### Choosing which API to use 
+### Choosing which API to use
 
 You don't need to have the Openverse API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [production API](https://api.openverse.engineering) that's already publicly available. If you need to test against changes in your local API, set the `API_URL` environment variable when run the development server.
 
@@ -83,16 +82,16 @@ You don't need to have the Openverse API running locally to be able to run the f
 API_URL=http://localhost:8000 pnpm dev
 ```
 
-### Standalone and embedded modes 
+### Standalone and embedded modes
 
 The application can run in two modes. By default, it runs in embedded mode, which is loaded in an iframe on [WordPress.org/openverse](https://make.wordpress.org/openverse). It has a small header without logo and no footer.
 The standalone mode which has a large header with logo and a footer, can be enabled by adding `?embedded=false` query parameter to the URL. For example, when running locally, you can go to [http://localhost:8443?embedded=false](http://localhost:8443?embedded=false) to view the standalone application.
 
-### Running tests 
+### Running tests
 
 Refer to the [`TESTING_GUIDELINES.md` file](./TESTING_GUIDELINES.md) for instructions on how to run tests.
 
-### localhost tunneling 
+### localhost tunneling
 
 If you want to make your local development server accessible to the internet (for testing or showing someone something you're working on), you can use [`ngrok`](https://ngrok.com/). Follow the documentation on the `ngrok` site to install it and set it up. Once you have it installed, get the development server for Openverse running and in a separate window/tab, run:
 
@@ -109,19 +108,19 @@ If you need to run an HTTP version (for example, if you're testing against third
 ngrok http 8443 -host-header="localhost:8443"
 ```
 
-## Frontend Components 
+## Frontend Components
 
 The frontend app is composed of a number of components that are documented in our [Storybook](https://wordpress.github.io/openverse-frontend).
 
-### CSS Framework 
+### CSS Framework
 
 To design our components, we use the [TailwindCSS](https://tailwindcss.com/) utility-first CSS framework. We have compiled a list of TailwindCSS classes that are used in the frontend app. You can view the list [here](https://wordpress.github.io/openverse-frontend/tailwind/).
 
-### Development Tips 
+### Development Tips
 
 If you use VS Code, you can install the [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) extension to get autocomplete for TailwindCSS classes.
 
-## Docker and Openverse frontend 
+## Docker and Openverse frontend
 
 We do not currently support local development using Docker or `docker-compose`. It was supported in the past, but it was not used by the core contributors. It remained broken for many months without ever being noticed, so the assumption is that it was also not being used active community members. Local `nuxt` development is still easy across platforms, so maintaining a separate Docker development stack for the frontend did not make sense.
 
@@ -141,13 +140,13 @@ docker run -it -p 127.0.0.1:8443:8443/tcp openverse-frontend:latest
 
 The app will be available at <http://localhost:8443>.
 
-## Formatting and Linting 
+## Formatting and Linting
 
 The code in this repository is formatted using `prettier`. If you have prettier setup in your code editor it should work out of the box; otherwise you can use the `pnpm lint:fix` script to format and fix lint errors in your code. Checks are run to lint your code and validate the formatting on git precommit using [husky](https://github.com/typicode/husky).
 
 You will need to fix any linting issues before committing. We recommend formatting your JavaScript files on save in your text editor. You can learn how to do this in Visual Studio Code [here](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode#format-on-save).
 
-### File name conventions 
+### File name conventions
 
 All files and folders should be written in `kebab-case`, with the exception of Vue single file components. If it ends in `.vue`, please use `PascalCase`. This distinction makes our component files stand out clearly and is [recommended by the Vue community](https://vuejs.org/v2/style-guide/#Single-file-component-filename-casing-strongly-recommended).
 
@@ -157,12 +156,12 @@ All files and folders should be written in `kebab-case`, with the exception of V
 | ------------ | ----------- | ----------- | ---------------------- |
 | /photos/\_id | /image/\_id | 301         | Nuxt server middleware |
 
-## Contributing 
+## Contributing
 
 Pull requests are welcome! Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community members on #openverse.
 
 You are welcome to take any open issue in the tracker labeled [`help wanted`](https://github.com/wordpress/openverse-frontend/labels/help%20wanted) or [`good first issue`](https://github.com/wordpress/openverse-frontend/labels/good%20first%20issue); **there's no need to ask for permission in advance**. Other issues are open for contribution as well, but may be less accessible or well defined in comparison to those that are explicitly labeled.
 
-## Acknowledgments 
+## Acknowledgments
 
 Openverse, previously known as CC Search, was conceived and built at [Creative Commons](https://creativecommons.org). We thank them for their commitment to open source and openly licensed content, with particular thanks to previous team members @ryanmerkley, @janetpkr, @lizadaly, @sebworks, @pa-w, @kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar, along with their [community of volunteers](https://opensource.creativecommons.org/community/community-team/).

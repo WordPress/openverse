@@ -14,7 +14,7 @@
     <VIcon :icon-path="icon" />
     <span
       class="md:block md:truncate md:ms-2 md:text-start"
-      :class="isHeaderScrolled ? 'hidden' : 'block truncate ms-2 text-start'"
+      :class="isHeaderScrolled ? 'hidden' : 'ms-2 block truncate text-start'"
       >{{ buttonLabel }}</span
     >
     <VIcon

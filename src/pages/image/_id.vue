@@ -36,8 +36,15 @@
         :href="image.foreign_landing_url"
         class="btn-main mb-4 w-full flex-initial leading-[1.3] md:mb-0 md:w-max"
         size="large"
-        >{{ $t('image-details.weblink') }}</VButton
       >
+        {{ $t('image-details.weblink') }}
+        <VIcon
+          :icon-path="externalIcon"
+          :rtl-flip="true"
+          class="ms-2 md:h-6 md:w-6"
+          :size="4"
+        />
+      </VButton>
       <div
         class="flex flex-1 flex-col justify-center text-base font-semibold leading-[1.3]"
       >
@@ -90,6 +97,7 @@ import { useRelatedMediaStore } from '~/stores/media/related-media'
 import { createDetailPageMeta } from '~/utils/og'
 
 import VButton from '~/components/VButton.vue'
+import VIcon from '~/components/VIcon/VIcon.vue'
 import VLink from '~/components/VLink.vue'
 import VImageDetails from '~/components/VImageDetails/VImageDetails.vue'
 import VMediaReuse from '~/components/VMediaInfo/VMediaReuse.vue'
@@ -98,11 +106,13 @@ import VSketchFabViewer from '~/components/VSketchFabViewer.vue'
 import VBackToSearchResultsLink from '~/components/VBackToSearchResultsLink.vue'
 
 import errorImage from '~/assets/image_not_available_placeholder.png'
+import externalIcon from '~/assets/icons/external-link.svg'
 
 export default defineComponent({
   name: 'VImageDetailsPage',
   components: {
     VButton,
+    VIcon,
     VLink,
     VImageDetails,
     VMediaReuse,
@@ -210,6 +220,7 @@ export default defineComponent({
       onImageLoaded,
       onImageError,
       backToSearchPath,
+      externalIcon,
     }
   },
   async asyncData({ app, error, route, $pinia }) {

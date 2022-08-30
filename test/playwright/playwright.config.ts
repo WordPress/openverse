@@ -52,6 +52,12 @@ const config: PlaywrightTestConfig = {
    * Playwright default of using 1/2 of the number of CPU cores continues to work otherwise.
    */
   workers: UPDATE_TAPES === 'true' ? 1 : undefined,
+  expect: {
+    toMatchSnapshot: {
+      // To avoid flaky tests, we allow a small amount of pixel difference.
+      maxDiffPixelRatio: 0.01,
+    },
+  },
 }
 
 export default config

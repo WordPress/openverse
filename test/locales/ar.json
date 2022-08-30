@@ -151,6 +151,7 @@
     "genre-label": "النوع",
     "related-audios": "الصوت ذو الصلة",
     "information": "معلومات صوتية",
+    "weblink": "احصل على هذا الصوت",
     "table": {
       "album": "الألبوم",
       "category": "يكتب",
@@ -163,7 +164,7 @@
   },
   "image-details": {
     "creator": "بالاسم{name}",
-    "weblink": "انتقل إلى موقع الصور",
+    "weblink": "احصل على هذه الصورة",
     "related-images": "الصور ذات الصلة",
     "aria": {
       "creator-url": "المؤلف {creator}"
