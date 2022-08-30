@@ -48,11 +48,21 @@ Production is automatically deployed any time a new release is created in GitHub
 
 Even if the deployment process described above succeeds, sometimes we may realise that the deployed code is not behaving as we expected. In these cases it may be necessary to force an environment to be deployed to a specific version.
 
-The [Rollback Frontend](https://github.com/WordPress/openverse-frontend/actions/workflows/rollback.yml) workflow makes this possible. It is a dispatchable workflow. Only members of the WordPress/openverse-maintainers GitHub team are able to dispatch the workflow to completion. Anyone else who tries to dispatch it will have the workflow automatically fail.
+The [Rollback Frontend](https://github.com/WordPress/openverse-frontend/actions/workflows/rollback.yml) workflow makes this possible. It is a dispatchable workflow. Only members of the @WordPress/openverse-maintainers GitHub team are able to dispatch the workflow to completion. Anyone else who tries to dispatch it will have the workflow automatically fail.
 
 The workflow requires two inputs: `environment` and `tag`. `environment` must be either `staging` or `production` and the `tag` must be a valid tag that exists on the ghcr.io/wordpress/openverse-frontend image. The `tag` input is validated against the available list of tags and the workflow will fail if the tag is determined not to exist in the image repository.
 
 After validating the tag and that the dispatcher is authorised, the Rollback workflow follows the deployment process described above, except that it skips the Docker image build and goes straight to step 2. Because of this difference, the rollback workflow generally takes less than 10 minutes.
+
+## Environment Variables
+
+To add new environment variables for a given service, you must first update the task definition template in Terraform with the new variables and then deploy the code that depends on it. It is generally good practice to have safe defaults for environment variables so that this ordering does not matter.
+
+If you're adding a new environment variable, be sure to coordinate with someone on @WordPress/openverse-maintainers who is able to update the task definition template for you, if you're unable to do so yourself.
+
+After the template is updated, deploy the new code following the usual procedures and the new template will be used.
+
+When updating existing environment variable values or adding new variables that do not have dependent code, update the template for the environment that needs updating and then redeploy the environment using the rollback workflow described above.
 
 ## Future end-to-end test integration
 
