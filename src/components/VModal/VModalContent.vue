@@ -1,7 +1,7 @@
 <template>
   <VTeleport v-if="visible" to="modal">
     <!-- Prevent FocusTrap from trying to focus the first element. We already do that in a more flexible, adaptive way in our Dialog composables. -->
-    <FocusTrap :initial-focus="() => false">
+    <FocusTrap :initial-focus="() => false" :escape-deactivates="!hideOnEsc">
       <div
         class="fixed inset-0 z-40 flex min-h-screen justify-center overflow-y-auto bg-dark-charcoal bg-opacity-75"
       >

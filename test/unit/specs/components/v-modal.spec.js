@@ -114,4 +114,16 @@ describe('VModal', () => {
     expect(getDialog()).toBeVisible()
     expect(screen.getByText(/custom initial focus/i))
   })
+
+  it('should hide the modal on escape', async () => {
+    render(TestWrapper, options)
+    await doOpen()
+
+    expect(getDialog()).toBeVisible()
+
+    await userEvent.keyboard('{Escape}')
+    await nextTick()
+
+    expect(queryDialog()).toBe(null)
+  })
 })
