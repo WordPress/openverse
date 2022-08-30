@@ -1,4 +1,5 @@
 import io
+import struct
 
 from django.conf import settings
 from django.http.response import FileResponse, HttpResponse
@@ -131,7 +132,14 @@ class ImageViewSet(MediaViewSet):
         watermarked, exif = watermark(image_url, image_info, params.data["watermark"])
         # Re-insert EXIF metadata.
         if exif:
-            exif_bytes = piexif.dump(exif)
+            # piexif dump raises InvalidImageDataError which is a child class
+            # of ValueError, and a struct error when the value is not
+            # between -2147483648 and 2147483647
+            # https://github.com/WordPress/openverse-api/issues/849
+            try:
+                exif_bytes = piexif.dump(exif)
+            except (struct.error, ValueError):
+                exif_bytes = None
         else:
             exif_bytes = None
         img_bytes = io.BytesIO()
