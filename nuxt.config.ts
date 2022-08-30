@@ -143,9 +143,6 @@ const config: NuxtConfig = {
     },
   },
   srcDir: 'src/',
-  // Necessary to fix pm2 + nuxt issues
-  rootDir: process.cwd(),
-  buildDir: process.cwd() + '/.nuxt/',
   modern: 'client',
   server: {
     port: process.env.PORT || 8443,

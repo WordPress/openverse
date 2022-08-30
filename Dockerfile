@@ -1,7 +1,8 @@
 FROM node:16-alpine as builder
 
+# Install system packages needed to build on macOS
 RUN apk add --no-cache --virtual .gyp python3 make g++ \
-    && npm install -g pnpm pm2@5.2.0
+  && npm install -g pnpm
 
 USER node
 
@@ -19,7 +20,6 @@ RUN pnpm install -r --offline
 
 # disable telemetry when building the app
 ENV NUXT_TELEMETRY_DISABLED=1
-
 ENV NODE_ENV=production
 
 ARG API_URL
@@ -30,17 +30,16 @@ RUN echo "{\"release\":\"${RELEASE}\"}" > /home/node/app/src/static/version.json
 RUN pnpm i18n
 RUN pnpm build:only
 
-COPY ecosystem.config.js /home/node/app/ecosystem.config.js
-
 ###################
 #    Nuxt app
 ###################
 
-FROM node:alpine as app
+FROM node:16-alpine as app
+
+# Install CURL for the production healthcheck
+RUN apk --no-cache add curl
 
 WORKDIR /home/node/app
-
-RUN npm install -g pm2@5.2.0
 
 USER node
 
@@ -55,4 +54,4 @@ ENV PORT=8443
 # expose port 8443 by default
 EXPOSE 8443
 
-CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+ENTRYPOINT [ "npm", "start", "--" ]
