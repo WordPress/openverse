@@ -47,7 +47,7 @@ class ImageSearchRequestSerializer(
     used to generate Swagger documentation.
     """
 
-    # Ref: ingestion_server/ingestion_server/categorize.py#Category
+    # Ref: api/catalog/api/constants/field_values.py
     category = EnumCharField(
         plural="categories",
         enum_class=IMAGE_CATEGORIES,

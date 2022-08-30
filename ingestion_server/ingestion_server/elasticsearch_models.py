@@ -10,7 +10,6 @@ from enum import Enum, auto
 from elasticsearch_dsl import Document, Field, Integer
 
 from ingestion_server.authority import get_authority_boost
-from ingestion_server.categorize import get_category
 
 
 class RankFeature(Field):
@@ -65,7 +64,7 @@ class Media(SyncableDocType):
         name = "media"
 
     @staticmethod
-    def database_row_to_elasticsearch_doc(row, schema):
+    def database_row_to_elasticsearch_doc(row: tuple, schema: dict[str, int]):
         """
         Map each row in the downstream database to a Python dictionary that
         represents a document in the ElasticSearch index.
@@ -96,6 +95,9 @@ class Media(SyncableDocType):
             popularity = Media.get_popularity(row[schema["standardized_popularity"]])
         else:
             popularity = None
+        # Extracted for compatibility with the old image schema to pass the
+        # cleanup tests in CI: test/unit_tests/test_cleanup.py
+        category = row[schema["category"]] if "category" in schema else None
 
         return {
             "_id": row[schema["id"]],
@@ -112,6 +114,7 @@ class Media(SyncableDocType):
             "license_url": Media.get_license_url(meta),
             "provider": row[schema["provider"]],
             "source": row[schema["source"]],
+            "category": category,
             "created_on": row[schema["created_on"]],
             "tags": Media.parse_detailed_tags(row[schema["tags"]]),
             "mature": Media.get_maturity(meta, row[schema["mature"]]),
@@ -227,11 +230,7 @@ class Image(Media):
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
-        source = row[schema["source"]]
         extension = Image.get_extension(row[schema["url"]])
-        category = get_category(extension, source)
-        if "category" in schema:
-            category = row[schema["category"]]
 
         height = row[schema["height"]]
         width = row[schema["width"]]
@@ -243,11 +242,11 @@ class Image(Media):
         authority_boost = Image.get_authority_boost(meta, provider)
 
         attrs = Image.get_instance_attrs(row, schema)
+        attrs["category"] = attrs["category"]
         popularity = attrs["standardized_popularity"]
 
         return Image(
             thumbnail=row[schema["thumbnail"]],
-            category=category,
             aspect_ratio=aspect_ratio,
             extension=extension,
             size=size,
@@ -333,7 +332,6 @@ class Audio(Media):
             bit_rate=row[schema["bit_rate"]],
             sample_rate=row[schema["sample_rate"]],
             genres=row[schema["genres"]],
-            category=row[schema["category"]],
             duration=row[schema["duration"]],
             length=length,
             filetype=filetype,

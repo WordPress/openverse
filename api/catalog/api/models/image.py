@@ -42,7 +42,7 @@ class Image(ImageFileMixin, AbstractMedia):
     """
     Inherited fields
     ================
-    category: eg. photograph, digitised artwork & illustration
+    category: eg. photograph, digitized_artwork & illustration
     """
 
     class Meta(AbstractMedia.Meta):
