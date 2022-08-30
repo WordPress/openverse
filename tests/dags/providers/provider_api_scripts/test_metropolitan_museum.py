@@ -6,181 +6,201 @@ from unittest.mock import MagicMock, patch
 import pytest
 import requests
 from common.licenses import LicenseInfo
-from providers.provider_api_scripts import metropolitan_museum as mma
+from providers.provider_api_scripts.metropolitan_museum import MetMuseumDataIngester
 
-
-RESOURCES = Path(__file__).parent / "resources/metropolitan_museum_of_art"
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
+mma = MetMuseumDataIngester()
+
+RESOURCES = Path(__file__).parent / "resources/metropolitan_museum_of_art"
+
+# abbreviated response without other images 45733
+single_object_response = json.loads(
+    (RESOURCES / "sample_response_without_additional.json").read_text()
+)
+# single expected record if 45733 with no additional images
+single_expected_data = json.loads((RESOURCES / "sample_image_data.json").read_text())
+
+# response for objectid 45734 with 2 additional image urls
+full_object_response = json.loads((RESOURCES / "sample_response.json").read_text())
+# 3 expected image records for objectid 45734
+full_expected_data = json.loads(
+    (RESOURCES / "sample_additional_image_data.json").read_text()
+)
+
+
 CC0 = LicenseInfo(
     "cc0", "1.0", "https://creativecommons.org/publicdomain/zero/1.0/", None
 )
 
 
-def test_get_object_ids():
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value={"total": 4, "objectIDs": [153, 1578, 465, 546]})
-    with patch.object(mma.delayed_requester, "get", return_value=r):
-        total_objects = mma._get_object_ids("")
-    assert total_objects[0] == 4
-    assert total_objects[1] == [153, 1578, 465, 546]
+@pytest.mark.parametrize(
+    "test_date, expected",
+    [
+        pytest.param("2022-07-01", {"metadataDate": "2022-07-01"}, id="happy_path"),
+        pytest.param(None, {}, id="None"),
+        pytest.param("", {}, id="empty_string"),
+    ],
+)
+def test_get_next_query_params(test_date, expected):
+    ingester = MetMuseumDataIngester(date=test_date)
+    actual = ingester.get_next_query_params()
+    assert actual == expected
 
 
-def test_get_response_json():
-    expect_json = {"it": "works"}
-    endpoint = "https://abc.com"
-    query_params = {"a": "b"}
-    retries = 2
-    with patch.object(
-        mma.delayed_requester, "get_response_json", return_value=expect_json
-    ) as mock_get_response_json:
-        r_json = mma._get_response_json(query_params, endpoint, retries=retries)
-
-    assert r_json == expect_json
-    mock_get_response_json.assert_called_once_with(
-        endpoint, query_params=query_params, retries=retries
-    )
-
-
-def test_create_meta_data():
-    exact_response = {
-        "accessionNumber": "36.100.45",
-        "classification": "Paintings",
-        "creditLine": "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
-        "culture": "Japan",
-        "objectDate": "late 17th century",
-        "medium": "Hanging scroll; ink and color on silk",
-    }
-    exact_meta_data = {
-        "accession_number": "36.100.45",
-        "classification": "Paintings",
-        "credit_line": "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
-        "culture": "Japan",
-        "date": "late 17th century",
-        "medium": "Hanging scroll; ink and color on silk",
-    }
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=exact_response)
-    with patch.object(mma.delayed_requester, "get", return_value=r):
-        response = mma._get_response_json(None, "", retries=2)
-        meta_data = mma._create_meta_data(response)
-
-    assert exact_meta_data == meta_data
+@pytest.mark.parametrize(
+    "response_json, expected",
+    [
+        pytest.param(
+            {"total": 4, "objectIDs": [153, 1578, 465, 546]},
+            [153, 1578, 465, 546],
+            id="happy_path",
+        ),
+        pytest.param({}, None, id="empty_dict"),
+        pytest.param(None, None, id="None"),
+    ],
+)
+def test_get_batch_data(response_json, expected):
+    actual = mma.get_batch_data(response_json)
+    assert actual == expected
 
 
-def test_get_data_for_image_with_none_response():
+@pytest.mark.parametrize(
+    "response_json, expected",
+    [
+        pytest.param(
+            single_object_response,
+            single_expected_data[0].get("meta_data"),
+            id="single_image",
+        ),
+        pytest.param(
+            full_object_response,
+            full_expected_data[0].get("meta_data"),
+            id="full_object",
+        ),
+        pytest.param({}, None, id="empty_dict"),
+        pytest.param(None, None, id="None"),
+    ],
+)
+def test_get_meta_data(response_json, expected):
+    actual = mma._get_meta_data(response_json)
+    assert expected == actual
+
+
+@pytest.mark.parametrize(
+    "response_json, expected",
+    [
+        pytest.param(
+            single_object_response,
+            single_expected_data[0].get("raw_tags"),
+            id="single_image",
+        ),
+        pytest.param(
+            full_object_response,
+            full_expected_data[0].get("raw_tags"),
+            id="full_object",
+        ),
+        pytest.param({}, [], id="empty_dict"),
+        pytest.param(None, None, id="None"),
+    ],
+)
+def test_get_tag_list(response_json, expected):
+    actual = mma._get_tag_list(response_json)
+    assert expected == actual
+
+
+@pytest.mark.parametrize(
+    "response_json, expected",
+    [
+        pytest.param(
+            {"title": "Yes, regular case", "objectName": "Wrong"},
+            "Yes, regular case",
+            id="happy_path",
+        ),
+        pytest.param(
+            {"objectName": "Yes, no title at all"},
+            "Yes, no title at all",
+            id="no_title",
+        ),
+        pytest.param(
+            {"title": "", "objectName": "Yes, empty title"},
+            "Yes, empty title",
+            id="empty_string_title",
+        ),
+        pytest.param({}, None, id="empty_json"),
+        pytest.param(None, None, id="None"),
+    ],
+)
+def test_get_title(response_json, expected):
+    actual = mma._get_title(response_json)
+    assert actual == expected
+
+
+@pytest.mark.parametrize(
+    "response_json, expected",
+    [
+        pytest.param({}, None, id="empty_json"),
+        pytest.param(None, None, id="None"),
+        pytest.param(
+            {"artistDisplayName": "Unidentified flying obj"},
+            "Unidentified flying obj",
+            id="happy_path",
+        ),
+    ],
+)
+def test_get_artist_name(response_json, expected):
+    actual = mma._get_artist_name(response_json)
+    assert actual == expected
+
+
+def test_get_record_data_with_none_response():
     with patch.object(mma.delayed_requester, "get", return_value=None) as mock_get:
         with pytest.raises(Exception):
-            assert mma._get_data_for_image(10)
-
+            assert mma.get_record_data(10)
     assert mock_get.call_count == 6
 
 
-def test_get_data_for_image_with_non_ok():
+def test_get_record_data_with_non_ok():
     r = requests.Response()
     r.status_code = 504
     r.json = MagicMock(return_value={})
     with patch.object(mma.delayed_requester, "get", return_value=r) as mock_get:
         with pytest.raises(Exception):
-            assert mma._get_data_for_image(10)
-
+            assert mma.get_record_data(10)
     assert mock_get.call_count == 6
 
 
-def test_get_data_for_image_returns_response_json_when_all_ok(monkeypatch):
-    with open(RESOURCES / "sample_response_without_additional.json") as f:
-        actual_response_json = json.load(f)
-
-    def mock_get_response_json(query_params, retries=0):
-        return actual_response_json
-
-    monkeypatch.setattr(mma, "_get_response_json", mock_get_response_json)
-    with open(RESOURCES / "sample_additional_image_data.json") as f:
-        image_data = json.load(f)
-
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=image_data)
-    with patch.object(
-        mma.image_store, "save_item", return_value=image_data
-    ) as mock_save:
-        mma._get_data_for_image(45733)
-
-    actual_image = mock_save.call_args[0][0]
-
-    expected_image = {
-        "creator": "",
-        "foreign_identifier": "45733-79_2_414b_S1_sf",
-        "foreign_landing_url": "https://www.metmuseum.org/art/collection/search/47533",
-        "url": "https://images.metmuseum.org/CRDImages/as/original/79_2_414b_S1_sf.jpg",
-        "license_": CC0.license,
-        "license_version": CC0.version,
-        "filetype": "jpg",
-        "filesize": None,
-        "meta_data": {
-            "license_url": CC0.url,
-            "raw_license_url": CC0.raw_url,
-            "accession_number": "79.2.414b",
-            "classification": "Ceramics",
-            "culture": "China",
-            "date": "",
-            "medium": "Porcelain painted in underglaze blue",
-            "credit_line": "Purchase by subscription, 1879",
-        },
-        "title": "Cover",
-    }
-
-    assert mock_save.call_count == 1
-    for key, value in expected_image.items():
-        assert getattr(actual_image, key) == value
-
-
-def test_get_data_for_image_returns_response_json_with_additional_images(monkeypatch):
-    with open(RESOURCES / "sample_response.json") as f:
-        actual_response_json = json.load(f)
-
-    def mock_get_response_json(query_params, retries=0):
-        return actual_response_json
-
-    monkeypatch.setattr(mma, "_get_response_json", mock_get_response_json)
-    with open(RESOURCES / "sample_additional_image_data.json") as f:
-        image_data = json.load(f)
-
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=image_data)
-    with patch.object(mma.image_store, "add_item", return_value=image_data) as mock_add:
-        mma._get_data_for_image(45734)
-
-    mock_add.assert_called_with(
-        creator="Kiyohara Yukinobu",
-        foreign_identifier="45734-DP251120",
-        foreign_landing_url=(
-            "https://wwwstg.metmuseum.org/art/collection/search/45734"
+@pytest.mark.parametrize(
+    "response_json, expected",
+    [
+        pytest.param(single_object_response, single_expected_data, id="single_image"),
+        pytest.param(full_object_response, full_expected_data, id="full_object"),
+        pytest.param(
+            json.loads('{"isPublicDomain": false, "otherData": "is here too"}'),
+            None,
+            id="not_cc0",
         ),
-        image_url="https://images.metmuseum.org/CRDImages/as/original/DP251120.jpg",
-        license_info=(
-            LicenseInfo(
-                "cc0", "1.0", "https://creativecommons.org/publicdomain/zero/1.0/", None
-            )
-        ),
-        meta_data={
-            "accession_number": "36.100.45",
-            "classification": "Paintings",
-            "culture": "Japan",
-            "date": "late 17th century",
-            "medium": "Hanging scroll; ink and color on silk",
-            "credit_line": (
-                "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936"
-            ),
-        },
-        title="Quail and Millet",
+    ],
+)
+def test_get_record_data_returns_response_json_when_all_ok(
+    response_json, expected, monkeypatch
+):
+    monkeypatch.setattr(
+        mma.delayed_requester, "get_response_json", lambda x, y: response_json
     )
+    actual = mma.get_record_data(response_json.get("objectID"))
 
-    assert mock_add.call_count == 3
+    if expected is None:
+        assert actual is None
+    else:
+        assert len(actual) == len(expected)
+        for actual_result, expected_result in zip(actual, expected):
+            for key, value in expected_result.items():
+                if key == "license_info":
+                    assert actual_result.get(key) == CC0
+                else:
+                    assert actual_result.get(key) == value
