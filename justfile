@@ -75,6 +75,7 @@ _deps:
 @_mount-tests command: _deps
     # The test directory is mounted into the container only during testing
     docker-compose {{ DOCKER_FILES }} run \
+        -e AIRFLOW_VAR_INGESTION_LIMIT=1000000 \
         -v {{ justfile_directory() }}/tests:/usr/local/airflow/tests/ \
         -v {{ justfile_directory() }}/pytest.ini:/usr/local/airflow/pytest.ini \
         --rm \
