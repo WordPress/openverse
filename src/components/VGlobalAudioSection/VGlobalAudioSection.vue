@@ -20,6 +20,7 @@ import {
 
 import { AUDIO } from '~/constants/media'
 import { useActiveAudio } from '~/composables/use-active-audio'
+import { isMinScreen } from '~/composables/use-media-query'
 import { useActiveMediaStore } from '~/stores/active-media'
 import { useMediaStore } from '~/stores/media'
 import { useSingleResultStore } from '~/stores/media/single-result'
@@ -112,13 +113,21 @@ export default defineComponent({
       activeMediaStore.ejectActiveMediaItem()
     }
 
-    /* Router observation */
-
-    const routeName = computed(() => route.value.name)
-    watch(routeName, (routeNameVal, oldRouteNameVal) => {
+    /**
+     * Router observation
+     *
+     * The player will continue only within 'search-audio' and 'audio-id' routes,
+     * and on desktop, only if the next route is the 'audio-id' page of the
+     * track currently playing, or the original search result page.
+     */
+    const routeValue = computed(() => route.value)
+    watch(routeValue, (newRouteVal, oldRouteVal) => {
       if (
-        oldRouteNameVal?.includes('audio') &&
-        !routeNameVal?.includes('audio')
+        (oldRouteVal.name?.includes('audio') &&
+          !newRouteVal.name?.includes('audio')) ||
+        (isMinScreen('md') &&
+          newRouteVal.name?.includes('audio-id') &&
+          newRouteVal.params.id != activeMediaStore.id)
       ) {
         activeAudio.obj.value?.pause()
         activeMediaStore.ejectActiveMediaItem()
