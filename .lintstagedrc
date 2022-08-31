@@ -1,8 +1,7 @@
 {
+  "*.{json,yml,yaml,mdx,md}": "prettier --write",
   "*.{ts,js,vue}": [
-    "eslint --fix --max-warnings=0"
-  ],
-  "*.{ts,js,vue,json,yml,yaml,mdx,md}": [
-    "prettier --write"
+    "prettier --write",
+    "eslint --ext .js,.vue,.ts --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 ."
   ]
 }

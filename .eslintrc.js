@@ -38,6 +38,7 @@ module.exports = {
   rules: {
     semi: [2, 'never'],
     'no-console': 'off',
+    'prettier/prettier': 'off',
     'vue/max-attributes-per-line': 'off',
     'vue/require-prop-types': 'off',
     'vue/require-default-prop': 'off',
