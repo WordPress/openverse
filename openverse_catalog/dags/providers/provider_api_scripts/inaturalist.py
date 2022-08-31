@@ -46,8 +46,8 @@ class INaturalistDataIngester(ProviderDataIngester):
 
     providers = {"image": prov.INATURALIST_DEFAULT_PROVIDER}
 
-    def __init__(self, *kwargs):
-        super(INaturalistDataIngester, self).__init__()
+    def __init__(self, *args):
+        super().__init__(*args)
         self.pg = PostgresHook(POSTGRES_CONN_ID)
 
         # adjustments to buffer limits. TO DO: try to integrate this with the dev
