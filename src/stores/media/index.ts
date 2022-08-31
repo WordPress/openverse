@@ -75,6 +75,13 @@ export const useMediaStore = defineStore('media', {
       }
       return searchType
     },
+    /**
+     * Returns a media item that exists either in the search results
+     * or in the related media store.
+     * This makes the single result page rendering faster by providing initial data.
+     * We still need to fetch the single result from the API to get the full data.
+     * @param state - the media store state
+     */
     getItemById: (state) => {
       return (mediaType: SupportedMediaType, id: string): Media | undefined => {
         const itemFromSearchResults = state.results[mediaType].items[id]

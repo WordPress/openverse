@@ -155,6 +155,7 @@ const opts = /** @type {Partial<TalkbackOptions>} */ ({
   port,
   path: './test/tapes',
   record: recordMode,
+  silent: true,
   fallbackMode: talkback.Options.FallbackMode.NOT_FOUND,
   ignoreBody: true,
   allowHeaders: ['connection'],

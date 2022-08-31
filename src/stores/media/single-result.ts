@@ -80,6 +80,9 @@ export const useSingleResultStore = defineStore('single-result', {
       if (existingItem) {
         this.mediaType = existingItem.frontendMediaType
         this.mediaItem = this._addProviderName(existingItem)
+        this.fetchMediaItem(type, id).then(() => {
+          /** noop to prevent the promise return ignored warning */
+        })
       } else {
         await this.fetchMediaItem(type, id)
       }

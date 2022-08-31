@@ -285,7 +285,10 @@ export const searchFromHeader = async (page: Page, term: string) => {
  * Scroll down and up to load all lazy-loaded content.
  */
 export const openFirstResult = async (page: Page, mediaType: MediaType) => {
-  await page.locator(`a[href*="/${mediaType}/"]`).first().click()
+  await Promise.all([
+    page.waitForNavigation(),
+    page.locator(`a[href*="/${mediaType}/"]`).first().click(),
+  ])
   await scrollDownAndUp(page)
 }
 

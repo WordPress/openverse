@@ -1,0 +1,125 @@
+{
+    meta: {
+        createdAt: '2022-08-27T13:37:06.342Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/images/feb91b13-422d-46fa-8ef4-cbf1e6ddee9b/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Sat, 27 Aug 2022 13:37:06 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'access-control-allow-origin': [
+                '*',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                'a7163c42de29437b944e6f58042306fe',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '90053',
+            ],
+            'last-modified': [
+                'Fri, 26 Aug 2022 12:36:13 GMT',
+            ],
+            'expect-ct': [
+                'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '74153330ceec9107-FRA',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            id: 'feb91b13-422d-46fa-8ef4-cbf1e6ddee9b',
+            title: 'Galah in Darwin (Eolophus roseicapilla)',
+            foreign_landing_url: 'https://www.flickr.com/photos/126953422@N04/40593461235',
+            url: 'https://live.staticflickr.com/894/40593461235_b72593df28_b.jpg',
+            creator: 'Graham Winterflood',
+            creator_url: 'https://www.flickr.com/photos/126953422@N04',
+            license: 'by-sa',
+            license_version: '2.0',
+            license_url: 'https://creativecommons.org/licenses/by-sa/2.0/',
+            provider: 'flickr',
+            source: 'flickr',
+            category: null,
+            filesize: null,
+            filetype: null,
+            tags: [
+                {
+                    name: 'bird',
+                },
+                {
+                    name: 'canoneos7d',
+                },
+                {
+                    name: 'eolophusroseicapilla',
+                },
+                {
+                    name: 'galah',
+                },
+            ],
+            attribution: '"Galah in Darwin (Eolophus roseicapilla)" by Graham Winterflood is licensed under CC BY-SA 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/2.0/.',
+            fields_matched: [],
+            mature: null,
+            height: 683,
+            width: 1024,
+            thumbnail: 'http://localhost:49153/v1/images/feb91b13-422d-46fa-8ef4-cbf1e6ddee9b/thumb/',
+            detail_url: 'http://localhost:49153/v1/images/feb91b13-422d-46fa-8ef4-cbf1e6ddee9b/',
+            related_url: 'http://localhost:49153/v1/images/feb91b13-422d-46fa-8ef4-cbf1e6ddee9b/related/',
+        },
+    },
+}
