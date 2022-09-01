@@ -5,6 +5,10 @@ export const createPinia = () =>
   pinia.createPinia().use(() => ({
     $nuxt: {
       $openverseApiToken: '',
+      $sentry: {
+        captureException: jest.fn(),
+        captureEvent: jest.fn(),
+      },
     },
   }))
 
