@@ -41,8 +41,8 @@ class StockSnapDataIngester(ProviderDataIngester):
     license_url = "https://creativecommons.org/publicdomain/zero/1.0/"
     license_info = get_license_info(license_url=license_url)
 
-    def __init__(self):
-        super(StockSnapDataIngester, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._page_counter = 0
 
     def get_next_query_params(self, prev_query_params, **kwargs):

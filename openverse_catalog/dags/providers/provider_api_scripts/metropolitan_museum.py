@@ -45,15 +45,15 @@ class MetMuseumDataIngester(ProviderDataIngester):
     DEFAULT_LICENSE_INFO = get_license_info(license_="cc0", license_version="1.0")
 
     # adding args for automatically generated parameters from generate_tsv_filenames
-    def __init__(self, conf: dict = None, date: str = None):
-        super(MetMuseumDataIngester, self).__init__(conf=conf, date=date)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.retries = 5
 
         # Default to empty dict to avoid break in ingest_records. In general, this dag
         # should not be run without a date, but don't want to completely rule it out.
         self.query_param = {}
-        if date:
-            self.query_param = {"metadataDate": date}
+        if self.date:
+            self.query_param = {"metadataDate": self.date}
 
         # this seems like useful information to track for context on the existing load
         # metrics, but just adding them to the log in aggregate for now rather than
