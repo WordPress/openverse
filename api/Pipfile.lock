@@ -1577,11 +1577,11 @@
         },
         "locust": {
             "hashes": [
-                "sha256:b1855b1c6413e56f333de86eb6f92df643bdd605369f7a258e8bfdcd9117b833",
-                "sha256:b6bfbdc4cccd4617b6f9637a3eea3b4c0fda681a1531f5566ad66e2c16547ecd"
+                "sha256:2c8ead881ade240d8988c1c94a9d84b1d38f3df0583f5a7b3bc8ddbd93181dfe",
+                "sha256:a0d2a81729acf057991e376a61194d50d70e3c420ba67d4d73b2462e8d7c029a"
             ],
             "index": "pypi",
-            "version": "==2.11.0"
+            "version": "==2.11.1"
         },
         "markdown-it-py": {
             "hashes": [
@@ -1739,7 +1739,7 @@
                 "sha256:2c64907728c3ef78e23711c8840a423f0b241588c9ed929855e4b2d1bb0cf5f2",
                 "sha256:9bae709212a19222892cabcc60cafd903cbf4b220223f48583afa3c0e3cc6fc4"
             ],
-            "markers": "python_version >= '3.7' and python_version < '4.0'",
+            "markers": "python_version >= '3.7' and python_full_version < '4.0.0'",
             "version": "==0.2.3"
         },
         "openapi-spec-validator": {
