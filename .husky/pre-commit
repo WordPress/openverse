@@ -6,4 +6,4 @@ if [ ! -f "$(dirname "$dir")"/src/locales/ar.json ]; then
   pnpm i18n
 fi
 # Lint staged files
-pnpx lint-staged && pnpm types
+pnpm lint-staged && pnpm types
