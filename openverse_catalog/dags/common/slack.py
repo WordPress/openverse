@@ -308,7 +308,10 @@ def on_failure_callback(context: dict) -> None:
 
     if exception:
         # Forgo the alert on upstream failures
-        if "Upstream task(s) failed" in exception.args:
+        if (
+            isinstance(exception, Exception)
+            and "Upstream task(s) failed" in exception.args
+        ):
             log.info("Forgoing Slack alert due to upstream failures")
             return
         exception_message = f"""
