@@ -31,7 +31,7 @@ module.exports = {
       'dark-pink': '#7c2264',
 
       // Grayscale
-      black: 'black',
+      black: '#000000',
       'dark-gray': '#767676', // rgb(118, 118, 188)
       gray: '#b0b0b0', // rgb(176, 176, 176)
       'light-gray': '#d8d8d8', // rgb(216, 216, 216)
