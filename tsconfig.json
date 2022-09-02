@@ -54,7 +54,7 @@
     "src/components/VSketchFabViewer.vue",
 
     "src/components/VAudioThumbnail/**.vue",
-    "src/components/VAudioTrack/**/*.vue",
+    "src/components/VAudioTrack/**.vue",
     "src/components/VCheckbox/**.vue",
     "src/components/VContentLink/**.vue",
     "src/components/VGlobalAudioSection/**.vue",

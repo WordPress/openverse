@@ -1,5 +1,14 @@
 <template>
-  <div role="alert" :class="[$style.snackbar, $style[size]]">
+  <div
+    role="alert"
+    :class="[
+      $style.snackbar,
+      $style[size],
+      isVisible
+        ? 'translate-y-0 opacity-100'
+        : 'translate-y-[4rem] opacity-0 motion-reduce:translate-y-0',
+    ]"
+  >
     <!-- @slot Your message or subcomponent goes passed here. -->
     <slot />
   </div>
@@ -15,6 +24,13 @@ export default defineComponent({
       type: String as PropType<'small' | 'large'>,
       default: 'small',
     },
+    /**
+     * whether the snackbar is visible or hidden
+     */
+    isVisible: {
+      type: Boolean,
+      default: true,
+    },
   },
 })
 </script>
@@ -22,11 +38,11 @@ export default defineComponent({
 <style module>
 .snackbar {
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
-  @apply fixed bottom-4 rounded-sm bg-black text-white ltr:left-4 rtl:right-4;
+  @apply fixed bottom-4 z-10 rounded-sm bg-black text-white transition-[opacity,transform] duration-500 ltr:left-4 rtl:right-4 motion-reduce:transition-opacity;
 }
 
 .large {
-  @apply w-max max-w-full flex-row items-center py-4 px-8 text-sm;
+  @apply w-max max-w-full flex-row items-center py-4 px-6 text-sm;
 }
 
 .small {

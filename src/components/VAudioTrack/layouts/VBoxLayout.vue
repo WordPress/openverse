@@ -24,8 +24,13 @@
         </div>
 
         <div class="player hidden flex-row md:flex">
-          <slot name="play-pause" size="small" layout="box" />
-          <slot name="controller" :features="[]" />
+          <slot
+            name="play-pause"
+            size="small"
+            layout="box"
+            :is-tabbable="false"
+          />
+          <slot name="controller" :features="[]" :is-tabbable="false" />
         </div>
       </div>
     </div>

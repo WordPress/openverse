@@ -1,12 +1,13 @@
 <template>
   <VIconButton
     v-bind="$attrs"
-    :tabindex="layout === 'box' ? -1 : 0"
+    :tabindex="isTabbable ? 0 : -1"
     class="play-pause flex-shrink-0 border-dark-charcoal bg-dark-charcoal text-white focus-visible:border-pink focus-visible:shadow-ring focus-visible:outline-none disabled:opacity-70"
     :icon-props="icon === undefined ? undefined : { iconPath: icon }"
     :aria-label="$t(label)"
     :button-props="buttonProps"
     @click.stop.prevent="handleClick"
+    @mousedown="handleMouseDown"
   >
     <template #default="{ iconSizeClasses }">
       <svg
@@ -82,6 +83,13 @@ export default defineComponent({
       type: String as PropType<AudioLayout>,
       default: 'full',
     },
+    /**
+     * whether the play-pause button can be focused by using the `Tab` key
+     */
+    isTabbable: {
+      type: Boolean,
+      default: true,
+    },
   },
   emits: {
     toggle: defineEvent<['paused' | 'playing']>(),
@@ -108,6 +116,9 @@ export default defineComponent({
       return { variant, connections: layoutConnectionsMap[props.layout] }
     })
 
+    const handleMouseDown = (event: MouseEvent) => {
+      if (!props.isTabbable) event.preventDefault() // to prevent focus
+    }
     const handleClick = () => {
       emit('toggle', isPlaying.value || isLoading.value ? 'paused' : 'playing')
     }
@@ -118,6 +129,7 @@ export default defineComponent({
       isLoading,
 
       handleClick,
+      handleMouseDown,
     }
   },
 })

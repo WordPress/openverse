@@ -14,6 +14,13 @@
         @shift-tab="handleShiftTab($event, i)"
       />
     </div>
+    <VSnackbar size="large" :is-visible="isSnackbarVisible">
+      <i18n path="all-results.snackbar.text" tag="p">
+        <template #spacebar>
+          <kbd class="font-sans">{{ $t(`all-results.snackbar.spacebar`) }}</kbd>
+        </template>
+      </i18n>
+    </VSnackbar>
     <VGridSkeleton
       v-if="resultsLoading && allMedia.length === 0"
       is-for-tab="all"
@@ -32,6 +39,8 @@
           v-if="item.frontendMediaType === 'audio'"
           :key="item.id"
           :audio="item"
+          @interacted="hideSnackbar"
+          @focus.native="showSnackbar"
         />
       </div>
     </div>
@@ -49,6 +58,9 @@ import { Focus } from '~/utils/focus-management'
 
 import { useI18n } from '~/composables/use-i18n'
 
+import { useUiStore } from '~/stores/ui'
+
+import VSnackbar from '~/components/VSnackbar.vue'
 import VImageCellSquare from '~/components/VAllResultsGrid/VImageCellSquare.vue'
 import VAudioCell from '~/components/VAllResultsGrid/VAudioCell.vue'
 import VLoadMore from '~/components/VLoadMore.vue'
@@ -58,6 +70,7 @@ import VGridSkeleton from '~/components/VSkeleton/VGridSkeleton.vue'
 export default defineComponent({
   name: 'VAllResultsGrid',
   components: {
+    VSnackbar,
     VImageCellSquare,
     VAudioCell,
     VLoadMore,
@@ -103,6 +116,15 @@ export default defineComponent({
       }
     }
 
+    const uiStore = useUiStore()
+    const isSnackbarVisible = computed(() => uiStore.areInstructionsVisible)
+    const showSnackbar = () => {
+      uiStore.showInstructionsSnackbar()
+    }
+    const hideSnackbar = () => {
+      uiStore.hideInstructionsSnackbar()
+    }
+
     return {
       isError,
       errorHeader,
@@ -112,6 +134,10 @@ export default defineComponent({
       resultCounts,
       noResults,
       handleShiftTab,
+
+      isSnackbarVisible,
+      showSnackbar,
+      hideSnackbar,
     }
   },
 })

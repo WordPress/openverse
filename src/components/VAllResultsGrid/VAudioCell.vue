@@ -1,5 +1,5 @@
 <template>
-  <VAudioTrack :audio="audio" layout="box" />
+  <VAudioTrack :audio="audio" layout="box" v-on="$listeners" />
 </template>
 
 <script lang="ts">

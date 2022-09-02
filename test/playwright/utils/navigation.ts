@@ -287,7 +287,12 @@ export const searchFromHeader = async (page: Page, term: string) => {
 export const openFirstResult = async (page: Page, mediaType: MediaType) => {
   await Promise.all([
     page.waitForNavigation(),
-    page.locator(`a[href*="/${mediaType}/"]`).first().click(),
+    page
+      .locator(`a[href*="/${mediaType}/"]`)
+      .first()
+      .click({
+        position: { x: 32, y: 32 },
+      }),
   ])
   await scrollDownAndUp(page)
 }

@@ -1,6 +1,7 @@
 <template>
+  <!-- `pages/search/audio` has negative margin `-mx-4` to compensate for this padding. -->
   <article
-    class="row-track flex flex-row"
+    class="row-track flex flex-row p-2 hover:bg-dark-charcoal-06 md:p-4"
     :class="[`size-${size}`, { 'items-start': isSmall }]"
   >
     <div
@@ -9,7 +10,7 @@
     >
       <VAudioThumbnail :audio="audio" />
       <div v-show="isSmall" class="absolute bottom-0 ltr:right-0 rtl:left-0">
-        <slot name="play-pause" size="tiny" layout="row" />
+        <slot name="play-pause" size="tiny" layout="row" :is-tabbable="false" />
       </div>
     </div>
 
@@ -21,15 +22,15 @@
       }"
     >
       <div class="flex-shrink-0" :class="{ 'w-70': isMedium }">
-        <VLink
-          :href="`/audio/${audio.id}`"
-          class="block rounded-sm p-px font-heading font-semibold text-dark-charcoal line-clamp-2 hover:text-dark-charcoal focus:outline-none focus:ring focus:ring-pink md:line-clamp-1"
+        <div
+          class="decoration-inherit block rounded-sm p-px font-heading font-semibold text-dark-charcoal line-clamp-2 hover:text-dark-charcoal focus:outline-none focus:ring focus:ring-pink group-hover:underline md:line-clamp-1"
           :class="{
             'text-2xl': isMedium || isLarge,
             'leading-snug': isSmall,
           }"
-          >{{ audio.title }}</VLink
         >
+          {{ audio.title }}
+        </div>
 
         <div
           class="mt-2 flex text-dark-charcoal-70"
@@ -50,7 +51,7 @@
             <span v-show="isSmall">
               <span
                 class="inline-block rounded-sm bg-dark-charcoal-06 p-1 font-semibold text-dark-charcoal"
-                >{{ timeFmt(audio.duration || 0) }}</span
+                >{{ timeFmt(audio.duration || 0, true) }}</span
               ><span class="mx-2">{{ $t('interpunct') }}</span>
             </span>
 
@@ -75,11 +76,13 @@
           name="play-pause"
           :size="isLarge ? 'medium' : 'large'"
           :layout="'row'"
+          :is-tabbable="false"
         />
         <slot
           name="controller"
           :features="features"
           :feature-notices="featureNotices"
+          :is-tabbable="false"
         />
       </div>
     </div>
@@ -89,19 +92,18 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
+import { timeFmt } from '~/utils/time-fmt'
 import type { AudioDetail } from '~/models/media'
 import type { AudioSize } from '~/constants/audio'
 
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
 import VLicense from '~/components/VLicense/VLicense.vue'
-import VLink from '~/components/VLink.vue'
 
 export default defineComponent({
   name: 'VRowLayout',
   components: {
     VAudioThumbnail,
     VLicense,
-    VLink,
   },
   props: {
     audio: {
@@ -120,20 +122,6 @@ export default defineComponent({
       seek?: string
     } = {}
     const features = ['timestamps', 'duration', 'seek']
-
-    /**
-     * Format the time as hh:mm:ss, dropping the hour part if it is zero.
-     * @param ms - the number of milliseconds in the duration
-     * @returns the duration in a human-friendly format
-     */
-    const timeFmt = (ms: number): string => {
-      if (ms) {
-        const date = new Date(0)
-        date.setSeconds(ms / 1e3)
-        return date.toISOString().substr(11, 8).replace(/^00:/, '')
-      }
-      return '--:--'
-    }
 
     const isSmall = computed(() => props.size === 's')
     const isMedium = computed(() => props.size === 'm')
@@ -160,7 +148,7 @@ export default defineComponent({
 
 .row-track .waveform {
   @apply flex-grow;
-  --waveform-background-color: theme('colors.white');
+  --waveform-background-color: theme('colors.tx');
 }
 
 .row-track .waveform {

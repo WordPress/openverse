@@ -3,7 +3,7 @@
     <slot />
     <VTeleport to="skip-to-content">
       <VButton
-        class="ms-2 z-50 mt-2 focus:fixed focus:absolute"
+        class="z-50 mt-2 ms-2 focus:fixed focus:absolute"
         :class="$style.skipButton"
         @click="skipToContent"
         >{{ $t('skip-to-content') }}</VButton

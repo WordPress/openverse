@@ -225,5 +225,6 @@ module.exports = {
     require('tailwindcss-rtl'),
     require('@tailwindcss/line-clamp'),
     require('@tailwindcss/typography'),
+    require('tailwindcss-labeled-groups')(['waveform']),
   ],
 }

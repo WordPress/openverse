@@ -1,6 +1,12 @@
 import { mount } from '@vue/test-utils'
 
+import { useI18n } from '~/composables/use-i18n'
+
 import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
+
+jest.mock('~/composables/use-i18n', () => ({
+  useI18n: jest.fn(),
+}))
 
 jest.mock('~/utils/resampling', () => {
   return {
@@ -14,6 +20,7 @@ describe('VWaveform', () => {
   let props = null
 
   beforeEach(() => {
+    useI18n.mockImplementation(() => ({ t: (v) => v, tc: (v) => v }))
     props = {
       peaks: [],
       audioId: 'test',
@@ -22,6 +29,9 @@ describe('VWaveform', () => {
     options = {
       propsData: props,
     }
+  })
+  afterEach(() => {
+    useI18n.mockReset()
   })
 
   it('should use given peaks when peaks array is provided', () => {

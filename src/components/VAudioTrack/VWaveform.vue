@@ -1,23 +1,18 @@
 <template>
   <div
+    v-bind="waveformAttributes"
     ref="el"
-    class="waveform bg-background-var group relative overflow-hidden focus:outline-none"
+    class="waveform bg-background-var group-waveform relative overflow-hidden text-dark-charcoal focus:outline-none"
     :style="heightProperties"
-    :tabIndex="isInteractive ? 0 : -1"
-    :role="isInteractive ? 'slider' : undefined"
+    :tabIndex="isTabbable && isInteractive ? 0 : -1"
     :aria-disabled="!isInteractive"
     :aria-label="$t('waveform.label').toString()"
-    aria-orientation="horizontal"
-    aria-valuemin="0"
-    :aria-valuemax="duration"
-    :aria-valuenow="currentTime"
-    :aria-valuetext="currentTimeText"
     v-on="eventHandlers"
   >
     <!-- Focus ring -->
     <svg
       v-if="isInteractive"
-      class="shadow-ring-1 absolute inset-0 z-20 hidden h-full w-full group-focus:block"
+      class="shadow-ring-1 absolute inset-0 z-20 hidden h-full w-full group-waveform-focus:block"
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="viewBox"
       preserveAspectRatio="none"
@@ -89,8 +84,8 @@
 
     <!-- Focus bar -->
     <div
-      v-if="isInteractive"
-      class="focus-indicator absolute top-0 z-20 flex hidden h-full flex-col items-center justify-between bg-black"
+      v-if="isInteractive && isSeeking"
+      class="absolute top-0 z-20 hidden h-full flex-col items-center justify-between bg-black group-focus:flex group-waveform-focus:flex"
       :style="{ width: `${barWidth}px`, left: `${progressBarWidth}px` }"
     >
       <div
@@ -157,10 +152,12 @@ import {
   onMounted,
   PropType,
   ref,
+  toRef,
 } from '@nuxtjs/composition-api'
 
 import { downsampleArray, upsampleArray } from '~/utils/resampling'
-import { keycodes } from '~/constants/key-codes'
+import { timeFmt } from '~/utils/time-fmt'
+import { useSeekable } from '~/composables/use-seekable'
 
 import type { AudioFeature } from '~/constants/audio'
 
@@ -244,6 +241,21 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    /**
+     * whether the waveform can be focused by using the `Tab` key
+     */
+    isTabbable: {
+      type: Boolean,
+      default: true,
+    },
+    /**
+     * whether the waveform should render as seeking when it is controlled by
+     * the parent audio track
+     */
+    isParentSeeking: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: {
     /**
@@ -260,24 +272,6 @@ export default defineComponent({
   setup(props, { emit }) {
     /* Utils */
 
-    /**
-     * Format the time as hh:mm:ss:ms.
-     * We drop the hour part if it is zero, and the ms part if the audio
-     * is longer than MAX_SECONDS_FOR_MS seconds.
-     *
-     * @param seconds - the number of seconds in the duration
-     * @returns the duration in a human-friendly format
-     */
-    const timeFmt = (seconds: number): string => {
-      const date = new Date(0)
-      const timeInSeconds = Number.isFinite(seconds) ? seconds : 0
-      date.setSeconds(0, timeInSeconds * 1000)
-
-      return date
-        .toISOString()
-        .substr(11, showMsInTimestamp.value ? 12 : 8)
-        .replace(/^00:/, '')
-    }
     /**
      * Get the x-coordinate of the event with respect to the bounding box of the
      * waveform.
@@ -342,6 +336,9 @@ export default defineComponent({
 
     const isReady = computed(() => !props.message)
     const isInteractive = computed(() => isSeekable.value && isReady.value)
+    const isSeeking = computed(
+      () => (!props.isTabbable && props.isParentSeeking) || isSelfSeeking.value
+    )
 
     /* Resampling */
 
@@ -384,10 +381,6 @@ export default defineComponent({
       waveformDimens.value.height - normalizedPeaks.value[index]
 
     /* Progress bar */
-
-    const currentFrac = computed(() =>
-      isReady.value ? props.currentTime / props.duration : 0
-    )
     const progressBarWidth = computed(() => {
       const frac = isDragging.value ? seekFrac.value ?? 0 : currentFrac.value
       return waveformDimens.value.width * frac
@@ -437,19 +430,27 @@ export default defineComponent({
       return barWidth < timestampWidth + 2
     })
 
+    const { isSeeking: isSelfSeeking, ...seekable } = useSeekable({
+      duration: toRef(props, 'duration'),
+      currentTime: toRef(props, 'currentTime'),
+      isReady,
+      onSeek: (frac) => {
+        clearSeekProgress()
+        emit('seeked', frac)
+      },
+      onTogglePlayback: () => emit('toggle-playback'),
+    })
+    const waveformAttributes = computed(() => ({
+      // ARIA slider attributes are only added when interactive
+      ...(isInteractive.value ? seekable.attributes.value : {}),
+    }))
+
     /* Seeking */
 
-    const seekDelta = 1 // s
-    const modSeekDelta = 15 // s
     /**
      * the seek jump length as a % of the track
      */
-    const seekDeltaFrac = computed(() => {
-      return isReady.value ? seekDelta / props.duration : 0
-    })
-    const modSeekDeltaFrac = computed(() =>
-      isReady.value ? modSeekDelta / props.duration : 0
-    )
+    const { currentFrac } = seekable.meta
     const setSeekProgress = (event: MouseEvent) => {
       seekFrac.value = getPositionFrac(event)
     }
@@ -466,6 +467,7 @@ export default defineComponent({
     let startPos: null | number = null
     const isDragging = ref(false)
     const handleMouseDown = (event: MouseEvent) => {
+      if (!props.isTabbable) event.preventDefault() // to prevent focus
       isDragging.value = false
       startPos = getPosition(event)
       setSeekProgress(event)
@@ -487,63 +489,10 @@ export default defineComponent({
     const handleMouseLeave = () => {
       clearSeekProgress()
     }
-
-    /* Keyboard */
-
-    const handlePosKeys = (frac: number) => {
-      clearSeekProgress()
-      emit('seeked', frac)
-    }
-    const handleArrowKeys = (event: KeyboardEvent) => {
-      const { key, shiftKey, metaKey } = event
-      if (metaKey) {
-        // Always false on Windows
-        handlePosKeys(key.includes('Left') ? 0 : 1)
-      } else {
-        clearSeekProgress()
-        const direction = key.includes('Left') ? -1 : 1
-        const magnitude = shiftKey
-          ? modSeekDeltaFrac.value
-          : seekDeltaFrac.value
-        const delta = magnitude * direction
-        emit('seeked', currentFrac.value + delta)
-      }
-    }
-
-    const handleSpacebar = () => {
-      emit('toggle-playback')
-    }
-
-    /**
-     * @param event
-     */
-    const willBeHandled = (event: KeyboardEvent) =>
-      (
-        [
-          keycodes.ArrowLeft,
-          keycodes.ArrowRight,
-          keycodes.Home,
-          keycodes.End,
-          keycodes.Spacebar,
-        ] as string[]
-      ).includes(event.key)
-
-    /**
-     * @param event
-     */
-    const handleKeys = (event: KeyboardEvent) => {
-      if (!willBeHandled(event)) return
-
+    const handleClick = (event: MouseEvent) => {
+      // Prevent event from bubbling to the parent anchor tag.
+      event.stopPropagation()
       event.preventDefault()
-      if (
-        ([keycodes.ArrowLeft, keycodes.ArrowRight] as string[]).includes(
-          event.key
-        )
-      )
-        return handleArrowKeys(event)
-      if (event.key === keycodes.Home) return handlePosKeys(0)
-      if (event.key === keycodes.End) return handlePosKeys(1)
-      if (event.key === keycodes.Spacebar) return handleSpacebar()
     }
 
     /* v-on */
@@ -555,7 +504,8 @@ export default defineComponent({
           mousemove: handleMouseMove,
           mouseup: handleMouseUp,
           mouseleave: handleMouseLeave,
-          keydown: handleKeys,
+          click: handleClick,
+          ...seekable.listeners,
         }
       } else {
         return {}
@@ -586,6 +536,7 @@ export default defineComponent({
 
       isReady,
       isInteractive,
+      isSeeking,
 
       barWidth,
       normalizedPeaks,
@@ -608,14 +559,7 @@ export default defineComponent({
       seekTimestamp,
       seekTimestampEl,
       isSeekTimestampCutoff,
-
-      handleMouseDown,
-      handleMouseMove,
-      handleMouseUp,
-      handleMouseLeave,
-
-      handlePosKeys,
-      handleArrowKeys,
+      waveformAttributes,
 
       eventHandlers,
 
@@ -623,16 +567,6 @@ export default defineComponent({
       progressTimeLeft,
       seekTimeLeft,
     }
-  },
-  computed: {
-    /**
-     * the waveform current time as a text string; This function was placed
-     * outside because `this` is not accessible inside the `setup`.
-     */
-    currentTimeText(): string {
-      const time = this.timeFmt(this.currentTime)
-      return this.$t('waveform.current-time', { time }).toString()
-    },
   },
 })
 </script>
@@ -668,10 +602,6 @@ export default defineComponent({
 
 .seek {
   left: var(--seek-time-left);
-}
-
-.waveform:focus-visible .focus-indicator {
-  display: flex;
 }
 
 .fill-dark-charcoal-20-alpha {

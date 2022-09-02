@@ -46,7 +46,7 @@
             $t('interpunct')
           }}</span>
 
-          <div>{{ timeFmt(audio.duration || 0) }}</div>
+          <div>{{ timeFmt(audio.duration || 0, true) }}</div>
         </div>
       </div>
 
@@ -72,6 +72,7 @@
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import type { AudioDetail } from '~/models/media'
+import { timeFmt } from '~/utils/time-fmt'
 import { AudioSize, AudioStatus, audioFeatures } from '~/constants/audio'
 
 import VButton from '~/components/VButton.vue'
@@ -100,20 +101,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    /**
-     * Format the time as hh:mm:ss, dropping the hour part if it is zero.
-     * @param ms - the number of milliseconds in the duration
-     * @returns the duration in a human-friendly format
-     */
-    const timeFmt = (ms: number): string => {
-      if (ms) {
-        const date = new Date(0)
-        date.setSeconds(ms / 1e3)
-        return date.toISOString().substr(11, 8).replace(/^00:/, '')
-      }
-      return '--:--'
-    }
-
     const isSmall = computed(() => props.size === 's')
 
     return {

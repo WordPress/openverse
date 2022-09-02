@@ -1,12 +1,14 @@
 <template>
+  <!-- eslint-disable vue/use-v-on-exact -->
   <Component
-    :is="isBoxed ? 'VLink' : 'VWarningSuppressor'"
-    class="audio-track group"
+    :is="isComposite ? 'VLink' : 'VWarningSuppressor'"
+    v-bind="containerAttributes"
+    class="audio-track group block overflow-hidden rounded-sm ring-pink hover:no-underline focus:border-tx focus:bg-white focus:outline-none"
     :aria-label="ariaLabel"
-    role="region"
-    v-bind="layoutBasedProps"
+    :role="isComposite ? 'application' : undefined"
     @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
-    @keydown.native.space="handleSpace"
+    @keydown.native="handleKeydown"
+    @blur.native="handleBlur"
   >
     <Component
       :is="layoutComponent"
@@ -18,6 +20,7 @@
       <template #controller="waveformProps">
         <VWaveform
           v-bind="waveformProps"
+          :is-parent-seeking="isSeeking"
           :peaks="audio.peaks"
           :audio-id="audio.id"
           :current-time="currentTime"
@@ -68,6 +71,9 @@ import {
   activeAudioStatus,
   layoutMappings,
 } from '~/constants/audio'
+import { useSeekable } from '~/composables/use-seekable'
+
+import { defineEvent } from '~/types/emits'
 
 import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
 import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
@@ -120,7 +126,13 @@ export default defineComponent({
       type: String as PropType<AudioSize>,
     },
   },
-  setup(props) {
+  emits: {
+    'shift-tab': defineEvent<[KeyboardEvent]>(),
+    interacted: defineEvent<[]>(),
+  },
+  setup(props, { emit }) {
+    const i18n = useI18n()
+
     const activeMediaStore = useActiveMediaStore()
     const route = useRoute()
 
@@ -360,6 +372,7 @@ export default defineComponent({
           pause()
           break
       }
+      emit('interacted')
     }
 
     /* Interface with VWaveform */
@@ -376,6 +389,7 @@ export default defineComponent({
       if (localAudio) {
         localAudio.currentTime = frac * duration.value
       }
+      emit('interacted')
     }
 
     /* Layout */
@@ -385,7 +399,7 @@ export default defineComponent({
      * Sets default size if not provided.
      */
     const layoutSize = computed(() => {
-      if (isBoxed.value && !props.size) {
+      if (props.layout === 'box' && !props.size) {
         return undefined
       }
       return props.size ?? 'm'
@@ -401,35 +415,57 @@ export default defineComponent({
     /**
      * These layout-conditional props and listeners allow us
      * to set properties on the parent element depending on
-     * the layout in use. This is currently relevant for the
-     * boxed layout exclusively.
+     * the layout in use.
      */
-    const isBoxed = computed(() => props.layout === 'box')
-    const i18n = useI18n()
-    const layoutBasedProps = computed(() => {
-      if (!isBoxed.value) return {}
-      return {
-        href: `/audio/${props.audio.id}`,
-        class:
-          'block focus:bg-white focus:border-tx focus:ring-[3px] focus:ring-pink focus:ring-offset-[3px] focus:outline-none rounded-sm overflow-hidden cursor-pointer',
-      }
-    })
+    const isComposite = computed(() => ['box', 'row'].includes(props.layout))
+    const layoutBasedProps = computed(() =>
+      isComposite.value
+        ? {
+            href: `/audio/${props.audio.id}`,
+            class: [
+              'cursor-pointer',
+              {
+                'focus:ring-offset-[3px] focus:ring-[3px]':
+                  props.layout === 'box',
+                'focus:ring-offset-0 focus:ring-[1.5px]':
+                  props.layout === 'row',
+              },
+            ],
+          }
+        : {}
+    )
     const ariaLabel = computed(() =>
-      isBoxed.value
+      isComposite.value
         ? i18n.t('audio-track.aria-label-interactive', {
             title: props.audio.title,
           })
         : i18n.t('audio-track.aria-label', { title: props.audio.title })
     )
 
-    const handleSpace = (event: KeyboardEvent) => {
-      if (!isBoxed.value) return
-      event.preventDefault()
+    const togglePlayback = () => {
       status.value = activeAudioStatus.includes(status.value)
         ? 'paused'
         : 'playing'
       handleToggle(status.value)
     }
+
+    const { isSeeking, ...seekable } = useSeekable({
+      duration,
+      currentTime,
+      isReady: ref(true),
+      onSeek: handleSeeked,
+      onTogglePlayback: togglePlayback,
+    })
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (seekable.willBeHandled(event)) emit('interacted')
+      seekable.listeners.keydown(event)
+    }
+
+    const containerAttributes = computed(() => ({
+      // ARIA slider attributes are only added when interactive
+      ...(isComposite.value ? seekable.attributes.value : {}),
+      ...layoutBasedProps.value,
+    }))
 
     return {
       status,
@@ -437,7 +473,10 @@ export default defineComponent({
       ariaLabel,
       handleToggle,
       handleSeeked,
-      handleSpace,
+      handleKeydown,
+      handleBlur: seekable.listeners.blur,
+
+      isSeeking,
 
       currentTime,
       duration,
@@ -445,8 +484,8 @@ export default defineComponent({
       layoutComponent,
       layoutSize,
 
-      isBoxed,
-      layoutBasedProps,
+      isComposite,
+      containerAttributes,
 
       playPauseRef,
     }

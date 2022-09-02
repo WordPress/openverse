@@ -3,9 +3,10 @@
     <h2 class="mb-6 text-2xl lg:text-3xl">
       {{ $t('audio-details.related-audios') }}
     </h2>
+    <!-- Negative margin compensates for the `p-4` padding in row layout. -->
     <div
       v-if="!fetchState.fetchingError"
-      class="mb-12 flex flex-col gap-8 lg:gap-12"
+      class="-mx-4 mb-12 flex flex-col gap-4"
     >
       <VAudioTrack
         v-for="audio in media"
