@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Dict, Optional, Sequence, Type
 
+from providers.provider_api_scripts.brooklyn_museum import BrooklynMuseumDataIngester
 from providers.provider_api_scripts.cleveland_museum import ClevelandDataIngester
 from providers.provider_api_scripts.finnish_museums import FinnishMuseumsDataIngester
 from providers.provider_api_scripts.inaturalist import INaturalistDataIngester
@@ -90,6 +91,7 @@ PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
         provider_script="brooklyn_museum",
         start_date=datetime(2020, 1, 1),
+        ingester_class=BrooklynMuseumDataIngester,
     ),
     ProviderWorkflow(
         provider_script="cleveland_museum",

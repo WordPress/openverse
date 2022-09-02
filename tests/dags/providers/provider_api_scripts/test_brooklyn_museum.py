@@ -1,229 +1,213 @@
 import json
-import logging
-import os
-from unittest.mock import MagicMock, patch
+from pathlib import Path
+from unittest.mock import patch
 
-import requests
-from providers.provider_api_scripts import brooklyn_museum as bkm
+import pytest
+from common.licenses import LicenseInfo
+from common.loader import provider_details as prov
+from common.storage.image import ImageStore
+from providers.provider_api_scripts.brooklyn_museum import BrooklynMuseumDataIngester
 
 
-RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), "resources/brooklynmuseum"
-)
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
-)
+RESOURCES = Path(__file__).parent / "resources/brooklynmuseum"
+bkm = BrooklynMuseumDataIngester()
+image_store = ImageStore(provider=prov.BROOKLYN_DEFAULT_PROVIDER)
+bkm.media_stores = {"image": image_store}
 
 
 def _get_resource_json(json_name):
-    with open(os.path.join(RESOURCES, json_name)) as f:
-        resource_json = json.load(f)
-    return resource_json
+    return json.loads((RESOURCES / json_name).read_text())
 
 
 def test_build_query_param_default():
-    actual_param = bkm._get_query_param()
+    actual_param = bkm.get_next_query_params(None)
     expected_param = {
         "has_images": 1,
         "rights_type_permissive": 1,
-        "limit": 35,
+        "limit": bkm.batch_limit,
         "offset": 0,
     }
     assert actual_param == expected_param
 
 
 def test_build_query_param_given():
-    actual_param = bkm._get_query_param(offset=35)
+    offset = 70
+    actual_param = bkm.get_next_query_params({"foo": "bar", "offset": offset})
     expected_param = {
-        "has_images": 1,
-        "rights_type_permissive": 1,
-        "limit": 35,
-        "offset": 35,
+        "foo": "bar",
+        "offset": offset + bkm.batch_limit,
     }
     assert actual_param == expected_param
 
 
-def test_get_response_failure():
-    param = {"has_images": 1, "rights_type_permissive": 1, "limit": -1, "offset": 0}
-    response_json = _get_resource_json("response_error.json")
-    r = requests.Response()
-    r.status_code = 500
-    r.json = MagicMock(return_value=response_json)
-    with patch.object(bkm.delay_request, "get", return_value=r) as mock_get:
-        actual_data = bkm._get_object_json(query_param=param)
-
-    expected_data = None
-
-    assert mock_get.call_count == 3
-    assert actual_data == expected_data
-
-
-def test_get_response_success():
-    param = {"has_images": 1, "rights_type_permissive": 1, "limit": 1, "offset": 0}
-    response_json = _get_resource_json("response_success.json")
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=response_json)
-
-    with patch.object(bkm.delay_request, "get", return_value=r) as mock_get:
-        actual_data = bkm._get_object_json(query_param=param)
-
-    expected_data = response_json["data"]
-    assert mock_get.call_count == 1
-    assert actual_data == expected_data
+@pytest.mark.parametrize(
+    "resource_name, expected",
+    [
+        ("response_success.json", _get_resource_json("response_success.json")["data"]),
+        ("response_error.json", None),
+        ("response_nodata.json", []),
+    ],
+)
+def test_get_data_from_response(resource_name, expected):
+    response_json = _get_resource_json(resource_name)
+    actual = bkm._get_data_from_response(response_json)
+    assert actual == expected
 
 
-def test_get_response_nodata():
-    param = {"has_images": 1, "rights_type_permissive": 1, "limit": 1, "offset": 70000}
-    response_json = _get_resource_json("response_nodata.json")
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=response_json)
+@pytest.mark.parametrize(
+    "batch_objects_name, object_data_name, expected_count",
+    [
+        ("batch_objects.json", "object_data.json", 1),
+        ("no_batch_objects.json", "non_cc_object_data.json", 0),
+    ],
+)
+def test_process_batch(batch_objects_name, object_data_name, expected_count):
+    batch_objects = _get_resource_json(batch_objects_name)
+    response_json = _get_resource_json(object_data_name)
 
-    with patch.object(bkm.delay_request, "get", return_value=r) as mock_get:
-        actual_data = bkm._get_object_json(query_param=param)
+    with (
+        patch.object(bkm, "get_response_json"),
+        patch.object(bkm, "_get_data_from_response", return_value=response_json),
+        patch.object(image_store, "add_item"),
+    ):
+        actual_count = bkm.process_batch(batch_objects)
 
-    assert len(actual_data) == 0
-    assert mock_get.call_count == 1
-
-
-def test_object_response_success():
-    response_json = _get_resource_json("complete_data.json")
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=response_json)
-
-    with patch.object(bkm.delay_request, "get", return_value=r) as mock_get:
-        actual_data = bkm._get_object_json(endpoint=bkm.ENDPOINT + str(1))
-
-    expected_data = response_json["data"]
-
-    assert mock_get.call_count == 1
-    assert actual_data == expected_data
+    assert actual_count == expected_count
 
 
-def test_process_objects_batch_success():
-    batch_objects = _get_resource_json("batch_objects.json")
-    response_json = _get_resource_json("object_data.json")
-
-    with patch.object(bkm, "_get_object_json", return_value=response_json):
-        with patch.object(bkm.image_store, "add_item") as mock_image:
-            bkm._process_objects_batch(batch_objects)
-
-    assert mock_image.call_count == 1
-
-
-def test_process_objects_batch_failure():
-    batch_objects = _get_resource_json("no_batch_objects.json")
-    response_json = _get_resource_json("non_cc_object_data.json")
-    with patch.object(bkm, "_get_object_json", return_value=response_json):
-        with patch.object(bkm.image_store, "add_item") as mock_image:
-            bkm._process_objects_batch(batch_objects)
-
-    assert mock_image.call_count == 0
-
-
-def test_handle_object_data():
-    response_json = _get_resource_json("object_data.json")
+@pytest.mark.parametrize(
+    "resource_name, expected",
+    [
+        (
+            "object_data.json",
+            [
+                {
+                    "creator": None,
+                    "foreign_identifier": 170425,
+                    "foreign_landing_url": "https://www.brooklynmuseum.org/opencollection/objects/90636",
+                    "height": 1152,
+                    "image_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size4/CUR.66.242.29.jpg",
+                    "license_info": LicenseInfo(
+                        license="by",
+                        version="3.0",
+                        url="https://creativecommons.org/licenses/by/3.0/",
+                        raw_url="https://creativecommons.org/licenses/by/3.0/",
+                    ),
+                    "meta_data": {
+                        "accession_number": "66.242.29",
+                        "classification": "Clothing",
+                        "credit_line": "Gift of John C. Monks",
+                        "medium": "Silk",
+                    },
+                    "title": "Caftan",
+                    "width": 1536,
+                },
+            ],
+        ),
+        ("object_data_noimage.json", []),
+    ],
+)
+def test_handle_object_data(resource_name, expected):
+    response_json = _get_resource_json(resource_name)
     license_url = "https://creativecommons.org/licenses/by/3.0/"
 
-    with patch.object(bkm.image_store, "add_item") as mock_image:
-        bkm._handle_object_data(response_json, license_url)
-
-    assert mock_image.call_count == 1
+    actual = bkm._handle_object_data(response_json, license_url)
+    assert actual == expected
 
 
-def test_handle_object_noimage_info():
-    response_json = _get_resource_json("object_data_noimage.json")
+@pytest.mark.parametrize("field", ["id", "largest_derivative_url"])
+def test_handle_object_data_missing_field(field):
+    response_json = _get_resource_json("object_data.json")
     license_url = "https://creativecommons.org/licenses/by/3.0/"
-
-    with patch.object(bkm.image_store, "add_item") as mock_image:
-        bkm._handle_object_data(response_json, license_url)
-
-    assert mock_image.call_count == 0
-
-
-def test_get_image_size():
-    response_json = _get_resource_json("image_details.json")
-    actual_height, actual_width = bkm._get_image_sizes(response_json)
-    expected_height, expected_width = (1152, 1536)
-
-    assert actual_height == expected_height
-    assert actual_width == expected_width
+    # Remove the requested field
+    response_json["images"][0].pop(field)
+    actual = bkm._handle_object_data(response_json, license_url)
+    assert actual == []
 
 
-def test_get_image_no_size():
-    response_json = _get_resource_json("image_nosize.json")
-    actual_height, actual_width = bkm._get_image_sizes(response_json)
-    expected_height, expected_width = (None, None)
+@pytest.mark.parametrize(
+    "resource_name, expected",
+    [
+        ("image_details.json", (1152, 1536)),
+        ("image_nosize.json", (None, None)),
+    ],
+)
+def test_get_image_size(resource_name, expected):
+    response_json = _get_resource_json(resource_name)
+    actual = bkm._get_image_sizes(response_json)
 
-    assert actual_height == expected_height
-    assert actual_width == expected_width
-
-
-def test_get_cc_license_url():
-    response_json = _get_resource_json("cc_license_info.json")
-    actual_url = bkm._get_license_url(response_json)
-    expected_url = "https://creativecommons.org/licenses/by/3.0/"
-
-    assert actual_url == expected_url
+    assert actual == expected
 
 
-def test_get_public_license_url():
-    response_json = _get_resource_json("public_license_info.json")
-    actual_url = bkm._get_license_url(response_json)
-    expected_url = "https://creativecommons.org/publicdomain/zero/1.0/"
+@pytest.mark.parametrize(
+    "resource_name, expected",
+    [
+        ("cc_license_info.json", "https://creativecommons.org/licenses/by/3.0/"),
+        (
+            "public_license_info.json",
+            "https://creativecommons.org/publicdomain/zero/1.0/",
+        ),
+        ("no_license_info.json", None),
+    ],
+)
+def test_get_license_url(resource_name, expected):
+    response_json = _get_resource_json(resource_name)
+    actual = bkm._get_license_url(response_json)
 
-    assert actual_url == expected_url
-
-
-def test_get_no_license_url():
-    response_json = _get_resource_json("no_license_info.json")
-    actual_url = bkm._get_license_url(response_json)
-    expected_url = None
-
-    assert actual_url == expected_url
+    assert actual == expected
 
 
 def test_get_metadata():
     response_json = _get_resource_json("object_data.json")
     actual_metadata = bkm._get_metadata(response_json)
-    expected_metadata = _get_resource_json("metadata.json")
+    expected_metadata = _get_resource_json("expected_metadata.json")
 
     assert actual_metadata == expected_metadata
 
 
-def test_get_creators():
-    response_json = _get_resource_json("artists_details.json")
-    actual_name = bkm._get_creators(response_json)
-    expected_name = "John La Farge"
-
-    assert actual_name == expected_name
-
-
-def test_get_no_creators():
-    data = {}
-    actual_name = bkm._get_creators(data)
-    expected_name = None
-
-    assert actual_name == expected_name
+@pytest.mark.parametrize(
+    "data, expected",
+    [
+        (_get_resource_json("artists_details.json"), "John La Farge"),
+        ({}, None),
+    ],
+)
+def test_get_creators(data, expected):
+    actual = bkm._get_creators(data)
+    assert actual == expected
 
 
-def test_get_images():
-    response_json = _get_resource_json("image_details.json")
-    actual_image_url = bkm._get_image_url(response_json)
-    expected_image_url = (
-        "https://d1lfxha3ugu3d4.cloudfront.net/images/"
-        "opencollection/objects/size4/CUR.66.242.29.jpg"
-    )
-
-    assert actual_image_url == expected_image_url
-
-
-def test_get_no_images():
-    data = {}
-    actual_image_url = bkm._get_image_url(data)
-    expected_image_url = None
-
-    assert actual_image_url == expected_image_url
+@pytest.mark.parametrize(
+    "license_url, license_is_none",
+    [
+        (None, True),
+        ("someurl", False),
+    ],
+)
+@pytest.mark.parametrize(
+    "data, data_is_none",
+    [
+        ({}, True),
+        ({"doesnt-have-id": "foobar"}, True),
+        ({"id": "foobar"}, False),
+    ],
+)
+@pytest.mark.parametrize(
+    "object_data, object_data_is_none",
+    [
+        (None, True),
+        ({"some-data": 1}, False),
+    ],
+)
+def test_get_record_data(
+    license_url, license_is_none, data, data_is_none, object_data, object_data_is_none
+):
+    should_be_none = any([license_is_none, data_is_none, object_data_is_none])
+    with (
+        patch.object(bkm, "_get_license_url", return_value=license_url),
+        patch.object(bkm, "get_response_json"),
+        patch.object(bkm, "_get_data_from_response", return_value=object_data),
+        patch.object(bkm, "_handle_object_data"),
+    ):
+        actual = bkm.get_record_data(data)
+        assert (actual is None) == should_be_none

@@ -2,7 +2,6 @@ import json
 import logging
 import traceback
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Tuple
 
 from airflow.exceptions import AirflowException
 from airflow.models import Variable
@@ -64,7 +63,7 @@ class ProviderDataIngester(ABC):
     delay = 1
     retries = 3
     batch_limit = 100
-    headers: Dict = {}
+    headers: dict = {}
 
     @property
     @abstractmethod
@@ -114,7 +113,7 @@ class ProviderDataIngester(ABC):
         # Used to skip over errors and continue ingestion. When enabled, errors
         # are not reported until ingestion has completed.
         self.skip_ingestion_errors = conf.get("skip_ingestion_errors", False)
-        self.ingestion_errors: List[IngestionError] = []  # Keep track of errors
+        self.ingestion_errors: list[IngestionError] = []  # Keep track of errors
 
         # An optional set of initial query params from which to begin ingestion.
         self.initial_query_params = conf.get("initial_query_params")
@@ -235,9 +234,7 @@ class ProviderDataIngester(ABC):
             )
         return None
 
-    def get_query_params(
-        self, prev_query_params: Optional[Dict], **kwargs
-    ) -> Optional[Dict]:
+    def get_query_params(self, prev_query_params: dict | None, **kwargs) -> dict | None:
         """
         Returns the next set of query_params for the next request, handling
         optional overrides via the dag_run conf.
@@ -265,23 +262,21 @@ class ProviderDataIngester(ABC):
         return self.get_next_query_params(prev_query_params, **kwargs)
 
     @abstractmethod
-    def get_next_query_params(
-        self, prev_query_params: Optional[Dict], **kwargs
-    ) -> Dict:
+    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         """
         Given the last set of query params, return the query params
         for the next request. Depending on the API, this may involve incrementing
         an `offset` or `page` param, for example.
 
         Required arguments:
-        prev_query_params: Dictionary of query string params used in the previous
+        prev_query_params: dictionary of query string params used in the previous
                            request. If None, this is the first request.
         **kwargs:          Optional kwargs passed through from `ingest_records`.
 
         """
         pass
 
-    def get_batch(self, query_params: Dict) -> Tuple[Optional[List], bool]:
+    def get_batch(self, query_params: dict) -> tuple[list | None, bool]:
         """
         Given query params, request the next batch of records from the API and
         return them in a list.
@@ -320,13 +315,16 @@ class ProviderDataIngester(ABC):
 
         return batch, should_continue
 
-    def get_response_json(self, query_params: Dict):
+    def get_response_json(self, query_params: dict, endpoint: str | None = None):
         """
         Make the actual API requests needed to ingest a batch. This can be overridden
         in order to support APIs that require multiple requests, for example.
         """
         return self.delayed_requester.get_response_json(
-            self.endpoint, self.retries, query_params, headers=self.headers
+            endpoint or self.endpoint,
+            self.retries,
+            query_params,
+            headers=self.headers,
         )
 
     def get_should_continue(self, response_json):
@@ -389,7 +387,7 @@ class ProviderDataIngester(ABC):
         pass
 
     @abstractmethod
-    def get_record_data(self, data: dict) -> dict | List[dict]:
+    def get_record_data(self, data: dict) -> dict | list[dict] | None:
         """
         Parse out the necessary information (license info, urls, etc) from the record
         data into a dictionary.

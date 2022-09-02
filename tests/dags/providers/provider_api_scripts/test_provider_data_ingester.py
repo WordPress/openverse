@@ -54,6 +54,21 @@ def test_init_without_date():
     assert ingester.date is None
 
 
+@pytest.mark.parametrize(
+    "endpoint, expected",
+    [
+        (None, MockProviderDataIngester.endpoint),
+        ("https://fake-endpoint.biz", "https://fake-endpoint.biz"),
+    ],
+)
+def test_get_response_json(endpoint, expected):
+    ingester = MockProviderDataIngester()
+    with patch.object(ingester.delayed_requester, "get_response_json") as mock_get:
+        ingester.get_response_json({}, endpoint=endpoint)
+        actual_endpoint = mock_get.call_args.args[0]
+        assert actual_endpoint == expected
+
+
 def test_batch_limit_is_capped_to_ingestion_limit():
     with patch(
         "providers.provider_api_scripts.provider_data_ingester.Variable"
