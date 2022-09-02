@@ -50,7 +50,7 @@
               {{ $t('audio-details.table.filetype') }}
             </dt>
             <dd>
-              {{ audio.filetype.toUpperCase() }}
+              {{ audioFormats.toUpperCase() }}
             </dd>
           </div>
           <div>
@@ -86,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import type { AudioDetail } from '~/models/media'
 
@@ -103,6 +103,19 @@ export default defineComponent({
       type: Object as PropType<AudioDetail>,
       required: true,
     },
+  },
+  setup(props) {
+    const audioFormats = computed(() => {
+      if (!props.audio.alt_files) return props.audio.filetype
+      const altFormats = props.audio.alt_files.map(
+        (altFile) => altFile.filetype
+      )
+      altFormats.unshift(props.audio.filetype)
+      const uniqueFormats = new Set(altFormats)
+      return [...uniqueFormats].join(', ')
+    })
+
+    return { audioFormats }
   },
 })
 </script>
