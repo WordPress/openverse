@@ -47,6 +47,7 @@
     "src/components/VMigrationNotice.vue",
     "src/components/VVariations.vue",
     "src/components/VBackToSearchResultsLink.vue",
+    "src/components/VSnackbar.vue",
     "src/components/VSourcesTable.vue",
     "src/components/TableSortIcon.vue",
     "src/components/VCopyButton.vue",
@@ -65,8 +66,6 @@
     "src/components/VLogoLoader/**.vue",
     "src/components/VMediaInfo/**.vue",
     "src/components/VMediaTag/**.vue",
-    "src/components/VMetaSearch/*.vue",
-    "src/components/VSnackbar.vue",
     "src/components/VSkeleton/**.vue",
     "src/components/VTabs/**.vue",
 

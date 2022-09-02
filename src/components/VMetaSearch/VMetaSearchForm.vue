@@ -2,23 +2,27 @@
   <section
     :key="type"
     ref="sectionRef"
-    class="meta-search p-6 text-center"
+    class="meta-search mb-16 flex flex-row place-items-center justify-center p-4"
     data-testid="meta-search-form"
     @keydown.tab.exact="handleTab"
   >
     <i18n
-      v-if="!hasNoResults"
-      :path="
-        isSupported
-          ? 'meta-search.form.supported-title'
-          : 'meta-search.form.unsupported-title'
-      "
+      v-if="!hasNoResults && isSupported"
+      path="meta-search.form.supported-title"
+      tag="p"
+      class="text-base font-normal leading-[130%]"
+    />
+
+    <i18n
+      v-else-if="!hasNoResults && !isSupported"
+      path="meta-search.form.unsupported-title"
       tag="p"
       class="text-base font-normal leading-[130%]"
     >
       <template #openverse>Openverse</template>
       <template #type>{{ $t(`meta-search.form.types.${type}`) }}</template>
     </i18n>
+
     <i18n
       v-else
       path="meta-search.form.no-results-title"
@@ -28,28 +32,12 @@
       <template #type>{{ $t(`meta-search.form.types.${type}`) }}</template>
       <template #query>{{ query.q }}</template>
     </i18n>
-    <i18n
-      class="text-base font-normal leading-[130%]"
-      path="meta-search.form.caption"
-      tag="p"
-    >
-      <template #type>{{
-        $t(`meta-search.form.types-plural.${type}`)
-      }}</template>
-      <template #break>
-        <br />
-      </template>
-    </i18n>
 
     <VMetaSourceList
-      class="my-8 md:justify-center"
+      class="ms-2 inline-flex md:justify-center"
       :type="type"
       :query="query"
     />
-
-    <p class="my-0 mx-auto max-w-3xl text-base font-normal leading-[130%]">
-      {{ $t('meta-search.caption', { openverse: 'Openverse' }) }}
-    </p>
   </section>
 </template>
 

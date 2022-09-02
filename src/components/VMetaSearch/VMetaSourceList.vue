@@ -1,27 +1,66 @@
 <template>
-  <ul
-    class="meta-sources flex w-full flex-col flex-wrap items-stretch gap-4 md:flex-row"
+  <VPopover
+    ref="sourceListPopover"
+    class="flex items-stretch"
+    :label="$t('meta-search.button').toString()"
+    placement="top-start"
   >
-    <li v-for="source in sources" :key="source.name">
+    <template #trigger="{ a11yProps }">
       <VButton
-        as="VLink"
+        :pressed="a11yProps['aria-expanded']"
+        :aria-haspopup="a11yProps['aria-haspopup']"
+        aria-controls="source-list-popover"
         variant="tertiary"
         size="disabled"
-        :href="source.url"
-        class="w-full p-4 text-sr font-bold md:w-auto md:py-2 md:px-3"
+        class="justify-between py-1 px-3 text-sr font-normal leading-[130%] text-dark-charcoal pe-2"
+        >{{ $t('meta-search.button').toString() }}
+        <VIcon
+          class="text-dark-charcoal-40 ms-1"
+          :class="a11yProps['aria-expanded'] ? 'rotate-180' : 'rotate-0'"
+          :icon-path="icons.caretDown"
+      /></VButton>
+    </template>
+    <template #default="{ close }">
+      <div
+        class="relative max-w-[280px] p-2 pt-0"
+        data-testid="source-list-popover"
       >
-        {{ source.name }}
-        <sup class="top-0">
+        <VIconButton
+          class="absolute top-0 border-none text-dark-charcoal-70 end-0"
+          size="search-medium"
+          :icon-props="{ iconPath: icons.closeSmall }"
+          :button-props="{
+            'aria-label': $t('modal.close').toString(),
+            variant: 'plain',
+          }"
+          @click="close"
+        />
+        <h2 class="mb-2 px-4 pt-5 text-base font-semibold text-start">
+          {{ $t('meta-search.title') }}
+        </h2>
+        <p class="mb-4 px-4 text-sr text-start">
+          {{ $t('meta-search.caption', { openverse: 'Openverse' }) }}
+        </p>
+        <VButton
+          v-for="source in sources"
+          :key="source.name"
+          as="VLink"
+          variant="plain"
+          size="disabled"
+          class="w-full justify-between px-4 py-3 text-sr font-bold text-dark-charcoal hover:bg-dark-charcoal-10"
+          :href="source.url"
+        >
+          {{ source.name }}
           <VIcon
             :icon-path="icons.externalLink"
             :size="4"
             :rtl-flip="true"
             class="ms-2"
           />
-        </sup>
-      </VButton>
-    </li>
-  </ul>
+        </VButton>
+      </div>
+    </template>
+  </VPopover>
 </template>
 
 <script lang="ts">
@@ -33,8 +72,12 @@ import type { MediaType } from '~/constants/media'
 
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
+import VIconButton from '~/components/VIconButton/VIconButton.vue'
+import VPopover from '~/components/VPopover/VPopover.vue'
 
 import externalLinkIcon from '~/assets/icons/external-link.svg'
+import caretDownIcon from '~/assets/icons/caret-down.svg'
+import closeSmallIcon from '~/assets/icons/close-small.svg'
 
 /**
  * This component renders a list of pre-populated links to additional sources
@@ -42,7 +85,7 @@ import externalLinkIcon from '~/assets/icons/external-link.svg'
  */
 export default defineComponent({
   name: 'VMetaSourceList',
-  components: { VButton, VIcon },
+  components: { VButton, VIcon, VIconButton, VPopover },
   props: {
     /**
      * the media type to use as the criteria for filtering additional sources
@@ -61,6 +104,8 @@ export default defineComponent({
     return {
       icons: {
         externalLink: externalLinkIcon,
+        caretDown: caretDownIcon,
+        closeSmall: closeSmallIcon,
       },
       sources,
     }
