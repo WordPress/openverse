@@ -130,7 +130,7 @@ def _extract_audio_data(media_data):
         foreign_landing_url = media_data["shareurl"]
     except (TypeError, KeyError, AttributeError):
         return None
-    audio_url, duration, download_url = _get_audio_info(media_data)
+    audio_url, duration = _get_audio_info(media_data)
     if audio_url is None:
         return None
     item_license = _get_license(media_data)
@@ -184,27 +184,42 @@ def _get_foreign_identifier(media_data):
         return None
 
 
-def _get_audio_info(media_data):
-    """Parses audio URL, audio download URL, audio duration
-    If the audio does not allow download, we save the 'streaming'
-    URL as the `audio_url`
+def _remove_param_from_url(url: str, param: str) -> str:
+    """
+    Remove a parameter from a provided URL.
+    """
+    parsed_url = urlsplit(url)
+    query = parse_qs(parsed_url.query)
+    query.pop(param, None)
+    return parsed_url._replace(query=urlencode(query, doseq=True)).geturl()
+
+
+def _get_audio_info(media_data: dict) -> tuple[Optional[str], Optional[int]]:
+    """Parse audio URL & audio duration
+    Also remove the "from" parameter from an audio URL. Audio URLs have a "from" param
+    which seems to encapsulate information about the calling application.
+    Example from the API:
+    https://prod-1.storage.jamendo.com/?trackid=1532771&format=mp31&from=app-devsite
+    This information looks like an API key or secret when returned, so we remove it
+    since it's not necessary for serving the audio files.
+    >>> base_url = "https://prod-1.storage.jamendo.com/"
+    >>> url = f"{base_url}?trackid=1532771&format=mp31&from=app-devsite"
+    >>> _remove_param_from_url(url, "from")
+    'https://prod-1.storage.jamendo.com/?trackid=1532771&format=mp31'
     :return: Tuple with main audio file information:
     - audio_url
-    - download_url
     - duration (in milliseconds)
     """
-    audio_url = media_data.get("audio")
-    download_url = None
-    if media_data.get("audiodownload_allowed") and media_data.get("audiodownload"):
-        audio_url = media_data.get("audiodownload")
-        download_url = media_data.get("audiodownload")
+    if (audio_url := media_data.get("audio")) is None:
+        return None, None
+    audio_url = _remove_param_from_url(audio_url, "from")
     duration = media_data.get("duration")
     if duration:
         duration = int(duration) * 1000
-    return audio_url, duration, download_url
+    return audio_url, duration
 
 
-def _remove_trackid(thumbnail_url: Optional[str]):
+def _remove_trackid(thumbnail_url: Optional[str]) -> Optional[str]:
     """
     ``audio_set`` data is used to create a separate database table in the API.
     To make sure that any given ``audio_set`` appears in that table only once,
@@ -221,10 +236,7 @@ def _remove_trackid(thumbnail_url: Optional[str]):
     """
     if thumbnail_url is None:
         return
-    parsed_url = urlsplit(thumbnail_url)
-    query = parse_qs(parsed_url.query)
-    query.pop("trackid", None)
-    return parsed_url._replace(query=urlencode(query, doseq=True)).geturl()
+    return _remove_param_from_url(thumbnail_url, "trackid")
 
 
 def _get_audio_set_info(media_data):

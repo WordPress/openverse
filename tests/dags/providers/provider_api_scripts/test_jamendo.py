@@ -24,6 +24,23 @@ def cleanse_url():
         yield
 
 
+@pytest.mark.parametrize(
+    "url, param, expected",
+    [
+        ("", "", ""),
+        ("https://example.com?a=1&b=2", "a", "https://example.com?b=2"),
+        ("https://example.com?a=1", "a", "https://example.com"),
+        ("https://example.com/?a=1", "a", "https://example.com/"),
+        ("https://example.com?a=1&a=2&b=3", "a", "https://example.com?b=3"),
+        ("https://example.com?a=1&a=2", "a", "https://example.com"),
+        ("https://example.com?a=1&b=2", "notexist", "https://example.com?a=1&b=2"),
+    ],
+)
+def test_remove_param_from_url(url, param, expected):
+    actual = jamendo._remove_param_from_url(url, param)
+    assert actual == expected
+
+
 def test_get_image_pages_returns_correctly_with_none_json():
     expect_result = None
     with patch.object(
@@ -71,7 +88,7 @@ def test_process_item_batch_handles_example_batch():
         _, actual_call_args = mock_add.call_args_list[0]
         expected_call_args = {
             "audio_set": "Opera I",
-            "audio_url": "https://mp3d.jamendo.com/download/track/732/mp32/",
+            "audio_url": "https://mp3d.jamendo.com/?trackid=732&format=mp32",
             "category": "music",
             "creator": "Haeresis",
             "creator_url": "https://www.jamendo.com/artist/92/haeresis",
@@ -118,39 +135,10 @@ def test_extract_audio_data_returns_none_when_no_foreign_id():
     assert actual_image_info is expected_image_info
 
 
-def test_extract_audio_data_falls_back_on_audio_url_when_download_not_available():
-    """
-    We use the URL from `audiodownload` only if download is allowed, and there is
-    download URL. Otherwise, we try to get URL from `audio_url`
-    """
-    AUDIO_D_URL = "https://mp3d.jamendo.com/download/track/732/mp32/"
-    AUDIO_URL = (
-        "https://mp3d.jamendo.com/?trackid=732&format=mp32&from="
-        "WftSCtIfbfXP90c1jNqsfw%3D%3D%7CNzgGctbCMB1xAW8bJE5uEw%3D%3D"
-    )
-    with open(RESOURCES / "audio_data_example.json") as f:
-        audio_data = json.load(f)
-    actual_image_info = jamendo._extract_audio_data(audio_data)["audio_url"]
-    expected_image_download_url = AUDIO_D_URL
-    assert actual_image_info == expected_image_download_url
-
-    audio_data["audiodownload_allowed"] = False
-    actual_image_info = jamendo._extract_audio_data(audio_data)["audio_url"]
-    expected_image_download_url = AUDIO_URL
-    assert actual_image_info == expected_image_download_url
-
-    audio_data["audiodownload_allowed"] = True
-    audio_data.pop("audiodownload", None)
-    actual_image_info = jamendo._extract_audio_data(audio_data)["audio_url"]
-    expected_image_download_url = AUDIO_URL
-    assert actual_image_info == expected_image_download_url
-
-
 def test_extract_audio_data_returns_none_when_no_audio_url():
     with open(RESOURCES / "audio_data_example.json") as f:
         audio_data = json.load(f)
         audio_data.pop("audio", None)
-        audio_data["audiodownload_allowed"] = False
     actual_audio_info = jamendo._extract_audio_data(audio_data)
     assert actual_audio_info is None
 
@@ -216,7 +204,7 @@ def test_extract_audio_data_handles_example_dict():
     actual_image_info = jamendo._extract_audio_data(audio_data)
     expected_image_info = {
         "audio_set": "Opera I",
-        "audio_url": "https://mp3d.jamendo.com/download/track/732/mp32/",
+        "audio_url": "https://mp3d.jamendo.com/?trackid=732&format=mp32",
         "category": "music",
         "creator": "Haeresis",
         "creator_url": "https://www.jamendo.com/artist/92/haeresis",
