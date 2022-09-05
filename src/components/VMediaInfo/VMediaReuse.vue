@@ -3,10 +3,17 @@
     :aria-label="$t('media-details.reuse.title').toString()"
     class="media-reuse"
   >
-    <h2 class="mb-6 text-2xl md:text-3xl">
+    <h2 class="mb-4 text-2xl md:text-3xl">
       {{ $t('media-details.reuse.title') }}
     </h2>
-    <div v-if="media.license_url" class="grid gap-6 md:grid-cols-2">
+    <p class="text-base font-normal leading-[130%]">
+      {{
+        $t('media-details.reuse.description', {
+          media: media.frontendMediaType,
+        })
+      }}
+    </p>
+    <div v-if="media.license_url" class="mt-8 grid gap-6 md:grid-cols-2">
       <VMediaLicense
         :license="media.license"
         :license-url="media.license_url"

@@ -397,7 +397,8 @@
   },
   "media-details": {
     "reuse": {
-      "title": "Reuse content",
+      "title": "How to use",
+      "description": "Visit the {media}'s website to download and use it. Make sure to credit the creator by showing the attribution information where you are sharing your work.",
       "license-header": "License",
       "tool-header": "Public Domain",
       "audio": "Audio",
