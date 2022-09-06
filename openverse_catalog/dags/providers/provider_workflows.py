@@ -11,6 +11,9 @@ from providers.provider_api_scripts.museum_victoria import VictoriaDataIngester
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 from providers.provider_api_scripts.science_museum import ScienceMuseumDataIngester
 from providers.provider_api_scripts.stocksnap import StockSnapDataIngester
+from providers.provider_api_scripts.wikimedia_commons import (
+    WikimediaCommonsDataIngester,
+)
 
 
 @dataclass
@@ -188,6 +191,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="wikimedia_commons",
+        ingester_class=WikimediaCommonsDataIngester,
         start_date=datetime(2020, 11, 1),
         schedule_string="@daily",
         dated=True,

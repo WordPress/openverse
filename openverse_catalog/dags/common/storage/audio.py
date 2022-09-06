@@ -65,6 +65,7 @@ class AudioStore(MediaStore):
         alt_files: Optional[Dict] = None,
         source: Optional[str] = None,
         ingestion_type: Optional[str] = None,
+        **kwargs,
     ):
         """
         Add information for a single audio to the AudioStore.

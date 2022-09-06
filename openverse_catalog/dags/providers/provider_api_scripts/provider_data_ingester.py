@@ -315,7 +315,9 @@ class ProviderDataIngester(ABC):
 
         return batch, should_continue
 
-    def get_response_json(self, query_params: dict, endpoint: str | None = None):
+    def get_response_json(
+        self, query_params: dict, endpoint: str | None = None, **kwargs
+    ):
         """
         Make the actual API requests needed to ingest a batch. This can be overridden
         in order to support APIs that require multiple requests, for example.
@@ -325,6 +327,7 @@ class ProviderDataIngester(ABC):
             self.retries,
             query_params,
             headers=self.headers,
+            **kwargs,
         )
 
     def get_should_continue(self, response_json):
