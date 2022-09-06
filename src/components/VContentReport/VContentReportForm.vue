@@ -10,7 +10,7 @@
         tag="p"
       >
         <template #source>
-          <VLink :href="media.url" class="text-pink hover:underline">{{
+          <VLink :href="media.foreign_landing_url" class="text-pink hover:underline">{{
             providerName
           }}</VLink>
         </template>
