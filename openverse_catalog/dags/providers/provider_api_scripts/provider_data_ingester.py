@@ -5,10 +5,9 @@ from abc import ABC, abstractmethod
 
 from airflow.exceptions import AirflowException
 from airflow.models import Variable
-from common.requester import DelayedRequester, RetriesExceeded
+from common.requester import DelayedRequester
 from common.storage.media import MediaStore
 from common.storage.util import get_media_store_class
-from requests.exceptions import JSONDecodeError, RequestException
 
 
 logger = logging.getLogger(__name__)
@@ -293,17 +292,7 @@ class ProviderDataIngester(ABC):
         should_continue = True
 
         # Get the API response
-        try:
-            response_json = self.get_response_json(query_params)
-        except (
-            RequestException,
-            RetriesExceeded,
-            JSONDecodeError,
-            ValueError,
-            TypeError,
-        ) as e:
-            logger.error(f"Error getting response due to {e}")
-            response_json = None
+        response_json = self.get_response_json(query_params)
 
         # Build a list of records from the response
         batch = self.get_batch_data(response_json)

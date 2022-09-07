@@ -1,9 +1,11 @@
 import json
 import os
-from unittest.mock import call, patch
+from unittest.mock import MagicMock, call, patch
 
 import pytest
+import requests
 from airflow.exceptions import AirflowException
+from common.requester import RetriesExceeded
 from common.storage.audio import AudioStore, MockAudioStore
 from common.storage.image import ImageStore, MockImageStore
 from providers.provider_api_scripts.provider_data_ingester import (
@@ -85,6 +87,17 @@ def test_get_batch_data():
     batch = ingester.get_batch_data(response_json)
 
     assert batch == EXPECTED_BATCH_DATA
+
+
+def test_get_batch_raises_error():
+    r = requests.Response()
+    r.status_code = 500
+    r.json = MagicMock(return_value={"error": ""})
+    with (
+        patch.object(ingester.delayed_requester, "get", return_value=r),
+        pytest.raises(RetriesExceeded),
+    ):
+        ingester.get_batch({})
 
 
 def test_process_batch_adds_items_to_correct_media_stores():
