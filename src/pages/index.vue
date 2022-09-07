@@ -12,11 +12,8 @@
         :is-search-route="false"
       />
 
-      <div class="z-10 mx-auto w-full px-6 lg:w-auto lg:pe-0 lg:ps-30 xl:px-40">
-        <VLink
-          href="/"
-          class="relative -left-[6.25rem] hidden rtl:-right-[6.25rem] lg:block"
-        >
+      <div class="z-10 mx-auto w-full px-6 lg:w-auto lg:pe-0 lg:ps-24">
+        <VLink href="/" class="hidden lg:block">
           <h1>
             <span class="sr-only">Openverse</span>
             <!-- width and height chosen w.r.t. viewBox "0 0 280 42" -->
@@ -24,15 +21,18 @@
               aria-hidden="true"
               class="flex flex-row items-center text-dark-charcoal"
             >
-              <OpenverseLogo class="h-[70px] w-[70px] me-6 xl:me-7" />
-              <OpenverseBrand class="h-[60px] w-[315px]" />
+              <OpenverseLogo class="me-5 xl:me-5" height="46" width="50" />
+              <OpenverseBrand height="46" width="234" />
             </span>
           </h1>
         </VLink>
-        <h2 class="mt-auto text-4xl lg:mt-6 lg:text-6xl">
+        <h2
+          class="mt-auto mb-2 max-w-[80%] text-[27px] font-normal leading-[35px] md:mt-16 md:mb-4 md:text-[46px] md:leading-[60px]"
+        >
           {{ $t('hero.subtitle') }}
         </h2>
-        <div class="mt-4 flex justify-start gap-4 md:hidden">
+        <p class="text-base md:text-3xl">{{ $t('hero.description') }}</p>
+        <div class="mt-8 flex justify-start gap-4 md:hidden">
           <VSearchTypeRadio
             v-for="type in supportedSearchTypes"
             :key="type"
@@ -43,7 +43,7 @@
         </div>
         <VSearchBar
           v-model.trim="searchTerm"
-          class="group mt-4 max-w-[40rem] lg:mt-8"
+          class="group mt-4 max-w-[40rem] md:mt-6"
           size="standalone"
           @submit="handleSearch"
         >
