@@ -173,7 +173,7 @@ describe('Media Store', () => {
 
     it.each`
       searchType   | fetchState
-      ${ALL_MEDIA} | ${{ fetchingError: 'Error', hasStarted: true, isFetching: true, isFinished: false }}
+      ${ALL_MEDIA} | ${{ fetchingError: null, hasStarted: true, isFetching: true, isFinished: false }}
       ${AUDIO}     | ${{ fetchingError: 'Error', hasStarted: true, isFetching: false, isFinished: true }}
       ${IMAGE}     | ${{ fetchingError: null, hasStarted: true, isFetching: true, isFinished: false }}
     `(
@@ -188,6 +188,20 @@ describe('Media Store', () => {
         expect(mediaStore.fetchState).toEqual(fetchState)
       }
     )
+    it('fetchState for ALL_MEDIA returns compound error if all types have errors', () => {
+      const mediaStore = useMediaStore()
+      const searchStore = useSearchStore()
+      searchStore.setSearchType(ALL_MEDIA)
+      mediaStore._updateFetchState(AUDIO, 'end', 'Error')
+      mediaStore._updateFetchState(IMAGE, 'end', 'Error')
+
+      expect(mediaStore.fetchState).toEqual({
+        fetchingError: '{"image":"Error","audio":"Error"}',
+        hasStarted: true,
+        isFetching: false,
+        isFinished: true,
+      })
+    })
   })
 
   describe('actions', () => {
@@ -299,35 +313,6 @@ describe('Media Store', () => {
         expect(actualResult).toEqual(expectedResult)
       }
     )
-
-    it('fetchSingleMediaType throws an error if result count is 0', async () => {
-      const mediaType = IMAGE
-      mockSearchImage.mockImplementationOnce(() =>
-        Promise.resolve({
-          results: {},
-          result_count: 0,
-          page_count: 0,
-        })
-      )
-
-      const mediaStore = useMediaStore()
-
-      const params = {
-        q: 'foo',
-        page: 1,
-        shouldPersistMedia: false,
-        mediaType,
-      }
-      await mediaStore.fetchSingleMediaType(params)
-
-      expect(mediaStore.results[mediaType]).toEqual(initialResults)
-      expect(mediaStore.fetchState).toEqual({
-        isFetching: false,
-        hasStarted: true,
-        isFinished: false,
-        fetchingError: `No ${mediaType} found for this query`,
-      })
-    })
 
     it('fetchSingleMediaType resets images if shouldPersistMedia is false', async () => {
       const mediaStore = useMediaStore()

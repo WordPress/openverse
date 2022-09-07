@@ -33,18 +33,11 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  toRef,
-  useMeta,
-} from '@nuxtjs/composition-api'
+import { computed, defineComponent, useMeta } from '@nuxtjs/composition-api'
 
-import { useLoadMore } from '~/composables/use-load-more'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useBrowserIsMobile } from '~/composables/use-browser-detection'
 import { useFocusFilters } from '~/composables/use-focus-filters'
-import { useI18n } from '~/composables/use-i18n'
 import { Focus } from '~/utils/focus-management'
 
 import { useUiStore } from '~/stores/ui'
@@ -66,8 +59,6 @@ export default defineComponent({
   },
   props: propTypes,
   setup(props) {
-    const i18n = useI18n()
-
     useMeta({ title: `${props.searchTerm} | Openverse` })
 
     const results = computed(() => props.resultItems.audio)
@@ -84,20 +75,12 @@ export default defineComponent({
         : 'm'
     })
 
-    const isError = computed(() => !!props.fetchState.fetchingError)
-    const errorHeader = computed(() => {
-      const type = i18n.t('browse-page.search-form.audio')
-      return i18n.t('browse-page.fetching-error', { type })
-    })
-
     const focusFilters = useFocusFilters()
     const handleShiftTab = (event: KeyboardEvent, i: number) => {
       if (i === 0) {
         focusFilters.focusFilterSidebar(event, Focus.Last)
       }
     }
-    const searchTermRef = toRef(props, 'searchTerm')
-    const { canLoadMore, onLoadMore } = useLoadMore(searchTermRef)
 
     const uiStore = useUiStore()
     const isSnackbarVisible = computed(() => uiStore.areInstructionsVisible)
@@ -111,12 +94,8 @@ export default defineComponent({
     return {
       results,
       audioTrackSize,
-      isError,
-      errorHeader,
 
       handleShiftTab,
-      canLoadMore,
-      onLoadMore,
 
       isSnackbarVisible,
       showSnackbar,

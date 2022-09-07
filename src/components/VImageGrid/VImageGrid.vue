@@ -11,7 +11,7 @@
     <h5 v-if="isError && !fetchState.isFinished" class="py-4">
       {{ fetchState.fetchingError }}
     </h5>
-    <footer v-if="showLoadMore" class="pt-4">
+    <footer v-if="!isSinglePage" class="pt-4">
       <VLoadMore />
     </footer>
   </section>
@@ -44,12 +44,14 @@ export default defineComponent({
       default: () => [],
     },
     /**
-     * Whether to show the 'Load More' button.
-     * Is false for related images
+     * VImageGrid is used for the search grid and the related images.
+     * In the related images, it is just a single page of results without the
+     * "Load More" button, and in the search grid it is a grid that can load
+     * more images on the "Load More" button click.
      */
-    showLoadMore: {
+    isSinglePage: {
       type: Boolean,
-      default: true,
+      required: true,
     },
     fetchState: {
       type: Object as PropType<FetchState>,
@@ -57,15 +59,10 @@ export default defineComponent({
     },
   },
   emits: {
-    'load-more': defineEvent(),
     'shift-tab': defineEvent(),
   },
   setup(props, { emit }) {
     const isError = computed(() => Boolean(props.fetchState.fetchingError))
-
-    const onLoadMore = () => {
-      emit('load-more')
-    }
 
     const handleShiftTab = (event: KeyboardEvent, index: number) => {
       if (index === 0) {
@@ -74,7 +71,7 @@ export default defineComponent({
       }
     }
 
-    return { isError, onLoadMore, handleShiftTab }
+    return { isError, handleShiftTab }
   },
 })
 </script>

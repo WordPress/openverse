@@ -1,9 +1,9 @@
 <template>
   <VButton
-    v-show="!endOfResults"
+    v-show="canLoadMore"
     size="large"
     variant="full"
-    :disabled="!canLoadMore || isFetching"
+    :disabled="isFetching"
     data-testid="load-more"
     @click="onLoadMore"
   >
@@ -29,27 +29,40 @@ export default defineComponent({
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
+    const isFetching = computed(() => mediaStore.fetchState.isFetching)
+
+    /**
+     * Whether we should show the "Load more" button.
+     * If the user has entered a search term, there is at least 1 page of results,
+     * there has been no fetching error, and there are more results to fetch,
+     * we show the button.
+     */
     const canLoadMore = computed(
       () =>
         searchStore.searchTerm !== '' &&
-        !mediaStore.fetchState.isFetching &&
         !mediaStore.fetchState.fetchingError &&
+        !mediaStore.fetchState.isFinished &&
         mediaStore.resultCount > 0
     )
+
+    /**
+     * On button click, fetch media, persisting the existing results.
+     * The button is disabled when we are fetching, but we still check
+     * whether we are currently fetching to be sure we don't fetch multiple times.
+     *
+     */
     const onLoadMore = async () => {
-      if (!canLoadMore.value) return
+      if (isFetching.value) return
 
       await mediaStore.fetchMedia({
         shouldPersistMedia: true,
       })
     }
-    const isFetching = computed(() => mediaStore.fetchState.isFetching)
-    const endOfResults = computed(
-      () => !(canLoadMore.value || isFetching.value)
-    )
 
     const buttonLabel = computed(() =>
-      i18n.t(`browse-page.${isFetching.value ? 'loading' : 'load'}`)
+      isFetching.value
+        ? i18n.t('browse-page.loading')
+        : i18n.t('browse-page.load')
     )
 
     return {
@@ -57,7 +70,6 @@ export default defineComponent({
       isFetching,
       onLoadMore,
       canLoadMore,
-      endOfResults,
     }
   },
 })

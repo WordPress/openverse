@@ -6,7 +6,7 @@
     <VLoadingIcon v-if="fetchState.isFetching" />
     <VImageGrid
       :images="media"
-      :show-load-more="false"
+      :is-single-page="true"
       :fetch-state="fetchState"
     />
   </aside>

@@ -135,24 +135,31 @@ export const useMediaStore = defineStore('media', {
     fetchState(): FetchState {
       if (this._searchType === ALL_MEDIA) {
         /**
-         * For all_media, we return the error for the first media type that has an error.
+         * For all_media, we return 'All media fetching error' if all types have some kind of error.
          */
-        const findFirstError = () => {
-          for (const type of supportedMediaTypes) {
-            if (this.mediaFetchState[type].fetchingError) {
-              return this.mediaFetchState[type].fetchingError
-            }
-          }
-          return null
-        }
         const atLeastOne = (property: keyof FetchState) =>
           supportedMediaTypes.some(
             (type) => this.mediaFetchState[type][property]
           )
 
+        const allMediaError = () => {
+          const errors = {} as Record<SupportedMediaType, string>
+          for (const mt of supportedMediaTypes) {
+            const error = this.mediaFetchState[mt].fetchingError
+            if (error) {
+              errors[mt] = error
+            }
+          }
+          return JSON.stringify(errors)
+        }
+
         return {
           isFetching: atLeastOne('isFetching'),
-          fetchingError: findFirstError(),
+          fetchingError: supportedMediaTypes.every(
+            (type) => this.mediaFetchState[type].fetchingError !== null
+          )
+            ? allMediaError()
+            : null,
           hasStarted: atLeastOne('hasStarted'),
           isFinished: supportedMediaTypes.every(
             (type) => this.mediaFetchState[type].isFinished
@@ -365,7 +372,8 @@ export const useMediaStore = defineStore('media', {
       ).filter(
         (type) =>
           !this.mediaFetchState[type].fetchingError &&
-          !this.mediaFetchState[type].isFetching
+          !this.mediaFetchState[type].isFetching &&
+          !this.mediaFetchState[type].isFinished
       )
       await Promise.all(
         mediaToFetch.map((type) =>
@@ -415,7 +423,6 @@ export const useMediaStore = defineStore('media', {
         const mediaCount = data.result_count
         let errorMessage
         if (!mediaCount) {
-          errorMessage = `No ${mediaType} found for this query`
           page = undefined
         }
         this._updateFetchState(mediaType, 'end', errorMessage)
