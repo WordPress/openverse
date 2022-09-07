@@ -73,7 +73,7 @@ loaded into a database to be indexed for searching in the Openverse API. These r
 different environment than the PySpark portion of the project, and so have their
 own dependency requirements.
 
-For instructions geared specifically towards production deployments, see [DEPLOY.md](DEPLOY.md).
+For instructions geared specifically towards production deployments, see [DEPLOYMENT.md](DEPLOYMENT.md)
 
 [api_scripts]: openverse_catalog/dags/providers/provider_api_scripts
 
