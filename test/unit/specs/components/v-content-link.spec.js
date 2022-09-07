@@ -16,7 +16,8 @@ describe('VContentLink', () => {
 
   beforeEach(() => {
     options = {
-      props: { mediaType: 'image', resultsCount: 123 },
+      props: { mediaType: 'image', resultsCount: 123, to: '/images' },
+      stubs: ['NuxtLink'],
       mocks: {
         $nuxt: {
           context: {
@@ -27,17 +28,23 @@ describe('VContentLink', () => {
     }
   })
 
-  xit('is not selected by default', () => {
+  it('is enabled when there are results', () => {
     render(VContentLink, options)
-    const btn = screen.getByRole('radio')
-    expect(btn).not.toHaveAttribute('aria-checked')
+    const btn = screen.getByRole('link')
+
+    /**  @todo: Mock NuxtLink and check for href instead.  **/
+    expect(btn).toHaveAttribute('to')
+    expect(btn).not.toHaveAttribute('aria-disabled')
   })
 
-  xit('is marked as selected when indicated with the isSelected prop', () => {
-    options.props.isSelected = true
+  it('is disabled when there are no results', () => {
+    options.props.resultsCount = 0
     render(VContentLink, options)
-    const btn = screen.getByRole('radio')
-    expect(btn).toHaveAttribute('aria-checked')
-    expect(btn.getAttribute('aria-checked')).toBeTruthy()
+    const btn = screen.getByRole('link')
+
+    /**  @todo: Mock NuxtLink and check for href instead.  **/
+    expect(btn).not.toHaveAttribute('to')
+    expect(btn).toHaveAttribute('aria-disabled')
+    expect(btn.getAttribute('aria-disabled')).toBeTruthy()
   })
 })
