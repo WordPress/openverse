@@ -78,6 +78,8 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             RELEASE=${{ steps.get-version.outputs.version }}
 
