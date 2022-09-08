@@ -142,14 +142,15 @@ The app will be available at <http://localhost:8443>.
 
 > **Note**: If you are _not_ using HTTPS locally, do not use the URL provided by Nuxt - this will cause certificate errors because it gets rerouted to HTTPS.
 > E.g. this link will not work:
+>
 > ```
 > $ docker run --rm -it -p 127.0.0.1:8443:8443/tcp openverse-frontend:latest
-> 
+>
 > > openverse-frontend@2.2.1 start
 > > nuxt start
-> 
+>
 > ℹ Sentry reporting is disabled ("disabled" option has been set) nuxt:sentry 18:22:32
-> 
+>
 >    ╭─────────────────────────────────────────╮
 >    │                                         │
 >    │   Nuxt @ v2.15.8                        │

@@ -25,7 +25,7 @@
           :audio-id="audio.id"
           :current-time="currentTime"
           :duration="duration"
-          :message="message ? $t(`audio-track.messages.${message}`) : null"
+          :message="message"
           @seeked="handleSeeked"
           @toggle-playback="handleToggle"
         />
@@ -50,6 +50,7 @@ import {
   ref,
   watch,
   onUnmounted,
+  useContext,
   useRoute,
   PropType,
 } from '@nuxtjs/composition-api'
@@ -132,6 +133,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const i18n = useI18n()
+    const { $sentry } = useContext()
 
     const activeMediaStore = useActiveMediaStore()
     const route = useRoute()
@@ -295,7 +297,7 @@ export default defineComponent({
       )
 
       if (
-        route.value.params.id === props.audio.id ||
+        route.value?.params?.id === props.audio.id ||
         mediaStore.getItemById(AUDIO, props.audio.id)
       ) {
         /**
@@ -322,9 +324,27 @@ export default defineComponent({
     })
 
     const play = () => {
-      // delay initializing the local audio element until playback is requested
+      // Delay initializing the local audio element until playback is requested
       if (!localAudio) initLocalAudio()
-      localAudio?.play()
+
+      // Check if the audio can be played successfully
+      localAudio?.play().catch((err) => {
+        let errorMsg = ''
+        switch (err.name) {
+          case 'NotAllowedError':
+            errorMsg = 'err_unallowed'
+            break
+          case 'NotSupportedError':
+            errorMsg = 'err_unsupported'
+            break
+          default:
+            errorMsg = 'err_unknown'
+            $sentry.captureException(err)
+        }
+        errorMsg = i18n.t(`audio-track.messages.${errorMsg}`).toString()
+        activeMediaStore.setMessage({ message: errorMsg })
+        localAudio?.pause()
+      })
     }
     const pause = () => localAudio?.pause()
 

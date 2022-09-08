@@ -10,9 +10,11 @@
         tag="p"
       >
         <template #source>
-          <VLink :href="media.foreign_landing_url" class="text-pink hover:underline">{{
-            providerName
-          }}</VLink>
+          <VLink
+            :href="media.foreign_landing_url"
+            class="text-pink hover:underline"
+            >{{ providerName }}</VLink
+          >
         </template>
       </i18n>
     </div>

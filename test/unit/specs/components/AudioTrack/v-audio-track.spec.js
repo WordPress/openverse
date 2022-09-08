@@ -1,4 +1,4 @@
-import { render } from '@testing-library/vue'
+import { fireEvent, render } from '@testing-library/vue'
 import Vuei18n from 'vue-i18n'
 
 import {
@@ -15,6 +15,10 @@ import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
 
 const enMessages = require('~/locales/en.json')
 
+window.HTMLMediaElement.prototype.play = () => {
+  /* mock */
+}
+
 const mockI18n = new Vuei18n({
   locale: 'en',
   fallbackLocale: 'en',
@@ -26,7 +30,10 @@ jest.mock('~/composables/use-browser-detection', () => ({
 }))
 
 jest.mock('~/composables/use-i18n', () => ({
-  useI18n: jest.fn(() => mockI18n),
+  useI18n: jest.fn(() => ({
+    t: jest.fn((val) => val),
+    tc: jest.fn((val) => val),
+  })),
 }))
 
 const useVueI18n = (vue) => {
@@ -84,9 +91,6 @@ describe('AudioTrack', () => {
     options = {
       propsData: props,
       stubs,
-      mocks: {
-        $nuxt: { context: { i18n: { t: jest.fn() } } },
-      },
     }
 
     setActivePinia(createPinia())
@@ -98,10 +102,7 @@ describe('AudioTrack', () => {
   })
 
   it('should render the row audio track component even without duration', () => {
-    options.propsData = {
-      ...options.propsData,
-      layout: 'row',
-    }
+    options.propsData.layout = 'row'
     const { getByText } = render(VAudioTrack, options, configureVue)
     getByText('by ' + props.audio.creator)
   })
@@ -118,5 +119,29 @@ describe('AudioTrack', () => {
     const element = getByText(props.audio.creator)
     expect(element).toBeInstanceOf(HTMLAnchorElement)
     expect(element).toHaveAttribute('href', props.audio.creator_url)
+  })
+
+  it('on play error displays a message instead of the waveform', async () => {
+    options.propsData.audio.url = 'bad.url'
+    options.propsData.layout = 'row'
+    options.stubs.VPlayPause = false
+    options.stubs.VWaveform = false
+    options.stubs.VAudioThumbnail = true
+    const pauseStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'pause')
+      .mockImplementation(() => undefined)
+
+    const playStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'play')
+      .mockImplementation(() =>
+        Promise.reject(new DOMException('msg', 'NotAllowedError'))
+      )
+    const { getByRole, getByText } = render(VAudioTrack, options, configureVue)
+
+    await fireEvent.click(getByRole('button'))
+    await expect(playStub).toHaveBeenCalledTimes(1)
+    await expect(pauseStub).toHaveBeenCalledTimes(1)
+    await expect(getByText('audio-track.messages.err_unallowed')).toBeVisible()
+    // It's not possible to get the vm to test that Sentry has been called
   })
 })

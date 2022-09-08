@@ -30,6 +30,7 @@ export const getAudioObj = (overrides = {}) =>
           name: 'cuivres',
         },
       ],
+      duration: 270000,
       alt_files: null,
       attribution:
         '"La vie des bêtes" by AS-POTIRONT! is licensed under CC BY-NC-SA 2.5. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/2.5/.',

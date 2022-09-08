@@ -575,6 +575,8 @@
       "err_aborted": "You aborted playback.",
       "err_network": "A network error occurred.",
       "err_decode": "Could not decode audio.",
+      "err_unallowed": "Reproduction not allowed.",
+      "err_unknown": "An unexpected error has ocurred. Try again in a few minutes or report the item if the issue persists.",
       "err_unsupported": "This audio format is not supported by your browser.",
       "loading": "Loading..."
     },

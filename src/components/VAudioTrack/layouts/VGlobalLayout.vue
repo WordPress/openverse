@@ -2,7 +2,7 @@
   <div class="global-track flex w-full flex-row">
     <div class="flex-shrink-0">
       <VAudioThumbnail :audio="audio" />
-      <slot name="play-pause" :size="size" :layout="layout" />
+      <slot name="play-pause" size="medium" layout="global" />
     </div>
 
     <div class="relative flex-grow">
@@ -37,12 +37,6 @@ export default defineComponent({
       type: Object as PropType<AudioDetail>,
       required: true,
     },
-  },
-  setup() {
-    const size = 'medium' as const
-    const layout = 'global' as const
-
-    return { size, layout }
   },
 })
 </script>
