@@ -47,7 +47,7 @@ class ClevelandDataIngester(ProviderDataIngester):
         if foreign_id is None:
             return None
 
-        image = self._get_image_type(data.get("images", {}))
+        image = self._get_image_data(data.get("images", {}))
         if image is None or image.get("url") is None:
             return None
 
@@ -70,8 +70,12 @@ class ClevelandDataIngester(ProviderDataIngester):
         }
 
     @staticmethod
-    def _get_image_type(image_data):
-        # Returns the image url and key for the image in `image_data` dict.
+    def _get_image_data(image_data):
+        # Returns the best available image in the `image_data` dict,
+        # preferring `web` and falling back to other types.
+        if image_data is None:
+            return None
+
         for key in ["web", "print", "full"]:
             if keyed_image := image_data.get(key):
                 return keyed_image
