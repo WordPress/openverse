@@ -50,14 +50,14 @@ export function isAdditionalSearchType(
 
 /* Media support */
 
-const SUPPORTED = 'supported' // Native search
-const BETA = 'beta' // Native but incomplete search
-const ADDITIONAL = 'additional' // Meta search
+export const SUPPORTED = 'supported' // Native search
+export const BETA = 'beta' // Native but incomplete search
+export const ADDITIONAL = 'additional' // Meta search
 
 export const contentStatus = Object.freeze({
   [ALL_MEDIA]: SUPPORTED,
   [IMAGE]: SUPPORTED,
-  [AUDIO]: BETA,
+  [AUDIO]: SUPPORTED,
   [VIDEO]: ADDITIONAL,
   [MODEL_3D]: ADDITIONAL,
 } as const)

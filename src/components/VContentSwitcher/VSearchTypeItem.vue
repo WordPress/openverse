@@ -9,7 +9,7 @@
     <div class="flex w-full flex-row items-center gap-2 py-2 text-base">
       <VIcon :icon-path="icon" />
       <span class="font-semibold">{{ $t(`search-type.${item}`) }}</span>
-      <VPill v-if="status === 'beta'" class="ms-auto">{{
+      <VPill v-if="isBeta" class="ms-auto">{{
         $t('search-type.status-beta')
       }}</VPill>
     </div>
@@ -19,7 +19,7 @@
 <script>
 import { computed, useContext, defineComponent } from '@nuxtjs/composition-api'
 
-import { ALL_MEDIA, contentStatus } from '~/constants/media'
+import { ALL_MEDIA, BETA, contentStatus } from '~/constants/media'
 import { useSearchStore } from '~/stores/search'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
@@ -42,9 +42,7 @@ export default defineComponent({
     const { app } = useContext()
     const searchStore = useSearchStore()
 
-    const status = computed(() => {
-      return contentStatus[props.item]
-    })
+    const isBeta = computed(() => contentStatus[props.item] === BETA)
 
     /**
      * The query sets the filters that are applicable for the specific search type.
@@ -63,7 +61,7 @@ export default defineComponent({
     })
     return {
       component,
-      status,
+      isBeta,
     }
   },
 })
