@@ -24,7 +24,12 @@ import { useFocusOnBlur } from '~/composables/use-focus-on-blur'
 export function useDialogContent({ emit, ...props }) {
   const focusOnBlur = useFocusOnBlur(props)
   useFocusOnShow(props)
-  useFocusOnHide(props)
+  useFocusOnHide({
+    dialogRef: props.dialogRef,
+    triggerElementRef: props.triggerElementRef,
+    visibleRef: props.visibleRef,
+    autoFocusOnHideRef: props.autoFocusOnHideRef,
+  })
   useHideOnClickOutside(props)
 
   /**

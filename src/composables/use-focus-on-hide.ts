@@ -1,20 +1,16 @@
-import { watch } from '@nuxtjs/composition-api'
+import { Ref, watch } from '@nuxtjs/composition-api'
 
 import { contains, getActiveElement } from '~/utils/reakit-utils/dom'
 import { ensureFocus, isTabbable } from '~/utils/reakit-utils/focus'
 
-/**
- * @typedef Props
- * @property {import('./types').Ref<HTMLElement>} dialogRef
- * @property {import('./types').Ref<HTMLElement>} triggerElementRef
- * @property {import('./types').Ref<boolean>} visibleRef
- * @property {import('./types').Ref<boolean>} autoFocusOnHideRef
- */
+type Props = {
+  dialogRef: Ref<HTMLElement | null>
+  triggerElementRef: Ref<HTMLElement | null>
+  visibleRef: Ref<boolean>
+  autoFocusOnHideRef: Ref<boolean>
+}
 
-/**
- * @param {HTMLElement} popover
- */
-function hidByFocusingAnotherElement(popover) {
+function hidByFocusingAnotherElement(popover: HTMLElement) {
   if (!popover) return false
 
   const activeElement = getActiveElement(popover)
@@ -26,21 +22,15 @@ function hidByFocusingAnotherElement(popover) {
   return activeElement.getAttribute('data-popover') === 'true'
 }
 
-/**
- * @param {Props} Props
- */
 export const useFocusOnHide = ({
   dialogRef,
   triggerElementRef,
   visibleRef,
   autoFocusOnHideRef,
-}) => {
+}: Props) => {
   watch(
-    [dialogRef, triggerElementRef, visibleRef, autoFocusOnHideRef],
-    /**
-     * @param {[HTMLElement, HTMLElement, boolean, boolean]} deps
-     * @param {[unknown, unknown, boolean]} previousDeps
-     */
+    [dialogRef, triggerElementRef, visibleRef, autoFocusOnHideRef] as const,
+
     (
       [dialog, triggerElement, visible, autoFocusOnHide],
       [, , previousVisible]
@@ -50,9 +40,9 @@ export const useFocusOnHide = ({
 
       if (!shouldFocus) return
 
-      if (hidByFocusingAnotherElement(dialog)) return
+      if (!dialog || hidByFocusingAnotherElement(dialog)) return
 
-      ensureFocus(triggerElement)
+      if (triggerElement) ensureFocus(triggerElement)
     }
   )
 }

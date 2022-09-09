@@ -31,7 +31,11 @@ export function isFocusable(element: Element): element is HTMLElement {
  * isTabbable(document.querySelector("input[hidden]")); // false
  * isTabbable(document.querySelector("input:disabled")); // false
  */
-export function isTabbable(element: Element): element is HTMLElement {
+export function isTabbableElement(element: Element): element is HTMLElement {
+  return isFocusable(element) && !hasNegativeTabIndex(element)
+}
+
+export function isTabbable(element: Element): boolean {
   return isFocusable(element) && !hasNegativeTabIndex(element)
 }
 
@@ -70,9 +74,9 @@ export function getAllTabbableIn(
 ) {
   const elements = Array.from(container.querySelectorAll<HTMLElement>(selector))
 
-  const tabbableElements = elements.filter(isTabbable)
+  const tabbableElements = elements.filter(isTabbableElement)
 
-  if (includeContainer && isTabbable(container)) {
+  if (includeContainer && isTabbableElement(container)) {
     tabbableElements.unshift(container)
   }
 
@@ -163,9 +167,10 @@ export function hasFocusWithin(element: Node | Element) {
  * @returns \{number\} `requestAnimationFrame` call ID so it can be passed to `cancelAnimationFrame` if needed.
  */
 export function ensureFocus(
-  element: HTMLElement,
+  el: Element,
   { preventScroll, isActive = hasFocus }: EnsureFocusOptions = {}
 ) {
+  const element = el as HTMLElement
   // TODO: Try to use queueMicrotask before requestAnimationFrame and dispatch
   // focus events if the element is not focusable?
   if (isActive(element)) return -1
