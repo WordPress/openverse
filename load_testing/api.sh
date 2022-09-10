@@ -2,7 +2,9 @@
 
 set -e
 
-source ./.env.sh || (echo 'Please create a `.env.sh` file based on the `.env.sh.template` file.' > /dev/stderr && false)
+shellcheck source = ./.env.sh
+
+source ./.env.sh || (echo "Please create a `.env.sh` file based on the `.env.sh.template` file." > /dev/stderr && false)
 
 host=$1
 
