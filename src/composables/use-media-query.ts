@@ -1,9 +1,11 @@
 /* this implementation is from https://github.com/vueuse/vueuse/packages/core/useMediaQuery/
  which, in turn, is ported from https://github.com/logaretm/vue-use-web by Abdelrahman Awad */
-import { onBeforeUnmount, ref } from '@nuxtjs/composition-api'
+import { ref, watchEffect } from '@nuxtjs/composition-api'
 
 import { SCREEN_SIZES, Breakpoint } from '~/constants/screens'
 import { defaultWindow } from '~/constants/window'
+import { tryOnScopeDispose } from '~/utils/try-on-scope-dispose'
+import { useSupported } from '~/composables/use-supported'
 
 interface Options {
   shouldPassInSSR?: boolean
@@ -17,34 +19,43 @@ export function useMediaQuery(
   query: string,
   options: Options = { shouldPassInSSR: false }
 ) {
-  const matches = ref(false)
   const { window = defaultWindow } = options
-  if (!window) {
-    matches.value = Boolean(options.shouldPassInSSR)
-    return matches
-  }
+  const isSupported = useSupported(
+    () =>
+      window &&
+      'matchMedia' in window &&
+      typeof window.matchMedia === 'function'
+  )
 
-  const mediaQuery = window.matchMedia(query)
-  matches.value = mediaQuery.matches
+  let mediaQuery: MediaQueryList | undefined
+  const matches = ref(Boolean(options.shouldPassInSSR))
 
-  const handler = (event: MediaQueryListEvent) => {
-    matches.value = event.matches
-  }
-  // Before Safari 14, MediaQueryList is based on EventTarget,
-  // so we use addListener() and removeListener(), too.
-  if ('addEventListener' in mediaQuery) {
-    mediaQuery.addEventListener('change', handler)
-  } else {
-    mediaQuery.addListener(handler)
-  }
-
-  onBeforeUnmount(() => {
+  const cleanup = () => {
+    if (!mediaQuery) return
     if ('removeEventListener' in mediaQuery) {
-      mediaQuery.removeEventListener('change', handler)
+      mediaQuery.removeEventListener('change', update)
     } else {
-      mediaQuery.removeListener(handler)
+      // @ts-expect-error deprecated API
+      mediaQuery.removeListener(update)
     }
-  })
+  }
+
+  const update = () => {
+    if (!isSupported.value) {
+      return
+    }
+    // This is already checked in `isSupported`, but TS doesn't know that
+    if (!window) return
+    cleanup()
+    if (!mediaQuery) {
+      mediaQuery = window.matchMedia(query)
+    }
+    matches.value = mediaQuery?.matches
+  }
+
+  watchEffect(update)
+
+  tryOnScopeDispose(() => cleanup())
 
   return matches
 }

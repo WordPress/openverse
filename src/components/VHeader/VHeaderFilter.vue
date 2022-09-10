@@ -41,16 +41,17 @@ import {
   inject,
   Ref,
   toRef,
+  onBeforeUnmount,
 } from '@nuxtjs/composition-api'
 
 import { Portal as VTeleport } from 'portal-vue'
 
+import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { useFocusFilters } from '~/composables/use-focus-filters'
 
 import { Focus } from '~/utils/focus-management'
 import { defineEvent } from '~/types/emits'
-
 import local from '~/utils/local'
 import { env } from '~/utils/env'
 import { useSearchStore } from '~/stores/search'
@@ -87,10 +88,11 @@ export default defineComponent({
     const filterSidebar = useFilterSidebarVisibility()
     const disabledRef = toRef(props, 'disabled')
 
-    const isMinScreenMd: Ref<boolean> = inject('isMinScreenMd', ref(true))
+    const isMinScreenMd: Ref<boolean> = inject('isMinScreenMd')
 
     const open = () => (visibleRef.value = true)
     const close = () => (visibleRef.value = false)
+    const { lock, unlock } = useBodyScrollLock({ nodeRef })
 
     onMounted(() => {
       // We default to show the filter on desktop, and only close it if the user has
@@ -110,14 +112,26 @@ export default defineComponent({
       }
     })
 
+    onBeforeUnmount(() => unlock())
+
     watch(visibleRef, (visible) => {
       filterSidebar.setVisibility(visible)
       visible ? emit('open') : emit('close')
+      if (!isMinScreenMd.value) {
+        visible ? lock() : unlock()
+      }
     })
 
     watch(disabledRef, (disabled) => {
       if (disabled && visibleRef.value) {
         close()
+      }
+    })
+
+    // Lock the scroll when the screen changes to below Md if filters are open.
+    watch(isMinScreenMd, (isMd) => {
+      if (!isMd && visibleRef.value) {
+        lock()
       }
     })
 
