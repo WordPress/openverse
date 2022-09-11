@@ -60,6 +60,19 @@ class MediaViewSet(ReadOnlyModelViewSet):
     def get_queryset(self):
         return self.model_class.objects.all()
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        req_serializer = self._get_request_serializer(self.request)
+        context.update({"validated_data": req_serializer.validated_data})
+        return context
+
+    def _get_request_serializer(self, request):
+        req_serializer = self.query_serializer_class(
+            data=request.query_params, context={"request": request}
+        )
+        req_serializer.is_valid(raise_exception=True)
+        return req_serializer
+
     # Standard actions
 
     def list(self, request, *_, **__):
@@ -68,10 +81,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
         self.paginator.page = request.query_params.get("page")
         page = self.paginator.page
 
-        params = self.query_serializer_class(
-            data=request.query_params, context={"request": request}
-        )
-        params.is_valid(raise_exception=True)
+        params = self._get_request_serializer(request)
 
         hashed_ip = hash(self._get_user_ip(request))
         qa = params.validated_data["qa"]
