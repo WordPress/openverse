@@ -77,26 +77,20 @@ def validate_images(query_hash, start_slice, results, image_urls):
             status = -1
         to_cache[cache_key] = status
 
-    thirty_minutes = 60 * 30
-    twenty_four_hours_seconds = 60 * 60 * 24
-
     pipe = redis.pipeline()
     if len(to_cache) > 0:
         pipe.mset(to_cache)
 
     for key, status in to_cache.items():
-        # Cache successful links for a day, and broken links for 120 days.
         if status == 200:
-            logger.debug("healthy link " f"key={key} ")
-            expiry = _get_expiry(200, twenty_four_hours_seconds * 30)
+            logger.debug(f"healthy link key={key}")
         elif status == -1:
-            logger.debug("no response from provider " f"key={key}")
-            # Content provider failed to respond; try again in a short interval
-            expiry = _get_expiry("_1", thirty_minutes)
+            logger.debug(f"no response from provider key={key}")
         else:
-            logger.debug("broken link " f"key={key} ")
-            expiry = _get_expiry("DEFAULT", twenty_four_hours_seconds * 120)
+            logger.debug(f"broken link key={key}")
 
+        expiry = settings.LINK_VALIDATION_CACHE_EXPIRY_CONFIGURATION[status]
+        logger.debug(f"caching status={status} expiry={expiry}")
         pipe.expire(key, expiry)
 
     pipe.execute()

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 from socket import gethostbyname, gethostname
 
@@ -20,6 +21,9 @@ from sentry_sdk.integrations.logging import ignore_logger
 
 from catalog.configuration.aws import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 from catalog.configuration.elasticsearch import ES, MEDIA_INDEX_MAPPING
+from catalog.configuration.link_validation_cache import (
+    LinkValidationCacheExpiryConfiguration,
+)
 from catalog.configuration.logging import LOGGING
 
 
@@ -361,3 +365,10 @@ if not DEBUG and SENTRY_DSN:
     # from pushing un-actionable alerts to Sentry like
     # https://sentry.io/share/issue/9af3cdf8ef74420aa7bbb6697760a82c/
     ignore_logger("django.security.DisallowedHost")
+
+# Custom link validation expiration times
+# Overrides can be set via LINK_VALIDATION_CACHE_EXPIRY__<http integer status code>
+# and should be set as kwarg dicts for datetime.timedelta
+# E.g. LINK_VALIDATION_CACHE_EXPIRY__200='{"days": 1}' will set the expiration time
+# for links with HTTP status 200 to 1 day
+LINK_VALIDATION_CACHE_EXPIRY_CONFIGURATION = LinkValidationCacheExpiryConfiguration()
