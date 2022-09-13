@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/audio/?q=honey',
+        url: '/v1/audio/?q=honey&peaks=true',
         method: 'GET',
         body: '',
     },

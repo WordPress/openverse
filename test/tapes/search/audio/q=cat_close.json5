@@ -9,7 +9,7 @@
             accept: 'application/json, text/plain, */*',
             connection: 'close',
         },
-        url: '/v1/audio/?q=cat',
+        url: '/v1/audio/?q=cat&peaks=true',
         method: 'GET',
         body: '',
     },

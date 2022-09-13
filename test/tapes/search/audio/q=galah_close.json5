@@ -9,7 +9,7 @@
             accept: 'application/json, text/plain, */*',
             connection: 'close',
         },
-        url: '/v1/audio/?q=galah',
+        url: '/v1/audio/?q=galah&peaks=true',
         method: 'GET',
         body: '',
     },

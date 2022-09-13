@@ -20,7 +20,7 @@
             referer: 'http://localhost:8443/',
             'accept-encoding': 'gzip, deflate, br',
         },
-        url: '/v1/audio/?q=galah',
+        url: '/v1/audio/?q=galah&peaks=true',
         method: 'GET',
         body: '',
     },

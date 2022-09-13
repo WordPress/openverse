@@ -27,6 +27,11 @@ export interface ApiQueryParams {
   length?: string
   mature?: string
   page?: string
+  /**
+   * A conditional to show audio waveform data.
+   * TODO:  We'll need new ApiQueryParams types that accept a media type to allow media-specific params
+   */
+  peaks?: string
 }
 
 export type ApiQueryFilters = Omit<ApiQueryParams, 'q'>

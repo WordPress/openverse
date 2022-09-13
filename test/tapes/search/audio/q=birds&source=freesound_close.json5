@@ -8,7 +8,7 @@
         headers: {
             connection: 'close',
         },
-        url: '/v1/audio/?q=birds&source=freesound',
+        url: '/v1/audio/?q=birds&source=freesound&peaks=true',
         method: 'GET',
         body: '',
     },

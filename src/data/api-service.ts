@@ -55,7 +55,11 @@ export interface ApiService {
     resource: string,
     params: Record<string, string>
   ): Promise<AxiosResponse<T>>
-  get<T = unknown>(resource: string, slug: string): Promise<AxiosResponse<T>>
+  get<T = unknown>(
+    resource: string,
+    slug: string,
+    params?: Record<string, string>
+  ): Promise<AxiosResponse<T>>
   post<T = unknown>(
     resource: string,
     data: Parameters<AxiosInstance['post']>[1],
@@ -141,9 +145,10 @@ export const createApiService = ({
      */
     get<T = unknown>(
       resource: string,
-      slug: string
+      slug: string,
+      params: Record<string, string> = {}
     ): Promise<AxiosResponse<T>> {
-      return client.get(`${getResourceSlug(resource)}${slug}/`)
+      return client.get(`${getResourceSlug(resource)}${slug}/`, { params })
     },
 
     /**

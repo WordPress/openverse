@@ -9,7 +9,7 @@
             accept: 'application/json, text/plain, */*',
             connection: 'close',
         },
-        url: '/v1/audio/?license_type=commercial&license=cc0&searchBy=creator&creator=cat',
+        url: '/v1/audio/?license_type=commercial&license=cc0&searchBy=creator&creator=cat&peaks=true',
         method: 'GET',
         body: '',
     },

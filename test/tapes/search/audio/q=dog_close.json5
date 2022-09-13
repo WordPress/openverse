@@ -8,7 +8,7 @@
         headers: {
             connection: 'close',
         },
-        url: '/v1/audio/?q=dog',
+        url: '/v1/audio/?q=dog&peaks=true',
         method: 'GET',
         body: '',
     },
