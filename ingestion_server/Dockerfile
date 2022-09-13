@@ -48,10 +48,15 @@ COPY --from=builder /venv /venv
 RUN apt-get update \
       && apt-get install -y curl libpq-dev \
       && rm -rf /var/lib/apt/lists/* \
-    && mkdir /worker_state
+      && mkdir /worker_state
+
+# Create a non-root user
+RUN useradd ingestionu
+RUN chown ingestionu /worker_state
+USER ingestionu
 
 # Copy code into the final image
-COPY . /ingestion_server/
+COPY --chown=ingestionu . /ingestion_server/
 
 # Exposes
 # - 8001: Gunicorn server for `ingestion_server` Falcon app
