@@ -2,8 +2,7 @@
 
 set -e
 
-# shellcheck disable=SC1091
-
+# shellcheck source=/dev/null
 source ./.env.sh || (echo "Please create a $(.env.sh) file based on the $(.env.sh.template) file." > /dev/stderr && false)
 
 host=$1
