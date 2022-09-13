@@ -1,0 +1,109 @@
+<template>
+  <VButton
+    class="flex flex-row py-2 text-sr font-semibold md:text-base"
+    :class="[
+      sizeClasses,
+      isHeaderScrolled ? 'max-w-[10rem] sm:max-w-[20rem] md:max-w-[16rem]' : '',
+    ]"
+    :variant="buttonVariant"
+    size="disabled"
+    :aria-label="buttonLabel"
+    v-bind="a11yProps"
+    @click="$emit('click')"
+  >
+    <VIcon :icon-path="icon" />
+    <span
+      class="md:block md:truncate md:ms-2 md:text-start"
+      :class="isHeaderScrolled ? 'hidden' : 'block truncate ms-2 text-start'"
+      >{{ buttonLabel }}</span
+    >
+    <VIcon
+      class="hidden text-dark-charcoal-40 md:block md:ms-2"
+      :icon-path="caretDownIcon"
+    />
+  </VButton>
+</template>
+<script lang="ts">
+import {
+  computed,
+  defineComponent,
+  inject,
+  PropType,
+  ref,
+} from '@nuxtjs/composition-api'
+
+import { ALL_MEDIA, SearchType } from '~/constants/media'
+import useSearchType from '~/composables/use-search-type'
+import { useI18n } from '~/composables/use-i18n'
+import { isMinScreen } from '~/composables/use-media-query'
+
+import VIcon from '~/components/VIcon/VIcon.vue'
+import VButton from '~/components/VButton.vue'
+
+import caretDownIcon from '~/assets/icons/caret-down.svg'
+
+export default defineComponent({
+  name: 'VSearchTypeButton',
+  components: { VButton, VIcon },
+  props: {
+    a11yProps: {
+      type: Object,
+      required: true,
+    },
+    activeItem: {
+      type: String as PropType<SearchType>,
+      default: ALL_MEDIA,
+    },
+    type: {
+      type: String as PropType<'header' | 'searchbar'>,
+      default: 'header',
+    },
+  },
+  setup(props) {
+    const i18n = useI18n()
+    const isHeaderScrolled = inject('isHeaderScrolled', ref(null))
+    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
+
+    const { icons, activeType: activeItem } = useSearchType()
+    const isIconButton = computed(
+      () => isHeaderScrolled?.value && !isMinScreenMd.value
+    )
+    const sizeClasses = computed(() => {
+      if (props.type === 'searchbar') {
+        return 'h-12 px-2'
+      } else if (isIconButton.value) {
+        return 'w-10 h-10'
+      } else {
+        /**
+          When there is a caret down icon (on 'md' screens), paddings are balanced,
+          without it, paddings need to be adjusted.
+          */
+        return 'ps-2 pe-3 md:px-2'
+      }
+    })
+
+    const buttonVariant = computed(() => {
+      if (props.type === 'searchbar') {
+        return 'action-menu'
+      } else {
+        return isMinScreenMd.value && !isHeaderScrolled?.value
+          ? 'tertiary'
+          : 'action-menu'
+      }
+    })
+    const buttonLabel = computed(() => {
+      return i18n.t(`search-type.${props.activeItem}`)
+    })
+
+    return {
+      buttonVariant,
+      sizeClasses,
+      buttonLabel,
+      caretDownIcon,
+      isHeaderScrolled,
+      isMinScreenMd,
+      icon: computed(() => icons[activeItem.value]),
+    }
+  },
+})
+</script>

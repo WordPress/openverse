@@ -6,7 +6,7 @@
     <header
       class="box-border flex w-full flex-grow flex-col justify-between lg:w-auto lg:min-w-[32rem] lg:justify-center xl:min-w-[64rem]"
     >
-      <VLogoButton
+      <VLogoButtonOld
         class="ms-3 lg:hidden"
         :auto-resize-logo="false"
         :is-search-route="false"
@@ -149,10 +149,10 @@ import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
 
 import VLink from '~/components/VLink.vue'
-import VLogoButton from '~/components/VHeader/VLogoButton.vue'
-import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
-import VSearchTypeRadio from '~/components/VContentSwitcher/VSearchTypeRadio.vue'
-import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover.vue'
+import VLogoButtonOld from '~/components/VHeaderOld/VLogoButtonOld.vue'
+import VSearchBar from '~/components/VHeaderOld/VSearchBar/VSearchBar.vue'
+import VSearchTypeRadio from '~/components/VContentSwitcherOld/VSearchTypeRadio.vue'
+import VSearchTypePopover from '~/components/VContentSwitcherOld/VSearchTypePopover.vue'
 
 import imageInfo from '~/assets/homepage_images/image_info.json'
 import OpenverseLogo from '~/assets/logo.svg?inline'
@@ -167,7 +167,7 @@ export default defineComponent({
     VSearchTypeRadio,
     VSearchBar,
     VLink,
-    VLogoButton,
+    VLogoButtonOld,
   },
   layout: 'blank',
   setup() {

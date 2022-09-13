@@ -25,7 +25,7 @@
             <div
               class="flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
             >
-              <VLogoButton
+              <VLogoButtonOld
                 class="md:hidden"
                 :is-fetching="false"
                 :is-header-scrolled="false"
@@ -65,7 +65,7 @@ import { warn } from '~/utils/console'
 
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
-import VLogoButton from '~/components/VHeader/VLogoButton.vue'
+import VLogoButtonOld from '~/components/VHeaderOld/VLogoButtonOld.vue'
 
 import closeIcon from '~/assets/icons/close.svg'
 
@@ -74,7 +74,7 @@ import closeIcon from '~/assets/icons/close.svg'
  */
 export default defineComponent({
   name: 'VModalContent',
-  components: { VTeleport, VButton, VIcon, FocusTrap, VLogoButton },
+  components: { VTeleport, VButton, VIcon, FocusTrap, VLogoButtonOld },
   props: {
     visible: {
       type: Boolean,

@@ -4,7 +4,8 @@
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
       <VMigrationNotice />
       <VTranslationStatusBanner />
-      <VHeader />
+      <VHeader v-if="isNewHeaderEnabled" />
+      <VHeaderOld v-else />
     </div>
     <main
       class="main embedded w-screen md:w-full"
@@ -28,10 +29,11 @@ import { useWindowScroll } from '~/composables/use-window-scroll'
 import { useMatchSearchRoutes } from '~/composables/use-match-routes'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
+import { useFeatureFlagStore } from '~/stores/feature-flag'
 
 import VMigrationNotice from '~/components/VMigrationNotice.vue'
 import VTranslationStatusBanner from '~/components/VTranslationStatusBanner.vue'
-import VHeader from '~/components/VHeader/VHeader.vue'
+import VHeaderOld from '~/components/VHeaderOld/VHeaderOld.vue'
 import VModalTarget from '~/components/VModal/VModalTarget.vue'
 import VSidebarTarget from '~/components/VModal/VSidebarTarget.vue'
 import VGlobalAudioSection from '~/components/VGlobalAudioSection/VGlobalAudioSection.vue'
@@ -41,7 +43,8 @@ const embeddedPage = {
   components: {
     VMigrationNotice,
     VTranslationStatusBanner,
-    VHeader,
+    VHeaderOld,
+    VHeader: () => import('~/components/VHeader/VHeader.vue'),
     VModalTarget,
     VTeleportTarget,
     VSidebarTarget,
@@ -53,8 +56,8 @@ const embeddedPage = {
   },
   setup() {
     const { isVisible: isFilterVisible } = useFilterSidebarVisibility()
-    const isMinScreenMd = isMinScreen('md')
     const { matches: isSearchRoute } = useMatchSearchRoutes()
+    const isMinScreenMd = isMinScreen('md')
 
     const isSidebarVisible = computed(
       () => isSearchRoute.value && isMinScreenMd.value && isFilterVisible.value
@@ -76,12 +79,16 @@ const embeddedPage = {
     )
     provide('headerHasTwoRows', headerHasTwoRows)
 
+    const featureFlagStore = useFeatureFlagStore()
+    const isNewHeaderEnabled = featureFlagStore.isOn('new_header')
+
     return {
       isHeaderScrolled,
       isMinScreenMd,
       isSidebarVisible,
       isSearchRoute,
       headerHasTwoRows,
+      isNewHeaderEnabled,
     }
   },
 }

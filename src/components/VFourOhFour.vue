@@ -56,7 +56,7 @@ import {
 import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
 
-import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
+import VSearchBar from '~/components/VHeaderOld/VSearchBar/VSearchBar.vue'
 import VLink from '~/components/VLink.vue'
 
 import Oops from '~/assets/oops.svg?inline'

@@ -1,0 +1,65 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import { ref } from '@nuxtjs/composition-api'
+
+import VSearchTypePopover from '~/components/VContentSwitcherOld/VSearchTypePopover.vue'
+
+<Meta
+  title="Components/VSearchTypePopover"
+  components={VSearchTypePopover}
+  argTypes={{
+    select: {
+      action: 'select',
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `<VSearchTypePopover active-item="image" v-bind="args" v-on="args"/>`,
+  components: { VSearchTypePopover },
+  setup() {
+    return { args }
+  },
+})
+
+# VSearchTypePopover
+
+<Description of={VSearchTypePopover} />
+
+<ArgsTable of={VSearchTypePopover} />
+
+<Canvas>
+  <Story height="480px" name="Default">
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## v-model
+
+The recommended way to use it is with `v-model` mapping to a `String`.
+
+export const vModelTemplate = () => ({
+  template: `
+    <div>
+      {{ item }}
+      <VSearchTypePopover v-model="item"/>
+    </div>
+  `,
+  components: { VSearchTypePopover },
+  setup() {
+    const item = ref('all')
+    return { item }
+  },
+})
+
+<Canvas>
+  <Story height="480px" name="v-model">
+    {vModelTemplate.bind({})}
+  </Story>
+</Canvas>

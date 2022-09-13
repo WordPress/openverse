@@ -10,7 +10,11 @@
       'flex-nowrap': !isSearchRoute && isHeaderScrolled,
     }"
   >
-    <VLogoButton :is-fetching="isFetching" :is-search-route="isSearchRoute" />
+    <VLogoButtonOld
+      :is-fetching="isFetching"
+      :is-header-scrolled="isHeaderScrolled"
+      :is-search-route="isSearchRoute"
+    />
 
     <VSearchBar
       v-model.trim="searchTerm"
@@ -62,10 +66,10 @@ import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
 import { useMediaStore } from '~/stores/media'
 import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
 
-import VLogoButton from '~/components/VHeader/VLogoButton.vue'
-import VHeaderFilter from '~/components/VHeader/VHeaderFilter.vue'
-import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
-import VHeaderMenu from '~/components/VHeader/VHeaderMenu.vue'
+import VLogoButtonOld from '~/components/VHeaderOld/VLogoButtonOld.vue'
+import VHeaderFilter from '~/components/VHeaderOld/VHeaderFilter.vue'
+import VSearchBar from '~/components/VHeaderOld/VSearchBar/VSearchBar.vue'
+import VHeaderMenu from '~/components/VHeaderOld/VHeaderMenu.vue'
 
 import closeIcon from '~/assets/icons/close.svg'
 
@@ -76,9 +80,9 @@ const menus = {
 type HeaderMenu = 'filters' | 'content-switcher'
 
 export default defineComponent({
-  name: 'VHeader',
+  name: 'VHeaderOld',
   components: {
-    VLogoButton,
+    VLogoButtonOld,
     VHeaderFilter,
     VHeaderMenu,
     VSearchBar,

@@ -56,7 +56,7 @@
           </i18n>
         </template>
       </template>
-      <i18n
+      <!--<i18n
         v-if="featureState('feat_nonexistent') === ON"
         path="pref-page.explanation"
         tag="li"
@@ -67,7 +67,7 @@
         <template #feat-state
           ><code>{{ $t(`flag-status.${ON}`) }}</code></template
         >
-      </i18n>
+      </i18n>-->
     </ul>
   </VContentPage>
 </template>

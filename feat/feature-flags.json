@@ -8,6 +8,14 @@
       "description": "Toggle the external sources in the header's search type switcher.",
       "defaultState": "off"
     },
+    "new_header": {
+      "status": {
+        "staging": "switchable",
+        "production": "disabled"
+      },
+      "description": "Toggle the new header.",
+      "defaultState": "off"
+    },
     "feat_disabled": {
       "status": "disabled",
       "description": "Will always be disabled"

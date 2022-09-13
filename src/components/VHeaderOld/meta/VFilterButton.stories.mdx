@@ -1,0 +1,95 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+import { provide, ref } from '@nuxtjs/composition-api'
+import VFilterButton from '~/components/VHeaderOld/VFilterButton.vue'
+import { useSearchStore } from '~/stores/search'
+import { filterData, mediaFilterKeys } from '~/constants/filters'
+import { IMAGE } from '~/constants/media'
+
+<Meta
+  title="Components/VHeaderOld/VFilterButton"
+  component={VFilterButton}
+  argTypes={{
+    pressed: {
+      type: 'boolean',
+    },
+    appliedFilters: {
+      type: 'number',
+    },
+    scrolled: {
+      type: 'boolean',
+    },
+    isMinMd: {
+      type: 'boolean',
+    },
+  }}
+/>
+
+export const Template = (args, { argTypes }) => ({
+  template: `<VFilterButton v-bind="args" />`,
+  components: { VFilterButton },
+  props: Object.keys(argTypes),
+  setup() {
+    const searchStore = useSearchStore()
+    searchStore.setSearchType(IMAGE)
+    function applyNFilters(filterCount) {
+      const filterTypes = [...mediaFilterKeys[IMAGE]]
+      let filterIdx = 0
+      // Skip license type filters as they can disable license filters
+      let filterTypeIdx = 1
+      for (let i = 0; i < filterCount; i++) {
+        let filterType = filterTypes[filterTypeIdx]
+        searchStore.toggleFilter({
+          filterType,
+          codeIdx: filterIdx,
+        })
+        filterIdx += 1
+        if (filterData[filterType].length === filterIdx) {
+          filterTypeIdx += 1
+          filterIdx = 0
+        }
+      }
+    }
+    applyNFilters(args.appliedFilters)
+    if (args.scrolled) {
+      provide('isHeaderScrolled', ref(true))
+    }
+    if (args.isMinMd) {
+      provide('isMinScreenMd', ref(true))
+    }
+    return { args }
+  },
+})
+
+# Filter button
+
+<Description of={VFilterButton} />
+
+<ArgsTable of={VFilterButton} />
+
+The button opens and closes the filters sidebar. It also shows how many filters are applied
+in the mobile view.
+the field receives an input. It also emits the `search` event when the search
+button is clicked.
+
+<Canvas>
+  <Story name="Default">{Template.bind({})}</Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name="Mobile Scrolled"
+    parameters={{
+      viewport: {
+        defaultViewport: 'iphonex',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
