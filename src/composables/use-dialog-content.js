@@ -22,7 +22,10 @@ import { useFocusOnBlur } from '~/composables/use-focus-on-blur'
  * @param {Props} params
  */
 export function useDialogContent({ emit, ...props }) {
-  const focusOnBlur = useFocusOnBlur(props)
+  const focusOnBlur = useFocusOnBlur({
+    dialogRef: props.dialogRef,
+    visibleRef: props.visibleRef,
+  })
   useFocusOnShow(props)
   useFocusOnHide({
     dialogRef: props.dialogRef,
