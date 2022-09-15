@@ -15,6 +15,8 @@ import { env } from './src/utils/env'
 
 import type { NuxtConfig, ServerMiddleware } from '@nuxt/types'
 import type { LocaleObject } from '@nuxtjs/i18n'
+import type { IncomingMessage, NextFunction } from 'connect'
+import type http from 'http'
 
 /**
  * The default metadata for the site. Can be extended and/or overwritten per page. And even in components!
@@ -230,7 +232,24 @@ const config: NuxtConfig = {
    * See the redirect module for more info.
    * {@link https://github.com/nuxt-community/redirect-module#usage}
    */
-  redirect: [{ from: '^/photos/(.*)$', to: '/image/$1', statusCode: 301 }],
+  redirect: {
+    rules: [
+      {
+        from: '^/photos/(.*)$',
+        to: '/image/$1',
+        statusCode: 301,
+      },
+    ],
+    // If the URL cannot be decoded, we call next() to show the client-side error page.
+    onDecodeError: (
+      _error: Error,
+      _req: IncomingMessage,
+      _res: http.ServerResponse,
+      next: NextFunction
+    ) => {
+      return next()
+    },
+  },
   sentry: sentryConfig,
   hooks: {
     render: {
