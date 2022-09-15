@@ -46,11 +46,18 @@ export function useMediaQuery(
     }
     // This is already checked in `isSupported`, but TS doesn't know that
     if (!window) return
+
     cleanup()
-    if (!mediaQuery) {
-      mediaQuery = window.matchMedia(query)
+
+    mediaQuery = window.matchMedia(query)
+    matches.value = mediaQuery.matches
+
+    if ('addEventListener' in mediaQuery) {
+      mediaQuery.addEventListener('change', update)
+    } else {
+      // @ts-expect-error deprecated API
+      mediaQuery.addListener(update)
     }
-    matches.value = mediaQuery?.matches
   }
 
   watchEffect(update)

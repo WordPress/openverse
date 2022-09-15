@@ -52,14 +52,12 @@ import {
   computed,
   defineComponent,
   inject,
-  provide,
   ref,
   useContext,
   useRouter,
 } from '@nuxtjs/composition-api'
 
 import { ALL_MEDIA, searchPath } from '~/constants/media'
-import { isMinScreen } from '~/composables/use-media-query'
 import { useMatchSearchRoutes } from '~/composables/use-match-routes'
 import { useI18n } from '~/composables/use-i18n'
 import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
@@ -97,9 +95,8 @@ export default defineComponent({
     const { matches: isSearchRoute } = useMatchSearchRoutes()
 
     const isHeaderScrolled = inject('isHeaderScrolled', false)
-    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
+    const isMinScreenMd = inject('isMinScreenMd', { shouldPassInSSR: false })
     const headerHasTwoRows = inject('headerHasTwoRows')
-    provide('isMinScreenMd', isMinScreenMd)
 
     const menuModalRef = ref(null)
 

@@ -9,7 +9,10 @@
     </div>
     <main
       class="main embedded w-screen md:w-full"
-      :class="{ 'has-sidebar': isSidebarVisible }"
+      :class="[
+        { 'has-sidebar': isSidebarVisible },
+        isNewHeaderEnabled ? 'new-layout' : 'old-layout',
+      ]"
     >
       <Nuxt class="main-page min-w-0" />
       <VSidebarTarget
@@ -30,6 +33,8 @@ import { useMatchSearchRoutes } from '~/composables/use-match-routes'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { useFeatureFlagStore } from '~/stores/feature-flag'
+
+import { IsMinScreenLgKey, IsMinScreenMdKey } from '~/types/provides'
 
 import VMigrationNotice from '~/components/VMigrationNotice.vue'
 import VTranslationStatusBanner from '~/components/VTranslationStatusBanner.vue'
@@ -55,13 +60,20 @@ const embeddedPage = {
     return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
   },
   setup() {
+    const featureFlagStore = useFeatureFlagStore()
+    const isNewHeaderEnabled = featureFlagStore.isOn('new_header')
+
     const { isVisible: isFilterVisible } = useFilterSidebarVisibility()
     const { matches: isSearchRoute } = useMatchSearchRoutes()
-    const isMinScreenMd = isMinScreen('md')
 
-    const isSidebarVisible = computed(
-      () => isSearchRoute.value && isMinScreenMd.value && isFilterVisible.value
-    )
+    const isMinScreenMd = isMinScreen('md')
+    const isMinScreenLg = isMinScreen('lg')
+
+    const isSidebarVisible = computed(() => {
+      return isNewHeaderEnabled
+        ? isSearchRoute.value && isMinScreenMd.value && isFilterVisible.value
+        : isSearchRoute.value && isMinScreenLg.value && isFilterVisible.value
+    })
 
     const isHeaderScrolled = ref(false)
     const { isScrolled: isMainContentScrolled, y: scrollY } = useWindowScroll()
@@ -72,15 +84,17 @@ const embeddedPage = {
 
     provide('isHeaderScrolled', isHeaderScrolled)
     provide('showScrollButton', showScrollButton)
+    // TODO: remove the untyped `isMinScreenMd` provide after the new header is enabled.
+    provide('isMinScreenMd', isMinScreenMd)
+    provide(IsMinScreenMdKey, isMinScreenMd)
+    provide(IsMinScreenLgKey, isMinScreenLg)
 
+    // TODO: remove `headerHasTwoRows` provide after the new header is enabled.
     const headerHasTwoRows = computed(
       () =>
         isSearchRoute.value && !isHeaderScrolled.value && !isMinScreenMd.value
     )
     provide('headerHasTwoRows', headerHasTwoRows)
-
-    const featureFlagStore = useFeatureFlagStore()
-    const isNewHeaderEnabled = featureFlagStore.isOn('new_header')
 
     return {
       isHeaderScrolled,
@@ -107,20 +121,37 @@ export default embeddedPage
 .app {
   grid-template-rows: auto 1fr;
 }
-
+/* TODO: remove these styles when new header is enabled */
 @screen md {
   /** Display the search filter sidebar and results as independently-scrolling. **/
-  .main {
+  .main.old-layout {
     height: 100%;
     display: grid;
     grid-template-columns: 1fr var(--filter-sidebar-width);
   }
   /** Make the main content area span both grid columns when the sidebar is closed... **/
-  .main > *:first-child {
+  .main.old-layout > *:first-child {
     grid-column: span 2;
   }
   /** ...and only one column when it is visible. **/
-  .main.has-sidebar > *:first-child {
+  .main.old-layout.has-sidebar > *:first-child {
+    grid-column: 1;
+  }
+}
+/* TODO: remove the new-layout class when new header is enabled */
+@screen lg {
+  /** Display the search filter sidebar and results as independently-scrolling. **/
+  .main.new-layout {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr var(--filter-sidebar-width);
+  }
+  /** Make the main content area span both grid columns when the sidebar is closed... **/
+  .main.new-layout > *:first-child {
+    grid-column: span 2;
+  }
+  /** ...and only one column when it is visible. **/
+  .main.new-layout.has-sidebar > *:first-child {
     grid-column: 1;
   }
 }
