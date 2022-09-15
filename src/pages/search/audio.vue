@@ -26,6 +26,7 @@
       layout="row"
       @shift-tab="handleShiftTab($event, i)"
       @interacted="hideSnackbar"
+      @mousedown.native="handleMouseDown"
       @focus.native="showSnackbar"
     />
     <VLoadMore />
@@ -33,7 +34,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, useMeta } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  useMeta,
+  ref,
+} from '@nuxtjs/composition-api'
 
 import { isMinScreen } from '~/composables/use-media-query'
 import { useBrowserIsMobile } from '~/composables/use-browser-detection'
@@ -82,10 +88,21 @@ export default defineComponent({
       }
     }
 
+    const isMouseDown = ref(false)
+    const handleMouseDown = () => {
+      isMouseDown.value = true
+    }
+
     const uiStore = useUiStore()
     const isSnackbarVisible = computed(() => uiStore.areInstructionsVisible)
     const showSnackbar = () => {
-      uiStore.showInstructionsSnackbar()
+      if (isMouseDown.value) {
+        // The audio player was clicked to open the single result view, not
+        // focused via keyboard.
+        isMouseDown.value = false
+      } else {
+        uiStore.showInstructionsSnackbar()
+      }
     }
     const hideSnackbar = () => {
       uiStore.hideInstructionsSnackbar()
@@ -96,6 +113,7 @@ export default defineComponent({
       audioTrackSize,
 
       handleShiftTab,
+      handleMouseDown,
 
       isSnackbarVisible,
       showSnackbar,
