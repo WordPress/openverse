@@ -76,12 +76,10 @@ class MediaViewSet(ReadOnlyModelViewSet):
     # Standard actions
 
     def list(self, request, *_, **__):
-        self.paginator.page_size = request.query_params.get("page_size")
-        page_size = self.paginator.page_size
-        self.paginator.page = request.query_params.get("page")
-        page = self.paginator.page
-
         params = self._get_request_serializer(request)
+
+        page_size = self.paginator.page_size = params.data["page_size"]
+        page = self.paginator.page = params.data["page"]
 
         hashed_ip = hash(self._get_user_ip(request))
         qa = params.validated_data["qa"]

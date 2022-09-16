@@ -18,7 +18,6 @@ from elasticsearch_dsl.response import Hit, Response
 
 import catalog.api.models as models
 from catalog.api.utils.dead_link_mask import get_query_hash, get_query_mask
-from catalog.api.utils.pagination import MAX_TOTAL_PAGE_COUNT
 from catalog.api.utils.validate_images import validate_images
 
 
@@ -502,10 +501,9 @@ def _get_result_and_page_count(
         return 0, 1
 
     result_count = response_obj.hits.total.value
-    natural_page_count = int(result_count / page_size)
-    if natural_page_count % page_size != 0:
-        natural_page_count += 1
-    page_count = min(natural_page_count, MAX_TOTAL_PAGE_COUNT)
+    page_count = int(result_count / page_size)
+    if page_count % page_size != 0:
+        page_count += 1
     if len(results) < page_size and page_count == 0:
         result_count = len(results)
 

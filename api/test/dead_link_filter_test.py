@@ -2,12 +2,13 @@ from test.constants import API_URL
 from unittest.mock import MagicMock, patch
 from uuid import uuid4
 
+from django.conf import settings
+
 import pytest
 import requests
 from fakeredis import FakeRedis
 
 from catalog.api.controllers.search_controller import DEAD_LINK_RATIO
-from catalog.api.utils.pagination import MAX_TOTAL_PAGE_COUNT
 
 
 @pytest.fixture(autouse=True)
@@ -202,7 +203,7 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
     Test the results returned in consecutive pages are never repeated when
     filtering out dead links.
     """
-    total_pages = MAX_TOTAL_PAGE_COUNT
+    total_pages = settings.MAX_PAGINATION_DEPTH
     page_size = 5
 
     page_results = []
@@ -226,6 +227,8 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
 @pytest.mark.django_db
 def test_max_page_count():
     response = requests.get(
-        f"{API_URL}/v1/images", params={"page": MAX_TOTAL_PAGE_COUNT + 1}, verify=False
+        f"{API_URL}/v1/images",
+        params={"page": settings.MAX_PAGINATION_DEPTH + 1},
+        verify=False,
     )
     assert response.status_code == 400

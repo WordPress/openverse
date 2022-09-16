@@ -1,10 +1,6 @@
+from django.conf import settings
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-
-from catalog.api.utils.exceptions import get_api_exception
-
-
-MAX_TOTAL_PAGE_COUNT = 20
 
 
 class StandardPagination(PageNumberPagination):
@@ -15,45 +11,13 @@ class StandardPagination(PageNumberPagination):
         super().__init__(*args, **kwargs)
         self.result_count = None  # populated later
         self.page_count = None  # populated later
-
-        self._page_size = 20
-        self._page = None
-
-    @property
-    def page_size(self):
-        """the number of results to show in one page"""
-        return self._page_size
-
-    @page_size.setter
-    def page_size(self, value):
-        if value is None or not str(value).isnumeric():
-            return
-        value = int(value)  # convert str params to int
-        if value <= 0 or value > 500:
-            raise get_api_exception("Page size must be between 0 & 500.", 400)
-        self._page_size = value
-
-    @property
-    def page(self):
-        """the current page number being served"""
-        return self._page
-
-    @page.setter
-    def page(self, value):
-        if value is None or not str(value).isnumeric():
-            value = 1
-        value = int(value)  # convert str params to int
-        if value <= 0:
-            raise get_api_exception("Page must be greater than 0.", 400)
-        elif value > 20:
-            raise get_api_exception("Searches are limited to 20 pages.", 400)
-        self._page = value
+        self.page = 1  # default, get's updated when necessary
 
     def get_paginated_response(self, data):
         return Response(
             {
                 "result_count": self.result_count,
-                "page_count": self.page_count,
+                "page_count": min(settings.MAX_PAGINATION_DEPTH, self.page_count),
                 "page_size": self.page_size,
                 "page": self.page,
                 "results": data,

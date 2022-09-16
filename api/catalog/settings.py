@@ -372,3 +372,7 @@ if not DEBUG and SENTRY_DSN:
 # E.g. LINK_VALIDATION_CACHE_EXPIRY__200='{"days": 1}' will set the expiration time
 # for links with HTTP status 200 to 1 day
 LINK_VALIDATION_CACHE_EXPIRY_CONFIGURATION = LinkValidationCacheExpiryConfiguration()
+
+MAX_ANONYMOUS_PAGE_SIZE = 20
+MAX_AUTHED_PAGE_SIZE = 500
+MAX_PAGINATION_DEPTH = 20
