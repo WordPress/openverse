@@ -56,7 +56,7 @@ const config: PlaywrightTestConfig = {
   expect: {
     toMatchSnapshot: {
       // To avoid flaky tests, we allow a small amount of pixel difference.
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.02,
     },
   },
 }

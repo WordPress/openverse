@@ -114,25 +114,33 @@ module.exports = {
       // Deprecated
       lg: '1.12rem',
       lgr: '1.43rem',
-
-      // Headings, where h[n] => [7-n]xl
+      '7xl': [
+        // Heading 1
+        '5.625rem', // 90px
+        '1.3', // 130%
+      ],
       '6xl': [
+        // Heading 2
         '2.0000rem', // 32px
         '1.3', // 130%
       ],
       '5xl': [
+        // Heading 3
         '1.7500rem', // 28px
         '1.3', // 130%
       ],
       '4xl': [
+        // Heading 4
         '1.5000rem', // 24px
         '1.3', // 130%
       ],
       '3xl': [
+        // Heading 5
         '1.1875rem', // 19px
         '1.3', // 130%
       ],
       '2xl': [
+        // Heading 6
         '1.0000rem', // 16px
         '1.3', // 130%
       ],
@@ -159,6 +167,8 @@ module.exports = {
       ],
     },
     lineHeights: {
+      larger: '1.9',
+      large: '1.7',
       normal: '1.5',
       snug: '1.3',
       tight: '1.2',

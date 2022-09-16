@@ -1,7 +1,7 @@
 <template>
   <section class="w-full">
     <div class="mb-6 flex flex-row items-center justify-between">
-      <h2 class="text-2xl md:text-3xl">
+      <h2 class="heading-6 md:heading-5">
         {{ $t('image-details.information.title') }}
       </h2>
       <VContentReportPopover :media="image" />
@@ -101,6 +101,6 @@ dd {
 }
 
 dd {
-  @apply mt-2 font-bold;
+  @apply mt-2 font-semibold;
 }
 </style>

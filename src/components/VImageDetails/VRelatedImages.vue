@@ -1,6 +1,6 @@
 <template>
   <aside>
-    <h2 class="mb-6 text-2xl md:text-3xl">
+    <h2 class="heading-6 md:heading-5 mb-6">
       {{ $t('image-details.related-images') }}
     </h2>
     <VLoadingIcon v-if="fetchState.isFetching" />

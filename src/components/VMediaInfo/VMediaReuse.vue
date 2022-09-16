@@ -3,7 +3,7 @@
     :aria-label="$t('media-details.reuse.title').toString()"
     class="media-reuse"
   >
-    <h2 class="mb-4 text-2xl md:text-3xl">
+    <h2 class="mb-4 heading-6 md:heading-5">
       {{ $t('media-details.reuse.title') }}
     </h2>
     <p class="text-base font-normal leading-[130%]">

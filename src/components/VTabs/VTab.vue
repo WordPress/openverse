@@ -7,7 +7,7 @@
     size="disabled"
     variant="plain--avoid"
     v-bind="tabProps"
-    class="rounded-none border-0 bg-white py-3 px-4 text-base font-semibold focus-visible:shadow-[0_0_0_1.5px_#c52b9b_inset] md:px-6"
+    class="label-bold md:description-bold rounded-none border-0 bg-white py-3 px-4 focus-visible:shadow-[0_0_0_1.5px_#c52b9b_inset] md:px-6"
     :class="[$style[variant], isSelected && $style[`${variant}-selected`]]"
     @click="handleSelection"
     @focus="handleFocus"

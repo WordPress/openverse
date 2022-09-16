@@ -34,7 +34,7 @@
       <VButton
         as="VLink"
         :href="image.foreign_landing_url"
-        class="btn-main mb-4 w-full flex-initial leading-[1.3] md:mb-0 md:w-max"
+        class="description-bold md:heading-6 mb-4 w-full flex-initial md:mb-0 md:w-max"
         size="large"
       >
         {{ $t('image-details.weblink') }}
@@ -45,10 +45,8 @@
           :size="4"
         />
       </VButton>
-      <div
-        class="flex flex-1 flex-col justify-center text-base font-semibold leading-[1.3]"
-      >
-        <h1 class="font-semibold md:text-3xl">
+      <div class="description-bold flex flex-1 flex-col justify-center">
+        <h1 class="description-bold md:heading-5">
           {{ image.title }}
         </h1>
         <i18n v-if="image.creator" path="image-details.creator" tag="span">
@@ -249,10 +247,6 @@ export default defineComponent({
 <style scoped>
 section,
 aside {
-  @apply mb-10 w-full px-6 md:mb-16 md:max-w-screen-lg md:px-16 lg:mx-auto;
-}
-
-.btn-main {
-  @apply py-3 text-sr font-semibold md:py-4 md:px-6 md:text-2xl;
+  @apply mb-10 w-full px-6 md:mb-16 md:max-w-screen-lg md:px-12 lg:mx-auto lg:px-16;
 }
 </style>

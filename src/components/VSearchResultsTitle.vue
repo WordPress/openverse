@@ -1,7 +1,7 @@
 <template>
   <h1
-    class="sr-only break-words leading-tight md:not-sr-only"
-    :class="[size === 'large' ? 'text-[90px]' : 'text-6xl']"
+    class="sr-only break-words md:not-sr-only"
+    :class="[size === 'large' ? 'heading-1' : 'heading-2']"
   >
     <slot default />
   </h1>

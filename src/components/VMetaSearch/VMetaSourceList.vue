@@ -12,7 +12,7 @@
         aria-controls="source-list-popover"
         variant="tertiary"
         size="disabled"
-        class="justify-between py-1 px-3 text-sr font-normal leading-[130%] text-dark-charcoal pe-2"
+        class="caption-regular justify-between py-1 px-3 text-dark-charcoal pe-2"
         >{{ $t('meta-search.button').toString() }}
         <VIcon
           class="text-dark-charcoal-40 ms-1"
@@ -35,10 +35,10 @@
           }"
           @click="close"
         />
-        <h2 class="mb-2 px-4 pt-5 text-base font-semibold text-start">
+        <h2 class="description-bold mb-2 px-4 pt-5 text-start">
           {{ $t('meta-search.title') }}
         </h2>
-        <p class="mb-4 px-4 text-sr text-start">
+        <p class="caption-regular mb-4 px-4 text-start">
           {{ $t('meta-search.caption', { openverse: 'Openverse' }) }}
         </p>
         <VButton
@@ -47,7 +47,7 @@
           as="VLink"
           variant="plain"
           size="disabled"
-          class="w-full justify-between px-4 py-3 text-sr font-bold text-dark-charcoal hover:bg-dark-charcoal-10"
+          class="caption-bold w-full justify-between px-4 py-3 text-dark-charcoal hover:bg-dark-charcoal-10"
           :href="source.url"
         >
           {{ source.name }}

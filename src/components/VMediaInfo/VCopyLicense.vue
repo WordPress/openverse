@@ -1,9 +1,6 @@
 <template>
   <div>
-    <h3
-      id="copy-license-title"
-      class="mb-4 text-base font-semibold md:text-2xl"
-    >
+    <h3 id="copy-license-title" class="description-bold md:heading-6 mb-4">
       {{ $t('media-details.reuse.copy-license.title') }}
     </h3>
 

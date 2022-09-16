@@ -1,6 +1,6 @@
 <template>
   <div class="media-attribution">
-    <h3 class="mb-4 text-base font-semibold md:text-2xl">
+    <h3 class="description md:heading-6 mb-4">
       {{ headerText }}
     </h3>
 
@@ -24,7 +24,7 @@
       <i18n
         path="media-details.reuse.tool.content"
         tag="span"
-        class="text-sm font-semibold"
+        class="description-bold"
       >
         <template #link>
           <VLink

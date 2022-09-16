@@ -1,7 +1,7 @@
 <template>
   <div id="content-report-form" class="w-80 p-6">
     <div v-if="status === SENT">
-      <p class="mb-4 text-2xl font-semibold">
+      <p class="heading-6 mb-4">
         {{ $t('media-details.content-report.success.title') }}
       </p>
       <i18n
@@ -20,7 +20,7 @@
     </div>
 
     <div v-else-if="status === FAILED">
-      <p class="mb-4 text-2xl font-semibold">
+      <p class="heading-6 mb-4">
         {{ $t('media-details.content-report.failure.title') }}
       </p>
       <p class="text-sm">
@@ -30,7 +30,7 @@
 
     <!-- Main form -->
     <div v-else>
-      <div class="mb-4 text-2xl font-semibold">
+      <div class="heading-6 mb-4">
         {{ $t('media-details.content-report.long') }}
       </div>
 
@@ -44,7 +44,7 @@
 
       <form class="text-sm" @submit="handleSubmit">
         <fieldset class="flex flex-col">
-          <legend class="mb-4 font-semibold">
+          <legend class="label-bold mb-4">
             {{ $t('media-details.content-report.form.question') }}
           </legend>
           <VRadio
