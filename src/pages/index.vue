@@ -13,18 +13,10 @@
       />
 
       <div class="z-10 mx-auto w-full px-6 lg:w-auto lg:pe-0 lg:ps-24">
-        <VLink href="/" class="hidden lg:block">
-          <h1>
-            <span class="sr-only">Openverse</span>
-            <!-- width and height chosen w.r.t. viewBox "0 0 280 42" -->
-            <span
-              aria-hidden="true"
-              class="flex flex-row items-center text-dark-charcoal"
-            >
-              <OpenverseLogo class="me-5 xl:me-5" height="46" width="50" />
-              <OpenverseBrand height="46" width="234" />
-            </span>
-          </h1>
+        <VLink href="/" class="hidden text-dark-charcoal lg:block">
+          <!-- eslint-disable vuejs-accessibility/heading-has-content -->
+          <h1><VBrand class="text-[46px]" /></h1>
+          <!-- eslint-enable vuejs-accessibility/heading-has-content -->
         </VLink>
         <h2
           class="mt-auto mb-2 max-w-[80%] text-[27px] font-normal leading-[35px] md:mt-16 md:mb-4 md:text-[46px] md:leading-[60px]"
@@ -153,16 +145,14 @@ import VLogoButtonOld from '~/components/VHeaderOld/VLogoButtonOld.vue'
 import VSearchBar from '~/components/VHeaderOld/VSearchBar/VSearchBar.vue'
 import VSearchTypeRadio from '~/components/VContentSwitcherOld/VSearchTypeRadio.vue'
 import VSearchTypePopover from '~/components/VContentSwitcherOld/VSearchTypePopover.vue'
+import VBrand from '~/components/VBrand/VBrand.vue'
 
 import imageInfo from '~/assets/homepage_images/image_info.json'
-import OpenverseLogo from '~/assets/logo.svg?inline'
-import OpenverseBrand from '~/assets/brand.svg?inline'
 
 export default defineComponent({
   name: 'HomePage',
   components: {
-    OpenverseLogo,
-    OpenverseBrand,
+    VBrand,
     VSearchTypePopover,
     VSearchTypeRadio,
     VSearchBar,

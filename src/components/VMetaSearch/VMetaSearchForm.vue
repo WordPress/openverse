@@ -2,7 +2,7 @@
   <section
     :key="type"
     ref="sectionRef"
-    class="meta-search mb-16 flex flex-row place-items-center justify-center p-4"
+    class="meta-search flex flex-row place-items-center justify-center p-4"
     data-testid="meta-search-form"
     @keydown.tab.exact="handleTab"
   >

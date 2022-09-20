@@ -59,6 +59,14 @@
       "with-count": "{count} Filter|{count} Filters"
     }
   },
+  "navigation": {
+    "about": "About",
+    "licenses": "Licenses",
+    "get-involved": "Get involved",
+    "api": "API",
+    "privacy": "Privacy",
+    "feedback": "Feedback"
+  },
   "about": {
     "title": "About {openverse}",
     "description": {
@@ -669,5 +677,9 @@
     "nonexistent": "Nonexistent",
     "on": "On",
     "off": "Off"
+  },
+  "footer": {
+    "wordpress-affiliation": "Powered by {wordpress}",
+    "wip": "\uD83D\uDEA7"
   }
 }

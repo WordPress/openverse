@@ -148,8 +148,6 @@
 import {
   computed,
   defineComponent,
-  onBeforeUnmount,
-  onMounted,
   PropType,
   ref,
   toRef,
@@ -160,6 +158,8 @@ import { timeFmt } from '~/utils/time-fmt'
 import { useSeekable } from '~/composables/use-seekable'
 
 import type { AudioFeature } from '~/constants/audio'
+
+import useResizeObserver from '~/composables/use-resize-observer'
 
 import { hash, rand as prng } from '~/utils/prng'
 
@@ -305,26 +305,7 @@ export default defineComponent({
     /* Element dimensions */
 
     const el = ref<HTMLElement | null>(null) // template ref
-    const waveformDimens = ref({ width: 0, height: 0 })
-    const updateWaveformDimens = () => {
-      waveformDimens.value = {
-        width: el.value?.clientWidth || 0,
-        height: el.value?.clientHeight || 0,
-      }
-    }
-    let observer: ResizeObserver | undefined
-    onMounted(() => {
-      if (window.ResizeObserver && el.value) {
-        observer = new ResizeObserver(updateWaveformDimens)
-        observer.observe(el.value)
-      }
-      updateWaveformDimens()
-    })
-    onBeforeUnmount(() => {
-      if (observer) {
-        observer.disconnect()
-      }
-    })
+    const { dimens: waveformDimens } = useResizeObserver(el)
 
     /* Features */
 
