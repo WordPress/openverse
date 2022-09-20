@@ -33,7 +33,13 @@ export function useDialogContent({ emit, ...props }) {
     visibleRef: props.visibleRef,
     autoFocusOnHideRef: props.autoFocusOnHideRef,
   })
-  useHideOnClickOutside(props)
+  useHideOnClickOutside({
+    dialogRef: props.dialogRef,
+    visibleRef: props.visibleRef,
+    hideOnClickOutsideRef: props.hideOnClickOutsideRef,
+    triggerElementRef: props.triggerElementRef,
+    hideRef: props.hideRef,
+  })
 
   /**
    * @param {KeyboardEvent} event
