@@ -41,20 +41,20 @@ header "MODIFYING ENVIRONMENT"
 # subprocess manipulation via <(...) syntax to allow the `export` calls
 # to propagate to the outer shell.
 # See: https://unix.stackexchange.com/a/402752
-while read var_string; do
+while read -r var_string; do
     # get the variable name
-    var_name=`expr "$var_string" : '^\([A-Z_]*\)'`
+    var_name=$(expr "$var_string" : '^\([A-Z_]*\)')
     echo "Variable Name: $var_name"
     # get the old value
-    old_value=`expr "$var_string" : '^[A-Z_]*=\(http.*\)$'`
+    old_value=$(expr "$var_string" : '^[A-Z_]*=\(http.*\)$')
     echo "    Old Value: $old_value"
     # call python to url encode the http clause
-    url_encoded=`python -c "from urllib.parse import quote_plus; import sys; print(quote_plus(sys.argv[1]))" $old_value`
+    url_encoded=$(python -c "from urllib.parse import quote_plus; import sys; print(quote_plus(sys.argv[1]))" "$old_value")
     # prepend https://
     new_value='https://'$url_encoded
     echo "    New Value: $new_value"
     # set the environment variable
-    export $var_name=$new_value
+    export "$var_name"="$new_value"
 # only include airflow connections with http somewhere in the string
 done < <(env | grep "^AIRFLOW_CONN[A-Z_]\+=http.*$")
 

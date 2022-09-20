@@ -14,16 +14,14 @@ SLACK_URL=$1
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd "$SCRIPT_DIR"
 
-# Get current commit hash
-current=$(git rev-parse HEAD)
 # Update origin
 git fetch origin
 # Get new commit hash *one commit ahead* of this one
 new=$(git rev-list --reverse --topo-order HEAD..origin/main | head -1)
 # If there is no new commit hash to move to, nothing has changed, quit early
-[ -z $new ] && exit
+[ -z "$new" ] && exit
 # Move ahead to this new commit
-git reset --hard $new
+git reset --hard "$new"
 # Pull out the subject from the new commit
 subject=$(git log -1 --format='%s')
 
@@ -32,7 +30,7 @@ if [ -z "$SLACK_URL" ]
   then
   echo "Slack hook was not supplied! Updates will not be posted"
 else
-  curl $SLACK_URL \
+  curl "$SLACK_URL" \
     -X POST \
     -H 'Content-Type: application/json' \
     -d '{"text":"Deployed: '"$subject"'","username":"DAG Sync","icon_emoji":":recycle:","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"Deployed: <https://github.com/WordPress/openverse-catalog/commit/'"$new"'|'"$subject"'>"}}]}'
