@@ -1,0 +1,45 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+import VContentSettingsButton from '~/components/VHeader/VContentSettingsButton.vue'
+
+<Meta
+  title="Components/VHeader/VContentSettingsButton"
+  component={VContentSettingsButton}
+  decorators={[
+    () => ({
+      template: '<div class="bg-dark-charcoal-20 p-10"><story /></div>',
+    }),
+  ]}
+  argTypes={{
+    click: {
+      action: 'click',
+    },
+  }}
+/>
+
+export const Template = (args, { argTypes }) => ({
+  template: `<VContentSettingsButton v-bind="args" v-on="args" />`,
+  components: { VContentSettingsButton },
+  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
+})
+
+# Content Settings button
+
+<Description of={VContentSettingsButton} />
+
+<ArgsTable of={VContentSettingsButton} />
+
+The button that opens the content settings modal on screens up to `lg` breakpoint.
+If any filters are selected, it shows a pink dot in the top right corner.
+
+<Canvas>
+  <Story name="Default">{Template.bind({})}</Story>
+</Canvas>

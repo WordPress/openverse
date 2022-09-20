@@ -48,6 +48,7 @@ export const buttonVariants = [
   'primary',
   'secondary',
   'tertiary',
+  'menu',
   'action-menu',
   'action-menu-secondary',
   'action-menu-muted',
@@ -311,6 +312,12 @@ a.button {
 
 .tertiary-pressed {
   @apply border-tx bg-dark-charcoal text-white;
+}
+.menu {
+  @apply border border-tx bg-white text-dark-charcoal ring-offset-0;
+}
+.menu-pressed {
+  @apply border border-tx bg-dark-charcoal text-white;
 }
 
 .action-menu {

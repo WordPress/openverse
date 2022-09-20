@@ -41,6 +41,7 @@
     "aria": {
       "primary": "primary",
       "menu": "menu",
+      "menu-notification": "Some filters are applied",
       "search": "search",
       "sr-search": "search button"
     },
