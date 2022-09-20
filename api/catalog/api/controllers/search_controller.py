@@ -240,15 +240,16 @@ def _apply_filter(
     """
 
     if serializer_field in search_params.data:
-        filters = []
-        for arg in search_params.data[serializer_field].split(","):
-            _param = es_field or serializer_field
-            args = {"name_or_query": "term", _param: arg}
-            filters.append(Q(**args))
+        arguments = search_params.data.get(serializer_field)
+        if arguments is None:
+            return s
+        arguments = arguments.split(",")
+        parameter = es_field or serializer_field
+        query = Q("terms", **{parameter: arguments})
         method = getattr(s, behaviour)
-        return method("bool", should=filters)
-    else:
-        return s
+        return method("bool", should=query)
+
+    return s
 
 
 def _exclude_filtered(s: Search):
