@@ -8,7 +8,7 @@ from airflow.providers.amazon.aws.operators.emr import (
     EmrTerminateJobFlowOperator,
 )
 from airflow.providers.amazon.aws.sensors.emr import EmrJobFlowSensor
-from airflow.providers.amazon.aws.sensors.s3 import S3KeySensor, S3PrefixSensor
+from airflow.providers.amazon.aws.sensors.s3 import S3KeySensor
 from airflow.utils.trigger_rule import TriggerRule
 from common.constants import DAG_DEFAULT_ARGS
 from commoncrawl.commoncrawl_utils import get_load_s3_task_id, load_file_to_s3
@@ -169,12 +169,13 @@ dag = DAG(
 )
 
 with dag:
-    check_for_cc_index = S3PrefixSensor(
+    check_for_cc_index = S3KeySensor(
         task_id="check_for_cc_index",
         retries=0,
         aws_conn_id=AWS_CONN_ID,
         bucket_name=COMMONCRAWL_BUCKET,
-        prefix=f"crawl-data/{CC_INDEX_TEMPLATE}",
+        bucket_key=f"crawl-data/{CC_INDEX_TEMPLATE}*",
+        wildcard_match=True,
         poke_interval=60,
         timeout=60 * 60 * 24 * 3,
         soft_fail=True,

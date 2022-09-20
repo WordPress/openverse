@@ -43,7 +43,7 @@ RUN useradd -m -d ${AIRFLOW_HOME} airflow && \
     chown airflow:airflow ${OUTPUT_DIR}
 USER airflow
 
-ARG AIRFLOW_VERSION=2.3.3
+ARG AIRFLOW_VERSION=2.3.4
 WORKDIR  ${AIRFLOW_HOME}
 # Always add the prod req because the dev reqs depend on it for deduplication
 COPY ${REQUIREMENTS_FILE} requirements_prod.txt ${AIRFLOW_HOME}/

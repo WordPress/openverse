@@ -111,7 +111,7 @@ class TestExternalDAGsSensor(unittest.TestCase):
             # TODO: warnings for...(drumroll) Airflow operators 🙃 hopefully this is
             # TODO: fixed in 2.2.5 or something.
             # TODO: Update: 2022-05-06/v2.3.0, still an issue!
-            # TODO: Update: 2022-08-15/v2.3.3, Still an issue (MJSB)
+            # TODO: Update: 2022-09-19/v2.3.4, Still an issue (MJSB)
             warnings.simplefilter("ignore", category=DeprecationWarning)
             dagbag = DagBag(dag_folder=DEV_NULL, include_examples=True)
         bash_dag = dagbag.dags["example_bash_operator"]
