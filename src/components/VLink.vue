@@ -1,7 +1,27 @@
+<!-- eslint-disable vue/no-restricted-syntax -->
 <template>
-  <Component
-    :is="linkComponent"
-    v-bind="linkProperties"
+  <NuxtLink
+    v-if="linkComponent === 'NuxtLink'"
+    v-bind="$attrs"
+    :class="{ 'inline-flex flex-row items-center gap-2': showExternalIcon }"
+    :to="linkTo"
+    v-on="$listeners"
+    @click.native="$emit('click', $event)"
+  >
+    <slot /><VIcon
+      v-if="showExternalIcon && !isInternal"
+      :icon-path="externalLinkIcon"
+      class="inline-block"
+      :size="4"
+      rtl-flip
+    />
+  </NuxtLink>
+  <a
+    v-else-if="linkComponent === 'a'"
+    v-bind="$attrs"
+    :href="href"
+    target="_blank"
+    rel="noopener noreferrer"
     :class="{ 'inline-flex flex-row items-center gap-2': showExternalIcon }"
     v-on="$listeners"
   >
@@ -12,7 +32,20 @@
       :size="4"
       rtl-flip
     />
-  </Component>
+  </a>
+  <span
+    v-else
+    v-bind="$attrs"
+    :class="{ 'inline-flex flex-row items-center gap-2': showExternalIcon }"
+  >
+    <slot /><VIcon
+      v-if="showExternalIcon && !isInternal"
+      :icon-path="externalLinkIcon"
+      class="inline-block"
+      :size="4"
+      rtl-flip
+    />
+  </span>
 </template>
 
 <script lang="ts">
@@ -31,14 +64,10 @@ import VIcon from '~/components/VIcon/VIcon.vue'
 
 import externalLinkIcon from '~/assets/icons/external-link.svg'
 
-const defaultProps = Object.freeze({
-  target: '_blank',
-  rel: 'noopener noreferrer',
-})
-
 export default defineComponent({
   name: 'VLink',
   components: { VIcon },
+  inheritAttrs: false,
   props: {
     href: {
       type: String,
@@ -71,15 +100,18 @@ export default defineComponent({
       hasHref.value ? (isInternal.value ? 'NuxtLink' : 'a') : 'span'
     )
 
-    let linkProperties = computed(() =>
-      checkHref(props)
-        ? isInternal.value
-          ? { to: app?.localePath(props.href) ?? props.href }
-          : { ...defaultProps, href: props.href }
+    let linkTo = computed(() =>
+      checkHref(props) && isInternal.value
+        ? app?.localePath(props.href) ?? props.href
         : null
     )
 
-    return { linkProperties, linkComponent, isInternal, externalLinkIcon }
+    return {
+      linkTo,
+      linkComponent,
+      isInternal,
+      externalLinkIcon,
+    }
   },
 })
 </script>

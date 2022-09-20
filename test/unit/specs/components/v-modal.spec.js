@@ -64,7 +64,6 @@ describe('VModal', () => {
   beforeEach(() => {
     options = {
       props: { useCustomInitialFocus: false },
-      stubs: ['NuxtLink'],
     }
     jest.resetAllMocks()
   })

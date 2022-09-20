@@ -74,7 +74,6 @@ const configureVue = (vue) => {
 
 const stubs = {
   VPlayPause: true,
-  NuxtLink: true,
   VLicense: true,
   VWaveform: true,
 }

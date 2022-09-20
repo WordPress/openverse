@@ -6,14 +6,6 @@ import VLink from '~/components/VLink.vue'
 const nuxtContextMock = {
   $nuxt: { context: { app: { localePath: jest.fn((v) => v) } } },
 }
-/**
- * Simplified mock of a NuxtLink component.
- */
-// eslint-disable-next-line vue/one-component-per-file
-const NuxtLink = Vue.component('NuxtLink', {
-  props: ['to'],
-  template: '<a :href="to" v-on="$listeners"><slot /></a>',
-})
 
 describe('VLink', () => {
   it.each`
@@ -23,17 +15,11 @@ describe('VLink', () => {
   `(
     'Creates a correct link component based on href',
     ({ href, target, rel }) => {
-      render(
-        VLink,
-        {
-          props: { href },
-          slots: { default: 'Code is Poetry' },
-          mocks: nuxtContextMock,
-        },
-        (localVue) => {
-          localVue.component('NuxtLink', NuxtLink)
-        }
-      )
+      render(VLink, {
+        props: { href },
+        slots: { default: 'Code is Poetry' },
+        mocks: nuxtContextMock,
+      })
       const link = screen.getByRole('link')
       const expectedHref = href.startsWith('/')
         ? `http://localhost${href}`
@@ -62,7 +48,6 @@ describe('VLink', () => {
       })
     const WrapperComponent = createVLinkWrapper(href)
     render(WrapperComponent, { mocks: nuxtContextMock }, (localVue) => {
-      localVue.component('NuxtLink', NuxtLink)
       localVue.component('VLink', VLink)
     })
     const linkBefore = await screen.getByRole('link')

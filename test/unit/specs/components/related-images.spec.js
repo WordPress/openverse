@@ -31,7 +31,7 @@ describe('RelatedImage', () => {
       localVue,
       pinia,
       propsData: props,
-      stubs: ['VLicense', 'NuxtLink'],
+      stubs: ['VLicense'],
       mocks: { $nuxt: { context: { i18n } } },
     }
   })

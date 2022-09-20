@@ -17,7 +17,6 @@ describe('VContentLink', () => {
   beforeEach(() => {
     options = {
       props: { mediaType: 'image', resultsCount: 123, to: '/images' },
-      stubs: ['NuxtLink'],
       mocks: {
         $nuxt: {
           context: {
@@ -32,8 +31,7 @@ describe('VContentLink', () => {
     render(VContentLink, options)
     const btn = screen.getByRole('link')
 
-    /**  @todo: Mock NuxtLink and check for href instead.  **/
-    expect(btn).toHaveAttribute('to')
+    expect(btn).toHaveAttribute('href')
     expect(btn).not.toHaveAttribute('aria-disabled')
   })
 
@@ -42,8 +40,7 @@ describe('VContentLink', () => {
     render(VContentLink, options)
     const btn = screen.getByRole('link')
 
-    /**  @todo: Mock NuxtLink and check for href instead.  **/
-    expect(btn).not.toHaveAttribute('to')
+    expect(btn).not.toHaveAttribute('href')
     expect(btn).toHaveAttribute('aria-disabled')
     expect(btn.getAttribute('aria-disabled')).toBeTruthy()
   })

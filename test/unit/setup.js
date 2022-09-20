@@ -13,6 +13,14 @@ Vue.config.productionTip = false
 Vue.config.devtools = false
 Vue.use(VueI18n)
 
+/**
+ * Simplified mock of a NuxtLink component.
+ */
+config.stubs['nuxt-link'] = Vue.component('NuxtLink', {
+  props: ['to'],
+  template: '<a :href="to" v-on="$listeners"><slot /></a>',
+})
+
 config.mocks.$t = (key) => key
 config.mocks.localePath = (i) => i
 global.matchMedia =

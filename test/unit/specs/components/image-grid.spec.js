@@ -39,7 +39,7 @@ describe('VImageGrid', () => {
       localVue,
       pinia,
       props: propsData,
-      stubs: ['NuxtLink', 'VLicense'],
+      stubs: ['VLicense'],
       mocks: { $nuxt: { context: { i18n } } },
     }
   })
