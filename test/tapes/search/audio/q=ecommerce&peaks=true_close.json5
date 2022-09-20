@@ -1,0 +1,78 @@
+{
+    meta: {
+        createdAt: '2022-09-20T13:08:25.443Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+    },
+    req: {
+        headers: {
+            connection: 'close',
+        },
+        url: '/v1/audio/?q=ecommerce&peaks=true',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Tue, 20 Sep 2022 13:08:26 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'content-length': [
+                '70',
+            ],
+            connection: [
+                'close',
+            ],
+            vary: [
+                'Accept, Authorization, Origin, Cookie',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                '04b106f51b82497a92f6deecf72a0fd3',
+            ],
+            'cf-cache-status': [
+                'BYPASS',
+            ],
+            'accept-ranges': [
+                'bytes',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '74daca2badc7cc08-IST',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            result_count: 0,
+            page_count: 1,
+            page_size: 20,
+            page: 1,
+            results: [],
+        },
+    },
+}

@@ -61,7 +61,8 @@ export const renderingContexts = [
   ['CSR', 'rtl'],
 ] as const
 
-export type RenderMode = 'SSR' | 'CSR'
+export const renderModes = ['SSR', 'CSR'] as const
+export type RenderMode = typeof renderModes[number]
 export type LanguageDirection = 'ltr' | 'rtl'
 
 const smWidth = SCREEN_SIZES.get('sm') as number

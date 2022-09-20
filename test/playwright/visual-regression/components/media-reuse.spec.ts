@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { Route, test } from '@playwright/test'
 
 import breakpoints from '~~/test/playwright/utils/breakpoints'
 import {
@@ -15,6 +15,10 @@ const tabs = [
   { id: 'html', name: 'HTML' },
   { id: 'plain', name: 'Plain text' },
 ]
+
+const cancelImageRequests = (route: Route) =>
+  route.request().resourceType() === 'image' ? route.abort() : route.continue()
+
 test.describe('media-reuse', () => {
   for (const tab of tabs) {
     for (const dir of languageDirections) {
@@ -22,6 +26,8 @@ test.describe('media-reuse', () => {
         test(`Should render a ${dir} media reuse section with "${tab.name}" tab open`, async ({
           page,
         }) => {
+          await page.route('**/*', cancelImageRequests)
+
           await page.goto(
             pathWithDir('/image/f9384235-b72e-4f1e-9b05-e1b116262a29', dir)
           )
