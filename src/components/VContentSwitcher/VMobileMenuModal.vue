@@ -39,7 +39,7 @@ import useSearchType from '~/composables/use-search-type'
 import type { SupportedSearchType } from '~/constants/media'
 
 import VModal from '~/components/VModal/VModal.vue'
-import VPageList from '~/components/VHeader/VPageMenu/VPageList.vue'
+import VPageList from '~/components/VHeaderOld/VPageMenu/VPageList.vue'
 import VSearchTypeButton from '~/components/VContentSwitcher/VSearchTypeButton.vue'
 import VSearchTypes from '~/components/VContentSwitcher/VSearchTypes.vue'
 

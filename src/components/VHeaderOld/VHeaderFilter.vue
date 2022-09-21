@@ -3,7 +3,7 @@
     ref="nodeRef"
     class="flex items-stretch justify-end text-sr md:text-base"
   >
-    <VFilterButton
+    <VFilterButtonOld
       ref="buttonRef"
       class="self-stretch"
       :class="visibleRef ? 'hidden md:flex' : 'flex'"
@@ -58,12 +58,12 @@ import { useSearchStore } from '~/stores/search'
 
 import VModalContent from '~/components/VModal/VModalContent.vue'
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
-import VFilterButton from '~/components/VHeaderOld/VFilterButton.vue'
+import VFilterButtonOld from '~/components/VHeaderOld/VFilterButtonOld.vue'
 
 export default defineComponent({
   name: 'VHeaderFilter',
   components: {
-    VFilterButton,
+    VFilterButtonOld,
     VModalContent,
     VSearchGridFilter,
     VTeleport,

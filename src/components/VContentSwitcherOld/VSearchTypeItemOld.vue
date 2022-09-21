@@ -35,7 +35,7 @@ const propTypes = {
   useLinks: { type: Boolean, default: true },
 }
 export default defineComponent({
-  name: 'VSearchTypeItem',
+  name: 'VSearchTypeItemOld',
   components: { VIcon, VItem, VPill },
   props: propTypes,
   setup(props) {

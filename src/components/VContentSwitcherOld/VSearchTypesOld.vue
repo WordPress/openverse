@@ -21,7 +21,7 @@
       >
         {{ $t(`search-type.${category.heading}`) }}
       </h4>
-      <VSearchTypeItem
+      <VSearchTypeItemOld
         v-for="(item, idx) in category.items"
         :key="item"
         class="md:mb-1"
@@ -43,11 +43,11 @@ import useSearchType from '~/composables/use-search-type'
 import { defineEvent } from '~/types/emits'
 
 import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
-import VSearchTypeItem from '~/components/VContentSwitcherOld/VSearchTypeItem.vue'
+import VSearchTypeItemOld from '~/components/VContentSwitcherOld/VSearchTypeItemOld.vue'
 
 export default defineComponent({
-  name: 'VSearchTypes',
-  components: { VItemGroup, VSearchTypeItem },
+  name: 'VSearchTypesOld',
+  components: { VItemGroup, VSearchTypeItemOld },
   props: {
     /**
      * 'Small' size for mobile screens,

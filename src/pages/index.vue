@@ -33,14 +33,14 @@
             @select="setSearchType"
           />
         </div>
-        <VSearchBar
+        <VSearchBarOld
           v-model.trim="searchTerm"
           class="group mt-4 max-w-[40rem] md:mt-6"
           size="standalone"
           @submit="handleSearch"
         >
           <ClientOnly>
-            <VSearchTypePopover
+            <VSearchTypePopoverOld
               v-if="isMinScreenMd"
               ref="contentSwitcher"
               class="mx-3"
@@ -49,7 +49,7 @@
               @select="setSearchType"
             />
           </ClientOnly>
-        </VSearchBar>
+        </VSearchBarOld>
 
         <!-- Disclaimer for large screens -->
         <i18n
@@ -142,9 +142,9 @@ import { useSearchStore } from '~/stores/search'
 
 import VLink from '~/components/VLink.vue'
 import VLogoButtonOld from '~/components/VHeaderOld/VLogoButtonOld.vue'
-import VSearchBar from '~/components/VHeaderOld/VSearchBar/VSearchBar.vue'
-import VSearchTypeRadio from '~/components/VContentSwitcherOld/VSearchTypeRadio.vue'
-import VSearchTypePopover from '~/components/VContentSwitcherOld/VSearchTypePopover.vue'
+import VSearchBarOld from '~/components/VHeaderOld/VSearchBar/VSearchBarOld.vue'
+import VSearchTypeRadio from '~/components/VContentSwitcher/VSearchTypeRadio.vue'
+import VSearchTypePopoverOld from '~/components/VContentSwitcherOld/VSearchTypePopoverOld.vue'
 import VBrand from '~/components/VBrand/VBrand.vue'
 
 import imageInfo from '~/assets/homepage_images/image_info.json'
@@ -153,9 +153,9 @@ export default defineComponent({
   name: 'HomePage',
   components: {
     VBrand,
-    VSearchTypePopover,
+    VSearchTypePopoverOld,
     VSearchTypeRadio,
-    VSearchBar,
+    VSearchBarOld,
     VLink,
     VLogoButtonOld,
   },

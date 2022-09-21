@@ -23,7 +23,7 @@
       <!-- @slot Extra information such as loading message or result count goes here. -->
       <slot />
     </VInputField>
-    <VSearchButton type="submit" :size="size" :route="route" />
+    <VSearchButtonOld type="submit" :size="size" :route="route" />
   </form>
 </template>
 
@@ -36,7 +36,7 @@ import { defineEvent } from '~/types/emits'
 import VInputField, {
   FIELD_SIZES,
 } from '~/components/VInputField/VInputField.vue'
-import VSearchButton from '~/components/VHeaderOld/VSearchBar/VSearchButton.vue'
+import VSearchButtonOld from '~/components/VHeaderOld/VSearchBar/VSearchButtonOld.vue'
 
 /**
  * Displays a text field for a search query and is attached to an action button
@@ -44,8 +44,8 @@ import VSearchButton from '~/components/VHeaderOld/VSearchBar/VSearchButton.vue'
  * displayed in the bar itself.
  */
 export default defineComponent({
-  name: 'VSearchBar',
-  components: { VInputField, VSearchButton },
+  name: 'VSearchBarOld',
+  components: { VInputField, VSearchButtonOld },
   inheritAttrs: false,
   props: {
     /**

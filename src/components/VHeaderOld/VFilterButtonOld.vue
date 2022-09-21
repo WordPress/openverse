@@ -46,7 +46,7 @@ import VIcon from '~/components/VIcon/VIcon.vue'
 import filterIcon from '~/assets/icons/filter.svg'
 
 export default defineComponent({
-  name: 'VFilterButton',
+  name: 'VFilterButtonOld',
   components: {
     VIcon,
     VButton,

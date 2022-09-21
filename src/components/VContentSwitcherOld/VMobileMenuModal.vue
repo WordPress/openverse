@@ -6,7 +6,7 @@
     :initial-focus-element="initialFocusElement"
   >
     <template #trigger="{ a11yProps, visible }">
-      <VSearchTypeButton
+      <VSearchTypeButtonOld
         :a11y-props="a11yProps"
         :visible="visible"
         :active-item="activeItem"
@@ -18,7 +18,7 @@
       class="p-6"
       aria-labelledby="content-switcher-heading"
     >
-      <VSearchTypes
+      <VSearchTypesOld
         ref="searchTypesRef"
         size="small"
         :active-item="content.activeType.value"
@@ -40,16 +40,16 @@ import type { SupportedSearchType } from '~/constants/media'
 
 import VModal from '~/components/VModal/VModal.vue'
 import VPageList from '~/components/VHeaderOld/VPageMenu/VPageList.vue'
-import VSearchTypeButton from '~/components/VContentSwitcherOld/VSearchTypeButton.vue'
-import VSearchTypes from '~/components/VContentSwitcherOld/VSearchTypes.vue'
+import VSearchTypeButtonOld from '~/components/VContentSwitcherOld/VSearchTypeButtonOld.vue'
+import VSearchTypesOld from '~/components/VContentSwitcherOld/VSearchTypesOld.vue'
 
 export default defineComponent({
   name: 'VMobileMenuModal',
   components: {
     VModal,
     VPageList,
-    VSearchTypeButton,
-    VSearchTypes,
+    VSearchTypeButtonOld,
+    VSearchTypesOld,
   },
   props: {
     activeItem: {
@@ -61,7 +61,9 @@ export default defineComponent({
     const content = useSearchType()
     const pages = usePages()
 
-    const searchTypesRef = ref<InstanceType<typeof VSearchTypes> | null>(null)
+    const searchTypesRef = ref<InstanceType<typeof VSearchTypesOld> | null>(
+      null
+    )
     const nodeRef = ref(null)
 
     const initialFocusElement = computed(() => {

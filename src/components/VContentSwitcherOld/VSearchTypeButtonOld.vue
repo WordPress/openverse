@@ -43,7 +43,7 @@ import VButton from '~/components/VButton.vue'
 import caretDownIcon from '~/assets/icons/caret-down.svg'
 
 export default defineComponent({
-  name: 'VSearchTypeButton',
+  name: 'VSearchTypeButtonOld',
   components: { VButton, VIcon },
   props: {
     a11yProps: {

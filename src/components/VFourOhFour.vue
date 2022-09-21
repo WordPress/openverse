@@ -33,7 +33,7 @@
             </template>
           </i18n>
         </p>
-        <VSearchBar
+        <VSearchBarOld
           :value="searchTerm"
           :label-text="$t('404.search-placeholder')"
           field-id="404-search"
@@ -63,7 +63,7 @@ import { useSearchStore } from '~/stores/search'
 
 import { useFeatureFlagStore } from '~/stores/feature-flag'
 
-import VSearchBar from '~/components/VHeaderOld/VSearchBar/VSearchBar.vue'
+import VSearchBarOld from '~/components/VHeaderOld/VSearchBar/VSearchBarOld.vue'
 import VLink from '~/components/VLink.vue'
 import VBrand from '~/components/VBrand/VBrand.vue'
 import VFooter from '~/components/VFooter/VFooter.vue'
@@ -75,7 +75,7 @@ export default defineComponent({
   components: {
     Oops,
     VLink,
-    VSearchBar,
+    VSearchBarOld,
     VBrand,
     VFooter,
   },

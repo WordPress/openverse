@@ -38,7 +38,7 @@ import type { FieldSize } from '~/components/VInputField/VInputField.vue'
 import searchIcon from '~/assets/icons/search.svg'
 
 export default defineComponent({
-  name: 'VSearchButton',
+  name: 'VSearchButtonOld',
   components: { VIcon, VButton },
   inheritAttrs: false,
   props: {

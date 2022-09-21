@@ -16,7 +16,7 @@
       :is-search-route="isSearchRoute"
     />
 
-    <VSearchBar
+    <VSearchBarOld
       v-model.trim="searchTerm"
       class="flex-grow lg:w-1/2 lg:flex-grow-0 2xl:w-1/3"
       :size="isMinScreenMd ? 'medium' : isHeaderScrolled ? 'small' : 'large'"
@@ -31,7 +31,7 @@
       >
         {{ searchStatus }}
       </span>
-    </VSearchBar>
+    </VSearchBarOld>
 
     <VHeaderMenu
       :is-search-route="isSearchRoute"
@@ -66,7 +66,7 @@ import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
 
 import VLogoButtonOld from '~/components/VHeaderOld/VLogoButtonOld.vue'
 import VHeaderFilter from '~/components/VHeaderOld/VHeaderFilter.vue'
-import VSearchBar from '~/components/VHeaderOld/VSearchBar/VSearchBar.vue'
+import VSearchBarOld from '~/components/VHeaderOld/VSearchBar/VSearchBarOld.vue'
 import VHeaderMenu from '~/components/VHeaderOld/VHeaderMenu.vue'
 
 import closeIcon from '~/assets/icons/close.svg'
@@ -83,7 +83,7 @@ export default defineComponent({
     VLogoButtonOld,
     VHeaderFilter,
     VHeaderMenu,
-    VSearchBar,
+    VSearchBarOld,
   },
   setup() {
     const mediaStore = useMediaStore()

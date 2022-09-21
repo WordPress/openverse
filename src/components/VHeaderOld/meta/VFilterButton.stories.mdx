@@ -6,14 +6,14 @@ import {
   Story,
 } from '@storybook/addon-docs'
 import { provide, ref } from '@nuxtjs/composition-api'
-import VFilterButton from '~/components/VHeaderOld/VFilterButton.vue'
+import VFilterButtonOld from '~/components/VHeaderOld/VFilterButtonOld.vue'
 import { useSearchStore } from '~/stores/search'
 import { filterData, mediaFilterKeys } from '~/constants/filters'
 import { IMAGE } from '~/constants/media'
 
 <Meta
-  title="Components/VHeaderOld/VFilterButton"
-  component={VFilterButton}
+  title="Components/VHeaderOld/VFilterButtonOld"
+  component={VFilterButtonOld}
   argTypes={{
     pressed: {
       type: 'boolean',
@@ -31,8 +31,8 @@ import { IMAGE } from '~/constants/media'
 />
 
 export const Template = (args, { argTypes }) => ({
-  template: `<VFilterButton v-bind="args" />`,
-  components: { VFilterButton },
+  template: `<VFilterButtonOld v-bind="args" />`,
+  components: { VFilterButtonOld },
   props: Object.keys(argTypes),
   setup() {
     const searchStore = useSearchStore()
@@ -68,9 +68,9 @@ export const Template = (args, { argTypes }) => ({
 
 # Filter button
 
-<Description of={VFilterButton} />
+<Description of={VFilterButtonOld} />
 
-<ArgsTable of={VFilterButton} />
+<ArgsTable of={VFilterButtonOld} />
 
 The button opens and closes the filters sidebar. It also shows how many filters are applied
 in the mobile view.

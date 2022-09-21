@@ -7,7 +7,7 @@
     :clippable="true"
   >
     <template #trigger="{ a11yProps }">
-      <VSearchTypeButton
+      <VSearchTypeButtonOld
         :a11y-props="a11yProps"
         aria-controls="content-switcher-popover"
         :active-item="activeItem"
@@ -19,7 +19,7 @@
         :type="placement"
       />
     </template>
-    <VSearchTypes
+    <VSearchTypesOld
       id="content-switcher-popover"
       size="medium"
       :active-item="activeItem"
@@ -41,17 +41,17 @@ import type { SearchType } from '~/constants/media'
 import { defineEvent } from '~/types/emits'
 
 import VPopover from '~/components/VPopover/VPopover.vue'
-import VSearchTypeButton from '~/components/VContentSwitcherOld/VSearchTypeButton.vue'
-import VSearchTypes from '~/components/VContentSwitcherOld/VSearchTypes.vue'
+import VSearchTypeButtonOld from '~/components/VContentSwitcherOld/VSearchTypeButtonOld.vue'
+import VSearchTypesOld from '~/components/VContentSwitcherOld/VSearchTypesOld.vue'
 
 import checkIcon from '~/assets/icons/checkmark.svg'
 
 export default defineComponent({
-  name: 'VSearchTypePopover',
+  name: 'VSearchTypePopoverOld',
   components: {
-    VSearchTypeButton,
+    VSearchTypeButtonOld,
     VPopover,
-    VSearchTypes,
+    VSearchTypesOld,
   },
   model: {
     prop: 'activeItem',

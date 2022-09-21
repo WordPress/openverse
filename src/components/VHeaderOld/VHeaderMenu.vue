@@ -16,7 +16,7 @@ import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
 
 import VMobileMenuModal from '~/components/VContentSwitcherOld/VMobileMenuModal.vue'
-import VSearchTypePopover from '~/components/VContentSwitcherOld/VSearchTypePopover.vue'
+import VSearchTypePopoverOld from '~/components/VContentSwitcherOld/VSearchTypePopoverOld.vue'
 import VDesktopPageMenu from '~/components/VHeaderOld/VPageMenu/VDesktopPageMenu.vue'
 import VMobilePageMenu from '~/components/VHeaderOld/VPageMenu/VMobilePageMenu.vue'
 
@@ -24,7 +24,7 @@ export default defineComponent({
   name: 'VHeaderMenu',
   components: {
     VMobileMenuModal,
-    VSearchTypePopover,
+    VSearchTypePopoverOld,
     VDesktopPageMenu,
     VMobilePageMenu,
   },
@@ -88,7 +88,7 @@ export default defineComponent({
     } else if (this.isMinScreenMd && this.isMounted) {
       return h('div', { class: 'flex flex-grow justify-between gap-x-2' }, [
         h(VDesktopPageMenu),
-        h(VSearchTypePopover, {
+        h(VSearchTypePopoverOld, {
           props: { activeItem: this.content.activeType.value },
           ref: 'menuModalRef',
           on: { select: this.selectSearchType },
