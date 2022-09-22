@@ -1,7 +1,7 @@
 ---
 name: Sentry Bug
 about: Report a bug identifed by Sentry
-labels: "🛠 goal: fix, 🚦 status: awaiting triage, 🐛 tooling: sentry",
+labels: "🛠 goal: fix, 🚦 status: awaiting triage, 🐛 tooling: sentry"
 title: "<Replace this with actual title>"
 ---
 
