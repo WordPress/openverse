@@ -45,5 +45,6 @@ const middleware: Middleware = async ({ app, query, route, $pinia }) => {
 
   const featureFlagStore = useFeatureFlagStore($pinia)
   featureFlagStore.initFromCookies(app.$cookies.get('features') ?? {})
+  featureFlagStore.initFromQuery(query)
 }
 export default middleware
