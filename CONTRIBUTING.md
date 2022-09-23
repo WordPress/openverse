@@ -30,6 +30,14 @@ An overview of Openverse translations is here: [https://translate.wordpress.org/
 
 A getting started guide for translating on GlotPress (the software behind [translate.wordpress.org](http://translate.wordpress.org)) is here: [https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started](https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started)
 
+## ☁️  Provider contributions
+
+Openverse is powered by upstream providers of openly licensed media. You can help expand Openverse by identifying sources of Creative Commons licensed media - we're always looking to broaden our dataset.
+
+[Our currently list of providers which have been identified but are not yet being ingested can be found here](https://github.com/WordPress/openverse-catalog/issues?q=is%3Aopen+is%3Aissue+label%3A%22%E2%98%81%EF%B8%8F+provider%3A+any%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+audio%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+images%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+text%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+video%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+3D+models%22).
+
+You can use the [New Source Suggestion for Openverse](https://github.com/WordPress/openverse-catalog/issues/new?assignees=&labels=%F0%9F%9A%A6+status%3A+awaiting+triage%2C%F0%9F%A7%B9+status%3A+ticket+work+required%2C%E2%98%81%EF%B8%8F+provider%3A+any&template=new_source_suggestion.yml&title=%3CSource+name+here%3E) issue template to submit whatever sources you find.
+
 ## 💻️ Code contributions
 
 ### ⛳️ How to contribute with code
@@ -98,3 +106,22 @@ Skip any steps you've already completed on your own. This is meant as an exhaust
 Most of these issues are potentially able to be completed in less than 4 hours, development environment set up included. It may take significantly more or less than 4 hours depending on experience and how smoothly development environment set up goes. Unfortunately sometimes dev env set up can sometimes be tricky! In these cases it would be helpful to the Openverse project to share your experience in an issue so we can try to remove any roadblocks for future contributors. **You can make meaningful contributions to the project in the form of valuable feedback about the development experience!**
 
 [List of Good First Issues](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AWordPress%2Fopenverse-catalog+repo%3AWordPress%2Fopenverse+repo%3AWordPress%2Fopenverse-api+repo%3AWordPress%2Fopenverse-frontend+label%3A%22good+first+issue%22+label%3A%22help+wanted%22+-label%3A%22%E2%9B%94+status%3A+blocked%22+-label%3A%22%F0%9F%94%92+staff+only%22+)
+
+## 🏔️ Other non-code contributions
+
+There are a number of other ways to contribute to the project that don't involve writing Python or Javascript.
+
+### 📑 Text improvements
+
+Our documentation and copy text could always use improvement! The following links can be useful for finding text issues to tackle:
+
+- [Good first issues with the label “aspect: text”](https://href.li/?https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AWordPress%2Fopenverse-catalog+repo%3AWordPress%2Fopenverse+repo%3AWordPress%2Fopenverse-api+repo%3AWordPress%2Fopenverse-frontend+label%3A%22good+first+issue%22+label%3A%22help+wanted%22+-label%3A%22%E2%9B%94+status%3A+blocked%22+-label%3A%22%F0%9F%94%92+staff+only%22+label%3A%22%F0%9F%93%84+aspect%3A+text%22)
+- [All issues with the label “aspect: text”](https://href.li/?https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AWordPress%2Fopenverse-catalog+repo%3AWordPress%2Fopenverse+repo%3AWordPress%2Fopenverse-api+repo%3AWordPress%2Fopenverse-frontend+-label%3A%22%E2%9B%94+status%3A+blocked%22+-label%3A%22%F0%9F%94%92+staff+only%22+label%3A%22%F0%9F%93%84+aspect%3A+text%22+)
+
+### 🩹 Bug reproduction & triage
+
+Openverse has a large list of open bugs: [all issues with the label "goal: fix"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AWordPress%2Fopenverse-catalog+repo%3AWordPress%2Fopenverse+repo%3AWordPress%2Fopenverse-api+repo%3AWordPress%2Fopenverse-frontend+-label%3A%22%E2%9B%94+status%3A+blocked%22+-label%3A%22%F0%9F%94%92+staff+only%22+label%3A%22%F0%9F%9B%A0+goal%3A+fix%22). In many cases these bugs can be out of date, or their reproduction criteria may no longer be accurate. It's useful information for maintainers to know whether the issue mentioned can still be reproduced on recent versions of the code or if the issue can no longer be replicated.
+
+### 🫱🏿‍🫲🏽 Recruit
+
+If you know folks who have expertise in any of the above areas who you think might be interested in contributing to open source, send them our way! We're happy to help onboard folks to the project itself, as well as the tools and technologies we use.
