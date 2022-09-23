@@ -247,8 +247,10 @@ def test_pull_media_wrapper_always_pushes_duration(func, ti_mock, dagrun_mock):
     assert duration > 0
 
 
+# Set up parametrizations for the schedule_interval and reingestion_date,
+# which result in different components of the path
 @pytest.mark.parametrize(
-    "schedule_interval, expected",
+    "schedule_interval, expected_schedule_prefix",
     [
         # Hourly should have year/month/day
         ("@hourly", "year=2022/month=02/day=03"),
@@ -266,9 +268,21 @@ def test_pull_media_wrapper_always_pushes_duration(func, ti_mock, dagrun_mock):
         (None, "year=2022"),
     ],
 )
-def test_date_partition_for_prefix(schedule_interval, expected):
+@pytest.mark.parametrize(
+    "reingestion_date, expected_reingestion_prefix",
+    [
+        # No reingestion date provided
+        (None, ""),
+        ("2022-01-01", "/reingestion=2022-01-01"),
+    ],
+)
+def test_date_partition_for_prefix(
+    schedule_interval,
+    expected_schedule_prefix,
+    reingestion_date,
+    expected_reingestion_prefix,
+):
     actual = factory_utils.date_partition_for_prefix(
-        schedule_interval,
-        datetime(2022, 2, 3),
+        schedule_interval, datetime(2022, 2, 3), reingestion_date
     )
-    assert actual == expected
+    assert actual == expected_schedule_prefix + expected_reingestion_prefix

@@ -18,6 +18,9 @@ class AudioStore(MediaStore):
 
     Optional init arguments:
     provider:       String marking the provider in the `audio` table of the DB.
+    date:           Date String in the form YYYY-MM-DD. This is the date for
+                    which data is being stored. If provided, it will be appended to
+                    the tsv filename.
     output_file:    String giving a temporary .tsv filename (*not* the
                     full path) where the audio info should be stored.
     output_dir:     String giving a path where `output_file` should be placed.

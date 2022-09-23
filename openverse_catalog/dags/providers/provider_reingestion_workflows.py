@@ -1,11 +1,14 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
+from providers.provider_api_scripts.wikimedia_commons import (
+    WikimediaCommonsDataIngester,
+)
 from providers.provider_workflows import ProviderWorkflow
 
 
 @dataclass
-class ProviderIngestionWorkflow(ProviderWorkflow):
+class ProviderReingestionWorkflow(ProviderWorkflow):
     """
     Extends the ProviderWorkflow with configuration options used to set up
     a day-partitioned ingestion workflow DAG.
@@ -35,13 +38,13 @@ class ProviderIngestionWorkflow(ProviderWorkflow):
     dagrun_timeout: timedelta = timedelta(hours=23)
 
     # Override default ProviderWorkflow configurations
-    schedule_string: str = "@daily"
-    dated = True
+    schedule_string: str = "@weekly"
+    dated: bool = True
 
 
-PROVIDER_INGESTION_WORKFLOWS = [
-    ProviderIngestionWorkflow(
-        dag_id="europeana_ingestion_workflow",
+PROVIDER_REINGESTION_WORKFLOWS = [
+    ProviderReingestionWorkflow(
+        dag_id="europeana_reingestion_workflow",
         provider_script="europeana",
         start_date=datetime(2013, 11, 21),
         max_active_tasks=3,
@@ -50,8 +53,8 @@ PROVIDER_INGESTION_WORKFLOWS = [
         one_month_list_length=12,
         three_month_list_length=40,
     ),
-    ProviderIngestionWorkflow(
-        dag_id="flickr_ingestion_workflow",
+    ProviderReingestionWorkflow(
+        dag_id="flickr_reingestion_workflow",
         provider_script="flickr",
         pull_timeout=timedelta(minutes=30),
         daily_list_length=7,
@@ -61,9 +64,10 @@ PROVIDER_INGESTION_WORKFLOWS = [
         three_month_list_length=24,
         six_month_list_length=40,
     ),
-    ProviderIngestionWorkflow(
-        dag_id="wikimedia_ingestion_workflow",
+    ProviderReingestionWorkflow(
+        dag_id="wikimedia_reingestion_workflow",
         provider_script="wikimedia_commons",
+        ingestion_callable=WikimediaCommonsDataIngester,
         pull_timeout=timedelta(minutes=90),
         media_types=("image", "audio"),
         max_active_tasks=2,

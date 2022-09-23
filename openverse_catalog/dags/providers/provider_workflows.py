@@ -1,3 +1,4 @@
+import importlib
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Dict, Optional, Sequence, Type
@@ -30,46 +31,49 @@ class ProviderWorkflow:
 
     Optional Arguments:
 
-    dag_id:            string giving a unique id of the DAG to be created. By
-                       default this will be set to the name of the provider_script,
-                       appended with 'workflow'.
-    default_args:      dictionary which is passed to the airflow.dag.DAG
-                       __init__ method and used to optionally override the
-                       DAG_DEFAULT_ARGS.
-    start_date:        datetime.datetime giving the first valid execution
-                       date of the DAG.
-    max_active_runs:   integer that sets the number of dagruns of this DAG
-                       which can be run in parallel.
-    max_active_tasks:  integer that sets the number of tasks which can
-                       run simultaneously for this DAG.
-                       It's important to keep the rate limits of the
-                       Provider API in mind when setting this parameter.
-    schedule_string:   string giving the schedule on which the DAG should
-                       be run.  Passed to the airflow.dag.DAG __init__
-                       method.
-    dated:             boolean giving whether the `main_function` takes a
-                       string parameter giving a date (i.e., the date for
-                       which data should be ingested).
-    day_shift:         integer giving the number of days before the
-                       current execution date the `main_function` should
-                       be run (if `dated=True`).
-    pull_timeout:      datetime.timedelta giving the amount of time a given data
-                       pull may take.
-    load_timeout:      datetime.timedelta giving the amount of time the load_data
-                       task may take.
-    doc_md:            string which should be used for the DAG's documentation markdown
-    media_types:       list describing the media type(s) that this provider handles
-                       (e.g. `["audio"]`, `["image", "audio"]`, etc.)
-    preingestion_task_creator: callable that returns an airflow task or task group to
+    dag_id:             string giving a unique id of the DAG to be created. By
+                        default this will be set to the name of the provider_script,
+                        appended with 'workflow'.
+    ingestion_callable: ProviderDataIngester class whose `ingest_records` method is
+                        to be run. Temporarily, may also be a `main` function for
+                        providers that have not yet been refactored. TODO: Remove this
+                        comment when refactors are completed.
+    default_args:       dictionary which is passed to the airflow.dag.DAG
+                        __init__ method and used to optionally override the
+                        DAG_DEFAULT_ARGS.
+    start_date:         datetime.datetime giving the first valid execution
+                        date of the DAG.
+    max_active_runs:    integer that sets the number of dagruns of this DAG
+                        which can be run in parallel.
+    max_active_tasks:   integer that sets the number of tasks which can
+                        run simultaneously for this DAG.
+                        It's important to keep the rate limits of the
+                        Provider API in mind when setting this parameter.
+    schedule_string:    string giving the schedule on which the DAG should
+                        be run.  Passed to the airflow.dag.DAG __init__
+                        method.
+    dated:              boolean giving whether the `main_function` takes a
+                        string parameter giving a date (i.e., the date for
+                        which data should be ingested).
+    pull_timeout:       datetime.timedelta giving the amount of time a given data
+                        pull may take.
+    load_timeout:       datetime.timedelta giving the amount of time the load_data
+                        task may take.
+    doc_md:             string which should be used for the DAG's documentation markdown
+    media_types:        list describing the media type(s) that this provider handles
+                        (e.g. `["audio"]`, `["image", "audio"]`, etc.)
+    create_preingestion_tasks: callable that returns an airflow task or task group to
                         to run any necessary pre-ingestion tasks, such as loading bulk
                         data from S3
-    postingestion_task_creator: callable that returns an airflow task or task group to
+    create_postingestion_tasks: callable that returns an airflow task or task group to
                         to run any necessary post-ingestion tasks, such as dropping data
                         loaded during pre-ingestion
     """
 
     provider_script: str
-    ingester_class: Optional[Type[ProviderDataIngester]] = None
+    # TODO: update the ingestion_callable to only accept ProviderDataIngester classes
+    # when all provider scripts have been refactored.
+    ingestion_callable: Type[ProviderDataIngester] | callable = None
     dag_id: str = ""
     default_args: Optional[Dict] = None
     start_date: datetime = datetime(1970, 1, 1)
@@ -77,28 +81,37 @@ class ProviderWorkflow:
     max_active_tasks: int = 1
     schedule_string: str = "@monthly"
     dated: bool = False
-    day_shift: int = 0
     pull_timeout: timedelta = timedelta(hours=24)
     load_timeout: timedelta = timedelta(hours=1)
     doc_md: str = ""
     media_types: Sequence[str] = ("image",)
-    preingestion_task_creator: Optional[callable] = None
-    postingestion_task_creator: Optional[callable] = None
+    create_preingestion_tasks: Optional[callable] = None
+    create_postingestion_tasks: Optional[callable] = None
 
     def __post_init__(self):
         if not self.dag_id:
             self.dag_id = f"{self.provider_script}_workflow"
+
+        provider_script = importlib.import_module(
+            f"providers.provider_api_scripts.{self.provider_script}"
+        )
+
+        if not self.ingestion_callable:
+            self.ingestion_callable = provider_script.main
+
+        if not self.doc_md:
+            self.doc_md = provider_script.__doc__
 
 
 PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
         provider_script="brooklyn_museum",
         start_date=datetime(2020, 1, 1),
-        ingester_class=BrooklynMuseumDataIngester,
+        ingestion_callable=BrooklynMuseumDataIngester,
     ),
     ProviderWorkflow(
         provider_script="cleveland_museum",
-        ingester_class=ClevelandDataIngester,
+        ingestion_callable=ClevelandDataIngester,
         start_date=datetime(2020, 1, 15),
         pull_timeout=timedelta(hours=12),
     ),
@@ -110,7 +123,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="finnish_museums",
-        ingester_class=FinnishMuseumsDataIngester,
+        ingestion_callable=FinnishMuseumsDataIngester,
         start_date=datetime(2020, 9, 1),
         pull_timeout=timedelta(days=5),
         load_timeout=timedelta(days=5),
@@ -123,9 +136,9 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="inaturalist",
-        ingester_class=INaturalistDataIngester,
-        preingestion_task_creator=INaturalistDataIngester.create_preingestion_tasks,
-        postingestion_task_creator=INaturalistDataIngester.create_postingestion_tasks,
+        ingestion_callable=INaturalistDataIngester,
+        create_preingestion_tasks=INaturalistDataIngester.create_preingestion_tasks,
+        create_postingestion_tasks=INaturalistDataIngester.create_postingestion_tasks,
         schedule_string="@monthly",
         pull_timeout=timedelta(days=5),
         load_timeout=timedelta(days=5),
@@ -140,7 +153,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="metropolitan_museum",
-        ingester_class=MetMuseumDataIngester,
+        ingestion_callable=MetMuseumDataIngester,
         start_date=datetime(2016, 9, 1),
         schedule_string="@daily",
         dated=True,
@@ -148,7 +161,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="museum_victoria",
-        ingester_class=VictoriaDataIngester,
+        ingestion_callable=VictoriaDataIngester,
         start_date=datetime(2020, 1, 1),
     ),
     ProviderWorkflow(
@@ -168,7 +181,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="science_museum",
-        ingester_class=ScienceMuseumDataIngester,
+        ingestion_callable=ScienceMuseumDataIngester,
         start_date=datetime(2020, 1, 1),
     ),
     ProviderWorkflow(
@@ -183,7 +196,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="stocksnap",
-        ingester_class=StockSnapDataIngester,
+        ingestion_callable=StockSnapDataIngester,
     ),
     ProviderWorkflow(
         provider_script="walters",
@@ -191,7 +204,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="wikimedia_commons",
-        ingester_class=WikimediaCommonsDataIngester,
+        ingestion_callable=WikimediaCommonsDataIngester,
         start_date=datetime(2020, 11, 1),
         schedule_string="@daily",
         dated=True,

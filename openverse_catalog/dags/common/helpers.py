@@ -6,13 +6,13 @@ class IngestionInput(NamedTuple):
     repeats: int
 
 
-def get_reingestion_day_list_list(inputs: List[IngestionInput]):
+def get_partitioned_reingestion_days(inputs: List[IngestionInput]):
     """
     This method calculates day-shift lists for Provider API workflows.
 
     The input should be a list of pairs of integers:
 
-    `get_reingestion_day_list_list((x_0, y_0), ..., (x_n, y_n))`
+    `get_partitioned_reingestion_days((x_0, y_0), ..., (x_n, y_n))`
 
     The return will be a list of lists of integers. The zeroth inner
     list will be a list of integers counting by x_0, of length y_0. The
@@ -23,7 +23,7 @@ def get_reingestion_day_list_list(inputs: List[IngestionInput]):
     list.
 
     For example,
-        get_reingestion_day_list_list((1, 2), (2, 3), (3, 2))
+        get_partitioned_reingestion_days((1, 2), (2, 3), (3, 2))
     returns
         [[1, 2], [4, 6, 8], [11, 14]]
     """

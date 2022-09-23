@@ -46,6 +46,9 @@ class MediaStore(metaclass=abc.ABCMeta):
     Optional init arguments:
     provider:       String marking the provider in the `media`
                     (`image`, `audio` etc) table of the DB.
+    date:           Date String in the form YYYY-MM-DD. This is the date for
+                    which data is being stored. If provided, it will be appended to
+                    the tsv filename.
     output_file:    String giving a temporary .tsv filename (*not* the
                     full path) where the media info should be stored.
     output_dir:     String giving a path where `output_file` should be placed.
@@ -66,9 +69,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         self.provider = provider
         self.buffer_length = buffer_length
         self.output_path = self._initialize_output_path(
-            output_dir,
-            output_file,
-            provider,
+            output_dir, output_file, provider
         )
         self.columns = None
         self._media_buffer = []
@@ -158,7 +159,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         self,
         output_dir: Optional[str],
         output_file: Optional[str],
-        provider: str,
+        provider: Optional[str],
         version: Optional[str] = None,
     ) -> str:
         """Creates the path for the tsv file.

@@ -64,11 +64,9 @@ https://github.com/creativecommons/cccatalog/issues/334)
 """
 import logging
 import os
-from datetime import datetime, timedelta
-from typing import Callable, Dict, Optional, Sequence
+from string import Template
 
 from airflow import DAG
-from airflow.models.baseoperator import cross_downstream
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
@@ -80,6 +78,8 @@ from providers.factory_utils import (
     generate_tsv_filenames,
     pull_media_wrapper,
 )
+from providers.provider_reingestion_workflows import ProviderReingestionWorkflow
+from providers.provider_workflows import ProviderWorkflow
 
 
 logger = logging.getLogger(__name__)
@@ -89,109 +89,55 @@ DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")
 AWS_CONN_ID = os.getenv("AWS_CONN_ID", "no_aws_conn_id")
 OPENVERSE_BUCKET = os.getenv("OPENVERSE_BUCKET")
 OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
-DATE_RANGE_ARG_TEMPLATE = "{{{{ macros.ds_add(ds, -{}) }}}}"
-DATE_PARTITION_ARG_TEMPLATE = "{media_type}/{provider_name}/{{{{ date_partition_for_prefix(dag.schedule_interval, dag_run.logical_date) }}}}"  # noqa
+_DATE_RANGE_INNER_TEMPLATE = "macros.ds_add(ds, -{} )"
+DATE_RANGE_ARG_TEMPLATE = "{{{{" + _DATE_RANGE_INNER_TEMPLATE + "}}}}"
+DATE_PARTITION_ARG_TEMPLATE = Template(
+    "$media_type/$provider_name/{{ date_partition_for_prefix(dag.schedule_interval, dag_run.logical_date, $reingestion_date ) }}"  # noqa
+)
 
 
-def create_provider_api_workflow(
-    dag_id: str,
-    ingestion_callable: Callable,
-    default_args: Optional[Dict] = None,
-    start_date: datetime = datetime(1970, 1, 1),
-    max_active_runs: int = 1,
-    max_active_tasks: int = 1,
-    schedule_string: str = "@daily",
-    dated: bool = True,
-    day_shift: int = 0,
-    pull_timeout: timedelta = timedelta(hours=12),
-    load_timeout: timedelta = timedelta(hours=1),
-    doc_md: Optional[str] = "",
-    media_types: Sequence[str] = ("image",),
-    create_preingestion_tasks: Optional[Callable] = None,
-    create_postingestion_tasks: Optional[Callable] = None,
+def create_ingestion_workflow(
+    conf: ProviderWorkflow, day_shift: int = 0, is_reingestion: bool = False
 ):
     """
-    This factory method instantiates a DAG that will run the given
-    `main_function`.
+    Creates a TaskGroup that performs the ingestion tasks, first pulling and then
+    loading data. Returns the TaskGroup, and a dictionary of reporting metrics.
 
     Required Arguments:
 
-    dag_id:             string giving a unique id of the DAG to be created.
-    ingestion_callable: python function to be run, or a ProviderDataIngester class
-                        whose `ingest_records` method is to be run. If the optional
-                        argument `dated` is True, then the function must take a
-                        single parameter (date) which will be a string of
-                        the form 'YYYY-MM-DD'.
+    conf: ProviderWorkflow configuration object.
 
     Optional Arguments:
 
-    default_args:      dictionary which is passed to the airflow.dag.DAG
-                       __init__ method and used to optionally override the
-                       DAG_DEFAULT_ARGS.
-    start_date:        datetime.datetime giving the first valid execution
-                       date of the DAG.
-    max_active_runs:   integer that sets the number of dagruns for this DAG
-                       which can be run in parallel.
-    max_active_tasks:  integer that sets the number of tasks which can
-                       run simultaneously for this DAG.
-                       It's important to keep the rate limits of the
-                       Provider API in mind when setting this parameter.
-    schedule_string:   string giving the schedule on which the DAG should
-                       be run.  Passed to the airflow.dag.DAG __init__
-                       method.
-    dated:             boolean giving whether the `main_function` takes a
-                       string parameter giving a date (i.e., the date for
-                       which data should be ingested).
-    day_shift:         integer giving the number of days before the
-                       current execution date the `main_function` should
-                       be run (if `dated=True`).
-    pull_timeout:      datetime.timedelta giving the amount of time a given data
-                       pull may take.
-    load_timeout:      datetime.timedelta giving the amount of time a given load_data
-                       task may take.
-    doc_md:            string which should be used for the DAG's documentation markdown
-    media_types:       list describing the media type(s) that this provider handles
-                       (e.g. `["audio"]`, `["image", "audio"]`, etc.)
-    create_preingestion_tasks and create_postingestion_tasks: callable which creates a
-                        task or task group to be run before or after (respectively) the
-                        rest of the provider workflow. Loading and dropping temporary
-                        tables is one example.
+    day_shift: integer giving the number of days before the current execution date
+               for which ingestion should run (if `conf.dated==True`).
+    is_reingestion: is this workflow a reingestion workflow
     """
-    default_args = {**DAG_DEFAULT_ARGS, **(default_args or {})}
-    media_type_name = "mixed" if len(media_types) > 1 else media_types[0]
-    provider_name = dag_id.replace("_workflow", "")
-    identifier = f"{provider_name}_{{{{ ts_nodash }}}}"
 
-    dag = DAG(
-        dag_id=dag_id,
-        default_args={**default_args, "start_date": start_date},
-        max_active_tasks=max_active_tasks,
-        max_active_runs=max_active_runs,
-        start_date=start_date,
-        schedule_interval=schedule_string,
-        catchup=dated,  # catchup is turned on for dated DAGs to allow backfilling
-        doc_md=doc_md,
-        tags=["provider"] + [f"provider: {media_type}" for media_type in media_types],
-        render_template_as_native_obj=True,
-        user_defined_macros={"date_partition_for_prefix": date_partition_for_prefix},
-    )
+    def append_day_shift(id_str):
+        # Appends the day_shift to an id if it is non-zero
+        return f"{id_str}{f'_day_shift_{day_shift}' if day_shift else ''}"
 
-    with dag:
+    with TaskGroup(group_id=append_day_shift("ingest_data")) as ingest_data:
+        media_type_name = "mixed" if len(conf.media_types) > 1 else conf.media_types[0]
+        provider_name = conf.dag_id.replace("_workflow", "")
+        identifier = f"{provider_name}_{{{{ ts_nodash }}}}_{day_shift}"
+
         ingestion_kwargs = {
-            "ingestion_callable": ingestion_callable,
-            "media_types": media_types,
+            "ingestion_callable": conf.ingestion_callable,
+            "media_types": conf.media_types,
         }
-        if dated:
+        if conf.dated:
             ingestion_kwargs["args"] = [DATE_RANGE_ARG_TEMPLATE.format(day_shift)]
 
         generate_filenames = PythonOperator(
-            task_id=f"generate_{media_type_name}_filename",
+            task_id=append_day_shift(f"generate_{media_type_name}_filename"),
             python_callable=generate_tsv_filenames,
             op_kwargs=ingestion_kwargs,
         )
 
         pull_data = PythonOperator(
-            task_id=f"pull_{media_type_name}_data",
+            task_id=append_day_shift(f"pull_{media_type_name}_data"),
             python_callable=pull_media_wrapper,
             op_kwargs={
                 **ingestion_kwargs,
@@ -200,11 +146,11 @@ def create_provider_api_workflow(
                     XCOM_PULL_TEMPLATE.format(
                         generate_filenames.task_id, f"{media_type}_tsv"
                     )
-                    for media_type in media_types
+                    for media_type in conf.media_types
                 ],
             },
             depends_on_past=False,
-            execution_timeout=pull_timeout,
+            execution_timeout=conf.pull_timeout,
             # If the data pull fails, we want to load all data that's been retrieved
             # thus far before we attempt again
             retries=0,
@@ -212,10 +158,12 @@ def create_provider_api_workflow(
 
         load_tasks = []
         record_counts_by_media_type: reporting.MediaTypeRecordMetrics = {}
-        for media_type in media_types:
-            with TaskGroup(group_id=f"load_{media_type}_data") as load_data:
+        for media_type in conf.media_types:
+            with TaskGroup(
+                group_id=append_day_shift(f"load_{media_type}_data")
+            ) as load_data:
                 create_loading_table = PythonOperator(
-                    task_id="create_loading_table",
+                    task_id=append_day_shift("create_loading_table"),
                     python_callable=sql.create_loading_table,
                     op_kwargs={
                         "postgres_conn_id": DB_CONN_ID,
@@ -227,24 +175,29 @@ def create_provider_api_workflow(
                     f"ingesting {media_type} data from a TSV",
                 )
                 copy_to_s3 = PythonOperator(
-                    task_id="copy_to_s3",
+                    task_id=append_day_shift("copy_to_s3"),
                     python_callable=s3.copy_file_to_s3,
                     op_kwargs={
                         "tsv_file_path": XCOM_PULL_TEMPLATE.format(
                             generate_filenames.task_id, f"{media_type}_tsv"
                         ),
                         "s3_bucket": OPENVERSE_BUCKET,
-                        "s3_prefix": DATE_PARTITION_ARG_TEMPLATE.format(
+                        "s3_prefix": DATE_PARTITION_ARG_TEMPLATE.substitute(
                             media_type=media_type,
                             provider_name=provider_name,
+                            reingestion_date=_DATE_RANGE_INNER_TEMPLATE.format(
+                                day_shift
+                            )
+                            if is_reingestion
+                            else None,
                         ),
                         "aws_conn_id": AWS_CONN_ID,
                     },
                     trigger_rule=TriggerRule.NONE_SKIPPED,
                 )
                 load_from_s3 = PythonOperator(
-                    task_id="load_from_s3",
-                    execution_timeout=load_timeout,
+                    task_id=append_day_shift("load_from_s3"),
+                    execution_timeout=conf.load_timeout,
                     retries=1,
                     python_callable=loader.load_from_s3,
                     op_kwargs={
@@ -259,7 +212,7 @@ def create_provider_api_workflow(
                     },
                 )
                 drop_loading_table = PythonOperator(
-                    task_id="drop_loading_table",
+                    task_id=append_day_shift("drop_loading_table"),
                     python_callable=sql.drop_load_table,
                     op_kwargs={
                         "postgres_conn_id": DB_CONN_ID,
@@ -276,86 +229,107 @@ def create_provider_api_workflow(
                 )
                 load_tasks.append(load_data)
 
-        report_load_completion = PythonOperator(
-            task_id="report_load_completion",
-            python_callable=reporting.report_completion,
-            op_kwargs={
-                "provider_name": provider_name,
-                "duration": XCOM_PULL_TEMPLATE.format(pull_data.task_id, "duration"),
-                "record_counts_by_media_type": record_counts_by_media_type,
-                "dated": dated,
-                "date_range_start": "{{ data_interval_start | ds }}",
-                "date_range_end": "{{ data_interval_end | ds }}",
-            },
-            trigger_rule=TriggerRule.ALL_DONE,
-        )
+        generate_filenames >> pull_data >> load_tasks
 
-        generate_filenames >> pull_data >> load_tasks >> report_load_completion
-
-        if create_preingestion_tasks:
-            preingestion_tasks = create_preingestion_tasks()
+        if conf.create_preingestion_tasks:
+            preingestion_tasks = conf.create_preingestion_tasks()
             preingestion_tasks >> pull_data
 
-        if create_postingestion_tasks:
-            postingestion_tasks = create_postingestion_tasks()
+        if conf.create_postingestion_tasks:
+            postingestion_tasks = conf.create_postingestion_tasks()
             pull_data >> postingestion_tasks
+
+    ingestion_metrics = {
+        "duration": XCOM_PULL_TEMPLATE.format(pull_data.task_id, "duration"),
+        "record_counts_by_media_type": record_counts_by_media_type,
+    }
+
+    return ingest_data, ingestion_metrics
+
+
+def create_report_load_completion(
+    dag_id,
+    media_types,
+    ingestion_metrics,
+    dated,
+):
+    return PythonOperator(
+        task_id="report_load_completion",
+        python_callable=reporting.report_completion,
+        op_kwargs={
+            "dag_id": dag_id,
+            "media_types": media_types,
+            "duration": ingestion_metrics["duration"],
+            "record_counts_by_media_type": ingestion_metrics[
+                "record_counts_by_media_type"
+            ],
+            "dated": dated,
+            "date_range_start": "{{ data_interval_start | ds }}",
+            "date_range_end": "{{ data_interval_end | ds }}",
+        },
+        trigger_rule=TriggerRule.ALL_DONE,
+    )
+
+
+def create_provider_api_workflow_dag(conf: ProviderWorkflow):
+    """
+    This factory method instantiates a DAG that will run the given
+    `main_function`.
+
+    Required Arguments:
+
+    conf: ProviderWorkflow configuration object.
+    """
+    default_args = {**DAG_DEFAULT_ARGS, **(conf.default_args or {})}
+
+    dag = DAG(
+        dag_id=conf.dag_id,
+        default_args={**default_args, "start_date": conf.start_date},
+        max_active_tasks=conf.max_active_tasks,
+        max_active_runs=conf.max_active_runs,
+        start_date=conf.start_date,
+        schedule_interval=conf.schedule_string,
+        catchup=conf.dated,  # catchup is turned on for dated DAGs to allow backfilling
+        doc_md=conf.doc_md,
+        tags=["provider"]
+        + [f"provider: {media_type}" for media_type in conf.media_types],
+        render_template_as_native_obj=True,
+        user_defined_macros={"date_partition_for_prefix": date_partition_for_prefix},
+    )
+
+    with dag:
+        ingest_data, ingestion_metrics = create_ingestion_workflow(conf)
+
+        report_load_completion = create_report_load_completion(
+            conf.dag_id, conf.media_types, ingestion_metrics, conf.dated
+        )
+
+        ingest_data >> report_load_completion
 
     return dag
 
 
-def create_day_partitioned_ingestion_dag(
-    dag_id: str,
-    main_function: Callable,
-    reingestion_day_list_list: list[list[int]],
-    start_date: datetime = datetime(1970, 1, 1),
-    max_active_runs: int = 1,
-    max_active_tasks: int = 1,
-    default_args: Optional[Dict] = None,
-    dagrun_timeout: timedelta = timedelta(hours=23),
-    ingestion_task_timeout: timedelta = timedelta(hours=2),
+def _build_partitioned_ingest_workflows(
+    partitioned_reingestion_days: list[list[int]], conf: ProviderReingestionWorkflow
 ):
     """
-    Given a `main_function` and `reingestion_day_list_list`, this
-    factory method instantiates a DAG that will run the given
-    `main_function`, parameterized by a number of dates, whose
-    calculation is described below.
+    Builds a list of lists of ingestion tasks, parameterized by the given
+    dag conf and a list of day shifts. Calculation is explained below.
 
     Required Arguments:
 
-    dag_id:                     string giving a unique id of the DAG to
-                                be created.
-    main_function:              python function to be run. The
-                                function must take a single parameter
-                                (date) which will be a string of the
-                                form 'YYYY-MM-DD'.
-    reingestion_day_list_list:  list of lists of integers. It gives the
-                                set of days before the current execution
-                                date of the DAG for which the
-                                `main_function` should be run, and
-                                describes how the calls to the function
-                                should be prioritized.
-
-    Optional Arguments:
-
-    start_date:              datetime.datetime giving the
-                             first valid execution_date of the DAG.
-    max_active_tasks:             integer that sets the number of tasks which
-                             can run simultaneously for this DAG. It's
-                             important to keep the rate limits of the
-                             Provider API in mind when setting this
-                             parameter.
-    default_args:            dictionary which is passed to the
-                             airflow.dag.DAG __init__ method and used to
-                             optionally override the DAG_DEFAULT_ARGS.
-    dagrun_timeout:          datetime.timedelta giving the total amount
-                             of time a given dagrun may take.
-    ingestion_task_timeout:  datetime.timedelta giving the amount of
-                             time a call to the `main_function` is
-                             allowed to take.
+    conf:                          ProviderReingestionWorkflow configuration
+                                   object used to configure the ingestion tasks.
+    partitioned_reingestion_days:  list of lists of integers. It gives the
+                                   set of days before the current execution
+                                   date of the DAG for which the
+                                   `main_function` should be run, and
+                                   describes how the calls to the function
+                                   should be prioritized.
 
     Calculation of ingestion dates:
 
-    The `reingestion_day_list_list` should have the form
+    The `partitioned_reingestion_days` should have the form
         [
             [int, ..., int],
             [int, ..., int],
@@ -363,12 +337,12 @@ def create_day_partitioned_ingestion_dag(
             [int, ..., int]
         ]
     It's not necessary for the inner lists to be the same length. The
-    DAG instantiated by this factory method will first run the
-    `main_function` for the current execution_date, then for the current
+    task groups instantiated by this factory method will first run
+    ingestion for the current execution_date, then for the current
     date minus the number of days given by integers in the first list
     (in an arbitrary order, and possibly in parallel if so configured),
     then for the dates calculated from the second list, and so on.  For
-    example, given the `reingestion_day_list_list`
+    example, given the `partitioned_reingestion_days`
         [
             [1, 2, 3],
             [8, 13, 18],
@@ -388,48 +362,100 @@ def create_day_partitioned_ingestion_dag(
     executions of the `main_function` allowed; that is set by the
     `max_active_tasks` parameter.
     """
-    default_args = {**DAG_DEFAULT_ARGS, **(default_args or {})}
+    if partitioned_reingestion_days[0] != [0]:
+        partitioned_reingestion_days = [[0]] + partitioned_reingestion_days
+
+    partitioned_workflows = []
+    duration_list = []
+    record_counts_by_media_type_list = []
+
+    for partition in partitioned_reingestion_days:
+        workflow_list = []
+        for day_shift in partition:
+            ingest_data, ingestion_metrics = create_ingestion_workflow(
+                conf, day_shift, is_reingestion=True
+            )
+            workflow_list.append(ingest_data)
+            duration_list.append(ingestion_metrics["duration"])
+            record_counts_by_media_type_list.append(
+                ingestion_metrics["record_counts_by_media_type"]
+            )
+
+        partitioned_workflows.append(workflow_list)
+
+    total_ingestion_metrics = {
+        "duration": duration_list,
+        "record_counts_by_media_type": record_counts_by_media_type_list,
+    }
+
+    return partitioned_workflows, total_ingestion_metrics
+
+
+def create_day_partitioned_reingestion_dag(
+    conf: ProviderReingestionWorkflow, partitioned_reingestion_days: list[list[int]]
+):
+    """
+    Given a `conf` object and `reingestion_day_list_list`, this
+    factory method instantiates a DAG that will run ingestion using the
+    given configuration, parameterized by a number of dates calculated
+    using the reingestion day list.
+
+    Required Arguments:
+
+    conf:                       ProviderReingestionWorkflow configuration
+                                object used to configure the ingestion tasks.
+    reingestion_day_list_list:  list of lists of integers. It gives the
+                                set of days before the current execution
+                                date of the DAG for which the
+                                `main_function` should be run, and
+                                describes how the calls to the function
+                                should be prioritized.
+    """
+    default_args = {**DAG_DEFAULT_ARGS, **(conf.default_args or {})}
     dag = DAG(
-        dag_id=dag_id,
-        default_args={**default_args, "start_date": start_date},
-        max_active_tasks=max_active_tasks,
-        max_active_runs=max_active_runs,
-        dagrun_timeout=dagrun_timeout,
-        schedule_interval="@daily",
-        start_date=start_date,
+        dag_id=conf.dag_id,
+        default_args={**default_args, "start_date": conf.start_date},
+        max_active_tasks=conf.max_active_tasks,
+        max_active_runs=conf.max_active_runs,
+        dagrun_timeout=conf.dagrun_timeout,
+        schedule_interval=conf.schedule_string,
+        start_date=conf.start_date,
         catchup=False,
-        tags=["provider-reingestion"],
+        doc_md=conf.doc_md,
+        tags=["provider-reingestion"]
+        + [f"provider-reingestion: {media_type}" for media_type in conf.media_types],
+        render_template_as_native_obj=True,
+        user_defined_macros={"date_partition_for_prefix": date_partition_for_prefix},
     )
     with dag:
-        ingest_operator_list_list = _build_ingest_operator_list_list(
-            reingestion_day_list_list, main_function, ingestion_task_timeout
-        )
-        for i in range(len(ingest_operator_list_list) - 1):
-            wait_operator = EmptyOperator(
-                task_id=f"wait_L{i}", trigger_rule=TriggerRule.ALL_DONE
+        # Generate a list of lists of ingestion TaskGroups for each day of reingestion.
+        (
+            partitioned_ingest_workflows,
+            ingestion_metrics,
+        ) = _build_partitioned_ingest_workflows(partitioned_reingestion_days, conf)
+
+        # For each 'level', make a gather task that waits for all of the reingestion
+        # tasks at that level to complete.
+        for i in range(len(partitioned_ingest_workflows) - 1):
+            gather_operator = EmptyOperator(
+                task_id=f"gather_partition_{i}", trigger_rule=TriggerRule.ALL_DONE
             )
-            cross_downstream(ingest_operator_list_list[i], [wait_operator])
-            wait_operator >> ingest_operator_list_list[i + 1]
-        ingest_operator_list_list[-1]
+
+            # Set gather task downstream of all ingestion TaskGroups in the ith list.
+            partitioned_ingest_workflows[i] >> gather_operator
+
+            # Set gather task upstream of all ingestion TaskGroups in the i+1th list.
+            # This gates the tasks at each level.
+            gather_operator >> partitioned_ingest_workflows[i + 1]
+
+        # Create a single report_load_completion task, passing in the list of duration
+        # and counts data for each completed task.
+        report_load_completion = create_report_load_completion(
+            conf.dag_id, conf.media_types, ingestion_metrics, conf.dated
+        )
+
+        # report_load_completion is downstream of all the ingestion TaskGroups in the
+        # final list.
+        partitioned_ingest_workflows[-1] >> report_load_completion
 
     return dag
-
-
-def _build_ingest_operator_list_list(
-    reingestion_day_list_list, main_function, ingestion_task_timeout
-):
-    if reingestion_day_list_list[0] != [0]:
-        reingestion_day_list_list = [[0]] + reingestion_day_list_list
-    return [
-        [
-            PythonOperator(
-                task_id=f"ingest_{d}",
-                python_callable=main_function,
-                op_args=[DATE_RANGE_ARG_TEMPLATE.format(d)],
-                execution_timeout=ingestion_task_timeout,
-                depends_on_past=False,
-            )
-            for d in L
-        ]
-        for L in reingestion_day_list_list
-    ]

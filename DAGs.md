@@ -102,9 +102,9 @@ The following are DAGs grouped by their primary tag:
 
 | DAG ID | Schedule Interval |
 | --- | --- |
-| `europeana_ingestion_workflow` | `@daily` |
-| `flickr_ingestion_workflow` | `@daily` |
-| `wikimedia_ingestion_workflow` | `@daily` |
+| [`europeana_reingestion_workflow`](#europeana_reingestion_workflow) | `@weekly` |
+| [`flickr_reingestion_workflow`](#flickr_reingestion_workflow) | `@weekly` |
+| [`wikimedia_reingestion_workflow`](#wikimedia_reingestion_workflow) | `@weekly` |
 
 
 # DAG documentation
@@ -114,7 +114,9 @@ The following is documentation associated with each DAG (where available):
  1. [`airflow_log_cleanup`](#airflow_log_cleanup)
  1. [`audio_data_refresh`](#audio_data_refresh)
  1. [`check_silenced_dags`](#check_silenced_dags)
+ 1. [`europeana_reingestion_workflow`](#europeana_reingestion_workflow)
  1. [`europeana_workflow`](#europeana_workflow)
+ 1. [`flickr_reingestion_workflow`](#flickr_reingestion_workflow)
  1. [`flickr_workflow`](#flickr_workflow)
  1. [`freesound_workflow`](#freesound_workflow)
  1. [`image_data_refresh`](#image_data_refresh)
@@ -133,6 +135,7 @@ The following is documentation associated with each DAG (where available):
  1. [`tsv_to_postgres_loader`](#tsv_to_postgres_loader)
  1. [`walters_workflow`](#walters_workflow)
  1. [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)
+ 1. [`wikimedia_reingestion_workflow`](#wikimedia_reingestion_workflow)
  1. [`wordpress_workflow`](#wordpress_workflow)
 
 
@@ -215,6 +218,20 @@ The DAG runs weekly.
 
 
 
+## `europeana_reingestion_workflow`
+
+
+Content Provider:       Europeana
+
+ETL Process:            Use the API to identify all CC licensed images.
+
+Output:                 TSV file containing the images and the
+                        respective meta-data.
+
+Notes:                  https://www.europeana.eu/api/v2/search.json
+
+
+
 ## `europeana_workflow`
 
 
@@ -226,6 +243,21 @@ Output:                 TSV file containing the images and the
                         respective meta-data.
 
 Notes:                  https://www.europeana.eu/api/v2/search.json
+
+
+
+## `flickr_reingestion_workflow`
+
+
+Content Provider:       Flickr
+
+ETL Process:            Use the API to identify all CC licensed images.
+
+Output:                 TSV file containing the images and the
+                        respective meta-data.
+
+Notes:                  https://www.flickr.com/help/terms/api
+                        Rate limit: 3600 requests per hour.
 
 
 
@@ -585,6 +617,21 @@ Notes:                  http://api.thewalters.org/
 
 
 ## `wikimedia_commons_workflow`
+
+
+Content Provider:       Wikimedia Commons
+
+ETL Process:            Use the API to identify all CC-licensed images.
+
+Output:                 TSV file containing the image, the respective
+                        meta-data.
+
+Notes:                  https://commons.wikimedia.org/wiki/API:Main_page
+                        No rate limit specified.
+
+
+
+## `wikimedia_reingestion_workflow`
 
 
 Content Provider:       Wikimedia Commons
