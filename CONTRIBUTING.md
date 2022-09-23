@@ -125,4 +125,3 @@ Openverse has a large list of open bugs: [all issues with the label "goal: fix"]
 ### 🫱🏿‍🫲🏽 Recruit
 
 If you know folks who have expertise in any of the above areas who you think might be interested in contributing to open source, send them our way! We're happy to help onboard folks to the project itself, as well as the tools and technologies we use.
-
