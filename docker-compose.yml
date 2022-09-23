@@ -46,6 +46,8 @@ services:
       # https://www.elastic.co/guide/en/elasticsearch/reference/5.3/docker.html#_security_note
       - xpack.security.enabled=false
       - discovery.type=single-node
+      - http.cors.enabled=true
+      - http.cors.allow-origin=/.*/
     healthcheck:
       test:
         [
