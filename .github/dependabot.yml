@@ -10,7 +10,7 @@ updates:
   - package-ecosystem: pip
     # Look for a `Pipfile` in the `/api` directory
     directory: /api
-    # Check for updates once a week
+    # Check for updates once a month
     schedule:
       interval: monthly
     labels:
@@ -24,7 +24,7 @@ updates:
   - package-ecosystem: pip
     # Look for a `Pipfile` in the `/ingestion_server` directory
     directory: /ingestion_server
-    # Check for updates once a week
+    # Check for updates once a month
     schedule:
       interval: monthly
     labels:
