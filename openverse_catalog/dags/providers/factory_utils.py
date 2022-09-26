@@ -147,7 +147,7 @@ def pull_media_wrapper(
 
 
 def date_partition_for_prefix(
-    schedule_interval: str | None,
+    schedule: str | None,
     logical_date: datetime,
     reingestion_date: datetime,
 ) -> str:
@@ -178,11 +178,11 @@ def date_partition_for_prefix(
     prefix = f"year={logical_date.year}"
 
     # Add month in daily/hourly cases
-    if schedule_interval in {hourly_airflow, hourly_cron, daily_airflow, daily_cron}:
+    if schedule in {hourly_airflow, hourly_cron, daily_airflow, daily_cron}:
         prefix += f"/month={logical_date.month:02}"
 
     # Add day to hourly cases
-    if schedule_interval in {hourly_airflow, hourly_cron}:
+    if schedule in {hourly_airflow, hourly_cron}:
         prefix += f"/day={logical_date.day:02}"
 
     # Further partition by reingestion date if supplied

@@ -45,7 +45,7 @@ dag = DAG(
         "template_undefined": jinja2.Undefined,
     },
     start_date=datetime(2020, 6, 15),
-    schedule_interval="@weekly",
+    schedule="@weekly",
     max_active_tasks=MAX_ACTIVE_TASKS,
     max_active_runs=MAX_ACTIVE_TASKS,
     # If this was True, airflow would run this DAG in the beginning

@@ -24,7 +24,7 @@ dag = DAG(
     max_active_tasks=MAX_ACTIVE_TASKS,
     max_active_runs=MAX_ACTIVE_TASKS,
     catchup=False,
-    schedule_interval=None,
+    schedule=None,
     tags=["database"],
 )
 

@@ -161,7 +161,6 @@ airflow dags trigger --conf
 - enableDelete:<BOOLEAN> - Optional
 
 
-
 ## `audio_data_refresh`
 
 ### Data Refresh DAG Factory
@@ -219,7 +218,6 @@ after the issue has been resolved.
 The DAG runs weekly.
 
 
-
 ## `europeana_reingestion_workflow`
 
 
@@ -233,7 +231,6 @@ Output:                 TSV file containing the images and the
 Notes:                  https://www.europeana.eu/api/v2/search.json
 
 
-
 ## `europeana_workflow`
 
 
@@ -245,7 +242,6 @@ Output:                 TSV file containing the images and the
                         respective meta-data.
 
 Notes:                  https://www.europeana.eu/api/v2/search.json
-
 
 
 ## `flickr_reingestion_workflow`
@@ -262,7 +258,6 @@ Notes:                  https://www.flickr.com/help/terms/api
                         Rate limit: 3600 requests per hour.
 
 
-
 ## `flickr_workflow`
 
 
@@ -277,7 +272,6 @@ Notes:                  https://www.flickr.com/help/terms/api
                         Rate limit: 3600 requests per hour.
 
 
-
 ## `freesound_workflow`
 
 
@@ -290,7 +284,6 @@ Output:                 TSV file containing the image, the respective
 
 Notes:                  https://freesound.org/apiv2/search/text'
                         No rate limit specified.
-
 
 
 ## `image_data_refresh`
@@ -351,7 +344,6 @@ Notes:      [The iNaturalist API is not intended for data scraping.]
             except for adding ancestry tags to the taxa table.
 
 
-
 ## `jamendo_workflow`
 
 
@@ -370,7 +362,6 @@ Notes:                  https://api.jamendo.com/v3.0/tracks/
                         bit depth: 16/24
                         sample rate: 44.1 or 48 kHz
                         channels: 1/2
-
 
 
 ## `metropolitan_museum_workflow`
@@ -399,7 +390,6 @@ Notes:                  https://metmuseum.github.io/#search
                         in addition to date and public domain. It seems like it won't
                         connect with just date and license.
                         https://collectionapi.metmuseum.org/public/collection/v1/search?isPublicDomain=true&metadataDate=2022-08-07
-
 
 
 
@@ -455,7 +445,6 @@ Notes:                  http://phylopic.org/api/
                         No rate limit specified.
 
 
-
 ## `pr_review_reminders`
 
 
@@ -479,7 +468,6 @@ author of the PR to re-assign review if one of the randomly selected reviewers
 is unavailable for the time period during which the PR should be reviewed.
 
 
-
 ## `recreate_audio_popularity_calculation`
 
 
@@ -493,7 +481,6 @@ These DAGs are not on a schedule, and should only be run manually when new
 SQL code is deployed for the calculation.
 
 
-
 ## `recreate_image_popularity_calculation`
 
 
@@ -505,7 +492,6 @@ The results are available in the materialized view for that media type.
 
 These DAGs are not on a schedule, and should only be run manually when new
 SQL code is deployed for the calculation.
-
 
 
 ## `report_pending_reported_media`
@@ -534,7 +520,6 @@ Output:            TSV file containing the images and the respective
 Notes:             None
 
 
-
 ## `stocksnap_workflow`
 
 
@@ -549,7 +534,6 @@ Notes:                  https://stocksnap.io/api/load-photos/date/desc/1
                         All images are licensed under CC0.
                         No rate limits or authorization required.
                         API is undocumented.
-
 
 
 ## `tsv_to_postgres_loader`
@@ -602,7 +586,6 @@ https://github.com/creativecommons/cccatalog/issues/334)
 
 
 
-
 ## `walters_workflow`
 
 
@@ -615,7 +598,6 @@ Output:                 TSV file containing the images and the
 
 Notes:                  http://api.thewalters.org/
                         Rate limit: 250000 Per Day Per Key
-
 
 
 ## `wikimedia_commons_workflow`
@@ -632,7 +614,6 @@ Notes:                  https://commons.wikimedia.org/wiki/API:Main_page
                         No rate limit specified.
 
 
-
 ## `wikimedia_reingestion_workflow`
 
 
@@ -645,7 +626,6 @@ Output:                 TSV file containing the image, the respective
 
 Notes:                  https://commons.wikimedia.org/wiki/API:Main_page
                         No rate limit specified.
-
 
 
 ## `wordpress_workflow`

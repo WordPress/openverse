@@ -35,7 +35,7 @@ def clean_db():
 def get_dag(sql, handler):
     with DAG(
         dag_id=TEST_DAG_ID,
-        schedule_interval="@daily",
+        schedule="@daily",
         start_date=DATA_INTERVAL_START,
     ) as dag:
         PostgresResultOperator(

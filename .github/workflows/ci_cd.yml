@@ -54,6 +54,10 @@ jobs:
         id: python-version
         run: echo "::set-output name=value::$(just py-version)"
 
+      - name: Get Airflow version
+        id: airflow-version
+        run: echo "::set-output name=value::$(just airflow-version)"
+
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v1
         with:
@@ -70,6 +74,7 @@ jobs:
           outputs: type=docker,dest=/tmp/catalog.tar
           build-args: |
             PROJECT_PY_VERSION=${{ steps.python-version.outputs.value }}
+            PROJECT_AIRFLOW_VERSION=${{ steps.airflow-version.outputs.value }}
 
       - name: Upload image
         uses: actions/upload-artifact@v2

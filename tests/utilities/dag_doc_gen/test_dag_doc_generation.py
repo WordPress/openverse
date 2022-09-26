@@ -8,6 +8,8 @@ from openverse_catalog.utilities.dag_doc_gen.dag_doc_generation import DagInfo
 
 
 class DagMock(NamedTuple):
+    # schedule_interval used here because the Dag model does not actually have a
+    # schedule attribute
     schedule_interval: str | None
     doc_md: str | None
     catchup: bool
@@ -21,7 +23,7 @@ PROVIDER_WORKFLOW_INSTANCE.media_types = SAMPLE_MEDIA_TYPES
 _MODULE = "openverse_catalog.utilities.dag_doc_gen.dag_doc_generation"
 
 
-@pytest.mark.parametrize("schedule_interval", ["@daily", None])
+@pytest.mark.parametrize("schedule", ["@daily", None])
 @pytest.mark.parametrize(
     "doc, expected_doc",
     [
@@ -42,14 +44,12 @@ _MODULE = "openverse_catalog.utilities.dag_doc_gen.dag_doc_generation"
 )
 @pytest.mark.parametrize("provider_workflow", ["foo_bar", None])
 def test_get_dags_info(
-    schedule_interval, doc, expected_doc, catchup, tags, type_, provider_workflow
+    schedule, doc, expected_doc, catchup, tags, type_, provider_workflow
 ):
-    dag = DagMock(
-        schedule_interval=schedule_interval, doc_md=doc, catchup=catchup, tags=tags
-    )
+    dag = DagMock(schedule_interval=schedule, doc_md=doc, catchup=catchup, tags=tags)
     expected = DagInfo(
         dag_id=DAG_ID,
-        schedule=schedule_interval,
+        schedule=schedule,
         doc=expected_doc,
         dated=catchup,
         type_=type_,

@@ -11,10 +11,15 @@ DOCKER_FILES := "--file=docker-compose.yml" + (
 SERVICE := "webserver"
 
 export PROJECT_PY_VERSION := `grep '# PYTHON' requirements_prod.txt | awk -F= '{print $2}'`
+export PROJECT_AIRFLOW_VERSION := `grep '^apache-airflow' requirements_prod.txt | awk -F= '{print $3}'`
 
 # Print the required Python version
 @py-version:
     echo $PROJECT_PY_VERSION
+
+# Print the current Airflow version
+@airflow-version:
+    echo $PROJECT_AIRFLOW_VERSION
 
 # Check the installed Python version matches the required Python version and fail if not
 check-py-version:

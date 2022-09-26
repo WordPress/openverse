@@ -162,7 +162,7 @@ dag = DAG(
         "execution_timeout": None,
     },
     start_date=datetime(1970, 1, 1),
-    schedule_interval="0 0 * * 1",
+    schedule="0 0 * * 1",
     max_active_tasks=1,
     catchup=False,
     tags=["commoncrawl"],

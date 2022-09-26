@@ -99,7 +99,7 @@ dag = DAG(
         "retry_delay": timedelta(minutes=1),
     },
     start_date=datetime(2022, 7, 29),
-    schedule_interval="@weekly",
+    schedule="@weekly",
     max_active_tasks=MAX_ACTIVE,
     max_active_runs=MAX_ACTIVE,
     catchup=False,

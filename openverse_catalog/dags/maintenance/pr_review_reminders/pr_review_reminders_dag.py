@@ -41,7 +41,7 @@ dag = DAG(
     },
     start_date=datetime(2022, 6, 9),
     # Run every weekday
-    schedule_interval="0 0 * * 1-5",
+    schedule="0 0 * * 1-5",
     max_active_tasks=MAX_ACTIVE_TASKS,
     max_active_runs=MAX_ACTIVE_TASKS,
     # If this was True, airflow would run this DAG in the beginning

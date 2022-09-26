@@ -134,7 +134,7 @@ def create_dag():
     dag = DAG(
         dag_id=DAG_ID,
         default_args=DAG_DEFAULT_ARGS,
-        schedule_interval="@weekly",
+        schedule="@weekly",
         catchup=False,
         tags=["database"],
         doc_md=__doc__,

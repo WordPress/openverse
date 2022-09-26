@@ -33,7 +33,7 @@ dag = DAG(
         "retry_delay": timedelta(days=1),
         "execution_timeout": None,
     },
-    schedule_interval="0 16 15 * *",
+    schedule="0 16 15 * *",
     catchup=False,
     tags=["commoncrawl"],
 )

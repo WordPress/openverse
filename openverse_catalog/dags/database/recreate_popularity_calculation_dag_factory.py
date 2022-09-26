@@ -26,7 +26,7 @@ def create_recreate_popularity_calculation_dag(data_refresh: DataRefresh):
         dag_id=f"recreate_{media_type}_popularity_calculation",
         default_args=default_args,
         max_active_runs=1,
-        schedule_interval=None,
+        schedule=None,
         catchup=False,
         doc_md=__doc__,
         tags=["database", "data_refresh"],

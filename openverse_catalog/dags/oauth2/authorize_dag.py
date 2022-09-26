@@ -16,7 +16,7 @@ from common.constants import DAG_DEFAULT_ARGS
 
 dag = DAG(
     dag_id="oauth2_authorization",
-    schedule_interval=None,
+    schedule=None,
     start_date=datetime(2021, 1, 1),
     description="Authorization workflow for all Oauth2 providers.",
     max_active_runs=1,
