@@ -24,6 +24,7 @@ const getValidatedLocales = async () => {
   const allLocales = Object.values(updatedLocaleList).map((locale) => ({
     code: locale.slug,
     name: locale.name,
+    nativeName: locale.nativeName ?? locale.name,
     iso: locale.langCodeIso_639_1,
     wpLocale: locale.wpLocale,
     dir: locale.textDirection || 'ltr',

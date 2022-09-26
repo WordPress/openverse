@@ -25,11 +25,7 @@
 
     <!-- Locale chooser and WordPress affiliation graphic -->
     <div class="locale-and-wp flex flex-col justify-between gap-10">
-      <div
-        class="language flex h-10 w-full w-full items-center justify-center rounded-sm border border-dark-charcoal-20 bg-white"
-      >
-        {{ $t('footer.wip') }}
-      </div>
+      <VLanguageSelect v-bind="languageProps" class="language max-w-full" />
       <VLink
         href="https://wordpress.org"
         class="text-dark-charcoal hover:no-underline"
@@ -63,8 +59,12 @@ import useResizeObserver from '~/composables/use-resize-observer'
 
 import { SCREEN_SIZES } from '~/constants/screens'
 
+import type { SelectFieldProps } from '~/components/VSelectField/VSelectField.vue'
+
 import VLink from '~/components/VLink.vue'
 import VBrand from '~/components/VBrand/VBrand.vue'
+
+import VLanguageSelect from '~/components/VLanguageSelect/VLanguageSelect.vue'
 
 import WordPress from '~/assets/wordpress.svg?inline'
 
@@ -75,6 +75,7 @@ import WordPress from '~/assets/wordpress.svg?inline'
 export default defineComponent({
   name: 'VFooter',
   components: {
+    VLanguageSelect,
     VLink,
     VBrand,
     WordPress,
@@ -89,6 +90,10 @@ export default defineComponent({
       type: String as PropType<'internal' | 'content'>,
       required: false,
       default: undefined,
+    },
+    languageProps: {
+      type: Object as PropType<SelectFieldProps>,
+      default: () => ({}),
     },
   },
   setup(props) {
@@ -134,7 +139,7 @@ export default defineComponent({
 }
 
 .footer.footer-sm .language {
-  @apply w-50;
+  @apply max-w-[12.5rem];
 }
 
 .footer.footer-md .logo-and-links {

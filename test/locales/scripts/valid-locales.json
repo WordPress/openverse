@@ -2,6 +2,7 @@
   {
     "code": "ar",
     "name": "Arabic",
+    "nativeName": "العربية",
     "iso": "ar",
     "wpLocale": "ar",
     "dir": "rtl",
@@ -11,6 +12,7 @@
   {
     "code": "es",
     "name": "Spanish (Spain)",
+    "nativeName": "Español",
     "iso": "es",
     "wpLocale": "es_ES",
     "dir": "ltr",
@@ -20,6 +22,7 @@
   {
     "code": "ru",
     "name": "Russian",
+    "nativeName": "Русский",
     "iso": "ru",
     "wpLocale": "ru_RU",
     "dir": "ltr",

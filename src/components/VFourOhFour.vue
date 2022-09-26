@@ -46,7 +46,11 @@
       </div>
     </main>
 
-    <VFooter v-if="isNewHeaderEnabled" mode="internal" />
+    <VFooter
+      v-if="isNewHeaderEnabled"
+      mode="internal"
+      :language-props="{ variant: 'borderless' }"
+    />
   </div>
 </template>
 

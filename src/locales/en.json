@@ -118,7 +118,9 @@
     },
     "suggestions": "We appreciate suggestions for new sources from our community of users.",
     "issue-button": "Suggest a new source",
-    "aria": { "table": "sources table" },
+    "aria": {
+      "table": "sources table"
+    },
     "heading": {
       "image": "Image Sources",
       "audio": "Audio Sources"
@@ -682,5 +684,8 @@
   "footer": {
     "wordpress-affiliation": "Powered by {wordpress}",
     "wip": "\uD83D\uDEA7"
+  },
+  "language": {
+    "language": "Language"
   }
 }
