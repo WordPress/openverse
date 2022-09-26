@@ -291,8 +291,11 @@ def create_provider_api_workflow_dag(conf: ProviderWorkflow):
         schedule=conf.schedule_string,
         catchup=conf.dated,  # catchup is turned on for dated DAGs to allow backfilling
         doc_md=conf.doc_md,
-        tags=["provider"]
-        + [f"provider: {media_type}" for media_type in conf.media_types],
+        tags=[
+            "provider",
+            *[f"provider: {media_type}" for media_type in conf.media_types],
+            *conf.tags,
+        ],
         render_template_as_native_obj=True,
         user_defined_macros={"date_partition_for_prefix": date_partition_for_prefix},
     )

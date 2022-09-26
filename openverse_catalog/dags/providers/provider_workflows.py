@@ -1,5 +1,5 @@
 import importlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Dict, Optional, Sequence, Type
 
@@ -68,6 +68,7 @@ class ProviderWorkflow:
     create_postingestion_tasks: callable that returns an airflow task or task group to
                         to run any necessary post-ingestion tasks, such as dropping data
                         loaded during pre-ingestion
+    tags:               list of any additional tags to apply to the generated DAG
     """
 
     provider_script: str
@@ -87,6 +88,7 @@ class ProviderWorkflow:
     media_types: Sequence[str] = ("image",)
     create_preingestion_tasks: Optional[callable] = None
     create_postingestion_tasks: Optional[callable] = None
+    tags: list[str] = field(default_factory=list)
 
     def __post_init__(self):
         if not self.dag_id:
@@ -98,6 +100,7 @@ class ProviderWorkflow:
 
         if not self.ingestion_callable:
             self.ingestion_callable = provider_script.main
+            self.tags.append("legacy-ingestion")
 
         if not self.doc_md:
             self.doc_md = provider_script.__doc__
