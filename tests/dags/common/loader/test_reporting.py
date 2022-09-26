@@ -24,7 +24,7 @@ def test_report_completion(should_send_message):
         "common.slack.should_send_message", return_value=should_send_message
     ):
         report_completion(
-            "Jamendo",
+            "jamendo_workflow",
             [
                 "audio",
             ],
@@ -154,7 +154,7 @@ def test_report_completion_contents(
 ):
     with mock.patch("common.loader.reporting.send_message"):
         message = report_completion(
-            "Jamendo",
+            "jamendo_workflow",
             ["audio", "image"],
             None,
             {**audio_data, **image_data},

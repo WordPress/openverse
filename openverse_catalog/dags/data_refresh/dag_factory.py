@@ -233,6 +233,7 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
                     after_record_count.task_id, "return_value"
                 ),
                 "media_type": data_refresh.media_type,
+                "dag_id": data_refresh.dag_id,
             },
         )
 

@@ -163,5 +163,5 @@ def report_completion(
             " pulls that may happen concurrently."
         )
 
-    send_message(message, username="Airflow DAG Load Data Complete")
+    send_message(message, dag_id=dag_id, username="Airflow DAG Load Data Complete")
     return message

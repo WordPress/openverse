@@ -12,7 +12,7 @@ from data_refresh.record_reporting import report_record_difference
     ],
 )
 def test_record_reporting(before, after, expected_in_message):
-    actual = report_record_difference(before, after, "media")
+    actual = report_record_difference(before, after, "media", "dag_id")
     assert isinstance(expected_in_message, list), (
         "Value for 'expected_in_message' should be a list, "
         "a string may give a false positive"

@@ -10,6 +10,7 @@ from common.slack import (
     send_alert,
     send_message,
     should_send_message,
+    should_silence_message,
 )
 
 
@@ -287,24 +288,142 @@ def test_send_fails(http_hook_mock):
 
 
 @pytest.mark.parametrize(
-    "environment, slack_message_override, expected_result",
+    "environment, slack_message_override, silenced_notifications, expected_result",
     [
-        ("dev", False, False),
-        ("dev", True, True),
-        ("prod", False, True),
-        ("prod", True, True),
+        # Dev
+        # Message is not sent by default. It is only sent if the override is enabled,
+        # AND notifications are not silenced.
+        # Default
+        ("dev", False, False, False),
+        # Override is not enabled AND notifications are silenced
+        ("dev", False, True, False),
+        # Override is enabled AND notifications NOT silenced
+        ("dev", True, False, True),
+        # Override is enabled but notifications are silenced
+        ("dev", True, True, False),
+        # Prod
+        # Message is sent by default; the override has no effect, but messages are
+        # not sent when notifications are silenced.
+        # Default
+        ("prod", False, False, True),
+        # Override not enabled, notifications ARE silenced
+        ("prod", False, True, False),
+        # Override enabled, notifications are NOT silenced
+        ("prod", True, False, True),
+        # Override enabled, notifications ARE silenced
+        ("prod", True, True, False),
     ],
 )
-def test_should_send_message(environment, slack_message_override, expected_result):
-    with mock.patch("common.slack.Variable") as MockVariable:
+def test_should_send_message(
+    environment, slack_message_override, silenced_notifications, expected_result
+):
+    with (
+        mock.patch("common.slack.Variable") as MockVariable,
+        mock.patch(
+            "common.slack.should_silence_message", return_value=silenced_notifications
+        ),
+    ):
         # Mock the calls to Variable.get, in order
-        MockVariable.get.side_effect = [environment, slack_message_override]
-        assert should_send_message() == expected_result
+        MockVariable.get.side_effect = [
+            environment,
+            slack_message_override,
+        ]
+        assert should_send_message("text", "user", "mock_dag_id") == expected_result
 
 
 def test_should_send_message_is_false_without_hook(http_hook_mock):
     http_hook_mock.get_conn.side_effect = AirflowNotFoundException("nope")
-    assert not should_send_message()
+    assert not should_send_message("text", "user", "test_workflow")
+
+
+@pytest.mark.parametrize(
+    "silenced_notifications, should_silence",
+    (
+        # Do not silence when silenced_notifications is empty
+        ({}, False),
+        # dag_id is not in silenced_notifications
+        (
+            {
+                "another_dag_id": [
+                    {
+                        "issue": "https://github.com/WordPress/openverse/issues/1",
+                        "predicate": "KeyError",
+                    }
+                ]
+            },
+            False,
+        ),
+        # dag_id is configured, but text and username do not match
+        (
+            {
+                "test_dag_id": [
+                    {
+                        "issue": "https://github.com/WordPress/openverse/issues/1",
+                        "predicate": "Unit codes",
+                    }
+                ]
+            },
+            False,
+        ),
+        # text matches
+        (
+            {
+                "test_dag_id": [
+                    {
+                        "issue": "https://github.com/WordPress/openverse/issues/1",
+                        "predicate": "KeyError: 'image'",
+                    }
+                ]
+            },
+            True,
+        ),
+        # a substring of text matches
+        (
+            {
+                "test_dag_id": [
+                    {
+                        "issue": "https://github.com/WordPress/openverse/issues/1",
+                        "predicate": "KeyError",
+                    }
+                ]
+            },
+            True,
+        ),
+        # matches are case-insensitive
+        (
+            {
+                "test_dag_id": [
+                    {
+                        "issue": "https://github.com/WordPress/openverse/issues/1",
+                        "predicate": "kEYErrOR",
+                    }
+                ]
+            },
+            True,
+        ),
+        # username matches
+        (
+            {
+                "test_dag_id": [
+                    {
+                        "issue": "https://github.com/WordPress/openverse/issues/1",
+                        "predicate": "Airflow DAG Failure",
+                    }
+                ]
+            },
+            True,
+        ),
+    ),
+)
+def test_should_silence_message(silenced_notifications, should_silence):
+    with mock.patch("common.slack.Variable") as MockVariable:
+        MockVariable.get.side_effect = [silenced_notifications]
+        assert (
+            should_silence_message(
+                "KeyError: 'image'", "Airflow DAG Failure", "test_dag_id"
+            )
+            == should_silence
+        )
 
 
 @pytest.mark.parametrize("environment", ["dev", "prod"])
@@ -313,7 +432,7 @@ def test_send_message(environment, http_hook_mock):
         "common.slack.Variable"
     ) as MockVariable:
         MockVariable.get.side_effect = [environment]
-        send_message("Sample text", username="DifferentUser")
+        send_message("Sample text", dag_id="test_workflow", username="DifferentUser")
         http_hook_mock.run.assert_called_with(
             endpoint=None,
             data=f'{{"username": "DifferentUser | {environment}", "unfurl_links": true, "unfurl_media": true,'
@@ -326,15 +445,16 @@ def test_send_message(environment, http_hook_mock):
 
 def test_send_message_does_not_send_if_checks_fail(http_hook_mock):
     with mock.patch("common.slack.should_send_message", return_value=False):
-        send_message("Sample text", username="DifferentUser")
+        send_message("Sample text", dag_id="test_workflow", username="DifferentUser")
         http_hook_mock.run.assert_not_called()
 
 
 def test_send_alert():
     with mock.patch("common.slack.send_message") as send_message_mock:
-        send_alert("Sample text", username="DifferentUser")
+        send_alert("Sample text", dag_id="test_workflow", username="DifferentUser")
         send_message_mock.assert_called_with(
             "Sample text",
+            "test_workflow",
             "DifferentUser",
             ":airflow:",
             True,
@@ -342,57 +462,6 @@ def test_send_alert():
             True,
             http_conn_id=SLACK_ALERTS_CONN_ID,
         )
-
-
-@pytest.mark.parametrize(
-    "silenced_errors, alert, should_send",
-    [
-        # silenced errors includes alert being raised
-        (
-            [
-                "Error triggering data refresh",
-            ],
-            "Error triggering data refresh",
-            False,
-        ),
-        # alert contains substring matching a silenced error
-        (
-            [
-                "Authorization failed",
-                "data refresh",
-            ],
-            "Error triggering data refresh",
-            False,
-        ),
-        # error matches are case-insensitive
-        (
-            [
-                "kEYeRROR",
-            ],
-            "KeyError: 'image'",
-            False,
-        ),
-        # none of the silenced errors matches alert string
-        (
-            ["Authorization failed", "data refresh", "No unit codes"],
-            "Error due to invalid selection criteria",
-            True,
-        ),
-    ],
-)
-def test_send_alert_skips_when_silenced(silenced_errors, alert, should_send):
-    mock_silenced_dags = {
-        "silenced_dag_id": {
-            "issue": "https://github.com/WordPress/openverse/issues/1",
-            "errors": silenced_errors,
-        }
-    }
-    with mock.patch("common.slack.send_message") as send_message_mock, mock.patch(
-        "common.slack.Variable"
-    ) as MockVariable:
-        MockVariable.get.side_effect = [mock_silenced_dags]
-        send_alert(alert, dag_id="silenced_dag_id")
-        assert send_message_mock.called == should_send
 
 
 @pytest.mark.parametrize(
@@ -432,7 +501,7 @@ def test_on_failure_callback(
     env_vars = {
         "environment": environment,
         "slack_message_override": slack_message_override,
-        "silenced_slack_alerts": [],
+        "silenced_slack_notifications": {},
     }
 
     # Mock env variables

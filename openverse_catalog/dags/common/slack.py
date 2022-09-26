@@ -51,7 +51,7 @@ variable to `true` in the Airflow UI.
 import json
 import logging
 from os.path import basename
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, TypedDict
 
 from airflow.exceptions import AirflowNotFoundException
 from airflow.models import Variable
@@ -63,6 +63,20 @@ SLACK_NOTIFICATIONS_CONN_ID = "slack_notifications"
 SLACK_ALERTS_CONN_ID = "slack_alerts"
 JsonDict = dict[str, Any]
 log = logging.getLogger(__name__)
+
+
+class SilencedSlackNotification(TypedDict):
+    """
+    Configuration for a silenced Slack notification.
+
+    issue:     A link to a GitHub issue which describes why the notification
+               is silenced and tracks resolving the problem.
+    predicate: Slack notifications whose text or username contain the
+               predicate will be silenced. Matching is case-insensitive.
+    """
+
+    issue: str
+    predicate: str
 
 
 class SlackMessage:
@@ -214,8 +228,57 @@ class SlackMessage:
         return response
 
 
+def should_silence_message(text, username, dag_id):
+    """
+    Checks the `silenced_slack_notifications` Airflow variable to see if the message
+    should be silenced for this DAG.
+    """
+    # Match on message text and username
+    message = username + text
+
+    # Get the configuration for silenced messages for this DAG
+    silenced_notifications: list[SilencedSlackNotification] = Variable.get(
+        "silenced_slack_notifications", default_var={}, deserialize_json=True
+    ).get(dag_id, [])
+
+    return bool(silenced_notifications) and any(
+        notification["predicate"].lower() in message.lower()
+        for notification in silenced_notifications
+    )
+
+
+def should_send_message(
+    text, username, dag_id, http_conn_id=SLACK_NOTIFICATIONS_CONN_ID
+):
+    """
+    Returns True if:
+      * A Slack connection is defined
+      * The DAG is not configured to silence messages of this type
+      * We are in the prod env OR the message override is set.
+    """
+    # Exit early if no slack connection exists
+    hook = HttpHook(http_conn_id=http_conn_id)
+    try:
+        hook.get_conn()
+    except AirflowNotFoundException:
+        return False
+
+    # Exit early if this DAG is configured to skip Slack messaging
+    if should_silence_message(text, username, dag_id):
+        log.info(f"Skipping Slack notification for {dag_id}.")
+        return False
+
+    # Exit early if we aren't on production or if force alert is not set
+    environment = Variable.get("environment", default_var="dev")
+    force_message = Variable.get(
+        "slack_message_override", default_var=False, deserialize_json=True
+    )
+    return environment == "prod" or force_message
+
+
 def send_message(
     text: str,
+    dag_id: str,
     username: str = "Airflow",
     icon_emoji: str = ":airflow:",
     markdown: bool = True,
@@ -225,7 +288,7 @@ def send_message(
 ) -> None:
     """Send a simple slack message, convenience message for short/simple messages."""
     log.info(text)
-    if not should_send_message(http_conn_id):
+    if not should_send_message(text, username, dag_id, http_conn_id):
         return
 
     environment = Variable.get("environment", default_var="dev")
@@ -240,29 +303,9 @@ def send_message(
     s.send(text)
 
 
-def should_send_message(http_conn_id=SLACK_NOTIFICATIONS_CONN_ID):
-    """
-    Returns true if a Slack connection is defined and we are in production (or
-    the message override is set).
-    """
-    # Exit early if no slack connection exists
-    hook = HttpHook(http_conn_id=http_conn_id)
-    try:
-        hook.get_conn()
-    except AirflowNotFoundException:
-        return False
-
-    # Exit early if we aren't on production or if force alert is not set
-    environment = Variable.get("environment", default_var="dev")
-    force_message = Variable.get(
-        "slack_message_override", default_var=False, deserialize_json=True
-    )
-    return environment == "prod" or force_message
-
-
 def send_alert(
     text: str,
-    dag_id: str | None = None,
+    dag_id: str,
     username: str = "Airflow Alert",
     icon_emoji: str = ":airflow:",
     markdown: bool = True,
@@ -273,18 +316,9 @@ def send_alert(
     Wrapper for send_message that allows sending a message to the configured alerts
     channel instead of the default notification channel.
     """
-
-    known_failures = Variable.get(
-        "silenced_slack_alerts", default_var={}, deserialize_json=True
-    )
-    if dag_id in known_failures and any(
-        error.lower() in text.lower() for error in known_failures[dag_id]["errors"]
-    ):
-        log.info(f"Skipping Slack alert for {dag_id}: {text}")
-        return
-
     send_message(
         text,
+        dag_id,
         username,
         icon_emoji,
         markdown,
