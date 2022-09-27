@@ -675,5 +675,16 @@
     "search": {
       "placeholder": "البحث عن محتوى"
     }
+  },
+  "navigation": {
+    "about": "حول",
+    "licenses": "التراخيص",
+    "get-involved": "شارك",
+    "api": "API",
+    "privacy": "خصوصية",
+    "feedback": "استجابة",
+    "sources": "مصادر",
+    "external-sources": "مصادر خارجية",
+    "search-help": "بحث في المساعدة"
   }
 }

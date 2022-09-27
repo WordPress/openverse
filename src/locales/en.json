@@ -66,7 +66,10 @@
     "get-involved": "Get involved",
     "api": "API",
     "privacy": "Privacy",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "sources": "Sources",
+    "external-sources": "External sources",
+    "search-help": "Search help"
   },
   "about": {
     "title": "About {openverse}",
@@ -77,8 +80,9 @@
       "content": "{openverse} searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution."
     },
     "planning": {
-      "content": "Currently {openverse} only searches images, with search for audio and video provided through {meta}. But we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. All of our code is open source ({search}, {api}, {catalog}) and we {community}. You can see what {working}.",
+      "content": "Currently {openverse} only searches images, with search for audio and video provided through {meta}. But we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. All of our code is open source ({frontend}, {api}, {catalog}) and we {community}. You can see what {working}.",
       "meta": "Meta Search",
+      "frontend": "{openverse} frontend",
       "api": "{openverse} API",
       "catalog": "{openverse} Catalog",
       "community": "welcome community contribution",

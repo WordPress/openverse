@@ -76,6 +76,7 @@
     "src/components/VFilters/VLicenseExplanation.vue",
     "src/components/VHeader/VFilterButton.vue",
     "src/components/VHeader/VSearchBar/**.vue",
+    "src/components/VHeader/VPageLinks.vue",
     "src/components/VImageDetails/VRelatedImages.vue",
     "src/pages/feedback.vue",
     "src/pages/search-help.vue",

@@ -7,26 +7,32 @@ export default function usePages(isNew = false) {
     ? [
         {
           id: 'about',
+          name: 'navigation.about',
           link: app.localePath('/about'),
         },
         {
           id: 'licenses',
+          name: 'navigation.licenses',
           link: 'https://creativecommons.org/about/cclicenses/',
         },
         {
           id: 'get-involved',
+          name: 'navigation.get-involved',
           link: 'https://github.com/WordPress/openverse/',
         },
         {
           id: 'api',
+          name: 'navigation.api',
           link: 'https://api.openverse.engineering/v1/',
         },
         {
           id: 'privacy',
+          name: 'navigation.privacy',
           link: 'https://wordpress.org/privacy',
         },
         {
           id: 'feedback',
+          name: 'navigation.feedback',
           link: app.localePath('/feedback'),
         },
       ]
@@ -74,7 +80,11 @@ export default function usePages(isNew = false) {
       ]
 
   const route = useRoute()
-  const currentPageId = computed(() => route.value.name)
+  /**
+   * The route name of the current page is localized, so it looks like `index__en`.
+   * We need to remove the locale suffix to match the page id.
+   */
+  const currentPageId = computed(() => route.value?.name?.split('__')[0])
 
   return { all: pages, current: currentPageId }
 }

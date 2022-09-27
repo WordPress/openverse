@@ -25,22 +25,22 @@ import VButton, { ButtonProps } from '~/components/VButton.vue'
 import type { ButtonType } from '~/components/VButton.vue'
 
 const SIZE_MAP = Object.freeze({
-  tiny: { icon: ['w-6', 'h-6'], button: ['w-6', 'h-6'] },
-  small: { icon: ['w-6', 'h-6'], button: ['w-10', 'h-10'] },
+  tiny: { icon: 'w-6 h-6', button: 'w-6 h-6' },
+  small: { icon: 'w-6 h-6', button: 'w-10 h-10' },
   // TODO: audit the sizes after new header is done.
   'new-small': { icon: 'w-4 h-4', button: 'w-8 h-8' },
   'search-small': {
-    icon: ['w-6', 'h-6'],
-    button: ['w-10', 'md:w-12', 'h-10', 'md:h-12'],
+    icon: 'w-6 h-6',
+    button: 'w-10 md:w-12 h-10 md:h-12',
   },
-  'search-medium': { icon: ['w-6', 'h-6'], button: ['w-12', 'h-12'] },
-  'search-large': { icon: ['w-6', 'h-6'], button: ['w-14', 'h-14'] },
+  'search-medium': { icon: 'w-6 h-6', button: 'w-12 h-12' },
+  'search-large': { icon: 'w-6 h-6', button: 'w-14 h-14' },
   'search-standalone': {
-    icon: ['w-6', 'h-6'],
-    button: ['w-14', 'md:w-[69px]', 'h-14', 'md:h-[69px]'],
+    icon: 'w-6 h-6',
+    button: 'w-14 md:w-[69px] h-14 md:h-[69px]',
   },
-  medium: { icon: ['w-8', 'h-8'], button: ['w-14', 'h-14'] },
-  large: { icon: ['w-12', 'h-12'], button: ['w-20', 'h-20'] },
+  medium: { icon: 'w-8 h-8', button: 'w-14 h-14' },
+  large: { icon: 'w-12 h-12', button: 'w-20 h-20' },
 } as const)
 type Size = keyof typeof SIZE_MAP
 

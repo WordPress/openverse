@@ -4,12 +4,15 @@
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
       <VMigrationNotice />
       <VTranslationStatusBanner />
-      <VHeader v-if="isNewHeaderEnabled" />
+      <template v-if="isNewHeaderEnabled">
+        <VHeader v-if="isSearchRoute" />
+        <VHeaderInternal v-else />
+      </template>
       <VHeaderOld v-else />
     </div>
 
     <main
-      class="main embedded w-screen flex-shrink-0 flex-grow md:w-full"
+      class="main embedded w-full flex-shrink-0 flex-grow md:w-full"
       :class="[
         { 'has-sidebar': isSidebarVisible },
         isNewHeaderEnabled ? 'new-layout' : 'old-layout',
@@ -41,7 +44,11 @@ import { isMinScreen } from '~/composables/use-media-query'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { useFeatureFlagStore } from '~/stores/feature-flag'
 
-import { IsMinScreenLgKey, IsMinScreenMdKey } from '~/types/provides'
+import {
+  IsHeaderScrolledKey,
+  IsMinScreenLgKey,
+  IsMinScreenMdKey,
+} from '~/types/provides'
 
 import VMigrationNotice from '~/components/VMigrationNotice.vue'
 import VTranslationStatusBanner from '~/components/VTranslationStatusBanner.vue'
@@ -57,6 +64,7 @@ const embeddedPage = {
     VMigrationNotice,
     VTranslationStatusBanner,
     VHeaderOld,
+    VHeaderInternal: () => import('~/components/VHeader/VHeaderInternal.vue'),
     VHeader: () => import('~/components/VHeader/VHeader.vue'),
     VFooter,
     VModalTarget,
@@ -97,6 +105,7 @@ const embeddedPage = {
     provide('isMinScreenMd', isMinScreenMd)
     provide(IsMinScreenMdKey, isMinScreenMd)
     provide(IsMinScreenLgKey, isMinScreenLg)
+    provide(IsHeaderScrolledKey, isHeaderScrolled)
 
     // TODO: remove `headerHasTwoRows` provide after the new header is enabled.
     const headerHasTwoRows = computed(

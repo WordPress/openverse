@@ -342,3 +342,12 @@ export const pathWithDir = (rawPath: string, dir: string) => {
   const path = rawPath.startsWith('/') ? rawPath : `/${rawPath}`
   return dir === 'rtl' ? `/ar${path}` : path
 }
+
+export const enableNewHeader = async (page: Page) => {
+  await page.goto('/preferences')
+  const newHeaderCheckboxLocator = 'input#new_header'
+
+  if (!(await page.locator(newHeaderCheckboxLocator).isChecked())) {
+    await page.click(newHeaderCheckboxLocator)
+  }
+}
