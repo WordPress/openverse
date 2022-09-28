@@ -435,7 +435,7 @@ def test_send_message(environment, http_hook_mock):
         send_message("Sample text", dag_id="test_workflow", username="DifferentUser")
         http_hook_mock.run.assert_called_with(
             endpoint=None,
-            data=f'{{"username": "DifferentUser | {environment}", "unfurl_links": true, "unfurl_media": true,'
+            data=f'{{"username": "DifferentUser | {environment}", "unfurl_links": false, "unfurl_media": false,'
             ' "icon_emoji": ":airflow:", "blocks": [{"type": "section", "text": '
             '{"type": "mrkdwn", "text": "Sample text"}}], "text": "Sample text"}',
             headers={"Content-type": "application/json"},
@@ -458,8 +458,8 @@ def test_send_alert():
             "DifferentUser",
             ":airflow:",
             True,
-            True,
-            True,
+            False,
+            False,
             http_conn_id=SLACK_ALERTS_CONN_ID,
         )
 

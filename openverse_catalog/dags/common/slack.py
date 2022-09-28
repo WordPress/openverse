@@ -282,8 +282,8 @@ def send_message(
     username: str = "Airflow",
     icon_emoji: str = ":airflow:",
     markdown: bool = True,
-    unfurl_links: bool = True,
-    unfurl_media: bool = True,
+    unfurl_links: bool = False,
+    unfurl_media: bool = False,
     http_conn_id: str = SLACK_NOTIFICATIONS_CONN_ID,
 ) -> None:
     """Send a simple slack message, convenience message for short/simple messages."""
@@ -309,8 +309,8 @@ def send_alert(
     username: str = "Airflow Alert",
     icon_emoji: str = ":airflow:",
     markdown: bool = True,
-    unfurl_links: bool = True,
-    unfurl_media: bool = True,
+    unfurl_links: bool = False,
+    unfurl_media: bool = False,
 ):
     """
     Wrapper for send_message that allows sending a message to the configured alerts
