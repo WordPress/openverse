@@ -271,7 +271,10 @@ def refresh_api_table(
     """
 
     # Step 1: Get the list of overlapping columns
-    slack.info(f"`{table}`: Starting data refresh | _Next: copying data from upstream_")
+    slack.status(
+        table,
+        "Starting ingestion server data refresh | _Next: copying data from upstream_",
+    )
     downstream_db = database_connect()
     upstream_db = psycopg2.connect(
         dbname=UPSTREAM_DB_NAME,
@@ -319,21 +322,15 @@ def refresh_api_table(
         log.info(f"Running copy-data query: \n{copy_data.as_string(downstream_cur)}")
         downstream_cur.execute(copy_data)
 
-    next_step = (
-        "_Next: {starting data cleaning}_"
-        if table == "image"
-        else "Finished refreshing table"
-    )
-    slack.verbose(f"`{table}`: Data copy complete | {next_step}")
+    next_step = "image data cleaning" if table == "image" else "Elasticsearch reindex"
+    slack.status(table, f"Data copy complete | _Next: {next_step}_")
 
     if table == "image":
         # Step 5: Clean the data
         log.info("Cleaning data...")
         clean_image_data(table)
         log.info("Cleaning completed!")
-        slack.verbose(
-            f"`{table}`: Data cleaning complete | " f"Finished refreshing table"
-        )
+        slack.status(table, "Data cleaning complete | _Next: Elasticsearch reindex_")
 
     downstream_db.close()
     log.info(f"Finished refreshing table '{table}'.")
@@ -378,17 +375,14 @@ def promote_api_table(
                 downstream_cur.execute(remap_constraint)
         log.info("Done remapping constraints! Going live with new table...")
         _update_progress(progress, 99.0)
-        slack.verbose(
-            f"`{table}`: Indices & constraints applied, finished refreshing table | "
-            f"_Next: Elasticsearch reindex_"
-        )
+        slack.status(table, "Indices & constraints applied | _Next: table promotion_")
 
         # Step 8: Promote the temporary table and delete the original
         go_live = get_go_live_query(table, index_mapping)
         log.info(f"Running go-live: \n{go_live.as_string(downstream_cur)}")
         downstream_cur.execute(go_live)
-        slack.verbose(
-            f"`{table}`: Finished table promotion | " f"_Next: Elasticsearch promotion_"
+        slack.status(
+            table, "Finished table promotion | _Next: Elasticsearch promotion_"
         )
 
     downstream_db.close()

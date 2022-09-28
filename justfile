@@ -179,6 +179,10 @@ _ing-api data port="50281":
 @promote model="image" suffix="init" alias="image":
     just _ing-api '{"model": "{{ model }}", "action": "PROMOTE", "index_suffix": "{{ suffix }}", "alias": "{{ alias }}"}'
 
+# Delete an index in Elasticsearch
+@delete model="image" suffix="init" alias="image":
+    just _ing-api '{"model": "{{ model }}", "action": "DELETE_INDEX", "index_suffix": "{{ suffix }}"}'
+
 # Run ingestion-server tests locally
 ing-testlocal *args:
     cd ingestion_server && pipenv run ./test/run_test.sh {{ args }}

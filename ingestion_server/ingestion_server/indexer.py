@@ -378,7 +378,7 @@ class TableIndexer:
         if alias_stat.exists:
             if not alias_stat.is_alias:
                 # Alias is an index, this is fatal.
-                message = f"There is an index named {alias}, cannot proceed."
+                message = f"There is an index named `{alias}`, cannot proceed."
                 log.error(message)
                 slack.error(message)
                 return
@@ -395,20 +395,23 @@ class TableIndexer:
                     }
                 )
                 message = (
-                    f"Migrated alias {alias} "
-                    f"from index {curr_index} to index {dest_index}."
+                    f"Migrated alias `{alias}` from index `{curr_index}` to "
+                    f"index `{dest_index}` | _Next: delete old index_"
                 )
                 log.info(message)
-                slack.info(message)
+                slack.status(model_name, message)
             else:
                 # Alias is already mapped.
-                log.info(f"Alias {alias} already points to index {dest_index}.")
+                log.info(
+                    f"`{model_name}`: Alias `{alias}` already points to "
+                    f"index `{dest_index}`."
+                )
         else:
             # Alias does not exist, create it.
             self.es.indices.put_alias(index=dest_index, name=alias)
-            message = f"Created alias {alias} pointing to index {dest_index}."
+            message = f"Created alias `{alias}` pointing to index `{dest_index}`."
             log.info(message)
-            slack.info(message)
+            slack.status(model_name, message)
 
         if self.progress is not None:
             self.progress.value = 100  # mark job as completed
@@ -441,7 +444,7 @@ class TableIndexer:
                     if self.is_bad_request is not None:
                         self.is_bad_request.value = 1
                     message = (
-                        f"Alias {target} might be in use so it cannot be deleted. "
+                        f"Alias `{target}` might be in use so it cannot be deleted. "
                         f"Verify that the API does not use this alias and then use the "
                         f"`force_delete` parameter."
                     )
@@ -455,7 +458,7 @@ class TableIndexer:
                     if self.is_bad_request is not None:
                         self.is_bad_request.value = 1
                     message = (
-                        f"Index {target} is associated with aliases "
+                        f"Index `{target}` is associated with aliases "
                         f"{target_stat.alt_names}, cannot delete. Delete aliases first."
                     )
                     log.error(message)
@@ -463,16 +466,16 @@ class TableIndexer:
                     return
 
             self.es.indices.delete(index=target)
-            message = f"Index {target} was deleted."
+            message = f"Index `{target}` was deleted - data refresh complete! :tada:"
             log.info(message)
-            slack.info(message)
+            slack.status(model_name, message)
         else:
             # Cannot delete as target does not exist.
             if self.is_bad_request is not None:
                 self.is_bad_request.value = 1
-            message = f"Target {target} does not exist and cannot be deleted."
+            message = f"Target `{target}` does not exist and cannot be deleted."
             log.info(message)
-            slack.info(message)
+            slack.status(model_name, message)
 
         if self.progress is not None:
             self.progress.value = 100

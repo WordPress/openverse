@@ -70,3 +70,13 @@ def info(text: str, summary: str = None) -> None:
 
 def error(text: str, summary: str = None) -> None:
     _message(text, summary, level=Level.ERROR)
+
+
+def status(model: str, text: str) -> None:
+    """
+    Send a message regarding the status of the data refresh.
+
+    Model is required an all messages get prepended with the model.
+    """
+    text = f"`{model}`: {text}"
+    info(text, None)

@@ -269,7 +269,10 @@ class WorkerFinishedResource(BaseTaskResource):
             index_type = target_index.split("-")[0]
             if index_type not in MEDIA_TYPES:
                 index_type = "image"
-            slack.verbose(f"`{index_type}`: Elasticsearch reindex complete")
+            slack.verbose(
+                f"`{index_type}`: Elasticsearch reindex complete | "
+                f"_Next: re-apply indices & constraints_"
+            )
 
             elasticsearch = elasticsearch_connect()
             indexer = TableIndexer(
