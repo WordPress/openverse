@@ -50,6 +50,8 @@ def _message(text: str, summary: str = None, level: Level = Level.INFO) -> None:
         "text": summary,
         "username": f"Data Refresh Notification | {environment.upper()}",
         "icon_emoji": "arrows_counterclockwise",
+        "unfurl_links": False,
+        "unfurl_media": False,
     }
     try:
         requests.post(webhook, json=data)
