@@ -2,6 +2,7 @@ import mimetypes
 
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.html import format_html
 
@@ -130,8 +131,16 @@ class AbstractMediaReport(models.Model):
     """
     Generic model from which to inherit all reported media classes. 'Reported'
     here refers to content reports such as mature, copyright-violating or
-    deleted content.
+    deleted content. Subclasses must populate ``media_class``, ``mature_class`` and
+    ``deleted_class`` fields.
     """
+
+    media_class: type[models.Model] = None
+    """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
+    mature_class: type[models.Model] = None
+    """the class storing mature media e.g. ``MatureImage`` or ``MatureAudio``"""
+    deleted_class: type[models.Model] = None
+    """the class storing deleted media e.g. ``DeletedImage`` or ``DeletedAudio``"""
 
     BASE_URL = "https://search.creativecommons.org/"
 
@@ -163,54 +172,41 @@ class AbstractMediaReport(models.Model):
     class Meta:
         abstract = True
 
+    def clean(self):
+        """
+        This function raises errors that can be handled by Django's admin interface.
+        """
+
+        if not self.media_class.objects.filter(identifier=self.identifier).exists():
+            raise ValidationError(
+                f"No '{self.media_class.__name__}' instance"
+                f"with identifier {self.identifier}."
+            )
+
     def url(self, media_type):
-        url = f"{AbstractMediaReport.BASE_URL}" f"{media_type}/" f"{self.identifier}"
+        url = f"{AbstractMediaReport.BASE_URL}{media_type}{self.identifier}"
         return format_html(f"<a href={url}>{url}</a>")
 
     def save(self, *args, **kwargs):
         """
-        Extend the ``save()`` functionality with Elastic Search integration to
+        Extend the ``save()`` functionality with Elasticsearch integration to
         update records and refresh indices.
 
         Media marked as mature or deleted also leads to instantiation of their
         corresponding mature or deleted classes.
-
-        Additional kwargs:
-        index_name    : Name of ES index, eg. 'image'
-        media_class   : Class of the media, eg. ``Image``
-        mature_class  : Class that stores mature media, eg. ``MatureImage``
-        deleted_class : Class that stores deleted media, eg. ``DeletedImage``
         """
 
-        index_name = kwargs.pop("index_name")
-        media_class = kwargs.pop("media_class")
-        mature_class = kwargs.pop("mature_class")
-        deleted_class = kwargs.pop("deleted_class")
+        self.clean()
 
-        update_required = {MATURE_FILTERED, DEINDEXED}  # ES needs updating
-        if self.status in update_required:
-            es = settings.ES
-            try:
-                media = media_class.objects.get(identifier=self.identifier)
-            except media_class.DoesNotExist:
-                super(AbstractMediaReport, self).save(*args, **kwargs)
-                return
-            es_id = media.id
-            if self.status == MATURE_FILTERED:
-                # Create an instance of the mature class for this media
-                mature_class.objects.create(identifier=self.identifier)
-                # Mark as 'mature' in Elastic Search
-                es.update(index=index_name, id=es_id, body={"doc": {"mature": True}})
-            elif self.status == DEINDEXED:
-                # Delete from the API database, retaining the copy of the
-                # metadata upstream in the catalog
-                media.delete()
-                # Create an instance of the deleted class for this media,
-                # so that we don't reindex it later
-                deleted_class.objects.create(identifier=self.identifier)
-                # Remove from Elastic Search
-                es.delete(index=index_name, id=es_id)
-            es.indices.refresh(index=index_name)
+        if self.status == MATURE_FILTERED:
+            # Create an instance of the mature class for this media. This will
+            # automatically set the ``mature`` field in the ES document.
+            self.mature_class.objects.create(identifier=self.identifier)
+        elif self.status == DEINDEXED:
+            # Create an instance of the deleted class for this media, so that we don't
+            # reindex it later. This will automatically delete the ES document and the
+            # DB instance.
+            self.deleted_class.objects.create(identifier=self.identifier)
 
         same_reports = self.__class__.objects.filter(
             identifier=self.identifier,
@@ -219,14 +215,22 @@ class AbstractMediaReport(models.Model):
         if self.status != DEINDEXED:
             same_reports = same_reports.filter(reason=self.reason)
         same_reports.update(status=self.status)
+
         super(AbstractMediaReport, self).save(*args, **kwargs)
 
 
 class AbstractDeletedMedia(OpenLedgerModel):
     """
     Generic model from which to inherit all deleted media classes. 'Deleted'
-    here refers to media which has been deleted at the source.
+    here refers to media which has been deleted at the source or intentionally
+    de-indexed by us. Unlike mature reports, this action is irreversible. Subclasses
+    must populate ``media_class`` and ``es_index`` fields.
     """
+
+    media_class: type[models.Model] = None
+    """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
+    es_index: str = None
+    """the name of the ES index from ``settings.MEDIA_INDEX_MAPPING``"""
 
     identifier = models.UUIDField(
         unique=True, primary_key=True, help_text="The identifier of the deleted media."
@@ -235,17 +239,72 @@ class AbstractDeletedMedia(OpenLedgerModel):
     class Meta:
         abstract = True
 
+    def _update_es(self, raise_errors: bool) -> models.Model:
+        es = settings.ES
+        try:
+            obj = self.media_class.objects.get(identifier=self.identifier)
+            es.delete(index=self.es_index, id=obj.id)
+            es.indices.refresh(index=self.es_index)
+            return obj
+        except self.media_class.DoesNotExist:
+            if raise_errors:
+                raise ValidationError(
+                    f"No '{self.media_class.__name__}' instance"
+                    f"with identifier {self.identifier}."
+                )
+
+    def save(self, *args, **kwargs):
+        obj = self._update_es(True)
+        obj.delete()  # remove the actual model instance
+        super().save(*args, **kwargs)
+
 
 class AbstractMatureMedia(models.Model):
     """
-    Generic model from which to inherit all mature media classes.
+    Generic model from which to inherit all mature media classes. Subclasses must
+    populate ``media_class`` and ``es_index`` fields.
     """
+
+    media_class: type[models.Model] = None
+    """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
+    es_index: str = None
+    """the name of the ES index from ``settings.MEDIA_INDEX_MAPPING``"""
 
     created_on = models.DateTimeField(auto_now_add=True)
     identifier = models.UUIDField(unique=True, primary_key=True)
 
     class Meta:
         abstract = True
+
+    def _update_es(self, is_mature: bool, raise_errors: bool):
+        """
+        Update the Elasticsearch document associated with the given model.
+
+        :param is_mature: whether to mark the media item as mature
+        :param raise_errors: whether to raise an error if the no media item is found
+        """
+
+        es = settings.ES
+        try:
+            obj = self.media_class.objects.get(identifier=self.identifier)
+            es.update(
+                index=self.es_index, id=obj.id, body={"doc": {"mature": is_mature}}
+            )
+            es.indices.refresh(index=self.es_index)
+        except self.media_class.DoesNotExist:
+            if raise_errors:
+                raise ValidationError(
+                    f"No '{self.media_class.__name__}' instance"
+                    f"with identifier {self.identifier}."
+                )
+
+    def save(self, *args, **kwargs):
+        self._update_es(True, True)
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self._update_es(False, False)
+        super().delete(*args, **kwargs)
 
 
 class AbstractMediaList(OpenLedgerModel):

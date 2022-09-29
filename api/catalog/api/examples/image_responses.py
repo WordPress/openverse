@@ -59,7 +59,6 @@ detailed_image = base_image | {
     "filesize": 896128,
     "filetype": "jpg",
     "width": 6016,
-    "mature": None,
 }
 
 image_search_200_example = {
@@ -72,7 +71,6 @@ image_search_200_example = {
             base_image
             | {
                 "fields_matched": ["title"],
-                "mature": False,
                 "height": None,
                 "width": None,
                 "attribution": None,

@@ -36,7 +36,7 @@ base_audio = {
     "alt_files": None,
     "attribution": '"Wish You Were Here" by The.madpix.project is licensed under CC BY-NC-SA 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/.',  # noqa: E501,
     "fields_matched": [],
-    "mature": None,
+    "mature": False,
     "audio_set": {
         "title": "Wish You Were Here",
         "foreign_landing_url": "https://www.jamendo.com/album/145774/wish-you-were-here",  # noqa: E501
@@ -65,7 +65,6 @@ audio_search_200_example = {
             base_audio
             | {
                 "fields_matched": ["title"],
-                "mature": False,
                 "audio_set": None,
                 "attribution": None,
                 "filesize": None,

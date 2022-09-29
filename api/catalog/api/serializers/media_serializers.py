@@ -354,7 +354,6 @@ class MediaSerializer(BaseModelSerializer):
     )
 
     mature = serializers.BooleanField(
-        allow_null=True,  # present in ``Hit`` but not in Django media models
         help_text="Whether the media item is marked as mature",
     )
 

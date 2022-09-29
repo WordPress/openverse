@@ -3,6 +3,7 @@ from django.db import models
 
 from uuslug import uuslug
 
+from catalog.api.constants.media_types import IMAGE_TYPE
 from catalog.api.models.media import (
     AbstractDeletedMedia,
     AbstractMatureMedia,
@@ -48,40 +49,42 @@ class Image(ImageFileMixin, AbstractMedia):
     class Meta(AbstractMedia.Meta):
         db_table = "image"
 
+    @property
+    def mature(self) -> bool:
+        return MatureImage.objects.filter(identifier=self.identifier).exists()
+
+
+class DeletedImage(AbstractDeletedMedia):
+    """
+    Stores identifiers of images that have been deleted from the source. Do not create
+    instances of this model manually. Create an ``ImageReport`` instance instead.
+    """
+
+    media_class = Image
+    es_index = settings.MEDIA_INDEX_MAPPING[IMAGE_TYPE]
+
+
+class MatureImage(AbstractMatureMedia):
+    """
+    Stores all images that have been flagged as 'mature'. Do not create instances of
+    this model manually. Create an ``ImageReport`` instance instead.
+    """
+
+    media_class = Image
+    es_index = settings.MEDIA_INDEX_MAPPING[IMAGE_TYPE]
+
 
 class ImageReport(AbstractMediaReport):
+    media_class = Image
+    mature_class = MatureImage
+    deleted_class = DeletedImage
+
     class Meta:
         db_table = "nsfw_reports"
 
     @property
     def image_url(self):
         return super(ImageReport, self).url("photos")
-
-    def save(self, *args, **kwargs):
-        kwargs.update(
-            {
-                "index_name": "image",
-                "media_class": Image,
-                "mature_class": MatureImage,
-                "deleted_class": DeletedImage,
-            }
-        )
-        super(ImageReport, self).save(*args, **kwargs)
-
-
-class DeletedImage(AbstractDeletedMedia):
-    pass
-
-
-class MatureImage(AbstractMatureMedia):
-    """Stores all images that have been flagged as 'mature'."""
-
-    def delete(self, *args, **kwargs):
-        es = settings.ES
-        img = Image.objects.get(identifier=self.identifier)
-        es_id = img.id
-        es.update(index="image", id=es_id, body={"doc": {"mature": False}})
-        super(MatureImage, self).delete(*args, **kwargs)
 
 
 class ImageList(AbstractMediaList):
