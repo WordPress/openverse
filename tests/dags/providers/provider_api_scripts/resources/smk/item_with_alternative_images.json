@@ -1,0 +1,188 @@
+{
+  "acquisition_date": "1787-01-01T00:00:00Z",
+  "acquisition_date_precision": "1887-12-31",
+  "alternative_images": [
+    {
+      "height": 3524,
+      "iiif_id": "https://iip.smk.dk/iiif/jp2/1c18df916_kksgb7575_001.tif.jp2",
+      "iiif_info": "https://iip.smk.dk/iiif/jp2/1c18df916_kksgb7575_001.tif.jp2/info.json",
+      "mime_type": "image/tiff",
+      "native": "https://iip.smk.dk/iiif/jp2/1c18df916_kksgb7575_001.tif.jp2/full/full/0/native.jpg",
+      "orientation": "portrait",
+      "size": 11347216.551724138,
+      "thumbnail": "https://iip-thumb.smk.dk/iiif/jp2/1c18df916_kksgb7575_001.tif.jp2/full/!1024,/0/default.jpg",
+      "width": 3110
+    },
+    {
+      "cropped": [
+        "true"
+      ],
+      "height": 3142,
+      "iiif_id": "https://iip.smk.dk/iiif/jp2/p8418r38n_kksgb7575_-_001.tif.reconstructed.tif.jp2",
+      "iiif_info": "https://iip.smk.dk/iiif/jp2/p8418r38n_kksgb7575_-_001.tif.reconstructed.tif.jp2/info.json",
+      "mime_type": "image/tiff",
+      "native": "https://iip.smk.dk/iiif/jp2/p8418r38n_kksgb7575_-_001.tif.reconstructed.tif.jp2/full/full/0/native.jpg",
+      "orientation": "portrait",
+      "size": 7452243.448275862,
+      "thumbnail": "https://iip-thumb.smk.dk/iiif/jp2/p8418r38n_kksgb7575_-_001.tif.reconstructed.tif.jp2/full/!1024,/0/default.jpg",
+      "width": 2302
+    }
+  ],
+  "artist": [
+    "Gheyn, Jacques II de"
+  ],
+  "brightness": 6.35253,
+  "collection": [
+    "Gammel bestand"
+  ],
+  "colors": [
+    "#888888",
+    "#ffe7c9",
+    "#bed69f",
+    "#382510",
+    "#777777"
+  ],
+  "colortemp": 3.8521814,
+  "content_person": [
+    "Brahe, Tycho"
+  ],
+  "content_person_full": [
+    {
+      "forename": "Tycho",
+      "full_name": "Tycho Brahe",
+      "gender": "UNKNOWN",
+      "name": "Brahe, Tycho",
+      "surname": "Brahe"
+    }
+  ],
+  "contrast": 4.1983867,
+  "created": "2020-03-21T08:32:04Z",
+  "dimensions": [
+    {
+      "notes": "186 x 134 mm",
+      "part": "bladmaal",
+      "type": "h\u00f8jde",
+      "unit": "milimeter",
+      "value": "187"
+    },
+    {
+      "notes": "186 x 134 mm",
+      "part": "bladmaal",
+      "type": "bredde",
+      "unit": "milimeter",
+      "value": "142"
+    }
+  ],
+  "documentation": [
+    {
+      "author": "Jan Piet Filedt Kok",
+      "notes": "238 II",
+      "shelfmark": "k2000-158",
+      "title": "The New Hollstein Dutch and Flemish etchings, engravings and woodcuts 1450-1700, The de Gheyn family, part I-II",
+      "year_of_publication": "2000"
+    },
+    {
+      "author": "Poul Grinder-Hansen",
+      "notes": "omt. og afb. p. 30 fig. 6",
+      "shelfmark": "C 35560",
+      "title": "Tycho Brahes verden: Danmark i Europa 1550-1600",
+      "year_of_publication": "2006"
+    }
+  ],
+  "enrichment_url": "https://enrichment.api.smk.dk/api/enrichment/KKSgb7575",
+  "entropy": 9.792481,
+  "frontend_url": "https://open.smk.dk/artwork/image/kksgb7575",
+  "has_3d_file": false,
+  "has_image": true,
+  "has_text": true,
+  "id": "1170001143_object",
+  "iiif_manifest": "https://api.smk.dk/api/v1/iiif/manifest/?id=kksgb7575",
+  "image_cropped": true,
+  "image_height": 3026,
+  "image_hq": true,
+  "image_iiif_id": "https://iip.smk.dk/iiif/jp2/t722hd324_KKSgb7575_crop.tif.jp2",
+  "image_iiif_info": "https://iip.smk.dk/iiif/jp2/t722hd324_KKSgb7575_crop.tif.jp2/info.json",
+  "image_mime_type": "image/tiff",
+  "image_native": "https://api.smk.dk/api/v1/download/W3siaW1nX3VybCI6Imh0dHBzOi8vaWlwLnNtay5kay9paWlmL2pwMi90NzIyaGQzMjRfS0tTZ2I3NTc1X2Nyb3AudGlmLmpwMi9mdWxsL2Z1bGwvMC9uYXRpdmUuanBnIiwicHVibGljX2RvbWFpbiI6dHJ1ZSwib2JqZWN0X251bWJlciI6IktLU2diNzU3NSIsIm51bSI6IiJ9XQ==/KKSgb7575.jpg",
+  "image_orientation": "portrait",
+  "image_size": 6706084,
+  "image_thumbnail": "https://iip-thumb.smk.dk/iiif/jp2/t722hd324_KKSgb7575_crop.tif.jp2/full/!1024,/0/default.jpg",
+  "image_width": 2183,
+  "inscriptions": [
+    {
+      "content": "\"Effigies Tychonis Brahe ottonidis dani/dni de knudstrup et arcis uranienburg in/insula hellisponti danici hvenna fundatoris/instrumentorumos astronomicorum in eadem/dispositarim inventoris et structoris/aetatis su\u00e6 anno 40.anno dni 1586.compl/\"",
+      "description": "Kobberstik",
+      "language": "Latin",
+      "type": "Tekst"
+    },
+    {
+      "content": "Grafikers og udgivers navn anf\u00f8rt i trykpladen",
+      "type": "Signatur"
+    }
+  ],
+  "modified": "2022-06-30T07:24:58Z",
+  "number_of_parts": 1,
+  "object_names": [
+    {
+      "name": "Kobberstik"
+    }
+  ],
+  "object_number": "KKSgb7575",
+  "object_url": "https://api.smk.dk/api/v1/art/?object_number=kksgb7575",
+  "on_display": false,
+  "production": [
+    {
+      "creator": "Gheyn, Jacques II de",
+      "creator_date_of_birth": "1565-01-01T00:00:00.000Z",
+      "creator_date_of_death": "1629-01-01T00:00:00.000Z",
+      "creator_gender": "MALE",
+      "creator_lref": "22711_person",
+      "creator_nationality": "Flamsk"
+    },
+    {
+      "creator": "Sadeler, Marcus",
+      "creator_date_of_birth": "1614-04-01T00:00:00.000Z",
+      "creator_date_of_death": "1650-01-01T00:00:00.000Z",
+      "creator_forename": "Marcus",
+      "creator_gender": "UNKNOWN",
+      "creator_lref": "30171_person",
+      "creator_nationality": "Tysk",
+      "creator_role": "Udgiver",
+      "creator_surname": "Sadeler"
+    }
+  ],
+  "production_date": [
+    {
+      "end": "1594-12-31T00:00:00.000Z",
+      "period": "1593-1594",
+      "start": "1593-01-01T00:00:00.000Z"
+    }
+  ],
+  "production_dates_notes": [
+    "V\u00e6rkdatering: ca. 1595"
+  ],
+  "public_domain": true,
+  "related_objects": [
+    {
+      "reference": "KKS4530",
+      "title": "Tycho Brahe"
+    }
+  ],
+  "responsible_department": "Den Kongelige Kobberstiksamling",
+  "rights": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "saturation": 2.495402,
+  "similar_images_url": "https://similar.api.smk.dk/similar/?object_number=KKSgb7575",
+  "suggested_bg_color": [
+    "#888888"
+  ],
+  "techniques": [
+    "Kobberstik"
+  ],
+  "titles": [
+    {
+      "language": "dansk",
+      "title": "Tycho Brahe",
+      "type": "museumstitel"
+    }
+  ]
+}

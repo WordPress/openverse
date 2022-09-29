@@ -11,6 +11,7 @@ from providers.provider_api_scripts.metropolitan_museum import MetMuseumDataInge
 from providers.provider_api_scripts.museum_victoria import VictoriaDataIngester
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 from providers.provider_api_scripts.science_museum import ScienceMuseumDataIngester
+from providers.provider_api_scripts.smk import SmkDataIngester
 from providers.provider_api_scripts.stocksnap import StockSnapDataIngester
 from providers.provider_api_scripts.wikimedia_commons import (
     WikimediaCommonsDataIngester,
@@ -195,6 +196,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="smk",
+        ingestion_callable=SmkDataIngester,
         start_date=datetime(2020, 1, 1),
     ),
     ProviderWorkflow(
