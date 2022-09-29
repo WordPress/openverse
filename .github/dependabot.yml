@@ -1,0 +1,22 @@
+#################################
+# Dependabot Configuration File #
+#################################
+
+# current Github-native version of Dependabot
+version: 2
+
+updates:
+  # Enable version updates for Python libraries in `requirements_dev.txt`
+  # These can be updated more frequently than those in `requirements_prod.txt` since
+  # they are not pinned by the Airflow constraints file.
+  - package-ecosystem: pip
+    directory: /
+    # Check for updates once a month
+    schedule:
+      interval: monthly
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - "🐍 tech: python"
+      - dependencies

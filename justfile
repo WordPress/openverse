@@ -33,7 +33,7 @@ check-py-version:
 
 # Install dependencies into the current environment
 install: check-py-version
-    pip install -r requirements.txt -r requirements_dev.txt
+    pip install -r requirements_tooling.txt -r requirements_dev.txt
     pre-commit install
 
 # Create the .env file from the template
