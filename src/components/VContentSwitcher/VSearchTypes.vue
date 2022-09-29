@@ -29,17 +29,21 @@
         :item-id="idx"
         :icon="content.icons[item]"
         :use-links="useLinks"
-        :selected="item === activeItem"
-        @click="handleClick(item)"
+        :selected="isActive(item)"
+        @click="selectItem(item)"
       />
     </div>
   </VItemGroup>
 </template>
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  type PropType,
+} from '@nuxtjs/composition-api'
 
-import type { SearchType } from '~/constants/media'
 import useSearchType from '~/composables/use-search-type'
+import type { SearchType } from '~/constants/media'
 import { defineEvent } from '~/types/emits'
 
 import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
@@ -57,10 +61,9 @@ export default defineComponent({
       type: String as PropType<'small' | 'medium'>,
       default: 'small',
     },
-    activeItem: {
-      type: String as PropType<SearchType>,
-      required: true,
-    },
+    /**
+     * Whether to use buttons for search type selection, or links to the specific search type search for the items.
+     */
     useLinks: {
       type: Boolean,
       default: true,
@@ -71,6 +74,9 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const content = useSearchType()
+    const bordered = computed(() => props.size === 'small')
+
+    const isActive = (item: SearchType) => item === content.activeType.value
 
     const contentTypeGroups = computed(() => {
       const base = [
@@ -90,15 +96,17 @@ export default defineComponent({
       return base
     })
 
-    const bordered = computed(() => props.size === 'small')
-    const handleClick = (item) => {
+    const selectItem = (item: SearchType) => {
+      content.setActiveType(item)
       emit('select', item)
     }
+
     return {
       content,
       contentTypeGroups,
+      isActive,
       bordered,
-      handleClick,
+      selectItem,
     }
   },
 })

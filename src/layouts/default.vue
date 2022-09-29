@@ -5,7 +5,10 @@
       <VMigrationNotice />
       <VTranslationStatusBanner />
       <template v-if="isNewHeaderEnabled">
-        <VHeader v-if="isSearchRoute" />
+        <template v-if="isSearchRoute">
+          <VHeaderDesktop v-if="isMinScreenLg" />
+          <VHeader v-else />
+        </template>
         <VHeaderInternal v-else />
       </template>
       <VHeaderOld v-else />
@@ -35,7 +38,13 @@
   </div>
 </template>
 <script>
-import { computed, provide, ref, watch } from '@nuxtjs/composition-api'
+import {
+  computed,
+  onMounted,
+  provide,
+  ref,
+  watch,
+} from '@nuxtjs/composition-api'
 import { PortalTarget as VTeleportTarget } from 'portal-vue'
 
 import { useWindowScroll } from '~/composables/use-window-scroll'
@@ -64,6 +73,7 @@ const embeddedPage = {
     VMigrationNotice,
     VTranslationStatusBanner,
     VHeaderOld,
+    VHeaderDesktop: () => import('~/components/VHeader/VHeaderDesktop.vue'),
     VHeaderInternal: () => import('~/components/VHeader/VHeaderInternal.vue'),
     VHeader: () => import('~/components/VHeader/VHeader.vue'),
     VFooter,
@@ -82,9 +92,25 @@ const embeddedPage = {
 
     const { isVisible: isFilterVisible } = useFilterSidebarVisibility()
     const { matches: isSearchRoute } = useMatchSearchRoutes()
+    const mounted = ref(false)
+    onMounted(() => {
+      mounted.value = true
+    })
 
     const isMinScreenMd = isMinScreen('md')
-    const isMinScreenLg = isMinScreen('lg')
+    /**
+     * If we use the `isMinScreen('lg')` composable for conditionally
+     * rendering components, we get a server-client side rendering
+     * mismatch.
+     * To prevent that, we initially render mobile components, and
+     * after the `mounted` ref is true, we re-render the desktop if
+     * the width is `lg`.
+     * @type {Ref<UnwrapRef<boolean>>}
+     */
+    const innerIsMinScreenLg = isMinScreen('lg')
+    const isMinScreenLg = computed(() =>
+      Boolean(innerIsMinScreenLg.value && mounted.value)
+    )
 
     const isSidebarVisible = computed(() => {
       return isNewHeaderEnabled
@@ -117,6 +143,7 @@ const embeddedPage = {
     return {
       isHeaderScrolled,
       isMinScreenMd,
+      isMinScreenLg,
       isSidebarVisible,
       isSearchRoute,
       headerHasTwoRows,
