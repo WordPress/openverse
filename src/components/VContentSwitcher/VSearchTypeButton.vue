@@ -1,11 +1,7 @@
 <template>
   <VButton
-    class="group flex flex-row py-2 text-sr font-semibold md:text-base"
-    :class="[
-      sizeClasses,
-      isHeaderScrolled ? 'max-w-[10rem] sm:max-w-[20rem] md:max-w-[16rem]' : '',
-    ]"
-    :variant="buttonVariant"
+    class="group flex h-12 w-12 flex-row xl:w-auto xl:px-2 xl:ps-3"
+    variant="action-menu"
     size="disabled"
     :aria-label="buttonLabel"
     v-bind="a11yProps"
@@ -13,97 +9,61 @@
   >
     <VIcon :icon-path="icon" />
     <span
-      class="md:block md:truncate md:ms-2 md:text-start"
-      :class="isHeaderScrolled ? 'hidden' : 'block truncate ms-2 text-start'"
+      class="label-regular hidden truncate xl:block xl:ms-2 xl:text-start"
       >{{ buttonLabel }}</span
     >
-    <VIcon
-      class="hidden text-dark-charcoal-40 group-hover:text-white md:block md:ms-2"
-      :icon-path="caretDownIcon"
-    />
+    <VIcon class="hidden xl:block xl:ms-2" :icon-path="caretDownIcon" />
   </VButton>
 </template>
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  inject,
-  PropType,
-  ref,
-} from '@nuxtjs/composition-api'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 
-import { ALL_MEDIA, type SearchType } from '~/constants/media'
-import type { ButtonVariant } from '~/types/button'
+import { ALL_MEDIA, AUDIO, IMAGE, MODEL_3D, VIDEO } from '~/constants/media'
 import useSearchType from '~/composables/use-search-type'
 import { useI18n } from '~/composables/use-i18n'
-import { isMinScreen } from '~/composables/use-media-query'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VButton from '~/components/VButton.vue'
 
 import caretDownIcon from '~/assets/icons/caret-down.svg'
 
+const labels = {
+  [ALL_MEDIA]: 'search-type.all',
+  [IMAGE]: 'search-type.image',
+  [AUDIO]: 'search-type.audio',
+  [VIDEO]: 'search-type.video',
+  [MODEL_3D]: 'search-type.model-3d',
+}
+
+/**
+ * This is the search type button that appears in the header, not on the homepage.
+ */
 export default defineComponent({
   name: 'VSearchTypeButton',
   components: { VButton, VIcon },
   props: {
     a11yProps: {
       type: Object,
-      required: true,
-    },
-    activeItem: {
-      type: String as PropType<SearchType>,
-      default: ALL_MEDIA,
-    },
-    type: {
-      type: String as PropType<'header' | 'searchbar'>,
-      default: 'header',
+      default: () => ({
+        'aria-expanded': false,
+        'aria-haspopup': 'dialog',
+      }),
     },
   },
-  setup(props) {
+  setup() {
     const i18n = useI18n()
-    const isHeaderScrolled = inject('isHeaderScrolled', ref(null))
-    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
+    const { icons, activeType } = useSearchType()
 
-    const { icons, activeType: activeItem } = useSearchType()
-    const isIconButton = computed(
-      () => isHeaderScrolled?.value && !isMinScreenMd.value
-    )
-    const sizeClasses = computed(() => {
-      if (props.type === 'searchbar') {
-        return 'h-12 px-2'
-      } else if (isIconButton.value) {
-        return 'w-10 h-10'
-      } else {
-        /**
-          When there is a caret down icon (on 'md' screens), paddings are balanced,
-          without it, paddings need to be adjusted.
-          */
-        return 'ps-2 pe-3 md:px-2'
-      }
-    })
+    const activeItem = computed(() => activeType.value)
 
-    const buttonVariant = computed<ButtonVariant>(() => {
-      if (props.type === 'searchbar') {
-        return 'action-menu'
-      } else {
-        return isMinScreenMd.value && !isHeaderScrolled?.value
-          ? 'action-menu-bordered'
-          : 'action-menu'
-      }
-    })
-    const buttonLabel = computed(() => {
-      return i18n.t(`search-type.${props.activeItem}`)
-    })
+    const buttonLabel = computed(() => i18n.t(labels[activeItem.value]))
+
+    const icon = computed(() => icons[activeItem.value])
 
     return {
-      buttonVariant,
-      sizeClasses,
       buttonLabel,
       caretDownIcon,
-      isHeaderScrolled,
-      isMinScreenMd,
-      icon: computed(() => icons[activeItem.value]),
+      icon,
     }
   },
 })

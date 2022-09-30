@@ -311,7 +311,7 @@ a.button {
   @apply border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal-20;
 }
 .action-menu-pressed {
-  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-90;
+  @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
 }
 
 /**
@@ -329,7 +329,7 @@ https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-
   @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:border-dark-charcoal-20;
 }
 .action-menu-muted-pressed {
-  @apply border-tx bg-dark-charcoal text-white;
+  @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
 }
 
 .action-menu[disabled='disabled'],
@@ -339,6 +339,14 @@ https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-
 .action-menu-bordered[disabled='disabled'],
 .action-menu-bordered[aria-disabled='true'] {
   @apply border-dark-charcoal-10 bg-dark-charcoal-10 text-dark-charcoal-40;
+}
+
+.action-menu-secondary {
+  @apply border border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+}
+
+.action-menu-secondary-pressed {
+  @apply border-tx bg-dark-charcoal text-white;
 }
 
 .full {

@@ -21,6 +21,12 @@ const config: PlaywrightTestConfig = {
     trace: 'retain-on-failure',
   },
   timeout: 2 * 60 * 1e3,
+  expect: {
+    toMatchSnapshot: {
+      // To avoid flaky tests, we allow a small amount of pixel difference.
+      maxDiffPixelRatio: 0.02,
+    },
+  },
 }
 
 export default config

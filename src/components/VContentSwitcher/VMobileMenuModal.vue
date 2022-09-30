@@ -9,7 +9,6 @@
       <VSearchTypeButton
         :a11y-props="a11yProps"
         :visible="visible"
-        :active-item="activeItem"
         aria-controls="content-switcher-modal"
       />
     </template>

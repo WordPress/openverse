@@ -1,0 +1,102 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import allIcon from '~/assets/icons/all-content.svg'
+import audioIcon from '~/assets/icons/audio-content.svg'
+import imageIcon from '~/assets/icons/image-content.svg'
+import videoIcon from '~/assets/icons/video-content.svg'
+import model3dIcon from '~/assets/icons/model-3d.svg'
+
+export const icons = {
+  [ALL_MEDIA]: allIcon,
+  [AUDIO]: audioIcon,
+  [IMAGE]: imageIcon,
+  [VIDEO]: videoIcon,
+  [MODEL_3D]: model3dIcon,
+}
+
+import VSearchTypeButton from '~/components/VContentSwitcher/VSearchTypeButton.vue'
+import {
+  ALL_MEDIA,
+  AUDIO,
+  IMAGE,
+  MODEL_3D,
+  supportedSearchTypes,
+  VIDEO,
+} from '~/constants/media'
+import useSearchType from '~/composables/use-search-type'
+
+<Meta
+  title="Components/VContentSwitcher/VSearchTypeButton"
+  components={VSearchTypeButton}
+  argTypes={{
+    activeItem: {
+      defaultValue: 'all',
+      options: supportedSearchTypes,
+      control: 'select',
+    },
+    pressed: {
+      control: 'boolean',
+    },
+    click: {
+      action: 'click',
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `<VSearchTypeButton v-bind="args" v-on="args" />`,
+  components: { VSearchTypeButton },
+  setup() {
+    const searchType = useSearchType()
+    searchType.setActiveType(args.activeItem)
+    const a11yProps = { 'aria-haspopup': 'dialog' }
+    if (args.pressed) {
+      a11yProps['aria-expanded'] = true
+    }
+    args.a11yProps = a11yProps
+    return { args }
+  },
+})
+
+# VSearchTypeButton
+
+<Description of={VSearchTypeButton} />
+
+<ArgsTable of={VSearchTypeButton} />
+
+<Canvas>
+  <Story
+    height="480px"
+    name="Default"
+    parameters={{
+      viewport: { defaultViewport: 'lg' },
+    }}
+    args={{
+      activeItem: ALL_MEDIA,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    height="480px"
+    name="Large with text label"
+    parameters={{
+      viewport: { defaultViewport: 'lx' },
+    }}
+    args={{
+      activeItem: ALL_MEDIA,
+      a11yProps: { 'aria-pressed': true },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
