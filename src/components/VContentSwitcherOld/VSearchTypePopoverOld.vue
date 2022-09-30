@@ -11,11 +11,6 @@
         :a11y-props="a11yProps"
         aria-controls="content-switcher-popover"
         :active-item="activeItem"
-        :class="{
-          '!border-tx': isInSearchBar,
-          '!bg-white group-hover:!border-dark-charcoal-20 group-hover:focus:!border-tx':
-            isInSearchBar && !a11yProps['aria-expanded'],
-        }"
         :type="placement"
       />
     </template>

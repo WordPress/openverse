@@ -2,14 +2,16 @@
   <Component
     :is="as"
     :type="typeRef"
-    class="flex appearance-none items-center justify-center rounded-sm no-underline ring-offset-1 transition-shadow duration-100 ease-linear focus:outline-none disabled:opacity-70"
+    class="flex appearance-none items-center justify-center rounded-sm no-underline ring-offset-1 transition-shadow duration-100 ease-linear focus:outline-none"
     :class="[
       $style.button,
       $style[variant],
       isConnected && $style[`connection-${connections}`],
       isActive && $style[`${variant}-pressed`],
       $style[`size-${size}`],
-      isPlainDangerous ? '' : 'focus-visible:ring focus-visible:ring-pink',
+      isPlainDangerous
+        ? ''
+        : 'border border-tx focus-visible:ring focus-visible:ring-pink',
     ]"
     :aria-pressed="pressed"
     :aria-disabled="ariaDisabledRef"
@@ -37,36 +39,16 @@ import {
 import { warn } from '~/utils/console'
 
 import type { ProperlyExtractPropTypes } from '~/types/prop-extraction'
+import {
+  ButtonConnections,
+  buttonForms,
+  ButtonSize,
+  ButtonType,
+  ButtonVariant,
+} from '~/types/button'
+import type { ButtonForm } from '~/types/button'
 
 import VLink from '~/components/VLink.vue'
-
-export const buttonForms = ['VLink', 'button'] as const
-
-type ButtonForm = typeof buttonForms[number]
-
-export const buttonVariants = [
-  'primary',
-  'secondary',
-  'tertiary',
-  'menu',
-  'action-menu',
-  'action-menu-secondary',
-  'action-menu-muted',
-  'action-menu-muted-pressed',
-  'plain',
-  'plain--avoid',
-  'full',
-] as const
-export type ButtonVariant = typeof buttonVariants[number]
-
-export const buttonSizes = ['large', 'medium', 'small', 'disabled'] as const
-export type ButtonSize = typeof buttonSizes[number]
-
-export const buttonTypes = ['button', 'submit', 'reset'] as const
-export type ButtonType = typeof buttonTypes[number]
-
-export const buttonConnections = ['start', 'end', 'none', 'all'] as const
-export type ButtonConnections = typeof buttonConnections[number]
 
 export type ButtonProps = ProperlyExtractPropTypes<
   NonNullable<typeof VButton['props']>
@@ -264,7 +246,7 @@ export default VButton
 <style module>
 .button[disabled='disabled'],
 .button[aria-disabled='true'] {
-  @apply opacity-50;
+  @apply cursor-not-allowed;
 }
 
 .size-small {
@@ -284,64 +266,79 @@ a.button {
 }
 
 .primary {
-  @apply bg-pink text-white  hover:bg-dark-pink hover:text-white;
+  @apply border-tx bg-pink text-white hover:border-tx hover:bg-dark-pink hover:text-white;
 }
-
 .primary-pressed {
   @apply bg-dark-pink;
 }
 
 .secondary {
-  @apply bg-dark-charcoal font-bold text-white hover:bg-dark-charcoal-80 hover:text-white;
+  @apply border-tx bg-tx hover:bg-dark-charcoal hover:text-white focus-visible:ring focus-visible:ring-pink;
 }
-
 .secondary-pressed {
-  @apply border border-tx bg-dark-charcoal-80 hover:border-tx;
+  @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
+}
+.secondary[disabled='disabled'],
+.secondary[aria-disabled='true'] {
+  @apply border-tx bg-tx text-dark-charcoal-40;
 }
 
-.tertiary {
-  @apply border border-dark-charcoal-20 bg-white text-dark-charcoal ring-offset-0 focus-visible:border-tx;
+.secondary-filled {
+  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-80 hover:text-white focus-visible:ring focus-visible:ring-pink disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
 }
 
-.tertiary[disabled='disabled'],
-.tertiary[aria-disabled='true'],
-.action-menu[disabled='disabled'],
-.action-menu[aria-disabled='true'] {
-  @apply border-dark-charcoal-10 bg-dark-charcoal-10;
+.secondary-bordered {
+  @apply border-dark-charcoal bg-tx hover:bg-dark-charcoal hover:text-white focus-visible:border-tx disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
+}
+.secondary-bordered-pressed {
+  @apply bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90 focus-visible:bg-dark-charcoal-90;
+}
+.secondary-filled[disabled='disabled'],
+.secondary-bordered[disabled='disabled'],
+.secondary-filled[aria-disabled='true'],
+.secondary-bordered[aria-disabled='true'] {
+  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal-40;
 }
 
-.tertiary-pressed {
-  @apply border-tx bg-dark-charcoal text-white;
-}
 .menu {
-  @apply border border-tx bg-white text-dark-charcoal ring-offset-0;
+  @apply border-tx bg-white text-dark-charcoal ring-offset-0;
 }
 .menu-pressed {
-  @apply border border-tx bg-dark-charcoal text-white;
+  @apply border-tx bg-dark-charcoal text-white;
 }
 
 .action-menu {
-  @apply border border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal-20;
+  @apply border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal-20;
 }
-
-.action-menu-secondary {
-  @apply border border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
-}
-
-.action-menu-secondary-pressed {
-  @apply border-tx bg-dark-charcoal text-white;
-}
-
 .action-menu-pressed {
-  @apply border-tx bg-dark-charcoal text-white hover:border-tx;
+  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-90;
+}
+
+/**
+Similar to `action-menu`, but always has a border, not only on hover.
+https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-id=1684%3A3678
+ */
+.action-menu-bordered {
+  @apply border-dark-charcoal-20 bg-white text-dark-charcoal focus-visible:border-tx;
+}
+.action-menu-bordered-pressed {
+  @apply border-dark-charcoal bg-dark-charcoal text-white hover:bg-dark-charcoal-90;
 }
 
 .action-menu-muted {
-  @apply border border-tx bg-dark-charcoal-10 text-dark-charcoal hover:border-dark-charcoal-20;
+  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:border-dark-charcoal-20;
+}
+.action-menu-muted-pressed {
+  @apply border-tx bg-dark-charcoal text-white;
 }
 
-.action-menu-muted-pressed {
-  @apply border border-tx bg-dark-charcoal text-white;
+.action-menu[disabled='disabled'],
+.action-menu[aria-disabled='true'],
+.action-menu-muted[disabled='disabled'],
+.action-menu-muted[aria-disabled='true'],
+.action-menu-bordered[disabled='disabled'],
+.action-menu-bordered[aria-disabled='true'] {
+  @apply border-dark-charcoal-10 bg-dark-charcoal-10 text-dark-charcoal-40;
 }
 
 .full {

@@ -1,6 +1,6 @@
 <template>
   <VButton
-    class="flex flex-row py-2 text-sr font-semibold md:text-base"
+    class="group flex flex-row py-2 text-sr font-semibold md:text-base"
     :class="[
       sizeClasses,
       isHeaderScrolled ? 'max-w-[10rem] sm:max-w-[20rem] md:max-w-[16rem]' : '',
@@ -18,7 +18,7 @@
       >{{ buttonLabel }}</span
     >
     <VIcon
-      class="hidden text-dark-charcoal-40 md:block md:ms-2"
+      class="hidden text-dark-charcoal-40 group-hover:text-white md:block md:ms-2"
       :icon-path="caretDownIcon"
     />
   </VButton>
@@ -32,7 +32,8 @@ import {
   ref,
 } from '@nuxtjs/composition-api'
 
-import { ALL_MEDIA, SearchType } from '~/constants/media'
+import { ALL_MEDIA, type SearchType } from '~/constants/media'
+import type { ButtonVariant } from '~/types/button'
 import useSearchType from '~/composables/use-search-type'
 import { useI18n } from '~/composables/use-i18n'
 import { isMinScreen } from '~/composables/use-media-query'
@@ -82,12 +83,12 @@ export default defineComponent({
       }
     })
 
-    const buttonVariant = computed(() => {
+    const buttonVariant = computed<ButtonVariant>(() => {
       if (props.type === 'searchbar') {
         return 'action-menu'
       } else {
         return isMinScreenMd.value && !isHeaderScrolled?.value
-          ? 'tertiary'
+          ? 'action-menu-bordered'
           : 'action-menu'
       }
     })

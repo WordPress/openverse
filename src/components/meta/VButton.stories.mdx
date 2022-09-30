@@ -5,12 +5,8 @@ import {
   Meta,
   Story,
 } from '@storybook/addon-docs'
-
-import VButton, {
-  buttonForms,
-  buttonSizes,
-  buttonVariants,
-} from '~/components/VButton.vue'
+import { buttonForms, buttonSizes, buttonVariants } from '~/types/button'
+import VButton from '~/components/VButton.vue'
 import { capital } from 'case'
 
 <Meta title="Components/VButton" components={VButton} />
@@ -41,7 +37,9 @@ export const Template = (args) => ({
 <Canvas>
   <Story
     name="VButton"
-    args={{}}
+    parameters={{
+      viewport: { defaultViewport: 'sm' },
+    }}
     argTypes={{
       as: {
         options: buttonForms,
@@ -65,24 +63,18 @@ export const Template = (args) => ({
   </Story>
 </Canvas>
 
-## Button variants
-
-export const variants = buttonVariants
-
 export const VariantsTemplate = (args) => ({
   template: `
 <div class="flex gap-4 flex-wrap">
-<VButton v-for="variant in buttonVariants"
+<VButton v-for="variant in args.variants"
     :variant="variant"
     :key="variant"
-    :v-bind="args">
+    class="caption-bold"
+    v-bind="args">
     {{ capitalize(variant) }}
     </VButton>
   </div>`,
   components: { VButton },
-  data: () => ({
-    buttonVariants,
-  }),
   methods: {
     capitalize(str) {
       return capital(str)
@@ -93,10 +85,69 @@ export const VariantsTemplate = (args) => ({
   },
 })
 
+## Button variants
+
+### Primary
+
+The style used for Call-to-action buttons, such as the 'Search' button or 'Get this media item' buttons.
+It is a pink button.
+
 <Canvas>
   <Story
-    name="VButton Variants"
-    args={{}}
+    name="primary"
+    args={{ variants: ['primary'] }}
+    argTypes={{
+      pressed: { control: 'boolean' },
+      size: {
+        options: buttonSizes,
+        control: { type: 'radio' },
+      },
+      disabled: { control: 'boolean' },
+    }}
+  >
+    {VariantsTemplate.bind({})}
+  </Story>
+</Canvas>
+
+### Secondary
+
+The styles used for other buttons.
+
+There are three variants of secondary buttons: filled, bordered and text (without border).
+
+<Canvas>
+  <Story
+    name="secondary"
+    args={{ variants: ['secondary-bordered', 'secondary-filled', 'secondary'] }}
+    argTypes={{
+      pressed: { control: 'boolean' },
+      size: {
+        options: buttonSizes,
+        control: { type: 'radio' },
+      },
+      disabled: { control: 'boolean' },
+    }}
+  >
+    {VariantsTemplate.bind({})}
+  </Story>
+</Canvas>
+
+### Action-menu
+
+The styles used for header 'action-menu' buttons.
+
+'action-menu' also has no border and no background. On hover, there is a light border. It is used in the desktop header buttons and for the content type switcher inside the searchbar.
+
+'action-menu-bordered' has a border but no background. It is used in the desktop header buttons when the (old) header is scrolled.
+
+'action-menu-muted' has a light charcoal background. It is used for filters when some filters are applied.
+
+<Canvas>
+  <Story
+    name="action-menu"
+    args={{
+      variants: ['action-menu', 'action-menu-bordered', 'action-menu-muted'],
+    }}
     argTypes={{
       pressed: { control: 'boolean' },
       size: {

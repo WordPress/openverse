@@ -1,26 +1,33 @@
 <template>
-  <button
+  <VButton
     type="button"
-    class="flex flex-row items-center rounded-sm border border-dark-charcoal p-2 text-sr font-semibold pe-3 hover:bg-dark-charcoal hover:text-white focus:outline-none focus-visible:ring focus-visible:ring-pink focus-visible:hover:border-white"
-    :class="[
-      selected
-        ? 'bg-dark-charcoal text-white focus-visible:border focus-visible:border-white'
-        : 'bg-tx focus-visible:border-tx',
-    ]"
+    variant="secondary-bordered"
+    size="disabled"
+    class="caption-bold h-10 py-2 ps-2 pe-3"
     :aria-pressed="selected"
     @click="handleClick"
   >
     <VIcon :icon-path="iconPath" class="flex-shrink-0 me-1" />
-    <span>{{ $t(`search-type.${searchType}`) }}</span>
-  </button>
+    <span>{{ $t(labelMapping[searchType]) }}</span>
+  </VButton>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  type PropType,
+} from '@nuxtjs/composition-api'
 
-import { ALL_MEDIA, AUDIO, IMAGE, SupportedSearchType } from '~/constants/media'
+import {
+  ALL_MEDIA,
+  AUDIO,
+  IMAGE,
+  type SupportedSearchType,
+} from '~/constants/media'
 import { defineEvent } from '~/types/emits'
 
+import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
 
 import audioIcon from '~/assets/icons/audio-wave.svg'
@@ -32,10 +39,15 @@ const iconMapping = {
   [IMAGE]: imageIcon,
   [ALL_MEDIA]: allIcon,
 }
+const labelMapping = {
+  [AUDIO]: 'search-type.audio',
+  [IMAGE]: 'search-type.image',
+  [ALL_MEDIA]: 'search-type.all',
+}
 
 export default defineComponent({
   name: 'VSearchTypeRadio',
-  components: { VIcon },
+  components: { VButton, VIcon },
   props: {
     /**
      * One of the media types supported.
@@ -55,7 +67,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const iconPath = computed(() => iconMapping[props.searchType])
     const handleClick = () => emit('select', props.searchType)
-    return { iconPath, handleClick }
+    return { iconPath, handleClick, labelMapping }
   },
 })
 </script>

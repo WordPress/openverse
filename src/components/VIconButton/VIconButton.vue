@@ -20,9 +20,10 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
-import VIcon, { IconProps } from '~/components/VIcon/VIcon.vue'
-import VButton, { ButtonProps } from '~/components/VButton.vue'
-import type { ButtonType } from '~/components/VButton.vue'
+import type { ButtonType } from '~/types/button'
+
+import VIcon, { type IconProps } from '~/components/VIcon/VIcon.vue'
+import VButton, { type ButtonProps } from '~/components/VButton.vue'
 
 const SIZE_MAP = Object.freeze({
   tiny: { icon: 'w-6 h-6', button: 'w-6 h-6' },

@@ -2,7 +2,7 @@
   <VButton
     :id="id"
     type="button"
-    variant="secondary"
+    variant="secondary-filled"
     size="disabled"
     class="py-2 px-3 text-sr"
     :data-clipboard-target="el"

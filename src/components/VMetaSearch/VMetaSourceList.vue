@@ -10,7 +10,7 @@
         :pressed="a11yProps['aria-expanded']"
         :aria-haspopup="a11yProps['aria-haspopup']"
         aria-controls="source-list-popover"
-        variant="tertiary"
+        variant="action-menu-bordered"
         size="disabled"
         class="caption-regular justify-between py-1 px-3 text-dark-charcoal pe-2"
         >{{ $t('meta-search.button').toString() }}

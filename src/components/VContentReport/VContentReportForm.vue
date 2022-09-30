@@ -76,7 +76,7 @@
         </div>
 
         <div class="flex flex-row items-center justify-end gap-4">
-          <VButton variant="tertiary" @click="handleCancel">
+          <VButton variant="secondary-bordered" @click="handleCancel">
             {{ $t('media-details.content-report.form.cancel') }}
           </VButton>
 
@@ -84,10 +84,8 @@
             v-if="selectedReason === DMCA"
             key="dmca"
             as="VLink"
-            variant="secondary"
+            variant="secondary-filled"
             :href="DMCA_FORM_URL"
-            target="_blank"
-            rel="noopener noreferrer"
           >
             {{ $t('media-details.content-report.form.dmca.open') }}
             <VIcon :size="4" class="ms-1" :icon-path="icons.externalLink" />
@@ -98,7 +96,7 @@
             type="submit"
             :disabled="isSubmitDisabled"
             :focusable-when-disabled="true"
-            variant="secondary"
+            variant="secondary-filled"
             :value="$t('media-details.content-report.form.submit')"
           >
             {{ $t('media-details.content-report.form.submit') }}

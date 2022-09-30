@@ -1,7 +1,7 @@
 <template>
   <VButton
     variant="plain"
-    class="report-button font-semibold text-dark-charcoal-70"
+    class="report-button font-semibold text-dark-charcoal-70 hover:underline"
   >
     <span class="text-sr md:hidden md:text-base">{{
       $t('media-details.content-report.short')

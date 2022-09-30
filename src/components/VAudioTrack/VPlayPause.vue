@@ -34,9 +34,9 @@ import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import { AudioLayout, AudioStatus, statusVerbMap } from '~/constants/audio'
 import { defineEvent } from '~/types/emits'
+import type { ButtonConnections, ButtonVariant } from '~/types/button'
 
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
-import type { ButtonConnections, ButtonVariant } from '~/components/VButton.vue'
 
 import playIcon from '~/assets/icons/play.svg'
 import pauseIcon from '~/assets/icons/pause.svg'
