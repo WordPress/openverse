@@ -222,7 +222,7 @@ def _build_license_url(license_path) -> str:
     derived_url = f"https://creativecommons.org/{license_path}/"
     rewritten_license_url = urls.rewrite_redirected_url(derived_url)
     if rewritten_license_url is None:
-        raise InvalidLicenseURLException(f"Failed to rewrite {derived_url}.")
+        raise InvalidLicenseURLException(f"Failed to rewrite URL: {derived_url}")
     return rewritten_license_url
 
 

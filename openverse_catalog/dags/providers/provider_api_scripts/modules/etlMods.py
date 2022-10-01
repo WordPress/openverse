@@ -155,7 +155,7 @@ def requestContent(_url, _headers=None):
             return response.json()
         else:
             logging.warning(
-                f"Unable to request URL: {_url}. Status code:" f"{response.status_code}"
+                f"Unable to request URL: {_url} Status code:" f"{response.status_code}"
             )
             return None
 

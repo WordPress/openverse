@@ -67,7 +67,7 @@ class DelayedRequester:
                 logger.error(f"Authorization failed for URL: {response.url}")
             else:
                 logger.warning(
-                    f"Unable to request URL: {response.url}.  "
+                    f"Unable to request URL: {response.url}  "
                     f"Status code: {response.status_code}"
                 )
             return response
@@ -82,7 +82,7 @@ class DelayedRequester:
             # sent a SIGTERM, which means that the task should be stopped.
             raise
         except Exception as e:
-            logger.error(f"Error with the request for URL: {url}.")
+            logger.error(f"Error with the request for URL: {url}")
             logger.info(f"{type(e).__name__}: {e}")
             logger.info(f"Using query parameters {params}")
             logger.info(f'Using headers {kwargs.get("headers")}')

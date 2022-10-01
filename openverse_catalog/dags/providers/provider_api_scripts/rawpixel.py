@@ -31,7 +31,7 @@ def _request_content(url, query_params=None, headers=None):
             return response.json()
         else:
             logger.warning(
-                f"Unable to request URL: {url}. Status code: " f"{response.status_code}"
+                f"Unable to request URL: {url} Status code: {response.status_code}"
             )
             return None
 

@@ -54,7 +54,7 @@ def validate_url_string(url_string, strip_slash: bool = True):
         return upgraded_url
     else:
         logger.info(
-            f"Invalid url {url_string}, attempted upgrade: {upgraded_url}."
+            f"Invalid url {url_string}, attempted upgrade: {upgraded_url}"
             " Returning None"
         )
         return None
