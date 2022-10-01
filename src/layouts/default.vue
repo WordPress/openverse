@@ -7,7 +7,7 @@
       <template v-if="isNewHeaderEnabled">
         <template v-if="isSearchRoute">
           <VHeaderDesktop v-if="isMinScreenLg" />
-          <VHeader v-else />
+          <VHeaderMobile v-else />
         </template>
         <VHeaderInternal v-else />
       </template>
@@ -75,7 +75,7 @@ const embeddedPage = {
     VHeaderOld,
     VHeaderDesktop: () => import('~/components/VHeader/VHeaderDesktop.vue'),
     VHeaderInternal: () => import('~/components/VHeader/VHeaderInternal.vue'),
-    VHeader: () => import('~/components/VHeader/VHeader.vue'),
+    VHeaderMobile: () => import('~/components/VHeader/VHeaderMobile.vue'),
     VFooter,
     VModalTarget,
     VTeleportTarget,

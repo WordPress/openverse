@@ -11,7 +11,7 @@
 
     <VSearchBar
       v-model.trim="searchTerm"
-      class="flex-grow"
+      class="flex-grow me-4"
       size="medium"
       @submit="handleSearch"
     >
@@ -40,7 +40,6 @@
     </VTeleport>
   </header>
 </template>
-
 <script lang="ts">
 import {
   computed,
@@ -80,6 +79,9 @@ import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover
 
 import closeIcon from '~/assets/icons/close.svg'
 
+/**
+ * The desktop search header.
+ */
 export default defineComponent({
   name: 'VHeaderDesktop',
   components: {
@@ -248,8 +250,7 @@ export default defineComponent({
       selectSearchType,
       searchStatus,
       searchTerm,
-      sidebarVisibleRef: sidebarVisibleRef,
-
+      sidebarVisibleRef,
       toggleSidebar,
       onTab,
     }

@@ -1,0 +1,42 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+import VHeaderMobile from '~/components/VHeader/VHeaderMobile.vue'
+
+<Meta
+  title="Components/VHeader/VHeaderMobile"
+  component={VHeaderMobile}
+  argTypes={{
+    input: {
+      action: 'input',
+    },
+    submit: {
+      action: 'submit',
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `
+    <VHeaderMobile v-bind="args" v-on="args" />`,
+  components: { VHeaderMobile },
+  setup() {
+    return { args }
+  },
+})
+
+# VHeaderMobile
+
+<Description of={VHeaderMobile} />
+
+<ArgsTable of={VHeaderMobile} />
+
+The header component used for screens up to `lg` breakpoint. Fixed on scroll, search bar, content switcher, pages menu and filters button.
+
+<Canvas>
+  <Story name="Default">{Template.bind({})}</Story>
+</Canvas>

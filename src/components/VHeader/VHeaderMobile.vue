@@ -1,45 +1,43 @@
 <template>
   <header
-    class="main-header z-30 flex w-full items-center justify-between gap-x-2 gap-y-4 bg-white px-4 py-3 md:items-stretch md:py-4 md:px-7"
+    class="main-header z-30 flex w-full items-center justify-between gap-x-2 bg-white px-4 py-3 md:items-stretch md:py-4 md:px-7"
     :class="{
-      'flex-wrap md:flex-nowrap': !isHeaderScrolled,
       'border-b border-white': !isHeaderScrolled && !isMenuOpen,
-      'border-b border-dark-charcoal-20':
-        isSearchRoute && (isHeaderScrolled || isMenuOpen),
-      'md:justify-start': !isSearchRoute,
-      'flex-nowrap': !isSearchRoute && isHeaderScrolled,
+      'border-b border-dark-charcoal-20': isHeaderScrolled || isMenuOpen,
     }"
   >
     <VLogoButton :is-fetching="isFetching" :is-search-route="isSearchRoute" />
 
     <VSearchBar
       v-model.trim="searchTerm"
-      class="flex-grow lg:w-1/2 lg:flex-grow-0 2xl:w-1/3"
-      :size="isMinScreenMd ? 'medium' : isHeaderScrolled ? 'small' : 'large'"
-      :class="{
-        'order-4 w-full md:order-none md:w-auto': !isHeaderScrolled,
-      }"
+      class="flex-grow"
+      size="medium"
       @submit="handleSearch"
     >
       <span
         v-show="searchStatus"
-        class="info mx-4 hidden whitespace-nowrap text-xs font-semibold text-dark-charcoal-70 group-hover:text-dark-charcoal group-focus:text-dark-charcoal lg:block"
+        class="info mx-4 hidden whitespace-nowrap text-xs font-semibold text-dark-charcoal-70 group-hover:text-dark-charcoal group-focus:text-dark-charcoal"
       >
         {{ searchStatus }}
       </span>
     </VSearchBar>
-
-    <VHeaderMenu
-      :is-search-route="isSearchRoute"
-      @open="openMenuModal(menus.CONTENT_SWITCHER)"
-      @close="close"
-    />
-    <VHeaderFilter
-      v-if="isSearchRoute"
-      :disabled="areFiltersDisabled"
-      @open="openMenuModal(menus.FILTERS)"
-      @close="close"
-    />
+    <VModal
+      :label="$t('header.aria.menu').toString()"
+      class="flex items-stretch"
+    >
+      <template #trigger="{ visible, a11Props }">
+        <VContentSettingsButton :is-pressed="visible" v-bind="a11Props" />
+      </template>
+      <template #default>
+        <nav
+          id="content-switcher-modal"
+          class="p-6"
+          aria-labelledby="content-switcher-heading"
+        >
+          <VSearchTypes ref="searchTypesRef" size="small" :use-links="true" />
+        </nav>
+      </template>
+    </VModal>
   </header>
 </template>
 
@@ -48,7 +46,6 @@ import {
   computed,
   defineComponent,
   inject,
-  provide,
   ref,
   useContext,
   useRouter,
@@ -62,10 +59,11 @@ import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
 import { useMediaStore } from '~/stores/media'
 import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
 
+import VContentSettingsButton from '~/components/VHeader/VContentSettingsButton.vue'
 import VLogoButton from '~/components/VHeader/VLogoButton.vue'
-import VHeaderFilter from '~/components/VHeader/VHeaderFilter.vue'
+import VModal from '~/components/VModal/VModal.vue'
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
-import VHeaderMenu from '~/components/VHeader/VHeaderMenu.vue'
+import VSearchTypes from '~/components/VContentSwitcher/VSearchTypes.vue'
 
 import closeIcon from '~/assets/icons/close.svg'
 
@@ -75,13 +73,17 @@ const menus = {
 }
 type HeaderMenu = 'filters' | 'content-switcher'
 
+/**
+ * The mobile search header component.
+ */
 export default defineComponent({
-  name: 'VHeader',
+  name: 'VHeaderMobile',
   components: {
+    VContentSettingsButton,
     VLogoButton,
-    VHeaderFilter,
-    VHeaderMenu,
+    VModal,
     VSearchBar,
+    VSearchTypes,
   },
   setup() {
     const mediaStore = useMediaStore()
@@ -94,8 +96,6 @@ export default defineComponent({
 
     const isHeaderScrolled = inject('isHeaderScrolled', false)
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
-    const headerHasTwoRows = inject('headerHasTwoRows')
-    provide('isMinScreenMd', isMinScreenMd)
 
     const menuModalRef = ref(null)
 
@@ -197,7 +197,6 @@ export default defineComponent({
       isHeaderScrolled,
       isMinScreenMd,
       isSearchRoute,
-      headerHasTwoRows,
       areFiltersDisabled,
 
       menuModalRef,
