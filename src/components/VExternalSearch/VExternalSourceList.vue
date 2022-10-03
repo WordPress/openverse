@@ -2,7 +2,7 @@
   <VPopover
     ref="sourceListPopover"
     class="flex items-stretch"
-    :label="$t('meta-search.button').toString()"
+    :label="$t('external-sources.button').toString()"
     placement="top-start"
   >
     <template #trigger="{ a11yProps }">
@@ -13,7 +13,7 @@
         variant="action-menu-bordered"
         size="disabled"
         class="caption-regular justify-between py-1 px-3 text-dark-charcoal pe-2"
-        >{{ $t('meta-search.button').toString() }}
+        >{{ $t('external-sources.button').toString() }}
         <VIcon
           class="text-dark-charcoal-40 ms-1"
           :class="a11yProps['aria-expanded'] ? 'rotate-180' : 'rotate-0'"
@@ -36,10 +36,10 @@
           @click="close"
         />
         <h2 class="description-bold mb-2 px-4 pt-5 text-start">
-          {{ $t('meta-search.title') }}
+          {{ $t('external-sources.title') }}
         </h2>
         <p class="caption-regular mb-4 px-4 text-start">
-          {{ $t('meta-search.caption', { openverse: 'Openverse' }) }}
+          {{ $t('external-sources.caption', { openverse: 'Openverse' }) }}
         </p>
         <VButton
           v-for="source in sources"
@@ -84,7 +84,7 @@ import closeSmallIcon from '~/assets/icons/close-small.svg'
  * when there are insufficient or zero search results.
  */
 export default defineComponent({
-  name: 'VMetaSourceList',
+  name: 'VExternalSourceList',
   components: { VButton, VIcon, VIconButton, VPopover },
   props: {
     /**

@@ -18,7 +18,7 @@
 
     <slot name="media" />
 
-    <VMetaSearchForm
+    <VExternalSearchForm
       :type="metaSearchFormType"
       :has-no-results="hasNoResults"
       :query="query"
@@ -43,7 +43,7 @@ import { defineEvent } from '~/types/emits'
 import type { ApiQueryParams } from '~/utils/search-query-transform'
 import type { FetchState } from '~/models/fetch-state'
 
-import VMetaSearchForm from '~/components/VMetaSearch/VMetaSearchForm.vue'
+import VExternalSearchForm from '~/components/VExternalSearch/VExternalSearchForm.vue'
 import VErrorSection from '~/components/VErrorSection/VErrorSection.vue'
 import VErrorImage from '~/components/VErrorSection/VErrorImage.vue'
 import VNoResults from '~/components/VErrorSection/VNoResults.vue'
@@ -53,7 +53,7 @@ export default defineComponent({
   name: 'VSearchGrid',
   components: {
     VErrorSection,
-    VMetaSearchForm,
+    VExternalSearchForm,
     VErrorImage,
     VNoResults,
     VSearchResultsTitle,

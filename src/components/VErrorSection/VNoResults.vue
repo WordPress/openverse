@@ -8,7 +8,7 @@
     >
       {{ $t('no-results.alternatives') }}
     </h2>
-    <VMetaSourceList class="mt-4 md:mt-6" :type="type" :query="query" />
+    <VExternalSourceList class="mt-4 md:mt-6" :type="type" :query="query" />
   </div>
 </template>
 
@@ -18,11 +18,11 @@ import { defineComponent, PropType } from '@nuxtjs/composition-api'
 import type { MediaType } from '~/constants/media'
 import type { ApiQueryParams } from '~/utils/search-query-transform'
 
-import VMetaSourceList from '~/components/VMetaSearch/VMetaSourceList.vue'
+import VExternalSourceList from '~/components/VExternalSearch/VExternalSourceList.vue'
 
 export default defineComponent({
   name: 'VNoResults',
-  components: { VMetaSourceList },
+  components: { VExternalSourceList },
   props: {
     type: {
       type: String as PropType<MediaType>,

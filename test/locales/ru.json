@@ -89,7 +89,7 @@
     "extension-nav-item": "Веб-расширение",
     "support-nav-item": "Поддержите нас",
     "feedback-nav-item": "Обратная связь",
-    "meta-search-nav-item": "Мета поиск",
+    "external-sources-nav-item": "Мета поиск",
     "search-guide-nav-item": "Руководство по поиску",
     "source-nav-item": "Источники",
     "about-nav-item": "Наша история",
@@ -262,7 +262,7 @@
     },
     "related-images": "Связанные изображения"
   },
-  "meta-search": {
+  "external-sources": {
     "card": {
       "checkboxes": {
         "title": "Использование"
@@ -309,7 +309,7 @@
   "waveform": {
     "current-time": "{time} секунда|{time} секунды|{time} секунд"
   },
-  "meta-search-page": {
+  "external-sources-page": {
     "why": {
       "feedback-suggestions": "Мы надеемся, что вам нравится. Если у вас есть предложения по улучшению, то есть {feedback}.",
       "feedback-link": "отзыв",

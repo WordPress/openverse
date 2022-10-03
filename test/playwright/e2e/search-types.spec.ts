@@ -71,10 +71,12 @@ async function checkLoadMore(page: Page, searchType: SearchTypeConfig) {
   }
 }
 async function checkMetasearchForm(page: Page, searchType: SearchTypeConfig) {
-  const metaSearchForm = await page.locator('[data-testid="meta-search-form"]')
+  const metaSearchForm = await page.locator(
+    '[data-testid="external-sources-form"]'
+  )
   await expect(metaSearchForm).toHaveCount(1)
 
-  const sourceButtons = await page.locator('.meta-search a')
+  const sourceButtons = await page.locator('.external-sources a')
   await expect(sourceButtons).toHaveCount(searchType.metaSourceCount)
 }
 

@@ -12,7 +12,7 @@ test.describe.configure({ mode: 'parallel' })
 
 const contentPages = [
   'about',
-  'meta-search',
+  'external-sources',
   'search-help',
   'non-existent',
   'sources',

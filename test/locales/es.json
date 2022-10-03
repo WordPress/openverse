@@ -424,7 +424,7 @@
     "extension-nav-item": "Extensión web",
     "support-nav-item": "Apóyanos",
     "feedback-nav-item": "Opinión",
-    "meta-search-nav-item": "Búsqueda meta",
+    "external-sources-nav-item": "Búsqueda meta",
     "search-guide-nav-item": "Guía de búsqueda",
     "source-nav-item": "Fuentes",
     "about-nav-item": "Nuestra historia",
@@ -449,7 +449,7 @@
       "text": "La traducción para el idioma local {locale} está incompleta. Ayúdanos a alcanzar el 100 % {link}."
     }
   },
-  "meta-search-page": {
+  "external-sources-page": {
     "images": {
       "not-finding": "Mira la sección «{not-finding}» debajo de los resultados.",
       "demo-label": "Diseño de la búsqueda meta para tipos de medios indexados, como las imágenes",
@@ -597,7 +597,7 @@
       "intro": "Una extensión del navegador que te permite buscar y usar imágenes con licencia abierta y de dominio público."
     }
   },
-  "meta-search": {
+  "external-sources": {
     "card": {
       "checkboxes": {
         "commercial": "Uso para fines comerciales",

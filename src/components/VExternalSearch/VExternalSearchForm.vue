@@ -2,38 +2,38 @@
   <section
     :key="type"
     ref="sectionRef"
-    class="meta-search flex flex-row place-items-center justify-center p-4"
-    data-testid="meta-search-form"
+    class="external-sources flex flex-row place-items-center justify-center p-4"
+    data-testid="external-sources-form"
     @keydown.tab.exact="handleTab"
   >
     <i18n
       v-if="!hasNoResults && isSupported"
-      path="meta-search.form.supported-title"
+      path="external-sources.form.supported-title"
       tag="p"
       class="text-base font-normal leading-[130%]"
     />
 
     <i18n
       v-else-if="!hasNoResults && !isSupported"
-      path="meta-search.form.unsupported-title"
+      path="external-sources.form.unsupported-title"
       tag="p"
       class="text-base font-normal leading-[130%]"
     >
       <template #openverse>Openverse</template>
-      <template #type>{{ $t(`meta-search.form.types.${type}`) }}</template>
+      <template #type>{{ $t(`external-sources.form.types.${type}`) }}</template>
     </i18n>
 
     <i18n
       v-else
-      path="meta-search.form.no-results-title"
+      path="external-sources.form.no-results-title"
       tag="p"
       class="text-base font-normal leading-[130%]"
     >
-      <template #type>{{ $t(`meta-search.form.types.${type}`) }}</template>
+      <template #type>{{ $t(`external-sources.form.types.${type}`) }}</template>
       <template #query>{{ query.q }}</template>
     </i18n>
 
-    <VMetaSourceList
+    <VExternalSourceList
       class="inline-flex ms-2 md:justify-center"
       :type="type"
       :query="query"
@@ -54,12 +54,12 @@ import type { ApiQueryParams } from '~/utils/search-query-transform'
 import { getFocusableElements } from '~/utils/focus-management'
 import { defineEvent } from '~/types/emits'
 
-import VMetaSourceList from './VMetaSourceList.vue'
+import VExternalSourceList from './VExternalSourceList.vue'
 
 export default defineComponent({
-  name: 'VMetaSearchForm',
+  name: 'VExternalSearchForm',
   components: {
-    VMetaSourceList,
+    VExternalSourceList,
   },
   props: {
     query: { type: Object as PropType<ApiQueryParams>, required: true },
