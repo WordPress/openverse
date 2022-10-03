@@ -44,7 +44,9 @@
           <div class="part-a">
             <i18n tag="span" path="audio-track.creator">
               <template #creator>{{ audio.creator }}</template> </i18n
-            ><span v-show="isLarge" class="mx-2">{{ $t('interpunct') }}</span>
+            ><span v-show="isLarge" class="mx-2" aria-hidden="true">{{
+              $t('interpunct')
+            }}</span>
           </div>
 
           <div class="part-b inline-flex flex-row items-center">
@@ -52,12 +54,16 @@
               <span
                 class="inline-block rounded-sm bg-dark-charcoal-06 p-1 font-semibold text-dark-charcoal"
                 >{{ timeFmt(audio.duration || 0, true) }}</span
-              ><span class="mx-2">{{ $t('interpunct') }}</span>
+              ><span class="mx-2" aria-hidden="true">{{
+                $t('interpunct')
+              }}</span>
             </span>
 
             <span v-if="audio.category">
               <span>{{ $t(`filters.audio-categories.${audio.category}`) }}</span
-              ><span class="mx-2">{{ $t('interpunct') }}</span>
+              ><span class="mx-2" aria-hidden="true">{{
+                $t('interpunct')
+              }}</span>
             </span>
 
             <VLicense :hide-name="isSmall" :license="audio.license" />

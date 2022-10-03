@@ -42,9 +42,11 @@
             </template>
           </i18n>
 
-          <span class="hidden text-dark-charcoal-70 lg:block">{{
-            $t('interpunct')
-          }}</span>
+          <span
+            class="hidden text-dark-charcoal-70 lg:block"
+            aria-hidden="true"
+            >{{ $t('interpunct') }}</span
+          >
 
           <div>{{ timeFmt(audio.duration || 0, true) }}</div>
         </div>
