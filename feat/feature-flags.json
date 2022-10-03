@@ -16,6 +16,14 @@
       "description": "Toggle the new header.",
       "defaultState": "off"
     },
+    "recent_searches": {
+      "status": {
+        "staging": "switchable",
+        "production": "disabled"
+      },
+      "description": "Save and display the user's recent searches.",
+      "defaultState": "on"
+    },
     "feat_disabled": {
       "status": "disabled",
       "description": "Will always be disabled"

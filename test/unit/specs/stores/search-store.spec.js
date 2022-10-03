@@ -2,6 +2,8 @@ import { nextTick } from '@nuxtjs/composition-api'
 
 import { setActivePinia, createPinia } from '~~/test/unit/test-utils/pinia'
 
+import { env } from '~/utils/env'
+
 import { filterData, mediaFilterKeys } from '~/constants/filters'
 import {
   ALL_MEDIA,
@@ -434,6 +436,48 @@ describe('Search Store', () => {
         code: 'commercial',
       })
       expect(searchStore.isAnyFilterApplied).toEqual(false)
+    })
+
+    describe('Recent searches', () => {
+      it('are saved, without duplication and not exceeding the limit.', () => {
+        const searchStore = useSearchStore()
+        const featureFlagStore = useFeatureFlagStore()
+        featureFlagStore.toggleFeature('recent_searches', 'on')
+
+        searchStore.setSearchTerm('boop')
+        searchStore.setSearchTerm('bar')
+        searchStore.setSearchTerm('foo')
+        searchStore.setSearchTerm('baz')
+        searchStore.setSearchTerm('boom')
+        searchStore.setSearchTerm('foo')
+
+        expect(searchStore.recentSearches).toEqual([
+          'foo',
+          'boom',
+          'baz',
+          'bar',
+        ])
+        expect(searchStore.recentSearches.length).toEqual(
+          parseInt(env.savedSearchCount)
+        )
+      })
+      it('can be cleared', () => {
+        const searchStore = useSearchStore()
+        const featureFlagStore = useFeatureFlagStore()
+        featureFlagStore.toggleFeature('recent_searches', 'on')
+
+        // Clear up front in case of any preserved searches
+        searchStore.clearRecentSearches()
+
+        searchStore.setSearchTerm('boop')
+        searchStore.setSearchTerm('bar')
+
+        expect(searchStore.recentSearches).toEqual(['bar', 'boop'])
+
+        searchStore.clearRecentSearches()
+
+        expect(searchStore.recentSearches).toEqual([])
+      })
     })
   })
 })

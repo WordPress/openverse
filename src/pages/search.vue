@@ -74,6 +74,13 @@ export default defineComponent({
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
+    // I don't know *exactly* why this is necessary, but without it
+    // transitioning from the homepage to this page breaks the
+    // watcher in useStorage and recent searches won't be saved
+    // properly. It is something related to Pinia, Nuxt SSR,
+    // hydration and Vue reactives. Hopefully fixed in Nuxt 3.
+    searchStore.refreshRecentSearches()
+
     const searchTerm = computed(() => searchStore.searchTerm)
     const searchType = computed(() => searchStore.searchType)
     const query = computed(() => searchStore.searchQueryParams)

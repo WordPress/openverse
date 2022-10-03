@@ -29,9 +29,10 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@nuxtjs/composition-api'
 
+import { useStorage } from '@vueuse/core'
+
 import { defineEvent } from '~/types/emits'
 import { useI18n } from '~/composables/use-i18n'
-import { useStorage } from '~/composables/use-storage'
 
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
 
