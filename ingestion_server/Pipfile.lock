@@ -166,11 +166,11 @@
         },
         "jsonschema": {
             "hashes": [
-                "sha256:21f4979391bdceb044e502fd8e79e738c0cdfbdc8773f9a49b5769461e82fe1e",
-                "sha256:2df0fab225abb3b41967bb3a46fd37dc74b1536b5296d0b1c2078cd072adf0f7"
+                "sha256:165059f076eff6971bae5b742fc029a7b4ef3f9bcf04c14e4776a7605de14b23",
+                "sha256:9e74b8f9738d6a946d70705dc692b74b5429cd0960d58e79ffecfc43b2221eb9"
             ],
             "index": "pypi",
-            "version": "==4.15.0"
+            "version": "==4.16.0"
         },
         "packaging": {
             "hashes": [
