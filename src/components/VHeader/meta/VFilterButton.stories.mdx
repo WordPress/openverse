@@ -5,7 +5,6 @@ import {
   Meta,
   Story,
 } from '@storybook/addon-docs'
-import { provide, ref } from '@nuxtjs/composition-api'
 import VFilterButton from '~/components/VHeader/VFilterButton.vue'
 import { useSearchStore } from '~/stores/search'
 import { filterData, mediaFilterKeys } from '~/constants/filters'
@@ -21,23 +20,24 @@ import { IMAGE } from '~/constants/media'
     appliedFilters: {
       type: 'number',
     },
-    scrolled: {
-      type: 'boolean',
+    toggle: {
+      action: 'toggle',
     },
-    isMinMd: {
-      type: 'boolean',
+    tab: {
+      action: 'tab',
     },
   }}
 />
 
 export const Template = (args, { argTypes }) => ({
-  template: `<VFilterButton v-bind="args" />`,
+  template: `<VFilterButton v-bind="args" v-on="args" />`,
   components: { VFilterButton },
   props: Object.keys(argTypes),
   setup() {
     const searchStore = useSearchStore()
     searchStore.setSearchType(IMAGE)
     function applyNFilters(filterCount) {
+      searchStore.clearFilters()
       const filterTypes = [...mediaFilterKeys[IMAGE]]
       let filterIdx = 0
       // Skip license type filters as they can disable license filters
@@ -56,12 +56,6 @@ export const Template = (args, { argTypes }) => ({
       }
     }
     applyNFilters(args.appliedFilters)
-    if (args.scrolled) {
-      provide('isHeaderScrolled', ref(true))
-    }
-    if (args.isMinMd) {
-      provide('isMinScreenMd', ref(true))
-    }
     return { args }
   },
 })
@@ -78,15 +72,24 @@ the field receives an input. It also emits the `search` event when the search
 button is clicked.
 
 <Canvas>
-  <Story name="Default">{Template.bind({})}</Story>
+  <Story
+    name="Default"
+    parameters={{
+      viewport: {
+        defaultViewport: 'lg',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
 </Canvas>
 
 <Canvas>
   <Story
-    name="Mobile Scrolled"
+    name="With text label"
     parameters={{
       viewport: {
-        defaultViewport: 'iphonex',
+        defaultViewport: 'xl',
       },
     }}
   >

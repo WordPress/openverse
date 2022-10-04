@@ -1,18 +1,14 @@
 <template>
   <VButton
     id="filter-button"
-    :variant="variant"
+    :variant="filtersAreApplied ? 'action-menu-muted' : 'action-menu'"
     size="disabled"
-    class="align-center flex-shrink-0 gap-2 self-center py-2 font-semibold focus-visible:border-tx focus-visible:ring focus-visible:ring-pink"
-    :class="
-      filtersAreApplied
-        ? 'flex-shrink-0 px-3'
-        : 'h-10 w-10 px-0 md:h-auto md:w-auto md:px-3'
-    "
+    class="align-center label-regular h-12 w-12 gap-2 self-center xl:w-auto xl:ps-3"
+    :class="[filtersAreApplied ? 'xl:pe-3' : 'xl:pe-4']"
     :pressed="pressed"
     :disabled="disabled"
     aria-controls="filters"
-    :aria-label="mdMinLabel"
+    :aria-label="xlMinLabel"
     @click="$emit('toggle')"
     @keydown.tab.exact="$emit('tab', $event)"
   >
@@ -20,19 +16,18 @@
       :class="filtersAreApplied ? 'hidden' : 'block'"
       :icon-path="filterIcon"
     />
-    <span class="hidden md:inline-block">{{ mdMinLabel }}</span>
-    <span class="md:hidden" :class="!filtersAreApplied && 'hidden'">{{
-      smMaxLabel
+    <span class="hidden xl:inline-block">{{ xlMinLabel }}</span>
+    <span class="xl:hidden" :class="{ hidden: !filtersAreApplied }">{{
+      lgMaxLabel
     }}</span>
   </VButton>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 
 import { useSearchStore } from '~/stores/search'
 import { defineEvent } from '~/types/emits'
-import type { ButtonVariant } from '~/types/button'
 import { useI18n } from '~/composables/use-i18n'
 
 import VButton from '~/components/VButton.vue'
@@ -63,29 +58,8 @@ export default defineComponent({
   setup() {
     const i18n = useI18n()
     const searchStore = useSearchStore()
-    const isMinScreenMd = inject('isMinScreenMd', ref(false))
-    const isHeaderScrolled = inject('isHeaderScrolled', ref(false))
     const filterCount = computed(() => searchStore.appliedFilterCount)
     const filtersAreApplied = computed(() => filterCount.value > 0)
-
-    /**
-     * Determine the visual style of the button
-     * based on the viewport, the application of filters, and scrolling.
-     */
-    const variant = computed(() => {
-      // Show the bordered state by default, unless below md
-      let value: ButtonVariant = isMinScreenMd.value
-        ? 'action-menu-bordered'
-        : 'action-menu'
-
-      if (isHeaderScrolled.value) {
-        value = 'action-menu'
-      }
-      if (filtersAreApplied.value) {
-        value = 'action-menu-muted'
-      }
-      return value
-    })
 
     /**
      * This label's verbosity makes it useful for the aria-label
@@ -93,25 +67,19 @@ export default defineComponent({
      * label would just be the number of applied filters, and therefore
      * basically useless as far as a label is concerned!
      */
-    const mdMinLabel = computed(() =>
+    const xlMinLabel = computed(() =>
       filtersAreApplied.value
         ? i18n.tc('header.filter-button.with-count', filterCount.value)
         : i18n.t('header.filter-button.simple')
     )
-
-    const smMaxLabel = computed(() =>
-      isHeaderScrolled.value
-        ? filterCount.value
-        : i18n.tc('header.filter-button.with-count', filterCount.value)
+    const lgMaxLabel = computed(() =>
+      filtersAreApplied ? filterCount.value : ''
     )
 
     return {
-      filterCount,
       filterIcon,
-      mdMinLabel,
-      smMaxLabel,
-      variant,
-      isHeaderScrolled,
+      xlMinLabel,
+      lgMaxLabel,
       filtersAreApplied,
     }
   },
