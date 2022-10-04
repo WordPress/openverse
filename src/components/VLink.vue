@@ -1,27 +1,21 @@
 <!-- eslint-disable vue/no-restricted-syntax -->
 <template>
   <NuxtLink
-    v-if="linkComponent === 'NuxtLink'"
-    v-bind="$attrs"
+    v-if="isNuxtLink"
     :class="{ 'inline-flex flex-row items-center gap-2': showExternalIcon }"
     :to="linkTo"
     v-on="$listeners"
     @click.native="$emit('click', $event)"
   >
-    <slot /><VIcon
-      v-if="showExternalIcon && !isInternal"
-      :icon-path="externalLinkIcon"
-      class="inline-block"
-      :size="4"
-      rtl-flip
-    />
+    <slot />
   </NuxtLink>
   <a
-    v-else-if="linkComponent === 'a'"
-    v-bind="$attrs"
+    v-else
     :href="href"
     target="_blank"
     rel="noopener noreferrer"
+    :role="href ? undefined : 'link'"
+    :aria-disabled="!href"
     :class="{ 'inline-flex flex-row items-center gap-2': showExternalIcon }"
     v-on="$listeners"
   >
@@ -33,26 +27,13 @@
       rtl-flip
     />
   </a>
-  <span
-    v-else
-    v-bind="$attrs"
-    :class="{ 'inline-flex flex-row items-center gap-2': showExternalIcon }"
-  >
-    <slot /><VIcon
-      v-if="showExternalIcon && !isInternal"
-      :icon-path="externalLinkIcon"
-      class="inline-block"
-      :size="4"
-      rtl-flip
-    />
-  </span>
 </template>
 
 <script lang="ts">
 /**
- * This is a wrapper component for all links. If a link is dynamically generated and doesn't have
- * an `href` prop (as the links for detail pages when the image detail hasn't loaded yet),
- * it is rendered as a `span`.
+ * This is a wrapper component for all links. If `href` prop is undefined,
+ * the link will be rendered as a disabled: an `<a>` element without `href`
+ * attribute and with `role="link"` and `aria-disabled="true"` attributes.
  * Links with `href` starting with `/` are treated as internal links.
  *
  * Internal links use `NuxtLink` component with `to` attribute set to `localePath(href)`
@@ -67,7 +48,6 @@ import externalLinkIcon from '~/assets/icons/external-link.svg'
 export default defineComponent({
   name: 'VLink',
   components: { VIcon },
-  inheritAttrs: false,
   props: {
     href: {
       type: String,
@@ -96,9 +76,7 @@ export default defineComponent({
     const isInternal = computed(
       () => hasHref.value && props.href?.startsWith('/')
     )
-    const linkComponent = computed(() =>
-      hasHref.value ? (isInternal.value ? 'NuxtLink' : 'a') : 'span'
-    )
+    const isNuxtLink = computed(() => hasHref.value && isInternal.value)
 
     let linkTo = computed(() =>
       checkHref(props) && isInternal.value
@@ -108,7 +86,7 @@ export default defineComponent({
 
     return {
       linkTo,
-      linkComponent,
+      isNuxtLink,
       isInternal,
       externalLinkIcon,
     }

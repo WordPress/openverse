@@ -2,8 +2,6 @@
   <!-- We 'disable' the link when there are 0 results by removing the href and setting aria-disabled. -->
   <VLink
     :href="hasResults ? to : undefined"
-    role="link"
-    :aria-disabled="!hasResults"
     class="flex w-full flex-col items-start overflow-hidden rounded-sm border border-dark-charcoal/20 bg-white py-4 ps-4 pe-12 md:flex-row md:items-center md:justify-between md:p-6"
     :class="
       hasResults
