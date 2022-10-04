@@ -13,7 +13,7 @@ from rest_framework.request import Request
 
 from elasticsearch.exceptions import NotFoundError, RequestError
 from elasticsearch_dsl import Q, Search
-from elasticsearch_dsl.query import EMPTY_QUERY, Query
+from elasticsearch_dsl.query import EMPTY_QUERY, MoreLikeThis, Query
 from elasticsearch_dsl.response import Hit, Response
 
 import catalog.api.models as models
@@ -421,11 +421,12 @@ def related_media(uuid, index, request, filter_dead):
 
     s = search_client
     s = s.query(
-        "more_like_this",
-        fields=["tags.name", "title", "creator"],
-        like={"_index": index, "_id": _id},
-        min_term_freq=1,
-        max_query_terms=50,
+        MoreLikeThis(
+            fields=["tags.name", "title", "creator"],
+            like={"_index": index, "_id": _id},
+            min_term_freq=1,
+            max_query_terms=50,
+        )
     )
     # Never show mature content in recommendations.
     s = s.exclude("term", mature=True)
