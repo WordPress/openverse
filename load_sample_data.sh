@@ -112,8 +112,8 @@ just wait-for-index "audio"
 set +e
 while true; do
 	just ingest-upstream "image" "init"
-	just wait-for-index "image-init"
-	if [ $? -eq 0 ]; then
+	if just wait-for-index "image-init"
+	then
 		break
 	fi
 	((c++)) && ((c==3)) && break

@@ -9,20 +9,20 @@ endcol="\e[0m"
 # $	./test/run_test.sh test/audio_integration_test.py
 # ```
 if [ $# -ge 1 ]; then
-	TEST_ARG="$@"
+	TEST_ARG=( "$@" )
 else
-	TEST_ARG="test/"
+	TEST_ARG=( "test/" )
 fi
 
 PYTHONWARNINGS="ignore:Unverified HTTPS request" \
 PYTHONPATH=. \
-pytest -s --disable-pytest-warnings $TEST_ARG
+pytest -s --disable-pytest-warnings "${TEST_ARG[@]}"
 
 succeeded=$?
 if [[ $succeeded -eq 0 ]]; then
-    printf "${green}:-) All tests passed${endcol}\n"
+    printf "%b:-) All tests passed${endcol}\n" "${green}"
 else
-    printf "\n\n${red}:'( Some tests did not pass${endcol}\n"
+    printf "\n\n%b:'( Some tests did not pass${endcol}\n" "${red}"
     printf "Hint: \`just logs [service]\` will print the Docker logs and may be helpful for debugging.\n\n"
 fi
 exit $succeeded

@@ -47,3 +47,7 @@ repos:
     hooks:
       - id: prettier
         types: [yaml]
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.8.0
+    hooks:
+      - id: shellcheck
