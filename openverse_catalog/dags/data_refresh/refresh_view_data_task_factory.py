@@ -14,6 +14,7 @@ from airflow.operators.python import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 from common.constants import POSTGRES_CONN_ID
 from common.popularity import sql
+from data_refresh import reporting
 from data_refresh.data_refresh_types import DataRefresh
 
 
@@ -25,7 +26,8 @@ def create_refresh_view_data_task(data_refresh: DataRefresh):
     The task refreshes the materialized view for the given media type. The view collates
     popularity data for each record. Refreshing has the effect of adding popularity data
     for records that were ingested since the last time the view was refreshed, and
-    updating popularity data for existing records.
+    updating popularity data for existing records. It also creates a reporting task
+    which will report the status of the matview refresh once it is complete.
 
     Required Arguments:
 
@@ -39,5 +41,18 @@ def create_refresh_view_data_task(data_refresh: DataRefresh):
         trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
         doc_md=create_refresh_view_data_task.__doc__,
     )
+
+    refresh_status = PythonOperator(
+        task_id=f"report_{UPDATE_DB_VIEW_TASK_ID}_status",
+        python_callable=reporting.report_status,
+        op_kwargs={
+            "media_type": data_refresh.media_type,
+            "dag_id": data_refresh.dag_id,
+            "message": "Matview refresh complete | "
+            "_Next: ingestion server data refresh_",
+        },
+    )
+
+    refresh_matview >> refresh_status
 
     return refresh_matview

@@ -1,5 +1,5 @@
 import pytest
-from data_refresh.record_reporting import report_record_difference
+from data_refresh.reporting import report_record_difference, report_status
 
 
 @pytest.mark.parametrize(
@@ -19,3 +19,8 @@ def test_record_reporting(before, after, expected_in_message):
     )
     for expected in expected_in_message:
         assert expected in actual
+
+
+def test_report_status():
+    actual = report_status("image", "This is my message", "sample_dag_id")
+    assert actual == "`image`: This is my message"

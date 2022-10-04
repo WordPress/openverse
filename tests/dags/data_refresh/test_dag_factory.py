@@ -1,3 +1,5 @@
+from unittest import mock
+
 import pytest
 from airflow.models import DagRun
 from airflow.models.dag import DAG
@@ -117,3 +119,26 @@ def test_month_check_ignores_failed_dagruns():
     # successful run was last month, so we should refresh metrics.
     next_task_id = dag_factory._month_check(TEST_DAG.dag_id)
     assert next_task_id == REFRESH_POPULARITY_METRICS_TASK_ID
+
+
+@pytest.mark.parametrize(
+    "task_id, expected_message",
+    [
+        (REFRESH_POPULARITY_METRICS_TASK_ID, "update popularity metrics"),
+        (REFRESH_MATERIALIZED_VIEW_TASK_ID, "refresh matview"),
+        ("Some other task ID", "unable to determine next step"),
+    ],
+)
+def test_month_check_with_reporting(task_id, expected_message):
+    with (
+        mock.patch("data_refresh.dag_factory._month_check") as mock_monthly_check,
+        mock.patch("data_refresh.dag_factory.report_status") as mock_report_status,
+    ):
+        mock_monthly_check.return_value = task_id
+        actual_task_id = dag_factory._month_check_with_reporting(
+            dag_id="fake_dag", media_type="image"
+        )
+        message = mock_report_status.call_args.args[1]
+        # Task ID returned from wrapper should be the same
+        assert actual_task_id == task_id
+        assert expected_message in message
