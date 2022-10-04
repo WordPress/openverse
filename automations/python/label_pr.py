@@ -128,8 +128,8 @@ def get_linked_issues(url: str) -> list[str]:
         return []
 
     soup = BeautifulSoup(text, "html.parser")
-    divs = soup.find_all("div", **{"class": re.compile("css-truncate my-1")})
-    anchors = [div.a["href"] for div in divs]
+    spans = soup.find_all("span", **{"class": re.compile("truncate-with-responsive-width my-1")})
+    anchors = [span.a["href"] for span in spans]
     return anchors
 
 
