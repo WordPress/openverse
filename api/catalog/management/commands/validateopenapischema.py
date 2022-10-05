@@ -3,8 +3,9 @@ from pathlib import Path
 
 from django.core.management import BaseCommand, call_command
 
-from openapi_spec_validator import validate_v2_spec
+from openapi_spec_validator import validate_spec
 from openapi_spec_validator.readers import read_from_filename
+from openapi_spec_validator.validation import openapi_v2_spec_validator
 
 
 class Command(BaseCommand):
@@ -22,7 +23,7 @@ class Command(BaseCommand):
         """
         This method should raise an error if the spec is not valid.
         """
-        validate_v2_spec(spec_dict)
+        validate_spec(spec_dict, validator=openapi_v2_spec_validator)
 
         invalid_paths = [p for p in spec_dict["paths"].keys() if not p.endswith("/")]
 
