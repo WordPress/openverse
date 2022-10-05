@@ -1,12 +1,16 @@
 import json
+import struct
 from dataclasses import dataclass
+from io import BytesIO
 from pathlib import Path
 from typing import Callable
+from unittest import mock
 
 import pytest
+from PIL import Image
 from requests import Request, Response
 
-from catalog.api.utils.watermark import HEADERS, watermark
+from catalog.api.utils.watermark import HEADERS, _open_image, watermark
 
 
 _MOCK_IMAGE_PATH = Path(__file__).parent / ".." / ".." / "factory"
@@ -51,3 +55,19 @@ def test_sends_UA_header(requests):
     assert len(requests.requests) > 0
     for r in requests.requests:
         assert r.headers == HEADERS
+
+
+def test_catch_struct_errors_from_piexif(requests):
+    img_mock = Image.open(BytesIO(_MOCK_IMAGE_BYTES))
+    img_mock.info["exif"] = "bad_info"
+
+    with mock.patch("PIL.Image.open") as open_mock, mock.patch(
+        "piexif.load"
+    ) as load_mock:
+        open_mock.return_value = img_mock
+        load_mock.side_effect = struct.error("unpack requires a buffer of 2 bytes")
+
+        img, exif = _open_image("http://example.com/")
+
+    assert img is not None
+    assert exif is None

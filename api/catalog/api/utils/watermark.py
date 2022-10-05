@@ -1,5 +1,6 @@
 import logging
 import os
+import struct
 from enum import Flag, auto
 from io import BytesIO
 from textwrap import wrap
@@ -158,16 +159,17 @@ def _open_image(url):
         response = requests.get(url, headers=HEADERS)
         img_bytes = BytesIO(response.content)
         img = Image.open(img_bytes)
-        # Preserve EXIF metadata
-        if "exif" in img.info:
-            exif = piexif.load(img.info["exif"])
-        else:
-            exif = None
-        return img, exif
     except requests.exceptions.RequestException as e:
         capture_exception(e)
         logger.error(f"Error loading image data: {e}")
         return None, None
+
+    try:
+        # Preserve EXIF metadata
+        exif = piexif.load(img.info["exif"]) if "exif" in img.info else None
+        return img, exif
+    except struct.error:
+        return img, None
 
 
 def _print_attribution_on_image(img, image_info):
