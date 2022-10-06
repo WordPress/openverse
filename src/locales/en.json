@@ -58,7 +58,8 @@
     "filter-button": {
       "simple": "Filters",
       "with-count": "{count} Filter|{count} Filters"
-    }
+    },
+    "see-results": "See results"
   },
   "navigation": {
     "about": "About",
@@ -348,6 +349,7 @@
     "filter-by": "Filter by",
     "hide": "Hide filters",
     "clear": "Clear filters",
+    "clear-numbered": "Clear filters ({number})",
     "show": "Show results",
     "category-aria": "filters list for {categoryName} category"
   },

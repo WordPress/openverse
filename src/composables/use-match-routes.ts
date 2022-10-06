@@ -6,7 +6,7 @@ import {
   Ref,
 } from '@nuxtjs/composition-api'
 
-import { ALL_MEDIA, searchTypes } from '~/constants/media'
+import { ALL_MEDIA, searchTypes, supportedSearchTypes } from '~/constants/media'
 
 /**
  * Reactive property that returns true only on the matching routes.
@@ -46,6 +46,19 @@ export const useMatchSearchRoutes = () => {
     ...searchTypes
       .filter((type) => type !== ALL_MEDIA)
       .map((type) => `search-${type}`),
+  ]
+  return useMatchRoute(routes)
+}
+
+/**
+ * Reactive property that returns true only on the `search` routes.
+ * Homepage, single image result and other content pages return `false`
+ */
+export const useMatchSingleResultRoutes = () => {
+  const routes = [
+    ...supportedSearchTypes
+      .filter((name) => name !== ALL_MEDIA)
+      .map((name) => `${name}-id`),
   ]
   return useMatchRoute(routes)
 }

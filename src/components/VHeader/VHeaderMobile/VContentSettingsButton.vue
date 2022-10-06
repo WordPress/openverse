@@ -3,15 +3,14 @@
     <VIconButton
       size="new-small"
       :icon-props="{ iconPath: sourceIcon }"
-      :button-props="{ variant: 'menu', pressed: isPressed }"
-      :has-dot="areFiltersSelected"
+      :button-props="{ variant: 'menu' }"
       :aria-label="
         areFiltersSelected
           ? $t('header.aria.menu-notification')
           : $t('header.aria.menu')
       "
-      :aria-haspopup="true"
-      :aria-pressed="isPressed"
+      aria-haspopup="dialog"
+      :aria-expanded="isPressed"
       aria-controls="content-settings-modal"
       @click="$emit('click')"
     />

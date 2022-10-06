@@ -4,7 +4,10 @@
     aria-labelledby="filters-heading"
     class="filters py-8 px-10"
   >
-    <div class="mt-2 mb-6 flex items-center justify-between">
+    <header
+      v-if="showFilterHeader"
+      class="mt-2 mb-6 flex items-center justify-between"
+    >
       <h4
         id="filters-heading"
         class="py-2 text-sr font-semibold uppercase leading-8"
@@ -21,7 +24,7 @@
       >
         {{ $t('filter-list.clear') }}
       </VButton>
-    </div>
+    </header>
     <form
       ref="filtersFormRef"
       class="filters-form"
@@ -37,7 +40,10 @@
         @toggle-filter="toggleFilter"
       />
     </form>
-    <footer v-if="isAnyFilterApplied" class="flex justify-between md:hidden">
+    <footer
+      v-if="showFilterHeader && isAnyFilterApplied"
+      class="flex justify-between md:hidden"
+    >
       <VButton variant="primary" @click="$emit('close')">
         {{ $t('filter-list.show') }}
       </VButton>
@@ -73,10 +79,29 @@ export default defineComponent({
     VButton,
     VFilterChecklist,
   },
+  props: {
+    /**
+     * Whether to show the header with the title and the clear button.
+     */
+    showFilterHeader: {
+      type: Boolean,
+      default: true,
+    },
+    /**
+     * When the filters are in the sidebar, we change the keyboard tabbing order:
+     * the focus moves from the Filters button to the filter,
+     * and from the last tabbable element to the main content on Tab,
+     * and from the filters to the filters button on Shift Tab.
+     */
+    changeTabOrder: {
+      type: Boolean,
+      default: true,
+    },
+  },
   emits: {
     close: defineEvent(),
   },
-  setup() {
+  setup(props) {
     const searchStore = useSearchStore()
 
     const { app, i18n } = useContext()
@@ -142,6 +167,7 @@ export default defineComponent({
      * @param event
      */
     const handleTabKey = (event: KeyboardEvent) => {
+      if (!props.changeTabOrder) return
       if (lastFocusableElement.value === event.target) {
         event.preventDefault()
         focusIn(document.querySelector('main'), Focus.First)
@@ -153,6 +179,7 @@ export default defineComponent({
      * @param event - The keydown event
      */
     const handleShiftTabKey = (event: KeyboardEvent) => {
+      if (!props.changeTabOrder) return
       if (
         firstFocusableElement.value === event.target &&
         !isAnyFilterApplied.value

@@ -300,6 +300,15 @@ a.button {
   @apply border-tx bg-dark-charcoal-10 text-dark-charcoal-40;
 }
 
+.text {
+  @apply border-tx bg-tx px-0 text-sm font-semibold text-pink hover:underline focus-visible:ring focus-visible:ring-pink;
+}
+
+.text[disabled='disabled'],
+.text[aria-disabled='true'] {
+  @apply border-tx bg-tx text-dark-charcoal-40;
+}
+
 .menu {
   @apply border-tx bg-white text-dark-charcoal ring-offset-0;
 }

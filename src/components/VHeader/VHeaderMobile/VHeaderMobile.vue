@@ -21,23 +21,7 @@
         {{ searchStatus }}
       </span>
     </VSearchBar>
-    <VModal
-      :label="$t('header.aria.menu').toString()"
-      class="flex items-stretch"
-    >
-      <template #trigger="{ visible, a11Props }">
-        <VContentSettingsButton :is-pressed="visible" v-bind="a11Props" />
-      </template>
-      <template #default>
-        <nav
-          id="content-switcher-modal"
-          class="p-6"
-          aria-labelledby="content-switcher-heading"
-        >
-          <VSearchTypes ref="searchTypesRef" size="small" :use-links="true" />
-        </nav>
-      </template>
-    </VModal>
+    <VContentSettingsModal :is-fetching="isFetching" />
   </header>
 </template>
 
@@ -52,18 +36,19 @@ import {
 } from '@nuxtjs/composition-api'
 
 import { ALL_MEDIA, searchPath } from '~/constants/media'
-import { isMinScreen } from '~/composables/use-media-query'
 import { useMatchSearchRoutes } from '~/composables/use-match-routes'
 import { useI18n } from '~/composables/use-i18n'
 import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
 import { useMediaStore } from '~/stores/media'
 import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
 
-import VContentSettingsButton from '~/components/VHeader/VContentSettingsButton.vue'
+import { IsHeaderScrolledKey, IsMinScreenMdKey } from '~/types/provides'
+
 import VLogoButton from '~/components/VHeader/VLogoButton.vue'
 import VModal from '~/components/VModal/VModal.vue'
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
-import VSearchTypes from '~/components/VContentSwitcher/VSearchTypes.vue'
+
+import VContentSettingsModal from '~/components/VHeader/VHeaderMobile/VContentSettingsModal.vue'
 
 import closeIcon from '~/assets/icons/close.svg'
 
@@ -79,13 +64,14 @@ type HeaderMenu = 'filters' | 'content-switcher'
 export default defineComponent({
   name: 'VHeaderMobile',
   components: {
-    VContentSettingsButton,
+    VContentSettingsModal,
     VLogoButton,
-    VModal,
     VSearchBar,
-    VSearchTypes,
   },
   setup() {
+    const contentSettingsModalRef = ref<InstanceType<typeof VModal> | null>(
+      null
+    )
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
     const { app } = useContext()
@@ -94,10 +80,8 @@ export default defineComponent({
 
     const { matches: isSearchRoute } = useMatchSearchRoutes()
 
-    const isHeaderScrolled = inject('isHeaderScrolled', false)
-    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
-
-    const menuModalRef = ref(null)
+    const isHeaderScrolled = inject(IsHeaderScrolledKey)
+    const isMinScreenMd = inject(IsMinScreenMdKey)
 
     const openMenu = ref<null | HeaderMenu>(null)
     const isMenuOpen = computed(() => openMenu.value !== null)
@@ -110,6 +94,12 @@ export default defineComponent({
     }
     const close = () => {
       openMenu.value = null
+    }
+    const closeModal = () => {
+      if (contentSettingsModalRef.value) {
+        contentSettingsModalRef.value.close()
+      }
+      close()
     }
 
     const isFetching = computed(() => {
@@ -199,8 +189,9 @@ export default defineComponent({
       isSearchRoute,
       areFiltersDisabled,
 
-      menuModalRef,
+      contentSettingsModalRef,
 
+      closeModal,
       openMenu,
       openMenuModal,
       isMenuOpen,

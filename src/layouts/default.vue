@@ -5,7 +5,7 @@
       <VMigrationNotice />
       <VTranslationStatusBanner />
       <template v-if="isNewHeaderEnabled">
-        <template v-if="isSearchRoute">
+        <template v-if="isSearchHeader">
           <VHeaderDesktop v-if="isMinScreenLg" />
           <VHeaderMobile v-else />
         </template>
@@ -48,7 +48,10 @@ import {
 import { PortalTarget as VTeleportTarget } from 'portal-vue'
 
 import { useWindowScroll } from '~/composables/use-window-scroll'
-import { useMatchSearchRoutes } from '~/composables/use-match-routes'
+import {
+  useMatchSearchRoutes,
+  useMatchSingleResultRoutes,
+} from '~/composables/use-match-routes'
 import { isMinScreen } from '~/composables/use-media-query'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { useFeatureFlagStore } from '~/stores/feature-flag'
@@ -75,7 +78,8 @@ const embeddedPage = {
     VHeaderOld,
     VHeaderDesktop: () => import('~/components/VHeader/VHeaderDesktop.vue'),
     VHeaderInternal: () => import('~/components/VHeader/VHeaderInternal.vue'),
-    VHeaderMobile: () => import('~/components/VHeader/VHeaderMobile.vue'),
+    VHeaderMobile: () =>
+      import('~/components/VHeader/VHeaderMobile/VHeaderMobile.vue'),
     VFooter,
     VModalTarget,
     VTeleportTarget,
@@ -92,6 +96,10 @@ const embeddedPage = {
 
     const { isVisible: isFilterVisible } = useFilterSidebarVisibility()
     const { matches: isSearchRoute } = useMatchSearchRoutes()
+    const { matches: isSingleResultRoute } = useMatchSingleResultRoutes()
+    const isSearchHeader = computed(
+      () => isSearchRoute.value || isSingleResultRoute.value
+    )
     const mounted = ref(false)
     onMounted(() => {
       mounted.value = true
@@ -146,6 +154,7 @@ const embeddedPage = {
       isMinScreenLg,
       isSidebarVisible,
       isSearchRoute,
+      isSearchHeader,
       headerHasTwoRows,
       isNewHeaderEnabled,
     }

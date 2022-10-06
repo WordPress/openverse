@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div role="tablist" class="flex flex-row" v-bind="accessibleLabel">
+    <div
+      role="tablist"
+      class="flex flex-row items-stretch"
+      :class="tablistStyle"
+      v-bind="accessibleLabel"
+    >
       <slot name="tabs" />
     </div>
     <slot name="default" />
@@ -16,8 +21,10 @@ import {
   ref,
 } from '@nuxtjs/composition-api'
 
-import { tabsContextKey, TabsState } from '~/models/tabs'
+import { tabsContextKey, type TabsState, TabVariant } from '~/models/tabs'
 import { defineEvent } from '~/types/emits'
+
+import closeIcon from '~/assets/icons/close-small.svg'
 
 /**
  * VTabs is an accessible implementation of tabs component that displays one panel at a time.
@@ -60,7 +67,7 @@ export default defineComponent({
      * `plain` tabs only have a line under the tabs, and a thicker line under the selected tab.
      */
     variant: {
-      type: String as PropType<TabsState['variant']['value'][number]>,
+      type: String as PropType<TabVariant>,
       default: 'bordered',
     },
     /**
@@ -70,14 +77,23 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    /**
+     * The classes to pass to the div wrapping VTabs.
+     */
+    tablistStyle: {
+      type: String,
+      default: '',
+    },
   },
   emits: {
     change: defineEvent<[string]>(),
+    close: defineEvent(),
   },
   setup(props, { emit }) {
     const selectedId = ref<TabsState['selectedId']['value']>(props.selectedId)
     const tabs = ref<TabsState['tabs']['value']>([])
     const panels = ref<TabsState['panels']['value']>([])
+    const closeButtonRef = ref<HTMLElement | null>(null)
 
     const tabGroupContext: TabsState = {
       selectedId,
@@ -114,9 +130,12 @@ export default defineComponent({
         ? { 'aria-labelledby': props.label.slice(1) }
         : { 'aria-label': props.label }
     )
+
     return {
       accessibleLabel,
       selectedTabId: tabGroupContext.selectedId,
+      closeIcon,
+      closeButtonRef,
     }
   },
 })

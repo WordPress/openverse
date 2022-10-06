@@ -7,8 +7,12 @@
     size="disabled"
     variant="plain--avoid"
     v-bind="tabProps"
-    class="label-bold md:description-bold rounded-none border-0 bg-white py-3 px-4 focus-visible:shadow-[0_0_0_1.5px_#c52b9b_inset] md:px-6"
-    :class="[$style[variant], isSelected && $style[`${variant}-selected`]]"
+    class="label-bold md:description-bold rounded-none border-0 bg-white focus-visible:shadow-[0_0_0_1.5px_#c52b9b_inset]"
+    :class="[
+      $style[variant],
+      $style[`size-${size}`],
+      isSelected && $style[`${variant}-selected`],
+    ]"
     @click="handleSelection"
     @focus="handleFocus"
     @mousedown="handleMouseDown"
@@ -25,6 +29,7 @@ import {
   inject,
   onMounted,
   onUnmounted,
+  type PropType,
   ref,
 } from '@nuxtjs/composition-api'
 
@@ -53,6 +58,10 @@ export default defineComponent({
     id: {
       type: String,
       required: true,
+    },
+    size: {
+      type: String as PropType<'default' | 'large' | 'medium'>,
+      default: 'default',
     },
   },
   setup(props) {
@@ -191,12 +200,30 @@ export default defineComponent({
   @apply rounded-t-sm border-x border-t border-tx;
 }
 .plain {
-  @apply border-b-3 border-tx;
+  @apply border-tx;
 }
 .bordered-selected {
   @apply -mb-[1px] border border-x-dark-charcoal-20 border-t-dark-charcoal-20 border-b-white bg-white;
 }
 .plain-selected {
-  @apply rounded-none border-dark-charcoal;
+  @apply relative rounded-none after:absolute after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-dark-charcoal after:transition-all after:duration-200;
+}
+.plain-selected.size-default {
+  @apply after:bottom-[-0.125rem];
+}
+.size-default {
+  @apply py-3 px-4 md:px-6;
+}
+.size-large {
+  @apply h-16;
+}
+.size-medium {
+  @apply h-12 px-2;
+}
+.plain.size-medium {
+  @apply my-2 border-tx;
+}
+.plain-selected.size-medium {
+  @apply after:bottom-[-0.625rem];
 }
 </style>

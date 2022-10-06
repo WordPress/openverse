@@ -8,6 +8,7 @@ export const buttonVariants = [
   'secondary-bordered',
   'secondary-filled',
   'menu',
+  'text',
   'action-menu',
   'action-menu-bordered',
   'action-menu-bordered-pressed',

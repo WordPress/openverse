@@ -1,0 +1,46 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import VContentSettingsModal from '~/components/VHeader/VHeaderMobile/VContentSettingsModal.vue'
+import VModalTarget from '~/components/VModal/VModalTarget'
+
+<Meta
+  title="Components/VHeader/VHeaderMobile/VContentSettingsModal"
+  components={VContentSettingsModal}
+  argTypes={{
+    close: {
+      action: 'close',
+    },
+    select: {
+      action: 'select',
+    },
+    change: {
+      action: 'change',
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `<div><VContentSettingsModal v-bind="args" v-on="args"/><VModalTarget /></div>`,
+  components: { VContentSettingsModal, VModalTarget },
+  setup() {
+    return { args }
+  },
+})
+
+# VContentSettingsModal
+
+<Description of={VContentSettingsModal} />
+
+<ArgsTable of={VContentSettingsModal} />
+
+<Canvas>
+  <Story height="480px" name="Default">
+    {Template.bind({})}
+  </Story>
+</Canvas>

@@ -4,7 +4,7 @@
     :size="size"
     :bordered="bordered"
     type="radiogroup"
-    class="z-10 max-w-full md:w-[260px]"
+    class="z-10 max-w-full"
   >
     <div
       v-for="(category, index) in contentTypeGroups"
@@ -16,6 +16,7 @@
       }"
     >
       <h4
+        v-if="index !== 0"
         :class="bordered ? 'ps-0' : 'ps-6'"
         class="pt-6 pb-4 text-sr font-semibold uppercase pe-6"
       >

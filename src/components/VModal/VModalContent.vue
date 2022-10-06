@@ -29,7 +29,8 @@
               jarring "shifting" effect when opening the mobile modal.
             -->
             <div
-              class="flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
+              v-if="variant === 'default'"
+              class="flex w-full shrink-0 justify-between py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
               :class="[$style[`top-bar-${variant}`], $style[`top-bar-${mode}`]]"
             >
               <VLogoButtonOld
@@ -52,7 +53,7 @@
           </slot>
 
           <div
-            class="w-full flex-grow text-left align-bottom md:rounded-t-md"
+            class="flex w-full flex-grow flex-col"
             :class="[
               $style[`modal-content-${variant}`],
               $style[`modal-content-${mode}`],
@@ -125,7 +126,7 @@ export default defineComponent({
       required: false,
     },
     variant: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<'default' | 'full'>} */ (
+      type: /** @type {import('@nuxtjs/composition-api').PropType<'default' | 'full' | 'two-thirds'>} */ (
         String
       ),
       default: 'default',
@@ -187,17 +188,33 @@ export default defineComponent({
 .top-bar-full {
   @apply flex h-20 w-full shrink-0 justify-between bg-dark-charcoal px-4 py-3 md:items-stretch md:justify-start md:py-4 md:px-7;
 }
+.top-bar-two-thirds {
+  @apply bg-tx;
+}
+.modal-backdrop-two-thirds {
+  @apply bg-dark-charcoal bg-opacity-75;
+}
 .modal-default {
   @apply md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px];
 }
+
 .modal-dark {
   @apply bg-dark-charcoal text-white;
 }
 .modal-light {
   @apply bg-white text-dark-charcoal;
 }
+.modal-content-default {
+  @apply text-left align-bottom md:rounded-t-md;
+}
 .modal-content-full {
   @apply flex w-full flex-col justify-between px-6 pb-10;
+}
+.modal-two-thirds {
+  @apply mt-auto h-2/3 w-full rounded-t-lg bg-white;
+}
+.modal-content-two-thirds {
+  @apply overflow-y-hidden rounded-t-md;
 }
 .modal-content-dark {
   @apply bg-dark-charcoal text-white;
