@@ -128,9 +128,10 @@ def get_linked_issues(url: str) -> list[str]:
         return []
 
     soup = BeautifulSoup(text, "html.parser")
-    divs = soup.find_all("div", **{"class": re.compile("css-truncate my-1")})
-    anchors = [div.a["href"] for div in divs]
-    return anchors
+    form = soup.find("form",  **{"aria-label": "Link issues"})
+    if form is None:
+        return []
+    return [a["href"] for a in form.find_all("a")]
 
 
 def get_label_of_cat(cat: str, labels: list[Label]) -> Optional[Label]:
