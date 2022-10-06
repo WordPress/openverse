@@ -677,5 +677,14 @@
   },
   "language": {
     "language": "Language"
+  },
+  "recent-searches": {
+    "heading": "Recent searches",
+    "clear": {
+      "text": "Clear",
+      "label": "Clear recent searches"
+    },
+    "none": "No recent searches to show.",
+    "disclaimer": "Openverse does not store your recent searches, this information is kept locally in your browser."
   }
 }

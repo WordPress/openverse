@@ -442,7 +442,7 @@ describe('Search Store', () => {
       it('are saved, without duplication and not exceeding the limit.', () => {
         const searchStore = useSearchStore()
         const featureFlagStore = useFeatureFlagStore()
-        featureFlagStore.toggleFeature('recent_searches', 'on')
+        featureFlagStore.toggleFeature('new_header', 'on')
 
         searchStore.setSearchTerm('boop')
         searchStore.setSearchTerm('bar')
@@ -464,7 +464,7 @@ describe('Search Store', () => {
       it('can be cleared', () => {
         const searchStore = useSearchStore()
         const featureFlagStore = useFeatureFlagStore()
-        featureFlagStore.toggleFeature('recent_searches', 'on')
+        featureFlagStore.toggleFeature('new_header', 'on')
 
         // Clear up front in case of any preserved searches
         searchStore.clearRecentSearches()

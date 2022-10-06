@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/vue'
 
+import { createPinia, PiniaVuePlugin } from '~~/test/unit/test-utils/pinia'
+
 import { useMatchHomeRoute } from '~/composables/use-match-routes'
 
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
@@ -10,6 +12,13 @@ jest.mock('~/composables/use-match-routes', () => ({
 
 const sizes = ['small', 'medium', 'large', 'standalone']
 const defaultPlaceholder = 'Enter search query'
+
+const configureVue = (vue) => {
+  vue.use(PiniaVuePlugin)
+  return {
+    pinia: createPinia(),
+  }
+}
 
 describe('VSearchBar', () => {
   let options
@@ -31,7 +40,7 @@ describe('VSearchBar', () => {
     (size) => {
       useMatchHomeRoute.mockImplementation(() => false)
       options.props.size = size
-      render(VSearchBar, options)
+      render(VSearchBar, options, configureVue)
 
       const inputElement = screen.getByPlaceholderText(defaultPlaceholder)
 
@@ -46,7 +55,7 @@ describe('VSearchBar', () => {
     (size) => {
       useMatchHomeRoute.mockImplementation(() => false)
       options.props.size = size
-      render(VSearchBar, options)
+      render(VSearchBar, options, configureVue)
 
       const btnElement = screen.getByLabelText('search.search')
 
@@ -60,7 +69,7 @@ describe('VSearchBar', () => {
     it('should default to hero.search.placeholder', () => {
       delete options.props.placeholder
 
-      render(VSearchBar, options)
+      render(VSearchBar, options, configureVue)
       expect(
         screen.queryByPlaceholderText('hero.search.placeholder')
       ).not.toBeNull()
@@ -69,7 +78,7 @@ describe('VSearchBar', () => {
     it('should use the prop when provided', () => {
       const placeholder = 'This is a different placeholder from the default'
       options.props.placeholder = placeholder
-      render(VSearchBar, options)
+      render(VSearchBar, options, configureVue)
       expect(screen.queryByPlaceholderText(placeholder)).not.toBeNull()
     })
   })

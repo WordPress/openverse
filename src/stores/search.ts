@@ -186,7 +186,7 @@ export const useSearchStore = defineStore('search', {
     ) {
       // No-op if feature isn't enabled
       const featureFlagStore = useFeatureFlagStore()
-      const saveRecentSearches = featureFlagStore.isOn('recent_searches')
+      const saveRecentSearches = featureFlagStore.isOn('new_header')
       if (!saveRecentSearches) {
         return
       }

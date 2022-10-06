@@ -215,6 +215,7 @@ module.exports = {
       boxShadow: {
         ring: 'inset 0 0 0 1px white',
         'ring-1.5': 'inset 0 0 0 1.5px white',
+        'el-2': '0 0.125rem 0.25rem rgba(0, 0, 0, 0.1)',
       },
       typography: (theme) => ({
         DEFAULT: {

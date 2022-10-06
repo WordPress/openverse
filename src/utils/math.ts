@@ -65,3 +65,21 @@ export const bezier = (ctrlPts: Point[], pointCount: number): number[] => {
   }
   return bezierPoints
 }
+
+/**
+ * Shift the given value by the given offset while remaining in the range
+ * specified by the params `min` and `max`.
+ *
+ * @param value - the number to shift
+ * @param offset - the amount by which to shift `value`
+ * @param min - the lower bound of the limiting range
+ * @param max - the upper bound of the limiting range
+ */
+export const cyclicShift = (
+  value: number,
+  offset: number,
+  min: number,
+  max: number
+): number => {
+  return (value + offset + max - min) % (max - min)
+}

@@ -13,16 +13,8 @@
         "staging": "switchable",
         "production": "disabled"
       },
-      "description": "Toggle the new header.",
+      "description": "Toggle the new header, including recent searches.",
       "defaultState": "off"
-    },
-    "recent_searches": {
-      "status": {
-        "staging": "switchable",
-        "production": "disabled"
-      },
-      "description": "Save and display the user's recent searches.",
-      "defaultState": "on"
     },
     "feat_disabled": {
       "status": "disabled",

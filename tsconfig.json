@@ -66,6 +66,7 @@
     "src/components/VLogoLoader/**.vue",
     "src/components/VMediaInfo/**.vue",
     "src/components/VMediaTag/**.vue",
+    "src/components/VRecentSearches/**.vue",
     "src/components/VSkeleton/**.vue",
     "src/components/VTabs/**.vue",
 
