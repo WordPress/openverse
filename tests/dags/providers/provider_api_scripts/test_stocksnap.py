@@ -118,7 +118,7 @@ def test_process_batch():
 
 
 def test_endpoint_increment():
-    expect_result = (None, "https://stocksnap.io/api/load-photos/date/desc/1")
+    expect_result = ({}, "https://stocksnap.io/api/load-photos/date/desc/1")
     query_params = stocksnap.get_next_query_params(None)
     next_endpoint = stocksnap.endpoint
     actual_result = (query_params, next_endpoint)

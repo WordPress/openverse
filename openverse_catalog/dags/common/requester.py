@@ -38,12 +38,15 @@ class DelayedRequester:
     rate limits of APIs.
 
     Optional Arguments:
-    delay:  an integer giving the minimum number of seconds to wait
-            between consecutive requests via the `get` method.
+    delay:   an integer giving the minimum number of seconds to wait
+             between consecutive requests via the `get` method.
+    headers: a dict that will be passed in all requests, unless overridden
+             by kwargs in specific calls to the get method
     """
 
-    def __init__(self, delay=0):
+    def __init__(self, delay=0, headers=None):
         self._DELAY = delay
+        self.headers = headers or {}
         self._last_request = 0
         self.session = requests.Session()
 
@@ -59,8 +62,11 @@ class DelayedRequester:
         """
         self._delay_processing()
         self._last_request = time.time()
+        request_kwargs = kwargs or {}
+        if "headers" not in kwargs:
+            request_kwargs["headers"] = self.headers
         try:
-            response = self.session.get(url, params=params, **kwargs)
+            response = self.session.get(url, params=params, **request_kwargs)
             if response.status_code == requests.codes.ok:
                 logger.debug(f"Received response from url {response.url}")
             elif response.status_code == requests.codes.unauthorized:
@@ -85,7 +91,7 @@ class DelayedRequester:
             logger.error(f"Error with the request for URL: {url}")
             logger.info(f"{type(e).__name__}: {e}")
             logger.info(f"Using query parameters {params}")
-            logger.info(f'Using headers {kwargs.get("headers")}')
+            logger.info(f'Using headers {request_kwargs.get("headers")}')
             return None
 
     def _delay_processing(self):

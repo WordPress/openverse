@@ -150,3 +150,45 @@ def test_oauth_requester_initializes_correctly(oauth_provider_var_mock):
     odq = requester.OAuth2DelayedRequester(FAKE_OAUTH_PROVIDER_NAME, 1)
     assert isinstance(odq.session, OAuth2Session)
     assert odq.session.client_id == "fakeclient"
+
+
+@pytest.mark.parametrize(
+    "init_headers, request_kwargs, expected_request_kwargs",
+    [
+        (None, None, {"headers": {}}),
+        ({"init_header": "test"}, None, {"headers": {"init_header": "test"}}),
+        (
+            None,
+            {"headers": {"h1": "test1"}, "other_kwarg": "test"},
+            {"headers": {"h1": "test1"}, "other_kwarg": "test"},
+        ),
+        (None, {"headers": {"h2": "test2"}}, {"headers": {"h2": "test2"}}),
+        (
+            {"init_header": "test"},
+            {"headers": {"h2": "test2"}},
+            {"headers": {"h2": "test2"}},
+        ),
+        ({"init_header": "test"}, {"headers": None}, {"headers": None}),
+        ({"init_header": "test"}, {"headers": {}}, {"headers": {}}),
+    ],
+    ids=[
+        "none_none",
+        "default_only",
+        "req_only_other",
+        "req_only_no_other",
+        "both",
+        "override_to_none",
+        "override_to_empty",
+    ],
+)
+def test_handles_optional_headers(
+    init_headers, request_kwargs, expected_request_kwargs
+):
+    dq = requester.DelayedRequester(0, headers=init_headers)
+    dq.session.get = MagicMock(return_value=None)
+    url = "http://test"
+    params = {"testy": "test"}
+    dq.get(url, params, **(request_kwargs or {}))
+    dq.session.get.assert_called_once_with(
+        url, params=params, **(expected_request_kwargs or {})
+    )

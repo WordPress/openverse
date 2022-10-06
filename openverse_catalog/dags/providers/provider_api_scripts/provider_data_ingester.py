@@ -102,7 +102,9 @@ class ProviderDataIngester(ABC):
             self.batch_limit = min(self.batch_limit, self.limit)
 
         # Initialize the DelayedRequester and all necessary Media Stores.
-        self.delayed_requester = DelayedRequester(self.delay)
+        self.delayed_requester = DelayedRequester(
+            delay=self.delay, headers=self.headers
+        )
         self.media_stores = self.init_media_stores()
         self.date = date
 
