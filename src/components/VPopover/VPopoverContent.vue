@@ -41,6 +41,7 @@ import { warn } from '~/utils/console'
 import { defineEvent } from '~/types/emits'
 
 import type { CSSProperties } from '@vue/runtime-dom'
+import type { SetupContext } from 'vue'
 
 export const VPopoverContentContextKey = Symbol(
   'VPopoverContentContextKey'
@@ -74,17 +75,21 @@ export default defineComponent({
       default: true,
     },
     triggerElement: {
-      type: (process.server ? Object : HTMLElement) as PropType<HTMLElement>,
+      type: (process.server
+        ? Object
+        : HTMLElement) as PropType<HTMLElement | null>,
+      default: null,
     },
     placement: {
       type: String as PropType<Placement>,
       default: 'bottom-end',
-      validate: (v) => popoverPlacements.includes(v),
+      validate: (v: string) =>
+        (popoverPlacements as unknown as string[]).includes(v),
     },
     strategy: {
       type: String as PropType<PositioningStrategy>,
       default: 'absolute',
-      validate: (v) => ['absolute', 'fixed'].includes(v),
+      validate: (v: string) => ['absolute', 'fixed'].includes(v),
     },
     zIndex: {
       type: Number,
@@ -111,12 +116,12 @@ export default defineComponent({
     }
 
     const propsRefs = toRefs(props)
-    const popoverRef = ref<HTMLElement | undefined>()
+    const popoverRef = ref<HTMLElement | null>(null)
 
     const { onKeyDown, onBlur, maxHeightRef } = usePopoverContent({
       popoverRef,
       popoverPropsRefs: propsRefs,
-      emit,
+      emit: emit as SetupContext['emit'],
     })
 
     const heightProperties = computed(() => {

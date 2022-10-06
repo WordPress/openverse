@@ -1,18 +1,21 @@
-import { usePopper } from '~/composables/use-popper'
+import { PopoverContentProps, usePopper } from '~/composables/use-popper'
 
-import { useDialogContent } from './use-dialog-content'
+import { useDialogContent } from '~/composables/use-dialog-content'
 
-/**
- * @typedef Props
- * @property {import('./types').Ref<HTMLElement>} popoverRef
- * @property {import('./types').ToRefs<import('~/composables/use-popper').PopoverContentProps>} popoverPropsRefs
- * @property {import('@nuxtjs/composition-api').SetupContext['emit']} emit
- */
+import type { SetupContext } from 'vue'
+import type { Ref, ToRefs } from '@nuxtjs/composition-api'
 
-/**
- * @param {Props} props
- */
-export function usePopoverContent({ popoverRef, popoverPropsRefs, emit }) {
+type Props = {
+  popoverRef: Ref<HTMLElement | null>
+  popoverPropsRefs: ToRefs<PopoverContentProps>
+  emit: SetupContext['emit']
+}
+
+export function usePopoverContent({
+  popoverRef,
+  popoverPropsRefs,
+  emit,
+}: Props) {
   const { onKeyDown, onBlur } = useDialogContent({
     dialogRef: popoverRef,
     visibleRef: popoverPropsRefs.visible,

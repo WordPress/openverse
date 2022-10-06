@@ -1,5 +1,7 @@
 import { ref } from '@nuxtjs/composition-api'
 
+import { itemGroupDirections } from '~/models/item-group'
+
 import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
 import VItem from '~/components/VItemGroup/VItem.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
@@ -20,7 +22,7 @@ export default {
   args: {
     direction: {
       type: 'radio',
-      options: ['vertical', 'horizontal'],
+      options: itemGroupDirections,
     },
     bordered: 'boolean',
   },

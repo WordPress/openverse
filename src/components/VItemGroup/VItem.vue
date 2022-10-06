@@ -49,25 +49,26 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {
   defineComponent,
   inject,
   ref,
   computed,
   watch,
+  PropType,
 } from '@nuxtjs/composition-api'
 
 import { warn } from '~/utils/console'
 
-import VButton from '~/components/VButton.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import { VPopoverContentContextKey } from '~/components/VPopover/VPopoverContent.vue'
-
 import {
   VItemGroupContextKey,
   VItemGroupFocusContextKey,
-} from './VItemGroup.vue'
+} from '~/models/item-group'
+
+import VButton from '~/components/VButton.vue'
+import VIcon from '~/components/VIcon/VIcon.vue'
+import { VPopoverContentContextKey } from '~/components/VPopover/VPopoverContent.vue'
 
 import checkmark from '~/assets/icons/checkmark.svg'
 
@@ -96,9 +97,9 @@ export default defineComponent({
      * @variants 'button', 'VLink'
      */
     as: {
-      type: String,
+      type: String as PropType<'button' | 'VLink'>,
       default: 'button',
-      validator: (val) => ['button', 'VLink'].includes(val),
+      validator: (val: string) => ['button', 'VLink'].includes(val),
     },
   },
   /**
@@ -116,7 +117,7 @@ export default defineComponent({
     const isInPopover = inject(VPopoverContentContextKey, false)
     const contextProps = inject(VItemGroupContextKey)
 
-    if (!contextProps) {
+    if (!contextProps || !focusContext) {
       throw new Error(
         'Do not use `VItem` outside of a `VItemGroup`. Use `VButton` instead.'
       )

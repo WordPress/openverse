@@ -42,16 +42,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {
   defineComponent,
   ref,
   watch,
   reactive,
   computed,
+  PropType,
 } from '@nuxtjs/composition-api'
 
 import VPopoverContent from '~/components/VPopover/VPopoverContent.vue'
+
+import type { Placement, PositioningStrategy } from '@popperjs/core'
 
 export default defineComponent({
   name: 'VPopover',
@@ -97,9 +100,7 @@ export default defineComponent({
      * @default 'bottom'
      */
     placement: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<import('@popperjs/core').Placement>} */ (
-        String
-      ),
+      type: String as PropType<Placement>,
     },
     /**
      * The positioning strategy of the popover. If your reference element is in a fixed container
@@ -110,9 +111,7 @@ export default defineComponent({
      * @default 'absolute'
      */
     strategy: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<import('@popperjs/core').PositioningStrategy>} */ (
-        String
-      ),
+      type: String as PropType<PositioningStrategy>,
     },
     /**
      * The label of the popover content. Must be provided if `labelledBy` is empty.
@@ -133,7 +132,7 @@ export default defineComponent({
       type: Number,
       default: 50,
       // TODO: extract valid z-indexes (these are from the tailwind config)
-      validator: (v) => [0, 10, 20, 30, 40, 50].includes(v),
+      validator: (v: number) => [0, 10, 20, 30, 40, 50].includes(v),
     },
     /**
      * Whether the popover height should be clipped and made scrollable
@@ -153,8 +152,7 @@ export default defineComponent({
   ],
   setup(_, { emit }) {
     const visibleRef = ref(false)
-    /** @type {import('@nuxtjs/composition-api').Ref<HTMLElement | undefined>} */
-    const triggerContainerRef = ref()
+    const triggerContainerRef = ref<HTMLElement | null>(null)
 
     const triggerA11yProps = reactive({
       'aria-expanded': false,
@@ -163,11 +161,11 @@ export default defineComponent({
 
     const triggerRef = computed(() =>
       triggerContainerRef.value?.firstChild
-        ? /** @type {HTMLElement} */ (triggerContainerRef.value.firstChild)
+        ? (triggerContainerRef.value.firstChild as HTMLElement)
         : undefined
     )
 
-    watch([visibleRef], ([visible]) => {
+    watch(visibleRef, (visible) => {
       triggerA11yProps['aria-expanded'] = visible
     })
 

@@ -16,14 +16,14 @@ export type PopoverContentProps = {
   hideOnClickOutside: boolean
   autoFocusOnShow: boolean
   autoFocusOnHide: boolean
-  triggerElement: HTMLElement
+  triggerElement: HTMLElement | null
   placement: Placement
   strategy: PositioningStrategy
   zIndex: number
 }
 
 type Props = {
-  popoverRef: Ref<HTMLElement>
+  popoverRef: Ref<HTMLElement | null>
   popoverPropsRefs: ToRefs<PopoverContentProps>
 }
 

@@ -14,7 +14,7 @@ type Props = {
   dialogRef: Ref<HTMLElement | null>
   visibleRef: Ref<boolean>
   autoFocusOnShowRef: Ref<boolean>
-  initialFocusElementRef: Ref<HTMLElement | null>
+  initialFocusElementRef?: Ref<HTMLElement | null>
 }
 
 /**

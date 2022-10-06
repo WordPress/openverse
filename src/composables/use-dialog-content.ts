@@ -3,25 +3,23 @@ import { useFocusOnHide } from '~/composables/use-focus-on-hide'
 import { useHideOnClickOutside } from '~/composables/use-hide-on-click-outside'
 import { useFocusOnBlur } from '~/composables/use-focus-on-blur'
 
-/**
- * @typedef InnerProps
- * @property {HTMLElement} dialogRef
- * @property {boolean} visibleRef
- * @property {boolean} autoFocusOnShowRef
- * @property {HTMLElement} triggerElementRef
- * @property {boolean} autoFocusOnHideRef
- * @property {boolean} hideOnClickOutsideRef
- * @property {boolean} hideOnEscRef
- * @property {HTMLElement} initialFocusElementRef
- * @property {() => void} hideRef
- */
+import type { Ref } from '@nuxtjs/composition-api'
+import type { SetupContext } from 'vue'
 
-/** @typedef {import('./types').ToRefs<InnerProps> & { emit: import('@nuxtjs/composition-api').SetupContext['emit']}} Props */
+type Props = {
+  dialogRef: Ref<HTMLElement | null>
+  visibleRef: Ref<boolean>
+  autoFocusOnShowRef: Ref<boolean>
+  autoFocusOnHideRef: Ref<boolean>
+  triggerElementRef: Ref<HTMLElement | null>
+  hideOnClickOutsideRef: Ref<boolean>
+  hideOnEscRef: Ref<boolean>
+  initialFocusElementRef?: Ref<HTMLElement | null>
+  hideRef: Ref<() => void>
+  emit: SetupContext['emit']
+}
 
-/**
- * @param {Props} params
- */
-export function useDialogContent({ emit, ...props }) {
+export function useDialogContent({ emit, ...props }: Props) {
   const focusOnBlur = useFocusOnBlur({
     dialogRef: props.dialogRef,
     visibleRef: props.visibleRef,
@@ -41,10 +39,7 @@ export function useDialogContent({ emit, ...props }) {
     hideRef: props.hideRef,
   })
 
-  /**
-   * @param {KeyboardEvent} event
-   */
-  const onKeyDown = (event) => {
+  const onKeyDown = (event: KeyboardEvent) => {
     emit('keydown', event)
 
     if (event.defaultPrevented) return
@@ -55,10 +50,7 @@ export function useDialogContent({ emit, ...props }) {
     props.hideRef.value()
   }
 
-  /**
-   * @param {FocusEvent} event
-   */
-  const onBlur = (event) => {
+  const onBlur = (event: FocusEvent) => {
     emit('blur', event)
     focusOnBlur(event)
   }
