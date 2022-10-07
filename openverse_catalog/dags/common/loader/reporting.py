@@ -160,7 +160,7 @@ def report_completion(
         message += (
             "\n_Duration is the sum of the duration for each data pull task."
             " It does not include loading time and does not account for data"
-            " pulls that may happen concurrently."
+            " pulls that may happen concurrently._"
         )
 
     send_message(message, dag_id=dag_id, username="Airflow DAG Load Data Complete")
