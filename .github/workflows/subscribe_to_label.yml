@@ -9,6 +9,6 @@ jobs:
   subscribe:
     runs-on: ubuntu-latest
     steps:
-    - uses: bytecodealliance/subscribe-to-label-action@v1
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: bytecodealliance/subscribe-to-label-action@v1
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
