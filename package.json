@@ -1,5 +1,5 @@
 {
-  "packageManager": "pnpm@7.8.0",
+  "packageManager": "pnpm@7.13.3",
   "dependencies": {
     "@octokit/rest": "19.0.4",
     "js-yaml": "^4.1.0",
