@@ -128,7 +128,7 @@ def get_linked_issues(url: str) -> list[str]:
         return []
 
     soup = BeautifulSoup(text, "html.parser")
-    form = soup.find("form",  **{"aria-label": "Link issues"})
+    form = soup.find("form", **{"aria-label": "Link issues"})
     if form is None:
         return []
     return [a["href"] for a in form.find_all("a")]
