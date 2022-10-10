@@ -7,6 +7,7 @@ from providers.provider_api_scripts.brooklyn_museum import BrooklynMuseumDataIng
 from providers.provider_api_scripts.cleveland_museum import ClevelandDataIngester
 from providers.provider_api_scripts.finnish_museums import FinnishMuseumsDataIngester
 from providers.provider_api_scripts.inaturalist import INaturalistDataIngester
+from providers.provider_api_scripts.jamendo import JamendoDataIngester
 from providers.provider_api_scripts.metropolitan_museum import MetMuseumDataIngester
 from providers.provider_api_scripts.museum_victoria import VictoriaDataIngester
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -153,6 +154,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="jamendo",
+        ingestion_callable=JamendoDataIngester,
         media_types=("audio",),
     ),
     ProviderWorkflow(
