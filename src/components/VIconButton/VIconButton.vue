@@ -28,6 +28,7 @@ import VButton, { type ButtonProps } from '~/components/VButton.vue'
 const SIZE_MAP = Object.freeze({
   tiny: { icon: 'w-6 h-6', button: 'w-6 h-6' },
   small: { icon: 'w-6 h-6', button: 'w-10 h-10' },
+  smaller: { icon: 'w-6 h-6', button: 'w-8 h-8' },
   // TODO: audit the sizes after new header is done.
   'new-small': { icon: 'w-4 h-4', button: 'w-8 h-8' },
   'search-small': {

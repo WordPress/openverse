@@ -1,11 +1,13 @@
 <template>
   <div
-    class="input-field group flex flex-row items-center overflow-hidden rounded-sm border p-0.5px focus-within:border-1.5 focus-within:border-pink focus-within:bg-dark-charcoal-06 focus-within:p-0 focus:border-pink group-hover:bg-dark-charcoal-06"
+    class="input-field group flex flex-row items-center overflow-hidden rounded-sm border p-0.5px focus-within:border-1.5 focus-within:border-pink focus-within:bg-dark-charcoal-06 focus-within:p-0 group-hover:bg-dark-charcoal-06"
     :class="[
       {
         // Padding is set to 1.5px to accommodate the border that will appear later.
-        'ps-1.5px rounded-s-none border-s-0': connectionSides.includes('start'),
-        'pe-1.5px rounded-e-none border-e-0': connectionSides.includes('end'),
+        'ps-1.5px rounded-s-none border-s-0 focus-within:ps-1.5px focus-within:rounded-s-none focus-within:border-s-0':
+          connectionSides.includes('start'),
+        'pe-1.5px rounded-e-none border-e-0 focus-within:pe-1.5px focus-within:rounded-e-none focus-within:border-e-0':
+          connectionSides.includes('end'),
       },
       sizeClass,
     ]"

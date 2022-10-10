@@ -33,7 +33,7 @@ import { useBrowserIsMobile } from '~/composables/use-browser-detection'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VButton from '~/components/VButton.vue'
-import type { FieldSize } from '~/components/VInputField/VInputField.vue'
+import type { FieldSize } from '~/components/VInputFieldOld/VInputFieldOld.vue'
 
 import searchIcon from '~/assets/icons/search.svg'
 

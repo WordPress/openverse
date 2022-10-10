@@ -5,7 +5,8 @@
       sizeClasses,
       {
         'max-w-[10rem] sm:max-w-[20rem] md:max-w-[16rem]': isHeaderScrolled,
-        'group-hover:border-dark-charcoal-20': isInSearchBar && !isPressed,
+        'focus-visible:border-tx focus-visible:bg-white focus-visible:ring-offset-dark-charcoal-06 group-hover:border-dark-charcoal-20 group-hover:bg-white group-hover:focus-within:border-tx':
+          isInSearchBar && !isPressed,
       },
     ]"
     :variant="buttonVariant"

@@ -243,7 +243,7 @@ export const goToSearchTerm = async (
     await page.goto(pathWithDir(path, dir))
     await dismissTranslationBanner(page)
   } else {
-    await page.goto(pathWithDir('/', dir))
+    await page.goto(pathWithDir(`/${query}`, dir))
     await dismissTranslationBanner(page)
     // Select the search type
     if (searchType !== 'all') {
@@ -262,7 +262,7 @@ export const goToSearchTerm = async (
   }
   await scrollDownAndUp(page)
   const pageWidth = page.viewportSize()?.width
-  if (pageWidth && pageWidth > smWidth) {
+  if (pageWidth && pageWidth > smWidth && query !== '&ff_new_header=on') {
     await page.waitForSelector(`[aria-label="${t('header.aria.menu', dir)}"]`)
   }
 }

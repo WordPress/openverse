@@ -18,11 +18,14 @@ test.describe('header snapshots', () => {
   for (const dir of languageDirections) {
     test.describe(dir, () => {
       test.beforeEach(async ({ page }) => {
-        await goToSearchTerm(page, 'birds', { dir: dir })
+        await goToSearchTerm(page, 'birds', {
+          dir: dir,
+          query: 'ff_new_header=on',
+        })
       })
 
       test.describe('header', () => {
-        breakpoints.describeEachDesktop(({ expectSnapshot }) => {
+        breakpoints.describeEachDesktopExceptMd(({ expectSnapshot }) => {
           test('filters open', async ({ page }) => {
             await page.mouse.move(0, 150)
             await expectSnapshot(
@@ -30,9 +33,7 @@ test.describe('header snapshots', () => {
               page.locator(headerSelector)
             )
           })
-        })
 
-        breakpoints.describeEvery(({ expectSnapshot }) => {
           test('resting', async ({ page }) => {
             // By default, filters are open. We need to close them.
             await closeFilters(page)
@@ -61,7 +62,18 @@ test.describe('header snapshots', () => {
               page.locator(headerSelector)
             )
           })
+
+          test('searchbar active', async ({ page }) => {
+            await closeFilters(page)
+            await hideInputCursors(page)
+            await page.click('input')
+            await expectSnapshot(
+              `searchbar-active-${dir}`,
+              page.locator(headerSelector)
+            )
+          })
         })
+        // TODO: add mobile tests
       })
     })
   }

@@ -4,7 +4,7 @@
     :class="{ 'h-[57px] md:h-[69px]': size === 'standalone' }"
     @submit.prevent="handleSearch"
   >
-    <VInputField
+    <VInputFieldOld
       :placeholder="placeholder || $t('hero.search.placeholder')"
       v-bind="$attrs"
       class="search-field flex-grow focus:border-pink"
@@ -22,7 +22,7 @@
     >
       <!-- @slot Extra information such as loading message or result count goes here. -->
       <slot />
-    </VInputField>
+    </VInputFieldOld>
     <VSearchButtonOld type="submit" :size="size" :route="route" />
   </form>
 </template>
@@ -33,9 +33,9 @@ import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 import { useMatchHomeRoute } from '~/composables/use-match-routes'
 import { defineEvent } from '~/types/emits'
 
-import VInputField, {
+import VInputFieldOld, {
   FIELD_SIZES,
-} from '~/components/VInputField/VInputField.vue'
+} from '~/components/VInputFieldOld/VInputFieldOld.vue'
 import VSearchButtonOld from '~/components/VHeaderOld/VSearchBar/VSearchButtonOld.vue'
 
 /**
@@ -45,7 +45,7 @@ import VSearchButtonOld from '~/components/VHeaderOld/VSearchBar/VSearchButtonOl
  */
 export default defineComponent({
   name: 'VSearchBarOld',
-  components: { VInputField, VSearchButtonOld },
+  components: { VInputFieldOld, VSearchButtonOld },
   inheritAttrs: false,
   props: {
     /**

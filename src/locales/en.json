@@ -374,7 +374,8 @@
       "model-3d": "3D Models",
       "all": "content",
       "collection-placeholder": "Search this collection",
-      "button": "Search"
+      "button": "Search",
+      "clear": "Clear"
     },
     "license-description": {
       "title": "License CC",

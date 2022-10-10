@@ -139,12 +139,17 @@ const describeEvery = describeEachBreakpoint(
   Object.keys(VIEWPORTS) as Breakpoint[]
 )
 const describeEachDesktop = describeEachBreakpoint(desktopBreakpoints)
+const describeEachDesktopExceptMd = describeEachBreakpoint(
+  desktopBreakpoints.filter((b) => b !== 'md')
+)
 const describeEachMobile = describeEachBreakpoint(mobileBreakpoints)
 
 export default {
   ...breakpointTests,
   describeEachBreakpoint,
   describeEvery,
+  // TODO: replace with describeEachDesktopExceptMd when the new header is ready
   describeEachDesktop,
+  describeEachDesktopExceptMd,
   describeEachMobile,
 }
