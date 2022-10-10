@@ -8,7 +8,7 @@ By participating in this project, you are expected to uphold our [Code of Conduc
 
 ## Project Documentation
 
-Please consult the [README](./README.md) and [CODEBASE](./CODEBASE.md) files at the root of this repository.
+Please consult the [README](./README.md) file at the root of this repository.
 
 ## How to Contribute
 
@@ -28,7 +28,7 @@ If you'd like to build a new feature but don't have a specific idea, please chec
 
 ### Pull requests
 
-Before you start writing code, make sure there is an issue open. Pull requests without a link to an existing issue won't be merged. All pull requests _must_ target the `develop` branch of the repository.
+Before you start writing code, make sure there is an issue open. Pull requests without a link to an existing issue won't be merged. All pull requests _must_ target the `main` branch of the repository.
 
 If you want to get started contributing code to this project but don't know exactly what to work on, we compiled a good list of issues labeled as ['good first issues'](https://github.com/wordpress/openverse-frontend/labels/good%20first%20issue) which are small in scope and not so complex to solve. There are also issues labeled as ['help wanted'](https://github.com/wordpress/openverse-frontend/labels/help%20wanted) which can be a bit more complex but are good examples of things we are currently accepting help from the community.
 
@@ -36,9 +36,9 @@ Any code modifications will have to be accompanied by the appropriate unit tests
 
 If you want to run the unit tests and linter on your machine, run the following commands:
 
-`npm run unit` for unit tests
+`pnpm test:unit` for unit tests
 
-`npm run lint` for linter.
+`pnpm lint` for linter.
 
 You can also configure your editor of choice with a ESLint plugin so you can get the linter feedback as you write code.
 
