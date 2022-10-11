@@ -6,6 +6,7 @@
       @submit.prevent="handleSearch"
     >
       <VInputField
+        ref="inputFieldRef"
         v-bind="$attrs"
         v-model="modelMedium"
         :placeholder="placeholder || $t('hero.search.placeholder')"
@@ -37,7 +38,12 @@
         <!-- @slot Extra information such as loading message or result count goes here. -->
         <slot />
       </VInputField>
-      <VSearchButton type="submit" :size="size" :route="route" />
+      <VSearchButton
+        type="submit"
+        :size="size"
+        :route="route"
+        @keydown.tab="handleSearchBlur"
+      />
     </form>
     <ClientOnly>
       <VRecentSearches
@@ -48,6 +54,7 @@
         :class="recentClasses"
         @select="handleSelect"
         @clear="handleClear"
+        @keydown.tab.native="handleBlur"
       />
     </ClientOnly>
   </div>
@@ -115,6 +122,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const searchBarEl = ref<HTMLElement | null>(null)
+    const inputFieldRef = ref<InstanceType<typeof VInputField> | null>(null)
 
     const { matches: isHomeRoute } = useMatchHomeRoute()
 
@@ -139,6 +147,9 @@ export default defineComponent({
     }
     const handleBlur = () => {
       isRecentVisible.value = false
+    }
+    const handleSearchBlur = () => {
+      if (!entries.value.length) handleBlur()
     }
     onClickOutside(searchBarEl, handleBlur)
 
@@ -224,11 +235,13 @@ export default defineComponent({
     }
     /* Clear all recent searches from the store. */
     const handleClear = () => {
+      inputFieldRef.value?.focusInput()
       searchStore.clearRecentSearches()
     }
 
     return {
       searchBarEl,
+      inputFieldRef,
 
       handleSearch,
       route,
@@ -236,6 +249,7 @@ export default defineComponent({
 
       handleFocus,
       handleBlur,
+      handleSearchBlur,
 
       isNewHeaderEnabled,
       isRecentVisible,

@@ -15,6 +15,7 @@
     <input
       :id="fieldId"
       v-bind="$attrs"
+      ref="inputEl"
       :type="type"
       class="h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none placeholder-dark-charcoal-70 ms-4 focus:outline-none md:text-base"
       :value="modelValue"
@@ -29,7 +30,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import {
+  ref,
+  computed,
+  defineComponent,
+  PropType,
+} from '@nuxtjs/composition-api'
 
 import { defineEvent } from '~/types/emits'
 
@@ -100,7 +106,14 @@ export default defineComponent({
   emits: {
     'update:modelValue': defineEvent<[string]>(),
   },
+  expose: ['focusInput'],
   setup(props, { emit, attrs }) {
+    const inputEl = ref<HTMLInputElement | null>(null)
+
+    const focusInput = () => {
+      inputEl.value?.focus()
+    }
+
     const type = typeof attrs['type'] === 'string' ? attrs['type'] : 'text'
 
     const updateModelValue = (event: Event) => {
@@ -109,6 +122,10 @@ export default defineComponent({
     const sizeClass = computed(() => FIELD_SIZES[props.size])
 
     return {
+      inputEl,
+
+      focusInput,
+
       emit,
       type,
 
