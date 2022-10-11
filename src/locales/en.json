@@ -59,7 +59,8 @@
       "simple": "Filters",
       "with-count": "{count} Filter|{count} Filters"
     },
-    "see-results": "See results"
+    "see-results": "See results",
+    "back-button": "Go back"
   },
   "navigation": {
     "about": "About",

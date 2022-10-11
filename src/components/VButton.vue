@@ -2,7 +2,7 @@
   <Component
     :is="as"
     :type="typeRef"
-    class="flex appearance-none items-center justify-center rounded-sm no-underline ring-offset-1 transition-shadow duration-100 ease-linear focus:outline-none"
+    class="group flex appearance-none items-center justify-center rounded-sm no-underline ring-offset-1 transition-shadow duration-100 ease-linear focus:outline-none"
     :class="[
       $style.button,
       $style[variant],

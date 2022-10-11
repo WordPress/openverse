@@ -5,7 +5,8 @@
     :aria-label="$t('header.home-link')"
     variant="plain"
     size="disabled"
-    class="max-w-min text-dark-charcoal hover:bg-yellow"
+    class="text-dark-charcoal hover:bg-yellow"
+    :class="fixedSize ? 'h-12 w-12 flex-shrink-0' : 'max-w-min'"
   >
     <VLogoLoader
       :status="isFetching ? 'loading' : 'idle'"
@@ -27,13 +28,13 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-    isSearchRoute: {
+    autoResizeLogo: {
       type: Boolean,
       default: false,
     },
-    autoResizeLogo: {
+    fixedSize: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
 })

@@ -93,7 +93,7 @@ export default defineComponent({
   name: 'VHeaderInternal',
   components: { VHomeLink, VIconButton, VLink, VModal, VPageLinks, WordPress },
   setup() {
-    const menuButtonRef = ref<InstanceType<typeof VIconButton>>(null)
+    const menuButtonRef = ref<InstanceType<typeof VIconButton> | null>(null)
 
     const { all: allPages, current: currentPage } = usePages(true)
     const route = useRoute()

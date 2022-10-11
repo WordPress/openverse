@@ -1,18 +1,21 @@
 <template>
   <div
-    class="flex flex-col gap-1 rounded-sm border border-dark-charcoal-20 bg-white p-4 shadow-el-2"
+    class="flex flex-col gap-1 rounded-sm border bg-white"
+    :class="bordered ? 'border-dark-charcoal-20 p-4 shadow-el-2' : 'border-tx'"
     data-testid="recent-searches"
   >
-    <div class="flex flex-row items-center justify-between py-2">
+    <div
+      class="flex flex-row items-center justify-between py-2"
+      :class="{ 'pe-2': !bordered }"
+    >
       <!-- Left margin to align with the text of recent searches. -->
       <span class="category mx-2 my-1">
         {{ $t('recent-searches.heading') }}
       </span>
       <VButton
         v-show="entries.length"
-        variant="plain"
-        size="small"
-        class="caption-bold hover:underline"
+        variant="text"
+        class="caption-bold"
         :aria-label="$t('recent-searches.clear.label').toString()"
         @click="handleClear"
       >
@@ -79,6 +82,13 @@ export default defineComponent({
      */
     selectedIdx: {
       type: Number,
+    },
+    /**
+     * the desktop popover is bordered, and the mobile element is not
+     */
+    bordered: {
+      type: Boolean,
+      default: true,
     },
   },
   emits: {

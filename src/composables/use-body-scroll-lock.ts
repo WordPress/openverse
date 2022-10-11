@@ -1,19 +1,32 @@
-import { Ref, ref } from '@nuxtjs/composition-api'
+import { Ref, ref, watch } from '@nuxtjs/composition-api'
 
 import { getDocument } from '~/utils/reakit-utils/dom'
 
 /**
  * Creates a utility for locking body scrolling for a particular node.
  */
-export function useBodyScrollLock({ nodeRef }: { nodeRef: Ref<HTMLElement> }) {
-  const locked = ref(false)
+export function useBodyScrollLock({
+  nodeRef,
+  initialLocked = false,
+}: {
+  nodeRef: Ref<HTMLElement | null>
+  initialLocked?: boolean
+}) {
+  const locked = ref(initialLocked)
   let scrollY: number | null = null
 
+  watch(
+    nodeRef,
+    (node) => {
+      if (node && locked.value) lock()
+    },
+    {
+      immediate: true,
+    }
+  )
   const lock = () => {
     if (!nodeRef.value) {
-      throw new Error(
-        'useBodyScrollLock: Cannot lock body with undefined node reference'
-      )
+      return
     }
 
     locked.value = true
@@ -25,9 +38,7 @@ export function useBodyScrollLock({ nodeRef }: { nodeRef: Ref<HTMLElement> }) {
 
   const unlock = () => {
     if (!nodeRef.value) {
-      throw new Error(
-        'useBodyScrollLock: Cannot unlock body with undefined node reference'
-      )
+      return
     }
 
     locked.value = false

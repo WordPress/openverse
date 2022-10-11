@@ -21,10 +21,10 @@
         isNewHeaderEnabled ? 'new-layout' : 'old-layout',
       ]"
     >
-      <div v-if="isNewHeaderEnabled">
-        <Nuxt class="main-page min-w-0" />
+      <template v-if="isNewHeaderEnabled">
+        <Nuxt class="main-page min-w-0 !px-6" />
         <VFooter class="border-t border-dark-charcoal-20" />
-      </div>
+      </template>
       <Nuxt v-else class="main-page min-w-0" />
 
       <VSidebarTarget

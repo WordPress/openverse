@@ -9,8 +9,8 @@
     <template #trigger="{ visible, a11Props }">
       <VContentSettingsButton
         :is-pressed="visible"
+        :are-filters-selected="areFiltersSelected"
         v-bind="a11Props"
-        class="me-2"
       />
     </template>
     <VTabs
@@ -111,6 +111,9 @@ export default defineComponent({
     const changeSelectedTab = (tab: 'content-settings' | 'filters') => {
       selectedTab.value = tab
     }
+
+    const areFiltersSelected = computed(() => searchStore.isAnyFilterApplied)
+
     const showClearFiltersButton = computed(
       () => selectedTab.value === 'filters'
     )
@@ -141,6 +144,7 @@ export default defineComponent({
       selectedTab,
       changeSelectedTab,
 
+      areFiltersSelected,
       showClearFiltersButton,
       isClearButtonDisabled,
       clearFiltersLabel,
