@@ -77,11 +77,11 @@ Time                - 11px - xs semibold (default leading-[120%])
   }
 
   .paragraph-large {
-    @apply text-2xl leading-larger;
+    @apply leading-larger text-2xl;
   }
 
   .paragraph-small {
-    @apply text-base leading-large;
+    @apply leading-large text-base;
   }
 
   .body {
@@ -113,10 +113,10 @@ Time                - 11px - xs semibold (default leading-[120%])
   }
 
   .category {
-    @apply text-sr uppercase font-semibold;
+    @apply text-sr font-semibold uppercase;
   }
 
   .time {
-    @apply text-xs font-semibold
+    @apply text-xs font-semibold;
   }
 }

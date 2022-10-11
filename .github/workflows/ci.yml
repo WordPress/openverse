@@ -36,7 +36,7 @@ jobs:
       - uses: ./.github/actions/setup-node-env
 
       - name: Lint with ESLint and Prettier
-        run: pnpm lint
+        run: pnpm pc:lint
 
   unit:
     name: Unit tests

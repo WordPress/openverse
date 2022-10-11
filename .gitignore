@@ -33,6 +33,9 @@ storybook-static
 .zshrc
 .tcv-export
 
+# pre-commit executable
+pre-commit.pyz
+
 # Playwright creates these two folders
 test-results
 test/Default

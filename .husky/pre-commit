@@ -1,9 +1,0 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-if [ ! -f "$(dirname "$dir")"/src/locales/ar.json ]; then
-  echo "Loading locales."
-  pnpm i18n
-fi
-# Lint staged files
-pnpm lint-staged && pnpm types
