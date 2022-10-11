@@ -39,15 +39,17 @@
       </VInputField>
       <VSearchButton type="submit" :size="size" :route="route" />
     </form>
-    <VRecentSearches
-      v-show="isNewHeaderEnabled && isRecentVisible"
-      :selected-idx="selectedIdx"
-      :entries="entries"
-      class="absolute inset-x-0 lg:flex"
-      :class="recentClasses"
-      @select="handleSelect"
-      @clear="handleClear"
-    />
+    <ClientOnly>
+      <VRecentSearches
+        v-show="isNewHeaderEnabled && isRecentVisible"
+        :selected-idx="selectedIdx"
+        :entries="entries"
+        class="absolute inset-x-0 lg:flex"
+        :class="recentClasses"
+        @select="handleSelect"
+        @clear="handleClear"
+      />
+    </ClientOnly>
   </div>
 </template>
 
