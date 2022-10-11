@@ -16,9 +16,10 @@ RUN pnpm fetch
 # copy the rest of the content
 COPY --chown=node:node . /home/node/app
 
-# `--ignore-scripts` prevents the `prepare` script from running. This avoids
-# installation of pre-commit inside the container.
-RUN pnpm install -r --offline --ignore-scripts
+# Prevent pre-commit from being installed, we don't need it here and it fails to install anyway
+ENV SKIP_PRE_COMMIT=true
+
+RUN pnpm install -r --offline
 
 # disable telemetry when building the app
 ENV NUXT_TELEMETRY_DISABLED=1
