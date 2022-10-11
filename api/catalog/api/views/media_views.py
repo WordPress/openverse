@@ -15,7 +15,6 @@ from sentry_sdk import capture_exception
 from catalog.api.controllers import search_controller
 from catalog.api.models import ContentProvider
 from catalog.api.serializers.provider_serializers import ProviderSerializer
-from catalog.api.utils.exceptions import get_api_exception
 from catalog.api.utils.pagination import StandardPagination
 from catalog.custom_auto_schema import CustomAutoSchema
 
@@ -99,7 +98,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
             self.paginator.page_count = num_pages
             self.paginator.result_count = num_results
         except ValueError as e:
-            raise get_api_exception(getattr(e, "message", str(e)))
+            raise APIException(getattr(e, "message", str(e)))
 
         serializer = self.get_serializer(results, many=True)
         return self.get_paginated_response(serializer.data)
@@ -133,10 +132,10 @@ class MediaViewSet(ReadOnlyModelViewSet):
             # `page_size` refers to the maximum number of related images to return.
             self.paginator.page_size = 10
         except ValueError as e:
-            raise get_api_exception(getattr(e, "message", str(e)))
+            raise APIException(getattr(e, "message", str(e)))
         # If there are no hits in the search controller
         except IndexError:
-            raise get_api_exception("Could not find items.", 404)
+            raise APIException("Could not find items.", 404)
 
         serializer = self.get_serializer(results, many=True)
         return self.get_paginated_response(serializer.data)
@@ -145,8 +144,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
         media = self.get_object()
         identifier = media.identifier
         serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            raise get_api_exception("Invalid input.", 400)
+        serializer.is_valid(raise_exception=True)
         report = serializer.save(identifier=identifier)
 
         serializer = self.get_serializer(report)

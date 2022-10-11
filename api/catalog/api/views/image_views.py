@@ -4,6 +4,7 @@ import struct
 
 from django.conf import settings
 from django.http.response import FileResponse, HttpResponse
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
@@ -34,7 +35,6 @@ from catalog.api.serializers.image_serializers import (
     WatermarkRequestSerializer,
 )
 from catalog.api.serializers.media_serializers import MediaThumbnailRequestSerializer
-from catalog.api.utils.exceptions import get_api_exception
 from catalog.api.utils.throttle import (
     AnonThumbnailRateThrottle,
     OAuth2IdThumbnailRateThrottle,
@@ -85,10 +85,7 @@ class ImageViewSet(MediaViewSet):
         if url.endswith("/"):
             url = url[:-1]
         identifier = url.rsplit("/", 1)[1]
-        try:
-            image = self.get_queryset().get(identifier=identifier)
-        except Image.DoesNotExist:
-            raise get_api_exception("Could not find image.", 404)
+        image = get_object_or_404(Image, identifier=identifier)
         if not (image.height and image.width):
             image_file = requests.get(image.url, headers=self.OEMBED_HEADERS)
             width, height = PILImage.open(io.BytesIO(image_file.content)).size
@@ -112,7 +109,7 @@ class ImageViewSet(MediaViewSet):
 
         image_url = image.url
         if not image_url:
-            raise get_api_exception("Could not find image.", 404)
+            raise NotFound("Could not find image.", 404)
 
         # Hotfix to use scaled down version of the image from SMK
         # TODO Remove when this issue is addressed:

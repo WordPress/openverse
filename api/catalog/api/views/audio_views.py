@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from rest_framework.decorators import action
+from rest_framework.exceptions import APIException, NotFound
 from rest_framework.response import Response
 
 from drf_yasg.utils import swagger_auto_schema
@@ -22,7 +23,6 @@ from catalog.api.serializers.audio_serializers import (
     AudioWaveformSerializer,
 )
 from catalog.api.serializers.media_serializers import MediaThumbnailRequestSerializer
-from catalog.api.utils.exceptions import get_api_exception
 from catalog.api.utils.throttle import OneThousandPerMinute
 from catalog.api.views.media_views import MediaViewSet
 
@@ -64,7 +64,7 @@ class AudioViewSet(MediaViewSet):
         elif audio.audio_set and (thumbnail := audio.audio_set.thumbnail):
             image_url = thumbnail
         if not image_url:
-            raise get_api_exception("Could not find artwork.", 404)
+            raise NotFound("Could not find artwork.")
 
         return super().thumbnail(image_url, request)
 
@@ -82,7 +82,7 @@ class AudioViewSet(MediaViewSet):
 
             return Response(status=200, data=serializer.data)
         except Exception as e:
-            raise get_api_exception(getattr(e, "message", str(e)))
+            raise APIException(getattr(e, "message", str(e)))
 
     @action(
         detail=True,
