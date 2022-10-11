@@ -37,8 +37,8 @@ jobs:
           cp /tmp/openverse.pot openverse.pot
           git config --global user.name 'POT Updater'
           git config --global user.email 'openverse@wordpress.org'
-          git commit -am 'Update POT file'
-          git push
+          git commit --no-verify -am 'Update POT file'
+          git push --no-verify
 
       - name: Re-checkout `main` branch to allow for cleanup to work
         uses: actions/checkout@v3
