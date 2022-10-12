@@ -92,7 +92,6 @@ The following are DAGs grouped by their primary tag:
 | [`smithsonian_workflow`](#smithsonian_workflow) | `@weekly` | `False` | image |
 | `smk_workflow` | `@monthly` | `False` | image |
 | [`stocksnap_workflow`](#stocksnap_workflow) | `@monthly` | `False` | image |
-| [`walters_workflow`](#walters_workflow) | `@monthly` | `False` | image |
 | [`wikimedia_commons_workflow`](#wikimedia_commons_workflow) | `@daily` | `True` | image, audio |
 | [`wordpress_workflow`](#wordpress_workflow) | `@monthly` | `False` | image |
 
@@ -133,7 +132,6 @@ The following is documentation associated with each DAG (where available):
  1. [`smithsonian_workflow`](#smithsonian_workflow)
  1. [`stocksnap_workflow`](#stocksnap_workflow)
  1. [`tsv_to_postgres_loader`](#tsv_to_postgres_loader)
- 1. [`walters_workflow`](#walters_workflow)
  1. [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)
  1. [`wikimedia_reingestion_workflow`](#wikimedia_reingestion_workflow)
  1. [`wordpress_workflow`](#wordpress_workflow)
@@ -584,20 +582,6 @@ https://github.com/creativecommons/cccatalog/issues/333)
 - [DB Loader should take data from S3, rather than EC2 to load into PostgreSQL](
 https://github.com/creativecommons/cccatalog/issues/334)
 
-
-
-## `walters_workflow`
-
-
-Content Provider:       Walters Art Museum
-
-ETL Process:            Use the API to identify all CC licensed images.
-
-Output:                 TSV file containing the images and the
-                        respective meta-data.
-
-Notes:                  http://api.thewalters.org/
-                        Rate limit: 250000 Per Day Per Key
 
 
 ## `wikimedia_commons_workflow`

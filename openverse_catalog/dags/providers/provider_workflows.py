@@ -206,10 +206,6 @@ PROVIDER_WORKFLOWS = [
         ingestion_callable=StockSnapDataIngester,
     ),
     ProviderWorkflow(
-        provider_script="walters",
-        start_date=datetime(2020, 9, 27),
-    ),
-    ProviderWorkflow(
         provider_script="wikimedia_commons",
         ingestion_callable=WikimediaCommonsDataIngester,
         start_date=datetime(2020, 11, 1),
