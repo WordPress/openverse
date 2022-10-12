@@ -282,6 +282,8 @@ Output:                 TSV file containing the image, the respective
 
 Notes:                  https://freesound.org/apiv2/search/text'
                         No rate limit specified.
+                        This script can be run either to ingest the full dataset or
+                        as a dated DAG.
 
 
 ## `image_data_refresh`
