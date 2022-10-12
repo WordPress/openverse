@@ -12,6 +12,8 @@ on:
         default: true
         description: Set to `false` to trigger _just_ a redeployment
 
+concurrency: ${{ github.workflow }}-${{ inputs.deploy-to }}
+
 jobs:
   build:
     name: Build

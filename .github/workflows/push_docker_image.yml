@@ -9,6 +9,8 @@ on:
         description: Commit that the image is built from
         required: true
 
+concurrency: ${{ github.workflow }}-${{ inputs.image }}-${{ inputs.commit }}
+
 jobs:
   push:
     name: Publish requested Docker image

@@ -5,6 +5,11 @@ on:
     paths:
       - "**/migrations/**/*"
 
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for pull requests.
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
   check-and-apply-labels:
     name: "Check and Apply Labels"
