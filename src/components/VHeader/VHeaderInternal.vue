@@ -22,7 +22,7 @@
             :button-props="{ variant: 'plain' }"
             :aria-label="$t('header.aria.menu')"
             v-bind="a11yProps"
-            class="border-tx"
+            class="border-tx hover:bg-dark-charcoal hover:text-white"
             size="search-medium"
           />
         </template>
