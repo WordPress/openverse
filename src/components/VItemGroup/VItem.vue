@@ -8,15 +8,17 @@
       }`]: contextProps.bordered,
       'bg-dark-charcoal-10': selected && contextProps.bordered,
       'px-2': isInPopover,
+      'hover:bg-dark-charcoal-10': !isInPopover,
       [$style[`${contextProps.direction}-popover-item`]]: isInPopover,
     }"
   >
     <VButton
       data-item-group-item
       :as="as"
-      class="group relative flex min-w-full justify-between px-2 py-2 hover:bg-dark-charcoal-10 focus:z-10"
+      class="group relative flex min-w-full justify-between py-2 px-6 hover:bg-dark-charcoal-10 focus:z-10 lg:px-2"
       :class="[
         $style[`${contextProps.direction}-button`],
+        $style[`${contextProps.size}-button`],
         selected && 'bg-dark-charcoal-10 ring-offset-dark-charcoal-10',
         as === 'VLink' && 'text-dark-charcoal',
       ]"
@@ -35,14 +37,14 @@
       @click.native="$emit('click')"
     >
       <div
-        class="my-0 flex-grow whitespace-nowrap rounded-sm px-2"
+        class="flex w-full flex-grow gap-x-2 whitespace-nowrap rounded-sm"
         :class="[$style[`${contextProps.direction}-content`]]"
       >
         <slot name="default" />
       </div>
       <VIcon
-        v-if="!isInPopover && selected && contextProps.direction === 'vertical'"
-        class="absolute end-5"
+        v-if="selected && contextProps.direction === 'vertical'"
+        class="absolute end-2 lg:end-5"
         :icon-path="checkmark"
       />
     </VButton>
@@ -163,7 +165,6 @@ export default defineComponent({
   },
 })
 </script>
-
 <style module>
 .button:focus {
   @apply z-10;
@@ -190,15 +191,11 @@ export default defineComponent({
 }
 
 .vertical-content {
-  @apply flex flex-row items-center;
+  @apply flex flex-row items-center pe-8 lg:pe-8;
 }
 
 .vertical-popover-item {
   @apply pb-0;
-}
-
-.vertical-popover-item:last-of-type {
-  @apply pb-2;
 }
 
 .horizontal-button {

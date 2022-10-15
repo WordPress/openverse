@@ -6,12 +6,10 @@ import {
   Story,
 } from '@storybook/addon-docs'
 
-import { ref } from '@nuxtjs/composition-api'
-
 import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover.vue'
 
 <Meta
-  title="Components/VSearchTypePopover"
+  title="Components/VContentSwitcher/VSearchTypePopover"
   components={VSearchTypePopover}
   argTypes={{
     select: {
@@ -37,29 +35,5 @@ export const Template = (args) => ({
 <Canvas>
   <Story height="480px" name="Default">
     {Template.bind({})}
-  </Story>
-</Canvas>
-
-## v-model
-
-The recommended way to use it is with `v-model` mapping to a `String`.
-
-export const vModelTemplate = () => ({
-  template: `
-    <div>
-      {{ item }}
-      <VSearchTypePopover v-model="item"/>
-    </div>
-  `,
-  components: { VSearchTypePopover },
-  setup() {
-    const item = ref('all')
-    return { item }
-  },
-})
-
-<Canvas>
-  <Story height="480px" name="v-model">
-    {vModelTemplate.bind({})}
   </Story>
 </Canvas>

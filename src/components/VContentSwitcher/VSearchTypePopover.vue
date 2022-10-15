@@ -14,7 +14,8 @@
     </template>
     <VSearchTypes
       id="content-switcher-popover"
-      size="medium"
+      class="min-w-[262px] pt-2"
+      size="small"
       :use-links="true"
       @select="closePopover"
     />

@@ -76,6 +76,7 @@
     "src/components/VAllResultsGrid/VImageCellSquare.vue",
     "src/components/VContentReport/VReportDescForm.vue",
     "src/components/VContentSwitcher/VSearchTypeButton.vue",
+    "src/components/VContentSwitcher/VSearchTypeItem.vue",
     "src/components/VContentSwitcher/VSearchTypeRadio.vue",
     "src/components/VContentSwitcherOld/VSearchTypeButton.vue",
     "src/components/VErrorSection/VErrorImage.vue",

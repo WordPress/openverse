@@ -37,7 +37,7 @@
         />
       </template>
       <VTabPanel id="content-settings">
-        <VSearchTypes size="small" :use-links="true" />
+        <VSearchTypes size="medium" :use-links="true" />
       </VTabPanel>
       <VTabPanel id="filters">
         <VSearchGridFilter

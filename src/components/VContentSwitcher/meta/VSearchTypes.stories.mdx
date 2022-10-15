@@ -1,0 +1,50 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import VSearchTypes from '~/components/VContentSwitcher/VSearchTypes.vue'
+
+<Meta
+  title="Components/VContentSwitcher/VSearchTypes"
+  components={VSearchTypes}
+  argTypes={{
+    select: {
+      action: 'select',
+    },
+    size: {
+      control: {
+        type: 'select',
+        options: ['small', 'medium'],
+      },
+    },
+    useLinks: {
+      control: {
+        type: 'boolean',
+      },
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `<VSearchTypes active-item="image" v-bind="args" v-on="args"/>`,
+  components: { VSearchTypes },
+  setup() {
+    return { args }
+  },
+})
+
+# VSearchTypes
+
+<Description of={VSearchTypes} />
+
+<ArgsTable of={VSearchTypes} />
+
+<Canvas>
+  <Story height="480px" name="Default">
+    {Template.bind({})}
+  </Story>
+</Canvas>
