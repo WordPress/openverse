@@ -1,0 +1,14 @@
+name: "Subscribe to Label"
+# link: https://github.com/bytecodealliance/subscribe-to-label-action
+
+on:
+  issues:
+    types: ["labeled"]
+
+jobs:
+  subscribe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: bytecodealliance/subscribe-to-label-action@v1
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
