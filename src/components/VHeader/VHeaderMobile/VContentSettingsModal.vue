@@ -29,7 +29,7 @@
           $t('filters.title')
         }}</VTab>
         <VIconButton
-          class="self-center ms-auto"
+          class="self-center ms-auto hover:bg-dark-charcoal hover:text-white"
           size="search-medium"
           :icon-props="{ iconPath: closeIcon }"
           :aria-label="$t('browse-page.aria.close')"

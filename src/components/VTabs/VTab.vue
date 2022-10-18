@@ -7,7 +7,7 @@
     size="disabled"
     variant="plain--avoid"
     v-bind="tabProps"
-    class="label-bold md:description-bold rounded-none border-0 bg-white focus-visible:shadow-[0_0_0_1.5px_#c52b9b_inset]"
+    class="rounded-none border-0 bg-white focus-visible:shadow-[0_0_0_1.5px_#c52b9b_inset]"
     :class="[
       $style[variant],
       $style[`size-${size}`],
@@ -197,16 +197,16 @@ export default defineComponent({
 
 <style module>
 .bordered {
-  @apply rounded-t-sm border-x border-t border-tx;
+  @apply rounded-t-sm border-x border-t border-tx text-sm font-semibold md:text-base md:font-semibold md:leading-snug;
 }
 .plain {
-  @apply border-tx;
+  @apply rounded-sm border-tx bg-tx text-sr font-semibold uppercase hover:bg-dark-charcoal-10;
 }
 .bordered-selected {
   @apply -mb-[1px] border border-x-dark-charcoal-20 border-t-dark-charcoal-20 border-b-white bg-white;
 }
 .plain-selected {
-  @apply relative rounded-none after:absolute after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-dark-charcoal after:transition-all after:duration-200;
+  @apply relative after:absolute after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-dark-charcoal after:transition-all after:duration-200;
 }
 .plain-selected.size-default {
   @apply after:bottom-[-0.125rem];
