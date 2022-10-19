@@ -101,6 +101,9 @@ class ProviderDataIngester(ABC):
         if self.limit:
             self.batch_limit = min(self.batch_limit, self.limit)
 
+        # Keep track of number of records ingested
+        self.record_count = 0
+
         # Initialize the DelayedRequester and all necessary Media Stores.
         self.delayed_requester = DelayedRequester(
             delay=self.delay, headers=self.headers
@@ -147,8 +150,13 @@ class ProviderDataIngester(ABC):
         **kwargs: Optional arguments to be passed to `get_next_query_params`.
         """
         should_continue = True
-        record_count = 0
         query_params = None
+
+        # If an ingestion limit has been set and we have already ingested records
+        # in excess of the limit, exit early. This may happen if `ingest_records`
+        # is called more than once.
+        if self.limit and self.record_count >= self.limit:
+            return
 
         logger.info(f"Begin ingestion for {self.__class__.__name__}")
 
@@ -163,8 +171,8 @@ class ProviderDataIngester(ABC):
                 batch, should_continue = self.get_batch(query_params)
 
                 if batch and len(batch) > 0:
-                    record_count += self.process_batch(batch)
-                    logger.info(f"{record_count} records ingested so far.")
+                    self.record_count += self.process_batch(batch)
+                    logger.info(f"{self.record_count} records ingested so far.")
                 else:
                     logger.info("Batch complete.")
                     should_continue = False
@@ -195,7 +203,7 @@ class ProviderDataIngester(ABC):
                 self.commit_records()
                 raise error from ingestion_error
 
-            if self.limit and record_count >= self.limit:
+            if self.limit and self.record_count >= self.limit:
                 logger.info(f"Ingestion limit of {self.limit} has been reached.")
                 should_continue = False
 

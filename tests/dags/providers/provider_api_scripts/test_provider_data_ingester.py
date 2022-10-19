@@ -379,6 +379,45 @@ def test_ingest_records_with_skip_ingestion_errors(
         assert get_batch_mock.call_count == expected_call_count
 
 
+def test_ingest_records_exits_immediately_if_limit_already_reached():
+    # A child class may override `ingest_records` to run multiple times.
+    # Once the ingestion limit has been reached, subsequent calls to
+    # `ingest_records` should immediately return without attempting to
+    # ingest new data.
+    with patch(
+        "providers.provider_api_scripts.provider_data_ingester.Variable"
+    ) as MockVariable:
+        # Mock the calls to Variable.get to set an ingestion limit
+        MockVariable.get.side_effect = [5]
+
+        ingester = MockProviderDataIngester()
+
+        # Mock batch processing to reach the ingestion limit
+        with (
+            patch.object(ingester, "get_batch") as get_batch_mock,
+            patch.object(
+                ingester, "process_batch", return_value=5
+            ) as process_batch_mock,
+        ):
+            get_batch_mock.side_effect = [
+                (EXPECTED_BATCH_DATA, True),  # First batch
+                (EXPECTED_BATCH_DATA, True),  # Second batch
+            ]
+
+            ingester.ingest_records()
+
+            # get_batch was only called once, and then the limit was reached
+            assert get_batch_mock.call_count == 1
+            assert process_batch_mock.call_count == 1
+
+            # Ingest records again
+            ingester.ingest_records()
+
+            # get_batch was not called any additional times
+            assert get_batch_mock.call_count == 1
+            assert process_batch_mock.call_count == 1
+
+
 def test_commit_commits_all_stores():
     with (
         patch.object(audio_store, "commit") as audio_store_mock,
