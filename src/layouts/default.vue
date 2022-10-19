@@ -21,10 +21,13 @@
         isNewHeaderEnabled ? 'new-layout' : 'old-layout',
       ]"
     >
-      <template v-if="isNewHeaderEnabled">
-        <Nuxt class="main-page min-w-0 !px-6" />
-        <VFooter class="border-t border-dark-charcoal-20" />
-      </template>
+      <div v-if="isNewHeaderEnabled" class="main-page min-w-0">
+        <Nuxt class="!px-6" />
+        <VFooter
+          :mode="isSearchHeader ? 'content' : 'search'"
+          class="border-t border-dark-charcoal-20"
+        />
+      </div>
       <Nuxt v-else class="main-page min-w-0" />
 
       <VSidebarTarget
@@ -198,6 +201,8 @@ export default embeddedPage
   /** Make the main content area span both grid columns when the sidebar is closed... **/
   .main.new-layout > *:first-child {
     grid-column: span 2;
+    /** Make sure the bottom element (footer) is all the way at the bottom of the page **/
+    @apply flex flex-col justify-between;
   }
   /** ...and only one column when it is visible. **/
   .main.new-layout.has-sidebar > *:first-child {

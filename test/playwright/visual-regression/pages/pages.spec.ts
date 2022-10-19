@@ -6,6 +6,7 @@ import {
   dismissTranslationBanner,
   pathWithDir,
   languageDirections,
+  enableNewHeader,
 } from '~~/test/playwright/utils/navigation'
 
 test.describe.configure({ mode: 'parallel' })
@@ -21,6 +22,7 @@ for (const contentPage of contentPages) {
   for (const dir of languageDirections) {
     test.describe(`${contentPage} ${dir} page snapshots`, () => {
       test.beforeEach(async ({ page }) => {
+        await enableNewHeader(page)
         await page.goto(pathWithDir(contentPage, dir))
         await dismissTranslationBanner(page)
       })

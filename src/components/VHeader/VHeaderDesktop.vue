@@ -1,6 +1,6 @@
 <template>
   <header
-    class="main-header z-30 flex w-full items-stretch justify-between gap-x-2 border-b bg-white py-4 px-7"
+    class="main-header z-30 flex w-full items-stretch justify-between gap-x-2 border-b bg-white py-4 px-6"
     :class="
       isHeaderScrolled || sidebarVisibleRef
         ? 'border-dark-charcoal-20'
