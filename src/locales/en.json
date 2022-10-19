@@ -41,7 +41,6 @@
     "aria": {
       "primary": "primary",
       "menu": "menu",
-      "menu-notification": "Some filters are applied",
       "search": "search",
       "sr-search": "search button"
     },
@@ -60,7 +59,11 @@
       "with-count": "{count} Filter|{count} Filters"
     },
     "see-results": "See results",
-    "back-button": "Go back"
+    "back-button": "Go back",
+    "content-settings-button": {
+      "simple": "Menu",
+      "with-count": "Menu. {count} filter applied|Menu. {count} filters applied"
+    }
   },
   "navigation": {
     "about": "About",
@@ -628,6 +631,7 @@
   "interpunct": "•",
   "modal": {
     "close": "Close",
+    "aria-close": "Close the modal",
     "close-named": "Close {name}"
   },
   "error-images": {

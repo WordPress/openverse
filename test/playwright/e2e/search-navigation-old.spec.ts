@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 
 import {
   goToSearchTerm,
+  OLD_HEADER,
   openFilters,
 } from '~~/test/playwright/utils/navigation'
 import { mockProviderApis } from '~~/test/playwright/utils/route'
@@ -18,7 +19,7 @@ test.describe('search history navigation', () => {
   }) => {
     await goToSearchTerm(page, 'galah')
     // Open filter sidebar
-    await openFilters(page)
+    await openFilters(page, OLD_HEADER)
 
     // Apply a filter
     await page.click('#modification')

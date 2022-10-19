@@ -37,6 +37,8 @@ test('shows recent searches in reverse chronological order', async ({
 test('clicking takes user to that search', async ({ page }) => {
   await executeSearches(page)
   expect(page.url()).toContain('?q=galah')
+  // Click on the input to open the Recent searches
+  await page.locator('input[type="search"]').click()
   await page
     .locator(`[aria-label="Recent searches"]`)
     .locator('[id="option-1"]')
@@ -45,6 +47,9 @@ test('clicking takes user to that search', async ({ page }) => {
 })
 
 test('recent searches shows message when blank', async ({ page }) => {
+  // Click on the input to open the Recent searches
+  await page.locator('input[type="search"]').click()
+
   const recentSearchesText = await page
     .locator('[data-testid="recent-searches"]')
     .textContent()
@@ -53,6 +58,8 @@ test('recent searches shows message when blank', async ({ page }) => {
 
 test('clicking Clear clears the recent searches', async ({ page }) => {
   await executeSearches(page)
+  // Click on the input to open the Recent searches
+  await page.locator('input[type="search"]').click()
   await page.locator('[aria-label="Clear recent searches"]').click()
   const recentSearchesText = await page
     .locator('[data-testid="recent-searches"]')

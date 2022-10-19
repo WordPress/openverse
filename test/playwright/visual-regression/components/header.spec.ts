@@ -4,6 +4,7 @@ import breakpoints from '~~/test/playwright/utils/breakpoints'
 import { hideInputCursors } from '~~/test/playwright/utils/page'
 import {
   closeFilters,
+  enableNewHeader,
   goToSearchTerm,
   languageDirections,
   scrollToBottom,
@@ -18,14 +19,12 @@ test.describe('header snapshots', () => {
   for (const dir of languageDirections) {
     test.describe(dir, () => {
       test.beforeEach(async ({ page }) => {
-        await goToSearchTerm(page, 'birds', {
-          dir: dir,
-          query: 'ff_new_header=on',
-        })
+        await enableNewHeader(page)
+        await goToSearchTerm(page, 'birds', { dir })
       })
 
       test.describe('header', () => {
-        breakpoints.describeEachDesktopExceptMd(({ expectSnapshot }) => {
+        breakpoints.describeEachDesktop(({ expectSnapshot }) => {
           test('filters open', async ({ page }) => {
             await page.mouse.move(0, 150)
             await expectSnapshot(

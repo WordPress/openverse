@@ -24,6 +24,12 @@ type BreakpointBlock = (options: {
 const desktopBreakpoints = ['2xl', 'xl', 'lg', 'md'] as const
 const mobileBreakpoints = ['sm', 'xs'] as const
 
+/**
+ * For e2e functionality testing, we need to test mobile and desktop screens.
+ */
+export const testScreens = ['sm', 'xl'] as const
+export type TestScreen = typeof testScreens[number]
+
 // For desktop UA use the default
 const desktopUa = undefined
 const mobileUa =
@@ -138,18 +144,21 @@ const describeEachBreakpoint =
 const describeEvery = describeEachBreakpoint(
   Object.keys(VIEWPORTS) as Breakpoint[]
 )
-const describeEachDesktop = describeEachBreakpoint(desktopBreakpoints)
-const describeEachDesktopExceptMd = describeEachBreakpoint(
+const describeEachDesktopWithMd = describeEachBreakpoint(desktopBreakpoints)
+const describeEachDesktop = describeEachBreakpoint(
   desktopBreakpoints.filter((b) => b !== 'md')
 )
 const describeEachMobile = describeEachBreakpoint(mobileBreakpoints)
+const describeEachMobileWithoutMd = describeEachBreakpoint(mobileBreakpoints)
 
 export default {
   ...breakpointTests,
   describeEachBreakpoint,
   describeEvery,
-  // TODO: replace with describeEachDesktopExceptMd when the new header is ready
   describeEachDesktop,
-  describeEachDesktopExceptMd,
+  // TODO: remove describeEachDesktopWithMd after the new_header is merged
+  describeEachDesktopWithMd,
   describeEachMobile,
+  // TODO: remove describeEachMobileWithoutMd after the new_header is merged
+  describeEachMobileWithoutMd,
 }

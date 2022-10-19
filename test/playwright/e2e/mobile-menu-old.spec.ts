@@ -3,8 +3,9 @@ import { test, expect } from '@playwright/test'
 import {
   closeMobileMenu,
   goToSearchTerm,
+  OLD_HEADER,
+  openContentTypes,
   openFilters,
-  openMobileMenu,
 } from '~~/test/playwright/utils/navigation'
 
 const mockUaString =
@@ -20,16 +21,16 @@ test.describe.configure({ mode: 'parallel' })
 test('Can open filters menu on mobile at least twice', async ({ page }) => {
   await page.goto('/search/?q=cat')
 
-  await openFilters(page)
+  await openFilters(page, OLD_HEADER)
   await expect(page.locator(`input[type="checkbox"]`)).toHaveCount(11, {
     timeout: 100,
   })
-  await closeMobileMenu(page)
+  await closeMobileMenu(page, OLD_HEADER)
   await expect(page.locator(`input[type="checkbox"]`)).toHaveCount(0, {
     timeout: 100,
   })
 
-  await openFilters(page)
+  await openFilters(page, OLD_HEADER)
   await expect(page.locator(`input[type="checkbox"]`)).toHaveCount(11, {
     timeout: 100,
   })
@@ -37,10 +38,10 @@ test('Can open filters menu on mobile at least twice', async ({ page }) => {
 
 test('Can open mobile menu at least twice', async ({ page }) => {
   await goToSearchTerm(page, 'cat')
-  await openMobileMenu(page)
+  await openContentTypes(page, OLD_HEADER)
   await expect(page.locator('button', { hasText: 'Close' })).toBeVisible()
-  await closeMobileMenu(page)
+  await closeMobileMenu(page, OLD_HEADER)
   await expect(page.locator('button', { hasText: 'Close' })).not.toBeVisible()
-  await openMobileMenu(page)
+  await openContentTypes(page, OLD_HEADER)
   await expect(page.locator('button', { hasText: 'Close' })).toBeVisible()
 })

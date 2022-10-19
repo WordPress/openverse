@@ -3,6 +3,7 @@ import { test, expect, Page } from '@playwright/test'
 import {
   changeContentType,
   goToSearchTerm,
+  OLD_HEADER,
   searchTypePath,
 } from '~~/test/playwright/utils/navigation'
 import { mockProviderApis } from '~~/test/playwright/utils/route'
@@ -115,7 +116,7 @@ for (const searchType of searchTypes) {
     // Audio is loading a lot of files, so we do not use it for the first SSR page
     const pageToOpen = searchType.id === 'all' ? searchTypes[1] : searchTypes[0]
     await page.goto(pageToOpen.url)
-    await changeContentType(page, searchType.name)
+    await changeContentType(page, searchType.name, OLD_HEADER)
     await checkSearchResult(page, searchType)
   })
 }

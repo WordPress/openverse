@@ -1,19 +1,20 @@
-import { test, expect, Page } from '@playwright/test'
+import { expect, Page, test } from '@playwright/test'
 
 import {
   assertCheckboxStatus,
-  openFilters,
   changeContentType,
   goToSearchTerm,
+  OLD_HEADER,
+  openFilters,
 } from '~~/test/playwright/utils/navigation'
 
 import { mockProviderApis } from '~~/test/playwright/utils/route'
 
 import {
-  supportedSearchTypes,
   ALL_MEDIA,
-  IMAGE,
   AUDIO,
+  IMAGE,
+  supportedSearchTypes,
 } from '~/constants/media'
 
 test.describe.configure({ mode: 'parallel' })
@@ -48,7 +49,7 @@ for (const searchType of supportedSearchTypes) {
   }) => {
     await goToSearchTerm(page, 'cat', { searchType })
 
-    await openFilters(page)
+    await openFilters(page, OLD_HEADER)
 
     await assertCheckboxCount(page, 'total', FILTER_COUNTS[searchType])
   })
@@ -58,7 +59,7 @@ test('initial filters are applied based on the url', async ({ page }) => {
   await page.goto(
     '/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator'
   )
-  await openFilters(page)
+  await openFilters(page, OLD_HEADER)
   const expectedFilters = ['cc0', 'commercial', 'creator']
 
   for (const checkbox of expectedFilters) {
@@ -72,13 +73,13 @@ test('common filters are retained when media type changes from all media to sing
   await page.goto(
     '/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator'
   )
-  await openFilters(page)
+  await openFilters(page, OLD_HEADER)
   const expectedFilters = ['cc0', 'commercial', 'creator']
 
   for (const checkbox of expectedFilters) {
     await assertCheckboxStatus(page, checkbox)
   }
-  await changeContentType(page, 'Images')
+  await changeContentType(page, 'Images', OLD_HEADER)
 
   await expect(page).toHaveURL(
     '/search/image?q=cat&license_type=commercial&license=cc0&searchBy=creator'
@@ -94,13 +95,13 @@ test('common filters are retained when media type changes from single type to al
   await page.goto(
     '/search/image?q=cat&license_type=commercial&license=cc0&searchBy=creator'
   )
-  await openFilters(page)
+  await openFilters(page, OLD_HEADER)
 
   for (const checkbox of ['cc0', 'commercial', 'creator']) {
     await assertCheckboxStatus(page, checkbox)
   }
 
-  await changeContentType(page, 'All content')
+  await changeContentType(page, 'All content', OLD_HEADER)
 
   for (const checkbox of ['cc0', 'commercial', 'creator']) {
     await assertCheckboxStatus(page, checkbox)
@@ -114,7 +115,7 @@ test('selecting some filters can disable dependent filters', async ({
   page,
 }) => {
   await page.goto('/search/audio?q=cat&license_type=commercial')
-  await openFilters(page)
+  await openFilters(page, OLD_HEADER)
 
   // by-nc is special because we normally test for fuzzy match, and by-nc matches 3 labels.
   const byNc = page.locator('input[value="by-nc"]')
@@ -144,12 +145,12 @@ test('selecting some filters can disable dependent filters', async ({
  */
 test('filters are updated when media type changes', async ({ page }) => {
   await page.goto('/search/image?q=cat&aspect_ratio=tall&license=cc0')
-  await openFilters(page)
+  await openFilters(page, OLD_HEADER)
 
   await assertCheckboxStatus(page, 'tall')
   await assertCheckboxStatus(page, 'cc0')
 
-  await changeContentType(page, 'Audio')
+  await changeContentType(page, 'Audio', OLD_HEADER)
 
   // Only CC0 checkbox is checked, and the filter button label is '1 Filter'
   await assertCheckboxStatus(page, 'cc0')
@@ -164,7 +165,7 @@ test('new media request is sent when a filter is selected', async ({
   page,
 }) => {
   await page.goto('/search/image?q=cat')
-  await openFilters(page)
+  await openFilters(page, OLD_HEADER)
 
   await assertCheckboxStatus(page, 'cc0', '', 'unchecked')
 
@@ -190,7 +191,7 @@ for (const [searchType, source] of [
     await page.goto(
       `/search/${searchType}?q=birds&source=${source.toLowerCase()}`
     )
-    await openFilters(page)
+    await openFilters(page, OLD_HEADER)
 
     await assertCheckboxStatus(page, source, '', 'checked')
   })

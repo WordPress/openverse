@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test'
 import {
   changeContentType,
   goToSearchTerm,
+  OLD_HEADER,
 } from '~~/test/playwright/utils/navigation'
 import { mockProviderApis } from '~~/test/playwright/utils/route'
 
@@ -51,7 +52,7 @@ test('url filter parameters not used by current mediaType are discarded', async 
     query: 'category=photograph',
   })
 
-  await changeContentType(page, 'Audio')
+  await changeContentType(page, 'Audio', OLD_HEADER)
   await expect(page).toHaveURL('/search/audio?q=cat')
 })
 
@@ -63,7 +64,7 @@ test('url filter types not used by current mediaType are discarded', async ({
     query: 'aspect_ratio=tall',
   })
 
-  await changeContentType(page, 'Audio')
+  await changeContentType(page, 'Audio', OLD_HEADER)
   await expect(page).toHaveURL('/search/audio?q=cat')
 })
 

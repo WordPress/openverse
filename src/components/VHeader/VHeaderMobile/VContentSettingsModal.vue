@@ -9,7 +9,7 @@
     <template #trigger="{ visible, a11Props }">
       <VContentSettingsButton
         :is-pressed="visible"
-        :are-filters-selected="areFiltersSelected"
+        :applied-filter-count="appliedFilterCount"
         v-bind="a11Props"
       />
     </template>
@@ -32,7 +32,7 @@
           class="self-center ms-auto hover:bg-dark-charcoal hover:text-white"
           size="search-medium"
           :icon-props="{ iconPath: closeIcon }"
-          :aria-label="$t('browse-page.aria.close')"
+          :aria-label="$t('modal.aria-close')"
           @click="closeModal"
         />
       </template>
@@ -120,11 +120,10 @@ export default defineComponent({
     const isClearButtonDisabled = computed(
       () => !searchStore.isAnyFilterApplied
     )
+    const appliedFilterCount = computed(() => searchStore.appliedFilterCount)
     const clearFiltersLabel = computed(() =>
       searchStore.isAnyFilterApplied
-        ? i18n.t('filter-list.clear-numbered', {
-            number: searchStore.appliedFilterCount,
-          })
+        ? i18n.tc('filter-list.clear-numbered', appliedFilterCount.value)
         : i18n.t('filter-list.clear')
     )
 
@@ -145,6 +144,7 @@ export default defineComponent({
       changeSelectedTab,
 
       areFiltersSelected,
+      appliedFilterCount,
       showClearFiltersButton,
       isClearButtonDisabled,
       clearFiltersLabel,

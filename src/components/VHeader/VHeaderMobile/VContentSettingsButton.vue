@@ -2,9 +2,9 @@
   <VSearchBarButton
     :icon-path="sourceIcon"
     :aria-label="
-      areFiltersSelected
-        ? $t('header.aria.menu-notification')
-        : $t('header.aria.menu')
+      appliedFilterCount
+        ? $tc('header.content-settings-button.with-count', appliedFilterCount)
+        : $t('header.content-settings-button.simple')
     "
     aria-haspopup="dialog"
     :aria-expanded="isPressed"
@@ -13,7 +13,7 @@
   >
     <template #notification>
       <span
-        v-if="areFiltersSelected"
+        v-if="appliedFilterCount"
         class="absolute top-[-2px] right-[-2px] h-[8px] w-[8px] rounded bg-pink"
       />
     </template>
@@ -32,9 +32,9 @@ export default {
       type: Boolean,
       default: false,
     },
-    areFiltersSelected: {
-      type: Boolean,
-      default: false,
+    appliedFilterCount: {
+      type: Number,
+      default: 0,
     },
   },
   setup() {

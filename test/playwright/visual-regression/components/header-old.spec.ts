@@ -6,6 +6,7 @@ import {
   closeFilters,
   goToSearchTerm,
   languageDirections,
+  OLD_HEADER,
   scrollToBottom,
   sleep,
 } from '~~/test/playwright/utils/navigation'
@@ -22,7 +23,7 @@ test.describe('header-old snapshots', () => {
       })
 
       test.describe('header-old', () => {
-        breakpoints.describeEachDesktop(({ expectSnapshot }) => {
+        breakpoints.describeEachDesktopWithMd(({ expectSnapshot }) => {
           test('filters open', async ({ page }) => {
             await page.mouse.move(0, 150)
             await expectSnapshot(
@@ -35,14 +36,14 @@ test.describe('header-old snapshots', () => {
         breakpoints.describeEvery(({ expectSnapshot }) => {
           test('resting', async ({ page }) => {
             // By default, filters are open. We need to close them.
-            await closeFilters(page)
+            await closeFilters(page, OLD_HEADER)
             // Make sure the header is not hovered on
             await page.mouse.move(0, 150)
             await expectSnapshot(`resting-${dir}`, page.locator(headerSelector))
           })
 
           test('scrolled', async ({ page }) => {
-            await closeFilters(page)
+            await closeFilters(page, OLD_HEADER)
             await scrollToBottom(page)
             await page.mouse.move(0, 150)
             await sleep(200)
@@ -53,7 +54,7 @@ test.describe('header-old snapshots', () => {
           })
 
           test('searchbar hovered', async ({ page }) => {
-            await closeFilters(page)
+            await closeFilters(page, OLD_HEADER)
             await page.hover('input')
             await hideInputCursors(page)
             await expectSnapshot(

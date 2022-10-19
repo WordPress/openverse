@@ -19,6 +19,14 @@ const messages: Record<string, Record<string, unknown>> = {
   ltr: enMessages,
   rtl: rtlMessages,
 }
+/**
+ * This is used during the transition period from the `old` header to the `new` one.
+ * The new header is enabled using `new_header` feature flag. Some navigation methods
+ * are different depending on the header version.
+ */
+export const OLD_HEADER = 'old_header'
+export const NEW_HEADER = 'new_header'
+export type HeaderMode = typeof OLD_HEADER | typeof NEW_HEADER
 
 const getNestedProperty = (
   obj: Record<string, unknown>,
@@ -67,9 +75,10 @@ export type LanguageDirection = 'ltr' | 'rtl'
 
 const smWidth = SCREEN_SIZES.get('sm') as number
 
-const buttonSelectors = {
-  filter: '[aria-controls="filters"]',
-  contentSwitcher: '[aria-controls="content-switcher-modal"]',
+export const buttonSelectors = {
+  filter: 'button[aria-controls="filters"]',
+  contentSwitcher: 'button[aria-controls="content-switcher-modal"]',
+  mobileContentSettings: `button[aria-controls="content-settings-modal"]`,
 }
 
 export function sleep(ms: number) {
@@ -106,7 +115,7 @@ const isButtonPressed = async (
   }
   const pageWidth = viewportSize.width
   if (pageWidth > 640) {
-    return (await page.getAttribute(buttonSelector, 'aria-pressed')) === 'true'
+    return await getPressed(page, buttonSelector)
   } else {
     return await page.locator('button', { hasText: 'Close' }).isVisible()
   }
@@ -120,26 +129,107 @@ const openMenu = async (page: Page, button: 'filter' | 'contentSwitcher') => {
   }
 }
 
-export const openFilters = async (page: Page) => {
-  await openMenu(page, 'filter')
-}
-
-export const closeFilters = async (page: Page) => {
-  const selector = buttonSelectors['filter']
-
-  if (await isButtonPressed(page, selector)) {
-    await page.click(selector)
-    expect(await isButtonPressed(page, selector)).toEqual(false)
+export const openFilters = async (
+  page: Page,
+  mode: HeaderMode = NEW_HEADER,
+  dir: LanguageDirection = 'ltr'
+) => {
+  if (mode === OLD_HEADER || (mode === NEW_HEADER && isPageDesktop(page))) {
+    await openMenu(page, 'filter')
+  } else {
+    await openContentSettingsTab(page, 'filters', dir)
   }
 }
 
-export const openMobileMenu = async (page: Page) => {
-  await openMenu(page, 'contentSwitcher')
+export const openContentTypes = async (
+  page: Page,
+  mode: HeaderMode = NEW_HEADER,
+  dir: LanguageDirection = 'ltr'
+) => {
+  if (mode === OLD_HEADER || (mode === NEW_HEADER && isPageDesktop(page))) {
+    await openMenu(page, 'contentSwitcher')
+  } else {
+    await openContentSettingsTab(page, 'contentTypes', dir)
+  }
 }
 
-export const closeMobileMenu = async (page: Page) => {
-  await page.click('text=Close')
+export const isPageDesktop = (page: Page, mode: HeaderMode = NEW_HEADER) => {
+  const pageWidth = page.viewportSize()?.width
+  if (!pageWidth) return false
+  const desktopMinWidth = mode === NEW_HEADER ? 1024 : 768
+  return pageWidth >= desktopMinWidth
 }
+/**
+ * Returns `true` if the `selector`'s `aria-pressed` attribute is `true`.
+ */
+const getPressed = async (page: Page, selector: string) => {
+  return (
+    (await page.getAttribute(selector, 'aria-pressed')) === 'true' ||
+    (await page.getAttribute(selector, 'aria-expanded')) === 'true'
+  )
+}
+
+/**
+ * Clicks the `selector` button if it is not already pressed.
+ */
+const ensureButtonPressed = async (page: Page, selector: string) => {
+  if (!(await getPressed(page, selector))) {
+    await page.click(selector)
+    expect(await getPressed(page, selector)).toEqual(true)
+  }
+}
+/**
+ * Open the Content types tab in the mobile content settings modal.
+ */
+export const openContentSettingsTab = async (
+  page: Page,
+  tab: 'contentTypes' | 'filters' = 'contentTypes',
+  dir: LanguageDirection = 'ltr'
+) => {
+  const selector = buttonSelectors.mobileContentSettings
+
+  await ensureButtonPressed(page, selector)
+
+  const tabLabel = t(
+    tab === 'contentTypes' ? 'search-type.heading' : 'filters.title',
+    dir
+  )
+  await page.locator(`button[role="tab"]:has-text("${tabLabel}")`).click()
+}
+
+export const closeFilters = async (
+  page: Page,
+  mode: HeaderMode = NEW_HEADER
+) => {
+  if (mode === OLD_HEADER || (mode === NEW_HEADER && isPageDesktop(page))) {
+    const selector = buttonSelectors['filter']
+
+    if (await isButtonPressed(page, selector)) {
+      await page.click(selector)
+      expect(await isButtonPressed(page, selector)).toEqual(false)
+    }
+  } else {
+    await closeMobileMenu(page, mode)
+  }
+}
+
+/**
+ * Previous to the `new_header` milestone, the mobile menu had a text button, now it is an icon button.
+ */
+export const closeMobileMenu = async (
+  page: Page,
+  mode: HeaderMode = NEW_HEADER,
+  dir: LanguageDirection = 'ltr'
+) => {
+  if (mode === OLD_HEADER) {
+    await page.click(`button:has-text('${t('modal.close', dir)}')`)
+  } else {
+    await page.click(`button[aria-label="${t('modal.aria-close', dir)}"]`)
+  }
+}
+
+export const isMobileMenuOpen = async (page: Page) =>
+  page.locator('[role="dialog"]').isVisible({ timeout: 100 })
 
 export const assertCheckboxStatus = async (
   page: Page,
@@ -171,27 +261,48 @@ export const assertCheckboxStatus = async (
 
 export const changeContentType = async (
   page: Page,
-  to: 'Audio' | 'Images' | 'All content'
+  to: 'Audio' | 'Images' | 'All content',
+  mode: HeaderMode = NEW_HEADER
 ) => {
-  await page.click(
-    `button[aria-controls="content-switcher-popover"], button[aria-controls="content-switcher-modal"]`
-  )
-  // Ensure that the asynchronous navigation is finished before next steps
-  await Promise.all([
-    page.waitForNavigation(),
-    page.locator(`#content-switcher-popover a:has-text("${to}")`).click(),
-  ])
+  if (mode === OLD_HEADER || isPageDesktop(page)) {
+    await page.click(
+      `button[aria-controls="content-switcher-popover"], button[aria-controls="content-switcher-modal"]`
+    )
+    // Ensure that the asynchronous navigation is finished before next steps
+    await Promise.all([
+      page.waitForNavigation(),
+      page.locator(`#content-switcher-popover a:has-text("${to}")`).click(),
+    ])
+  } else {
+    await openContentTypes(page, mode)
+    await page.locator(`a[role="radio"]:has-text("${to}")`).click()
+    await closeMobileMenu(page, mode)
+  }
 }
 
 /**
- * Finds a button with a popup to the left of the filters button which doesn't have a 'menu' label
- * @param page - The current page
+ * For desktop, returns the content of the Content switcher button.
+ * For mobile, returns the selected content type from the modal.
+ * @param page - Playwright page object.
+ * @param mode - `new` if `new_header` flag is on, `old` otherwise.
  */
-export const currentContentType = async (page: Page) => {
-  const contentSwitcherButton = await page.locator(
-    `button[aria-controls="content-switcher-popover"], button[aria-controls="content-switcher-modal"]`
-  )
-  return contentSwitcherButton.textContent()
+export const currentContentType = async (
+  page: Page,
+  mode: HeaderMode = NEW_HEADER
+) => {
+  if (isPageDesktop(page)) {
+    const contentSwitcherButton = await page.locator(
+      `button[aria-controls="content-switcher-popover"]`
+    )
+    return (await contentSwitcherButton.textContent())?.trim()
+  } else {
+    await openContentTypes(page, mode)
+    const currentContentType = await page
+      .locator('a[aria-current="page"]')
+      .textContent()
+    await closeMobileMenu(page, mode)
+    return currentContentType
+  }
 }
 
 /**
@@ -261,10 +372,6 @@ export const goToSearchTerm = async (
     await page.waitForLoadState('load')
   }
   await scrollDownAndUp(page)
-  const pageWidth = page.viewportSize()?.width
-  if (pageWidth && pageWidth > smWidth && query !== '&ff_new_header=on') {
-    await page.waitForSelector(`[aria-label="${t('header.aria.menu', dir)}"]`)
-  }
 }
 
 /**
@@ -272,11 +379,10 @@ export const goToSearchTerm = async (
  * and waits for navigation.
  */
 export const searchFromHeader = async (page: Page, term: string) => {
+  // Double click on the search bar to remove previous value
+  await page.dblclick('id=search-bar')
   await page.fill('id=search-bar', term)
-  await Promise.all([
-    page.waitForNavigation(),
-    page.locator('button[type="submit"]').click(),
-  ])
+  await Promise.all([page.waitForNavigation(), page.keyboard.press('Enter')])
 }
 
 /**
@@ -344,6 +450,15 @@ export const pathWithDir = (rawPath: string, dir: string) => {
 }
 
 export const enableNewHeader = async (page: Page) => {
+  // Add the new_header cookie
+  await page.context().addCookies([
+    {
+      name: 'features',
+      value: '%7B%22new_header%22%3A%22on%22%7D',
+      domain: 'localhost',
+      path: '/',
+    },
+  ])
   await page.goto('/preferences')
   const newHeaderCheckboxLocator = 'input#new_header'
 
