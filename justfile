@@ -44,7 +44,7 @@ build *args:
     just dc build {{ args }}
 
 # Bring all Docker services up
-up flags="":
+up *flags="":
     just dc up -d {{ flags }}
 
 # Take all Docker services down
