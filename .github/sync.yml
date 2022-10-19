@@ -28,8 +28,8 @@ group:
         dest: .github/actionlint-matcher.json
       - source: .github/workflows/subscribe_to_label.yml
         dest: .github/workflows/subscribe_to_label.yml
-      - source: .github/subscribe_to_label.json
-        dest: .github/subscribe_to_label.json
+      - source: .github/subscribe-to-label.json
+        dest: .github/subscribe-to-label.json
       # Downstream workflows
       - source: .github/workflows_downstream/draft_release.yml
         dest: .github/workflows/draft_release.yml
