@@ -199,13 +199,13 @@ Checks for DAGs that have silenced Slack alerts which may need to be turned back
 on.
 
 When a DAG has known failures, it can be ommitted from Slack error reporting by adding
-an entry to the `silenced_slack_notifications` Airflow variable. This is a dictionary
+an entry to the `SILENCED_SLACK_NOTIFICATIONS` Airflow variable. This is a dictionary
 where thekey is the `dag_id` of the affected DAG, and the value is a list of
 SilencedSlackNotifications (which map silenced notifications to GitHub URLs) for that
 DAG.
 
 The `check_silenced_dags` DAG iterates over the entries in the
-`silenced_slack_notifications` configuration and verifies that the associated GitHub
+`SILENCED_SLACK_NOTIFICATIONS` configuration and verifies that the associated GitHub
 issues are still open. If an issue has been closed, it is assumed that the DAG should
 have Slack reporting reenabled, and an alert is sent to prompt manual update of the
 configuration. This prevents developers from forgetting to reenable Slack reporting

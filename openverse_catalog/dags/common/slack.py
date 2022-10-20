@@ -12,7 +12,7 @@ More information can be found here: https://app.slack.com/block-kit-builder.
 
 Messages or alerts sent using `send_message` or `on_failure_callback` will only
 send if a Slack connection is defined and we are running in production. You can
-manually override this for testing purposes by setting the `slack_message_override`
+manually override this for testing purposes by setting the `SLACK_MESSAGE_OVERRIDE`
 variable to `true` in the Airflow UI.
 
 ## Send multiple messages - payload is reset after sending
@@ -230,7 +230,7 @@ class SlackMessage:
 
 def should_silence_message(text, username, dag_id):
     """
-    Checks the `silenced_slack_notifications` Airflow variable to see if the message
+    Checks the `SILENCED_SLACK_NOTIFICATIONS` Airflow variable to see if the message
     should be silenced for this DAG.
     """
     # Match on message text and username
@@ -238,7 +238,7 @@ def should_silence_message(text, username, dag_id):
 
     # Get the configuration for silenced messages for this DAG
     silenced_notifications: list[SilencedSlackNotification] = Variable.get(
-        "silenced_slack_notifications", default_var={}, deserialize_json=True
+        "SILENCED_SLACK_NOTIFICATIONS", default_var={}, deserialize_json=True
     ).get(dag_id, [])
 
     return bool(silenced_notifications) and any(
@@ -269,9 +269,9 @@ def should_send_message(
         return False
 
     # Exit early if we aren't on production or if force alert is not set
-    environment = Variable.get("environment", default_var="dev")
+    environment = Variable.get("ENVIRONMENT", default_var="dev")
     force_message = Variable.get(
-        "slack_message_override", default_var=False, deserialize_json=True
+        "SLACK_MESSAGE_OVERRIDE", default_var=False, deserialize_json=True
     )
     return environment == "prod" or force_message
 
@@ -291,7 +291,7 @@ def send_message(
     if not should_send_message(text, username, dag_id, http_conn_id):
         return
 
-    environment = Variable.get("environment", default_var="dev")
+    environment = Variable.get("ENVIRONMENT", default_var="dev")
     s = SlackMessage(
         f"{username} | {environment}",
         icon_emoji,

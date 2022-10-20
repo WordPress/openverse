@@ -499,9 +499,9 @@ def test_on_failure_callback(
         "dag": mock.Mock(),
     }
     env_vars = {
-        "environment": environment,
-        "slack_message_override": slack_message_override,
-        "silenced_slack_notifications": {},
+        "ENVIRONMENT": environment,
+        "SLACK_MESSAGE_OVERRIDE": slack_message_override,
+        "SILENCED_SLACK_NOTIFICATIONS": {},
     }
 
     # Mock env variables

@@ -51,7 +51,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
 
     # The batch_limit applies to the number of pages received by the API, rather
     # than the number of individual records. This means that for Wikimedia Commons
-    # setting a global `ingestion_limit` will still limit the number of records, but
+    # setting a global `INGESTION_LIMIT` will still limit the number of records, but
     # the exact limit may not be respected.
     batch_limit = 250
 

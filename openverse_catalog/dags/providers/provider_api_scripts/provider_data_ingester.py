@@ -93,7 +93,7 @@ class ProviderDataIngester(ABC):
         # processes some data but still returns quickly.
         # When set to 0, no limit is imposed.
         self.limit = Variable.get(
-            "ingestion_limit", deserialize_json=True, default_var=0
+            "INGESTION_LIMIT", deserialize_json=True, default_var=0
         )
 
         # If a test limit is imposed, ensure that the `batch_limit` does not
