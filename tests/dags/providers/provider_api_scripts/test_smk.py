@@ -30,6 +30,7 @@ def test_get_next_query_params_first_call():
         "filters": "[has_image:true],[public_domain:true]",
         "offset": 0,
         "rows": 2000,
+        "lang": "en",
     }
 
     assert actual_param == expected_param
@@ -42,6 +43,7 @@ def test_get_next_query_params_increments_offset():
             "filters": "[has_image:true],[public_domain:true]",
             "offset": 0,
             "rows": 2000,
+            "lang": "en",
         }
     )
     expected_param = {
@@ -49,6 +51,7 @@ def test_get_next_query_params_increments_offset():
         "filters": "[has_image:true],[public_domain:true]",
         "offset": 2000,
         "rows": 2000,
+        "lang": "en",
     }
 
     assert actual_param == expected_param

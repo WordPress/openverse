@@ -26,6 +26,7 @@ class SmkDataIngester(ProviderDataIngester):
                 "filters": "[has_image:true],[public_domain:true]",
                 "offset": 0,
                 "rows": self.batch_limit,
+                "lang": "en",
             }
         return {
             **prev_query_params,
