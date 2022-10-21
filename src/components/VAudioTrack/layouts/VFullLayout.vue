@@ -56,7 +56,7 @@
         as="VLink"
         :href="audio.foreign_landing_url"
         size="disabled"
-        class="order-1 px-6 py-3 text-sr font-semibold ms-auto md:px-6 md:py-4 md:text-2xl lg:order-2"
+        class="order-1 self-center px-6 py-3 text-sr font-semibold ms-auto md:px-6 md:py-4 md:text-2xl lg:order-2"
       >
         {{ $t('audio-details.weblink') }}
         <VIcon
