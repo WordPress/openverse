@@ -22,7 +22,7 @@ DAG_DEFAULT_ARGS = {
     "email_on_failure": False,
     "email_on_retry": False,
     "email": [CONTACT_EMAIL],
-    "retries": 2,
+    "retries": int(os.getenv("DEFAULT_RETRY_COUNT", 2)),
     "retry_delay": timedelta(minutes=5),
     "execution_timeout": timedelta(hours=1),
     "on_failure_callback": slack.on_failure_callback,
