@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: bytecodealliance/subscribe-to-label-action@v1
         with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          repo-token: "${{ secrets.ACCESS_TOKEN }}"
