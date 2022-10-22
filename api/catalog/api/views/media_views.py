@@ -1,7 +1,8 @@
 import logging
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
 
 from django.conf import settings
+from django.core.cache import cache
 from django.http.response import HttpResponse
 from rest_framework import status
 from rest_framework.decorators import action
@@ -211,6 +212,19 @@ class MediaViewSet(ReadOnlyModelViewSet):
             )
 
             return upstream_response, res_status, content_type
+        except requests.ReadTimeout as exc:
+            # Count the incident so that we can identify providers with most timeouts.
+            domain = urlparse(params["url"]).netloc
+            key = f"{settings.THUMBNAIL_TIMEOUT_PREFIX}{domain}"
+            try:
+                cache.incr(key)
+            except ValueError:  # Key does not exist.
+                cache.set(key, 1)
+
+            capture_exception(exc)
+            raise UpstreamThumbnailException(
+                f"Failed to render thumbnail due to timeout: {exc}"
+            )
         except requests.RequestException as exc:
             capture_exception(exc)
             raise UpstreamThumbnailException(f"Failed to render thumbnail: {exc}")

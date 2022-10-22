@@ -213,6 +213,10 @@ THUMBNAIL_WIDTH_PX = config("THUMBNAIL_WIDTH_PX", cast=int, default=600)
 THUMBNAIL_JPG_QUALITY = config("THUMBNAIL_JPG_QUALITY", cast=int, default=80)
 THUMBNAIL_PNG_COMPRESSION = config("THUMBNAIL_PNG_COMPRESSION", cast=int, default=6)
 
+THUMBNAIL_TIMEOUT_PREFIX = config(
+    "THUMBNAIL_TIMEOUT_PREFIX", default="thumbnail_timeout:"
+)
+
 AUTHENTICATION_BACKENDS = (
     "oauth2_provider.backends.OAuth2Backend",
     "django.contrib.auth.backends.ModelBackend",

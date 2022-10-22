@@ -5,14 +5,16 @@ from test.factory.models.audio import AudioFactory
 from test.factory.models.image import ImageFactory
 from typing import Callable
 from unittest import mock
+from unittest.mock import patch
 
 from rest_framework.test import APIClient
 
 import pytest
 import requests as requests_lib
-from requests import PreparedRequest, Request, Response
+from fakeredis import FakeRedis
+from requests import PreparedRequest, ReadTimeout, Request, Response
 
-from catalog.api.views.media_views import MediaViewSet
+from catalog.api.views.media_views import MediaViewSet, UpstreamThumbnailException
 
 
 _MOCK_IMAGE_PATH = Path(__file__).parent / ".." / ".." / "factory"
@@ -241,3 +243,27 @@ def test_thumb_full_size(api_client, media_type, media_factory, requests):
         assert (
             entry in requests.sent_requests[1].request.url
         ), f"{entry} not found in prepared request url: {requests.sent_requests[0].request.url}"
+
+
+@pytest.fixture
+def redis(monkeypatch) -> FakeRedis:
+    fake_redis = FakeRedis()
+    monkeypatch.setattr("catalog.api.views.media_views.cache", fake_redis)
+
+    yield fake_redis
+
+    fake_redis.client().close()
+
+
+@pytest.mark.parametrize("count", [1, 3])
+def test_thumb_timeout(redis, count: int):
+    with patch("requests.get", side_effect=ReadTimeout()):
+        for idx in range(count):
+            with pytest.raises(UpstreamThumbnailException):
+                MediaViewSet._thumbnail_proxy_comm(
+                    "test", params={"url": f"https://example.com/image/{idx}"}
+                )
+
+    # Conversion to ``int`` required because of bug:
+    # https://github.com/cunla/fakeredis-py/issues/58
+    assert count == int(redis.get("thumbnail_timeout:example.com"))
