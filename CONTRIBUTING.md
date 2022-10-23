@@ -107,6 +107,14 @@ Most of these issues are potentially able to be completed in less than 4 hours, 
 
 [List of Good First Issues](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AWordPress%2Fopenverse-catalog+repo%3AWordPress%2Fopenverse+repo%3AWordPress%2Fopenverse-api+repo%3AWordPress%2Fopenverse-frontend+label%3A%22good+first+issue%22+label%3A%22help+wanted%22+-label%3A%22%E2%9B%94+status%3A+blocked%22+-label%3A%22%F0%9F%94%92+staff+only%22+)
 
+### 🤗 Friendly note for new comers
+
+1. It is totally ok and even encouraged to do more than one "[good first issue](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AWordPress%2Fopenverse-catalog+repo%3AWordPress%2Fopenverse+repo%3AWordPress%2Fopenverse-api+repo%3AWordPress%2Fopenverse-frontend+label%3A%22good+first+issue%22+label%3A%22help+wanted%22+-label%3A%22%E2%9B%94+status%3A+blocked%22+-label%3A%22%F0%9F%94%92+staff+only%22+)"
+2. Maintainers could also use help with writing up issues too. If you see something that could be worked on, there's a [template](https://github.com/WordPress/openverse-frontend/issues/new?assignees=&labels=🖼️+aspect%3A+design%2C✨+goal%3A+improvement%2C+🚦+status%3A+awaiting+triage&template=feature_request.md&title=<Replace+this+with+actual+title>) to help write it up.
+3. Providing feedback on any pull request is welcome too, and you can start by just asking questions! It's great for getting to know the project and a good way to help others by having them question their own assumptions.
+4. Don't hesitate to ask for help! In slack or in a draft PR, if you're stuck, we're here for you. Everyone is learning and thinking things through all the time.
+5. On the technical side, there are a ton of just recipes to help you out. If you run just on its own in any repo, it will show you what recipes are available and what they do. just lint, just test, just recreate, we all run these so frequently!
+
 ## 🏔️ Other non-code contributions
 
 There are a number of other ways to contribute to the project that don't involve writing Python or Javascript.
