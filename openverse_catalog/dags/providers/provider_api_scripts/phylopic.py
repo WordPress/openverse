@@ -13,272 +13,238 @@ Notes:                  http://phylopic.org/api/
 import argparse
 import logging
 from datetime import date, timedelta
-from typing import Dict
 
+from common import constants
 from common.licenses import get_license_info
-from common.requester import DelayedRequester
-from common.storage.image import ImageStore
+from common.loader import provider_details as prov
+from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
-)
 logger = logging.getLogger(__name__)
 
-DELAY = 5.0
-HOST = "phylopic.org"
-ENDPOINT = f"http://{HOST}/api/a"
-PROVIDER = "phylopic"
-LIMIT = 5
-# Default number of days to process if date_end is not defined
-DEFAULT_PROCESS_DAYS = 7
 
-delayed_requester = DelayedRequester(DELAY)
-image_store = ImageStore(provider=PROVIDER)
+class PhylopicDataIngester(ProviderDataIngester):
+    delay = 5
+    host = "http://phylopic.org"
+    # Use "base_endpoint" since class's "endpoint" parameter gets defined as a property
+    base_endpoint = f"{host}/api/a/image"
+    providers = {"image": prov.PHYLOPIC_DEFAULT_PROVIDER}
+    batch_limit = 25
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # This is made an instance attribute rather than passed around via query params
+        # because the URL we hit includes it in the path (not the params) depending on
+        # whether we're running a dated DAG or not. This needs to start at 0 after
+        # getting called once, so we do not set it as a sentinel for the
+        # get_next_query_params function.
+        self.offset = None
 
-def main(date_start: str = "all", date_end: str = None):
-    """
-    This script pulls the data for a given date from the PhyloPic
-    API, and writes it into a .TSV file to be eventually read
-    into our DB.
+    def get_media_type(self, record: dict) -> str:
+        return constants.IMAGE
 
-    Required Arguments:
+    @property
+    def endpoint(self) -> str:
+        """
+        If this is being run as a dated DAG, **only one request is ever issued** to
+        retrieve all updated IDs. As such, the dated version will only return one
+        endpoint. The full run DAG does require the typical offset + limit, which gets
+        recomputed on each call to this property.
+        """
+        list_endpoint = f"{self.base_endpoint}/list"
+        if self.date:
+            # Process for a given date
+            end_date = (date.fromisoformat(self.date) + timedelta(days=1)).isoformat()
+            # Get a list of objects uploaded/updated within a date range
+            # http://phylopic.org/api/#method-image-time-range
+            endpoint = f"{list_endpoint}/modified/{self.date}/{end_date}"
+        else:
+            # Get all images and limit the results for each request.
+            endpoint = f"{list_endpoint}/{self.offset}/{self.batch_limit}"
+        logger.info(f"Constructed endpoint: {endpoint}")
+        return endpoint
 
-    date_start:  Date String in the form YYYY-MM-DD. This date defines the beginning
-                 of the range that the script will pull data from.
-    date_end:    Date String in the form YYYY-MM-DD. Similar to `date_start`, this
-                 defines the end of the range of data pulled. Defaults to
-                 DEFAULT_PROCESS_DAYS (7) if undefined.
-    """
+    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+        """
+        Since the query range is determined via endpoint, this only increments the range
+        to query.
+        """
+        if self.offset is None:
+            self.offset = 0
+        else:
+            self.offset += self.batch_limit
+        return {}
 
-    offset = 0
+    def get_should_continue(self, response_json):
+        """
+        Override for upstream "return True". Dated runs will only ever make 1 query so
+        they should not continue to loop.
+        """
+        return not bool(self.date)
 
-    logger.info("Begin: PhyloPic API requests")
+    @staticmethod
+    def _get_response_data(response_json) -> dict | list | None:
+        """
+        Intermediate method for pulling out results from a Phylopic API request.
+        """
+        if response_json and response_json.get("success") is True:
+            return response_json.get("result")
 
-    if date_start == "all":
-        logger.info("Processing all images")
-        param = {"offset": offset}
+    def get_batch_data(self, response_json):
+        """
+        Process the returned IDs.
 
-        image_count = _get_total_images()
-        logger.info(f"Total images: {image_count}")
+        The Phylopic API returns only lists of IDs in the initial request. We must take
+        this request and iterate through all the IDs to get the metadata for each one.
+        """
+        data = self._get_response_data(response_json)
 
-        while offset <= image_count:
-            _add_data_to_buffer(**param)
-            offset += LIMIT
-            param = {"offset": offset}
+        if not data:
+            logger.warning("No content available!")
+            return None
 
-    else:
-        if date_end is None:
-            date_end = _compute_date_range(date_start)
-        param = {"date_start": date_start, "date_end": date_end}
+        return data
 
-        logger.info(f"Processing from {date_start} to {date_end}")
-        _add_data_to_buffer(**param)
+    @staticmethod
+    def _image_url(uid: str) -> str:
+        return f"{PhylopicDataIngester.host}/image/{uid}"
 
-    image_store.commit()
+    @staticmethod
+    def _get_image_info(
+        result: dict, uid: str
+    ) -> tuple[str | None, int | None, int | None]:
+        img_url = None
+        width = None
+        height = None
 
-    logger.info("Terminated!")
+        image_info = result.get("pngFiles")
+        if image_info:
+            images = list(
+                filter(lambda x: (int(str(x.get("width", "0"))) >= 257), image_info)
+            )
+            if images:
+                image = sorted(images, key=lambda x: x["width"], reverse=True)[0]
+                img_url = image.get("url")
+                if not img_url:
+                    logging.warning(
+                        "Image not detected in url: "
+                        f"{PhylopicDataIngester._image_url(uid)}"
+                    )
+                else:
+                    img_url = f"{PhylopicDataIngester.host}{img_url}"
+                    width = image.get("width")
+                    height = image.get("height")
 
+        return img_url, width, height
 
-def _add_data_to_buffer(**kwargs):
-    endpoint = _create_endpoint_for_IDs(**kwargs)
-    IDs = _get_image_IDs(endpoint)
-    if IDs is None:
-        return
+    @staticmethod
+    def _get_taxa_details(result: dict) -> tuple[list[str] | None, str]:
+        taxa = result.get("taxa", [])
+        taxa_list = None
+        title = ""
+        if taxa:
+            taxa = [
+                _.get("canonicalName")
+                for _ in taxa
+                if _.get("canonicalName") is not None
+            ]
+            taxa_list = [_.get("string", "") for _ in taxa]
 
-    for id_ in IDs:
-        item_data = _get_object_json(id_)
-        if item_data:
-            _process_item(item_data)
+        if taxa_list:
+            title = taxa_list[0]
 
+        return taxa_list, title
 
-def _process_item(item_data: Dict) -> None:
-    details = _get_meta_data(item_data)
-    if details is not None:
-        image_store.add_item(**details)
+    @staticmethod
+    def _get_creator_details(result: dict) -> tuple[str | None, str | None, str | None]:
+        credit_line = None
+        pub_date = None
+        creator = None
+        submitter = result.get("submitter", {})
+        first_name = submitter.get("firstName")
+        last_name = submitter.get("lastName")
+        if first_name and last_name:
+            creator = f"{first_name} {last_name}".strip()
 
+        if credit := result.get("credit"):
+            credit_line = credit.strip()
+            pub_date = result.get("submitted").strip()
 
-def _get_total_images() -> int:
-    # Get the total number of PhyloPic images
-    total = 0
-    endpoint = "http://phylopic.org/api/a/image/count"
-    result = delayed_requester.get_response_json(endpoint, retries=2)
+        return creator, credit_line, pub_date
 
-    if result and result.get("success") is True:
-        total = result.get("result", 0)
+    def get_record_data(self, data: dict) -> dict | list[dict] | None:
+        uid = data.get("uid")
+        if not uid:
+            return
+        logger.debug(f"Processing UUID: {uid}")
+        params = {
+            "options": " ".join(
+                [
+                    "credit",
+                    "licenseURL",
+                    "pngFiles",
+                    "submitted",
+                    "submitter",
+                    "taxa",
+                    "canonicalName",
+                    "string",
+                    "firstName",
+                    "lastName",
+                ]
+            )
+        }
+        endpoint = f"{self.base_endpoint}/{uid}"
+        response_json = self.get_response_json(params, endpoint)
+        result = self._get_response_data(response_json)
+        if not result:
+            return None
 
-    return total
+        meta_data = {}
+        uid = result.get("uid")
+        license_url = result.get("licenseURL")
 
+        img_url, width, height = self._get_image_info(result, uid)
 
-def _create_endpoint_for_IDs(**kwargs):
-    limit = LIMIT
+        if img_url is None:
+            return None
 
-    if ((date_start := kwargs.get("date_start")) is not None) and (
-        (date_end := kwargs.get("date_end")) is not None
-    ):
-        # Get a list of objects uploaded/updated from a given date to another date
-        # http://phylopic.org/api/#method-image-time-range
-        endpoint = (
-            f"http://phylopic.org/api/a/image/list/modified/{date_start}/{date_end}"
-        )
+        meta_data["taxa"], title = self._get_taxa_details(result)
 
-    elif (offset := kwargs.get("offset")) is not None:
-        # Get all images and limit the results for each request.
-        endpoint = f"http://phylopic.org/api/a/image/list/{offset}/{limit}"
+        foreign_url = self._image_url(uid)
 
-    else:
-        raise ValueError("No valid selection criteria found!")
-    return endpoint
+        (
+            creator,
+            meta_data["credit_line"],
+            meta_data["pub_date"],
+        ) = self._get_creator_details(result)
 
-
-def _get_image_IDs(_endpoint) -> list | None:
-    result = delayed_requester.get_response_json(_endpoint, retries=2)
-    image_IDs = []
-
-    if result and result.get("success") is True:
-        data = list(result.get("result"))
-
-        if len(data) > 0:
-            for item in data:
-                image_IDs.append(item.get("uid"))
-
-    if not image_IDs:
-        logger.warning("No content available!")
-        return None
-
-    return image_IDs
-
-
-def _get_object_json(_uuid: str) -> Dict | None:
-    logger.info(f"Processing UUID: {_uuid}")
-
-    endpoint = (
-        f"http://phylopic.org/api/a/image/{_uuid}?options=credit+"
-        "licenseURL+pngFiles+submitted+submitter+taxa+canonicalName"
-        "+string+firstName+lastName"
-    )
-    result = None
-    request = delayed_requester.get_response_json(endpoint, retries=2)
-    if request and request.get("success") is True:
-        result = request["result"]
-    return result
-
-
-def _get_meta_data(result: Dict) -> Dict:
-    base_url = "http://phylopic.org"
-    meta_data = {}
-    _uuid = result.get("uid")
-    license_url = result.get("licenseURL")
-
-    meta_data["taxa"], title = _get_taxa_details(result)
-
-    foreign_url = f"{base_url}/image/{_uuid}"
-
-    (creator, meta_data["credit_line"], meta_data["pub_date"]) = _get_creator_details(
-        result
-    )
-
-    img_url, width, height = _get_image_info(result, _uuid)
-
-    if img_url is None:
-        return None
-
-    details = {
-        "foreign_identifier": _uuid,
-        "foreign_landing_url": foreign_url,
-        "image_url": img_url,
-        "license_info": get_license_info(license_url=license_url),
-        "width": width,
-        "height": height,
-        "creator": creator,
-        "title": title,
-        "meta_data": meta_data,
-    }
-    return details
-
-
-def _get_creator_details(result):
-    credit_line = None
-    pub_date = None
-    creator = None
-    first_name = result.get("submitter", {}).get("firstName")
-    last_name = result.get("submitter", {}).get("lastName")
-    if first_name and last_name:
-        creator = f"{first_name} {last_name}".strip()
-
-    if result.get("credit"):
-        credit_line = result.get("credit").strip()
-        pub_date = result.get("submitted").strip()
-
-    return creator, credit_line, pub_date
-
-
-def _get_taxa_details(result):
-    taxa = result.get("taxa", [])
-    # [0].get('canonicalName', {}).get('string')
-    taxa_list = None
-    title = ""
-    if taxa:
-        taxa = [
-            _.get("canonicalName") for _ in taxa if _.get("canonicalName") is not None
-        ]
-        taxa_list = [_.get("string", "") for _ in taxa]
-
-    if taxa_list:
-        title = taxa_list[0]
-
-    return taxa_list, title
-
-
-def _get_image_info(result, _uuid):
-    base_url = "http://phylopic.org"
-    img_url = None
-    width = None
-    height = None
-
-    image_info = result.get("pngFiles")
-    if image_info:
-        images = list(
-            filter(lambda x: (int(str(x.get("width", "0"))) >= 257), image_info)
-        )
-        if len(images) > 0:
-            image = sorted(images, key=lambda x: x["width"], reverse=True)[0]
-            img_url = image.get("url")
-            if not img_url:
-                logging.warning(f"Image not detected in url: {base_url}/image/{_uuid}")
-            else:
-                img_url = f"{base_url}{img_url}"
-                width = image.get("width")
-                height = image.get("height")
-
-    return img_url, width, height
+        return {
+            "foreign_identifier": uid,
+            "foreign_landing_url": foreign_url,
+            "image_url": img_url,
+            "license_info": get_license_info(license_url=license_url),
+            "width": width,
+            "height": height,
+            "creator": creator,
+            "title": title,
+            "meta_data": meta_data,
+        }
 
 
-def _compute_date_range(date_start: str, days: int = DEFAULT_PROCESS_DAYS) -> str:
-    """
-    Given an ISO formatted date string and a number of days, compute the
-    ISO string that represents the start date plus the days provided.
-    """
-    date_end = date.fromisoformat(date_start) + timedelta(days=days)
-    return date_end.isoformat()
+def main(date: str = None):
+    logger.info("Begin: Phylopic provider script")
+    ingester = PhylopicDataIngester(date=date)
+    ingester.ingest_records()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="PhyloPic API Job", add_help=True)
     parser.add_argument(
-        "--date-start",
-        default="all",
-        help="Identify all images starting from a particular date (YYYY-MM-DD).",
-    )
-    parser.add_argument(
-        "--date-end",
+        "--date",
         default=None,
-        help="Used in conjunction with --date-start, identify all images ending on "
-        f"a particular date (YYYY-MM-DD), defaults to {DEFAULT_PROCESS_DAYS} "
-        "if not defined.",
+        help="Identify all images updated on a particular date (YYYY-MM-DD).",
     )
 
     args = parser.parse_args()
 
-    main(args.date_start, args.date_end)
+    main(args.date)

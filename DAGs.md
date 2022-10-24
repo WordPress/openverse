@@ -85,7 +85,7 @@ The following are DAGs grouped by their primary tag:
 | [`metropolitan_museum_workflow`](#metropolitan_museum_workflow) | `@daily` | `True` | image |
 | `museum_victoria_workflow` | `@monthly` | `False` | image |
 | `nypl_workflow` | `@monthly` | `False` | image |
-| [`phylopic_workflow`](#phylopic_workflow) | `@weekly` | `True` | image |
+| [`phylopic_workflow`](#phylopic_workflow) | `@daily` | `True` | image |
 | `rawpixel_workflow` | `@monthly` | `False` | image |
 | `science_museum_workflow` | `@monthly` | `False` | image |
 | [`smithsonian_workflow`](#smithsonian_workflow) | `@weekly` | `False` | image |
