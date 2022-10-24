@@ -1,120 +1,77 @@
 import json
-import logging
-import os
-from unittest.mock import MagicMock, patch
+from pathlib import Path
+from unittest.mock import patch
 
-import requests
-from providers.provider_api_scripts import nypl as np
-
-
-RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "resources/nypl")
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
+import pytest
+from common.licenses import LicenseInfo
+from providers.provider_api_scripts.nypl import (
+    NyplDataIngester,
+    get_value_from_dict_or_list,
 )
 
 
+RESOURCES = Path(__file__).parent / "resources/nypl"
+CC0 = LicenseInfo(
+    license="cc0",
+    version="1.0",
+    url="https://creativecommons.org/publicdomain/zero/1.0/",
+    raw_url="https://creativecommons.org/publicdomain/zero/1.0/",
+)
+
+
+@pytest.fixture(autouse=True)
+def validate_url_string():
+    with patch("common.urls.rewrite_redirected_url") as mock_validate_url_string:
+        mock_validate_url_string.side_effect = lambda x: x
+        yield
+
+
+nypl = NyplDataIngester()
+image_store = nypl.media_stores["image"]
+
+
 def _get_resource_json(json_name):
-    with open(os.path.join(RESOURCES, json_name)) as f:
+    with open(RESOURCES / json_name) as f:
         resource_json = json.load(f)
-    return resource_json
+        return resource_json
 
 
-def test_get_query_param_default():
-    actual_param = np._get_query_param()
+def test_get_next_query_params_default():
+    actual_param = nypl.get_next_query_params({})
     expected_param = {"q": "CC_0", "field": "use_rtxt_s", "page": 1, "per_page": 500}
-
     assert actual_param == expected_param
 
 
-def test_get_query_param_offset():
-    actual_param = np._get_query_param(page=10)
-    expected_param = {"q": "CC_0", "field": "use_rtxt_s", "page": 10, "per_page": 500}
+def test_get_next_query_params_increments_offset():
+    previous_query_params = {
+        "q": "CC_0",
+        "field": "use_rtxt_s",
+        "page": 10,
+        "per_page": 500,
+    }
 
+    actual_param = nypl.get_next_query_params(previous_query_params)
+    expected_param = {"q": "CC_0", "field": "use_rtxt_s", "page": 11, "per_page": 500}
     assert actual_param == expected_param
 
 
-def test_request_handler_search_success():
-    query_param = {"q": "CC_0", "field": "use_rtxt_s", "page": 12, "per_page": 1}
-
+def test_get_batch_data_success():
     response_search_success = _get_resource_json("response_search_success.json")
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=response_search_success)
-    with patch.object(np.delay_request, "get", return_value=r) as mock_call:
-        actual_response = np._request_handler(params=query_param)
+    actual_response = nypl.get_batch_data(response_search_success)
 
-    expected_response = response_search_success.get("nyplAPI", {}).get("response")
-
-    assert actual_response == expected_response
-    assert mock_call.call_count == 1
+    assert len(actual_response) == 1
 
 
-def test_request_handler_itemdetail_success():
-    response_itemdetails_success = _get_resource_json(
-        "response_itemdetails_success.json"
-    )
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=response_itemdetails_success)
-    with patch.object(np.delay_request, "get", return_value=r) as mock_call:
-        actual_response = np._request_handler(
-            endpoint=np.METADATA_ENDPOINT + ("0cabe3d0-3d50-0134-a8e0-00505686a51c"),
-        )
+def test_get_batch_data_failure():
+    response_search_failure = {}
+    actual_response = nypl.get_batch_data(response_search_failure)
 
-    expected_response = response_itemdetails_success.get("nyplAPI", {}).get("response")
-
-    assert actual_response == expected_response
-    assert mock_call.call_count == 1
-
-
-def test_request_handler_failure():
-    query_param = {"q": "CC_0", "field": "use_rtxt_s", "page": 12, "per_page": 1}
-
-    r = requests.Response()
-    r.status_code = 400
-    r.json = MagicMock(return_value={})
-    with patch.object(np.delay_request, "get", return_value=r) as mock_call:
-        actual_response = np._request_handler(params=query_param)
-    assert mock_call.call_count == 3
     assert actual_response is None
-
-
-def test_get_images_success():
-    images = _get_resource_json("images.json")
-    actual_image_url = np._get_image_url(images)
-
-    assert actual_image_url == (
-        "http://images.nypl.org/index.php?id=56738462&t=g&suffix=0cabe3d0-"
-        "3d50-0134-a8e0-00505686a51c.001"
-    )
-
-
-def test_get_image_failure():
-    images = []
-    actual_image_url = np._get_image_url(images)
-
-    assert actual_image_url is None
-
-
-def test_get_title_success():
-    titleinfo = _get_resource_json("title_info_success.json")
-    actual_title = np._get_title(titleinfo)
-    expected_title = "1900 census enumeration districts, Manhattan and Bronx"
-
-    assert actual_title == expected_title
-
-
-def test_get_title_failure():
-    titleinfo = []
-    actual_title = np._get_title(titleinfo)
-
-    assert actual_title is None
 
 
 def test_get_creators_success():
     creatorinfo = _get_resource_json("creator_info_success.json")
-    actual_creator = np._get_creators(creatorinfo)
+    actual_creator = nypl._get_creators(creatorinfo)
     expected_creator = "Hillman, Barbara"
 
     assert actual_creator == expected_creator
@@ -122,7 +79,7 @@ def test_get_creators_success():
 
 def test_get_creators_failure():
     creatorinfo = []
-    actual_creator = np._get_creators(creatorinfo)
+    actual_creator = nypl._get_creators(creatorinfo)
 
     assert actual_creator is None
 
@@ -130,7 +87,7 @@ def test_get_creators_failure():
 def test_get_metadata():
     item_response = _get_resource_json("response_itemdetails_success.json")
     mods = item_response.get("nyplAPI").get("response").get("mods")
-    actual_metadata = np._get_metadata(mods)
+    actual_metadata = nypl._get_metadata(mods)
     expected_metadata = _get_resource_json("metadata.json")
 
     assert actual_metadata == expected_metadata
@@ -145,54 +102,97 @@ def test_get_metadata_missing_attrs():
     mods["physicalDescription"].pop("note")
     # Remove data from expected values too
     expected_metadata = _get_resource_json("metadata.json")
-    for attr in ["date_issued", "publisher", "description"]:
+    for attr in ["date_issued", "publisher", "physical_description"]:
         expected_metadata.pop(attr)
 
-    actual_metadata = np._get_metadata(mods)
+    actual_metadata = nypl._get_metadata(mods)
 
     assert actual_metadata == expected_metadata
 
 
-def test_handle_results_success():
+def test_get_record_data_success():
     search_response = _get_resource_json("response_search_success.json")
-    result = search_response.get("nyplAPI").get("response").get("result")
-
+    result = search_response["nyplAPI"]["response"]["result"][0]
     item_response = _get_resource_json("response_itemdetails_success.json")
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=item_response)
-    with patch.object(np.delay_request, "get", return_value=r) as mock_request:
-        with patch.object(np.image_store, "add_item") as mock_item:
-            np._handle_results(result)
 
-    assert mock_item.call_count == 7
-    assert mock_request.call_count == 1
+    with patch.object(nypl, "get_response_json", return_value=item_response):
+        images = nypl.get_record_data(result)
+    assert len(images) == 7
+    expected_image = {
+        "category": None,
+        "creator": "Hillman, Barbara",
+        "filetype": "jpeg",
+        "foreign_identifier": "56738462",
+        "foreign_landing_url": "http://digitalcollections.nypl.org/items/0cabe3d0-3d50-0134-a8e0-00505686a51c",
+        "image_url": "http://images.nypl.org/index.php?id=56738462&t=g&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+        "meta_data": {
+            "date_issued": "1981",
+            "genre": "Maps",
+            "publisher": "New York Public Library, Local History and Genealogy Division",
+            "tags": "Census districts",
+            "type_of_resource": "cartographic",
+            "physical_description": "4 polyester film encapsulations, some containing 2 sheets back-to-back. "
+            "Accompanying text formatted as 1 large sheet (46 x 59 cm), in one of "
+            "the encapsulations.",
+        },
+        "title": "1900 census enumeration districts, Manhattan and Bronx",
+        "license_info": CC0,
+    }
+    assert images[0] == expected_image
 
 
-def test_handle_results_failure():
+def test_get_record_data_failure():
     search_response = _get_resource_json("response_search_success.json")
-    result = search_response.get("nyplAPI").get("response").get("result")
+    result = search_response["nyplAPI"]["response"]["result"][0]
 
     item_response = None
-    with patch.object(np, "_request_handler", return_value=item_response):
-        with patch.object(np.image_store, "add_item") as mock_item:
-            np._handle_results(result)
-
-    assert mock_item.call_count == 0
+    with patch.object(nypl, "get_response_json", return_value=item_response):
+        images = nypl.get_record_data(result)
+    assert images is None
 
 
-def test_get_capture_detail_success():
-    captures = _get_resource_json("capture_details.json")
-
-    with patch.object(np.image_store, "add_item") as mock_item:
-        np._get_capture_details(captures=captures)
-    assert mock_item.call_count == 7
-
-
-def test_get_capture_detail_failure():
-    captures = []
-
-    with patch.object(np.image_store, "add_item") as mock_item:
-        np._get_capture_details(captures=captures)
-
-    assert mock_item.call_count == 0
+@pytest.mark.parametrize(
+    "dict_or_list, keys, expected",
+    [
+        ({"genre": None}, [], {"genre": None}),
+        ({"genre": None}, ["$"], None),
+        ([{"genre": None}], ["$"], None),
+        (
+            {
+                "genre": {
+                    "$": "Maps",
+                    "authority": "lctgm",
+                    "valueURI": "http://id.loc.gov/vocabulary/graphicMaterials/tgm006261",
+                }
+            },
+            ["genre"],
+            {
+                "$": "Maps",
+                "authority": "lctgm",
+                "valueURI": "http://id.loc.gov/vocabulary/graphicMaterials/tgm006261",
+            },
+        ),
+        (
+            {
+                "genre": {
+                    "$": "Maps",
+                    "authority": "lctgm",
+                    "valueURI": "http://id.loc.gov/vocabulary/graphicMaterials/tgm006261",
+                }
+            },
+            ["genre", "$"],
+            "Maps",
+        ),
+        ({"a": [{"b": "b_value"}, {"c": "c_value"}]}, ["a", "c"], "c_value"),
+    ],
+    ids=[
+        "empty list of keys",
+        "key not present in a dict",
+        "key not present in a list",
+        "return a dict value with one key",
+        "return a string value with a list of keys",
+        "return a string value with a list of keys, from a list",
+    ],
+)
+def test_get_value_from_dict_or_list(keys, dict_or_list, expected):
+    assert get_value_from_dict_or_list(dict_or_list, keys) == expected
