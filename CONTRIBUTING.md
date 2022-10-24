@@ -113,7 +113,17 @@ Most of these issues are potentially able to be completed in less than 4 hours, 
 2. Maintainers could also use help with writing up issues too. If you see something that could be worked on, there's a [template](https://github.com/WordPress/openverse-frontend/issues/new?assignees=&labels=🖼️+aspect%3A+design%2C✨+goal%3A+improvement%2C+🚦+status%3A+awaiting+triage&template=feature_request.md&title=<Replace+this+with+actual+title>) to help write it up.
 3. Providing feedback on any pull request is welcome too, and you can start by just asking questions! It's great for getting to know the project and a good way to help others by having them question their own assumptions.
 4. Don't hesitate to ask for help! In slack or in a draft PR, if you're stuck, we're here for you. Everyone is learning and thinking things through all the time.
-5. On the technical side, there are a ton of just recipes to help you out. If you run just on its own in any repo, it will show you what recipes are available and what they do. just lint, just test, just recreate, we all run these so frequently!
+5. On the technical side, there are a ton of [`just`](https://github.com/casey/just) recipes to help you out. If you run `just` on its own in any Openverse repository, it will show you what recipes are available and what they do. `just lint`, `just test`, `just recreate`, we all run these so frequently!
+```
+# Run `just` in any of the Openverse repositories to see a list of available commands.
+# This example is for the `WordPress/openverse` repository.
+> just
+Available recipes:
+    default   # Show all available recipes
+    install   # Install Python dependencies in Pipenv environments and JS dependencies
+    precommit # Setup pre-commit as a Git hook
+    lint      # Run pre-commit to lint and reformat all files
+```
 
 ## 🏔️ Other non-code contributions
 
