@@ -133,7 +133,7 @@ def test_ingest_records():
     with (
         patch.object(ingester, "get_batch") as get_batch_mock,
         patch.object(ingester, "process_batch", return_value=3) as process_batch_mock,
-        patch.object(ingester, "commit_records") as commit_mock,
+        patch.object(ingester, "_commit_records") as commit_mock,
     ):
         get_batch_mock.side_effect = [
             (EXPECTED_BATCH_DATA, True),  # First batch
@@ -231,7 +231,7 @@ def test_ingest_records_commits_on_exception():
     with (
         patch.object(ingester, "get_batch") as get_batch_mock,
         patch.object(ingester, "process_batch", return_value=3) as process_batch_mock,
-        patch.object(ingester, "commit_records") as commit_mock,
+        patch.object(ingester, "_commit_records") as commit_mock,
     ):
         get_batch_mock.side_effect = [
             (EXPECTED_BATCH_DATA, True),  # First batch
@@ -423,7 +423,7 @@ def test_commit_commits_all_stores():
         patch.object(audio_store, "commit") as audio_store_mock,
         patch.object(image_store, "commit") as image_store_mock,
     ):
-        ingester.commit_records()
+        ingester._commit_records()
 
         assert audio_store_mock.called
         assert image_store_mock.called

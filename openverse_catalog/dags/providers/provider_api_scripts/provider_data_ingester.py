@@ -68,8 +68,20 @@ class ProviderDataIngester(ABC):
     @abstractmethod
     def providers(self) -> dict[str, str]:
         """
-        A dictionary whose keys are the supported `media_types`, and values are
-        the `provider` string in the `media` table of the DB for that type.
+        A dictionary mapping each supported media type to its corresponding
+        `provider` string (the string that will populate the `provider` field
+        in the Catalog DB). These strings should be defined as constants in
+        common.loader.provider_details.py
+
+        By convention, when a provider supports multiple media types we set
+        separate provider strings for each type. For example:
+
+        ```
+        providers = {
+            "image": provider_details.MYPROVIDER_IMAGE_PROVIDER,
+            "audio": provider_details.MYPROVIDER_AUDIO_PROVIDER,
+        }
+        ```
         """
         pass
 
@@ -108,7 +120,7 @@ class ProviderDataIngester(ABC):
         self.delayed_requester = DelayedRequester(
             delay=self.delay, headers=self.headers
         )
-        self.media_stores = self.init_media_stores()
+        self.media_stores = self._init_media_stores()
         self.date = date
 
         # dag_run configuration options
@@ -129,7 +141,7 @@ class ProviderDataIngester(ABC):
             # Create a generator to facilitate fetching the next set of query_params.
             self.override_query_params = (qp for qp in query_params_list)
 
-    def init_media_stores(self) -> dict[str, MediaStore]:
+    def _init_media_stores(self) -> dict[str, MediaStore]:
         """
         Initialize a media store for each media type supported by this
         provider.
@@ -161,7 +173,7 @@ class ProviderDataIngester(ABC):
         logger.info(f"Begin ingestion for {self.__class__.__name__}")
 
         while should_continue:
-            query_params = self.get_query_params(query_params, **kwargs)
+            query_params = self._get_query_params(query_params, **kwargs)
             if query_params is None:
                 # Break out of ingestion if no query_params are supplied. This can
                 # happen when the final `override_query_params` is processed.
@@ -183,7 +195,7 @@ class ProviderDataIngester(ABC):
 
                 # If errors have already been caught during processing, raise them
                 # as well.
-                if error_summary := self.get_ingestion_errors():
+                if error_summary := self._get_ingestion_errors():
                     raise error_summary from error
                 raise
 
@@ -200,7 +212,7 @@ class ProviderDataIngester(ABC):
 
                 # Commit whatever records we were able to process, and rethrow the
                 # exception so the taskrun fails.
-                self.commit_records()
+                self._commit_records()
                 raise error from ingestion_error
 
             if self.limit and self.record_count >= self.limit:
@@ -208,13 +220,13 @@ class ProviderDataIngester(ABC):
                 should_continue = False
 
         # Commit whatever records we were able to process
-        self.commit_records()
+        self._commit_records()
 
         # If errors were caught during processing, raise them now
-        if error_summary := self.get_ingestion_errors():
+        if error_summary := self._get_ingestion_errors():
             raise error_summary
 
-    def get_ingestion_errors(self) -> AggregateIngestionError | None:
+    def _get_ingestion_errors(self) -> AggregateIngestionError | None:
         """
         If any errors were skipped during ingestion, log them as well as the
         associated query parameters. Then return an AggregateIngestionError.
@@ -243,10 +255,13 @@ class ProviderDataIngester(ABC):
             )
         return None
 
-    def get_query_params(self, prev_query_params: dict | None, **kwargs) -> dict | None:
+    def _get_query_params(
+        self, prev_query_params: dict | None, **kwargs
+    ) -> dict | None:
         """
         Returns the next set of query_params for the next request, handling
-        optional overrides via the dag_run conf.
+        optional overrides via the dag_run conf. This method should not be overridden;
+        instead override get_next_query_params.
         """
         # If we are getting query_params for the first batch and initial_query_params
         # have been set, return them.
@@ -399,7 +414,7 @@ class ProviderDataIngester(ABC):
         """
         pass
 
-    def commit_records(self) -> int:
+    def _commit_records(self) -> int:
         total = 0
         for store in self.media_stores.values():
             total += store.commit()
