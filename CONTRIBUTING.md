@@ -116,7 +116,11 @@ Most of these issues are potentially able to be completed in less than 4 hours, 
   * [`WordPress/openverse-catalog`](https://github.com/wordpress/openverse-catalog/issues/new/choose)
   * [`WordPress/openverse`](https://github.com/wordpress/openverse/issues/new/choose)
 3. New contributors are welcome and invited to provide feedback on pull requests. You can start by just asking questions! It's great to get to know the project and helps PR authors by uncovering unspoken or undocumented assumptions that exist about the project. It is frequently folks who know the least about and are newest to a project that ask the most helpful questions in this regard.
-4. Don't hesitate to ask for help! In slack or in a draft PR, if you're stuck, we're here for you. Everyone is learning and thinking things through all the time.
+4. Don't hesitate to ask for help! In [WordPress Make Slack](https://make.wordpress.org/chat/) or in a draft PR, if you're stuck, we're here for you. Everyone is learning and thinking things through all the time. Each Openverse repository has an `@` alias you can ping for help in any issue or pull request, draft or otherwise:
+  * `@WordPress/openverse-api`
+  * `@WordPress/openverse-catalog`
+  * `@WordPress/openverse-frontend`
+  * etc.
 5. On the technical side, there are a ton of [`just`](https://github.com/casey/just) recipes to help you out. If you run `just` on its own in any Openverse repository, it will show you what recipes are available and what they do. `just lint`, `just test`, `just recreate`, we all run these so frequently!
 ```
 # Run `just` in any of the Openverse repositories to see a list of available commands.
