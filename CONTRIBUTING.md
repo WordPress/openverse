@@ -111,7 +111,7 @@ Most of these issues are potentially able to be completed in less than 4 hours, 
 
 1. It is totally ok and even encouraged to do more than one "[good first issue](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AWordPress%2Fopenverse-catalog+repo%3AWordPress%2Fopenverse+repo%3AWordPress%2Fopenverse-api+repo%3AWordPress%2Fopenverse-frontend+label%3A%22good+first+issue%22+label%3A%22help+wanted%22+-label%3A%22%E2%9B%94+status%3A+blocked%22+-label%3A%22%F0%9F%94%92+staff+only%22+)"
 2. All are welcome to write issues and the Openverse maintainers have deep gratitude for those who do. If you see something that could be worked on, each repository has a set of issue templates to help you get started writing issues:
-    * [`WordPress/openverse-frontend`](https://github.com/wordpress/openverse-frontend/issues/new/choose).
+    * [`WordPress/openverse-frontend`](https://github.com/wordpress/openverse-frontend/issues/new/choose)
     * [`WordPress/openverse-api`](https://github.com/wordpress/openverse-api/issues/new/choose)
     * [`WordPress/openverse-catalog`](https://github.com/wordpress/openverse-catalog/issues/new/choose)
     * [`WordPress/openverse`](https://github.com/wordpress/openverse/issues/new/choose)
