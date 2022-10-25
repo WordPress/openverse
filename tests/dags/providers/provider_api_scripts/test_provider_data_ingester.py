@@ -129,6 +129,25 @@ def test_process_batch_handles_list_of_records():
         assert image_store_mock.call_count == 1
 
 
+def test_process_batch_halts_processing_after_reaching_ingestion_limit():
+    # Set up an ingester with an ingestion limit of 1
+    ingester = MockProviderDataIngester()
+    ingester.limit = 1
+
+    with (
+        patch.object(audio_store, "add_item"),
+        patch.object(image_store, "add_item"),
+        patch.object(ingester, "get_record_data") as get_record_data_mock,
+    ):
+
+        # Mock `get_record_data` to return a list of 2 records
+        get_record_data_mock.return_value = MOCK_RECORD_DATA_LIST
+        record_count = ingester.process_batch(EXPECTED_BATCH_DATA)
+
+        # Only the first record was added, and then ingestion stopped
+        assert record_count == 1
+
+
 def test_ingest_records():
     with (
         patch.object(ingester, "get_batch") as get_batch_mock,

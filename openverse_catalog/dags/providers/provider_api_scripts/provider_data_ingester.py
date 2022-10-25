@@ -366,7 +366,7 @@ class ProviderDataIngester(ABC):
         Returns the total count of records ingested up to this point, for all
         media types.
         """
-        record_count = 0
+        processed_count = 0
 
         for data in media_batch:
             record_data = self.get_record_data(data)
@@ -390,9 +390,13 @@ class ProviderDataIngester(ABC):
                 # Add the record to the correct store
                 store = self.media_stores[media_type]
                 store.add_item(**record)
-                record_count += 1
+                processed_count += 1
 
-        return record_count
+                if self.limit and (self.record_count + processed_count) >= self.limit:
+                    logger.info("Ingestion limit has been reached. Halting processing.")
+                    return processed_count
+
+        return processed_count
 
     @abstractmethod
     def get_media_type(self, record: dict) -> str:
