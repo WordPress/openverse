@@ -2,11 +2,15 @@
   <div
     class="error relative flex min-h-screen flex-col overflow-x-hidden bg-yellow"
   >
-    <Oops
+    <svg
+      class="pointer-events-none absolute top-20 z-0 -mt-[10%] -ml-[20%] w-[140%] fill-dark-charcoal px-6 opacity-5 lg:mx-auto lg:ml-0 lg:w-full lg:px-16"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1320 569"
       aria-hidden="true"
-      class="pointer-events-none absolute top-20 z-0 -mt-[10%] -ml-[20%] w-[140%] fill-dark-charcoal px-6 opacity-5 lg:mx-auto lg:w-full lg:px-16"
-    />
-
+      focusable="false"
+    >
+      <use :href="`${Oops}#oops`" />
+    </svg>
     <div>
       <VLink href="/" class="relative z-10 text-dark-charcoal">
         <VBrand class="m-6 text-[18px] lg:mx-10 lg:my-8" />
@@ -19,10 +23,10 @@
       <!-- Push content by 1/4th height without absolute positioning. -->
       <div class="spacer grow" />
       <div class="z-10 grow-[3] space-y-4 lg:space-y-6">
-        <h1 class="mb-6 text-3xl lg:mb-10 lg:text-6xl lg:leading-tight">
+        <h1 class="heading-5 lg:heading-2 mb-6 lg:mb-10 lg:leading-tight">
           {{ $t('404.title') }}
         </h1>
-        <p class="font-semibold">
+        <p class="label-bold lg:heading-6">
           <i18n path="404.main">
             <template #link>
               <VLink
@@ -33,16 +37,7 @@
             </template>
           </i18n>
         </p>
-        <VSearchBarOld
-          :value="searchTerm"
-          :label-text="$t('404.search-placeholder')"
-          field-id="404-search"
-          :placeholder="$t('404.search-placeholder').toString()"
-          :is404="true"
-          size="standalone"
-          @input="setSearchTerm"
-          @submit="handleSearch"
-        />
+        <VStandaloneSearchBarOld route="404" @submit="handleSearch" />
       </div>
     </main>
 
@@ -55,55 +50,44 @@
 </template>
 
 <script>
-import {
-  defineComponent,
-  ref,
-  useContext,
-  useRouter,
-} from '@nuxtjs/composition-api'
+import { defineComponent, useContext, useRouter } from '@nuxtjs/composition-api'
 
-import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
 
 import { useFeatureFlagStore } from '~/stores/feature-flag'
 
-import VSearchBarOld from '~/components/VHeaderOld/VSearchBar/VSearchBarOld.vue'
+import { ALL_MEDIA, searchPath } from '~/constants/media'
+
+import VStandaloneSearchBarOld from '~/components/VHeaderOld/VSearchBar/VStandaloneSearchBarOld.vue'
 import VLink from '~/components/VLink.vue'
 import VBrand from '~/components/VBrand/VBrand.vue'
 import VFooter from '~/components/VFooter/VFooter.vue'
 
-import Oops from '~/assets/oops.svg?inline'
+import Oops from '~/assets/oops.svg'
 
 export default defineComponent({
   name: 'VFourOhFour',
   components: {
-    Oops,
     VLink,
-    VSearchBarOld,
+    VStandaloneSearchBarOld,
     VBrand,
     VFooter,
   },
   props: ['error'],
   setup() {
-    const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
     const { app } = useContext()
     const router = useRouter()
 
-    const searchTerm = ref('')
-    const setSearchTerm = (value) => {
-      searchTerm.value = value
-    }
-
-    const handleSearch = async () => {
-      if (searchTerm.value === '') return
+    const handleSearch = async (searchTerm) => {
+      if (!searchTerm) return
 
       searchStore.setSearchTerm(searchTerm.value)
-      await mediaStore.fetchMedia()
+      searchStore.setSearchType(ALL_MEDIA)
 
       router.push(
         app.localePath({
-          path: `/search`,
+          path: searchPath(ALL_MEDIA),
           query: { q: searchTerm.value },
         })
       )
@@ -113,10 +97,9 @@ export default defineComponent({
     const isNewHeaderEnabled = featureFlagStore.isOn('new_header')
 
     return {
-      searchTerm,
-      setSearchTerm,
       handleSearch,
       isNewHeaderEnabled,
+      Oops,
     }
   },
   head: {
@@ -145,8 +128,5 @@ export default defineComponent({
   button:not(:hover):not(:focus):not(:focus-within) {
   border-color: black;
   border-inline-start-color: transparent;
-}
-.page-404 .search-bar button {
-  border-width: 1px;
 }
 </style>

@@ -4,7 +4,7 @@
     :aria-label="$t('search.search')"
     size="disabled"
     :variant="isIcon ? 'plain' : 'primary'"
-    class="flex-shrink-0 text-2xl font-semibold transition-none rounded-s-none hover:bg-pink hover:text-white focus-visible:ring focus-visible:ring-pink group-hover:border-pink group-hover:bg-pink group-hover:text-white"
+    class="heading-6 flex-shrink-0 transition-none rounded-s-none hover:bg-pink hover:text-white focus-visible:ring focus-visible:ring-pink group-hover:border-pink group-hover:bg-pink group-hover:text-white"
     :class="[
       isIcon
         ? 'search-button ps-[1.5px] p-[0.5px] focus-visible:bg-pink focus-visible:text-white'
@@ -75,7 +75,7 @@ export default defineComponent({
             small: 'w-10 md:w-12 h-10 md:h-12',
             medium: 'w-12 h-12',
             large: 'w-14 h-14',
-            standalone: 'w-[57px] md:w-[69px] h-[57px] md:h-[69px]',
+            standalone: 'w-[57px] md:w-[69px] h-full',
           }[props.size]
         : undefined
     })
@@ -90,14 +90,5 @@ export default defineComponent({
   /* Negative margin removes a tiny gap between the button and the input borders */
   margin-inline-start: -1px;
   border-inline-start-color: transparent;
-  border-width: 1px;
-}
-.search-button.search-button:not(:hover):not(:focus):not(:focus-within) {
-  border-inline-start-color: transparent;
-  border-width: 1px;
-}
-.search-button.search-button:hover {
-  border-inline-start-color: rgba(214, 212, 213, 1);
-  border-width: 1px;
 }
 </style>

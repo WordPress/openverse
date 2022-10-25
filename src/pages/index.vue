@@ -33,23 +33,19 @@
             @select="setSearchType"
           />
         </div>
-        <VSearchBarOld
-          v-model.trim="searchTerm"
-          class="group mt-4 max-w-[40rem] md:mt-6"
-          size="standalone"
+        <VStandaloneSearchBarOld
+          class="mt-4 max-w-[40rem] md:mt-6"
           @submit="handleSearch"
         >
-          <ClientOnly>
-            <VSearchTypePopoverOld
-              v-if="isMinScreenMd"
-              ref="contentSwitcher"
-              class="mx-3"
-              :active-item="searchType"
-              placement="searchbar"
-              @select="setSearchType"
-            />
-          </ClientOnly>
-        </VSearchBarOld>
+          <VSearchTypePopoverOld
+            v-show="isMinScreenMd"
+            ref="contentSwitcher"
+            class="mx-3 group-focus-within:bg-white group-hover:bg-white"
+            :active-item="searchType"
+            placement="searchbar"
+            @select="setSearchType"
+          />
+        </VStandaloneSearchBarOld>
 
         <!-- Disclaimer for large screens -->
         <i18n
@@ -134,7 +130,12 @@ import {
   useRouter,
 } from '@nuxtjs/composition-api'
 
-import { ALL_MEDIA, searchPath, supportedSearchTypes } from '~/constants/media'
+import {
+  ALL_MEDIA,
+  searchPath,
+  SupportedSearchType,
+  supportedSearchTypes,
+} from '~/constants/media'
 import { isMinScreen } from '~/composables/use-media-query'
 
 import { useMediaStore } from '~/stores/media'
@@ -142,7 +143,7 @@ import { useSearchStore } from '~/stores/search'
 
 import VLink from '~/components/VLink.vue'
 import VLogoButtonOld from '~/components/VHeaderOld/VLogoButtonOld.vue'
-import VSearchBarOld from '~/components/VHeaderOld/VSearchBar/VSearchBarOld.vue'
+import VStandaloneSearchBarOld from '~/components/VHeaderOld/VSearchBar/VStandaloneSearchBarOld.vue'
 import VSearchTypeRadio from '~/components/VContentSwitcher/VSearchTypeRadio.vue'
 import VSearchTypePopoverOld from '~/components/VContentSwitcherOld/VSearchTypePopoverOld.vue'
 import VBrand from '~/components/VBrand/VBrand.vue'
@@ -155,7 +156,7 @@ export default defineComponent({
     VBrand,
     VSearchTypePopoverOld,
     VSearchTypeRadio,
-    VSearchBarOld,
+    VStandaloneSearchBarOld,
     VLink,
     VLogoButtonOld,
   },
@@ -191,26 +192,27 @@ export default defineComponent({
     const featuredSearchIdx = Math.floor(Math.random() * 3)
     const featuredSearch = featuredSearches[featuredSearchIdx]
 
-    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
+    const isMinScreenMd = isMinScreen('md')
 
-    const contentSwitcher = ref(null)
+    const contentSwitcher = ref<InstanceType<
+      typeof VSearchTypePopoverOld
+    > | null>(null)
     const searchType = ref(ALL_MEDIA)
 
-    const setSearchType = (type) => {
+    const setSearchType = (type: SupportedSearchType) => {
       searchType.value = type
       contentSwitcher.value?.closeMenu()
-      useSearchStore().setSearchType(type)
     }
 
-    const searchTerm = ref('')
-    const handleSearch = async () => {
-      if (!searchTerm.value) return
-      searchStore.setSearchTerm(searchTerm.value)
+    const handleSearch = async (searchTerm: string) => {
+      if (!searchTerm) return
+
+      searchStore.setSearchTerm(searchTerm)
       searchStore.setSearchType(searchType.value)
-      const query = searchStore.searchQueryParams
+
       const newPath = app.localePath({
         path: searchPath(searchType.value),
-        query,
+        query: searchStore.searchQueryParams,
       })
       router.push(newPath)
     }
@@ -225,7 +227,6 @@ export default defineComponent({
       setSearchType,
       supportedSearchTypes,
 
-      searchTerm,
       handleSearch,
     }
   },

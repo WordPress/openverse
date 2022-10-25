@@ -1,14 +1,12 @@
 <template>
   <form
     class="search-bar group flex flex-row items-center rounded-sm border-tx bg-white"
-    :class="{ 'h-[57px] md:h-[69px]': size === 'standalone' }"
     @submit.prevent="handleSearch"
   >
     <VInputFieldOld
       :placeholder="placeholder || $t('hero.search.placeholder')"
       v-bind="$attrs"
-      class="search-field flex-grow focus:border-pink"
-      :class="[route === 'home' ? 'border-tx' : 'border-dark-charcoal-20']"
+      class="search-field flex-grow border-dark-charcoal-20 focus:border-pink"
       :label-text="
         $t('search.search-bar-label', { openverse: 'Openverse' }).toString()
       "
@@ -23,14 +21,17 @@
       <!-- @slot Extra information such as loading message or result count goes here. -->
       <slot />
     </VInputFieldOld>
-    <VSearchButtonOld type="submit" :size="size" :route="route" />
+    <VSearchButtonOld
+      type="submit"
+      :size="size"
+      :route="is404 ? '404' : undefined"
+    />
   </form>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
-import { useMatchHomeRoute } from '~/composables/use-match-routes'
 import { defineEvent } from '~/types/emits'
 
 import VInputFieldOld, {
@@ -73,12 +74,6 @@ export default defineComponent({
     submit: defineEvent(),
   },
   setup(props, { emit }) {
-    const { matches: isHomeRoute } = useMatchHomeRoute()
-
-    const route = computed(() => {
-      return isHomeRoute?.value ? 'home' : props.is404 ? '404' : undefined
-    })
-
     const searchText = computed(() => props.value)
 
     const updateSearchText = (val: string) => {
@@ -91,20 +86,9 @@ export default defineComponent({
 
     return {
       handleSearch,
-      route,
       searchText,
       updateSearchText,
     }
   },
 })
 </script>
-
-<style>
-/* Removes the cross icon to clear the field */
-.search-field input[type='search']::-webkit-search-decoration,
-.search-field input[type='search']::-webkit-search-cancel-button,
-.search-field input[type='search']::-webkit-search-results-button,
-.search-field input[type='search']::-webkit-search-results-decoration {
-  -webkit-appearance: none;
-}
-</style>
