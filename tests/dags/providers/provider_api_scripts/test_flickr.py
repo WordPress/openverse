@@ -1,13 +1,20 @@
 import json
 import os
-from unittest.mock import MagicMock, patch
 
+import pytest
 from common.licenses import LicenseInfo
-from providers.provider_api_scripts import flickr
-from requests import Response, codes
+from providers.provider_api_scripts.flickr import FlickrDataIngester
 
 
 RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "resources/flickr")
+
+flickr = FlickrDataIngester()
+test_license_info = LicenseInfo(
+    "by-nc-sa",
+    "2.0",
+    "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+    None,
+)
 
 
 def _get_resource_json(json_name):
@@ -16,240 +23,134 @@ def _get_resource_json(json_name):
     return resource_json
 
 
-def test_derive_timestamp_pair_list_with_undivided_day():
-    # Note that the timestamps are derived as if input was in UTC.
-    actual_pair_list = flickr._derive_timestamp_pair_list("2018-01-15", day_division=1)
-    expect_pair_list = [("1515974400", "1516060800")]
-    assert expect_pair_list == actual_pair_list
-
-
-def test_derive_timestamp_pair_list_with_three_divided_day():
-    actual_pair_list = flickr._derive_timestamp_pair_list("2018-01-15", day_division=3)
-    expect_pair_list = [
-        ("1515974400", "1516003200"),
-        ("1516003200", "1516032000"),
-        ("1516032000", "1516060800"),
-    ]
-    assert expect_pair_list == actual_pair_list
-
-
 def test_derive_timestamp_pair_list_with_sub_hourly_day_divisions():
-    actual_pair_list = flickr._derive_timestamp_pair_list("2018-01-15", day_division=40)
+    # Note that the timestamps are derived as if input was in UTC.
+    actual_pair_list = flickr._derive_timestamp_pair_list("2018-01-15")
     expect_pair_list = [
-        ("1515974400", "1515976560"),
-        ("1515976560", "1515978720"),
-        ("1515978720", "1515980880"),
-        ("1515980880", "1515983040"),
-        ("1515983040", "1515985200"),
-        ("1515985200", "1515987360"),
-        ("1515987360", "1515989520"),
-        ("1515989520", "1515991680"),
-        ("1515991680", "1515993840"),
-        ("1515993840", "1515996000"),
-        ("1515996000", "1515998160"),
-        ("1515998160", "1516000320"),
-        ("1516000320", "1516002480"),
-        ("1516002480", "1516004640"),
-        ("1516004640", "1516006800"),
-        ("1516006800", "1516008960"),
-        ("1516008960", "1516011120"),
-        ("1516011120", "1516013280"),
-        ("1516013280", "1516015440"),
-        ("1516015440", "1516017600"),
-        ("1516017600", "1516019760"),
-        ("1516019760", "1516021920"),
-        ("1516021920", "1516024080"),
-        ("1516024080", "1516026240"),
-        ("1516026240", "1516028400"),
-        ("1516028400", "1516030560"),
-        ("1516030560", "1516032720"),
-        ("1516032720", "1516034880"),
-        ("1516034880", "1516037040"),
-        ("1516037040", "1516039200"),
-        ("1516039200", "1516041360"),
-        ("1516041360", "1516043520"),
-        ("1516043520", "1516045680"),
-        ("1516045680", "1516047840"),
-        ("1516047840", "1516050000"),
-        ("1516050000", "1516052160"),
-        ("1516052160", "1516054320"),
-        ("1516054320", "1516056480"),
-        ("1516056480", "1516058640"),
-        ("1516058640", "1516060800"),
+        ("1515974400", "1515976200"),
+        ("1515976200", "1515978000"),
+        ("1515978000", "1515979800"),
+        ("1515979800", "1515981600"),
+        ("1515981600", "1515983400"),
+        ("1515983400", "1515985200"),
+        ("1515985200", "1515987000"),
+        ("1515987000", "1515988800"),
+        ("1515988800", "1515990600"),
+        ("1515990600", "1515992400"),
+        ("1515992400", "1515994200"),
+        ("1515994200", "1515996000"),
+        ("1515996000", "1515997800"),
+        ("1515997800", "1515999600"),
+        ("1515999600", "1516001400"),
+        ("1516001400", "1516003200"),
+        ("1516003200", "1516005000"),
+        ("1516005000", "1516006800"),
+        ("1516006800", "1516008600"),
+        ("1516008600", "1516010400"),
+        ("1516010400", "1516012200"),
+        ("1516012200", "1516014000"),
+        ("1516014000", "1516015800"),
+        ("1516015800", "1516017600"),
+        ("1516017600", "1516019400"),
+        ("1516019400", "1516021200"),
+        ("1516021200", "1516023000"),
+        ("1516023000", "1516024800"),
+        ("1516024800", "1516026600"),
+        ("1516026600", "1516028400"),
+        ("1516028400", "1516030200"),
+        ("1516030200", "1516032000"),
+        ("1516032000", "1516033800"),
+        ("1516033800", "1516035600"),
+        ("1516035600", "1516037400"),
+        ("1516037400", "1516039200"),
+        ("1516039200", "1516041000"),
+        ("1516041000", "1516042800"),
+        ("1516042800", "1516044600"),
+        ("1516044600", "1516046400"),
+        ("1516046400", "1516048200"),
+        ("1516048200", "1516050000"),
+        ("1516050000", "1516051800"),
+        ("1516051800", "1516053600"),
+        ("1516053600", "1516055400"),
+        ("1516055400", "1516057200"),
+        ("1516057200", "1516059000"),
+        ("1516059000", "1516060800"),
     ]
     assert expect_pair_list == actual_pair_list
 
 
-def test_derive_timestamp_pair_list_fall_back_to_48_day_divisions():
-    fallback_pair_list = flickr._derive_timestamp_pair_list(
-        "2018-01-15", day_division=49
-    )
-    correct_pair_list = flickr._derive_timestamp_pair_list(
-        "2018-01-15", day_division=48
-    )
-    assert fallback_pair_list == correct_pair_list
-
-
-def test_process_interval_skips_bad_pages():
-    with patch.object(
-        flickr, "_get_image_list", return_value=(None, 5)
-    ) as mock_get_image_list:
-        flickr._process_interval("1234", "5678", "test")
-
-    assert mock_get_image_list.call_count == 5
-    assert mock_get_image_list.called_with("1234", "5678", "test", 5)
-
-
-def test_get_image_list_retries_with_none_response():
-    with patch.object(
-        flickr.delayed_requester, "get", return_value=Response()
-    ) as mock_get:
-        flickr._get_image_list("1234", "5678", "test", 4, max_tries=3)
-
-    assert mock_get.call_count == 3
-
-
-def test_get_image_list_retries_with_non_ok_response():
-    response_json = _get_resource_json("flickr_example_pretty.json")
-    r = Response()
-    r.status_code = 504
-    r.json = MagicMock(return_value=response_json)
-    with patch.object(flickr.delayed_requester, "get", return_value=r) as mock_get:
-        flickr._get_image_list("1234", "5678", "test", 4, max_tries=3)
-
-    assert mock_get.call_count == 3
-
-
-def test_get_image_list_with_partial_response():
-    response_json = _get_resource_json("total_pages_but_no_image_list.json")
-    r = Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=response_json)
-    with patch.object(flickr.delayed_requester, "get", return_value=r) as mock_get:
-        image_list, total_pages = flickr._get_image_list(
-            "1234", "5678", "test", 4, max_tries=3
-        )
-
-    assert mock_get.call_count == 3
-
-
-def test_get_image_list_with_realistic_response():
-    response_json = _get_resource_json("flickr_example_pretty.json")
-    r = Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=response_json)
-    with patch.object(flickr.delayed_requester, "get", return_value=r) as mock_get:
-        image_list, total_pages = flickr._get_image_list(
-            "1234", "5678", "test", 4, max_tries=3
-        )
-    expect_image_list = _get_resource_json("flickr_example_photo_list.json")
-
-    assert mock_get.call_count == 1
-    assert image_list == expect_image_list
-    assert total_pages == 1
-
-
-# This test will fail if default constants change.
-def test_build_query_param_dict_default():
-    cur_time = "12345"
-    nxt_time = "12346"
-    flickr_api_key = "notset"
-    actual_query_param_dict = flickr._build_query_param_dict(
-        cur_time, nxt_time, 3, "test", api_key=flickr_api_key
-    )
-    expect_query_param_dict = {
+def test_get_next_query_params():
+    expected_params = {
+        "min_upload_date": "1516060900",
+        "max_upload_date": "1516060800",
+        "page": 0,
+        "api_key": "not_set",
+        "license": "1,2,3,4,5,6,9,10",
+        "per_page": 500,
         "method": "flickr.photos.search",
         "media": "photos",
-        "safe_search": 1,
+        "safe_search": 1,  # Restrict to 'safe'
         "extras": (
-            "description,license,date_upload,date_taken,owner_name,tags,"
-            "o_dims,url_t,url_s,url_m,url_l,views,content_type"
+            "description,license,date_upload,date_taken,owner_name,tags,o_dims,"
+            "url_t,url_s,url_m,url_l,views,content_type"
         ),
         "format": "json",
         "nojsoncallback": 1,
-        "min_test_date": cur_time,
-        "max_test_date": nxt_time,
-        "page": 3,
-        "api_key": flickr_api_key,
-        "license": "1,2,3,4,5,6,9,10",
-        "per_page": 500,
     }
-    assert actual_query_param_dict == expect_query_param_dict
+    # Set the api key
+    flickr.api_key = "not_set"
 
-
-def test_build_query_param_dict_with_givens():
-    cur_time = "12345"
-    nxt_time = "12346"
-    flickr_api_key = "notset"
-    actual_query_param_dict = flickr._build_query_param_dict(
-        cur_time,
-        nxt_time,
-        3,
-        "test",
-        api_key=flickr_api_key,
-        license_info={
-            "1": ("by-nc-sa", "2.0"),
-            "2": ("by-nc", "2.0"),
-        },
-        limit=10,
-        default_query_param={
-            "method": "flickr.photos.search",
-            "media": "photos",
-            "extras": "url_t,url_s,url_m,url_l,views",
-            "nojsoncallback": 1,
-        },
+    # First request
+    first_params = flickr.get_next_query_params(
+        None, start_timestamp="1516060900", end_timestamp="1516060800"
     )
-    expect_query_param_dict = {
-        "method": "flickr.photos.search",
-        "media": "photos",
-        "extras": "url_t,url_s,url_m,url_l,views",
-        "nojsoncallback": 1,
-        "min_test_date": cur_time,
-        "max_test_date": nxt_time,
-        "page": 3,
-        "api_key": flickr_api_key,
-        "license": "1,2",
-        "per_page": 10,
-    }
-    assert actual_query_param_dict == expect_query_param_dict
+    assert first_params == expected_params
 
-
-def test_extract_image_list_from_json_handles_realistic_input():
-    test_dict = _get_resource_json("flickr_example_pretty.json")
-    expect_image_list = _get_resource_json("flickr_example_photo_list.json")
-    expect_total_pages = 1
-    actual_image_list, actual_total_pages = flickr._extract_image_list_from_json(
-        test_dict
+    # Updated page on second request
+    second_params = flickr.get_next_query_params(
+        first_params, start_timestamp="1516060900", end_timestamp="1516060800"
     )
-    assert actual_image_list == expect_image_list
-    assert actual_total_pages == expect_total_pages
+    assert second_params == {**expected_params, "page": 1}
 
 
-def test_extract_image_list_from_json_handles_missing_photo_list():
-    test_dict = {"stat": "ok", "photos": {}}
-    assert flickr._extract_image_list_from_json(test_dict)[0] is None
+def test_get_media_type():
+    assert flickr.get_media_type({}) == "image"
 
 
-def test_extract_image_list_from_json_handles_missing_photos():
-    test_dict = {"stat": "ok", "abc": "def"}
-    assert flickr._extract_image_list_from_json(test_dict) == (None, None)
+@pytest.mark.parametrize(
+    "response_json, expected_response",
+    [
+        # Realistic full response
+        (
+            _get_resource_json("flickr_example_pretty.json"),
+            _get_resource_json("flickr_example_photo_list.json"),
+        ),
+        # Partial response (has `photos` but no `photo`)
+        (
+            {
+                "photos": {"page": 1, "pages": 1, "perpage": 500, "total": "30"},
+                "stat": "ok",
+            },
+            None,
+        ),
+        # Empty photos list
+        ({"stat": "ok", "photos": {}}, None),
+        # No photos list
+        ({"stat": "ok", "abc": "def"}, None),
+        # Not Ok stat
+        ({"stat": "notok", "abc": "def"}, None),
+        # None
+        (None, None),
+    ],
+)
+def test_get_batch_data(response_json, expected_response):
+    actual_response = flickr.get_batch_data(response_json)
+    assert actual_response == expected_response
 
 
-def test_extract_image_list_from_json_returns_nones_given_non_ok_stat():
-    test_dict = {"stat": "notok", "abc": "def"}
-    assert flickr._extract_image_list_from_json(test_dict) == (None, None)
-
-
-def test_extract_image_list_from_json_returns_nones_given_none_json():
-    assert flickr._extract_image_list_from_json(None) == (None, None)
-
-
-def test_process_image_data_with_real_example():
+def test_get_record_data():
     image_data = _get_resource_json("image_data_complete_example.json")
-    with patch.object(
-        flickr, "_get_file_properties", return_value=(371862, "jpg")
-    ), patch.object(flickr.image_store, "add_item", return_value=100) as mock_add_item:
-        total_images = flickr._process_image_data(image_data)
+    actual_data = flickr.get_record_data(image_data)
 
     expect_meta_data = {
         "pub_date": "1581318235",
@@ -261,27 +162,20 @@ def test_process_image_data_with_real_example():
         ),
     }
 
-    mock_add_item.assert_called_once_with(
-        foreign_landing_url="https://www.flickr.com/photos/71925535@N03/49514824541",
-        image_url=(
+    expected_data = {
+        "foreign_landing_url": "https://www.flickr.com/photos/71925535@N03/49514824541",
+        "image_url": (
             "https://live.staticflickr.com/65535/49514824541_35d1b4f8db" "_b.jpg"
         ),
-        license_info=LicenseInfo(
-            "by-nc-sa",
-            "2.0",
-            "https://creativecommons.org/licenses/by-nc-sa/2.0/",
-            None,
-        ),
-        foreign_identifier="49514824541",
-        width=1024,
-        height=683,
-        filesize=371862,
-        filetype="jpg",
-        creator="Marine Explorer",
-        creator_url="https://www.flickr.com/photos/71925535@N03",
-        title="Surveying Ruperts Reef @reeflifesurvey #lapofaus #marineexplorer",
-        meta_data=expect_meta_data,
-        raw_tags=[
+        "license_info": test_license_info,
+        "foreign_identifier": "49514824541",
+        "width": 1024,
+        "height": 683,
+        "creator": "Marine Explorer",
+        "creator_url": "https://www.flickr.com/photos/71925535@N03",
+        "title": "Surveying Ruperts Reef @reeflifesurvey #lapofaus #marineexplorer",
+        "meta_data": expect_meta_data,
+        "raw_tags": [
             "australia",
             "marine",
             "marineexplorer",
@@ -289,208 +183,143 @@ def test_process_image_data_with_real_example():
             "scuba",
             "underwater",
         ],
-        source=flickr.PROVIDER,
-        category="photograph",
-    )
-    assert total_images == 100
+        "source": flickr.provider_string,
+        "category": "photograph",
+    }
+    assert actual_data == expected_data
 
 
-def test_build_creator_url_nones_missing_owner():
-    image_data = _get_resource_json("image_data_long_tags_string.json")
-    actual_url = flickr._build_creator_url(
-        image_data, photo_url_base="https://photo.com"
-    )
-    assert actual_url is None
-
-
-def test_build_creator_url_finds_owner():
+def test_get_record_data_returns_none_when_missing_owner():
     image_data = _get_resource_json("image_data_complete_example.json")
-    actual_url = flickr._build_creator_url(
-        image_data, photo_url_base="https://photo.com"
-    )
-    expect_url = "https://photo.com/71925535@N03"
-    assert actual_url == expect_url
+    image_data.pop("owner")
+
+    actual_data = flickr.get_record_data(image_data)
+    assert actual_data is None
 
 
-def test_build_foreign_landing_url():
-    actual_url = flickr._build_foreign_landing_url("https://creator.com", "foreignid")
-    expect_url = "https://creator.com/foreignid"
-    assert actual_url == expect_url
+def test_get_record_data_returns_none_when_missing_foreign_id():
+    image_data = _get_resource_json("image_data_complete_example.json")
+    image_data.pop("id")
+
+    actual_data = flickr.get_record_data(image_data)
+    assert actual_data is None
 
 
-def test_build_foreign_landing_url_nones_with_falsy_foreign_id():
-    actual_url = flickr._build_foreign_landing_url("https://creator.com", False)
-    assert actual_url is None
-
-
-def test_build_foreign_landing_url_nones_with_falsy_creator_url():
-    assert flickr._build_foreign_landing_url("", "abcde") is None
-
-
-def test_url_join_no_trailing_slashes():
+@pytest.mark.parametrize(
+    "args",
+    [
+        # No trailing slashes
+        ["https://aurl.com", "path", "morepath", "lastpath"],
+        # Slashes
+        ["https://aurl.com/", "/path/", "/morepath/", "lastpath"],
+    ],
+)
+def test_url_join_no_trailing_slashes(args):
     expect_url = "https://aurl.com/path/morepath/lastpath"
-    actual_url = flickr._url_join("https://aurl.com", "path", "morepath", "lastpath")
+    actual_url = flickr._url_join(*args)
     assert expect_url == actual_url
 
 
-def test_url_join_with_slashes():
-    expect_url = "https://aurl.com/path/morepath/lastpath"
-    actual_url = flickr._url_join(
-        "https://aurl.com/", "/path/", "/morepath/", "lastpath"
-    )
-    assert expect_url == actual_url
+@pytest.mark.parametrize(
+    "image_data, expected_size",
+    [
+        # No image detected
+        (_get_resource_json("image_data_no_image_url.json"), None),
+        # Large size available
+        (_get_resource_json("image_data_with_large_url_available.json"), "l"),
+        # Large not available, but medium is
+        (_get_resource_json("image_data_with_med_url_available.json"), "m"),
+        # Falls back to small when large and medium not available
+        (_get_resource_json("image_data_with_small_url_available.json"), "s"),
+    ],
+)
+def test_get_largest_image_size(image_data, expected_size):
+    actual_size = flickr._get_largest_image_size(image_data)
+    assert actual_size == expected_size
 
 
-def test_get_image_url_returns_Nonetype_tuple_if_no_image():
-    data = _get_resource_json("image_data_no_image_url.json")
-    actual_tuple = flickr._get_image_url(data)
-    expect_tuple = (None, None, None)
-    assert expect_tuple == actual_tuple
+@pytest.mark.parametrize(
+    "license_id, expected_license_info",
+    [
+        # integer id
+        (1, test_license_info),
+        # string id
+        ("1", test_license_info),
+        # id that does not map to anything in the LICENSE_INFO list
+        (99999999999, None),
+    ],
+)
+def test_get_license(license_id, expected_license_info):
+    actual_license_info = flickr._get_license_info({"license": license_id})
+    assert actual_license_info == expected_license_info
 
 
-def test_get_image_url_returns_large_tuple_when_avail():
-    image_data = _get_resource_json("image_data_with_large_url_available.json")
-    actual_tuple = flickr._get_image_url(image_data)
-    expect_tuple = ("https://live.staticflickr.com/456_b.jpg", 768, 1024)
-    assert expect_tuple == actual_tuple
+@pytest.mark.parametrize(
+    "image_data, expected_meta_data",
+    [
+        # Happy path
+        (
+            _get_resource_json("image_data_full_meta_data_example.json"),
+            {
+                "pub_date": "1571326372",
+                "date_taken": "2019-09-07 16:26:44",
+                "description": "OLYMPUS DIGITAL CAMERA",
+                "views": "9",
+            },
+        ),
+        # Partial meta data dict, does not include None fields
+        (
+            _get_resource_json("image_data_partial_meta_data_info.json"),
+            {"pub_date": "1571326372", "date_taken": "2019-09-07 16:26:44"},
+        ),
+        # Empty meta data dict, no data available
+        (_get_resource_json("image_data_no_meta_data_info.json"), {}),
+        # Meta data containing html description that should be stripped
+        (
+            _get_resource_json("image_data_html_description.json"),
+            _get_resource_json("expect_meta_data_from_html_description.json"),
+        ),
+        # Meta data contains whitespace in the description that should be stripped
+        (
+            _get_resource_json("image_data_whitespace_description.json"),
+            _get_resource_json("expect_meta_data_from_whitespace_description.json"),
+        ),
+    ],
+)
+def test_create_meta_data(image_data, expected_meta_data):
+    actual_meta_data = flickr._create_meta_data_dict(image_data)
+    assert actual_meta_data == expected_meta_data
 
 
-def test_get_image_url_returns_medium_tuple_when_large_not_avail():
-    data = _get_resource_json("image_data_with_med_url_available.json")
-    actual_tuple = flickr._get_image_url(data)
-    expect_tuple = ("https://live.staticflickr.com/456.jpg", 375, 500)
-    assert expect_tuple == actual_tuple
+@pytest.mark.parametrize(
+    "image_data, expected_tags_list",
+    [
+        # Happy path, handles whitespace
+        (
+            _get_resource_json("image_data_varying_tags_whitespace.json"),
+            ["tag1", "tag2", "tag3"],
+        ),
+        # Sorts tags
+        (_get_resource_json("image_data_unsorted_tags.json"), ["tag1", "tag2", "tag3"]),
+        # Truncates long tags
+        (
+            _get_resource_json("image_data_long_tags_string.json"),
+            ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"],
+        ),
+        # Returns None when no tags key
+        ({"id": "aslkjb"}, None),
+        # Returns None when empty tags
+        ({"id": "aslkjb", "tags": ""}, None),
+    ],
+)
+def test_create_tags_list(image_data, expected_tags_list):
+    actual_tags_list = flickr._create_tags_list(image_data, max_tag_string_length=37)
+    assert actual_tags_list == expected_tags_list
 
 
-def test_get_image_url_falls_to_small_tuple():
-    data = _get_resource_json("image_data_with_small_url_available.json")
-    actual_tuple = flickr._get_image_url(data)
-    expect_tuple = ("https://live.staticflickr.com/456_m.jpg", 180, 240)
-    assert expect_tuple == actual_tuple
-
-
-def test_get_license_with_int_license_id():
-    license_info = {
-        "1": ("by-nc-sa", "2.0"),
-        "2": ("by-nc", "2.0"),
-    }
-    actual_license, actual_license_version = flickr._get_license(
-        2, license_info=license_info
-    )
-    expect_license, expect_license_version = "by-nc", "2.0"
-    assert expect_license == actual_license
-    assert expect_license_version == actual_license_version
-
-
-def test_get_license_with_str_license_id():
-    license_info = {
-        "1": ("by-nc-sa", "2.0"),
-        "2": ("by-nc", "2.0"),
-    }
-    actual_license, actual_license_version = flickr._get_license(
-        "2", license_info=license_info
-    )
-    expect_license, expect_license_version = "by-nc", "2.0"
-    assert expect_license == actual_license
-    assert expect_license_version == actual_license_version
-
-
-def test_get_license_with_missing_license_id():
-    license_info = {
-        "1": ("by-nc-sa", "2.0"),
-        "2": ("by-nc", "2.0"),
-    }
-    actual_license, actual_license_version = flickr._get_license(
-        12, license_info=license_info
-    )
-    assert actual_license is None
-    assert actual_license_version is None
-
-
-def test_create_meta_data_fills_meta_data_dict():
-    data = _get_resource_json("image_data_full_meta_data_example.json")
-    actual_dict = flickr._create_meta_data_dict(data)
-    expect_dict = {
-        "pub_date": "1571326372",
-        "date_taken": "2019-09-07 16:26:44",
-        "description": "OLYMPUS DIGITAL CAMERA",
-        "views": "9",
-    }
-    assert expect_dict == actual_dict
-
-
-def test_create_meta_data_fills_partial_meta_data_dict():
-    data = _get_resource_json("image_data_partial_meta_data_info.json")
-    actual_dict = flickr._create_meta_data_dict(data)
-    expect_dict = {"pub_date": "1571326372", "date_taken": "2019-09-07 16:26:44"}
-    assert expect_dict == actual_dict
-
-
-def test_create_meta_data_makes_empty_meta_data_dict():
-    data = _get_resource_json("image_data_no_meta_data_info.json")
-    actual_dict = flickr._create_meta_data_dict(data)
-    expect_dict = {}
-    assert expect_dict == actual_dict
-
-
-def test_create_meta_data_dict_strips_html():
-    data = _get_resource_json("image_data_html_description.json")
-    actual_dict = flickr._create_meta_data_dict(data)
-    expect_dict = _get_resource_json("expect_meta_data_from_html_description.json")
-    assert expect_dict == actual_dict
-
-
-def test_create_meta_data_handles_whitespace_description():
-    data = _get_resource_json("image_data_whitespace_description.json")
-    actual_dict = flickr._create_meta_data_dict(data)
-    expect_dict = _get_resource_json(
-        "expect_meta_data_from_whitespace_description.json"
-    )
-    assert expect_dict == actual_dict
-
-
-def test_create_tags_list_makes_tags_list():
-    data = _get_resource_json("image_data_varying_tags_whitespace.json")
-    actual_tags_list = flickr._create_tags_list(data)
-    expect_tags_list = ["tag1", "tag2", "tag3"]
-    assert len(actual_tags_list) == len(expect_tags_list)
-    assert all([element in actual_tags_list for element in expect_tags_list])
-
-
-def test_create_tags_list_sorts_tags():
-    data = _get_resource_json("image_data_unsorted_tags.json")
-    actual_tags_list = flickr._create_tags_list(data)
-    expect_tags_list = ["tag1", "tag2", "tag3"]
-    assert len(actual_tags_list) == len(expect_tags_list)
-    assert all([element in actual_tags_list for element in expect_tags_list])
-
-
-def test_create_tags_list_truncates_long_tags():
-    data = _get_resource_json("image_data_long_tags_string.json")
-    actual_tags_list = flickr._create_tags_list(data, max_tag_string_length=37)
-    expect_tags_list = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"]
-    assert len(actual_tags_list) == len(expect_tags_list)
-    assert all([element in actual_tags_list for element in expect_tags_list])
-
-
-def test_create_tags_list_returns_falsy_no_tag_key():
-    data = {"id": "aslkjb"}
-    tags_list = flickr._create_tags_list(data)
-    assert not tags_list
-
-
-def test_create_tags_list_returns_falsy_empty_tags():
-    data = {"id": "aslkjb", "tags": ""}
-    tags_list = flickr._create_tags_list(data)
-    assert not tags_list
-
-
-def test_process_image_data_with_sub_provider():
+def test_get_record_data_with_sub_provider():
     image_data = _get_resource_json("image_data_sub_provider_example.json")
-    with patch.object(
-        flickr, "_get_file_properties", return_value=(218414, "jpg")
-    ), patch.object(flickr.image_store, "add_item", return_value=100) as mock_add_item:
-        total_images = flickr._process_image_data(image_data)
+    actual_data = flickr.get_record_data(image_data)
 
     expect_meta_data = {
         "pub_date": "1590799192",
@@ -503,29 +332,22 @@ def test_process_image_data_with_sub_provider():
         ),
     }
 
-    mock_add_item.assert_called_once_with(
-        foreign_landing_url=("https://www.flickr.com/photos/35067687@N04/49950595947"),
-        image_url=(
+    expected_data = {
+        "foreign_landing_url": (
+            "https://www.flickr.com/photos/35067687@N04/49950595947"
+        ),
+        "image_url": (
             "https://live.staticflickr.com/65535/49950595947_65a3560ddc" "_b.jpg"
         ),
-        license_info=(
-            LicenseInfo(
-                "by-nc-sa",
-                "2.0",
-                "https://creativecommons.org/licenses/by-nc-sa/2.0/",
-                None,
-            )
-        ),
-        foreign_identifier="49950595947",
-        width=1024,
-        height=683,
-        filesize=218414,
-        filetype="jpg",
-        creator="NASA HQ PHOTO",
-        creator_url="https://www.flickr.com/photos/35067687@N04",
-        title="SpaceX Demo-2 Preflight (NHQ202005290001)",
-        meta_data=expect_meta_data,
-        raw_tags=[
+        "license_info": test_license_info,
+        "foreign_identifier": "49950595947",
+        "width": 1024,
+        "height": 683,
+        "creator": "NASA HQ PHOTO",
+        "creator_url": "https://www.flickr.com/photos/35067687@N04",
+        "title": "SpaceX Demo-2 Preflight (NHQ202005290001)",
+        "meta_data": expect_meta_data,
+        "raw_tags": [
             "capecanaveral",
             "commercialcrewprogram",
             "gophertortoise",
@@ -533,35 +355,7 @@ def test_process_image_data_with_sub_provider():
             "nasa",
             "spacex",
         ],
-        source="nasa",
-        category=None,
-    )
-    assert total_images == 100
-
-
-def test_get_file_properties_returns_no_filesize_from_no_response():
-    url = "https://flickr.com/image.jpg"
-    with patch.object(flickr.delayed_requester, "get", return_value=None):
-        actual_filesize, _ = flickr._get_file_properties(url)
-    assert actual_filesize is None
-
-
-def test_get_file_properties_returns_both_values():
-    url = "https://flickr.com/image.jpg"
-    headers = {"X-TTDB-L": "123456"}
-
-    def get_mock_headers(name, default):
-        return headers[name]
-
-    mock_response = Response()
-    mock_response.status_code = codes.ok
-    mock_response.headers = MagicMock()
-    mock_response.headers.get.side_effect = get_mock_headers
-
-    # filesize and filetype
-    expect_props = (123456, "jpg")
-
-    with patch.object(flickr.delayed_requester, "get", return_value=mock_response):
-        actual_props = flickr._get_file_properties(url)
-
-    assert actual_props == expect_props
+        "source": "nasa",
+        "category": None,
+    }
+    assert actual_data == expected_data

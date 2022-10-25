@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
+from providers.provider_api_scripts.flickr import FlickrDataIngester
 from providers.provider_api_scripts.metropolitan_museum import MetMuseumDataIngester
 from providers.provider_api_scripts.wikimedia_commons import (
     WikimediaCommonsDataIngester,
@@ -61,6 +62,7 @@ PROVIDER_REINGESTION_WORKFLOWS = [
     ProviderReingestionWorkflow(
         # 128 total reingestion days
         provider_script="flickr",
+        ingestion_callable=FlickrDataIngester,
         pull_timeout=timedelta(minutes=30),
         daily_list_length=7,
         weekly_list_length=12,

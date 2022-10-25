@@ -6,6 +6,7 @@ from typing import Dict, Optional, Sequence, Type
 from providers.provider_api_scripts.brooklyn_museum import BrooklynMuseumDataIngester
 from providers.provider_api_scripts.cleveland_museum import ClevelandDataIngester
 from providers.provider_api_scripts.finnish_museums import FinnishMuseumsDataIngester
+from providers.provider_api_scripts.flickr import FlickrDataIngester
 from providers.provider_api_scripts.freesound import FreesoundDataIngester
 from providers.provider_api_scripts.inaturalist import INaturalistDataIngester
 from providers.provider_api_scripts.jamendo import JamendoDataIngester
@@ -138,9 +139,15 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="flickr",
-        start_date=datetime(2004, 2, 1),
+        ingestion_callable=FlickrDataIngester,
+        start_date=datetime(2020, 11, 1),
         schedule_string="@daily",
         dated=True,
+    ),
+    ProviderWorkflow(
+        provider_script="freesound",
+        ingestion_callable=FreesoundDataIngester,
+        media_types=("audio",),
     ),
     ProviderWorkflow(
         provider_script="inaturalist",
@@ -150,11 +157,6 @@ PROVIDER_WORKFLOWS = [
         schedule_string="@monthly",
         pull_timeout=timedelta(days=5),
         load_timeout=timedelta(days=5),
-    ),
-    ProviderWorkflow(
-        provider_script="freesound",
-        ingestion_callable=FreesoundDataIngester,
-        media_types=("audio",),
     ),
     ProviderWorkflow(
         provider_script="jamendo",
