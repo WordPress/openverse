@@ -1,9 +1,5 @@
 <template>
-  <section
-    id="filters"
-    aria-labelledby="filters-heading"
-    class="filters py-8 px-10"
-  >
+  <section id="filters" aria-labelledby="filters-heading" class="filters">
     <header
       v-if="showFilterHeader"
       class="mt-2 mb-6 flex items-center justify-between"

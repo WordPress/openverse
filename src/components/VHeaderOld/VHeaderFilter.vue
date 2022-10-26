@@ -16,7 +16,7 @@
     />
     <template v-if="visibleRef">
       <VTeleport v-if="isMinScreenMd" to="sidebar">
-        <VSearchGridFilter @close="onTriggerClick" />
+        <VSearchGridFilter class="px-10 pt-1" @close="onTriggerClick" />
       </VTeleport>
       <VModalContent
         v-else
@@ -25,7 +25,10 @@
         :trigger-element="triggerElement"
         :aria-label="$t('header.filter-button.simple')"
       >
-        <VSearchGridFilter @close="onTriggerClick" />
+        <VSearchGridFilter
+          class="px-6 pt-[7px] pb-10"
+          @close="onTriggerClick"
+        />
       </VModalContent>
     </template>
   </div>
