@@ -84,6 +84,7 @@ PROVIDER_REINGESTION_WORKFLOWS = [
     ),
     ProviderReingestionWorkflow(
         # 64 total reingestion days
+        dag_id="wikimedia_reingestion_workflow",
         provider_script="wikimedia_commons",
         ingestion_callable=WikimediaCommonsDataIngester,
         pull_timeout=timedelta(minutes=90),

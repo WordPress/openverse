@@ -103,7 +103,7 @@ The following are DAGs grouped by their primary tag:
 | `europeana_reingestion_workflow` | `@weekly` |
 | `flickr_reingestion_workflow` | `@weekly` |
 | `metropolitan_museum_reingestion_workflow` | `@weekly` |
-| `wikimedia_commons_reingestion_workflow` | `@weekly` |
+| `wikimedia_reingestion_workflow` | `@weekly` |
 
 
 # DAG documentation
