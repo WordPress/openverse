@@ -36,11 +36,6 @@ class ContentProvider(models.Model):
         db_table = "content_provider"
 
 
-class SourceLogo(models.Model):
-    source = models.OneToOneField(ContentProvider, on_delete=models.CASCADE)
-    image = models.ImageField()
-
-
 class Tag(OpenLedgerModel):
     foreign_identifier = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=1000, blank=True, null=True)

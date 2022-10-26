@@ -1,13 +1,7 @@
 from django.contrib import admin
 
 from catalog.api.admin.site import openverse_admin
-from catalog.api.models import (
-    PENDING,
-    AudioReport,
-    ContentProvider,
-    ImageReport,
-    SourceLogo,
-)
+from catalog.api.models import PENDING, AudioReport, ContentProvider, ImageReport
 from catalog.api.models.media import AbstractDeletedMedia, AbstractMatureMedia
 
 
@@ -73,13 +67,8 @@ for klass in [
     admin.site.register(klass, MediaSubreportAdmin)
 
 
-class InlineImage(admin.TabularInline):
-    model = SourceLogo
-
-
 @admin.register(ContentProvider)
 class ProviderAdmin(admin.ModelAdmin):
     list_display = ("provider_name", "provider_identifier", "media_type")
     search_fields = ("provider_name", "provider_identifier")
     exclude = ("notes",)
-    inlines = [InlineImage]

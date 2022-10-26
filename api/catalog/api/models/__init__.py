@@ -24,7 +24,7 @@ from catalog.api.models.media import (
     OTHER,
     PENDING,
 )
-from catalog.api.models.models import ContentProvider, SourceLogo, Tag
+from catalog.api.models.models import ContentProvider, Tag
 from catalog.api.models.oauth import (
     OAuth2Registration,
     OAuth2Verification,
