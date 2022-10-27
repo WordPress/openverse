@@ -8,266 +8,226 @@ Output:                 TSV file containing the images and the
 
 Notes:                  https://www.europeana.eu/api/v2/search.json
 """
-
 import argparse
+import functools
 import logging
 from datetime import datetime, timedelta, timezone
 
+import common
 from airflow.models import Variable
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
-from common.requester import DelayedRequester
-from common.storage.image import ImageStore
-from requests.exceptions import JSONDecodeError
+from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
-)
 logger = logging.getLogger(__name__)
+logging.getLogger(common.urls.__name__).setLevel(logging.WARNING)
 
-DELAY = 30.0
-RESOURCES_PER_REQUEST = "100"
-PROVIDER = prov.EUROPEANA_DEFAULT_PROVIDER
-API_KEY = Variable.get("API_KEY_EUROPEANA", default_var=None)
-ENDPOINT = "https://www.europeana.eu/api/v2/search.json?"
-# SUB_PROVIDERS is a collection of providers within europeana which are
-# valuable to a broad audience
-SUB_PROVIDERS = prov.EUROPEANA_SUB_PROVIDERS
 
-RESOURCE_TYPE = "IMAGE"
-REUSE_TERMS = ["open", "restricted"]
+class EmptyRequiredFieldException(Exception):
+    def __init__(self, method_name: str, value):
+        super().__init__(f"`{method_name}` returned an empty value: {value}.")
 
-DEFAULT_QUERY_PARAMS = {
-    "profile": "rich",
-    "reusability": REUSE_TERMS,
-    "sort": ["europeana_id+desc", "timestamp_created+desc"],
-    "rows": RESOURCES_PER_REQUEST,
-    "media": "true",
-    "start": 1,
-    "qf": [f"TYPE:{RESOURCE_TYPE}", "provider_aggregation_edm_isShownBy:*"],
-}
 
-delayed_requester = DelayedRequester(DELAY)
-image_store = ImageStore(provider=PROVIDER)
+def raise_if_empty(fn):
+    """
+    Used to decorate RecordBuilder methods for "required" fields
+    to shortcut record building in the case where a record would
+    be missing some required fields and be thrown out anyway.
+    """
+
+    @functools.wraps(fn)
+    def inner(*args, **kwargs):
+        value = fn(*args, **kwargs)
+
+        if not value:
+            raise EmptyRequiredFieldException(fn.__name__, value)
+
+        return value
+
+    return inner
+
+
+class EuropeanaRecordBuilder:
+    """
+    A small class to contain the record building functionality
+    and simplify testing a bit.
+    """
+
+    def get_record_data(self, data: dict) -> dict:
+        try:
+            record = {
+                "foreign_landing_url": self._get_foreign_landing_url(data),
+                "image_url": self._get_image_url(data),
+                "foreign_identifier": self._get_foreign_identifier(data),
+                "meta_data": self._get_meta_data_dict(data),
+                "title": self._get_title(data),
+                "license_info": get_license_info(
+                    license_url=self._get_license_url(data)
+                ),
+            }
+
+            data_providers = set(record["meta_data"]["dataProvider"])
+            eligible_sub_providers = {
+                s
+                for s in EuropeanaDataIngester.sub_providers
+                if EuropeanaDataIngester.sub_providers[s] in data_providers
+            }
+            if len(eligible_sub_providers) > 1:
+                raise Exception(
+                    f"More than one sub-provider identified for the "
+                    f"image with foreign ID {record['foreign_identifier']}"
+                )
+
+            return record | {
+                "source": (
+                    eligible_sub_providers.pop()
+                    if len(eligible_sub_providers) == 1
+                    else EuropeanaDataIngester.providers["image"]
+                )
+            }
+        except EmptyRequiredFieldException as exc:
+            logger.warning("A required field was empty", exc_info=exc)
+            return None
+
+    @raise_if_empty
+    def _get_image_url(self, data: dict) -> str | None:
+        group = data.get("edmIsShownBy")
+        return group[0] if group else None
+
+    @raise_if_empty
+    def _get_foreign_identifier(self, data: dict) -> str | None:
+        return data.get("id")
+
+    @raise_if_empty
+    def _get_title(self, data: dict) -> str | None:
+        group = data.get("title")
+        return group[0] if group else None
+
+    @raise_if_empty
+    def _get_license_url(self, data: dict) -> str | None:
+        license_field = data.get("rights")
+        if not license_field:
+            return None
+
+        if len(license_field) > 1:
+            logger.warning("More than one license field found")
+        for license_ in license_field:
+            if "creativecommons" in license_:
+                return license_
+
+        return None
+
+    @raise_if_empty
+    def _get_foreign_landing_url(self, data: dict) -> str:
+        original_url = data.get("edmIsShownAt")
+        if original_url:
+            return original_url[0]
+        europeana_url = data.get("guid")
+
+        return europeana_url
+
+    def _get_meta_data_dict(self, data: dict) -> dict:
+        meta_data = {
+            "country": data.get("country"),
+            "dataProvider": data.get("dataProvider"),
+            "description": self._get_description(data),
+        }
+
+        return {k: v for k, v in meta_data.items() if v is not None}
+
+    def _get_description(self, data: dict) -> str | None:
+        description = None
+        lang_aware_description = data.get("dcDescriptionLangAware")
+        if lang_aware_description:
+            description = lang_aware_description.get(
+                "en"
+            ) or lang_aware_description.get("def")
+
+        if not description:  # cover None and []
+            description = data.get("dcDescription")
+
+        if description:
+            return description[0].strip()
+
+        return ""
+
+
+class EuropeanaDataIngester(ProviderDataIngester):
+    providers = {"image": prov.EUROPEANA_DEFAULT_PROVIDER}
+    sub_providers = prov.EUROPEANA_SUB_PROVIDERS
+    endpoint = "https://www.europeana.eu/api/v2/search.json?"
+    delay = 30
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Each response back from Europeana returns a `nextCursor`
+        # property that needs to be passed to subsequent requests
+        # as `cursor`. This allows us to systematically page
+        # through the API data.
+        self.cursor = None
+
+        self.base_request_body = {
+            "wskey": Variable.get("API_KEY_EUROPEANA", default_var=None),
+            "profile": "rich",
+            "reusability": ["open", "restricted"],
+            "sort": ["europeana_id+desc", "timestamp_created+desc"],
+            "rows": str(self.batch_limit),
+            "media": "true",
+            "start": 1,
+            "qf": ["TYPE:IMAGE", "provider_aggregation_edm_isShownBy:*"],
+            # As a dated DAG, Europeana accepts a ``query`` prop in the
+            # request params that delineates the timestamps between which
+            # records will have been added. The base class sets up the
+            # ``self.date`` attribute for us, so we can construct that
+            # ``query`` prop for the request params ahead of time.
+            "query": self._get_timestamp_query_param(self.date),
+            "cursor": "*",
+        }
+
+        self.record_builder = EuropeanaRecordBuilder()
+
+    def _get_timestamp_query_param(self, date):
+        date_obj = datetime.strptime(date, "%Y-%m-%d")
+        utc_date = date_obj.replace(tzinfo=timezone.utc)
+        start_timestamp = utc_date.isoformat()
+        end_timestamp = (utc_date + timedelta(days=1)).isoformat()
+
+        start_timestamp = start_timestamp.replace("+00:00", "Z")
+        end_timestamp = end_timestamp.replace("+00:00", "Z")
+
+        return f"timestamp_created:[{start_timestamp} TO {end_timestamp}]"
+
+    def get_next_query_params(self, prev_query_params) -> dict:
+        if not prev_query_params:
+            return self.base_request_body
+
+        return prev_query_params | {
+            "cursor": self.cursor,
+        }
+
+    def get_should_continue(self, response_json: dict):
+        self.cursor = response_json.get("nextCursor")
+
+        return self.cursor is not None
+
+    def get_batch_data(self, response_json: dict) -> None | list[dict]:
+        if response_json.get("success") != "True":
+            logger.warning('Request failed with ``success != "True"``')
+            # No batch data to process if the request failed.
+            return None
+
+        return response_json.get("items")
+
+    def get_record_data(self, data: dict) -> dict:
+        return self.record_builder.get_record_data(data)
 
 
 def main(date):
-    logger.info(f"Processing Europeana API for date: {date}")
-
-    start_timestamp, end_timestamp = _derive_timestamp_pair(date)
-    _get_pagewise(start_timestamp, end_timestamp)
-
-    total_images = image_store.commit()
-    logger.info(f"Total images: {total_images}")
-    logger.info("Terminated!")
-
-
-def _get_pagewise(start_timestamp, end_timestamp):
-    cursor = "*"
-
-    while cursor is not None:
-        image_list, next_cursor, total_number_of_images = _get_image_list(
-            start_timestamp, end_timestamp, cursor
-        )
-
-        if next_cursor is None:
-            break
-
-        cursor = next_cursor
-
-        if image_list is not None:
-            images_stored = _process_image_list(image_list)
-            logger.info(f"Images stored: {images_stored} of {total_number_of_images}")
-
-        else:
-            logger.warning("No image data!  Attempting to continue")
-
-
-def _get_image_list(
-    start_timestamp,
-    end_timestamp,
-    cursor,
-    endpoint=ENDPOINT,
-    max_tries=6,  # one original try, plus 5 retries
-):
-    try_number = 0
-    image_list, next_cursor, total_number_of_images = (None, None, None)
-    for try_number in range(max_tries):
-
-        query_param_dict = _build_query_param_dict(
-            start_timestamp, end_timestamp, cursor
-        )
-
-        response = delayed_requester.get(
-            endpoint,
-            params=query_param_dict,
-        )
-
-        logger.debug("response.status_code: {response.status_code}")
-        response_json = _extract_response_json(response)
-        (
-            image_list,
-            next_cursor,
-            total_number_of_images,
-        ) = _extract_image_list_from_json(response_json)
-
-        if image_list is not None:
-            break
-
-    if try_number == max_tries - 1 and (image_list is None or next_cursor is None):
-        logger.warning("No more tries remaining. Returning None types.")
-    return image_list, next_cursor, total_number_of_images
-
-
-def _extract_response_json(response):
-    if response is not None and response.status_code == 200:
-        try:
-            response_json = response.json()
-        except JSONDecodeError as e:
-            logger.warning(f"Could not get image_data json.\n{e}")
-            response_json = None
-    else:
-        response_json = None
-
-    return response_json
-
-
-def _extract_image_list_from_json(response_json):
-    if response_json is None or str(response_json.get("success")) != "True":
-        image_list, next_cursor, total_number_of_images = None, None, None
-    else:
-        image_list = response_json.get("items")
-        next_cursor = response_json.get("nextCursor")
-        total_number_of_images = response_json.get("totalResults")
-
-    return image_list, next_cursor, total_number_of_images
-
-
-def _process_image_list(image_list):
-    prev_total = 0
-    total_images = 0
-    for image_data in image_list:
-        total_images = _process_image_data(image_data)
-        if total_images is None:
-            total_images = prev_total
-        else:
-            prev_total = total_images
-
-    return total_images
-
-
-def _process_image_data(image_data, sub_providers=SUB_PROVIDERS, provider=PROVIDER):
-    logger.debug(f"Processing image data: {image_data}")
-    license_url = _get_license_url(image_data.get("rights"))
-    image_url = image_data.get("edmIsShownBy")[0]
-    foreign_landing_url = _get_foreign_landing_url(image_data)
-    foreign_id = image_data.get("id")
-    title = image_data.get("title")[0]
-    meta_data = _create_meta_data_dict(image_data)
-
-    data_providers = set(meta_data["dataProvider"])
-    eligible_sub_providers = {
-        s for s in sub_providers if sub_providers[s] in data_providers
-    }
-    if len(eligible_sub_providers) > 1:
-        raise Exception(
-            f"More than one sub-provider identified for the "
-            f"image with foreign ID {foreign_id}"
-        )
-    source = (
-        eligible_sub_providers.pop() if len(eligible_sub_providers) == 1 else provider
-    )
-
-    license_info = get_license_info(license_url=license_url)
-
-    return image_store.add_item(
-        foreign_landing_url=foreign_landing_url,
-        image_url=image_url,
-        license_info=license_info,
-        foreign_identifier=foreign_id,
-        title=title,
-        meta_data=meta_data,
-        source=source,
-    )
-
-
-def _get_license_url(license_field):
-    if len(license_field) > 1:
-        logger.warning("More than one license field found")
-    for license_ in license_field:
-        if "creativecommons" in license_:
-            return license_
-    return None
-
-
-def _get_foreign_landing_url(image_data):
-    original_url = image_data.get("edmIsShownAt")
-    if original_url is not None:
-        return original_url[0]
-    europeana_url = image_data.get("guid")
-    return europeana_url
-
-
-def _create_meta_data_dict(image_data):
-    meta_data = {
-        "country": image_data.get("country"),
-        "dataProvider": image_data.get("dataProvider"),
-        "description": _get_description(image_data),
-    }
-
-    return {k: v for k, v in meta_data.items() if v is not None}
-
-
-def _get_description(image_data):
-    if (
-        image_data.get("dcDescriptionLangAware") is not None
-        and image_data.get("dcDescriptionLangAware").get("en") is not None
-    ):
-        description = image_data.get("dcDescriptionLangAware").get("en")[0]
-    elif (
-        image_data.get("dcDescriptionLangAware") is not None
-        and image_data.get("dcDescriptionLangAware").get("def") is not None
-    ):
-        description = image_data.get("dcDescriptionLangAware").get("def")[0]
-    elif image_data.get("dcDescription") is not None:
-        description = image_data.get("dcDescription")[0]
-    else:
-        description = None
-
-    description = description.strip() if description is not None else ""
-
-    return description
-
-
-def _build_query_param_dict(
-    start_timestamp,
-    end_timestamp,
-    cursor,
-    api_key=API_KEY,
-    default_query_param=None,
-):
-    if default_query_param is None:
-        default_query_param = DEFAULT_QUERY_PARAMS
-    query_param_dict = default_query_param.copy()
-    query_param_dict.update(
-        wskey=api_key,
-        query=f"timestamp_created:[{start_timestamp} TO {end_timestamp}]",
-        cursor=cursor,
-    )
-    return query_param_dict
-
-
-def _derive_timestamp_pair(date):
-    date_obj = datetime.strptime(date, "%Y-%m-%d")
-    utc_date = date_obj.replace(tzinfo=timezone.utc)
-    start_timestamp = utc_date.isoformat()
-    end_timestamp = (utc_date + timedelta(days=1)).isoformat()
-
-    start_timestamp = start_timestamp.replace("+00:00", "Z")
-    end_timestamp = end_timestamp.replace("+00:00", "Z")
-
-    return start_timestamp, end_timestamp
+    logger.info(f"Begin: Europeana data ingestion for {date}")
+    ingester = EuropeanaDataIngester(date)
+    ingester.ingest_records()
 
 
 if __name__ == "__main__":

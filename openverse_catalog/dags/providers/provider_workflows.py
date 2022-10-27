@@ -5,6 +5,7 @@ from typing import Dict, Optional, Sequence, Type
 
 from providers.provider_api_scripts.brooklyn_museum import BrooklynMuseumDataIngester
 from providers.provider_api_scripts.cleveland_museum import ClevelandDataIngester
+from providers.provider_api_scripts.europeana import EuropeanaDataIngester
 from providers.provider_api_scripts.finnish_museums import FinnishMuseumsDataIngester
 from providers.provider_api_scripts.flickr import FlickrDataIngester
 from providers.provider_api_scripts.freesound import FreesoundDataIngester
@@ -128,6 +129,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="europeana",
+        ingestion_callable=EuropeanaDataIngester,
         start_date=datetime(2011, 9, 1),
         schedule_string="@daily",
         dated=True,

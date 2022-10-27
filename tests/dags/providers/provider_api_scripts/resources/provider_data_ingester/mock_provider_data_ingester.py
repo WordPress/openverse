@@ -16,10 +16,13 @@ HEADERS = {"api_key": "mock_api_key"}
 DEFAULT_QUERY_PARAMS = {"has_image": 1, "page": 1}
 
 
-class MockProviderDataIngester(ProviderDataIngester):
+class MockProviderDataIngesterMixin:
     """
     A very simple concrete implementation of the ProviderDataIngester class,
     for testing purposes.
+
+    Excludes ``get_media_type`` to allow for testing implementations
+    that do not require it (single media type providers).
     """
 
     providers = {"audio": AUDIO_PROVIDER, "image": IMAGE_PROVIDER}
@@ -33,9 +36,6 @@ class MockProviderDataIngester(ProviderDataIngester):
             return response_json.get("data")
         return None
 
-    def get_media_type(self, record):
-        return record["media_type"]
-
     def get_record_data(self, record):
         data = {
             "foreign_identifier": record["id"],
@@ -48,6 +48,34 @@ class MockProviderDataIngester(ProviderDataIngester):
         elif record["media_type"] == "image":
             data["image_url"] = record["image_url"]
         return data
+
+
+class MockProviderDataIngester(MockProviderDataIngesterMixin, ProviderDataIngester):
+    def get_media_type(self, record):
+        return record["media_type"]
+
+
+class MockImageOnlyProviderDataIngester(
+    MockProviderDataIngesterMixin, ProviderDataIngester
+):
+    providers = {"image": IMAGE_PROVIDER}
+
+
+class MockAudioOnlyProviderDataIngester(
+    MockProviderDataIngesterMixin, ProviderDataIngester
+):
+    providers = {"audio": AUDIO_PROVIDER}
+
+
+class IncorrectlyConfiguredMockProviderDataIngester(
+    MockProviderDataIngesterMixin, ProviderDataIngester
+):
+    """
+    Used for testing default method implementions.
+    """
+
+    # Do not configure ``get_media_type`` to test the failure case
+    # for the default implementation
 
 
 # Expected result of calling `get_batch_data` with `response_success.json`

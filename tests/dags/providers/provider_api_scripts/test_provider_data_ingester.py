@@ -17,6 +17,9 @@ from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.
     EXPECTED_BATCH_DATA,
     IMAGE_PROVIDER,
     MOCK_RECORD_DATA_LIST,
+    IncorrectlyConfiguredMockProviderDataIngester,
+    MockAudioOnlyProviderDataIngester,
+    MockImageOnlyProviderDataIngester,
     MockProviderDataIngester,
 )
 
@@ -26,6 +29,9 @@ RESOURCES = os.path.join(
 )
 
 ingester = MockProviderDataIngester()
+image_ingester = MockImageOnlyProviderDataIngester()
+audio_ingester = MockAudioOnlyProviderDataIngester()
+misconfigured_ingester = IncorrectlyConfiguredMockProviderDataIngester()
 audio_store = MockAudioStore(AUDIO_PROVIDER)
 image_store = MockImageStore(IMAGE_PROVIDER)
 ingester.media_stores = {"audio": audio_store, "image": image_store}
@@ -446,3 +452,16 @@ def test_commit_commits_all_stores():
 
         assert audio_store_mock.called
         assert image_store_mock.called
+
+
+def test_get_media_type_default_behaviour_multiple_media_types_fails():
+    with pytest.raises(NotImplementedError):
+        misconfigured_ingester.get_media_type({})
+
+
+def test_get_media_type_default_behaviour_image_only_provider():
+    assert image_ingester.get_media_type({}) == "image"
+
+
+def test_get_media_type_default_behaviour_audio_only_provider():
+    assert audio_ingester.get_media_type({}) == "audio"
