@@ -21,3 +21,13 @@ updates:
       - "🟩 priority: low"
       - "🐍 tech: python"
       - dependencies
+
+  - package-ecosystem: "github-actions"
+    directory: /
+    schedule:
+      interval: "weekly"
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - dependencies
