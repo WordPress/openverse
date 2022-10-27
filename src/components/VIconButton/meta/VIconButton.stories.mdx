@@ -16,7 +16,7 @@ import replayIcon from '~/assets/icons/replay.svg'
   argTypes={{
     size: {
       defaultValue: 'medium',
-      options: ['tiny', 'small', 'search', 'medium', 'large'],
+      options: ['tiny', 'small', 'medium', 'large', 'extra-large'],
       control: 'select',
     },
   }}
@@ -25,6 +25,23 @@ import replayIcon from '~/assets/icons/replay.svg'
 export const Template = (args) => ({
   template: `
     <VIconButton class="text-white bg-dark-charcoal border-dark-charcoal" v-bind="args"/>
+  `,
+  components: { VIconButton },
+  setup() {
+    return { args }
+  },
+})
+
+export const sizesTemplate = (args) => ({
+  template: `
+    <div class="flex gap-x-2">
+      <div v-for="size in ['tiny', 'small', 'medium', 'large', 'extra-large']" :key="size" class="flex flex-col items-center p-2">
+        <p>{{ size }}</p>
+        <VIconButton
+           class="text-white bg-dark-charcoal border-dark-charcoal"
+           :size="size" v-bind="args" />
+      </div>
+    </div>
   `,
   components: { VIconButton },
   setup() {
@@ -48,5 +65,20 @@ export const Template = (args) => ({
     }}
   >
     {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Sizes
+
+<Canvas>
+  <Story
+    name="Sizes"
+    args={{
+      iconProps: {
+        iconPath: replayIcon,
+      },
+    }}
+  >
+    {sizesTemplate.bind({})}
   </Story>
 </Canvas>

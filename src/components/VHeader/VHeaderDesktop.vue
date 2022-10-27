@@ -16,9 +16,12 @@
       size="medium"
       @submit="handleSearch"
     >
-      <VClearButton
+      <VSearchBarButton
         v-show="searchTerm !== ''"
-        class="hidden me-2 group-focus-within:flex"
+        :icon-path="closeIcon"
+        :aria-label="$t('browse-page.search-form.clear')"
+        inner-area-classes="bg-white hover:bg-dark-charcoal-10"
+        class="hidden group-focus-within:flex"
         @click="clearSearchTerm"
       />
       <span
@@ -78,12 +81,14 @@ import { Focus } from '~/utils/focus-management'
 
 import { ensureFocus } from '~/utils/reakit-utils/focus'
 
-import VClearButton from '~/components/VHeader/VSearchBar/VClearButton.vue'
 import VFilterButton from '~/components/VHeader/VFilterButton.vue'
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
 import VLogoButton from '~/components/VHeader/VLogoButton.vue'
+import VSearchBarButton from '~/components/VHeader/VHeaderMobile/VSearchBarButton.vue'
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover.vue'
+
+import closeIcon from '~/assets/icons/close-small.svg'
 
 /**
  * The desktop search header.
@@ -91,9 +96,9 @@ import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover
 export default defineComponent({
   name: 'VHeaderDesktop',
   components: {
-    VClearButton,
     VFilterButton,
     VLogoButton,
+    VSearchBarButton,
     VSearchGridFilter,
     VSearchTypePopover,
     VSearchBar,
@@ -239,6 +244,7 @@ export default defineComponent({
     }
 
     return {
+      closeIcon,
       filterButtonRef,
       searchBarRef,
       isFetching,

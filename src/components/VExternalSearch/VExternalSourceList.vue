@@ -27,12 +27,8 @@
       >
         <VIconButton
           class="absolute top-0 border-none text-dark-charcoal-70 end-0"
-          size="search-medium"
           :icon-props="{ iconPath: icons.closeSmall }"
-          :button-props="{
-            'aria-label': $t('modal.close').toString(),
-            variant: 'plain',
-          }"
+          :aria-label="$t('modal.close').toString()"
           @click="close"
         />
         <h2 class="description-bold mb-2 px-4 pt-5 text-start">

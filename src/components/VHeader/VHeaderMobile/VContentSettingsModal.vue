@@ -30,7 +30,6 @@
         }}</VTab>
         <VIconButton
           class="self-center ms-auto hover:bg-dark-charcoal hover:text-white"
-          size="search-medium"
           :icon-props="{ iconPath: closeIcon }"
           :aria-label="$t('modal.aria-close')"
           @click="closeModal"

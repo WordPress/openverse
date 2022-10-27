@@ -59,14 +59,14 @@ export default defineComponent({
     },
     /**
      * The size of the icon based on tailwind values. Possible values:
-     * 4 - 1rem, 5 - 1.25rem, 6 - 1.5rem.
+     * 4 - 1rem, 5 - 1.25rem, 6 - 1.5rem, 8 - 2rem, 12 - 3rem.
      *
      * @default 6
      */
     size: {
       type: Number,
       default: 6,
-      validator: (val: number) => [4, 5, 6].includes(val),
+      validator: (val: number) => [4, 5, 6, 8, 12].includes(val),
     },
     /**
      * whether to flip the icon for RTL languages; This generally makes sense

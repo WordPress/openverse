@@ -12,12 +12,8 @@
       <div class="relative" data-testid="content-report-popover">
         <VIconButton
           class="absolute top-0 border-none text-dark-charcoal-70 end-0"
-          size="search-medium"
           :icon-props="{ iconPath: icons.closeSmall }"
-          :button-props="{
-            'aria-label': $t('modal.close').toString(),
-            variant: 'plain',
-          }"
+          :aria-label="$t('modal.close').toString()"
           @click="close"
         />
         <VContentReportForm

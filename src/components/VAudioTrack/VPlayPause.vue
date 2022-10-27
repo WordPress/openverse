@@ -2,18 +2,18 @@
   <VIconButton
     v-bind="$attrs"
     :tabindex="isTabbable ? 0 : -1"
-    class="play-pause flex-shrink-0 border-dark-charcoal bg-dark-charcoal text-white focus-visible:border-pink focus-visible:shadow-ring focus-visible:outline-none disabled:opacity-70"
+    class="play-pause flex-shrink-0 border-dark-charcoal bg-dark-charcoal text-white focus-visible:border-pink focus-visible:shadow-ring focus-visible:outline-none active:shadow-ring disabled:opacity-70"
     :icon-props="icon === undefined ? undefined : { iconPath: icon }"
     :aria-label="$t(label)"
     :button-props="buttonProps"
     @click.stop.prevent="handleClick"
     @mousedown="handleMouseDown"
   >
-    <template #default="{ iconSizeClasses }">
+    <template #default="{ iconSize }">
       <svg
         v-if="isLoading"
         class="loading p-2"
-        :class="iconSizeClasses"
+        :class="`w-${iconSize} h-${iconSize}`"
         xmlns="http://www.w3.org/2000/svg"
         overflow="visible"
         viewBox="0 0 12 12"

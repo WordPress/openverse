@@ -12,8 +12,6 @@
       <slot name="buttons">
         <VIconButton
           :class="variant === 'announcement' && 'text-white'"
-          class="border-none"
-          :button-props="{ variant: 'plain' }"
           size="small"
           :aria-label="closeLabel"
           :icon-props="{

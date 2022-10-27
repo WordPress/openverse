@@ -80,7 +80,7 @@
       >
         <slot
           name="play-pause"
-          :size="isLarge ? 'medium' : 'large'"
+          :size="isLarge ? 'large' : 'extra-large'"
           :layout="'row'"
           :is-tabbable="false"
         />

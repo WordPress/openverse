@@ -18,7 +18,7 @@
     <div
       class="items-top mx-auto mt-6 flex flex-row flex-wrap gap-6 px-6 lg:max-w-5xl lg:flex-nowrap"
     >
-      <slot name="play-pause" :size="isSmall ? 'small' : 'medium'" />
+      <slot name="play-pause" :size="isSmall ? 'small' : 'large'" />
 
       <div
         class="audio-info order-2 flex w-full flex-col justify-center lg:order-1 lg:w-auto"

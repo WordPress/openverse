@@ -19,11 +19,9 @@
           <VIconButton
             ref="menuButtonRef"
             :icon-props="{ iconPath: menuIcon }"
-            :button-props="{ variant: 'plain' }"
             :aria-label="$t('header.aria.menu')"
             v-bind="a11yProps"
             class="border-tx hover:bg-dark-charcoal hover:text-white"
-            size="search-medium"
           />
         </template>
 
@@ -34,9 +32,7 @@
             <VHomeLink variant="light" />
             <VIconButton
               ref="closeButton"
-              :button-props="{ variant: 'plain' }"
               :icon-props="{ iconPath: closeIcon }"
-              size="search-medium"
               class="border-tx text-white focus-visible:ring-offset-tx"
               :aria-label="$t('modal.close')"
               @click="closeModal"
