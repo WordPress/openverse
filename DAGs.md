@@ -86,7 +86,7 @@ The following are DAGs grouped by their primary tag:
 | `museum_victoria_workflow` | `@monthly` | `False` | image |
 | `nypl_workflow` | `@monthly` | `False` | image |
 | [`phylopic_workflow`](#phylopic_workflow) | `@daily` | `True` | image |
-| `rawpixel_workflow` | `@monthly` | `False` | image |
+| [`rawpixel_workflow`](#rawpixel_workflow) | `@monthly` | `False` | image |
 | `science_museum_workflow` | `@monthly` | `False` | image |
 | [`smithsonian_workflow`](#smithsonian_workflow) | `@weekly` | `False` | image |
 | `smk_workflow` | `@monthly` | `False` | image |
@@ -124,6 +124,7 @@ The following is documentation associated with each DAG (where available):
  1. [`oauth2_token_refresh`](#oauth2_token_refresh)
  1. [`phylopic_workflow`](#phylopic_workflow)
  1. [`pr_review_reminders`](#pr_review_reminders)
+ 1. [`rawpixel_workflow`](#rawpixel_workflow)
  1. [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation)
  1. [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation)
  1. [`report_pending_reported_media`](#report_pending_reported_media)
@@ -435,6 +436,23 @@ when determining how much time has passed since the review.
 Unfortunately the DAG does not know when someone is on vacation. It is up to the
 author of the PR to re-assign review if one of the randomly selected reviewers
 is unavailable for the time period during which the PR should be reviewed.
+
+
+## `rawpixel_workflow`
+
+
+Content Provider:       Rawpixel
+
+ETL Process:            Use the API to identify all CC-licensed images.
+
+Output:                 TSV file containing the image meta-data.
+
+Notes:                  Rawpixel has given Openverse beta access to their API.
+                        This API is undocumented, and we will need to contact Rawpixel
+                        directly if we run into any issues.
+                        The public API max results range is limited to 100,000 results,
+                        although the API key we've been given can circumvent this limit.
+                        https://www.rawpixel.com/api/v1/search?tags=$publicdomain&page=1&pagesize=100
 
 
 ## `recreate_audio_popularity_calculation`
