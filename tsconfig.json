@@ -88,10 +88,15 @@
     "src/components/VModal/VInputModal.vue",
     "src/pages/feedback.vue",
     "src/pages/search-help.vue",
-    "src/composables/types.js",
 
-    // This section cannot be converted to TypeScript because it's used in non-TS contexts (like Tailwind configuration)
-    "src/constants/screens.js",
+    /**
+     * Some files from this section cannot be converted to TypeScript because they are
+     * used in non-TS contexts (like Tailwind configuration). Therefore they're left as
+     * "vanilla JavaScript" with JSDoc based type annotations. This allows us to check
+     * them with TypeScript without introducing syntax changes that are not compatible
+     * with other tools we rely on.
+     */
+    "src/constants/**/*",
     "src/server-middleware/healthcheck.js"
   ],
   "exclude": ["node_modules"],

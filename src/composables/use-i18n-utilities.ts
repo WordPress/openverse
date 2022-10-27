@@ -18,11 +18,7 @@ export function useI18nResultsCount() {
   const i18n = useI18n()
   const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
 
-  /**
-   * @param {number} resultsCount
-   * @returns {string}
-   */
-  const getI18nCount = (resultsCount) => {
+  const getI18nCount = (resultsCount: number) => {
     const countKey =
       resultsCount === 0
         ? 'noResult'
