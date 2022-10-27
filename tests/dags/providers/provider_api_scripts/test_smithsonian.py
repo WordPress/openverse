@@ -1,32 +1,21 @@
 import json
-import logging
-import os
-from unittest.mock import call, patch
+from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from airflow.exceptions import AirflowException
-from common.licenses import LicenseInfo
-from providers.provider_api_scripts import smithsonian as si
+from providers.provider_api_scripts.smithsonian import SmithsonianDataIngester
 
 
-logger = logging.getLogger(__name__)
+RESOURCES = Path(__file__).parent / "resources/smithsonian"
 
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
-)
-
-RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), "resources/smithsonian"
-)
-
-
-def _get_resource_json(json_name):
-    with open(os.path.join(RESOURCES, json_name)) as f:
-        resource_json = json.load(f)
-    return resource_json
+# Set up test class
+ingester = SmithsonianDataIngester()
 
 
 def test_get_hash_prefixes_with_len_one():
+    with patch.object(ingester, "hash_prefix_length", 1):
+        actual_prefix_list = list(ingester._get_hash_prefixes())
     expect_prefix_list = [
         "0",
         "1",
@@ -45,29 +34,16 @@ def test_get_hash_prefixes_with_len_one():
         "e",
         "f",
     ]
-    actual_prefix_list = list(si._get_hash_prefixes(1))
     assert actual_prefix_list == expect_prefix_list
 
 
 def test_alert_new_unit_codes():
-    unit_code_set = {"a", "b", "c", "d"}
     sub_prov_dict = {"sub_prov1": {"a", "c"}, "sub_prov2": {"b"}, "sub_prov3": {"e"}}
-
-    assert si.get_new_and_outdated_unit_codes(unit_code_set, sub_prov_dict) == (
-        {"d"},
-        {"e"},
-    )
-
-
-def test_get_unit_codes_from_api_retries():
-    mock_response = {"terms": []}
-    # Patch the sleep function so it doesn't take long
-    with patch.object(
-        si.delayed_requester, "get_response_json", return_value=mock_response
-    ) as request_patch, patch("time.sleep"):
-        with pytest.raises(ValueError, match="No unit codes received."):
-            si.get_unit_codes_from_api()
-        assert request_patch.call_count == 3
+    unit_code_set = {"a", "b", "c", "d"}
+    with patch.dict(ingester.sub_providers, sub_prov_dict, clear=True):
+        actual_codes = ingester._get_new_and_outdated_unit_codes(unit_code_set)
+    expected_codes = ({"d"}, {"e"})
+    assert actual_codes == expected_codes
 
 
 @pytest.mark.parametrize(
@@ -81,28 +57,26 @@ def test_get_unit_codes_from_api_retries():
 def test_validate_unit_codes_from_api_raises_exception(
     new_unit_codes, outdated_unit_codes
 ):
-    with patch.object(si, "get_unit_codes_from_api"), patch.object(
-        si,
-        "get_new_and_outdated_unit_codes",
+    with patch.object(ingester, "_get_unit_codes_from_api"), patch.object(
+        ingester,
+        "_get_new_and_outdated_unit_codes",
         return_value=(new_unit_codes, outdated_unit_codes),
     ):
-        with pytest.raises(
-            AirflowException,
-            match="^\n\\*Updates needed to the SMITHSONIAN_SUB_PROVIDERS dictionary\\**",
-        ):
-            si.validate_unit_codes_from_api()
+        message = "^\n\\*Updates needed to the SMITHSONIAN_SUB_PROVIDERS dictionary\\**"
+        with pytest.raises(AirflowException, match=message):
+            ingester.validate_unit_codes_from_api()
 
 
 def test_validate_unit_codes_from_api():
-    with patch.object(si, "get_unit_codes_from_api"), patch.object(
-        si, "get_new_and_outdated_unit_codes", return_value=(set(), set())
+    with patch.object(ingester, "_get_unit_codes_from_api"), patch.object(
+        ingester, "_get_new_and_outdated_unit_codes", return_value=(set(), set())
     ):
         # Validation should run without raising an exception
-        si.validate_unit_codes_from_api()
+        ingester.validate_unit_codes_from_api()
 
 
 @pytest.mark.parametrize(
-    "input_int,expect_len,expect_first,expect_last",
+    "input_int, expect_len, expect_first, expect_last",
     [
         (1, 16, "0", "f"),
         (2, 256, "00", "ff"),
@@ -113,7 +87,9 @@ def test_validate_unit_codes_from_api():
 def test_get_hash_prefixes_with_other_len(
     input_int, expect_len, expect_first, expect_last
 ):
-    actual_list = list(si._get_hash_prefixes(input_int))
+    with patch.object(ingester, "hash_prefix_length", input_int):
+        actual_list = list(ingester._get_hash_prefixes())
+
     assert all("0x" not in h for h in actual_list)
     assert all(
         int(actual_list[i + 1], 16) - int(actual_list[i], 16) == 1
@@ -124,212 +100,162 @@ def test_get_hash_prefixes_with_other_len(
     assert actual_list[-1] == expect_last
 
 
-def test_process_hash_prefix_with_none_response_json():
-    endpoint = "https://abc.com/123"
-    limit = 100
-    hash_prefix = "00"
-    retries = 3
-    qp = {"q": "abc"}
-
-    patch_get_response_json = patch.object(
-        si.delayed_requester, "get_response_json", return_value=None
-    )
-    patch_build_qp = patch.object(si, "_build_query_params", return_value=qp)
-    patch_process_response = patch.object(si, "_process_response_json")
-    with patch_get_response_json as mock_get_response_json, patch_build_qp as mock_build_qp, patch_process_response as mock_process_response:
-        si._process_hash_prefix(
-            hash_prefix, endpoint=endpoint, limit=limit, retries=retries
-        )
-    mock_process_response.assert_not_called()
-    mock_build_qp.assert_called_once_with(0, hash_prefix=hash_prefix)
-    mock_get_response_json.assert_called_once_with(
-        endpoint, retries=retries, query_params=qp
-    )
-
-
-def test_process_hash_prefix_with_response_json_no_row_count():
-    endpoint = "https://abc.com/123"
-    limit = 100
-    hash_prefix = "00"
-    retries = 3
-    qp = {"q": "abc"}
-    response_json = {"abc": "123"}
-
-    patch_get_response_json = patch.object(
-        si.delayed_requester, "get_response_json", return_value=response_json
-    )
-    patch_build_qp = patch.object(si, "_build_query_params", return_value=qp)
-    patch_process_response = patch.object(si, "_process_response_json")
-    with patch_get_response_json as mock_get_response_json, patch_build_qp as mock_build_qp, patch_process_response as mock_process_response:
-        si._process_hash_prefix(
-            hash_prefix, endpoint=endpoint, limit=limit, retries=retries
-        )
-    mock_process_response.assert_called_with(response_json)
-    mock_build_qp.assert_called_once_with(0, hash_prefix=hash_prefix)
-    mock_get_response_json.assert_called_once_with(
-        endpoint, retries=retries, query_params=qp
-    )
-
-
-def test_process_hash_prefix_with_good_response_json():
-    endpoint = "https://abc.com/123"
-    limit = 100
-    hash_prefix = "00"
-    retries = 3
-    qp = {"q": "abc"}
-    response_json = {"response": {"abc": "123", "rowCount": 150}}
-
-    patch_get_response_json = patch.object(
-        si.delayed_requester, "get_response_json", return_value=response_json
-    )
-    patch_build_qp = patch.object(si, "_build_query_params", return_value=qp)
-    patch_process_response = patch.object(si, "_process_response_json", return_value=0)
-    with patch_build_qp as mock_build_qp, patch_get_response_json as mock_get_response_json, patch_process_response as mock_process_response:
-        si._process_hash_prefix(
-            hash_prefix, endpoint=endpoint, limit=limit, retries=retries
-        )
-    expect_process_response_calls = [call(response_json), call(response_json)]
-    expect_build_qp_calls = [
-        call(0, hash_prefix=hash_prefix),
-        call(limit, hash_prefix=hash_prefix),
-    ]
-    expect_get_response_json_calls = [
-        call(endpoint, retries=retries, query_params=qp),
-        call(endpoint, retries=retries, query_params=qp),
-    ]
-    mock_build_qp.assert_has_calls(expect_build_qp_calls)
-    mock_get_response_json.assert_has_calls(expect_get_response_json_calls)
-    mock_process_response.assert_has_calls(expect_process_response_calls)
-
-
-def test_build_query_params():
+def test_get_next_query_params_first_call():
     hash_prefix = "ff"
-    row_offset = 10
-    default_params = {"api_key": "pass123", "rows": 10}
-    acutal_params = si._build_query_params(
-        row_offset, hash_prefix=hash_prefix, default_params=default_params
+    actual_params = ingester.get_next_query_params(
+        prev_query_params=None, hash_prefix=hash_prefix
     )
-    expect_params = {
+    actual_params.pop("api_key")  # Omitting the API key
+    expected_params = {
+        "q": f"online_media_type:Images AND media_usage:CC0 AND hash:{hash_prefix}*",
+        "start": 0,
+        "rows": 1000,
+    }
+    assert actual_params == expected_params
+
+
+def test_get_next_query_params_updates_parameters():
+    previous_query_params = {
         "api_key": "pass123",
-        "rows": 10,
-        "q": (
-            f"online_media_type:Images AND media_usage:CC0 " f"AND hash:{hash_prefix}*"
-        ),
-        "start": row_offset,
+        "q": "online_media_type:Images AND media_usage:CC0 AND hash:ff*",
+        "start": 0,
+        "rows": 1000,
     }
-    assert acutal_params == expect_params
-    assert default_params == {"api_key": "pass123", "rows": 10}
-
-
-def test_process_response_json_with_no_rows_json():
-    response_json = {
-        "status": 200,
-        "responseCode": 1,
-        "response": {
-            "norows": ["abc", "def"],
-            "rowCount": 2,
-            "message": "content found",
-        },
+    actual_params = ingester.get_next_query_params(previous_query_params)
+    expected_params = {
+        "api_key": "pass123",
+        "q": "online_media_type:Images AND media_usage:CC0 AND hash:ff*",
+        "start": 1000,
+        "rows": 1000,
     }
-    patch_process_image_list = patch.object(si, "_process_image_list", return_value=2)
-
-    with patch_process_image_list as mock_process_image_list:
-        si._process_response_json(response_json)
-
-    mock_process_image_list.assert_not_called()
-
-
-def test_process_response_json_uses_required_getters():
-    """
-    This test only checks for appropriate calls to getter functions
-    """
-    response_json = {"test key": "test value"}
-    row_list = ["row0", "row1"]
-    image_lists = [["image", "list", "zero"], ["image", "list", "one"]]
-    flu_list = ["flu0", "flu1"]
-    title_list = ["title0", "title1"]
-    creator_list = ["creator0", "creator1"]
-    metadata_list = ["metadata0", "metadata1"]
-    tags_list = ["tags0", "tags1"]
-    source_list = ["source0", "source1"]
-
-    get_row_list = patch.object(si, "_get_row_list", return_value=row_list)
-    process_image_list = patch.object(si, "_process_image_list", return_value=2)
-    get_image_list = patch.object(si, "_get_image_list", side_effect=image_lists)
-    get_flu = patch.object(si, "_get_foreign_landing_url", side_effect=flu_list)
-    get_title = patch.object(si, "_get_title", side_effect=title_list)
-    get_creator = patch.object(si, "_get_creator", side_effect=creator_list)
-    ext_meta_data = patch.object(si, "_extract_meta_data", side_effect=metadata_list)
-    ext_tags = patch.object(si, "_extract_tags", side_effect=tags_list)
-    ext_source = patch.object(si, "_extract_source", side_effect=source_list)
-
-    with get_row_list as mock_get_row_list, get_image_list as mock_get_image_list, get_flu as mock_get_foreign_landing_url, get_title as mock_get_title, get_creator as mock_get_creator, ext_meta_data as mock_extract_meta_data, ext_tags as mock_extract_tags, ext_source as mock_extract_source, process_image_list as mock_process_image_list:
-        si._process_response_json(response_json)
-
-    getter_calls_list = [call(r) for r in row_list]
-    image_processing_call_list = [
-        call(
-            image_lists[0],
-            flu_list[0],
-            title_list[0],
-            creator_list[0],
-            metadata_list[0],
-            tags_list[0],
-            source_list[0],
-        ),
-        call(
-            image_lists[1],
-            flu_list[1],
-            title_list[1],
-            creator_list[1],
-            metadata_list[1],
-            tags_list[1],
-            source_list[1],
-        ),
-    ]
-    mock_get_row_list.assert_called_once_with(response_json)
-    assert mock_process_image_list.mock_calls == image_processing_call_list
-    assert mock_get_image_list.mock_calls == getter_calls_list
-    assert mock_get_foreign_landing_url.mock_calls == getter_calls_list
-    assert mock_get_title.mock_calls == getter_calls_list
-    assert mock_get_creator.mock_calls == getter_calls_list
-    assert mock_extract_meta_data.mock_calls == getter_calls_list
-    assert mock_extract_tags.mock_calls == getter_calls_list
-    assert mock_extract_source.mock_calls == [call(m) for m in metadata_list]
-
-
-def test_get_row_list_with_no_rows():
-    response_json = {"not": "rows"}
-    row_list = si._get_row_list(response_json)
-    assert row_list == []
+    assert actual_params == expected_params
 
 
 @pytest.mark.parametrize(
-    "input_row_list,expect_row_list",
+    "input_row, field, expected_dict",
     [
-        ([], []),
-        ("abc", []),  # wrong type
-        ({"key": "val"}, []),  # wrong type
-        ([{"key", "val"}], [{"key", "val"}]),  # nested dict
-        ([{"key1", "val1"}, "abc"], [{"key1", "val1"}, "abc"]),
+        # field: descriptiveNonRepeating
+        ({}, "descriptiveNonRepeating", {}),
+        ({"content": {"key": {"key2", "val2"}}}, "descriptiveNonRepeating", {}),
+        (
+            {"noncontent": {"descriptiveNonRepeating": {"key2": "val2"}}},
+            "descriptiveNonRepeating",
+            {},
+        ),
+        (
+            {"content": {"descriptiveNonRepeating": {"key2": "val2"}}},
+            "descriptiveNonRepeating",
+            {"key2": "val2"},
+        ),
+        # field: indexedStructured
+        ({}, "indexedStructured", {}),
+        ({"content": {"key": {"key2", "val2"}}}, "indexedStructured", {}),
+        (
+            {"noncontent": {"indexedStructured": {"key2": "val2"}}},
+            "indexedStructured",
+            {},
+        ),
+        (
+            {"content": {"indexedStructured": {"key2": "val2"}}},
+            "indexedStructured",
+            {"key2": "val2"},
+        ),
+        # field: freetext
+        ({}, "freetext", {}),
+        ({"content": {"key": {"key2", "val2"}}}, "freetext", {}),
+        ({"noncontent": {"freetext": {"key2": "val2"}}}, "freetext", {}),
+        ({"content": {"freetext": {"key2": "val2"}}}, "freetext", {"key2": "val2"}),
     ],
 )
-def test_get_row_list(input_row_list, expect_row_list):
-    response_json = {
-        "status": 200,
-        "responseCode": 1,
-        "response": {
-            "rows": input_row_list,
-            "rowCount": 734,
-            "message": "content found",
-        },
-    }
-    actual_row_list = si._get_row_list(response_json)
-    assert actual_row_list == expect_row_list
+def test_content_dict(input_row, field, expected_dict):
+    actual_dict = ingester._get_content_dict(input_row, field)
+    assert actual_dict == expected_dict
 
 
 @pytest.mark.parametrize(
-    "input_dnr,expect_image_list",
+    "required_type,default_input",
+    [
+        (str, ""),
+        (int, 0),
+        (float, 0.0),
+        (complex, 0j),
+        (list, []),
+        (tuple, ()),
+        (dict, {}),
+        (set, set()),
+        (bool, False),
+        (bytes, b""),
+    ],
+)
+def test_check_type_with_defaults(required_type, default_input):
+    assert ingester._check_type(default_input, required_type) == default_input
+
+
+@pytest.mark.parametrize(
+    "required_type,good_input",
+    [
+        (str, "abc"),
+        (int, 5),
+        (float, 1.2),
+        (complex, 3 + 2j),
+        (list, ["a", 2, 0, False]),
+        (tuple, (1, 0, False)),
+        (dict, {"key": "val", "f": False}),
+        (set, {1, False, "abc"}),
+        (bool, True),
+        (bytes, b"abc"),
+    ],
+)
+def test_check_type_with_truthy_good_inputs(required_type, good_input):
+    assert ingester._check_type(good_input, required_type) == good_input
+
+
+@pytest.mark.parametrize(
+    "required_type,good_indices,default",
+    [
+        (str, (0, 1), ""),
+        (int, (2, 3), 0),
+        (float, (4, 5), 0.0),
+        (complex, (6, 7), 0j),
+        (list, (8, 9), []),
+        (tuple, (10, 11), ()),
+        (dict, (12, 13), {}),
+        (set, (14, 15), set()),
+        (bool, (16, 17), False),
+        (bytes, (18, 19), b""),
+    ],
+)
+def test_check_type_with_bad_inputs(required_type, good_indices, default):
+    bad_input_list = [
+        "abc",
+        "",
+        5,
+        0,
+        1.2,
+        0.0,
+        3 + 2j,
+        0j,
+        ["a", 2],
+        [],
+        (1, 2),
+        (),
+        {"key": "val"},
+        {},
+        {1, "abc"},
+        set(),
+        True,
+        False,
+        b"abc",
+        b"",
+    ]
+    for i in sorted(good_indices, reverse=True):
+        del bad_input_list[i]
+    for bad_input in bad_input_list:
+        assert ingester._check_type(bad_input, required_type) == default
+
+
+@pytest.mark.parametrize(
+    "input_dnr, expect_image_list",
     [
         ({}, []),
         ({"non_media": {"media": ["image1", "image2"]}}, []),
@@ -349,15 +275,20 @@ def test_get_row_list(input_row_list, expect_row_list):
 def test_get_image_list(input_dnr, expect_image_list):
     input_row = {"key": "val"}
     with patch.object(
-        si, "_get_descriptive_non_repeating_dict", return_value=input_dnr
+        ingester, "_get_content_dict", return_value=input_dnr
     ) as mock_dnr:
-        actual_image_list = si._get_image_list(input_row)
-    mock_dnr.assert_called_once_with(input_row)
+        actual_image_list = ingester._get_image_list(input_row)
+    mock_dnr.assert_called_once_with(input_row, "descriptiveNonRepeating")
     assert actual_image_list == expect_image_list
 
 
+def test_get_media_type():
+    actual_type = ingester.get_media_type(record={})
+    assert actual_type == "image"
+
+
 @pytest.mark.parametrize(
-    "input_dnr,expect_foreign_landing_url",
+    "input_dnr, expect_foreign_landing_url",
     [
         ({}, None),
         (
@@ -375,29 +306,15 @@ def test_get_image_list(input_dnr, expect_image_list):
 def test_get_foreign_landing_url(input_dnr, expect_foreign_landing_url):
     input_row = {"key": "val"}
     with patch.object(
-        si, "_get_descriptive_non_repeating_dict", return_value=input_dnr
+        ingester, "_get_content_dict", return_value=input_dnr
     ) as mock_dnr:
-        actual_foreign_landing_url = si._get_foreign_landing_url(input_row)
-    mock_dnr.assert_called_once_with(input_row)
+        actual_foreign_landing_url = ingester._get_foreign_landing_url(input_row)
+    mock_dnr.assert_called_once_with(input_row, "descriptiveNonRepeating")
     assert actual_foreign_landing_url == expect_foreign_landing_url
 
 
 @pytest.mark.parametrize(
-    "input_row,expect_title",
-    [
-        ({}, None),
-        ({"id": "abcde"}, None),
-        ({"title": "my Title"}, "my Title"),
-        ({"id": "abcde", "title": "my Title"}, "my Title"),
-    ],
-)
-def test_get_title(input_row, expect_title):
-    actual_title = si._get_title(input_row)
-    assert actual_title == expect_title
-
-
-@pytest.mark.parametrize(
-    "input_is,input_ft,expect_creator",
+    "input_is, input_ft, expected_creator",
     [
         ({}, {}, None),
         ({"name": ["Alice"]}, {}, None),
@@ -489,21 +406,20 @@ def test_get_title(input_row, expect_title):
         ),
     ],
 )
-def test_get_creator(input_is, input_ft, expect_creator):
+def test_get_creator(input_is, input_ft, expected_creator):
     creator_types = {"creator": 0, "designer": 1, "after": 3}
-    input_row = {"test": "row"}
-    get_is = patch.object(si, "_get_indexed_structured_dict", return_value=input_is)
-    get_ft = patch.object(si, "_get_freetext_dict", return_value=input_ft)
-    with get_is as mock_is, get_ft as mock_ft:
-        actual_creator = si._get_creator(input_row, creator_types=creator_types)
+    input_row = {
+        "test": "row",
+        "content": {"freetext": input_ft, "indexedStructured": input_is},
+    }
+    with patch.object(ingester, "creator_types", creator_types):
+        actual_creator = ingester._get_creator(input_row)
 
-    mock_is.assert_called_once_with(input_row)
-    mock_ft.assert_called_once_with(input_row)
-    assert actual_creator == expect_creator
+    assert actual_creator == expected_creator
 
 
 @pytest.mark.parametrize(
-    "input_ft,input_dnr,expect_description",
+    "input_ft, input_dnr, expected_description",
     [
         ({}, {}, None),
         ({"notes": [{"label": "notthis", "content": "blah"}]}, {}, None),
@@ -533,25 +449,21 @@ def test_get_creator(input_is, input_ft, expect_creator):
         ),
     ],
 )
-def test_ext_meta_data_description(input_ft, input_dnr, expect_description):
+def test_ext_meta_data_description(input_ft, input_dnr, expected_description):
     description_types = {"description", "summary"}
-    input_row = {"test": "row"}
-    get_dnr = patch.object(
-        si, "_get_descriptive_non_repeating_dict", return_value=input_dnr
-    )
-    get_ft = patch.object(si, "_get_freetext_dict", return_value=input_ft)
-    with get_dnr as mock_dnr, get_ft as mock_ft:
-        meta_data = si._extract_meta_data(
-            input_row, description_types=description_types
-        )
+    input_row = {
+        "test": "row",
+        "content": {"freetext": input_ft, "descriptiveNonRepeating": input_dnr},
+    }
+    with patch.object(ingester, "description_types", description_types):
+        meta_data = ingester._extract_meta_data(input_row)
     actual_description = meta_data.get("description")
-    mock_dnr.assert_called_once_with(input_row)
-    mock_ft.assert_called_once_with(input_row)
-    assert actual_description == expect_description
+
+    assert actual_description == expected_description
 
 
 @pytest.mark.parametrize(
-    "input_ft,input_dnr,expect_label_text",
+    "input_ft, input_dnr, expected_label_text",
     [
         ({}, {}, None),
         ({"notes": [{"label": "notthis", "content": "blah"}]}, {}, None),
@@ -570,22 +482,19 @@ def test_ext_meta_data_description(input_ft, input_dnr, expect_description):
         ),
     ],
 )
-def test_ext_meta_data_label_text(input_ft, input_dnr, expect_label_text):
-    input_row = {"test": "row"}
-    get_dnr = patch.object(
-        si, "_get_descriptive_non_repeating_dict", return_value=input_dnr
-    )
-    get_ft = patch.object(si, "_get_freetext_dict", return_value=input_ft)
-    with get_dnr as mock_dnr, get_ft as mock_ft:
-        meta_data = si._extract_meta_data(input_row)
+def test_ext_meta_data_label_text(input_ft, input_dnr, expected_label_text):
+    input_row = {
+        "test": "row",
+        "content": {"freetext": input_ft, "descriptiveNonRepeating": input_dnr},
+    }
+    meta_data = ingester._extract_meta_data(input_row)
     actual_label_text = meta_data.get("label_text")
-    mock_dnr.assert_called_once_with(input_row)
-    mock_ft.assert_called_once_with(input_row)
-    assert actual_label_text == expect_label_text
+
+    assert actual_label_text == expected_label_text
 
 
 @pytest.mark.parametrize(
-    "input_ft,input_dnr,expect_meta_data",
+    "input_ft, input_dnr, expected_meta_data",
     [
         ({"nothing": "here"}, {"nothing_to": "see"}, {}),
         ({}, {"unit_code": "SIA"}, {"unit_code": "SIA"}),
@@ -596,21 +505,18 @@ def test_ext_meta_data_label_text(input_ft, input_dnr, expect_label_text):
         ),
     ],
 )
-def test_extract_meta_data_dnr_fields(input_ft, input_dnr, expect_meta_data):
-    input_row = {"test": "row"}
-    get_dnr = patch.object(
-        si, "_get_descriptive_non_repeating_dict", return_value=input_dnr
-    )
-    get_ft = patch.object(si, "_get_freetext_dict", return_value=input_ft)
-    with get_dnr as mock_dnr, get_ft as mock_ft:
-        actual_meta_data = si._extract_meta_data(input_row)
-    mock_dnr.assert_called_once_with(input_row)
-    mock_ft.assert_called_once_with(input_row)
-    assert actual_meta_data == expect_meta_data
+def test_extract_meta_data_dnr_fields(input_ft, input_dnr, expected_meta_data):
+    input_row = {
+        "test": "row",
+        "content": {"freetext": input_ft, "descriptiveNonRepeating": input_dnr},
+    }
+    actual_meta_data = ingester._extract_meta_data(input_row)
+
+    assert actual_meta_data == expected_meta_data
 
 
 @pytest.mark.parametrize(
-    "input_is,expect_tags",
+    "input_is, expect_tags",
     [
         ({}, []),
         ({"nothing": "here"}, []),
@@ -641,139 +547,15 @@ def test_extract_meta_data_dnr_fields(input_ft, input_dnr, expect_meta_data):
 )
 def test_extract_tags(input_is, expect_tags):
     input_row = {"test": "row"}
-    get_is = patch.object(si, "_get_indexed_structured_dict", return_value=input_is)
+    get_is = patch.object(ingester, "_get_content_dict", return_value=input_is)
     with get_is as mock_is:
-        actual_tags = si._extract_tags(input_row)
-    mock_is.assert_called_once_with(input_row)
+        actual_tags = ingester._extract_tags(input_row)
+    mock_is.assert_called_once_with(input_row, "indexedStructured")
     assert actual_tags == expect_tags
 
 
 @pytest.mark.parametrize(
-    "input_row,expect_dnr_dict",
-    [
-        ({}, {}),
-        ({"content": {"key": {"key2", "val2"}}}, {}),
-        ({"noncontent": {"descriptiveNonRepeating": {"key2": "val2"}}}, {}),
-        ({"content": {"descriptiveNonRepeating": {"key2": "val2"}}}, {"key2": "val2"}),
-    ],
-)
-def test_get_descriptive_non_repeating_dict(input_row, expect_dnr_dict):
-    actual_dnr_dict = si._get_descriptive_non_repeating_dict(input_row)
-    assert actual_dnr_dict == expect_dnr_dict
-
-
-@pytest.mark.parametrize(
-    "input_row,expect_ind_struc_dict",
-    [
-        ({}, {}),
-        ({"content": {"key": {"key2", "val2"}}}, {}),
-        ({"noncontent": {"indexedStructured": {"key2": "val2"}}}, {}),
-        ({"content": {"indexedStructured": {"key2": "val2"}}}, {"key2": "val2"}),
-    ],
-)
-def test_get_indexed_structured_dict(input_row, expect_ind_struc_dict):
-    actual_ind_struc_dict = si._get_indexed_structured_dict(input_row)
-    assert actual_ind_struc_dict == expect_ind_struc_dict
-
-
-@pytest.mark.parametrize(
-    "input_row,expect_freetext_dict",
-    [
-        ({}, {}),
-        ({"content": {"key": {"key2", "val2"}}}, {}),
-        ({"noncontent": {"freetext": {"key2": "val2"}}}, {}),
-        ({"content": {"freetext": {"key2": "val2"}}}, {"key2": "val2"}),
-    ],
-)
-def test_get_freetext_dict(input_row, expect_freetext_dict):
-    actual_freetext_dict = si._get_freetext_dict(input_row)
-    assert actual_freetext_dict == expect_freetext_dict
-
-
-@pytest.mark.parametrize(
-    "required_type,default_input",
-    [
-        (str, ""),
-        (int, 0),
-        (float, 0.0),
-        (complex, 0j),
-        (list, []),
-        (tuple, ()),
-        (dict, {}),
-        (set, set()),
-        (bool, False),
-        (bytes, b""),
-    ],
-)
-def test_check_type_with_defaults(required_type, default_input):
-    assert si._check_type(default_input, required_type) == default_input
-
-
-@pytest.mark.parametrize(
-    "required_type,good_input",
-    [
-        (str, "abc"),
-        (int, 5),
-        (float, 1.2),
-        (complex, 3 + 2j),
-        (list, ["a", 2, 0, False]),
-        (tuple, (1, 0, False)),
-        (dict, {"key": "val", "f": False}),
-        (set, {1, False, "abc"}),
-        (bool, True),
-        (bytes, b"abc"),
-    ],
-)
-def test_check_type_with_truthy_good_inputs(required_type, good_input):
-    assert si._check_type(good_input, required_type) == good_input
-
-
-@pytest.mark.parametrize(
-    "required_type,good_indices,default",
-    [
-        (str, (0, 1), ""),
-        (int, (2, 3), 0),
-        (float, (4, 5), 0.0),
-        (complex, (6, 7), 0j),
-        (list, (8, 9), []),
-        (tuple, (10, 11), ()),
-        (dict, (12, 13), {}),
-        (set, (14, 15), set()),
-        (bool, (16, 17), False),
-        (bytes, (18, 19), b""),
-    ],
-)
-def test_check_type_with_bad_inputs(required_type, good_indices, default):
-    bad_input_list = [
-        "abc",
-        "",
-        5,
-        0,
-        1.2,
-        0.0,
-        3 + 2j,
-        0j,
-        ["a", 2],
-        [],
-        (1, 2),
-        (),
-        {"key": "val"},
-        {},
-        {1, "abc"},
-        set(),
-        True,
-        False,
-        b"abc",
-        b"",
-    ]
-    for i in sorted(good_indices, reverse=True):
-        del bad_input_list[i]
-    for bad_input in bad_input_list:
-        assert si._check_type(bad_input, required_type) == default
-
-
-@pytest.mark.parametrize(
-    "input_media,expect_calls",
+    "input_media, expected_image_data",
     [
         ([], []),
         (
@@ -796,162 +578,60 @@ def test_check_type_with_bad_inputs(required_type, good_indices, default):
                 },
             ],
             [
-                call(
-                    foreign_landing_url="https://foreignlanding.url",
-                    image_url="https://image.url.one",
-                    license_info=LicenseInfo(
-                        "cc0",
-                        "1.0",
-                        "https://creativecommons.org/publicdomain/zero/1.0/",
-                        "https://license.url",
-                    ),
-                    foreign_identifier="id_one",
-                    title="The Title",
-                    creator="Alice",
-                    meta_data={"unit_code": "NMNHBOTANY"},
-                    raw_tags=["tag", "list"],
-                    source="smithsonian_national_museum_of_natural_history",
-                ),
-                call(
-                    foreign_landing_url="https://foreignlanding.url",
-                    image_url="https://image.url.two",
-                    license_info=LicenseInfo(
-                        "cc0",
-                        "1.0",
-                        "https://creativecommons.org/publicdomain/zero/1.0/",
-                        "https://license.url",
-                    ),
-                    foreign_identifier="id_two",
-                    title="The Title",
-                    creator="Alice",
-                    meta_data={"unit_code": "NMNHBOTANY"},
-                    raw_tags=["tag", "list"],
-                    source="smithsonian_national_museum_of_natural_history",
-                ),
-            ],
-        ),
-        (
-            [
                 {
-                    "thumbnail": "https://thumbnail.one",
-                    "idsId": "id_one",
-                    "usage": {"access": "CC-BY"},
-                    "guid": "http://gu.id.one",
-                    "type": "Images",
-                    "content": "https://image.url.one",
+                    "foreign_identifier": "id_one",
+                    "image_url": "https://image.url.one",
                 },
                 {
-                    "thumbnail": "https://thumbnail.two",
-                    "idsId": "id_two",
-                    "usage": {"access": "CC0"},
-                    "guid": "http://gu.id.two",
-                    "type": "Images",
-                    "content": "https://image.url.two",
+                    "foreign_identifier": "id_two",
+                    "image_url": "https://image.url.two",
                 },
-            ],
-            [
-                call(
-                    foreign_landing_url="https://foreignlanding.url",
-                    image_url="https://image.url.two",
-                    license_info=LicenseInfo(
-                        "cc0",
-                        "1.0",
-                        "https://creativecommons.org/publicdomain/zero/1.0/",
-                        "https://license.url",
-                    ),
-                    foreign_identifier="id_two",
-                    title="The Title",
-                    creator="Alice",
-                    meta_data={"unit_code": "NMNHBOTANY"},
-                    raw_tags=["tag", "list"],
-                    source="smithsonian_national_museum_of_natural_history",
-                )
-            ],
-        ),
-        (
-            [
-                {
-                    "thumbnail": "https://thumbnail.one",
-                    "idsId": "id_one",
-                    "usage": {"access": "CC0"},
-                    "guid": "http://gu.id.one",
-                    "type": "Images",
-                    "content": "https://image.url.one",
-                },
-                {
-                    "thumbnail": "https://thumbnail.two",
-                    "idsId": "id_two",
-                    "usage": {"access": "CC0"},
-                    "guid": "http://gu.id.two",
-                    "type": "Audio",
-                    "content": "https://image.url.two",
-                },
-            ],
-            [
-                call(
-                    foreign_landing_url="https://foreignlanding.url",
-                    image_url="https://image.url.one",
-                    license_info=LicenseInfo(
-                        "cc0",
-                        "1.0",
-                        "https://creativecommons.org/publicdomain/zero/1.0/",
-                        "https://license.url",
-                    ),
-                    foreign_identifier="id_one",
-                    title="The Title",
-                    creator="Alice",
-                    meta_data={"unit_code": "NMNHBOTANY"},
-                    raw_tags=["tag", "list"],
-                    source="smithsonian_national_museum_of_natural_history",
-                )
             ],
         ),
     ],
 )
-def test_process_image_list(input_media, expect_calls):
-    with patch.object(si.image_store, "add_item", return_value=10) as mock_add_item:
-        si._process_image_list(
-            input_media,
-            foreign_landing_url="https://foreignlanding.url",
-            title="The Title",
-            creator="Alice",
-            meta_data={"unit_code": "NMNHBOTANY"},
-            tags=["tag", "list"],
-            source="smithsonian_national_museum_of_natural_history",
-            license_url="https://license.url",
-        )
-    assert expect_calls == mock_add_item.mock_calls
-
-
-def test_process_image_data_with_sub_provider():
-    response = _get_resource_json("sub_provider_example.json")
-    with patch.object(si.image_store, "add_item", return_value=100) as mock_add_item:
-        total_images = si._process_response_json(response)
-
-    expect_meta_data = {
-        "unit_code": "SIA",
-        "data_source": "Smithsonian Institution Archives",
+def test_process_image_list(input_media, expected_image_data):
+    shared_image_data = {
+        "foreign_landing_url": "https://foreignlanding.url",
+        "title": "The Title",
+        "license_info": ingester.license_info,
+        "creator": "Alice",
+        "meta_data": {"unit_code": "NMNHBOTANY"},
+        "source": "smithsonian_national_museum_of_natural_history",
+        "raw_tags": ["tag", "list"],
     }
+    expected_result = [(img | shared_image_data) for img in expected_image_data]
+    actual_image_data = ingester._get_associated_images(input_media, shared_image_data)
+    assert actual_image_data == expected_result
 
-    mock_add_item.assert_called_once_with(
-        foreign_landing_url=None,
-        image_url="https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-2358",
-        license_info=(
-            LicenseInfo(
-                "cc0",
-                "1.0",
-                "https://creativecommons.org/publicdomain/zero/1.0/",
-                "https://creativecommons.org/publicdomain/zero/1.0/",
-            )
-        ),
-        foreign_identifier="SIA-SIA2010-2358",
-        creator="Gruber, Martin A",
-        title=(
-            "Views of the National Zoological Park in Washington, DC, "
-            "showing Elephant"
-        ),
-        meta_data=expect_meta_data,
-        raw_tags=["1920s", "1910s", "Archival materials", "Photographs", "Animals"],
-        source="smithsonian_institution_archives",
-    )
-    assert total_images == 100
+
+def test_get_record_data():
+    with open(RESOURCES / "actual_record_data.json") as f:
+        data = json.load(f)
+    actual_data = ingester.get_record_data(data)
+    expected_data = [
+        {
+            "image_url": "https://collections.nmnh.si.edu/media/?irn=15814382",
+            "foreign_identifier": "https://collections.nmnh.si.edu/media/?irn=15814382",
+            "foreign_landing_url": "http://n2t.net/ark:/65665/34857ca78-9195-4156-849b-1ec47f7cd1ce",
+            "title": "Passerculus sandwichensis nevadensis",
+            "license_info": ingester.license_info,
+            "source": "smithsonian_national_museum_of_natural_history",
+            "creator": "Seymour H. Levy",
+            "meta_data": {
+                "unit_code": "NMNHBIRDS",
+                "data_source": "NMNH - Vertebrate Zoology - Birds Division",
+            },
+            "raw_tags": [
+                "1950s",
+                "Animals",
+                "Birds",
+                "United States",
+                "Pinal",
+                "North America",
+                "Arizona",
+            ],
+        }
+    ]
+
+    assert actual_data == expected_data

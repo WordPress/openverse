@@ -17,6 +17,7 @@ from providers.provider_api_scripts.phylopic import PhylopicDataIngester
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 from providers.provider_api_scripts.rawpixel import RawpixelDataIngester
 from providers.provider_api_scripts.science_museum import ScienceMuseumDataIngester
+from providers.provider_api_scripts.smithsonian import SmithsonianDataIngester
 from providers.provider_api_scripts.smk import SmkDataIngester
 from providers.provider_api_scripts.stocksnap import StockSnapDataIngester
 from providers.provider_api_scripts.wikimedia_commons import (
@@ -202,6 +203,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="smithsonian",
+        ingestion_callable=SmithsonianDataIngester,
         start_date=datetime(2020, 1, 1),
         schedule_string="@weekly",
         load_timeout=timedelta(hours=4),
