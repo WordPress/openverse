@@ -47,14 +47,19 @@ class ProviderReingestionWorkflow(ProviderWorkflow):
 
     def __post_init__(self):
         if not self.dag_id:
-            self.dag_id = f"{self.provider_script}_reingestion_workflow"
+            # Call super() first to initialize the provider_name
+            super().__post_init__()
+            # Override the dag_id
+            self.dag_id = f"{self.provider_name}_reingestion_workflow"
+            return
+
+        super().__post_init__()
 
 
 PROVIDER_REINGESTION_WORKFLOWS = [
     ProviderReingestionWorkflow(
         # 60 total reingestion days
-        provider_script="europeana",
-        ingestion_callable=EuropeanaDataIngester,
+        ingester_class=EuropeanaDataIngester,
         max_active_tasks=3,
         pull_timeout=timedelta(hours=12),
         daily_list_length=7,
@@ -63,8 +68,7 @@ PROVIDER_REINGESTION_WORKFLOWS = [
     ),
     ProviderReingestionWorkflow(
         # 128 total reingestion days
-        provider_script="flickr",
-        ingestion_callable=FlickrDataIngester,
+        ingester_class=FlickrDataIngester,
         pull_timeout=timedelta(minutes=30),
         daily_list_length=7,
         weekly_list_length=12,
@@ -75,8 +79,7 @@ PROVIDER_REINGESTION_WORKFLOWS = [
     ),
     ProviderReingestionWorkflow(
         # 64 total reingestion days
-        provider_script="metropolitan_museum",
-        ingestion_callable=MetMuseumDataIngester,
+        ingester_class=MetMuseumDataIngester,
         max_active_tasks=2,
         pull_timeout=timedelta(hours=12),
         daily_list_length=6,
@@ -86,8 +89,7 @@ PROVIDER_REINGESTION_WORKFLOWS = [
     ),
     ProviderReingestionWorkflow(
         # 64 total reingestion days
-        provider_script="phylopic",
-        ingestion_callable=PhylopicDataIngester,
+        ingester_class=PhylopicDataIngester,
         max_active_tasks=2,
         pull_timeout=timedelta(hours=12),
         daily_list_length=6,
@@ -98,10 +100,8 @@ PROVIDER_REINGESTION_WORKFLOWS = [
     ProviderReingestionWorkflow(
         # 64 total reingestion days
         dag_id="wikimedia_reingestion_workflow",
-        provider_script="wikimedia_commons",
-        ingestion_callable=WikimediaCommonsDataIngester,
+        ingester_class=WikimediaCommonsDataIngester,
         pull_timeout=timedelta(minutes=90),
-        media_types=("image", "audio"),
         max_active_tasks=2,
         daily_list_length=6,
         one_month_list_length=9,

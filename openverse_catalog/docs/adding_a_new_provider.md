@@ -71,9 +71,7 @@ Some APIs may not fit perfectly into the established `ProviderDataIngester` patt
 Now that you have an ingester class, you're ready to wire up a provider DAG in Airflow to automatically pull data and load it into our Catalog database. This is done by defining a `ProviderWorkflow` configuration dataclass and adding it to the `PROVIDER_WORKFLOWS` list in [`provider_workflows.py`](../dags/providers/provider_workflows.py). Our DAG factories will pick up the configuration and generate a complete new DAG in Airflow!
 
 At minimum, you'll need to provide the following in your configuration:
-* `provider_script`: the name of the file where you defined your `ProviderDataIngester` class
-* `ingestion_callable`: the `ProviderDataIngester` class itself
-* `media_types`: the media types your provider handles
+* `ingester_class`: the `ProviderDataIngester` class itself
 
 Example:
 ```python
@@ -85,9 +83,7 @@ from providers.provider_api_scripts.foobar_museum import FoobarMuseumDataIngeste
 PROVIDER_WORKFLOWS = [
     ...
     ProviderWorkflow(
-        provider_script='foobar_museum',
-        ingestion_callable=FooBarMuseumDataIngester,
-        media_types=("image", "audio",)
+        ingester_class=FooBarMuseumDataIngester,
     )
 ]
 ```

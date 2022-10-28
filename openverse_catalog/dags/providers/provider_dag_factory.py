@@ -124,7 +124,7 @@ def create_ingestion_workflow(
         identifier = f"{provider_name}_{{{{ ts_nodash }}}}_{day_shift}"
 
         ingestion_kwargs = {
-            "ingestion_callable": conf.ingestion_callable,
+            "ingester_class": conf.ingester_class,
             "media_types": conf.media_types,
         }
         if conf.dated:

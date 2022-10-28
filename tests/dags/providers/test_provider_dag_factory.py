@@ -11,6 +11,11 @@ from providers.provider_reingestion_workflows import ProviderReingestionWorkflow
 from providers.provider_workflows import ProviderWorkflow
 
 from tests.conftest import mark_extended
+from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
+    MockAudioOnlyProviderDataIngester,
+    MockImageOnlyProviderDataIngester,
+    MockProviderDataIngester,
+)
 
 
 DAG_ID = "test_provider_dag_factory"
@@ -29,7 +34,7 @@ def clean_db():
     _clean_dag_from_db()
 
 
-def _generate_tsv_mock(ingestion_callable, media_types, ti, **kwargs):
+def _generate_tsv_mock(ingester_class, media_types, ti, **kwargs):
     for media_type in media_types:
         ti.xcom_push(
             key=f"{media_type}_tsv", value=f"/tmp/{media_type}_does_not_exist.tsv"
@@ -61,9 +66,7 @@ def test_skipped_pull_data_runs_successfully(side_effect, clean_db):
         pull_media_mock.side_effect = side_effect
         dag = provider_dag_factory.create_provider_api_workflow_dag(
             ProviderWorkflow(
-                provider_script="provider_data_ingester",
-                ingestion_callable=print,
-                dag_id=DAG_ID,
+                ingester_class=MockProviderDataIngester,
                 default_args={"retries": 0, "on_failure_callback": None},
                 schedule_string="@once",
             )
@@ -75,9 +78,7 @@ def test_skipped_pull_data_runs_successfully(side_effect, clean_db):
 def test_create_day_partitioned_ingestion_dag_with_single_layer_dependencies():
     dag = provider_dag_factory.create_day_partitioned_reingestion_dag(
         ProviderReingestionWorkflow(
-            dag_id="test_dag",
-            provider_script="provider_data_ingester",
-            ingestion_callable=print,
+            ingester_class=MockImageOnlyProviderDataIngester,
         ),
         [[1, 2]],
     )
@@ -101,20 +102,18 @@ def test_create_day_partitioned_ingestion_dag_with_single_layer_dependencies():
 def test_create_day_partitioned_ingestion_dag_with_multi_layer_dependencies():
     dag = provider_dag_factory.create_day_partitioned_reingestion_dag(
         ProviderReingestionWorkflow(
-            dag_id="test_dag",
-            provider_script="provider_data_ingester",
-            ingestion_callable=print,
+            ingester_class=MockAudioOnlyProviderDataIngester,
         ),
         [[1, 2], [3, 4, 5]],
     )
-    today_id = "ingest_data.generate_image_filename"
+    today_id = "ingest_data.generate_audio_filename"
     gather0_id = "gather_partition_0"
-    ingest1_id = "ingest_data_day_shift_1.generate_image_filename_day_shift_1"
-    ingest2_id = "ingest_data_day_shift_2.generate_image_filename_day_shift_2"
+    ingest1_id = "ingest_data_day_shift_1.generate_audio_filename_day_shift_1"
+    ingest2_id = "ingest_data_day_shift_2.generate_audio_filename_day_shift_2"
     gather1_id = "gather_partition_1"
-    ingest3_id = "ingest_data_day_shift_3.generate_image_filename_day_shift_3"
-    ingest4_id = "ingest_data_day_shift_4.generate_image_filename_day_shift_4"
-    ingest5_id = "ingest_data_day_shift_5.generate_image_filename_day_shift_5"
+    ingest3_id = "ingest_data_day_shift_3.generate_audio_filename_day_shift_3"
+    ingest4_id = "ingest_data_day_shift_4.generate_audio_filename_day_shift_4"
+    ingest5_id = "ingest_data_day_shift_5.generate_audio_filename_day_shift_5"
     today_task = dag.get_task(today_id)
     assert today_task.upstream_task_ids == set()
     ingest1_task = dag.get_task(ingest1_id)

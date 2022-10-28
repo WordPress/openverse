@@ -100,11 +100,11 @@ The following are DAGs grouped by their primary tag:
 
 | DAG ID | Schedule Interval |
 | --- | --- |
-| `europeana_reingestion_workflow` | `@weekly` |
-| `flickr_reingestion_workflow` | `@weekly` |
-| `metropolitan_museum_reingestion_workflow` | `@weekly` |
-| `phylopic_reingestion_workflow` | `@weekly` |
-| `wikimedia_reingestion_workflow` | `@weekly` |
+| [`europeana_reingestion_workflow`](#europeana_reingestion_workflow) | `@weekly` |
+| [`flickr_reingestion_workflow`](#flickr_reingestion_workflow) | `@weekly` |
+| [`metropolitan_museum_reingestion_workflow`](#metropolitan_museum_reingestion_workflow) | `@weekly` |
+| [`phylopic_reingestion_workflow`](#phylopic_reingestion_workflow) | `@weekly` |
+| [`wikimedia_reingestion_workflow`](#wikimedia_reingestion_workflow) | `@weekly` |
 
 
 # DAG documentation
@@ -114,15 +114,19 @@ The following is documentation associated with each DAG (where available):
  1. [`airflow_log_cleanup`](#airflow_log_cleanup)
  1. [`audio_data_refresh`](#audio_data_refresh)
  1. [`check_silenced_dags`](#check_silenced_dags)
+ 1. [`europeana_reingestion_workflow`](#europeana_reingestion_workflow)
  1. [`europeana_workflow`](#europeana_workflow)
+ 1. [`flickr_reingestion_workflow`](#flickr_reingestion_workflow)
  1. [`flickr_workflow`](#flickr_workflow)
  1. [`freesound_workflow`](#freesound_workflow)
  1. [`image_data_refresh`](#image_data_refresh)
  1. [`inaturalist_workflow`](#inaturalist_workflow)
  1. [`jamendo_workflow`](#jamendo_workflow)
+ 1. [`metropolitan_museum_reingestion_workflow`](#metropolitan_museum_reingestion_workflow)
  1. [`metropolitan_museum_workflow`](#metropolitan_museum_workflow)
  1. [`oauth2_authorization`](#oauth2_authorization)
  1. [`oauth2_token_refresh`](#oauth2_token_refresh)
+ 1. [`phylopic_reingestion_workflow`](#phylopic_reingestion_workflow)
  1. [`phylopic_workflow`](#phylopic_workflow)
  1. [`pr_review_reminders`](#pr_review_reminders)
  1. [`rawpixel_workflow`](#rawpixel_workflow)
@@ -132,6 +136,7 @@ The following is documentation associated with each DAG (where available):
  1. [`smithsonian_workflow`](#smithsonian_workflow)
  1. [`stocksnap_workflow`](#stocksnap_workflow)
  1. [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)
+ 1. [`wikimedia_reingestion_workflow`](#wikimedia_reingestion_workflow)
  1. [`wordpress_workflow`](#wordpress_workflow)
 
 
@@ -214,6 +219,19 @@ after the issue has been resolved.
 The DAG runs weekly.
 
 
+## `europeana_reingestion_workflow`
+
+
+Content Provider:       Europeana
+
+ETL Process:            Use the API to identify all CC licensed images.
+
+Output:                 TSV file containing the images and the
+                        respective meta-data.
+
+Notes:                  https://www.europeana.eu/api/v2/search.json
+
+
 ## `europeana_workflow`
 
 
@@ -225,6 +243,20 @@ Output:                 TSV file containing the images and the
                         respective meta-data.
 
 Notes:                  https://www.europeana.eu/api/v2/search.json
+
+
+## `flickr_reingestion_workflow`
+
+
+Content Provider:       Flickr
+
+ETL Process:            Use the API to identify all CC licensed images.
+
+Output:                 TSV file containing the images and the
+                        respective meta-data.
+
+Notes:                  https://www.flickr.com/help/terms/api
+                        Rate limit: 3600 requests per hour.
 
 
 ## `flickr_workflow`
@@ -335,6 +367,35 @@ Notes:                  https://api.jamendo.com/v3.0/tracks/
                         channels: 1/2
 
 
+## `metropolitan_museum_reingestion_workflow`
+
+
+Content Provider:       Metropolitan Museum of Art
+
+ETL Process:            Use the API to identify all CC0 artworks.
+
+Output:                 TSV file containing the image, their respective
+                        meta-data.
+
+Notes:                  https://metmuseum.github.io/#search
+                        "Please limit requests to 80 requests per second." May need to
+                        bump up the delay (e.g. to 3 seconds), to avoid of blocking
+                        during local development testing.
+
+                        Some analysis to improve data quality was conducted using a
+                        separate csv file here: https://github.com/metmuseum/openaccess
+
+                        Get a list of object IDs:
+                        https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=2022-08-10
+                        Get a specific object:
+                        https://collectionapi.metmuseum.org/public/collection/v1/objects/1027
+                        The search functionality requires a specific query (term search)
+                        in addition to date and public domain. It seems like it won't
+                        connect with just date and license.
+                        https://collectionapi.metmuseum.org/public/collection/v1/search?isPublicDomain=true&metadataDate=2022-08-07
+
+
+
 ## `metropolitan_museum_workflow`
 
 
@@ -400,6 +461,20 @@ update the tokens stored in the Variable upon successful refresh.
 **Current Providers**:
 
 - Freesound
+
+
+## `phylopic_reingestion_workflow`
+
+
+Content Provider:       PhyloPic
+
+ETL Process:            Use the API to identify all CC licensed images.
+
+Output:                 TSV file containing the image,
+                        their respective meta-data.
+
+Notes:                  http://phylopic.org/api/
+                        No rate limit specified.
 
 
 ## `phylopic_workflow`
@@ -524,6 +599,20 @@ Notes:                  https://stocksnap.io/api/load-photos/date/desc/1
 
 
 ## `wikimedia_commons_workflow`
+
+
+Content Provider:       Wikimedia Commons
+
+ETL Process:            Use the API to identify all CC-licensed images.
+
+Output:                 TSV file containing the image, the respective
+                        meta-data.
+
+Notes:                  https://commons.wikimedia.org/wiki/API:Main_page
+                        No rate limit specified.
+
+
+## `wikimedia_reingestion_workflow`
 
 
 Content Provider:       Wikimedia Commons

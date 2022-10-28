@@ -1,48 +1,19 @@
-import inspect
 import logging
 import time
 from datetime import datetime
-from types import FunctionType
-from typing import Callable, Sequence
+from typing import Sequence, Type
 
 from airflow.models import DagRun, TaskInstance
 from airflow.utils.dates import cron_presets
 from common.constants import MediaType
-from common.storage.media import MediaStore
+from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
 logger = logging.getLogger(__name__)
 
 
-def _load_provider_script_stores(
-    ingestion_callable: Callable,
-    media_types: list[MediaType],
-    **kwargs,
-) -> dict[str, MediaStore]:
-    """
-    Load the stores associated with a provided ingestion callable. This callable is
-    assumed to be a legacy provider script and NOT a provider data ingestion class.
-    """
-    # Stores exist at the module level, so in order to retrieve the output values we
-    # must first pull the stores from the module.
-    module = inspect.getmodule(ingestion_callable)
-    stores = {}
-    for media_type in media_types:
-        store = getattr(module, f"{media_type}_store", None)
-        if not store:
-            continue
-        stores[media_type] = store
-
-    if len(stores) != len(media_types):
-        raise ValueError(
-            f"Expected stores in {module.__name__} were missing: "
-            f"{list(set(media_types) - set(stores))}"
-        )
-    return stores
-
-
 def generate_tsv_filenames(
-    ingestion_callable: Callable,
+    ingester_class: Type[ProviderDataIngester],
     media_types: list[MediaType],
     ti: TaskInstance,
     dag_run: DagRun,
@@ -60,20 +31,14 @@ def generate_tsv_filenames(
     args = args or []
     logger.info("Pushing available store paths to XComs")
 
-    # TODO: This entire branch can be removed when all of the provider scripts have been
-    # TODO: refactored to subclass ProviderDataIngester.
-    if isinstance(ingestion_callable, FunctionType):
-        stores = _load_provider_script_stores(ingestion_callable, media_types)
-
-    else:
-        # A ProviderDataIngester class was passed instead. First we initialize the
-        # class, which will initialize the media stores and DelayedRequester.
-        logger.info(
-            f"Initializing ProviderIngester {ingestion_callable.__name__} in"
-            f"order to generate store filenames."
-        )
-        ingester = ingestion_callable(dag_run.conf, *args)
-        stores = ingester.media_stores
+    # Initialize the ProviderDataIngester class, which will initialize the
+    # DelayedRequester and appropriate media stores.
+    logger.info(
+        f"Initializing ProviderIngester {ingester_class.__name__} in"
+        f"order to generate store filenames."
+    )
+    ingester = ingester_class(dag_run.conf, *args)
+    stores = ingester.media_stores
 
     # Push the media store output paths to XComs.
     for store in stores.values():
@@ -84,7 +49,7 @@ def generate_tsv_filenames(
 
 
 def pull_media_wrapper(
-    ingestion_callable: Callable,
+    ingester_class: Type[ProviderDataIngester],
     media_types: list[MediaType],
     tsv_filenames: list[str],
     ti: TaskInstance,
@@ -107,23 +72,11 @@ def pull_media_wrapper(
         )
     logger.info("Setting media stores to the appropriate output filenames")
 
-    # TODO: This entire branch can be removed when all of the provider scripts have been
-    # TODO: refactored to subclass ProviderDataIngester.
-    if isinstance(ingestion_callable, FunctionType):
-        # Stores exist at the module level, so in order to set the output values we
-        # must first pull the stores from the module.
-        stores = _load_provider_script_stores(ingestion_callable, media_types)
-        run_func = ingestion_callable
-    else:
-        # A ProviderDataIngester class was passed instead. First we initialize the
-        # class, which will initialize the media stores and DelayedRequester.
-        logger.info(f"Initializing ProviderIngester {ingestion_callable.__name__}")
-        ingester = ingestion_callable(dag_run.conf, *args)
-        stores = ingester.media_stores
-        run_func = ingester.ingest_records
-        # args have already been passed into the ingester, we don't need them passed
-        # in again to the ingest_records function, so we clear the list
-        args = []
+    # Initialize the ProviderDataIngester class, which will initialize the
+    # media stores and DelayedRequester.
+    logger.info(f"Initializing ProviderIngester {ingester_class.__name__}")
+    ingester = ingester_class(dag_run.conf, *args)
+    stores = ingester.media_stores
 
     for store, tsv_filename in zip(stores.values(), tsv_filenames):
         logger.info(
@@ -134,10 +87,10 @@ def pull_media_wrapper(
 
     logger.info("Beginning ingestion")
     start_time = time.perf_counter()
-    # Not passing kwargs here because Airflow throws a bunch of stuff in there that
-    # none of our provider scripts are expecting.
+    # Not passing args or kwargs here because Airflow throws a bunch of stuff in
+    # there that none of our provider scripts are expecting.
     try:
-        data = run_func(*args)
+        data = ingester.ingest_records()
     finally:
         end_time = time.perf_counter()
         # Report duration
