@@ -74,7 +74,11 @@
       :image-height="imageHeight"
       :image-type="imageType"
     />
-    <VRelatedImages :media="relatedMedia" :fetch-state="relatedFetchState" />
+    <VRelatedImages
+      v-if="hasRelatedMedia"
+      :media="relatedMedia"
+      :fetch-state="relatedFetchState"
+    />
   </div>
 </template>
 
@@ -136,6 +140,7 @@ export default defineComponent({
     )
 
     const backToSearchPath = computed(() => route.value.meta?.backToSearchPath)
+    const hasRelatedMedia = computed(() => relatedMediaStore.media.length > 0)
     const relatedMedia = computed(() => relatedMediaStore.media)
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
 
@@ -207,6 +212,7 @@ export default defineComponent({
     }
     return {
       image,
+      hasRelatedMedia,
       relatedMedia,
       relatedFetchState,
       imageWidth,
