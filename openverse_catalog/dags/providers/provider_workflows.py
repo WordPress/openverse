@@ -24,6 +24,7 @@ from providers.provider_api_scripts.stocksnap import StockSnapDataIngester
 from providers.provider_api_scripts.wikimedia_commons import (
     WikimediaCommonsDataIngester,
 )
+from providers.provider_api_scripts.wordpress import WordPressDataIngester
 
 
 @dataclass
@@ -230,6 +231,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         provider_script="wordpress",
+        ingestion_callable=WordPressDataIngester,
         pull_timeout=timedelta(hours=12),
     ),
 ]

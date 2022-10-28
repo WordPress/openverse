@@ -1,63 +1,41 @@
 import json
-import logging
 from pathlib import Path
-from unittest.mock import patch
 
-import requests
-import wordpress as wp
+import pytest
+from providers.provider_api_scripts.wordpress import WordPressDataIngester
 
 
 RESOURCES = Path(__file__).parent / "resources/wordpress"
 SAMPLE_MEDIA_DATA = RESOURCES / "full_item.json"
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
-    level=logging.DEBUG,
-)
+wp = WordPressDataIngester()
 
 
 def test_get_query_params_returns_defaults():
     expected_result = {"format": "json", "page": 1, "per_page": 100, "_embed": "true"}
-    actual_result = wp._get_query_params()
+    actual_result = wp.get_next_query_params({})
     assert actual_result == expected_result
 
 
-def test_get_query_params_returns_defaults_with_given_page():
+def test_get_query_params_returns_next_page():
     expected_result = {"format": "json", "page": 3, "per_page": 100, "_embed": "true"}
-    actual_result = wp._get_query_params(page=3)
+    actual_result = wp.get_next_query_params({**expected_result, "page": 2})
     assert actual_result == expected_result
 
 
-def test_get_item_page_returns_correctly_with_none_response():
-    expected_result = (None, 0)
-    endpoint = "example.com"
-    with patch.object(wp.delayed_requester, "get", return_value=None):
-        actual_result = wp._get_item_page(endpoint)
-    assert actual_result == expected_result
-
-
-def test_get_item_page_returns_correctly_with_no_results():
-    expected_result = (None, 0)
-    endpoint = "example.com"
-    with patch.object(wp.delayed_requester, "get", return_value=requests.Response()):
-        actual_result = wp._get_item_page(endpoint)
-    assert actual_result == expected_result
-
-
-def test_extract_image_data_returns_none_when_no_foreign_id():
+@pytest.mark.parametrize("missing_field", ["slug", "link"])
+def test_get_record_data_returns_none_when_missing_necessary_data(missing_field):
     with open(SAMPLE_MEDIA_DATA) as f:
         image_data = json.load(f)
-        image_data.pop("slug", None)
-    actual_image_info = wp._extract_image_data(image_data)
-    expected_image_info = None
-    assert actual_image_info is expected_image_info
+        image_data.pop(missing_field, None)
+    actual_image_info = wp.get_record_data(image_data)
+    assert actual_image_info is None
 
 
-def test_extract_image_data_returns_none_when_no_image_url():
+def test_get_record_data_returns_none_when_no_image_url():
     with open(SAMPLE_MEDIA_DATA) as f:
         image_data = json.load(f)
         image_data["_embedded"]["wp:featuredmedia"][0]["media_details"].pop("sizes")
-    actual_image_info = wp._extract_image_data(image_data)
+    actual_image_info = wp.get_record_data(image_data)
     assert actual_image_info is None
 
 
@@ -82,7 +60,6 @@ def test_get_file_info():
         "https://pd.w.org/2022/05/203627f31f8770f03.61535278-2048x1366.jpg",  # image_url
         1366,  # height
         2048,  # width
-        "jpg",  # filetype
         544284,  # filesize
     )
     assert actual_result == expected_result

@@ -28,7 +28,7 @@ class PhylopicDataIngester(ProviderDataIngester):
     host = "http://phylopic.org"
     # Use "base_endpoint" since class's "endpoint" parameter gets defined as a property
     base_endpoint = f"{host}/api/a/image"
-    providers = {"image": prov.PHYLOPIC_DEFAULT_PROVIDER}
+    providers = {constants.IMAGE: prov.PHYLOPIC_DEFAULT_PROVIDER}
     batch_limit = 25
 
     def __init__(self, *args, **kwargs):
@@ -39,9 +39,6 @@ class PhylopicDataIngester(ProviderDataIngester):
         # getting called once, so we do not set it as a sentinel for the
         # get_next_query_params function.
         self.offset = None
-
-    def get_media_type(self, record: dict) -> str:
-        return constants.IMAGE
 
     @property
     def endpoint(self) -> str:
