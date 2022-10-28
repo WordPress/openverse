@@ -43,5 +43,13 @@ test.describe('VButton', () => {
         name: `${variant}-pressed-hovered.png`,
       })
     })
+    if (variant.startsWith('action')) {
+      test(`${variant} disabled`, async ({ page }) => {
+        await gotoWithArgs(page, { variant, disabled: true })
+        expect(await page.locator(buttonLocator).screenshot()).toMatchSnapshot({
+          name: `${variant}-disabled.png`,
+        })
+      })
+    }
   }
 })
