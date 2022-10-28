@@ -131,7 +131,7 @@ PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
         provider_script="europeana",
         ingestion_callable=EuropeanaDataIngester,
-        start_date=datetime(2011, 9, 1),
+        start_date=datetime(2022, 10, 27),
         schedule_string="@daily",
         dated=True,
     ),

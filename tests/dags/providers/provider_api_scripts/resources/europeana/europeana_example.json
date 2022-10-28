@@ -214,7 +214,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -232,7 +232,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -448,7 +448,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26228_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -466,7 +466,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -682,7 +682,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26227_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -700,7 +700,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -909,7 +909,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26226_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -927,7 +927,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -1136,7 +1136,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26225_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -1154,7 +1154,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -1339,7 +1339,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26224_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -1357,7 +1357,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ],
       "year": [
         "1829"
@@ -2780,7 +2780,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26222_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -2798,7 +2798,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ],
       "year": [
         "1947"
@@ -4221,7 +4221,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26221_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -4239,7 +4239,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ],
       "year": [
         "1946"
@@ -5662,7 +5662,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26220_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -5680,7 +5680,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ],
       "year": [
         "1945"
@@ -7120,7 +7120,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26219_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -7138,7 +7138,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ],
       "year": [
         "1930"
@@ -8545,7 +8545,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26215_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -8563,7 +8563,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ],
       "year": [
         "1924"
@@ -9987,7 +9987,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26214_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -10005,7 +10005,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ],
       "year": [
         "1928"
@@ -11412,7 +11412,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26213_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -11430,7 +11430,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ],
       "year": [
         "1918"
@@ -12577,7 +12577,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26212_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -12595,7 +12595,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -12788,7 +12788,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26210_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -12806,7 +12806,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ],
       "year": [
         "1823"
@@ -12916,7 +12916,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26209_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -12934,7 +12934,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -13123,7 +13123,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26208_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -13141,7 +13141,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ],
       "year": [
         "1823"
@@ -13333,7 +13333,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26207_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -13351,7 +13351,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ],
       "year": [
         "1823"
@@ -13549,7 +13549,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26206_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -13567,7 +13567,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ],
       "year": [
         "1810"
@@ -13772,7 +13772,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26201_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -13790,7 +13790,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -13893,7 +13893,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26200_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -13911,7 +13911,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -14021,7 +14021,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26199_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -14039,7 +14039,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -14142,7 +14142,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26198_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -14160,7 +14160,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -15318,7 +15318,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_24170_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -15336,7 +15336,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -15531,7 +15531,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_24169_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -15549,7 +15549,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -15744,7 +15744,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_24168_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -15762,7 +15762,7 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     },
     {
@@ -15952,7 +15952,7 @@
         "es"
       ],
       "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_24167_ent1.json?wskey=test_key",
-      "previewNoDistribute": "False",
+      "previewNoDistribute": false,
       "provider": [
         "Hispana"
       ],
@@ -15970,13 +15970,13 @@
       ],
       "type": "IMAGE",
       "ugc": [
-        "False"
+        false
       ]
     }
   ],
   "itemsCount": 27,
   "nextCursor": "test_next_cursor",
   "requestNumber": 999,
-  "success": "True",
+  "success": true,
   "totalResults": 27
 }

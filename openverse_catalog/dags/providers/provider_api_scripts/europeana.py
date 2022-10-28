@@ -213,8 +213,8 @@ class EuropeanaDataIngester(ProviderDataIngester):
         return self.cursor is not None
 
     def get_batch_data(self, response_json: dict) -> None | list[dict]:
-        if response_json.get("success") != "True":
-            logger.warning('Request failed with ``success != "True"``')
+        if not response_json.get("success"):
+            logger.warning("Request failed with ``success != True``")
             # No batch data to process if the request failed.
             return None
 

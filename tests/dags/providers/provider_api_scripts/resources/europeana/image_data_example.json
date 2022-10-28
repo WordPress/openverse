@@ -211,7 +211,7 @@
     "es"
   ],
   "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1.json?wskey=test_key",
-  "previewNoDistribute": "False",
+  "previewNoDistribute": false,
   "provider": [
     "Hispana"
   ],
@@ -229,6 +229,6 @@
   ],
   "type": "IMAGE",
   "ugc": [
-    "False"
+    false
   ]
 }

@@ -95,7 +95,7 @@ def test_get_should_continue_returns_false(ingester, response_json):
 
 
 def test_get_batch_data_returns_None_if_success_not_True(ingester):
-    response_json = {"success": "False", "items": [1]}
+    response_json = {"success": False, "items": [1]}
     assert ingester.get_batch_data(response_json) is None
 
 
