@@ -1,5 +1,8 @@
 # For local dev tooling only, this is separate from requirements_dev.txt because these
 # libraries are not needed within the built docker container in any environment.
+
+# Note: Unpinned packages have their versions determined by the Airflow constraints file
+
 black==22.10.0
 flake8==5.0.4
 isort==5.10.1
