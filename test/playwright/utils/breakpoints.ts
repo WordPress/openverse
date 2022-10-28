@@ -21,14 +21,8 @@ type BreakpointBlock = (options: {
   expectSnapshot: ExpectSnapshot
 }) => void
 
-const desktopBreakpoints = ['2xl', 'xl', 'lg', 'md'] as const
-const mobileBreakpoints = ['sm', 'xs'] as const
-
-/**
- * For e2e functionality testing, we need to test mobile and desktop screens.
- */
-export const testScreens = ['sm', 'xl'] as const
-export type TestScreen = typeof testScreens[number]
+const desktopBreakpoints = ['2xl', 'xl', 'lg'] as const
+const mobileBreakpoints = ['md', 'sm', 'xs'] as const
 
 // For desktop UA use the default
 const desktopUa = undefined
@@ -144,21 +138,27 @@ const describeEachBreakpoint =
 const describeEvery = describeEachBreakpoint(
   Object.keys(VIEWPORTS) as Breakpoint[]
 )
-const describeEachDesktopWithMd = describeEachBreakpoint(desktopBreakpoints)
-const describeEachDesktop = describeEachBreakpoint(
-  desktopBreakpoints.filter((b) => b !== 'md')
-)
+const describeEachDesktopWithMd = describeEachBreakpoint([
+  ...desktopBreakpoints,
+  'md',
+])
+const describeEachDesktop = describeEachBreakpoint(desktopBreakpoints)
 const describeEachMobile = describeEachBreakpoint(mobileBreakpoints)
-const describeEachMobileWithoutMd = describeEachBreakpoint(mobileBreakpoints)
+const describeEachMobileWithoutMd = describeEachBreakpoint(
+  mobileBreakpoints.filter((b) => b !== 'md')
+)
+const describeMobileAndDesktop = describeEachBreakpoint(['sm', 'xl'])
 
 export default {
   ...breakpointTests,
   describeEachBreakpoint,
   describeEvery,
   describeEachDesktop,
-  // TODO: remove describeEachDesktopWithMd after the new_header is merged
-  describeEachDesktopWithMd,
   describeEachMobile,
-  // TODO: remove describeEachMobileWithoutMd after the new_header is merged
+  // For `old_header` layout and for VHeaderInternal, the mobile layout ends at `md` breakpoint
   describeEachMobileWithoutMd,
+  describeEachDesktopWithMd,
+  // For testing functionality in e2e tests, we need to test mobile and desktop screens.
+  // Having two breakpoints should be enough and should save testing time.
+  describeMobileAndDesktop,
 }

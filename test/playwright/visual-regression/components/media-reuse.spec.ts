@@ -1,12 +1,14 @@
-import { Route, test } from '@playwright/test'
+import { test } from '@playwright/test'
 
 import breakpoints from '~~/test/playwright/utils/breakpoints'
 import {
   dismissTranslationBanner,
-  pathWithDir,
   languageDirections,
+  pathWithDir,
+  scrollDownAndUp,
   t,
 } from '~~/test/playwright/utils/navigation'
+import { mockProviderApis } from '~~/test/playwright/utils/route'
 
 test.describe.configure({ mode: 'parallel' })
 
@@ -16,22 +18,24 @@ const tabs = [
   { id: 'plain', name: 'Plain text' },
 ]
 
-const cancelImageRequests = (route: Route) =>
-  route.request().resourceType() === 'image' ? route.abort() : route.continue()
-
 test.describe('media-reuse', () => {
   for (const tab of tabs) {
     for (const dir of languageDirections) {
       breakpoints.describeEvery(({ expectSnapshot }) => {
         test(`Should render a ${dir} media reuse section with "${tab.name}" tab open`, async ({
+          context,
           page,
         }) => {
-          await page.route('**/*', cancelImageRequests)
+          await mockProviderApis(context)
 
           await page.goto(
             pathWithDir('/image/f9384235-b72e-4f1e-9b05-e1b116262a29', dir)
           )
           await dismissTranslationBanner(page)
+          // The image is loading from provider, so we need to wait for it to
+          // finish loaded to prevent the shift of the component during snapshots.
+          await scrollDownAndUp(page)
+          await page.waitForLoadState('networkidle')
 
           await page.locator(`#tab-${tab.id}`).click()
           // Make sure the tab is not focused and doesn't have a pink ring

@@ -39,14 +39,18 @@ import {
   defineComponent,
   useMeta,
   ref,
+  inject,
+  watch,
+  toRef,
 } from '@nuxtjs/composition-api'
 
-import { isMinScreen } from '~/composables/use-media-query'
 import { useBrowserIsMobile } from '~/composables/use-browser-detection'
 import { useFocusFilters } from '~/composables/use-focus-filters'
 import { Focus } from '~/utils/focus-management'
 
 import { useUiStore } from '~/stores/ui'
+
+import { IsMinScreenMdKey } from '~/types/provides'
 
 import VSnackbar from '~/components/VSnackbar.vue'
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
@@ -69,16 +73,21 @@ export default defineComponent({
 
     const results = computed(() => props.resultItems.audio)
 
-    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
+    const isMinScreenMd = inject(IsMinScreenMdKey)
+    const filterVisibleRef = toRef(props, 'isFilterVisible')
 
     // On SSR, we set the size to small if the User Agent is mobile, otherwise we set the size to medium.
     const isMobile = useBrowserIsMobile()
-    const audioTrackSize = computed(() => {
-      return !isMinScreenMd.value || isMobile
-        ? 's'
-        : props.isFilterVisible
-        ? 'l'
-        : 'm'
+    const audioTrackSize = ref(
+      !isMinScreenMd.value || isMobile ? 's' : props.isFilterVisible ? 'l' : 'm'
+    )
+
+    watch([filterVisibleRef, isMinScreenMd], ([filterVisible, isMd]) => {
+      if (!isMd) {
+        audioTrackSize.value = 's'
+      } else {
+        audioTrackSize.value = filterVisible ? 'l' : 'm'
+      }
     })
 
     const focusFilters = useFocusFilters()

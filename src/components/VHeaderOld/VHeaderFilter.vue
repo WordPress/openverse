@@ -41,8 +41,6 @@ import {
   watch,
   computed,
   onMounted,
-  inject,
-  Ref,
   toRef,
   onBeforeUnmount,
 } from '@nuxtjs/composition-api'
@@ -52,6 +50,7 @@ import { Portal as VTeleport } from 'portal-vue'
 import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { useFocusFilters } from '~/composables/use-focus-filters'
+import { isMinScreen } from '~/composables/use-media-query'
 
 import { Focus } from '~/utils/focus-management'
 import { defineEvent } from '~/types/emits'
@@ -93,7 +92,9 @@ export default defineComponent({
     const filterSidebar = useFilterSidebarVisibility()
     const disabledRef = toRef(props, 'disabled')
 
-    const isMinScreenMd: Ref<boolean> = inject('isMinScreenMd')
+    // The `onMounted` in this component is run before the parent components' `onMounted` is run.
+    // The injected `isMinScreenMd` value can become true only after `default` layout's `onMounted` is run, so we need a separate check for `md` here to make sure that the value in `onMounted` is correct.
+    const isMinScreenMd = isMinScreen('md')
 
     const open = () => (visibleRef.value = true)
     const close = () => (visibleRef.value = false)

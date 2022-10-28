@@ -11,7 +11,7 @@ const pageUrl = (dir: typeof languageDirections[number]) =>
 
 test.describe('VHeaderInternal', () => {
   for (const dir of languageDirections) {
-    breakpoints.describeEachDesktop(({ expectSnapshot }) => {
+    breakpoints.describeEachDesktopWithMd(({ expectSnapshot }) => {
       test(`desktop-header-internal-${dir}`, async ({ page }) => {
         await page.goto(pageUrl(dir))
         await page.mouse.move(0, 150)
@@ -21,7 +21,7 @@ test.describe('VHeaderInternal', () => {
         )
       })
     })
-    breakpoints.describeEachMobile(({ expectSnapshot }) => {
+    breakpoints.describeEachMobileWithoutMd(({ expectSnapshot }) => {
       test(`mobile-header-internal-${dir}`, async ({ page }) => {
         await page.goto(pageUrl(dir))
         await page.mouse.move(0, 150)

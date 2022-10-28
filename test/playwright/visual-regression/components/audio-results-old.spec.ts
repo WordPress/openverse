@@ -16,7 +16,6 @@ test.describe('audio results', () => {
       test('should render small row layout desktop UA with narrow viewport', async ({
         page,
       }) => {
-        await closeFilters(page, OLD_HEADER)
         await expectSnapshot('audio-results-narrow-viewport-desktop-UA', page)
       })
     }
@@ -28,7 +27,6 @@ test.describe('audio results', () => {
       test('should render small row layout mobile UA with narrow viewport', async ({
         page,
       }) => {
-        await closeFilters(page, OLD_HEADER)
         await expectSnapshot('audio-results-narrow-viewport-mobile-UA', page)
       })
     }

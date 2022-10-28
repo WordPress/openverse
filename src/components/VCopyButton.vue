@@ -4,7 +4,7 @@
     type="button"
     variant="secondary-filled"
     size="disabled"
-    class="py-2 px-3 text-sr"
+    class="py-2 px-3 text-sr font-semibold"
     :data-clipboard-target="el"
   >
     <span v-if="!success">

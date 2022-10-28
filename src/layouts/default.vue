@@ -110,7 +110,6 @@ const embeddedPage = {
       mounted.value = true
     })
 
-    const isMinScreenMd = isMinScreen('md')
     /**
      * If we use the `isMinScreen('lg')` composable for conditionally
      * rendering components, we get a server-client side rendering
@@ -123,6 +122,10 @@ const embeddedPage = {
     const innerIsMinScreenLg = isMinScreen('lg')
     const isMinScreenLg = computed(() =>
       Boolean(innerIsMinScreenLg.value && mounted.value)
+    )
+    const innerIsMinScreenMd = isMinScreen('md')
+    const isMinScreenMd = computed(() =>
+      Boolean(innerIsMinScreenMd.value && mounted.value)
     )
 
     const isSidebarVisible = computed(() => {

@@ -37,9 +37,6 @@
 import { isShallowEqualObjects } from '@wordpress/is-shallow-equal'
 import { computed, defineComponent, inject, ref } from '@nuxtjs/composition-api'
 
-import { Context } from '@nuxt/types'
-
-import { isMinScreen } from '~/composables/use-media-query'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { Focus, focusIn } from '~/utils/focus-management'
 import { useMediaStore } from '~/stores/media'
@@ -48,6 +45,8 @@ import { useSearchStore } from '~/stores/search'
 import VSearchGrid from '~/components/VSearchGrid.vue'
 import VSkipToContentContainer from '~/components/VSkipToContentContainer.vue'
 import VScrollButton from '~/components/VScrollButton.vue'
+
+import type { Context } from '@nuxt/types'
 
 export default defineComponent({
   name: 'BrowsePage',
@@ -68,7 +67,6 @@ export default defineComponent({
   scrollToTop: false,
   setup() {
     const searchGridRef = ref(null)
-    const isMinScreenMd = isMinScreen('md')
     const { isVisible: isFilterSidebarVisible } = useFilterSidebarVisibility()
     const showScrollButton = inject('showScrollButton')
     const mediaStore = useMediaStore()
@@ -99,7 +97,6 @@ export default defineComponent({
 
     return {
       searchGridRef,
-      isMinScreenMd,
       isFilterSidebarVisible,
       showScrollButton,
       searchTerm,
@@ -156,9 +153,9 @@ export default defineComponent({
       }
       focusIn(document.getElementById('__layout'), Focus.First)
     },
-    fetchMedia(...args: unknown[]) {
+    fetchMedia(payload: { shouldPersistMedia?: boolean } = {}) {
       const mediaStore = useMediaStore(this.$pinia)
-      return mediaStore.fetchMedia(...args)
+      return mediaStore.fetchMedia(payload)
     },
   },
 })
