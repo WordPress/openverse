@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from providers.provider_api_scripts.flickr import FlickrDataIngester
 from providers.provider_api_scripts.metropolitan_museum import MetMuseumDataIngester
+from providers.provider_api_scripts.phylopic import PhylopicDataIngester
 from providers.provider_api_scripts.wikimedia_commons import (
     WikimediaCommonsDataIngester,
 )
@@ -75,6 +76,17 @@ PROVIDER_REINGESTION_WORKFLOWS = [
         # 64 total reingestion days
         provider_script="metropolitan_museum",
         ingestion_callable=MetMuseumDataIngester,
+        max_active_tasks=2,
+        pull_timeout=timedelta(hours=12),
+        daily_list_length=6,
+        one_month_list_length=9,
+        three_month_list_length=18,
+        six_month_list_length=30,
+    ),
+    ProviderReingestionWorkflow(
+        # 64 total reingestion days
+        provider_script="phylopic",
+        ingestion_callable=PhylopicDataIngester,
         max_active_tasks=2,
         pull_timeout=timedelta(hours=12),
         daily_list_length=6,
