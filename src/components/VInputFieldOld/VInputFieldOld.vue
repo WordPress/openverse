@@ -43,7 +43,7 @@ export type FieldSize = keyof typeof FIELD_SIZES
  * Provides a control to enter text as input.
  */
 export default defineComponent({
-  name: 'VInputField',
+  name: 'VInputFieldOld',
   inheritAttrs: false,
   model: {
     prop: 'modelValue',
