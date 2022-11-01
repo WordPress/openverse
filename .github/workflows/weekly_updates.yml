@@ -26,7 +26,8 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./automations/js
-        run: npm ci
+        shell: bash
+        run: "pnpm install"
 
       - name: Create draft post
         working-directory: ./automations/js
