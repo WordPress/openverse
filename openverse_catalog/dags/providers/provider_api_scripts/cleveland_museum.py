@@ -99,13 +99,14 @@ class ClevelandDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_metadata(data):
         metadata = {
-            "accession_number": data.get("accession_number", ""),
-            "technique": data.get("technique", ""),
-            "date": data.get("creation_date", ""),
-            "credit_line": data.get("creditline", ""),
-            "classification": data.get("type", ""),
-            "tombstone": data.get("tombstone", ""),
-            "culture": ",".join([i for i in data.get("culture", []) if i is not None]),
+            "accession_number": data.get("accession_number"),
+            "technique": data.get("technique"),
+            "date": data.get("creation_date"),
+            "credit_line": data.get("creditline"),
+            "classification": data.get("type"),
+            "tombstone": data.get("tombstone"),
+            "culture": ",".join([i for i in data.get("culture", []) if i is not None])
+            or None,
         }
         metadata = {k: v for k, v in metadata.items() if v is not None}
         return metadata

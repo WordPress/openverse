@@ -121,6 +121,21 @@ def test_get_metadata():
     assert actual_metadata == expected_metadata
 
 
+def test_get_metadata_missing_attrs():
+    data = _get_resource_json("complete_data.json")
+    # Remove data to simulate it being missing
+    data.pop("technique")
+    data.pop("culture")
+    actual_metadata = clm._get_metadata(data)
+
+    # Remove data from expected values too
+    expected_metadata = _get_resource_json("expect_metadata.json")
+    expected_metadata.pop("technique")
+    expected_metadata.pop("culture")
+
+    assert actual_metadata == expected_metadata
+
+
 def test_get_response_success():
     query_param = {"cc": 1, "has_image": 1, "limit": 1, "skip": 30000}
     response_json = _get_resource_json("response_success.json")
