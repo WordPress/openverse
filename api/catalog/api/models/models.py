@@ -12,7 +12,7 @@ class ContentProvider(models.Model):
 
     For example,
     - Wikimedia for audio can have
-        ``provider_identifier`` as  wikimedia_audio" and
+        ``provider_identifier`` as  "wikimedia_audio" and
         ``provider_name`` as "Wikimedia"
     - Wikimedia for images can have
         ``provider_identifier`` as "wikimedia_images" or "wikimedia" and

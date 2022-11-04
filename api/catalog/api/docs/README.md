@@ -23,7 +23,7 @@ instructions on obtaining an API key.
 
 ## Register for a key
 Before using the Openverse API, you need to register access via OAuth2. This can
-be done using the `/v1/auth_tokens/register` endpoint.
+be done using the `/v1/auth_tokens/register/` endpoint.
 
 Example on how to register for a key:
 ```bash
@@ -31,7 +31,7 @@ $ curl \
   -X POST \
   -H "Content-Type: application/json" \
   -d '{"name": "My amazing project", "description": "To access Openverse API", "email": "user@example.com"}' \
-  "https://api.openverse.engineering/v1/auth_tokens/register"
+  "https://api.openverse.engineering/v1/auth_tokens/register/"
 ```
 If your request is successful, you will get a `client_id` and `client_secret`.
 
