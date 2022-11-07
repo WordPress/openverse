@@ -21,7 +21,7 @@ sphinx-autobuild = "~=2021.3"
 
 [packages]
 aws-requests-auth = "~=0.4"
-boto3 = "~=1.24"
+boto3 = "~=1.26"
 deepdiff = "~=6.2"
 Django = "~=4.1"
 django-braces = "~=1.15"
