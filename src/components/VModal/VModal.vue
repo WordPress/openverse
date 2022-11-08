@@ -36,7 +36,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {
   defineComponent,
   ref,
@@ -44,9 +44,13 @@ import {
   reactive,
   computed,
   toRef,
+  PropType,
+  Ref,
 } from '@nuxtjs/composition-api'
 
 import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
+
+import type { ModalColorMode, ModalVariant } from '~/types/modal'
 
 import VModalContent from '~/components/VModal/VModalContent.vue'
 
@@ -106,9 +110,7 @@ export default defineComponent({
      * @default undefined
      */
     initialFocusElement: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<HTMLElement>} */ (
-        process.server ? Object : HTMLElement
-      ),
+      type: (process.server ? Object : HTMLElement) as PropType<HTMLElement>,
       default: undefined,
     },
     /**
@@ -122,9 +124,7 @@ export default defineComponent({
      * @default 'default'
      */
     variant: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<'default' | 'full' | 'two-thirds'>} */ (
-        String
-      ),
+      type: String as PropType<ModalVariant>,
       default: 'default',
     },
     /**
@@ -135,9 +135,7 @@ export default defineComponent({
      * @default 'light'
      */
     mode: {
-      type: /** @type {import('@nuxtjs/composition-api').PropType<'dark' | 'light'>} */ (
-        String
-      ),
+      type: String as PropType<ModalColorMode>,
       default: 'light',
     },
     /**
@@ -167,14 +165,12 @@ export default defineComponent({
   ],
   setup(props, { emit }) {
     const visibleRef = toRef(props, 'visible')
-    const internalVisibleRef =
-      /** @type {import('@nuxtjs/composition-api').Ref<boolean>} */ (
-        ref(props.visible === undefined ? false : props.visible)
-      )
-    const nodeRef = ref()
+    const internalVisibleRef: Ref<boolean> = ref<boolean>(
+      typeof props.visible === 'undefined' ? false : props.visible
+    )
+    const nodeRef = ref<null | HTMLElement>(null)
 
-    /** @type {import('@nuxtjs/composition-api').Ref<HTMLElement | undefined>} */
-    const triggerContainerRef = ref()
+    const triggerContainerRef = ref<HTMLElement | null>(null)
 
     const triggerA11yProps = reactive({
       'aria-expanded': false,
@@ -182,14 +178,11 @@ export default defineComponent({
     })
 
     const triggerRef = computed(
-      () =>
-        /** @type {HTMLElement | undefined} */ (
-          triggerContainerRef.value?.firstChild
-        )
+      () => triggerContainerRef.value?.firstChild as HTMLElement | undefined
     )
 
     watch(internalVisibleRef, (visible) => {
-      triggerA11yProps['aria-expanded'] = !!visible
+      triggerA11yProps['aria-expanded'] = visible
     })
 
     /**
@@ -223,7 +216,7 @@ export default defineComponent({
     }
 
     const onTriggerClick = () => {
-      if (internalVisibleRef.value === true) {
+      if (internalVisibleRef.value) {
         close()
       } else {
         open()

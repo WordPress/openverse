@@ -11,16 +11,19 @@
       :status="isFetching ? 'loading' : 'idle'"
       :auto-resize="autoResizeLogo"
     />
-    <OpenverseLogoText
+    <svg
       v-show="!isHeaderScrolled"
-      class="-ml-1 mt-1 me-3"
-      :class="{
-        'hidden sm:block md:hidden': isSearchRoute,
-      }"
-      :aria-hidden="true"
+      class="-ml-1 mt-1 flex flex-shrink-0 flex-grow-0 me-3"
+      :class="{ 'hidden sm:block md:hidden': isSearchRoute }"
+      xmlns="http://www.w3.org/2000/svg"
       width="95"
       height="15"
-    />
+      viewBox="0 0 95 15"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <use :href="`${OpenverseLogoText}#logo`" />
+    </svg>
   </VButton>
 </template>
 <script>
@@ -29,11 +32,11 @@ import { defineComponent } from '@nuxtjs/composition-api'
 import VLogoLoader from '~/components/VLogoLoader/VLogoLoader.vue'
 import VButton from '~/components/VButton.vue'
 
-import OpenverseLogoText from '~/assets/icons/openverse-logo-text.svg?inline'
+import OpenverseLogoText from '~/assets/icons/openverse-logo-text.svg'
 
 export default defineComponent({
   name: 'VLogoButtonOld',
-  components: { OpenverseLogoText, VLogoLoader, VButton },
+  components: { VLogoLoader, VButton },
   props: {
     isFetching: {
       type: Boolean,
@@ -51,6 +54,9 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+  },
+  setup() {
+    return { OpenverseLogoText }
   },
 })
 </script>
