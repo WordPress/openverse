@@ -235,42 +235,83 @@ def test_get_dimensions_none():
     assert actual_width is None
 
 
-def test_get_license():
-    source = _get_resource_json("license_source.json")
-    actual_license = sm._get_license(source)
-    expected_license = ("by-nc-sa", "4.0")
-
-    assert actual_license == expected_license
-
-
-def test_get_license_with_space():
-    source = _get_resource_json("license_source.json")
-    source["source"]["legal"]["rights"][0]["usage_terms"] = "CC BY-NC-SA 4.0"
-    actual_license = sm._get_license(source)
-    expected_license = ("by-nc-sa", "4.0")
-
-    assert actual_license == expected_license
-
-
-def test_get_license_none_type1():
-    image_data = {}
+@pytest.mark.parametrize(
+    "image_data, expected",
+    [
+        # Typical license with dash
+        (
+            {"source": {"legal": {"rights": [{"usage_terms": "CC-BY-NC-SA 4.0"}]}}},
+            ("by-nc-sa", "4.0"),
+        ),
+        (
+            {"source": {"legal": {"rights": [{"usage_terms": "CC-BY-NC-ND 4.0"}]}}},
+            ("by-nc-nd", "4.0"),
+        ),
+        # Typical license with space
+        (
+            {"source": {"legal": {"rights": [{"usage_terms": "CC BY-NC-SA 4.0"}]}}},
+            ("by-nc-sa", "4.0"),
+        ),
+        (
+            {"source": {"legal": {"rights": [{"usage_terms": "CC BY-SA 4.0"}]}}},
+            ("by-sa", "4.0"),
+        ),
+        # No legal section
+        (
+            {"source": {}},
+            None,
+        ),
+        # No usage terms
+        (
+            {"source": {"legal": {"rights": [{"details": "Details!"}]}}},
+            None,
+        ),
+        # Invalid usage terms
+        (
+            {
+                "source": {
+                    "legal": {
+                        "rights": [
+                            {
+                                "usage_terms": "Contact the picture library team (SMG Images) to clear permissions"
+                            }
+                        ]
+                    }
+                }
+            },
+            None,
+        ),
+        (
+            {
+                "source": {
+                    "legal": {
+                        "rights": [
+                            {
+                                "usage_terms": "© The Board of Trustees of the Science Museum, London"
+                            }
+                        ]
+                    }
+                }
+            },
+            None,
+        ),
+        (
+            {
+                "source": {
+                    "legal": {
+                        "rights": [
+                            {"usage_terms": "Restricted - Not for Commercial Use"}
+                        ]
+                    }
+                }
+            },
+            None,
+        ),
+    ],
+)
+def test_get_license(image_data, expected):
     actual_license_version = sm._get_license(image_data)
-
-    assert actual_license_version is None
-
-
-def test_get_license_none_type2():
-    image_data = _get_resource_json("no_license_no_legal.json")
-    actual_license_version = sm._get_license(image_data)
-
-    assert actual_license_version is None
-
-
-def test_get_license_none_type3():
-    image_data = _get_resource_json("no_license_no_usage_terms.json")
-    actual_license_version = sm._get_license(image_data)
-
-    assert actual_license_version is None
+    assert actual_license_version == expected
 
 
 def test_get_metadata():

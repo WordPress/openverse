@@ -25,6 +25,7 @@ YEAR_RANGES = [
     (1940, 1965),
     (1965, 1990),
     (1990, 2020),
+    (2020, 2023),
 ]
 
 
@@ -208,7 +209,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         return metadata
 
     @staticmethod
-    def _get_license(image_data):
+    def _get_license(image_data) -> None | tuple[str, str]:
         rights = image_data.get("source", {}).get("legal", {}).get("rights")
         if isinstance(rights, list):
             license_name = rights[0].get("usage_terms")
@@ -216,6 +217,9 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
                 return None
             license_name = license_name.lower()
             license_name = re.sub("^cc[ -]", "", license_name)
+            if license_name.count(" ") != 1:
+                # Unidentifiable license
+                return None
             license_, version = license_name.split(" ")
             return license_, version
         return None
