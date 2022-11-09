@@ -14,6 +14,7 @@
       :is-fetching="isFetching"
       :is-header-scrolled="isHeaderScrolled"
       :is-search-route="isSearchRoute"
+      class="md:h-12"
     />
 
     <VSearchBarOld
