@@ -12,7 +12,7 @@ remote-pdb = "~=2.1"
 
 [packages]
 aws-requests-auth = "~=0.4"
-boto3 = "~=1.24"
+boto3 = "~=1.26"
 bottle = "~=0.12"
 elasticsearch-dsl = "~=7.4"
 falcon = "~=3.1"
