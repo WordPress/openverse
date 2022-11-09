@@ -167,6 +167,7 @@ const config: NuxtConfig = {
     '~/plugins/ua-parse.ts',
     '~/plugins/focus-visible.client.ts',
     '~/plugins/api-token.server.ts',
+    '~/plugins/sentry.ts',
   ],
   css: ['~/styles/tailwind.css', '~/assets/fonts.css', '~/styles/accent.css'],
   head,
