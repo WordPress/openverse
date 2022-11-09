@@ -40,7 +40,6 @@
       </VTabPanel>
       <VTabPanel id="filters">
         <VSearchGridFilter
-          class="!p-0"
           :show-filter-header="false"
           :change-tab-order="false"
         />

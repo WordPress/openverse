@@ -16,7 +16,7 @@
     />
     <template v-if="visibleRef">
       <VTeleport v-if="isMinScreenMd" to="sidebar">
-        <VSearchGridFilter class="px-10 pt-1" @close="onTriggerClick" />
+        <VSearchGridFilter class="px-10 pt-8 pb-10" @close="onTriggerClick" />
       </VTeleport>
       <VModalContent
         v-else

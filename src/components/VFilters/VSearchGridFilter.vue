@@ -2,19 +2,16 @@
   <section id="filters" aria-labelledby="filters-heading" class="filters">
     <header
       v-if="showFilterHeader"
-      class="mt-2 mb-6 flex items-center justify-between"
+      class="relative mb-6 flex items-center justify-between"
     >
-      <h4
-        id="filters-heading"
-        class="py-2 text-sr font-semibold uppercase leading-8"
-      >
+      <h4 id="filters-heading" class="caption-bold uppercase">
         {{ $t('filter-list.filter-by') }}
       </h4>
       <VButton
-        v-if="isAnyFilterApplied"
+        v-show="isAnyFilterApplied"
         id="clear-filter-button"
         variant="plain"
-        class="py-1 px-4 text-sm font-semibold text-pink hover:ring hover:ring-pink"
+        class="label-bold absolute py-1 px-4 text-pink end-0 hover:ring hover:ring-pink hover:ring-offset-tx"
         @click="clearFilters"
         @keydown.shift.tab.exact="focusFilterButton"
       >
