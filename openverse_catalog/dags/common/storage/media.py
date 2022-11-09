@@ -49,9 +49,6 @@ class MediaStore(metaclass=abc.ABCMeta):
     date:           Date String in the form YYYY-MM-DD. This is the date for
                     which data is being stored. If provided, it will be appended to
                     the tsv filename.
-    output_file:    String giving a temporary .tsv filename (*not* the
-                    full path) where the media info should be stored.
-    output_dir:     String giving a path where `output_file` should be placed.
     buffer_length:  Integer giving the maximum number of media information rows
                     to store in memory before writing them to disk.
     """
@@ -59,8 +56,6 @@ class MediaStore(metaclass=abc.ABCMeta):
     def __init__(
         self,
         provider: Optional[str] = None,
-        output_file: Optional[str] = None,
-        output_dir: Optional[str] = None,
         buffer_length: int = 100,
         media_type: Optional[str] = "generic",
     ):
@@ -68,9 +63,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         self.media_type = media_type
         self.provider = provider
         self.buffer_length = buffer_length
-        self.output_path = self._initialize_output_path(
-            output_dir, output_file, provider
-        )
+        self.output_path = self._initialize_output_path(provider)
         self.columns = None
         self._media_buffer = []
         self._total_items = 0
@@ -157,8 +150,6 @@ class MediaStore(metaclass=abc.ABCMeta):
 
     def _initialize_output_path(
         self,
-        output_dir: Optional[str],
-        output_file: Optional[str],
         provider: Optional[str],
         version: Optional[str] = None,
     ) -> str:
@@ -170,9 +161,8 @@ class MediaStore(metaclass=abc.ABCMeta):
         Returns:
             Path of the tsv file to write media data pulled from providers
         """
-        if output_dir is None:
-            logger.info("No given output directory. Using OUTPUT_DIR from environment.")
-            output_dir = os.getenv("OUTPUT_DIR")
+
+        output_dir = os.getenv("OUTPUT_DIR")
         if output_dir is None:
             logger.warning(
                 "OUTPUT_DIR is not set in the environment. Output will go to /tmp."
@@ -180,13 +170,9 @@ class MediaStore(metaclass=abc.ABCMeta):
             output_dir = "/tmp"
         if version is None:
             version = CURRENT_VERSION[self.media_type]
-        if output_file is not None:
-            output_file = str(output_file)
-        else:
-            datetime_string = datetime.now().strftime("%Y%m%d%H%M%S")
-            output_file = (
-                f"{provider}_{self.media_type}_v{version}_{datetime_string}.tsv"
-            )
+
+        datetime_string = datetime.now().strftime("%Y%m%d%H%M%S")
+        output_file = f"{provider}_{self.media_type}_v{version}_{datetime_string}.tsv"
 
         output_path = os.path.join(output_dir, output_file)
         logger.info(f"Output path: {output_path}")

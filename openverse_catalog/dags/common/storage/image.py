@@ -37,7 +37,7 @@ class ImageStore(MediaStore):
         media_type="image",
         tsv_columns=None,
     ):
-        super().__init__(provider, output_file, output_dir, buffer_length, media_type)
+        super().__init__(provider, buffer_length, media_type)
         self.columns = CURRENT_IMAGE_TSV_COLUMNS if tsv_columns is None else tsv_columns
 
     def add_item(

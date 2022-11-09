@@ -101,15 +101,8 @@ def test_AudioStore_add_item_adds_multiple_audios_to_buffer():
 
 
 def test_AudioStore_add_item_flushes_buffer(tmpdir):
-    output_file = "testing.tsv"
-    tmp_directory = tmpdir
-    output_dir = str(tmp_directory)
-    tmp_file = tmp_directory.join(output_file)
-    tmp_path_full = str(tmp_file)
     audio_store = audio.AudioStore(
         provider="testing_provider",
-        output_file=output_file,
-        output_dir=output_dir,
         buffer_length=3,
     )
     audio_store.add_item(
@@ -137,7 +130,7 @@ def test_AudioStore_add_item_flushes_buffer(tmpdir):
         license_info=PD_LICENSE_INFO,
     )
     assert len(audio_store._media_buffer) == 1
-    with open(tmp_path_full) as f:
+    with open(audio_store.output_path) as f:
         lines = f.read().split("\n")
     assert len(lines) == 4  # recall the last '\n' will create an empty line.
 
