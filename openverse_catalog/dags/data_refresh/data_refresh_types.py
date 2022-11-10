@@ -7,7 +7,6 @@ the dynamic Data Refresh dags.
 """
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Dict, Optional
 
 
 @dataclass
@@ -45,8 +44,8 @@ class DataRefresh:
     dag_id: str = field(init=False)
     media_type: str
     start_date: datetime = datetime(2020, 1, 1)
-    schedule: Optional[str] = "@weekly"
-    default_args: Optional[Dict] = field(default_factory=dict)
+    schedule: str | None = "@weekly"
+    default_args: dict | None = field(default_factory=dict)
     data_refresh_timeout: int = 24 * 60 * 60  # 1 day
     refresh_metrics_timeout: timedelta = timedelta(hours=1)
     refresh_matview_timeout: timedelta = timedelta(hours=1)

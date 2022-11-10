@@ -2,7 +2,6 @@ import abc
 import logging
 import os
 from datetime import datetime
-from typing import Optional, Union
 
 from common.extensions import extract_filetype
 from common.licenses import is_valid_license_info
@@ -55,9 +54,9 @@ class MediaStore(metaclass=abc.ABCMeta):
 
     def __init__(
         self,
-        provider: Optional[str] = None,
+        provider: str | None = None,
         buffer_length: int = 100,
-        media_type: Optional[str] = "generic",
+        media_type: str | None = "generic",
     ):
         logger.info(f"Initialized {media_type} MediaStore with provider {provider}")
         self.media_type = media_type
@@ -90,7 +89,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         """
         pass
 
-    def clean_media_metadata(self, **media_data) -> Optional[dict]:
+    def clean_media_metadata(self, **media_data) -> dict | None:
         """
         Cleans and enriches the base media metadata common for all media types.
         Even though we clean license info in the provider API scripts,
@@ -150,8 +149,8 @@ class MediaStore(metaclass=abc.ABCMeta):
 
     def _initialize_output_path(
         self,
-        provider: Optional[str],
-        version: Optional[str] = None,
+        provider: str | None,
+        version: str | None = None,
     ) -> str:
         """Creates the path for the tsv file.
         If output_dir and output_file ar not given,
@@ -214,7 +213,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         return buffer_length
 
     @staticmethod
-    def _tag_blacklisted(tag: Union[str, dict]) -> bool:
+    def _tag_blacklisted(tag: str | dict) -> bool:
         """
         Tag is banned or contains a banned substring.
         :param tag: the tag to be verified against the blacklist
@@ -248,7 +247,7 @@ class MediaStore(metaclass=abc.ABCMeta):
             )
         return enriched_meta_data
 
-    def _enrich_tags(self, raw_tags) -> Optional[list]:
+    def _enrich_tags(self, raw_tags) -> list | None:
         """Takes a list of tags and adds provider information to them
 
         Args:

@@ -1,7 +1,7 @@
 import logging
 import time
+from collections.abc import Sequence
 from datetime import datetime
-from typing import Sequence, Type
 
 from airflow.models import DagRun, TaskInstance
 from airflow.utils.dates import cron_presets
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def generate_tsv_filenames(
-    ingester_class: Type[ProviderDataIngester],
+    ingester_class: type[ProviderDataIngester],
     media_types: list[MediaType],
     ti: TaskInstance,
     dag_run: DagRun,
@@ -49,7 +49,7 @@ def generate_tsv_filenames(
 
 
 def pull_media_wrapper(
-    ingester_class: Type[ProviderDataIngester],
+    ingester_class: type[ProviderDataIngester],
     media_types: list[MediaType],
     tsv_filenames: list[str],
     ti: TaskInstance,

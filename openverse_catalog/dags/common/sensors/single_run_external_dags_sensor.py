@@ -1,5 +1,5 @@
 import os
-from typing import Iterable
+from collections.abc import Iterable
 
 from airflow.exceptions import AirflowException
 from airflow.models import DagBag, DagModel, DagRun, TaskInstance

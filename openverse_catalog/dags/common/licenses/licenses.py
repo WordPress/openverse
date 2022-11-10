@@ -5,7 +5,6 @@ with licenses.
 import logging
 from collections import namedtuple
 from functools import cache, lru_cache
-from typing import Optional, Tuple
 from urllib.parse import urlparse
 
 from common import urls
@@ -85,7 +84,7 @@ def get_license_info(license_url=None, license_=None, license_version=None):
 
 def _get_license_info_from_url(
     license_url: str, path_map=LICENSE_PATH_MAP
-) -> Tuple[Optional[str], Optional[str], Optional[str], Optional[str]]:
+) -> tuple[str | None, str | None, str | None, str | None]:
     """
     We try to extract license info from a given URL.
 
@@ -133,7 +132,7 @@ def _get_license_info_from_url(
     return license_, license_version, cc_url, raw_url
 
 
-def _get_valid_cc_url(license_url) -> Optional[str]:
+def _get_valid_cc_url(license_url) -> str | None:
     """
     Try to get a valid creativecommons.org URL from a given URL.
 
@@ -181,7 +180,7 @@ def _get_valid_cc_url(license_url) -> Optional[str]:
 
 def get_license_info_from_license_pair(
     license_, license_version, pair_map=REVERSE_LICENSE_PATH_MAP
-) -> Tuple[Optional[str], Optional[str], Optional[str]]:
+) -> tuple[str | None, str | None, str | None]:
     """
     Validates a given license pair, and derives a license URL from it.
 
@@ -200,7 +199,7 @@ def get_license_info_from_license_pair(
     return valid_license, valid_version, valid_url
 
 
-def _ensure_license_version_string(license_version) -> Optional[str]:
+def _ensure_license_version_string(license_version) -> str | None:
     string_license_version = None
     try:
         if license_version == constants.NO_VERSION:

@@ -21,7 +21,6 @@ Notes:      [The iNaturalist API is not intended for data scraping.]
 
 import os
 from pathlib import Path
-from typing import Dict
 
 import pendulum
 from airflow.exceptions import AirflowSkipException
@@ -64,7 +63,7 @@ class INaturalistDataIngester(ProviderDataIngester):
             next_offset = prev_query_params["offset_num"] + self.batch_limit
             return {"offset_num": next_offset}
 
-    def get_response_json(self, query_params: Dict):
+    def get_response_json(self, query_params: dict):
         """
         Call the SQL to pull json from Postgres, where the raw data has been loaded.
         """

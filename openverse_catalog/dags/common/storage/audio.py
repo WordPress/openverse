@@ -1,6 +1,5 @@
 import logging
 from collections import namedtuple
-from typing import Dict, Optional, Union
 
 from common.licenses import LicenseInfo
 from common.storage.media import MediaStore
@@ -45,29 +44,29 @@ class AudioStore(MediaStore):
         foreign_landing_url: str,
         audio_url: str,
         license_info: LicenseInfo,
-        thumbnail_url: Optional[str] = None,
-        filesize: Optional[int] = None,
-        filetype: Optional[str] = None,
-        foreign_identifier: Optional[str] = None,
-        creator: Optional[str] = None,
-        creator_url: Optional[str] = None,
-        title: Optional[str] = None,
-        meta_data: Optional[Union[Dict, str]] = None,
-        raw_tags: Optional[Union[list, str]] = None,
-        watermarked: Optional[bool] = False,
-        duration: Optional[int] = None,
-        bit_rate: Optional[int] = None,
-        sample_rate: Optional[int] = None,
-        category: Optional[str] = None,
-        genres: Optional[list[str]] = None,
-        set_foreign_id: Optional[str] = None,
-        audio_set: Optional[str] = None,
-        set_position: Optional[int] = None,
-        set_thumbnail: Optional[str] = None,
-        set_url: Optional[str] = None,
-        alt_files: Optional[Dict] = None,
-        source: Optional[str] = None,
-        ingestion_type: Optional[str] = None,
+        thumbnail_url: str | None = None,
+        filesize: int | None = None,
+        filetype: str | None = None,
+        foreign_identifier: str | None = None,
+        creator: str | None = None,
+        creator_url: str | None = None,
+        title: str | None = None,
+        meta_data: dict | str | None = None,
+        raw_tags: list | str | None = None,
+        watermarked: bool | None = False,
+        duration: int | None = None,
+        bit_rate: int | None = None,
+        sample_rate: int | None = None,
+        category: str | None = None,
+        genres: list[str] | None = None,
+        set_foreign_id: str | None = None,
+        audio_set: str | None = None,
+        set_position: int | None = None,
+        set_thumbnail: str | None = None,
+        set_url: str | None = None,
+        alt_files: dict | None = None,
+        source: str | None = None,
+        ingestion_type: str | None = None,
         **kwargs,
     ):
         """
@@ -182,7 +181,7 @@ class AudioStore(MediaStore):
             self.save_item(audio)
         return self.total_items
 
-    def _get_audio(self, **kwargs) -> Optional[Audio]:
+    def _get_audio(self, **kwargs) -> Audio | None:
         """Validates audio information and returns Audio namedtuple"""
         audio_metadata = self.clean_media_metadata(**kwargs)
         if audio_metadata is None:

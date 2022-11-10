@@ -1,7 +1,7 @@
 import datetime
 import json
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal
 
 from openverse_catalog.dags.maintenance.pr_review_reminders.pr_review_reminders import (
     COMMENT_MARKER,
@@ -84,7 +84,7 @@ _comment_count = 1
 
 
 def make_pr_comment(
-    is_reminder: bool, created_at: Optional[datetime.datetime] = None
+    is_reminder: bool, created_at: datetime.datetime | None = None
 ) -> dict:
     global _comment_count
 

@@ -1,6 +1,5 @@
 import logging
 import re
-from typing import Dict, Optional, Tuple
 
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
@@ -151,7 +150,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         return f"https://coimages.sciencemuseumgroup.org.uk/images/{image_url}"
 
     @staticmethod
-    def _get_dimensions(image_data: Dict) -> Tuple[int | None, int | None]:
+    def _get_dimensions(image_data: dict) -> tuple[int | None, int | None]:
         """
         Returns the height and width of the image from "image_data"."measurements"
         with keys of "dimension", "units", "value".
@@ -167,8 +166,8 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _get_image_info(
-        processed: Dict,
-    ) -> Tuple[Optional[str], Optional[int], Optional[int], Optional[str]]:
+        processed: dict,
+    ) -> tuple[str | None, int | None, int | None, str | None]:
         height, width, filetype = None, None, None
         image_data = processed.get("large")
         if image_data is None:
@@ -181,7 +180,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         return image_url, height, width, filetype
 
     @staticmethod
-    def _get_first_list_value(key: str, attributes: Dict) -> str | None:
+    def _get_first_list_value(key: str, attributes: dict) -> str | None:
         val = attributes.get(key)
         if isinstance(val, list):
             return val[0].get("value")

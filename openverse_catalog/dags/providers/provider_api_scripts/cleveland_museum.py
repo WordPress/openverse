@@ -1,5 +1,4 @@
 import logging
-from typing import Dict
 
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
@@ -82,7 +81,7 @@ class ClevelandDataIngester(ProviderDataIngester):
         return None
 
     @staticmethod
-    def _get_int_value(data: Dict, key: str) -> int | None:
+    def _get_int_value(data: dict, key: str) -> int | None:
         """
         Converts the value of the key `key` in `data` to an integer.
         Returns None if the value is not convertible to an integer, or

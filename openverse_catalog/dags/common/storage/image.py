@@ -1,6 +1,5 @@
 import logging
 from collections import namedtuple
-from typing import Dict, Optional, Union
 
 from common.licenses import LicenseInfo
 from common.storage.media import MediaStore
@@ -45,20 +44,20 @@ class ImageStore(MediaStore):
         foreign_landing_url: str,
         image_url: str,
         license_info: LicenseInfo,
-        filesize: Optional[int] = None,
-        filetype: Optional[str] = None,
-        foreign_identifier: Optional[str] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        creator: Optional[str] = None,
-        creator_url: Optional[str] = None,
-        title: Optional[str] = None,
-        meta_data: Optional[Union[Dict, str]] = None,
+        filesize: int | None = None,
+        filetype: str | None = None,
+        foreign_identifier: str | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        creator: str | None = None,
+        creator_url: str | None = None,
+        title: str | None = None,
+        meta_data: dict | str | None = None,
         raw_tags=None,
-        category: Optional[str] = None,
-        watermarked: Optional[str] = "f",
-        source: Optional[str] = None,
-        ingestion_type: Optional[str] = None,
+        category: str | None = None,
+        watermarked: str | None = "f",
+        source: str | None = None,
+        ingestion_type: str | None = None,
         **kwargs,
     ):
         """
@@ -145,7 +144,7 @@ class ImageStore(MediaStore):
             self.save_item(image)
         return self.total_items
 
-    def _get_image(self, **kwargs) -> Optional[Image]:
+    def _get_image(self, **kwargs) -> Image | None:
         """Validates image information and returns Image namedtuple"""
         image_metadata = self.clean_media_metadata(**kwargs)
         if image_metadata is None:

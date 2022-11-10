@@ -1,5 +1,3 @@
-from typing import List
-
 from common.constants import AUDIO, IMAGE
 from common.storage import columns as col
 from common.storage.columns import Column
@@ -90,8 +88,8 @@ COLUMNS = {
     },
 }
 
-CURRENT_AUDIO_TSV_COLUMNS: List[Column] = COLUMNS[AUDIO][CURRENT_VERSION[AUDIO]]
-CURRENT_IMAGE_TSV_COLUMNS: List[Column] = COLUMNS[IMAGE][CURRENT_VERSION[IMAGE]]
+CURRENT_AUDIO_TSV_COLUMNS: list[Column] = COLUMNS[AUDIO][CURRENT_VERSION[AUDIO]]
+CURRENT_IMAGE_TSV_COLUMNS: list[Column] = COLUMNS[IMAGE][CURRENT_VERSION[IMAGE]]
 
 # This list is the same for all media types
 required_columns = [col for col in CURRENT_IMAGE_TSV_COLUMNS if col.required]

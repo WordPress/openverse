@@ -16,7 +16,6 @@ Notes:                  https://api.jamendo.com/v3.0/tracks/
                         channels: 1/2
 """
 import logging
-from typing import Optional
 from urllib.parse import parse_qs, urlencode, urlsplit
 
 import common
@@ -75,7 +74,7 @@ class JamendoDataIngester(ProviderDataIngester):
         query.pop(param, None)
         return parsed_url._replace(query=urlencode(query, doseq=True)).geturl()
 
-    def _remove_trackid(self, thumbnail_url: Optional[str]) -> Optional[str]:
+    def _remove_trackid(self, thumbnail_url: str | None) -> str | None:
         """
         ``audio_set`` data is used to create a separate database table in the API.
         To make sure that any given ``audio_set`` appears in that table only once,

@@ -33,7 +33,7 @@ def _fix_ingestion_column(filepath: str) -> None:
     ingestion_type = source if source == "commoncrawl" else "provider_api"
     logger.info(f"Adding ingestion type {ingestion_type} to {filepath}")
     temp_tsv = filepath + ".new"
-    with open(filepath, "r") as old_tsv, open(temp_tsv, "w") as new_tsv:
+    with open(filepath) as old_tsv, open(temp_tsv, "w") as new_tsv:
         old_line = old_tsv.readline().strip()
         while old_line:
             if ingestion_type == "commoncrawl":

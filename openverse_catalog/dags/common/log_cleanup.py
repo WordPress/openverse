@@ -3,7 +3,6 @@ import logging
 import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
 
 
 logger = logging.getLogger(__name__)
@@ -19,8 +18,8 @@ def is_older_than_cutoff(file_or_folder: Path, cutoff: int):
     return datetime.fromtimestamp(last_modified) <= cutoff_time
 
 
-def dir_size_in_mb(dir_paths: Union[List[Path], Path]):
-    if not isinstance(dir_paths, List):
+def dir_size_in_mb(dir_paths: list[Path] | Path):
+    if not isinstance(dir_paths, list):
         dir_paths = [dir_paths]
     size_in_bytes = sum(
         sum(f.stat().st_size for f in folder.glob("**/*") if f.is_file())
@@ -29,7 +28,7 @@ def dir_size_in_mb(dir_paths: Union[List[Path], Path]):
     return size_in_bytes / (1024 * 1024)
 
 
-def get_folders_to_delete(dag_log_folder: Path, max_log_age_in_days: int) -> List[Path]:
+def get_folders_to_delete(dag_log_folder: Path, max_log_age_in_days: int) -> list[Path]:
     """Returns a list of log folders that are older `than max_log_age_in_days`
     The folder structure is as follows:
     `{dag_id}/{task_id}/{timestamp}/{try}.log`
@@ -54,15 +53,15 @@ def get_folders_to_delete(dag_log_folder: Path, max_log_age_in_days: int) -> Lis
     return folders_to_delete
 
 
-def delete_folders(folders_to_delete: List[Path]) -> None:
+def delete_folders(folders_to_delete: list[Path]) -> None:
     for dag_log_folder in folders_to_delete:
         logger.info(f"Deleting {dag_log_folder}")
         shutil.rmtree(dag_log_folder)
 
 
 def get_params(
-    log_age: Union[int, str], enable_delete: Union[bool, str], params: Dict
-) -> Tuple[int, bool]:
+    log_age: int | str, enable_delete: bool | str, params: dict
+) -> tuple[int, bool]:
     if not isinstance(log_age, int):
         log_age_param = params.get("maxLogAgeInDays")
         try:
@@ -86,9 +85,9 @@ def get_params(
 
 
 def clean_up(
-    base_log_folder: Union[str, Path],
-    max_log_age_in_days: Union[int, str],
-    should_delete: Union[bool, str],
+    base_log_folder: str | Path,
+    max_log_age_in_days: int | str,
+    should_delete: bool | str,
     **kwargs,
 ) -> list[Path]:
     """Finds all log folders that were modified more than

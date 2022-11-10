@@ -1,7 +1,7 @@
 import inspect
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Dict, Optional, Sequence, Type
 
 from providers.provider_api_scripts.brooklyn_museum import BrooklynMuseumDataIngester
 from providers.provider_api_scripts.cleveland_museum import ClevelandDataIngester
@@ -75,9 +75,9 @@ class ProviderWorkflow:
     tags:               list of any additional tags to apply to the generated DAG
     """
 
-    ingester_class: Type[ProviderDataIngester]
+    ingester_class: type[ProviderDataIngester]
     dag_id: str = ""
-    default_args: Optional[Dict] = None
+    default_args: dict | None = None
     start_date: datetime = datetime(1970, 1, 1)
     max_active_runs: int = 1
     max_active_tasks: int = 1
@@ -87,8 +87,8 @@ class ProviderWorkflow:
     load_timeout: timedelta = timedelta(hours=1)
     doc_md: str = ""
     media_types: Sequence[str] = ()
-    create_preingestion_tasks: Optional[callable] = None
-    create_postingestion_tasks: Optional[callable] = None
+    create_preingestion_tasks: Callable | None = None
+    create_postingestion_tasks: Callable | None = None
     tags: list[str] = field(default_factory=list)
 
     def __post_init__(self):

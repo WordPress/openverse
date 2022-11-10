@@ -5,20 +5,17 @@
 import gzip
 import logging
 import os
-import random
 import re
 import sys
 from collections import Counter
-from datetime import date, datetime, timedelta
 
 import boto3
 import botocore
 import requests
 import StringIO
 import ujson as json
-from botocore.handlers import disable_signing
 from pyspark import SparkContext
-from pyspark.sql import SparkSession, SQLContext
+from pyspark.sql import SparkSession
 from pyspark.sql.types import *
 from urlparse import urlparse
 from warcio.archiveiterator import ArchiveIterator
@@ -50,16 +47,16 @@ class CCLinks:
         self.crawlIndex = _index
 
         # check index format
-        pattern = re.compile("CC-MAIN-\d{4}-\d{2}")
+        pattern = re.compile(r"CC-MAIN-\d{4}-\d{2}")
         if not pattern.match(_index):
-            logging.error("Invalid common crawl index format => {}.".format(_index))
+            logging.error(f"Invalid common crawl index format => {_index}.")
             sys.exit()
 
         self.numPartitions = _ptn
         self.url = "https://{}.s3.amazonaws.com/crawl-data/{}/wat.paths.gz".format(
             BUCKET, self.crawlIndex
         )
-        self.output = "s3://commonsmapper-v2/output/{}".format(self.crawlIndex)
+        self.output = f"s3://commonsmapper-v2/output/{self.crawlIndex}"
 
     def loadWATFile(self):
         # load the WAT file paths
@@ -75,7 +72,7 @@ class CCLinks:
         list
             A list of WAT path locations.
         """
-        logging.info("Loading file {}".format(self.url))
+        logging.info(f"Loading file {self.url}")
 
         try:
             response = requests.get(self.url)
@@ -91,7 +88,7 @@ class CCLinks:
 
         except Exception as e:
             logging.error("There was a problem loading the file.")
-            logging.error("{}: {}".format(type(e).__name__, e))
+            logging.error(f"{type(e).__name__}: {e}")
             # sys.exit()
 
     def processFile(self, _iterator):
@@ -153,7 +150,7 @@ class CCLinks:
                     except Exception as e:
                         # ConnectionError: HTTPSConnectionPool
                         logging.error(
-                            "Exception type: {0}, Message: {1}".format(
+                            "Exception type: {}, Message: {}".format(
                                 type(e).__name__, e
                             )
                         )
@@ -168,7 +165,7 @@ class CCLinks:
 
                                 except Exception as e:
                                     logging.warning(
-                                        "JSON payload file: {0}. Exception type: {1}, Message: {2}".format(
+                                        "JSON payload file: {}. Exception type: {}, Message: {}".format(
                                             uri.strip(), type(e).__name__, e
                                         )
                                     )
@@ -292,8 +289,7 @@ class CCLinks:
 
                                     else:
                                         if result:
-                                            for res in result:
-                                                yield res
+                                            yield from result
 
     def generateParquet(self, _data):
         """

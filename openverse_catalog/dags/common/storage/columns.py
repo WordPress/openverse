@@ -2,7 +2,7 @@ import json
 import logging
 from abc import ABC, abstractmethod
 from enum import Enum, auto
-from typing import NewType, Optional
+from typing import NewType
 
 from common import urls
 
@@ -106,10 +106,10 @@ class Column(ABC):
         name: str,
         required: bool,
         datatype: Datatype = Datatype.char,
-        upsert_strategy: Optional[UpsertStrategy] = UpsertStrategy.newest_non_null,
-        constraint: Optional[str] = None,
-        db_name: Optional[str] = None,
-        nullable: Optional[bool] = None,
+        upsert_strategy: UpsertStrategy | None = UpsertStrategy.newest_non_null,
+        constraint: str | None = None,
+        db_name: str | None = None,
+        nullable: bool | None = None,
     ):
         """
         :param name: The column name used in TSV, ImageStore and provider API scripts,
@@ -212,8 +212,8 @@ class IntegerColumn(Column):
         self,
         name: str,
         required: bool,
-        constraint: Optional[str] = None,
-        db_name: Optional[str] = None,
+        constraint: str | None = None,
+        db_name: str | None = None,
     ):
         super().__init__(
             name,
@@ -255,9 +255,9 @@ class BooleanColumn(Column):
         self,
         name: str,
         required: bool,
-        upsert_strategy: Optional[UpsertStrategy] = UpsertStrategy.newest_non_null,
-        constraint: Optional[str] = None,
-        db_name: Optional[str] = None,
+        upsert_strategy: UpsertStrategy | None = UpsertStrategy.newest_non_null,
+        constraint: str | None = None,
+        db_name: str | None = None,
     ):
         super().__init__(
             name,
@@ -303,8 +303,8 @@ class JSONColumn(Column):
         self,
         name: str,
         required: bool,
-        db_name: Optional[str] = None,
-        upsert_strategy: Optional[UpsertStrategy] = None,
+        db_name: str | None = None,
+        upsert_strategy: UpsertStrategy | None = None,
     ):
         strategy = upsert_strategy or UpsertStrategy.merge_jsonb_objects
         super().__init__(
@@ -381,7 +381,7 @@ class StringColumn(Column):
         required: bool,
         size: int,
         truncate: bool,
-        db_name: Optional[str] = None,
+        db_name: str | None = None,
     ):
         self.SIZE = size
         self.TRUNCATE = truncate
@@ -436,7 +436,7 @@ class TimestampColumn(Column):
         self,
         name: str,
         required: bool,
-        upsert_strategy: Optional[UpsertStrategy] = None,
+        upsert_strategy: UpsertStrategy | None = None,
     ):
         super().__init__(
             name,
@@ -476,7 +476,7 @@ class URLColumn(Column):
         required: bool,
         size: int,
         nullable: bool = False,
-        db_name: Optional[str] = None,
+        db_name: str | None = None,
     ):
         self.SIZE = size
         super().__init__(
@@ -522,7 +522,7 @@ class ArrayColumn(Column):
         name: str,
         required: bool,
         base_column: Column,
-        db_name: Optional[str] = None,
+        db_name: str | None = None,
     ):
         self.base_column = base_column
         super().__init__(

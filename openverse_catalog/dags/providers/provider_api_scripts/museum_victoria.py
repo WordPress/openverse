@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Optional, Tuple, TypedDict
+from typing import TypedDict
 
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
@@ -15,7 +15,7 @@ class ImageDetails(TypedDict, total=False):
     license_info: LicenseInfo
     foreign_landing_url: str
     title: str
-    meta_data: Dict
+    meta_data: dict
     height: int | None
     width: int | None
     creator: str | None
@@ -49,9 +49,7 @@ class VictoriaDataIngester(ProviderDataIngester):
     def get_batch_data(self, response_json):
         return response_json or None
 
-    def get_next_query_params(
-        self, prev_query_params: Optional[Dict], **kwargs
-    ) -> Dict:
+    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         if not prev_query_params:
             return {
                 "hasimages": "yes",
@@ -65,7 +63,7 @@ class VictoriaDataIngester(ProviderDataIngester):
                 "page": prev_query_params["page"] + 1,
             }
 
-    def get_record_data(self, data: Dict):
+    def get_record_data(self, data: dict):
         object_id = data.get("id")
         if object_id in self.RECORDS_IDS:
             return None
@@ -123,8 +121,8 @@ class VictoriaDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _get_image_data(
-        media: Dict,
-    ) -> Tuple[str | None, int | None, int | None, int | None]:
+        media: dict,
+    ) -> tuple[str | None, int | None, int | None, int | None]:
         height, width, filesize = None, None, None
         media_data = {}
         for size in ["large", "medium", "small"]:
@@ -165,7 +163,7 @@ class VictoriaDataIngester(ProviderDataIngester):
         return {key: value for key, value in meta_data.items() if value is not None}
 
     @staticmethod
-    def _get_license_info(media: Dict) -> LicenseInfo | None:
+    def _get_license_info(media: dict) -> LicenseInfo | None:
         license_uri = media.get("licence", {}).get("uri", {})
         if "creativecommons" in license_uri:
             return get_license_info(license_url=license_uri)

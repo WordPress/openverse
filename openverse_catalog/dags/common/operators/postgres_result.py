@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, Callable, Iterable, List, Mapping, Optional, Union
+from collections.abc import Callable, Iterable, Mapping
+from typing import TYPE_CHECKING
 
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.providers.postgres.operators.postgres import PostgresOperator
@@ -19,13 +20,13 @@ class PostgresResultOperator(PostgresOperator):
     def __init__(
         self,
         *,
-        sql: Union[str, List[str]],
+        sql: str | list[str],
         handler: Callable,
         postgres_conn_id: str = "postgres_default",
         autocommit: bool = False,
-        parameters: Optional[Union[Mapping, Iterable]] = None,
-        database: Optional[str] = None,
-        runtime_parameters: Optional[Mapping] = None,
+        parameters: Mapping | Iterable | None = None,
+        database: str | None = None,
+        runtime_parameters: Mapping | None = None,
         **kwargs,
     ) -> None:
         super().__init__(

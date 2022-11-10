@@ -1,5 +1,4 @@
 import re
-from typing import Optional
 
 from common.constants import MEDIA_TYPES
 
@@ -7,7 +6,7 @@ from common.constants import MEDIA_TYPES
 LEGACY_TSV_VERSION = "000"
 
 
-def _extract_media_type(tsv_file_name: Optional[str]) -> str:
+def _extract_media_type(tsv_file_name: str | None) -> str:
     """
     By default, the filename will be:
     `folder/provider_timestamp.tsv` for older version

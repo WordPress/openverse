@@ -32,7 +32,7 @@ https://github.com/WordPress/openverse-catalog/issues/353)
 https://github.com/WordPress/openverse-catalog/issues/453)
 """
 import logging
-from typing import Sequence
+from collections.abc import Sequence
 
 from airflow import DAG
 from airflow.models.dagrun import DagRun

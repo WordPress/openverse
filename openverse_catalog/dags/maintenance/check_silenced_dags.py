@@ -20,7 +20,6 @@ The DAG runs weekly.
 
 import logging
 from datetime import datetime, timedelta
-from typing import Tuple
 
 from airflow.exceptions import AirflowException, AirflowSkipException
 from airflow.models import DAG, Variable
@@ -38,7 +37,7 @@ MAX_ACTIVE = 1
 GITHUB_PAT = Variable.get("GITHUB_API_KEY", default_var="not_set")
 
 
-def get_issue_info(issue_url: str) -> Tuple[str, str, str]:
+def get_issue_info(issue_url: str) -> tuple[str, str, str]:
     """
     Parses out the owner, repo, and issue_number from a GitHub issue url.
     """

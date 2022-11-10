@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import logging
-from typing import NamedTuple, Optional, Sequence
+from collections.abc import Sequence
+from typing import NamedTuple
 
 from common.slack import send_message
 
@@ -21,10 +22,10 @@ TIME_DURATION_UNITS = (
 
 
 class RecordMetrics(NamedTuple):
-    upserted: Optional[int]
-    missing_columns: Optional[int]
-    foreign_id_dup: Optional[int]
-    url_dup: Optional[int]
+    upserted: int | None
+    missing_columns: int | None
+    foreign_id_dup: int | None
+    url_dup: int | None
 
     def _add_counts(self, a, b):
         return (a or 0) + (b or 0)

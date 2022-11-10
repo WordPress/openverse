@@ -21,7 +21,7 @@ MAX_THINGS = 30
 LICENSE = "pd0"
 TOKEN = Variable.get("API_KEY_THINGIVERSE", default_var=None)
 DELAY = 5.0  # seconds
-FILE = "thingiverse_{}.tsv".format(int(time.time()))
+FILE = f"thingiverse_{int(time.time())}.tsv"
 
 
 def requestBatchThings(_page):
@@ -39,9 +39,7 @@ def requestBatchThings(_page):
 
 def getMetaData(_thing, _date):
 
-    url = "https://api.thingiverse.com/things/{0}?access_token={1}".format(
-        _thing, TOKEN
-    )
+    url = f"https://api.thingiverse.com/things/{_thing}?access_token={TOKEN}"
     licenseText = "Creative Commons - Public Domain Dedication"
     license = None
     version = None
@@ -51,7 +49,7 @@ def getMetaData(_thing, _date):
     foreignURL = None
     extracted = []
 
-    logging.info("Processing thing: {}".format(_thing))
+    logging.info(f"Processing thing: {_thing}")
 
     result = requestContent(url)
     if result:
@@ -94,7 +92,7 @@ def getMetaData(_thing, _date):
         if "public_url" in result:
             foreignURL = result["public_url"].strip()
         else:
-            foreignURL = "https://www.thingiverse.com/thing:{}".format(_thing)
+            foreignURL = f"https://www.thingiverse.com/thing:{_thing}"
 
         # creator of the 3D model
         if "creator" in result:
@@ -114,9 +112,9 @@ def getMetaData(_thing, _date):
 
         # get the tags
         delayProcessing(startTime, DELAY)
-        logging.info("Requesting tags for thing: {}".format(_thing))
+        logging.info(f"Requesting tags for thing: {_thing}")
         startTime = time.time()
-        tags = requestContent(url.replace(_thing, "{0}/tags".format(_thing)))
+        tags = requestContent(url.replace(_thing, f"{_thing}/tags"))
         tagsList = None
 
         if tags:
@@ -132,9 +130,9 @@ def getMetaData(_thing, _date):
 
         # get 3D models and their respective images
         delayProcessing(startTime, DELAY)
-        logging.info("Requesting images for thing: {}".format(_thing))
+        logging.info(f"Requesting images for thing: {_thing}")
 
-        imageList = requestContent(url.replace(_thing, "{}/files".format(_thing)))
+        imageList = requestContent(url.replace(_thing, f"{_thing}/files"))
         if imageList is None:
             logging.warning("Image Not Detected!")
             delayProcessing(startTime, DELAY)
@@ -234,7 +232,7 @@ def execJob(_date):
 
         page += 1
 
-    logging.info("Total CC0 3D Models: {}".format(result))
+    logging.info(f"Total CC0 3D Models: {result}")
 
 
 def main():
@@ -258,7 +256,7 @@ def main():
             param = datetime.strftime(datetime.now() - timedelta(1), "%Y-%m-%d")
 
         mode += param if param is not None else ""
-        logging.info("Processing {}".format(mode))
+        logging.info(f"Processing {mode}")
 
         if param:
             execJob(param)

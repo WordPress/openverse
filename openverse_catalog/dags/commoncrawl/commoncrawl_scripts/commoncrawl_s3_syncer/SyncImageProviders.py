@@ -52,7 +52,7 @@ def getCrawlIndex(_param):
 
 def validateIndexPattern(_index, _pattern=re.compile(r"CC-MAIN-\d{4}-\d{2}")):
     if not _pattern.match(_index):
-        logging.error("Invalid common crawl index format => {}.".format(_index))
+        logging.error(f"Invalid common crawl index format => {_index}.")
         raise argparse.ArgumentTypeError
     return _index
 
@@ -61,7 +61,7 @@ def syncS3Objects(_index):
     s3 = boto3.client(
         "s3", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY
     )
-    botoArgs = {"Bucket": BUCKET, "Prefix": "common_crawl_image_data/{}".format(_index)}
+    botoArgs = {"Bucket": BUCKET, "Prefix": f"common_crawl_image_data/{_index}"}
 
     objects = s3.list_objects_v2(**botoArgs)
 
@@ -70,7 +70,7 @@ def syncS3Objects(_index):
 
         if "_SUCCESS" not in key:
             fileName = key.lstrip("common_crawl_image_data/").replace("/", "_")
-            fileName = "{}{}".format(PATH, fileName)
+            fileName = f"{PATH}{fileName}"
             fileName = fileName.replace(".csv", ".tsv")
 
             with open(fileName, "wb") as fh:
@@ -79,7 +79,7 @@ def syncS3Objects(_index):
                 # check if the file exists locally before removing it from the s3 bucket
                 if os.path.exists(fileName) and os.path.getsize(fileName) > 0:
                     s3.delete_object(Bucket=BUCKET, Key=key)
-                    logging.info("Deleted object: {}".format(key))
+                    logging.info(f"Deleted object: {key}")
         else:
             s3.delete_object(Bucket=BUCKET, Key=key)
 

@@ -1,5 +1,6 @@
 import logging
-from typing import Any, Collection, NamedTuple
+from collections.abc import Collection
+from typing import Any, NamedTuple
 
 from airflow.exceptions import AirflowSkipException
 from airflow.models import Variable

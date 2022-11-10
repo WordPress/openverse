@@ -48,7 +48,7 @@ import json
 import logging
 import os
 import uuid
-from typing import Sequence
+from collections.abc import Sequence
 from urllib.parse import urlparse
 
 from airflow.exceptions import AirflowException

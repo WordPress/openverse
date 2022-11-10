@@ -14,7 +14,6 @@ import argparse
 import logging
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
-from typing import Optional
 
 import lxml.html as html
 from common.constants import AUDIO, IMAGE
@@ -290,7 +289,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
                 return "pronunciation"
 
     @staticmethod
-    def extract_ext_value(media_info: dict, ext_key: str) -> Optional[str]:
+    def extract_ext_value(media_info: dict, ext_key: str) -> str | None:
         return media_info.get("extmetadata", {}).get(ext_key, {}).get("value")
 
     @staticmethod

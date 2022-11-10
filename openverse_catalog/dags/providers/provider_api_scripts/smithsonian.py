@@ -9,7 +9,6 @@ Notes:              https://api.si.edu/openaccess/api/v1.0/search
 """
 
 import logging
-from typing import Tuple
 
 from airflow.exceptions import AirflowException
 from airflow.models import Variable
@@ -190,7 +189,7 @@ class SmithsonianDataIngester(ProviderDataIngester):
 
     def _get_new_and_outdated_unit_codes(
         self, unit_codes_from_api: set
-    ) -> Tuple[set, set]:
+    ) -> tuple[set, set]:
         current_unit_codes = set().union(*self.sub_providers.values())
         new_unit_codes = unit_codes_from_api - current_unit_codes
         outdated_unit_codes = current_unit_codes - unit_codes_from_api

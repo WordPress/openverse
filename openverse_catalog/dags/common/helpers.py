@@ -1,4 +1,4 @@
-from typing import List, NamedTuple
+from typing import NamedTuple
 
 
 class IngestionInput(NamedTuple):
@@ -6,7 +6,7 @@ class IngestionInput(NamedTuple):
     repeats: int
 
 
-def get_partitioned_reingestion_days(inputs: List[IngestionInput]):
+def get_partitioned_reingestion_days(inputs: list[IngestionInput]):
     """
     This method calculates day-shift lists for Provider API workflows.
 

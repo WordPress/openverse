@@ -2,7 +2,6 @@ import datetime
 import logging
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Optional
 
 from common.github import GitHubAPI
 
@@ -76,7 +75,7 @@ def parse_gh_date(d) -> datetime.datetime:
     return datetime.datetime.fromisoformat(d.rstrip("Z"))
 
 
-def get_urgency_if_urgent(pr: dict) -> Optional[ReviewDelta]:
+def get_urgency_if_urgent(pr: dict) -> ReviewDelta | None:
     updated_at = parse_gh_date(pr["updated_at"])
     today = datetime.datetime.now()
     urgency = pr_urgency(pr)

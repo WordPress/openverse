@@ -50,8 +50,9 @@ variable to `true` in the Airflow UI.
 
 import json
 import logging
+from collections.abc import Callable
 from os.path import basename
-from typing import Any, Callable, Optional, TypedDict
+from typing import Any, TypedDict
 
 from airflow.exceptions import AirflowNotFoundException
 from airflow.models import Variable
@@ -112,7 +113,7 @@ class SlackMessage:
 
     @staticmethod
     def _image_block(
-        url: str, title: Optional[str] = None, alt_text: Optional[str] = None
+        url: str, title: str | None = None, alt_text: str | None = None
     ) -> JsonDict:
         img = {"type": "image", "image_url": url}
         if title:
@@ -169,7 +170,7 @@ class SlackMessage:
             plain_text=plain_text,
         )
 
-    def add_context_image(self, url: str, alt_text: Optional[str] = None) -> None:
+    def add_context_image(self, url: str, alt_text: str | None = None) -> None:
         """Display context image inline within a text block"""
         self._add_context(self._image_block, url, alt_text=alt_text)
 
@@ -192,7 +193,7 @@ class SlackMessage:
         self._add_block({"type": "section", "text": text})
 
     def add_image(
-        self, url, title: Optional[str] = None, alt_text: Optional[str] = None
+        self, url, title: str | None = None, alt_text: str | None = None
     ) -> None:
         """Add an image block, with optional title and alt text."""
         self._add_block(self._image_block(url, title, alt_text))
@@ -337,7 +338,7 @@ def on_failure_callback(context: dict) -> None:
     dag = context["dag"]
     ti = context["task_instance"]
     execution_date = context["execution_date"]
-    exception: Optional[Exception] = context.get("exception")
+    exception: Exception | None = context.get("exception")
     exception_message = ""
 
     if exception:

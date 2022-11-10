@@ -1,6 +1,5 @@
 import logging
 from textwrap import dedent
-from typing import List
 
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from common.constants import AUDIO, IMAGE
@@ -51,7 +50,7 @@ CURRENT_TSV_VERSION = "001"
 RETURN_ROW_COUNT = lambda c: c.rowcount  # noqa: E731
 
 
-def create_column_definitions(table_columns: List[Column], is_loading=True):
+def create_column_definitions(table_columns: list[Column], is_loading=True):
     """Loading table should not have 'NOT NULL' constraints: all TSV values
     are copied, and then the items without required columns are dropped"""
     definitions = [column.create_definition(is_loading) for column in table_columns]
@@ -260,7 +259,7 @@ def upsert_records_to_db_table(
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
 
     # Remove identifier column
-    db_columns: List[Column] = DB_COLUMNS[media_type][1:]
+    db_columns: list[Column] = DB_COLUMNS[media_type][1:]
     column_inserts = {}
     column_conflict_values = {}
     for column in db_columns:
@@ -326,7 +325,7 @@ def _get_malformed_row_in_file(error_msg):
 
 
 def _delete_malformed_row_in_file(tsv_file_name, line_number):
-    with open(tsv_file_name, "r") as read_obj:
+    with open(tsv_file_name) as read_obj:
         lines = read_obj.readlines()
 
     with open(tsv_file_name, "w") as write_obj:
