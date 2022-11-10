@@ -1,6 +1,6 @@
 <template>
   <div class="media-attribution">
-    <h3 class="description md:heading-6 mb-4">
+    <h3 class="description-bold md:heading-6 mb-4">
       {{ headerText }}
     </h3>
 
