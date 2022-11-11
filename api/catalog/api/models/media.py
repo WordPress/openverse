@@ -216,7 +216,7 @@ class AbstractMediaReport(models.Model):
             same_reports = same_reports.filter(reason=self.reason)
         same_reports.update(status=self.status)
 
-        super(AbstractMediaReport, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class AbstractDeletedMedia(OpenLedgerModel):

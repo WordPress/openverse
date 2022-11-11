@@ -1,3 +1,7 @@
+"""
+Perform some basic tests to ensure that search rankings work as anticipated.
+"""
+
 import json
 import pprint
 from enum import Enum
@@ -6,11 +10,6 @@ import pytest
 import requests
 
 from .api_live_integration import API_URL
-
-
-"""
-Perform some basic tests to ensure that search rankings work as anticipated.
-"""
 
 
 class QAScores(Enum):

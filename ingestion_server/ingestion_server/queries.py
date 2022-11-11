@@ -1,5 +1,4 @@
 from textwrap import dedent as d
-from typing import Optional
 
 from psycopg2.sql import SQL, Identifier
 from psycopg2.sql import Literal as PgLiteral
@@ -93,7 +92,7 @@ def get_copy_data_query(
     table: str,
     columns: list[str],
     approach: ApproachType,
-    limit: Optional[int] = 100_000,
+    limit: int | None = 100_000,
 ):
     """
     Get the query for copying data from the upstream table to a temporary table

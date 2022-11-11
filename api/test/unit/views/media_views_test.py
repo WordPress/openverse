@@ -1,9 +1,9 @@
 import json
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from test.factory.models.audio import AudioFactory
 from test.factory.models.image import ImageFactory
-from typing import Callable
 from unittest import mock
 from unittest.mock import patch
 
@@ -37,7 +37,7 @@ class SentRequest:
 class RequestsFixture:
     sent_requests: list[SentRequest]
     send_handler: Callable[
-        (Request,), Response
+        [Request], Response
     ] = lambda *args, **kwargs: RequestsFixture._default_send_handler(*args, **kwargs)
     response_queue: list[Response] = field(default_factory=list)
 

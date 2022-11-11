@@ -3,7 +3,6 @@ import logging
 import os
 from collections import defaultdict
 from datetime import timedelta
-from typing import Optional
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -53,7 +52,7 @@ class LinkValidationCacheExpiryConfiguration(defaultdict):
 
             self[status] = value
 
-    def _config(self, key: str | int, default: Optional[dict] = None) -> Optional[int]:
+    def _config(self, key: str | int, default: dict | None = None) -> int | None:
         try:
             v = config(
                 f"{self.SETTING_PREFIX}{str(key)}",

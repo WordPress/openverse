@@ -1,4 +1,4 @@
-from typing import Iterable
+from collections.abc import Iterable
 
 
 def make_comma_separated_help_text(items: Iterable[str], name: str) -> str:

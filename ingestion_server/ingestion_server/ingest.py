@@ -45,14 +45,14 @@ RELATIVE_UPSTREAM_DB_HOST = config(
     "RELATIVE_UPSTREAM_DB_HOST",
     default=UPSTREAM_DB_HOST,
 )
-"""The hostname of the upstream DB from the POV of the downstream DB"""
+#: the hostname of the upstream DB from the POV of the downstream DB
 
 RELATIVE_UPSTREAM_DB_PORT = config(
     "RELATIVE_UPSTREAM_DB_PORT",
     default=UPSTREAM_DB_PORT,
     cast=int,
 )
-"""The port of the upstream DB from the POV of the downstream DB"""
+#: the port of the upstream DB from the POV of the downstream DB
 
 
 def _get_shared_cols(downstream, upstream, table: str):
@@ -69,9 +69,9 @@ def _get_shared_cols(downstream, upstream, table: str):
     with downstream.cursor() as cur1, upstream.cursor() as cur2:
         get_tables = SQL("SELECT * FROM {table} LIMIT 0;")
         cur1.execute(get_tables.format(table=Identifier(table)))
-        conn1_cols = set([desc[0] for desc in cur1.description])
+        conn1_cols = {desc[0] for desc in cur1.description}
         cur2.execute(get_tables.format(table=Identifier(f"{table}_view")))
-        conn2_cols = set([desc[0] for desc in cur2.description])
+        conn2_cols = {desc[0] for desc in cur2.description}
 
     shared = list(conn1_cols.intersection(conn2_cols))
     log.info(f"Shared columns: {shared}")

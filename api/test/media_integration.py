@@ -64,10 +64,10 @@ def search_consistency(
     appear in the first few pages of a search query.
     """
 
-    searches = set(
+    searches = {
         requests.get(f"{API_URL}/v1/{media_path}?page={page}", verify=False)
         for page in range(1, n_pages)
-    )
+    }
 
     results = set()
     for response in searches:

@@ -1,5 +1,3 @@
-from typing import List
-
 from deepdiff import DeepHash
 from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
@@ -25,7 +23,7 @@ def get_query_hash(s: Search) -> str:
     return deep_hash
 
 
-def get_query_mask(query_hash: str) -> List[int]:
+def get_query_mask(query_hash: str) -> list[int]:
     """
     Fetches an existing query mask for a given query hash
     or returns an empty one.
@@ -38,7 +36,7 @@ def get_query_mask(query_hash: str) -> List[int]:
     return list(map(int, redis.lrange(key, 0, -1)))
 
 
-def save_query_mask(query_hash: str, mask: List):
+def save_query_mask(query_hash: str, mask: list):
     """
     Saves a query mask to redis.
 

@@ -112,8 +112,8 @@ def test_dead_link_filtering(mocked_map, client):
     data_with_dead_links = res_with_dead_links.json()
     data_without_dead_links = res_without_dead_links.json()
 
-    res_1_ids = set(result["id"] for result in data_with_dead_links["results"])
-    res_2_ids = set(result["id"] for result in data_without_dead_links["results"])
+    res_1_ids = {result["id"] for result in data_with_dead_links["results"]}
+    res_2_ids = {result["id"] for result in data_without_dead_links["results"]}
     # In this case, both have 20 results as the dead link filter has "back filled" the
     # pages of dead links. See the subsequent test for the case when this does not
     # occur (i.e., when the entire first page of links is dead).

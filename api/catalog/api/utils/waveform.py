@@ -6,7 +6,6 @@ import os
 import pathlib
 import shutil
 import subprocess
-from typing import List
 
 from django.conf import settings
 
@@ -141,7 +140,7 @@ def cleanup(file_name):
         logger.debug("file not found, nothing deleted")
 
 
-def generate_peaks(audio) -> List[float]:
+def generate_peaks(audio) -> list[float]:
     file_name = None
     try:
         file_name = download_audio(audio.url, audio.identifier)

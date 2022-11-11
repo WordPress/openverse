@@ -1,5 +1,5 @@
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
 
 import pytest
 from fakeredis import FakeRedis
@@ -26,7 +26,7 @@ def redis(monkeypatch) -> FakeRedis:
 class GRequestsFixture:
     requests: list[AsyncRequest]
     response_factory: Callable[
-        (AsyncRequest,), Response
+        [AsyncRequest], Response
     ] = lambda x: GRequestsFixture._default_response_factory(x)
 
     @staticmethod

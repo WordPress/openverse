@@ -1,3 +1,7 @@
+"""
+This file contains configuration pertaining to Elasticsearch.
+"""
+
 from django.conf import settings
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
@@ -42,11 +46,12 @@ def _elasticsearch_connect():
 
 
 ES = _elasticsearch_connect()
-"""Elasticsearch client, also aliased to connection 'default'"""
+#: Elasticsearch client, also aliased to connection 'default'
+
 connections.add_connection("default", ES)
 
 MEDIA_INDEX_MAPPING = {
     media_type: config(f"{media_type.upper()}_INDEX_NAME", default=media_type)
     for media_type in MEDIA_TYPES
 }
-"""mapping of media types to Elasticsearch index names"""
+#: mapping of media types to Elasticsearch index names

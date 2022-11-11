@@ -5,7 +5,7 @@ import logging as log
 import pprint
 from itertools import accumulate
 from math import ceil
-from typing import Any, List, Literal, Optional, Tuple
+from typing import Any, Literal
 
 from django.conf import settings
 from django.core.cache import cache
@@ -52,7 +52,7 @@ def _unmasked_query_end(page_size, page):
 
 def _paginate_with_dead_link_mask(
     s: Search, page_size: int, page: int
-) -> Tuple[int, int]:
+) -> tuple[int, int]:
     """
     Given a query, a page and page_size, return the start and end
     of the slice of results.
@@ -117,8 +117,8 @@ def _paginate_with_dead_link_mask(
 
 
 def _get_query_slice(
-    s: Search, page_size: int, page: int, filter_dead: Optional[bool] = False
-) -> Tuple[int, int]:
+    s: Search, page_size: int, page: int, filter_dead: bool | None = False
+) -> tuple[int, int]:
     """
     Select the start and end of the search results for this query.
     """
@@ -147,7 +147,7 @@ def _quote_escape(query_string):
 
 def _post_process_results(
     s, start, end, page_size, search_results, request, filter_dead
-) -> Optional[List[Hit]]:
+) -> list[Hit] | None:
     """
     After fetching the search results from the back end, iterate through the
     results, perform image validation, and route certain thumbnails through our
@@ -222,7 +222,7 @@ def _apply_filter(
     # Any is used here to avoid a circular import
     search_params: Any,  # MediaSearchRequestSerializer
     serializer_field: str,
-    es_field: Optional[str] = None,
+    es_field: str | None = None,
     behaviour: Literal["filter", "exclude"] = "filter",
 ):
     """
@@ -285,7 +285,7 @@ def search(
     request: Request,
     filter_dead: bool,
     page: int = 1,
-) -> Tuple[List[Hit], int, int]:
+) -> tuple[list[Hit], int, int]:
     """
     Given a set of keywords and an optional set of filters, perform a ranked
     paginated search.
@@ -489,8 +489,8 @@ def get_sources(index):
 
 
 def _get_result_and_page_count(
-    response_obj: Response, results: Optional[List[Hit]], page_size: int
-) -> Tuple[int, int]:
+    response_obj: Response, results: list[Hit] | None, page_size: int
+) -> tuple[int, int]:
     """
     Elasticsearch does not allow deep pagination of ranked queries.
     Adjust returned page count to reflect this.

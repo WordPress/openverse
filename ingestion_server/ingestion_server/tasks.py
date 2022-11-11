@@ -6,7 +6,6 @@ import datetime
 import logging
 from enum import Enum, auto
 from multiprocessing import Value
-from typing import Optional
 
 from ingestion_server import slack
 from ingestion_server.constants.media_types import MediaType
@@ -96,7 +95,7 @@ class TaskTracker:
         :return: the details of the task to show to the user
         """
 
-        def _time_fmt(timestamp: int) -> Optional[str]:
+        def _time_fmt(timestamp: int) -> str | None:
             """
             Format the timestamp into a human-readable date and time notation.
             :param timestamp: the timestamp to format
@@ -154,7 +153,7 @@ def perform_task(
     task_id: str,
     model: MediaType,
     action: TaskTypes,
-    callback_url: Optional[str],
+    callback_url: str | None,
     progress: Value,
     finish_time: Value,
     active_workers: Value,

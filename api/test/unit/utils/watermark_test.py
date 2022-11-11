@@ -1,9 +1,9 @@
 import json
 import struct
+from collections.abc import Callable
 from dataclasses import dataclass
 from io import BytesIO
 from pathlib import Path
-from typing import Callable
 from unittest import mock
 
 import pytest
@@ -22,7 +22,7 @@ _MOCK_IMAGE_INFO = json.loads((_MOCK_IMAGE_PATH / "sample-image-info.json").read
 class RequestsFixture:
     requests: list[Request]
     response_factory: Callable[
-        (Request,), Response
+        [Request], Response
     ] = lambda x: RequestsFixture._default_response_factory(x)
 
     @staticmethod

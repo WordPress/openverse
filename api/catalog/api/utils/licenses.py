@@ -4,7 +4,6 @@ For any changes made here, please make the corresponding changes in the
 frontend, or open an issue to track it.
 """
 
-from typing import Optional
 
 from catalog.api.constants.licenses import (
     ALL_CC_LICENSES,
@@ -13,7 +12,7 @@ from catalog.api.constants.licenses import (
 )
 
 
-def get_license_url(_license: str, license_version: Optional[str]) -> str:
+def get_license_url(_license: str, license_version: str | None) -> str:
     """
     Get the URL to the deed of the license.
 
@@ -33,7 +32,7 @@ def get_license_url(_license: str, license_version: Optional[str]) -> str:
     return f"https://creativecommons.org/{fragment}/"
 
 
-def get_full_license_name(_license: str, license_version: Optional[str]) -> str:
+def get_full_license_name(_license: str, license_version: str | None) -> str:
     """
     Get the full name of the license in a displayable format from the license
     slug and version.

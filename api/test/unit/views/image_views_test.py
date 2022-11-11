@@ -1,8 +1,8 @@
 import json
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from test.factory.models.image import ImageFactory
-from typing import Callable
 
 from rest_framework.test import APIClient
 
@@ -26,7 +26,7 @@ def api_client():
 class RequestsFixture:
     requests: list[Request]
     response_factory: Callable[
-        (Request,), Response
+        [Request], Response
     ] = lambda x: RequestsFixture._default_response_factory(x)
 
     @staticmethod

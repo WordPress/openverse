@@ -1,3 +1,11 @@
+"""
+**These are the LEGACY API integration tests; do not add further tests here.**
+New tests should be added in v1_integration_test.
+
+End-to-end API tests. Can be used to verify a live deployment is functioning as
+designed. Run with the `pytest -s` command from this directory.
+"""
+
 import json
 import os
 import uuid
@@ -8,15 +16,6 @@ import requests
 from catalog.api.constants.licenses import LICENSE_GROUPS
 from catalog.api.models import Image
 from catalog.api.utils.watermark import watermark
-
-
-"""
-**These are the LEGACY API integration tests; do not add further tests here.**
-New tests should be added in v1_integration_test.
-
-End-to-end API tests. Can be used to verify a live deployment is functioning as
-designed. Run with the `pytest -s` command from this directory.
-"""
 
 
 API_URL = os.getenv("INTEGRATION_TEST_URL", "http://localhost:8000")
@@ -60,10 +59,10 @@ def test_search_consistency():
     appear in the first few pages of a search query.
     """
     n_pages = 5
-    searches = set(
+    searches = {
         requests.get(f"{API_URL}/image/search?q=honey;page={page}", verify=False)
         for page in range(1, n_pages)
-    )
+    }
 
     images = set()
     for response in searches:

@@ -145,7 +145,7 @@ class TestIngestion(unittest.TestCase):
         cur = conn.cursor()
         for schema_name in schema_names:
             schema_path = this_dir.joinpath("mock_schemas", f"{schema_name}.sql")
-            with open(schema_path, "r") as schema:
+            with open(schema_path) as schema:
                 cur.execute(schema.read())
         conn.commit()
         cur.close()
@@ -155,7 +155,7 @@ class TestIngestion(unittest.TestCase):
         cur = conn.cursor()
         for table_name in table_names:
             data_path = this_dir.joinpath("mock_data", f"mocked_{table_name}.csv")
-            with open(data_path, "r") as data:
+            with open(data_path) as data:
                 cur.copy_expert(
                     f"COPY {table_name} FROM STDIN WITH (FORMAT csv, HEADER true)",
                     data,
@@ -451,7 +451,7 @@ class TestIngestion(unittest.TestCase):
         es.indices.refresh(index="image-integration")
         count = es.count(index="image-integration")["count"]
         msg = "There should be 5000 images in Elasticsearch after ingestion."
-        self.assertEquals(count, 5000, msg)
+        self.assertEqual(count, 5000, msg)
 
     @pytest.mark.order(9)
     def test_upstream_indexed_audio(self):
@@ -465,7 +465,7 @@ class TestIngestion(unittest.TestCase):
         es.indices.refresh(index="audio-integration")
         count = es.count(index="audio-integration")["count"]
         msg = "There should be 5000 audio tracks in Elasticsearch after ingestion."
-        self.assertEquals(count, 5000, msg)
+        self.assertEqual(count, 5000, msg)
 
     @pytest.mark.order(10)
     def test_update_index_images(self):

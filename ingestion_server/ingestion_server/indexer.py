@@ -19,8 +19,7 @@ import logging as log
 import time
 import uuid
 from collections import deque
-from multiprocessing import Value
-from typing import Optional
+from typing import Any
 
 import elasticsearch
 import psycopg2
@@ -113,11 +112,13 @@ class TableIndexer:
     def __init__(
         self,
         es_instance: Elasticsearch,
-        task_id: Optional[str] = None,
-        callback_url: Optional[str] = None,
-        progress: Optional[Value] = None,
-        active_workers: Optional[Value] = None,
-        is_bad_request: Optional[Value] = None,
+        task_id: str | None = None,
+        callback_url: str | None = None,
+        # The following arguments should be typed as ``Synchronized | None``.
+        # https://github.com/python/typeshed/issues/8799
+        progress: Any = None,
+        active_workers: Any = None,
+        is_bad_request: Any = None,
     ):
         self.es = es_instance
         connections.connections.add_connection("default", self.es)
@@ -420,8 +421,8 @@ class TableIndexer:
     def delete_index(
         self,
         model_name: str,
-        index_suffix: Optional[str] = None,
-        alias: Optional[str] = None,
+        index_suffix: str | None = None,
+        alias: str | None = None,
         force_delete: bool = False,
         **_,
     ):

@@ -1,6 +1,6 @@
 import logging as log
 import time
-from typing import NamedTuple, Optional, Union
+from typing import NamedTuple
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from decouple import config
@@ -14,8 +14,8 @@ class Stat(NamedTuple):
     """
 
     exists: bool
-    is_alias: Optional[bool]
-    alt_names: Optional[Union[str, list[str]]]
+    is_alias: bool | None
+    alt_names: str | list[str] | None
 
 
 def elasticsearch_connect(timeout: int = 300) -> Elasticsearch:

@@ -12,7 +12,7 @@ description_path = settings.BASE_DIR.joinpath(
     "docs",
     "README.md",
 )
-with open(description_path, "r") as description_file:
+with open(description_path) as description_file:
     description = description_file.read()
 
 tos_url = "https://wordpress.github.io/openverse-api/terms_of_service.html"

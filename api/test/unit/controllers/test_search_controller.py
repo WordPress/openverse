@@ -1,6 +1,6 @@
 import random
+from collections.abc import Callable
 from enum import Enum, auto
-from typing import Callable
 from unittest import mock
 from uuid import uuid4
 
@@ -137,7 +137,7 @@ class CreateMaskConfig(Enum):
 
 
 @pytest.fixture(name="create_mask")
-def create_mask_fixture() -> Callable[(Search, int, int), None]:
+def create_mask_fixture() -> Callable[[Search, int, int], None]:
     created_masks = []
 
     def create_mask(
