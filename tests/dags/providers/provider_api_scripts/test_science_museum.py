@@ -327,3 +327,15 @@ def test_handle_obj_data_none(object_data):
     actual_images = sm.get_record_data(object_data)
 
     assert actual_images is None
+
+
+def test_get_should_continue():
+    response_json = {"links": {"next": ""}}
+
+    assert sm.get_should_continue(response_json) is True
+
+
+def test_get_should_continue_last_page():
+    response_json = {"links": {"next": None}}
+
+    assert sm.get_should_continue(response_json) is False

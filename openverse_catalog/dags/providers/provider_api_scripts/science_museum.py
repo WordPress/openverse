@@ -223,6 +223,9 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
             return license_, version
         return None
 
+    def get_should_continue(self, response_json) -> bool:
+        return response_json.get("links", {}).get("next") is not None
+
 
 def main():
     logger.info("Begin: Science Museum data ingestion")
