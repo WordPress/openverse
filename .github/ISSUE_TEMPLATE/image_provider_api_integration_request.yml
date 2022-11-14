@@ -40,7 +40,7 @@ body:
     attributes:
       label: Checklist to complete before beginning development
       description: |
-          Please do not modify this section. No development should be done on a Provider API Script until the following info is gathered:
+        Please do not modify this section. No development should be done on a Provider API Script until the following info is gathered:
       options:
         - label: Verify there is a way to retrieve the entire relevant portion of the provider's collection in a systematic way via their API.
           required: false

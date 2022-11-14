@@ -1,7 +1,6 @@
-version: '3'
+version: "3"
 
 services:
-
   webserver:
     image: ghcr.io/wordpress/openverse-catalog:${DOCKER_IMAGE_TAG:-latest}
     env_file: .env
