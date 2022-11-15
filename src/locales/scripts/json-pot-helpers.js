@@ -1,76 +1,70 @@
-// More about the structure of .po files:
-// https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html#PO-Files
-
-/*
+/**
+ * More about the structure of .po files:
+ * // https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html#PO-Files
+ *
+ * ```po
  * white-space
- #  translator-comments
- #. extracted-comments
- #: reference…
- #, flag…
- #| msgid previous-untranslated-string
- msgid untranslated-string
- msgstr translated-string
+ * #  translator-comments
+ * #. extracted-comments
+ * #: reference…
+ * #, flag…
+ * #| msgid previous-untranslated-string
+ * msgid untranslated-string
+ * msgstr translated-string
+ * ```
  */
-const { getAllPaths, getKeyValue } = require('./json-helpers')
+
 const { getParsedVueFiles } = require('./parse-vue-files')
-
-const curlyRegex = new RegExp('{[a-zA-Z-]*}')
-const containsCurlyWord = (string) => curlyRegex.test(string)
-const checkStringForVars = (string) =>
-  containsCurlyWord(string) ? 'Do not translate words between ### ###.' : ''
-
-/**
- * For GlotPress to display warning when the translators try to
- * replace placeholders with something else, we need to wrap the
- * placeholders with `###WORD###`
- * @param string
- * @return {string}
- */
-const replaceVarsPlaceholders = (string) => {
-  if (!containsCurlyWord(string)) {
-    return string
-  }
-  const variable = /{(?<variable>[a-zA-Z-]*)}/g
-  return string.replace(variable, `###$<variable>###`)
-}
-
-/**
- * Replace placeholder format for variables,
- * escape quotes (in a different PR)
- * @param string
- * @return {string}
- */
-const processValue = (string) => {
-  return escapeQuotes(replaceVarsPlaceholders(string))
-}
 
 const PARSED_VUE_FILES = getParsedVueFiles('**/*.?(js|vue)')
 
-/**
- * Returns the comment with a reference github link to the line where the
- * string is used, if available. Example:
- * #: /components/HeroSection.vue:L6
- * @param {string} keyPath (eg."hero.title")
- * @return {string}
- */
-const getRefComment = (keyPath) => {
-  const keyValue = PARSED_VUE_FILES.find((k) => k.path === keyPath)
-  return keyValue ? `\n#: ${keyValue.file}:${keyValue.line}` : ''
-}
-
+/** @param str {string} */
 const escapeQuotes = (str) => str.replace(/"/g, '\\"')
 
-/**
- * String values that need to be pluralized contain {count},
- * {time} or {localeCount},
- * and a pipe symbol.
- */
-const pluralizedRegex = new RegExp(/(count|time)/i)
+/** @param str {string} */
+const containsCurlyWord = (str) => /\{[a-zA-Z-]*}/.test(str)
 
-const pot_creation_date = () => {
-  const today = new Date()
-  return `${today.toISOString().split('.')[0]}+00:00`
+/** @param str {string} */
+const checkStringForVars = (str) =>
+  containsCurlyWord(str) ? '#. Do not translate words between ### ###.' : ''
+
+/**
+ * For GlotPress to display warning when the translators miss the placeholders
+ * or try replacing them with something else, we need to surround the
+ * placeholders with `###`.
+ *
+ * @param str {string} the translation string
+ * @return {string} the translation string with all placeholders marked
+ */
+const replaceVarsPlaceholders = (str) => {
+  if (!containsCurlyWord(str)) return str
+
+  const variable = /\{(?<variable>[a-zA-Z-]*)}/g
+  return str.replace(variable, `###$<variable>###`)
 }
+
+/**
+ * Replace placeholder format for variables and escape quotes.
+ *
+ * @param str {string} the translation string
+ * @return {string} the translation string with quotes escaped and placeholders marked
+ */
+const processValue = (str) => escapeQuotes(replaceVarsPlaceholders(str))
+
+/**
+ * Returns a comment with all reference to the file and line where the string is
+ * used. These are prefixed with `#:`.
+ *
+ * @param  keyPath {string} the lineage of the entry to search in Vue files
+ * @return {string[]} the list of reference comments
+ */
+const getRefComments = (keyPath) =>
+  PARSED_VUE_FILES.filter((k) => k.path === keyPath).map(
+    (item) => `#: ${item.file}:${item.line}`
+  )
+
+const pot_creation_date = () =>
+  `${new Date().toISOString().split('.')[0]}+00:00`
 
 const POT_FILE_META = `# Copyright (C) 2021
 # This file is distributed under the same license as Openverse.
@@ -87,44 +81,73 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\\n"
 `
 
-// POT Syntax
+/**
+ * Generate the comment for the POT entry. This includes any comment written on
+ * the JSON entry, a message about `###` and finally references to where that
+ * entry is used in the codebase.
+ *
+ * @param entry {import('./read-i18n').Entry} the entry to get the comment for
+ * @return {string} the comment lines
+ */
+const getComment = (entry) => {
+  const comment = []
 
-// msgctxt context
-// msgid untranslated-string
-// msgstr translated-string
+  // comments given by the programmer, directed at the translator (#.)
+  if (entry.doc) comment.push(`#. ${entry.doc}`)
 
-function potTime(json) {
-  let potFileString = ''
-  const jsonKeys = getAllPaths(json)
-  jsonKeys.forEach((key) => {
-    const value = getKeyValue(key, json)
-    if (value.indexOf('|') > -1 && pluralizedRegex.test(value)) {
-      const pluralizedValues = value.split('|')
-      if (pluralizedValues.length === 1) {
-        pluralizedValues.push(pluralizedValues[0])
-      }
-      potFileString = `${potFileString}
-${
-  checkStringForVars(value) ? `\n#. ${checkStringForVars(value)}` : ''
-}${getRefComment(key)}
-msgctxt "${key}"
-msgid "${processValue(pluralizedValues[0])}"
-msgid_plural "${processValue(pluralizedValues[1])}"
-msgstr[0] ""
-msgstr[1] ""`
-    } else {
-      potFileString = `${potFileString}
-${
-  checkStringForVars(value) ? `\n#. ${checkStringForVars(value)}` : ''
-}${getRefComment(key)}
-msgctxt "${key}"
-msgid "${processValue(value)}"
-msgstr ""`
-    }
-  })
-  return potFileString
+  // comments given by the programmer, directed at the translator (#.)
+  let vars = checkStringForVars(entry.value)
+  if (vars) comment.push(vars)
+
+  // comments containing references to the program’s source code (#:)
+  let refComments = getRefComments(entry.lineage)
+  if (refComments.length) comment.push(...refComments)
+
+  return comment.map((item) => `${item}`).join('\n')
 }
 
-const createPotFile = (json) => `${POT_FILE_META}${potTime(json)}\n`
+/**
+ * Convert a JSON entry into a POT entry. If the JSON entry has nested entries,
+ * recursively convert them as well.
+ *
+ * @param entry {import('./read-i18n').Entry} the entry to convert to POT
+ * @return {string} the POT equivalent of the JSON entry
+ */
+const toPot = (entry) => {
+  if (!entry.value) {
+    // string-object type mapping
+    return entry.children.map((child) => toPot(child)).join('\n\n')
+  }
 
-module.exports = { createPotFile, replaceVarsPlaceholders }
+  // string-string type mapping
+  let poEntry = []
+  let comment = getComment(entry)
+  if (comment) poEntry.push(comment)
+  poEntry.push(`msgctxt "${entry.lineage}"`)
+  if (entry.value.includes('|') && /(count|time)/i.test(entry.value)) {
+    const pluralizedValues = entry.value.split('|')
+    if (pluralizedValues.length === 1) {
+      pluralizedValues.push(pluralizedValues[0])
+    }
+    poEntry.push(
+      `msgid "${processValue(pluralizedValues[0])}"`,
+      `msgid_plural "${processValue(pluralizedValues[1])}"`,
+      'msgstr[0] ""',
+      'msgstr[1] ""'
+    )
+  } else {
+    poEntry.push(`msgid "${processValue(entry.value)}"`, 'msgstr ""')
+  }
+  return poEntry.join('\n')
+}
+
+/**
+ * Given the root entry generated by `read-i18n.parseJson`, this function
+ * returns the complete text to output to the Openverse POT file.
+ *
+ * @param entry {import('./read-i18n').Entry} the root entry of the JSON file
+ * @return {string} the text content of the Openverse POT file
+ */
+const makePot = (entry) => [POT_FILE_META, toPot(entry)].join('\n')
+
+module.exports = { replaceVarsPlaceholders, makePot }

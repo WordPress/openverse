@@ -23,7 +23,6 @@ vercel.json
 .eslintcache
 .nuxt
 src/locales/*.json
-!src/locales/en.json
 .nuxt-storybook
 storybook-static
 .vercel

@@ -34,7 +34,13 @@ Run the following commands in order to have the code up and running on your mach
 # Builds and serves assets with hot-reload
 # Automatically invokes pnpm install and pnpm i18n
 pnpm dev
+```
 
+If you intend to change any text in the app, you will need to edit `src/locales/scripts/en.json5`. To ensure your changes are reflected immediately, run the following command.
+
+```bash
+# Watches the en.json5 file and updates the en.json file for every change.
+pnpm i18n:watch-en
 ```
 
 ### Using HTTPS Locally
