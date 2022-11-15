@@ -184,7 +184,7 @@ class AbstractMediaReport(models.Model):
             )
 
     def url(self, media_type):
-        url = f"{AbstractMediaReport.BASE_URL}{media_type}{self.identifier}"
+        url = f"{AbstractMediaReport.BASE_URL}v1/{media_type}/{self.identifier}"
         return format_html(f"<a href={url}>{url}</a>")
 
     def save(self, *args, **kwargs):
