@@ -14,7 +14,7 @@ Openverse API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a 
 
 - Run the server locally by following this [link](https://github.com/WordPress/openverse-api#running-the-server-locally)
 - Update documentation
-- Make sure the updates passed the automated tests in this [file](https://github.com/WordPress/openverse-api/blob/master/.github/workflows/integration-tests.yml)
+- Make sure the updates passed the automated tests in this [file](https://github.com/WordPress/openverse-api/blob/main/.github/workflows/ci_cd.yml)
 - Commit and push
 - Create pull request by following [GitHub Repo Guidelines](https://opensource.creativecommons.org/contributing-code/github-repo-guidelines/)
 
