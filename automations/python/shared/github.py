@@ -1,6 +1,5 @@
 import logging
 import os
-import typing
 
 from github import Github
 
@@ -19,7 +18,7 @@ def get_client(is_authenticated: bool = True) -> Github:
 
     log.info("Setting up GitHub client")
     if is_authenticated:
-        access_token: typing.Optional[str] = os.getenv("ACCESS_TOKEN")
+        access_token: str | None = os.getenv("ACCESS_TOKEN")
         if access_token is None:
             log.error("Access token was not found in env.ACCESS_TOKEN.")
             raise ValueError("Access token not found")

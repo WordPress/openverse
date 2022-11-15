@@ -6,7 +6,6 @@ import logging
 import os
 import re
 from http.cookiejar import CookieJar
-from typing import Optional
 
 import mechanize
 import pyotp
@@ -134,7 +133,7 @@ def get_linked_issues(url: str) -> list[str]:
     return [a["href"] for a in form.find_all("a")]
 
 
-def get_label_of_cat(cat: str, labels: list[Label]) -> Optional[Label]:
+def get_label_of_cat(cat: str, labels: list[Label]) -> Label | None:
     """
     Get the label of a particular category from the given list of labels.
 

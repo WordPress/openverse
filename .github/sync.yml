@@ -33,10 +33,17 @@ group:
       # Downstream workflows
       - source: .github/workflows_downstream/draft_release.yml
         dest: .github/workflows/draft_release.yml
+      # Templates
       - source: .github/release_drafter.yml
         dest: .github/release_drafter.yml
-      # Templates
       - source: .github/ISSUE_TEMPLATE/
         dest: .github/ISSUE_TEMPLATE/
       - source: .github/PULL_REQUEST_TEMPLATE.md
         dest: .github/PULL_REQUEST_TEMPLATE.md
+  # Unified lint rules
+  - repos: |
+      WordPress/openverse-catalog
+      WordPress/openverse-api
+    files:
+      - source: .pre-commit-config.yaml
+        dest: .pre-commit-config.yaml
