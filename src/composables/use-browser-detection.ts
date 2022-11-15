@@ -5,7 +5,7 @@ export const useBrowserDetection = () => {
   return app.$ua
 }
 
-export const useBrowserIsMobile = () => {
+export const useBrowserIsMobile = (): boolean => {
   const browser = useBrowserDetection()
   if (browser === null) {
     return false

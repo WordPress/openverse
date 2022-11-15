@@ -1,4 +1,4 @@
-import useragent from 'express-useragent'
+import useragent, { Details as UADetails } from 'express-useragent'
 
 import type { Plugin } from '@nuxt/types'
 
@@ -10,7 +10,7 @@ const uaParsePlugin: Plugin = (context, inject) => {
   } else if (typeof navigator !== 'undefined') {
     userAgent = navigator.userAgent
   }
-  let ua
+  let ua: UADetails | null
   if (typeof userAgent == 'string') {
     ua = useragent.parse(userAgent)
   } else {

@@ -1,11 +1,15 @@
 /* this implementation is from https://github.com/vueuse/vueuse/packages/core/useMediaQuery/
  which, in turn, is ported from https://github.com/logaretm/vue-use-web by Abdelrahman Awad */
-import { ref, watchEffect } from '@nuxtjs/composition-api'
+import { computed, ref, watchEffect } from '@nuxtjs/composition-api'
+
+import { resolveUnref } from '@vueuse/core'
 
 import { SCREEN_SIZES, Breakpoint } from '~/constants/screens'
 import { defaultWindow } from '~/constants/window'
 import { tryOnScopeDispose } from '~/utils/try-on-scope-dispose'
 import { useSupported } from '~/composables/use-supported'
+
+import type { MaybeComputedRef } from '@vueuse/core'
 
 interface Options {
   shouldPassInSSR?: boolean
@@ -16,7 +20,7 @@ interface Options {
  * Reactive Media Query.
  */
 export function useMediaQuery(
-  query: string,
+  query: MaybeComputedRef<string>,
   options: Options = { shouldPassInSSR: false }
 ) {
   const { window = defaultWindow } = options
@@ -49,7 +53,7 @@ export function useMediaQuery(
 
     cleanup()
 
-    mediaQuery = window.matchMedia(query)
+    mediaQuery = window.matchMedia(resolveUnref(query))
     matches.value = mediaQuery.matches
 
     if ('addEventListener' in mediaQuery) {
@@ -67,20 +71,29 @@ export function useMediaQuery(
   return matches
 }
 
+const isBpXs = (bp: Breakpoint): bp is 'xs' => bp === 'xs'
+
 /**
  * Check whether the current screen meets
  * or exceeds the provided breakpoint size.
  */
-export const isMinScreen = (breakpointName: Breakpoint, options?: Options) => {
-  if (breakpointName === 'xs') {
+export const isMinScreen = (
+  breakpointName: MaybeComputedRef<Breakpoint>,
+  options?: Options
+) => {
+  const resolvedBp = resolveUnref(breakpointName)
+
+  if (isBpXs(resolvedBp)) {
     // `xs` is the "minimum" so it is always true
     return ref(true)
   }
 
-  return useMediaQuery(
-    `(min-width: ${SCREEN_SIZES.get(breakpointName)}px)`,
-    options
-  )
+  const query = computed(() => {
+    const sizeInPx = SCREEN_SIZES.get(resolvedBp)
+    return `(min-width: ${sizeInPx}px)`
+  })
+
+  return useMediaQuery(query, options)
 }
 
 /**

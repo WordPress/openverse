@@ -88,7 +88,7 @@ export default defineComponent({
     VCheckbox,
   },
   setup() {
-    const { app } = useContext()
+    const { $cookies } = useContext()
     const featureFlagStore = useFeatureFlagStore()
 
     const flags = computed(() => featureFlagStore.flags)
@@ -106,7 +106,7 @@ export default defineComponent({
       checked: boolean
     }) => {
       featureFlagStore.toggleFeature(name, checked ? ON : OFF)
-      app.$cookies.set('features', featureFlagStore.flagStateMap)
+      $cookies.set('features', featureFlagStore.flagStateMap)
     }
 
     return {

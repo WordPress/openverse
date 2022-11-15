@@ -66,6 +66,7 @@ repos:
     rev: v2.6.0
     hooks:
       - id: prettier
+        exclude: \.vue$
         additional_dependencies:
           - prettier@2.6.0
           - prettier-plugin-tailwindcss@0.1.12
