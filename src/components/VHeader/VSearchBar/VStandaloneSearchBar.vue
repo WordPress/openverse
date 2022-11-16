@@ -4,8 +4,8 @@
     @submit.prevent="handleSearch"
   >
     <div
-      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm border p-0.5px pe-1.5px rounded-e-none border-e-0 focus-within:border-1.5 focus-within:border-pink focus-within:bg-dark-charcoal-06 focus-within:p-0 group-hover:bg-dark-charcoal-06"
-      :class="[isHomeRoute ? 'border-tx' : 'border-dark-charcoal-20']"
+      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm border p-0.5px pe-1.5px rounded-e-none border-e-0 focus-within:border-1.5 focus-within:border-pink focus-within:bg-dark-charcoal-06 focus-within:p-0 focus-within:pe-1.5px group-hover:bg-dark-charcoal-06"
+      :class="[isHomeRoute ? 'border-tx' : 'border-black']"
     >
       <input
         id="search-bar"
@@ -29,7 +29,7 @@
       <!-- @slot Extra information goes here -->
       <slot />
     </div>
-    <VSearchButtonOld type="submit" size="standalone" :route="route" />
+    <VSearchButton type="submit" size="standalone" :route="route" />
   </form>
 </template>
 
@@ -43,7 +43,7 @@ import {
 
 import { defineEvent } from '~/types/emits'
 
-import VSearchButtonOld from '~/components/VHeaderOld/VSearchBar/VSearchButtonOld.vue'
+import VSearchButton from '~/components/VHeader/VSearchBar/VSearchButton.vue'
 
 /**
  * Displays a search input for a search query and is attached to an action button
@@ -53,8 +53,8 @@ import VSearchButtonOld from '~/components/VHeaderOld/VSearchBar/VSearchButtonOl
  * is not removed.
  */
 export default defineComponent({
-  name: 'VStandaloneSearchBarOld',
-  components: { VSearchButtonOld },
+  name: 'VStandaloneSearchBar',
+  components: { VSearchButton },
   props: {
     route: {
       type: String as PropType<'home' | '404'>,
@@ -62,14 +62,17 @@ export default defineComponent({
     },
   },
   emits: {
-    submit: defineEvent(),
+    submit: defineEvent<[string]>(),
   },
   setup(props, { emit }) {
     const inputRef = ref<HTMLInputElement | null>(null)
 
+    // Only emit `submit` if the input value is not blank
     const handleSearch = () => {
       const searchTerm = inputRef.value?.value.trim()
-      emit('submit', searchTerm)
+      if (searchTerm) {
+        emit('submit', searchTerm)
+      }
     }
 
     const isHomeRoute = computed(() => props.route === 'home')
@@ -82,3 +85,8 @@ export default defineComponent({
   },
 })
 </script>
+<style scoped>
+.input-field {
+  border-inline-end-width: 0;
+}
+</style>

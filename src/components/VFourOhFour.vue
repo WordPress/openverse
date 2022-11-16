@@ -37,7 +37,7 @@
             </template>
           </i18n>
         </p>
-        <VStandaloneSearchBarOld route="404" @submit="handleSearch" />
+        <VStandaloneSearchBar route="404" @submit="handleSearch" />
       </div>
     </main>
 
@@ -58,7 +58,7 @@ import { useFeatureFlagStore } from '~/stores/feature-flag'
 
 import { ALL_MEDIA, searchPath } from '~/constants/media'
 
-import VStandaloneSearchBarOld from '~/components/VHeaderOld/VSearchBar/VStandaloneSearchBarOld.vue'
+import VStandaloneSearchBar from '~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue'
 import VLink from '~/components/VLink.vue'
 import VBrand from '~/components/VBrand/VBrand.vue'
 import VFooter from '~/components/VFooter/VFooter.vue'
@@ -69,7 +69,7 @@ export default defineComponent({
   name: 'VFourOhFour',
   components: {
     VLink,
-    VStandaloneSearchBarOld,
+    VStandaloneSearchBar,
     VBrand,
     VFooter,
   },
@@ -82,13 +82,13 @@ export default defineComponent({
     const handleSearch = async (searchTerm) => {
       if (!searchTerm) return
 
-      searchStore.setSearchTerm(searchTerm.value)
+      searchStore.setSearchTerm(searchTerm)
       searchStore.setSearchType(ALL_MEDIA)
 
       router.push(
         app.localePath({
           path: searchPath(ALL_MEDIA),
-          query: { q: searchTerm.value },
+          query: { q: searchTerm },
         })
       )
     }
@@ -113,20 +113,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style>
-/* Override the default search bar styles.
-   Maybe in the future this would warrant a
-   variant of the searchbar, but that seems
-   excessive for this one-off usage.
-*/
-.page-404 .search-bar > div:not(:focus):not(:focus-within) {
-  border-color: black;
-}
-.page-404
-  .search-bar:not(:hover)
-  button:not(:hover):not(:focus):not(:focus-within) {
-  border-color: black;
-  border-inline-start-color: transparent;
-}
-</style>

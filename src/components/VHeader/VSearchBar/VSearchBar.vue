@@ -1,8 +1,7 @@
 <template>
   <div ref="searchBarEl" class="relative">
     <form
-      class="search-bar group flex flex-row items-center rounded-sm border-tx bg-white"
-      :class="{ 'h-[57px] md:h-[69px]': size === 'standalone' }"
+      class="search-bar group flex h-12 flex-row items-center rounded-sm border-tx bg-white"
       @submit.prevent="handleSearch"
     >
       <VInputField
@@ -10,12 +9,7 @@
         v-bind="$attrs"
         v-model="modelMedium"
         :placeholder="placeholder || $t('hero.search.placeholder')"
-        class="search-field flex-grow focus:border-pink"
-        :class="[
-          route === 'home'
-            ? 'border-tx'
-            : 'border-tx bg-dark-charcoal-10 text-dark-charcoal-70 focus-within:bg-white group-hover:bg-dark-charcoal-10 group-hover:text-dark-charcoal group-hover:focus-within:bg-white',
-        ]"
+        class="search-field flex-grow border-tx bg-dark-charcoal-10 text-dark-charcoal-70 focus-within:bg-white focus:border-pink group-hover:bg-dark-charcoal-10 group-hover:text-dark-charcoal group-hover:focus-within:bg-white"
         :label-text="
           $t('search.search-bar-label', { openverse: 'Openverse' }).toString()
         "
@@ -41,7 +35,7 @@
       <VSearchButton
         type="submit"
         :size="size"
-        :route="route"
+        route="search"
         @keydown.tab="handleSearchBlur"
       />
     </form>
@@ -70,7 +64,6 @@ import {
 
 import { onClickOutside } from '@vueuse/core'
 
-import { useMatchHomeRoute } from '~/composables/use-match-routes'
 import { defineEvent } from '~/types/emits'
 
 import { useSearchStore } from '~/stores/search'
@@ -87,6 +80,10 @@ import VSearchButton from '~/components/VHeader/VSearchBar/VSearchButton.vue'
 import VRecentSearches from '~/components/VRecentSearches/VRecentSearches.vue'
 
 /**
+ * The search bar displayed on the search page.
+ * TODO: remove the next line after new header is set as default
+ * Only on the search page with `new_header` flag on.
+ *
  * Displays a text field for a search query and is attached to an action button
  * that fires a search request. The loading state and number of hits are also
  * displayed in the bar itself.
@@ -111,10 +108,6 @@ export default defineComponent({
       type: String,
       required: false,
     },
-    is404: {
-      type: Boolean,
-      default: false,
-    },
   },
   emits: {
     input: defineEvent<[string]>(),
@@ -123,12 +116,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const searchBarEl = ref<HTMLElement | null>(null)
     const inputFieldRef = ref<InstanceType<typeof VInputField> | null>(null)
-
-    const { matches: isHomeRoute } = useMatchHomeRoute()
-
-    const route = computed(() => {
-      return isHomeRoute?.value ? 'home' : props.is404 ? '404' : undefined
-    })
 
     const modelMedium = computed<string>({
       get: () => props.value ?? '',
@@ -253,7 +240,6 @@ export default defineComponent({
       inputFieldRef,
 
       handleSearch,
-      route,
       modelMedium,
 
       showRecentSearches,
@@ -273,13 +259,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style>
-/* Removes the cross icon to clear the field */
-.search-field input[type='search']::-webkit-search-decoration,
-.search-field input[type='search']::-webkit-search-cancel-button,
-.search-field input[type='search']::-webkit-search-results-button,
-.search-field input[type='search']::-webkit-search-results-decoration {
-  -webkit-appearance: none;
-}
-</style>

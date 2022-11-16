@@ -21,11 +21,7 @@
       <!-- @slot Extra information such as loading message or result count goes here. -->
       <slot />
     </VInputFieldOld>
-    <VSearchButtonOld
-      type="submit"
-      :size="size"
-      :route="is404 ? '404' : undefined"
-    />
+    <VSearchButtonOld type="submit" :size="size" />
   </form>
 </template>
 

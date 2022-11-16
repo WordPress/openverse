@@ -3,16 +3,18 @@
     v-bind="$attrs"
     :aria-label="$t('search.search')"
     size="disabled"
-    :variant="isIcon ? 'plain' : 'primary'"
-    class="flex-shrink-0 text-2xl font-semibold transition-none rounded-s-none hover:bg-pink hover:text-white focus-visible:ring focus-visible:ring-pink"
+    :variant="route === 'home' ? 'primary' : 'plain'"
+    class="heading-6 h-full flex-shrink-0 transition-none rounded-s-none"
     :class="[
-      isIcon
-        ? 'search-button ps-[1.5px] p-[0.5px] focus-visible:bg-pink focus-visible:text-white'
-        : 'h-full whitespace-nowrap py-6 px-10',
-      sizeClasses,
       route === 'home'
-        ? 'border-b border-tx border-b-pink bg-pink text-white group-hover:border-pink group-hover:bg-pink group-hover:text-white'
-        : 'border-tx bg-dark-charcoal-10 group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink',
+        ? 'w-[57px] whitespace-nowrap md:w-auto md:py-6 md:px-10'
+        : 'search-button p-0.5px ps-1.5px hover:bg-pink hover:text-white focus-visible:bg-pink focus-visible:text-white group-focus-within:border-pink group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink group-hover:border-pink group-hover:bg-pink group-hover:text-white',
+      {
+        'w-10 bg-dark-charcoal-10 md:w-12': route === 'search',
+        'border-black focus:border-tx group-focus-within:border-tx group-hover:border-tx group-focus:border-tx':
+          route === '404',
+      },
+      sizeClasses,
     ]"
     v-on="$listeners"
   >
@@ -36,7 +38,11 @@ import VButton from '~/components/VButton.vue'
 import type { FieldSize } from '~/components/VInputField/VInputField.vue'
 
 import searchIcon from '~/assets/icons/search.svg'
-
+/**
+ * The search button used in the search bar on the homepage and on the 404 page,
+ * and on the search page.
+ * TODO: remove when `new_header` is default: only on the search page with the `new_header`.
+ */
 export default defineComponent({
   name: 'VSearchButton',
   components: { VIcon, VButton },
@@ -47,8 +53,8 @@ export default defineComponent({
       required: true,
     },
     route: {
-      type: String as PropType<'home' | '404'>,
-      validator: (v: string) => ['home', '404'].includes(v),
+      type: String as PropType<'home' | '404' | 'search'>,
+      validator: (v: string) => ['home', '404', 'search'].includes(v),
     },
   },
   setup(props) {
@@ -56,48 +62,32 @@ export default defineComponent({
 
     const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: !isMobile })
 
-    const isIcon = computed(() => {
-      // split the evaluation of the isMinScreenMd ref
-      // out to prevent short-circuiting from creating
-      // problems with `computed`'s dependency detection
-      const currentIsMinScreenMd = isMinScreenMd.value
+    /**
+     * The search button has a text label on the homepage on screen larger than `md`,
+     * everywhere else it has an icon.
+     */
+    const isIcon = computed(
+      () => !(props.route === 'home' && isMinScreenMd.value)
+    )
 
-      return (
-        props.route === '404' ||
-        props.size !== 'standalone' ||
-        (props.size === 'standalone' && !currentIsMinScreenMd)
-      )
-    })
-
-    const sizeClasses = computed(() => {
-      return isIcon.value
+    const sizeClasses = computed(() =>
+      isIcon.value
         ? {
-            small: 'w-10 md:w-12 h-10 md:h-12',
-            medium: 'w-12 h-12',
-            large: 'w-14 h-14',
-            standalone: 'w-[57px] md:w-[69px] h-[57px] md:h-[69px]',
+            small: 'w-10 md:w-12',
+            medium: 'w-12',
+            large: 'w-14',
+            standalone: 'w-[57px] md:w-[69px]',
           }[props.size]
         : undefined
-    })
+    )
 
-    return { isMinScreenMd, searchIcon, sizeClasses, isIcon }
+    return { searchIcon, sizeClasses, isIcon }
   },
 })
 </script>
 
 <style scoped>
 .search-button {
-  /* Negative margin removes a tiny gap between the button and the input borders */
-  margin-inline-start: -1px;
-  border-inline-start-color: transparent;
-  border-width: 1px;
-}
-.search-button.search-button:not(:hover):not(:focus):not(:focus-within) {
-  border-inline-start-color: transparent;
-  border-width: 1px;
-}
-.search-button.search-button:hover {
-  border-inline-start-color: rgba(214, 212, 213, 1);
-  border-width: 1px;
+  border-inline-start-width: 0;
 }
 </style>

@@ -33,7 +33,7 @@
             @select="setSearchType"
           />
         </div>
-        <VStandaloneSearchBarOld
+        <VStandaloneSearchBar
           class="mt-4 max-w-[40rem] md:mt-6"
           @submit="handleSearch"
         >
@@ -45,7 +45,7 @@
             placement="searchbar"
             @select="setSearchType"
           />
-        </VStandaloneSearchBarOld>
+        </VStandaloneSearchBar>
 
         <!-- Disclaimer for large screens -->
         <i18n
@@ -143,7 +143,7 @@ import { useSearchStore } from '~/stores/search'
 
 import VLink from '~/components/VLink.vue'
 import VLogoButtonOld from '~/components/VHeaderOld/VLogoButtonOld.vue'
-import VStandaloneSearchBarOld from '~/components/VHeaderOld/VSearchBar/VStandaloneSearchBarOld.vue'
+import VStandaloneSearchBar from '~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue'
 import VSearchTypeRadio from '~/components/VContentSwitcher/VSearchTypeRadio.vue'
 import VSearchTypePopoverOld from '~/components/VContentSwitcherOld/VSearchTypePopoverOld.vue'
 import VBrand from '~/components/VBrand/VBrand.vue'
@@ -156,7 +156,7 @@ export default defineComponent({
     VBrand,
     VSearchTypePopoverOld,
     VSearchTypeRadio,
-    VStandaloneSearchBarOld,
+    VStandaloneSearchBar,
     VLink,
     VLogoButtonOld,
   },
