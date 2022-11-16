@@ -1,13 +1,9 @@
 {
-  "extends": [
-    "config:base",
-    ":preserveSemverRanges",
-    "schedule:monthly"
-  ],
+  "extends": ["config:base", ":preserveSemverRanges", "schedule:monthly"],
   "labels": [
     "dependencies",
-    "\ud83d\udcbb aspect: code",
-    "\ud83e\uddf0 goal: internal improvement",
-    "\ud83d\udfe9 priority: low"
+    "💻 aspect: code",
+    "🧰 goal: internal improvement",
+    "🟩 priority: low"
   ]
 }

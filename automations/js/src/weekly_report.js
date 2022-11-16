@@ -45,8 +45,7 @@ const makeWpIssueUrl = makeIssueUrl('wordpress')
 const authFetch = (url) =>
   fetch(url, {
     headers: {
-      Authorization:
-        `Basic ${ghKey}`,
+      Authorization: `Basic ${ghKey}`,
     },
   })
 const fetchRepoIssues = compose(authFetch, makeWpIssueUrl)
