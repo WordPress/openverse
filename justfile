@@ -35,4 +35,4 @@ _py-install:
 
 # Install dependencies for JavaScript
 _js-install:
-    cd automations/js && npm install
+    cd automations/js && pnpm install
