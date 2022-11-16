@@ -21,8 +21,13 @@ type BreakpointBlock = (options: {
   expectSnapshot: ExpectSnapshot
 }) => void
 
-const desktopBreakpoints = ['2xl', 'xl', 'lg'] as const
-const mobileBreakpoints = ['md', 'sm', 'xs'] as const
+export const desktopBreakpoints = ['2xl', 'xl', 'lg'] as const
+export const mobileBreakpoints = ['md', 'sm', 'xs'] as const
+
+export const isMobileBreakpoint = (
+  bp: Breakpoint
+): bp is typeof mobileBreakpoints[number] =>
+  (mobileBreakpoints as unknown as string[]).includes(bp)
 
 // For desktop UA use the default
 const desktopUa = undefined

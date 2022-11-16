@@ -459,10 +459,4 @@ export const enableNewHeader = async (page: Page) => {
       path: '/',
     },
   ])
-  await page.goto('/preferences')
-  const newHeaderCheckboxLocator = 'input#new_header'
-
-  if (!(await page.locator(newHeaderCheckboxLocator).isChecked())) {
-    await page.click(newHeaderCheckboxLocator)
-  }
 }
