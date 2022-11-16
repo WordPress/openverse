@@ -1,9 +1,6 @@
 <template>
   <div
-    class="relative m-0.5px box-content block w-fit overflow-hidden rounded-sm border text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-pink hover:border-dark-charcoal focus-within:hover:border-pink"
-    :class="
-      variant === 'yellow' ? 'border-[#d6bb32]' : 'border-dark-charcoal-20'
-    "
+    class="relative m-0.5px box-content block w-fit overflow-hidden rounded-sm border border-dark-charcoal border-opacity-20 text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-pink hover:border-dark-charcoal focus-within:hover:border-pink"
   >
     <div class="pointer-events-none absolute inset-y-0 my-auto h-fit start-2">
       <slot name="start" />
@@ -99,14 +96,6 @@ const VSelectField = defineComponent({
     choices: {
       type: Array as PropType<Choice[]>,
       default: () => [],
-    },
-    /**
-     * the stylistic variant of the select field to use; The 'yellow' variant
-     * has a `#d6bb32` border (20% dark charcoal on top of brand yellow).
-     */
-    variant: {
-      type: String as PropType<'regular' | 'yellow'>,
-      default: 'regular',
     },
   },
   // using non-native event name to ensure the two are not mixed
