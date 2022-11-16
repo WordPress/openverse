@@ -32,7 +32,7 @@ I suggest that our frontend events should be agnostic to any specific analytics 
 - It makes it much easier for users to audit exactly what values we're collecting, by avoiding heavy and mysterious 3rd-party SDKs
 - Makes us less likely to be blocked by ad and script blocking software
 
-There are many established conventions around frontend event collection. Using our own system should allow us to adopt most 3rd party platforms with without locking us in. A quick example use case is the Google Analytics alternative [Plausible.io](https://plausible.io/), which includes an [events API](https://plausible.io/docs/events-api). Plausible accepts the following simple request shape to capture a pageview, for example:
+There are many established conventions around frontend event collection. Using our own system should allow us to adopt most 3rd party platforms without locking us in. A quick example use case is the Google Analytics alternative [Plausible.io](https://plausible.io/), which includes an [events API](https://plausible.io/docs/events-api). Plausible accepts the following simple request shape to capture a pageview, for example:
 
 ```shell
 curl -i -X POST https://plausible.io/api/event \
