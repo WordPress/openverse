@@ -30,17 +30,20 @@
       </div>
       <Nuxt v-else class="main-page min-w-0" />
 
-      <VSidebarTarget
+      <aside
+        v-if="isSidebarVisible"
         class="sidebar fixed z-10 overflow-y-auto bg-dark-charcoal-06 end-0"
         :class="{ 'border-dark-charcoal-20 border-s': isSidebarVisible }"
-      />
+      >
+        <VSearchGridFilter class="px-10 pt-1" @close="closeSidebar" />
+      </aside>
     </main>
 
     <VModalTarget class="modal" />
     <VGlobalAudioSection />
   </div>
 </template>
-<script>
+<script lang="ts">
 import {
   computed,
   onMounted,
@@ -69,9 +72,9 @@ import VMigrationNotice from '~/components/VMigrationNotice.vue'
 import VTranslationStatusBanner from '~/components/VTranslationStatusBanner.vue'
 import VHeaderOld from '~/components/VHeaderOld/VHeaderOld.vue'
 import VModalTarget from '~/components/VModal/VModalTarget.vue'
-import VSidebarTarget from '~/components/VModal/VSidebarTarget.vue'
 import VGlobalAudioSection from '~/components/VGlobalAudioSection/VGlobalAudioSection.vue'
 import VFooter from '~/components/VFooter/VFooter.vue'
+import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 
 const embeddedPage = {
   name: 'embedded',
@@ -86,8 +89,8 @@ const embeddedPage = {
     VFooter,
     VModalTarget,
     VTeleportTarget,
-    VSidebarTarget,
     VGlobalAudioSection,
+    VSearchGridFilter,
   },
   layout: 'embedded',
   head() {
@@ -99,7 +102,8 @@ const embeddedPage = {
       featureFlagStore.isOn('new_header')
     )
 
-    const { isVisible: isFilterVisible } = useFilterSidebarVisibility()
+    const { isVisible: isFilterVisible, setVisibility } =
+      useFilterSidebarVisibility()
     const { matches: isSearchRoute } = useMatchSearchRoutes()
     const { matches: isSingleResultRoute } = useMatchSingleResultRoutes()
     const isSearchHeader = computed(
@@ -134,6 +138,10 @@ const embeddedPage = {
         : isSearchRoute.value && isMinScreenMd.value && isFilterVisible.value
     })
 
+    const closeSidebar = () => {
+      setVisibility(false)
+    }
+
     const isHeaderScrolled = ref(false)
     const { isScrolled: isMainContentScrolled, y: scrollY } = useWindowScroll()
     watch([isMainContentScrolled], ([isMainContentScrolled]) => {
@@ -165,6 +173,7 @@ const embeddedPage = {
       isSearchHeader,
       headerHasTwoRows,
       isNewHeaderEnabled,
+      closeSidebar,
     }
   },
 }

@@ -14,23 +14,15 @@
       @toggle="onTriggerClick"
       @tab="onTab"
     />
-    <template v-if="visibleRef">
-      <VTeleport v-if="isMinScreenMd" to="sidebar">
-        <VSearchGridFilter class="px-10 pt-8 pb-10" @close="onTriggerClick" />
-      </VTeleport>
-      <VModalContent
-        v-else
-        :hide="close"
-        :visible="true"
-        :trigger-element="triggerElement"
-        :aria-label="$t('header.filter-button.simple')"
-      >
-        <VSearchGridFilter
-          class="px-6 pt-[7px] pb-10"
-          @close="onTriggerClick"
-        />
-      </VModalContent>
-    </template>
+    <VModalContent
+      v-if="visibleRef && !isMinScreenMd"
+      :hide="close"
+      :visible="true"
+      :trigger-element="triggerElement"
+      :aria-label="$t('header.filter-button.simple')"
+    >
+      <VSearchGridFilter class="px-6 pt-[7px] pb-10" @close="onTriggerClick" />
+    </VModalContent>
   </div>
 </template>
 
@@ -44,8 +36,6 @@ import {
   toRef,
   onBeforeUnmount,
 } from '@nuxtjs/composition-api'
-
-import { Portal as VTeleport } from 'portal-vue'
 
 import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
@@ -68,7 +58,6 @@ export default defineComponent({
     VFilterButtonOld,
     VModalContent,
     VSearchGridFilter,
-    VTeleport,
   },
   props: {
     disabled: {

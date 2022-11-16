@@ -44,9 +44,6 @@
       @toggle="toggleSidebar"
       @tab="onTab"
     />
-    <VTeleport v-if="sidebarVisibleRef" to="sidebar">
-      <VSearchGridFilter class="px-10 pt-8 pb-10" @close="toggleSidebar" />
-    </VTeleport>
   </header>
 </template>
 <script lang="ts">
@@ -60,8 +57,6 @@ import {
   useRouter,
   watch,
 } from '@nuxtjs/composition-api'
-
-import { Portal as VTeleport } from 'portal-vue'
 
 import { useMediaStore } from '~/stores/media'
 import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
@@ -85,7 +80,6 @@ import VFilterButton from '~/components/VHeader/VFilterButton.vue'
 import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
 import VLogoButton from '~/components/VHeader/VLogoButton.vue'
 import VSearchBarButton from '~/components/VHeader/VHeaderMobile/VSearchBarButton.vue'
-import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover.vue'
 
 import closeIcon from '~/assets/icons/close-small.svg'
@@ -99,10 +93,8 @@ export default defineComponent({
     VFilterButton,
     VLogoButton,
     VSearchBarButton,
-    VSearchGridFilter,
     VSearchTypePopover,
     VSearchBar,
-    VTeleport,
   },
   setup(_, { emit }) {
     const filterButtonRef = ref<InstanceType<typeof VFilterButton> | null>(null)
