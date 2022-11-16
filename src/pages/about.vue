@@ -73,7 +73,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, useMeta } from '@nuxtjs/composition-api'
+
+import { useFeatureFlagStore } from '~/stores/feature-flag'
+import { useI18n } from '~/composables/use-i18n'
 
 import VLink from '~/components/VLink.vue'
 import VContentPage from '~/components/VContentPage.vue'
@@ -81,12 +84,19 @@ import VContentPage from '~/components/VContentPage.vue'
 export default defineComponent({
   name: 'AboutPage',
   components: { VLink, VContentPage },
-  head() {
-    return {
-      title: `${this.$t('about.title', {
+  setup() {
+    const i18n = useI18n()
+    const featureFlagStore = useFeatureFlagStore()
+
+    useMeta({
+      title: `${i18n.t('about.title', {
         openverse: 'Openverse',
       })} | Openverse`,
-    }
+      meta: featureFlagStore.isOn('new_header')
+        ? [{ hid: 'robots', name: 'robots', content: 'all' }]
+        : undefined,
+    })
   },
+  head: {},
 })
 </script>

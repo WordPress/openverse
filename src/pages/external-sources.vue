@@ -63,9 +63,12 @@
     </i18n>
   </VContentPage>
 </template>
+<script lang="ts">
+import { defineComponent, useMeta } from '@nuxtjs/composition-api'
 
-<script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { useFeatureFlagStore } from '~/stores/feature-flag'
+
+import { useI18n } from '~/composables/use-i18n'
 
 import VContentPage from '~/components/VContentPage.vue'
 import VLink from '~/components/VLink.vue'
@@ -73,11 +76,18 @@ import VLink from '~/components/VLink.vue'
 export default defineComponent({
   name: 'ExternalSourcesPage',
   components: { VContentPage, VLink },
-  head() {
-    return {
-      title: `${this.$t('external-sources-page.title')} | Openverse`,
-    }
+  setup() {
+    const i18n = useI18n()
+    const featureFlagStore = useFeatureFlagStore()
+
+    useMeta({
+      title: `${i18n.t('external-sources-page.title')} | Openverse`,
+      meta: featureFlagStore.isOn('new_header')
+        ? [{ hid: 'robots', name: 'robots', content: 'all' }]
+        : undefined,
+    })
   },
+  head: {},
 })
 </script>
 

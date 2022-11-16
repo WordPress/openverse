@@ -223,7 +223,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useContext } from '@nuxtjs/composition-api'
+import { defineComponent, useContext, useMeta } from '@nuxtjs/composition-api'
+
+import { useFeatureFlagStore } from '~/stores/feature-flag'
+import { useI18n } from '~/composables/use-i18n'
 
 import VLink from '~/components/VLink.vue'
 import VContentPage from '~/components/VContentPage.vue'
@@ -233,6 +236,19 @@ export default defineComponent({
   components: { VLink, VContentPage },
   setup() {
     const { app } = useContext()
+
+    const i18n = useI18n()
+    const featureFlagStore = useFeatureFlagStore()
+
+    useMeta({
+      title: `${i18n.t('search-guide.title', {
+        openverse: 'Openverse',
+      })} | Openverse`,
+      meta: featureFlagStore.isOn('new_header')
+        ? [{ hid: 'robots', name: 'robots', content: 'all' }]
+        : undefined,
+    })
+
     const pathFromQuery = (queryString: string, quote = false) => {
       return app.localePath({
         path: 'search',
@@ -246,12 +262,6 @@ export default defineComponent({
     }
     return { pathFromQuery, providerSearchLink }
   },
-  head() {
-    return {
-      title: `${this.$t('search-guide.title', {
-        openverse: 'Openverse',
-      })} | Openverse`,
-    }
-  },
+  head: {},
 })
 </script>
