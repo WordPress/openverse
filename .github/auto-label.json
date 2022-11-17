@@ -1,7 +1,5 @@
 {
   "rules": {
-    "migrations": [
-      "**/migrations/**/*"
-    ]
+    "migrations": ["**/migrations/**/*"]
   }
 }

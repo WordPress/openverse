@@ -1,0 +1,4 @@
+# Jinja templates
+api/catalog/templates/drf-yasg/redoc.html
+api/docs/_templates/sidebar/brand.html
+api/docs/_templates/page.html
