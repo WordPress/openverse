@@ -31,7 +31,7 @@ from catalog.configuration.logging import LOGGING
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Where to collect static files in production/development deployments
-STATIC_ROOT = "/var/api_static_content/static"
+STATIC_ROOT = config("STATIC_ROOT", default="/var/api_static_content/static")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/

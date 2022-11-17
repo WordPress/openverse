@@ -4,3 +4,6 @@
 !manage.py
 !Pipfile*
 !run.sh
+!nginx.conf.template
+!static
+!nginx-entrypoint.sh

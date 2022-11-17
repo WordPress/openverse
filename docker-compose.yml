@@ -82,6 +82,9 @@ services:
       - cache
     env_file:
       - api/env.docker
+    environment:
+      STATIC_ROOT: ${STATIC_ROOT:-}
+      MEDIA_ROOT: ${MEDIA_ROOT:-}
     stdin_open: true
     tty: true
     user: ${DOCKER_USER_ID}:${DOCKER_GROUP_ID}

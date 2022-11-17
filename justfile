@@ -230,6 +230,13 @@ stats media="images":
 ipython:
     just dj shell
 
+# Run `collectstatic` to prepare for building the `nginx` Dockerfile target.
+@collectstatic: _api-up
+    # The `STATIC_ROOT` setting is relative to the directory in which the Django
+    # container runs (i.e., the `api` directory at the root of the repository).
+    # The resulting output will be at `api/static` and is git ignored for convenience.
+    @STATIC_ROOT="./static" just dj collectstatic --noinput
+
 
 ##########
 # Sphinx #

@@ -34,6 +34,22 @@ COPY Pipfile Pipfile.lock ./
 # Install Python dependencies system-wide (uses the active virtualenv)
 RUN pipenv install --system --deploy --dev
 
+#########
+# Nginx #
+#########
+
+# This target assumes that the build host has run `manage.py collectstatic`
+# `just collectstatic` is provided as a convenient alias for running it the expected way
+
+FROM nginx:1.23.2-alpine as nginx
+
+WORKDIR /app
+
+COPY nginx.conf.template /etc/nginx/templates/openverse-api.conf.template
+COPY /static /app/static
+
+ENV NGINX_ENVSUBST_FILTER="DJANGO_UPSTREAM_URL"
+
 #######
 # API #
 #######
