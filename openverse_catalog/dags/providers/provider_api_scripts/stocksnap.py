@@ -151,7 +151,7 @@ class StockSnapDataIngester(ProviderDataIngester):
         """
         Get the size of the image in bytes.
         """
-        resp = self.delayed_requester.get(image_url)
+        resp = self.delayed_requester.head(image_url)
         if resp:
             filesize = int(resp.headers.get("Content-Length", 0))
             return filesize if filesize != 0 else None

@@ -129,7 +129,7 @@ class WordPressDataIngester(ProviderDataIngester):
         return None, None, None, None
 
     def _get_filesize(self, image_url):
-        resp = self.get_response_json(query_params={}, endpoint=image_url)
+        resp = self.delayed_requester.head(image_url)
         if resp:
             filesize = int(resp.headers.get("Content-Length", 0))
             return filesize if filesize != 0 else None
