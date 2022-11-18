@@ -24,7 +24,7 @@ new=$(git rev-list --reverse --topo-order HEAD..origin/main | head -1)
 # Move ahead to this new commit
 git reset --hard "$new"
 # Verify if have /dags/ in the last commit
-have_dag=$(git log -p -1 "$new"  --pretty=format: --name-only | grep "/dags/")
+have_dag=$(git log -p -1 "$new"  --pretty=format: --name-only | grep "openverse_catalog/dags/")
 # If there is no files under /dags/ folder, no need to notify, quit early
 [ -z "$have_dag" ] && exit
 
