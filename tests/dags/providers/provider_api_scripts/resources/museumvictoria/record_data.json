@@ -73,10 +73,7 @@
     "Processing - planning & departure",
     "Luggage handling"
   ],
-  "collectingAreas": [
-    "Migration & Cultural Diversity",
-    "Transport"
-  ],
+  "collectingAreas": ["Migration & Cultural Diversity", "Transport"],
   "collectionNames": [
     "Margaret Wood Immigration & Shipping Collection",
     "Immigration Shipping Collection"
@@ -163,9 +160,7 @@
         "uri": "https://collections.museumsvictoria.com.au/content/media/13/488013-small.jpg",
         "width": 855
       },
-      "sources": [
-        "Museums Victoria"
-      ],
+      "sources": ["Museums Victoria"],
       "thumbnail": {
         "height": 250,
         "size": 8158,
@@ -205,9 +200,7 @@
         "uri": "https://collections.museumsvictoria.com.au/content/media/14/488014-small.jpg",
         "width": 855
       },
-      "sources": [
-        "Museums Victoria"
-      ],
+      "sources": ["Museums Victoria"],
       "thumbnail": {
         "height": 250,
         "size": 11400,
@@ -247,9 +240,7 @@
         "uri": "https://collections.museumsvictoria.com.au/content/media/1/372501-small.jpg",
         "width": 855
       },
-      "sources": [
-        "Museums Victoria"
-      ],
+      "sources": ["Museums Victoria"],
       "thumbnail": {
         "height": 250,
         "size": 13892,
@@ -289,9 +280,7 @@
         "uri": "https://collections.museumsvictoria.com.au/content/media/0/372500-small.jpg",
         "width": 855
       },
-      "sources": [
-        "Museums Victoria"
-      ],
+      "sources": ["Museums Victoria"],
       "thumbnail": {
         "height": 250,
         "size": 10149,
@@ -328,10 +317,7 @@
   "recordType": "item",
   "references": null,
   "registrationNumber": "HT 1447",
-  "relatedArticleIds": [
-    "articles/3438",
-    "articles/3437"
-  ],
+  "relatedArticleIds": ["articles/3438", "articles/3437"],
   "relatedItemIds": [],
   "relatedSpeciesIds": [],
   "relatedSpecimenIds": [],

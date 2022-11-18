@@ -100,10 +100,7 @@
             ]
           },
           "indexedStructured": {
-            "date": [
-              "1920s",
-              "1910s"
-            ],
+            "date": ["1920s", "1910s"],
             "name": [
               {
                 "content": "Gruber, Martin A",
@@ -114,19 +111,10 @@
                 "type": "corporate_subj"
               }
             ],
-            "object_type": [
-              "Archival materials",
-              "Photographs"
-            ],
-            "online_media_type": [
-              "Images"
-            ],
-            "topic": [
-              "Animals"
-            ],
-            "usage_flag": [
-              "Personal Paper Deposit"
-            ]
+            "object_type": ["Archival materials", "Photographs"],
+            "online_media_type": ["Images"],
+            "topic": ["Animals"],
+            "usage_flag": ["Personal Paper Deposit"]
           }
         },
         "docSignature": "b943f314acfdbcd3ed740a1c4bb2774f1e0abc24_c58eacf430afa83b10f6a76fc64459d9",

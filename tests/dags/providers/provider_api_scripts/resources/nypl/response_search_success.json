@@ -8,9 +8,7 @@
       "totalPages": "1275"
     },
     "response": {
-      "capture": [
-        null
-      ],
+      "capture": [null],
       "headers": {
         "code": "200",
         "message": "ok",

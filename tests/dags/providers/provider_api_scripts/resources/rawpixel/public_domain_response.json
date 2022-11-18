@@ -26,12 +26,8 @@
       "isPng": false,
       "isPortrait": false,
       "metadata": {
-        "artist_accounts": [
-          3059155
-        ],
-        "artist_names": [
-          "National Park Service (Source)"
-        ],
+        "artist_accounts": [3059155],
+        "artist_names": ["National Park Service (Source)"],
         "artist_twitters": [],
         "artists": [
           {
@@ -107,11 +103,7 @@
           }
         ],
         "info_label": "Free U.S. Government Image",
-        "info_label_tags": [
-          "$publicdomain",
-          "$usgovernmentworks",
-          "$jpegtiff"
-        ],
+        "info_label_tags": ["$publicdomain", "$usgovernmentworks", "$jpegtiff"],
         "isAddon": false,
         "isCC0License": true,
         "isDocxPdf": false,
@@ -263,10 +255,7 @@
           }
         ],
         "info_label": "Free CC0 Image",
-        "info_label_tags": [
-          "$publicdomain",
-          "$jpegtiff"
-        ],
+        "info_label_tags": ["$publicdomain", "$jpegtiff"],
         "isAddon": false,
         "isCC0License": true,
         "isDocxPdf": false,

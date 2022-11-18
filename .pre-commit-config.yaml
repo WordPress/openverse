@@ -20,10 +20,6 @@ repos:
       - id: fix-encoding-pragma
         args:
           - --remove
-      - id: pretty-format-json
-        exclude: package(-lock)?\.json
-        args:
-          - --autofix
       - id: requirements-txt-fixer
 
   - repo: https://github.com/PyCQA/isort
@@ -73,9 +69,7 @@ repos:
     rev: v2.5.0
     hooks:
       - id: prettier
-        files: ^js/.*$
-      - id: prettier
-        types: [yaml]
+        exclude: .*\.md$
 
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.8.0

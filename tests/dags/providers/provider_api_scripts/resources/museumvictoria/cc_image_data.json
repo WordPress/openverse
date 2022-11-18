@@ -1,9 +1,7 @@
 {
   "alternativeText": null,
   "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr - 11 May 1915",
-  "creators": [
-    "Photographer: Deb Tout-Smith"
-  ],
+  "creators": ["Photographer: Deb Tout-Smith"],
   "credit": null,
   "dateModified": "2019-07-09T05:51:00Z",
   "id": "media/329745",
@@ -31,9 +29,7 @@
     "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg",
     "width": 540
   },
-  "sources": [
-    "Museums Victoria"
-  ],
+  "sources": ["Museums Victoria"],
   "thumbnail": {
     "height": 250,
     "size": 5282,

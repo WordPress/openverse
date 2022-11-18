@@ -476,20 +476,10 @@
   },
   "modified": "2022-05-16T18:50:55",
   "modified_gmt": "2022-05-16T18:50:55",
-  "photo-categories": [
-    7
-  ],
-  "photo-colors": [
-    18,
-    13
-  ],
-  "photo-orientations": [
-    23
-  ],
-  "photo-tags": [
-    1099,
-    337
-  ],
+  "photo-categories": [7],
+  "photo-colors": [18, 13],
+  "photo-orientations": [23],
+  "photo-tags": [1099, 337],
   "slug": "203627f31f",
   "status": "publish",
   "template": "",

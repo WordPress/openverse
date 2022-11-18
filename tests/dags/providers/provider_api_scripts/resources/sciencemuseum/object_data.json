@@ -47,9 +47,7 @@
         "value": "1923-668"
       }
     ],
-    "language": [
-      "eng"
-    ],
+    "language": ["eng"],
     "legal": {
       "legal_status": "permanent collection"
     },
@@ -120,12 +118,7 @@
         }
       ]
     },
-    "materials": [
-      "card",
-      "complete",
-      "glass",
-      "leather"
-    ],
+    "materials": ["card", "complete", "glass", "leather"],
     "measurements": {
       "dimensions": [
         {

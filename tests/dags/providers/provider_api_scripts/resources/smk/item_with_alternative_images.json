@@ -14,9 +14,7 @@
       "width": 3110
     },
     {
-      "cropped": [
-        "true"
-      ],
+      "cropped": ["true"],
       "height": 3142,
       "iiif_id": "https://iip.smk.dk/iiif/jp2/p8418r38n_kksgb7575_-_001.tif.reconstructed.tif.jp2",
       "iiif_info": "https://iip.smk.dk/iiif/jp2/p8418r38n_kksgb7575_-_001.tif.reconstructed.tif.jp2/info.json",
@@ -28,24 +26,12 @@
       "width": 2302
     }
   ],
-  "artist": [
-    "Gheyn, Jacques II de"
-  ],
+  "artist": ["Gheyn, Jacques II de"],
   "brightness": 6.35253,
-  "collection": [
-    "Gammel bestand"
-  ],
-  "colors": [
-    "#888888",
-    "#ffe7c9",
-    "#bed69f",
-    "#382510",
-    "#777777"
-  ],
+  "collection": ["Gammel bestand"],
+  "colors": ["#888888", "#ffe7c9", "#bed69f", "#382510", "#777777"],
   "colortemp": 3.8521814,
-  "content_person": [
-    "Brahe, Tycho"
-  ],
+  "content_person": ["Brahe, Tycho"],
   "content_person_full": [
     {
       "forename": "Tycho",
@@ -158,9 +144,7 @@
       "start": "1593-01-01T00:00:00.000Z"
     }
   ],
-  "production_dates_notes": [
-    "V\u00e6rkdatering: ca. 1595"
-  ],
+  "production_dates_notes": ["V\u00e6rkdatering: ca. 1595"],
   "public_domain": true,
   "related_objects": [
     {
@@ -172,12 +156,8 @@
   "rights": "https://creativecommons.org/publicdomain/zero/1.0/",
   "saturation": 2.495402,
   "similar_images_url": "https://similar.api.smk.dk/similar/?object_number=KKSgb7575",
-  "suggested_bg_color": [
-    "#888888"
-  ],
-  "techniques": [
-    "Kobberstik"
-  ],
+  "suggested_bg_color": ["#888888"],
+  "techniques": ["Kobberstik"],
   "titles": [
     {
       "language": "dansk",

@@ -67,9 +67,7 @@
             "type": "inscription"
           }
         ],
-        "language": [
-          "eng"
-        ],
+        "language": ["eng"],
         "legal": {
           "legal_status": "loan: wellcome trust"
         },

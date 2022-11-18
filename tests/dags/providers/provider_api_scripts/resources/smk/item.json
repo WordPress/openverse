@@ -1,8 +1,6 @@
 {
   "acquisition_date_precision": "1893-12-30",
-  "collection": [
-    "Gammel bestand"
-  ],
+  "collection": ["Gammel bestand"],
   "created": "2020-03-21T10:18:17Z",
   "dimensions": [
     {
@@ -92,9 +90,7 @@
   "responsible_department": "Samling og Forskning (KKS)",
   "rights": "https://creativecommons.org/share-your-work/public-domain/cc0/",
   "similar_images_url": "https://similar.api.smk.dk/similar/?object_number=KKS1615",
-  "techniques": [
-    "Kobberstik"
-  ],
+  "techniques": ["Kobberstik"],
   "titles": [
     {
       "title": "Jomfru Maria med barnet og Sankt Anne ved vuggen",

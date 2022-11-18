@@ -121,13 +121,8 @@
       ]
     },
     "indexedStructured": {
-      "common_name": [
-        "Savannah Sparrow",
-        "Savannah Sparrow (Ipswich)"
-      ],
-      "date": [
-        "1950s"
-      ],
+      "common_name": ["Savannah Sparrow", "Savannah Sparrow (Ipswich)"],
+      "date": ["1950s"],
       "geoLocation": [
         {
           "L1": {
@@ -152,40 +147,16 @@
           }
         }
       ],
-      "name": [
-        "Levy, S. H."
-      ],
-      "online_media_type": [
-        "Images"
-      ],
-      "place": [
-        "United States",
-        "Pinal",
-        "North America",
-        "Arizona"
-      ],
-      "scientific_name": [
-        "Passerculus sandwichensis nevadensis"
-      ],
-      "tax_class": [
-        "Aves"
-      ],
-      "tax_family": [
-        "Emberizidae"
-      ],
-      "tax_kingdom": [
-        "Animalia"
-      ],
-      "tax_order": [
-        "Passeriformes"
-      ],
-      "tax_phylum": [
-        "Chordata"
-      ],
-      "topic": [
-        "Animals",
-        "Birds"
-      ]
+      "name": ["Levy, S. H."],
+      "online_media_type": ["Images"],
+      "place": ["United States", "Pinal", "North America", "Arizona"],
+      "scientific_name": ["Passerculus sandwichensis nevadensis"],
+      "tax_class": ["Aves"],
+      "tax_family": ["Emberizidae"],
+      "tax_kingdom": ["Animalia"],
+      "tax_order": ["Passeriformes"],
+      "tax_phylum": ["Chordata"],
+      "topic": ["Animals", "Birds"]
     }
   },
   "docSignature": "860718e6b8703c3c798bb9b800842061",

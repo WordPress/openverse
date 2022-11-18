@@ -45,19 +45,10 @@
   },
   "series": [],
   "subjects": [
-    [
-      "koivu",
-      "koivussa"
-    ],
-    [
-      "linnunp\u00f6nt\u00f6t"
-    ],
-    [
-      "Revonristi"
-    ],
-    [
-      "valmistusaika: 11.06.1923"
-    ]
+    ["koivu", "koivussa"],
+    ["linnunp\u00f6nt\u00f6t"],
+    ["Revonristi"],
+    ["valmistusaika: 11.06.1923"]
   ],
   "title": "linnunp\u00f6ntt\u00f6 koivussa"
 }

@@ -21,14 +21,7 @@
     "preview-lq-ogg": "https://freesound.org/data/previews/415/415362_6044691-lq.ogg"
   },
   "samplerate": 44100.0,
-  "tags": [
-    "eh",
-    "disinterest",
-    "low",
-    "uh",
-    "voice",
-    "uncaring"
-  ],
+  "tags": ["eh", "disinterest", "low", "uh", "voice", "uncaring"],
   "type": "wav",
   "url": "https://freesound.org/people/owly-bee/sounds/415362/",
   "username": "owly-bee"

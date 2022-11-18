@@ -85,9 +85,7 @@
       "type": "inscription"
     }
   ],
-  "language": [
-    "eng"
-  ],
+  "language": ["eng"],
   "legal": {
     "credit_line": "McPhail, Mary",
     "legal_status": "permanent collection"
