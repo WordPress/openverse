@@ -18,7 +18,7 @@ export default function usePages(isNew = false) {
         {
           id: 'get-involved',
           name: 'navigation.get-involved',
-          link: 'https://github.com/WordPress/openverse/',
+          link: 'https://make.wordpress.org/openverse/handbook/',
         },
         {
           id: 'api',
