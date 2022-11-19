@@ -44,7 +44,6 @@
     <VFooter
       v-if="isNewHeaderEnabled"
       mode="internal"
-      :language-props="{ variant: 'yellow' }"
     />
   </div>
 </template>
