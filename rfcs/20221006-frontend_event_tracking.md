@@ -63,7 +63,7 @@ Unless all conditions are met the `sendEvent` function will simply no-op.
 
 A previous version of this proposal suggested honoring the `navigator.doNotTrack` browser method, but upon inspection this was deprecated in 2018 and is no longer advised.
 
-This proposal will require the creation of a user settings page _or_ a analytics opt-out checkbox on the soon to be created `/privacy` page.
+This proposal will require the creation of a user settings page _or_ an analytics opt-out checkbox on the soon to be created `/privacy` page.
 
 ### Sample implementaton and event types
 
@@ -162,11 +162,19 @@ type AnalyticsEvents = {
     /** The search term **/
     query: string;
   };
+  /** The user clicks the CTA button to the external source to use the image */
   GET_MEDIA: {};
+  /** The user clicks one of the buttons to copy the media attribution */
   COPY_ATTRIBUTION: {};
+  /** The user reports a piece of media through our form */
   REPORT_MEDIA: {};
+  /** The user plays, pauses, or seeks an audio track.
+   * @todo: This potentially requires throttling.
+   **/
   AUDIO_INTERACTION: {};
+  /** The user visits a CC license description page on CC.org  **/
   VISIT_LICENSE_PAGE: {};
+  /** The user visits a creator's link in the single result UI  **/
   VISIT_CREATOR_LINK: {};
   /** The user right clicks a single image result, most likely to download it. **/
   RIGHT_CLICK_IMAGE: {};
@@ -186,21 +194,46 @@ async function sendEvent<T extends AnalyticsEventTypes>(
   payload?: AnalyticsEvents[T]
 ): Promise<any> {
   /**
-   * Actually send the event here, with some additional values:
-   *
-   * - Session ID
-   * - Current path
+   * The default values to send with every analytics event.
    */
-  // Default options are marked with *
-  navigator.sendBeacon;
-  const response = await fetch(`/api`, {
-    method: "POST", // *GET, POST, PUT, DELETE, etc.
+  const defaults = {
+    timestamp: Date.now(),
+    path: window.location.pathname,
+    // The dimensions of the user's device
+    width: window.innerWidth,
+    height: window.innerHeight,
+    referrer: document.referrer || null,
+  };
+  /**
+   * Actually send the event here, with some additional values.
+   * I would have prefered to use `navigator.sendBeacon` here
+   * but it is blocked by most ad blockers.
+   *
+   * We might not want to call our api route "analytics" to
+   * further avoid blocking by adblockers, but I'll use that
+   * name for clarity here.
+   */
+  const response = await fetch(`/analytics`, {
+    method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...defaults, ...payload }),
   });
-  return response.json(); // parses JSON response into native JavaScript objects
 }
 ```
+
+### Implementation Plan
+
+This needs more elaboration, as it's a very rough outline. For example, specific events will require more detailed planning.
+
+- [ ] Create "Event Tracking" GitHub milestone in the frontend repository
+- [ ] Create a GitHub issue for each of the following todos
+- [ ] Create an issue for the creation of the 'sendEvent' function and for the api route to post analytics events to
+- [ ] Create a single issue for each event in the sample implementation
+
+## Concerns / Pitfalls
+
+- Related to content safety, this is an area where we are surfacing user information in the form of text, or even malicious URLs, to Openverse developers. These searches could include explicit or sensitive material. We're also potentially surfacing explicit image results to anyone working with this data.
+- We're building something here that is commonly drop-in when 3rd party tools are used. Is this a poor use of time?
 
 ### Prior Art
 
