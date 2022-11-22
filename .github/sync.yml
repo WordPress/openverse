@@ -42,8 +42,17 @@ group:
         dest: .github/PULL_REQUEST_TEMPLATE.md
   # Unified lint rules
   - repos: |
+      WordPress/openverse
       WordPress/openverse-catalog
       WordPress/openverse-api
     files:
-      - source: .pre-commit-config.yaml
+      - source: .pre-commit-config.yaml.jinja
         dest: .pre-commit-config.yaml
+        template: true
+  - repos: |
+      WordPress/openverse-frontend
+    files:
+      - source: .pre-commit-config.frontend.yaml.jinja
+        dest: .pre-commit-config.yaml
+        template:
+          contains_python_code: false
