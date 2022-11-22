@@ -70,7 +70,7 @@ repos:
     rev: v8.15.0
     hooks:
       - id: eslint
-        files: \.(js|ts|vue)$
+        files: ^js/.*$
         exclude: ^nuxt-template-overrides/.*$
         'types': [file] # ESLint only accepts [javascript] by default
         args:
