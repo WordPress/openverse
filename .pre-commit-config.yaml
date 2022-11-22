@@ -71,7 +71,6 @@ repos:
     hooks:
       - id: eslint
         files: ^js/.*$
-        exclude: ^nuxt-template-overrides/.*$
         'types': [file] # ESLint only accepts [javascript] by default
         args:
           - --ignore-path=.gitignore
