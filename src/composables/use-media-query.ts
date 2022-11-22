@@ -89,7 +89,7 @@ export const isMinScreen = (
   }
 
   const query = computed(() => {
-    const sizeInPx = SCREEN_SIZES.get(resolvedBp)
+    const sizeInPx = SCREEN_SIZES[resolvedBp]
     return `(min-width: ${sizeInPx}px)`
   })
 

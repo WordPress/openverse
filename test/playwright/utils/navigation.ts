@@ -73,8 +73,6 @@ export const renderModes = ['SSR', 'CSR'] as const
 export type RenderMode = typeof renderModes[number]
 export type LanguageDirection = 'ltr' | 'rtl'
 
-const smWidth = SCREEN_SIZES.get('sm') as number
-
 export const buttonSelectors = {
   filter: 'button[aria-controls="filters"]',
   contentSwitcher: 'button[aria-controls="content-switcher-modal"]',
@@ -324,7 +322,7 @@ export const selectHomepageSearchType = async (
   dir: LanguageDirection = 'ltr'
 ) => {
   const pageWidth = page.viewportSize()?.width
-  if (pageWidth && pageWidth > smWidth) {
+  if (pageWidth && pageWidth > SCREEN_SIZES.sm) {
     await page.click(`[aria-label="${t('search-type.all', dir)}"]`)
     await page.click(
       `button[role="radio"]:has-text("${searchTypeNames[dir][searchType]}")`

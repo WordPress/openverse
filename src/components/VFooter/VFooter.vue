@@ -113,7 +113,7 @@ export default defineComponent({
     const footerEl = ref<HTMLElement | null>(null)
     const { dimens: footerDimens } = useResizeObserver(footerEl)
     const variantNames = computed(() =>
-      Array.from(SCREEN_SIZES)
+      Object.entries(SCREEN_SIZES)
         .filter(([, val]) => footerDimens.value.width >= val)
         .map(([key]) => `footer-${key}`)
     )

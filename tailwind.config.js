@@ -1,4 +1,4 @@
-const { SCREEN_SIZES } = require('./src/constants/screens')
+const { SCREENS } = require('./src/constants/screens')
 const { Z_INDICES } = require('./src/constants/z-indices')
 
 module.exports = {
@@ -8,12 +8,7 @@ module.exports = {
     './tailwind.safelist.txt',
   ],
   theme: {
-    screens: Object.fromEntries(
-      Array.from(SCREEN_SIZES, ([name, width]) => [
-        name,
-        `${width}px`,
-      ]).reverse()
-    ),
+    screens: SCREENS,
     zIndex: Z_INDICES,
     colors: {
       // Accents
