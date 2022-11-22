@@ -1,6 +1,13 @@
 <template>
-  <div class="full-track w-full">
-    <div class="relative bg-dark-charcoal-06">
+  <div class="full-track w-full" :class="{ isNewHeaderEnabled }">
+    <div
+      class="relative"
+      :class="
+        isNewHeaderEnabled
+          ? 'border-b border-dark-charcoal-20'
+          : 'bg-dark-charcoal-06'
+      "
+    >
       <span
         v-if="currentTime > 0"
         class="pointer-events-none absolute left-0 hidden h-full w-4 bg-yellow md:block lg:w-10"
@@ -76,6 +83,7 @@ import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 import type { AudioDetail } from '~/models/media'
 import { timeFmt } from '~/utils/time-fmt'
 import { AudioSize, AudioStatus, audioFeatures } from '~/constants/audio'
+import { useFeatureFlagStore } from '~/stores/feature-flag'
 
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'
@@ -105,12 +113,18 @@ export default defineComponent({
   setup(props) {
     const isSmall = computed(() => props.size === 's')
 
+    const featureFlagStore = useFeatureFlagStore()
+    const isNewHeaderEnabled = computed(() =>
+      featureFlagStore.isOn('new_header')
+    )
+
     return {
       timeFmt,
 
       isSmall,
       audioFeatures,
       externalIcon,
+      isNewHeaderEnabled,
     }
   },
 })
@@ -119,6 +133,10 @@ export default defineComponent({
 <style>
 .full-track .waveform {
   @apply h-[185px] rounded-sm;
+}
+
+.full-track.isNewHeaderEnabled .waveform {
+  --waveform-background-color: theme('colors.white');
 }
 
 .full-track .play-pause {

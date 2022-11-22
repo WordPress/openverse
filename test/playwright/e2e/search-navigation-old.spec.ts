@@ -4,6 +4,7 @@ import {
   goToSearchTerm,
   OLD_HEADER,
   openFilters,
+  t,
 } from '~~/test/playwright/utils/navigation'
 import { mockProviderApis } from '~~/test/playwright/utils/route'
 
@@ -73,7 +74,7 @@ test.describe('back to search results link', () => {
     const url = '/search/?q=galah'
     await page.goto(url)
     await page.locator('a[href^="/image"]').first().click()
-    const link = page.locator('text="Back to search results"')
+    const link = page.locator(`text="${t('single-result.back')}"`)
     await expect(link).toBeVisible()
     await link.click()
     await expect(page).toHaveURL(url)

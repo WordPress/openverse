@@ -1,13 +1,21 @@
 <template>
   <div>
-    <figure class="relative mb-4 w-full bg-dark-charcoal-06 px-6 pt-12">
-      <div
-        v-if="backToSearchPath"
-        class="absolute left-0 top-0 right-0 w-full px-2"
-      >
-        <VBackToSearchResultsLink :path="backToSearchPath" />
-      </div>
+    <div
+      v-if="backToSearchPath"
+      class="w-full py-2 px-2 md:px-6"
+      :class="{ 'bg-dark-charcoal-06': !isNewHeaderEnabled }"
+    >
+      <VBackToSearchResultsLink :href="backToSearchPath" />
+    </div>
 
+    <figure
+      class="relative mb-4 px-6"
+      :class="
+        isNewHeaderEnabled
+          ? 'border-b border-dark-charcoal-20'
+          : 'bg-dark-charcoal-06 pt-4 md:pt-8'
+      "
+    >
       <img
         v-if="!sketchFabUid"
         id="main-image"
@@ -96,6 +104,7 @@ import { IMAGE } from '~/constants/media'
 import type { ImageDetail } from '~/models/media'
 import { useSingleResultStore } from '~/stores/media/single-result'
 import { useRelatedMediaStore } from '~/stores/media/related-media'
+import { useFeatureFlagStore } from '~/stores/feature-flag'
 import { createDetailPageMeta } from '~/utils/og'
 
 import VButton from '~/components/VButton.vue'
@@ -137,6 +146,11 @@ export default defineComponent({
       singleResultStore.mediaType === IMAGE
         ? (singleResultStore.mediaItem as ImageDetail)
         : null
+    )
+
+    const featureFlagStore = useFeatureFlagStore()
+    const isNewHeaderEnabled = computed(() =>
+      featureFlagStore.isOn('new_header')
     )
 
     const backToSearchPath = computed(() => route.value.meta?.backToSearchPath)
@@ -225,6 +239,7 @@ export default defineComponent({
       onImageError,
       backToSearchPath,
       externalIcon,
+      isNewHeaderEnabled,
     }
   },
   async asyncData({ app, error, route, $pinia }) {

@@ -1,6 +1,7 @@
 import { test, expect, Page } from '@playwright/test'
 
 import { mockProviderApis } from '~~/test/playwright/utils/route'
+import { t } from '~~/test/playwright/utils/navigation'
 
 const goToCustomImagePage = async (page: Page) => {
   // Test in a custom image detail page, it should apply the same for any image.
@@ -37,7 +38,9 @@ test('shows the main image with its title as alt text', async ({ page }) => {
 
 test('does not show back to search results breadcrumb', async ({ page }) => {
   await goToCustomImagePage(page)
-  await expect(page.locator('text="Back to search results"')).not.toBeVisible({
+  await expect(
+    page.locator(`text="${t('single-result.back')}"`)
+  ).not.toBeVisible({
     timeout: 300,
   })
 })

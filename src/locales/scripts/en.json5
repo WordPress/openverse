@@ -487,7 +487,7 @@
     },
   },
   'single-result': {
-    back: 'Back to search results',
+    back: 'Back to results',
   },
   'image-details': {
     creator: 'by {name}',

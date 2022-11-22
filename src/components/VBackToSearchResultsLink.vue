@@ -1,10 +1,10 @@
 <template>
   <!-- @todo: Separate the absolute container from the link itself. -->
   <VLink
-    class="flex flex-row items-center px-2 py-3 text-xs font-semibold text-dark-charcoal md:px-6 md:pt-4 md:pb-2 md:text-sr"
-    :href="path"
+    class="time inline-flex flex-row items-center gap-2 rounded-sm p-2 text-xs font-semibold text-dark-charcoal-70 pe-3 hover:text-dark-charcoal"
+    v-bind="$attrs"
   >
-    <VIcon :icon-path="chevronIcon" class="-ms-2" />
+    <VIcon :icon-path="chevronIcon" :rtl-flip="true" />
     {{ $t('single-result.back') }}
   </VLink>
 </template>
@@ -17,17 +17,16 @@ import VLink from '~/components/VLink.vue'
 
 import chevronIcon from '~/assets/icons/chevron-left.svg'
 
+/**
+ * This link takes the user from a single result back to the list of all
+ * results. It only appears if the user navigated from the search results.
+ */
 export default defineComponent({
   components: {
     VIcon,
     VLink,
   },
-  props: {
-    path: {
-      type: String,
-      required: true,
-    },
-  },
+  inheritAttrs: false,
   setup() {
     return { chevronIcon }
   },

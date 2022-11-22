@@ -1,8 +1,9 @@
 <template>
-  <main class="relative">
-    <div v-if="backToSearchPath" class="w-full p-2">
-      <VBackToSearchResultsLink :path="backToSearchPath" />
+  <main>
+    <div v-if="backToSearchPath" class="w-full py-2 px-2 md:px-6">
+      <VBackToSearchResultsLink :href="backToSearchPath" />
     </div>
+
     <VAudioTrack layout="full" :audio="audio" class="main-track" />
     <div
       class="mx-auto mt-10 flex flex-col gap-10 px-6 lg:mt-16 lg:max-w-5xl lg:gap-16"
@@ -25,6 +26,7 @@ import { AUDIO } from '~/constants/media'
 import type { AudioDetail } from '~/models/media'
 import { useRelatedMediaStore } from '~/stores/media/related-media'
 import { useSingleResultStore } from '~/stores/media/single-result'
+import { useFeatureFlagStore } from '~/stores/feature-flag'
 import { createDetailPageMeta } from '~/utils/og'
 
 import VAudioDetails from '~/components/VAudioDetails/VAudioDetails.vue'
@@ -53,6 +55,11 @@ export default defineComponent({
     const singleResultStore = useSingleResultStore()
     const relatedMediaStore = useRelatedMediaStore()
 
+    const featureFlagStore = useFeatureFlagStore()
+    const isNewHeaderEnabled = computed(() =>
+      featureFlagStore.isOn('new_header')
+    )
+
     const audio = computed(() =>
       singleResultStore.mediaType === AUDIO
         ? (singleResultStore.mediaItem as AudioDetail)
@@ -62,7 +69,13 @@ export default defineComponent({
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
     const backToSearchPath = computed(() => route.value.meta?.backToSearchPath)
 
-    return { audio, backToSearchPath, relatedMedia, relatedFetchState }
+    return {
+      audio,
+      backToSearchPath,
+      relatedMedia,
+      relatedFetchState,
+      isNewHeaderEnabled,
+    }
   },
   async asyncData({ route, error, app, $pinia }) {
     const audioId = route.params.id

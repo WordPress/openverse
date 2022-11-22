@@ -22,7 +22,7 @@
       ]"
     >
       <div v-if="isNewHeaderEnabled" class="main-page min-w-0">
-        <Nuxt class="!px-6" />
+        <Nuxt />
         <VFooter
           :mode="isSearchHeader ? 'content' : 'search'"
           class="border-t border-dark-charcoal-20"
