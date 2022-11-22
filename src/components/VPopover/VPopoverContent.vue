@@ -40,6 +40,8 @@ import { usePopoverContent } from '~/composables/use-popover-content'
 import { warn } from '~/utils/console'
 import { defineEvent } from '~/types/emits'
 
+import { zIndexValidator } from '~/constants/z-indices'
+
 import type { CSSProperties } from '@vue/runtime-dom'
 import type { SetupContext } from 'vue'
 
@@ -92,11 +94,9 @@ export default defineComponent({
       validate: (v: string) => ['absolute', 'fixed'].includes(v),
     },
     zIndex: {
-      type: Number,
+      type: [String, Number],
       required: true,
-      // TODO: extract valid z-indexes (these are from the tailwind config)
-      validator: (v: number | 'auto') =>
-        [0, 10, 20, 30, 40, 50, 'auto'].includes(v),
+      validator: zIndexValidator,
     },
     clippable: {
       type: Boolean,

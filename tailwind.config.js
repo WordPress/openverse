@@ -1,4 +1,5 @@
 const { SCREEN_SIZES } = require('./src/constants/screens')
+const { Z_INDICES } = require('./src/constants/z-indices')
 
 module.exports = {
   content: [
@@ -13,6 +14,7 @@ module.exports = {
         `${width}px`,
       ]).reverse()
     ),
+    zIndex: Z_INDICES,
     colors: {
       // Accents
       tomato: '#e23600',

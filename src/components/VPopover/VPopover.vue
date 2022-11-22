@@ -52,6 +52,8 @@ import {
   PropType,
 } from '@nuxtjs/composition-api'
 
+import { zIndexValidator } from '~/constants/z-indices'
+
 import VPopoverContent from '~/components/VPopover/VPopoverContent.vue'
 
 import type { Placement, PositioningStrategy } from '@popperjs/core'
@@ -129,10 +131,9 @@ export default defineComponent({
      * the z-index to apply to the popover content
      */
     zIndex: {
-      type: Number,
-      default: 50,
-      // TODO: extract valid z-indexes (these are from the tailwind config)
-      validator: (v: number) => [0, 10, 20, 30, 40, 50].includes(v),
+      type: [Number, String],
+      default: 'popover', // named z-index
+      validator: zIndexValidator,
     },
     /**
      * Whether the popover height should be clipped and made scrollable

@@ -19,7 +19,7 @@ export type PopoverContentProps = {
   triggerElement: HTMLElement | null
   placement: Placement
   strategy: PositioningStrategy
-  zIndex: number
+  zIndex: number | string
 }
 
 type Props = {
