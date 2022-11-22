@@ -27,7 +27,7 @@ services:
       MINIO_ROOT_USER: ${AWS_ACCESS_KEY}
       MINIO_ROOT_PASSWORD: ${AWS_SECRET_KEY}
       # Comma separated list of buckets to create on startup
-      BUCKETS_TO_CREATE: ${OPENVERSE_BUCKET},openverse-airflow-logs,commonsmapper-v2,commonsmapper
+      BUCKETS_TO_CREATE: ${OPENVERSE_BUCKET},openverse-airflow-logs
     # Create empty buckets on every container startup
     # Note: $0 is included in the exec because "/bin/bash -c" swallows the first
     # argument, so it must be re-added at the beginning of the exec call

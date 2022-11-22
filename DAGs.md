@@ -14,22 +14,12 @@ The DAGs are shown in two forms:
 
 The following are DAGs grouped by their primary tag:
 
- 1. [Commoncrawl](#commoncrawl)
  1. [Data Refresh](#data_refresh)
  1. [Database](#database)
  1. [Maintenance](#maintenance)
  1. [Oauth](#oauth)
  1. [Provider](#provider)
  1. [Provider Reingestion](#provider-reingestion)
-
-## Commoncrawl
-
-| DAG ID | Schedule Interval |
-| --- | --- |
-| `commoncrawl_etl_workflow` | `0 0 * * 1` |
-| `sync_commoncrawl_workflow` | `0 16 15 * *` |
-
-
 
 ## Data Refresh
 
