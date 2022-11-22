@@ -30,7 +30,7 @@ repos:
         args:
           - --remove
 
-  {% if contains_python_code|default(true) %}
+  {% if contains_python_code | default(true) %}
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
     hooks:
