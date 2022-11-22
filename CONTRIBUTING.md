@@ -8,7 +8,8 @@ By participating in this project, you are expected to uphold our [Code of Conduc
 
 ## Project Documentation
 
-Please consult the [README](./README.md) and [CODEBASE](./CODEBASE.md) files at the root of this repository.
+Please consult the [README](./README.md) file at the root of this repository.
+Also see the [project documentation guidelines](./DOCUMENTATION_GUIDELINES.md) if you are interested in improving our documentation.
 
 ### Bugs
 
@@ -18,7 +19,7 @@ After that, don't forget to tag the issue with the "Bug" label.
 
 ### Proposing changes or new features
 
-If you have an idea of a new feature or change to how the Openverse API works, please [start a discussion](https://github.com/WordPress/openverse-api/discussions/new?category=ideas) so we can discuss the possibility of that change or new feature being implemented and released in the future. This lets us come to an agreement about the proposed idea before any work is done.
+Feel free to [open an issue](https://github.com/WordPress/openverse-api/issues/new/choose) to discuss any new features or to propose any changes.
 
 ### Pull requests
 
@@ -94,4 +95,4 @@ python3 test/integration_tests.py
 
 ## Questions or Thoughts?
 
-Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community members on #openverse. We also use [GitHub discussions](https://github.com/WordPress/openverse-api/discussions) for feature requests, troubleshooting, and other 'off-topic' conversations.
+Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community members on #openverse.
