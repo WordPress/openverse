@@ -78,6 +78,9 @@ repos:
     hooks:
       - id: eslint
         files: {{ eslint_files | default('^js/.*$') }}
+        {% if eslint_exclude %}
+        exclude: {{ eslint_exclude }}
+        {% endif %}
         'types': [file] # ESLint only accepts [javascript] by default
         args:
           - --ignore-path=.gitignore
