@@ -89,8 +89,9 @@ repos:
           {% block eslint_dependencies %}
           - eslint@8.15.0
           - eslint-config-prettier@8.5.0
-          {% endblock %}
+          {%- endblock %}
 
+{# This comment adds a blank line. #}
   {% endif %}
   # Use the `.prettierignore` and `.prettier.config.js` files to configure project-specific requirements.
   - repo: https://github.com/pre-commit/mirrors-prettier
@@ -101,8 +102,9 @@ repos:
         additional_dependencies:
           {% block prettier_dependencies %}
           - prettier@2.6.0
-          {% endblock %}
+          {%- endblock %}
 
+{# This comment adds a blank line. #}
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.8.0
     hooks:
