@@ -4,11 +4,9 @@
 {% extends '.pre-commit-config.yaml.jinja' %}
 
 {% block note %}
-# This file is being synced from WordPress/openverse. Any changes made to it
-# here will be overwritten. Please make any necessary edits to the source files:
-# https://github.com/WordPress/openverse/blob/main/.pre-commit-config.yaml.jinja
-# https://github.com/WordPress/openverse/blob/main/.pre-commit-config.frontend.yaml.jinja
-{% endblock %}
+{{ super() }}
+# - https://github.com/WordPress/openverse/blob/main/.pre-commit-config.frontend.yaml.jinja
+{%- endblock %}
 
 {# TODO: `|safe` filters can be removed after https://github.com/BetaHuhn/repo-file-sync-action/issues/278 #}
 
