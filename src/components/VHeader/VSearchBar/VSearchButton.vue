@@ -1,6 +1,5 @@
 <template>
   <VButton
-    v-bind="$attrs"
     :aria-label="$t('search.search')"
     size="disabled"
     :variant="route === 'home' ? 'primary' : 'plain'"
@@ -16,14 +15,9 @@
       },
       sizeClasses,
     ]"
-    v-on="$listeners"
   >
-    <template v-if="isIcon">
-      <VIcon :icon-path="searchIcon" />
-    </template>
-    <template v-else>
-      <span>{{ $t('search.search') }}</span>
-    </template>
+    <VIcon v-show="isIcon" :icon-path="searchIcon" />
+    <span v-show="!isIcon">{{ $t('search.search') }}</span>
   </VButton>
 </template>
 
@@ -31,7 +25,6 @@
 import { defineComponent, computed, PropType } from '@nuxtjs/composition-api'
 
 import { isMinScreen } from '~/composables/use-media-query'
-import { useBrowserIsMobile } from '~/composables/use-browser-detection'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VButton from '~/components/VButton.vue'
@@ -46,7 +39,6 @@ import searchIcon from '~/assets/icons/search.svg'
 export default defineComponent({
   name: 'VSearchButton',
   components: { VIcon, VButton },
-  inheritAttrs: false,
   props: {
     size: {
       type: String as PropType<FieldSize>,
@@ -58,17 +50,19 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const isMobile = useBrowserIsMobile()
-
-    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: !isMobile })
+    const isDesktopLayout = isMinScreen('md')
 
     /**
-     * The search button has a text label on the homepage on screen larger than `md`,
+     * The search button has a text label on the homepage with a desktop layout,
      * everywhere else it has an icon.
      */
-    const isIcon = computed(
-      () => !(props.route === 'home' && isMinScreenMd.value)
-    )
+    const isIcon = computed(() => {
+      if (props.route !== 'home') {
+        return true
+      } else {
+        return !isDesktopLayout.value
+      }
+    })
 
     const sizeClasses = computed(() =>
       isIcon.value

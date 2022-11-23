@@ -24,6 +24,8 @@ for (const dir of languageDirections) {
     test.beforeEach(async ({ page }) => {
       await page.goto(path)
       await dismissTranslationBanner(page)
+      // TODO: Remove this after the cookie-based layout is merged.
+      await page.waitForLoadState('networkidle')
     })
 
     breakpoints.describeEvery(({ expectSnapshot }) =>

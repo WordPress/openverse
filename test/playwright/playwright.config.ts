@@ -55,8 +55,8 @@ const config: PlaywrightTestConfig = {
   workers: UPDATE_TAPES === 'true' ? 1 : undefined,
   expect: {
     toMatchSnapshot: {
-      // To avoid flaky tests, we allow a small amount of pixel difference.
-      maxDiffPixelRatio: 0.06,
+      // If the visual regression tests are flaky, we can increase this to 0.1 or 0.2.
+      maxDiffPixelRatio: 0,
     },
   },
 }

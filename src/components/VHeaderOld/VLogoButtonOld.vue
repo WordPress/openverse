@@ -15,6 +15,7 @@
       v-show="!isHeaderScrolled"
       class="-ml-1 mt-1 flex flex-shrink-0 flex-grow-0 me-3"
       :class="{ 'hidden sm:block md:hidden': isSearchRoute }"
+      fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
       width="95"
       height="15"
