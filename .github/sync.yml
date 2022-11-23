@@ -47,6 +47,9 @@ group:
       - source: .pre-commit-config.yaml.jinja
         dest: .pre-commit-config.yaml
         template: true
+      - source: prettier.config.js.jinja
+        dest: prettier.config.js
+        template: true
   - repos: |
       WordPress/openverse-catalog
       WordPress/openverse-api
@@ -55,6 +58,9 @@ group:
         dest: .pre-commit-config.yaml
         template:
           contains_js_code: false
+      - source: prettier.config.js.jinja
+        dest: prettier.config.js
+        template: true
   - repos: |
       WordPress/openverse-frontend
     files:
@@ -62,3 +68,6 @@ group:
         dest: .pre-commit-config.yaml
         template:
           contains_python_code: false
+      - source: prettier.config.frontend.js.jinja
+        dest: prettier.config.js
+        template: true
