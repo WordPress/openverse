@@ -43,13 +43,8 @@ repos:
         files: \.py$
         exclude: ^build/.*$|^.tox/.*$|^venv/.*$
         args:
+          - --profile=black
           - --lines-after-imports=2
-          - --multi-line=3
-          - --trailing-comma
-          - --force-grid-wrap=0
-          - --use-parentheses
-          - --ensure-newline-before-comments
-          - --line-length=88
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.2.2
@@ -63,6 +58,9 @@ repos:
     rev: 3.9.2
     hooks:
       - id: flake8
+        args:
+          - --extend-ignore=E203,W503
+          - --max-line-length=88
 
   - repo: https://github.com/ambv/black
     rev: 22.3.0
