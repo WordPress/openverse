@@ -52,7 +52,7 @@ group:
   - repos: |
       WordPress/openverse
     files:
-      - source: .pre-commit-config.yaml.jinja
+      - source: .pre-commit-config.local.yaml.jinja
         dest: .pre-commit-config.yaml
         template: true
   - repos: |

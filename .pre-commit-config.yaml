@@ -1,6 +1,7 @@
 # This file is being synced from WordPress/openverse. Any changes made to it
 # here will be overwritten. Please make any necessary edits to these files:
 # - https://github.com/WordPress/openverse/blob/main/.pre-commit-config.yaml.jinja
+# - https://github.com/WordPress/openverse/blob/main/.pre-commit-config.local.yaml.jinja
 
 exclude: Pipfile\.lock|migrations|\.idea|node_modules|archive
 
@@ -89,3 +90,17 @@ repos:
     rev: v0.8.0
     hooks:
       - id: shellcheck
+
+  - repo: local
+    hooks:
+      - id: render-precommit
+        name: render-precommit
+        entry: bash -c 'just render-precommit'
+        language: system
+        pass_filenames: false
+
+      - id: render-prettier
+        name: render-prettier
+        entry: bash -c 'just render-prettier'
+        language: system
+        pass_filenames: false

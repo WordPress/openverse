@@ -43,7 +43,7 @@ render in_file out_file ctx="{}":
 
 # Render `.pre-commit-config.yaml`
 render-precommit:
-    just render .pre-commit-config.yaml.jinja .pre-commit-config.yaml
+    just render .pre-commit-config.local.yaml.jinja .pre-commit-config.yaml
 
 # Render `prettier.config.js`
 render-prettier:
