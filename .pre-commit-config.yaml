@@ -25,13 +25,10 @@ repos:
       - id: fix-encoding-pragma
         args:
           - --remove
-
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
-    hooks:
       - id: check-docstring-first
       - id: requirements-txt-fixer
 
+  # Use the `.isort.cfg` file to configure additional project-specific requirements.
   - repo: https://github.com/PyCQA/isort
     rev: 5.9.1
     hooks:
@@ -54,6 +51,7 @@ repos:
         args:
           - --py310-plus
 
+  # Use the `.flake8` file to configure additional project-specific requirements.
   - repo: https://github.com/PyCQA/flake8
     rev: 3.9.2
     hooks:
@@ -71,7 +69,7 @@ repos:
     hooks:
       - id: eslint
         files: ^js/.*$
-        'types': [file] # ESLint only accepts [javascript] by default
+        'types': [file] # ESLint only accepts [javascript] by default.
         args:
           - --ignore-path=.gitignore
           - --ignore-path=.eslintignore
@@ -80,11 +78,12 @@ repos:
           - eslint@8.15.0
           - eslint-config-prettier@8.5.0
 
+  # Use the `.prettierignore` and `.prettier.config.js` files to configure project-specific requirements.
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v2.6.0
     hooks:
       - id: prettier
-        exclude: \.md$
+        exclude: \.md$ # TODO: https://github.com/WordPress/openverse/issues/333
         additional_dependencies:
           - prettier@2.6.0
 
