@@ -16,7 +16,7 @@
 Blocks must be indented by 2 spaces.
 ==================================#}
 
-{% set repos_top_content %}
+{% block repos_top %}
   - repo: local # More local hooks are defined at the bottom.
     hooks:
       - id: i18n
@@ -26,14 +26,11 @@ Blocks must be indented by 2 spaces.
         entry: bash -c 'if [ ! -f "$(dirname "$dir")"/src/locales/ar.json ]; then pnpm i18n; fi'
         language: system
         pass_filenames: false
-{%- endset %}
-
-{% block repos_top %}
-{{ repos_top_content | safe }}
 {# This comment adds a blank line. #}
 {% endblock %}
 
-{% set repos_bottom_content %}
+{% block repos_bottom %}
+{# This comment adds a blank line. #}
   - repo: local # More local hooks are defined at the top.
     hooks:
       - id: types
@@ -49,11 +46,6 @@ Blocks must be indented by 2 spaces.
         pass_filenames: false
         stages:
           - push
-{%- endset %}
-
-{% block repos_bottom %}
-{# This comment adds a blank line. #}
-{{ repos_bottom_content | safe }}
 {% endblock %}
 
 {#=========================================
