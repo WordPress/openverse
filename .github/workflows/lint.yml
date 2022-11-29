@@ -21,10 +21,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Setup just
+        uses: extractions/setup-just@v1
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            .npmrc
 
       - name: Cache pre-commit envs
         uses: actions/cache@v3
@@ -34,5 +49,8 @@ jobs:
 
       - name: Run pre-commit to lint files
         run: |
-          pip install pre-commit
-          pre-commit run --all-files
+          pip install -U pip
+          pip install pipenv
+          just install
+          just precommit
+          just lint
