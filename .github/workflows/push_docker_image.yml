@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       image:
-        description: Image to push (either `api` or `ingestion_server`)
+        description: 'Image to push (options: "api", "api-nginx", or "ingestion_server")'
         required: true
       commit:
         description: Commit that the image is built from
