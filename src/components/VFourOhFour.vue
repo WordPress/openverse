@@ -3,7 +3,7 @@
     class="error relative flex min-h-screen flex-col overflow-x-hidden bg-yellow"
   >
     <svg
-      class="pointer-events-none absolute top-20 z-0 -mt-[10%] -ml-[20%] w-[140%] fill-dark-charcoal px-6 opacity-5 lg:mx-auto lg:ml-0 lg:w-full lg:px-16"
+      class="z-0 pointer-events-none absolute top-20 -mt-[10%] -ml-[20%] w-[140%] fill-dark-charcoal px-6 opacity-5 lg:mx-auto lg:ml-0 lg:w-full lg:px-16"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1320 569"
       aria-hidden="true"
@@ -41,10 +41,7 @@
       </div>
     </main>
 
-    <VFooter
-      v-if="isNewHeaderEnabled"
-      mode="internal"
-    />
+    <VFooter v-if="isNewHeaderEnabled" mode="internal" />
   </div>
 </template>
 
