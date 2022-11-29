@@ -231,11 +231,22 @@ ipython:
     just dj shell
 
 # Run `collectstatic` to prepare for building the `nginx` Dockerfile target.
-@collectstatic: _api-up
+@collectstatic:
     # The `STATIC_ROOT` setting is relative to the directory in which the Django
     # container runs (i.e., the `api` directory at the root of the repository).
     # The resulting output will be at `api/static` and is git ignored for convenience.
     @STATIC_ROOT="./static" just dj collectstatic --noinput
+
+# Run the nginx image locally
+nginx upstream_url='api.openverse.engineering': collectstatic
+    # upstream_url can also be set to 172.17.0.1:50280 for local testing
+    cd api && docker build --target nginx . -t openverse-api-nginx:latest
+    @echo "--> NGINX server will be run at http://localhost:9090, upstream at {{ upstream_url }}"
+    @echo "--> Try a static URL like http://localhost:9090/static/admin/css/base.css to test"
+    docker run --rm -p 9090:8080 -it \
+      -e DJANGO_NGINX_UPSTREAM_URL="{{ upstream_url }}" \
+      -e DJANGO_NGINX_GIT_REVISION="$(git rev-parse HEAD)" \
+      openverse-api-nginx:latest
 
 
 ##########

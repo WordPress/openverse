@@ -48,7 +48,9 @@ WORKDIR /app
 COPY nginx.conf.template /etc/nginx/templates/openverse-api.conf.template
 COPY /static /app/static
 
-ENV NGINX_ENVSUBST_FILTER="DJANGO_UPSTREAM_URL"
+# Only environment variables with this prefix will be available in the template
+ENV NGINX_ENVSUBST_FILTER="DJANGO_NGINX_"
+ENV DJANGO_NGINX_ENVIRONMENT="local"
 
 #######
 # API #
