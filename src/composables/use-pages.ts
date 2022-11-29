@@ -58,11 +58,6 @@ export default function usePages(isNew = false) {
           link: app.localePath('/search-help'),
         },
         {
-          id: 'external-sources',
-          name: 'header.external-sources-nav-item',
-          link: app.localePath('/external-sources'),
-        },
-        {
           id: 'feedback',
           name: 'header.feedback-nav-item',
           link: app.localePath('/feedback'),

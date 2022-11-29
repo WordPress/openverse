@@ -241,7 +241,8 @@ const config: NuxtConfig = {
   redirect: {
     rules: [
       { from: '^/photos/(.*)$', to: '/image/$1', statusCode: 301 },
-      { from: '/meta-search', to: '/external-sources', statusCode: 301 },
+      { from: '/meta-search', to: '/about', statusCode: 301 },
+      { from: '/external-sources', to: '/about', statusCode: 301 },
     ],
     // If the URL cannot be decoded, we call next() to show the client-side error page.
     onDecodeError: (
