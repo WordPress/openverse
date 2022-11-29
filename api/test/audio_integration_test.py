@@ -15,6 +15,7 @@ from test.media_integration import (
     search_by_category,
     search_consistency,
     search_quotes,
+    search_quotes_exact,
     search_source_and_excluded,
     search_special_chars,
     stats,
@@ -99,6 +100,11 @@ def test_search_source_and_excluded():
 
 def test_search_quotes():
     search_quotes("audio", "love")
+
+
+def test_search_quotes_exact():
+    # ``water running`` returns different results when quoted vs unquoted
+    search_quotes_exact("audio", "water running")
 
 
 def test_search_with_special_characters():

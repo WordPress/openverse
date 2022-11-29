@@ -10,7 +10,7 @@ identifier = "4bc43a04-ef46-4544-a0c1-63c63f56e276"
 syntax_examples = {
     "using single query parameter": "test",
     "using multiple query parameters": "test&license=pdm,by&categories=illustration&page_size=1&page=1",  # noqa: E501
-    "that are an exact match of Claude Monet": '"Claude Monet"',
+    "that are an exact match of Claude Monet": "%22Claude%20Monet%22",
     "related to both dog and cat": "dog+cat",
     "related to dog or cat, but not necessarily both": "dog|cat",
     "related to dog but won't include results related to 'pug'": "dog -pug",

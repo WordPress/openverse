@@ -340,18 +340,25 @@ def search(
     search_fields = ["tags.name", "title", "description"]
     if "q" in search_params.data:
         query = _quote_escape(search_params.data["q"])
+        base_query_kwargs = {
+            "query": query,
+            "fields": search_fields,
+            "default_operator": "AND",
+        }
+
+        if '"' in query:
+            base_query_kwargs["quote_field_suffix"] = ".exact"
+
         s = s.query(
             "simple_query_string",
-            query=query,
-            fields=search_fields,
-            default_operator="AND",
+            **base_query_kwargs,
         )
-        # Boost exact matches
+        # Boost exact matches on the title
         quotes_stripped = query.replace('"', "")
         exact_match_boost = Q(
             "simple_query_string",
             fields=["title"],
-            query=f'"{quotes_stripped}"',
+            query=f"{quotes_stripped}",
             boost=10000,
         )
         s = search_client.query(Q("bool", must=s.query, should=exact_match_boost))

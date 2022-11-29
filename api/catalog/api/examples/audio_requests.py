@@ -10,7 +10,7 @@ identifier = "8624ba61-57f1-4f98-8a85-ece206c319cf"
 syntax_examples = {
     "using single query parameter": "test",
     "using multiple query parameters": "test&license=pdm,by&categories=illustration&page_size=1&page=1",  # noqa: E501
-    "that is an exact match of Giacomo Puccini": '"Giacomo Puccini"',
+    "that is an exact match of Giacomo Puccini": r"%22Giacomo%20Puccini%22",
     "related to both dog and cat": "dog+cat",
     "related to dog or cat, but not necessarily both": "dog|cat",
     "related to dog but won't include results related to 'pug'": "dog -pug",

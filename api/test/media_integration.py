@@ -45,6 +45,25 @@ def search_quotes(media_path, q="test"):
     assert response.status_code == 200
 
 
+def search_quotes_exact(media_path, q):
+    """Only returns exact matches for the given query"""
+    unquoted_response = requests.get(f"{API_URL}/v1/{media_path}?q={q}", verify=False)
+    assert unquoted_response.status_code == 200
+    unquoted_result_count = unquoted_response.json()["result_count"]
+    assert unquoted_result_count > 0
+
+    quoted_response = requests.get(f'{API_URL}/v1/{media_path}?q="{q}"', verify=False)
+    assert quoted_response.status_code == 200
+    quoted_result_count = quoted_response.json()["result_count"]
+    assert quoted_result_count > 0
+
+    # The rationale here is that the unquoted results will match more records due
+    # to the query being overall less strict. Quoting the query will make it more
+    # strict causing it to return fewer results.
+    # Above we check that the results are not 0 to confirm that we do still get results back.
+    assert quoted_result_count < unquoted_result_count
+
+
 def search_special_chars(media_path, q="test"):
     """Returns a response when query includes special characters."""
     response = requests.get(f"{API_URL}/v1/{media_path}?q={q}!", verify=False)
