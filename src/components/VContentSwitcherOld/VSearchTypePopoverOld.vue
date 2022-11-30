@@ -66,7 +66,7 @@ export default defineComponent({
     select: defineEvent<SearchType>(),
   },
   setup(props, { emit }) {
-    const contentMenuPopover = ref<HTMLElement | null>(null)
+    const contentMenuPopover = ref<InstanceType<typeof VPopover> | null>(null)
 
     /**
      * When in the searchbar, content switcher button has a border when the
@@ -78,9 +78,7 @@ export default defineComponent({
      * Only the contentMenuPopover needs to be closed programmatically
      */
     const closeMenu = () => {
-      if (contentMenuPopover.value) {
-        contentMenuPopover.value.close()
-      }
+      contentMenuPopover.value?.close()
     }
 
     const selectItem = (item: SearchType) => {

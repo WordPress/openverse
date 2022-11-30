@@ -1,6 +1,5 @@
 <script lang="ts">
 import {
-  ComponentInstance,
   defineComponent,
   inject,
   onMounted,
@@ -36,7 +35,9 @@ export default defineComponent({
   },
   setup() {
     const isMinScreenMd: Ref<boolean> = inject('isMinScreenMd')
-    const menuModalRef = ref<ComponentInstance | null>(null)
+    const menuModalRef = ref<InstanceType<
+      typeof VMobileMenuModal | typeof VSearchTypePopoverOld
+    > | null>(null)
     const content = useSearchType()
     const { app } = useContext()
     const mediaStore = useMediaStore()
