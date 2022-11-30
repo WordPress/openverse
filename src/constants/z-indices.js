@@ -17,6 +17,8 @@ const Z_INDICES = Object.freeze(
     50: 50,
     // Named indices
     popover: 50,
+    snackbar: 10,
+    'global-audio': 20,
   })
 )
 

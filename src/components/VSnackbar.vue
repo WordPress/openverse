@@ -38,7 +38,7 @@ export default defineComponent({
 <style module>
 .snackbar {
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
-  @apply fixed bottom-4 z-10 rounded-sm bg-black text-white transition-[opacity,transform] duration-500 ltr:left-4 rtl:right-4 motion-reduce:transition-opacity;
+  @apply fixed bottom-4 z-snackbar rounded-sm bg-black text-white transition-[opacity,transform] duration-500 ltr:left-4 rtl:right-4 motion-reduce:transition-opacity;
 }
 
 .large {
