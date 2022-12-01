@@ -172,6 +172,7 @@ module.exports = {
           'Flickr',
           'Openverse',
           'WordPress',
+          'openverse@wordpress.org',
         ],
       },
     ],

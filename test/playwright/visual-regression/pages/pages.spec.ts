@@ -11,7 +11,13 @@ import {
 
 test.describe.configure({ mode: 'parallel' })
 
-const contentPages = ['about', 'search-help', 'non-existent', 'sources']
+const contentPages = [
+  'about',
+  'privacy',
+  'search-help',
+  'non-existent',
+  'sources',
+]
 for (const contentPage of contentPages) {
   for (const dir of languageDirections) {
     test.describe(`${contentPage} ${dir} page snapshots`, () => {

@@ -28,7 +28,7 @@ export default function usePages(isNew = false) {
         {
           id: 'privacy',
           name: 'navigation.privacy',
-          link: 'https://wordpress.org/privacy',
+          link: app.localePath('/privacy'),
         },
         {
           id: 'feedback',
@@ -69,8 +69,8 @@ export default function usePages(isNew = false) {
         },
         {
           id: 'privacy',
-          name: 'header.privacy-nav-item',
-          link: 'https://wordpress.org/privacy',
+          name: 'navigation.privacy',
+          link: app.localePath('/privacy'),
         },
       ]
 
