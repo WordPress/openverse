@@ -4,8 +4,8 @@ A proposal to emit frontend events based on user interactions and page visits.
 
 ## Reviewers
 
-- [ ] @sarayourfriend
-- [ ] @dhruvkb
+- [ ] @krysal - For API experience
+- [ ] @dhruvkb - For frontend and DX experience
 
 ## Rationale
 
@@ -42,15 +42,15 @@ curl -i -X POST https://plausible.io/api/event \
   --data '{"name":"pageview","url":"http://dummy.site","domain":"dummy.site","screen_width":1666}'
 ```
 
-There are many points in the code execution at which we could transform our custom events into ones supported by other platforms, if we need to. By adopting and implementing our own custom solution we can start collecting data as soon as possible without being blocked by time spent evaluating and implementing other analytics systems.
+There are many points in the code execution at which we could transform our custom events into ones supported by other platforms. By adopting and implementing our own custom solution, we can start collecting data as soon as possible without being blocked on time spent evaluating and implementing a full analytics system.
 
 ## The technical details
 
-We should create a system for collecting events on the frontend. Each event will have a unique name, collect some default data about the enviroment (timestamp, referer, and so on) and can have an optional data payload containing string and numerical values.
+We will create a system for collecting events on the frontend. Each event will have a unique name, collect some default data about the enviroment (timestamp, referer, and so on) and can have an optional data payload containing string and numerical values. I'd like to limit the payload shape to strings and numbers to keep it JSON serializable and simple. Allowing for complex nested objects might prove too complex to query in the future. I think this is a reasonable constraint but am open to alternatives.
 
 ### Sending events
 
-These events will be sent as `POST` requests to a server route on the frontend, which will then route them to our desired analytics service. In the future it may make sense to move this server route to a standalone microservice but for now a [Nuxt server route](https://v3.nuxtjs.org/guide/directory-structure/server/#server-routes) should be sufficient to handle the analytics events. This endpoint is essentially a proxy between the frontend and our 'true' analytics service.
+These events will be sent as `POST` requests to a server route on the frontend, which will then route them to our desired analytics service. In the future, it may make sense to move this server route to a standalone microservice, but for now a [Nuxt server route](https://v3.nuxtjs.org/guide/directory-structure/server/#server-routes) should be sufficient to handle the analytics events. This endpoint is essentially a proxy between the frontend and our 'true' analytics service that makes sure we're always sending events server-side.
 
 #### Privacy
 
@@ -67,7 +67,7 @@ This proposal will require the creation of a user settings page _or_ an analytic
 
 ### Sample implementaton and event types
 
-Below I've created a TypeScript type for all allowed anlytics events, and a simple function for sending events. This is where you can see a list of proposed events and their payloads, along with the default values which will be passed to all events.
+Below I've created a TypeScript type for all the proposed anlytics events, and a simple function for sending events. For each event you'll see the payload alongside the default values which will be passed to _all_ events.
 
 ```ts
 // src/utils/events.ts
@@ -163,25 +163,73 @@ type AnalyticsEvents = {
     query: string;
   };
   /** The user clicks the CTA button to the external source to use the image */
-  GET_MEDIA: {};
+  GET_MEDIA: {
+    /** The unique ID of the media */
+    id: string;
+    /** The slug (not the prettified name) of the provider */
+    provider: string;
+    /** The media type being searched */
+    mediaType: MediaType;
+  };
   /** The user clicks one of the buttons to copy the media attribution */
-  COPY_ATTRIBUTION: {};
+  COPY_ATTRIBUTION: {
+    /** The unique ID of the media */
+    id: string;
+    /** The format of the copied attribution */
+    format: "plain" | "rich" | "html";
+    /** The media type being searched */
+    mediaType: MediaType;
+  };
   /** The user reports a piece of media through our form */
-  REPORT_MEDIA: {};
+  REPORT_MEDIA: {
+    /** The unique ID of the media */
+    id: string;
+    /** The slug (not the prettified name) of the provider */
+    provider: string;
+    /** The media type being searched */
+    mediaType: MediaType;
+  };
   /** The user plays, pauses, or seeks an audio track.
    * @todo: This potentially requires throttling.
    **/
-  AUDIO_INTERACTION: {};
+  AUDIO_INTERACTION: {
+    /** The unique ID of the media */
+    id: string;
+    event: "seek" | "play" | "pause";
+    /** The slug (not the prettified name) of the provider */
+    provider: string;
+  };
   /** The user visits a CC license description page on CC.org  **/
-  VISIT_LICENSE_PAGE: {};
+  VISIT_LICENSE_PAGE: {
+    /** The slug of the license the user clicked on */
+    license: string;
+  };
   /** The user visits a creator's link in the single result UI  **/
-  VISIT_CREATOR_LINK: {};
+  VISIT_CREATOR_LINK: {
+    /** The unique ID of the media */
+    id: string;
+    /** The permalink to the creator's profile */
+    url: string;
+  };
   /** The user right clicks a single image result, most likely to download it. **/
-  RIGHT_CLICK_IMAGE: {};
+  RIGHT_CLICK_IMAGE: {
+    /** The unique ID of the media */
+    id: string;
+    /** The media type being searched */
+    mediaType: MediaType;
+  };
   /** The user uses the 'back to search' link on a single result **/
-  BACK_TO_SEARCH: {};
+  BACK_TO_SEARCH: {
+    /** The unique ID of the media */
+    id: string;
+    /** The media type being searched */
+    mediaType: MediaType;
+  };
   /** The visibility of the filter sidebar on desktop is toggled **/
-  TOGGLE_FILTERS: {};
+  TOGGLE_FILTERS: {
+    /** The media type being searched */
+    mediaType: MediaType;
+  };
 };
 type AnalyticsEventTypes = keyof AnalyticsEvents;
 
@@ -226,14 +274,16 @@ async function sendEvent<T extends AnalyticsEventTypes>(
 This needs more elaboration, as it's a very rough outline. For example, specific events will require more detailed planning.
 
 - [ ] Create "Event Tracking" GitHub milestone in the frontend repository
-- [ ] Create a GitHub issue for each of the following todos
+- [ ] Design: design a privacy and analytics opt-out checkbox on the Privacy page
+- [ ] Create an issue for the `ANALYTICS_ENABLED` feature flag
 - [ ] Create an issue for the creation of the 'sendEvent' function and for the api route to post analytics events to
-- [ ] Create a single issue for each event in the sample implementation
+- [ ] Create a single issue for each event in the sample implementation. Each issue will need its specific implementation (when the event is called, what user DOM interaction triggers it, etc.) approved by frontend developers before it is implemented.
 
 ## Concerns / Pitfalls
 
 - Related to content safety, this is an area where we are surfacing user information in the form of text, or even malicious URLs, to Openverse developers. These searches could include explicit or sensitive material. We're also potentially surfacing explicit image results to anyone working with this data.
-- We're building something here that is commonly drop-in when 3rd party tools are used. Is this a poor use of time?
+- I think it's great to build this decoupled from a specific back-end, but if we never actually implement a backend this would largely be a wasted effort.
+- We're building something here that is commonly drop-in when 3rd party tools are used. At least for page views; custom events still require custom work. Is this a poor use of time?
 
 ### Prior Art
 
