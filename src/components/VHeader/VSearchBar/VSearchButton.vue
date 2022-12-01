@@ -24,7 +24,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@nuxtjs/composition-api'
 
-import { isMinScreen } from '~/composables/use-media-query'
+import { useUiStore } from '~/stores/ui'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VButton from '~/components/VButton.vue'
@@ -50,7 +50,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const isDesktopLayout = isMinScreen('md')
+    const uiStore = useUiStore()
 
     /**
      * The search button has a text label on the homepage with a desktop layout,
@@ -60,7 +60,7 @@ export default defineComponent({
       if (props.route !== 'home') {
         return true
       } else {
-        return !isDesktopLayout.value
+        return !uiStore.isDesktopLayout
       }
     })
 

@@ -24,7 +24,10 @@
           {{ $t('hero.subtitle') }}
         </h2>
         <p class="text-base md:text-3xl">{{ $t('hero.description') }}</p>
-        <div class="mt-8 flex justify-start gap-4 md:hidden">
+        <div
+          class="mt-8 flex justify-start gap-4"
+          :class="isNewHeaderEnabled ? 'lg:hidden' : 'md:hidden'"
+        >
           <VSearchTypeRadio
             v-for="type in supportedSearchTypes"
             :key="type"
@@ -38,7 +41,7 @@
           @submit="handleSearch"
         >
           <VSearchTypePopoverOld
-            v-show="isMinScreenMd"
+            v-show="isDesktopLayout"
             ref="contentSwitcher"
             class="mx-3 group-focus-within:bg-white group-hover:bg-white"
             :active-item="searchType"
@@ -123,6 +126,7 @@
 
 <script lang="ts">
 import {
+  computed,
   defineComponent,
   onMounted,
   ref,
@@ -137,11 +141,12 @@ import {
   SupportedSearchType,
   supportedSearchTypes,
 } from '~/constants/media'
-import { isMinScreen } from '~/composables/use-media-query'
+import { useLayout } from '~/composables/use-layout'
 
+import { useFeatureFlagStore } from '~/stores/feature-flag'
 import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
-import { useFeatureFlagStore } from '~/stores/feature-flag'
+import { useUiStore } from '~/stores/ui'
 
 import VLink from '~/components/VLink.vue'
 import VLogoButtonOld from '~/components/VHeaderOld/VLogoButtonOld.vue'
@@ -166,20 +171,27 @@ export default defineComponent({
   },
   layout: 'blank',
   setup() {
+    const { app } = useContext()
+    const router = useRouter()
+
+    const mediaStore = useMediaStore()
+    const searchStore = useSearchStore()
+    const uiStore = useUiStore()
     const featureFlagStore = useFeatureFlagStore()
+
+    const isNewHeaderEnabled = computed(() =>
+      featureFlagStore.isOn('new_header')
+    )
     const themeColorMeta = [
       { hid: 'theme-color', name: 'theme-color', content: '#ffe033' },
     ]
     useMeta({
-      meta: featureFlagStore.isOn('new_header')
+      meta: isNewHeaderEnabled.value
         ? [...themeColorMeta, { hid: 'robots', name: 'robots', content: 'all' }]
         : themeColorMeta,
     })
 
-    const { app } = useContext()
-    const router = useRouter()
-    const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
+    const { updateBreakpoint } = useLayout()
 
     /**
      * Reset the search type, search term and filters when the user navigates [back] to the homepage.
@@ -187,6 +199,8 @@ export default defineComponent({
     onMounted(() => {
       searchStore.$reset()
       mediaStore.$reset()
+
+      updateBreakpoint()
     })
 
     const featuredSearches = imageInfo.sets.map((setItem) => ({
@@ -206,7 +220,7 @@ export default defineComponent({
     const featuredSearchIdx = Math.floor(Math.random() * 3)
     const featuredSearch = featuredSearches[featuredSearchIdx]
 
-    const isMinScreenMd = isMinScreen('md')
+    const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
 
     const contentSwitcher = ref<InstanceType<
       typeof VSearchTypePopoverOld
@@ -234,7 +248,8 @@ export default defineComponent({
     return {
       featuredSearch,
 
-      isMinScreenMd,
+      isDesktopLayout,
+      isNewHeaderEnabled,
 
       contentSwitcher,
       searchType,

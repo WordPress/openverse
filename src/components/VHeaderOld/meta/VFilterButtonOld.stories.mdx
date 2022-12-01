@@ -6,10 +6,14 @@ import {
   Story,
 } from '@storybook/addon-docs'
 import { provide, ref } from '@nuxtjs/composition-api'
-import VFilterButtonOld from '~/components/VHeaderOld/VFilterButtonOld.vue'
+
 import { useSearchStore } from '~/stores/search'
+import { useUiStore } from '~/stores/ui'
+
 import { filterData, mediaFilterKeys } from '~/constants/filters'
 import { IMAGE } from '~/constants/media'
+
+import VFilterButtonOld from '~/components/VHeaderOld/VFilterButtonOld.vue'
 
 <Meta
   title="Components/VHeaderOld/VFilterButtonOld"
@@ -60,7 +64,8 @@ export const Template = (args, { argTypes }) => ({
       provide('isHeaderScrolled', ref(true))
     }
     if (args.isMinMd) {
-      provide('isMinScreenMd', ref(true))
+      const uiStore = useUiStore()
+      uiStore.isDesktopLayout = true
     }
     return { args }
   },
@@ -86,7 +91,7 @@ button is clicked.
     name="Mobile Scrolled"
     parameters={{
       viewport: {
-        defaultViewport: 'iphonex',
+        defaultViewport: 'sm',
       },
     }}
   >

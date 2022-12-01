@@ -21,10 +21,11 @@ import {
 
 import { AUDIO } from '~/constants/media'
 import { useActiveAudio } from '~/composables/use-active-audio'
-import { isMinScreen } from '~/composables/use-media-query'
+
 import { useActiveMediaStore } from '~/stores/active-media'
 import { useMediaStore } from '~/stores/media'
 import { useSingleResultStore } from '~/stores/media/single-result'
+import { useUiStore } from '~/stores/ui'
 
 import type { AudioDetail } from '~/models/media'
 
@@ -40,9 +41,11 @@ export default defineComponent({
     VIconButton,
   },
   setup() {
+    const route = useRoute()
+
     const activeMediaStore = useActiveMediaStore()
     const mediaStore = useMediaStore()
-    const route = useRoute()
+    const uiStore = useUiStore()
 
     const activeAudio = useActiveAudio()
 
@@ -126,7 +129,7 @@ export default defineComponent({
       if (
         (oldRouteVal.name?.includes('audio') &&
           !newRouteVal.name?.includes('audio')) ||
-        (isMinScreen('md') &&
+        (uiStore.isDesktopLayout &&
           newRouteVal.name?.includes('audio-id') &&
           newRouteVal.params.id != activeMediaStore.id)
       ) {

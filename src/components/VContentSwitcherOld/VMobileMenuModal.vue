@@ -58,13 +58,14 @@ export default defineComponent({
     },
   },
   setup(_, { emit }) {
-    const content = useSearchType()
-    const pages = usePages()
+    const nodeRef = ref<InstanceType<typeof VModal> | null>(null)
 
     const searchTypesRef = ref<InstanceType<typeof VSearchTypesOld> | null>(
       null
     )
-    const nodeRef = ref<InstanceType<typeof VModal> | null>(null)
+
+    const content = useSearchType()
+    const pages = usePages()
 
     const initialFocusElement = computed(() => {
       return searchTypesRef.value?.$el
@@ -75,6 +76,7 @@ export default defineComponent({
     })
 
     const selectItem = (item: SupportedSearchType) => emit('select', item)
+
     const closeMenu = () => nodeRef.value?.close()
 
     return {

@@ -38,9 +38,11 @@ import {
 
 import { ALL_MEDIA, type SearchType } from '~/constants/media'
 import type { ButtonVariant } from '~/types/button'
+
 import useSearchType from '~/composables/use-search-type'
+import { useUiStore } from '~/stores/ui'
+
 import { useI18n } from '~/composables/use-i18n'
-import { isMinScreen } from '~/composables/use-media-query'
 
 import VIcon from '~/components/VIcon/VIcon.vue'
 import VButton from '~/components/VButton.vue'
@@ -66,12 +68,16 @@ export default defineComponent({
   },
   setup(props) {
     const i18n = useI18n()
-    const isHeaderScrolled = inject('isHeaderScrolled', ref(null))
-    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
+
+    const uiStore = useUiStore()
+
+    const isHeaderScrolled = inject('isHeaderScrolled', ref(false))
+
+    const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
 
     const { icons, activeType: activeItem } = useSearchType()
     const isIconButton = computed(
-      () => isHeaderScrolled?.value && !isMinScreenMd.value
+      () => isHeaderScrolled.value && !isDesktopLayout.value
     )
     const sizeClasses = computed(() => {
       if (props.type === 'searchbar') {
@@ -91,7 +97,7 @@ export default defineComponent({
       if (props.type === 'searchbar') {
         return 'action-menu'
       } else {
-        return isMinScreenMd.value && !isHeaderScrolled?.value
+        return isDesktopLayout.value && !isHeaderScrolled.value
           ? 'action-menu-bordered'
           : 'action-menu'
       }
@@ -107,12 +113,13 @@ export default defineComponent({
       buttonVariant,
       sizeClasses,
       buttonLabel,
-      caretDownIcon,
+
       isHeaderScrolled,
-      isMinScreenMd,
       isInSearchBar,
       isPressed,
+
       icon: computed(() => icons[activeItem.value]),
+      caretDownIcon,
     }
   },
 })

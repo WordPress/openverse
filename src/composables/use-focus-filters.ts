@@ -1,13 +1,10 @@
-import { isMinScreen } from '~/composables/use-media-query'
-import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { Focus, focusIn } from '~/utils/focus-management'
+import { useUiStore } from '~/stores/ui'
 
 export const useFocusFilters = () => {
-  const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
-  const { isVisible: isFilterVisible } = useFilterSidebarVisibility()
-
   const focusFilterSidebar = (event?: KeyboardEvent, focus = Focus.Last) => {
-    if (isMinScreenMd.value && isFilterVisible.value) {
+    const uiStore = useUiStore()
+    if (uiStore.isDesktopLayout && uiStore.isFilterVisible) {
       if (event) event.preventDefault()
       // Prevent over-tabbing to the element after the target one
       // Cannot use refs when using portals (for sidebar)
@@ -18,7 +15,8 @@ export const useFocusFilters = () => {
     }
   }
   const focusFilterButton = (event?: KeyboardEvent) => {
-    if (isMinScreenMd.value && isFilterVisible.value) {
+    const uiStore = useUiStore()
+    if (uiStore.isDesktopLayout && uiStore.isFilterVisible) {
       if (event) event.preventDefault()
       const filterButton = document.getElementById('filter-button')
       if (filterButton) {

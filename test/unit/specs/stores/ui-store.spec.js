@@ -104,11 +104,12 @@ describe('Ui Store', () => {
     it('initFromCookies sets initial state with a desktop cookie', () => {
       const uiStore = useUiStore()
       uiStore.initFromCookies({
-        uiIsDesktopLayout: true,
+        uiBreakpoint: 'lg',
         uiIsFilterDismissed: true,
       })
 
       expect(uiStore.instructionsSnackbarState).toEqual('not_shown')
+      expect(uiStore.breakpoint).toEqual('lg')
       expect(uiStore.isDesktopLayout).toEqual(true)
       expect(uiStore.isMobileUa).toEqual(false)
       expect(uiStore.isFilterVisible).toEqual(false)
@@ -124,6 +125,7 @@ describe('Ui Store', () => {
 
       expect(uiStore.instructionsSnackbarState).toEqual('not_shown')
       expect(uiStore.isDesktopLayout).toEqual(false)
+      expect(uiStore.breakpoint).toEqual('sm')
       expect(uiStore.isMobileUa).toEqual(true)
       expect(uiStore.isFilterDismissed).toEqual(false)
       expect(uiStore.isFilterVisible).toEqual(false)
@@ -163,18 +165,18 @@ describe('Ui Store', () => {
   )
 
   test.each`
-    initialState     | isDesktopLayout | expected
-    ${[true, false]} | ${false}        | ${{ isDesktopLayout: false, isMobileUa: false }}
-    ${[false, true]} | ${true}         | ${{ isDesktopLayout: true, isMobileUa: true }}
+    initialState     | breakpoint | expected
+    ${[true, false]} | ${'xm'}    | ${{ isDesktopLayout: false, isMobileUa: false }}
+    ${[false, true]} | ${'lg'}    | ${{ isDesktopLayout: true, isMobileUa: true }}
   `(
-    'updateBreakpoint gets isDesktopLayout $isDesktopLayout and returns $expected',
-    ({ initialState, isDesktopLayout, expected }) => {
+    'updateBreakpoint gets breakpoint $breakpoint and returns $expected',
+    ({ initialState, breakpoint, expected }) => {
       const uiStore = useUiStore()
       uiStore.$patch({
         isDesktopLayout: initialState[0],
         isMobileUa: initialState[1],
       })
-      uiStore.updateBreakpoint(isDesktopLayout)
+      uiStore.updateBreakpoint(breakpoint)
       const actualOutput = {
         isDesktopLayout: uiStore.isDesktopLayout,
         isMobileUa: uiStore.isMobileUa,

@@ -26,7 +26,7 @@
 <script>
 import { computed } from '@nuxtjs/composition-api'
 
-import { isMinScreen } from '~/composables/use-media-query'
+import { useUiStore } from '~/stores/ui'
 
 import LoadingIcon from '~/components/LoadingIcon.vue'
 import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
@@ -49,10 +49,12 @@ export default {
    * @return {{audioTrackSize: import('@nuxtjs/composition-api').ComputedRef<"l" | "s"> }}
    */
   setup() {
-    const isMinScreenMd = isMinScreen('md', { shouldPassInSSR: true })
+    const uiStore = useUiStore()
+
     const audioTrackSize = computed(() => {
-      return isMinScreenMd.value ? 'l' : 's'
+      return uiStore.isBreakpoint('md') ? 'l' : 's'
     })
+
     return { audioTrackSize }
   },
 }

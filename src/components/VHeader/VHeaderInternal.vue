@@ -64,8 +64,8 @@
 
 <script lang="ts">
 import {
+  computed,
   defineComponent,
-  inject,
   ref,
   useRoute,
   watch,
@@ -73,7 +73,7 @@ import {
 
 import usePages from '~/composables/use-pages'
 
-import { IsMinScreenMdKey } from '~/types/provides'
+import { useUiStore } from '~/stores/ui'
 
 import VHomeLink from '~/components/VHeader/VHomeLink.vue'
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
@@ -91,10 +91,9 @@ export default defineComponent({
   setup() {
     const menuButtonRef = ref<InstanceType<typeof VIconButton> | null>(null)
 
-    const { all: allPages, current: currentPage } = usePages(true)
     const route = useRoute()
 
-    const isMinScreenMd = inject(IsMinScreenMdKey)
+    const { all: allPages, current: currentPage } = usePages(true)
 
     const isModalVisible = ref(false)
     const closeModal = () => (isModalVisible.value = false)
@@ -107,8 +106,10 @@ export default defineComponent({
       }
     })
 
-    watch(isMinScreenMd, (isMd) => {
-      if (isMd && isModalVisible.value) {
+    const uiStore = useUiStore()
+    const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
+    watch(isDesktopLayout, (isDesktop) => {
+      if (isDesktop && isModalVisible.value) {
         closeModal()
       }
     })

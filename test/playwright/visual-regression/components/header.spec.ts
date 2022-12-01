@@ -17,67 +17,76 @@ test.describe.configure({ mode: 'parallel' })
 
 const headerSelector = '.main-header'
 
-test.describe('header', () => {
-  for (const dir of languageDirections) {
-    test.describe(dir, () => {
-      test.beforeEach(async ({ page }) => {
+for (const dir of languageDirections) {
+  test.describe(`header-${dir}`, () => {
+    breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
+      test.beforeEach(async ({ context, page }) => {
+        if (!isMobileBreakpoint(breakpoint)) {
+          await context.addCookies([
+            {
+              name: 'ui',
+              value: JSON.stringify({ isDesktopLayout: true }),
+              domain: 'localhost',
+              path: '/',
+            },
+          ])
+        }
+
         await enableNewHeader(page)
         await goToSearchTerm(page, 'birds', { dir })
       })
 
-      breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
-        test('filters open', async ({ page }) => {
-          await page.mouse.move(0, 150)
-          await expectSnapshot(
-            `filters-open-${dir}`,
-            page.locator(headerSelector)
-          )
-        })
+      test('filters open', async ({ page }) => {
+        await page.mouse.move(0, 150)
+        await expectSnapshot(
+          `filters-open-${dir}`,
+          page.locator(headerSelector)
+        )
+      })
 
-        test('resting', async ({ page }) => {
-          // By default, filters are open on desktop. We need to close them.
-          if (!isMobileBreakpoint(breakpoint)) {
-            await closeFilters(page)
-          }
-          // Make sure the header is not hovered on
-          await page.mouse.move(0, 150)
-          await expectSnapshot(`resting-${dir}`, page.locator(headerSelector))
-        })
+      test('resting', async ({ page }) => {
+        // By default, filters are open on desktop. We need to close them.
+        if (!isMobileBreakpoint(breakpoint)) {
+          await closeFilters(page)
+        }
+        // Make sure the header is not hovered on
+        await page.mouse.move(0, 150)
+        await expectSnapshot(`resting-${dir}`, page.locator(headerSelector))
+      })
 
-        test('scrolled', async ({ page }) => {
-          if (!isMobileBreakpoint(breakpoint)) {
-            await closeFilters(page)
-          }
-          await scrollToBottom(page)
-          await page.mouse.move(0, 150)
-          await sleep(200)
-          await expectSnapshot(`scrolled-${dir}`, page.locator(headerSelector))
-        })
+      test('scrolled', async ({ page }) => {
+        if (!isMobileBreakpoint(breakpoint)) {
+          await closeFilters(page)
+        }
+        await scrollToBottom(page)
+        await page.mouse.move(0, 150)
+        await sleep(200)
+        await expectSnapshot(`scrolled-${dir}`, page.locator(headerSelector))
+      })
 
-        test('searchbar hovered', async ({ page }) => {
-          if (!isMobileBreakpoint(breakpoint)) {
-            await closeFilters(page)
-          }
-          await page.hover('input')
-          await hideInputCursors(page)
-          await expectSnapshot(
-            `searchbar-hovered-${dir}`,
-            page.locator(headerSelector)
-          )
-        })
+      test('searchbar hovered', async ({ page }) => {
+        if (!isMobileBreakpoint(breakpoint)) {
+          await closeFilters(page)
+        }
+        await page.hover('input')
+        await hideInputCursors(page)
+        await expectSnapshot(
+          `searchbar-hovered-${dir}`,
+          page.locator(headerSelector)
+        )
+      })
 
-        test('searchbar active', async ({ page }) => {
-          if (!isMobileBreakpoint(breakpoint)) {
-            await closeFilters(page)
-          }
-          await hideInputCursors(page)
-          await page.click('input')
-          const locator = isMobileBreakpoint(breakpoint)
-            ? page
-            : page.locator(headerSelector)
-          await expectSnapshot(`searchbar-active-${dir}`, locator)
-        })
+      test('searchbar active', async ({ page }) => {
+        if (!isMobileBreakpoint(breakpoint)) {
+          await closeFilters(page)
+        }
+        await hideInputCursors(page)
+        await page.click('input')
+        const locator = isMobileBreakpoint(breakpoint)
+          ? page
+          : page.locator(headerSelector)
+        await expectSnapshot(`searchbar-active-${dir}`, locator)
       })
     })
-  }
-})
+  })
+}

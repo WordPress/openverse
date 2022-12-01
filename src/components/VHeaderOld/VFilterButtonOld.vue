@@ -3,7 +3,7 @@
     id="filter-button"
     :variant="variant"
     size="disabled"
-    class="align-center flex-shrink-0 gap-2 self-center py-2 font-semibold focus-visible:border-tx focus-visible:ring focus-visible:ring-pink"
+    class="align-center flex-shrink-0 gap-2 self-center py-2 font-semibold focus-visible:border-tx"
     :class="
       filtersAreApplied
         ? 'flex-shrink-0 px-3'
@@ -21,7 +21,7 @@
       :icon-path="filterIcon"
     />
     <span class="hidden md:inline-block">{{ mdMinLabel }}</span>
-    <span class="md:hidden" :class="!filtersAreApplied && 'hidden'">{{
+    <span class="md:hidden" :class="{ hidden: !filtersAreApplied }">{{
       smMaxLabel
     }}</span>
   </VButton>
@@ -31,6 +31,8 @@
 import { computed, defineComponent, inject, ref } from '@nuxtjs/composition-api'
 
 import { useSearchStore } from '~/stores/search'
+import { useUiStore } from '~/stores/ui'
+
 import type { ButtonVariant } from '~/types/button'
 import { defineEvent } from '~/types/emits'
 import { useI18n } from '~/composables/use-i18n'
@@ -62,8 +64,10 @@ export default defineComponent({
   },
   setup() {
     const i18n = useI18n()
+
     const searchStore = useSearchStore()
-    const isMinScreenMd = inject('isMinScreenMd', ref(false))
+    const uiStore = useUiStore()
+
     const isHeaderScrolled = inject('isHeaderScrolled', ref(false))
     const filterCount = computed(() => searchStore.appliedFilterCount)
     const filtersAreApplied = computed(() => filterCount.value > 0)
@@ -74,7 +78,7 @@ export default defineComponent({
      */
     const variant = computed(() => {
       // Show the bordered state by default, unless below md
-      let value: ButtonVariant = isMinScreenMd.value
+      let value: ButtonVariant = uiStore.isDesktopLayout
         ? 'action-menu-bordered'
         : 'action-menu'
 

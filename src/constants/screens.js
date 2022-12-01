@@ -23,6 +23,13 @@ const SCREEN_SIZES = Object.freeze(
 )
 
 /**
+ * the same as SCREEN_SIZES but with the 'xs' breakpoint added for use in JS.
+ */
+const ALL_SCREEN_SIZES = Object.freeze(
+  /** @type {const }*/ { ...SCREEN_SIZES, xs: 0 }
+)
+
+/**
  * mapping of breakpoint names to the lower-bound of their screen width range,
  * with the 'px' suffix attached; This is used by Tailwind.
  */
@@ -56,6 +63,7 @@ const VIEWPORTS = /** @type {Record<Breakpoint, Viewport>} */ (
  * This module is consumed by Nuxt and Tailwind config, so it needs to use CJS modules.
  */
 module.exports = {
+  ALL_SCREEN_SIZES,
   SCREEN_SIZES,
   SCREENS,
   VIEWPORTS,

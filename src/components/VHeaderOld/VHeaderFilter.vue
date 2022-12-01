@@ -6,17 +6,17 @@
     <VFilterButtonOld
       ref="buttonRef"
       class="self-stretch"
-      :class="visibleRef ? 'hidden md:flex' : 'flex'"
-      :pressed="visibleRef"
+      :class="isFilterVisible ? 'hidden md:flex' : 'flex'"
+      :pressed="isFilterVisible"
       :disabled="disabled"
       aria-haspopup="dialog"
-      :aria-expanded="visibleRef"
+      :aria-expanded="isFilterVisible"
       @toggle="onTriggerClick"
       @tab="onTab"
     />
     <VModalContent
-      v-if="visibleRef && !isMinScreenMd"
-      :hide="close"
+      v-if="isFilterVisible && !isDesktopLayout"
+      :hide="onTriggerClick"
       :visible="true"
       :trigger-element="triggerElement"
       :aria-label="$t('header.filter-button.simple')"
@@ -32,21 +32,16 @@ import {
   ref,
   watch,
   computed,
-  onMounted,
-  toRef,
   onBeforeUnmount,
 } from '@nuxtjs/composition-api'
 
 import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
-import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { useFocusFilters } from '~/composables/use-focus-filters'
-import { isMinScreen } from '~/composables/use-media-query'
 
 import { Focus } from '~/utils/focus-management'
 import { defineEvent } from '~/types/emits'
-import local from '~/utils/local'
-import { env } from '~/utils/env'
-import { useSearchStore } from '~/stores/search'
+
+import { useUiStore } from '~/stores/ui'
 
 import VModalContent from '~/components/VModal/VModalContent.vue'
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
@@ -77,62 +72,29 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const nodeRef = ref<HTMLElement | null>(null)
-    const visibleRef = ref(false)
-    const filterSidebar = useFilterSidebarVisibility()
-    const disabledRef = toRef(props, 'disabled')
 
-    // The `onMounted` in this component is run before the parent components' `onMounted` is run.
-    // The injected `isMinScreenMd` value can become true only after `default` layout's `onMounted` is run, so we need a separate check for `md` here to make sure that the value in `onMounted` is correct.
-    const isMinScreenMd = isMinScreen('md')
+    const uiStore = useUiStore()
 
-    const open = () => (visibleRef.value = true)
-    const close = () => (visibleRef.value = false)
-    const { lock, unlock } = useBodyScrollLock({ nodeRef })
+    const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
 
-    onMounted(() => {
-      // We default to show the filter on desktop, and only close it if the user has
-      // explicitly closed it before.
-      const localFilterState = !(
-        local.getItem(env.filterStorageKey) === 'false'
-      )
-      const searchStore = useSearchStore()
-      if (!isMinScreenMd.value) {
-        local.setItem(env.filterStorageKey, 'false')
-      } else {
-        const visible = searchStore.searchTypeIsSupported && localFilterState
-        filterSidebar.setVisibility(visible)
-        if (visible) {
-          open()
-        }
-      }
+    const isFilterVisible = computed(
+      () => !props.disabled && uiStore.isFilterVisible
+    )
+    watch(isFilterVisible, (visible) => {
+      emit(visible ? 'open' : 'close')
     })
+    const { lock, unlock } = useBodyScrollLock({ nodeRef })
 
     onBeforeUnmount(() => unlock())
 
-    watch(visibleRef, (visible) => {
-      filterSidebar.setVisibility(visible)
-      visible ? emit('open') : emit('close')
-      if (!isMinScreenMd.value) {
-        visible ? lock() : unlock()
-      }
-    })
-
-    watch(disabledRef, (disabled) => {
-      if (disabled && visibleRef.value) {
-        close()
-      }
-    })
-
     // Lock the scroll when the screen changes to below Md if filters are open.
-    watch(isMinScreenMd, (isMd) => {
-      if (!isMd && visibleRef.value) {
+    watch(isDesktopLayout, (isDesktop) => {
+      if (!isDesktop && uiStore.isFilterVisible) {
         lock()
       }
     })
 
-    const onTriggerClick = () => {
-      visibleRef.value = !visibleRef.value
-    }
+    const onTriggerClick = () => uiStore.toggleFilters()
 
     const focusFilters = useFocusFilters()
     /**
@@ -151,14 +113,12 @@ export default defineComponent({
 
     return {
       nodeRef,
-      visibleRef,
+      isFilterVisible,
       triggerElement,
+      isDesktopLayout,
 
-      open,
-      close,
       onTriggerClick,
       onTab,
-      isMinScreenMd,
     }
   },
 })

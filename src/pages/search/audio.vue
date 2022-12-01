@@ -40,17 +40,14 @@ import {
   useMeta,
   ref,
   inject,
-  watch,
-  toRef,
 } from '@nuxtjs/composition-api'
 
-import { useBrowserIsMobile } from '~/composables/use-browser-detection'
 import { useFocusFilters } from '~/composables/use-focus-filters'
 import { Focus } from '~/utils/focus-management'
 
 import { useUiStore } from '~/stores/ui'
 
-import { IsMinScreenMdKey } from '~/types/provides'
+import { IsSidebarVisibleKey } from '~/types/provides'
 
 import { useFeatureFlagStore } from '~/stores/feature-flag'
 
@@ -80,24 +77,16 @@ export default defineComponent({
         : undefined,
     })
 
+    const uiStore = useUiStore()
+
     const results = computed(() => props.resultItems.audio)
 
-    const isMinScreenMd = inject(IsMinScreenMdKey)
-    const filterVisibleRef = toRef(props, 'isFilterVisible')
+    const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
+    const filterVisibleRef = inject(IsSidebarVisibleKey)
 
-    // On SSR, we set the size to small if the User Agent is mobile, otherwise we set the size to medium.
-    const isMobile = useBrowserIsMobile()
-    const audioTrackSize = ref(
-      !isMinScreenMd.value || isMobile ? 's' : props.isFilterVisible ? 'l' : 'm'
+    const audioTrackSize = computed(() =>
+      !isDesktopLayout.value ? 's' : filterVisibleRef.value ? 'l' : 'm'
     )
-
-    watch([filterVisibleRef, isMinScreenMd], ([filterVisible, isMd]) => {
-      if (!isMd) {
-        audioTrackSize.value = 's'
-      } else {
-        audioTrackSize.value = filterVisible ? 'l' : 'm'
-      }
-    })
 
     const focusFilters = useFocusFilters()
     const handleShiftTab = (event: KeyboardEvent, i: number) => {
@@ -111,7 +100,6 @@ export default defineComponent({
       isMouseDown.value = true
     }
 
-    const uiStore = useUiStore()
     const isSnackbarVisible = computed(() => uiStore.areInstructionsVisible)
     const showSnackbar = () => {
       if (isMouseDown.value) {

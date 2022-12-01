@@ -6,8 +6,7 @@ import {
   Placement,
   PositioningStrategy,
 } from '@popperjs/core'
-
-import { useWindowSize } from '~/composables/use-window-size'
+import { useWindowSize } from '@vueuse/core'
 
 export type PopoverContentProps = {
   visible: boolean

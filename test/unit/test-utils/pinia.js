@@ -12,6 +12,7 @@ export const createPinia = () =>
       $cookies: {
         set: jest.fn(),
         get: jest.fn(),
+        setAll: jest.fn(),
       },
     },
   }))

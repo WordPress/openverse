@@ -2,7 +2,7 @@
   <header
     class="main-header z-30 flex w-full items-stretch justify-between gap-x-2 border-b bg-white py-4 px-6"
     :class="
-      isHeaderScrolled || sidebarVisibleRef
+      isHeaderScrolled || isSidebarVisible
         ? 'border-dark-charcoal-20'
         : 'border-white'
     "
@@ -37,10 +37,10 @@
     <VFilterButton
       ref="filterButtonRef"
       class="flex self-stretch"
-      :pressed="sidebarVisibleRef"
+      :pressed="isSidebarVisible"
       :disabled="areFiltersDisabled"
       aria-haspopup="dialog"
-      :aria-expanded="sidebarVisibleRef"
+      :aria-expanded="isSidebarVisible"
       @toggle="toggleSidebar"
       @tab="onTab"
     />
@@ -51,29 +51,24 @@ import {
   computed,
   defineComponent,
   inject,
-  onMounted,
   ref,
   useContext,
   useRouter,
-  watch,
 } from '@nuxtjs/composition-api'
 
 import { useMediaStore } from '~/stores/media'
 import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
+import { useUiStore } from '~/stores/ui'
 
 import { ALL_MEDIA, searchPath, supportedMediaTypes } from '~/constants/media'
-import { IsHeaderScrolledKey } from '~/types/provides'
+import { IsHeaderScrolledKey, IsSidebarVisibleKey } from '~/types/provides'
+
 import { useI18n } from '~/composables/use-i18n'
 import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
-
-import useSearchType from '~/composables/use-search-type'
-import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { useFocusFilters } from '~/composables/use-focus-filters'
+import useSearchType from '~/composables/use-search-type'
 
-import local from '~/utils/local'
-import { env } from '~/utils/env'
 import { Focus } from '~/utils/focus-management'
-
 import { ensureFocus } from '~/utils/reakit-utils/focus'
 
 import VFilterButton from '~/components/VHeader/VFilterButton.vue'
@@ -96,11 +91,9 @@ export default defineComponent({
     VSearchTypePopover,
     VSearchBar,
   },
-  setup(_, { emit }) {
+  setup() {
     const filterButtonRef = ref<InstanceType<typeof VFilterButton> | null>(null)
     const searchBarRef = ref<InstanceType<typeof VSearchBar> | null>(null)
-
-    const sidebarVisibleRef = ref(false)
 
     const { app } = useContext()
     const i18n = useI18n()
@@ -108,11 +101,12 @@ export default defineComponent({
 
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
+    const uiStore = useUiStore()
 
     const content = useSearchType()
-    const filterSidebar = useFilterSidebarVisibility()
 
     const isHeaderScrolled = inject(IsHeaderScrolledKey)
+    const isSidebarVisible = inject(IsSidebarVisibleKey)
 
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
@@ -207,24 +201,7 @@ export default defineComponent({
       () => !searchStore.searchTypeIsSupported
     )
 
-    onMounted(() => {
-      // We default to show the filter on desktop, and only close it if the user has
-      // explicitly closed it before.
-      const localFilterState = !(
-        local.getItem(env.filterStorageKey) === 'false'
-      )
-      const searchStore = useSearchStore()
-      sidebarVisibleRef.value =
-        searchStore.searchTypeIsSupported && localFilterState
-    })
-
-    watch(sidebarVisibleRef, (visible) => {
-      filterSidebar.setVisibility(visible)
-      visible ? emit('open') : emit('close')
-    })
-
-    const toggleSidebar = () =>
-      (sidebarVisibleRef.value = !sidebarVisibleRef.value)
+    const toggleSidebar = () => uiStore.toggleFilters()
 
     const focusFilters = useFocusFilters()
     /**
@@ -242,16 +219,14 @@ export default defineComponent({
       isFetching,
 
       isHeaderScrolled,
+      isSidebarVisible,
       areFiltersDisabled,
-
-      close,
 
       handleSearch,
       clearSearchTerm,
       selectSearchType,
       searchStatus,
       searchTerm,
-      sidebarVisibleRef,
       toggleSidebar,
       onTab,
     }

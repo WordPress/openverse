@@ -17,7 +17,6 @@
           :key="$route.path"
           :result-items="resultItems"
           :fetch-state="fetchState"
-          :is-filter-visible="isFilterSidebarVisible"
           :search-term="query.q"
           :supported="supported"
           data-testid="search-results"
@@ -26,7 +25,7 @@
     </VSearchGrid>
     <VScrollButton
       v-show="showScrollButton"
-      :is-filter-sidebar-visible="isFilterSidebarVisible"
+      :is-filter-sidebar-visible="isSidebarVisible"
       data-testid="scroll-button"
       @tab="handleTab($event, 'scroll-button')"
     />
@@ -37,10 +36,10 @@
 import { isShallowEqualObjects } from '@wordpress/is-shallow-equal'
 import { computed, defineComponent, inject, ref } from '@nuxtjs/composition-api'
 
-import { useFilterSidebarVisibility } from '~/composables/use-filter-sidebar-visibility'
 import { Focus, focusIn } from '~/utils/focus-management'
 import { useMediaStore } from '~/stores/media'
 import { useSearchStore } from '~/stores/search'
+import { IsSidebarVisibleKey } from '~/types/provides'
 
 import VSearchGrid from '~/components/VSearchGrid.vue'
 import VSkipToContentContainer from '~/components/VSkipToContentContainer.vue'
@@ -66,9 +65,10 @@ export default defineComponent({
   },
   scrollToTop: false,
   setup() {
-    const searchGridRef = ref(null)
-    const { isVisible: isFilterSidebarVisible } = useFilterSidebarVisibility()
+    const searchGridRef = ref<InstanceType<typeof VSearchGrid> | null>(null)
+
     const showScrollButton = inject('showScrollButton')
+    const isSidebarVisible = inject(IsSidebarVisibleKey)
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
@@ -97,7 +97,6 @@ export default defineComponent({
 
     return {
       searchGridRef,
-      isFilterSidebarVisible,
       showScrollButton,
       searchTerm,
       searchType,
@@ -108,6 +107,7 @@ export default defineComponent({
       fetchState,
       resultItems,
       needsFetching,
+      isSidebarVisible,
     }
   },
   /**

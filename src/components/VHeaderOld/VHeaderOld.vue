@@ -20,7 +20,7 @@
     <VSearchBarOld
       v-model.trim="searchTerm"
       class="flex-grow lg:w-1/2 lg:flex-grow-0 2xl:w-1/3"
-      :size="isMinScreenMd ? 'medium' : isHeaderScrolled ? 'small' : 'large'"
+      :size="isDesktopLayout ? 'medium' : isHeaderScrolled ? 'small' : 'large'"
       :class="{
         'order-4 w-full md:order-none md:w-auto': !isHeaderScrolled,
       }"
@@ -62,8 +62,12 @@ import { ALL_MEDIA, searchPath } from '~/constants/media'
 import { useMatchSearchRoutes } from '~/composables/use-match-routes'
 import { useI18n } from '~/composables/use-i18n'
 import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
+
 import { useMediaStore } from '~/stores/media'
 import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
+import { useUiStore } from '~/stores/ui'
+
+import { IsSidebarVisibleKey } from '~/types/provides'
 
 import VLogoButtonOld from '~/components/VHeaderOld/VLogoButtonOld.vue'
 import VHeaderFilter from '~/components/VHeaderOld/VHeaderFilter.vue'
@@ -87,22 +91,26 @@ export default defineComponent({
     VSearchBarOld,
   },
   setup() {
-    const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
     const { app } = useContext()
     const i18n = useI18n()
     const router = useRouter()
 
+    const mediaStore = useMediaStore()
+    const searchStore = useSearchStore()
+    const uiStore = useUiStore()
+
     const { matches: isSearchRoute } = useMatchSearchRoutes()
 
     const isHeaderScrolled = inject('isHeaderScrolled', false)
-    const isMinScreenMd = inject('isMinScreenMd', { shouldPassInSSR: false })
     const headerHasTwoRows = inject('headerHasTwoRows')
+    const isSidebarVisible = inject(IsSidebarVisibleKey)
 
-    const menuModalRef = ref(null)
+    const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
 
     const openMenu = ref<null | HeaderMenu>(null)
-    const isMenuOpen = computed(() => openMenu.value !== null)
+    const isMenuOpen = computed(
+      () => openMenu.value !== null || isSidebarVisible.value
+    )
 
     const openMenuModal = (menuName: HeaderMenu) => {
       if (openMenu.value !== null) {
@@ -114,9 +122,7 @@ export default defineComponent({
       openMenu.value = null
     }
 
-    const isFetching = computed(() => {
-      return mediaStore.fetchState.isFetching
-    })
+    const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
     const resultsCount = computed(() => mediaStore.resultCount)
     const { getI18nCount } = useI18nResultsCount()
@@ -163,8 +169,7 @@ export default defineComponent({
      */
     const handleSearch = async () => {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
-      const mediaStore = useMediaStore()
-      const searchStore = useSearchStore()
+
       const searchType = isSearchRoute.value
         ? searchStore.searchType
         : ALL_MEDIA
@@ -197,12 +202,10 @@ export default defineComponent({
       isFetching,
 
       isHeaderScrolled,
-      isMinScreenMd,
+      isDesktopLayout,
       isSearchRoute,
       headerHasTwoRows,
       areFiltersDisabled,
-
-      menuModalRef,
 
       openMenu,
       openMenuModal,

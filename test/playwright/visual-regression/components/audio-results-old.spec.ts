@@ -33,7 +33,15 @@ test.describe('audio results', () => {
   )
 
   breakpoints.describeEachDesktopWithMd(({ expectSnapshot }) => {
-    test('desktop audio results', async ({ page }) => {
+    test('desktop audio results', async ({ context, page }) => {
+      await context.addCookies([
+        {
+          name: 'ui',
+          value: JSON.stringify({ isDesktopLayout: true }),
+          domain: 'localhost',
+          path: '/',
+        },
+      ])
       await closeFilters(page, OLD_HEADER)
       await expectSnapshot('audio-results-desktop', page)
     })

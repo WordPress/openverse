@@ -5,6 +5,8 @@ import { useProviderStore } from '~/stores/provider'
 import { useFeatureFlagStore } from '~/stores/feature-flag'
 import { useUiStore } from '~/stores/ui'
 
+import { cookieOptions } from '~/utils/cookies'
+
 import type { Context, Middleware } from '@nuxt/types'
 
 /**
@@ -59,7 +61,7 @@ const middleware: Middleware = async ({
 
   const uiStore = useUiStore($pinia)
   const isMobileUa = $ua ? $ua.isMobile : false
-  $cookies.set('uiIsMobileUa', isMobileUa)
+  $cookies.set('uiIsMobileUa', isMobileUa, cookieOptions)
   uiStore.initFromCookies($cookies.getAll() ?? {})
 }
 export default middleware
