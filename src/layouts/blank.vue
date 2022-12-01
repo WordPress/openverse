@@ -1,7 +1,6 @@
 <template>
   <div>
-    <VMigrationNotice />
-    <VTranslationStatusBanner />
+    <VBanners />
     <Nuxt />
   </div>
 </template>
@@ -9,12 +8,11 @@
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
 
-import VTranslationStatusBanner from '~/components/VTranslationStatusBanner.vue'
-import VMigrationNotice from '~/components/VMigrationNotice.vue'
+import VBanners from '~/components/VBanner/VBanners.vue'
 
 export default defineComponent({
   name: 'BlankLayout',
-  components: { VMigrationNotice, VTranslationStatusBanner },
+  components: { VBanners },
   head() {
     return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
   },

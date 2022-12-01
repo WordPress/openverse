@@ -1,8 +1,8 @@
 <template>
   <VNotificationBanner
     id="cc-referral"
-    :enabled="isReferredFromCc"
     variant="announcement"
+    @close="$emit('close')"
   >
     {{
       $t('migration-notice.intro', {
@@ -25,20 +25,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@nuxtjs/composition-api'
+import { defineComponent } from '@nuxtjs/composition-api'
 
-import { useNavigationStore } from '~/stores/navigation'
-
-import VNotificationBanner from '~/components/VNotificationBanner.vue'
+import VNotificationBanner from '~/components/VBanner/VNotificationBanner.vue'
 import VLink from '~/components/VLink.vue'
 
 export default defineComponent({
   name: 'VMigrationNotice',
   components: { VLink, VNotificationBanner },
-  setup() {
-    const navigationStore = useNavigationStore()
-    const isReferredFromCc = computed(() => navigationStore.isReferredFromCc)
-    return { isReferredFromCc }
-  },
 })
 </script>

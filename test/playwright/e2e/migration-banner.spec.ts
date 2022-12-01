@@ -13,6 +13,24 @@ test.describe('migration banner', () => {
     await expect(migrationNotice).toBeVisible()
   })
 
+  test('does not show migration banner if cookie dismissed value is saved', async ({
+    context,
+    page,
+  }) => {
+    await context.addCookies([
+      {
+        name: 'uiDismissedBanners',
+        value: '["cc-referral"]',
+        domain: 'localhost',
+        path: '/',
+      },
+    ])
+    await page.goto('/?referrer=creativecommons.org')
+    const migrationNotice = page.locator('[data-testid="banner-cc-referral"]')
+
+    await expect(migrationNotice).toBeHidden()
+  })
+
   test('migration banner goes away on navigation', async ({ page }) => {
     await page.goto('/?referrer=creativecommons.org')
 

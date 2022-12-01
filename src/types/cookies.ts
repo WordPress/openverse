@@ -1,9 +1,19 @@
 import type { FeatureState } from '~/constants/feature-flag'
+import { isProd } from '~/utils/node-env'
 
+import type { BannerId } from '~/types/banners'
 import type { Breakpoint } from '~/constants/screens'
+
+import type { CookieSerializeOptions } from 'cookie'
 
 export type SnackbarState = 'not_shown' | 'visible' | 'dismissed'
 
+export const cookieOptions: CookieSerializeOptions = {
+  path: '/',
+  sameSite: 'strict',
+  maxAge: 60 * 60 * 24 * 60, // 60 days
+  secure: isProd,
+}
 /**
  * The cookies that Openverse uses to store the UI state.
  */
@@ -24,6 +34,10 @@ export interface OpenverseCookieState {
    * Whether the request user agent is mobile or not.
    */
   uiIsMobileUa?: boolean
+  /**
+   * The list of ids of dismissed banners.
+   */
+  uiDismissedBanners?: BannerId[]
   /**
    * The state of the feature flags.
    */

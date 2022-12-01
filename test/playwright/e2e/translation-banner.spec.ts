@@ -24,6 +24,23 @@ test.describe('translation banner', () => {
     )
   })
 
+  test('Banner is not shown if dismissed state is saved in a cookie', async ({
+    page,
+  }) => {
+    await page.context().addCookies([
+      {
+        name: 'uiDismissedBanners',
+        value: '["translation-ru"]',
+        domain: 'localhost',
+        path: '/',
+      },
+    ])
+    await page.goto(russianSearchPath)
+    await expect(
+      page.locator('[data-testid="banner-translation"]')
+    ).not.toBeVisible({ timeout: 500 })
+  })
+
   test('Can close the translation banner', async ({ page }) => {
     await page.goto(russianSearchPath)
     await page.click('[data-testid="banner-translation"] button:visible', {

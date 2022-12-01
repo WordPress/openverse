@@ -2,8 +2,7 @@
   <div class="app flex min-h-screen flex-col">
     <div class="sticky top-0 z-40 block">
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
-      <VMigrationNotice />
-      <VTranslationStatusBanner />
+      <VBanners />
       <template v-if="isNewHeaderEnabled">
         <template v-if="isSearchHeader">
           <VHeaderDesktop v-if="isDesktopLayout" />
@@ -66,25 +65,22 @@ import { useSearchStore } from '~/stores/search'
 
 import { IsHeaderScrolledKey, IsSidebarVisibleKey } from '~/types/provides'
 
-import VMigrationNotice from '~/components/VMigrationNotice.vue'
-import VTranslationStatusBanner from '~/components/VTranslationStatusBanner.vue'
+import VBanners from '~/components/VBanner/VBanners.vue'
 import VHeaderOld from '~/components/VHeaderOld/VHeaderOld.vue'
 import VModalTarget from '~/components/VModal/VModalTarget.vue'
 import VGlobalAudioSection from '~/components/VGlobalAudioSection/VGlobalAudioSection.vue'
-import VFooter from '~/components/VFooter/VFooter.vue'
 import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
 
 const embeddedPage = {
   name: 'embedded',
   components: {
-    VMigrationNotice,
-    VTranslationStatusBanner,
-    VHeaderOld,
+    VBanners,
     VHeaderDesktop: () => import('~/components/VHeader/VHeaderDesktop.vue'),
     VHeaderInternal: () => import('~/components/VHeader/VHeaderInternal.vue'),
     VHeaderMobile: () =>
       import('~/components/VHeader/VHeaderMobile/VHeaderMobile.vue'),
-    VFooter,
+    VFooter: () => import('~/components/VFooter/VFooter.vue'),
+    VHeaderOld,
     VModalTarget,
     VTeleportTarget,
     VGlobalAudioSection,
@@ -164,6 +160,7 @@ const embeddedPage = {
       isSearchHeader,
       headerHasTwoRows,
       isNewHeaderEnabled,
+
       closeSidebar,
     }
   },

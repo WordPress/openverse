@@ -1,19 +1,18 @@
 <template>
   <div
-    v-show="enabled && shouldShow"
     class="flex items-center justify-between px-4 py-2 md:px-7"
     :class="$style[variant]"
     :data-testid="`banner-${id}`"
   >
-    <p class="text-left text-sr leading-tight md:text-base md:leading-normal">
+    <p class="caption-regular md:description-regular text-left">
       <slot name="default" />
     </p>
     <div class="flex">
       <slot name="buttons">
         <VIconButton
-          :class="variant === 'announcement' && 'text-white'"
+          :class="{ 'text-white': variant === 'announcement' }"
           size="small"
-          :aria-label="closeLabel"
+          :aria-label="$t('modal.close')"
           :icon-props="{
             iconPath: closeIcon,
           }"
@@ -27,10 +26,9 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@nuxtjs/composition-api'
 
-import { useStorage } from '@vueuse/core'
-
 import { defineEvent } from '~/types/emits'
-import { useI18n } from '~/composables/use-i18n'
+
+import type { BannerId } from '~/types/banners'
 
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
 
@@ -47,31 +45,21 @@ export default defineComponent({
       required: true,
     },
     id: {
-      type: String,
-      required: true,
-    },
-    enabled: {
-      type: Boolean,
+      type: String as PropType<BannerId>,
       required: true,
     },
   },
   emits: {
     close: defineEvent(),
   },
-  setup(props, { emit }) {
-    const i18n = useI18n()
-    const shouldShow = useStorage(`banner:show-${props.id}`, true)
-    const dismissBanner = () => (shouldShow.value = false)
+  setup(_, { emit }) {
     const handleClose = () => {
-      dismissBanner()
       emit('close')
     }
-    const closeLabel = i18n.t('modal.close') as string
+
     return {
       closeIcon,
-      closeLabel,
       handleClose,
-      shouldShow,
     }
   },
 })
