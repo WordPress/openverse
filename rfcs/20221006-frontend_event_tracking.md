@@ -63,7 +63,7 @@ Unless all conditions are met the `sendEvent` function will simply no-op.
 
 A previous version of this proposal suggested honoring the `navigator.doNotTrack` browser method, but upon inspection this was deprecated in 2018 and is no longer advised.
 
-This proposal will require the creation of a user settings page _or_ an analytics opt-out checkbox on the soon to be created `/privacy` page.
+This proposal will require the creation of a user settings page _or_ an analytics opt-out checkbox on the `/privacy` page.
 
 ### Sample implementaton and event types
 
