@@ -45,6 +45,7 @@ IMAGE_POPULARITY_METRICS = {
     "flickr": {"metric": "views"},
     "wikimedia": {"metric": "global_usage_count"},
     "stocksnap": {"metric": "downloads_raw"},
+    "rawpixel": {"metric": "download_count"},
 }
 
 AUDIO_POPULARITY_METRICS = {

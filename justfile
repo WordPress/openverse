@@ -82,6 +82,7 @@ _deps:
     docker-compose {{ DOCKER_FILES }} run \
         -e AIRFLOW_VAR_INGESTION_LIMIT=1000000 \
         -v {{ justfile_directory() }}/tests:/usr/local/airflow/tests/ \
+        -v {{ justfile_directory() }}/docker:/usr/local/airflow/docker/ \
         -v {{ justfile_directory() }}/pytest.ini:/usr/local/airflow/pytest.ini \
         --rm \
         {{ SERVICE }} \

@@ -1,5 +1,7 @@
 import os
+import re
 from collections import namedtuple
+from pathlib import Path
 from textwrap import dedent
 from typing import NamedTuple
 
@@ -8,6 +10,7 @@ import pytest
 from common.popularity import sql
 
 
+DDL_DEFINITIONS_PATH = Path(__file__).parents[4] / "docker" / "local_postgres"
 POSTGRES_CONN_ID = os.getenv("TEST_CONN_ID")
 POSTGRES_TEST_URI = os.getenv("AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING")
 
@@ -500,3 +503,25 @@ def test_image_view_calculates_std_pop(postgres_with_image_table, table_info):
             rd["fid_d"] == 0.75,
         ]
     )
+
+
+@pytest.mark.parametrize(
+    "ddl_filename, metrics",
+    [
+        ("0004_openledger_image_view.sql", sql.IMAGE_POPULARITY_METRICS),
+        ("0007_openledger_audio_view.sql", sql.AUDIO_POPULARITY_METRICS),
+    ],
+)
+def test_ddl_matches_definitions(ddl_filename, metrics):
+    ddl = (DDL_DEFINITIONS_PATH / ddl_filename).read_text()
+    if not (
+        match := re.search(
+            r"INSERT INTO public.\w+_popularity_metrics.*?;",
+            ddl,
+            re.MULTILINE | re.DOTALL,
+        )
+    ):
+        raise ValueError(f"Could not find insert statement in ddl file {ddl_filename}")
+
+    for provider in metrics:
+        assert provider in match.group(0)
