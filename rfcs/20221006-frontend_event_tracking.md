@@ -159,6 +159,8 @@ type AnalyticsEvents = {
     related: string | null;
     /** The media type being searched */
     mediaType: MediaType;
+    /** The slug (not the prettified name) of the provider */
+    provider: string;
     /** The search term **/
     query: string;
   };
