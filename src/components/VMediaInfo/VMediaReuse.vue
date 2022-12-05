@@ -17,7 +17,7 @@
       <VMediaLicense
         :license="media.license"
         :license-url="media.license_url"
-        :full-license-name="fullLicenseName"
+        :license-version="media.license_version"
       />
       <VCopyLicense :media="media" />
     </div>
@@ -25,13 +25,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
-
-import { getFullLicenseName } from '~/utils/license'
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import type { Media } from '~/models/media'
-
-import { useI18n } from '~/composables/use-i18n'
 
 import VCopyLicense from '~/components/VMediaInfo/VCopyLicense.vue'
 import VMediaLicense from '~/components/VMediaInfo/VMediaLicense.vue'
@@ -44,15 +40,6 @@ export default defineComponent({
       type: Object as PropType<Media>,
       required: true,
     },
-  },
-  setup(props) {
-    const i18n = useI18n()
-
-    const fullLicenseName = computed(() =>
-      getFullLicenseName(props.media.license, props.media.license_version, i18n)
-    )
-
-    return { fullLicenseName }
   },
 })
 </script>
