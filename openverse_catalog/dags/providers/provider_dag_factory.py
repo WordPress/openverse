@@ -294,6 +294,7 @@ def create_provider_api_workflow_dag(conf: ProviderWorkflow):
         tags=[
             "provider",
             *[f"provider: {media_type}" for media_type in conf.media_types],
+            f"ingestion: {'dated' if conf.dated else 'full'}",
             *conf.tags,
         ],
         render_template_as_native_obj=True,
