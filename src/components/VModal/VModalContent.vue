@@ -1,69 +1,66 @@
 <template>
   <VTeleport v-if="visible" to="modal">
-    <!-- Prevent FocusTrap from trying to focus the first element. We already do that in a more flexible, adaptive way in our Dialog composables. -->
-    <FocusTrap :initial-focus="() => false" :escape-deactivates="!hideOnEsc">
+    <div
+      class="fixed inset-0 z-40 flex min-h-screen justify-center overflow-y-auto bg-dark-charcoal bg-opacity-75"
+      :class="[
+        $style[`modal-backdrop-${variant}`],
+        $style[`modal-backdrop-${mode}`],
+        contentClasses,
+      ]"
+    >
       <div
-        class="fixed inset-0 z-40 flex min-h-screen justify-center overflow-y-auto bg-dark-charcoal bg-opacity-75"
-        :class="[
-          $style[`modal-backdrop-${variant}`],
-          $style[`modal-backdrop-${mode}`],
-          contentClasses,
-        ]"
+        ref="dialogRef"
+        v-bind="$attrs"
+        class="flex w-full flex-col"
+        :class="[$style[`modal-${variant}`], $style[`modal-${mode}`]]"
+        role="dialog"
+        aria-modal="true"
+        v-on="$listeners"
+        @keydown="onKeyDown"
+        @blur="onBlur"
       >
-        <div
-          ref="dialogRef"
-          v-bind="$attrs"
-          class="flex w-full flex-col"
-          :class="[$style[`modal-${variant}`], $style[`modal-${mode}`]]"
-          role="dialog"
-          aria-modal="true"
-          v-on="$listeners"
-          @keydown="onKeyDown"
-          @blur="onBlur"
-        >
-          <slot name="top-bar" :close="hide">
-            <!--
+        <slot name="top-bar" :close="hide">
+          <!--
               These specific padding and margin values serve to
               visually align the Openverse logo button in the modal
               with the header logo button so that there isn't a
               jarring "shifting" effect when opening the mobile modal.
             -->
-            <div
-              v-if="variant === 'default'"
-              class="flex w-full shrink-0 justify-between py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
-              :class="[$style[`top-bar-${variant}`], $style[`top-bar-${mode}`]]"
-            >
-              <VLogoButtonOld
-                class="md:hidden"
-                :is-fetching="false"
-                :is-header-scrolled="false"
-                :is-search-route="true"
-              />
-              <VButton
-                ref="closeButton"
-                size="disabled"
-                variant="plain"
-                class="text-sr md:text-base md:text-white"
-                @click="hide()"
-              >
-                {{ $t('modal.close') }}
-                <VIcon :icon-path="closeIcon" class="ms-2" :size="5" />
-              </VButton>
-            </div>
-          </slot>
-
           <div
-            class="flex w-full flex-grow flex-col"
-            :class="[
-              $style[`modal-content-${variant}`],
-              $style[`modal-content-${mode}`],
-            ]"
+            v-if="variant === 'default'"
+            class="md:justify-end md:bg-tx md:px-0 md:py-3 flex w-full shrink-0 justify-between py-4 pe-3 ps-4"
+            :class="[$style[`top-bar-${variant}`], $style[`top-bar-${mode}`]]"
           >
-            <slot />
+            <VLogoButtonOld
+              class="md:hidden"
+              :is-fetching="false"
+              :is-header-scrolled="false"
+              :is-search-route="true"
+            />
+            <VButton
+              ref="closeButton"
+              size="disabled"
+              variant="plain"
+              class="md:text-base md:text-white text-sr"
+              @click="hide()"
+            >
+              {{ $t('modal.close') }}
+              <VIcon :icon-path="closeIcon" class="ms-2" :size="5" />
+            </VButton>
           </div>
+        </slot>
+
+        <div
+          class="flex w-full flex-grow flex-col"
+          :class="[
+            $style[`modal-content-${variant}`],
+            $style[`modal-content-${mode}`],
+          ]"
+        >
+          <slot />
         </div>
       </div>
-    </FocusTrap>
+    </div>
   </VTeleport>
 </template>
 
@@ -75,7 +72,7 @@ import {
   computed,
   PropType,
 } from '@nuxtjs/composition-api'
-import { FocusTrap } from 'focus-trap-vue'
+
 import { Portal as VTeleport } from 'portal-vue'
 
 import { useDialogContent } from '~/composables/use-dialog-content'
@@ -94,7 +91,7 @@ import closeIcon from '~/assets/icons/close.svg'
  */
 export default defineComponent({
   name: 'VModalContent',
-  components: { VTeleport, VButton, VIcon, FocusTrap, VLogoButtonOld },
+  components: { VTeleport, VButton, VIcon, VLogoButtonOld },
   props: {
     visible: {
       type: Boolean,
@@ -182,10 +179,10 @@ export default defineComponent({
 
 <style module>
 .top-bar-default {
-  @apply flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3;
+  @apply md:justify-end md:bg-tx md:px-0 md:py-3 flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4;
 }
 .top-bar-full {
-  @apply flex h-20 w-full shrink-0 justify-between bg-dark-charcoal px-4 py-3 md:items-stretch md:justify-start md:py-4 md:px-7;
+  @apply md:items-stretch md:justify-start md:py-4 md:px-7 flex h-20 w-full shrink-0 justify-between bg-dark-charcoal px-4 py-3;
 }
 .top-bar-two-thirds {
   @apply bg-tx;
@@ -204,7 +201,7 @@ export default defineComponent({
   @apply bg-white text-dark-charcoal;
 }
 .modal-content-default {
-  @apply text-left align-bottom md:rounded-t-md;
+  @apply md:rounded-t-md text-left align-bottom;
 }
 .modal-content-full {
   @apply flex w-full flex-col justify-between px-6 pb-10;

@@ -2,23 +2,21 @@
   <div ref="nodeRef">
     <div v-if="!isActive" class="flex w-full"><slot /></div>
     <VTeleport v-else to="modal">
-      <FocusTrap :initial-focus="() => false">
+      <div
+        class="fixed inset-0 z-40 flex min-h-screen w-full justify-center overflow-y-auto bg-white"
+      >
         <div
-          class="fixed inset-0 z-40 flex min-h-screen w-full justify-center overflow-y-auto bg-white"
+          ref="dialogRef"
+          v-bind="$attrs"
+          class="flex w-full flex-col py-4 px-4"
+          role="dialog"
+          aria-modal="true"
+          @keydown="onKeyDown"
+          @blur="onBlur"
         >
-          <div
-            ref="dialogRef"
-            v-bind="$attrs"
-            class="flex w-full flex-col py-4 px-4"
-            role="dialog"
-            aria-modal="true"
-            @keydown="onKeyDown"
-            @blur="onBlur"
-          >
-            <slot />
-          </div>
+          <slot />
         </div>
-      </FocusTrap>
+      </div>
     </VTeleport>
   </div>
 </template>
@@ -32,7 +30,6 @@ import {
 } from '@nuxtjs/composition-api'
 
 import { Portal as VTeleport } from 'portal-vue'
-import { FocusTrap } from 'focus-trap-vue'
 
 import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
 import { useDialogContent } from '~/composables/use-dialog-content'
@@ -41,7 +38,7 @@ import type { SetupContext } from 'vue'
 
 export default defineComponent({
   name: 'VInputModal',
-  components: { VTeleport, FocusTrap },
+  components: { VTeleport },
 
   /**
    * NB: Most of these technically default to `undefined` so that the underlying `VPopoverContent`

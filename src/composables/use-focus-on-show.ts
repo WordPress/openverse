@@ -6,6 +6,7 @@ import {
   getFirstTabbableIn,
   hasFocusWithin,
 } from '~/utils/reakit-utils/focus'
+import { useFocusTrap } from '~/composables/use-focus-trap'
 
 export const noFocusableElementWarning =
   "It's recommended to have at least one tabbable element inside dialog. The dialog element has been automatically focused. If this is the intended behavior, pass `tabIndex={0}` to the dialog element to disable this warning."
@@ -26,6 +27,15 @@ export const useFocusOnShow = ({
   autoFocusOnShowRef,
   initialFocusElementRef = ref(null),
 }: Props) => {
+  const { activate: activateFocusTrap, deactivate: deactivateFocusTrap } =
+    useFocusTrap(dialogRef, {
+      // Prevent FocusTrap from trying to focus the first element.
+      // We already do that in a more flexible, adaptive way in our Dialog composables.
+      initialFocus: false,
+      // if set to true, focus-trap prevents the default for the keyboard event, and we cannot handle it in our composables.
+      escapeDeactivates: false,
+    })
+
   watch(
     [
       dialogRef,
@@ -34,6 +44,10 @@ export const useFocusOnShow = ({
       initialFocusElementRef,
     ] as const,
     ([dialog, visible, autoFocusOnShow, initialFocusElement]) => {
+      if (!dialog || !visible) {
+        deactivateFocusTrap()
+        return
+      }
       if (!dialog || !visible || !autoFocusOnShow) return
 
       nextTick(() => {
@@ -56,6 +70,7 @@ export const useFocusOnShow = ({
             }
           }
         }
+        activateFocusTrap()
       })
     }
   )
