@@ -28,7 +28,7 @@
             -->
           <div
             v-if="variant === 'default'"
-            class="md:justify-end md:bg-tx md:px-0 md:py-3 flex w-full shrink-0 justify-between py-4 pe-3 ps-4"
+            class="flex w-full shrink-0 justify-between py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
             :class="[$style[`top-bar-${variant}`], $style[`top-bar-${mode}`]]"
           >
             <VLogoButtonOld
@@ -41,7 +41,7 @@
               ref="closeButton"
               size="disabled"
               variant="plain"
-              class="md:text-base md:text-white text-sr"
+              class="text-sr md:text-base md:text-white"
               @click="hide()"
             >
               {{ $t('modal.close') }}
@@ -179,10 +179,10 @@ export default defineComponent({
 
 <style module>
 .top-bar-default {
-  @apply md:justify-end md:bg-tx md:px-0 md:py-3 flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4;
+  @apply flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3;
 }
 .top-bar-full {
-  @apply md:items-stretch md:justify-start md:py-4 md:px-7 flex h-20 w-full shrink-0 justify-between bg-dark-charcoal px-4 py-3;
+  @apply flex h-20 w-full shrink-0 justify-between bg-dark-charcoal px-4 py-3 md:items-stretch md:justify-start md:py-4 md:px-7;
 }
 .top-bar-two-thirds {
   @apply bg-tx;
@@ -201,7 +201,7 @@ export default defineComponent({
   @apply bg-white text-dark-charcoal;
 }
 .modal-content-default {
-  @apply md:rounded-t-md text-left align-bottom;
+  @apply text-left align-bottom md:rounded-t-md;
 }
 .modal-content-full {
   @apply flex w-full flex-col justify-between px-6 pb-10;
