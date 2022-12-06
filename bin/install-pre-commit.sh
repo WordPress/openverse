@@ -2,7 +2,7 @@
 
 set -e
 
-if [ -z "$SKIP_PRE_COMMIT" ]
+if [ -z "$SKIP_PRE_COMMIT" ] && [ ! -f ./pre-commit.pyz ]
 then
   echo "installing pre-commit"
   pnpm pc:download && pnpm pc:install
