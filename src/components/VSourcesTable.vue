@@ -68,7 +68,7 @@ import { useProviderStore } from '~/stores/provider'
 import { useGetLocaleFormattedNumber } from '~/composables/use-get-locale-formatted-number'
 
 import type { SupportedMediaType } from '~/constants/media'
-import type { MediaProvider } from '~/models/media-provider'
+import type { MediaProvider } from '~/types/media-provider'
 
 import TableSortIcon from '~/components/TableSortIcon.vue'
 import VLink from '~/components/VLink.vue'

@@ -4,7 +4,7 @@
  * backend, or open an issue to track it.
  */
 
-import type { Media } from '~/models/media'
+import type { Media } from '~/types/media'
 import {
   getElements,
   getFullLicenseName,

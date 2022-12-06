@@ -41,7 +41,7 @@ import { ALL_MEDIA, IMAGE, SearchType, mediaTypes } from '~/constants/media'
 import { NO_RESULT } from '~/constants/errors'
 import { defineEvent } from '~/types/emits'
 import type { ApiQueryParams } from '~/utils/search-query-transform'
-import type { FetchState } from '~/models/fetch-state'
+import type { FetchState } from '~/types/fetch-state'
 
 import VExternalSearchForm from '~/components/VExternalSearch/VExternalSearchForm.vue'
 import VErrorSection from '~/components/VErrorSection/VErrorSection.vue'

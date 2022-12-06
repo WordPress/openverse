@@ -33,7 +33,7 @@ import {
   ref,
 } from '@nuxtjs/composition-api'
 
-import { tabsContextKey } from '~/models/tabs'
+import { tabsContextKey } from '~/types/tabs'
 import { keycodes } from '~/constants/key-codes'
 import { getDomElement } from '~/utils/dom'
 import { Focus, focusIn } from '~/utils/focus-management'

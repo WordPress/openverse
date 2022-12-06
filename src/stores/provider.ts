@@ -12,8 +12,8 @@ import {
 } from '~/constants/media'
 import { warn } from '~/utils/console'
 import { initProviderServices } from '~/data/media-provider-service'
-import type { MediaProvider } from '~/models/media-provider'
-import type { FetchState } from '~/models/fetch-state'
+import type { MediaProvider } from '~/types/media-provider'
+import type { FetchState } from '~/types/fetch-state'
 
 export interface ProviderState {
   providers: {

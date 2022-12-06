@@ -21,7 +21,8 @@ import {
   ref,
 } from '@nuxtjs/composition-api'
 
-import { tabsContextKey, type TabsState, TabVariant } from '~/models/tabs'
+import { tabsContextKey } from '~/types/tabs'
+import type { TabsState, TabVariant } from '~/types/tabs'
 import { defineEvent } from '~/types/emits'
 
 import closeIcon from '~/assets/icons/close-small.svg'

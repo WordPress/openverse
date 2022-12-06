@@ -23,7 +23,7 @@
 import { computed, defineComponent, useRoute } from '@nuxtjs/composition-api'
 
 import { AUDIO } from '~/constants/media'
-import type { AudioDetail } from '~/models/media'
+import type { AudioDetail } from '~/types/media'
 import { useRelatedMediaStore } from '~/stores/media/related-media'
 import { useSingleResultStore } from '~/stores/media/single-result'
 import { useFeatureFlagStore } from '~/stores/feature-flag'

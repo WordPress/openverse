@@ -101,7 +101,7 @@ import {
 } from '@nuxtjs/composition-api'
 
 import { IMAGE } from '~/constants/media'
-import type { ImageDetail } from '~/models/media'
+import type { ImageDetail } from '~/types/media'
 import { useSingleResultStore } from '~/stores/media/single-result'
 import { useRelatedMediaStore } from '~/stores/media/related-media'
 import { useFeatureFlagStore } from '~/stores/feature-flag'

@@ -37,7 +37,7 @@ import {
 
 import { rand, hash } from '~/utils/prng'
 import { lerp, dist, bezier, Point } from '~/utils/math'
-import type { AudioDetail } from '~/models/media'
+import type { AudioDetail } from '~/types/media'
 import { useI18n } from '~/composables/use-i18n'
 
 /**

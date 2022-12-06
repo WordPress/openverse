@@ -1,7 +1,7 @@
 import { AUDIO, IMAGE } from '~/constants/media'
-import type { AudioDetail, ImageDetail, Media } from '~/models/media'
+import type { AudioDetail, ImageDetail, Media } from '~/types/media'
 import { ApiService, createApiService } from '~/data/api-service'
-import type { MediaProvider } from '~/models/media-provider'
+import type { MediaProvider } from '~/types/media-provider'
 
 export class MediaProviderService<T extends Media> {
   private readonly apiService: ApiService

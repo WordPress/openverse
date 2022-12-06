@@ -27,7 +27,7 @@ import { useMediaStore } from '~/stores/media'
 import { useSingleResultStore } from '~/stores/media/single-result'
 import { useUiStore } from '~/stores/ui'
 
-import type { AudioDetail } from '~/models/media'
+import type { AudioDetail } from '~/types/media'
 
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
 import VGlobalAudioTrack from '~/components/VAudioTrack/VGlobalAudioTrack.vue'

@@ -64,7 +64,7 @@ import { useMediaStore } from '~/stores/media'
 
 import { AUDIO } from '~/constants/media'
 
-import type { AudioDetail } from '~/models/media'
+import type { AudioDetail } from '~/types/media'
 import {
   AudioLayout,
   AudioSize,

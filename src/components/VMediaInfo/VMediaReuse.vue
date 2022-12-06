@@ -27,7 +27,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@nuxtjs/composition-api'
 
-import type { Media } from '~/models/media'
+import type { Media } from '~/types/media'
 
 import VCopyLicense from '~/components/VMediaInfo/VCopyLicense.vue'
 import VMediaLicense from '~/components/VMediaInfo/VMediaLicense.vue'

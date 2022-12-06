@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 
-import type { FetchState } from '~/models/fetch-state'
+import type { FetchState } from '~/types/fetch-state'
 import { initServices } from '~/stores/media/services'
-import type { Media } from '~/models/media'
+import type { Media } from '~/types/media'
 import type { SupportedMediaType } from '~/constants/media'
 
 interface RelatedMediaState {

@@ -27,8 +27,8 @@
  */
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
-import type { FetchState } from '~/models/fetch-state'
-import type { ImageDetail } from '~/models/media'
+import type { FetchState } from '~/types/fetch-state'
+import type { ImageDetail } from '~/types/media'
 
 import { defineEvent } from '~/types/emits'
 

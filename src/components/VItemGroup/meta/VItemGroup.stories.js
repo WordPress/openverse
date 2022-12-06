@@ -1,6 +1,6 @@
 import { ref } from '@nuxtjs/composition-api'
 
-import { itemGroupDirections } from '~/models/item-group'
+import { itemGroupDirections } from '~/types/item-group'
 
 import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
 import VItem from '~/components/VItemGroup/VItem.vue'

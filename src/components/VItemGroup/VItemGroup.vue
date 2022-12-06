@@ -36,14 +36,14 @@ import type {
   ItemGroupDirection,
   ItemGroupSize,
   ItemGroupType,
-} from '~/models/item-group'
+} from '~/types/item-group'
 import {
   itemGroupDirections,
   itemGroupSizes,
   itemGroupTypes,
   VItemGroupContextKey,
   VItemGroupFocusContextKey,
-} from '~/models/item-group'
+} from '~/types/item-group'
 
 const arrows = [
   keycodes.ArrowUp,

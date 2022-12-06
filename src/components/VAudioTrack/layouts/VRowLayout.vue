@@ -99,7 +99,7 @@
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 
 import { timeFmt } from '~/utils/time-fmt'
-import type { AudioDetail } from '~/models/media'
+import type { AudioDetail } from '~/types/media'
 import type { AudioSize } from '~/constants/audio'
 
 import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 import type { SupportedMediaType } from '~/constants/media'
-import type { Media } from '~/models/media'
+import type { Media } from '~/types/media'
 
 export type MediaStatus = 'ejected' | 'playing' | 'paused' // 'ejected' means player is closed
 

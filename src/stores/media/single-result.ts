@@ -2,9 +2,9 @@ import { defineStore } from 'pinia'
 
 import axios from 'axios'
 
-import type { AudioDetail, ImageDetail, Media } from '~/models/media'
+import type { AudioDetail, ImageDetail, Media } from '~/types/media'
 import type { SupportedMediaType } from '~/constants/media'
-import type { FetchState } from '~/models/fetch-state'
+import type { FetchState } from '~/types/fetch-state'
 import { initServices } from '~/stores/media/services'
 import { useMediaStore } from '~/stores/media/index'
 import { useRelatedMediaStore } from '~/stores/media/related-media'

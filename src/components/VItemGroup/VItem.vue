@@ -66,7 +66,7 @@ import { warn } from '~/utils/console'
 import {
   VItemGroupContextKey,
   VItemGroupFocusContextKey,
-} from '~/models/item-group'
+} from '~/types/item-group'
 
 import VButton from '~/components/VButton.vue'
 import VIcon from '~/components/VIcon/VIcon.vue'

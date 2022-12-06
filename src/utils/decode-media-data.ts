@@ -1,19 +1,9 @@
 import { title as titleCase } from 'case'
 
 import { decodeData as decodeString } from '~/utils/decode-data'
-import type { Media, Tag } from '~/models/media'
+import type { ApiMedia, Media, Tag } from '~/types/media'
 import type { MediaType } from '~/constants/media'
 import { AUDIO, IMAGE, MODEL_3D, VIDEO } from '~/constants/media'
-
-/**
- * This interface is a subset of `Media` that types dictionaries sent by the API
- * being decoded in the `decodeMediaData` function.
- */
-interface ApiMedia
-  extends Omit<Media, 'frontendMediaType' | 'title' | 'originalTitle'> {
-  title?: string
-  originalTitle?: string
-}
 
 const mediaTypeExtensions: Record<MediaType, string[]> = {
   [IMAGE]: ['jpg', 'jpeg', 'png', 'gif', 'svg'],

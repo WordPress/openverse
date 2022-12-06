@@ -37,7 +37,7 @@ import {
   ref,
 } from '@nuxtjs/composition-api'
 
-import type { ImageDetail } from '~/models/media'
+import type { ImageDetail } from '~/types/media'
 
 import VLicense from '~/components/VLicense/VLicense.vue'
 import VLink from '~/components/VLink.vue'

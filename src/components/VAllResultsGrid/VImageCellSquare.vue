@@ -35,7 +35,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@nuxtjs/composition-api'
 
-import type { ImageDetail } from '~/models/media'
+import type { ImageDetail } from '~/types/media'
 
 import VLink from '~/components/VLink.vue'
 import VLicense from '~/components/VLicense/VLicense.vue'

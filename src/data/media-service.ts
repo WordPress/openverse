@@ -1,7 +1,7 @@
 import { decodeMediaData } from '~/utils/decode-media-data'
 import type { ApiQueryParams } from '~/utils/search-query-transform'
 import type { ApiService } from '~/data/api-service'
-import type { DetailFromMediaType, Media } from '~/models/media'
+import type { DetailFromMediaType, Media } from '~/types/media'
 import { AUDIO, type SupportedMediaType } from '~/constants/media'
 
 import type { AxiosResponse } from 'axios'

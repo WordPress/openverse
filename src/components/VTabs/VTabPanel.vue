@@ -21,7 +21,7 @@ import {
   ref,
 } from '@nuxtjs/composition-api'
 
-import { tabsContextKey } from '~/models/tabs'
+import { tabsContextKey } from '~/types/tabs'
 
 export default defineComponent({
   name: 'VTabPanel',
