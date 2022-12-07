@@ -77,7 +77,7 @@ The following are DAGs grouped by their primary tag:
 | `nypl_workflow` | `@monthly` | `False` | image |
 | [`phylopic_workflow`](#phylopic_workflow) | `@daily` | `True` | image |
 | [`rawpixel_workflow`](#rawpixel_workflow) | `@monthly` | `False` | image |
-| `science_museum_workflow` | `@monthly` | `False` | image |
+| [`science_museum_workflow`](#science_museum_workflow) | `@monthly` | `False` | image |
 | [`smithsonian_workflow`](#smithsonian_workflow) | `@weekly` | `False` | image |
 | `smk_workflow` | `@monthly` | `False` | image |
 | [`stocksnap_workflow`](#stocksnap_workflow) | `@monthly` | `False` | image |
@@ -123,6 +123,7 @@ The following is documentation associated with each DAG (where available):
  1. [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation)
  1. [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation)
  1. [`report_pending_reported_media`](#report_pending_reported_media)
+ 1. [`science_museum_workflow`](#science_museum_workflow)
  1. [`smithsonian_workflow`](#smithsonian_workflow)
  1. [`stocksnap_workflow`](#stocksnap_workflow)
  1. [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)
@@ -558,6 +559,20 @@ example. Once reported, these require manual review through the Django Admin to
 determine whether further action (such as deindexing the record) needs to be
 taken. If a record has been reported multiple times, it only needs to be
 reviewed once and so is only counted once in the reporting by this DAG.
+
+
+## `science_museum_workflow`
+
+
+Content Provider:       Science Museum
+
+ETL Process:            Use the API to identify all CC-licensed images.
+
+Output:                 TSV file containing the image, the respective
+                        meta-data.
+
+Notes:                  https://github.com/TheScienceMuseum/collectionsonline/wiki/Collections-Online-API  # noqa
+                        Rate limited, no specific rate given.
 
 
 ## `smithsonian_workflow`

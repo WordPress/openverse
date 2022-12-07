@@ -93,10 +93,12 @@ class ProviderDataIngester(ABC):
         """
         pass
 
-    def __init__(self, conf: dict = None, date: str = None):
+    def __init__(self, conf: dict = None, dag_id: str = None, date: str = None):
         """
         Optional Arguments:
+
         conf: The configuration dict for the running DagRun
+        dag_id: The id of the running provider DAG
         date: Date String in the form YYYY-MM-DD. This is the date for
               which running the script will pull data
         """
@@ -122,6 +124,7 @@ class ProviderDataIngester(ABC):
         )
         self.media_stores = self._init_media_stores()
         self.date = date
+        self.dag_id = dag_id or ""
 
         # dag_run configuration options
         conf = conf or {}

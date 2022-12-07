@@ -37,7 +37,7 @@ def generate_tsv_filenames(
         f"Initializing ProviderIngester {ingester_class.__name__} in"
         f"order to generate store filenames."
     )
-    ingester = ingester_class(dag_run.conf, *args)
+    ingester = ingester_class(dag_run.conf, dag_run.dag_id, *args)
     stores = ingester.media_stores
 
     # Push the media store output paths to XComs.
@@ -75,7 +75,7 @@ def pull_media_wrapper(
     # Initialize the ProviderDataIngester class, which will initialize the
     # media stores and DelayedRequester.
     logger.info(f"Initializing ProviderIngester {ingester_class.__name__}")
-    ingester = ingester_class(dag_run.conf, *args)
+    ingester = ingester_class(dag_run.conf, dag_run.dag_id, *args)
     stores = ingester.media_stores
 
     for store, tsv_filename in zip(stores.values(), tsv_filenames):
