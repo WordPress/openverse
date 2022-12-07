@@ -79,7 +79,7 @@ The following are DAGs grouped by their primary tag:
 | [`rawpixel_workflow`](#rawpixel_workflow) | `@monthly` | `False` | image |
 | [`science_museum_workflow`](#science_museum_workflow) | `@monthly` | `False` | image |
 | [`smithsonian_workflow`](#smithsonian_workflow) | `@weekly` | `False` | image |
-| `smk_workflow` | `@monthly` | `False` | image |
+| [`smk_workflow`](#smk_workflow) | `@monthly` | `False` | image |
 | [`stocksnap_workflow`](#stocksnap_workflow) | `@monthly` | `False` | image |
 | [`wikimedia_commons_workflow`](#wikimedia_commons_workflow) | `@daily` | `True` | image, audio |
 | [`wordpress_workflow`](#wordpress_workflow) | `@monthly` | `False` | image |
@@ -125,6 +125,7 @@ The following is documentation associated with each DAG (where available):
  1. [`report_pending_reported_media`](#report_pending_reported_media)
  1. [`science_museum_workflow`](#science_museum_workflow)
  1. [`smithsonian_workflow`](#smithsonian_workflow)
+ 1. [`smk_workflow`](#smk_workflow)
  1. [`stocksnap_workflow`](#stocksnap_workflow)
  1. [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)
  1. [`wikimedia_reingestion_workflow`](#wikimedia_reingestion_workflow)
@@ -585,6 +586,18 @@ ETL Process:        Use the API to identify all CC licensed images.
 Output:             TSV file containing the images and the respective meta-data.
 
 Notes:              https://api.si.edu/openaccess/api/v1.0/search
+
+
+## `smk_workflow`
+
+
+Content Provider:       Statens Museum for Kunst (National Gallery of Denmark)
+
+ETL Process:            Use the API to identify all openly licensed media.
+
+Output:                 TSV file containing the media metadata.
+
+Notes:                  https://www.smk.dk/en/article/smk-api/
 
 
 ## `stocksnap_workflow`

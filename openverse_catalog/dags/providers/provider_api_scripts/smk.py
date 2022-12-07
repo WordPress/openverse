@@ -1,3 +1,12 @@
+"""
+Content Provider:       Statens Museum for Kunst (National Gallery of Denmark)
+
+ETL Process:            Use the API to identify all openly licensed media.
+
+Output:                 TSV file containing the media metadata.
+
+Notes:                  https://www.smk.dk/en/article/smk-api/
+"""
 import logging
 
 from common import constants
@@ -53,8 +62,6 @@ class SmkDataIngester(ProviderDataIngester):
     def _get_image_url(image_iiif_id: str, image_size=2048):
         # For high quality IIIF-enabled images, restrict the image size to prevent
         # loading very large files.
-        # TODO: consider just using the full "image_native" when adding the
-        # "image_thumbnail".
         image_url = f"{image_iiif_id}/full/!{image_size},/0/default.jpg"
         return image_url
 
@@ -91,6 +98,7 @@ class SmkDataIngester(ProviderDataIngester):
             else:
                 image_url = SmkDataIngester._get_image_url(iiif_id)
 
+            thumbnail_url = item.get("image_thumbnail")
             height = item.get("image_height")
             width = item.get("image_width")
             filesize = item.get("image_size") or item.get("size")
@@ -98,6 +106,7 @@ class SmkDataIngester(ProviderDataIngester):
                 {
                     "id": image_id,
                     "image_url": image_url,
+                    "thumbnail_url": thumbnail_url,
                     "height": height,
                     "width": width,
                     "filesize": filesize,
@@ -114,6 +123,7 @@ class SmkDataIngester(ProviderDataIngester):
                         # 'id', so we must skip if `iiif_id` is not present.
                         continue
                     image_url = SmkDataIngester._get_image_url(iiif_id)
+                    thumbnail_url = alt_img.get("thumbnail")
                     height = alt_img.get("height")
                     width = alt_img.get("width")
                     filesize = alt_img.get("image_size") or alt_img.get("size")
@@ -122,6 +132,7 @@ class SmkDataIngester(ProviderDataIngester):
                         {
                             "id": iiif_id,
                             "image_url": image_url,
+                            "thumbnail_url": thumbnail_url,
                             "height": height,
                             "width": width,
                             "filesize": filesize,
@@ -157,6 +168,7 @@ class SmkDataIngester(ProviderDataIngester):
                     "foreign_identifier": img.get("id"),
                     "foreign_landing_url": self._get_foreign_landing_url(data),
                     "image_url": img.get("image_url"),
+                    "thumbnail_url": img.get("thumbnail_url"),
                     "license_info": license_info,
                     "title": self._get_title(data),
                     "creator": self._get_creator(data),

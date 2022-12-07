@@ -44,6 +44,7 @@ class ImageStore(MediaStore):
         foreign_landing_url: str,
         image_url: str,
         license_info: LicenseInfo,
+        thumbnail_url: str | None = None,
         filesize: int | None = None,
         filetype: str | None = None,
         foreign_identifier: str | None = None,
@@ -122,7 +123,7 @@ class ImageStore(MediaStore):
         image_data = {
             "foreign_landing_url": foreign_landing_url,
             "image_url": image_url,
-            "thumbnail_url": None,
+            "thumbnail_url": thumbnail_url,
             "filesize": filesize,
             "filetype": filetype,
             "license_info": license_info,
@@ -149,10 +150,6 @@ class ImageStore(MediaStore):
         image_metadata = self.clean_media_metadata(**kwargs)
         if image_metadata is None:
             return None
-        # Set the thumbnail to None to make sure no image provider scripts
-        # write a value, and to make testing easier by not having to provide
-        # the value.
-        image_metadata["thumbnail_url"] = None
         # Convert the `image_url` key used in ImageStore, TSV and
         # provider API scripts into `url` key used in db
         image_metadata["url"] = image_metadata.pop("image_url")
@@ -176,6 +173,7 @@ class MockImageStore(ImageStore):
     """
 
     NULLABLE_FIELDS = [
+        "thumbnail_url",
         "filesize",
         "filetype",
         "foreign_identifier",
@@ -206,7 +204,7 @@ class MockImageStore(ImageStore):
         self.media_buffer = []
 
     def add_item(self, **kwargs):
-        image_data = kwargs | {"thumbnail_url": None}
+        image_data = kwargs
         for field in MockImageStore.NULLABLE_FIELDS:
             if field not in image_data:
                 image_data[field] = None
