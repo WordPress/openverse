@@ -88,6 +88,30 @@ def test_batch_limit_is_capped_to_ingestion_limit():
         assert ingester.limit == 20
 
 
+@pytest.mark.parametrize(
+    "date, date_override, expected_date",
+    [
+        # No override
+        ("2022-01-01", None, "2022-01-01"),
+        # Simple override
+        ("2022-01-01", "2022-12-12", "2022-12-12"),
+        # Incorrect date format throws error
+        pytest.param(
+            "2022-01-01",
+            "12/12/22",
+            None,
+            marks=pytest.mark.raises(exception=ValueError),
+        ),
+    ],
+)
+def test_date_override(date, date_override, expected_date):
+    ingester = MockProviderDataIngester(
+        conf={"date": date_override},  # DagRun conf object
+        date=date,
+    )
+    assert ingester.date == expected_date
+
+
 def test_get_batch_data():
     response_json = _get_resource_json("complete_response.json")
     batch = ingester.get_batch_data(response_json)

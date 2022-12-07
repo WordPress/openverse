@@ -2,6 +2,7 @@ import json
 import logging
 import traceback
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 from airflow.exceptions import AirflowException
 from airflow.models import Variable
@@ -128,6 +129,12 @@ class ProviderDataIngester(ABC):
 
         # dag_run configuration options
         conf = conf or {}
+
+        # Allow overriding the date with a %Y-%m-%d string from the dagrun conf.
+        date_override = conf.get("date")
+        if date_override and datetime.strptime(date_override, "%Y-%m-%d"):
+            logger.info(f"Using date {date_override} from dagrun conf.")
+            self.date = date_override
 
         # Used to skip over errors and continue ingestion. When enabled, errors
         # are not reported until ingestion has completed.
