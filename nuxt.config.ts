@@ -173,7 +173,7 @@ const config: NuxtConfig = {
     '~/plugins/api-token.server.ts',
     '~/plugins/sentry.ts',
   ],
-  css: ['~/styles/tailwind.css', '~/assets/fonts.css', '~/styles/accent.css'],
+  css: ['~/assets/fonts.css', '~/styles/tailwind.css', '~/styles/accent.css'],
   head,
   env, // TODO: Replace with `publicRuntimeConfig`
   privateRuntimeConfig: {

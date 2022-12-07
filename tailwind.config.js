@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 const { SCREENS } = require('./src/constants/screens')
 const { Z_INDICES } = require('./src/constants/z-indices')
 
@@ -179,31 +181,9 @@ module.exports = {
       2: 2,
     },
     fontFamily: {
-      system: [
-        'ui-sans-serif',
-        'system-ui',
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        '"Noto Sans"',
-        '"Oxygen"',
-        '"Cantarell"',
-        '"Fira Sans"',
-        '"Droid Sans"',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-        '"Noto Color Emoji"',
-      ],
-      heading: ['"Inter"', 'sans-serif'],
       mono: ['"JetBrains Mono"', 'monospace'],
-      sans: ['"Inter"', 'sans-serif'],
-      serif: ['Times New Roman'],
-      icons: ['"Vocabulary Icons"'],
+      sans: ['Inter', ...defaultTheme.fontFamily.sans],
+      serif: [...defaultTheme.fontFamily.serif],
     },
     extend: {
       scale: {

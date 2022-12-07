@@ -20,7 +20,7 @@
     <VSearchBarOld
       v-model.trim="searchTerm"
       class="flex-grow lg:w-1/2 lg:flex-grow-0 2xl:w-1/3"
-      :size="isDesktopLayout ? 'medium' : isHeaderScrolled ? 'small' : 'large'"
+      :size="searchBarSize"
       :class="{
         'order-4 w-full md:order-none md:w-auto': !isHeaderScrolled,
       }"
@@ -101,11 +101,16 @@ export default defineComponent({
 
     const { matches: isSearchRoute } = useMatchSearchRoutes()
 
-    const isHeaderScrolled = inject('isHeaderScrolled', false)
+    const isHeaderScrolled = inject('isHeaderScrolled', ref(false))
     const headerHasTwoRows = inject('headerHasTwoRows')
     const isSidebarVisible = inject(IsSidebarVisibleKey)
 
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
+    const searchBarSize = computed(() => {
+      if (isDesktopLayout.value) return 'medium'
+      if (isHeaderScrolled.value) return 'small'
+      return 'large'
+    })
 
     const openMenu = ref<null | HeaderMenu>(null)
     const isMenuOpen = computed(
@@ -206,6 +211,7 @@ export default defineComponent({
       isSearchRoute,
       headerHasTwoRows,
       areFiltersDisabled,
+      searchBarSize,
 
       openMenu,
       openMenuModal,

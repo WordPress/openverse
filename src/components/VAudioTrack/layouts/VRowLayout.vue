@@ -23,7 +23,7 @@
     >
       <div class="flex-shrink-0" :class="{ 'w-70': isMedium }">
         <div
-          class="decoration-inherit block rounded-sm p-px font-heading font-semibold text-dark-charcoal line-clamp-2 hover:text-dark-charcoal focus:outline-none focus:ring focus:ring-pink group-hover:underline md:line-clamp-1"
+          class="decoration-inherit font-heading block rounded-sm p-px font-semibold text-dark-charcoal line-clamp-2 hover:text-dark-charcoal focus:outline-none focus:ring focus:ring-pink group-hover:underline md:line-clamp-1"
           :class="{
             'text-2xl': isMedium || isLarge,
             'leading-snug': isSmall,
