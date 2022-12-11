@@ -4,9 +4,6 @@ name: PR label check
 on:
   pull_request:
     types:
-      - opened
-      - synchronize
-      - reopened
       - labeled
       - unlabeled
 
@@ -18,7 +15,7 @@ jobs:
       - name: Check aspect label
         uses: agilepathway/label-checker@v1.2.9
         with:
-          any_of: api,bug,build,dependencies,documentation,enhancement,no-changelog,refactoring
+          any_of: "💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface,♿️ aspect: a11y"
 
   check_goal_label:
     name: Check goal label
@@ -27,7 +24,7 @@ jobs:
       - name: Check goal label
         uses: agilepathway/label-checker@v1.2.9
         with:
-          any_of: api,bug,build,dependencies,documentation,enhancement,no-changelog,refactoring
+          any_of: "💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface,♿️ aspect: a11y"
 
   check_priority_label:
     name: Check priority label
@@ -36,4 +33,4 @@ jobs:
       - name: Check priority label
         uses: agilepathway/label-checker@v1.2.9
         with:
-          any_of: api,bug,build,dependencies,documentation,enhancement,no-changelog,refactoring
+          any_of: "💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface,♿️ aspect: a11y"
