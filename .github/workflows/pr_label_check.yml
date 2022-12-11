@@ -15,7 +15,7 @@ jobs:
       - name: Check aspect label
         uses: agilepathway/label-checker@v1.2.9
         with:
-          any_of: "💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface,♿️ aspect: a11y"
+          any_of: "🌟 goal: addition,🛠 goal: fix,✨ goal: improvement,🧰 goal: internal improvement"
 
   check_goal_label:
     name: Check goal label
@@ -33,4 +33,4 @@ jobs:
       - name: Check priority label
         uses: agilepathway/label-checker@v1.2.9
         with:
-          any_of: "💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface,♿️ aspect: a11y"
+          any_of: "🟩 priority: low,🟨 priority: medium,🟧 priority: high,🟥 priority: critical"
