@@ -115,6 +115,7 @@ export default defineComponent({
       autoFocusOnHideRef: ref(false),
       triggerElementRef: ref(null),
       hideOnClickOutsideRef: ref(false),
+      trapFocusRef: ref(true),
       hideRef: ref(close),
       hideOnEscRef: ref(true),
       emit: emit as SetupContext['emit'],

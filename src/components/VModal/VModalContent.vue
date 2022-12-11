@@ -117,6 +117,10 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+    trapFocus: {
+      type: Boolean,
+      default: true,
+    },
     triggerElement: {
       type: (process.server ? Object : HTMLElement) as PropType<HTMLElement>,
       default: null,
@@ -158,6 +162,7 @@ export default defineComponent({
       visibleRef: propsRefs.visible,
       autoFocusOnShowRef: propsRefs.autoFocusOnShow,
       autoFocusOnHideRef: propsRefs.autoFocusOnHide,
+      trapFocusRef: propsRefs.trapFocus,
       triggerElementRef: propsRefs.triggerElement,
       hideOnClickOutsideRef: propsRefs.hideOnClickOutside,
       hideRef: propsRefs.hide,

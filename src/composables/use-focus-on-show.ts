@@ -15,6 +15,7 @@ type Props = {
   dialogRef: Ref<HTMLElement | null>
   visibleRef: Ref<boolean>
   autoFocusOnShowRef: Ref<boolean>
+  trapFocusRef: Ref<boolean>
   initialFocusElementRef?: Ref<HTMLElement | null>
 }
 
@@ -25,16 +26,19 @@ export const useFocusOnShow = ({
   dialogRef,
   visibleRef,
   autoFocusOnShowRef,
+  trapFocusRef,
   initialFocusElementRef = ref(null),
 }: Props) => {
   const { activate: activateFocusTrap, deactivate: deactivateFocusTrap } =
-    useFocusTrap(dialogRef, {
-      // Prevent FocusTrap from trying to focus the first element.
-      // We already do that in a more flexible, adaptive way in our Dialog composables.
-      initialFocus: false,
-      // if set to true, focus-trap prevents the default for the keyboard event, and we cannot handle it in our composables.
-      escapeDeactivates: false,
-    })
+    trapFocusRef.value
+      ? useFocusTrap(dialogRef, {
+          // Prevent FocusTrap from trying to focus the first element.
+          // We already do that in a more flexible, adaptive way in our Dialog composables.
+          initialFocus: false,
+          // if set to true, focus-trap prevents the default for the keyboard event, and we cannot handle it in our composables.
+          escapeDeactivates: false,
+        })
+      : { activate: undefined, deactivate: undefined }
 
   watch(
     [
@@ -45,7 +49,7 @@ export const useFocusOnShow = ({
     ] as const,
     ([dialog, visible, autoFocusOnShow, initialFocusElement]) => {
       if (!dialog || !visible) {
-        deactivateFocusTrap()
+        if (deactivateFocusTrap) deactivateFocusTrap()
         return
       }
       if (!dialog || !visible || !autoFocusOnShow) return
@@ -70,7 +74,7 @@ export const useFocusOnShow = ({
             }
           }
         }
-        activateFocusTrap()
+        if (activateFocusTrap) activateFocusTrap()
       })
     }
   )

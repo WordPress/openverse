@@ -11,6 +11,7 @@ type Props = {
   visibleRef: Ref<boolean>
   autoFocusOnShowRef: Ref<boolean>
   autoFocusOnHideRef: Ref<boolean>
+  trapFocusRef: Ref<boolean>
   triggerElementRef: Ref<HTMLElement | null>
   hideOnClickOutsideRef: Ref<boolean>
   hideOnEscRef: Ref<boolean>

@@ -1,3 +1,5 @@
+import { ref } from '@nuxtjs/composition-api'
+
 import { PopoverContentProps, usePopper } from '~/composables/use-popper'
 
 import { useDialogContent } from '~/composables/use-dialog-content'
@@ -21,6 +23,7 @@ export function usePopoverContent({
     visibleRef: popoverPropsRefs.visible,
     autoFocusOnShowRef: popoverPropsRefs.autoFocusOnShow,
     autoFocusOnHideRef: popoverPropsRefs.autoFocusOnHide,
+    trapFocusRef: ref(false),
     triggerElementRef: popoverPropsRefs.triggerElement,
     hideOnClickOutsideRef: popoverPropsRefs.hideOnClickOutside,
     hideRef: popoverPropsRefs.hide,

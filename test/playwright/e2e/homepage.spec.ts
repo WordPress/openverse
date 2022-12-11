@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, Page } from '@playwright/test'
 
 import { mockProviderApis } from '~~/test/playwright/utils/route'
 import {
@@ -24,3 +24,33 @@ for (const searchType of supportedSearchTypes) {
     await expect(page).toHaveURL(expectedUrl)
   })
 }
+
+const popoverIsVisible = async (page: Page) =>
+  await expect(page.locator('.popover-content')).toBeVisible()
+const popoverIsNotVisible = async (page: Page) =>
+  await expect(page.locator('.popover-content')).not.toBeVisible()
+const clickPopoverButton = async (page: Page) =>
+  await page.click('button[aria-label="All content"]')
+
+test('can close the search type popover by clicking outside', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await clickPopoverButton(page)
+  await popoverIsVisible(page)
+
+  await page.mouse.click(1, 1)
+  await popoverIsNotVisible(page)
+})
+
+test('can close the search type popover by pressing Escape', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await clickPopoverButton(page)
+  await popoverIsVisible(page)
+
+  await page.keyboard.press('Escape')
+
+  await popoverIsNotVisible(page)
+})
