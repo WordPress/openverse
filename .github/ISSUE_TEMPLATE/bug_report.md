@@ -30,6 +30,4 @@ title: "<Replace this with actual title>"
 ## Additional context
 <!-- Add any other context about the problem here; or delete the section entirely. -->
 
-## Resolution
-<!-- Replace the [ ] with [x] to check the box. -->
-- [ ] 🙋 I would be interested in resolving this bug.
+<!-- If you would like to work on this, please comment below separately. -->
