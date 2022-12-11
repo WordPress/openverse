@@ -31,7 +31,7 @@ const NOT_VISIBLE_AND_NOT_DISMISSED = {
 const cookieOptions = {
   maxAge: 5184000,
   path: '/',
-  sameSite: 'strict',
+  sameSite: 'none',
   secure: false,
 }
 

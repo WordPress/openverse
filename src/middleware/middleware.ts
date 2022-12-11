@@ -61,7 +61,11 @@ const middleware: Middleware = async ({
 
   const uiStore = useUiStore($pinia)
   const isMobileUa = $ua ? $ua.isMobile : false
-  $cookies.set('uiIsMobileUa', isMobileUa, cookieOptions)
+  const sameSite = featureFlagStore.isOn('new_header')
+    ? cookieOptions.sameSite
+    : 'none'
+
+  $cookies.set('uiIsMobileUa', isMobileUa, { ...cookieOptions, sameSite })
   uiStore.initFromCookies($cookies.getAll() ?? {})
 }
 export default middleware

@@ -64,6 +64,7 @@ export const useUiStore = defineStore('ui', {
     areInstructionsVisible(state): boolean {
       return state.instructionsSnackbarState === 'visible'
     },
+
     desktopBreakpoints(): Breakpoint[] {
       const featureFlagStore = useFeatureFlagStore()
       const isNewHeaderEnabled = computed(() =>
@@ -158,7 +159,11 @@ export const useUiStore = defineStore('ui', {
     },
 
     updateCookies() {
-      const opts = cookieOptions
+      const opts = { ...cookieOptions }
+      if (!useFeatureFlagStore().isOn('new_header')) {
+        opts.sameSite = 'none'
+      }
+
       this.$nuxt.$cookies.setAll([
         {
           name: 'uiInstructionsSnackbarState',
@@ -183,7 +188,14 @@ export const useUiStore = defineStore('ui', {
       }
 
       this.breakpoint = breakpoint
-      this.$nuxt.$cookies.set('uiBreakpoint', this.breakpoint, cookieOptions)
+      const sameSite = useFeatureFlagStore().isOn('new_header')
+        ? cookieOptions.sameSite
+        : 'none'
+
+      this.$nuxt.$cookies.set('uiBreakpoint', this.breakpoint, {
+        ...cookieOptions,
+        sameSite,
+      })
       this.isDesktopLayout = this.desktopBreakpoints.includes(breakpoint)
     },
 
@@ -198,11 +210,14 @@ export const useUiStore = defineStore('ui', {
       this.innerFilterVisible = visible
       if (this.isDesktopLayout) {
         this.isFilterDismissed = !visible
-        this.$nuxt.$cookies.set(
-          'uiIsFilterDismissed',
-          this.isFilterDismissed,
-          cookieOptions
-        )
+        const sameSite = useFeatureFlagStore().isOn('new_header')
+          ? cookieOptions.sameSite
+          : 'none'
+
+        this.$nuxt.$cookies.set('uiIsFilterDismissed', this.isFilterDismissed, {
+          ...cookieOptions,
+          sameSite,
+        })
       }
     },
 
@@ -222,11 +237,14 @@ export const useUiStore = defineStore('ui', {
       }
 
       this.dismissedBanners.push(bannerId)
-      this.$nuxt.$cookies.set(
-        'uiDismissedBanners',
-        this.dismissedBanners,
-        cookieOptions
-      )
+      const sameSite = useFeatureFlagStore().isOn('new_header')
+        ? cookieOptions.sameSite
+        : 'none'
+
+      this.$nuxt.$cookies.set('uiDismissedBanners', this.dismissedBanners, {
+        ...cookieOptions,
+        sameSite,
+      })
     },
     isBannerDismissed(bannerId: BannerId) {
       return this.dismissedBanners.includes(bannerId)
