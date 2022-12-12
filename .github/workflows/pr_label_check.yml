@@ -33,4 +33,4 @@ jobs:
       - name: Check priority label
         uses: agilepathway/label-checker@v1.2.9
         with:
-          any_of: "🟩 priority: low,🟨 priority: medium,🟧 priority: high,🟥 priority: critical"
+          one_of: "🟩 priority: low,🟨 priority: medium,🟧 priority: high,🟥 priority: critical"
