@@ -1,10 +1,10 @@
-import { group } from 'k6'
-import { searchBy } from './search.js'
-import { getProvider, getRandomWord } from './utils.js'
+import { group } from "k6"
+import { searchBy } from "./search.js"
+import { getProvider, getRandomWord } from "./utils.js"
 
 const createScenario = (mediaType, pageSize, funcName) => {
   return {
-    executor: 'per-vu-iterations',
+    executor: "per-vu-iterations",
     env: {
       MEDIA_TYPE: mediaType,
       PAGE_SIZE: pageSize,
@@ -18,29 +18,29 @@ const createScenario = (mediaType, pageSize, funcName) => {
 export const options = {
   scenarios: {
     random_word_image_page_20: createScenario(
-      'images',
-      '20',
-      'searchByRandomWord'
+      "images",
+      "20",
+      "searchByRandomWord"
     ),
     random_word_audio_page_20: createScenario(
-      'audio',
-      '20',
-      'searchByRandomWord'
+      "audio",
+      "20",
+      "searchByRandomWord"
     ),
     random_word_image_page_500: createScenario(
-      'images',
-      '500',
-      'searchByRandomWord'
+      "images",
+      "500",
+      "searchByRandomWord"
     ),
     random_word_audio_page_500: createScenario(
-      'audio',
-      '500',
-      'searchByRandomWord'
+      "audio",
+      "500",
+      "searchByRandomWord"
     ),
-    provider_image_page_20: createScenario('image', '20', 'searchByProvider'),
-    provider_image_page_500: createScenario('image', '500', 'searchByProvider'),
-    provider_audio_page_20: createScenario('audio', '20', 'searchByProvider'),
-    provider_audio_page_500: createScenario('audio', '500', 'searchByProvider'),
+    provider_image_page_20: createScenario("image", "20", "searchByProvider"),
+    provider_image_page_500: createScenario("image", "500", "searchByProvider"),
+    provider_audio_page_20: createScenario("audio", "20", "searchByProvider"),
+    provider_audio_page_500: createScenario("audio", "500", "searchByProvider"),
   },
 }
 
@@ -49,7 +49,7 @@ const searchByField = (paramFunc, followLinks = false) => {
   const PAGE_SIZE = __ENV.PAGE_SIZE
   console.log(`VU: ${__VU}  -  ITER: ${__ITER}`)
   const param = paramFunc(MEDIA_TYPE)
-  const depth = followLinks ? 'Deep' : 'Shallow'
+  const depth = followLinks ? "Deep" : "Shallow"
 
   group(
     `${depth} ${MEDIA_TYPE} search of ${PAGE_SIZE} items (using '${param}')`,

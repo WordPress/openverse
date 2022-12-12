@@ -3,15 +3,16 @@
 // - https://github.com/WordPress/openverse/blob/main/prettier.config.js.jinja
 
 module.exports = {
-  trailingComma: 'es5',
+  trailingComma: "es5",
   tabWidth: 2,
   semi: false,
-  singleQuote: true,
+  singleQuote: false,
+  proseWrap: "always",
   overrides: [
     {
-      files: '*.yml',
+      files: "*.yml",
       options: {
-        singleQuote: false,
+        proseWrap: "preserve",
       },
     },
   ],
