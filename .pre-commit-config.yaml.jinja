@@ -98,7 +98,6 @@ repos:
     rev: v2.6.0
     hooks:
       - id: prettier
-        exclude: \.md$ # TODO: https://github.com/WordPress/openverse/issues/333
         additional_dependencies:
           {% block prettier_dependencies %}
           - prettier@2.6.0
