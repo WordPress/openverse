@@ -67,7 +67,7 @@ The following are DAGs grouped by their primary tag:
 | `brooklyn_museum_workflow` | `@monthly` | `False` | image |
 | `cleveland_museum_workflow` | `@monthly` | `False` | image |
 | [`europeana_workflow`](#europeana_workflow) | `@daily` | `True` | image |
-| `finnish_museums_workflow` | `@monthly` | `False` | image |
+| [`finnish_museums_workflow`](#finnish_museums_workflow) | `@daily` | `True` | image |
 | [`flickr_workflow`](#flickr_workflow) | `@daily` | `True` | image |
 | [`freesound_workflow`](#freesound_workflow) | `@monthly` | `False` | audio |
 | [`inaturalist_workflow`](#inaturalist_workflow) | `@monthly` | `False` | image |
@@ -106,6 +106,7 @@ The following is documentation associated with each DAG (where available):
  1. [`check_silenced_dags`](#check_silenced_dags)
  1. [`europeana_reingestion_workflow`](#europeana_reingestion_workflow)
  1. [`europeana_workflow`](#europeana_workflow)
+ 1. [`finnish_museums_workflow`](#finnish_museums_workflow)
  1. [`flickr_reingestion_workflow`](#flickr_reingestion_workflow)
  1. [`flickr_workflow`](#flickr_workflow)
  1. [`freesound_workflow`](#freesound_workflow)
@@ -235,6 +236,25 @@ Output:                 TSV file containing the images and the
                         respective meta-data.
 
 Notes:                  https://www.europeana.eu/api/v2/search.json
+
+
+## `finnish_museums_workflow`
+
+
+Content Provider:       Finnish Museums
+
+ETL Process:            Use the API to identify all CC licensed images.
+
+Output:                 TSV file containing the images and the
+                        respective meta-data.
+
+Notes:                  https://api.finna.fi/swagger-ui/
+                        https://www.finna.fi/Content/help-syntax?lng=en-gb
+                        The Finnish Museums provider script is a dated DAG that
+                        ingests all records that were last updated in the previous
+                        day. Because of this, it is not necessary to run a separate
+                        reingestion DAG, as updated data will be processed during
+                        regular ingestion.
 
 
 ## `flickr_reingestion_workflow`
