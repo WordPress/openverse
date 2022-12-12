@@ -1,7 +1,7 @@
 <template>
   <VItemGroup
     :direction="layout"
-    class="mt-10 min-w-[200px] text-base md:mt-2"
+    class="mt-10 min-w-[200px] text-base md:my-2"
     :bordered="false"
   >
     <VItem
