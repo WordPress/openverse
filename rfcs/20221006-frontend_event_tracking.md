@@ -255,6 +255,8 @@ type AnalyticsEvents = {
   TOGGLE_FILTERS: {
     /** The media type being searched */
     mediaType: MediaType;
+    /** The state of the filter sidebar after the user interaction. */
+    state: "open" | "closed";
   };
 };
 type AnalyticsEventTypes = keyof AnalyticsEvents;
