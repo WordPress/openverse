@@ -157,7 +157,7 @@ type AnalyticsEvents = {
     /** The name of the external source */
     name: string;
     /** The full URL of the source */
-    link: string;
+    url: string;
     /** The media type being searched */
     mediaType: MediaType;
     /** The search term **/
@@ -165,6 +165,18 @@ type AnalyticsEvents = {
   };
   /**  The user opens the menu which lists pages. */
   OPEN_PAGES_MENU: {};
+  EXTERNAL_LINK_CLICK: {
+    /** The url of the external link */
+    url: string;
+    /**
+     * The name of the Vue component used to switch content types.
+     * @todo: We need to determine the best way of creating a string
+     * representation of a vue component, which allows us to know
+     * which ui element was clicked. Perhaps we could use unique data-test-ids
+     * or another unique identifier for this?
+     **/
+    component: string;
+  };
   /** Whenever the user selects a result from the search results page. */
   SELECT_SEARCH_RESULT: {
     /** If the result is a related result, provide the ID of the 'original' result */
