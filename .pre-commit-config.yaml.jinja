@@ -76,11 +76,11 @@ repos:
     rev: v8.15.0
     hooks:
       - id: eslint
-        files: {{ eslint_files | default('^js/.*$') }}
+        files: {{ eslint_files | default("^js/.*$") }}
         {% if eslint_exclude %}
         exclude: {{ eslint_exclude }} # ESLint raises warnings for ignored files.
         {% endif %}
-        'types': [file] # ESLint only accepts [javascript] by default.
+        "types": [file] # ESLint only accepts [javascript] by default.
         args:
           - --ignore-path=.gitignore
           - --ignore-path=.eslintignore
@@ -98,7 +98,6 @@ repos:
     rev: v2.6.0
     hooks:
       - id: prettier
-        exclude: \.md$ # TODO: https://github.com/WordPress/openverse/issues/333
         additional_dependencies:
           {% block prettier_dependencies %}
           - prettier@2.6.0
