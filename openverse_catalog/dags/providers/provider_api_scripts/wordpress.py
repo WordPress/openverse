@@ -45,24 +45,48 @@ class WordPressDataIngester(ProviderDataIngester):
         super().__init__(*args, **kwargs)
         self.license_info = get_license_info(license_url=self.license_url)
 
+        # Total pages is determined on the first request
+        self.total_pages = None
+        self.current_page = 1
+
     def get_media_type(self, record: dict) -> str:
         return constants.IMAGE
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
-        if not prev_query_params:
-            return {
-                "format": "json",
-                "page": 1,
-                "per_page": self.batch_limit,
-                "_embed": "true",
-            }
-        else:
-            return {**prev_query_params, "page": prev_query_params["page"] + 1}
+        if self.total_pages is None:
+            # On the first request, make a HEAD request to get the number of pages of
+            # results, so we know when to halt ingestion. This prevents errors
+            # from attempting to access too large a page number.
+            # https://github.com/WordPress/openverse-catalog/issues/853
+            response = self.delayed_requester.head(
+                self.endpoint, params={"per_page": self.batch_limit, "_embed": "true"}
+            )
+            self.total_pages = int(response.headers.get("X-WP-TotalPages", 0))
+            logger.info(f"{self.total_pages} pages detected.")
+
+        # Increment the page number for subsequent batches
+        if prev_query_params:
+            self.current_page = prev_query_params["page"] + 1
+
+        return {
+            "format": "json",
+            "page": self.current_page,
+            "per_page": self.batch_limit,
+            "_embed": "true",
+        }
 
     def get_batch_data(self, response_json):
         if isinstance(response_json, list) and len(response_json):
             return response_json
         return None
+
+    def get_should_continue(self, response_json):
+        # Do not continue if we have exceeded the total pages
+        if self.current_page >= self.total_pages:
+            logger.info("The final page of data has been processed. Halting ingestion.")
+            return False
+
+        return True
 
     def get_record_data(self, data):
         """
