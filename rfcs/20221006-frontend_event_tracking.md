@@ -50,7 +50,7 @@ We will create a system for collecting events on the frontend. Each event will h
 
 ### Sending events
 
-These events will be sent as `POST` requests to a server route on the frontend, which will then route them to our desired analytics service. In the future, it may make sense to move this server route to a standalone microservice, but for now a [Nuxt server route](https://v3.nuxtjs.org/guide/directory-structure/server/#server-routes) should be sufficient to handle the analytics events. This endpoint is essentially a proxy between the frontend and our 'true' analytics service that makes sure we're always sending events server-side.
+These events will be sent as `POST` requests to a server route on the frontend, which will then route them to our desired analytics service. In the future, it may make sense to move this server route to a standalone microservice, but for now a [Nuxt server route](https://v3.nuxtjs.org/guide/directory-structure/server/#server-routes) or [Server Middleware](https://nuxtjs.org/docs/configuration-glossary/configuration-servermiddleware/) (once we're updated to Nuxt 3), should be sufficient to handle the analytics events. This endpoint is essentially a proxy between the frontend and our 'true' analytics service that makes sure we're always sending events server-side.
 
 #### Privacy
 
