@@ -50,9 +50,7 @@ def force_result_validity():
 
 @pytest.fixture
 def audio_fixture(force_result_validity):
-    res = requests.get(
-        f"{API_URL}/v1/audio/", data={"filter_dead": False}, verify=False
-    )
+    res = requests.get(f"{API_URL}/v1/audio/", verify=False)
     parsed = res.json()
     force_result_validity(parsed)
     assert res.status_code == 200
@@ -67,7 +65,7 @@ def jamendo_audio_fixture(force_result_validity):
     """
     res = requests.get(
         f"{API_URL}/v1/audio/",
-        data={"source": "jamendo", "filter_dead": False},
+        data={"source": "jamendo"},
         verify=False,
     )
     parsed = res.json()
@@ -133,7 +131,7 @@ def test_audio_detail_without_thumb():
 
 def test_audio_search_without_thumb():
     """The first audio of this search should not have a thumbnail."""
-    resp = requests.get(f"{API_URL}/v1/audio/?q=zaus&filter_dead=false")
+    resp = requests.get(f"{API_URL}/v1/audio/?q=zaus")
     assert resp.status_code == 200
     parsed = json.loads(resp.text)
     assert parsed["results"][0]["thumbnail"] is None

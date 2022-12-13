@@ -91,7 +91,7 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         label="filter_dead",
         help_text="Control whether 404 links are filtered out.",
         required=False,
-        default=True,
+        default=settings.FILTER_DEAD_LINKS_BY_DEFAULT,
     )
     extension = serializers.CharField(
         label="extension",

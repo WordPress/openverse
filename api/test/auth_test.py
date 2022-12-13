@@ -98,7 +98,7 @@ def test_auth_rate_limit_reporting(
 
 @pytest.mark.django_db
 def test_page_size_limit_unauthed(client):
-    query_params = {"filter_dead": False, "page_size": 20}
+    query_params = {"page_size": 20}
     res = client.get("/v1/images/", query_params)
     assert res.status_code == 200
     query_params["page_size"] = 21
@@ -110,10 +110,10 @@ def test_page_size_limit_unauthed(client):
 def test_page_size_limit_authed(client, test_auth_token_exchange):
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
-    query_params = {"filter_dead": False, "page_size": 21}
+    query_params = {"page_size": 21}
     res = client.get("/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}")
     assert res.status_code == 200
 
-    query_params = {"filter_dead": False, "page_size": 500}
+    query_params = {"page_size": 500}
     res = client.get("/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}")
     assert res.status_code == 200

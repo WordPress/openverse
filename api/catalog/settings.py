@@ -33,6 +33,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Where to collect static files in production/development deployments
 STATIC_ROOT = config("STATIC_ROOT", default="/var/api_static_content/static")
 
+FILTER_DEAD_LINKS_BY_DEFAULT = config(
+    "FILTER_DEAD_LINKS_BY_DEFAULT", cast=bool, default=True
+)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 

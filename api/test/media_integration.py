@@ -47,12 +47,13 @@ def search_quotes(media_path, q="test"):
 
 def search_quotes_exact(media_path, q):
     """Only returns exact matches for the given query"""
-    unquoted_response = requests.get(f"{API_URL}/v1/{media_path}?q={q}", verify=False)
+    url_format = f"{API_URL}/v1/{media_path}?q={{q}}"
+    unquoted_response = requests.get(url_format.format(q=q), verify=False)
     assert unquoted_response.status_code == 200
     unquoted_result_count = unquoted_response.json()["result_count"]
     assert unquoted_result_count > 0
 
-    quoted_response = requests.get(f'{API_URL}/v1/{media_path}?q="{q}"', verify=False)
+    quoted_response = requests.get(url_format.format(q=f'"{q}"'), verify=False)
     assert quoted_response.status_code == 200
     quoted_result_count = quoted_response.json()["result_count"]
     assert quoted_result_count > 0

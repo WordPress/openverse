@@ -20,9 +20,7 @@ class QAScores(Enum):
 
 @pytest.mark.skip(reason="This test is nondeterministic")
 def test_phrase_relevance():
-    res = requests.get(
-        f"{API_URL}/image/search?q=home office&filter_dead=false&qa=true"
-    )
+    res = requests.get(f"{API_URL}/image/search?q=home office&qa=true")
     parsed = json.loads(res.text)
     pprint.pprint(parsed)
     assert int(parsed["results"][0]["id"]) == QAScores.TARGET.value
