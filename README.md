@@ -22,6 +22,12 @@ The frontend app is built using [Vue.js](https://vuejs.org/) and [Nuxt.js](https
 
 We use [Volta](https://volta.sh/) to manage our local environment tools. Please install it using the instructions on their website.
 
+Before installing pnpm, make sure to switch to node version 16 using Volta:
+
+```bash
+volta install node@16
+```
+
 Once you have volta installed, manually install `pnpm` using volta. [Volta does not currently officially support `pnpm`](https://github.com/volta-cli/volta/issues/737) so this is a stop gap solution until that support is implemented:
 
 ```bash
@@ -33,7 +39,7 @@ Run the following commands in order to have the code up and running on your mach
 ```bash
 # Builds and serves assets with hot-reload
 # Automatically invokes pnpm install and pnpm i18n
-pnpm dev
+volta run pnpm dev
 ```
 
 If you intend to change any text in the app, you will need to edit `src/locales/scripts/en.json5`. To ensure your changes are reflected immediately, run the following command.
