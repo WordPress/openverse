@@ -21,7 +21,7 @@
       <!-- @slot Extra information such as loading message or result count goes here. -->
       <slot />
     </VInputFieldOld>
-    <VSearchButtonOld type="submit" :size="size" />
+    <VSearchButtonOld type="submit" class="md:!h-12 md:!w-12" :size="size" />
   </form>
 </template>
 

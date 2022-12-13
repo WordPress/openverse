@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test'
+import { BrowserContext, expect, Page } from '@playwright/test'
 
 import rtlMessages from '~~/test/locales/ar.json'
 
@@ -457,4 +457,18 @@ export const enableNewHeader = async (page: Page) => {
       path: '/',
     },
   ])
+}
+
+export const setCookies = async (
+  context: BrowserContext,
+  cookies: Record<string, string | boolean | string[]>
+) => {
+  await context.addCookies(
+    Object.entries(cookies).map(([name, value]) => ({
+      name,
+      value: JSON.stringify(value),
+      domain: 'localhost',
+      path: '/',
+    }))
+  )
 }

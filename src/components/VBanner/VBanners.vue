@@ -16,7 +16,7 @@
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 
 import { useUiStore } from '~/stores/ui'
-import { TranslationBannerId } from '~/types/banners'
+import type { TranslationBannerId } from '~/types/banners'
 
 export default defineComponent({
   name: 'VBanners',
@@ -37,12 +37,17 @@ export default defineComponent({
     const translationBannerId = computed<TranslationBannerId>(
       () => uiStore.translationBannerId
     )
+
+    const dismissBanner = (bannerKey: TranslationBannerId) => {
+      uiStore.dismissBanner(bannerKey)
+    }
+
     return {
       translationBannerId,
       shouldShowMigrationBanner,
       shouldShowTranslationBanner,
 
-      dismissBanner: uiStore.dismissBanner,
+      dismissBanner,
     }
   },
 })

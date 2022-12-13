@@ -73,8 +73,8 @@ jobs:
             })
             console.log('Deleted comment with ID ${{ steps.test-results-comment.outputs.comment-id }}')
 
-  nuxt-playwright:
-    name: Nuxt Playwright tests
+  nuxt-playwright-e2e:
+    name: Nuxt Playwright e2e tests
     runs-on: ubuntu-latest
 
     steps:
@@ -82,13 +82,31 @@ jobs:
 
       - uses: ./.github/actions/setup-node-env
 
-      - name: Run Nuxt Playwright tests
-        run: pnpm test:playwright --workers=2
+      - name: Run Nuxt Playwright e2e tests
+        run: pnpm test:playwright e2e --workers=2
 
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: nuxt-test-results
+          name: nuxt-e2e-test-results
+          path: test-results
+
+  nuxt-playwright-vr:
+    name: Nuxt Playwright VR tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/setup-node-env
+
+      - name: Run Nuxt Playwright visual regression tests
+        run: pnpm test:playwright visual-regression --workers=2
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: nuxt-vr-test-results
           path: test-results
 
   storybook-playwright:
@@ -113,9 +131,10 @@ jobs:
   playwright-test-failure-comment:
     name: Share Playwright test debugging instructions
     runs-on: ubuntu-latest
-    if: always() && github.ref != 'refs/heads/main' && (needs.nuxt-playwright.result == 'failure' || needs.storybook-playwright.result == 'failure')
+    if: always() && github.ref != 'refs/heads/main' && (needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' ||needs.storybook-playwright.result == 'failure')
     needs:
-      - nuxt-playwright
+      - nuxt-playwright-e2e
+      - nuxt-playwright-vr
       - storybook-playwright
 
     steps:
