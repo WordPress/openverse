@@ -257,14 +257,23 @@ async function sendEvent<T extends AnalyticsEventTypes>(
 ): Promise<any> {
   /**
    * The default values to send with every analytics event.
+   * Any sensitive or personally-identifying information
+   * sent here is *not* stored, rather used to derive
+   * anonymized session, device, and browser statistics.
+   *
+   * The items not stored directly include: width, height,
+   * ipAddress, and userAgent
    */
   const defaults = {
     timestamp: Date.now(),
     path: window.location.pathname,
-    // The dimensions of the user's device
-    width: window.innerWidth,
-    height: window.innerHeight,
     referrer: document.referrer || null,
+    language: i18n.locale, // collected from the global Nuxt i18n object
+    // These fields are not stored directly, rather used to derive anonymized values
+    width: window.innerWidth, // The width of the user's device
+    height: window.innerHeight, // The height of the user's device
+    ipAddress: "", // Should be read from the X-Forwarded-For header server-side, will need to be stored securely during the user's session
+    userAgent: navigator.userAgent,
   };
   /**
    * Actually send the event here, with some additional values.
