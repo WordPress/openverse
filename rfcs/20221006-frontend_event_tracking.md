@@ -76,17 +76,32 @@ Below I've created a TypeScript type for all the proposed anlytics events, and a
 type MediaType = "image" | "audio" | "all";
 
 /**
- * A list of all events allowed by our analytics server.
+ * A list of all events allowed by our analytics server. For each event
+ * there is a description and a series of questions the event can help
+ * answer about our users and their behavior.
  */
 type AnalyticsEvents = {
-  /** A search performed by the user **/
+  /**
+   * Description: A search performed by the user
+   * Questions:
+   *   - How many searches do we serve per day/month/year?
+   *   - What are the most popular searches in Openverse?
+   *   - Which media types are the most popular?
+   *   - Do most users search from the homepage, or internal searchbar?
+   */
   SUBMIT_SEARCH: {
     /** The media type being searched */
     mediaType: MediaType;
-    /** The search term **/
+    /** The search term */
     query: string;
   };
-  /** The user navigates to a page. */
+  /** Description: The user navigates to a page.
+   * Questions:
+   *   - Which content pages are the most popular?
+   *   - Are search result pages commonly shared?
+   *   - If so, which are most popular?
+   *   - What is the most common user path?
+   */
   VIEW_PAGE: {
     /** The title of the page being navigated to (window.document.title)  */
     title: string;
@@ -95,64 +110,114 @@ type AnalyticsEvents = {
     /** The path of the new page */
     next: string;
   };
-  /** Whenever the user sets a filter  */
+  /**
+   * Description: Whenever the user sets a filter
+   * Questions:
+   *  - Do most users filter their searches?
+   *  - What % of users use filtering?
+   *  - Which filters are most popular? Least popular?
+   *  - Are any filters so commonly applied they should become defaults?
+   */
   APPLY_FILTER: {
     /** The name of the filter (not the user-facing element label) */
     key: string;
-    /** The value of the filter */
+    /** The value of the filter  */
     value: string | boolean;
     /** The media type being searched */
     mediaType: MediaType;
-    /** The search term **/
+    /** The search term */
     query: string;
   };
-  /** Whenever a user changes the content type */
+  /**
+   * Description: Whenever a user changes the content type
+   * Questions:
+   *   - Which content types are most popular?
+   *   - Is there interest in the non-supported content types?
+   *   - Do users switch content types? Where in their journeys?
+   */
   CHANGE_CONTENT_TYPE: {
     /** The previously-set media type */
     previous: MediaType;
     /** The new media type */
     next: MediaType;
-    /** The name of the Vue component used to switch content types. **/
+    /** The name of the Vue component used to switch content types. */
     component: string;
   };
   /**
-   * Whenever the user scrolls to the end of the results page.
+   * Description: Whenever the user scrolls to the end of the results page.
    * Useful to evaluate how often users load more results or click
    * on the external sources dropdown.
-   * */
+   *
+   * This event is mainly used as part of a funnel leading to a
+   * `LOAD_MORE` or `VIEW_EXTERNAL_SOURCES` event.
+   *
+   * Questions:
+   *   - Do users use meta search after reaching the result end?
+   *   - Do users find a result before reaching the end of the results?
+   */
   REACH_RESULT_END: {
     /** The media type being searched */
     mediaType: MediaType;
-    /** The search term **/
+    /** The search term */
     query: string;
+    /** The current page of results the user is on. */
+    resultPage: number;
   };
   /**
    * Whenever a search results in less than a full page
    * of results or no results.
+   *
+   * Questions:
+   *   - How often do searches provide limited or no results?
+   *   - Do users visit external sources when results are insufficient?
+   *   - What do users do after a search has no results?
    */
   INSUFFICIENT_RESULTS: {
     /** The media type being searched */
     mediaType: MediaType;
-    /** The search term **/
+    /** The search term */
     query: string;
-    /** The number of results returned **/
+    /** The number of results returned */
     resultCount: number;
   };
-  /** Whenever the user clicks the load more button */
+  /**
+   * Description: Whenever the user clicks the load more button
+   * Questions:
+   *   - On what page do users typically find a result?
+   *   - How often and how many pages of results do users load?
+   *   - Can we experiment with the types of results / result rankings
+   *     on certain pages, pages that users don't usually choose a result
+   *     from anyway?
+   */
   LOAD_MORE_RESULTS: {
     /** The media type being searched */
     mediaType: MediaType;
-    /** The search term **/
+    /** The search term */
     query: string;
+    /** The current page of results the user is on. */
+    resultPage: number;
   };
-  /** When a user opens the external sources popover. */
+  /**
+   * Description: When a user opens the external sources popover.
+   * Questions:
+   *   - How often do users use this feature?
+   *   - Under what conditions to users use this feature? No results?
+   *     Many results, but none they actually select?
+   */
   VIEW_EXTERNAL_SOURCES: {
     /** The media type being searched */
     mediaType: MediaType;
-    /** The search term **/
+    /** The search term */
     query: string;
+    /** The current page of results the user is on. */
+    resultPage: number;
   };
-  /** When the user chooses an external source from the dropdown of external sources */
+  /**
+   * Description: When the user chooses an external source from the dropdown of external sources
+   * Questions:
+   *   - Which external sources are most popular? This could drive inclusion in Openverse.
+   *   - Are certain media types more popular externally?
+   */
   SELECT_EXTERNAL_SOURCE: {
     /** The name of the external source */
     name: string;
@@ -160,11 +225,23 @@ type AnalyticsEvents = {
     url: string;
     /** The media type being searched */
     mediaType: MediaType;
-    /** The search term **/
+    /** The search term */
     query: string;
   };
-  /**  The user opens the menu which lists pages. */
+  /**
+   * Description: The user opens the menu which lists pages.
+   * Questions:
+   *   - How often is this menu used?
+   *   - Is this menu visible enough?
+   */
   OPEN_PAGES_MENU: {};
+  /**
+   * Description: The user clicks to a link outside of Openverse.
+   * Questions:
+   *   - What types of external content do users seek?
+   *   - Are there external resources we should make more visible?
+   *   - Is there content we might want to add to Openverse directly?
+   */
   EXTERNAL_LINK_CLICK: {
     /** The url of the external link */
     url: string;
@@ -174,10 +251,16 @@ type AnalyticsEvents = {
      * representation of a vue component, which allows us to know
      * which ui element was clicked. Perhaps we could use unique data-test-ids
      * or another unique identifier for this?
-     **/
+     */
     component: string;
   };
-  /** Whenever the user selects a result from the search results page. */
+  /**
+   * Description: Whenever the user selects a result from the search results page.
+   * Questions:
+   *   - Which results are most popular for given searches?
+   *   - How often do searches lead to clicking a result?
+   *   - Are there popular searches that do not result in result selection?
+   */
   SELECT_SEARCH_RESULT: {
     /** If the result is a related result, provide the ID of the 'original' result */
     related: string | null;
@@ -185,10 +268,14 @@ type AnalyticsEvents = {
     mediaType: MediaType;
     /** The slug (not the prettified name) of the provider */
     provider: string;
-    /** The search term **/
+    /** The search term */
     query: string;
   };
-  /** The user clicks the CTA button to the external source to use the image */
+  /**
+   * Description: The user clicks the CTA button to the external source to use the image
+   * Questions:
+   *   - How often do users go to the source after viewing a result?
+   */
   GET_MEDIA: {
     /** The unique ID of the media */
     id: string;
@@ -197,7 +284,12 @@ type AnalyticsEvents = {
     /** The media type being searched */
     mediaType: MediaType;
   };
-  /** The user clicks one of the buttons to copy the media attribution */
+  /**
+   * Description: The user clicks one of the buttons to copy the media attribution
+   * Questions:
+   *   - How often do users use our attribution tool?
+   *   - Which format is the most popular?
+   */
   COPY_ATTRIBUTION: {
     /** The unique ID of the media */
     id: string;
@@ -206,7 +298,14 @@ type AnalyticsEvents = {
     /** The media type being searched */
     mediaType: MediaType;
   };
-  /** The user reports a piece of media through our form */
+  /**
+   * Description: The user reports a piece of media through our form
+   * Questions:
+   *   - How often do we get reports?
+   *   - Which types of reports are more common?
+   *   - Do we see an uptick in reports when a certain provider
+   *     is added/updated/refreshed?
+   */
   REPORT_MEDIA: {
     /** The unique ID of the media */
     id: string;
@@ -215,9 +314,15 @@ type AnalyticsEvents = {
     /** The media type being searched */
     mediaType: MediaType;
   };
-  /** The user plays, pauses, or seeks an audio track.
+  /** Description: The user plays, pauses, or seeks an audio track.
    * @todo: This potentially requires throttling.
-   **/
+   *
+   * Questions:
+   *   - Do users interact with media frequently?
+   *   - Is it more common to playback audio on single results
+   *     or search pages?
+   *   - How many audio plays do we get?
+   */
   AUDIO_INTERACTION: {
     /** The unique ID of the media */
     id: string;
@@ -225,33 +330,55 @@ type AnalyticsEvents = {
     /** The slug (not the prettified name) of the provider */
     provider: string;
   };
-  /** The user visits a CC license description page on CC.org  **/
+  /**
+   * Description: The user visits a CC license description page on CC.org
+   * Questions:
+   *   - How often are external licenses viewed?
+   */
   VISIT_LICENSE_PAGE: {
     /** The slug of the license the user clicked on */
     license: string;
   };
-  /** The user visits a creator's link in the single result UI  **/
+  /**
+   * Description: The user visits a creator's link in the single result UI
+   * Questions:
+   *   - Are creator links clicked much? Does Openverse increase visibility
+   *     of included creator's profiles?
+   */
   VISIT_CREATOR_LINK: {
     /** The unique ID of the media */
     id: string;
     /** The permalink to the creator's profile */
     url: string;
   };
-  /** The user right clicks a single image result, most likely to download it. **/
+  /**
+   * Description: The user right clicks a single image result, most likely to download it.
+   * Questions:
+   *   - Do users right click images often? Does this suggest downloading them directly,
+   *     when not paired with a `GET_MEDIA` event?
+   */
   RIGHT_CLICK_IMAGE: {
     /** The unique ID of the media */
     id: string;
     /** The media type being searched */
     mediaType: MediaType;
   };
-  /** The user uses the 'back to search' link on a single result **/
+  /**
+   * Description: The user uses the 'back to search' link on a single result
+   * Questions:
+   *   - Are these links used much? Are they necessary?
+   */
   BACK_TO_SEARCH: {
     /** The unique ID of the media */
     id: string;
     /** The media type being searched */
     mediaType: MediaType;
   };
-  /** The visibility of the filter sidebar on desktop is toggled **/
+  /**
+   * Description: The visibility of the filter sidebar on desktop is toggled
+   * Questions:
+   *   - Do a majority users prefer the sidebar visible or hidden?
+   */
   TOGGLE_FILTERS: {
     /** The media type being searched */
     mediaType: MediaType;
