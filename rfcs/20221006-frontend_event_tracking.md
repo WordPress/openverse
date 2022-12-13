@@ -126,6 +126,18 @@ type AnalyticsEvents = {
     /** The search term **/
     query: string;
   };
+  /**
+   * Whenever a search results in less than a full page
+   * of results or no results.
+   */
+  INSUFFICIENT_RESULTS: {
+    /** The media type being searched */
+    mediaType: MediaType;
+    /** The search term **/
+    query: string;
+    /** The number of results returned **/
+    resultCount: number;
+  };
   /** Whenever the user clicks the load more button */
   LOAD_MORE_RESULTS: {
     /** The media type being searched */
