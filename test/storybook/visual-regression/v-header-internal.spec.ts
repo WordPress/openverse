@@ -9,6 +9,8 @@ const defaultUrl =
 const pageUrl = (dir: typeof languageDirections[number]) =>
   dir === 'ltr' ? defaultUrl : `${defaultUrl}&globals=languageDirection:rtl`
 
+test.describe.configure({ mode: 'parallel' })
+
 test.describe('VHeaderInternal', () => {
   for (const dir of languageDirections) {
     breakpoints.describeEachDesktopWithMd(({ expectSnapshot }) => {

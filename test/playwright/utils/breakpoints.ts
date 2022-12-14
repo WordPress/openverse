@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, Expect } from '@playwright/test'
 
 import { VIEWPORTS } from '~/constants/screens'
 import type { Breakpoint } from '~/constants/screens'
@@ -11,7 +11,8 @@ type ScreenshotAble = {
 type ExpectSnapshot = <T extends ScreenshotAble>(
   name: string,
   s: T,
-  options?: Parameters<T['screenshot']>[0]
+  options?: Parameters<T['screenshot']>[0],
+  snapshotOptions?: Parameters<ReturnType<Expect>['toMatchSnapshot']>[0]
 ) => Promise<Buffer | void>
 
 type BreakpointBlock = (options: {
@@ -49,11 +50,18 @@ interface Options {
    *
    * @defaultValue true
    */
-  uaMocking: boolean
+  uaMocking?: boolean
+  /**
+   * Adjust the error tolerance for a single test to avoid
+   * flakiness.
+   * Do not set to a value higher than 0.02.
+   */
+  maxDiffPixelRatio?: number
 }
 
 const defaultOptions = Object.freeze({
   uaMocking: true,
+  maxDiffPixelRatio: 0,
 })
 
 const makeBreakpointDescribe =
@@ -85,13 +93,15 @@ const makeBreakpointDescribe =
         const expectSnapshot = async <T extends ScreenshotAble>(
           name: string,
           screenshotAble: T,
-          options?: Parameters<T['screenshot']>[0]
+          options?: Parameters<T['screenshot']>[0],
+          snapshotOptions?: Parameters<ReturnType<Expect>['toMatchSnapshot']>[0]
         ) => {
           const { name: snapshotName } = getConfigValues(name)
           return expect(
             await screenshotAble.screenshot(options)
           ).toMatchSnapshot({
             name: snapshotName,
+            ...snapshotOptions,
           })
         }
 

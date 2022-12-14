@@ -3,8 +3,13 @@
     class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 bg-white py-4 pe-3 ps-6 md:py-4 md:px-7"
   >
     <VHomeLink variant="dark" />
-    <nav class="justify-stretch md:justify-stretch hidden ms-auto md:flex">
-      <VPageLinks mode="dark" variant="inline" @close="closeModal" />
+    <nav class="md:justify-stretch hidden ms-auto md:flex">
+      <VPageLinks
+        mode="light"
+        class="md:justify-stretch flex hidden flex-row items-center gap-8 text-sm ms-auto md:flex"
+        nav-link-classes="ps-3"
+        @close="closeModal"
+      />
     </nav>
     <div class="flex md:hidden">
       <VModal
@@ -40,22 +45,15 @@
           </div>
         </template>
         <template #default>
-          <VPageLinks mode="light" variant="column" @close="closeModal" />
-          <VLink
-            href="https://wordpress.org"
-            class="text-white hover:no-underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-pink focus-visible:ring-offset-1 focus-visible:ring-offset-tx"
-          >
-            <i18n
-              tag="p"
-              path="footer.wordpress-affiliation"
-              class="mt-auto flex flex-row items-center text-sm"
-            >
-              <template #wordpress>
-                <WordPress class="aria-hidden text-white" />
-                <span class="sr-only">WordPress</span>
-              </template>
-            </i18n>
-          </VLink>
+          <nav>
+            <VPageLinks
+              mode="dark"
+              class="mt-3 flex flex-col items-end gap-y-2"
+              nav-link-classes="heading-5 py-3"
+              @close="closeModal"
+            />
+          </nav>
+          <VWordPressLink class="mt-auto" mode="dark" />
         </template>
       </VModal>
     </div>
@@ -77,17 +75,23 @@ import { useUiStore } from '~/stores/ui'
 
 import VHomeLink from '~/components/VHeader/VHomeLink.vue'
 import VIconButton from '~/components/VIconButton/VIconButton.vue'
-import VLink from '~/components/VLink.vue'
 import VPageLinks from '~/components/VHeader/VPageLinks.vue'
 import VModal from '~/components/VModal/VModal.vue'
 
+import VWordPressLink from '~/components/VHeader/VWordPressLink.vue'
+
 import closeIcon from '~/assets/icons/close.svg'
 import menuIcon from '~/assets/icons/menu.svg'
-import WordPress from '~/assets/wordpress.svg?inline'
 
 export default defineComponent({
   name: 'VHeaderInternal',
-  components: { VHomeLink, VIconButton, VLink, VModal, VPageLinks, WordPress },
+  components: {
+    VWordPressLink,
+    VHomeLink,
+    VIconButton,
+    VModal,
+    VPageLinks,
+  },
   setup() {
     const menuButtonRef = ref<InstanceType<typeof VIconButton> | null>(null)
 

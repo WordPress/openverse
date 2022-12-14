@@ -8,6 +8,8 @@ const pressedUrl = `${defaultUrl}&args=pressed:true`
 
 const searchTypeButtonLocator = 'button[aria-haspopup="dialog"]'
 
+test.describe.configure({ mode: 'parallel' })
+
 test.describe('VSearchTypeButton', () => {
   breakpoints.describeLg(({ expectSnapshot }) => {
     test('resting', async ({ page }) => {

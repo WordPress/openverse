@@ -1,5 +1,8 @@
 <template>
-  <div class="app flex min-h-screen flex-col">
+  <div
+    class="app flex min-h-screen flex-col"
+    :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]"
+  >
     <div class="sticky top-0 z-40 block">
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
       <VBanners />
@@ -160,6 +163,7 @@ const embeddedPage = {
       isSearchHeader,
       headerHasTwoRows,
       isNewHeaderEnabled,
+      breakpoint: computed(() => uiStore.breakpoint),
 
       closeSidebar,
     }

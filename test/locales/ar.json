@@ -689,5 +689,21 @@
     "sources": "مصادر",
     "external-sources": "مصادر خارجية",
     "search-help": "بحث في المساعدة"
+  },
+  "footer": {
+    "wordpress-affiliation": "جزء من مشروع {wordpress}",
+    "wip": "\uD83D\uDEA7"
+  },
+  "language": {
+    "language": "لغة"
+  },
+  "recent-searches": {
+    "heading": "عمليات البحث الأخيرة",
+    "clear": {
+      "text": "مسح",
+      "label": "مسح عمليات البحث الأخيرة"
+    },
+    "none": "لا توجد عمليات بحث حديثة لعرضها.",
+    "disclaimer": "لا يقوم Openverse بتخزين عمليات البحث الأخيرة ، يتم الاحتفاظ بهذه المعلومات محليًا في متصفحك."
   }
 }

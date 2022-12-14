@@ -14,5 +14,6 @@ declare module 'csstype' {
     '--progress-time-left'?: string
     '--seek-time-left'?: string
     '--popover-height'?: string
+    '--link-col-height'?: number
   }
 }

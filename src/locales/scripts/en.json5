@@ -697,7 +697,7 @@
   },
   footer: {
     // Link back to WordPress, the word is replaced by the logo
-    'wordpress-affiliation': 'Powered by {wordpress}',
+    'wordpress-affiliation': 'Part of the {wordpress} project',
     wip: '\uD83D\uDEA7',
   },
   language: {
