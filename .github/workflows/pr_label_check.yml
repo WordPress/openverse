@@ -16,6 +16,7 @@ jobs:
         uses: agilepathway/label-checker@v1.2.9
         with:
           one_of: "💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface,♿️ aspect: a11y"
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   check_goal_label:
     name: Check goal label
@@ -25,6 +26,7 @@ jobs:
         uses: agilepathway/label-checker@v1.2.9
         with:
           one_of: "🌟 goal: addition,🛠 goal: fix,✨ goal: improvement,🧰 goal: internal improvement"
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   check_priority_label:
     name: Check priority label
@@ -34,3 +36,4 @@ jobs:
         uses: agilepathway/label-checker@v1.2.9
         with:
           one_of: "🟩 priority: low,🟨 priority: medium,🟧 priority: high,🟥 priority: critical"
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
