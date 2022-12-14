@@ -62,6 +62,7 @@ jobs:
         shell: python
         run: |
           import json
+          import os
           metadata = json.loads('${{ steps.metadata.outputs.json }}')
           version = metadata["labels"]["org.opencontainers.image.version"]
           if version == "main":
@@ -69,8 +70,8 @@ jobs:
               for tag in metadata["tags"]:
                   if ":main" not in tag:
                       version = tag.split(":")[1]
-
-          print(f"::set-output name=version::{version}")
+          with open(os.environ.get("GITHUB_OUTPUT"), "a") as state:
+              state.write(f"version={version}\n")
 
       - uses: docker/build-push-action@v3
         with:
