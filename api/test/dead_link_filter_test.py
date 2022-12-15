@@ -1,5 +1,5 @@
 from test.constants import API_URL
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 from uuid import uuid4
 
 from django.conf import settings
@@ -48,44 +48,39 @@ def empty_validation_cache(monkeypatch):
     )
 
 
-def _patch_grequests():
-    def grequests_map(reqs, *_, **__):
-        """
-        Patch for ``grequests.map`` used by ``validate_images`` to filter
-        and remove dead links
-        """
+_MAKE_HEAD_REQUESTS_MODULE_PATH = (
+    "catalog.api.utils.validate_images._make_head_requests"
+)
+
+
+def _patch_make_head_requests():
+    def _make_head_requests(urls):
         responses = []
-        for idx in range(len(list(reqs))):
-            mocked_res = MagicMock()
-            mocked_res.status_code = 200 if idx % 10 != 0 else 404
-            responses.append(mocked_res)
+        for idx, url in enumerate(urls):
+            status_code = 200 if idx % 10 != 0 else 404
+            responses.append((url, status_code))
         return responses
 
-    return patch("grequests.map", side_effect=grequests_map)
+    return patch(_MAKE_HEAD_REQUESTS_MODULE_PATH, side_effect=_make_head_requests)
 
 
 def patch_link_validation_dead_for_count(count):
     total_res_count = 0
 
-    def grequests_map(reqs, *_, **__):
+    def _make_head_requests(urls):
         nonlocal total_res_count
-        """
-        Patch for ``grequests.map`` used by ``validate_images`` to filter
-        and remove dead links
-        """
         responses = []
-        for idx in range(len(list(reqs))):
+        for idx, url in enumerate(urls):
             total_res_count += 1
-            mocked_res = MagicMock()
-            mocked_res.status_code = 404 if total_res_count <= count else 200
-            responses.append(mocked_res)
+            status_code = 404 if total_res_count <= count else 200
+            responses.append((url, status_code))
         return responses
 
-    return patch("grequests.map", side_effect=grequests_map)
+    return patch(_MAKE_HEAD_REQUESTS_MODULE_PATH, side_effect=_make_head_requests)
 
 
 @pytest.mark.django_db
-@_patch_grequests()
+@_patch_make_head_requests()
 def test_dead_link_filtering(mocked_map, client):
     path = "/v1/images/"
     query_params = {"q": "*", "page_size": 20}
