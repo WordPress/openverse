@@ -2,12 +2,12 @@
   color: black;
 }
 
-body[data-theme='dark'] .sidebar-logo-container {
+body[data-theme="dark"] .sidebar-logo-container {
   color: white;
 }
 
 @media (prefers-color-scheme: dark) {
-  body:not([data-theme='light']) .sidebar-logo-container {
+  body:not([data-theme="light"]) .sidebar-logo-container {
     color: white;
   }
 }

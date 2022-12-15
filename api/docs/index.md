@@ -1,6 +1,8 @@
 # Openverse API developer docs
 
-This documentation is focused towards developers who are building the Openverse API. The consumer documentation for the Openverse API can be found [here](https://api.openverse.engineering/).
+This documentation is focused towards developers who are building the Openverse
+API. The consumer documentation for the Openverse API can be found
+[here](https://api.openverse.engineering/).
 
 ```{toctree}
 :maxdepth: 2

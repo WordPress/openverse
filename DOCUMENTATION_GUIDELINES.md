@@ -1,22 +1,28 @@
 # Documentation Guidelines
 
-Interested in improving our documentation? Here’s what you need to know before making any changes to the documentation.
+Interested in improving our documentation? Here’s what you need to know before
+making any changes to the documentation.
 
 <br/>
 
 ## Introduction
 
-Openverse API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a tool that generates real Swagger/OpenAPI 2.0 specifications from a Django Rest Framework API.
+Openverse API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a
+tool that generates real Swagger/OpenAPI 2.0 specifications from a Django Rest
+Framework API.
 
 <br/>
 
 ## How to Start Contributing
 
-- Run the server locally by following this [link](https://github.com/WordPress/openverse-api#running-the-server-locally)
+- Run the server locally by following this
+  [link](https://github.com/WordPress/openverse-api#running-the-server-locally)
 - Update documentation
-- Make sure the updates passed the automated tests in this [file](https://github.com/WordPress/openverse-api/blob/main/.github/workflows/ci_cd.yml)
+- Make sure the updates passed the automated tests in this
+  [file](https://github.com/WordPress/openverse-api/blob/main/.github/workflows/ci_cd.yml)
 - Commit and push
-- Create pull request by following [GitHub Repo Guidelines](https://opensource.creativecommons.org/contributing-code/github-repo-guidelines/)
+- Create pull request by following
+  [GitHub Repo Guidelines](https://opensource.creativecommons.org/contributing-code/github-repo-guidelines/)
 
 <br/>
 
@@ -30,7 +36,8 @@ Openverse API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a 
 
 ## Cheat Sheet for drf-yasg
 
-This is a quick syntax guide with examples on how to add or update the documentation for API endpoints.
+This is a quick syntax guide with examples on how to add or update the
+documentation for API endpoints.
 
 <br/>
 
@@ -73,7 +80,9 @@ image_stats_description = \
 
 ### Responses
 
-The response received after submitting an API request. The current API documentation includes response schemas and response samples based on their response codes.
+The response received after submitting an API request. The current API
+documentation includes response schemas and response samples based on their
+response codes.
 
 **Example**
 
@@ -159,7 +168,8 @@ register_api_oauth2_request = openapi.Schema(
 
 ### Code Examples
 
-Code examples on how to use the API endpoints. The current API documentation provides code examples in Bash.
+Code examples on how to use the API endpoints. The current API documentation
+provides code examples in Bash.
 
 **Example**
 

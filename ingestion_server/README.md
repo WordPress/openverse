@@ -2,12 +2,16 @@
 
 ## Introduction
 
-Ingestion Server is a small private API for copying data from an upstream source and loading it into the Openverse API. This is a two-step process:
+Ingestion Server is a small private API for copying data from an upstream source
+and loading it into the Openverse API. This is a two-step process:
 
-1. The data is copied from the upstream catalog database and into the downstream API database.
+1. The data is copied from the upstream catalog database and into the downstream
+   API database.
 2. Data from the downstream API database gets indexed in Elasticsearch.
 
-Performance is dependent on the size of the target Elasticsearch cluster, database throughput, and bandwidth available to the ingestion server. The primary bottleneck is indexing to Elasticsearch.
+Performance is dependent on the size of the target Elasticsearch cluster,
+database throughput, and bandwidth available to the ingestion server. The
+primary bottleneck is indexing to Elasticsearch.
 
 ## How indexing works
 
@@ -15,28 +19,36 @@ Performance is dependent on the size of the target Elasticsearch cluster, databa
 
 ## Safety and security considerations
 
-The server has been designed to fail gracefully in the event of network interruptions, full disks, etc. If a task fails to complete successfully, the whole process is rolled back with zero impact to production.
+The server has been designed to fail gracefully in the event of network
+interruptions, full disks, etc. If a task fails to complete successfully, the
+whole process is rolled back with zero impact to production.
 
-The server is designed to be run in a private network only. You must not expose the private Ingestion Server API to the public internet.
+The server is designed to be run in a private network only. You must not expose
+the private Ingestion Server API to the public internet.
 
 ## Notifications
 
-If a `SLACK_WEBHOOK` variable is provided, the ingestion server will provide periodic updates on the progress of a data refresh, or relay any errors that may occur during the process.
+If a `SLACK_WEBHOOK` variable is provided, the ingestion server will provide
+periodic updates on the progress of a data refresh, or relay any errors that may
+occur during the process.
 
 ## Data refresh limit
 
-The `DATA_REFRESH_LIMIT` variable can be used to define a limit to the number of rows pulled from the upstream
-catalog database. If the server is running in an `ENVIRONMENT` that is not `prod` or `production`, this is
-automatically set to 100k records.
+The `DATA_REFRESH_LIMIT` variable can be used to define a limit to the number of
+rows pulled from the upstream catalog database. If the server is running in an
+`ENVIRONMENT` that is not `prod` or `production`, this is automatically set to
+100k records.
 
 ## Running on the host
 
 1. Create environment variables from the template file.
+
    ```bash
    just env
    ```
 
 2. Install Python dependencies.
+
    ```bash
    just install
    ```
@@ -50,12 +62,14 @@ automatically set to 100k records.
 
 ### Integration Tests
 
-The integration tests can be run using `just ing-testlocal`.
-Note that if a `.env` file exists in the folder you're running `just` from, it may interfere with the integration test variables and cause unexpected failures.
+The integration tests can be run using `just ing-testlocal`. Note that if a
+`.env` file exists in the folder you're running `just` from, it may interfere
+with the integration test variables and cause unexpected failures.
 
 ### Making requests
 
 To make cURL requests to the server
+
 ```bash
 pipenv run \
   curl \
@@ -70,17 +84,25 @@ will be `"INGEST_UPSTREAM"`.
 
 ## Configuration
 
-All configuration is performed through environment variables. See the `env.template` file for a comprehensive list of all environment variables. The ones with sane defaults have been commented out.
+All configuration is performed through environment variables. See the
+`env.template` file for a comprehensive list of all environment variables. The
+ones with sane defaults have been commented out.
 
-Pipenv will automatically load `.env` files when running commands with `pipenv run`.
+Pipenv will automatically load `.env` files when running commands with
+`pipenv run`.
 
 ## Mapping database tables to Elasticsearch
 
-In order to synchronize a given table to Elasticsearch, the following requirements must be met:
+In order to synchronize a given table to Elasticsearch, the following
+requirements must be met:
 
-- The database table must have an autoincrementing integer primary key named `id`.
-- A SyncableDoctype must be defined in `es_syncer/elasticsearch_models`. The SyncableDoctype must implement the function `database_row_to_elasticsearch_model`.
-- The table name must be mapped to the corresponding Elasticsearch SyncableDoctype in `database_table_to_elasticsearch_model` map.
+- The database table must have an autoincrementing integer primary key named
+  `id`.
+- A SyncableDoctype must be defined in `es_syncer/elasticsearch_models`. The
+  SyncableDoctype must implement the function
+  `database_row_to_elasticsearch_model`.
+- The table name must be mapped to the corresponding Elasticsearch
+  SyncableDoctype in `database_table_to_elasticsearch_model` map.
 
 Example from `es_syncer/elasticsearch_models.py`:
 
@@ -133,9 +155,18 @@ database_table_to_elasticsearch_model = {
 
 ## Deployment
 
-This codebase is deployed as a Docker image to the GitHub Container Registry [ghcr.io](https://ghcr.io). The deployed image is then pulled in the production environment. See the [`ci_cd.yml`](../.github/workflows/ci_cd.yml) workflow for deploying to GHCR.
+This codebase is deployed as a Docker image to the GitHub Container Registry
+[ghcr.io](https://ghcr.io). The deployed image is then pulled in the production
+environment. See the [`ci_cd.yml`](../.github/workflows/ci_cd.yml) workflow for
+deploying to GHCR.
 
-The published image can be deployed using the minimal [`docker-compose.yml`](docker-compose.yml) file defined in this folder (do not forget to update the `.env` file for production). The repository `justfile` can be used, but the environment variable `IS_PROD` must be set to `true` in order for it to reference the production `docker-compose.yml` file here. The version of the image to use can also be explicitly defined using the `IMAGE_TAG` environment variable (e.g. `IMAGE_TAG=v2.1.1`).
+The published image can be deployed using the minimal
+[`docker-compose.yml`](docker-compose.yml) file defined in this folder (do not
+forget to update the `.env` file for production). The repository `justfile` can
+be used, but the environment variable `IS_PROD` must be set to `true` in order
+for it to reference the production `docker-compose.yml` file here. The version
+of the image to use can also be explicitly defined using the `IMAGE_TAG`
+environment variable (e.g. `IMAGE_TAG=v2.1.1`).
 
 ### Old Docker Hub images
 
