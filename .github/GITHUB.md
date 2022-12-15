@@ -16,8 +16,8 @@ to the "In progress" column.
 ### PR project automation
 
 This workflow archives PRs in the "Merged!" and "Closed" columns of the PR
-project board, 15 minutes after the commencement of the weekly developer chat
-at 15:00 UTC every Tuesday.
+project board, 15 minutes after the commencement of the weekly developer chat at
+15:00 UTC every Tuesday.
 
 **Cron:** [at 15:15 on Tuesday](https://crontab.guru/#15_15_*_*_2)
 
@@ -40,9 +40,9 @@ week, outlining the closed issues and merged PRs of the preceding week.
 
 ### New discussion notification
 
-This workflow makes a `POST` request to the Slack webhook when a new
-discussion is created, sending a notification message to the
-`#openverse-notifications` channel.
+This workflow makes a `POST` request to the Slack webhook when a new discussion
+is created, sending a notification message to the `#openverse-notifications`
+channel.
 
 **Discussion:** created
 
@@ -54,7 +54,7 @@ truth, it creates PRs to resolve any differences.
 
 **Cron:** [at 00:00](https://crontab.guru/#0_0_*_*_*)  
 **Push:** Branch `main`  
-**Dispatch:** enabled
+**Dispatch:** enabled  
 **Config:** `.github/sync.yml`
 
 ## Synced workflows
@@ -101,5 +101,5 @@ These workflows run only in the downstream synced repos and not in `openverse`.
 This workflow updates the draft release message when new commits are added to
 `main` so that there is a ready-to-go changelog when publishing a new release.
 
-**Push:** Branch `main`
+**Push:** Branch `main`  
 **Config:** `.github/release_drafter.yml`

@@ -1,16 +1,17 @@
 {
-  "packageManager": "pnpm@7.14.1",
+  "packageManager": "pnpm@7.17.1",
   "dependencies": {
     "@octokit/rest": "19.0.5",
     "js-yaml": "^4.1.0",
     "k6": "0.0.0",
-    "node-fetch": "^3.0.0"
+    "node-fetch": "^3.0.0",
+    "nunjucks": "^3.2.3"
   },
   "engines": {
     "node": ">= 16.0.0 <17",
     "pnpm": ">= 7.8.0"
   },
   "volta": {
-    "node": "16.18.0"
+    "node": "16.18.1"
   }
 }

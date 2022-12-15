@@ -1,11 +1,15 @@
+{% block note %}
 # This file is being synced from WordPress/openverse. Any changes made to it
 # here will be overwritten. Please make any necessary edits to these files:
 # - https://github.com/WordPress/openverse/blob/main/.pre-commit-config.yaml.jinja
-# - https://github.com/WordPress/openverse/blob/main/.pre-commit-config.local.yaml.jinja
+{%- endblock %}
 
+{# This comment adds a blank line. #}
 exclude: Pipfile\.lock|migrations|\.idea|node_modules|archive
 
 repos:
+  {% block repos_top %}
+  {% endblock %}
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
     hooks:
@@ -26,9 +30,12 @@ repos:
       - id: fix-encoding-pragma
         args:
           - --remove
+      {% if contains_python_code | default(true) %}
       - id: check-docstring-first
       - id: requirements-txt-fixer
+      {% endif %}
 
+  {% if contains_python_code | default(true) %}
   # Use the `.isort.cfg` file to configure additional project-specific requirements.
   - repo: https://github.com/PyCQA/isort
     rev: 5.9.1
@@ -63,43 +70,43 @@ repos:
         args:
           - --safe
 
+  {% endif %}
+  {% if contains_js_code | default(true) %}
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v8.15.0
     hooks:
       - id: eslint
-        files: ^js/.*$
+        files: {{ eslint_files | default("^js/.*$") }}
+        {% if eslint_exclude %}
+        exclude: {{ eslint_exclude }} # ESLint raises warnings for ignored files.
+        {% endif %}
         "types": [file] # ESLint only accepts [javascript] by default.
         args:
           - --ignore-path=.gitignore
           - --ignore-path=.eslintignore
           - --max-warnings=0
         additional_dependencies:
+          {% block eslint_dependencies %}
           - eslint@8.15.0
           - eslint-config-prettier@8.5.0
+          {%- endblock %}
 
+{# This comment adds a blank line. #}
+  {% endif %}
   # Use the `.prettierignore` and `.prettier.config.js` files to configure project-specific requirements.
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v2.6.0
     hooks:
       - id: prettier
         additional_dependencies:
+          {% block prettier_dependencies %}
           - prettier@2.6.0
+          {%- endblock %}
 
+{# This comment adds a blank line. #}
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.8.0
     hooks:
       - id: shellcheck
-
-  - repo: local
-    hooks:
-      - id: render-precommit
-        name: render-precommit
-        entry: bash -c 'just render-precommit'
-        language: system
-        pass_filenames: false
-
-      - id: render-prettier
-        name: render-prettier
-        entry: bash -c 'just render-prettier'
-        language: system
-        pass_filenames: false
+  {% block repos_bottom %}
+  {% endblock %}

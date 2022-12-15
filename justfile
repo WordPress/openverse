@@ -12,6 +12,7 @@ default:
 @install:
     just _py-install
     just _js-install
+    just precommit
 
 # Setup pre-commit as a Git hook
 precommit:
@@ -35,4 +36,16 @@ _py-install:
 
 # Install dependencies for JavaScript
 _js-install:
-    cd automations/js && pnpm install
+    pnpm install
+
+# Run `render-jinja.js` with given input file, output file and context
+render in_file out_file ctx="{}":
+    cd automations/js && node src/render-jinja.js {{ in_file }} {{ out_file }} {{ ctx }}
+
+# Render `.pre-commit-config.yaml`
+render-precommit:
+    just render .pre-commit-config.local.yaml.jinja .pre-commit-config.yaml
+
+# Render `prettier.config.js`
+render-prettier:
+    just render prettier.config.js.jinja prettier.config.js
