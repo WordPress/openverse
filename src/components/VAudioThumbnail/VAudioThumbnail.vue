@@ -33,18 +33,18 @@ import {
   onMounted,
   defineComponent,
   PropType,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { rand, hash } from '~/utils/prng'
-import { lerp, dist, bezier, Point } from '~/utils/math'
-import type { AudioDetail } from '~/types/media'
-import { useI18n } from '~/composables/use-i18n'
+import { rand, hash } from "~/utils/prng"
+import { lerp, dist, bezier, Point } from "~/utils/math"
+import type { AudioDetail } from "~/types/media"
+import { useI18n } from "~/composables/use-i18n"
 
 /**
  * Displays the cover art for the audio in a square aspect ratio.
  */
 export default defineComponent({
-  name: 'VAudioThumbnail',
+  name: "VAudioThumbnail",
   props: {
     /**
      * the details of the audio whose artwork is to be shown; The properties
@@ -58,7 +58,7 @@ export default defineComponent({
   setup(props) {
     const i18n = useI18n()
     const helpText = i18n
-      .t('audio-thumbnail.alt', {
+      .t("audio-thumbnail.alt", {
         title: props.audio.title,
         creator: props.audio.creator,
       })
@@ -82,7 +82,7 @@ export default defineComponent({
     const minRadius = 2
     const maxRadius = 27
 
-    const random = rand(hash(props.audio.title ?? ''))
+    const random = rand(hash(props.audio.title ?? ""))
     const ctrlPts = Array.from(
       { length: 4 },
       (_, idx) => [random() * canvasSize, (idx / 3) * canvasSize] as Point

@@ -1,13 +1,13 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from "@playwright/test"
 
 import {
   changeContentType,
   goToSearchTerm,
   OLD_HEADER,
-} from '~~/test/playwright/utils/navigation'
-import { mockProviderApis } from '~~/test/playwright/utils/route'
+} from "~~/test/playwright/utils/navigation"
+import { mockProviderApis } from "~~/test/playwright/utils/route"
 
-import { AUDIO, IMAGE } from '~/constants/media'
+import { AUDIO, IMAGE } from "~/constants/media"
 
 /**
  * When navigating to the search page on the client side:
@@ -21,66 +21,66 @@ import { AUDIO, IMAGE } from '~/constants/media'
  * All of these tests test search page on the client
  */
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })
 
-test('q query parameter is set as the search term', async ({ page }) => {
-  await goToSearchTerm(page, 'cat', { mode: 'CSR' })
+test("q query parameter is set as the search term", async ({ page }) => {
+  await goToSearchTerm(page, "cat", { mode: "CSR" })
 
-  await expect(page.locator('header input[type="search"]')).toHaveValue('cat')
-  await expect(page).toHaveURL('search/?q=cat')
+  await expect(page.locator('header input[type="search"]')).toHaveValue("cat")
+  await expect(page).toHaveURL("search/?q=cat")
 })
 
-test('selecting `audio` on homepage, you can search for audio', async ({
+test("selecting `audio` on homepage, you can search for audio", async ({
   page,
 }) => {
-  await goToSearchTerm(page, 'cat', { searchType: AUDIO, mode: 'CSR' })
+  await goToSearchTerm(page, "cat", { searchType: AUDIO, mode: "CSR" })
 
-  await expect(page.locator('header input[type="search"]')).toHaveValue('cat')
+  await expect(page.locator('header input[type="search"]')).toHaveValue("cat")
 
-  await expect(page).toHaveURL('search/audio?q=cat')
+  await expect(page).toHaveURL("search/audio?q=cat")
 })
 
-test('url filter parameters not used by current mediaType are discarded', async ({
+test("url filter parameters not used by current mediaType are discarded", async ({
   page,
 }) => {
-  await goToSearchTerm(page, 'cat', {
+  await goToSearchTerm(page, "cat", {
     searchType: IMAGE,
-    query: 'category=photograph',
+    query: "category=photograph",
   })
 
-  await changeContentType(page, 'Audio', OLD_HEADER)
-  await expect(page).toHaveURL('/search/audio?q=cat')
+  await changeContentType(page, "Audio", OLD_HEADER)
+  await expect(page).toHaveURL("/search/audio?q=cat")
 })
 
-test('url filter types not used by current mediaType are discarded', async ({
+test("url filter types not used by current mediaType are discarded", async ({
   page,
 }) => {
-  await goToSearchTerm(page, 'cat', {
+  await goToSearchTerm(page, "cat", {
     searchType: IMAGE,
-    query: 'aspect_ratio=tall',
+    query: "aspect_ratio=tall",
   })
 
-  await changeContentType(page, 'Audio', OLD_HEADER)
-  await expect(page).toHaveURL('/search/audio?q=cat')
+  await changeContentType(page, "Audio", OLD_HEADER)
+  await expect(page).toHaveURL("/search/audio?q=cat")
 })
 
-test('can search for a different term', async ({ page }) => {
-  await goToSearchTerm(page, 'cat', { searchType: IMAGE })
-  await page.fill('header input[type="search"]', 'dog')
-  await page.keyboard.press('Enter')
-  await expect(page).toHaveURL('/search/image?q=dog')
+test("can search for a different term", async ({ page }) => {
+  await goToSearchTerm(page, "cat", { searchType: IMAGE })
+  await page.fill('header input[type="search"]', "dog")
+  await page.keyboard.press("Enter")
+  await expect(page).toHaveURL("/search/image?q=dog")
 })
 
-test('search for a different term keeps query parameters', async ({ page }) => {
-  await goToSearchTerm(page, 'cat', {
+test("search for a different term keeps query parameters", async ({ page }) => {
+  await goToSearchTerm(page, "cat", {
     searchType: IMAGE,
-    query: 'license=by&extension=jpg',
+    query: "license=by&extension=jpg",
   })
-  await page.fill('header input[type="search"]', 'dog')
-  await page.keyboard.press('Enter')
-  await expect(page).toHaveURL('/search/image?q=dog&license=by&extension=jpg')
+  await page.fill('header input[type="search"]', "dog")
+  await page.keyboard.press("Enter")
+  await expect(page).toHaveURL("/search/image?q=dog&license=by&extension=jpg")
 })

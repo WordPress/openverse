@@ -19,12 +19,12 @@ import {
   onMounted,
   onUnmounted,
   ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { tabsContextKey } from '~/types/tabs'
+import { tabsContextKey } from "~/types/tabs"
 
 export default defineComponent({
-  name: 'VTabPanel',
+  name: "VTabPanel",
   props: {
     /**
      * Tabpanel id should be the same as the controlling tab id.
@@ -60,9 +60,9 @@ export default defineComponent({
     const isSelected = computed(() => props.id === tabContext.selectedId.value)
 
     const panelVariantStyle = computed(() =>
-      tabContext.variant.value === 'bordered'
-        ? 'border rounded-sm first:rounded-tl-none'
-        : 'border-t'
+      tabContext.variant.value === "bordered"
+        ? "border rounded-sm first:rounded-tl-none"
+        : "border-t"
     )
 
     return {

@@ -1,18 +1,18 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia"
 
-import type { SupportedMediaType } from '~/constants/media'
-import type { Media } from '~/types/media'
+import type { SupportedMediaType } from "~/constants/media"
+import type { Media } from "~/types/media"
 
-export type MediaStatus = 'ejected' | 'playing' | 'paused' // 'ejected' means player is closed
+export type MediaStatus = "ejected" | "playing" | "paused" // 'ejected' means player is closed
 
 export interface ActiveMediaState {
   type: SupportedMediaType | null
-  id: Media['id'] | null
+  id: Media["id"] | null
   status: MediaStatus
   message: string | null
 }
 
-const ACTIVE_MEDIA = 'active-media'
+const ACTIVE_MEDIA = "active-media"
 
 /**
  * Store information about the active media item.
@@ -23,7 +23,7 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, {
   state: (): ActiveMediaState => ({
     type: null,
     id: null,
-    status: 'ejected',
+    status: "ejected",
     message: null,
   }),
 
@@ -38,10 +38,10 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, {
     setActiveMediaItem({
       type,
       id,
-      status = 'playing',
+      status = "playing",
     }: {
       type: SupportedMediaType
-      id: Media['id']
+      id: Media["id"]
       status?: MediaStatus
     }) {
       this.type = type
@@ -50,11 +50,11 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, {
     },
 
     pauseActiveMediaItem() {
-      this.status = 'paused'
+      this.status = "paused"
     },
 
     ejectActiveMediaItem() {
-      this.status = 'ejected'
+      this.status = "ejected"
       this.id = null
       this.type = null
     },

@@ -1,10 +1,10 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia"
 
-import featureData from '~~/feat/feature-flags.json'
+import featureData from "~~/feat/feature-flags.json"
 
-import { warn } from '~/utils/console'
+import { warn } from "~/utils/console"
 
-import type { FeatureFlag } from '~/types/feature-flag'
+import type { FeatureFlag } from "~/types/feature-flag"
 import {
   FeatureState,
   FlagStatus,
@@ -13,17 +13,17 @@ import {
   ON,
   OFF,
   DISABLED,
-} from '~/constants/feature-flag'
-import { LOCAL, DEPLOY_ENVS, DeployEnv } from '~/constants/deploy-env'
+} from "~/constants/feature-flag"
+import { LOCAL, DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
 
-import type { Dictionary } from 'vue-router/types/router'
+import type { Dictionary } from "vue-router/types/router"
 
-type FlagName = keyof typeof featureData['features']
+type FlagName = keyof typeof featureData["features"]
 export interface FeatureFlagState {
   flags: Record<FlagName, FeatureFlag>
 }
 
-const FEATURE_FLAG = 'feature_flag'
+const FEATURE_FLAG = "feature_flag"
 
 /**
  * Get the status of the flag. If the flag status is environment dependent, this
@@ -34,7 +34,7 @@ const FEATURE_FLAG = 'feature_flag'
  */
 export const getFlagStatus = (flag: FeatureFlag): FlagStatus => {
   const deployEnv = (process.env.DEPLOYMENT_ENV ?? LOCAL) as DeployEnv
-  if (typeof flag.status === 'string') return flag.status
+  if (typeof flag.status === "string") return flag.status
   else {
     const envIndex = DEPLOY_ENVS.indexOf(deployEnv)
     for (let i = envIndex; i < DEPLOY_ENVS.length; i += 1) {
@@ -127,11 +127,11 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      */
     initFromQuery(query: Dictionary<string | (string | null)[]>) {
       const isValidName = (name: string): name is `ff_${FlagName}` =>
-        name.startsWith('ff_') && name.replace('ff_', '') in this.flags
+        name.startsWith("ff_") && name.replace("ff_", "") in this.flags
       const isValidValue = (
         value: string | (string | null)[]
       ): value is FeatureState =>
-        typeof value === 'string' && ['on', 'off'].includes(value)
+        typeof value === "string" && ["on", "off"].includes(value)
       const isValidEntry = (
         entry: [string, string | (string | null)[]]
       ): entry is [`ff_${FlagName}`, FeatureState] =>

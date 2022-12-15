@@ -4,16 +4,16 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import VRadio from '~/components/VRadio/VRadio.vue'
+import VRadio from "~/components/VRadio/VRadio.vue"
 
 <Meta
   title="Components/VRadio"
   components={VRadio}
   argTypes={{
     change: {
-      action: 'change',
+      action: "change",
     },
   }}
 />
@@ -38,9 +38,9 @@ export const Template = (args, { argTypes }) => ({
   <Story
     name="Default"
     args={{
-      id: 'default',
-      value: 'value',
-      modelValue: 'modelValue', // if same as value, radio is checked
+      id: "default",
+      value: "value",
+      modelValue: "modelValue", // if same as value, radio is checked
     }}
   >
     {Template.bind({})}
@@ -57,9 +57,9 @@ change the type as the field is specifically designed as a radio.
   <Story
     name="Disabled"
     args={{
-      id: 'disabled',
-      value: 'value',
-      modelValue: 'modelValue', // if same as value, radio is checked
+      id: "disabled",
+      value: "value",
+      modelValue: "modelValue", // if same as value, radio is checked
       disabled: true,
     }}
   >

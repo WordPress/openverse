@@ -1,4 +1,4 @@
-const { setToValue } = require('./utils')
+const { setToValue } = require("./utils")
 
 /**
  * Convert a Jed1x-Translate object to a nested JSON object.
@@ -36,7 +36,7 @@ function jed1xJsonToJson(jed1xObject) {
   Object.entries(jed1xObject?.locale_data?.messages).forEach(([key, value]) => {
     const cleanedKey = key.slice(0, key.indexOf(SPLIT_CHAR))
     if (value.length > 0) {
-      const cleanedValue = value.length === 1 ? value[0] : value.join('|')
+      const cleanedValue = value.length === 1 ? value[0] : value.join("|")
       return setToValue(result, cleanedKey, cleanedValue)
     }
   })

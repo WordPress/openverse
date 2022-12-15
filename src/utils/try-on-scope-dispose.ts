@@ -1,4 +1,4 @@
-import { getCurrentScope, onScopeDispose } from '@nuxtjs/composition-api'
+import { getCurrentScope, onScopeDispose } from "@nuxtjs/composition-api"
 
 export function tryOnScopeDispose(fn: () => void) {
   if (getCurrentScope()) {

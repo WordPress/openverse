@@ -27,26 +27,26 @@
  * Display placeholder elements while waiting for the actual elements to be
  * loaded in the results views.
  */
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { SupportedSearchType } from '~/constants/media'
+import type { SupportedSearchType } from "~/constants/media"
 
-import VAudioTrackSkeleton from '~/components/VSkeleton/VAudioTrackSkeleton.vue'
-import VBone from '~/components/VSkeleton/VBone.vue'
+import VAudioTrackSkeleton from "~/components/VSkeleton/VAudioTrackSkeleton.vue"
+import VBone from "~/components/VSkeleton/VBone.vue"
 
 export default defineComponent({
-  name: 'VGridSkeleton',
+  name: "VGridSkeleton",
   components: { VAudioTrackSkeleton, VBone },
   props: {
     isForTab: {
       type: String as PropType<SupportedSearchType>,
-      default: 'image',
+      default: "image",
     },
     numElems: {
       type: Number,
       default: function () {
-        if (this.isForTab === 'all') return 20
-        if (this.isForTab === 'image') return 30
+        if (this.isForTab === "all") return 20
+        if (this.isForTab === "image") return 30
         return 8
       },
     },

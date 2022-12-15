@@ -1,30 +1,30 @@
-import { ref } from '@nuxtjs/composition-api'
+import { ref } from "@nuxtjs/composition-api"
 
-import { itemGroupDirections } from '~/types/item-group'
+import { itemGroupDirections } from "~/types/item-group"
 
-import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
-import VItem from '~/components/VItemGroup/VItem.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VPopover from '~/components/VPopover/VPopover.vue'
-import VButton from '~/components/VButton.vue'
+import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
+import VItem from "~/components/VItemGroup/VItem.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VPopover from "~/components/VPopover/VPopover.vue"
+import VButton from "~/components/VButton.vue"
 
-import replay from '~/assets/icons/replay.svg'
+import replay from "~/assets/icons/replay.svg"
 
-import pause from '~/assets/icons/pause.svg'
-import play from '~/assets/icons/play.svg'
-import close from '~/assets/icons/close.svg'
+import pause from "~/assets/icons/pause.svg"
+import play from "~/assets/icons/play.svg"
+import close from "~/assets/icons/close.svg"
 
 const icons = [close, pause, play, replay]
 
 export default {
   component: VItemGroup,
-  title: 'Components/VItemGroup',
+  title: "Components/VItemGroup",
   args: {
     direction: {
-      type: 'radio',
+      type: "radio",
       options: itemGroupDirections,
     },
-    bordered: 'boolean',
+    bordered: "boolean",
   },
 }
 
@@ -66,7 +66,7 @@ const DefaultStory = (args) => ({
 
 export const Default = DefaultStory.bind({})
 Default.args = {
-  direction: 'vertical',
+  direction: "vertical",
   bordered: true,
 }
 
@@ -116,7 +116,7 @@ const MenuStory = (args) => ({
 
 export const Menu = MenuStory.bind({})
 Menu.args = {
-  direction: 'vertical',
+  direction: "vertical",
   bordered: true,
 }
 
@@ -165,6 +165,6 @@ const PopoverStory = (args) => ({
 
 export const Popover = PopoverStory.bind({})
 Popover.args = {
-  direction: 'vertical',
+  direction: "vertical",
   bordered: false,
 }

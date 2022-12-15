@@ -34,23 +34,23 @@ import {
   inject,
   PropType,
   ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, type SearchType } from '~/constants/media'
-import type { ButtonVariant } from '~/types/button'
+import { ALL_MEDIA, type SearchType } from "~/constants/media"
+import type { ButtonVariant } from "~/types/button"
 
-import useSearchType from '~/composables/use-search-type'
-import { useUiStore } from '~/stores/ui'
+import useSearchType from "~/composables/use-search-type"
+import { useUiStore } from "~/stores/ui"
 
-import { useI18n } from '~/composables/use-i18n'
+import { useI18n } from "~/composables/use-i18n"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VButton from '~/components/VButton.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VButton from "~/components/VButton.vue"
 
-import caretDownIcon from '~/assets/icons/caret-down.svg'
+import caretDownIcon from "~/assets/icons/caret-down.svg"
 
 export default defineComponent({
-  name: 'VSearchTypeButtonOld',
+  name: "VSearchTypeButtonOld",
   components: { VButton, VIcon },
   props: {
     a11yProps: {
@@ -62,8 +62,8 @@ export default defineComponent({
       default: ALL_MEDIA,
     },
     type: {
-      type: String as PropType<'header' | 'searchbar'>,
-      default: 'header',
+      type: String as PropType<"header" | "searchbar">,
+      default: "header",
     },
   },
   setup(props) {
@@ -71,7 +71,7 @@ export default defineComponent({
 
     const uiStore = useUiStore()
 
-    const isHeaderScrolled = inject('isHeaderScrolled', ref(false))
+    const isHeaderScrolled = inject("isHeaderScrolled", ref(false))
 
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
 
@@ -80,34 +80,34 @@ export default defineComponent({
       () => isHeaderScrolled.value && !isDesktopLayout.value
     )
     const sizeClasses = computed(() => {
-      if (props.type === 'searchbar') {
-        return 'h-12 px-2'
+      if (props.type === "searchbar") {
+        return "h-12 px-2"
       } else if (isIconButton.value) {
-        return 'w-10 h-10'
+        return "w-10 h-10"
       } else {
         /**
           When there is a caret down icon (on 'md' screens), paddings are balanced,
           without it, paddings need to be adjusted.
           */
-        return 'ps-2 pe-3 md:px-2'
+        return "ps-2 pe-3 md:px-2"
       }
     })
 
     const buttonVariant = computed<ButtonVariant>(() => {
-      if (props.type === 'searchbar') {
-        return 'action-menu'
+      if (props.type === "searchbar") {
+        return "action-menu"
       } else {
         return isDesktopLayout.value && !isHeaderScrolled.value
-          ? 'action-menu-bordered'
-          : 'action-menu'
+          ? "action-menu-bordered"
+          : "action-menu"
       }
     })
     const buttonLabel = computed(() => {
       return i18n.t(`search-type.${props.activeItem}`)
     })
 
-    const isInSearchBar = computed(() => props.type === 'searchbar')
-    const isPressed = computed(() => Boolean(props.a11yProps['aria-expanded']))
+    const isInSearchBar = computed(() => props.type === "searchbar")
+    const isPressed = computed(() => Boolean(props.a11yProps["aria-expanded"]))
 
     return {
       buttonVariant,

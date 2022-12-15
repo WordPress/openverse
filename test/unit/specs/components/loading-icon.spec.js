@@ -1,10 +1,10 @@
-import LoadingIcon from '~/components/LoadingIcon.vue'
+import LoadingIcon from "~/components/LoadingIcon.vue"
 
-import render from '../../test-utils/render'
+import render from "../../test-utils/render"
 
-describe('LoadingIcon', () => {
-  it('should render correct contents', () => {
+describe("LoadingIcon", () => {
+  it("should render correct contents", () => {
     const wrapper = render(LoadingIcon)
-    expect(wrapper.find('.lds-ring').vm).toBeDefined()
+    expect(wrapper.find(".lds-ring").vm).toBeDefined()
   })
 })

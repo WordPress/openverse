@@ -1,11 +1,11 @@
-import { expect, Locator } from '@playwright/test'
+import { expect, Locator } from "@playwright/test"
 
 import {
   activeAudioStatus,
   inactiveAudioStatus,
   statusVerbMap,
   AudioStatusVerb,
-} from '~/constants/audio'
+} from "~/constants/audio"
 
 const getPossibleAudioActions = async (
   context: Locator,
@@ -37,7 +37,7 @@ const getAllActive = async (
     ...options,
     state: activeAudioStatus.map((a) => statusVerbMap[a]),
   })
-  expect(locators, 'Could not find a pause or loading button.').toHaveLength(
+  expect(locators, "Could not find a pause or loading button.").toHaveLength(
     options.filterVisible ? 1 : 2
   )
   return locators
@@ -54,7 +54,7 @@ const getAllInactive = async (
     ...options,
     state: inactiveAudioStatus.map((a) => statusVerbMap[a]),
   })
-  expect(locators, 'Could not find a play or replay button.').toHaveLength(
+  expect(locators, "Could not find a play or replay button.").toHaveLength(
     options.filterVisible ? 1 : 2
   )
   return locators

@@ -1,17 +1,17 @@
-import { setActivePinia, createPinia } from '~~/test/unit/test-utils/pinia'
+import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import { useNavigationStore } from '~/stores/navigation'
+import { useNavigationStore } from "~/stores/navigation"
 
 const initialState = {
   isEmbedded: true,
   isReferredFromCc: false,
 }
 
-describe('Nav Store', () => {
+describe("Nav Store", () => {
   beforeEach(() => {
     setActivePinia(createPinia())
   })
-  it('sets the initial state correctly', () => {
+  it("sets the initial state correctly", () => {
     const navigationStore = useNavigationStore()
     expect(navigationStore.isEmbedded).toEqual(initialState.isEmbedded)
     expect(navigationStore.isReferredFromCc).toEqual(
@@ -19,7 +19,7 @@ describe('Nav Store', () => {
     )
   })
 
-  it.each([true, false, undefined])('sets isEmbedded', (embedded) => {
+  it.each([true, false, undefined])("sets isEmbedded", (embedded) => {
     const navigationStore = useNavigationStore()
     navigationStore.setIsEmbedded(embedded)
     const expectedValue = embedded ?? true
@@ -28,7 +28,7 @@ describe('Nav Store', () => {
   })
 
   it.each([true, false, undefined])(
-    'sets isReferredFromCc',
+    "sets isReferredFromCc",
     (isReferredFromCc) => {
       const navigationStore = useNavigationStore()
       navigationStore.setIsReferredFromCc(isReferredFromCc)

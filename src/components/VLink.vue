@@ -39,21 +39,21 @@
  * Internal links use `NuxtLink` component with `to` attribute set to `localePath(href)`
  * External links use `a` element set to open in a new tab and not raise an error with the current iframe setup.
  */
-import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useContext } from "@nuxtjs/composition-api"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
 
-import externalLinkIcon from '~/assets/icons/external-link.svg'
+import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
-  name: 'VLink',
+  name: "VLink",
   components: { VIcon },
   props: {
     href: {
       type: String,
       required: false,
       validator: (v: string | undefined) =>
-        (typeof v === 'string' && v.length > 0) || typeof v === 'undefined',
+        (typeof v === "string" && v.length > 0) || typeof v === "undefined",
     },
     /**
      * whether to render the external link icon next to links that point away
@@ -69,12 +69,12 @@ export default defineComponent({
     function checkHref(
       p: typeof props
     ): p is { href: string; showExternalIcon: boolean } {
-      return typeof p.href === 'string' && !['', '#'].includes(p.href)
+      return typeof p.href === "string" && !["", "#"].includes(p.href)
     }
 
     const hasHref = computed(() => checkHref(props))
     const isInternal = computed(
-      () => hasHref.value && props.href?.startsWith('/')
+      () => hasHref.value && props.href?.startsWith("/")
     )
     const isNuxtLink = computed(() => hasHref.value && isInternal.value)
 

@@ -8,22 +8,22 @@
  * This makes it possible for the e2e tests to run without internet, and makes the
  * tests less flaky due to changes in the API or API data.
  */
-const process = require('process')
-const zlib = require('zlib')
+const process = require("process")
+const zlib = require("zlib")
 
 // TS doesn't pull the type in correctly for the next dependency when it's `require`'d.
 
 /** @type {import('talkback')['default']} */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-const talkback = require('talkback')
+const talkback = require("talkback")
 
 // Talkback does not export its types so we've got to pull them out of the Options
 /** @typedef {Required<typeof talkback['Options']['Default']>} TalkbackOptions */
 /** @typedef {ReturnType<TalkbackOptions['tapeDecorator']>} Tape */
 
 const port = 49153
-const host = 'https://api.openverse.engineering'
+const host = "https://api.openverse.engineering"
 
 const urlPatterns = {
   search: /\/(?<mediaType>images|audio|video|model-3d)\/*\?(?<query>[\w&=]+)/,
@@ -54,10 +54,10 @@ const tapeNameGenerator = (tapeNumber, tape) => {
     const groups = typeMatch.match.groups
     const prefix = `${typeMatch.type}/${groups.mediaType}`
     let suffix = `${tape.req.headers.connection}`
-    if (tape.req.method !== 'GET') {
+    if (tape.req.method !== "GET") {
       suffix = `${suffix}_${tape.req.method}`
     }
-    if (typeMatch.type === 'search') {
+    if (typeMatch.type === "search") {
       return `${prefix}/${groups.query}_${suffix}`
     } else {
       return `${prefix}/${groups.uuid}_${suffix}`
@@ -68,7 +68,7 @@ const tapeNameGenerator = (tapeNumber, tape) => {
 }
 
 const updatingTapes =
-  process.argv.includes('--update-tapes') || process.env.UPDATE_TAPES === 'true'
+  process.argv.includes("--update-tapes") || process.env.UPDATE_TAPES === "true"
 
 /** @type {TalkbackOptions['record']} */
 const recordMode = updatingTapes
@@ -97,7 +97,7 @@ const BodyUtils = Object.freeze({
  */
 const getBodyUtil = (tape) =>
   Object.entries(BodyUtils).find(([key]) =>
-    tape.res?.headers['content-encoding']?.includes(key)
+    tape.res?.headers["content-encoding"]?.includes(key)
   )?.[1] ?? BodyUtils.default
 
 /**
@@ -135,7 +135,7 @@ const getBodyUtil = (tape) =>
  * @type {TalkbackOptions['tapeDecorator']}
  */
 const tapeDecorator = (tape) => {
-  if (!tape.res || tape.req.url.endsWith('/thumb/') || tape.res.status >= 399)
+  if (!tape.res || tape.req.url.endsWith("/thumb/") || tape.res.status >= 399)
     return tape
 
   const bodyUtil = getBodyUtil(tape)
@@ -153,13 +153,13 @@ const tapeDecorator = (tape) => {
 const opts = /** @type {Partial<TalkbackOptions>} */ ({
   host,
   port,
-  path: './test/tapes',
+  path: "./test/tapes",
   record: recordMode,
   silent: true,
   fallbackMode: talkback.Options.FallbackMode.NOT_FOUND,
   ignoreBody: true,
-  allowHeaders: ['connection'],
-  name: 'Openverse e2e proxy',
+  allowHeaders: ["connection"],
+  name: "Openverse e2e proxy",
   summary: false,
   tapeNameGenerator,
   tapeDecorator,
@@ -167,13 +167,13 @@ const opts = /** @type {Partial<TalkbackOptions>} */ ({
 
 const server = talkback(opts)
 
-server.start(() => console.log('Talkback started with record mode', recordMode))
+server.start(() => console.log("Talkback started with record mode", recordMode))
 function closeServer() {
   server.close()
-  console.log('Server closed, exiting process')
+  console.log("Server closed, exiting process")
   process.exit(0)
 }
-process.on('SIGTERM', () => {
-  console.log('Received SIGTERM')
+process.on("SIGTERM", () => {
+  console.log("Received SIGTERM")
   closeServer()
 })

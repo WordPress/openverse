@@ -1,19 +1,19 @@
-import { capital } from 'case'
-import { defineStore } from 'pinia'
-import { Ref, ssrRef } from '@nuxtjs/composition-api'
-import axios from 'axios'
+import { capital } from "case"
+import { defineStore } from "pinia"
+import { Ref, ssrRef } from "@nuxtjs/composition-api"
+import axios from "axios"
 
-import { env } from '~/utils/env'
+import { env } from "~/utils/env"
 import {
   AUDIO,
   IMAGE,
   SupportedMediaType,
   supportedMediaTypes,
-} from '~/constants/media'
-import { warn } from '~/utils/console'
-import { initProviderServices } from '~/data/media-provider-service'
-import type { MediaProvider } from '~/types/media-provider'
-import type { FetchState } from '~/types/fetch-state'
+} from "~/constants/media"
+import { warn } from "~/utils/console"
+import { initProviderServices } from "~/data/media-provider-service"
+import type { MediaProvider } from "~/types/media-provider"
+import type { FetchState } from "~/types/fetch-state"
 
 export interface ProviderState {
   providers: {
@@ -44,7 +44,7 @@ const lastUpdated: Ref<Date | null> = ssrRef(null)
 
 const updateFrequency = parseInt(env.providerUpdateFrequency, 10)
 
-export const useProviderStore = defineStore('provider', {
+export const useProviderStore = defineStore("provider", {
   state: (): ProviderState => ({
     providers: {
       [AUDIO]: [],
@@ -74,10 +74,10 @@ export const useProviderStore = defineStore('provider', {
 
     _updateFetchState(
       mediaType: SupportedMediaType,
-      action: 'start' | 'end',
+      action: "start" | "end",
       option?: string
     ) {
-      action === 'start'
+      action === "start"
         ? this._startFetching(mediaType)
         : this._endFetching(mediaType, option)
     },
@@ -121,7 +121,7 @@ export const useProviderStore = defineStore('provider', {
     async fetchMediaTypeProviders(
       mediaType: SupportedMediaType
     ): Promise<void> {
-      this._updateFetchState(mediaType, 'start')
+      this._updateFetchState(mediaType, "start")
       let sortedProviders = [] as MediaProvider[]
       try {
         const service = initProviderServices[mediaType](
@@ -129,19 +129,19 @@ export const useProviderStore = defineStore('provider', {
         )
         const res = await service.getProviderStats()
         sortedProviders = sortProviders(res.data)
-        this._updateFetchState(mediaType, 'end')
+        this._updateFetchState(mediaType, "end")
       } catch (error: unknown) {
         let errorMessage = `There was an error fetching media providers for ${mediaType}`
         if (error instanceof Error) {
           errorMessage =
-            axios.isAxiosError(error) && 'response' in error
+            axios.isAxiosError(error) && "response" in error
               ? `${errorMessage}: ${error.code}`
               : `${errorMessage}: ${error?.message}`
         }
         warn(errorMessage)
         // Fallback on existing providers if there was an error
         sortedProviders = this.providers[mediaType]
-        this._updateFetchState(mediaType, 'end', errorMessage)
+        this._updateFetchState(mediaType, "end", errorMessage)
       } finally {
         this.providers[mediaType] = sortedProviders
       }

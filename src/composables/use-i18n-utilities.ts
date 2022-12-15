@@ -1,14 +1,14 @@
-import { useGetLocaleFormattedNumber } from '~/composables/use-get-locale-formatted-number'
-import { useI18n } from '~/composables/use-i18n'
+import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
+import { useI18n } from "~/composables/use-i18n"
 
 /**
  * Not using dynamically-generated keys to ensure that
  * correct line is shown in the 'po' locale files
  */
 const i18nKeys = {
-  noResult: 'browse-page.all-no-results',
-  result: 'browse-page.all-result-count',
-  more: 'browse-page.all-result-count-more',
+  noResult: "browse-page.all-no-results",
+  result: "browse-page.all-result-count",
+  more: "browse-page.all-result-count-more",
 }
 
 /**
@@ -21,10 +21,10 @@ export function useI18nResultsCount() {
   const getI18nCount = (resultsCount: number) => {
     const countKey =
       resultsCount === 0
-        ? 'noResult'
+        ? "noResult"
         : resultsCount >= 10000
-        ? 'more'
-        : 'result'
+        ? "more"
+        : "result"
     const fullKey = i18nKeys[countKey]
     const localeCount = getLocaleFormattedNumber(resultsCount)
     return i18n.tc(fullKey, resultsCount, { localeCount })

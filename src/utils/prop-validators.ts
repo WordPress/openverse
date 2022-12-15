@@ -1,4 +1,4 @@
-import { SupportedSearchType, supportedSearchTypes } from '~/constants/media'
+import { SupportedSearchType, supportedSearchTypes } from "~/constants/media"
 
 /**
  * Validates the search types that have supported API endpoints.

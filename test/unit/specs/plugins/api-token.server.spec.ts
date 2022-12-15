@@ -1,16 +1,16 @@
-import { mockCreateApiService } from '~~/test/unit/test-utils/api-service-mock'
+import { mockCreateApiService } from "~~/test/unit/test-utils/api-service-mock"
 
 import apiTokenPlugin, {
   Process,
   expiryThreshold,
-} from '~/plugins/api-token.server'
+} from "~/plugins/api-token.server"
 
-import type { AxiosRequestConfig } from 'axios'
+import type { AxiosRequestConfig } from "axios"
 
-import type { Context } from '@nuxt/types'
+import type { Context } from "@nuxt/types"
 
 // Comment this out if you need to debug the tests as the logs are quite helpful
-jest.mock('~/utils/console', () => ({
+jest.mock("~/utils/console", () => ({
   log: () => {
     /* noop */
   },
@@ -29,14 +29,14 @@ type $config = Partial<{
 }>
 
 const defaultConfig: Required<$config> = {
-  apiClientId: 'abcdefg_client_i_d',
-  apiClientSecret: 'shhhhhhhhh_1234_super_secret',
+  apiClientId: "abcdefg_client_i_d",
+  apiClientSecret: "shhhhhhhhh_1234_super_secret",
 }
 
 const matchTokenDataRequestBody = new URLSearchParams({
   client_id: defaultConfig.apiClientId,
   client_secret: defaultConfig.apiClientSecret,
-  grant_type: 'client_credentials',
+  grant_type: "client_credentials",
 }).toString()
 
 const getMockContext = ($config: $config = defaultConfig) =>
@@ -51,7 +51,7 @@ const mockInject = jest.fn()
 
 const frozenNow = Date.now()
 const frozenSeconds = Math.floor(frozenNow / 1e3)
-jest.spyOn(global.Date, 'now').mockReturnValue(frozenNow)
+jest.spyOn(global.Date, "now").mockReturnValue(frozenNow)
 const twelveHoursInSeconds = 12 * 3600
 let tokenCount = 1
 const getMockTokenResponse = (expires_in = twelveHoursInSeconds) => ({
@@ -68,18 +68,18 @@ const mockResponseAndAssertData =
 
 const defaultPromise = Promise.resolve()
 
-describe('api-token.server plugin', () => {
+describe("api-token.server plugin", () => {
   afterEach(() => {
     mockInject.mockReset()
     process.tokenData = {
-      accessToken: '',
+      accessToken: "",
       accessTokenExpiry: 0,
     }
     process.tokenFetching = defaultPromise
   })
 
-  describe('successful token retrieval', () => {
-    it('should save the token into the process and inject into the context', async () => {
+  describe("successful token retrieval", () => {
+    it("should save the token into the process and inject into the context", async () => {
       const mockTokenResponse = getMockTokenResponse()
       mockCreateApiService((axiosMockAdapter) => {
         axiosMockAdapter
@@ -95,12 +95,12 @@ describe('api-token.server plugin', () => {
       })
 
       expect(mockInject).toHaveBeenCalledWith(
-        'openverseApiToken',
+        "openverseApiToken",
         process.tokenData.accessToken
       )
     })
 
-    it('should re-retrieve the token when about to expire', async () => {
+    it("should re-retrieve the token when about to expire", async () => {
       const mockTokenResponse = getMockTokenResponse(expiryThreshold - 1)
       const nextMockTokenResponse = getMockTokenResponse()
       mockCreateApiService((axiosMockAdapter) => {
@@ -121,7 +121,7 @@ describe('api-token.server plugin', () => {
       })
     })
 
-    it('should not request a new token if the token is not about to expire', async () => {
+    it("should not request a new token if the token is not about to expire", async () => {
       const mockTokenResponse = getMockTokenResponse(twelveHoursInSeconds)
       const nextMockTokenResponse = getMockTokenResponse()
       mockCreateApiService((axiosMockAdapter) => {
@@ -142,7 +142,7 @@ describe('api-token.server plugin', () => {
       })
     })
 
-    it('subsequent requests should all block on the same token retrieval promise', async () => {
+    it("subsequent requests should all block on the same token retrieval promise", async () => {
       /**
        * This test is pretty complicated because we need to simulate
        * multiple requests coming in at the same time with requests
@@ -207,8 +207,8 @@ describe('api-token.server plugin', () => {
     })
   })
 
-  describe('unnecessful token retrieval', () => {
-    it('should record the error in sentry', async () => {
+  describe("unnecessful token retrieval", () => {
+    it("should record the error in sentry", async () => {
       mockCreateApiService((mockAdapter) => {
         mockAdapter
           .onPost(matchTokenDataRequest)
@@ -228,11 +228,11 @@ describe('api-token.server plugin', () => {
       expect(mockContext.$sentry.captureException).toHaveBeenCalledTimes(1)
       expect(capturedError).not.toBeUndefined()
       expect((capturedError as unknown as Error).message).toMatch(
-        'Unable to retrieve API token. Request failed with status code 418'
+        "Unable to retrieve API token. Request failed with status code 418"
       )
     })
 
-    it('should empty the token data', async () => {
+    it("should empty the token data", async () => {
       mockCreateApiService((mockAdapter) => {
         mockAdapter
           .onPost(matchTokenDataRequest)
@@ -248,12 +248,12 @@ describe('api-token.server plugin', () => {
       })
 
       await apiTokenPlugin(getMockContext(), mockInject)
-      expect(process.tokenData.accessToken).not.toEqual('')
+      expect(process.tokenData.accessToken).not.toEqual("")
       await apiTokenPlugin(getMockContext(), mockInject)
-      expect(process.tokenData.accessToken).toEqual('')
+      expect(process.tokenData.accessToken).toEqual("")
     })
 
-    it('should properly release the mutex and allow for subsequent requests to retry the token refresh', async () => {
+    it("should properly release the mutex and allow for subsequent requests to retry the token refresh", async () => {
       const finalTokenResponse = getMockTokenResponse()
       mockCreateApiService((mockAdapter) => {
         mockAdapter
@@ -282,16 +282,16 @@ describe('api-token.server plugin', () => {
     })
   })
 
-  describe('missing client credentials', () => {
-    describe('completely missing', () => {
-      it('should not make any requests and fall back to tokenless', async () => {
+  describe("missing client credentials", () => {
+    describe("completely missing", () => {
+      it("should not make any requests and fall back to tokenless", async () => {
         await apiTokenPlugin(getMockContext({}), mockInject)
-        expect(mockInject).toHaveBeenCalledWith('openverseApiToken', '')
+        expect(mockInject).toHaveBeenCalledWith("openverseApiToken", "")
       })
     })
 
-    describe('explicitly undefined', () => {
-      it('should not make any requests and fall back to tokenless', async () => {
+    describe("explicitly undefined", () => {
+      it("should not make any requests and fall back to tokenless", async () => {
         await apiTokenPlugin(
           getMockContext({
             apiClientId: undefined,
@@ -299,7 +299,7 @@ describe('api-token.server plugin', () => {
           }),
           mockInject
         )
-        expect(mockInject).toHaveBeenCalledWith('openverseApiToken', '')
+        expect(mockInject).toHaveBeenCalledWith("openverseApiToken", "")
       })
     })
   })

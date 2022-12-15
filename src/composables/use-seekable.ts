@@ -1,7 +1,7 @@
-import { computed, ToRefs, ref } from '@nuxtjs/composition-api'
+import { computed, ToRefs, ref } from "@nuxtjs/composition-api"
 
-import { useI18n } from '~/composables/use-i18n'
-import { keycodes } from '~/constants/key-codes'
+import { useI18n } from "~/composables/use-i18n"
+import { keycodes } from "~/constants/key-codes"
 
 export interface UseSeekableOptions
   extends ToRefs<{
@@ -23,16 +23,16 @@ export const useSeekable = ({
   const i18n = useI18n()
 
   const attributes = computed(() => ({
-    'aria-role': 'slider',
-    'aria-valuemax': duration.value,
-    'aria-valuenow': currentTime.value,
-    'aria-valuetext': i18n
-      .tc('waveform.current-time', currentTime.value, {
+    "aria-role": "slider",
+    "aria-valuemax": duration.value,
+    "aria-valuenow": currentTime.value,
+    "aria-valuetext": i18n
+      .tc("waveform.current-time", currentTime.value, {
         time: currentTime.value,
       })
       .toString(),
-    'aria-orientation': 'horizontal' as const,
-    'aria-valuemin': '0',
+    "aria-orientation": "horizontal" as const,
+    "aria-valuemin": "0",
   }))
 
   const seekDelta = 1 // seconds
@@ -52,9 +52,9 @@ export const useSeekable = ({
     const { key, shiftKey, metaKey } = event
     if (metaKey) {
       // Always false on Windows
-      onSeek(key.includes('Left') ? 0 : 1)
+      onSeek(key.includes("Left") ? 0 : 1)
     } else {
-      const direction = key.includes('Left') ? -1 : 1
+      const direction = key.includes("Left") ? -1 : 1
       const magnitude = shiftKey ? modSeekDeltaFrac.value : seekDeltaFrac.value
       const delta = magnitude * direction
       onSeek(currentFrac.value + delta)

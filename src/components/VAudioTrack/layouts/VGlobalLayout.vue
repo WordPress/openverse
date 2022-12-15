@@ -19,15 +19,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { AudioDetail } from '~/types/media'
+import type { AudioDetail } from "~/types/media"
 
-import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
-import VLink from '~/components/VLink.vue'
+import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
+import VLink from "~/components/VLink.vue"
 
 export default defineComponent({
-  name: 'VGlobalLayout',
+  name: "VGlobalLayout",
   components: {
     VAudioThumbnail,
     VLink,

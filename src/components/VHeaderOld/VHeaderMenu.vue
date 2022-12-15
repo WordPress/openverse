@@ -5,21 +5,21 @@ import {
   ref,
   useContext,
   useRouter,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, searchPath, supportedMediaTypes } from '~/constants/media'
-import useSearchType from '~/composables/use-search-type'
-import { useMediaStore } from '~/stores/media'
-import { useSearchStore } from '~/stores/search'
-import { useUiStore } from '~/stores/ui'
+import { ALL_MEDIA, searchPath, supportedMediaTypes } from "~/constants/media"
+import useSearchType from "~/composables/use-search-type"
+import { useMediaStore } from "~/stores/media"
+import { useSearchStore } from "~/stores/search"
+import { useUiStore } from "~/stores/ui"
 
-import VMobileMenuModal from '~/components/VContentSwitcherOld/VMobileMenuModal.vue'
-import VSearchTypePopoverOld from '~/components/VContentSwitcherOld/VSearchTypePopoverOld.vue'
-import VDesktopPageMenu from '~/components/VHeaderOld/VPageMenu/VDesktopPageMenu.vue'
-import VMobilePageMenu from '~/components/VHeaderOld/VPageMenu/VMobilePageMenu.vue'
+import VMobileMenuModal from "~/components/VContentSwitcherOld/VMobileMenuModal.vue"
+import VSearchTypePopoverOld from "~/components/VContentSwitcherOld/VSearchTypePopoverOld.vue"
+import VDesktopPageMenu from "~/components/VHeaderOld/VPageMenu/VDesktopPageMenu.vue"
+import VMobilePageMenu from "~/components/VHeaderOld/VPageMenu/VMobilePageMenu.vue"
 
 export default defineComponent({
-  name: 'VHeaderMenu',
+  name: "VHeaderMenu",
   components: {
     VMobileMenuModal,
     VSearchTypePopoverOld,
@@ -84,17 +84,17 @@ export default defineComponent({
     if (!this.isSearchRoute) {
       return this.isDesktopLayout ? h(VDesktopPageMenu) : h(VMobilePageMenu)
     } else if (this.isDesktopLayout) {
-      return h('div', { class: 'flex flex-grow justify-between gap-x-2' }, [
+      return h("div", { class: "flex flex-grow justify-between gap-x-2" }, [
         h(VDesktopPageMenu),
         h(VSearchTypePopoverOld, {
           props: { activeItem: this.content.activeType.value },
-          ref: 'menuModalRef',
+          ref: "menuModalRef",
           on: { select: this.selectSearchType },
         }),
       ])
     } else {
       return h(VMobileMenuModal, {
-        ref: 'menuModalRef',
+        ref: "menuModalRef",
         props: { activeItem: this.content.activeType.value },
         on: {
           select: this.selectSearchType,

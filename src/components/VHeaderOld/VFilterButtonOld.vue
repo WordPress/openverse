@@ -28,22 +28,22 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent, inject, ref } from "@nuxtjs/composition-api"
 
-import { useSearchStore } from '~/stores/search'
-import { useUiStore } from '~/stores/ui'
+import { useSearchStore } from "~/stores/search"
+import { useUiStore } from "~/stores/ui"
 
-import type { ButtonVariant } from '~/types/button'
-import { defineEvent } from '~/types/emits'
-import { useI18n } from '~/composables/use-i18n'
+import type { ButtonVariant } from "~/types/button"
+import { defineEvent } from "~/types/emits"
+import { useI18n } from "~/composables/use-i18n"
 
-import VButton from '~/components/VButton.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
 
-import filterIcon from '~/assets/icons/filter.svg'
+import filterIcon from "~/assets/icons/filter.svg"
 
 export default defineComponent({
-  name: 'VFilterButtonOld',
+  name: "VFilterButtonOld",
   components: {
     VIcon,
     VButton,
@@ -68,7 +68,7 @@ export default defineComponent({
     const searchStore = useSearchStore()
     const uiStore = useUiStore()
 
-    const isHeaderScrolled = inject('isHeaderScrolled', ref(false))
+    const isHeaderScrolled = inject("isHeaderScrolled", ref(false))
     const filterCount = computed(() => searchStore.appliedFilterCount)
     const filtersAreApplied = computed(() => filterCount.value > 0)
 
@@ -79,14 +79,14 @@ export default defineComponent({
     const variant = computed(() => {
       // Show the bordered state by default, unless below md
       let value: ButtonVariant = uiStore.isDesktopLayout
-        ? 'action-menu-bordered'
-        : 'action-menu'
+        ? "action-menu-bordered"
+        : "action-menu"
 
       if (isHeaderScrolled.value) {
-        value = 'action-menu'
+        value = "action-menu"
       }
       if (filtersAreApplied.value) {
-        value = 'action-menu-muted'
+        value = "action-menu-muted"
       }
       return value
     })
@@ -99,14 +99,14 @@ export default defineComponent({
      */
     const mdMinLabel = computed(() =>
       filtersAreApplied.value
-        ? i18n.tc('header.filter-button.with-count', filterCount.value)
-        : i18n.t('header.filter-button.simple')
+        ? i18n.tc("header.filter-button.with-count", filterCount.value)
+        : i18n.t("header.filter-button.simple")
     )
 
     const smMaxLabel = computed(() =>
       isHeaderScrolled.value
         ? filterCount.value
-        : i18n.tc('header.filter-button.with-count', filterCount.value)
+        : i18n.tc("header.filter-button.with-count", filterCount.value)
     )
 
     return {

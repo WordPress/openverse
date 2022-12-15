@@ -1,11 +1,11 @@
-import { render, screen } from '@testing-library/vue'
+import { render, screen } from "@testing-library/vue"
 
-import VLicense from '~/components/VLicense/VLicense.vue'
+import VLicense from "~/components/VLicense/VLicense.vue"
 
-describe('VLicense', () => {
+describe("VLicense", () => {
   let options = {
     props: {
-      license: 'by',
+      license: "by",
     },
     mocks: {
       $nuxt: {
@@ -16,30 +16,30 @@ describe('VLicense', () => {
     },
   }
 
-  it('should render the license name and icons', () => {
+  it("should render the license name and icons", () => {
     const { container } = render(VLicense, options)
-    const licenseName = screen.getByLabelText('license-readable-names.by')
+    const licenseName = screen.getByLabelText("license-readable-names.by")
     expect(licenseName).toBeInTheDocument()
-    const licenseIcons = container.querySelectorAll('svg')
+    const licenseIcons = container.querySelectorAll("svg")
     expect(licenseIcons).toHaveLength(2) // 'CC' and 'BY' icons
   })
 
-  it('should render only the license icons', () => {
+  it("should render only the license icons", () => {
     options.props.hideName = true
     const { container } = render(VLicense, options)
-    const licenseName = screen.queryByLabelText('license-readable-names.by')
+    const licenseName = screen.queryByLabelText("license-readable-names.by")
     expect(licenseName).not.toBeVisible()
-    const licenseIcons = container.querySelectorAll('svg')
+    const licenseIcons = container.querySelectorAll("svg")
     expect(licenseIcons).toHaveLength(2)
   })
 
-  it('should have background filled with black text', () => {
+  it("should have background filled with black text", () => {
     options.props.bgFilled = true
     const { container } = render(VLicense, options)
-    const licenseIcons = container.querySelectorAll('svg')
+    const licenseIcons = container.querySelectorAll("svg")
     expect(licenseIcons).toHaveLength(2)
     licenseIcons.forEach((icon) => {
-      expect(icon).toHaveClass('bg-filled', 'text-black')
+      expect(icon).toHaveClass("bg-filled", "text-black")
     })
   })
 })

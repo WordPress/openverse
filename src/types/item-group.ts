@@ -1,16 +1,16 @@
-import type { InjectionKey, Ref } from '@nuxtjs/composition-api'
+import type { InjectionKey, Ref } from "@nuxtjs/composition-api"
 
 export const itemGroupDirections = [
-  'vertical',
-  'horizontal',
-  'columns',
+  "vertical",
+  "horizontal",
+  "columns",
 ] as const
 export type ItemGroupDirection = typeof itemGroupDirections[number]
 
-export const itemGroupTypes = ['list', 'menu', 'radiogroup'] as const
+export const itemGroupTypes = ["list", "menu", "radiogroup"] as const
 export type ItemGroupType = typeof itemGroupTypes[number]
 
-export const itemGroupSizes = ['small', 'medium'] as const
+export const itemGroupSizes = ["small", "medium"] as const
 export type ItemGroupSize = typeof itemGroupSizes[number]
 
 export type VIemGroupContext = {
@@ -21,7 +21,7 @@ export type VIemGroupContext = {
 }
 
 export const VItemGroupContextKey = Symbol(
-  'VItemGroupContext'
+  "VItemGroupContext"
 ) as InjectionKey<VIemGroupContext>
 
 export type VIemGroupFocusContext = {
@@ -32,5 +32,5 @@ export type VIemGroupFocusContext = {
 }
 
 export const VItemGroupFocusContextKey = Symbol(
-  'VItemGroupFocusContext'
+  "VItemGroupFocusContext"
 ) as InjectionKey<VIemGroupFocusContext>

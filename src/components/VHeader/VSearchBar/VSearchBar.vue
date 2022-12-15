@@ -60,24 +60,24 @@ import {
   defineComponent,
   PropType,
   ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { onClickOutside } from '@vueuse/core'
+import { onClickOutside } from "@vueuse/core"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
-import { useSearchStore } from '~/stores/search'
-import { useFeatureFlagStore } from '~/stores/feature-flag'
+import { useSearchStore } from "~/stores/search"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-import { keycodes } from '~/constants/key-codes'
+import { keycodes } from "~/constants/key-codes"
 
-import { cyclicShift } from '~/utils/math'
+import { cyclicShift } from "~/utils/math"
 
 import VInputField, {
   FIELD_SIZES,
-} from '~/components/VInputField/VInputField.vue'
-import VSearchButton from '~/components/VHeader/VSearchBar/VSearchButton.vue'
-import VRecentSearches from '~/components/VRecentSearches/VRecentSearches.vue'
+} from "~/components/VInputField/VInputField.vue"
+import VSearchButton from "~/components/VHeader/VSearchBar/VSearchButton.vue"
+import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
 
 /**
  * The search bar displayed on the search page.
@@ -89,7 +89,7 @@ import VRecentSearches from '~/components/VRecentSearches/VRecentSearches.vue'
  * displayed in the bar itself.
  */
 export default defineComponent({
-  name: 'VSearchBar',
+  name: "VSearchBar",
   components: { VRecentSearches, VInputField, VSearchButton },
   inheritAttrs: false,
   props: {
@@ -98,7 +98,7 @@ export default defineComponent({
      */
     value: {
       type: String,
-      default: '',
+      default: "",
     },
     size: {
       type: String as PropType<keyof typeof FIELD_SIZES>,
@@ -118,19 +118,19 @@ export default defineComponent({
     const inputFieldRef = ref<InstanceType<typeof VInputField> | null>(null)
 
     const modelMedium = computed<string>({
-      get: () => props.value ?? '',
+      get: () => props.value ?? "",
       set: (value: string) => {
-        emit('input', value)
+        emit("input", value)
       },
     })
 
     const handleSearch = () => {
-      emit('submit')
+      emit("submit")
     }
 
     /* Recent searches */
     const featureFlagStore = useFeatureFlagStore()
-    const isNewHeaderEnabled = featureFlagStore.isOn('new_header')
+    const isNewHeaderEnabled = featureFlagStore.isOn("new_header")
 
     const searchStore = useSearchStore()
 
@@ -138,10 +138,10 @@ export default defineComponent({
     const recentClasses = computed(() => {
       // Calculated by adding 8px to all heights defined in `VInputField.vue`.
       const FIELD_OFFSETS = {
-        small: 'top-12',
-        medium: 'top-14',
-        large: 'top-16',
-        standalone: 'top-[65px] md:top-[77px]',
+        small: "top-12",
+        medium: "top-14",
+        large: "top-16",
+        standalone: "top-[65px] md:top-[77px]",
       } as const
       return FIELD_OFFSETS[props.size]
     })

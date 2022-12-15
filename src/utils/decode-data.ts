@@ -5,8 +5,8 @@
  *
  * @param data - the string to unescape so that it can be rendered
  */
-export const decodeData = (data = ''): string => {
-  if (!data) return ''
+export const decodeData = (data = ""): string => {
+  if (!data) return ""
 
   try {
     const regexes = [/\\x([\d\w]{2})/gi, /\\u([\d\w]{4})/gi]

@@ -12,17 +12,17 @@
   </VButton>
 </template>
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VButton from '~/components/VButton.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VButton from "~/components/VButton.vue"
 
-import ellipsisIcon from '~/assets/icons/ellipsis.svg'
+import ellipsisIcon from "~/assets/icons/ellipsis.svg"
 
 export default defineComponent({
-  name: 'VPageMenuButton',
+  name: "VPageMenuButton",
   components: { VButton, VIcon },
   props: {
     a11yProps: {},

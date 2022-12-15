@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia"
 
-import type { FetchState } from '~/types/fetch-state'
-import { initServices } from '~/stores/media/services'
-import type { Media } from '~/types/media'
-import type { SupportedMediaType } from '~/constants/media'
+import type { FetchState } from "~/types/fetch-state"
+import { initServices } from "~/stores/media/services"
+import type { Media } from "~/types/media"
+import type { SupportedMediaType } from "~/constants/media"
 
 interface RelatedMediaState {
   mainMediaId: null | string
@@ -11,7 +11,7 @@ interface RelatedMediaState {
   fetchState: FetchState
 }
 
-export const useRelatedMediaStore = defineStore('related-media', {
+export const useRelatedMediaStore = defineStore("related-media", {
   state: (): RelatedMediaState => ({
     mainMediaId: null,
     fetchState: { isFetching: false, hasStarted: false, fetchingError: null },

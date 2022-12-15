@@ -1,7 +1,7 @@
-import { ref, watch, computed, Ref } from '@nuxtjs/composition-api'
+import { ref, watch, computed, Ref } from "@nuxtjs/composition-api"
 
-import { getDocument } from '~/utils/reakit-utils/dom'
-import { useEventListenerOutside } from '~/composables/use-event-listener-outside'
+import { getDocument } from "~/utils/reakit-utils/dom"
+import { useEventListenerOutside } from "~/composables/use-event-listener-outside"
 
 type Props = {
   dialogRef: Ref<HTMLElement | null>
@@ -16,9 +16,9 @@ function useMouseDownTargetRef({
   visibleRef,
   hideOnClickOutsideRef,
 }: {
-  dialogRef: Props['dialogRef']
-  visibleRef: Props['visibleRef']
-  hideOnClickOutsideRef: Props['hideOnClickOutsideRef']
+  dialogRef: Props["dialogRef"]
+  visibleRef: Props["visibleRef"]
+  hideOnClickOutsideRef: Props["hideOnClickOutsideRef"]
 }): Ref<EventTarget> {
   const mouseDownTargetRef = ref()
 
@@ -30,9 +30,9 @@ function useMouseDownTargetRef({
       const document = getDocument(popover)
       const onMouseDown = (event: MouseEvent) =>
         (mouseDownTargetRef.value = event.target)
-      document.addEventListener('mousedown', onMouseDown)
+      document.addEventListener("mousedown", onMouseDown)
       onInvalidate(() => {
-        document.removeEventListener('mousedown', onMouseDown)
+        document.removeEventListener("mousedown", onMouseDown)
       })
     },
     { immediate: true }
@@ -61,7 +61,7 @@ export function useHideOnClickOutside({
   useEventListenerOutside({
     containerRef: dialogRef,
     triggerRef: triggerElementRef,
-    eventType: 'click',
+    eventType: "click",
     listener: (event: Event) => {
       if (mouseDownTargetRef.value === event.target) {
         // Make sure the element that has been clicked is the same that last
@@ -77,7 +77,7 @@ export function useHideOnClickOutside({
   useEventListenerOutside({
     containerRef: dialogRef,
     triggerRef: triggerElementRef,
-    eventType: 'focusin',
+    eventType: "focusin",
     listener: (event: Event) => {
       const document = getDocument(dialogRef.value)
       if (event.target !== document) {

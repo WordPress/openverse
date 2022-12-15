@@ -10,21 +10,21 @@
       <VIcon :icon-path="icon" />
       <span class="font-semibold">{{ $t(`search-type.${item}`) }}</span>
       <VPill v-if="isBeta" class="ms-auto">{{
-        $t('search-type.status-beta')
+        $t("search-type.status-beta")
       }}</VPill>
     </div>
   </VItem>
 </template>
 
 <script>
-import { computed, useContext, defineComponent } from '@nuxtjs/composition-api'
+import { computed, useContext, defineComponent } from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, BETA, contentStatus } from '~/constants/media'
-import { useSearchStore } from '~/stores/search'
+import { ALL_MEDIA, BETA, contentStatus } from "~/constants/media"
+import { useSearchStore } from "~/stores/search"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VItem from '~/components/VItemGroup/VItem.vue'
-import VPill from '~/components/VPill.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VItem from "~/components/VItemGroup/VItem.vue"
+import VPill from "~/components/VPill.vue"
 
 /** @typedef {import('@nuxtjs/composition-api').ExtractPropTypes<typeof propTypes>} Props */
 const propTypes = {
@@ -35,7 +35,7 @@ const propTypes = {
   useLinks: { type: Boolean, default: true },
 }
 export default defineComponent({
-  name: 'VSearchTypeItemOld',
+  name: "VSearchTypeItemOld",
   components: { VIcon, VItem, VPill },
   props: propTypes,
   setup(props) {
@@ -52,9 +52,9 @@ export default defineComponent({
         return {}
       }
       return {
-        as: 'VLink',
+        as: "VLink",
         href: app.localePath({
-          path: `/search/${props.item === ALL_MEDIA ? '' : props.item}`,
+          path: `/search/${props.item === ALL_MEDIA ? "" : props.item}`,
           query: searchStore.computeQueryParams(props.item),
         }),
       }

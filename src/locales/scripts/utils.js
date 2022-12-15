@@ -10,7 +10,7 @@
  * @param {unknown} value - The value to set at the path.
  */
 exports.setToValue = function setValue(obj, path, value) {
-  var a = path.split('.')
+  var a = path.split(".")
   var o = obj
   while (a.length - 1) {
     var n = a.shift()

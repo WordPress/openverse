@@ -46,16 +46,16 @@ import {
   toRef,
   PropType,
   Ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
+import { useBodyScrollLock } from "~/composables/use-body-scroll-lock"
 
-import type { ModalColorMode, ModalVariant } from '~/types/modal'
+import type { ModalColorMode, ModalVariant } from "~/types/modal"
 
-import VModalContent from '~/components/VModal/VModalContent.vue'
+import VModalContent from "~/components/VModal/VModalContent.vue"
 
 export default defineComponent({
-  name: 'VModal',
+  name: "VModal",
   components: { VModalContent },
   /**
    * NB: Most of these technically default to `undefined` so that the underlying `VPopoverContent`
@@ -125,7 +125,7 @@ export default defineComponent({
      */
     variant: {
       type: String as PropType<ModalVariant>,
-      default: 'default',
+      default: "default",
     },
     /**
      * The color mode of the modal content.
@@ -136,7 +136,7 @@ export default defineComponent({
      */
     mode: {
       type: String as PropType<ModalColorMode>,
-      default: 'light',
+      default: "light",
     },
     /**
      * This props allows for the modal to be opened or closed programmatically.
@@ -150,31 +150,31 @@ export default defineComponent({
     },
     modalContentClasses: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   emits: [
     /**
      * Fires when the popover opens, regardless of reason. There are no extra parameters.
      */
-    'open',
+    "open",
     /**
      * Fires when the popover closes, regardless of reason. There are no extra parameters.
      */
-    'close',
+    "close",
   ],
   setup(props, { emit }) {
-    const visibleRef = toRef(props, 'visible')
+    const visibleRef = toRef(props, "visible")
     const internalVisibleRef: Ref<boolean> = ref<boolean>(
-      typeof props.visible === 'undefined' ? false : props.visible
+      typeof props.visible === "undefined" ? false : props.visible
     )
     const nodeRef = ref<null | HTMLElement>(null)
 
     const triggerContainerRef = ref<HTMLElement | null>(null)
 
     const triggerA11yProps = reactive({
-      'aria-expanded': false,
-      'aria-haspopup': 'dialog',
+      "aria-expanded": false,
+      "aria-haspopup": "dialog",
     })
 
     const triggerRef = computed(
@@ -182,7 +182,7 @@ export default defineComponent({
     )
 
     watch(internalVisibleRef, (visible) => {
-      triggerA11yProps['aria-expanded'] = visible
+      triggerA11yProps["aria-expanded"] = visible
     })
 
     /**
@@ -205,14 +205,14 @@ export default defineComponent({
       internalVisibleRef.value = true
       lock()
       if (props.visible !== internalVisibleRef.value) {
-        emit('open')
+        emit("open")
       }
     }
 
     const close = () => {
       internalVisibleRef.value = false
       unlock()
-      emit('close')
+      emit("close")
     }
 
     const onTriggerClick = () => {

@@ -1,10 +1,10 @@
 // This implementation is loosely copied from vue-i18n-extract
 // https://github.com/pixari/vue-i18n-extract
 
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs")
+const path = require("path")
 
-const glob = require('glob')
+const glob = require("glob")
 
 const BASE_PATH = path.dirname(path.dirname(__dirname))
 
@@ -12,16 +12,16 @@ function readVueFiles(src) {
   const targetFiles = glob.sync(src)
 
   if (targetFiles.length === 0) {
-    throw new Error('vueFiles glob has no files.')
+    throw new Error("vueFiles glob has no files.")
   }
   // Now that the script are inside `src/locales/scripts`,
   // to get relative URL, the script needs to go up 3 levels
   return targetFiles.map((f) => {
-    const fileName = path.relative(process.cwd(), f.replace(BASE_PATH, 'src'))
+    const fileName = path.relative(process.cwd(), f.replace(BASE_PATH, "src"))
     return {
       fileName,
       path: f,
-      content: fs.readFileSync(f, 'utf8'),
+      content: fs.readFileSync(f, "utf8"),
     }
   })
 }

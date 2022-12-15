@@ -1,9 +1,9 @@
-import { test } from '@playwright/test'
+import { test } from "@playwright/test"
 
 import breakpoints, {
   isMobileBreakpoint,
-} from '~~/test/playwright/utils/breakpoints'
-import { hideInputCursors } from '~~/test/playwright/utils/page'
+} from "~~/test/playwright/utils/breakpoints"
+import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {
   closeFilters,
   enableNewHeader,
@@ -11,11 +11,11 @@ import {
   languageDirections,
   scrollToBottom,
   sleep,
-} from '~~/test/playwright/utils/navigation'
+} from "~~/test/playwright/utils/navigation"
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
-const headerSelector = '.main-header'
+const headerSelector = ".main-header"
 
 for (const dir of languageDirections) {
   test.describe(`header-${dir}`, () => {
@@ -24,19 +24,19 @@ for (const dir of languageDirections) {
         if (!isMobileBreakpoint(breakpoint)) {
           await context.addCookies([
             {
-              name: 'ui',
+              name: "ui",
               value: JSON.stringify({ isDesktopLayout: true }),
-              domain: 'localhost',
-              path: '/',
+              domain: "localhost",
+              path: "/",
             },
           ])
         }
 
         await enableNewHeader(page)
-        await goToSearchTerm(page, 'birds', { dir })
+        await goToSearchTerm(page, "birds", { dir })
       })
 
-      test('filters open', async ({ page }) => {
+      test("filters open", async ({ page }) => {
         await page.mouse.move(0, 150)
         await expectSnapshot(
           `filters-open-${dir}`,
@@ -44,7 +44,7 @@ for (const dir of languageDirections) {
         )
       })
 
-      test('resting', async ({ page }) => {
+      test("resting", async ({ page }) => {
         // By default, filters are open on desktop. We need to close them.
         if (!isMobileBreakpoint(breakpoint)) {
           await closeFilters(page)
@@ -54,7 +54,7 @@ for (const dir of languageDirections) {
         await expectSnapshot(`resting-${dir}`, page.locator(headerSelector))
       })
 
-      test('scrolled', async ({ page }) => {
+      test("scrolled", async ({ page }) => {
         if (!isMobileBreakpoint(breakpoint)) {
           await closeFilters(page)
         }
@@ -64,11 +64,11 @@ for (const dir of languageDirections) {
         await expectSnapshot(`scrolled-${dir}`, page.locator(headerSelector))
       })
 
-      test('searchbar hovered', async ({ page }) => {
+      test("searchbar hovered", async ({ page }) => {
         if (!isMobileBreakpoint(breakpoint)) {
           await closeFilters(page)
         }
-        await page.hover('input')
+        await page.hover("input")
         await hideInputCursors(page)
         await expectSnapshot(
           `searchbar-hovered-${dir}`,
@@ -76,12 +76,12 @@ for (const dir of languageDirections) {
         )
       })
 
-      test('searchbar active', async ({ page }) => {
+      test("searchbar active", async ({ page }) => {
         if (!isMobileBreakpoint(breakpoint)) {
           await closeFilters(page)
         }
         await hideInputCursors(page)
-        await page.click('input')
+        await page.click("input")
         const locator = isMobileBreakpoint(breakpoint)
           ? page
           : page.locator(headerSelector)

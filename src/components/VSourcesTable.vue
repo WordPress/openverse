@@ -12,7 +12,7 @@
           @keypress.enter="sortTable('display_name')"
         >
           <span class="flex w-full flex-row items-center justify-between">
-            {{ $t('sources.providers.source') }}
+            {{ $t("sources.providers.source") }}
             <TableSortIcon :active="sorting.field === 'display_name'" />
           </span>
         </th>
@@ -22,7 +22,7 @@
           @keypress.enter="sortTable('source_url')"
         >
           <span class="flex w-full flex-row items-center justify-between">
-            {{ $t('sources.providers.domain') }}
+            {{ $t("sources.providers.domain") }}
             <TableSortIcon :active="sorting.field === 'source_url'" />
           </span>
         </th>
@@ -32,7 +32,7 @@
           @keypress.enter="sortTable('media_count')"
         >
           <span class="flex w-full flex-row items-center justify-between">
-            {{ $t('sources.providers.item') }}
+            {{ $t("sources.providers.item") }}
             <TableSortIcon :active="sorting.field === 'media_count'" />
           </span>
         </th>
@@ -62,21 +62,21 @@ import {
   defineComponent,
   PropType,
   reactive,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { useProviderStore } from '~/stores/provider'
-import { useGetLocaleFormattedNumber } from '~/composables/use-get-locale-formatted-number'
+import { useProviderStore } from "~/stores/provider"
+import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
 
-import type { SupportedMediaType } from '~/constants/media'
-import type { MediaProvider } from '~/types/media-provider'
+import type { SupportedMediaType } from "~/constants/media"
+import type { MediaProvider } from "~/types/media-provider"
 
-import TableSortIcon from '~/components/TableSortIcon.vue'
-import VLink from '~/components/VLink.vue'
+import TableSortIcon from "~/components/TableSortIcon.vue"
+import VLink from "~/components/VLink.vue"
 
-import externalLinkIcon from '~/assets/icons/external-link.svg'
+import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
-  name: 'VSourcesTable',
+  name: "VSourcesTable",
   components: {
     TableSortIcon,
     VLink,
@@ -89,14 +89,14 @@ export default defineComponent({
   },
   setup(props) {
     const sorting = reactive({
-      direction: 'asc',
-      field: 'display_name' as keyof Omit<MediaProvider, 'logo_url'>,
+      direction: "asc",
+      field: "display_name" as keyof Omit<MediaProvider, "logo_url">,
     })
 
-    function sortTable(field: keyof Omit<MediaProvider, 'logo_url'>) {
-      let direction = 'asc'
+    function sortTable(field: keyof Omit<MediaProvider, "logo_url">) {
+      let direction = "asc"
       if (field === sorting.field) {
-        direction = sorting.direction === 'asc' ? 'desc' : 'asc'
+        direction = sorting.direction === "asc" ? "desc" : "asc"
       }
 
       sorting.direction = direction
@@ -104,10 +104,10 @@ export default defineComponent({
     }
 
     function cleanSourceUrlForPresentation(url: string) {
-      const stripProtocol = (s: string) => s.replace(/https?:\/\//, '')
+      const stripProtocol = (s: string) => s.replace(/https?:\/\//, "")
       const stripLeadingWww = (s: string) =>
-        s.startsWith('www.') ? s.replace('www.', '') : s
-      const removeAfterSlash = (s: string) => s.split('/')[0]
+        s.startsWith("www.") ? s.replace("www.", "") : s
+      const removeAfterSlash = (s: string) => s.split("/")[0]
 
       return removeAfterSlash(stripLeadingWww(stripProtocol(url)))
     }
@@ -118,7 +118,7 @@ export default defineComponent({
     function compareProviders(prov1: MediaProvider, prov2: MediaProvider) {
       let field1 = prov1[sorting.field]
       let field2 = prov2[sorting.field]
-      if (sorting.field === 'source_url') {
+      if (sorting.field === "source_url") {
         field1 = cleanSourceUrlForPresentation(field1 as string)
         field2 = cleanSourceUrlForPresentation(field2 as string)
       }
@@ -130,7 +130,7 @@ export default defineComponent({
     const sortedProviders = computed(() => {
       const providers = providerStore.providers[props.media]
       providers.sort(compareProviders)
-      return sorting.direction === 'asc' ? providers : providers.reverse()
+      return sorting.direction === "asc" ? providers : providers.reverse()
     })
 
     return {

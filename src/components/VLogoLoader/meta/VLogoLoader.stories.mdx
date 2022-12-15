@@ -4,19 +4,19 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import VLink from '~/components/VLink.vue'
-import VLogoLoader from '~/components/VLogoLoader/VLogoLoader.vue'
+import VLink from "~/components/VLink.vue"
+import VLogoLoader from "~/components/VLogoLoader/VLogoLoader.vue"
 
 <Meta
   title="Components/VLogoLoader"
   component={VLogoLoader}
   argTypes={{
     status: {
-      default: 'idle',
-      options: ['loading', 'idle'],
-      control: { type: 'radio' },
+      default: "idle",
+      options: ["loading", "idle"],
+      control: { type: "radio" },
     },
   }}
 />
@@ -42,7 +42,7 @@ The component can exist in two states.
 ### Idle
 
 <Canvas>
-  <Story name="Idle" args={{ status: 'idle' }}>
+  <Story name="Idle" args={{ status: "idle" }}>
     {Template.bind({})}
   </Story>
 </Canvas>
@@ -58,8 +58,8 @@ for toggling this setting for your particular OS.
   <Story
     name="Loading"
     args={{
-      status: 'loading',
-      loadingLabel: 'Loading images',
+      status: "loading",
+      loadingLabel: "Loading images",
     }}
   >
     {Template.bind({})}
@@ -84,8 +84,8 @@ export const LinkTemplate = (args) => ({
   <Story
     name="Link"
     args={{
-      status: 'loading',
-      loadingLabel: 'Loading images',
+      status: "loading",
+      loadingLabel: "Loading images",
     }}
   >
     {LinkTemplate.bind({})}

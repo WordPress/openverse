@@ -1,7 +1,7 @@
 import type {
   ExtractPropTypes,
   ExtractDefaultPropTypes,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
 /**
  * Correctly extracts optional prop types.

@@ -19,13 +19,13 @@ import {
   PropType,
   provide,
   ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { tabsContextKey } from '~/types/tabs'
-import type { TabsState, TabVariant } from '~/types/tabs'
-import { defineEvent } from '~/types/emits'
+import { tabsContextKey } from "~/types/tabs"
+import type { TabsState, TabVariant } from "~/types/tabs"
+import { defineEvent } from "~/types/emits"
 
-import closeIcon from '~/assets/icons/close-small.svg'
+import closeIcon from "~/assets/icons/close-small.svg"
 
 /**
  * VTabs is an accessible implementation of tabs component that displays one panel at a time.
@@ -38,7 +38,7 @@ import closeIcon from '~/assets/icons/close-small.svg'
  * To link the VTab to VTabPanel, make sure to pass the same `id` to both.
  */
 export default defineComponent({
-  name: 'VTabs',
+  name: "VTabs",
   props: {
     /**
      * Accessible name label to use for the tablist.
@@ -69,7 +69,7 @@ export default defineComponent({
      */
     variant: {
       type: String as PropType<TabVariant>,
-      default: 'bordered',
+      default: "bordered",
     },
     /**
      * To ensure that a panel is visible on SSR, before we can run `onMounted` hook to register panel.
@@ -83,7 +83,7 @@ export default defineComponent({
      */
     tablistStyle: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   emits: {
@@ -91,35 +91,35 @@ export default defineComponent({
     close: defineEvent(),
   },
   setup(props, { emit }) {
-    const selectedId = ref<TabsState['selectedId']['value']>(props.selectedId)
-    const tabs = ref<TabsState['tabs']['value']>([])
-    const panels = ref<TabsState['panels']['value']>([])
+    const selectedId = ref<TabsState["selectedId"]["value"]>(props.selectedId)
+    const tabs = ref<TabsState["tabs"]["value"]>([])
+    const panels = ref<TabsState["panels"]["value"]>([])
     const closeButtonRef = ref<HTMLElement | null>(null)
 
     const tabGroupContext: TabsState = {
       selectedId,
-      activation: computed(() => (props.manual ? 'manual' : 'auto')),
+      activation: computed(() => (props.manual ? "manual" : "auto")),
       variant: computed(() =>
-        props.variant === 'bordered' ? 'bordered' : 'plain'
+        props.variant === "bordered" ? "bordered" : "plain"
       ),
       tabs,
       panels,
       setSelectedId(id: string) {
         if (selectedId.value === id) return
         selectedId.value = id
-        emit('change', id)
+        emit("change", id)
       },
-      registerTab(tab: typeof tabs['value'][number]) {
+      registerTab(tab: typeof tabs["value"][number]) {
         if (!tabs.value.includes(tab)) tabs.value.push(tab)
       },
-      unregisterTab(tab: typeof tabs['value'][number]) {
+      unregisterTab(tab: typeof tabs["value"][number]) {
         let idx = tabs.value.indexOf(tab)
         if (idx !== -1) tabs.value.splice(idx, 1)
       },
-      registerPanel(panel: typeof panels['value'][number]) {
+      registerPanel(panel: typeof panels["value"][number]) {
         if (!panels.value.includes(panel)) panels.value.push(panel)
       },
-      unregisterPanel(panel: typeof panels['value'][number]) {
+      unregisterPanel(panel: typeof panels["value"][number]) {
         let idx = panels.value.indexOf(panel)
         if (idx !== -1) panels.value.splice(idx, 1)
       },
@@ -127,9 +127,9 @@ export default defineComponent({
     provide(tabsContextKey, tabGroupContext)
 
     const accessibleLabel = computed(() =>
-      props.label.startsWith('#')
-        ? { 'aria-labelledby': props.label.slice(1) }
-        : { 'aria-label': props.label }
+      props.label.startsWith("#")
+        ? { "aria-labelledby": props.label.slice(1) }
+        : { "aria-label": props.label }
     )
 
     return {

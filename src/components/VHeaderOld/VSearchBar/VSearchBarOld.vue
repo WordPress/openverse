@@ -26,14 +26,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
 import VInputFieldOld, {
   FIELD_SIZES,
-} from '~/components/VInputFieldOld/VInputFieldOld.vue'
-import VSearchButtonOld from '~/components/VHeaderOld/VSearchBar/VSearchButtonOld.vue'
+} from "~/components/VInputFieldOld/VInputFieldOld.vue"
+import VSearchButtonOld from "~/components/VHeaderOld/VSearchBar/VSearchButtonOld.vue"
 
 /**
  * Displays a text field for a search query and is attached to an action button
@@ -41,7 +41,7 @@ import VSearchButtonOld from '~/components/VHeaderOld/VSearchBar/VSearchButtonOl
  * displayed in the bar itself.
  */
 export default defineComponent({
-  name: 'VSearchBarOld',
+  name: "VSearchBarOld",
   components: { VInputFieldOld, VSearchButtonOld },
   inheritAttrs: false,
   props: {
@@ -50,7 +50,7 @@ export default defineComponent({
      */
     value: {
       type: String,
-      default: '',
+      default: "",
     },
     size: {
       type: String as PropType<keyof typeof FIELD_SIZES>,
@@ -73,11 +73,11 @@ export default defineComponent({
     const searchText = computed(() => props.value)
 
     const updateSearchText = (val: string) => {
-      emit('input', val)
+      emit("input", val)
     }
 
     const handleSearch = () => {
-      emit('submit')
+      emit("submit")
     }
 
     return {

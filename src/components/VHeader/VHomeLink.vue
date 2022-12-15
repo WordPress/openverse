@@ -9,13 +9,13 @@
 </template>
 
 <script lang="ts">
-import { type PropType, defineComponent } from '@nuxtjs/composition-api'
+import { type PropType, defineComponent } from "@nuxtjs/composition-api"
 
-import VBrand from '~/components/VBrand/VBrand.vue'
-import VLink from '~/components/VLink.vue'
+import VBrand from "~/components/VBrand/VBrand.vue"
+import VLink from "~/components/VLink.vue"
 
 export default defineComponent({
-  name: 'VHomeLink',
+  name: "VHomeLink",
   components: {
     VBrand,
     VLink,
@@ -28,8 +28,8 @@ export default defineComponent({
      * @default 'light'
      */
     variant: {
-      type: String as PropType<'light' | 'dark'>,
-      default: 'light',
+      type: String as PropType<"light" | "dark">,
+      default: "light",
     },
   },
 })

@@ -19,13 +19,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watch } from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref, watch } from "@nuxtjs/composition-api"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
 
-import checkmark from '~/assets/icons/checkmark.svg'
+import checkmark from "~/assets/icons/checkmark.svg"
 
 type CheckboxAttrs = {
   name: string
@@ -40,7 +40,7 @@ type CheckboxAttrs = {
  * Unlike the native checkbox, this component only has two states: checked / not checked.
  */
 export default defineComponent({
-  name: 'VCheckbox',
+  name: "VCheckbox",
   components: {
     VIcon,
   },
@@ -97,12 +97,12 @@ export default defineComponent({
     },
   },
   emits: {
-    change: defineEvent<[Omit<CheckboxAttrs, 'disabled'>]>(),
+    change: defineEvent<[Omit<CheckboxAttrs, "disabled">]>(),
   },
   setup(props, { emit }) {
     const localCheckedState = ref(props.checked || false)
     const labelClasses = computed(() =>
-      props.disabled ? 'text-dark-charcoal-70' : 'text-dark-charcoal'
+      props.disabled ? "text-dark-charcoal-70" : "text-dark-charcoal"
     )
     const inputAttrs = computed<CheckboxAttrs>(() => {
       const attrs: CheckboxAttrs = {
@@ -129,7 +129,7 @@ export default defineComponent({
 
     const onChange = () => {
       localCheckedState.value = !localCheckedState.value
-      emit('change', {
+      emit("change", {
         name: inputAttrs.value.name,
         value: inputAttrs.value.value,
         checked: localCheckedState.value,

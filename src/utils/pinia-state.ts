@@ -1,6 +1,6 @@
-import { isClient } from '~/constants/window'
+import { isClient } from "~/constants/window"
 
-import type { StateTree } from 'pinia'
+import type { StateTree } from "pinia"
 
 /**
  * On the server, set the state to `initialState`.

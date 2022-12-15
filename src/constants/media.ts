@@ -1,10 +1,10 @@
 /* Media types */
 
-export const IMAGE = 'image'
-export const AUDIO = 'audio'
-export const VIDEO = 'video'
-export const MODEL_3D = 'model-3d'
-export const ALL_MEDIA = 'all'
+export const IMAGE = "image"
+export const AUDIO = "audio"
+export const VIDEO = "video"
+export const MODEL_3D = "model-3d"
+export const ALL_MEDIA = "all"
 
 /**
  * all existing media types
@@ -50,9 +50,9 @@ export function isAdditionalSearchType(
 
 /* Media support */
 
-export const SUPPORTED = 'supported' // Native search
-export const BETA = 'beta' // Native but incomplete search
-export const ADDITIONAL = 'additional' // Meta search
+export const SUPPORTED = "supported" // Native search
+export const BETA = "beta" // Native but incomplete search
+export const ADDITIONAL = "additional" // Meta search
 
 export const contentStatus = Object.freeze({
   [ALL_MEDIA]: SUPPORTED,
@@ -63,4 +63,4 @@ export const contentStatus = Object.freeze({
 } as const)
 
 export const searchPath = (type: SearchType) =>
-  `/search/${type === ALL_MEDIA ? '' : type}`
+  `/search/${type === ALL_MEDIA ? "" : type}`

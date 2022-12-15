@@ -1,14 +1,14 @@
 <template>
   <VContentPage>
     <h1>
-      {{ $t('sources.title') }}
+      {{ $t("sources.title") }}
     </h1>
 
     <h2>
-      {{ $t('sources.cc-content.where', { openverse: 'Openverse' }) }}
+      {{ $t("sources.cc-content.where", { openverse: "Openverse" }) }}
     </h2>
     <p>
-      {{ $t('sources.cc-content.content', { openverse: 'Openverse' }) }}
+      {{ $t("sources.cc-content.content", { openverse: "Openverse" }) }}
     </p>
     <i18n path="sources.cc-content.provider" tag="p">
       <template #flickr>
@@ -16,7 +16,7 @@
       </template>
       <template #smithsonian>
         <VLink href="https://www.si.edu/">{{
-          $t('sources.cc-content.smithsonian')
+          $t("sources.cc-content.smithsonian")
         }}</VLink>
       </template>
     </i18n>
@@ -27,31 +27,31 @@
       </template>
       <template #link-api>
         <VLink href="https://pro.europeana.eu/page/apis">{{
-          $t('sources.cc-content.europeana-api')
+          $t("sources.cc-content.europeana-api")
         }}</VLink>
       </template>
     </i18n>
 
     <h2>
-      {{ $t('sources.new-content.next') }}
+      {{ $t("sources.new-content.next") }}
     </h2>
     <p>
-      {{ $t('sources.new-content.integrate') }}
+      {{ $t("sources.new-content.integrate") }}
     </p>
     <ul>
       <li>
-        {{ $t('sources.new-content.impact') }}
+        {{ $t("sources.new-content.impact") }}
       </li>
       <li>
-        {{ $t('sources.new-content.reuse') }}
+        {{ $t("sources.new-content.reuse") }}
       </li>
       <li>
-        {{ $t('sources.new-content.total-items') }}
+        {{ $t("sources.new-content.total-items") }}
       </li>
     </ul>
 
     <h2>
-      {{ $t('sources.suggestions') }}
+      {{ $t("sources.suggestions") }}
     </h2>
 
     <p class="inline-block">
@@ -62,7 +62,7 @@
         class="not-prose mt-5 px-6 py-4 font-semibold"
         href="https://github.com/WordPress/openverse-catalog/issues/new?assignees=&labels=%F0%9F%9A%A6+status%3A+awaiting+triage%2C+%F0%9F%A7%B9+status%3A+ticket+work+required%2C+%E2%98%81%EF%B8%8F+provider%3A+any&template=new-source-suggestion.md&title=%5BSource+Suggestion%5D+Insert+source+name+here"
       >
-        {{ $t('sources.issue-button') }}
+        {{ $t("sources.issue-button") }}
         <VIcon :icon-path="externalLinkIcon" :rtl-flip="true" class="mx-2" />
       </VButton>
     </p>
@@ -70,7 +70,7 @@
     <i18n path="sources.detail" tag="p">
       <template #single-name>
         <strong>
-          {{ $t('sources.single-name') }}
+          {{ $t("sources.single-name") }}
         </strong>
       </template>
     </i18n>
@@ -82,31 +82,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from '@nuxtjs/composition-api'
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
-import { supportedMediaTypes } from '~/constants/media'
-import { useI18n } from '~/composables/use-i18n'
-import { useFeatureFlagStore } from '~/stores/feature-flag'
+import { supportedMediaTypes } from "~/constants/media"
+import { useI18n } from "~/composables/use-i18n"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-import VButton from '~/components/VButton.vue'
-import VLink from '~/components/VLink.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VContentPage from '~/components/VContentPage.vue'
-import VSourcesTable from '~/components/VSourcesTable.vue'
+import VButton from "~/components/VButton.vue"
+import VLink from "~/components/VLink.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VContentPage from "~/components/VContentPage.vue"
+import VSourcesTable from "~/components/VSourcesTable.vue"
 
-import externalLinkIcon from '~/assets/icons/external-link.svg'
+import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
-  name: 'SourcePage',
+  name: "SourcePage",
   components: { VButton, VContentPage, VIcon, VLink, VSourcesTable },
   setup() {
     const i18n = useI18n()
     const featureFlagStore = useFeatureFlagStore()
 
     useMeta({
-      title: `${i18n.t('sources.title')} | Openverse`,
-      meta: featureFlagStore.isOn('new_header')
-        ? [{ hid: 'robots', name: 'robots', content: 'all' }]
+      title: `${i18n.t("sources.title")} | Openverse`,
+      meta: featureFlagStore.isOn("new_header")
+        ? [{ hid: "robots", name: "robots", content: "all" }]
         : undefined,
     })
 

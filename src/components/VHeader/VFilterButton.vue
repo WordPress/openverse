@@ -24,19 +24,19 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from "@nuxtjs/composition-api"
 
-import { useSearchStore } from '~/stores/search'
-import { defineEvent } from '~/types/emits'
-import { useI18n } from '~/composables/use-i18n'
+import { useSearchStore } from "~/stores/search"
+import { defineEvent } from "~/types/emits"
+import { useI18n } from "~/composables/use-i18n"
 
-import VButton from '~/components/VButton.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
 
-import filterIcon from '~/assets/icons/filter.svg'
+import filterIcon from "~/assets/icons/filter.svg"
 
 export default defineComponent({
-  name: 'VFilterButton',
+  name: "VFilterButton",
   components: {
     VIcon,
     VButton,
@@ -69,11 +69,11 @@ export default defineComponent({
      */
     const xlMinLabel = computed(() =>
       filtersAreApplied.value
-        ? i18n.tc('header.filter-button.with-count', filterCount.value)
-        : i18n.t('header.filter-button.simple')
+        ? i18n.tc("header.filter-button.with-count", filterCount.value)
+        : i18n.t("header.filter-button.simple")
     )
     const lgMaxLabel = computed(() =>
-      filtersAreApplied ? filterCount.value : ''
+      filtersAreApplied ? filterCount.value : ""
     )
 
     return {

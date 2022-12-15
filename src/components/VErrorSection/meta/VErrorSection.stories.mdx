@@ -4,14 +4,14 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import VErrorSection from '~/components/VErrorSection/VErrorSection.vue'
-import VErrorImage from '~/components/VErrorSection/VErrorImage.vue'
-import VNoResults from '~/components/VErrorSection/VNoResults.vue'
-import VServerTimeout from '~/components/VErrorSection/VServerTimeout.vue'
+import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
+import VErrorImage from "~/components/VErrorSection/VErrorImage.vue"
+import VNoResults from "~/components/VErrorSection/VNoResults.vue"
+import VServerTimeout from "~/components/VErrorSection/VServerTimeout.vue"
 
-import { NO_RESULT, SERVER_TIMEOUT } from '~/constants/errors'
+import { NO_RESULT, SERVER_TIMEOUT } from "~/constants/errors"
 
 <Meta title="Components/VErrorSection" component={VErrorSection} />
 
@@ -45,13 +45,13 @@ export const NoResultsTemplate = (args) => ({
     name="No result"
     args={{
       errorCode: NO_RESULT,
-      type: 'image',
+      type: "image",
       query: {
-        license: '',
-        license_type: '',
+        license: "",
+        license_type: "",
         mature: false,
-        q: 'sad person',
-        searchBy: '',
+        q: "sad person",
+        searchBy: "",
       },
     }}
   >

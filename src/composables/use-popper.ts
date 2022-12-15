@@ -1,12 +1,12 @@
-import { ref, watch, Ref, ToRefs } from '@nuxtjs/composition-api'
+import { ref, watch, Ref, ToRefs } from "@nuxtjs/composition-api"
 import {
   createPopper,
   detectOverflow,
   Instance,
   Placement,
   PositioningStrategy,
-} from '@popperjs/core'
-import { useWindowSize } from '@vueuse/core'
+} from "@popperjs/core"
+import { useWindowSize } from "@vueuse/core"
 
 export type PopoverContentProps = {
   visible: boolean
@@ -54,15 +54,15 @@ export function usePopper({ popoverRef, popoverPropsRefs }: Props) {
         strategy,
         modifiers: [
           {
-            name: 'eventListeners',
+            name: "eventListeners",
             enabled: visible,
           },
           {
-            name: 'arrow',
+            name: "arrow",
             enabled: false,
           },
           {
-            name: 'offset',
+            name: "offset",
             options: {
               offset: [0, 8],
             },

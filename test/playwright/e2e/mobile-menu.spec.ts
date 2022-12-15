@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from "@playwright/test"
 
 import {
   closeFilters,
@@ -8,19 +8,19 @@ import {
   isMobileMenuOpen,
   openContentTypes,
   openFilters,
-} from '~~/test/playwright/utils/navigation'
-import breakpoints from '~~/test/playwright/utils/breakpoints'
+} from "~~/test/playwright/utils/navigation"
+import breakpoints from "~~/test/playwright/utils/breakpoints"
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
-test.describe('mobile menu', () => {
+test.describe("mobile menu", () => {
   breakpoints.describeSm(() => {
     test.beforeEach(async ({ page }) => {
       await enableNewHeader(page)
     })
 
-    test('Can open filters menu on mobile at least twice', async ({ page }) => {
-      await page.goto('/search/?q=cat')
+    test("Can open filters menu on mobile at least twice", async ({ page }) => {
+      await page.goto("/search/?q=cat")
 
       await openFilters(page)
       expect(await isMobileMenuOpen(page)).toBe(true)
@@ -32,8 +32,8 @@ test.describe('mobile menu', () => {
       expect(await isMobileMenuOpen(page)).toBe(false)
     })
 
-    test('Can open mobile menu at least twice', async ({ page }) => {
-      await goToSearchTerm(page, 'cat')
+    test("Can open mobile menu at least twice", async ({ page }) => {
+      await goToSearchTerm(page, "cat")
       await openContentTypes(page)
       expect(await isMobileMenuOpen(page)).toBe(true)
       await closeMobileMenu(page)

@@ -1,13 +1,13 @@
-import { contains, getActiveElement, isFrame, isVisible } from './dom'
+import { contains, getActiveElement, isFrame, isVisible } from "./dom"
 
 const selector =
   "input:not([type='hidden']):not([disabled]), select:not([disabled]), " +
-  'textarea:not([disabled]), a[href], button:not([disabled]), [tabindex], ' +
-  'iframe, object, embed, area[href], audio[controls], video[controls], ' +
+  "textarea:not([disabled]), a[href], button:not([disabled]), [tabindex], " +
+  "iframe, object, embed, area[href], audio[controls], video[controls], " +
   "[contenteditable]:not([contenteditable='false'])"
 
 function hasNegativeTabIndex(element: Element) {
-  const tabIndex = parseInt(element.getAttribute('tabindex') || '0', 10)
+  const tabIndex = parseInt(element.getAttribute("tabindex") || "0", 10)
   return tabIndex < 0
 }
 
@@ -126,7 +126,7 @@ export function hasFocus(element: Element) {
   const activeElement = getActiveElement(element)
   if (!activeElement) return false
   if (activeElement === element) return true
-  const activeDescendant = activeElement.getAttribute('aria-activedescendant')
+  const activeDescendant = activeElement.getAttribute("aria-activedescendant")
   if (!activeDescendant) return false
   return activeDescendant === element.id
 }
@@ -141,9 +141,9 @@ export function hasFocusWithin(element: Node | Element) {
   const activeElement = getActiveElement(element)
   if (!activeElement) return false
   if (contains(element, activeElement)) return true
-  const activeDescendant = activeElement.getAttribute('aria-activedescendant')
+  const activeDescendant = activeElement.getAttribute("aria-activedescendant")
   if (!activeDescendant) return false
-  if (!('id' in element)) return false
+  if (!("id" in element)) return false
   if (activeDescendant === element.id) return true
   return !!element.querySelector(`#${CSS.escape(activeDescendant)}`)
 }

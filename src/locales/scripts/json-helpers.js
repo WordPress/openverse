@@ -1,7 +1,7 @@
 // Copied from these two libraries:
 // https://github.com/coderaiser/all-object-keys
 // https://github.com/coderaiser/jessy
-const isObject = (a) => typeof a === 'object'
+const isObject = (a) => typeof a === "object"
 const isEmptyObject = (a) => !Object.keys(a).length
 const isSimple = (a) => !a || !isObject(a) || isEmptyObject(a)
 const pop = (a) => a.pop() || []
@@ -25,8 +25,8 @@ function getAllPaths(obj) {
 
 const { entries } = Object
 
-function readPaths(obj, path = '') {
-  const divider = '.'
+function readPaths(obj, path = "") {
+  const divider = "."
   const result = []
   const stack = []
   for (const [key, value] of entries(obj)) {
@@ -41,10 +41,10 @@ function readPaths(obj, path = '') {
   return [result, stack]
 }
 const getKeyValue = (key, value) => {
-  const selects = key.split('.')
+  const selects = key.split(".")
   selects.some((name, i) => {
-    const nestedName = selects.slice(i).join('.')
-    if (typeof value[nestedName] !== 'undefined') {
+    const nestedName = selects.slice(i).join(".")
+    if (typeof value[nestedName] !== "undefined") {
       value = value[nestedName]
       return true
     }

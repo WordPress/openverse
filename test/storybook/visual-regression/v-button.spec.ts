@@ -1,17 +1,17 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from "@playwright/test"
 
-import { makeGotoWithArgs } from '~~/test/storybook/utils/args'
+import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
 
-import { buttonVariants } from '~/types/button'
+import { buttonVariants } from "~/types/button"
 
-const buttonLocator = 'text=Code is Poetry'
+const buttonLocator = "text=Code is Poetry"
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
-test.describe('VButton', () => {
-  const gotoWithArgs = makeGotoWithArgs('components-vbutton--v-button')
+test.describe("VButton", () => {
+  const gotoWithArgs = makeGotoWithArgs("components-vbutton--v-button")
   const nonPressedVariants = buttonVariants.filter(
-    (name) => !name.endsWith('pressed')
+    (name) => !name.endsWith("pressed")
   )
   for (const variant of nonPressedVariants) {
     test(`${variant} resting`, async ({ page }) => {
@@ -43,7 +43,7 @@ test.describe('VButton', () => {
         name: `${variant}-pressed-hovered.png`,
       })
     })
-    if (variant.startsWith('action')) {
+    if (variant.startsWith("action")) {
       test(`${variant} disabled`, async ({ page }) => {
         await gotoWithArgs(page, { variant, disabled: true })
         expect(await page.locator(buttonLocator).screenshot()).toMatchSnapshot({

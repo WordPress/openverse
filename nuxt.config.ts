@@ -1,22 +1,22 @@
-import path from 'path'
-import fs from 'fs'
+import path from "path"
+import fs from "fs"
 
-import promBundle from 'express-prom-bundle'
+import promBundle from "express-prom-bundle"
 
-import pkg from './package.json'
-import locales from './src/locales/scripts/valid-locales.json'
+import pkg from "./package.json"
+import locales from "./src/locales/scripts/valid-locales.json"
 
-import { searchTypes } from './src/constants/media'
-import { VIEWPORTS } from './src/constants/screens'
+import { searchTypes } from "./src/constants/media"
+import { VIEWPORTS } from "./src/constants/screens"
 
-import { isProd } from './src/utils/node-env'
-import { sentryConfig } from './src/utils/sentry-config'
-import { env } from './src/utils/env'
+import { isProd } from "./src/utils/node-env"
+import { sentryConfig } from "./src/utils/sentry-config"
+import { env } from "./src/utils/env"
 
-import type { NuxtConfig, ServerMiddleware } from '@nuxt/types'
-import type { LocaleObject } from '@nuxtjs/i18n'
-import type { IncomingMessage, NextFunction } from 'connect'
-import type http from 'http'
+import type { NuxtConfig, ServerMiddleware } from "@nuxt/types"
+import type { LocaleObject } from "@nuxtjs/i18n"
+import type { IncomingMessage, NextFunction } from "connect"
+import type http from "http"
 
 /**
  * The default metadata for the site. Can be extended and/or overwritten per page. And even in components!
@@ -24,156 +24,156 @@ import type http from 'http'
  * {@link https://nuxtjs.org/guides/features/meta-tags-seo} Nuxt.js Docs
  */
 const meta = [
-  { charset: 'utf-8' },
+  { charset: "utf-8" },
   {
-    name: 'viewport',
-    content: 'width=device-width,initial-scale=1',
+    name: "viewport",
+    content: "width=device-width,initial-scale=1",
   },
   // By default, tell all robots not to index pages. Will be overridden in the
   // search, content and home pages.
-  { hid: 'robots', name: 'robots', content: 'noindex' },
+  { hid: "robots", name: "robots", content: "noindex" },
   // Tell Googlebot to crawl Openverse when iframed
   // TODO: remove after the iframe is removed
-  { hid: 'googlebot', name: 'googlebot', content: 'indexifembedded' },
+  { hid: "googlebot", name: "googlebot", content: "indexifembedded" },
   {
-    vmid: 'monetization',
-    name: 'monetization',
-    content: '$ilp.uphold.com/edR8erBDbRyq',
+    vmid: "monetization",
+    name: "monetization",
+    content: "$ilp.uphold.com/edR8erBDbRyq",
   },
   {
-    hid: 'theme-color',
-    name: 'theme-color',
-    content: '#ffffff',
+    hid: "theme-color",
+    name: "theme-color",
+    content: "#ffffff",
   },
   {
-    name: 'description',
+    name: "description",
     content:
-      'Search over 600 million free and openly licensed images, photos, audio, and other media types for reuse and remixing.',
+      "Search over 600 million free and openly licensed images, photos, audio, and other media types for reuse and remixing.",
   },
-  { hid: 'og:title', name: 'og:title', content: 'Openverse' },
+  { hid: "og:title", name: "og:title", content: "Openverse" },
   {
-    hid: 'og:image',
-    name: 'og:image',
-    content: '/openverse-default.jpg',
+    hid: "og:image",
+    name: "og:image",
+    content: "/openverse-default.jpg",
   },
   {
-    hid: 'og:description',
-    name: 'og:description',
+    hid: "og:description",
+    name: "og:description",
     content:
-      'Search over 600 million free and openly licensed images, photos, audio, and other media types for reuse and remixing.',
+      "Search over 600 million free and openly licensed images, photos, audio, and other media types for reuse and remixing.",
   },
-  { name: 'twitter:card', content: 'summary_large_image' },
-  { name: 'twitter:site', content: '@WPOpenverse' },
+  { name: "twitter:card", content: "summary_large_image" },
+  { name: "twitter:site", content: "@WPOpenverse" },
 ]
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   meta.push({
     // @ts-expect-error: 'http-equiv' isn't allowed here by Nuxt
-    'http-equiv': 'Content-Security-Policy',
-    content: 'upgrade-insecure-requests',
+    "http-equiv": "Content-Security-Policy",
+    content: "upgrade-insecure-requests",
   })
 }
 
 const favicons = [
   // SVG favicon
   {
-    rel: 'icon',
-    href: '/openverse-logo.svg',
+    rel: "icon",
+    href: "/openverse-logo.svg",
   },
   // SVG favicon for Safari
   {
-    rel: 'mask-icon',
-    href: '/opvenverse-logo.svg',
-    color: '#30272E',
+    rel: "mask-icon",
+    href: "/opvenverse-logo.svg",
+    color: "#30272E",
   },
   // Fallback iPhone Icon
   {
-    rel: 'apple-touch-icon',
-    href: '/openverse-logo-180.png',
+    rel: "apple-touch-icon",
+    href: "/openverse-logo-180.png",
   },
 ]
 
 // Default html head
 const head = {
-  title: 'Openly Licensed Images, Audio and More | Openverse',
+  title: "Openly Licensed Images, Audio and More | Openverse",
   meta,
   link: [
     ...favicons,
     {
-      rel: 'preconnect',
+      rel: "preconnect",
       href: env.apiUrl,
-      crossorigin: '',
+      crossorigin: "",
     },
     {
-      rel: 'dns-prefetch',
+      rel: "dns-prefetch",
       href: env.apiUrl,
     },
     {
-      rel: 'search',
-      type: 'application/opensearchdescription+xml',
-      title: 'Openverse',
-      href: '/opensearch.xml',
+      rel: "search",
+      type: "application/opensearchdescription+xml",
+      title: "Openverse",
+      href: "/opensearch.xml",
     },
   ],
 }
 
-const baseProdName = process.env.CI ? '[name]' : '[contenthash:7]'
+const baseProdName = process.env.CI ? "[name]" : "[contenthash:7]"
 
-const filenames: NonNullable<NuxtConfig['build']>['filenames'] = {
+const filenames: NonNullable<NuxtConfig["build"]>["filenames"] = {
   app: ({ isDev, isModern }) =>
     isDev
-      ? `[name]${isModern ? '.modern' : ''}.js`
-      : `${baseProdName}${isModern ? '.modern' : ''}.js`,
+      ? `[name]${isModern ? ".modern" : ""}.js`
+      : `${baseProdName}${isModern ? ".modern" : ""}.js`,
   chunk: ({ isDev, isModern }) =>
     isDev
-      ? `[name]${isModern ? '.modern' : ''}.js`
-      : `${baseProdName}${isModern ? '.modern' : ''}.js`,
-  css: ({ isDev }) => (isDev ? '[name].css' : `css/${baseProdName}.css`),
+      ? `[name]${isModern ? ".modern" : ""}.js`
+      : `${baseProdName}${isModern ? ".modern" : ""}.js`,
+  css: ({ isDev }) => (isDev ? "[name].css" : `css/${baseProdName}.css`),
   img: ({ isDev }) =>
-    isDev ? '[path][name].[ext]' : `img/${baseProdName}.[ext]`,
+    isDev ? "[path][name].[ext]" : `img/${baseProdName}.[ext]`,
   font: ({ isDev }) =>
-    isDev ? '[path][name].[ext]' : `fonts/${baseProdName}.[ext]`,
+    isDev ? "[path][name].[ext]" : `fonts/${baseProdName}.[ext]`,
   video: ({ isDev }) =>
-    isDev ? '[path][name].[ext]' : `videos/${baseProdName}.[ext]`,
+    isDev ? "[path][name].[ext]" : `videos/${baseProdName}.[ext]`,
 }
 
 const config: NuxtConfig = {
   // eslint-disable-next-line no-undef
   version: pkg.version, // used to purge cache :)
   cache: {
-    pages: ['/'],
+    pages: ["/"],
     store: {
-      type: 'memory', // 'redis' would be nice
+      type: "memory", // 'redis' would be nice
       max: 100,
       ttl: process.env.MICROCACHE_DURATION || 60,
     },
   },
-  srcDir: 'src/',
-  modern: 'client',
+  srcDir: "src/",
+  modern: "client",
   server: {
     port: process.env.PORT || 8443,
     https: process.env.LOCAL_SSL
       ? {
-          key: fs.readFileSync(path.resolve(__dirname, 'localhost+1-key.pem')),
-          cert: fs.readFileSync(path.resolve(__dirname, 'localhost+1.pem')),
+          key: fs.readFileSync(path.resolve(__dirname, "localhost+1-key.pem")),
+          cert: fs.readFileSync(path.resolve(__dirname, "localhost+1.pem")),
         }
       : undefined,
   },
   router: {
-    middleware: 'middleware',
+    middleware: "middleware",
   },
   components: [
-    { path: '~/components', extensions: ['vue'], pathPrefix: false },
+    { path: "~/components", extensions: ["vue"], pathPrefix: false },
   ],
   plugins: [
-    '~/plugins/url-change.ts',
-    '~/plugins/migration-notice.ts',
-    '~/plugins/ua-parse.ts',
-    '~/plugins/focus-visible.client.ts',
-    '~/plugins/api-token.server.ts',
-    '~/plugins/sentry.ts',
+    "~/plugins/url-change.ts",
+    "~/plugins/migration-notice.ts",
+    "~/plugins/ua-parse.ts",
+    "~/plugins/focus-visible.client.ts",
+    "~/plugins/api-token.server.ts",
+    "~/plugins/sentry.ts",
   ],
-  css: ['~/assets/fonts.css', '~/styles/tailwind.css', '~/styles/accent.css'],
+  css: ["~/assets/fonts.css", "~/styles/tailwind.css", "~/styles/accent.css"],
   head,
   env, // TODO: Replace with `publicRuntimeConfig`
   privateRuntimeConfig: {
@@ -182,43 +182,43 @@ const config: NuxtConfig = {
   },
   dev: !isProd,
   buildModules: [
-    '@nuxt/typescript-build',
-    '@nuxtjs/composition-api/module',
-    '@nuxt/postcss8',
-    '@nuxtjs/style-resources',
-    '@nuxtjs/svg',
-    '@nuxtjs/eslint-module',
-    '@pinia/nuxt',
+    "@nuxt/typescript-build",
+    "@nuxtjs/composition-api/module",
+    "@nuxt/postcss8",
+    "@nuxtjs/style-resources",
+    "@nuxtjs/svg",
+    "@nuxtjs/eslint-module",
+    "@pinia/nuxt",
   ],
   modules: [
-    'portal-vue/nuxt',
-    '@nuxtjs/i18n',
-    '@nuxtjs/redirect-module',
-    '@nuxtjs/sentry',
-    '@nuxtjs/sitemap',
-    'cookie-universal-nuxt',
+    "portal-vue/nuxt",
+    "@nuxtjs/i18n",
+    "@nuxtjs/redirect-module",
+    "@nuxtjs/sentry",
+    "@nuxtjs/sitemap",
+    "cookie-universal-nuxt",
   ],
   serverMiddleware: [
-    { path: '/healthcheck', handler: '~/server-middleware/healthcheck.js' },
+    { path: "/healthcheck", handler: "~/server-middleware/healthcheck.js" },
   ],
   i18n: {
     locales: [
       {
         // unique identifier for the locale in Vue i18n
-        code: 'en',
-        name: 'English',
-        nativeName: 'English',
+        code: "en",
+        name: "English",
+        nativeName: "English",
         // ISO code used for SEO purposes (html lang attribute)
-        iso: 'en',
+        iso: "en",
         // wp_locale as found in GlotPress
-        wpLocale: 'en_US',
-        file: 'en.json',
+        wpLocale: "en_US",
+        file: "en.json",
       },
       ...(locales ?? []),
     ].filter((l) => Boolean(l.iso)) as LocaleObject[],
     lazy: true,
-    langDir: 'locales',
-    defaultLocale: 'en',
+    langDir: "locales",
+    defaultLocale: "en",
     /**
      * `detectBrowserLanguage` must be false to prevent nuxt/i18n from automatically
      * setting the locale based on headers or the client-side `navigator` object.
@@ -231,7 +231,7 @@ const config: NuxtConfig = {
      * - [Browser language detection info](https://i18n.nuxtjs.org/browser-language-detection)
      * */
     detectBrowserLanguage: false,
-    vueI18n: '~/plugins/vue-i18n',
+    vueI18n: "~/plugins/vue-i18n",
   },
   /**
    * Map the old route for /photos/_id page to /image/_id permanently to keep links working.
@@ -240,9 +240,9 @@ const config: NuxtConfig = {
    */
   redirect: {
     rules: [
-      { from: '^/photos/(.*)$', to: '/image/$1', statusCode: 301 },
-      { from: '/meta-search', to: '/about', statusCode: 301 },
-      { from: '/external-sources', to: '/about', statusCode: 301 },
+      { from: "^/photos/(.*)$", to: "/image/$1", statusCode: 301 },
+      { from: "/meta-search", to: "/about", statusCode: 301 },
+      { from: "/external-sources", to: "/about", statusCode: 301 },
     ],
     // If the URL cannot be decoded, we call next() to show the client-side error page.
     onDecodeError: (
@@ -267,20 +267,20 @@ const config: NuxtConfig = {
        * need to debug metrics locally, comment out the early return in development.
        */
       setupMiddleware: (app) => {
-        if (process.env.NODE_ENV === 'development') return
+        if (process.env.NODE_ENV === "development") return
 
         const bypassMetricsPathParts = [
           /**
            * Exclude static paths. Remove once we've moved static file
            * hosting out of the SSR server's responsibilities.
            */
-          '_nuxt',
+          "_nuxt",
           /**
            * Only include these paths in development. They do not exist in production
            * so we can happily skip the extra iterations these path parts introduce.
            */
-          ...(process.env.NODE_ENV === 'development'
-            ? ['__webpack', 'sse']
+          ...(process.env.NODE_ENV === "development"
+            ? ["__webpack", "sse"]
             : []),
         ]
         /**
@@ -327,12 +327,12 @@ const config: NuxtConfig = {
   build: {
     templates: [
       {
-        src: './nuxt-template-overrides/App.js',
-        dst: 'App.js',
+        src: "./nuxt-template-overrides/App.js",
+        dst: "App.js",
       },
       {
-        src: './nuxt-template-overrides/index.js',
-        dst: 'index.js',
+        src: "./nuxt-template-overrides/index.js",
+        dst: "index.js",
       },
     ],
     filenames,
@@ -341,27 +341,27 @@ const config: NuxtConfig = {
       plugins: {
         tailwindcss: {},
         autoprefixer: {},
-        'postcss-focus-visible': {},
+        "postcss-focus-visible": {},
       },
     },
     extend(config, ctx) {
       // Enables use of IDE debuggers
-      config.devtool = ctx.isClient ? 'source-map' : 'inline-source-map'
+      config.devtool = ctx.isClient ? "source-map" : "inline-source-map"
 
       // Mitigates import errors for Pinia
       config.module?.rules.push({
         test: /\.mjs$/,
         include: /node_modules/,
-        type: 'javascript/auto',
+        type: "javascript/auto",
       })
     },
   },
   storybook: {
     port: 6006, // standard port for Storybook
-    stories: ['~/**/*.stories.@(mdx|js)'],
+    stories: ["~/**/*.stories.@(mdx|js)"],
     addons: [
       {
-        name: '@storybook/addon-essentials',
+        name: "@storybook/addon-essentials",
         options: {
           backgrounds: false,
           viewport: true,
@@ -372,7 +372,7 @@ const config: NuxtConfig = {
     parameters: {
       options: {
         storySort: {
-          order: ['Introduction', ['Openverse UI']],
+          order: ["Introduction", ["Openverse UI"]],
         },
       },
       viewport: {

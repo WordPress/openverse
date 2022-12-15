@@ -1,10 +1,10 @@
-import { decodeMediaData } from '~/utils/decode-media-data'
-import type { ApiQueryParams } from '~/utils/search-query-transform'
-import type { ApiService } from '~/data/api-service'
-import type { DetailFromMediaType, Media } from '~/types/media'
-import { AUDIO, type SupportedMediaType } from '~/constants/media'
+import { decodeMediaData } from "~/utils/decode-media-data"
+import type { ApiQueryParams } from "~/utils/search-query-transform"
+import type { ApiService } from "~/data/api-service"
+import type { DetailFromMediaType, Media } from "~/types/media"
+import { AUDIO, type SupportedMediaType } from "~/constants/media"
 
-import type { AxiosResponse } from 'axios'
+import type { AxiosResponse } from "axios"
 
 export interface MediaResult<
   T extends Media | Media[] | Record<string, Media>
@@ -18,9 +18,9 @@ export interface MediaResult<
 
 class MediaService<T extends Media> {
   private readonly apiService: ApiService
-  private readonly mediaType: T['frontendMediaType']
+  private readonly mediaType: T["frontendMediaType"]
 
-  constructor(apiService: ApiService, mediaType: T['frontendMediaType']) {
+  constructor(apiService: ApiService, mediaType: T["frontendMediaType"]) {
     this.apiService = apiService
     this.mediaType = mediaType
   }
@@ -51,7 +51,7 @@ class MediaService<T extends Media> {
   ): Promise<MediaResult<Record<string, Media>>> {
     // Add the `peaks` param to all audio searches automatically
     if (this.mediaType === AUDIO) {
-      params.peaks = 'true'
+      params.peaks = "true"
     }
 
     const res = await this.apiService.query<MediaResult<T[]>>(
@@ -90,7 +90,7 @@ class MediaService<T extends Media> {
     }
     const params: ApiQueryParams = {}
     if (this.mediaType === AUDIO) {
-      params.peaks = 'true'
+      params.peaks = "true"
     }
     const res = (await this.apiService.get(
       this.mediaType,

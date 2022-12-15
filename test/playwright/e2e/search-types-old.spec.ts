@@ -1,12 +1,12 @@
-import { test, expect, Page } from '@playwright/test'
+import { test, expect, Page } from "@playwright/test"
 
 import {
   changeContentType,
   goToSearchTerm,
   OLD_HEADER,
   searchTypePath,
-} from '~~/test/playwright/utils/navigation'
-import { mockProviderApis } from '~~/test/playwright/utils/route'
+} from "~~/test/playwright/utils/navigation"
+import { mockProviderApis } from "~~/test/playwright/utils/route"
 
 /**
  * Using SSR:
@@ -24,33 +24,33 @@ import { mockProviderApis } from '~~/test/playwright/utils/route'
  * Results include search meta information, media grid and Meta search form, can load more media if there are more media items.
  */
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })
 
 const allContentConfig = {
-  id: 'all',
-  name: 'All content',
-  url: '/search/?q=birds',
+  id: "all",
+  name: "All content",
+  url: "/search/?q=birds",
   canLoadMore: true,
   metaSourceCount: 7,
 } as const
 
 const imageConfig = {
-  id: 'image',
-  name: 'Images',
-  url: '/search/image?q=birds',
+  id: "image",
+  name: "Images",
+  url: "/search/image?q=birds",
   canLoadMore: true,
   metaSourceCount: 7,
   results: /Over 10,000 results/,
 } as const
 
 const audioConfig = {
-  id: 'audio',
-  name: 'Audio',
-  url: '/search/audio?q=birds',
+  id: "audio",
+  name: "Audio",
+  url: "/search/audio?q=birds",
   canLoadMore: true,
   metaSourceCount: 3,
   results: /764 results/,
@@ -68,7 +68,7 @@ async function checkLoadMore(page: Page, searchType: SearchTypeConfig) {
     await expect(loadMoreSection).toHaveCount(0, { timeout: 300 })
   } else {
     await expect(loadMoreSection).toHaveCount(1)
-    await expect(loadMoreSection).toContainText('Load more')
+    await expect(loadMoreSection).toContainText("Load more")
   }
 }
 async function checkMetasearchForm(page: Page, searchType: SearchTypeConfig) {
@@ -77,7 +77,7 @@ async function checkMetasearchForm(page: Page, searchType: SearchTypeConfig) {
   )
   await expect(metaSearchForm).toHaveCount(1)
 
-  const sourceButtons = await page.locator('.external-sources a')
+  const sourceButtons = await page.locator(".external-sources a")
   await expect(sourceButtons).toHaveCount(searchType.metaSourceCount)
 }
 
@@ -107,28 +107,28 @@ async function checkSearchResult(page: Page, searchType: SearchTypeConfig) {
 
 for (const searchType of searchTypes) {
   test(`Can open ${searchType.name} search page on SSR`, async ({ page }) => {
-    await goToSearchTerm(page, 'birds', { searchType: searchType.id })
+    await goToSearchTerm(page, "birds", { searchType: searchType.id })
 
     await checkSearchResult(page, searchType)
   })
 
   test(`Can open ${searchType.name} page client-side`, async ({ page }) => {
     // Audio is loading a lot of files, so we do not use it for the first SSR page
-    const pageToOpen = searchType.id === 'all' ? searchTypes[1] : searchTypes[0]
+    const pageToOpen = searchType.id === "all" ? searchTypes[1] : searchTypes[0]
     await page.goto(pageToOpen.url)
     await changeContentType(page, searchType.name, OLD_HEADER)
     await checkSearchResult(page, searchType)
   })
 }
 
-for (const searchTypeName of ['audio', 'image'] as const) {
+for (const searchTypeName of ["audio", "image"] as const) {
   const searchType = searchTypes.find((type) => type.id === searchTypeName) as
     | typeof audioConfig
     | typeof imageConfig
   test(`Can open ${searchTypeName} page from the all view`, async ({
     page,
   }) => {
-    await page.goto('/search/?q=birds')
+    await page.goto("/search/?q=birds")
     const contentLink = await page.locator(
       `a:not([role="radio"])[href*="/search/${searchTypeName}"][href$="q=birds"]`
     )

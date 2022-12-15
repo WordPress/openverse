@@ -27,17 +27,17 @@ import {
   watch,
   toRef,
   ComponentInstance,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { Portal as VTeleport } from 'portal-vue'
+import { Portal as VTeleport } from "portal-vue"
 
-import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
-import { useDialogContent } from '~/composables/use-dialog-content'
+import { useBodyScrollLock } from "~/composables/use-body-scroll-lock"
+import { useDialogContent } from "~/composables/use-dialog-content"
 
-import type { SetupContext } from 'vue'
+import type { SetupContext } from "vue"
 
 export default defineComponent({
-  name: 'VInputModal',
+  name: "VInputModal",
   components: { VTeleport },
 
   /**
@@ -60,16 +60,16 @@ export default defineComponent({
     /**
      * Fires when the popover opens, regardless of reason. There are no extra parameters.
      */
-    'open',
+    "open",
     /**
      * Fires when the popover closes, regardless of reason. There are no extra parameters.
      */
-    'close',
+    "close",
   ],
   setup(props, { emit }) {
     const focusTrapRef = ref<ComponentInstance | null>(null)
 
-    const visibleRef = toRef(props, 'isActive')
+    const visibleRef = toRef(props, "isActive")
     const internalVisibleRef = ref<boolean>(
       props.isActive === undefined ? false : visibleRef.value
     )
@@ -96,21 +96,21 @@ export default defineComponent({
       internalVisibleRef.value = true
       lock()
       if (props.isActive !== internalVisibleRef.value) {
-        emit('open')
+        emit("open")
       }
     }
 
     const close = () => {
       internalVisibleRef.value = false
       unlock()
-      emit('close')
+      emit("close")
     }
 
     const dialogRef = ref<HTMLElement | null>(null)
 
     const { onKeyDown, onBlur } = useDialogContent({
       dialogRef,
-      visibleRef: toRef(props, 'isActive'),
+      visibleRef: toRef(props, "isActive"),
       autoFocusOnShowRef: ref(true),
       autoFocusOnHideRef: ref(false),
       triggerElementRef: ref(null),
@@ -118,7 +118,7 @@ export default defineComponent({
       trapFocusRef: ref(true),
       hideRef: ref(close),
       hideOnEscRef: ref(true),
-      emit: emit as SetupContext['emit'],
+      emit: emit as SetupContext["emit"],
     })
 
     return {

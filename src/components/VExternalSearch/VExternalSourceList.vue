@@ -13,7 +13,7 @@
         variant="action-menu-bordered"
         size="disabled"
         class="caption-regular justify-between py-1 px-3 text-dark-charcoal pe-2"
-        >{{ $t('external-sources.button').toString() }}
+        >{{ $t("external-sources.button").toString() }}
         <VIcon
           class="text-dark-charcoal-40 ms-1"
           :class="a11yProps['aria-expanded'] ? 'rotate-180' : 'rotate-0'"
@@ -32,10 +32,10 @@
           @click="close"
         />
         <h2 class="description-bold mb-2 px-4 pt-5 text-start">
-          {{ $t('external-sources.title') }}
+          {{ $t("external-sources.title") }}
         </h2>
         <p class="caption-regular mb-4 px-4 text-start">
-          {{ $t('external-sources.caption', { openverse: 'Openverse' }) }}
+          {{ $t("external-sources.caption", { openverse: "Openverse" }) }}
         </p>
         <VButton
           v-for="source in sources"
@@ -60,27 +60,27 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { getAdditionalSources } from '~/utils/get-additional-sources'
-import type { ApiQueryParams } from '~/utils/search-query-transform'
-import type { MediaType } from '~/constants/media'
+import { getAdditionalSources } from "~/utils/get-additional-sources"
+import type { ApiQueryParams } from "~/utils/search-query-transform"
+import type { MediaType } from "~/constants/media"
 
-import VButton from '~/components/VButton.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VIconButton from '~/components/VIconButton/VIconButton.vue'
-import VPopover from '~/components/VPopover/VPopover.vue'
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VPopover from "~/components/VPopover/VPopover.vue"
 
-import externalLinkIcon from '~/assets/icons/external-link.svg'
-import caretDownIcon from '~/assets/icons/caret-down.svg'
-import closeSmallIcon from '~/assets/icons/close-small.svg'
+import externalLinkIcon from "~/assets/icons/external-link.svg"
+import caretDownIcon from "~/assets/icons/caret-down.svg"
+import closeSmallIcon from "~/assets/icons/close-small.svg"
 
 /**
  * This component renders a list of pre-populated links to additional sources
  * when there are insufficient or zero search results.
  */
 export default defineComponent({
-  name: 'VExternalSourceList',
+  name: "VExternalSourceList",
   components: { VButton, VIcon, VIconButton, VPopover },
   props: {
     /**

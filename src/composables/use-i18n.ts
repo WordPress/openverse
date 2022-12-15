@@ -1,4 +1,4 @@
-import { useContext } from '@nuxtjs/composition-api'
+import { useContext } from "@nuxtjs/composition-api"
 
 /**
  * This composable exists to make it easy to mock the i18n context

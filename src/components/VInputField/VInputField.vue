@@ -35,15 +35,15 @@ import {
   computed,
   defineComponent,
   PropType,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
 export const FIELD_SIZES = {
-  small: 'h-10 text-md',
-  medium: 'h-12',
-  large: 'h-14',
-  standalone: 'h-full',
+  small: "h-10 text-md",
+  medium: "h-12",
+  large: "h-14",
+  standalone: "h-full",
 } as const
 export type FieldSize = keyof typeof FIELD_SIZES
 
@@ -51,11 +51,11 @@ export type FieldSize = keyof typeof FIELD_SIZES
  * Provides a control to enter text as input.
  */
 export default defineComponent({
-  name: 'VInputField',
+  name: "VInputField",
   inheritAttrs: false,
   model: {
-    prop: 'modelValue',
-    event: 'update:modelValue',
+    prop: "modelValue",
+    event: "update:modelValue",
   },
   props: {
     /**
@@ -63,7 +63,7 @@ export default defineComponent({
      */
     modelValue: {
       type: String,
-      default: '',
+      default: "",
     },
     /**
      * the textual content of the label associated with this input field; This
@@ -88,7 +88,7 @@ export default defineComponent({
       type: Array,
       default: () => [],
       validator: (v: string[]) =>
-        v.every((item) => ['start', 'end'].includes(item)),
+        v.every((item) => ["start", "end"].includes(item)),
     },
     /**
      *  Small size is for mobile header/scrolled
@@ -104,9 +104,9 @@ export default defineComponent({
   },
   // using non-native event name to ensure the two are not mixed
   emits: {
-    'update:modelValue': defineEvent<[string]>(),
+    "update:modelValue": defineEvent<[string]>(),
   },
-  expose: ['focusInput'],
+  expose: ["focusInput"],
   setup(props, { emit, attrs }) {
     const inputEl = ref<HTMLInputElement | null>(null)
 
@@ -114,10 +114,10 @@ export default defineComponent({
       inputEl.value?.focus()
     }
 
-    const type = typeof attrs['type'] === 'string' ? attrs['type'] : 'text'
+    const type = typeof attrs["type"] === "string" ? attrs["type"] : "text"
 
     const updateModelValue = (event: Event) => {
-      emit('update:modelValue', (event.target as HTMLInputElement).value)
+      emit("update:modelValue", (event.target as HTMLInputElement).value)
     }
     const sizeClass = computed(() => FIELD_SIZES[props.size])
 

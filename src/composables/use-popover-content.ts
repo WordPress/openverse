@@ -1,16 +1,16 @@
-import { ref } from '@nuxtjs/composition-api'
+import { ref } from "@nuxtjs/composition-api"
 
-import { PopoverContentProps, usePopper } from '~/composables/use-popper'
+import { PopoverContentProps, usePopper } from "~/composables/use-popper"
 
-import { useDialogContent } from '~/composables/use-dialog-content'
+import { useDialogContent } from "~/composables/use-dialog-content"
 
-import type { SetupContext } from 'vue'
-import type { Ref, ToRefs } from '@nuxtjs/composition-api'
+import type { SetupContext } from "vue"
+import type { Ref, ToRefs } from "@nuxtjs/composition-api"
 
 type Props = {
   popoverRef: Ref<HTMLElement | null>
   popoverPropsRefs: ToRefs<PopoverContentProps>
-  emit: SetupContext['emit']
+  emit: SetupContext["emit"]
 }
 
 export function usePopoverContent({

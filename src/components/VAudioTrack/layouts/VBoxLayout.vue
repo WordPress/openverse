@@ -38,16 +38,16 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { AudioDetail } from '~/types/media'
-import type { AudioSize } from '~/constants/audio'
-import { useI18n } from '~/composables/use-i18n'
+import type { AudioDetail } from "~/types/media"
+import type { AudioSize } from "~/constants/audio"
+import { useI18n } from "~/composables/use-i18n"
 
-import VLicense from '~/components/VLicense/VLicense.vue'
+import VLicense from "~/components/VLicense/VLicense.vue"
 
 export default defineComponent({
-  name: 'VBoxLayout',
+  name: "VBoxLayout",
   components: {
     VLicense,
   },
@@ -63,7 +63,7 @@ export default defineComponent({
   },
   setup(props) {
     const i18n = useI18n()
-    const isSmall = computed(() => props.size === 's')
+    const isSmall = computed(() => props.size === "s")
 
     const width = computed(() => {
       const magnitudes = {
@@ -91,7 +91,7 @@ export default defineComponent({
 <style>
 .box-track .waveform {
   @apply flex-grow;
-  --waveform-background-color: theme('colors.yellow');
+  --waveform-background-color: theme("colors.yellow");
 }
 
 .box-track .play-pause {

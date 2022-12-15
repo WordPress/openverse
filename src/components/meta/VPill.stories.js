@@ -1,7 +1,7 @@
-import VPill from '~/components/VPill.vue'
+import VPill from "~/components/VPill.vue"
 
 export default {
-  title: 'Components/VPill',
+  title: "Components/VPill",
   component: VPill,
 }
 

@@ -1,7 +1,7 @@
 <template>
   <aside :aria-label="$t('audio-details.related-audios')">
     <h2 class="heading-6 lg:heading-6 mb-6">
-      {{ $t('audio-details.related-audios') }}
+      {{ $t("audio-details.related-audios") }}
     </h2>
     <!-- Negative margin compensates for the `p-4` padding in row layout. -->
     <div
@@ -18,24 +18,24 @@
       <LoadingIcon v-show="fetchState.isFetching" />
     </div>
     <p v-show="!!fetchState.fetchingError">
-      {{ $t('media-details.related-error') }}
+      {{ $t("media-details.related-error") }}
     </p>
   </aside>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { useUiStore } from '~/stores/ui'
+import { useUiStore } from "~/stores/ui"
 
-import type { FetchState } from '~/models/fetch-state'
-import type { AudioDetail } from '~/models/media'
+import type { FetchState } from "~/models/fetch-state"
+import type { AudioDetail } from "~/models/media"
 
-import LoadingIcon from '~/components/LoadingIcon.vue'
-import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
+import LoadingIcon from "~/components/LoadingIcon.vue"
+import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 
 export default defineComponent({
-  name: 'VRelatedAudio',
+  name: "VRelatedAudio",
   components: { VAudioTrack, LoadingIcon },
   props: {
     media: {
@@ -51,7 +51,7 @@ export default defineComponent({
     const uiStore = useUiStore()
 
     const audioTrackSize = computed(() => {
-      return uiStore.isBreakpoint('md') ? 'l' : 's'
+      return uiStore.isBreakpoint("md") ? "l" : "s"
     })
 
     return { audioTrackSize }

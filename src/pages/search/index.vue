@@ -3,15 +3,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from '@nuxtjs/composition-api'
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
-import { propTypes } from '~/pages/search/search-page.types'
-import { useFeatureFlagStore } from '~/stores/feature-flag'
+import { propTypes } from "~/pages/search/search-page.types"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-import VAllResultsGrid from '~/components/VAllResultsGrid/VAllResultsGrid.vue'
+import VAllResultsGrid from "~/components/VAllResultsGrid/VAllResultsGrid.vue"
 
 export default defineComponent({
-  name: 'SearchIndex',
+  name: "SearchIndex",
   components: { VAllResultsGrid },
   props: propTypes,
   setup(props) {
@@ -19,8 +19,8 @@ export default defineComponent({
 
     useMeta({
       title: `${props.searchTerm} | Openverse`,
-      meta: featureFlagStore.isOn('new_header')
-        ? [{ hid: 'robots', name: 'robots', content: 'all' }]
+      meta: featureFlagStore.isOn("new_header")
+        ? [{ hid: "robots", name: "robots", content: "all" }]
         : undefined,
     })
   },

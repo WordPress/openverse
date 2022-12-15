@@ -15,14 +15,14 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import VPopover from '~/components/VPopover/VPopover.vue'
-import VPageMenuButton from '~/components/VHeaderOld/VPageMenu/VPageMenuButton.vue'
-import VPageList from '~/components/VHeaderOld/VPageMenu/VPageList.vue'
+import VPopover from "~/components/VPopover/VPopover.vue"
+import VPageMenuButton from "~/components/VHeaderOld/VPageMenu/VPageMenuButton.vue"
+import VPageList from "~/components/VHeaderOld/VPageMenu/VPageList.vue"
 
 export default defineComponent({
-  name: 'VDesktopPageMenu',
+  name: "VDesktopPageMenu",
   components: {
     VPageMenuButton,
     VPageList,

@@ -1,10 +1,10 @@
-import '@nuxt/types'
-import '@nuxtjs/i18n'
-import { CookieSerializeOptions } from 'cookie'
+import "@nuxt/types"
+import "@nuxtjs/i18n"
+import { CookieSerializeOptions } from "cookie"
 
-import type { OpenverseCookieState } from '~/types/cookies'
+import type { OpenverseCookieState } from "~/types/cookies"
 
-import type { Details as UADetails } from 'express-useragent'
+import type { Details as UADetails } from "express-useragent"
 
 export interface SetParams<Key extends keyof OpenverseCookieState> {
   name: Key
@@ -31,7 +31,7 @@ export interface NuxtCookies {
   removeAll: () => void
 }
 
-declare module '@nuxt/types' {
+declare module "@nuxt/types" {
   export interface Context {
     $ua: UADetails | null
     $cookies: NuxtCookies
@@ -42,7 +42,7 @@ declare module '@nuxt/types' {
   }
 }
 
-declare module '@nuxtjs/i18n' {
+declare module "@nuxtjs/i18n" {
   /**
    * We put a little extra information in the Vue-i18n `locales` field such as the
    * locale's name and native name, which comes in use here.

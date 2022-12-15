@@ -1,6 +1,6 @@
-import { Ref, ref, watch } from '@nuxtjs/composition-api'
+import { Ref, ref, watch } from "@nuxtjs/composition-api"
 
-import { getActiveElement, getDocument } from '~/utils/reakit-utils/dom'
+import { getActiveElement, getDocument } from "~/utils/reakit-utils/dom"
 
 type Props = {
   dialogRef: Ref<HTMLElement | null>
@@ -14,7 +14,7 @@ function isActualElement(
   const elementAsElement = element as Element
   return !!(
     elementAsElement.tagName &&
-    elementAsElement.tagName !== 'HTML' &&
+    elementAsElement.tagName !== "HTML" &&
     elementAsElement !== getDocument(elementAsElement).body
   )
 }

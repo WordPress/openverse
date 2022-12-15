@@ -20,15 +20,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from "@nuxtjs/composition-api"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
-const positionWithoutSidebar = 'ltr:right-4 rtl:left-4'
-const positionWithSidebar = 'ltr:right-[21rem] rtl:left-[21rem]'
+const positionWithoutSidebar = "ltr:right-4 rtl:left-4"
+const positionWithSidebar = "ltr:right-[21rem] rtl:left-[21rem]"
 
 export default defineComponent({
-  name: 'VScrollButton',
+  name: "VScrollButton",
   props: {
     isFilterSidebarVisible: {
       type: Boolean,
@@ -45,7 +45,7 @@ export default defineComponent({
         : positionWithoutSidebar
     )
     const scrollToTop = () => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
     }
     return { hClass, scrollToTop }
   },

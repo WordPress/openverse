@@ -1,14 +1,14 @@
 // Credit: https://github.com/tailwindlabs/headlessui/blob/main/packages/%40headlessui-vue/src/utils/focus-management.ts
-import { getDomElement } from '~/utils/dom'
+import { getDomElement } from "~/utils/dom"
 
-import type { Ref } from '@nuxtjs/composition-api'
+import type { Ref } from "@nuxtjs/composition-api"
 
 function getOwnerDocument<T extends Element | Ref<Element | null>>(
   element: T | null | undefined
 ) {
-  if (typeof window === 'undefined') return null
+  if (typeof window === "undefined") return null
   if (element instanceof Node) return element.ownerDocument
-  if (element && Object.prototype.hasOwnProperty.call(element, 'value')) {
+  if (element && Object.prototype.hasOwnProperty.call(element, "value")) {
     const domElement = getDomElement(element)
     if (domElement) return domElement.ownerDocument
   }
@@ -19,18 +19,18 @@ function getOwnerDocument<T extends Element | Ref<Element | null>>(
 // Credit:
 //  - https://stackoverflow.com/a/30753870
 const focusableSelector = [
-  '[contentEditable=true]',
-  '[tabindex]',
-  'a[href]',
-  'area[href]',
-  'button:not([disabled])',
-  'iframe',
-  'input:not([disabled])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
+  "[contentEditable=true]",
+  "[tabindex]",
+  "a[href]",
+  "area[href]",
+  "button:not([disabled])",
+  "iframe",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
 ]
   .map(
-    process.env.NODE_ENV === 'test'
+    process.env.NODE_ENV === "test"
       ? // TODO: Remove this once JSDOM fixes the issue where an element that is
         // "hidden" can be the document.activeElement, because this is not possible
         // in real browsers.
@@ -38,7 +38,7 @@ const focusableSelector = [
           `${selector}:not([tabindex='-1']):not([style*='display: none'])`
       : (selector) => `${selector}:not([tabindex='-1'])`
   )
-  .join(',')
+  .join(",")
 
 export const Focus = Object.freeze({
   /** Focus the first non-disabled element */
@@ -58,10 +58,10 @@ export const Focus = Object.freeze({
 })
 
 export const FocusResult = Object.freeze({
-  Error: 'Error' as const,
-  Overflow: 'Overflow' as const,
-  Success: 'Success' as const,
-  Underflow: 'Underflow' as const,
+  Error: "Error" as const,
+  Overflow: "Overflow" as const,
+  Success: "Success" as const,
+  Underflow: "Underflow" as const,
 })
 
 export const Direction = Object.freeze({ Next: 1, Previous: -1 })
@@ -83,7 +83,7 @@ export function focusElement(element: HTMLElement | null) {
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/select
-const selectableSelector = ['textarea', 'input'].join(',')
+const selectableSelector = ["textarea", "input"].join(",")
 function isSelectableElement(
   element: Element | null
 ): element is HTMLInputElement | HTMLTextAreaElement {
@@ -127,7 +127,7 @@ export function focusIn(container: HTMLElement | HTMLElement[], focus: number) {
     if (focus & (Focus.Previous | Focus.Last)) return Direction.Previous
 
     throw new Error(
-      'Missing Focus.First, Focus.Previous, Focus.Next or Focus.Last'
+      "Missing Focus.First, Focus.Previous, Focus.Next or Focus.Last"
     )
   })()
 
@@ -138,7 +138,7 @@ export function focusIn(container: HTMLElement | HTMLElement[], focus: number) {
     if (focus & Focus.Last) return elements.length - 1
 
     throw new Error(
-      'Missing Focus.First, Focus.Previous, Focus.Next or Focus.Last'
+      "Missing Focus.First, Focus.Previous, Focus.Next or Focus.Last"
     )
   })()
 
@@ -165,10 +165,10 @@ export function focusIn(container: HTMLElement | HTMLElement[], focus: number) {
     offset += direction
   } while (next !== ownerDocument.activeElement)
   if (
-    !next.hasAttribute('tabindex') ||
-    next.getAttribute('tabindex') === '-1'
+    !next.hasAttribute("tabindex") ||
+    next.getAttribute("tabindex") === "-1"
   ) {
-    next.setAttribute('tabindex', '0')
+    next.setAttribute("tabindex", "0")
   }
 
   if (focus & (Focus.Next | Focus.Previous) && isSelectableElement(next)) {

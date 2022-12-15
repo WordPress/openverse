@@ -1,6 +1,6 @@
 export default () => {
   return {
-    fallbackLocale: 'en',
+    fallbackLocale: "en",
     silentFallbackWarn: true,
     pluralizationRules: {
       /**

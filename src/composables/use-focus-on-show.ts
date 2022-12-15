@@ -1,12 +1,12 @@
-import { nextTick, ref, watch, Ref } from '@nuxtjs/composition-api'
+import { nextTick, ref, watch, Ref } from "@nuxtjs/composition-api"
 
-import { warn } from '~/utils/console'
+import { warn } from "~/utils/console"
 import {
   ensureFocus,
   getFirstTabbableIn,
   hasFocusWithin,
-} from '~/utils/reakit-utils/focus'
-import { useFocusTrap } from '~/composables/use-focus-trap'
+} from "~/utils/reakit-utils/focus"
+import { useFocusTrap } from "~/composables/use-focus-trap"
 
 export const noFocusableElementWarning =
   "It's recommended to have at least one tabbable element inside dialog. The dialog element has been automatically focused. If this is the intended behavior, pass `tabIndex={0}` to the dialog element to disable this warning."

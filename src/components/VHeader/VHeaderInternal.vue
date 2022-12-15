@@ -67,24 +67,24 @@ import {
   ref,
   useRoute,
   watch,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import usePages from '~/composables/use-pages'
+import usePages from "~/composables/use-pages"
 
-import { useUiStore } from '~/stores/ui'
+import { useUiStore } from "~/stores/ui"
 
-import VHomeLink from '~/components/VHeader/VHomeLink.vue'
-import VIconButton from '~/components/VIconButton/VIconButton.vue'
-import VPageLinks from '~/components/VHeader/VPageLinks.vue'
-import VModal from '~/components/VModal/VModal.vue'
+import VHomeLink from "~/components/VHeader/VHomeLink.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VPageLinks from "~/components/VHeader/VPageLinks.vue"
+import VModal from "~/components/VModal/VModal.vue"
 
-import VWordPressLink from '~/components/VHeader/VWordPressLink.vue'
+import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
 
-import closeIcon from '~/assets/icons/close.svg'
-import menuIcon from '~/assets/icons/menu.svg'
+import closeIcon from "~/assets/icons/close.svg"
+import menuIcon from "~/assets/icons/menu.svg"
 
 export default defineComponent({
-  name: 'VHeaderInternal',
+  name: "VHeaderInternal",
   components: {
     VWordPressLink,
     VHomeLink,

@@ -2,7 +2,7 @@
   <div id="content-report-form" class="w-80 p-6">
     <div v-if="status === SENT">
       <p class="heading-6 mb-4">
-        {{ $t('media-details.content-report.success.title') }}
+        {{ $t("media-details.content-report.success.title") }}
       </p>
       <i18n
         path="media-details.content-report.success.note"
@@ -21,23 +21,23 @@
 
     <div v-else-if="status === FAILED">
       <p class="heading-6 mb-4">
-        {{ $t('media-details.content-report.failure.title') }}
+        {{ $t("media-details.content-report.failure.title") }}
       </p>
       <p class="text-sm">
-        {{ $t('media-details.content-report.failure.note') }}
+        {{ $t("media-details.content-report.failure.note") }}
       </p>
     </div>
 
     <!-- Main form -->
     <div v-else>
       <div class="heading-6 mb-4">
-        {{ $t('media-details.content-report.long') }}
+        {{ $t("media-details.content-report.long") }}
       </div>
 
       <p class="mb-4 text-sm">
         {{
-          $t('media-details.content-report.form.disclaimer', {
-            openverse: 'Openverse',
+          $t("media-details.content-report.form.disclaimer", {
+            openverse: "Openverse",
           })
         }}
       </p>
@@ -45,7 +45,7 @@
       <form class="text-sm" @submit="handleSubmit">
         <fieldset class="flex flex-col">
           <legend class="label-bold mb-4">
-            {{ $t('media-details.content-report.form.question') }}
+            {{ $t("media-details.content-report.form.question") }}
           </legend>
           <VRadio
             v-for="reason in reasons"
@@ -77,7 +77,7 @@
 
         <div class="flex flex-row items-center justify-end gap-4">
           <VButton variant="secondary-bordered" @click="handleCancel">
-            {{ $t('media-details.content-report.form.cancel') }}
+            {{ $t("media-details.content-report.form.cancel") }}
           </VButton>
 
           <VButton
@@ -87,7 +87,7 @@
             variant="secondary-filled"
             :href="DMCA_FORM_URL"
           >
-            {{ $t('media-details.content-report.form.dmca.open') }}
+            {{ $t("media-details.content-report.form.dmca.open") }}
             <VIcon :size="4" class="ms-1" :icon-path="icons.externalLink" />
           </VButton>
           <VButton
@@ -99,7 +99,7 @@
             variant="secondary-filled"
             :value="$t('media-details.content-report.form.submit')"
           >
-            {{ $t('media-details.content-report.form.submit') }}
+            {{ $t("media-details.content-report.form.submit") }}
           </VButton>
         </div>
       </form>
@@ -108,9 +108,9 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref } from "@nuxtjs/composition-api"
 
-import ReportService from '~/data/report-service'
+import ReportService from "~/data/report-service"
 
 import {
   reasons,
@@ -120,19 +120,19 @@ import {
   FAILED,
   WIP,
   DMCA_FORM_URL,
-} from '~/constants/content-report'
+} from "~/constants/content-report"
 
-import VButton from '~/components/VButton.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VRadio from '~/components/VRadio/VRadio.vue'
-import VDmcaNotice from '~/components/VContentReport/VDmcaNotice.vue'
-import VReportDescForm from '~/components/VContentReport/VReportDescForm.vue'
-import VLink from '~/components/VLink.vue'
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VRadio from "~/components/VRadio/VRadio.vue"
+import VDmcaNotice from "~/components/VContentReport/VDmcaNotice.vue"
+import VReportDescForm from "~/components/VContentReport/VReportDescForm.vue"
+import VLink from "~/components/VLink.vue"
 
-import externalLinkIcon from '~/assets/icons/external-link.svg'
+import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
-  name: 'VContentReportForm',
+  name: "VContentReportForm",
   components: {
     VButton,
     VIcon,
@@ -149,7 +149,7 @@ export default defineComponent({
   },
   setup(props) {
     const service = props.reportService || ReportService
-    const description = ref('')
+    const description = ref("")
 
     /** @type {import('@nuxtjs/composition-api').Ref<string|null>} */
     const status = ref(WIP)
@@ -160,7 +160,7 @@ export default defineComponent({
     /* Buttons */
     const handleCancel = () => {
       selectedReason.value = null
-      description.value = ''
+      description.value = ""
       props.closeFn()
     }
 

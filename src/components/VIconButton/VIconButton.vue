@@ -18,24 +18,24 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { ButtonType } from '~/types/button'
+import type { ButtonType } from "~/types/button"
 
-import VIcon, { type IconProps } from '~/components/VIcon/VIcon.vue'
-import VButton, { type ButtonProps } from '~/components/VButton.vue'
+import VIcon, { type IconProps } from "~/components/VIcon/VIcon.vue"
+import VButton, { type ButtonProps } from "~/components/VButton.vue"
 
 const SIZE_MAP = Object.freeze({
-  tiny: { icon: 6, button: 'w-6 h-6' },
-  small: { icon: 6, button: 'w-10 h-10' },
-  medium: { icon: 6, button: 'w-12 h-12' },
-  large: { icon: 8, button: 'w-14 h-14' },
-  'extra-large': { icon: 12, button: 'w-20 h-20' },
+  tiny: { icon: 6, button: "w-6 h-6" },
+  small: { icon: 6, button: "w-10 h-10" },
+  medium: { icon: 6, button: "w-12 h-12" },
+  large: { icon: 8, button: "w-14 h-14" },
+  "extra-large": { icon: 12, button: "w-20 h-20" },
 } as const)
 type Size = keyof typeof SIZE_MAP
 
 export default defineComponent({
-  name: 'VIconButton',
+  name: "VIconButton",
   components: { VIcon, VButton },
   props: {
     /**
@@ -44,7 +44,7 @@ export default defineComponent({
      */
     size: {
       type: String as PropType<Size>,
-      default: 'medium',
+      default: "medium",
       validator: (val: string) => Object.keys(SIZE_MAP).includes(val),
     },
     /**
@@ -61,11 +61,11 @@ export default defineComponent({
      */
     buttonProps: {
       type: Object as PropType<ButtonProps>,
-      default: () => ({ variant: 'plain' }),
+      default: () => ({ variant: "plain" }),
     },
   },
   setup(props, { attrs }) {
-    const type = (attrs['type'] ?? 'button') as ButtonType
+    const type = (attrs["type"] ?? "button") as ButtonType
 
     const buttonSizeClasses = computed(() => SIZE_MAP[props.size].button)
     const iconSize = computed(() => SIZE_MAP[props.size].icon)

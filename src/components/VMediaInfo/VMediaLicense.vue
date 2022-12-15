@@ -30,7 +30,7 @@
           <VLink
             :aria-label="$t('media-details.aria.attribution.tool')"
             :href="licenseUrl"
-            >{{ $t('media-details.reuse.tool.link') }}</VLink
+            >{{ $t("media-details.reuse.tool.link") }}</VLink
           >
         </template>
       </i18n>
@@ -39,18 +39,18 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { getFullLicenseName, isLicense as isLicenseFn } from '~/utils/license'
-import { useI18n } from '~/composables/use-i18n'
+import { getFullLicenseName, isLicense as isLicenseFn } from "~/utils/license"
+import { useI18n } from "~/composables/use-i18n"
 
-import type { License, LicenseVersion } from '~/constants/license'
+import type { License, LicenseVersion } from "~/constants/license"
 
-import VLicenseElements from '~/components/VLicense/VLicenseElements.vue'
-import VLink from '~/components/VLink.vue'
+import VLicenseElements from "~/components/VLicense/VLicenseElements.vue"
+import VLink from "~/components/VLink.vue"
 
 export default defineComponent({
-  name: 'VMediaLicense',
+  name: "VMediaLicense",
   components: { VLicenseElements, VLink },
   props: {
     license: {
@@ -70,7 +70,7 @@ export default defineComponent({
     const i18n = useI18n()
     const isLicense = computed(() => isLicenseFn(props.license))
     const headerText = computed(() => {
-      const licenseOrTool = isLicense.value ? 'license' : 'tool'
+      const licenseOrTool = isLicense.value ? "license" : "tool"
       return i18n.t(`media-details.reuse.${licenseOrTool}-header`)
     })
     const fullLicenseName = computed(() =>

@@ -6,12 +6,12 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import VBanners from '~/components/VBanner/VBanners.vue'
+import VBanners from "~/components/VBanner/VBanners.vue"
 
 export default defineComponent({
-  name: 'BlankLayout',
+  name: "BlankLayout",
   components: { VBanners },
   head() {
     return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })

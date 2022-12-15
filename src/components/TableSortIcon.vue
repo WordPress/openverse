@@ -25,10 +25,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
 export default defineComponent({
-  name: 'TableSortIcon',
+  name: "TableSortIcon",
   props: {
     active: {
       type: Boolean,

@@ -1,22 +1,22 @@
-import VContentLink from '~/components/VContentLink/VContentLink.vue'
+import VContentLink from "~/components/VContentLink/VContentLink.vue"
 
 export default {
-  title: 'Components/VContentLink',
+  title: "Components/VContentLink",
   component: VContentLink,
   argTypes: {
     mediaType: {
-      options: ['audio', 'image'],
-      control: { type: 'radio' },
+      options: ["audio", "image"],
+      control: { type: "radio" },
     },
     resultsCount: {
-      control: { type: 'number' },
+      control: { type: "number" },
     },
     isSelected: {
-      control: { type: 'boolean' },
+      control: { type: "boolean" },
     },
     layout: {
-      options: ['stacked', 'horizontal'],
-      control: { type: 'radio' },
+      options: ["stacked", "horizontal"],
+      control: { type: "radio" },
     },
   },
 }
@@ -44,10 +44,10 @@ const TwoVContentLinkStory = () => ({
   data() {
     return {
       types: [
-        { mediaType: 'image', resultsCount: 4321 },
-        { mediaType: 'audio', resultsCount: 1234 },
+        { mediaType: "image", resultsCount: 4321 },
+        { mediaType: "audio", resultsCount: 1234 },
       ],
-      selected: 'audio',
+      selected: "audio",
     }
   },
   methods: {
@@ -59,7 +59,7 @@ const TwoVContentLinkStory = () => ({
 
 export const Default = VContentLinkStory.bind({})
 Default.args = {
-  mediaType: 'image',
+  mediaType: "image",
   resultsCount: 5708,
   isSelected: false,
 }
@@ -74,13 +74,13 @@ const VContentLinkHorizontalStory = (args) => ({
 
 export const Horizontal = VContentLinkHorizontalStory.bind({})
 Horizontal.args = {
-  mediaType: 'audio',
+  mediaType: "audio",
   resultsCount: 4561,
   isSelected: false,
-  layout: 'horizontal',
+  layout: "horizontal",
 }
 
 export const Mobile = TwoVContentLinkStory.bind({})
 Mobile.parameters = {
-  viewport: { defaultViewport: 'xs' },
+  viewport: { defaultViewport: "xs" },
 }

@@ -1,12 +1,12 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia"
 
-import axios from 'axios'
+import axios from "axios"
 
-import { warn } from '~/utils/console'
-import { hash, rand as prng } from '~/utils/prng'
-import prepareSearchQueryParams from '~/utils/prepare-search-query-params'
-import type { DetailFromMediaType, Media } from '~/types/media'
-import type { FetchState } from '~/types/fetch-state'
+import { warn } from "~/utils/console"
+import { hash, rand as prng } from "~/utils/prng"
+import prepareSearchQueryParams from "~/utils/prepare-search-query-params"
+import type { DetailFromMediaType, Media } from "~/types/media"
+import type { FetchState } from "~/types/fetch-state"
 import {
   ALL_MEDIA,
   AUDIO,
@@ -14,11 +14,11 @@ import {
   SupportedMediaType,
   supportedMediaTypes,
   isAdditionalSearchType,
-} from '~/constants/media'
-import { initServices } from '~/stores/media/services'
-import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
-import { useRelatedMediaStore } from '~/stores/media/related-media'
-import { deepFreeze } from '~/utils/deep-freeze'
+} from "~/constants/media"
+import { initServices } from "~/stores/media/services"
+import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
+import { useRelatedMediaStore } from "~/stores/media/related-media"
+import { deepFreeze } from "~/utils/deep-freeze"
 
 export type MediaStoreResult = {
   count: number
@@ -45,7 +45,7 @@ export const initialResults = deepFreeze({
   items: {},
 }) as MediaStoreResult
 
-export const useMediaStore = defineStore('media', {
+export const useMediaStore = defineStore("media", {
   state: (): MediaState => ({
     results: {
       [AUDIO]: { ...initialResults },
@@ -154,13 +154,13 @@ export const useMediaStore = defineStore('media', {
         }
 
         return {
-          isFetching: atLeastOne('isFetching'),
+          isFetching: atLeastOne("isFetching"),
           fetchingError: supportedMediaTypes.every(
             (type) => this.mediaFetchState[type].fetchingError !== null
           )
             ? allMediaError()
             : null,
-          hasStarted: atLeastOne('hasStarted'),
+          hasStarted: atLeastOne("hasStarted"),
           isFinished: supportedMediaTypes.every(
             (type) => this.mediaFetchState[type].isFinished
           ),
@@ -196,12 +196,12 @@ export const useMediaStore = defineStore('media', {
       // distribution is the same on repeated searches
       const seedString = media[IMAGE][0]?.id
       let seed: number
-      if (typeof seedString === 'string') {
+      if (typeof seedString === "string") {
         seed = hash(seedString)
       } else {
-        let otherTypeId = 'string'
+        let otherTypeId = "string"
         for (const type of supportedMediaTypes.slice(1)) {
-          if (typeof media[type][0]?.id === 'string') {
+          if (typeof media[type][0]?.id === "string") {
             otherTypeId = media[type][0].id
             break
           }
@@ -286,20 +286,20 @@ export const useMediaStore = defineStore('media', {
 
     _updateFetchState(
       mediaType: SupportedMediaType,
-      action: 'reset' | 'start' | 'end' | 'finish',
+      action: "reset" | "start" | "end" | "finish",
       option?: string
     ) {
       switch (action) {
-        case 'reset':
+        case "reset":
           this._resetFetchState()
           break
-        case 'start':
+        case "start":
           this._startFetching(mediaType)
           break
-        case 'end':
+        case "end":
           this._endFetching(mediaType, option)
           break
-        case 'finish':
+        case "finish":
           this._finishFetchingForQuery(mediaType)
           break
       }
@@ -336,7 +336,7 @@ export const useMediaStore = defineStore('media', {
       this.results[mediaType].page = mediaCount === 0 ? undefined : mediaPage
       this.results[mediaType].pageCount = pageCount
       if (mediaPage >= pageCount) {
-        this._updateFetchState(mediaType, 'finish')
+        this._updateFetchState(mediaType, "finish")
       }
     },
 
@@ -415,7 +415,7 @@ export const useMediaStore = defineStore('media', {
         page = (this.results[mediaType].page ?? 0) + 1
         queryParams.page = `${page}`
       }
-      this._updateFetchState(mediaType, 'start')
+      this._updateFetchState(mediaType, "start")
       try {
         const accessToken = this.$nuxt.$openverseApiToken
         const service = initServices[mediaType](accessToken)
@@ -425,7 +425,7 @@ export const useMediaStore = defineStore('media', {
         if (!mediaCount) {
           page = undefined
         }
-        this._updateFetchState(mediaType, 'end', errorMessage)
+        this._updateFetchState(mediaType, "end", errorMessage)
         this.setMedia({
           mediaType,
           media: data.results,
@@ -475,7 +475,7 @@ export const useMediaStore = defineStore('media', {
         },
       })
 
-      this._updateFetchState(mediaType, 'end', errorMessage)
+      this._updateFetchState(mediaType, "end", errorMessage)
       if (!axios.isAxiosError(error)) {
         throw new Error(errorMessage)
       }

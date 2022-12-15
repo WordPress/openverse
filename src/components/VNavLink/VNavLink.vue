@@ -14,12 +14,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import VLink from '~/components/VLink.vue'
+import VLink from "~/components/VLink.vue"
 
 export default defineComponent({
-  name: 'VNavLink',
+  name: "VNavLink",
   components: {
     VLink,
   },
@@ -29,8 +29,8 @@ export default defineComponent({
       default: false,
     },
     mode: {
-      type: String as PropType<'light' | 'dark'>,
-      default: 'dark',
+      type: String as PropType<"light" | "dark">,
+      default: "dark",
     },
     link: {
       type: String,

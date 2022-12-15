@@ -13,17 +13,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from "@nuxtjs/composition-api"
 
-import { useUiStore } from '~/stores/ui'
-import type { TranslationBannerId } from '~/types/banners'
+import { useUiStore } from "~/stores/ui"
+import type { TranslationBannerId } from "~/types/banners"
 
 export default defineComponent({
-  name: 'VBanners',
+  name: "VBanners",
   components: {
-    VMigrationNotice: () => import('~/components/VBanner/VMigrationNotice.vue'),
+    VMigrationNotice: () => import("~/components/VBanner/VMigrationNotice.vue"),
     VTranslationStatusBanner: () =>
-      import('~/components/VBanner/VTranslationStatusBanner.vue'),
+      import("~/components/VBanner/VTranslationStatusBanner.vue"),
   },
   setup() {
     const uiStore = useUiStore()

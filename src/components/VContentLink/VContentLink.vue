@@ -24,18 +24,18 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
-import { AUDIO, IMAGE, SupportedMediaType } from '~/constants/media'
+import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
+import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VLink from '~/components/VLink.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VLink from "~/components/VLink.vue"
 
-import audioIcon from '~/assets/icons/audio-wave.svg'
-import imageIcon from '~/assets/icons/image.svg'
+import audioIcon from "~/assets/icons/audio-wave.svg"
+import imageIcon from "~/assets/icons/image.svg"
 
 const iconMapping = {
   [AUDIO]: audioIcon,
@@ -43,7 +43,7 @@ const iconMapping = {
 }
 
 export default defineComponent({
-  name: 'VContentLink',
+  name: "VContentLink",
   components: { VIcon, VLink },
   props: {
     /**
@@ -69,7 +69,7 @@ export default defineComponent({
     },
   },
   emits: {
-    'shift-tab': defineEvent<[KeyboardEvent]>(),
+    "shift-tab": defineEvent<[KeyboardEvent]>(),
   },
   setup(props) {
     const iconPath = computed(() => iconMapping[props.mediaType])

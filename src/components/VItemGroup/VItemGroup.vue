@@ -26,24 +26,24 @@ import {
   ref,
   readonly,
   PropType,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { useI18n } from '~/composables/use-i18n'
+import { useI18n } from "~/composables/use-i18n"
 
-import { keycodes } from '~/constants/key-codes'
-import { ensureFocus } from '~/utils/reakit-utils/focus'
+import { keycodes } from "~/constants/key-codes"
+import { ensureFocus } from "~/utils/reakit-utils/focus"
 import type {
   ItemGroupDirection,
   ItemGroupSize,
   ItemGroupType,
-} from '~/types/item-group'
+} from "~/types/item-group"
 import {
   itemGroupDirections,
   itemGroupSizes,
   itemGroupTypes,
   VItemGroupContextKey,
   VItemGroupFocusContextKey,
-} from '~/types/item-group'
+} from "~/types/item-group"
 
 const arrows = [
   keycodes.ArrowUp,
@@ -53,7 +53,7 @@ const arrows = [
 ]
 
 export default defineComponent({
-  name: 'VItemGroup',
+  name: "VItemGroup",
   props: {
     /**
      * The direction to render the items in.
@@ -62,7 +62,7 @@ export default defineComponent({
      */
     direction: {
       type: String as PropType<ItemGroupDirection>,
-      default: 'vertical',
+      default: "vertical",
       validate: (v: string) =>
         (itemGroupDirections as unknown as string[]).includes(v),
     },
@@ -92,7 +92,7 @@ export default defineComponent({
      */
     type: {
       type: String as PropType<ItemGroupType>,
-      default: 'menu',
+      default: "menu",
       validate: (v: string) =>
         (itemGroupTypes as unknown as string[]).includes(v),
     },
@@ -103,7 +103,7 @@ export default defineComponent({
      */
     size: {
       type: String as PropType<ItemGroupSize>,
-      default: 'small',
+      default: "small",
       validate: (v: string) =>
         (itemGroupSizes as unknown as string[]).includes(v),
     },
@@ -124,8 +124,8 @@ export default defineComponent({
      * @param rtl
      */
     const resolveArrow = (ltr: string, rtl: string) => {
-      return i18n.localeProperties.dir === 'rtl' &&
-        props.direction === 'horizontal'
+      return i18n.localeProperties.dir === "rtl" &&
+        props.direction === "horizontal"
         ? rtl
         : ltr
     }
@@ -139,7 +139,7 @@ export default defineComponent({
 
       // While VItem ultimately renders a button at the moment, that could change in the future, so using a data attribute selector makes it more flexible for the future
       const items = Array.from<HTMLElement>(
-        nodeRef.value?.querySelectorAll('[data-item-group-item]')
+        nodeRef.value?.querySelectorAll("[data-item-group-item]")
       )
 
       const targetIndex = items.findIndex((item) => item === target)

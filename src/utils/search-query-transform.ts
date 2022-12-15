@@ -3,16 +3,16 @@ import {
   FilterItem,
   Filters,
   mediaFilterKeys,
-} from '~/constants/filters'
+} from "~/constants/filters"
 import {
   ALL_MEDIA,
   mediaTypes,
   SearchType,
   SupportedSearchType,
   supportedSearchTypes,
-} from '~/constants/media'
-import { getParameterByName } from '~/utils/url-params'
-import { deepClone } from '~/utils/clone'
+} from "~/constants/media"
+import { getParameterByName } from "~/utils/url-params"
+import { deepClone } from "~/utils/clone"
 
 export interface ApiQueryParams {
   q?: string
@@ -34,7 +34,7 @@ export interface ApiQueryParams {
   peaks?: string
 }
 
-export type ApiQueryFilters = Omit<ApiQueryParams, 'q'>
+export type ApiQueryFilters = Omit<ApiQueryParams, "q">
 export type ApiQueryKeys = keyof ApiQueryFilters
 
 /**
@@ -43,19 +43,19 @@ export type ApiQueryKeys = keyof ApiQueryFilters
  * parameters are singular.
  */
 const filterPropertyMappings: Record<FilterCategory, ApiQueryKeys> = {
-  licenses: 'license',
-  licenseTypes: 'license_type',
-  audioCategories: 'category',
-  imageCategories: 'category',
-  audioExtensions: 'extension',
-  imageExtensions: 'extension',
-  lengths: 'length',
-  aspectRatios: 'aspect_ratio',
-  sizes: 'size',
-  audioProviders: 'source',
-  imageProviders: 'source',
-  searchBy: 'searchBy',
-  mature: 'mature',
+  licenses: "license",
+  licenseTypes: "license_type",
+  audioCategories: "category",
+  imageCategories: "category",
+  audioExtensions: "extension",
+  imageExtensions: "extension",
+  lengths: "length",
+  aspectRatios: "aspect_ratio",
+  sizes: "size",
+  audioProviders: "source",
+  imageProviders: "source",
+  searchBy: "searchBy",
+  mature: "mature",
 }
 
 const getMediaFilterTypes = (searchType: SearchType) => {
@@ -73,8 +73,8 @@ const filterToString = (filterItem: FilterItem[]) => {
   const filterString = filterItem
     .filter((f) => f.checked)
     .map((filterItem) => filterItem.code)
-    .join(',')
-  return filterString === 'mature' ? 'true' : filterString
+    .join(",")
+  return filterString === "mature" ? "true" : filterString
 }
 
 /**
@@ -110,7 +110,7 @@ export const filtersToQueryData = (
  * @param queryString - the query path string from the url
  */
 export const queryStringToSearchType = (queryString: string): SearchType => {
-  const searchTypePattern = new RegExp(`/search/(${mediaTypes.join('|')})`)
+  const searchTypePattern = new RegExp(`/search/(${mediaTypes.join("|")})`)
   const matchedType = queryString.match(searchTypePattern)
   return matchedType === null ? ALL_MEDIA : (matchedType[1] as SearchType)
 }
@@ -132,8 +132,8 @@ const getMediaTypeApiFilters = (
   filterParameter: string,
   parameterFilters: FilterItem[]
 ): FilterItem[] => {
-  if (filterParameter !== '') {
-    const parameterValues = filterParameter.split(',')
+  if (filterParameter !== "") {
+    const parameterValues = filterParameter.split(",")
     parameterValues.forEach((parameter) => {
       const existingParameterIdx = parameterFilters.findIndex(
         (p) => p.code === parameter
@@ -163,7 +163,7 @@ const getMediaTypeApiFilters = (
  */
 export const queryToFilterData = ({
   query,
-  searchType = 'image',
+  searchType = "image",
   defaultFilters,
 }: {
   query: Record<string, string>
@@ -175,12 +175,12 @@ export const queryToFilterData = ({
   const filters = deepClone(defaultFilters) as Filters
   const filterTypes = getMediaFilterTypes(searchType)
   const differentFiltersWithSameApiParams = [
-    'audioProviders',
-    'imageProviders',
-    'audioExtensions',
-    'imageExtensions',
-    'audioCategories',
-    'imageCategories',
+    "audioProviders",
+    "imageProviders",
+    "audioExtensions",
+    "imageExtensions",
+    "audioCategories",
+    "imageCategories",
   ]
   filterTypes.forEach((filterDataKey) => {
     if (differentFiltersWithSameApiParams.includes(filterDataKey)) {
@@ -196,10 +196,10 @@ export const queryToFilterData = ({
     } else {
       const queryDataKey = filterPropertyMappings[filterDataKey]
       if (query[queryDataKey]) {
-        if (queryDataKey === 'mature' && query[queryDataKey].length > 0) {
+        if (queryDataKey === "mature" && query[queryDataKey].length > 0) {
           filters[filterDataKey][0].checked = true
         } else {
-          const filterValues = query[queryDataKey].split(',')
+          const filterValues = query[queryDataKey].split(",")
           filterValues.forEach((val: string) => {
             const idx = filters[filterDataKey].findIndex((f) => f.code === val)
             if (idx >= 0) {
@@ -235,7 +235,7 @@ export const queryStringToQueryData = (queryString: string) => {
     )
   })
 
-  queryDataObject.q = getParameterByName('q', queryString)
+  queryDataObject.q = getParameterByName("q", queryString)
 
   return queryDataObject
 }
@@ -248,7 +248,7 @@ export const areQueriesEqual = (
   oldQuery: ApiQueryParams
 ): boolean => {
   const queryKeys = (query: ApiQueryParams) =>
-    Object.keys(query).filter((k) => k !== 'q') as (keyof ApiQueryParams)[]
+    Object.keys(query).filter((k) => k !== "q") as (keyof ApiQueryParams)[]
   const oldQueryKeys = queryKeys(oldQuery)
   const newQueryKeys = queryKeys(newQuery)
   if (oldQueryKeys.length !== newQueryKeys.length) return false

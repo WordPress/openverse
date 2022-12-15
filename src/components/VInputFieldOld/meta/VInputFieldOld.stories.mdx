@@ -4,16 +4,16 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import VInputFieldOld from '~/components/VInputFieldOld/VInputFieldOld.vue'
+import VInputFieldOld from "~/components/VInputFieldOld/VInputFieldOld.vue"
 
 <Meta
   title="Components/VInputFieldOld"
   component={VInputFieldOld}
   argTypes={{
-    'update:modelValue': {
-      action: 'update:modelValue',
+    "update:modelValue": {
+      action: "update:modelValue",
     },
   }}
 />
@@ -43,7 +43,7 @@ the field receives an input.
   <Story
     name="Default"
     args={{
-      value: 'Text goes here',
+      value: "Text goes here",
     }}
   >
     {Template.bind({})}
@@ -64,7 +64,7 @@ export const vModelTemplate = () => ({
   components: { VInputFieldOld },
   data() {
     return {
-      text: 'Hello, World!',
+      text: "Hello, World!",
     }
   },
 })
@@ -81,7 +81,7 @@ change the type as the field is specifically designed for text.
   <Story
     name="With placeholder"
     args={{
-      placeholder: 'Enter something here',
+      placeholder: "Enter something here",
     }}
   >
     {Template.bind({})}
@@ -96,7 +96,7 @@ via the `labelText` prop.
   <Story
     name="With label text"
     args={{
-      labelText: 'Label:',
+      labelText: "Label:",
     }}
   >
     {Template.bind({})}
@@ -130,7 +130,7 @@ seamless. The field has no border or rounded corners on the connected sides.
   <Story
     name="With connections"
     args={{
-      connectionSides: ['start', 'end'],
+      connectionSides: ["start", "end"],
     }}
   >
     {Template.bind({})}

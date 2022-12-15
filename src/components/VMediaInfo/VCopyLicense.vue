@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3 id="copy-license-title" class="description-bold md:heading-6 mb-4">
-      {{ $t('media-details.reuse.copy-license.title') }}
+      {{ $t("media-details.reuse.copy-license.title") }}
     </h3>
 
     <VTabs label="#copy-license-title" :selected-id="tabs[0]">
@@ -29,20 +29,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { AttributionOptions, getAttribution } from '~/utils/attribution-html'
-import type { Media } from '~/types/media'
-import { useI18n } from '~/composables/use-i18n'
+import { AttributionOptions, getAttribution } from "~/utils/attribution-html"
+import type { Media } from "~/types/media"
+import { useI18n } from "~/composables/use-i18n"
 
-import VTabs from '~/components/VTabs/VTabs.vue'
-import VTab from '~/components/VTabs/VTab.vue'
-import VLicenseTabPanel from '~/components/VMediaInfo/VLicenseTabPanel.vue'
+import VTabs from "~/components/VTabs/VTabs.vue"
+import VTab from "~/components/VTabs/VTab.vue"
+import VLicenseTabPanel from "~/components/VMediaInfo/VLicenseTabPanel.vue"
 
-const tabs = ['rich', 'html', 'plain']
+const tabs = ["rich", "html", "plain"]
 
 export default defineComponent({
-  name: 'VCopyLicense',
+  name: "VCopyLicense",
   components: { VTabs, VTab, VLicenseTabPanel },
   props: {
     media: {

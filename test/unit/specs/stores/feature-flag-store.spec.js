@@ -1,75 +1,75 @@
-import { setActivePinia, createPinia } from '~~/test/unit/test-utils/pinia'
+import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import { useFeatureFlagStore, getFlagStatus } from '~/stores/feature-flag'
-import { OFF, ON } from '~/constants/feature-flag'
+import { useFeatureFlagStore, getFlagStatus } from "~/stores/feature-flag"
+import { OFF, ON } from "~/constants/feature-flag"
 
 jest.mock(
-  '~~/feat/feature-flags.json',
+  "~~/feat/feature-flags.json",
   () => ({
     features: {
       feat_enabled: {
-        status: 'enabled',
-        description: 'Will always be enabled',
+        status: "enabled",
+        description: "Will always be enabled",
       },
       feat_disabled: {
-        status: 'disabled',
-        description: 'Will always be disabled',
+        status: "disabled",
+        description: "Will always be disabled",
       },
       feat_switchable_optout: {
-        status: 'switchable',
-        description: 'Can be switched between on and off',
-        defaultState: 'on',
+        status: "switchable",
+        description: "Can be switched between on and off",
+        defaultState: "on",
       },
       feat_switchable_optin: {
-        status: 'switchable',
-        description: 'Can be switched between on and off',
-        defaultState: 'off',
+        status: "switchable",
+        description: "Can be switched between on and off",
+        defaultState: "off",
       },
       feat_env_specific: {
         status: {
-          local: 'enabled',
-          staging: 'switchable',
-          production: 'disabled',
+          local: "enabled",
+          staging: "switchable",
+          production: "disabled",
         },
-        description: 'Depends on the environment',
-        defaultState: 'off',
+        description: "Depends on the environment",
+        defaultState: "off",
       },
     },
   }),
   { virtual: true }
 )
 
-describe('Feature flag store', () => {
+describe("Feature flag store", () => {
   beforeEach(() => {
     setActivePinia(createPinia())
   })
 
-  it('initialises state from JSON', () => {
+  it("initialises state from JSON", () => {
     const featureFlagStore = useFeatureFlagStore()
     expect(Object.keys(featureFlagStore.flags).length).toBe(5)
   })
 
   it.each`
     flagName           | featureState
-    ${'feat_enabled'}  | ${'on'}
-    ${'feat_disabled'} | ${'off'}
+    ${"feat_enabled"}  | ${"on"}
+    ${"feat_disabled"} | ${"off"}
   `(
-    'does not allow modification of fixed flags',
+    "does not allow modification of fixed flags",
     ({ flagName, featureState }) => {
       const featureFlagStore = useFeatureFlagStore()
       expect(featureFlagStore.featureState(flagName)).toEqual(featureState)
-      expect(featureFlagStore.isOn(flagName)).toEqual(featureState === 'on')
+      expect(featureFlagStore.isOn(flagName)).toEqual(featureState === "on")
     }
   )
 
   it.each`
     flagName                    | doCookieInit | featureState
-    ${'feat_switchable_optout'} | ${false}     | ${'on'}
-    ${'feat_switchable_optin'}  | ${false}     | ${'off'}
-    ${'feat_switchable_optout'} | ${true}      | ${'off'}
-    ${'feat_switchable_optin'}  | ${true}      | ${'on'}
+    ${"feat_switchable_optout"} | ${false}     | ${"on"}
+    ${"feat_switchable_optin"}  | ${false}     | ${"off"}
+    ${"feat_switchable_optout"} | ${true}      | ${"off"}
+    ${"feat_switchable_optin"}  | ${true}      | ${"on"}
   `(
-    'cascades flag $flagName from cookies',
+    "cascades flag $flagName from cookies",
     ({ flagName, doCookieInit, featureState }) => {
       const featureFlagStore = useFeatureFlagStore()
       if (doCookieInit)
@@ -78,18 +78,18 @@ describe('Feature flag store', () => {
           feat_switchable_optin: ON,
         })
       expect(featureFlagStore.featureState(flagName)).toEqual(featureState)
-      expect(featureFlagStore.isOn(flagName)).toEqual(featureState === 'on')
+      expect(featureFlagStore.isOn(flagName)).toEqual(featureState === "on")
     }
   )
 
   it.each`
     cookieState | queryState | finalState
-    ${'off'}    | ${'on'}    | ${'on'}
-    ${'on'}     | ${'off'}   | ${'off'}
+    ${"off"}    | ${"on"}    | ${"on"}
+    ${"on"}     | ${"off"}   | ${"off"}
   `(
-    'cascades flag from cookies and query params',
+    "cascades flag from cookies and query params",
     ({ cookieState, queryState, finalState }) => {
-      const flagName = 'feat_switchable_optout'
+      const flagName = "feat_switchable_optout"
       const featureFlagStore = useFeatureFlagStore()
       featureFlagStore.initFromCookies({
         [flagName]: cookieState,
@@ -104,10 +104,10 @@ describe('Feature flag store', () => {
 
   it.each`
     flagName           | queryState | finalState
-    ${'feat_disabled'} | ${'on'}    | ${'off'}
-    ${'feat_enabled'}  | ${'off'}   | ${'on'}
+    ${"feat_disabled"} | ${"on"}    | ${"off"}
+    ${"feat_enabled"}  | ${"off"}   | ${"on"}
   `(
-    'does not cascade non-switchable flags from query params',
+    "does not cascade non-switchable flags from query params",
     ({ flagName, queryState, finalState }) => {
       const featureFlagStore = useFeatureFlagStore()
       featureFlagStore.initFromQuery({
@@ -120,22 +120,22 @@ describe('Feature flag store', () => {
 
   it.each`
     environment     | featureState
-    ${'local'}      | ${'on'}
-    ${'staging'}    | ${'off'}
-    ${'production'} | ${'off'}
+    ${"local"}      | ${"on"}
+    ${"staging"}    | ${"off"}
+    ${"production"} | ${"off"}
   `(
-    'returns $expectedState for $environment',
+    "returns $expectedState for $environment",
     ({ environment, featureState }) => {
       // Back up value of `DEPLOYMENT_ENV` and replace it
       const old_env = process.env.DEPLOYMENT_ENV
       process.env.DEPLOYMENT_ENV = environment
 
       const featureFlagStore = useFeatureFlagStore()
-      expect(featureFlagStore.featureState('feat_env_specific')).toEqual(
+      expect(featureFlagStore.featureState("feat_env_specific")).toEqual(
         featureState
       )
-      expect(featureFlagStore.isOn('feat_env_specific')).toEqual(
-        featureState === 'on'
+      expect(featureFlagStore.isOn("feat_env_specific")).toEqual(
+        featureState === "on"
       )
 
       // Restore `DEPLOYMENT_ENV` value
@@ -145,17 +145,17 @@ describe('Feature flag store', () => {
 
   it.each`
     environment     | flagStatus
-    ${'local'}      | ${'switchable'}
-    ${'staging'}    | ${'switchable'}
-    ${'production'} | ${'disabled'}
+    ${"local"}      | ${"switchable"}
+    ${"staging"}    | ${"switchable"}
+    ${"production"} | ${"disabled"}
   `(
-    'handles fallback for missing $environment',
+    "handles fallback for missing $environment",
     ({ environment, flagStatus }) => {
       // Back up value of `DEPLOYMENT_ENV` and replace it
       const old_env = process.env.DEPLOYMENT_ENV
       process.env.DEPLOYMENT_ENV = environment
 
-      expect(getFlagStatus({ status: { staging: 'switchable' } })).toEqual(
+      expect(getFlagStatus({ status: { staging: "switchable" } })).toEqual(
         flagStatus
       )
 
@@ -164,14 +164,14 @@ describe('Feature flag store', () => {
     }
   )
 
-  it('returns mapping of switchable flags', () => {
+  it("returns mapping of switchable flags", () => {
     const featureFlagStore = useFeatureFlagStore()
     const flagStateMap = featureFlagStore.flagStateMap
 
-    expect(flagStateMap).toHaveProperty('feat_switchable_optout')
-    expect(flagStateMap).toHaveProperty('feat_switchable_optin')
+    expect(flagStateMap).toHaveProperty("feat_switchable_optout")
+    expect(flagStateMap).toHaveProperty("feat_switchable_optin")
 
-    expect(flagStateMap).not.toHaveProperty('feat_enabled')
-    expect(flagStateMap).not.toHaveProperty('feat_disabled')
+    expect(flagStateMap).not.toHaveProperty("feat_enabled")
+    expect(flagStateMap).not.toHaveProperty("feat_disabled")
   })
 })

@@ -1,4 +1,4 @@
-import { useContext } from '@nuxtjs/composition-api'
+import { useContext } from "@nuxtjs/composition-api"
 
 export const useBrowserDetection = () => {
   const { app } = useContext()

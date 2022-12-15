@@ -1,6 +1,6 @@
-import { Ref, ref } from '@nuxtjs/composition-api'
+import { Ref, ref } from "@nuxtjs/composition-api"
 
-import { tryOnMounted } from '~/utils/try-on-mounted'
+import { tryOnMounted } from "~/utils/try-on-mounted"
 
 export function useSupported(callback: () => unknown, sync = false) {
   const isSupported = ref() as Ref<boolean>

@@ -1,8 +1,8 @@
-import { computed, useContext } from '@nuxtjs/composition-api'
+import { computed, useContext } from "@nuxtjs/composition-api"
 
-import type { LocaleObject } from '@nuxtjs/i18n'
+import type { LocaleObject } from "@nuxtjs/i18n"
 
-const BASE_URL = 'https://translate.wordpress.org/projects/meta/openverse/'
+const BASE_URL = "https://translate.wordpress.org/projects/meta/openverse/"
 
 export function useI18nSync() {
   const { app } = useContext()
@@ -13,13 +13,13 @@ export function useI18nSync() {
   })
 
   const needsTranslationBanner = computed(() => {
-    if (!currentLocale.value || currentLocale.value.code === 'en') return false
+    if (!currentLocale.value || currentLocale.value.code === "en") return false
 
     return (currentLocale.value?.translated ?? 100) <= 90
   })
 
   const translationLink = computed(
-    () => `${BASE_URL}${currentLocale.value?.code || 'en'}/default/`
+    () => `${BASE_URL}${currentLocale.value?.code || "en"}/default/`
   )
 
   return {

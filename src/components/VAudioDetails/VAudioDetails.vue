@@ -2,7 +2,7 @@
   <section class="audio-info">
     <header class="mb-6 flex flex-row items-center justify-between">
       <h2 class="heading-6 md:heading-5">
-        {{ $t('audio-details.information') }}
+        {{ $t("audio-details.information") }}
       </h2>
       <VContentReportPopover :media="audio" />
     </header>
@@ -24,7 +24,7 @@
         </ul>
         <dl v-if="audio">
           <div v-if="audio.audio_set">
-            <dt>{{ $t('audio-details.table.album') }}</dt>
+            <dt>{{ $t("audio-details.table.album") }}</dt>
             <dd>
               <VLink :href="audio.audio_set.foreign_landing_url">{{
                 audio.audio_set.title
@@ -32,14 +32,14 @@
             </dd>
           </div>
           <div v-if="audio.category">
-            <dt>{{ $t('audio-details.table.category') }}</dt>
+            <dt>{{ $t("audio-details.table.category") }}</dt>
             <dd>
               {{ $t(`filters.audio-categories.${audio.category}`) }}
             </dd>
           </div>
           <div v-if="audio.sample_rate">
             <dt>
-              {{ $t('audio-details.table.sample-rate') }}
+              {{ $t("audio-details.table.sample-rate") }}
             </dt>
             <dd>
               {{ audio.sample_rate }}
@@ -47,7 +47,7 @@
           </div>
           <div v-if="audio.filetype">
             <dt>
-              {{ $t('audio-details.table.filetype') }}
+              {{ $t("audio-details.table.filetype") }}
             </dt>
             <dd>
               {{ audioFormats.toUpperCase() }}
@@ -55,7 +55,7 @@
           </div>
           <div>
             <dt>
-              {{ $t('audio-details.table.provider') }}
+              {{ $t("audio-details.table.provider") }}
             </dt>
             <dd>
               <VLink :href="audio.foreign_landing_url">
@@ -65,7 +65,7 @@
           </div>
           <div v-if="audio.source && audio.sourceName !== audio.providerName">
             <dt>
-              {{ $t('audio-details.table.source') }}
+              {{ $t("audio-details.table.source") }}
             </dt>
             <dd>
               {{ audio.sourceName }}
@@ -73,10 +73,10 @@
           </div>
           <div v-if="audio.genres && audio.genres.length > 0">
             <dt>
-              {{ $t('audio-details.table.genre') }}
+              {{ $t("audio-details.table.genre") }}
             </dt>
             <dd>
-              {{ audio.genres.join(', ') }}
+              {{ audio.genres.join(", ") }}
             </dd>
           </div>
         </dl>
@@ -86,17 +86,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { AudioDetail } from '~/types/media'
+import type { AudioDetail } from "~/types/media"
 
-import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
-import VContentReportPopover from '~/components/VContentReport/VContentReportPopover.vue'
-import VLink from '~/components/VLink.vue'
-import VMediaTag from '~/components/VMediaTag/VMediaTag.vue'
+import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
+import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
+import VLink from "~/components/VLink.vue"
+import VMediaTag from "~/components/VMediaTag/VMediaTag.vue"
 
 export default defineComponent({
-  name: 'VAudioDetails',
+  name: "VAudioDetails",
   components: { VAudioThumbnail, VContentReportPopover, VLink, VMediaTag },
   props: {
     audio: {
@@ -112,7 +112,7 @@ export default defineComponent({
       )
       altFormats.unshift(props.audio.filetype)
       const uniqueFormats = new Set(altFormats)
-      return [...uniqueFormats].join(', ')
+      return [...uniqueFormats].join(", ")
     })
 
     return { audioFormats }

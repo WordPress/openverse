@@ -30,27 +30,27 @@ import {
   defineComponent,
   PropType,
   ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import type { SearchType } from '~/constants/media'
-import { defineEvent } from '~/types/emits'
+import type { SearchType } from "~/constants/media"
+import { defineEvent } from "~/types/emits"
 
-import VPopover from '~/components/VPopover/VPopover.vue'
-import VSearchTypeButtonOld from '~/components/VContentSwitcherOld/VSearchTypeButtonOld.vue'
-import VSearchTypesOld from '~/components/VContentSwitcherOld/VSearchTypesOld.vue'
+import VPopover from "~/components/VPopover/VPopover.vue"
+import VSearchTypeButtonOld from "~/components/VContentSwitcherOld/VSearchTypeButtonOld.vue"
+import VSearchTypesOld from "~/components/VContentSwitcherOld/VSearchTypesOld.vue"
 
-import checkIcon from '~/assets/icons/checkmark.svg'
+import checkIcon from "~/assets/icons/checkmark.svg"
 
 export default defineComponent({
-  name: 'VSearchTypePopoverOld',
+  name: "VSearchTypePopoverOld",
   components: {
     VSearchTypeButtonOld,
     VPopover,
     VSearchTypesOld,
   },
   model: {
-    prop: 'activeItem',
-    event: 'select',
+    prop: "activeItem",
+    event: "select",
   },
   props: {
     activeItem: {
@@ -58,8 +58,8 @@ export default defineComponent({
       required: true,
     },
     placement: {
-      type: String as PropType<'header' | 'searchbar'>,
-      default: 'header',
+      type: String as PropType<"header" | "searchbar">,
+      default: "header",
     },
   },
   emits: {
@@ -72,7 +72,7 @@ export default defineComponent({
      * When in the searchbar, content switcher button has a border when the
      * search bar group is hovered on.
      */
-    const isInSearchBar = computed(() => props.placement === 'searchbar')
+    const isInSearchBar = computed(() => props.placement === "searchbar")
 
     /**
      * Only the contentMenuPopover needs to be closed programmatically
@@ -82,7 +82,7 @@ export default defineComponent({
     }
 
     const selectItem = (item: SearchType) => {
-      emit('select', item)
+      emit("select", item)
     }
 
     return {

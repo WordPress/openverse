@@ -1,7 +1,7 @@
 <template>
   <VContentPage>
     <h1 id="feedback">
-      {{ $t('feedback.title') }}
+      {{ $t("feedback.title") }}
     </h1>
     <i18n path="feedback.intro" tag="p">
       <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
@@ -30,7 +30,7 @@
             :aria-label="$t(`feedback.aria.${tab}`).toString()"
             :title="$t(`feedback.aria.${tab}`).toString()"
           >
-            {{ $t('feedback.loading') }}
+            {{ $t("feedback.loading") }}
           </iframe>
         </VTabPanel>
       </VTabs>
@@ -39,21 +39,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from '@nuxtjs/composition-api'
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
-import { useFeatureFlagStore } from '~/stores/feature-flag'
-import { useI18n } from '~/composables/use-i18n'
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useI18n } from "~/composables/use-i18n"
 
-import VLink from '~/components/VLink.vue'
-import VContentPage from '~/components/VContentPage.vue'
-import VTabs from '~/components/VTabs/VTabs.vue'
-import VTab from '~/components/VTabs/VTab.vue'
-import VTabPanel from '~/components/VTabs/VTabPanel.vue'
+import VLink from "~/components/VLink.vue"
+import VContentPage from "~/components/VContentPage.vue"
+import VTabs from "~/components/VTabs/VTabs.vue"
+import VTab from "~/components/VTabs/VTab.vue"
+import VTabPanel from "~/components/VTabs/VTabPanel.vue"
 
 const bugForm =
-  'https://docs.google.com/forms/d/e/1FAIpQLSenCn-3HoZlCz4vlL2621wjezfu1sPZDaWGe_FtQ1R5-5qR4Q/viewform'
+  "https://docs.google.com/forms/d/e/1FAIpQLSenCn-3HoZlCz4vlL2621wjezfu1sPZDaWGe_FtQ1R5-5qR4Q/viewform"
 const suggestionForm =
-  'https://docs.google.com/forms/d/e/1FAIpQLSfGC7JWbNjGs-_pUNe3B2nzBW-YrIrmRd92t-7u0y7s8jMjzQ/viewform'
+  "https://docs.google.com/forms/d/e/1FAIpQLSfGC7JWbNjGs-_pUNe3B2nzBW-YrIrmRd92t-7u0y7s8jMjzQ/viewform"
 
 const forms = {
   report: `${bugForm}?embedded=true`,
@@ -62,16 +62,16 @@ const forms = {
 const tabs = Object.keys(forms) as (keyof typeof forms)[]
 
 export default defineComponent({
-  name: 'FeedbackPage',
+  name: "FeedbackPage",
   components: { VLink, VContentPage, VTabs, VTab, VTabPanel },
   setup() {
     const i18n = useI18n()
     const featureFlagStore = useFeatureFlagStore()
 
     useMeta({
-      title: `${i18n.t('feedback.title')} | Openverse`,
-      meta: featureFlagStore.isOn('new_header')
-        ? [{ hid: 'robots', name: 'robots', content: 'all' }]
+      title: `${i18n.t("feedback.title")} | Openverse`,
+      meta: featureFlagStore.isOn("new_header")
+        ? [{ hid: "robots", name: "robots", content: "all" }]
         : undefined,
     })
 

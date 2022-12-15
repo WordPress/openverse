@@ -1,15 +1,15 @@
-import { title as titleCase } from 'case'
+import { title as titleCase } from "case"
 
-import { decodeData as decodeString } from '~/utils/decode-data'
-import type { ApiMedia, Media, Tag } from '~/types/media'
-import type { MediaType } from '~/constants/media'
-import { AUDIO, IMAGE, MODEL_3D, VIDEO } from '~/constants/media'
+import { decodeData as decodeString } from "~/utils/decode-data"
+import type { ApiMedia, Media, Tag } from "~/types/media"
+import type { MediaType } from "~/constants/media"
+import { AUDIO, IMAGE, MODEL_3D, VIDEO } from "~/constants/media"
 
 const mediaTypeExtensions: Record<MediaType, string[]> = {
-  [IMAGE]: ['jpg', 'jpeg', 'png', 'gif', 'svg'],
-  [AUDIO]: ['mp3', 'wav', 'ogg', 'flac', 'aac', 'aiff', 'mp32'],
-  [VIDEO]: ['mp4', 'webm', 'mkv', 'avi', 'mov', 'wmv', 'flv', 'mpg', 'mpeg'],
-  [MODEL_3D]: ['fbx', 'obj', 'stl', 'dae', '3ds', 'blend', 'max', 'obj', 'ply'],
+  [IMAGE]: ["jpg", "jpeg", "png", "gif", "svg"],
+  [AUDIO]: ["mp3", "wav", "ogg", "flac", "aac", "aiff", "mp32"],
+  [VIDEO]: ["mp4", "webm", "mkv", "avi", "mov", "wmv", "flv", "mpg", "mpeg"],
+  [MODEL_3D]: ["fbx", "obj", "stl", "dae", "3ds", "blend", "max", "obj", "ply"],
 }
 
 const matchers = [/jpe?g$/i, /tiff?$/i, /mp32?$/i]
@@ -31,10 +31,10 @@ const isFiletypeMatching = (extension: string, filetype?: string) => {
 }
 const extractPartAfterLastDot = (str?: string) => {
   if (!str) {
-    return ''
+    return ""
   }
-  const parts = str.split('.')
-  return parts.length ? parts[parts.length - 1].toLowerCase() : ''
+  const parts = str.split(".")
+  return parts.length ? parts[parts.length - 1].toLowerCase() : ""
 }
 
 /**
@@ -48,14 +48,14 @@ const stripExtension = (
   media: ApiMedia
 ) => {
   const filetype = media.filetype ?? extractPartAfterLastDot(media.url)
-  const titleParts = title.split('.')
+  const titleParts = title.split(".")
   if (
     mediaTypeExtensions[mediaType].includes(filetype) &&
     isFiletypeMatching(extractPartAfterLastDot(title), filetype)
   ) {
     titleParts.pop()
   }
-  return titleParts.join('.')
+  return titleParts.join(".")
 }
 /**
  * Corrects the encoding of the media title, or uses the media type as the title.
@@ -82,7 +82,7 @@ const mediaTitle = (
  */
 export const decodeMediaData = <T extends Media>(
   media: ApiMedia,
-  mediaType: T['frontendMediaType']
+  mediaType: T["frontendMediaType"]
 ): T =>
   ({
     ...media,

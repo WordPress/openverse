@@ -27,18 +27,18 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import VIconButton from '~/components/VIconButton/VIconButton.vue'
-import VPopover from '~/components/VPopover/VPopover.vue'
-import VContentReportButton from '~/components/VContentReport/VContentReportButton.vue'
-import VContentReportForm from '~/components/VContentReport/VContentReportForm.vue'
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VPopover from "~/components/VPopover/VPopover.vue"
+import VContentReportButton from "~/components/VContentReport/VContentReportButton.vue"
+import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
 
-import flagIcon from '~/assets/icons/flag.svg'
-import closeSmallIcon from '~/assets/icons/close-small.svg'
+import flagIcon from "~/assets/icons/flag.svg"
+import closeSmallIcon from "~/assets/icons/close-small.svg"
 
 export default defineComponent({
-  name: 'VContentReportPopover',
+  name: "VContentReportPopover",
   components: {
     VIconButton,
     VPopover,

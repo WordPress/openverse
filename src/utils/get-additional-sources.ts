@@ -1,11 +1,11 @@
-import buildUrl from 'build-url'
+import buildUrl from "build-url"
 
-import type { MediaType } from '~/constants/media'
-import type { ApiQueryParams } from '~/utils/search-query-transform'
+import type { MediaType } from "~/constants/media"
+import type { ApiQueryParams } from "~/utils/search-query-transform"
 
-import { MODEL_3D } from '~/constants/media'
+import { MODEL_3D } from "~/constants/media"
 
-import type { BuildUrlOptions } from 'build-url'
+import type { BuildUrlOptions } from "build-url"
 
 /**
  * Describes the query format used by the URL builder functions of additional
@@ -25,7 +25,7 @@ interface AdditionalSearchQuery {
 const transformSearchQuery = (
   query: ApiQueryParams
 ): AdditionalSearchQuery => ({
-  q: query.q ?? '',
+  q: query.q ?? "",
 })
 
 type SearchFunctions = {
@@ -60,101 +60,101 @@ interface AdditionalSource {
  */
 const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   {
-    name: 'Centre For Ageing Better',
+    name: "Centre For Ageing Better",
     image: (search) => ({
-      url: 'https://ageingbetter.resourcespace.com/pages/search.php',
+      url: "https://ageingbetter.resourcespace.com/pages/search.php",
       queryParams: {
         search: search.q,
       },
     }),
   },
   {
-    name: 'EDU images',
+    name: "EDU images",
     image: (search) => ({
-      url: 'https://images.all4ed.org',
+      url: "https://images.all4ed.org",
       queryParams: {
         s: search.q,
       },
     }),
   },
   {
-    name: 'Google Images',
+    name: "Google Images",
     image: (search) => ({
-      url: 'https://www.google.com/search',
+      url: "https://www.google.com/search",
       queryParams: {
         q: search.q,
-        tbm: 'isch', // this means 'search images'
-        tbs: 'il:cl',
+        tbm: "isch", // this means 'search images'
+        tbs: "il:cl",
       },
     }),
   },
   {
-    name: 'Images of Empowerment',
+    name: "Images of Empowerment",
     image: (search) => ({
-      url: 'https://www.imagesofempowerment.org/',
+      url: "https://www.imagesofempowerment.org/",
       queryParams: {
         s: search.q,
       },
     }),
   },
   {
-    name: 'Open Clip Art Library',
+    name: "Open Clip Art Library",
     image: (search) => ({
-      url: 'http://www.openclipart.org/search/',
+      url: "http://www.openclipart.org/search/",
       queryParams: {
         query: search.q,
       },
     }),
   },
   {
-    name: 'Nappy',
+    name: "Nappy",
     image: (search) => ({
-      url: 'https://www.nappy.co/',
+      url: "https://www.nappy.co/",
       queryParams: {
         s: search.q,
       },
     }),
   },
   {
-    name: 'The Greats',
+    name: "The Greats",
     image: (search) => ({
-      url: 'https://www.thegreats.co/artworks/',
+      url: "https://www.thegreats.co/artworks/",
       queryParams: {
-        theme: '0',
+        theme: "0",
         search: search.q,
       },
     }),
   },
   {
-    name: 'ccMixter',
+    name: "ccMixter",
     audio: (search) => ({
       // no https :(
-      url: 'http://dig.ccmixter.org/search',
+      url: "http://dig.ccmixter.org/search",
       queryParams: {
-        lic: 'open',
+        lic: "open",
         searchp: search.q,
       },
     }),
   },
   {
-    name: 'SoundCloud',
+    name: "SoundCloud",
     audio: (search) => {
       return {
-        url: 'https://soundcloud.com/search/sounds',
+        url: "https://soundcloud.com/search/sounds",
         queryParams: {
           q: search.q,
-          'filter.license': 'to_share', // @todo: choose which type from the search object
+          "filter.license": "to_share", // @todo: choose which type from the search object
         },
       }
     },
   },
   {
-    name: 'Europeana',
+    name: "Europeana",
     audio: (search) => {
       return {
-        url: 'https://www.europeana.eu/en/search',
+        url: "https://www.europeana.eu/en/search",
         queryParams: {
-          page: '1',
+          page: "1",
           qf: 'TYPE:"SOUND"',
           // search cc licensed works
           query: `${search.q} AND RIGHTS:*creative*`,
@@ -163,9 +163,9 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
     },
     video(search) {
       return {
-        url: 'https://www.europeana.eu/en/search',
+        url: "https://www.europeana.eu/en/search",
         queryParams: {
-          page: '1',
+          page: "1",
           qf: 'TYPE:"VIDEO"',
           // search cc licensed works
           query: `${search.q} AND RIGHTS:*creative*`,
@@ -174,51 +174,51 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
     },
   },
   {
-    name: 'Vimeo',
+    name: "Vimeo",
     video: (search) => ({
-      url: 'https://vimeo.com/search',
+      url: "https://vimeo.com/search",
       queryParams: {
-        license: 'by',
+        license: "by",
         q: search.q,
       },
     }),
   },
   {
-    name: 'Wikimedia Commons',
+    name: "Wikimedia Commons",
     video: (search) => ({
-      url: 'https://commons.wikimedia.org/w/index.php',
+      url: "https://commons.wikimedia.org/w/index.php",
       queryParams: {
         search: `${search.q}`,
-        title: 'Special:MediaSearch',
-        type: 'video',
+        title: "Special:MediaSearch",
+        type: "video",
       },
     }),
   },
   {
-    name: 'YouTube',
+    name: "YouTube",
     video: (search) => ({
-      url: 'https://www.youtube.com/results',
+      url: "https://www.youtube.com/results",
       queryParams: {
         search_query: search.q,
-        sp: 'EgIwAQ%3D%3D', // this interesting line filters by cc license
+        sp: "EgIwAQ%3D%3D", // this interesting line filters by cc license
       },
     }),
   },
   {
-    name: 'Sketchfab',
+    name: "Sketchfab",
     [MODEL_3D](search) {
       // TODO: Use actual license from filters
       const licenseCodes: string[] = [
-        '322a749bcfa841b29dff1e8a1bb74b0b', // CC BY
-        'b9ddc40b93e34cdca1fc152f39b9f375', // CC BY-SA
-        '72360ff1740d419791934298b8b6d270', // CC BY-ND
-        'bbfe3f7dbcdd4122b966b85b9786a989', // CC BY-NC
-        '2628dbe5140a4e9592126c8df566c0b7', // CC BY-NC-SA
-        '34b725081a6a4184957efaec2cb84ed3', // CC BY-NC-ND
-        '7c23a1ba438d4306920229c12afcb5f9', // CC0
+        "322a749bcfa841b29dff1e8a1bb74b0b", // CC BY
+        "b9ddc40b93e34cdca1fc152f39b9f375", // CC BY-SA
+        "72360ff1740d419791934298b8b6d270", // CC BY-ND
+        "bbfe3f7dbcdd4122b966b85b9786a989", // CC BY-NC
+        "2628dbe5140a4e9592126c8df566c0b7", // CC BY-NC-SA
+        "34b725081a6a4184957efaec2cb84ed3", // CC BY-NC-ND
+        "7c23a1ba438d4306920229c12afcb5f9", // CC0
       ]
       return {
-        url: 'https://sketchfab.com/search',
+        url: "https://sketchfab.com/search",
         queryParams: {
           q: search.q,
           licenses: licenseCodes,
@@ -228,12 +228,12 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
     },
   },
   {
-    name: 'Thingiverse',
+    name: "Thingiverse",
     [MODEL_3D](search) {
       return {
-        url: 'https://www.thingiverse.com/search',
+        url: "https://www.thingiverse.com/search",
         queryParams: {
-          type: 'things',
+          type: "things",
           q: search.q,
         },
       }

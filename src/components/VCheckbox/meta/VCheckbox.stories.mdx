@@ -4,27 +4,27 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import VCheckbox from '~/components/VCheckbox/VCheckbox.vue'
-import VLicense from '~/components/VLicense/VLicense.vue'
+import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
+import VLicense from "~/components/VLicense/VLicense.vue"
 
 <Meta
   title="Components/VCheckbox"
   components={VCheckbox}
   argTypes={{
     change: {
-      action: 'change',
+      action: "change",
     },
   }}
 />
 
 export const checkboxArgTypes = {
-  id: { control: { type: 'text' } },
-  checked: { control: { type: 'boolean' } },
-  name: { control: { type: 'text' } },
-  value: { control: { type: 'text' } },
-  disabled: { control: { type: 'boolean' } },
+  id: { control: { type: "text" } },
+  checked: { control: { type: "boolean" } },
+  name: { control: { type: "text" } },
+  value: { control: { type: "text" } },
+  disabled: { control: { type: "boolean" } },
 }
 
 export const Template = (args) => ({
@@ -45,9 +45,9 @@ export const Template = (args) => ({
   <Story
     name="Default"
     args={{
-      id: 'default',
-      name: 'storybook',
-      value: 'codeIsPoetry',
+      id: "default",
+      name: "storybook",
+      value: "codeIsPoetry",
     }}
     argTypes={checkboxArgTypes}
   >
@@ -72,15 +72,17 @@ export const LicenseCheckboxTemplate = (args) => ({
 
 ## License Checkbox
 
-The checkbox label can be a string or another component. Here, we use a VLicense component, and set `checked` prop to `true` to set the checkbox as checked on render.
+The checkbox label can be a string or another component. Here, we use a VLicense
+component, and set `checked` prop to `true` to set the checkbox as checked on
+render.
 
 <Canvas>
   <Story
     name="License Checkbox"
     args={{
-      id: 'cc-by',
-      name: 'license',
-      value: 'cc-by',
+      id: "cc-by",
+      name: "license",
+      value: "cc-by",
       checked: true,
     }}
     argTypes={checkboxArgTypes}

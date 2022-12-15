@@ -1,20 +1,20 @@
-import Vue from 'vue'
-import { fireEvent, render, screen } from '@testing-library/vue'
+import Vue from "vue"
+import { fireEvent, render, screen } from "@testing-library/vue"
 
-import VCheckbox from '~/components/VCheckbox/VCheckbox.vue'
+import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 
 const TestWrapperStringLabel = ({
-  id = 'simple',
-  value = 'simple',
+  id = "simple",
+  value = "simple",
   checked = false,
-  defaultSlot = 'JPGs',
+  defaultSlot = "JPGs",
   disabled = false,
 } = {}) => {
   // eslint-disable-next-line vue/one-component-per-file
-  return Vue.component('TestWrapper', {
+  return Vue.component("TestWrapper", {
     components: { VCheckbox },
     data() {
-      return { checked, status: '' }
+      return { checked, status: "" }
     },
     computed: {
       attrs() {
@@ -29,15 +29,15 @@ const TestWrapperStringLabel = ({
     },
     methods: {
       updateStatus(params) {
-        this.status = Object.values(params).join(',')
+        this.status = Object.values(params).join(",")
       },
     },
     template: `<div><span>{{status}}</span><VCheckbox v-bind="attrs" @change="updateStatus">${defaultSlot}</VCheckbox></div>`,
   })
 }
 
-describe('VCheckbox', () => {
-  it('should render a checkbox with a string label', async () => {
+describe("VCheckbox", () => {
+  it("should render a checkbox with a string label", async () => {
     const wrapper = TestWrapperStringLabel()
     const { container } = render(wrapper)
     // Finding a checked input doesn't work using { checked: false/true }
@@ -45,40 +45,40 @@ describe('VCheckbox', () => {
     // toHaveAttribute('checked', 'true') also doesn't work, screen.debug()
     // returns an element without `checked` attribute, although the attribute
     // exists in the app/Storybook.
-    const checkboxes = screen.queryAllByLabelText(/jpgs/i, { role: 'checkbox' })
+    const checkboxes = screen.queryAllByLabelText(/jpgs/i, { role: "checkbox" })
 
     // The checkmark svg should not be visible
-    expect(container.querySelector('svg')).not.toBeVisible()
+    expect(container.querySelector("svg")).not.toBeVisible()
     expect(checkboxes).toHaveLength(1)
   })
 
-  it('should render a checked checkbox if `checked` is true', async () => {
+  it("should render a checked checkbox if `checked` is true", async () => {
     const wrapper = TestWrapperStringLabel({ checked: true })
     const { container } = render(wrapper)
-    const checkboxes = screen.queryAllByLabelText(/jpgs/i, { role: 'checkbox' })
+    const checkboxes = screen.queryAllByLabelText(/jpgs/i, { role: "checkbox" })
 
     // The checkmark svg should be visible
-    expect(container.querySelector('svg')).toBeVisible()
+    expect(container.querySelector("svg")).toBeVisible()
     expect(checkboxes).toHaveLength(1)
   })
 
-  it('should emit event on change', async () => {
+  it("should emit event on change", async () => {
     const wrapper = TestWrapperStringLabel()
     const { container } = render(wrapper)
-    await fireEvent.click(screen.queryByRole('checkbox'))
+    await fireEvent.click(screen.queryByRole("checkbox"))
 
     // Testing the method that handles the emitted data instead of testing emitted event
-    expect(container.querySelector('span').textContent).toEqual(
-      'simple,simple,true'
+    expect(container.querySelector("span").textContent).toEqual(
+      "simple,simple,true"
     )
   })
 
-  it('should render a disabled checkbox if `disabled` is true', async () => {
+  it("should render a disabled checkbox if `disabled` is true", async () => {
     const wrapper = TestWrapperStringLabel({ disabled: true })
     render(wrapper)
-    const checkboxes = screen.queryAllByLabelText(/jpgs/i, { role: 'checkbox' })
+    const checkboxes = screen.queryAllByLabelText(/jpgs/i, { role: "checkbox" })
 
     expect(checkboxes).toHaveLength(1)
-    expect(checkboxes[0]).toHaveAttribute('disabled', 'disabled')
+    expect(checkboxes[0]).toHaveAttribute("disabled", "disabled")
   })
 })

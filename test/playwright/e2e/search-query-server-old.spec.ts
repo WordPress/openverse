@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from "@playwright/test"
 
 import {
   assertCheckboxStatus,
@@ -6,10 +6,10 @@ import {
   goToSearchTerm,
   OLD_HEADER,
   openFilters,
-} from '~~/test/playwright/utils/navigation'
-import { mockProviderApis } from '~~/test/playwright/utils/route'
+} from "~~/test/playwright/utils/navigation"
+import { mockProviderApis } from "~~/test/playwright/utils/route"
 
-import { AUDIO, IMAGE } from '~/constants/media'
+import { AUDIO, IMAGE } from "~/constants/media"
 
 /**
  * URL is correctly converted into search state:
@@ -23,79 +23,79 @@ import { AUDIO, IMAGE } from '~/constants/media'
  * All of these tests test server-generated search page, not the one generated on the client
  */
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })
 
-test('q query parameter is set as the search term', async ({ page }) => {
-  await goToSearchTerm(page, 'cat', {
-    query: 'license=cc0&license_type=commercial&searchBy=creator',
+test("q query parameter is set as the search term", async ({ page }) => {
+  await goToSearchTerm(page, "cat", {
+    query: "license=cc0&license_type=commercial&searchBy=creator",
   })
 
   const searchInput = page.locator('input[type="search"]')
-  await expect(searchInput).toHaveValue('cat')
+  await expect(searchInput).toHaveValue("cat")
   // Todo: focus the input?
   // await expect(searchInput).toBeFocused()
 })
 
-test('url path /search/ is used to select `all` search tab', async ({
+test("url path /search/ is used to select `all` search tab", async ({
   page,
 }) => {
-  await page.goto('/search/?q=cat')
+  await page.goto("/search/?q=cat")
 
   const contentType = await currentContentType(page, OLD_HEADER)
-  expect(contentType?.trim()).toEqual('All content')
+  expect(contentType?.trim()).toEqual("All content")
 })
 
-test('url path /search/audio is used to select `audio` search tab', async ({
+test("url path /search/audio is used to select `audio` search tab", async ({
   page,
 }) => {
-  await goToSearchTerm(page, 'cat', { searchType: AUDIO })
+  await goToSearchTerm(page, "cat", { searchType: AUDIO })
 
   const contentType = await currentContentType(page, OLD_HEADER)
-  expect(contentType?.trim()).toEqual('Audio')
+  expect(contentType?.trim()).toEqual("Audio")
 })
 
-test('url query to filter, all tab, one parameter per filter type', async ({
+test("url query to filter, all tab, one parameter per filter type", async ({
   page,
 }) => {
-  await goToSearchTerm(page, 'cat', {
-    query: 'license=cc0&license_type=commercial&searchBy=creator',
+  await goToSearchTerm(page, "cat", {
+    query: "license=cc0&license_type=commercial&searchBy=creator",
   })
 
   await openFilters(page, OLD_HEADER)
-  for (const checkbox of ['cc0', 'commercial', 'creator']) {
+  for (const checkbox of ["cc0", "commercial", "creator"]) {
     await assertCheckboxStatus(page, checkbox)
   }
 })
 
-test('url query to filter, image tab, several filters for one filter type selected', async ({
+test("url query to filter, image tab, several filters for one filter type selected", async ({
   page,
 }) => {
-  await goToSearchTerm(page, 'cat', {
+  await goToSearchTerm(page, "cat", {
     searchType: IMAGE,
-    query: 'searchBy=creator&extension=jpg,png,gif,svg',
+    query: "searchBy=creator&extension=jpg,png,gif,svg",
   })
   await openFilters(page, OLD_HEADER)
-  const checkboxes = ['jpeg', 'png', 'gif', 'svg']
+  const checkboxes = ["jpeg", "png", "gif", "svg"]
   for (const checkbox of checkboxes) {
-    const forValue = checkbox === 'jpeg' ? 'jpg' : checkbox
+    const forValue = checkbox === "jpeg" ? "jpg" : checkbox
     await assertCheckboxStatus(page, checkbox, forValue)
   }
 })
 
-test.skip('url mature query is set, and can be unchecked using the Safer Browsing popup', async ({
+test.skip("url mature query is set, and can be unchecked using the Safer Browsing popup", async ({
   page,
 }) => {
-  await goToSearchTerm(page, 'cat', { searchType: IMAGE, query: 'mature=true' })
+  await goToSearchTerm(page, "cat", { searchType: IMAGE, query: "mature=true" })
 
   await page.click('button:has-text("Safer Browsing")')
 
-  const matureCheckbox = await page.locator('text=Show Mature Content')
+  const matureCheckbox = await page.locator("text=Show Mature Content")
   await expect(matureCheckbox).toBeChecked()
 
-  await page.click('text=Show Mature Content')
-  await expect(page).toHaveURL('/search/image?q=cat')
+  await page.click("text=Show Mature Content")
+  await expect(page).toHaveURL("/search/image?q=cat")
 })

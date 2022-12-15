@@ -1,4 +1,4 @@
-const vueJest = require('vue-jest/lib/template-compiler')
+const vueJest = require("vue-jest/lib/template-compiler")
 
 module.exports = {
   process(content) {

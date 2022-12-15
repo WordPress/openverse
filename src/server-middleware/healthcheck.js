@@ -6,6 +6,6 @@
  * @type {import('@nuxt/types').ServerMiddleware}
  */
 export default function healthcheck(_, res) {
-  res.setHeader('Content-Type', 'text/plain')
-  res.end('OK')
+  res.setHeader("Content-Type", "text/plain")
+  res.end("OK")
 }

@@ -13,14 +13,14 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import VModal from '~/components/VModal/VModal.vue'
-import VPageMenuButton from '~/components/VHeaderOld/VPageMenu/VPageMenuButton.vue'
-import VPageList from '~/components/VHeaderOld/VPageMenu/VPageList.vue'
+import VModal from "~/components/VModal/VModal.vue"
+import VPageMenuButton from "~/components/VHeaderOld/VPageMenu/VPageMenuButton.vue"
+import VPageList from "~/components/VHeaderOld/VPageMenu/VPageList.vue"
 
 export default defineComponent({
-  name: 'VMobilePageMenu',
+  name: "VMobilePageMenu",
   components: { VModal, VPageMenuButton, VPageList },
 })
 </script>

@@ -16,6 +16,6 @@
  * This component sets the layout for showing error messages.
  */
 export default {
-  name: 'VErrorSection',
+  name: "VErrorSection",
 }
 </script>

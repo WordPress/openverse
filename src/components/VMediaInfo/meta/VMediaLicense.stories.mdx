@@ -4,12 +4,12 @@ import {
   Description,
   Meta,
   ArgsTable,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import VMediaLicense from '~/components/VMediaInfo/VMediaLicense.vue'
+import VMediaLicense from "~/components/VMediaInfo/VMediaLicense.vue"
 
-import { ALL_LICENSES, LICENSE_VERSIONS } from '~/constants/license'
-import { getLicenseUrl } from '~/utils/license'
+import { ALL_LICENSES, LICENSE_VERSIONS } from "~/constants/license"
+import { getLicenseUrl } from "~/utils/license"
 
 export const Template = (args) => ({
   template: `<VMediaLicense v-bind="args"/>`,
@@ -26,12 +26,12 @@ export const Template = (args) => ({
     license: {
       defaultValue: ALL_LICENSES[0],
       options: ALL_LICENSES,
-      control: 'select',
+      control: "select",
     },
     licenseVersion: {
       defaultValue: LICENSE_VERSIONS[0],
       options: LICENSE_VERSIONS,
-      control: 'select',
+      control: "select",
     },
   }}
 />
@@ -59,9 +59,9 @@ It can display CC licenses.
   <Story
     name="CC BY"
     args={{
-      license: 'by',
-      licenseVersion: '4.0',
-      licenseUrl: getLicenseUrl('by', '4.0'),
+      license: "by",
+      licenseVersion: "4.0",
+      licenseUrl: getLicenseUrl("by", "4.0"),
     }}
   >
     {Template.bind({})}
@@ -69,9 +69,9 @@ It can display CC licenses.
   <Story
     name="CC BY-SA"
     args={{
-      license: 'by-sa',
-      licenseVersion: '4.0',
-      licenseUrl: getLicenseUrl('by-sa', '4.0'),
+      license: "by-sa",
+      licenseVersion: "4.0",
+      licenseUrl: getLicenseUrl("by-sa", "4.0"),
     }}
   >
     {Template.bind({})}
@@ -79,9 +79,9 @@ It can display CC licenses.
   <Story
     name="CC BY-ND"
     args={{
-      license: 'by-nd',
-      licenseVersion: '4.0',
-      licenseUrl: getLicenseUrl('by-nd', '4.0'),
+      license: "by-nd",
+      licenseVersion: "4.0",
+      licenseUrl: getLicenseUrl("by-nd", "4.0"),
     }}
   >
     {Template.bind({})}
@@ -89,9 +89,9 @@ It can display CC licenses.
   <Story
     name="CC BY-NC"
     args={{
-      license: 'by-nc',
-      licenseVersion: '4.0',
-      licenseUrl: getLicenseUrl('by-nc', '4.0'),
+      license: "by-nc",
+      licenseVersion: "4.0",
+      licenseUrl: getLicenseUrl("by-nc", "4.0"),
     }}
   >
     {Template.bind({})}
@@ -99,9 +99,9 @@ It can display CC licenses.
   <Story
     name="CC BY-NC-SA"
     args={{
-      license: 'by-nc-sa',
-      licenseVersion: '4.0',
-      licenseUrl: getLicenseUrl('by-nc-sa', '4.0'),
+      license: "by-nc-sa",
+      licenseVersion: "4.0",
+      licenseUrl: getLicenseUrl("by-nc-sa", "4.0"),
     }}
   >
     {Template.bind({})}
@@ -109,9 +109,9 @@ It can display CC licenses.
   <Story
     name="CC BY-NC-ND"
     args={{
-      license: 'by-nc-nd',
-      licenseVersion: '4.0',
-      licenseUrl: getLicenseUrl('by-nc-nd', '4.0'),
+      license: "by-nc-nd",
+      licenseVersion: "4.0",
+      licenseUrl: getLicenseUrl("by-nc-nd", "4.0"),
     }}
   >
     {Template.bind({})}
@@ -129,9 +129,9 @@ It can also display some public domain licenses.
   <Story
     name="CC0"
     args={{
-      license: 'cc0',
-      licenseVersion: '1.0',
-      licenseUrl: getLicenseUrl('cc0', '1.0'),
+      license: "cc0",
+      licenseVersion: "1.0",
+      licenseUrl: getLicenseUrl("cc0", "1.0"),
     }}
   >
     {Template.bind({})}
@@ -139,9 +139,9 @@ It can also display some public domain licenses.
   <Story
     name="PDM"
     args={{
-      license: 'pdm',
-      licenseVersion: '1.0',
-      licenseUrl: getLicenseUrl('pdm', '4.0'),
+      license: "pdm",
+      licenseVersion: "1.0",
+      licenseUrl: getLicenseUrl("pdm", "4.0"),
     }}
   >
     {Template.bind({})}
@@ -159,9 +159,9 @@ It can also display some deprecated CC licenses.
   <Story
     name="CC Sampling+"
     args={{
-      license: 'sampling+',
-      licenseVersion: '',
-      licenseUrl: getLicenseUrl('sampling+', ''),
+      license: "sampling+",
+      licenseVersion: "",
+      licenseUrl: getLicenseUrl("sampling+", ""),
     }}
   >
     {Template.bind({})}
@@ -169,9 +169,9 @@ It can also display some deprecated CC licenses.
   <Story
     name="CC NC-Sampling+"
     args={{
-      license: 'nc-sampling+',
-      licenseVersion: '',
-      licenseUrl: getLicenseUrl('nc-sampling+', ''),
+      license: "nc-sampling+",
+      licenseVersion: "",
+      licenseUrl: getLicenseUrl("nc-sampling+", ""),
     }}
   >
     {Template.bind({})}

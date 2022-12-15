@@ -15,14 +15,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
 export default defineComponent({
-  name: 'VSnackbar',
+  name: "VSnackbar",
   props: {
     size: {
-      type: String as PropType<'small' | 'large'>,
-      default: 'small',
+      type: String as PropType<"small" | "large">,
+      default: "small",
     },
     /**
      * whether the snackbar is visible or hidden

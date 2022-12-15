@@ -30,17 +30,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { AudioLayout, AudioStatus, statusVerbMap } from '~/constants/audio'
-import { defineEvent } from '~/types/emits'
-import type { ButtonConnections, ButtonVariant } from '~/types/button'
+import { AudioLayout, AudioStatus, statusVerbMap } from "~/constants/audio"
+import { defineEvent } from "~/types/emits"
+import type { ButtonConnections, ButtonVariant } from "~/types/button"
 
-import VIconButton from '~/components/VIconButton/VIconButton.vue'
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
-import playIcon from '~/assets/icons/play.svg'
-import pauseIcon from '~/assets/icons/pause.svg'
-import replayIcon from '~/assets/icons/replay.svg'
+import playIcon from "~/assets/icons/play.svg"
+import pauseIcon from "~/assets/icons/pause.svg"
+import replayIcon from "~/assets/icons/replay.svg"
 
 const statusIconMap = {
   playing: pauseIcon,
@@ -50,10 +50,10 @@ const statusIconMap = {
 } as const
 
 const layoutConnectionsMap: Record<AudioLayout, ButtonConnections> = {
-  row: 'end',
-  global: 'all',
-  box: 'none',
-  full: 'none',
+  row: "end",
+  global: "all",
+  box: "none",
+  full: "none",
 } as const
 
 /**
@@ -61,12 +61,12 @@ const layoutConnectionsMap: Record<AudioLayout, ButtonConnections> = {
  * a media file.
  */
 export default defineComponent({
-  name: 'VPlayPause',
+  name: "VPlayPause",
   components: { VIconButton },
   inheritAttrs: false,
   model: {
-    prop: 'status',
-    event: 'toggle',
+    prop: "status",
+    event: "toggle",
   },
   props: {
     /**
@@ -81,7 +81,7 @@ export default defineComponent({
      */
     layout: {
       type: String as PropType<AudioLayout>,
-      default: 'full',
+      default: "full",
     },
     /**
      * whether the play-pause button can be focused by using the `Tab` key
@@ -92,11 +92,11 @@ export default defineComponent({
     },
   },
   emits: {
-    toggle: defineEvent<['paused' | 'playing']>(),
+    toggle: defineEvent<["paused" | "playing"]>(),
   },
   setup(props, { emit }) {
-    const isPlaying = computed(() => props.status === 'playing')
-    const isLoading = computed(() => props.status === 'loading')
+    const isPlaying = computed(() => props.status === "playing")
+    const isLoading = computed(() => props.status === "loading")
     /**
      * Get the button label based on the current status of the player.
      */
@@ -111,7 +111,7 @@ export default defineComponent({
      * Sets the connections (none-rounded corners) for the button based on the layout.
      */
     const buttonProps = computed(() => {
-      const variant = 'plain--avoid' as ButtonVariant
+      const variant = "plain--avoid" as ButtonVariant
 
       return { variant, connections: layoutConnectionsMap[props.layout] }
     })
@@ -120,7 +120,7 @@ export default defineComponent({
       if (!props.isTabbable) event.preventDefault() // to prevent focus
     }
     const handleClick = () => {
-      emit('toggle', isPlaying.value || isLoading.value ? 'paused' : 'playing')
+      emit("toggle", isPlaying.value || isLoading.value ? "paused" : "playing")
     }
     return {
       label,

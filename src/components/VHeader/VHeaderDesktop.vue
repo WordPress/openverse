@@ -54,36 +54,36 @@ import {
   ref,
   useContext,
   useRouter,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { useMediaStore } from '~/stores/media'
-import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
-import { useUiStore } from '~/stores/ui'
+import { useMediaStore } from "~/stores/media"
+import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
+import { useUiStore } from "~/stores/ui"
 
-import { ALL_MEDIA, searchPath, supportedMediaTypes } from '~/constants/media'
-import { IsHeaderScrolledKey, IsSidebarVisibleKey } from '~/types/provides'
+import { ALL_MEDIA, searchPath, supportedMediaTypes } from "~/constants/media"
+import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
-import { useI18n } from '~/composables/use-i18n'
-import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
-import { useFocusFilters } from '~/composables/use-focus-filters'
-import useSearchType from '~/composables/use-search-type'
+import { useI18n } from "~/composables/use-i18n"
+import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
+import { useFocusFilters } from "~/composables/use-focus-filters"
+import useSearchType from "~/composables/use-search-type"
 
-import { Focus } from '~/utils/focus-management'
-import { ensureFocus } from '~/utils/reakit-utils/focus'
+import { Focus } from "~/utils/focus-management"
+import { ensureFocus } from "~/utils/reakit-utils/focus"
 
-import VFilterButton from '~/components/VHeader/VFilterButton.vue'
-import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
-import VLogoButton from '~/components/VHeader/VLogoButton.vue'
-import VSearchBarButton from '~/components/VHeader/VHeaderMobile/VSearchBarButton.vue'
-import VSearchTypePopover from '~/components/VContentSwitcher/VSearchTypePopover.vue'
+import VFilterButton from "~/components/VHeader/VFilterButton.vue"
+import VSearchBar from "~/components/VHeader/VSearchBar/VSearchBar.vue"
+import VLogoButton from "~/components/VHeader/VLogoButton.vue"
+import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
+import VSearchTypePopover from "~/components/VContentSwitcher/VSearchTypePopover.vue"
 
-import closeIcon from '~/assets/icons/close-small.svg'
+import closeIcon from "~/assets/icons/close-small.svg"
 
 /**
  * The desktop search header.
  */
 export default defineComponent({
-  name: 'VHeaderDesktop',
+  name: "VHeaderDesktop",
   components: {
     VFilterButton,
     VLogoButton,
@@ -117,8 +117,8 @@ export default defineComponent({
      * Shows the loading state or result count.
      */
     const searchStatus = computed(() => {
-      if (searchStore.searchTerm === '') return ''
-      if (isFetching.value) return i18n.t('header.loading')
+      if (searchStore.searchTerm === "") return ""
+      if (isFetching.value) return i18n.t("header.loading")
       return getI18nCount(resultsCount.value)
     })
 
@@ -139,8 +139,8 @@ export default defineComponent({
     })
 
     const clearSearchTerm = () => {
-      searchTerm.value = ''
-      ensureFocus(searchBarRef.value?.$el.querySelector('input') as HTMLElement)
+      searchTerm.value = ""
+      ensureFocus(searchBarRef.value?.$el.querySelector("input") as HTMLElement)
     }
 
     const selectSearchType = async (type) => {
@@ -178,11 +178,11 @@ export default defineComponent({
      * to run and fetch new media.
      */
     const handleSearch = async () => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" })
       const mediaStore = useMediaStore()
       const searchStore = useSearchStore()
       const searchType = searchStore.searchType
-      if (!searchTermChanged.value || searchTerm.value === '') return
+      if (!searchTermChanged.value || searchTerm.value === "") return
       if (searchTermChanged.value) {
         await mediaStore.clearMedia()
 

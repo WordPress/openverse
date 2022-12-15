@@ -1,18 +1,18 @@
 // Copied from https://github.com/vueuse/vueuse/blob/91ec77418298eb252899125ab37c160718a3e078/packages/integrations/useFocusTrap/index.ts
 // Importing it directly from the vueuse/integration causes an import error
-import { tryOnScopeDispose, unrefElement } from '@vueuse/core'
+import { tryOnScopeDispose, unrefElement } from "@vueuse/core"
 
-import { ref, watch } from 'vue-demi'
-import { createFocusTrap } from 'focus-trap'
+import { ref, watch } from "vue-demi"
+import { createFocusTrap } from "focus-trap"
 
-import type { Ref } from 'vue-demi'
-import type { Fn, MaybeElementRef } from '@vueuse/core'
+import type { Ref } from "vue-demi"
+import type { Fn, MaybeElementRef } from "@vueuse/core"
 import type {
   ActivateOptions,
   DeactivateOptions,
   FocusTrap,
   Options,
-} from 'focus-trap'
+} from "focus-trap"
 
 export interface UseFocusTrapOptions extends Options {
   /**
@@ -122,7 +122,7 @@ export function useFocusTrap(
       // Focus if immediate is set to true
       if (immediate) activate()
     },
-    { flush: 'sync' }
+    { flush: "sync" }
   )
 
   // Cleanup on unmount

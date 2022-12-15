@@ -9,7 +9,7 @@
         :aria-label="$t('media-details.content-report.form.dmca.form')"
         :href="DMCA_FORM_URL"
         class="text-pink hover:underline"
-        >{{ $t('media-details.content-report.form.dmca.form') }}</VLink
+        >{{ $t("media-details.content-report.form.dmca.form") }}</VLink
       >
     </template>
     <template #source>
@@ -21,14 +21,14 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import { DMCA_FORM_URL } from '~/constants/content-report'
+import { DMCA_FORM_URL } from "~/constants/content-report"
 
-import VLink from '~/components/VLink.vue'
+import VLink from "~/components/VLink.vue"
 
 export default defineComponent({
-  name: 'VDmcaNotice',
+  name: "VDmcaNotice",
   components: { VLink },
   props: {
     /**

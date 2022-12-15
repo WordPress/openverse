@@ -4,9 +4,9 @@ import {
   useRoute,
   useRouter,
   Ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, searchTypes, supportedSearchTypes } from '~/constants/media'
+import { ALL_MEDIA, searchTypes, supportedSearchTypes } from "~/constants/media"
 
 /**
  * Reactive property that returns true only on the matching routes.
@@ -42,7 +42,7 @@ export const useMatchRoute = (
  */
 export const useMatchSearchRoutes = () => {
   const routes = [
-    'search',
+    "search",
     ...searchTypes
       .filter((type) => type !== ALL_MEDIA)
       .map((type) => `search-${type}`),
@@ -63,4 +63,4 @@ export const useMatchSingleResultRoutes = () => {
   return useMatchRoute(routes)
 }
 
-export const useMatchHomeRoute = () => useMatchRoute(['index'])
+export const useMatchHomeRoute = () => useMatchRoute(["index"])

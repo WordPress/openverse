@@ -35,14 +35,14 @@ import {
   defineComponent,
   PropType,
   ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import type { ImageDetail } from '~/types/media'
+import type { ImageDetail } from "~/types/media"
 
-import VLicense from '~/components/VLicense/VLicense.vue'
-import VLink from '~/components/VLink.vue'
+import VLicense from "~/components/VLicense/VLicense.vue"
+import VLink from "~/components/VLink.vue"
 
-import errorImage from '~/assets/image_not_available_placeholder.png'
+import errorImage from "~/assets/image_not_available_placeholder.png"
 
 const minAspect = 3 / 4
 const maxAspect = 16 / 9
@@ -50,15 +50,15 @@ const panoramaAspect = 21 / 9
 const minRowWidth = 450
 const widthBasis = minRowWidth / maxAspect
 
-const toAbsolutePath = (url: string, prefix = 'https://') => {
-  if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
+const toAbsolutePath = (url: string, prefix = "https://") => {
+  if (url.indexOf("http://") >= 0 || url.indexOf("https://") >= 0) {
     return url
   }
   return `${prefix}${url}`
 }
 
 export default defineComponent({
-  name: 'VImageCell',
+  name: "VImageCell",
   components: { VLicense, VLink },
   props: {
     image: {

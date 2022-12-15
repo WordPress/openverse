@@ -1,20 +1,20 @@
-import { test, expect, Page, BrowserContext } from '@playwright/test'
+import { test, expect, Page, BrowserContext } from "@playwright/test"
 
-import { mockProviderApis } from '~~/test/playwright/utils/route'
+import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
   goToSearchTerm,
   openFirstResult,
-} from '~~/test/playwright/utils/navigation'
+} from "~~/test/playwright/utils/navigation"
 
-import { supportedMediaTypes } from '~/constants/media'
+import { supportedMediaTypes } from "~/constants/media"
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
 /**
  * Some helpers for repeated actions.
  */
 
-const reportingEndpoint = '**/report/'
+const reportingEndpoint = "**/report/"
 
 export const openReportModal = (page: Page) =>
   page.click('text="Report this content"')
@@ -24,8 +24,8 @@ export const mockReportingEndpoint = (context: BrowserContext) =>
   context.route(reportingEndpoint, (route) =>
     route.fulfill({
       status: 200,
-      contentType: 'text/json',
-      headers: { 'access-control-allow-origin': '*' },
+      contentType: "text/json",
+      headers: { "access-control-allow-origin": "*" },
     })
   )
 
@@ -42,20 +42,20 @@ export const submitApiReport = (page: Page) =>
 
 const submitDmcaReport = async (page: Page, context: BrowserContext) => {
   // Mock the Google Form to return a successful html document
-  await context.route('https://docs.google.com/forms/**', (route) => {
+  await context.route("https://docs.google.com/forms/**", (route) => {
     route.fulfill({
       status: 200,
-      contentType: 'text/html',
-      body: '<div>Fake form!</div>',
+      contentType: "text/html",
+      body: "<div>Fake form!</div>",
     })
   })
   await page.click('text="Infringes copyright"')
   const [newPage] = await Promise.all([
-    context.waitForEvent('page'),
+    context.waitForEvent("page"),
     await page.click('text="Open form"'), // Opens a new tab
   ])
   await newPage.waitForLoadState()
-  return expect(await newPage.url()).toContain('https://docs.google.com/forms')
+  return expect(await newPage.url()).toContain("https://docs.google.com/forms")
 }
 
 // todo: Test a mature report with the optional description field
@@ -73,7 +73,7 @@ const submitOtherReport = async (page: Page, context: BrowserContext) => {
   await mockReportingEndpoint(context)
   await page.click('text="Other"')
   await page.fill(
-    'text=Describe the issue',
+    "text=Describe the issue",
     'This is an example "Other" report submit by Playwright, our automated e2e test tool.'
   )
   const response = await submitApiReport(page)
@@ -100,7 +100,7 @@ supportedMediaTypes.forEach((mediaType) => {
       page,
       context,
     }) => {
-      await goToSearchTerm(page, 'cat', { searchType: mediaType })
+      await goToSearchTerm(page, "cat", { searchType: mediaType })
       await openFirstResult(page, mediaType)
       await openReportModal(page)
       await reportAssertion(page, context)

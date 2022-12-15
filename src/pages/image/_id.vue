@@ -45,7 +45,7 @@
         class="description-bold md:heading-6 mb-4 w-full flex-initial self-center md:mb-0 md:w-max"
         size="large"
       >
-        {{ $t('image-details.weblink') }}
+        {{ $t("image-details.weblink") }}
         <VIcon
           :icon-path="externalIcon"
           :rtl-flip="true"
@@ -91,36 +91,36 @@
 </template>
 
 <script lang="ts">
-import axios from 'axios'
+import axios from "axios"
 
 import {
   computed,
   defineComponent,
   ref,
   useRoute,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { IMAGE } from '~/constants/media'
-import type { ImageDetail } from '~/types/media'
-import { useSingleResultStore } from '~/stores/media/single-result'
-import { useRelatedMediaStore } from '~/stores/media/related-media'
-import { useFeatureFlagStore } from '~/stores/feature-flag'
-import { createDetailPageMeta } from '~/utils/og'
+import { IMAGE } from "~/constants/media"
+import type { ImageDetail } from "~/types/media"
+import { useSingleResultStore } from "~/stores/media/single-result"
+import { useRelatedMediaStore } from "~/stores/media/related-media"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { createDetailPageMeta } from "~/utils/og"
 
-import VButton from '~/components/VButton.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VLink from '~/components/VLink.vue'
-import VImageDetails from '~/components/VImageDetails/VImageDetails.vue'
-import VMediaReuse from '~/components/VMediaInfo/VMediaReuse.vue'
-import VRelatedImages from '~/components/VImageDetails/VRelatedImages.vue'
-import VSketchFabViewer from '~/components/VSketchFabViewer.vue'
-import VBackToSearchResultsLink from '~/components/VBackToSearchResultsLink.vue'
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VLink from "~/components/VLink.vue"
+import VImageDetails from "~/components/VImageDetails/VImageDetails.vue"
+import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
+import VRelatedImages from "~/components/VImageDetails/VRelatedImages.vue"
+import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
+import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 
-import errorImage from '~/assets/image_not_available_placeholder.png'
-import externalIcon from '~/assets/icons/external-link.svg'
+import errorImage from "~/assets/image_not_available_placeholder.png"
+import externalIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
-  name: 'VImageDetailsPage',
+  name: "VImageDetailsPage",
   components: {
     VButton,
     VIcon,
@@ -132,7 +132,7 @@ export default defineComponent({
     VBackToSearchResultsLink,
   },
   beforeRouteEnter(to, from, next) {
-    if (from.path.includes('/search/')) {
+    if (from.path.includes("/search/")) {
       to.meta.backToSearchPath = from.fullPath
     }
     next()
@@ -150,7 +150,7 @@ export default defineComponent({
 
     const featureFlagStore = useFeatureFlagStore()
     const isNewHeaderEnabled = computed(() =>
-      featureFlagStore.isOn('new_header')
+      featureFlagStore.isOn("new_header")
     )
 
     const backToSearchPath = computed(() => route.value.meta?.backToSearchPath)
@@ -160,7 +160,7 @@ export default defineComponent({
 
     const imageWidth = ref(0)
     const imageHeight = ref(0)
-    const imageType = ref('Unknown')
+    const imageType = ref("Unknown")
     /**
      * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
      * and then replace it with the provider image once it is loaded.
@@ -170,12 +170,12 @@ export default defineComponent({
     const sketchFabfailure = ref(false)
 
     const sketchFabUid = computed(() => {
-      if (image.value?.source !== 'sketchfab' || sketchFabfailure.value) {
+      if (image.value?.source !== "sketchfab" || sketchFabfailure.value) {
         return null
       }
       return image.value.url
-        .split('https://media.sketchfab.com/models/')[1]
-        .split('/')[0]
+        .split("https://media.sketchfab.com/models/")[1]
+        .split("/")[0]
     })
 
     /**
@@ -211,7 +211,7 @@ export default defineComponent({
           axios
             .head(event.target.src)
             .then((res) => {
-              imageType.value = res.headers['content-type']
+              imageType.value = res.headers["content-type"]
             })
             .catch(() => {
               /**
@@ -249,7 +249,7 @@ export default defineComponent({
       await singleResultStore.fetch(IMAGE, imageId)
     } catch (err) {
       const errorMessage = app.i18n
-        .t('error.image-not-found', {
+        .t("error.image-not-found", {
           id: imageId,
         })
         .toString()

@@ -1,8 +1,8 @@
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
-import { config } from '@vue/test-utils'
+import Vue from "vue"
+import VueI18n from "vue-i18n"
+import { config } from "@vue/test-utils"
 
-import { env } from '~/utils/env'
+import { env } from "~/utils/env"
 
 // Attach nuxt config to process
 for (const [key, value] of Object.entries(env)) {
@@ -16,8 +16,8 @@ Vue.use(VueI18n)
 /**
  * Simplified mock of a NuxtLink component.
  */
-config.stubs['nuxt-link'] = Vue.component('NuxtLink', {
-  props: ['to'],
+config.stubs["nuxt-link"] = Vue.component("NuxtLink", {
+  props: ["to"],
   template: '<a :href="to" v-on="$listeners"><slot /></a>',
 })
 

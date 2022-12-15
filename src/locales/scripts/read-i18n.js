@@ -10,10 +10,10 @@
  * @typedef {{ [key: string]: string | SimJson }} SimJson
  */
 
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs")
+const path = require("path")
 
-const babel = require('@babel/parser')
+const babel = require("@babel/parser")
 
 /**
  * An `Entry` refers to one i18n translation definition. It can be one of two
@@ -45,7 +45,7 @@ class Entry {
    * @return {string} the dot separated path to this entry
    */
   get lineage() {
-    return [...this.ancestors.filter((item) => item), this.key].join('.')
+    return [...this.ancestors.filter((item) => item), this.key].join(".")
   }
 
   /**
@@ -87,11 +87,11 @@ class Entry {
  * @return {string} the text content of the key
  */
 const parseKey = (keyNode) => {
-  if (keyNode === undefined) return ''
+  if (keyNode === undefined) return ""
   switch (keyNode.type) {
-    case 'StringLiteral':
+    case "StringLiteral":
       return keyNode.value
-    case 'Identifier':
+    case "Identifier":
       return keyNode.name
   }
 }
@@ -105,12 +105,12 @@ const parseKey = (keyNode) => {
  */
 const parseComment = (commentNode) => {
   switch (commentNode.type) {
-    case 'CommentLine':
+    case "CommentLine":
       return commentNode.value.trim()
-    case 'CommentBlock':
+    case "CommentBlock":
       return commentNode.value
-        .replace(/\n|\*+/g, '')
-        .replace(/\s+/, ' ')
+        .replace(/\n|\*+/g, "")
+        .replace(/\s+/, " ")
         .trim()
   }
 }
@@ -124,10 +124,10 @@ const parseComment = (commentNode) => {
  */
 const parseValue = (entry, valueNode) => {
   switch (valueNode.type) {
-    case 'StringLiteral':
+    case "StringLiteral":
       entry.value = valueNode.value
       break
-    case 'ObjectExpression':
+    case "ObjectExpression":
       valueNode.properties.map(parseObjProperty).forEach((child) => {
         entry.addChild(child)
       })
@@ -143,7 +143,7 @@ const parseValue = (entry, valueNode) => {
  */
 const parseObjProperty = (node) => {
   let key = parseKey(node.key)
-  let comments = node.leadingComments?.map(parseComment).join('')
+  let comments = node.leadingComments?.map(parseComment).join("")
   let entry = new Entry(key, comments)
   parseValue(entry, node.value)
   return entry
@@ -157,7 +157,7 @@ const parseObjProperty = (node) => {
 const parseJson = (filename) =>
   parseObjProperty({
     value: babel.parseExpression(
-      fs.readFileSync(path.join(__dirname, filename), 'utf-8')
+      fs.readFileSync(path.join(__dirname, filename), "utf-8")
     ),
   })
 

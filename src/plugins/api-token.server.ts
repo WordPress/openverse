@@ -1,11 +1,11 @@
-import { Mutex, MutexInterface } from 'async-mutex'
+import { Mutex, MutexInterface } from "async-mutex"
 
-import { createApiService } from '~/data/api-service'
-import { error, log } from '~/utils/console'
+import { createApiService } from "~/data/api-service"
+import { error, log } from "~/utils/console"
 
-import type { AxiosError } from 'axios'
+import type { AxiosError } from "axios"
 
-import type { Context, Plugin } from '@nuxt/types'
+import type { Context, Plugin } from "@nuxt/types"
 
 /* Process level state */
 
@@ -28,7 +28,7 @@ export declare let process: NodeJS.Process & Process
  * is mysteriously reloaded (cache-busted) for each request.
  */
 process.tokenData = process.tokenData || {
-  accessToken: '', // '' denotes non-existent key
+  accessToken: "", // '' denotes non-existent key
   accessTokenExpiry: 0, // 0 denotes non-existent key
 }
 
@@ -73,14 +73,14 @@ const refreshApiAccessToken = async (
   clientSecret: string
 ) => {
   const formData = new URLSearchParams()
-  formData.append('client_id', clientId)
-  formData.append('client_secret', clientSecret)
-  formData.append('grant_type', 'client_credentials')
+  formData.append("client_id", clientId)
+  formData.append("client_secret", clientSecret)
+  formData.append("grant_type", "client_credentials")
 
   const apiService = createApiService()
   try {
     const res = await apiService.post<TokenResponse>(
-      'auth_tokens/token',
+      "auth_tokens/token",
       formData
     )
     process.tokenData.accessToken = res.data.access_token
@@ -91,8 +91,8 @@ const refreshApiAccessToken = async (
      * anonymously and hope it works. By setting the expiry to 0 we queue
      * up another token fetch attempt for the next request.
      */
-    error('Unable to retrieve API token, clearing existing token', e)
-    process.tokenData.accessToken = ''
+    error("Unable to retrieve API token, clearing existing token", e)
+    process.tokenData.accessToken = ""
     process.tokenData.accessTokenExpiry = 0
     ;(e as AxiosError).message = `Unable to retrieve API token. ${
       (e as AxiosError).message
@@ -128,16 +128,16 @@ const getApiAccessToken = async (
   // not already another request making the request (represented
   // by the locked mutex).
   if (isNewTokenNeeded() && !process.fetchingMutex.isLocked()) {
-    log('acquiring mutex lock')
+    log("acquiring mutex lock")
     release = await process.fetchingMutex.acquire()
-    log('mutex lock acquired, preparing token refresh request')
+    log("mutex lock acquired, preparing token refresh request")
     process.tokenFetching = refreshApiAccessToken(apiClientId, apiClientSecret)
   }
 
   try {
-    log('awaiting the fetching of the api token to resolve')
+    log("awaiting the fetching of the api token to resolve")
     await process.tokenFetching
-    log('done waiting for the token, moving on now...')
+    log("done waiting for the token, moving on now...")
   } finally {
     /**
      * Releasing must be in a `finally` block otherwise if the
@@ -146,9 +146,9 @@ const getApiAccessToken = async (
      * refresh.
      */
     if (release) {
-      log('releasing mutex')
+      log("releasing mutex")
       release()
-      log('mutex released')
+      log("mutex released")
     }
   }
 
@@ -157,7 +157,7 @@ const getApiAccessToken = async (
 
 /* Plugin */
 
-declare module '@nuxt/types' {
+declare module "@nuxt/types" {
   interface Context {
     $openverseApiToken: string
   }
@@ -171,7 +171,7 @@ const apiToken: Plugin = async (context, inject) => {
     // capture the exception but allow the request to continue with anonymous API requests
     context.$sentry.captureException(e)
   } finally {
-    inject('openverseApiToken', openverseApiToken || '')
+    inject("openverseApiToken", openverseApiToken || "")
   }
 }
 

@@ -12,14 +12,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { License, LicenseVersion } from '~/constants/license'
-import type { ErrorCode } from '~/constants/errors'
-import { AttributableMedia, getAttribution } from '~/utils/attribution-html'
-import { useI18n } from '~/composables/use-i18n'
+import type { License, LicenseVersion } from "~/constants/license"
+import type { ErrorCode } from "~/constants/errors"
+import { AttributableMedia, getAttribution } from "~/utils/attribution-html"
+import { useI18n } from "~/composables/use-i18n"
 
-import imageInfo from '~/assets/error_images/image_info.json'
+import imageInfo from "~/assets/error_images/image_info.json"
 
 interface ErrorImage extends AttributableMedia {
   src: string
@@ -32,7 +32,7 @@ interface ErrorImage extends AttributableMedia {
  * results or a server error.
  */
 export default defineComponent({
-  name: 'VErrorImage',
+  name: "VErrorImage",
   props: {
     /**
      * the code of the error, used to identify and render the appropriate image

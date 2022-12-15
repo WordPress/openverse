@@ -1,4 +1,4 @@
-const { setToValue } = require('./utils')
+const { setToValue } = require("./utils")
 
 /**
  * Convert an NGX-Translate object to a nested JSON object

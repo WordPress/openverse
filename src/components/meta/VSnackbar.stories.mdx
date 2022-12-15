@@ -4,18 +4,18 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
-import { ref } from '@nuxtjs/composition-api'
+} from "@storybook/addon-docs"
+import { ref } from "@nuxtjs/composition-api"
 
-import VSnackbar from '~/components/VSnackbar.vue'
+import VSnackbar from "~/components/VSnackbar.vue"
 
 <Meta
   title="Components/VSnackbar"
   components={VSnackbar}
   argTypes={{
     size: {
-      options: ['large', 'small'],
-      control: { type: 'radio' },
+      options: ["large", "small"],
+      control: { type: "radio" },
     },
   }}
 />
@@ -48,7 +48,7 @@ export const Template = (args) => ({
 <Canvas>
   <Story
     name="Default"
-    args={{ defaultSlot: 'Your message goes here.', size: 'small' }}
+    args={{ defaultSlot: "Your message goes here.", size: "small" }}
     inline={false}
   >
     {Template.bind({})}

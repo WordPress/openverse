@@ -1,11 +1,11 @@
-import { getAdditionalSources } from '~/utils/get-additional-sources'
-import { AUDIO, IMAGE, MediaType, MODEL_3D, VIDEO } from '~/constants/media'
+import { getAdditionalSources } from "~/utils/get-additional-sources"
+import { AUDIO, IMAGE, MediaType, MODEL_3D, VIDEO } from "~/constants/media"
 
 /**
  * These tests do not test the health or uptime of URLS, only that a valid URL
  * string is returned.
  */
-describe('getAdditionalSources', () => {
+describe("getAdditionalSources", () => {
   it.each`
     mediaType
     ${AUDIO}
@@ -15,11 +15,11 @@ describe('getAdditionalSources', () => {
   `(
     `returns a URL for each $mediaType source`,
     ({ mediaType }: { mediaType: MediaType }) => {
-      const search = { q: 'dogs' }
+      const search = { q: "dogs" }
       const audioSources = getAdditionalSources(mediaType, search)
       const urls = audioSources.map((source) => source.url)
 
-      expect(urls.every((url) => url?.startsWith('http'))).toBeTruthy()
+      expect(urls.every((url) => url?.startsWith("http"))).toBeTruthy()
     }
   )
 })

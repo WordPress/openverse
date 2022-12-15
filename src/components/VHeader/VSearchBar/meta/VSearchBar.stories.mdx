@@ -4,18 +4,18 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
-import VSearchBar from '~/components/VHeader/VSearchBar/VSearchBar.vue'
+} from "@storybook/addon-docs"
+import VSearchBar from "~/components/VHeader/VSearchBar/VSearchBar.vue"
 
 <Meta
   title="Components/VHeader/Search bar"
   component={VSearchBar}
   argTypes={{
     input: {
-      action: 'input',
+      action: "input",
     },
     submit: {
-      action: 'submit',
+      action: "submit",
     },
   }}
 />
@@ -47,8 +47,8 @@ button is clicked.
   <Story
     name="Default"
     args={{
-      value: 'Search query',
-      size: 'medium',
+      value: "Search query",
+      size: "medium",
     }}
   >
     {Template.bind({})}
@@ -72,7 +72,7 @@ export const vModelTemplate = (args) => ({
   components: { VSearchBar },
   data() {
     return {
-      text: 'Hello, World!',
+      text: "Hello, World!",
     }
   },
   setup() {
@@ -92,8 +92,8 @@ easy `<input>` attributes like placeholders or HTML validations.
   <Story
     name="With placeholder"
     args={{
-      placeholder: 'Search query',
-      size: 'large',
+      placeholder: "Search query",
+      size: "large",
     }}
   >
     {Template.bind({})}

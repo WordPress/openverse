@@ -4,20 +4,20 @@ import {
   Meta,
   Canvas,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import { ref } from '@nuxtjs/composition-api'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VSelectField from '~/components/VSelectField/VSelectField.vue'
+import { ref } from "@nuxtjs/composition-api"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VSelectField from "~/components/VSelectField/VSelectField.vue"
 
-import radioIcon from '~/assets/icons/radiomark.svg'
+import radioIcon from "~/assets/icons/radiomark.svg"
 
 <Meta
   title="Components/VSelectField"
   component={VSelectField}
   argTypes={{
-    'update:modelValue': {
-      action: 'update:modelValue',
+    "update:modelValue": {
+      action: "update:modelValue",
     },
   }}
 />
@@ -32,13 +32,13 @@ export const Template = (args) => ({
 })
 
 export const baseArgs = {
-  fieldId: 'fruit',
-  blankText: 'Fruit',
-  labelText: 'Fruit',
+  fieldId: "fruit",
+  blankText: "Fruit",
+  labelText: "Fruit",
   choices: [
-    { key: 'a', text: 'Apple' },
-    { key: 'b', text: 'Banana' },
-    { key: 'c', text: 'Cantaloupe' },
+    { key: "a", text: "Apple" },
+    { key: "b", text: "Banana" },
+    { key: "c", text: "Cantaloupe" },
   ],
 }
 
@@ -66,7 +66,7 @@ export const vModelTemplate = (args) => ({
   `,
   components: { VSelectField },
   setup() {
-    const choice = ref('a')
+    const choice = ref("a")
     return { choice, args }
   },
 })
@@ -123,10 +123,10 @@ export const ConstraintTemplate = (args) => ({
     args={{
       ...baseArgs,
       choices: [
-        { key: 'short', text: 'Kiwi' },
+        { key: "short", text: "Kiwi" },
         {
-          key: 'long',
-          text: 'Bob Gordon American Elderberry',
+          key: "long",
+          text: "Bob Gordon American Elderberry",
         },
       ],
     }}
@@ -141,7 +141,7 @@ There is a variant of the select field without the border, currently used only
 on the 404 page.
 
 <Canvas>
-  <Story name="Without border" args={{ ...baseArgs, variant: 'borderless' }}>
+  <Story name="Without border" args={{ ...baseArgs, variant: "borderless" }}>
     {Template.bind({})}
   </Story>
 </Canvas>

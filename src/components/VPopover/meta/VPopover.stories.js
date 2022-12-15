@@ -1,24 +1,24 @@
-import { placements as popoverPlacements } from '@popperjs/core'
+import { placements as popoverPlacements } from "@popperjs/core"
 
-import { log } from '~/utils/console'
+import { log } from "~/utils/console"
 
-import VPopover from '~/components/VPopover/VPopover.vue'
-import VButton from '~/components/VButton.vue'
+import VPopover from "~/components/VPopover/VPopover.vue"
+import VButton from "~/components/VButton.vue"
 
 export default {
   component: VPopover,
-  title: 'Components/VPopover',
+  title: "Components/VPopover",
   argTypes: {
-    hideOnEsc: 'boolean',
-    hideOnClickOutside: 'boolean',
-    autoFocusOnShow: 'boolean',
-    autoFocusOnHide: 'boolean',
+    hideOnEsc: "boolean",
+    hideOnClickOutside: "boolean",
+    autoFocusOnShow: "boolean",
+    autoFocusOnHide: "boolean",
     placement: {
-      type: 'radio',
+      type: "radio",
       options: [...popoverPlacements],
     },
-    label: 'text',
-    labelledBy: 'text',
+    label: "text",
+    labelledBy: "text",
   },
 }
 
@@ -40,8 +40,8 @@ const SinglePopoverStory = (args, { argTypes }) => ({
   `,
   components: { VPopover, VButton },
   setup() {
-    const onOpen = () => log('opened!')
-    const onClose = () => log('closed!')
+    const onOpen = () => log("opened!")
+    const onClose = () => log("closed!")
 
     return { onOpen, onClose }
   },

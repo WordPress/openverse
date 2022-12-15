@@ -34,24 +34,24 @@ import {
   toRefs,
   computed,
   PropType,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { warn } from '~/utils/console'
+import { warn } from "~/utils/console"
 
-import type { ProperlyExtractPropTypes } from '~/types/prop-extraction'
+import type { ProperlyExtractPropTypes } from "~/types/prop-extraction"
 import {
   ButtonConnections,
   buttonForms,
   ButtonSize,
   ButtonType,
   ButtonVariant,
-} from '~/types/button'
-import type { ButtonForm } from '~/types/button'
+} from "~/types/button"
+import type { ButtonForm } from "~/types/button"
 
-import VLink from '~/components/VLink.vue'
+import VLink from "~/components/VLink.vue"
 
 export type ButtonProps = ProperlyExtractPropTypes<
-  NonNullable<typeof VButton['props']>
+  NonNullable<typeof VButton["props"]>
 >
 
 /**
@@ -67,7 +67,7 @@ export type ButtonProps = ProperlyExtractPropTypes<
  * adapted from Reakit's Button, Clickable, and Tabbable component implementations.
  */
 const VButton = defineComponent({
-  name: 'VButton',
+  name: "VButton",
   components: { VLink },
   props: {
     /**
@@ -85,7 +85,7 @@ const VButton = defineComponent({
      */
     as: {
       type: String as PropType<ButtonForm>,
-      default: 'button',
+      default: "button",
       validate: (val: ButtonForm) => buttonForms.includes(val),
     },
     /**
@@ -98,7 +98,7 @@ const VButton = defineComponent({
      */
     variant: {
       type: String as PropType<ButtonVariant>,
-      default: 'primary',
+      default: "primary",
     },
     /**
      * Allows for programmatically setting the pressed state of a button,
@@ -118,7 +118,7 @@ const VButton = defineComponent({
      */
     size: {
       type: String as PropType<ButtonSize>,
-      default: 'medium',
+      default: "medium",
     },
     /**
      * Whether the button is disabled. Used alone this will only
@@ -151,7 +151,7 @@ const VButton = defineComponent({
      */
     type: {
       type: String as PropType<ButtonType>,
-      default: 'button',
+      default: "button",
     },
     /**
      * Whether the button is connected to another control and needs to have no rounded
@@ -162,7 +162,7 @@ const VButton = defineComponent({
      */
     connections: {
       type: String as PropType<ButtonConnections>,
-      default: 'none',
+      default: "none",
     },
   },
   setup(props, { attrs }) {
@@ -175,18 +175,18 @@ const VButton = defineComponent({
     const typeRef = ref<ButtonType | undefined>(propsRef.type.value)
     const supportsDisabledAttributeRef = ref(true)
 
-    const isConnected = computed(() => props.connections !== 'none')
+    const isConnected = computed(() => props.connections !== "none")
 
     const isActive = computed(() => {
       return (
         propsRef.pressed.value ||
-        attrs['aria-pressed'] ||
-        attrs['aria-expanded']
+        attrs["aria-pressed"] ||
+        attrs["aria-expanded"]
       )
     })
 
     const isPlainDangerous = computed(() => {
-      return propsRef.variant.value === 'plain--avoid'
+      return propsRef.variant.value === "plain--avoid"
     })
 
     watch(
@@ -208,10 +208,10 @@ const VButton = defineComponent({
     watch(
       propsRef.as,
       (as) => {
-        if (['VLink'].includes(as)) {
+        if (["VLink"].includes(as)) {
           typeRef.value = undefined
           supportsDisabledAttributeRef.value = false
-        } else if (['a', 'NuxtLink'].includes(as)) {
+        } else if (["a", "NuxtLink"].includes(as)) {
           warn(
             `Please use \`VLink\` with an \`href\` prop instead of ${as} for the button component`
           )
@@ -244,8 +244,8 @@ export default VButton
 </script>
 
 <style module>
-.button[disabled='disabled'],
-.button[aria-disabled='true'] {
+.button[disabled="disabled"],
+.button[aria-disabled="true"] {
   @apply cursor-not-allowed;
 }
 
@@ -278,8 +278,8 @@ a.button {
 .secondary-pressed {
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
 }
-.secondary[disabled='disabled'],
-.secondary[aria-disabled='true'] {
+.secondary[disabled="disabled"],
+.secondary[aria-disabled="true"] {
   @apply border-tx bg-tx text-dark-charcoal-40;
 }
 
@@ -293,10 +293,10 @@ a.button {
 .secondary-bordered-pressed {
   @apply bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90 focus-visible:bg-dark-charcoal-90;
 }
-.secondary-filled[disabled='disabled'],
-.secondary-bordered[disabled='disabled'],
-.secondary-filled[aria-disabled='true'],
-.secondary-bordered[aria-disabled='true'] {
+.secondary-filled[disabled="disabled"],
+.secondary-bordered[disabled="disabled"],
+.secondary-filled[aria-disabled="true"],
+.secondary-bordered[aria-disabled="true"] {
   @apply border-tx bg-dark-charcoal-10 text-dark-charcoal-40;
 }
 
@@ -304,8 +304,8 @@ a.button {
   @apply border-tx bg-tx px-0 text-sm font-semibold text-pink hover:underline focus-visible:ring focus-visible:ring-pink;
 }
 
-.text[disabled='disabled'],
-.text[aria-disabled='true'] {
+.text[disabled="disabled"],
+.text[aria-disabled="true"] {
   @apply border-tx bg-tx text-dark-charcoal-40;
 }
 
@@ -341,12 +341,12 @@ https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
 }
 
-.action-menu[disabled='disabled'],
-.action-menu[aria-disabled='true'],
-.action-menu-muted[disabled='disabled'],
-.action-menu-muted[aria-disabled='true'],
-.action-menu-bordered[disabled='disabled'],
-.action-menu-bordered[aria-disabled='true'] {
+.action-menu[disabled="disabled"],
+.action-menu[aria-disabled="true"],
+.action-menu-muted[disabled="disabled"],
+.action-menu-muted[aria-disabled="true"],
+.action-menu-bordered[disabled="disabled"],
+.action-menu-bordered[aria-disabled="true"] {
   @apply border-dark-charcoal-10 bg-dark-charcoal-10 text-dark-charcoal-40;
 }
 

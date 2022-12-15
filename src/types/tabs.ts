@@ -1,8 +1,8 @@
-import type { ComputedRef, InjectionKey, Ref } from '@nuxtjs/composition-api'
-import type { ComponentPublicInstance } from '@vue/runtime-dom'
+import type { ComputedRef, InjectionKey, Ref } from "@nuxtjs/composition-api"
+import type { ComponentPublicInstance } from "@vue/runtime-dom"
 
-export type TabActivation = 'manual' | 'auto'
-export type TabVariant = 'bordered' | 'plain'
+export type TabActivation = "manual" | "auto"
+export type TabVariant = "bordered" | "plain"
 export type TabsState = {
   // State
   selectedId: Ref<string>

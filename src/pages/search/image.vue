@@ -8,16 +8,16 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, useMeta } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useMeta } from "@nuxtjs/composition-api"
 
-import { propTypes } from '~/pages/search/search-page.types'
-import { useFocusFilters } from '~/composables/use-focus-filters'
-import { useFeatureFlagStore } from '~/stores/feature-flag'
+import { propTypes } from "~/pages/search/search-page.types"
+import { useFocusFilters } from "~/composables/use-focus-filters"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-import VImageGrid from '~/components/VImageGrid/VImageGrid.vue'
+import VImageGrid from "~/components/VImageGrid/VImageGrid.vue"
 
 export default defineComponent({
-  name: 'ImageSearch',
+  name: "ImageSearch",
   components: { VImageGrid },
   props: propTypes,
   setup(props) {
@@ -25,8 +25,8 @@ export default defineComponent({
 
     useMeta({
       title: `${props.searchTerm} | Openverse`,
-      meta: featureFlagStore.isOn('new_header')
-        ? [{ hid: 'robots', name: 'robots', content: 'all' }]
+      meta: featureFlagStore.isOn("new_header")
+        ? [{ hid: "robots", name: "robots", content: "all" }]
         : undefined,
     })
 

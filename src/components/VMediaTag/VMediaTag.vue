@@ -14,10 +14,10 @@
  * Displays a tag associated with a media item. If set up as a link, it can be
  * used as a link to find other items that are similarly tagged.
  */
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
 export default defineComponent({
-  name: 'MediaTag',
+  name: "MediaTag",
   props: {
     /**
      * the HTML tag or Vue component to use as the root node; A non-interactive
@@ -25,7 +25,7 @@ export default defineComponent({
      */
     tag: {
       type: String,
-      default: 'span',
+      default: "span",
     },
   },
 })

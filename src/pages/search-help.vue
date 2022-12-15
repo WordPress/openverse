@@ -1,14 +1,14 @@
 <template>
   <VContentPage>
     <h1>
-      {{ $t('search-guide.title', { openverse: 'Openverse' }) }}
+      {{ $t("search-guide.title", { openverse: "Openverse" }) }}
     </h1>
     <p>
-      {{ $t('search-guide.intro') }}
+      {{ $t("search-guide.intro") }}
     </p>
 
     <h2>
-      {{ $t('search-guide.exact.title') }}
+      {{ $t("search-guide.exact.title") }}
     </h2>
     <i18n path="search-guide.exact.content" tag="p">
       <template #link>
@@ -17,18 +17,18 @@
           :aria-label="$t('search-guide.exact.aria-label')"
           :href="pathFromQuery('Claude Monet', true)"
         >
-          <em>{{ $t('search-guide.exact.claude-monet') }}</em>
+          <em>{{ $t("search-guide.exact.claude-monet") }}</em>
         </VLink>
         <!-- eslint-enable -->
       </template>
     </i18n>
 
     <h2>
-      {{ $t('search-guide.combine.title') }}
+      {{ $t("search-guide.combine.title") }}
     </h2>
 
     <p>
-      {{ $t('search-guide.combine.description') }}
+      {{ $t("search-guide.combine.description") }}
     </p>
     <ul>
       <i18n path="search-guide.combine.and" tag="li">
@@ -102,7 +102,7 @@
           :aria-label="$t('search-guide.example.and.aria-label').toString()"
           :href="pathFromQuery('dog%2Bcat')"
         >
-          <em>{{ $t('search-guide.example.and.example') }}</em>
+          <em>{{ $t("search-guide.example.and.example") }}</em>
         </VLink>
       </template>
       <template #br>
@@ -116,7 +116,7 @@
           :aria-label="$t('search-guide.example.or.aria-label')"
           :href="pathFromQuery('dog%7Ccat')"
         >
-          <em>{{ $t('search-guide.example.or.example').toString() }}</em>
+          <em>{{ $t("search-guide.example.or.example").toString() }}</em>
         </VLink>
       </template>
       <template #br>
@@ -131,7 +131,7 @@
             $t('search-guide.example.negate.operator-aria-label').toString()
           "
           >-
-          {{ $t('search-guide.example.negate.operator-name').toString() }}</em
+          {{ $t("search-guide.example.negate.operator-name").toString() }}</em
         >
       </template>
     </i18n>
@@ -142,7 +142,7 @@
           :aria-label="$t('search-guide.example.negate.aria-label')"
           :href="pathFromQuery('dog%20-pug')"
         >
-          <em>{{ $t('search-guide.example.negate.example') }}</em>
+          <em>{{ $t("search-guide.example.negate.example") }}</em>
         </VLink>
       </template>
       <template #br>
@@ -155,7 +155,7 @@
         <em
           :aria-label="$t('search-guide.example.prefix.aria-label').toString()"
           >*
-          {{ $t('search-guide.example.prefix.operator-name').toString() }}</em
+          {{ $t("search-guide.example.prefix.operator-name").toString() }}</em
         >
       </template>
     </i18n>
@@ -166,7 +166,7 @@
           :aria-label="$t('search-guide.example.prefix.aria-label')"
           :href="pathFromQuery('net%2a')"
         >
-          <em>{{ $t('search-guide.example.prefix.example') }}</em>
+          <em>{{ $t("search-guide.example.prefix.example") }}</em>
         </VLink>
       </template>
       <template #br>
@@ -186,7 +186,7 @@
           :aria-label="$t('search-guide.example.precedence.aria-label')"
           :href="pathFromQuery('dogs%20%2B%20%28corgis%20%7C%20labrador%29')"
         >
-          <em>{{ $t('search-guide.example.precedence.example') }}</em>
+          <em>{{ $t("search-guide.example.precedence.example") }}</em>
         </VLink>
       </template>
       <template #br>
@@ -200,7 +200,7 @@
       </template>
       <template #link>
         <VLink href="https://en.wikipedia.org/wiki/Levenshtein_distance">
-          {{ $t('search-guide.example.fuzziness.link-text') }}
+          {{ $t("search-guide.example.fuzziness.link-text") }}
         </VLink>
       </template>
     </i18n>
@@ -211,7 +211,7 @@
           :aria-label="$t('search-guide.example.fuzziness.aria-label')"
           :href="pathFromQuery('theatre~1')"
         >
-          <em>{{ $t('search-guide.example.fuzziness.example') }}</em>
+          <em>{{ $t("search-guide.example.fuzziness.example") }}</em>
         </VLink>
       </template>
       <template #br>
@@ -223,16 +223,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useContext, useMeta } from '@nuxtjs/composition-api'
+import { defineComponent, useContext, useMeta } from "@nuxtjs/composition-api"
 
-import { useFeatureFlagStore } from '~/stores/feature-flag'
-import { useI18n } from '~/composables/use-i18n'
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useI18n } from "~/composables/use-i18n"
 
-import VLink from '~/components/VLink.vue'
-import VContentPage from '~/components/VContentPage.vue'
+import VLink from "~/components/VLink.vue"
+import VContentPage from "~/components/VContentPage.vue"
 
 export default defineComponent({
-  name: 'VSearchHelpPage',
+  name: "VSearchHelpPage",
   components: { VLink, VContentPage },
   setup() {
     const { app } = useContext()
@@ -241,17 +241,17 @@ export default defineComponent({
     const featureFlagStore = useFeatureFlagStore()
 
     useMeta({
-      title: `${i18n.t('search-guide.title', {
-        openverse: 'Openverse',
+      title: `${i18n.t("search-guide.title", {
+        openverse: "Openverse",
       })} | Openverse`,
-      meta: featureFlagStore.isOn('new_header')
-        ? [{ hid: 'robots', name: 'robots', content: 'all' }]
+      meta: featureFlagStore.isOn("new_header")
+        ? [{ hid: "robots", name: "robots", content: "all" }]
         : undefined,
     })
 
     const pathFromQuery = (queryString: string, quote = false) => {
       return app.localePath({
-        path: 'search',
+        path: "search",
         query: {
           q: quote ? `"${queryString}"` : queryString,
         },

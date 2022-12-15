@@ -1,20 +1,20 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from "@playwright/test"
 
 import {
   goToSearchTerm,
   languageDirections,
-} from '~~/test/playwright/utils/navigation'
+} from "~~/test/playwright/utils/navigation"
 
-import { supportedSearchTypes } from '~/constants/media'
+import { supportedSearchTypes } from "~/constants/media"
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
 for (const dir of languageDirections) {
   for (const searchType of supportedSearchTypes) {
     test(`External ${searchType} sources popover - ${dir}`, async ({
       page,
     }) => {
-      await goToSearchTerm(page, 'birds', { searchType, dir })
+      await goToSearchTerm(page, "birds", { searchType, dir })
       const externalSourcesButton = page.locator(
         '[aria-controls="source-list-popover"]'
       )

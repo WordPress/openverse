@@ -1,7 +1,7 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 
-import { warn } from '~/utils/console'
-import { AUDIO, IMAGE } from '~/constants/media'
+import { warn } from "~/utils/console"
+import { AUDIO, IMAGE } from "~/constants/media"
 
 const DEFAULT_REQUEST_TIMEOUT = 30000
 
@@ -12,7 +12,7 @@ const DEFAULT_REQUEST_TIMEOUT = 30000
  * @param resource - the first part of the request path
  */
 export const getResourceSlug = (resource: string): string => {
-  const slug = { [AUDIO]: 'audio', [IMAGE]: 'images' }[resource] ?? resource
+  const slug = { [AUDIO]: "audio", [IMAGE]: "images" }[resource] ?? resource
   return `${slug}/`
 }
 
@@ -62,14 +62,14 @@ export interface ApiService {
   ): Promise<AxiosResponse<T>>
   post<T = unknown>(
     resource: string,
-    data: Parameters<AxiosInstance['post']>[1],
-    headers?: AxiosRequestConfig['headers']
+    data: Parameters<AxiosInstance["post"]>[1],
+    headers?: AxiosRequestConfig["headers"]
   ): Promise<AxiosResponse<T>>
   update<T = unknown>(
     resource: string,
     slug: string,
-    data: Parameters<AxiosInstance['put']>[1],
-    headers: AxiosRequestConfig['headers']
+    data: Parameters<AxiosInstance["put"]>[1],
+    headers: AxiosRequestConfig["headers"]
   ): Promise<AxiosResponse<T>>
   put<T = unknown>(
     resource: string,
@@ -78,7 +78,7 @@ export interface ApiService {
   delete<T = unknown>(
     resource: string,
     slug: string,
-    headers: AxiosRequestConfig['headers']
+    headers: AxiosRequestConfig["headers"]
   ): Promise<AxiosResponse<T>>
 }
 
@@ -97,13 +97,13 @@ export const createApiService = ({
   const client = axios.create(axiosParams)
   client.interceptors.request.use(function (config) {
     validateRequest(
-      !config.url?.endsWith('/'),
-      'API request urls should have a trailing slash',
+      !config.url?.endsWith("/"),
+      "API request urls should have a trailing slash",
       config
     )
     validateRequest(
-      config.url?.includes('//') ?? false,
-      'API request urls should not have two slashes',
+      config.url?.includes("//") ?? false,
+      "API request urls should not have two slashes",
       config
     )
     return config
@@ -111,7 +111,7 @@ export const createApiService = ({
   client.interceptors.response.use(
     (response) => response,
     (error) => {
-      if (error.code === 'ECONNABORTED') {
+      if (error.code === "ECONNABORTED") {
         return Promise.reject({
           message: `timeout of ${
             DEFAULT_REQUEST_TIMEOUT / 1000
@@ -158,7 +158,7 @@ export const createApiService = ({
      */
     post<T = unknown>(
       resource: string,
-      data: Parameters<typeof client['post']>[1]
+      data: Parameters<typeof client["post"]>[1]
     ): Promise<AxiosResponse<T>> {
       return client.post(getResourceSlug(resource), data)
     },
@@ -173,8 +173,8 @@ export const createApiService = ({
     update<T = unknown>(
       resource: string,
       slug: string,
-      data: Parameters<typeof client['put']>[1],
-      headers: AxiosRequestConfig['headers']
+      data: Parameters<typeof client["put"]>[1],
+      headers: AxiosRequestConfig["headers"]
     ): Promise<AxiosResponse<T>> {
       return client.put(`${getResourceSlug(resource)}${slug}`, data, {
         headers,
@@ -202,7 +202,7 @@ export const createApiService = ({
     delete<T = unknown>(
       resource: string,
       slug: string,
-      headers: AxiosRequestConfig['headers']
+      headers: AxiosRequestConfig["headers"]
     ): Promise<AxiosResponse<T>> {
       return client.delete(`${getResourceSlug(resource)}${slug}`, { headers })
     },

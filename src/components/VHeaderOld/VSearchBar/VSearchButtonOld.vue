@@ -13,19 +13,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, computed, PropType } from "@nuxtjs/composition-api"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VButton from '~/components/VButton.vue'
-import type { FieldSize } from '~/components/VInputFieldOld/VInputFieldOld.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VButton from "~/components/VButton.vue"
+import type { FieldSize } from "~/components/VInputFieldOld/VInputFieldOld.vue"
 
-import searchIcon from '~/assets/icons/search.svg'
+import searchIcon from "~/assets/icons/search.svg"
 
 /**
  * The search button used in the search bar on the search page with the `old_header`.
  */
 export default defineComponent({
-  name: 'VSearchButtonOld',
+  name: "VSearchButtonOld",
   components: { VIcon, VButton },
   inheritAttrs: false,
   props: {
@@ -37,9 +37,9 @@ export default defineComponent({
   setup(props) {
     const sizeClasses = computed(() => {
       return {
-        small: 'w-10 md:w-12 h-10 md:h-12',
-        medium: 'w-12 h-12',
-        large: 'w-14 h-14',
+        small: "w-10 md:w-12 h-10 md:h-12",
+        medium: "w-12 h-12",
+        large: "w-14 h-14",
       }[props.size]
     })
 

@@ -8,14 +8,14 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
 const sizes = {
-  DEFAULT: 'default',
-  LARGE: 'large',
+  DEFAULT: "default",
+  LARGE: "large",
 }
 export default defineComponent({
-  name: 'VSearchResultsTitle',
+  name: "VSearchResultsTitle",
   props: {
     size: {
       required: false,

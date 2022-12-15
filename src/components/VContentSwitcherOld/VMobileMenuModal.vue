@@ -31,20 +31,20 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref } from "@nuxtjs/composition-api"
 
-import usePages from '~/composables/use-pages'
-import useSearchType from '~/composables/use-search-type'
+import usePages from "~/composables/use-pages"
+import useSearchType from "~/composables/use-search-type"
 
-import type { SupportedSearchType } from '~/constants/media'
+import type { SupportedSearchType } from "~/constants/media"
 
-import VModal from '~/components/VModal/VModal.vue'
-import VPageList from '~/components/VHeaderOld/VPageMenu/VPageList.vue'
-import VSearchTypeButtonOld from '~/components/VContentSwitcherOld/VSearchTypeButtonOld.vue'
-import VSearchTypesOld from '~/components/VContentSwitcherOld/VSearchTypesOld.vue'
+import VModal from "~/components/VModal/VModal.vue"
+import VPageList from "~/components/VHeaderOld/VPageMenu/VPageList.vue"
+import VSearchTypeButtonOld from "~/components/VContentSwitcherOld/VSearchTypeButtonOld.vue"
+import VSearchTypesOld from "~/components/VContentSwitcherOld/VSearchTypesOld.vue"
 
 export default defineComponent({
-  name: 'VMobileMenuModal',
+  name: "VMobileMenuModal",
   components: {
     VModal,
     VPageList,
@@ -75,7 +75,7 @@ export default defineComponent({
         : null
     })
 
-    const selectItem = (item: SupportedSearchType) => emit('select', item)
+    const selectItem = (item: SupportedSearchType) => emit("select", item)
 
     const closeMenu = () => nodeRef.value?.close()
 

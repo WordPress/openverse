@@ -3,14 +3,14 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import VFourOhFour from '~/components/VFourOhFour.vue'
+import VFourOhFour from "~/components/VFourOhFour.vue"
 
 export default defineComponent({
-  name: 'ErrorPage',
+  name: "ErrorPage",
   components: { VFourOhFour },
-  layout: 'blank',
-  props: ['error'],
+  layout: "blank",
+  props: ["error"],
 })
 </script>

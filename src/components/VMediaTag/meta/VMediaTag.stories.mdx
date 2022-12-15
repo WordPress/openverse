@@ -4,9 +4,9 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import VMediaTag from '~/components/VMediaTag/VMediaTag'
+import VMediaTag from "~/components/VMediaTag/VMediaTag"
 
 <Meta title="Components/VMediaTag" component={VMediaTag} />
 
@@ -31,15 +31,15 @@ By default, the component is a transparent wrapper over `<span>`.
 </Canvas>
 
 The root node of the tag can be overridden to a different HTML tag or a Vue
-component, e.g. `VLink`. Any additional classes, such as for hover and
-focus states on interactive elements, can be applied to add to the base styles.
+component, e.g. `VLink`. Any additional classes, such as for hover and focus
+states on interactive elements, can be applied to add to the base styles.
 
 <Canvas>
   <Story
     name="Custom node"
     args={{
-      tag: 'a',
-      href: 'https://wordpress.org/',
+      tag: "a",
+      href: "https://wordpress.org/",
     }}
   >
     {Template.bind({})}

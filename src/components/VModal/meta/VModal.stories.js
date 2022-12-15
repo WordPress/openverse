@@ -1,22 +1,22 @@
-import { ref, computed } from '@nuxtjs/composition-api'
+import { ref, computed } from "@nuxtjs/composition-api"
 
-import VModal from '~/components/VModal/VModal.vue'
-import VModalTarget from '~/components/VModal/VModalTarget.vue'
-import VButton from '~/components/VButton.vue'
-import VPopover from '~/components/VPopover/VPopover.vue'
+import VModal from "~/components/VModal/VModal.vue"
+import VModalTarget from "~/components/VModal/VModalTarget.vue"
+import VButton from "~/components/VButton.vue"
+import VPopover from "~/components/VPopover/VPopover.vue"
 
 export default {
   component: VModal,
-  title: 'Components/VModal',
+  title: "Components/VModal",
   argTypes: {
-    hideOnEsc: 'boolean',
-    hideOnClickOutside: 'boolean',
-    autoFocusOnShow: 'boolean',
-    autoFocusOnHide: 'boolean',
-    label: 'text',
-    labelledBy: 'text',
+    hideOnEsc: "boolean",
+    hideOnClickOutside: "boolean",
+    autoFocusOnShow: "boolean",
+    autoFocusOnHide: "boolean",
+    label: "text",
+    labelledBy: "text",
     useCustomInitialFocus: {
-      type: 'boolean',
+      type: "boolean",
       default: false,
     },
   },

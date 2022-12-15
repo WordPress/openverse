@@ -52,44 +52,44 @@ import {
   provide,
   ref,
   watch,
-} from '@nuxtjs/composition-api'
-import { PortalTarget as VTeleportTarget } from 'portal-vue'
+} from "@nuxtjs/composition-api"
+import { PortalTarget as VTeleportTarget } from "portal-vue"
 
-import { useWindowScroll } from '~/composables/use-window-scroll'
+import { useWindowScroll } from "~/composables/use-window-scroll"
 import {
   useMatchSearchRoutes,
   useMatchSingleResultRoutes,
-} from '~/composables/use-match-routes'
-import { useLayout } from '~/composables/use-layout'
+} from "~/composables/use-match-routes"
+import { useLayout } from "~/composables/use-layout"
 
-import { useFeatureFlagStore } from '~/stores/feature-flag'
-import { useUiStore } from '~/stores/ui'
-import { useSearchStore } from '~/stores/search'
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useUiStore } from "~/stores/ui"
+import { useSearchStore } from "~/stores/search"
 
-import { IsHeaderScrolledKey, IsSidebarVisibleKey } from '~/types/provides'
+import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
-import VBanners from '~/components/VBanner/VBanners.vue'
-import VHeaderOld from '~/components/VHeaderOld/VHeaderOld.vue'
-import VModalTarget from '~/components/VModal/VModalTarget.vue'
-import VGlobalAudioSection from '~/components/VGlobalAudioSection/VGlobalAudioSection.vue'
-import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
+import VBanners from "~/components/VBanner/VBanners.vue"
+import VHeaderOld from "~/components/VHeaderOld/VHeaderOld.vue"
+import VModalTarget from "~/components/VModal/VModalTarget.vue"
+import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
+import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 
 const embeddedPage = {
-  name: 'embedded',
+  name: "embedded",
   components: {
     VBanners,
-    VHeaderDesktop: () => import('~/components/VHeader/VHeaderDesktop.vue'),
-    VHeaderInternal: () => import('~/components/VHeader/VHeaderInternal.vue'),
+    VHeaderDesktop: () => import("~/components/VHeader/VHeaderDesktop.vue"),
+    VHeaderInternal: () => import("~/components/VHeader/VHeaderInternal.vue"),
     VHeaderMobile: () =>
-      import('~/components/VHeader/VHeaderMobile/VHeaderMobile.vue'),
-    VFooter: () => import('~/components/VFooter/VFooter.vue'),
+      import("~/components/VHeader/VHeaderMobile/VHeaderMobile.vue"),
+    VFooter: () => import("~/components/VFooter/VFooter.vue"),
     VHeaderOld,
     VModalTarget,
     VTeleportTarget,
     VGlobalAudioSection,
     VSearchGridFilter,
   },
-  layout: 'embedded',
+  layout: "embedded",
   head() {
     return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
   },
@@ -99,7 +99,7 @@ const embeddedPage = {
     const searchStore = useSearchStore()
 
     const isNewHeaderEnabled = computed(() =>
-      featureFlagStore.isOn('new_header')
+      featureFlagStore.isOn("new_header")
     )
     const { updateBreakpoint } = useLayout()
 
@@ -143,8 +143,8 @@ const embeddedPage = {
     })
     const showScrollButton = computed(() => scrollY.value > 70)
 
-    provide('isHeaderScrolled', isHeaderScrolled)
-    provide('showScrollButton', showScrollButton)
+    provide("isHeaderScrolled", isHeaderScrolled)
+    provide("showScrollButton", showScrollButton)
     provide(IsHeaderScrolledKey, isHeaderScrolled)
     provide(IsSidebarVisibleKey, isSidebarVisible)
 
@@ -153,7 +153,7 @@ const embeddedPage = {
       () =>
         isSearchRoute.value && !isHeaderScrolled.value && !isDesktopLayout.value
     )
-    provide('headerHasTwoRows', headerHasTwoRows)
+    provide("headerHasTwoRows", headerHasTwoRows)
 
     return {
       isHeaderScrolled,

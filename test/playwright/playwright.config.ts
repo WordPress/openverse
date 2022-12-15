@@ -1,15 +1,15 @@
-import path from 'path'
+import path from "path"
 
-import { addAliases } from 'module-alias'
+import { addAliases } from "module-alias"
 
-import type { PlaywrightTestConfig } from '@playwright/test'
+import type { PlaywrightTestConfig } from "@playwright/test"
 
 addAliases({
-  '~': path.resolve(process.cwd(), 'src'),
-  '~~': process.cwd(),
+  "~": path.resolve(process.cwd(), "src"),
+  "~~": process.cwd(),
 })
 
-const UPDATE_TAPES = process.env.UPDATE_TAPES || 'false'
+const UPDATE_TAPES = process.env.UPDATE_TAPES || "false"
 
 const config: PlaywrightTestConfig = {
   webServer: {
@@ -28,19 +28,19 @@ const config: PlaywrightTestConfig = {
      * verified that there is indeed a tape saved for the response in question,
      * switch this back to `prod` and see if your tests pass.
      */
-    command: './node_modules/.bin/npm-run-all -p -r talkback prod:playwright',
-    cwd: '/app',
+    command: "./node_modules/.bin/npm-run-all -p -r talkback prod:playwright",
+    cwd: "/app",
     timeout: 60_000 * 5, // 5 minutes
     port: 8443,
-    reuseExistingServer: !process.env.CI || process.env.PWDEBUG === '1',
+    reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
     env: {
-      API_URL: 'http://localhost:49153/',
+      API_URL: "http://localhost:49153/",
       UPDATE_TAPES: UPDATE_TAPES,
     },
   },
   use: {
-    baseURL: 'http://localhost:8443',
-    trace: 'retain-on-failure',
+    baseURL: "http://localhost:8443",
+    trace: "retain-on-failure",
   },
   timeout: 60 * 1e3,
   /**
@@ -52,7 +52,7 @@ const config: PlaywrightTestConfig = {
    * tapes then we can avoid this problem. Defaulting to `undefined` means the
    * Playwright default of using 1/2 of the number of CPU cores continues to work otherwise.
    */
-  workers: UPDATE_TAPES === 'true' ? 1 : undefined,
+  workers: UPDATE_TAPES === "true" ? 1 : undefined,
   expect: {
     toMatchSnapshot: {
       // If the visual regression tests are flaky, we can increase this to 0.1 or 0.2.

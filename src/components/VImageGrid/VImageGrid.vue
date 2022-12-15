@@ -25,18 +25,18 @@
  * or display 'No More Media'.
  * Used to display both image search results, and related images.
  */
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { FetchState } from '~/types/fetch-state'
-import type { ImageDetail } from '~/types/media'
+import type { FetchState } from "~/types/fetch-state"
+import type { ImageDetail } from "~/types/media"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
-import VLoadMore from '~/components/VLoadMore.vue'
-import VImageCell from '~/components/VImageGrid/VImageCell.vue'
+import VLoadMore from "~/components/VLoadMore.vue"
+import VImageCell from "~/components/VImageGrid/VImageCell.vue"
 
 export default defineComponent({
-  name: 'ImageGrid',
+  name: "ImageGrid",
   components: { VLoadMore, VImageCell },
   props: {
     images: {
@@ -59,7 +59,7 @@ export default defineComponent({
     },
   },
   emits: {
-    'shift-tab': defineEvent(),
+    "shift-tab": defineEvent(),
   },
   setup(props, { emit }) {
     const isError = computed(() => Boolean(props.fetchState.fetchingError))
@@ -67,7 +67,7 @@ export default defineComponent({
     const handleShiftTab = (event: KeyboardEvent, index: number) => {
       if (index === 0) {
         event.preventDefault()
-        emit('shift-tab')
+        emit("shift-tab")
       }
     }
 
@@ -85,7 +85,7 @@ export default defineComponent({
    * single, 100% wide image.
    */
 
-    content: '';
+    content: "";
     flex-grow: 999999999;
   }
 }

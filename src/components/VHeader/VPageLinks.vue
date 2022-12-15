@@ -22,14 +22,14 @@ import {
   type PropType,
   defineComponent,
   useRoute,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import usePages from '~/composables/use-pages'
+import usePages from "~/composables/use-pages"
 
-import VNavLink from '~/components/VNavLink/VNavLink.vue'
+import VNavLink from "~/components/VNavLink/VNavLink.vue"
 
 export default defineComponent({
-  name: 'VPageLinks',
+  name: "VPageLinks",
   components: {
     VNavLink,
   },
@@ -41,8 +41,8 @@ export default defineComponent({
      * @default 'light'
      */
     mode: {
-      type: String as PropType<'light' | 'dark'>,
-      default: 'light',
+      type: String as PropType<"light" | "dark">,
+      default: "light",
     },
     /**
      * Pass the tailwind classes to style the nav links.
@@ -51,7 +51,7 @@ export default defineComponent({
      */
     navLinkClasses: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   setup(_, { emit }) {
@@ -60,7 +60,7 @@ export default defineComponent({
 
     const onClick = (link: string) => {
       if (link === route.value.path) {
-        emit('close')
+        emit("close")
       }
     }
 

@@ -31,17 +31,17 @@ import {
   onUnmounted,
   type PropType,
   ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { tabsContextKey } from '~/types/tabs'
-import { keycodes } from '~/constants/key-codes'
-import { getDomElement } from '~/utils/dom'
-import { Focus, focusIn } from '~/utils/focus-management'
+import { tabsContextKey } from "~/types/tabs"
+import { keycodes } from "~/constants/key-codes"
+import { getDomElement } from "~/utils/dom"
+import { Focus, focusIn } from "~/utils/focus-management"
 
-import VButton from '~/components/VButton.vue'
+import VButton from "~/components/VButton.vue"
 
 export default defineComponent({
-  name: 'VTab',
+  name: "VTab",
   components: { VButton },
   props: {
     /**
@@ -60,8 +60,8 @@ export default defineComponent({
       required: true,
     },
     size: {
-      type: String as PropType<'default' | 'large' | 'medium'>,
-      default: 'default',
+      type: String as PropType<"default" | "large" | "medium">,
+      default: "default",
     },
   },
   setup(props) {
@@ -79,7 +79,7 @@ export default defineComponent({
 
     const handleFocus = () => {
       if (props.disabled) return
-      if (tabContext.activation.value === 'auto') {
+      if (tabContext.activation.value === "auto") {
         tabContext.setSelectedId(props.id)
       }
       getDomElement(internalTabRef)?.focus()
@@ -112,7 +112,7 @@ export default defineComponent({
       documentDir?: string
     ) => {
       let forward = arrowKeyCode === keycodes.ArrowRight
-      if (documentDir === 'rtl') {
+      if (documentDir === "rtl") {
         forward = !forward
       }
       return forward ? Focus.Next : Focus.Previous
@@ -172,12 +172,12 @@ export default defineComponent({
     }
 
     const tabProps = computed(() => ({
-      'aria-controls': `panel-${props.id}`,
-      'aria-selected': isSelected.value,
+      "aria-controls": `panel-${props.id}`,
+      "aria-selected": isSelected.value,
       disabled: props.disabled ? true : undefined,
     }))
 
-    const isManual = computed(() => tabContext.activation.value === 'manual')
+    const isManual = computed(() => tabContext.activation.value === "manual")
 
     return {
       internalTabRef,

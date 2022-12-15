@@ -4,6 +4,6 @@
 
 <script>
 export default {
-  name: 'Model3dPage',
+  name: "Model3dPage",
 }
 </script>

@@ -11,16 +11,16 @@
  */
 
 export const keycodes = Object.freeze({
-  Spacebar: ' ',
-  Home: 'Home',
-  End: 'End',
-  ArrowUp: 'ArrowUp',
-  ArrowDown: 'ArrowDown',
-  ArrowLeft: 'ArrowLeft',
-  ArrowRight: 'ArrowRight',
-  Escape: 'Escape',
-  PageUp: 'PageUp',
-  PageDown: 'PageDown',
-  Tab: 'Tab',
-  Enter: 'Enter',
+  Spacebar: " ",
+  Home: "Home",
+  End: "End",
+  ArrowUp: "ArrowUp",
+  ArrowDown: "ArrowDown",
+  ArrowLeft: "ArrowLeft",
+  ArrowRight: "ArrowRight",
+  Escape: "Escape",
+  PageUp: "PageUp",
+  PageDown: "PageDown",
+  Tab: "Tab",
+  Enter: "Enter",
 } as const)

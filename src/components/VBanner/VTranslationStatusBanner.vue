@@ -7,12 +7,12 @@
   >
     {{
       // eslint-disable-next-line @intlify/vue-i18n/no-raw-text
-      '⚠️'
+      "⚠️"
     }}
     <i18n path="notification.translation.text">
       <template #link>
         <VLink :href="currentLocale.link" class="underline">{{
-          $t('notification.translation.link')
+          $t("notification.translation.link")
         }}</VLink>
       </template>
       <template #locale>
@@ -23,19 +23,19 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { BannerId } from '~/types/banners'
+import type { BannerId } from "~/types/banners"
 
-import { useUiStore } from '~/stores/ui'
+import { useUiStore } from "~/stores/ui"
 
-import { createTranslationLink } from '~/utils/translation-banner'
+import { createTranslationLink } from "~/utils/translation-banner"
 
-import VLink from '~/components/VLink.vue'
-import VNotificationBanner from '~/components/VBanner/VNotificationBanner.vue'
+import VLink from "~/components/VLink.vue"
+import VNotificationBanner from "~/components/VBanner/VNotificationBanner.vue"
 
 export default defineComponent({
-  name: 'VTranslationStatusBanner',
+  name: "VTranslationStatusBanner",
   components: {
     VLink,
     VNotificationBanner,

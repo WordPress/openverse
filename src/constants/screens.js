@@ -14,7 +14,7 @@
  */
 const SCREEN_SIZES = Object.freeze(
   /** @type {const} */ ({
-    '2xl': 1536,
+    "2xl": 1536,
     xl: 1280,
     lg: 1024,
     md: 768,
@@ -48,12 +48,12 @@ const SCREENS = /** @type {Record<RealBreakpoint, string>} */ (
 const VIEWPORTS = /** @type {Record<Breakpoint, Viewport>} */ (
   Object.fromEntries(
     /** @type {[Breakpoint, number][]} */ (Object.entries(SCREEN_SIZES))
-      .concat([['xs', 340]])
+      .concat([["xs", 340]])
       .map(([key, val]) => [
         key,
         {
           name: `${key} (${val}px)`,
-          styles: { width: `${val}px`, height: '768px' },
+          styles: { width: `${val}px`, height: "768px" },
         },
       ])
   )

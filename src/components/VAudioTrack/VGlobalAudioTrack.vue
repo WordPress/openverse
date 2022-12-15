@@ -32,28 +32,28 @@ import {
   PropType,
   ref,
   watch,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { useActiveAudio } from '~/composables/use-active-audio'
-import { defaultRef } from '~/composables/default-ref'
-import { useI18n } from '~/composables/use-i18n'
+import { useActiveAudio } from "~/composables/use-active-audio"
+import { defaultRef } from "~/composables/default-ref"
+import { useI18n } from "~/composables/use-i18n"
 
-import { useActiveMediaStore } from '~/stores/active-media'
-import { useMediaStore } from '~/stores/media'
+import { useActiveMediaStore } from "~/stores/active-media"
+import { useMediaStore } from "~/stores/media"
 
-import type { AudioDetail } from '~/types/media'
-import type { AudioStatus } from '~/constants/audio'
+import type { AudioDetail } from "~/types/media"
+import type { AudioStatus } from "~/constants/audio"
 
-import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
-import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
-import VGlobalLayout from '~/components/VAudioTrack/layouts/VGlobalLayout.vue'
+import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
+import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
+import VGlobalLayout from "~/components/VAudioTrack/layouts/VGlobalLayout.vue"
 
 /**
  * Displays the waveform and basic information about the track, along with
  * controls to play, pause or seek to a point on the track.
  */
 export default defineComponent({
-  name: 'VGlobalAudioTrack',
+  name: "VGlobalAudioTrack",
   components: {
     VPlayPause,
     VWaveform,
@@ -74,34 +74,34 @@ export default defineComponent({
     const activeAudio = useActiveAudio()
 
     const ariaLabel = computed(() =>
-      i18n.t('audio-track.aria-label', { title: props.audio.title }).toString()
+      i18n.t("audio-track.aria-label", { title: props.audio.title }).toString()
     )
 
-    const status = ref<AudioStatus>('paused')
+    const status = ref<AudioStatus>("paused")
     const currentTime = ref(0)
     const duration = defaultRef(() => {
-      if (typeof props.audio?.duration === 'number')
+      if (typeof props.audio?.duration === "number")
         return props.audio.duration / 1e3
       return 0
     })
 
     const setPlaying = () => {
       if (props.audio.hasLoaded) {
-        status.value = 'playing'
+        status.value = "playing"
       } else {
-        status.value = 'loading'
+        status.value = "loading"
       }
       updateTimeLoop()
     }
-    const setPaused = () => (status.value = 'paused')
-    const setPlayed = () => (status.value = 'played')
+    const setPaused = () => (status.value = "paused")
+    const setPlayed = () => (status.value = "played")
 
     const setTimeWhenPaused = (event: Event) => {
-      if (status.value !== 'playing' && event.target) {
+      if (status.value !== "playing" && event.target) {
         currentTime.value = (event.target as HTMLAudioElement).currentTime ?? 0
-        if (status.value === 'played') {
+        if (status.value === "played") {
           // Set to pause to remove replay icon
-          status.value = 'paused'
+          status.value = "paused"
         }
       }
     }
@@ -112,7 +112,7 @@ export default defineComponent({
     const updateTimeLoop = () => {
       if (
         activeAudio.obj.value &&
-        (status.value === 'playing' || status.value === 'loading')
+        (status.value === "playing" || status.value === "loading")
       ) {
         currentTime.value = activeAudio.obj.value.currentTime
         window.requestAnimationFrame(updateTimeLoop)
@@ -121,13 +121,13 @@ export default defineComponent({
 
     const mediaStore = useMediaStore()
     const setLoaded = () => {
-      mediaStore.setMediaProperties('audio', props.audio.id, {
+      mediaStore.setMediaProperties("audio", props.audio.id, {
         hasLoaded: true,
       })
-      status.value = 'playing'
+      status.value = "playing"
     }
     const setWaiting = () => {
-      status.value = 'loading'
+      status.value = "loading"
     }
 
     const eventMap = {
@@ -198,24 +198,24 @@ export default defineComponent({
 
     /* Interface with VPlayPause */
 
-    const handleToggle = (state?: 'playing' | 'paused') => {
+    const handleToggle = (state?: "playing" | "paused") => {
       if (!state) {
         switch (status.value) {
-          case 'playing':
-            state = 'paused'
+          case "playing":
+            state = "paused"
             break
-          case 'paused':
-          case 'played':
-            state = 'playing'
+          case "paused":
+          case "played":
+            state = "playing"
             break
         }
       }
 
       switch (state) {
-        case 'playing':
+        case "playing":
           play()
           break
-        case 'paused':
+        case "paused":
           pause()
           break
       }

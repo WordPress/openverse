@@ -17,19 +17,19 @@
   </VLink>
 </template>
 <script lang="ts">
-import { PropType } from '@nuxtjs/composition-api'
+import { PropType } from "@nuxtjs/composition-api"
 
-import VLink from '~/components/VLink.vue'
+import VLink from "~/components/VLink.vue"
 
-import WordPress from '~/assets/wordpress.svg?inline'
+import WordPress from "~/assets/wordpress.svg?inline"
 
 export default {
-  name: 'VWordPressLink',
+  name: "VWordPressLink",
   components: { VLink, WordPress },
   props: {
     mode: {
-      type: String as PropType<'dark' | 'light'>,
-      default: 'light',
+      type: String as PropType<"dark" | "light">,
+      default: "light",
     },
   },
 }

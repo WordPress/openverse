@@ -1,4 +1,4 @@
-import { ref } from '@nuxtjs/composition-api'
+import { ref } from "@nuxtjs/composition-api"
 
 /**
  * This global ref is SSR safe because it will only

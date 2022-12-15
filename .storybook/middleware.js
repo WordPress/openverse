@@ -1,1 +1,1 @@
-module.exports = require('../.nuxt-storybook/storybook/middleware')
+module.exports = require("../.nuxt-storybook/storybook/middleware")

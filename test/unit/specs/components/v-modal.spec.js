@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import { ref, computed } from '@nuxtjs/composition-api'
-import { render, screen } from '@testing-library/vue'
-import userEvent from '@testing-library/user-event'
+import Vue from "vue"
+import { ref, computed } from "@nuxtjs/composition-api"
+import { render, screen } from "@testing-library/vue"
+import userEvent from "@testing-library/user-event"
 
-import VModal from '~/components/VModal/VModal.vue'
-import VModalTarget from '~/components/VModal/VModalTarget.vue'
-import VButton from '~/components/VButton.vue'
+import VModal from "~/components/VModal/VModal.vue"
+import VModalTarget from "~/components/VModal/VModalTarget.vue"
+import VButton from "~/components/VButton.vue"
 
-const TestWrapper = Vue.component('TestWrapper', {
+const TestWrapper = Vue.component("TestWrapper", {
   components: { VModal, VButton, VModalTarget },
-  props: ['useCustomInitialFocus'],
+  props: ["useCustomInitialFocus"],
   setup(props) {
     const initialFocusElement = ref()
 
@@ -38,10 +38,10 @@ const TestWrapper = Vue.component('TestWrapper', {
 const nextTick = async () =>
   await new Promise((resolve) => setTimeout(resolve, 1))
 
-const getCloseButton = () => screen.getByText('modal.close')
-const getDialog = () => screen.getByRole('dialog')
-const queryDialog = () => screen.queryByRole('dialog')
-const getTrigger = () => screen.getByRole('button')
+const getCloseButton = () => screen.getByText("modal.close")
+const getDialog = () => screen.getByRole("dialog")
+const queryDialog = () => screen.queryByRole("dialog")
+const getTrigger = () => screen.getByRole("button")
 const doOpen = async () => {
   await userEvent.click(getTrigger())
   await nextTick()
@@ -50,7 +50,7 @@ const doOpen = async () => {
 // `useDialogContent` functionality is already tested by `VPopover` tests.
 // Eventually we'll want to abstract those tests out but for now it's not worth
 // the work.
-describe('VModal', () => {
+describe("VModal", () => {
   let options
   let _scrollTo
   beforeAll(() => {
@@ -68,7 +68,7 @@ describe('VModal', () => {
     jest.resetAllMocks()
   })
 
-  it('should render a close button that hides the modal', async () => {
+  it("should render a close button that hides the modal", async () => {
     render(TestWrapper, options)
     await doOpen()
 
@@ -80,24 +80,24 @@ describe('VModal', () => {
     expect(queryDialog()).toBe(null)
   })
 
-  it('should scroll lock the body when modal opens and unlock when modal closes', async () => {
+  it("should scroll lock the body when modal opens and unlock when modal closes", async () => {
     const { container } = render(TestWrapper, options)
     const scrollY = 10
     window.scrollY = scrollY
     await doOpen()
 
     expect(getDialog()).toBeVisible()
-    expect(container.ownerDocument.body.style.position).toBe('fixed')
+    expect(container.ownerDocument.body.style.position).toBe("fixed")
     expect(container.ownerDocument.body.style.top).toBe(`-${scrollY}px`)
 
-    await userEvent.click(screen.getByText('modal.close'))
+    await userEvent.click(screen.getByText("modal.close"))
     await nextTick()
 
     expect(window.scrollTo).toHaveBeenCalledWith(0, scrollY)
-    expect(container.ownerDocument.body.style.position).not.toBe('fixed')
+    expect(container.ownerDocument.body.style.position).not.toBe("fixed")
   })
 
-  it('should focus the close button by default', async () => {
+  it("should focus the close button by default", async () => {
     render(TestWrapper, options)
     await doOpen()
 
@@ -105,7 +105,7 @@ describe('VModal', () => {
     expect(getCloseButton()).toHaveFocus()
   })
 
-  it('should focus the explicit initial focus element when specified', async () => {
+  it("should focus the explicit initial focus element when specified", async () => {
     options.props = { useCustomInitialFocus: true }
     render(TestWrapper, options)
     await doOpen()
@@ -114,13 +114,13 @@ describe('VModal', () => {
     expect(screen.getByText(/custom initial focus/i))
   })
 
-  it('should hide the modal on escape', async () => {
+  it("should hide the modal on escape", async () => {
     render(TestWrapper, options)
     await doOpen()
 
     expect(getDialog()).toBeVisible()
 
-    await userEvent.keyboard('{Escape}')
+    await userEvent.keyboard("{Escape}")
     await nextTick()
 
     expect(queryDialog()).toBe(null)

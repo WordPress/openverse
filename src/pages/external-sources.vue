@@ -1,89 +1,89 @@
 <template>
   <VContentPage>
     <h1>
-      {{ $t('external-sources-page.title') }}
+      {{ $t("external-sources-page.title") }}
     </h1>
 
     <i18n path="external-sources-page.intro" tag="p">
       <template #openverse>Openverse</template>
       <template #link>
-        <VLink href="/sources">{{ $t('external-sources-page.link') }}</VLink>
+        <VLink href="/sources">{{ $t("external-sources-page.link") }}</VLink>
       </template>
     </i18n>
-    <p>{{ $t('external-sources-page.license', { openverse: 'Openverse' }) }}</p>
+    <p>{{ $t("external-sources-page.license", { openverse: "Openverse" }) }}</p>
     <p>
-      {{ $t('external-sources-page.explanation', { openverse: 'Openverse' }) }}
+      {{ $t("external-sources-page.explanation", { openverse: "Openverse" }) }}
     </p>
     <p>
       {{
-        $t('external-sources-page.relationships', { openverse: 'Openverse' })
+        $t("external-sources-page.relationships", { openverse: "Openverse" })
       }}
     </p>
     <h2>
-      {{ $t('external-sources-page.new.title') }}
+      {{ $t("external-sources-page.new.title") }}
     </h2>
     <i18n path="external-sources-page.new.content" tag="p">
       <template #issue>
         <VLink
           aria-label="issue"
           href="https://github.com/WordPress/openverse-catalog/issues/new?assignees=&labels=%F0%9F%9A%A6+status%3A+awaiting+triage%2C%F0%9F%A7%B9+status%3A+ticket+work+required%2C%E2%98%81%EF%B8%8F+provider%3A+any&template=new_source_suggestion.yml&title=%3CSource+name+here%3E"
-          >{{ $t('external-sources-page.new.issue') }}</VLink
+          >{{ $t("external-sources-page.new.issue") }}</VLink
         >
       </template>
       <template #email>
         <VLink aria-label="email" href="mailto:openverse@wordpress.org">{{
-          $t('external-sources-page.new.email')
+          $t("external-sources-page.new.email")
         }}</VLink>
       </template>
     </i18n>
     <h2>
-      {{ $t('external-sources-page.why.title') }}
+      {{ $t("external-sources-page.why.title") }}
     </h2>
     <i18n path="external-sources-page.why.content" tag="p">
       <template #old>
         <VLink
           aria-label="email"
           href="https://oldsearch.creativecommons.org"
-          >{{ $t('external-sources-page.why.old') }}</VLink
+          >{{ $t("external-sources-page.why.old") }}</VLink
         >
       </template>
     </i18n>
 
     <p>
-      {{ $t('external-sources-page.why.new', { openverse: 'Openverse' }) }}
+      {{ $t("external-sources-page.why.new", { openverse: "Openverse" }) }}
     </p>
     <i18n path="external-sources-page.why.feedback-suggestions" tag="p">
       <template #feedback>
         <VLink
           :aria-label="$t('external-sources-page.why.aria-label')"
           href="/feedback"
-          >{{ $t('external-sources-page.why.feedback-link') }}</VLink
+          >{{ $t("external-sources-page.why.feedback-link") }}</VLink
         >
       </template>
     </i18n>
   </VContentPage>
 </template>
 <script lang="ts">
-import { defineComponent, useMeta } from '@nuxtjs/composition-api'
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
-import { useFeatureFlagStore } from '~/stores/feature-flag'
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-import { useI18n } from '~/composables/use-i18n'
+import { useI18n } from "~/composables/use-i18n"
 
-import VContentPage from '~/components/VContentPage.vue'
-import VLink from '~/components/VLink.vue'
+import VContentPage from "~/components/VContentPage.vue"
+import VLink from "~/components/VLink.vue"
 
 export default defineComponent({
-  name: 'ExternalSourcesPage',
+  name: "ExternalSourcesPage",
   components: { VContentPage, VLink },
   setup() {
     const i18n = useI18n()
     const featureFlagStore = useFeatureFlagStore()
 
     useMeta({
-      title: `${i18n.t('external-sources-page.title')} | Openverse`,
-      meta: featureFlagStore.isOn('new_header')
-        ? [{ hid: 'robots', name: 'robots', content: 'all' }]
+      title: `${i18n.t("external-sources-page.title")} | Openverse`,
+      meta: featureFlagStore.isOn("new_header")
+        ? [{ hid: "robots", name: "robots", content: "all" }]
         : undefined,
     })
   },

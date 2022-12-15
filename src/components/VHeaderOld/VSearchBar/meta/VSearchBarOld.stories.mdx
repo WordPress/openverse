@@ -4,18 +4,18 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
-import VSearchBarOld from '~/components/VHeaderOld/VSearchBar/VSearchBarOld.vue'
+} from "@storybook/addon-docs"
+import VSearchBarOld from "~/components/VHeaderOld/VSearchBar/VSearchBarOld.vue"
 
 <Meta
   title="Components/VHeaderOld/Search bar"
   component={VSearchBarOld}
   argTypes={{
     input: {
-      action: 'input',
+      action: "input",
     },
     submit: {
-      action: 'submit',
+      action: "submit",
     },
   }}
 />
@@ -45,8 +45,8 @@ button is clicked.
   <Story
     name="Default"
     args={{
-      value: 'Search query',
-      size: 'medium',
+      value: "Search query",
+      size: "medium",
     }}
   >
     {Template.bind({})}
@@ -68,7 +68,7 @@ export const vModelTemplate = () => ({
   components: { VSearchBarOld },
   data() {
     return {
-      text: 'Hello, World!',
+      text: "Hello, World!",
     }
   },
 })
@@ -77,16 +77,17 @@ export const vModelTemplate = () => ({
   <Story name="v-model">{vModelTemplate.bind({})}</Story>
 </Canvas>
 
-The `VSearchBarOld` component passes all attributes down to the inner `InputField`
-which itself applies all its attributes to its inner `<input>` element. So it's
-easy `<input>` attributes like placeholders or HTML validations.
+The `VSearchBarOld` component passes all attributes down to the inner
+`InputField` which itself applies all its attributes to its inner `<input>`
+element. So it's easy `<input>` attributes like placeholders or HTML
+validations.
 
 <Canvas>
   <Story
     name="With placeholder"
     args={{
-      placeholder: 'Search query',
-      size: 'large',
+      placeholder: "Search query",
+      size: "large",
     }}
   >
     {Template.bind({})}

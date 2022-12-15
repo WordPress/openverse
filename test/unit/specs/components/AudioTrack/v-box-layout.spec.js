@@ -1,25 +1,25 @@
-import { render } from '@testing-library/vue'
-import Vuei18n from 'vue-i18n'
-import { createLocalVue } from '@vue/test-utils'
+import { render } from "@testing-library/vue"
+import Vuei18n from "vue-i18n"
+import { createLocalVue } from "@vue/test-utils"
 
-import { getAudioObj } from '~~/test/unit/fixtures/audio'
+import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
-import VBoxLayout from '~/components/VAudioTrack/layouts/VBoxLayout.vue'
+import VBoxLayout from "~/components/VAudioTrack/layouts/VBoxLayout.vue"
 
-const enMessages = require('~/locales/en.json')
+const enMessages = require("~/locales/en.json")
 
 const i18n = new Vuei18n({
-  locale: 'en',
-  fallbackLocale: 'en',
+  locale: "en",
+  fallbackLocale: "en",
   messages: { en: enMessages },
 })
 
-describe('VBoxLayout', () => {
+describe("VBoxLayout", () => {
   let options = null
   let localVue
   let props = {
     audio: getAudioObj(),
-    size: 'm',
+    size: "m",
   }
 
   beforeEach(() => {
@@ -33,18 +33,18 @@ describe('VBoxLayout', () => {
     }
   })
 
-  it('renders audio title, license and category in v-box-layout', () => {
-    props.audio.category = 'music'
+  it("renders audio title, license and category in v-box-layout", () => {
+    props.audio.category = "music"
     const screen = render(VBoxLayout, options)
     screen.getByText(props.audio.title)
-    screen.getByLabelText('Attribution-NonCommercial-Share-Alike')
-    screen.getByText('Music')
+    screen.getByLabelText("Attribution-NonCommercial-Share-Alike")
+    screen.getByText("Music")
   })
 
-  it('should not render category string if category is null', () => {
+  it("should not render category string if category is null", () => {
     props.audio.category = null
     const screen = render(VBoxLayout, options)
-    const categoryLabel = screen.queryByText('Music')
+    const categoryLabel = screen.queryByText("Music")
     expect(categoryLabel).toBeNull()
   })
 })

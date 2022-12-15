@@ -20,23 +20,23 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, useRoute } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useRoute } from "@nuxtjs/composition-api"
 
-import { AUDIO } from '~/constants/media'
-import type { AudioDetail } from '~/types/media'
-import { useRelatedMediaStore } from '~/stores/media/related-media'
-import { useSingleResultStore } from '~/stores/media/single-result'
-import { useFeatureFlagStore } from '~/stores/feature-flag'
-import { createDetailPageMeta } from '~/utils/og'
+import { AUDIO } from "~/constants/media"
+import type { AudioDetail } from "~/types/media"
+import { useRelatedMediaStore } from "~/stores/media/related-media"
+import { useSingleResultStore } from "~/stores/media/single-result"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { createDetailPageMeta } from "~/utils/og"
 
-import VAudioDetails from '~/components/VAudioDetails/VAudioDetails.vue'
-import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
-import VBackToSearchResultsLink from '~/components/VBackToSearchResultsLink.vue'
-import VRelatedAudio from '~/components/VAudioDetails/VRelatedAudio.vue'
-import VMediaReuse from '~/components/VMediaInfo/VMediaReuse.vue'
+import VAudioDetails from "~/components/VAudioDetails/VAudioDetails.vue"
+import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
+import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
+import VRelatedAudio from "~/components/VAudioDetails/VRelatedAudio.vue"
+import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 
 export default defineComponent({
-  name: 'AudioDetailPage',
+  name: "AudioDetailPage",
   components: {
     VAudioDetails,
     VAudioTrack,
@@ -45,7 +45,7 @@ export default defineComponent({
     VRelatedAudio,
   },
   beforeRouteEnter(to, from, next) {
-    if (from.path.includes('/search/')) {
+    if (from.path.includes("/search/")) {
       to.meta.backToSearchPath = from.fullPath
     }
     next()
@@ -57,7 +57,7 @@ export default defineComponent({
 
     const featureFlagStore = useFeatureFlagStore()
     const isNewHeaderEnabled = computed(() =>
-      featureFlagStore.isOn('new_header')
+      featureFlagStore.isOn("new_header")
     )
 
     const audio = computed(() =>
@@ -86,7 +86,7 @@ export default defineComponent({
     } catch (err) {
       error({
         statusCode: 404,
-        message: app.i18n.t('error.media-not-found', {
+        message: app.i18n.t("error.media-not-found", {
           mediaType: AUDIO,
           id: route.params.id,
         }),

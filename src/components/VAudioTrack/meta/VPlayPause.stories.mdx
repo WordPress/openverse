@@ -4,26 +4,26 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
+import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
 
 <Meta
   title="Components/Audio track/Play-pause toggle"
   components={VPlayPause}
   argTypes={{
     status: {
-      options: ['playing', 'paused', 'played'],
-      defaultValue: 'paused',
-      control: 'select',
+      options: ["playing", "paused", "played"],
+      defaultValue: "paused",
+      control: "select",
     },
     size: {
-      defaultValue: 'medium',
-      options: ['tiny', 'small', 'medium', 'extra-large'],
-      control: 'select',
+      defaultValue: "medium",
+      options: ["tiny", "small", "medium", "extra-large"],
+      control: "select",
     },
     toggle: {
-      action: 'toggle',
+      action: "toggle",
     },
   }}
 />
@@ -47,16 +47,15 @@ value of its `status` state.
 
 ## Size
 
-The button dimensions can be set by passing the
-`size` prop (see
+The button dimensions can be set by passing the `size` prop (see
 [`VIconButton` docs](?path=/docs/components-viconbutton--default-story)).
 
 <Canvas>
   <Story
     name="Default"
     args={{
-      status: 'playing',
-      size: 'large',
+      status: "playing",
+      size: "large",
     }}
   >
     {Template.bind({})}
@@ -82,7 +81,7 @@ export const vModelTemplate = () => ({
   components: { VPlayPause },
   data() {
     return {
-      status: 'played',
+      status: "played",
     }
   },
 })

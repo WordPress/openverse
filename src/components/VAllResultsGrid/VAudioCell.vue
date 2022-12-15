@@ -3,11 +3,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { AudioDetail } from '~/types/media'
+import type { AudioDetail } from "~/types/media"
 
-import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
+import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 
 export default defineComponent({
   components: { VAudioTrack },

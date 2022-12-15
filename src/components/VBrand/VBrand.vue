@@ -11,17 +11,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import OpenverseLogo from '~/assets/logo.svg?inline'
-import OpenverseBrand from '~/assets/brand.svg?inline'
+import OpenverseLogo from "~/assets/logo.svg?inline"
+import OpenverseBrand from "~/assets/brand.svg?inline"
 
 /**
  * Render the openverse logo and wordmark next to each other, while being
  * accessible to screen-readers.
  */
 export default defineComponent({
-  name: 'VBrand',
+  name: "VBrand",
   components: {
     OpenverseLogo,
     OpenverseBrand,
@@ -34,7 +34,7 @@ export default defineComponent({
     srText: {
       type: String,
       required: false,
-      default: 'Openverse',
+      default: "Openverse",
     },
   },
 })

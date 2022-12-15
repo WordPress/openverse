@@ -36,17 +36,17 @@
   </VItemGroup>
 </template>
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { SearchType } from '~/constants/media'
-import useSearchType from '~/composables/use-search-type'
-import { defineEvent } from '~/types/emits'
+import type { SearchType } from "~/constants/media"
+import useSearchType from "~/composables/use-search-type"
+import { defineEvent } from "~/types/emits"
 
-import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
-import VSearchTypeItemOld from '~/components/VContentSwitcherOld/VSearchTypeItemOld.vue'
+import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
+import VSearchTypeItemOld from "~/components/VContentSwitcherOld/VSearchTypeItemOld.vue"
 
 export default defineComponent({
-  name: 'VSearchTypesOld',
+  name: "VSearchTypesOld",
   components: { VItemGroup, VSearchTypeItemOld },
   props: {
     /**
@@ -54,8 +54,8 @@ export default defineComponent({
      * 'medium' size for larger screens.
      */
     size: {
-      type: String as PropType<'small' | 'medium'>,
-      default: 'small',
+      type: String as PropType<"small" | "medium">,
+      default: "small",
     },
     activeItem: {
       type: String as PropType<SearchType>,
@@ -75,14 +75,14 @@ export default defineComponent({
     const contentTypeGroups = computed(() => {
       const base = [
         {
-          heading: 'heading',
+          heading: "heading",
           items: content.types,
         },
       ]
 
       if (content.additionalTypes.value.length && props.useLinks) {
         base.push({
-          heading: 'additional',
+          heading: "additional",
           items: content.additionalTypes.value,
         })
       }
@@ -90,9 +90,9 @@ export default defineComponent({
       return base
     })
 
-    const bordered = computed(() => props.size === 'small')
+    const bordered = computed(() => props.size === "small")
     const handleClick = (item) => {
-      emit('select', item)
+      emit("select", item)
     }
     return {
       content,

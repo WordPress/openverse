@@ -1,13 +1,13 @@
-import { sendWindowMessage } from '~/utils/send-message'
+import { sendWindowMessage } from "~/utils/send-message"
 
-import { useNavigationStore } from '~/stores/navigation'
-import { useProviderStore } from '~/stores/provider'
-import { useFeatureFlagStore } from '~/stores/feature-flag'
-import { useUiStore } from '~/stores/ui'
+import { useNavigationStore } from "~/stores/navigation"
+import { useProviderStore } from "~/stores/provider"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useUiStore } from "~/stores/ui"
 
-import { cookieOptions } from '~/utils/cookies'
+import { cookieOptions } from "~/utils/cookies"
 
-import type { Context, Middleware } from '@nuxt/types'
+import type { Context, Middleware } from "@nuxt/types"
 
 /**
  * In embedded mode, the app sends its url
@@ -33,12 +33,12 @@ const middleware: Middleware = async ({
 
   const navigationStore = useNavigationStore($pinia)
 
-  if ('embedded' in query) {
-    navigationStore.setIsEmbedded(query.embedded === 'true')
+  if ("embedded" in query) {
+    navigationStore.setIsEmbedded(query.embedded === "true")
   }
   if (process.client) {
     sendWindowMessage({
-      type: 'urlChange',
+      type: "urlChange",
       value: { path: route.fullPath, title: document.title },
     })
   }
@@ -54,18 +54,18 @@ const middleware: Middleware = async ({
   /* Feature flag store */
 
   const featureFlagStore = useFeatureFlagStore($pinia)
-  featureFlagStore.initFromCookies($cookies.get('features') ?? {})
+  featureFlagStore.initFromCookies($cookies.get("features") ?? {})
   featureFlagStore.initFromQuery(query)
 
   /* UI store */
 
   const uiStore = useUiStore($pinia)
   const isMobileUa = $ua ? $ua.isMobile : false
-  const sameSite = featureFlagStore.isOn('new_header')
+  const sameSite = featureFlagStore.isOn("new_header")
     ? cookieOptions.sameSite
-    : 'none'
+    : "none"
 
-  $cookies.set('uiIsMobileUa', isMobileUa, { ...cookieOptions, sameSite })
+  $cookies.set("uiIsMobileUa", isMobileUa, { ...cookieOptions, sameSite })
   uiStore.initFromCookies($cookies.getAll() ?? {})
 }
 export default middleware

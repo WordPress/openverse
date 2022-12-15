@@ -12,9 +12,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import { isTest } from '~/utils/node-env'
+import { isTest } from "~/utils/node-env"
 
 export type IconPath = string
 export type IconProps = {
@@ -29,14 +29,14 @@ export type IconProps = {
  * Displays the given icon in a 24px × 24px square.
  */
 export default defineComponent({
-  name: 'VIcon',
+  name: "VIcon",
   props: {
     /**
      *
      */
     viewBox: {
       type: String,
-      default: '0 0 24 24',
+      default: "0 0 24 24",
     },
     /**
      * the path to the icon SVG; In a bundled application like Openverse,
@@ -55,7 +55,7 @@ export default defineComponent({
      */
     gId: {
       type: String,
-      default: 'icon',
+      default: "icon",
     },
     /**
      * The size of the icon based on tailwind values. Possible values:
@@ -81,7 +81,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-[dir='rtl'] .v-icon.rtl-flip {
+[dir="rtl"] .v-icon.rtl-flip {
   @apply -scale-x-100 transform;
 }
 </style>

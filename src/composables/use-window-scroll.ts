@@ -1,9 +1,9 @@
 // code taken from Vueuse
-import { throttle } from 'throttle-debounce'
-import { ref } from '@nuxtjs/composition-api'
+import { throttle } from "throttle-debounce"
+import { ref } from "@nuxtjs/composition-api"
 
-import { defaultWindow } from '~/constants/window'
-import { useEventListener } from '~/composables/use-event-listener'
+import { defaultWindow } from "~/constants/window"
+import { useEventListener } from "~/composables/use-event-listener"
 
 /**
  * Whether the page has been scrolled down at all.
@@ -53,7 +53,7 @@ export function useWindowScroll({
     ? throttle(throttleMs, scrollHandler)
     : scrollHandler
 
-  useEventListener(window, 'scroll', handler, {
+  useEventListener(window, "scroll", handler, {
     capture: false,
     passive: true,
   })

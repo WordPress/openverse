@@ -1,10 +1,10 @@
-import { useFocusOnShow } from '~/composables/use-focus-on-show'
-import { useFocusOnHide } from '~/composables/use-focus-on-hide'
-import { useHideOnClickOutside } from '~/composables/use-hide-on-click-outside'
-import { useFocusOnBlur } from '~/composables/use-focus-on-blur'
+import { useFocusOnShow } from "~/composables/use-focus-on-show"
+import { useFocusOnHide } from "~/composables/use-focus-on-hide"
+import { useHideOnClickOutside } from "~/composables/use-hide-on-click-outside"
+import { useFocusOnBlur } from "~/composables/use-focus-on-blur"
 
-import type { Ref } from '@nuxtjs/composition-api'
-import type { SetupContext } from 'vue'
+import type { Ref } from "@nuxtjs/composition-api"
+import type { SetupContext } from "vue"
 
 type Props = {
   dialogRef: Ref<HTMLElement | null>
@@ -17,7 +17,7 @@ type Props = {
   hideOnEscRef: Ref<boolean>
   initialFocusElementRef?: Ref<HTMLElement | null>
   hideRef: Ref<() => void>
-  emit: SetupContext['emit']
+  emit: SetupContext["emit"]
 }
 
 export function useDialogContent({ emit, ...props }: Props) {
@@ -41,10 +41,10 @@ export function useDialogContent({ emit, ...props }: Props) {
   })
 
   const onKeyDown = (event: KeyboardEvent) => {
-    emit('keydown', event)
+    emit("keydown", event)
 
     if (event.defaultPrevented) return
-    if (event.key !== 'Escape') return
+    if (event.key !== "Escape") return
     if (!props.hideOnEscRef.value) return
 
     event.stopPropagation()
@@ -52,7 +52,7 @@ export function useDialogContent({ emit, ...props }: Props) {
   }
 
   const onBlur = (event: FocusEvent) => {
-    emit('blur', event)
+    emit("blur", event)
     focusOnBlur(event)
   }
 

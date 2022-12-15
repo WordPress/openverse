@@ -1,5 +1,5 @@
-import type { FeatureState, FlagStatus } from '~/constants/feature-flag'
-import type { DeployEnv } from '~/constants/deploy-env'
+import type { FeatureState, FlagStatus } from "~/constants/feature-flag"
+import type { DeployEnv } from "~/constants/deploy-env"
 
 export interface FeatureFlag {
   status: FlagStatus | Record<DeployEnv, FlagStatus>

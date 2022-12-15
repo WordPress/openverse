@@ -27,14 +27,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, computed, PropType } from "@nuxtjs/composition-api"
 
-import { defineEvent } from '~/types/emits'
-import { ProperlyExtractPropTypes } from '~/types/prop-extraction'
+import { defineEvent } from "~/types/emits"
+import { ProperlyExtractPropTypes } from "~/types/prop-extraction"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
 
-import caretDownIcon from '~/assets/icons/caret-down.svg'
+import caretDownIcon from "~/assets/icons/caret-down.svg"
 
 /**
  * Represents a singular valid option of the dropdown.
@@ -47,24 +47,24 @@ export interface Choice {
 }
 
 export type SelectFieldProps = ProperlyExtractPropTypes<
-  NonNullable<typeof VSelectField['props']>
+  NonNullable<typeof VSelectField["props"]>
 >
 
 /**
  * This field present many viable choices of which any one may be selected.
  */
 const VSelectField = defineComponent({
-  name: 'VSelectField',
+  name: "VSelectField",
   components: { VIcon },
   inheritAttrs: false,
   model: {
-    prop: 'modelValue',
-    event: 'update:modelValue',
+    prop: "modelValue",
+    event: "update:modelValue",
   },
   props: {
     modelValue: {
       type: String,
-      default: '',
+      default: "",
     },
     /**
      * the text to associate with the blank value option; Skipping this prop
@@ -100,14 +100,14 @@ const VSelectField = defineComponent({
   },
   // using non-native event name to ensure the two are not mixed
   emits: {
-    'update:modelValue': defineEvent<[string]>(),
+    "update:modelValue": defineEvent<[string]>(),
   },
   setup(props, { emit, attrs, slots }) {
-    const fieldName = computed(() => attrs['name'] ?? props.fieldId)
+    const fieldName = computed(() => attrs["name"] ?? props.fieldId)
     const modelMedium = computed<string>({
-      get: () => props.modelValue ?? '',
+      get: () => props.modelValue ?? "",
       set: (value: string) => {
-        emit('update:modelValue', value)
+        emit("update:modelValue", value)
       },
     })
 

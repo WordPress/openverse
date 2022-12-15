@@ -14,9 +14,9 @@
  * ```
  */
 
-const { getParsedVueFiles } = require('./parse-vue-files')
+const { getParsedVueFiles } = require("./parse-vue-files")
 
-const PARSED_VUE_FILES = getParsedVueFiles('**/*.?(js|vue)')
+const PARSED_VUE_FILES = getParsedVueFiles("**/*.?(js|vue)")
 
 /** @param str {string} */
 const escapeQuotes = (str) => str.replace(/"/g, '\\"')
@@ -26,7 +26,7 @@ const containsCurlyWord = (str) => /\{[a-zA-Z-]*}/.test(str)
 
 /** @param str {string} */
 const checkStringForVars = (str) =>
-  containsCurlyWord(str) ? '#. Do not translate words between ### ###.' : ''
+  containsCurlyWord(str) ? "#. Do not translate words between ### ###." : ""
 
 /**
  * For GlotPress to display warning when the translators miss the placeholders
@@ -64,7 +64,7 @@ const getRefComments = (keyPath) =>
   )
 
 const pot_creation_date = () =>
-  `${new Date().toISOString().split('.')[0]}+00:00`
+  `${new Date().toISOString().split(".")[0]}+00:00`
 
 const POT_FILE_META = `# Copyright (C) 2021
 # This file is distributed under the same license as Openverse.
@@ -103,7 +103,7 @@ const getComment = (entry) => {
   let refComments = getRefComments(entry.lineage)
   if (refComments.length) comment.push(...refComments)
 
-  return comment.map((item) => `${item}`).join('\n')
+  return comment.map((item) => `${item}`).join("\n")
 }
 
 /**
@@ -116,7 +116,7 @@ const getComment = (entry) => {
 const toPot = (entry) => {
   if (!entry.value) {
     // string-object type mapping
-    return entry.children.map((child) => toPot(child)).join('\n\n')
+    return entry.children.map((child) => toPot(child)).join("\n\n")
   }
 
   // string-string type mapping
@@ -124,8 +124,8 @@ const toPot = (entry) => {
   let comment = getComment(entry)
   if (comment) poEntry.push(comment)
   poEntry.push(`msgctxt "${entry.lineage}"`)
-  if (entry.value.includes('|') && /(count|time)/i.test(entry.value)) {
-    const pluralizedValues = entry.value.split('|')
+  if (entry.value.includes("|") && /(count|time)/i.test(entry.value)) {
+    const pluralizedValues = entry.value.split("|")
     if (pluralizedValues.length === 1) {
       pluralizedValues.push(pluralizedValues[0])
     }
@@ -138,7 +138,7 @@ const toPot = (entry) => {
   } else {
     poEntry.push(`msgid "${processValue(entry.value)}"`, 'msgstr ""')
   }
-  return poEntry.join('\n')
+  return poEntry.join("\n")
 }
 
 /**
@@ -148,6 +148,6 @@ const toPot = (entry) => {
  * @param entry {import('./read-i18n').Entry} the root entry of the JSON file
  * @return {string} the text content of the Openverse POT file
  */
-const makePot = (entry) => [POT_FILE_META, toPot(entry)].join('\n')
+const makePot = (entry) => [POT_FILE_META, toPot(entry)].join("\n")
 
 module.exports = { replaceVarsPlaceholders, makePot }

@@ -3,11 +3,11 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
-import { PortalTarget } from 'portal-vue'
+import { defineComponent } from "@nuxtjs/composition-api"
+import { PortalTarget } from "portal-vue"
 
 export default defineComponent({
-  name: 'VModalTarget',
+  name: "VModalTarget",
   components: { PortalTarget },
 })
 </script>

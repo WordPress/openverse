@@ -1,7 +1,7 @@
-import { sendWindowMessage } from '~/utils/send-message'
-import { useNavigationStore } from '~/stores/navigation'
+import { sendWindowMessage } from "~/utils/send-message"
+import { useNavigationStore } from "~/stores/navigation"
 
-import type { Plugin } from '@nuxt/types'
+import type { Plugin } from "@nuxt/types"
 
 /**
  * In embedded mode, we need to notify the outer window of the current URL.
@@ -14,7 +14,7 @@ const urlChangePlugin: Plugin = ({ app, $pinia }): void => {
     const isEmbedded = useNavigationStore($pinia).isEmbedded
     if (process.client && isEmbedded && app.router) {
       sendWindowMessage({
-        type: 'urlChange',
+        type: "urlChange",
         value: {
           path: app.router.currentRoute.fullPath,
           title: document.title,

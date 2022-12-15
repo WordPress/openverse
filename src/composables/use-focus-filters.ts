@@ -1,5 +1,5 @@
-import { Focus, focusIn } from '~/utils/focus-management'
-import { useUiStore } from '~/stores/ui'
+import { Focus, focusIn } from "~/utils/focus-management"
+import { useUiStore } from "~/stores/ui"
 
 export const useFocusFilters = () => {
   const focusFilterSidebar = (event?: KeyboardEvent, focus = Focus.Last) => {
@@ -8,7 +8,7 @@ export const useFocusFilters = () => {
       if (event) event.preventDefault()
       // Prevent over-tabbing to the element after the target one
       // Cannot use refs when using portals (for sidebar)
-      const filtersSidebarElement = document.getElementById('filters')
+      const filtersSidebarElement = document.getElementById("filters")
       if (filtersSidebarElement) {
         focusIn(filtersSidebarElement, focus)
       }
@@ -18,7 +18,7 @@ export const useFocusFilters = () => {
     const uiStore = useUiStore()
     if (uiStore.isDesktopLayout && uiStore.isFilterVisible) {
       if (event) event.preventDefault()
-      const filterButton = document.getElementById('filter-button')
+      const filterButton = document.getElementById("filter-button")
       if (filterButton) {
         filterButton.focus()
       }

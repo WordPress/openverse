@@ -10,7 +10,7 @@
     >
       <!-- Left margin to align with the text of recent searches. -->
       <span class="category mx-2 my-1">
-        {{ $t('recent-searches.heading') }}
+        {{ $t("recent-searches.heading") }}
       </span>
       <VButton
         v-show="entries.length"
@@ -19,7 +19,7 @@
         :aria-label="$t('recent-searches.clear.label').toString()"
         @click="handleClear"
       >
-        {{ $t('recent-searches.clear.text') }}
+        {{ $t("recent-searches.clear.text") }}
       </VButton>
     </div>
 
@@ -46,28 +46,28 @@
       <!-- eslint-enable -->
     </ul>
     <span v-else class="description-regular mx-2 my-3">
-      {{ $t('recent-searches.none') }}
+      {{ $t("recent-searches.none") }}
     </span>
 
     <span class="caption-regular mx-2 my-3 text-dark-charcoal-70">
-      {{ $t('recent-searches.disclaimer') }}
+      {{ $t("recent-searches.disclaimer") }}
     </span>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from '@nuxtjs/composition-api'
+import { defineComponent, type PropType } from "@nuxtjs/composition-api"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
-import VButton from '~/components/VButton.vue'
+import VButton from "~/components/VButton.vue"
 
 /**
  * List the recent searches of the user allowing them to go back to a previous
  * search. These searches are saved locally and never shared with the server.
  */
 export default defineComponent({
-  name: 'VRecentSearches',
+  name: "VRecentSearches",
   components: { VButton },
   props: {
     /**
@@ -97,10 +97,10 @@ export default defineComponent({
   },
   setup(_, { emit }) {
     const handleClick = (idx: number) => {
-      emit('select', idx)
+      emit("select", idx)
     }
     const handleClear = () => {
-      emit('clear')
+      emit("clear")
     }
 
     return {

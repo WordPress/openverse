@@ -17,22 +17,22 @@ import {
   computed,
   defineComponent,
   type PropType,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
 import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
   type SupportedSearchType,
-} from '~/constants/media'
-import { defineEvent } from '~/types/emits'
+} from "~/constants/media"
+import { defineEvent } from "~/types/emits"
 
-import VButton from '~/components/VButton.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
 
-import audioIcon from '~/assets/icons/audio-wave.svg'
-import imageIcon from '~/assets/icons/image.svg'
-import allIcon from '~/assets/icons/all-content.svg'
+import audioIcon from "~/assets/icons/audio-wave.svg"
+import imageIcon from "~/assets/icons/image.svg"
+import allIcon from "~/assets/icons/all-content.svg"
 
 const iconMapping = {
   [AUDIO]: audioIcon,
@@ -40,13 +40,13 @@ const iconMapping = {
   [ALL_MEDIA]: allIcon,
 }
 const labelMapping = {
-  [AUDIO]: 'search-type.audio',
-  [IMAGE]: 'search-type.image',
-  [ALL_MEDIA]: 'search-type.all',
+  [AUDIO]: "search-type.audio",
+  [IMAGE]: "search-type.image",
+  [ALL_MEDIA]: "search-type.all",
 }
 
 export default defineComponent({
-  name: 'VSearchTypeRadio',
+  name: "VSearchTypeRadio",
   components: { VButton, VIcon },
   props: {
     /**
@@ -66,7 +66,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const iconPath = computed(() => iconMapping[props.searchType])
-    const handleClick = () => emit('select', props.searchType)
+    const handleClick = () => emit("select", props.searchType)
     return { iconPath, handleClick, labelMapping }
   },
 })

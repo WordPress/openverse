@@ -21,17 +21,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { License } from '~/constants/license'
-import { LICENSE_ICONS } from '~/constants/license'
-import { useUiStore } from '~/stores/ui'
-import { getElements } from '~/utils/license'
+import type { License } from "~/constants/license"
+import { LICENSE_ICONS } from "~/constants/license"
+import { useUiStore } from "~/stores/ui"
+import { getElements } from "~/utils/license"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
 
 export default defineComponent({
-  name: 'VLicenseElements',
+  name: "VLicenseElements",
   components: { VIcon },
   props: {
     /**
@@ -46,16 +46,16 @@ export default defineComponent({
      * the size of the icons and text
      */
     size: {
-      type: String as PropType<'big' | 'small'>,
-      default: 'big',
+      type: String as PropType<"big" | "small">,
+      default: "big",
     },
   },
   setup(props) {
     const elementNames = computed(() =>
-      getElements(props.license).filter((icon) => icon !== 'cc')
+      getElements(props.license).filter((icon) => icon !== "cc")
     )
 
-    const isSmall = computed(() => props.size === 'small')
+    const isSmall = computed(() => props.size === "small")
     const uiStore = useUiStore()
     const isMobile = computed(() => !uiStore.isDesktopLayout)
 

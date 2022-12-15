@@ -1,23 +1,23 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia"
 
-import axios from 'axios'
+import axios from "axios"
 
-import type { AudioDetail, ImageDetail, Media } from '~/types/media'
-import type { SupportedMediaType } from '~/constants/media'
-import type { FetchState } from '~/types/fetch-state'
-import { initServices } from '~/stores/media/services'
-import { useMediaStore } from '~/stores/media/index'
-import { useRelatedMediaStore } from '~/stores/media/related-media'
-import { useProviderStore } from '~/stores/provider'
+import type { AudioDetail, ImageDetail, Media } from "~/types/media"
+import type { SupportedMediaType } from "~/constants/media"
+import type { FetchState } from "~/types/fetch-state"
+import { initServices } from "~/stores/media/services"
+import { useMediaStore } from "~/stores/media/index"
+import { useRelatedMediaStore } from "~/stores/media/related-media"
+import { useProviderStore } from "~/stores/provider"
 
 export type MediaItemState =
   | {
-      mediaType: 'audio'
+      mediaType: "audio"
       mediaItem: AudioDetail
       fetchState: FetchState
     }
   | {
-      mediaType: 'image'
+      mediaType: "image"
       mediaItem: ImageDetail
       fetchState: FetchState
     }
@@ -27,7 +27,7 @@ export type MediaItemState =
       fetchState: FetchState
     }
 
-export const useSingleResultStore = defineStore('single-result', {
+export const useSingleResultStore = defineStore("single-result", {
   state: (): MediaItemState => ({
     mediaItem: null,
     mediaType: null,
@@ -45,8 +45,8 @@ export const useSingleResultStore = defineStore('single-result', {
       this.fetchState.fetchingError = null
     },
 
-    _updateFetchState(action: 'start' | 'end', option?: string) {
-      action === 'start' ? this._startFetching() : this._endFetching(option)
+    _updateFetchState(action: "start" | "end", option?: string) {
+      action === "start" ? this._startFetching() : this._endFetching(option)
     },
 
     _addProviderName(mediaItem: Media) {
@@ -94,13 +94,13 @@ export const useSingleResultStore = defineStore('single-result', {
         try {
           await useRelatedMediaStore().fetchMedia(type, id)
         } catch (error) {
-          console.warn('Could not load related media: ', error)
+          console.warn("Could not load related media: ", error)
         }
       } else {
         useRelatedMediaStore()
           .fetchMedia(type, id)
           .catch((error) =>
-            console.warn('Could not load related media: ', error)
+            console.warn("Could not load related media: ", error)
           )
       }
     },
@@ -112,13 +112,13 @@ export const useSingleResultStore = defineStore('single-result', {
      */
     async fetchMediaItem(type: SupportedMediaType, id: string) {
       try {
-        this._updateFetchState('start')
+        this._updateFetchState("start")
         const accessToken = this.$nuxt.$openverseApiToken
         const service = initServices[type](accessToken)
         this.mediaItem = this._addProviderName(await service.getMediaDetail(id))
         this.mediaType = type
 
-        this._updateFetchState('end')
+        this._updateFetchState("end")
       } catch (error: unknown) {
         this.mediaItem = null
         this.mediaType = type
@@ -138,16 +138,16 @@ export const useSingleResultStore = defineStore('single-result', {
       if (axios.isAxiosError(error)) {
         errorMessage =
           error.response?.status === 500
-            ? 'There was a problem with our servers'
+            ? "There was a problem with our servers"
             : `Request failed with status ${
-                error.response?.status ?? 'unknown'
+                error.response?.status ?? "unknown"
               }`
       } else {
         errorMessage =
-          error instanceof Error ? error.message : 'Oops! Something went wrong'
+          error instanceof Error ? error.message : "Oops! Something went wrong"
       }
 
-      this._updateFetchState('end', errorMessage)
+      this._updateFetchState("end", errorMessage)
       throw new Error(errorMessage)
     },
   },

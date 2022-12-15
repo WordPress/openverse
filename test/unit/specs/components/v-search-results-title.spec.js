@@ -1,20 +1,20 @@
-import { render, screen } from '@testing-library/vue'
+import { render, screen } from "@testing-library/vue"
 
-import VSearchResultsTitle from '~/components/VSearchResultsTitle.vue'
+import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
 
-describe('VSearchResultsTitle', () => {
+describe("VSearchResultsTitle", () => {
   let options = {
     props: {
-      size: 'large',
+      size: "large",
     },
     scopedSlots: {
-      default: () => 'zack',
+      default: () => "zack",
     },
   }
 
-  it('should render an h1 tag containing the correct text', async () => {
+  it("should render an h1 tag containing the correct text", async () => {
     render(VSearchResultsTitle, options)
-    const button = await screen.findByText('zack')
-    expect(button.tagName).toBe('H1')
+    const button = await screen.findByText("zack")
+    expect(button.tagName).toBe("H1")
   })
 })

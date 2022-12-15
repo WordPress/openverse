@@ -4,18 +4,18 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
-import VHeaderOld from '~/components/VHeaderOld/VHeaderOld.vue'
+} from "@storybook/addon-docs"
+import VHeaderOld from "~/components/VHeaderOld/VHeaderOld.vue"
 
 <Meta
   title="Components/VHeader/VHeader"
   component={VHeaderOld}
   argTypes={{
     input: {
-      action: 'input',
+      action: "input",
     },
     submit: {
-      action: 'submit',
+      action: "submit",
     },
   }}
 />
@@ -35,7 +35,8 @@ export const Template = (args) => ({
 
 <ArgsTable of={VHeaderOld} />
 
-The header component. Fixed on scroll, search bar, content switcher, pages menu and filters button.
+The header component. Fixed on scroll, search bar, content switcher, pages menu
+and filters button.
 
 <Canvas>
   <Story name="Default">{Template.bind({})}</Story>

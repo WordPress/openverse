@@ -4,27 +4,27 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
-import VFilterButton from '~/components/VHeader/VFilterButton.vue'
-import { useSearchStore } from '~/stores/search'
-import { filterData, mediaFilterKeys } from '~/constants/filters'
-import { IMAGE } from '~/constants/media'
+} from "@storybook/addon-docs"
+import VFilterButton from "~/components/VHeader/VFilterButton.vue"
+import { useSearchStore } from "~/stores/search"
+import { filterData, mediaFilterKeys } from "~/constants/filters"
+import { IMAGE } from "~/constants/media"
 
 <Meta
   title="Components/VHeader/VFilterButton"
   component={VFilterButton}
   argTypes={{
     pressed: {
-      type: 'boolean',
+      type: "boolean",
     },
     appliedFilters: {
-      type: 'number',
+      type: "number",
     },
     toggle: {
-      action: 'toggle',
+      action: "toggle",
     },
     tab: {
-      action: 'tab',
+      action: "tab",
     },
   }}
 />
@@ -66,17 +66,16 @@ export const Template = (args, { argTypes }) => ({
 
 <ArgsTable of={VFilterButton} />
 
-The button opens and closes the filters sidebar. It also shows how many filters are applied
-in the mobile view.
-the field receives an input. It also emits the `search` event when the search
-button is clicked.
+The button opens and closes the filters sidebar. It also shows how many filters
+are applied in the mobile view. the field receives an input. It also emits the
+`search` event when the search button is clicked.
 
 <Canvas>
   <Story
     name="Default"
     parameters={{
       viewport: {
-        defaultViewport: 'lg',
+        defaultViewport: "lg",
       },
     }}
   >
@@ -89,7 +88,7 @@ button is clicked.
     name="With text label"
     parameters={{
       viewport: {
-        defaultViewport: 'xl',
+        defaultViewport: "xl",
       },
     }}
   >

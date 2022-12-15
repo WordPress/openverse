@@ -4,6 +4,6 @@
 
 <script>
 export default {
-  name: 'VideoSearch',
+  name: "VideoSearch",
 }
 </script>

@@ -3,10 +3,10 @@ Updates the translation status of locales list from wp-locales-list,
 and saves lists of translated and untranslated locales with properties expected
 by Vue i18n.
  */
-const fs = require('fs')
+const fs = require("fs")
 
-const localesList = require('./wp-locales.json')
-const { addFetchedTranslationStatus } = require('./get-translations-status')
+const localesList = require("./wp-locales.json")
+const { addFetchedTranslationStatus } = require("./get-translations-status")
 
 /**
  * Returns a list of locale objects with at least one translated string
@@ -27,7 +27,7 @@ const getValidatedLocales = async () => {
     nativeName: locale.nativeName ?? locale.name,
     iso: locale.langCodeIso_639_1,
     wpLocale: locale.wpLocale,
-    dir: locale.textDirection || 'ltr',
+    dir: locale.textDirection || "ltr",
     translated: locale.translated,
     file: `${locale.slug}.json`,
   }))
@@ -44,15 +44,15 @@ const getValidatedLocales = async () => {
 
 try {
   getValidatedLocales().then((locales) => {
-    const fileName = 'valid-locales.json'
+    const fileName = "valid-locales.json"
     fs.writeFileSync(
       process.cwd() + `/src/locales/scripts/` + fileName,
-      JSON.stringify(locales.translated, null, 2) + '\n'
+      JSON.stringify(locales.translated, null, 2) + "\n"
     )
-    const untranslatedFileName = 'untranslated-locales.json'
+    const untranslatedFileName = "untranslated-locales.json"
     fs.writeFileSync(
       process.cwd() + `/src/locales/scripts/` + untranslatedFileName,
-      JSON.stringify(locales.untranslated, null, 2) + '\n'
+      JSON.stringify(locales.untranslated, null, 2) + "\n"
     )
     console.log(`> Wrote locale metadata for @nuxt/i18n.`)
   })

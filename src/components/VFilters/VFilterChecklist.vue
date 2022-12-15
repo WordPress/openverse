@@ -57,24 +57,24 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { useSearchStore } from '~/stores/search'
-import { useI18n } from '~/composables/use-i18n'
-import type { NonMatureFilterCategory, FilterItem } from '~/constants/filters'
-import { defineEvent } from '~/types/emits'
-import { getElements } from '~/utils/license'
+import { useSearchStore } from "~/stores/search"
+import { useI18n } from "~/composables/use-i18n"
+import type { NonMatureFilterCategory, FilterItem } from "~/constants/filters"
+import { defineEvent } from "~/types/emits"
+import { getElements } from "~/utils/license"
 
-import VLicenseExplanation from '~/components/VFilters/VLicenseExplanation.vue'
-import VCheckbox from '~/components/VCheckbox/VCheckbox.vue'
-import VLicense from '~/components/VLicense/VLicense.vue'
-import VButton from '~/components/VButton.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VIconButton from '~/components/VIconButton/VIconButton.vue'
-import VPopover from '~/components/VPopover/VPopover.vue'
+import VLicenseExplanation from "~/components/VFilters/VLicenseExplanation.vue"
+import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
+import VLicense from "~/components/VLicense/VLicense.vue"
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VPopover from "~/components/VPopover/VPopover.vue"
 
-import helpIcon from '~/assets/icons/help.svg'
-import closeSmallIcon from '~/assets/icons/close-small.svg'
+import helpIcon from "~/assets/icons/help.svg"
+import closeSmallIcon from "~/assets/icons/close-small.svg"
 
 type toggleFilterPayload = {
   filterType: NonMatureFilterCategory
@@ -82,7 +82,7 @@ type toggleFilterPayload = {
 }
 
 export default defineComponent({
-  name: 'FilterCheckList',
+  name: "FilterCheckList",
   components: {
     VCheckbox,
     VButton,
@@ -110,34 +110,34 @@ export default defineComponent({
     },
   },
   emits: {
-    'toggle-filter': defineEvent<[toggleFilterPayload]>(),
+    "toggle-filter": defineEvent<[toggleFilterPayload]>(),
   },
   setup(props, { emit }) {
     const i18n = useI18n()
     const itemName = computed(() => {
-      return props.filterType === 'searchBy'
-        ? i18n.t('filters.search-by.title')
+      return props.filterType === "searchBy"
+        ? i18n.t("filters.search-by.title")
         : props.title
     })
 
     const itemLabel = (item: FilterItem) =>
-      ['audioProviders', 'imageProviders'].indexOf(props.filterType) > -1
+      ["audioProviders", "imageProviders"].indexOf(props.filterType) > -1
         ? item.name
         : i18n.t(item.name)
 
     const onValueChange = ({ value }: { value: string }) => {
-      emit('toggle-filter', {
+      emit("toggle-filter", {
         code: value,
         filterType: props.filterType,
       })
     }
     const getLicenseExplanationCloseAria = (license) => {
-      const elements = getElements(license).filter((icon) => icon !== 'cc')
+      const elements = getElements(license).filter((icon) => icon !== "cc")
       const descriptions = elements
         .map((element) => i18n.t(`browse-page.license-description.${element}`))
-        .join(' ')
-      const close = i18n.t('modal.close-named', {
-        name: i18n.t('browse-page.aria.license-explanation'),
+        .join(" ")
+      const close = i18n.t("modal.close-named", {
+        name: i18n.t("browse-page.aria.license-explanation"),
       })
       return `${descriptions} - ${close}`
     }

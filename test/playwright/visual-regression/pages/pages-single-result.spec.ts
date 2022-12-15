@@ -1,18 +1,18 @@
-import { test } from '@playwright/test'
+import { test } from "@playwright/test"
 
-import { removeHiddenOverflow } from '~~/test/playwright/utils/page'
-import breakpoints from '~~/test/playwright/utils/breakpoints'
+import { removeHiddenOverflow } from "~~/test/playwright/utils/page"
+import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   enableNewHeader,
   goToSearchTerm,
   languageDirections,
   openFirstResult,
   setCookies,
-} from '~~/test/playwright/utils/navigation'
+} from "~~/test/playwright/utils/navigation"
 
-import { supportedMediaTypes } from '~/constants/media'
+import { supportedMediaTypes } from "~/constants/media"
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
 for (const mediaType of supportedMediaTypes) {
   for (const dir of languageDirections) {
@@ -23,9 +23,9 @@ for (const mediaType of supportedMediaTypes) {
           await setCookies(context, {
             uiBreakpoint: breakpoint,
             uiIsFilterDismissed: true,
-            uiDismissedBanners: ['translation-ar'],
+            uiDismissedBanners: ["translation-ar"],
           })
-          await goToSearchTerm(page, 'birds', { dir })
+          await goToSearchTerm(page, "birds", { dir })
         })
 
         test(`from search results`, async ({ page }) => {

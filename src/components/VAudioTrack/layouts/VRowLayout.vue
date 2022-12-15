@@ -45,7 +45,7 @@
             <i18n tag="span" path="audio-track.creator">
               <template #creator>{{ audio.creator }}</template> </i18n
             ><span v-show="isLarge" class="mx-2" aria-hidden="true">{{
-              $t('interpunct')
+              $t("interpunct")
             }}</span>
           </div>
 
@@ -55,14 +55,14 @@
                 class="inline-block rounded-sm bg-dark-charcoal-06 p-1 font-semibold text-dark-charcoal"
                 >{{ timeFmt(audio.duration || 0, true) }}</span
               ><span class="mx-2" aria-hidden="true">{{
-                $t('interpunct')
+                $t("interpunct")
               }}</span>
             </span>
 
             <span v-if="audio.category">
               <span>{{ $t(`filters.audio-categories.${audio.category}`) }}</span
               ><span class="mx-2" aria-hidden="true">{{
-                $t('interpunct')
+                $t("interpunct")
               }}</span>
             </span>
 
@@ -96,17 +96,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { timeFmt } from '~/utils/time-fmt'
-import type { AudioDetail } from '~/types/media'
-import type { AudioSize } from '~/constants/audio'
+import { timeFmt } from "~/utils/time-fmt"
+import type { AudioDetail } from "~/types/media"
+import type { AudioSize } from "~/constants/audio"
 
-import VAudioThumbnail from '~/components/VAudioThumbnail/VAudioThumbnail.vue'
-import VLicense from '~/components/VLicense/VLicense.vue'
+import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
+import VLicense from "~/components/VLicense/VLicense.vue"
 
 export default defineComponent({
-  name: 'VRowLayout',
+  name: "VRowLayout",
   components: {
     VAudioThumbnail,
     VLicense,
@@ -127,11 +127,11 @@ export default defineComponent({
       duration?: string
       seek?: string
     } = {}
-    const features = ['timestamps', 'duration', 'seek']
+    const features = ["timestamps", "duration", "seek"]
 
-    const isSmall = computed(() => props.size === 's')
-    const isMedium = computed(() => props.size === 'm')
-    const isLarge = computed(() => props.size === 'l')
+    const isSmall = computed(() => props.size === "s")
+    const isMedium = computed(() => props.size === "m")
+    const isLarge = computed(() => props.size === "l")
 
     return {
       timeFmt,
@@ -154,7 +154,7 @@ export default defineComponent({
 
 .row-track .waveform {
   @apply flex-grow;
-  --waveform-background-color: theme('colors.tx');
+  --waveform-background-color: theme("colors.tx");
 }
 
 .row-track .waveform {

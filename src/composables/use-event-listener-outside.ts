@@ -1,6 +1,6 @@
-import { Ref, ref, watch } from '@nuxtjs/composition-api'
+import { Ref, ref, watch } from "@nuxtjs/composition-api"
 
-import { contains, getDocument, isInDocument } from '~/utils/reakit-utils/dom'
+import { contains, getDocument, isInDocument } from "~/utils/reakit-utils/dom"
 
 interface Props {
   /**

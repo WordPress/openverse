@@ -52,7 +52,7 @@
           <span
             class="hidden text-dark-charcoal-70 lg:block"
             aria-hidden="true"
-            >{{ $t('interpunct') }}</span
+            >{{ $t("interpunct") }}</span
           >
 
           <div>{{ timeFmt(audio.duration || 0, true) }}</div>
@@ -65,7 +65,7 @@
         size="disabled"
         class="order-1 self-center px-6 py-3 text-sr font-semibold ms-auto md:px-6 md:py-4 md:text-2xl lg:order-2"
       >
-        {{ $t('audio-details.weblink') }}
+        {{ $t("audio-details.weblink") }}
         <VIcon
           :icon-path="externalIcon"
           :rtl-flip="true"
@@ -78,21 +78,21 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { AudioDetail } from '~/types/media'
-import { timeFmt } from '~/utils/time-fmt'
-import { AudioSize, AudioStatus, audioFeatures } from '~/constants/audio'
-import { useFeatureFlagStore } from '~/stores/feature-flag'
+import type { AudioDetail } from "~/types/media"
+import { timeFmt } from "~/utils/time-fmt"
+import { AudioSize, AudioStatus, audioFeatures } from "~/constants/audio"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-import VButton from '~/components/VButton.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VLink from '~/components/VLink.vue'
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VLink from "~/components/VLink.vue"
 
-import externalIcon from '~/assets/icons/external-link.svg'
+import externalIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
-  name: 'VFullLayout',
+  name: "VFullLayout",
   components: { VButton, VIcon, VLink },
   props: {
     audio: {
@@ -111,11 +111,11 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const isSmall = computed(() => props.size === 's')
+    const isSmall = computed(() => props.size === "s")
 
     const featureFlagStore = useFeatureFlagStore()
     const isNewHeaderEnabled = computed(() =>
-      featureFlagStore.isOn('new_header')
+      featureFlagStore.isOn("new_header")
     )
 
     return {
@@ -136,7 +136,7 @@ export default defineComponent({
 }
 
 .full-track.isNewHeaderEnabled .waveform {
-  --waveform-background-color: theme('colors.white');
+  --waveform-background-color: theme("colors.white");
 }
 
 .full-track .play-pause {

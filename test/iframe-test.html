@@ -30,7 +30,7 @@
     ></iframe>
     <!-- Scripts stolen from: https://github.com/WordPress/wordpress.org/blob/master/wordpress.org/public_html/wp-content/themes/pub/wporg-openverse/js -->
     <script>
-      const openverseSubpath = 'http://localhost:8443/'
+      const openverseSubpath = "http://localhost:8443/"
 
       /**
        * Update the height of the nested `iframe` to match the height of the nested
@@ -45,10 +45,10 @@
         if (height) {
           heightProp = `${height}px`
         } else {
-          heightProp = '100vh'
+          heightProp = "100vh"
         }
         document.documentElement.style.setProperty(
-          '--openverse-embed-height',
+          "--openverse-embed-height",
           heightProp
         )
       }
@@ -69,7 +69,7 @@
         const url = `${openverseSubpath}${path}` // openverseSubpath defined in `index.php`
 
         console.log(`Replacing state URL: ${url}`)
-        history.replaceState(value.state, value.title ?? 'Openverse', url)
+        history.replaceState(value.state, value.title ?? "Openverse", url)
 
         if (value.title) {
           console.log(`Setting document title: ${value.title}`)
@@ -82,7 +82,7 @@
        * not have a handler configured for them.
        */
       function logUnhandled() {
-        console.error('No handler configured for event received')
+        console.error("No handler configured for event received")
       }
 
       /**
@@ -103,7 +103,7 @@
         let handler
 
         switch (data.type) {
-          case 'urlChange':
+          case "urlChange":
             handler = updatePath
             break
           default:
@@ -112,7 +112,7 @@
         handler(data.value)
       }
 
-      window.addEventListener('message', handleIframeMessages)
+      window.addEventListener("message", handleIframeMessages)
     </script>
   </body>
 </html>

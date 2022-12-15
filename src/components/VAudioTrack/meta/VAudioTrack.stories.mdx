@@ -4,34 +4,34 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
-import { computed } from '@nuxtjs/composition-api'
+} from "@storybook/addon-docs"
+import { computed } from "@nuxtjs/composition-api"
 
-import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
+import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 
-import flacWaveform from './flac-waveform.json'
-import mp3Waveform from './mp3-waveform.json'
-import oggWaveform from './ogg-waveform.json'
-import wavWaveform from './wav-waveform.json'
+import flacWaveform from "./flac-waveform.json"
+import mp3Waveform from "./mp3-waveform.json"
+import oggWaveform from "./ogg-waveform.json"
+import wavWaveform from "./wav-waveform.json"
 
 <Meta
   title="Components/Audio track"
   component={VAudioTrack}
   argTypes={{
     format: {
-      defaultValue: 'mp3',
-      options: ['mp3', 'ogg', 'flac', 'wav'],
-      control: 'select',
+      defaultValue: "mp3",
+      options: ["mp3", "ogg", "flac", "wav"],
+      control: "select",
     },
     layout: {
-      defaultValue: 'full',
-      options: ['full', 'box', 'row', 'global'],
-      control: 'select',
+      defaultValue: "full",
+      options: ["full", "box", "row", "global"],
+      control: "select",
     },
     size: {
-      defaultValue: 'm',
-      options: ['s', 'm', 'l'],
-      control: 'select',
+      defaultValue: "m",
+      options: ["s", "m", "l"],
+      control: "select",
     },
     audio: {
       control: false,
@@ -41,41 +41,41 @@ import wavWaveform from './wav-waveform.json'
 
 export const commonAttrs = () => ({
   id: Math.floor(Math.random() * 1e9).toString(),
-  creator: 'Wolfgang Amadeus Mozart',
-  creator_url: 'https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart',
-  category: 'music',
+  creator: "Wolfgang Amadeus Mozart",
+  creator_url: "https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart",
+  category: "music",
   thumbnail:
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Croce-Mozart-Detail.jpg/370px-Croce-Mozart-Detail.jpg',
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Croce-Mozart-Detail.jpg/370px-Croce-Mozart-Detail.jpg",
 })
 
 export const formatExamples = {
   ogg: {
-    title: 'Eine kleine Nachtmusik - 1. Allegro',
-    url: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg',
+    title: "Eine kleine Nachtmusik - 1. Allegro",
+    url: "https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg",
     duration: 355e3,
     peaks: oggWaveform.points,
-    license: 'by-sa',
+    license: "by-sa",
   },
   mp3: {
     title: 'Serenade No. 10 "Grand Partita" - VII. Finale. Molto Allegro',
-    url: 'https://upload.wikimedia.org/wikipedia/commons/e/e1/Mozart%27s_Serenade_No._10_%22Grand_Partita%22_-_VII._Finale._Molto_Allegro_-_United_States_Marine_Band.mp3',
+    url: "https://upload.wikimedia.org/wikipedia/commons/e/e1/Mozart%27s_Serenade_No._10_%22Grand_Partita%22_-_VII._Finale._Molto_Allegro_-_United_States_Marine_Band.mp3",
     duration: 206e3,
     peaks: mp3Waveform.points,
-    license: 'pdm',
+    license: "pdm",
   },
   wav: {
-    title: 'Trio from Wind Serenade K. 388',
-    url: 'https://upload.wikimedia.org/wikipedia/commons/b/b3/Mozart_Trio_from_Wind_Serenade_K388.wav',
+    title: "Trio from Wind Serenade K. 388",
+    url: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Mozart_Trio_from_Wind_Serenade_K388.wav",
     duration: 33e3,
     peaks: wavWaveform.points,
-    license: 'pdm',
+    license: "pdm",
   },
   flac: {
     title: 'Piano Concerto No. 26 in D Major, KV 537 "Coronation", 1. Allegro',
-    url: 'https://upload.wikimedia.org/wikipedia/commons/1/17/Mozart%3B_Piano_Concerto_No._26_in_D_Major%2C_KV_537_%22Coronation%22%2C_1._Allegro.flac',
+    url: "https://upload.wikimedia.org/wikipedia/commons/1/17/Mozart%3B_Piano_Concerto_No._26_in_D_Major%2C_KV_537_%22Coronation%22%2C_1._Allegro.flac",
     duration: 808e3,
     peaks: flacWaveform.points,
-    license: 'pdm',
+    license: "pdm",
   },
 }
 
@@ -103,8 +103,8 @@ export const Template = (args) => ({
 
 ## Layouts
 
-The component can be rendered in a multiple different layouts, by
-specifying a `layout`. The layout can further be customised by the `size` prop.
+The component can be rendered in a multiple different layouts, by specifying a
+`layout`. The layout can further be customised by the `size` prop.
 
 ### Full (default)
 
@@ -131,10 +131,10 @@ specifying a `layout`. The layout can further be customised by the `size` prop.
     name="Full (small)"
     args={{
       // layout: 'full', (default)
-      size: 's',
+      size: "s",
     }}
     parameters={{
-      viewport: { defaultViewport: 'sm' },
+      viewport: { defaultViewport: "sm" },
     }}
   >
     {Template.bind({})}
@@ -149,8 +149,8 @@ specifying a `layout`. The layout can further be customised by the `size` prop.
   <Story
     name="Row (large)"
     args={{
-      layout: 'row',
-      size: 'l',
+      layout: "row",
+      size: "l",
     }}
   >
     {Template.bind({})}
@@ -163,7 +163,7 @@ specifying a `layout`. The layout can further be customised by the `size` prop.
   <Story
     name="Row (medium)"
     args={{
-      layout: 'row',
+      layout: "row",
       // size: 'm', (default)
     }}
   >
@@ -177,11 +177,11 @@ specifying a `layout`. The layout can further be customised by the `size` prop.
   <Story
     name="Row (small)"
     args={{
-      layout: 'row',
-      size: 's',
+      layout: "row",
+      size: "s",
     }}
     parameters={{
-      viewport: { defaultViewport: 'sm' },
+      viewport: { defaultViewport: "sm" },
     }}
   >
     {Template.bind({})}
@@ -199,8 +199,8 @@ dimension.
   <Story
     name="Box (large)"
     args={{
-      layout: 'box',
-      size: 'l',
+      layout: "box",
+      size: "l",
     }}
   >
     {Template.bind({})}
@@ -208,7 +208,7 @@ dimension.
   <Story
     name="Box (medium)"
     args={{
-      layout: 'box',
+      layout: "box",
       // size: 'm', (default)
     }}
   >
@@ -222,11 +222,11 @@ dimension.
   <Story
     name="Box (small)"
     args={{
-      layout: 'box',
-      size: 's',
+      layout: "box",
+      size: "s",
     }}
     parameters={{
-      viewport: { defaultViewport: 'sm' },
+      viewport: { defaultViewport: "sm" },
     }}
   >
     {Template.bind({})}
@@ -242,10 +242,10 @@ across pages when navigating.
   <Story
     name="Global"
     args={{
-      layout: 'global',
+      layout: "global",
     }}
     parameters={{
-      viewport: { defaultViewport: 'sm' },
+      viewport: { defaultViewport: "sm" },
     }}
   >
     {Template.bind({})}

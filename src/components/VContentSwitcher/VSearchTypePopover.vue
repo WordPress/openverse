@@ -23,16 +23,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { defineComponent, ref } from "@nuxtjs/composition-api"
 
-import VPopover from '~/components/VPopover/VPopover.vue'
-import VSearchTypeButton from '~/components/VContentSwitcher/VSearchTypeButton.vue'
-import VSearchTypes from '~/components/VContentSwitcher/VSearchTypes.vue'
+import VPopover from "~/components/VPopover/VPopover.vue"
+import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.vue"
+import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
 
-import checkIcon from '~/assets/icons/checkmark.svg'
+import checkIcon from "~/assets/icons/checkmark.svg"
 
 export default defineComponent({
-  name: 'VSearchTypePopover',
+  name: "VSearchTypePopover",
   components: {
     VPopover,
     VSearchTypeButton,

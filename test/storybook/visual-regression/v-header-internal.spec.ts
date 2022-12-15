@@ -1,17 +1,17 @@
-import { test } from '@playwright/test'
+import { test } from "@playwright/test"
 
-import breakpoints from '~~/test/playwright/utils/breakpoints'
-import { languageDirections } from '~~/test/playwright/utils/navigation'
+import breakpoints from "~~/test/playwright/utils/breakpoints"
+import { languageDirections } from "~~/test/playwright/utils/navigation"
 
-const headerSelector = '.main-header'
+const headerSelector = ".main-header"
 const defaultUrl =
-  '/iframe.html?id=components-vheader-vheaderinternal--default-story'
+  "/iframe.html?id=components-vheader-vheaderinternal--default-story"
 const pageUrl = (dir: typeof languageDirections[number]) =>
-  dir === 'ltr' ? defaultUrl : `${defaultUrl}&globals=languageDirection:rtl`
+  dir === "ltr" ? defaultUrl : `${defaultUrl}&globals=languageDirection:rtl`
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
-test.describe('VHeaderInternal', () => {
+test.describe("VHeaderInternal", () => {
   for (const dir of languageDirections) {
     breakpoints.describeEachDesktopWithMd(({ expectSnapshot }) => {
       test(`desktop-header-internal-${dir}`, async ({ page }) => {

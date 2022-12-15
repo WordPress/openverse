@@ -47,17 +47,17 @@ import {
   defineComponent,
   PropType,
   ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import type { MediaType } from '~/constants/media'
-import type { ApiQueryParams } from '~/utils/search-query-transform'
-import { getFocusableElements } from '~/utils/focus-management'
-import { defineEvent } from '~/types/emits'
+import type { MediaType } from "~/constants/media"
+import type { ApiQueryParams } from "~/utils/search-query-transform"
+import { getFocusableElements } from "~/utils/focus-management"
+import { defineEvent } from "~/types/emits"
 
-import VExternalSourceList from './VExternalSourceList.vue'
+import VExternalSourceList from "./VExternalSourceList.vue"
 
 export default defineComponent({
-  name: 'VExternalSearchForm',
+  name: "VExternalSearchForm",
   components: {
     VExternalSourceList,
   },
@@ -85,7 +85,7 @@ export default defineComponent({
 
     const handleTab = (event: KeyboardEvent) => {
       if (event.target === lastFocusableElement.value) {
-        emit('tab', event)
+        emit("tab", event)
       }
     }
     return {

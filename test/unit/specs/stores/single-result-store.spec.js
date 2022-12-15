@@ -1,16 +1,16 @@
-import { createPinia, setActivePinia } from '~~/test/unit/test-utils/pinia'
+import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 
-import { AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
-import { useMediaStore } from '~/stores/media'
-import { useSingleResultStore } from '~/stores/media/single-result'
+import { AUDIO, IMAGE, supportedMediaTypes } from "~/constants/media"
+import { useMediaStore } from "~/stores/media"
+import { useSingleResultStore } from "~/stores/media/single-result"
 
 const detailData = {
-  [AUDIO]: { title: 'audioDetails', id: 'audio1', frontendMediaType: AUDIO },
-  [IMAGE]: { title: 'imageDetails', id: 'image1', frontendMediaType: IMAGE },
+  [AUDIO]: { title: "audioDetails", id: "audio1", frontendMediaType: AUDIO },
+  [IMAGE]: { title: "imageDetails", id: "image1", frontendMediaType: IMAGE },
 }
-jest.mock('axios', () => ({
-  ...jest.requireActual('axios'),
-  isAxiosError: jest.fn((obj) => 'response' in obj),
+jest.mock("axios", () => ({
+  ...jest.requireActual("axios"),
+  isAxiosError: jest.fn((obj) => "response" in obj),
 }))
 
 const mockImplementation = (mediaType) => () =>
@@ -25,7 +25,7 @@ const mocks = {
   audio: mockGetMediaDetailAudio,
   image: mockGetMediaDetailImage,
 }
-jest.mock('~/stores/media/services', () => ({
+jest.mock("~/stores/media/services", () => ({
   initServices: {
     audio: () =>
       /** @type {import('~/data/services').MediaService} */ ({
@@ -38,9 +38,9 @@ jest.mock('~/stores/media/services', () => ({
   },
 }))
 
-describe('Media Item Store', () => {
-  describe('state', () => {
-    it('sets default state', () => {
+describe("Media Item Store", () => {
+  describe("state", () => {
+    it("sets default state", () => {
       setActivePinia(createPinia())
       const singleResultStore = useSingleResultStore()
       expect(singleResultStore.fetchState).toEqual({
@@ -53,7 +53,7 @@ describe('Media Item Store', () => {
     })
   })
 
-  describe('actions', () => {
+  describe("actions", () => {
     beforeEach(() => {
       setActivePinia(createPinia())
       useMediaStore()
@@ -64,16 +64,16 @@ describe('Media Item Store', () => {
     })
 
     it.each(supportedMediaTypes)(
-      'fetchMediaItem (%s) fetches a new media if none is found in the store',
+      "fetchMediaItem (%s) fetches a new media if none is found in the store",
       async (type) => {
         const singleResultStore = useSingleResultStore()
 
-        await singleResultStore.fetchMediaItem(type, 'foo')
+        await singleResultStore.fetchMediaItem(type, "foo")
         expect(singleResultStore.mediaItem).toEqual(detailData[type])
       }
     )
     it.each(supportedMediaTypes)(
-      'fetchMediaItem (%s) re-uses existing media from the store',
+      "fetchMediaItem (%s) re-uses existing media from the store",
       async (type) => {
         const singleResultStore = useSingleResultStore()
         const mediaStore = useMediaStore()
@@ -86,9 +86,9 @@ describe('Media Item Store', () => {
     )
 
     it.each(supportedMediaTypes)(
-      'fetchMediaItem throws not found error on request error',
+      "fetchMediaItem throws not found error on request error",
       async (type) => {
-        const expectedErrorMessage = 'error'
+        const expectedErrorMessage = "error"
 
         mocks[type].mockImplementationOnce(() =>
           Promise.reject(new Error(expectedErrorMessage))
@@ -97,19 +97,19 @@ describe('Media Item Store', () => {
         const singleResultStore = useSingleResultStore()
 
         await expect(() =>
-          singleResultStore.fetchMediaItem(type, 'foo')
+          singleResultStore.fetchMediaItem(type, "foo")
         ).rejects.toThrow(expectedErrorMessage)
       }
     )
 
     it.each(supportedMediaTypes)(
-      'fetchMediaItem on 404 sets fetchingError and throws a new error',
+      "fetchMediaItem on 404 sets fetchingError and throws a new error",
       async (type) => {
         mocks[type].mockImplementationOnce(() =>
           Promise.reject({ response: { status: 404 } })
         )
         const singleResultStore = useSingleResultStore()
-        const id = 'foo'
+        const id = "foo"
         await expect(() =>
           singleResultStore.fetchMediaItem(type, id)
         ).rejects.toThrow(`Media of type ${type} with id ${id} not found`)

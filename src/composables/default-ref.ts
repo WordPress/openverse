@@ -1,6 +1,6 @@
-import { computed, ref, UnwrapRef } from '@nuxtjs/composition-api'
+import { computed, ref, UnwrapRef } from "@nuxtjs/composition-api"
 
-const NotSet = Symbol('NotSet')
+const NotSet = Symbol("NotSet")
 
 /**
  * Produces a `computed` that returns a default value until

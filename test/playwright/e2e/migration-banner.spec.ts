@@ -1,54 +1,54 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from "@playwright/test"
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
-test.describe('migration banner', () => {
-  test('shows migration banner on homepage', async ({ page }) => {
-    await page.goto('/?referrer=creativecommons.org')
+test.describe("migration banner", () => {
+  test("shows migration banner on homepage", async ({ page }) => {
+    await page.goto("/?referrer=creativecommons.org")
 
     const migrationNotice = page.locator('[data-testid="banner-cc-referral"]')
-    const message = 'CC Search is now called Openverse'
+    const message = "CC Search is now called Openverse"
 
     await expect(migrationNotice).toContainText(message)
     await expect(migrationNotice).toBeVisible()
   })
 
-  test('does not show migration banner if cookie dismissed value is saved', async ({
+  test("does not show migration banner if cookie dismissed value is saved", async ({
     context,
     page,
   }) => {
     await context.addCookies([
       {
-        name: 'uiDismissedBanners',
+        name: "uiDismissedBanners",
         value: '["cc-referral"]',
-        domain: 'localhost',
-        path: '/',
+        domain: "localhost",
+        path: "/",
       },
     ])
-    await page.goto('/?referrer=creativecommons.org')
+    await page.goto("/?referrer=creativecommons.org")
     const migrationNotice = page.locator('[data-testid="banner-cc-referral"]')
 
     await expect(migrationNotice).toBeHidden()
   })
 
-  test('migration banner goes away on navigation', async ({ page }) => {
-    await page.goto('/?referrer=creativecommons.org')
+  test("migration banner goes away on navigation", async ({ page }) => {
+    await page.goto("/?referrer=creativecommons.org")
 
     const migrationNotice = page.locator('[data-testid="banner-cc-referral"]')
     await expect(migrationNotice).toBeVisible()
 
     // Navigate away from the page
     await Promise.all([
-      page.locator('a.homepage-image').first().click(),
-      page.waitForLoadState('domcontentloaded'),
+      page.locator("a.homepage-image").first().click(),
+      page.waitForLoadState("domcontentloaded"),
     ])
     await expect(migrationNotice).toBeHidden()
   })
 
-  test('migration banner is dismissable and stays dismissed', async ({
+  test("migration banner is dismissable and stays dismissed", async ({
     page,
   }) => {
-    await page.goto('/?referrer=creativecommons.org')
+    await page.goto("/?referrer=creativecommons.org")
 
     const migrationNotice = page.locator('[data-testid="banner-cc-referral"]')
     await expect(migrationNotice).toBeVisible({ timeout: 500 })

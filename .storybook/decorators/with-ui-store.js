@@ -1,6 +1,6 @@
-import { ref, onMounted } from '@nuxtjs/composition-api'
+import { ref, onMounted } from "@nuxtjs/composition-api"
 
-import { useLayout } from '~/composables/use-layout'
+import { useLayout } from "~/composables/use-layout"
 
 export const WithUiStore = (story) => {
   return {

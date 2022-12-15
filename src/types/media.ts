@@ -1,5 +1,5 @@
-import type { SupportedMediaType } from '~/constants/media'
-import type { License, LicenseVersion } from '~/constants/license'
+import type { SupportedMediaType } from "~/constants/media"
+import type { License, LicenseVersion } from "~/constants/license"
 
 export interface Tag {
   name: string
@@ -47,7 +47,7 @@ export interface Media {
 }
 
 export interface ImageDetail extends Media {
-  frontendMediaType: 'image'
+  frontendMediaType: "image"
 
   height?: number
   width?: number
@@ -64,7 +64,7 @@ export interface AudioSet {
 }
 
 export interface AudioDetail extends Media {
-  frontendMediaType: 'audio'
+  frontendMediaType: "audio"
 
   audio_set?: AudioSet
   genres?: string[]
@@ -81,14 +81,14 @@ export interface AudioDetail extends Media {
 }
 
 export type DetailFromMediaType<T extends SupportedMediaType> =
-  T extends 'audio' ? AudioDetail : ImageDetail
+  T extends "audio" ? AudioDetail : ImageDetail
 
 /**
  * This interface is a subset of `Media` that types dictionaries sent by the API
  * being decoded in the `decodeMediaData` function.
  */
 export interface ApiMedia
-  extends Omit<Media, 'frontendMediaType' | 'title' | 'originalTitle'> {
+  extends Omit<Media, "frontendMediaType" | "title" | "originalTitle"> {
   title?: string
   originalTitle?: string
 }

@@ -2,10 +2,10 @@
   <div class="license-explanation w-70 max-w-xs p-6">
     <h5 class="text-base font-semibold">
       <template v-if="isLicense(license)">{{
-        $t('filters.license-explanation.license-definition')
+        $t("filters.license-explanation.license-definition")
       }}</template>
       <template v-else>{{
-        $t('filters.license-explanation.mark-definition', {
+        $t("filters.license-explanation.mark-definition", {
           mark: license.toUpperCase(),
         })
       }}</template>
@@ -27,7 +27,7 @@
     >
       <template #read-more>
         <VLink :href="`${getLicenseUrl(license)}`">{{
-          $t('filters.license-explanation.more.read-more')
+          $t("filters.license-explanation.more.read-more")
         }}</VLink>
       </template>
       <template #mark>{{ license.toUpperCase() }}</template>
@@ -36,21 +36,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { getLicenseUrl, isLicense } from '~/utils/license'
+import { getLicenseUrl, isLicense } from "~/utils/license"
 
-import type { License } from '~/constants/license'
+import type { License } from "~/constants/license"
 
-import VLicenseElements from '~/components/VLicense/VLicenseElements.vue'
-import VLink from '~/components/VLink.vue'
+import VLicenseElements from "~/components/VLicense/VLicenseElements.vue"
+import VLink from "~/components/VLink.vue"
 
 /**
  * Renders the explanation of the license passed to it by breaking it down to
  * its constituent clauses.
  */
 export default defineComponent({
-  name: 'VLicenseExplanation',
+  name: "VLicenseExplanation",
   components: {
     VLicenseElements,
     VLink,

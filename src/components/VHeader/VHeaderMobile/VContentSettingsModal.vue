@@ -23,10 +23,10 @@
     >
       <template #tabs>
         <VTab id="content-settings" size="medium" class="category me-4">{{
-          $t('search-type.heading')
+          $t("search-type.heading")
         }}</VTab>
         <VTab id="filters" size="medium" class="category">{{
-          $t('filters.title')
+          $t("filters.title")
         }}</VTab>
         <VIconButton
           class="self-center ms-auto hover:bg-dark-charcoal hover:text-white"
@@ -60,27 +60,27 @@
   </VModal>
 </template>
 <script lang="ts">
-import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref } from "@nuxtjs/composition-api"
 
-import { useSearchStore } from '~/stores/search'
+import { useSearchStore } from "~/stores/search"
 
-import { useI18n } from '~/composables/use-i18n'
+import { useI18n } from "~/composables/use-i18n"
 
-import VButton from '~/components/VButton.vue'
-import VContentSettingsButton from '~/components/VHeader/VHeaderMobile/VContentSettingsButton.vue'
-import VIconButton from '~/components/VIconButton/VIconButton.vue'
-import VModal from '~/components/VModal/VModal.vue'
-import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
-import VSearchTypes from '~/components/VContentSwitcher/VSearchTypes.vue'
-import VShowResultsButton from '~/components/VHeader/VHeaderMobile/VShowResultsButton.vue'
-import VTab from '~/components/VTabs/VTab.vue'
-import VTabPanel from '~/components/VTabs/VTabPanel.vue'
-import VTabs from '~/components/VTabs/VTabs.vue'
+import VButton from "~/components/VButton.vue"
+import VContentSettingsButton from "~/components/VHeader/VHeaderMobile/VContentSettingsButton.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VModal from "~/components/VModal/VModal.vue"
+import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
+import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
+import VShowResultsButton from "~/components/VHeader/VHeaderMobile/VShowResultsButton.vue"
+import VTab from "~/components/VTabs/VTab.vue"
+import VTabPanel from "~/components/VTabs/VTabPanel.vue"
+import VTabs from "~/components/VTabs/VTabs.vue"
 
-import closeIcon from '~/assets/icons/close-small.svg'
+import closeIcon from "~/assets/icons/close-small.svg"
 
 export default defineComponent({
-  name: 'VContentSettingsModal',
+  name: "VContentSettingsModal",
   components: {
     VButton,
     VContentSettingsButton,
@@ -105,15 +105,15 @@ export default defineComponent({
     )
     const i18n = useI18n()
     const searchStore = useSearchStore()
-    const selectedTab = ref<'content-settings' | 'filters'>('content-settings')
-    const changeSelectedTab = (tab: 'content-settings' | 'filters') => {
+    const selectedTab = ref<"content-settings" | "filters">("content-settings")
+    const changeSelectedTab = (tab: "content-settings" | "filters") => {
       selectedTab.value = tab
     }
 
     const areFiltersSelected = computed(() => searchStore.isAnyFilterApplied)
 
     const showClearFiltersButton = computed(
-      () => selectedTab.value === 'filters'
+      () => selectedTab.value === "filters"
     )
     const isClearButtonDisabled = computed(
       () => !searchStore.isAnyFilterApplied
@@ -121,8 +121,8 @@ export default defineComponent({
     const appliedFilterCount = computed(() => searchStore.appliedFilterCount)
     const clearFiltersLabel = computed(() =>
       searchStore.isAnyFilterApplied
-        ? i18n.tc('filter-list.clear-numbered', appliedFilterCount.value)
-        : i18n.t('filter-list.clear')
+        ? i18n.tc("filter-list.clear-numbered", appliedFilterCount.value)
+        : i18n.t("filter-list.clear")
     )
 
     const clearFilters = () => {

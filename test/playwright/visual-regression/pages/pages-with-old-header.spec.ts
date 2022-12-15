@@ -1,24 +1,24 @@
-import { test } from '@playwright/test'
+import { test } from "@playwright/test"
 
-import breakpoints from '~~/test/playwright/utils/breakpoints'
-import { removeHiddenOverflow } from '~~/test/playwright/utils/page'
+import breakpoints from "~~/test/playwright/utils/breakpoints"
+import { removeHiddenOverflow } from "~~/test/playwright/utils/page"
 import {
   pathWithDir,
   languageDirections,
   setCookies,
-} from '~~/test/playwright/utils/navigation'
+} from "~~/test/playwright/utils/navigation"
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
-const contentPages = ['about', 'search-help', 'non-existent', 'sources']
+const contentPages = ["about", "search-help", "non-existent", "sources"]
 for (const contentPage of contentPages) {
   for (const dir of languageDirections) {
     test.describe(`${contentPage} ${dir} page snapshots`, () => {
       breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
-        test('full page', async ({ context, page }) => {
+        test("full page", async ({ context, page }) => {
           await setCookies(context, {
             uiBreakpoint: breakpoint,
-            uiDismissedBanners: ['translation-ar'],
+            uiDismissedBanners: ["translation-ar"],
           })
 
           await page.goto(pathWithDir(contentPage, dir))

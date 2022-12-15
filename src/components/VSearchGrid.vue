@@ -35,22 +35,22 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, IMAGE, SearchType, mediaTypes } from '~/constants/media'
-import { NO_RESULT } from '~/constants/errors'
-import { defineEvent } from '~/types/emits'
-import type { ApiQueryParams } from '~/utils/search-query-transform'
-import type { FetchState } from '~/types/fetch-state'
+import { ALL_MEDIA, IMAGE, SearchType, mediaTypes } from "~/constants/media"
+import { NO_RESULT } from "~/constants/errors"
+import { defineEvent } from "~/types/emits"
+import type { ApiQueryParams } from "~/utils/search-query-transform"
+import type { FetchState } from "~/types/fetch-state"
 
-import VExternalSearchForm from '~/components/VExternalSearch/VExternalSearchForm.vue'
-import VErrorSection from '~/components/VErrorSection/VErrorSection.vue'
-import VErrorImage from '~/components/VErrorSection/VErrorImage.vue'
-import VNoResults from '~/components/VErrorSection/VNoResults.vue'
-import VSearchResultsTitle from '~/components/VSearchResultsTitle.vue'
+import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
+import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
+import VErrorImage from "~/components/VErrorSection/VErrorImage.vue"
+import VNoResults from "~/components/VErrorSection/VNoResults.vue"
+import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
 
 export default defineComponent({
-  name: 'VSearchGrid',
+  name: "VSearchGrid",
   components: {
     VErrorSection,
     VExternalSearchForm,
@@ -88,7 +88,7 @@ export default defineComponent({
       // noResult is hard-coded for search types that are not currently
       // supported by Openverse built-in search
       return props.supported
-        ? props.query.q !== '' && props.resultsCount === 0
+        ? props.query.q !== "" && props.resultsCount === 0
         : false
     })
 

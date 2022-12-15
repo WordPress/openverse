@@ -33,22 +33,22 @@
 </template>
 
 <script lang="ts">
-import { isShallowEqualObjects } from '@wordpress/is-shallow-equal'
-import { computed, defineComponent, inject, ref } from '@nuxtjs/composition-api'
+import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
+import { computed, defineComponent, inject, ref } from "@nuxtjs/composition-api"
 
-import { Focus, focusIn } from '~/utils/focus-management'
-import { useMediaStore } from '~/stores/media'
-import { useSearchStore } from '~/stores/search'
-import { IsSidebarVisibleKey } from '~/types/provides'
+import { Focus, focusIn } from "~/utils/focus-management"
+import { useMediaStore } from "~/stores/media"
+import { useSearchStore } from "~/stores/search"
+import { IsSidebarVisibleKey } from "~/types/provides"
 
-import VSearchGrid from '~/components/VSearchGrid.vue'
-import VSkipToContentContainer from '~/components/VSkipToContentContainer.vue'
-import VScrollButton from '~/components/VScrollButton.vue'
+import VSearchGrid from "~/components/VSearchGrid.vue"
+import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
+import VScrollButton from "~/components/VScrollButton.vue"
 
-import type { Context } from '@nuxt/types'
+import type { Context } from "@nuxt/types"
 
 export default defineComponent({
-  name: 'BrowsePage',
+  name: "BrowsePage",
   components: {
     VScrollButton,
     VSearchGrid,
@@ -61,13 +61,13 @@ export default defineComponent({
      * an exception for the 'creator' filter. The creator filter doesn't send
      * the search query to the API.
      */
-    if (!route.query.q && !route.query.searchBy) return redirect('/')
+    if (!route.query.q && !route.query.searchBy) return redirect("/")
   },
   scrollToTop: false,
   setup() {
     const searchGridRef = ref<InstanceType<typeof VSearchGrid> | null>(null)
 
-    const showScrollButton = inject('showScrollButton')
+    const showScrollButton = inject("showScrollButton")
     const isSidebarVisible = inject(IsSidebarVisibleKey)
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
@@ -91,7 +91,7 @@ export default defineComponent({
       Boolean(
         searchStore.searchTypeIsSupported &&
           !mediaStore.resultCount &&
-          searchStore.searchTerm.trim() !== ''
+          searchStore.searchTerm.trim() !== ""
       )
     )
 
@@ -134,7 +134,7 @@ export default defineComponent({
     /**
      * Updates the search type only if the route's path changes.
      */
-    async $route(newRoute: Context['route'], oldRoute: Context['route']) {
+    async $route(newRoute: Context["route"], oldRoute: Context["route"]) {
       if (
         newRoute.path !== oldRoute.path ||
         !isShallowEqualObjects(newRoute.query, oldRoute.query)
@@ -148,10 +148,10 @@ export default defineComponent({
   },
   methods: {
     handleTab(event: KeyboardEvent, element: string) {
-      if (this.showScrollButton.value && element !== 'scroll-button') {
+      if (this.showScrollButton.value && element !== "scroll-button") {
         return
       }
-      focusIn(document.getElementById('__layout'), Focus.First)
+      focusIn(document.getElementById("__layout"), Focus.First)
     },
     fetchMedia(payload: { shouldPersistMedia?: boolean } = {}) {
       const mediaStore = useMediaStore(this.$pinia)

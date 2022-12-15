@@ -4,11 +4,11 @@
     class="media-reuse"
   >
     <h2 class="heading-6 md:heading-5 mb-4">
-      {{ $t('media-details.reuse.title') }}
+      {{ $t("media-details.reuse.title") }}
     </h2>
     <p class="text-base font-normal leading-[130%]">
       {{
-        $t('media-details.reuse.description', {
+        $t("media-details.reuse.description", {
           media: media.frontendMediaType,
         })
       }}
@@ -25,15 +25,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { Media } from '~/types/media'
+import type { Media } from "~/types/media"
 
-import VCopyLicense from '~/components/VMediaInfo/VCopyLicense.vue'
-import VMediaLicense from '~/components/VMediaInfo/VMediaLicense.vue'
+import VCopyLicense from "~/components/VMediaInfo/VCopyLicense.vue"
+import VMediaLicense from "~/components/VMediaInfo/VMediaLicense.vue"
 
 export default defineComponent({
-  name: 'VMediaReuse',
+  name: "VMediaReuse",
   components: { VCopyLicense, VMediaLicense },
   props: {
     media: {

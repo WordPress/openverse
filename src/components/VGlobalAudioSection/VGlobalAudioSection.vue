@@ -17,25 +17,25 @@ import {
   watch,
   computed,
   defineComponent,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { AUDIO } from '~/constants/media'
-import { useActiveAudio } from '~/composables/use-active-audio'
+import { AUDIO } from "~/constants/media"
+import { useActiveAudio } from "~/composables/use-active-audio"
 
-import { useActiveMediaStore } from '~/stores/active-media'
-import { useMediaStore } from '~/stores/media'
-import { useSingleResultStore } from '~/stores/media/single-result'
-import { useUiStore } from '~/stores/ui'
+import { useActiveMediaStore } from "~/stores/active-media"
+import { useMediaStore } from "~/stores/media"
+import { useSingleResultStore } from "~/stores/media/single-result"
+import { useUiStore } from "~/stores/ui"
 
-import type { AudioDetail } from '~/types/media'
+import type { AudioDetail } from "~/types/media"
 
-import VIconButton from '~/components/VIconButton/VIconButton.vue'
-import VGlobalAudioTrack from '~/components/VAudioTrack/VGlobalAudioTrack.vue'
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VGlobalAudioTrack from "~/components/VAudioTrack/VGlobalAudioTrack.vue"
 
-import closeIcon from '~/assets/icons/close-small.svg'
+import closeIcon from "~/assets/icons/close-small.svg"
 
 export default defineComponent({
-  name: 'VGlobalAudioSection',
+  name: "VGlobalAudioSection",
   components: {
     VGlobalAudioTrack,
     VIconButton,
@@ -73,7 +73,7 @@ export default defineComponent({
 
     const handleError = (event: Event) => {
       if (!(event.target instanceof HTMLAudioElement)) {
-        activeMediaStore.setMessage({ message: 'err_unknown' })
+        activeMediaStore.setMessage({ message: "err_unknown" })
         return
       }
       const error = event.target.error
@@ -81,19 +81,19 @@ export default defineComponent({
       let errorMsg
       switch (error.code) {
         case error.MEDIA_ERR_ABORTED:
-          errorMsg = 'err_aborted'
+          errorMsg = "err_aborted"
           break
         case error.MEDIA_ERR_NETWORK:
-          errorMsg = 'err_network'
+          errorMsg = "err_network"
           break
         case error.MEDIA_ERR_DECODE:
-          errorMsg = 'err_decode'
+          errorMsg = "err_decode"
           break
         case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-          errorMsg = 'err_unsupported'
+          errorMsg = "err_unsupported"
           break
         default:
-          errorMsg = 'err_unknown'
+          errorMsg = "err_unknown"
       }
       activeMediaStore.setMessage({ message: errorMsg })
     }
@@ -102,10 +102,10 @@ export default defineComponent({
       activeAudio.obj,
       (audio, _, onInvalidate) => {
         if (!audio) return
-        audio.addEventListener('error', handleError)
+        audio.addEventListener("error", handleError)
 
         onInvalidate(() => {
-          audio.removeEventListener('error', handleError)
+          audio.removeEventListener("error", handleError)
         })
       },
       { immediate: true }
@@ -127,10 +127,10 @@ export default defineComponent({
     const routeValue = computed(() => route.value)
     watch(routeValue, (newRouteVal, oldRouteVal) => {
       if (
-        (oldRouteVal.name?.includes('audio') &&
-          !newRouteVal.name?.includes('audio')) ||
+        (oldRouteVal.name?.includes("audio") &&
+          !newRouteVal.name?.includes("audio")) ||
         (uiStore.isDesktopLayout &&
-          newRouteVal.name?.includes('audio-id') &&
+          newRouteVal.name?.includes("audio-id") &&
           newRouteVal.params.id != activeMediaStore.id)
       ) {
         activeAudio.obj.value?.pause()

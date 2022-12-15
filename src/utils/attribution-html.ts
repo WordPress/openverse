@@ -4,17 +4,17 @@
  * backend, or open an issue to track it.
  */
 
-import type { Media } from '~/types/media'
+import type { Media } from "~/types/media"
 import {
   getElements,
   getFullLicenseName,
   isPublicDomain,
-} from '~/utils/license'
-import type { LicenseElement } from '~/constants/license'
+} from "~/utils/license"
+import type { LicenseElement } from "~/constants/license"
 
-import enJson from '~/locales/en.json'
+import enJson from "~/locales/en.json"
 
-import type VueI18n from 'vue-i18n'
+import type VueI18n from "vue-i18n"
 
 /* Helper functions */
 
@@ -33,10 +33,10 @@ const h = (
 ): string => {
   const map = Object.entries(attrs)
     .map(([key, value]) => `${key}="${value}"`)
-    .join(' ')
+    .join(" ")
   const opening = map ? `<${name} ${map}>` : `<${name}>`
   const closing = `</${name}>`
-  return `${opening}${(children ?? []).join('\n')}${closing}`
+  return `${opening}${(children ?? []).join("\n")}${closing}`
 }
 
 /**
@@ -70,15 +70,15 @@ const fakeT = (
     [key: string]: string | NestedRecord
   }
 
-  const segments = path.split('.')
-  let fraction: NestedRecord = enJson['media-details'].reuse.credit
+  const segments = path.split(".")
+  let fraction: NestedRecord = enJson["media-details"].reuse.credit
   let text: string | undefined = undefined
   segments.forEach((segment) => {
     const piece = fraction[segment]
-    if (typeof piece === 'string') text = piece
+    if (typeof piece === "string") text = piece
     else fraction = piece
   })
-  return text ? fmt(text, replacements) : ''
+  return text ? fmt(text, replacements) : ""
 }
 
 /**
@@ -88,11 +88,11 @@ const fakeT = (
  * @returns the HTML markup of the `<img>` tag
  */
 const licenseElementImg = (licenseElement: LicenseElement): string => {
-  const filename = licenseElement.replace('-', '.')
+  const filename = licenseElement.replace("-", ".")
   const src = `https://mirrors.creativecommons.org/presskit/icons/${filename}.svg`
-  return h('img', {
+  return h("img", {
     src,
-    style: 'height: 1em; margin-right: 0.125em; display: inline;',
+    style: "height: 1em; margin-right: 0.125em; display: inline;",
   })
 }
 
@@ -104,7 +104,7 @@ const licenseElementImg = (licenseElement: LicenseElement): string => {
  * @returns the HTML markup of the `<a>` tag
  */
 const extLink = (href: string, text: string) =>
-  h('a', { target: '_blank', rel: 'noopener noreferrer', href }, [text])
+  h("a", { target: "_blank", rel: "noopener noreferrer", href }, [text])
 
 /* Interfaces */
 
@@ -114,13 +114,13 @@ const extLink = (href: string, text: string) =>
  */
 export type AttributableMedia = Pick<
   Media,
-  | 'originalTitle'
-  | 'foreign_landing_url'
-  | 'creator'
-  | 'creator_url'
-  | 'license'
-  | 'license_version'
-  | 'license_url'
+  | "originalTitle"
+  | "foreign_landing_url"
+  | "creator"
+  | "creator_url"
+  | "license"
+  | "license_version"
+  | "license_url"
 >
 
 /**
@@ -150,11 +150,11 @@ export const getAttribution = (
     includeIcons: true,
   }
 ): string => {
-  if (!mediaItem) return ''
+  if (!mediaItem) return ""
 
   const isPd = isPublicDomain(mediaItem.license)
 
-  const i18nBase = 'media-details.reuse.credit'
+  const i18nBase = "media-details.reuse.credit"
   const tFn = i18n
     ? (key: string, values?: VueI18n.Values) =>
         i18n.t(`${i18nBase}.${key}`, values).toString()
@@ -162,10 +162,10 @@ export const getAttribution = (
 
   /* Title */
 
-  let title = mediaItem.originalTitle || tFn('generic-title')
+  let title = mediaItem.originalTitle || tFn("generic-title")
   if (!isPlaintext && mediaItem.foreign_landing_url)
     title = extLink(mediaItem.foreign_landing_url, title)
-  if (mediaItem.originalTitle) title = tFn('actual-title', { title })
+  if (mediaItem.originalTitle) title = tFn("actual-title", { title })
 
   /* License */
 
@@ -174,12 +174,12 @@ export const getAttribution = (
     mediaItem.license_version,
     i18n
   )
-  let licenseIcons = ''
+  let licenseIcons = ""
   if (includeIcons && mediaItem.license) {
     const elements = getElements(mediaItem.license)
     const icons = elements.map((element) => licenseElementImg(element))
     // Icons are only rendered if present for every element
-    if (!icons.includes('')) licenseIcons = icons.join('')
+    if (!icons.includes("")) licenseIcons = icons.join("")
   }
   let license = `${fullLicenseName} ${licenseIcons}`.trim()
   if (!isPlaintext && mediaItem.license_url)
@@ -189,15 +189,15 @@ export const getAttribution = (
 
   const attributionParts: Record<string, string> = {
     title,
-    'marked-licensed': tFn(isPd ? 'marked' : 'licensed'),
+    "marked-licensed": tFn(isPd ? "marked" : "licensed"),
     license: license,
-    'view-legal': '',
-    creator: '',
+    "view-legal": "",
+    creator: "",
   }
 
   if (isPlaintext && mediaItem.license_url) {
-    attributionParts['view-legal'] = tFn('view-legal-text', {
-      'terms-copy': tFn(isPd ? 'terms-text' : 'copy-text'),
+    attributionParts["view-legal"] = tFn("view-legal-text", {
+      "terms-copy": tFn(isPd ? "terms-text" : "copy-text"),
       url: `${mediaItem.license_url}?ref=openverse`,
     })
   }
@@ -206,14 +206,14 @@ export const getAttribution = (
     let creator = mediaItem.creator
     if (!isPlaintext && mediaItem.creator_url)
       creator = extLink(mediaItem.creator_url, creator)
-    attributionParts.creator = tFn('creator-text', {
-      'creator-name': creator,
+    attributionParts.creator = tFn("creator-text", {
+      "creator-name": creator,
     })
   }
 
-  const attribution = tFn('text', attributionParts).replace(/\s{2}/g, ' ')
+  const attribution = tFn("text", attributionParts).replace(/\s{2}/g, " ")
 
   return isPlaintext
     ? attribution
-    : h('p', { class: 'attribution' }, [attribution])
+    : h("p", { class: "attribution" }, [attribution])
 }

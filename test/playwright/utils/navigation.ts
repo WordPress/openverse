@@ -1,6 +1,6 @@
-import { BrowserContext, expect, Page } from '@playwright/test'
+import { BrowserContext, expect, Page } from "@playwright/test"
 
-import rtlMessages from '~~/test/locales/ar.json'
+import rtlMessages from "~~/test/locales/ar.json"
 
 import {
   ALL_MEDIA,
@@ -10,10 +10,10 @@ import {
   MODEL_3D,
   SupportedSearchType,
   VIDEO,
-} from '~/constants/media'
-import { SCREEN_SIZES } from '~/constants/screens'
+} from "~/constants/media"
+import { SCREEN_SIZES } from "~/constants/screens"
 
-import enMessages from '~/locales/en.json'
+import enMessages from "~/locales/en.json"
 
 const messages: Record<string, Record<string, unknown>> = {
   ltr: enMessages,
@@ -24,8 +24,8 @@ const messages: Record<string, Record<string, unknown>> = {
  * The new header is enabled using `new_header` feature flag. Some navigation methods
  * are different depending on the header version.
  */
-export const OLD_HEADER = 'old_header'
-export const NEW_HEADER = 'new_header'
+export const OLD_HEADER = "old_header"
+export const NEW_HEADER = "new_header"
 export type HeaderMode = typeof OLD_HEADER | typeof NEW_HEADER
 
 const getNestedProperty = (
@@ -33,17 +33,17 @@ const getNestedProperty = (
   path: string
 ): string => {
   const value = path
-    .split('.')
+    .split(".")
     .reduce((acc: string | Record<string, unknown>, part) => {
-      if (typeof acc === 'string') {
+      if (typeof acc === "string") {
         return acc
       }
       if (Object.keys(acc as Record<string, unknown>).includes(part)) {
         return (acc as Record<string, string | Record<string, unknown>>)[part]
       }
-      return ''
+      return ""
     }, obj)
-  return typeof value === 'string' ? value : JSON.stringify(value)
+  return typeof value === "string" ? value : JSON.stringify(value)
 }
 
 /**
@@ -52,26 +52,26 @@ const getNestedProperty = (
  * @param path - The label to translate.
  * @param dir - The language direction.
  */
-export const t = (path: string, dir: LanguageDirection = 'ltr'): string => {
-  let value = ''
-  if (dir === 'rtl') {
+export const t = (path: string, dir: LanguageDirection = "ltr"): string => {
+  let value = ""
+  if (dir === "rtl") {
     value = getNestedProperty(messages.rtl, path)
   }
-  return value === '' ? getNestedProperty(messages.ltr, path) : value
+  return value === "" ? getNestedProperty(messages.ltr, path) : value
 }
 
-export const languageDirections = ['ltr', 'rtl'] as const
+export const languageDirections = ["ltr", "rtl"] as const
 
 export const renderingContexts = [
-  ['SSR', 'ltr'],
-  ['SSR', 'rtl'],
-  ['CSR', 'ltr'],
-  ['CSR', 'rtl'],
+  ["SSR", "ltr"],
+  ["SSR", "rtl"],
+  ["CSR", "ltr"],
+  ["CSR", "rtl"],
 ] as const
 
-export const renderModes = ['SSR', 'CSR'] as const
+export const renderModes = ["SSR", "CSR"] as const
 export type RenderMode = typeof renderModes[number]
-export type LanguageDirection = 'ltr' | 'rtl'
+export type LanguageDirection = "ltr" | "rtl"
 
 export const buttonSelectors = {
   filter: 'button[aria-controls="filters"]',
@@ -84,22 +84,22 @@ export function sleep(ms: number) {
 }
 
 export const searchTypePath = (searchType: SupportedSearchType) =>
-  searchType === 'all' ? '' : `${searchType}`
+  searchType === "all" ? "" : `${searchType}`
 
 export const searchTypeNames = {
   ltr: {
-    [ALL_MEDIA]: t('search-type.all', 'ltr'),
-    [AUDIO]: t('search-type.audio', 'ltr'),
-    [IMAGE]: t('search-type.image', 'ltr'),
-    [VIDEO]: t('search-type.video', 'ltr'),
-    [MODEL_3D]: t('search-type.model-3d', 'ltr'),
+    [ALL_MEDIA]: t("search-type.all", "ltr"),
+    [AUDIO]: t("search-type.audio", "ltr"),
+    [IMAGE]: t("search-type.image", "ltr"),
+    [VIDEO]: t("search-type.video", "ltr"),
+    [MODEL_3D]: t("search-type.model-3d", "ltr"),
   },
   rtl: {
-    [ALL_MEDIA]: t('search-type.all', 'rtl'),
-    [AUDIO]: t('search-type.audio', 'rtl'),
-    [IMAGE]: t('search-type.image', 'rtl'),
-    [VIDEO]: t('search-type.video', 'rtl'),
-    [MODEL_3D]: t('search-type.model-3d', 'rtl'),
+    [ALL_MEDIA]: t("search-type.all", "rtl"),
+    [AUDIO]: t("search-type.audio", "rtl"),
+    [IMAGE]: t("search-type.image", "rtl"),
+    [VIDEO]: t("search-type.video", "rtl"),
+    [MODEL_3D]: t("search-type.model-3d", "rtl"),
   },
 }
 
@@ -115,11 +115,11 @@ const isButtonPressed = async (
   if (pageWidth > 640) {
     return await getPressed(page, buttonSelector)
   } else {
-    return await page.locator('button', { hasText: 'Close' }).isVisible()
+    return await page.locator("button", { hasText: "Close" }).isVisible()
   }
 }
 
-const openMenu = async (page: Page, button: 'filter' | 'contentSwitcher') => {
+const openMenu = async (page: Page, button: "filter" | "contentSwitcher") => {
   const selector = buttonSelectors[button]
   if (!(await isButtonPressed(page, selector))) {
     await page.click(selector)
@@ -130,24 +130,24 @@ const openMenu = async (page: Page, button: 'filter' | 'contentSwitcher') => {
 export const openFilters = async (
   page: Page,
   mode: HeaderMode = NEW_HEADER,
-  dir: LanguageDirection = 'ltr'
+  dir: LanguageDirection = "ltr"
 ) => {
   if (mode === OLD_HEADER || (mode === NEW_HEADER && isPageDesktop(page))) {
-    await openMenu(page, 'filter')
+    await openMenu(page, "filter")
   } else {
-    await openContentSettingsTab(page, 'filters', dir)
+    await openContentSettingsTab(page, "filters", dir)
   }
 }
 
 export const openContentTypes = async (
   page: Page,
   mode: HeaderMode = NEW_HEADER,
-  dir: LanguageDirection = 'ltr'
+  dir: LanguageDirection = "ltr"
 ) => {
   if (mode === OLD_HEADER || (mode === NEW_HEADER && isPageDesktop(page))) {
-    await openMenu(page, 'contentSwitcher')
+    await openMenu(page, "contentSwitcher")
   } else {
-    await openContentSettingsTab(page, 'contentTypes', dir)
+    await openContentSettingsTab(page, "contentTypes", dir)
   }
 }
 
@@ -162,8 +162,8 @@ export const isPageDesktop = (page: Page, mode: HeaderMode = NEW_HEADER) => {
  */
 const getPressed = async (page: Page, selector: string) => {
   return (
-    (await page.getAttribute(selector, 'aria-pressed')) === 'true' ||
-    (await page.getAttribute(selector, 'aria-expanded')) === 'true'
+    (await page.getAttribute(selector, "aria-pressed")) === "true" ||
+    (await page.getAttribute(selector, "aria-expanded")) === "true"
   )
 }
 
@@ -181,15 +181,15 @@ const ensureButtonPressed = async (page: Page, selector: string) => {
  */
 export const openContentSettingsTab = async (
   page: Page,
-  tab: 'contentTypes' | 'filters' = 'contentTypes',
-  dir: LanguageDirection = 'ltr'
+  tab: "contentTypes" | "filters" = "contentTypes",
+  dir: LanguageDirection = "ltr"
 ) => {
   const selector = buttonSelectors.mobileContentSettings
 
   await ensureButtonPressed(page, selector)
 
   const tabLabel = t(
-    tab === 'contentTypes' ? 'search-type.heading' : 'filters.title',
+    tab === "contentTypes" ? "search-type.heading" : "filters.title",
     dir
   )
   await page.locator(`button[role="tab"]:has-text("${tabLabel}")`).click()
@@ -200,7 +200,7 @@ export const closeFilters = async (
   mode: HeaderMode = NEW_HEADER
 ) => {
   if (mode === OLD_HEADER || (mode === NEW_HEADER && isPageDesktop(page))) {
-    const selector = buttonSelectors['filter']
+    const selector = buttonSelectors["filter"]
 
     if (await isButtonPressed(page, selector)) {
       await page.click(selector)
@@ -217,12 +217,12 @@ export const closeFilters = async (
 export const closeMobileMenu = async (
   page: Page,
   mode: HeaderMode = NEW_HEADER,
-  dir: LanguageDirection = 'ltr'
+  dir: LanguageDirection = "ltr"
 ) => {
   if (mode === OLD_HEADER) {
-    await page.click(`button:has-text('${t('modal.close', dir)}')`)
+    await page.click(`button:has-text('${t("modal.close", dir)}')`)
   } else {
-    await page.click(`button[aria-label="${t('modal.aria-close', dir)}"]`)
+    await page.click(`button[aria-label="${t("modal.aria-close", dir)}"]`)
   }
 }
 
@@ -232,26 +232,26 @@ export const isMobileMenuOpen = async (page: Page) =>
 export const assertCheckboxStatus = async (
   page: Page,
   label: string,
-  forValue = '',
-  status: 'checked' | 'unchecked' | 'disabled' = 'checked'
+  forValue = "",
+  status: "checked" | "unchecked" | "disabled" = "checked"
 ) => {
   const selector =
-    forValue === ''
+    forValue === ""
       ? `label:has-text('${label}')`
       : `label[for="${forValue}"]:has-text('${label}')`
   const checkbox = page.locator(selector)
   switch (status) {
-    case 'checked': {
+    case "checked": {
       await expect(checkbox).not.toBeDisabled()
       await expect(checkbox).toBeChecked()
       break
     }
-    case 'unchecked': {
+    case "unchecked": {
       await expect(checkbox).not.toBeDisabled()
       await expect(checkbox).not.toBeChecked()
       break
     }
-    case 'disabled': {
+    case "disabled": {
       await expect(checkbox).toBeDisabled()
     }
   }
@@ -259,7 +259,7 @@ export const assertCheckboxStatus = async (
 
 export const changeContentType = async (
   page: Page,
-  to: 'Audio' | 'Images' | 'All content',
+  to: "Audio" | "Images" | "All content",
   mode: HeaderMode = NEW_HEADER
 ) => {
   if (mode === OLD_HEADER || isPageDesktop(page)) {
@@ -319,11 +319,11 @@ export const dismissTranslationBanner = async (page: Page) => {
 export const selectHomepageSearchType = async (
   page: Page,
   searchType: SupportedSearchType,
-  dir: LanguageDirection = 'ltr'
+  dir: LanguageDirection = "ltr"
 ) => {
   const pageWidth = page.viewportSize()?.width
   if (pageWidth && pageWidth > SCREEN_SIZES.sm) {
-    await page.click(`[aria-label="${t('search-type.all', dir)}"]`)
+    await page.click(`[aria-label="${t("search-type.all", dir)}"]`)
     await page.click(
       `button[role="radio"]:has-text("${searchTypeNames[dir][searchType]}")`
     )
@@ -343,11 +343,11 @@ export const goToSearchTerm = async (
   } = {}
 ) => {
   const searchType = options.searchType || ALL_MEDIA
-  const dir = options.dir || 'ltr'
-  const mode = options.mode ?? 'SSR'
-  const query = options.query ? `&${options.query}` : ''
+  const dir = options.dir || "ltr"
+  const mode = options.mode ?? "SSR"
+  const query = options.query ? `&${options.query}` : ""
 
-  if (mode === 'SSR') {
+  if (mode === "SSR") {
     const path = `search/${searchTypePath(searchType)}?q=${term}${query}`
     await page.goto(pathWithDir(path, dir))
     await dismissTranslationBanner(page)
@@ -355,7 +355,7 @@ export const goToSearchTerm = async (
     await page.goto(pathWithDir(`/${query}`, dir))
     await dismissTranslationBanner(page)
     // Select the search type
-    if (searchType !== 'all') {
+    if (searchType !== "all") {
       await selectHomepageSearchType(page, searchType, dir)
     }
     // Type search term
@@ -365,9 +365,9 @@ export const goToSearchTerm = async (
     // Wait for navigation
     await Promise.all([
       page.waitForNavigation(),
-      page.click(`[aria-label="${t('search.search', dir)}"]`),
+      page.click(`[aria-label="${t("search.search", dir)}"]`),
     ])
-    await page.waitForLoadState('load')
+    await page.waitForLoadState("load")
   }
   await scrollDownAndUp(page)
 }
@@ -378,9 +378,9 @@ export const goToSearchTerm = async (
  */
 export const searchFromHeader = async (page: Page, term: string) => {
   // Double click on the search bar to remove previous value
-  await page.dblclick('id=search-bar')
-  await page.fill('id=search-bar', term)
-  await Promise.all([page.waitForNavigation(), page.keyboard.press('Enter')])
+  await page.dblclick("id=search-bar")
+  await page.fill("id=search-bar", term)
+  await Promise.all([page.waitForNavigation(), page.keyboard.press("Enter")])
 }
 
 /**
@@ -435,7 +435,7 @@ export const scrollToTop = async (page: Page) => {
  */
 export const scrollDownAndUp = async (page: Page) => {
   await scrollToBottom(page)
-  await page.waitForLoadState('load')
+  await page.waitForLoadState("load")
   await scrollToTop(page)
 }
 
@@ -443,18 +443,18 @@ export const scrollDownAndUp = async (page: Page) => {
  * Adds '/ar' prefix to a rtl route. The path should start with '/'
  */
 export const pathWithDir = (rawPath: string, dir: string) => {
-  const path = rawPath.startsWith('/') ? rawPath : `/${rawPath}`
-  return dir === 'rtl' ? `/ar${path}` : path
+  const path = rawPath.startsWith("/") ? rawPath : `/${rawPath}`
+  return dir === "rtl" ? `/ar${path}` : path
 }
 
 export const enableNewHeader = async (page: Page) => {
   // Add the new_header cookie
   await page.context().addCookies([
     {
-      name: 'features',
-      value: '%7B%22new_header%22%3A%22on%22%7D',
-      domain: 'localhost',
-      path: '/',
+      name: "features",
+      value: "%7B%22new_header%22%3A%22on%22%7D",
+      domain: "localhost",
+      path: "/",
     },
   ])
 }
@@ -467,8 +467,8 @@ export const setCookies = async (
     Object.entries(cookies).map(([name, value]) => ({
       name,
       value: JSON.stringify(value),
-      domain: 'localhost',
-      path: '/',
+      domain: "localhost",
+      path: "/",
     }))
   )
 }

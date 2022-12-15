@@ -1,16 +1,16 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from "@playwright/test"
 
 import {
   changeContentType,
   enableNewHeader,
   goToSearchTerm,
   searchFromHeader,
-} from '~~/test/playwright/utils/navigation'
-import { mockProviderApis } from '~~/test/playwright/utils/route'
+} from "~~/test/playwright/utils/navigation"
+import { mockProviderApis } from "~~/test/playwright/utils/route"
 
-import breakpoints from '~~/test/playwright/utils/breakpoints'
+import breakpoints from "~~/test/playwright/utils/breakpoints"
 
-import { AUDIO, IMAGE } from '~/constants/media'
+import { AUDIO, IMAGE } from "~/constants/media"
 
 /**
  * When navigating to the search page on the client side:
@@ -24,79 +24,79 @@ import { AUDIO, IMAGE } from '~/constants/media'
  * All of these tests test search page on the client
  */
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
-test.describe('search query on CSR', () => {
+test.describe("search query on CSR", () => {
   breakpoints.describeMobileAndDesktop(() => {
     test.beforeEach(async ({ context, page }) => {
       await mockProviderApis(context)
       await enableNewHeader(page)
     })
 
-    test('q query parameter is set as the search term', async ({ page }) => {
-      await goToSearchTerm(page, 'cat', { mode: 'CSR' })
+    test("q query parameter is set as the search term", async ({ page }) => {
+      await goToSearchTerm(page, "cat", { mode: "CSR" })
 
       await expect(page.locator('header input[type="search"]')).toHaveValue(
-        'cat'
+        "cat"
       )
-      await expect(page).toHaveURL('search/?q=cat')
+      await expect(page).toHaveURL("search/?q=cat")
     })
 
-    test('selecting `audio` on homepage, you can search for audio', async ({
+    test("selecting `audio` on homepage, you can search for audio", async ({
       page,
     }) => {
-      await goToSearchTerm(page, 'cat', { searchType: AUDIO, mode: 'CSR' })
+      await goToSearchTerm(page, "cat", { searchType: AUDIO, mode: "CSR" })
 
       await expect(page.locator('header input[type="search"]')).toHaveValue(
-        'cat'
+        "cat"
       )
 
-      await expect(page).toHaveURL('search/audio?q=cat')
+      await expect(page).toHaveURL("search/audio?q=cat")
     })
 
-    test('url filter parameters not used by current mediaType are discarded', async ({
+    test("url filter parameters not used by current mediaType are discarded", async ({
       page,
     }) => {
-      await goToSearchTerm(page, 'cat', {
+      await goToSearchTerm(page, "cat", {
         searchType: IMAGE,
-        query: 'category=photograph',
+        query: "category=photograph",
       })
 
-      await changeContentType(page, 'Audio')
-      await expect(page).toHaveURL('/search/audio?q=cat')
+      await changeContentType(page, "Audio")
+      await expect(page).toHaveURL("/search/audio?q=cat")
     })
 
-    test('url filter types not used by current mediaType are discarded', async ({
+    test("url filter types not used by current mediaType are discarded", async ({
       page,
     }) => {
-      await goToSearchTerm(page, 'cat', {
+      await goToSearchTerm(page, "cat", {
         searchType: IMAGE,
-        query: 'aspect_ratio=tall',
+        query: "aspect_ratio=tall",
       })
 
-      await changeContentType(page, 'Audio')
-      await expect(page).toHaveURL('/search/audio?q=cat')
+      await changeContentType(page, "Audio")
+      await expect(page).toHaveURL("/search/audio?q=cat")
     })
 
-    test('can search for a different term', async ({ page }) => {
-      await goToSearchTerm(page, 'cat', { searchType: IMAGE })
+    test("can search for a different term", async ({ page }) => {
+      await goToSearchTerm(page, "cat", { searchType: IMAGE })
 
-      await searchFromHeader(page, 'dog')
+      await searchFromHeader(page, "dog")
 
-      await expect(page).toHaveURL('/search/image?q=dog')
+      await expect(page).toHaveURL("/search/image?q=dog")
     })
 
-    test('search for a different term keeps query parameters', async ({
+    test("search for a different term keeps query parameters", async ({
       page,
     }) => {
-      await goToSearchTerm(page, 'cat', {
+      await goToSearchTerm(page, "cat", {
         searchType: IMAGE,
-        query: 'license=by&extension=jpg',
+        query: "license=by&extension=jpg",
       })
-      await searchFromHeader(page, 'dog')
+      await searchFromHeader(page, "dog")
 
       await expect(page).toHaveURL(
-        '/search/image?q=dog&license=by&extension=jpg'
+        "/search/image?q=dog&license=by&extension=jpg"
       )
     })
   })

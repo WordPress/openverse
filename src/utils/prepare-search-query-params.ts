@@ -1,6 +1,6 @@
-import type { ApiQueryParams } from '~/utils/search-query-transform'
+import type { ApiQueryParams } from "~/utils/search-query-transform"
 
-const NON_API_PARAMS = ['shouldPersistMedia']
+const NON_API_PARAMS = ["shouldPersistMedia"]
 
 export default function prepareSearchQueryParams(
   searchParams: Record<string, string>
@@ -24,7 +24,7 @@ export default function prepareSearchQueryParams(
     delete params.q
   }
   Object.keys(params).forEach((key) => {
-    if (params[key] === '') {
+    if (params[key] === "") {
       delete params[key]
     }
   })

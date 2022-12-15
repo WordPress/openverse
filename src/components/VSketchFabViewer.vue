@@ -20,13 +20,13 @@ import {
   ref,
   onMounted,
   useContext,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { useI18n } from '~/composables/use-i18n'
-import { loadScript } from '~/utils/load-script'
+import { useI18n } from "~/composables/use-i18n"
+import { loadScript } from "~/utils/load-script"
 
 const sketchfabUrl =
-  'https://static.sketchfab.com/api/sketchfab-viewer-1.10.1.js'
+  "https://static.sketchfab.com/api/sketchfab-viewer-1.10.1.js"
 
 interface SketchfabConfig {
   error(e: unknown): void
@@ -47,19 +47,19 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['failure'],
+  emits: ["failure"],
   setup(props, { emit }) {
     const i18n = useI18n()
     const label = i18n
-      .t('sketchfab-iframe-title', { sketchfab: 'Sketchfab' })
+      .t("sketchfab-iframe-title", { sketchfab: "Sketchfab" })
       .toString()
     const node = ref<Element | undefined>()
     const { $sentry } = useContext()
 
     const initSketchfab = async () => {
       await loadScript(sketchfabUrl)
-      if (typeof window.Sketchfab === 'undefined') {
-        $sentry.captureMessage('Unable to find window.Sketchfab after loading')
+      if (typeof window.Sketchfab === "undefined") {
+        $sentry.captureMessage("Unable to find window.Sketchfab after loading")
         return
       }
 
@@ -73,7 +73,7 @@ export default defineComponent({
       sf.init(props.uid, {
         error: (e: unknown) => {
           $sentry.captureException(e)
-          emit('failure')
+          emit("failure")
         },
       })
     }

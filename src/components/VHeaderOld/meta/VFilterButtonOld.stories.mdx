@@ -4,32 +4,32 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
-import { provide, ref } from '@nuxtjs/composition-api'
+} from "@storybook/addon-docs"
+import { provide, ref } from "@nuxtjs/composition-api"
 
-import { useSearchStore } from '~/stores/search'
-import { useUiStore } from '~/stores/ui'
+import { useSearchStore } from "~/stores/search"
+import { useUiStore } from "~/stores/ui"
 
-import { filterData, mediaFilterKeys } from '~/constants/filters'
-import { IMAGE } from '~/constants/media'
+import { filterData, mediaFilterKeys } from "~/constants/filters"
+import { IMAGE } from "~/constants/media"
 
-import VFilterButtonOld from '~/components/VHeaderOld/VFilterButtonOld.vue'
+import VFilterButtonOld from "~/components/VHeaderOld/VFilterButtonOld.vue"
 
 <Meta
   title="Components/VHeaderOld/VFilterButtonOld"
   component={VFilterButtonOld}
   argTypes={{
     pressed: {
-      type: 'boolean',
+      type: "boolean",
     },
     appliedFilters: {
-      type: 'number',
+      type: "number",
     },
     scrolled: {
-      type: 'boolean',
+      type: "boolean",
     },
     isMinMd: {
-      type: 'boolean',
+      type: "boolean",
     },
   }}
 />
@@ -61,7 +61,7 @@ export const Template = (args, { argTypes }) => ({
     }
     applyNFilters(args.appliedFilters)
     if (args.scrolled) {
-      provide('isHeaderScrolled', ref(true))
+      provide("isHeaderScrolled", ref(true))
     }
     if (args.isMinMd) {
       const uiStore = useUiStore()
@@ -77,10 +77,9 @@ export const Template = (args, { argTypes }) => ({
 
 <ArgsTable of={VFilterButtonOld} />
 
-The button opens and closes the filters sidebar. It also shows how many filters are applied
-in the mobile view.
-the field receives an input. It also emits the `search` event when the search
-button is clicked.
+The button opens and closes the filters sidebar. It also shows how many filters
+are applied in the mobile view. the field receives an input. It also emits the
+`search` event when the search button is clicked.
 
 <Canvas>
   <Story name="Default">{Template.bind({})}</Story>
@@ -91,7 +90,7 @@ button is clicked.
     name="Mobile Scrolled"
     parameters={{
       viewport: {
-        defaultViewport: 'sm',
+        defaultViewport: "sm",
       },
     }}
   >

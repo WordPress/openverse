@@ -1,4 +1,4 @@
-import { computed, ref } from '@nuxtjs/composition-api'
+import { computed, ref } from "@nuxtjs/composition-api"
 
 import {
   ALL_MEDIA,
@@ -9,16 +9,16 @@ import {
   additionalSearchTypes,
   supportedSearchTypes,
   SearchType,
-} from '~/constants/media'
+} from "~/constants/media"
 
-import { useSearchStore } from '~/stores/search'
-import { useFeatureFlagStore } from '~/stores/feature-flag'
+import { useSearchStore } from "~/stores/search"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-import allIcon from '~/assets/icons/all-content.svg'
-import audioIcon from '~/assets/icons/audio-content.svg'
-import imageIcon from '~/assets/icons/image-content.svg'
-import videoIcon from '~/assets/icons/video-content.svg'
-import model3dIcon from '~/assets/icons/model-3d.svg'
+import allIcon from "~/assets/icons/all-content.svg"
+import audioIcon from "~/assets/icons/audio-content.svg"
+import imageIcon from "~/assets/icons/image-content.svg"
+import videoIcon from "~/assets/icons/video-content.svg"
+import model3dIcon from "~/assets/icons/model-3d.svg"
 
 const icons = {
   [ALL_MEDIA]: allIcon,
@@ -36,7 +36,7 @@ export default function useSearchType() {
   const featureFlagStore = useFeatureFlagStore()
 
   const additionalTypes = computed(() =>
-    featureFlagStore.isOn('external_sources') ? additionalSearchTypes : []
+    featureFlagStore.isOn("external_sources") ? additionalSearchTypes : []
   )
   const searchTypes = [...supportedSearchTypes]
 

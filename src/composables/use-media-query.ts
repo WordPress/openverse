@@ -1,15 +1,15 @@
 /* this implementation is from https://github.com/vueuse/vueuse/packages/core/useMediaQuery/
  which, in turn, is ported from https://github.com/logaretm/vue-use-web by Abdelrahman Awad */
-import { computed, ref, watchEffect } from '@nuxtjs/composition-api'
+import { computed, ref, watchEffect } from "@nuxtjs/composition-api"
 
-import { resolveUnref } from '@vueuse/core'
+import { resolveUnref } from "@vueuse/core"
 
-import { SCREEN_SIZES, Breakpoint } from '~/constants/screens'
-import { defaultWindow } from '~/constants/window'
-import { tryOnScopeDispose } from '~/utils/try-on-scope-dispose'
-import { useSupported } from '~/composables/use-supported'
+import { SCREEN_SIZES, Breakpoint } from "~/constants/screens"
+import { defaultWindow } from "~/constants/window"
+import { tryOnScopeDispose } from "~/utils/try-on-scope-dispose"
+import { useSupported } from "~/composables/use-supported"
 
-import type { MaybeComputedRef } from '@vueuse/core'
+import type { MaybeComputedRef } from "@vueuse/core"
 
 interface Options {
   shouldPassInSSR?: boolean
@@ -27,8 +27,8 @@ export function useMediaQuery(
   const isSupported = useSupported(
     () =>
       window &&
-      'matchMedia' in window &&
-      typeof window.matchMedia === 'function'
+      "matchMedia" in window &&
+      typeof window.matchMedia === "function"
   )
 
   let mediaQuery: MediaQueryList | undefined
@@ -36,8 +36,8 @@ export function useMediaQuery(
 
   const cleanup = () => {
     if (!mediaQuery) return
-    if ('removeEventListener' in mediaQuery) {
-      mediaQuery.removeEventListener('change', update)
+    if ("removeEventListener" in mediaQuery) {
+      mediaQuery.removeEventListener("change", update)
     } else {
       // @ts-expect-error deprecated API
       mediaQuery.removeListener(update)
@@ -56,8 +56,8 @@ export function useMediaQuery(
     mediaQuery = window.matchMedia(resolveUnref(query))
     matches.value = mediaQuery.matches
 
-    if ('addEventListener' in mediaQuery) {
-      mediaQuery.addEventListener('change', update)
+    if ("addEventListener" in mediaQuery) {
+      mediaQuery.addEventListener("change", update)
     } else {
       // @ts-expect-error deprecated API
       mediaQuery.addListener(update)
@@ -71,7 +71,7 @@ export function useMediaQuery(
   return matches
 }
 
-const isBpXs = (bp: Breakpoint): bp is 'xs' => bp === 'xs'
+const isBpXs = (bp: Breakpoint): bp is "xs" => bp === "xs"
 
 /**
  * Check whether the current screen meets
@@ -100,5 +100,5 @@ export const isMinScreen = (
  * Check if the user prefers reduced motion or not.
  */
 export function useReducedMotion(options?: Options) {
-  return useMediaQuery('(prefers-reduced-motion: reduce)', options)
+  return useMediaQuery("(prefers-reduced-motion: reduce)", options)
 }

@@ -1,42 +1,42 @@
-import { setActivePinia, createPinia } from '~~/test/unit/test-utils/pinia'
+import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import { warn } from '~/utils/console'
-import { AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
-import { useSearchStore } from '~/stores/search'
-import { useProviderStore } from '~/stores/provider'
-import { initProviderServices } from '~/data/media-provider-service'
+import { warn } from "~/utils/console"
+import { AUDIO, IMAGE, supportedMediaTypes } from "~/constants/media"
+import { useSearchStore } from "~/stores/search"
+import { useProviderStore } from "~/stores/provider"
+import { initProviderServices } from "~/data/media-provider-service"
 
-jest.mock('axios', () => ({
-  ...jest.requireActual('axios'),
-  isAxiosError: jest.fn((obj) => 'response' in obj),
+jest.mock("axios", () => ({
+  ...jest.requireActual("axios"),
+  isAxiosError: jest.fn((obj) => "response" in obj),
 }))
-jest.mock('@nuxtjs/composition-api', () => ({
-  ...jest.requireActual('@nuxtjs/composition-api'),
+jest.mock("@nuxtjs/composition-api", () => ({
+  ...jest.requireActual("@nuxtjs/composition-api"),
   ssrRef: (v) => jest.fn(v),
 }))
-jest.mock('~/utils/console', () => ({ warn: jest.fn(), log: jest.fn() }))
+jest.mock("~/utils/console", () => ({ warn: jest.fn(), log: jest.fn() }))
 
-process.env.providerUpdateFrequency = '0'
+process.env.providerUpdateFrequency = "0"
 
 const mockData = [
   {
-    source_name: 'test_source',
-    display_name: '',
-    source_url: 'https://test.org',
+    source_name: "test_source",
+    display_name: "",
+    source_url: "https://test.org",
     logo_url: null,
     media_count: 4,
   },
   {
-    source_name: 'wikimedia',
-    display_name: 'Wikimedia Commons',
-    source_url: 'https://commons.wikimedia.org',
+    source_name: "wikimedia",
+    display_name: "Wikimedia Commons",
+    source_url: "https://commons.wikimedia.org",
     logo_url: null,
     media_count: 47823833,
   },
   {
-    source_name: 'wordpress',
-    display_name: 'WP Photo Directory',
-    source_url: 'https://wordpress.org/photos',
+    source_name: "wordpress",
+    display_name: "WP Photo Directory",
+    source_url: "https://wordpress.org/photos",
     logo_url: null,
     media_count: 154,
   },
@@ -44,7 +44,7 @@ const mockData = [
 
 const mockImplementation = () => Promise.resolve({ data: [...mockData] })
 const mock = jest.fn().mockImplementation(mockImplementation)
-jest.mock('~/data/media-provider-service', () => ({
+jest.mock("~/data/media-provider-service", () => ({
   initProviderServices: {
     audio: () =>
       /** @type {typeof import('~/data/media-provider-services').MediaProviderService} */ ({
@@ -57,7 +57,7 @@ jest.mock('~/data/media-provider-service', () => ({
   },
 }))
 
-describe('Provider Store', () => {
+describe("Provider Store", () => {
   let providerStore
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -70,7 +70,7 @@ describe('Provider Store', () => {
     warn.mockReset()
   })
 
-  it('sets the default state', () => {
+  it("sets the default state", () => {
     expect(providerStore.providers).toEqual({
       [AUDIO]: [],
       [IMAGE]: [],
@@ -83,11 +83,11 @@ describe('Provider Store', () => {
 
   it.each`
     providerCode     | displayName
-    ${'wikimedia'}   | ${'Wikimedia Commons'}
-    ${'wordpress'}   | ${'WP Photo Directory'}
-    ${'test_source'} | ${'Test Source'}
+    ${"wikimedia"}   | ${"Wikimedia Commons"}
+    ${"wordpress"}   | ${"WP Photo Directory"}
+    ${"test_source"} | ${"Test Source"}
   `(
-    'getProviderName returns provider name or capitalizes providerCode',
+    "getProviderName returns provider name or capitalizes providerCode",
     async ({ providerCode, displayName }) => {
       await providerStore.fetchMediaProviders()
       expect(providerStore.getProviderName(providerCode, IMAGE)).toEqual(
@@ -96,7 +96,7 @@ describe('Provider Store', () => {
     }
   )
 
-  it('fetchMediaProviders on success', async () => {
+  it("fetchMediaProviders on success", async () => {
     await providerStore.fetchMediaProviders()
     expect(providerStore.fetchState[IMAGE]).toEqual({
       fetchingError: null,
@@ -106,12 +106,12 @@ describe('Provider Store', () => {
     expect(providerStore.providers[IMAGE]).toEqual(mockData)
   })
 
-  it('fetchMediaProviders on error', async () => {
+  it("fetchMediaProviders on error", async () => {
     for (const mediaType of supportedMediaTypes) {
       initProviderServices[mediaType] = () => ({
         getProviderStats: jest
           .fn()
-          .mockImplementation(() => Promise.reject(new Error('Not found'))),
+          .mockImplementation(() => Promise.reject(new Error("Not found"))),
       })
     }
     const searchStore = useSearchStore()

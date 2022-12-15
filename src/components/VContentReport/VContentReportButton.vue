@@ -4,25 +4,25 @@
     class="report-button font-semibold text-dark-charcoal-70 hover:underline"
   >
     <span class="text-sr md:hidden md:text-base">{{
-      $t('media-details.content-report.short')
+      $t("media-details.content-report.short")
     }}</span>
     <span class="hidden text-sr md:inline md:text-base">{{
-      $t('media-details.content-report.long')
+      $t("media-details.content-report.long")
     }}</span>
     <VIcon :icon-path="icons.flag" class="ms-2" />
   </VButton>
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VButton from '~/components/VButton.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VButton from "~/components/VButton.vue"
 
-import flagIcon from '~/assets/icons/flag.svg'
+import flagIcon from "~/assets/icons/flag.svg"
 
 export default defineComponent({
-  name: 'VContentReportButton',
+  name: "VContentReportButton",
   components: { VButton, VIcon },
   setup() {
     return {

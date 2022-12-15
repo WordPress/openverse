@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
 export default defineComponent({
-  name: 'VPill',
+  name: "VPill",
 })
 </script>

@@ -17,27 +17,27 @@
     ]"
   >
     <VIcon v-show="isIcon" :icon-path="searchIcon" />
-    <span v-show="!isIcon">{{ $t('search.search') }}</span>
+    <span v-show="!isIcon">{{ $t("search.search") }}</span>
   </VButton>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, computed, PropType } from "@nuxtjs/composition-api"
 
-import { useUiStore } from '~/stores/ui'
+import { useUiStore } from "~/stores/ui"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VButton from '~/components/VButton.vue'
-import type { FieldSize } from '~/components/VInputField/VInputField.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VButton from "~/components/VButton.vue"
+import type { FieldSize } from "~/components/VInputField/VInputField.vue"
 
-import searchIcon from '~/assets/icons/search.svg'
+import searchIcon from "~/assets/icons/search.svg"
 /**
  * The search button used in the search bar on the homepage and on the 404 page,
  * and on the search page.
  * TODO: remove when `new_header` is default: only on the search page with the `new_header`.
  */
 export default defineComponent({
-  name: 'VSearchButton',
+  name: "VSearchButton",
   components: { VIcon, VButton },
   props: {
     size: {
@@ -45,8 +45,8 @@ export default defineComponent({
       required: true,
     },
     route: {
-      type: String as PropType<'home' | '404' | 'search'>,
-      validator: (v: string) => ['home', '404', 'search'].includes(v),
+      type: String as PropType<"home" | "404" | "search">,
+      validator: (v: string) => ["home", "404", "search"].includes(v),
     },
   },
   setup(props) {
@@ -57,7 +57,7 @@ export default defineComponent({
      * everywhere else it has an icon.
      */
     const isIcon = computed(() => {
-      if (props.route !== 'home') {
+      if (props.route !== "home") {
         return true
       } else {
         return !uiStore.isDesktopLayout
@@ -67,10 +67,10 @@ export default defineComponent({
     const sizeClasses = computed(() =>
       isIcon.value
         ? {
-            small: 'w-10 md:w-12',
-            medium: 'w-12',
-            large: 'w-14',
-            standalone: 'w-[57px] md:w-[69px]',
+            small: "w-10 md:w-12",
+            medium: "w-12",
+            large: "w-14",
+            standalone: "w-[57px] md:w-[69px]",
           }[props.size]
         : undefined
     )

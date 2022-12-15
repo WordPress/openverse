@@ -4,16 +4,16 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
+import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
 
 <Meta
   title="Components/Audio track/Waveform"
   components={VWaveform}
   argTypes={{
     seeked: {
-      action: 'seeked',
+      action: "seeked",
     },
   }}
 />
@@ -49,7 +49,7 @@ Here 9 points are upsampled to as many as required to fill the viewport.
       peaks: [0.5, 1, 0.5, 0, 0.5, 1, 0.5, 0, 0.5], // triangular wave with 9 points
       currentTime: 2,
       duration: 10,
-      features: ['timestamps', 'duration', 'seek'],
+      features: ["timestamps", "duration", "seek"],
     }}
   >
     {Template.bind({})}
@@ -70,7 +70,7 @@ Here 1000 points are downsampled to as many as required to fill the viewport.
       ), // sine wave with 1000 points
       currentTime: 2,
       duration: 10,
-      features: ['timestamps', 'duration', 'seek'],
+      features: ["timestamps", "duration", "seek"],
     }}
   >
     {Template.bind({})}
@@ -90,8 +90,8 @@ the `--waveform-background-color` CSS custom property on the component or on the
       peaks: [0.5, 1, 0.5, 0, 0.5],
       currentTime: 2,
       duration: 10,
-      features: ['timestamps', 'duration', 'seek'],
-      style: { '--waveform-background-color': '#d7fcd4' },
+      features: ["timestamps", "duration", "seek"],
+      style: { "--waveform-background-color": "#d7fcd4" },
     }}
   >
     {Template.bind({})}
@@ -122,7 +122,7 @@ contains both the bars and the timestamps so the actual bar height is less than
       peaks: [0.5, 1, 0.5, 0, 0.5],
       currentTime: 2,
       duration: 10,
-      features: ['timestamps', 'duration', 'seek'],
+      features: ["timestamps", "duration", "seek"],
       usableFrac: 0.5,
     }}
   >
@@ -143,7 +143,7 @@ meet the design requirements and space/information density constraints. The
       peaks: [0.5, 1, 0.5, 0, 0.5],
       currentTime: 2,
       duration: 10,
-      features: ['timestamps', 'duration', 'seek'],
+      features: ["timestamps", "duration", "seek"],
     }}
   >
     {Template.bind({})}
@@ -159,7 +159,7 @@ will animate up to their actual height when the prop is unset.
   <Story
     name="Message"
     args={{
-      message: 'Hello, World!',
+      message: "Hello, World!",
       audioId: 123,
     }}
   >

@@ -16,37 +16,37 @@
   </VButton>
 </template>
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, AUDIO, IMAGE, MODEL_3D, VIDEO } from '~/constants/media'
-import useSearchType from '~/composables/use-search-type'
-import { useI18n } from '~/composables/use-i18n'
+import { ALL_MEDIA, AUDIO, IMAGE, MODEL_3D, VIDEO } from "~/constants/media"
+import useSearchType from "~/composables/use-search-type"
+import { useI18n } from "~/composables/use-i18n"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VButton from '~/components/VButton.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VButton from "~/components/VButton.vue"
 
-import caretDownIcon from '~/assets/icons/caret-down.svg'
+import caretDownIcon from "~/assets/icons/caret-down.svg"
 
 const labels = {
-  [ALL_MEDIA]: 'search-type.all',
-  [IMAGE]: 'search-type.image',
-  [AUDIO]: 'search-type.audio',
-  [VIDEO]: 'search-type.video',
-  [MODEL_3D]: 'search-type.model-3d',
+  [ALL_MEDIA]: "search-type.all",
+  [IMAGE]: "search-type.image",
+  [AUDIO]: "search-type.audio",
+  [VIDEO]: "search-type.video",
+  [MODEL_3D]: "search-type.model-3d",
 }
 
 /**
  * This is the search type button that appears in the header, not on the homepage.
  */
 export default defineComponent({
-  name: 'VSearchTypeButton',
+  name: "VSearchTypeButton",
   components: { VButton, VIcon },
   props: {
     a11yProps: {
       type: Object,
       default: () => ({
-        'aria-expanded': false,
-        'aria-haspopup': 'dialog',
+        "aria-expanded": false,
+        "aria-haspopup": "dialog",
       }),
     },
   },

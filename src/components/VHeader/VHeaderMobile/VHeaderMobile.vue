@@ -107,30 +107,30 @@ import {
   useContext,
   useRouter,
   watch,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { ensureFocus } from '~/utils/reakit-utils/focus'
-import { cyclicShift } from '~/utils/math'
+import { ensureFocus } from "~/utils/reakit-utils/focus"
+import { cyclicShift } from "~/utils/math"
 
-import { searchPath } from '~/constants/media'
-import { keycodes } from '~/constants/key-codes'
+import { searchPath } from "~/constants/media"
+import { keycodes } from "~/constants/key-codes"
 
-import { IsHeaderScrolledKey } from '~/types/provides'
+import { IsHeaderScrolledKey } from "~/types/provides"
 
-import { useI18n } from '~/composables/use-i18n'
-import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
+import { useI18n } from "~/composables/use-i18n"
+import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 
-import { useMediaStore } from '~/stores/media'
-import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
+import { useMediaStore } from "~/stores/media"
+import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 
-import VLogoButton from '~/components/VHeader/VLogoButton.vue'
-import VInputModal from '~/components/VModal/VInputModal.vue'
-import VContentSettingsModal from '~/components/VHeader/VHeaderMobile/VContentSettingsModal.vue'
-import VRecentSearches from '~/components/VRecentSearches/VRecentSearches.vue'
-import VSearchBarButton from '~/components/VHeader/VHeaderMobile/VSearchBarButton.vue'
+import VLogoButton from "~/components/VHeader/VLogoButton.vue"
+import VInputModal from "~/components/VModal/VInputModal.vue"
+import VContentSettingsModal from "~/components/VHeader/VHeaderMobile/VContentSettingsModal.vue"
+import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
+import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 
-import closeIcon from '~/assets/icons/close-small.svg'
-import chevronLeftIcon from '~/assets/icons/chevron-left.svg'
+import closeIcon from "~/assets/icons/close-small.svg"
+import chevronLeftIcon from "~/assets/icons/chevron-left.svg"
 
 /**
  * Displays a text field for a search query and is attached to an action button
@@ -138,7 +138,7 @@ import chevronLeftIcon from '~/assets/icons/chevron-left.svg'
  * displayed in the bar itself.
  */
 export default defineComponent({
-  name: 'VHeaderMobile',
+  name: "VHeaderMobile",
   components: {
     VContentSettingsModal,
     VInputModal,
@@ -168,8 +168,8 @@ export default defineComponent({
      * Shows the loading state or result count.
      */
     const searchStatus = computed<string>(() => {
-      if (searchStore.searchTerm === '') return ''
-      if (isFetching.value) return i18n.t('header.loading').toString()
+      if (searchStore.searchTerm === "") return ""
+      if (isFetching.value) return i18n.t("header.loading").toString()
       return getI18nCount(resultsCount.value)
     })
 
@@ -205,11 +205,11 @@ export default defineComponent({
      * to run and fetch new media.
      */
     const handleSearch = async () => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" })
       const mediaStore = useMediaStore()
       const searchStore = useSearchStore()
       const searchType = searchStore.searchType
-      if (!searchTermChanged.value || searchTerm.value === '') return
+      if (!searchTermChanged.value || searchTerm.value === "") return
       if (searchTermChanged.value) {
         await mediaStore.clearMedia()
 
@@ -245,7 +245,7 @@ export default defineComponent({
         })
       } else {
         isRecentSearchesModalOpen.value = false
-        if (localSearchTerm.value === '' && searchStore.searchTerm !== '') {
+        if (localSearchTerm.value === "" && searchStore.searchTerm !== "") {
           localSearchTerm.value = searchStore.searchTerm
         }
       }
@@ -256,7 +256,7 @@ export default defineComponent({
     }
 
     const clearSearchText = () => {
-      searchTerm.value = ''
+      searchTerm.value = ""
       if (searchInputRef.value) {
         ensureFocus(searchInputRef.value)
       }

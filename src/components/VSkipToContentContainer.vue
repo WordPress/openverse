@@ -6,19 +6,19 @@
         class="z-50 mt-2 ms-2 focus:fixed focus:absolute"
         :class="$style.skipButton"
         @click="skipToContent"
-        >{{ $t('skip-to-content') }}</VButton
+        >{{ $t("skip-to-content") }}</VButton
       >
     </VTeleport>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref } from '@nuxtjs/composition-api'
-import { Portal as VTeleport } from 'portal-vue'
+import { defineComponent, ref } from "@nuxtjs/composition-api"
+import { Portal as VTeleport } from "portal-vue"
 
-import { ensureFocus, getFirstTabbableIn } from '~/utils/reakit-utils/focus'
+import { ensureFocus, getFirstTabbableIn } from "~/utils/reakit-utils/focus"
 
-import VButton from '~/components/VButton.vue'
+import VButton from "~/components/VButton.vue"
 
 /**
  * Demarcates the section that the "skip to content"
@@ -29,7 +29,7 @@ import VButton from '~/components/VButton.vue'
  * button will not render.
  */
 export default defineComponent({
-  name: 'VSkipToContentContainer',
+  name: "VSkipToContentContainer",
   components: { VTeleport, VButton },
   props: {
     initialFocusNode: {

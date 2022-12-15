@@ -29,29 +29,29 @@
         />
       </svg>
       <span class="sr-only">
-        {{ $t('header.loading') }}
+        {{ $t("header.loading") }}
       </span>
     </span>
 
     <!-- To preserve the button width when state changes, this element is not
     removed from the DOM, only hidden and muted. -->
     <span :class="{ 'opacity-0': isFetching }" :aria-hidden="isFetching">
-      {{ $t('header.see-results') }}
+      {{ $t("header.see-results") }}
     </span>
   </VButton>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from "@nuxtjs/composition-api"
 
-import VButton from '~/components/VButton.vue'
+import VButton from "~/components/VButton.vue"
 
 /**
  * This button dismisses the open modal for changing content types or applying
  * filters and takes the user back to the results.
  */
 export default defineComponent({
-  name: 'VShowResultsButton',
+  name: "VShowResultsButton",
   components: { VButton },
   props: {
     /**

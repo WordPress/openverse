@@ -25,7 +25,7 @@ export function getActiveElement(
     )
   }
   if (activeDescendant) {
-    const id = activeElement.getAttribute('aria-activedescendant')
+    const id = activeElement.getAttribute("aria-activedescendant")
     if (id) {
       const element = getDocument(activeElement).getElementById(id)
       if (element) {
@@ -50,7 +50,7 @@ export function contains(parent: Node, child: Node): boolean {
  * Checks whether `element` is a frame element.
  */
 export function isFrame(element: Element): element is HTMLIFrameElement {
-  return element.tagName === 'IFRAME'
+  return element.tagName === "IFRAME"
 }
 
 /**
@@ -67,6 +67,6 @@ export function isVisible(element: Element) {
 
 export function isInDocument(target: Element) {
   const document = getDocument(target)
-  if (target.tagName === 'HTML') return true
+  if (target.tagName === "HTML") return true
   return contains(document.body, target)
 }

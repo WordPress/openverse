@@ -1,7 +1,7 @@
 <template>
   <label class="other-form block" for="description">
     <span class="flex flex-row items-center justify-between">
-      <span>{{ $t('media-details.content-report.form.other.note') }}</span>
+      <span>{{ $t("media-details.content-report.form.other.note") }}</span>
       <span>{{
         $t(`media-details.content-report.form.${reason}.sub-label`)
       }}</span>
@@ -21,15 +21,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { reasons, OTHER, ReportReason } from '~/constants/content-report'
+import { reasons, OTHER, ReportReason } from "~/constants/content-report"
 
 export default defineComponent({
-  name: 'VReportDescForm',
+  name: "VReportDescForm",
   model: {
-    prop: 'content',
-    event: 'input',
+    prop: "content",
+    event: "input",
   },
   props: {
     /**
@@ -37,7 +37,7 @@ export default defineComponent({
      */
     content: {
       type: String,
-      default: '',
+      default: "",
     },
     /**
      * the reason selected for reporting the content
@@ -50,7 +50,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const text = computed({
       get: () => props.content,
-      set: (val) => emit('input', val),
+      set: (val) => emit("input", val),
     })
 
     const isRequired = computed(() => props.reason === OTHER)

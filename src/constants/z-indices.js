@@ -9,7 +9,7 @@
  */
 const Z_INDICES = Object.freeze(
   /** @type {const} */ ({
-    auto: 'auto',
+    auto: "auto",
     10: 10,
     20: 20,
     30: 30,
@@ -18,7 +18,7 @@ const Z_INDICES = Object.freeze(
     // Named indices
     popover: 50,
     snackbar: 10,
-    'global-audio': 20,
+    "global-audio": 20,
   })
 )
 

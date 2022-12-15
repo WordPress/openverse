@@ -56,34 +56,34 @@ import {
   ref,
   useContext,
   useRouter,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, searchPath } from '~/constants/media'
-import { useMatchSearchRoutes } from '~/composables/use-match-routes'
-import { useI18n } from '~/composables/use-i18n'
-import { useI18nResultsCount } from '~/composables/use-i18n-utilities'
+import { ALL_MEDIA, searchPath } from "~/constants/media"
+import { useMatchSearchRoutes } from "~/composables/use-match-routes"
+import { useI18n } from "~/composables/use-i18n"
+import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 
-import { useMediaStore } from '~/stores/media'
-import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
-import { useUiStore } from '~/stores/ui'
+import { useMediaStore } from "~/stores/media"
+import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
+import { useUiStore } from "~/stores/ui"
 
-import { IsSidebarVisibleKey } from '~/types/provides'
+import { IsSidebarVisibleKey } from "~/types/provides"
 
-import VLogoButtonOld from '~/components/VHeaderOld/VLogoButtonOld.vue'
-import VHeaderFilter from '~/components/VHeaderOld/VHeaderFilter.vue'
-import VSearchBarOld from '~/components/VHeaderOld/VSearchBar/VSearchBarOld.vue'
-import VHeaderMenu from '~/components/VHeaderOld/VHeaderMenu.vue'
+import VLogoButtonOld from "~/components/VHeaderOld/VLogoButtonOld.vue"
+import VHeaderFilter from "~/components/VHeaderOld/VHeaderFilter.vue"
+import VSearchBarOld from "~/components/VHeaderOld/VSearchBar/VSearchBarOld.vue"
+import VHeaderMenu from "~/components/VHeaderOld/VHeaderMenu.vue"
 
-import closeIcon from '~/assets/icons/close.svg'
+import closeIcon from "~/assets/icons/close.svg"
 
 const menus = {
-  FILTERS: 'filters',
-  CONTENT_SWITCHER: 'content-switcher',
+  FILTERS: "filters",
+  CONTENT_SWITCHER: "content-switcher",
 }
-type HeaderMenu = 'filters' | 'content-switcher'
+type HeaderMenu = "filters" | "content-switcher"
 
 export default defineComponent({
-  name: 'VHeaderOld',
+  name: "VHeaderOld",
   components: {
     VLogoButtonOld,
     VHeaderFilter,
@@ -101,19 +101,19 @@ export default defineComponent({
 
     const { matches: isSearchRoute } = useMatchSearchRoutes()
 
-    const isHeaderScrolled = inject('isHeaderScrolled', ref(false))
-    const headerHasTwoRows = inject('headerHasTwoRows')
+    const isHeaderScrolled = inject("isHeaderScrolled", ref(false))
+    const headerHasTwoRows = inject("headerHasTwoRows")
     const isSidebarVisible = inject(IsSidebarVisibleKey)
 
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
 
     const searchBarSize = computed(() => {
       if (isDesktopLayout.value) {
-        return 'medium'
+        return "medium"
       } else if (isHeaderScrolled.value) {
-        return 'small'
+        return "small"
       } else {
-        return 'large'
+        return "large"
       }
     })
 
@@ -141,8 +141,8 @@ export default defineComponent({
      * Shows the loading state or result count.
      */
     const searchStatus = computed(() => {
-      if (!isSearchRoute.value || searchStore.searchTerm === '') return ''
-      if (isFetching.value) return i18n.t('header.loading')
+      if (!isSearchRoute.value || searchStore.searchTerm === "") return ""
+      if (isFetching.value) return i18n.t("header.loading")
       return getI18nCount(resultsCount.value)
     })
 
@@ -178,14 +178,14 @@ export default defineComponent({
      * to run and fetch new media.
      */
     const handleSearch = async () => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" })
 
       const searchType = isSearchRoute.value
         ? searchStore.searchType
         : ALL_MEDIA
       if (
         isSearchRoute.value &&
-        (!searchTermChanged.value || searchTerm.value === '')
+        (!searchTermChanged.value || searchTerm.value === "")
       )
         return
       if (searchTermChanged.value) {

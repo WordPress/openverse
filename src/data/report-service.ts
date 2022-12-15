@@ -1,6 +1,6 @@
-import type { MediaType } from '~/constants/media'
-import type { ReportReason } from '~/constants/content-report'
-import { createApiService, getResourceSlug } from '~/data/api-service'
+import type { MediaType } from "~/constants/media"
+import type { ReportReason } from "~/constants/content-report"
+import { createApiService, getResourceSlug } from "~/data/api-service"
 
 interface ReportParams {
   mediaType: MediaType

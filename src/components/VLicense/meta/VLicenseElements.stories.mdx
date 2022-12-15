@@ -4,24 +4,24 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import VLicenseElements from '~/components/VLicense/VLicenseElements.vue'
-import { ALL_LICENSES } from '~/constants/license'
+import VLicenseElements from "~/components/VLicense/VLicenseElements.vue"
+import { ALL_LICENSES } from "~/constants/license"
 
 <Meta
   title="Components/VLicenseElements"
   component={VLicenseElements}
   argTypes={{
     license: {
-      default: 'by',
+      default: "by",
       options: ALL_LICENSES,
-      control: 'select',
+      control: "select",
     },
     size: {
-      default: 'big',
-      options: ['big', 'small'],
-      control: 'select',
+      default: "big",
+      options: ["big", "small"],
+      control: "select",
     },
   }}
 />
@@ -48,7 +48,7 @@ export const Template = (args) => ({
   <Story
     name="Big"
     args={{
-      license: 'by-nc-nd',
+      license: "by-nc-nd",
     }}
   >
     {Template.bind({})}
@@ -61,8 +61,8 @@ export const Template = (args) => ({
   <Story
     name="Small"
     args={{
-      license: 'by-nc-nd',
-      size: 'small',
+      license: "by-nc-nd",
+      size: "small",
     }}
   >
     {Template.bind({})}

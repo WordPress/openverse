@@ -48,17 +48,17 @@ import {
   computed,
   defineComponent,
   type PropType,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import useSearchType from '~/composables/use-search-type'
-import type { SearchType } from '~/constants/media'
-import { defineEvent } from '~/types/emits'
+import useSearchType from "~/composables/use-search-type"
+import type { SearchType } from "~/constants/media"
+import { defineEvent } from "~/types/emits"
 
-import VItemGroup from '~/components/VItemGroup/VItemGroup.vue'
-import VSearchTypeItem from '~/components/VContentSwitcher/VSearchTypeItem.vue'
+import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
+import VSearchTypeItem from "~/components/VContentSwitcher/VSearchTypeItem.vue"
 
 export default defineComponent({
-  name: 'VSearchTypes',
+  name: "VSearchTypes",
   components: { VItemGroup, VSearchTypeItem },
   props: {
     /**
@@ -66,8 +66,8 @@ export default defineComponent({
      * 'medium' size for larger screens.
      */
     size: {
-      type: String as PropType<'small' | 'medium'>,
-      default: 'small',
+      type: String as PropType<"small" | "medium">,
+      default: "small",
     },
     /**
      * Whether to use buttons for search type selection, or links to the specific search type search pages.
@@ -82,21 +82,21 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const content = useSearchType()
-    const bordered = computed(() => props.size === 'medium')
+    const bordered = computed(() => props.size === "medium")
 
     const isActive = (item: SearchType) => item === content.activeType.value
 
     const contentTypeGroups = computed(() => {
       const base = [
         {
-          heading: 'heading',
+          heading: "heading",
           items: content.types,
         },
       ]
 
       if (content.additionalTypes.value.length && props.useLinks) {
         base.push({
-          heading: 'additional',
+          heading: "additional",
           items: content.additionalTypes.value,
         })
       }
@@ -106,7 +106,7 @@ export default defineComponent({
 
     const selectItem = (item: SearchType) => {
       content.setActiveType(item)
-      emit('select', item)
+      emit("select", item)
     }
 
     return {

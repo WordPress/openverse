@@ -1,6 +1,6 @@
-import { useNavigationStore } from '~/stores/navigation'
+import { useNavigationStore } from "~/stores/navigation"
 
-import type { Plugin } from '@nuxt/types'
+import type { Plugin } from "@nuxt/types"
 
 /**
  * If the URL contains a referral parameter pointing containing
@@ -10,7 +10,7 @@ import type { Plugin } from '@nuxt/types'
 const migrationNoticePlugin: Plugin = ({ query }) => {
   if (query.referrer) {
     useNavigationStore().setIsReferredFromCc(
-      query.referrer.includes('creativecommons.org')
+      query.referrer.includes("creativecommons.org")
     )
   }
 }

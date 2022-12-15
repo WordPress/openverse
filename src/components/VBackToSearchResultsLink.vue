@@ -5,17 +5,17 @@
     v-bind="$attrs"
   >
     <VIcon :icon-path="chevronIcon" :rtl-flip="true" />
-    {{ $t('single-result.back') }}
+    {{ $t("single-result.back") }}
   </VLink>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VLink from '~/components/VLink.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VLink from "~/components/VLink.vue"
 
-import chevronIcon from '~/assets/icons/chevron-left.svg'
+import chevronIcon from "~/assets/icons/chevron-left.svg"
 
 /**
  * This link takes the user from a single result back to the list of all

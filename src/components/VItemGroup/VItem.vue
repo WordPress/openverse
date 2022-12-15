@@ -59,23 +59,23 @@ import {
   computed,
   watch,
   PropType,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { warn } from '~/utils/console'
+import { warn } from "~/utils/console"
 
 import {
   VItemGroupContextKey,
   VItemGroupFocusContextKey,
-} from '~/types/item-group'
+} from "~/types/item-group"
 
-import VButton from '~/components/VButton.vue'
-import VIcon from '~/components/VIcon/VIcon.vue'
-import { VPopoverContentContextKey } from '~/components/VPopover/VPopoverContent.vue'
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import { VPopoverContentContextKey } from "~/components/VPopover/VPopoverContent.vue"
 
-import checkmark from '~/assets/icons/checkmark.svg'
+import checkmark from "~/assets/icons/checkmark.svg"
 
 export default defineComponent({
-  name: 'VItem',
+  name: "VItem",
   components: { VButton, VIcon },
   inheritAttrs: false,
   props: {
@@ -99,9 +99,9 @@ export default defineComponent({
      * @variants 'button', 'VLink'
      */
     as: {
-      type: String as PropType<'button' | 'VLink'>,
-      default: 'button',
-      validator: (val: string) => ['button', 'VLink'].includes(val),
+      type: String as PropType<"button" | "VLink">,
+      default: "button",
+      validator: (val: string) => ["button", "VLink"].includes(val),
     },
   },
   /**
@@ -112,7 +112,7 @@ export default defineComponent({
    * However, with current Vue 2 setup, if VItem is a link (a or NuxtLink), it is
    * necessary to add native modifier to handle click event: `@click.native='handler'`.
    */
-  emits: ['click'],
+  emits: ["click"],
   setup(props) {
     const focusContext = inject(VItemGroupFocusContextKey)
     const isFocused = ref(false)
@@ -121,12 +121,12 @@ export default defineComponent({
 
     if (!contextProps || !focusContext) {
       throw new Error(
-        'Do not use `VItem` outside of a `VItemGroup`. Use `VButton` instead.'
+        "Do not use `VItem` outside of a `VItemGroup`. Use `VButton` instead."
       )
     }
 
     if (isInPopover && contextProps.bordered) {
-      warn('Bordered popover items are not supported')
+      warn("Bordered popover items are not supported")
     }
 
     watch(
@@ -137,7 +137,7 @@ export default defineComponent({
 
     const tabIndex = computed(() => {
       // If outside a radiogroup then everything can be tabbable in order
-      if (contextProps.type !== 'radiogroup') return 0
+      if (contextProps.type !== "radiogroup") return 0
       // If no items are selected then all can be tabbable to ensure it is possible to enter into the group
       if (
         focusContext.selectedCount.value === 0 &&

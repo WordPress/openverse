@@ -1,4 +1,4 @@
-import type { DeepReadonly } from '@nuxtjs/composition-api'
+import type { DeepReadonly } from "@nuxtjs/composition-api"
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze#examples
@@ -14,7 +14,7 @@ export function deepFreeze<T>(object: T): DeepReadonly<T> {
     // @ts-ignore We got the property name from getOwnPropertyNames so this is safe
     const value = object[name]
 
-    if (value && typeof value === 'object') {
+    if (value && typeof value === "object") {
       deepFreeze(value)
     }
   }

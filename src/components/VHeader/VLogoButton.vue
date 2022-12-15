@@ -15,13 +15,13 @@
   </VButton>
 </template>
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import VLogoLoader from '~/components/VLogoLoader/VLogoLoader.vue'
-import VButton from '~/components/VButton.vue'
+import VLogoLoader from "~/components/VLogoLoader/VLogoLoader.vue"
+import VButton from "~/components/VButton.vue"
 
 export default defineComponent({
-  name: 'VLogoButton',
+  name: "VLogoButton",
   components: { VLogoLoader, VButton },
   props: {
     isFetching: {

@@ -5,10 +5,10 @@ import {
   onBeforeUnmount,
   unref,
   Ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
 const isComponentInstance = (o: unknown): o is { $el: unknown } =>
-  !!o && typeof (o as { $el: unknown }).$el !== 'undefined'
+  !!o && typeof (o as { $el: unknown }).$el !== "undefined"
 
 export type MaybeRef<T> = Ref<T> | T
 
@@ -19,8 +19,8 @@ export type MaybeRef<T> = Ref<T> | T
  */
 export function useEventListener<T extends EventTarget>(
   target: MaybeRef<T | { $el: T }>,
-  event: Parameters<T['addEventListener']>[0],
-  handler: Parameters<T['addEventListener']>[1],
+  event: Parameters<T["addEventListener"]>[0],
+  handler: Parameters<T["addEventListener"]>[1],
   options = {}
 ) {
   // if it's a reactive ref, use a watcher

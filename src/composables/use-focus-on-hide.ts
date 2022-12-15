@@ -1,7 +1,7 @@
-import { Ref, watch } from '@nuxtjs/composition-api'
+import { Ref, watch } from "@nuxtjs/composition-api"
 
-import { contains, getActiveElement } from '~/utils/reakit-utils/dom'
-import { ensureFocus, isTabbable } from '~/utils/reakit-utils/focus'
+import { contains, getActiveElement } from "~/utils/reakit-utils/dom"
+import { ensureFocus, isTabbable } from "~/utils/reakit-utils/focus"
 
 type Props = {
   dialogRef: Ref<HTMLElement | null>
@@ -19,7 +19,7 @@ function hidByFocusingAnotherElement(popover: HTMLElement) {
   if (contains(popover, activeElement)) return false
   if (isTabbable(activeElement)) return true
 
-  return activeElement.getAttribute('data-popover') === 'true'
+  return activeElement.getAttribute("data-popover") === "true"
 }
 
 export const useFocusOnHide = ({

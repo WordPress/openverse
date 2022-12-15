@@ -28,29 +28,29 @@ import {
   InjectionKey,
   PropType,
   computed,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
 import {
   Placement,
   placements as popoverPlacements,
   PositioningStrategy,
-} from '@popperjs/core'
+} from "@popperjs/core"
 
-import { usePopoverContent } from '~/composables/use-popover-content'
-import { warn } from '~/utils/console'
-import { defineEvent } from '~/types/emits'
+import { usePopoverContent } from "~/composables/use-popover-content"
+import { warn } from "~/utils/console"
+import { defineEvent } from "~/types/emits"
 
-import { zIndexValidator } from '~/constants/z-indices'
+import { zIndexValidator } from "~/constants/z-indices"
 
-import type { CSSProperties } from '@vue/runtime-dom'
-import type { SetupContext } from 'vue'
+import type { CSSProperties } from "@vue/runtime-dom"
+import type { SetupContext } from "vue"
 
 export const VPopoverContentContextKey = Symbol(
-  'VPopoverContentContextKey'
+  "VPopoverContentContextKey"
 ) as InjectionKey<boolean>
 
 export default defineComponent({
-  name: 'VPopoverContent',
+  name: "VPopoverContent",
   props: {
     visible: {
       type: Boolean,
@@ -84,14 +84,14 @@ export default defineComponent({
     },
     placement: {
       type: String as PropType<Placement>,
-      default: 'bottom-end',
+      default: "bottom-end",
       validate: (v: string) =>
         (popoverPlacements as unknown as string[]).includes(v),
     },
     strategy: {
       type: String as PropType<PositioningStrategy>,
-      default: 'absolute',
-      validate: (v: string) => ['absolute', 'fixed'].includes(v),
+      default: "absolute",
+      validate: (v: string) => ["absolute", "fixed"].includes(v),
     },
     zIndex: {
       type: [String, Number],
@@ -111,8 +111,8 @@ export default defineComponent({
   emits: { keydown: defineEvent(), blur: defineEvent() },
   setup(props, { emit, attrs }) {
     provide(VPopoverContentContextKey, true)
-    if (!attrs['aria-label'] && !attrs['aria-labelledby']) {
-      warn('You should provide either `aria-label` or `aria-labelledby` props.')
+    if (!attrs["aria-label"] && !attrs["aria-labelledby"]) {
+      warn("You should provide either `aria-label` or `aria-labelledby` props.")
     }
 
     const propsRefs = toRefs(props)
@@ -121,7 +121,7 @@ export default defineComponent({
     const { onKeyDown, onBlur, maxHeightRef } = usePopoverContent({
       popoverRef,
       popoverPropsRefs: propsRefs,
-      emit: emit as SetupContext['emit'],
+      emit: emit as SetupContext["emit"],
     })
 
     const heightProperties = computed(() => {
@@ -129,7 +129,7 @@ export default defineComponent({
       const maxHeight = maxHeightRef.value
 
       return maxHeight && props.clippable
-        ? ({ '--popover-height': `${maxHeight}px` } as CSSProperties)
+        ? ({ "--popover-height": `${maxHeight}px` } as CSSProperties)
         : ({} as CSSProperties)
     })
 

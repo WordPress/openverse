@@ -4,19 +4,19 @@ import {
   Meta,
   Canvas,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import VRecentSearches from '~/components/VRecentSearches/VRecentSearches.vue'
+import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
 
 <Meta
   title="Components/VRecentSearches"
   component={VRecentSearches}
   argTypes={{
     select: {
-      action: 'select',
+      action: "select",
     },
     clear: {
-      action: 'clear',
+      action: "clear",
     },
   }}
 />
@@ -40,7 +40,7 @@ export const Template = (args) => ({
   <Story
     name="Default"
     args={{
-      entries: ['addition', 'subtraction', 'multiplication', 'division'],
+      entries: ["addition", "subtraction", "multiplication", "division"],
     }}
   >
     {Template.bind({})}

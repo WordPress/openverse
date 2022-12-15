@@ -11,16 +11,16 @@
   </VButton>
 </template>
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from "@nuxtjs/composition-api"
 
-import { useMediaStore } from '~/stores/media'
-import { useSearchStore } from '~/stores/search'
-import { useI18n } from '~/composables/use-i18n'
+import { useMediaStore } from "~/stores/media"
+import { useSearchStore } from "~/stores/search"
+import { useI18n } from "~/composables/use-i18n"
 
-import VButton from '~/components/VButton.vue'
+import VButton from "~/components/VButton.vue"
 
 export default defineComponent({
-  name: 'VLoadMore',
+  name: "VLoadMore",
   components: {
     VButton,
   },
@@ -39,7 +39,7 @@ export default defineComponent({
      */
     const canLoadMore = computed(
       () =>
-        searchStore.searchTerm !== '' &&
+        searchStore.searchTerm !== "" &&
         !mediaStore.fetchState.fetchingError &&
         !mediaStore.fetchState.isFinished &&
         mediaStore.resultCount > 0
@@ -61,8 +61,8 @@ export default defineComponent({
 
     const buttonLabel = computed(() =>
       isFetching.value
-        ? i18n.t('browse-page.loading')
-        : i18n.t('browse-page.load')
+        ? i18n.t("browse-page.loading")
+        : i18n.t("browse-page.load")
     )
 
     return {

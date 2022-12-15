@@ -1,14 +1,14 @@
-import { test, expect, Page } from '@playwright/test'
+import { test, expect, Page } from "@playwright/test"
 
-import { mockProviderApis } from '~~/test/playwright/utils/route'
+import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
   goToSearchTerm,
   searchTypePath,
-} from '~~/test/playwright/utils/navigation'
+} from "~~/test/playwright/utils/navigation"
 
-import { supportedSearchTypes } from '~/constants/media'
+import { supportedSearchTypes } from "~/constants/media"
 
-test.describe.configure({ mode: 'parallel' })
+test.describe.configure({ mode: "parallel" })
 
 test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
@@ -18,7 +18,7 @@ for (const searchType of supportedSearchTypes) {
   test(`can change type and search for ${searchType} from homepage`, async ({
     page,
   }) => {
-    await goToSearchTerm(page, 'cat', { searchType, mode: 'CSR' })
+    await goToSearchTerm(page, "cat", { searchType, mode: "CSR" })
 
     const expectedUrl = `/search/${searchTypePath(searchType)}?q=cat`
     await expect(page).toHaveURL(expectedUrl)
@@ -26,16 +26,16 @@ for (const searchType of supportedSearchTypes) {
 }
 
 const popoverIsVisible = async (page: Page) =>
-  await expect(page.locator('.popover-content')).toBeVisible()
+  await expect(page.locator(".popover-content")).toBeVisible()
 const popoverIsNotVisible = async (page: Page) =>
-  await expect(page.locator('.popover-content')).not.toBeVisible()
+  await expect(page.locator(".popover-content")).not.toBeVisible()
 const clickPopoverButton = async (page: Page) =>
   await page.click('button[aria-label="All content"]')
 
-test('can close the search type popover by clicking outside', async ({
+test("can close the search type popover by clicking outside", async ({
   page,
 }) => {
-  await page.goto('/')
+  await page.goto("/")
   await clickPopoverButton(page)
   await popoverIsVisible(page)
 
@@ -43,14 +43,14 @@ test('can close the search type popover by clicking outside', async ({
   await popoverIsNotVisible(page)
 })
 
-test('can close the search type popover by pressing Escape', async ({
+test("can close the search type popover by pressing Escape", async ({
   page,
 }) => {
-  await page.goto('/')
+  await page.goto("/")
   await clickPopoverButton(page)
   await popoverIsVisible(page)
 
-  await page.keyboard.press('Escape')
+  await page.keyboard.press("Escape")
 
   await popoverIsNotVisible(page)
 })

@@ -22,10 +22,10 @@
   </VIconButton>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VIconButton from '~/components/VIconButton/VIconButton.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 /**
  * The buttons placed inside the mobile search bar in the header.
@@ -34,7 +34,7 @@ import VIconButton from '~/components/VIconButton/VIconButton.vue'
  * accessibility requirements.
  */
 export default defineComponent({
-  name: 'VSearchBarButton',
+  name: "VSearchBarButton",
   components: { VIcon, VIconButton },
   props: {
     /**
@@ -57,7 +57,7 @@ export default defineComponent({
      */
     innerAreaClasses: {
       type: String,
-      default: '',
+      default: "",
     },
     /**
      * Whether the icon should be flipped when the page is in RTL mode.

@@ -4,9 +4,9 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
-import VNavLink from '~/components/VNavLink/VNavLink.vue'
+import VNavLink from "~/components/VNavLink/VNavLink.vue"
 
 export const Template = (args) => ({
   template: `<VNavLink link="/about" v-bind="args" v-on="args">About</VNavLink>`,
@@ -20,11 +20,11 @@ export const Template = (args) => ({
   title="Components/VNavLink"
   component={VNavLink}
   argTypes={{
-    isActive: { control: { type: 'boolean' } },
-    mode: { control: { type: 'select', options: ['dark', 'light'] } },
-    variant: { control: { type: 'select', options: ['inline', 'column'] } },
-    link: { control: { type: 'text' } },
-    click: { action: 'click' },
+    isActive: { control: { type: "boolean" } },
+    mode: { control: { type: "select", options: ["dark", "light"] } },
+    variant: { control: { type: "select", options: ["inline", "column"] } },
+    link: { control: { type: "text" } },
+    click: { action: "click" },
   }}
 />
 

@@ -1,13 +1,13 @@
 <template>
   <VContentPage>
-    <h1>{{ $t('pref-page.title') }}</h1>
+    <h1>{{ $t("pref-page.title") }}</h1>
 
     <div v-for="isSwitchable in [false, true]" :key="isSwitchable">
       <h2>
-        {{ $t(`pref-page.${isSwitchable ? '' : 'non-'}switchable.title`) }}
+        {{ $t(`pref-page.${isSwitchable ? "" : "non-"}switchable.title`) }}
       </h2>
       <p>
-        {{ $t(`pref-page.${isSwitchable ? '' : 'non-'}switchable.desc`) }}
+        {{ $t(`pref-page.${isSwitchable ? "" : "non-"}switchable.desc`) }}
       </p>
       <ul class="!ps-0">
         <template v-for="(feature, name) in flags">
@@ -34,10 +34,10 @@
       </ul>
     </div>
 
-    <h2>{{ $t('pref-page.store-state') }}</h2>
+    <h2>{{ $t("pref-page.store-state") }}</h2>
     <pre><code>{{ flags }}</code></pre>
 
-    <h2>{{ $t('pref-page.content-filtering') }}</h2>
+    <h2>{{ $t("pref-page.content-filtering") }}</h2>
     <ul>
       <template v-for="(_, featName) in flags">
         <template v-for="featState in FEATURE_STATES">
@@ -73,16 +73,16 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, useContext } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useContext } from "@nuxtjs/composition-api"
 
-import { useFeatureFlagStore, getFlagStatus } from '~/stores/feature-flag'
-import { SWITCHABLE, ON, OFF, FEATURE_STATES } from '~/constants/feature-flag'
+import { useFeatureFlagStore, getFlagStatus } from "~/stores/feature-flag"
+import { SWITCHABLE, ON, OFF, FEATURE_STATES } from "~/constants/feature-flag"
 
-import VContentPage from '~/components/VContentPage.vue'
-import VCheckbox from '~/components/VCheckbox/VCheckbox.vue'
+import VContentPage from "~/components/VContentPage.vue"
+import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 
 export default defineComponent({
-  name: 'VPreferences',
+  name: "VPreferences",
   components: {
     VContentPage,
     VCheckbox,
@@ -106,7 +106,7 @@ export default defineComponent({
       checked: boolean
     }) => {
       featureFlagStore.toggleFeature(name, checked ? ON : OFF)
-      $cookies.set('features', featureFlagStore.flagStateMap)
+      $cookies.set("features", featureFlagStore.flagStateMap)
     }
 
     return {

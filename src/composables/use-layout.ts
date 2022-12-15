@@ -1,13 +1,13 @@
-import { useWindowSize, watchThrottled } from '@vueuse/core'
+import { useWindowSize, watchThrottled } from "@vueuse/core"
 
-import type { Breakpoint } from '~/constants/screens'
-import { ALL_SCREEN_SIZES } from '~/constants/screens'
-import { useUiStore } from '~/stores/ui'
+import type { Breakpoint } from "~/constants/screens"
+import { ALL_SCREEN_SIZES } from "~/constants/screens"
+import { useUiStore } from "~/stores/ui"
 
 const widthToBreakpoint = (width: number): Breakpoint => {
   const bp = Object.entries(ALL_SCREEN_SIZES).find(
     ([, bpWidth]) => width >= bpWidth
-  ) ?? ['xs', 0]
+  ) ?? ["xs", 0]
   return bp[0] as Breakpoint
 }
 

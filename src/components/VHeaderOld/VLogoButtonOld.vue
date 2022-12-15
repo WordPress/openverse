@@ -28,15 +28,15 @@
   </VButton>
 </template>
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import VLogoLoader from '~/components/VLogoLoader/VLogoLoader.vue'
-import VButton from '~/components/VButton.vue'
+import VLogoLoader from "~/components/VLogoLoader/VLogoLoader.vue"
+import VButton from "~/components/VButton.vue"
 
-import OpenverseLogoText from '~/assets/icons/openverse-logo-text.svg'
+import OpenverseLogoText from "~/assets/icons/openverse-logo-text.svg"
 
 export default defineComponent({
-  name: 'VLogoButtonOld',
+  name: "VLogoButtonOld",
   components: { VLogoLoader, VButton },
   props: {
     isFetching: {

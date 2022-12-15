@@ -24,7 +24,7 @@
       <div class="spacer grow" />
       <div class="z-10 grow-[3] space-y-4 lg:space-y-6">
         <h1 class="heading-5 lg:heading-2 mb-6 lg:mb-10 lg:leading-tight">
-          {{ $t('404.title') }}
+          {{ $t("404.title") }}
         </h1>
         <p class="label-bold lg:heading-6">
           <i18n path="404.main">
@@ -46,30 +46,30 @@
 </template>
 
 <script>
-import { defineComponent, useContext, useRouter } from '@nuxtjs/composition-api'
+import { defineComponent, useContext, useRouter } from "@nuxtjs/composition-api"
 
-import { useSearchStore } from '~/stores/search'
+import { useSearchStore } from "~/stores/search"
 
-import { useFeatureFlagStore } from '~/stores/feature-flag'
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-import { ALL_MEDIA, searchPath } from '~/constants/media'
+import { ALL_MEDIA, searchPath } from "~/constants/media"
 
-import VStandaloneSearchBar from '~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue'
-import VLink from '~/components/VLink.vue'
-import VBrand from '~/components/VBrand/VBrand.vue'
-import VFooter from '~/components/VFooter/VFooter.vue'
+import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
+import VLink from "~/components/VLink.vue"
+import VBrand from "~/components/VBrand/VBrand.vue"
+import VFooter from "~/components/VFooter/VFooter.vue"
 
-import Oops from '~/assets/oops.svg'
+import Oops from "~/assets/oops.svg"
 
 export default defineComponent({
-  name: 'VFourOhFour',
+  name: "VFourOhFour",
   components: {
     VLink,
     VStandaloneSearchBar,
     VBrand,
     VFooter,
   },
-  props: ['error'],
+  props: ["error"],
   setup() {
     const searchStore = useSearchStore()
     const { app } = useContext()
@@ -90,7 +90,7 @@ export default defineComponent({
     }
 
     const featureFlagStore = useFeatureFlagStore()
-    const isNewHeaderEnabled = featureFlagStore.isOn('new_header')
+    const isNewHeaderEnabled = featureFlagStore.isOn("new_header")
 
     return {
       handleSearch,
@@ -101,9 +101,9 @@ export default defineComponent({
   head: {
     meta: [
       {
-        hid: 'theme-color',
-        name: 'theme-color',
-        content: '#ffe033',
+        hid: "theme-color",
+        name: "theme-color",
+        content: "#ffe033",
       },
     ],
   },

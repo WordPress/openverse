@@ -39,11 +39,11 @@ import {
   defineComponent,
   PropType,
   ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
-import VSearchButton from '~/components/VHeader/VSearchBar/VSearchButton.vue'
+import VSearchButton from "~/components/VHeader/VSearchBar/VSearchButton.vue"
 
 /**
  * Displays a search input for a search query and is attached to an action button
@@ -53,12 +53,12 @@ import VSearchButton from '~/components/VHeader/VSearchBar/VSearchButton.vue'
  * is not removed.
  */
 export default defineComponent({
-  name: 'VStandaloneSearchBar',
+  name: "VStandaloneSearchBar",
   components: { VSearchButton },
   props: {
     route: {
-      type: String as PropType<'home' | '404'>,
-      default: 'home',
+      type: String as PropType<"home" | "404">,
+      default: "home",
     },
   },
   emits: {
@@ -71,11 +71,11 @@ export default defineComponent({
     const handleSearch = () => {
       const searchTerm = inputRef.value?.value.trim()
       if (searchTerm) {
-        emit('submit', searchTerm)
+        emit("submit", searchTerm)
       }
     }
 
-    const isHomeRoute = computed(() => props.route === 'home')
+    const isHomeRoute = computed(() => props.route === "home")
 
     return {
       inputRef,

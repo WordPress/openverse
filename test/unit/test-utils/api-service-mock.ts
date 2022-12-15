@@ -1,9 +1,9 @@
-import MockAdapter from 'axios-mock-adapter'
+import MockAdapter from "axios-mock-adapter"
 
-import * as apiService from '~/data/api-service'
+import * as apiService from "~/data/api-service"
 
-jest.mock('~/data/api-service', () => ({ createApiService: jest.fn() }))
-const originalApiService = jest.requireActual('~/data/api-service')
+jest.mock("~/data/api-service", () => ({ createApiService: jest.fn() }))
+const originalApiService = jest.requireActual("~/data/api-service")
 
 const createApiService = apiService.createApiService as jest.Mock<
   ReturnType<typeof apiService.createApiService>,

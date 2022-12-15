@@ -1,21 +1,21 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia"
 
-import { computed } from '@nuxtjs/composition-api'
+import { computed } from "@nuxtjs/composition-api"
 
-import { useNavigationStore } from '~/stores/navigation'
+import { useNavigationStore } from "~/stores/navigation"
 
-import type { OpenverseCookieState, SnackbarState } from '~/types/cookies'
-import type { BannerId, TranslationBannerId } from '~/types/banners'
+import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
+import type { BannerId, TranslationBannerId } from "~/types/banners"
 
-import type { Breakpoint } from '~/constants/screens'
-import { ALL_SCREEN_SIZES } from '~/constants/screens'
-import { useFeatureFlagStore } from '~/stores/feature-flag'
-import { cookieOptions } from '~/utils/cookies'
-import { needsTranslationBanner } from '~/utils/translation-banner'
+import type { Breakpoint } from "~/constants/screens"
+import { ALL_SCREEN_SIZES } from "~/constants/screens"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { cookieOptions } from "~/utils/cookies"
+import { needsTranslationBanner } from "~/utils/translation-banner"
 
-import type { LocaleObject } from '@nuxtjs/i18n'
+import type { LocaleObject } from "@nuxtjs/i18n"
 
-const desktopBreakpoints: Breakpoint[] = ['2xl', 'xl', 'lg']
+const desktopBreakpoints: Breakpoint[] = ["2xl", "xl", "lg"]
 
 export interface UiState {
   /**
@@ -49,30 +49,30 @@ export interface UiState {
 
 export const breakpoints = Object.keys(ALL_SCREEN_SIZES)
 
-export const useUiStore = defineStore('ui', {
+export const useUiStore = defineStore("ui", {
   state: (): UiState => ({
-    instructionsSnackbarState: 'not_shown',
+    instructionsSnackbarState: "not_shown",
     innerFilterVisible: false,
     isFilterDismissed: false,
     isDesktopLayout: false,
-    breakpoint: 'sm',
+    breakpoint: "sm",
     isMobileUa: true,
     dismissedBanners: [],
   }),
 
   getters: {
     areInstructionsVisible(state): boolean {
-      return state.instructionsSnackbarState === 'visible'
+      return state.instructionsSnackbarState === "visible"
     },
 
     desktopBreakpoints(): Breakpoint[] {
       const featureFlagStore = useFeatureFlagStore()
       const isNewHeaderEnabled = computed(() =>
-        featureFlagStore.isOn('new_header')
+        featureFlagStore.isOn("new_header")
       )
       return isNewHeaderEnabled.value
         ? desktopBreakpoints
-        : [...desktopBreakpoints, 'md']
+        : [...desktopBreakpoints, "md"]
     },
     /**
      * On desktop, we only hide the filters sidebar if it was
@@ -105,7 +105,7 @@ export const useUiStore = defineStore('ui', {
      * @example 'translation-ru'
      */
     translationBannerId(): TranslationBannerId {
-      return `translation-${this.currentLocale.code as LocaleObject['code']}`
+      return `translation-${this.currentLocale.code as LocaleObject["code"]}`
     },
     /**
      * The translation banner is shown if the translated percentage is below 90%,
@@ -124,7 +124,7 @@ export const useUiStore = defineStore('ui', {
     shouldShowMigrationBanner(): boolean {
       const navigationStore = useNavigationStore()
       return (
-        !this.dismissedBanners.includes('cc-referral') &&
+        !this.dismissedBanners.includes("cc-referral") &&
         navigationStore.isReferredFromCc
       )
     },
@@ -132,13 +132,13 @@ export const useUiStore = defineStore('ui', {
 
   actions: {
     showInstructionsSnackbar() {
-      if (this.instructionsSnackbarState === 'not_shown') {
-        this.instructionsSnackbarState = 'visible'
+      if (this.instructionsSnackbarState === "not_shown") {
+        this.instructionsSnackbarState = "visible"
       }
     },
 
     hideInstructionsSnackbar() {
-      this.instructionsSnackbarState = 'dismissed'
+      this.instructionsSnackbarState = "dismissed"
     },
 
     /**
@@ -160,20 +160,20 @@ export const useUiStore = defineStore('ui', {
 
     updateCookies() {
       const opts = { ...cookieOptions }
-      if (!useFeatureFlagStore().isOn('new_header')) {
-        opts.sameSite = 'none'
+      if (!useFeatureFlagStore().isOn("new_header")) {
+        opts.sameSite = "none"
       }
 
       this.$nuxt.$cookies.setAll([
         {
-          name: 'uiInstructionsSnackbarState',
+          name: "uiInstructionsSnackbarState",
           value: this.instructionsSnackbarState,
           opts,
         },
-        { name: 'uiIsFilterDismissed', value: this.isFilterDismissed, opts },
-        { name: 'uiBreakpoint', value: this.breakpoint, opts },
-        { name: 'uiIsMobileUa', value: this.isMobileUa, opts },
-        { name: 'uiDismissedBanners', value: this.dismissedBanners, opts },
+        { name: "uiIsFilterDismissed", value: this.isFilterDismissed, opts },
+        { name: "uiBreakpoint", value: this.breakpoint, opts },
+        { name: "uiIsMobileUa", value: this.isMobileUa, opts },
+        { name: "uiDismissedBanners", value: this.dismissedBanners, opts },
       ])
     },
 
@@ -188,11 +188,11 @@ export const useUiStore = defineStore('ui', {
       }
 
       this.breakpoint = breakpoint
-      const sameSite = useFeatureFlagStore().isOn('new_header')
+      const sameSite = useFeatureFlagStore().isOn("new_header")
         ? cookieOptions.sameSite
-        : 'none'
+        : "none"
 
-      this.$nuxt.$cookies.set('uiBreakpoint', this.breakpoint, {
+      this.$nuxt.$cookies.set("uiBreakpoint", this.breakpoint, {
         ...cookieOptions,
         sameSite,
       })
@@ -210,11 +210,11 @@ export const useUiStore = defineStore('ui', {
       this.innerFilterVisible = visible
       if (this.isDesktopLayout) {
         this.isFilterDismissed = !visible
-        const sameSite = useFeatureFlagStore().isOn('new_header')
+        const sameSite = useFeatureFlagStore().isOn("new_header")
           ? cookieOptions.sameSite
-          : 'none'
+          : "none"
 
-        this.$nuxt.$cookies.set('uiIsFilterDismissed', this.isFilterDismissed, {
+        this.$nuxt.$cookies.set("uiIsFilterDismissed", this.isFilterDismissed, {
           ...cookieOptions,
           sameSite,
         })
@@ -237,11 +237,11 @@ export const useUiStore = defineStore('ui', {
       }
 
       this.dismissedBanners.push(bannerId)
-      const sameSite = useFeatureFlagStore().isOn('new_header')
+      const sameSite = useFeatureFlagStore().isOn("new_header")
         ? cookieOptions.sameSite
-        : 'none'
+        : "none"
 
-      this.$nuxt.$cookies.set('uiDismissedBanners', this.dismissedBanners, {
+      this.$nuxt.$cookies.set("uiDismissedBanners", this.dismissedBanners, {
         ...cookieOptions,
         sameSite,
       })

@@ -4,14 +4,14 @@ This script extracts data for locales available in GlotPress and translate.wp.or
  and saves it to `wp-locales-list.json`.
  **/
 
-const fs = require('fs')
+const fs = require("fs")
 
-const axios = require('./axios')
+const axios = require("./axios")
 
-const { addFetchedTranslationStatus } = require('./get-translations-status')
+const { addFetchedTranslationStatus } = require("./get-translations-status")
 
 const base_url =
-  'https://raw.githubusercontent.com/GlotPress/GlotPress-WP/develop/locales/locales.php'
+  "https://raw.githubusercontent.com/GlotPress/GlotPress-WP/develop/locales/locales.php"
 
 /**
  * Fetches the data from GlotPress GitHub.
@@ -26,23 +26,23 @@ const snakeToCamel = (str) =>
   str
     .toLowerCase()
     .replace(/([-_][a-z])/g, (group) =>
-      group.toUpperCase().replace('-', '').replace('_', '')
+      group.toUpperCase().replace("-", "").replace("_", "")
     )
 
 const createPropertyRePatterns = ({
   properties = [
-    'english_name',
-    'native_name',
-    'lang_code_iso_639_1',
-    'lang_code_iso_639_2',
-    'country_code',
-    'slug',
-    'nplurals',
-    'plural_expression',
-    'google_code',
-    'facebook_locale',
-    'text_direction',
-    'wp_locale',
+    "english_name",
+    "native_name",
+    "lang_code_iso_639_1",
+    "lang_code_iso_639_2",
+    "country_code",
+    "slug",
+    "nplurals",
+    "plural_expression",
+    "google_code",
+    "facebook_locale",
+    "text_direction",
+    "wp_locale",
   ],
 } = {}) => {
   const propertyRePatterns = {}
@@ -59,7 +59,7 @@ function parseLocaleData(rawData) {
   // ugly check to exclude English from the locales list,
   // so we don't overwrite `en.json` later. See `get-translations.js`
   // to check how `en.json` file is created.
-  if (wpLocaleMatch && wpLocaleMatch[1] !== 'en_US') {
+  if (wpLocaleMatch && wpLocaleMatch[1] !== "en_US") {
     const wpLocale = wpLocaleMatch[1]
     const data = {}
     Object.keys(propertyRePatterns).forEach((key) => {
@@ -68,7 +68,7 @@ function parseLocaleData(rawData) {
       if (value) {
         // Convert locale property names to camelCase and replace `english_name` with `name`
         const camelCasedPropName = snakeToCamel(
-          key === 'english_name' ? 'name' : key
+          key === "english_name" ? "name" : key
         )
         data[camelCasedPropName] = value[1]
       }
@@ -93,7 +93,7 @@ async function getWpLocaleData() {
 
   const data = await getGpLocalesData()
   const rawLocalesData = data
-    .split('new GP_Locale();')
+    .split("new GP_Locale();")
     .splice(1)
     .map((item) => item.trim())
 
@@ -115,11 +115,11 @@ async function getWpLocaleData() {
 getWpLocaleData()
   .then((data) => {
     try {
-      const fileName = process.cwd() + '/src/locales/scripts/wp-locales.json'
-      fs.writeFileSync(fileName, JSON.stringify(data, null, 2) + '\n')
+      const fileName = process.cwd() + "/src/locales/scripts/wp-locales.json"
+      fs.writeFileSync(fileName, JSON.stringify(data, null, 2) + "\n")
       console.log(`Successfully wrote locales list file to ${fileName}`)
     } catch (err) {
       console.error(err)
     }
   })
-  .catch((err) => console.log('Could not fetch data from ', base_url, err))
+  .catch((err) => console.log("Could not fetch data from ", base_url, err))

@@ -35,30 +35,30 @@ import {
   defineComponent,
   PropType,
   ref,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { CSSProperties } from '@vue/runtime-dom'
+import { CSSProperties } from "@vue/runtime-dom"
 
-import usePages from '~/composables/use-pages'
-import useResizeObserver from '~/composables/use-resize-observer'
+import usePages from "~/composables/use-pages"
+import useResizeObserver from "~/composables/use-resize-observer"
 
-import { SCREEN_SIZES } from '~/constants/screens'
+import { SCREEN_SIZES } from "~/constants/screens"
 
-import { useUiStore } from '~/stores/ui'
+import { useUiStore } from "~/stores/ui"
 
-import type { SelectFieldProps } from '~/components/VSelectField/VSelectField.vue'
-import VLink from '~/components/VLink.vue'
-import VBrand from '~/components/VBrand/VBrand.vue'
-import VLanguageSelect from '~/components/VLanguageSelect/VLanguageSelect.vue'
-import VPageLinks from '~/components/VHeader/VPageLinks.vue'
-import VWordPressLink from '~/components/VHeader/VWordPressLink.vue'
+import type { SelectFieldProps } from "~/components/VSelectField/VSelectField.vue"
+import VLink from "~/components/VLink.vue"
+import VBrand from "~/components/VBrand/VBrand.vue"
+import VLanguageSelect from "~/components/VLanguageSelect/VLanguageSelect.vue"
+import VPageLinks from "~/components/VHeader/VPageLinks.vue"
+import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
 
 /**
  * The footer is the section displayed at the bottom of a page. It can contain
  * some branding, links to other pages and an option to change the language.
  */
 export default defineComponent({
-  name: 'VFooter',
+  name: "VFooter",
   components: {
     VWordPressLink,
     VPageLinks,
@@ -73,7 +73,7 @@ export default defineComponent({
      * displayed.
      */
     mode: {
-      type: String as PropType<'internal' | 'content'>,
+      type: String as PropType<"internal" | "content">,
       required: false,
     },
     languageProps: {
@@ -85,7 +85,7 @@ export default defineComponent({
     const uiStore = useUiStore()
     const { all: allPages, current: currentPage } = usePages(true)
 
-    const isContentMode = computed(() => props.mode === 'content')
+    const isContentMode = computed(() => props.mode === "content")
 
     /** JS-based responsiveness */
     const footerEl = ref<HTMLElement | null>(null)
@@ -106,7 +106,7 @@ export default defineComponent({
     )
 
     const linkColumnHeight = computed<CSSProperties>(() => ({
-      '--link-col-height': Math.ceil(Object.keys(allPages).length / 2),
+      "--link-col-height": Math.ceil(Object.keys(allPages).length / 2),
     }))
 
     return {

@@ -1,13 +1,13 @@
-import { createLocalVue, mount } from '@vue/test-utils'
-import VueI18n from 'vue-i18n'
+import { createLocalVue, mount } from "@vue/test-utils"
+import VueI18n from "vue-i18n"
 
-import { PiniaVuePlugin, createPinia } from '~~/test/unit/test-utils/pinia'
+import { PiniaVuePlugin, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import VRelatedAudio from '~/components/VAudioDetails/VRelatedAudio.vue'
+import VRelatedAudio from "~/components/VAudioDetails/VRelatedAudio.vue"
 
-import render from '../../test-utils/render'
+import render from "../../test-utils/render"
 
-const audioResults = [{ id: 'audio1' }, { id: 'audio2' }]
+const audioResults = [{ id: "audio1" }, { id: "audio2" }]
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -34,14 +34,14 @@ const doRender = async () => {
   )
 }
 
-describe('RelatedAudios', () => {
-  it('should render content when finished loading related audios', async () => {
+describe("RelatedAudios", () => {
+  it("should render content when finished loading related audios", async () => {
     const wrapper = await doRender()
 
-    const header = wrapper.find('h2').text()
-    expect(header).toEqual('audio-details.related-audios')
+    const header = wrapper.find("h2").text()
+    expect(header).toEqual("audio-details.related-audios")
 
-    const audioTracks = wrapper.findAll('vaudiotrack-stub')
+    const audioTracks = wrapper.findAll("vaudiotrack-stub")
     expect(audioTracks.length).toEqual(audioResults.length)
   })
 })

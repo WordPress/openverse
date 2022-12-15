@@ -2,7 +2,7 @@
  * Small wrapper for localstorage to protect against SSR and permissions
  */
 
-import { warn } from '~/utils/console'
+import { warn } from "~/utils/console"
 
 const localStorageExists = () => process.client && window.localStorage !== null
 
@@ -10,7 +10,7 @@ const tryUse = <R>(fn: () => R, def: R) => {
   try {
     return localStorageExists() ? fn() : def
   } catch (e) {
-    warn('`localStorage` access denied', e)
+    warn("`localStorage` access denied", e)
     return def
   }
 }

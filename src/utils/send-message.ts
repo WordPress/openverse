@@ -1,10 +1,10 @@
-import { isProd } from '~/utils/node-env'
+import { isProd } from "~/utils/node-env"
 
 // TODO: set correct targetOrigin of the parent window
-const TARGET_ORIGIN = '*'
+const TARGET_ORIGIN = "*"
 
 interface Message<T extends ResizeValue | UrlChangeValue> {
-  type: 'resize' | 'urlChange'
+  type: "resize" | "urlChange"
   value: T
 }
 

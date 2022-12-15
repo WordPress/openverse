@@ -50,25 +50,25 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from "@nuxtjs/composition-api"
 
-import { useMediaStore } from '~/stores/media'
-import { useFocusFilters } from '~/composables/use-focus-filters'
-import { Focus } from '~/utils/focus-management'
+import { useMediaStore } from "~/stores/media"
+import { useFocusFilters } from "~/composables/use-focus-filters"
+import { Focus } from "~/utils/focus-management"
 
-import { useI18n } from '~/composables/use-i18n'
+import { useI18n } from "~/composables/use-i18n"
 
-import { useUiStore } from '~/stores/ui'
+import { useUiStore } from "~/stores/ui"
 
-import VSnackbar from '~/components/VSnackbar.vue'
-import VImageCellSquare from '~/components/VAllResultsGrid/VImageCellSquare.vue'
-import VAudioCell from '~/components/VAllResultsGrid/VAudioCell.vue'
-import VLoadMore from '~/components/VLoadMore.vue'
-import VContentLink from '~/components/VContentLink/VContentLink.vue'
-import VGridSkeleton from '~/components/VSkeleton/VGridSkeleton.vue'
+import VSnackbar from "~/components/VSnackbar.vue"
+import VImageCellSquare from "~/components/VAllResultsGrid/VImageCellSquare.vue"
+import VAudioCell from "~/components/VAllResultsGrid/VAudioCell.vue"
+import VLoadMore from "~/components/VLoadMore.vue"
+import VContentLink from "~/components/VContentLink/VContentLink.vue"
+import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 
 export default defineComponent({
-  name: 'VAllResultsGrid',
+  name: "VAllResultsGrid",
   components: {
     VSnackbar,
     VImageCellSquare,
@@ -95,8 +95,8 @@ export default defineComponent({
     const fetchState = computed(() => mediaStore.fetchState)
 
     const errorHeader = computed(() => {
-      const type = i18n.t('browse-page.search-form.audio')
-      return i18n.t('browse-page.fetching-error', { type })
+      const type = i18n.t("browse-page.search-form.audio")
+      return i18n.t("browse-page.fetching-error", { type })
     })
 
     const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)

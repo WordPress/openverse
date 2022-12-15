@@ -151,21 +151,21 @@ import {
   PropType,
   ref,
   toRef,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { downsampleArray, upsampleArray } from '~/utils/resampling'
-import { timeFmt } from '~/utils/time-fmt'
-import { useSeekable } from '~/composables/use-seekable'
+import { downsampleArray, upsampleArray } from "~/utils/resampling"
+import { timeFmt } from "~/utils/time-fmt"
+import { useSeekable } from "~/composables/use-seekable"
 
-import type { AudioFeature } from '~/constants/audio'
+import type { AudioFeature } from "~/constants/audio"
 
-import useResizeObserver from '~/composables/use-resize-observer'
+import useResizeObserver from "~/composables/use-resize-observer"
 
-import { hash, rand as prng } from '~/utils/prng'
+import { hash, rand as prng } from "~/utils/prng"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
-import type { CSSProperties } from '@vue/runtime-dom'
+import type { CSSProperties } from "@vue/runtime-dom"
 
 /**
  * If the duration is above this threshold, the progress timestamp will show ms.
@@ -177,7 +177,7 @@ const MAX_SECONDS_FOR_MS = 1
  * bars.
  */
 export default defineComponent({
-  name: 'VWaveform',
+  name: "VWaveform",
   props: {
     /**
      * an array of heights of the bars; The waveform will be generated with
@@ -187,7 +187,7 @@ export default defineComponent({
       type: Array as PropType<number[]>,
       required: false,
       validator: (val: unknown[]) =>
-        val.every((item) => typeof item === 'number'),
+        val.every((item) => typeof item === "number"),
     },
     /**
      * the message to display instead of the waveform; This is useful when
@@ -224,7 +224,7 @@ export default defineComponent({
      */
     features: {
       type: Array as PropType<AudioFeature[]>,
-      default: () => ['timestamps', 'seek'],
+      default: () => ["timestamps", "seek"],
     },
     /**
      * An object of notices to display when a feature is disabled.
@@ -267,7 +267,7 @@ export default defineComponent({
      * keyboard events that also correspond to seeking.
      */
     seeked: defineEvent<[number]>(),
-    'toggle-playback': defineEvent<[]>(),
+    "toggle-playback": defineEvent<[]>(),
   },
   setup(props, { emit }) {
     /* Utils */
@@ -309,9 +309,9 @@ export default defineComponent({
 
     /* Features */
 
-    const showDuration = computed(() => props.features.includes('duration'))
-    const showTimestamps = computed(() => props.features.includes('timestamps'))
-    const isSeekable = computed(() => props.features.includes('seek'))
+    const showDuration = computed(() => props.features.includes("duration"))
+    const showTimestamps = computed(() => props.features.includes("timestamps"))
+    const isSeekable = computed(() => props.features.includes("seek"))
 
     /* State */
 
@@ -355,7 +355,7 @@ export default defineComponent({
     /* SVG drawing */
 
     const viewBox = computed(() =>
-      [0, 0, waveformDimens.value.width, waveformDimens.value.height].join(' ')
+      [0, 0, waveformDimens.value.width, waveformDimens.value.height].join(" ")
     )
     const spaceBefore = (index: number) => index * barWidth + index * barGap
     const spaceAbove = (index: number) =>
@@ -412,14 +412,14 @@ export default defineComponent({
     })
 
     const { isSeeking: isSelfSeeking, ...seekable } = useSeekable({
-      duration: toRef(props, 'duration'),
-      currentTime: toRef(props, 'currentTime'),
+      duration: toRef(props, "duration"),
+      currentTime: toRef(props, "currentTime"),
       isReady,
       onSeek: (frac) => {
         clearSeekProgress()
-        emit('seeked', frac)
+        emit("seeked", frac)
       },
-      onTogglePlayback: () => emit('toggle-playback'),
+      onTogglePlayback: () => emit("toggle-playback"),
     })
     const waveformAttributes = computed(() => ({
       // ARIA slider attributes are only added when interactive
@@ -439,7 +439,7 @@ export default defineComponent({
       seekFrac.value = null
     }
     const seek = (event: MouseEvent) => {
-      emit('seeked', getPositionFrac(event))
+      emit("seeked", getPositionFrac(event))
     }
 
     /* Dragging */
@@ -494,16 +494,16 @@ export default defineComponent({
     })
 
     const heightProperties = computed<CSSProperties>(() => ({
-      '--usable-height': `${Math.floor(props.usableFrac * 100)}%`,
-      '--unusable-height': `${Math.floor((1 - props.usableFrac) * 100)}%`,
+      "--usable-height": `${Math.floor(props.usableFrac * 100)}%`,
+      "--unusable-height": `${Math.floor((1 - props.usableFrac) * 100)}%`,
     }))
 
     const progressTimeLeft = computed<CSSProperties>(() => ({
-      '--progress-time-left': `${progressBarWidth.value}px`,
+      "--progress-time-left": `${progressBarWidth.value}px`,
     }))
 
     const seekTimeLeft = computed<CSSProperties>(() => ({
-      '--seek-time-left': `${seekBarWidth.value}px`,
+      "--seek-time-left": `${seekBarWidth.value}px`,
     }))
 
     return {
@@ -556,13 +556,13 @@ export default defineComponent({
 .waveform {
   --v-background-color: var(
     --waveform-background-color,
-    theme('colors.dark-charcoal.06')
+    theme("colors.dark-charcoal.06")
   );
 }
 
 .timestamp {
   @apply pointer-events-none absolute px-1 text-xs font-bold;
-  top: calc(var(--unusable-height) + theme('spacing[0.5]'));
+  top: calc(var(--unusable-height) + theme("spacing[0.5]"));
 }
 
 .bg-background-var {
@@ -574,7 +574,7 @@ export default defineComponent({
 }
 
 .bars.with-space {
-  height: calc(var(--usable-height) - 1rem - 2 * theme('spacing[0.5]'));
+  height: calc(var(--usable-height) - 1rem - 2 * theme("spacing[0.5]"));
 }
 
 .progress {

@@ -50,16 +50,16 @@ import {
   reactive,
   computed,
   PropType,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { zIndexValidator } from '~/constants/z-indices'
+import { zIndexValidator } from "~/constants/z-indices"
 
-import VPopoverContent from '~/components/VPopover/VPopoverContent.vue'
+import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 
-import type { Placement, PositioningStrategy } from '@popperjs/core'
+import type { Placement, PositioningStrategy } from "@popperjs/core"
 
 export default defineComponent({
-  name: 'VPopover',
+  name: "VPopover",
   components: { VPopoverContent },
   /**
    * NB: Most of these technically default to `undefined` so that the underlying `VPopoverContent`
@@ -132,7 +132,7 @@ export default defineComponent({
      */
     zIndex: {
       type: [Number, String],
-      default: 'popover', // named z-index
+      default: "popover", // named z-index
       validator: zIndexValidator,
     },
     /**
@@ -145,19 +145,19 @@ export default defineComponent({
     /**
      * Fires when the popover opens, regardless of reason. There are no extra parameters.
      */
-    'open',
+    "open",
     /**
      * Fires when the popover closes, regardless of reason. There are no extra parameters.
      */
-    'close',
+    "close",
   ],
   setup(_, { emit }) {
     const visibleRef = ref(false)
     const triggerContainerRef = ref<HTMLElement | null>(null)
 
     const triggerA11yProps = reactive({
-      'aria-expanded': false,
-      'aria-haspopup': 'dialog',
+      "aria-expanded": false,
+      "aria-haspopup": "dialog",
     })
 
     const triggerRef = computed(() =>
@@ -167,17 +167,17 @@ export default defineComponent({
     )
 
     watch(visibleRef, (visible) => {
-      triggerA11yProps['aria-expanded'] = visible
+      triggerA11yProps["aria-expanded"] = visible
     })
 
     const open = () => {
       visibleRef.value = true
-      emit('open')
+      emit("open")
     }
 
     const close = () => {
       visibleRef.value = false
-      emit('close')
+      emit("close")
     }
 
     const onTriggerClick = () => {

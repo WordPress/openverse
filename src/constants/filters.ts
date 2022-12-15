@@ -1,10 +1,10 @@
-import { kebab } from 'case'
+import { kebab } from "case"
 
-import { ALL_MEDIA, AUDIO, IMAGE, VIDEO, MODEL_3D } from '~/constants/media'
-import { ACTIVE_LICENSES } from '~/constants/license'
-import { deepFreeze } from '~/utils/deep-freeze'
+import { ALL_MEDIA, AUDIO, IMAGE, VIDEO, MODEL_3D } from "~/constants/media"
+import { ACTIVE_LICENSES } from "~/constants/license"
+import { deepFreeze } from "~/utils/deep-freeze"
 
-import type { SearchType } from '~/constants/media'
+import type { SearchType } from "~/constants/media"
 
 export interface FilterItem {
   code: string
@@ -28,7 +28,7 @@ export interface Filters {
   mature: FilterItem[]
 }
 export type FilterCategory = keyof Filters
-export type NonMatureFilterCategory = Exclude<FilterCategory, 'mature'>
+export type NonMatureFilterCategory = Exclude<FilterCategory, "mature">
 
 /**
  * List of filters available for each search type. The order of the keys
@@ -37,29 +37,29 @@ export type NonMatureFilterCategory = Exclude<FilterCategory, 'mature'>
 export const mediaFilterKeys = deepFreeze<Record<SearchType, FilterCategory[]>>(
   {
     [IMAGE]: [
-      'licenseTypes',
-      'licenses',
-      'imageCategories',
-      'imageExtensions',
-      'aspectRatios',
-      'sizes',
-      'imageProviders',
-      'searchBy',
-      'mature',
+      "licenseTypes",
+      "licenses",
+      "imageCategories",
+      "imageExtensions",
+      "aspectRatios",
+      "sizes",
+      "imageProviders",
+      "searchBy",
+      "mature",
     ],
     [AUDIO]: [
-      'licenseTypes',
-      'licenses',
-      'audioCategories',
-      'audioExtensions',
-      'lengths',
-      'audioProviders',
-      'searchBy',
-      'mature',
+      "licenseTypes",
+      "licenses",
+      "audioCategories",
+      "audioExtensions",
+      "lengths",
+      "audioProviders",
+      "searchBy",
+      "mature",
     ],
     [VIDEO]: [],
     [MODEL_3D]: [],
-    [ALL_MEDIA]: ['licenseTypes', 'licenses', 'searchBy', 'mature'],
+    [ALL_MEDIA]: ["licenseTypes", "licenses", "searchBy", "mature"],
   }
 )
 
@@ -72,38 +72,38 @@ export const mediaUniqueFilterKeys = deepFreeze<
 >({
   [ALL_MEDIA]: [],
   [IMAGE]: [
-    'imageCategories',
-    'imageExtensions',
-    'aspectRatios',
-    'sizes',
-    'imageProviders',
+    "imageCategories",
+    "imageExtensions",
+    "aspectRatios",
+    "sizes",
+    "imageProviders",
   ],
-  [AUDIO]: ['audioCategories', 'audioExtensions', 'lengths', 'audioProviders'],
+  [AUDIO]: ["audioCategories", "audioExtensions", "lengths", "audioProviders"],
   [VIDEO]: [],
   [MODEL_3D]: [],
 })
 
 const filterCodesPerCategory = deepFreeze<Record<FilterCategory, string[]>>({
   licenses: [...ACTIVE_LICENSES],
-  licenseTypes: ['commercial', 'modification'],
+  licenseTypes: ["commercial", "modification"],
   audioCategories: [
-    'audiobook',
-    'music',
-    'news',
-    'podcast',
-    'pronunciation',
-    'sound_effect',
+    "audiobook",
+    "music",
+    "news",
+    "podcast",
+    "pronunciation",
+    "sound_effect",
   ],
-  imageCategories: ['photograph', 'illustration', 'digitized_artwork'],
-  audioExtensions: ['flac', 'mid', 'mp3', 'oga', 'ogg', 'opus', 'wav', 'webm'],
-  imageExtensions: ['jpg', 'png', 'gif', 'svg'],
-  aspectRatios: ['tall', 'wide', 'square'],
-  lengths: ['shortest', 'short', 'medium', 'long'],
-  sizes: ['small', 'medium', 'large'],
+  imageCategories: ["photograph", "illustration", "digitized_artwork"],
+  audioExtensions: ["flac", "mid", "mp3", "oga", "ogg", "opus", "wav", "webm"],
+  imageExtensions: ["jpg", "png", "gif", "svg"],
+  aspectRatios: ["tall", "wide", "square"],
+  lengths: ["shortest", "short", "medium", "long"],
+  sizes: ["small", "medium", "large"],
   audioProviders: [],
   imageProviders: [],
-  searchBy: ['creator'],
-  mature: ['mature'],
+  searchBy: ["creator"],
+  mature: ["mature"],
 })
 /**
  * Converts the filterCodesPerCategory object into the format that's used by the filter store.

@@ -24,24 +24,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
-import type { BannerId } from '~/types/banners'
+import type { BannerId } from "~/types/banners"
 
-import VIconButton from '~/components/VIconButton/VIconButton.vue'
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
-import closeIcon from '~/assets/icons/close.svg'
+import closeIcon from "~/assets/icons/close.svg"
 
 export default defineComponent({
-  name: 'VNotificationBanner',
+  name: "VNotificationBanner",
   components: {
     VIconButton,
   },
   props: {
     variant: {
-      type: String as PropType<'announcement' | 'informational'>,
+      type: String as PropType<"announcement" | "informational">,
       required: true,
     },
     id: {
@@ -54,7 +54,7 @@ export default defineComponent({
   },
   setup(_, { emit }) {
     const handleClose = () => {
-      emit('close')
+      emit("close")
     }
 
     return {

@@ -1,10 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
-import * as pinia from 'pinia'
+import * as pinia from "pinia"
 
 export const createPinia = () =>
   pinia.createPinia().use(() => ({
     $nuxt: {
-      $openverseApiToken: '',
+      $openverseApiToken: "",
       $sentry: {
         captureException: jest.fn(),
         captureEvent: jest.fn(),
@@ -16,9 +16,9 @@ export const createPinia = () =>
       },
       i18n: {
         localeProperties: {
-          code: 'es',
+          code: "es",
           translated: 100,
-          name: 'Spanish',
+          name: "Spanish",
         },
       },
     },

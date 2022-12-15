@@ -22,21 +22,21 @@
 </template>
 
 <script>
-import { computed } from '@nuxtjs/composition-api'
+import { computed } from "@nuxtjs/composition-api"
 
-import Radiomark from '~/assets/icons/radiomark.svg?inline'
+import Radiomark from "~/assets/icons/radiomark.svg?inline"
 
 /**
  * Renders a radio input field, useful for choosing one of a few options that
  * can all be presented on the screen at once.
  */
 export default {
-  name: 'VRadio',
+  name: "VRadio",
   components: { Radiomark },
   inheritAttrs: false,
   model: {
-    prop: 'modelValue',
-    event: 'change',
+    prop: "modelValue",
+    event: "change",
   },
   props: {
     /**
@@ -58,13 +58,13 @@ export default {
      */
     modelValue: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   setup(props, { emit }) {
     const isChecked = computed(() => props.value === props.modelValue)
     const handleInput = () => {
-      emit('change', props.value)
+      emit("change", props.value)
     }
 
     return {

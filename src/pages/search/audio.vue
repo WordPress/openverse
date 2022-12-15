@@ -40,26 +40,26 @@ import {
   useMeta,
   ref,
   inject,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { useFocusFilters } from '~/composables/use-focus-filters'
-import { Focus } from '~/utils/focus-management'
+import { useFocusFilters } from "~/composables/use-focus-filters"
+import { Focus } from "~/utils/focus-management"
 
-import { useUiStore } from '~/stores/ui'
+import { useUiStore } from "~/stores/ui"
 
-import { IsSidebarVisibleKey } from '~/types/provides'
+import { IsSidebarVisibleKey } from "~/types/provides"
 
-import { useFeatureFlagStore } from '~/stores/feature-flag'
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-import VSnackbar from '~/components/VSnackbar.vue'
-import VAudioTrack from '~/components/VAudioTrack/VAudioTrack.vue'
-import VLoadMore from '~/components/VLoadMore.vue'
-import VGridSkeleton from '~/components/VSkeleton/VGridSkeleton.vue'
+import VSnackbar from "~/components/VSnackbar.vue"
+import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
+import VLoadMore from "~/components/VLoadMore.vue"
+import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 
-import { propTypes } from './search-page.types'
+import { propTypes } from "./search-page.types"
 
 export default defineComponent({
-  name: 'AudioSearch',
+  name: "AudioSearch",
   components: {
     VSnackbar,
     VAudioTrack,
@@ -72,8 +72,8 @@ export default defineComponent({
 
     useMeta({
       title: `${props.searchTerm} | Openverse`,
-      meta: featureFlagStore.isOn('new_header')
-        ? [{ hid: 'robots', name: 'robots', content: 'all' }]
+      meta: featureFlagStore.isOn("new_header")
+        ? [{ hid: "robots", name: "robots", content: "all" }]
         : undefined,
     })
 
@@ -85,7 +85,7 @@ export default defineComponent({
     const filterVisibleRef = inject(IsSidebarVisibleKey)
 
     const audioTrackSize = computed(() =>
-      !isDesktopLayout.value ? 's' : filterVisibleRef.value ? 'l' : 'm'
+      !isDesktopLayout.value ? "s" : filterVisibleRef.value ? "l" : "m"
     )
 
     const focusFilters = useFocusFilters()

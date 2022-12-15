@@ -53,44 +53,44 @@ import {
   useContext,
   useRoute,
   PropType,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { useActiveAudio } from '~/composables/use-active-audio'
-import { defaultRef } from '~/composables/default-ref'
-import { useI18n } from '~/composables/use-i18n'
+import { useActiveAudio } from "~/composables/use-active-audio"
+import { defaultRef } from "~/composables/default-ref"
+import { useI18n } from "~/composables/use-i18n"
 
-import { useActiveMediaStore } from '~/stores/active-media'
-import { useMediaStore } from '~/stores/media'
+import { useActiveMediaStore } from "~/stores/active-media"
+import { useMediaStore } from "~/stores/media"
 
-import { AUDIO } from '~/constants/media'
+import { AUDIO } from "~/constants/media"
 
-import type { AudioDetail } from '~/types/media'
+import type { AudioDetail } from "~/types/media"
 import {
   AudioLayout,
   AudioSize,
   AudioStatus,
   activeAudioStatus,
   layoutMappings,
-} from '~/constants/audio'
-import { useSeekable } from '~/composables/use-seekable'
+} from "~/constants/audio"
+import { useSeekable } from "~/composables/use-seekable"
 
-import { defineEvent } from '~/types/emits'
+import { defineEvent } from "~/types/emits"
 
-import VPlayPause from '~/components/VAudioTrack/VPlayPause.vue'
-import VWaveform from '~/components/VAudioTrack/VWaveform.vue'
-import VFullLayout from '~/components/VAudioTrack/layouts/VFullLayout.vue'
-import VRowLayout from '~/components/VAudioTrack/layouts/VRowLayout.vue'
-import VBoxLayout from '~/components/VAudioTrack/layouts/VBoxLayout.vue'
-import VGlobalLayout from '~/components/VAudioTrack/layouts/VGlobalLayout.vue'
-import VLink from '~/components/VLink.vue'
-import VWarningSuppressor from '~/components/VWarningSuppressor.vue'
+import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
+import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
+import VFullLayout from "~/components/VAudioTrack/layouts/VFullLayout.vue"
+import VRowLayout from "~/components/VAudioTrack/layouts/VRowLayout.vue"
+import VBoxLayout from "~/components/VAudioTrack/layouts/VBoxLayout.vue"
+import VGlobalLayout from "~/components/VAudioTrack/layouts/VGlobalLayout.vue"
+import VLink from "~/components/VLink.vue"
+import VWarningSuppressor from "~/components/VWarningSuppressor.vue"
 
 /**
  * Displays the waveform and basic information about the track, along with
  * controls to play, pause or seek to a point on the track.
  */
 export default defineComponent({
-  name: 'VAudioTrack',
+  name: "VAudioTrack",
   components: {
     VPlayPause,
     VWaveform,
@@ -117,7 +117,7 @@ export default defineComponent({
      */
     layout: {
       type: String as PropType<AudioLayout>,
-      default: 'full',
+      default: "full",
     },
     /**
      * the size of the component; Both 'box' and 'row' layouts offer multiple
@@ -128,7 +128,7 @@ export default defineComponent({
     },
   },
   emits: {
-    'shift-tab': defineEvent<[KeyboardEvent]>(),
+    "shift-tab": defineEvent<[KeyboardEvent]>(),
     interacted: defineEvent<[]>(),
   },
   setup(props, { emit }) {
@@ -140,7 +140,7 @@ export default defineComponent({
 
     const activeAudio = useActiveAudio()
 
-    const status = ref<AudioStatus>('paused')
+    const status = ref<AudioStatus>("paused")
     const currentTime = ref(0)
 
     const initLocalAudio = () => {
@@ -218,38 +218,38 @@ export default defineComponent({
 
     const mediaStore = useMediaStore()
     const setLoaded = () => {
-      mediaStore.setMediaProperties('audio', props.audio.id, {
+      mediaStore.setMediaProperties("audio", props.audio.id, {
         hasLoaded: true,
       })
-      status.value = 'playing'
+      status.value = "playing"
     }
     const setWaiting = () => {
-      status.value = 'loading'
+      status.value = "loading"
     }
     const setPlaying = () => {
       if (props.audio.hasLoaded) {
-        status.value = 'playing'
+        status.value = "playing"
       } else {
-        status.value = 'loading'
+        status.value = "loading"
       }
       activeAudio.obj.value = localAudio
       activeMediaStore.setActiveMediaItem({
-        type: 'audio',
+        type: "audio",
         id: props.audio.id,
       })
       updateTimeLoop()
     }
     const setPaused = () => {
-      status.value = 'paused'
+      status.value = "paused"
       activeMediaStore.pauseActiveMediaItem()
     }
-    const setPlayed = () => (status.value = 'played')
+    const setPlayed = () => (status.value = "played")
     const setTimeWhenPaused = () => {
-      if (status.value !== 'playing' && localAudio) {
+      if (status.value !== "playing" && localAudio) {
         currentTime.value = localAudio.currentTime
-        if (status.value === 'played') {
+        if (status.value === "played") {
           // Set to pause to remove replay icon
-          status.value = 'paused'
+          status.value = "paused"
         }
       }
     }
@@ -257,7 +257,7 @@ export default defineComponent({
       if (localAudio) {
         return localAudio.duration
       }
-      if (typeof props.audio?.duration === 'number')
+      if (typeof props.audio?.duration === "number")
         return props.audio.duration / 1e3
       return 0
     })
@@ -329,16 +329,16 @@ export default defineComponent({
 
       // Check if the audio can be played successfully
       localAudio?.play().catch((err) => {
-        let errorMsg = ''
+        let errorMsg = ""
         switch (err.name) {
-          case 'NotAllowedError':
-            errorMsg = 'err_unallowed'
+          case "NotAllowedError":
+            errorMsg = "err_unallowed"
             break
-          case 'NotSupportedError':
-            errorMsg = 'err_unsupported'
+          case "NotSupportedError":
+            errorMsg = "err_unsupported"
             break
           default:
-            errorMsg = 'err_unknown'
+            errorMsg = "err_unknown"
             $sentry.captureException(err)
         }
         errorMsg = i18n.t(`audio-track.messages.${errorMsg}`).toString()
@@ -353,7 +353,7 @@ export default defineComponent({
       (audio) => {
         if (
           audio !== localAudio &&
-          (status.value === 'playing' || status.value === 'loading')
+          (status.value === "playing" || status.value === "loading")
         ) {
           localAudio?.pause()
         }
@@ -371,28 +371,28 @@ export default defineComponent({
      * This function can safely ignore the `loading` status because
      * that status is never toggled _to_.
      */
-    const handleToggle = (state?: 'playing' | 'paused' | 'played') => {
+    const handleToggle = (state?: "playing" | "paused" | "played") => {
       if (!state) {
         switch (status.value) {
-          case 'playing':
-            state = 'paused'
+          case "playing":
+            state = "paused"
             break
-          case 'paused':
-          case 'played':
-            state = 'playing'
+          case "paused":
+          case "played":
+            state = "playing"
             break
         }
       }
 
       switch (state) {
-        case 'playing':
+        case "playing":
           play()
           break
-        case 'paused':
+        case "paused":
           pause()
           break
       }
-      emit('interacted')
+      emit("interacted")
     }
 
     /* Interface with VWaveform */
@@ -409,7 +409,7 @@ export default defineComponent({
       if (localAudio) {
         localAudio.currentTime = frac * duration.value
       }
-      emit('interacted')
+      emit("interacted")
     }
 
     /* Layout */
@@ -419,10 +419,10 @@ export default defineComponent({
      * Sets default size if not provided.
      */
     const layoutSize = computed(() => {
-      if (props.layout === 'box' && !props.size) {
+      if (props.layout === "box" && !props.size) {
         return undefined
       }
-      return props.size ?? 'm'
+      return props.size ?? "m"
     })
 
     /**
@@ -437,18 +437,18 @@ export default defineComponent({
      * to set properties on the parent element depending on
      * the layout in use.
      */
-    const isComposite = computed(() => ['box', 'row'].includes(props.layout))
+    const isComposite = computed(() => ["box", "row"].includes(props.layout))
     const layoutBasedProps = computed(() =>
       isComposite.value
         ? {
             href: `/audio/${props.audio.id}`,
             class: [
-              'cursor-pointer',
+              "cursor-pointer",
               {
-                'focus:ring-offset-[3px] focus:ring-[3px]':
-                  props.layout === 'box',
-                'focus:ring-offset-0 focus:ring-[1.5px]':
-                  props.layout === 'row',
+                "focus:ring-offset-[3px] focus:ring-[3px]":
+                  props.layout === "box",
+                "focus:ring-offset-0 focus:ring-[1.5px]":
+                  props.layout === "row",
               },
             ],
           }
@@ -456,16 +456,16 @@ export default defineComponent({
     )
     const ariaLabel = computed(() =>
       isComposite.value
-        ? i18n.t('audio-track.aria-label-interactive', {
+        ? i18n.t("audio-track.aria-label-interactive", {
             title: props.audio.title,
           })
-        : i18n.t('audio-track.aria-label', { title: props.audio.title })
+        : i18n.t("audio-track.aria-label", { title: props.audio.title })
     )
 
     const togglePlayback = () => {
       status.value = activeAudioStatus.includes(status.value)
-        ? 'paused'
-        : 'playing'
+        ? "paused"
+        : "playing"
       handleToggle(status.value)
     }
 
@@ -477,7 +477,7 @@ export default defineComponent({
       onTogglePlayback: togglePlayback,
     })
     const handleKeydown = (event: KeyboardEvent) => {
-      if (seekable.willBeHandled(event)) emit('interacted')
+      if (seekable.willBeHandled(event)) emit("interacted")
       seekable.listeners.keydown(event)
     }
 

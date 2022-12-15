@@ -1,19 +1,19 @@
-import Vue from 'vue'
-import { render, screen } from '@testing-library/vue'
-import userEvent from '@testing-library/user-event'
+import Vue from "vue"
+import { render, screen } from "@testing-library/vue"
+import userEvent from "@testing-library/user-event"
 
-import { noFocusableElementWarning } from '~/composables/use-focus-on-show'
+import { noFocusableElementWarning } from "~/composables/use-focus-on-show"
 
-import { warn } from '~/utils/console'
+import { warn } from "~/utils/console"
 
-import VButton from '~/components/VButton.vue'
-import VPopover from '~/components/VPopover/VPopover.vue'
+import VButton from "~/components/VButton.vue"
+import VPopover from "~/components/VPopover/VPopover.vue"
 
-jest.mock('~/utils/console', () => ({
+jest.mock("~/utils/console", () => ({
   warn: jest.fn(),
 }))
 
-const TestWrapper = Vue.component('TestWrapper', {
+const TestWrapper = Vue.component("TestWrapper", {
   components: { VButton, VPopover },
   props: {
     popoverProps: {
@@ -44,7 +44,7 @@ const nextTick = async () =>
 
 const getPopover = () => screen.getByText(/code is poetry/i)
 const queryPopover = () => screen.queryByText(/code is poetry/i)
-const getTrigger = () => screen.getByRole('button')
+const getTrigger = () => screen.getByRole("button")
 const getExternalArea = () => screen.getByText(/external area/i)
 const clickOutside = () => userEvent.click(getExternalArea())
 
@@ -62,16 +62,16 @@ const expectOpen = () => {
 
 const expectClosed = () => {
   expect(queryPopover().parentElement.parentElement.style.display).toEqual(
-    'none'
+    "none"
   )
 }
 
-describe('VPopover', () => {
+describe("VPopover", () => {
   afterEach(() => {
     warn.mockReset()
   })
 
-  it('should open the popover when the trigger is clicked', async () => {
+  it("should open the popover when the trigger is clicked", async () => {
     render(TestWrapper)
 
     expectClosed()
@@ -80,25 +80,25 @@ describe('VPopover', () => {
     await doOpen()
   })
 
-  describe('accessibility', () => {
-    it('should render a11y props for the trigger', async () => {
+  describe("accessibility", () => {
+    it("should render a11y props for the trigger", async () => {
       render(TestWrapper)
 
       const trigger = getTrigger()
 
       // This attribute will always exist
-      expect(trigger).toHaveAttribute('aria-haspopup', 'dialog')
+      expect(trigger).toHaveAttribute("aria-haspopup", "dialog")
 
       // This attribute will only exist when the trigger's related popover is open and the trigger was the current disclosure
-      expect(trigger).not.toHaveAttribute('aria-expanded')
+      expect(trigger).not.toHaveAttribute("aria-expanded")
 
       await doOpen(trigger)
 
-      expect(trigger).toHaveAttribute('aria-expanded', 'true')
+      expect(trigger).toHaveAttribute("aria-expanded", "true")
     })
 
-    describe('autoFocusOnShow', () => {
-      it('should focus the popover by default when opening if there is no tabbable content in the popover and warn', async () => {
+    describe("autoFocusOnShow", () => {
+      it("should focus the popover by default when opening if there is no tabbable content in the popover and warn", async () => {
         render(TestWrapper)
         await doOpen()
         expect(getPopover().parentElement).toHaveFocus()
@@ -106,7 +106,7 @@ describe('VPopover', () => {
         expect(warn).toHaveBeenCalledWith(noFocusableElementWarning)
       })
 
-      it('should focus the first tabbable element in the popover by default and not warn', async () => {
+      it("should focus the first tabbable element in the popover by default and not warn", async () => {
         render(TestWrapper, { props: { popoverContentTabIndex: 0 } })
         await doOpen()
         await nextTick(() => {
@@ -115,7 +115,7 @@ describe('VPopover', () => {
         })
       })
 
-      it('should neither focus no warn when the prop is false', async () => {
+      it("should neither focus no warn when the prop is false", async () => {
         render(TestWrapper, {
           props: { popoverProps: { autoFocusOnShow: false } },
         })
@@ -126,8 +126,8 @@ describe('VPopover', () => {
       })
     })
 
-    describe('autoFocusOnHide', () => {
-      it('should return focus to the trigger', async () => {
+    describe("autoFocusOnHide", () => {
+      it("should return focus to the trigger", async () => {
         render(TestWrapper)
         await doOpen()
         await clickOutside()
@@ -135,7 +135,7 @@ describe('VPopover', () => {
         expect(getTrigger()).toHaveFocus()
       })
 
-      it('should not return focus to the trigger when false', async () => {
+      it("should not return focus to the trigger when false", async () => {
         render(TestWrapper, {
           props: { popoverProps: { autoFocusOnHide: false } },
         })
@@ -146,8 +146,8 @@ describe('VPopover', () => {
     })
   })
 
-  describe('hideOnClickOutside', () => {
-    it('should hide the popover if a click happens outside the popover by default', async () => {
+  describe("hideOnClickOutside", () => {
+    it("should hide the popover if a click happens outside the popover by default", async () => {
       render(TestWrapper)
 
       await doOpen()
@@ -156,7 +156,7 @@ describe('VPopover', () => {
       expectClosed()
     })
 
-    it('should not hide the popover if a click happens outside the popover when false', async () => {
+    it("should not hide the popover if a click happens outside the popover when false", async () => {
       render(TestWrapper, {
         props: { popoverProps: { hideOnClickOutside: false } },
       })
@@ -168,18 +168,18 @@ describe('VPopover', () => {
     })
   })
 
-  describe('hideOnEsc', () => {
-    it('should hide the popover if escape is sent in the popover by default', async () => {
+  describe("hideOnEsc", () => {
+    it("should hide the popover if escape is sent in the popover by default", async () => {
       render(TestWrapper)
       await doOpen()
-      await userEvent.keyboard('{escape}')
+      await userEvent.keyboard("{escape}")
       expectClosed()
     })
 
-    it('should not hide if the escape is sent in the popover when false', async () => {
+    it("should not hide if the escape is sent in the popover when false", async () => {
       render(TestWrapper, { props: { popoverProps: { hideOnEsc: false } } })
       await doOpen()
-      await userEvent.keyboard('{escape}')
+      await userEvent.keyboard("{escape}")
       expectOpen()
     })
   })

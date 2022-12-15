@@ -10,7 +10,7 @@
     <VIcon :icon-path="icon" />
     <span>{{ $t(`search-type.${item}`) }}</span>
     <VPill v-if="isBeta" class="ms-auto">{{
-      $t('search-type.status-beta')
+      $t("search-type.status-beta")
     }}</VPill>
   </VItem>
 </template>
@@ -21,19 +21,19 @@ import {
   useContext,
   defineComponent,
   PropType,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { BETA, contentStatus, searchPath, SearchType } from '~/constants/media'
-import { isSearchTypeSupported, useSearchStore } from '~/stores/search'
+import { BETA, contentStatus, searchPath, SearchType } from "~/constants/media"
+import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 
-import VIcon from '~/components/VIcon/VIcon.vue'
-import VItem from '~/components/VItemGroup/VItem.vue'
-import VPill from '~/components/VPill.vue'
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VItem from "~/components/VItemGroup/VItem.vue"
+import VPill from "~/components/VPill.vue"
 
-import type { Dictionary } from 'vue-router/types/router'
+import type { Dictionary } from "vue-router/types/router"
 
 export default defineComponent({
-  name: 'VSearchTypeItem',
+  name: "VSearchTypeItem",
   components: { VIcon, VItem, VPill },
   props: {
     /**
@@ -76,8 +76,8 @@ export default defineComponent({
      * 'medium' size for mobile screens.
      */
     size: {
-      type: String as PropType<'small' | 'medium'>,
-      default: 'small',
+      type: String as PropType<"small" | "medium">,
+      default: "small",
     },
   },
   setup(props) {
@@ -104,7 +104,7 @@ export default defineComponent({
     /**
      * The query sets the filters that are applicable for the specific search type.
      */
-    const component = computed(() => (props.useLinks ? 'VLink' : undefined))
+    const component = computed(() => (props.useLinks ? "VLink" : undefined))
     return {
       component,
       href,

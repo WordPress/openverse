@@ -33,22 +33,22 @@ import {
   watch,
   computed,
   onBeforeUnmount,
-} from '@nuxtjs/composition-api'
+} from "@nuxtjs/composition-api"
 
-import { useBodyScrollLock } from '~/composables/use-body-scroll-lock'
-import { useFocusFilters } from '~/composables/use-focus-filters'
+import { useBodyScrollLock } from "~/composables/use-body-scroll-lock"
+import { useFocusFilters } from "~/composables/use-focus-filters"
 
-import { Focus } from '~/utils/focus-management'
-import { defineEvent } from '~/types/emits'
+import { Focus } from "~/utils/focus-management"
+import { defineEvent } from "~/types/emits"
 
-import { useUiStore } from '~/stores/ui'
+import { useUiStore } from "~/stores/ui"
 
-import VModalContent from '~/components/VModal/VModalContent.vue'
-import VSearchGridFilter from '~/components/VFilters/VSearchGridFilter.vue'
-import VFilterButtonOld from '~/components/VHeaderOld/VFilterButtonOld.vue'
+import VModalContent from "~/components/VModal/VModalContent.vue"
+import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
+import VFilterButtonOld from "~/components/VHeaderOld/VFilterButtonOld.vue"
 
 export default defineComponent({
-  name: 'VHeaderFilter',
+  name: "VHeaderFilter",
   components: {
     VFilterButtonOld,
     VModalContent,
@@ -81,7 +81,7 @@ export default defineComponent({
       () => !props.disabled && uiStore.isFilterVisible
     )
     watch(isFilterVisible, (visible) => {
-      emit(visible ? 'open' : 'close')
+      emit(visible ? "open" : "close")
     })
     const { lock, unlock } = useBodyScrollLock({ nodeRef })
 
