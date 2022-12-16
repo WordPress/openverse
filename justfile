@@ -102,11 +102,24 @@ init: _api-up
 
 # Setup pre-commit as a Git hook
 precommit:
-    cd api && pipenv run pre-commit install
+    #!/usr/bin/env bash
+    set -eo pipefail
+    if [ -z "$SKIP_PRE_COMMIT" ] && [ ! -f ./pre-commit.pyz ]; then
+      echo "Downloading pre-commit";
+      curl \
+        https://api.github.com/repos/pre-commit/pre-commit/releases/latest \
+      | grep -o 'https://.*\.pyz' -m 1 \
+      | xargs \
+      | xargs curl -fsJo pre-commit.pyz -L;
+      echo "Installing pre-commit";
+      python3 pre-commit.pyz install -t pre-push -t pre-commit;
+    else
+      echo "Skipping pre-commit installation";
+    fi
 
 # Run pre-commit to lint and reformat all files
 lint:
-    cd api && pipenv run pre-commit run --all-files
+    python3 pre-commit.pyz run --all-files
 
 # Make locally trusted certificates
 cert:

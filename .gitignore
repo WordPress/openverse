@@ -109,6 +109,9 @@ venv.bak/
 # mkdocs documentation
 /site
 
+# Lint
+pre-commit.pyz
+
 # mypy
 .mypy_cache/
 
