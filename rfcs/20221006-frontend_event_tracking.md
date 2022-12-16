@@ -9,7 +9,7 @@ A proposal to emit frontend events based on user interactions and page visits.
 
 ## Rationale
 
-Openverse developers have very little insight into the behaviors and interests of our users. We do not have any means of observing if they actually use the features we build in the intended manner, or at all.
+Openverse contributors have very little insight into the behaviors and interests of our users. We do not have any means of observing if they actually use the features we build in the intended manner, or at all.
 
 There are multiple ways to address this, like conducting user surveys or test sessions. One other way we would like to gather this information is through analytics, specifically logging events performed by users. I'll share a full list of the events later in this proposal, but here are some examples:
 
