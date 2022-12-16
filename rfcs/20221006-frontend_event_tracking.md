@@ -65,7 +65,7 @@ A previous version of this proposal suggested honoring the `navigator.doNotTrack
 
 This proposal will require the creation of a user settings page _or_ an analytics opt-out checkbox on the `/privacy` page.
 
-### Sample implementaton and event types
+### Events
 
 Below I've created a TypeScript type for all the proposed anlytics events, and a simple function for sending events. For each event you'll see the payload alongside the default values which will be passed to _all_ events.
 
@@ -387,10 +387,18 @@ type AnalyticsEvents = {
   };
 };
 type AnalyticsEventTypes = keyof AnalyticsEvents;
+```
 
+## Default values and sample implementation of event sending code
+
+This is a sample implementation of what our event sending code can look like. With the power of TypeScript we can make sure to only send valid events with proper payloads.
+
+Pay careful attention to the `defaults` object. This is the default payload that will send with every single event. These are properties that are universally useful to any event, like the current page the user is on, and also properties that allow for tracking unique user sessions.
+
+```ts
 /**
- * Send an event to our analytics endpoint. Should be a no-op if the
- * user has opted-out of analytics.
+ * Send an event to our analytics endpoint. Should be a no-op
+ * if the user has opted-out of analytics.
  */
 async function sendEvent<T extends AnalyticsEventTypes>(
   key: T,
@@ -437,7 +445,8 @@ async function sendEvent<T extends AnalyticsEventTypes>(
 
 - [ ] Create "Event Tracking" GitHub milestone in the frontend repository
 - [ ] Design: design a privacy and analytics opt-out checkbox on the Privacy page. Also a pop-up banner to be shown to users letting them know Openverse uses analytics (can use the existing audio notice for this)
-- [ ] Create the `ANALYTICS_ENABLED` feature flag which defaults to `off`/`false`
+- [ ] Create the `ANALYTICS_ENABLED` feature flag which defaults to `off`/`false`.
+- [ ] Create a PR which adds an `allowAnalytics` value to our UI cookie store; implements the checkbox on the privacy page; and shows a 'Openverse collects analytics information...' banner to first-time (new session) users.
 - [ ] Create an issue for the creation of the `sendEvent` function and the api route to post analytics events to. The api route will post events to an `ANALYTICS_ENDPOINT` environment variable. If that variable is unset and/or the `ANALYTICS_ENABLED` flag is off, the analytics events will not send.
 - [ ] Create each event in the sample implementation. Each event will need a detailed description of the payload and trigger (the actual user interaction that fires off the event). Events will need to account for accessibility concerns. Will keyboard users' actions trigger the events the same way as mouse users?
 - [ ] Future: Create a PR to turn `ANALYTICS_ENABLED` to `on`/`true`, set the `ANALYTICS_ENDPOINT` environment variable, and do any munging of data necessary for the decided on analytics service.
@@ -445,8 +454,8 @@ async function sendEvent<T extends AnalyticsEventTypes>(
 ## Concerns / Pitfalls
 
 - Related to content safety, this is an area where we are surfacing user information in the form of text, or even malicious URLs, to Openverse developers. These searches could include explicit or sensitive material. We're also potentially surfacing explicit image results to anyone working with this data.
-- I think it's great to build this decoupled from a specific back-end, but if we never actually implement a backend this would largely be a wasted effort.
 - We're building something here that is commonly drop-in when 3rd party tools are used. At least for page views; custom events still require custom work. Is this a poor use of time?
+- I think it's great to build this decoupled from a specific back-end, but if we never actually implement a backend this would largely be a wasted effort.
 
 ### Prior Art
 
