@@ -435,13 +435,12 @@ async function sendEvent<T extends AnalyticsEventTypes>(
 
 ### Implementation Plan
 
-This needs more elaboration, as it's a very rough outline. For example, specific events will require more detailed planning.
-
 - [ ] Create "Event Tracking" GitHub milestone in the frontend repository
-- [ ] Design: design a privacy and analytics opt-out checkbox on the Privacy page
-- [ ] Create an issue for the `ANALYTICS_ENABLED` feature flag
-- [ ] Create an issue for the creation of the 'sendEvent' function and for the api route to post analytics events to
-- [ ] Create a single issue for each event in the sample implementation. Each issue will need its specific implementation (when the event is called, what user DOM interaction triggers it, etc.) approved by frontend developers before it is implemented.
+- [ ] Design: design a privacy and analytics opt-out checkbox on the Privacy page. Also a pop-up banner to be shown to users letting them know Openverse uses analytics (can use the existing audio notice for this)
+- [ ] Create the `ANALYTICS_ENABLED` feature flag which defaults to `off`/`false`
+- [ ] Create an issue for the creation of the `sendEvent` function and the api route to post analytics events to. The api route will post events to an `ANALYTICS_ENDPOINT` environment variable. If that variable is unset and/or the `ANALYTICS_ENABLED` flag is off, the analytics events will not send.
+- [ ] Create each event in the sample implementation. Each event will need a detailed description of the payload and trigger (the actual user interaction that fires off the event). Events will need to account for accessibility concerns. Will keyboard users' actions trigger the events the same way as mouse users?
+- [ ] Future: Create a PR to turn `ANALYTICS_ENABLED` to `on`/`true`, set the `ANALYTICS_ENDPOINT` environment variable, and do any munging of data necessary for the decided on analytics service.
 
 ## Concerns / Pitfalls
 
