@@ -63,7 +63,10 @@ Unless all conditions are met the `sendEvent` function will simply no-op.
 
 A previous version of this proposal suggested honoring the `navigator.doNotTrack` browser method, but upon inspection this was deprecated in 2018 and is no longer advised.
 
-This proposal will require the creation of a user settings page _or_ an analytics opt-out checkbox on the `/privacy` page.
+This proposal will require the creation of some new user interface elements to toggle analytics tracking:
+
+1. A small popup banner that shows up to users, which informs them that Openverse collects anonymized analytics information to make the service better. There are "dismiss" and "learn more" calls to action. "Learn more" directs users to:
+2. An analytics opt-out checkbox on the `/privacy` page. We also add information describing our analytics collection, and link to the relevant code in our GitHub repository.
 
 ### Events
 
