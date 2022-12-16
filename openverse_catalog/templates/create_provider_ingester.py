@@ -55,19 +55,26 @@ def _render_file(
     endpoint: str,
     media_types: list[str],
     name: str,
+    repo_path: Path,
 ):
     with target.open("w", encoding="utf-8") as target_file:
         filled_template = _get_filled_template(
             template_path, provider, endpoint, media_types
         )
         target_file.write(filled_template)
-        print(f"{name + ':':<18} {target.relative_to(REPO_PATH)}")
+        print(f"{name + ':':<18} {target.relative_to(repo_path)}")
 
 
-def fill_template(provider, endpoint, media_types):
+def fill_template(
+    provider: str,
+    endpoint: str,
+    media_types: list[str],
+    project_path: Path = PROJECT_PATH,
+    repo_path: Path = REPO_PATH,
+):
     print(f"Creating files in {REPO_PATH}")
 
-    dags_path = PROJECT_PATH / "dags" / "providers"
+    dags_path = project_path / "dags" / "providers"
     api_path = dags_path / "provider_api_scripts"
     filename = inflection.underscore(provider)
 
@@ -81,11 +88,12 @@ def fill_template(provider, endpoint, media_types):
         endpoint,
         media_types,
         "API script",
+        repo_path,
     )
 
     # Render the tests
     script_template_path = TEMPLATES_PATH / "template_test.py_template"
-    tests_path = REPO_PATH / "tests"
+    tests_path = repo_path / "tests"
     # Mirror the directory structure, but under the "tests" top level directory
     test_script_path = tests_path.joinpath(*api_path.parts[-3:]) / f"test_{filename}.py"
 
@@ -96,6 +104,7 @@ def fill_template(provider, endpoint, media_types):
         endpoint,
         media_types,
         "API script test",
+        repo_path,
     )
 
     print(

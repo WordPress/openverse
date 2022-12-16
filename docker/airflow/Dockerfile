@@ -1,17 +1,18 @@
 # Cannot use $PYTHON_VERSION because that is overwritten by the base image
 # with the patch version (we only care about major and minor version)
 ARG PROJECT_PY_VERSION
+ARG PROJECT_AIRFLOW_VERSION
 
-FROM python:${PROJECT_PY_VERSION}-slim
+FROM apache/airflow:slim-${PROJECT_AIRFLOW_VERSION}-python${PROJECT_PY_VERSION}
 
 # Build-time arguments, with sensible defaults
 ARG REQUIREMENTS_FILE=requirements_prod.txt
 
 # Path configurations
-ENV AIRFLOW_HOME=/usr/local/airflow
+ENV AIRFLOW_HOME=/opt/airflow
 ENV DAGS_FOLDER=${AIRFLOW_HOME}/openverse_catalog/dags
 ENV PYTHONPATH=${DAGS_FOLDER}
-ENV PATH=/usr/local/airflow/.local/bin:$PATH
+ENV PATH=${AIRFLOW_HOME}/.local/bin:$PATH
 
 # Container optimizations
 ENV PIPNOCACHEDIR=1
@@ -33,21 +34,25 @@ ENV AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID=aws_default
 ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://openverse-airflow-logs
 
 
-RUN apt-get update && apt-get -yqq upgrade && apt-get -yqq install \
+USER root
+RUN apt-get update && apt-get -yqq install \
     build-essential \
     libpq-dev \
     libffi-dev \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
-RUN useradd -m -d ${AIRFLOW_HOME} airflow && \
-    mkdir -p ${OUTPUT_DIR} && \
-    chown airflow:airflow ${OUTPUT_DIR}
+
+# Create and set the ownership of directories so airflow user can write to them
+# The .ipython directories are not needed in production but it's easier to perform
+# this step here while we're doing it for the output directory
+RUN mkdir -p ${OUTPUT_DIR} /home/airflow/.ipython && \
+    chown airflow ${OUTPUT_DIR} /home/airflow/.ipython
+
 USER airflow
 
 WORKDIR  ${AIRFLOW_HOME}
 # Always add the prod req because the dev reqs depend on it for deduplication
 COPY ${REQUIREMENTS_FILE} requirements_prod.txt ${AIRFLOW_HOME}/
-COPY docker/airflow/wait_for_db.py /opt/airflow/
 
 # args go out of scope when a new build stage starts so it must be redeclared here
 ARG PROJECT_PY_VERSION
@@ -60,5 +65,4 @@ RUN pip install --user -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE}
 
 COPY docker/airflow/entrypoint.sh /opt/airflow/entrypoint.sh
 
-ENTRYPOINT ["/opt/airflow/entrypoint.sh"]
-CMD ["server"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "/opt/airflow/entrypoint.sh"]

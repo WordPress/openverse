@@ -8,7 +8,8 @@ IS_PROD := env_var_or_default("IS_PROD", "")
 DOCKER_FILES := "--file=docker-compose.yml" + (
     if IS_PROD != "true" {" --file=docker-compose.override.yml"} else {""}
 )
-SERVICE := "webserver"
+SERVICE := env_var_or_default("SERVICE", "scheduler")
+DC_USER := env_var_or_default("DC_USER", "airflow")
 
 export PROJECT_PY_VERSION := `grep '# PYTHON' requirements_prod.txt | awk -F= '{print $2}'`
 export PROJECT_AIRFLOW_VERSION := `grep '^apache-airflow' requirements_prod.txt | awk -F= '{print $3}'`
@@ -40,17 +41,21 @@ install: check-py-version
 dotenv:
     @([ ! -f .env ] && cp env.template .env) || true
 
+# Run docker compose with the specified command
+_dc *args:
+    docker-compose {{ DOCKER_FILES }} {{ args }}
+
 # Build all (or specified) container(s)
 build service="": dotenv
-    docker-compose {{ DOCKER_FILES }} build {{ service }}
+    @just _dc build {{ service }}
 
 # Bring all Docker services up
 up flags="": dotenv
-    docker-compose {{ DOCKER_FILES }} up -d {{ flags }}
+    @just _dc up -d {{ flags }}
 
 # Take all Docker services down
 down flags="":
-    docker-compose {{ DOCKER_FILES }} down {{ flags }}
+    @just _dc down {{ flags }}
 
 # Recreate all volumes and containers from scratch
 recreate: dotenv
@@ -59,13 +64,12 @@ recreate: dotenv
 
 # Show logs of all, or named, Docker services
 logs service="": up
-    docker-compose {{ DOCKER_FILES }} logs -f {{ service }}
+    @just _dc logs -f {{ service }}
 
 # Pull, build, and deploy all services
 deploy:
-    @just down
     -git pull
-    @just build
+    @just pull
     @just up
 
 # Run pre-commit on all files
@@ -79,11 +83,11 @@ _deps:
 # Mount the tests directory and run a particular command
 @_mount-tests command: _deps
     # The test directory is mounted into the container only during testing
-    docker-compose {{ DOCKER_FILES }} run \
+    @just _dc run \
         -e AIRFLOW_VAR_INGESTION_LIMIT=1000000 \
-        -v {{ justfile_directory() }}/tests:/usr/local/airflow/tests/ \
-        -v {{ justfile_directory() }}/docker:/usr/local/airflow/docker/ \
-        -v {{ justfile_directory() }}/pytest.ini:/usr/local/airflow/pytest.ini \
+        -v {{ justfile_directory() }}/tests:/opt/airflow/tests/ \
+        -v {{ justfile_directory() }}/pytest.ini:/opt/airflow/pytest.ini \
+        -v {{ justfile_directory() }}/docker:/opt/airflow/docker/ \
         --rm \
         {{ SERVICE }} \
         {{ command }}
@@ -94,34 +98,33 @@ test-session:
 
 # Run pytest using the webserver image
 test *pytestargs:
-    @just _mount-tests "/usr/local/airflow/.local/bin/pytest {{ pytestargs }}"
+    @just _mount-tests "bash -c \'pytest {{ pytestargs }}\'"
 
 # Open a shell into the webserver container
-shell: up
-    docker-compose {{ DOCKER_FILES }} exec {{ SERVICE }} /bin/bash
+shell user="airflow": up
+    @just _dc exec -u {{ user }} {{ SERVICE }} /bin/bash
 
 # Launch an IPython REPL using the webserver image
 ipython: _deps
-    docker-compose {{ DOCKER_FILES }} run \
+    @just _dc run \
         --rm \
-        -w /usr/local/airflow/openverse_catalog/dags \
-        -v {{ justfile_directory() }}/.ipython:/usr/local/airflow/.ipython:z \
+        -w /opt/airflow/openverse_catalog/dags \
         {{ SERVICE }} \
-        /usr/local/airflow/.local/bin/ipython
+        bash -c \'ipython\'
 
-# Run a given command using the webserver image
+# Run a given command in bash using the scheduler image
 run *args: _deps
-    docker-compose {{ DOCKER_FILES }} run --rm {{ SERVICE }} {{ args }}
+    @just _dc run --rm -u {{ DC_USER }} {{ SERVICE }} bash -c \'{{ args }}\'
 
 # Launch a pgcli shell on the postgres container (defaults to openledger) use "airflow" for airflow metastore
 db-shell args="openledger": up
-    docker-compose {{ DOCKER_FILES }} exec postgres pgcli {{ args }}
+    @just _dc exec postgres pgcli {{ args }}
 
 # Generate the DAG documentation
 generate-dag-docs fail_on_diff="false":
     #!/bin/bash
     set -e
-    just run python openverse_catalog/utilities/dag_doc_gen/dag_doc_generation.py
+    DC_USER=root just run 'python openverse_catalog/utilities/dag_doc_gen/dag_doc_generation.py \&\& chmod 666 /opt/airflow/openverse_catalog/utilities/dag_doc_gen/DAGs.md'
     # Move the file to the top level, since that level is not mounted into the container
     mv openverse_catalog/utilities/dag_doc_gen/DAGs.md DAGs.md
     if {{ fail_on_diff }}; then

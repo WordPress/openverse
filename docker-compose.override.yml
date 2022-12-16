@@ -1,5 +1,23 @@
 version: "3"
 
+# Common build configuration for Airflow
+# Extension field, see https://docs.docker.com/compose/compose-file/compose-file-v3/#extension-fields
+x-airflow-common: &airflow-common
+  restart: on-failure
+  depends_on:
+    - postgres
+    - s3
+  build:
+    context: .
+    args:
+      - REQUIREMENTS_FILE=requirements_dev.txt
+      - PROJECT_PY_VERSION=${PROJECT_PY_VERSION}
+      - PROJECT_AIRFLOW_VERSION=${PROJECT_AIRFLOW_VERSION}
+    dockerfile: docker/airflow/Dockerfile
+  volumes:
+    - ./openverse_catalog:/opt/airflow/openverse_catalog
+    - ipython:/home/airflow/.ipython
+
 services:
   # Services only needed for local development
   postgres:
@@ -76,26 +94,29 @@ services:
       exit 0;
       "
 
-  # Dev changes for the webserver container
-  webserver:
+  # Dev changes for the scheduler
+  scheduler:
+    <<: *airflow-common
     depends_on:
       - postgres
       - s3
-    build:
-      context: .
-      args:
-        - REQUIREMENTS_FILE=requirements_dev.txt
-        - PROJECT_PY_VERSION=${PROJECT_PY_VERSION}
-        - PROJECT_AIRFLOW_VERSION=${PROJECT_AIRFLOW_VERSION}
-      dockerfile: docker/airflow/Dockerfile
-    restart: on-failure
-    # This command ensures an admin account is created on startup
-    command: init
-    volumes:
-      - ./openverse_catalog:/usr/local/airflow/openverse_catalog
-    stdin_open: true
-    tty: true
+    environment:
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: airflow
+      _AIRFLOW_WWW_USER_PASSWORD: airflow
+      _AIRFLOW_WWW_USER_FIRSTNAME: Air
+      _AIRFLOW_WWW_USER_LASTNAME: Flow
+      _AIRFLOW_WWW_USER_EMAIL: airflow@example.com
+
+  # Dev changes for the webserver container
+  webserver:
+    <<: *airflow-common
+    depends_on:
+      - postgres
+      - s3
+      - scheduler
 
 volumes:
   postgres:
   minio:
+  ipython:

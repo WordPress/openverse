@@ -11,14 +11,17 @@ function help_text() {
  \   / |    |    |  | |/    |    |  \ .   ) |
   `-'  '    `--' '  ' '     `--' '  '  `-'  `--'
 
-Docker entrypoint script for Openverse Airflow. Unless specified, all commands
-will wait for the database to be ready and will upgrade the Airflow schema.
+Docker entrypoint script for Openverse Airflow. This uses the upstream Airflow
+entrypoint under the hood. For help running commands, see
+https://airflow.apache.org/docs/docker-stack/entrypoint.html#executing-commands
+Unless specified, all commands will wait for the database to be ready and
+will upgrade the Airflow schema.
 
 Usage:
   help - print this help text and exit
-  init - create an admin user account before starting the scheduler+webserver
-  server - start the scheduler+webserver
-  (anything else) - run the command provided
+  bash [...] - drop into a bash shell or run a bash command/script
+  python [ ... ] - drop into a python shell or run a python command/script
+  (anything else) - interpreted as an argument to "airflow [ argument ]"
 END
 }
 
@@ -58,27 +61,4 @@ while read -r var_string; do
 # only include airflow connections with http somewhere in the string
 done < <(env | grep "^AIRFLOW_CONN[A-Z_]\+=http.*$")
 
-# Wait for postgres
-header "WAITING FOR POSTGRES"
-python /opt/airflow/wait_for_db.py
-# Upgrade the database -- command is idempotent.
-header "MIGRATING DATABASE"
-airflow db upgrade
-if [[ "$1" == "init" ]]; then
-  header "CREATING ADMIN USER"
-  airflow users create -r Admin -u airflow -f Air -l Flow -p airflow --email airflow@example.org
-fi
-
-case "$1" in
-  init|server|"")
-    # Start scheduler and webserver in same container
-    header "STARTING AIRFLOW"
-    airflow scheduler &
-    exec airflow webserver
-    ;;
-  *)
-    # The command is something like bash, not an airflow subcommand. Just run it in the right environment.
-    header "RUNNING \"$*\""
-    exec "$@"
-    ;;
-esac
+exec /entrypoint "$@"

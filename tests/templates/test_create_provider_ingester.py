@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import pytest
 
 from openverse_catalog.templates import create_provider_ingester
@@ -50,22 +48,33 @@ def test_sanitize_provider(provider, expected_result):
     assert actual_result == expected_result
 
 
-def test_files_created():
+def test_files_created(tmp_path):
+    # Make temporary output directorys for testing
+    dags_path = tmp_path / "openverse_catalog" / "dags" / "providers"
+    (dags_path / "provider_api_scripts").mkdir(parents=True)
+    test_path = tmp_path / "tests"
+    (test_path / "dags" / "providers" / "provider_api_scripts").mkdir(parents=True)
+
     provider = "foobar_industries"
     endpoint = "https://myfakeapi/v1"
-    media_type = "image"
+    media_types = ["image"]
 
-    dags_path = create_provider_ingester.TEMPLATES_PATH.parent / "dags" / "providers"
     expected_provider = dags_path / "provider_api_scripts" / "foobar_industries.py"
     expected_test = (
-        Path(__file__).parents[1]
+        test_path
         / "dags"
         / "providers"
         / "provider_api_scripts"
         / "test_foobar_industries.py"
     )
     try:
-        create_provider_ingester.fill_template(provider, endpoint, media_type)
+        create_provider_ingester.fill_template(
+            provider,
+            endpoint,
+            media_types,
+            project_path=(tmp_path / "openverse_catalog"),
+            repo_path=tmp_path,
+        )
         assert expected_provider.exists()
         assert expected_test.exists()
     finally:

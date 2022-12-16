@@ -142,9 +142,9 @@ and some networking setup so that they can communicate. Note:
   databases and tables to emulate the production environment. It also provides a
   database for Airflow to store its running state.
 - The directory containing all modules files (including DAGs, dependencies, and other
-  tooling) will be mounted to the directory `/usr/local/airflow/openverse_catalog`
+  tooling) will be mounted to the directory `/opt/airflow/openverse_catalog`
   in the container `openverse_catalog_webserver_1`. On production, only the DAGs folder
-  will be mounted, e.g. `/usr/local/airflow/openverse_catalog/dags`.
+  will be mounted, e.g. `/opt/airflow/openverse_catalog/dags`.
 
 The various services can be accessed using these links:
 
@@ -207,6 +207,12 @@ To fully recreate everything from the ground up, you can use:
 ```shell
 just recreate
 ```
+
+> **Note**:
+> Any recipes or scripts which output files to the container's mounted volumes will
+> need to be run as the root user. This can be done with the `DC_USER=root`
+> environment variable for `just` recipes. For example, see the
+> [generate-dag-docs recipe](https://github.com/WordPress/openverse-catalog/blob/c9be67e483e49e9eda7cd21b52bcde8857cd3922/justfile#L126).
 
 [justfile]: justfile
 [dockercompose]: docker-compose.yml
