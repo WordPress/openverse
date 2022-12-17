@@ -10,8 +10,8 @@ This repository contains the methods used to identify over 1.4 billion Creative
 Commons licensed works. The challenge is that these works are dispersed
 throughout the web and identifying them requires a combination of techniques.
 
-Currently, we only pull data from APIs which serve Creative Commons licensed media.
-In the past, we have also used web crawl data as a source.
+Currently, we only pull data from APIs which serve Creative Commons licensed
+media. In the past, we have also used web crawl data as a source.
 
 ## API Data
 
@@ -21,10 +21,11 @@ the internet.
 
 ### API Workflows
 
-To view more information about all the available workflows (DAGs) within the project,
-see [DAGs.md](DAGs.md).
+To view more information about all the available workflows (DAGs) within the
+project, see [DAGs.md](DAGs.md).
 
-See each provider API script's notes in their respective [handbook][ov-handbook] entry.
+See each provider API script's notes in their respective [handbook][ov-handbook]
+entry.
 
 [ov-handbook]: https://make.wordpress.org/openverse/handbook/openverse-handbook/
 
@@ -41,14 +42,14 @@ The data is available in three file formats:
 - WET: extracted plaintext from each webpage.
 - WAT: extracted html metadata, e.g. HTTP headers and hyperlinks, etc.
 
-For more information about these formats, please see the
-[Common Crawl documentation][ccrawl_doc].
+For more information about these formats, please see the [Common Crawl
+documentation][ccrawl_doc].
 
-Openverse Catalog used AWS Data Pipeline service to automatically create an Amazon EMR
-cluster of 100 c4.8xlarge instances that parsed the WAT archives to identify
-all domains that link to creativecommons.org. Due to the volume of data, Apache
-Spark was also used to streamline the processing. The output of this methodology was a
-series of parquet files that contain:
+Openverse Catalog used AWS Data Pipeline service to automatically create an
+Amazon EMR cluster of 100 c4.8xlarge instances that parsed the WAT archives to
+identify all domains that link to creativecommons.org. Due to the volume of
+data, Apache Spark was also used to streamline the processing. The output of
+this methodology was a series of parquet files that contain:
 
 - the domains and its respective content path and query string (i.e. the exact
   webpage that links to creativecommons.org)
@@ -68,12 +69,13 @@ This method was retired in 2021.
 ## Development setup for Airflow and API puller scripts
 
 There are a number of scripts in the directory
-[`openverse_catalog/dags/provider_api_scripts`][api_scripts] eventually
-loaded into a database to be indexed for searching in the Openverse API. These run in a
+[`openverse_catalog/dags/provider_api_scripts`][api_scripts] eventually loaded
+into a database to be indexed for searching in the Openverse API. These run in a
 different environment than the PySpark portion of the project, and so have their
 own dependency requirements.
 
-For instructions geared specifically towards production deployments, see [DEPLOYMENT.md](DEPLOYMENT.md)
+For instructions geared specifically towards production deployments, see
+[DEPLOYMENT.md](DEPLOYMENT.md)
 
 [api_scripts]: openverse_catalog/dags/providers/provider_api_scripts
 
@@ -82,7 +84,8 @@ For instructions geared specifically towards production deployments, see [DEPLOY
 You'll need `docker` and `docker-compose` installed on your machine, with
 versions new enough to use version `3` of Docker Compose `.yml` files.
 
-You will also need the [`just`](https://github.com/casey/just#installation) command runner installed.
+You will also need the [`just`](https://github.com/casey/just#installation)
+command runner installed.
 
 ### Setup
 
@@ -94,8 +97,8 @@ source venv/bin/activate
 just install
 ```
 
-The containers will be built when starting the stack up for the first time.
-If you'd like to build them prior to that, run:
+The containers will be built when starting the stack up for the first time. If
+you'd like to build them prior to that, run:
 
 ```shell
 just build
@@ -112,10 +115,14 @@ just dotenv
 This will generate a `.env` file which is used by the containers.
 
 The `.env` file is split into four sections:
+
 1. Airflow Settings - these can be used to tweak various Airflow properties
-2. API Keys - set these if you intend to test one of the provider APIs referenced
-3. Connection/Variable info - this will not likely need to be modified for local development, though the values will need to be changed in production
-4. Other config - misc. configuration settings, some of which are useful for local dev
+2. API Keys - set these if you intend to test one of the provider APIs
+   referenced
+3. Connection/Variable info - this will not likely need to be modified for local
+   development, though the values will need to be changed in production
+4. Other config - misc. configuration settings, some of which are useful for
+   local dev
 
 The `.env` file does not need to be modified if you only want to run the tests.
 
@@ -141,15 +148,18 @@ and some networking setup so that they can communicate. Note:
 - `openverse_catalog_postgres_1` is running PostgreSQL, and is setup with some
   databases and tables to emulate the production environment. It also provides a
   database for Airflow to store its running state.
-- The directory containing all modules files (including DAGs, dependencies, and other
-  tooling) will be mounted to the directory `/opt/airflow/openverse_catalog`
-  in the container `openverse_catalog_webserver_1`. On production, only the DAGs folder
-  will be mounted, e.g. `/opt/airflow/openverse_catalog/dags`.
+- The directory containing all modules files (including DAGs, dependencies, and
+  other tooling) will be mounted to the directory
+  `/opt/airflow/openverse_catalog` in the container
+  `openverse_catalog_webserver_1`. On production, only the DAGs folder will be
+  mounted, e.g. `/opt/airflow/openverse_catalog/dags`.
 
 The various services can be accessed using these links:
 
-- Airflow: `localhost:9090` (The default username and password are both `airflow`.)
-- Minio Console: `localhost:5011` (The default username and password are `test_key` and `test_secret`)
+- Airflow: `localhost:9090` (The default username and password are both
+  `airflow`.)
+- Minio Console: `localhost:5011` (The default username and password are
+  `test_key` and `test_secret`)
 - Postgres: `localhost:5434` (using a database connector)
 
 At this stage, you can run the tests via:
@@ -170,7 +180,8 @@ If you'd like, it's possible to login to the webserver container via:
 just shell
 ```
 
-If you just need to run an airflow command, you can use the `airflow` recipe. Arguments passed to airflow must be quoted:
+If you just need to run an airflow command, you can use the `airflow` recipe.
+Arguments passed to airflow must be quoted:
 
 ```shell
 just airflow "config list"
@@ -182,7 +193,8 @@ To follow the logs of the running container:
 just logs
 ```
 
-To begin an interactive [`pgcli` shell](https://www.pgcli.com/) on the database container, run:
+To begin an interactive [`pgcli` shell](https://www.pgcli.com/) on the database
+container, run:
 
 ```shell
 just db-shell
@@ -200,7 +212,9 @@ To reset the test DB (wiping out all databases, schemata, and tables), run
 just down -v
 ```
 
-`docker volume prune` can also be useful if you've already stopped the running containers, but be warned that it will remove all volumes associated with stopped containers, not just openverse-catalog ones.
+`docker volume prune` can also be useful if you've already stopped the running
+containers, but be warned that it will remove all volumes associated with
+stopped containers, not just openverse-catalog ones.
 
 To fully recreate everything from the ground up, you can use:
 
@@ -208,10 +222,9 @@ To fully recreate everything from the ground up, you can use:
 just recreate
 ```
 
-> **Note**:
-> Any recipes or scripts which output files to the container's mounted volumes will
-> need to be run as the root user. This can be done with the `DC_USER=root`
-> environment variable for `just` recipes. For example, see the
+> **Note**: Any recipes or scripts which output files to the container's mounted
+> volumes will need to be run as the root user. This can be done with the
+> `DC_USER=root` environment variable for `just` recipes. For example, see the
 > [generate-dag-docs recipe](https://github.com/WordPress/openverse-catalog/blob/c9be67e483e49e9eda7cd21b52bcde8857cd3922/justfile#L126).
 
 [justfile]: justfile
@@ -245,22 +258,31 @@ openverse-catalog
 
 ## Publishing
 
-The docker image for the catalog (Airflow) is published to ghcr.io/WordPress/openverse-catalog.
+The docker image for the catalog (Airflow) is published to
+ghcr.io/WordPress/openverse-catalog.
 
 ## Contributing
 
-Pull requests are welcome! Feel free to [join us on Slack][wp_slack] and discuss the
-project with the engineers and community members on #openverse.
+Pull requests are welcome! Feel free to [join us on Slack][wp_slack] and discuss
+the project with the engineers and community members on #openverse.
 
 ## Acknowledgments
 
-Openverse, previously known as CC Search, was conceived and built at [Creative Commons](https://creativecommons.org). We thank them for their commitment to open source and openly licensed content, with particular thanks to previous team members @ryanmerkley, @janetpkr, @lizadaly, @sebworks, @pa-w, @kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar, along with their [community of volunteers](https://opensource.creativecommons.org/community/community-team/).
+Openverse, previously known as CC Search, was conceived and built at
+[Creative Commons](https://creativecommons.org). We thank them for their
+commitment to open source and openly licensed content, with particular thanks to
+previous team members @ryanmerkley, @janetpkr, @lizadaly, @sebworks, @pa-w,
+@kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar,
+along with their
+[community of volunteers](https://opensource.creativecommons.org/community/community-team/).
 
 ## License
 
 - [`LICENSE`](LICENSE) (Expat/[MIT][mit] License)
 
-[mit]: http://www.opensource.org/licenses/MIT "The MIT License | Open Source Initiative"
+[mit]:
+  http://www.opensource.org/licenses/MIT
+  "The MIT License | Open Source Initiative"
 [wp_slack]: https://make.wordpress.org/chat/
 [cc]: https://creativecommons.org
 [cc_community]: https://opensource.creativecommons.org/community/community-team/

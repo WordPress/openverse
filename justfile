@@ -127,6 +127,10 @@ generate-dag-docs fail_on_diff="false":
     DC_USER=root just run 'python openverse_catalog/utilities/dag_doc_gen/dag_doc_generation.py \&\& chmod 666 /opt/airflow/openverse_catalog/utilities/dag_doc_gen/DAGs.md'
     # Move the file to the top level, since that level is not mounted into the container
     mv openverse_catalog/utilities/dag_doc_gen/DAGs.md DAGs.md
+    echo -n "Running linting..."
+    # Linting step afterwards is necessary since the generated output differs greatly from what prettier expects
+    just lint &>/dev/null || true
+    echo "Done!"
     if {{ fail_on_diff }}; then
       set +e
       git diff --exit-code DAGs.md
