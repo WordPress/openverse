@@ -23,6 +23,17 @@ runs:
   using: "composite"
 
   steps:
+    - name: Set the Slack user
+      shell: python
+      run: |
+        import json
+        import os
+        mapping = json.loads("${{ toJSON(secrets.GH_SLACK_USERNAME_MAP) }}")
+        github_user = "${{ github.triggering_actor }}"
+        slack_id = mapping[github_user]
+        with open(os.getenv('GITHUB_ENV'), "a") as env_file:
+            env_file.write(f"SLACK_USER_ID={slack_id}")
+
     - name: Notify deployment start
       uses: slackapi/slack-github-action@v1.23.0
       with:
@@ -34,7 +45,7 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": ":spinning-cd: A deployment of staging-frontend is starting using the `${{ inputs.tag }}` tag."
+                  "text": ":spinning-cd: A deployment of staging-frontend triggered by <@${{ env.SLACK_USER_ID }}> is starting using the `${{ inputs.tag }}` tag."
                 }
               },
               {
@@ -95,7 +106,7 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": ":tadaco: The deployment of staging-frontend using the `${{ inputs.tag }}` tag *succeeded*."
+                  "text": ":tadaco: The deployment of staging-frontend triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *succeeded*."
                 }
               },
               {
@@ -123,7 +134,7 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": ":alert: The deployment of staging-frontend using the `${{ inputs.tag }}` tag *failed* :alert:"
+                  "text": ":alert: The deployment of staging-frontend triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *failed* :alert:"
                 }
               },
               {
