@@ -66,6 +66,7 @@ EUROPEANA_SUB_PROVIDERS = {"wellcome_collection": "Wellcome Collection"}
 # Smithsonian parameters
 SMITHSONIAN_SUB_PROVIDERS = {
     "smithsonian_national_museum_of_natural_history": {
+        "NMNHANTHRO",  # NMNH - Anthropology Dept.
         "NMNHBIRDS",  # NMNH - Vertebrate Zoology - Birds Division
         "NMNHBOTANY",  # NMNH - Botany Dept.
         "NMNHEDUCATION",  # NMNH - Education & Outreach

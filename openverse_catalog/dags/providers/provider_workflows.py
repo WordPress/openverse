@@ -59,7 +59,7 @@ class ProviderWorkflow:
                         which data should be ingested).
     pull_timeout:       datetime.timedelta giving the amount of time a given data
                         pull may take.
-    load_timeout:       datetime.timedelta giving the amount of time the load_data
+    upsert_timeout:     datetime.timedelta giving the amount of time the upsert_data
                         task may take.
     doc_md:             string which should be used for the DAG's documentation markdown
     media_types:        list describing the media type(s) that this provider handles
@@ -84,7 +84,7 @@ class ProviderWorkflow:
     schedule_string: str = "@monthly"
     dated: bool = False
     pull_timeout: timedelta = timedelta(hours=24)
-    load_timeout: timedelta = timedelta(hours=1)
+    upsert_timeout: timedelta = timedelta(hours=1)
     doc_md: str = ""
     media_types: Sequence[str] = ()
     create_preingestion_tasks: Callable | None = None
@@ -125,7 +125,7 @@ PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
         ingester_class=FinnishMuseumsDataIngester,
         start_date=datetime(2015, 11, 1),
-        load_timeout=timedelta(hours=5),
+        upsert_timeout=timedelta(hours=5),
         schedule_string="@daily",
         dated=True,
     ),
@@ -144,7 +144,7 @@ PROVIDER_WORKFLOWS = [
         create_postingestion_tasks=INaturalistDataIngester.create_postingestion_tasks,
         schedule_string="@monthly",
         pull_timeout=timedelta(days=5),
-        load_timeout=timedelta(days=5),
+        upsert_timeout=timedelta(days=5),
     ),
     ProviderWorkflow(
         ingester_class=JamendoDataIngester,
@@ -183,7 +183,7 @@ PROVIDER_WORKFLOWS = [
         ingester_class=SmithsonianDataIngester,
         start_date=datetime(2020, 1, 1),
         schedule_string="@weekly",
-        load_timeout=timedelta(hours=4),
+        upsert_timeout=timedelta(hours=6),
     ),
     ProviderWorkflow(
         ingester_class=SmkDataIngester,

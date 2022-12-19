@@ -267,7 +267,7 @@ def test_delete_more_than_max_malformed_rows(
 
 @flaky
 @pytest.mark.parametrize("load_function", [_load_local_tsv, _load_s3_tsv])
-def test_loaders_delete_null_url_rows(
+def test_loaders_deletes_null_url_rows(
     postgres_with_load_table,
     tmpdir,
     empty_s3_bucket,
@@ -275,7 +275,12 @@ def test_loaders_delete_null_url_rows(
     load_table,
     identifier,
 ):
+    # Load test data with some null urls into the intermediate table
     load_function(tmpdir, empty_s3_bucket, "url_missing.tsv", identifier)
+    # Clean data
+    sql.clean_intermediate_table_data(POSTGRES_CONN_ID, identifier)
+
+    # Check that rows with null urls were deleted
     null_url_check = f"SELECT COUNT (*) FROM {load_table} WHERE url IS NULL;"
     postgres_with_load_table.cursor.execute(null_url_check)
     null_url_num_rows = postgres_with_load_table.cursor.fetchone()[0]
@@ -297,7 +302,12 @@ def test_loaders_delete_null_license_rows(
     load_table,
     identifier,
 ):
+    # Load test data with some null licenses into the intermediate table
     load_function(tmpdir, empty_s3_bucket, "license_missing.tsv", identifier)
+    # Clean data
+    sql.clean_intermediate_table_data(POSTGRES_CONN_ID, identifier)
+
+    # Check that rows with null licenses were deleted
     license_check = f"SELECT COUNT (*) FROM {load_table} WHERE license IS NULL;"
     postgres_with_load_table.cursor.execute(license_check)
     null_license_num_rows = postgres_with_load_table.cursor.fetchone()[0]
@@ -319,9 +329,14 @@ def test_loaders_delete_null_foreign_landing_url_rows(
     load_table,
     identifier,
 ):
+    # Load test data with null foreign landings url into the intermediate table
     load_function(
         tmpdir, empty_s3_bucket, "foreign_landing_url_missing.tsv", identifier
     )
+    # Clean data
+    sql.clean_intermediate_table_data(POSTGRES_CONN_ID, identifier)
+
+    # Check that rows with null foreign landing urls were deleted
     foreign_landing_url_check = (
         f"SELECT COUNT (*) FROM {load_table} " f"WHERE foreign_landing_url IS NULL;"
     )
@@ -344,7 +359,12 @@ def test_data_loaders_delete_null_foreign_identifier_rows(
     load_table,
     identifier,
 ):
+    # Load test data with null foreign identifiers into the intermediate table
     load_function(tmpdir, empty_s3_bucket, "foreign_identifier_missing.tsv", identifier)
+    # Clean data
+    sql.clean_intermediate_table_data(POSTGRES_CONN_ID, identifier)
+
+    # Check that rows with null foreign identifiers were deleted
     foreign_identifier_check = (
         f"SELECT COUNT (*) FROM {load_table} " f"WHERE foreign_identifier IS NULL;"
     )
@@ -367,9 +387,14 @@ def test_import_data_deletes_duplicate_foreign_identifier_rows(
     load_table,
     identifier,
 ):
+    # Load test data with duplicate foreign identifiers into the intermediate table
     load_function(
         tmpdir, empty_s3_bucket, "foreign_identifier_duplicate.tsv", identifier
     )
+    # Clean data
+    sql.clean_intermediate_table_data(POSTGRES_CONN_ID, identifier)
+
+    # Check that rows with duplicate foreign ids were deleted
     foreign_id_duplicate_check = (
         f"SELECT COUNT (*) FROM {load_table} " f"WHERE foreign_identifier='135257';"
     )

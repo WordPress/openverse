@@ -2,7 +2,7 @@ import logging
 from textwrap import dedent
 
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from common.constants import AUDIO, IMAGE
+from common.constants import AUDIO, IMAGE, MediaType
 from common.loader import provider_details as prov
 from common.loader.paths import _extract_media_type
 from common.storage import columns as col
@@ -125,8 +125,6 @@ def load_local_data_to_intermediate_table(
             "Exceeded the maximum number of allowed defective rows"
         )
 
-    _clean_intermediate_table_data(postgres, load_table)
-
 
 def _handle_s3_load_result(cursor) -> int:
     """
@@ -147,7 +145,7 @@ def load_s3_data_to_intermediate_table(
     s3_key,
     identifier,
     media_type=IMAGE,
-) -> tuple[int, int, int]:
+) -> int:
     load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f"Loading {s3_key} from S3 Bucket {bucket} into {load_table}")
 
@@ -168,13 +166,14 @@ def load_s3_data_to_intermediate_table(
         handler=_handle_s3_load_result,
     )
     logger.info(f"Successfully loaded {loaded} records from S3")
-    missing_columns, foreign_id_dup = _clean_intermediate_table_data(
-        postgres, load_table
-    )
-    return loaded, missing_columns, foreign_id_dup
+    return loaded
 
 
-def _clean_intermediate_table_data(postgres_hook, load_table) -> tuple[int, int]:
+def clean_intermediate_table_data(
+    postgres_conn_id: str,
+    identifier: str,
+    media_type: MediaType = IMAGE,
+) -> tuple[int, int]:
     """
     Necessary for old TSV files that have not been cleaned up,
     using `MediaStore` class:
@@ -183,13 +182,16 @@ def _clean_intermediate_table_data(postgres_hook, load_table) -> tuple[int, int]
     Also removes any duplicate rows that have the same `provider`
     and `foreign_id`.
     """
+    load_table = _get_load_table_name(identifier, media_type=media_type)
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+
     missing_columns = 0
     for column in required_columns:
-        missing_columns += postgres_hook.run(
+        missing_columns += postgres.run(
             f"DELETE FROM {load_table} WHERE {column.db_name} IS NULL;",
             handler=RETURN_ROW_COUNT,
         )
-    foreign_id_dup = postgres_hook.run(
+    foreign_id_dup = postgres.run(
         dedent(
             f"""
             DELETE FROM {load_table} p1
