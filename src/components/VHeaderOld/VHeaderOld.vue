@@ -54,11 +54,10 @@ import {
   defineComponent,
   inject,
   ref,
-  useContext,
   useRouter,
 } from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, searchPath } from "~/constants/media"
+import { ALL_MEDIA } from "~/constants/media"
 import { useMatchSearchRoutes } from "~/composables/use-match-routes"
 import { useI18n } from "~/composables/use-i18n"
 import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
@@ -91,7 +90,6 @@ export default defineComponent({
     VSearchBarOld,
   },
   setup() {
-    const { app } = useContext()
     const i18n = useI18n()
     const router = useRouter()
 
@@ -196,11 +194,7 @@ export default defineComponent({
       }
       document.activeElement?.blur()
       if (isSearchTypeSupported(searchType)) {
-        const newPath = app.localePath({
-          path: searchPath(searchType),
-          query: searchStore.searchQueryParams,
-        })
-        router.push(newPath)
+        router.push(searchStore.getSearchPath({ type: searchType }))
       }
     }
     const areFiltersDisabled = computed(

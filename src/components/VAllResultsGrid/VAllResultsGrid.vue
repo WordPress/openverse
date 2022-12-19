@@ -9,7 +9,7 @@
         :key="mediaType"
         :media-type="mediaType"
         :results-count="count"
-        :to="localePath({ path: `/search/${mediaType}`, query: $route.query })"
+        :to="contentLinkPath(mediaType)"
         class="lg:col-span-2"
         @shift-tab="handleShiftTab($event, i)"
       />
@@ -53,12 +53,13 @@
 import { computed, defineComponent } from "@nuxtjs/composition-api"
 
 import { useMediaStore } from "~/stores/media"
-import { useFocusFilters } from "~/composables/use-focus-filters"
-import { Focus } from "~/utils/focus-management"
+import { useSearchStore } from "~/stores/search"
+import { useUiStore } from "~/stores/ui"
 
+import { useFocusFilters } from "~/composables/use-focus-filters"
 import { useI18n } from "~/composables/use-i18n"
 
-import { useUiStore } from "~/stores/ui"
+import { Focus } from "~/utils/focus-management"
 
 import VSnackbar from "~/components/VSnackbar.vue"
 import VImageCellSquare from "~/components/VAllResultsGrid/VImageCellSquare.vue"
@@ -80,6 +81,7 @@ export default defineComponent({
   setup() {
     const i18n = useI18n()
     const mediaStore = useMediaStore()
+    const searchStore = useSearchStore()
 
     const resultsLoading = computed(() => {
       return (
@@ -87,6 +89,9 @@ export default defineComponent({
         mediaStore.fetchState.isFetching
       )
     })
+
+    const contentLinkPath = (mediaType: string) =>
+      searchStore.getSearchPath({ type: mediaType })
 
     const allMedia = computed(() => mediaStore.allMedia)
 
@@ -134,6 +139,8 @@ export default defineComponent({
       resultCounts,
       noResults,
       handleShiftTab,
+
+      contentLinkPath,
 
       isSnackbarVisible,
       showSnackbar,

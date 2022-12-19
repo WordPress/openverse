@@ -137,7 +137,6 @@ import {
 
 import {
   ALL_MEDIA,
-  searchPath,
   SupportedSearchType,
   supportedSearchTypes,
 } from "~/constants/media"
@@ -154,8 +153,6 @@ import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSea
 import VSearchTypeRadio from "~/components/VContentSwitcher/VSearchTypeRadio.vue"
 import VSearchTypePopoverOld from "~/components/VContentSwitcherOld/VSearchTypePopoverOld.vue"
 import VBrand from "~/components/VBrand/VBrand.vue"
-
-import type { Dictionary } from "vue-router/types/router"
 
 import imageInfo from "~/assets/homepage_images/image_info.json"
 
@@ -232,17 +229,15 @@ export default defineComponent({
       contentSwitcher.value?.closeMenu()
     }
 
-    const handleSearch = async (searchTerm: string) => {
+    const handleSearch = (searchTerm: string) => {
       if (!searchTerm) return
 
-      searchStore.setSearchTerm(searchTerm)
-      searchStore.setSearchType(searchType.value)
-
-      const newPath = app.localePath({
-        path: searchPath(searchType.value),
-        query: searchStore.searchQueryParams as Dictionary<string>,
-      })
-      router.push(newPath)
+      router.push(
+        searchStore.updateSearchPath({
+          type: searchType.value,
+          searchTerm,
+        })
+      )
     }
 
     return {

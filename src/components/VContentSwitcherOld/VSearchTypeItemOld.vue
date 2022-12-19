@@ -17,9 +17,9 @@
 </template>
 
 <script>
-import { computed, useContext, defineComponent } from "@nuxtjs/composition-api"
+import { computed, defineComponent } from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, BETA, contentStatus } from "~/constants/media"
+import { BETA, contentStatus } from "~/constants/media"
 import { useSearchStore } from "~/stores/search"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -39,7 +39,6 @@ export default defineComponent({
   components: { VIcon, VItem, VPill },
   props: propTypes,
   setup(props) {
-    const { app } = useContext()
     const searchStore = useSearchStore()
 
     const isBeta = computed(() => contentStatus[props.item] === BETA)
@@ -53,10 +52,7 @@ export default defineComponent({
       }
       return {
         as: "VLink",
-        href: app.localePath({
-          path: `/search/${props.item === ALL_MEDIA ? "" : props.item}`,
-          query: searchStore.computeQueryParams(props.item),
-        }),
+        href: searchStore.getSearchPath({ type: props.item }),
       }
     })
     return {

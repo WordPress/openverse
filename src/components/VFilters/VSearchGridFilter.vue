@@ -50,14 +50,13 @@ import {
   defineComponent,
   ref,
   useContext,
-  useRoute,
   useRouter,
   watch,
 } from "@nuxtjs/composition-api"
 import { kebab } from "case"
 
 import { useSearchStore } from "~/stores/search"
-import { areQueriesEqual } from "~/utils/search-query-transform"
+import { areQueriesEqual, ApiQueryParams } from "~/utils/search-query-transform"
 import { Focus, focusIn, getFocusableElements } from "~/utils/focus-management"
 import type { NonMatureFilterCategory } from "~/constants/filters"
 import { useFocusFilters } from "~/composables/use-focus-filters"
@@ -97,8 +96,7 @@ export default defineComponent({
   setup(props) {
     const searchStore = useSearchStore()
 
-    const { app, i18n } = useContext()
-    const route = useRoute()
+    const { i18n } = useContext()
     const router = useRouter()
 
     const filtersFormRef = ref<HTMLFormElement>(null)
@@ -119,17 +117,9 @@ export default defineComponent({
      */
     watch(
       () => searchStore.searchQueryParams,
-      /**
-       * @param {import('~/utils/search-query-transform').ApiQueryParams} newQuery
-       * @param {import('~/utils/search-query-transform').ApiQueryParams} oldQuery
-       */
-      (newQuery, oldQuery) => {
+      (newQuery: ApiQueryParams, oldQuery: ApiQueryParams) => {
         if (!areQueriesEqual(newQuery, oldQuery)) {
-          const newPath = app.localePath({
-            path: route.value.path,
-            query: searchStore.searchQueryParams,
-          })
-          router.push(newPath)
+          router.push(searchStore.getSearchPath())
         }
       }
     )

@@ -104,7 +104,6 @@ import {
   inject,
   nextTick,
   ref,
-  useContext,
   useRouter,
   watch,
 } from "@nuxtjs/composition-api"
@@ -112,7 +111,6 @@ import {
 import { ensureFocus } from "~/utils/reakit-utils/focus"
 import { cyclicShift } from "~/utils/math"
 
-import { searchPath } from "~/constants/media"
 import { keycodes } from "~/constants/key-codes"
 
 import { IsHeaderScrolledKey } from "~/types/provides"
@@ -151,7 +149,6 @@ export default defineComponent({
 
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-    const { app } = useContext()
     const i18n = useI18n()
     const router = useRouter()
 
@@ -218,11 +215,7 @@ export default defineComponent({
       }
 
       if (isSearchTypeSupported(searchType)) {
-        const newPath = app.localePath({
-          path: searchPath(searchType),
-          query: searchStore.searchQueryParams,
-        })
-        router.push(newPath)
+        router.push(searchStore.getSearchPath({ type: searchType }))
       }
       deactivate()
     }

@@ -21,6 +21,7 @@ export const createPinia = () =>
           name: "Spanish",
         },
       },
+      localePath: jest.fn(),
     },
   }))
 

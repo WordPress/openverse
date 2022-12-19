@@ -3,11 +3,10 @@ import {
   computed,
   defineComponent,
   ref,
-  useContext,
   useRouter,
 } from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, searchPath, supportedMediaTypes } from "~/constants/media"
+import { ALL_MEDIA, supportedMediaTypes, SearchType } from "~/constants/media"
 import useSearchType from "~/composables/use-search-type"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -37,7 +36,6 @@ export default defineComponent({
       typeof VMobileMenuModal | typeof VSearchTypePopoverOld
     > | null>(null)
 
-    const { app } = useContext()
     const router = useRouter()
 
     const mediaStore = useMediaStore()
@@ -48,15 +46,11 @@ export default defineComponent({
 
     const content = useSearchType()
 
-    const selectSearchType = async (type) => {
+    const selectSearchType = async (type: SearchType) => {
       menuModalRef.value?.closeMenu()
       content.setActiveType(type)
 
-      const newPath = app.localePath({
-        path: searchPath(type),
-        query: searchStore.searchQueryParams,
-      })
-      router.push(newPath)
+      router.push(searchStore.getSearchPath({ type }))
 
       function typeWithoutMedia(mediaType) {
         return mediaStore.resultCountsPerMediaType[mediaType] === 0

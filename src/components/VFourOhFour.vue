@@ -46,13 +46,12 @@
 </template>
 
 <script>
-import { defineComponent, useContext, useRouter } from "@nuxtjs/composition-api"
+import { defineComponent, useRouter } from "@nuxtjs/composition-api"
 
 import { useSearchStore } from "~/stores/search"
-
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-import { ALL_MEDIA, searchPath } from "~/constants/media"
+import { ALL_MEDIA } from "~/constants/media"
 
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 import VLink from "~/components/VLink.vue"
@@ -72,21 +71,12 @@ export default defineComponent({
   props: ["error"],
   setup() {
     const searchStore = useSearchStore()
-    const { app } = useContext()
     const router = useRouter()
 
-    const handleSearch = async (searchTerm) => {
+    const handleSearch = (searchTerm) => {
       if (!searchTerm) return
 
-      searchStore.setSearchTerm(searchTerm)
-      searchStore.setSearchType(ALL_MEDIA)
-
-      router.push(
-        app.localePath({
-          path: searchPath(ALL_MEDIA),
-          query: { q: searchTerm },
-        })
-      )
+      router.push(searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm }))
     }
 
     const featureFlagStore = useFeatureFlagStore()

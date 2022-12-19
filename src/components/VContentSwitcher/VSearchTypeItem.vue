@@ -16,21 +16,14 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  useContext,
-  defineComponent,
-  PropType,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { BETA, contentStatus, searchPath, SearchType } from "~/constants/media"
+import { BETA, contentStatus, SearchType } from "~/constants/media"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VItem from "~/components/VItemGroup/VItem.vue"
 import VPill from "~/components/VPill.vue"
-
-import type { Dictionary } from "vue-router/types/router"
 
 export default defineComponent({
   name: "VSearchTypeItem",
@@ -81,7 +74,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { app } = useContext()
     const searchStore = useSearchStore()
 
     /**
@@ -96,9 +88,7 @@ export default defineComponent({
       if (!props.useLinks || !isSearchTypeSupported(props.item)) {
         return undefined
       }
-      const query = searchStore.computeQueryParams(props.item)
-      const path = searchPath(props.item)
-      return app.localePath({ path, query: query as Dictionary<string> })
+      return searchStore.getSearchPath({ type: props.item })
     })
 
     /**

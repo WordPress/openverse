@@ -16,6 +16,7 @@ import {
   SupportedSearchType,
   supportedSearchTypes,
   isAdditionalSearchType,
+  searchPath,
 } from "~/constants/media"
 import {
   ApiQueryParams,
@@ -152,6 +153,41 @@ export const useSearchStore = defineStore("search", {
     },
   },
   actions: {
+    /**
+     * Updates the search type and search term, and returns the
+     * updated localized search path.
+     */
+    updateSearchPath({
+      type,
+      searchTerm,
+    }: { type?: SearchType; searchTerm?: string } = {}): string {
+      if (type) {
+        this.setSearchType(type)
+      }
+      if (searchTerm) {
+        this.setSearchTerm(searchTerm)
+      }
+
+      return this.getSearchPath()
+    },
+    /**
+     * Returns localized search path for the given search type.
+     *
+     * If search type is not provided, returns the path for the current search type.
+     * If query is not provided, returns current query parameters.
+     */
+    getSearchPath({
+      type,
+      query,
+    }: { type?: SearchType; query?: ApiQueryParams } = {}): string {
+      const searchType = type || this.searchType
+      const queryParams = query || this.searchQueryParams
+
+      return this.$nuxt.localePath({
+        path: searchPath(searchType),
+        query: queryParams as Dictionary<string>,
+      })
+    },
     setSearchType(type: SearchType) {
       const featureFlagStore = useFeatureFlagStore()
       if (

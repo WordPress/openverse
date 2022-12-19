@@ -223,9 +223,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useContext, useMeta } from "@nuxtjs/composition-api"
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useSearchStore } from "~/stores/search"
+
 import { useI18n } from "~/composables/use-i18n"
 
 import VLink from "~/components/VLink.vue"
@@ -235,10 +237,9 @@ export default defineComponent({
   name: "VSearchHelpPage",
   components: { VLink, VContentPage },
   setup() {
-    const { app } = useContext()
-
     const i18n = useI18n()
     const featureFlagStore = useFeatureFlagStore()
+    const searchStore = useSearchStore()
 
     useMeta({
       title: `${i18n.t("search-guide.title", {
@@ -250,8 +251,7 @@ export default defineComponent({
     })
 
     const pathFromQuery = (queryString: string, quote = false) => {
-      return app.localePath({
-        path: "search",
+      return searchStore.getSearchPath({
         query: {
           q: quote ? `"${queryString}"` : queryString,
         },

@@ -52,7 +52,6 @@ import {
   defineComponent,
   inject,
   ref,
-  useContext,
   useRouter,
 } from "@nuxtjs/composition-api"
 
@@ -60,7 +59,7 @@ import { useMediaStore } from "~/stores/media"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
-import { ALL_MEDIA, searchPath, supportedMediaTypes } from "~/constants/media"
+import { ALL_MEDIA, supportedMediaTypes } from "~/constants/media"
 import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
 import { useI18n } from "~/composables/use-i18n"
@@ -95,7 +94,6 @@ export default defineComponent({
     const filterButtonRef = ref<InstanceType<typeof VFilterButton> | null>(null)
     const searchBarRef = ref<InstanceType<typeof VSearchBar> | null>(null)
 
-    const { app } = useContext()
     const i18n = useI18n()
     const router = useRouter()
 
@@ -146,11 +144,7 @@ export default defineComponent({
     const selectSearchType = async (type) => {
       content.setActiveType(type)
 
-      const newPath = app.localePath({
-        path: searchPath(type),
-        query: searchStore.searchQueryParams,
-      })
-      router.push(newPath)
+      router.push(searchStore.getSearchPath({ type }))
 
       function typeWithoutMedia(mediaType) {
         return mediaStore.resultCountsPerMediaType[mediaType] === 0
@@ -190,11 +184,7 @@ export default defineComponent({
       }
       document.activeElement?.blur()
       if (isSearchTypeSupported(searchType)) {
-        const newPath = app.localePath({
-          path: searchPath(searchType),
-          query: searchStore.searchQueryParams,
-        })
-        router.push(newPath)
+        router.push(searchStore.getSearchPath({ type: searchType }))
       }
     }
     const areFiltersDisabled = computed(
