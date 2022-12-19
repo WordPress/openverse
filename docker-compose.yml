@@ -87,7 +87,6 @@ services:
       MEDIA_ROOT: ${MEDIA_ROOT:-}
     stdin_open: true
     tty: true
-    user: ${DOCKER_USER_ID}:${DOCKER_GROUP_ID}
 
   ingestion_server:
     build: ./ingestion_server/

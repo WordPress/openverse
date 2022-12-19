@@ -59,7 +59,7 @@ jobs:
           install: true
 
       - name: Build image `${{ matrix.image }}`
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ${{ matrix.image }}
           push: false
@@ -83,10 +83,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: extractions/setup-just@v1
+
+      - name: Setup just
+        uses: extractions/setup-just@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download all images
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: /tmp
 
@@ -97,6 +101,9 @@ jobs:
 
       - name: collectstatic
         run: just collectstatic
+        env:
+          STATIC_ROOT: ./static
+          DC_USER: root
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -104,7 +111,7 @@ jobs:
           install: true
 
       - name: Build image `nginx`
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: api
           target: nginx
@@ -132,6 +139,8 @@ jobs:
 
       - name: Setup just
         uses: extractions/setup-just@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -153,7 +162,7 @@ jobs:
           just _ing-install
 
       - name: Download image `ingestion_server`
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ingestion_server
           path: /tmp
@@ -186,9 +195,11 @@ jobs:
 
       - name: Setup just
         uses: extractions/setup-just@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download all images
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: /tmp
 
@@ -227,9 +238,11 @@ jobs:
 
       - name: Setup just
         uses: extractions/setup-just@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download all images
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: /tmp
 
@@ -248,10 +261,14 @@ jobs:
       - build-images
     steps:
       - uses: actions/checkout@v3
-      - uses: extractions/setup-just@v1
+
+      - name: Setup just
+        uses: extractions/setup-just@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download all images
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: /tmp
 
@@ -262,6 +279,8 @@ jobs:
 
       - name: Run check
         run: just dj validateopenapischema
+        env:
+          DC_USER: root
 
       - name: Upload schema on failure
         if: failure()
@@ -281,9 +300,11 @@ jobs:
 
       - name: Setup just
         uses: extractions/setup-just@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download all images
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: /tmp
 
@@ -306,9 +327,11 @@ jobs:
 
       - name: Setup just
         uses: extractions/setup-just@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download all images
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: /tmp
 
@@ -346,7 +369,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download image `${{ matrix.image }}`
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.image }}
           path: /tmp
@@ -376,9 +399,11 @@ jobs:
 
       - name: Setup just
         uses: extractions/setup-just@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download all images
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: /tmp
 
@@ -419,7 +444,6 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.owner.login == 'WordPress' && github.actor != 'dependabot[bot]'
     needs:
       - build-images
-
     steps:
       - uses: peter-evans/find-comment@v2
         id: preview-comment
@@ -449,9 +473,11 @@ jobs:
 
       - name: Setup just
         uses: extractions/setup-just@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download all images
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: /tmp
 
@@ -465,6 +491,8 @@ jobs:
           just sphinx-make
           sudo chown "$USER:$USER" -R ./api
           mv ./api/build/html /tmp/preview
+        env:
+          DC_USER: root
 
       # Otherwise we end up with any extra stuff not git-ignored in the gh-pages branch
       - name: Recreate working directory to avoid superfluous files
