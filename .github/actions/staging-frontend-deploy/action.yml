@@ -25,10 +25,12 @@ runs:
   steps:
     - name: Set the Slack user
       shell: python
+      env:
+        GH_SLACK_USERNAME_MAP: ${{ secrets.GH_SLACK_USERNAME_MAP }}
       run: |
         import json
         import os
-        mapping = json.loads("${{ toJSON(secrets.GH_SLACK_USERNAME_MAP) }}")
+        mapping = json.loads("${{ toJSON(env.GH_SLACK_USERNAME_MAP) }}")
         github_user = "${{ github.triggering_actor }}"
         slack_id = mapping[github_user]
         with open(os.getenv('GITHUB_ENV'), "a") as env_file:
