@@ -415,7 +415,10 @@ jobs:
       - name: Make developer docs
         run: |
           just sphinx-make
+          sudo chown "$USER:$USER" -R ./api
           mv ./api/build/html /tmp/gh-pages
+        env:
+          DC_USER: root
 
       - uses: actions/checkout@v3
         with:
