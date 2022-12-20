@@ -8,4 +8,10 @@ while [ "$(curl -s -o /dev/null -w '%{http_code}' "$es_url")" != "200" ]; do
 done
 echo "Elasticsearch connection established!"
 
+# Run any database migrations
+if [ "$DJANGO_MIGRATE_DB_ON_STARTUP" != "False" ]; then
+  echo "Running database migrations..."
+  python manage.py migrate
+fi
+
 exec "$@"
