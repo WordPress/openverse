@@ -11,6 +11,7 @@ concurrency:
 
 jobs:
   deploy:
+    name: Deploy GitHub pages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

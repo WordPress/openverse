@@ -26,17 +26,8 @@ runs:
 
   steps:
     - name: Set the Slack user
-      shell: python
-      env:
-        GH_SLACK_USERNAME_MAP: ${{ inputs.gh-slack-username-map }}
-      run: |
-        import json
-        import os
-        mapping = json.loads('${{ env.GH_SLACK_USERNAME_MAP }}')
-        github_user = "${{ github.triggering_actor }}"
-        slack_id = mapping[github_user]
-        with open(os.getenv('GITHUB_ENV'), "a") as env_file:
-            env_file.write(f"SLACK_USER_ID={slack_id}")
+      shell: bash
+      run: echo "SLACK_USER_ID=${{ inputs.gh-slack-username-map[github.actor] }}" >> "$GITHUB_ENV"
 
     - name: Notify deployment start
       uses: slackapi/slack-github-action@v1.23.0
