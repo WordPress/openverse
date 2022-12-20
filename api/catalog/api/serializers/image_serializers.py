@@ -66,6 +66,12 @@ class ImageSearchRequestSerializer(
 
 
 class ImageReportRequestSerializer(MediaReportRequestSerializer):
+    identifier = serializers.SlugRelatedField(
+        slug_field="identifier",
+        queryset=Image.objects.all(),
+        source="media_obj",
+    )
+
     class Meta(MediaReportRequestSerializer.Meta):
         model = ImageReport
 
@@ -95,6 +101,8 @@ class ImageSerializer(ImageHyperlinksSerializer, MediaSerializer):
         Keep the fields names in sync with the actual fields below as this list is
         used to generate Swagger documentation.
         """
+
+    needs_db = True  # for the 'height' and 'width' fields
 
 
 class ImageSearchSerializer(MediaSearchSerializer):

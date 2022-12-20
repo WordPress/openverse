@@ -126,6 +126,14 @@ class AbstractMedia(
             ),
         ]
 
+    def __str__(self):
+        """
+        Return the string representation of the model, used in the Django admin site.
+        :return: the string representation of the model
+        """
+
+        return f"{self.__class__.__name__}: {self.identifier}"
+
 
 class AbstractMediaReport(models.Model):
     """
@@ -155,7 +163,21 @@ class AbstractMediaReport(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
-    identifier = models.UUIDField(help_text="The ID for media to be reported.")
+    media_obj = models.ForeignKey(
+        to="AbstractMedia",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="abstract_media_report",
+        help_text="The reference to the media being reported.",
+    )
+    """
+    There can be many reports associated with a single media item, hence foreign key.
+    Sub-classes must override this field to point to a concrete sub-class of
+    ``AbstractMedia``.
+    """
+
     reason = models.CharField(
         max_length=20,
         choices=REPORT_CHOICES,
@@ -177,14 +199,18 @@ class AbstractMediaReport(models.Model):
         This function raises errors that can be handled by Django's admin interface.
         """
 
-        if not self.media_class.objects.filter(identifier=self.identifier).exists():
+        if not self.media_class.objects.filter(
+            identifier=self.media_obj.identifier
+        ).exists():
             raise ValidationError(
                 f"No '{self.media_class.__name__}' instance"
-                f"with identifier {self.identifier}."
+                f"with identifier {self.media_obj.identifier}."
             )
 
     def url(self, media_type):
-        url = f"{AbstractMediaReport.BASE_URL}v1/{media_type}/{self.identifier}"
+        url = (
+            f"{AbstractMediaReport.BASE_URL}v1/{media_type}/{self.media_obj.identifier}"
+        )
         return format_html(f"<a href={url}>{url}</a>")
 
     def save(self, *args, **kwargs):
@@ -198,25 +224,25 @@ class AbstractMediaReport(models.Model):
 
         self.clean()
 
+        super().save(*args, **kwargs)
+
         if self.status == MATURE_FILTERED:
             # Create an instance of the mature class for this media. This will
             # automatically set the ``mature`` field in the ES document.
-            self.mature_class.objects.create(identifier=self.identifier)
+            self.mature_class.objects.create(media_obj=self.media_obj)
         elif self.status == DEINDEXED:
             # Create an instance of the deleted class for this media, so that we don't
             # reindex it later. This will automatically delete the ES document and the
             # DB instance.
-            self.deleted_class.objects.create(identifier=self.identifier)
+            self.deleted_class.objects.create(media_obj=self.media_obj)
 
         same_reports = self.__class__.objects.filter(
-            identifier=self.identifier,
+            media_obj=self.media_obj,
             status=PENDING,
         )
         if self.status != DEINDEXED:
             same_reports = same_reports.filter(reason=self.reason)
         same_reports.update(status=self.status)
-
-        super().save(*args, **kwargs)
 
 
 class AbstractDeletedMedia(OpenLedgerModel):
@@ -232,9 +258,20 @@ class AbstractDeletedMedia(OpenLedgerModel):
     es_index: str = None
     """the name of the ES index from ``settings.MEDIA_INDEX_MAPPING``"""
 
-    identifier = models.UUIDField(
-        unique=True, primary_key=True, help_text="The identifier of the deleted media."
+    media_obj = models.OneToOneField(
+        to="AbstractMedia",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        primary_key=True,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="deleted_abstract_media",
+        help_text="The reference to the deleted media.",
     )
+    """
+    Sub-classes must override this field to point to a concrete sub-class of
+    ``AbstractMedia``.
+    """
 
     class Meta:
         abstract = True
@@ -242,7 +279,7 @@ class AbstractDeletedMedia(OpenLedgerModel):
     def _update_es(self, raise_errors: bool) -> models.Model:
         es = settings.ES
         try:
-            obj = self.media_class.objects.get(identifier=self.identifier)
+            obj = self.media_obj
             es.delete(index=self.es_index, id=obj.id)
             es.indices.refresh(index=self.es_index)
             return obj
@@ -250,13 +287,13 @@ class AbstractDeletedMedia(OpenLedgerModel):
             if raise_errors:
                 raise ValidationError(
                     f"No '{self.media_class.__name__}' instance"
-                    f"with identifier {self.identifier}."
+                    f"with identifier {self.media_obj.identifier}."
                 )
 
     def save(self, *args, **kwargs):
         obj = self._update_es(True)
-        obj.delete()  # remove the actual model instance
         super().save(*args, **kwargs)
+        obj.delete()  # remove the actual model instance
 
 
 class AbstractMatureMedia(models.Model):
@@ -271,7 +308,21 @@ class AbstractMatureMedia(models.Model):
     """the name of the ES index from ``settings.MEDIA_INDEX_MAPPING``"""
 
     created_on = models.DateTimeField(auto_now_add=True)
-    identifier = models.UUIDField(unique=True, primary_key=True)
+
+    media_obj = models.OneToOneField(
+        to="AbstractMedia",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        primary_key=True,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="mature_abstract_media",
+        help_text="The reference to the mature media.",
+    )
+    """
+    Sub-classes must override this field to point to a concrete sub-class of
+    ``AbstractMedia``.
+    """
 
     class Meta:
         abstract = True
@@ -286,16 +337,17 @@ class AbstractMatureMedia(models.Model):
 
         es = settings.ES
         try:
-            obj = self.media_class.objects.get(identifier=self.identifier)
             es.update(
-                index=self.es_index, id=obj.id, body={"doc": {"mature": is_mature}}
+                index=self.es_index,
+                id=self.media_obj.id,
+                body={"doc": {"mature": is_mature}},
             )
             es.indices.refresh(index=self.es_index)
         except self.media_class.DoesNotExist:
             if raise_errors:
                 raise ValidationError(
                     f"No '{self.media_class.__name__}' instance"
-                    f"with identifier {self.identifier}."
+                    f"with identifier {self.media_obj.identifier}."
                 )
 
     def save(self, *args, **kwargs):

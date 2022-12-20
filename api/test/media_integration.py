@@ -122,7 +122,7 @@ def report(media_type, fixture):
     test_id = fixture["results"][0]["id"]
     response = requests.post(
         f"{API_URL}/v1/{media_type}/{test_id}/report/",
-        {
+        json={
             "reason": "mature",
             "description": "This item contains sensitive content",
         },

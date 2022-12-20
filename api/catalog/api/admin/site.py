@@ -24,7 +24,17 @@ class OpenverseAdmin(admin.AdminSite):
                 if media_type in model["object_name"].lower():
                     models.append(model)
                     api_app["models"].remove(model)
-            models.sort(key=lambda x: "0" if "report" in x["name"] else x["name"])
+
+            def key(entry):
+                name = entry["name"]
+                if name in ["Audios", "Images"]:
+                    return "0"
+                elif "report" in name:
+                    return "1"
+                else:
+                    return name
+
+            models.sort(key=key)
 
             media_app = {
                 "name": media_type_name,

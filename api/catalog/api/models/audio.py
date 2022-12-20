@@ -141,6 +141,14 @@ class Audio(AudioFileMixin, AbstractMedia):
     category: eg. music, sound_effect, podcast, news & audiobook
     """
 
+    audioset = models.ForeignObject(
+        to="AudioSet",
+        on_delete=models.DO_NOTHING,
+        from_fields=["audio_set_foreign_identifier", "provider"],
+        to_fields=["foreign_identifier", "provider"],
+        null=True,
+    )
+
     # Replaces the foreign key to AudioSet
     audio_set_foreign_identifier = models.CharField(
         max_length=1000,
@@ -178,7 +186,7 @@ class Audio(AudioFileMixin, AbstractMedia):
 
     @property
     def mature(self) -> bool:
-        return MatureAudio.objects.filter(identifier=self.identifier).exists()
+        return hasattr(self, "mature_audio")
 
     @property
     def alternative_files(self):
@@ -192,13 +200,7 @@ class Audio(AudioFileMixin, AbstractMedia):
 
     @property
     def audio_set(self):
-        try:
-            return AudioSet.objects.get(
-                provider=self.provider,
-                foreign_identifier=self.audio_set_foreign_identifier,
-            )
-        except AudioSet.DoesNotExist:
-            return None
+        return getattr(self, "audioset")
 
     def get_waveform(self) -> list[float]:
         """
@@ -236,6 +238,17 @@ class DeletedAudio(AbstractDeletedMedia):
     media_class = Audio
     es_index = settings.MEDIA_INDEX_MAPPING[AUDIO_TYPE]
 
+    media_obj = models.OneToOneField(
+        to="Audio",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        primary_key=True,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="deleted_audio",
+        help_text="The reference to the deleted audio.",
+    )
+
     class Meta:
         verbose_name_plural = "Deleted audio"
 
@@ -249,6 +262,17 @@ class MatureAudio(AbstractMatureMedia):
     media_class = Audio
     es_index = settings.MEDIA_INDEX_MAPPING[AUDIO_TYPE]
 
+    media_obj = models.OneToOneField(
+        to="Audio",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        primary_key=True,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="mature_audio",
+        help_text="The reference to the mature audio.",
+    )
+
     class Meta:
         verbose_name_plural = "Mature audio"
 
@@ -257,6 +281,16 @@ class AudioReport(AbstractMediaReport):
     media_class = Audio
     mature_class = MatureAudio
     deleted_class = DeletedAudio
+
+    media_obj = models.ForeignKey(
+        to="Audio",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="audio_report",
+        help_text="The reference to the audio being reported.",
+    )
 
     class Meta:
         db_table = "nsfw_reports_audio"

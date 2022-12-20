@@ -67,6 +67,9 @@ class ImageViewSet(MediaViewSet):
         "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="OEmbed"),
     }
 
+    def get_queryset(self):
+        return super().get_queryset().select_related("mature_image")
+
     # Extra actions
 
     @action(

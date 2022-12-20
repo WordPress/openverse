@@ -62,13 +62,7 @@ audio_search_200_example = {
         "page_size": 20,
         "page": 1,
         "results": [
-            base_audio
-            | {
-                "fields_matched": ["title"],
-                "audio_set": None,
-                "attribution": None,
-                "filesize": None,
-            },
+            base_audio | {"fields_matched": ["title"]},
         ],
     },
 }

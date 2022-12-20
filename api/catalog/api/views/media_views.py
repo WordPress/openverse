@@ -73,6 +73,15 @@ class MediaViewSet(ReadOnlyModelViewSet):
         req_serializer.is_valid(raise_exception=True)
         return req_serializer
 
+    def get_db_results(self, results):
+        hit_map = {hit.identifier: hit for hit in results}
+        results = self.get_queryset().filter(identifier__in=hit_map.keys())
+        for obj in results:
+            obj.fields_matched = getattr(
+                hit_map[str(obj.identifier)], "fields_matched", None
+            )
+        return results
+
     # Standard actions
 
     def list(self, request, *_, **__):
@@ -100,6 +109,10 @@ class MediaViewSet(ReadOnlyModelViewSet):
             self.paginator.result_count = num_results
         except ValueError as e:
             raise APIException(getattr(e, "message", str(e)))
+
+        serializer_class = self.get_serializer()
+        if params.needs_db or serializer_class.needs_db:
+            results = self.get_db_results(results)
 
         serializer = self.get_serializer(results, many=True)
         return self.get_paginated_response(serializer.data)
@@ -144,9 +157,9 @@ class MediaViewSet(ReadOnlyModelViewSet):
     def report(self, request, *_, **__):
         media = self.get_object()
         identifier = media.identifier
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.data | {"identifier": identifier})
         serializer.is_valid(raise_exception=True)
-        report = serializer.save(identifier=identifier)
+        report = serializer.save()
 
         serializer = self.get_serializer(report)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)

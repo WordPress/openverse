@@ -1,7 +1,14 @@
 from django.contrib import admin
 
 from catalog.api.admin.site import openverse_admin
-from catalog.api.models import PENDING, AudioReport, ContentProvider, ImageReport
+from catalog.api.models import (
+    PENDING,
+    Audio,
+    AudioReport,
+    ContentProvider,
+    Image,
+    ImageReport,
+)
 from catalog.api.models.media import AbstractDeletedMedia, AbstractMatureMedia
 
 
@@ -9,32 +16,46 @@ admin.site = openverse_admin
 admin.sites.site = openverse_admin
 
 
+@admin.register(Image)
+class ImageAdmin(admin.ModelAdmin):
+    search_fields = ("identifier",)
+
+
+@admin.register(Audio)
+class AudioAdmin(admin.ModelAdmin):
+    search_fields = ("identifier",)
+
+
 class MediaReportAdmin(admin.ModelAdmin):
     list_display = ("reason", "status", "description", "created_at")
     media_specific_list_display = ()
     list_filter = ("status", "reason")
     list_display_links = ("status",)
-    search_fields = ("description", "identifier")
+    search_fields = ("description", "media_obj__identifier")
+    autocomplete_fields = ("media_obj",)
     actions = None
 
     def get_list_display(self, request):
         return self.list_display + self.media_specific_list_display
 
+    def get_exclude(self, request, obj=None):
+        # ``identifier`` cannot be edited on an existing report.
+        if request.path.endswith("/change/"):
+            return ["media_obj"]
+
     def get_readonly_fields(self, request, obj=None):
         if obj is None:
             return []
-        always_readonly = [
+        readonly_fields = [
             "reason",
             "description",
-            "identifier",
+            "media_obj_id",
             "created_at",
         ]
-        if obj.status == PENDING:
-            return always_readonly
-        else:
-            status_readonly = ["status"]
-            status_readonly.extend(always_readonly)
-            return status_readonly
+        # ``status`` cannot be changed on a finalised report.
+        if obj.status != PENDING:
+            readonly_fields.append("status")
+        return readonly_fields
 
 
 @admin.register(ImageReport)
@@ -48,12 +69,9 @@ class AudioReportAdmin(MediaReportAdmin):
 
 
 class MediaSubreportAdmin(admin.ModelAdmin):
-    search_fields = [
-        "identifier",
-    ]
-    readonly_fields = [
-        "identifier",
-    ]
+    exclude = ("media_obj",)
+    search_fields = ("media_obj__identifier",)
+    readonly_fields = ("media_obj_id",)
 
     def has_add_permission(self, *args, **kwargs):
         """Create ``_Report`` instances instead."""

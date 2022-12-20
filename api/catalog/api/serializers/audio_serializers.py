@@ -61,8 +61,18 @@ class AudioSearchRequestSerializer(
         default=False,
     )
 
+    @property
+    def needs_db(self) -> bool:
+        return super().needs_db or self.data["peaks"]
+
 
 class AudioReportRequestSerializer(MediaReportRequestSerializer):
+    identifier = serializers.SlugRelatedField(
+        slug_field="identifier",
+        queryset=Audio.objects.all(),
+        source="media_obj",
+    )
+
     class Meta(MediaReportRequestSerializer.Meta):
         model = AudioReport
 
@@ -115,6 +125,8 @@ class AudioSerializer(AudioHyperlinksSerializer, MediaSerializer):
         Keep the fields names in sync with the actual fields below as this list is
         used to generate Swagger documentation.
         """
+
+    needs_db = True  # for the 'thumbnail' field
 
     audio_set = AudioSetSerializer(
         allow_null=True,

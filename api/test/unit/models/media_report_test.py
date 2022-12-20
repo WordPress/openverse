@@ -2,7 +2,7 @@ import uuid
 from typing import Literal, Union
 from unittest.mock import MagicMock, patch
 
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist
 
 import pytest
 
@@ -53,9 +53,9 @@ def media_obj():
 )
 @reason_params
 def test_cannot_report_invalid_identifier(media_type, report_class, reason):
-    with pytest.raises(ValidationError):
+    with pytest.raises(ObjectDoesNotExist):
         report_class.objects.create(
-            identifier=uuid.uuid4(),
+            media_obj_id=uuid.uuid4(),
             reason=reason,
         )
 
@@ -72,14 +72,11 @@ def test_pending_reports_have_no_subreport_models(
     media_type: MediaType, report_class, mature_class, deleted_class, reason, media_obj
 ):
     media = media_obj(media_type)
-    report = report_class.objects.create(
-        identifier=media.identifier,
-        reason=reason,
-    )
+    report = report_class.objects.create(media_obj=media, reason=reason)
 
     assert report.status == PENDING
-    assert not mature_class.objects.filter(identifier=media.identifier).exists()
-    assert not deleted_class.objects.filter(identifier=media.identifier).exists()
+    assert not mature_class.objects.filter(media_obj=media).exists()
+    assert not deleted_class.objects.filter(media_obj=media).exists()
 
 
 @pytest.mark.parametrize(
@@ -93,10 +90,10 @@ def test_mature_filtering_creates_mature_image_instance(
     mock_es = MagicMock()
     with patch("django.conf.settings.ES", mock_es):
         report_class.objects.create(
-            identifier=media.identifier, reason=MATURE, status=MATURE_FILTERED
+            media_obj=media, reason=MATURE, status=MATURE_FILTERED
         )
 
-    assert mature_class.objects.filter(identifier=media.identifier).exists()
+    assert mature_class.objects.filter(media_obj=media).exists()
     assert mock_es.update.called_with(
         index=media_type, id=media.id, body={"doc": {"mature": True}}
     )
@@ -115,13 +112,14 @@ def test_deleting_mature_image_instance_resets_mature_flag(
     with patch("django.conf.settings.ES", mock_es):
         # Mark as mature.
         report_class.objects.create(
-            identifier=media.identifier, reason=MATURE, status=MATURE_FILTERED
+            media_obj=media, reason=MATURE, status=MATURE_FILTERED
         )
         # Delete ``MatureImage`` instance.
-        mature_class.objects.get(identifier=media.identifier).delete()
+        mature_class.objects.get(media_obj=media).delete()
 
     assert mock_es.update.call_count == 2
     assert mock_es.update.called_with(id=media.id, body={"doc": {"mature": False}})
+    media.refresh_from_db()
     assert not media.mature
 
 
@@ -142,10 +140,8 @@ def test_deindexing_creates_deleted_image_instance(
 
     mock_es = MagicMock()
     with patch("django.conf.settings.ES", mock_es):
-        report_class.objects.create(
-            identifier=identifier, reason=DMCA, status=DEINDEXED
-        )
+        report_class.objects.create(media_obj=media, reason=DMCA, status=DEINDEXED)
 
-    assert deleted_class.objects.filter(identifier=identifier).exists()
+    assert deleted_class.objects.filter(media_obj=media).exists()
     assert not media_class.objects.filter(identifier=identifier).exists()
     assert mock_es.delete.called_with(id=image_id)

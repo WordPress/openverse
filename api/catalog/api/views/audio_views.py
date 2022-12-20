@@ -46,6 +46,9 @@ class AudioViewSet(MediaViewSet):
 
     serializer_class = AudioSerializer
 
+    def get_queryset(self):
+        return super().get_queryset().select_related("mature_audio", "audioset")
+
     # Extra actions
 
     @action(

@@ -51,7 +51,7 @@ class Image(ImageFileMixin, AbstractMedia):
 
     @property
     def mature(self) -> bool:
-        return MatureImage.objects.filter(identifier=self.identifier).exists()
+        return hasattr(self, "mature_image")
 
 
 class DeletedImage(AbstractDeletedMedia):
@@ -63,6 +63,17 @@ class DeletedImage(AbstractDeletedMedia):
     media_class = Image
     es_index = settings.MEDIA_INDEX_MAPPING[IMAGE_TYPE]
 
+    media_obj = models.OneToOneField(
+        to="Image",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        primary_key=True,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="deleted_image",
+        help_text="The reference to the deleted image.",
+    )
+
 
 class MatureImage(AbstractMatureMedia):
     """
@@ -73,11 +84,32 @@ class MatureImage(AbstractMatureMedia):
     media_class = Image
     es_index = settings.MEDIA_INDEX_MAPPING[IMAGE_TYPE]
 
+    media_obj = models.OneToOneField(
+        to="Image",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        primary_key=True,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="mature_image",
+        help_text="The reference to the mature image.",
+    )
+
 
 class ImageReport(AbstractMediaReport):
     media_class = Image
     mature_class = MatureImage
     deleted_class = DeletedImage
+
+    media_obj = models.ForeignKey(
+        to="Image",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="image_report",
+        help_text="The reference to the image being reported.",
+    )
 
     class Meta:
         db_table = "nsfw_reports"

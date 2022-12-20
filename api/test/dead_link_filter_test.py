@@ -27,6 +27,18 @@ def redis(monkeypatch) -> FakeRedis:
     fake_redis.client().close()
 
 
+@pytest.fixture(autouse=True)
+def turn_off_db_read(monkeypatch):
+    """
+    Since ImageSerializer has set ``needs_db`` to ``True``, all results from ES will be
+    mapped to DB models. Since the test DB is empty, results array will be empty. By
+    patching ``needs_db`` to ``False``, we can test the dead link filtering process
+    without needing to populate the test DB.
+    """
+
+    monkeypatch.setattr("catalog.api.views.image_views.ImageSerializer.needs_db", False)
+
+
 @pytest.fixture
 def unique_query_hash(redis, monkeypatch):
     def get_unique_hash(*args, **kwargs):
