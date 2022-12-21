@@ -28,7 +28,7 @@ runs:
     - name: Set the Slack user
       shell: python
       env:
-        GH_SLACK_USERNAME_MAP: ${{ inputs.GH_SLACK_USERNAME_MAP }}
+        GH_SLACK_USERNAME_MAP: ${{ inputs.gh-slack-username-map }}
       run: |
         import json
         import os
