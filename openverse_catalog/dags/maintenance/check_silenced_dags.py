@@ -99,7 +99,6 @@ dag = DAG(
     },
     start_date=datetime(2022, 7, 29),
     schedule="@weekly",
-    max_active_tasks=MAX_ACTIVE,
     max_active_runs=MAX_ACTIVE,
     catchup=False,
     # Use the docstring at the top of the file as md docs in the UI

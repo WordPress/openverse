@@ -44,6 +44,7 @@ The following are DAGs grouped by their primary tag:
 | [`airflow_log_cleanup`](#airflow_log_cleanup) | `@weekly`         |
 | [`check_silenced_dags`](#check_silenced_dags) | `@weekly`         |
 | [`pr_review_reminders`](#pr_review_reminders) | `0 0 * * 1-5`     |
+| [`rotate_db_snapshots`](#rotate_db_snapshots) | `0 0 * * 6`       |
 
 ## Oauth
 
@@ -113,6 +114,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation)
 1.  [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation)
 1.  [`report_pending_reported_media`](#report_pending_reported_media)
+1.  [`rotate_db_snapshots`](#rotate_db_snapshots)
 1.  [`science_museum_workflow`](#science_museum_workflow)
 1.  [`smithsonian_workflow`](#smithsonian_workflow)
 1.  [`smk_workflow`](#smk_workflow)
@@ -500,6 +502,21 @@ Once reported, these require manual review through the Django Admin to determine
 whether further action (such as deindexing the record) needs to be taken. If a
 record has been reported multiple times, it only needs to be reviewed once and
 so is only counted once in the reporting by this DAG.
+
+## `rotate_db_snapshots`
+
+Manages weekly database snapshots. RDS does not support weekly snapshots
+schedules on its own, so we need a DAG to manage this for us.
+
+It runs on Saturdays at 00:00 UTC in order to happen before the data refresh.
+
+The DAG will automatically delete the oldest snapshots when more snaphots exist
+than it is configured to retain.
+
+Requires two variables:
+
+`AIRFLOW_RDS_ARN`: The ARN of the RDS DB instance that needs snapshots.
+`AIRFLOW_RDS_SNAPSHOTS_TO_RETAIN`: How many historical snapshots to retain.
 
 ## `science_museum_workflow`
 
