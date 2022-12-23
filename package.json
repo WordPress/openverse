@@ -51,7 +51,6 @@
     "types": "vue-tsc --noEmit",
     "lint": "prettier --check .; eslint --ext .js,.vue,.ts --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 .",
     "lint:fix": "prettier --write --loglevel=warn .; pnpm lint --fix",
-    "pc:download": "curl https://api.github.com/repos/pre-commit/pre-commit/releases/latest | grep -o 'https://.*\\.pyz' -m 1 | xargs | xargs curl -fsJo pre-commit.pyz -L",
     "pc:install": "python3 pre-commit.pyz install -t pre-push -t pre-commit",
     "pc:lint": "python3 pre-commit.pyz run --all-files",
     "i18n": "pnpm i18n:create-locales-list && pnpm i18n:get-translations && pnpm i18n:update-locales",
