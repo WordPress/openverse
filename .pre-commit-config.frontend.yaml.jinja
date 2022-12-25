@@ -1,5 +1,6 @@
 {% set eslint_files = '\\.(js|ts|vue)$' %}
 {% set eslint_exclude = '^nuxt-template-overrides/.*$|.remake' %}
+{% set prettier_exclude = '.remake/component-unit-test/remake-fileName.spec.js' %}
 
 {% extends '.pre-commit-config.yaml.jinja' %}
 
