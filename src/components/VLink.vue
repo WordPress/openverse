@@ -23,7 +23,7 @@
       v-if="showExternalIcon && !isInternal"
       :icon-path="externalLinkIcon"
       class="inline-block"
-      :size="4"
+      :size="externalIconSize"
       rtl-flip
     />
   </a>
@@ -63,12 +63,21 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    /**
+     * The size of external link icon.
+     */
+    externalIconSize: {
+      type: Number,
+      default: 4,
+    },
   },
   setup(props) {
     const { app } = useContext()
-    function checkHref(
-      p: typeof props
-    ): p is { href: string; showExternalIcon: boolean } {
+    function checkHref(p: typeof props): p is {
+      href: string
+      showExternalIcon: boolean
+      externalIconSize: number
+    } {
       return typeof p.href === "string" && !["", "#"].includes(p.href)
     }
 

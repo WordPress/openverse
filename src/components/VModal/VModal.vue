@@ -10,11 +10,12 @@
       <slot
         name="trigger"
         :a11y-props="triggerA11yProps"
-        :visible="internalVisibleRef"
+        :visible="visibleRef"
       />
     </div>
     <VModalContent
-      :visible="internalVisibleRef"
+      v-if="triggerRef"
+      :visible="visibleRef"
       :trigger-element="triggerRef"
       :hide-on-esc="hideOnEsc"
       :hide-on-click-outside="hideOnClickOutside"
@@ -40,17 +41,15 @@
 import {
   defineComponent,
   ref,
-  watch,
-  reactive,
   computed,
   toRef,
   PropType,
-  Ref,
+  SetupContext,
 } from "@nuxtjs/composition-api"
 
-import { useBodyScrollLock } from "~/composables/use-body-scroll-lock"
-
 import type { ModalColorMode, ModalVariant } from "~/types/modal"
+
+import { useDialogControl } from "~/composables/use-dialog-control"
 
 import VModalContent from "~/components/VModal/VModalContent.vue"
 
@@ -164,72 +163,37 @@ export default defineComponent({
     "close",
   ],
   setup(props, { emit }) {
-    const visibleRef = toRef(props, "visible")
-    const internalVisibleRef: Ref<boolean> = ref<boolean>(
-      typeof props.visible === "undefined" ? false : props.visible
-    )
+    const visiblePropRef =
+      typeof props.visible === "undefined" ? undefined : toRef(props, "visible")
+
     const nodeRef = ref<null | HTMLElement>(null)
 
     const triggerContainerRef = ref<HTMLElement | null>(null)
-
-    const triggerA11yProps = reactive({
-      "aria-expanded": false,
-      "aria-haspopup": "dialog",
-    })
 
     const triggerRef = computed(
       () => triggerContainerRef.value?.firstChild as HTMLElement | undefined
     )
 
-    watch(internalVisibleRef, (visible) => {
-      triggerA11yProps["aria-expanded"] = visible
+    const {
+      close,
+      open,
+      onTriggerClick,
+      triggerA11yProps,
+      visible: visibleRef,
+    } = useDialogControl({
+      visibleRef: visiblePropRef,
+      nodeRef,
+      emit: emit as SetupContext["emit"],
     })
-
-    /**
-     * When the `visible` prop is set to a different value than internalVisibleRef,
-     * we update the internalVisibleRef to match the prop.
-     */
-    watch(visibleRef, (visible) => {
-      if (visible === undefined || visible === internalVisibleRef.value) return
-
-      if (visible) {
-        open()
-      } else {
-        close()
-      }
-    })
-
-    const { lock, unlock } = useBodyScrollLock({ nodeRef })
-
-    const open = () => {
-      internalVisibleRef.value = true
-      lock()
-      if (props.visible !== internalVisibleRef.value) {
-        emit("open")
-      }
-    }
-
-    const close = () => {
-      internalVisibleRef.value = false
-      unlock()
-      emit("close")
-    }
-
-    const onTriggerClick = () => {
-      if (internalVisibleRef.value) {
-        close()
-      } else {
-        open()
-      }
-    }
 
     return {
       nodeRef,
-      internalVisibleRef,
+      visibleRef,
       triggerContainerRef,
       triggerRef,
 
       close,
+      open,
       onTriggerClick,
       triggerA11yProps,
     }

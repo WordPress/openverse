@@ -1,5 +1,6 @@
 <template>
   <header
+    ref="headerRef"
     class="main-header z-30 flex w-full items-center border-b border-tx bg-white px-6 py-4"
     :class="{ 'border-dark-charcoal-20': isHeaderScrolled }"
   >
@@ -7,9 +8,10 @@
       class="flex w-full"
       variant="recent-searches"
       :is-active="isRecentSearchesModalOpen"
+      aria-label="inputmodal"
       @close="deactivate"
     >
-      <div class="flex w-full" :class="isRecentSearchesModalOpen ? 'px-2' : ''">
+      <div class="flex w-full" :class="{ 'px-2': isRecentSearchesModalOpen }">
         <form
           class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-sm"
           :class="
@@ -76,9 +78,19 @@
             >
               {{ searchStatus }}
             </span>
-            <VContentSettingsModal
+            <VContentSettingsButton
               v-show="!searchBarIsActive"
+              :is-pressed="contentSettingsOpen"
+              :applied-filter-count="appliedFilterCount"
+              v-bind="triggerA11yProps"
+              @click="toggleContentSettings"
+            />
+            <VContentSettingsModalContent
+              v-show="!searchBarIsActive"
+              :visible="contentSettingsOpen"
               :is-fetching="isFetching"
+              :close="closeContentSettings"
+              labelledby="content-settings-button"
             />
           </slot>
         </form>
@@ -115,6 +127,7 @@ import { keycodes } from "~/constants/key-codes"
 
 import { IsHeaderScrolledKey } from "~/types/provides"
 
+import { useDialogControl } from "~/composables/use-dialog-control"
 import { useI18n } from "~/composables/use-i18n"
 import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 
@@ -123,7 +136,8 @@ import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
 import VInputModal from "~/components/VModal/VInputModal.vue"
-import VContentSettingsModal from "~/components/VHeader/VHeaderMobile/VContentSettingsModal.vue"
+import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue"
+import VContentSettingsButton from "~/components/VHeader/VHeaderMobile/VContentSettingsButton.vue"
 import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 
@@ -138,14 +152,16 @@ import chevronLeftIcon from "~/assets/icons/chevron-left.svg"
 export default defineComponent({
   name: "VHeaderMobile",
   components: {
-    VContentSettingsModal,
+    VContentSettingsModalContent,
+    VContentSettingsButton,
     VInputModal,
     VLogoButton,
     VRecentSearches,
     VSearchBarButton,
   },
-  setup() {
+  setup(_, { emit }) {
     const searchInputRef = ref<HTMLInputElement | null>(null)
+    const headerRef = ref<HTMLElement | null>(null)
 
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
@@ -153,6 +169,7 @@ export default defineComponent({
     const router = useRouter()
 
     const searchBarIsActive = ref(false)
+    const contentSettingsOpen = ref(false)
 
     const isHeaderScrolled = inject(IsHeaderScrolledKey)
 
@@ -243,6 +260,7 @@ export default defineComponent({
         }
       }
     })
+    const appliedFilterCount = computed(() => searchStore.appliedFilterCount)
 
     const updateSearchText = (event: Event) => {
       searchTerm.value = (event.target as HTMLInputElement).value
@@ -324,13 +342,33 @@ export default defineComponent({
       () => isRecentSearchesModalOpen.value && entries.value.length > 0
     )
 
+    const {
+      close: closeContentSettings,
+      open: openContentSettings,
+      onTriggerClick: toggleContentSettings,
+      triggerA11yProps,
+    } = useDialogControl({
+      visibleRef: contentSettingsOpen,
+      nodeRef: headerRef,
+      emit,
+    })
+
     return {
       chevronLeftIcon: chevronLeftIcon as unknown as string,
       closeIcon: closeIcon as unknown as string,
       searchInputRef,
+      headerRef,
 
       isHeaderScrolled,
       isFetching,
+
+      appliedFilterCount,
+
+      contentSettingsOpen,
+      openContentSettings,
+      closeContentSettings,
+      toggleContentSettings,
+      triggerA11yProps,
 
       isRecentSearchesModalOpen,
       showRecentSearches,

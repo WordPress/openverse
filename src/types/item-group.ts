@@ -18,6 +18,7 @@ export type VIemGroupContext = {
   bordered: boolean
   type: ItemGroupType
   size: ItemGroupSize
+  showCheck: boolean
 }
 
 export const VItemGroupContextKey = Symbol(

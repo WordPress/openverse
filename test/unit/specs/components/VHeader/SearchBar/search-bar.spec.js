@@ -25,6 +25,7 @@ describe("VSearchBar", () => {
   beforeEach(() => {
     options = {
       props: { placeholder: defaultPlaceholder, size: "standalone" },
+      stubs: { ClientOnly: true },
       mocks: {
         $nuxt: {
           context: {

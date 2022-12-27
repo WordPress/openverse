@@ -1,7 +1,11 @@
 import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-import { closeFilters, OLD_HEADER } from "~~/test/playwright/utils/navigation"
+import {
+  closeFilters,
+  OLD_HEADER,
+  setCookies,
+} from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -34,14 +38,7 @@ test.describe("audio results", () => {
 
   breakpoints.describeEachDesktopWithMd(({ expectSnapshot }) => {
     test("desktop audio results", async ({ context, page }) => {
-      await context.addCookies([
-        {
-          name: "ui",
-          value: JSON.stringify({ isDesktopLayout: true }),
-          domain: "localhost",
-          path: "/",
-        },
-      ])
+      await setCookies(context, { uiIsDesktopLayout: true })
       await closeFilters(page, OLD_HEADER)
       await expectSnapshot("audio-results-desktop", page)
     })

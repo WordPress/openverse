@@ -24,17 +24,15 @@
 import {
   defineComponent,
   ref,
-  watch,
   toRef,
   ComponentInstance,
+  SetupContext,
 } from "@nuxtjs/composition-api"
 
 import { Portal as VTeleport } from "portal-vue"
 
-import { useBodyScrollLock } from "~/composables/use-body-scroll-lock"
 import { useDialogContent } from "~/composables/use-dialog-content"
-
-import type { SetupContext } from "vue"
+import { useDialogControl } from "~/composables/use-dialog-control"
 
 export default defineComponent({
   name: "VInputModal",
@@ -66,66 +64,43 @@ export default defineComponent({
      */
     "close",
   ],
-  setup(props, { emit }) {
+  setup(props, { attrs, emit }) {
     const focusTrapRef = ref<ComponentInstance | null>(null)
 
     const visibleRef = toRef(props, "isActive")
-    const internalVisibleRef = ref<boolean>(
-      props.isActive === undefined ? false : visibleRef.value
-    )
 
     const nodeRef = ref<HTMLElement | null>(null)
-
-    /**
-     * When the `visible` prop is set to a different value than internalVisibleRef,
-     * we update the internalVisibleRef to match the prop.
-     */
-    watch(visibleRef, (visible) => {
-      if (visible === undefined || visible === internalVisibleRef.value) return
-
-      if (visible) {
-        open()
-      } else {
-        close()
-      }
+    const { close } = useDialogControl({
+      visibleRef,
+      nodeRef,
+      emit: emit as SetupContext["emit"],
     })
-
-    const { lock, unlock } = useBodyScrollLock({ nodeRef })
-
-    const open = () => {
-      internalVisibleRef.value = true
-      lock()
-      if (props.isActive !== internalVisibleRef.value) {
-        emit("open")
-      }
-    }
-
-    const close = () => {
-      internalVisibleRef.value = false
-      unlock()
-      emit("close")
-    }
 
     const dialogRef = ref<HTMLElement | null>(null)
 
     const { onKeyDown, onBlur } = useDialogContent({
-      dialogRef,
+      dialogElements: {
+        dialogRef,
+        triggerElementRef: ref(null),
+        initialFocusElementRef: ref(null),
+      },
+      dialogOptions: {
+        autoFocusOnHideRef: ref(false),
+        hideOnClickOutsideRef: ref(false),
+        hideOnEscRef: ref(true),
+        trapFocusRef: ref(true),
+      },
       visibleRef: toRef(props, "isActive"),
-      autoFocusOnShowRef: ref(true),
-      autoFocusOnHideRef: ref(false),
-      triggerElementRef: ref(null),
-      hideOnClickOutsideRef: ref(false),
-      trapFocusRef: ref(true),
       hideRef: ref(close),
-      hideOnEscRef: ref(true),
       emit: emit as SetupContext["emit"],
+      attrs,
     })
 
     return {
       focusTrapRef,
       dialogRef,
       nodeRef,
-      internalVisibleRef,
+      visibleRef,
 
       close,
       onKeyDown,

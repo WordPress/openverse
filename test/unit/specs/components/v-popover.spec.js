@@ -61,8 +61,11 @@ const expectOpen = () => {
 }
 
 const expectClosed = () => {
-  expect(queryPopover().parentElement.parentElement.style.display).toEqual(
-    "none"
+  return (
+    expect(queryPopover() === null) ||
+    expect(queryPopover().parentElement.parentElement.style.display).toEqual(
+      "none"
+    )
   )
 }
 

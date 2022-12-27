@@ -25,7 +25,7 @@ for (const contentPage of contentPages) {
         test.beforeEach(async ({ context, page }) => {
           await enableNewHeader(page)
           await setCookies(context, {
-            uiBreakpoint: breakpoint,
+            uiBreakpoint: breakpoint as string,
             uiIsFilterDismissed: true,
             uiDismissedBanners: ["translation-ar"],
           })

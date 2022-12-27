@@ -466,9 +466,10 @@ export const setCookies = async (
   await context.addCookies(
     Object.entries(cookies).map(([name, value]) => ({
       name,
-      value: JSON.stringify(value),
+      value: typeof value === "string" ? value : JSON.stringify(value),
       domain: "localhost",
       path: "/",
+      maxAge: 60 * 5,
     }))
   )
 }

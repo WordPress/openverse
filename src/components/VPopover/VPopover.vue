@@ -19,6 +19,7 @@
       />
     </div>
     <VPopoverContent
+      v-if="triggerRef"
       :z-index="zIndex"
       :visible="visibleRef"
       :trigger-element="triggerRef"
@@ -46,13 +47,14 @@
 import {
   defineComponent,
   ref,
-  watch,
-  reactive,
   computed,
   PropType,
+  SetupContext,
 } from "@nuxtjs/composition-api"
 
 import { zIndexValidator } from "~/constants/z-indices"
+
+import { useDialogControl } from "~/composables/use-dialog-control"
 
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 
@@ -155,42 +157,21 @@ export default defineComponent({
     const visibleRef = ref(false)
     const triggerContainerRef = ref<HTMLElement | null>(null)
 
-    const triggerA11yProps = reactive({
-      "aria-expanded": false,
-      "aria-haspopup": "dialog",
-    })
-
     const triggerRef = computed(() =>
       triggerContainerRef.value?.firstChild
         ? (triggerContainerRef.value.firstChild as HTMLElement)
         : undefined
     )
 
-    watch(visibleRef, (visible) => {
-      triggerA11yProps["aria-expanded"] = visible
+    const { close, open, onTriggerClick, triggerA11yProps } = useDialogControl({
+      visibleRef,
+      emit: emit as SetupContext["emit"],
     })
 
-    const open = () => {
-      visibleRef.value = true
-      emit("open")
-    }
-
-    const close = () => {
-      visibleRef.value = false
-      emit("close")
-    }
-
-    const onTriggerClick = () => {
-      if (visibleRef.value === true) {
-        close()
-      } else {
-        open()
-      }
-    }
-
     return {
-      visibleRef,
+      open,
       close,
+      visibleRef,
       triggerContainerRef,
       triggerRef,
       onTriggerClick,

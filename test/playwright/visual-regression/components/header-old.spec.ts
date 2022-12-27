@@ -8,6 +8,7 @@ import {
   languageDirections,
   OLD_HEADER,
   scrollToBottom,
+  setCookies,
   sleep,
 } from "~~/test/playwright/utils/navigation"
 
@@ -23,14 +24,8 @@ for (const dir of languageDirections) {
 
     breakpoints.describeEachDesktopWithMd(({ expectSnapshot }) => {
       test("filters open", async ({ context, page }) => {
-        await context.addCookies([
-          {
-            name: "ui",
-            value: JSON.stringify({ isDesktopLayout: true }),
-            domain: "localhost",
-            path: "/search",
-          },
-        ])
+        await setCookies(context, { uiIsDesktopLayout: true })
+
         await page.mouse.move(0, 150)
         await expectSnapshot(
           `filters-open-${dir}`,

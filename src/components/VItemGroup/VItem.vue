@@ -6,10 +6,13 @@
       [`border border-dark-charcoal-20 ${
         $style[`${contextProps.direction}-bordered`]
       }`]: contextProps.bordered,
-      'bg-dark-charcoal-10': selected && contextProps.bordered,
+      'bg-dark-charcoal-10':
+        selected && contextProps.bordered && contextProps.showCheck,
       'px-2': isInPopover,
       'hover:bg-dark-charcoal-10': !isInPopover,
       [$style[`${contextProps.direction}-popover-item`]]: isInPopover,
+      'has-check': contextProps.showCheck,
+      'font-semibold': selected && !contextProps.showCheck,
     }"
   >
     <VButton
@@ -19,8 +22,11 @@
       :class="[
         $style[`${contextProps.direction}-button`],
         $style[`${contextProps.size}-button`],
-        selected && 'bg-dark-charcoal-10 ring-offset-dark-charcoal-10',
+        selected &&
+          contextProps.showCheck &&
+          'bg-dark-charcoal-10 ring-offset-dark-charcoal-10',
         as === 'VLink' && 'text-dark-charcoal',
+        !contextProps.showCheck && 'px-2',
       ]"
       variant="plain"
       size="disabled"
@@ -43,7 +49,11 @@
         <slot name="default" />
       </div>
       <VIcon
-        v-if="selected && contextProps.direction === 'vertical'"
+        v-if="
+          selected &&
+          contextProps.direction === 'vertical' &&
+          contextProps.showCheck
+        "
         class="absolute end-2 lg:end-5"
         :icon-path="checkmark"
       />
@@ -191,7 +201,11 @@ export default defineComponent({
 }
 
 .vertical-content {
-  @apply flex flex-row items-center pe-8 lg:pe-8;
+  @apply flex flex-row items-center;
+}
+
+.has-check .vertical-content {
+  @apply pe-8 lg:pe-8;
 }
 
 .vertical-popover-item {

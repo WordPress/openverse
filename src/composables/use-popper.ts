@@ -18,6 +18,7 @@ export type PopoverContentProps = {
   triggerElement: HTMLElement | null
   placement: Placement
   strategy: PositioningStrategy
+  clippable: boolean
   zIndex: number | string
 }
 

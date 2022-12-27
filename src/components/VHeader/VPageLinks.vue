@@ -1,19 +1,52 @@
 <template>
-  <ul
-    :class="
-      mode === 'light' ? 'text-dark-charcoal' : 'bg-dark-charcoal text-white'
-    "
+  <VItemGroup
+    v-if="variant === 'itemgroup'"
+    class="min-w-50 my-2 gap-y-2"
+    :bordered="false"
+    :show-check="false"
   >
-    <VNavLink
-      v-for="page in allPages"
-      :key="page.id"
-      :link="page.link"
-      :mode="mode"
-      :is-active="currentPage === page.id"
-      :class="navLinkClasses"
-      @click="onClick(page.link)"
-      >{{ $t(page.name) }}</VNavLink
+    <VItem
+      v-for="(page, i) of allPages"
+      :key="i"
+      as="VLink"
+      :is-first="i === 0"
+      :selected="currentPage === page.id"
+      :href="page.link"
+      class="w-full"
+      @click="onClick"
     >
+      <div class="flex w-full flex-row justify-between">
+        <span class="pe-2">{{ $t(page.name) }}</span>
+        <VIcon
+          v-if="isLinkExternal(page)"
+          :icon-path="externalLinkIcon"
+          :size="4"
+          class="self-center"
+          rtl-flip
+        />
+      </div>
+    </VItem>
+  </VItemGroup>
+  <ul v-else>
+    <li v-for="page in allPages" :key="page.id">
+      <VLink
+        class="flex flex-row rounded-sm hover:underline focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-tx disabled:text-dark-charcoal-40"
+        :class="[
+          { 'font-semibold': currentPage === page.id },
+          { 'text-dark-charcoal focus-visible:ring-pink': mode === 'light' },
+          navLinkClasses,
+        ]"
+        :href="page.link"
+        @click="onClick"
+        >{{ $t(page.name)
+        }}<VIcon
+          v-if="isLinkExternal(page)"
+          :icon-path="externalLinkIcon"
+          :size="externalIconSize"
+          class="self-center ms-2"
+          rtl-flip
+      /></VLink>
+    </li>
   </ul>
 </template>
 
@@ -21,17 +54,25 @@
 import {
   type PropType,
   defineComponent,
-  useRoute,
+  computed,
 } from "@nuxtjs/composition-api"
 
 import usePages from "~/composables/use-pages"
 
-import VNavLink from "~/components/VNavLink/VNavLink.vue"
+import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
+import VItem from "~/components/VItemGroup/VItem.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VLink from "~/components/VLink.vue"
+
+import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
   name: "VPageLinks",
   components: {
-    VNavLink,
+    VIcon,
+    VItem,
+    VItemGroup,
+    VLink,
   },
   props: {
     /**
@@ -53,21 +94,34 @@ export default defineComponent({
       type: String,
       default: "",
     },
+    variant: {
+      type: String as PropType<"links" | "itemgroup">,
+      default: "links",
+    },
+    isInModal: {
+      type: Boolean,
+      default: false,
+    },
   },
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     const { all: allPages, current: currentPage } = usePages(true)
-    const route = useRoute()
 
-    const onClick = (link: string) => {
-      if (link === route.value.path) {
-        emit("close")
-      }
-    }
+    // The modal isn't closed if we click on the current page link,
+    // so we need to close it manually.
+    const onClick = () => emit("close")
+
+    const isLinkExternal = (item: typeof allPages[number]) =>
+      !item.link.startsWith("/")
+
+    const externalIconSize = computed(() => (props.isInModal ? 6 : 4))
 
     return {
       allPages,
       currentPage,
       onClick,
+      isLinkExternal,
+      externalLinkIcon,
+      externalIconSize,
     }
   },
 })

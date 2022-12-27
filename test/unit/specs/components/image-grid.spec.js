@@ -25,6 +25,7 @@ const propsData = {
     isFetching: false,
     fetchingError: null,
   },
+  isSinglePage: false,
 }
 
 describe("VImageGrid", () => {

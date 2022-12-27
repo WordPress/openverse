@@ -1,4 +1,4 @@
-import { nextTick, ref, watch, Ref } from "@nuxtjs/composition-api"
+import { nextTick, watch, Ref } from "@nuxtjs/composition-api"
 
 import { warn } from "~/utils/console"
 import {
@@ -16,7 +16,7 @@ type Props = {
   visibleRef: Ref<boolean>
   autoFocusOnShowRef: Ref<boolean>
   trapFocusRef: Ref<boolean>
-  initialFocusElementRef?: Ref<HTMLElement | null>
+  initialFocusElementRef: Ref<HTMLElement | null>
 }
 
 /**
@@ -27,7 +27,7 @@ export const useFocusOnShow = ({
   visibleRef,
   autoFocusOnShowRef,
   trapFocusRef,
-  initialFocusElementRef = ref(null),
+  initialFocusElementRef,
 }: Props) => {
   const { activate: activateFocusTrap, deactivate: deactivateFocusTrap } =
     trapFocusRef.value
@@ -38,7 +38,14 @@ export const useFocusOnShow = ({
           // if set to true, focus-trap prevents the default for the keyboard event, and we cannot handle it in our composables.
           escapeDeactivates: false,
         })
-      : { activate: undefined, deactivate: undefined }
+      : {
+          activate: () => {
+            /** */
+          },
+          deactivate: () => {
+            /** */
+          },
+        }
 
   watch(
     [
@@ -49,7 +56,7 @@ export const useFocusOnShow = ({
     ] as const,
     ([dialog, visible, autoFocusOnShow, initialFocusElement]) => {
       if (!dialog || !visible) {
-        if (deactivateFocusTrap) deactivateFocusTrap()
+        deactivateFocusTrap()
         return
       }
       if (!dialog || !visible || !autoFocusOnShow) return
@@ -74,7 +81,7 @@ export const useFocusOnShow = ({
             }
           }
         }
-        if (activateFocusTrap) activateFocusTrap()
+        activateFocusTrap()
       })
     }
   )

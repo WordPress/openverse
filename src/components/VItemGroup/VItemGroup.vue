@@ -107,6 +107,15 @@ export default defineComponent({
       validate: (v: string) =>
         (itemGroupSizes as unknown as string[]).includes(v),
     },
+    /**
+     * Whether to show a checkmark when an item is selected.
+     *
+     * @default true
+     */
+    showCheck: {
+      type: Boolean,
+      default: true,
+    },
   },
   setup(props) {
     const nodeRef = ref<HTMLElement | null>(null)

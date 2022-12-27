@@ -1,18 +1,12 @@
 <template>
-  <VModal
-    ref="contentSettingsModalRef"
-    :label="$t('header.aria.menu').toString()"
+  <VModalContent
+    :aria-label="$t('header.aria.menu').toString()"
     :hide-on-click-outside="true"
+    :hide="close"
+    :visible="visible"
     variant="two-thirds"
     class="flex items-center"
   >
-    <template #trigger="{ visible, a11Props }">
-      <VContentSettingsButton
-        :is-pressed="visible"
-        :applied-filter-count="appliedFilterCount"
-        v-bind="a11Props"
-      />
-    </template>
     <VTabs
       :selected-id="selectedTab"
       tablist-style="ps-6 pe-2"
@@ -32,7 +26,7 @@
           class="self-center ms-auto hover:bg-dark-charcoal hover:text-white"
           :icon-props="{ iconPath: closeIcon }"
           :aria-label="$t('modal.aria-close')"
-          @click="closeModal"
+          @click="close"
         />
       </template>
       <VTabPanel id="content-settings">
@@ -55,9 +49,9 @@
         @click="clearFilters"
         >{{ clearFiltersLabel }}
       </VButton>
-      <VShowResultsButton :is-fetching="isFetching" @click="closeModal" />
+      <VShowResultsButton :is-fetching="isFetching" @click="close" />
     </footer>
-  </VModal>
+  </VModalContent>
 </template>
 <script lang="ts">
 import { computed, defineComponent, ref } from "@nuxtjs/composition-api"
@@ -67,9 +61,8 @@ import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"
 
 import VButton from "~/components/VButton.vue"
-import VContentSettingsButton from "~/components/VHeader/VHeaderMobile/VContentSettingsButton.vue"
+import VModalContent from "~/components/VModal/VModalContent.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
-import VModal from "~/components/VModal/VModal.vue"
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
 import VShowResultsButton from "~/components/VHeader/VHeaderMobile/VShowResultsButton.vue"
@@ -80,12 +73,11 @@ import VTabs from "~/components/VTabs/VTabs.vue"
 import closeIcon from "~/assets/icons/close-small.svg"
 
 export default defineComponent({
-  name: "VContentSettingsModal",
+  name: "VContentSettingsModalContent",
   components: {
+    VModalContent,
     VButton,
-    VContentSettingsButton,
     VIconButton,
-    VModal,
     VSearchGridFilter,
     VSearchTypes,
     VShowResultsButton,
@@ -98,11 +90,16 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    close: {
+      type: Function,
+      required: true,
+    },
+    visible: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup() {
-    const contentSettingsModalRef = ref<InstanceType<typeof VModal> | null>(
-      null
-    )
     const i18n = useI18n()
     const searchStore = useSearchStore()
     const selectedTab = ref<"content-settings" | "filters">("content-settings")
@@ -129,14 +126,8 @@ export default defineComponent({
       searchStore.clearFilters()
     }
 
-    const closeModal = () => {
-      contentSettingsModalRef.value?.close()
-    }
-
     return {
-      contentSettingsModalRef,
       closeIcon,
-      closeModal,
 
       selectedTab,
       changeSelectedTab,

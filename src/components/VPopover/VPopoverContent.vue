@@ -27,22 +27,15 @@ import {
   provide,
   InjectionKey,
   PropType,
-  computed,
 } from "@nuxtjs/composition-api"
 
-import {
-  Placement,
-  placements as popoverPlacements,
-  PositioningStrategy,
-} from "@popperjs/core"
-
 import { usePopoverContent } from "~/composables/use-popover-content"
-import { warn } from "~/utils/console"
 import { defineEvent } from "~/types/emits"
 
 import { zIndexValidator } from "~/constants/z-indices"
 
-import type { CSSProperties } from "@vue/runtime-dom"
+import type { Placement, PositioningStrategy } from "@popperjs/core"
+
 import type { SetupContext } from "vue"
 
 export const VPopoverContentContextKey = Symbol(
@@ -80,18 +73,15 @@ export default defineComponent({
       type: (process.server
         ? Object
         : HTMLElement) as PropType<HTMLElement | null>,
-      default: null,
+      required: true,
     },
     placement: {
       type: String as PropType<Placement>,
       default: "bottom-end",
-      validate: (v: string) =>
-        (popoverPlacements as unknown as string[]).includes(v),
     },
     strategy: {
       type: String as PropType<PositioningStrategy>,
       default: "absolute",
-      validate: (v: string) => ["absolute", "fixed"].includes(v),
     },
     zIndex: {
       type: [String, Number],
@@ -111,26 +101,15 @@ export default defineComponent({
   emits: { keydown: defineEvent(), blur: defineEvent() },
   setup(props, { emit, attrs }) {
     provide(VPopoverContentContextKey, true)
-    if (!attrs["aria-label"] && !attrs["aria-labelledby"]) {
-      warn("You should provide either `aria-label` or `aria-labelledby` props.")
-    }
 
     const propsRefs = toRefs(props)
     const popoverRef = ref<HTMLElement | null>(null)
 
-    const { onKeyDown, onBlur, maxHeightRef } = usePopoverContent({
+    const { onKeyDown, onBlur, heightProperties } = usePopoverContent({
       popoverRef,
       popoverPropsRefs: propsRefs,
       emit: emit as SetupContext["emit"],
-    })
-
-    const heightProperties = computed(() => {
-      // extracting this to ensure that computed is updated when the value changes
-      const maxHeight = maxHeightRef.value
-
-      return maxHeight && props.clippable
-        ? ({ "--popover-height": `${maxHeight}px` } as CSSProperties)
-        : ({} as CSSProperties)
+      attrs,
     })
 
     return { popoverRef, onKeyDown, onBlur, heightProperties }

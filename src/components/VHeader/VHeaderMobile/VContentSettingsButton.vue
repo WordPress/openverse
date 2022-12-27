@@ -1,5 +1,6 @@
 <template>
   <VSearchBarButton
+    id="content-settings-button"
     :icon-path="sourceIcon"
     :aria-label="
       appliedFilterCount
@@ -10,6 +11,7 @@
     :aria-expanded="isPressed"
     aria-controls="content-settings-modal"
     inner-area-classes="bg-white hover:bg-dark-charcoal hover:text-white"
+    v-on="$listeners"
   >
     <template #notification>
       <span
