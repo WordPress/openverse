@@ -7,7 +7,7 @@
     <i18n
       tag="p"
       path="footer.wordpress-affiliation"
-      class="label-regular flex flex-row items-center gap-2"
+      class="label-regular flex flex-row items-center gap-1"
     >
       <template #wordpress>
         <WordPress class="aria-hidden" />
