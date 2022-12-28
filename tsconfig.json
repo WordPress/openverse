@@ -58,6 +58,7 @@
     "src/components/VCheckbox/**.vue",
     "src/components/VContentLink/**.vue",
     "src/components/VGlobalAudioSection/**.vue",
+    "src/components/VHomeGallery/**.vue",
     "src/components/VIcon/**.vue",
     "src/components/VIconButton/**.vue",
     "src/components/VImageGrid/**.vue",

@@ -1,7 +1,7 @@
 <template>
   <header
     ref="nodeRef"
-    class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 border-b border-tx bg-white py-4 ps-2 pe-3 md:py-4 lg:ps-6 lg:pe-10"
+    class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 border-b border-tx py-4 ps-2 pe-3 md:py-4 lg:ps-6 lg:pe-10"
   >
     <VHomeLink variant="dark" class="px-4 hover:bg-yellow" />
     <nav class="lg:justify-stretch hidden ms-auto lg:flex">

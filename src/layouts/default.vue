@@ -13,6 +13,7 @@
         </template>
         <VHeaderInternal
           v-else
+          class="bg-white"
           :class="{ 'border-b-dark-charcoal-20': isHeaderScrolled }"
         />
       </template>

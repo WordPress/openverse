@@ -167,6 +167,7 @@ module.exports = {
         "1.2", // 120%
       ],
     },
+    // FIXME: This should be `lineHeight` but fixing it will break VRT
     lineHeights: {
       larger: "1.9",
       large: "1.7",
@@ -186,6 +187,9 @@ module.exports = {
       serif: [...defaultTheme.fontFamily.serif],
     },
     extend: {
+      lineHeight: {
+        relaxed: "1.8",
+      },
       scale: {
         "-100": "-1",
       },
