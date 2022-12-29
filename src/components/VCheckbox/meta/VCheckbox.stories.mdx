@@ -6,12 +6,15 @@ import {
   Story,
 } from "@storybook/addon-docs"
 
+import { WithScreenshotArea } from "~~/.storybook/decorators/with-screenshot-area"
+
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 import VLicense from "~/components/VLicense/VLicense.vue"
 
 <Meta
   title="Components/VCheckbox"
   components={VCheckbox}
+  decorators={[WithScreenshotArea]}
   argTypes={{
     change: {
       action: "change",

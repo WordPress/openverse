@@ -363,16 +363,23 @@ const config: NuxtConfig = {
       {
         name: "@storybook/addon-essentials",
         options: {
-          backgrounds: false,
+          backgrounds: true,
           viewport: true,
           toolbars: true,
         },
       },
     ],
     parameters: {
+      backgrounds: {
+        default: "White",
+        values: [
+          { name: "White", value: "#ffffff" },
+          { name: "Dark charcoal", value: "#30272e" },
+        ],
+      },
       options: {
         storySort: {
-          order: ["Introduction", ["Openverse UI"]],
+          order: ["Introduction", ["Openverse UI"], "Meta"],
         },
       },
       viewport: {

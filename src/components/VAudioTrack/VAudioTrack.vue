@@ -3,7 +3,7 @@
   <Component
     :is="isComposite ? 'VLink' : 'VWarningSuppressor'"
     v-bind="containerAttributes"
-    class="audio-track group block overflow-hidden rounded-sm ring-pink hover:no-underline focus:border-tx focus:bg-white focus:outline-none"
+    class="audio-track group block overflow-hidden rounded-sm ring-pink hover:no-underline"
     :aria-label="ariaLabel"
     :role="isComposite ? 'application' : undefined"
     @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
@@ -445,10 +445,8 @@ export default defineComponent({
             class: [
               "cursor-pointer",
               {
-                "focus:ring-offset-[3px] focus:ring-[3px]":
-                  props.layout === "box",
-                "focus:ring-offset-0 focus:ring-[1.5px]":
-                  props.layout === "row",
+                "focus-bold-filled": props.layout === "box",
+                "focus-slim-tx": props.layout === "row",
               },
             ],
           }

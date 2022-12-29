@@ -1,4 +1,5 @@
 const defaultTheme = require("tailwindcss/defaultTheme")
+const plugin = require("tailwindcss/plugin")
 
 const { SCREENS } = require("./src/constants/screens")
 const { Z_INDICES } = require("./src/constants/z-indices")
@@ -96,7 +97,8 @@ module.exports = {
       120: "30.00rem",
     },
     ringWidth: {
-      DEFAULT: "1.5px",
+      DEFAULT: "1.5px", // aka slim
+      bold: "3.0px",
       0: 0,
     },
     borderWidth: {
@@ -197,6 +199,11 @@ module.exports = {
         ring: "inset 0 0 0 1px white",
         "ring-1.5": "inset 0 0 0 1.5px white",
         "el-2": "0 0.125rem 0.25rem rgba(0, 0, 0, 0.1)",
+        "slim-filled": "inset 0 0 0 1.5px white",
+        "bold-filled": "inset 0 0 0 3px white",
+      },
+      borderRadius: {
+        inherit: "inherit",
       },
       typography: (theme) => ({
         DEFAULT: {
@@ -220,5 +227,17 @@ module.exports = {
     require("@tailwindcss/line-clamp"),
     require("@tailwindcss/typography"),
     require("tailwindcss-labeled-groups")(["waveform"]),
+    // Focus styles
+    // This plugin has related stylesheets in `src/styles/tailwind.css`.
+    plugin(({ matchUtilities, theme }) => {
+      matchUtilities(
+        Object.fromEntries(
+          ["focus-slim-tx", "focus-slim-filled", "focus-bold-filled"].map(
+            (item) => [item, (value) => ({ "--tw-ring-color": value })]
+          )
+        ),
+        { values: { ...theme("colors"), DEFAULT: theme("colors.pink") } }
+      )
+    }),
   ],
 }

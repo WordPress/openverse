@@ -59,6 +59,7 @@ const config: PlaywrightTestConfig = {
       maxDiffPixelRatio: 0,
     },
   },
+  retries: 2,
 }
 
 export default config

@@ -127,4 +127,48 @@ Time                - 11px - xs semibold (default leading-[120%])
   .time {
     @apply text-xs font-semibold;
   }
+
+  /**
+   * Focus styles are defined across across two axes.
+   *
+   * Thickness:
+   * - Slim: 1.5px outline
+   * - Bold: 3.0px outline
+   *
+   * Style:
+   * - Transparent: Replaces existing border on the element
+   * - Filled: Adds a ring around element with some offset
+   *
+   * There is no bold-transparent variant.
+   *
+   * The color of the ring is set by a plugin defined in `tailwind.config.js`.
+   */
+
+  [class*="focus-slim-tx"] {
+    @apply focus-visible:outline-none; /* UA styles: none */
+    @apply focus-visible:ring; /* outer-stroke: box-shadow */
+    @apply focus-visible:border-tx; /* inner-stroke: transparent border */
+
+    /* It is up to the component to apply border utilities. */
+    @apply focus-visible:hover:border-tx; /* focus prevails over hover */
+  }
+
+  [class*="focus-slim-filled"],
+  [class*="focus-bold-filled"] {
+    @apply relative;
+    @apply after:pointer-events-none after:absolute after:inset-0 after:-z-10 after:rounded-inherit;
+
+    @apply focus-visible:outline-none; /* UA styles: none */
+    @apply focus-visible:after:z-10; /* inner-stroke: pseudo-element */
+  }
+
+  [class*="focus-slim-filled"] {
+    @apply after:shadow-slim-filled;
+    @apply focus-visible:ring; /* outer-stroke: box-shadow */
+  }
+
+  [class*="focus-bold-filled"] {
+    @apply after:shadow-bold-filled;
+    @apply focus-visible:ring-bold; /* outer-stroke: box-shadow */
+  }
 }

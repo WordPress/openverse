@@ -1,17 +1,25 @@
 <template>
-  <label :for="id" class="checkbox-label" :class="labelClasses">
+  <label
+    :for="id"
+    class="relative flex text-sm leading-5"
+    :class="labelClasses"
+  >
+    <!--
+    The checkbox focus style is a slight variation on the `focus-slim-tx` style.
+    Because it becomes filled when checked, it also needs the
+    `checked:focus-visible:border-white` class.
+    -->
     <input
       :id="id"
       type="checkbox"
-      class="checkbox bg-white"
+      class="checkbox h-5 w-5 flex-shrink-0 appearance-none rounded-sm border border-dark-charcoal bg-white me-3 focus-slim-tx checked:bg-dark-charcoal checked:focus-visible:border-white disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10 checked:disabled:border-dark-charcoal-40 checked:disabled:bg-dark-charcoal-40"
       v-bind="inputAttrs"
       @change="onChange"
     />
     <VIcon
       v-show="localCheckedState"
-      class="absolute text-white start-0"
-      :icon-path="checkmark"
-      view-box="0 0 20 20"
+      class="absolute transform text-white"
+      :icon-path="checkIcon"
       :size="5"
     />
     <!--  @slot The checkbox label  --><slot />
@@ -25,7 +33,7 @@ import { defineEvent } from "~/types/emits"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-import checkmark from "~/assets/icons/checkmark.svg"
+import checkIcon from "~/assets/icons/check.svg"
 
 type CheckboxAttrs = {
   name: string
@@ -136,7 +144,7 @@ export default defineComponent({
       })
     }
     return {
-      checkmark,
+      checkIcon,
       localCheckedState,
       labelClasses,
       inputAttrs,
@@ -145,15 +153,3 @@ export default defineComponent({
   },
 })
 </script>
-<style scoped>
-.checkbox-label {
-  @apply relative flex text-sm leading-5;
-}
-.checkbox {
-  @apply relative h-5 w-5 flex-shrink-0 appearance-none rounded-sm border border-dark-charcoal me-3;
-  @apply focus:outline-none focus:ring focus:ring-pink focus:ring-offset-2;
-  @apply disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10;
-  @apply checked:bg-dark-charcoal;
-  @apply checked:disabled:bg-dark-charcoal-40;
-}
-</style>
