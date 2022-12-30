@@ -46,30 +46,30 @@ group:
       WordPress/openverse-catalog
       WordPress/openverse-api
     files:
-      - source: prettier.config.js.jinja
+      - source: templates/prettier.config.js.jinja
         dest: prettier.config.js
         template: true
   - repos: |
       WordPress/openverse
     files:
-      - source: .pre-commit-config.local.yaml.jinja
+      - source: templates/.pre-commit-config.local.yaml.jinja
         dest: .pre-commit-config.yaml
         template: true
   - repos: |
       WordPress/openverse-catalog
       WordPress/openverse-api
     files:
-      - source: .pre-commit-config.yaml.jinja
+      - source: templates/.pre-commit-config.yaml.jinja
         dest: .pre-commit-config.yaml
         template:
           contains_js_code: false
   - repos: |
       WordPress/openverse-frontend
     files:
-      - source: .pre-commit-config.frontend.yaml.jinja
+      - source: templates/.pre-commit-config.frontend.yaml.jinja
         dest: .pre-commit-config.yaml
         template:
           contains_python_code: false
-      - source: prettier.config.frontend.js.jinja
+      - source: templates/prettier.config.frontend.js.jinja
         dest: prettier.config.js
         template: true
