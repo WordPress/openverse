@@ -14,3 +14,5 @@
   - Fixed issue with error handling
 - **[Vignesh Ram Somnath](https://github.com/VIGS25)**
   - Implemented exclusion of known dead links from the search index
+- **[Mudassir Chapra](https://github.com/muddi900)**
+  - Improved quickstart docs for macOS users

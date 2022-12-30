@@ -7,9 +7,11 @@
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [Just](https://github.com/casey/just)
 - [mkcert](https://github.com/FiloSottile/mkcert)
+- [coreutils](https://formulae.brew.sh/formula/coreutils) (only for macOS)
 
 Ensure that you have installed `mkcert` (and the corresponding NSS tools). You
-can run `mkcert -install` to verify your installation.
+can run `mkcert -install` to verify your installation. `coreutils` adds GNU
+utils to macOS. `timeout` from the package is required.
 
 > _**Note:**_ Our Docker compose configuration requires specific environment
 > configuration that is automatically handled by `just`. While you can run
