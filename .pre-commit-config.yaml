@@ -12,9 +12,7 @@ repos:
         name: i18n
         # Check if the i18n files have been downloaded by checking if the Arabic translation exists
         # Download the i18n files if they do not exist
-        entry:
-          bash -c 'if [ ! -f "$(dirname "$dir")"/src/locales/ar.json ]; then
-          pnpm i18n; fi'
+        entry: bash -c 'if [ ! -f "$(dirname "$dir")"/src/locales/ar.json ]; then pnpm i18n; fi'
         language: system
         pass_filenames: false
 
