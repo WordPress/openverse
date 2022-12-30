@@ -10,7 +10,7 @@ module.exports = {
   proseWrap: "always",
   overrides: [
     {
-      files: "*.yml",
+      files: ["*.yml", "*.yaml"],
       options: {
         proseWrap: "preserve",
       },
