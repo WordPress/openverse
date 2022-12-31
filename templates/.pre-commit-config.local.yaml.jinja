@@ -9,15 +9,12 @@
 {# This comment adds a blank line. #}
   - repo: local
     hooks:
-      - id: render-precommit
-        name: render-precommit
-        entry: bash -c 'just render-precommit'
+    {% set renders = ["precommit", "prettier", "github"] %}
+    {% for render in renders %}
+      - id: render-{{ render }}
+        name: render-{{ render }}
+        entry: bash -c 'just render-{{ render }}'
         language: system
         pass_filenames: false
-
-      - id: render-prettier
-        name: render-prettier
-        entry: bash -c 'just render-prettier'
-        language: system
-        pass_filenames: false
+    {% endfor %}
 {% endblock %}

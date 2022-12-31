@@ -49,3 +49,7 @@ render-precommit:
 # Render `prettier.config.js`
 render-prettier:
     just render templates/prettier.config.js.jinja prettier.config.js
+
+# Render GitHub issue & PR templates
+render-github:
+    just render templates/PULL_REQUEST_TEMPLATE.md.jinja .github/PULL_REQUEST_TEMPLATE.md

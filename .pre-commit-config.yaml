@@ -97,9 +97,13 @@ repos:
         entry: bash -c 'just render-precommit'
         language: system
         pass_filenames: false
-
       - id: render-prettier
         name: render-prettier
         entry: bash -c 'just render-prettier'
+        language: system
+        pass_filenames: false
+      - id: render-github
+        name: render-github
+        entry: bash -c 'just render-github'
         language: system
         pass_filenames: false
