@@ -254,14 +254,6 @@ DATABASES = {
         "PASSWORD": config("DJANGO_DATABASE_PASSWORD", default="deploy"),
         "NAME": config("DJANGO_DATABASE_NAME", default="openledger"),
     },
-    "upstream": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": config("UPSTREAM_DATABASE_HOST", default="localhost"),
-        "PORT": config("UPSTREAM_DATABASE_PORT", default=5433, cast=int),
-        "USER": config("UPSTREAM_DATABASE_USER", default="deploy"),
-        "PASSWORD": config("UPSTREAM_DATABASE_PASSWORD", default="deploy"),
-        "NAME": config("UPSTREAM_DATABASE_NAME", default="openledger"),
-    },
 }
 
 # Password validation
