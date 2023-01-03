@@ -4,6 +4,7 @@ import {
   enableNewHeader,
   goToSearchTerm,
   openFilters,
+  searchFromHeader,
   t,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
@@ -61,6 +62,19 @@ test.describe("search history navigation", () => {
       expect(
         await page.locator('a:has-text("See all audio")').isVisible()
       ).toBe(true)
+    })
+
+    test("should update search term when back button is clicked", async ({
+      page,
+    }) => {
+      await goToSearchTerm(page, "galah")
+
+      await searchFromHeader(page, "cat")
+      expect(await page.locator('input[name="q"]').inputValue()).toBe("cat")
+
+      await page.goBack()
+      await page.waitForSelector('a:has-text("See all images")')
+      expect(await page.locator('input[name="q"]').inputValue()).toBe("galah")
     })
 
     test("navigates to the image detail page correctly", async ({ page }) => {

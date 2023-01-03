@@ -18,6 +18,8 @@ export function useI18nResultsCount() {
   const i18n = useI18n()
   const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
 
+  const getLoading = () => i18n.t("header.loading").toString()
+
   const getI18nCount = (resultsCount: number) => {
     const countKey =
       resultsCount === 0
@@ -31,5 +33,6 @@ export function useI18nResultsCount() {
   }
   return {
     getI18nCount,
+    getLoading,
   }
 }

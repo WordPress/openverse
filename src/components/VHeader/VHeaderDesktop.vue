@@ -47,25 +47,16 @@
   </header>
 </template>
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  inject,
-  ref,
-  useRouter,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, inject, ref } from "@nuxtjs/composition-api"
 
 import { useMediaStore } from "~/stores/media"
-import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
+import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
-import { ALL_MEDIA, supportedMediaTypes } from "~/constants/media"
 import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
-import { useI18n } from "~/composables/use-i18n"
-import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 import { useFocusFilters } from "~/composables/use-focus-filters"
-import useSearchType from "~/composables/use-search-type"
+import { useSearch } from "~/composables/use-search"
 
 import { Focus } from "~/utils/focus-management"
 import { ensureFocus } from "~/utils/reakit-utils/focus"
@@ -94,98 +85,27 @@ export default defineComponent({
     const filterButtonRef = ref<InstanceType<typeof VFilterButton> | null>(null)
     const searchBarRef = ref<InstanceType<typeof VSearchBar> | null>(null)
 
-    const i18n = useI18n()
-    const router = useRouter()
-
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
     const uiStore = useUiStore()
-
-    const content = useSearchType()
 
     const isHeaderScrolled = inject(IsHeaderScrolledKey)
     const isSidebarVisible = inject(IsSidebarVisibleKey)
 
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
-    const resultsCount = computed(() => mediaStore.resultCount)
-    const { getI18nCount } = useI18nResultsCount()
-    /**
-     * Additional text at the end of the search bar.
-     * Shows the loading state or result count.
-     */
-    const searchStatus = computed(() => {
-      if (searchStore.searchTerm === "") return ""
-      if (isFetching.value) return i18n.t("header.loading")
-      return getI18nCount(resultsCount.value)
-    })
-
-    const localSearchTerm = ref(searchStore.searchTerm)
-    let searchTermChanged = computed(() => {
-      return searchStore.searchTerm !== localSearchTerm.value
-    })
-    /**
-     * Search term has a getter and setter to be used as a v-model.
-     * To prevent sending unnecessary requests, we also keep track of whether
-     * the search term was changed.
-     */
-    const searchTerm = computed({
-      get: () => localSearchTerm.value,
-      set: (value: string) => {
-        localSearchTerm.value = value
-      },
-    })
+    const { updateSearchState, searchTerm, searchStatus } = useSearch()
 
     const clearSearchTerm = () => {
       searchTerm.value = ""
       ensureFocus(searchBarRef.value?.$el.querySelector("input") as HTMLElement)
     }
 
-    const selectSearchType = async (type) => {
-      content.setActiveType(type)
-
-      router.push(searchStore.getSearchPath({ type }))
-
-      function typeWithoutMedia(mediaType) {
-        return mediaStore.resultCountsPerMediaType[mediaType] === 0
-      }
-
-      const shouldFetchMedia =
-        type === ALL_MEDIA
-          ? supportedMediaTypes.every((type) => typeWithoutMedia(type))
-          : typeWithoutMedia(type)
-
-      if (shouldFetchMedia) {
-        await mediaStore.fetchMedia()
-      }
-    }
-
-    /**
-     * Called when the 'search' button in the header is clicked.
-     * There are several scenarios:
-     * - search term hasn't changed:
-     *   - do nothing.
-     * - search term changed:
-     *   - Update the store searchTerm value, update query `q` param, reset media,
-     *     fetch new media.
-     * Updating the path causes the `search.vue` page's route watcher
-     * to run and fetch new media.
-     */
     const handleSearch = async () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" })
-      const mediaStore = useMediaStore()
-      const searchStore = useSearchStore()
-      const searchType = searchStore.searchType
-      if (!searchTermChanged.value || searchTerm.value === "") return
-      if (searchTermChanged.value) {
-        await mediaStore.clearMedia()
 
-        searchStore.setSearchTerm(searchTerm.value)
-      }
       document.activeElement?.blur()
-      if (isSearchTypeSupported(searchType)) {
-        router.push(searchStore.getSearchPath({ type: searchType }))
-      }
+      updateSearchState()
     }
     const areFiltersDisabled = computed(
       () => !searchStore.searchTypeIsSupported
@@ -214,7 +134,6 @@ export default defineComponent({
 
       handleSearch,
       clearSearchTerm,
-      selectSearchType,
       searchStatus,
       searchTerm,
       toggleSidebar,

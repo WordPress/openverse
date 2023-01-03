@@ -1,15 +1,7 @@
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  ref,
-  useRouter,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, ref } from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, supportedMediaTypes, SearchType } from "~/constants/media"
 import useSearchType from "~/composables/use-search-type"
-import { useMediaStore } from "~/stores/media"
-import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
 import VMobileMenuModal from "~/components/VContentSwitcherOld/VMobileMenuModal.vue"
@@ -36,34 +28,18 @@ export default defineComponent({
       typeof VMobileMenuModal | typeof VSearchTypePopoverOld
     > | null>(null)
 
-    const router = useRouter()
-
-    const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
     const uiStore = useUiStore()
 
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
 
     const content = useSearchType()
 
-    const selectSearchType = async (type: SearchType) => {
+    /**
+     * Clicking on the search type link navigates to the search path,
+     * so we only need to close the menu modal here.
+     */
+    const selectSearchType = () => {
       menuModalRef.value?.closeMenu()
-      content.setActiveType(type)
-
-      router.push(searchStore.getSearchPath({ type }))
-
-      function typeWithoutMedia(mediaType) {
-        return mediaStore.resultCountsPerMediaType[mediaType] === 0
-      }
-
-      const shouldFetchMedia =
-        type === ALL_MEDIA
-          ? supportedMediaTypes.every((type) => typeWithoutMedia(type))
-          : typeWithoutMedia(type)
-
-      if (shouldFetchMedia) {
-        await mediaStore.fetchMedia()
-      }
     }
 
     return {

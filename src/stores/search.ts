@@ -32,9 +32,10 @@ import {
   mediaFilterKeys,
   mediaUniqueFilterKeys,
 } from "~/constants/filters"
-import { useProviderStore } from "~/stores/provider"
 
+import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useMediaStore } from "~/stores/media"
 
 import type { Ref } from "@nuxtjs/composition-api"
 
@@ -50,6 +51,7 @@ export interface SearchState {
   searchType: SearchType
   recentSearches: Ref<string[]>
   searchTerm: string
+  localSearchTerm: string
   filters: Filters
 }
 
@@ -78,6 +80,7 @@ export const useSearchStore = defineStore("search", {
   state: (): SearchState => ({
     searchType: ALL_MEDIA,
     searchTerm: "",
+    localSearchTerm: "",
     recentSearches: useStorage<string[]>("recent-searches", []),
     filters: deepClone(filterData as DeepWriteable<typeof filterData>),
   }),
@@ -204,8 +207,14 @@ export const useSearchStore = defineStore("search", {
     },
     setSearchTerm(term: string) {
       const formattedTerm = term.trim()
+      if (this.searchTerm === formattedTerm) return
       this.searchTerm = formattedTerm
+      this.localSearchTerm = formattedTerm
+
       this.addRecentSearch(formattedTerm)
+
+      const mediaStore = useMediaStore()
+      mediaStore.clearMedia()
     },
     /**
      * This method need not exist and is only used to fix an odd
@@ -231,7 +240,7 @@ export const useSearchStore = defineStore("search", {
        * Add the latest search to the top of the stack,
        * then add the existing items, making sure not to exceed
        * the max count, and removing existing occurrences of the
-       * most latest search term, if there are any.
+       * latest search term, if there are any.
        */
       this.recentSearches = [
         search,

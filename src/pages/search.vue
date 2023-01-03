@@ -54,6 +54,18 @@ export default defineComponent({
     VSearchGrid,
     VSkipToContentContainer,
   },
+  beforeRouteEnter(to, from, next) {
+    /**
+     * The order in which beforeRouteEnter and middleware are called is indeterminate.
+     * We need to make sure that query `q` exists before checking if it matches
+     * the store searchTerm.
+     */
+    const searchStore = useSearchStore()
+    if (to.query.q && to.query.q !== searchStore.searchTerm) {
+      searchStore.setSearchTerm(to.query.q)
+    }
+    next()
+  },
   middleware({ route, redirect }) {
     /**
      * This anonymous middleware redirects any search without a query to the homepage.
