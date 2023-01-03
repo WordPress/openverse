@@ -16,6 +16,16 @@ export default function usePages(isNew = false) {
           link: "https://creativecommons.org/about/cclicenses/",
         },
         {
+          id: "sources",
+          name: "navigation.sources",
+          link: app.localePath("/sources"),
+        },
+        {
+          id: "search-help",
+          name: "navigation.search-help",
+          link: app.localePath("/search-help"),
+        },
+        {
           id: "get-involved",
           name: "navigation.get-involved",
           link: "https://make.wordpress.org/openverse/handbook/",
