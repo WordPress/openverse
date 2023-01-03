@@ -1,0 +1,20 @@
+{% extends 'templates/.pre-commit-config.yaml.jinja' %}
+
+{% block note %}
+{{ super() }}
+# - https://github.com/WordPress/openverse/blob/main/templates/.pre-commit-config.local.yaml.jinja
+{%- endblock %}
+
+{% block repos_bottom %}
+{# This comment adds a blank line. #}
+  - repo: local
+    hooks:
+    {% set renders = ["precommit", "prettier", "github"] %}
+    {% for render in renders %}
+      - id: render-{{ render }}
+        name: render-{{ render }}
+        entry: bash -c 'just render-{{ render }}'
+        language: system
+        pass_filenames: false
+    {% endfor %}
+{% endblock %}

@@ -44,8 +44,12 @@ render in_file out_file ctx="{}":
 
 # Render `.pre-commit-config.yaml`
 render-precommit:
-    just render .pre-commit-config.local.yaml.jinja .pre-commit-config.yaml
+    just render templates/.pre-commit-config.local.yaml.jinja .pre-commit-config.yaml
 
 # Render `prettier.config.js`
 render-prettier:
-    just render prettier.config.js.jinja prettier.config.js
+    just render templates/prettier.config.js.jinja prettier.config.js
+
+# Render GitHub issue & PR templates
+render-github:
+    just render templates/PULL_REQUEST_TEMPLATE.md.jinja .github/PULL_REQUEST_TEMPLATE.md

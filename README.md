@@ -66,3 +66,5 @@ felt it best to keep them distinct.
     - Requires [npm](https://www.npmjs.com) as the package manager.
 - **`brand/`:** This directory contains brand assets for the project.
 - **`rfcs/`:** This directory contains proposals for changes to Openverse.
+- **`templates/`:** This directory contains templates which are rendered by
+  GitHub and synced across the other repositories.
