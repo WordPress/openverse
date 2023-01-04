@@ -14,16 +14,16 @@
     </template>
     <VSearchTypes
       id="content-switcher-popover"
-      class="min-w-[262px] pt-2"
+      class="w-[260px] pt-2"
       size="small"
-      :use-links="true"
+      :use-links="placement === 'header'"
       @select="closePopover"
     />
   </VPopover>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@nuxtjs/composition-api"
+import { defineComponent, PropType, ref } from "@nuxtjs/composition-api"
 
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.vue"
@@ -37,6 +37,12 @@ export default defineComponent({
     VPopover,
     VSearchTypeButton,
     VSearchTypes,
+  },
+  props: {
+    placement: {
+      type: String as PropType<"header" | "searchbar">,
+      default: "header",
+    },
   },
   setup() {
     const contentMenuPopover = ref<InstanceType<typeof VPopover> | null>(null)

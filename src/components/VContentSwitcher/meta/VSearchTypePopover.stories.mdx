@@ -7,6 +7,7 @@ import {
 } from "@storybook/addon-docs"
 
 import VSearchTypePopover from "~/components/VContentSwitcher/VSearchTypePopover.vue"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 <Meta
   title="Components/VContentSwitcher/VSearchTypePopover"
@@ -15,6 +16,12 @@ import VSearchTypePopover from "~/components/VContentSwitcher/VSearchTypePopover
     select: {
       action: "select",
     },
+    additionalTypes: {
+      control: { type: "boolean" },
+    },
+  }}
+  args={{
+    additionalTypes: false,
   }}
 />
 
@@ -22,6 +29,11 @@ export const Template = (args) => ({
   template: `<VSearchTypePopover active-item="image" v-bind="args" v-on="args"/>`,
   components: { VSearchTypePopover },
   setup() {
+    const featureFlagStore = useFeatureFlagStore()
+    featureFlagStore.toggleFeature(
+      "external_sources",
+      args.additionalTypes ? "on" : "off"
+    )
     return { args }
   },
 })

@@ -7,32 +7,39 @@ import {
 } from "@storybook/addon-docs"
 
 import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 <Meta
   title="Components/VContentSwitcher/VSearchTypes"
   components={VSearchTypes}
   argTypes={{
-    select: {
-      action: "select",
-    },
     size: {
-      control: {
-        type: "select",
-        options: ["small", "medium"],
-      },
+      options: ["small", "medium"],
+      control: { type: "select" },
     },
     useLinks: {
-      control: {
-        type: "boolean",
-      },
+      control: { type: "boolean" },
     },
+    additionalTypes: {
+      control: { type: "boolean" },
+    },
+  }}
+  args={{
+    size: "medium",
+    useLinks: false,
+    additionalTypes: false,
   }}
 />
 
 export const Template = (args) => ({
-  template: `<VSearchTypes active-item="image" v-bind="args" v-on="args"/>`,
+  template: `<VSearchTypes v-bind="args" v-on="args"/>`,
   components: { VSearchTypes },
   setup() {
+    const featureFlagStore = useFeatureFlagStore()
+    featureFlagStore.toggleFeature(
+      "external_sources",
+      args.additionalTypes ? "on" : "off"
+    )
     return { args }
   },
 })

@@ -4,22 +4,24 @@
     :size="size"
     :bordered="bordered"
     type="radiogroup"
-    class="z-10 min-w-[262px] max-w-full"
+    class="z-10"
+    :class="{ 'w-[260px]': size === 'small' }"
   >
     <div
       v-for="(category, index) in contentTypeGroups"
       :key="index"
-      class="flex flex-col lg:gap-y-1"
+      class="flex flex-col"
       :class="{
         'mt-2': index > 0,
         'border-t border-dark-charcoal-20 bg-dark-charcoal-06':
           index > 0 && !bordered,
+        'gap-1': size === 'small',
       }"
     >
       <h4
         v-if="index !== 0"
         :class="bordered ? 'ps-0' : 'ps-6'"
-        class="pt-6 pb-4 text-sr font-semibold uppercase pe-6"
+        class="category pt-6 pb-4 uppercase pe-6"
       >
         {{ $t(`search-type.${category.heading}`) }}
       </h4>
@@ -57,13 +59,18 @@ import { defineEvent } from "~/types/emits"
 import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
 import VSearchTypeItem from "~/components/VContentSwitcher/VSearchTypeItem.vue"
 
+type ContentTypeGroup = {
+  heading: string
+  items: SearchType[]
+}
+
 export default defineComponent({
   name: "VSearchTypes",
   components: { VItemGroup, VSearchTypeItem },
   props: {
     /**
-     * 'Small' size for mobile screens,
-     * 'medium' size for larger screens.
+     * 'Small' size is used in the popover,
+     * 'medium' size is used in the mobile modal.
      */
     size: {
       type: String as PropType<"small" | "medium">,
@@ -86,18 +93,18 @@ export default defineComponent({
 
     const isActive = (item: SearchType) => item === content.activeType.value
 
-    const contentTypeGroups = computed(() => {
-      const base = [
+    const contentTypeGroups = computed<ContentTypeGroup[]>(() => {
+      const base: ContentTypeGroup[] = [
         {
           heading: "heading",
           items: content.types,
         },
       ]
 
-      if (content.additionalTypes.value.length && props.useLinks) {
+      if (content.additionalTypes.value.length) {
         base.push({
           heading: "additional",
-          items: content.additionalTypes.value,
+          items: [...content.additionalTypes.value],
         })
       }
 

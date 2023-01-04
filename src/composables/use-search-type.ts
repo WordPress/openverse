@@ -14,6 +14,8 @@ import {
 import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
+import { useI18n } from "~/composables/use-i18n"
+
 import allIcon from "~/assets/icons/all-content.svg"
 import audioIcon from "~/assets/icons/audio-content.svg"
 import imageIcon from "~/assets/icons/image-content.svg"
@@ -28,7 +30,16 @@ const icons = {
   [MODEL_3D]: model3dIcon,
 } as const
 
+const labels = {
+  [ALL_MEDIA]: "search-type.all",
+  [IMAGE]: "search-type.image",
+  [AUDIO]: "search-type.audio",
+  [VIDEO]: "search-type.video",
+  [MODEL_3D]: "search-type.model-3d",
+} as const
+
 export default function useSearchType() {
+  const i18n = useI18n()
   const activeType = computed(() => useSearchStore().searchType)
 
   const previousSearchType = ref(activeType.value)
@@ -46,13 +57,22 @@ export default function useSearchType() {
     previousSearchType.value = searchType
   }
 
+  const getSearchTypeProps = (searchType?: SearchType) => {
+    const type = searchType ?? activeType.value
+    return {
+      label: i18n.t(labels[type]).toString(),
+      icon: icons[type],
+      searchType: type,
+    }
+  }
+
   return {
     setActiveType,
     activeType,
+    getSearchTypeProps,
     types: searchTypes,
     icons,
+    labels,
     additionalTypes,
   }
 }
-
-export type UseSearchTypeReturn = ReturnType<typeof useSearchType>

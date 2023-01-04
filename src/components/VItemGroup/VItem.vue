@@ -18,7 +18,7 @@
     <VButton
       data-item-group-item
       :as="as"
-      class="group relative flex min-w-full justify-between py-2 px-6 hover:bg-dark-charcoal-10 focus:z-10 lg:px-2"
+      class="group relative flex min-w-full justify-between py-2 hover:bg-dark-charcoal-10 focus:z-10"
       :class="[
         $style[`${contextProps.direction}-button`],
         $style[`${contextProps.size}-button`],
@@ -54,8 +54,9 @@
           contextProps.direction === 'vertical' &&
           contextProps.showCheck
         "
-        class="absolute end-2 lg:end-5"
-        :icon-path="checkmark"
+        class="absolute end-2"
+        :class="contextProps.size === 'small' ? 'end-3' : 'end-6'"
+        :icon-path="itemIndicator"
       />
     </VButton>
   </div>
@@ -82,7 +83,7 @@ import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import { VPopoverContentContextKey } from "~/components/VPopover/VPopoverContent.vue"
 
-import checkmark from "~/assets/icons/checkmark.svg"
+import itemIndicator from "~/assets/icons/item-indicator.svg"
 
 export default defineComponent({
   name: "VItem",
@@ -165,7 +166,7 @@ export default defineComponent({
     })
 
     return {
-      checkmark,
+      itemIndicator,
       contextProps,
       isInPopover,
       isFocused,
@@ -205,7 +206,7 @@ export default defineComponent({
 }
 
 .has-check .vertical-content {
-  @apply pe-8 lg:pe-8;
+  @apply pe-8;
 }
 
 .vertical-popover-item {
@@ -242,5 +243,11 @@ export default defineComponent({
 
 .horizontal-popover-item:last-of-type {
   @apply pe-2;
+}
+.small-button {
+  @apply p-3;
+}
+.medium-button {
+  @apply px-6 py-5;
 }
 </style>

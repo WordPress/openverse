@@ -3,7 +3,8 @@
     :selected="selected"
     :is-first="isFirst"
     :as="component"
-    class="h-16 text-base lg:h-12"
+    class="label-regular"
+    :size="size"
     v-bind="{ href }"
     @click.native="$emit('click', item)"
   >
