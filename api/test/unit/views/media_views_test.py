@@ -7,8 +7,6 @@ from test.factory.models.image import ImageFactory
 from unittest import mock
 from unittest.mock import MagicMock, patch
 
-from rest_framework.test import APIClient
-
 import pytest
 import pytest_django.asserts
 import requests as requests_lib
@@ -21,11 +19,6 @@ from catalog.api.views.media_views import MediaViewSet, UpstreamThumbnailExcepti
 _MOCK_IMAGE_PATH = Path(__file__).parent / ".." / ".." / "factory"
 _MOCK_IMAGE_BYTES = (_MOCK_IMAGE_PATH / "sample-image.jpg").read_bytes()
 _MOCK_IMAGE_INFO = json.loads((_MOCK_IMAGE_PATH / "sample-image-info.json").read_text())
-
-
-@pytest.fixture
-def api_client():
-    return APIClient()
 
 
 @dataclass

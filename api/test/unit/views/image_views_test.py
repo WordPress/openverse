@@ -4,8 +4,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from test.factory.models.image import ImageFactory
 
-from rest_framework.test import APIClient
-
 import pytest
 from requests import Request, Response
 
@@ -15,11 +13,6 @@ from catalog.api.views.image_views import ImageViewSet
 _MOCK_IMAGE_PATH = Path(__file__).parent / ".." / ".." / "factory"
 _MOCK_IMAGE_BYTES = (_MOCK_IMAGE_PATH / "sample-image.jpg").read_bytes()
 _MOCK_IMAGE_INFO = json.loads((_MOCK_IMAGE_PATH / "sample-image-info.json").read_text())
-
-
-@pytest.fixture
-def api_client():
-    return APIClient()
 
 
 @dataclass
