@@ -4,11 +4,10 @@
     class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 border-b border-tx py-4 ps-2 pe-3 md:py-4 lg:ps-6 lg:pe-10"
   >
     <VHomeLink variant="dark" class="px-4 hover:bg-yellow" />
-    <nav class="lg:justify-stretch hidden ms-auto lg:flex">
+    <nav class="hidden lg:flex">
       <VPageLinks
         mode="light"
-        class="md:justify-stretch hidden items-center gap-8 text-sm ms-auto md:flex"
-        nav-link-classes="ms-3"
+        class="flex items-center gap-6 text-sm"
         @close="closePageMenu"
       />
     </nav>
