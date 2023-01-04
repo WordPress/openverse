@@ -6,34 +6,30 @@ import {
   dismissTranslationBanner,
   pathWithDir,
   languageDirections,
-  enableNewHeader,
 } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
 
 /**
- * Make the random set of images uniform by dropping their brightness to zero,
- * and changing them into black circles.
+ * Remove the randomly-selected images from the homepage.
  */
-const cleanImageCarousel = async (page: Page) => {
-  await page.addStyleTag({
-    content: ".home-cell > img { filter: brightness(0%); }",
-  })
-  await page.waitForTimeout(1000) // wait for animation to finish
+const deleteImageCarousel = async (page: Page) => {
+  const element = await page.$('[data-testid="image-carousel"]')
+  await element?.evaluate((node) => node.remove())
+  element?.dispose()
 }
 
 for (const dir of languageDirections) {
   test.describe(`${dir} homepage snapshots`, () => {
     const path = pathWithDir("/", dir)
     test.beforeEach(async ({ page }) => {
-      await enableNewHeader(page)
       await page.goto(path)
       await dismissTranslationBanner(page)
-      await cleanImageCarousel(page)
     })
 
     breakpoints.describeEvery(({ expectSnapshot }) =>
-      test(`${dir} full page`, async ({ page }) => {
+      test(`${dir} full page old design`, async ({ page }) => {
+        await deleteImageCarousel(page)
         await expectSnapshot(`index-${dir}`, page)
       })
     )

@@ -319,9 +319,22 @@ export const dismissTranslationBanner = async (page: Page) => {
 export const selectHomepageSearchType = async (
   page: Page,
   searchType: SupportedSearchType,
-  dir: LanguageDirection = "ltr"
+  dir: LanguageDirection = "ltr",
+  headerMode: HeaderMode = NEW_HEADER
 ) => {
   const pageWidth = page.viewportSize()?.width
+  // TODO: replace when the search types can only be selected using the popover/modal
+  console.log("Selecting homepage search type in header mode", headerMode)
+  // if (headerMode === NEW_HEADER || (pageWidth && pageWidth > SCREEN_SIZES.sm)) {
+  //   await page.getByRole("button", { name: t("search-type.all", dir) }).click()
+  //
+  //   await page
+  //     .getByRole("radio", { name: searchTypeNames[dir][searchType] })
+  //     .click()
+  // } else {
+  //   await page.click(`button:has-text("${searchTypeNames[dir][searchType]}")`)
+  // }
+
   if (pageWidth && pageWidth > SCREEN_SIZES.sm) {
     await page.click(`[aria-label="${t("search-type.all", dir)}"]`)
     await page.click(
@@ -340,12 +353,14 @@ export const goToSearchTerm = async (
     mode?: RenderMode
     dir?: LanguageDirection
     query?: string // Only for SSR mode
+    headerMode?: HeaderMode
   } = {}
 ) => {
   const searchType = options.searchType || ALL_MEDIA
   const dir = options.dir || "ltr"
   const mode = options.mode ?? "SSR"
   const query = options.query ? `&${options.query}` : ""
+  const headerMode = options.headerMode ?? NEW_HEADER
 
   if (mode === "SSR") {
     const path = `search/${searchTypePath(searchType)}?q=${term}${query}`
@@ -356,7 +371,7 @@ export const goToSearchTerm = async (
     await dismissTranslationBanner(page)
     // Select the search type
     if (searchType !== "all") {
-      await selectHomepageSearchType(page, searchType, dir)
+      await selectHomepageSearchType(page, searchType, dir, headerMode)
     }
     // Type search term
     const searchInput = page.locator('main input[type="search"]')
@@ -365,7 +380,7 @@ export const goToSearchTerm = async (
     // Wait for navigation
     await Promise.all([
       page.waitForNavigation(),
-      page.click(`[aria-label="${t("search.search", dir)}"]`),
+      await page.getByRole("button", { name: t("search.search", dir) }).click(),
     ])
     await page.waitForLoadState("load")
   }
