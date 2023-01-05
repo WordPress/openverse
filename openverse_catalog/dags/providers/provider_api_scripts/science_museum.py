@@ -56,15 +56,18 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         """
         # Start with some very large ranges for old data
         year_ranges = [
-            (0, 1500),
+            (0, 200),
+            (200, 1500),
             (1500, 1750),
         ]
-        # Add a range for every 25 years between 1750 and 1875
-        year_ranges.extend([(x, x + 25) for x in range(1750, 1875, 25)])
-        # Add a range for every 10 years between 1875 and 'next year'
+        # Add a range for every 25 years between 1750 and 1825
+        year_ranges.extend([(x, x + 25) for x in range(1750, 1825, 25)])
+        # Add a range for every 10 years between 1825 and 1925
+        year_ranges.extend([(x, x + 10) for x in range(1825, 1925, 10)])
+        # Add a range for every 5 years between 1925 and 'next year'
         # relative to when the DAG is being run.
         year_ranges.extend(
-            [(x, min(x + 10, final_year)) for x in range(1875, final_year, 10)]
+            [(x, min(x + 5, final_year)) for x in range(1925, final_year, 5)]
         )
         return year_ranges
 

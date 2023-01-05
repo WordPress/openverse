@@ -68,22 +68,28 @@ default_params = {
 
 
 def test_get_year_ranges():
-    # Expected list when using 1923 as the final year
+    # Expected list when using 1933 as the final year
     expected_list = [
-        (0, 1500),
+        (0, 200),
+        (200, 1500),
         (1500, 1750),
         (1750, 1775),
         (1775, 1800),
         (1800, 1825),
-        (1825, 1850),
-        (1850, 1875),
+        (1825, 1835),
+        (1835, 1845),
+        (1845, 1855),
+        (1855, 1865),
+        (1865, 1875),
         (1875, 1885),
         (1885, 1895),
         (1895, 1905),
         (1905, 1915),
-        (1915, 1923),
+        (1915, 1925),
+        (1925, 1930),
+        (1930, 1933),
     ]
-    actual_list = sm._get_year_ranges(1923)
+    actual_list = sm._get_year_ranges(1933)
     assert actual_list == expected_list
 
 
