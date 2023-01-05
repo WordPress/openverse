@@ -1,6 +1,9 @@
 <template>
   <div
-    class="error relative flex min-h-screen flex-col overflow-x-hidden bg-yellow"
+    class="error relative flex flex-col overflow-x-hidden"
+    :class="
+      isNewHeaderEnabled ? 'flex-grow px-6 sm:px-0' : 'min-h-screen bg-yellow'
+    "
   >
     <svg
       class="z-0 pointer-events-none absolute top-20 -mt-[10%] -ml-[20%] w-[140%] fill-dark-charcoal px-6 opacity-5 lg:mx-auto lg:ml-0 lg:w-full lg:px-16"
@@ -11,7 +14,7 @@
     >
       <use :href="`${Oops}#oops`" />
     </svg>
-    <div>
+    <div v-if="!isNewHeaderEnabled">
       <VLink href="/" class="relative z-10 text-dark-charcoal">
         <VBrand class="m-6 text-[18px] lg:mx-10 lg:my-8" />
       </VLink>
@@ -37,11 +40,14 @@
             </template>
           </i18n>
         </p>
-        <VStandaloneSearchBar route="404" @submit="handleSearch" />
+        <VStandaloneSearchBar
+          v-if="isNewHeaderEnabled"
+          route="404"
+          @submit="handleSearch"
+        />
+        <VStandaloneSearchBarOld v-else route="404" @submit="handleSearch" />
       </div>
     </main>
-
-    <VFooter v-if="isNewHeaderEnabled" mode="internal" />
   </div>
 </template>
 
@@ -53,10 +59,9 @@ import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { ALL_MEDIA } from "~/constants/media"
 
-import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
+import VStandaloneSearchBarOld from "~/components/VHeaderOld/VSearchBar/VStandaloneSearchBarOld.vue"
 import VLink from "~/components/VLink.vue"
 import VBrand from "~/components/VBrand/VBrand.vue"
-import VFooter from "~/components/VFooter/VFooter.vue"
 
 import Oops from "~/assets/oops.svg"
 
@@ -64,9 +69,11 @@ export default defineComponent({
   name: "VFourOhFour",
   components: {
     VLink,
-    VStandaloneSearchBar,
+    VStandaloneSearchBarOld,
+    VStandaloneSearchBar: () =>
+      import("~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"),
+
     VBrand,
-    VFooter,
   },
   props: ["error"],
   setup() {

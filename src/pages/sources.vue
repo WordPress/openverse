@@ -74,9 +74,14 @@
         </strong>
       </template>
     </i18n>
-    <template v-for="mediaType in supportedMediaTypes">
+    <template v-for="(mediaType, i) in supportedMediaTypes">
       <h3 :key="`h3-${mediaType}`">{{ $t(`sources.heading.${mediaType}`) }}</h3>
-      <VSourcesTable :key="`table-${mediaType}`" :media="mediaType" />
+      <VSourcesTable
+        :key="`table-${mediaType}`"
+        :media="mediaType"
+        class="mt-4"
+        :class="i < supportedMediaTypes.length - 1 ? 'mb-10' : ''"
+      />
     </template>
   </VContentPage>
 </template>

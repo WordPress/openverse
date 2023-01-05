@@ -1,45 +1,59 @@
 <template>
   <div
+    :key="isWhite ? 'white' : 'yellow'"
     class="app flex min-h-screen flex-col"
-    :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]"
+    :class="[
+      isDesktopLayout ? 'desktop' : 'mobile',
+      isWhite ? 'bg-white' : 'bg-yellow',
+      breakpoint,
+    ]"
   >
     <div class="sticky top-0 z-40 block">
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
       <VBanners />
       <template v-if="isNewHeaderEnabled">
         <template v-if="isSearchHeader">
-          <VHeaderDesktop v-if="isDesktopLayout" />
-          <VHeaderMobile v-else />
+          <VHeaderDesktop
+            v-if="isDesktopLayout"
+            :class="isWhite ? 'bg-white' : 'bg-yellow'"
+          />
+          <VHeaderMobile v-else :class="isWhite ? 'bg-white' : 'bg-yellow'" />
         </template>
         <VHeaderInternal
           v-else
-          class="bg-white"
-          :class="{ 'border-b-dark-charcoal-20': isHeaderScrolled }"
+          :class="[
+            { 'border-b-dark-charcoal-20': isHeaderScrolled && isWhite },
+            isWhite ? 'bg-white' : 'bg-yellow',
+          ]"
         />
       </template>
-      <VHeaderOld v-else />
+      <VHeaderOld v-else :class="isWhite ? 'bg-white' : 'bg-yellow'" />
     </div>
 
     <main
-      class="main embedded w-full flex-shrink-0 flex-grow md:w-full"
+      class="main grid flex-grow"
       :class="[
         { 'has-sidebar': isSidebarVisible },
-        isNewHeaderEnabled ? 'new-layout' : 'old-layout',
+        isSidebarVisible
+          ? 'grid-cols-[1fr_var(--filter-sidebar-width)]'
+          : 'grid-cols-1',
       ]"
     >
-      <div v-if="isNewHeaderEnabled" class="main-page min-w-0">
+      <div
+        v-if="isNewHeaderEnabled"
+        class="main-page flex h-full w-full min-w-0 flex-col justify-between"
+      >
         <Nuxt />
         <VFooter
           :mode="isSearchHeader ? 'content' : 'search'"
-          class="border-t border-dark-charcoal-20"
+          :class="{ 'border-t border-dark-charcoal-20': isWhite }"
         />
       </div>
-      <Nuxt v-else class="main-page min-w-0" />
+      <Nuxt v-else class="main-page flex h-full w-full min-w-0 flex-col" />
 
       <aside
         v-if="isSidebarVisible"
-        class="sidebar fixed z-10 overflow-y-auto bg-dark-charcoal-06 end-0"
-        :class="{ 'border-dark-charcoal-20 border-s': isSidebarVisible }"
+        class="sidebar fixed z-10 overflow-y-auto border-dark-charcoal-20 bg-dark-charcoal-06 end-0 border-s"
       >
         <VSearchGridFilter class="px-10 pt-8 pb-10" @close="closeSidebar" />
       </aside>
@@ -63,6 +77,7 @@ import { useWindowScroll } from "~/composables/use-window-scroll"
 import {
   useMatchSearchRoutes,
   useMatchSingleResultRoutes,
+  useMatchContentPageRoutes,
 } from "~/composables/use-match-routes"
 import { useLayout } from "~/composables/use-layout"
 
@@ -93,10 +108,6 @@ const embeddedPage = {
     VGlobalAudioSection,
     VSearchGridFilter,
   },
-  layout: "embedded",
-  head() {
-    return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
-  },
   setup() {
     const uiStore = useUiStore()
     const featureFlagStore = useFeatureFlagStore()
@@ -118,11 +129,21 @@ const embeddedPage = {
 
     const { matches: isSearchRoute } = useMatchSearchRoutes()
     const { matches: isSingleResultRoute } = useMatchSingleResultRoutes()
+    const { matches: isContentPageRoute } = useMatchContentPageRoutes()
+
+    const isWhite = computed(
+      () =>
+        isSearchRoute.value ||
+        isSingleResultRoute.value ||
+        isContentPageRoute.value
+    )
+
     const isSearchHeader = computed(
       () => isSearchRoute.value || isSingleResultRoute.value
     )
 
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
+    const breakpoint = computed(() => uiStore.breakpoint)
 
     /**
      * Filters sidebar is visible only on desktop layouts
@@ -167,10 +188,14 @@ const embeddedPage = {
       isSearchHeader,
       headerHasTwoRows,
       isNewHeaderEnabled,
-      breakpoint: computed(() => uiStore.breakpoint),
+      isWhite,
+      breakpoint,
 
       closeSidebar,
     }
+  },
+  head() {
+    return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
   },
 }
 export default embeddedPage
@@ -183,38 +208,5 @@ export default embeddedPage
 }
 .has-sidebar .sidebar {
   width: var(--filter-sidebar-width);
-}
-
-/* TODO: remove these styles when new header is enabled */
-@screen md {
-  /** Display the search filter sidebar and results as independently-scrolling. **/
-  .main.old-layout {
-    @apply grid h-full grid-cols-[1fr_var(--filter-sidebar-width)];
-  }
-  /** Make the main content area span both grid columns when the sidebar is closed... **/
-  .main.old-layout > *:first-child {
-    grid-column: span 2;
-  }
-  /** ...and only one column when it is visible. **/
-  .main.old-layout.has-sidebar > *:first-child {
-    grid-column: 1;
-  }
-}
-/* TODO: remove the new-layout class when new header is enabled */
-@screen lg {
-  /** Display the search filter sidebar and results as independently-scrolling. **/
-  .main.new-layout {
-    @apply grid h-full grid-cols-[1fr_var(--filter-sidebar-width)];
-  }
-  /** Make the main content area span both grid columns when the sidebar is closed... **/
-  .main.new-layout > *:first-child {
-    grid-column: span 2;
-    /** Make sure the bottom element (footer) is all the way at the bottom of the page **/
-    @apply flex flex-col justify-between;
-  }
-  /** ...and only one column when it is visible. **/
-  .main.new-layout.has-sidebar > *:first-child {
-    grid-column: 1;
-  }
 }
 </style>

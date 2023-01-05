@@ -2,7 +2,7 @@
   <table
     :aria-label="$t('sources.aria.table').toString()"
     role="region"
-    class="not-prose mt-4 mb-10 table w-full table-fixed text-base"
+    class="not-prose table w-full table-fixed text-base"
   >
     <thead>
       <tr>

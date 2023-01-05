@@ -57,6 +57,8 @@ import {
 import { useReducedMotion } from "~/composables/use-media-query"
 import useResizeObserver from "~/composables/use-resize-observer"
 
+import VLink from "~/components/VLink.vue"
+
 import imageInfo from "~/assets/homepage_images/image_info.json"
 
 export const GALLERY_SETS = [
@@ -74,6 +76,7 @@ export type GallerySet = typeof GALLERY_SETS[number]
  */
 export default defineComponent({
   name: "VHomeGallery",
+  components: { VLink },
   props: {
     /**
      * the set of images to use for the gallery grid

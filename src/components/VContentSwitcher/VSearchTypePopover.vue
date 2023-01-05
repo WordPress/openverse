@@ -17,13 +17,15 @@
       class="w-[260px] pt-2"
       size="small"
       :use-links="placement === 'header'"
-      @select="closePopover"
+      @select="handleSelect"
     />
   </VPopover>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from "@nuxtjs/composition-api"
+
+import type { SearchType } from "~/constants/media"
 
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.vue"
@@ -44,16 +46,17 @@ export default defineComponent({
       default: "header",
     },
   },
-  setup() {
+  setup(_, { emit }) {
     const contentMenuPopover = ref<InstanceType<typeof VPopover> | null>(null)
 
-    const closePopover = () => {
+    const handleSelect = (searchType: SearchType) => {
+      emit("select", searchType)
       contentMenuPopover.value?.close()
     }
 
     return {
       checkIcon,
-      closePopover,
+      handleSelect,
       contentMenuPopover,
     }
   },

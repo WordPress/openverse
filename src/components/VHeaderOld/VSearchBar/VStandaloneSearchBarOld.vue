@@ -1,6 +1,6 @@
 <template>
   <form
-    class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-white sm:h-16"
+    class="search-bar group flex h-[57px] flex-row items-center rounded-sm border-tx bg-white md:h-[69px]"
     @submit.prevent="handleSearch"
   >
     <div
@@ -29,19 +29,12 @@
       <!-- @slot Extra information goes here -->
       <slot />
     </div>
-    <VButton
+    <VSearchButton
+      class="flex-shrink-0"
       type="submit"
-      :aria-label="$t('search.search')"
-      size="disabled"
-      :variant="isHomeRoute ? 'primary' : 'plain'"
-      class="h-full w-14 flex-shrink-0 transition-none rounded-s-none sm:w-16"
-      :class="{
-        'search-button border-black p-0.5px ps-1.5px hover:bg-pink hover:text-white focus:border-tx focus-visible:bg-pink focus-visible:text-white group-focus-within:border-pink group-focus-within:border-tx group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink group-hover:border-pink group-hover:border-tx group-hover:bg-pink group-hover:text-white group-focus:border-tx':
-          !isHomeRoute,
-      }"
-    >
-      <VIcon :icon-path="searchIcon" />
-    </VButton>
+      size="standalone"
+      :route="route"
+    />
   </form>
 </template>
 
@@ -55,10 +48,7 @@ import {
 
 import { defineEvent } from "~/types/emits"
 
-import VButton from "~/components/VButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
-
-import searchIcon from "~/assets/icons/search.svg"
+import VSearchButton from "~/components/VHeader/VSearchBar/VSearchButton.vue"
 
 /**
  * Displays a search input for a search query and is attached to an action button
@@ -68,8 +58,8 @@ import searchIcon from "~/assets/icons/search.svg"
  * is not removed.
  */
 export default defineComponent({
-  name: "VStandaloneSearchBar",
-  components: { VButton, VIcon },
+  name: "VStandaloneSearchBarOld",
+  components: { VSearchButton },
   props: {
     route: {
       type: String as PropType<"home" | "404">,
@@ -96,8 +86,6 @@ export default defineComponent({
       inputRef,
       handleSearch,
       isHomeRoute,
-
-      searchIcon,
     }
   },
 })
@@ -105,9 +93,5 @@ export default defineComponent({
 <style scoped>
 .input-field {
   border-inline-end-width: 0;
-}
-
-.search-button {
-  border-inline-start-width: 0;
 }
 </style>

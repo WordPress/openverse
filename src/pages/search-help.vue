@@ -205,7 +205,7 @@
       </template>
     </i18n>
 
-    <i18n path="search-guide.example.fuzziness.content" tag="p" class="mb-4">
+    <i18n path="search-guide.example.fuzziness.content" tag="p">
       <template #link>
         <VLink
           :aria-label="$t('search-guide.example.fuzziness.aria-label')"
