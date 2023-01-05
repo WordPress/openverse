@@ -22,6 +22,6 @@ jobs:
         with:
           GH_PAT: ${{ secrets.ACCESS_TOKEN }} # Can't use GITHUB_TOKEN to make PRs on other repos
           PR_LABELS: |
-            🛠 goal: fix
+            🧰 goal: internal improvement
             🤖 aspect: dx
             🟧 priority: high
