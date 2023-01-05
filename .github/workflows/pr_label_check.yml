@@ -4,6 +4,12 @@ name: PR label check
 on:
   pull_request:
     types:
+      # Default types
+      # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
+      - opened
+      - reopened
+      - synchronize
+      # Label is changed
       - labeled
       - unlabeled
 
