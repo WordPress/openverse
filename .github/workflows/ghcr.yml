@@ -84,6 +84,24 @@ jobs:
           build-args: |
             RELEASE=${{ steps.get-version.outputs.version }}
 
+  # TODO: Remove once this install redirects to the new one.
+  deploy-old-staging:
+    name: Deploy old staging frontend
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs: push-to-ghcr
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/staging-frontend-deploy
+        with:
+          tag: ${{ needs.push-to-ghcr.outputs.pushed-version }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+
   deploy-staging:
     name: Deploy staging frontend
     runs-on: ubuntu-latest
@@ -93,7 +111,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: ./.github/actions/staging-frontend-deploy
+      - uses: ./.github/actions/staging-deploy
         with:
           tag: ${{ needs.push-to-ghcr.outputs.pushed-version }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
