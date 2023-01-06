@@ -5,6 +5,7 @@
 # Environments
 .env
 env/
+venv/
 
 # Editor/IDE configs
 .idea/
