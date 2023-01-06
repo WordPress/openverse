@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from common.licenses.licenses import LicenseInfo
@@ -81,6 +81,24 @@ def test_get_items(file_size_patch):
     expected_audio_count = 6
     actual_audio_count = fsd.process_batch(first_response)
     assert actual_audio_count == expected_audio_count
+
+
+def test_handles_failure_to_get_set_info():
+    fsd = FreesoundDataIngester()
+    # Patch the sleep function so it doesn't take long
+    with patch.object(fsd.delayed_requester, "get") as get_mock, patch("time.sleep"):
+        error_response = MagicMock()
+        error_response.status_code = 404
+        get_mock.return_value = error_response
+
+        actual_id, actual_name, actual_url = fsd._get_audio_set_info(
+            {"pack": "https://freesound.org/apiv2/packs/35596/"}
+        )
+
+        assert get_mock.call_count == 4
+        assert actual_url == "https://freesound.org/apiv2/packs/35596/"
+        assert actual_id is None
+        assert actual_name is None
 
 
 def test_get_audio_files_handles_example_audio_data(audio_data, file_size_patch):
