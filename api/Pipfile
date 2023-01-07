@@ -5,7 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 factory-boy = "~=3.2"
-fakeredis = "~=1.9"
+fakeredis = "~=2.4"
 furo = "~=2022.9"
 ipython = "~=8.7"
 myst-parser = "~=0.18"
