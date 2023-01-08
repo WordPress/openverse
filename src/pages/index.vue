@@ -13,6 +13,7 @@
       :handle-search="handleSearch"
       :search-type="searchType"
       :set-search-type="setSearchType"
+      :is-sm="isSm"
     />
 
     <!-- TODO: Refine min-width for different breakpoints, remove magic numbers -->
@@ -121,6 +122,7 @@ export default defineComponent({
     })
 
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
+    const isSm = computed(() => uiStore.isBreakpoint("sm"))
 
     const contentSwitcher = ref<InstanceType<
       typeof VSearchTypePopoverOld
@@ -129,8 +131,8 @@ export default defineComponent({
 
     const setSearchType = (type: SupportedSearchType) => {
       searchType.value = type
-      if (!isNewHeaderEnabled) {
-        contentSwitcher.value?.closeMenu()
+      if (!isNewHeaderEnabled.value) {
+        contentSwitcher.value?.close()
       }
     }
 
@@ -147,6 +149,7 @@ export default defineComponent({
 
     return {
       isDesktopLayout,
+      isSm,
       isNewHeaderEnabled,
 
       contentSwitcher,

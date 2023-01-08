@@ -15,6 +15,7 @@
         class="mx-3 group-focus-within:bg-white group-hover:bg-white"
         :active-item="searchType"
         placement="searchbar"
+        :show-label="isSm"
         @select="setSearchType"
       />
     </VStandaloneSearchBar>
@@ -57,10 +58,10 @@ export default {
       type: Function as PropType<(searchType: SearchType) => void>,
       required: true,
     },
+    isSm: {
+      type: Boolean,
+      required: true,
+    },
   },
 }
 </script>
-<style>
-@screen lg {
-}
-</style>

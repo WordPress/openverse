@@ -1,14 +1,14 @@
 <template>
   <VPopover
     ref="contentMenuPopover"
-    class="flex items-stretch"
     :label="$t('search-type.label').toString()"
     placement="bottom-end"
     :clippable="true"
   >
     <template #trigger="{ a11yProps }">
       <VSearchTypeButton
-        :a11y-props="a11yProps"
+        v-bind="{ ...a11yProps, ...searchTypeProps }"
+        :show-label="showLabel"
         aria-controls="content-switcher-popover"
       />
     </template>
@@ -23,15 +23,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from "@nuxtjs/composition-api"
+import {
+  computed,
+  defineComponent,
+  PropType,
+  ref,
+} from "@nuxtjs/composition-api"
+
+import useSearchType from "~/composables/use-search-type"
 
 import type { SearchType } from "~/constants/media"
 
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.vue"
 import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
-
-import checkIcon from "~/assets/icons/checkmark.svg"
 
 export default defineComponent({
   name: "VSearchTypePopover",
@@ -41,6 +46,10 @@ export default defineComponent({
     VSearchTypes,
   },
   props: {
+    showLabel: {
+      type: Boolean,
+      default: false,
+    },
     placement: {
       type: String as PropType<"header" | "searchbar">,
       default: "header",
@@ -49,15 +58,19 @@ export default defineComponent({
   setup(_, { emit }) {
     const contentMenuPopover = ref<InstanceType<typeof VPopover> | null>(null)
 
+    const { getSearchTypeProps } = useSearchType()
+
+    const searchTypeProps = computed(() => getSearchTypeProps())
+
     const handleSelect = (searchType: SearchType) => {
       emit("select", searchType)
       contentMenuPopover.value?.close()
     }
 
     return {
-      checkIcon,
       handleSelect,
       contentMenuPopover,
+      searchTypeProps,
     }
   },
 })

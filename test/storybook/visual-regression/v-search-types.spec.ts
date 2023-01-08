@@ -7,6 +7,8 @@ const defaultUrl =
 
 const audioButtonLocator = "text=images"
 
+test.describe.configure({ mode: "parallel" })
+
 test.describe("VSearchTypes", () => {
   breakpoints.describeMd(({ expectSnapshot }) => {
     test.beforeEach(async ({ page }) => {

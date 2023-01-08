@@ -32,7 +32,7 @@
       </span>
     </VSearchBar>
 
-    <VSearchTypePopover />
+    <VSearchTypePopover :show-label="isXl" placement="header" />
 
     <VFilterButton
       ref="filterButtonRef"
@@ -122,6 +122,8 @@ export default defineComponent({
       focusFilters.focusFilterSidebar(event, Focus.First)
     }
 
+    const isXl = computed(() => uiStore.isBreakpoint("xl"))
+
     return {
       closeIcon,
       filterButtonRef,
@@ -131,6 +133,7 @@ export default defineComponent({
       isHeaderScrolled,
       isSidebarVisible,
       areFiltersDisabled,
+      isXl,
 
       handleSearch,
       clearSearchTerm,

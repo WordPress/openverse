@@ -1,8 +1,9 @@
-import { test, expect, Page } from "@playwright/test"
+import { expect, Page, test } from "@playwright/test"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
   goToSearchTerm,
+  OLD_HEADER,
   searchTypePath,
 } from "~~/test/playwright/utils/navigation"
 
@@ -18,7 +19,11 @@ for (const searchType of supportedSearchTypes) {
   test(`can change type and search for ${searchType} from homepage`, async ({
     page,
   }) => {
-    await goToSearchTerm(page, "cat", { searchType, mode: "CSR" })
+    await goToSearchTerm(page, "cat", {
+      searchType,
+      mode: "CSR",
+      headerMode: OLD_HEADER,
+    })
 
     const expectedUrl = `/search/${searchTypePath(searchType)}?q=cat`
     await expect(page).toHaveURL(expectedUrl)

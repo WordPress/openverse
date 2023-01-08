@@ -37,7 +37,11 @@ test("q query parameter is set as the search term", async ({ page }) => {
 test("selecting `audio` on homepage, you can search for audio", async ({
   page,
 }) => {
-  await goToSearchTerm(page, "cat", { searchType: AUDIO, mode: "CSR" })
+  await goToSearchTerm(page, "cat", {
+    searchType: AUDIO,
+    mode: "CSR",
+    headerMode: OLD_HEADER,
+  })
 
   await expect(page.locator('header input[type="search"]')).toHaveValue("cat")
 
@@ -50,6 +54,7 @@ test("url filter parameters not used by current mediaType are discarded", async 
   await goToSearchTerm(page, "cat", {
     searchType: IMAGE,
     query: "category=photograph",
+    headerMode: OLD_HEADER,
   })
 
   await changeContentType(page, "Audio", OLD_HEADER)
@@ -62,6 +67,7 @@ test("url filter types not used by current mediaType are discarded", async ({
   await goToSearchTerm(page, "cat", {
     searchType: IMAGE,
     query: "aspect_ratio=tall",
+    headerMode: OLD_HEADER,
   })
 
   await changeContentType(page, "Audio", OLD_HEADER)
@@ -69,7 +75,10 @@ test("url filter types not used by current mediaType are discarded", async ({
 })
 
 test("can search for a different term", async ({ page }) => {
-  await goToSearchTerm(page, "cat", { searchType: IMAGE })
+  await goToSearchTerm(page, "cat", {
+    searchType: IMAGE,
+    headerMode: OLD_HEADER,
+  })
   await page.fill('header input[type="search"]', "dog")
   await page.keyboard.press("Enter")
   await expect(page).toHaveURL("/search/image?q=dog")
@@ -79,6 +88,7 @@ test("search for a different term keeps query parameters", async ({ page }) => {
   await goToSearchTerm(page, "cat", {
     searchType: IMAGE,
     query: "license=by&extension=jpg",
+    headerMode: OLD_HEADER,
   })
   await page.fill('header input[type="search"]', "dog")
   await page.keyboard.press("Enter")

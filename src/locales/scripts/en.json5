@@ -673,6 +673,7 @@
     "status-beta": "Beta",
     "see-image": "See all images",
     "see-audio": "See all audio",
+    "select-label": "Select a content type: {type}",
   },
   "skip-to-content": "Skip to content",
   "pref-page": {

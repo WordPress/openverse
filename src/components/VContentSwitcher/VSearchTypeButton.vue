@@ -1,69 +1,68 @@
 <template>
   <VButton
-    class="group flex h-12 w-12 flex-row xl:w-auto xl:px-2 xl:ps-3"
+    class="group h-12 flex-shrink-0 gap-2"
+    :class="showLabel ? 'w-auto gap-2 px-3' : 'w-12'"
     variant="action-menu"
     size="disabled"
-    :aria-label="buttonLabel"
-    v-bind="a11yProps"
+    :aria-label="$t('search-type.select-label', { type: label })"
+    v-bind="$attrs"
     @click="$emit('click')"
   >
     <VIcon :icon-path="icon" />
-    <span
-      class="label-regular hidden truncate xl:block xl:ms-2 xl:text-start"
-      >{{ buttonLabel }}</span
-    >
-    <VIcon class="hidden xl:block xl:ms-2" :icon-path="caretDownIcon" />
+    <template v-if="showLabel">
+      <span class="label-regular block truncate text-start">{{ label }}</span>
+      <VIcon :icon-path="caretDownIcon" />
+    </template>
   </VButton>
 </template>
 <script lang="ts">
-import { computed, defineComponent } from "@nuxtjs/composition-api"
+import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, AUDIO, IMAGE, MODEL_3D, VIDEO } from "~/constants/media"
-import useSearchType from "~/composables/use-search-type"
-import { useI18n } from "~/composables/use-i18n"
+import type { SearchType } from "~/constants/media"
+
+import { warn } from "~/utils/console"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
 
 import caretDownIcon from "~/assets/icons/caret-down.svg"
 
-const labels = {
-  [ALL_MEDIA]: "search-type.all",
-  [IMAGE]: "search-type.image",
-  [AUDIO]: "search-type.audio",
-  [VIDEO]: "search-type.video",
-  [MODEL_3D]: "search-type.model-3d",
-}
-
 /**
- * This is the search type button that appears in the header, not on the homepage.
+ * This is the search type switcher button that appears in the header or the homepage search bar.
  */
 export default defineComponent({
   name: "VSearchTypeButton",
   components: { VButton, VIcon },
   props: {
-    a11yProps: {
-      type: Object,
-      default: () => ({
-        "aria-expanded": false,
-        "aria-haspopup": "dialog",
-      }),
+    /**
+     * Whether to show the text label and the chevron down.
+     */
+    showLabel: {
+      type: Boolean,
+      default: false,
+    },
+    searchType: {
+      type: String as PropType<SearchType>,
+      required: true,
+    },
+    icon: {
+      type: String,
+      required: true,
+    },
+    label: {
+      type: String,
+      required: true,
     },
   },
-  setup() {
-    const i18n = useI18n()
-    const { icons, activeType } = useSearchType()
-
-    const activeItem = computed(() => activeType.value)
-
-    const buttonLabel = computed(() => i18n.t(labels[activeItem.value]))
-
-    const icon = computed(() => icons[activeItem.value])
+  setup(_, { attrs }) {
+    if (!attrs["aria-haspopup"] || attrs["aria-expanded"] === undefined) {
+      warn(
+        "You should provide `aria-haspopup` and `aria-expanded` props to VSearchTypeButton."
+      )
+    }
 
     return {
-      buttonLabel,
       caretDownIcon,
-      icon,
     }
   },
 })

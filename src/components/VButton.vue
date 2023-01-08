@@ -317,7 +317,7 @@ a.button {
 }
 
 .action-menu {
-  @apply border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal-20;
+  @apply border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20 group-focus-within:hover:border-tx;
 }
 .action-menu-pressed {
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;

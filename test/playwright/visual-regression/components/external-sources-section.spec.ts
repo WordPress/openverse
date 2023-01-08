@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test"
 
 import {
+  enableNewHeader,
   goToSearchTerm,
   languageDirections,
 } from "~~/test/playwright/utils/navigation"
@@ -14,6 +15,7 @@ for (const dir of languageDirections) {
     test(`External ${searchType} sources popover - ${dir}`, async ({
       page,
     }) => {
+      await enableNewHeader(page)
       await goToSearchTerm(page, "birds", { searchType, dir })
       const externalSourcesButton = page.locator(
         '[aria-controls="source-list-popover"]'

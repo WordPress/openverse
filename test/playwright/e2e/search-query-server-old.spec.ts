@@ -52,7 +52,10 @@ test("url path /search/ is used to select `all` search tab", async ({
 test("url path /search/audio is used to select `audio` search tab", async ({
   page,
 }) => {
-  await goToSearchTerm(page, "cat", { searchType: AUDIO })
+  await goToSearchTerm(page, "cat", {
+    searchType: AUDIO,
+    headerMode: OLD_HEADER,
+  })
 
   const contentType = await currentContentType(page, OLD_HEADER)
   expect(contentType?.trim()).toEqual("Audio")
@@ -77,6 +80,7 @@ test("url query to filter, image tab, several filters for one filter type select
   await goToSearchTerm(page, "cat", {
     searchType: IMAGE,
     query: "searchBy=creator&extension=jpg,png,gif,svg",
+    headerMode: OLD_HEADER,
   })
   await openFilters(page, OLD_HEADER)
   const checkboxes = ["jpeg", "png", "gif", "svg"]
@@ -89,7 +93,11 @@ test("url query to filter, image tab, several filters for one filter type select
 test.skip("url mature query is set, and can be unchecked using the Safer Browsing popup", async ({
   page,
 }) => {
-  await goToSearchTerm(page, "cat", { searchType: IMAGE, query: "mature=true" })
+  await goToSearchTerm(page, "cat", {
+    searchType: IMAGE,
+    query: "mature=true",
+    headerMode: OLD_HEADER,
+  })
 
   await page.click('button:has-text("Safer Browsing")')
 
