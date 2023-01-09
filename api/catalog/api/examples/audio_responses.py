@@ -58,7 +58,7 @@ base_audio = {
 audio_search_200_example = {
     "application/json": {
         "result_count": 1,
-        "page_count": 0,
+        "page_count": 1,
         "page_size": 20,
         "page": 1,
         "results": [
@@ -108,7 +108,7 @@ audio_detail_404_example = {"application/json": {"detail": "Not found."}}
 audio_related_200_example = {
     "application/json": {
         "result_count": 10000,
-        "page_count": 0,
+        "page_count": 1,
         "results": [
             {
                 "title": "File:Mozart - Eine kleine Nachtmusik - 1. Allegro.ogg",

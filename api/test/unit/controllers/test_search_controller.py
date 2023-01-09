@@ -13,36 +13,49 @@ from catalog.api.utils.dead_link_mask import get_query_hash, save_query_mask
 
 
 @pytest.mark.parametrize(
-    "total_hits, real_result_count, page_size, expected",
+    "total_hits, real_result_count, page_size, page, expected",
     [
         # No results
-        (0, 0, 10, (0, 0)),
+        (0, 0, 10, 1, (0, 0)),
         # Setting page size to 0 raises an exception
+        # Not possible in the actual API
         pytest.param(
-            0, 0, 0, (0, 0), marks=pytest.mark.raises(exception=ZeroDivisionError)
+            5, 5, 0, 1, (0, 0), marks=pytest.mark.raises(exception=ZeroDivisionError)
         ),
         # Fewer results than page size leads to max of result total
-        (5, 5, 10, (5, 0)),
-        # Even if no real results exist, total result count and page count are returned
-        # (seems like an impossible case IRL)
-        (100, 0, 10, (100, 10)),
+        (5, 5, 10, 1, (5, 1)),
+        # If no real results exist, even if there are hits, fall back to 0, 0
+        # (This case represents where all the links for a result are dead, for example)
+        (100, 0, 10, 1, (0, 0)),
         # If there are real results and ES reports no hits, nothing is expected
         # (seems like an impossible case IRL)
-        (0, 100, 10, (0, 0)),
+        (0, 100, 10, 1, (0, 0)),
         # Evenly divisible number of pages
-        (25, 5, 5, (25, 5)),
+        (25, 5, 5, 1, (25, 5)),
+        # An edge case that previously did not behave as expected with evenly divisble numbers of pages
+        (20, 5, 5, 1, (20, 4)),
         # Unevenly divisible number of pages
-        (21, 5, 5, (21, 5)),
-        # My assumption would be that this yields (20, 4), but the code is such that
-        # when the "natural" page count can't be cleanly divisible by the page size,
-        # We increment it plus one. Why would that be the case? 20 results, with 5
-        # results per-page, would seem to result in 4 pages total not 5 🤷‍♀️
-        (20, 5, 5, (20, 5)),
+        (21, 5, 5, 1, (21, 5)),
         # Fewer hits than page size, but result list somehow differs, use that for count
-        (48, 20, 50, (20, 0)),
+        (48, 20, 50, 1, (20, 1)),
+        # Despite us applying a pagination limit, that is applied further up in the API, not at this low a level
+        (2000, 20, 20, 2, (2000, 100)),
+        # Page count is reduced to the current page number even though 2000 / 20 is much larger than 5
+        # because despite that we have result count < page size which indicates we've exhausted the query
+        (2000, 5, 20, 5, (2000, 5)),
+        # First page, we got all the results and there are no further possible pages with the current page count
+        (10, 10, 20, 1, (10, 1)),
+        # This is here to test a case that used to erroneously produce (10, 2) by adding 1
+        # to the page count when it wasn't necessary to do so.
+        (10, 10, 10, 1, (10, 1)),
+        # This is technically impossible because we truncate results to the page size before entering this method
+        # I think the handling of this case is a likely source for the bug in the previous case
+        (10, 10, 9, 1, (10, 2)),
     ],
 )
-def test_get_result_and_page_count(total_hits, real_result_count, page_size, expected):
+def test_get_result_and_page_count(
+    total_hits, real_result_count, page_size, page, expected
+):
     response_obj = mock.MagicMock()
     response_obj.hits.total.value = total_hits
     results = [mock.MagicMock() for _ in range(real_result_count)]
@@ -51,6 +64,7 @@ def test_get_result_and_page_count(total_hits, real_result_count, page_size, exp
         response_obj,
         results,
         page_size,
+        page,
     )
     assert actual == expected
 

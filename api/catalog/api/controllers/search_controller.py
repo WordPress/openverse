@@ -410,7 +410,7 @@ def search(
     )
 
     result_count, page_count = _get_result_and_page_count(
-        search_response, results, page_size
+        search_response, results, page_size, page
     )
     return results or [], page_count, result_count
 
@@ -447,7 +447,7 @@ def related_media(uuid, index, request, filter_dead):
         s, start, end, page_size, response, request, filter_dead
     )
 
-    result_count, _ = _get_result_and_page_count(response, results, page_size)
+    result_count, _ = _get_result_and_page_count(response, results, page_size, page)
 
     return results or [], result_count
 
@@ -496,7 +496,7 @@ def get_sources(index):
 
 
 def _get_result_and_page_count(
-    response_obj: Response, results: list[Hit] | None, page_size: int
+    response_obj: Response, results: list[Hit] | None, page_size: int, page: int
 ) -> tuple[int, int]:
     """
     Elasticsearch does not allow deep pagination of ranked queries.
@@ -506,14 +506,22 @@ def _get_result_and_page_count(
     :param results: The list of filtered result Hits.
     :return: Result and page count.
     """
-    if results is None:
-        return 0, 1
+    if not results:
+        return 0, 0
 
     result_count = response_obj.hits.total.value
-    page_count = int(result_count / page_size)
-    if page_count % page_size != 0:
-        page_count += 1
-    if len(results) < page_size and page_count == 0:
-        result_count = len(results)
+    page_count = ceil(result_count / page_size)
+
+    if len(results) < page_size:
+        if page_count == 1:
+            result_count = len(results)
+
+        # If we have fewer results than the requested page size and are
+        # not on the first page that means that we've reached the end of
+        # the query and can set the page_count to the currently requested
+        # page. This means that the `page_count` can change during
+        # pagination for the same query, but it's the only way to
+        # communicate under the current v1 API that a query has been exhausted.
+        page_count = page
 
     return result_count, page_count

@@ -68,7 +68,7 @@ detailed_image = base_image | {
 image_search_200_example = {
     "application/json": {
         "result_count": 1,
-        "page_count": 0,
+        "page_count": 1,
         "page_size": 20,
         "page": 1,
         "results": [base_image | {"fields_matched": ["title"]}],
@@ -109,7 +109,7 @@ image_detail_404_example = {"application/json": {"detail": "Not found."}}
 image_related_200_example = {
     "application/json": {
         "result_count": 10000,
-        "page_count": 0,
+        "page_count": 1,
         "results": [
             {
                 "title": "exam tactics",
