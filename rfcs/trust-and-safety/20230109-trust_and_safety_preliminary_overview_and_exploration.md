@@ -132,7 +132,7 @@ possible, both for visual and textual material.
 1. As an Openverse content moderator, I want a clear definition of what is and
    is not allowed to exist within Openverse so that I can take decisive action
    on content reports
-1. As an Openverse developer, I want a clear definition fo what is and is not
+1. As an Openverse developer, I want a clear definition for what is and is not
    allowed to exist within Openverse so that I can build tools that identify
    results that should not be accessible in Openverse without them needing to be
    discovered by a content moderator or user
