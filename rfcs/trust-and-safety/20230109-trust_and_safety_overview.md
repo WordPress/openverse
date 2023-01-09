@@ -6,6 +6,21 @@ tools for content moderation. The bulk of this practice is a list of user
 stories and accompanying assumptions and technical and process requirements
 needed to meet the assumptions.
 
+## General considerations
+
+### Accessibility
+
+While considering the user stories and accompanying requirements and
+assumptions, keep in mind that content moderation is not just about keeping
+Openverse legal. It is also about accessibility. If Openverse users are
+confronted with sensitive materials without their consent, then Openverse is not
+an accessible platform. Likewise, Openverse is used by a diverse set of people,
+including children in educational environments. Consider that the age and other
+intersectionalities of a user will influence how they're affected by content
+moderation policies (both successes and failures).
+
+### The relevance of scanning for known illegal materials
+
 Note that a distinct feature of Openverse _as it exists today, in early 2023_ is
 that there is no method for anyone to upload content directly to us. Every
 single provider is manually added to the catalogue. We currently rely heavily on
@@ -23,6 +38,53 @@ prudent for us to consider doing it earlier because running the risk of hosting
 and distributing illegal content (which is also universally heinous content) is
 not something Openverse ever wants to be involved in, even if it is only because
 one of our upstream content providers made a mistake.
+
+### GLAM institutions and the relationship of historical collections to sensitive visual and textual materials
+
+Museum and library collections often include historical material with sensitive
+content. For example, a museum may hold, catalogue, and distribute a photograph
+with its original caption even if the caption describes the subject in an
+offensive or inaccurate way. Especially common examples of this are images of
+racialised people with original captions that use slurs or other derogatory
+language to describe the subject. I (Sara) do not know if this is something that
+currently exists in Openverse, but it is something we could discuss with
+providers if we discovered it to ensure that we are capturing the relevant
+metadata. For example, some providers may include a note clarifying that a
+caption or title of a work is "from the original source" rather than the
+museum's own description of a collection item. In these cases, it would be
+imperative for Openverse to also include that information if we surface the
+relevant text fields because it may serve double duty of giving historical
+context for a potentially sensitive and controversial cultural artefact _and_ as
+a manually attached content warning. Once Openverse has a way of scanning our
+catalogue for sensitive textual material, if we discover any of it to be coming
+from GLAM institutions, we should keep this in mind and work with the
+institution to understand how we can appropriately represent these sensitive
+historical materials.
+
+### The difference between offensive, sensitive, and illegal
+
+Openverse could choose to take different approaches to material that is
+considered to be variously offensive, sensitive, or illegal. For illegal
+materials, we should just remove it as much as possible and prevent its
+accidental reinclusion. This is clear and is not just a legal requirement but is
+also a baseline responsibility that we should consider. However, the definition
+of illegal probably depends somewhat (though not entirely, as there are certain
+classes of illegal materials that are essentially universally agreed upon) on
+what jurisdictions we need to abide by. Certain classifications of "illegal"
+material may not correspond to Openverse's priorities, for example, if a state
+entity attempts to use "illegality" to censor criticism. Luckily, Openverse does
+not need to make a distinct decision in this case as we can fall back to the
+WordPress Foundation's policies in this regard.
+
+When it comes to offensive and sensitive materials, however, the issue is more
+complicated. There are probably certain sensitive materials which are not
+illegal but that Openverse does not want to distribute. The WordPress Foundation
+probably already has a position on this kind of thing, and we should lean on
+pre-existing definitions and policies in that regard. For everything else,
+however, we'll need to make our own decisions about how to represent the
+material. One option is to generously blur visual content that may be offensive
+or otherwise sensitive. Additionally, adding content warnings as much as
+possible, both for visual and textual material.
 
 ## Process user stories
 
