@@ -87,7 +87,7 @@ class MediaMixin(models.Model):
     )
 
     # Because all forms of media have a thumbnail for visual representation
-    # For images, this field is not used as images are generated using ``imaginary``.
+    # For images, this field is not used as images are generated using Photon.
     # For audio, this field points to the artwork, or is ``null``.
     thumbnail = models.URLField(
         max_length=1000,

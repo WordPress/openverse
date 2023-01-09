@@ -35,6 +35,7 @@ DOCKER_FILE := "-f " + (
 
 # Run `docker-compose` configured with the correct files and environment
 dc *args:
+    @{{ if IS_CI != "" { "just env" } else { "true" } }}
     docker-compose {{ DOCKER_FILE }} {{ args }}
 
 # Build all (or specified) services

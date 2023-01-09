@@ -11,15 +11,6 @@ services:
     volumes:
       - api-postgres:/var/lib/postgresql/data
 
-  thumbnails:
-    image: ghcr.io/wordpress/openverse-imaginary:latest
-    expose:
-      - "8222"
-    environment:
-      PORT: 8222
-      MALLOC_ARENA_MAX: 2
-    command: ["-enable-url-source", "-forward-headers", "User-Agent"]
-
   upstream_db:
     image: postgres:13.2-alpine
     expose:
@@ -82,6 +73,7 @@ services:
       - cache
     env_file:
       - api/env.docker
+      - api/.env
     environment:
       STATIC_ROOT: ${STATIC_ROOT:-}
       MEDIA_ROOT: ${MEDIA_ROOT:-}

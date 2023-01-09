@@ -3,23 +3,8 @@ from unittest import mock
 
 import aiohttp
 import pook
-import pytest
-from fakeredis import FakeRedis
 
 from catalog.api.utils.validate_images import HEADERS, validate_images
-
-
-@pytest.fixture(autouse=True)
-def redis(monkeypatch) -> FakeRedis:
-    fake_redis = FakeRedis()
-
-    def get_redis_connection(*args, **kwargs):
-        return fake_redis
-
-    monkeypatch.setattr("django_redis.get_redis_connection", get_redis_connection)
-
-    yield fake_redis
-    fake_redis.client().close()
 
 
 @mock.patch.object(aiohttp, "ClientSession", wraps=aiohttp.ClientSession)
