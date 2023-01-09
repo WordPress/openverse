@@ -34,10 +34,29 @@ goals for Openverse is for websites (and WordPress sites, in particular) to be
 able to automatically add themselves as providers of openly licensed content.
 Once that is possible, then it will become even more imperative that Openverse
 scans materials for illegal materials. Even before then, however, I think it is
-prudent for us to consider doing it earlier because running the risk of hosting
-and distributing illegal content (which is also universally heinous content) is
-not something Openverse ever wants to be involved in, even if it is only because
-one of our upstream content providers made a mistake.
+prudent for us to consider doing it earlier because running the risk of
+distributing illegal content (which is also universally heinous content) is not
+something Openverse ever wants to be involved in, even if it is only because one
+of our upstream content providers made a mistake.
+
+### Openverse as a content "host"
+
+While Openverse does not, to a meaningful extent, "host" the original content
+ingested from providers, it does have specially cached resources that, if not
+appropriately managed, could persist, even if a result is removed. For example,
+our thumbnails are heavily cached on infrastructure that we control (or, more
+accurately, infrastructure that exists under a PaaS account we're responsible
+for). Removing a result from showing in search is not sufficient for completely
+removing it from Openverse's distribution of the content. A particularly
+difficult corner case for this is if a result is removed from the upstream
+provider for content moderation reasons and then removed from our catalogue upon
+re-ingestion, the cached thumbnail persists in the current implementation.
+Maintaining the thumbnail cache is a critical aspect of ensuring that Openverse
+does not continue to accidentally be a distributor of content we do not wish
+to/have a legal obligation not to. Several of the technical requirements
+mentioned below involve juggling various important, interconnected, and
+interrelated caches: caches of image classification data obtained at search
+time, link status caches, and thumbnail caches.
 
 ### GLAM institutions and the relationship of historical collections to sensitive visual and textual materials
 
@@ -90,7 +109,7 @@ possible, both for visual and textual material.
 
 1. As an Openverse user, I expect results that are removed from upstream
    providers due to containing illegal materials will be automatically removed
-   from Openverse so that Openverse does not accidentally continue to host
+   from Openverse so that Openverse does not accidentally continue to distribute
    materials that have been removed from the provider
 1. As an Openverse content moderator, I want to be able to queue the removal of
    a result from the index without a prior report existing so that I can skip
