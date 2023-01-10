@@ -74,6 +74,20 @@ def create_dagrun(dag, dag_state):
     )
 
 
+# This appears to be coming from Airflow internals during testing as a result of
+# loading the example DAGs:
+# /opt/airflow/.local/lib/python3.10/site-packages/airflow/example_dags/example_subdag_operator.py:43: RemovedInAirflow3Warning  # noqa: E501
+@pytest.mark.filterwarnings(
+    "ignore:This class is deprecated. Please use "
+    "`airflow.utils.task_group.TaskGroup`.:airflow.exceptions.RemovedInAirflow3Warning"
+)
+# This also appears to be coming from Airflow internals during testing as a result of
+# loading the example bash operator DAG:
+# /home/airflow/.local/lib/python3.10/site-packages/airflow/models/dag.py:3492: RemovedInAirflow3Warning  # noqa: E501
+@pytest.mark.filterwarnings(
+    "ignore:Param `schedule_interval` is deprecated and will be removed in a future release. "
+    "Please use `schedule` instead.:airflow.exceptions.RemovedInAirflow3Warning"
+)
 class TestExternalDAGsSensor(unittest.TestCase):
     def setUp(self):
         Pool.create_or_update_pool(TEST_POOL, slots=1, description="test pool")

@@ -37,6 +37,7 @@ from collections.abc import Sequence
 from airflow import DAG
 from airflow.models.dagrun import DagRun
 from airflow.operators.python import BranchPythonOperator, PythonOperator
+from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.settings import SASession
 from airflow.utils.session import provide_session
 from airflow.utils.state import State
@@ -45,7 +46,6 @@ from common.constants import (
     OPENLEDGER_API_CONN_ID,
     XCOM_PULL_TEMPLATE,
 )
-from common.operators.postgres_result import PostgresResultOperator
 from data_refresh.data_refresh_task_factory import create_data_refresh_task_group
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
 from data_refresh.refresh_popularity_metrics_task_factory import (
@@ -206,11 +206,12 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
         )
 
         # Get the current number of records in the target API table
-        before_record_count = PostgresResultOperator(
+        before_record_count = SQLExecuteQueryOperator(
             task_id="get_before_record_count",
-            postgres_conn_id=OPENLEDGER_API_CONN_ID,
+            conn_id=OPENLEDGER_API_CONN_ID,
             sql=count_sql,
             handler=_single_value,
+            return_last=True,
         )
 
         # Refresh underlying popularity tables. This is required infrequently in order
@@ -231,11 +232,12 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
         )
 
         # Get the final number of records in the API table after the refresh
-        after_record_count = PostgresResultOperator(
+        after_record_count = SQLExecuteQueryOperator(
             task_id="get_after_record_count",
-            postgres_conn_id=OPENLEDGER_API_CONN_ID,
+            conn_id=OPENLEDGER_API_CONN_ID,
             sql=count_sql,
             handler=_single_value,
+            return_last=True,
         )
 
         # Report the count difference to Slack

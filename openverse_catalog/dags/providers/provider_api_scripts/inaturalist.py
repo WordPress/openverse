@@ -26,8 +26,8 @@ import pendulum
 from airflow.exceptions import AirflowSkipException
 from airflow.operators.python import PythonOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.utils.task_group import TaskGroup
 from common.constants import POSTGRES_CONN_ID
 from common.licenses import NO_LICENSE_FOUND, get_license_info
@@ -137,17 +137,17 @@ class INaturalistDataIngester(ProviderDataIngester):
                 },
             )
 
-            create_inaturalist_schema = PostgresOperator(
+            create_inaturalist_schema = SQLExecuteQueryOperator(
                 task_id="create_inaturalist_schema",
-                postgres_conn_id=POSTGRES_CONN_ID,
+                conn_id=POSTGRES_CONN_ID,
                 sql=(SCRIPT_DIR / "create_schema.sql").read_text(),
             )
 
             with TaskGroup(group_id="load_source_files") as load_source_files:
                 for source_name in SOURCE_FILE_NAMES:
-                    PostgresOperator(
+                    SQLExecuteQueryOperator(
                         task_id=f"load_{source_name}",
-                        postgres_conn_id=POSTGRES_CONN_ID,
+                        conn_id=POSTGRES_CONN_ID,
                         sql=(SCRIPT_DIR / f"{source_name}.sql").read_text(),
                     ),
 
@@ -157,9 +157,9 @@ class INaturalistDataIngester(ProviderDataIngester):
 
     @staticmethod
     def create_postingestion_tasks():
-        drop_inaturalist_schema = PostgresOperator(
+        drop_inaturalist_schema = SQLExecuteQueryOperator(
             task_id="drop_inaturalist_schema",
-            postgres_conn_id=POSTGRES_CONN_ID,
+            conn_id=POSTGRES_CONN_ID,
             sql="DROP SCHEMA IF EXISTS inaturalist CASCADE",
         )
         return drop_inaturalist_schema
