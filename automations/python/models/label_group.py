@@ -19,8 +19,6 @@ class LabelGroup:
         is_required=False,
         **kwargs,
     ):
-        """Initialise LabelGroup."""
-
         self.name = kwargs["name"]
         self.color = color
         self.is_prefixed = is_prefixed
