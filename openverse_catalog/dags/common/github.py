@@ -9,11 +9,13 @@ class GitHubAPI:
         self.session = requests.Session()
         self.session.headers["Authorization"] = f"token {pat}"
 
-    def _make_request(self, method: str, resource: str, **kwargs) -> requests.Response:
+    def _make_request(self, method: str, resource: str, **kwargs):
         response = getattr(self.session, method.lower())(
             f"https://api.github.com/{resource}", **kwargs
         )
         response.raise_for_status()
+        if response.status_code == 204:
+            return None
         return response.json()
 
     def get_issue(self, repo: str, issue_number: int, owner: str = "WordPress"):

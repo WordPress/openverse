@@ -21,7 +21,7 @@ is unavailable for the time period during which the PR should be reviewed.
 
 from datetime import datetime, timedelta
 
-from airflow.models import DAG, Variable
+from airflow.models import DAG
 from airflow.operators.python import PythonOperator
 from common.constants import DAG_DEFAULT_ARGS
 from maintenance.pr_review_reminders import pr_review_reminders
@@ -29,9 +29,6 @@ from maintenance.pr_review_reminders import pr_review_reminders
 
 DAG_ID = "pr_review_reminders"
 MAX_ACTIVE_TASKS = 1
-ENVIRONMENT = Variable.get("ENVIRONMENT", default_var="dev")
-DRY_RUN = Variable.get("PR_REVIEW_REMINDER_DRY_RUN", default_var=(ENVIRONMENT == "dev"))
-GITHUB_PAT = Variable.get("GITHUB_API_KEY", default_var="not_set")
 
 dag = DAG(
     dag_id=DAG_ID,
@@ -50,11 +47,16 @@ dag = DAG(
     # Use the docstring at the top of the file as md docs in the UI
     doc_md=__doc__,
     tags=["maintenance"],
+    render_template_as_native_obj=True,
 )
 
 with dag:
     PythonOperator(
         task_id="pr_review_reminder_operator",
         python_callable=pr_review_reminders.post_reminders,
-        op_kwargs={"github_pat": GITHUB_PAT, "dry_run": DRY_RUN},
+        op_kwargs={
+            "github_pat": "{{ var.value.get('GITHUB_API_KEY', 'not_set') }}",
+            "dry_run": "{{ var.json.get('PR_REVIEW_REMINDER_DRY_RUN', "
+            "var.value.ENVIRONMENT != 'prod') }}",
+        },
     )
