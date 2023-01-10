@@ -14,7 +14,7 @@ application locally. If you want to just generally test the application in its
 current state (i.e., what exists on `main` as opposed to what has actually been
 deployed to production) you can find the staging deployment here:
 
-https://search-staging.openverse.engineering
+https://staging.openverse.org
 
 Staging is redeployed everytime we merge to the `main` branch, so if you're
 looking to test the latest version of the app without going through the local

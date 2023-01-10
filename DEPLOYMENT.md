@@ -2,7 +2,7 @@
 
 | Environment | Deployment Log                                                                                                                        | URL                                                            | Version Endpoint[^versions]                                                        |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| Staging     | [Staging Deployment Log](https://github.com/WordPress/openverse-frontend/actions/workflows/ghcr.yml?query=branch%3Amain+event%3Apush) | <https://search-staging.openverse.engineering>                 | [Staging version](https://search-staging.openverse.engineering/version.json)       |
+| Staging     | [Staging Deployment Log](https://github.com/WordPress/openverse-frontend/actions/workflows/ghcr.yml?query=branch%3Amain+event%3Apush) | <https://staging.openverse.org>                                | [Staging version](https://staging.openverse.org/version.json)                      |
 | Production  | [Production Deployment Log](https://github.com/WordPress/openverse-frontend/actions/workflows/ghcr.yml?query=event%3Arelease)         | <https://search-production.openverse.engineering>[^production] | [Production version](https://search-production.openverse.engineering/version.json) |
 
 [^versions]:
