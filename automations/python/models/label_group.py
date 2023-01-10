@@ -1,6 +1,11 @@
+# noqa: D100
+
+
 class LabelGroup:
     """
-    This model represents a group of labels. A group has some fixed parameters
+    Represents a group of labels.
+
+    A group has some fixed parameters:
     - name, which may be prefixed to all child label names
     - color, which acts as a fallback for child labels that do not specify one
     - is_prefixed, which determines if group name is prefixed on child labels
@@ -14,6 +19,8 @@ class LabelGroup:
         is_required=False,
         **kwargs,
     ):
+        """Initialise LabelGroup."""
+
         self.name = kwargs["name"]
         self.color = color
         self.is_prefixed = is_prefixed
