@@ -9,7 +9,7 @@ import pytest
 from common import urls
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
-from common.storage import image
+from common.storage import image, media
 
 
 logging.basicConfig(
@@ -51,6 +51,16 @@ TEST_IMAGE_DICT = {
     "source": None,
     "ingestion_type": None,
 }
+
+INT_MAX_PARAMETERIZATION = pytest.mark.parametrize(
+    "value, expected",
+    [
+        (None, None),
+        (123, 123),
+        (media.PG_INTEGER_MAXIMUM - 1, media.PG_INTEGER_MAXIMUM - 1),
+        (media.PG_INTEGER_MAXIMUM, None),
+    ],
+)
 
 
 @pytest.fixture
@@ -667,6 +677,29 @@ def test_MediaStore_validates_filetype(filetype, image_url, expected_filetype):
     image_store.add_item(**test_image_args)
     cleaned_data = image_store.clean_media_metadata(**test_image_args)
     assert cleaned_data["filetype"] == expected_filetype
+
+
+@INT_MAX_PARAMETERIZATION
+def test_MediaStore_validate_integer(value, expected):
+    image_store = image.MockImageStore("test_provider")
+    actual = image_store._validate_integer(value)
+    assert actual == expected
+
+
+@INT_MAX_PARAMETERIZATION
+def test_MediaStore_validates_filesize(value, expected):
+    image_store = image.MockImageStore("test_provider")
+    test_image_args = TEST_IMAGE_DICT | {
+        "license_info": BY_LICENSE_INFO,
+        "foreign_landing_url": "https://example.com/image.html",
+        "foreign_identifier": "image1",
+        "image_url": TEST_IMAGE_URL,
+        "filesize": value,
+    }
+    test_image_args.pop("thumbnail_url")
+    image_store.add_item(**test_image_args)
+    cleaned_data = image_store.clean_media_metadata(**test_image_args)
+    assert cleaned_data["filesize"] == expected
 
 
 def test_get_source_preserves_given_both():

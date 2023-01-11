@@ -189,6 +189,10 @@ class AudioStore(MediaStore):
         # Convert the `audio_url` key used in AudioStore, TSV and
         # provider API scripts into `url` key used in db
         audio_metadata["url"] = audio_metadata.pop("audio_url")
+        # Validate that duration does not exceed Postgres int maximum
+        audio_metadata["duration"] = self._validate_integer(
+            audio_metadata.get("duration")
+        )
         return Audio(**audio_metadata)
 
 

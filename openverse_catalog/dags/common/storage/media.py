@@ -36,6 +36,7 @@ COMMON_CRAWL = "commoncrawl"
 PROVIDER_API = "provider_api"
 
 FILETYPE_EQUIVALENTS = {"jpeg": "jpg", "tif": "tiff"}
+PG_INTEGER_MAXIMUM = 2147483647
 
 
 class MediaStore(metaclass=abc.ABCMeta):
@@ -125,6 +126,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         media_data["filetype"] = self._validate_filetype(
             media_data["filetype"], media_data[f"{self.media_type}_url"]
         )
+        media_data["filesize"] = self._validate_integer(media_data.get("filesize"))
 
         media_data["tags"] = self._enrich_tags(media_data.pop("raw_tags", None))
         media_data["meta_data"] = self._enrich_meta_data(
@@ -287,6 +289,20 @@ class MediaStore(metaclass=abc.ABCMeta):
         if self.media_type != "image":
             return filetype
         return FILETYPE_EQUIVALENTS.get(filetype, filetype)
+
+    @staticmethod
+    def _validate_integer(value: int | None) -> int | None:
+        """
+        Checks to ensure that a provided integer value is less than the Postgres
+        maximum integer value. If the value exceeds this maximum, None is returned.
+        TODO: Remove this logic once the column has been embiggened
+        https://github.com/WordPress/openverse-catalog/issues/730
+        https://github.com/WordPress/openverse-catalog/issues/873
+        """
+        if value and value >= PG_INTEGER_MAXIMUM:
+            logger.warning(f"Value exceeds Postgres maximum integer value: {value}")
+            return None
+        return value
 
     @staticmethod
     def _get_source(source, provider):

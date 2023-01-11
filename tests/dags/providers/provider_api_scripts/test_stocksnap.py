@@ -109,8 +109,9 @@ def test_get_batch_data_returns_correctly_with_full_response():
     }
 
 
-def test_process_batch():
+def test_process_batch(filesize_mock):
     expect_result = 40
+    filesize_mock.return_value = 12345
     actual_result = stocksnap.process_batch(
         stocksnap.get_batch_data(_get_resource_json("full_response.json"))
     )

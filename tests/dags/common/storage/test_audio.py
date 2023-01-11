@@ -6,6 +6,8 @@ import pytest
 from common.licenses import LicenseInfo
 from common.storage import audio
 
+from tests.dags.common.storage import test_media
+
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
@@ -176,6 +178,18 @@ def test_AudioStore_get_audio_enriches_multiple_tags():
         {"name": "tag2", "provider": "test_provider"},
         {"name": "tag3", "provider": "test_provider"},
     ]
+
+
+@test_media.INT_MAX_PARAMETERIZATION
+def test_AudioStore_get_audio_validates_duration(value, expected):
+    audio_store = audio.AudioStore("test_provider")
+    audio_args = mock_audio_args.copy()
+    audio_args["duration"] = value
+    actual_audio = audio_store._get_audio(
+        **audio_args,
+    )
+
+    assert actual_audio.duration == expected
 
 
 @pytest.fixture
