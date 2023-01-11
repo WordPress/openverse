@@ -46,7 +46,8 @@ with infrastructure access.
    [check that the new Docker tag corresponding to the release exists on ghcr.io](https://github.com/wordpress/openverse-catalog/pkgs/container/openverse-catalog).
 3. Ensure that there are
    [no actively running DAGs](https://airflow.openverse.engineering/dagrun/list/?_flt_3_state=running).
-4. 🔒 Update the `docker_image_tag` in Terraform's configuration.
+4. 🔒 Update the catalog version in the infrastructure repo by running
+   `just bump prod catalog-airflow`
 5. 🔒 Initiate the deployment via `just plan prod catalog-airflow` (and
    subsequently `just apply prod catalog-airflow` if the plan looks correct).
 
