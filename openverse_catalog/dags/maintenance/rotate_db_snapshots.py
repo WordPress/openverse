@@ -68,7 +68,7 @@ def delete_previous_snapshots(rds_arn: str, snapshots_to_retain: int):
 )
 def rotate_db_snapshots():
     snapshot_id = "airflow-{{ ds }}"
-    db_identifier_template = "{{ var.json.AIRFLOW_RDS_ARN }}"
+    db_identifier_template = "{{ var.value.AIRFLOW_RDS_ARN }}"
     create_db_snapshot = RdsCreateDbSnapshotOperator(
         task_id="create_snapshot",
         db_type="instance",
