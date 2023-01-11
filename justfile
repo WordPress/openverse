@@ -53,3 +53,8 @@ render-prettier:
 # Render GitHub issue & PR templates
 render-github:
     just render templates/PULL_REQUEST_TEMPLATE.md.jinja .github/PULL_REQUEST_TEMPLATE.md
+# Render all templates (shortcut for easy iteration)
+render-templates:
+    just render-precommit
+    just render-prettier
+    just render-github

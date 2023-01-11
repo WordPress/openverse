@@ -35,8 +35,10 @@ def get_labels() -> list[Label]:
 
 def set_labels(repo: Repository, labels: list[Label]):
     """
-    Set the given list of labels on the given repository. Missing labels will
-    be added, but extraneous labels will be left intact.
+    Set the given list of labels on the given repository.
+
+    Missing labels will be added, but extraneous labels will
+    be left intact.
 
     :param repo: the repo in which to set the given labels
     :param labels: the list of labels to define on the repo

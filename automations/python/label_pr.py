@@ -81,8 +81,11 @@ def get_pull_request(gh: Github, html_url: str) -> PullRequest:
 
 def get_authenticated_html(url: str) -> str:
     """
-    Login to the GitHub UI using the username and password, followed by 2FA. Then
-    navigate to the specified URL as the authenticated user and scrape the text body.
+    Retrieve HTML for GitHub webpages that require authentication to view.
+
+    Login to the GitHub UI using the username and password, followed by 2FA.
+    Then navigate to the specified URL as the authenticated user and scrape the
+    text body.
 
     :param url: the URL to scrape after authenticating in GitHub
     :return: the text content of the scraped page
@@ -106,9 +109,10 @@ def get_authenticated_html(url: str) -> str:
 
 def get_linked_issues(url: str) -> list[str]:
     """
-    Get the list of linked issues from the GitHub UI by parsing the HTML. This is a
-    workaround because GitHub API does not provide a reliable way to find the linked
-    issues for a PR.
+    Get the list of linked issues from the GitHub UI by parsing the HTML.
+
+    This is a workaround because GitHub API does not provide a reliable way
+    to find the linked issues for a PR.
 
     If the page returns a 404 response, it is assumed that the page belongs to a private
     repository and needs authentication. In these cases, ``get_authenticated_html`` is

@@ -4,7 +4,9 @@ import os
 
 def configure_logger():
     """
-    Configures the logging module to
+    Configure the logging module.
+
+    Applies the following configuration:
     - change the log level names to lowercase
     - set the formatter that works with GitHub logging commands
     - set the default log level to LOGGING_LEVEL environment variable

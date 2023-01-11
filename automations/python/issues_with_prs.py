@@ -51,8 +51,7 @@ def get_open_issues_with_prs(
     repo_names: list[str],
 ) -> list[Issue]:
     """
-    From given repos in the given organization, retrieve a list of open issues
-    that have PRs linked to them.
+    Retrieve open issues with linked PRs.
 
     :param gh: the GitHub client
     :param org_handle: the name of the org in which to look for issues
@@ -86,8 +85,9 @@ def get_open_issues_with_prs(
 
 def get_issue_cards(col: ProjectColumn) -> list[tuple[ProjectCard, Issue]]:
     """
-    Get all cards linked to issues in the given column. This excludes cards that
-    either have no links (just notes) or are linked to PRs.
+    Get all cards linked to issues in the given column.
+
+    This excludes cards that either have no links (just notes) or are linked to PRs.
 
     :param col: the project column from which to retrieve issue cards
     :return: the list of cards linked to issues in the given column

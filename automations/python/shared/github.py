@@ -9,8 +9,10 @@ log = logging.getLogger(__name__)
 
 def get_client(is_authenticated: bool = True) -> Github:
     """
-    Get a PyGithub client to access the GitHub API. The client can optionally be
-    authenticated using the GITHUB_ACCESS_TOKEN from the environment variables.
+    Get a PyGithub client to access the GitHub API.
+
+    The client can optionally be authenticated using the GITHUB_ACCESS_TOKEN
+    from the environment variables.
 
     :param is_authenticated: whether to authenticate the client
     :return: the PyGithub client

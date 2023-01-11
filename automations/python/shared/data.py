@@ -14,8 +14,9 @@ ROOT_DIR = CURR_FILE.parent.parent.parent
 @cache
 def get_data(file_name: str) -> dict:
     """
-    Access YAML files in the `data/` directory as Python objects. Calls to the
-    function with the same file name will be cached for performance.
+    Access YAML files in the `data/` directory as Python objects.
+
+    Calls to the function with the same file name will be cached for performance.
 
     :param file_name: the name of the YAML file to read
     :return: the contents of the YAML file as a Python object

@@ -3,8 +3,11 @@ from shared.data import get_data
 
 
 class Label:
+
     """
-    This model represents a single label. A label is defined by four parameters
+    Represents a single label.
+
+    A label is defined by four parameters:
     - name, which appears on the label
     - description, which describes it in a little more detail
     - emoji, which is a pictorial representation of the purpose of the label
@@ -33,10 +36,11 @@ class Label:
     @property
     def color(self) -> str:
         """
-        Return the color to use on the emoji label, given as a 6-digit
-        hexadecimal code without the prefix '#'. Labels can have their color
-        specified as a constant and if missing inherit color from the parent
-        group. If not resolved, the color defaults to pure black.
+        Get the hex code (sans '#') to use on the emoji label.
+
+        Labels can have their color specified as a constant and if
+        missing inherit color from the parent group. If not resolved,
+        the color defaults to pure black.
 
         :return: the 6-digit hexadecimal code of the background color
         """
@@ -55,10 +59,11 @@ class Label:
     @property
     def qualified_name(self) -> str:
         """
-        Return the fully qualified name of the label. Most label groups prefix
-        the group name to the name of the label, separated by a colon, as
-        indicated by the ``is_prefixed`` attribute on the associated ``Group``
-        instance.
+        Get the fully qualified name of the label.
+
+        Most label groups prefix the group name to the name
+        of the label, separated by a colon, as indicated by the
+        ``is_prefixed`` attribute on the associated ``Group`` instance.
 
         :return: the fully qualified name of the label
         """
@@ -73,6 +78,8 @@ class Label:
     @property
     def emojified_description(self) -> str:
         """
+        Get the label description with emoji prefix.
+
         TODO: Use this when GitHub supports Unicode in label descriptions
         Get the description of the label prefixed with the emoji.
 
@@ -84,8 +91,9 @@ class Label:
     @property
     def api_arguments(self) -> dict[str, str]:
         """
-        Get the dictionary of arguments to pass to the API for creating the
-        label. The API only accepts ``name``, ``color`` and ``description``.
+        Get label creation API parameters.
+
+        The API only accepts ``name``, ``color`` and ``description``.
 
         :return: the API arguments as a dictionary
         """
@@ -98,8 +106,7 @@ class Label:
 
     def __eq__(self, remote: "Label") -> bool:
         """
-        Compare this instance with the corresponding PyGithub instance to
-        determine whether the two are equal.
+        Compare ``self`` with PyGithub label object.
 
         :param remote: the PyGithub label instance to compare itself against
         :return: whether the instance is equal to its remote counterpart
@@ -115,8 +122,7 @@ class Label:
 
     def __ne__(self, remote: "Label") -> bool:
         """
-        Compare this instance with the corresponding PyGithub instance to
-        determine whether the two are unequal and would need to be reconciled.
+        Compare ``self`` with PyGithub label object.
 
         :param remote: the PyGithub label instance to compare itself against
         :return: whether the instance is unequal to its remote counterpart
