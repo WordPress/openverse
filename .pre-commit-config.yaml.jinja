@@ -98,8 +98,6 @@ repos:
     rev: v2.6.0
     hooks:
       - id: prettier
-       {% if prettier_exclude %}
-       exclude: {{ prettier_exclude }}
         additional_dependencies:
           {% block prettier_dependencies %}
           - prettier@2.6.0
