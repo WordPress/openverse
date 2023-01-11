@@ -1,6 +1,3 @@
-# noqa: D100
-
-
 class LabelGroup:
     """
     Represents a group of labels.
