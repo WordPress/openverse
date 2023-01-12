@@ -265,6 +265,8 @@ type AnalyticsEvents = {
    *   - Are there popular searches that do not result in result selection?
    */
   SELECT_SEARCH_RESULT: {
+    /** The unique ID of the media */
+    id: string;
     /** If the result is a related result, provide the ID of the 'original' result */
     related: string | null;
     /** The media type being searched */
