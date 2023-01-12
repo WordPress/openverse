@@ -52,6 +52,12 @@ def get(
         # request URL.
         params["q"] = parsed_image_url.query
 
+    if parsed_image_url.scheme == "https":
+        # Photon defaults to HTTP without this parameter
+        # which will cause some providers to fail (if they
+        # do not serve over HTTP and do not have a redirect)
+        params["ssl"] = "true"
+
     # Photon excludes the protocol so we need to reconstruct the url + port + path
     # to send as the "path" of the Photon request
     domain = parsed_image_url.netloc

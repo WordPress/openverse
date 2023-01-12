@@ -11,7 +11,7 @@ from catalog.api.utils.photon import get as photon_get
 
 
 PHOTON_URL_FOR_TEST_IMAGE = f"{settings.PHOTON_ENDPOINT}subdomain.example.com/path_part1/part2/image_dot_jpg.jpg"
-TEST_IMAGE_URL = PHOTON_URL_FOR_TEST_IMAGE.replace(settings.PHOTON_ENDPOINT, "https://")
+TEST_IMAGE_URL = PHOTON_URL_FOR_TEST_IMAGE.replace(settings.PHOTON_ENDPOINT, "http://")
 
 UA_HEADER = HEADERS["User-Agent"]
 
@@ -261,3 +261,29 @@ def test_get_generic_exception(capture_exception, setup_requests_get_exception):
         photon_get(TEST_IMAGE_URL)
 
     capture_exception.assert_called_once_with(exc)
+
+
+@pook.on
+def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
+    https_url = TEST_IMAGE_URL.replace("http://", "https://")
+    mock_get: pook.Mock = (
+        pook.get(PHOTON_URL_FOR_TEST_IMAGE)
+        .params(
+            {
+                "w": settings.THUMBNAIL_WIDTH_PX,
+                "quality": settings.THUMBNAIL_QUALITY,
+                "ssl": "true",
+            }
+        )
+        .header("User-Agent", UA_HEADER)
+        .header("Accept", "image/*")
+        .reply(200)
+        .body(MOCK_BODY)
+        .mock
+    )
+
+    res = photon_get(https_url)
+
+    assert res.content == MOCK_BODY.encode()
+    assert res.status_code == 200
+    assert mock_get.matched
