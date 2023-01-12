@@ -76,7 +76,7 @@ Below I've created a TypeScript type for all the proposed anlytics events, and a
 // src/utils/events.ts
 
 // This type is only for illustrative purposes and would be imported from elsewhere.
-type MediaType = "image" | "audio" | "all";
+type SearchType = "image" | "audio" | "all";
 
 /**
  * A list of all events allowed by our analytics server. For each event
@@ -94,7 +94,7 @@ type AnalyticsEvents = {
    */
   SUBMIT_SEARCH: {
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
     /** The search term */
     query: string;
   };
@@ -127,7 +127,7 @@ type AnalyticsEvents = {
     /** The value of the filter  */
     value: string | boolean;
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
     /** The search term */
     query: string;
   };
@@ -140,9 +140,9 @@ type AnalyticsEvents = {
    */
   CHANGE_CONTENT_TYPE: {
     /** The previously-set media type */
-    previous: MediaType;
+    previous: SearchType;
     /** The new media type */
-    next: MediaType;
+    next: SearchType;
     /** The name of the Vue component used to switch content types. */
     component: string;
   };
@@ -160,7 +160,7 @@ type AnalyticsEvents = {
    */
   REACH_RESULT_END: {
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
     /** The search term */
     query: string;
     /** The current page of results the user is on. */
@@ -177,7 +177,7 @@ type AnalyticsEvents = {
    */
   INSUFFICIENT_RESULTS: {
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
     /** The search term */
     query: string;
     /** The number of results returned */
@@ -194,7 +194,7 @@ type AnalyticsEvents = {
    */
   LOAD_MORE_RESULTS: {
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
     /** The search term */
     query: string;
     /** The current page of results the user is on. */
@@ -209,7 +209,7 @@ type AnalyticsEvents = {
    */
   VIEW_EXTERNAL_SOURCES: {
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
     /** The search term */
     query: string;
     /** The current page of results the user is on. */
@@ -227,7 +227,7 @@ type AnalyticsEvents = {
     /** The full URL of the source */
     url: string;
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
     /** The search term */
     query: string;
   };
@@ -268,7 +268,7 @@ type AnalyticsEvents = {
     /** If the result is a related result, provide the ID of the 'original' result */
     related: string | null;
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
     /** The slug (not the prettified name) of the provider */
     provider: string;
     /** The search term */
@@ -285,7 +285,7 @@ type AnalyticsEvents = {
     /** The slug (not the prettified name) of the provider */
     provider: string;
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
   };
   /**
    * Description: The user clicks one of the buttons to copy the media attribution
@@ -299,7 +299,7 @@ type AnalyticsEvents = {
     /** The format of the copied attribution */
     format: "plain" | "rich" | "html";
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
   };
   /**
    * Description: The user reports a piece of media through our form
@@ -315,7 +315,7 @@ type AnalyticsEvents = {
     /** The slug (not the prettified name) of the provider */
     provider: string;
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
   };
   /** Description: The user plays, pauses, or seeks an audio track.
    * @todo: This potentially requires throttling.
@@ -364,7 +364,7 @@ type AnalyticsEvents = {
     /** The unique ID of the media */
     id: string;
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
   };
   /**
    * Description: The user uses the 'back to search' link on a single result
@@ -375,7 +375,7 @@ type AnalyticsEvents = {
     /** The unique ID of the media */
     id: string;
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
   };
   /**
    * Description: The visibility of the filter sidebar on desktop is toggled
@@ -384,7 +384,7 @@ type AnalyticsEvents = {
    */
   TOGGLE_FILTERS: {
     /** The media type being searched */
-    mediaType: MediaType;
+    mediaType: SearchType;
     /** The state of the filter sidebar after the user interaction. */
     state: "open" | "closed";
   };
