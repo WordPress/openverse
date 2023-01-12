@@ -334,6 +334,8 @@ type AnalyticsEvents = {
     event: "seek" | "play" | "pause";
     /** The slug (not the prettified name) of the provider */
     provider: string;
+    /** The name of the Vue component used on the interaction, e.g. the global or main player. */
+    component: string;
   };
   /**
    * Description: The user visits a CC license description page on CC.org
