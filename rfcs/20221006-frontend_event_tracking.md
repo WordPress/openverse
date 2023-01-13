@@ -268,7 +268,7 @@ type AnalyticsEvents = {
     /** The unique ID of the media */
     id: string;
     /** If the result is a related result, provide the ID of the 'original' result */
-    related: string | null;
+    relatedTo: string | null;
     /** The media type being searched */
     mediaType: SearchType;
     /** The slug (not the prettified name) of the provider */
