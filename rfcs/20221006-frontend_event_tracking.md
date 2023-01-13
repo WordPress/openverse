@@ -4,7 +4,7 @@ A proposal to emit frontend events based on user interactions and page visits.
 
 ## Reviewers
 
-- [ ] @krysal - For API experience
+- [x] @krysal - For API experience
 - [x] @dhruvkb - For frontend and DX experience
 
 ## Rationale
