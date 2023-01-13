@@ -3,7 +3,7 @@
 # - https://github.com/WordPress/openverse/blob/main/.pre-commit-config.yaml.jinja
 # - https://github.com/WordPress/openverse/blob/main/templates/.pre-commit-config.local.yaml.jinja
 
-exclude: Pipfile\.lock|migrations|\.idea|node_modules|archive
+exclude: Pipfile\.lock|migrations|\.idea|node_modules|archive|retired
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
