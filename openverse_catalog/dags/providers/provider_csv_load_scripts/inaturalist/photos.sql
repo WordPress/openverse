@@ -6,8 +6,6 @@ PHOTOS
     constraint on observer_id in order to save load time
 --  photo_id is not unique. There are ~130,000 duplicate photo_ids (~0.1% of photos).
     Both records are saved to the TSV and only one is loaded back into to postgres.
---  TO DO: See https://github.com/WordPress/openverse-catalog/issues/685 for more on
-    handling duplicate photo ids.
 
 Taking DDL from
 https://github.com/inaturalist/inaturalist-open-data/blob/main/Metadata/structure.sql
@@ -40,5 +38,15 @@ SELECT aws_s3.table_import_from_s3('inaturalist.photos',
 -- btree because that is the only one that will support limit/offset without sorting.
 -- more here: https://www.postgresql.org/docs/current/indexes-ordering.html
 CREATE INDEX ON INATURALIST.PHOTOS USING btree (PHOTO_ID);
+
+DROP TABLE IF EXISTS inaturalist.photo_dupes;
+CREATE TABLE inaturalist.photo_dupes as (
+    SELECT PHOTO_ID, count(*) PHOTO_RECORDS
+    FROM INATURALIST.PHOTOS
+    GROUP BY PHOTO_ID
+    HAVING COUNT(*)>1
+);
+ALTER TABLE inaturalist.photo_dupes ADD PRIMARY KEY (PHOTO_ID);
+COMMIT;
 
 SELECT count(*) FROM inaturalist.photos;

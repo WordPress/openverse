@@ -1,20 +1,40 @@
 from ast import literal_eval
 from pathlib import Path
+from unittest import mock
 
 import pytest
+from airflow.models import TaskInstance
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from common.constants import POSTGRES_CONN_ID
-from common.licenses import get_license_info
+from common.constants import IMAGE, POSTGRES_CONN_ID
+from common.loader.reporting import RecordMetrics
 from providers.provider_api_scripts import inaturalist
 
 
-# Sample data included in the tests below covers the following weird cases:
+# TO DO #898: Most of the transformations for inaturalist are in SQL, and testing them
+# effectively could mean looking more closely at the production data itself.
+# For now, sample data included in the tests below covers the following weird cases:
 #  - 3 of the photo records link to unclassified observations, so they have no title or
 #    tags and we don't load them.
 #  - 10 of the remaining photo ids appear on multiple records, load one per photo_id.
 #  - One of the photos has a taxon without any ancestors in the source table.
-# To really get at data quality issues, it's worth loading bigger sample files to minio
-# and running the dag in airflow locally.
+#
+# To get at data quality issues, it's worth loading bigger sample files to minio and
+# running the dag in airflow locally:
+#  - Use the aws cli to download these separate files observations.csv.gz,
+#    observers.csv.gz, photos.csv.gz, and taxa.csv.gz from s3://inaturalist-open-data
+#  - Consider whether you want to really test the full dataset, which may take a couple
+#    of days to run locally, and will definitely take 10s of GB. If not, maybe use
+#    tests/dags/providers/provider_api_scripts/resources/inaturalist/pull_sample_records.py
+#    to pull a sample of records without breaking referential integrity.
+#  - Putting your final zipped test files in /tests/s3-data/inaturalist-open-data
+#    so that they will be synced over to minio.
+#  - Run `just down -v` and then `just recreate` to make sure that the test data gets to
+#    the test s3 instance. That process may take on the order of 15 minutes for the full
+#    dataset. You'll know that it's done when the s3-load container in docker exits.
+#  - Then, in airflow, trigger the dag possibly with configuration
+#    {"sql_rm_source_data_after_ingesting": false} so that a) you don't have to
+#    download catalog of life data over and over, and b) you can compare the results in
+#    the image table to the raw data in the inaturalist schema.
 
 
 INAT = inaturalist.INaturalistDataIngester()
@@ -53,78 +73,100 @@ def test_load_data(file_name, expected):
     assert actual == expected
 
 
-def test_get_next_query_params_no_prior():
-    expected = {"offset_num": 0}
-    actual = INAT.get_next_query_params()
-    assert expected == actual
-
-
-def test_get_next_query_params_prior_0():
-    expected = {"offset_num": INAT.batch_limit}
-    actual = INAT.get_next_query_params({"offset_num": 0})
-    assert expected == actual
+@pytest.mark.parametrize("value", [None, {"offset_num": 0}])
+def test_get_next_query_params(value):
+    with pytest.raises(
+        NotImplementedError,
+        match="Instead we use get_batches to dynamically create subtasks.",
+    ):
+        INAT.get_next_query_params(value)
 
 
 @pytest.mark.parametrize("value", [None, {}])
 def test_get_batch_data_returns_none(value):
-    actual = INAT.get_batch_data(value)
-    assert actual is None
+    with pytest.raises(
+        NotImplementedError, match="TSV files from AWS S3 processed in postgres."
+    ):
+        INAT.get_batch_data(value)
 
 
 def test_get_response_json():
-    expected = JSON_RESPONSE
-    actual = INAT.get_response_json({"offset_num": 0})
-    assert actual == expected
+    with pytest.raises(
+        NotImplementedError, match="TSV files from AWS S3 processed in postgres."
+    ):
+        INAT.get_response_json({"offset_num": 0})
 
 
 def test_get_batch_data_full_response():
-    actual = INAT.get_batch_data(JSON_RESPONSE)
-    assert isinstance(actual, list)
-    assert len(actual) == 34
-    assert isinstance(actual[0], dict)
-    assert actual[0] == RECORD0
+    with pytest.raises(
+        NotImplementedError, match="TSV files from AWS S3 processed in postgres."
+    ):
+        INAT.get_batch_data(JSON_RESPONSE)
 
 
 @pytest.mark.parametrize("field", ["license_url", "foreign_identifier"])
 def test_get_record_data_missing_necessarly_fields(field):
-    expected = None
-    record = RECORD0.copy()
-    record.pop(field)
-    actual = INAT.get_record_data(record)
-    assert actual == expected
+    with pytest.raises(
+        NotImplementedError, match="TSV files from AWS S3 processed in postgres."
+    ):
+        INAT.get_record_data(RECORD0)
 
 
 def test_get_record_data_full_response():
-    expected = {
-        "foreign_identifier": 10314159,
-        "filetype": "jpg",
-        "license_info": get_license_info(
-            license_url="http://creativecommons.org/licenses/by-nc/4.0/"
-        ),
-        "width": 1530,
-        "height": 2048,
-        "foreign_landing_url": "https://www.inaturalist.org/photos/10314159",
-        "image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/10314159/medium.jpg",
-        "creator": "akjenny",
-        "creator_url": "https://www.inaturalist.org/users/615549",
-        "title": "Trifolium hybridum",
-        "raw_tags": [
-            "Fabaceae",
-            "Fabales",
-            "Magnoliopsida",
-            "Angiospermae",
-            "Plantae",
-            "Trifolium",
-            "Tracheophyta",
-            "Faboideae",
-            "Trifolieae",
-        ],
-    }
-    actual = INAT.get_record_data(RECORD0)
-    assert actual == expected
+    with pytest.raises(
+        NotImplementedError, match="TSV files from AWS S3 processed in postgres."
+    ):
+        INAT.get_record_data(RECORD0)
 
 
 def test_get_media_type():
     expected = "image"
-    actual = INAT.get_media_type(INAT.get_record_data(RECORD0))
+    actual = INAT.get_media_type({"some test": "data"})
     assert actual == expected
+
+
+@pytest.mark.parametrize(
+    "all_results, expected",
+    [
+        (None, None),
+        (
+            [
+                {
+                    "loaded": 0,
+                    "max_id_loaded": None,
+                    "missing_columns": 0,
+                    "foreign_id_dup": 0,
+                    "upserted": 0,
+                    "duration": 0.07186045899288729,
+                },
+                {
+                    "loaded": 1,
+                    "max_id_loaded": "10314159",
+                    "missing_columns": 0,
+                    "foreign_id_dup": 0,
+                    "upserted": 1,
+                    "duration": 0.0823216249991674,
+                },
+            ],
+            {IMAGE: RecordMetrics(1, 0, 0, 0)},
+        ),
+    ],
+)
+def test_consolidate_load_statistics(all_results, expected):
+    ti_mock = mock.MagicMock(spec=TaskInstance)
+    actual = INAT.consolidate_load_statistics(all_results, ti_mock)
+    assert actual == expected
+
+
+@pytest.mark.parametrize(
+    "batch_length, max_id, expected",
+    [
+        pytest.param(10, [(22,)], [[(0, 9)], [(10, 19)], [(20, 29)]], id="happy_path"),
+        pytest.param(10, [(2,)], [[(0, 9)]], id="bigger_batch_than_id"),
+        pytest.param(10, [(None,)], None, id="no_data"),
+    ],
+)
+def test_get_batches(batch_length, max_id, expected):
+    with mock.patch.object(PostgresHook, "get_records", return_value=max_id) as pg_mock:
+        actual = INAT.get_batches(batch_length, pg_mock)
+        assert actual == expected

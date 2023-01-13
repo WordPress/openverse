@@ -67,6 +67,7 @@ import os
 from string import Template
 
 from airflow import DAG
+from airflow.models.param import Param
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
@@ -327,10 +328,19 @@ def create_provider_api_workflow_dag(conf: ProviderWorkflow):
         ],
         render_template_as_native_obj=True,
         user_defined_macros={"date_partition_for_prefix": date_partition_for_prefix},
+        # Delete source data from airflow and db once ingestion is complete. Here as a
+        # parameter to support data quality testing in sql-only dags like iNaturalist.
+        params={"sql_rm_source_data_after_ingesting": Param(True, type="boolean")},
     )
 
     with dag:
-        ingest_data, ingestion_metrics = create_ingestion_workflow(conf)
+        if callable(getattr(conf.ingester_class, "create_ingestion_workflow", None)):
+            (
+                ingest_data,
+                ingestion_metrics,
+            ) = conf.ingester_class.create_ingestion_workflow()
+        else:
+            ingest_data, ingestion_metrics = create_ingestion_workflow(conf)
 
         report_load_completion = create_report_load_completion(
             conf.dag_id, conf.media_types, ingestion_metrics, conf.dated

@@ -25,18 +25,6 @@ MID_SIZE_FILE_PATH = BASE_DIR / "inaturalist-june-22/mid-sized"
 SMALL_FILE_PATH = BASE_DIR / "inaturalist-june-22/small"
 
 
-# This is just something I used in ipython to move things around
-def move_files(from_dir, to_dir, copy=False):
-    for file_name in os.listdir(from_dir):
-        if file_name[-7:] == ".csv.gz":
-            if copy:
-                print(f"Copying {file_name} from {from_dir} to {to_dir}...")
-                os.system(f"cp {from_dir}/{file_name} {to_dir}/{file_name}")
-            else:
-                print(f"Moving {file_name} from {from_dir} to {to_dir}...")
-                os.rename(f"{from_dir}/{file_name}", f"{to_dir}/{file_name}")
-
-
 def pull_sample_records(
     file_name,
     id_name,
@@ -59,7 +47,7 @@ def pull_sample_records(
     output_file_name = output_path / file_name
     # read in the selected records
     sample_records = []
-    remaining_ids = id_list.copy()
+    remaining_ids = set(id_list)
     print(
         "Starting to read",
         working_input_file,
@@ -104,7 +92,7 @@ def get_sample_id_list(sample_file, joined_on):
     sample_values = set()
     for record in records:
         sample_values.add(record[joined_on])
-    return list(sample_values)
+    return sample_values
 
 
 if __name__ == "__main__":
@@ -147,12 +135,12 @@ if __name__ == "__main__":
         id_name="photo_id",
         id_list=photo_ids,
         is_unique=False,
-        every_nth_record=None,
-        output_path=DATA_FOR_TESTING,
+        every_nth_record=50_000,
+        output_path=MID_SIZE_FILE_PATH,
     )
 
     # ASSOCIATED OBSERVATIONS
-    with gzip.open(f"{DATA_FOR_TESTING}/photos.csv.gz", "rt") as photo_output:
+    with gzip.open(f"{MID_SIZE_FILE_PATH}/photos.csv.gz", "rt") as photo_output:
         sample_observations = get_sample_id_list(photo_output, "observation_uuid")
     pull_sample_records(
         "observations.csv.gz",
@@ -160,11 +148,11 @@ if __name__ == "__main__":
         sample_observations,
         False,
         None,
-        DATA_FOR_TESTING,
+        MID_SIZE_FILE_PATH,
     )
 
     # ASSOCIATED OBSERVERS
-    with gzip.open(f"{DATA_FOR_TESTING}/photos.csv.gz", "rt") as photo_output:
+    with gzip.open(f"{MID_SIZE_FILE_PATH}/photos.csv.gz", "rt") as photo_output:
         sample_observers = get_sample_id_list(photo_output, "observer_id")
     pull_sample_records(
         "observers.csv.gz",
@@ -172,12 +160,12 @@ if __name__ == "__main__":
         sample_observers,
         False,
         None,
-        DATA_FOR_TESTING,
+        MID_SIZE_FILE_PATH,
     )
 
     # ASSOCIATED TAXA (including ancestry for photo tags)
     with gzip.open(
-        f"{DATA_FOR_TESTING}/observations.csv.gz", "rt"
+        f"{MID_SIZE_FILE_PATH}/observations.csv.gz", "rt"
     ) as observation_output:
         sample_taxa = get_sample_id_list(observation_output, "taxon_id")
     sample_taxa_with_ancestors = set(sample_taxa)
@@ -192,5 +180,5 @@ if __name__ == "__main__":
         list(sample_taxa_with_ancestors),
         False,
         None,
-        DATA_FOR_TESTING,
+        MID_SIZE_FILE_PATH,
     )
