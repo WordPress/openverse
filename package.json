@@ -61,7 +61,14 @@
     "i18n:get-translations": "node src/locales/scripts/get-translations",
     "i18n:update-locales": "node src/locales/scripts/get-validated-locales",
     "i18n:generate-pot": "node src/locales/scripts/json-to-pot",
-    "i18n:check": "vue-i18n-extract report --vueFiles './src/*/**.?(js|ts|vue)' --languageFiles './src/locales/en.json'"
+    "i18n:check": "vue-i18n-extract report --vueFiles './src/*/**.?(js|ts|vue)' --languageFiles './src/locales/en.json'",
+    "create:component-sfc": "remake component",
+    "create:story": "remake story",
+    "create:component-storybook-test": "remake component-storybook-test",
+    "create:component-unit-test": "remake component-unit-test",
+    "add-component-to-tsconfig": "node bin/add-entry-to-tsconfig.js",
+    "create:component-scaffolding": "npm-run-all \"create:component-sfc --output=src/components --name={1}\" \"create:story --output=src/components/{1}/meta --name={1}\" \"create:component-unit-test --output=test/unit/specs/components/{1} --name={1} --fileName={2}\" \"create:component-storybook-test --output=test/storybook/visual-regression --fileName={2} --name={1}\" \"add-component-to-tsconfig {1}\" --",
+    "create:component": "./bin/create-component.sh"
   },
   "dependencies": {
     "@nuxt/components": "^2.1.6",
@@ -114,6 +121,7 @@
     "@babel/preset-typescript": "^7.18.6",
     "@babel/runtime-corejs3": "^7.20.1",
     "@intlify/eslint-plugin-vue-i18n": "^1.4.0",
+    "@itsjonq/remake": "^2.0.0",
     "@nuxt/types": "^2.15.8",
     "@nuxt/typescript-build": "^2.1.0",
     "@nuxtjs/eslint-module": "^3.1.0",
@@ -140,6 +148,7 @@
     "babel-jest": "^26.6.3",
     "babel-loader": "8.2.5",
     "chokidar": "^3.5.3",
+    "comment-json": "^4.2.3",
     "css-loader": "^5.2.7",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",

@@ -171,6 +171,43 @@ ngrok http 8443 -host-header="localhost:8443"
 The frontend app is composed of a number of components that are documented in
 our [Storybook](https://wordpress.github.io/openverse-frontend).
 
+### How to create a component
+
+To create a component you can run:
+
+```shell
+# Make sure you have run `pnpm install` at least once before.
+pnpm run create:component [component name in PascalCase]
+for example: pnpm run create:component VButtonGreen
+
+This command will create a component file, a story file for the component, a
+unit test file, and a regression test file. It also adds the component name to
+tsconfig.ts `include` property. Each file will have a basic template to start
+working with. We use the
+[itsjonq/remake](https://www.npmjs.com/package/@itsjonq/remake?activeTab=readme)
+package to create files out of templates.
+
+You can also create all those files manually by running the following
+commands:
+
+```
+
+create a component file: pnpm run create:component-sfc --output=[path]
+--name=[component name]
+
+create a story file: pnpm run create:story --output=[path] --name=[component
+name]
+
+create a component unit test file: pnpm run create:component-unit-test
+--output=[path] --name=[component name] --fileName=[component name in
+kebab-case]
+
+create a component regression test file: pnpm run
+create:component-storybook-test --output=[path] --name=[component name
+kebab-case] --fileName=[component name in kebab-case]
+
+````
+
 ### CSS Framework
 
 To design our components, we use the [TailwindCSS](https://tailwindcss.com/)
@@ -198,7 +235,7 @@ you wish to build the production image for yourself, run the following:
 
 ```shell
 pnpm docker:build
-```
+````
 
 You can also find the latest `openverse-frontend` images on our
 [GitHub packages page](https://github.com/WordPress/openverse-frontend/pkgs/container/openverse-frontend).

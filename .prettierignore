@@ -7,3 +7,4 @@ test/tapes
 storybook-static
 pnpm-lock.yaml
 nuxt-template-overrides
+.remake/component-unit-test/remake-fileName.spec.js

@@ -1,0 +1,17 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+
+import <%= name %> from '~/components/<%= name %>/<%= name %>.vue'
+
+export const Template = (args) => ({
+  template: `<<%= name %> v-bind="args"/>`,
+  components: { <%= name %> },
+  setup() {
+    return { args }
+  },
+});
+
+<Meta title="Components/<%= name %>" component={ <%= name %> }  />
+
+<Canvas>
+  <Story name="default">{Template.bind({})}</Story>
+</Canvas>

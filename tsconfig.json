@@ -11,17 +11,14 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "sourceMap": true,
-
     /* Strict Type-Checking Options */
     "strict": true,
-
     /* Additional Checks */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "importsNotUsedAsValues": "error",
-
     /* Module Resolution Options */
     "moduleResolution": "Node",
     "resolveJsonModule": true,
@@ -52,7 +49,6 @@
     "src/components/TableSortIcon.vue",
     "src/components/VCopyButton.vue",
     "src/components/VSketchFabViewer.vue",
-
     "src/components/VAudioThumbnail/**.vue",
     "src/components/VAudioTrack/**.vue",
     "src/components/VCheckbox/**.vue",
@@ -73,7 +69,6 @@
     "src/components/VRecentSearches/**.vue",
     "src/components/VSkeleton/**.vue",
     "src/components/VTabs/**.vue",
-
     "src/components/VAllResultsGrid/VAudioCell.vue",
     "src/components/VAllResultsGrid/VImageCellSquare.vue",
     "src/components/VContentReport/VReportDescForm.vue",
@@ -91,7 +86,6 @@
     "src/pages/about.vue",
     "src/pages/feedback.vue",
     "src/pages/search-help.vue",
-
     /**
      * Some files from this section cannot be converted to TypeScript because they are
      * used in non-TS contexts (like Tailwind configuration). Therefore they're left as
@@ -101,12 +95,15 @@
      */
     "src/constants/**/*",
     "src/server-middleware/healthcheck.js"
+    /** End of non TypeScript files section */
   ],
   "exclude": ["node_modules"],
   "vueCompilerOptions": {
     "experimentalCompatMode": 2,
     "experimentalTemplateCompilerOptions": {
-      "compatConfig": { "MODE": 2 } // optional
+      "compatConfig": {
+        "MODE": 2
+      } // optional
     },
     "target": 2.7
   }

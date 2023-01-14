@@ -21,7 +21,7 @@ module.exports = {
     ".+\\.(css|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
     "^.+\\.svg$": "<rootDir>/test/unit/svg-transform.js",
   },
-  testPathIgnorePatterns: ["/playwright/", "/storybook/"],
+  testPathIgnorePatterns: ["/playwright/", "/storybook/", ".remake"],
   collectCoverage: true,
   coverageDirectory: "<rootDir>/test/unit/coverage",
   collectCoverageFrom: [
