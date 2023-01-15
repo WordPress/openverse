@@ -9,14 +9,21 @@ A proposal to emit frontend events based on user interactions and page visits.
 
 ## Rationale
 
-Openverse contributors have very little insight into the behaviors and interests of our users. We do not have any means of observing if they actually use the features we build in the intended manner, or at all.
+Openverse contributors have very little insight into the behaviors and interests
+of our users. We do not have any means of observing if they actually use the
+features we build in the intended manner, or at all.
 
-There are multiple ways to address this, like conducting user surveys or test sessions. One other way we would like to gather this information is through analytics, specifically logging events performed by users. I'll share a full list of the events later in this proposal, but here are some examples:
+There are multiple ways to address this, like conducting user surveys or test
+sessions. One other way we would like to gather this information is through
+analytics, specifically logging events performed by users. I'll share a full
+list of the events later in this proposal, but here are some examples:
 
 - When a user clicks on a search result from the search results page
 - When a user copies the attribution text
 
-By collecting this data, anonymized and with user consent (through opt-out), we can make better decisions about what to build and increase the overall usefulness of Openverse.
+By collecting this data, anonymized and with user consent (through opt-out), we
+can make better decisions about what to build and increase the overall
+usefulness of Openverse.
 
 ### Why is this distinct from a general-purpose, cross-repo Analytics RFC?
 
@@ -26,13 +33,22 @@ This proposal only discusses front-end event collection. It does not discuss:
 - The ideal data warehouse for our frontend events
 - Whether to use a SaaS product or self-host analytics software
 
-I suggest that our frontend events should be agnostic to any specific analytics platform. This means that our frontend events will be generalized to contain information we think is useful, and munged as necessary to conform to the needs of our analytics service. I see many benefits to doing this:
+I suggest that our frontend events should be agnostic to any specific analytics
+platform. This means that our frontend events will be generalized to contain
+information we think is useful, and munged as necessary to conform to the needs
+of our analytics service. I see many benefits to doing this:
 
 - It avoids vendor lock-in to a specific analytics platform
-- It makes it much easier for users to audit exactly what values we're collecting, by avoiding heavy and mysterious 3rd-party SDKs
+- It makes it much easier for users to audit exactly what values we're
+  collecting, by avoiding heavy and mysterious 3rd-party SDKs
 - Makes us less likely to be blocked by ad and script blocking software
 
-There are many established conventions around frontend event collection. Using our own system should allow us to adopt most 3rd party platforms without locking us in. A quick example use case is the Google Analytics alternative [Plausible.io](https://plausible.io/), which includes an [events API](https://plausible.io/docs/events-api). Plausible accepts the following simple request shape to capture a pageview, for example:
+There are many established conventions around frontend event collection. Using
+our own system should allow us to adopt most 3rd party platforms without locking
+us in. A quick example use case is the Google Analytics alternative
+[Plausible.io](https://plausible.io/), which includes an
+[events API](https://plausible.io/docs/events-api). Plausible accepts the
+following simple request shape to capture a pageview, for example:
 
 ```shell
 curl -i -X POST https://plausible.io/api/event \
@@ -42,41 +58,71 @@ curl -i -X POST https://plausible.io/api/event \
   --data '{"name":"pageview","url":"http://dummy.site","domain":"dummy.site","screen_width":1666}'
 ```
 
-There are many points in the code execution at which we could transform our custom events into ones supported by other platforms. By adopting and implementing our own custom solution, we can start collecting data as soon as possible without being blocked on time spent evaluating and implementing a full analytics system.
+There are many points in the code execution at which we could transform our
+custom events into ones supported by other platforms. By adopting and
+implementing our own custom solution, we can start collecting data as soon as
+possible without being blocked on time spent evaluating and implementing a full
+analytics system.
 
 ## The technical details
 
-We will create a system for collecting events on the frontend. Each event will have a unique name, collect some default data about the enviroment (timestamp, referer, and so on) and can have an optional data payload containing string and numerical values. I'd like to limit the payload shape to strings and numbers to keep it JSON serializable and simple. Allowing for complex nested objects might prove too complex to query in the future. I think this is a reasonable constraint but am open to alternatives.
+We will create a system for collecting events on the frontend. Each event will
+have a unique name, collect some default data about the enviroment (timestamp,
+referer, and so on) and can have an optional data payload containing string and
+numerical values. I'd like to limit the payload shape to strings and numbers to
+keep it JSON serializable and simple. Allowing for complex nested objects might
+prove too complex to query in the future. I think this is a reasonable
+constraint but am open to alternatives.
 
 ### Sending events
 
-These events will be sent as `POST` requests to a server route on the frontend, which will then route them to our desired analytics service. In the future, it may make sense to move this server route to a standalone microservice, but for now a [Nuxt server route](https://v3.nuxtjs.org/guide/directory-structure/server/#server-routes) or [Server Middleware](https://nuxtjs.org/docs/configuration-glossary/configuration-servermiddleware/) (once we're updated to Nuxt 3), should be sufficient to handle the analytics events. This endpoint is essentially a proxy between the frontend and our 'true' analytics service that makes sure we're always sending events server-side.
+These events will be sent as `POST` requests to a server route on the frontend,
+which will then route them to our desired analytics service. In the future, it
+may make sense to move this server route to a standalone microservice, but for
+now a
+[Nuxt server route](https://v3.nuxtjs.org/guide/directory-structure/server/#server-routes)
+or
+[Server Middleware](https://nuxtjs.org/docs/configuration-glossary/configuration-servermiddleware/)
+(once we're updated to Nuxt 3), should be sufficient to handle the analytics
+events. This endpoint is essentially a proxy between the frontend and our 'true'
+analytics service that makes sure we're always sending events server-side.
 
 #### Privacy
 
 Events will _only_ be collected and sent under the following conditions:
 
 - An `ANALYTICS_ENABLED` feature flag is set to `true`.
-- The user has not opted out of analytics by setting the `allowAnalytics` value in our UI cookie store to `false`.
+- The user has not opted out of analytics by setting the `allowAnalytics` value
+  in our UI cookie store to `false`.
 
 Unless all conditions are met the `sendEvent` function will simply no-op.
 
-A previous version of this proposal suggested honoring the `navigator.doNotTrack` browser method, but upon inspection this was deprecated in 2018 and is no longer advised.
+A previous version of this proposal suggested honoring the
+`navigator.doNotTrack` browser method, but upon inspection this was deprecated
+in 2018 and is no longer advised.
 
-This proposal will require the creation of some new user interface elements to toggle analytics tracking:
+This proposal will require the creation of some new user interface elements to
+toggle analytics tracking:
 
-1. A small popup banner that shows up to users, which informs them that Openverse collects anonymized analytics information to make the service better. There are "dismiss" and "learn more" calls to action. "Learn more" directs users to:
-2. An analytics opt-out checkbox on the `/privacy` page. We also add information describing our analytics collection, and link to the relevant code in our GitHub repository.
+1. A small popup banner that shows up to users, which informs them that
+   Openverse collects anonymized analytics information to make the service
+   better. There are "dismiss" and "learn more" calls to action. "Learn more"
+   directs users to:
+2. An analytics opt-out checkbox on the `/privacy` page. We also add information
+   describing our analytics collection, and link to the relevant code in our
+   GitHub repository.
 
 ### Events
 
-Below I've created a TypeScript type for all the proposed anlytics events, and a simple function for sending events. For each event you'll see the payload alongside the default values which will be passed to _all_ events.
+Below I've created a TypeScript type for all the proposed anlytics events, and a
+simple function for sending events. For each event you'll see the payload
+alongside the default values which will be passed to _all_ events.
 
 ```ts
 // src/utils/events.ts
 
 // This type is only for illustrative purposes and would be imported from elsewhere.
-type SearchType = "image" | "audio" | "all";
+type SearchType = "image" | "audio" | "all"
 
 /**
  * A list of all events allowed by our analytics server. For each event
@@ -94,10 +140,10 @@ type AnalyticsEvents = {
    */
   SUBMIT_SEARCH: {
     /** The media type being searched */
-    mediaType: SearchType;
+    mediaType: SearchType
     /** The search term */
-    query: string;
-  };
+    query: string
+  }
   /** Description: The user navigates to a page.
    * Questions:
    *   - Which content pages are the most popular?
@@ -107,12 +153,12 @@ type AnalyticsEvents = {
    */
   VIEW_PAGE: {
     /** The title of the page being navigated to (window.document.title)  */
-    title: string;
+    title: string
     /** The path of the previous page */
-    previous: string;
+    previous: string
     /** The path of the new page */
-    next: string;
-  };
+    next: string
+  }
   /**
    * Description: Whenever the user sets a filter
    * Questions:
@@ -123,14 +169,14 @@ type AnalyticsEvents = {
    */
   APPLY_FILTER: {
     /** The name of the filter (not the user-facing element label) */
-    key: string;
+    key: string
     /** The value of the filter  */
-    value: string | boolean;
+    value: string | boolean
     /** The media type being searched */
-    mediaType: SearchType;
+    mediaType: SearchType
     /** The search term */
-    query: string;
-  };
+    query: string
+  }
   /**
    * Description: Whenever a user changes the content type
    * Questions:
@@ -140,12 +186,12 @@ type AnalyticsEvents = {
    */
   CHANGE_CONTENT_TYPE: {
     /** The previously-set media type */
-    previous: SearchType;
+    previous: SearchType
     /** The new media type */
-    next: SearchType;
+    next: SearchType
     /** The name of the Vue component used to switch content types. */
-    component: string;
-  };
+    component: string
+  }
   /**
    * Description: Whenever the user scrolls to the end of the results page.
    * Useful to evaluate how often users load more results or click
@@ -160,12 +206,12 @@ type AnalyticsEvents = {
    */
   REACH_RESULT_END: {
     /** The media type being searched */
-    mediaType: SearchType;
+    mediaType: SearchType
     /** The search term */
-    query: string;
+    query: string
     /** The current page of results the user is on. */
-    resultPage: number;
-  };
+    resultPage: number
+  }
   /**
    * Whenever a search results in less than a full page
    * of results or no results.
@@ -177,12 +223,12 @@ type AnalyticsEvents = {
    */
   INSUFFICIENT_RESULTS: {
     /** The media type being searched */
-    mediaType: SearchType;
+    mediaType: SearchType
     /** The search term */
-    query: string;
+    query: string
     /** The number of results returned */
-    resultCount: number;
-  };
+    resultCount: number
+  }
   /**
    * Description: Whenever the user clicks the load more button
    * Questions:
@@ -194,12 +240,12 @@ type AnalyticsEvents = {
    */
   LOAD_MORE_RESULTS: {
     /** The media type being searched */
-    mediaType: SearchType;
+    mediaType: SearchType
     /** The search term */
-    query: string;
+    query: string
     /** The current page of results the user is on. */
-    resultPage: number;
-  };
+    resultPage: number
+  }
   /**
    * Description: When a user opens the external sources popover.
    * Questions:
@@ -209,12 +255,12 @@ type AnalyticsEvents = {
    */
   VIEW_EXTERNAL_SOURCES: {
     /** The media type being searched */
-    mediaType: SearchType;
+    mediaType: SearchType
     /** The search term */
-    query: string;
+    query: string
     /** The current page of results the user is on. */
-    resultPage: number;
-  };
+    resultPage: number
+  }
   /**
    * Description: When the user chooses an external source from the dropdown of external sources
    * Questions:
@@ -223,21 +269,21 @@ type AnalyticsEvents = {
    */
   SELECT_EXTERNAL_SOURCE: {
     /** The name of the external source */
-    name: string;
+    name: string
     /** The full URL of the source */
-    url: string;
+    url: string
     /** The media type being searched */
-    mediaType: SearchType;
+    mediaType: SearchType
     /** The search term */
-    query: string;
-  };
+    query: string
+  }
   /**
    * Description: The user opens the menu which lists pages.
    * Questions:
    *   - How often is this menu used?
    *   - Is this menu visible enough?
    */
-  OPEN_PAGES_MENU: {};
+  OPEN_PAGES_MENU: {}
   /**
    * Description: The user clicks to a link outside of Openverse.
    * Questions:
@@ -247,7 +293,7 @@ type AnalyticsEvents = {
    */
   EXTERNAL_LINK_CLICK: {
     /** The url of the external link */
-    url: string;
+    url: string
     /**
      * The name of the Vue component used to switch content types.
      * @todo: We need to determine the best way of creating a string
@@ -255,8 +301,8 @@ type AnalyticsEvents = {
      * which ui element was clicked. Perhaps we could use unique data-test-ids
      * or another unique identifier for this?
      */
-    component: string;
-  };
+    component: string
+  }
   /**
    * Description: Whenever the user selects a result from the search results page.
    * Questions:
@@ -266,16 +312,16 @@ type AnalyticsEvents = {
    */
   SELECT_SEARCH_RESULT: {
     /** The unique ID of the media */
-    id: string;
+    id: string
     /** If the result is a related result, provide the ID of the 'original' result */
-    relatedTo: string | null;
+    relatedTo: string | null
     /** The media type being searched */
-    mediaType: SearchType;
+    mediaType: SearchType
     /** The slug (not the prettified name) of the provider */
-    provider: string;
+    provider: string
     /** The search term */
-    query: string;
-  };
+    query: string
+  }
   /**
    * Description: The user clicks the CTA button to the external source to use the image
    * Questions:
@@ -283,12 +329,12 @@ type AnalyticsEvents = {
    */
   GET_MEDIA: {
     /** The unique ID of the media */
-    id: string;
+    id: string
     /** The slug (not the prettified name) of the provider */
-    provider: string;
+    provider: string
     /** The media type being searched */
-    mediaType: SearchType;
-  };
+    mediaType: SearchType
+  }
   /**
    * Description: The user clicks one of the buttons to copy the media attribution
    * Questions:
@@ -297,12 +343,12 @@ type AnalyticsEvents = {
    */
   COPY_ATTRIBUTION: {
     /** The unique ID of the media */
-    id: string;
+    id: string
     /** The format of the copied attribution */
-    format: "plain" | "rich" | "html";
+    format: "plain" | "rich" | "html"
     /** The media type being searched */
-    mediaType: SearchType;
-  };
+    mediaType: SearchType
+  }
   /**
    * Description: The user reports a piece of media through our form
    * Questions:
@@ -313,12 +359,12 @@ type AnalyticsEvents = {
    */
   REPORT_MEDIA: {
     /** The unique ID of the media */
-    id: string;
+    id: string
     /** The slug (not the prettified name) of the provider */
-    provider: string;
+    provider: string
     /** The media type being searched */
-    mediaType: SearchType;
-  };
+    mediaType: SearchType
+  }
   /** Description: The user plays, pauses, or seeks an audio track.
    * @todo: This potentially requires throttling.
    *
@@ -330,13 +376,13 @@ type AnalyticsEvents = {
    */
   AUDIO_INTERACTION: {
     /** The unique ID of the media */
-    id: string;
-    event: "seek" | "play" | "pause";
+    id: string
+    event: "seek" | "play" | "pause"
     /** The slug (not the prettified name) of the provider */
-    provider: string;
+    provider: string
     /** The name of the Vue component used on the interaction, e.g. the global or main player. */
-    component: string;
-  };
+    component: string
+  }
   /**
    * Description: The user visits a CC license description page on CC.org
    * Questions:
@@ -344,8 +390,8 @@ type AnalyticsEvents = {
    */
   VISIT_LICENSE_PAGE: {
     /** The slug of the license the user clicked on */
-    license: string;
-  };
+    license: string
+  }
   /**
    * Description: The user visits a creator's link in the single result UI
    * Questions:
@@ -354,10 +400,10 @@ type AnalyticsEvents = {
    */
   VISIT_CREATOR_LINK: {
     /** The unique ID of the media */
-    id: string;
+    id: string
     /** The permalink to the creator's profile */
-    url: string;
-  };
+    url: string
+  }
   /**
    * Description: The user right clicks a single image result, most likely to download it.
    * Questions:
@@ -366,10 +412,10 @@ type AnalyticsEvents = {
    */
   RIGHT_CLICK_IMAGE: {
     /** The unique ID of the media */
-    id: string;
+    id: string
     /** The media type being searched */
-    mediaType: SearchType;
-  };
+    mediaType: SearchType
+  }
   /**
    * Description: The user uses the 'back to search' link on a single result
    * Questions:
@@ -377,10 +423,10 @@ type AnalyticsEvents = {
    */
   BACK_TO_SEARCH: {
     /** The unique ID of the media */
-    id: string;
+    id: string
     /** The media type being searched */
-    mediaType: SearchType;
-  };
+    mediaType: SearchType
+  }
   /**
    * Description: The visibility of the filter sidebar on desktop is toggled
    * Questions:
@@ -388,19 +434,24 @@ type AnalyticsEvents = {
    */
   TOGGLE_FILTERS: {
     /** The media type being searched */
-    mediaType: SearchType;
+    mediaType: SearchType
     /** The state of the filter sidebar after the user interaction. */
-    state: "open" | "closed";
-  };
-};
-type AnalyticsEventTypes = keyof AnalyticsEvents;
+    state: "open" | "closed"
+  }
+}
+type AnalyticsEventTypes = keyof AnalyticsEvents
 ```
 
 ## Default values and sample implementation of event sending code
 
-This is a sample implementation of what our event sending code can look like. With the power of TypeScript we can make sure to only send valid events with proper payloads.
+This is a sample implementation of what our event sending code can look like.
+With the power of TypeScript we can make sure to only send valid events with
+proper payloads.
 
-Pay careful attention to the `defaults` object. This is the default payload that will send with every single event. These are properties that are universally useful to any event, like the current page the user is on, and also properties that allow for tracking unique user sessions.
+Pay careful attention to the `defaults` object. This is the default payload that
+will send with every single event. These are properties that are universally
+useful to any event, like the current page the user is on, and also properties
+that allow for tracking unique user sessions.
 
 ```ts
 /**
@@ -430,7 +481,7 @@ async function sendEvent<T extends AnalyticsEventTypes>(
     height: window.innerHeight, // The height of the user's device
     ipAddress: "", // Should be read from the X-Forwarded-For header server-side, will need to be stored securely during the user's session
     userAgent: navigator.userAgent,
-  };
+  }
   /**
    * Actually send the event here, with some additional values.
    * I would have prefered to use `navigator.sendBeacon` here
@@ -444,30 +495,67 @@ async function sendEvent<T extends AnalyticsEventTypes>(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ ...defaults, ...payload }),
-  });
+  })
 }
 ```
 
 ### Implementation Plan
 
 - [ ] Create "Event Tracking" GitHub milestone in the frontend repository
-- [ ] Design: design a privacy and analytics opt-out checkbox on the Privacy page. Also a pop-up banner to be shown to users letting them know Openverse uses analytics (can use the existing audio notice for this)
-- [ ] Create the `ANALYTICS_ENABLED` feature flag which defaults to `off`/`false`.
-- [ ] Create a PR which adds an `allowAnalytics` value to our UI cookie store; implements the checkbox on the privacy page; and shows a 'Openverse collects analytics information...' banner to first-time (new session) users.
-- [ ] Create an issue for the creation of the `sendEvent` function and the api route to post analytics events to. The api route will post events to an `ANALYTICS_ENDPOINT` environment variable. If that variable is unset and/or the `ANALYTICS_ENABLED` flag is off, the analytics events will not send.
-- [ ] Create each event in the sample implementation. Each event will need a detailed description of the payload and trigger (the actual user interaction that fires off the event). Events will need to account for accessibility concerns. Will keyboard users' actions trigger the events the same way as mouse users?
-- [ ] Future: Create a PR to turn `ANALYTICS_ENABLED` to `on`/`true`, set the `ANALYTICS_ENDPOINT` environment variable, and do any munging of data necessary for the decided on analytics service.
+- [ ] Design: design a privacy and analytics opt-out checkbox on the Privacy
+      page. Also a pop-up banner to be shown to users letting them know
+      Openverse uses analytics (can use the existing audio notice for this)
+- [ ] Create the `ANALYTICS_ENABLED` feature flag which defaults to
+      `off`/`false`.
+- [ ] Create a PR which adds an `allowAnalytics` value to our UI cookie store;
+      implements the checkbox on the privacy page; and shows a 'Openverse
+      collects analytics information...' banner to first-time (new session)
+      users.
+- [ ] Create an issue for the creation of the `sendEvent` function and the api
+      route to post analytics events to. The api route will post events to an
+      `ANALYTICS_ENDPOINT` environment variable. If that variable is unset
+      and/or the `ANALYTICS_ENABLED` flag is off, the analytics events will not
+      send.
+- [ ] Create each event in the sample implementation. Each event will need a
+      detailed description of the payload and trigger (the actual user
+      interaction that fires off the event). Events will need to account for
+      accessibility concerns. Will keyboard users' actions trigger the events
+      the same way as mouse users?
+- [ ] Future: Create a PR to turn `ANALYTICS_ENABLED` to `on`/`true`, set the
+      `ANALYTICS_ENDPOINT` environment variable, and do any munging of data
+      necessary for the decided on analytics service.
 
 ## Concerns / Pitfalls
 
-- Related to content safety, this is an area where we are surfacing user information in the form of text, or even malicious URLs, to Openverse developers. These searches could include explicit or sensitive material. We're also potentially surfacing explicit image results to anyone working with this data.
-- We're building something here that is commonly drop-in when 3rd party tools are used. At least for page views; custom events still require custom work. Is this a poor use of time?
-- I think it's great to build this decoupled from a specific back-end, but if we never actually implement a backend this would largely be a wasted effort.
+- Related to content safety, this is an area where we are surfacing user
+  information in the form of text, or even malicious URLs, to Openverse
+  developers. These searches could include explicit or sensitive material. We're
+  also potentially surfacing explicit image results to anyone working with this
+  data.
+- We're building something here that is commonly drop-in when 3rd party tools
+  are used. At least for page views; custom events still require custom work. Is
+  this a poor use of time?
+- I think it's great to build this decoupled from a specific back-end, but if we
+  never actually implement a backend this would largely be a wasted effort.
 
 ### Prior Art
 
-[Snowplow](https://snowplow.io/) is "the world’s largest developer-first engine for collecting behavioral data". This is a heavy, complicated, and powerful analytics platform for [collecting](https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/snowplow-tracker-protocol/example-requests/), [enriching](https://docs.snowplow.io/docs/enriching-your-data/available-enrichments/), and [modeling](https://docs.snowplow.io/docs/modeling-your-data/what-is-data-modeling/) data. This is about as robust as an open-source user behavior tracking platform can be.
+[Snowplow](https://snowplow.io/) is "the world’s largest developer-first engine
+for collecting behavioral data". This is a heavy, complicated, and powerful
+analytics platform for
+[collecting](https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/snowplow-tracker-protocol/example-requests/),
+[enriching](https://docs.snowplow.io/docs/enriching-your-data/available-enrichments/),
+and
+[modeling](https://docs.snowplow.io/docs/modeling-your-data/what-is-data-modeling/)
+data. This is about as robust as an open-source user behavior tracking platform
+can be.
 
-[Plausible](https://plausible.io/) is a simple, lightweight, and self-hostable Google Analytics alternative. Our implementation here would be easily compatiable with Plausible's self-hosted or cloud offerings.
+[Plausible](https://plausible.io/) is a simple, lightweight, and self-hostable
+Google Analytics alternative. Our implementation here would be easily
+compatiable with Plausible's self-hosted or cloud offerings.
 
-[Umami](https://umami.is/) is quite similar to Plausible. Their codebase contains [valuable discussions](https://github.com/umami-software/umami/pull/1272), for example why one might use `fetch` instead of `navigator.sendBeacon` to send analytics events even though the later was _designed_ for analytis use cases.
+[Umami](https://umami.is/) is quite similar to Plausible. Their codebase
+contains
+[valuable discussions](https://github.com/umami-software/umami/pull/1272), for
+example why one might use `fetch` instead of `navigator.sendBeacon` to send
+analytics events even though the later was _designed_ for analytis use cases.
