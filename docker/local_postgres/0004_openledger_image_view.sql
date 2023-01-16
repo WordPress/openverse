@@ -12,9 +12,10 @@ INSERT INTO public.image_popularity_metrics (
   provider, metric, percentile
 ) VALUES
   ('flickr', 'views', 0.85),
-  ('wikimedia', 'global_usage_count', 0.85),
+  ('nappy', 'downloads', 0.85),
+  ('rawpixel', 'download_count', 0.85),
   ('stocksnap', 'downloads_raw', 0.85),
-  ('rawpixel', 'download_count', 0.85)
+  ('wikimedia', 'global_usage_count', 0.85)
 ;
 
 

@@ -13,26 +13,27 @@ from enum import Enum
 
 
 # Default provider names
-FLICKR_DEFAULT_PROVIDER = "flickr"
-EUROPEANA_DEFAULT_PROVIDER = "europeana"
-WIKIMEDIA_AUDIO_PROVIDER = "wikimedia_audio"
-WIKIMEDIA_DEFAULT_PROVIDER = "wikimedia"
-SMITHSONIAN_DEFAULT_PROVIDER = "smithsonian"
 BROOKLYN_DEFAULT_PROVIDER = "brooklynmuseum"
 CLEVELAND_DEFAULT_PROVIDER = "clevelandmuseum"
+EUROPEANA_DEFAULT_PROVIDER = "europeana"
+FINNISH_DEFAULT_PROVIDER = "finnishmuseums"
+FLICKR_DEFAULT_PROVIDER = "flickr"
+FREESOUND_DEFAULT_PROVIDER = "freesound"
+INATURALIST_DEFAULT_PROVIDER = "inaturalist"
+JAMENDO_DEFAULT_PROVIDER = "jamendo"
 METROPOLITAN_MUSEUM_DEFAULT_PROVIDER = "met"
-VICTORIA_DEFAULT_PROVIDER = "museumsvictoria"
+NAPPY_DEFAULT_PROVIDER = "nappy"
 NYPL_DEFAULT_PROVIDER = "nypl"
 RAWPIXEL_DEFAULT_PROVIDER = "rawpixel"
 SCIENCE_DEFAULT_PROVIDER = "sciencemuseum"
+SMITHSONIAN_DEFAULT_PROVIDER = "smithsonian"
 SMK_DEFAULT_PROVIDER = "smk"
-WALTERS_DEFAULT_PROVIDER = "waltersartmuseum"
-FINNISH_DEFAULT_PROVIDER = "finnishmuseums"
-JAMENDO_DEFAULT_PROVIDER = "jamendo"
 STOCKSNAP_DEFAULT_PROVIDER = "stocksnap"
+VICTORIA_DEFAULT_PROVIDER = "museumsvictoria"
+WALTERS_DEFAULT_PROVIDER = "waltersartmuseum"
+WIKIMEDIA_AUDIO_PROVIDER = "wikimedia_audio"
+WIKIMEDIA_DEFAULT_PROVIDER = "wikimedia"
 WORDPRESS_DEFAULT_PROVIDER = "wordpress"
-FREESOUND_DEFAULT_PROVIDER = "freesound"
-INATURALIST_DEFAULT_PROVIDER = "inaturalist"
 PHYLOPIC_DEFAULT_PROVIDER = "phylopic"
 
 # Finnish parameters
@@ -138,6 +139,7 @@ DEFAULT_IMAGE_CATEGORY = {
     "mccordmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
     "met": ImageCategory.DIGITIZED_ARTWORK.value,
     "museumsvictoria": ImageCategory.DIGITIZED_ARTWORK.value,
+    "nappy": ImageCategory.PHOTOGRAPH.value,
     "phylopic": ImageCategory.ILLUSTRATION.value,
     "rijksmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
     "sciencemuseum": ImageCategory.PHOTOGRAPH.value,

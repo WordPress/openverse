@@ -13,6 +13,7 @@ from providers.provider_api_scripts.inaturalist import INaturalistDataIngester
 from providers.provider_api_scripts.jamendo import JamendoDataIngester
 from providers.provider_api_scripts.metropolitan_museum import MetMuseumDataIngester
 from providers.provider_api_scripts.museum_victoria import VictoriaDataIngester
+from providers.provider_api_scripts.nappy import NappyDataIngester
 from providers.provider_api_scripts.nypl import NyplDataIngester
 from providers.provider_api_scripts.phylopic import PhylopicDataIngester
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -159,6 +160,10 @@ PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
         ingester_class=VictoriaDataIngester,
         start_date=datetime(2020, 1, 1),
+    ),
+    ProviderWorkflow(
+        ingester_class=NappyDataIngester,
+        start_date=datetime(2022, 12, 1),
     ),
     ProviderWorkflow(
         ingester_class=NyplDataIngester,

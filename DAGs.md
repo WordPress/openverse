@@ -67,6 +67,7 @@ The following are DAGs grouped by their primary tag:
 | [`jamendo_workflow`](#jamendo_workflow)                         | `@monthly`        | `False` | audio         |
 | [`metropolitan_museum_workflow`](#metropolitan_museum_workflow) | `@daily`          | `True`  | image         |
 | `museum_victoria_workflow`                                      | `@monthly`        | `False` | image         |
+| [`nappy_workflow`](#nappy_workflow)                             | `@monthly`        | `False` | image         |
 | `nypl_workflow`                                                 | `@monthly`        | `False` | image         |
 | [`phylopic_workflow`](#phylopic_workflow)                       | `@daily`          | `True`  | image         |
 | [`rawpixel_workflow`](#rawpixel_workflow)                       | `@monthly`        | `False` | image         |
@@ -105,6 +106,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`jamendo_workflow`](#jamendo_workflow)
 1.  [`metropolitan_museum_reingestion_workflow`](#metropolitan_museum_reingestion_workflow)
 1.  [`metropolitan_museum_workflow`](#metropolitan_museum_workflow)
+1.  [`nappy_workflow`](#nappy_workflow)
 1.  [`oauth2_authorization`](#oauth2_authorization)
 1.  [`oauth2_token_refresh`](#oauth2_token_refresh)
 1.  [`phylopic_reingestion_workflow`](#phylopic_reingestion_workflow)
@@ -375,6 +377,17 @@ blocking during local development testing.
                         in addition to date and public domain. It seems like it won't
                         connect with just date and license.
                         https://collectionapi.metmuseum.org/public/collection/v1/search?isPublicDomain=true&metadataDate=2022-08-07
+
+## `nappy_workflow`
+
+Content Provider: Nappy
+
+ETL Process: Use the API to identify all CC0-licensed images.
+
+Output: TSV file containing the image meta-data.
+
+Notes: This api was written specially for Openverse. There are no known limits
+or restrictions. https://nappy.co/
 
 ## `oauth2_authorization`
 
