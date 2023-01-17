@@ -1,7 +1,7 @@
 <template>
   <footer
     ref="footerEl"
-    class="footer flex flex-col gap-10 px-6 py-10"
+    class="footer flex flex-col gap-10 px-6"
     :class="[
       ...variantNames,
       isContentMode ? 'footer-content' : 'footer-internal',
@@ -22,7 +22,7 @@
     </div>
 
     <!-- Locale chooser and WordPress affiliation graphic -->
-    <div class="locale-and-wp flex flex-col justify-between gap-y-10">
+    <div class="locale-and-wp flex flex-col justify-between">
       <VLanguageSelect v-bind="languageProps" class="language max-w-full" />
       <VWordPressLink mode="light" />
     </div>
@@ -124,17 +124,17 @@ export default defineComponent({
 
 <style>
 /* wrapper element styles */
-.footer-sm {
-  @apply px-6;
-}
 .footer-lg {
   @apply gap-y-8 px-10;
 }
+
 .footer-internal {
-  @apply pt-6;
+  @apply py-6;
 }
-.footer-internal.footer-lg {
-  @apply pt-10;
+
+.footer-content,
+.footer-interal.footer-lg {
+  @apply py-10;
 }
 
 /* footer > logo-and-links styles */
@@ -161,12 +161,21 @@ export default defineComponent({
 }
 
 /* locale-and-wp locale chooser and WordPress affiliation graphic styles */
+.footer-content .locale-and-wp {
+  @apply gap-y-10;
+}
+
+.footer-internal .locale-and-wp {
+  @apply gap-y-4;
+}
+
 .footer-content.footer-sm .locale-and-wp {
   @apply grid grid-cols-2 items-center;
 }
+
 .footer-content.footer-lg .locale-and-wp,
 .footer-internal.footer-sm .locale-and-wp {
-  @apply flex flex-row items-center justify-between;
+  @apply flex flex-row items-center;
 }
 
 /* element styles */
