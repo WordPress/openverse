@@ -21,6 +21,7 @@
     <VPopoverContent
       v-if="triggerRef"
       :z-index="zIndex"
+      :width="width"
       :visible="visibleRef"
       :trigger-element="triggerRef"
       :placement="placement"
@@ -140,8 +141,16 @@ export default defineComponent({
     /**
      * Whether the popover height should be clipped and made scrollable
      * if the window height is too small.
+     *
+     * @default false
      */
     clippable: { type: Boolean, default: false },
+    /**
+     * Optional Tailwind class for fixed width popover content.
+     *
+     * @default undefined
+     */
+    width: { type: String },
   },
   emits: [
     /**

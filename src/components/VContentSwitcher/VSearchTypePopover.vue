@@ -3,10 +3,12 @@
     ref="contentMenuPopover"
     :label="$t('search-type.label').toString()"
     placement="bottom-end"
+    width="w-66"
     :clippable="true"
   >
     <template #trigger="{ a11yProps }">
       <VSearchTypeButton
+        id="search-type-button"
         v-bind="{ ...a11yProps, ...searchTypeProps }"
         :show-label="showLabel"
         aria-controls="content-switcher-popover"
@@ -14,7 +16,6 @@
     </template>
     <VSearchTypes
       id="content-switcher-popover"
-      class="w-[260px] pt-2"
       size="small"
       :use-links="placement === 'header'"
       @select="handleSelect"

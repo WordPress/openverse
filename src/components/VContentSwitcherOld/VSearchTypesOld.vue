@@ -4,7 +4,7 @@
     :size="size"
     :bordered="bordered"
     type="radiogroup"
-    class="z-10 max-w-full md:w-[260px]"
+    :class="{ 'w-66 pt-2': size === 'small' }"
   >
     <div
       v-for="(category, index) in contentTypeGroups"
@@ -13,18 +13,19 @@
         'mt-2': index > 0,
         'border-t border-dark-charcoal-20 bg-dark-charcoal-06':
           index > 0 && !bordered,
+        'w-66': size === 'small',
       }"
     >
       <h4
         :class="bordered ? 'ps-0' : 'ps-6'"
-        class="pt-6 pb-4 text-sr font-semibold uppercase pe-6"
+        class="category pt-6 pb-4 text-sr"
       >
         {{ $t(`search-type.${category.heading}`) }}
       </h4>
       <VSearchTypeItemOld
         v-for="(item, idx) in category.items"
         :key="item"
-        class="md:mb-1"
+        :class="{ 'mb-1': size === 'small' }"
         :item="item"
         :item-id="idx"
         :icon="content.icons[item]"
@@ -50,8 +51,8 @@ export default defineComponent({
   components: { VItemGroup, VSearchTypeItemOld },
   props: {
     /**
-     * 'Small' size for mobile screens,
-     * 'medium' size for larger screens.
+     * 'Small' size for popovers on larger screens,
+     * 'medium' size for modals on mobile screens.
      */
     size: {
       type: String as PropType<"small" | "medium">,
@@ -90,7 +91,7 @@ export default defineComponent({
       return base
     })
 
-    const bordered = computed(() => props.size === "small")
+    const bordered = computed(() => props.size === "medium")
     const handleClick = (item) => {
       emit("select", item)
     }

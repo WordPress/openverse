@@ -18,7 +18,7 @@
     <VButton
       data-item-group-item
       :as="as"
-      class="group relative flex min-w-full justify-between py-2 hover:bg-dark-charcoal-10 focus:z-10"
+      class="group relative flex min-w-full justify-between border-0 py-2 hover:bg-dark-charcoal-10 focus:z-10"
       :class="[
         $style[`${contextProps.direction}-button`],
         $style[`${contextProps.size}-button`],
@@ -54,8 +54,8 @@
           contextProps.direction === 'vertical' &&
           contextProps.showCheck
         "
-        class="absolute end-2"
-        :class="contextProps.size === 'small' ? 'end-3' : 'end-6'"
+        class="absolute"
+        :class="contextProps.size === 'small' ? 'end-3' : 'end-5'"
         :icon-path="itemIndicator"
       />
     </VButton>
@@ -205,10 +205,6 @@ export default defineComponent({
   @apply flex flex-row items-center;
 }
 
-.has-check .vertical-content {
-  @apply pe-8;
-}
-
 .vertical-popover-item {
   @apply pb-0;
 }
@@ -248,6 +244,6 @@ export default defineComponent({
   @apply p-3;
 }
 .medium-button {
-  @apply px-6 py-5;
+  @apply p-5 ps-6;
 }
 </style>

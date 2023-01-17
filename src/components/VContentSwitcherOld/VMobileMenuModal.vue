@@ -20,7 +20,7 @@
     >
       <VSearchTypesOld
         ref="searchTypesRef"
-        size="small"
+        size="medium"
         :active-item="content.activeType.value"
         :use-links="true"
         @select="selectItem"

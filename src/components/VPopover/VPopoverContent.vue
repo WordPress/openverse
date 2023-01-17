@@ -8,8 +8,8 @@
   >
     <div
       ref="popoverRef"
-      class="popover-content max-w-max overflow-y-auto overflow-x-hidden rounded-sm border border-light-gray bg-white shadow"
-      :class="`z-${zIndex}`"
+      class="popover-content overflow-y-auto overflow-x-hidden rounded-sm border border-light-gray bg-white shadow"
+      :class="[`z-${zIndex}`, width]"
       :style="heightProperties"
       :tabindex="-1"
       @blur="onBlur"
@@ -91,6 +91,12 @@ export default defineComponent({
     clippable: {
       type: Boolean,
       default: false,
+    },
+    /**
+     * Optional Tailwind class for fixed width.
+     */
+    width: {
+      type: String,
     },
   },
   /**

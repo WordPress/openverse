@@ -4,6 +4,7 @@
     class="flex items-stretch"
     :label="$t('search-type.label').toString()"
     placement="bottom-end"
+    width="w-66"
     :clippable="true"
   >
     <template #trigger="{ a11yProps }">
@@ -16,7 +17,7 @@
     </template>
     <VSearchTypesOld
       id="content-switcher-popover"
-      size="medium"
+      size="small"
       :active-item="activeItem"
       :use-links="placement === 'header'"
       @select="selectItem"

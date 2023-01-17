@@ -4,8 +4,11 @@
     @submit.prevent="handleSearch"
   >
     <div
-      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm border p-0.5px pe-1.5px rounded-e-none border-e-0 focus-within:border-1.5 focus-within:border-pink focus-within:bg-dark-charcoal-06 focus-within:p-0 focus-within:pe-1.5px group-hover:bg-dark-charcoal-06"
-      :class="[isHomeRoute ? 'border-tx' : 'border-black']"
+      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm border p-0.5px pe-2 rounded-e-none border-e-0 focus-within:border-1.5 focus-within:p-0 focus-within:pe-2 focus-within:border-e-0"
+      :class="[
+        isHomeRoute ? 'border-tx' : 'border-black',
+        hasPopover ? 'focus-within:border-tx' : 'focus-within:border-pink',
+      ]"
     >
       <input
         id="search-bar"
@@ -36,7 +39,7 @@
       :variant="isHomeRoute ? 'primary' : 'plain'"
       class="h-full w-14 flex-shrink-0 transition-none rounded-s-none sm:w-16"
       :class="{
-        'search-button border-black p-0.5px ps-1.5px hover:bg-pink hover:text-white focus:border-tx focus-visible:bg-pink focus-visible:text-white group-focus-within:border-pink group-focus-within:border-tx group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink group-hover:border-pink group-hover:border-tx group-hover:bg-pink group-hover:text-white group-focus:border-tx':
+        'search-button border-black p-0.5px ps-1.5px hover:bg-pink hover:text-white focus:border-tx focus-visible:bg-pink focus-visible:text-white group-focus-within:border-tx group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink group-hover:border-tx group-hover:bg-pink group-hover:text-white group-focus:border-tx':
           !isHomeRoute,
       }"
     >
@@ -74,6 +77,13 @@ export default defineComponent({
     route: {
       type: String as PropType<"home" | "404">,
       default: "home",
+    },
+    /**
+     * Search bar should not have a focus box when a popover is open.
+     */
+    hasPopover: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: {

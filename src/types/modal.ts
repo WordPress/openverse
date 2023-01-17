@@ -1,6 +1,6 @@
 import type { Ref } from "@nuxtjs/composition-api"
 
-export type ModalVariant = "default" | "full" | "two-thirds"
+export type ModalVariant = "default" | "full" | "two-thirds" | "fit-content"
 export type ModalColorMode = "dark" | "light"
 
 export type DialogOptions = {

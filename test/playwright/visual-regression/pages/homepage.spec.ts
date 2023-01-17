@@ -55,6 +55,26 @@ for (const dir of languageDirections) {
             page.locator("form:has(input)")
           )
         })
+
+        test("content switcher open", async ({ page }) => {
+          await page.locator("#search-type-button").click()
+
+          await expectSnapshot(`content-switcher-open-${dir}`, page)
+        })
+
+        test("content switcher with external sources open", async ({
+          page,
+        }) => {
+          await page.goto(pathWithDir("/?ff_external_sources=on", dir))
+          await cleanImageCarousel(page)
+
+          await page.locator("#search-type-button").click()
+
+          await expectSnapshot(
+            `content-switcher-with-external-sources-open-${dir}`,
+            page
+          )
+        })
       })
     })
   })

@@ -192,6 +192,7 @@ export default defineComponent({
 .top-bar-two-thirds {
   @apply bg-tx;
 }
+.modal-backdrop-fit-content,
 .modal-backdrop-two-thirds {
   @apply bg-dark-charcoal bg-opacity-75;
 }
@@ -208,14 +209,20 @@ export default defineComponent({
 .modal-content-default {
   @apply text-left align-bottom md:rounded-t-md;
 }
-.modal-content-full {
-  @apply flex w-full flex-col justify-between px-6 pb-10;
-}
 .modal-two-thirds {
   @apply mt-auto h-2/3 w-full rounded-t-lg bg-white;
 }
+.modal-fit-content {
+  @apply mt-auto w-full rounded-t-lg bg-white;
+}
+.modal-content-full {
+  @apply flex w-full flex-col justify-between px-6 pb-10;
+}
 .modal-content-two-thirds {
   @apply overflow-y-hidden rounded-t-md;
+}
+.modal-content-fit-content {
+  @apply rounded-t-md;
 }
 .modal-content-dark {
   @apply bg-black text-white;
