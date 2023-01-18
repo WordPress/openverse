@@ -3,6 +3,7 @@ import { test } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   closeFilters,
+  enableOldHeader,
   OLD_HEADER,
   setCookies,
 } from "~~/test/playwright/utils/navigation"
@@ -11,6 +12,7 @@ test.describe.configure({ mode: "parallel" })
 
 test.describe("audio results", () => {
   test.beforeEach(async ({ page }) => {
+    await enableOldHeader(page)
     await page.goto("/search/audio?q=birds")
   })
 

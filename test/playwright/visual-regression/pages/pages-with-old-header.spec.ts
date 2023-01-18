@@ -6,6 +6,7 @@ import {
   pathWithDir,
   languageDirections,
   setCookies,
+  enableOldHeader,
 } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
@@ -16,6 +17,7 @@ for (const contentPage of contentPages) {
     test.describe(`${contentPage} ${dir} page snapshots`, () => {
       breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
         test("full page", async ({ context, page }) => {
+          await enableOldHeader(page)
           await setCookies(context, {
             uiBreakpoint: breakpoint,
             uiDismissedBanners: ["translation-ar"],

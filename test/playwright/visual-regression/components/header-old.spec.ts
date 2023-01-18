@@ -4,6 +4,7 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {
   closeFilters,
+  enableOldHeader,
   goToSearchTerm,
   languageDirections,
   OLD_HEADER,
@@ -19,6 +20,7 @@ const headerSelector = ".main-header"
 for (const dir of languageDirections) {
   test.describe(dir, () => {
     test.beforeEach(async ({ page }) => {
+      await enableOldHeader(page)
       await goToSearchTerm(page, "birds", { dir: dir })
     })
 

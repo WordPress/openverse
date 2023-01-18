@@ -2,9 +2,10 @@ import { expect, Page, test } from "@playwright/test"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
+  enableNewHeader,
   goToSearchTerm,
-  OLD_HEADER,
   searchTypePath,
+  t,
 } from "~~/test/playwright/utils/navigation"
 
 import { supportedSearchTypes } from "~/constants/media"
@@ -19,10 +20,10 @@ for (const searchType of supportedSearchTypes) {
   test(`can change type and search for ${searchType} from homepage`, async ({
     page,
   }) => {
+    await enableNewHeader(page)
     await goToSearchTerm(page, "cat", {
       searchType,
       mode: "CSR",
-      headerMode: OLD_HEADER,
     })
 
     const expectedUrl = `/search/${searchTypePath(searchType)}?q=cat`
@@ -30,12 +31,14 @@ for (const searchType of supportedSearchTypes) {
   })
 }
 
+const searchTypePopover = "[aria-labelledby='search-type-button'] > div"
+
 const popoverIsVisible = async (page: Page) =>
-  await expect(page.locator(".popover-content")).toBeVisible()
+  await expect(page.locator(searchTypePopover)).toBeVisible()
 const popoverIsNotVisible = async (page: Page) =>
-  await expect(page.locator(".popover-content")).not.toBeVisible()
+  await expect(page.locator(searchTypePopover)).not.toBeVisible()
 const clickPopoverButton = async (page: Page) =>
-  await page.click('button[aria-label="All content"]')
+  await page.getByRole("button", { name: t("search-type.all") }).click()
 
 test("can close the search type popover by clicking outside", async ({
   page,

@@ -14,7 +14,7 @@
         "production": "disabled"
       },
       "description": "Toggle the new header, including recent searches.",
-      "defaultState": "off"
+      "defaultState": "on"
     },
     "feat_disabled": {
       "status": "disabled",

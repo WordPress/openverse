@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test"
 
+import { enableNewHeader } from "~~/test/playwright/utils/navigation"
+
 test.describe.configure({ mode: "parallel" })
 
 test.describe("migration banner", () => {
@@ -32,6 +34,7 @@ test.describe("migration banner", () => {
   })
 
   test("migration banner goes away on navigation", async ({ page }) => {
+    await enableNewHeader(page)
     await page.goto("/?referrer=creativecommons.org")
 
     const migrationNotice = page.locator('[data-testid="banner-cc-referral"]')
@@ -39,7 +42,7 @@ test.describe("migration banner", () => {
 
     // Navigate away from the page
     await Promise.all([
-      page.locator("a.homepage-image").first().click(),
+      page.locator("a.home-cell").first().click(),
       page.waitForLoadState("domcontentloaded"),
     ])
     await expect(migrationNotice).toBeHidden()

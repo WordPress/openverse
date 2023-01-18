@@ -6,6 +6,7 @@ import {
   dismissTranslationBanner,
   pathWithDir,
   languageDirections,
+  enableOldHeader,
 } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
@@ -23,6 +24,7 @@ for (const dir of languageDirections) {
   test.describe(`${dir} homepage snapshots`, () => {
     const path = pathWithDir("/", dir)
     test.beforeEach(async ({ page }) => {
+      await enableOldHeader(page)
       await page.goto(path)
       await dismissTranslationBanner(page)
       await deleteImageCarousel(page)

@@ -1,5 +1,6 @@
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
 
 const initialState = {
@@ -31,13 +32,19 @@ const NOT_VISIBLE_AND_NOT_DISMISSED = {
 const cookieOptions = {
   maxAge: 5184000,
   path: "/",
-  sameSite: "none",
+  sameSite: "strict",
   secure: false,
 }
 
 describe("Ui Store", () => {
   beforeEach(() => {
     setActivePinia(createPinia())
+    const featureFlagStore = useFeatureFlagStore()
+    if (featureFlagStore.isOn("new_header")) {
+      cookieOptions.sameSite = "strict"
+    } else {
+      cookieOptions.sameSite = "none"
+    }
   })
   describe("state", () => {
     it("sets the initial state correctly", () => {
