@@ -117,34 +117,8 @@ repository. Project proposals can be authored in any tool but are shipped as a
 markdown file in the `rfcs/` directory, using a filename formatted as
 `YYYYMMDD-proposal_title.md`.
 
-The PR description should use the "Project Proposal" PR template [to be
-created]:
-
-```md
-<!--
-  This should be two weeks from the publish date of the proposal.
-  One week extensions will be granted in the case of critical contributors being unavaliable or the author's personal avalibility.
--->
-
-## Due date: yyyy-mm-dd
-
-<!--
-  Suggest two members of @WordPress/openverse to review the discussion.
-  Please share the reasoning between choosing these members. Ideally authors should select for:
-
-  - Relevant expertise or experience, or
-  - Expressed interest in the project
--->
-
-## Assigned reviewers
-
-- [ ] TBD
-- [ ] TBD
-
-## Description
-
-<!-- Start the conversation. Please @ anyone relevant and try to ask questions to help facilate discussion. Try not to repeat anything here that is better suited for the proposal itself.  -->
-```
+The PR description should use the
+["Project Proposal" PR template.](./templates/project-proposal-pr-template.md)
 
 #### The review process
 
@@ -204,28 +178,8 @@ These updates are useful for folks checking in on a project but also for the
 project lead. It's an opportunity to _reflect on_ the status of the project and
 any blockers, or successes to be shared.
 
-Here is an update template to be followed:
-
-```md
-## Update YYYY-MM-DD
-
-_A very brief, nearly single line summary giving a cleardescription of the
-project. Example: We continue to ship frontend PRs and are 75% complete with the
-milestone. Blocked on design approval from community contributors for the new
-signup flow._
-
-### Done
-
-_List recently-completed tasks here_
-
-### Next
-
-_List this week's tasks here_
-
-### Blockers
-
-_List any blockers for the week_
-```
+Here is an [update template](./templates/project-update.md) to be followed for
+every project update.
 
 ### Delivery (`status: shipped`)
 
@@ -245,9 +199,3 @@ Project completion is a time for celebration, and reflection.
 - `shipped`: Launched. Success criteria are under evaluation.
 - `success`: Completed. Success criteria are met.
 - `rollback`: Completed. Success criteria are not met. Work is reverted.
-
-## Open Questions
-
-1. Should the lead of a project also be the primary implementor of the work,
-   generally speaking? Should we actively avoid this? Does this relationship not
-   matter?
