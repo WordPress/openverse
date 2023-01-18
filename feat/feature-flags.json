@@ -10,7 +10,7 @@
     },
     "new_header": {
       "status": {
-        "staging": "switchable",
+        "staging": "enabled",
         "production": "disabled"
       },
       "description": "Toggle the new header, including recent searches.",
