@@ -713,4 +713,7 @@
     none: "No recent searches to show.",
     disclaimer: "Openverse does not store your recent searches, this information is kept locally in your browser.",
   },
+  report: {
+    "image-details": "See image details",
+  },
 }

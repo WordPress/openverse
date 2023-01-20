@@ -1,5 +1,5 @@
 <template>
-  <div id="content-report-form" class="w-80 p-6">
+  <div id="content-report-form">
     <div v-if="status === SENT">
       <p class="heading-6 mb-4">
         {{ $t("media-details.content-report.success.title") }}
@@ -76,7 +76,11 @@
         </div>
 
         <div class="flex flex-row items-center justify-end gap-4">
-          <VButton variant="secondary-bordered" @click="handleCancel">
+          <VButton
+            v-if="allowCancel"
+            variant="secondary-bordered"
+            @click="handleCancel"
+          >
             {{ $t("media-details.content-report.form.cancel") }}
           </VButton>
 
@@ -146,6 +150,7 @@ export default defineComponent({
     providerName: { required: true },
     reportService: { required: false },
     closeFn: { required: true },
+    allowCancel: { type: Boolean, default: true },
   },
   setup(props) {
     const service = props.reportService || ReportService

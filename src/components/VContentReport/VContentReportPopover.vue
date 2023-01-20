@@ -17,6 +17,7 @@
           @click="close"
         />
         <VContentReportForm
+          class="w-80 p-6"
           :close-fn="close"
           :media="media"
           :provider-name="media.providerName"
