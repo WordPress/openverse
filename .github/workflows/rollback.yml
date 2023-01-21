@@ -74,7 +74,7 @@ jobs:
               )
             }
 
-      - uses: ./.github/actions/production-frontend-deploy
+      - uses: ./.github/actions/production-deploy
         if: inputs.environment == 'production'
         with:
           tag: ${{ inputs.tag }}

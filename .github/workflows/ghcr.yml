@@ -112,7 +112,7 @@ jobs:
         with:
           ref: main
 
-      - uses: ./.github/actions/production-frontend-deploy
+      - uses: ./.github/actions/production-deploy
         with:
           tag: ${{ github.event.release.tag_name }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

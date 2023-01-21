@@ -5,8 +5,8 @@
 # updated version.
 ### !!!
 
-name: openverse/production-frontend-nuxt-deploy
-description: Update the task definition for a production-frontend-nuxt deployment
+name: openverse/production-nuxt-nuxt-deploy
+description: Update the task definition for a production-nuxt-nuxt deployment
 
 inputs:
   tag:
@@ -44,13 +44,13 @@ runs:
       with:
         payload: |
           {
-            "text": "Starting deployment of production-frontend",
+            "text": "Starting deployment of production-nuxt",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": ":spinning-cd: A deployment of production-frontend triggered by <@${{ env.SLACK_USER_ID }}> is starting using the `${{ inputs.tag }}` tag."
+                  "text": ":spinning-cd: A deployment of production-nuxt triggered by <@${{ env.SLACK_USER_ID }}> is starting using the `${{ inputs.tag }}` tag."
                 }
               },
               {
@@ -78,11 +78,11 @@ runs:
       shell: bash
       run: |
         aws ecs describe-task-definition \
-          --task-definition production-frontend-template \
+          --task-definition production-nuxt-template \
           --query taskDefinition > task-definition.json
 
         # Remove template from the family name (the render action does not support this)
-        sed -i 's/"family": "production-frontend-template"/"family": "production-frontend"/g' task-definition.json
+        sed -i 's/"family": "production-nuxt-template"/"family": "production-nuxt"/g' task-definition.json
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
@@ -96,7 +96,7 @@ runs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: production-frontend
+        service: production-nuxt
         cluster: production-default
         wait-for-service-stability: true
         wait-for-minutes: 10
@@ -106,13 +106,13 @@ runs:
       with:
         payload: |
           {
-            "text": "Deployment of production-frontend successful",
+            "text": "Deployment of production-nuxt successful",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": ":tadaco: The deployment of production-frontend triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *succeeded*."
+                  "text": ":tadaco: The deployment of production-nuxt triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *succeeded*."
                 }
               },
               {
@@ -134,13 +134,13 @@ runs:
       with:
         payload: |
           {
-            "text": "Deployment of production-frontend failed!",
+            "text": "Deployment of production-nuxt failed!",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": ":alert: The deployment of production-frontend triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *failed* :alert:"
+                  "text": ":alert: The deployment of production-nuxt triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *failed* :alert:"
                 }
               },
               {
