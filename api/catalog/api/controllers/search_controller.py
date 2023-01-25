@@ -17,6 +17,7 @@ from elasticsearch_dsl.query import EMPTY_QUERY, MoreLikeThis, Query
 from elasticsearch_dsl.response import Hit, Response
 
 import catalog.api.models as models
+from catalog.api.utils import tallies
 from catalog.api.utils.dead_link_mask import get_query_hash, get_query_mask
 from catalog.api.utils.validate_images import validate_images
 
@@ -412,6 +413,12 @@ def search(
     result_count, page_count = _get_result_and_page_count(
         search_response, results, page_size, page
     )
+
+    if results and page <= 4:
+        # We ignore tallies for deep pages because they're not likely to
+        # be as important for search relevancy for most users at this point
+        tallies.count_provider_occurrences(results, index)
+
     return results or [], page_count, result_count
 
 

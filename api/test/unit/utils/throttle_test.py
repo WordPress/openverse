@@ -1,6 +1,6 @@
 from test.factory.models.oauth2 import AccessTokenFactory
 
-from rest_framework.test import APIRequestFactory, force_authenticate
+from rest_framework.test import force_authenticate
 from rest_framework.views import APIView
 
 import pytest
@@ -26,13 +26,6 @@ def redis(monkeypatch) -> FakeRedis:
 
     yield fake_redis
     fake_redis.client().close()
-
-
-@pytest.fixture
-def request_factory() -> APIRequestFactory():
-    request_factory = APIRequestFactory(defaults={"REMOTE_ADDR": "192.0.2.1"})
-
-    return request_factory
 
 
 @pytest.fixture

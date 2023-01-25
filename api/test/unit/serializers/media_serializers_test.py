@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 from django.conf import settings
 from rest_framework.exceptions import NotAuthenticated, ValidationError
-from rest_framework.test import APIRequestFactory, force_authenticate
+from rest_framework.test import force_authenticate
 from rest_framework.views import APIView
 
 import pytest
@@ -12,15 +12,6 @@ import pytest
 from catalog.api.serializers.audio_serializers import AudioSerializer
 from catalog.api.serializers.image_serializers import ImageSerializer
 from catalog.api.serializers.media_serializers import MediaSearchRequestSerializer
-
-
-# TODO: @sarayourfriend consolidate these with the other
-# request factory fixtures into conftest.py
-@pytest.fixture
-def request_factory() -> APIRequestFactory():
-    request_factory = APIRequestFactory(defaults={"REMOTE_ADDR": "192.0.2.1"})
-
-    return request_factory
 
 
 @pytest.fixture

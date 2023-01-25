@@ -19,6 +19,7 @@ sphinx = "~=5.2"
 sphinx-autobuild = "~=2021.3"
 pook = "~=1.0"
 pgcli = "~=3.5"
+freezegun = "~=1.2.2"
 
 [packages]
 aws-requests-auth = "~=0.4"

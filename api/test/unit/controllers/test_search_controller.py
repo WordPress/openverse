@@ -9,6 +9,8 @@ from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
 
 from catalog.api.controllers import search_controller
+from catalog.api.serializers.media_serializers import MediaSearchRequestSerializer
+from catalog.api.utils import tallies
 from catalog.api.utils.dead_link_mask import get_query_hash, save_query_mask
 
 
@@ -377,3 +379,61 @@ def test_paginate_with_dead_link_mask_query_mask_overlaps_query_window(
     assert (
         actual_range == expected_range
     ), f"expected {expected_range} but got {actual_range}"
+
+
+MOCK_RESULTS = [{"provider": "a provider", "identifier": i} for i in range(20)]
+
+
+@pytest.mark.parametrize(
+    "index",
+    (
+        "image",
+        "audio",
+    ),
+)
+@pytest.mark.parametrize(
+    ("page", "does_tally"),
+    (
+        (1, True),
+        (2, True),
+        (3, True),
+        (4, True),
+        (5, False),
+    ),
+)
+@mock.patch.object(
+    tallies, "count_provider_occurrences", wraps=tallies.count_provider_occurrences
+)
+@mock.patch(
+    "catalog.api.controllers.search_controller._post_process_results",
+    return_value=MOCK_RESULTS,
+)
+@pytest.mark.django_db
+def test_search_tallies_pages_less_than_5(
+    _,
+    count_provider_occurrences_mock: mock.MagicMock,
+    page,
+    does_tally,
+    index,
+    request_factory,
+):
+    serializer = MediaSearchRequestSerializer(data={"q": "dogs"})
+    serializer.is_valid()
+
+    search_controller.search(
+        search_params=serializer,
+        ip=0,
+        index=index,
+        page=page,
+        page_size=20,
+        request=request_factory.get("/"),
+        filter_dead=False,
+    )
+
+    if does_tally:
+        count_provider_occurrences_mock.assert_called_once_with(
+            mock.ANY,
+            index,
+        )
+    else:
+        count_provider_occurrences_mock.assert_not_called()
