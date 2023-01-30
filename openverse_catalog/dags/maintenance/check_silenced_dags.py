@@ -34,7 +34,6 @@ logger = logging.getLogger(__name__)
 
 DAG_ID = "check_silenced_dags"
 MAX_ACTIVE = 1
-GITHUB_PAT = Variable.get("GITHUB_API_KEY", default_var="not_set")
 
 
 def get_issue_info(issue_url: str) -> tuple[str, str, str]:
@@ -111,6 +110,6 @@ with dag:
         task_id="check_silenced_dags_configuration",
         python_callable=check_configuration,
         op_kwargs={
-            "github_pat": GITHUB_PAT,
+            "github_pat": "{{ var.value.get('GITHUB_API_KEY', 'not_set') }}",
         },
     )
