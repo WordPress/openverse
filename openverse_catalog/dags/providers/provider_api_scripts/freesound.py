@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 class FreesoundDataIngester(ProviderDataIngester):
     batch_limit = 150
+    delay = 5  # TODO: Remove after full Freesound run
     host = "freesound.org"
     endpoint = f"https://{host}/apiv2/search/text"
     providers = {"audio": prov.FREESOUND_DEFAULT_PROVIDER}

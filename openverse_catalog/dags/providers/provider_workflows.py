@@ -138,6 +138,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         ingester_class=FreesoundDataIngester,
+        pull_timeout=timedelta(hours=240),  # TODO: Remove after full Freesound run
     ),
     ProviderWorkflow(
         ingester_class=INaturalistDataIngester,
