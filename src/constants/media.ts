@@ -48,6 +48,11 @@ export function isAdditionalSearchType(
   return (additionalSearchTypes as readonly string[]).includes(searchType)
 }
 
+export function isSupportedMediaType(
+  searchType: string
+): searchType is SupportedMediaType {
+  return supportedMediaTypes.includes(searchType as SupportedMediaType)
+}
 /* Media support */
 
 export const SUPPORTED = "supported" // Native search

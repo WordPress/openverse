@@ -49,6 +49,8 @@
     "src/components/TableSortIcon.vue",
     "src/components/VCopyButton.vue",
     "src/components/VSketchFabViewer.vue",
+    "src/components/VSearchGrid.vue",
+
     "src/components/VAudioThumbnail/**.vue",
     "src/components/VAudioTrack/**.vue",
     "src/components/VCheckbox/**.vue",

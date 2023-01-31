@@ -12,36 +12,43 @@
       :class="isAllView ? 'mb-10' : 'mb-8'"
     >
       <VSearchResultsTitle :size="isAllView ? 'large' : 'default'">
-        {{ query.q }}
+        {{ searchTerm }}
       </VSearchResultsTitle>
     </header>
 
     <slot name="media" />
 
     <VExternalSearchForm
-      :type="metaSearchFormType"
+      :type="externalSourcesType"
       :has-no-results="hasNoResults"
-      :query="query"
+      :external-sources="externalSources"
+      :search-term="searchTerm"
       :is-supported="supported"
       @tab="$emit('tab', $event)"
     />
   </section>
   <VErrorSection v-else class="w-full py-10">
     <template #image>
-      <VErrorImage :error-code="NO_RESULT" />
+      <VErrorImage error-code="NO_RESULT" />
     </template>
-    <VNoResults :type="metaSearchFormType" :query="query" />
+    <VNoResults :external-sources="externalSources" :search-term="searchTerm" />
   </VErrorSection>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { ALL_MEDIA, IMAGE, SearchType, mediaTypes } from "~/constants/media"
+import {
+  ALL_MEDIA,
+  IMAGE,
+  SearchType,
+  isSupportedMediaType,
+} from "~/constants/media"
 import { NO_RESULT } from "~/constants/errors"
 import { defineEvent } from "~/types/emits"
-import type { ApiQueryParams } from "~/utils/search-query-transform"
 import type { FetchState } from "~/types/fetch-state"
+import type { ApiQueryParams } from "~/utils/search-query-transform"
+import { getAdditionalSources } from "~/utils/get-additional-sources"
 
 import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
@@ -88,29 +95,39 @@ export default defineComponent({
       // noResult is hard-coded for search types that are not currently
       // supported by Openverse built-in search
       return props.supported
-        ? props.query.q !== "" && props.resultsCount === 0
+        ? Boolean(
+            props.query.q !== "" &&
+              props.fetchState.hasStarted &&
+              props.resultsCount === 0
+          )
         : false
     })
 
     /**
-     * Metasearch form shows the external sources for current search type, or for images if the search type is 'All Content'.
+     * External sources search form shows the external sources for current search type, or for images if the search type is 'All Content'.
      */
-    const metaSearchFormType = computed(() => {
-      if (mediaTypes.includes(props.searchType)) {
+    const externalSourcesType = computed(() => {
+      if (isSupportedMediaType(props.searchType)) {
         return props.searchType
       }
       return IMAGE
     })
 
-    const isAllView = computed(() => {
-      return props.searchType === ALL_MEDIA
-    })
+    const isAllView = computed(() => props.searchType === ALL_MEDIA)
+
+    const externalSources = computed(() =>
+      getAdditionalSources(externalSourcesType.value, props.query)
+    )
+
+    const searchTerm = computed(() => props.query.q || "")
 
     return {
       hasNoResults,
-      metaSearchFormType,
+      externalSourcesType,
       isAllView,
       NO_RESULT,
+      externalSources,
+      searchTerm,
     }
   },
 })

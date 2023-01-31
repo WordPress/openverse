@@ -8,6 +8,7 @@ import {
   IMAGE,
   MediaType,
   MODEL_3D,
+  searchPath,
   SupportedSearchType,
   VIDEO,
 } from "~/constants/media"
@@ -351,7 +352,7 @@ export const goToSearchTerm = async (
   const headerMode = options.headerMode ?? NEW_HEADER
 
   if (mode === "SSR") {
-    const path = `search/${searchTypePath(searchType)}?q=${term}${query}`
+    const path = `${searchPath(searchType)}?q=${term}${query}`
     await page.goto(pathWithDir(path, dir))
     await dismissTranslationBanner(page)
   } else {

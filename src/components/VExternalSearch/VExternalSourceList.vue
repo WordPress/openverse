@@ -38,7 +38,7 @@
           {{ $t("external-sources.caption", { openverse: "Openverse" }) }}
         </p>
         <VButton
-          v-for="source in sources"
+          v-for="source in externalSources"
           :key="source.name"
           as="VLink"
           variant="plain"
@@ -60,11 +60,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
+import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import { getAdditionalSources } from "~/utils/get-additional-sources"
-import type { ApiQueryParams } from "~/utils/search-query-transform"
-import type { MediaType } from "~/constants/media"
+import type { ExternalSource } from "~/types/external-source"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -86,24 +84,18 @@ export default defineComponent({
     /**
      * the media type to use as the criteria for filtering additional sources
      */
-    type: { type: String as PropType<MediaType>, required: true },
-    /**
-     * the search query to pre-populate in the additional sources link
-     */
-    query: { type: Object as PropType<ApiQueryParams>, required: true },
+    externalSources: {
+      type: Array as PropType<ExternalSource[]>,
+      required: true,
+    },
   },
-  setup(props) {
-    const sources = computed(() =>
-      getAdditionalSources(props.type, props.query)
-    )
-
+  setup() {
     return {
       icons: {
         externalLink: externalLinkIcon,
         caretDown: caretDownIcon,
         closeSmall: closeSmallIcon,
       },
-      sources,
     }
   },
 })

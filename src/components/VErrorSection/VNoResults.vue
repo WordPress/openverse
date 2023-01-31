@@ -1,35 +1,56 @@
 <template>
   <div class="no-results text-center md:text-left">
-    <h1 class="break-words text-4xl md:text-6xl">
-      {{ $t("no-results.heading", { query: query.q }) }}
+    <h1 class="heading-4 md:heading-2 break-words">
+      {{ $t("no-results.heading", { query: searchTerm }) }}
     </h1>
-    <h2
-      class="mt-10 text-base font-normal md:mt-16 md:text-3xl md:font-semibold"
-    >
+    <h2 class="description-regular md:heading-5 mt-4">
       {{ $t("no-results.alternatives") }}
     </h2>
-    <VExternalSourceList class="mt-4 md:mt-6" :type="type" :query="query" />
+
+    <div class="mt-10 flex flex-col flex-wrap gap-4 gap-2 md:flex-row">
+      <VButton
+        v-for="source in externalSources"
+        :key="source.name"
+        as="VLink"
+        :href="source.url"
+        variant="secondary-bordered"
+        class="label-bold justify-between text-dark-charcoal md:justify-start md:gap-x-2"
+      >
+        {{ source.name }}
+        <VIcon :icon-path="externalLinkIcon" :size="4" rtl-flip />
+      </VButton>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "@nuxtjs/composition-api"
 
-import type { MediaType } from "~/constants/media"
-import type { ApiQueryParams } from "~/utils/search-query-transform"
+import type { ExternalSource } from "~/types/external-source"
 
-import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
+import VButton from "~/components/VButton.vue"
+
+import VIcon from "~/components/VIcon/VIcon.vue"
+
+import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
   name: "VNoResults",
-  components: { VExternalSourceList },
+  components: { VIcon, VButton },
   props: {
-    type: {
-      type: String as PropType<MediaType>,
+    externalSources: {
+      type: Array as PropType<ExternalSource[]>,
+      required: true,
     },
-    query: {
-      type: Object as PropType<ApiQueryParams>,
+    searchTerm: {
+      type: String,
+      required: true,
     },
+  },
+  setup() {
+    return {
+      externalLinkIcon,
+    }
   },
 })
 </script>
