@@ -9,6 +9,8 @@ DEAD_LINK_MASK_TTL = 60 * 60 * 3
 
 def get_query_hash(s: Search) -> str:
     """
+    Hash the search query using a deterministic algorithm.
+
     Generates a deterministic Murmur3 or SHA256 hash from the serialized Search
     object using DeepHash so that two Search objects with the same content will
     produce the same hash.
@@ -25,8 +27,7 @@ def get_query_hash(s: Search) -> str:
 
 def get_query_mask(query_hash: str) -> list[int]:
     """
-    Fetches an existing query mask for a given query hash
-    or returns an empty one.
+    Fetch an existing query mask for a given query hash or returns an empty one.
 
     :param query_hash: Unique value for a particular query.
     :return: Boolean mask as a list of integers (0 or 1).
@@ -38,7 +39,7 @@ def get_query_mask(query_hash: str) -> list[int]:
 
 def save_query_mask(query_hash: str, mask: list):
     """
-    Saves a query mask to redis.
+    Save a query mask to redis.
 
     :param mask: Boolean mask as a list of integers (0 or 1).
     :param query_hash: Unique value to be used as key.

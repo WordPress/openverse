@@ -57,6 +57,8 @@ RELATIVE_UPSTREAM_DB_PORT = config(
 
 def _get_shared_cols(downstream, upstream, table: str):
     """
+    Get the common columns between two tables with the same name in different DBs.
+
     Given two database connections and a table name, return the list of columns
     that the two tables have in common. The upstream table has the "_view"
     suffix attached to it.
@@ -80,14 +82,11 @@ def _get_shared_cols(downstream, upstream, table: str):
 
 def _generate_indices(conn, table: str) -> tuple[list[str], dict[str, str]]:
     """
-    Using the existing table as a template, generate CREATE INDEX statements for
-    the new table.
+    Apply the existing table indices to the new temp table imported from upstream.
 
-    :param conn: A connection to the API database.
-    :param table: The table to be updated.
-    :return: A list of CREATE INDEX statements, and a mapping from new indices to
-    the previous ones.
+    :return: a list of ``CREATE INDEX`` SQL statements
     """
+
     index_mapping = {}
 
     def _clean_idxs(indices: list[str]):
@@ -139,6 +138,7 @@ def _is_foreign_key(_statement, table):
 
 def _remap_constraint(name, con_table, fk_statement, table) -> list[SQL]:
     """Produce ALTER TABLE ... statements for each constraint."""
+
     alterations = [
         SQL("ALTER TABLE {con_table} DROP CONSTRAINT {name}").format(
             con_table=Identifier(con_table), name=Identifier(name)
@@ -173,11 +173,13 @@ def _remap_constraint(name, con_table, fk_statement, table) -> list[SQL]:
 
 def _generate_delete_orphans(fk_statement, fk_table):
     """
+    Parse the foreign key statement and generate the deletion statement.
+
     Sometimes, upstream data is deleted. If there are foreign key
     references to deleted data, we must delete them before adding
-    constraints back to the table. To accomplish this, parse the
-    foreign key statement and generate the deletion statement.
+    constraints back to the table.
     """
+
     fk_tokens = fk_statement.split(" ")
     fk_field_idx = fk_tokens.index("KEY") + 1
     fk_ref_idx = fk_tokens.index("REFERENCES") + 1
@@ -201,11 +203,11 @@ def _generate_delete_orphans(fk_statement, fk_table):
 
 def _generate_constraints(conn, table: str) -> list[SQL]:
     """
-    Using the existing table as a template, generate ALTER TABLE ADD CONSTRAINT
-    statements pointing to the new table.
+    Apply the existing table constraints to the new temp table imported from upstream.
 
-    :return: A list of SQL statements.
+    :return: a list of ``ALTER TABLE ADD CONSTRAINT`` SQL statements
     """
+
     # List all active constraints across the database.
     get_all_constraints = SQL(
         """
@@ -254,8 +256,9 @@ def refresh_api_table(
     approach: ApproachType = "advanced",
 ):
     """
-    Import updates from the upstream catalog database into the API. The
-    process involves the following steps.
+    Import updates from the upstream catalog database into the API.
+
+    The process involves the following steps.
 
     1. Get the list of overlapping columns: ``_get_shared_cols``
     2. Create the FDW extension if it does not exist
@@ -342,6 +345,8 @@ def promote_api_table(
     progress: multiprocessing.Value = None,
 ):
     """
+    Promote the temporary table in the API database to the main one.
+
     This runs after ``refresh_api_table``. The process involves the following steps.
 
     6. Recreate indices from the original table: ``_generate_indices``

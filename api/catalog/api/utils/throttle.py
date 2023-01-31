@@ -71,9 +71,9 @@ class OnePerSecond(AbstractAnonRateThrottle):
 
 class AbstractOAuth2IdRateThrottle(SimpleRateThrottle, metaclass=abc.ABCMeta):
     """
-    Ties a particular configured throttling scope from ``settings.py`` to
-    a "rate limit model". See ``ThrottledApplication.rate_limit_model``
-    for an explanation of that concept.
+    Ties a particular throttling scope from ``settings.py`` to a rate limit model.
+
+    See ``ThrottledApplication.rate_limit_model`` for an explanation of that concept.
     """
 
     scope: str

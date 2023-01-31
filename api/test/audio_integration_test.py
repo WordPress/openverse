@@ -1,6 +1,8 @@
 """
-End-to-end API tests for audio. Can be used to verify a live deployment is
-functioning as designed. Run with the `pytest -s` command from this directory.
+End-to-end API tests for audio.
+
+Can be used to verify a live deployment is functioning as designed.
+Run with the `pytest -s` command from this directory.
 """
 
 import json
@@ -60,6 +62,8 @@ def audio_fixture(force_result_validity):
 @pytest.fixture
 def jamendo_audio_fixture(force_result_validity):
     """
+    Get an audio object specifically from the Jamendo provider.
+
     Thumbnail tests must use Jamendo results because the Wikimedia
     sample audio results do not have thumbnails.
     """

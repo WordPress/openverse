@@ -177,10 +177,7 @@ If you believe you received this message in error, please disregard it.
 
 
 class VerifyEmail(APIView):
-    """
-    When the user follows the verification link sent to their email, enable
-    their OAuth2 key.
-    """
+    """Enable a user's OAuth2 key upon visiting the emailed verification link."""
 
     swagger_schema = None
 

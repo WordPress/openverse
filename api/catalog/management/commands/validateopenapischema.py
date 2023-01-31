@@ -20,9 +20,8 @@ class Command(BaseCommand):
         )
 
     def handle_validation(self, spec_dict: dict):
-        """
-        This method should raise an error if the spec is not valid.
-        """
+        """Validate the spec and raise an error if the spec is not valid."""
+
         validate_spec(spec_dict, validator=openapi_v2_spec_validator)
 
         invalid_paths = [p for p in spec_dict["paths"].keys() if not p.endswith("/")]

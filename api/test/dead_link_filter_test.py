@@ -30,6 +30,8 @@ def redis(monkeypatch) -> FakeRedis:
 @pytest.fixture(autouse=True)
 def turn_off_db_read(monkeypatch):
     """
+    Prevent DB lookup for ES results because DB is empty.
+
     Since ImageSerializer has set ``needs_db`` to ``True``, all results from ES will be
     mapped to DB models. Since the test DB is empty, results array will be empty. By
     patching ``needs_db`` to ``False``, we can test the dead link filtering process
@@ -165,9 +167,7 @@ def test_dead_link_filtering_all_dead_links(
 
 @pytest.fixture
 def search_factory(client):
-    """
-    Allows passing url parameters along with a search request.
-    """
+    """Allow passing url parameters along with a search request."""
 
     def _parameterized_search(**kwargs):
         response = requests.get(f"{API_URL}/v1/images", params=kwargs, verify=False)
@@ -180,9 +180,7 @@ def search_factory(client):
 
 @pytest.fixture
 def search_without_dead_links(search_factory):
-    """
-    Here we pass filter_dead = True.
-    """
+    """Test with ``filter_dead`` parameter set to true."""
 
     def _search_without_dead_links(**kwargs):
         return search_factory(filter_dead=True, **kwargs)
@@ -193,23 +191,21 @@ def search_without_dead_links(search_factory):
 @pytest.mark.django_db
 def test_page_size_removing_dead_links(search_without_dead_links):
     """
+    Test whether the number of results returned is equal to the requested page size.
+
     We have about 500 dead links in the sample data and should have around
     8 dead links in the first 100 results on a query composed of a single
     wildcard operator.
-
-    Test whether the number of results returned is equal to the requested
-    page_size of 20.
     """
+
     data = search_without_dead_links(q="*", page_size=20)
     assert len(data["results"]) == 20
 
 
 @pytest.mark.django_db
 def test_page_consistency_removing_dead_links(search_without_dead_links):
-    """
-    Test the results returned in consecutive pages are never repeated when
-    filtering out dead links.
-    """
+    """Test that results in consecutive pages don't repeat when filtering dead links."""
+
     total_pages = settings.MAX_PAGINATION_DEPTH
     page_size = 5
 

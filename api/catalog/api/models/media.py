@@ -30,8 +30,9 @@ class AbstractMedia(
     IdentifierMixin, ForeignIdentifierMixin, MediaMixin, OpenLedgerModel
 ):
     """
-    Generic model from which to inherit all media classes. This class stores
-    information common to all media types indexed by Openverse.
+    Generic model from which to inherit all media classes.
+
+    This class stores information common to all media types indexed by Openverse.
     """
 
     watermarked = models.BooleanField(blank=True, null=True)
@@ -99,8 +100,10 @@ class AbstractMedia(
     @property
     def attribution(self) -> str:
         """
-        The plain-text English attribution for a media item. Use this to credit creators
-        for their work and fulfill legal attribution requirements.
+        The plain-text English attribution for a media item.
+
+        Use this to credit creators for their work and fulfill legal attribution
+        requirements.
         """
 
         return get_attribution_text(
@@ -113,8 +116,9 @@ class AbstractMedia(
 
     class Meta:
         """
-        Meta class for all media types indexed by Openverse. All concrete media
-        classes should inherit their Meta class from this.
+        Meta class for all media types indexed by Openverse.
+
+        All concrete media classes should inherit their Meta class from this.
         """
 
         ordering = ["-created_on"]
@@ -129,6 +133,7 @@ class AbstractMedia(
     def __str__(self):
         """
         Return the string representation of the model, used in the Django admin site.
+
         :return: the string representation of the model
         """
 
@@ -137,8 +142,9 @@ class AbstractMedia(
 
 class AbstractMediaReport(models.Model):
     """
-    Generic model from which to inherit all reported media classes. 'Reported'
-    here refers to content reports such as mature, copyright-violating or
+    Generic model from which to inherit all reported media classes.
+
+    'Reported' here refers to content reports such as mature, copyright-violating or
     deleted content. Subclasses must populate ``media_class``, ``mature_class`` and
     ``deleted_class`` fields.
     """
@@ -195,9 +201,7 @@ class AbstractMediaReport(models.Model):
         abstract = True
 
     def clean(self):
-        """
-        This function raises errors that can be handled by Django's admin interface.
-        """
+        """Clean fields and raise errors that can be handled by Django Admin."""
 
         if not self.media_class.objects.filter(
             identifier=self.media_obj.identifier
@@ -215,8 +219,10 @@ class AbstractMediaReport(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Extend the ``save()`` functionality with Elasticsearch integration to
-        update records and refresh indices.
+        Save changes to the DB and sync them with Elasticsearch.
+
+        Extend the built-in ``save()`` functionality of Django with Elasticsearch
+        integration to update records and refresh indices.
 
         Media marked as mature or deleted also leads to instantiation of their
         corresponding mature or deleted classes.
@@ -247,8 +253,9 @@ class AbstractMediaReport(models.Model):
 
 class AbstractDeletedMedia(OpenLedgerModel):
     """
-    Generic model from which to inherit all deleted media classes. 'Deleted'
-    here refers to media which has been deleted at the source or intentionally
+    Generic model from which to inherit all deleted media classes.
+
+    'Deleted' here refers to media which has been deleted at the source or intentionally
     de-indexed by us. Unlike mature reports, this action is irreversible. Subclasses
     must populate ``media_class`` and ``es_index`` fields.
     """
@@ -298,8 +305,9 @@ class AbstractDeletedMedia(OpenLedgerModel):
 
 class AbstractMatureMedia(models.Model):
     """
-    Generic model from which to inherit all mature media classes. Subclasses must
-    populate ``media_class`` and ``es_index`` fields.
+    Generic model from which to inherit all mature media classes.
+
+    Subclasses must populate ``media_class`` and ``es_index`` fields.
     """
 
     media_class: type[models.Model] = None
@@ -361,8 +369,10 @@ class AbstractMatureMedia(models.Model):
 
 class AbstractMediaList(OpenLedgerModel):
     """
-    Generic model from which to inherit media lists. Each subclass should define
-    its own `ManyToManyField` to point to a subclass of `AbstractMedia`.
+    Generic model from which to inherit media lists.
+
+    Each subclass should define its own `ManyToManyField` to point to a subclass of
+    `AbstractMedia`.
     """
 
     title = models.CharField(max_length=2000, help_text="Display name")
@@ -412,6 +422,7 @@ class AbstractAltFile:
     def mime_type(self):
         """
         Get the MIME type of the file inferred from the extension of the file.
+
         :return: the inferred MIME type of the file
         """
 

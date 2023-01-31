@@ -35,9 +35,7 @@ from catalog.api.views.media_views import MediaViewSet
 @method_decorator(swagger_auto_schema(**AudioThumbnail.swagger_setup), "thumbnail")
 @method_decorator(swagger_auto_schema(auto_schema=None), "waveform")
 class AudioViewSet(MediaViewSet):
-    """
-    Viewset for all endpoints pertaining to audio.
-    """
+    """Viewset for all endpoints pertaining to audio."""
 
     model_class = Audio
     query_serializer_class = AudioSearchRequestSerializer

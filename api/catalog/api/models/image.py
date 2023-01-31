@@ -16,8 +16,9 @@ from catalog.api.models.mixins import FileMixin
 
 class ImageFileMixin(FileMixin):
     """
-    This mixin adds fields related to image resolution to the standard file
-    mixin. Do not use this as the sole base class.
+    This mixin adds fields related to image resolution to the standard file mixin.
+
+    Do not use this as the sole base class.
     """
 
     width = models.IntegerField(
@@ -41,6 +42,8 @@ class ImageFileMixin(FileMixin):
 
 class Image(ImageFileMixin, AbstractMedia):
     """
+    Represents one image media instance.
+
     Inherited fields
     ================
     category: eg. photograph, digitized_artwork & illustration
@@ -56,8 +59,10 @@ class Image(ImageFileMixin, AbstractMedia):
 
 class DeletedImage(AbstractDeletedMedia):
     """
-    Stores identifiers of images that have been deleted from the source. Do not create
-    instances of this model manually. Create an ``ImageReport`` instance instead.
+    Stores identifiers of images that have been deleted from the source.
+
+    Do not create instances of this model manually. Create an ``ImageReport`` instance
+    instead.
     """
 
     media_class = Image
@@ -77,8 +82,10 @@ class DeletedImage(AbstractDeletedMedia):
 
 class MatureImage(AbstractMatureMedia):
     """
-    Stores all images that have been flagged as 'mature'. Do not create instances of
-    this model manually. Create an ``ImageReport`` instance instead.
+    Stores all images that have been flagged as 'mature'.
+
+    Do not create instances of this model manually. Create an ``ImageReport`` instance
+    instead.
     """
 
     media_class = Image

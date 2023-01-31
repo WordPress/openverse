@@ -1,12 +1,13 @@
 """
-Tools for embedding Creative Commons Rights Expression Language (ccREL) data
-into files using Extensible Metadata Platform (XMP).
+Tools for embedding ccREL data into files using XMP.
+
+ccREL stands for Creative Commons Rights Expression Language. XMP stands for Extensible
+Metadata Platform.
 
 This implementation is specifically for embedding ccREL inside of images, but it
 could be extended to handle other types of content.
 
-For more information, see the ccREL W3 standard [0].
-[0] https://www.w3.org/Submission/ccREL/
+For more information, see the [ccREL W3 standard](https://www.w3.org/Submission/ccREL/).
 """
 
 import io
@@ -19,7 +20,8 @@ from libxmp.consts import XMP_NS_CC, XMP_NS_XMP, XMP_NS_XMP_Rights
 
 def embed_xmp_bytes(image: io.BytesIO, work_properties):
     """
-    Given a file-like `io.BytesIO` object, embed ccREL metadata inside of it.
+    Embed ccREL metadata inside a file-like `io.BytesIO` object.
+
     For our purposes, we assume that the file is an image.
 
     :param image: A BytesIO representation of an image.

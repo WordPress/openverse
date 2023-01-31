@@ -6,8 +6,7 @@ endpoint.
 
 def fields_to_md(field_names):
     """
-    Create a Markdown representation of the given list of names to use in
-    Swagger documentation.
+    Create a Markdown representation of the given list of names to use in Swagger docs.
 
     :param field_names: the list of field names to convert to Markdown
     :return: the names as a Markdown string

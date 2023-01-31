@@ -1,6 +1,7 @@
 """
-This file hardcodes the logical order for serializer fields to be defined in so that
-their output feels suitable for human consumption.
+This file hardcodes the logical order for serializer fields.
+
+This leads to the JSON output being more suitable for human consumption.
 """
 
 json_fields = [

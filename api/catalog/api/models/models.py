@@ -6,8 +6,9 @@ from catalog.api.models.base import OpenLedgerModel
 
 class ContentProvider(models.Model):
     """
-    A content provider instance can only be mapped to a single media type. For
-    providers providing multiple media types, use different identifiers while
+    A content provider instance can only be mapped to a single media type.
+
+    For providers providing multiple media types, use different identifiers while
     keeping the same display name.
 
     For example,

@@ -1,7 +1,8 @@
 """
-A utility for indexing data to Elasticsearch. For each table to
-sync, find its largest ID in database. Find the corresponding largest ID in
-Elasticsearch. If the database ID is greater than the largest corresponding
+A utility for indexing data to Elasticsearch.
+
+For each table to sync, find its largest ID in database. Find the corresponding largest
+ID in Elasticsearch. If the database ID is greater than the largest corresponding
 ID in Elasticsearch, copy the missing records over to Elasticsearch.
 
 Each table is database corresponds to an identically named index in
@@ -60,6 +61,7 @@ REP_TABLES = config(
 def database_connect(autocommit=False):
     """
     Repeatedly try to connect to the downstream (API) database until successful.
+
     :return: A database connection object
     """
     while True:
@@ -86,8 +88,8 @@ def database_connect(autocommit=False):
 
 def get_last_item_ids(table):
     """
-    Find the last item added to Postgres and return both its sequential ID
-    and its UUID.
+    Find the last item added to Postgres and return both its sequential ID and UUID.
+
     :param table: The name of the database table to check.
     :return: A tuple containing a sequential ID and a UUID
     """
@@ -134,10 +136,8 @@ class TableIndexer:
 
     @staticmethod
     def pg_chunk_to_es(pg_chunk, columns, model_name, dest_index):
-        """
-        Given a list of psycopg2 results, convert them all to Elasticsearch
-        documents.
-        """
+        """Convert the given list of psycopg2 results to Elasticsearch documents."""
+
         # Map column names to locations in the row tuple
         schema = {col[0]: idx for idx, col in enumerate(columns)}
         model = media_type_to_elasticsearch_model.get(model_name)
@@ -262,9 +262,7 @@ class TableIndexer:
             )
 
     def ping_callback(self):
-        """
-        Send a request to the callback URL indicating the completion of the task.
-        """
+        """Send a request to the callback URL indicating the completion of the task."""
 
         if not self.callback_url:
             return

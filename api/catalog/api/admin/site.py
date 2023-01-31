@@ -8,9 +8,10 @@ class OpenverseAdmin(admin.AdminSite):
 
     def get_app_list(self, *args, **kwargs):
         """
-        Modify the app and model list to present media specific models outside the main
-        API group. This makes the long list easier to comprehend and locating the model
-        of interest faster.
+        Present media specific models outside the main API group.
+
+        This modifies the app and model list to make it shorter and easier to
+        comprehend, thereby making it faster to locate the model of interest.
         """
 
         app_list = super().get_app_list(*args, **kwargs)

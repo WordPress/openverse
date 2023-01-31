@@ -1,8 +1,8 @@
 """
-Tests to run against a live instance of Openverse with a significant (10M+)
-number of records. Quality of search rankings can be affected by the number of
-documents in the search index, so toy examples with five or six documents
-do not accurately model relevance at scale.
+Tests to run against a live Openverse instance with a significant (10M+) record count.
+
+Quality of search rankings can be affected by the number of documents in the search
+index, so toy examples with few documents do not accurately model relevance at scale.
 """
 
 import json
@@ -27,9 +27,12 @@ def _phrase_in_title(title, term):
 
 def test_phrase_relevance():
     """
+    Test that results have the phrase in the tags or title.
+
     If I search for "home office", the top results ought to have the phrase
     'home office' in the tags or title.
     """
+
     search_term = "home office"
     response = requests.get(f"{API_URL}/image/search?q={search_term}", verify=False)
     assert response.status_code == 200

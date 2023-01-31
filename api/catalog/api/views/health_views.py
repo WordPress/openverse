@@ -12,8 +12,7 @@ class ElasticsearchHealthcheckException(APIException):
 
 class HealthCheck(APIView):
     """
-    Returns a "200 OK" response if the server is running normally. Returns 503
-    otherwise.
+    Return a "200 OK" response if the server is running normally, 503 otherwise.
 
     This endpoint is used in production to ensure that the server should receive
     traffic. If no response is provided, the server is deregistered from the
@@ -23,9 +22,8 @@ class HealthCheck(APIView):
     swagger_schema = None
 
     def _check_es(self) -> Response | None:
-        """
-        Checks Elasticsearch cluster health. Raises an exception if ES is not healthy.
-        """
+        """Check ES cluster health and raise an exception if ES is not healthy."""
+
         es_health = settings.ES.cluster.health(timeout="5s")
 
         if es_health["timed_out"]:

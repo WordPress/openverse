@@ -1,6 +1,4 @@
-"""
-This file contains configuration pertaining to Elasticsearch.
-"""
+"""This file contains configuration pertaining to Elasticsearch."""
 
 from django.conf import settings
 

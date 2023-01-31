@@ -22,9 +22,7 @@ from catalog.api.utils.url import add_protocol
 
 
 class MediaSearchRequestSerializer(serializers.Serializer):
-    """
-    This serializer parses and validates search query string parameters.
-    """
+    """This serializer parses and validates search query string parameters."""
 
     DeprecatedParam = namedtuple("DeprecatedParam", ["original", "successor"])
     deprecated_params = [
@@ -137,7 +135,7 @@ class MediaSearchRequestSerializer(serializers.Serializer):
 
     @staticmethod
     def validate_license(value):
-        """Checks whether license is a valid license code."""
+        """Check whether license is a valid license code."""
 
         licenses = value.lower().split(",")
         for _license in licenses:
@@ -150,7 +148,7 @@ class MediaSearchRequestSerializer(serializers.Serializer):
 
     @staticmethod
     def validate_license_type(value):
-        """Checks whether license type is a known collection of licenses."""
+        """Check whether license type is a known collection of licenses."""
 
         license_types = value.lower().split(",")
         license_groups = []
@@ -224,9 +222,7 @@ class MediaSearchRequestSerializer(serializers.Serializer):
 
 
 class MediaThumbnailRequestSerializer(serializers.Serializer):
-    """
-    This serializer parses and validates thumbnail query string parameters.
-    """
+    """This serializer parses and validates thumbnail query string parameters."""
 
     full_size = serializers.BooleanField(
         source="is_full_size",
@@ -273,9 +269,7 @@ class MediaReportRequestSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.Serializer):
-    """
-    This output serializer serializes a singular tag.
-    """
+    """This output serializer serializes a singular tag."""
 
     name = serializers.CharField(
         help_text="The name of a detailed tag.",
@@ -289,8 +283,9 @@ class TagSerializer(serializers.Serializer):
 
 class MediaSearchSerializer(serializers.Serializer):
     """
-    This serializer serializes the full media search response. The class should
-    be inherited by all individual media serializers.
+    This serializer serializes the full media search response.
+
+    The class should be inherited by all individual media serializers.
     """
 
     result_count = serializers.IntegerField(
@@ -310,8 +305,9 @@ class MediaSearchSerializer(serializers.Serializer):
 
 class MediaSerializer(BaseModelSerializer):
     """
-    This serializer serializes a single media file. The class should be
-    inherited by all individual media serializers.
+    This serializer serializes a single media file.
+
+    The class should be inherited by all individual media serializers.
     """
 
     class Meta:
@@ -397,10 +393,7 @@ class MediaSerializer(BaseModelSerializer):
 
 def get_search_request_source_serializer(media_type):
     class MediaSearchRequestSourceSerializer(serializers.Serializer):
-        """
-        This serializer parses and validates the source/not_source fields from the query
-        parameters.
-        """
+        """Parses and validates the source/not_source fields from the query params."""
 
         field_names = [
             "source",
@@ -429,7 +422,7 @@ def get_search_request_source_serializer(media_type):
 
         @staticmethod
         def validate_source_field(value):
-            """Checks whether source is a valid source."""
+            """Check whether source is a valid source."""
 
             allowed_sources = list(search_controller.get_sources(media_type).keys())
             sources = value.lower().split(",")
@@ -458,8 +451,9 @@ def get_search_request_source_serializer(media_type):
 def get_hyperlinks_serializer(media_type):
     class MediaHyperlinksSerializer(serializers.Serializer):
         """
-        This serializer creates URLs pointing to other endpoints related with this media
-        item such as details and related media.
+        This serializer creates URLs pointing to other endpoints for this media item.
+
+        These URLs include the thumbnail, details page and list of related media.
         """
 
         field_names = [

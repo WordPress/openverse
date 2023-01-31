@@ -1,4 +1,6 @@
 """
+These serializers handle error responses sent by API endpoints.
+
 Reference for exception handling in Django REST Framework:
     https://www.django-rest-framework.org/api-guide/exceptions/
 """

@@ -1,7 +1,4 @@
-"""
-A small RPC API server for scheduling ingestion of upstream data and
-Elasticsearch indexing tasks.
-"""
+"""A small RPC API server for scheduling data refresh and indexing tasks."""
 
 import logging
 import sys
@@ -38,8 +35,7 @@ class StatResource:
     @staticmethod
     def on_get(_, res, name):
         """
-        Handles an incoming GET request. Provides information about the given index or
-        alias.
+        Handle an incoming GET request and provides info about the given index or alias.
 
         :param _: the incoming request
         :param res: the appropriate response
@@ -54,7 +50,7 @@ class StatResource:
 
 
 class BaseTaskResource:
-    """Base class for all resource that need access to a task tracker"""
+    """Base class for all resource that need access to a task tracker."""
 
     def __init__(self, tracker: TaskTracker, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -118,7 +114,7 @@ class TaskResource(BaseTaskResource):
     )
     def on_post(self, req, res):
         """
-        Handles an incoming POST request. Schedules the specified task.
+        Handle an incoming POST request and schedule the specified task.
 
         :param req: the incoming request
         :param res: the appropriate response
@@ -219,7 +215,7 @@ class TaskResource(BaseTaskResource):
 
     def on_get(self, _, res):
         """
-        Handles an incoming GET request. Provides information about all past tasks.
+        Handle an incoming GET request and provide information about all past tasks.
 
         :param _: the incoming request
         :param res: the appropriate response
@@ -231,7 +227,7 @@ class TaskResource(BaseTaskResource):
 class TaskStatus(BaseTaskResource):
     def on_get(self, _, res, task_id):
         """
-        Handles an incoming GET request. Provides information about a single task.
+        Handle an incoming GET request and provide information about a single task.
 
         :param _: the incoming request
         :param res: the appropriate response
@@ -249,7 +245,7 @@ class TaskStatus(BaseTaskResource):
 class WorkerFinishedResource(BaseTaskResource):
     def on_post(self, req, _):
         """
-        Handles an incoming POST request. Records messages sent from indexer workers.
+        Handle an incoming POST request and record messages sent from indexer workers.
 
         :param req: the incoming request
         :param _: the appropriate response
@@ -301,9 +297,8 @@ class WorkerFinishedResource(BaseTaskResource):
 class StateResource:
     @staticmethod
     def on_delete(_, __):
-        """
-        Forget about the last scheduled indexing job.
-        """
+        """Forget about the last scheduled indexing job."""
+
         clear_state()
 
 

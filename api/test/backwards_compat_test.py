@@ -1,6 +1,5 @@
 """
-This file ensures that deprecated URLs are redirected to their updated paths and
-not left to rot.
+Ensures that deprecated URLs are redirected to their updated paths and not left to rot.
 
 Can be used to verify a live deployment is functioning as designed.
 Run with the `pytest -s` command from this directory.

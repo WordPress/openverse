@@ -1,7 +1,8 @@
 """
-Authority is a ranking from 0 to 100 (with 0 being least authoritative)
-indicating the pedigree of an image. Some examples of things that could impact
-authority:
+Authority is a ranking indicating the pedigree of an image.
+
+It ranges from 0 (least authoritative) to 100 (most authoritative). Some examples of
+things that could impact authority are:
 - The reputation of the website that posted an image
 - The popularity of the uploader on a social media site in terms of number of
 followers

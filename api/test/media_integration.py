@@ -1,5 +1,6 @@
 """
 Base test cases for all media types.
+
 These are not tests and cannot be invoked.
 """
 
@@ -10,7 +11,8 @@ import requests
 
 
 def search(fixture):
-    """Returns results for test query."""
+    """Return results for test query."""
+
     assert fixture["result_count"] > 0
 
 
@@ -40,13 +42,15 @@ def search_source_and_excluded(media_path):
 
 
 def search_quotes(media_path, q="test"):
-    """Returns a response when quote matching is messed up."""
+    """Return a response when quote matching is messed up."""
+
     response = requests.get(f'{API_URL}/v1/{media_path}?q="{q}', verify=False)
     assert response.status_code == 200
 
 
 def search_quotes_exact(media_path, q):
-    """Only returns exact matches for the given query"""
+    """Return only exact matches for the given query."""
+
     url_format = f"{API_URL}/v1/{media_path}?q={{q}}"
     unquoted_response = requests.get(url_format.format(q=q), verify=False)
     assert unquoted_response.status_code == 200
@@ -66,7 +70,8 @@ def search_quotes_exact(media_path, q):
 
 
 def search_special_chars(media_path, q="test"):
-    """Returns a response when query includes special characters."""
+    """Return a response when query includes special characters."""
+
     response = requests.get(f"{API_URL}/v1/{media_path}?q={q}!", verify=False)
     assert response.status_code == 200
 
@@ -76,7 +81,7 @@ def search_consistency(
     n_pages,
 ):
     """
-    Returns consistent, non-duplicate results in the first n pages.
+    Return consistent, non-duplicate results in the first n pages.
 
     Elasticsearch sometimes reaches an inconsistent state, which causes search
     results to appear differently upon page refresh. This can also introduce

@@ -39,8 +39,10 @@ class RankFeature(Query):
 
 def _unmasked_query_end(page_size, page):
     """
-    Used to retrieve the upper index of results to retrieve
-    from Elasticsearch under the following conditions:
+    Calculate the upper index of results to retrieve from Elasticsearch.
+
+    Used to retrieve the upper index of results to retrieve from Elasticsearch under the
+    following conditions:
     1. There is no query mask
     2. The lower index is beyond the scope of the existing query mask
     3. The lower index is within the scope of the existing query mask
@@ -55,8 +57,7 @@ def _paginate_with_dead_link_mask(
     s: Search, page_size: int, page: int
 ) -> tuple[int, int]:
     """
-    Given a query, a page and page_size, return the start and end
-    of the slice of results.
+    Return the start and end of the results slice, given the query, page and page size.
 
     In almost all cases the ``DEAD_LINK_RATIO`` will effectively double
     the page size (given the current configuration of 0.5).
@@ -120,9 +121,8 @@ def _paginate_with_dead_link_mask(
 def _get_query_slice(
     s: Search, page_size: int, page: int, filter_dead: bool | None = False
 ) -> tuple[int, int]:
-    """
-    Select the start and end of the search results for this query.
-    """
+    """Select the start and end of the search results for this query."""
+
     if filter_dead:
         start_slice, end_slice = _paginate_with_dead_link_mask(s, page_size, page)
     else:
@@ -135,10 +135,8 @@ def _get_query_slice(
 
 
 def _quote_escape(query_string):
-    """
-    If there are any unmatched quotes in the query supplied by the user, ignore
-    them.
-    """
+    """Ignore any unmatched quotes in the query supplied by the user."""
+
     num_quotes = query_string.count('"')
     if num_quotes % 2 == 1:
         return query_string.replace('"', '\\"')
@@ -150,6 +148,8 @@ def _post_process_results(
     s, start, end, page_size, search_results, request, filter_dead
 ) -> list[Hit] | None:
     """
+    Perform some steps on results fetched from the backend.
+
     After fetching the search results from the back end, iterate through the
     results, perform image validation, and route certain thumbnails through our
     proxy.
@@ -227,8 +227,9 @@ def _apply_filter(
     behaviour: Literal["filter", "exclude"] = "filter",
 ):
     """
-    Parse and apply a filter from the search parameters serializer. The
-    parameter key is assumed to have the same name as the corresponding
+    Parse and apply a filter from the search parameters serializer.
+
+    The parameter key is assumed to have the same name as the corresponding
     Elasticsearch property. Each parameter value is assumed to be a comma
     separated list encoded as a string.
 
@@ -254,9 +255,8 @@ def _apply_filter(
 
 
 def _exclude_filtered(s: Search):
-    """
-    Hide data sources from the catalog dynamically.
-    """
+    """Hide data sources from the catalog dynamically."""
+
     filter_cache_key = "filtered_providers"
     filtered_providers = cache.get(key=filter_cache_key)
     if not filtered_providers:
@@ -288,8 +288,7 @@ def search(
     page: int = 1,
 ) -> tuple[list[Hit], int, int]:
     """
-    Given a set of keywords and an optional set of filters, perform a ranked
-    paginated search.
+    Perform a ranked paginated search from the set of keywords and, optionally, filters.
 
     :param search_params: Search parameters. See
      :class: `ImageSearchQueryStringSerializer`.
@@ -423,9 +422,8 @@ def search(
 
 
 def related_media(uuid, index, request, filter_dead):
-    """
-    Given a UUID, find related search results.
-    """
+    """Given a UUID, find related search results."""
+
     search_client = Search(index=index)
 
     # Convert UUID to sequential ID.
@@ -506,8 +504,7 @@ def _get_result_and_page_count(
     response_obj: Response, results: list[Hit] | None, page_size: int, page: int
 ) -> tuple[int, int]:
     """
-    Elasticsearch does not allow deep pagination of ranked queries.
-    Adjust returned page count to reflect this.
+    Adjust related page count because ES disallows deep pagination of ranked queries.
 
     :param response_obj: The original Elasticsearch response object.
     :param results: The list of filtered result Hits.

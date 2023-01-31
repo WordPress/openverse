@@ -56,9 +56,10 @@ def validate_images(
     query_hash: str, start_slice: int, results: list[Hit], image_urls: list[str]
 ) -> None:
     """
-    Make sure images exist before we display them. Treat redirects as broken
-    links since 99% of the time the redirect leads to a generic "not found"
-    placeholder.
+    Make sure images exist before we display them.
+
+    Treat redirects as broken links since most of the time the redirect leads to a
+    generic "not found" placeholder.
 
     Results are cached in redis and shared amongst all API servers in the
     cluster.

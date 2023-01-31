@@ -6,6 +6,8 @@ from drf_yasg.utils import filter_none, force_real_str
 class CustomAutoSchema(SwaggerAutoSchema):
     def get_pagination_parameters(self):
         """
+        Set pagination params to an empty list.
+
         Since the pagination params are a part of the ``MediaSearchRequestSerializer``,
         they need not be added again as pagination params.
         """

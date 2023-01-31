@@ -1,6 +1,8 @@
 """
-End-to-end API tests. Can be used to verify a live deployment is functioning as
-designed. Run with the `pytest -s` command from this directory.
+End-to-end API tests.
+
+Can be used to verify a live deployment is functioning as designed.
+Run with the `pytest -s` command from this directory.
 """
 
 import json
@@ -65,9 +67,8 @@ def test_list_delete(test_list_create):
 
 
 def test_license_type_filtering():
-    """
-    Ensure that multiple license type filters interact together correctly.
-    """
+    """Ensure that multiple license type filters interact together correctly."""
+
     commercial = LICENSE_GROUPS["commercial"]
     modification = LICENSE_GROUPS["modification"]
     commercial_and_modification = set.intersection(modification, commercial)
@@ -97,10 +98,8 @@ def test_specific_license_filter():
 
 
 def test_creator_quotation_grouping():
-    """
-    Users should be able to group terms together with quotation marks to narrow
-    down their searches more effectively.
-    """
+    """Test that quotation marks can be used to narrow down search results."""
+
     no_quotes = json.loads(
         requests.get(f"{API_URL}/v1/images?creator=Steve%20Wedgwood", verify=False).text
     )
@@ -141,10 +140,12 @@ def test_watermark_preserves_exif():
 
 def test_attribution():
     """
-    The API includes an attribution string. Since there are some works where
-    the title or creator is not known, the format of the attribution string
-    can need to be tweaked slightly.
+    Check that the API includes an attribution string.
+
+    Since there are some works where the title or creator is not known, the format of
+    the attribution string can need to be tweaked slightly.
     """
+
     title_and_creator_missing = Image(
         identifier="ab80dbe1-414c-4ee8-9543-f9599312aeb8",
         title=None,
@@ -217,9 +218,7 @@ def test_extension_filter():
 
 @pytest.fixture
 def recommendation_factory():
-    """
-    Allows passing url parameters along with a related images request.
-    """
+    """Allow passing url parameters along with a related images request."""
 
     def _parameterized_search(identifier, **kwargs):
         response = requests.get(

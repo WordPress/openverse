@@ -52,9 +52,7 @@ from catalog.api.views.media_views import MediaViewSet
 @method_decorator(swagger_auto_schema(**ImageThumbnail.swagger_setup), "thumbnail")
 @method_decorator(swagger_auto_schema(auto_schema=None), "watermark")
 class ImageViewSet(MediaViewSet):
-    """
-    Viewset for all endpoints pertaining to images.
-    """
+    """Viewset for all endpoints pertaining to images."""
 
     model_class = Image
     query_serializer_class = ImageSearchRequestSerializer
@@ -195,10 +193,8 @@ class ImageViewSet(MediaViewSet):
 
     @staticmethod
     def _save_wrapper(pil_img, exif_bytes, destination):
-        """
-        PIL crashes if exif_bytes=None, so we have to wrap it to avoid littering
-        the code with branches.
-        """
+        """Prevent PIL from crashing if ``exif_bytes`` is ``None``."""
+
         if exif_bytes:
             pil_img.save(destination, "jpeg", exif=exif_bytes)
         else:

@@ -1,6 +1,8 @@
 """
-End-to-end API tests for images. Can be used to verify a live deployment is
-functioning as designed. Run with the `pytest -s` command from this directory.
+End-to-end API tests for images.
+
+Can be used to verify a live deployment is functioning as designed.
+Run with the `pytest -s` command from this directory.
 """
 
 import json

@@ -9,9 +9,7 @@ from elasticsearch import Elasticsearch, NotFoundError, RequestsHttpConnection
 
 
 class Stat(NamedTuple):
-    """
-    Contains information about the index or alias identified by its name.
-    """
+    """Contains information about the index or alias identified by its name."""
 
     exists: bool
     is_alias: bool | None
@@ -39,8 +37,10 @@ def elasticsearch_connect(timeout: int = 300) -> Elasticsearch:
 
 def _elasticsearch_connect() -> Elasticsearch:
     """
-    Connect to an Elasticsearch indices at the configured domain. This method also
-    handles AWS authentication using the AWS access key ID and the secret access key.
+    Connect to an Elasticsearch indices at the configured domain.
+
+    This method also handles AWS authentication using the AWS access key ID and the
+    secret access key.
 
     :return: an Elasticsearch client
     """
@@ -77,8 +77,9 @@ def _elasticsearch_connect() -> Elasticsearch:
 
 def get_stat(es: Elasticsearch, name_or_alias: str) -> Stat:
     """
-    Get more information about the index name or alias given to the function. For
-    any given input, the function offers three bits of information:
+    Get more information about the index name or alias given to the function.
+
+    For any given input, the function offers three bits of information:
 
     - whether an alias or index of the name exists
     - whether the name is an alias

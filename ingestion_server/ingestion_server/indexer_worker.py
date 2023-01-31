@@ -1,6 +1,5 @@
 """
-A single worker responsible for indexing a subset of the records stored in the
-database.
+A single worker responsible for indexing a subset of the records stored in the database.
 
 Accept an HTTP request specifying a range of image IDs to reindex. After the
 data has been indexed, notify Ingestion Server and stop the instance.
@@ -99,9 +98,8 @@ def _launch_reindex(model, table, target_index, query, indexer, notify_url):
 
 
 def _self_destruct():
-    """
-    Stop this EC2 instance once the task is finished.
-    """
+    """Stop this EC2 instance once the task is finished."""
+
     # Get instance ID from AWS metadata service
     if config("ENVIRONMENT", default="local") == "local":
         log.info("Skipping self destruction because worker is in local environment")

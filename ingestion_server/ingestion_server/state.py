@@ -1,4 +1,6 @@
 """
+Handles operations pertaining to the state of indexe workers.
+
 Indexing is distributed across multiple independent hosts. We don't want to
 "go live" in production with the newly indexed data until all of the indexing
 workers have finished their tasks. To that end, we need to track the state of
@@ -37,8 +39,7 @@ class TaskData(NamedTuple):
 
 def register_indexing_job(worker_ips, target_index, task_id):
     """
-    Track the hosts that are running indexing jobs. Only one indexing job can
-    run at a time.
+    Track the active indexer workers to prevent concurrent indexing jobs.
 
     :param worker_ips: A list of private IP addresses corresponding to the pool
     of relevant indexer-worker instances.
@@ -71,8 +72,8 @@ def register_indexing_job(worker_ips, target_index, task_id):
 
 def worker_finished(worker_ip, error):
     """
-    The scheduler received a notification indicating an indexing worker has
-    finished its task.
+    Receive the notifications indicating an indexing worker has finished its task.
+
     :param worker_ip: The private IP of the worker.
     :param error: Whether this worker had an error during processing.
     :return: TaskData namedtuple containing the target index, task_id, and the
@@ -109,9 +110,8 @@ def worker_finished(worker_ip, error):
 
 
 def clear_state():
-    """
-    Forget about all running index jobs. Use with care.
-    """
+    """Forget about all running index jobs. Use with care."""
+
     with FileLock(lock_path), shelve.open(shelf_path, writeback=True) as db:
         for key in db:
             log.info("Deleting " + str(db[key]))

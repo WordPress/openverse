@@ -1,7 +1,8 @@
 """
-Cron-like tasks run at a set interval. `python3 manage.py runcrons` will
-execute any scheduled tasks. This is intended to run on all instances of the
-server.
+Cron-like tasks run at a set interval.
+
+`python3 manage.py runcrons` will execute any scheduled tasks. This is intended to run
+on all instances of the server.
 
 Even though there may be multiple instances of the server running, a job is
 guaranteed to execute only once. Jobs are not run unless it can acquire a lock
@@ -24,6 +25,8 @@ model_name_to_instance = {"Image": Image}
 
 class SaveCachedTrafficStats(CronJobBase):
     """
+    Handle recording of stats to cache and periodically persisting them in the DB.
+
     Traffic statistics (view count, API usage) are stored in Redis for fast
     updates and retrieval. In order to ensure durability of statistics and
     minimize cache memory requirements, they are intermittently replicated to

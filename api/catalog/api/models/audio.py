@@ -43,9 +43,10 @@ class AltAudioFile(AbstractAltFile):
 
 class AudioSet(ForeignIdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     """
-    This is an ordered collection of audio files, such as a podcast series or
-    an album. Not to be confused with AudioList which is a many-to-many
-    collection of audio files, like a playlist or favourites library.
+    This is an ordered collection of audio files, such as a podcast series or an album.
+
+    Not to be confused with AudioList which is a many-to-many collection of audio files,
+    like a playlist or favourites library.
 
     The FileMixin inherited by this model refers not to audio but album art.
     """
@@ -74,6 +75,7 @@ class AudioSet(ForeignIdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
 class AudioFileMixin(FileMixin):
     """
     This mixin adds fields related to audio quality to the standard file mixin.
+
     Do not use this as the sole base class.
     """
 
@@ -136,6 +138,8 @@ class AudioAddOn(OpenLedgerModel):
 
 class Audio(AudioFileMixin, AbstractMedia):
     """
+    Represents one audio media instance.
+
     Inherited fields
     ================
     category: eg. music, sound_effect, podcast, news & audiobook
@@ -205,6 +209,7 @@ class Audio(AudioFileMixin, AbstractMedia):
     def get_waveform(self) -> list[float]:
         """
         Get the waveform if it exists. Return a blank list otherwise.
+
         :return: the waveform, if it exists; empty list otherwise
         """
 
@@ -231,8 +236,10 @@ class Audio(AudioFileMixin, AbstractMedia):
 
 class DeletedAudio(AbstractDeletedMedia):
     """
-    Stores identifiers of audio tracks that have been deleted from the source. Do not
-    create instances of this model manually. Create an ``AudioReport`` instance instead.
+    Stores identifiers of audio tracks that have been deleted from the source.
+
+    Do not create instances of this model manually. Create an ``AudioReport`` instance
+    instead.
     """
 
     media_class = Audio
@@ -255,8 +262,10 @@ class DeletedAudio(AbstractDeletedMedia):
 
 class MatureAudio(AbstractMatureMedia):
     """
-    Stores all audio tracks that have been flagged as 'mature'. Do not create instances
-    of this model manually. Create an ``AudioReport`` instance instead.
+    Stores all audio tracks that have been flagged as 'mature'.
+
+    Do not create instances of this model manually. Create an ``AudioReport`` instance
+    instead.
     """
 
     media_class = Audio

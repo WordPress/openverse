@@ -4,7 +4,9 @@ from rest_framework.views import exception_handler as drf_exception_handler
 
 def exception_handler(ex, context):
     """
-    Handle the exception raised in a DRF context. See `DRF docs`_.
+    Handle the exception raised in a DRF context.
+
+    See `DRF docs`_.
     .. _DRF docs: https://www.django-rest-framework.org/api-guide/exceptions/#custom-exception-handling  # noqa: E501
 
     :param ex: the exception that has occurred

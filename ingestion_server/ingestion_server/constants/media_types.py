@@ -1,6 +1,4 @@
-"""
-Also see `api/constants/media_types.py`
-"""
+"""Also see `api/constants/media_types.py`."""
 
 from typing import Literal, get_args
 

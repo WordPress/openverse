@@ -30,9 +30,7 @@ class SchemableHyperlinkedIdentityField(serializers.HyperlinkedIdentityField):
 
 
 class EnumCharField(serializers.CharField):
-    """
-    This field extends the ``CharField`` to add enum validation.
-    """
+    """This field extends the ``CharField`` to add enum validation."""
 
     default_error_messages = serializers.CharField.default_error_messages | {
         "outside_enum": "Invalid value: {given}. Allowed values: {allowed}"

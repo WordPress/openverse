@@ -1,6 +1,7 @@
 """
-Functions for processing data when it is imported into the catalog. This
-includes cleaning up malformed URLs and filtering out undesirable tags.
+Functions for processing data when it is imported into the catalog.
+
+This includes cleaning up malformed URLs and filtering out undesirable tags.
 """
 
 import logging as log
@@ -51,7 +52,8 @@ TAG_MIN_CONFIDENCE = 0.90
 
 
 def _tag_denylisted(tag):
-    """Tag is banned or contains a banned substring."""
+    """Check if a tag is banned or contains a banned substring."""
+
     if tag in TAG_DENYLIST:
         return True
     for denylisted_substring in TAG_CONTAINS_DENYLIST:
@@ -62,6 +64,8 @@ def _tag_denylisted(tag):
 
 class CleanupFunctions:
     """
+    This class is a loose collection of static cleanup functions.
+
     A cleanup function takes one parameter and returns the "cleaned" version if
     an update is required, otherwise None.
 
@@ -71,8 +75,11 @@ class CleanupFunctions:
     @staticmethod
     def cleanup_url(url, tls_support):
         """
-        Add protocols to the URI if they are missing, else return None.
+        Add protocols to the URI if they are missing.
+
+        :return: the URL with the protocol if an update is needed, ``None`` otherwise
         """
+
         parsed = urlparse(url)
         if parsed.scheme == "":
             _tld = tldextract.extract(url)
@@ -94,10 +101,11 @@ class CleanupFunctions:
     @staticmethod
     def cleanup_tags(tags):
         """
-        Delete tags because they have low accuracy or because they are in the
-        denylist. If no change is made, return None.
-        :return: A SQL fragment if an update is required or None
+        Delete denylisted and low-accuracy tags.
+
+        :return: an SQL fragment if an update is needed, ``None`` otherwise
         """
+
         update_required = False
         tag_output = []
         if not tags:
@@ -148,6 +156,8 @@ _cleanup_config = {
 
 class TlsTest:
     """
+    Test URLs to add the correct protocol when missing and use HTTPS when available.
+
     URLs crawled from upstream are often lacking protocol information, or
     use HTTP when HTTPS is available. We have to test a small sample of the
     URLs to determine what protocol should be appended to each URL in the
@@ -228,14 +238,13 @@ def _clean_data_worker(rows, temp_table, sources_config):
 
 def clean_image_data(table):
     """
-    Data from upstream can be unsuitable for production for a number of reasons.
-    Clean it up before we go live with the new data.
+    Clean up data loaded from upstream that is unsuitable for prod before going live.
 
     :param table: The staging table for the new data
-    :param upstream_db: A dict specifying the connection details of the upstream
-    database.
+    :param upstream_db: A dict specifying the connection details of the upstream DB
     :return: None
     """
+
     # Map each table to the fields that need to be cleaned up. Then, map each
     # field to its cleanup function.
     log.info("Cleaning up data...")

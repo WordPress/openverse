@@ -34,7 +34,10 @@ def test_sends_user_agent(wrapped_client_session: mock.AsyncMock):
 
 def test_handles_timeout():
     """
-    Note: This test takes just over 3 seconds to run as it simulates network delay of 3 seconds.
+    Test that case where timeout occurs.
+
+    Note: This test takes just over 3 seconds to run as it simulates network delay of
+    3 seconds.
     """
     query_hash = "test_handles_timeout"
     results = [{"identifier": i} for i in range(1)]

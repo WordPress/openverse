@@ -5,8 +5,9 @@ from django.db import models
 
 class IdentifierMixin(models.Model):
     """
-    This mixin adds fields related to unique ID, both internal and external, to
-    any model. Do not use this as the sole base class.
+    This mixin adds fields related to unique ID, both internal and external, to a model.
+
+    Do not use this as the sole base class.
 
     The mixins adds
 
@@ -25,8 +26,9 @@ class IdentifierMixin(models.Model):
 
 class ForeignIdentifierMixin(models.Model):
     """
-    This mixin adds fields related to the external unique ID to any model. Do
-    not use this as the sole base class.
+    This mixin adds fields related to the external unique ID to any model.
+
+    Do not use this as the sole base class.
 
     This mixin adds
 
@@ -47,8 +49,9 @@ class ForeignIdentifierMixin(models.Model):
 
 class MediaMixin(models.Model):
     """
-    This mixin adds fields related to a creative creation such as the title of
-    the work and info about the artist. Do not use this as the sole base class.
+    This mixin adds fields related to a creation such as the title and artist info.
+
+    Do not use this as the sole base class.
 
     The mixin adds
 
@@ -111,8 +114,9 @@ class MediaMixin(models.Model):
 
 class FileMixin(models.Model):
     """
-    This mixin adds fields related to file such as the file URL and size to any
-    model. Do not use this as the sole base class.
+    This mixin adds fields related to file such as the file URL and size to any model.
+
+    Do not use this as the sole base class.
 
     This mixin adds
 
@@ -153,6 +157,7 @@ class FileMixin(models.Model):
     def mime_type(self):
         """
         Get the MIME type of the file inferred from the extension of the file.
+
         :return: the inferred MIME type of the file
         """
 

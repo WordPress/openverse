@@ -9,6 +9,8 @@ from catalog.api.models.audio import Audio, AudioAddOn
 
 def paginate_reducing_query(get_query_set, page_size=10):
     """
+    Iterate over the given query set yielding a specific number of entries each time.
+
     We can't use `Paginator` because it can't handle the situation
     where the query result changes each time a page is accessed.
     Because the `audios` QuerySet result is naturally getting smaller

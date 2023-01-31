@@ -8,8 +8,10 @@ from ingestion_server.constants.internal_types import ApproachType
 
 def get_existence_queries(model: str, table: str = None) -> tuple[SQL, SQL]:
     """
-    Get the query for checking whether an identifier exists in the deleted or
-    the mature tables for the media. The media tables are assumed to be named
+    Get the query for checking whether a media is deleted or mature.
+
+    Returns two SQL queries for checking if an identifier exists in the deleted or the
+    mature tables for the media respectively. The media tables are assumed to be named
     with the prefixes "api_deleted" and "api_mature" respectively.
 
     :param model: the name to use for the deleted and mature tables
@@ -50,9 +52,10 @@ def get_fdw_query(
     host: str, port: int, dbname: str, user: str, password: str, table: str
 ):
     """
-    Get the query for creating a new FDW to be used when copying data from the
-    upstream DB to the downstream DB. It creates a new schema named "upstream"
-    in which the upstream table can be accessed.
+    Get the query for creating a new FDW from the upstream DB to the downstream DB.
+
+    This FDW will be used when copying data. It creates a new schema named "upstream"
+    in the downstream DB through which the upstream table can be accessed.
 
     :param host: the hostname of the upstream DB relative to the downstream
     :param port: the exposed port of the upstream DB accessible from downstream
@@ -95,11 +98,12 @@ def get_copy_data_query(
     limit: int | None = 100_000,
 ):
     """
-    Get the query for copying data from the upstream table to a temporary table
-    in the downstream database. This temporary table will replace the permanent
-    one later on. This query uses the "temp_import_" prefix on the temporary
-    table and avoids entries from the deleted table with the "api_deleted"
-    prefix. After the copying process, the "upstream" schema is dropped.
+    Get the query for copying data from an upstream table to a temp downstream table.
+
+    This temporary table in the downstream DB will eventually replace the permanent one.
+    This query uses the "temp_import_" prefix on the temporary table and avoids entries
+    from the deleted table with the "api_deleted" prefix. After the copying process,
+    the "upstream" schema is dropped and the FDW is closed.
 
     When running this on a non-production environment, the results will be ordered
     by `identifier` to simulate a random sample and only the first 100k records
@@ -208,8 +212,9 @@ def get_copy_data_query(
 
 def get_go_live_query(table: str, index_mapping: dict[str, str]):
     """
-    Get the query for replacing the old table with new temporary table. The
-    temporary table with the "temp_import_" prefix replaces the un-prefixed
+    Get the query for replacing the old table with new temporary table.
+
+    The temporary table with the "temp_import_" prefix replaces the un-prefixed
     old table.
 
     :param table: the name of the old table being replaced with the temp

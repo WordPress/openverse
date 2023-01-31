@@ -4,9 +4,7 @@ from oauth2_provider.models import AbstractApplication
 
 
 class OAuth2Registration(models.Model):
-    """
-    Information about API key applicants.
-    """
+    """Information about API key applicants."""
 
     name = models.CharField(
         max_length=150,
@@ -27,9 +25,7 @@ class OAuth2Registration(models.Model):
 
 
 class ThrottledApplication(AbstractApplication):
-    """
-    An OAuth2 application with adjustable rate limits.
-    """
+    """An OAuth2 application with adjustable rate limits."""
 
     RATE_LIMIT_MODELS = [
         ("standard", "standard"),  # Default rate limit for all API keys.
@@ -46,8 +42,9 @@ class ThrottledApplication(AbstractApplication):
 
 class OAuth2Verification(models.Model):
     """
-    An email verification code sent by noreply-catalog. After verification
-    occurs, the entry should be deleted.
+    An email verification code sent by noreply-catalog.
+
+    After verification occurs, the entry should be deleted.
     """
 
     associated_application = models.ForeignKey(

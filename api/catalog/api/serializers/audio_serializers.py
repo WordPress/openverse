@@ -175,8 +175,9 @@ class AudioSerializer(AudioHyperlinksSerializer, MediaSerializer):
 class AudioSearchSerializer(MediaSearchSerializer):
     """
     The full audio search response.
-    This serializer is purely representational and not actually used to
-    serialize the response.
+
+    This serializer is purely representational and not actually used to serialize the
+    response.
     """
 
     results = AudioSerializer(

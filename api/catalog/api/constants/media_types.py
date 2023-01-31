@@ -1,6 +1,4 @@
-"""
-Also see `ingestion_server/constants/media_types.py`
-"""
+"""Also see `ingestion_server/constants/media_types.py`."""
 
 AUDIO_TYPE = "audio"
 IMAGE_TYPE = "image"

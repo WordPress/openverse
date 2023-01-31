@@ -18,8 +18,9 @@ class RankFeature(Field):
 
 def _verify_rank_feature(value, low, high):
     """
-    Rank features must be a positive non-zero float. Our features are scaled
-    from 0 to 100 for fair comparison.
+    Rank features must be a positive non-zero float.
+
+    Our features are scaled from 0 to 100 for fair comparison.
     """
     if value is None or value == 0:
         return None
@@ -29,10 +30,7 @@ def _verify_rank_feature(value, low, high):
 
 
 class SyncableDocType(Document):
-    """
-    Represents tables in the source-of-truth that will be replicated to
-    Elasticsearch.
-    """
+    """Represents tables in the source-of-truth that will be replicated to ES."""
 
     # Aggregations can't be performed on the _id meta-column, which
     # necessitates copying it to this column in the doc. Aggregation is
@@ -42,8 +40,7 @@ class SyncableDocType(Document):
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
         """
-        Children of this class must have a function mapping a Postgres model
-        to an Elasticsearch document.
+        Children of this class must have a function mapping a PSQL model to an ES doc.
 
         :param row: A tuple representing a row in Postgres.
         :param schema: A map of each field name to its position in the row.
@@ -56,8 +53,9 @@ class SyncableDocType(Document):
 
 class Media(SyncableDocType):
     """
-    Represents a media object in Elasticsearch. Note that actual mappings
-    are defined in `ingestion_server.es_mapping`.
+    Represents a media object in Elasticsearch.
+
+    Note that actual mappings are defined in `ingestion_server.es_mapping`.
     """
 
     class Index:
@@ -66,8 +64,7 @@ class Media(SyncableDocType):
     @staticmethod
     def database_row_to_elasticsearch_doc(row: tuple, schema: dict[str, int]):
         """
-        Map each row in the downstream database to a Python dictionary that
-        represents a document in the ElasticSearch index.
+        Map the DB row to a Python dictionary that represents a doc in the ES index.
 
         :param row: the database row as a tuple obtained by the psycopg2 cursor
         :param schema: the mapping of database column names to the tuple index
@@ -81,8 +78,9 @@ class Media(SyncableDocType):
     @staticmethod
     def get_instance_attrs(row, schema):
         """
-        Map the common columns in the database row to a Python dictionary that
-        represents a part of the ES doc.
+        Map the common columns in the DB row to a Python dictionary.
+
+        This dictionary is a smaller part of the document indexed by Elasticsearch.
 
         :param row: the database row as a tuple obtained by the psycopg2 cursor
         :param schema: the mapping of database column names to the tuple index
@@ -137,6 +135,8 @@ class Media(SyncableDocType):
     @staticmethod
     def get_license_url(meta_data):
         """
+        Get license URL from the metadata.
+
         If the license_url is not provided, we'll try to generate it elsewhere
         from the `license` and `license_version`.
         """
@@ -149,6 +149,7 @@ class Media(SyncableDocType):
     def get_maturity(meta_data, api_maturity_flag):
         """
         Determine whether a work has been labeled for mature audiences only.
+
         :param meta_data: The metadata column, which may have a 'mature'
         flag.
         :param api_maturity_flag: An API layer flag that indicates we have
@@ -199,15 +200,13 @@ class Media(SyncableDocType):
 
 class Image(Media):
     """
-    Represents an image in Elasticsearch. Note that actual mappings are defined
-    in `ingestion_server.es_mapping`.
+    Represents an image in Elasticsearch.
+
+    Note that actual mappings are defined in `ingestion_server.es_mapping`.
     """
 
     class AspectRatios(Enum):
-        """
-        These aspect ratios are also defined in
-        ``api/catalog/api/constants/field_values.py.``
-        """
+        """Also defined in ``api/catalog/api/constants/field_values.py``."""
 
         TALL = auto()
         WIDE = auto()
@@ -215,7 +214,7 @@ class Image(Media):
 
     class ImageSizes(Enum):
         """
-        Maximum threshold for each image size band
+        Maximum threshold for each image size band.
 
         These sizes are also defined in
         ``api/catalog/api/constants/field_values.py.``
@@ -272,6 +271,7 @@ class Image(Media):
     def get_extension(url):
         """
         Get the extension from the last segment of the URL separated by a dot.
+
         TODO: Use the `filetype` field once the following issue is completed:
         https://github.com/WordPress/openverse-catalog/issues/536
         """
@@ -293,13 +293,14 @@ class Image(Media):
 
 class Audio(Media):
     """
-    Represents an audio in Elasticsearch. Note that actual mappings are defined
-    in `ingestion_server.es_mapping`.
+    Represents an audio in Elasticsearch.
+
+    Note that actual mappings are defined in `ingestion_server.es_mapping`.
     """
 
     class Durations(Enum):
         """
-        Maximum threshold for each audio duration band
+        Maximum threshold for each audio duration band.
 
         These durations are also defined in
         ``api/catalog/api/constants/field_values.py.``

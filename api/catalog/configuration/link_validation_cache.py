@@ -13,9 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class LinkValidationCacheExpiryConfiguration(defaultdict):
-    """
-    Link validation cache expiry configuration.
-    """
+    """Link validation cache expiry configuration."""
 
     SETTING_PREFIX = "LINK_VALIDATION_CACHE_EXPIRY__"
 

@@ -6,14 +6,15 @@ from ingestion_server.elasticsearch_models import Audio, Image
 
 def create_mock_audio(override=None):
     """
-    Produce a mock audio. Override default fields by passing in a dict with the
-    desired keys and values.
+    Produce a mock audio.
 
+    Override default fields by passing in a dict with the desired keys and values.
     For example, to make an image with a custom title and default everything
     else:
     >>> create_mock_audio({'title': 'My title'})
     :return:
     """
+
     test_popularity = {"downloads": 3}
     license_url = "http://creativecommons.org/publicdomain/zero/1.0/"
     meta_data = {"popularity_metrics": test_popularity, "license_url": license_url}
@@ -65,14 +66,15 @@ def create_mock_audio(override=None):
 
 def create_mock_image(override=None):
     """
-    Produce a mock image. Override default fields by passing in a dict with the
-    desired keys and values.
+    Produce a mock image.
 
+    Override default fields by passing in a dict with the desired keys and values.
     For example, to make an image with a custom title and default everything
     else:
     >>> create_mock_image({'title': 'My title'})
     :return:
     """
+
     test_popularity = {"views": 50, "likes": 3, "comments": 1}
     license_url = "https://creativecommons.org/licenses/by/2.0/fr/legalcode"
     meta_data = {"popularity_metrics": test_popularity, "license_url": license_url}

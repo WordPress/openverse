@@ -1,4 +1,6 @@
 """
+This module handles distributed reindexing.
+
 Allocate hardware for performing a distributed index by spawning several
 indexer_worker instances on multiple machines. Then, partition the work across
 each worker, notifying each worker which partition to reindex through an HTTP
@@ -31,9 +33,8 @@ def schedule_distributed_index(db_conn, model_name, table_name, target_index, ta
 
 
 def _assign_work(db_conn, workers, model_name, table_name, target_index):
-    """
-    Target index has a form of `<media_type>-<uuid>`
-    """
+    """Assign jobs to workers."""
+
     est_records_query = f"SELECT id FROM {table_name} ORDER BY id DESC LIMIT 1"
     with db_conn.cursor() as cur:
         cur.execute(est_records_query)
@@ -62,8 +63,9 @@ def _assign_work(db_conn, workers, model_name, table_name, target_index):
 
 def _prepare_workers():
     """
-    Get a list of internal URLs bound to each indexing worker. If the worker is
-    stopped, start the worker.
+    Get a list of internal URLs bound to each indexing worker.
+
+    If the worker is stopped, start the worker.
 
     :return: A list of private URLs pointing to each available indexing worker
     """

@@ -54,9 +54,7 @@ def _test_audio(title, tags, creator, relevance):
 
 
 def _phrase_relevance_images(index):
-    """
-    Creates documents for images with varying relevance in the given index.
-    """
+    """Create documents for images with varying relevance in the given index."""
 
     less_relevant_1 = _test_image(
         title="A picture of my office",
@@ -93,9 +91,7 @@ def _phrase_relevance_images(index):
 
 
 def _phrase_relevance_audio(index):
-    """
-    Creates documents for audio with varying relevance in the given index.
-    """
+    """Create documents for audio with varying relevance in the given index."""
 
     less_relevant_1 = _test_audio(
         title="Symphony No. 1 in C major, Op. 21",

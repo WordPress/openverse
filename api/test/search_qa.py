@@ -1,6 +1,4 @@
-"""
-Perform some basic tests to ensure that search rankings work as anticipated.
-"""
+"""Perform some basic tests to ensure that search rankings work as anticipated."""
 
 import json
 import pprint

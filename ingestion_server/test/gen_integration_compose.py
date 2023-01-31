@@ -1,6 +1,5 @@
 """
-Parses the top-level Docker Compose file and generates a Docker Compose file for
-the integration tests.
+Parses the top-level Docker Compose file and generates one for the integration tests.
 
 The generated file is written to the same directory this script resides in with
 the name ``integration-docker-compose.yml``.
@@ -27,8 +26,10 @@ dest_dc_path = this_dir.joinpath("integration-docker-compose.yml")
 
 def _prune_services(conf: dict):
     """
-    Prune the unnecessary services from the Docker Compose configuration,
-    keeping only those that are used in the integration tests.
+    Prune the unnecessary services from the Docker Compose configuration.
+
+    After this step, only those that are used in the integration tests are left.
+
     :param conf: the Docker Compose configuration
     """
 
@@ -40,8 +41,11 @@ def _prune_services(conf: dict):
 
 def _map_ports(conf: dict):
     """
-    Change the port mappings for the services so as to not conflict any running
-    containers that might be using those ports.
+    Change the port mappings for the services to avoid conflicts.
+
+    This ensures that the test containers do not use the same ports as dev containers
+    that might already be using them.
+
     :param conf: the Docker Compose configuration
     """
 
@@ -60,8 +64,10 @@ def _map_ports(conf: dict):
 
 def _fixup_env(conf: dict):
     """
-    Change the relative paths to the environment files to absolute paths so that
-    they hold up in the new Docker Compose file.
+    Change the relative paths to the environment files to absolute paths.
+
+    This ensures that they are point to valid locations in the new Docker Compose file.
+
     :param conf: the Docker Compose configuration
     """
 
@@ -75,8 +81,10 @@ def _fixup_env(conf: dict):
 
 def _remove_volumes(conf: dict):
     """
-    Remove the volumes from the compose configuration so that the images begin with
-    a fresh start on every startup.
+    Remove the volumes from the compose configuration.
+
+    This ensures that the images begin with a fresh start on every startup.
+
     :param conf: the Docker Compose configuration
     """
     volumes_to_remove = {
@@ -95,8 +103,8 @@ def _remove_volumes(conf: dict):
 
 def _change_directories(conf: dict):
     """
-    Update the relative paths of the directories such as build context or bind
-    volumes attached to the containers.
+    Update the relative paths of the directories like build context or bind volumes.
+
     :param conf: the Docker Compose configuration
     """
 
@@ -109,8 +117,8 @@ def _change_directories(conf: dict):
 
 def _rename_services(conf: dict):
     """
-    Add the 'integration_' prefix to the services to distinguish them from the
-    normal services running in dev environments.
+    Add the 'integration_' prefix to the services to distinguish them from dev services.
+
     :param conf: the Docker Compose configuration
     """
 

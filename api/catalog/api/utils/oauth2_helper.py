@@ -13,8 +13,7 @@ _no_result = (None, None, None)
 
 def get_token_info(token: str):
     """
-    Recover an OAuth2 application client ID and rate limit model from an access
-    token.
+    Recover an OAuth2 application client ID and rate limit model from an access token.
 
     :param token: An OAuth2 access token.
     :return: If the token is valid, return the client ID associated with the
