@@ -31,53 +31,34 @@ class PhylopicDataIngester(ProviderDataIngester):
     providers = {constants.IMAGE: prov.PHYLOPIC_DEFAULT_PROVIDER}
     batch_limit = 25
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # This is made an instance attribute rather than passed around via query params
-        # because the URL we hit includes it in the path (not the params) depending on
-        # whether we're running a dated DAG or not. This needs to start at 0 after
-        # getting called once, so we do not set it as a sentinel for the
-        # get_next_query_params function.
-        self.offset = None
-
     @property
     def endpoint(self) -> str:
         """
-        If this is being run as a dated DAG, **only one request is ever issued** to
-        retrieve all updated IDs. As such, the dated version will only return one
-        endpoint. The full run DAG does require the typical offset + limit, which gets
-        recomputed on each call to this property.
+        Due to the way this DAG is run (via a dated range), **only one request is ever
+        issued** to retrieve all updated IDs. As such, it will only
+        return one endpoint.
         """
         list_endpoint = f"{self.base_endpoint}/list"
-        if self.date:
-            # Process for a given date
-            end_date = (date.fromisoformat(self.date) + timedelta(days=1)).isoformat()
-            # Get a list of objects uploaded/updated within a date range
-            # http://phylopic.org/api/#method-image-time-range
-            endpoint = f"{list_endpoint}/modified/{self.date}/{end_date}"
-        else:
-            # Get all images and limit the results for each request.
-            endpoint = f"{list_endpoint}/{self.offset}/{self.batch_limit}"
+        # Process for a given date
+        end_date = (date.fromisoformat(self.date) + timedelta(days=1)).isoformat()
+        # Get a list of objects uploaded/updated within a date range
+        # http://phylopic.org/api/#method-image-time-range
+        endpoint = f"{list_endpoint}/modified/{self.date}/{end_date}"
         logger.info(f"Constructed endpoint: {endpoint}")
         return endpoint
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         """
-        Since the query range is determined via endpoint, this only increments the range
-        to query.
+        Since the range is determined by the endpoint property, this step is a noop.
         """
-        if self.offset is None:
-            self.offset = 0
-        else:
-            self.offset += self.batch_limit
         return {}
 
     def get_should_continue(self, response_json):
         """
-        Override for upstream "return True". Dated runs will only ever make 1 query so
+        Override for upstream "return True". This DAG will only ever make 1 query so
         they should not continue to loop.
         """
-        return not bool(self.date)
+        return False
 
     @staticmethod
     def _get_response_data(response_json) -> dict | list | None:

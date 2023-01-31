@@ -24,66 +24,15 @@ def get_json(filename):
 @pytest.fixture
 def ingester() -> PhylopicDataIngester:
     _pp = PhylopicDataIngester()
-    offset = _pp.offset
-    batch_limit = _pp.batch_limit
     yield _pp
-    _pp.offset = offset
-    _pp.batch_limit = batch_limit
 
 
-@pytest.mark.parametrize(
-    "offset, limit, non_dated_endpoint",
-    [
-        # Basic limit/offset changes
-        (0, 25, "http://phylopic.org/api/a/image/list/0/25"),
-        (0, 30, "http://phylopic.org/api/a/image/list/0/30"),
-        (60, 30, "http://phylopic.org/api/a/image/list/60/30"),
-    ],
-)
-@pytest.mark.parametrize(
-    "date, dated_endpoint",
-    [
-        # Defer to non-dated case
-        (None, None),
-        # Dated DAG produces specific endpoint irrespective of everything else
-        (
-            "2022-01-01",
-            "http://phylopic.org/api/a/image/list/modified/2022-01-01/2022-01-02",
-        ),
-    ],
-)
-def test_endpoint(
-    offset,
-    limit,
-    non_dated_endpoint,
-    date,
-    dated_endpoint,
-    ingester,
-):
-    # Defer to dated endpoint if provided
-    expected_endpoint = dated_endpoint or non_dated_endpoint
-    ingester.date = date
-    ingester.offset = offset
-    ingester.batch_limit = limit
+def test_endpoint(ingester):
+    expected_endpoint = (
+        "http://phylopic.org/api/a/image/list/modified/2022-01-01/2022-01-02"
+    )
+    ingester.date = "2022-01-01"
     assert ingester.endpoint == expected_endpoint
-
-
-def test_get_next_query_params(ingester):
-    # Initial call sets offset to 0
-    ingester.batch_limit = 50
-    # Offset after the first call should be 0, then increment by batch limit
-    # each other iteration
-    for expected_offset in [0, 50, 100]:
-        ingester.get_next_query_params({})
-        assert ingester.offset == expected_offset
-
-
-@pytest.mark.parametrize("dated", [True, False])
-def test_get_should_continue(dated, ingester):
-    ingester.date = dated
-    actual = ingester.get_should_continue({})
-    # Should continue only if we're running as non-dated
-    assert actual == (not dated)
 
 
 @pytest.mark.parametrize(
