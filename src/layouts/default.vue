@@ -69,6 +69,7 @@ import {
   onMounted,
   provide,
   ref,
+  useContext,
   watch,
 } from "@nuxtjs/composition-api"
 import { PortalTarget as VTeleportTarget } from "portal-vue"
@@ -93,8 +94,8 @@ import VModalTarget from "~/components/VModal/VModalTarget.vue"
 import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 
-const embeddedPage = {
-  name: "embedded",
+export default {
+  name: "DefaultLayout",
   components: {
     VBanners,
     VHeaderDesktop: () => import("~/components/VHeader/VHeaderDesktop.vue"),
@@ -109,6 +110,7 @@ const embeddedPage = {
     VSearchGridFilter,
   },
   setup() {
+    const { app } = useContext()
     const uiStore = useUiStore()
     const featureFlagStore = useFeatureFlagStore()
     const searchStore = useSearchStore()
@@ -131,15 +133,19 @@ const embeddedPage = {
     const { matches: isSingleResultRoute } = useMatchSingleResultRoutes()
     const { matches: isContentPageRoute } = useMatchContentPageRoutes()
 
+    const nuxtError = computed(() => app.nuxt.err)
+
     const isWhite = computed(
       () =>
-        isSearchRoute.value ||
-        isSingleResultRoute.value ||
-        isContentPageRoute.value
+        !nuxtError.value &&
+        (isSearchRoute.value ||
+          isSingleResultRoute.value ||
+          isContentPageRoute.value)
     )
 
     const isSearchHeader = computed(
-      () => isSearchRoute.value || isSingleResultRoute.value
+      () =>
+        !nuxtError.value && (isSearchRoute.value || isSingleResultRoute.value)
     )
 
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
@@ -198,7 +204,6 @@ const embeddedPage = {
     return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
   },
 }
-export default embeddedPage
 </script>
 
 <style scoped>

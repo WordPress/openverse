@@ -1,8 +1,8 @@
 import { expect, Page, test } from "@playwright/test"
 
 import {
+  enableNewHeader,
   goToSearchTerm,
-  OLD_HEADER,
   renderModes,
   t,
 } from "~~/test/playwright/utils/navigation"
@@ -11,10 +11,6 @@ import { mockProviderApis } from "~~/test/playwright/utils/route"
 import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
-
-test.beforeEach(async ({ context }) => {
-  await mockProviderApis(context)
-})
 
 const loadMoreButton = `button:has-text("${t("browse-page.load", "ltr")}")`
 
@@ -46,6 +42,11 @@ const openSingleMediaView = async (
  */
 
 test.describe("Load more button", () => {
+  test.beforeEach(async ({ context, page }) => {
+    await mockProviderApis(context)
+    await enableNewHeader(page)
+  })
+
   test("Clicking sends 2 requests on All view with enough results", async ({
     page,
   }) => {
@@ -125,7 +126,6 @@ test.describe("Load more button", () => {
         await goToSearchTerm(page, "horses snort", {
           mode,
           searchType: AUDIO,
-          headerMode: OLD_HEADER,
         })
         await expect(page.locator(loadMoreButton)).not.toBeVisible()
       })

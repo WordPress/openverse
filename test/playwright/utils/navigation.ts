@@ -468,9 +468,13 @@ export const enableOldHeader = async (page: Page) => {
   await setCookies(page.context(), { features: { new_header: "off" } })
 }
 
+export interface CookieMap {
+  [key: string]: string | boolean | string[] | CookieMap
+}
+
 export const setCookies = async (
   context: BrowserContext,
-  cookies: Record<string, string | boolean | string[] | Record<string, string>>
+  cookies: CookieMap
 ) => {
   await context.addCookies(
     Object.entries(cookies).map(([name, value]) => ({
