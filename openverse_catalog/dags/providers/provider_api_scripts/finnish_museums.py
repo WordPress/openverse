@@ -18,6 +18,7 @@ import logging
 from datetime import datetime, timedelta, timezone
 from itertools import chain
 
+from airflow.exceptions import AirflowException
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -33,7 +34,6 @@ LANDING_URL = "https://www.finna.fi/Record/"
 
 PROVIDER = prov.FINNISH_DEFAULT_PROVIDER
 SUB_PROVIDERS = prov.FINNISH_SUB_PROVIDERS
-BUILDINGS = ["0/Suomen kansallismuseo/", "0/Museovirasto/", "0/SATMUSEO/", "0/SA-kuva/"]
 
 
 class FinnishMuseumsDataIngester(ProviderDataIngester):
@@ -42,54 +42,153 @@ class FinnishMuseumsDataIngester(ProviderDataIngester):
     batch_limit = 100
     delay = 5
     format_type = "0/Image/"
+    buildings = [
+        "0/Suomen kansallismuseo/",
+        "0/Museovirasto/",
+        "0/SATMUSEO/",
+        "0/SA-kuva/",
+    ]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # A flag that is turned on each time we start ingestion for a new set of
-        # query params. This is useful for logging information on only the first
-        # batch of each set.
-        self.new_iteration = True
+        """
+        This DAG runs ingestion separately for each configured `building`. When a
+        building has many records for the ingestion date, the DAG further splits up
+        ingestion into time slices. Each run of the `ingest_records` function for
+        a particular (building, time slice) pair is an "iteration" of the DAG.
 
-        # Build the list of timestamp pairs once, so they can be reused for each
-        # building queried.
-        self.timestamp_pairs = self._get_timestamp_query_params_list(self.date)
+        For logging and alerting purposes, we maintain several instance variables
+        that help track each iteration.
+        """
+        # A flag that is True only when we are processing the first batch of data in
+        # a new iteration.
+        self.new_iteration = True
+        # Use to keep track of the number of records we've fetched from the API so far,
+        # specifically in this iteration.
+        self.fetched_count = 0
+
+        super().__init__(*args, **kwargs)
 
     @staticmethod
-    def _get_timestamp_query_params_list(date):
+    def format_ts(timestamp):
+        return timestamp.isoformat().replace("+00:00", "Z")
+
+    @staticmethod
+    def _get_timestamp_query_params_list(
+        start_date: datetime, end_date: datetime, number_of_divisions: int
+    ) -> list[tuple[datetime, datetime]]:
         """
-        The Finnish Museums API behaves unexpectedly when querying large datasets,
-        resulting in large numbers of duplicates and eventual DAG timeouts
-        (see https://github.com/WordPress/openverse-catalog/pull/879 for more
-        details). To avoid this, we build a list of timestamp pairs that divide
-        the ingestion date into equal portions of the 24-hour period, and run
-        ingestion separately for each time slice.
+        Given a start_date and end_date, returns a list of timestamp pairs that
+        divides the time interval between them into equal portions, with the
+        number of portions determined by `number_of_divisions`.
+
+        Required Arguments:
+        start_date:          datetime to be considered start of the interval
+        end_date:            datetime to be considered end of the interval
+        number_of_divisions: int number of portions to divide the interval into.
         """
-        # Get the logical date for the DagRun
-        utc_date = datetime.strptime(date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        seconds_in_time_slice = (end_date - start_date).total_seconds()
+        portion = int(seconds_in_time_slice / number_of_divisions)
+        # Double check that the division resulted in even portions
+        if seconds_in_time_slice % number_of_divisions:
+            raise ValueError(
+                f"The time slice from {start_date} to {end_date} cannot be divided "
+                f"evenly into {number_of_divisions} parts!"
+            )
 
-        seconds_in_a_day = 86400
-        number_of_divisions = 48  # Half-hour increments
-        portion = int(seconds_in_a_day / number_of_divisions)
-
-        def _format_timestamp(d):
-            return d.isoformat().replace("+00:00", "Z")
-
-        # Generate the start/end timestamps for each half-hour 'slice' of the day
-        pair_list = [
+        # Generate the start/end timestamps for each 'slice' of the interval
+        return [
             (
-                _format_timestamp(utc_date + timedelta(seconds=i * portion)),
-                _format_timestamp(utc_date + timedelta(seconds=(i + 1) * portion)),
+                start_date + timedelta(seconds=i * portion),
+                start_date + timedelta(seconds=(i + 1) * portion),
             )
             for i in range(number_of_divisions)
         ]
-        return pair_list
+
+    def _get_record_count(self, start: datetime, end: datetime, building: str) -> int:
+        """
+        Get the number of records returned by the Finnish Museums API for a
+        particular building, during a given time interval.
+        """
+        query_params = self.get_next_query_params(
+            prev_query_params=None, building=building, start_ts=start, end_ts=end
+        )
+        response_json = self.get_response_json(query_params)
+
+        if response_json:
+            return response_json.get("resultCount", 0)
+        return 0
+
+    def _get_timestamp_pairs(self, building: str):
+        """
+        The Finnish Museums API can behave unexpectedly when querying large datasets,
+        resulting in large numbers of duplicates and eventual DAG timeouts
+        (see https://github.com/WordPress/openverse-catalog/pull/879 for more
+        details). To avoid this, when we detect that a time period contains a large
+        number of records we split it up into multiple smaller time periods and
+        run ingestion separately for each.
+
+        Most runs of the DAG will have a very small (or zero) number of records, so in
+        order to determine how many time intervals we need we first check the record
+        count, and split into the smallest number of intervals possible.
+
+        If the building has no/few records, this results in ONE extra request.
+        If the building has a large amount of data, this results in TWENTY FIVE extra
+        requests (one for the full day, and then one for each hour).
+        """
+        pairs_list: list[tuple[datetime, datetime]] = []
+        # Get UTC timestamps for the start and end of the ingestion date
+        start_ts = datetime.strptime(self.date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        end_ts = start_ts + timedelta(days=1)
+
+        record_count = self._get_record_count(start_ts, end_ts, building)
+        if record_count == 0:
+            logger.info(f"No data for {building}. Continuing.")
+            return pairs_list
+        if record_count < 10_000:
+            # This building only has a small amount of data. We can ingest all of the
+            # data for it in a single run.
+            return self._get_timestamp_query_params_list(start_ts, end_ts, 1)
+
+        # If we got here, this building has a large amount of data. Since data is often
+        # not distributed evenly across the day, we'll break down each hour of the day
+        # separately. We add timestamp_pairs to the list only for hours that actually
+        # contain data. Hours that contain more data get divided into a larger number of
+        # portions.
+        hour_slices = self._get_timestamp_query_params_list(start_ts, end_ts, 24)
+        for (start_hour, end_hour) in hour_slices:
+            # Get the number of records in this hour interval
+            record_count = self._get_record_count(start_hour, end_hour, building)
+            if record_count == 0:
+                # No records for this hour, don't bother ingesting for this time period.
+                logger.info(f"No data detected for {start_hour}. Continuing.")
+                continue
+            if record_count < 10_000:
+                # This hour doesn't have much data, ingest it in one chunk
+                pairs_list.append((start_hour, end_hour))
+                continue
+            # If we got this far, this hour has a lot of data. It is split into 12 5-min
+            # intervals if it has fewer than 100k, or 20 3-min intervals if more.
+            num_divisions = 12 if record_count < 100_000 else 20
+            minute_slices = self._get_timestamp_query_params_list(
+                start_hour, end_hour, num_divisions
+            )
+            pairs_list.extend(minute_slices)
+
+        return pairs_list
 
     def ingest_records(self, **kwargs):
-        for building in BUILDINGS:
+        for building in self.buildings:
             logger.info(f"Obtaining images of building {building}")
 
-            for start_ts, end_ts in self.timestamp_pairs:
+            # Get the timestamp pairs. If there are no records for this building,
+            # it will be an empty list.
+            timestamp_pairs = self._get_timestamp_pairs(building)
+
+            # Run ingestion for each timestamp pair
+            for start_ts, end_ts in timestamp_pairs:
+                # Reset counts before we start
                 self.new_iteration = True
+                self.fetched_count = 0
 
                 logger.info(f"Ingesting data for start: {start_ts}, end: {end_ts}")
                 super().ingest_records(
@@ -99,8 +198,8 @@ class FinnishMuseumsDataIngester(ProviderDataIngester):
     def get_next_query_params(self, prev_query_params, **kwargs):
         if not prev_query_params:
             building = kwargs.get("building")
-            start_ts = kwargs.get("start_ts")
-            end_ts = kwargs.get("end_ts")
+            start_ts = self.format_ts(kwargs.get("start_ts"))
+            end_ts = self.format_ts(kwargs.get("end_ts"))
 
             return {
                 "filter[]": [
@@ -125,9 +224,25 @@ class FinnishMuseumsDataIngester(ProviderDataIngester):
         ):
             return None
 
+        total_count = response_json.get("resultCount")
+        # Update the number of records we have pulled for this iteration.
+        # Note that this tracks the number of records pulled from the API, not
+        # the number actually written to TSV (which may be larger or smaller
+        # as some records are discarded or have additional related images.)
+        self.fetched_count += len(response_json.get("records"))
+
         if self.new_iteration:
-            logger.info(f"Detected {response_json['resultCount']} total records.")
+            # This is the first batch of a new iteration.
+            logger.info(f"Detected {total_count} total records.")
             self.new_iteration = False
+
+        # Detect a bug when the API continues serving pages of data in excess of
+        # the stated resultCount.
+        if self.fetched_count > total_count:
+            raise AirflowException(
+                f"Expected {total_count} records, but {self.fetched_count} have"
+                " been fetched. Consider reducing the ingestion interval."
+            )
 
         return response_json["records"]
 
