@@ -31,7 +31,7 @@ repos:
 
   # Use the `.isort.cfg` file to configure additional project-specific requirements.
   - repo: https://github.com/PyCQA/isort
-    rev: 5.9.1
+    rev: 5.12.0
     hooks:
       - id: isort
         files: \.py$
