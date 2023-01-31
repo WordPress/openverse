@@ -1,16 +1,21 @@
 import { test, expect } from "@playwright/test"
 
-import { enableNewHeader } from "~~/test/playwright/utils/navigation"
+import {
+  enableNewHeader,
+  setCookies,
+} from "~~/test/playwright/utils/navigation"
 
 const russianSearchPath = "/ru/search?q=dog"
 
 test.describe.configure({ mode: "parallel" })
 
 test.describe("translation banner", () => {
+  test.beforeEach(async ({ page }) => {
+    await enableNewHeader(page)
+  })
   test("Can see the translation banner and go to the correct link", async ({
     page,
   }) => {
-    await enableNewHeader(page)
     await page.goto(russianSearchPath)
     await expect(
       page.locator(
@@ -30,14 +35,10 @@ test.describe("translation banner", () => {
   test("Banner is not shown if dismissed state is saved in a cookie", async ({
     page,
   }) => {
-    await page.context().addCookies([
-      {
-        name: "uiDismissedBanners",
-        value: '["translation-ru"]',
-        domain: "localhost",
-        path: "/",
-      },
-    ])
+    await setCookies(page.context(), {
+      uiDismissedBanners: '["translation-ru"]',
+    })
+
     await page.goto(russianSearchPath)
     await expect(
       page.locator('[data-testid="banner-translation"]')

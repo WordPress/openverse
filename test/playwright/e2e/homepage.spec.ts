@@ -12,15 +12,15 @@ import { supportedSearchTypes } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 
-test.beforeEach(async ({ context }) => {
+test.beforeEach(async ({ context, page }) => {
   await mockProviderApis(context)
+  await enableNewHeader(page)
 })
 
 for (const searchType of supportedSearchTypes) {
   test(`can change type and search for ${searchType} from homepage`, async ({
     page,
   }) => {
-    await enableNewHeader(page)
     await goToSearchTerm(page, "cat", {
       searchType,
       mode: "CSR",

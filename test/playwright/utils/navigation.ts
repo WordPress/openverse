@@ -464,19 +464,12 @@ export const enableNewHeader = async (page: Page) => {
 
 export const enableOldHeader = async (page: Page) => {
   // Add the new_header cookie
-  await page.context().addCookies([
-    {
-      name: "features",
-      value: "%7B%22new_header%22%3A%22off%22%7D",
-      domain: "localhost",
-      path: "/",
-    },
-  ])
+  await setCookies(page.context(), { features: { new_header: "off" } })
 }
 
 export const setCookies = async (
   context: BrowserContext,
-  cookies: Record<string, string | boolean | string[]>
+  cookies: Record<string, string | boolean | string[] | Record<string, string>>
 ) => {
   await context.addCookies(
     Object.entries(cookies).map(([name, value]) => ({
