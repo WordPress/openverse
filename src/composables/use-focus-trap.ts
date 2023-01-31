@@ -98,7 +98,7 @@ export function useFocusTrap(
     }
   }
 
-  watch(
+  const stopWatcher = watch(
     () => unrefElement(target),
     (el) => {
       if (!el) return
@@ -122,11 +122,13 @@ export function useFocusTrap(
       // Focus if immediate is set to true
       if (immediate) activate()
     },
-    { flush: "sync" }
+    { flush: "post" }
   )
 
   // Cleanup on unmount
-  tryOnScopeDispose(() => deactivate())
+  tryOnScopeDispose(() => {
+    stopWatcher()
+  })
 
   return {
     hasFocus,

@@ -452,19 +452,12 @@ export const pathWithDir = (rawPath: string, dir: string) => {
 }
 
 export const enableNewHeader = async (page: Page) => {
-  // Add the new_header cookie
-  await page.context().addCookies([
-    {
-      name: "features",
-      value: "%7B%22new_header%22%3A%22on%22%7D",
-      domain: "localhost",
-      path: "/",
-    },
-  ])
+  // Set the `new_header` cookie to `on`, should be called before `page.goto`.
+  await setCookies(page.context(), { features: { new_header: "on" } })
 }
 
 export const enableOldHeader = async (page: Page) => {
-  // Add the new_header cookie
+  // Set the `new_header` cookie to `off`, should be called before `page.goto`.
   await setCookies(page.context(), { features: { new_header: "off" } })
 }
 

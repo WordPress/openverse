@@ -66,19 +66,21 @@ export default defineComponent({
   ],
   setup(props, { attrs, emit }) {
     const focusTrapRef = ref<ComponentInstance | null>(null)
+    const nodeRef = ref<HTMLElement | null>(null)
+    const dialogRef = ref<HTMLElement | null>(null)
 
     const visibleRef = toRef(props, "isActive")
 
-    const nodeRef = ref<HTMLElement | null>(null)
+    const deactivateRef = ref()
+
     const { close } = useDialogControl({
       visibleRef,
       nodeRef,
       emit: emit as SetupContext["emit"],
+      deactivateFocusTrap: deactivateRef,
     })
 
-    const dialogRef = ref<HTMLElement | null>(null)
-
-    const { onKeyDown, onBlur } = useDialogContent({
+    const { onKeyDown, onBlur, deactivateFocusTrap } = useDialogContent({
       dialogElements: {
         dialogRef,
         triggerElementRef: ref(null),
@@ -95,6 +97,7 @@ export default defineComponent({
       emit: emit as SetupContext["emit"],
       attrs,
     })
+    deactivateRef.value = deactivateFocusTrap
 
     return {
       focusTrapRef,

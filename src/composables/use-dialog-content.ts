@@ -51,7 +51,7 @@ export function useDialogContent({
     dialogRef,
     visibleRef,
   })
-  useFocusOnShow({
+  const { deactivateFocusTrap } = useFocusOnShow({
     dialogRef,
     visibleRef,
     initialFocusElementRef,
@@ -90,5 +90,5 @@ export function useDialogContent({
     focusOnBlur(event)
   }
 
-  return { onKeyDown, onBlur }
+  return { onKeyDown, onBlur, deactivateFocusTrap }
 }

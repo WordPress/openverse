@@ -221,3 +221,10 @@ in a format that can be used in end-to-end tests.
 
 Note that this does _not_ run the server for you; you must run the Nuxt server
 using `pnpm start` or `pnpm dev` separately before running the codegen script.
+
+To generate tests for a non-default breakpoint, set the viewport size using the
+`--viewport-size` flag. For example, to test the `xs` breakpoint, run:
+
+```
+pnpm run test:playwright:gen --viewport-size=340,600"
+```

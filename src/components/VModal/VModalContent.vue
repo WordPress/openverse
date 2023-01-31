@@ -152,7 +152,7 @@ export default defineComponent({
       () => props.initialFocusElement || closeButton.value?.$el
     )
     const dialogRef = ref<HTMLElement | null>(null)
-    const { onKeyDown, onBlur } = useDialogContent({
+    const { onKeyDown, onBlur, deactivateFocusTrap } = useDialogContent({
       dialogElements: {
         dialogRef,
         initialFocusElementRef: initialFocusElement,
@@ -177,6 +177,7 @@ export default defineComponent({
       onBlur,
       closeIcon,
       closeButton,
+      deactivateFocusTrap,
     }
   },
 })

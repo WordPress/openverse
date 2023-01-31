@@ -20,15 +20,17 @@ const closeMenu = async (page: Page) => await page.click(modalCloseButton)
 const isPagesPopoverOpen = async (page: Page) =>
   page.locator(".popover-content").isVisible({ timeout: 100 })
 
+test.describe.configure({ mode: "parallel" })
+
 test.describe("Header internal", () => {
   breakpoints.describeXs(() => {
     test.beforeEach(async ({ context, page }) => {
       await setCookies(context, { uiBreakpoint: "xs" })
       await enableNewHeader(page)
-      await page.goto("/about")
     })
 
     test("can open and close the modal on xs breakpoint", async ({ page }) => {
+      await page.goto("/about")
       await clickMenuButton(page)
       expect(await isMobileMenuOpen(page)).toBe(true)
       await expect(page.locator(currentPageLink)).toBeVisible()
@@ -40,6 +42,7 @@ test.describe("Header internal", () => {
     })
 
     test("the modal locks the scroll on xs breakpoint", async ({ page }) => {
+      await page.goto("/about")
       await scrollToBottom(page)
 
       await clickMenuButton(page)
@@ -52,6 +55,7 @@ test.describe("Header internal", () => {
     test("the modal opens an external link in a new window and it closes the modal", async ({
       page,
     }) => {
+      await page.goto("/about")
       await scrollToBottom(page)
       await clickMenuButton(page)
 
@@ -64,6 +68,26 @@ test.describe("Header internal", () => {
       // If we want the modal to stay open, we'll need to change this to `true`,
       // and implement the change
       expect(await isMobileMenuOpen(page)).toBe(false)
+    })
+
+    test("content page opened from home should be scrollable", async ({
+      page,
+    }) => {
+      await page.goto("/")
+      await clickMenuButton(page)
+      await page.getByRole("link", { name: t("navigation.about") }).click()
+      await scrollToBottom(page)
+      const scrollPosition = await page.evaluate(() => window.scrollY)
+      expect(scrollPosition).toBeGreaterThan(100)
+    })
+
+    test("can open a content page from home and go back", async ({ page }) => {
+      await page.goto("/")
+      const homeUrl = page.url()
+      await clickMenuButton(page)
+      await page.getByRole("link", { name: t("navigation.about") }).click()
+      await page.locator("a[href='/']").click()
+      expect(page.url()).toBe(homeUrl)
     })
   })
 
