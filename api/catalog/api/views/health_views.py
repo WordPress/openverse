@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db import connection
 from rest_framework import status
 from rest_framework.exceptions import APIException
 from rest_framework.request import Request
@@ -21,19 +22,33 @@ class HealthCheck(APIView):
 
     swagger_schema = None
 
-    def _check_es(self) -> Response | None:
-        """Check ES cluster health and raise an exception if ES is not healthy."""
+    @staticmethod
+    def _check_db() -> None:
+        """
+        Check that the database is available.
 
+        Returns nothing if everything is OK, throws error otherwise.
+        """
+        connection.ensure_connection()
+
+    @staticmethod
+    def _check_es() -> None:
+        """
+        Check Elasticsearch cluster health.
+
+        Raises an exception if ES is not healthy.
+        """
         es_health = settings.ES.cluster.health(timeout="5s")
 
         if es_health["timed_out"]:
             raise ElasticsearchHealthcheckException("es_timed_out")
 
-        if (status := es_health["status"]) != "green":
-            raise ElasticsearchHealthcheckException(f"es_status_{status}")
+        if (es_status := es_health["status"]) != "green":
+            raise ElasticsearchHealthcheckException(f"es_status_{es_status}")
 
     def get(self, request: Request):
         if "check_es" in request.query_params:
             self._check_es()
+        self._check_db()
 
         return Response({"status": "200 OK"}, status=200)

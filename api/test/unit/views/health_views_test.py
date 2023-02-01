@@ -1,3 +1,5 @@
+from unittest import mock
+
 import pook
 import pytest
 
@@ -16,9 +18,19 @@ def mock_health_response(status="green", timed_out=False):
     )
 
 
+@pytest.mark.django_db
 def test_health_check_plain(api_client):
     res = api_client.get("/healthcheck/")
     assert res.status_code == 200
+
+
+def test_health_check_calls__check_db(api_client):
+    with mock.patch(
+        "catalog.api.views.health_views.HealthCheck._check_db"
+    ) as mock_check_db:
+        res = api_client.get("/healthcheck/")
+        assert res.status_code == 200
+        mock_check_db.assert_called_once()
 
 
 def test_health_check_es_timed_out(api_client):
@@ -42,6 +54,7 @@ def test_health_check_es_status_bad(status, api_client):
     assert res.json()["detail"] == f"es_status_{status}"
 
 
+@pytest.mark.django_db
 def test_health_check_es_all_good(api_client):
     mock_health_response(status="green")
     pook.on()
