@@ -73,7 +73,7 @@ jobs:
           with open(os.environ.get("GITHUB_OUTPUT"), "a") as state:
               state.write(f"version={version}\n")
 
-      - uses: docker/build-push-action@v3
+      - uses: docker/build-push-action@v4
         with:
           context: .
           tags: ${{ steps.metadata.outputs.tags }}
