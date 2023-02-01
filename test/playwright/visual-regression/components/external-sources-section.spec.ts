@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test"
+import { test } from "@playwright/test"
 
 import {
   enableNewHeader,
@@ -6,28 +6,36 @@ import {
   languageDirections,
 } from "~~/test/playwright/utils/navigation"
 
+import breakpoints from "~~/test/playwright/utils/breakpoints"
+
 import { supportedSearchTypes } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 
 for (const dir of languageDirections) {
   for (const searchType of supportedSearchTypes) {
-    test(`External ${searchType} sources popover - ${dir}`, async ({
-      page,
-    }) => {
-      await enableNewHeader(page)
-      await goToSearchTerm(page, "birds", { searchType, dir })
-      const externalSourcesButton = page.locator(
-        '[aria-controls="source-list-popover"]'
-      )
+    breakpoints.describeMobileAndDesktop(
+      async ({ breakpoint, expectSnapshot }) => {
+        test(`External ${searchType} sources popover - ${dir}`, async ({
+          page,
+        }) => {
+          await enableNewHeader(page)
+          await goToSearchTerm(page, "birds", { searchType, dir })
+          const sourcesId = `external-sources-${
+            breakpoint === "xl" ? "popover" : "modal"
+          }`
+          const externalSourcesButton = page.locator(
+            `[aria-controls="${sourcesId}"]`
+          )
 
-      await externalSourcesButton.click()
+          await externalSourcesButton.click()
 
-      expect(
-        await page.locator('[data-testid="source-list-popover"]').screenshot()
-      ).toMatchSnapshot({
-        name: `external-${searchType}-sources-popover-${dir}.png`,
-      })
-    })
+          await expectSnapshot(
+            `external-${searchType}-sources-popover-${dir}.png`,
+            page.locator(`#${sourcesId}`)
+          )
+        })
+      }
+    )
   }
 }

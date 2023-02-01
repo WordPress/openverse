@@ -2,7 +2,7 @@
   <section
     :key="type"
     ref="sectionRef"
-    class="external-sources flex flex-row place-items-center justify-center p-4"
+    class="external-sources flex flex-row place-items-center justify-center py-4"
     data-testid="external-sources-form"
     @keydown.tab.exact="handleTab"
   >
@@ -33,10 +33,56 @@
       <template #query>{{ searchTerm }}</template>
     </i18n>
 
-    <VExternalSourceList
-      class="inline-flex ms-2 md:justify-center"
-      :external-sources="externalSources"
-    />
+    <VButton
+      id="external-sources-button"
+      ref="triggerRef"
+      :pressed="triggerA11yProps['aria-expanded']"
+      aria-haspopup="dialog"
+      :aria-controls="
+        isMd ? 'external-sources-popover' : 'external-sources-modal'
+      "
+      variant="dropdown-label"
+      size="disabled"
+      class="caption-regular min-w-max gap-1 py-1 px-3 text-dark-charcoal pe-1 ms-2 focus-visible:border-tx"
+      @click="onTriggerClick"
+      >{{ $t("external-sources.button").toString()
+      }}<VIcon
+        class="text-dark-charcoal-40"
+        :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
+        :icon-path="caretDownIcon"
+      />
+    </VButton>
+    <template v-if="triggerElement">
+      <VPopoverContent
+        v-if="isMd"
+        id="external-sources-popover"
+        aria-labelledby="external-sources-button"
+        :hide="closeDialog"
+        :trigger-element="triggerElement"
+        :visible="isVisible"
+        z-index="popover"
+      >
+        <VExternalSourceList
+          class="flex flex-col"
+          :external-sources="externalSources"
+          @close="closeDialog"
+      /></VPopoverContent>
+      <VModalContent
+        v-else
+        id="external-sources-modal"
+        aria-labelledby="external-sources-button"
+        :trigger-element="triggerElement"
+        :hide="closeDialog"
+        :visible="isVisible"
+        variant="centered"
+      >
+        <VExternalSourceList
+          class="flex-col justify-center"
+          :external-sources="externalSources"
+          @close="closeDialog"
+        />
+      </VModalContent>
+    </template>
   </section>
 </template>
 
@@ -46,20 +92,34 @@ import {
   defineComponent,
   PropType,
   ref,
+  SetupContext,
 } from "@nuxtjs/composition-api"
 
 import { getFocusableElements } from "~/utils/focus-management"
 import { defineEvent } from "~/types/emits"
 
-import type { MediaType } from "~/constants/media"
+import { useUiStore } from "~/stores/ui"
 
+import { useDialogControl } from "~/composables/use-dialog-control"
+
+import type { MediaType } from "~/constants/media"
 import type { ExternalSource } from "~/types/external-source"
 
 import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
+import VModalContent from "~/components/VModal/VModalContent.vue"
+
+import caretDownIcon from "~/assets/icons/caret-down.svg"
 
 export default defineComponent({
   name: "VExternalSearchForm",
   components: {
+    VModalContent,
+    VPopoverContent,
+    VIcon,
+    VButton,
     VExternalSourceList,
   },
   props: {
@@ -88,7 +148,29 @@ export default defineComponent({
     tab: defineEvent<[KeyboardEvent]>(),
   },
   setup(_, { emit }) {
-    const sectionRef = ref<HTMLElement>()
+    const sectionRef = ref<HTMLElement | null>(null)
+    const triggerRef = ref<InstanceType<typeof VButton> | null>(null)
+    const uiStore = useUiStore()
+
+    const isMd = computed(() => uiStore.isBreakpoint("md"))
+
+    const triggerElement = computed(() => triggerRef.value?.$el as HTMLElement)
+
+    const lockBodyScroll = computed(() => !isMd.value)
+
+    const isVisible = ref(false)
+
+    const {
+      close: closeDialog,
+      open: openDialog,
+      onTriggerClick,
+      triggerA11yProps,
+    } = useDialogControl({
+      visibleRef: isVisible,
+      nodeRef: sectionRef,
+      lockBodyScroll,
+      emit: emit as SetupContext["emit"],
+    })
 
     /**
      * Find the last focusable element in VSearchGridFilter to add a 'Tab' keydown event
@@ -107,7 +189,19 @@ export default defineComponent({
     }
     return {
       sectionRef,
+      triggerRef,
+      triggerElement,
       handleTab,
+      isMd,
+
+      closeDialog,
+      openDialog,
+      onTriggerClick,
+      triggerA11yProps,
+
+      isVisible,
+
+      caretDownIcon,
     }
   },
 })

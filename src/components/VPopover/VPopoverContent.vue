@@ -12,6 +12,7 @@
       :class="[`z-${zIndex}`, width]"
       :style="heightProperties"
       :tabindex="-1"
+      v-bind="$attrs"
       @blur="onBlur"
     >
       <slot />
@@ -44,6 +45,7 @@ export const VPopoverContentContextKey = Symbol(
 
 export default defineComponent({
   name: "VPopoverContent",
+  inheritAttrs: false,
   props: {
     visible: {
       type: Boolean,

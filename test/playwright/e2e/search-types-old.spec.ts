@@ -4,9 +4,10 @@ import {
   changeContentType,
   goToSearchTerm,
   OLD_HEADER,
-  searchTypePath,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
+
+import { searchPath } from "~/constants/media"
 
 /**
  * Using SSR:
@@ -35,7 +36,7 @@ const allContentConfig = {
   name: "All content",
   url: "/search/?q=birds",
   canLoadMore: true,
-  metaSourceCount: 7,
+  externalSourceCount: 7,
 } as const
 
 const imageConfig = {
@@ -43,7 +44,7 @@ const imageConfig = {
   name: "Images",
   url: "/search/image?q=birds",
   canLoadMore: true,
-  metaSourceCount: 7,
+  externalSourceCount: 7,
   results: /Over 10,000 results/,
 } as const
 
@@ -52,7 +53,7 @@ const audioConfig = {
   name: "Audio",
   url: "/search/audio?q=birds",
   canLoadMore: true,
-  metaSourceCount: 3,
+  externalSourceCount: 3,
   results: /764 results/,
 } as const
 
@@ -71,14 +72,17 @@ async function checkLoadMore(page: Page, searchType: SearchTypeConfig) {
     await expect(loadMoreSection).toContainText("Load more")
   }
 }
-async function checkMetasearchForm(page: Page, searchType: SearchTypeConfig) {
+async function checkExternalSourcesForm(
+  page: Page,
+  searchType: SearchTypeConfig
+) {
   const metaSearchForm = await page.locator(
     '[data-testid="external-sources-form"]'
   )
   await expect(metaSearchForm).toHaveCount(1)
 
   const sourceButtons = await page.locator(".external-sources a")
-  await expect(sourceButtons).toHaveCount(searchType.metaSourceCount)
+  await expect(sourceButtons).toHaveCount(searchType.externalSourceCount)
 }
 
 async function checkSearchMetadata(page: Page, searchType: SearchTypeConfig) {
@@ -90,10 +94,8 @@ async function checkSearchMetadata(page: Page, searchType: SearchTypeConfig) {
 }
 
 async function checkPageMeta(page: Page, searchType: SearchTypeConfig) {
-  const urlParam = searchTypePath(searchType.id)
-
   const expectedTitle = `birds | Openverse`
-  const expectedURL = `/search/${urlParam}?q=birds`
+  const expectedURL = `${searchPath(searchType.id)}?q=birds`
 
   await expect(page).toHaveTitle(expectedTitle)
   await expect(page).toHaveURL(expectedURL)
@@ -101,7 +103,7 @@ async function checkPageMeta(page: Page, searchType: SearchTypeConfig) {
 async function checkSearchResult(page: Page, searchType: SearchTypeConfig) {
   await checkSearchMetadata(page, searchType)
   await checkLoadMore(page, searchType)
-  await checkMetasearchForm(page, searchType)
+  await checkExternalSourcesForm(page, searchType)
   await checkPageMeta(page, searchType)
 }
 

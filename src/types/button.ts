@@ -17,6 +17,8 @@ export const buttonVariants = [
   "plain",
   "plain--avoid",
   "full",
+  "dropdown-label",
+  "dropdown-label-pressed",
 ] as const
 export type ButtonVariant = typeof buttonVariants[number]
 

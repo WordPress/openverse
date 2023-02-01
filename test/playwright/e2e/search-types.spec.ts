@@ -4,10 +4,11 @@ import {
   changeContentType,
   enableNewHeader,
   goToSearchTerm,
-  searchTypePath,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
+
+import { searchPath } from "~/constants/media"
 
 /**
  * Using SSR:
@@ -32,7 +33,6 @@ const allContentConfig = {
   name: "All content",
   url: "/search/?q=birds",
   canLoadMore: true,
-  metaSourceCount: 7,
 } as const
 
 const imageConfig = {
@@ -40,7 +40,6 @@ const imageConfig = {
   name: "Images",
   url: "/search/image?q=birds",
   canLoadMore: true,
-  metaSourceCount: 7,
   results: /Over 10,000 results/,
 } as const
 
@@ -49,7 +48,6 @@ const audioConfig = {
   name: "Audio",
   url: "/search/audio?q=birds",
   canLoadMore: true,
-  metaSourceCount: 3,
   results: /764 results/,
 } as const
 
@@ -68,29 +66,23 @@ async function checkLoadMore(page: Page, searchType: SearchTypeConfig) {
     await expect(loadMoreSection).toContainText("Load more")
   }
 }
-async function checkMetasearchForm(page: Page, searchType: SearchTypeConfig) {
-  const metaSearchForm = await page.locator(
-    '[data-testid="external-sources-form"]'
-  )
-  await expect(metaSearchForm).toHaveCount(1)
-
-  const sourceButtons = await page.locator(".external-sources a")
-  await expect(sourceButtons).toHaveCount(searchType.metaSourceCount)
+async function checkExternalSourcesForm(page: Page) {
+  await expect(
+    page.locator('[data-testid="external-sources-form"]')
+  ).toBeVisible()
 }
 
 async function checkSearchMetadata(page: Page, searchType: SearchTypeConfig) {
   if (searchType.canLoadMore) {
-    const searchResult = await page.locator('[data-testid="search-results"]')
+    const searchResult = page.locator('[data-testid="search-results"]')
     await expect(searchResult).toBeVisible()
     await expect(searchResult).not.toBeEmpty()
   }
 }
 
 async function checkPageMeta(page: Page, searchType: SearchTypeConfig) {
-  const urlParam = searchTypePath(searchType.id)
-
   const expectedTitle = `birds | Openverse`
-  const expectedURL = `/search/${urlParam}?q=birds`
+  const expectedURL = `${searchPath(searchType.id)}?q=birds`
 
   await expect(page).toHaveTitle(expectedTitle)
   await expect(page).toHaveURL(expectedURL)
@@ -98,7 +90,7 @@ async function checkPageMeta(page: Page, searchType: SearchTypeConfig) {
 async function checkSearchResult(page: Page, searchType: SearchTypeConfig) {
   await checkSearchMetadata(page, searchType)
   await checkLoadMore(page, searchType)
-  await checkMetasearchForm(page, searchType)
+  await checkExternalSourcesForm(page)
   await checkPageMeta(page, searchType)
 }
 

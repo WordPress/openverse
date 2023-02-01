@@ -366,6 +366,13 @@ https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-
   @apply w-full bg-dark-charcoal-06 font-semibold text-dark-charcoal;
 }
 
+.dropdown-label {
+  @apply border border-dark-charcoal-20 text-dark-charcoal focus-slim-tx hover:border-tx hover:bg-dark-charcoal hover:text-white;
+}
+.dropdown-label-pressed {
+  @apply border-tx bg-dark-charcoal text-white focus-bold-filled active:hover:border-white;
+}
+
 .connection-start {
   @apply rounded-s-none;
 }

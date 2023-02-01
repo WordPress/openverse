@@ -60,6 +60,13 @@ export function useDialogControl({
     unlock = bodyScroll.unlock
   }
   const shouldLockBodyScroll = computed(() => unref(lockBodyScroll) ?? false)
+  watch(shouldLockBodyScroll, (shouldLock) => {
+    if (shouldLock) {
+      if (internalVisibleRef.value) lock()
+    } else {
+      unlock()
+    }
+  })
 
   const open = () => (internalVisibleRef.value = true)
 
