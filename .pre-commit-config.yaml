@@ -72,10 +72,12 @@ repos:
           # Additional ignore reasons:
           # D1xx: we do not want to force contributors to write redundant or useless docstrings
           # D202: additional whitespace helps with readability
+          # D205: we don't want to always require a single line summary
           # D211: same as D202
+          # D400: first line doesn't need to end in a period
           # See the following documentation for what each rule does:
           # https://www.pydocstyle.org/en/6.2.3/error_codes.html#error-codes
-          - --add-ignore=D1,D202,D211
+          - --add-ignore=D1,D202,D205,D211,D400
 
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v8.15.0
