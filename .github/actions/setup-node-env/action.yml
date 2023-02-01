@@ -19,7 +19,7 @@ runs:
         restore-keys: |
           ${{ runner.os }}-
 
-    - uses: actions/setup-node@v3.5.1
+    - uses: actions/setup-node@v3.6.0
       with:
         node-version: 16
         cache: pnpm
