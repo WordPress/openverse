@@ -413,10 +413,33 @@ def search(
         search_response, results, page_size, page
     )
 
-    if results and page <= 4:
-        # We ignore tallies for deep pages because they're not likely to
+    max_result_depth = page * page_size
+    if max_result_depth <= 80:
+        # Applies when `page_size * page` could land "evenly" on 80
+        should_tally = True
+        results_to_tally = results
+    elif max_result_depth - page_size < 80:
+        # Applies when `page_size * page` could land beyond 80, but still
+        # encompass some results on _this page_ that are at or below the 80th
+        # position. For example: page=7 page_size=12 result depth=84.
+        # While max_result_depth exceeds 80, we still want to count
+        # the first eight results in `results` that are below or at the 80th
+        # position for the query.
+        should_tally = True
+        results_to_tally = results[: 80 - (max_result_depth - page_size)]
+    else:
+        should_tally = False
+
+    if results and should_tally:
+        # We ignore tallies for deep results because they're not likely to
         # be as important for search relevancy for most users at this point
-        tallies.count_provider_occurrences(results, index)
+        # 80 is chosen because it represents the first four pages of the
+        # default page count of 20 (20 * 4) which is how our own frontend
+        # makes requests and displays results. Because that is the only
+        # place we can actually conceivably measure relevancy down the
+        # line, it is the only sensible, controlled space we can use to
+        # check things like provider density for a set of queries.
+        tallies.count_provider_occurrences(results_to_tally, index)
 
     return results or [], page_count, result_count
 

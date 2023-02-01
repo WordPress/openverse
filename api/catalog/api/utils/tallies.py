@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import django_redis
 from django_redis.client.default import Redis
@@ -8,12 +8,8 @@ from django_redis.client.default import Redis
 def _get_weekly_timestamp() -> str:
     """Get a timestamp for the Monday of any given week."""
     now = datetime.now()
-    return datetime(
-        now.year,
-        now.month,
-        # Set the day to Monday of the current week
-        now.day - now.weekday(),
-    ).strftime("%Y-%m-%d")
+    monday = now - timedelta(days=now.weekday())
+    return monday.strftime("%Y-%m-%d")
 
 
 def count_provider_occurrences(results: list[dict], index: str) -> None:

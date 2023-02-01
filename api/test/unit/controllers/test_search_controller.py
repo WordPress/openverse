@@ -381,9 +381,6 @@ def test_paginate_with_dead_link_mask_query_mask_overlaps_query_window(
     ), f"expected {expected_range} but got {actual_range}"
 
 
-MOCK_RESULTS = [{"provider": "a provider", "identifier": i} for i in range(20)]
-
-
 @pytest.mark.parametrize(
     "index",
     (
@@ -392,13 +389,35 @@ MOCK_RESULTS = [{"provider": "a provider", "identifier": i} for i in range(20)]
     ),
 )
 @pytest.mark.parametrize(
-    ("page", "does_tally"),
+    ("page", "page_size", "does_tally", "number_of_results_passed"),
     (
-        (1, True),
-        (2, True),
-        (3, True),
-        (4, True),
-        (5, False),
+        (1, 20, True, 20),
+        (2, 20, True, 20),
+        (3, 20, True, 20),
+        (4, 20, True, 20),
+        (5, 20, False, 0),
+        (1, 40, True, 40),
+        (2, 40, True, 40),
+        (3, 40, False, 0),
+        (4, 40, False, 0),
+        (5, 40, False, 0),
+        (1, 10, True, 10),
+        (2, 10, True, 10),
+        (3, 10, True, 10),
+        (4, 10, True, 10),
+        (5, 10, True, 10),
+        (6, 10, True, 10),
+        (7, 10, True, 10),
+        (8, 10, True, 10),
+        (9, 10, False, 0),
+        (1, 12, True, 12),
+        (2, 12, True, 12),
+        (3, 12, True, 12),
+        (4, 12, True, 12),
+        (5, 12, True, 12),
+        (6, 12, True, 12),
+        (7, 12, True, 8),
+        (8, 12, False, 0),
     ),
 )
 @mock.patch.object(
@@ -406,17 +425,22 @@ MOCK_RESULTS = [{"provider": "a provider", "identifier": i} for i in range(20)]
 )
 @mock.patch(
     "catalog.api.controllers.search_controller._post_process_results",
-    return_value=MOCK_RESULTS,
 )
 @pytest.mark.django_db
 def test_search_tallies_pages_less_than_5(
-    _,
+    mock_post_process_results,
     count_provider_occurrences_mock: mock.MagicMock,
     page,
+    page_size,
     does_tally,
+    number_of_results_passed,
     index,
     request_factory,
 ):
+    mock_post_process_results.return_value = [
+        {"provider": "a provider", "identifier": i} for i in range(page_size)
+    ]
+
     serializer = MediaSearchRequestSerializer(data={"q": "dogs"})
     serializer.is_valid()
 
@@ -425,7 +449,7 @@ def test_search_tallies_pages_less_than_5(
         ip=0,
         index=index,
         page=page,
-        page_size=20,
+        page_size=page_size,
         request=request_factory.get("/"),
         filter_dead=False,
     )
@@ -435,5 +459,7 @@ def test_search_tallies_pages_less_than_5(
             mock.ANY,
             index,
         )
+        passed_results = count_provider_occurrences_mock.call_args_list[0][0][0]
+        assert len(passed_results) == number_of_results_passed
     else:
         count_provider_occurrences_mock.assert_not_called()
