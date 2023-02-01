@@ -238,6 +238,15 @@ def test_build_query_param_default():
             'building:"0/Museovirasto/"',
             'last_indexed:"[2020-04-01T00:00:00Z TO 2020-04-02T00:00:00Z]"',
         ],
+        "field[]": [
+            "authors",
+            "buildings",
+            "id",
+            "imageRights",
+            "images",
+            "subjects",
+            "title",
+        ],
         "limit": 100,
         "page": 1,
     }
@@ -282,34 +291,26 @@ def test_get_object_list_return_none_if_none_json():
 
 
 def test_process_object_with_real_example():
-    object_data = _get_resource_json("object_complete_example.json")
-    data = fm.get_record_data(object_data)
-
-    assert len(data) == 1
-    assert data[0] == {
+    expected_data = {
         "license_info": LicenseInfo(
             "by",
             "4.0",
             "https://creativecommons.org/licenses/by/4.0/",
             "http://creativecommons.org/licenses/by/4.0/",
         ),
-        "foreign_identifier": "museovirasto.CC0641BB5337F541CBD19169838BAC1F",
-        "foreign_landing_url": (
-            "https://www.finna.fi/Record/museovirasto.CC0641BB5337F541CBD19169838BAC1F"
-        ),
-        "image_url": (
-            "https://api.finna.fi/Cover/Show?id=museovirasto.CC0641BB5337F541CBD19169838BAC1F&index=0&size=large"
-        ),
-        "title": "linnunpönttö koivussa",
-        "source": "finnish_heritage_agency",
-        "raw_tags": [
-            "koivu",
-            "koivussa",
-            "linnunpöntöt",
-            "Revonristi",
-            "valmistusaika: 11.06.1923",
-        ],
+        "foreign_identifier": "sa-kuva.sa-kuva-1835",
+        "foreign_landing_url": "https://www.finna.fi/Record/sa-kuva.sa-kuva-1835",
+        "image_url": "https://api.finna.fi/Cover/Show?source=Solr&id=sa-kuva.sa-kuva-1835&index=0&size=large",
+        "title": "Vuokkiniemen koulu",
+        "source": "finnish_military_museum",
+        "creator": "Uomala, valokuvaaja",
+        "raw_tags": ["1942-03-02"],
     }
+    object_data = _get_resource_json("object_complete_example.json")
+    actual_data = fm.get_record_data(object_data)
+
+    assert len(actual_data) == 1
+    assert actual_data[0] == expected_data
 
 
 def test_get_image_url():
@@ -339,3 +340,48 @@ def test_get_image_url():
 )
 def test_get_license_url(image_rights_obj, expected_license_url):
     assert fm.get_license_url(image_rights_obj) == expected_license_url
+
+
+@pytest.mark.parametrize(
+    "authors_raw, expected_creator",
+    [
+        (
+            {"primary": [], "secondary": [], "corporate": []},  # Case with no author
+            None,
+        ),
+        (
+            {  # Case with only a primary author
+                "primary": {"Name": {"role": ["-"]}},
+                "secondary": [],
+                "corporate": [],
+            },
+            "Name",
+        ),
+        (
+            {  # Case with only a secondary author
+                "primary": [],
+                "secondary": {"Name2": {"role": ["-"]}},
+                "corporate": [],
+            },
+            "Name2",
+        ),
+        (
+            {  # Case with primary and secondary authors
+                "primary": {"Lastname, Name": {"role": ["-"]}},
+                "secondary": {"Name2": {"role": ["-"]}},
+                "corporate": [],
+            },
+            "Lastname, Name; Name2",
+        ),
+        (
+            {  # Case with all the authors
+                "primary": {"Name": {"role": ["-"]}},
+                "secondary": {"Name2": {"role": ["-"]}},
+                "corporate": {"Name3": {"role": ["-"]}},
+            },
+            "Name; Name2; Name3",
+        ),
+    ],
+)
+def test_get_creator(authors_raw, expected_creator):
+    assert fm.get_creator(authors_raw) == expected_creator
