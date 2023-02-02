@@ -11,18 +11,22 @@ from maintenance.check_silenced_dags import (
 from tests.factories.github import make_issue
 
 
+p = pytest.param
+
+
 @pytest.mark.parametrize(
     "silenced_dags, dags_to_reenable, should_send_alert",
     (
         # No Dags to reenable, task should skip
-        pytest.param(
+        p(
             {},
             [],
             False,
             marks=pytest.mark.raises(exception=AirflowSkipException),
+            id="none to re-enable",
         ),
         # One DAG to reenable
-        (
+        p(
             {
                 "dag_a_id": [
                     {
@@ -39,9 +43,10 @@ from tests.factories.github import make_issue
                 ),
             ],
             True,
+            id="one to re-enable",
         ),
         # One DAG, multiple notifications to reenable
-        (
+        p(
             {
                 "dag_a_id": [
                     {
@@ -67,9 +72,10 @@ from tests.factories.github import make_issue
                 ),
             ],
             True,
+            id="one to re-enable, multiple notifications",
         ),
         # Multiple DAGs to reenable
-        (
+        p(
             {
                 "dag_a_id": [
                     {
@@ -97,6 +103,7 @@ from tests.factories.github import make_issue
                 ),
             ],
             True,
+            id="multiple to re-enable",
         ),
     ),
 )
@@ -108,7 +115,8 @@ def test_check_configuration(silenced_dags, dags_to_reenable, should_send_alert)
         ),
         mock.patch(
             "maintenance.check_silenced_dags.get_dags_with_closed_issues",
-            return_value=dags_to_reenable,
+            # Add in shim task ID
+            return_value=[(*dag, None) for dag in dags_to_reenable],
         ) as get_dags_with_closed_issues_mock,
         mock.patch("maintenance.check_silenced_dags.send_alert") as send_alert_mock,
     ):
@@ -119,6 +127,36 @@ def test_check_configuration(silenced_dags, dags_to_reenable, should_send_alert)
         # Called with correct dag_ids
         for dag_id, issue_url, predicate in dags_to_reenable:
             assert f"<{issue_url}|{dag_id}: '{predicate}'>" in message
+
+
+def test_check_configuration_formats_dag_correctly():
+    issue = "https://github.com/WordPress/openverse/issues/1"
+    dag = "dag_a_id"
+    predicate = "Test exception"
+    task_id_pattern = "task_id_a"
+    with (
+        mock.patch(
+            "maintenance.check_silenced_dags.Variable",
+            return_value={
+                dag: [
+                    {
+                        "issue": issue,
+                        "predicate": predicate,
+                        "task_id_pattern": task_id_pattern,
+                    }
+                ]
+            },
+        ),
+        mock.patch(
+            "maintenance.check_silenced_dags.get_dags_with_closed_issues",
+            # Add in shim task ID
+            return_value=[(dag, issue, predicate, task_id_pattern)],
+        ),
+        mock.patch("maintenance.check_silenced_dags.send_alert"),
+    ):
+        message = check_configuration("not_set")
+        # Called with correct dag_ids
+        assert f"<{issue}|{dag} ({task_id_pattern}): '{predicate}'>" in message
 
 
 @pytest.mark.parametrize(
@@ -174,7 +212,7 @@ def test_get_dags_with_closed_issues(open_issues, closed_issues):
 
         assert len(dags_to_reenable) == len(closed_issues)
         for issue in closed_issues:
-            assert (f"dag_{issue}", issue, "test") in dags_to_reenable
+            assert (f"dag_{issue}", issue, "test", None) in dags_to_reenable
 
 
 @pytest.mark.parametrize(

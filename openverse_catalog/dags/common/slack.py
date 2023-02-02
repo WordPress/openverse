@@ -50,14 +50,16 @@ variable to `true` in the Airflow UI.
 
 import json
 import logging
+import re
 from collections.abc import Callable
 from os.path import basename
-from typing import Any, TypedDict
+from typing import Any
 
 from airflow.exceptions import AirflowNotFoundException
 from airflow.models import Variable
 from airflow.providers.http.hooks.http import HttpHook
 from requests import Response
+from typing_extensions import NotRequired, TypedDict
 
 
 SLACK_NOTIFICATIONS_CONN_ID = "slack_notifications"
@@ -70,14 +72,17 @@ class SilencedSlackNotification(TypedDict):
     """
     Configuration for a silenced Slack notification.
 
-    issue:     A link to a GitHub issue which describes why the notification
-               is silenced and tracks resolving the problem.
+    issue: A link to a GitHub issue which describes why the notification
+           is silenced and tracks resolving the problem.
     predicate: Slack notifications whose text or username contain the
                predicate will be silenced. Matching is case-insensitive.
+    task_id_pattern: A regex pattern that matches the task_id of the task
+                     that triggered the notification. (Optional)
     """
 
     issue: str
     predicate: str
+    task_id_pattern: NotRequired[str | None]
 
 
 class SlackMessage:
@@ -229,7 +234,12 @@ class SlackMessage:
         return response
 
 
-def should_silence_message(text, username, dag_id):
+def should_silence_message(
+    text: str,
+    username: str,
+    dag_id: str,
+    task_id: str | None = None,
+):
     """
     Determine if a Slack message should be silenced.
 
@@ -244,14 +254,29 @@ def should_silence_message(text, username, dag_id):
         "SILENCED_SLACK_NOTIFICATIONS", default_var={}, deserialize_json=True
     ).get(dag_id, [])
 
-    return bool(silenced_notifications) and any(
-        notification["predicate"].lower() in message.lower()
-        for notification in silenced_notifications
-    )
+    if not bool(silenced_notifications):
+        # No silenced notifications for this DAG, exit early
+        return False
+    matches = []
+    for notification in silenced_notifications:
+        # Check that the predicate matches whatever message was raised
+        predicate_matches = notification["predicate"].lower() in message.lower()
+        # Check that the task ID matches the predicate _if both were supplied_,
+        # not all messages supply a task ID but all exception-based alerts do.
+        pattern = notification.get("task_id_pattern")
+        task_id_matches = (task_id is None or pattern is None) or (
+            task_id and pattern and re.search(pattern, task_id)
+        )
+        matches.append(predicate_matches and task_id_matches)
+    return any(matches)
 
 
 def should_send_message(
-    text, username, dag_id, http_conn_id=SLACK_NOTIFICATIONS_CONN_ID
+    text: str,
+    username: str,
+    dag_id: str,
+    http_conn_id: str = SLACK_NOTIFICATIONS_CONN_ID,
+    task_id: str | None = None,
 ):
     """
     Determine if a Slack message should actually be sent.
@@ -269,8 +294,8 @@ def should_send_message(
         return False
 
     # Exit early if this DAG is configured to skip Slack messaging
-    if should_silence_message(text, username, dag_id):
-        log.info(f"Skipping Slack notification for {dag_id}.")
+    if should_silence_message(text, username, dag_id, task_id):
+        log.info(f"Skipping Slack notification for {dag_id}::{task_id}.")
         return False
 
     # Exit early if we aren't on production or if force alert is not set
@@ -290,10 +315,13 @@ def send_message(
     unfurl_links: bool = False,
     unfurl_media: bool = False,
     http_conn_id: str = SLACK_NOTIFICATIONS_CONN_ID,
+    task_id: str | None = None,
 ) -> None:
     """Send a simple slack message, convenience message for short/simple messages."""
     log.info(text)
-    if not should_send_message(text, username, dag_id, http_conn_id):
+    if not should_send_message(
+        text, username, dag_id, http_conn_id=http_conn_id, task_id=task_id
+    ):
         return
 
     environment = Variable.get("ENVIRONMENT", default_var="dev")
@@ -316,6 +344,7 @@ def send_alert(
     markdown: bool = True,
     unfurl_links: bool = False,
     unfurl_media: bool = False,
+    task_id: str | None = None,
 ):
     """
     Send a slack alert.
@@ -332,6 +361,7 @@ def send_alert(
         unfurl_links,
         unfurl_media,
         http_conn_id=SLACK_ALERTS_CONN_ID,
+        task_id=task_id,
     )
 
 
@@ -342,8 +372,9 @@ def on_failure_callback(context: dict) -> None:
     Errors are only sent out in production and if a Slack connection is defined.
     """
     # Get relevant info
-    dag = context["dag"]
     ti = context["task_instance"]
+    dag_id = ti.dag_id
+    task_id = ti.task_id
     execution_date = context["execution_date"]
     exception: Exception | None = context.get("exception")
     exception_message = ""
@@ -362,10 +393,15 @@ def on_failure_callback(context: dict) -> None:
 """
 
     message = f"""
-*DAG*: `{ti.dag_id}`
-*Task*: `{ti.task_id}`
+*DAG*: `{dag_id}`
+*Task*: `{task_id}`
 *Execution Date*: {execution_date.strftime('%Y-%m-%dT%H:%M:%SZ')}
 *Log*: {ti.log_url}
 {exception_message}
 """
-    send_alert(message, dag_id=dag.dag_id, username="Airflow DAG Failure")
+    send_alert(
+        message,
+        dag_id=dag_id,
+        task_id=task_id,
+        username="Airflow DAG Failure",
+    )

@@ -15,6 +15,7 @@ from common.slack import (
 
 
 _FAKE_IMAGE = "http://image.com/img.jpg"
+p = pytest.param
 
 
 @pytest.fixture(autouse=True)
@@ -340,9 +341,9 @@ def test_should_send_message_is_false_without_hook(http_hook_mock):
     "silenced_notifications, should_silence",
     (
         # Do not silence when silenced_notifications is empty
-        ({}, False),
+        p({}, False, id="empty notifications"),
         # dag_id is not in silenced_notifications
-        (
+        p(
             {
                 "another_dag_id": [
                     {
@@ -352,9 +353,10 @@ def test_should_send_message_is_false_without_hook(http_hook_mock):
                 ]
             },
             False,
+            id="wrong dag_id",
         ),
         # dag_id is configured, but text and username do not match
-        (
+        p(
             {
                 "test_dag_id": [
                     {
@@ -364,9 +366,10 @@ def test_should_send_message_is_false_without_hook(http_hook_mock):
                 ]
             },
             False,
+            id="unmatched predicate",
         ),
         # text matches
-        (
+        p(
             {
                 "test_dag_id": [
                     {
@@ -376,9 +379,10 @@ def test_should_send_message_is_false_without_hook(http_hook_mock):
                 ]
             },
             True,
+            id="matches predicate",
         ),
         # a substring of text matches
-        (
+        p(
             {
                 "test_dag_id": [
                     {
@@ -388,9 +392,10 @@ def test_should_send_message_is_false_without_hook(http_hook_mock):
                 ]
             },
             True,
+            id="matches substring",
         ),
         # matches are case-insensitive
-        (
+        p(
             {
                 "test_dag_id": [
                     {
@@ -400,9 +405,10 @@ def test_should_send_message_is_false_without_hook(http_hook_mock):
                 ]
             },
             True,
+            id="matches case-insensitive",
         ),
         # username matches
-        (
+        p(
             {
                 "test_dag_id": [
                     {
@@ -412,6 +418,73 @@ def test_should_send_message_is_false_without_hook(http_hook_mock):
                 ]
             },
             True,
+            id="matches message username",
+        ),
+        # Wrong task ID with pattern
+        p(
+            {
+                "test_dag_id": [
+                    {
+                        "issue": "https://github.com/WordPress/openverse/issues/1",
+                        "predicate": "KeyError",
+                        "task_id_pattern": "totally_different",
+                    }
+                ]
+            },
+            False,
+            id="wrong task_id",
+        ),
+        p(
+            {
+                "test_dag_id": [
+                    {
+                        "issue": "https://github.com/WordPress/openverse/issues/1",
+                        "predicate": "Does not exist",
+                        "task_id_pattern": "test_task_id_1",
+                    }
+                ]
+            },
+            False,
+            id="matches task pattern but not predicate",
+        ),
+        p(
+            {
+                "test_dag_id": [
+                    {
+                        "issue": "https://github.com/WordPress/openverse/issues/1",
+                        "predicate": "KeyError",
+                        "task_id_pattern": "test_task_id_1",
+                    }
+                ]
+            },
+            True,
+            id="matches task pattern and predicate",
+        ),
+        p(
+            {
+                "test_dag_id": [
+                    {
+                        "issue": "https://github.com/WordPress/openverse/issues/1",
+                        "predicate": "KeyError",
+                        "task_id_pattern": "task_id",
+                    }
+                ]
+            },
+            True,
+            id="matches task pattern (substring) and predicate",
+        ),
+        p(
+            {
+                "test_dag_id": [
+                    {
+                        "issue": "https://github.com/WordPress/openverse/issues/1",
+                        "predicate": "KeyError",
+                        "task_id_pattern": "task_.*?_1",
+                    }
+                ]
+            },
+            True,
+            id="matches task pattern (regex) and predicate",
         ),
     ),
 )
@@ -420,7 +493,10 @@ def test_should_silence_message(silenced_notifications, should_silence):
         MockVariable.get.side_effect = [silenced_notifications]
         assert (
             should_silence_message(
-                "KeyError: 'image'", "Airflow DAG Failure", "test_dag_id"
+                "KeyError: 'image'",
+                "Airflow DAG Failure",
+                "test_dag_id",
+                "test_task_id_1",
             )
             == should_silence
         )
@@ -461,6 +537,7 @@ def test_send_alert():
             False,
             False,
             http_conn_id=SLACK_ALERTS_CONN_ID,
+            task_id=None,
         )
 
 
