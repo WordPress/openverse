@@ -1,7 +1,7 @@
 {
   "packageManager": "pnpm@7.17.1",
   "dependencies": {
-    "@octokit/rest": "19.0.5",
+    "@octokit/rest": "19.0.7",
     "js-yaml": "^4.1.0",
     "k6": "0.0.0",
     "node-fetch": "^3.0.0",
