@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-ipython = "~=8.8"
+ipython = "~=8.9"
 pycodestyle = "~=2.10"
 pytest = "~=7.2"
 pytest-order = "~=1.0"
