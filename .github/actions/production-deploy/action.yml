@@ -5,8 +5,8 @@
 # updated version.
 ### !!!
 
-name: openverse/production-nuxt-nuxt-deploy
-description: Update the task definition for a production-nuxt-nuxt deployment
+name: openverse/production-nuxt-deploy
+description: Update the task definition for a production-nuxt deployment
 
 inputs:
   tag:
@@ -84,18 +84,18 @@ runs:
         # Remove template from the family name (the render action does not support this)
         sed -i 's/"family": "production-nuxt-template"/"family": "production-nuxt"/g' task-definition.json
 
-    - name: Fill in the new image ID in the Amazon ECS task definition
-      id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
+    - name: "Fill in the new nuxt image ID in the Amazon ECS task definition"
+      id: "task-def-nuxt"
+      uses: "aws-actions/amazon-ecs-render-task-definition@v1"
       with:
         task-definition: task-definition.json
         container-name: nuxt
-        image: ghcr.io/wordpress/openverse-frontend:${{ inputs.tag }}
+        image: "ghcr.io/wordpress/openverse-frontend:${{ inputs.tag }}"
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        task-definition: ${{ steps.task-def-nuxt.outputs.task-definition }}
         service: production-nuxt
         cluster: production-default
         wait-for-service-stability: true
