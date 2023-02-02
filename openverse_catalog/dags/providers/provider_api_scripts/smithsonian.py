@@ -197,8 +197,10 @@ class SmithsonianDataIngester(ProviderDataIngester):
 
     def validate_unit_codes_from_api(self) -> None:
         """
-        Validates the SMITHSONIAN_SUB_PROVIDERS dictionary, and raises an exception if
-        human intervention is needed to add or remove unit codes.
+        Validate the SMITHSONIAN_SUB_PROVIDERS dictionary.
+
+        This raises an exception if human intervention is needed to add or
+        remove unit codes.
         """
         logger.info("Validating Smithsonian sub-providers...")
         unit_codes_from_api = self._get_unit_codes_from_api()
@@ -236,7 +238,7 @@ class SmithsonianDataIngester(ProviderDataIngester):
     @staticmethod
     def _check_type(unknown_input, required_type):
         """
-        This function ensures that the input is of the required type.
+        Ensure that the input is of the required type.
 
         Required Arguments:
 

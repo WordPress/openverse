@@ -1,6 +1,8 @@
 """
-Manages weekly database snapshots. RDS does not support weekly snapshots
-schedules on its own, so we need a DAG to manage this for us.
+Manages weekly database snapshots.
+
+RDS does not support weekly snapshots schedules on its own, so we need a DAG to manage
+this for us.
 
 It runs on Saturdays at 00:00 UTC in order to happen before the data refresh.
 

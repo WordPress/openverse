@@ -27,7 +27,7 @@ LicenseInfo = namedtuple("LicenseInfo", ["license", "version", "url", "raw_url"]
 @lru_cache(maxsize=1024)
 def get_license_info(license_url=None, license_=None, license_version=None):
     """
-    Returns a valid license, version, license URL tuple if possible.
+    Return a valid license, version, license URL tuple if possible.
 
     Three optional arguments:
     license_url:      String URL to a CC license page.
@@ -182,7 +182,7 @@ def get_license_info_from_license_pair(
     license_, license_version, pair_map=REVERSE_LICENSE_PATH_MAP
 ) -> tuple[str | None, str | None, str | None]:
     """
-    Validates a given license pair, and derives a license URL from it.
+    Validate a given license pair, and derive a license URL from it.
 
     Returns both the validated pair and the derived license URL.
     """

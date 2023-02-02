@@ -23,6 +23,8 @@ UPDATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID = "update_media_popularity_constants_v
 
 def create_refresh_popularity_metrics_task_group(data_refresh: DataRefresh):
     """
+    Create tasks related to refreshing popularity statistics.
+
     This factory method instantiates a TaskGroup that will update the popularity
     DB tables for the given media type, including percentiles and popularity
     metrics. It also creates a reporting tasks which will report the status of the

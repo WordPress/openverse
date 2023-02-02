@@ -169,6 +169,7 @@ class FreesoundDataIngester(ProviderDataIngester):
     def _get_audio_file_size(self, url):
         """
         Get the content length of a provided URL.
+
         Freesound can be finicky, so we want to retry it a few times on
         these conditions:
           * SSLError - 'EOF occurred in violation of protocol (_ssl.c:1129)'
@@ -215,7 +216,8 @@ class FreesoundDataIngester(ProviderDataIngester):
 
     def get_record_data(self, media_data: dict) -> dict | list[dict] | None:
         """
-        Extracts metadata about the audio file.
+        Extract metadata about the audio file.
+
         Freesound does not have audio thumbnails.
         """
         foreign_landing_url = media_data.get("url")

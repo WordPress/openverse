@@ -1,6 +1,7 @@
 """
-Checks for DAGs that have silenced Slack alerts which may need to be turned back
-on.
+# Silenced DAGs check
+
+Check for DAGs that have silenced Slack alerts which may need to be turned back on.
 
 When a DAG has known failures, it can be ommitted from Slack error reporting by adding
 an entry to the `SILENCED_SLACK_NOTIFICATIONS` Airflow variable. This is a dictionary
@@ -37,9 +38,7 @@ MAX_ACTIVE = 1
 
 
 def get_issue_info(issue_url: str) -> tuple[str, str, str]:
-    """
-    Parses out the owner, repo, and issue_number from a GitHub issue url.
-    """
+    """Parse out the owner, repo, and issue_number from a GitHub issue url."""
     url_split = issue_url.split("/")
     if len(url_split) < 4:
         raise AirflowException(f"Issue url {issue_url} could not be parsed.")

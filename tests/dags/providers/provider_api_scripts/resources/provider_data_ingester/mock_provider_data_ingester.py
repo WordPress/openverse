@@ -18,8 +18,7 @@ DEFAULT_QUERY_PARAMS = {"has_image": 1, "page": 1}
 
 class MockProviderDataIngesterMixin:
     """
-    A very simple concrete implementation of the ProviderDataIngester class,
-    for testing purposes.
+    A simple concrete ProviderDataIngester class for testing purposes.
 
     Excludes ``get_media_type`` to allow for testing implementations
     that do not require it (single media type providers).
@@ -70,9 +69,7 @@ class MockAudioOnlyProviderDataIngester(
 class IncorrectlyConfiguredMockProviderDataIngester(
     MockProviderDataIngesterMixin, ProviderDataIngester
 ):
-    """
-    Used for testing default method implementions.
-    """
+    """Used for testing default method implementations."""
 
     # Do not configure ``get_media_type`` to test the failure case
     # for the default implementation

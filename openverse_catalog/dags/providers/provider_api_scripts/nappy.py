@@ -56,9 +56,7 @@ class NappyDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _convert_filesize(raw_filesize_string: str) -> int:
-        """
-        Convert sizes from strings to byte integers, ex. "187.8kB" to 188.
-        """
+        """Convert sizes from strings to byte integers, ex. "187.8kB" to 188."""
         FILETYPE_MULTIPLIERS = {"kB": 1000, "MB": 1_000_000, "GB": 1_000_000_000}
         if isinstance(raw_filesize_string, str) and len(raw_filesize_string) > 2:
             stripped = raw_filesize_string.strip()

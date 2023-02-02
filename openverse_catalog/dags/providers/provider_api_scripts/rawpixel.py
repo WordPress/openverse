@@ -85,6 +85,8 @@ class RawpixelDataIngester(ProviderDataIngester):
 
     def _get_signature(self, query_params: dict) -> str:
         """
+        Get the query signature for a request.
+
         URL encode the ordered parameters in a way that matches Node's
         querystring.stringify as closely as possible
         See: https://docs.python.org/3.10/library/urllib.parse.html#urllib.parse.urlencode  # noqa
@@ -132,6 +134,8 @@ class RawpixelDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_image_url(data: dict, size_option: str) -> str | None:
         """
+        Get the URL for an image.
+
         Rawpixel provides a "style_uri" string which can be formatted with these values:
             'image_24', 'image_png_24', 'image_48', 'image_png_48', 'image_100',
             'image_png_100', 'image_150', 'image_png_150', 'image_200', 'image_png_200',
@@ -176,6 +180,8 @@ class RawpixelDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_title(metadata: dict) -> str | None:
         """
+        Get the title for an image.
+
         Titles come in the following form, so we clean them up a bit:
           Bull elk searches for food | Free Photo - rawpixel
           Desktop wallpaper summer beach landscape, | Free Photo - rawpixel

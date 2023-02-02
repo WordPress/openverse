@@ -35,7 +35,7 @@ def pull_sample_records(
     input_path=RAW_DATA,
 ):
     """
-    Reads through a full gzip file and keeps just the selected ID records
+    Read through a full gzip file and keeps just the selected ID records
 
     This is not wildly efficient for large ID lists and large files.
     """

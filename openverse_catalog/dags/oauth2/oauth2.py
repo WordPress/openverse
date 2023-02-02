@@ -31,9 +31,7 @@ OAUTH_PROVIDERS = [
 
 
 def _var_get(key: str) -> dict[str, Any]:
-    """
-    Helper function for Variable retrieval with deserialization and dictionary default.
-    """
+    """Shortcut for Variable retrieval with deserialization and dictionary default."""
     return Variable.get(key, default_var={}, deserialize_json=True)
 
 
@@ -42,8 +40,9 @@ def _update_tokens(
     tokens: dict[str, str],
 ) -> None:
     """
-    Update the access/refresh tokens for a specific provider in the Airflow Variable
-    store. This update does not affect the tokens for any other existing providers.
+    Update the access/refresh tokens for a provider in the Airflow Variable store.
+
+    This update does not affect the tokens for any other existing providers.
     """
     log.info(f"Updating tokens for provider: {provider_name}")
     current_tokens = _var_get(OAUTH2_TOKEN_KEY)
@@ -58,9 +57,9 @@ def _get_provider_secrets(
     name: str, provider_secrets: dict[str, dict] = None
 ) -> dict[str, str]:
     """
-    Retrieve provider secrets from the Airflow Variable store. Optionally provide
-    a previously retrieved Variable value for improved performance.
+    Retrieve provider secrets from the Airflow Variable store.
 
+    Optionally provide a previously retrieved Variable value for improved performance.
     Providers are expected to *at least* have a `client_id`, and may have more
     information defined as necessary.
     """
@@ -78,8 +77,10 @@ def _get_provider_secrets(
 
 def get_oauth_client(provider_name: str) -> OAuth2Session:
     """
-    Create an OAuth2 client. This client behaves like a `requests.Session` instance,
-    but will automatically add the authorization necessary for a particular provider.
+    Create an OAuth2 client.
+
+    This client behaves like a `requests.Session` instance, but will automatically add
+    the authorization necessary for a particular provider.
     """
     secrets = _get_provider_secrets(provider_name)
     tokens = _var_get(OAUTH2_TOKEN_KEY)
@@ -93,7 +94,8 @@ def get_oauth_client(provider_name: str) -> OAuth2Session:
 
 def authorize_providers(providers: Collection[OauthProvider]) -> None:
     """
-    Iterate through all of the specified providers and authorize those that may need it.
+    Iterate through all the specified providers and authorize those that may need it.
+
     The authorization flow will only be attempted if a provider has an authorization
     key defined in the Airflow Variable store.
     """
@@ -118,10 +120,11 @@ def authorize_providers(providers: Collection[OauthProvider]) -> None:
 
 def refresh(provider: OauthProvider) -> None:
     """
-    Refresh the tokens for a given provider. This will use the stored refresh token to
-    attempt a fetch of a new access/refresh token pair. The new tokens will be updated
-    in the Airflow Variable store. Raises an AirflowSkipException if no tokens are
-    defined for the provider.
+    Refresh the tokens for a given provider.
+
+    This will use the stored refresh token to attempt a fetch of a new access/refresh
+    token pair. The new tokens will be updated in the Airflow Variable store. Raises
+    an AirflowSkipException if no tokens are defined for the provider.
     """
     current_tokens = _var_get(OAUTH2_TOKEN_KEY)
     if provider.name not in current_tokens:

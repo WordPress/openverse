@@ -1,6 +1,4 @@
-"""
-This module has public methods which are useful for storage operations.
-"""
+"""This module has public methods which are useful for storage operations."""
 import logging
 
 from common.storage.audio import AudioStore

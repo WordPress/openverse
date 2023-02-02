@@ -1,11 +1,11 @@
-""""
+"""
 # Ingestion Workflow Dag Factory
 
 This file iterates over the configurations defined in PROVIDER_INGESTION_WORKFLOWS
 and generates a day-partitioned ingestion workflow DAG in Airflow for each.
 
 These DAGs generate a list of `reingestion_days` for which to run the `main`
-function from the provided `provider_script`, and run the function. Currently
+function from the provided `provider_script`, and run the function. Currently,
 this will only pull data for each of the given days and create the tsv; the
 loading step is not yet wired up.
 """

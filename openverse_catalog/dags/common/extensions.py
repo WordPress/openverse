@@ -5,9 +5,7 @@ EXTENSIONS = {
 
 
 def extract_filetype(url: str, media_type: str) -> str | None:
-    """
-    Extracts the filetype from a media url extension.
-    """
+    """Extract the filetype from a media url extension."""
     possible_filetype = url.split(".")[-1]
     if possible_filetype in EXTENSIONS.get(media_type, {}):
         return possible_filetype

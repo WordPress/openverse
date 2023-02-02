@@ -10,6 +10,8 @@ from airflow.utils.state import State
 
 class SingleRunExternalDAGsSensor(BaseSensorOperator):
     """
+    Sensor for ensuring only one DAG runs at a time.
+
     Waits for a list of related DAGs, each assumed to have a similar Sensor,
     to not be running. A related DAG is considered to be 'running' if it is
     itself in the running state, and its corresponding wait task completed

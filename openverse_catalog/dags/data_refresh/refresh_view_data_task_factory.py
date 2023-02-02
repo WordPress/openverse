@@ -23,6 +23,8 @@ UPDATE_DB_VIEW_TASK_ID = "update_materialized_popularity_view"
 
 def create_refresh_view_data_task(data_refresh: DataRefresh):
     """
+    Create the refresh related tasks.
+
     The task refreshes the materialized view for the given media type. The view collates
     popularity data for each record. Refreshing has the effect of adding popularity data
     for records that were ingested since the last time the view was refreshed, and

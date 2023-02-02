@@ -43,8 +43,8 @@ def _newest_non_null(column: str) -> str:
 
 def _merge_jsonb_objects(column: str) -> str:
     """
-    This function returns SQL that merges the top-level keys of the
-    a JSONB column, taking the newest available non-null value.
+    Return an SQL that merges the top-level keys of a JSONB column.
+    This takes the newest available non-null value.
     """
     return f"""{column} = COALESCE(
            jsonb_strip_nulls(old.{column})
@@ -112,6 +112,8 @@ class Column(ABC):
         nullable: bool | None = None,
     ):
         """
+        Initialize a column.
+
         :param name: The column name used in TSV, ImageStore and provider API scripts,
         can be different from the name in the database.
         :param required: If True, the database column will be set to 'NOT NULL'
@@ -226,7 +228,7 @@ class IntegerColumn(Column):
 
     def prepare_string(self, value):
         """
-        Returns a string representation to the best integer approx of input.
+        Return a string representation to the best integer approx of input.
 
         If there is no sane mapping from the input to an integer,
         returns None.
@@ -271,7 +273,7 @@ class BooleanColumn(Column):
 
     def prepare_string(self, value):
         """
-        Returns a string `t` or `f`, as appropriate to input.
+        Return a string `t` or `f`, as appropriate to input.
 
         If there is no sane mapping from the input to a boolean,
         returns None.
@@ -318,7 +320,7 @@ class JSONColumn(Column):
 
     def prepare_string(self, value):
         """
-        Returns a json string as appropriate to input.
+        Return a json string as appropriate to input.
 
         Also sanitizes values within the json to ensure they are
         loadable into a PostgreSQL table.
@@ -335,8 +337,8 @@ class JSONColumn(Column):
 
     def _sanitize_json_values(self, value, recursion_limit=100):
         """
-        Recursively sanitizes the non-dict, non-list values of an input
-        dictionary or list in preparation for dumping to JSON string.
+        Recursively sanitize the non-dict/non-list values of an input dict or list in
+        preparation for dumping to a JSON string.
         """
         input_type = type(value)
 
@@ -395,9 +397,7 @@ class StringColumn(Column):
         )
 
     def prepare_string(self, value):
-        """
-        Sanitizes input and enforces the character limit, returning a string.
-        """
+        """Sanitizes input and enforces the character limit, returning a string."""
         return self._Column__enforce_char_limit(
             self._Column__sanitize_string(value), self.SIZE, self.TRUNCATE
         )
@@ -406,6 +406,7 @@ class StringColumn(Column):
 class UUIDColumn(Column):
     """
     Represents the PrimaryKey `identifier` column in PostgreSQL.
+
     name:          Column name
     """
 
@@ -491,7 +492,7 @@ class URLColumn(Column):
 
     def prepare_string(self, value):
         """
-        Returns input unchanged, as long as it is a valid URL string.
+        Return input unchanged, as long as it is a valid URL string.
 
         Also enforces the character limit of the column. If the input
         value fails a validation, returns None.
@@ -506,15 +507,15 @@ class URLColumn(Column):
 
 class ArrayColumn(Column):
     """
-    Represents a PostgreSQL column of type Array, which should hold elements
-    of the given base_column type.
+    Represents a PostgreSQL column of type Array.
+
+    Arrays should hold elements of the given base_column type.
 
     name:           name of the corresponding column in the DB
     required:       whether the column should be considered required by the
                     instantiating script.  (Not necessarily mapping to
                     `not null` columns in the PostgreSQL table)
     base_column:    type of the elements in the array, another column
-
     """
 
     def __init__(
@@ -536,9 +537,9 @@ class ArrayColumn(Column):
 
     def prepare_string(self, value):
         """
-        Returns a string representation of an array in the PostgreSQL format:
-        `{<item 1>, <item 2>...}`.
+        Return a string representation of an array.
 
+        The format in PostgreSQL is: `{<item 1>, <item 2>...}`.
         Apply changes and validations of the corresponding base column type.
         """
         input_type = type(value)

@@ -1,11 +1,4 @@
-"""
-# OAuth Provider Authorization
-
-**Author**: Madison Swain-Bowden
-
-**Created**: 2021-10-13
-
-"""
+"""# OAuth Provider Authorization"""
 from datetime import datetime
 
 import oauth2

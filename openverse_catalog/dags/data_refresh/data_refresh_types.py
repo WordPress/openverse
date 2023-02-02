@@ -1,7 +1,7 @@
 """
 # Data Refresh DAG Configuration
 This file defines the type for the `DataRefresh`, a dataclass containing
-configuation for a Data Refresh DAG, and defines the actual `DATA_REFRESH_CONFIGS`
+configuration for a Data Refresh DAG, and defines the actual `DATA_REFRESH_CONFIGS`
 for each of our media types. This configuration information is used to generate
 the dynamic Data Refresh dags.
 """

@@ -14,6 +14,8 @@ from providers.provider_workflows import ProviderWorkflow
 @dataclass
 class ProviderReingestionWorkflow(ProviderWorkflow):
     """
+    Provider reingestion workflow configurations.
+
     Extends the ProviderWorkflow with configuration options used to set up
     a day-partitioned ingestion workflow DAG.
 

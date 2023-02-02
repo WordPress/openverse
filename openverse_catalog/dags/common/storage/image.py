@@ -146,7 +146,7 @@ class ImageStore(MediaStore):
         return self.total_items
 
     def _get_image(self, **kwargs) -> Image | None:
-        """Validates image information and returns Image namedtuple"""
+        """Validate image information and return Image namedtuple."""
         image_metadata = self.clean_media_metadata(**kwargs)
         if image_metadata is None:
             return None
@@ -158,8 +158,9 @@ class ImageStore(MediaStore):
 
 class MockImageStore(ImageStore):
     """
-    A class that mocks the role of the ImageStore class. This class replaces
-    all functionality of ImageStore that calls the internet.
+    A class that mocks the role of the ImageStore class.
+
+    This class replaces all functionality of ImageStore that calls the internet.
     It also allows for easy introspection into the images added to the
     media_buffer by making it a public attribute, and not converting the
     images to TSV.

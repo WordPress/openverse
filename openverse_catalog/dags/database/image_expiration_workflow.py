@@ -1,4 +1,6 @@
 """
+# Image expiration
+
 This file configures the Apache Airflow DAG to expire the outdated images
 in the image table by setting the removed_from_source column value to true
 """

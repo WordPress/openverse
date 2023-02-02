@@ -182,7 +182,7 @@ class AudioStore(MediaStore):
         return self.total_items
 
     def _get_audio(self, **kwargs) -> Audio | None:
-        """Validates audio information and returns Audio namedtuple"""
+        """Validate audio information and return an Audio namedtuple."""
         audio_metadata = self.clean_media_metadata(**kwargs)
         if audio_metadata is None:
             return None
@@ -198,11 +198,12 @@ class AudioStore(MediaStore):
 
 class MockAudioStore(AudioStore):
     """
-    A class that mocks the role of the AudioStore class. This class replaces
-    all functionality of AudioStore that calls the internet.
+    Mock AudioStore for testing.
 
-    For information about all arguments other than license_info refer to
-    AudioStore class.
+    This class replaces all functionality of AudioStore that calls the internet.
+
+     For information about all arguments other than license_info refer to
+     AudioStore class.
 
     Required init arguments:
     license_info:       A named tuple consisting of valid license info from

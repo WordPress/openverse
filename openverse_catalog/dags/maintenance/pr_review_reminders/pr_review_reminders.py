@@ -58,6 +58,8 @@ def pr_urgency(pr: dict) -> Urgency.Urgency:
 
 def days_without_weekends(today: datetime, updated_at: datetime) -> int:
     """
+    Return the number of days between two dates, excluding weekends.
+
     Adapted from:
     https://stackoverflow.com/a/3615984 CC BY-SA 2.5
     """

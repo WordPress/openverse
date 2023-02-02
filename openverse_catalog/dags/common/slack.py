@@ -131,7 +131,7 @@ class SlackMessage:
         self._payload = self._base_payload.copy()
 
     def display(self) -> None:
-        """Prints current payload, intended for local development only."""
+        """Print current payload, intended for local development only."""
         if self._context:
             self._append_context()
         self._payload.update({"blocks": self.blocks})
@@ -163,7 +163,7 @@ class SlackMessage:
             raise ValueError("Unable to include more than 10 context elements")
 
     def add_context(self, message: str, plain_text: bool = False) -> None:
-        """Display context above or below a text block"""
+        """Display context above or below a text block."""
         self._add_context(
             self._text_block,
             message,
@@ -171,7 +171,7 @@ class SlackMessage:
         )
 
     def add_context_image(self, url: str, alt_text: str | None = None) -> None:
-        """Display context image inline within a text block"""
+        """Display context image inline within a text block."""
         self._add_context(self._image_block, url, alt_text=alt_text)
 
     ####################################################################################
@@ -204,7 +204,7 @@ class SlackMessage:
 
     def send(self, notification_text: str = "Airflow notification") -> Response:
         """
-        Sends message payload to the channel configured by the webhook.
+        Send message payload to the channel configured by the webhook.
 
         Any notification text provided will only show up as the content within
         the notification pushed to various devices.
@@ -231,6 +231,8 @@ class SlackMessage:
 
 def should_silence_message(text, username, dag_id):
     """
+    Determine if a Slack message should be silenced.
+
     Checks the `SILENCED_SLACK_NOTIFICATIONS` Airflow variable to see if the message
     should be silenced for this DAG.
     """
@@ -252,6 +254,8 @@ def should_send_message(
     text, username, dag_id, http_conn_id=SLACK_NOTIFICATIONS_CONN_ID
 ):
     """
+    Determine if a Slack message should actually be sent.
+
     Returns True if:
       * A Slack connection is defined
       * The DAG is not configured to silence messages of this type
@@ -314,6 +318,8 @@ def send_alert(
     unfurl_media: bool = False,
 ):
     """
+    Send a slack alert.
+
     Wrapper for send_message that allows sending a message to the configured alerts
     channel instead of the default notification channel.
     """
@@ -332,6 +338,7 @@ def send_alert(
 def on_failure_callback(context: dict) -> None:
     """
     Send an alert out regarding a failure to Slack.
+
     Errors are only sent out in production and if a Slack connection is defined.
     """
     # Get relevant info

@@ -31,9 +31,11 @@ class EmptyRequiredFieldException(Exception):
 
 def raise_if_empty(fn):
     """
-    Used to decorate RecordBuilder methods for "required" fields
-    to shortcut record building in the case where a record would
-    be missing some required fields and be thrown out anyway.
+    Raise an exception if the value returned by the wrapped function is empty.
+
+    Used to decorate RecordBuilder methods for "required" fields to shortcut record
+    building in the case where a record would be missing some required fields and be
+    thrown out anyway.
     """
 
     @functools.wraps(fn)
@@ -50,8 +52,9 @@ def raise_if_empty(fn):
 
 class EuropeanaRecordBuilder:
     """
-    A small class to contain the record building functionality
-    and simplify testing a bit.
+    Build records for Europeana.
+
+    This small class contains the record building functionality and simplifies testing.
     """
 
     def get_record_data(self, data: dict) -> dict:

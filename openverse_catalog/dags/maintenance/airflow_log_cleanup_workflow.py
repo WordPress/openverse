@@ -1,4 +1,6 @@
 """
+# Clean up airflow logs
+
 A maintenance workflow that you can deploy into Airflow to periodically clean
 out the task logs to avoid those getting too big. By default, this will also
 clean child process logs from the 'scheduler' directory.

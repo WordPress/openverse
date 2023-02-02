@@ -39,7 +39,8 @@ _pr_count = 1
 
 def make_pull(urgency: Urgency, past_due: bool) -> dict:
     """
-    Creates a PR object like the one returned by the GitHub API.
+    Create a PR object like the one returned by the GitHub API.
+
     The PR will also be created specifically to have the priority
     label associated with the passed in urgency.
 

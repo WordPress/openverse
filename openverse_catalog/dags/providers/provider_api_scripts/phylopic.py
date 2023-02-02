@@ -48,9 +48,7 @@ class PhylopicDataIngester(ProviderDataIngester):
         return endpoint
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
-        """
-        Since the range is determined by the endpoint property, this step is a noop.
-        """
+        """Noop since the range is determined by the endpoint property."""
         return {}
 
     def get_should_continue(self, response_json):
@@ -62,9 +60,7 @@ class PhylopicDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _get_response_data(response_json) -> dict | list | None:
-        """
-        Intermediate method for pulling out results from a Phylopic API request.
-        """
+        """Intermediate method for pulling out results from a Phylopic API request."""
         if response_json and response_json.get("success") is True:
             return response_json.get("result")
 

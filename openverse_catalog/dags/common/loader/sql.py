@@ -51,8 +51,12 @@ RETURN_ROW_COUNT = lambda c: c.rowcount  # noqa: E731
 
 
 def create_column_definitions(table_columns: list[Column], is_loading=True):
-    """Loading table should not have 'NOT NULL' constraints: all TSV values
-    are copied, and then the items without required columns are dropped"""
+    """
+    Create column definitions for a table.
+
+    Loading table should not have 'NOT NULL' constraints: all TSV values
+    are copied, and then the items without required columns are dropped.
+    """
     definitions = [column.create_definition(is_loading) for column in table_columns]
     return ",\n  ".join(definitions)
 
@@ -62,9 +66,7 @@ def create_loading_table(
     identifier: str,
     media_type: str = IMAGE,
 ):
-    """
-    Create intermediary table and indices if they do not exist
-    """
+    """Create intermediary table and indices if they do not exist."""
     load_table = _get_load_table_name(identifier, media_type=media_type)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     loading_table_columns = TSV_COLUMNS[media_type]
@@ -129,8 +131,10 @@ def load_local_data_to_intermediate_table(
 
 def _handle_s3_load_result(cursor) -> int:
     """
-    Handle the results of the aws_s3.table_import_from_s3 function. Locally this will
-    return an integer, but on AWS infrastructure it will return a string similar to:
+    Handle the results of the aws_s3.table_import_from_s3 function.
+
+    Locally this will return an integer, but on AWS infrastructure it will return a
+    string similar to:
 
     500 rows imported into relation "..." from file ... of ... bytes
     """
@@ -176,8 +180,9 @@ def clean_intermediate_table_data(
     media_type: MediaType = IMAGE,
 ) -> tuple[int, int]:
     """
-    Necessary for old TSV files that have not been cleaned up,
-    using `MediaStore` class:
+    Clean the data in the intermediate table.
+
+    Necessary for old TSV files that have not been cleaned up, using `MediaStore` class:
     Removes any rows without any of the required fields:
     `url`, `license`, `license_version`, `foreign_id`.
     Also removes any duplicate rows that have the same `provider`
@@ -216,9 +221,11 @@ def _is_tsv_column_from_different_version(
     column: Column, media_type: str, tsv_version: str
 ) -> bool:
     """
-    Checks that column is a column that exists in TSV files (unlike the db-only
+    Check that a column appears in the available columns for a TSV verison.
+
+    Check that column is a column that exists in TSV files (unlike the db-only
     columns like IDENTIFIER or CREATED_ON), but is not available for `tsv_version`.
-    For example, Category column was added to Image TSV in version 001
+    For example, Category column was added to Image TSV in version 001:
     >>> from common.storage import CATEGORY, DIRECT_URL
     >>> _is_tsv_column_from_different_version(CATEGORY, IMAGE, '000')
     True
@@ -227,7 +234,6 @@ def _is_tsv_column_from_different_version(
     >>> from common.storage import IDENTIFIER
     >>> _is_tsv_column_from_different_version(IDENTIFIER, IMAGE, '000')
     False
-
     """
     return (
         column not in COLUMNS[media_type][tsv_version]
@@ -243,9 +249,11 @@ def upsert_records_to_db_table(
     tsv_version: str = CURRENT_TSV_VERSION,
 ):
     """
-    Upserts newly ingested records from loading table into the main db table.
+    Upsert newly ingested records from loading table into the main db table.
+
     For tsv columns that do not exist in the `tsv_version` for `media_type`,
     NULL value is used.
+
     :param postgres_conn_id
     :param identifier
     :param db_table

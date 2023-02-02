@@ -29,7 +29,9 @@ def dir_size_in_mb(dir_paths: list[Path] | Path):
 
 
 def get_folders_to_delete(dag_log_folder: Path, max_log_age_in_days: int) -> list[Path]:
-    """Returns a list of log folders that are older `than max_log_age_in_days`
+    """
+    Return a list of log folders that are older `than max_log_age_in_days`.
+
     The folder structure is as follows:
     `{dag_id}/{task_id}/{timestamp}/{try}.log`
     This function iterates over all `{timestamp}` folders, detects the
@@ -90,10 +92,11 @@ def clean_up(
     should_delete: bool | str,
     **kwargs,
 ) -> list[Path]:
-    """Finds all log folders that were modified more than
-    `max_log_age_in_days` days ago, and
-    deletes them, if `should_delete` is True, or
-    logs them, if `should_delete` is False.
+    """
+    Find and delete all log folders that were modified more than `max_log_age_in_days`.
+
+    Deletion only happens if `should_delete` is True, otherwise they are logged
+    (e.g. if `should_delete` is False).
 
     :param base_log_folder: the folder in which dag log folders
     are located.

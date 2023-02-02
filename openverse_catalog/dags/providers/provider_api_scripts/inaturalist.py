@@ -104,7 +104,7 @@ class INaturalistDataIngester(ProviderDataIngester):
         sql_template_file_name="transformed_table.template.sql",
     ):
         """
-        Processes a single batch of inaturalist photo ids. batch_start is the minimum
+        Process a single batch of inaturalist photo ids. batch_start is the minimum
         photo_id for the batch. get_batches generates a list for xcoms to use in
         generating tasks that use this function.
         """

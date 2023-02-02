@@ -31,6 +31,8 @@ from providers.provider_api_scripts.wordpress import WordPressDataIngester
 @dataclass
 class ProviderWorkflow:
     """
+    Provider workflow definition.
+
     Required Arguments:
 
     ingester_class: ProviderDataIngester class whose `ingest_records` method is

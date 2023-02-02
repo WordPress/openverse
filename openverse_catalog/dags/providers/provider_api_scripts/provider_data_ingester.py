@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 class AggregateIngestionError(Exception):
     """
+    Combined error for all ingestion errors.
+
     Custom exception when multiple ingestion errors are skipped and then
     raised in aggregate at the end of ingestion.
     """
@@ -25,6 +27,8 @@ class AggregateIngestionError(Exception):
 
 class IngestionError(Exception):
     """
+    Ingestion error which occurred during processing.
+
     Custom exception which includes information about the query_params that
     were being used when the error was encountered.
     """
@@ -45,8 +49,7 @@ class IngestionError(Exception):
 
 class ProviderDataIngester(ABC):
     """
-    An abstract base class that initializes media stores and ingests records
-    from a given provider.
+    ABC which initializes media stores and ingests records from a given provider.
 
     Class variables of note:
     providers:   a dictionary whose keys are the supported `media_types`, and values are
@@ -69,6 +72,8 @@ class ProviderDataIngester(ABC):
     @abstractmethod
     def providers(self) -> dict[str, str]:
         """
+        Providers supported by this ingester.
+
         A dictionary mapping each supported media type to its corresponding
         `provider` string (the string that will populate the `provider` field
         in the Catalog DB). These strings should be defined as constants in
@@ -89,13 +94,12 @@ class ProviderDataIngester(ABC):
     @property
     @abstractmethod
     def endpoint(self):
-        """
-        The URL with which to request records from the API.
-        """
+        """The URL with which to request records from the API."""
         pass
 
     def __init__(self, conf: dict = None, dag_id: str = None, date: str = None):
         """
+        Initialize the provider configuration.
         Optional Arguments:
 
         conf: The configuration dict for the running DagRun
@@ -152,10 +156,7 @@ class ProviderDataIngester(ABC):
             self.override_query_params = (qp for qp in query_params_list)
 
     def _init_media_stores(self) -> dict[str, MediaStore]:
-        """
-        Initialize a media store for each media type supported by this
-        provider.
-        """
+        """Initialize a media store for each media type supported by this provider."""
         media_stores = {}
 
         for media_type, provider in self.providers.items():
@@ -166,7 +167,9 @@ class ProviderDataIngester(ABC):
 
     def ingest_records(self, **kwargs) -> None:
         """
-        The main ingestion function that is called during the `pull_data` task.
+        Ingest all records.
+
+        This is the main ingestion function that is called during the `pull_data` task.
 
         Optional Arguments:
         **kwargs: Optional arguments to be passed to `get_next_query_params`.
@@ -238,10 +241,12 @@ class ProviderDataIngester(ABC):
 
     def _get_ingestion_errors(self) -> AggregateIngestionError | None:
         """
+        Retrieve all ingestion errors that have been caught during processing.
+
         If any errors were skipped during ingestion, log them as well as the
         associated query parameters. Then return an AggregateIngestionError.
 
-        It there are no errors to report, returns None.
+        If there are no errors to report, returns None.
         """
         if self.ingestion_errors:
             # Log the affected query_params
@@ -269,9 +274,10 @@ class ProviderDataIngester(ABC):
         self, prev_query_params: dict | None, **kwargs
     ) -> dict | None:
         """
-        Returns the next set of query_params for the next request, handling
-        optional overrides via the dag_run conf. This method should not be overridden;
-        instead override get_next_query_params.
+        Return the next set of query_params for the next request.
+
+        This handles optional overrides via the dag_run conf.
+        This method should not be overridden; instead override get_next_query_params.
         """
         # If we are getting query_params for the first batch and initial_query_params
         # have been set, return them.
@@ -298,6 +304,8 @@ class ProviderDataIngester(ABC):
     @abstractmethod
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         """
+        Get the next set of query parameters.
+
         Given the last set of query params, return the query params
         for the next request. Depending on the API, this may involve incrementing
         an `offset` or `page` param, for example.
@@ -312,6 +320,8 @@ class ProviderDataIngester(ABC):
 
     def get_batch(self, query_params: dict) -> tuple[list | None, bool]:
         """
+        Get a batch of records from the API.
+
         Given query params, request the next batch of records from the API and
         return them in a list.
 
@@ -343,8 +353,10 @@ class ProviderDataIngester(ABC):
         self, query_params: dict, endpoint: str | None = None, **kwargs
     ):
         """
-        Make the actual API requests needed to ingest a batch. This can be overridden
-        in order to support APIs that require multiple requests, for example.
+        Make the actual API requests needed to ingest a batch.
+
+        This can be overridden in order to support APIs that require multiple requests,
+        for example.
         """
         return self.delayed_requester.get_response_json(
             endpoint or self.endpoint,
@@ -356,6 +368,8 @@ class ProviderDataIngester(ABC):
 
     def get_should_continue(self, response_json):
         """
+        Determine whether ingestion should continue after this batch has been processed.
+
         This method should be overridden when an API has additional logic for
         determining whether ingestion should continue. For example, this
         can be used to check for the existence of a `continue_token` in the
@@ -365,14 +379,13 @@ class ProviderDataIngester(ABC):
 
     @abstractmethod
     def get_batch_data(self, response_json) -> None | list[dict]:
-        """
-        Take an API response and return the list of records.
-        """
+        """Take an API response and return the list of records."""
         pass
 
     def process_batch(self, media_batch) -> int:
         """
         Process a batch of records by adding them to the appropriate MediaStore.
+
         Returns the total count of records ingested up to this point, for all
         media types.
         """
@@ -410,8 +423,10 @@ class ProviderDataIngester(ABC):
 
     def get_media_type(self, record: dict) -> str:
         """
-        For a given record, return the media type it represents (eg "image", "audio",
-        etc.) If a provider only supports a single media type, this method defaults
+        Return the media type a record represents.
+
+        (eg "image", "audio", etc.)
+        If a provider only supports a single media type, this method defaults
         to returning the only media type defined in the ``providers`` attribute.
         """
         if len(self.providers) == 1:
@@ -425,11 +440,11 @@ class ProviderDataIngester(ABC):
     @abstractmethod
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
         """
-        Parse out the necessary information (license info, urls, etc) from the record
-        data into a dictionary.
+        Parse out the necessary information from the record data into a dictionary.
 
-        If the record being parsed contains data for additional related records, a list
-        may be returned of multiple record dictionaries.
+        Examples include license info, urls, etc. If the record being parsed contains
+        data for additional related records, a list may be returned of multiple
+        record dictionaries.
         """
         pass
 

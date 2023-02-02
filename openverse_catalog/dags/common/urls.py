@@ -19,8 +19,7 @@ logger = logging.getLogger(__name__)
 
 def validate_url_string(url_string, strip_slash: bool = True):
     """
-    Determines whether the given `url_string` is a valid URL with an https
-    scheme.
+    Determine whether the given `url_string` is a valid URL with an https scheme.
 
     If not, attempts to mangle the URL scheme into the desired form,
     falling back to an http scheme in the event TLS is not supported.
@@ -63,9 +62,9 @@ def validate_url_string(url_string, strip_slash: bool = True):
 @lru_cache(maxsize=2048)
 def rewrite_redirected_url(url_string):
     """
-    Requests the given `url_string`, and rewrites it to the final URL
-    after any redirects.  Caches the result to avoid repetitive network
-    requests.
+    Request the given url and rewrite it to the final URL after any redirects.
+
+    Caches the result to avoid repetitive network requests.
     """
     try:
         response = requests_get(url_string)
@@ -87,8 +86,7 @@ def rewrite_redirected_url(url_string):
 
 def add_url_scheme(url_string, scheme="http", strip_slash: bool = True):
     """
-    Replaces the scheme of `url_string` with `scheme`,
-    or adds the given `scheme` if necessary.
+    Replace the scheme of `url_string` with `scheme` or adds the `scheme` if necessary.
 
     Only strip the leading/trailing slash of url if flag is True.
     """

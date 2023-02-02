@@ -83,7 +83,8 @@ class ClevelandDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_int_value(data: dict, key: str) -> int | None:
         """
-        Converts the value of the key `key` in `data` to an integer.
+        Convert the value of the key `key` in `data` to an integer.
+
         Returns None if the value is not convertible to an integer, or
         if the value doesn't exist.
         """

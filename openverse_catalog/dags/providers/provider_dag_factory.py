@@ -101,8 +101,10 @@ def create_ingestion_workflow(
     conf: ProviderWorkflow, day_shift: int = 0, is_reingestion: bool = False
 ):
     """
-    Creates a TaskGroup that performs the ingestion tasks, first pulling and then
-    loading data. Returns the TaskGroup, and a dictionary of reporting metrics.
+    Create a TaskGroup that performs the ingestion tasks.
+
+    This flow first pulls and then loads the data. Returns the TaskGroup, and a
+    dictionary of reporting metrics.
 
     Required Arguments:
 
@@ -302,8 +304,7 @@ def create_report_load_completion(
 
 def create_provider_api_workflow_dag(conf: ProviderWorkflow):
     """
-    This factory method instantiates a DAG that will run the given
-    `main_function`.
+    Instantiate a DAG that will run the given `main_function`.
 
     Required Arguments:
 
@@ -355,8 +356,10 @@ def _build_partitioned_ingest_workflows(
     partitioned_reingestion_days: list[list[int]], conf: ProviderReingestionWorkflow
 ):
     """
-    Builds a list of lists of ingestion tasks, parameterized by the given
-    dag conf and a list of day shifts. Calculation is explained below.
+    Build a list of lists of ingestion tasks.
+
+    These are parameterized by the given dag conf and a list of day shifts.
+    Calculation is explained below.
 
     Required Arguments:
 
@@ -437,10 +440,10 @@ def create_day_partitioned_reingestion_dag(
     conf: ProviderReingestionWorkflow, partitioned_reingestion_days: list[list[int]]
 ):
     """
-    Given a `conf` object and `reingestion_day_list_list`, this
-    factory method instantiates a DAG that will run ingestion using the
-    given configuration, parameterized by a number of dates calculated
-    using the reingestion day list.
+    Instantiate a DAG that will run ingestion using the given configuration.
+
+    In addition to a `conf` object and `reingestion_day_list_list`, this is
+    parameterized by a number of dates calculated using the reingestion day list.
 
     Required Arguments:
 

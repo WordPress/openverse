@@ -1,5 +1,5 @@
-""""
-# Provider Workflow Dag Factory
+"""
+# Provider Workflow DAG Factory
 
 This file iterates over the configurations defined in PROVIDER_WORKFLOWS
 and generates a provider workflow DAG in Airflow for each.

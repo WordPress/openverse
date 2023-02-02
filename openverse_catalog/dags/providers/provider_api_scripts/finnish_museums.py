@@ -51,7 +51,7 @@ class FinnishMuseumsDataIngester(ProviderDataIngester):
 
     def __init__(self, *args, **kwargs):
         """
-        This DAG runs ingestion separately for each configured `building`. When a
+        Note: this DAG runs ingestion separately for each configured `building`. When a
         building has many records for the ingestion date, the DAG further splits up
         ingestion into time slices. Each run of the `ingest_records` function for
         a particular (building, time slice) pair is an "iteration" of the DAG.
@@ -120,6 +120,7 @@ class FinnishMuseumsDataIngester(ProviderDataIngester):
 
     def _get_timestamp_pairs(self, building: str):
         """
+        Determine a set of timestamp pairs per building.
         The Finnish Museums API can behave unexpectedly when querying large datasets,
         resulting in large numbers of duplicates and eventual DAG timeouts
         (see https://github.com/WordPress/openverse-catalog/pull/879 for more

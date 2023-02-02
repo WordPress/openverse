@@ -63,10 +63,11 @@ class FlickrDataIngester(ProviderDataIngester):
     @staticmethod
     def _derive_timestamp_pair_list(date):
         """
-        Build a list of timestamp pairs that divide the given date into equal
-        portions of the 24-hour period. Ingestion will be run separately for
-        each of these time divisions. This is necessary because requesting data
-        for too long a period may cause unexpected behavior from the API:
+        Create a list of start/end timestamps for equal portions of the day.
+
+        Ingestion will be run separately for each of these time divisions.
+        This is necessary because requesting data for too long a period may cause
+        unexpected behavior from the API:
         https://github.com/WordPress/openverse-catalog/issues/26.
         """
         seconds_in_a_day = 86400
@@ -206,9 +207,7 @@ class FlickrDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _get_largest_image_size(image_data):
-        """
-        Returns the key for the largest image size available.
-        """
+        """Return the key for the largest image size available."""
         for size in ["l", "m", "s"]:
             if f"url_{size}" in image_data:
                 return size
@@ -261,6 +260,8 @@ class FlickrDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_category(image_data):
         """
+        Get the category.
+
         Flickr has three types:
             0 for photos
             1 for screenshots

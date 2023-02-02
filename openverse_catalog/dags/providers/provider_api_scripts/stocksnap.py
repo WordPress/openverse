@@ -58,9 +58,7 @@ class StockSnapDataIngester(ProviderDataIngester):
         return bool(response_json.get("nextPage"))
 
     def get_batch_data(self, response_json):
-        """
-        Take an API response and return the list of records.
-        """
+        """Take an API response and return the list of records."""
         if response_json:
             return response_json.get("results")
         return None
@@ -122,8 +120,10 @@ class StockSnapDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_creator_data(item):
         """
-        Get the author's name and website preferring their custom link over the
-        StockSnap profile. The latter is used if the first is not found.
+        Get the author's name and website.
+
+        This prefers their custom link over the StockSnap profile.
+        The latter is used if the first is not found.
         """
         creator_name = item.get("author_name")
         if creator_name is None:
@@ -139,7 +139,9 @@ class StockSnapDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_title(item):
         """
-        Get the first two photo's tags/keywords to make the title and transform it
+        Get the title.
+
+        Gets the first two photo's tags/keywords to make the title and transform it
         to title case, as shown on its page.
         """
         tags = item.get("keywords", [])[:2]
@@ -148,9 +150,7 @@ class StockSnapDataIngester(ProviderDataIngester):
             return img_title.title()
 
     def _get_filesize(self, image_url):
-        """
-        Get the size of the image in bytes.
-        """
+        """Get the size of the image in bytes."""
         resp = self.delayed_requester.head(image_url)
         if resp:
             filesize = int(resp.headers.get("Content-Length", 0))
@@ -158,9 +158,7 @@ class StockSnapDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _get_metadata(item):
-        """
-        Include popularity statistics.
-        """
+        """Include popularity statistics."""
         extras = ["downloads_raw", "page_views_raw", "favorites_raw"]
         metadata = {}
         for key in extras:

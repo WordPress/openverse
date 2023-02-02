@@ -43,7 +43,7 @@ def upsert_data(
     duplicates_count: tuple[int, int],
 ) -> RecordMetrics:
     """
-    Upserts data into the catalog DB from the loading table, and calculates
+    Upsert data into the catalog DB from the loading table, and calculate
     final record metrics.
     """
     missing_columns, foreign_id_dup = duplicates_count

@@ -51,8 +51,7 @@ def get_pending_report_counts(
     db_conn_id: str, media_type: str, ti: TaskInstance
 ) -> ReportCountsByReason:
     """
-    For the given media type, builds a dict of pending report counts grouped by
-    report reason.
+    Build a dict of pending report counts grouped by report reason for a media type.
 
     Required Arguments:
 

@@ -1,6 +1,4 @@
-"""
-Script used to generate a templated ProviderDataIngester.
-"""
+"""Script used to generate a templated ProviderDataIngester."""
 
 import argparse
 import re
@@ -16,9 +14,7 @@ MEDIA_TYPES = ["audio", "image"]
 
 
 def _render_provider_configuration(provider: str, media_type: str):
-    """
-    Render the provider configuration string for a particular media type.
-    """
+    """Render the provider configuration string for a particular media type."""
     return f'"{media_type}": prov.{provider}_{media_type.upper()}_PROVIDER,'
 
 
@@ -117,6 +113,8 @@ PROVIDER_WORKFLOWS list in `openverse-catalog/dags/providers/provider_workflows.
 
 def sanitize_provider(provider: str) -> str:
     """
+    Sanitize the provider name.
+
     Takes a provider string from user input and sanitizes it by:
     - removing trailing whitespace
     - replacing spaces and periods with underscores
@@ -132,9 +130,7 @@ def sanitize_provider(provider: str) -> str:
 
 
 def parse_media_types(media_types: list[str]) -> list[str]:
-    """
-    Parses valid media types out from user input. Defaults to ["image",]
-    """
+    """Parse valid media types out from user input. Defaults to ["image",]."""
     valid_media_types = []
 
     if media_types is None:

@@ -45,6 +45,8 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_year_ranges(final_year: int) -> list[tuple[int, int]]:
         """
+        Get the year ranges based on a final year.
+
         The Science Museum API currently raises a 400 when attempting to access
         any page number higher than 50
         (https://github.com/TheScienceMuseum/collectionsonline/issues/1470).
@@ -181,8 +183,10 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_dimensions(image_data: dict) -> tuple[int | None, int | None]:
         """
-        Returns the height and width of the image from "image_data"."measurements"
-        with keys of "dimension", "units", "value".
+        Return the height and width of the image.
+
+        Uses the values from "image_data"."measurements" with keys of "dimension",
+        "units", "value".
         """
         size = {}
         dimensions = image_data.get("measurements", {}).get("dimensions")

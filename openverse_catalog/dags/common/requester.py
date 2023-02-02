@@ -22,15 +22,15 @@ logger = logging.getLogger(__name__)
 
 
 class RetriesExceeded(Exception):
-    """
-    Custom exception for when the number of allowed retries has been exceeded.
-    """
+    """Custom exception for when the number of allowed retries has been exceeded."""
 
     pass
 
 
 class DelayedRequester:
     """
+    Requester class with a built-in delay.
+
     Provides methods `get` and `head` that are wrappers around the `requests`
     module methods with the same name (i.e., it simply passes along whatever
     arguments it receives).  The difference is that when this class is initialized

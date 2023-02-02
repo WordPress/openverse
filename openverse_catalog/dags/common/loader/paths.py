@@ -8,6 +8,8 @@ LEGACY_TSV_VERSION = "000"
 
 def _extract_media_type(tsv_file_name: str | None) -> str:
     """
+    Extract the media type from a filename.
+
     By default, the filename will be:
     `folder/provider_timestamp.tsv` for older version
     `folder/provider_<media_type>_timestamp.tsv` for newer version
@@ -27,7 +29,10 @@ def _extract_media_type(tsv_file_name: str | None) -> str:
 
 
 def get_tsv_version(tsv_file_name: str) -> str:
-    """TSV file version can be deducted from the filename
+    """
+    Extract the TSV version from a filename.
+
+    TSV file version can be deducted from the filename using:
     v0: without _vN_ in the filename
     v1+: has a _vN in the filename
 

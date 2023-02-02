@@ -70,8 +70,7 @@ class MediaStore(metaclass=abc.ABCMeta):
 
     def save_item(self, media) -> None:
         """
-        Appends item data to the buffer as a tsv row,
-        only if data is valid.
+        Append item data to the buffer as a tsv row, only if data is valid.
 
         Args:
             media: a namedtuple with validated media metadata
@@ -85,14 +84,13 @@ class MediaStore(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def add_item(self, **kwargs):
-        """
-        Abstract method to clean the item data and add it to the store
-        """
+        """Abstract method to clean the item data and add it to the store."""
         pass
 
     def clean_media_metadata(self, **media_data) -> dict | None:
         """
-        Cleans and enriches the base media metadata common for all media types.
+        Clean and enrich the base media metadata common for all media types.
+
         Even though we clean license info in the provider API scripts,
         we validate it here, too, to make sure we don't have
         invalid license information in the database.
@@ -145,7 +143,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         return media_data
 
     def commit(self):
-        """Writes all remaining media items in the buffer to disk."""
+        """Write all remaining media items in the buffer to disk."""
         self._flush_buffer()
         return self.total_items
 
@@ -154,7 +152,9 @@ class MediaStore(metaclass=abc.ABCMeta):
         provider: str | None,
         version: str | None = None,
     ) -> str:
-        """Creates the path for the tsv file.
+        """
+        Create the path for the tsv file.
+
         If output_dir and output_file ar not given,
         the following filename is used:
         `/tmp/{provider_name}_{media_type}_{timestamp}.tsv`
@@ -217,7 +217,8 @@ class MediaStore(metaclass=abc.ABCMeta):
     @staticmethod
     def _tag_blacklisted(tag: str | dict) -> bool:
         """
-        Tag is banned or contains a banned substring.
+        Determine if the is banned or contains a banned substring.
+
         :param tag: the tag to be verified against the blacklist
         :return: true if tag is blacklisted, else returns false
         """
@@ -232,10 +233,7 @@ class MediaStore(metaclass=abc.ABCMeta):
 
     @staticmethod
     def _enrich_meta_data(meta_data, license_url, raw_license_url) -> dict:
-        """
-        Makes sure that meta_data is a dictionary, and contains
-        license_url and raw_license_url
-        """
+        """Ensure that meta_data is a dict and contains both license URLs."""
         if type(meta_data) != dict:
             logger.debug(f"`meta_data` is not a dictionary: {meta_data}")
             enriched_meta_data = {
@@ -250,7 +248,8 @@ class MediaStore(metaclass=abc.ABCMeta):
         return enriched_meta_data
 
     def _enrich_tags(self, raw_tags) -> list | None:
-        """Takes a list of tags and adds provider information to them
+        """
+        Add provider information to tags.
 
         Args:
             raw_tags: List of strings or dictionaries
@@ -279,7 +278,8 @@ class MediaStore(metaclass=abc.ABCMeta):
 
     def _validate_filetype(self, filetype: str | None, url: str) -> str | None:
         """
-        Extracts filetype from the media URL if filetype is None.
+        Extract filetype from the media URL if filetype is None.
+
         Unifies filetypes that have variants such as jpg/jpeg and tiff/tif.
         :param filetype: Optional filetype string.
         :return: filetype string or None
@@ -293,8 +293,9 @@ class MediaStore(metaclass=abc.ABCMeta):
     @staticmethod
     def _validate_integer(value: int | None) -> int | None:
         """
-        Checks to ensure that a provided integer value is less than the Postgres
-        maximum integer value. If the value exceeds this maximum, None is returned.
+        Ensure the provided int value is less than the Postgres maximum integer value.
+
+        If the value exceeds this maximum, None is returned.
         TODO: Remove this logic once the column has been embiggened
         https://github.com/WordPress/openverse-catalog/issues/730
         https://github.com/WordPress/openverse-catalog/issues/873
@@ -306,9 +307,7 @@ class MediaStore(metaclass=abc.ABCMeta):
 
     @staticmethod
     def _get_source(source, provider):
-        """
-        Returns `source` if given, otherwise `provider`
-        """
+        """Return `source` if given, otherwise `provider`."""
         if not source:
             source = provider
 

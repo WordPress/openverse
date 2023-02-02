@@ -1,6 +1,6 @@
 """
-This module contains the lists of database columns
-in the same order as in the main image / audio databases.
+This module contains the lists of database columns in the same order as in the
+main media tables within the database.
 """
 from common.storage import columns as col
 

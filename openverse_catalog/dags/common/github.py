@@ -3,9 +3,7 @@ import requests
 
 class GitHubAPI:
     def __init__(self, pat: str):
-        """
-        :param pat: GitHub Personal Access Token to use to authenticate requests
-        """
+        """:param pat: GitHub Personal Access Token to use to authenticate requests"""
         self.session = requests.Session()
         self.session.headers["Authorization"] = f"token {pat}"
 

@@ -8,7 +8,7 @@ class IngestionInput(NamedTuple):
 
 def get_partitioned_reingestion_days(inputs: list[IngestionInput]):
     """
-    This method calculates day-shift lists for Provider API workflows.
+    Calculate day-shift lists for Provider API workflows.
 
     The input should be a list of pairs of integers:
 

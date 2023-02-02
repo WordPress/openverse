@@ -66,9 +66,7 @@ class JamendoDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _remove_param_from_url(url: str, param: str) -> str:
-        """
-        Remove a parameter from a provided URL.
-        """
+        """Remove a parameter from a provided URL."""
         parsed_url = urlsplit(url)
         query = parse_qs(parsed_url.query)
         query.pop(param, None)
@@ -76,6 +74,8 @@ class JamendoDataIngester(ProviderDataIngester):
 
     def _remove_trackid(self, thumbnail_url: str | None) -> str | None:
         """
+        Remove the track ID from a URL.
+
         ``audio_set`` data is used to create a separate database table in the API.
         To make sure that any given ``audio_set`` appears in that table only once,
         all the fields for that ``audio_set`` need to have the same values. In
@@ -94,9 +94,10 @@ class JamendoDataIngester(ProviderDataIngester):
 
     def _get_audio_url(self, data):
         """
-        Parses out audio URL, and removes the "from" parameter. Audio URLs have a "from"
-        param which seems to encapsulate information about the calling application.
-        Example from the API:
+        Parse out audio URL and remove the "from" parameter.
+
+        Audio URLs have a "from" param which seems to encapsulate information about the
+        calling application. Example from the API:
         https://prod-1.storage.jamendo.com/?trackid=1532771&format=mp31&from=app-devsite
         This information looks like an API key or secret when returned, so we remove it
         since it's not necessary for serving the audio files.

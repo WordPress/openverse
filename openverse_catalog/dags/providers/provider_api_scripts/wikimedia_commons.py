@@ -83,6 +83,8 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
 
     def get_response_json(self, query_params):
         """
+        Get the response data from the API.
+
         Overrides the parent function to make multiple requests until
         we see "batchcomplete", rather than a single request to the
         endpoint. This ensures that global usage data used for calculating
@@ -179,7 +181,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         return funcs[valid_media_type](record_data, media_info)
 
     def get_image_record_data(self, record_data, media_info):
-        """Extend record_data with image-specific fields"""
+        """Extend record_data with image-specific fields."""
         record_data["image_url"] = record_data.pop("media_url")
         if record_data["filetype"] == "svg":
             record_data["category"] = "illustration"
@@ -191,7 +193,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         }
 
     def get_audio_record_data(self, record_data, media_info):
-        """Extend record_data with audio-specific fields"""
+        """Extend record_data with audio-specific fields."""
         record_data["audio_url"] = record_data.pop("media_url")
 
         duration = int(float(media_info.get("duration", 0)) * 1000)
@@ -215,7 +217,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         return record_data
 
     def parse_audio_file_meta_data(self, media_info):
-        """Parse out audio file metadata"""
+        """Parse out audio file metadata."""
         metadata = media_info.get("metadata", [])
 
         streams = self.get_value_by_name(metadata, "streams")
@@ -242,8 +244,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
 
     @staticmethod
     def get_value_by_name(key_value_list: list, prop_name: str):
-        """Gets the first value for the given `prop_name` in a list of
-        key value pairs."""
+        """Get the first value for the given prop_name in a list of key value pairs."""
         if key_value_list is None:
             key_value_list = []
 
@@ -257,8 +258,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
 
     @staticmethod
     def get_value_by_names(key_value_list: list, prop_names: list):
-        """Gets the first available value for one of the `prop_names`
-        property names"""
+        """Get the first available value for one of the `prop_names` property names."""
         for prop_name in prop_names:
             if val := WikimediaCommonsDataIngester.get_value_by_name(
                 key_value_list, prop_name
@@ -282,8 +282,12 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
 
     @staticmethod
     def extract_audio_category(parsed_data):
-        """Set category to "pronunciation" for any audio with
-        pronunciation of a word or a phrase"""
+        """
+        Determine the audio category.
+
+        Sets category to "pronunciation" for any audio with pronunciation
+        of a word or a phrase.
+        """
         for category in parsed_data["meta_data"].get("categories", []):
             if "pronunciation" in category.lower():
                 return "pronunciation"

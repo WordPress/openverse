@@ -83,8 +83,9 @@ def _single_value(cursor):
 @provide_session
 def _month_check(dag_id: str, session: SASession = None) -> str:
     """
-    Checks whether there has been a previous DagRun this month. If so,
-    returns the task_id for the matview refresh task; else, returns the
+    Check whether there has been a previous DagRun this month.
+
+    If so, return the task_id for the matview refresh task; else, return the
     task_id for refresh popularity metrics task.
 
     Required Arguments:
@@ -137,8 +138,9 @@ def _month_check(dag_id: str, session: SASession = None) -> str:
 
 def _month_check_with_reporting(dag_id: str, media_type: str) -> str:
     """
-    Wrapper for the monthly check function to report which step is starting
-    and which step is next to slack.
+    Wrap the monthly check function.
+
+    This reports which step is starting and which step is next to slack.
     """
     next_task_id = _month_check(dag_id)
     next_step = {
@@ -153,8 +155,10 @@ def _month_check_with_reporting(dag_id: str, media_type: str) -> str:
 
 def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequence[str]):
     """
-    This factory method instantiates a DAG that will run the popularity calculation and
-    subsequent data refresh for the given `media_type`.
+    Instantiate a DAG for a data refresh.
+
+    This DAG will run the popularity calculation and subsequent data refresh for the
+    given `media_type`.
 
     Required Arguments:
 

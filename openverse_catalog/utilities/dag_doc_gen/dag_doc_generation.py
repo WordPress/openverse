@@ -1,4 +1,6 @@
 """
+Automatic DAG documentation generator.
+
 This script generates a markdown documentation file which aggregates various pieces
 of information about all of our DAGs. The generated document has two sections: "DAGs
 by type" and "individual DAG documentation". Both sections have a small table of
@@ -120,9 +122,7 @@ def get_dags_info(dags: DagMapping) -> list[DagInfo]:
 def generate_type_subsection(
     name: str, dags_info: list[DagInfo], is_provider: bool
 ) -> str:
-    """
-    Generate the documentation for a "DAGs by type" subsection.
-    """
+    """Generate the documentation for a "DAGs by type" subsection."""
     log.info(f"Building subsection for '{name}'")
     text = f"## {name}\n\n"
     # Columns for all DAGs
@@ -156,9 +156,7 @@ def generate_type_subsection(
 
 
 def generate_single_documentation(dag: DagInfo) -> str:
-    """
-    Generate the documentation for a single DAG.
-    """
+    """Generate the documentation for a single DAG."""
     return f"""
 ## `{dag.dag_id}`
 
@@ -219,9 +217,7 @@ def generate_dag_doc(dag_folder: Path = DAG_FOLDER) -> str:
 
 
 def write_dag_doc(path: Path = DAG_MD_PATH) -> None:
-    """
-    Generate the DAG documentation and write it to a file.
-    """
+    """Generate the DAG documentation and write it to a file."""
     doc_text = generate_dag_doc()
     log.info(f"Writing DAG doc to {path}")
     path.write_text(doc_text)

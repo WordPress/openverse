@@ -105,9 +105,9 @@ def date_partition_for_prefix(
     reingestion_date: datetime,
 ) -> str:
     """
-    Given a schedule interval and the logical date for a DAG run, determine an
-    appropriate partition for the run. This partition will be used as part of the S3
-    key prefix for a given TSV.
+    Determine the date partitions based on schedule, logical date, and reingestion date.
+
+    This partition will be used as part of the S3 key prefix for a given TSV.
 
     Prefix mapping (schedule interval to partition):
         - Hourly -> `year=YYYY/month=MM/day=DD`

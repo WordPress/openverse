@@ -1,10 +1,4 @@
-"""
-# OAuth Provider Token Refresh
-
-**Author**: Madison Swain-Bowden
-
-**Created**: 2021-10-13
-"""
+"""# OAuth Provider Token Refresh"""
 from datetime import datetime
 
 import oauth2

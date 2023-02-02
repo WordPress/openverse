@@ -89,9 +89,7 @@ class WordPressDataIngester(ProviderDataIngester):
         return True
 
     def get_record_data(self, data):
-        """
-        Extract data for individual item.
-        """
+        """Extract data for individual item."""
         if (foreign_identifier := data.get("slug")) is None:
             return None
 

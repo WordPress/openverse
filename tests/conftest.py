@@ -3,6 +3,8 @@ import pytest
 
 def pytest_addoption(parser):
     """
+    Add options to pytest.
+
     This functions alters the pytest CLI command options. It adds an "extended" flag
     which will run tests that take a significant amount of time that may not be useful
     for rapid local iteration.

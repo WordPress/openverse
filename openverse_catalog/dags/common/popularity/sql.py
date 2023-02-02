@@ -303,9 +303,7 @@ def create_standardized_media_popularity_function(
 
 
 def create_audioset_view_query():
-    """
-    Returns SQL to create the audioset_view.
-    """
+    """Return SQL to create the audioset_view."""
     return dedent(
         f"""
         CREATE VIEW public.{AUDIOSET_VIEW_NAME}

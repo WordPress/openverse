@@ -71,9 +71,10 @@ DATA_REFRESH_POOL = "data_refresh"
 
 def response_filter_stat(response: Response) -> str:
     """
-    Filter for the `get_current_index` task, used to extract the name of the current
-    index that the concerned alias points to. This index name will be availabe via XCom
-    in the downstream tasks.
+    Handle the response for the `get_current_index` task.
+
+    This is used to extract the name of the current index that the concerned alias
+    points to. This index name will be available via XCom in the downstream tasks.
     """
     index_name = response.json()["alt_names"]
     # Indices are named as '<media type>-<suffix>', so everything after the first
@@ -84,9 +85,11 @@ def response_filter_stat(response: Response) -> str:
 
 def response_filter_data_refresh(response: Response) -> str:
     """
-    Filter for the `trigger_data_refresh` task, used to grab the endpoint needed
-    to poll for the status of the triggered data refresh. This information will
-    then be available via XCom in the downstream tasks.
+    Handle the response for `trigger_data_refresh` task.
+
+    This is used to grab the endpoint needed to poll for the status of the triggered
+    data refresh. This information will then be available via XCom in the downstream
+    tasks.
     """
     status_check_url = response.json()["status_check"]
     return urlparse(status_check_url).path
@@ -94,8 +97,9 @@ def response_filter_data_refresh(response: Response) -> str:
 
 def response_check_wait_for_completion(response: Response) -> bool:
     """
-    Response check to the `wait_for_completion` Sensor. Processes the response to
-    determine whether the task can complete.
+    Handle the response for `wait_for_completion` Sensor.
+
+    Processes the response to determine whether the task can complete.
     """
     data = response.json()
 
@@ -116,6 +120,8 @@ def create_data_refresh_task_group(
     data_refresh: DataRefresh, external_dag_ids: Sequence[str]
 ):
     """
+    Create the data refresh tasks.
+
     This factory method instantiates a DAG that will run the data refresh for
     the given `media_type`.
 

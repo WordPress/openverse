@@ -36,8 +36,10 @@ def oauth_provider_var_mock():
 
 def _make_response(*args, **kwargs):
     """
-    Mock the request used during license URL validation. Most times the results of this
-    function are expected to end with a `/`, so if the URL provided does not we add it.
+    Mock the request used during license URL validation.
+
+    Most times the results of this function are expected to end with a `/`, so if the
+    URL provided does not we add it.
     """
     response: Response = mock.Mock(spec=Response)
     if args:
@@ -52,8 +54,9 @@ def _make_response(*args, **kwargs):
 @pytest.fixture(autouse=True)
 def requests_get_mock():
     """
-    Mock request.get calls that occur during testing done by the
-    `common.urls.rewrite_redirected_url` function.
+    Mock request.get calls that occur during testing.
+
+    This is primarily done by the `common.urls.rewrite_redirected_url` function.
     """
     with mock.patch("common.urls.requests_get", autospec=True) as mock_get:
         mock_get.side_effect = _make_response
@@ -63,9 +66,9 @@ def requests_get_mock():
 @pytest.fixture
 def freeze_time(monkeypatch):
     """
-    Now() manager patches datetime return a fixed, settable, value
-    (freezes time)
+    Patch the `datetime.datetime.now` function to return a fixed, settable time.
 
+    This effectively freezes time.
     https://stackoverflow.com/a/28073449 CC BY-SA 3.0
     """
     import datetime
@@ -90,7 +93,7 @@ def freeze_time(monkeypatch):
 
         @classmethod
         def delta(cls, timedelta=None, **kwargs):
-            """Moves time fwd/bwd by the delta"""
+            """Move time fwd/bwd by the delta."""
             from datetime import timedelta as td
 
             if not timedelta:
