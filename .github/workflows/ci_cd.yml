@@ -346,7 +346,8 @@ jobs:
   push:
     name: Publish Docker images
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'published'
+    # prevent running on fork PRs
+    if: (github.event_name == 'push' || github.event_name == 'release') && github.repository == 'WordPress/openverse-api'
     needs:
       - test-ing
       - test-api
@@ -374,16 +375,39 @@ jobs:
           name: ${{ matrix.image }}
           path: /tmp
 
-      - name: Load and tag image `${{ matrix.image }}`
+      - name: Load and tag image `${{ matrix.image }}` (latest & sha)
         run: |
           docker load --input /tmp/${{ matrix.image }}.tar
           docker tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:latest
           docker tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ github.sha }}
+          docker push --all-tags ghcr.io/wordpress/openverse-${{ matrix.image }}
+
+      - name: Tag image `${{ matrix.image }}` (release)
+        if: github.event_name == 'release'
+        run: |
           docker tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ github.ref_name }}
           docker push --all-tags ghcr.io/wordpress/openverse-${{ matrix.image }}
+
+  deploy-staging:
+    name: Deploy staging API
+    runs-on: ubuntu-latest
+    # Deploy a new version when `main` is pushed to in this repository
+    if: github.event_name == 'push' && github.repository == 'WordPress/openverse-api'
+    needs: push
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/staging-deploy
+        with:
+          tag: ${{ github.sha }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
 
   publish-docs:
     name: Publish developer docs
