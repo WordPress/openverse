@@ -26,8 +26,6 @@ into individual repositories, and managed via a
   Airflow-powered system for downloading and storing Openverse's metadata
 - [API](https://github.com/wordpress/openverse-api) | The Django REST API for
   querying the catalog data, used by the frontend
-- [Browser extension](https://github.com/wordpress/openverse-browser-extension)
-  | An extension to view Openverse images directly in your web browser
 
 It is possible we will explore a monorepo structure in the future, but since all
 the repos are decoupled from each other and use different technologies, we've

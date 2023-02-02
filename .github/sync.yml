@@ -8,7 +8,6 @@ group:
       WordPress/openverse-catalog
       WordPress/openverse-api
       WordPress/openverse-frontend
-      WordPress/openverse-browser-extension
       WordPress/openverse-infrastructure
     files:
       # Synced workflows
