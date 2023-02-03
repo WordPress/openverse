@@ -27,6 +27,6 @@ jobs:
           max_time: 120 # timeout after 2 minutes
       - uses: actions/checkout@v2
       - uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ failure() }}
+        if: ${{failure()}}
         with:
           labels: "🚦 status: awaiting triage"

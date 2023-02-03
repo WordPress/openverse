@@ -31,10 +31,8 @@ jobs:
           python -m pip install --user --upgrade pip
           python -m pip install --user pipenv
           pipenv install --deploy
-
       - name: Label PR
         working-directory: ./automations/python
         run: |
           pipenv run python label_pr.py \
             --pr-url "$PR_URL"
-
