@@ -4,5 +4,4 @@ repos:
   catalog: openverse-catalog
   api: openverse-api
   frontend: openverse-frontend
-  extension: openverse-browser-extension
   infra: openverse-infrastructure
