@@ -104,9 +104,7 @@ class NyplDataIngester(ProviderDataIngester):
 
         metadata = self._get_metadata(mods)
         category = (
-            ImageCategory.PHOTOGRAPH.value
-            if metadata.get("genre") == "Photographs"
-            else None
+            ImageCategory.PHOTOGRAPH if metadata.get("genre") == "Photographs" else None
         )
 
         captures = item_details.get("sibling_captures", {}).get("capture")

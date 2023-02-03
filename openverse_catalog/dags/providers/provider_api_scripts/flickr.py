@@ -269,7 +269,7 @@ class FlickrDataIngester(ProviderDataIngester):
         Treating everything different from photos as unknown.
         """
         if "content_type" in image_data and image_data["content_type"] == "0":
-            return ImageCategory.PHOTOGRAPH.value
+            return ImageCategory.PHOTOGRAPH
         return None
 
 

@@ -236,11 +236,11 @@ class RawpixelDataIngester(ProviderDataIngester):
     def _get_category(metadata: dict) -> str | None:
         keywords = set(metadata.get("popular_keywords", []))
         if "public domain art" in keywords:
-            return prov.ImageCategory.DIGITIZED_ARTWORK.value
+            return prov.ImageCategory.DIGITIZED_ARTWORK
         if "image" in keywords or "photo" in keywords:
-            return prov.ImageCategory.PHOTOGRAPH.value
+            return prov.ImageCategory.PHOTOGRAPH
         if "clipart" in keywords:
-            return prov.ImageCategory.ILLUSTRATION.value
+            return prov.ImageCategory.ILLUSTRATION
         return None
 
     def get_record_data(self, data: dict) -> dict | list[dict] | None:

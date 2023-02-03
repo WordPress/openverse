@@ -273,9 +273,9 @@ def test_get_tags(keywords, expected):
     zip(
         [*EXAMPLE_KEYWORDS, []],
         [
-            ImageCategory.DIGITIZED_ARTWORK.value,
-            ImageCategory.ILLUSTRATION.value,
-            ImageCategory.PHOTOGRAPH.value,
+            ImageCategory.DIGITIZED_ARTWORK,
+            ImageCategory.ILLUSTRATION,
+            ImageCategory.PHOTOGRAPH,
             None,
         ],
     ),

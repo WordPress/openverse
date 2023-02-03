@@ -9,7 +9,6 @@ might be useful for retrieving sub-providers at the database level and the
 API level.
 """
 import os
-from enum import Enum
 
 
 # Default provider names
@@ -118,32 +117,43 @@ CONTACT_EMAIL = os.getenv("CONTACT_EMAIL")
 UA_STRING = f"Openverse/0.1 (https://wordpress.org/openverse; {CONTACT_EMAIL})"
 
 
-class ImageCategory(Enum):
+# Available Image Categories for API
+class ImageCategory:
     PHOTOGRAPH = "photograph"
     DIGITIZED_ARTWORK = "digitized_artwork"
     ILLUSTRATION = "illustration"
 
 
+# Available Audio Categories for API
+class AudioCategory:
+    AUDIOBOOK = "audiobook"
+    MUSIC = "music"
+    NEWS = "news"
+    PODCAST = "podcast"
+    PRONUNCIATION = "pronunciation"
+    SOUND_EFFECT = "sound_effect"
+
+
 # Default image category by source
 DEFAULT_IMAGE_CATEGORY = {
-    "stocksnap": ImageCategory.PHOTOGRAPH.value,
+    "stocksnap": ImageCategory.PHOTOGRAPH,
     # Remains to be assigned
-    "animaldiversity": ImageCategory.PHOTOGRAPH.value,
-    "brooklynmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
-    "capl": ImageCategory.PHOTOGRAPH.value,
-    "clevelandmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
-    "deviantart": ImageCategory.DIGITIZED_ARTWORK.value,
-    "digitaltmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
-    "floraon": ImageCategory.PHOTOGRAPH.value,
-    "inaturalist": ImageCategory.PHOTOGRAPH.value,
-    "mccordmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
-    "met": ImageCategory.DIGITIZED_ARTWORK.value,
-    "museumsvictoria": ImageCategory.DIGITIZED_ARTWORK.value,
-    "nappy": ImageCategory.PHOTOGRAPH.value,
-    "phylopic": ImageCategory.ILLUSTRATION.value,
-    "rijksmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
-    "sciencemuseum": ImageCategory.PHOTOGRAPH.value,
-    "svgsilh": ImageCategory.ILLUSTRATION.value,
-    "thorvaldsenmuseum": ImageCategory.DIGITIZED_ARTWORK.value,
-    "worms": ImageCategory.PHOTOGRAPH.value,
+    "animaldiversity": ImageCategory.PHOTOGRAPH,
+    "brooklynmuseum": ImageCategory.DIGITIZED_ARTWORK,
+    "capl": ImageCategory.PHOTOGRAPH,
+    "clevelandmuseum": ImageCategory.DIGITIZED_ARTWORK,
+    "deviantart": ImageCategory.DIGITIZED_ARTWORK,
+    "digitaltmuseum": ImageCategory.DIGITIZED_ARTWORK,
+    "floraon": ImageCategory.PHOTOGRAPH,
+    "inaturalist": ImageCategory.PHOTOGRAPH,
+    "mccordmuseum": ImageCategory.DIGITIZED_ARTWORK,
+    "met": ImageCategory.DIGITIZED_ARTWORK,
+    "museumsvictoria": ImageCategory.DIGITIZED_ARTWORK,
+    "nappy": ImageCategory.PHOTOGRAPH,
+    "phylopic": ImageCategory.ILLUSTRATION,
+    "rijksmuseum": ImageCategory.DIGITIZED_ARTWORK,
+    "sciencemuseum": ImageCategory.PHOTOGRAPH,
+    "svgsilh": ImageCategory.ILLUSTRATION,
+    "thorvaldsenmuseum": ImageCategory.DIGITIZED_ARTWORK,
+    "worms": ImageCategory.PHOTOGRAPH,
 }
