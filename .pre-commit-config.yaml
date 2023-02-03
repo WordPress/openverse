@@ -3,7 +3,7 @@
 # - https://github.com/WordPress/openverse/blob/main/.pre-commit-config.yaml.jinja
 # - https://github.com/WordPress/openverse/blob/main/templates/.pre-commit-config.frontend.yaml.jinja
 
-exclude: Pipfile\.lock|migrations|\.idea|node_modules|archive
+exclude: Pipfile\.lock|migrations|\.idea|node_modules|archive|retired
 
 repos:
   - repo: local # More local hooks are defined at the bottom.
@@ -42,7 +42,7 @@ repos:
     hooks:
       - id: eslint
         files: \.(js|ts|vue)$
-        exclude: ^(nuxt-template-overrides/.*|.remake/.*) # ESLint raises warnings for ignored files.
+        exclude: ^nuxt-template-overrides/.*|.remake/.*$ # ESLint raises warnings for ignored files.
         "types": [file] # ESLint only accepts [javascript] by default.
         args:
           - --ignore-path=.gitignore

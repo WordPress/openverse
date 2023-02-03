@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add issue to "Backlog"
-        uses: alex-page/github-project-automation-plus@v0.8.3
+        uses: alex-page/github-project-automation-plus@v0.8.2
         with:
           project: Openverse
           column: Backlog
