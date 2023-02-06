@@ -338,6 +338,15 @@ back the project, or marking it as successful.
 > users, the project should be rolled back immediately, regardless of the
 > evaluation period.
 
+Finally, the team should take some time to reflect on the project. A
+project-speficis retrospective should be held between the contributors and
+stakeholders of the project.
+
+If the evaluation period of a project is longer than one week, consider holding
+the retrospective _before_ the project is resolved. It is important that a
+retrospective is timely and happens as close to the experience of a project as
+possible.
+
 ## Managing and working with projects
 
 We use a new
