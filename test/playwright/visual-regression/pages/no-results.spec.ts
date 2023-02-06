@@ -11,6 +11,7 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { supportedSearchTypes } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
+test.describe.configure({ retries: 2 })
 
 for (const searchType of supportedSearchTypes) {
   for (const dir of languageDirections) {

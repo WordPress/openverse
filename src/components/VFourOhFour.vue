@@ -2,7 +2,9 @@
   <div
     class="error relative flex flex-col overflow-x-hidden"
     :class="
-      isNewHeaderEnabled ? 'flex-grow px-6 sm:px-0' : 'min-h-screen bg-yellow'
+      isNewHeaderEnabled
+        ? 'flex-grow px-6 sm:px-0'
+        : 'h-screen h-[100dvh] bg-yellow'
     "
   >
     <svg

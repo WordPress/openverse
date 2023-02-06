@@ -3,7 +3,7 @@
     <div v-if="!isActive" class="flex w-full"><slot /></div>
     <VTeleport v-else to="modal">
       <div
-        class="fixed inset-0 z-40 flex min-h-screen w-full justify-center overflow-y-auto bg-white"
+        class="fixed inset-0 z-40 flex h-screen h-[100dvh] w-full justify-center overflow-y-auto bg-white"
       >
         <div
           ref="dialogRef"

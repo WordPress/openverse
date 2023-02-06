@@ -4,7 +4,7 @@
     :class="
       isNewHeaderEnabled
         ? 'flex-grow px-6 sm:px-0'
-        : 'h-screen min-h-screen overflow-hidden bg-yellow'
+        : 'h-screen h-[100dvh] overflow-hidden bg-yellow'
     "
   >
     <VHomepageContent

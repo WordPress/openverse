@@ -351,13 +351,19 @@ export const goToSearchTerm = async (
   const query = options.query ? `&${options.query}` : ""
   const headerMode = options.headerMode ?? NEW_HEADER
 
+  await setCookies(page.context(), {
+    uiDismissedBanners: [
+      "translation-ru",
+      "translation-en",
+      "translation-ar",
+      "translation-es",
+    ],
+  })
   if (mode === "SSR") {
     const path = `${searchPath(searchType)}?q=${term}${query}`
     await page.goto(pathWithDir(path, dir))
-    await dismissTranslationBanner(page)
   } else {
-    await page.goto(pathWithDir(`/${query}`, dir))
-    await dismissTranslationBanner(page)
+    await page.goto(pathWithDir("/", dir))
     // Select the search type
     if (searchType !== "all") {
       await selectHomepageSearchType(page, searchType, dir, headerMode)
