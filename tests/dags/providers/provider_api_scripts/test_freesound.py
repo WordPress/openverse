@@ -57,12 +57,22 @@ def test_get_audio_pages_returns_correctly_with_empty_list():
 def test_get_audio_file_size_retries_and_does_not_raise(exception_type, audio_data):
     expected_result = None
     # Patch the sleep function so it doesn't take long
-    with patch("requests.head") as head_patch, patch("time.sleep"):
+    with patch.object(fsd.delayed_requester, "head") as head_patch, patch("time.sleep"):
         head_patch.side_effect = exception_type("whoops")
         actual_result = fsd.get_record_data(audio_data)
 
         assert head_patch.call_count == 3
         assert actual_result == expected_result
+
+
+def test_get_audio_file_size_returns_None_when_preview_url_404s(audio_data):
+    with patch.object(fsd.delayed_requester, "head") as head_patch:
+        # Returns None when 404
+        head_patch.return_value = None
+
+        actual_result = fsd.get_record_data(audio_data)
+        assert head_patch.call_count == 1
+        assert actual_result is None
 
 
 def test_get_query_params_increments_page_number():
@@ -133,6 +143,15 @@ def test_get_audio_files_returns_none_when_missing_preferred_preview(audio_data)
     audio_data["previews"].pop(fsd.preferred_preview)
     actual = fsd._get_audio_files(audio_data)
     assert actual == (None, None)
+
+
+def test_get_audio_files_returns_none_when_unable_to_get_filesize(audio_data):
+    # Mimics a 404 when attempting to get filesize information from the preview url
+    with patch.object(fsd.delayed_requester, "head") as head_patch:
+        head_patch.return_value = None
+
+        actual = fsd._get_audio_files(audio_data)
+        assert actual == (None, None)
 
 
 @pytest.mark.parametrize(

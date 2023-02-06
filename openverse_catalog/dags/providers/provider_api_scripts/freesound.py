@@ -15,7 +15,6 @@ import functools
 import logging
 from datetime import datetime
 
-import requests
 from airflow.models import Variable
 from common import constants
 from common.licenses.licenses import get_license_info
@@ -178,10 +177,12 @@ class FreesoundDataIngester(ProviderDataIngester):
         Both of these seem transient and may be the result of some odd behavior on the
         Freesound API end. We have an API key that's supposed to be maxed out, so
         I can't imagine it's throttling (aetherunbound).
-
-        TODO(obulat): move filesize detection to the polite crawler
         """
-        return int(requests.head(url).headers["content-length"])
+        response = self.delayed_requester.head(url)
+
+        if response:
+            return response.headers.get("content-length")
+        return None
 
     def _get_audio_files(
         self, media_data
@@ -195,11 +196,16 @@ class FreesoundDataIngester(ProviderDataIngester):
         if not (preview_url := previews.get(self.preferred_preview)):
             return None, None
 
+        # If unable to get filesize from the preview, skip this audio
+        # This may happen if the preview 404s
+        if (filesize := self._get_audio_file_size(preview_url)) is None:
+            return None, None
+
         main_file = {
             "audio_url": preview_url,
             "filetype": self.preferred_preview.split("-")[-1],
             "bit_rate": FreesoundDataIngester.preview_bitrates[self.preferred_preview],
-            "filesize": self._get_audio_file_size(preview_url),
+            "filesize": int(filesize),
         }
         # These are the original files, needs auth for downloading.
         # bit_rate in kilobytes, converted to bytes
