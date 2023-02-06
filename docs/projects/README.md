@@ -97,8 +97,8 @@ title of each project lifecycle section. You can find a
 ### Creation (`status: Not Started`)
 
 When contributors have decided to work on a project, we immediately create a
-project thread to capture this intent. You can use "Project Thread" issue
-template [To be created in this PR] to create a new project thread. At this
+project thread to capture this intent. You can use ["Project Thread" issue
+template](templates/project-thread-issue-template.md) to create a new project thread. At this
 point, it is okay if we don't have any of the metadata for the project. Please
 just fill in as many of the fields in the
 [template](templates/project-thread-issue-template.md) as you can.
@@ -124,13 +124,13 @@ expresses our intent to work on a feature and why. The project thread should
 also be added to our GitHub Project Board, which can be done using the
 "Projects" section of the sidebar when viewing an issue in the GitHub UI. To
 learn more about our use of project boards please see the
-[# Managing and working with projects](#managing-and-working-with-projects)
+[Managing and working with projects](#managing-and-working-with-projects)
 section of this document.
 
 > **Note**
 >
 > At some point between creation and kickoff we need to make a determination
-> about whom the lead of a project is. Often this has happened organically in
+> about who will lead the project. Often this has happened organically in
 > the past, based on who may be most interested in a project or on whose work
 > might be most relevant to the project.
 >
@@ -232,27 +232,28 @@ should seek to uncover and discover new or unforseen details about a project.
 
 #### Required content
 
-Every plan should contain the following information:
+Every plan should accomplish the following:
 
-- A step by step process for implementing the project.
-- Identify tools and depndencies of the project.
-  - Any new Pypi, NPM, or binary dependencies added by the project.
-  - Any infrastructure that will need to be provisioned or modified.
-    - Identify significant/unprecedented cost increases or decreases associated
-      with related infrastructure changes
-  - Any cloud services we will need to pay for. When we will need to start
-    paying, free trials, non-profit pricing, etc.
-  - If there are multiple options here, identify relevant pros/cons of the
-    different choices. Try to make a reccommendation.
+- Describe a step by step process for implementing the project.
+- Identify tools and dependencies of the project.
+  - Examples:
+    - New PyPI, NPM, or binary dependencies added by the project
+    - Infrastructure that will need to be provisioned or modified
+      - In particular, identify significant/unprecedented cost increases or decreases associated
+        with related infrastructure changes.
+    - New cloud services, paid or otherwise
+        - Explore when we will need to start paying, free trials, non-profit pricing, etc.
+  - If there are multiple options for any of these, identify relevant pros/cons of the
+    different choices. Make a recommendation or ping for specific help to decide.
 - Identify any design requirements of the project.
 - Identify work-streams that can run in parallel.
 - Identify work dependencies, especially cross-project dependencies that will
   need to be coordinated. For example:
-  - list feature flags that will be used
+  - List feature flags that will be used
   - Will a frontend feature be blocked by an API feature?
 - Explore API version conflicts and ensure that versioning is respected
 - Identify hard blockers that will prevent further work on the project
-- Identify areas of technical ambiguity that were not able to be predetermined
+- Identify areas of technical ambiguity that cannot be predetermined
   during planning (i.e., after we've implemented _x_, we'll be able to make an
   informed decision about _y_).
 - Identify atomic blocks of work so that work can be split into individual,
@@ -269,21 +270,21 @@ Every plan should contain the following information:
   - Are there any steps that can not easily be rolled back?
 - Privacy
   - How does this approach protect users' privacy?
-- Localization.
+- Localization
   - Any translation or regional requirements?
   - Any differing legal requirements based on user location?
-- Risks:
+- Risks
   - What risks are we taking with this solution?
   - Are there risks that once taken can’t be undone?
-- Prior art:
+- Prior art
   - Include links to documents and resources that you used when coming up with
     your solution.
   - Credit people who have contributed to the solution that you wish to
-    adknowledge.
+    acknowledge.
 
 > **Note**
 >
-> We do not have any reccommendations about time estimates in this section.
+> We do not have any recommendations about time estimates in this section.
 
 #### The review process
 
@@ -291,7 +292,7 @@ Technical implementation plans will be open for a two-week review period. In
 cases where relevant contributors are AFK or otherwise unavailable, or a
 implementation plan experiences low engagement for a number of reasons,
 implementation plan deadlines will be extended by one week at a time
-as-necessary.
+as necessary.
 
 #### Wrapping up
 
@@ -301,7 +302,7 @@ This process can be quite time-consiming for large projects. Generally, it makes
 sense to create issues in the order which they must be completed; this allows
 work to begin if, for some reason, there is delay in creating issues for work at
 the end of a project. It also however makes sense to priorize issues that are
-"good first issues" and "help wanted" issues which contributors might be able to
+"good first issues" and "help wanted" issues contributors outside of the core maintainers can
 help with.
 
 It is important to make sure dependencies are documented when creating these
@@ -339,15 +340,15 @@ implemented at the same time, in a single PR. However, this should be avoided.
 The implementation plan will have split the work into small, atomic, and
 digestible chunks of work that progress the project at an appropriate pace. Keep
 in mind that small PRs are reviewed _much_ faster than bigger PRs. While
-implementing two or three issues in one go may _feel_ faster, it is often no
-faster, but much riskier (due to increased review overhead) than going
+implementing two or three issues in one go may _feel_ faster, it is often slower
+and riskier, due to increased review overhead, than going
 step-by-step.
 
 #### Notes for code reviewers
 
 Code reviewers should focus primarily on the technical aspects of the
 implementation required by the issue. At times, during the course of a project,
-significant issues will only be discovered during implementation and sometimes
+unforeseen amiguities will discovered during implementation and sometimes
 an alarm bell must be rung. However, these should be reserved for issues that
 will cause long-term harm to the project. Merely disagreeing with a particular
 detail of the project's implementation details is not sufficient for holding up
@@ -375,7 +376,7 @@ also to reflect on and make improvements to our own team processes.
 The success criteria for this phase are determined and refined in earlier stages
 of the project. At this point we should have a set of measurable criteria by
 which to evaluate the project. This might be things like analytics events around
-usage of a feature; a reduction in or the dissapearance of a production bug; or
+usage of a feature; a reduction in or the disappearance of a production bug; or
 changes in traffic to Openverse, as examples.
 
 During this phase, the project lead should report updates on these metrics
