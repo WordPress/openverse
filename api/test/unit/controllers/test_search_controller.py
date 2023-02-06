@@ -463,3 +463,43 @@ def test_search_tallies_pages_less_than_5(
         assert len(passed_results) == number_of_results_passed
     else:
         count_provider_occurrences_mock.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "index",
+    (
+        "image",
+        "audio",
+    ),
+)
+@mock.patch.object(
+    tallies, "count_provider_occurrences", wraps=tallies.count_provider_occurrences
+)
+@mock.patch(
+    "catalog.api.controllers.search_controller._post_process_results",
+)
+@pytest.mark.django_db
+def test_search_tallies_handles_empty_page(
+    mock_post_process_results,
+    count_provider_occurrences_mock: mock.MagicMock,
+    index,
+    request_factory,
+):
+    mock_post_process_results.return_value = None
+
+    serializer = MediaSearchRequestSerializer(data={"q": "dogs"})
+    serializer.is_valid()
+
+    search_controller.search(
+        search_params=serializer,
+        ip=0,
+        index=index,
+        # Force calculated result depth length to include results within 80th position and above
+        # to force edge case where retrieved results are only partially tallied.
+        page=1,
+        page_size=100,
+        request=request_factory.get("/"),
+        filter_dead=True,
+    )
+
+    count_provider_occurrences_mock.assert_not_called()

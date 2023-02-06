@@ -413,11 +413,11 @@ def search(
         search_response, results, page_size, page
     )
 
+    results_to_tally = results or []
     max_result_depth = page * page_size
     if max_result_depth <= 80:
         # Applies when `page_size * page` could land "evenly" on 80
         should_tally = True
-        results_to_tally = results
     elif max_result_depth - page_size < 80:
         # Applies when `page_size * page` could land beyond 80, but still
         # encompass some results on _this page_ that are at or below the 80th
@@ -426,7 +426,7 @@ def search(
         # the first eight results in `results` that are below or at the 80th
         # position for the query.
         should_tally = True
-        results_to_tally = results[: 80 - (max_result_depth - page_size)]
+        results_to_tally = results_to_tally[: 80 - (max_result_depth - page_size)]
     else:
         should_tally = False
 
