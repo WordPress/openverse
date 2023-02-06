@@ -1,16 +1,19 @@
 # Projects in Openverse
 
 Openverse contributors use project threads to track our work. Project threads
-GitHub meta issue in the `WordPress/openverse` repository with some special
+are issues in the `WordPress/openverse` repository with some special
 requirements:
 
-- The issue follows the "project thread" issue template
+- The issue follows the
+  [project thread issue template](templates/project-thread-issue-template.md)
 - The `project` label is applied to the issue
-- A `status` label is applied to the issue (enforced via GitHub action)
+- A `status` is applied to the issue via our GitHub Project Board
 
 These threads are for the benefit of our contributors, but also external
-stakeholders to the project. Each project thread is a place to see the current
-status, timeline, and motivation of a given work stream.
+stakeholders to the project. They provide visibility into our current
+initiatives and up to date information on each initiative. Each project thread
+is a place to see the current status, timeline, and motivation of a given work
+stream.
 
 All requirements for working with project threads can be found in this document.
 If you have any questions please feel free to reach out to an Openverse
@@ -21,21 +24,21 @@ maintainer in the #openverse channel of the
 ## Where documents are kept, how they are named, and how they are reviewed
 
 For each project, planning documents should be kept in the `rfcs/` directory of
-this repository. Each project should have its own subdirectory, with projects
-predating this document being moved into subdirectories. Individual documents
-should be date-stamped in the `YYYYMMDD` format. An example of this entire
-structure follows:
+this repository. Each project should have its own subdirectory. Projects
+predating this document have been updated to follow this structure. Individual
+documents should be date-stamped in the `YYYYMMDD` format. An example of this
+entire structure follows:
 
 ```
 | rfcs/
    | service_metrics/
       - YYYYMMDD-project_proposal.md
-      - YYYYMMDD-implementation_planning.md
+      - YYYYMMDD-implementation_plan.md
    | 3d_model_support/
       - YYYYMMDD-project_proposal.md
-      - YYYYMMDD-implementation_planning_(catalogue).md
-      - YYYYMMDD-implementation_planning_(api).md
-      - YYYYMMDD-implementation_planning_(frontend).md
+      - YYYYMMDD-implementation_plan_(catalogue).md
+      - YYYYMMDD-implementation_plan_(api).md
+      - YYYYMMDD-implementation_plan_(frontend).md
 ```
 
 Using subdirectories makes it slightly easier to navigate an ever-growing list
@@ -63,24 +66,18 @@ relevant step of the process is complete.
 ## Project Lifecycle
 
 There a few stages in the project process. None is inherently more important
-than the next. At each stage of the project lifecycle, an appropriate status tag
-should be used to label the project thread. The correct tag can be found in the
+than the next. At each stage of the project lifecycle, an appropriate status
+will be applied to the project thread. The correct status can be found in the
 title of each project lifecycle section.
 
-### Creation (`status: not started`)
+### Creation (`status: Not Started`)
 
 When contributors have decided to work on a project, we immediately create a
 project thread to capture this intent. You can use "Project Thread" issue
 template [To be created in this PR] to create a new project thread. At this
-point, it is okay if we don't have any of the metadata for the project, which
-includes:
-
-```
-ETA: {YYYY-MM-DD [Q?]}
-Start Date: {YYYY-MM-DD}
-Project Lead: {@username}
-Actual Shipping Date: —
-```
+point, it is okay if we don't have any of the metadata for the project. Please
+just fill in as many of the fields in the
+[template](templates/project-thread-issue-template.md) as you can.
 
 The post should include a small description explaining the goal and outcomes of
 the project. For example:
@@ -114,7 +111,7 @@ how we can track the creation of and lead assignment of a project.
 > Do we need additional processes for assigning leads in cases where no one
 > volunteers to work on a project?
 
-### Kickoff (`status: in kickoff`)
+### Kickoff (`status: In Kickoff`)
 
 In the kickoff stage, a **project proposal** is written and shared with the team
 by the project lead. The primary goals of this document are that of discovery;
@@ -193,7 +190,7 @@ metadata, including some additional fields:
     steps of the project (no matter how obvious this might seem)
 - Links to all milestones and relevant issues
 
-### Implementation RFCs (`status: in rfc`)
+### Implementation RFCs (`status: In RFC`)
 
 [TBD]
 
@@ -220,7 +217,7 @@ This section is a bunch of "identifying" technical details, leading up to a list
 
 -->
 
-### Implementation (`status: in progress`)
+### Implementation (`status: In Progress`)
 
 In the implementation phase, contributors begin work on the project. At this
 point the work has been divided into discrete tasks and ordered according to
@@ -230,7 +227,7 @@ individual pieces of the project by _exclusively_ reading the information
 present in the GitHub issue or task they are being assigned.
 
 > **Warning** If this isn't possible, planning was insufficient, and we may want
-> to place the project in `status: on hold` to re-adjust. It's a very important
+> to place the project in `status: On Hold` to re-adjust. It's a very important
 > aspect of the work.
 
 > **Note for implementers**: With sufficient planning, it may make certain
@@ -274,28 +271,43 @@ any blockers, or successes to be shared.
 Here is an [update template](./templates/project-update.md) to be followed for
 every project update.
 
-### Delivery (`status: shipped`)
+### Delivery (`status: Shipped`)
 
-The completion of technical implementation is a time for celebration and
+The completion of the technical implementation is a time for celebration and
 reflection.
 
-### After Completion (`status: success`, `status: reverted`)
+### After Completion (`status: Success`, `status: Reverted`)
 
-[TBD]
+After a project is completed and deployed, we take a number of steps to learn
+from the project. We do this to evaluate the success of the project and
+determine if it achieved the desired goal, but also to make improvements to our
+own team processes.
 
-<!-- notes for section
-- measuring analytics/frequency of analytics updates
-- reporting progress towards a success or revert decision
-- brainstorming fast-follow tweaks that may help project performance
--->
+The success criteria for this phase are determined and refined in earlier stages
+of the project. At this point we should have a set of measurable criteria by
+which to evaluate the project. This might be things like analytics events around
+usage of a feature; a reduction in or the dissapearance of a production bug; or
+changes in traffic to Openverse, as examples.
+
+During this phase, the project lead should report updates on these metrics
+regularly to help the team make a determination about changing the project
+status to `Success` or `Rollback`. Rolling back a project is not a decision we
+should take lightly, and by providing regular updates project leads can prevent
+this action from seeming like a surprise or a rash decision to others.
+
+Frequent feedback on the success criteria can also help contributors come up
+with fast-follow improvements or modifications to the feature that may prevent
+rollback.
+
+---
 
 ### Reference: Project Statuses
 
-- `not started`: Has not started yet.
-- `in kickoff`: Project proposal is in progress.
-- `in RFC`: Technical implementation plan is in progress.
-- `in progress`: Under active development.
-- `on hold`: Stalled or blocked after work started.
-- `shipped`: Launched. Success criteria are under evaluation.
-- `success`: Completed. Success criteria are met.
-- `rollback`: Completed. Success criteria are not met. Work is reverted.
+- `Not Started`: Has not started yet.
+- `In Kickoff`: Project proposal is in progress.
+- `In Rfc`: Technical implementation plan is in progress.
+- `In Progress`: Under active development.
+- `On Hold`: Stalled or blocked after work started.
+- `Shipped`: Launched. Success criteria are under evaluation.
+- `Success`: Completed. Success criteria are met.
+- `Rollback`: Completed. Success criteria are not met. Work is reverted.

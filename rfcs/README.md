@@ -10,25 +10,29 @@ them easier to comment on.
 
 The following is the RFC process for Openverse:
 
-1. Write an RFC document using Markdown.
-2. Open a PR into this repository to add the RFC in the `rfcs` folder. Name the
-   file using this format:
+1. Write an RFC document (A project proposal, implementation plan, etc.) using
+1. Create a new directory in `/rfcs` for your initiative. Markdown.
+1. Add your document to the project folder using this format:
 
 ```
-YYYYMMDD-<snake case rfc title>.md
+YYYYMMDD-<snake case rfc type>.md
 ```
 
-3. Wait for feedback. Please `@` contributors you think might have specific and
+1. Wait for feedback. Please `@` contributors you think might have specific and
    applicable knowledge to the problem space.
-4. Revise based on feedback.
-5. Allow for a minimum of **5** days for review by contributors and the
+1. Revise based on feedback.
+1. Allow for a minimum of **5** days for review by contributors and the
    community.
-6. Continue until approval from at least two core contributors has been given
+1. Continue until approval from at least two core contributors has been given
    and there are no absolute blockers raised.
-7. Create the related milestone and issues for the implementation plan. Link to
+1. Create the related milestone and issues for the implementation plan. Link to
    the milestone in the final RFC and merge it.
 
 ## Format
+
+> Please see the [project process](../docs/project-process.md) document for
+> additional information of the different types of proposals accepted in
+> Openverse and how to format them.
 
 There is no concrete format for RFCs but they probably (but not necessarily)
 should include the following sections:
