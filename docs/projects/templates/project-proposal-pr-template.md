@@ -5,14 +5,16 @@ labels: "💬 talk: discussion"
 title: "<Replace this with actual title>"
 ---
 
+## Due date:
+
 <!--
   This should be two weeks from the publish date of the proposal.
   One week extensions will be granted in the case of critical contributors being unavaliable or the author's personal avalibility.
 -->
 
-## Due date:
-
 <yyyy-mm-dd>
+
+## Assigned reviewers
 
 <!--
   Suggest two members of @WordPress/openverse to review the discussion.
@@ -23,8 +25,6 @@ title: "<Replace this with actual title>"
   - Work frequently with the parts of code this will change the most
   - Has expressed interest in this project
 -->
-
-## Assigned reviewers
 
 - [ ] TBD
 - [ ] TBD
