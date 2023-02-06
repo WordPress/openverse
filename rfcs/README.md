@@ -30,7 +30,7 @@ YYYYMMDD-<snake case rfc type>.md
 
 ## Format
 
-> Please see the [project process](../docs/project-process.md) document for
+> Please see the [project process](../docs/projects/README.md) document for
 > additional information of the different types of proposals accepted in
 > Openverse and how to format them.
 

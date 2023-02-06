@@ -68,7 +68,8 @@ relevant step of the process is complete.
 There a few stages in the project process. None is inherently more important
 than the next. At each stage of the project lifecycle, an appropriate status
 will be applied to the project thread. The correct status can be found in the
-title of each project lifecycle section.
+title of each project lifecycle section. You can find a
+[list of all statuses](#project-statuses-reference) at the end of this document.
 
 ### Creation (`status: Not Started`)
 
@@ -86,7 +87,7 @@ the project. For example:
 > especially information related to preventing layout shift caused by server
 > rendering and media queries.
 
-This stage is the smallest and is meant to expressing our intent to work on the
+This stage is the smallest and is meant to express our intent to work on the
 project. At this time it is important to link to any background on the project
 that could help the eventual project lead. Some ideas for this content include:
 
@@ -96,17 +97,21 @@ that could help the eventual project lead. Some ideas for this content include:
 - Links to past chat threads related to the project
 
 In conclusion, the deliverable for this stage is a new project thread which
-expresses our intent to work on a feature and why.
+expresses our intent to work on a feature and why. The project thread should
+also be added to our GitHub Project Board, which can be done using the
+"Projects" section of the sidebar when viewing an issue in the GitHub UI. To
+learn more about our use of project boards please see the
+[# Managing and working with projects](#managing-and-working-with-projects)
+section of this document.
 
-Finally, a GitHub
-[issue can be created](https://github.com/WordPress/openverse/issues/new/choose)
-in the `wordpress/openverse` repository to request a project proposal. This is
-how we can track the creation of and lead assignment of a project.
+This is how we can track the creation of and lead assignment of a project.
 
-> **Note**: At some point between creation and kickoff we need to make a
-> determination about whom the lead of a project is. Often this has happened
-> organically in the past, based on who may be most interested in a project or
-> on whose work might be most relevant to the project.
+> **Note**
+>
+> At some point between creation and kickoff we need to make a determination
+> about whom the lead of a project is. Often this has happened organically in
+> the past, based on who may be most interested in a project or on whose work
+> might be most relevant to the project.
 >
 > Do we need additional processes for assigning leads in cases where no one
 > volunteers to work on a project?
@@ -140,9 +145,11 @@ leads should **ask questions** directly in the document, tagging relevant
 contributors who can bring needed expertise and guidance. The goal is to lead
 the process of requirement and assumption discovery.
 
-> **A note on analytics**: Leads must endeavour to describe metrics and analysis
-> that should be completed before the changes for the project's ultimate goal
-> are implemented. Whenever possible or relevant, projects should have success
+> **Note**
+>
+> **On Analytics**: Leads must endeavour to describe metrics and analysis that
+> should be completed before the changes for the project's ultimate goal are
+> implemented. Whenever possible or relevant, projects should have success
 > criteria that compare the state of relevant metrics after the project's
 > completion to the same metrics beforehand.
 
@@ -168,10 +175,6 @@ relevant contributors are AFK or otherwise unavailable, or a project proposal
 experiences low engagement for a number of reasons, projects proposal deadlines
 will be extended by one week.
 
-Projects, their deadlines, and reviewers, will be added to our
-[Action Items project board](https://github.com/orgs/WordPress/projects/59/views/1?query=is%3Aopen+sort%3Aupdated-desc)
-for tracking with our other action items.
-
 #### Wrapping up
 
 Finally, the plan and technical proposals are merged, then the project thread is
@@ -190,9 +193,16 @@ metadata, including some additional fields:
     steps of the project (no matter how obvious this might seem)
 - Links to all milestones and relevant issues
 
-### Implementation RFCs (`status: In RFC`)
+### Implementation Plans (`status: In RFC`)
 
-[TBD]
+Implementation plans are the next type of RFC created for a project. The main
+goal of an implementation plan is to produce a discrete and ordered list of
+steps for implementing the project's requirements. As much as possible, these
+steps should be organised into parallelisable work streams that can be
+distributed across multiple team members (if desired).
+
+Implementation plans share some philosophical goals with project plans. They
+should seek to uncover and discover new or unforseen details about a project.
 
 <!-- notes for section
 
@@ -217,6 +227,9 @@ This section is a bunch of "identifying" technical details, leading up to a list
 
 -->
 
+After an implementation plan is reviewed and approved, contributors can complete
+the work of creating GitHub issues for the project's discrete tasks.
+
 ### Implementation (`status: In Progress`)
 
 In the implementation phase, contributors begin work on the project. At this
@@ -226,40 +239,55 @@ full understanding of the project should be able to jump in and work on
 individual pieces of the project by _exclusively_ reading the information
 present in the GitHub issue or task they are being assigned.
 
-> **Warning** If this isn't possible, planning was insufficient, and we may want
-> to place the project in `status: On Hold` to re-adjust. It's a very important
-> aspect of the work.
-
-> **Note for implementers**: With sufficient planning, it may make certain
-> issues able to be easily implemented at the same time, in a single PR.
-> However, this should be avoided. The implementation plan will have split the
-> work into small, atomic, and digestible chunks of work that progress the
-> project at an appropriate pace. Keep in mind that small PRs are reviewed
-> _much_ faster than bigger PRs. While implementing two or three issues in one
-> go may _feel_ faster, it is often no faster, but much riskier (due to
-> increased review overhead) than going step-by-step.
-
-> **Note for code reviewers**: Code reviewers should focus primarily on the
-> technical aspects of the implementation required by the issue. At times,
-> during the course of a project, significant issues will only be discovered
-> during implementation and sometimes an alarm bell must be rung. However, these
-> should be reserved for issues that will cause long-term harm to the project.
-> Merely disagreeing with a particular detail of the project's implementation
-> details is not sufficient for holding up a PR that is part of a larger,
-> carefully planned project, for which a technical implementation plan has
-> already been reviewed and approved. Therefore, avoid raising objections to the
-> broad technical decisions of a PR unless they do cause long term harm to the
-> project. This allows projects to move along at an expedient pace and trusts
-> that the project planners did their due diligence in considering alternatives.
+> **Warning**
 >
-> Of course, exceptions to this do exist and reviewers are expected to point out
-> when there is a significant issue with the implementation details of a PR that
-> will cause long-term harm.
+> If this isn't possible, planning was insufficient, and we may want to place
+> the project in `status: On Hold` to re-adjust. It's a very important aspect of
+> the work.
+
+#### Notes for Implementors
+
+With sufficient planning, it may make certain issues able to be easily
+implemented at the same time, in a single PR. However, this should be avoided.
+The implementation plan will have split the work into small, atomic, and
+digestible chunks of work that progress the project at an appropriate pace. Keep
+in mind that small PRs are reviewed _much_ faster than bigger PRs. While
+implementing two or three issues in one go may _feel_ faster, it is often no
+faster, but much riskier (due to increased review overhead) than going
+step-by-step.
+
+#### Notes for code reviewers
+
+Code reviewers should focus primarily on the technical aspects of the
+implementation required by the issue. At times, during the course of a project,
+significant issues will only be discovered during implementation and sometimes
+an alarm bell must be rung. However, these should be reserved for issues that
+will cause long-term harm to the project. Merely disagreeing with a particular
+detail of the project's implementation details is not sufficient for holding up
+a PR that is part of a larger, carefully planned project, for which a technical
+implementation plan has already been reviewed and approved. Therefore, avoid
+raising objections to the broad technical decisions of a PR unless they do cause
+long term harm to the project. This allows projects to move along at an
+expedient pace and trusts that the project planners did their due diligence in
+considering alternatives.
+
+Of course, exceptions to this do exist and reviewers are expected to point out
+when there is a significant issue with the implementation details of a PR that
+will cause long-term harm.
+
+Reviewers should also be mindful to point out when an implementer has
+implemented multiple issues in a single PR, in a manner which makes reviewing
+difficult or much more time-consuming.
 
 #### Providing project updates
 
+Weekly public updates are the best way for Openverse contributors and
+maintainers to understand the health of our projects. Most crucially, these
+updates allow us to allocate resources to projects that need them before work
+stalls completely.
+
 Project updates should be left as weekly comments in the project threads. Even
-if the update is "the project has stalled." or "No developments this week", the
+if the update is "the project is blocked." or "No developments this week.", the
 updates should still be posted. This removes ambiguity for folks visiting the
 project, avoiding questions like "I don't see an update this week; is it being
 worked on or not?"
@@ -273,15 +301,14 @@ every project update.
 
 ### Delivery (`status: Shipped`)
 
-The completion of the technical implementation is a time for celebration and
-reflection.
+The completion of the technical implementation of a project is a time for
+celebration and reflection.
 
 ### After Completion (`status: Success`, `status: Reverted`)
 
-After a project is completed and deployed, we take a number of steps to learn
-from the project. We do this to evaluate the success of the project and
-determine if it achieved the desired goal, but also to make improvements to our
-own team processes.
+After shipping, the project enters a period of evaluation. We do this to meaure
+the success of the project and determine if it achieved the desired goal, but
+also to reflect on and make improvements to our own team processes.
 
 The success criteria for this phase are determined and refined in earlier stages
 of the project. At this point we should have a set of measurable criteria by
@@ -291,17 +318,53 @@ changes in traffic to Openverse, as examples.
 
 During this phase, the project lead should report updates on these metrics
 regularly to help the team make a determination about changing the project
-status to `Success` or `Rollback`. Rolling back a project is not a decision we
-should take lightly, and by providing regular updates project leads can prevent
-this action from seeming like a surprise or a rash decision to others.
+status to `Success` or `Rollback`. Please make these updates on the project
+thread using the standard [update template](./templates/project-update.md).
+Rolling back a project is not a decision we should take lightly, and by
+providing regular updates project leads can prevent this action from seeming
+like a surprise or a rash decision to others.
 
 Frequent feedback on the success criteria can also help contributors come up
 with fast-follow improvements or modifications to the feature that may prevent
-rollback.
+rollback. Project leads should itentify these types of improvements in their
+weekly updates as well.
 
----
+After the designated evaluation period we will make a decision about rolling
+back the project, or marking it as successful.
 
-### Reference: Project Statuses
+> **Note**
+>
+> If a shipped project is erroring or otherwise disrupting service to Openverse
+> users, the project should be rolled back immediately, regardless of the
+> evaluation period.
+
+## Managing and working with projects
+
+We use a new
+[Github Project Board](https://github.com/orgs/WordPress/projects/70/views/1) to
+track all of the projects in Openverse. This board gives us a single view to see
+all projects and some additional metadata:
+
+- The lighthouse goal assigned to each project
+- Estimated start/end dates for the project
+- The status of the project
+
+At the time of writing, projects are added to this board manually. In the future
+we may develop automatations, for example one which automatically adds any issue
+with the "project" label to this board.
+
+This board should be checked regularly as a 'dashboard' to answer some critical
+questions:
+
+- Are we making progress on our current open projects?
+- Are there any projects we should put on hold?
+- Are any projects blocked or in need of major intervention?
+- Are there any projects we need to start now, or soon, in order to meet our
+  goals for the year?
+
+### Project Statuses Reference
+
+Here is a description of each project status.
 
 - `Not Started`: Has not started yet.
 - `In Kickoff`: Project proposal is in progress.
