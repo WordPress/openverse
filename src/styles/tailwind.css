@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --filter-sidebar-width: 316px;
+    --filter-sidebar-width: 336px;
   }
 
   html {
