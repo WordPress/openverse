@@ -63,6 +63,29 @@ request with the document. The review process of the document will happen as a
 PR review. Once the document is accepted and approved, it is merged and the
 relevant step of the process is complete.
 
+## Providing project updates
+
+At all stages of a project, weekly public updates are the best way for Openverse
+contributors and maintainers to understand the health of a project. Importantl,
+these updates allow us to allocate resources to projects that need them before
+work stalls completely.
+
+Project updates should be left as comments in the project threads. Even if the
+update is "the project is blocked." or "No developments this week.", the updates
+should still be posted. This removes ambiguity for folks visiting the project,
+avoiding questions like "I don't see an update this week; is it being worked on
+or not?"
+
+These updates are useful for folks checking in on a project but also for the
+project lead. It's an opportunity to _reflect on_ the status of the project and
+any blockers, or successes to be shared.
+
+Here is an [update template](./templates/project-update.md) to be followed for
+every project update. Some update information will be specific to the current
+phase of the project. In the future we might develop different templates for
+each project phase. For now, we'll see which conventions emerge as we begin
+using this process.
+
 ## Project Lifecycle
 
 There a few stages in the project process. None is inherently more important
@@ -103,8 +126,6 @@ also be added to our GitHub Project Board, which can be done using the
 learn more about our use of project boards please see the
 [# Managing and working with projects](#managing-and-working-with-projects)
 section of this document.
-
-This is how we can track the creation of and lead assignment of a project.
 
 > **Note**
 >
@@ -172,14 +193,14 @@ The PR description should use the
 
 Project proposals will be open for a two-week review period. In cases where
 relevant contributors are AFK or otherwise unavailable, or a project proposal
-experiences low engagement for a number of reasons, projects proposal deadlines
-will be extended by one week.
+experiences low engagement for a number of reasons, project proposal deadlines
+will be extended by one week at a time as-necessary.
 
 #### Wrapping up
 
-Finally, the plan and technical proposals are merged, then the project thread is
-given a substantial update. At this point we should be able to fill in all
-metadata, including some additional fields:
+Finally, the plan is merged, then the project thread is given a substantial
+update. At this point we should be able to fill in all metadata, including some
+additional fields:
 
 - Links to the kick-off and technical implementation documents
 - Links to any other external documents or supporting materials
@@ -193,6 +214,11 @@ metadata, including some additional fields:
     steps of the project (no matter how obvious this might seem)
 - Links to all milestones and relevant issues
 
+At this point it may be relevant to share our intent to work on this project to
+a larger audience outside of our contributor base. It might also be a good time
+to connect with any external collaborators and share the project details with
+them.
+
 ### Implementation Plans (`status: In RFC`)
 
 Implementation plans are the next type of RFC created for a project. The main
@@ -204,31 +230,83 @@ distributed across multiple team members (if desired).
 Implementation plans share some philosophical goals with project plans. They
 should seek to uncover and discover new or unforseen details about a project.
 
-<!-- notes for section
+#### Required content
 
-This section is a bunch of "identifying" technical details, leading up to a list of steps for implementing the projects requirements. The steps should be discrete and ordered. They should also, as much as possible, be organised into parallelisable work streams that can be distributed across multiple team members (if desired).
+Every plan should contain the following information:
 
-- technical planning
-- giving step by step process for planning
-- identify technical tools that will be used
-   - when available, alternative options should be listed with their relevant pros and cons
-- identify new Pypi, NPM, or binary dependencies required for the project
-- identify work-streams that can run parallel
-- identify work dependencies, especially cross-project dependencies that will need to be coordinated
-- list feature flags that will be used
-- explore API version conflicts and ensure that versioning is respected
-   - gosh I'd really like to get a technical plan for adding new API version endpoints in the future :cold_sweat:
-- identify hard blockers that will prevent further work on the project
-- identify areas of technical ambiguity that were not able to be predetermined during planning (i.e., after we've implemented _x_, we'll be able to make an informed decision about _y_)
-- identify significant/unprecedented cost increases or decreases associated with related infrastructure changes
-- identify atomic blocks of work so that work can be split into individual, small, easily reviewable PRs
-   - ideally PRs can be reviewed by anyone capable of reviewing in the relevant parts of the code base, not only people intimately familiar with the project
-   - this isn't always possible, but it is good to strive for it as much as we can
+- A step by step process for implementing the project.
+- Identify tools and depndencies of the project.
+  - Any new Pypi, NPM, or binary dependencies added by the project.
+  - Any infrastructure that will need to be provisioned or modified.
+    - Identify significant/unprecedented cost increases or decreases associated
+      with related infrastructure changes
+  - Any cloud services we will need to pay for. When we will need to start
+    paying, free trials, non-profit pricing, etc.
+  - If there are multiple options here, identify relevant pros/cons of the
+    different choices. Try to make a reccommendation.
+- Identify any design requirements of the project.
+- Identify work-streams that can run in parallel.
+- Identify work dependencies, especially cross-project dependencies that will
+  need to be coordinated. For example:
+  - list feature flags that will be used
+  - Will a frontend feature be blocked by an API feature?
+- Explore API version conflicts and ensure that versioning is respected
+- Identify hard blockers that will prevent further work on the project
+- Identify areas of technical ambiguity that were not able to be predetermined
+  during planning (i.e., after we've implemented _x_, we'll be able to make an
+  informed decision about _y_).
+- Identify atomic blocks of work so that work can be split into individual,
+  small, easily reviewable PRs
+  - Ideally PRs can be reviewed by anyone capable of reviewing in the relevant
+    parts of the codebase, not only people intimately familiar with the project
+  - This isn't always possible, but it is good to strive for it as much as we
+    can
+- Any milestones. Moments when significant or discrete chunks of work have been
+  completed, or sub-features can ship.
+- Any accessibility concerns or requirements.
+- Rollback
+  - How do we rollback this solution in the event of failure?
+  - Are there any steps that can not easily be rolled back?
+- Privacy
+  - How does this approach protect users' privacy?
+- Localization.
+  - Any translation or regional requirements?
+  - Any differing legal requirements based on user location?
+- Risks:
+  - What risks are we taking with this solution?
+  - Are there risks that once taken can’t be undone?
+- Prior art:
+  - Include links to documents and resources that you used when coming up with
+    your solution.
+  - Credit people who have contributed to the solution that you wish to
+    adknowledge.
 
--->
+> **Note**
+>
+> We do not have any reccommendations about time estimates in this section.
 
-After an implementation plan is reviewed and approved, contributors can complete
-the work of creating GitHub issues for the project's discrete tasks.
+#### The review process
+
+Technical implementation plans will be open for a two-week review period. In
+cases where relevant contributors are AFK or otherwise unavailable, or a
+implementation plan experiences low engagement for a number of reasons,
+implementation plan deadlines will be extended by one week at a time
+as-necessary.
+
+#### Wrapping up
+
+Finally, the implementation plan is merged into the repo. Project contributors
+create GitHub issues for all of the work identified in the implementation plan.
+This process can be quite time-consiming for large projects. Generally, it makes
+sense to create issues in the order which they must be completed; this allows
+work to begin if, for some reason, there is delay in creating issues for work at
+the end of a project. It also however makes sense to priorize issues that are
+"good first issues" and "help wanted" issues which contributors might be able to
+help with.
+
+It is important to make sure dependencies are documented when creating these
+issues. Issues which depend on another issue or set of issues should be labeled
+as "blocked" and reference the blocking issue(s).
 
 ### Implementation (`status: In Progress`)
 
@@ -244,6 +322,15 @@ present in the GitHub issue or task they are being assigned.
 > If this isn't possible, planning was insufficient, and we may want to place
 > the project in `status: On Hold` to re-adjust. It's a very important aspect of
 > the work.
+
+In this phase, contributors should feel the benefits of all the planning and
+textual material generated in earlier phases. For the most part, contributors
+should feel as though they are just able to "do the work".
+
+It's likely during implementation we'll come across faulty assumptions or new
+problems which require design. It is important that any realization like this
+which blocks or delays the delivery of the project be clearly documented in the
+weekly updates.
 
 #### Notes for Implementors
 
@@ -279,32 +366,7 @@ Reviewers should also be mindful to point out when an implementer has
 implemented multiple issues in a single PR, in a manner which makes reviewing
 difficult or much more time-consuming.
 
-#### Providing project updates
-
-Weekly public updates are the best way for Openverse contributors and
-maintainers to understand the health of our projects. Most crucially, these
-updates allow us to allocate resources to projects that need them before work
-stalls completely.
-
-Project updates should be left as weekly comments in the project threads. Even
-if the update is "the project is blocked." or "No developments this week.", the
-updates should still be posted. This removes ambiguity for folks visiting the
-project, avoiding questions like "I don't see an update this week; is it being
-worked on or not?"
-
-These updates are useful for folks checking in on a project but also for the
-project lead. It's an opportunity to _reflect on_ the status of the project and
-any blockers, or successes to be shared.
-
-Here is an [update template](./templates/project-update.md) to be followed for
-every project update.
-
 ### Delivery (`status: Shipped`)
-
-The completion of the technical implementation of a project is a time for
-celebration and reflection.
-
-### After Completion (`status: Success`, `status: Reverted`)
 
 After shipping, the project enters a period of evaluation. We do this to meaure
 the success of the project and determine if it achieved the desired goal, but
@@ -338,14 +400,20 @@ back the project, or marking it as successful.
 > users, the project should be rolled back immediately, regardless of the
 > evaluation period.
 
+### After Completion (`status: Success`, `status: Reverted`)
+
 Finally, the team should take some time to reflect on the project. A
-project-speficis retrospective should be held between the contributors and
+project-specific retrospective should be held between the contributors and
 stakeholders of the project.
 
 If the evaluation period of a project is longer than one week, consider holding
 the retrospective _before_ the project is resolved. It is important that a
 retrospective is timely and happens as close to the experience of a project as
 possible.
+
+This may also be a time to make any marketing or other public announcements
+about a project, if relevant. Marketing and communications work should be scoped
+in the earlier project stages but is likely to be implemented here.
 
 ## Managing and working with projects
 
