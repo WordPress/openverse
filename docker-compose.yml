@@ -60,7 +60,10 @@ services:
       - es-data:/usr/share/elasticsearch/data
 
   web:
-    build: ./api/
+    build:
+      context: ./api/
+      args:
+        SEMANTIC_VERSION: ${SEMANTIC_VERSION:-v1.0.0}
     image: openverse-api
     volumes:
       - ./api:/api

@@ -41,6 +41,21 @@ jobs:
           pip install pre-commit
           pre-commit run --all-files
 
+  get-image-tag:
+    name: Get image tag
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.get-image-tag.outputs.image-tag }}
+    steps:
+      - name: Get image tag
+        id: get-image-tag
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+              echo "image-tag=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          else
+              echo "image-tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          fi
+
   build-images:
     name: Build images
     runs-on: ubuntu-latest
@@ -49,6 +64,9 @@ jobs:
         image:
           - api
           - ingestion_server
+    needs:
+      - get-image-tag
+      - lint
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -67,6 +85,8 @@ jobs:
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
+          build-args: |
+            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image-tag }}
 
       - name: Upload image `${{ matrix.image }}`
         uses: actions/upload-artifact@v3
@@ -80,6 +100,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-images
+      - get-image-tag
 
     steps:
       - uses: actions/checkout@v3
@@ -120,6 +141,8 @@ jobs:
           cache-from: type=gha,scope=nginx
           cache-to: type=gha,scope=nginx
           outputs: type=docker,dest=/tmp/api-nginx.tar
+          build-args: |
+            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image-tag }}
 
       - name: Upload image `api-nginx`
         uses: actions/upload-artifact@v3
@@ -351,6 +374,7 @@ jobs:
     needs:
       - test-ing
       - test-api
+      - get-image-tag
       - build-nginx
     permissions:
       packages: write
@@ -381,14 +405,7 @@ jobs:
           docker tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:latest
           docker tag openverse-${{ matrix.image }} \
-            ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ github.sha }}
-          docker push --all-tags ghcr.io/wordpress/openverse-${{ matrix.image }}
-
-      - name: Tag image `${{ matrix.image }}` (release)
-        if: github.event_name == 'release'
-        run: |
-          docker tag openverse-${{ matrix.image }} \
-            ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ github.ref_name }}
+            ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ needs.get-image-tag.outputs.image-tag }}
           docker push --all-tags ghcr.io/wordpress/openverse-${{ matrix.image }}
 
   deploy-staging:
@@ -396,14 +413,15 @@ jobs:
     runs-on: ubuntu-latest
     # Deploy a new version when `main` is pushed to in this repository
     if: github.event_name == 'push' && github.repository == 'WordPress/openverse-api'
-    needs: push
-
+    needs:
+      - push
+      - get-image-tag
     steps:
       - uses: actions/checkout@v3
 
       - uses: ./.github/actions/staging-deploy
         with:
-          tag: ${{ github.sha }}
+          tag: ${{ needs.get-image-tag.outputs.image-tag }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}

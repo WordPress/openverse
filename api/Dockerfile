@@ -51,6 +51,9 @@ COPY /static /app/static
 # Only environment variables with this prefix will be available in the template
 ENV NGINX_ENVSUBST_FILTER="DJANGO_NGINX_"
 ENV DJANGO_NGINX_ENVIRONMENT="local"
+# Add the release version to the docker container
+ARG SEMANTIC_VERSION
+ENV DJANGO_NGINX_GIT_REVISION=$SEMANTIC_VERSION
 
 #######
 # API #
@@ -89,6 +92,10 @@ USER opener
 
 # Copy code into the final image
 COPY --chown=opener . /api/
+
+# Add the release version to the docker container
+ARG SEMANTIC_VERSION
+ENV SEMANTIC_VERSION=$SEMANTIC_VERSION
 
 # Exposes
 # - 8000: Dev server for API Django app
