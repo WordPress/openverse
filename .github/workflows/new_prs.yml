@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add PR to "In progress"
-        uses: alex-page/github-project-automation-plus@v0.8.2
+        uses: alex-page/github-project-automation-plus@v0.8.3
         with:
           project: Openverse PRs
           column: In progress
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add PR to "Needs review"
-        uses: alex-page/github-project-automation-plus@v0.8.2
+        uses: alex-page/github-project-automation-plus@v0.8.3
         with:
           project: Openverse PRs
           column: Needs review
