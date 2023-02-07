@@ -77,7 +77,7 @@ jobs:
           install: true
 
       - name: Build image `${{ matrix.image }}`
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.image }}
           push: false
@@ -132,7 +132,7 @@ jobs:
           install: true
 
       - name: Build image `nginx`
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: api
           target: nginx
