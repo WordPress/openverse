@@ -127,15 +127,6 @@ learn more about our use of project boards please see the
 [Managing and working with projects](#managing-and-working-with-projects)
 section of this document.
 
-> **Note**
->
-> At some point between creation and kickoff we need to make a determination
-> about who will lead the project. Often this has happened organically in
-> the past, based on who may be most interested in a project or on whose work
-> might be most relevant to the project.
->
-> Do we need additional processes for assigning leads in cases where no one
-> volunteers to work on a project?
 
 ### Kickoff (`status: In Kickoff`)
 
