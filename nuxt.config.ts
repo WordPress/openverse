@@ -1,6 +1,9 @@
 import path from "path"
 import fs from "fs"
 
+import http from "http"
+
+import Prometheus from "prom-client"
 import promBundle from "express-prom-bundle"
 
 import pkg from "./package.json"
@@ -16,7 +19,6 @@ import { env } from "./src/utils/env"
 import type { NuxtConfig, ServerMiddleware } from "@nuxt/types"
 import type { LocaleObject } from "@nuxtjs/i18n"
 import type { IncomingMessage, NextFunction } from "connect"
-import type http from "http"
 
 /**
  * The default metadata for the site. Can be extended and/or overwritten per page. And even in components!
@@ -137,6 +139,8 @@ const filenames: NonNullable<NuxtConfig["build"]>["filenames"] = {
     isDev ? "[path][name].[ext]" : `videos/${baseProdName}.[ext]`,
 }
 
+let metricsServer: null | http.Server = null
+
 const config: NuxtConfig = {
   // eslint-disable-next-line no-undef
   version: pkg.version, // used to purge cache :)
@@ -256,19 +260,25 @@ const config: NuxtConfig = {
   },
   sentry: sentryConfig,
   hooks: {
+    close() {
+      metricsServer?.close()
+      // Clear registry so that metrics can re-register when the server restarts in development
+      Prometheus.register.clear()
+    },
+    listen() {
+      // Serve Prometheus metrics on a separate port to allow production
+      // metrics to be hidden behind security group settings
+      metricsServer = http
+        .createServer(async (_, res) => {
+          res.writeHead(200, {
+            "Content-Type": Prometheus.register.contentType,
+          })
+          res.end(await Prometheus.register.metrics())
+        })
+        .listen(parseFloat(process.env.METRICS_PORT || "54641"), "0.0.0.0")
+    },
     render: {
-      /**
-       * When modifying this function in development with automatic rebuilds enabled
-       * it _will_ crash your server with an error about duplicate metric name registration.
-       * To debug this function's behavior locally you will have to tolerate stopping and
-       * starting `pnpm dev` between each change to nuxt.config.ts. To prevent this from
-       * being a _general_ problem the metrics middleware is disabled in development
-       * mode, otherwise any change to `nuxt.config.ts` would cause this crash. If you
-       * need to debug metrics locally, comment out the early return in development.
-       */
       setupMiddleware: (app) => {
-        if (process.env.NODE_ENV === "development") return
-
         const bypassMetricsPathParts = [
           /**
            * Exclude static paths. Remove once we've moved static file
@@ -302,6 +312,16 @@ const config: NuxtConfig = {
          */
         app.use(
           promBundle({
+            // We serve the Prometheus metrics on a separate port for production
+            // and if we let express-prom-bundle register the `/metrics` route then
+            // it exposes all the metrics on the publicly accessible port
+            autoregister: false,
+            promClient: {
+              // Set this to an empty object to pass falsy check in express-prom-bundle
+              // and default metrics get enabled with the default prom-client configuration
+              collectDefaultMetrics: {},
+            },
+            buckets: [0.03, 0.3, 0.5, 1, 1.5, 2, 5, 10, Infinity],
             bypass: (req) =>
               bypassMetricsPathParts.some((p) => req.originalUrl.includes(p)),
             includeMethod: true,
