@@ -25,6 +25,12 @@ const mockI18n = new Vuei18n({
   messages: { en: enMessages },
 })
 
+jest.mock("~/composables/use-match-routes", () => ({
+  // mocking `Ref<boolean>` as `{ value: boolean }`
+  useMatchSearchRoutes: jest.fn(() => ({ matches: { value: false } })),
+  useMatchSingleResultRoutes: jest.fn(() => ({ matches: { value: false } })),
+}))
+
 jest.mock("~/composables/use-browser-detection", () => ({
   useBrowserIsBlink: jest.fn(() => false),
 }))

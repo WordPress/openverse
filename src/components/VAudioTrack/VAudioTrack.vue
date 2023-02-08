@@ -73,6 +73,10 @@ import {
   layoutMappings,
 } from "~/constants/audio"
 import { useSeekable } from "~/composables/use-seekable"
+import {
+  useMatchSearchRoutes,
+  useMatchSingleResultRoutes,
+} from "~/composables/use-match-routes"
 
 import { defineEvent } from "~/types/emits"
 
@@ -304,9 +308,13 @@ export default defineComponent({
         localAudio?.removeEventListener(name, fn)
       )
 
+      const { matches: isSearchRoute } = useMatchSearchRoutes()
+      const { matches: isSingleResultRoute } = useMatchSingleResultRoutes()
+
       if (
-        route.value?.params?.id === props.audio.id ||
-        mediaStore.getItemById(AUDIO, props.audio.id)
+        (isSingleResultRoute.value &&
+          route.value?.params?.id === props.audio.id) ||
+        (isSearchRoute.value && mediaStore.getItemById(AUDIO, props.audio.id))
       ) {
         /**
          * If switching to any route other than the single result
