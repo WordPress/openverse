@@ -5,6 +5,7 @@
         v-for="(image, index) in images"
         :key="image.id"
         :image="image"
+        :search-term="searchTerm"
         @shift-tab="handleShiftTab($event, index)"
       />
     </div>
@@ -26,6 +27,8 @@
  * Used to display both image search results, and related images.
  */
 import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
+
+import { useSearchStore } from "~/stores/search"
 
 import type { FetchState } from "~/types/fetch-state"
 import type { ImageDetail } from "~/types/media"
@@ -62,6 +65,9 @@ export default defineComponent({
     "shift-tab": defineEvent(),
   },
   setup(props, { emit }) {
+    const searchStore = useSearchStore()
+
+    const searchTerm = computed(() => searchStore.searchTerm)
     const isError = computed(() => Boolean(props.fetchState.fetchingError))
 
     const handleShiftTab = (event: KeyboardEvent, index: number) => {
@@ -71,7 +77,7 @@ export default defineComponent({
       }
     }
 
-    return { isError, handleShiftTab }
+    return { isError, handleShiftTab, searchTerm }
   },
 })
 </script>

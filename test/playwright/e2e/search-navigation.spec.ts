@@ -6,6 +6,7 @@ import {
   openFilters,
   searchFromHeader,
   t,
+  openFirstResult,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
@@ -128,3 +129,97 @@ test.describe("search history navigation", () => {
     })
   })
 })
+
+test.describe("search query param is set on a single page reulst", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(`/search?q=cat`)
+  })
+
+  test("the search query param should be set to the search term inside the header on a single page result of type image", async ({
+    page,
+  }) => {
+    await openFirstResult(page, "image")
+    const url = page.url()
+    const query = url.substring(url.indexOf("=") + 1)
+
+    expect(query).toEqual("cat")
+  })
+
+  test("the search query param should be set to the search term inside the header on a single page result of type audio", async ({
+    page,
+  }) => {
+    await openFirstResult(page, "audio")
+    const url = page.url()
+    const query = url.substring(url.indexOf("=") + 1)
+
+    expect(query).toEqual("cat")
+  })
+})
+
+test.describe(
+  "search term inside header should be set correctly when navigating back from a new search",
+  () => {
+    test.beforeEach(async ({ page }) => {
+      // search for cat
+      await page.goto(`/search?q=cat`)
+    })
+
+    /**
+     * # search for cat
+     * # navigate to the first image type result
+     * # search for dog
+     * # go back to single result page of cat
+     * # search term inside the header should be set to cat
+     */
+    test("search term should be set to the search query param on an image type single result page", async ({
+      page,
+    }) => {
+      await openFirstResult(page, "image")
+
+      let searchInput = page.locator('header input[type="search"]')
+      await searchInput.clear()
+
+      await searchInput.type("dog")
+
+      await Promise.all([
+        page.waitForNavigation(),
+        await page.getByRole("button", { name: "Search" }).click(),
+      ])
+
+      await page.waitForLoadState("load")
+      await page.goBack()
+
+      searchInput = page.locator('header input[type="search"]')
+      const queryParam = page.url().substring(page.url().indexOf("=") + 1)
+
+      expect(queryParam).toEqual(await searchInput.inputValue())
+    })
+
+    /**
+     * same test as above, but the new serach is performed from an audio type single result page
+     */
+    test("search term should be set to the search query param on an audio type single result page", async ({
+      page,
+    }) => {
+      await openFirstResult(page, "audio")
+
+      let searchInput = page.locator('header input[type="search"]')
+      await searchInput.clear()
+
+      await searchInput.type("dog")
+
+      await Promise.all([
+        page.waitForNavigation(),
+        await page.getByRole("button", { name: "Search" }).click(),
+      ])
+
+      await page.waitForLoadState("load")
+      await page.goBack()
+
+      searchInput = page.locator('header input[type="search"]')
+      const queryParam = page.url().substring(page.url().indexOf("=") + 1)
+
+      expect(queryParam).toEqual(await searchInput.inputValue())
+    })
+  }
+)

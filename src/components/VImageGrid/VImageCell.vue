@@ -1,6 +1,6 @@
 <template>
   <VLink
-    :href="'/image/' + image.id"
+    :href="`/image/${image.id}?q=${searchTerm}`"
     class="group relative block w-full overflow-hidden rounded-sm bg-dark-charcoal-10 text-dark-charcoal-10 focus:outline-none focus:ring-[3px] focus:ring-pink focus:ring-offset-[3px]"
     :aria-label="image.title"
     :style="containerStyle"
@@ -63,6 +63,10 @@ export default defineComponent({
   props: {
     image: {
       type: Object as PropType<ImageDetail>,
+      required: true,
+    },
+    searchTerm: {
+      type: String,
       required: true,
     },
   },

@@ -105,6 +105,7 @@ import type { ImageDetail } from "~/types/media"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useSearchStore } from "~/stores/search"
 import { createDetailPageMeta } from "~/utils/og"
 
 import VButton from "~/components/VButton.vue"
@@ -134,6 +135,9 @@ export default defineComponent({
   beforeRouteEnter(to, from, next) {
     if (from.path.includes("/search/")) {
       to.meta.backToSearchPath = from.fullPath
+    }
+    if (from.path.includes("/search/") && to.query.q) {
+      useSearchStore().setSearchTerm(to.query.q)
     }
     next()
   },

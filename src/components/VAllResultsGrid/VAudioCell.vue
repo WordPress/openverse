@@ -1,5 +1,10 @@
 <template>
-  <VAudioTrack :audio="audio" layout="box" v-on="$listeners" />
+  <VAudioTrack
+    :audio="audio"
+    layout="box"
+    :search-term="searchTerm"
+    v-on="$listeners"
+  />
 </template>
 
 <script lang="ts">
@@ -14,6 +19,10 @@ export default defineComponent({
   props: {
     audio: {
       type: Object as PropType<AudioDetail>,
+      required: true,
+    },
+    searchTerm: {
+      type: String,
       required: true,
     },
   },

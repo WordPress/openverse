@@ -126,6 +126,14 @@ export default defineComponent({
     size: {
       type: String as PropType<AudioSize>,
     },
+    /**
+     * the search term that was used to find this track; This is used
+     * in the link to the track's detail page.
+     */
+    searchTerm: {
+      type: String,
+      required: true,
+    },
   },
   emits: {
     "shift-tab": defineEvent<[KeyboardEvent]>(),
@@ -441,7 +449,7 @@ export default defineComponent({
     const layoutBasedProps = computed(() =>
       isComposite.value
         ? {
-            href: `/audio/${props.audio.id}`,
+            href: `/audio/${props.audio.id}/?q=${props.searchTerm}`,
             class: [
               "cursor-pointer",
               {

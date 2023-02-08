@@ -34,11 +34,13 @@
           v-if="item.frontendMediaType === 'image'"
           :key="item.id"
           :image="item"
+          :search-term="searchTerm"
         />
         <VAudioCell
           v-if="item.frontendMediaType === 'audio'"
           :key="item.id"
           :audio="item"
+          :search-term="searchTerm"
           @interacted="hideSnackbar"
           @focus.native="showSnackbar"
         />
@@ -82,6 +84,7 @@ export default defineComponent({
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
+    const searchTerm = computed(() => searchStore.searchTerm)
 
     const resultsLoading = computed(() => {
       return (
@@ -131,6 +134,7 @@ export default defineComponent({
     }
 
     return {
+      searchTerm,
       isError,
       errorHeader,
       allMedia,

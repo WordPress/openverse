@@ -2,7 +2,7 @@
   <VLink
     itemprop="contentUrl"
     :title="image.title"
-    :href="'/image/' + image.id"
+    :href="`/image/${image.id}?q=${searchTerm}`"
     class="group block rounded-sm focus-bold-filled"
   >
     <figure
@@ -55,6 +55,10 @@ export default defineComponent({
   props: {
     image: {
       type: Object as PropType<ImageDetail>,
+      required: true,
+    },
+    searchTerm: {
+      type: String,
       required: true,
     },
   },

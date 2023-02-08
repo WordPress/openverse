@@ -9,7 +9,7 @@ const walkToNextOfType = async (type: "image" | "audio", page: Page) => {
     return page.evaluate(
       ([contextType]) =>
         new RegExp(
-          `/${contextType}/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$`,
+          `/${contextType}/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\?q=birds$`,
           "i"
         ).test(
           (document.activeElement as HTMLAnchorElement | null)?.href ?? ""
@@ -39,7 +39,7 @@ const locateFocusedResult = async (page: Page) => {
   expect(href).toBeDefined()
   const url = new URL(href ?? "")
 
-  return page.locator(`[href="${url.pathname}"]`)
+  return page.locator(`[href="${url.pathname}?q=birds"]`)
 }
 
 test.describe.configure({ mode: "parallel" })
@@ -54,7 +54,7 @@ test.describe("all results grid keyboard accessibility test", () => {
     await page.keyboard.press("Enter")
     await page.waitForURL(
       new RegExp(
-        `/image/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$`,
+        `/image/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\?q=birds$`,
         "i"
       )
     )
@@ -65,13 +65,13 @@ test.describe("all results grid keyboard accessibility test", () => {
     await page.keyboard.press("Enter")
     await page.waitForURL(
       new RegExp(
-        `/audio/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$`,
+        `/audio/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\?q=birds$`,
         "i"
       )
     )
     expect(page.url()).toMatch(
       new RegExp(
-        `/audio/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$`,
+        `/audio/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\?q=birds$`,
         "i"
       )
     )
