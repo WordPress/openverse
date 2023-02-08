@@ -97,10 +97,10 @@ title of each project lifecycle section. You can find a
 ### Creation (`status: Not Started`)
 
 When contributors have decided to work on a project, we immediately create a
-project thread to capture this intent. You can use ["Project Thread" issue
-template](templates/project-thread-issue-template.md) to create a new project thread. At this
-point, it is okay if we don't have any of the metadata for the project. Please
-just fill in as many of the fields in the
+project thread to capture this intent. You can use
+["Project Thread" issue template](templates/project-thread-issue-template.md) to
+create a new project thread. At this point, it is okay if we don't have any of
+the metadata for the project. Please just fill in as many of the fields in the
 [template](templates/project-thread-issue-template.md) as you can.
 
 The post should include a small description explaining the goal and outcomes of
@@ -127,7 +127,6 @@ learn more about our use of project boards please see the
 [Managing and working with projects](#managing-and-working-with-projects)
 section of this document.
 
-
 ### Kickoff (`status: In Kickoff`)
 
 In the kickoff stage, a **project proposal** is written and shared with the team
@@ -151,7 +150,12 @@ Every plan should contain the following information:
    How is the project presented and made visible to our users?
 6. Will any outside stakeholders or communities need to approve parts of the
    project, or confirm their interest?
-7. A list of the requested technical implementation plans for the projects. Some projects will require multiple implementation plans (one for each the catalogue, API, and frontend, for example), and capturing that now will help understand the scope of the planning and implementation work that will arise down the road.
+7. A list of the requested technical implementation plans for the projects. Some
+   projects will require multiple implementation plans (one for each the
+   catalogue, API, and frontend, for example), and capturing that now will help
+   understand the scope of the planning and implementation work that will arise
+   down the road.
+
 Leads are not expected to know the answers to all of these questions. Rather,
 leads should **ask questions** directly in the document, tagging relevant
 contributors who can bring needed expertise and guidance. The goal is to lead
@@ -230,12 +234,14 @@ Every plan should accomplish the following:
   - Examples:
     - New PyPI, NPM, or binary dependencies added by the project
     - Infrastructure that will need to be provisioned or modified
-      - In particular, identify significant/unprecedented cost increases or decreases associated
-        with related infrastructure changes.
+      - In particular, identify significant/unprecedented cost increases or
+        decreases associated with related infrastructure changes.
     - New cloud services, paid or otherwise
-        - Explore when we will need to start paying, free trials, non-profit pricing, etc.
-  - If there are multiple options for any of these, identify relevant pros/cons of the
-    different choices. Make a recommendation or ping for specific help to decide.
+      - Explore when we will need to start paying, free trials, non-profit
+        pricing, etc.
+  - If there are multiple options for any of these, identify relevant pros/cons
+    of the different choices. Make a recommendation or ping for specific help to
+    decide.
 - Identify any design requirements of the project.
 - Identify work-streams that can run in parallel.
 - Identify work dependencies, especially cross-project dependencies that will
@@ -244,9 +250,9 @@ Every plan should accomplish the following:
   - Will a frontend feature be blocked by an API feature?
 - Explore API version conflicts and ensure that versioning is respected
 - Identify hard blockers that will prevent further work on the project
-- Identify areas of technical ambiguity that cannot be predetermined
-  during planning (i.e., after we've implemented _x_, we'll be able to make an
-  informed decision about _y_).
+- Identify areas of technical ambiguity that cannot be predetermined during
+  planning (i.e., after we've implemented _x_, we'll be able to make an informed
+  decision about _y_).
 - Identify atomic blocks of work so that work can be split into individual,
   small, easily reviewable PRs
   - Ideally PRs can be reviewed by anyone capable of reviewing in the relevant
@@ -282,8 +288,8 @@ Every plan should accomplish the following:
 Technical implementation plans will be open for a two-week review period. In
 cases where relevant contributors are AFK or otherwise unavailable, or a
 implementation plan experiences low engagement for a number of reasons,
-implementation plan deadlines will be extended by one week at a time
-as necessary.
+implementation plan deadlines will be extended by one week at a time as
+necessary.
 
 #### Wrapping up
 
@@ -293,36 +299,55 @@ This process can be quite time-consiming for large projects. Generally, it makes
 sense to create issues in the order which they must be completed; this allows
 work to begin if, for some reason, there is delay in creating issues for work at
 the end of a project. It also however makes sense to priorize issues that are
-"good first issues" and "help wanted" issues contributors outside of the core maintainers can
-help with.
+"good first issues" and "help wanted" issues contributors outside of the core
+maintainers can help with.
 
 It is important to make sure dependencies are documented when creating these
 issues. Issues which depend on another issue or set of issues should be labeled
 as "blocked" and reference the blocking issue(s).
 
+Whenever possible, issues should be written so that an implementor can complete
+an atomic unit of work without needing to understand the full scope and
+technicalities of the project. The issue description should contain all
+necessary information to complete the issue. This can include linking to
+specific relevant sections of the existing implementation plan(s).
+
 ### Implementation (`status: In Progress`)
 
 In the implementation phase, contributors begin work on the project. At this
 point the work has been divided into discrete tasks and ordered according to
-priority. Folks who have _not read_ the motivating documents or who even lack a
-full understanding of the project should be able to jump in and work on
-individual pieces of the project by _exclusively_ reading the information
-present in the GitHub issue or task they are being assigned.
-
-> **Warning**
->
-> If this isn't possible, planning was insufficient, and we may want to place
-> the project in `status: On Hold` to re-adjust. It's a very important aspect of
-> the work.
-
-In this phase, contributors should feel the benefits of all the planning and
-textual material generated in earlier phases. For the most part, contributors
-should feel as though they are just able to "do the work".
+priority. Contributors should feel the benefits of all the planning and textual
+material generated in earlier phases. For the most part, contributors should
+feel as though they are just able to "do the work".
 
 It's likely during implementation we'll come across faulty assumptions or new
 problems which require design. It is important that any realization like this
 which blocks or delays the delivery of the project be clearly documented in the
 weekly updates.
+
+Ideally, issues stand on their own and do not require reading the full
+implementation plans. For some issues, complexity prevents this from being
+possible. If the contributor working on an issue is still unable to achieve
+clarity on the details of an issue, even after reading the relevant parts of the
+implementation plan, this would be a signal that details were not sufficiently
+captured during implementation.
+
+If at any point during implementation, it is discovered that the implementation
+planning did not sufficiently capture the details of the project, we will put
+the project back into a planning status. Someone familiar with the broader scope
+of the project will be assigned to explore the discovered discrepancies and
+sufficiently resolve them for the project to continue in confidence.
+
+This is distinct from when the implementation plan has explicitly called out
+that an ambiguity exists that will need to be resolved after a specific part of
+the implementation is complete. The main idea here is that if at any point
+during implementation, contributors are unclear on what they are meant to
+implement or how they're meant to implement it, and this wasn't an expected part
+of the project during planning, then something potentially big was missed during
+planning.
+
+In these cases, it is worth taking a step back to ensure that the full scope of
+the plan is defined and being followed.
 
 #### Notes for Implementors
 
@@ -332,18 +357,17 @@ The implementation plan will have split the work into small, atomic, and
 digestible chunks of work that progress the project at an appropriate pace. Keep
 in mind that small PRs are reviewed _much_ faster than bigger PRs. While
 implementing two or three issues in one go may _feel_ faster, it is often slower
-and riskier, due to increased review overhead, than going
-step-by-step.
+and riskier, due to increased review overhead, than going step-by-step.
 
 #### Notes for code reviewers
 
 Code reviewers should focus primarily on the technical aspects of the
 implementation required by the issue. At times, during the course of a project,
-unforeseen amiguities will discovered during implementation and sometimes
-an alarm bell must be rung. However, these should be reserved for issues that
-will cause long-term harm to the project. Merely disagreeing with a particular
-detail of the project's implementation details is not sufficient for holding up
-a PR that is part of a larger, carefully planned project, for which a technical
+unforeseen amiguities will discovered during implementation and sometimes an
+alarm bell must be rung. However, these should be reserved for issues that will
+cause long-term harm to the project. Merely disagreeing with a particular detail
+of the project's implementation details is not sufficient for holding up a PR
+that is part of a larger, carefully planned project, for which a technical
 implementation plan has already been reviewed and approved. Therefore, avoid
 raising objections to the broad technical decisions of a PR unless they do cause
 long term harm to the project. This allows projects to move along at an
