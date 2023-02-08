@@ -51,9 +51,10 @@ import {
   ref,
   useContext,
   useRouter,
-  watch,
 } from "@nuxtjs/composition-api"
 import { kebab } from "case"
+
+import { watchDebounced } from "@vueuse/core"
 
 import { useSearchStore } from "~/stores/search"
 import { areQueriesEqual, ApiQueryParams } from "~/utils/search-query-transform"
@@ -115,13 +116,14 @@ export default defineComponent({
      * This watcher fires even when the queries are equal. We update the path only
      * when the queries change.
      */
-    watch(
+    watchDebounced(
       () => searchStore.searchQueryParams,
       (newQuery: ApiQueryParams, oldQuery: ApiQueryParams) => {
         if (!areQueriesEqual(newQuery, oldQuery)) {
           router.push(searchStore.getSearchPath())
         }
-      }
+      },
+      { debounce: 800, maxWait: 5000 }
     )
 
     const focusableElements = computed(() =>

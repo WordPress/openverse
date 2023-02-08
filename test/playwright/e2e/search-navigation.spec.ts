@@ -28,6 +28,9 @@ test.describe("search history navigation", () => {
 
       // Apply a filter
       await page.click("#modification")
+      // There is a debounce when choosing a filter.
+      // we need to wait for the page to reload before running the test
+      await page.waitForNavigation()
 
       // Verify the filter is applied to the URL and the checkbox is checked
       // Note: Need to add that a search was actually executed with the new
