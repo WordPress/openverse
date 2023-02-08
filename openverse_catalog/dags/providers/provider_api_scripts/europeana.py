@@ -6,7 +6,7 @@ ETL Process:            Use the API to identify all CC licensed images.
 Output:                 TSV file containing the images and the
                         respective meta-data.
 
-Notes:                  https://www.europeana.eu/api/v2/search.json
+Notes:                  https://pro.europeana.eu/page/search
 """
 import argparse
 import functools
@@ -159,7 +159,7 @@ class EuropeanaRecordBuilder:
 class EuropeanaDataIngester(ProviderDataIngester):
     providers = {"image": prov.EUROPEANA_DEFAULT_PROVIDER}
     sub_providers = prov.EUROPEANA_SUB_PROVIDERS
-    endpoint = "https://www.europeana.eu/api/v2/search.json?"
+    endpoint = "https://api.europeana.eu/record/v2/search.json?"
     delay = 30
 
     def __init__(self, *args, **kwargs):

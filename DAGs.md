@@ -213,7 +213,7 @@ ETL Process: Use the API to identify all CC licensed images.
 
 Output: TSV file containing the images and the respective meta-data.
 
-Notes: https://www.europeana.eu/api/v2/search.json
+Notes: https://pro.europeana.eu/page/search
 
 ## `europeana_workflow`
 
@@ -223,7 +223,7 @@ ETL Process: Use the API to identify all CC licensed images.
 
 Output: TSV file containing the images and the respective meta-data.
 
-Notes: https://www.europeana.eu/api/v2/search.json
+Notes: https://pro.europeana.eu/page/search
 
 ## `finnish_museums_workflow`
 
