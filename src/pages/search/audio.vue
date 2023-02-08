@@ -49,8 +49,6 @@ import { useUiStore } from "~/stores/ui"
 
 import { IsSidebarVisibleKey } from "~/types/provides"
 
-import { useFeatureFlagStore } from "~/stores/feature-flag"
-
 import VSnackbar from "~/components/VSnackbar.vue"
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 import VLoadMore from "~/components/VLoadMore.vue"
@@ -68,13 +66,8 @@ export default defineComponent({
   },
   props: propTypes,
   setup(props) {
-    const featureFlagStore = useFeatureFlagStore()
-
     useMeta({
       title: `${props.searchTerm} | Openverse`,
-      meta: featureFlagStore.isOn("new_header")
-        ? [{ hid: "robots", name: "robots", content: "all" }]
-        : undefined,
     })
 
     const uiStore = useUiStore()

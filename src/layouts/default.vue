@@ -71,7 +71,10 @@ export default defineComponent({
     }
   },
   head() {
-    return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
+    return this.$nuxtI18nHead({
+      addSeoAttributes: true,
+      addDirAttribute: true,
+    })
   },
 })
 </script>
