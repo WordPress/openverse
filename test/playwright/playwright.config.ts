@@ -30,7 +30,7 @@ const config: PlaywrightTestConfig = {
      */
     command: "./node_modules/.bin/npm-run-all -p -r talkback prod:playwright",
     cwd: "/app",
-    timeout: 60_000 * 5, // 5 minutes
+    timeout: process.env.CI ? 60_000 * 5 : 60_000 * 10, // 5 minutes in CI, 10 in other envs
     port: 8443,
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
     env: {

@@ -185,7 +185,7 @@ export const openContentSettingsTab = async (
   tab: "contentTypes" | "filters" = "contentTypes",
   dir: LanguageDirection = "ltr"
 ) => {
-  const selector = buttonSelectors.mobileContentSettings
+  const selector = "#content-settings-button"
 
   await ensureButtonPressed(page, selector)
 

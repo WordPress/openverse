@@ -200,7 +200,7 @@ export default defineComponent({
   @apply rounded-t-sm border-x border-t border-tx text-sm font-semibold md:text-base md:font-semibold md:leading-snug;
 }
 .plain {
-  @apply rounded-sm border-tx bg-tx text-sr font-semibold uppercase hover:bg-dark-charcoal-10;
+  @apply rounded-sm border-tx bg-tx text-sm hover:bg-dark-charcoal-10;
 }
 .bordered-selected {
   @apply -mb-[1px] border border-x-dark-charcoal-20 border-t-dark-charcoal-20 border-b-white bg-white;

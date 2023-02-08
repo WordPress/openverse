@@ -20,8 +20,10 @@
           v-if="showFilters"
           id="content-settings"
           size="medium"
-          class="category me-4"
-          >{{ $t("search-type.heading") }}</VTab
+          class="gap-x-2 me-4"
+          ><VIcon :icon-path="searchType.icon" />{{
+            $t("search-type.heading")
+          }}</VTab
         >
         <h2
           v-else
@@ -30,9 +32,14 @@
           <VIcon :icon-path="searchType.icon" />
           {{ $t("search-type.heading") }}
         </h2>
-        <VTab v-if="showFilters" id="filters" size="medium" class="category">{{
-          $t("filters.title")
-        }}</VTab>
+        <VTab
+          v-if="showFilters"
+          id="filters"
+          size="medium"
+          class="label-regular gap-x-2"
+        >
+          <VIcon :icon-path="filtersIcon" />{{ $t("filters.title") }}</VTab
+        >
         <VIconButton
           class="self-center ms-auto hover:bg-dark-charcoal hover:text-white"
           :icon-props="{ iconPath: closeIcon }"
@@ -89,6 +96,7 @@ import VTabPanel from "~/components/VTabs/VTabPanel.vue"
 import VTabs from "~/components/VTabs/VTabs.vue"
 
 import closeIcon from "~/assets/icons/close-small.svg"
+import filtersIcon from "~/assets/icons/filter.svg"
 
 export default defineComponent({
   name: "VContentSettingsModalContent",
@@ -161,6 +169,7 @@ export default defineComponent({
 
     return {
       closeIcon,
+      filtersIcon,
       searchType,
 
       selectedTab,
