@@ -306,7 +306,7 @@ It is important to make sure dependencies are documented when creating these
 issues. Issues which depend on another issue or set of issues should be labeled
 as "blocked" and reference the blocking issue(s).
 
-Whenever possible, issues should be written so that an implementor can complete
+Whenever possible, issues should be written so that an implementer can complete
 an atomic unit of work without needing to understand the full scope and
 technicalities of the project. The issue description should contain all
 necessary information to complete the issue. This can include linking to
@@ -349,7 +349,7 @@ planning.
 In these cases, it is worth taking a step back to ensure that the full scope of
 the plan is defined and being followed.
 
-#### Notes for Implementors
+#### Notes for Implementers
 
 With sufficient planning, it may make certain issues able to be easily
 implemented at the same time, in a single PR. However, this should be avoided.
