@@ -65,10 +65,10 @@ relevant step of the process is complete.
 
 ## Providing project updates
 
-At all stages of a project, weekly public updates are the best way for Openverse
-contributors and maintainers to understand the health of a project. Importantly,
-these updates allow us to allocate resources to projects that need them before
-work stalls completely.
+At all stages of a project (except for `Not Started` projects), weekly public
+updates are the best way for Openverse contributors and maintainers to
+understand the health of a project. Importantly, these updates allow us to
+allocate resources to projects that need them before work stalls completely.
 
 Project updates should be left as comments in the project threads. Even if the
 update is "the project is blocked." or "No developments this week.", the updates
