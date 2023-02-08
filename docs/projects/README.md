@@ -5,7 +5,7 @@ are issues in the `WordPress/openverse` repository with some special
 requirements:
 
 - The issue follows the
-  [project thread issue template](templates/project-thread-issue-template.md)
+  [project thread issue template](../../.github/ISSUE_TEMPLATE/project_thread.md)
 - The `project` label is applied to the issue
 - A `status` is applied to the issue via our GitHub Project Board
 
@@ -99,10 +99,10 @@ title of each project lifecycle section. You can find a
 
 When contributors have decided to work on a project, we immediately create a
 project thread to capture this intent. You can use
-["Project Thread" issue template](templates/project-thread-issue-template.md) to
-create a new project thread. At this point, it is okay if we don't have any of
-the metadata for the project. Please just fill in as many of the fields in the
-[template](templates/project-thread-issue-template.md) as you can.
+["Project Thread" issue template](../../.github/ISSUE_TEMPLATE/project_thread.md)
+to create a new project thread. At this point, it is okay if we don't have any
+of the metadata for the project. Please just fill in as many of the fields in
+the [template](../../.github/ISSUE_TEMPLATE/project_thread.md) as you can.
 
 The post should include a small description explaining the goal and outcomes of
 the project. For example:
@@ -183,7 +183,7 @@ convey the value of the work?
 #### Formatting and process for Project Proposals
 
 The PR description should use the
-["Project Proposal" PR template.](./templates/project-proposal-pr-template.md)
+["Project Proposal" PR template.](../../.github/PULL_REQUEST_TEMPLATE/project_proposal.md)
 
 #### The review process
 
