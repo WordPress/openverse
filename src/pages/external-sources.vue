@@ -76,6 +76,7 @@ import VLink from "~/components/VLink.vue"
 export default defineComponent({
   name: "ExternalSourcesPage",
   components: { VContentPage, VLink },
+  layout: "content-layout",
   setup() {
     const i18n = useI18n()
     const featureFlagStore = useFeatureFlagStore()

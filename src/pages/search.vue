@@ -68,6 +68,7 @@ export default defineComponent({
     }
     next()
   },
+  layout: "content-layout",
   middleware({ route, redirect }) {
     /**
      * This anonymous middleware redirects any search without a query to the homepage.

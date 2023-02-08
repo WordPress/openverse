@@ -145,6 +145,7 @@ import VContentPage from "~/components/VContentPage.vue"
 export default defineComponent({
   name: "AboutPage",
   components: { VLink, VContentPage },
+  layout: "content-layout",
   setup() {
     const i18n = useI18n()
     const featureFlagStore = useFeatureFlagStore()

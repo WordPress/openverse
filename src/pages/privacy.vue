@@ -56,6 +56,7 @@ import VContentPage from "~/components/VContentPage.vue"
 export default defineComponent({
   name: "VPrivacyPage",
   components: { VLink, VContentPage },
+  layout: "content-layout",
   setup() {
     const i18n = useI18n()
     const featureFlagStore = useFeatureFlagStore()

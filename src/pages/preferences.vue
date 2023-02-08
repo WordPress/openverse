@@ -87,6 +87,7 @@ export default defineComponent({
     VContentPage,
     VCheckbox,
   },
+  layout: "content-layout",
   setup() {
     const { $cookies } = useContext()
     const featureFlagStore = useFeatureFlagStore()

@@ -50,6 +50,7 @@ export default defineComponent({
     }
     next()
   },
+  layout: "content-layout",
   setup() {
     const route = useRoute()
     const singleResultStore = useSingleResultStore()

@@ -1,62 +1,21 @@
 <template>
   <div
-    :key="isWhite ? 'white' : 'yellow'"
-    class="app flex flex-col"
-    :class="[
-      isDesktopLayout ? 'desktop' : 'mobile',
-      isWhite ? 'bg-white' : 'bg-yellow',
-      breakpoint,
-    ]"
+    class="app flex h-screen h-[100dvh] flex-col bg-yellow"
+    :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]"
   >
     <div class="sticky top-0 z-40 block">
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
       <VBanners />
-      <template v-if="isNewHeaderEnabled">
-        <template v-if="isSearchHeader">
-          <VHeaderDesktop
-            v-if="isDesktopLayout"
-            :class="isWhite ? 'bg-white' : 'bg-yellow'"
-          />
-          <VHeaderMobile v-else :class="isWhite ? 'bg-white' : 'bg-yellow'" />
-        </template>
-        <VHeaderInternal
-          v-else
-          :class="[
-            { 'border-b-dark-charcoal-20': isHeaderScrolled && isWhite },
-            isWhite ? 'bg-white' : 'bg-yellow',
-          ]"
-        />
-      </template>
-      <VHeaderOld v-else :class="isWhite ? 'bg-white' : 'bg-yellow'" />
+      <VHeaderInternal class="bg-yellow" />
     </div>
 
-    <main
-      class="main grid h-full flex-grow"
-      :class="[
-        { 'has-sidebar': isSidebarVisible },
-        isSidebarVisible
-          ? 'grid-cols-[1fr_var(--filter-sidebar-width)]'
-          : 'grid-cols-1',
-      ]"
-    >
+    <main class="main grid h-full flex-grow">
       <div
-        v-if="isNewHeaderEnabled"
         class="main-page flex h-full w-full min-w-0 flex-col justify-between"
       >
         <Nuxt />
-        <VFooter
-          :mode="isSearchHeader ? 'content' : 'search'"
-          :class="isWhite ? 'border-t border-dark-charcoal-20' : 'bg-yellow'"
-        />
+        <VFooter mode="search" class="bg-yellow" />
       </div>
-      <Nuxt v-else class="main-page flex h-full w-full min-w-0 flex-col" />
-
-      <aside
-        v-if="isSidebarVisible"
-        class="sidebar fixed z-10 overflow-y-auto border-dark-charcoal-20 bg-dark-charcoal-06 end-0 border-s"
-      >
-        <VSearchGridFilter class="px-10 pt-8 pb-10" @close="closeSidebar" />
-      </aside>
     </main>
 
     <VModalTarget class="modal" />
@@ -64,60 +23,34 @@
   </div>
 </template>
 <script lang="ts">
-import {
-  computed,
-  onMounted,
-  provide,
-  ref,
-  useContext,
-  watch,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, onMounted } from "@nuxtjs/composition-api"
 import { PortalTarget as VTeleportTarget } from "portal-vue"
 
-import { useWindowScroll } from "~/composables/use-window-scroll"
-import {
-  useMatchSearchRoutes,
-  useMatchSingleResultRoutes,
-  useMatchContentPageRoutes,
-} from "~/composables/use-match-routes"
 import { useLayout } from "~/composables/use-layout"
 
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
-import { useSearchStore } from "~/stores/search"
-
-import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
 import VBanners from "~/components/VBanner/VBanners.vue"
-import VHeaderOld from "~/components/VHeaderOld/VHeaderOld.vue"
-import VModalTarget from "~/components/VModal/VModalTarget.vue"
 import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
-import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
+import VModalTarget from "~/components/VModal/VModalTarget.vue"
 
-export default {
+/**
+ * The default layout is one screen high and yellow, without sidebars.
+ * The new header version of the "blank" layout.
+ */
+export default defineComponent({
   name: "DefaultLayout",
   components: {
     VBanners,
-    VHeaderDesktop: () => import("~/components/VHeader/VHeaderDesktop.vue"),
     VHeaderInternal: () => import("~/components/VHeader/VHeaderInternal.vue"),
-    VHeaderMobile: () =>
-      import("~/components/VHeader/VHeaderMobile/VHeaderMobile.vue"),
     VFooter: () => import("~/components/VFooter/VFooter.vue"),
-    VHeaderOld,
     VModalTarget,
     VTeleportTarget,
     VGlobalAudioSection,
-    VSearchGridFilter,
   },
   setup() {
-    const { app } = useContext()
     const uiStore = useUiStore()
-    const featureFlagStore = useFeatureFlagStore()
-    const searchStore = useSearchStore()
 
-    const isNewHeaderEnabled = computed(() =>
-      featureFlagStore.isOn("new_header")
-    )
     const { updateBreakpoint } = useLayout()
 
     /**
@@ -129,92 +62,16 @@ export default {
       updateBreakpoint()
     })
 
-    const { matches: isSearchRoute } = useMatchSearchRoutes()
-    const { matches: isSingleResultRoute } = useMatchSingleResultRoutes()
-    const { matches: isContentPageRoute } = useMatchContentPageRoutes()
-
-    const nuxtError = computed(() => app.nuxt.err)
-
-    const isWhite = computed(
-      () =>
-        !nuxtError.value &&
-        (isSearchRoute.value ||
-          isSingleResultRoute.value ||
-          isContentPageRoute.value)
-    )
-
-    const isSearchHeader = computed(
-      () =>
-        !nuxtError.value && (isSearchRoute.value || isSingleResultRoute.value)
-    )
-
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
     const breakpoint = computed(() => uiStore.breakpoint)
 
-    /**
-     * Filters sidebar is visible only on desktop layouts
-     * on search result pages for supported search types.
-     */
-    const isSidebarVisible = computed(
-      () =>
-        isSearchRoute.value &&
-        searchStore.searchTypeIsSupported &&
-        uiStore.isFilterVisible &&
-        isDesktopLayout.value
-    )
-
-    const closeSidebar = () => {
-      uiStore.setFiltersState(false)
-    }
-
-    const isHeaderScrolled = ref(false)
-    const { isScrolled: isMainContentScrolled, y: scrollY } = useWindowScroll()
-    watch([isMainContentScrolled], ([isMainContentScrolled]) => {
-      isHeaderScrolled.value = isMainContentScrolled
-    })
-    const showScrollButton = computed(() => scrollY.value > 70)
-
-    provide("isHeaderScrolled", isHeaderScrolled)
-    provide("showScrollButton", showScrollButton)
-    provide(IsHeaderScrolledKey, isHeaderScrolled)
-    provide(IsSidebarVisibleKey, isSidebarVisible)
-
-    // TODO: remove `headerHasTwoRows` provide after the new header is enabled.
-    const headerHasTwoRows = computed(
-      () =>
-        isSearchRoute.value && !isHeaderScrolled.value && !isDesktopLayout.value
-    )
-    provide("headerHasTwoRows", headerHasTwoRows)
-
     return {
-      isHeaderScrolled,
       isDesktopLayout,
-      isSidebarVisible,
-      isSearchRoute,
-      isSearchHeader,
-      headerHasTwoRows,
-      isNewHeaderEnabled,
-      isWhite,
       breakpoint,
-
-      closeSidebar,
     }
   },
   head() {
     return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true })
   },
-}
+})
 </script>
-
-<style scoped>
-.app {
-  @apply h-screen h-[100dvh];
-}
-.sidebar {
-  /* Header height above md is 80px plus 1px for bottom border */
-  @apply h-[calc(100vh-81px)] h-[calc(100dvh-81px)];
-}
-.has-sidebar .sidebar {
-  width: var(--filter-sidebar-width);
-}
-</style>

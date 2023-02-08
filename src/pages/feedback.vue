@@ -64,6 +64,7 @@ const tabs = Object.keys(forms) as (keyof typeof forms)[]
 export default defineComponent({
   name: "FeedbackPage",
   components: { VLink, VContentPage, VTabs, VTab, VTabPanel },
+  layout: "content-layout",
   setup() {
     const i18n = useI18n()
     const featureFlagStore = useFeatureFlagStore()

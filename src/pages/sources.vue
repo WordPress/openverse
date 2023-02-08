@@ -104,6 +104,7 @@ import externalLinkIcon from "~/assets/icons/external-link.svg"
 export default defineComponent({
   name: "SourcePage",
   components: { VButton, VContentPage, VIcon, VLink, VSourcesTable },
+  layout: "content-layout",
   setup() {
     const i18n = useI18n()
     const featureFlagStore = useFeatureFlagStore()

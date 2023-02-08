@@ -292,6 +292,7 @@ export default defineComponent({
     } = useDialogControl({
       visibleRef: contentSettingsOpen,
       nodeRef: headerRef,
+      lockBodyScroll: true,
       emit,
     })
 
