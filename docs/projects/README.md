@@ -151,7 +151,7 @@ Every plan should contain the following information:
    How is the project presented and made visible to our users?
 6. Will any outside stakeholders or communities need to approve parts of the
    project, or confirm their interest?
-
+7. A list of the requested technical implementation plans for the projects. Some projects will require multiple implementation plans (one for each the catalogue, API, and frontend, for example), and capturing that now will help understand the scope of the planning and implementation work that will arise down the road.
 Leads are not expected to know the answers to all of these questions. Rather,
 leads should **ask questions** directly in the document, tagging relevant
 contributors who can bring needed expertise and guidance. The goal is to lead
