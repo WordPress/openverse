@@ -36,27 +36,39 @@ class Entry {
 
     this.value = undefined // populated for string-string entries, `undefined` otherwise
     this.children = [] // populated for string-object entries, `[]` otherwise
-    this.ancestors = []
+    this.parent = undefined
   }
 
   /**
-   * Get the fully qualified name of the instance w.r.t. the root `Entry`.
+   * Get the path to this entry as a list of path component strings.
+   *
+   * @return {string[]} the list of all path components up to this entry
+   */
+  get path() {
+    const path = this.parent?.path ?? []
+    path.push(this.key)
+    return path
+  }
+
+  /**
+   * Get the fully qualified name of the instance w.r.t. the root `Entry`. The
+   * `path` field is sliced to remove the root key '' from the list.
    *
    * @return {string} the dot separated path to this entry
    */
   get lineage() {
-    return [...this.ancestors.filter((item) => item), this.key].join(".")
+    return this.path.slice(1).join(".")
   }
 
   /**
-   * Register the given entry as a child of this one. Adds this entry and its
-   * ancestors to the child's ancestry.
+   * Register the given entry as a child of this one. Adds this entry as the
+   * child's parent.
    *
    * @param child {Entry} the child to register
    */
   addChild(child) {
-    child.ancestors.push(...this.ancestors, this.key)
     this.children.push(child)
+    child.parent = this
   }
 
   /**
