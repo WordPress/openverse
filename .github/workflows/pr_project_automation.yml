@@ -2,12 +2,13 @@ name: PR project automation
 # ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#pr-project-automation
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "15 15 * * 2" # 3:15pm on Tuesday
 
 env:
   LOGGING_LEVEL: 20 # corresponds to INFO
-  ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # Using GITHUB_TOKEN causes server error.
 
 jobs:
   clear_done:
