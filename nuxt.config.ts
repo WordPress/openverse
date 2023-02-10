@@ -1,22 +1,18 @@
 import path from "path"
 import fs from "fs"
 
-import http from "http"
-
-import Prometheus from "prom-client"
-import promBundle from "express-prom-bundle"
-
 import pkg from "./package.json"
 import locales from "./src/locales/scripts/valid-locales.json"
 
-import { searchTypes } from "./src/constants/media"
 import { VIEWPORTS } from "./src/constants/screens"
 
 import { isProd } from "./src/utils/node-env"
 import { sentryConfig } from "./src/utils/sentry-config"
 import { env } from "./src/utils/env"
 
-import type { NuxtConfig, ServerMiddleware } from "@nuxt/types"
+import type http from "http"
+
+import type { NuxtConfig } from "@nuxt/types"
 import type { LocaleObject } from "@nuxtjs/i18n"
 import type { IncomingMessage, NextFunction } from "connect"
 
@@ -136,8 +132,6 @@ const filenames: NonNullable<NuxtConfig["build"]>["filenames"] = {
     isDev ? "[path][name].[ext]" : `videos/${baseProdName}.[ext]`,
 }
 
-let metricsServer: null | http.Server = null
-
 const openverseLocales = [
   {
     // unique identifier for the locale in Vue i18n
@@ -212,6 +206,7 @@ const config: NuxtConfig = {
     "@nuxtjs/redirect-module",
     "@nuxtjs/sentry",
     "cookie-universal-nuxt",
+    "~/modules/prometheus.ts",
     // Sitemap must be last to ensure that even routes created by other modules are added
     "@nuxtjs/sitemap",
   ],
@@ -268,91 +263,6 @@ const config: NuxtConfig = {
     },
   },
   sentry: sentryConfig,
-  hooks: {
-    close() {
-      metricsServer?.close()
-      // Clear registry so that metrics can re-register when the server restarts in development
-      Prometheus.register.clear()
-    },
-    listen() {
-      // Serve Prometheus metrics on a separate port to allow production
-      // metrics to be hidden behind security group settings
-      metricsServer = http
-        .createServer(async (_, res) => {
-          res.writeHead(200, {
-            "Content-Type": Prometheus.register.contentType,
-          })
-          res.end(await Prometheus.register.metrics())
-        })
-        .listen(parseFloat(process.env.METRICS_PORT || "54641"), "0.0.0.0")
-    },
-    render: {
-      setupMiddleware: (app) => {
-        const bypassMetricsPathParts = [
-          /**
-           * Exclude static paths. Remove once we've moved static file
-           * hosting out of the SSR server's responsibilities.
-           */
-          "_nuxt",
-          /**
-           * Only include these paths in development. They do not exist in production
-           * so we can happily skip the extra iterations these path parts introduce.
-           */
-          ...(process.env.NODE_ENV === "development"
-            ? ["__webpack", "sse"]
-            : []),
-        ]
-        /**
-         * Register this here so that it's registered at the absolute top
-         * of the middleware stack. Using server-middleware puts it
-         * after a whole host of stuff.
-         *
-         * Note: The middleware only has access to server side navigations,
-         * as it is indeed an express middleware, not a Nuxt page middleware.
-         * There's no safe way to pipe client side metrics to Prometheus with
-         * this set up and if we wanted that anyway we'll want to invest into
-         * an actual RUM solution, not a systems monitoring solution like
-         * Prometheus. The implication of this is that the metrics will only
-         * include SSR'd requests. SPA navigations or anything else that
-         * happens exclusively on the client will not be measured. This is the
-         * expected behavior!
-         *
-         * @see {@link https://github.com/nuxt/nuxt.js/blob/dev/packages/server/src/server.js#L70-L138}
-         */
-        app.use(
-          promBundle({
-            // We serve the Prometheus metrics on a separate port for production
-            // and if we let express-prom-bundle register the `/metrics` route then
-            // it exposes all the metrics on the publicly accessible port
-            autoregister: false,
-            promClient: {
-              // Set this to an empty object to pass falsy check in express-prom-bundle
-              // and default metrics get enabled with the default prom-client configuration
-              collectDefaultMetrics: {},
-            },
-            buckets: [0.03, 0.3, 0.5, 1, 1.5, 2, 5, 10, Infinity],
-            bypass: (req) =>
-              bypassMetricsPathParts.some((p) => req.originalUrl.includes(p)),
-            includeMethod: true,
-            includePath: true,
-            normalizePath: [
-              ...searchTypes.map(
-                // Normalize single result pages with IDs in the path
-                (t) => [`/${t}/.*`, `/${t}/#id`] as [string, string]
-              ),
-            ],
-            /**
-             * promBundle creates an Express middleware function, which is type-incompatible
-             * with Nuxt's "connect" middleware functions. I guess they _are_ compatible,
-             * in actual code, or maybe just in the particular implementation of the prometheus
-             * bundle middleware. In any case, this cast is necessary to appeas TypeScript
-             * without an ugly ts-ignore.
-             */
-          }) as unknown as ServerMiddleware
-        )
-      },
-    },
-  },
   build: {
     templates: [
       {
