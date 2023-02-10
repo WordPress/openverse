@@ -2,6 +2,7 @@ name: PR project automation
 # ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#pr-project-automation
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "15 15 * * 2" # 3:15pm on Tuesday
 
