@@ -15,18 +15,12 @@
         ref="inputRef"
         type="search"
         name="q"
-        :placeholder="
-          $t(
-            isHomeRoute ? 'hero.search.placeholder' : '404.search-placeholder'
-          ).toString()
-        "
-        class="h-full w-full appearance-none rounded-none bg-tx text-base leading-none text-dark-charcoal placeholder-dark-charcoal-70 ms-4 focus:outline-none md:text-2xl"
+        :placeholder="$t('hero.search.placeholder').toString()"
+        class="paragraph-large md:label-regular h-full w-full appearance-none rounded-none bg-tx leading-none text-dark-charcoal placeholder-dark-charcoal-70 ms-4 focus:outline-none"
         :aria-label="
-          isHomeRoute
-            ? $t('search.search-bar-label', {
-                openverse: 'Openverse',
-              }).toString()
-            : $t('404.search-placeholder').toString()
+          $t('search.search-bar-label', {
+            openverse: 'Openverse',
+          }).toString()
         "
       />
       <!-- @slot Extra information goes here -->

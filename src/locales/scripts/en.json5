@@ -2,7 +2,6 @@
   "404": {
     title: "The content you’re looking for seems to have disappeared.",
     main: "Go to {link} or search for something similar from the field below.",
-    "search-placeholder": "Search for content to reuse",
   },
   hero: {
     subtitle: "Explore more than 600 million creative works",

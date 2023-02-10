@@ -45,8 +45,8 @@ Heading 3           - 28px - 5xl bold
 Heading 4           - 24px - 4xl bold
 Heading 5           - 19px - 3xl semibold
 Heading 6           - 16px - 2xl semibold
-Paragraph Large     - 16px - 2xl regular leading-larger
-Paragraph Small     - 14px - base regular leading-large
+Paragraph Large     - 16px - 2xl regular leading-[190%] (larger)
+Paragraph Small     - 14px - base regular leading-[170%] (large)
 Body                - 14px - base regular (default leading-normal)
 Description Regular - 14px - base
 Description Bold    - 14px - base semibold
@@ -85,7 +85,7 @@ Time                - 11px - xs semibold (default leading-[120%])
   }
 
   .paragraph-large {
-    @apply leading-larger text-2xl;
+    @apply text-2xl leading-[190%];
   }
 
   .paragraph-small {
