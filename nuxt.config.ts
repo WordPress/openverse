@@ -138,6 +138,21 @@ const filenames: NonNullable<NuxtConfig["build"]>["filenames"] = {
 
 let metricsServer: null | http.Server = null
 
+const openverseLocales = [
+  {
+    // unique identifier for the locale in Vue i18n
+    code: "en",
+    name: "English",
+    nativeName: "English",
+    // ISO code used for SEO purposes (html lang attribute)
+    iso: "en",
+    // wp_locale as found in GlotPress
+    wpLocale: "en_US",
+    file: "en.json",
+  },
+  ...(locales ?? []),
+].filter((l) => Boolean(l.iso)) as LocaleObject[]
+
 const config: NuxtConfig = {
   // eslint-disable-next-line no-undef
   version: pkg.version, // used to purge cache :)
@@ -196,8 +211,9 @@ const config: NuxtConfig = {
     "@nuxtjs/i18n",
     "@nuxtjs/redirect-module",
     "@nuxtjs/sentry",
-    "@nuxtjs/sitemap",
     "cookie-universal-nuxt",
+    // Sitemap must be last to ensure that even routes created by other modules are added
+    "@nuxtjs/sitemap",
   ],
   serverMiddleware: [
     { path: "/healthcheck", handler: "~/server-middleware/healthcheck.js" },
@@ -205,20 +221,7 @@ const config: NuxtConfig = {
   ],
   i18n: {
     baseUrl: "https://openverse.org",
-    locales: [
-      {
-        // unique identifier for the locale in Vue i18n
-        code: "en",
-        name: "English",
-        nativeName: "English",
-        // ISO code used for SEO purposes (html lang attribute)
-        iso: "en",
-        // wp_locale as found in GlotPress
-        wpLocale: "en_US",
-        file: "en.json",
-      },
-      ...(locales ?? []),
-    ].filter((l) => Boolean(l.iso)) as LocaleObject[],
+    locales: openverseLocales,
     lazy: true,
     langDir: "locales",
     defaultLocale: "en",
@@ -235,6 +238,13 @@ const config: NuxtConfig = {
      * */
     detectBrowserLanguage: false,
     vueI18n: "~/plugins/vue-i18n",
+  },
+  sitemap: {
+    hostname: "https://openverse.org",
+    i18n: {
+      locales: openverseLocales.map((l) => l.iso),
+      routesNameSeparator: "___",
+    },
   },
   /**
    * Map the old route for /photos/_id page to /image/_id permanently to keep links working.
