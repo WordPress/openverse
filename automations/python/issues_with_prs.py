@@ -4,9 +4,10 @@ import logging
 import sys
 from collections import defaultdict
 
+import requests
 from github import Github, GithubException, Issue, ProjectCard, ProjectColumn
 from shared.data import get_data
-from shared.github import get_client
+from shared.github import get_client, get_access_token
 from shared.log import configure_logger
 from shared.project import get_org_project, get_project_column
 
@@ -50,12 +51,32 @@ parser.add_argument(
     help="filter issues by this state of their linked PRs",
 )
 
-# TODO: Add a new argument, which is like "closed PRs" or something which tells the
-# TODO: script logic to only filter down to issues with linked PRs which are closed.
-# TODO: The rest of the logic can be the same because we're just moving issue from
-# TODO: one column to another
-
 # endregion
+
+
+def run_query(
+    query,
+) -> dict:
+    """
+    A simple function to use requests.post to make the API call. Note the json= section.
+    Taken from https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
+    """
+    log.debug(f"{query=}")
+    request = requests.post(
+        "https://api.github.com/graphql",
+        json={"query": query},
+        headers={"Authorization": f"Bearer {get_access_token()}"},
+    )
+    if request.status_code == 200:
+        results = request.json()
+        log.debug(f"{results=}")
+        return request.json().get("data")
+    else:
+        raise Exception(
+            "Query failed to run by returning code of {}. {}".format(
+                request.status_code, query
+            )
+        )
 
 
 def get_open_issues_with_prs(
@@ -63,7 +84,7 @@ def get_open_issues_with_prs(
     org_handle: str,
     repo_names: list[str],
     linked_pr_state: str,
-) -> list[Issue]:
+) -> set[tuple[str, str]]:
     """
     Retrieve open issues with linked PRs.
 
@@ -71,63 +92,53 @@ def get_open_issues_with_prs(
     :param org_handle: the name of the org in which to look for issues
     :param repo_names: the name of the repos in which to look for issues
     :param linked_pr_state: the state of the linked PRs to filter by
-    :return: the list of open issues with linked PRs
+    :return: a set of tuples containing the repo name and issue number for each issue
     """
 
-    issues_by_repo = {}
+    all_issues = set()
     for repo_name in repo_names:
-        log.info(f"Looking for issues with PRs in {org_handle}/{repo_name}")
-        issues = gh.search_issues(
-            query="",
-            sort="updated",
-            order="desc",
-            **{
-                "repo": f"{org_handle}/{repo_name}",
-                "is": "issue",
-                "state": "open",
-                "linked": "pr",
-            },
+        log.info(f"Looking for {linked_pr_state} PRs in {org_handle}/{repo_name} "
+                 f"with linked issues")
+        results = run_query(
+            """
+        {
+            repository(owner: "%s", name: "%s") {
+                pullRequests(first: 100, states:%s, orderBy:{field:UPDATED_AT, direction:DESC}) {    
+                    nodes {
+                        number
+                        title
+                        closingIssuesReferences (first: 50) {
+                            edges {
+                                node {
+                                    number
+                                    title
+                                    state
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        """
+            % (org_handle, repo_name, linked_pr_state.upper())
         )
-        issues = list(issues)
+        pulls = results["repository"]["pullRequests"]["nodes"]
+        log.info(f"Found {len(pulls)} PRs in {org_handle}/{repo_name}")
+        issues = {
+            issue["node"]["number"]: issue["node"]["title"]
+            for pull in pulls
+            for issue in pull["closingIssuesReferences"]["edges"]
+        }
         log.info(f"Found {len(issues)} issues")
-        for issue in issues:
-            log.info(f"• #{issue.number} | {issue.title}")
-        issues_by_repo[repo_name] = issues
+        for number, title in issues.items():
+            log.info(f"• #{number} | {title}")
+            all_issues.add((repo_name, number))
 
-    # Have to either make individual queries per-PR or search by PR ID. Problem with the
-    # latter is that it also returns PRs which reference the number inside it.
-    # So we will further have to filter out PRs which are returned from the search but
-    # are not in any of the PRs supplied
-    # Extract the PR ID
-    # FIXME: This doesn't work because the pull request key is only available for pull requests actually
-    pr_mapping: dict[str, dict[str, Issue]] = {
-        repo_name: {issue.pull_request.html_url.rsplit("/", 1)[-1]: issue for issue in issues}
-        for repo_name, issues in issues_by_repo.items()
-    }
-    all_issues = []
-    for repo_name, pr_issue_mapping in pr_mapping.items():
-        pr_ids = set(pr_issue_mapping.keys())
-        log.info(
-            f"Looking for {linked_pr_state} PRs with the following IDs in "
-            f"{org_handle}/{repo_name}: {pr_ids}"
-        )
-        prs = gh.search_issues(
-            query=" ".join(pr_ids),
-            sort="updated",
-            order="desc",
-            **{
-                "repo": f"{org_handle}/{repo_name}",
-                "is": "pr",
-                "state": linked_pr_state,
-            },
-        )
-        # Ensure PR actually *is* within the listed IDs rather than just referencing it
-        prs = [pr for pr in prs if pr.number in pr_ids]
-        # Match PRs back to issues
-        for pr in prs:
-            all_issues.append(pr_issue_mapping[str(pr.number)])
-
-    log.info(f"Found a total of {len(all_issues)} open issues with linked PRs")
+    log.info(
+        f"Found a total of {len(all_issues)} open issues "
+        f"with linked {linked_pr_state} PRs"
+    )
     return all_issues
 
 
@@ -193,14 +204,14 @@ def main():
     issue_cards = get_issue_cards(source_column)
 
     cards_to_move = []
-    for (issue_card, issue) in issue_cards:
-        if issue in issues_with_prs:
+    for issue_card, issue in issue_cards:
+        if (issue.repository.name, issue.number) in issues_with_prs:
             cards_to_move.append((issue_card, issue))
     log.info(f"Found {len(cards_to_move)} cards to move")
 
     for (issue_card, issue) in cards_to_move:
         log.info(f"Moving card for issue {issue.html_url} to {target_column.name}")
-        # issue_card.move("bottom", target_column)
+        issue_card.move("bottom", target_column)
 
 
 if __name__ == "__main__":
