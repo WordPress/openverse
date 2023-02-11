@@ -2,12 +2,11 @@
 import argparse
 import logging
 import sys
-from collections import defaultdict
 
 import requests
 from github import Github, GithubException, Issue, ProjectCard, ProjectColumn
 from shared.data import get_data
-from shared.github import get_client, get_access_token
+from shared.github import get_access_token, get_client
 from shared.log import configure_logger
 from shared.project import get_org_project, get_project_column
 
@@ -58,7 +57,7 @@ def run_query(
     query,
 ) -> dict:
     """
-    A simple function to use requests.post to make the API call. Note the json= section.
+    Run a GitHub GraphQL query.
     Taken from https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
     """
     log.debug(f"{query=}")
@@ -97,29 +96,32 @@ def get_open_issues_with_prs(
 
     all_issues = set()
     for repo_name in repo_names:
-        log.info(f"Looking for {linked_pr_state} PRs in {org_handle}/{repo_name} "
-                 f"with linked issues")
+        log.info(
+            f"Looking for {linked_pr_state} PRs in {org_handle}/{repo_name} "
+            f"with linked issues"
+        )
         results = run_query(
             """
-        {
-            repository(owner: "%s", name: "%s") {
-                pullRequests(first: 100, states:%s, orderBy:{field:UPDATED_AT, direction:DESC}) {    
-                    nodes {
-                        number
-                        title
-                        closingIssuesReferences (first: 50) {
-                            edges {
-                                node {
-                                    number
-                                    title
-                                    state
-                                }
-                            }
+{
+    repository(owner: "%s", name: "%s") {
+        pullRequests(first: 100, states:%s,
+                     orderBy:{field:UPDATED_AT, direction:DESC}) {
+            nodes {
+                number
+                title
+                closingIssuesReferences (first: 50) {
+                    edges {
+                        node {
+                            number
+                            title
+                            state
                         }
                     }
                 }
             }
         }
+    }
+}
         """
             % (org_handle, repo_name, linked_pr_state.upper())
         )

@@ -45,7 +45,7 @@ jobs:
           pipenv run python issues_with_prs.py \
           --project-number 3 \
           --source-column "To do" \
-          --target-column "In progress" \ 
+          --target-column "In progress" \
           --linked-pr-state "open"
 
       - name: Move issues from "Backlog"
