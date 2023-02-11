@@ -30,6 +30,15 @@ jobs:
           python -m pip install --user pipenv
           pipenv install --deploy
 
+      - name: Move stale issues from "In progress"
+        working-directory: ./automations/python
+        run: |
+          pipenv run python issues_with_prs.py \
+          --project-number 3 \
+          --source-column "In progress" \
+          --target-column "Backlog" \
+          --linked-pr-state "closed"
+
       - name: Move issues from "To do"
         working-directory: ./automations/python
         run: |
@@ -47,12 +56,3 @@ jobs:
           --source-column "Backlog" \
           --target-column "In progress" \
           --linked-pr-state "open"
-
-      - name: Move stale issues from "In progress"
-        working-directory: ./automations/python
-        run: |
-          pipenv run python issues_with_prs.py \
-          --project-number 3 \
-          --source-column "In progress" \
-          --target-column "Backlog" \
-          --linked-pr-state "closed"
