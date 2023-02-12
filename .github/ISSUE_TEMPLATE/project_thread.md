@@ -5,7 +5,7 @@ labels: "project"
 title: "<Replace this with actual title>"
 ---
 
-| ETA        | Start Date | Project Lead | Actual Ship Date |
+| Start Date | ETA        | Project Lead | Actual Ship Date |
 | ---------- | ---------- | ------------ | ---------------- |
 | YYYY-MM-DD | YYYY-MM-DD | TBD          | TBD              |
 
