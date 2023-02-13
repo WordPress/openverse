@@ -30,8 +30,19 @@ def handle_matches(matches, redis: Redis, tallies, errors):
 
 
 @click.command()
-@click.option("--output", help="Output file path", type=click.Path(path_type=Path), required=True)
-def main(output: Path):
+@click.option(
+    "--output",
+    help="Output file path",
+    type=click.Path(path_type=Path),
+    default="provider_tally_stats.csv",
+)
+@click.option(
+    "--start-date",
+    help="Start date for the tally, in the form of YYYY-MM-DD. "
+    "Results in Redis are grouped by the start of the week.",
+    type=str,
+)
+def main(output: Path, start_date: str | None):
     redis = Redis("localhost", decode_responses=True, db=TALLY_DATABASE)
     cursor = 0
     should_continue = True
@@ -49,6 +60,7 @@ def main(output: Path):
         should_continue = cursor != 0
 
     df = pd.DataFrame(tallies, columns=COLUMNS)
+
     df.to_csv(output, index=False)
 
     print("\n\n\n\n============= FINAL RESULTS ============= \n\n")
