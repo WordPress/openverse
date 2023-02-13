@@ -60,6 +60,7 @@ def main(output: Path, start_date: str | None):
         should_continue = cursor != 0
 
     df = pd.DataFrame(tallies, columns=COLUMNS)
+    df = df.sort_values(by=COLUMNS[:4])
 
     df.to_csv(output, index=False)
 
