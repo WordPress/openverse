@@ -61,7 +61,8 @@ def main(output: Path, start_date: str | None):
 
     df = pd.DataFrame(tallies, columns=COLUMNS)
     df = df.sort_values(by=COLUMNS[:4])
-
+    if start_date:
+        df = df[df["start_of_week"] >= start_date]
     df.to_csv(output, index=False)
 
     print("\n\n\n\n============= FINAL RESULTS ============= \n\n")
