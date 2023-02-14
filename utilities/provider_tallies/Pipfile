@@ -7,6 +7,7 @@ name = "pypi"
 py-redis = "*"
 pandas = "*"
 click = "*"
+matplotlib = "*"
 
 [dev-packages]
 
