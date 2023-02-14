@@ -74,11 +74,7 @@ from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 from common.constants import DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
 from common.loader import loader, reporting, s3, sql
-from providers.factory_utils import (
-    date_partition_for_prefix,
-    generate_tsv_filenames,
-    pull_media_wrapper,
-)
+from providers.factory_utils import date_partition_for_prefix, pull_media_wrapper
 from providers.provider_reingestion_workflows import ProviderReingestionWorkflow
 from providers.provider_workflows import ProviderWorkflow
 
@@ -131,26 +127,16 @@ def create_ingestion_workflow(
             "media_types": conf.media_types,
         }
         if conf.dated:
-            ingestion_kwargs["args"] = [DATE_RANGE_ARG_TEMPLATE.format(day_shift)]
-
-        generate_filenames = PythonOperator(
-            task_id=append_day_shift(f"generate_{media_type_name}_filename"),
-            python_callable=generate_tsv_filenames,
-            op_kwargs=ingestion_kwargs,
-        )
+            ingestion_kwargs["args"] = [
+                DATE_RANGE_ARG_TEMPLATE.format(day_shift),
+                day_shift,  # Pass day_shift in as the tsv_suffix
+            ]
 
         pull_data = PythonOperator(
             task_id=append_day_shift(f"pull_{media_type_name}_data"),
             python_callable=pull_media_wrapper,
             op_kwargs={
                 **ingestion_kwargs,
-                # Note: this is assumed to match the order of media_types exactly
-                "tsv_filenames": [
-                    XCOM_PULL_TEMPLATE.format(
-                        generate_filenames.task_id, f"{media_type}_tsv"
-                    )
-                    for media_type in conf.media_types
-                ],
             },
             depends_on_past=False,
             execution_timeout=conf.pull_timeout,
@@ -182,7 +168,7 @@ def create_ingestion_workflow(
                     python_callable=s3.copy_file_to_s3,
                     op_kwargs={
                         "tsv_file_path": XCOM_PULL_TEMPLATE.format(
-                            generate_filenames.task_id, f"{media_type}_tsv"
+                            pull_data.task_id, f"{media_type}_tsv"
                         ),
                         "s3_bucket": OPENVERSE_BUCKET,
                         "s3_prefix": DATE_PARTITION_ARG_TEMPLATE.substitute(
@@ -260,7 +246,7 @@ def create_ingestion_workflow(
                 )
                 load_tasks.append(load_data)
 
-        generate_filenames >> pull_data >> load_tasks
+        pull_data >> load_tasks
 
         if conf.create_preingestion_tasks:
             preingestion_tasks = conf.create_preingestion_tasks()

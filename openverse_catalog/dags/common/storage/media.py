@@ -46,16 +46,16 @@ class MediaStore(metaclass=abc.ABCMeta):
     Optional init arguments:
     provider:       String marking the provider in the `media`
                     (`image`, `audio` etc) table of the DB.
-    date:           Date String in the form YYYY-MM-DD. This is the date for
-                    which data is being stored. If provided, it will be appended to
-                    the tsv filename.
+    tsv_suffix:     Optional string to append to the tsv filename.
     buffer_length:  Integer giving the maximum number of media information rows
                     to store in memory before writing them to disk.
+
     """
 
     def __init__(
         self,
         provider: str | None = None,
+        tsv_suffix: str | None = None,
         buffer_length: int = 100,
         media_type: str | None = "generic",
     ):
@@ -63,7 +63,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         self.media_type = media_type
         self.provider = provider
         self.buffer_length = buffer_length
-        self.output_path = self._initialize_output_path(provider)
+        self.output_path = self._initialize_output_path(provider, tsv_suffix=tsv_suffix)
         self.columns = None
         self._media_buffer = []
         self._total_items = 0
@@ -150,6 +150,7 @@ class MediaStore(metaclass=abc.ABCMeta):
     def _initialize_output_path(
         self,
         provider: str | None,
+        tsv_suffix: str | None = None,
         version: str | None = None,
     ) -> str:
         """
@@ -169,11 +170,16 @@ class MediaStore(metaclass=abc.ABCMeta):
                 "OUTPUT_DIR is not set in the environment. Output will go to /tmp."
             )
             output_dir = "/tmp"
-        if version is None:
-            version = CURRENT_VERSION[self.media_type]
+        version = f"v{version or CURRENT_VERSION[self.media_type]}"
 
-        datetime_string = datetime.now().strftime("%Y%m%d%H%M%S")
-        output_file = f"{provider}_{self.media_type}_v{version}_{datetime_string}.tsv"
+        path_components = [
+            provider,
+            self.media_type,
+            version,
+            datetime.now().strftime("%Y%m%d%H%M%S"),
+            tsv_suffix,
+        ]
+        output_file = ("_").join(filter(None, path_components)) + ".tsv"
 
         output_path = os.path.join(output_dir, output_file)
         logger.info(f"Output path: {output_path}")

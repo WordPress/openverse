@@ -97,7 +97,13 @@ class ProviderDataIngester(ABC):
         """The URL with which to request records from the API."""
         pass
 
-    def __init__(self, conf: dict = None, dag_id: str = None, date: str = None):
+    def __init__(
+        self,
+        conf: dict = None,
+        dag_id: str = None,
+        date: str = None,
+        day_shift: int = None,
+    ):
         """
         Initialize the provider configuration.
         Optional Arguments:
@@ -127,7 +133,7 @@ class ProviderDataIngester(ABC):
         self.delayed_requester = DelayedRequester(
             delay=self.delay, headers=self.headers
         )
-        self.media_stores = self._init_media_stores()
+        self.media_stores = self._init_media_stores(day_shift)
         self.date = date
         self.dag_id = dag_id or ""
 
@@ -155,13 +161,15 @@ class ProviderDataIngester(ABC):
             # Create a generator to facilitate fetching the next set of query_params.
             self.override_query_params = (qp for qp in query_params_list)
 
-    def _init_media_stores(self) -> dict[str, MediaStore]:
+    def _init_media_stores(self, day_shift: int = None) -> dict[str, MediaStore]:
         """Initialize a media store for each media type supported by this provider."""
+
         media_stores = {}
+        tsv_suffix = str(day_shift) if day_shift else None
 
         for media_type, provider in self.providers.items():
             StoreClass = get_media_store_class(media_type)
-            media_stores[media_type] = StoreClass(provider)
+            media_stores[media_type] = StoreClass(provider, tsv_suffix=tsv_suffix)
 
         return media_stores
 

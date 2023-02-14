@@ -44,7 +44,6 @@ class MetMuseumDataIngester(ProviderDataIngester):
     endpoint = "https://collectionapi.metmuseum.org/public/collection/v1/objects"
     DEFAULT_LICENSE_INFO = get_license_info(license_="cc0", license_version="1.0")
 
-    # adding args for automatically generated parameters from generate_tsv_filenames
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.retries = 5

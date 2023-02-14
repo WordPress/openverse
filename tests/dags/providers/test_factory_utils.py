@@ -54,66 +54,54 @@ FakeDataIngesterClass.__name__ = "FakeDataIngesterClass"
 FakeDataIngesterClass.side_effect = _set_up_ingester
 
 
-@pytest.mark.parametrize(
-    "func, media_types, stores",
-    [
-        # Happy path
-        (FakeDataIngesterClass, ["image", "audio"], list(fdi.media_stores.values())),
-        # No media types provided, ingester class still supplies stores
-        (FakeDataIngesterClass, 2, list(fdi.media_stores.values())),
-    ],
-)
-def test_generate_tsv_filenames(
-    func, media_types, stores, ti_mock, dagrun_mock, internal_func_mock
-):
-    value = 42
-    factory_utils.generate_tsv_filenames(
-        func,
-        media_types,
-        ti_mock,
-        dagrun_mock,
-        args=[internal_func_mock, value],
-    )
-    # There should be one call to xcom_push for each provided store
-    # If the media_types value is an int, use that for the expected xcoms test
-    expected_xcoms = len(media_types) if isinstance(media_types, list) else media_types
-    actual_xcoms = ti_mock.xcom_push.call_count
-    assert (
-        actual_xcoms == expected_xcoms
-    ), f"Expected {expected_xcoms} XComs but {actual_xcoms} pushed"
-    for args, store in zip(ti_mock.xcom_push.mock_calls[:-1], stores):
-        assert args.kwargs["value"] == store.output_path
-
-    # Check that the function itself was NOT called with the provided args
-    internal_func_mock.assert_not_called()
-
-
 def test_pull_media_wrapper(ti_mock, dagrun_mock, internal_func_mock):
     value = 42
-    stores = list(fdi.media_stores.values())
-    tsv_filenames = ["image_file_000.tsv", "audio_file_111.tsv"]
 
     factory_utils.pull_media_wrapper(
         FakeDataIngesterClass,
         ["image", "audio"],
-        tsv_filenames,
         ti_mock,
         dagrun_mock,
         args=[internal_func_mock, value],
     )
-    # We should have one XCom push for duration
-    assert ti_mock.xcom_push.call_count == 1
+    # We should have one XCom push for duration, and two for the tsv filenames
+    assert ti_mock.xcom_push.call_count == 3
+    push_calls = ti_mock.xcom_push.mock_calls
+    # Check that the tsv filenames were reported
+    assert push_calls[0].kwargs["key"] == "image_tsv"
+    assert push_calls[1].kwargs["key"] == "audio_tsv"
     # Check that the duration was reported
-    assert ti_mock.xcom_push.mock_calls[0].kwargs["key"] == "duration"
-    # Check that the output paths for the stores were changed to the provided filenames
-    for filename, store in zip(tsv_filenames, stores):
-        assert store.output_path == filename
+    assert push_calls[2].kwargs["key"] == "duration"
 
     # Check that the function itself was called with the provided args
     internal_func_mock.assert_called_once_with(value)
 
 
+def test_pull_media_wrapper_checks_media_types(ti_mock, dagrun_mock):
+    value = 42
+    # The FakeDataIngester class has stores for `audio` and `image`. Calling
+    # `pull_media_wrapper` with only `image` will raise an error due to the
+    # mismatch in media types.
+    error_message = (
+        "Provided media types and media stores don't match: "
+        r"media_types=\['image'\] stores=\['image', 'audio'\]"
+    )
+    with pytest.raises(ValueError, match=error_message):
+        factory_utils.pull_media_wrapper(
+            FakeDataIngesterClass,
+            ["image"],  # Only pass in `image` for media_types
+            ti_mock,
+            dagrun_mock,
+            args=[internal_func_mock, value],
+        )
+
+    # We should fail early with no XCom pushes
+    assert ti_mock.xcom_push.call_count == 0
+
+
 def test_pull_media_wrapper_always_pushes_duration(ti_mock, dagrun_mock):
+    # Force `ingest_records` to throw an error, and verify that duration
+    # is still reported to XComs.
     error_message = "Whoops!"
 
     def _raise_an_error(text):
@@ -122,19 +110,21 @@ def test_pull_media_wrapper_always_pushes_duration(ti_mock, dagrun_mock):
     with pytest.raises(ValueError, match=error_message):
         factory_utils.pull_media_wrapper(
             FakeDataIngesterClass,
-            ["image"],
-            ["file1.tsv"],
+            ["image", "audio"],
             ti_mock,
             dagrun_mock,
             args=[_raise_an_error, error_message],
         )
-    # We should have one XCom push for duration
-    assert ti_mock.xcom_push.call_count == 1
-    push_call = ti_mock.xcom_push.mock_calls[0]
+    # We should have one XCom push for duration, and two for the tsv filenames
+    assert ti_mock.xcom_push.call_count == 3
+    push_calls = ti_mock.xcom_push.mock_calls
+    # Check that the tsv was reported for each media type
+    assert push_calls[0].kwargs["key"] == "image_tsv"
+    assert push_calls[1].kwargs["key"] == "audio_tsv"
     # Check that the duration was reported
-    assert push_call.kwargs["key"] == "duration"
-    # Check that it was *not* None (it should always be recorded)
-    duration = push_call.kwargs["value"]
+    assert push_calls[2].kwargs["key"] == "duration"
+    # Check that duration was *not* None (it should always be recorded)
+    duration = push_calls[2].kwargs["value"]
     assert duration is not None
     assert duration > 0
 

@@ -44,12 +44,33 @@ def _get_resource_json(json_name):
 
 
 def test_init_media_stores():
-    ingester = MockProviderDataIngester()
+    with patch(
+        "common.storage.media.MediaStore._initialize_output_path"
+    ) as get_path_mock:
+        ingester = MockProviderDataIngester()
 
-    # We should have two media stores, with the correct types
-    assert len(ingester.media_stores) == 2
-    assert isinstance(ingester.media_stores["audio"], AudioStore)
-    assert isinstance(ingester.media_stores["image"], ImageStore)
+        # We should have two media stores, with the correct types
+        stores = ingester.media_stores
+        assert len(stores) == 2
+        assert isinstance(stores["audio"], AudioStore)
+        assert isinstance(stores["image"], ImageStore)
+
+        # The ingester was not initialized with a day_shift, so no
+        # suffix should be applied to the tsv filenames.
+        expected_calls = [
+            call("mock_audio_provider", tsv_suffix=None),
+            call("mock_image_provider", tsv_suffix=None),
+        ]
+        get_path_mock.assert_has_calls(expected_calls)
+
+
+def test_init_media_stores_with_day_shift():
+    ingester = MockProviderDataIngester(day_shift=5)
+    # The day shift should have been appended to all generated tsv filenames
+    stores = ingester.media_stores
+    assert len(stores) == 2
+    for store in stores.values():
+        assert store.output_path.endswith("_5.tsv")
 
 
 def test_init_with_date():

@@ -17,9 +17,7 @@ class AudioStore(MediaStore):
 
     Optional init arguments:
     provider:       String marking the provider in the `audio` table of the DB.
-    date:           Date String in the form YYYY-MM-DD. This is the date for
-                    which data is being stored. If provided, it will be appended to
-                    the tsv filename.
+    tsv_suffix:     Optional string to append to the tsv filename.
     output_file:    String giving a temporary .tsv filename (*not* the
                     full path) where the audio info should be stored.
     output_dir:     String giving a path where `output_file` should be placed.
@@ -30,13 +28,14 @@ class AudioStore(MediaStore):
     def __init__(
         self,
         provider=None,
+        tsv_suffix=None,
         output_file=None,
         output_dir=None,
         buffer_length=100,
         media_type="audio",
         tsv_columns=None,
     ):
-        super().__init__(provider, buffer_length, media_type)
+        super().__init__(provider, tsv_suffix, buffer_length, media_type)
         self.columns = CURRENT_AUDIO_TSV_COLUMNS if tsv_columns is None else tsv_columns
 
     def add_item(

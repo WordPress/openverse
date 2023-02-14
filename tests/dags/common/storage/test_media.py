@@ -98,6 +98,12 @@ def test_MediaStore_includes_media_type_in_output_file_string():
     assert "image" in image_store.output_path
 
 
+def test_MediaStore_includes_tsvsuffix_if_provided():
+    image_store = image.ImageStore("test_provider", tsv_suffix="foo")
+    assert type(image_store.output_path) == str
+    assert image_store.output_path.endswith("_foo.tsv")
+
+
 def test_MediaStore_add_item_flushes_buffer(tmpdir):
     image_store = image.ImageStore(
         provider="testing_provider",

@@ -6,39 +6,38 @@ from datetime import datetime
 from airflow.models import DagRun, TaskInstance
 from airflow.utils.dates import cron_presets
 from common.constants import MediaType
+from common.storage.media import MediaStore
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
 logger = logging.getLogger(__name__)
 
 
-def generate_tsv_filenames(
+def pull_media_wrapper(
     ingester_class: type[ProviderDataIngester],
     media_types: list[MediaType],
     ti: TaskInstance,
     dag_run: DagRun,
     args: Sequence = None,
-) -> None:
+):
     """
-    Calculate the output directories for each media store to XComs. Output locations
-    are pushed under keys with the format `<media-type>_tsv`. This is a temporary
-    workaround due to the nature of the current provider scripts. Once
-    https://github.com/WordPress/openverse-catalog/issues/229 is addressed and the
-    provider scripts are refactored into classes, we can alter the process by which
-    MediaStores create/set their output directory so that they are always expected
-    to receive it.
+    Run the provided callable after pushing the output directories for each media
+    store, which are generated when initializing the ingester class.
     """
     args = args or []
-    logger.info("Pushing available store paths to XComs")
-
     # Initialize the ProviderDataIngester class, which will initialize the
-    # DelayedRequester and appropriate media stores.
-    logger.info(
-        f"Initializing ProviderIngester {ingester_class.__name__} in"
-        f"order to generate store filenames."
-    )
+    # media stores and DelayedRequester.
+    logger.info(f"Initializing ProviderIngester {ingester_class.__name__}")
     ingester = ingester_class(dag_run.conf, dag_run.dag_id, *args)
-    stores = ingester.media_stores
+    stores: dict[MediaType, MediaStore] = ingester.media_stores
+
+    # Check that the ProviderDataIngester class has a store configuration for each
+    # of the given media types.
+    if len(media_types) != len(stores):
+        raise ValueError(
+            "Provided media types and media stores don't match: "
+            f"{media_types=} stores={list(stores.keys())}"
+        )
 
     # Push the media store output paths to XComs.
     for store in stores.values():
@@ -46,44 +45,6 @@ def generate_tsv_filenames(
             f"{store.media_type.capitalize()} store location: {store.output_path}"
         )
         ti.xcom_push(key=f"{store.media_type}_tsv", value=store.output_path)
-
-
-def pull_media_wrapper(
-    ingester_class: type[ProviderDataIngester],
-    media_types: list[MediaType],
-    tsv_filenames: list[str],
-    ti: TaskInstance,
-    dag_run: DagRun,
-    args: Sequence = None,
-):
-    """
-    Run the provided callable after pushing setting the output directories
-    for each media store using the provided values. This is a temporary workaround
-    due to the nature of the current provider scripts. Once
-    https://github.com/WordPress/openverse-catalog/issues/229 is addressed and the
-    provider scripts are refactored into classes, this wrapper can either be updated
-    or the output filename retrieval/setting process can be altered.
-    """
-    args = args or []
-    if len(media_types) != len(tsv_filenames):
-        raise ValueError(
-            "Provided media types and TSV filenames don't match: "
-            f"{media_types=} {tsv_filenames=}"
-        )
-    logger.info("Setting media stores to the appropriate output filenames")
-
-    # Initialize the ProviderDataIngester class, which will initialize the
-    # media stores and DelayedRequester.
-    logger.info(f"Initializing ProviderIngester {ingester_class.__name__}")
-    ingester = ingester_class(dag_run.conf, dag_run.dag_id, *args)
-    stores = ingester.media_stores
-
-    for store, tsv_filename in zip(stores.values(), tsv_filenames):
-        logger.info(
-            f"Setting {store.media_type.capitalize()} store location "
-            f"to {tsv_filename}"
-        )
-        store.output_path = tsv_filename
 
     logger.info("Beginning ingestion")
     start_time = time.perf_counter()

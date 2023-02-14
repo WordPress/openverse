@@ -34,13 +34,6 @@ def clean_db():
     _clean_dag_from_db()
 
 
-def _generate_tsv_mock(ingester_class, media_types, ti, **kwargs):
-    for media_type in media_types:
-        ti.xcom_push(
-            key=f"{media_type}_tsv", value=f"/tmp/{media_type}_does_not_exist.tsv"
-        )
-
-
 @mark_extended
 @pytest.mark.parametrize(
     "side_effect",
@@ -58,12 +51,9 @@ def _generate_tsv_mock(ingester_class, media_types, ti, **kwargs):
 )
 def test_skipped_pull_data_runs_successfully(side_effect, clean_db):
     with mock.patch(
-        "providers.provider_dag_factory.generate_tsv_filenames"
-    ) as generate_filenames_mock, mock.patch(
-        "providers.provider_dag_factory.pull_media_wrapper"
-    ) as pull_media_mock:
-        generate_filenames_mock.side_effect = _generate_tsv_mock
-        pull_media_mock.side_effect = side_effect
+        "tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester.MockProviderDataIngester.ingest_records"
+    ) as ingest_records_mock:
+        ingest_records_mock.side_effect = side_effect
         dag = provider_dag_factory.create_provider_api_workflow_dag(
             ProviderWorkflow(
                 ingester_class=MockProviderDataIngester,
@@ -83,12 +73,12 @@ def test_create_day_partitioned_ingestion_dag_with_single_layer_dependencies():
         [[1, 2]],
     )
     # First task in the ingestion step for today
-    today_pull_data_id = "ingest_data.generate_image_filename"
+    today_pull_data_id = "ingest_data.pull_image_data"
     # Last task in the ingestion step for today
     today_drop_table_id = "ingest_data.load_image_data.drop_loading_table"
     gather0_id = "gather_partition_0"
-    ingest1_id = "ingest_data_day_shift_1.generate_image_filename_day_shift_1"
-    ingest2_id = "ingest_data_day_shift_2.generate_image_filename_day_shift_2"
+    ingest1_id = "ingest_data_day_shift_1.pull_image_data_day_shift_1"
+    ingest2_id = "ingest_data_day_shift_2.pull_image_data_day_shift_2"
     today_pull_task = dag.get_task(today_pull_data_id)
     assert today_pull_task.upstream_task_ids == set()
     gather_task = dag.get_task(gather0_id)
@@ -106,14 +96,14 @@ def test_create_day_partitioned_ingestion_dag_with_multi_layer_dependencies():
         ),
         [[1, 2], [3, 4, 5]],
     )
-    today_id = "ingest_data.generate_audio_filename"
+    today_id = "ingest_data.pull_audio_data"
     gather0_id = "gather_partition_0"
-    ingest1_id = "ingest_data_day_shift_1.generate_audio_filename_day_shift_1"
-    ingest2_id = "ingest_data_day_shift_2.generate_audio_filename_day_shift_2"
+    ingest1_id = "ingest_data_day_shift_1.pull_audio_data_day_shift_1"
+    ingest2_id = "ingest_data_day_shift_2.pull_audio_data_day_shift_2"
     gather1_id = "gather_partition_1"
-    ingest3_id = "ingest_data_day_shift_3.generate_audio_filename_day_shift_3"
-    ingest4_id = "ingest_data_day_shift_4.generate_audio_filename_day_shift_4"
-    ingest5_id = "ingest_data_day_shift_5.generate_audio_filename_day_shift_5"
+    ingest3_id = "ingest_data_day_shift_3.pull_audio_data_day_shift_3"
+    ingest4_id = "ingest_data_day_shift_4.pull_audio_data_day_shift_4"
+    ingest5_id = "ingest_data_day_shift_5.pull_audio_data_day_shift_5"
     today_task = dag.get_task(today_id)
     assert today_task.upstream_task_ids == set()
     ingest1_task = dag.get_task(ingest1_id)
