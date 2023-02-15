@@ -9,6 +9,6 @@ module.exports = rateLimit(
     headers: { "User-Agent": userAgent },
   }),
   {
-    maxRPS: 99, // limit GlotPress calls to 99 requests per second
+    maxRPS: 50, // limit GlotPress calls to 50 requests per second
   }
 )
