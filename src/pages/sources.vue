@@ -91,7 +91,6 @@ import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { supportedMediaTypes } from "~/constants/media"
 import { useI18n } from "~/composables/use-i18n"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import VButton from "~/components/VButton.vue"
 import VLink from "~/components/VLink.vue"
@@ -107,13 +106,10 @@ export default defineComponent({
   layout: "content-layout",
   setup() {
     const i18n = useI18n()
-    const featureFlagStore = useFeatureFlagStore()
 
     useMeta({
       title: `${i18n.t("sources.title")} | Openverse`,
-      meta: featureFlagStore.isOn("new_header")
-        ? [{ hid: "robots", name: "robots", content: "all" }]
-        : undefined,
+      meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
 
     return { externalLinkIcon, supportedMediaTypes }

@@ -1,7 +1,6 @@
 import { expect, test } from "@playwright/test"
 
 import {
-  enableNewHeader,
   goToSearchTerm,
   languageDirections,
   t,
@@ -13,8 +12,6 @@ test.describe.configure({ mode: "parallel" })
 for (const dir of languageDirections) {
   breakpoints.describeEachDesktop(() => {
     test(`Filters sidebar none selected - ${dir}`, async ({ page }) => {
-      await enableNewHeader(page)
-
       await goToSearchTerm(page, "birds", { dir })
 
       expect(await page.locator(".sidebar").screenshot()).toMatchSnapshot(
@@ -23,8 +20,6 @@ for (const dir of languageDirections) {
     })
 
     test(`Filters sidebar some filters selected - ${dir}`, async ({ page }) => {
-      await enableNewHeader(page)
-
       await goToSearchTerm(page, "birds", { dir })
       await page.locator('input[type="checkbox"]').first().check()
 
@@ -36,8 +31,6 @@ for (const dir of languageDirections) {
 
   breakpoints.describeEachMobile(({ expectSnapshot }) => {
     test(`Filters modal none selected - ${dir}`, async ({ page }) => {
-      await enableNewHeader(page)
-
       await goToSearchTerm(page, "birds", { dir })
       await page.getByRole("button", { name: "Menu" }).click()
       await page.getByRole("tab", { name: t("filters.title", dir) }).click()
@@ -46,8 +39,6 @@ for (const dir of languageDirections) {
     })
 
     test(`Filters modal some filters selected - ${dir}`, async ({ page }) => {
-      await enableNewHeader(page)
-
       await goToSearchTerm(page, "birds", { dir })
       await page.getByRole("button", { name: "Menu" }).click()
       await page.getByRole("tab", { name: t("filters.title", dir) }).click()

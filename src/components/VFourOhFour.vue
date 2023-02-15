@@ -1,11 +1,6 @@
 <template>
   <div
-    class="error relative flex flex-col overflow-x-hidden"
-    :class="
-      isNewHeaderEnabled
-        ? 'flex-grow px-6 sm:px-0'
-        : 'h-screen h-[100dvh] bg-yellow'
-    "
+    class="error relative flex flex-grow flex-col overflow-x-hidden px-6 sm:px-0"
   >
     <svg
       class="z-0 pointer-events-none absolute top-20 -mt-[10%] -ml-[20%] w-[140%] fill-dark-charcoal px-6 opacity-5 lg:mx-auto lg:ml-0 lg:w-full lg:px-16"
@@ -16,11 +11,6 @@
     >
       <use :href="`${Oops}#oops`" />
     </svg>
-    <div v-if="!isNewHeaderEnabled">
-      <VLink href="/" class="relative z-10 text-dark-charcoal">
-        <VBrand class="m-6 text-[18px] lg:mx-10 lg:my-8" />
-      </VLink>
-    </div>
 
     <main
       class="page-404 flex w-full flex-shrink-0 flex-grow flex-col overflow-x-hidden px-6 lg:mx-auto lg:max-w-2xl lg:px-0"
@@ -42,28 +32,21 @@
             </template>
           </i18n>
         </p>
-        <VStandaloneSearchBar
-          v-if="isNewHeaderEnabled"
-          route="404"
-          @submit="handleSearch"
-        />
-        <VStandaloneSearchBarOld v-else route="404" @submit="handleSearch" />
+        <VStandaloneSearchBar route="404" @submit="handleSearch" />
       </div>
     </main>
   </div>
 </template>
 
 <script>
-import { defineComponent, useRouter } from "@nuxtjs/composition-api"
+import { defineComponent, useMeta, useRouter } from "@nuxtjs/composition-api"
 
 import { useSearchStore } from "~/stores/search"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { ALL_MEDIA } from "~/constants/media"
 
-import VStandaloneSearchBarOld from "~/components/VHeaderOld/VSearchBar/VStandaloneSearchBarOld.vue"
+import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 import VLink from "~/components/VLink.vue"
-import VBrand from "~/components/VBrand/VBrand.vue"
 
 import Oops from "~/assets/oops.svg"
 
@@ -71,11 +54,7 @@ export default defineComponent({
   name: "VFourOhFour",
   components: {
     VLink,
-    VStandaloneSearchBarOld,
-    VStandaloneSearchBar: () =>
-      import("~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"),
-
-    VBrand,
+    VStandaloneSearchBar,
   },
   props: ["error"],
   setup() {
@@ -88,23 +67,15 @@ export default defineComponent({
       router.push(searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm }))
     }
 
-    const featureFlagStore = useFeatureFlagStore()
-    const isNewHeaderEnabled = featureFlagStore.isOn("new_header")
+    useMeta({
+      meta: [{ hid: "theme-color", name: "theme-color", content: "#ffe033" }],
+    })
 
     return {
       handleSearch,
-      isNewHeaderEnabled,
       Oops,
     }
   },
-  head: {
-    meta: [
-      {
-        hid: "theme-color",
-        name: "theme-color",
-        content: "#ffe033",
-      },
-    ],
-  },
+  head: {},
 })
 </script>

@@ -225,7 +225,6 @@
 <script lang="ts">
 import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSearchStore } from "~/stores/search"
 
 import { useI18n } from "~/composables/use-i18n"
@@ -239,16 +238,13 @@ export default defineComponent({
   layout: "content-layout",
   setup() {
     const i18n = useI18n()
-    const featureFlagStore = useFeatureFlagStore()
     const searchStore = useSearchStore()
 
     useMeta({
       title: `${i18n.t("search-guide.title", {
         openverse: "Openverse",
       })} | Openverse`,
-      meta: featureFlagStore.isOn("new_header")
-        ? [{ hid: "robots", name: "robots", content: "all" }]
-        : undefined,
+      meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
 
     const pathFromQuery = (queryString: string, quote = false) => {

@@ -3,11 +3,7 @@ import { computed, useRouter, watch } from "@nuxtjs/composition-api"
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
-import {
-  useMatchSearchRoutes,
-  useMatchSingleResultRoutes,
-} from "~/composables/use-match-routes"
-import { ALL_MEDIA } from "~/constants/media"
+import { useMatchSearchRoutes } from "~/composables/use-match-routes"
 
 export const useSearch = () => {
   const mediaStore = useMediaStore()
@@ -15,7 +11,6 @@ export const useSearch = () => {
   const router = useRouter()
 
   const { matches: isSearchRoute } = useMatchSearchRoutes()
-  const { matches: isSingleResultRoute } = useMatchSingleResultRoutes()
 
   const storeSearchTerm = computed(() => searchStore.searchTerm)
 
@@ -59,13 +54,6 @@ export const useSearch = () => {
   const updateSearchState = () => {
     if (searchTerm.value === "") return
     if (!searchTermChanged.value && isSearchRoute.value) return
-    // With the old header, content pages have a search bar.
-    // Reset the search type to All media when searched from content pages.
-    // TODO: remove when new_header is done
-    if (!isSearchRoute.value && isSingleResultRoute.value) {
-      searchStore.setSearchType(ALL_MEDIA)
-      mediaStore.clearMedia()
-    }
 
     const searchPath = searchStore.updateSearchPath({
       searchTerm: searchTerm.value,

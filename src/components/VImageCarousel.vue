@@ -48,12 +48,6 @@ export default {
   components: {
     VLink,
   },
-  props: {
-    isNewHeaderEnabled: {
-      type: Boolean,
-      default: false,
-    },
-  },
   setup() {
     const router = useRouter()
     const { app } = useContext()

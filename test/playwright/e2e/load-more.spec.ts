@@ -1,7 +1,6 @@
 import { expect, Page, test } from "@playwright/test"
 
 import {
-  enableNewHeader,
   goToSearchTerm,
   renderModes,
   t,
@@ -42,9 +41,8 @@ const openSingleMediaView = async (
  */
 
 test.describe("Load more button", () => {
-  test.beforeEach(async ({ context, page }) => {
+  test.beforeEach(async ({ context }) => {
     await mockProviderApis(context)
-    await enableNewHeader(page)
   })
 
   test("Clicking sends 2 requests on All view with enough results", async ({

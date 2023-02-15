@@ -26,7 +26,6 @@ import { AUDIO } from "~/constants/media"
 import type { AudioDetail } from "~/types/media"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useSingleResultStore } from "~/stores/media/single-result"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSearchStore } from "~/stores/search"
 import { createDetailPageMeta } from "~/utils/og"
 
@@ -60,11 +59,6 @@ export default defineComponent({
     const singleResultStore = useSingleResultStore()
     const relatedMediaStore = useRelatedMediaStore()
 
-    const featureFlagStore = useFeatureFlagStore()
-    const isNewHeaderEnabled = computed(() =>
-      featureFlagStore.isOn("new_header")
-    )
-
     const audio = computed(() =>
       singleResultStore.mediaType === AUDIO
         ? (singleResultStore.mediaItem as AudioDetail)
@@ -79,7 +73,6 @@ export default defineComponent({
       backToSearchPath,
       relatedMedia,
       relatedFetchState,
-      isNewHeaderEnabled,
     }
   },
   async asyncData({ route, error, app, $pinia }) {

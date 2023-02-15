@@ -6,20 +6,15 @@
     <div class="sticky top-0 z-40 block">
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
       <VBanners />
-      <template v-if="isNewHeaderEnabled">
-        <template v-if="isSearchHeader">
-          <VHeaderDesktop v-if="isDesktopLayout" class="bg-white" />
-          <VHeaderMobile v-else class="bg-white" />
-        </template>
-        <VHeaderInternal
-          v-else
-          :class="[
-            'bg-white',
-            { 'border-b-dark-charcoal-20': isHeaderScrolled },
-          ]"
-        />
+      <template v-if="isSearchHeader">
+        <VHeaderDesktop v-if="isDesktopLayout" class="bg-white" />
+        <VHeaderMobile v-else class="bg-white" />
       </template>
-      <VHeaderOld v-else class="bg-white" />
+      <VHeaderInternal
+        v-else
+        class="bg-white"
+        :class="{ 'border-b-dark-charcoal-20': isHeaderScrolled }"
+      />
     </div>
 
     <main
@@ -32,7 +27,6 @@
       ]"
     >
       <div
-        v-if="isNewHeaderEnabled"
         class="main-page flex h-full w-full min-w-0 flex-col justify-between"
       >
         <Nuxt />
@@ -41,7 +35,6 @@
           class="border-t border-dark-charcoal-20 bg-white"
         />
       </div>
-      <Nuxt v-else class="main-page flex h-full w-full min-w-0 flex-col" />
 
       <aside
         v-if="isSidebarVisible"
@@ -71,18 +64,16 @@ import { useWindowScroll } from "~/composables/use-window-scroll"
 import {
   useMatchSearchRoutes,
   useMatchSingleResultRoutes,
-  useMatchContentPageRoutes,
 } from "~/composables/use-match-routes"
 import { useLayout } from "~/composables/use-layout"
 
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
 
 import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
 import VBanners from "~/components/VBanner/VBanners.vue"
-import VHeaderOld from "~/components/VHeaderOld/VHeaderOld.vue"
+import VFooter from "~/components/VFooter/VFooter.vue"
 import VModalTarget from "~/components/VModal/VModalTarget.vue"
 import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
@@ -100,8 +91,7 @@ export default defineComponent({
     VHeaderInternal: () => import("~/components/VHeader/VHeaderInternal.vue"),
     VHeaderMobile: () =>
       import("~/components/VHeader/VHeaderMobile/VHeaderMobile.vue"),
-    VFooter: () => import("~/components/VFooter/VFooter.vue"),
-    VHeaderOld,
+    VFooter,
     VModalTarget,
     VTeleportTarget,
     VGlobalAudioSection,
@@ -110,12 +100,8 @@ export default defineComponent({
   setup() {
     const { app } = useContext()
     const uiStore = useUiStore()
-    const featureFlagStore = useFeatureFlagStore()
     const searchStore = useSearchStore()
 
-    const isNewHeaderEnabled = computed(() =>
-      featureFlagStore.isOn("new_header")
-    )
     const { updateBreakpoint } = useLayout()
 
     /**
@@ -129,17 +115,8 @@ export default defineComponent({
 
     const { matches: isSearchRoute } = useMatchSearchRoutes()
     const { matches: isSingleResultRoute } = useMatchSingleResultRoutes()
-    const { matches: isContentPageRoute } = useMatchContentPageRoutes()
 
     const nuxtError = computed(() => app.nuxt.err)
-
-    const isWhite = computed(
-      () =>
-        !nuxtError.value &&
-        (isSearchRoute.value ||
-          isSingleResultRoute.value ||
-          isContentPageRoute.value)
-    )
 
     const isSearchHeader = computed(
       () =>
@@ -177,22 +154,12 @@ export default defineComponent({
     provide(IsHeaderScrolledKey, isHeaderScrolled)
     provide(IsSidebarVisibleKey, isSidebarVisible)
 
-    // TODO: remove `headerHasTwoRows` provide after the new header is enabled.
-    const headerHasTwoRows = computed(
-      () =>
-        isSearchRoute.value && !isHeaderScrolled.value && !isDesktopLayout.value
-    )
-    provide("headerHasTwoRows", headerHasTwoRows)
-
     return {
       isHeaderScrolled,
       isDesktopLayout,
       isSidebarVisible,
       isSearchRoute,
       isSearchHeader,
-      headerHasTwoRows,
-      isNewHeaderEnabled,
-      isWhite,
       breakpoint,
 
       closeSidebar,

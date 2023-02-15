@@ -66,8 +66,6 @@
 <script lang="ts">
 import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
-import { useFeatureFlagStore } from "~/stores/feature-flag"
-
 import { useI18n } from "~/composables/use-i18n"
 
 import VContentPage from "~/components/VContentPage.vue"
@@ -79,13 +77,10 @@ export default defineComponent({
   layout: "content-layout",
   setup() {
     const i18n = useI18n()
-    const featureFlagStore = useFeatureFlagStore()
 
     useMeta({
       title: `${i18n.t("external-sources-page.title")} | Openverse`,
-      meta: featureFlagStore.isOn("new_header")
-        ? [{ hid: "robots", name: "robots", content: "all" }]
-        : undefined,
+      meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
   },
   head: {},

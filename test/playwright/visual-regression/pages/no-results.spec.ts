@@ -1,7 +1,6 @@
 import { test } from "@playwright/test"
 
 import {
-  enableNewHeader,
   goToSearchTerm,
   languageDirections,
   setCookies,
@@ -19,7 +18,6 @@ for (const searchType of supportedSearchTypes) {
       test(`No results ${searchType} ${dir} page snapshots`, async ({
         page,
       }) => {
-        await enableNewHeader(page)
         await setCookies(page.context(), {
           uiBreakpoint: breakpoint as string,
           uiIsFilterDismissed: true,

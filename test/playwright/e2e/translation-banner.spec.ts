@@ -1,18 +1,12 @@
 import { test, expect } from "@playwright/test"
 
-import {
-  enableNewHeader,
-  setCookies,
-} from "~~/test/playwright/utils/navigation"
+import { setCookies } from "~~/test/playwright/utils/navigation"
 
 const russianSearchPath = "/ru/search?q=dog"
 
 test.describe.configure({ mode: "parallel" })
 
 test.describe("translation banner", () => {
-  test.beforeEach(async ({ page }) => {
-    await enableNewHeader(page)
-  })
   test("Can see the translation banner and go to the correct link", async ({
     page,
   }) => {

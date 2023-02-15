@@ -71,6 +71,7 @@ export default defineComponent({
   setup(props) {
     useMeta({
       title: `${props.searchTerm} | Openverse`,
+      meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
     const searchStore = useSearchStore()
 

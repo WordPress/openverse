@@ -9,7 +9,7 @@ during Playwright tests.
    including their translation status (the percentage of strings that are
    translated).
 2. `es.json` is the `es` locale file used for search navigation tests
-   (`../playwright/e2e/search-navigation-old.spec.ts`).
+   (`../playwright/e2e/search-navigation.spec.ts`).
 3. `ru.json` is the `ru` locale file used for testing the translation banner
    because the current translated percentage is ~40%, which is below the banner
    threshold of 90%.

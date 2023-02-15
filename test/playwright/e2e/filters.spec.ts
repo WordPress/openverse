@@ -5,7 +5,6 @@ import {
   openFilters,
   changeContentType,
   goToSearchTerm,
-  enableNewHeader,
   closeFilters,
   isPageDesktop,
 } from "~~/test/playwright/utils/navigation"
@@ -44,9 +43,8 @@ const FILTER_COUNTS = {
 }
 
 breakpoints.describeMobileAndDesktop(() => {
-  test.beforeEach(async ({ context, page }) => {
+  test.beforeEach(async ({ context }) => {
     await mockProviderApis(context)
-    await enableNewHeader(page)
   })
   for (const searchType of supportedSearchTypes) {
     test(`correct total number of filters is displayed for ${searchType}`, async ({

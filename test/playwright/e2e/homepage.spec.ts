@@ -2,7 +2,6 @@ import { expect, Page, test } from "@playwright/test"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
-  enableNewHeader,
   goToSearchTerm,
   searchTypePath,
   t,
@@ -12,9 +11,8 @@ import { supportedSearchTypes } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 
-test.beforeEach(async ({ context, page }) => {
+test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
-  await enableNewHeader(page)
 })
 
 for (const searchType of supportedSearchTypes) {

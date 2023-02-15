@@ -34,7 +34,6 @@ import searchIcon from "~/assets/icons/search.svg"
 /**
  * The search button used in the search bar on the homepage and on the 404 page,
  * and on the search page.
- * TODO: remove when `new_header` is default: only on the search page with the `new_header`.
  */
 export default defineComponent({
   name: "VSearchButton",

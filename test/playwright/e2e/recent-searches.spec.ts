@@ -1,15 +1,10 @@
 import { expect, test, type Page } from "@playwright/test"
 
-import {
-  enableNewHeader,
-  searchFromHeader,
-} from "~~/test/playwright/utils/navigation"
+import { searchFromHeader } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
 
 test.beforeEach(async ({ page }) => {
-  await enableNewHeader(page)
-
   // We are first navigating to search because the recent searches feature has
   // not yet been implemented on the homepage.
   await page.goto("/search?q=galah")

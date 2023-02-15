@@ -36,7 +36,6 @@ import VModalTarget from "~/components/VModal/VModalTarget.vue"
 
 /**
  * The default layout is one screen high and yellow, without sidebars.
- * The new header version of the "blank" layout.
  */
 export default defineComponent({
   name: "DefaultLayout",

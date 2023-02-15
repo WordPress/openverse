@@ -1,7 +1,6 @@
 import { test, expect, Page } from "@playwright/test"
 
 import {
-  enableNewHeader,
   isMobileMenuOpen,
   scrollToBottom,
   setCookies,
@@ -24,9 +23,8 @@ test.describe.configure({ mode: "parallel" })
 
 test.describe("Header internal", () => {
   breakpoints.describeXs(() => {
-    test.beforeEach(async ({ context, page }) => {
+    test.beforeEach(async ({ context }) => {
       await setCookies(context, { uiBreakpoint: "xs" })
-      await enableNewHeader(page)
     })
 
     test("can open and close the modal on xs breakpoint", async ({ page }) => {
@@ -97,7 +95,6 @@ test.describe("Header internal", () => {
       page,
     }) => {
       await setCookies(context, { breakpoint: "sm" })
-      await enableNewHeader(page)
       await page.goto("/about")
       await clickMenuButton(page)
       expect(await isPagesPopoverOpen(page)).toBe(true)

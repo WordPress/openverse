@@ -2,7 +2,6 @@ import { test, expect, Page } from "@playwright/test"
 
 import {
   changeContentType,
-  enableNewHeader,
   goToSearchTerm,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
@@ -96,9 +95,8 @@ async function checkSearchResult(page: Page, searchType: SearchTypeConfig) {
 
 test.describe("search types", () => {
   breakpoints.describeMobileAndDesktop(() => {
-    test.beforeEach(async ({ context, page }) => {
+    test.beforeEach(async ({ context }) => {
       await mockProviderApis(context)
-      await enableNewHeader(page)
     })
 
     for (const searchType of searchTypes) {

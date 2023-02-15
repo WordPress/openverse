@@ -22,6 +22,7 @@ export default defineComponent({
   setup(props) {
     useMeta({
       title: `${props.searchTerm} | Openverse`,
+      meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
 
     const results = computed(() => props.resultItems.image)

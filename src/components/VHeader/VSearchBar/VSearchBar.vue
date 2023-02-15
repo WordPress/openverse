@@ -41,7 +41,7 @@
     </form>
     <ClientOnly>
       <VRecentSearches
-        v-show="isNewHeaderEnabled && isRecentVisible"
+        v-show="isRecentVisible"
         :selected-idx="selectedIdx"
         :entries="entries"
         class="absolute inset-x-0 lg:flex"
@@ -67,7 +67,6 @@ import { onClickOutside } from "@vueuse/core"
 import { defineEvent } from "~/types/emits"
 
 import { useSearchStore } from "~/stores/search"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { keycodes } from "~/constants/key-codes"
 
@@ -81,8 +80,6 @@ import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
 
 /**
  * The search bar displayed on the search page.
- * TODO: remove the next line after new header is set as default
- * Only on the search page with `new_header` flag on.
  *
  * Displays a text field for a search query and is attached to an action button
  * that fires a search request. The loading state and number of hits are also
@@ -129,9 +126,6 @@ export default defineComponent({
     }
 
     /* Recent searches */
-    const featureFlagStore = useFeatureFlagStore()
-    const isNewHeaderEnabled = featureFlagStore.isOn("new_header")
-
     const searchStore = useSearchStore()
 
     const isRecentVisible = ref(false)
@@ -246,7 +240,6 @@ export default defineComponent({
       hideRecentSearches,
       handleSearchBlur,
 
-      isNewHeaderEnabled,
       isRecentVisible,
       recentClasses,
       selectedIdx,

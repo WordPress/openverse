@@ -1,7 +1,6 @@
 import { expect, test } from "@playwright/test"
 
 import {
-  enableNewHeader,
   goToSearchTerm,
   openFilters,
   searchFromHeader,
@@ -15,9 +14,8 @@ test.describe.configure({ mode: "parallel" })
 
 test.describe("search history navigation", () => {
   breakpoints.describeMobileAndDesktop(() => {
-    test.beforeEach(async ({ context, page }) => {
+    test.beforeEach(async ({ context }) => {
       await mockProviderApis(context)
-      await enableNewHeader(page)
     })
 
     test("should update search results when back navigation changes filters", async ({

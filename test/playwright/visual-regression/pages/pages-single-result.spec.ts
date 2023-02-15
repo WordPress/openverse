@@ -3,7 +3,6 @@ import { test } from "@playwright/test"
 import { removeHiddenOverflow } from "~~/test/playwright/utils/page"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
-  enableNewHeader,
   goToSearchTerm,
   languageDirections,
   openFirstResult,
@@ -19,7 +18,6 @@ for (const mediaType of supportedMediaTypes) {
     test.describe(`${mediaType} ${dir} single-result page snapshots`, () => {
       breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
         test.beforeEach(async ({ context, page }) => {
-          await enableNewHeader(page)
           await setCookies(context, {
             uiBreakpoint: breakpoint,
             uiIsFilterDismissed: true,

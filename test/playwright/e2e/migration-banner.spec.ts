@@ -1,7 +1,5 @@
 import { test, expect } from "@playwright/test"
 
-import { enableNewHeader } from "~~/test/playwright/utils/navigation"
-
 test.describe.configure({ mode: "parallel" })
 
 test.describe("migration banner", () => {
@@ -34,7 +32,6 @@ test.describe("migration banner", () => {
   })
 
   test("migration banner goes away on navigation", async ({ page }) => {
-    await enableNewHeader(page)
     await page.goto("/?referrer=creativecommons.org")
 
     const migrationNotice = page.locator('[data-testid="banner-cc-referral"]')

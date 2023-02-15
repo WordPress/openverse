@@ -229,13 +229,6 @@ export const useSearchStore = defineStore("search", {
     addRecentSearch(
       search: string /** A search term to add to the saved list.*/
     ) {
-      // No-op if feature isn't enabled
-      const featureFlagStore = useFeatureFlagStore()
-      const saveRecentSearches = featureFlagStore.isOn("new_header")
-      if (!saveRecentSearches) {
-        return
-      }
-
       /**
        * Add the latest search to the top of the stack,
        * then add the existing items, making sure not to exceed

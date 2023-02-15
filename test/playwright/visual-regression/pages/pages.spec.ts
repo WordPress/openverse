@@ -5,7 +5,6 @@ import { removeHiddenOverflow } from "~~/test/playwright/utils/page"
 import {
   pathWithDir,
   languageDirections,
-  enableNewHeader,
   setCookies,
 } from "~~/test/playwright/utils/navigation"
 
@@ -25,7 +24,6 @@ for (const contentPage of contentPages) {
 
       breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
         test.beforeEach(async ({ context, page }) => {
-          await enableNewHeader(page)
           await setCookies(context, {
             uiBreakpoint: breakpoint as string,
             uiIsFilterDismissed: true,
@@ -56,13 +54,6 @@ const cleanImageResults = async (page: Page) => {
 
 test.describe("Layout color is set correctly", () => {
   breakpoints.describeLg(() => {
-    test.use({
-      viewport: { width: 1024, height: 700 },
-    })
-    test.beforeEach(async ({ page }) => {
-      await enableNewHeader(page)
-    })
-
     test("Change language on homepage and search", async ({ page }) => {
       await page.goto("/")
       await page.getByRole("combobox", { name: "Language" }).selectOption("ar")

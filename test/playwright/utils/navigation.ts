@@ -12,7 +12,6 @@ import {
   SupportedSearchType,
   VIDEO,
 } from "~/constants/media"
-import { SCREEN_SIZES } from "~/constants/screens"
 
 import enMessages from "~/locales/en.json"
 
@@ -20,14 +19,6 @@ const messages: Record<string, Record<string, unknown>> = {
   ltr: enMessages,
   rtl: rtlMessages,
 }
-/**
- * This is used during the transition period from the `old` header to the `new` one.
- * The new header is enabled using `new_header` feature flag. Some navigation methods
- * are different depending on the header version.
- */
-export const OLD_HEADER = "old_header"
-export const NEW_HEADER = "new_header"
-export type HeaderMode = typeof OLD_HEADER | typeof NEW_HEADER
 
 const getNestedProperty = (
   obj: Record<string, unknown>,
@@ -130,10 +121,9 @@ const openMenu = async (page: Page, button: "filter" | "contentSwitcher") => {
 
 export const openFilters = async (
   page: Page,
-  mode: HeaderMode = NEW_HEADER,
   dir: LanguageDirection = "ltr"
 ) => {
-  if (mode === OLD_HEADER || (mode === NEW_HEADER && isPageDesktop(page))) {
+  if (isPageDesktop(page)) {
     await openMenu(page, "filter")
   } else {
     await openContentSettingsTab(page, "filters", dir)
@@ -142,20 +132,19 @@ export const openFilters = async (
 
 export const openContentTypes = async (
   page: Page,
-  mode: HeaderMode = NEW_HEADER,
   dir: LanguageDirection = "ltr"
 ) => {
-  if (mode === OLD_HEADER || (mode === NEW_HEADER && isPageDesktop(page))) {
+  if (isPageDesktop(page)) {
     await openMenu(page, "contentSwitcher")
   } else {
     await openContentSettingsTab(page, "contentTypes", dir)
   }
 }
 
-export const isPageDesktop = (page: Page, mode: HeaderMode = NEW_HEADER) => {
+export const isPageDesktop = (page: Page) => {
   const pageWidth = page.viewportSize()?.width
   if (!pageWidth) return false
-  const desktopMinWidth = mode === NEW_HEADER ? 1024 : 768
+  const desktopMinWidth = 1024
   return pageWidth >= desktopMinWidth
 }
 /**
@@ -196,11 +185,8 @@ export const openContentSettingsTab = async (
   await page.locator(`button[role="tab"]:has-text("${tabLabel}")`).click()
 }
 
-export const closeFilters = async (
-  page: Page,
-  mode: HeaderMode = NEW_HEADER
-) => {
-  if (mode === OLD_HEADER || (mode === NEW_HEADER && isPageDesktop(page))) {
+export const closeFilters = async (page: Page) => {
+  if (isPageDesktop(page)) {
     const selector = buttonSelectors["filter"]
 
     if (await isButtonPressed(page, selector)) {
@@ -208,23 +194,15 @@ export const closeFilters = async (
       expect(await isButtonPressed(page, selector)).toEqual(false)
     }
   } else {
-    await closeMobileMenu(page, mode)
+    await closeMobileMenu(page)
   }
 }
 
-/**
- * Previous to the `new_header` milestone, the mobile menu had a text button, now it is an icon button.
- */
 export const closeMobileMenu = async (
   page: Page,
-  mode: HeaderMode = NEW_HEADER,
   dir: LanguageDirection = "ltr"
 ) => {
-  if (mode === OLD_HEADER) {
-    await page.click(`button:has-text('${t("modal.close", dir)}')`)
-  } else {
-    await page.click(`button[aria-label="${t("modal.aria-close", dir)}"]`)
-  }
+  await page.click(`button[aria-label="${t("modal.aria-close", dir)}"]`)
 }
 
 export const isMobileMenuOpen = async (page: Page) =>
@@ -260,10 +238,9 @@ export const assertCheckboxStatus = async (
 
 export const changeContentType = async (
   page: Page,
-  to: "Audio" | "Images" | "All content",
-  mode: HeaderMode = NEW_HEADER
+  to: "Audio" | "Images" | "All content"
 ) => {
-  if (mode === OLD_HEADER || isPageDesktop(page)) {
+  if (isPageDesktop(page)) {
     await page.click(
       `button[aria-controls="content-switcher-popover"], button[aria-controls="content-switcher-modal"]`
     )
@@ -273,9 +250,9 @@ export const changeContentType = async (
       page.locator(`#content-switcher-popover a:has-text("${to}")`).click(),
     ])
   } else {
-    await openContentTypes(page, mode)
+    await openContentTypes(page)
     await page.locator(`a[role="radio"]:has-text("${to}")`).click()
-    await closeMobileMenu(page, mode)
+    await closeMobileMenu(page)
   }
 }
 
@@ -283,23 +260,19 @@ export const changeContentType = async (
  * For desktop, returns the content of the Content switcher button.
  * For mobile, returns the selected content type from the modal.
  * @param page - Playwright page object.
- * @param mode - `new` if `new_header` flag is on, `old` otherwise.
  */
-export const currentContentType = async (
-  page: Page,
-  mode: HeaderMode = NEW_HEADER
-) => {
+export const currentContentType = async (page: Page) => {
   if (isPageDesktop(page)) {
     const contentSwitcherButton = await page.locator(
       `button[aria-controls="content-switcher-popover"]`
     )
     return (await contentSwitcherButton.textContent())?.trim()
   } else {
-    await openContentTypes(page, mode)
+    await openContentTypes(page)
     const currentContentType = await page
       .locator('a[aria-current="page"]')
       .textContent()
-    await closeMobileMenu(page, mode)
+    await closeMobileMenu(page)
     return currentContentType
   }
 }
@@ -320,18 +293,12 @@ export const dismissTranslationBanner = async (page: Page) => {
 export const selectHomepageSearchType = async (
   page: Page,
   searchType: SupportedSearchType,
-  dir: LanguageDirection = "ltr",
-  headerMode: HeaderMode = NEW_HEADER
+  dir: LanguageDirection = "ltr"
 ) => {
-  const pageWidth = page.viewportSize()?.width
-  if (headerMode === NEW_HEADER || (pageWidth && pageWidth > SCREEN_SIZES.sm)) {
-    await page.getByRole("button", { name: t("search-type.all", dir) }).click()
-    await page
-      .getByRole("radio", { name: searchTypeNames[dir][searchType] })
-      .click()
-  } else {
-    await page.click(`button:has-text("${searchTypeNames[dir][searchType]}")`)
-  }
+  await page.getByRole("button", { name: t("search-type.all", dir) }).click()
+  await page
+    .getByRole("radio", { name: searchTypeNames[dir][searchType] })
+    .click()
 }
 
 export const goToSearchTerm = async (
@@ -342,14 +309,12 @@ export const goToSearchTerm = async (
     mode?: RenderMode
     dir?: LanguageDirection
     query?: string // Only for SSR mode
-    headerMode?: HeaderMode
   } = {}
 ) => {
   const searchType = options.searchType || ALL_MEDIA
   const dir = options.dir || "ltr"
   const mode = options.mode ?? "SSR"
   const query = options.query ? `&${options.query}` : ""
-  const headerMode = options.headerMode ?? NEW_HEADER
 
   await setCookies(page.context(), {
     uiDismissedBanners: [
@@ -366,7 +331,7 @@ export const goToSearchTerm = async (
     await page.goto(pathWithDir("/", dir))
     // Select the search type
     if (searchType !== "all") {
-      await selectHomepageSearchType(page, searchType, dir, headerMode)
+      await selectHomepageSearchType(page, searchType, dir)
     }
     // Type search term
     const searchInput = page.locator('main input[type="search"]')
@@ -387,7 +352,7 @@ export const goToSearchTerm = async (
  * and waits for navigation.
  */
 export const searchFromHeader = async (page: Page, term: string) => {
-  // Double click on the search bar to remove previous value
+  // Double-click on the search bar to remove previous value
   await page.dblclick("id=search-bar")
   await page.fill("id=search-bar", term)
   await Promise.all([page.waitForNavigation(), page.keyboard.press("Enter")])
@@ -455,16 +420,6 @@ export const scrollDownAndUp = async (page: Page) => {
 export const pathWithDir = (rawPath: string, dir: string) => {
   const path = rawPath.startsWith("/") ? rawPath : `/${rawPath}`
   return dir === "rtl" ? `/ar${path}` : path
-}
-
-export const enableNewHeader = async (page: Page) => {
-  // Set the `new_header` cookie to `on`, should be called before `page.goto`.
-  await setCookies(page.context(), { features: { new_header: "on" } })
-}
-
-export const enableOldHeader = async (page: Page) => {
-  // Set the `new_header` cookie to `off`, should be called before `page.goto`.
-  await setCookies(page.context(), { features: { new_header: "off" } })
 }
 
 export interface CookieMap {

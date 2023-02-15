@@ -1,21 +1,10 @@
 <template>
   <div>
-    <div
-      v-if="backToSearchPath"
-      class="w-full py-2 px-2 md:px-6"
-      :class="{ 'bg-dark-charcoal-06': !isNewHeaderEnabled }"
-    >
+    <div v-if="backToSearchPath" class="w-full py-2 px-2 md:px-6">
       <VBackToSearchResultsLink :href="backToSearchPath" />
     </div>
 
-    <figure
-      class="relative mb-4 px-6"
-      :class="
-        isNewHeaderEnabled
-          ? 'border-b border-dark-charcoal-20'
-          : 'bg-dark-charcoal-06 pt-4 md:pt-8'
-      "
-    >
+    <figure class="relative mb-4 border-b border-dark-charcoal-20 px-6">
       <img
         v-if="!sketchFabUid"
         id="main-image"
@@ -104,7 +93,6 @@ import { IMAGE } from "~/constants/media"
 import type { ImageDetail } from "~/types/media"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSearchStore } from "~/stores/search"
 import { createDetailPageMeta } from "~/utils/og"
 
@@ -151,11 +139,6 @@ export default defineComponent({
       singleResultStore.mediaType === IMAGE
         ? (singleResultStore.mediaItem as ImageDetail)
         : null
-    )
-
-    const featureFlagStore = useFeatureFlagStore()
-    const isNewHeaderEnabled = computed(() =>
-      featureFlagStore.isOn("new_header")
     )
 
     const backToSearchPath = computed(() => route.value.meta?.backToSearchPath)
@@ -244,7 +227,6 @@ export default defineComponent({
       onImageError,
       backToSearchPath,
       externalIcon,
-      isNewHeaderEnabled,
     }
   },
   async asyncData({ app, error, route, $pinia }) {

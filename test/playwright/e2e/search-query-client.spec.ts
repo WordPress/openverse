@@ -2,7 +2,6 @@ import { expect, test } from "@playwright/test"
 
 import {
   changeContentType,
-  enableNewHeader,
   goToSearchTerm,
   searchFromHeader,
 } from "~~/test/playwright/utils/navigation"
@@ -28,9 +27,8 @@ test.describe.configure({ mode: "parallel" })
 
 test.describe("search query on CSR", () => {
   breakpoints.describeMobileAndDesktop(() => {
-    test.beforeEach(async ({ context, page }) => {
+    test.beforeEach(async ({ context }) => {
       await mockProviderApis(context)
-      await enableNewHeader(page)
     })
 
     test("q query parameter is set as the search term", async ({ page }) => {

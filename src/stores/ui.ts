@@ -1,7 +1,5 @@
 import { defineStore } from "pinia"
 
-import { computed } from "@nuxtjs/composition-api"
-
 import { useNavigationStore } from "~/stores/navigation"
 
 import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
@@ -9,7 +7,6 @@ import type { BannerId, TranslationBannerId } from "~/types/banners"
 
 import type { Breakpoint } from "~/constants/screens"
 import { ALL_SCREEN_SIZES } from "~/constants/screens"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { cookieOptions } from "~/utils/cookies"
 import { needsTranslationBanner } from "~/utils/translation-banner"
 
@@ -65,15 +62,6 @@ export const useUiStore = defineStore("ui", {
       return state.instructionsSnackbarState === "visible"
     },
 
-    desktopBreakpoints(): Breakpoint[] {
-      const featureFlagStore = useFeatureFlagStore()
-      const isNewHeaderEnabled = computed(() =>
-        featureFlagStore.isOn("new_header")
-      )
-      return isNewHeaderEnabled.value
-        ? desktopBreakpoints
-        : [...desktopBreakpoints, "md"]
-    },
     /**
      * On desktop, we only hide the filters sidebar if it was
      * specifically dismissed on the desktop layout.
@@ -160,9 +148,6 @@ export const useUiStore = defineStore("ui", {
 
     updateCookies() {
       const opts = { ...cookieOptions }
-      if (!useFeatureFlagStore().isOn("new_header")) {
-        opts.sameSite = "none"
-      }
 
       this.$nuxt.$cookies.setAll([
         {
@@ -188,15 +173,11 @@ export const useUiStore = defineStore("ui", {
       }
 
       this.breakpoint = breakpoint
-      const sameSite = useFeatureFlagStore().isOn("new_header")
-        ? cookieOptions.sameSite
-        : "none"
 
       this.$nuxt.$cookies.set("uiBreakpoint", this.breakpoint, {
         ...cookieOptions,
-        sameSite,
       })
-      this.isDesktopLayout = this.desktopBreakpoints.includes(breakpoint)
+      this.isDesktopLayout = desktopBreakpoints.includes(breakpoint)
     },
 
     /**
@@ -210,13 +191,9 @@ export const useUiStore = defineStore("ui", {
       this.innerFilterVisible = visible
       if (this.isDesktopLayout) {
         this.isFilterDismissed = !visible
-        const sameSite = useFeatureFlagStore().isOn("new_header")
-          ? cookieOptions.sameSite
-          : "none"
 
         this.$nuxt.$cookies.set("uiIsFilterDismissed", this.isFilterDismissed, {
           ...cookieOptions,
-          sameSite,
         })
       }
     },
@@ -237,13 +214,9 @@ export const useUiStore = defineStore("ui", {
       }
 
       this.dismissedBanners.push(bannerId)
-      const sameSite = useFeatureFlagStore().isOn("new_header")
-        ? cookieOptions.sameSite
-        : "none"
 
       this.$nuxt.$cookies.set("uiDismissedBanners", this.dismissedBanners, {
         ...cookieOptions,
-        sameSite,
       })
     },
     isBannerDismissed(bannerId: BannerId) {

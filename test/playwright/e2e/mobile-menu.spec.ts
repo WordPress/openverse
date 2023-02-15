@@ -3,7 +3,6 @@ import { test, expect } from "@playwright/test"
 import {
   closeFilters,
   closeMobileMenu,
-  enableNewHeader,
   goToSearchTerm,
   isMobileMenuOpen,
   openContentTypes,
@@ -15,10 +14,6 @@ test.describe.configure({ mode: "parallel" })
 
 test.describe("mobile menu", () => {
   breakpoints.describeSm(() => {
-    test.beforeEach(async ({ page }) => {
-      await enableNewHeader(page)
-    })
-
     test("Can open filters menu on mobile at least twice", async ({ page }) => {
       await page.goto("/search/?q=cat")
 

@@ -32,12 +32,6 @@
             class="flex w-full shrink-0 justify-between py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
             :class="[$style[`top-bar-${variant}`], $style[`top-bar-${mode}`]]"
           >
-            <VLogoButtonOld
-              class="md:hidden"
-              :is-fetching="false"
-              :is-header-scrolled="false"
-              :is-search-route="true"
-            />
             <VButton
               ref="closeButton"
               size="disabled"
@@ -82,7 +76,6 @@ import type { ModalColorMode, ModalVariant } from "~/types/modal"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VLogoButtonOld from "~/components/VHeaderOld/VLogoButtonOld.vue"
 
 import closeIcon from "~/assets/icons/close.svg"
 
@@ -91,7 +84,7 @@ import closeIcon from "~/assets/icons/close.svg"
  */
 export default defineComponent({
   name: "VModalContent",
-  components: { VTeleport, VButton, VIcon, VLogoButtonOld },
+  components: { VTeleport, VButton, VIcon },
   inheritAttrs: false,
   props: {
     visible: {

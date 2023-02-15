@@ -6,7 +6,6 @@ import breakpoints, {
 import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {
   closeFilters,
-  enableNewHeader,
   goToSearchTerm,
   languageDirections,
   scrollToBottom,
@@ -26,7 +25,6 @@ for (const dir of languageDirections) {
           await setCookies(context, { uiIsDesktopLayout: true })
         }
 
-        await enableNewHeader(page)
         await goToSearchTerm(page, "birds", { dir })
       })
 
