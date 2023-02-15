@@ -17,6 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: pnpm/action-setup@v2.2.4
+        with:
+          # Ensure that it matchers `packageManager` field.
+          version: 7.17.1
 
       - name: Cache pnpm modules
         uses: actions/cache@v3
