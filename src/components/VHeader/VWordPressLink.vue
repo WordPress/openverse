@@ -1,6 +1,9 @@
 <template>
   <VLink
     href="https://wordpress.org"
+    :aria-label="
+      $t('footer.wordpress-affiliation', { wordpress: 'WordPress' }).toString()
+    "
     :class="mode === 'light' ? 'text-dark-charcoal' : 'text-white'"
     class="hover:no-underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-pink focus-visible:ring-offset-1 focus-visible:ring-offset-tx"
   >
@@ -10,8 +13,7 @@
       class="label-regular flex flex-row items-center gap-1"
     >
       <template #wordpress>
-        <WordPress class="aria-hidden" />
-        <span class="sr-only">WordPress</span>
+        <WordPress />
       </template>
     </i18n>
   </VLink>
