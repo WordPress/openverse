@@ -1,120 +1,58 @@
 <template>
   <VContentPage>
-    <h1>
-      {{ $t("search-guide.title", { openverse: "Openverse" }) }}
-    </h1>
-    <p>
-      {{ $t("search-guide.intro") }}
-    </p>
+    <h1>{{ $t("search-guide.title", { openverse: "Openverse" }) }}</h1>
+    <p>{{ $t("search-guide.intro") }}</p>
 
-    <h2>
-      {{ $t("search-guide.exact.title") }}
-    </h2>
+    <h2>{{ $t("search-guide.exact.title") }}</h2>
     <i18n path="search-guide.exact.content" tag="p">
       <template #link>
-        <!-- eslint-disable -->
         <VLink
           :aria-label="$t('search-guide.exact.aria-label')"
-          :href="pathFromQuery('Claude Monet', true)"
+          :href="pathFromQuery('&quot;Claude Monet&quot;')"
         >
           <em>{{ $t("search-guide.exact.claude-monet") }}</em>
         </VLink>
-        <!-- eslint-enable -->
       </template>
     </i18n>
 
-    <h2>
-      {{ $t("search-guide.combine.title") }}
-    </h2>
+    <h2>{{ $t("search-guide.combine.title") }}</h2>
 
-    <p>
-      {{ $t("search-guide.combine.description") }}
-    </p>
-    <ul>
-      <i18n path="search-guide.combine.and" tag="li">
-        <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-        <template #symbol>
-          <code
-            :aria-label="$t('search-guide.combine.aria-labels.plus').toString()"
-            >+
-          </code>
-        </template>
-      </i18n>
-      <i18n path="search-guide.combine.or" tag="li">
+    <p>{{ $t("search-guide.combine.description") }}</p>
+    <ul class="not-prose marker:text-dark-charcoal-20">
+      <i18n
+        v-for="[name, operator] in Object.entries(operators)"
+        :key="name"
+        :path="`search-guide.combine.${name}`"
+        tag="li"
+      >
         <template #symbol>
           <code
             :aria-label="
-              $t('search-guide.combine.aria-labels.vertical-bar').toString()
+              $t(`search-guide.combine.aria-labels.${name}`).toString()
             "
-            >|
-          </code>
-        </template>
-      </i18n>
-      <i18n path="search-guide.combine.negate" tag="li">
-        <template #symbol>
-          <code
-            :aria-label="
-              $t('search-guide.combine.aria-labels.minus').toString()
-            "
-            >-
-          </code>
-        </template>
-      </i18n>
-      <i18n path="search-guide.combine.prefix" tag="li">
-        <template #symbol>
-          <code
-            :aria-label="$t('search-guide.combine.aria-labels.star').toString()"
-            >*
-          </code>
-        </template>
-      </i18n>
-      <i18n path="search-guide.combine.precedence" tag="li">
-        <template #open>
-          <code
-            :aria-label="$t('search-guide.combine.aria-labels.open').toString()"
-            >(
-          </code>
-        </template>
-        <template #close>
-          <code
-            :aria-label="
-              $t('search-guide.combine.aria-labels.close').toString()
-            "
-            >)
-          </code>
-        </template>
-      </i18n>
-      <i18n path="search-guide.combine.fuzziness" tag="li">
-        <template #symbol>
-          <code
-            :aria-label="
-              $t('search-guide.combine.aria-labels.fuzziness').toString()
-            "
-            >~N
-          </code>
+            >{{ operator.symbol }}</code
+          >
         </template>
       </i18n>
     </ul>
-
+    <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
     <i18n path="search-guide.example.and.description" tag="p">
       <template #link>
         <VLink
           :aria-label="$t('search-guide.example.and.aria-label').toString()"
-          :href="pathFromQuery('dog%2Bcat')"
+          :href="pathFromQuery('dog+cat')"
         >
           <em>{{ $t("search-guide.example.and.example") }}</em>
         </VLink>
       </template>
-      <template #br>
-        <br />
-      </template>
+      <template #br><br /></template>
     </i18n>
 
     <i18n path="search-guide.example.or.description" tag="p">
       <template #link>
         <VLink
           :aria-label="$t('search-guide.example.or.aria-label')"
-          :href="pathFromQuery('dog%7Ccat')"
+          :href="pathFromQuery('dog|cat')"
         >
           <em>{{ $t("search-guide.example.or.example").toString() }}</em>
         </VLink>
@@ -140,7 +78,7 @@
       <template #link>
         <VLink
           :aria-label="$t('search-guide.example.negate.aria-label')"
-          :href="pathFromQuery('dog%20-pug')"
+          :href="pathFromQuery('dog -pug')"
         >
           <em>{{ $t("search-guide.example.negate.example") }}</em>
         </VLink>
@@ -164,7 +102,7 @@
       <template #link>
         <VLink
           :aria-label="$t('search-guide.example.prefix.aria-label')"
-          :href="pathFromQuery('net%2a')"
+          :href="pathFromQuery('net*')"
         >
           <em>{{ $t("search-guide.example.prefix.example") }}</em>
         </VLink>
@@ -184,7 +122,7 @@
       <template #link>
         <VLink
           :aria-label="$t('search-guide.example.precedence.aria-label')"
-          :href="pathFromQuery('dogs%20%2B%20%28corgis%20%7C%20labrador%29')"
+          :href="pathFromQuery('dog (corgis | labrador)')"
         >
           <em>{{ $t("search-guide.example.precedence.example") }}</em>
         </VLink>
@@ -232,6 +170,19 @@ import { useI18n } from "~/composables/use-i18n"
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
 
+const operators = {
+  and: { symbol: "+", query: "dog+cat" },
+  not: { symbol: "-", query: "dog-cat" },
+  or: { symbol: "|", query: "dog|cat" },
+  prefix: { symbol: "*", query: "net*" },
+  precedence: { symbol: "()", query: "dogs+(corgis|labrador)" },
+  fuzziness: {
+    symbol: "~",
+    query: "theatre~1",
+    reference: "https://en.wikipedia.org/wiki/Levenshtein_distance",
+  },
+}
+
 export default defineComponent({
   name: "VSearchHelpPage",
   components: { VLink, VContentPage },
@@ -247,17 +198,12 @@ export default defineComponent({
       meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
 
-    const pathFromQuery = (queryString: string, quote = false) => {
+    const pathFromQuery = (queryString: string) => {
       return searchStore.getSearchPath({
-        query: {
-          q: quote ? `"${queryString}"` : queryString,
-        },
+        query: { q: queryString },
       })
     }
-    const providerSearchLink = (providerCode: string) => {
-      return `https://search.creativecommons.org/search?q=provider%3A%20"${providerCode}"`
-    }
-    return { pathFromQuery, providerSearchLink }
+    return { pathFromQuery, operators }
   },
   head: {},
 })
