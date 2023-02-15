@@ -7,6 +7,12 @@ from rest_framework import serializers
 from rest_framework.exceptions import NotAuthenticated
 
 from catalog.api.constants.licenses import LICENSE_GROUPS
+from catalog.api.constants.sorting import (
+    DESCENDING,
+    RELEVANCE,
+    SORT_DIRECTIONS,
+    SORT_FIELDS,
+)
 from catalog.api.controllers import search_controller
 from catalog.api.models.media import AbstractMedia
 from catalog.api.serializers.base import BaseModelSerializer
@@ -42,6 +48,8 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         "extension",
         "mature",
         "qa",
+        # "unstable__sort_by",  # excluding unstable fields
+        # "unstable__sort_dir",  # excluding unstable fields
         "page_size",
         "page",
     ]
@@ -109,6 +117,28 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         required=False,
         default=False,
     )
+
+    # The ``unstable__`` prefix is used in the query params.
+    # The validated data does not contain the ``unstable__`` prefix.
+    # If you rename these fields, update the following references:
+    #   - ``field_names`` in ``MediaSearchRequestSerializer``
+    #   - validators for these fields in ``MediaSearchRequestSerializer``
+    unstable__sort_by = serializers.ChoiceField(
+        source="sort_by",
+        help_text="The field which should be the basis for sorting results.",
+        choices=SORT_FIELDS,
+        required=False,
+        default=RELEVANCE,
+    )
+    unstable__sort_dir = serializers.ChoiceField(
+        source="sort_dir",
+        help_text="The direction of sorting. Cannot be applied when sorting by "
+        "`relevance`.",
+        choices=SORT_DIRECTIONS,
+        required=False,
+        default=DESCENDING,
+    )
+
     page_size = serializers.IntegerField(
         label="page_size",
         help_text="Number of results to return per page.",
@@ -169,6 +199,16 @@ class MediaSearchRequestSerializer(serializers.Serializer):
 
     def validate_title(self, value):
         return self._truncate(value)
+
+    def validate_unstable__sort_by(self, value):
+        request = self.context.get("request")
+        is_anonymous = bool(request and request.user and request.user.is_anonymous)
+        return RELEVANCE if is_anonymous else value
+
+    def validate_unstable__sort_dir(self, value):
+        request = self.context.get("request")
+        is_anonymous = bool(request and request.user and request.user.is_anonymous)
+        return DESCENDING if is_anonymous else value
 
     def validate_page_size(self, value):
         request = self.context.get("request")
@@ -314,6 +354,7 @@ class MediaSerializer(BaseModelSerializer):
         model = AbstractMedia
         fields = [
             "id",
+            "indexed_on",
             "title",
             "foreign_landing_url",
             "url",
@@ -343,6 +384,11 @@ class MediaSerializer(BaseModelSerializer):
     id = serializers.CharField(
         help_text="Our unique identifier for an open-licensed work.",
         source="identifier",
+    )
+
+    indexed_on = serializers.DateTimeField(
+        source="created_on",
+        help_text="The timestamp of when the media was indexed by Openverse.",
     )
 
     tags = TagSerializer(

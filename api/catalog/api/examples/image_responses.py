@@ -8,6 +8,7 @@ identifier = "4bc43a04-ef46-4544-a0c1-63c63f56e276"
 base_image = {
     "id": identifier,
     "title": "Tree Bark Photo",
+    "indexed_on": "2022-08-27T17:39:48Z",
     "foreign_landing_url": "https://stocksnap.io/photo/XNVBVXO3B7",
     "url": "https://cdn.stocksnap.io/img-thumbs/960w/XNVBVXO3B7.jpg",
     "creator": "Tim Sullivan",

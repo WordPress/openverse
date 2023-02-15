@@ -97,6 +97,31 @@ def test_auth_rate_limit_reporting(
 
 
 @pytest.mark.django_db
+@pytest.mark.parametrize(
+    "sort_dir, exp_indexed_on",
+    [
+        ("desc", "2022-12-31"),
+        ("asc", "2022-01-01"),
+    ],
+)
+def test_sorting_authed(
+    client, monkeypatch, test_auth_token_exchange, sort_dir, exp_indexed_on
+):
+    # Prevent DB lookup for ES results because DB is empty.
+    monkeypatch.setattr("catalog.api.views.image_views.ImageSerializer.needs_db", False)
+
+    time.sleep(1)
+    token = test_auth_token_exchange["access_token"]
+    query_params = {"unstable__sort_by": "indexed_on", "unstable__sort_dir": sort_dir}
+    res = client.get("/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}")
+    assert res.status_code == 200
+
+    res_data = res.json()
+    indexed_on = res_data["results"][0]["indexed_on"][:10]  # ``indexed_on`` is ISO.
+    assert indexed_on == exp_indexed_on
+
+
+@pytest.mark.django_db
 def test_page_size_limit_unauthed(client):
     query_params = {"page_size": 20}
     res = client.get("/v1/images/", query_params)

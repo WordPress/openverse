@@ -5,7 +5,7 @@ import logging as log
 import pprint
 from itertools import accumulate
 from math import ceil
-from typing import Any, Literal
+from typing import Literal
 
 from django.conf import settings
 from django.core.cache import cache
@@ -17,6 +17,8 @@ from elasticsearch_dsl.query import EMPTY_QUERY, MoreLikeThis, Query
 from elasticsearch_dsl.response import Hit, Response
 
 import catalog.api.models as models
+from catalog.api.constants.sorting import INDEXED_ON
+from catalog.api.serializers import media_serializers
 from catalog.api.utils import tallies
 from catalog.api.utils.dead_link_mask import get_query_hash, get_query_mask
 from catalog.api.utils.validate_images import validate_images
@@ -220,8 +222,7 @@ def _post_process_results(
 
 def _apply_filter(
     s: Search,
-    # Any is used here to avoid a circular import
-    search_params: Any,  # MediaSearchRequestSerializer
+    search_params: media_serializers.MediaSearchRequestSerializer,
     serializer_field: str,
     es_field: str | None = None,
     behaviour: Literal["filter", "exclude"] = "filter",
@@ -278,8 +279,7 @@ def _exclude_mature_by_param(s: Search, search_params):
 
 
 def search(
-    # Any is used here to avoid a circular import
-    search_params: Any,  # MediaSearchRequestSerializer
+    search_params: media_serializers.MediaSearchRequestSerializer,
     index: Literal["image", "audio"],
     page_size: int,
     ip: int,
@@ -390,6 +390,11 @@ def search(
     # Route users to the same Elasticsearch worker node to reduce
     # pagination inconsistencies and increase cache hits.
     s = s.params(preference=str(ip), request_timeout=7)
+
+    # Sort by new
+    if search_params.validated_data["sort_by"] == INDEXED_ON:
+        s = s.sort({"created_on": {"order": search_params.validated_data["sort_dir"]}})
+
     # Paginate
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]

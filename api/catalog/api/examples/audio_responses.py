@@ -8,6 +8,7 @@ identifier = "8624ba61-57f1-4f98-8a85-ece206c319cf"
 base_audio = {
     "id": identifier,
     "title": "Wish You Were Here",
+    "indexed_on": "2022-12-06T06:54:25Z",
     "foreign_landing_url": "https://www.jamendo.com/track/1214935",
     "url": "https://mp3d.jamendo.com/download/track/1214935/mp32",
     "creator": "The.madpix.project",

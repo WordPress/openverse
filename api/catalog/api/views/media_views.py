@@ -63,12 +63,17 @@ class MediaViewSet(ReadOnlyModelViewSet):
         return req_serializer
 
     def get_db_results(self, results):
-        hit_map = {hit.identifier: hit for hit in results}
-        results = self.get_queryset().filter(identifier__in=hit_map.keys())
-        for obj in results:
-            obj.fields_matched = getattr(
-                hit_map[str(obj.identifier)], "fields_matched", None
-            )
+        identifiers = []
+        hits = []
+        for hit in results:
+            identifiers.append(hit.identifier)
+            hits.append(hit)
+
+        results = list(self.get_queryset().filter(identifier__in=identifiers))
+        results.sort(key=lambda x: identifiers.index(str(x.identifier)))
+        for result, hit in zip(results, hits):
+            result.fields_matched = getattr(hit, "fields_matched", None)
+
         return results
 
     # Standard actions
