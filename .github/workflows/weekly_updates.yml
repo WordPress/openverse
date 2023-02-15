@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: pnpm/action-setup@v2.2.4
         with:
-          # Ensure that it matchers `packageManager` field.
+          # Ensure that this value matches `packageManager` field.
           version: 7.17.1
 
       - name: Cache pnpm modules
