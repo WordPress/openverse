@@ -175,7 +175,6 @@ export default defineComponent({
     /**
      * Find the last focusable element in VSearchGridFilter to add a 'Tab' keydown event
      * handler to it.
-     * We could actually hard-code this because 'searchBy' is always the last now.
      */
     const lastFocusableElement = computed<HTMLElement>(() => {
       const focusable = getFocusableElements(sectionRef.value)

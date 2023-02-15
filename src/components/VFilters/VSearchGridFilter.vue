@@ -108,9 +108,7 @@ export default defineComponent({
       () => Object.keys(filters.value) as NonMatureFilterCategory[]
     )
     const filterTypeTitle = (filterType: string) =>
-      filterType === "searchBy"
-        ? ""
-        : i18n.t(`filters.${kebab(filterType)}.title`)
+      i18n.t(`filters.${kebab(filterType)}.title`)
 
     /**
      * This watcher fires even when the queries are equal. We update the path only

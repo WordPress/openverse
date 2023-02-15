@@ -37,9 +37,9 @@ const assertCheckboxCount = async (
 }
 
 const FILTER_COUNTS = {
-  [ALL_MEDIA]: 11,
-  [AUDIO]: 32,
-  [IMAGE]: 70,
+  [ALL_MEDIA]: 10,
+  [AUDIO]: 31,
+  [IMAGE]: 69,
 }
 
 breakpoints.describeMobileAndDesktop(() => {
@@ -63,7 +63,8 @@ breakpoints.describeMobileAndDesktop(() => {
       "/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator"
     )
     await openFilters(page)
-    const expectedFilters = ["cc0", "commercial", "creator"]
+    // Creator filter was removed from the UI
+    const expectedFilters = ["cc0", "commercial"]
 
     for (const checkbox of expectedFilters) {
       await assertCheckboxStatus(page, checkbox)
@@ -77,7 +78,8 @@ breakpoints.describeMobileAndDesktop(() => {
       "/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator"
     )
     await openFilters(page)
-    const expectedFilters = ["cc0", "commercial", "creator"]
+    // Creator filter was removed from the UI
+    const expectedFilters = ["cc0", "commercial"]
 
     for (const checkbox of expectedFilters) {
       await assertCheckboxStatus(page, checkbox)
@@ -101,14 +103,15 @@ breakpoints.describeMobileAndDesktop(() => {
     )
     await openFilters(page)
 
-    for (const checkbox of ["cc0", "commercial", "creator"]) {
+    // Creator filter was removed from the UI
+    for (const checkbox of ["cc0", "commercial"]) {
       await assertCheckboxStatus(page, checkbox)
     }
 
     await changeContentType(page, "All content")
 
     await openFilters(page)
-    await expect(page.locator('input[type="checkbox"]:checked')).toHaveCount(3)
+    await expect(page.locator('input[type="checkbox"]:checked')).toHaveCount(2)
 
     await expect(page).toHaveURL(
       "/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator"

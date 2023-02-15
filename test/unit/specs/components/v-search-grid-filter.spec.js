@@ -72,6 +72,6 @@ describe("VSearchGridFilter", () => {
 
     expect(checkedFilters.length).toEqual(0)
     // Filters are reset with the initial `filterData` for ALL_MEDIA
-    expect(uncheckedFilters.length).toEqual(11)
+    expect(uncheckedFilters.length).toEqual(10)
   })
 })

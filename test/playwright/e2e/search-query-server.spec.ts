@@ -69,7 +69,8 @@ test.describe("search query on SSR", () => {
       })
 
       await openFilters(page)
-      for (const checkbox of ["cc0", "commercial", "creator"]) {
+      // Creator filter was removed from the UI
+      for (const checkbox of ["cc0", "commercial"]) {
         await assertCheckboxStatus(page, checkbox)
       }
     })

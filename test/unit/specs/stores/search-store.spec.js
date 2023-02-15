@@ -79,7 +79,7 @@ describe("Search Store", () => {
         const searchStore = useSearchStore()
         searchStore.setSearchType(searchType)
         const filtersForDisplay = searchStore.searchFilters
-        const expectedFilterCount = Math.max(0, filterTypeCount - 1)
+        const expectedFilterCount = Math.max(0, filterTypeCount - 2)
         expect(Object.keys(filtersForDisplay).length).toEqual(
           expectedFilterCount
         )
