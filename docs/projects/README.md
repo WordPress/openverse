@@ -65,8 +65,8 @@ relevant step of the process is complete.
 
 ## Providing project updates
 
-At all stages of a project (except for `Not Started` projects), fortnightly public
-updates are the best way for Openverse contributors and maintainers to
+At all stages of a project (except for `Not Started` projects), fortnightly
+public updates are the best way for Openverse contributors and maintainers to
 understand the health of a project. Importantly, these updates allow us to
 allocate more time or material resources to projects that need them before work
 stalls completely.
