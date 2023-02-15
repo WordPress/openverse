@@ -101,7 +101,7 @@ def get_authenticated_html(url: str) -> str:
         browser.submit()
 
         browser.select_form(nr=0)  # focus on the first (and only) form on the page
-        browser.form["otp"] = pyotp.TOTP(os.getenv("GH_2FA_SECRET")).now()
+        browser.form["app_otp"] = pyotp.TOTP(os.getenv("GH_2FA_SECRET")).now()
         browser.submit()
     except mechanize.ControlNotFoundError as err:
         form_name = err.args[0].replace("no control matching name ", "").strip("'")
