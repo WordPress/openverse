@@ -10,7 +10,6 @@
       :search-type="searchType"
       :results-count="resultCount"
       data-testid="search-grid"
-      @tab="handleTab($event, 'search-grid')"
     >
       <template #media>
         <NuxtChild
@@ -27,7 +26,6 @@
       v-show="showScrollButton"
       :is-filter-sidebar-visible="isSidebarVisible"
       data-testid="scroll-button"
-      @tab="handleTab($event, 'scroll-button')"
     />
   </VSkipToContentContainer>
 </template>
@@ -36,7 +34,6 @@
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, defineComponent, inject, ref } from "@nuxtjs/composition-api"
 
-import { Focus, focusIn } from "~/utils/focus-management"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { IsSidebarVisibleKey } from "~/types/provides"
@@ -160,12 +157,6 @@ export default defineComponent({
     },
   },
   methods: {
-    handleTab(event: KeyboardEvent, element: string) {
-      if (this.showScrollButton.value && element !== "scroll-button") {
-        return
-      }
-      focusIn(document.getElementById("__layout"), Focus.First)
-    },
     fetchMedia(payload: { shouldPersistMedia?: boolean } = {}) {
       const mediaStore = useMediaStore(this.$pinia)
       return mediaStore.fetchMedia(payload)

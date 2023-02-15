@@ -42,7 +42,6 @@
       aria-haspopup="dialog"
       :aria-expanded="isSidebarVisible"
       @toggle="toggleSidebar"
-      @tab="onTab"
     />
   </header>
 </template>
@@ -55,10 +54,8 @@ import { useUiStore } from "~/stores/ui"
 
 import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
-import { useFocusFilters } from "~/composables/use-focus-filters"
 import { useSearch } from "~/composables/use-search"
 
-import { Focus } from "~/utils/focus-management"
 import { ensureFocus } from "~/utils/reakit-utils/focus"
 
 import VFilterButton from "~/components/VHeader/VFilterButton.vue"
@@ -113,15 +110,6 @@ export default defineComponent({
 
     const toggleSidebar = () => uiStore.toggleFilters()
 
-    const focusFilters = useFocusFilters()
-    /**
-     * Focus the first element in the sidebar when navigating from the VFilterButton
-     * using keyboard `Tab` key.
-     */
-    const onTab = (event: KeyboardEvent) => {
-      focusFilters.focusFilterSidebar(event, Focus.First)
-    }
-
     const isXl = computed(() => uiStore.isBreakpoint("xl"))
 
     return {
@@ -140,7 +128,6 @@ export default defineComponent({
       searchStatus,
       searchTerm,
       toggleSidebar,
-      onTab,
     }
   },
 })

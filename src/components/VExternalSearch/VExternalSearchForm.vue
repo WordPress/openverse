@@ -4,7 +4,6 @@
     ref="sectionRef"
     class="external-sources flex flex-row place-items-center justify-center py-4"
     data-testid="external-sources-form"
-    @keydown.tab.exact="handleTab"
   >
     <i18n
       v-if="!hasNoResults && isSupported"
@@ -95,7 +94,6 @@ import {
   SetupContext,
 } from "@nuxtjs/composition-api"
 
-import { getFocusableElements } from "~/utils/focus-management"
 import { defineEvent } from "~/types/emits"
 
 import { useUiStore } from "~/stores/ui"
@@ -172,25 +170,10 @@ export default defineComponent({
       emit: emit as SetupContext["emit"],
     })
 
-    /**
-     * Find the last focusable element in VSearchGridFilter to add a 'Tab' keydown event
-     * handler to it.
-     */
-    const lastFocusableElement = computed<HTMLElement>(() => {
-      const focusable = getFocusableElements(sectionRef.value)
-      return focusable[focusable.length - 1]
-    })
-
-    const handleTab = (event: KeyboardEvent) => {
-      if (event.target === lastFocusableElement.value) {
-        emit("tab", event)
-      }
-    }
     return {
       sectionRef,
       triggerRef,
       triggerElement,
-      handleTab,
       isMd,
 
       closeDialog,

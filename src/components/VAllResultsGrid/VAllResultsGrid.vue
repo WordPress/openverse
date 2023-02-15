@@ -5,13 +5,12 @@
       class="results-grid mb-4 grid grid-cols-2 gap-4 lg:grid-cols-5 2xl:grid-cols-6"
     >
       <VContentLink
-        v-for="([mediaType, count], i) in resultCounts"
+        v-for="[mediaType, count] in resultCounts"
         :key="mediaType"
         :media-type="mediaType"
         :results-count="count"
         :to="contentLinkPath(mediaType)"
         class="lg:col-span-2"
-        @shift-tab="handleShiftTab($event, i)"
       />
     </div>
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
@@ -58,10 +57,7 @@ import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
-import { useFocusFilters } from "~/composables/use-focus-filters"
 import { useI18n } from "~/composables/use-i18n"
-
-import { Focus } from "~/utils/focus-management"
 
 import VSnackbar from "~/components/VSnackbar.vue"
 import VImageCellSquare from "~/components/VAllResultsGrid/VImageCellSquare.vue"
@@ -112,17 +108,6 @@ export default defineComponent({
     const noResults = computed(
       () => fetchState.value.isFinished && allMedia.value.length === 0
     )
-    const focusFilters = useFocusFilters()
-    /**
-     * Move focus to the filters sidebar if shift-tab is pressed on the first content link.
-     * @param i - the index of the content link.
-     * @param event - keydown event
-     */
-    const handleShiftTab = (event: KeyboardEvent, i: number) => {
-      if (i === 0) {
-        focusFilters.focusFilterSidebar(event, Focus.Last)
-      }
-    }
 
     const uiStore = useUiStore()
     const isSnackbarVisible = computed(() => uiStore.areInstructionsVisible)
@@ -142,7 +127,6 @@ export default defineComponent({
       resultsLoading,
       resultCounts,
       noResults,
-      handleShiftTab,
 
       contentLinkPath,
 

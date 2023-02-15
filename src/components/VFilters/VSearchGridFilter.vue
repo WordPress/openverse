@@ -13,17 +13,11 @@
         variant="plain"
         class="label-bold absolute py-1 px-4 text-pink end-0 hover:ring hover:ring-pink"
         @click="clearFilters"
-        @keydown.shift.tab.exact="focusFilterButton"
       >
         {{ $t("filter-list.clear") }}
       </VButton>
     </header>
-    <form
-      ref="filtersFormRef"
-      class="filters-form"
-      @keydown.tab.exact="handleTabKey"
-      @keydown.shift.tab.exact="handleShiftTabKey"
-    >
+    <form ref="filtersFormRef" class="filters-form">
       <VFilterChecklist
         v-for="filterType in filterTypes"
         :key="filterType"
@@ -58,9 +52,7 @@ import { watchDebounced } from "@vueuse/core"
 
 import { useSearchStore } from "~/stores/search"
 import { areQueriesEqual, ApiQueryParams } from "~/utils/search-query-transform"
-import { Focus, focusIn, getFocusableElements } from "~/utils/focus-management"
 import type { NonMatureFilterCategory } from "~/constants/filters"
-import { useFocusFilters } from "~/composables/use-focus-filters"
 import { defineEvent } from "~/types/emits"
 
 import VFilterChecklist from "~/components/VFilters/VFilterChecklist.vue"
@@ -94,7 +86,7 @@ export default defineComponent({
   emits: {
     close: defineEvent(),
   },
-  setup(props) {
+  setup() {
     const searchStore = useSearchStore()
 
     const { i18n } = useContext()
@@ -124,60 +116,7 @@ export default defineComponent({
       { debounce: 800, maxWait: 5000 }
     )
 
-    const focusableElements = computed(() =>
-      getFocusableElements(filtersFormRef.value)
-    )
-    /**
-     * Find the last focusable element in VSearchGridFilter to add a 'Tab' keydown event
-     * handler to it.
-     * We could actually hard-code this because 'searchBy' is always the last now.
-     */
-    const lastFocusableElement = computed<HTMLElement>(() => {
-      return focusableElements.value[focusableElements.value.length - 1]
-    })
-
-    /**
-     * We add the `Shift-Tab` handler to the first focusable checkbox so that focus can go back
-     * to the filter button
-     */
-    const firstFocusableElement = computed<HTMLElement | undefined>(
-      () => focusableElements.value[0]
-    )
-
-    /**
-     * When the user presses 'Tab' on the last focusable element, we need to
-     * move focus to the first focusable element in main.
-     * @param event
-     */
-    const handleTabKey = (event: KeyboardEvent) => {
-      if (!props.changeTabOrder) return
-      if (lastFocusableElement.value === event.target) {
-        event.preventDefault()
-        focusIn(document.querySelector("main"), Focus.First)
-      }
-    }
-    /**
-     * Move focus to the filter button only when this checkbox is the first focusable
-     * element in the search grid filter, i.e. the 'Clear filters' button is hidden.
-     * @param event - The keydown event
-     */
-    const handleShiftTabKey = (event: KeyboardEvent) => {
-      if (!props.changeTabOrder) return
-      if (
-        firstFocusableElement.value === event.target &&
-        !isAnyFilterApplied.value
-      ) {
-        focusFilterButton(event)
-      }
-    }
-
-    const focusFilters = useFocusFilters()
-    const focusFilterButton = (event?: KeyboardEvent) => {
-      focusFilters.focusFilterButton(event)
-    }
-
     return {
-      firstFocusableElement,
       filtersFormRef,
       isAnyFilterApplied,
       filters,
@@ -185,9 +124,6 @@ export default defineComponent({
       filterTypeTitle,
       clearFilters: searchStore.clearFilters,
       toggleFilter: searchStore.toggleFilter,
-      handleTabKey,
-      handleShiftTabKey,
-      focusFilterButton,
     }
   },
 })

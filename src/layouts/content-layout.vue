@@ -1,9 +1,16 @@
 <template>
   <div
-    class="app flex min-h-screen min-h-[100dvh] flex-col bg-white"
-    :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]"
+    class="app flex grid min-h-screen min-h-[100dvh] grid-rows-[auto,1fr] bg-white"
+    :class="[
+      isDesktopLayout ? 'desktop' : 'mobile',
+      breakpoint,
+      { 'has-sidebar': isSidebarVisible },
+      isSidebarVisible
+        ? 'grid-cols-[1fr_var(--filter-sidebar-width)]'
+        : 'grid-cols-1',
+    ]"
   >
-    <div class="sticky top-0 z-40 block">
+    <div class="header-el sticky top-0 z-40 block">
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
       <VBanners />
       <template v-if="isSearchHeader">
@@ -17,32 +24,20 @@
       />
     </div>
 
-    <main
-      class="main grid h-full flex-grow"
-      :class="[
-        { 'has-sidebar': isSidebarVisible },
-        isSidebarVisible
-          ? 'grid-cols-[1fr_var(--filter-sidebar-width)]'
-          : 'grid-cols-1',
-      ]"
+    <aside
+      v-if="isSidebarVisible"
+      class="sidebar fixed z-10 mt-[81px] h-[calc(100vh-81px)] h-[calc(100dvh-81px)] overflow-y-auto border-dark-charcoal-20 bg-dark-charcoal-06 end-0 border-s"
     >
-      <div
-        class="main-page flex h-full w-full min-w-0 flex-col justify-between"
-      >
-        <Nuxt />
-        <VFooter
-          :mode="isSearchHeader ? 'content' : 'search'"
-          class="border-t border-dark-charcoal-20 bg-white"
-        />
-      </div>
+      <VSearchGridFilter class="px-10 pt-8 pb-10" @close="closeSidebar" />
+    </aside>
 
-      <aside
-        v-if="isSidebarVisible"
-        class="sidebar fixed z-10 h-[calc(100vh-81px)] h-[calc(100dvh-81px)] overflow-y-auto border-dark-charcoal-20 bg-dark-charcoal-06 end-0 border-s"
-      >
-        <VSearchGridFilter class="px-10 pt-8 pb-10" @close="closeSidebar" />
-      </aside>
-    </main>
+    <div class="main-page flex h-full w-full min-w-0 flex-col justify-between">
+      <Nuxt />
+      <VFooter
+        :mode="isSearchHeader ? 'content' : 'search'"
+        class="border-t border-dark-charcoal-20 bg-white"
+      />
+    </div>
 
     <VModalTarget class="modal" />
     <VGlobalAudioSection />
@@ -177,5 +172,20 @@ export default defineComponent({
 <style scoped>
 .has-sidebar .sidebar {
   width: var(--filter-sidebar-width);
+}
+.app {
+  grid-template-areas: "header header" "main main";
+}
+.header-el {
+  grid-area: header;
+}
+.main-page {
+  grid-area: main;
+}
+.sidebar {
+  grid-area: sidebar;
+}
+.has-sidebar.app {
+  grid-template-areas: "header header" "main sidebar";
 }
 </style>

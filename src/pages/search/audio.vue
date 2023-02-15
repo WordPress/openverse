@@ -18,14 +18,13 @@
       is-for-tab="audio"
     />
     <VAudioTrack
-      v-for="(audio, i) in results"
+      v-for="audio in results"
       :key="audio.id"
       class="mb-2 md:mb-1"
       :audio="audio"
       :size="audioTrackSize"
       layout="row"
       :search-term="searchTerm"
-      @shift-tab="handleShiftTab($event, i)"
       @interacted="hideSnackbar"
       @mousedown.native="handleMouseDown"
       @focus.native="showSnackbar"
@@ -43,10 +42,7 @@ import {
   inject,
 } from "@nuxtjs/composition-api"
 
-import { useFocusFilters } from "~/composables/use-focus-filters"
 import { useSearchStore } from "~/stores/search"
-
-import { Focus } from "~/utils/focus-management"
 
 import { useUiStore } from "~/stores/ui"
 
@@ -87,13 +83,6 @@ export default defineComponent({
       !isDesktopLayout.value ? "s" : filterVisibleRef.value ? "l" : "m"
     )
 
-    const focusFilters = useFocusFilters()
-    const handleShiftTab = (event: KeyboardEvent, i: number) => {
-      if (i === 0) {
-        focusFilters.focusFilterSidebar(event, Focus.Last)
-      }
-    }
-
     const isMouseDown = ref(false)
     const handleMouseDown = () => {
       isMouseDown.value = true
@@ -118,7 +107,6 @@ export default defineComponent({
       results,
       audioTrackSize,
 
-      handleShiftTab,
       handleMouseDown,
 
       isSnackbarVisible,

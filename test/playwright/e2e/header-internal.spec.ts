@@ -84,7 +84,7 @@ test.describe("Header internal", () => {
       const homeUrl = page.url()
       await clickMenuButton(page)
       await page.getByRole("link", { name: t("navigation.about") }).click()
-      await page.locator("a[href='/']").click()
+      await page.getByRole("link", { name: t("header.home-link") }).click()
       expect(page.url()).toBe(homeUrl)
     })
   })

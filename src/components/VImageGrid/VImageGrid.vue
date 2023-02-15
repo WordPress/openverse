@@ -2,11 +2,10 @@
   <section>
     <div class="image-grid flex flex-wrap gap-4">
       <VImageCell
-        v-for="(image, index) in images"
+        v-for="image in images"
         :key="image.id"
         :image="image"
         :search-term="searchTerm"
-        @shift-tab="handleShiftTab($event, index)"
       />
     </div>
     <h5 v-if="isError && !fetchState.isFinished" class="py-4">
@@ -32,8 +31,6 @@ import { useSearchStore } from "~/stores/search"
 
 import type { FetchState } from "~/types/fetch-state"
 import type { ImageDetail } from "~/types/media"
-
-import { defineEvent } from "~/types/emits"
 
 import VLoadMore from "~/components/VLoadMore.vue"
 import VImageCell from "~/components/VImageGrid/VImageCell.vue"
@@ -61,23 +58,13 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: {
-    "shift-tab": defineEvent(),
-  },
-  setup(props, { emit }) {
+  setup(props) {
     const searchStore = useSearchStore()
 
     const searchTerm = computed(() => searchStore.searchTerm)
     const isError = computed(() => Boolean(props.fetchState.fetchingError))
 
-    const handleShiftTab = (event: KeyboardEvent, index: number) => {
-      if (index === 0) {
-        event.preventDefault()
-        emit("shift-tab")
-      }
-    }
-
-    return { isError, handleShiftTab, searchTerm }
+    return { isError, searchTerm }
   },
 })
 </script>
