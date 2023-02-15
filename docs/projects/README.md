@@ -417,7 +417,7 @@ back the project, or marking it as successful.
 > users, the project should be rolled back immediately, regardless of the
 > evaluation period.
 
-### After Completion (`status: Success`, `status: Reverted`)
+### After Completion (`status: Success`, `status: Rollback`)
 
 Finally, the team should take some time to reflect on the project. A
 project-specific retrospective should be held between the contributors and
