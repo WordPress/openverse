@@ -324,7 +324,7 @@ feel as though they are just able to "do the work".
 It's likely during implementation we'll come across faulty assumptions or new
 problems which require design. It is important that any realization like this
 which blocks or delays the delivery of the project be clearly documented in the
-weekly updates.
+project thread updates.
 
 Ideally, issues stand on their own and do not require reading the full
 implementation plans. For some issues, complexity prevents this from being
@@ -406,7 +406,7 @@ like a surprise or a rash decision to others.
 Frequent feedback on the success criteria can also help contributors come up
 with fast-follow improvements or modifications to the feature that may prevent
 rollback. Project leads should itentify these types of improvements in their
-weekly updates as well.
+project thread updates as well.
 
 After the designated evaluation period we will make a decision about rolling
 back the project, or marking it as successful.
