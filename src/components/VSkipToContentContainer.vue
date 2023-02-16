@@ -1,5 +1,5 @@
 <template>
-  <div ref="containerNode">
+  <Component :is="as" ref="containerNode">
     <slot />
     <VTeleport to="skip-to-content">
       <VButton
@@ -9,11 +9,11 @@
         >{{ $t("skip-to-content") }}</VButton
       >
     </VTeleport>
-  </div>
+  </Component>
 </template>
 
-<script>
-import { defineComponent, ref } from "@nuxtjs/composition-api"
+<script lang="ts">
+import { defineComponent, PropType, ref } from "@nuxtjs/composition-api"
 import { Portal as VTeleport } from "portal-vue"
 
 import { ensureFocus, getFirstTabbableIn } from "~/utils/reakit-utils/focus"
@@ -35,6 +35,10 @@ export default defineComponent({
     initialFocusNode: {
       type: process.server ? Object : HTMLElement,
       required: false,
+    },
+    as: {
+      type: String as PropType<"div" | "main">,
+      default: "div",
     },
   },
   setup(props) {

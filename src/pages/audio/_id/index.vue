@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <VSkipToContentContainer as="main">
     <div v-if="backToSearchPath" class="w-full py-2 px-2 md:px-6">
       <VBackToSearchResultsLink :href="backToSearchPath" />
     </div>
@@ -16,7 +16,7 @@
         :fetch-state="relatedFetchState"
       />
     </div>
-  </main>
+  </VSkipToContentContainer>
 </template>
 
 <script lang="ts">
@@ -32,8 +32,9 @@ import { createDetailPageMeta } from "~/utils/og"
 import VAudioDetails from "~/components/VAudioDetails/VAudioDetails.vue"
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
-import VRelatedAudio from "~/components/VAudioDetails/VRelatedAudio.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
+import VRelatedAudio from "~/components/VAudioDetails/VRelatedAudio.vue"
+import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 
 export default defineComponent({
   name: "AudioDetailPage",
@@ -43,6 +44,7 @@ export default defineComponent({
     VBackToSearchResultsLink,
     VMediaReuse,
     VRelatedAudio,
+    VSkipToContentContainer,
   },
   beforeRouteEnter(to, from, next) {
     if (from.path.includes("/search/")) {

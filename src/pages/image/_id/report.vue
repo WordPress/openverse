@@ -1,5 +1,6 @@
 <template>
-  <div
+  <VSkipToContentContainer
+    as="main"
     class="mx-auto mt-8 mb-6 max-w-none gap-x-10 px-4 md:grid md:max-w-4xl md:grid-cols-2 md:px-6 lg:mb-30 lg:px-0 xl:max-w-4xl"
   >
     <figure class="mb-6 flex flex-col items-start gap-y-4">
@@ -35,7 +36,7 @@
       :allow-cancel="false"
       :provider-name="image.providerName"
     />
-  </div>
+  </VSkipToContentContainer>
 </template>
 
 <script lang="ts">
@@ -50,11 +51,15 @@ import type { ImageDetail } from "~/types/media"
 import { AttributionOptions, getAttribution } from "~/utils/attribution-html"
 
 import VButton from "~/components/VButton.vue"
+import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
+import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 
 export default defineComponent({
   name: "ReportImage",
   components: {
     VButton,
+    VContentReportForm,
+    VSkipToContentContainer,
   },
   setup() {
     const i18n = useI18n()

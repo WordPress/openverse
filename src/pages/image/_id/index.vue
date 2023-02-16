@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <VSkipToContentContainer as="main">
     <div v-if="backToSearchPath" class="w-full py-2 px-2 md:px-6">
       <VBackToSearchResultsLink :href="backToSearchPath" />
     </div>
@@ -76,7 +76,7 @@
       :media="relatedMedia"
       :fetch-state="relatedFetchState"
     />
-  </div>
+  </VSkipToContentContainer>
 </template>
 
 <script lang="ts">
@@ -96,14 +96,15 @@ import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useSearchStore } from "~/stores/search"
 import { createDetailPageMeta } from "~/utils/og"
 
+import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VLink from "~/components/VLink.vue"
 import VImageDetails from "~/components/VImageDetails/VImageDetails.vue"
+import VLink from "~/components/VLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedImages from "~/components/VImageDetails/VRelatedImages.vue"
 import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
-import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
+import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
 import externalIcon from "~/assets/icons/external-link.svg"
@@ -111,6 +112,7 @@ import externalIcon from "~/assets/icons/external-link.svg"
 export default defineComponent({
   name: "VImageDetailsPage",
   components: {
+    VBackToSearchResultsLink,
     VButton,
     VIcon,
     VLink,
@@ -118,7 +120,7 @@ export default defineComponent({
     VMediaReuse,
     VRelatedImages,
     VSketchFabViewer,
-    VBackToSearchResultsLink,
+    VSkipToContentContainer,
   },
   beforeRouteEnter(to, from, next) {
     if (from.path.includes("/search/")) {
