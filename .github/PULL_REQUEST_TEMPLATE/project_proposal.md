@@ -1,10 +1,3 @@
----
-name: Project Proposal
-about: A suggestion for a new project to work on
-labels: "💬 talk: discussion"
-title: "<Replace this with actual title>"
----
-
 ## Due date:
 
 <!--
