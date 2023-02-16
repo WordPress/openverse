@@ -3,9 +3,10 @@ import argparse
 import logging
 import sys
 
+import requests
 from github import Github, GithubException, Issue, ProjectCard, ProjectColumn
 from shared.data import get_data
-from shared.github import get_client
+from shared.github import get_access_token, get_client
 from shared.log import configure_logger
 from shared.project import get_org_project, get_project_column
 
@@ -40,46 +41,106 @@ parser.add_argument(
     default="In progress",
     help="column in which to move cards containing issues with PRs",
 )
-
+parser.add_argument(
+    "--linked-pr-state",
+    dest="linked_pr_state",
+    metavar="linked-pr-state",
+    type=str,
+    default="open",
+    help="filter issues by this state of their linked PRs",
+)
 
 # endregion
+
+
+def run_query(
+    query,
+) -> dict:
+    """
+    Run a GitHub GraphQL query.
+    Taken from https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
+    """
+    log.debug(f"{query=}")
+    request = requests.post(
+        "https://api.github.com/graphql",
+        json={"query": query},
+        headers={"Authorization": f"Bearer {get_access_token()}"},
+    )
+    if request.status_code == 200:
+        results = request.json()
+        log.debug(f"{results=}")
+        return request.json().get("data")
+    else:
+        raise Exception(
+            "Query failed to run by returning code of {}. {}".format(
+                request.status_code, query
+            )
+        )
 
 
 def get_open_issues_with_prs(
     gh: Github,
     org_handle: str,
     repo_names: list[str],
-) -> list[Issue]:
+    linked_pr_state: str,
+) -> set[tuple[str, str]]:
     """
     Retrieve open issues with linked PRs.
 
     :param gh: the GitHub client
     :param org_handle: the name of the org in which to look for issues
     :param repo_names: the name of the repos in which to look for issues
-    :return: the list of open issues with linked PRs
+    :param linked_pr_state: the state of the linked PRs to filter by
+    :return: a set of tuples containing the repo name and issue number for each issue
     """
 
-    all_issues = []
+    all_issues = set()
     for repo_name in repo_names:
-        log.info(f"Looking for issues with PRs in {org_handle}/{repo_name}")
-        issues = gh.search_issues(
-            query="",
-            sort="updated",
-            order="desc",
-            **{
-                "repo": f"{org_handle}/{repo_name}",
-                "is": "issue",
-                "state": "open",
-                "linked": "pr",
-            },
+        log.info(
+            f"Looking for {linked_pr_state} PRs in {org_handle}/{repo_name} "
+            f"with linked issues"
         )
-        issues = list(issues)
+        results = run_query(
+            """
+{
+    repository(owner: "%s", name: "%s") {
+        pullRequests(first: 100, states:%s,
+                     orderBy:{field:UPDATED_AT, direction:DESC}) {
+            nodes {
+                number
+                title
+                closingIssuesReferences (first: 50) {
+                    edges {
+                        node {
+                            number
+                            title
+                            state
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+        """
+            % (org_handle, repo_name, linked_pr_state.upper())
+        )
+        pulls = results["repository"]["pullRequests"]["nodes"]
+        log.info(f"Found {len(pulls)} PRs in {org_handle}/{repo_name}")
+        issues = {
+            issue["node"]["number"]: issue["node"]["title"]
+            for pull in pulls
+            for issue in pull["closingIssuesReferences"]["edges"]
+        }
         log.info(f"Found {len(issues)} issues")
-        for issue in issues:
-            log.info(f"• #{issue.number} | {issue.title}")
-        all_issues += issues
+        for number, title in issues.items():
+            log.info(f"• #{number: >5} | {title}")
+            all_issues.add((repo_name, number))
 
-    log.info(f"Found a total of {len(all_issues)} open issues with linked PRs")
+    log.info(
+        f"Found a total of {len(all_issues)} open issues "
+        f"with linked {linked_pr_state} PRs"
+    )
     return all_issues
 
 
@@ -114,6 +175,7 @@ def main():
     log.debug(f"Project number: {args.proj_number}")
     log.debug(f"Source column name: {args.source_col_name}")
     log.debug(f"Target column name: {args.target_col_name}")
+    log.debug(f"Linked issue PR state: {args.linked_pr_state}")
 
     github_info = get_data("github.yml")
     org_handle = github_info["org"]
@@ -128,6 +190,7 @@ def main():
         gh=gh,
         org_handle=org_handle,
         repo_names=repo_names,
+        linked_pr_state=args.linked_pr_state,
     )
     if len(issues_with_prs) == 0:
         log.warning("Found no issues with PRs, stopping")
@@ -143,8 +206,8 @@ def main():
     issue_cards = get_issue_cards(source_column)
 
     cards_to_move = []
-    for (issue_card, issue) in issue_cards:
-        if issue in issues_with_prs:
+    for issue_card, issue in issue_cards:
+        if (issue.repository.name, issue.number) in issues_with_prs:
             cards_to_move.append((issue_card, issue))
     log.info(f"Found {len(cards_to_move)} cards to move")
 
