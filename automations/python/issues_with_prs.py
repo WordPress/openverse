@@ -134,7 +134,7 @@ def get_open_issues_with_prs(
         }
         log.info(f"Found {len(issues)} issues")
         for number, title in issues.items():
-            log.info(f"• #{number} | {title}")
+            log.info(f"• #{number: >5} | {title}")
             all_issues.add((repo_name, number))
 
     log.info(
