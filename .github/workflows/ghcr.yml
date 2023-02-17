@@ -38,6 +38,14 @@ jobs:
         with:
           ref: ${{ github.event.release.tag_name }}
 
+      - uses: ./.github/actions/setup-node-env
+
+      - name: Download translation strings
+        run: pnpm i18n
+        env:
+          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
+          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
+
       - uses: docker/setup-buildx-action@v2
         with:
           install: true
