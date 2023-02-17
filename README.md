@@ -44,7 +44,25 @@ This repository also contains the following directories.
 
 ## Contributing
 
-For information on how to start contributing to Openverse please read the
-[`CONTRIBUTING.md`](./CONTRIBUTING.md) document. You can look at some
-[good first issues](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AWordPress%2Fopenverse-catalog+repo%3AWordPress%2Fopenverse+repo%3AWordPress%2Fopenverse-api+repo%3AWordPress%2Fopenverse-frontend+label%3A%22good+first+issue%22+label%3A%22help+wanted%22+-label%3A%22%E2%9B%94+status%3A+blocked%22+-label%3A%22%F0%9F%94%92+staff+only%22+)
-to get started.
+Pull requests are welcome! Feel free to
+[join us on Slack](https://make.wordpress.org/chat/) and discuss the project
+with the engineers and community members on #openverse.
+
+You are welcome to take any open issue in the tracker labelled
+[`help wanted`](https://github.com/WordPress/openverse/labels/help%20wanted) or
+[`good first issue`](https://github.com/WordPress/openverse/labels/good%20first%20issue);
+**there's no need to ask for permission in advance**. Other issues are open for
+contribution as well, but may be less accessible or well-defined in comparison
+to those that are explicitly labelled.
+
+See the [`CONTRIBUTING.md`](CONTRIBUTING.md) file for details.
+
+## Acknowledgments
+
+Openverse, previously known as CC Search, was conceived and built at
+[Creative Commons](https://creativecommons.org). We thank them for their
+commitment to open source and openly licensed content, with particular thanks to
+previous team members @ryanmerkley, @janetpkr, @lizadaly, @sebworks, @pa-w,
+@kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar,
+along with their
+[community of volunteers](https://opensource.creativecommons.org/community/community-team/).
