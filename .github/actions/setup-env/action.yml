@@ -1,0 +1,77 @@
+name: openverse/setup-env
+description: Setup Openverse CI environment
+
+inputs:
+  setup_python:
+    default: "true"
+    description: Whether to set up Python and install dependencies
+
+  setup_nodejs:
+    default: "true"
+    description: Whether to set up Node.js and dependencies
+
+  install_deps:
+    default: "true"
+    description: Whether to install dependencies using Just
+
+  github_token:
+    required: true
+    description: The token to authenticate calls to the GitHub API
+
+  install_recipe:
+    default: "install"
+    description: The recipe to use to install dependencies
+
+runs:
+  using: "composite"
+  steps:
+    # Just
+    - name: Setup just
+      uses: extractions/setup-just@v1
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+
+    # Python
+    - name: Setup Python
+      if: inputs.setup_python == 'true'
+      uses: actions/setup-python@v4
+      with:
+        # Ensure that it matches `python_version` field in the following files:
+        # - `automations/python/Pipfile`
+        # - `dead_links/Pipfile`
+        python-version: "3.10"
+        cache: pipenv
+        cache-dependency-path: |
+          **/Pipfile.lock
+
+    - name: Setup global Python deps
+      if: inputs.setup_python == 'true'
+      shell: bash
+      run: |
+        pip install -U pip
+        pip install pipenv
+
+    # Node.js
+    - name: Setup pnpm
+      if: inputs.setup_nodejs == 'true'
+      uses: pnpm/action-setup@v2
+      # Automatically reads `packageManager` field from root `package.json`.
+
+    - name: Setup Node.js
+      if: inputs.setup_nodejs == 'true'
+      uses: actions/setup-node@v3
+      with:
+        # Ensure that it matches `engines` field in the following files:
+        # - `package.json`
+        node-version: "16"
+        cache: pnpm
+        cache-dependency-path: |
+          pnpm-lock.yaml
+          .npmrc
+
+    # Install dependencies
+    - name: Install dependencies
+      if: inputs.install_deps == 'true'
+      shell: bash
+      run: |
+        just ${{ inputs.install_recipe }}

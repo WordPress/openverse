@@ -21,27 +21,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup just
-        uses: extractions/setup-just@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
         with:
-          python-version: "3.10"
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2.2.4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: pnpm
-          cache-dependency-path: |
-            pnpm-lock.yaml
-            .npmrc
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Python is not needed to run pre-commit.
+          setup_python: false
+          # Node.js is needed to check rendered templates.
+          install_recipe: automations/js/install
 
       - name: Cache pre-commit envs
         uses: actions/cache@v3
@@ -51,6 +38,5 @@ jobs:
 
       - name: Run pre-commit to lint files
         run: |
-          just automations/js/install
           just precommit
           just lint
