@@ -1,5 +1,5 @@
 <template>
-  <div ref="nodeRef">
+  <VSkipToContentContainer>
     <h1
       class="mt-auto mb-2 text-[40px] font-light leading-tight lg:text-[63px]"
     >
@@ -66,7 +66,7 @@
         >
       </template>
     </i18n>
-  </div>
+  </VSkipToContentContainer>
 </template>
 <script lang="ts">
 import { computed, ref, PropType } from "@nuxtjs/composition-api"
@@ -84,6 +84,7 @@ import VLink from "~/components/VLink.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.vue"
 import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
+import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 
 export default {
@@ -93,6 +94,7 @@ export default {
     VSearchTypes,
     VPopoverContent,
     VSearchTypeButton,
+    VSkipToContentContainer,
     VStandaloneSearchBar,
     VLink,
   },
@@ -111,13 +113,13 @@ export default {
     },
   },
   setup(props, { emit }) {
-    const nodeRef = ref<HTMLElement | null>(null)
     const searchTypeButtonRef = ref<InstanceType<
       typeof VSearchTypeButton
     > | null>(null)
     const searchBarRef = ref<InstanceType<typeof VStandaloneSearchBar> | null>(
       null
     )
+    const nodeRef = computed(() => searchBarRef.value?.$el)
 
     const { getSearchTypeProps } = useSearchType()
     const uiStore = useUiStore()
@@ -163,7 +165,6 @@ export default {
     })
 
     return {
-      nodeRef,
       searchTypeButtonRef,
       searchBarRef,
 
