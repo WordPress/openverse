@@ -228,6 +228,7 @@
         "operator-aria-label": "star operator (wildcard)",
         "aria-label": "net star symbol",
         example: "net*",
+        // Do not translate 'network', 'Netflix' and 'Netherlands' are they are examples of words starting with 'net'.
         content: "Example: {link}{br} This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc.",
       },
       precedence: {
