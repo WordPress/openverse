@@ -9,6 +9,5 @@ node_modules
 .nuxt
 .nuxt-storybook
 !.github
-!.husky
 storybook-static
 .idea

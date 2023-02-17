@@ -287,8 +287,8 @@ The app will be available at <http://localhost:8443>.
 The code in this repository is formatted using `prettier`. If you have prettier
 setup in your code editor it should work out of the box; otherwise you can use
 the `pnpm lint:fix` script to format and fix lint errors in your code. Checks
-are run to lint your code and validate the formatting on git precommit using
-[husky](https://github.com/typicode/husky).
+are run to lint your code and validate the formatting using Git hooks managed by
+[pre-commit](https://pre-commit.com).
 
 You will need to fix any linting issues before committing. We recommend
 formatting your JavaScript files on save in your text editor. You can learn how
