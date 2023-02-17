@@ -8,7 +8,9 @@ contributors into the fold in WordPress, Openverse and FOSS in general.
 Please be aware that as a project of the WordPress Foundation, Openverse follows
 [the WordPress Etiquette](https://wordpress.org/about/etiquette/), a code of
 conduct that you should read and agree to abide by before contributing to
-WordPress projects. This applies to all Openverse respositories.
+WordPress projects. This applies to all Openverse repositories.
+
+See the [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) file for details.
 
 ## 🎨 Design contributions
 
