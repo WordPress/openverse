@@ -76,12 +76,12 @@ group:
       WordPress/openverse-frontend
       WordPress/openverse-api
     files:
-      - source: templates/PULL_REQUEST_TEMPLATE.md.jinja
-        dest: .github/PULL_REQUEST_TEMPLATE.md
+      - source: templates/pull_request_template.md.jinja
+        dest: .github/PULL_REQUEST_TEMPLATE/pull_request_template.md
         template: true
   - repos: |
       WordPress/openverse-catalog
     files:
-      - source: templates/PULL_REQUEST_TEMPLATE.catalog.md.jinja
-        dest: .github/PULL_REQUEST_TEMPLATE.md
+      - source: templates/pull_request_template.catalog.md.jinja
+        dest: .github/PULL_REQUEST_TEMPLATE/pull_request_template.md
         template: true
