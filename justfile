@@ -1,17 +1,23 @@
 set dotenv-load := false
 
-# Show all available recipes
-default:
-  @just --list --unsorted
+# Meaning of Just prefixes:
+# @ - Quiet recipes (https://github.com/casey/just#quiet-recipes)
+# _ - Private recipes (https://github.com/casey/just#private-recipes)
+
+# Show all available recipes, also recurses inside nested justfiles
+@_default:
+  just --list --unsorted
+  cd automations/python && just
+  cd automations/js && just
 
 #######
 # Dev #
 #######
 
-# Install Python dependencies in Pipenv environments and JS dependencies
+# Install all dependencies
 @install:
-    just _py-install
-    just _js-install
+    just automations/python/install
+    just automations/js/install
 
 # Setup pre-commit as a Git hook
 precommit:
@@ -44,41 +50,3 @@ precommit:
 # Run pre-commit to lint and reformat all files
 lint:
     python3 pre-commit.pyz run --all-files
-
-##########
-# Python #
-##########
-
-# Install dependencies for Python
-_py-install:
-    cd automations/python && pipenv install --dev
-
-##############
-# JavaScript #
-##############
-
-# Install dependencies for JavaScript
-_js-install:
-    pnpm install
-
-# Run `render-jinja.js` with given input file, output file and context
-render in_file out_file ctx="{}":
-    cd automations/js && node src/render-jinja.js {{ in_file }} {{ out_file }} {{ ctx }}
-
-# Render `.pre-commit-config.yaml`
-render-precommit:
-    just render templates/.pre-commit-config.local.yaml.jinja .pre-commit-config.yaml
-
-# Render `prettier.config.js`
-render-prettier:
-    just render templates/prettier.config.js.jinja prettier.config.js
-
-# Render GitHub issue & PR templates
-render-github:
-    just render templates/pull_request_template.md.jinja .github/PULL_REQUEST_TEMPLATE/pull_request_template.md
-
-# Render all templates (shortcut for easy iteration)
-render-templates:
-    just render-precommit
-    just render-prettier
-    just render-github
