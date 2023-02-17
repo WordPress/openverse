@@ -62,9 +62,9 @@ rows pulled from the upstream catalog database. If the server is running in an
 
 ### Integration Tests
 
-The integration tests can be run using `just ing-testlocal`. Note that if a
-`.env` file exists in the folder you're running `just` from, it may interfere
-with the integration test variables and cause unexpected failures.
+The integration tests can be run using `just ingestion_server/test-local`. Note
+that if an `.env` file exists in the folder you're running `just` from, it may
+interfere with the integration test variables and cause unexpected failures.
 
 ### Making requests
 

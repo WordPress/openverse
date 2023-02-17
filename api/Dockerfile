@@ -39,7 +39,7 @@ RUN pipenv install --system --deploy --dev
 #########
 
 # This target assumes that the build host has run `manage.py collectstatic`
-# `just collectstatic` is provided as a convenient alias for running it the expected way
+# `just api/collectstatic` is provided as a convenient alias for running it the expected way
 
 FROM nginx:1.23.2-alpine as nginx
 

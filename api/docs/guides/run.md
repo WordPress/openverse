@@ -29,7 +29,7 @@ To run the API inside Docker, follow the instructions in the
 
 3. Start the Django dev server.
    ```bash
-   just dj runserver
+   just api/dj runserver
    ```
 
 ## Django admin

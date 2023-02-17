@@ -12,5 +12,5 @@
 
 2. Run the tests in an interactive TTY connected to a `web` container.
    ```bash
-   just api-test
+   just api/test
    ```

@@ -34,7 +34,7 @@ utils to macOS. `timeout` from the package is required.
    to serve the API over `https`.
 
    ```bash
-   just cert
+   just nginx/cert
    ```
 
 4. From the monorepo root, bring up the Docker Compose system. Docker Compose
@@ -57,7 +57,7 @@ utils to macOS. `timeout` from the package is required.
 7. Make an API request using cURL. You should receive a JSON response.
 
    ```bash
-   just stats
+   just api/stats
    ```
 
    Piping the response through a pretty-printer like
@@ -65,7 +65,7 @@ utils to macOS. `timeout` from the package is required.
    following.
 
    ```bash
-   just stats | jq '.[0]'
+   just api/stats | jq '.[0]'
    ```
 
    ```json

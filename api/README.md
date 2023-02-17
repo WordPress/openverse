@@ -8,7 +8,7 @@ The API has two sets of documentation.
   - can be seen locally by
     - running the following recipe:
       ```bash
-      just sphinx-live
+      just api/sphinx-live
       ```
     - visiting the `https://localhost:50230/` endpoint
   - contain more details on how to contribute to the API project
