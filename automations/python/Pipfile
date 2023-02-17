@@ -13,7 +13,6 @@ pyotp = "*"
 
 [dev-packages]
 ipython = "*"
-pre-commit = "*"
 
 [requires]
 python_version = "3.10"
