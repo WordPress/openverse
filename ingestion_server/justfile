@@ -1,0 +1,66 @@
+set dotenv-load := false
+
+# Show all available recipes
+@_default:
+  echo "####################"
+  echo "# Ingestion server #"
+  echo "####################"
+  just --list --unsorted
+
+
+# Install dependencies
+install:
+    pipenv install --dev
+
+##########
+# Health #
+##########
+
+# Check the health of the service
+@health host="localhost:50281":
+    -curl -s -o /dev/null -w '%{http_code}' 'http://{{ host }}/'
+
+# Wait for the service to be healthy
+@wait host="localhost:50281":
+    # The just command on the second line is executed in the context of the
+    # parent directory and so must be prefixed with `ingestion_server/`.
+    just ../_loop \
+    '"$(just ingestion_server/health {{ host }})" != "200"' \
+    "Waiting for the ingestion-server to be healthy..."
+
+########
+# cURL #
+########
+
+# Make a cURL POST request to the service with the given data
+_curl-post data host="localhost:50281":
+    curl \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -d '{{ data }}' \
+      -w "\n" \
+      'http://{{ host }}/task'
+
+# Load QA data into QA indices in Elasticsearch
+load-test-data model="image":
+    just _curl-post '{"model": "{{ model }}", "action": "LOAD_TEST_DATA"}'
+
+# Load sample data into temp table in API and new index in Elasticsearch
+ingest-upstream model="image" suffix="init":
+    just _curl-post '{"model": "{{ model }}", "action": "INGEST_UPSTREAM", "index_suffix": "{{ suffix }}"}'
+
+# Promote temp table to prod in API and new index to primary in Elasticsearch
+promote model="image" suffix="init" alias="image":
+    just _curl-post '{"model": "{{ model }}", "action": "PROMOTE", "index_suffix": "{{ suffix }}", "alias": "{{ alias }}"}'
+
+# Delete an index in Elasticsearch
+delete model="image" suffix="init" alias="image":
+    just _curl-post '{"model": "{{ model }}", "action": "DELETE_INDEX", "index_suffix": "{{ suffix }}"}'
+
+#########
+# Tests #
+#########
+
+# Run ingestion-server tests locally
+test-local *args:
+    pipenv run ./test/run_test.sh {{ args }}
