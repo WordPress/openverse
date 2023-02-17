@@ -13,7 +13,7 @@
     {% for render in renders %}
       - id: render-{{ render }}
         name: render-{{ render }}
-        entry: bash -c 'just render-{{ render }}'
+        entry: bash -c 'just automations/js/render-{{ render }}'
         language: system
         pass_filenames: false
     {% endfor %}

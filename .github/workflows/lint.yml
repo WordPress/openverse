@@ -51,8 +51,6 @@ jobs:
 
       - name: Run pre-commit to lint files
         run: |
-          pip install -U pip
-          pip install pipenv
-          just install
+          just automations/js/install
           just precommit
           just lint

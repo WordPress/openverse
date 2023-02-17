@@ -110,16 +110,16 @@ repos:
     hooks:
       - id: render-precommit
         name: render-precommit
-        entry: bash -c 'just render-precommit'
+        entry: bash -c 'just automations/js/render-precommit'
         language: system
         pass_filenames: false
       - id: render-prettier
         name: render-prettier
-        entry: bash -c 'just render-prettier'
+        entry: bash -c 'just automations/js/render-prettier'
         language: system
         pass_filenames: false
       - id: render-github
         name: render-github
-        entry: bash -c 'just render-github'
+        entry: bash -c 'just automations/js/render-github'
         language: system
         pass_filenames: false
