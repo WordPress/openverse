@@ -7,8 +7,8 @@ iterate.
 ## Process for editing jinja templates
 
 1. Make changes to the jinja template
-1. Run `just render-templates` to re-render all templates. This runs pretty
-   quickly but if you need to go even faster, you can run the
+1. Run `just automations/js/render-templates` to re-render all templates. This
+   runs pretty quickly but if you need to go even faster, you can run the
    `render-precommit`, `render-prettier`, or `render-github` recipes instead to
    render only the specific files you're changing.
 1. Confirm your rendered changes meet prettier's requirements by:
