@@ -1,0 +1,13 @@
+{
+  "name": "@openverse/automations",
+  "description": "Openverse automations",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "@octokit/rest": "19.0.7",
+    "js-yaml": "^4.1.0",
+    "k6": "0.0.0",
+    "node-fetch": "2",
+    "nunjucks": "^3.2.3"
+  }
+}
