@@ -1,5 +1,5 @@
 module.exports = {
-  extends: "../../.eslintrc.js",
+  extends: "../../../.eslintrc.js",
   rules: {
     "unicorn/filename-case": [
       "error",

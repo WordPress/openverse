@@ -16,9 +16,9 @@ on:
       # This file configures TypeScript. Changes could affect the outcome.
       - "**.tsconfig*"
       # This file configures Nuxt (and therefore the build). Changes could affect the outcome.
-      - "nuxt.config.ts"
+      - "frontend/nuxt.config.ts"
       # This file configures Tailwind and could affect the style outcome.
-      - "tailwind.config.js"
+      - "frontend/tailwind.config.js"
       # Changes to this workflow file should always verify the changes are successful.
       - ".github/workflows/bundle_size.yml"
 

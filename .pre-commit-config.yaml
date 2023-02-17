@@ -12,7 +12,7 @@ repos:
         name: i18n
         # Check if the i18n files have been downloaded by checking if the Arabic translation exists
         # Download the i18n files if they do not exist
-        entry: bash -c 'if [ ! -f "$(dirname "$dir")"/src/locales/ar.json ]; then pnpm i18n; fi'
+        entry: bash -c 'if [ ! -f "$(dirname "$dir")"/frontend/src/locales/ar.json ]; then just frontend/run i18n; fi'
         language: system
         pass_filenames: false
 
@@ -30,7 +30,7 @@ repos:
       - id: check-xml
       - id: check-yaml
       - id: end-of-file-fixer
-        exclude: test/tapes/.+\.json5
+        exclude: frontend/test/tapes/.+\.json5
       - id: check-symlinks
       - id: mixed-line-ending
       - id: fix-encoding-pragma
@@ -42,7 +42,7 @@ repos:
     hooks:
       - id: eslint
         files: \.(js|ts|vue)$
-        exclude: ^nuxt-template-overrides/.*|.remake/.*$ # ESLint raises warnings for ignored files.
+        exclude: ^frontend/(nuxt-template-overrides/.*|.remake/.*)$ # ESLint raises warnings for ignored files.
         "types": [file] # ESLint only accepts [javascript] by default.
         args:
           - --ignore-path=.gitignore
@@ -74,6 +74,7 @@ repos:
         additional_dependencies:
           - prettier@2.6.0
           - prettier-plugin-tailwindcss@0.2.2
+          - tailwindcss-rtl@0.9.0
           - typescript@4.9.3
 
   - repo: https://github.com/koalaman/shellcheck-precommit
@@ -85,13 +86,13 @@ repos:
     hooks:
       - id: types
         name: types
-        entry: bash -c 'pnpm types'
+        entry: bash -c 'just frontend/run types'
         language: system
         pass_filenames: false
 
       - id: test:unit
         name: test:unit
-        entry: bash -c 'pnpm test:unit'
+        entry: bash -c 'just frontend/run test:unit'
         language: system
         pass_filenames: false
         stages:

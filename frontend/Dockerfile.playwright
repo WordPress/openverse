@@ -3,4 +3,6 @@ ARG PLAYWRIGHT_VERSION
 FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-jammy
 
 COPY package.json .
+
+# Requires `packageManager` field to be present in `frontend/package.json`.
 RUN npm install -g $(grep packageManager package.json | awk '{print $2}' | sed 's/[",]//g')

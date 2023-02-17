@@ -1,10 +1,10 @@
 .github/**/*.md
+frontend/test/unit/coverage
+frontend/test/tapes
+frontend/.nuxt
+frontend/.nuxt-storybook
+frontend/storybook-static
+frontend/nuxt-template-overrides
+frontend/.remake/component-unit-test/remake-fileName.spec.js
 dist
-test/unit/coverage
-test/tapes
-.nuxt
-.nuxt-storybook
-storybook-static
 pnpm-lock.yaml
-nuxt-template-overrides
-.remake/component-unit-test/remake-fileName.spec.js

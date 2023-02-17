@@ -4,12 +4,12 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/test/unit/coverage/
-/test/e2e/reports/
-/test/e2e/screenshots
-/test/e2e/videos
-/test/selenium-webdriver/geckodriver.log
-/test/selenium-webdriver/screenshots/*
+frontend/test/unit/coverage/
+frontend/test/e2e/reports/
+frontend/test/e2e/screenshots
+frontend/test/e2e/videos
+frontend/test/selenium-webdriver/geckodriver.log
+frontend/test/selenium-webdriver/screenshots/*
 selenium-debug.log
 .pnpm-debug.log
 .env
@@ -42,8 +42,8 @@ test/Default
 *.pot
 
 # Ignore downloaded translation files
-/src/locales/openverse.zip
-/src/locales/*.json
-/src/locales/scripts/valid-locales.json
-/src/locales/scripts/untranslated-locales.json
-/src/locales/scripts/wp-locales.json
+frontend/src/locales/openverse.zip
+frontend/src/locales/*.json
+frontend/src/locales/scripts/valid-locales.json
+frontend/src/locales/scripts/untranslated-locales.json
+frontend/src/locales/scripts/wp-locales.json

@@ -7,6 +7,7 @@ services:
       args:
         - PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}
     volumes:
+      - ../node_modules:/node_modules
       - .:/app
     user: ${USER_ID}
     working_dir: /app

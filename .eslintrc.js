@@ -193,14 +193,14 @@ module.exports = {
   ],
   settings: {
     "vue-i18n": {
-      localeDir: "./src/locales/*.{json}",
+      localeDir: "./frontend/src/locales/*.{json}",
       messageSyntaxVersion: "^8.24.3",
     },
     "import/resolver": {
       "eslint-import-resolver-custom-alias": {
         alias: {
-          "~": "./src",
-          "~~": ".",
+          "~": "./frontend/src",
+          "~~": "./frontend",
         },
         /**
          * SVG imports are excluded for the import/no-unresolved
