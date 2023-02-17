@@ -126,7 +126,8 @@ class TestIngestion(unittest.TestCase):
 
         logging.info("Waiting for ES to be ready...")
         port = service_ports["es"]
-        cls._wait(["just", "wait-for-es", f"localhost:{port}"])
+        # Point to the root `justfile` to avoid automatic resolution to the nearest.
+        cls._wait(["just", "../../wait-for-es", f"localhost:{port}"])
         logging.info("Connected to ES")
 
     @classmethod
@@ -135,7 +136,8 @@ class TestIngestion(unittest.TestCase):
 
         logging.info("Waiting for ingestion-server to be ready...")
         port = service_ports["ingestion_server"]
-        cls._wait(["just", "wait-for-ing", f"localhost:{port}"])
+        # Automatically resolves to the nearest `justfile`.
+        cls._wait(["just", "wait", f"localhost:{port}"])
         logging.info("Connected to ingestion-server")
 
     @classmethod

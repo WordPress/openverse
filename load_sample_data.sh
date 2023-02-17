@@ -96,22 +96,22 @@ docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy 
 	EOF"
 
 # Load search quality assurance data.
-just load-test-data "audio"
+just ingestion_server/load-test-data "audio"
 sleep 2
 
-just load-test-data "image"
+just ingestion_server/load-test-data "image"
 sleep 2
 
 # Ingest and index the data
-just ingest-upstream "audio" "init"
+just ingestion_server/ingest-upstream "audio" "init"
 just wait-for-index "audio-init"
-just promote "audio" "init" "audio"
+just ingestion_server/promote "audio" "init" "audio"
 just wait-for-index "audio"
 
 # Image ingestion is flaky; but usually works on the next attempt
 set +e
 while true; do
-	just ingest-upstream "image" "init"
+	just ingestion_server/ingest-upstream "image" "init"
 	if just wait-for-index "image-init"
 	then
 		break
@@ -120,7 +120,7 @@ while true; do
 done
 set -e
 
-just promote "image" "init" "image"
+just ingestion_server/promote "image" "init" "image"
 just wait-for-index "image"
 
 # Clear source cache since it's out of date after data has been loaded

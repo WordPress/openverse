@@ -121,7 +121,7 @@ jobs:
           docker load --input /tmp/ingestion_server/ingestion_server.tar
 
       - name: collectstatic
-        run: just collectstatic
+        run: just api/collectstatic
         env:
           STATIC_ROOT: ./static
           DC_USER: root
@@ -182,7 +182,7 @@ jobs:
         run: |
           pip install -U pip
           pip install pipenv
-          just _ing-install
+          just ingestion_server/install
 
       - name: Download image `ingestion_server`
         uses: actions/download-artifact@v3
@@ -193,7 +193,7 @@ jobs:
         run: docker load --input /tmp/ingestion_server.tar
 
       - name: Run ingestion-server tests
-        run: just ing-testlocal
+        run: just ingestion_server/test-local
 
       - name: Upload ingestion test logs
         if: always()
@@ -235,7 +235,7 @@ jobs:
         run: just init
 
       - name: Run API tests
-        run: just api-test
+        run: just api/test
 
       - name: Print API test logs
         if: always()
@@ -275,7 +275,7 @@ jobs:
           docker load --input /tmp/ingestion_server/ingestion_server.tar
 
       - name: Test ReDoc site
-        run: just api-doctest
+        run: just api/doc-test
 
   validate-openapi-spec:
     name: Validate Open API spec
@@ -301,7 +301,7 @@ jobs:
           docker load --input /tmp/ingestion_server/ingestion_server.tar
 
       - name: Run check
-        run: just dj validateopenapischema
+        run: just api/dj validateopenapischema
         env:
           DC_USER: root
 
@@ -337,7 +337,7 @@ jobs:
           docker load --input /tmp/ingestion_server/ingestion_server.tar
 
       - name: Run check
-        run: just dj check
+        run: just api/dj check
 
   check-migrations:
     name: Check for uncommited Django migrations
@@ -364,7 +364,7 @@ jobs:
           docker load --input /tmp/ingestion_server/ingestion_server.tar
 
       - name: Run makemigrations
-        run: just dj makemigrations --check --noinput --merge
+        run: just api/dj makemigrations --check --noinput --merge
 
   push:
     name: Publish Docker images
@@ -456,7 +456,7 @@ jobs:
 
       - name: Make developer docs
         run: |
-          just sphinx-make
+          just api/sphinx-make
           sudo chown "$USER:$USER" -R ./api
           mv ./api/build/html /tmp/gh-pages
         env:
@@ -533,7 +533,7 @@ jobs:
 
       - name: Build docs
         run: |
-          just sphinx-make
+          just api/sphinx-make
           sudo chown "$USER:$USER" -R ./api
           mv ./api/build/html /tmp/preview
         env:
