@@ -1,49 +1,48 @@
+# macOS
+._*
 .DS_Store
-node_modules/
-/dist/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-frontend/test/unit/coverage/
-frontend/test/e2e/reports/
-frontend/test/e2e/screenshots
-frontend/test/e2e/videos
-frontend/test/selenium-webdriver/geckodriver.log
-frontend/test/selenium-webdriver/screenshots/*
-selenium-debug.log
-.pnpm-debug.log
-.env
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-vercel.json
-.eslintcache
-.nuxt
-.nuxt-storybook
-storybook-static
-.vercel
-.zshrc
-.tcv-export
 
-# pre-commit executable
+# Editor/IDE configs
+.idea/
+.vscode/
+.swp
+
+# Environment
+.env
+
+# Python environments
+env/
+venv/
+pip-log.txt
+
+# Python
+__pycache__/
+*.py[cod]
+.python-version
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+.pnpm-debug.log
+
+# Local certificates
+*.pem
+*.crt
+*.key
+
+# pre-commit
 pre-commit.pyz
 
-# Playwright creates these two folders
-test-results
-test/Default
+# ESLint
+.eslintcache
 
-# Ignore local certificates
-*.pem
+# Vercel
+vercel.json
+.vercel
 
-# Ignore generated translation files
-*.pot
+# Grafana
+grafana.db
 
-# Ignore downloaded translation files
-frontend/src/locales/openverse.zip
-frontend/src/locales/*.json
-frontend/src/locales/scripts/valid-locales.json
-frontend/src/locales/scripts/untranslated-locales.json
-frontend/src/locales/scripts/wp-locales.json
+# Ingestion server
+# TODO: This shouldn't be in root
+ingestion_server.log

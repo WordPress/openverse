@@ -1,0 +1,26 @@
+# Nuxt
+.nuxt
+
+# Storybook
+.nuxt-storybook
+storybook-static
+
+# Tailwind Config Viewer
+.tcv-export
+
+# Playwright creates these two folders
+test-results
+test/Default
+
+# Coverage
+test/unit/coverage/
+
+# Generated translation files
+*.pot
+
+# Downloaded translation files
+src/locales/openverse.zip
+src/locales/*.json
+src/locales/scripts/valid-locales.json
+src/locales/scripts/untranslated-locales.json
+src/locales/scripts/wp-locales.json
