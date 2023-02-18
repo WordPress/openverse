@@ -139,7 +139,7 @@ view the standalone application.
 
 ### Running tests
 
-Refer to the [`TESTING_GUIDELINES.md` file](./TESTING_GUIDELINES.md) for
+Refer to the [`TESTING_GUIDELINES.md` file](TESTING_GUIDELINES.md) for
 instructions on how to run tests.
 
 ### localhost tunneling

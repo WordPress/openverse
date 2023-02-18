@@ -6,11 +6,11 @@ of guidelines to help you contribute to this project.
 ## Code of Conduct
 
 By participating in this project, you are expected to uphold our
-[Code of Conduct](./CODE_OF_CONDUCT.md).
+[Code of Conduct](../../CODE_OF_CONDUCT.md).
 
 ## Project Documentation
 
-Please consult the [README](./README.md) file at the root of this repository.
+Please consult the [README](README.md) file at the root of this repository.
 
 ## How to Contribute
 
@@ -28,7 +28,7 @@ You can file a bug
 You will see a bug report template with the required information you should
 provide.
 
-Please see our [testing guidelines](./TESTING_GUIDELINES.md) for general
+Please see our [testing guidelines](TESTING_GUIDELINES.md) for general
 instructions and recommendations for how to test the application.
 
 ### Proposing changes or new features
