@@ -1,7 +1,7 @@
 {% block note %}
 // This file is being synced from WordPress/openverse. Any changes made to it
 // here will be overwritten. Please make any necessary edits to these files:
-// - https://github.com/WordPress/openverse/blob/main/prettier.config.js.jinja
+// - https://github.com/WordPress/openverse/blob/main/templates/prettier.config.js.jinja
 {%- endblock %}
 
 {# This comment adds a blank line. #}
@@ -18,6 +18,8 @@ module.exports = {
         proseWrap: "preserve",
       },
     },
+    {% block additional_overrides %}
+    {% endblock %}
   ],
   {% block additional_config %}
   {% endblock %}

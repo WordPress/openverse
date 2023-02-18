@@ -6,8 +6,6 @@ group:
   # Openverse
   - repos: |
       WordPress/openverse-catalog
-      WordPress/openverse-api
-      WordPress/openverse-frontend
       WordPress/openverse-infrastructure
     files:
       # Synced workflows
@@ -37,15 +35,22 @@ group:
         dest: .github/release_drafter.yml
       - source: .github/ISSUE_TEMPLATE/
         dest: .github/ISSUE_TEMPLATE/
-  # Unified lint rules
+
+  # prettier.config.js
   - repos: |
       WordPress/openverse
+    files:
+      - source: templates/prettier.config.local.js.jinja
+        dest: prettier.config.js
+        template: true
+  - repos: |
       WordPress/openverse-catalog
-      WordPress/openverse-api
     files:
       - source: templates/prettier.config.js.jinja
         dest: prettier.config.js
         template: true
+
+  # .pre-commit-config.yaml
   - repos: |
       WordPress/openverse
     files:
@@ -54,27 +59,15 @@ group:
         template: true
   - repos: |
       WordPress/openverse-catalog
-      WordPress/openverse-api
     files:
       - source: templates/.pre-commit-config.yaml.jinja
         dest: .pre-commit-config.yaml
         template:
           contains_js_code: false
-  - repos: |
-      WordPress/openverse-frontend
-    files:
-      - source: templates/.pre-commit-config.frontend.yaml.jinja
-        dest: .pre-commit-config.yaml
-        template:
-          contains_python_code: false
-      - source: templates/prettier.config.frontend.js.jinja
-        dest: prettier.config.js
-        template: true
-  # Pull request configuration
+
+  # pull_request_template.md
   - repos: |
       WordPress/openverse
-      WordPress/openverse-frontend
-      WordPress/openverse-api
     files:
       - source: templates/pull_request_template.md.jinja
         dest: .github/PULL_REQUEST_TEMPLATE/pull_request_template.md

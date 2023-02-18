@@ -1,3 +1,6 @@
+{% set eslint_files = '\\.(js|ts|vue)$' %}
+{% set eslint_exclude = '^load_testing/.*|frontend/(nuxt-template-overrides/.*|.remake/.*)$' %}
+
 {% extends 'templates/.pre-commit-config.yaml.jinja' %}
 
 {% block note %}
@@ -5,16 +8,77 @@
 # - https://github.com/WordPress/openverse/blob/main/templates/.pre-commit-config.local.yaml.jinja
 {%- endblock %}
 
+{#=======================================
+Repo blocks must be indented by 2 spaces.
+=======================================#}
+
+{% block repos_top %}
+  - repo: local # More local hooks are defined at the bottom.
+    hooks:
+      - id: i18n
+        name: i18n
+        files: ^frontend/.*$
+        # Check if the i18n files have been downloaded by checking if the Arabic translation exists
+        # Download the i18n files if they do not exist
+        entry: bash -c 'if [ ! -f "$(dirname "$dir")"/frontend/src/locales/ar.json ]; then just frontend/run i18n; fi'
+        language: system
+        pass_filenames: false
+{# This comment adds a blank line. #}
+{% endblock %}
+
 {% block repos_bottom %}
 {# This comment adds a blank line. #}
-  - repo: local
+  - repo: local # More local hooks are defined at the top.
     hooks:
+      - id: types
+        name: types
+        files: ^frontend/.*$
+        entry: bash -c 'just frontend/run types'
+        language: system
+        pass_filenames: false
+      - id: test:unit
+        name: test:unit
+        files: ^frontend/.*$
+        entry: bash -c 'just frontend/run test:unit'
+        language: system
+        pass_filenames: false
+        stages:
+          - push
     {% set renders = ["precommit", "prettier", "github"] %}
     {% for render in renders %}
       - id: render-{{ render }}
         name: render-{{ render }}
+        files: ^templates/.*$
         entry: bash -c 'just automations/js/render-{{ render }}'
         language: system
         pass_filenames: false
     {% endfor %}
 {% endblock %}
+
+{#=========================================
+Dependencies must be indented by 10 spaces.
+=========================================#}
+
+{% block eslint_dependencies %}
+{{ super() }}
+          - "@babel/eslint-parser@7.19.1"
+          - "@intlify/eslint-plugin-vue-i18n@1.4.0"
+          - "@nuxtjs/eslint-module@3.1.0"
+          - "@typescript-eslint/eslint-plugin@5.44.0"
+          - "@typescript-eslint/parser@5.44.0"
+          - eslint-config-prettier@8.6.0
+          - eslint-import-resolver-custom-alias@1.3.0
+          - eslint-plugin-eslint-comments@3.2.0
+          - eslint-plugin-import@2.27.5
+          - eslint-plugin-prettier@4.2.1
+          - eslint-plugin-tsdoc@0.2.17
+          - eslint-plugin-unicorn@42.0.0
+          - eslint-plugin-vue@9.9.0
+          - eslint-plugin-vuejs-accessibility@1.1.1
+{%- endblock %}
+
+{% block prettier_dependencies %}
+{{ super() }}
+          - prettier-plugin-tailwindcss@0.2.2
+          - typescript@4.9.3
+{%- endblock %}
