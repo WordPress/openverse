@@ -20,13 +20,13 @@ A front end web application that interfaces with the API can be found at the
 Our quickstart guide and other documentation can be found in our
 [developer docs](https://wordpress.github.io/openverse-api/guides/quickstart.html)
 (or within the repo at
-[`./api/docs/guides/quickstart.md`](./api/docs/guides/quickstart.md)). Our API
+[`./api/docs/guides/quickstart.md`](../docs/guides/quickstart.md)). Our API
 documentation can also be found at
 [https://api.openverse.engineering](https://api.openverse.engineering).
 
 ## System architecture
 
-![System architecture](readme_assets/system_diagram/system_architecture.png)
+![System architecture](../../readme_assets/system_diagram/system_architecture.png)
 
 ### Basic flow of data
 
