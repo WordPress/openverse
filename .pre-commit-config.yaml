@@ -1,7 +1,7 @@
 # This file is being synced from WordPress/openverse. Any changes made to it
 # here will be overwritten. Please make any necessary edits to these files:
-# - https://github.com/WordPress/openverse/blob/main/.pre-commit-config.yaml.jinja
-# - https://github.com/WordPress/openverse/blob/main/templates/.pre-commit-config.frontend.yaml.jinja
+# - https://github.com/WordPress/openverse/blob/main/templates/.pre-commit-config.yaml.jinja
+# - https://github.com/WordPress/openverse/blob/main/templates/.pre-commit-config.local.yaml.jinja
 
 exclude: Pipfile\.lock|migrations|\.idea|node_modules|archive|retired
 
@@ -10,6 +10,7 @@ repos:
     hooks:
       - id: i18n
         name: i18n
+        files: ^frontend/.*$
         # Check if the i18n files have been downloaded by checking if the Arabic translation exists
         # Download the i18n files if they do not exist
         entry: bash -c 'if [ ! -f "$(dirname "$dir")"/frontend/src/locales/ar.json ]; then just frontend/run i18n; fi'
@@ -36,13 +37,65 @@ repos:
       - id: fix-encoding-pragma
         args:
           - --remove
+      - id: check-docstring-first
+      - id: requirements-txt-fixer
+
+  # Use the `.isort.cfg` file to configure additional project-specific requirements.
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        files: \.py$
+        exclude: ^build/.*$|^.tox/.*$|^venv/.*$
+        args:
+          - --profile=black
+          - --lines-after-imports=2
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.2.2
+    hooks:
+      - id: pyupgrade
+        args:
+          - --py310-plus
+
+  # Use the `.flake8` file to configure additional project-specific requirements.
+  - repo: https://github.com/PyCQA/flake8
+    rev: 3.9.2
+    hooks:
+      - id: flake8
+        args:
+          - --extend-ignore=E203,W503
+          - --max-line-length=88
+
+  - repo: https://github.com/ambv/black
+    rev: 22.3.0
+    hooks:
+      - id: black
+        args:
+          - --safe
+
+  - repo: https://github.com/pycqa/pydocstyle
+    rev: 6.2.2 # 6.2.3 is slightly broken
+    hooks:
+      - id: pydocstyle
+        args:
+          - --convention=pep257
+          # Additional ignore reasons:
+          # D1xx: we do not want to force contributors to write redundant or useless docstrings
+          # D202: additional whitespace helps with readability
+          # D205: we don't want to always require a single line summary
+          # D211: same as D202
+          # D400: first line doesn't need to end in a period
+          # See the following documentation for what each rule does:
+          # https://www.pydocstyle.org/en/6.2.3/error_codes.html#error-codes
+          - --add-ignore=D1,D202,D205,D211,D400
 
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v8.15.0
     hooks:
       - id: eslint
         files: \.(js|ts|vue)$
-        exclude: ^frontend/(nuxt-template-overrides/.*|.remake/.*)$ # ESLint raises warnings for ignored files.
+        exclude: ^load_testing/.*|frontend/(nuxt-template-overrides/.*|.remake/.*)$ # ESLint raises warnings for ignored files.
         "types": [file] # ESLint only accepts [javascript] by default.
         args:
           - --ignore-path=.gitignore
@@ -74,7 +127,6 @@ repos:
         additional_dependencies:
           - prettier@2.6.0
           - prettier-plugin-tailwindcss@0.2.2
-          - tailwindcss-rtl@0.9.0
           - typescript@4.9.3
 
   - repo: https://github.com/koalaman/shellcheck-precommit
@@ -86,14 +138,33 @@ repos:
     hooks:
       - id: types
         name: types
+        files: ^frontend/.*$
         entry: bash -c 'just frontend/run types'
         language: system
         pass_filenames: false
-
       - id: test:unit
         name: test:unit
+        files: ^frontend/.*$
         entry: bash -c 'just frontend/run test:unit'
         language: system
         pass_filenames: false
         stages:
           - push
+      - id: render-precommit
+        name: render-precommit
+        files: ^templates/.*$
+        entry: bash -c 'just automations/js/render-precommit'
+        language: system
+        pass_filenames: false
+      - id: render-prettier
+        name: render-prettier
+        files: ^templates/.*$
+        entry: bash -c 'just automations/js/render-prettier'
+        language: system
+        pass_filenames: false
+      - id: render-github
+        name: render-github
+        files: ^templates/.*$
+        entry: bash -c 'just automations/js/render-github'
+        language: system
+        pass_filenames: false

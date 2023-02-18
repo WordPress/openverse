@@ -1,7 +1,7 @@
 // This file is being synced from WordPress/openverse. Any changes made to it
 // here will be overwritten. Please make any necessary edits to these files:
-// - https://github.com/WordPress/openverse/blob/main/prettier.config.js.jinja
-// - https://github.com/WordPress/openverse/blob/main/templates/prettier.config.frontend.js.jinja
+// - https://github.com/WordPress/openverse/blob/main/templates/prettier.config.js.jinja
+// - https://github.com/WordPress/openverse/blob/main/templates/prettier.config.local.js.jinja
 
 module.exports = {
   trailingComma: "es5",
@@ -16,8 +16,13 @@ module.exports = {
         proseWrap: "preserve",
       },
     },
+    {
+      files: ["frontend/**/*"],
+      options: {
+        plugins: [require("prettier-plugin-tailwindcss")],
+        tailwindConfig: "frontend/tailwind.config.js",
+        vueIndentScriptAndStyle: false,
+      },
+    },
   ],
-  vueIndentScriptAndStyle: false,
-  plugins: [require("prettier-plugin-tailwindcss")],
-  tailwindConfig: "frontend/tailwind.config.js",
 }
