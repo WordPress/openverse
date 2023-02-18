@@ -36,16 +36,23 @@ jobs:
     if: github.repository == 'WordPress/openverse-frontend'
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node-env
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
 
       - uses: preactjs/compressed-size-action@2.5.0
         with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
           # Only measure changes in the client, we don't care much about the size of the server bundles (I don't think?)
-          pattern: "./.nuxt/dist/client/**/*.{modern.js,js,css}"
-          exclude: "{./.nuxt/dist/client/lang-*.json.js,./.nuxt/dist/client/lang-*.json.modern.js}"
+          pattern: "./frontend/.nuxt/dist/client/**/*.{modern.js,js,css}"
+          exclude: "{./frontend/.nuxt/dist/client/lang-*.json.js,./frontend/.nuxt/dist/client/lang-*.json.modern.js}"
           minimum-change-threshold: 10
+
+      - name: Checkout repository # again, to enable cleaning
+        if: always()
+        uses: actions/checkout@v3

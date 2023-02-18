@@ -13,22 +13,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          ref: main
 
-      - uses: ./.github/actions/setup-node-env
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
 
       - name: Generate PO
-        run: pnpm i18n:generate-pot
+        run: just frontend/run i18n:generate-pot
 
       - name: Copy to root
-        run: cp ./openverse.pot /tmp/openverse.pot
+        run: cp frontend/openverse.pot /tmp/openverse.pot
 
-      - name: Checkout `translations` branch
+      - name: Checkout repository at `translations` branch
         uses: actions/checkout@v3
         with:
           ref: translations
@@ -42,7 +42,6 @@ jobs:
           git commit --no-verify -am 'Update POT file'
           git push --no-verify
 
-      - name: Re-checkout `main` branch to allow for cleanup to work
+      - name: Checkout repository # again, to enable cleaning.
+        if: always()
         uses: actions/checkout@v3
-        with:
-          ref: main

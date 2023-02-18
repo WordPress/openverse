@@ -22,36 +22,61 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node-env
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
 
       - name: Check types
-        run: pnpm types
+        run: just frontend/run types
 
   lint:
     name: Lint files
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node-env
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Python is not needed to run pre-commit.
+          setup_python: false
+          # Node.js is needed by lint actions.
 
-      - name: Lint with ESLint and Prettier
-        run: pnpm pc:lint
+      - name: Cache pre-commit envs
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: Run pre-commit to lint files
+        run: |
+          just precommit
+          just lint
 
   unit:
     name: Unit tests
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node-env
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
 
       - name: Run unit tests
-        run: pnpm test:unit
+        run: just frontend/run test:unit
 
   clean-playwright-failure-comment:
     name: Remove previous Playwright test failure comments
@@ -81,12 +106,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node-env
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
 
       - name: Run Nuxt Playwright e2e tests
-        run: pnpm test:playwright e2e --workers=2
+        run: just frontend/run test:playwright e2e --workers=2
 
       - uses: actions/upload-artifact@v3
         if: failure()
@@ -99,12 +129,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node-env
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
 
       - name: Run Nuxt Playwright visual regression tests
-        run: pnpm test:playwright visual-regression --workers=2
+        run: just frontend/run test:playwright visual-regression --workers=2
 
       - uses: actions/upload-artifact@v3
         if: failure()
@@ -117,12 +152,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node-env
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
 
       - name: Run Storybook Playwright tests
-        run: pnpm test:storybook
+        run: just frontend/run test:storybook
 
       - uses: actions/upload-artifact@v3
         if: failure()
@@ -160,24 +200,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node-env
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
 
       - name: Run Storybook smoke-test
-        run: pnpm storybook:smoke
+        run: just frontend/run storybook:smoke
 
   build:
     name: Check Nuxt build
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node-env
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
 
       - name: Run build
-        run: pnpm build
+        run: just frontend/run build
 
   gh-pages:
     name: PR Storybook and Tailwind Preview
@@ -208,25 +258,29 @@ jobs:
             **Storybook and Tailwind configuration previews**: _Updating_
             (This comment will be automatically updated with the preview URLs once they are ready)
 
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node-env
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
 
       - name: Fetch translation files
-        run: pnpm i18n
+        run: just frontend/run i18n
 
       - name: Build Storybook
-        run: pnpm storybook:build
+        run: just frontend/run storybook:build
 
       - name: Build Tailwind Config Viewer
-        run: pnpm tcv:build
+        run: just frontend/run tcv:build
 
       # This makes the TCV available at the `/tailwind` directory in the gh-pages
       - name: Merge TCV and Storybook builds
         run: |
-          mv .tcv-export ./storybook-static/tailwind
-          mv ./storybook-static /tmp/preview
+          mv frontend/.tcv-export frontend/storybook-static/tailwind
+          mv frontend/storybook-static /tmp/preview
 
       # Otherwise we end up with `node_modules` and other things only necessary for building
       # but not necessary for deploying the `gh-pages` branch
@@ -236,7 +290,8 @@ jobs:
           rm -rf openverse-frontend
           mkdir openverse-frontend
 
-      - uses: actions/checkout@v3
+      - name: Checkout repository at `gh-pages` branch
+        uses: actions/checkout@v3
         with:
           ref: gh-pages
 
@@ -277,6 +332,6 @@ jobs:
 
             You can check [the GitHub pages deployment action list](https://github.com/WordPress/openverse-frontend/actions/workflows/pages/pages-build-deployment) to see the current status of the deployments.
 
-      - name: Checkout branch again to enable cleaning
-        uses: actions/checkout@v3
+      - name: Checkout repository # again, to enable cleaning.
         if: always()
+        uses: actions/checkout@v3

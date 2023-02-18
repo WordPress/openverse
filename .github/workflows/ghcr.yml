@@ -38,10 +38,14 @@ jobs:
         with:
           ref: ${{ github.event.release.tag_name }}
 
-      - uses: ./.github/actions/setup-node-env
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
 
       - name: Download translation strings
-        run: pnpm i18n
+        run: just frontend/run i18n
         env:
           GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
           GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
@@ -83,7 +87,7 @@ jobs:
 
       - uses: docker/build-push-action@v4
         with:
-          context: .
+          context: frontend/
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           push: true
