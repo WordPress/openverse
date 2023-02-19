@@ -90,7 +90,7 @@ runs:
       with:
         task-definition: task-definition.json
         container-name: nginx
-        image: "ghcr.io/wordpress/openverse-api-nginx:${{ inputs.tag }}"
+        image: "ghcr.io/wordpress/openverse-api_nginx:${{ inputs.tag }}"
 
     - name: "Fill in the new django image ID in the Amazon ECS task definition"
       id: "task-def-django"

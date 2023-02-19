@@ -58,7 +58,7 @@ jobs:
               const { data: versions } =
                 await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
                   package_type: 'container',
-                  package_name: 'openverse-api-nginx',
+                  package_name: 'openverse-api_nginx',
                   org: 'WordPress',
                   page,
                   // max of `per_page`
@@ -71,7 +71,7 @@ jobs:
             }
             if (!exists) {
               throw new Error(
-                '`${{ inputs.tag }}` does not appear to be a valid tag for the ghcr.io/wordpress/openverse-api-nginx image.'
+                '`${{ inputs.tag }}` does not appear to be a valid tag for the ghcr.io/wordpress/openverse-api_nginx image.'
               )
             }
 

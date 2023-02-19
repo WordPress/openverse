@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - monorepo
   release:
     types:
       - published
@@ -18,34 +19,16 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-
-      - name: Cache pre-commit envs
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pre-commit
-          key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
-
-      - name: Run pre-commit to lint files
-        run: |
-          pip install pre-commit
-          pre-commit run --all-files
+  ###########
+  # Helpers #
+  ###########
 
   get-image-tag:
     name: Get image tag
     runs-on: ubuntu-latest
     outputs:
       image-tag: ${{ steps.get-image-tag.outputs.image-tag }}
+
     steps:
       - name: Get image tag
         id: get-image-tag
@@ -56,8 +39,50 @@ jobs:
               echo "image-tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
           fi
 
+  #############
+  # Universal #
+  #############
+
+  lint: # This includes type-checking of the frontend.
+    name: Lint files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Python is not needed to run pre-commit.
+          setup_python: false
+          # Node.js is needed by lint actions.
+          install_recipe: ""
+          # Need more complex install recipe.
+
+      - name: Install dependences
+        run: |
+          pnpm install
+          just frontend/install --ignore-workspace
+
+      - name: Cache pre-commit envs
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: Run pre-commit to lint files
+        run: |
+          just precommit
+          just lint
+
+  ############################
+  # API and ingestion server #
+  ############################
+
   build-images:
-    name: Build images
+    name: Build Docker images
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -67,6 +92,7 @@ jobs:
     needs:
       - get-image-tag
       - lint
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -94,61 +120,9 @@ jobs:
           name: ${{ matrix.image }}
           path: /tmp/${{ matrix.image }}.tar
 
-  build-nginx:
-    # This requires a separate job due to the dependency on the other image builds
-    name: Build `nginx` Dockerfile target
-    runs-on: ubuntu-latest
-    needs:
-      - build-images
-      - get-image-tag
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup just
-        uses: extractions/setup-just@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Download all images
-        uses: actions/download-artifact@v3
-        with:
-          path: /tmp
-
-      - name: Load API and ingestion server images
-        run: |
-          docker load --input /tmp/api/api.tar
-          docker load --input /tmp/ingestion_server/ingestion_server.tar
-
-      - name: collectstatic
-        run: just api/collectstatic
-        env:
-          STATIC_ROOT: ./static
-          DC_USER: root
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          install: true
-
-      - name: Build image `nginx`
-        uses: docker/build-push-action@v4
-        with:
-          context: api
-          target: nginx
-          push: false
-          tags: openverse-api-nginx
-          cache-from: type=gha,scope=nginx
-          cache-to: type=gha,scope=nginx
-          outputs: type=docker,dest=/tmp/api-nginx.tar
-          build-args: |
-            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image-tag }}
-
-      - name: Upload image `api-nginx`
-        uses: actions/upload-artifact@v3
-        with:
-          name: api-nginx
-          path: /tmp/api-nginx.tar
+  ####################
+  # Ingestion server #
+  ####################
 
   test-ing:
     name: Run tests for ingestion-server
@@ -156,41 +130,24 @@ jobs:
     timeout-minutes: 15
     needs:
       - build-images
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup just
-        uses: extractions/setup-just@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
         with:
-          python-version: "3.10"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Python is needed to run the test.
+          setup_nodejs: false
+          # Node.js is not needed to run ingestion server tests.
+          install_recipe: ingestion_server/install
 
-      - name: Cache Python dependencies
-        uses: actions/cache@v3
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install Python deps for ingestion-server
-        run: |
-          pip install -U pip
-          pip install pipenv
-          just ingestion_server/install
-
-      - name: Download image `ingestion_server`
-        uses: actions/download-artifact@v3
-        with:
-          name: ingestion_server
-          path: /tmp
-      - name: Load image `ingestion_server`
-        run: docker load --input /tmp/ingestion_server.tar
+          setup_api: false
 
       - name: Run ingestion-server tests
         run: just ingestion_server/test-local
@@ -206,30 +163,33 @@ jobs:
         if: always()
         run: cat ingestion_server/test/ingestion_logs.txt
 
+  #######
+  # API #
+  #######
+
   test-api:
     name: Run tests for the API
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
       - build-images
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup just
-        uses: extractions/setup-just@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Download all images
-        uses: actions/download-artifact@v3
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
         with:
-          path: /tmp
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          # Python is not needed to run the tests.
+          setup_nodejs: false
+          # Node.js is not needed to run API tests.
+          install_recipe: ""
 
-      - name: Load all images
-        run: |
-          docker load --input /tmp/api/api.tar
-          docker load --input /tmp/ingestion_server/ingestion_server.tar
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
 
       - name: Start API, ingest and index test data
         run: just init
@@ -255,24 +215,23 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-images
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup just
-        uses: extractions/setup-just@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Download all images
-        uses: actions/download-artifact@v3
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
         with:
-          path: /tmp
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          # Python is not needed to run the tests.
+          setup_nodejs: false
+          # Node.js is not needed to run API tests.
+          install_recipe: ""
 
-      - name: Load all images
-        run: |
-          docker load --input /tmp/api/api.tar
-          docker load --input /tmp/ingestion_server/ingestion_server.tar
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
 
       - name: Test ReDoc site
         run: just api/doc-test
@@ -282,23 +241,23 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-images
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Setup just
-        uses: extractions/setup-just@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Download all images
-        uses: actions/download-artifact@v3
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
         with:
-          path: /tmp
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          # Python is not needed to run the tests.
+          setup_nodejs: false
+          # Node.js is not needed to run API tests.
+          install_recipe: ""
 
-      - name: Load all images
-        run: |
-          docker load --input /tmp/api/api.tar
-          docker load --input /tmp/ingestion_server/ingestion_server.tar
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
 
       - name: Run check
         run: just api/dj validateopenapischema
@@ -317,24 +276,23 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-images
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup just
-        uses: extractions/setup-just@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Download all images
-        uses: actions/download-artifact@v3
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
         with:
-          path: /tmp
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          # Python is not needed to run the tests.
+          setup_nodejs: false
+          # Node.js is not needed to run API tests.
+          install_recipe: ""
 
-      - name: Load all images
-        run: |
-          docker load --input /tmp/api/api.tar
-          docker load --input /tmp/ingestion_server/ingestion_server.tar
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
 
       - name: Run check
         run: just api/dj check
@@ -344,38 +302,498 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-images
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup just
-        uses: extractions/setup-just@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Download all images
-        uses: actions/download-artifact@v3
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
         with:
-          path: /tmp
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          # Python is not needed to run the tests.
+          setup_nodejs: false
+          # Node.js is not needed to run API tests.
+          install_recipe: ""
 
-      - name: Load all images
-        run: |
-          docker load --input /tmp/api/api.tar
-          docker load --input /tmp/ingestion_server/ingestion_server.tar
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
 
       - name: Run makemigrations
         run: just api/dj makemigrations --check --noinput --merge
 
-  push:
-    name: Publish Docker images
+  #########
+  # NGINX #
+  #########
+
+  build-nginx:
+    # This requires a separate job due to the dependency on the other image builds
+    name: Build `nginx` Docker image
     runs-on: ubuntu-latest
-    # prevent running on fork PRs
-    if: (github.event_name == 'push' || github.event_name == 'release') && github.repository == 'WordPress/openverse-api'
+    needs:
+      - build-images
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          # Python is not needed to build the image.
+          setup_nodejs: false
+          # Node.js is not needed to build the image.
+          install_recipe: ""
+
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
+
+      - name: collectstatic
+        run: |
+          just _all-up
+          just api/collectstatic
+        env:
+          DC_USER: root
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          install: true
+
+      - name: Build image `api_nginx`
+        uses: docker/build-push-action@v4
+        with:
+          context: api
+          target: nginx # from `api/Dockerfile`
+          push: false
+          tags: openverse-api_nginx
+          cache-from: type=gha,scope=nginx
+          cache-to: type=gha,scope=nginx
+          outputs: type=docker,dest=/tmp/api_nginx.tar
+          build-args: |
+            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image-tag }}
+
+      - name: Upload image `api_nginx`
+        uses: actions/upload-artifact@v3
+        with:
+          name: api_nginx
+          path: /tmp/api_nginx.tar
+
+  ############
+  # Frontend #
+  ############
+
+  frontend-unit:
+    name: Run frontend unit tests
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          install_recipe: frontend/install --ignore-workspace
+
+      - name: Run unit tests
+        run: just frontend/run test:unit
+
+  storybook-smoke:
+    name: Check Storybook smoke test
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          install_recipe: frontend/install --ignore-workspace
+
+      - name: Run Storybook smoke-test
+        run: just frontend/run storybook:smoke
+
+  nuxt-build:
+    name: Check Nuxt build
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          install_recipe: frontend/install --ignore-workspace
+
+      - name: Run build
+        run: just frontend/run build
+
+  nuxt-playwright-e2e:
+    name: Nuxt Playwright e2e tests
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          install_recipe: frontend/install --ignore-workspace
+
+      - name: Run Nuxt Playwright e2e tests
+        run: just frontend/run test:playwright e2e --workers=2
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: nuxt-e2e-test-results
+          path: test-results
+
+  nuxt-playwright-vr:
+    name: Nuxt Playwright VR tests
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          install_recipe: frontend/install --ignore-workspace
+
+      - name: Run Nuxt Playwright visual regression tests
+        run: just frontend/run test:playwright visual-regression --workers=2
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: nuxt-vr-test-results
+          path: test-results
+
+  storybook-playwright:
+    name: Storybook Playwright tests
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          install_recipe: frontend/install --ignore-workspace
+
+      - name: Run Storybook Playwright tests
+        run: just frontend/run test:storybook
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        id: test-results
+        with:
+          name: storybook-test-results
+          path: test-results
+
+  clean-playwright-failure-comment:
+    name: Remove Playwright test debugging instructions
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - uses: peter-evans/find-comment@v2
+        id: test-results-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Playwright failure test results
+
+      - uses: actions/github-script@v6
+        if: steps.test-results-comment.outputs.comment-id != 0
+        with:
+          script: |
+            await github.rest.issues.deleteComment({
+              repo: context.repo.repo,
+              owner: context.repo.owner,
+              comment_id: ${{ steps.test-results-comment.outputs.comment-id }}
+            })
+            console.log('Deleted comment with ID ${{ steps.test-results-comment.outputs.comment-id }}')
+
+  playwright-test-failure-comment:
+    name: Post Playwright test debugging instructions
+    runs-on: ubuntu-latest
+    if: always() && github.event_name == 'pull_request' && (needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' ||needs.storybook-playwright.result == 'failure')
+    needs:
+      - nuxt-playwright-e2e
+      - nuxt-playwright-vr
+      - storybook-playwright
+      - clean-playwright-failure-comment
+
+    steps:
+      - uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            **Playwright failure test results**
+
+            It looks like some of the Playwright tests failed. You can download the Playwright trace
+            output for all playwright tests that have failed at the bottom of this page, under the
+            "Artifacts" section:
+
+            <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}>
+
+            Read more about how to use this artifact here: <https://github.com/${{ github.repository }}/blob/main/frontend/test/playwright/README.md#debugging>
+
+  build-frontend:
+    # This requires a separate job due to a difference in build steps
+    name: Build `frontend` Docker image
+    runs-on: ubuntu-latest
+    needs:
+      - build-images
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          # Python is not needed to build the image.
+          install_recipe: frontend/install --ignore-workspace
+
+      - name: Download translation strings
+        run: just frontend/run i18n
+        env:
+          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
+          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          install: true
+
+      - name: Build image `frontend`
+        uses: docker/build-push-action@v4
+        with:
+          context: frontend
+          target: app # from `frontend/Dockerfile`
+          push: false
+          tags: openverse-frontend
+          cache-from: type=gha,scope=frontend
+          cache-to: type=gha,scope=frontend
+          outputs: type=docker,dest=/tmp/frontend.tar
+          build-args: |
+            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image-tag }}
+
+      - name: Upload image `frontend`
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend
+          path: /tmp/frontend.tar
+
+  #################
+  # Documentation #
+  #################
+
+  docs-publish:
+    name: Publish full-stack docs
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
     needs:
       - test-ing
       - test-api
-      - get-image-tag
+      - nuxt-build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          install_recipe: frontend/install --ignore-workspace
+
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
+
+      - name: Compile documentation
+        uses: ./.github/actions/build-docs
+        # Docs will be located at `/tmp/docs`.
+
+      - name: Checkout repository at `gh-pages` branch
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+
+      - name: Preserve previews
+        run: mv _preview /tmp/docs/_preview
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/docs
+          force_orphan: true
+
+      - name: Checkout repository # again, to enable cleaning
+        uses: actions/checkout@v3
+        if: always()
+
+  docs-preview:
+    name: Preview full-stack docs
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.owner.login == 'WordPress' && github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    needs:
+      - test-ing
+      - test-api
+      - nuxt-build
+    env:
+      REPO_OWNER: ${{ github.event.pull_request.head.repo.owner.login }}
+      REPO_NAME: ${{ github.event.pull_request.head.repo.name }}
+
+    steps:
+      - uses: peter-evans/find-comment@v2
+        id: preview-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Full-stack documentation
+
+      - uses: peter-evans/create-or-update-comment@v2
+        if: steps.preview-comment.outputs.comment-id != 0
+        with:
+          comment-id: ${{ steps.preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            **Full-stack documentation**: _Updating_
+
+            (This comment will be automatically updated with the preview URL once it is ready)
+
+      - uses: peter-evans/create-or-update-comment@v2
+        if: steps.preview-comment.outputs.comment-id == 0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            **Full-stack documentation**: _Updating_
+
+            (This comment will be automatically updated with the preview URLs once it is ready)
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          install_recipe: frontend/install --ignore-workspace
+
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
+
+      - name: Compile documentation
+        uses: ./.github/actions/build-docs
+        # Docs will be located at `/tmp/docs`.
+
+      - name: Recreate working directory # to avoid superfluous files from getting tracked automatically
+        run: |
+          cd ..
+          sudo rm -rf "$REPO_NAME"
+          mkdir "$REPO_NAME"
+
+      - name: Checkout repository at `gh-pages` branch
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+
+      - name: Merge preview with existing gh-pages
+        run: |
+          cd ..
+          cp -r "$REPO_NAME" /tmp/gh-pages
+          # Trash the existing preview folder and replace it with the newly generated one.
+          # If the preview hasn't been pushed yet this will still exit with code 0.
+          sudo rm -rf /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
+          mv /tmp/docs /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
+          cd "$REPO_NAME"
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/gh-pages
+          force_orphan: true
+
+      - uses: peter-evans/find-comment@v2
+        id: final-preview-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Full-stack documentation
+
+      - uses: peter-evans/create-or-update-comment@v2
+        with:
+          comment-id: ${{ steps.final-preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            **Full-stack documentation**: _Ready_
+
+            <https://${{ env.REPO_OWNER }}.github.io/${{ env.REPO_NAME }}/_preview/${{ github.event.pull_request.number }}>
+
+            Please note that GitHub pages takes a little time to deploy newly pushed code, if the links above don't work or you see old versions, wait 5 minutes and try again.
+
+            You can check [the GitHub pages deployment action list](https://github.com/${{ github.repository }}/actions/workflows/pages/pages-build-deployment) to see the current status of the deployments.
+
+      - name: Checkout repository # again, to enable cleaning
+        uses: actions/checkout@v3
+        if: always()
+
+  #################
+  # Docker images #
+  #################
+
+  publish-images:
+    name: Publish Docker images
+    runs-on: ubuntu-latest
+    # prevent running on fork PRs
+    if: (github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'release' && github.repository == 'WordPress/openverse')
+    needs:
+      # `build-images` is automatically included in `test-ing` and `test-api`.
+      - test-ing
+      - test-api
       - build-nginx
+      - build-frontend
+      - get-image-tag
     permissions:
       packages: write
       contents: read
@@ -384,7 +802,9 @@ jobs:
         image:
           - api
           - ingestion_server
-          - api-nginx
+          - api_nginx
+          - frontend
+
     steps:
       - name: Log in to GitHub Docker Registry
         uses: docker/login-action@v2
@@ -407,185 +827,3 @@ jobs:
           docker tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ needs.get-image-tag.outputs.image-tag }}
           docker push --all-tags ghcr.io/wordpress/openverse-${{ matrix.image }}
-
-  deploy-staging:
-    name: Deploy staging API
-    runs-on: ubuntu-latest
-    # Deploy a new version when `main` is pushed to in this repository
-    if: github.event_name == 'push' && github.repository == 'WordPress/openverse-api'
-    needs:
-      - push
-      - get-image-tag
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: ./.github/actions/staging-api-deploy
-        with:
-          tag: ${{ needs.get-image-tag.outputs.image-tag }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
-
-  publish-docs:
-    name: Publish developer docs
-    runs-on: ubuntu-latest
-    # Push new docs when `main` is pushed to in this repository
-    if: github.event_name == 'push' && github.repository == 'WordPress/openverse-api'
-    needs:
-      - build-images
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup just
-        uses: extractions/setup-just@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Download all images
-        uses: actions/download-artifact@v3
-        with:
-          path: /tmp
-
-      - name: Load all images
-        run: |
-          docker load --input /tmp/api/api.tar
-          docker load --input /tmp/ingestion_server/ingestion_server.tar
-
-      - name: Make developer docs
-        run: |
-          just api/sphinx-make
-          sudo chown "$USER:$USER" -R ./api
-          mv ./api/build/html /tmp/gh-pages
-        env:
-          DC_USER: root
-
-      - uses: actions/checkout@v3
-        with:
-          ref: gh-pages
-
-      - name: Preserve previews
-        run: mv _preview /tmp/gh-pages/_preview
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@bbdfb200618d235585ad98e965f4aafc39b4c501 # v3.7.3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: /tmp/gh-pages
-          force_orphan: true
-
-      - name: Checkout branch again to enable cleaning
-        if: always()
-        uses: actions/checkout@v3
-        with:
-          ref: main
-
-  docs-preview:
-    name: Publish preview of developer docs for the branch
-    runs-on: ubuntu-latest
-    # Check if the event is not triggered by a fork or dependabot
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.owner.login == 'WordPress' && github.actor != 'dependabot[bot]'
-    needs:
-      - build-images
-    steps:
-      - uses: peter-evans/find-comment@v2
-        id: preview-comment
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body-includes: API Developer Docs Preview
-
-      - uses: peter-evans/create-or-update-comment@v2
-        if: steps.preview-comment.outputs.comment-id != 0
-        with:
-          comment-id: ${{ steps.preview-comment.outputs.comment-id }}
-          edit-mode: replace
-          body: |
-            **API Developer Docs Preview**: _Updating_
-            (This comment will be automatically updated with the preview URL once it is ready)
-
-      - uses: peter-evans/create-or-update-comment@v2
-        if: steps.preview-comment.outputs.comment-id == 0
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            **API Developer Docs Preview**: _Updating_
-            (This comment will be automatically updated with the preview URLs once it is ready)
-
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup just
-        uses: extractions/setup-just@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Download all images
-        uses: actions/download-artifact@v3
-        with:
-          path: /tmp
-
-      - name: Load all images
-        run: |
-          docker load --input /tmp/api/api.tar
-          docker load --input /tmp/ingestion_server/ingestion_server.tar
-
-      - name: Build docs
-        run: |
-          just api/sphinx-make
-          sudo chown "$USER:$USER" -R ./api
-          mv ./api/build/html /tmp/preview
-        env:
-          DC_USER: root
-
-      # Otherwise we end up with any extra stuff not git-ignored in the gh-pages branch
-      - name: Recreate working directory to avoid superfluous files
-        run: |
-          cd ..
-          sudo rm -rf openverse-api
-          mkdir openverse-api
-
-      - uses: actions/checkout@v3
-        with:
-          ref: gh-pages
-
-      - name: Merge preview with existing gh-pages
-        run: |
-          cd ..
-          cp -r ./openverse-api /tmp/gh-pages
-          # trash the existing preview folder and replace it with the newly generated one
-          # if the preview hasn't been pushed yet this will still exit(0)
-          sudo rm -rf /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
-          mv /tmp/preview /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
-          cd openverse-api
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: /tmp/gh-pages
-          force_orphan: true
-
-      - uses: peter-evans/find-comment@v2
-        id: final-preview-comment
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body-includes: API Developer Docs Preview
-
-      - uses: peter-evans/create-or-update-comment@v2
-        with:
-          comment-id: ${{ steps.final-preview-comment.outputs.comment-id }}
-          edit-mode: replace
-          body: |
-            **API Developer Docs Preview**: _Ready_
-
-            <https://wordpress.github.io/openverse-api/_preview/${{ github.event.pull_request.number }}>
-
-            Please note that GitHub pages takes a little time to deploy newly pushed code, if the links above don't work or you see old versions, wait 5 minutes and try again.
-
-            You can check [the GitHub pages deployment action list](https://github.com/WordPress/openverse-api/actions/workflows/pages/pages-build-deployment) to see the current status of the deployments.
-
-      - name: Checkout branch again to enable cleaning
-        uses: actions/checkout@v3
-        if: always()

@@ -1,0 +1,42 @@
+name: openverse/load-img
+description: Download and import Docker images from artifacts
+
+inputs:
+  setup_ingestion_server:
+    default: "true"
+    description: Whether to set up ingestion server image
+
+  setup_api:
+    default: "true"
+    description: Whether to set up API image
+
+runs:
+  using: "composite"
+  steps:
+    # Ingestion server
+    - name: Download image `ingestion_server`
+      uses: actions/download-artifact@v3
+      if: inputs.setup_ingestion_server == 'true'
+      with:
+        name: ingestion_server
+        path: /tmp
+
+    - name: Load image `ingestion_server`
+      if: inputs.setup_ingestion_server == 'true'
+      shell: bash
+      run: |
+        docker load --input /tmp/ingestion_server.tar
+
+    # API
+    - name: Download image `api`
+      uses: actions/download-artifact@v3
+      if: inputs.setup_api == 'true'
+      with:
+        name: api
+        path: /tmp
+
+    - name: Load image `api`
+      if: inputs.setup_api == 'true'
+      shell: bash
+      run: |
+        docker load --input /tmp/api.tar
