@@ -863,3 +863,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+
+  deploy-api:
+    name: Deploy staging API
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs:
+      - get-image-tag
+      - test-api
+      - publish-images
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Deploy to staging
+        uses: ./.github/actions/staging-api-deploy
+        with:
+          tag: ${{ needs.get-image-tag.outputs.image-tag }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
