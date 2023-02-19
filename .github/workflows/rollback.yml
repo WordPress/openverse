@@ -74,7 +74,7 @@ jobs:
               )
             }
 
-      - uses: ./.github/actions/production-deploy
+      - uses: ./.github/actions/production-nuxt-deploy
         if: inputs.environment == 'production'
         with:
           tag: ${{ inputs.tag }}
@@ -83,7 +83,7 @@ jobs:
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
 
-      - uses: ./.github/actions/staging-deploy
+      - uses: ./.github/actions/staging-nuxt-deploy
         if: inputs.environment == 'staging'
         with:
           tag: ${{ inputs.tag }}

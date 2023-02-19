@@ -419,7 +419,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: ./.github/actions/staging-deploy
+      - uses: ./.github/actions/staging-api-deploy
         with:
           tag: ${{ needs.get-image-tag.outputs.image-tag }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
