@@ -1,0 +1,84 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+
+import replayIcon from "~/assets/icons/replay.svg"
+
+<Meta
+  title="Components/VIconButton"
+  component={VIconButton}
+  argTypes={{
+    size: {
+      defaultValue: "medium",
+      options: ["tiny", "small", "medium", "large", "extra-large"],
+      control: "select",
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `
+    <VIconButton class="text-white bg-dark-charcoal border-dark-charcoal" v-bind="args"/>
+  `,
+  components: { VIconButton },
+  setup() {
+    return { args }
+  },
+})
+
+export const sizesTemplate = (args) => ({
+  template: `
+    <div class="flex gap-x-2">
+      <div v-for="size in ['tiny', 'small', 'medium', 'large', 'extra-large']" :key="size" class="flex flex-col items-center p-2">
+        <p>{{ size }}</p>
+        <VIconButton
+           class="text-white bg-dark-charcoal border-dark-charcoal"
+           :size="size" v-bind="args" />
+      </div>
+    </div>
+  `,
+  components: { VIconButton },
+  setup() {
+    return { args }
+  },
+})
+
+# Icon Button
+
+<Description of={VIconButton} />
+
+<ArgsTable of={VIconButton} />
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      iconProps: {
+        iconPath: replayIcon,
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Sizes
+
+<Canvas>
+  <Story
+    name="Sizes"
+    args={{
+      iconProps: {
+        iconPath: replayIcon,
+      },
+    }}
+  >
+    {sizesTemplate.bind({})}
+  </Story>
+</Canvas>

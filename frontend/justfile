@@ -1,0 +1,20 @@
+set dotenv-load := false
+
+# Show all available recipes
+@_default:
+    echo "############"
+    echo "# Frontend #"
+    echo "############"
+    just --list --unsorted
+
+# Install dependencies
+install *args: && core-locales
+    pnpm install {{ args }}
+
+# Ensure that some core locales are present
+core-locales:
+    cp -r test/locales/* src/locales
+
+# Run a package.json script via pnpm
+run *args:
+    pnpm run {{ args }}

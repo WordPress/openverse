@@ -1,0 +1,133 @@
+name: GitHub Container Registry & Deployment
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  release:
+    types: [published]
+
+# Prevents multiple deployments/builds from running at the same time
+concurrency:
+  group: ${{ github.event_name == 'release' && 'production' || github.event_name == 'push' && 'staging' || github.event.pull_request.number }}_release
+  # Don't continue building images for a PR if the PR is updated quickly
+  # For other workflows, allow them to complete and just block on them. This
+  # ensures deployments in particular to happen in series rather than parallel.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  push-to-ghcr:
+    name: Build and push image for commit
+    runs-on: ubuntu-latest
+    # prevent running on fork PRs
+    if: github.event_name == 'push' || github.event_name == 'release' || github.event.pull_request.head.repo.owner.login == 'WordPress'
+    outputs:
+      pushed-version: ${{ steps.get-version.outputs.version }}
+
+    steps:
+      - name: Checkout branch or push to main
+        uses: actions/checkout@v3
+        if: github.event_name != 'release'
+
+      - name: Checkout release
+        uses: actions/checkout@v3
+        if: github.event_name == 'release'
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+
+      - name: Download translation strings
+        run: just frontend/run i18n
+        env:
+          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
+          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
+
+      - uses: docker/setup-buildx-action@v2
+        with:
+          install: true
+
+      - uses: docker/login-action@v2
+        with:
+          registry: https://ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/metadata-action@v4
+        id: metadata
+        with:
+          images: ghcr.io/wordpress/openverse-frontend
+          tags: |
+            type=sha
+            type=ref,event=tag
+            type=raw,value=main,enabled=${{ github.event_name == 'push' }}
+
+      - name: Get relevant tag for internal image version
+        id: get-version
+        shell: python
+        run: |
+          import json
+          import os
+          metadata = json.loads('${{ steps.metadata.outputs.json }}')
+          version = metadata["labels"]["org.opencontainers.image.version"]
+          if version == "main":
+              # get first version that isn't main
+              for tag in metadata["tags"]:
+                  if ":main" not in tag:
+                      version = tag.split(":")[1]
+          with open(os.environ.get("GITHUB_OUTPUT"), "a") as state:
+              state.write(f"version={version}\n")
+
+      - uses: docker/build-push-action@v4
+        with:
+          context: frontend/
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            RELEASE=${{ steps.get-version.outputs.version }}
+
+  deploy-staging:
+    name: Deploy staging frontend
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs: push-to-ghcr
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/staging-deploy
+        with:
+          tag: ${{ needs.push-to-ghcr.outputs.pushed-version }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+
+  deploy-production:
+    name: Deploy production frontend
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    needs: push-to-ghcr
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - uses: ./.github/actions/production-deploy
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}

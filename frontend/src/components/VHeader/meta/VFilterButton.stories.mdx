@@ -1,0 +1,97 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+import VFilterButton from "~/components/VHeader/VFilterButton.vue"
+import { useSearchStore } from "~/stores/search"
+import { filterData, mediaFilterKeys } from "~/constants/filters"
+import { IMAGE } from "~/constants/media"
+
+<Meta
+  title="Components/VHeader/VFilterButton"
+  component={VFilterButton}
+  argTypes={{
+    pressed: {
+      type: "boolean",
+    },
+    appliedFilters: {
+      type: "number",
+    },
+    toggle: {
+      action: "toggle",
+    },
+    tab: {
+      action: "tab",
+    },
+  }}
+/>
+
+export const Template = (args, { argTypes }) => ({
+  template: `<VFilterButton v-bind="args" v-on="args" />`,
+  components: { VFilterButton },
+  props: Object.keys(argTypes),
+  setup() {
+    const searchStore = useSearchStore()
+    searchStore.setSearchType(IMAGE)
+    function applyNFilters(filterCount) {
+      searchStore.clearFilters()
+      const filterTypes = [...mediaFilterKeys[IMAGE]]
+      let filterIdx = 0
+      // Skip license type filters as they can disable license filters
+      let filterTypeIdx = 1
+      for (let i = 0; i < filterCount; i++) {
+        let filterType = filterTypes[filterTypeIdx]
+        searchStore.toggleFilter({
+          filterType,
+          codeIdx: filterIdx,
+        })
+        filterIdx += 1
+        if (filterData[filterType].length === filterIdx) {
+          filterTypeIdx += 1
+          filterIdx = 0
+        }
+      }
+    }
+    applyNFilters(args.appliedFilters)
+    return { args }
+  },
+})
+
+# Filter button
+
+<Description of={VFilterButton} />
+
+<ArgsTable of={VFilterButton} />
+
+The button opens and closes the filters sidebar. It also shows how many filters
+are applied in the mobile view. the field receives an input. It also emits the
+`search` event when the search button is clicked.
+
+<Canvas>
+  <Story
+    name="Default"
+    parameters={{
+      viewport: {
+        defaultViewport: "lg",
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name="With text label"
+    parameters={{
+      viewport: {
+        defaultViewport: "xl",
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

@@ -1,0 +1,52 @@
+import {
+  ArgsTable,
+  Description,
+  Meta,
+  Canvas,
+  Story,
+} from "@storybook/addon-docs"
+
+import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
+
+<Meta
+  title="Components/VRecentSearches"
+  component={VRecentSearches}
+  argTypes={{
+    select: {
+      action: "select",
+    },
+    clear: {
+      action: "clear",
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `
+    <VRecentSearches v-bind="args" v-on="args" />`,
+  components: { VRecentSearches },
+  setup() {
+    return { args }
+  },
+})
+
+# VRecentSearches
+
+<Description of={VRecentSearches} />
+
+<ArgsTable of={VRecentSearches} />
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      entries: ["addition", "subtraction", "multiplication", "division"],
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="No history">{Template.bind({})}</Story>
+</Canvas>

@@ -1,0 +1,112 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
+    "target": "ES2018",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext", "ESNext.AsyncIterable"],
+    "noEmit": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    /* Strict Type-Checking Options */
+    "strict": true,
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "importsNotUsedAsValues": "error",
+    /* Module Resolution Options */
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "types": ["@types/jest", "@nuxt/types", "@nuxtjs/i18n", "@pinia/nuxt"],
+    "typeRoots": ["./typings", "./node_modules/@types"],
+    "paths": {
+      "~/*": ["./src/*"],
+      "~~/*": ["./*"]
+    },
+    "baseUrl": "."
+  },
+  "include": [
+    "**/*.ts",
+    "test/proxy.js",
+    "src/components/VButton.vue",
+    "src/components/VContentPage.vue",
+    "src/components/VLicenseElements.vue",
+    "src/components/VWarningSuppressor.vue",
+    "src/components/VLink.vue",
+    "src/components/VLoadMore.vue",
+    "src/components/VTranslationStatusBanner.vue",
+    "src/components/VNotificationBanner.vue",
+    "src/components/VMigrationNotice.vue",
+    "src/components/VVariations.vue",
+    "src/components/VBackToSearchResultsLink.vue",
+    "src/components/VSnackbar.vue",
+    "src/components/VSourcesTable.vue",
+    "src/components/TableSortIcon.vue",
+    "src/components/VCopyButton.vue",
+    "src/components/VSketchFabViewer.vue",
+    "src/components/VSearchGrid.vue",
+
+    "src/components/VAudioThumbnail/**.vue",
+    "src/components/VAudioTrack/**.vue",
+    "src/components/VCheckbox/**.vue",
+    "src/components/VContentLink/**.vue",
+    "src/components/VGlobalAudioSection/**.vue",
+    "src/components/VHomeGallery/**.vue",
+    "src/components/VIcon/**.vue",
+    "src/components/VIconButton/**.vue",
+    "src/components/VImageGrid/**.vue",
+    "src/components/VInputField/**.vue",
+    "src/components/VItemGroup/**.vue",
+    "src/components/VLicense/**.vue",
+    "src/components/VLogoLoader/**.vue",
+    "src/components/VMediaInfo/**.vue",
+    "src/components/VMediaTag/**.vue",
+    "src/components/VModal/**.vue",
+    "src/components/VPopover/**.vue",
+    "src/components/VRecentSearches/**.vue",
+    "src/components/VSkeleton/**.vue",
+    "src/components/VTabs/**.vue",
+    "src/components/VAllResultsGrid/VAudioCell.vue",
+    "src/components/VAllResultsGrid/VImageCellSquare.vue",
+    "src/components/VContentReport/VReportDescForm.vue",
+    "src/components/VContentSwitcher/VSearchTypeButton.vue",
+    "src/components/VContentSwitcher/VSearchTypeItem.vue",
+    "src/components/VContentSwitcher/VSearchTypeRadio.vue",
+    "src/components/VContentSwitcherOld/VSearchTypeButton.vue",
+    "src/components/VErrorSection/VErrorImage.vue",
+    "src/components/VFilters/VLicenseExplanation.vue",
+    "src/components/VHeader/VFilterButton.vue",
+    "src/components/VHeader/VPageLinks.vue",
+    "src/components/VHeader/VSearchBar/**.vue",
+    "src/components/VImageDetails/VRelatedImages.vue",
+
+    "src/pages/about.vue",
+    "src/pages/feedback.vue",
+    "src/pages/search-help.vue",
+    /**
+     * Some files from this section cannot be converted to TypeScript because they are
+     * used in non-TS contexts (like Tailwind configuration). Therefore they're left as
+     * "vanilla JavaScript" with JSDoc based type annotations. This allows us to check
+     * them with TypeScript without introducing syntax changes that are not compatible
+     * with other tools we rely on.
+     */
+    "src/constants/**/*",
+    "src/server-middleware/healthcheck.js"
+    /** End of non TypeScript files section */
+  ],
+  "exclude": ["node_modules"],
+  "vueCompilerOptions": {
+    "experimentalCompatMode": 2,
+    "experimentalTemplateCompilerOptions": {
+      "compatConfig": {
+        "MODE": 2
+      } // optional
+    },
+    "target": 2.7
+  }
+}

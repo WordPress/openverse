@@ -1,0 +1,337 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+# Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for pull requests
+  # or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  types:
+    name: Check types
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+
+      - name: Check types
+        run: just frontend/run types
+
+  lint:
+    name: Lint files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Python is not needed to run pre-commit.
+          setup_python: false
+          # Node.js is needed by lint actions.
+
+      - name: Cache pre-commit envs
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: Run pre-commit to lint files
+        run: |
+          just precommit
+          just lint
+
+  unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+
+      - name: Run unit tests
+        run: just frontend/run test:unit
+
+  clean-playwright-failure-comment:
+    name: Remove previous Playwright test failure comments
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+
+    steps:
+      - uses: peter-evans/find-comment@v2
+        id: test-results-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Playwright Failure Test Results
+
+      - uses: actions/github-script@v6
+        if: steps.test-results-comment.outputs.comment-id != 0
+        with:
+          script: |
+            await github.rest.issues.deleteComment({
+              repo: context.repo.repo,
+              owner: context.repo.owner,
+              comment_id: ${{ steps.test-results-comment.outputs.comment-id }}
+            })
+            console.log('Deleted comment with ID ${{ steps.test-results-comment.outputs.comment-id }}')
+
+  nuxt-playwright-e2e:
+    name: Nuxt Playwright e2e tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+
+      - name: Run Nuxt Playwright e2e tests
+        run: just frontend/run test:playwright e2e --workers=2
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: nuxt-e2e-test-results
+          path: test-results
+
+  nuxt-playwright-vr:
+    name: Nuxt Playwright VR tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+
+      - name: Run Nuxt Playwright visual regression tests
+        run: just frontend/run test:playwright visual-regression --workers=2
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: nuxt-vr-test-results
+          path: test-results
+
+  storybook-playwright:
+    name: Storybook Playwright tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+
+      - name: Run Storybook Playwright tests
+        run: just frontend/run test:storybook
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        id: test-results
+        with:
+          name: storybook-test-results
+          path: test-results
+
+  playwright-test-failure-comment:
+    name: Share Playwright test debugging instructions
+    runs-on: ubuntu-latest
+    if: always() && github.ref != 'refs/heads/main' && (needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' ||needs.storybook-playwright.result == 'failure')
+    needs:
+      - nuxt-playwright-e2e
+      - nuxt-playwright-vr
+      - storybook-playwright
+
+    steps:
+      - uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            **Playwright Failure Test Results**
+
+            It looks like some of the Playwright tests failed. You can download the Playwright trace
+            output for both Storybook and Nuxt Playwright tests that have failed at the bottom of this
+            page, under the "Artifacts" section:
+
+            <https://github.com/WordPress/openverse-frontend/actions/runs/${{ github.run_id }}>
+
+            Read more about how to use this artifact here: <https://github.com/WordPress/openverse-frontend/blob/main/test/playwright/README.md#debugging>
+
+  storybook:
+    name: Check Storybook build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+
+      - name: Run Storybook smoke-test
+        run: just frontend/run storybook:smoke
+
+  build:
+    name: Check Nuxt build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+
+      - name: Run build
+        run: just frontend/run build
+
+  gh-pages:
+    name: PR Storybook and Tailwind Preview
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.owner.login == 'WordPress'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: peter-evans/find-comment@v2
+        id: preview-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Storybook and Tailwind configuration previews
+
+      - uses: peter-evans/create-or-update-comment@v2
+        if: steps.preview-comment.outputs.comment-id != 0
+        with:
+          comment-id: ${{ steps.preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            **Storybook and Tailwind configuration previews**: _Updating_
+            (This comment will be automatically updated with the preview URLs once they are ready)
+
+      - uses: peter-evans/create-or-update-comment@v2
+        if: steps.preview-comment.outputs.comment-id == 0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            **Storybook and Tailwind configuration previews**: _Updating_
+            (This comment will be automatically updated with the preview URLs once they are ready)
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+
+      - name: Fetch translation files
+        run: just frontend/run i18n
+
+      - name: Build Storybook
+        run: just frontend/run storybook:build
+
+      - name: Build Tailwind Config Viewer
+        run: just frontend/run tcv:build
+
+      # This makes the TCV available at the `/tailwind` directory in the gh-pages
+      - name: Merge TCV and Storybook builds
+        run: |
+          mv frontend/.tcv-export frontend/storybook-static/tailwind
+          mv frontend/storybook-static /tmp/preview
+
+      # Otherwise we end up with `node_modules` and other things only necessary for building
+      # but not necessary for deploying the `gh-pages` branch
+      - name: Recreate working directory to avoid superfluous files
+        run: |
+          cd ..
+          rm -rf openverse-frontend
+          mkdir openverse-frontend
+
+      - name: Checkout repository at `gh-pages` branch
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+
+      - name: Merge preview with existing gh-pages
+        run: |
+          cd ..
+          cp -r ./openverse-frontend /tmp/gh-pages
+          # trash the existing preview folder and replace it with the newly generated one
+          # if the preview hasn't been pushed yet this will still exit(0)
+          rm -rf /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
+          mv /tmp/preview /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
+          cd openverse-frontend
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/gh-pages
+          force_orphan: true
+
+      - uses: peter-evans/find-comment@v2
+        id: final-preview-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Storybook and Tailwind configuration previews
+
+      - uses: peter-evans/create-or-update-comment@v2
+        with:
+          comment-id: ${{ steps.final-preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            **Storybook and Tailwind configuration previews**: _Ready_
+
+            **Storybook:** <https://wordpress.github.io/openverse-frontend/_preview/${{ github.event.pull_request.number }}>
+            **Tailwind:** <https://wordpress.github.io/openverse-frontend/_preview/${{ github.event.pull_request.number }}/tailwind>
+
+            Please note that GitHub pages takes a little time to deploy newly pushed code, if the links above don't work or you see old versions, wait 5 minutes and try again.
+
+            You can check [the GitHub pages deployment action list](https://github.com/WordPress/openverse-frontend/actions/workflows/pages/pages-build-deployment) to see the current status of the deployments.
+
+      - name: Checkout repository # again, to enable cleaning.
+        if: always()
+        uses: actions/checkout@v3

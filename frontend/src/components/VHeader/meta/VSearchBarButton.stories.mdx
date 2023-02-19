@@ -1,0 +1,118 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+import VContentSettingsButton from "~/components/VHeader/VHeaderMobile/VContentSettingsButton"
+import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
+
+import closeIcon from "~/assets/icons/close-small.svg"
+import chevronLeftIcon from "~/assets/icons/chevron-left.svg"
+import sourceIcon from "~/assets/icons/source.svg"
+
+<Meta
+  title="Components/VHeader/VHeaderMobile/VSearchBarButton"
+  component={VSearchBarButton}
+  argTypes={{
+    iconPath: {
+      control: {
+        type: "select",
+        options: [closeIcon, chevronLeftIcon, sourceIcon],
+        default: closeIcon,
+      },
+    },
+    innerSize: {
+      control: {
+        type: "select",
+        options: [6, 8],
+      },
+    },
+    rtlFlip: {
+      control: {
+        type: "boolean",
+      },
+    },
+    innerAreaClasses: {
+      control: {
+        type: "text",
+      },
+    },
+    click: {
+      action: "click",
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `<div class="bg-white"><VSearchBarButton v-bind="args" v-on="args" /></div>`,
+  components: { VSearchBarButton },
+  setup() {
+    if (!args.iconPath) {
+      args.iconPath = closeIcon
+    }
+    return { args, closeIcon, chevronLeftIcon, sourceIcon }
+  },
+})
+
+# Content Settings button
+
+<Description of={VSearchBarButton} />
+
+<ArgsTable of={VSearchBarButton} />
+
+<Canvas>
+  <Story name="Default">{Template.bind({})}</Story>
+</Canvas>
+
+export const contentSettingsTemplate = (args) => ({
+  template: `
+    <div class="bg-dark-charcoal-10 rounded-sm flex justify-end">
+    <VContentSettingsButton :are-filters-selected="true" v-bind="args" />
+    </div>
+  `,
+  components: { VContentSettingsButton },
+  setup() {
+    return { args }
+  },
+})
+
+## Content Settings button with filters selected
+
+The button that opens the content settings modal on screens up to `lg`
+breakpoint. If any filters are selected, it shows a pink dot in the top right
+corner.
+
+<Canvas>
+  <Story name="Content Settings Button with filters selected">
+    {contentSettingsTemplate.bind({})}
+  </Story>
+</Canvas>
+
+## Clear button and Back button
+
+export const activeButtonsTemplate = (args) => ({
+  template: `<div class="wrapper rounded-sm bg-white flex justify-between ring ring-pink">
+  <VSearchBarButton
+    :icon-path="chevronLeftIcon"
+    :inner-size="8"
+    :aria-label="$t('header.back-button')"
+    inner-area-classes="hover:bg-dark-charcoal hover:text-white"
+    :rtl-flip="true"
+  />
+  <VSearchBarButton
+    :icon-path="closeIcon"
+    :aria-label="$t('browse-page.search-form.clear')"
+    inner-area-classes="bg-white hover:bg-dark-charcoal-10"
+  />
+</div>`,
+  components: { VContentSettingsButton },
+  setup() {
+    return { args, closeIcon, chevronLeftIcon }
+  },
+})
+
+<Canvas>
+  <Story name="Clear and Back Buttons">{activeButtonsTemplate.bind({})}</Story>
+</Canvas>

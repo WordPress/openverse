@@ -1,0 +1,49 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+
+import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
+
+<Meta title="Components/Skeleton" component={VGridSkeleton} />
+
+export const Template = (args) => ({
+  template: `<VGridSkeleton v-bind="args" />`,
+  components: { VGridSkeleton },
+  setup() {
+    return { args }
+  },
+})
+
+# Skeleton
+
+<Description of={VGridSkeleton} />
+
+<ArgsTable of={VGridSkeleton} />
+
+## Grid skeleton for "All" tab
+
+<Canvas>
+  <Story name="All tab" args={{ isForTab: "all" }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Grid skeleton for "Image" tab
+
+<Canvas>
+  <Story name="Image tab" args={{ isForTab: "image" }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## List skeleton for "Audio" tab
+
+<Canvas>
+  <Story name="Audio tab" args={{ isForTab: "audio" }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>

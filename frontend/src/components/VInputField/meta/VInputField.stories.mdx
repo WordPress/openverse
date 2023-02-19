@@ -1,0 +1,138 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+
+import VInputField from "~/components/VInputField/VInputField.vue"
+
+<Meta
+  title="Components/VInputField"
+  component={VInputField}
+  argTypes={{
+    "update:modelValue": {
+      action: "update:modelValue",
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `
+    <VInputField v-bind="args" v-on="args" label-text="Test label">
+      Extra info
+    </VInputField>
+  `,
+  components: { VInputField },
+  setup() {
+    return { args }
+  },
+})
+
+# Input field
+
+<Description of={VInputField} />
+
+<ArgsTable of={VInputField} />
+
+The component emits an `input` event with the new contents of the field whenever
+the field receives an input.
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      value: "Text goes here",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+The recommended way to use it is with `v-model` mapping to a `String`.
+
+export const vModelTemplate = () => ({
+  template: `
+    <div>
+      <VInputField v-model="text">
+        {{ text.length }}
+      </VInputField>
+      {{ text }}
+    </div>
+  `,
+  components: { VInputField },
+  data() {
+    return {
+      text: "Hello, World!",
+    }
+  },
+})
+
+<Canvas>
+  <Story name="v-model">{vModelTemplate.bind({})}</Story>
+</Canvas>
+
+The component is a transparent wrapper over `<input>` so all attributes of the
+input element can be applied to it, e.g. `placeholder`. It is recommended not to
+change the type as the field is specifically designed for text.
+
+<Canvas>
+  <Story
+    name="With placeholder"
+    args={{
+      placeholder: "Enter something here",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+For a11y, it is recommended that the input field be associated with a label. For
+this reason, the field is rendered with an SR-only label. The text can be set
+via the `labelText` prop.
+
+<Canvas>
+  <Story
+    name="With label text"
+    args={{
+      labelText: "Label:",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+To provide a custom label, skip the `labelText` prop (to remove the SR-only
+label) and set the `id` attribute on the component (which is passed to the
+`<input>` element). Now use the ID as the `for` attribute of your custom
+`<label>` element.
+
+export const labelTemplate = () => ({
+  template: `
+    <div>
+      <label for="field">Label:</label>
+      <VInputField id="field"/>
+    </div>
+  `,
+  components: { VInputField },
+})
+
+<Canvas>
+  <Story name="With custom label">{labelTemplate.bind({})}</Story>
+</Canvas>
+
+The field can be conjoined with other controls on either the start or the end
+side and as such it provides the `connectionSides` prop to make the connections
+seamless. The field has no border or rounded corners on the connected sides.
+
+<Canvas>
+  <Story
+    name="With connections"
+    args={{
+      connectionSides: ["start", "end"],
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

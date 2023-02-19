@@ -1,0 +1,47 @@
+name: Generate translation PO file
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+
+      - name: Generate PO
+        run: just frontend/run i18n:generate-pot
+
+      - name: Copy to root
+        run: cp frontend/openverse.pot /tmp/openverse.pot
+
+      - name: Checkout repository at `translations` branch
+        uses: actions/checkout@v3
+        with:
+          ref: translations
+
+      - name: Update POT on `translations` branch
+        run: |
+          rm openverse.pot
+          cp /tmp/openverse.pot openverse.pot
+          git config --global user.name 'POT Updater'
+          git config --global user.email 'openverse@wordpress.org'
+          git commit --no-verify -am 'Update POT file'
+          git push --no-verify
+
+      - name: Checkout repository # again, to enable cleaning.
+        if: always()
+        uses: actions/checkout@v3

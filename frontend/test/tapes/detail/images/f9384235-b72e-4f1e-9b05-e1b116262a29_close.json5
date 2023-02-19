@@ -1,0 +1,104 @@
+{
+    meta: {
+        createdAt: '2022-04-23T07:14:38.689Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+    },
+    req: {
+        headers: {
+            connection: 'close',
+        },
+        url: '/v1/images/f9384235-b72e-4f1e-9b05-e1b116262a29/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Sat, 23 Apr 2022 07:14:38 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'close',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '60056',
+            ],
+            'last-modified': [
+                'Fri, 22 Apr 2022 14:33:42 GMT',
+            ],
+            'expect-ct': [
+                'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '7004cdb15a7f1cbc-BUD',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            id: 'f9384235-b72e-4f1e-9b05-e1b116262a29',
+            title: 'Cat',
+            foreign_landing_url: 'https://www.flickr.com/photos/7788419@N05/15218475961',
+            creator: 'strogoscope',
+            creator_url: 'https://www.flickr.com/photos/7788419@N05',
+            url: 'https://live.staticflickr.com/3903/15218475961_963a4c116e_b.jpg',
+            filesize: null,
+            filetype: null,
+            license: 'by',
+            license_version: '2.0',
+            license_url: 'https://creativecommons.org/licenses/by/2.0/',
+            provider: 'flickr',
+            source: 'flickr',
+            category: null,
+            tags: [
+                {
+                    name: 'cat',
+                },
+            ],
+            attribution: '"Cat" by strogoscope is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.',
+            height: 678,
+            width: 1024,
+            thumbnail: 'http://localhost:49153/v1/images/f9384235-b72e-4f1e-9b05-e1b116262a29/thumb/',
+            detail_url: 'http://localhost:49153/v1/images/f9384235-b72e-4f1e-9b05-e1b116262a29/',
+            related_url: 'http://localhost:49153/v1/images/f9384235-b72e-4f1e-9b05-e1b116262a29/related/',
+        },
+    },
+}

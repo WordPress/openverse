@@ -1,0 +1,70 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+
+import VLicenseElements from "~/components/VLicense/VLicenseElements.vue"
+import { ALL_LICENSES } from "~/constants/license"
+
+<Meta
+  title="Components/VLicenseElements"
+  component={VLicenseElements}
+  argTypes={{
+    license: {
+      default: "by",
+      options: ALL_LICENSES,
+      control: "select",
+    },
+    size: {
+      default: "big",
+      options: ["big", "small"],
+      control: "select",
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `<VLicenseElements v-bind="args" />`,
+  components: { VLicenseElements },
+  setup() {
+    return { args }
+  },
+})
+
+# VLicense
+
+<Description of={VLicenseElements} />
+
+<ArgsTable of={VLicenseElements} />
+
+## Sizes
+
+### Big
+
+<Canvas>
+  <Story
+    name="Big"
+    args={{
+      license: "by-nc-nd",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Small
+
+<Canvas>
+  <Story
+    name="Small"
+    args={{
+      license: "by-nc-nd",
+      size: "small",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

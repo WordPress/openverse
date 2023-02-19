@@ -1,0 +1,1059 @@
+{
+    meta: {
+        createdAt: '2022-04-21T15:53:07.950Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/images/cfa45160-a7be-4911-9b9f-4e66678ec7f7/related/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Thu, 21 Apr 2022 15:53:08 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'access-control-allow-origin': [
+                '*',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '29995',
+            ],
+            'last-modified': [
+                'Thu, 21 Apr 2022 07:33:13 GMT',
+            ],
+            'expect-ct': [
+                'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '6ff74a724827d407-BUD',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            result_count: 10000,
+            page_count: 1,
+            page_size: 10,
+            page: null,
+            results: [
+                {
+                    id: '0a44e589-86dc-423a-9002-0f3ae4a9536e',
+                    title: 'Southwark Cathedral 004 interior 03a Shakespeare window Kal02',
+                    foreign_landing_url: 'https://www.flickr.com/photos/36699243@N02/14617895311',
+                    creator: 'Peter2010',
+                    creator_url: 'https://www.flickr.com/photos/36699243@N02',
+                    url: 'https://live.staticflickr.com/3924/14617895311_91e7c4a32c_b.jpg',
+                    license: 'by',
+                    license_version: '2.0',
+                    license_url: 'https://creativecommons.org/licenses/by/2.0/',
+                    provider: 'flickr',
+                    source: 'flickr',
+                    category: null,
+                    tags: [
+                        {
+                            name: 'abstract',
+                            accuracy: 0.99014,
+                        },
+                        {
+                            name: 'arabesque',
+                            accuracy: 0.97389,
+                        },
+                        {
+                            name: 'embroidery',
+                            accuracy: 0.96855,
+                        },
+                        {
+                            name: 'floral',
+                            accuracy: 0.96053,
+                        },
+                        {
+                            name: 'handmade',
+                            accuracy: 0.97049,
+                        },
+                        {
+                            name: 'round out',
+                            accuracy: 0.99087,
+                        },
+                        {
+                            name: 'decoration',
+                            accuracy: 0.99451,
+                        },
+                        {
+                            name: 'geometric',
+                            accuracy: 0.99176,
+                        },
+                        {
+                            name: 'lace',
+                            accuracy: 0.97801,
+                        },
+                        {
+                            name: 'ornate',
+                            accuracy: 0.97896,
+                        },
+                        {
+                            name: 'pattern',
+                            accuracy: 0.98994,
+                        },
+                        {
+                            name: 'art',
+                            accuracy: 0.98257,
+                        },
+                        {
+                            name: 'filigree',
+                            accuracy: 0.94804,
+                        },
+                        {
+                            name: 'flower',
+                            accuracy: 0.95885,
+                        },
+                        {
+                            name: 'proportion',
+                            accuracy: 0.98245,
+                        },
+                        {
+                            name: 'round',
+                            accuracy: 0.9935,
+                        },
+                    ],
+                    thumbnail: 'http://localhost:49153/v1/images/0a44e589-86dc-423a-9002-0f3ae4a9536e/thumb/',
+                    detail_url: 'http://localhost:49153/v1/images/0a44e589-86dc-423a-9002-0f3ae4a9536e/',
+                    related_url: 'http://localhost:49153/v1/images/0a44e589-86dc-423a-9002-0f3ae4a9536e/related/',
+                },
+                {
+                    id: 'c927bbc0-5585-4a72-b92a-606402ded916',
+                    title: 'Stone Pile Kaleidoscope',
+                    foreign_landing_url: 'https://www.flickr.com/photos/78428166@N00/14766083978',
+                    creator: 'Tobyotter',
+                    creator_url: 'https://www.flickr.com/photos/78428166@N00',
+                    url: 'https://live.staticflickr.com/5584/14766083978_ee97203637_b.jpg',
+                    license: 'by',
+                    license_version: '2.0',
+                    license_url: 'https://creativecommons.org/licenses/by/2.0/',
+                    provider: 'flickr',
+                    source: 'flickr',
+                    category: null,
+                    tags: [
+                        {
+                            name: 'design',
+                            accuracy: 0.92219,
+                        },
+                        {
+                            name: 'floral',
+                            accuracy: 0.90892,
+                        },
+                        {
+                            name: 'round',
+                            accuracy: 0.97474,
+                        },
+                        {
+                            name: 'art',
+                            accuracy: 0.98925,
+                        },
+                        {
+                            name: 'flower',
+                            accuracy: 0.95012,
+                        },
+                        {
+                            name: 'geometric',
+                            accuracy: 0.92018,
+                        },
+                        {
+                            name: 'handmade',
+                            accuracy: 0.90728,
+                        },
+                        {
+                            name: 'retro',
+                            accuracy: 0.94354,
+                        },
+                        {
+                            name: 'graphic',
+                            accuracy: 0.94865,
+                        },
+                        {
+                            name: 'pattern',
+                            accuracy: 0.98674,
+                        },
+                        {
+                            name: 'round out',
+                            accuracy: 0.97231,
+                        },
+                        {
+                            name: 'abstract',
+                            accuracy: 0.97831,
+                        },
+                        {
+                            name: 'decoration',
+                            accuracy: 0.99321,
+                        },
+                        {
+                            name: 'element',
+                            accuracy: 0.91258,
+                        },
+                        {
+                            name: 'illustration',
+                            accuracy: 0.98283,
+                        },
+                        {
+                            name: 'ornate',
+                            accuracy: 0.97358,
+                        },
+                        {
+                            name: 'proportion',
+                            accuracy: 0.9571,
+                        },
+                        {
+                            name: 'snowflake',
+                            accuracy: 0.92625,
+                        },
+                        {
+                            name: 'texture',
+                            accuracy: 0.94865,
+                        },
+                        {
+                            name: 'vector',
+                            accuracy: 0.94493,
+                        },
+                    ],
+                    thumbnail: 'http://localhost:49153/v1/images/c927bbc0-5585-4a72-b92a-606402ded916/thumb/',
+                    detail_url: 'http://localhost:49153/v1/images/c927bbc0-5585-4a72-b92a-606402ded916/',
+                    related_url: 'http://localhost:49153/v1/images/c927bbc0-5585-4a72-b92a-606402ded916/related/',
+                },
+                {
+                    id: '366eb553-c6e5-48dc-8f4a-a3e6a6fafedc',
+                    title: 'S Alban FF 016 Abbey interior 02a Come ye thankful people, come. Kal02',
+                    foreign_landing_url: 'https://www.flickr.com/photos/36699243@N02/15250817919',
+                    creator: 'Peter2010',
+                    creator_url: 'https://www.flickr.com/photos/36699243@N02',
+                    url: 'https://live.staticflickr.com/2947/15250817919_ef88067dd2_b.jpg',
+                    license: 'by',
+                    license_version: '2.0',
+                    license_url: 'https://creativecommons.org/licenses/by/2.0/',
+                    provider: 'flickr',
+                    source: 'flickr',
+                    category: null,
+                    tags: [
+                        {
+                            name: 'embroidery',
+                            accuracy: 0.98633,
+                        },
+                        {
+                            name: 'flower',
+                            accuracy: 0.9931,
+                        },
+                        {
+                            name: 'handmade',
+                            accuracy: 0.97875,
+                        },
+                        {
+                            name: 'ornate',
+                            accuracy: 0.98806,
+                        },
+                        {
+                            name: 'proportion',
+                            accuracy: 0.99572,
+                        },
+                        {
+                            name: 'radiant',
+                            accuracy: 0.9662,
+                        },
+                        {
+                            name: 'round out',
+                            accuracy: 0.98673,
+                        },
+                        {
+                            name: 'art',
+                            accuracy: 0.97959,
+                        },
+                        {
+                            name: 'decoration',
+                            accuracy: 0.99126,
+                        },
+                        {
+                            name: 'filigree',
+                            accuracy: 0.97976,
+                        },
+                        {
+                            name: 'illustration',
+                            accuracy: 0.96468,
+                        },
+                        {
+                            name: 'lace',
+                            accuracy: 0.98607,
+                        },
+                        {
+                            name: 'napkin',
+                            accuracy: 0.975,
+                        },
+                        {
+                            name: 'tribal',
+                            accuracy: 0.96805,
+                        },
+                        {
+                            name: 'abstract',
+                            accuracy: 0.98299,
+                        },
+                        {
+                            name: 'floral',
+                            accuracy: 0.9692,
+                        },
+                        {
+                            name: 'geometric',
+                            accuracy: 0.97924,
+                        },
+                        {
+                            name: 'arabesque',
+                            accuracy: 0.97518,
+                        },
+                        {
+                            name: 'pattern',
+                            accuracy: 0.9807,
+                        },
+                        {
+                            name: 'round',
+                            accuracy: 0.98894,
+                        },
+                    ],
+                    thumbnail: 'http://localhost:49153/v1/images/366eb553-c6e5-48dc-8f4a-a3e6a6fafedc/thumb/',
+                    detail_url: 'http://localhost:49153/v1/images/366eb553-c6e5-48dc-8f4a-a3e6a6fafedc/',
+                    related_url: 'http://localhost:49153/v1/images/366eb553-c6e5-48dc-8f4a-a3e6a6fafedc/related/',
+                },
+                {
+                    id: '06f2ae25-51e4-4915-bd76-5261025abf98',
+                    title: 'Lincoln FF 10a Interior 03a Now let me see Kal03',
+                    foreign_landing_url: 'https://www.flickr.com/photos/36699243@N02/16805030114',
+                    creator: 'Peter2010',
+                    creator_url: 'https://www.flickr.com/photos/36699243@N02',
+                    url: 'https://live.staticflickr.com/8722/16805030114_bf0582f31b_b.jpg',
+                    license: 'by',
+                    license_version: '2.0',
+                    license_url: 'https://creativecommons.org/licenses/by/2.0/',
+                    provider: 'flickr',
+                    source: 'flickr',
+                    category: null,
+                    tags: [
+                        {
+                            name: 'geometric',
+                            accuracy: 0.92991,
+                        },
+                        {
+                            name: 'pattern',
+                            accuracy: 0.94602,
+                        },
+                        {
+                            name: 'proportion',
+                            accuracy: 0.94547,
+                        },
+                        {
+                            name: 'round',
+                            accuracy: 0.97105,
+                        },
+                        {
+                            name: 'texture',
+                            accuracy: 0.90361,
+                        },
+                        {
+                            name: 'tribal',
+                            accuracy: 0.92871,
+                        },
+                        {
+                            name: 'decoration',
+                            accuracy: 0.98194,
+                        },
+                        {
+                            name: 'floral',
+                            accuracy: 0.90697,
+                        },
+                        {
+                            name: 'flower',
+                            accuracy: 0.95864,
+                        },
+                        {
+                            name: 'graphic',
+                            accuracy: 0.91017,
+                        },
+                        {
+                            name: 'round out',
+                            accuracy: 0.96194,
+                        },
+                        {
+                            name: 'embroidery',
+                            accuracy: 0.91789,
+                        },
+                        {
+                            name: 'illustration',
+                            accuracy: 0.95611,
+                        },
+                        {
+                            name: 'ornate',
+                            accuracy: 0.92896,
+                        },
+                        {
+                            name: 'abstract',
+                            accuracy: 0.96547,
+                        },
+                        {
+                            name: 'art',
+                            accuracy: 0.96114,
+                        },
+                        {
+                            name: 'design',
+                            accuracy: 0.94605,
+                        },
+                        {
+                            name: 'element',
+                            accuracy: 0.90863,
+                        },
+                        {
+                            name: 'handmade',
+                            accuracy: 0.90541,
+                        },
+                    ],
+                    thumbnail: 'http://localhost:49153/v1/images/06f2ae25-51e4-4915-bd76-5261025abf98/thumb/',
+                    detail_url: 'http://localhost:49153/v1/images/06f2ae25-51e4-4915-bd76-5261025abf98/',
+                    related_url: 'http://localhost:49153/v1/images/06f2ae25-51e4-4915-bd76-5261025abf98/related/',
+                },
+                {
+                    id: '21aa7e9a-21f1-48e1-a7a2-1f34a0438b01',
+                    title: 'S Alban FF 005 Exterior 01a I the Lord of Sea & Sky. Marquee display Kal02',
+                    foreign_landing_url: 'https://www.flickr.com/photos/36699243@N02/15370079725',
+                    creator: 'Peter2010',
+                    creator_url: 'https://www.flickr.com/photos/36699243@N02',
+                    url: 'https://live.staticflickr.com/3898/15370079725_4f08f76c80_b.jpg',
+                    license: 'by',
+                    license_version: '2.0',
+                    license_url: 'https://creativecommons.org/licenses/by/2.0/',
+                    provider: 'flickr',
+                    source: 'flickr',
+                    category: null,
+                    tags: [
+                        {
+                            name: 'geometric',
+                            accuracy: 0.97957,
+                        },
+                        {
+                            name: 'radiant',
+                            accuracy: 0.94294,
+                        },
+                        {
+                            name: 'art',
+                            accuracy: 0.96861,
+                        },
+                        {
+                            name: 'decoration',
+                            accuracy: 0.99048,
+                        },
+                        {
+                            name: 'handmade',
+                            accuracy: 0.96073,
+                        },
+                        {
+                            name: 'psychedelic',
+                            accuracy: 0.96127,
+                        },
+                        {
+                            name: 'snowflake',
+                            accuracy: 0.97696,
+                        },
+                        {
+                            name: 'embroidery',
+                            accuracy: 0.98176,
+                        },
+                        {
+                            name: 'filigree',
+                            accuracy: 0.95269,
+                        },
+                        {
+                            name: 'floral',
+                            accuracy: 0.97099,
+                        },
+                        {
+                            name: 'flower',
+                            accuracy: 0.99212,
+                        },
+                        {
+                            name: 'illustration',
+                            accuracy: 0.96963,
+                        },
+                        {
+                            name: 'lace',
+                            accuracy: 0.96402,
+                        },
+                        {
+                            name: 'ornate',
+                            accuracy: 0.96849,
+                        },
+                        {
+                            name: 'proportion',
+                            accuracy: 0.99272,
+                        },
+                        {
+                            name: 'round',
+                            accuracy: 0.99284,
+                        },
+                        {
+                            name: 'abstract',
+                            accuracy: 0.97808,
+                        },
+                        {
+                            name: 'napkin',
+                            accuracy: 0.9626,
+                        },
+                        {
+                            name: 'pattern',
+                            accuracy: 0.96608,
+                        },
+                        {
+                            name: 'round out',
+                            accuracy: 0.98568,
+                        },
+                    ],
+                    thumbnail: 'http://localhost:49153/v1/images/21aa7e9a-21f1-48e1-a7a2-1f34a0438b01/thumb/',
+                    detail_url: 'http://localhost:49153/v1/images/21aa7e9a-21f1-48e1-a7a2-1f34a0438b01/',
+                    related_url: 'http://localhost:49153/v1/images/21aa7e9a-21f1-48e1-a7a2-1f34a0438b01/related/',
+                },
+                {
+                    id: 'dd1a442c-c674-4ef4-a639-6976333b3202',
+                    title: 'bm_sym_6_20090311_078',
+                    foreign_landing_url: 'https://www.flickr.com/photos/33409576@N08/3343542459',
+                    creator: 'jonathanmccabe',
+                    creator_url: 'https://www.flickr.com/photos/33409576@N08',
+                    url: 'https://live.staticflickr.com/3391/3343542459_416131109b.jpg',
+                    license: 'by',
+                    license_version: '2.0',
+                    license_url: 'https://creativecommons.org/licenses/by/2.0/',
+                    provider: 'flickr',
+                    source: 'flickr',
+                    category: null,
+                    tags: [
+                        {
+                            name: 'abstract',
+                            accuracy: 0.99099,
+                        },
+                        {
+                            name: 'arabesque',
+                            accuracy: 0.96731,
+                        },
+                        {
+                            name: 'art',
+                            accuracy: 0.98943,
+                        },
+                        {
+                            name: 'floral',
+                            accuracy: 0.96655,
+                        },
+                        {
+                            name: 'flower',
+                            accuracy: 0.97933,
+                        },
+                        {
+                            name: 'geometric',
+                            accuracy: 0.98366,
+                        },
+                        {
+                            name: 'handmade',
+                            accuracy: 0.96625,
+                        },
+                        {
+                            name: 'pattern',
+                            accuracy: 0.99577,
+                        },
+                        {
+                            name: 'antique',
+                            accuracy: 0.97323,
+                        },
+                        {
+                            name: 'decoration',
+                            accuracy: 0.99281,
+                        },
+                        {
+                            name: 'mosaic',
+                            accuracy: 0.97729,
+                        },
+                        {
+                            name: 'proportion',
+                            accuracy: 0.98244,
+                        },
+                        {
+                            name: 'retro',
+                            accuracy: 0.96465,
+                        },
+                        {
+                            name: 'round',
+                            accuracy: 0.96695,
+                        },
+                        {
+                            name: 'round out',
+                            accuracy: 0.9691,
+                        },
+                        {
+                            name: 'texture',
+                            accuracy: 0.98209,
+                        },
+                        {
+                            name: 'design',
+                            accuracy: 0.95742,
+                        },
+                        {
+                            name: 'kaleidoscope',
+                            accuracy: 0.96,
+                        },
+                        {
+                            name: 'lace',
+                            accuracy: 0.98985,
+                        },
+                        {
+                            name: 'ornate',
+                            accuracy: 0.99126,
+                        },
+                    ],
+                    thumbnail: 'http://localhost:49153/v1/images/dd1a442c-c674-4ef4-a639-6976333b3202/thumb/',
+                    detail_url: 'http://localhost:49153/v1/images/dd1a442c-c674-4ef4-a639-6976333b3202/',
+                    related_url: 'http://localhost:49153/v1/images/dd1a442c-c674-4ef4-a639-6976333b3202/related/',
+                },
+                {
+                    id: 'ae6f77b1-385e-4c3c-b11d-0129cc22a191',
+                    title: 'Brikke',
+                    foreign_landing_url: 'https://digitaltmuseum.org/021027628921/brikke/media?slide=0',
+                    creator: 'Vest-Telemark Museum',
+                    url: 'https://dms-cf-04.dimu.org/image/0331uxv1yXdr?dimension=1200x1200',
+                    license: 'by-nc-sa',
+                    license_version: '4.0',
+                    license_url: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+                    provider: 'digitaltmuseum',
+                    source: 'digitaltmuseum',
+                    category: null,
+                    tags: [
+                        {
+                            name: 'lace',
+                            accuracy: 0.99725,
+                        },
+                        {
+                            name: 'embroidery',
+                            accuracy: 0.99361,
+                        },
+                        {
+                            name: 'abstract',
+                            accuracy: 0.99319,
+                        },
+                        {
+                            name: 'round',
+                            accuracy: 0.9928,
+                        },
+                        {
+                            name: 'decoration',
+                            accuracy: 0.99184,
+                        },
+                        {
+                            name: 'pattern',
+                            accuracy: 0.98992,
+                        },
+                        {
+                            name: 'round out',
+                            accuracy: 0.98746,
+                        },
+                        {
+                            name: 'flower',
+                            accuracy: 0.98735,
+                        },
+                        {
+                            name: 'arabesque',
+                            accuracy: 0.98597,
+                        },
+                        {
+                            name: 'napkin',
+                            accuracy: 0.98461,
+                        },
+                        {
+                            name: 'geometric',
+                            accuracy: 0.98408,
+                        },
+                        {
+                            name: 'handmade',
+                            accuracy: 0.98209,
+                        },
+                        {
+                            name: 'art',
+                            accuracy: 0.98036,
+                        },
+                        {
+                            name: 'doily',
+                            accuracy: 0.97798,
+                        },
+                        {
+                            name: 'texture',
+                            accuracy: 0.9777,
+                        },
+                        {
+                            name: 'retro',
+                            accuracy: 0.97717,
+                        },
+                        {
+                            name: 'illustration',
+                            accuracy: 0.97391,
+                        },
+                        {
+                            name: 'proportion',
+                            accuracy: 0.97239,
+                        },
+                        {
+                            name: 'vintage',
+                            accuracy: 0.97182,
+                        },
+                        {
+                            name: 'vector',
+                            accuracy: 0.97054,
+                        },
+                    ],
+                    thumbnail: 'http://localhost:49153/v1/images/ae6f77b1-385e-4c3c-b11d-0129cc22a191/thumb/',
+                    detail_url: 'http://localhost:49153/v1/images/ae6f77b1-385e-4c3c-b11d-0129cc22a191/',
+                    related_url: 'http://localhost:49153/v1/images/ae6f77b1-385e-4c3c-b11d-0129cc22a191/related/',
+                },
+                {
+                    id: '5c5aa3bf-7d02-422b-8741-2e7c7b011940',
+                    title: 'fpx112412-06',
+                    foreign_landing_url: 'https://www.flickr.com/photos/7888217@N04/8213410037',
+                    creator: 'fontplaydotcom',
+                    creator_url: 'https://www.flickr.com/photos/7888217@N04',
+                    url: 'https://live.staticflickr.com/8337/8213410037_408562cc1a_b.jpg',
+                    license: 'by',
+                    license_version: '2.0',
+                    license_url: 'https://creativecommons.org/licenses/by/2.0/',
+                    provider: 'flickr',
+                    source: 'flickr',
+                    category: null,
+                    tags: [
+                        {
+                            name: 'needlework',
+                        },
+                        {
+                            name: 'texture',
+                        },
+                        {
+                            name: 'abstract',
+                            accuracy: 0.9941,
+                        },
+                        {
+                            name: 'arabesque',
+                            accuracy: 0.98841,
+                        },
+                        {
+                            name: 'art',
+                            accuracy: 0.98849,
+                        },
+                        {
+                            name: 'craft',
+                            accuracy: 0.98206,
+                        },
+                        {
+                            name: 'decoration',
+                            accuracy: 0.99802,
+                        },
+                        {
+                            name: 'doily',
+                            accuracy: 0.99624,
+                        },
+                        {
+                            name: 'embroidery',
+                            accuracy: 0.99761,
+                        },
+                        {
+                            name: 'flower',
+                            accuracy: 0.99192,
+                        },
+                        {
+                            name: 'geometric',
+                            accuracy: 0.98148,
+                        },
+                        {
+                            name: 'handmade',
+                            accuracy: 0.99798,
+                        },
+                        {
+                            name: 'lace',
+                            accuracy: 0.99898,
+                        },
+                        {
+                            name: 'napkin',
+                            accuracy: 0.99805,
+                        },
+                        {
+                            name: 'ornate',
+                            accuracy: 0.98749,
+                        },
+                        {
+                            name: 'pattern',
+                            accuracy: 0.99473,
+                        },
+                        {
+                            name: 'proportion',
+                            accuracy: 0.98612,
+                        },
+                        {
+                            name: 'retro',
+                            accuracy: 0.97531,
+                        },
+                        {
+                            name: 'round',
+                            accuracy: 0.99245,
+                        },
+                        {
+                            name: 'round out',
+                            accuracy: 0.98447,
+                        },
+                        {
+                            name: 'style',
+                            accuracy: 0.97693,
+                        },
+                        {
+                            name: 'texture',
+                            accuracy: 0.9821,
+                        },
+                    ],
+                    thumbnail: 'http://localhost:49153/v1/images/5c5aa3bf-7d02-422b-8741-2e7c7b011940/thumb/',
+                    detail_url: 'http://localhost:49153/v1/images/5c5aa3bf-7d02-422b-8741-2e7c7b011940/',
+                    related_url: 'http://localhost:49153/v1/images/5c5aa3bf-7d02-422b-8741-2e7c7b011940/related/',
+                },
+                {
+                    id: '68dceb2b-0d9a-499a-90db-81affb8e8c82',
+                    title: 'S Alban FF 020 Abbey interior 04a Water Music Kal02',
+                    foreign_landing_url: 'https://www.flickr.com/photos/36699243@N02/15341177097',
+                    creator: 'Peter2010',
+                    creator_url: 'https://www.flickr.com/photos/36699243@N02',
+                    url: 'https://live.staticflickr.com/5604/15341177097_92233a0f5a_b.jpg',
+                    license: 'by',
+                    license_version: '2.0',
+                    license_url: 'https://creativecommons.org/licenses/by/2.0/',
+                    provider: 'flickr',
+                    source: 'flickr',
+                    category: null,
+                    tags: [
+                        {
+                            name: 'arabesque',
+                            accuracy: 0.96048,
+                        },
+                        {
+                            name: 'art',
+                            accuracy: 0.97235,
+                        },
+                        {
+                            name: 'illustration',
+                            accuracy: 0.98143,
+                        },
+                        {
+                            name: 'mosaic',
+                            accuracy: 0.97328,
+                        },
+                        {
+                            name: 'ornate',
+                            accuracy: 0.98492,
+                        },
+                        {
+                            name: 'proportion',
+                            accuracy: 0.99794,
+                        },
+                        {
+                            name: 'doily',
+                            accuracy: 0.97732,
+                        },
+                        {
+                            name: 'flower',
+                            accuracy: 0.99016,
+                        },
+                        {
+                            name: 'handmade',
+                            accuracy: 0.96383,
+                        },
+                        {
+                            name: 'lace',
+                            accuracy: 0.97952,
+                        },
+                        {
+                            name: 'napkin',
+                            accuracy: 0.96321,
+                        },
+                        {
+                            name: 'pattern',
+                            accuracy: 0.9905,
+                        },
+                        {
+                            name: 'round',
+                            accuracy: 0.99445,
+                        },
+                        {
+                            name: 'abstract',
+                            accuracy: 0.9943,
+                        },
+                        {
+                            name: 'decoration',
+                            accuracy: 0.99282,
+                        },
+                        {
+                            name: 'graphic',
+                            accuracy: 0.96049,
+                        },
+                        {
+                            name: 'psychedelic',
+                            accuracy: 0.97374,
+                        },
+                        {
+                            name: 'geometric',
+                            accuracy: 0.9889,
+                        },
+                        {
+                            name: 'round out',
+                            accuracy: 0.98105,
+                        },
+                        {
+                            name: 'snowflake',
+                            accuracy: 0.97582,
+                        },
+                    ],
+                    thumbnail: 'http://localhost:49153/v1/images/68dceb2b-0d9a-499a-90db-81affb8e8c82/thumb/',
+                    detail_url: 'http://localhost:49153/v1/images/68dceb2b-0d9a-499a-90db-81affb8e8c82/',
+                    related_url: 'http://localhost:49153/v1/images/68dceb2b-0d9a-499a-90db-81affb8e8c82/related/',
+                },
+                {
+                    id: '9deb85ad-913c-45c3-8c76-fac79be18a4d',
+                    title: 'Wheel',
+                    foreign_landing_url: 'https://www.flickr.com/photos/12457246@N03/7180721417',
+                    creator: 'chrstphre',
+                    creator_url: 'https://www.flickr.com/photos/12457246@N03',
+                    url: 'https://live.staticflickr.com/7245/7180721417_80e283251a_b.jpg',
+                    license: 'by',
+                    license_version: '2.0',
+                    license_url: 'https://creativecommons.org/licenses/by/2.0/',
+                    provider: 'flickr',
+                    source: 'flickr',
+                    category: null,
+                    tags: [
+                        {
+                            name: 'abstract',
+                            accuracy: 0.97023,
+                        },
+                        {
+                            name: 'decoration',
+                            accuracy: 0.97476,
+                        },
+                        {
+                            name: 'embroidery',
+                            accuracy: 0.92725,
+                        },
+                        {
+                            name: 'lace',
+                            accuracy: 0.99394,
+                        },
+                        {
+                            name: 'pattern',
+                            accuracy: 0.98314,
+                        },
+                        {
+                            name: 'round out',
+                            accuracy: 0.99244,
+                        },
+                        {
+                            name: 'texture',
+                            accuracy: 0.96172,
+                        },
+                        {
+                            name: 'geometric',
+                            accuracy: 0.93954,
+                        },
+                        {
+                            name: 'handmade',
+                            accuracy: 0.95815,
+                        },
+                        {
+                            name: 'snowflake',
+                            accuracy: 0.90829,
+                        },
+                        {
+                            name: 'textile',
+                            accuracy: 0.92354,
+                        },
+                        {
+                            name: 'fabric',
+                            accuracy: 0.94779,
+                        },
+                        {
+                            name: 'line',
+                            accuracy: 0.90114,
+                        },
+                        {
+                            name: 'proportion',
+                            accuracy: 0.95897,
+                        },
+                        {
+                            name: 'art',
+                            accuracy: 0.95548,
+                        },
+                        {
+                            name: 'design',
+                            accuracy: 0.93347,
+                        },
+                        {
+                            name: 'ornate',
+                            accuracy: 0.97154,
+                        },
+                        {
+                            name: 'round',
+                            accuracy: 0.99731,
+                        },
+                    ],
+                    thumbnail: 'http://localhost:49153/v1/images/9deb85ad-913c-45c3-8c76-fac79be18a4d/thumb/',
+                    detail_url: 'http://localhost:49153/v1/images/9deb85ad-913c-45c3-8c76-fac79be18a4d/',
+                    related_url: 'http://localhost:49153/v1/images/9deb85ad-913c-45c3-8c76-fac79be18a4d/related/',
+                },
+            ],
+        },
+    },
+}

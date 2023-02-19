@@ -1,0 +1,20 @@
+version: "3"
+services:
+  playwright:
+    build:
+      context: .
+      dockerfile: Dockerfile.playwright
+      args:
+        - PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}
+    volumes:
+      - ../node_modules:/node_modules
+      - .:/app
+    user: ${USER_ID}
+    working_dir: /app
+    command: pnpm ${TEST_COMMAND} ${PLAYWRIGHT_ARGS:-}
+    environment:
+      # This makes the webserver that Playwright runs show the build
+      - DEBUG=pw:webserver
+      - DISABLE_SENTRY=true
+      - UPDATE_TAPES=${UPDATE_TAPES:-false}
+    cpus: 0.000

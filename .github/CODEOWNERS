@@ -1,3 +1,4 @@
 api/                @WordPress/openverse-api
 ingestion_server/   @WordPress/openverse-api
+frontend/           @WordPress/openverse-frontend
 *                   @WordPress/openverse-maintainers

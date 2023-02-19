@@ -1,0 +1,30 @@
+{
+  "errors": [
+    {
+      "error": "NO_RESULT",
+      "image": {
+        "id": "depressed-musician",
+        "file": "depressed_musician",
+        "title": "Depressed musician vintage drawing",
+        "foreign_landing_url": "https://www.rawpixel.com/image/573060/depressed-musician-vintage-drawing",
+        "creator": "The British Library",
+        "license": "cc0",
+        "license_version": "1.0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      }
+    },
+    {
+      "error": "SERVER_TIMEOUT",
+      "image": {
+        "id": "waiting-for-a-bite",
+        "file": "waiting_for_a_bite",
+        "title": "Waiting for a Bite, from Harper's Weekly, August 22, 1874, p. 693",
+        "foreign_landing_url": "https://collection.cooperhewitt.org/view/objects/asitem/id/105053",
+        "creator": "Edward Lagarde, American, 19th century",
+        "license": "cc0",
+        "license_version": "1.0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      }
+    }
+  ]
+}

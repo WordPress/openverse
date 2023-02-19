@@ -1,0 +1,37 @@
+# os
+.DS_Store
+
+# directories
+node_modules/
+dist/
+.storybook/
+.github/
+.idea/
+.vscode/
+.nuxt/
+.nuxt-storybook
+storybook-static
+.vercel
+.git
+
+# log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+selenium-debug.log
+
+# files
+.env
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+vercel.json
+.eslintcache
+.editorconfig
+.eslintignore
+.eslintrc.js
+.lintstagedrc
+.prettierignore
+*.md
+LICENSE

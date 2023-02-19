@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --filter-sidebar-width: 336px;
+  }
+
+  html {
+    @apply m-0 font-normal leading-loose text-dark-charcoal;
+    font-display: swap;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a {
+    @apply text-pink hover:underline;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply leading-snug;
+  }
+
+  /* Removes the cross icon to clear the field */
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+  }
+}
+/*
+Text styles from Figma, @see
+https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-id=311%3A331
+The default line height of 130% is not written here
+Heading 1           - 90px - 7xl bold
+Heading 2           - 32px - 6xl bold
+Heading 3           - 28px - 5xl bold
+Heading 4           - 24px - 4xl bold
+Heading 5           - 19px - 3xl semibold
+Heading 6           - 16px - 2xl semibold
+Paragraph Large     - 16px - 2xl regular leading-[190%] (larger)
+Paragraph Small     - 14px - base regular leading-[170%] (large)
+Body                - 14px - base regular (default leading-normal)
+Description Regular - 14px - base
+Description Bold    - 14px - base semibold
+Label Bold          - 13px - sm semibold
+Label Regular       - 13px - sm regular
+Caption Regular     - 12px - sr regular
+Caption Bold        - 12px - sr semibold
+Category            - 12px - sr semibold UPPERCASE
+Time                - 11px - xs semibold (default leading-[120%])
+
+
+*/
+@layer utilities {
+  .heading-1 {
+    @apply text-7xl font-bold;
+  }
+
+  .heading-2 {
+    @apply text-6xl font-bold;
+  }
+
+  .heading-3 {
+    @apply text-5xl font-bold;
+  }
+
+  .heading-4 {
+    @apply text-4xl font-bold;
+  }
+
+  .heading-5 {
+    @apply text-3xl font-semibold;
+  }
+
+  .heading-6 {
+    @apply text-2xl font-semibold;
+  }
+
+  .paragraph-large {
+    @apply text-2xl leading-[190%];
+  }
+
+  .paragraph-small {
+    @apply leading-large text-base;
+  }
+
+  .body {
+    @apply text-base;
+  }
+
+  .description-regular {
+    @apply text-base leading-snug;
+  }
+
+  .description-bold {
+    @apply text-base font-semibold leading-snug;
+  }
+
+  .label-bold {
+    @apply text-sm font-semibold;
+  }
+
+  .label-regular {
+    @apply text-sm;
+  }
+
+  .caption-regular {
+    @apply text-sr;
+  }
+
+  .caption-bold {
+    @apply text-sr font-semibold;
+  }
+
+  .category {
+    @apply text-sr font-semibold uppercase;
+  }
+
+  .time {
+    @apply text-xs font-semibold;
+  }
+
+  /**
+   * Focus styles are defined across across two axes.
+   *
+   * Thickness:
+   * - Slim: 1.5px outline
+   * - Bold: 3.0px outline
+   *
+   * Style:
+   * - Transparent: Replaces existing border on the element
+   * - Filled: Adds a ring around element with some offset
+   *
+   * There is no bold-transparent variant.
+   *
+   * The color of the ring is set by a plugin defined in `tailwind.config.js`.
+   */
+
+  [class*="focus-slim-tx"] {
+    @apply focus-visible:outline-none; /* UA styles: none */
+    @apply focus-visible:ring; /* outer-stroke: box-shadow */
+    @apply focus-visible:border-tx; /* inner-stroke: transparent border */
+
+    /* It is up to the component to apply border utilities. */
+    @apply focus-visible:hover:border-tx; /* focus prevails over hover */
+  }
+
+  [class*="focus-slim-filled"],
+  [class*="focus-bold-filled"] {
+    @apply relative;
+    @apply after:pointer-events-none after:absolute after:inset-0 after:-z-10 after:rounded-inherit;
+
+    @apply focus-visible:outline-none; /* UA styles: none */
+    @apply focus-visible:after:z-10; /* inner-stroke: pseudo-element */
+  }
+
+  [class*="focus-slim-filled"] {
+    @apply after:shadow-slim-filled;
+    @apply focus-visible:ring; /* outer-stroke: box-shadow */
+  }
+
+  [class*="focus-bold-filled"] {
+    @apply after:shadow-bold-filled;
+    @apply focus-visible:ring-bold; /* outer-stroke: box-shadow */
+  }
+}

@@ -13,6 +13,7 @@ DC_USER := env_var_or_default("DC_USER", "opener")
   just --list --unsorted
   cd api && just
   cd ingestion_server && just
+  cd frontend && just
   cd automations/python && just
   cd automations/js && just
 
@@ -39,6 +40,7 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 @install:
     just api/install
     just ingestion_server/install
+    just frontend/install --ignore-workspace
     just automations/python/install
     just automations/js/install
 

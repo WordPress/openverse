@@ -1,0 +1,348 @@
+{
+    meta: {
+        createdAt: '2022-04-11T16:42:23.591Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/images/802d76cd-84cf-45bc-81ac-610331dab420/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Mon, 11 Apr 2022 16:42:24 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'access-control-allow-origin': [
+                '*',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'MISS',
+            ],
+            'last-modified': [
+                'Mon, 11 Apr 2022 16:42:24 GMT',
+            ],
+            'expect-ct': [
+                'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '6fa52cdb0a186d7d-MUC',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            id: '802d76cd-84cf-45bc-81ac-610331dab420',
+            title: 'Impasto four-handled ovoid olla with lid, from S. Marzano sul Sarno',
+            foreign_landing_url: 'https://www.flickr.com/photos/7945858@N08/43212654745',
+            creator: 'diffendale',
+            creator_url: 'https://www.flickr.com/photos/7945858@N08',
+            url: 'https://live.staticflickr.com/1887/43212654745_03cbefb861_b.jpg',
+            filesize: null,
+            filetype: null,
+            license: 'by-nc-sa',
+            license_version: '2.0',
+            license_url: 'https://creativecommons.org/licenses/by-nc-sa/2.0/',
+            provider: 'flickr',
+            source: 'flickr',
+            category: null,
+            tags: [
+                {
+                    name: '1sthalf7thcbce',
+                },
+                {
+                    name: '2ndquarter7thcbce',
+                },
+                {
+                    name: '650sbce',
+                },
+                {
+                    name: '660sbce',
+                },
+                {
+                    name: '670sbce',
+                },
+                {
+                    name: '7thcbce',
+                },
+                {
+                    name: 'ancient',
+                },
+                {
+                    name: 'antico',
+                },
+                {
+                    name: 'antique',
+                },
+                {
+                    name: 'archaeological',
+                },
+                {
+                    name: 'archeologico',
+                },
+                {
+                    name: 'artifact',
+                },
+                {
+                    name: 'burial',
+                },
+                {
+                    name: 'cemetery',
+                },
+                {
+                    name: 'ceramica',
+                },
+                {
+                    name: 'ceramics',
+                },
+                {
+                    name: 'clay',
+                },
+                {
+                    name: 'display',
+                },
+                {
+                    name: 'etàdelferro',
+                },
+                {
+                    name: 'etu00e0delferro',
+                },
+                {
+                    name: 'exhibit',
+                },
+                {
+                    name: 'fossakultur',
+                },
+                {
+                    name: 'grab',
+                },
+                {
+                    name: 'grave',
+                },
+                {
+                    name: 'human',
+                },
+                {
+                    name: 'impasto',
+                },
+                {
+                    name: 'indigenous',
+                },
+                {
+                    name: 'ironage',
+                },
+                {
+                    name: 'italia',
+                },
+                {
+                    name: 'italic',
+                },
+                {
+                    name: 'italie',
+                },
+                {
+                    name: 'italië',
+                },
+                {
+                    name: 'italien',
+                },
+                {
+                    name: 'italio',
+                },
+                {
+                    name: 'italiu00eb',
+                },
+                {
+                    name: 'italy',
+                },
+                {
+                    name: 'mu00fcze',
+                },
+                {
+                    name: 'musée',
+                },
+                {
+                    name: 'museo',
+                },
+                {
+                    name: 'museoarcheologicoprovincialedisalerno',
+                },
+                {
+                    name: 'museu',
+                },
+                {
+                    name: 'museum',
+                },
+                {
+                    name: 'musu00e9e',
+                },
+                {
+                    name: 'müze',
+                },
+                {
+                    name: 'native',
+                },
+                {
+                    name: 'necropolis',
+                },
+                {
+                    name: 'nongreek',
+                },
+                {
+                    name: 'popoloitalico',
+                },
+                {
+                    name: 'pots',
+                },
+                {
+                    name: 'pottery',
+                },
+                {
+                    name: 'preroman',
+                },
+                {
+                    name: 'preromanitaly',
+                },
+                {
+                    name: 'salerno',
+                },
+                {
+                    name: 'sanmarzanosulsarno',
+                },
+                {
+                    name: 'sepultura',
+                },
+                {
+                    name: 'sépulture',
+                },
+                {
+                    name: 'smarzanosulsarno',
+                },
+                {
+                    name: 'su00e9pulture',
+                },
+                {
+                    name: 'tomb',
+                },
+                {
+                    name: 'tomba',
+                },
+                {
+                    name: 'tombe',
+                },
+                {
+                    name: 'tombeau',
+                },
+                {
+                    name: 'tumba',
+                },
+                {
+                    name: 'u03b1u03b3u03b3u03b5u03afu03b1',
+                },
+                {
+                    name: 'u03b9u03c4u03b1u03bbu03afu03b1',
+                },
+                {
+                    name: 'u03bau03b5u03c1u03b1u03bcu03b9u03bau03ae',
+                },
+                {
+                    name: 'u03bcu03bfu03c5u03c3u03b5u03afu03bf',
+                },
+                {
+                    name: 'u0438u0442u0430u043bu0438u044f',
+                },
+                {
+                    name: 'u043cu0443u0437u0435u0438',
+                },
+                {
+                    name: 'u0645u062au062du0641',
+                },
+                {
+                    name: 'valledelsarno',
+                },
+                {
+                    name: 'vase',
+                },
+                {
+                    name: 'vasellame',
+                },
+                {
+                    name: 'vessel',
+                },
+                {
+                    name: 'متحف',
+                },
+                {
+                    name: 'αγγεία',
+                },
+                {
+                    name: 'ιταλία',
+                },
+                {
+                    name: 'κεραμική',
+                },
+                {
+                    name: 'μουσείο',
+                },
+                {
+                    name: 'италия',
+                },
+                {
+                    name: 'музеи',
+                },
+            ],
+            attribution: '"Impasto four-handled ovoid olla with lid, from S. Marzano sul Sarno" by diffendale is licensed under CC-BY-NC-SA 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/2.0/.',
+            height: 1024,
+            width: 819,
+            thumbnail: 'http://localhost:49153/v1/images/802d76cd-84cf-45bc-81ac-610331dab420/thumb/',
+            detail_url: 'http://localhost:49153/v1/images/802d76cd-84cf-45bc-81ac-610331dab420/',
+            related_url: 'http://localhost:49153/v1/images/802d76cd-84cf-45bc-81ac-610331dab420/related/',
+        },
+    },
+}
