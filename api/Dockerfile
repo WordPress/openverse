@@ -43,6 +43,8 @@ RUN pipenv install --system --deploy --dev
 
 FROM nginx:1.23.2-alpine as nginx
 
+LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
+
 WORKDIR /app
 
 COPY nginx.conf.template /etc/nginx/templates/openverse-api.conf.template
@@ -60,6 +62,8 @@ ENV DJANGO_NGINX_GIT_REVISION=$SEMANTIC_VERSION
 #######
 
 FROM python:3.10-slim as api
+
+LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
 ENV PYTHONBUFFERED=1
 # Activate the virtualenv

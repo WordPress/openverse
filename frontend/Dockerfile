@@ -38,6 +38,8 @@ RUN pnpm build:only
 
 FROM node:16-alpine as app
 
+LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
+
 # Install CURL for the production healthcheck
 RUN apk --no-cache add curl
 

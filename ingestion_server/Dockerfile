@@ -29,6 +29,8 @@ RUN pipenv install --system --deploy --dev
 
 FROM python:3.10-slim as ing
 
+LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
+
 ENV PYTHONBUFFERED=1
 # Activate the virtualenv
 ENV PATH="/venv/bin:$PATH"
