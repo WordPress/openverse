@@ -2,20 +2,47 @@
 ._*
 .DS_Store
 
-# Environments
-.env
-env/
-venv/
-
 # Editor/IDE configs
 .idea/
 .vscode/
+.swp
 
-grafana.db
-__pycache__
+# Environment
+.env
 
-# Node.js
+# Python environments
+env/
+venv/
+pip-log.txt
+
+# Python
+__pycache__/
+*.py[cod]
+.python-version
+
+# Node.js dependencies
 node_modules/
+npm-debug.log*
+.pnpm-debug.log
 
-# pre-commit executable
+# Local certificates
+*.pem
+*.crt
+*.key
+
+# pre-commit
 pre-commit.pyz
+
+# ESLint
+.eslintcache
+
+# Vercel
+vercel.json
+.vercel
+
+# Grafana
+grafana.db
+
+# Ingestion server
+# TODO: This shouldn't be in root
+ingestion_server.log
