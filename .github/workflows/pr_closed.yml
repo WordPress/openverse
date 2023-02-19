@@ -7,7 +7,7 @@ on:
 
 jobs:
   clean-gh-pages:
-    name: Clean Storybook and Tailwind preview
+    name: Clean GH Pages preview
     runs-on: ubuntu-latest
 
     steps:
@@ -22,5 +22,5 @@ jobs:
         run: |
           git config --global user.name 'PR Closed action'
           git config --global user.email 'openverse@wordpress.org'
-          git reset "$(git commit-tree 'HEAD^{tree}' -m 'Clean preview for PR #${{ github.event.pull_request.number }}')"
-          git push --force
+          git commit -am 'Clean preview for PR ${{ github.event.pull_request.number }}'
+          git push
