@@ -66,8 +66,8 @@ runs:
         node-version: "16"
         cache: pnpm
         cache-dependency-path: |
-          pnpm-lock.yaml
-          .npmrc
+          **/pnpm-lock.yaml
+          **/.npmrc
 
     # Install dependencies
     - name: Install dependencies
