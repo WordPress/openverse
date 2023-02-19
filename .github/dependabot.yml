@@ -1,0 +1,45 @@
+#################################
+# Dependabot Configuration File #
+#################################
+
+# current Github-native version of Dependabot
+version: 2
+
+updates:
+  # Enable version updates for Python libs in Openverse API
+  - package-ecosystem: pip
+    # Look for a `Pipfile` in the `/api` directory
+    directory: /api
+    # Check for updates once a month
+    schedule:
+      interval: monthly
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - "🐍 tech: python"
+      - dependencies
+
+  # Enable version updates for Python libs in ingestion server
+  - package-ecosystem: pip
+    # Look for a `Pipfile` in the `/ingestion_server` directory
+    directory: /ingestion_server
+    # Check for updates once a month
+    schedule:
+      interval: monthly
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - "🐍 tech: python"
+      - dependencies
+
+  - package-ecosystem: "github-actions"
+    directory: /
+    schedule:
+      interval: "weekly"
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - dependencies

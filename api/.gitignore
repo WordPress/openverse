@@ -1,0 +1,12 @@
+# Django
+static/*
+*.log
+local_settings.py
+db.sqlite3
+
+# Sphinx
+build/
+docs/_build/
+
+# OpenAPI
+openapi.yaml

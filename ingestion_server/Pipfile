@@ -1,0 +1,28 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+ipython = "~=8.10"
+pycodestyle = "~=2.10"
+pytest = "~=7.2"
+pytest-order = "~=1.0"
+remote-pdb = "~=2.1"
+
+[packages]
+aws-requests-auth = "~=0.4"
+boto3 = "~=1.26"
+bottle = "~=0.12"
+elasticsearch-dsl = "~=7.4"
+falcon = "~=3.1"
+filelock = "~=3.9"
+gunicorn = "~=20.1"
+jsonschema = "~=4.17"
+psycopg2 = "~=2.9"
+python-decouple = "~=3.7"
+PyYAML = "~=6.0"
+tldextract = "~=3.3"
+
+[requires]
+python_version = "3.10"

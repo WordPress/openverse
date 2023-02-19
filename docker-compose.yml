@@ -1,0 +1,137 @@
+version: "2.4"
+services:
+  db:
+    image: postgres:13.2-alpine
+    ports:
+      - "50254:5432"
+    env_file:
+      - postgres/env.docker
+    healthcheck:
+      test: "pg_isready -U deploy -d openledger"
+    volumes:
+      - api-postgres:/var/lib/postgresql/data
+
+  upstream_db:
+    image: postgres:13.2-alpine
+    expose:
+      - "5432"
+    volumes:
+      - catalog-postgres:/var/lib/postgresql/data
+      - ./sample_data:/sample_data
+    env_file:
+      - postgres/env.docker
+    healthcheck:
+      test: "pg_isready -U deploy -d openledger"
+
+  cache:
+    image: redis:4.0.10
+    ports:
+      - "50263:6379"
+
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+    ports:
+      - "50292:9200"
+    environment:
+      # disable XPack
+      # https://www.elastic.co/guide/en/elasticsearch/reference/5.3/docker.html#_security_note
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - http.cors.enabled=true
+      - http.cors.allow-origin=/.*/
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -si -XGET 'localhost:9200/_cluster/health?pretty' | grep -qE 'yellow|green'",
+        ]
+      interval: 10s
+      timeout: 60s
+      retries: 10
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    # Memory limit for ES, as it tends to be a memory hoarder
+    # Set this value to an empty string to remove the limit
+    # https://docs.docker.com/compose/compose-file/compose-file-v2/#cpu-and-other-resources
+    mem_limit: ${ES_MEM_LIMIT:-4294967296} # 4 GiB in bytes
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+
+  web:
+    build:
+      context: ./api/
+      args:
+        SEMANTIC_VERSION: ${SEMANTIC_VERSION:-v1.0.0}
+    image: openverse-api
+    volumes:
+      - ./api:/api
+    ports:
+      - "50280:8000" # Django
+      - "50230:3000" # Sphinx (unused by default; see `sphinx-live` recipe)
+    depends_on:
+      - db
+      - es
+      - cache
+    env_file:
+      - api/env.docker
+      - api/.env
+    environment:
+      STATIC_ROOT: ${STATIC_ROOT:-}
+      MEDIA_ROOT: ${MEDIA_ROOT:-}
+    stdin_open: true
+    tty: true
+
+  ingestion_server:
+    build: ./ingestion_server/
+    image: openverse-ingestion_server
+    command: gunicorn -c ./gunicorn.conf.py
+    ports:
+      - "50281:8001"
+    depends_on:
+      - db
+      - upstream_db
+      - es
+      - indexer_worker
+    volumes:
+      - ./ingestion_server:/ingestion_server
+    env_file:
+      - ingestion_server/env.docker
+    stdin_open: true
+    tty: true
+
+  indexer_worker:
+    build: ./ingestion_server/
+    image: openverse-ingestion_server
+    command: gunicorn -c ./gunicorn_worker.conf.py
+    expose:
+      - "8002"
+    depends_on:
+      - db
+      - upstream_db
+      - es
+    volumes:
+      - ./ingestion_server:/ingestion_server
+    env_file:
+      - ingestion_server/env.docker
+    stdin_open: true
+    tty: true
+
+  proxy:
+    image: nginx:alpine
+    ports:
+      - "50200:9080"
+      - "50243:9443"
+    environment:
+      HTTPS_PORT: 50243 # See `ports` mapping above.
+    depends_on:
+      - web
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates
+      - ./nginx/certs:/etc/nginx/certs
+
+volumes:
+  api-postgres:
+  catalog-postgres:
+  es-data:

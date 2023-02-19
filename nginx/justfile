@@ -1,0 +1,33 @@
+set dotenv-load := false
+
+# Show all available recipes
+@_default:
+  echo "#########"
+  echo "# NGINX #"
+  echo "#########"
+  just --list --unsorted
+
+
+# Aliases collectstatic from the API directory
+# https://github.com/casey/just/issues/1550
+collectstatic:
+    just ../api/collectstatic
+
+# Run the NGINX image locally
+build-run upstream_url='api.openverse.engineering': collectstatic
+    # upstream_url can also be set to 172.17.0.1:50280 for local testing
+    docker build --target nginx . -t openverse-api-nginx:latest
+    @echo "--> NGINX server will be run at http://localhost:9090, upstream at {{ upstream_url }}"
+    @echo "--> Try a static URL like http://localhost:9090/static/admin/css/base.css to test"
+    docker run --rm -p 9090:8080 -it \
+      -e DJANGO_NGINX_UPSTREAM_URL="{{ upstream_url }}" \
+      -e DJANGO_NGINX_GIT_REVISION="$(git rev-parse HEAD)" \
+      openverse-api-nginx:latest
+
+# Make locally trusted certificates (requires mkcert installed)
+cert:
+    mkdir -p nginx/certs/
+    mkcert \
+      -cert-file nginx/certs/openverse.crt \
+      -key-file nginx/certs/openverse.key \
+      dev.openverse.test localhost 127.0.0.1 ::1

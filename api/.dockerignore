@@ -1,0 +1,9 @@
+# Exclude everything and only include certain files
+*
+!catalog
+!manage.py
+!Pipfile*
+!run.sh
+!nginx.conf.template
+!static
+!nginx-entrypoint.sh

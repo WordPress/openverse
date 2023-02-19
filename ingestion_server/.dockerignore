@@ -1,0 +1,5 @@
+# Exclude everything and only include certain files
+*
+!ingestion_server
+!gunicorn*
+!Pipfile*
