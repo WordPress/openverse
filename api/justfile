@@ -93,19 +93,3 @@ test-local *args:
 # Run smoke test for the API docs
 doc-test: _all-up
     curl --fail 'http://localhost:50280/v1/?format=openapi'
-
-##########
-# Sphinx #
-##########
-
-# Compile Sphinx documentation into HTML output
-sphinx-make: _all-up
-    just ../exec web sphinx-build -M html docs/ build/
-
-# Serve Sphinx documentation via a live-reload server
-sphinx-live: _all-up
-    just ../exec web sphinx-autobuild --host 0.0.0.0 --port 3000 docs/ build/html/
-
-# Serve the Sphinx documentation from the HTML output directory
-sphinx-serve dir="api" port="50231":
-    cd {{ dir }}/build/html && pipenv run python -m http.server {{ port }}

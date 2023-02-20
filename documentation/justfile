@@ -1,0 +1,32 @@
+set dotenv-load := false
+
+COLOR := "\\033[0;35m"
+NO_COLOR := "\\033[0m"
+
+# Show all available recipes
+@_default:
+    printf "{{ COLOR }}#################\n"
+    printf "# Documentation #\n"
+    printf "#################{{ NO_COLOR }}\n"
+    just --list --unsorted
+
+
+# Install dependencies
+install:
+    pipenv install --dev
+
+##########
+# Sphinx #
+##########
+
+# Serve a live-reload documentation site
+live port="50230":
+    pipenv run sphinx-autobuild -b html . _serve/ --port {{ port }}
+
+# Compile the documentation into a static site
+build:
+    pipenv run sphinx-build -b html . _build/
+
+# Serve the compiled docs using a simple HTTP server
+serve port="50231":
+    pipenv run python -m http.server -d _build/ {{ port }}

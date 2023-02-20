@@ -17,6 +17,7 @@ DC_USER := env_var_or_default("DC_USER", "opener")
     cd frontend && just
     cd automations/python && just
     cd automations/js && just
+    cd documentation && just
     printf "\nTo run a nested recipe, add the folder path before it, like \`just frontend/install\`.\n"
 
 ###########
@@ -45,6 +46,7 @@ DC_USER := env_var_or_default("DC_USER", "opener")
     just frontend/install
     just automations/python/install
     just automations/js/install
+    just documentation/install
 
 # Setup pre-commit as a Git hook
 precommit:
