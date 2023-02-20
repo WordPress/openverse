@@ -878,6 +878,7 @@ jobs:
   # Deployment #
   ##############
 
+  # See also `deploy-frontend` in `prod_deploy.yml`.
   deploy-frontend:
     name: Deploy staging frontend
     runs-on: ubuntu-latest
@@ -903,6 +904,7 @@ jobs:
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
 
+  # See also `deploy-api` in `prod_deploy.yml`.
   deploy-api:
     name: Deploy staging API
     runs-on: ubuntu-latest
