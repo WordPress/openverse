@@ -673,7 +673,13 @@ jobs:
 
   docs-publish:
     name: Publish full-stack docs
-    if: github.event_name == 'push'
+    # https://github.com/actions/runner/issues/491#issuecomment-850884422
+    if: |
+      always() &&
+      (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
+      (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
+      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
+      github.event_name == 'push'
     runs-on: ubuntu-latest
     needs:
       - test-ing
@@ -719,7 +725,13 @@ jobs:
 
   docs-preview:
     name: Preview full-stack docs
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.owner.login == 'WordPress' && github.actor != 'dependabot[bot]'
+    # https://github.com/actions/runner/issues/491#issuecomment-850884422
+    if: |
+      always() &&
+      (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
+      (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
+      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
+      github.event_name == 'pull_request' && github.event.pull_request.head.repo.owner.login == 'WordPress' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     needs:
       - test-ing
