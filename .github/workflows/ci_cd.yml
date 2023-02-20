@@ -880,9 +880,10 @@ jobs:
   deploy-frontend:
     name: Deploy staging frontend
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && needs.get-changes.outputs.frontend == 'true'
     needs:
       - get-image-tag
+      - get-changes
       - nuxt-build
       - nuxt-playwright-e2e
       - nuxt-playwright-vr
@@ -905,9 +906,10 @@ jobs:
   deploy-api:
     name: Deploy staging API
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && (needs.get-changes.outputs.ingestion_server == 'true' || needs.get-changes.outputs.api == 'true')
     needs:
       - get-image-tag
+      - get-changes
       - test-api
       - publish-images
 
