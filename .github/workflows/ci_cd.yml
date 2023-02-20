@@ -594,10 +594,9 @@ jobs:
 
   playwright-test-failure-comment:
     name: Post Playwright test debugging instructions
-    if: always() && needs.get-changes.outputs.frontend == 'true' && github.event_name == 'pull_request' && (needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' ||needs.storybook-playwright.result == 'failure')
+    if: always() && github.event_name == 'pull_request' && (needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' || needs.storybook-playwright.result == 'failure')
     runs-on: ubuntu-latest
     needs:
-      - get-changes
       - nuxt-playwright-e2e
       - nuxt-playwright-vr
       - storybook-playwright
