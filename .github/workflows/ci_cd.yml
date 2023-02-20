@@ -91,7 +91,7 @@ jobs:
       - name: Install dependences
         run: |
           pnpm install
-          just frontend/install --ignore-workspace
+          just frontend/install
 
       - name: Cache pre-commit envs
         uses: actions/cache@v3
@@ -438,7 +438,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install --ignore-workspace
+          install_recipe: frontend/install
 
       - name: Run unit tests
         run: just frontend/run test:unit
@@ -458,7 +458,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install --ignore-workspace
+          install_recipe: frontend/install
 
       - name: Run Storybook smoke-test
         run: just frontend/run storybook:smoke
@@ -478,7 +478,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install --ignore-workspace
+          install_recipe: frontend/install
 
       - name: Run build
         run: just frontend/run build
@@ -500,7 +500,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install --ignore-workspace
+          install_recipe: frontend/install
 
       - name: Run Nuxt Playwright e2e tests
         run: just frontend/run test:playwright e2e --workers=2
@@ -528,7 +528,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install --ignore-workspace
+          install_recipe: frontend/install
 
       - name: Run Nuxt Playwright visual regression tests
         run: just frontend/run test:playwright visual-regression --workers=2
@@ -556,7 +556,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install --ignore-workspace
+          install_recipe: frontend/install
 
       - name: Run Storybook Playwright tests
         run: just frontend/run test:storybook
@@ -636,7 +636,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
           # Python is not needed to build the image.
-          install_recipe: frontend/install --ignore-workspace
+          install_recipe: frontend/install
 
       - name: Download translation strings
         run: just frontend/run i18n
@@ -690,7 +690,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install --ignore-workspace
+          install_recipe: frontend/install
 
       - name: Load Docker images
         uses: ./.github/actions/load-img
@@ -764,7 +764,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install --ignore-workspace
+          install_recipe: frontend/install
 
       - name: Load Docker images
         uses: ./.github/actions/load-img

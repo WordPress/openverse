@@ -40,7 +40,7 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 @install:
     just api/install
     just ingestion_server/install
-    just frontend/install --ignore-workspace
+    just frontend/install
     just automations/python/install
     just automations/js/install
 

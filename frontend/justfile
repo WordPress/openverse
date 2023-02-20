@@ -9,7 +9,7 @@ set dotenv-load := false
 
 # Install dependencies
 install *args: && core-locales
-    pnpm install {{ args }}
+    pnpm install --ignore-workspace {{ args }}
 
 # Ensure that some core locales are present
 core-locales:

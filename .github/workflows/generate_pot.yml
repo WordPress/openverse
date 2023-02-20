@@ -23,7 +23,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install --ignore-workspace
+          install_recipe: frontend/install
 
       - name: Generate PO
         run: just frontend/run i18n:generate-pot
