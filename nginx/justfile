@@ -5,9 +5,8 @@ NO_COLOR := "\\033[0m"
 
 # Show all available recipes
 @_default:
-    printf "{{ COLOR }}#########\n"
-    printf "# NGINX #\n"
-    printf "#########{{ NO_COLOR }}\n"
+    printf "{{ COLOR }}# NGINX (path: \`nginx/\`)\n"
+    printf "========================{{ NO_COLOR }}\n"
     just --list --unsorted
 
 
