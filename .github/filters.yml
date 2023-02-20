@@ -1,0 +1,6 @@
+api:
+  - api/**
+ingestion_server:
+  - ingestion_server/**
+frontend:
+  - frontend/**

@@ -28,6 +28,26 @@ jobs:
   # Helpers #
   ###########
 
+  get-changes:
+    name: Get changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      api: ${{ steps.paths-filter.outputs.api }}
+      ingestion_server: ${{ steps.paths-filter.outputs.ingestion_server }}
+      frontend: ${{ steps.paths-filter.outputs.frontend }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - id: paths-filter
+        name: Check changed paths
+        uses: dorny/paths-filter@v2
+        with:
+          filters: ./.github/filters.yml
+
   get-image-tag:
     name: Get image tag
     runs-on: ubuntu-latest
@@ -133,14 +153,22 @@ jobs:
 
   test-ing:
     name: Run tests for ingestion-server
+    if: needs.get-changes.outputs.ingestion_server == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
+      - get-changes
       - build-images
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - id: paths-filter
+        name: Conditionally skip job
+        uses: dorny/paths-filter@v2
+        with:
+          filters: .github/filters.yml
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -176,9 +204,11 @@ jobs:
 
   test-api:
     name: Run tests for the API
+    if: needs.get-changes.outputs.ingestion_server == 'true' || needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -455,8 +485,10 @@ jobs:
 
   nuxt-playwright-e2e:
     name: Nuxt Playwright e2e tests
+    if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - lint
 
     steps:
@@ -481,8 +513,10 @@ jobs:
 
   nuxt-playwright-vr:
     name: Nuxt Playwright VR tests
+    if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - lint
 
     steps:
@@ -507,8 +541,10 @@ jobs:
 
   storybook-playwright:
     name: Storybook Playwright tests
+    if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - lint
 
     steps:
@@ -534,8 +570,10 @@ jobs:
 
   clean-playwright-failure-comment:
     name: Remove Playwright test debugging instructions
+    if: github.event_name == 'pull_request' && needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    needs:
+      - get-changes
 
     steps:
       - uses: peter-evans/find-comment@v2
@@ -557,9 +595,10 @@ jobs:
 
   playwright-test-failure-comment:
     name: Post Playwright test debugging instructions
+    if: always() && needs.get-changes.outputs.frontend == 'true' && github.event_name == 'pull_request' && (needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' ||needs.storybook-playwright.result == 'failure')
     runs-on: ubuntu-latest
-    if: always() && github.event_name == 'pull_request' && (needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' ||needs.storybook-playwright.result == 'failure')
     needs:
+      - get-changes
       - nuxt-playwright-e2e
       - nuxt-playwright-vr
       - storybook-playwright
