@@ -5,9 +5,10 @@ on:
     inputs:
       stack:
         type: choice
-        descriptions: The layer of the stack to deploy
+        description: The layer of the stack to deploy
+        default: 'frontend'
         options:
-          - api
+          # - api TODO
           - frontend
       image-tag:
         description: The image tag to deploy to prod
