@@ -7,10 +7,7 @@ runs:
     - name: Build Sphinx
       shell: bash
       run: |
-        just api/sphinx-make
-        sudo chown "$USER:$USER" -R ./api
-      env:
-        DC_USER: root
+        just documentation/build
 
     - name: Install translations
       shell: bash
@@ -32,6 +29,6 @@ runs:
     - name: Merge all docs
       shell: bash
       run: |
-        mv api/build/html /tmp/docs
+        mv documentation/_build /tmp/docs
         mv frontend/storybook-static /tmp/docs/storybook
         mv frontend/.tcv-export /tmp/docs/tailwind
