@@ -9,7 +9,7 @@ on:
     types:
       - published
   workflow_dispatch:
-    input:
+    inputs:
       image_tag:
         description: "The tag to assign to the images built in the workflow."
         type: string
