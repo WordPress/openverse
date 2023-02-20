@@ -41,8 +41,6 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 
 # Install all dependencies
 @install:
-    just api/install
-    just ingestion_server/install
     just frontend/install
     just automations/python/install
     just automations/js/install
