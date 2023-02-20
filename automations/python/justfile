@@ -5,7 +5,7 @@ NO_COLOR := "\\033[0m"
 
 # Show all available recipes
 @_default:
-    printf "{{ COLOR }}# Python automations (path: \`automations/python/\`)\n"
+    printf "\n{{ COLOR }}# Python automations (path: \`automations/python/\`)\n"
     printf "=================================================={{ NO_COLOR }}\n"
     just --list --unsorted
 
