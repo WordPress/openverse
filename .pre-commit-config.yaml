@@ -1,11 +1,22 @@
 # This file is being synced from WordPress/openverse. Any changes made to it
 # here will be overwritten. Please make any necessary edits to these files:
-# - https://github.com/WordPress/openverse/blob/main/.pre-commit-config.yaml.jinja
+# - https://github.com/WordPress/openverse/blob/main/templates/.pre-commit-config.yaml.jinja
 # - https://github.com/WordPress/openverse/blob/main/templates/.pre-commit-config.local.yaml.jinja
 
 exclude: Pipfile\.lock|migrations|\.idea|node_modules|archive|retired
 
 repos:
+  - repo: local # More local hooks are defined at the bottom.
+    hooks:
+      - id: i18n
+        name: i18n
+        files: ^frontend/.*$
+        # Check if the i18n files have been downloaded by checking if the Arabic translation exists
+        # Download the i18n files if they do not exist
+        entry: bash -c 'if [ ! -f "$(dirname "$dir")"/frontend/src/locales/ar.json ]; then just frontend/run i18n; fi'
+        language: system
+        pass_filenames: false
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
     hooks:
@@ -20,7 +31,7 @@ repos:
       - id: check-xml
       - id: check-yaml
       - id: end-of-file-fixer
-        exclude: test/tapes/.+\.json5
+        exclude: frontend/test/tapes/.+\.json5
       - id: check-symlinks
       - id: mixed-line-ending
       - id: fix-encoding-pragma
@@ -83,7 +94,8 @@ repos:
     rev: v8.15.0
     hooks:
       - id: eslint
-        files: ^js/.*$
+        files: \.(js|ts|vue)$
+        exclude: ^load_testing/.*|frontend/(nuxt-template-overrides/.*|.remake/.*)$ # ESLint raises warnings for ignored files.
         "types": [file] # ESLint only accepts [javascript] by default.
         args:
           - --ignore-path=.gitignore
@@ -92,6 +104,20 @@ repos:
         additional_dependencies:
           - eslint@8.15.0
           - eslint-config-prettier@8.5.0
+          - "@babel/eslint-parser@7.19.1"
+          - "@intlify/eslint-plugin-vue-i18n@1.4.0"
+          - "@nuxtjs/eslint-module@3.1.0"
+          - "@typescript-eslint/eslint-plugin@5.44.0"
+          - "@typescript-eslint/parser@5.44.0"
+          - eslint-config-prettier@8.6.0
+          - eslint-import-resolver-custom-alias@1.3.0
+          - eslint-plugin-eslint-comments@3.2.0
+          - eslint-plugin-import@2.27.5
+          - eslint-plugin-prettier@4.2.1
+          - eslint-plugin-tsdoc@0.2.17
+          - eslint-plugin-unicorn@42.0.0
+          - eslint-plugin-vue@9.9.0
+          - eslint-plugin-vuejs-accessibility@1.1.1
 
   # Use the `.prettierignore` and `.prettier.config.js` files to configure project-specific requirements.
   - repo: https://github.com/pre-commit/mirrors-prettier
@@ -100,26 +126,45 @@ repos:
       - id: prettier
         additional_dependencies:
           - prettier@2.6.0
+          - prettier-plugin-tailwindcss@0.2.2
+          - typescript@4.9.3
 
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.8.0
     hooks:
       - id: shellcheck
 
-  - repo: local
+  - repo: local # More local hooks are defined at the top.
     hooks:
+      - id: types
+        name: types
+        files: ^frontend/.*$
+        entry: bash -c 'just frontend/run types'
+        language: system
+        pass_filenames: false
+      - id: test:unit
+        name: test:unit
+        files: ^frontend/.*$
+        entry: bash -c 'just frontend/run test:unit'
+        language: system
+        pass_filenames: false
+        stages:
+          - push
       - id: render-precommit
         name: render-precommit
-        entry: bash -c 'just render-precommit'
+        files: ^templates/.*$
+        entry: bash -c 'just automations/js/render-precommit'
         language: system
         pass_filenames: false
       - id: render-prettier
         name: render-prettier
-        entry: bash -c 'just render-prettier'
+        files: ^templates/.*$
+        entry: bash -c 'just automations/js/render-prettier'
         language: system
         pass_filenames: false
       - id: render-github
         name: render-github
-        entry: bash -c 'just render-github'
+        files: ^templates/.*$
+        entry: bash -c 'just automations/js/render-github'
         language: system
         pass_filenames: false
