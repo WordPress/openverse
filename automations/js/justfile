@@ -5,15 +5,15 @@ NO_COLOR := "\\033[0m"
 
 # Show all available recipes
 @_default:
-  printf "{{ COLOR }}#######################\n"
-  printf "# Node.js automations #\n"
-  printf "#######################{{ NO_COLOR }}\n"
-  just --list --unsorted
+    printf "{{ COLOR }}#######################\n"
+    printf "# Node.js automations #\n"
+    printf "#######################{{ NO_COLOR }}\n"
+    just --list --unsorted
 
 
 # Install dependencies
 install:
-  pnpm install
+    pnpm install
 
 ##########
 # Render #

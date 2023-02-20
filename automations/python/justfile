@@ -5,12 +5,12 @@ NO_COLOR := "\\033[0m"
 
 # Show all available recipes
 @_default:
-  printf "{{ COLOR }}######################\n"
-  printf "# Python automations #\n"
-  printf "######################{{ NO_COLOR }}\n"
-  just --list --unsorted
+    printf "{{ COLOR }}######################\n"
+    printf "# Python automations #\n"
+    printf "######################{{ NO_COLOR }}\n"
+    just --list --unsorted
 
 
 # Install dependencies
 install:
-  pipenv install --dev
+    pipenv install --dev
