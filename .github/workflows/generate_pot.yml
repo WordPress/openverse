@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - monorepo
 
 concurrency:
   group: ${{ github.workflow }}
