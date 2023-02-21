@@ -7,13 +7,6 @@ set dotenv-load := false
     echo "############"
     just --list --unsorted
 
-# Install dependencies
-install *args: && core-locales
-    pnpm install --ignore-workspace {{ args }}
-
-# Ensure that some core locales are present
-core-locales:
-    cp -r test/locales/* src/locales
 
 # Run a package.json script via pnpm
 run *args:

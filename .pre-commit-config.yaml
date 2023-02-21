@@ -102,8 +102,7 @@ repos:
           - --ignore-path=.eslintignore
           - --max-warnings=0
         additional_dependencies:
-          - eslint@8.15.0
-          - eslint-config-prettier@8.5.0
+          - eslint@8.28.0
           - "@babel/eslint-parser@7.19.1"
           - "@intlify/eslint-plugin-vue-i18n@1.4.0"
           - "@nuxtjs/eslint-module@3.1.0"

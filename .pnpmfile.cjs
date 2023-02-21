@@ -1,4 +1,4 @@
-const packageJson = require("./package.json")
+const packageJson = require("./frontend/package.json")
 
 function readPackage(pkg, context) {
   if (pkg.dependencies.typescript) {

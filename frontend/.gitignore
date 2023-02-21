@@ -24,3 +24,8 @@ src/locales/*.json
 src/locales/scripts/valid-locales.json
 src/locales/scripts/untranslated-locales.json
 src/locales/scripts/wp-locales.json
+
+# Workspace mock-files
+/.npmrc
+/.pnpmfile.cjs
+/pnpm-lock.yaml
