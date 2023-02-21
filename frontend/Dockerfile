@@ -10,7 +10,7 @@ WORKDIR /home/node/
 
 # Copy monorepo mocking files into `/home/node`, which pretends to be the monorepo root.
 COPY --chown=node:node .npmrc .pnpmfile.cjs pnpm-lock.yaml ./
-RUN echo '{"packages":["frontend/"]}' > pnpm-workspaces.yaml
+RUN echo '{"packages":["frontend/"]}' > pnpm-workspace.yaml
 
 # Copy the `frontend/` directory into `/home/node/frontend`, as a package in the monorepo.
 COPY --chown=node:node . ./frontend/
