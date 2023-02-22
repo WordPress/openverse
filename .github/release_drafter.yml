@@ -18,6 +18,8 @@ categories:
   - title: Bug Fixes
     label: "🛠 goal: fix"
 change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
+exclude-labels:
+  - "skip-changelog"
 version-resolver:
   major:
     labels:

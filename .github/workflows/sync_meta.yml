@@ -25,3 +25,4 @@ jobs:
             🧰 goal: internal improvement
             🤖 aspect: dx
             🟧 priority: high
+            skip-changelog
