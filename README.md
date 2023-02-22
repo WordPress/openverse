@@ -1,4 +1,6 @@
-<img src="brand/banner.svg" width="100%"/>
+<a href="https://openverse.org">
+  <img src="brand/banner.svg" width="100%" alt="Visit Openverse.org"/>
+</a>
 
 <p align="center">
   <a href="https://github.com/orgs/WordPress/projects/3">Project Board</a> |
