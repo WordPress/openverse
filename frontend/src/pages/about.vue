@@ -95,7 +95,7 @@
       <template #issue>
         <VLink
           aria-label="issue"
-          href="https://github.com/WordPress/openverse-catalog/issues/new?assignees=&labels=%F0%9F%9A%A6+status%3A+awaiting+triage%2C%F0%9F%A7%B9+status%3A+ticket+work+required%2C%E2%98%81%EF%B8%8F+provider%3A+any&template=new_source_suggestion.yml&title=%3CSource+name+here%3E"
+          href="https://github.com/WordPress/openverse-catalog/issues"
           >{{ $t("external-sources-page.new.issue") }}</VLink
         >
       </template>
