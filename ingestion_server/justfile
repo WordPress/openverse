@@ -11,8 +11,8 @@ NO_COLOR := "\\033[0m"
 
 
 # Install dependencies
-install:
-    pipenv install --dev
+install *args="--dev":
+    pipenv install {{ args }}
 
 ##########
 # Health #
