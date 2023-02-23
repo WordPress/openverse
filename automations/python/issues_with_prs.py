@@ -2,6 +2,7 @@
 import argparse
 import logging
 import sys
+from typing import Literal
 
 import requests
 from github import Github, GithubException, Issue, ProjectCard, ProjectColumn
@@ -12,6 +13,34 @@ from shared.project import get_org_project, get_project_column
 
 
 log = logging.getLogger(__name__)
+
+CLOSED = "closed"
+OPEN = "open"
+IssueState = Literal[CLOSED, OPEN]
+
+LINKED_PR_QUERY = """
+{
+    repository(owner: "%s", name: "%s") {
+        pullRequests(first: 100, states:%s,
+                     orderBy:{field:UPDATED_AT, direction:DESC}) {
+            nodes {
+                number
+                title
+                closingIssuesReferences (first: 50) {
+                    edges {
+                        node {
+                            number
+                            title
+                            state
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+"""
+
 
 # region argparse
 parser = argparse.ArgumentParser(
@@ -46,7 +75,8 @@ parser.add_argument(
     dest="linked_pr_state",
     metavar="linked-pr-state",
     type=str,
-    default="open",
+    default=OPEN,
+    choices=[OPEN, CLOSED],
     help="filter issues by this state of their linked PRs",
 )
 
@@ -78,6 +108,26 @@ def run_query(
         )
 
 
+def get_pulls_with_linked_issues(
+    org_handle: str, repo_name: str, state: IssueState
+) -> dict[str, str]:
+    """
+
+    :param org_handle:
+    :param repo_name:
+    :param state:
+    :return:
+    """
+    results = run_query(LINKED_PR_QUERY % (org_handle, repo_name, state.upper()))
+    pulls = results["repository"]["pullRequests"]["nodes"]
+    log.info(f"Found {len(pulls)} {state} PRs in {org_handle}/{repo_name}")
+    return {
+        issue["node"]["number"]: issue["node"]["title"]
+        for pull in pulls
+        for issue in pull["closingIssuesReferences"]["edges"]
+    }
+
+
 def get_open_issues_with_prs(
     gh: Github,
     org_handle: str,
@@ -100,40 +150,21 @@ def get_open_issues_with_prs(
             f"Looking for {linked_pr_state} PRs in {org_handle}/{repo_name} "
             f"with linked issues"
         )
-        results = run_query(
-            """
-{
-    repository(owner: "%s", name: "%s") {
-        pullRequests(first: 100, states:%s,
-                     orderBy:{field:UPDATED_AT, direction:DESC}) {
-            nodes {
-                number
-                title
-                closingIssuesReferences (first: 50) {
-                    edges {
-                        node {
-                            number
-                            title
-                            state
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-        """
-            % (org_handle, repo_name, linked_pr_state.upper())
-        )
-        pulls = results["repository"]["pullRequests"]["nodes"]
-        log.info(f"Found {len(pulls)} PRs in {org_handle}/{repo_name}")
-        issues = {
-            issue["node"]["number"]: issue["node"]["title"]
-            for pull in pulls
-            for issue in pull["closingIssuesReferences"]["edges"]
-        }
+        issues = get_pulls_with_linked_issues(org_handle, repo_name, linked_pr_state)
+        # In the case where we're querying for closed PRs, we'll also need to consider
+        # open PRs - if there's an issue with both an open PR and a closed PR, we should
+        # not take any action on it
+        if linked_pr_state == CLOSED:
+            open_issues = get_pulls_with_linked_issues(org_handle, repo_name, OPEN)
+
         log.info(f"Found {len(issues)} issues")
         for number, title in issues.items():
+            if linked_pr_state == CLOSED and number in open_issues:
+                log.info(
+                    f"• #{number: >5} | {title} "
+                    f"(skipped because there's an open PR)"
+                )
+                continue
             log.info(f"• #{number: >5} | {title}")
             all_issues.add((repo_name, number))
 
