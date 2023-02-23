@@ -6,7 +6,6 @@ verify_ssl = true
 [dev-packages]
 factory-boy = "~=3.2"
 fakeredis = "~=2.9"
-furo = "~=2022.9"
 ipython = "~=8.10"
 openapi-spec-validator = "~=0.5"
 pycodestyle = "~=2.10"
