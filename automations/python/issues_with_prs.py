@@ -5,7 +5,7 @@ import sys
 from typing import Literal
 
 import requests
-from github import Github, GithubException, Issue, ProjectCard, ProjectColumn
+from github import Github, ProjectCard, ProjectColumn
 from shared.data import get_data
 from shared.github import get_access_token, get_client
 from shared.log import configure_logger
@@ -165,9 +165,7 @@ def get_open_issues_with_prs(
         for number, title in issues.items():
             log.info(f"• #{number: >5} | {title}")
             if linked_pr_state == CLOSED and number in open_issues:
-                log.info(
-                    f"{' ' * 11}(skipped because there's an open PR)"
-                )
+                log.info(f"{' ' * 11}(skipped because there's an open PR)")
                 continue
             all_issues.add((repo_name, number))
 
