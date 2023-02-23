@@ -12,15 +12,18 @@ Notes:                  https://www.flickr.com/help/terms/api
 
 import argparse
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 
 import lxml.html as html
+from airflow.exceptions import AirflowException
 from airflow.models import Variable
 from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.loader.provider_details import ImageCategory
-from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
+from providers.provider_api_scripts.time_delineated_provider_data_ingester import (
+    TimeDelineatedProviderDataIngester,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -37,7 +40,7 @@ LICENSE_INFO = {
 }
 
 
-class FlickrDataIngester(ProviderDataIngester):
+class FlickrDataIngester(TimeDelineatedProviderDataIngester):
     provider_string = prov.FLICKR_DEFAULT_PROVIDER
     sub_providers = prov.FLICKR_SUB_PROVIDERS
     photo_url_base = prov.FLICKR_PHOTO_URL_BASE
@@ -46,6 +49,16 @@ class FlickrDataIngester(ProviderDataIngester):
     endpoint = "https://api.flickr.com/services/rest"
     batch_limit = 500
     retries = 5
+
+    max_records = 4_000
+    division_threshold = 20_000
+    min_divisions = 12
+    max_divisions = 60
+    # When we pull more records than the API reports, we don't want to raise an error
+    # and halt ingestion. Instead, this DAG adds its own separate handling to cut off
+    # ingestion when max_records is reached, and continue to the next time interval. See
+    # https://github.com/WordPress/openverse-catalog/pull/995
+    should_raise_error = False
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -60,48 +73,11 @@ class FlickrDataIngester(ProviderDataIngester):
         # to hitting rate limits.
         self.requests_count = 0
 
-    @staticmethod
-    def _derive_timestamp_pair_list(date):
-        """
-        Create a list of start/end timestamps for equal portions of the day.
-
-        Ingestion will be run separately for each of these time divisions.
-        This is necessary because requesting data for too long a period may cause
-        unexpected behavior from the API:
-        https://github.com/WordPress/openverse-catalog/issues/26.
-        """
-        seconds_in_a_day = 86400
-        number_of_divisions = 48  # Half-hour increments
-        portion = int(seconds_in_a_day / number_of_divisions)
-        utc_date = datetime.strptime(date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
-
-        def _ts_string(d):
-            return str(int(d.timestamp()))
-
-        # Generate the start/end timestamps for each half-hour 'slice' of the day
-        pair_list = [
-            (
-                _ts_string(utc_date + timedelta(seconds=i * portion)),
-                _ts_string(utc_date + timedelta(seconds=(i + 1) * portion)),
-            )
-            for i in range(number_of_divisions)
-        ]
-        return pair_list
-
-    def ingest_records(self, **kwargs):
-        # Build a list of start/end timestamps demarcating portions of the day
-        # for which to ingest data.
-        timestamp_pairs = self._derive_timestamp_pair_list(self.date)
-
-        for start_ts, end_ts in timestamp_pairs:
-            logger.info(f"Ingesting data for start: {start_ts}, end: {end_ts}")
-            super().ingest_records(start_timestamp=start_ts, end_timestamp=end_ts)
-
     def get_next_query_params(self, prev_query_params, **kwargs):
         if not prev_query_params:
             # Initial request, return default params
-            start_timestamp = kwargs.get("start_timestamp")
-            end_timestamp = kwargs.get("end_timestamp")
+            start_timestamp = kwargs.get("start_ts")
+            end_timestamp = kwargs.get("end_ts")
 
             return {
                 "min_upload_date": start_timestamp,
@@ -150,6 +126,12 @@ class FlickrDataIngester(ProviderDataIngester):
         if response_json is None or response_json.get("stat") != "ok":
             return None
         return response_json.get("photos", {}).get("photo")
+
+    def get_record_count_from_response(self, response_json) -> int:
+        if response_json:
+            count = response_json.get("photos", {}).get("total", 0)
+            return int(count)
+        return 0
 
     def get_record_data(self, data):
         if (license_info := self._get_license_info(data)) is None:
@@ -271,6 +253,22 @@ class FlickrDataIngester(ProviderDataIngester):
         if "content_type" in image_data and image_data["content_type"] == "0":
             return ImageCategory.PHOTOGRAPH
         return None
+
+    def get_should_continue(self, response_json):
+        # Call the parent method in order to update the fetched_count
+        should_continue = super().get_should_continue(response_json)
+
+        # Return early if more than the max_records have been ingested.
+        # This could happen if we did not break the ingestion down into
+        # small enough divisions.
+        if self.fetched_count > self.max_records:
+            raise AirflowException(
+                f"{self.fetched_count} records retrieved, but there is a"
+                f" limit of {self.max_records}. Consider increasing the"
+                " number of divisions."
+            )
+
+        return should_continue
 
 
 def main(date):

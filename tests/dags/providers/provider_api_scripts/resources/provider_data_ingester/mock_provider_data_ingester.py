@@ -1,5 +1,8 @@
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
+from providers.provider_api_scripts.time_delineated_provider_data_ingester import (
+    TimeDelineatedProviderDataIngester,
+)
 
 
 _license_info = (
@@ -15,6 +18,12 @@ ENDPOINT = "http://mock-api/endpoint"
 HEADERS = {"api_key": "mock_api_key"}
 DEFAULT_QUERY_PARAMS = {"has_image": 1, "page": 1}
 
+# Constants used for time delineated ingester
+MAX_RECORDS = 10_000
+DIVISION_THRESHOLD = 100_000
+MIN_DIVISIONS = 12
+MAX_DIVISIONS = 20
+
 
 class MockProviderDataIngesterMixin:
     """
@@ -27,7 +36,7 @@ class MockProviderDataIngesterMixin:
     providers = {"audio": AUDIO_PROVIDER, "image": IMAGE_PROVIDER}
     endpoint = ENDPOINT
 
-    def get_next_query_params(self, prev_query_params):
+    def get_next_query_params(self, prev_query_params, **kwargs):
         return DEFAULT_QUERY_PARAMS
 
     def get_batch_data(self, response_json):
@@ -73,6 +82,28 @@ class IncorrectlyConfiguredMockProviderDataIngester(
 
     # Do not configure ``get_media_type`` to test the failure case
     # for the default implementation
+
+
+class MockTimeDelineatedProviderDataIngester(
+    MockProviderDataIngesterMixin, TimeDelineatedProviderDataIngester
+):
+    providers = {"image": IMAGE_PROVIDER}
+    max_records = MAX_RECORDS
+    division_threshold = DIVISION_THRESHOLD
+    min_divisions = MIN_DIVISIONS
+    max_divisions = MAX_DIVISIONS
+
+    def get_next_query_params(self, prev_query_params, **kwargs):
+        return {
+            **DEFAULT_QUERY_PARAMS,
+            "start_ts": kwargs.get("start_ts"),
+            "end_ts": kwargs.get("end_ts"),
+        }
+
+    def get_record_count_from_response(self, response_json):
+        if response_json:
+            return response_json.get("count")
+        return 0
 
 
 # Expected result of calling `get_batch_data` with `response_success.json`

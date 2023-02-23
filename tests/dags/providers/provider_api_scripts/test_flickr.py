@@ -8,7 +8,8 @@ from providers.provider_api_scripts.flickr import FlickrDataIngester
 
 RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "resources/flickr")
 
-flickr = FlickrDataIngester()
+FROZEN_DATE = "2020-04-01"
+flickr = FlickrDataIngester(date=FROZEN_DATE)
 test_license_info = LicenseInfo(
     "by-nc-sa",
     "2.0",
@@ -21,62 +22,6 @@ def _get_resource_json(json_name):
     with open(os.path.join(RESOURCES, json_name)) as f:
         resource_json = json.load(f)
     return resource_json
-
-
-def test_derive_timestamp_pair_list_with_sub_hourly_day_divisions():
-    # Note that the timestamps are derived as if input was in UTC.
-    actual_pair_list = flickr._derive_timestamp_pair_list("2018-01-15")
-    expect_pair_list = [
-        ("1515974400", "1515976200"),
-        ("1515976200", "1515978000"),
-        ("1515978000", "1515979800"),
-        ("1515979800", "1515981600"),
-        ("1515981600", "1515983400"),
-        ("1515983400", "1515985200"),
-        ("1515985200", "1515987000"),
-        ("1515987000", "1515988800"),
-        ("1515988800", "1515990600"),
-        ("1515990600", "1515992400"),
-        ("1515992400", "1515994200"),
-        ("1515994200", "1515996000"),
-        ("1515996000", "1515997800"),
-        ("1515997800", "1515999600"),
-        ("1515999600", "1516001400"),
-        ("1516001400", "1516003200"),
-        ("1516003200", "1516005000"),
-        ("1516005000", "1516006800"),
-        ("1516006800", "1516008600"),
-        ("1516008600", "1516010400"),
-        ("1516010400", "1516012200"),
-        ("1516012200", "1516014000"),
-        ("1516014000", "1516015800"),
-        ("1516015800", "1516017600"),
-        ("1516017600", "1516019400"),
-        ("1516019400", "1516021200"),
-        ("1516021200", "1516023000"),
-        ("1516023000", "1516024800"),
-        ("1516024800", "1516026600"),
-        ("1516026600", "1516028400"),
-        ("1516028400", "1516030200"),
-        ("1516030200", "1516032000"),
-        ("1516032000", "1516033800"),
-        ("1516033800", "1516035600"),
-        ("1516035600", "1516037400"),
-        ("1516037400", "1516039200"),
-        ("1516039200", "1516041000"),
-        ("1516041000", "1516042800"),
-        ("1516042800", "1516044600"),
-        ("1516044600", "1516046400"),
-        ("1516046400", "1516048200"),
-        ("1516048200", "1516050000"),
-        ("1516050000", "1516051800"),
-        ("1516051800", "1516053600"),
-        ("1516053600", "1516055400"),
-        ("1516055400", "1516057200"),
-        ("1516057200", "1516059000"),
-        ("1516059000", "1516060800"),
-    ]
-    assert expect_pair_list == actual_pair_list
 
 
 def test_get_next_query_params():
@@ -102,19 +47,26 @@ def test_get_next_query_params():
 
     # First request
     first_params = flickr.get_next_query_params(
-        None, start_timestamp="1516060900", end_timestamp="1516060800"
+        None, start_ts="1516060900", end_ts="1516060800"
     )
     assert first_params == expected_params
 
     # Updated page on second request
     second_params = flickr.get_next_query_params(
-        first_params, start_timestamp="1516060900", end_timestamp="1516060800"
+        first_params, start_ts="1516060900", end_ts="1516060800"
     )
     assert second_params == {**expected_params, "page": 1}
 
 
 def test_get_media_type():
     assert flickr.get_media_type({}) == "image"
+
+
+def test_get_record_count_from_response():
+    response_json = _get_resource_json("flickr_example_pretty.json")
+    count = flickr.get_record_count_from_response(response_json)
+
+    assert count == 30
 
 
 @pytest.mark.parametrize(
