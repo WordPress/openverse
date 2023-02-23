@@ -8,14 +8,14 @@ on:
         description: The environment to deploy to.
         type: choice
         default: staging
-        choices:
+        options:
           - staging
           - production
       service:
         required: true
         description: The service to deploy.
         type: choice
-        choices:
+        options:
           - nuxt
           - api
       tag:
