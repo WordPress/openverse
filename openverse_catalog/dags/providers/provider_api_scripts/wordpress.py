@@ -44,6 +44,8 @@ class WordPressDataIngester(ProviderDataIngester):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.license_info = get_license_info(license_url=self.license_url)
+        # Prevent the removal of trailing slashes on media
+        self.media_stores[constants.IMAGE].strip_url_trailing_slashes = False
 
         # Total pages is determined on the first request
         self.total_pages = None

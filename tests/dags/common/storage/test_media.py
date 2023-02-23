@@ -170,13 +170,11 @@ def test_MediaStore_produces_correct_total_images():
 def test_MediaStore_clean_media_metadata_does_not_change_required_media_arguments(
     monkeypatch,
 ):
-    image_url = "test_url"
-    foreign_landing_url = "foreign_landing_url"
     image_store = image.ImageStore()
     image_data = {
         "license_info": BY_LICENSE_INFO,
-        "foreign_landing_url": foreign_landing_url,
-        "image_url": image_url,
+        "foreign_landing_url": TEST_FOREIGN_LANDING_URL,
+        "image_url": TEST_IMAGE_URL,
         "filetype": None,
         "thumbnail_url": None,
         "foreign_identifier": None,
@@ -184,13 +182,11 @@ def test_MediaStore_clean_media_metadata_does_not_change_required_media_argument
     }
     cleaned_data = image_store.clean_media_metadata(**image_data)
 
-    assert cleaned_data["image_url"] == image_url
-    assert cleaned_data["foreign_landing_url"] == foreign_landing_url
+    assert cleaned_data["image_url"] == TEST_IMAGE_URL
+    assert cleaned_data["foreign_landing_url"] == TEST_FOREIGN_LANDING_URL
 
 
-def test_MediaStore_clean_media_metadata_adds_provider(
-    monkeypatch,
-):
+def test_MediaStore_clean_media_metadata_adds_provider(monkeypatch):
     provider = "test_provider"
     image_store = image.ImageStore(provider=provider)
     image_data = {
@@ -205,9 +201,7 @@ def test_MediaStore_clean_media_metadata_adds_provider(
     assert cleaned_data["provider"] == provider
 
 
-def test_MediaStore_clean_media_metadata_removes_license_urls(
-    monkeypatch,
-):
+def test_MediaStore_clean_media_metadata_removes_license_urls(monkeypatch):
     image_store = image.ImageStore()
     image_data = {
         "license_info": BY_LICENSE_INFO,
@@ -243,9 +237,7 @@ def test_MediaStore_clean_media_metadata_replaces_license_url_with_license_info(
     assert "license_url" not in cleaned_data
 
 
-def test_MediaStore_clean_media_metadata_adds_default_provider_category(
-    monkeypatch,
-):
+def test_MediaStore_clean_media_metadata_adds_default_provider_category(monkeypatch):
     image_store = image.ImageStore(provider=prov.CLEVELAND_DEFAULT_PROVIDER)
     image_data = {
         "license_info": BY_LICENSE_INFO,
@@ -273,9 +265,7 @@ def test_MediaStore_clean_media_metadata_does_not_replace_category_with_default(
     assert cleaned_data["category"] == prov.ImageCategory.PHOTOGRAPH
 
 
-def test_MediaStore_clean_media_metadata_adds_license_urls_to_meta_data(
-    monkeypatch,
-):
+def test_MediaStore_clean_media_metadata_adds_license_urls_to_meta_data(monkeypatch):
     raw_license_url = "raw_license"
     license_url = "https://creativecommons.org/licenses/by-nc-nd/4.0/"
     image_store = image.ImageStore()
@@ -300,9 +290,33 @@ def test_MediaStore_clean_media_metadata_adds_license_urls_to_meta_data(
     assert cleaned_data["meta_data"]["raw_license_url"] == raw_license_url
 
 
-def test_MediaStore_get_image_gets_source(
-    monkeypatch,
+@pytest.mark.parametrize(
+    "input_url, remove_slashes, expected",
+    [
+        ("https://www.example.com/", True, "https://www.example.com"),
+        ("https://www.example.com", True, "https://www.example.com"),
+        ("https://www.example.com/", False, "https://www.example.com/"),
+        ("https://www.example.com", False, "https://www.example.com"),
+    ],
+)
+def test_MediaStore_clean_media_strips_url_trailing_slashes(
+    input_url, remove_slashes, expected
 ):
+    image_store = image.ImageStore(strip_url_trailing_slashes=remove_slashes)
+    test_data = {
+        "foreign_landing_url": input_url,
+        "image_url": input_url,
+        "thumbnail_url": input_url,
+        "creator_url": input_url,
+    }
+    image_data = TEST_IMAGE_DICT | test_data | {"license_info": BY_LICENSE_INFO}
+    cleaned_data = image_store.clean_media_metadata(**image_data)
+
+    for key in test_data:
+        assert cleaned_data[key] == expected
+
+
+def test_MediaStore_get_image_gets_source(monkeypatch):
     image_store = image.ImageStore()
 
     actual_image = image_store._get_image(
@@ -328,9 +342,7 @@ def test_MediaStore_get_image_gets_source(
     assert actual_image.source == "diff_source"
 
 
-def test_MediaStore_sets_source_to_provider_if_source_is_none(
-    monkeypatch,
-):
+def test_MediaStore_sets_source_to_provider_if_source_is_none(monkeypatch):
     image_store = image.ImageStore(provider="test_provider")
 
     actual_image = image_store._get_image(
@@ -365,8 +377,8 @@ def test_MediaStore_add_image_replaces_non_dict_meta_data_with_no_license_url():
     with patch.object(image_store, "save_item", side_effect=item_saver) as mock_save:
         image_store.add_item(
             license_info=BY_LICENSE_INFO,
-            foreign_landing_url="",
-            image_url="",
+            foreign_landing_url=TEST_FOREIGN_LANDING_URL,
+            image_url=TEST_IMAGE_URL,
             thumbnail_url=None,
             foreign_identifier=None,
             width=None,
@@ -401,8 +413,8 @@ def test_MediaStore_add_item_creates_meta_data_with_valid_license_url(
     with patch.object(image_store, "save_item", side_effect=item_saver) as mock_save:
         image_store.add_item(
             license_info=LicenseInfo("by", "4.0", valid_license_url, license_url),
-            foreign_landing_url="",
-            image_url="",
+            foreign_landing_url=TEST_FOREIGN_LANDING_URL,
+            image_url=TEST_IMAGE_URL,
             thumbnail_url=None,
             foreign_identifier=None,
             width=None,
@@ -438,8 +450,8 @@ def test_MediaStore_add_item_adds_valid_license_url_to_dict_meta_data(
     with patch.object(image_store, "save_item", side_effect=item_saver) as mock_save:
         image_store.add_item(
             license_info=LicenseInfo("by", "4.0", valid_license_url, license_url),
-            foreign_landing_url="",
-            image_url="",
+            foreign_landing_url=TEST_FOREIGN_LANDING_URL,
+            image_url=TEST_IMAGE_URL,
             foreign_identifier=None,
             width=None,
             height=None,
@@ -461,7 +473,7 @@ def test_MediaStore_add_item_adds_valid_license_url_to_dict_meta_data(
         }
 
 
-def test_ImageStore_add_item_fixes_invalid_license_url():
+def test_MediaStore_add_item_fixes_invalid_license_url():
     image_store = image.ImageStore()
 
     original_url = "https://license/url"
@@ -473,8 +485,8 @@ def test_ImageStore_add_item_fixes_invalid_license_url():
     with patch.object(image_store, "save_item", side_effect=item_saver) as mock_save:
         image_store.add_item(
             license_info=LicenseInfo("by-nc-sa", "2.0", updated_url, original_url),
-            foreign_landing_url="",
-            image_url="",
+            foreign_landing_url=TEST_FOREIGN_LANDING_URL,
+            image_url=TEST_IMAGE_URL,
             meta_data={},
         )
     actual_image = mock_save.call_args[0][0]

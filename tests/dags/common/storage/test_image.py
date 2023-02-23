@@ -6,10 +6,6 @@ from common.licenses import LicenseInfo
 from common.storage import image
 
 
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
-)
-
 logger = logging.getLogger(__name__)
 
 

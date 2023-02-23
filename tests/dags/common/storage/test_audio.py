@@ -1,17 +1,11 @@
 import logging
-from unittest.mock import patch
 
-import common.storage.columns
 import pytest
 from common.licenses import LicenseInfo
 from common.storage import audio
 
 from tests.dags.common.storage import test_media
 
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
-)
 
 logger = logging.getLogger(__name__)
 
@@ -239,51 +233,42 @@ def test_create_tsv_row_creates_alt_files(
     audio_args["alt_files"] = alt_files
     test_audio = audio.Audio(**audio_args)
 
-    def mock_url_validator(value):
-        # This avoids needing the internet for testing.
-        return value
-
-    with patch.object(
-        common.storage.columns.urls,
-        "validate_url_string",
-        side_effect=mock_url_validator,
-    ):
-        actual_row = audio_store._create_tsv_row(test_audio)
-        expected_row = (
-            "\t".join(
-                [
-                    "foreign_id",
-                    "https://landing_page.org",
-                    "https://audiourl.org",
-                    "https://thumbnail.com",
-                    "\\N",
-                    "\\N",
-                    "by",
-                    "4.0",
-                    "tyler",
-                    "https://creatorurl.com",
-                    "agreatsong",
-                    '{"description": "cat song"}',
-                    '{"name": "tag1", "provider": "testing"}',
-                    "music",
-                    "\\N",
-                    "testing_provider",
-                    "testing_source",
-                    "provider_api",
-                    "100",
-                    "\\N",
-                    "\\N",
-                    '{"rock", "pop"}',
-                    "\\N",
-                    "1",
-                    '[{"url": '
-                    '"https://alternative.com/audio.mp3", "filesize": "123", "bit_rate": "41000", '
-                    '"sample_rate": "16000"}]',
-                ]
-            )
-            + "\n"
+    actual_row = audio_store._create_tsv_row(test_audio)
+    expected_row = (
+        "\t".join(
+            [
+                "foreign_id",
+                "https://landing_page.org",
+                "https://audiourl.org",
+                "https://thumbnail.com",
+                "\\N",
+                "\\N",
+                "by",
+                "4.0",
+                "tyler",
+                "https://creatorurl.com",
+                "agreatsong",
+                '{"description": "cat song"}',
+                '{"name": "tag1", "provider": "testing"}',
+                "music",
+                "\\N",
+                "testing_provider",
+                "testing_source",
+                "provider_api",
+                "100",
+                "\\N",
+                "\\N",
+                '{"rock", "pop"}',
+                "\\N",
+                "1",
+                '[{"url": '
+                '"https://alternative.com/audio.mp3", "filesize": "123", "bit_rate": "41000", '
+                '"sample_rate": "16000"}]',
+            ]
         )
-        assert actual_row == expected_row
+        + "\n"
+    )
+    assert actual_row == expected_row
 
 
 def test_create_tsv_row_creates_audio_set(
@@ -304,46 +289,41 @@ def test_create_tsv_row_creates_audio_set(
         # This avoids needing the internet for testing.
         return value
 
-    with patch.object(
-        common.storage.columns.urls,
-        "validate_url_string",
-        side_effect=mock_url_validator,
-    ):
-        actual_row = audio_store._create_tsv_row(test_audio)
-        expected_row = (
-            "\t".join(
-                [
-                    "foreign_id",
-                    "https://landing_page.org",
-                    "https://audiourl.org",
-                    "https://thumbnail.com",
-                    "\\N",
-                    "\\N",
-                    "by",
-                    "4.0",
-                    "tyler",
-                    "https://creatorurl.com",
-                    "agreatsong",
-                    '{"description": "cat song"}',
-                    '{"name": "tag1", "provider": "testing"}',
-                    "music",
-                    "\\N",
-                    "testing_provider",
-                    "testing_source",
-                    "provider_api",
-                    "100",
-                    "\\N",
-                    "\\N",
-                    '{"rock", "pop"}',
-                    '{"audio_set": "test_audio_set", "set_url": "test.com", '
-                    '"set_position": "1", "set_thumbnail": "thumbnail.jpg"}',
-                    "1",
-                    "\\N",
-                ]
-            )
-            + "\n"
+    actual_row = audio_store._create_tsv_row(test_audio)
+    expected_row = (
+        "\t".join(
+            [
+                "foreign_id",
+                "https://landing_page.org",
+                "https://audiourl.org",
+                "https://thumbnail.com",
+                "\\N",
+                "\\N",
+                "by",
+                "4.0",
+                "tyler",
+                "https://creatorurl.com",
+                "agreatsong",
+                '{"description": "cat song"}',
+                '{"name": "tag1", "provider": "testing"}',
+                "music",
+                "\\N",
+                "testing_provider",
+                "testing_source",
+                "provider_api",
+                "100",
+                "\\N",
+                "\\N",
+                '{"rock", "pop"}',
+                '{"audio_set": "test_audio_set", "set_url": "test.com", '
+                '"set_position": "1", "set_thumbnail": "thumbnail.jpg"}',
+                "1",
+                "\\N",
+            ]
         )
-        assert actual_row == expected_row
+        + "\n"
+    )
+    assert actual_row == expected_row
 
 
 def test_create_tsv_row_non_none_if_req_fields(
@@ -428,12 +408,6 @@ def test_create_tsv_row_handles_empty_dict_and_tags(
 
 
 def test_create_tsv_row_properly_places_entries(monkeypatch):
-    def mock_validate_url(url_string):
-        return url_string
-
-    monkeypatch.setattr(
-        common.storage.columns.urls, "validate_url_string", mock_validate_url
-    )
     audio_store = audio.AudioStore()
     req_args_dict = {
         "foreign_landing_url": "https://landing_page.com",

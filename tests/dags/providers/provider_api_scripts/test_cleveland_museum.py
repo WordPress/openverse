@@ -14,7 +14,7 @@ from providers.provider_api_scripts.cleveland_museum import ClevelandDataIngeste
 @pytest.fixture(autouse=True)
 def validate_url_string():
     with patch("common.urls.validate_url_string") as mock_validate_url_string:
-        mock_validate_url_string.side_effect = lambda x: x
+        mock_validate_url_string.side_effect = lambda x, y=True: x
         yield
 
 

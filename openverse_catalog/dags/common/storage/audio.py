@@ -34,8 +34,11 @@ class AudioStore(MediaStore):
         buffer_length=100,
         media_type="audio",
         tsv_columns=None,
+        strip_url_trailing_slashes: bool = True,
     ):
-        super().__init__(provider, tsv_suffix, buffer_length, media_type)
+        super().__init__(
+            provider, tsv_suffix, buffer_length, media_type, strip_url_trailing_slashes
+        )
         self.columns = CURRENT_AUDIO_TSV_COLUMNS if tsv_columns is None else tsv_columns
 
     def add_item(

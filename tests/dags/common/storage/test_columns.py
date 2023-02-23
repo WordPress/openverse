@@ -2,6 +2,7 @@ import logging
 import string
 
 import tldextract
+from common import urls
 from common.storage import columns
 from common.storage.columns import Datatype
 
@@ -11,7 +12,7 @@ logging.basicConfig(
 )
 
 
-columns.urls.tldextract.extract = tldextract.TLDExtract(suffix_list_urls=None)
+urls.tldextract.extract = tldextract.TLDExtract(suffix_list_urls=None)
 
 
 class TruncateColumn(columns.Column):

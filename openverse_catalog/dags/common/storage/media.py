@@ -3,6 +3,7 @@ import logging
 import os
 from datetime import datetime
 
+from common import urls
 from common.extensions import extract_filetype
 from common.licenses import is_valid_license_info
 from common.loader import provider_details as prov
@@ -49,7 +50,8 @@ class MediaStore(metaclass=abc.ABCMeta):
     tsv_suffix:     Optional string to append to the tsv filename.
     buffer_length:  Integer giving the maximum number of media information rows
                     to store in memory before writing them to disk.
-
+    strip_url_trailing_slashes: Boolean to strip trailing slashes from URLs during
+                                validation
     """
 
     def __init__(
@@ -58,11 +60,13 @@ class MediaStore(metaclass=abc.ABCMeta):
         tsv_suffix: str | None = None,
         buffer_length: int = 100,
         media_type: str | None = "generic",
+        strip_url_trailing_slashes: bool = True,
     ):
         logger.info(f"Initialized {media_type} MediaStore with provider {provider}")
         self.media_type = media_type
         self.provider = provider
         self.buffer_length = buffer_length
+        self.strip_url_trailing_slashes = strip_url_trailing_slashes
         self.output_path = self._initialize_output_path(provider, tsv_suffix=tsv_suffix)
         self.columns = None
         self._media_buffer = []
@@ -99,6 +103,8 @@ class MediaStore(metaclass=abc.ABCMeta):
         and for common metadata we:
         - validate `license_info`
         - validate `filetype`
+        - validate `url`, `foreign_landing_url`, `thumbnail_url`, and `creator_url`
+          (stripping trailing slashes if requested)
         - enrich `metadata`,
         - replace `raw_tags` with enriched `tags`,
         - validate `source`,
@@ -112,6 +118,18 @@ class MediaStore(metaclass=abc.ABCMeta):
         ):
             logger.debug("Discarding media due to invalid license")
             return None
+        for field in [
+            f"{self.media_type}_url",
+            "foreign_landing_url",
+            "thumbnail_url",
+            "creator_url",
+        ]:
+            if field not in media_data:
+                continue
+            media_data[field] = urls.validate_url_string(
+                media_data[field],
+                self.strip_url_trailing_slashes,
+            )
         media_data["source"] = self._get_source(media_data.get("source"), self.provider)
         # Add ingestion_type column value based on `source`.
         # The implementation is based on `ingestion_column`

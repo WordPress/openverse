@@ -4,8 +4,6 @@ from abc import ABC, abstractmethod
 from enum import Enum, auto
 from typing import NewType
 
-from common import urls
-
 
 logger = logging.getLogger(__name__)
 
@@ -500,9 +498,7 @@ class URLColumn(Column):
         if self._Column__sanitize_string(value) != value:
             return None
         else:
-            return self._Column__enforce_char_limit(
-                urls.validate_url_string(value), self.SIZE, False
-            )
+            return self._Column__enforce_char_limit(value, self.SIZE, False)
 
 
 class ArrayColumn(Column):
