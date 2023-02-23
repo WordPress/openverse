@@ -23,7 +23,7 @@ class DataRefresh:
     default_args:                      dictionary which is passed to the
                                        airflow.dag.DAG __init__ method.
     start_date:                        datetime.datetime giving the
-                                       first valid execution_date of the DAG.
+                                       first valid logical date of the DAG.
     schedule:                          string giving the schedule on which the DAG
                                        should be run.  Passed to the
                                        airflow.dag.DAG __init__ method.

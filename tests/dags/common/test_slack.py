@@ -571,7 +571,7 @@ def test_on_failure_callback(
 ):
     context = {
         "task_instance": mock.Mock(),
-        "execution_date": datetime.now(),
+        "logical_date": datetime.now(),
         "exception": exception,
         "dag": mock.Mock(),
     }
