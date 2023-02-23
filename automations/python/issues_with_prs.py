@@ -17,6 +17,8 @@ log = logging.getLogger(__name__)
 CLOSED = "closed"
 OPEN = "open"
 IssueState = Literal[CLOSED, OPEN]
+# Unique identifier of repo + issue
+RepoIssue = tuple[str, str]
 
 LINKED_PR_QUERY = """
 {
@@ -133,7 +135,7 @@ def get_open_issues_with_prs(
     org_handle: str,
     repo_names: list[str],
     linked_pr_state: str,
-) -> set[tuple[str, str]]:
+) -> set[RepoIssue]:
     """
     Retrieve open issues with linked PRs.
 
@@ -175,7 +177,7 @@ def get_open_issues_with_prs(
     return all_issues
 
 
-def get_issue_cards(col: ProjectColumn) -> list[tuple[ProjectCard, Issue]]:
+def get_issue_cards(col: ProjectColumn) -> list[tuple[ProjectCard, RepoIssue]]:
     """
     Get all cards linked to issues in the given column.
 
@@ -188,13 +190,17 @@ def get_issue_cards(col: ProjectColumn) -> list[tuple[ProjectCard, Issue]]:
     cards = col.get_cards(archived_state="not archived")
     issue_cards = []
     for card in cards:
-        issue = card.get_content()
-        if issue is None:
-            continue
+        # Example URL: https://api.github.com/repos/api-playground/project-test/issues/3
+        # See: https://docs.github.com/en/rest/projects/cards?apiVersion=2022-11-28
+        url = card.content_url
         try:
-            issue.as_pull_request()
-        except GithubException:
-            issue_cards.append((card, issue))
+            url_parts = url.split("/")
+            # Repo + issue
+            issue = (url_parts[-3], url_parts[-1])
+        except Exception:
+            log.debug(f"Could not decode card with content_url: {url}")
+            continue
+        issue_cards.append((card, issue))
     return issue_cards
 
 
@@ -238,7 +244,7 @@ def main():
 
     cards_to_move = []
     for issue_card, issue in issue_cards:
-        if (issue.repository.name, issue.number) in issues_with_prs:
+        if issue in issues_with_prs:
             cards_to_move.append((issue_card, issue))
     log.info(f"Found {len(cards_to_move)} cards to move")
 
