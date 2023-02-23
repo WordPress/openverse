@@ -1,23 +1,35 @@
-name: Rollback Frontend
+name: Deployment
 
 on:
   workflow_dispatch:
     inputs:
       environment:
         required: true
-        description: The environment to roll back. `staging` or `production`.
+        description: The environment to deploy to.
+        type: choice
+        default: staging
+        choices:
+          - staging
+          - production
+      service:
+        required: true
+        description: The service to deploy.
+        type: choice
+        choices:
+          - nuxt
+          - api
       tag:
         required: true
-        description: The GHCR image tag to which the environment should be rolled back
+        description: The GHCR image tag to which the environment should be deployed.
 
-# Only allow a single rollback to happen at a time
-# If you need to stop an in-progress rollback to force
-# another for the same environment, you'll need to manually cancel it
+# Only allow a single deploy to happen at a time
+# If you need to stop an in-progress deployment to force # another for the same
+# environment, you'll need to manually cancel it
 concurrency: ${{ github.workflow }}-${{ inputs.environment }}
 
 jobs:
-  rollback:
-    name: Perform Rollback
+  deploy:
+    name: Perform Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -42,49 +54,7 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - name: Validate `tag` input
-        uses: actions/github-script@v6
-        with:
-          script: |
-            let exists = undefined,
-              page = 0
-
-            while (!exists) {
-              page += 1
-              const { data: versions } =
-                await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
-                  package_type: 'container',
-                  package_name: 'openverse-frontend',
-                  org: 'WordPress',
-                  page,
-                  // max of `per_page`
-                  per_page: 100,
-                })
-
-              if (!versions.length) {
-                break
-              }
-
-              exists = versions.some((v) => v.metadata.container.tags.includes('${{ inputs.tag }}'))
-            }
-
-            if (!exists) {
-              throw new Error(
-                '`${{ inputs.tag }}` does not appear to be a valid tag for the ghcr.io/wordpress/openverse-frontend image.'
-              )
-            }
-
-      - uses: ./.github/actions/production-nuxt-deploy
-        if: inputs.environment == 'production'
-        with:
-          tag: ${{ inputs.tag }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
-
-      - uses: ./.github/actions/staging-nuxt-deploy
-        if: inputs.environment == 'staging'
+      - uses: ./.github/actions/${{ inputs.environment }}-${{ inputs.service }}-deploy
         with:
           tag: ${{ inputs.tag }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
