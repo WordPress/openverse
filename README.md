@@ -44,6 +44,27 @@ This repository also contains the following directories.
 - [Templates](templates/) | Common scaffolding code that is rendered and synced
   to the catalog repo
 
+## Keep in touch
+
+You can keep in touch with the project via the following channels:
+
+- GitHub
+  - [Issues](https://github.com/WordPress/openverse/issues/)
+  - [PRs](https://github.com/WordPress/openverse/pulls/)
+  - [Discussions](https://github.com/WordPress/openverse/discussions/)
+  - [Project Board](https://github.com/orgs/WordPress/projects/3)
+- [Community Site](https://make.wordpress.org/openverse/)
+- #openverse channel in the
+  [Making WordPress Slack](https://make.wordpress.org/chat/)
+  - Weekly Development Chat (@
+    [Tuesday 15:00 UTC](https://everytimezone.com/s/d1d42c7b))
+  - Monthly Prioritisation Meeting
+
+## Documentation
+
+To use the Openverse API, please refer to the
+[API consumer documentation](https://api.openverse.engineering/v1/).
+
 ## Contributing
 
 Pull requests are welcome! Feel free to
