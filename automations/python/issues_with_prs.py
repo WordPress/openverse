@@ -114,11 +114,12 @@ def get_pulls_with_linked_issues(
     org_handle: str, repo_name: str, state: IssueState
 ) -> dict[str, str]:
     """
+    Query all the pull requests with issues of a linked state.
 
-    :param org_handle:
-    :param repo_name:
-    :param state:
-    :return:
+    This uses the GraphQL API since the REST API doesn't support querying for linked
+    issues.
+
+    :return: a dict of issue numbers to issue titles
     """
     results = run_query(LINKED_PR_QUERY % (org_handle, repo_name, state.upper()))
     pulls = results["repository"]["pullRequests"]["nodes"]
@@ -156,6 +157,7 @@ def get_open_issues_with_prs(
         # In the case where we're querying for closed PRs, we'll also need to consider
         # open PRs - if there's an issue with both an open PR and a closed PR, we should
         # not take any action on it
+        open_issues = {}
         if linked_pr_state == CLOSED:
             open_issues = get_pulls_with_linked_issues(org_handle, repo_name, OPEN)
 
