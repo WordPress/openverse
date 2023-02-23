@@ -14,14 +14,24 @@ prerequisites.
    Docker daemon is running.
 
 2. Clone the repository to your computer. Then switch to the cloned directory.
+   If you're planning to contribute, fork the repo and clone your fork instead.
 
    ```console
-   $ git clone https://github.com/WordPress/openverse.git
-   $ cd openverse
+   $ git clone https://github.com/WordPress/openverse.git # or your fork
+   $ cd openverse/
+   ```
+
+   If you followed the setup guide and installed
+   [GitHub CLI](./general_setup.md#github-cli), you can clone more simply using
+   the `gh` command.
+
+   ```console
+   $ gh repo clone WordPress/openverse # or your fork
+   $ cd openverse/
    ```
 
 3. Install all dependencies. This is generally not advisable unless you plan to
-   work on everything! This step won't install API or ingestion-server
+   work on everything! This step won't install API or ingestion server
    dependencies because they are meant to run using Docker containers.
 
    ```console
