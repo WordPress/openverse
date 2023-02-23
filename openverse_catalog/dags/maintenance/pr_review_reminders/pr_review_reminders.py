@@ -12,8 +12,6 @@ logger = logging.getLogger(__name__)
 REPOSITORIES = [
     "openverse",
     "openverse-catalog",
-    "openverse-api",
-    "openverse-frontend",
     "openverse-infrastructure",
 ]
 
