@@ -95,7 +95,7 @@ repos:
     hooks:
       - id: eslint
         files: \.(js|ts|vue)$
-        exclude: ^load_testing/.*|frontend/(nuxt-template-overrides/.*|.remake/.*)$ # ESLint raises warnings for ignored files.
+        exclude: ^utilities/load_testing/.*|frontend/(nuxt-template-overrides/.*|.remake/.*)$ # ESLint raises warnings for ignored files.
         "types": [file] # ESLint only accepts [javascript] by default.
         args:
           - --ignore-path=.gitignore
