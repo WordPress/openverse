@@ -1,30 +1,12 @@
-# Quickstart
+# Quickstart guide
 
 This guide covers the steps to get the Openverse stack running locally on your
 computer.
 
 ## Prerequisites
 
-- [Git](https://git-scm.com/downloads)
-- [Docker](https://docs.docker.com/install/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-- [Just](https://github.com/casey/just)
-- [coreutils](https://formulae.brew.sh/formula/coreutils) (only for macOS)
-
-The following prerequisites are optional, and only needed in some very specific
-cases.
-
-- [mkcert](https://github.com/FiloSottile/mkcert)
-
-  This is only needed to test SSL locally. Ensure that you have installed
-  `mkcert` (and the corresponding NSS tools). You can run `mkcert -install` to
-  verify your installation.
-
-- [OpenSSL](https://formulae.brew.sh/formula/openssl)
-
-  This is only need if the `psycopg2` install fails with the
-  `ld: library not found for -lssl` error. Install `openssl` from Homebrew and
-  set `LDFLAGS` and `CPPFLAGS` as given in the installation output.
+Refer to the [general setup guide](./general_setup.md) for setting up the
+prerequisites.
 
 ## Steps
 
