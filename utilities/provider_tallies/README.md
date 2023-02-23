@@ -3,8 +3,8 @@
 This script is used to extract the per-provider counts for both total results
 and appearances within searches from the Openverse API redis.
 
-The script assumes that the API Redis instance you care about is present
-on localhost (usually via tunneling).
+The script assumes that the API Redis instance you care about is present on
+localhost (usually via tunneling).
 
 ## Usage
 
