@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - main
-      - monorepo
 
 jobs:
   sync_meta:
@@ -26,3 +25,4 @@ jobs:
             🧰 goal: internal improvement
             🤖 aspect: dx
             🟧 priority: high
+            skip-changelog

@@ -5,12 +5,11 @@ on:
   push:
     branches:
       - main
-      - monorepo
   release:
     types:
       - published
   workflow_dispatch:
-    input:
+    inputs:
       image_tag:
         description: "The tag to assign to the images built in the workflow."
         type: string
@@ -594,10 +593,9 @@ jobs:
 
   playwright-test-failure-comment:
     name: Post Playwright test debugging instructions
-    if: always() && needs.get-changes.outputs.frontend == 'true' && github.event_name == 'pull_request' && (needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' ||needs.storybook-playwright.result == 'failure')
+    if: always() && github.event_name == 'pull_request' && (needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' || needs.storybook-playwright.result == 'failure')
     runs-on: ubuntu-latest
     needs:
-      - get-changes
       - nuxt-playwright-e2e
       - nuxt-playwright-vr
       - storybook-playwright
@@ -680,7 +678,13 @@ jobs:
 
   docs-publish:
     name: Publish full-stack docs
-    if: github.event_name == 'push'
+    # https://github.com/actions/runner/issues/491#issuecomment-850884422
+    if: |
+      always() &&
+      (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
+      (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
+      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
+      github.event_name == 'push'
     runs-on: ubuntu-latest
     needs:
       - test-ing
@@ -695,8 +699,6 @@ jobs:
         uses: ./.github/actions/setup-env
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          setup_python: false
-          install_recipe: node-install
 
       - name: Load Docker images
         uses: ./.github/actions/load-img
@@ -726,7 +728,13 @@ jobs:
 
   docs-preview:
     name: Preview full-stack docs
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.owner.login == 'WordPress' && github.actor != 'dependabot[bot]'
+    # https://github.com/actions/runner/issues/491#issuecomment-850884422
+    if: |
+      always() &&
+      (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
+      (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
+      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
+      github.event_name == 'pull_request' && github.event.pull_request.head.repo.owner.login == 'WordPress' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     needs:
       - test-ing
@@ -769,8 +777,6 @@ jobs:
         uses: ./.github/actions/setup-env
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          setup_python: false
-          install_recipe: node-install
 
       - name: Load Docker images
         uses: ./.github/actions/load-img
@@ -891,9 +897,10 @@ jobs:
   deploy-frontend:
     name: Deploy staging frontend
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && needs.get-changes.outputs.frontend == 'true'
     needs:
       - get-image-tag
+      - get-changes
       - nuxt-build
       - nuxt-playwright-e2e
       - nuxt-playwright-vr
@@ -916,9 +923,10 @@ jobs:
   deploy-api:
     name: Deploy staging API
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && (needs.get-changes.outputs.ingestion_server == 'true' || needs.get-changes.outputs.api == 'true')
     needs:
       - get-image-tag
+      - get-changes
       - test-api
       - publish-images
 

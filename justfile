@@ -10,12 +10,15 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 
 # Show all available recipes, also recurses inside nested justfiles
 @_default:
-  just --list --unsorted
-  cd api && just
-  cd ingestion_server && just
-  cd frontend && just
-  cd automations/python && just
-  cd automations/js && just
+    just --list --unsorted
+    cd nginx && just
+    cd api && just
+    cd ingestion_server && just
+    cd frontend && just
+    cd automations/python && just
+    cd automations/js && just
+    cd documentation && just
+    printf "\nTo run a nested recipe, add the folder path before it, like \`just frontend/install\`.\n"
 
 ###########
 # Helpers #
@@ -43,6 +46,7 @@ node-install:
 # Install all dependencies
 install: node-install
     just automations/python/install
+    just documentation/install
 
 # Setup pre-commit as a Git hook
 precommit:

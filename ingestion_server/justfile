@@ -1,11 +1,13 @@
 set dotenv-load := false
 
+COLOR := "\\033[0;36m"
+NO_COLOR := "\\033[0m"
+
 # Show all available recipes
 @_default:
-  echo "####################"
-  echo "# Ingestion server #"
-  echo "####################"
-  just --list --unsorted
+    printf "\n{{ COLOR }}# Ingestion server (path: \`ingestion_server/\`)\n"
+    printf "=============================================={{ NO_COLOR }}\n"
+    just --list --unsorted
 
 
 # Install dependencies
