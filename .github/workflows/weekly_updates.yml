@@ -46,5 +46,4 @@ jobs:
         run: "pnpm install"
 
       - name: Create draft post
-        working-directory: ./automations/js
-        run: node src/last_week_tonight.js
+        run: just automations/js/report

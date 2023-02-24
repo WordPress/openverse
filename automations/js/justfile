@@ -10,9 +10,13 @@ NO_COLOR := "\\033[0m"
     just --list --unsorted
 
 
-# Install dependencies
-install:
-    pnpm install
+#################
+# Weekly report #
+#################
+
+# Generate and post the weekly report
+report:
+    node src/last_week_tonight.mjs
 
 ##########
 # Render #
