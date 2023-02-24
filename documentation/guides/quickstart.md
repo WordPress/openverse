@@ -1,30 +1,12 @@
-# Quickstart
+# Quickstart guide
 
 This guide covers the steps to get the Openverse stack running locally on your
 computer.
 
 ## Prerequisites
 
-- [Git](https://git-scm.com/downloads)
-- [Docker](https://docs.docker.com/install/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-- [Just](https://github.com/casey/just)
-- [coreutils](https://formulae.brew.sh/formula/coreutils) (only for macOS)
-
-The following prerequisites are optional, and only needed in some very specific
-cases.
-
-- [mkcert](https://github.com/FiloSottile/mkcert)
-
-  This is only needed to test SSL locally. Ensure that you have installed
-  `mkcert` (and the corresponding NSS tools). You can run `mkcert -install` to
-  verify your installation.
-
-- [OpenSSL](https://formulae.brew.sh/formula/openssl)
-
-  This is only need if the `psycopg2` install fails with the
-  `ld: library not found for -lssl` error. Install `openssl` from Homebrew and
-  set `LDFLAGS` and `CPPFLAGS` as given in the installation output.
+Refer to the [general setup guide](./general_setup.md) for setting up the
+prerequisites.
 
 ## Steps
 
@@ -32,14 +14,24 @@ cases.
    Docker daemon is running.
 
 2. Clone the repository to your computer. Then switch to the cloned directory.
+   If you're planning to contribute, fork the repo and clone your fork instead.
 
    ```console
-   $ git clone https://github.com/WordPress/openverse.git
-   $ cd openverse
+   $ git clone https://github.com/WordPress/openverse.git # or your fork
+   $ cd openverse/
+   ```
+
+   If you followed the setup guide and installed
+   [GitHub CLI](./general_setup.md#github-cli), you can clone more simply using
+   the `gh` command.
+
+   ```console
+   $ gh repo clone WordPress/openverse # or your fork
+   $ cd openverse/
    ```
 
 3. Install all dependencies. This is generally not advisable unless you plan to
-   work on everything! This step won't install API or ingestion-server
+   work on everything! This step won't install API or ingestion server
    dependencies because they are meant to run using Docker containers.
 
    ```console

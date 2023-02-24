@@ -76,9 +76,9 @@ precommit:
       echo "Skipping pre-commit installation"
     fi
 
-# Run pre-commit to lint and reformat all files
-lint:
-    python3 pre-commit.pyz run --all-files
+# Run pre-commit to lint and reformat files
+lint hook="" *files="": precommit
+    python3 pre-commit.pyz run {{ hook }} {{ if files == "" { "--all-files" } else { "--files" } }}  {{ files }}
 
 ########
 # Init #

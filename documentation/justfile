@@ -29,3 +29,7 @@ build:
 # Serve the compiled docs using a simple HTTP server
 serve port="50231":
     pipenv run python -m http.server -d _build/ {{ port }}
+
+# Delete the live server and build output directories
+clean:
+    rm -rf _serve/ _build

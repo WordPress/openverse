@@ -16,8 +16,8 @@ _all-up:
     just ../_all-up
 
 # Install dependencies
-install:
-    pipenv install --dev
+install *args="--dev":
+    pipenv install {{ args }}
 
 ##########
 # Health #
