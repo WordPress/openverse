@@ -9,13 +9,6 @@ NO_COLOR := "\\033[0m"
     printf "=============================={{ NO_COLOR }}\n"
     just --list --unsorted
 
-# Install dependencies
-install *args: && core-locales
-    pnpm install --ignore-workspace {{ args }}
-
-# Ensure that some core locales are present
-core-locales:
-    cp -r test/locales/* src/locales
 
 # Run a package.json script via pnpm
 run *args:

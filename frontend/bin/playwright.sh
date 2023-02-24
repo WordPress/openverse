@@ -2,7 +2,7 @@
 set -e
 
 version() {
-  pnpm ls --ignore-workspace --depth=0 | grep -e playwright | awk '{print $2}';
+  pnpm ls --depth=0 | grep -e playwright | awk '{print $2}';
 }
 
 export USER_ID="${USER_ID:-$(id -u)}"

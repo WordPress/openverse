@@ -87,10 +87,9 @@ jobs:
           install_recipe: ""
           # Need more complex install recipe.
 
-      - name: Install dependences
+      - name: Install dependencies
         run: |
-          pnpm install
-          just frontend/install
+          just node-install
 
       - name: Cache pre-commit envs
         uses: actions/cache@v3
@@ -437,7 +436,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install
+          install_recipe: node-install
 
       - name: Run unit tests
         run: just frontend/run test:unit
@@ -457,7 +456,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install
+          install_recipe: node-install
 
       - name: Run Storybook smoke-test
         run: just frontend/run storybook:smoke
@@ -477,7 +476,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install
+          install_recipe: node-install
 
       - name: Run build
         run: just frontend/run build
@@ -499,7 +498,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install
+          install_recipe: node-install
 
       - name: Run Nuxt Playwright e2e tests
         run: just frontend/run test:playwright e2e --workers=2
@@ -527,7 +526,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install
+          install_recipe: node-install
 
       - name: Run Nuxt Playwright visual regression tests
         run: just frontend/run test:playwright visual-regression --workers=2
@@ -555,7 +554,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
-          install_recipe: frontend/install
+          install_recipe: node-install
 
       - name: Run Storybook Playwright tests
         run: just frontend/run test:storybook
@@ -634,13 +633,20 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
           # Python is not needed to build the image.
-          install_recipe: frontend/install
+          install_recipe: node-install
 
       - name: Download translation strings
         run: just frontend/run i18n
         env:
           GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
           GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
+
+      - name: Copy files into Docker context
+        run: |
+          cp .npmrc .pnpmfile.cjs pnpm-lock.yaml frontend/
+        # These files are copied into the `frontend/` folder so that they can be
+        # included in the Docker context. The `Dockerfile` will use them to mock
+        # up a monorepo inside the Docker image.
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -838,7 +844,11 @@ jobs:
     name: Publish Docker images
     runs-on: ubuntu-latest
     # prevent running on fork PRs
-    if: (github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'release' && github.repository == 'WordPress/openverse')
+    if: |
+      always() &&
+      (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
+      (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
+      ((github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'release' && github.repository == 'WordPress/openverse'))
     needs:
       # `build-images` is automatically included in `test-ing` and `test-api`.
       - test-ing
