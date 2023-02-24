@@ -120,7 +120,11 @@ def create_ingestion_workflow(
     with TaskGroup(group_id=append_day_shift("ingest_data")) as ingest_data:
         media_type_name = "mixed" if len(conf.media_types) > 1 else conf.media_types[0]
         provider_name = conf.dag_id.replace("_workflow", "")
-        identifier = f"{provider_name}_{{{{ ts_nodash }}}}_{day_shift}"
+
+        # Unique identifier used to generate the load_table name
+        identifier = f"{{{{ ts_nodash }}}}_{provider_name}"
+        if is_reingestion:
+            identifier = f"{day_shift}_{identifier}"
 
         ingestion_kwargs = {
             "ingester_class": conf.ingester_class,

@@ -19,7 +19,7 @@ from psycopg2.errors import InvalidTextRepresentation
 
 logger = logging.getLogger(__name__)
 
-LOAD_TABLE_NAME_STUB = "provider_data_"
+LOAD_TABLE_NAME_STUB = "load_"
 TABLE_NAMES = {AUDIO: AUDIO, IMAGE: IMAGE}
 DB_USER_NAME = "deploy"
 NOW = "NOW()"

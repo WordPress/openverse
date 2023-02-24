@@ -102,7 +102,7 @@ def create_query_values(
 @pytest.fixture
 def load_table(identifier):
     # Parallelized tests need to use distinct database tables
-    return f"provider_data_image_{identifier}"
+    return f"load_image_{identifier}"
 
 
 @pytest.fixture
