@@ -29,8 +29,8 @@ frontend. There is scope of improvement at each level.
 We use two labels to identify issues that have been specifically created or
 selected for new contributors:
 ["help wanted"](https://github.com/WordPress/openverse/issues?q=is:issue+is:open+sort:updated-desc+label:%22help+wanted%22)
-and "good first
-issue"](https://github.com/WordPress/openverse/issues?q=is:issue+is:open+sort:updated-desc+label:%22good+first+issue%22).
+and
+["good first issue"](https://github.com/WordPress/openverse/issues?q=is:issue+is:open+sort:updated-desc+label:%22good+first+issue%22).
 
 #### Help wanted
 
