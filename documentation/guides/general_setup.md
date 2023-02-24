@@ -5,15 +5,10 @@ you have already done on your own.
 
 ## Operating system
 
-```{note}
-Most of this is also true for many other OSS projects.
-```
-
 ```{caution}
-While we would like to, Openverse currently does not support development
-natively on Windows because we have no active contributors who use Windows on a
-daily basis. Nonetheless, PRs that enable or improve the Openverse development
-experience on Windows are welcome.
+Openverse development is currently supported only for UNIX-type environments
+(Linux and macOS). Windows is not supported natively, but PRs that enable
+Openverse development on Windows, or improve the experience, are welcome.
 ```
 
 ```{tip}
