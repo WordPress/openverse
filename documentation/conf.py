@@ -13,7 +13,7 @@ author = "Openverse <openverse@wordpress.org>"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = ["myst_parser"]
-myst_heading_anchors = 6
+myst_heading_anchors = 6  # Add anchors to all headers, this is disabled by default.
 
 source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
 
