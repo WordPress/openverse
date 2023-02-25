@@ -50,6 +50,7 @@ $ curl \
 ```
 
 If your request is successful, you will get a `client_id` and `client_secret`.
+Save these keys securely because you will not be able to see them again.
 
 Example of successful request:
 
