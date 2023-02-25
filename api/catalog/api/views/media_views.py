@@ -46,6 +46,28 @@ class MediaViewSet(ReadOnlyModelViewSet):
             msg = "Viewset fields are not completely populated."
             raise ValueError(msg)
 
+    def check_throttles(self, request):
+        """
+        Set the rate-limit headers and copy ``super`` implementation for raising
+        throttling exceptions.
+        """
+
+        throttle_durations = []
+        for index, throttle in enumerate(self.get_throttles()):
+            if not throttle.allow_request(request, self):
+                throttle_durations.append(throttle.wait())
+            self.headers |= throttle.headers(index)
+
+        if throttle_durations:
+            # Filter out `None` values which may happen in case of config / rate
+            # changes, see #1438
+            durations = [
+                duration for duration in throttle_durations if duration is not None
+            ]
+
+            duration = max(durations, default=None)
+            self.throttled(request, duration)
+
     def get_queryset(self):
         return self.model_class.objects.all()
 
