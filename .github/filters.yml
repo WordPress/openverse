@@ -4,3 +4,5 @@ ingestion_server:
   - ingestion_server/**
 frontend:
   - frontend/**
+  - package.json
+  - pnpm-lock.yaml
