@@ -195,7 +195,11 @@ def main():
             log.info(f"Aspect label: {aspect}")
             log.info(f"Priority label: {priority}")
             log.info(f"Goal label: {goal}")
-            pr.set_labels(aspect, priority, goal)
+            labels_to_add = [aspect, priority, goal]
+            if stack := get_label_of_cat("stack", labels):
+                log.info(f"Stack label: {stack}")
+                labels_to_add.append(stack)
+            pr.set_labels(*labels_to_add)
             break
     else:
         log.info("Could not find properly labelled issue")
