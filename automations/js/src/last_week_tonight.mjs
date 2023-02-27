@@ -7,7 +7,7 @@ import { readFileSync } from 'fs'
 import { resolve } from 'path'
 
 import yaml from 'js-yaml'
-import fetch from 'node-fetch'
+import axios from 'axios'
 import { Octokit } from '@octokit/rest'
 
 import { escapeHtml } from './html.mjs'
@@ -112,27 +112,29 @@ const getRepoHtml = ({ repo, mergedPrs, closedIssues }) => {
 const postActivities = (activities) => {
   const report = activities.map(getRepoHtml).flat().join('\n')
 
-  const MAKE_SITE_API = 'https://make.wordpress.org/openverse/wp-json/wp/v2'
+  const MAKE_SITE_API = 'https://make.wordpress.org/openverse/wp-json/wp/v2/'
   const token = Buffer.from(`${username}:${password}`).toString('base64')
 
-  return fetch(`${MAKE_SITE_API}/posts`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${token}`,
-    },
-    body: JSON.stringify({
+  return axios.post(
+    'posts',
+    {
       title: `A week in Openverse: ${startDate} - ${endDate}`,
       slug: `last-week-openverse-${startDate}-${endDate}`,
       excerpt: `The developments in Openverse between ${startDate} and ${endDate}`,
       content: report,
-      status: 'publish',
+      status: 'draft',
       tags: [
         3, // openverse
         5, // week-in-openverse
       ],
-    }),
-  })
+    },
+    {
+      baseURL: MAKE_SITE_API,
+      headers: {
+        Authorization: `Basic ${token}`,
+      },
+    }
+  )
 }
 
 // Entry point
@@ -153,4 +155,4 @@ if (res.status !== 201) {
   console.error('Create post request failed. See the logs.')
   process.exitCode = 1
 }
-console.log(JSON.stringify(res.json(), null, 2))
+console.log(JSON.stringify(res.data, null, 2))

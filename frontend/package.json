@@ -193,13 +193,5 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ],
-  "packageManager": "pnpm@7.17.1",
-  "engines": {
-    "node": ">= 16.0.0 <17",
-    "pnpm": ">= 7.17.1"
-  },
-  "volta": {
-    "node": "16.19.0"
-  }
+  ]
 }
