@@ -1,0 +1,25 @@
+name: openverse/get-changes
+description: Determine where changes happened in the repository
+
+outputs:
+  api:
+    description: "'true' if API changes are present"
+    value: ${{ steps.paths-filter.outputs.api }}
+  ingestion_server:
+    description: "'true' if ingestion server changes are present"
+    value: ${{ steps.paths-filter.outputs.ingestion_server }}
+  frontend:
+    description: "'true' if frontend changes are present"
+    value: ${{ steps.paths-filter.outputs.frontend }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - id: paths-filter
+      name: Check changed paths
+      uses: dorny/paths-filter@v2
+      with:
+        filters: ./.github/filters.yml
