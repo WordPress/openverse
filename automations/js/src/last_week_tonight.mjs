@@ -116,7 +116,7 @@ const postActivities = (activities) => {
   const token = Buffer.from(`${username}:${password}`).toString('base64')
 
   return axios.post(
-    `posts`,
+    'posts',
     {
       title: `A week in Openverse: ${startDate} - ${endDate}`,
       slug: `last-week-openverse-${startDate}-${endDate}`,
