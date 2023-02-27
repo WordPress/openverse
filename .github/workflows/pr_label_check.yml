@@ -43,3 +43,13 @@ jobs:
         with:
           one_of: "🟩 priority: low,🟨 priority: medium,🟧 priority: high,🟥 priority: critical"
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+  check_stack_label:
+    name: Check stack label
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check stack label
+        uses: docker://agilepathway/pull-request-label-checker:v1.2.13
+        with:
+          one_of: "🧱 stack: backend,🧱 stack: frontend,🧱 stack: mgmt,🧱 stack: api,🧱 stack: catalog,🧱 stack: ingestion server"
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
