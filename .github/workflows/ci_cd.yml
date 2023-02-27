@@ -102,6 +102,26 @@ jobs:
           just precommit
           just lint
 
+  add-stack-label:
+    name: Add stack label
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Add backend stack label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ needs.get-changes.outputs.api == 'true' || needs.get-changes.outputs.ingestion_server == 'true' }}
+        with:
+          labels: "🧱 stack: backend"
+
+      - name: Add frontend stack label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ needs.get-changes.outputs.frontend == 'true' }}
+        with:
+          labels: "🧱 stack: frontend"
+
   ############################
   # API and ingestion server #
   ############################
