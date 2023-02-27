@@ -66,7 +66,7 @@ runs:
         SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-    - name: Validate `tag` input for nginx
+    - name: Validate `tag` input for Nginx
       uses: actions/github-script@v6
       with:
         script: |
@@ -77,7 +77,7 @@ runs:
             const { data: versions } =
               await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
                 package_type: 'container',
-                package_name: 'openverse-api-nginx',
+                package_name: 'openverse-api_nginx',
                 org: 'WordPress',
                 page,
                 // max of `per_page`
@@ -90,11 +90,11 @@ runs:
           }
           if (!exists) {
             throw new Error(
-              '`${{ inputs.tag }}` does not appear to be a valid tag for the ghcr.io/wordpress/openverse-api-nginx:latest image.'
+              `'${{ inputs.tag }}' does not appear to be a valid tag for the ghcr.io/wordpress/openverse-api_nginx image.`
             )
           }
 
-    - name: Validate `tag` input for django
+    - name: Validate `tag` input for Django
       uses: actions/github-script@v6
       with:
         script: |
@@ -118,7 +118,7 @@ runs:
           }
           if (!exists) {
             throw new Error(
-              '`${{ inputs.tag }}` does not appear to be a valid tag for the ghcr.io/wordpress/openverse-api:latest image.'
+              `'${{ inputs.tag }}' does not appear to be a valid tag for the ghcr.io/wordpress/openverse-api image.`
             )
           }
 
@@ -146,7 +146,7 @@ runs:
       with:
         task-definition: task-definition.json
         container-name: nginx
-        image: "ghcr.io/wordpress/openverse-api-nginx:${{ inputs.tag }}"
+        image: "ghcr.io/wordpress/openverse-api_nginx:${{ inputs.tag }}"
 
     - name: "Fill in the new django image ID in the Amazon ECS task definition"
       id: "task-def-django"

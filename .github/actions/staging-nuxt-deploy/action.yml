@@ -66,7 +66,7 @@ runs:
         SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-    - name: Validate `tag` input for nuxt
+    - name: Validate `tag` input for Nuxt
       uses: actions/github-script@v6
       with:
         script: |
@@ -90,7 +90,7 @@ runs:
           }
           if (!exists) {
             throw new Error(
-              '`${{ inputs.tag }}` does not appear to be a valid tag for the ghcr.io/wordpress/openverse-frontend:main image.'
+              `'${{ inputs.tag }}' does not appear to be a valid tag for the ghcr.io/wordpress/openverse-frontend image.`
             )
           }
 
