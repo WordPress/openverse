@@ -1,6 +1,6 @@
 # This file is being synced from WordPress/openverse. Any changes made to it
 # here will be overwritten. Please make any necessary edits to these files:
-# - https://github.com/WordPress/openverse/blob/main/.pre-commit-config.yaml.jinja
+# - https://github.com/WordPress/openverse/blob/main/templates/.pre-commit-config.yaml.jinja
 
 exclude: Pipfile\.lock|migrations|\.idea|node_modules|archive|retired
 
@@ -19,7 +19,7 @@ repos:
       - id: check-xml
       - id: check-yaml
       - id: end-of-file-fixer
-        exclude: test/tapes/.+\.json5
+        exclude: frontend/test/tapes/.+\.json5
       - id: check-symlinks
       - id: mixed-line-ending
       - id: fix-encoding-pragma
