@@ -41,7 +41,7 @@ def test_get_delays_processing(monkeypatch):
 
     monkeypatch.setattr(requester.requests.Session, "get", mock_requests_get)
 
-    delay = 2
+    delay = 1
     dq = requester.DelayedRequester(delay=delay)
     start = time.time()
     dq.get("http://fake_url")

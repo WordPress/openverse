@@ -639,7 +639,7 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
         f"\nLast updated: {original_updated_on}\nSynced: {original_last_synced}"
     )
 
-    time.sleep(1)
+    time.sleep(0.5)
     sql.upsert_records_to_db_table(
         postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
     )
