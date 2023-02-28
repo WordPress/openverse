@@ -1,7 +1,11 @@
 api:
   - api/**
+  # Change to the CI + CD workflow should trigger complete workflow.
+  - .github/workflows/ci_cd.yml
 ingestion_server:
   - ingestion_server/**
+  # Change to the CI + CD workflow should trigger complete workflow.
+  - .github/workflows/ci_cd.yml
 frontend:
   - frontend/**
   - package.json
@@ -9,3 +13,5 @@ frontend:
   - pnpm-workspace.yaml
   - .npmrc
   - .pnpmfile.cjs
+  # Change to the CI + CD workflow should trigger complete workflow.
+  - .github/workflows/ci_cd.yml
