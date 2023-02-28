@@ -15,9 +15,8 @@ ENV PYTHONPATH=${DAGS_FOLDER}
 ENV PATH=${AIRFLOW_HOME}/.local/bin:$PATH
 
 # Container optimizations
-ENV PIPNOCACHEDIR=1
-ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
 
 # Airflow/workflow configuration
@@ -35,10 +34,11 @@ ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://openverse-airflow-logs
 
 
 USER root
-RUN apt-get update && apt-get -yqq install \
-    build-essential \
-    libpq-dev \
-    libffi-dev \
+RUN apt-get update \
+    && apt-get -yqq install \
+      build-essential \
+      libpq-dev \
+      libffi-dev \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
