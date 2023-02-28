@@ -160,7 +160,7 @@ def postgres_with_load_and_image_table(load_table, image_table):
     conn.close()
 
 
-def _load_local_tsv(tmpdir, bucket, tsv_file_name, identifier):
+def _load_local_tsv(tmpdir, bucket, tsv_file_name, identifier, mock_pg_hook_task):
     """
     This wraps sql.load_local_data_to_intermediate_table so we can test it
     under various conditions.
@@ -173,19 +173,30 @@ def _load_local_tsv(tmpdir, bucket, tsv_file_name, identifier):
     path = tmpdir.join(test_tsv)
     path.write(f_data)
 
-    sql.load_local_data_to_intermediate_table(POSTGRES_CONN_ID, str(path), identifier)
+    sql.load_local_data_to_intermediate_table(
+        postgres_conn_id=POSTGRES_CONN_ID,
+        tsv_file_name=str(path),
+        identifier=identifier,
+        task=mock_pg_hook_task,
+    )
 
 
-def _load_s3_tsv(tmpdir, bucket, tsv_file_name, identifier):
+def _load_s3_tsv(tmpdir, bucket, tsv_file_name, identifier, mock_pg_hook_task):
     tsv_file_path = os.path.join(RESOURCES, tsv_file_name)
     key = f"path/to/object/{tsv_file_name}"
     bucket.upload_file(tsv_file_path, key)
     sql.load_s3_data_to_intermediate_table(
-        POSTGRES_CONN_ID, bucket.name, key, identifier
+        postgres_conn_id=POSTGRES_CONN_ID,
+        bucket=bucket.name,
+        s3_key=key,
+        identifier=identifier,
+        task=mock_pg_hook_task,
     )
 
 
-def test_create_loading_table_creates_table(postgres, load_table, identifier):
+def test_create_loading_table_creates_table(
+    postgres, load_table, identifier, mock_pg_hook_task
+):
     postgres_conn_id = POSTGRES_CONN_ID
     sql.create_loading_table(postgres_conn_id, identifier)
 
@@ -213,8 +224,11 @@ def test_loaders_load_good_tsv(
     load_function,
     load_table,
     identifier,
+    mock_pg_hook_task,
 ):
-    load_function(tmpdir, empty_s3_bucket, "none_missing.tsv", identifier)
+    load_function(
+        tmpdir, empty_s3_bucket, "none_missing.tsv", identifier, mock_pg_hook_task
+    )
     check_query = f"SELECT COUNT (*) FROM {load_table};"
     postgres_with_load_table.cursor.execute(check_query)
     num_rows = postgres_with_load_table.cursor.fetchone()[0]
@@ -229,9 +243,14 @@ def test_delete_less_than_max_malformed_rows(
     load_function,
     load_table,
     identifier,
+    mock_pg_hook_task,
 ):
     load_function(
-        tmpdir, empty_s3_bucket, "malformed_less_than_max_rows.tsv", identifier
+        tmpdir,
+        empty_s3_bucket,
+        "malformed_less_than_max_rows.tsv",
+        identifier,
+        mock_pg_hook_task,
     )
     check_query = f"SELECT COUNT (*) FROM {load_table};"
     postgres_with_load_table.cursor.execute(check_query)
@@ -247,8 +266,11 @@ def test_delete_max_malformed_rows(
     load_function,
     load_table,
     identifier,
+    mock_pg_hook_task,
 ):
-    load_function(tmpdir, empty_s3_bucket, "malformed_max_rows.tsv", identifier)
+    load_function(
+        tmpdir, empty_s3_bucket, "malformed_max_rows.tsv", identifier, mock_pg_hook_task
+    )
     check_query = f"SELECT COUNT (*) FROM {load_table};"
     postgres_with_load_table.cursor.execute(check_query)
     num_rows = postgres_with_load_table.cursor.fetchone()[0]
@@ -257,11 +279,20 @@ def test_delete_max_malformed_rows(
 
 @pytest.mark.parametrize("load_function", [_load_local_tsv])
 def test_delete_more_than_max_malformed_rows(
-    postgres_with_load_table, tmpdir, empty_s3_bucket, load_function, identifier
+    postgres_with_load_table,
+    tmpdir,
+    empty_s3_bucket,
+    load_function,
+    identifier,
+    mock_pg_hook_task,
 ):
     with pytest.raises(InvalidTextRepresentation):
         load_function(
-            tmpdir, empty_s3_bucket, "malformed_more_than_max_rows.tsv", identifier
+            tmpdir,
+            empty_s3_bucket,
+            "malformed_more_than_max_rows.tsv",
+            identifier,
+            mock_pg_hook_task,
         )
 
 
@@ -274,11 +305,16 @@ def test_loaders_deletes_null_url_rows(
     load_function,
     load_table,
     identifier,
+    mock_pg_hook_task,
 ):
     # Load test data with some null urls into the intermediate table
-    load_function(tmpdir, empty_s3_bucket, "url_missing.tsv", identifier)
+    load_function(
+        tmpdir, empty_s3_bucket, "url_missing.tsv", identifier, mock_pg_hook_task
+    )
     # Clean data
-    sql.clean_intermediate_table_data(POSTGRES_CONN_ID, identifier)
+    sql.clean_intermediate_table_data(
+        POSTGRES_CONN_ID, identifier, task=mock_pg_hook_task
+    )
 
     # Check that rows with null urls were deleted
     null_url_check = f"SELECT COUNT (*) FROM {load_table} WHERE url IS NULL;"
@@ -301,11 +337,16 @@ def test_loaders_delete_null_license_rows(
     load_function,
     load_table,
     identifier,
+    mock_pg_hook_task,
 ):
     # Load test data with some null licenses into the intermediate table
-    load_function(tmpdir, empty_s3_bucket, "license_missing.tsv", identifier)
+    load_function(
+        tmpdir, empty_s3_bucket, "license_missing.tsv", identifier, mock_pg_hook_task
+    )
     # Clean data
-    sql.clean_intermediate_table_data(POSTGRES_CONN_ID, identifier)
+    sql.clean_intermediate_table_data(
+        POSTGRES_CONN_ID, identifier, task=mock_pg_hook_task
+    )
 
     # Check that rows with null licenses were deleted
     license_check = f"SELECT COUNT (*) FROM {load_table} WHERE license IS NULL;"
@@ -328,13 +369,20 @@ def test_loaders_delete_null_foreign_landing_url_rows(
     load_function,
     load_table,
     identifier,
+    mock_pg_hook_task,
 ):
     # Load test data with null foreign landings url into the intermediate table
     load_function(
-        tmpdir, empty_s3_bucket, "foreign_landing_url_missing.tsv", identifier
+        tmpdir,
+        empty_s3_bucket,
+        "foreign_landing_url_missing.tsv",
+        identifier,
+        mock_pg_hook_task,
     )
     # Clean data
-    sql.clean_intermediate_table_data(POSTGRES_CONN_ID, identifier)
+    sql.clean_intermediate_table_data(
+        POSTGRES_CONN_ID, identifier, task=mock_pg_hook_task
+    )
 
     # Check that rows with null foreign landing urls were deleted
     foreign_landing_url_check = (
@@ -358,11 +406,20 @@ def test_data_loaders_delete_null_foreign_identifier_rows(
     load_function,
     load_table,
     identifier,
+    mock_pg_hook_task,
 ):
     # Load test data with null foreign identifiers into the intermediate table
-    load_function(tmpdir, empty_s3_bucket, "foreign_identifier_missing.tsv", identifier)
+    load_function(
+        tmpdir,
+        empty_s3_bucket,
+        "foreign_identifier_missing.tsv",
+        identifier,
+        mock_pg_hook_task,
+    )
     # Clean data
-    sql.clean_intermediate_table_data(POSTGRES_CONN_ID, identifier)
+    sql.clean_intermediate_table_data(
+        POSTGRES_CONN_ID, identifier, task=mock_pg_hook_task
+    )
 
     # Check that rows with null foreign identifiers were deleted
     foreign_identifier_check = (
@@ -386,13 +443,20 @@ def test_import_data_deletes_duplicate_foreign_identifier_rows(
     load_function,
     load_table,
     identifier,
+    mock_pg_hook_task,
 ):
     # Load test data with duplicate foreign identifiers into the intermediate table
     load_function(
-        tmpdir, empty_s3_bucket, "foreign_identifier_duplicate.tsv", identifier
+        tmpdir,
+        empty_s3_bucket,
+        "foreign_identifier_duplicate.tsv",
+        identifier,
+        mock_pg_hook_task,
     )
     # Clean data
-    sql.clean_intermediate_table_data(POSTGRES_CONN_ID, identifier)
+    sql.clean_intermediate_table_data(
+        POSTGRES_CONN_ID, identifier, task=mock_pg_hook_task
+    )
 
     # Check that rows with duplicate foreign ids were deleted
     foreign_id_duplicate_check = (
@@ -409,7 +473,12 @@ def test_import_data_deletes_duplicate_foreign_identifier_rows(
 
 
 def test_upsert_records_inserts_one_record_to_empty_image_table(
-    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -459,7 +528,9 @@ def test_upsert_records_inserts_one_record_to_empty_image_table(
         );"""
     postgres_with_load_and_image_table.cursor.execute(load_data_query)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
     actual_row = actual_rows[0]
@@ -485,7 +556,12 @@ def test_upsert_records_inserts_one_record_to_empty_image_table(
 
 
 def test_upsert_records_inserts_two_records_to_image_table(
-    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -514,7 +590,9 @@ def test_upsert_records_inserts_two_records_to_image_table(
             );"""
         postgres_with_load_and_image_table.cursor.execute(load_data_query)
         postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
     assert actual_rows[0][fid_idx] == FID_A
@@ -522,7 +600,12 @@ def test_upsert_records_inserts_two_records_to_image_table(
 
 
 def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
-    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -543,7 +626,9 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
     postgres_with_load_and_image_table.cursor.execute(load_data_query)
     postgres_with_load_and_image_table.connection.commit()
 
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     original_row = postgres_with_load_and_image_table.cursor.fetchall()
     logging.info(f"\n{len(original_row)}\nOriginal row: {original_row}\n")
@@ -555,7 +640,9 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
     )
 
     time.sleep(1)
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     updated_result = postgres_with_load_and_image_table.cursor.fetchall()
     logging.info(
@@ -571,7 +658,12 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
 
 
 def test_upsert_records_replaces_data(
-    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -634,7 +726,9 @@ def test_upsert_records_replaces_data(
        );"""
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
 
     query_values = create_query_values(
@@ -666,7 +760,9 @@ def test_upsert_records_replaces_data(
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
@@ -686,7 +782,12 @@ def test_upsert_records_replaces_data(
 
 
 def test_upsert_records_does_not_replace_with_nulls(
-    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -741,7 +842,9 @@ def test_upsert_records_does_not_replace_with_nulls(
         );"""
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
 
     query_values_b = create_query_values(
@@ -763,7 +866,9 @@ def test_upsert_records_does_not_replace_with_nulls(
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
@@ -784,7 +889,12 @@ def test_upsert_records_does_not_replace_with_nulls(
 
 
 def test_upsert_records_merges_meta_data(
-    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -823,13 +933,17 @@ def test_upsert_records_merges_meta_data(
         );"""
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
@@ -841,7 +955,12 @@ def test_upsert_records_merges_meta_data(
 
 
 def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
-    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -880,13 +999,17 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
         );"""
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
@@ -900,7 +1023,12 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
 
 
 def test_upsert_records_merges_tags(
-    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -946,13 +1074,17 @@ def test_upsert_records_merges_tags(
         );"""
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
@@ -970,7 +1102,12 @@ def test_upsert_records_merges_tags(
 
 
 def test_upsert_records_does_not_replace_tags_with_null(
-    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -1010,13 +1147,17 @@ def test_upsert_records_does_not_replace_tags_with_null(
         );"""
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
@@ -1033,7 +1174,12 @@ def test_upsert_records_does_not_replace_tags_with_null(
 
 
 def test_upsert_records_replaces_null_tags(
-    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -1072,13 +1218,17 @@ def test_upsert_records_replaces_null_tags(
 
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
@@ -1096,7 +1246,12 @@ def test_upsert_records_replaces_null_tags(
 
 
 def test_upsert_records_handles_duplicate_url_and_does_not_merge(
-    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -1141,7 +1296,9 @@ def test_upsert_records_handles_duplicate_url_and_does_not_merge(
     # the image table, and finally the loading table is cleared for the next DAG run.
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
     postgres_with_load_and_image_table.connection.commit()
@@ -1150,7 +1307,9 @@ def test_upsert_records_handles_duplicate_url_and_does_not_merge(
     # attempt to upsert it into the image table which already contains A.
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
 
     # Now check the final state of the image table. If we get here, the duplicate key
@@ -1167,7 +1326,12 @@ def test_upsert_records_handles_duplicate_url_and_does_not_merge(
 
 
 def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_merge(
-    postgres_with_load_and_image_table, tmpdir, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -1238,7 +1402,9 @@ def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_me
     assert len(rows) == 3
 
     # Now try upserting the records from the loading table to the final image table.
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
 
     # Now check the final state of the image table. If we get here, the duplicate key
@@ -1266,7 +1432,11 @@ def test_drop_load_table_drops_table(postgres_with_load_table, load_table, ident
 
 
 def test_image_expiration(
-    postgres_with_load_and_image_table, load_table, image_table, identifier
+    postgres_with_load_and_image_table,
+    load_table,
+    image_table,
+    identifier,
+    mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
 
@@ -1305,7 +1475,9 @@ def test_image_expiration(
 
     postgres_with_load_and_image_table.cursor.execute(insert_data_query)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_db_table(postgres_conn_id, identifier, db_table=image_table)
+    sql.upsert_records_to_db_table(
+        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+    )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
     postgres_with_load_and_image_table.connection.commit()
@@ -1317,9 +1489,13 @@ def test_image_expiration(
 
     postgres_with_load_and_image_table.connection.commit()
 
-    sql.expire_old_images(postgres_conn_id, PROVIDER_A, image_table=image_table)
+    sql.expire_old_images(
+        postgres_conn_id, PROVIDER_A, image_table=image_table, task=mock_pg_hook_task
+    )
 
-    sql.expire_old_images(postgres_conn_id, PROVIDER_B, image_table=image_table)
+    sql.expire_old_images(
+        postgres_conn_id, PROVIDER_B, image_table=image_table, task=mock_pg_hook_task
+    )
 
     postgres_with_load_and_image_table.connection.commit()
 

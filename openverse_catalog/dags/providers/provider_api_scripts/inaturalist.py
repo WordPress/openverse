@@ -27,14 +27,14 @@ import pendulum
 import requests
 from airflow import XComArg
 from airflow.exceptions import AirflowNotFoundException, AirflowSkipException
+from airflow.models.abstractoperator import AbstractOperator
 from airflow.operators.python import PythonOperator, ShortCircuitOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
-from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
-from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 from common.constants import IMAGE, POSTGRES_CONN_ID, XCOM_PULL_TEMPLATE
 from common.loader import provider_details, reporting, sql
+from common.sql import PGExecuteQueryOperator, PostgresHook
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
@@ -81,9 +81,12 @@ class INaturalistDataIngester(ProviderDataIngester):
     @staticmethod
     def get_batches(
         batch_length: int,  # must be a positive, non-zero integer
-        postgres_conn_id=POSTGRES_CONN_ID,
+        task: AbstractOperator,
     ):
-        pg = PostgresHook(postgres_conn_id)
+        pg = PostgresHook(
+            postgres_conn_id=POSTGRES_CONN_ID,
+            default_statement_timeout=PostgresHook.get_execution_timeout(task),
+        )
         max_id = pg.get_records("SELECT max(photo_id) FROM inaturalist.photos")[0][0]
         if max_id is None:
             # This would only happen if there were no data loaded to inaturalist.photos
@@ -100,7 +103,7 @@ class INaturalistDataIngester(ProviderDataIngester):
         batch: tuple[int, int],
         intermediate_table: str,
         identifier: str,
-        postgres_conn_id=POSTGRES_CONN_ID,
+        task: AbstractOperator,
         sql_template_file_name="transformed_table.template.sql",
     ):
         """
@@ -110,7 +113,10 @@ class INaturalistDataIngester(ProviderDataIngester):
         """
         start_time = time.perf_counter()
         (batch_start, batch_end) = batch
-        pg = PostgresHook(postgres_conn_id)
+        pg = PostgresHook(
+            postgres_conn_id=POSTGRES_CONN_ID,
+            default_statement_timeout=PostgresHook.get_execution_timeout(task),
+        )
         sql_template = (SCRIPT_DIR / sql_template_file_name).read_text()
         batch_number = int(batch_start / (batch_end - batch_start + 1)) + 1
         logger.info(f"Starting at photo_id {batch_start}, on batch {batch_number}.")
@@ -128,15 +134,13 @@ class INaturalistDataIngester(ProviderDataIngester):
         )
         # Run standard cleaning
         (missing_columns, foreign_id_dup) = sql.clean_intermediate_table_data(
-            identifier=identifier,
-            postgres_conn_id=postgres_conn_id,
+            postgres_conn_id=POSTGRES_CONN_ID, identifier=identifier, task=task
         )
         # Add transformed records to the target catalog image table.
         # TO DO: Would it be better to use loader.upsert_records here? Would need to
         # trace back the parameters that need to be passed in for different stats.
         upserted_records = sql.upsert_records_to_db_table(
-            identifier=identifier,
-            postgres_conn_id=postgres_conn_id,
+            postgres_conn_id=POSTGRES_CONN_ID, identifier=identifier, task=task
         )
         logger.info(f"Upserted {upserted_records} records, from batch {batch_number}.")
         # Truncate the temp table
@@ -201,7 +205,7 @@ class INaturalistDataIngester(ProviderDataIngester):
         raise AirflowSkipException("Nothing new to ingest")
 
     @staticmethod
-    def load_catalog_of_life_names(remove_api_files: bool):
+    def load_catalog_of_life_names(task: PythonOperator, remove_api_files: bool):
         COL_URL = "https://api.checklistbank.org/dataset/9840/export.zip?format=ColDP"
         local_zip_file = "COL_archive.zip"
         name_usage_file = "NameUsage.tsv"
@@ -237,13 +241,16 @@ class INaturalistDataIngester(ProviderDataIngester):
                     f.write(z.read(vernacular_file))
                 logger.info(f"Extracted raw file: {OUTPUT_DIR}/{vernacular_file}")
         # set up for loading data
-        pg = PostgresHook(POSTGRES_CONN_ID)
+        pg = PostgresHook(
+            default_statement_timeout=PostgresHook.get_execution_timeout(task)
+        )
         COPY_SQL = (
             "COPY inaturalist.{} FROM STDIN "
             "DELIMITER E'\t' CSV HEADER QUOTE E'\b' NULL AS ''"
         )
         COUNT_SQL = "SELECT count(*) FROM inaturalist.{};"
         # upload vernacular names file to postgres
+        pg.run_statement_timeout()
         pg.copy_expert(COPY_SQL.format("col_vernacular"), OUTPUT_DIR / vernacular_file)
         vernacular_records = pg.get_records(COUNT_SQL.format("col_vernacular"))
         if vernacular_records[0][0] == 0:
@@ -288,11 +295,11 @@ class INaturalistDataIngester(ProviderDataIngester):
                 doc_md="Check for iNaturalist files added to S3 since last load",
             )
 
-            create_inaturalist_schema = SQLExecuteQueryOperator(
+            create_inaturalist_schema = PGExecuteQueryOperator(
                 task_id="create_inaturalist_schema",
-                conn_id=POSTGRES_CONN_ID,
                 sql=(SCRIPT_DIR / "create_schema.sql").read_text(),
                 doc_md="Create temporary schema and license table",
+                execution_timeout=timedelta(minutes=1),
             )
 
             load_catalog_of_life_names = PythonOperator(
@@ -302,6 +309,7 @@ class INaturalistDataIngester(ProviderDataIngester):
                 op_kwargs={
                     "remove_api_files": "{{params.sql_rm_source_data_after_ingesting}}"
                 },
+                execution_timeout=timedelta(minutes=15),
             )
 
             (
@@ -324,17 +332,18 @@ class INaturalistDataIngester(ProviderDataIngester):
                 # just skip the drop steps, not the final reporting step in the dag
                 ignore_downstream_trigger_rules=False,
             )
-            drop_inaturalist_schema = SQLExecuteQueryOperator(
+            drop_inaturalist_schema = PGExecuteQueryOperator(
                 task_id="drop_inaturalist_schema",
-                conn_id=POSTGRES_CONN_ID,
                 sql="DROP SCHEMA IF EXISTS inaturalist CASCADE",
                 doc_md="Drop iNaturalist source tables and their schema",
+                execution_timeout=timedelta(minutes=10),
             )
             drop_loading_table = PythonOperator(
                 task_id="drop_loading_table",
                 python_callable=sql.drop_load_table,
                 op_kwargs=LOADER_ARGS,
                 doc_md="Drop the temporary (transformed) loading table",
+                execution_timeout=timedelta(minutes=10),
             )
             (check_drop_parameter >> [drop_inaturalist_schema, drop_loading_table])
         return postingestion_tasks
@@ -348,11 +357,11 @@ class INaturalistDataIngester(ProviderDataIngester):
 
             with TaskGroup(group_id="pull_image_data") as pull_data:
                 for source_name in SOURCE_FILE_NAMES:
-                    SQLExecuteQueryOperator(
+                    PGExecuteQueryOperator(
                         task_id=f"load_{source_name}",
-                        conn_id=POSTGRES_CONN_ID,
                         sql=(SCRIPT_DIR / f"{source_name}.sql").read_text(),
                         doc_md=f"Load iNaturalist {source_name} from s3 to postgres",
+                        execution_timeout=timedelta(minutes=10),
                     ),
 
             with TaskGroup(group_id="load_image_data") as loader_tasks:
@@ -367,6 +376,7 @@ class INaturalistDataIngester(ProviderDataIngester):
                         "Create a temp table for ingesting data from inaturalist "
                         "source tables."
                     ),
+                    execution_timeout=timedelta(minutes=1),
                 )
 
                 get_batches = PythonOperator(
@@ -374,17 +384,16 @@ class INaturalistDataIngester(ProviderDataIngester):
                     python_callable=INaturalistDataIngester.get_batches,
                     op_kwargs={
                         "batch_length": 2_000_000,
-                        "postgres_conn_id": LOADER_ARGS["postgres_conn_id"],
                     },
+                    execution_timeout=timedelta(minutes=1),
                 )
 
+                # In testing this locally, the longest full iteration took 39 minutes,
+                # median was 18 minutes. We should probably adjust the timeouts with
+                # more info from production runs.
                 load_transformed_data = PythonOperator.partial(
                     task_id="load_transformed_data",
                     python_callable=INaturalistDataIngester.load_transformed_data,
-                    # In testing this locally, the longest iteration took 39 minutes,
-                    # median was 18 minutes. We should probably adjust the timeouts with
-                    # more info from production runs.
-                    execution_timeout=timedelta(hours=1),
                     retries=0,
                     max_active_tis_per_dag=1,
                     op_kwargs={
@@ -397,7 +406,7 @@ class INaturalistDataIngester(ProviderDataIngester):
                         "Load one batch of data from source tables to target table."
                     ),
                 ).expand(
-                    op_args=XComArg(get_batches),
+                    op_args=XComArg(get_batches, "return_value"),
                 )
 
                 consolidate_load_statistics = PythonOperator(

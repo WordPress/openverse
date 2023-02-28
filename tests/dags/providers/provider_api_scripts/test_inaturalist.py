@@ -4,9 +4,9 @@ from unittest import mock
 
 import pytest
 from airflow.models import TaskInstance
-from airflow.providers.postgres.hooks.postgres import PostgresHook
-from common.constants import IMAGE, POSTGRES_CONN_ID
+from common.constants import IMAGE
 from common.loader.reporting import RecordMetrics
+from common.sql import PostgresHook
 from providers.provider_api_scripts import inaturalist
 
 
@@ -38,7 +38,7 @@ from providers.provider_api_scripts import inaturalist
 
 
 INAT = inaturalist.INaturalistDataIngester()
-PG = PostgresHook(POSTGRES_CONN_ID)
+PG = PostgresHook(default_statement_timeout=5)
 SQL_SCRIPT_DIR = (
     Path(__file__).parents[4]
     / "openverse_catalog/dags/providers/provider_csv_load_scripts/inaturalist"
@@ -167,6 +167,8 @@ def test_consolidate_load_statistics(all_results, expected):
     ],
 )
 def test_get_batches(batch_length, max_id, expected):
-    with mock.patch.object(PostgresHook, "get_records", return_value=max_id) as pg_mock:
-        actual = INAT.get_batches(batch_length, pg_mock)
-        assert actual == expected
+    task = mock.Mock()
+    with mock.patch.object(PostgresHook, "get_execution_timeout", return_value=60):
+        with mock.patch.object(PostgresHook, "get_records", return_value=max_id):
+            actual = INAT.get_batches(batch_length, task)
+            assert actual == expected

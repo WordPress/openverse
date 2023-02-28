@@ -38,7 +38,10 @@ def create_refresh_view_data_task(data_refresh: DataRefresh):
     refresh_matview = PythonOperator(
         task_id=UPDATE_DB_VIEW_TASK_ID,
         python_callable=sql.update_db_view,
-        op_args=[POSTGRES_CONN_ID, data_refresh.media_type],
+        op_kwargs={
+            "postgres_conn_id": POSTGRES_CONN_ID,
+            "media_type": data_refresh.media_type,
+        },
         execution_timeout=data_refresh.refresh_matview_timeout,
         trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
         doc_md=create_refresh_view_data_task.__doc__,

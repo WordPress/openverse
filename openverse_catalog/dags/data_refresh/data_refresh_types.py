@@ -28,7 +28,9 @@ class DataRefresh:
                                        should be run.  Passed to the
                                        airflow.dag.DAG __init__ method.
     data_refresh_timeout:              int giving the amount of time in seconds a
-                                       given data pull may take.
+                                       given data pull may take. int rather than
+                                       than timedelta because it is used by HttpSensor
+                                       for scheduling, rather than PG for running tasks.
     refresh_metrics_timeout:           timedelta expressing amount of time the
                                        refresh popularity metrics tasks may take.
     refresh_matview_timeout:           timedelta expressing amount of time the

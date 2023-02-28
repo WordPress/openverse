@@ -37,7 +37,6 @@ from collections.abc import Sequence
 from airflow import DAG
 from airflow.models.dagrun import DagRun
 from airflow.operators.python import BranchPythonOperator, PythonOperator
-from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.settings import SASession
 from airflow.utils.session import provide_session
 from airflow.utils.state import State
@@ -46,6 +45,7 @@ from common.constants import (
     OPENLEDGER_API_CONN_ID,
     XCOM_PULL_TEMPLATE,
 )
+from common.sql import PGExecuteQueryOperator
 from data_refresh.data_refresh_task_factory import create_data_refresh_task_group
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
 from data_refresh.refresh_popularity_metrics_task_factory import (
@@ -210,7 +210,7 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
         )
 
         # Get the current number of records in the target API table
-        before_record_count = SQLExecuteQueryOperator(
+        before_record_count = PGExecuteQueryOperator(
             task_id="get_before_record_count",
             conn_id=OPENLEDGER_API_CONN_ID,
             sql=count_sql,
@@ -236,7 +236,7 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
         )
 
         # Get the final number of records in the API table after the refresh
-        after_record_count = SQLExecuteQueryOperator(
+        after_record_count = PGExecuteQueryOperator(
             task_id="get_after_record_count",
             conn_id=OPENLEDGER_API_CONN_ID,
             sql=count_sql,

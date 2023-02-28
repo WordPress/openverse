@@ -16,9 +16,8 @@ from urllib.parse import urljoin
 
 from airflow import DAG
 from airflow.exceptions import AirflowException
-from airflow.models import TaskInstance
+from airflow.models import BaseOperator, TaskInstance
 from airflow.operators.python import PythonOperator
-from airflow.providers.postgres.hooks.postgres import PostgresHook
 from common import slack
 from common.constants import (
     DAG_DEFAULT_ARGS,
@@ -26,6 +25,7 @@ from common.constants import (
     OPENLEDGER_API_CONN_ID,
     XCOM_PULL_TEMPLATE,
 )
+from common.sql import PostgresHook
 
 
 logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ MediaTypeReportCounts = dict[str, ReportCountsByReason]
 
 
 def get_pending_report_counts(
-    db_conn_id: str, media_type: str, ti: TaskInstance
+    db_conn_id: str, media_type: str, ti: TaskInstance, task: BaseOperator
 ) -> ReportCountsByReason:
     """
     Build a dict of pending report counts grouped by report reason for a media type.
@@ -59,7 +59,10 @@ def get_pending_report_counts(
     media_type: Media type for which to look up reports
     ti:         Running task instance
     """
-    postgres = PostgresHook(postgres_conn_id=db_conn_id)
+    postgres = PostgresHook(
+        postgres_conn_id=db_conn_id,
+        default_statement_timeout=PostgresHook.get_execution_timeout(task),
+    )
     report_counts_by_reason = {}
 
     if media_type not in REPORTS_TABLES:

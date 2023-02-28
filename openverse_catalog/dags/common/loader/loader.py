@@ -1,3 +1,4 @@
+from airflow.models.abstractoperator import AbstractOperator
 from common.loader import paths, s3, sql
 from common.loader.paths import _extract_media_type
 from common.loader.reporting import RecordMetrics
@@ -17,6 +18,7 @@ def load_s3_data(
     postgres_conn_id,
     identifier,
     ti,
+    task,
 ):
     media_type = ti.xcom_pull(task_ids="stage_oldest_tsv_file", key="media_type")
     tsv_version = ti.xcom_pull(task_ids="stage_oldest_tsv_file", key="tsv_version")
@@ -27,10 +29,14 @@ def load_s3_data(
         identifier, bucket, aws_conn_id, media_prefix=media_type
     )
     sql.load_s3_data_to_intermediate_table(
-        postgres_conn_id, bucket, tsv_key, identifier, media_type
+        postgres_conn_id, bucket, tsv_key, identifier, media_type, task
     )
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, media_type=media_type, tsv_version=tsv_version
+        postgres_conn_id,
+        identifier,
+        media_type=media_type,
+        tsv_version=tsv_version,
+        task=task,
     )
 
 
@@ -41,6 +47,7 @@ def upsert_data(
     identifier: str,
     loaded_count: int,
     duplicates_count: tuple[int, int],
+    task: AbstractOperator = None,
 ) -> RecordMetrics:
     """
     Upsert data into the catalog DB from the loading table, and calculate
@@ -48,7 +55,11 @@ def upsert_data(
     """
     missing_columns, foreign_id_dup = duplicates_count
     upserted = sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, media_type=media_type, tsv_version=tsv_version
+        postgres_conn_id,
+        identifier,
+        media_type=media_type,
+        tsv_version=tsv_version,
+        task=task,
     )
 
     url_dup = loaded_count - missing_columns - foreign_id_dup - upserted

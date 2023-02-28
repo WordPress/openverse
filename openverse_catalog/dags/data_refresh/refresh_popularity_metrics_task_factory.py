@@ -41,7 +41,10 @@ def create_refresh_popularity_metrics_task_group(data_refresh: DataRefresh):
         update_metrics = PythonOperator(
             task_id=UPDATE_MEDIA_POPULARITY_METRICS_TASK_ID,
             python_callable=sql.update_media_popularity_metrics,
-            op_args=[POSTGRES_CONN_ID, media_type],
+            op_kwargs={
+                "postgres_conn_id": POSTGRES_CONN_ID,
+                "media_type": media_type,
+            },
             execution_timeout=execution_timeout,
             doc=(
                 "Updates the popularity metrics table, adding any new "
@@ -63,7 +66,10 @@ def create_refresh_popularity_metrics_task_group(data_refresh: DataRefresh):
         update_constants = PythonOperator(
             task_id=UPDATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID,
             python_callable=sql.update_media_popularity_constants,
-            op_args=[POSTGRES_CONN_ID, media_type],
+            op_kwargs={
+                "postgres_conn_id": POSTGRES_CONN_ID,
+                "media_type": media_type,
+            },
             execution_timeout=execution_timeout,
             doc=(
                 "Updates the popularity constants view. This completely "
