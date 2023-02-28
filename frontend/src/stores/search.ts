@@ -21,6 +21,7 @@ import {
 import {
   ApiQueryParams,
   filtersToQueryData,
+  qToSearchTerm,
   queryStringToSearchType,
   queryToFilterData,
 } from "~/utils/search-query-transform"
@@ -40,6 +41,7 @@ import { useMediaStore } from "~/stores/media"
 import type { Ref } from "@nuxtjs/composition-api"
 
 import type { Dictionary } from "vue-router/types/router"
+import type { Context } from "@nuxt/types"
 
 export const isSearchTypeSupported = (
   st: SearchType
@@ -208,8 +210,13 @@ export const useSearchStore = defineStore("search", {
       this.searchType = type
       this.clearOtherMediaTypeFilters(type)
     },
-    setSearchTerm(term: string) {
-      const formattedTerm = term.trim()
+    /**
+     * The user can set several `q` query parameters, but we only
+     * use the first one.
+     * @param q - The URL `q` query parameter
+     */
+    setSearchTerm(q: string | (null | string)[] | null) {
+      const formattedTerm = qToSearchTerm(q)
       if (this.searchTerm === formattedTerm) return
       this.searchTerm = formattedTerm
       this.localSearchTerm = formattedTerm
@@ -383,16 +390,14 @@ export const useSearchStore = defineStore("search", {
       urlQuery,
     }: {
       path: string
-      urlQuery: Dictionary<string | (string | null)[]>
+      urlQuery: Context["query"]
     }) {
-      if (urlQuery.q && typeof urlQuery.q === "string") {
-        this.setSearchTerm(urlQuery.q.trim())
-      }
+      this.setSearchTerm(urlQuery.q)
       this.searchType = queryStringToSearchType(path)
       if (!isSearchTypeSupported(this.searchType)) return
       // When setting filters from URL query, 'mature' has a value of 'true',
       // but we need the 'mature' code. Creating a local shallow copy to prevent mutation.
-      const query = { ...urlQuery }
+      const query: Record<string, string> = { ...urlQuery, q: this.searchTerm }
       if (query.mature === "true") {
         query.mature = "mature"
       } else {
@@ -400,7 +405,7 @@ export const useSearchStore = defineStore("search", {
       }
 
       const newFilterData = queryToFilterData({
-        query: query as Record<string, string>,
+        query,
         searchType: this.searchType,
         defaultFilters: this.getBaseFiltersWithProviders(),
       })
