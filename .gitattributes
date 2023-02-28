@@ -5,6 +5,10 @@
 # in Unix via a file share from Windows, the files will work
 * text eol=lf
 
+*.jpg binary
+*.otf binary
 *.png binary
 *.PNG binary
 *.ttf binary
+*.woff binary
+*.woff2 binary
