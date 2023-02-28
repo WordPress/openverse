@@ -485,6 +485,7 @@ jobs:
     name: Nuxt Playwright e2e tests
     if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs:
       - get-changes
       - lint
@@ -513,6 +514,7 @@ jobs:
     name: Nuxt Playwright VR tests
     if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs:
       - get-changes
       - lint
@@ -541,6 +543,7 @@ jobs:
     name: Storybook Playwright tests
     if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs:
       - get-changes
       - lint
