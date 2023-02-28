@@ -24,7 +24,7 @@ for (const searchType of supportedSearchTypes) {
       mode: "CSR",
     })
 
-    const expectedUrl = `/not_search/${searchTypePath(searchType)}?q=cat`
+    const expectedUrl = `/search/${searchTypePath(searchType)}?q=cat`
     await expect(page).toHaveURL(expectedUrl)
   })
 }
