@@ -507,7 +507,7 @@ jobs:
         if: failure()
         with:
           name: nuxt-e2e-test-results
-          path: test-results
+          path: frontend/test-results
 
   nuxt-playwright-vr:
     name: Nuxt Playwright VR tests
@@ -535,7 +535,7 @@ jobs:
         if: failure()
         with:
           name: nuxt-vr-test-results
-          path: test-results
+          path: frontend/test-results
 
   storybook-playwright:
     name: Storybook Playwright tests
@@ -564,7 +564,7 @@ jobs:
         id: test-results
         with:
           name: storybook-test-results
-          path: test-results
+          path: frontend/test-results
 
   clean-playwright-failure-comment:
     name: Remove Playwright test debugging instructions
