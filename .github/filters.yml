@@ -1,8 +1,11 @@
 api:
+  - .github/workflows/ci_cd.yml
   - api/**
 ingestion_server:
+  - .github/workflows/ci_cd.yml
   - ingestion_server/**
 frontend:
+  - .github/workflows/ci_cd.yml
   - frontend/**
   - package.json
   - pnpm-lock.yaml
