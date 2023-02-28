@@ -10,7 +10,7 @@ on:
       - published
   workflow_dispatch:
     inputs:
-      image_tag:
+      image-tag:
         description: "The tag to assign to the images built in the workflow."
         type: string
         required: true
@@ -58,7 +58,7 @@ jobs:
         id: get-image-tag
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-              echo "image-tag=${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
+              echo "image-tag=${{ inputs.image-tag }}" >> "$GITHUB_OUTPUT"
           elif [[ "${{ github.event_name }}" == "release" ]]; then
               echo "image-tag=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
           else

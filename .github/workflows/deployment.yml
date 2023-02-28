@@ -1,0 +1,63 @@
+name: Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        description: The environment to deploy to.
+        type: choice
+        default: staging
+        options:
+          - staging
+          - production
+      service:
+        required: true
+        description: The service to deploy.
+        type: choice
+        options:
+          - nuxt
+          - api
+      tag:
+        required: true
+        description: The GHCR image tag to which the environment should be deployed.
+
+# Only allow a single deploy to happen at a time
+# If you need to stop an in-progress deployment to force # another for the same
+# environment, you'll need to manually cancel it
+concurrency: ${{ github.workflow }}-${{ inputs.environment }}
+
+jobs:
+  deploy:
+    name: Perform Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            const { data: members } = await github.rest.teams.listMembersInOrg({
+              org: 'WordPress',
+              team_slug: 'openverse-maintainers',
+            });
+
+            const isAllowed = members.some(m => m.login === "${{ github.actor }}")
+
+            if (!isAllowed) {
+              throw new Error(
+                "Only GitHub users in the @WordPress/openverse-maintainers "
+                + "team are allowed to run this workflow. If you need to run "
+                + "this workflow, please reach out to that group for help."
+              )
+            }
+
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/${{ inputs.environment }}-${{ inputs.service }}-deploy
+        with:
+          tag: ${{ inputs.tag }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
