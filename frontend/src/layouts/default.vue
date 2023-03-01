@@ -16,7 +16,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted } from "@nuxtjs/composition-api"
+import { computed, defineComponent, onMounted } from "vue"
 import { PortalTarget as VTeleportTarget } from "portal-vue"
 
 import { useLayout } from "~/composables/use-layout"

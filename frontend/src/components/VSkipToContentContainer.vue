@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from "@nuxtjs/composition-api"
+import { defineComponent, PropType, ref } from "vue"
 import { Portal as VTeleport } from "portal-vue"
 
 import { ensureFocus, getFirstTabbableIn } from "~/utils/reakit-utils/focus"

@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { defineComponent } from "vue"
+import { useMeta } from "@nuxtjs/composition-api"
 
 import { propTypes } from "~/pages/search/search-page.types"
 

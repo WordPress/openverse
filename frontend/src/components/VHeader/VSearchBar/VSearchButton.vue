@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from "@nuxtjs/composition-api"
+import { defineComponent, computed, PropType } from "vue"
 
 import { useUiStore } from "~/stores/ui"
 

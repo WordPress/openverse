@@ -2,7 +2,7 @@ import type { SupportedMediaType } from "~/constants/media"
 import type { Media } from "~/types/media"
 import type { FetchState } from "~/types/fetch-state"
 
-import type { ExtractPropTypes, PropType } from "@nuxtjs/composition-api"
+import type { ExtractPropTypes, PropType } from "vue"
 
 export const propTypes = {
   resultItems: {

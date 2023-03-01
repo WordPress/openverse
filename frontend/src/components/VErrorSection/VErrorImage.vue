@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType } from "vue"
 
 import type { License, LicenseVersion } from "~/constants/license"
 import type { ErrorCode } from "~/constants/errors"

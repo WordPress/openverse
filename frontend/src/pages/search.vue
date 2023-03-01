@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
-import { computed, defineComponent, inject, ref } from "@nuxtjs/composition-api"
+import { computed, defineComponent, inject, ref } from "vue"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"

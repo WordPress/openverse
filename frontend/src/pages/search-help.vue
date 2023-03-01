@@ -161,7 +161,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { defineComponent } from "vue"
+import { useMeta } from "@nuxtjs/composition-api"
 
 import { useSearchStore } from "~/stores/search"
 

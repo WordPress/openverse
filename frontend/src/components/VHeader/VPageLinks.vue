@@ -51,11 +51,7 @@
 </template>
 
 <script lang="ts">
-import {
-  type PropType,
-  defineComponent,
-  computed,
-} from "@nuxtjs/composition-api"
+import { type PropType, defineComponent, computed } from "vue"
 
 import usePages from "~/composables/use-pages"
 

@@ -64,7 +64,8 @@
   </VContentPage>
 </template>
 <script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { defineComponent } from "vue"
+import { useMeta } from "@nuxtjs/composition-api"
 
 import { useI18n } from "~/composables/use-i18n"
 

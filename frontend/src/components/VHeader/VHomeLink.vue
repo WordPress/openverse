@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { type PropType, defineComponent } from "@nuxtjs/composition-api"
+import { type PropType, defineComponent } from "vue"
 
 import VBrand from "~/components/VBrand/VBrand.vue"
 import VLink from "~/components/VLink.vue"

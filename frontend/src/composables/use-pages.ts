@@ -1,4 +1,5 @@
-import { computed, useContext, useRoute } from "@nuxtjs/composition-api"
+import { computed } from "vue"
+import { useContext, useRoute } from "@nuxtjs/composition-api"
 
 export default function usePages(isNew = false) {
   const { app } = useContext()

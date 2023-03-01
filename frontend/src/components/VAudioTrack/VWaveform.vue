@@ -145,13 +145,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  PropType,
-  ref,
-  toRef,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType, ref, toRef } from "vue"
 
 import { downsampleArray, upsampleArray } from "~/utils/resampling"
 import { timeFmt } from "~/utils/time-fmt"

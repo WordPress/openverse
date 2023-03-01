@@ -1,4 +1,4 @@
-import { ref } from "@nuxtjs/composition-api"
+import { ref } from "vue"
 
 import { useFocusOnShow } from "~/composables/use-focus-on-show"
 import { useFocusOnHide } from "~/composables/use-focus-on-hide"
@@ -7,7 +7,7 @@ import { useFocusOnBlur } from "~/composables/use-focus-on-blur"
 
 import { warn } from "~/utils/console"
 
-import type { Ref, SetupContext } from "@nuxtjs/composition-api"
+import type { Ref, SetupContext } from "vue"
 
 type Props = {
   dialogElements: {

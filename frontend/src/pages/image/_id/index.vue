@@ -82,12 +82,8 @@
 <script lang="ts">
 import axios from "axios"
 
-import {
-  computed,
-  defineComponent,
-  ref,
-  useRoute,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, ref } from "vue"
+import { useRoute } from "@nuxtjs/composition-api"
 
 import { IMAGE } from "~/constants/media"
 import type { ImageDetail } from "~/types/media"

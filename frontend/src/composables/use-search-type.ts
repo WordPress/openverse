@@ -1,4 +1,4 @@
-import { computed, ref } from "@nuxtjs/composition-api"
+import { computed, ref } from "vue"
 
 import {
   ALL_MEDIA,

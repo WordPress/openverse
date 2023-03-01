@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType } from "vue"
 
 import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"

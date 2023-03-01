@@ -1,4 +1,4 @@
-import { computed, ToRefs, ref } from "@nuxtjs/composition-api"
+import { computed, ToRefs, ref } from "vue"
 
 import { useI18n } from "~/composables/use-i18n"
 import { keycodes } from "~/constants/key-codes"

@@ -87,7 +87,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { defineComponent } from "vue"
+import { useMeta } from "@nuxtjs/composition-api"
 
 import { supportedMediaTypes } from "~/constants/media"
 import { useI18n } from "~/composables/use-i18n"

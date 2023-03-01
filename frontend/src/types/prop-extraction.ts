@@ -1,7 +1,4 @@
-import type {
-  ExtractPropTypes,
-  ExtractDefaultPropTypes,
-} from "@nuxtjs/composition-api"
+import type { ExtractPropTypes, ExtractDefaultPropTypes } from "vue"
 
 /**
  * Correctly extracts optional prop types.

@@ -34,13 +34,8 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  useMeta,
-  ref,
-  inject,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, ref, inject } from "vue"
+import { useMeta } from "@nuxtjs/composition-api"
 
 import { useSearchStore } from "~/stores/search"
 

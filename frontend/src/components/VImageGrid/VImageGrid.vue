@@ -25,7 +25,7 @@
  * or display 'No More Media'.
  * Used to display both image search results, and related images.
  */
-import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 
