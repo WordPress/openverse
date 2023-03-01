@@ -11,7 +11,7 @@ import { computed, defineComponent } from "vue"
 
 import { propTypes } from "~/pages/search/search-page.types"
 
-import VImageGrid from "~/components/VImageGrid/VImageGrid.vue"
+import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
 export default defineComponent({
   name: "ImageSearch",

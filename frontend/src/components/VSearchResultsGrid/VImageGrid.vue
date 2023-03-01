@@ -6,6 +6,7 @@
         :key="image.id"
         :image="image"
         :search-term="searchTerm"
+        aspect-ratio="intrinsic"
       />
     </div>
     <h5 v-if="isError && !fetchState.isFinished" class="py-4">
@@ -33,7 +34,7 @@ import type { FetchState } from "~/types/fetch-state"
 import type { ImageDetail } from "~/types/media"
 
 import VLoadMore from "~/components/VLoadMore.vue"
-import VImageCell from "~/components/VImageGrid/VImageCell.vue"
+import VImageCell from "~/components/VSearchResultsGrid/VImageCell.vue"
 
 export default defineComponent({
   name: "ImageGrid",

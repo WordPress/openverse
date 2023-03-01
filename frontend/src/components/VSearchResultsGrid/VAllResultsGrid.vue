@@ -29,11 +29,12 @@
       class="results-grid grid grid-cols-2 gap-4 lg:grid-cols-5 2xl:grid-cols-6"
     >
       <div v-for="item in allMedia" :key="item.id">
-        <VImageCellSquare
+        <VImageCell
           v-if="item.frontendMediaType === 'image'"
           :key="item.id"
           :image="item"
           :search-term="searchTerm"
+          aspect-ratio="square"
         />
         <VAudioCell
           v-if="item.frontendMediaType === 'audio'"
@@ -60,8 +61,8 @@ import { useUiStore } from "~/stores/ui"
 import { useI18n } from "~/composables/use-i18n"
 
 import VSnackbar from "~/components/VSnackbar.vue"
-import VImageCellSquare from "~/components/VAllResultsGrid/VImageCellSquare.vue"
-import VAudioCell from "~/components/VAllResultsGrid/VAudioCell.vue"
+import VImageCell from "~/components/VSearchResultsGrid/VImageCell.vue"
+import VAudioCell from "~/components/VSearchResultsGrid/VAudioCell.vue"
 import VLoadMore from "~/components/VLoadMore.vue"
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
@@ -70,7 +71,7 @@ export default defineComponent({
   name: "VAllResultsGrid",
   components: {
     VSnackbar,
-    VImageCellSquare,
+    VImageCell,
     VAudioCell,
     VLoadMore,
     VGridSkeleton,
