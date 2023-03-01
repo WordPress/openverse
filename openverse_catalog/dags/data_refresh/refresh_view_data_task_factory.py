@@ -44,6 +44,7 @@ def create_refresh_view_data_task(data_refresh: DataRefresh):
         },
         execution_timeout=data_refresh.refresh_matview_timeout,
         trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
+        retries=0,
         doc_md=create_refresh_view_data_task.__doc__,
     )
 

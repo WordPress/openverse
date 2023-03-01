@@ -27,10 +27,8 @@ class DataRefresh:
     schedule:                          string giving the schedule on which the DAG
                                        should be run.  Passed to the
                                        airflow.dag.DAG __init__ method.
-    data_refresh_timeout:              int giving the amount of time in seconds a
-                                       given data pull may take. int rather than
-                                       than timedelta because it is used by HttpSensor
-                                       for scheduling, rather than PG for running tasks.
+    data_refresh_timeout:              timedelta expressing the amount of time the data
+                                       refresh (run by the ingestion server) may take.
     refresh_metrics_timeout:           timedelta expressing amount of time the
                                        refresh popularity metrics tasks may take.
     refresh_matview_timeout:           timedelta expressing amount of time the
@@ -48,7 +46,7 @@ class DataRefresh:
     start_date: datetime = datetime(2020, 1, 1)
     schedule: str | None = "@weekly"
     default_args: dict | None = field(default_factory=dict)
-    data_refresh_timeout: int = 24 * 60 * 60  # 1 day
+    data_refresh_timeout: timedelta = timedelta(days=1)
     refresh_metrics_timeout: timedelta = timedelta(hours=1)
     refresh_matview_timeout: timedelta = timedelta(hours=1)
     create_pop_constants_view_timeout: timedelta = timedelta(hours=1)
@@ -61,9 +59,9 @@ class DataRefresh:
 DATA_REFRESH_CONFIGS = [
     DataRefresh(
         media_type="image",
-        data_refresh_timeout=3 * 24 * 60 * 60,  # 3 days,
+        data_refresh_timeout=timedelta(days=4),
         refresh_metrics_timeout=timedelta(hours=24),
-        refresh_matview_timeout=timedelta(hours=24),
+        refresh_matview_timeout=timedelta(hours=72),
         create_pop_constants_view_timeout=timedelta(hours=8),
         create_materialized_view_timeout=timedelta(hours=5),
     ),
