@@ -278,7 +278,9 @@ const config: NuxtConfig = {
     friendlyErrors: false,
     postcss: {
       plugins: {
-        tailwindcss: {},
+        tailwindcss: {
+          config: path.resolve(__dirname, "tailwind.config.js"),
+        },
         autoprefixer: {},
         "postcss-focus-visible": {},
       },
