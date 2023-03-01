@@ -32,7 +32,8 @@
 
 <script lang="ts">
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
-import { computed, defineComponent, inject, ref } from "vue"
+import { computed, inject, ref } from "vue"
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -105,6 +106,11 @@ export default defineComponent({
       )
     )
 
+    useMeta({
+      title: `${searchTerm.value} | Openverse`,
+      meta: [{ hid: "robots", name: "robots", content: "all" }],
+    })
+
     return {
       searchGridRef,
       showScrollButton,
@@ -140,6 +146,7 @@ export default defineComponent({
       await this.fetchMedia()
     }
   },
+  head: {},
   watch: {
     /**
      * Updates the search type only if the route's path changes.

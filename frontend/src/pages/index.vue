@@ -16,9 +16,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 
-import { useMeta, useRouter } from "@nuxtjs/composition-api"
+import { defineComponent, useMeta, useRouter } from "@nuxtjs/composition-api"
 
 import {
   ALL_MEDIA,

@@ -4,7 +4,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { useMeta } from "@nuxtjs/composition-api"
 
 import { propTypes } from "~/pages/search/search-page.types"
 
@@ -14,12 +13,5 @@ export default defineComponent({
   name: "SearchIndex",
   components: { VAllResultsGrid },
   props: propTypes,
-  setup(props) {
-    useMeta({
-      title: `${props.searchTerm} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
-    })
-  },
-  head: {},
 })
 </script>

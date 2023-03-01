@@ -35,7 +35,6 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref, inject } from "vue"
-import { useMeta } from "@nuxtjs/composition-api"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -60,10 +59,6 @@ export default defineComponent({
   },
   props: propTypes,
   setup(props) {
-    useMeta({
-      title: `${props.searchTerm} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
-    })
     const searchStore = useSearchStore()
 
     const uiStore = useUiStore()
@@ -109,6 +104,5 @@ export default defineComponent({
       hideSnackbar,
     }
   },
-  head: {},
 })
 </script>
