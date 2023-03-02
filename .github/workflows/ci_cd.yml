@@ -926,7 +926,10 @@ jobs:
   deploy-api:
     name: Deploy staging API
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && needs.get-changes.outputs.api == 'true'
+    if: |
+      !failure() && !cancelled() &&
+      github.event_name == 'push' && needs.get-changes.outputs.api == 'true' &&
+      (needs.test-ing.result == 'success' && needs.publish-images.result == 'success')
     needs:
       - get-image-tag
       - get-changes
