@@ -20,7 +20,7 @@
           v-if="showFilters"
           id="content-settings"
           size="medium"
-          class="gap-x-2 me-4"
+          class="label-regular gap-x-2 me-4"
           ><VIcon :icon-path="searchType.icon" />
           <h2 class="label-regular">{{ $t("search-type.heading") }}</h2></VTab
         >
@@ -96,6 +96,7 @@ import closeIcon from "~/assets/icons/close-small.svg"
 export default defineComponent({
   name: "VContentSettingsModalContent",
   components: {
+    VFilterTab,
     VIcon,
     VModalContent,
     VButton,

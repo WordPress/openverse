@@ -1,26 +1,21 @@
 <template>
-  <VTab id="filters" size="medium" class="label-regular gap-x-2">
-    <VIcon :icon-path="filtersIcon" />
+  <VTab id="filters" size="medium" class="gap-x-2">
+    <VFilterIconOrCounter :applied-filter-count="appliedFilterCount" />
     <h2 class="label-regular">{{ $t("filters.title") }}</h2>
   </VTab>
 </template>
 <script lang="ts">
-import VIcon from "~/components/VIcon/VIcon.vue"
+import VFilterIconOrCounter from "~/components/VHeader/VFilterIconOrCounter.vue"
 import VTab from "~/components/VTabs/VTab.vue"
-
-import filtersIcon from "~/assets/icons/filter.svg"
 
 export default {
   name: "VFilterTab",
-  components: { VIcon, VTab },
+  components: { VFilterIconOrCounter, VTab },
   props: {
     appliedFilterCount: {
       type: Number,
       default: 0,
     },
-  },
-  setup() {
-    return { filtersIcon }
   },
 }
 </script>
