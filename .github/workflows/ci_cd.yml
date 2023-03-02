@@ -923,7 +923,7 @@ jobs:
   deploy-api:
     name: Deploy staging API
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (needs.get-changes.outputs.ingestion_server == 'true' || needs.get-changes.outputs.api == 'true')
+    if: github.event_name == 'push' && needs.get-changes.outputs.api == 'true'
     needs:
       - get-image-tag
       - get-changes
