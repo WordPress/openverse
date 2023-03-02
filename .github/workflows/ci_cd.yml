@@ -37,8 +37,10 @@ jobs:
       ingestion_server: ${{ steps.paths-filter.outputs.ingestion_server }}
       frontend: ${{ steps.paths-filter.outputs.frontend }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/get-changes
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Get changes
+        uses: ./.github/actions/get-changes
         id: paths-filter
 
   get-image-tag:
@@ -103,12 +105,20 @@ jobs:
       - get-changes
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Add backend stack label
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Add API stack label
         uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.api == 'true' || needs.get-changes.outputs.ingestion_server == 'true' }}
+        if: ${{ needs.get-changes.outputs.api == 'true' }}
         with:
-          labels: "🧱 stack: backend"
+          labels: "🧱 stack: api"
+
+      - name: Add ingestion server stack label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ needs.get-changes.outputs.ingestion_server == 'true' }}
+        with:
+          labels: "🧱 stack: ingestion server"
 
       - name: Add frontend stack label
         uses: actions-ecosystem/action-add-labels@v1
