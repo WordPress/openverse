@@ -22,6 +22,8 @@ from shared.log import configure_logger
 
 log = logging.getLogger(__name__)
 
+REQUIRED_LABEL_CATEGORIES = ["aspect", "priority", "goal", "stack"]
+
 # region argparse
 parser = argparse.ArgumentParser(description="")
 parser.add_argument(
@@ -185,20 +187,14 @@ def main():
     for issue in linked_issues:
         issue = get_issue(gh, issue)
         labels = issue.labels
-        if all(
-            [
-                (aspect := get_label_of_cat("aspect", labels)),
-                (priority := get_label_of_cat("priority", labels)),
-                (goal := get_label_of_cat("goal", labels)),
-            ]
-        ):
-            log.info(f"Aspect label: {aspect}")
-            log.info(f"Priority label: {priority}")
-            log.info(f"Goal label: {goal}")
-            labels_to_add = [aspect, priority, goal]
-            if stack := get_label_of_cat("stack", labels):
-                log.info(f"Stack label: {stack}")
-                labels_to_add.append(stack)
+        labels_to_add = []
+
+        for category in REQUIRED_LABEL_CATEGORIES:
+            if label := get_label_of_cat(category, labels):
+                log.info(f"Found label for category {category}: {label}")
+                labels_to_add.append(label)
+
+        if labels_to_add:
             pr.set_labels(*labels_to_add)
             break
     else:
