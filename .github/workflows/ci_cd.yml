@@ -186,14 +186,14 @@ jobs:
         run: just ingestion_server/test-local
 
       - name: Upload ingestion test logs
-        if: always()
+        if: success() || failure()
         uses: actions/upload-artifact@v3
         with:
           name: ing_logs
           path: ingestion_server/test/ingestion_logs.txt
 
       - name: Print ingestion test logs
-        if: always()
+        if: success() || failure()
         run: cat ingestion_server/test/ingestion_logs.txt
 
   #######
@@ -233,13 +233,13 @@ jobs:
         run: just api/test
 
       - name: Print API test logs
-        if: always()
+        if: success() || failure()
         run: |
           just logs > api_logs
           cat api_logs
 
       - name: Upload API test logs
-        if: always()
+        if: success() || failure()
         uses: actions/upload-artifact@v3
         with:
           name: api_logs
@@ -593,7 +593,10 @@ jobs:
 
   playwright-test-failure-comment:
     name: Post Playwright test debugging instructions
-    if: always() && github.event_name == 'pull_request' && (needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' || needs.storybook-playwright.result == 'failure')
+    if: |
+      (success() || failure()) &&
+      github.event_name == 'pull_request' &&
+      (needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' || needs.storybook-playwright.result == 'failure')
     runs-on: ubuntu-latest
     needs:
       - nuxt-playwright-e2e
@@ -680,7 +683,7 @@ jobs:
     name: Publish full-stack docs
     # https://github.com/actions/runner/issues/491#issuecomment-850884422
     if: |
-      always() &&
+      !failure() && !cancelled() &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
       (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
@@ -730,7 +733,7 @@ jobs:
     name: Preview full-stack docs
     # https://github.com/actions/runner/issues/491#issuecomment-850884422
     if: |
-      always() &&
+      !failure() && !cancelled() &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
       (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
@@ -845,7 +848,7 @@ jobs:
     runs-on: ubuntu-latest
     # prevent running on fork PRs
     if: |
-      always() &&
+      !failure() && !cancelled() &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
       ((github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'release' && github.repository == 'WordPress/openverse'))
