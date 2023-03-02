@@ -3,4 +3,4 @@
 
 # Note: Unpinned packages have their versions determined by the Airflow constraints file
 
-pre-commit==3.0.2
+pre-commit==3.1.1
