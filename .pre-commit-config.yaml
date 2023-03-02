@@ -102,6 +102,7 @@ repos:
           - --ignore-path=.eslintignore
           - --max-warnings=0
         additional_dependencies:
+          # This is a no-op change to see if sync has problems
           - eslint@8.15.0
           - eslint-config-prettier@8.5.0
           - "@babel/eslint-parser@7.19.1"
