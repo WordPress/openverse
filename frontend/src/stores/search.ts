@@ -124,15 +124,20 @@ export const useSearchStore = defineStore("search", {
     },
 
     /**
-     * Returns the object with filters for selected search type,
-     * with codes, names for i18n labels, and checked status.
-     *
-     * Excludes `searchBy` and `mature` filters that we don't display.
+     * Returns the object with filters for selected search type, with codes, names for i18n labels, and checked status.
+     * If `mature` filter is not eanbled, it is not included in the result.
+     * also excludes `searchBy` filter.
      */
     searchFilters(state) {
       return mediaFilterKeys[state.searchType]
-        .filter((filterKey) => !["searchBy", "mature"].includes(filterKey))
+        .filter((filterKey) => !["searchBy"].includes(filterKey))
         .reduce((obj, filterKey) => {
+          if (
+            filterKey === "mature" &&
+            !useFeatureFlagStore().isOn("toggle_sensitive_content")
+          ) {
+            return obj
+          }
           obj[filterKey] = this.filters[filterKey]
           return obj
         }, {} as Filters)

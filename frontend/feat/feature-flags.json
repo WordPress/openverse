@@ -27,6 +27,14 @@
       "status": "switchable",
       "description": "Can be switched between on and off",
       "defaultState": "on"
+    },
+    "toggle_sensitive_content": {
+      "status": {
+        "staging": "switchable",
+        "production": "disabled"
+      },
+      "description": "Toggle sensitive content",
+      "defaultState": "off"
     }
   }
 }

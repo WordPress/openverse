@@ -96,8 +96,9 @@
      * with other tools we rely on.
      */
     "src/constants/**/*",
-    "src/server-middleware/healthcheck.js"
+    "src/server-middleware/healthcheck.js",
     /** End of non TypeScript files section */
+    "src/components/VToggleSwitch/VToggleSwitch.vue"
   ],
   "exclude": ["node_modules"],
   "vueCompilerOptions": {
