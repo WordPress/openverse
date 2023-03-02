@@ -147,16 +147,24 @@ export const useUiStore = defineStore("ui", {
       )
         breakpoint = cookies.uiBreakpoint
       this.updateBreakpoint(breakpoint)
-      if (typeof cookies.uiIsFilterDismissed === "boolean")
+
+      if (typeof cookies.uiIsFilterDismissed === "boolean") {
         this.isFilterDismissed = cookies.uiIsFilterDismissed
+      }
+
       this.isMobileUa = false
-      if (typeof cookies.uiIsMobileUa === "boolean")
+      if (typeof cookies.uiIsMobileUa === "boolean") {
         this.isMobileUa = cookies.uiIsMobileUa
+      }
+
       this.innerFilterVisible = this.isDesktopLayout
         ? !this.isFilterDismissed
         : false
-      if (Array.isArray(cookies.uiDismissedBanners))
+
+      if (Array.isArray(cookies.uiDismissedBanners)) {
         this.dismissedBanners = cookies.uiDismissedBanners
+      }
+
       this.updateCookies()
     },
 
