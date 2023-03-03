@@ -1,4 +1,4 @@
-import { nextTick } from "@nuxtjs/composition-api"
+import { nextTick } from "vue"
 
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 

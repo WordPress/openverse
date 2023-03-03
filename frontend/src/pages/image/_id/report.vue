@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "@nuxtjs/composition-api"
+import { defineComponent, ref, computed } from "vue"
 
 import { useI18n } from "~/composables/use-i18n"
 

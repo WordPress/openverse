@@ -19,7 +19,7 @@ import {
   onMounted,
   onUnmounted,
   ref,
-} from "@nuxtjs/composition-api"
+} from "vue"
 
 import { tabsContextKey } from "~/types/tabs"
 

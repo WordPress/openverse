@@ -57,12 +57,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  PropType,
-  reactive,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType, reactive } from "vue"
 
 import { useProviderStore } from "~/stores/provider"
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"

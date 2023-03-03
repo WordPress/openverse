@@ -7,7 +7,7 @@ import {
   SetupContext,
   unref,
   watch,
-} from "@nuxtjs/composition-api"
+} from "vue"
 
 import { MaybeComputedRef, resolveUnref } from "@vueuse/core"
 

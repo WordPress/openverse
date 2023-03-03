@@ -30,12 +30,7 @@
 </template>
 
 <script lang="ts">
-import {
-  ref,
-  computed,
-  defineComponent,
-  PropType,
-} from "@nuxtjs/composition-api"
+import { ref, computed, defineComponent, PropType } from "vue"
 
 import { defineEvent } from "~/types/emits"
 

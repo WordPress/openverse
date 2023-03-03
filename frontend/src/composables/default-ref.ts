@@ -1,4 +1,4 @@
-import { computed, ref, UnwrapRef } from "@nuxtjs/composition-api"
+import { computed, ref, UnwrapRef } from "vue"
 
 const NotSet = Symbol("NotSet")
 

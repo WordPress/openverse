@@ -40,7 +40,8 @@
 </template>
 
 <script>
-import { defineComponent, useMeta, useRouter } from "@nuxtjs/composition-api"
+import { defineComponent } from "vue"
+import { useMeta, useRouter } from "@nuxtjs/composition-api"
 
 import { useSearchStore } from "~/stores/search"
 

@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "@nuxtjs/composition-api"
+import { defineComponent, PropType } from "vue"
 
 import type { ImageDetail } from "~/types/media"
 import type { FetchState } from "~/types/fetch-state"

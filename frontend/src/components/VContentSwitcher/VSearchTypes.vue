@@ -38,11 +38,7 @@
   </VItemGroup>
 </template>
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  type PropType,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, type PropType } from "vue"
 
 import useSearchType from "~/composables/use-search-type"
 import type { SearchType } from "~/constants/media"

@@ -27,7 +27,7 @@
  * Display placeholder elements while waiting for the actual elements to be
  * loaded in the results views.
  */
-import { defineComponent, PropType } from "@nuxtjs/composition-api"
+import { defineComponent, PropType } from "vue"
 
 import type { SupportedSearchType } from "~/constants/media"
 

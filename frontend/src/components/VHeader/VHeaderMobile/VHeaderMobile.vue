@@ -110,14 +110,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  inject,
-  nextTick,
-  ref,
-  watch,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, inject, nextTick, ref, watch } from "vue"
 
 import { ensureFocus } from "~/utils/reakit-utils/focus"
 import { cyclicShift } from "~/utils/math"

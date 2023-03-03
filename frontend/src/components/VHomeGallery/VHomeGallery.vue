@@ -45,14 +45,8 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  useContext,
-  useRouter,
-  PropType,
-  ref,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType, ref } from "vue"
+import { useContext, useRouter } from "@nuxtjs/composition-api"
 
 import { useReducedMotion } from "~/composables/use-media-query"
 import useResizeObserver from "~/composables/use-resize-observer"

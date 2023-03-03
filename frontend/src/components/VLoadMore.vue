@@ -11,7 +11,7 @@
   </VButton>
 </template>
 <script lang="ts">
-import { computed, defineComponent } from "@nuxtjs/composition-api"
+import { computed, defineComponent } from "vue"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"

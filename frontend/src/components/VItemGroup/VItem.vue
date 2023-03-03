@@ -63,14 +63,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  inject,
-  ref,
-  computed,
-  watch,
-  PropType,
-} from "@nuxtjs/composition-api"
+import { defineComponent, inject, ref, computed, watch, PropType } from "vue"
 
 import { warn } from "~/utils/console"
 

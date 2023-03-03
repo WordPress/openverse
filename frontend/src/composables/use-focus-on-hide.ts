@@ -1,4 +1,4 @@
-import { Ref, watch } from "@nuxtjs/composition-api"
+import { Ref, watch } from "vue"
 
 import { contains, getActiveElement } from "~/utils/reakit-utils/dom"
 import { ensureFocus, isTabbable } from "~/utils/reakit-utils/focus"

@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "@nuxtjs/composition-api"
+import { defineComponent, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"

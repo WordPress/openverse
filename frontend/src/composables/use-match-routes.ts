@@ -1,4 +1,5 @@
-import { ref, useRoute, useRouter, Ref } from "@nuxtjs/composition-api"
+import { ref, Ref } from "vue"
+import { useRoute, useRouter } from "@nuxtjs/composition-api"
 
 import { ALL_MEDIA, searchTypes, supportedSearchTypes } from "~/constants/media"
 import usePages from "~/composables/use-pages"

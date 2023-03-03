@@ -1,4 +1,4 @@
-import type { InjectionKey, Ref } from "@nuxtjs/composition-api"
+import type { InjectionKey, Ref } from "vue"
 
 export const itemGroupDirections = [
   "vertical",
