@@ -196,7 +196,10 @@ def main():
 
         if labels_to_add:
             pr.set_labels(*labels_to_add)
-            break
+            # Only break when all labels are applied, if we're missing any
+            # then continue to the else to apply the awaiting triage label
+            if len(labels_to_add) == len(REQUIRED_LABEL_CATEGORIES):
+                break
     else:
         log.info("Could not find properly labelled issue")
         pr.set_labels("🚦 status: awaiting triage")
