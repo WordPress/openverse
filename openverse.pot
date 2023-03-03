@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-03-02T13:50:37+00:00\n"
+"POT-Creation-Date: 2023-03-03T03:42:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -877,14 +877,14 @@ msgid "An error occurred"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:241
+#: src/pages/image/_id/index.vue:237
 #: src/pages/image/_id/report.vue:100
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/audio/_id/index.vue:89
+#: src/pages/audio/_id/index.vue:90
 msgctxt "error.media-not-found"
 msgid "Couldn't find ###mediaType### with id ###id###"
 msgstr ""
@@ -1868,20 +1868,20 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioThumbnail/VAudioThumbnail.vue:61
+#: src/components/VAudioThumbnail/VAudioThumbnail.vue:56
 msgctxt "audio-thumbnail.alt"
 msgid "Cover art for \"###title###\" by ###creator###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:476
-#: src/components/VAudioTrack/VGlobalAudioTrack.vue:77
+#: src/components/VAudioTrack/VAudioTrack.vue:475
+#: src/components/VAudioTrack/VGlobalAudioTrack.vue:71
 msgctxt "audio-track.aria-label"
 msgid "###title### - Audio Player"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:473
+#: src/components/VAudioTrack/VAudioTrack.vue:472
 msgctxt "audio-track.aria-label-interactive"
 msgid "###title### - audio player - press the spacebar to play and pause a preview of the audio"
 msgstr ""
@@ -2176,7 +2176,7 @@ msgid "Shown because ###feat-name### is ###feat-state###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSketchFabViewer.vue:54
+#: src/components/VSketchFabViewer.vue:50
 msgctxt "sketchfab-iframe-title"
 msgid "###sketchfab### viewer"
 msgstr ""
