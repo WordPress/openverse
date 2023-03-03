@@ -24,9 +24,3 @@ title: "<Replace this with the actual title>"
 ## Additional context
 
 <!-- Add any other context about the feature request. -->
-
-## Implementation
-
-<!-- Replace the [ ] with [x] to check the box. -->
-
-- [ ] 🙋 I would be interested in implementing this feature.
