@@ -51,5 +51,5 @@ jobs:
       - name: Check stack label
         uses: docker://agilepathway/pull-request-label-checker:v1.2.13
         with:
-          one_of: "🧱 stack: backend,🧱 stack: frontend,🧱 stack: mgmt,🧱 stack: api,🧱 stack: catalog,🧱 stack: ingestion server"
+          any_of: "🧱 stack: backend,🧱 stack: frontend,🧱 stack: mgmt,🧱 stack: api,🧱 stack: catalog,🧱 stack: ingestion server"
           repo_token: ${{ secrets.GITHUB_TOKEN }}
