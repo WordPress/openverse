@@ -23,6 +23,8 @@ from shared.log import configure_logger
 log = logging.getLogger(__name__)
 
 REQUIRED_LABEL_CATEGORIES = ["aspect", "priority", "goal", "stack"]
+# Categories where all labels should be retrievd rather than first only
+GET_ALL_LABEL_CATEGORIES = {"stack"}
 
 # region argparse
 parser = argparse.ArgumentParser(description="")
@@ -146,6 +148,22 @@ def get_linked_issues(url: str) -> list[str]:
     return [a["href"] for a in form.find_all("a")]
 
 
+def get_all_labels_of_cat(cat: str, labels: list[Label]) -> list[Label]:
+    """
+    Get all of the available labels from a category from a given list of
+    labels.
+
+    :param cat: the category to which the label should belong
+    :param labels: the list of labels to choose from
+    :return: the labels matching the given category
+    """
+    available_labels = []
+    for label in labels:
+        if cat in label.name:
+            available_labels.append(label)
+    return available_labels
+
+
 def get_label_of_cat(cat: str, labels: list[Label]) -> Label | None:
     """
     Get the label of a particular category from the given list of labels.
@@ -154,11 +172,7 @@ def get_label_of_cat(cat: str, labels: list[Label]) -> Label | None:
     :param labels: the list of labels to choose from
     :return: the label matching the given category
     """
-
-    for label in labels:
-        if cat in label.name:
-            return label
-    return None
+    return next(iter(get_all_labels_of_cat(cat, labels)), None)
 
 
 def main():
@@ -190,15 +204,21 @@ def main():
         labels_to_add = []
 
         for category in REQUIRED_LABEL_CATEGORIES:
-            if label := get_label_of_cat(category, labels):
+            if category in GET_ALL_LABEL_CATEGORIES and (
+                available_labels := get_all_labels_of_cat(category, labels)
+            ):
+                log.info(f"Found labels for category {category}: {available_labels}")
+                labels_to_add.extend(available_labels)
+            elif label := get_label_of_cat(category, labels):
                 log.info(f"Found label for category {category}: {label}")
                 labels_to_add.append(label)
 
         if labels_to_add:
             pr.set_labels(*labels_to_add)
             # Only break when all labels are applied, if we're missing any
-            # then continue to the else to apply the awaiting triage label
-            if len(labels_to_add) == len(REQUIRED_LABEL_CATEGORIES):
+            # then continue to the else to apply the awaiting triage label.
+            # Stack can have more than one label so this is not an exact check
+            if len(labels_to_add) >= len(REQUIRED_LABEL_CATEGORIES):
                 break
     else:
         log.info("Could not find properly labelled issue")
