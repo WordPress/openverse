@@ -44,7 +44,7 @@ importers:
       '@nuxtjs/style-resources': ^1.0.0
       '@nuxtjs/svg': ^0.4.0
       '@pinia/nuxt': 0.2.1
-      '@pinia/testing': ^0.0.12
+      '@pinia/testing': ^0.0.15
       '@playwright/test': 1.29.1
       '@popperjs/core': ^2.11.2
       '@tailwindcss/line-clamp': ^0.3.1
@@ -190,7 +190,7 @@ importers:
       '@nuxtjs/eslint-module': 3.1.0_4ccfrreed6ckxvste6jnrinore
       '@nuxtjs/storybook': 4.3.2_hf5jwnuj73afyp2yvmpfp5hsii
       '@nuxtjs/style-resources': 1.2.1
-      '@pinia/testing': 0.0.12_pinia@2.0.20+vue@2.7.10
+      '@pinia/testing': 0.0.15_pinia@2.0.20+vue@2.7.10
       '@playwright/test': 1.29.1
       '@testing-library/dom': 8.13.0
       '@testing-library/jest-dom': 5.16.1
@@ -2153,9 +2153,6 @@ packages:
     resolution: {integrity: sha512-TDoPum4SHdfPiGSAaRBw7ECyI8VaHpK8GJugbJIJuqyh6kzw9ZLJZW3HGL3NNrJGxcAixUvqROm+YuQOo5eXtg==}
     peerDependencies:
       react: ^16.13.1 || ^17.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
     dev: true
 
   /@mdx-js/util/1.6.22:
@@ -2369,9 +2366,6 @@ packages:
     resolution: {integrity: sha512-r1LHUzifvheTnJtYrMuA+apgsrEJbxcgFKIimeXKb+jl8TnPWdV3egmrxBCaDJchrtY/wmHyP47tunsft7AWwg==}
     peerDependencies:
       consola: '*'
-    peerDependenciesMeta:
-      consola:
-        optional: true
     dependencies:
       chalk: 4.1.2
       chokidar: 3.5.3
@@ -2569,9 +2563,9 @@ packages:
     dependencies:
       '@nuxt/types': 2.15.8_webpack@4.46.0
       consola: 2.15.3
-      fork-ts-checker-webpack-plugin: 6.5.0_xar55um6mem7oz7pyhmuipcgya
-      ts-loader: 8.3.0_evijigonbo4skk2vlqtwtdqibu
-      typescript: 4.9.5
+      fork-ts-checker-webpack-plugin: 6.5.0_ov4c6mrakb3deevpnp6vjbjqra
+      ts-loader: 8.3.0_e7hrjdrs22zc4syxbltzlwluhe
+      typescript: 4.2.4
     transitivePeerDependencies:
       - eslint
       - vue-template-compiler
@@ -3087,10 +3081,10 @@ packages:
       - vue
     dev: false
 
-  /@pinia/testing/0.0.12_pinia@2.0.20+vue@2.7.10:
-    resolution: {integrity: sha512-OGJ5kZihiuNua9trREAVLiv8wAlxT2+gZAz3Cen1L4ch51MbSgY5/nbo9htYsP2my9dhbggBhecgYWlhejhRcQ==}
+  /@pinia/testing/0.0.15_pinia@2.0.20+vue@2.7.10:
+    resolution: {integrity: sha512-Ykz5sPUVDphDMssA27+ExPSzxqfn7Y3jax77KA0AChDB6ODu31CnXIwoiUG+U5WA6ey7gzHkZh8wlnAtzVnB8g==}
     peerDependencies:
-      pinia: '>=2.0.14'
+      pinia: '>=2.0.31'
     dependencies:
       pinia: 2.0.20_zwrjrur6baadhegswmjpbhxwja
       vue-demi: 0.13.11_vue@2.7.10
@@ -3569,11 +3563,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/api': 6.5.10
       '@storybook/channels': 6.5.10
@@ -3593,11 +3582,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/api': 6.5.10_wcqkhtmu7mswc6yz4uyexck3ty
       '@storybook/channels': 6.5.10
@@ -3619,11 +3603,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/channels': 6.5.10
       '@storybook/client-logger': 6.5.10
@@ -3649,11 +3628,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/channels': 6.5.10
       '@storybook/client-logger': 6.5.10
@@ -3683,10 +3657,6 @@ packages:
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
       typescript: '*'
     peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
       typescript:
         optional: true
     dependencies:
@@ -3784,11 +3754,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/addons': 6.5.10_wcqkhtmu7mswc6yz4uyexck3ty
       '@storybook/channel-postmessage': 6.5.10
@@ -3826,11 +3791,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/client-logger': 6.5.10
       '@storybook/csf': 0.0.2--canary.4566f4d.1
@@ -3847,11 +3807,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/client-logger': 6.5.10
       '@storybook/csf': 0.0.2--canary.4566f4d.1
@@ -3873,10 +3828,6 @@ packages:
       typescript: '*'
       webpack: '*'
     peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
       typescript:
         optional: true
     dependencies:
@@ -3913,10 +3864,6 @@ packages:
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
       typescript: '*'
     peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
       typescript:
         optional: true
     dependencies:
@@ -3986,10 +3933,6 @@ packages:
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
       typescript: '*'
     peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
       typescript:
         optional: true
     dependencies:
@@ -4073,10 +4016,6 @@ packages:
         optional: true
       '@storybook/manager-webpack5':
         optional: true
-      react:
-        optional: true
-      react-dom:
-        optional: true
       typescript:
         optional: true
     dependencies:
@@ -4154,10 +4093,6 @@ packages:
       '@storybook/builder-webpack5':
         optional: true
       '@storybook/manager-webpack5':
-        optional: true
-      react:
-        optional: true
-      react-dom:
         optional: true
       typescript:
         optional: true
@@ -4252,10 +4187,6 @@ packages:
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
       typescript: '*'
     peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
       typescript:
         optional: true
     dependencies:
@@ -4347,11 +4278,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/addons': 6.5.10
       '@storybook/channel-postmessage': 6.5.10
@@ -4376,11 +4302,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/addons': 6.5.10_wcqkhtmu7mswc6yz4uyexck3ty
       '@storybook/channel-postmessage': 6.5.10
@@ -4426,11 +4347,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/client-logger': 6.5.10
       core-js: 3.27.2
@@ -4444,11 +4360,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/client-logger': 6.5.10
       core-js: 3.27.2
@@ -4473,11 +4384,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/addons': 6.5.10
       '@storybook/client-logger': 6.5.10
@@ -4496,11 +4402,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/addons': 6.5.10
       '@storybook/client-logger': 6.5.10
@@ -4524,11 +4425,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/addons': 6.5.10_wcqkhtmu7mswc6yz4uyexck3ty
       '@storybook/client-logger': 6.5.10
@@ -4581,11 +4477,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/client-logger': 6.5.10
       core-js: 3.27.2
@@ -4598,11 +4489,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/client-logger': 6.5.10
       core-js: 3.27.2
@@ -4617,11 +4503,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
     dependencies:
       '@storybook/addons': 6.5.10_wcqkhtmu7mswc6yz4uyexck3ty
       '@storybook/api': 6.5.10_wcqkhtmu7mswc6yz4uyexck3ty
@@ -6414,7 +6295,7 @@ packages:
     engines: {node: ^10 || ^12 || >=14}
     hasBin: true
     peerDependencies:
-      postcss: ^8.1.0 || 5.2.18
+      postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.4
       caniuse-lite: 1.0.30001434
@@ -7637,7 +7518,7 @@ packages:
     peerDependencies:
       arc-templates: ^0.5.3
       atpl: '>=0.7.6'
-      babel-core: ^6.26.3 || 7.0.0-bridge.0
+      babel-core: ^6.26.3
       bracket-template: ^1.1.5
       coffee-script: ^1.12.7
       dot: ^1.1.3
@@ -7806,7 +7687,7 @@ packages:
     peerDependencies:
       arc-templates: ^0.5.3
       atpl: '>=0.7.6'
-      babel-core: ^6.26.3 || 7.0.0-bridge.0
+      babel-core: ^6.26.3
       bracket-template: ^1.1.5
       coffee-script: ^1.12.7
       dot: ^1.1.3
@@ -9939,6 +9820,39 @@ packages:
       - supports-color
     dev: true
 
+  /fork-ts-checker-webpack-plugin/6.5.0_ov4c6mrakb3deevpnp6vjbjqra:
+    resolution: {integrity: sha512-cS178Y+xxtIjEUorcHddKS7yCMlrDPV31mt47blKKRfMd70Kxu5xruAFE2o9sDY6wVC5deuob/u/alD04YYHnw==}
+    engines: {node: '>=10', yarn: '>=1.0.0'}
+    peerDependencies:
+      eslint: '>= 6'
+      typescript: '>= 2.7'
+      vue-template-compiler: '*'
+      webpack: '>= 4'
+    peerDependenciesMeta:
+      eslint:
+        optional: true
+      vue-template-compiler:
+        optional: true
+    dependencies:
+      '@babel/code-frame': 7.18.6
+      '@types/json-schema': 7.0.9
+      chalk: 4.1.2
+      chokidar: 3.5.3
+      cosmiconfig: 6.0.0
+      deepmerge: 4.2.2
+      eslint: 8.28.0
+      fs-extra: 9.1.0
+      glob: 7.2.0
+      memfs: 3.4.0
+      minimatch: 3.1.2
+      schema-utils: 2.7.0
+      semver: 7.3.7
+      tapable: 1.1.3
+      typescript: 4.2.4
+      vue-template-compiler: 2.7.10
+      webpack: 4.46.0
+    dev: true
+
   /fork-ts-checker-webpack-plugin/6.5.0_xar55um6mem7oz7pyhmuipcgya:
     resolution: {integrity: sha512-cS178Y+xxtIjEUorcHddKS7yCMlrDPV31mt47blKKRfMd70Kxu5xruAFE2o9sDY6wVC5deuob/u/alD04YYHnw==}
     engines: {node: '>=10', yarn: '>=1.0.0'}
@@ -10760,7 +10674,7 @@ packages:
     resolution: {integrity: sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA==}
     engines: {node: ^10 || ^12 || >= 14}
     peerDependencies:
-      postcss: ^8.1.0 || 5.2.18
+      postcss: ^8.1.0
     dependencies:
       postcss: 8.4.21
 
@@ -14190,7 +14104,7 @@ packages:
     resolution: {integrity: sha512-QcKuUU/dgNsstIK6HELFRT5Y3lbrMLEOwG+A4s5cA+fx3A3y/JTq3X9LaOj3OC3ALH0XqyrgQIgey/MIZ8Wczw==}
     engines: {node: ^12 || ^14 || >=16}
     peerDependencies:
-      postcss: ^8.4 || 5.2.18
+      postcss: ^8.4
     dependencies:
       postcss: 8.4.21
       postcss-selector-parser: 6.0.11
@@ -14244,7 +14158,7 @@ packages:
     resolution: {integrity: sha512-LPUbm3ytpYopwQQjqgUH4S3EM/Gb9QsaSPP/5vnoi+oKVy3/mIk2sc0Paqw7RL57GpScm9MdIMUypw2znWiBpg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
-      postcss: ^8.0.0 || 5.2.18
+      postcss: ^8.0.0
     dependencies:
       postcss: 8.4.21
       postcss-value-parser: 4.2.0
@@ -14255,7 +14169,7 @@ packages:
     resolution: {integrity: sha512-flwI+Vgm4SElObFVPpTIT7SU7R3qk2L7PyduMcokiaVKuWv9d/U+Gm/QAd8NDLuykTWTkcrjOeD2Pp1rMeBTGw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
-      postcss: ^8.0.0 || 5.2.18
+      postcss: ^8.0.0
     dependencies:
       postcss: 8.4.21
       postcss-value-parser: 4.2.0
@@ -14272,7 +14186,7 @@ packages:
     resolution: {integrity: sha512-77QESFBwgX4irogGVPgQ5s07vLvFqWr228qZY+w6lW599cRlK/HmnlivnnVUxkjHnCu4J16PDMHcH+e+2HbvTQ==}
     engines: {node: ^12 || ^14 || >= 16}
     peerDependencies:
-      postcss: ^8.3.3 || 5.2.18
+      postcss: ^8.3.3
     dependencies:
       camelcase-css: 2.0.1
       postcss: 8.4.21
@@ -14298,7 +14212,7 @@ packages:
     resolution: {integrity: sha512-6DiM4E7v4coTE4uzA8U//WhtPwyhiim3eyjEMFCnUpzbrkK9wJHgKDT2mR+HbtSrd/NubVaYTOpSpjUl8NQeRg==}
     engines: {node: '>= 10'}
     peerDependencies:
-      postcss: '>=8.0.9 || 5.2.18'
+      postcss: '>=8.0.9'
       ts-node: '>=9.0.0'
     peerDependenciesMeta:
       postcss:
@@ -14325,7 +14239,7 @@ packages:
     resolution: {integrity: sha512-M/dSoIiNDOo8Rk0mUqoj4kpGq91gcxCfb9PoyZVdZ76/AuhxylHDYZblNE8o+EQ9AMSASeMFEKxZf5aU6wlx1Q==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
-      postcss: ^7.0.0 || ^8.0.1 || 5.2.18
+      postcss: ^7.0.0 || ^8.0.1
       webpack: ^4.0.0 || ^5.0.0
     dependencies:
       cosmiconfig: 7.0.1
@@ -14340,7 +14254,7 @@ packages:
     resolution: {integrity: sha512-M/dSoIiNDOo8Rk0mUqoj4kpGq91gcxCfb9PoyZVdZ76/AuhxylHDYZblNE8o+EQ9AMSASeMFEKxZf5aU6wlx1Q==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
-      postcss: ^7.0.0 || ^8.0.1 || 5.2.18
+      postcss: ^7.0.0 || ^8.0.1
       webpack: ^4.0.0 || ^5.0.0
     dependencies:
       cosmiconfig: 7.0.1
@@ -14438,7 +14352,7 @@ packages:
     resolution: {integrity: sha512-bdHleFnP3kZ4NYDhuGlVK+CMrQ/pqUm8bx/oGL93K6gVwiclvX5x0n76fYMKuIGKzlABOy13zsvqjb0f92TEXw==}
     engines: {node: ^10 || ^12 || >= 14}
     peerDependencies:
-      postcss: ^8.1.0 || 5.2.18
+      postcss: ^8.1.0
     dependencies:
       postcss: 8.4.21
 
@@ -14455,7 +14369,7 @@ packages:
     resolution: {integrity: sha512-sT7ihtmGSF9yhm6ggikHdV0hlziDTX7oFoXtuVWeDd3hHObNkcHRo9V3yg7vCAY7cONyxJC/XXCmmiHHcvX7bQ==}
     engines: {node: ^10 || ^12 || >= 14}
     peerDependencies:
-      postcss: ^8.1.0 || 5.2.18
+      postcss: ^8.1.0
     dependencies:
       icss-utils: 5.1.0_postcss@8.4.21
       postcss: 8.4.21
@@ -14473,7 +14387,7 @@ packages:
     resolution: {integrity: sha512-hncihwFA2yPath8oZ15PZqvWGkWf+XUfQgUGamS4LqoP1anQLOsOJw0vr7J7IwLpoY9fatA2qiGUGmuZL0Iqlg==}
     engines: {node: ^10 || ^12 || >= 14}
     peerDependencies:
-      postcss: ^8.1.0 || 5.2.18
+      postcss: ^8.1.0
     dependencies:
       postcss: 8.4.21
       postcss-selector-parser: 6.0.11
@@ -14488,7 +14402,7 @@ packages:
     resolution: {integrity: sha512-RDxHkAiEGI78gS2ofyvCsu7iycRv7oqw5xMWn9iMoR0N/7mf9D50ecQqUo5BZ9Zh2vH4bCUR/ktCqbB9m8vJjQ==}
     engines: {node: ^10 || ^12 || >= 14}
     peerDependencies:
-      postcss: ^8.1.0 || 5.2.18
+      postcss: ^8.1.0
     dependencies:
       icss-utils: 5.1.0_postcss@8.4.21
       postcss: 8.4.21
@@ -14497,7 +14411,7 @@ packages:
     resolution: {integrity: sha512-0DkamqrPcmkBDsLn+vQDIrtkSbNkv5AD/M322ySo9kqFkCIYklym2xEmWkwo+Y3/qZo34tzEPNUw4y7yMCdv5w==}
     engines: {node: '>=12.0'}
     peerDependencies:
-      postcss: ^8.2.14 || 5.2.18
+      postcss: ^8.2.14
     dependencies:
       postcss: 8.4.21
       postcss-selector-parser: 6.0.11
@@ -14623,7 +14537,7 @@ packages:
   /postcss-prefix-selector/1.14.0_postcss@5.2.18:
     resolution: {integrity: sha512-8d5fiBQZWMtGWH/7ewEeo6RnBNyT2kLD5wTIfV2oHYqH4hjiofg/rP5X3SUwnqOINzE4mM/K/UOAiNrIaKzd4w==}
     peerDependencies:
-      postcss: 7.x || 8.x || 5.2.18
+      postcss: 7.x || 8.x
     dependencies:
       postcss: 5.2.18
     dev: false
@@ -14766,7 +14680,7 @@ packages:
     resolution: {integrity: sha512-FUzyxfI5l2tKmXdYc6VTu3TWZsInayEKPbiyW+P6vmmIrrb4I6CGX0BFoewgYHLK+oIL5FECEK02REYRpBvUCw==}
     engines: {node: '>=10'}
     peerDependencies:
-      postcss: ^8.0.0 || 5.2.18
+      postcss: ^8.0.0
     dependencies:
       make-dir: 3.1.0
       mime: 2.5.2
@@ -15374,9 +15288,6 @@ packages:
     resolution: {integrity: sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==}
     peerDependencies:
       react: ^16.14.0
-    peerDependenciesMeta:
-      react:
-        optional: true
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
@@ -15389,9 +15300,6 @@ packages:
     resolution: {integrity: sha512-GURDaYzoLbW8pMGXwYPDBIv6nqei4kK7LPRZ9q9HCZF54wqXz/dnylBp/kfE9XmekBhHvLDdcYeyIwSrvtOiWg==}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
     dependencies:
       '@babel/runtime': 7.18.9
       is-dom: 1.1.0
@@ -16815,7 +16723,7 @@ packages:
     engines: {node: '>=12.13.0'}
     hasBin: true
     peerDependencies:
-      postcss: ^8.0.9 || 5.2.18
+      postcss: ^8.0.9
     dependencies:
       arg: 5.0.2
       chokidar: 3.5.3
@@ -17149,6 +17057,22 @@ packages:
     engines: {node: '>=6.10'}
     dev: true
 
+  /ts-loader/8.3.0_e7hrjdrs22zc4syxbltzlwluhe:
+    resolution: {integrity: sha512-MgGly4I6cStsJy27ViE32UoqxPTN9Xly4anxxVyaIWR+9BGxboV4EyJBGfR3RePV7Ksjj3rHmPZJeIt+7o4Vag==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      typescript: '*'
+      webpack: '*'
+    dependencies:
+      chalk: 4.1.2
+      enhanced-resolve: 4.5.0
+      loader-utils: 2.0.2
+      micromatch: 4.0.5
+      semver: 7.3.7
+      typescript: 4.2.4
+      webpack: 4.46.0
+    dev: true
+
   /ts-loader/8.3.0_evijigonbo4skk2vlqtwtdqibu:
     resolution: {integrity: sha512-MgGly4I6cStsJy27ViE32UoqxPTN9Xly4anxxVyaIWR+9BGxboV4EyJBGfR3RePV7Ksjj3rHmPZJeIt+7o4Vag==}
     engines: {node: '>=10.0.0'}
@@ -17312,6 +17236,12 @@ packages:
 
   /typedarray/0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
+
+  /typescript/4.2.4:
+    resolution: {integrity: sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
 
   /typescript/4.9.5:
     resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
@@ -17799,7 +17729,7 @@ packages:
   /vue-jest/3.0.7_i3g5ct7fh5wtolwqklzapd5wym:
     resolution: {integrity: sha512-PIOxFM+wsBMry26ZpfBvUQ/DGH2hvp5khDQ1n51g3bN0TwFwTy4J85XVfxTRMukqHji/GnAoGUnlZ5Ao73K62w==}
     peerDependencies:
-      babel-core: ^6.25.0 || ^7.0.0-0 || 7.0.0-bridge.0
+      babel-core: ^6.25.0 || ^7.0.0-0
       vue: ^2.x
       vue-template-compiler: ^2.x
     dependencies:

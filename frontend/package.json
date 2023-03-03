@@ -116,7 +116,7 @@
     "@nuxtjs/eslint-module": "^3.1.0",
     "@nuxtjs/storybook": "^4.3.2",
     "@nuxtjs/style-resources": "^1.0.0",
-    "@pinia/testing": "^0.0.12",
+    "@pinia/testing": "^0.0.15",
     "@playwright/test": "1.29.1",
     "@testing-library/dom": "^8.13.0",
     "@testing-library/jest-dom": "^5.16.1",
