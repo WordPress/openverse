@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-03-03T03:50:13+00:00\n"
+"POT-Creation-Date: 2023-03-03T15:13:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1229,7 +1229,7 @@ msgid "Loading..."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAllResultsGrid/VAllResultsGrid.vue:103
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:104
 msgctxt "browse-page.fetching-error"
 msgid "Error fetching ###type###:"
 msgstr ""
@@ -1259,7 +1259,7 @@ msgctxt "browse-page.search-form.image"
 msgid "images"
 msgstr ""
 
-#: src/components/VAllResultsGrid/VAllResultsGrid.vue:102
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:103
 msgctxt "browse-page.search-form.audio"
 msgid "audio"
 msgstr ""
@@ -1732,12 +1732,12 @@ msgid "Get this audio"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAllResultsGrid/VAllResultsGrid.vue:17
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:17
 msgctxt "all-results.snackbar.text"
 msgid "Press ###spacebar### to play or pause the track."
 msgstr ""
 
-#: src/components/VAllResultsGrid/VAllResultsGrid.vue:19
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:19
 msgctxt "all-results.snackbar.spacebar"
 msgid "Spacebar"
 msgstr ""
