@@ -16,14 +16,6 @@
   "docker": {
     "labels": ["🐳 tech: docker"]
   },
-  "ignorePaths": [
-    ".github/workflows/draft_release.yml",
-    ".github/workflows/label_new_pr.yml",
-    ".github/workflows/new_isssues.yml",
-    ".github/workflows/new_prs.yml",
-    ".github/workflows/pr_label_check.yml",
-    ".github/workflows/pr_ping.yml",
-    "package.json"
-  ],
+  "ignorePaths": ["package.json"],
   "includeForks": false
 }
