@@ -900,7 +900,10 @@ jobs:
   deploy-frontend:
     name: Deploy staging frontend
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && needs.get-changes.outputs.frontend == 'true'
+    if: |
+      !failure() && !cancelled() &&
+      github.event_name == 'push' && needs.get-changes.outputs.frontend == 'true' &&
+      (needs.nuxt-playwright-e2e.result == 'success' && needs.nuxt-playwright-vr.result == 'success' && needs.storybook-playwright.result == 'success')
     needs:
       - get-image-tag
       - get-changes
