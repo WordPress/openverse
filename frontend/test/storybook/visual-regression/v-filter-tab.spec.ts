@@ -23,7 +23,7 @@ test.describe("VFilterTab", () => {
      * If the tab is focused, it will always be selected (it's not manually activated)
      */
     test(`focused,${appliedFilterCount} filters`, async ({ page }) => {
-      await gotoWithArgs(page, { appliedFilterCount })
+      await gotoWithArgs(page, { appliedFilterCount, isSelected: true })
       await focusFiltersTab(page)
 
       expect(await page.locator(wrapper).screenshot()).toMatchSnapshot(
