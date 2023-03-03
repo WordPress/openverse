@@ -11,7 +11,6 @@ jest.mock("axios", () => ({
   isAxiosError: jest.fn((obj) => "response" in obj),
 }))
 jest.mock("@nuxtjs/composition-api", () => ({
-  ...jest.requireActual("@nuxtjs/composition-api"),
   ssrRef: (v) => jest.fn(v),
 }))
 jest.mock("~/utils/console", () => ({ warn: jest.fn(), log: jest.fn() }))
