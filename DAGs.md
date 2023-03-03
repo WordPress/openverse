@@ -574,23 +574,241 @@ is undocumented.
 
 ## `wikimedia_commons_workflow`
 
-Content Provider: Wikimedia Commons
+**Content Provider:** Wikimedia Commons
 
-ETL Process: Use the API to identify all CC-licensed images.
+**ETL Process:** Use the API to identify all CC-licensed images.
 
-Output: TSV file containing the image, the respective meta-data.
+**Output:** TSV file containing the image, the respective meta-data.
 
-Notes: https://commons.wikimedia.org/wiki/API:Main_page No rate limit specified.
+### Notes
+
+Rate limit of no more than 200 requests/second, and we are required to set a
+unique User-Agent field
+([docs](https://www.mediawiki.org/wiki/Wikimedia_REST_API#Terms_and_conditions)).
+
+Wikimedia Commons uses an implementation of the
+[MediaWiki API](https://www.mediawiki.org/wiki/API:Main_page). This API is
+incredibly complex in the level of configuration you can provide when querying,
+and as such it can also be quite abstruse. The most straightforward docs can be
+found on the
+[Wikimedia website directly](https://commons.wikimedia.org/w/api.php?action=help&modules=query),
+as these show all the parameters available. Specifications on queries can also
+be found on the [query page](https://www.mediawiki.org/wiki/API:Query).
+
+Different kinds of queries can be made against the API using "modules", we use
+the [allimages module](https://www.mediawiki.org/wiki/API:Allimages), which lets
+us search for images in a given time range (see `"generator": "allimages"` in
+the query params).
+
+Many queries will return results in batches, with the API supplying a "continue"
+token. This token is used on subsequent calls to tell the API where to start the
+next set of results from; it functions as a page offset
+([docs](https://www.mediawiki.org/wiki/API:Query#Continuing_queries)).
+
+We can also specify what kinds of information we want for the query. Wikimedia
+has a massive amount of data on it, so it only returns what we ask for. The
+fields that are returned are defined by the
+[properties](https://www.mediawiki.org/wiki/API:Properties) or "props"
+parameter. Sub-properties can also be defined, with the parameter name of the
+sub-property determined by an abbreviation of the higher-level property. For
+instance, if our property is "imageinfo" and we want to set sub-property values,
+we would define those in "iiprops".
+
+The data within a property is paginated as well, Wikimedia will handle iteration
+through the property sub-pages using the "continue" token
+([see here for more details](https://www.mediawiki.org/wiki/API:Properties#Additional_notes)).
+
+Depending on the kind of property data that's being returned, it's possible for
+the API to iterate extensively on a specific media item. What Wikimedia is
+iterating over in these cases can be gleaned from the "continue" token. Those
+tokens take the form of, as I understand it,
+"<primary-iterator>||<next-iteration-prop>", paired with an "<XX>continue" value
+for the property being iterated over. For example, if we're were iterating over
+a set of image properties, the token might look like:
+
+```
+{
+    "iicontinue": "The_Railway_Chronicle_1844.pdf|20221209222801",
+    "gaicontinue": "20221209222614|NTUL-0527100_英國產業革命史略.pdf",
+    "continue": "gaicontinue||globalusage",
+}
+```
+
+In this case, we're iterating over the "global all images" generator
+(gaicontinue) as our primary iterator, with the "image properties" (iicontinue)
+as the secondary continue iterator. The "globalusage" property would be the next
+property to iterate over. It's also possible for multiple sub-properties to be
+iterated over simultaneously, in which case the "continue" token would not have
+a secondary value (e.g. `gaicontinue||`).
+
+In most runs, the "continue" key will be `gaicontinue||` after the first
+request, which means that we have more than one batch to iterate over for the
+primary iterator. Some days will have fewer images than the batch limit but
+still have multiple batches of content on the secondary iterator, which means
+the "continue" key may not have a primary iteration component (e.g.
+`||globalusage`). This token can also be seen when the first request has more
+data in the secondary iterator, before we've processed any data on the primary
+iterator.
+
+Occasionally, the ingester will come across a piece of media that has many
+results for the property it's iterating over. An example of this can include an
+item being on many pages, this it would have many "global usage" results. In
+order to process the entire batch, we have to iterate over _all_ of the returned
+results; Wikimedia does not provide a mechanism to "skip to the end" of a batch.
+On numerous occasions, this iteration has been so extensive that the pull media
+task has hit the task's timeout. To avoid this, we limit the number of
+iterations we make for parsing through a sub-property's data. If we hit the
+limit, we re-issue the original query _without_ requesting properties that
+returned large amounts of data. Unfortunately, this means that we will **not**
+have that property's data for these items the second time around (e.g.
+popularity data if we needed to skip global usage). In the case of popularity,
+especially since the problem with these images is that they're so popular, we
+want to preserve that information where possible! So we cache the popularity
+data from previous iterations and use it in subsequent ones if we come across
+the same item again.
+
+Below are some specific references to various properties, with examples for
+cases where they might exceed the limit. Technically, it's feasible for almost
+any property to exceed the limit, but these are the ones that we've seen in
+practice.
+
+#### `imageinfo`
+
+[Docs](https://commons.wikimedia.org/w/api.php?action=help&modules=query%2Bimageinfo)
+
+[Example where metadata has hundreds of data points](https://commons.wikimedia.org/wiki/File:The_Railway_Chronicle_1844.pdf#metadata)
+(see "Metadata" table, which may need to be expanded).
+
+For these requests, we can remove the `metadata` property from the `iiprops`
+parameter to avoid this issue on subsequent iterations.
+
+#### `globalusage`
+
+[Docs](https://commons.wikimedia.org/w/api.php?action=help&modules=query%2Bglobalusage)
+
+[Example where an image is used on almost every wiki](https://commons.wikimedia.org/w/index.php?curid=4298234).
+
+For these requests, we can remove the `globalusage` property from the `prop`
+parameter entirely and eschew the popularity data for these items.
 
 ## `wikimedia_reingestion_workflow`
 
-Content Provider: Wikimedia Commons
+**Content Provider:** Wikimedia Commons
 
-ETL Process: Use the API to identify all CC-licensed images.
+**ETL Process:** Use the API to identify all CC-licensed images.
 
-Output: TSV file containing the image, the respective meta-data.
+**Output:** TSV file containing the image, the respective meta-data.
 
-Notes: https://commons.wikimedia.org/wiki/API:Main_page No rate limit specified.
+### Notes
+
+Rate limit of no more than 200 requests/second, and we are required to set a
+unique User-Agent field
+([docs](https://www.mediawiki.org/wiki/Wikimedia_REST_API#Terms_and_conditions)).
+
+Wikimedia Commons uses an implementation of the
+[MediaWiki API](https://www.mediawiki.org/wiki/API:Main_page). This API is
+incredibly complex in the level of configuration you can provide when querying,
+and as such it can also be quite abstruse. The most straightforward docs can be
+found on the
+[Wikimedia website directly](https://commons.wikimedia.org/w/api.php?action=help&modules=query),
+as these show all the parameters available. Specifications on queries can also
+be found on the [query page](https://www.mediawiki.org/wiki/API:Query).
+
+Different kinds of queries can be made against the API using "modules", we use
+the [allimages module](https://www.mediawiki.org/wiki/API:Allimages), which lets
+us search for images in a given time range (see `"generator": "allimages"` in
+the query params).
+
+Many queries will return results in batches, with the API supplying a "continue"
+token. This token is used on subsequent calls to tell the API where to start the
+next set of results from; it functions as a page offset
+([docs](https://www.mediawiki.org/wiki/API:Query#Continuing_queries)).
+
+We can also specify what kinds of information we want for the query. Wikimedia
+has a massive amount of data on it, so it only returns what we ask for. The
+fields that are returned are defined by the
+[properties](https://www.mediawiki.org/wiki/API:Properties) or "props"
+parameter. Sub-properties can also be defined, with the parameter name of the
+sub-property determined by an abbreviation of the higher-level property. For
+instance, if our property is "imageinfo" and we want to set sub-property values,
+we would define those in "iiprops".
+
+The data within a property is paginated as well, Wikimedia will handle iteration
+through the property sub-pages using the "continue" token
+([see here for more details](https://www.mediawiki.org/wiki/API:Properties#Additional_notes)).
+
+Depending on the kind of property data that's being returned, it's possible for
+the API to iterate extensively on a specific media item. What Wikimedia is
+iterating over in these cases can be gleaned from the "continue" token. Those
+tokens take the form of, as I understand it,
+"<primary-iterator>||<next-iteration-prop>", paired with an "<XX>continue" value
+for the property being iterated over. For example, if we're were iterating over
+a set of image properties, the token might look like:
+
+```
+{
+    "iicontinue": "The_Railway_Chronicle_1844.pdf|20221209222801",
+    "gaicontinue": "20221209222614|NTUL-0527100_英國產業革命史略.pdf",
+    "continue": "gaicontinue||globalusage",
+}
+```
+
+In this case, we're iterating over the "global all images" generator
+(gaicontinue) as our primary iterator, with the "image properties" (iicontinue)
+as the secondary continue iterator. The "globalusage" property would be the next
+property to iterate over. It's also possible for multiple sub-properties to be
+iterated over simultaneously, in which case the "continue" token would not have
+a secondary value (e.g. `gaicontinue||`).
+
+In most runs, the "continue" key will be `gaicontinue||` after the first
+request, which means that we have more than one batch to iterate over for the
+primary iterator. Some days will have fewer images than the batch limit but
+still have multiple batches of content on the secondary iterator, which means
+the "continue" key may not have a primary iteration component (e.g.
+`||globalusage`). This token can also be seen when the first request has more
+data in the secondary iterator, before we've processed any data on the primary
+iterator.
+
+Occasionally, the ingester will come across a piece of media that has many
+results for the property it's iterating over. An example of this can include an
+item being on many pages, this it would have many "global usage" results. In
+order to process the entire batch, we have to iterate over _all_ of the returned
+results; Wikimedia does not provide a mechanism to "skip to the end" of a batch.
+On numerous occasions, this iteration has been so extensive that the pull media
+task has hit the task's timeout. To avoid this, we limit the number of
+iterations we make for parsing through a sub-property's data. If we hit the
+limit, we re-issue the original query _without_ requesting properties that
+returned large amounts of data. Unfortunately, this means that we will **not**
+have that property's data for these items the second time around (e.g.
+popularity data if we needed to skip global usage). In the case of popularity,
+especially since the problem with these images is that they're so popular, we
+want to preserve that information where possible! So we cache the popularity
+data from previous iterations and use it in subsequent ones if we come across
+the same item again.
+
+Below are some specific references to various properties, with examples for
+cases where they might exceed the limit. Technically, it's feasible for almost
+any property to exceed the limit, but these are the ones that we've seen in
+practice.
+
+#### `imageinfo`
+
+[Docs](https://commons.wikimedia.org/w/api.php?action=help&modules=query%2Bimageinfo)
+
+[Example where metadata has hundreds of data points](https://commons.wikimedia.org/wiki/File:The_Railway_Chronicle_1844.pdf#metadata)
+(see "Metadata" table, which may need to be expanded).
+
+For these requests, we can remove the `metadata` property from the `iiprops`
+parameter to avoid this issue on subsequent iterations.
+
+#### `globalusage`
+
+[Docs](https://commons.wikimedia.org/w/api.php?action=help&modules=query%2Bglobalusage)
+
+[Example where an image is used on almost every wiki](https://commons.wikimedia.org/w/index.php?curid=4298234).
+
+For these requests, we can remove the `globalusage` property from the `prop`
+parameter entirely and eschew the popularity data for these items.
 
 ## `wordpress_workflow`
 
