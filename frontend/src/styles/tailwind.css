@@ -144,6 +144,12 @@ Time                - 11px - xs semibold (default leading-[120%])
    * The color of the ring is set by a plugin defined in `tailwind.config.js`.
    */
 
+  [class*="focus-slim-offset"] {
+    @apply focus-visible:outline-none; /* UA styles: none */
+    @apply focus-visible:ring; /* outer-stroke: box-shadow */
+    @apply ring-offset-1;
+  }
+
   [class*="focus-slim-tx"] {
     @apply focus-visible:outline-none; /* UA styles: none */
     @apply focus-visible:ring; /* outer-stroke: box-shadow */

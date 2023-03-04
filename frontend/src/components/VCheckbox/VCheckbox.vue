@@ -4,24 +4,54 @@
     class="relative flex text-sm leading-5"
     :class="labelClasses"
   >
-    <!--
-    The checkbox focus style is a slight variation on the `focus-slim-tx` style.
-    Because it becomes filled when checked, it also needs the
-    `checked:focus-visible:border-white` class.
-    -->
-    <input
-      :id="id"
-      type="checkbox"
-      class="checkbox h-5 w-5 flex-shrink-0 appearance-none rounded-sm border border-dark-charcoal bg-white me-3 focus-slim-tx checked:bg-dark-charcoal checked:focus-visible:border-white disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10 checked:disabled:border-dark-charcoal-40 checked:disabled:bg-dark-charcoal-40"
-      v-bind="inputAttrs"
-      @change="onChange"
-    />
-    <VIcon
-      v-show="localCheckedState"
-      class="absolute transform text-white"
-      :icon-path="checkIcon"
-      :size="5"
-    />
+    <div class="relative">
+      <!--
+      The checkbox focus style is a slight variation on the `focus-slim-tx` style.
+      Because it becomes filled when checked, it also needs the
+      `checked:focus-visible:border-white` class.
+      -->
+      <input
+        :id="id"
+        type="checkbox"
+        class="flex-shrink-0 appearance-none border border-dark-charcoal bg-white transition-colors duration-100 me-3 checked:bg-dark-charcoal disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10 checked:disabled:border-dark-charcoal-40 checked:disabled:bg-dark-charcoal-40"
+        :class="
+          isSwitch
+            ? ['h-4.5', 'w-9', 'rounded-full', 'focus-slim-offset']
+            : [
+                'h-5',
+                'w-5',
+                'rounded-sm',
+                'focus-slim-tx',
+                'checked:focus-visible:border-white',
+              ]
+        "
+        v-bind="inputAttrs"
+        @click="onChange"
+      />
+
+      <!-- Knob, for when `ifSwitch` is `true` -->
+      <div
+        v-if="isSwitch"
+        class="absolute top-0.75 left-0.75 h-3 w-3 rounded-full transition-transform duration-100"
+        :class="
+          localCheckedState
+            ? ['bg-white', 'translate-x-[1.125rem]']
+            : disabled
+            ? ['bg-dark-charcoal-40']
+            : ['bg-dark-charcoal']
+        "
+      />
+
+      <!-- Checkmark, for when `ifSwitch` is `false` -->
+      <VIcon
+        v-else
+        v-show="localCheckedState"
+        class="absolute inset-0 transform text-white"
+        :icon-path="checkIcon"
+        :size="5"
+      />
+    </div>
+
     <!--  @slot The checkbox label  --><slot />
   </label>
 </template>
@@ -100,6 +130,13 @@ export default defineComponent({
      * Sets disabled property of the input and changes label opacity if set to true.
      */
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * whether to make the checkbox appear like a switch
+     */
+    isSwitch: {
       type: Boolean,
       default: false,
     },

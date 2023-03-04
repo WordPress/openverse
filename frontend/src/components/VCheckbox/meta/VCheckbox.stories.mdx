@@ -42,6 +42,8 @@ export const Template = (args) => ({
 
 <Description of={VCheckbox} />
 
+<ArgsTable of={VCheckbox} />
+
 ## Default checkbox
 
 <Canvas>
@@ -58,7 +60,25 @@ export const Template = (args) => ({
   </Story>
 </Canvas>
 
-<ArgsTable of={VCheckbox} />
+## Switch
+
+The checkbox can alternatively be rendered as a switch, when the choice is
+between an on/off decision.
+
+<Canvas>
+  <Story
+    name="Switch"
+    args={{
+      id: "default",
+      name: "storybook",
+      value: "codeIsPoetry",
+      isSwitch: true,
+    }}
+    argTypes={checkboxArgTypes}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
 
 export const LicenseCheckboxTemplate = (args) => ({
   template: `<fieldset>

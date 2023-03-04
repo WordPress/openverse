@@ -6,7 +6,7 @@ const { Z_INDICES } = require("./src/constants/z-indices")
 
 module.exports = {
   content: [
-    "src/**/*.{vue,js,jsx,ts,tsx,mdx}",
+    "./src/**/*.{vue,js,jsx,ts,tsx,mdx}",
     "./nuxt.config.js",
     "./tailwind.safelist.txt",
   ],
@@ -73,14 +73,17 @@ module.exports = {
       // Indexed by multiples of baseline (~ `0.25rem`)
       0: "0",
       0.5: "0.125rem",
+      0.75: "0.1875rem",
       1: "0.25rem",
       2: "0.50rem",
       3: "0.75rem",
       4: "1.00rem",
+      4.5: "1.125rem",
       5: "1.25rem",
       6: "1.50rem",
       7: "1.75rem",
       8: "2.00rem",
+      9: "2.25rem",
       10: "2.50rem",
       12: "3.00rem",
       14: "3.50rem",
@@ -234,9 +237,12 @@ module.exports = {
     plugin(({ matchUtilities, theme }) => {
       matchUtilities(
         Object.fromEntries(
-          ["focus-slim-tx", "focus-slim-filled", "focus-bold-filled"].map(
-            (item) => [item, (value) => ({ "--tw-ring-color": value })]
-          )
+          [
+            "focus-slim-offset",
+            "focus-slim-tx",
+            "focus-slim-filled",
+            "focus-bold-filled",
+          ].map((item) => [item, (value) => ({ "--tw-ring-color": value })])
         ),
         { values: { ...theme("colors"), DEFAULT: theme("colors.pink") } }
       )
