@@ -10,7 +10,7 @@
     <div
       v-for="(group, groupIndex) in featureData.groups"
       :key="groupIndex"
-      class="not-prose"
+      class="not-prose border-b border-dark-charcoal-20 py-6 last-of-type:border-b-0"
     >
       <h2 class="label-bold mb-2">
         {{ $t(`pref-page.groups.${group.title}.title`) }}
@@ -37,12 +37,10 @@
       </ul>
     </div>
 
-    <hr />
-
     <div
       v-for="isSwitchable in [false, true]"
       :key="isSwitchable"
-      class="not-prose my-6 py-4"
+      class="not-prose border-b border-dark-charcoal-20 py-6 last-of-type:border-b-0"
     >
       <h2 class="label-bold mb-2">
         {{ $t(`pref-page.${isSwitchable ? "" : "non-"}switchable.title`) }}
