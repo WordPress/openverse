@@ -29,6 +29,7 @@
             :class="idx >= imageCount ? 'hidden' : 'block'"
             :style="{ '--delay': `${idx * 0.05}s` }"
             :href="image.url"
+            @click="handleClick(image.identifier)"
           >
             <img
               :height="dimens"
@@ -49,6 +50,7 @@ import { computed, defineComponent, PropType, ref } from "vue"
 import { useContext, useRouter } from "@nuxtjs/composition-api"
 
 import { useReducedMotion } from "~/composables/use-media-query"
+import { useAnalytics } from "~/composables/use-analytics"
 import useResizeObserver from "~/composables/use-resize-observer"
 
 import VLink from "~/components/VLink.vue"
@@ -101,14 +103,18 @@ export default defineComponent({
     const el = ref<HTMLElement | null>(null) // template ref
     const { dimens: gridDimens } = useResizeObserver(el)
 
+    const imageSet = computed(() =>
+      props.set === "random"
+        ? imageInfo.sets[Math.floor(Math.random() * imageInfo.sets.length)]
+        : imageInfo.sets.find((item) => (item.key = props.set)) ??
+          imageInfo.sets[0]
+    )
     const imageList = computed(() => {
-      const imageSet =
-        props.set === "random"
-          ? imageInfo.sets[Math.floor(Math.random() * imageInfo.sets.length)]
-          : imageInfo.sets.find((item) => (item.key = props.set))
-      return imageSet?.images.map((image, idx) => ({
+      return imageSet.value.images.map((image, idx) => ({
         ...image,
-        src: require(`~/assets/homepage_images/${imageSet.key}/${idx + 1}.png`),
+        src: require(`~/assets/homepage_images/${imageSet.value.key}/${
+          idx + 1
+        }.png`),
         url: router.resolve(
           app.localePath({
             name: "image-id",
@@ -118,6 +124,14 @@ export default defineComponent({
       }))
     })
     const imageCount = computed(() => columnCount.value * rowCount)
+
+    const { sendCustomEvent } = useAnalytics()
+    const handleClick = (identifier: string) => {
+      sendCustomEvent("CLICK_HOME_GALLERY_IMAGE", {
+        set: imageSet.value.key,
+        identifier,
+      })
+    }
 
     return {
       el,
@@ -130,6 +144,8 @@ export default defineComponent({
       imageList,
 
       prefersReducedMotion,
+
+      handleClick,
     }
   },
 })

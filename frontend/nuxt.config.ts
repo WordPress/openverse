@@ -199,7 +199,6 @@ const config: NuxtConfig = {
     "@nuxtjs/svg",
     "@nuxtjs/eslint-module",
     "@pinia/nuxt",
-    "vue-plausible",
   ],
   modules: [
     "portal-vue/nuxt",
@@ -207,6 +206,7 @@ const config: NuxtConfig = {
     "@nuxtjs/redirect-module",
     "@nuxtjs/sentry",
     "cookie-universal-nuxt",
+    "vue-plausible",
     "~/modules/prometheus.ts",
     // Sitemap must be last to ensure that even routes created by other modules are added
     "@nuxtjs/sitemap",
@@ -328,6 +328,9 @@ const config: NuxtConfig = {
         viewports: VIEWPORTS,
       },
     },
+  },
+  plausible: {
+    trackLocalhost: !isProd,
   },
   publicRuntimeConfig: {
     plausible: {
