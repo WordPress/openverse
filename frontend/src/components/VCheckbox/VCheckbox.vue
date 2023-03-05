@@ -40,6 +40,7 @@
             ? ['bg-dark-charcoal-40']
             : ['bg-dark-charcoal']
         "
+        aria-hidden="true"
       />
 
       <!-- Checkmark, for when `ifSwitch` is `false` -->
