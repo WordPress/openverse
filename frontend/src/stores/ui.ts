@@ -34,6 +34,14 @@ export interface UiState {
    */
   isDesktopLayout: boolean
   /**
+   * the width of the browser viewport
+   */
+  deviceWidth: number
+  /**
+   * the height of the browser viewport
+   */
+  deviceHeight: number
+  /**
    * the screen's max-width breakpoint.
    */
   breakpoint: Breakpoint
@@ -52,6 +60,8 @@ export const useUiStore = defineStore("ui", {
     innerFilterVisible: false,
     isFilterDismissed: false,
     isDesktopLayout: false,
+    deviceWidth: -1,
+    deviceHeight: -1,
     breakpoint: "sm",
     isMobileUa: true,
     dismissedBanners: [],
@@ -136,7 +146,11 @@ export const useUiStore = defineStore("ui", {
      * @param cookies - mapping of UI state parameters and their states.
      */
     initFromCookies(cookies: OpenverseCookieState) {
-      this.updateBreakpoint(cookies.uiBreakpoint ?? this.breakpoint)
+      this.updateBreakpoint(
+        cookies.uiDeviceWidth ?? this.deviceWidth,
+        cookies.uiDeviceHeight ?? this.deviceHeight,
+        cookies.uiBreakpoint ?? this.breakpoint
+      )
       this.isFilterDismissed = cookies.uiIsFilterDismissed ?? false
       this.isMobileUa = cookies.uiIsMobileUa ?? false
       this.innerFilterVisible = this.isDesktopLayout
@@ -156,6 +170,8 @@ export const useUiStore = defineStore("ui", {
           opts,
         },
         { name: "uiIsFilterDismissed", value: this.isFilterDismissed, opts },
+        { name: "uiDeviceWidth", value: this.deviceWidth, opts },
+        { name: "uiDeviceHeight", value: this.deviceHeight, opts },
         { name: "uiBreakpoint", value: this.breakpoint, opts },
         { name: "uiIsMobileUa", value: this.isMobileUa, opts },
         { name: "uiDismissedBanners", value: this.dismissedBanners, opts },
@@ -163,17 +179,35 @@ export const useUiStore = defineStore("ui", {
     },
 
     /**
-     * If the breakpoint is different from the state, updates the state, and saves it into app cookies.
+     * If the width, height or breakpoint is different from the state, updates the state, and saves it into app cookies.
      *
+     * @param deviceWidth - the updated device width
+     * @param deviceHeight - the updated device height
      * @param breakpoint - the `min-width` tailwind breakpoint for the screen width.
      */
-    updateBreakpoint(breakpoint: Breakpoint) {
-      if (this.breakpoint === breakpoint) {
+    updateBreakpoint(
+      deviceWidth: number,
+      deviceHeight: number,
+      breakpoint: Breakpoint
+    ) {
+      if (
+        this.deviceWidth === deviceWidth &&
+        this.deviceHeight === deviceHeight &&
+        this.breakpoint === breakpoint
+      ) {
         return
       }
 
+      this.deviceWidth = deviceWidth
+      this.deviceHeight = deviceHeight
       this.breakpoint = breakpoint
 
+      this.$nuxt.$cookies.set("uiDeviceWidth", this.deviceWidth, {
+        ...cookieOptions,
+      })
+      this.$nuxt.$cookies.set("uiDeviceHeight", this.deviceHeight, {
+        ...cookieOptions,
+      })
       this.$nuxt.$cookies.set("uiBreakpoint", this.breakpoint, {
         ...cookieOptions,
       })

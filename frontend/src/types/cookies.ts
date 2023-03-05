@@ -31,6 +31,14 @@ export interface OpenverseCookieState {
    */
   uiBreakpoint?: Breakpoint
   /**
+   * the width of the browser viewport
+   */
+  uiDeviceWidth?: number
+  /**
+   * the height of the browser viewport
+   */
+  uiDeviceHeight?: number
+  /**
    * Whether the request user agent is mobile or not.
    */
   uiIsMobileUa?: boolean
