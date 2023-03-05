@@ -13,7 +13,7 @@
       <input
         :id="id"
         type="checkbox"
-        class="flex-shrink-0 appearance-none border border-dark-charcoal bg-white transition-colors duration-100 me-3 checked:bg-dark-charcoal disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10 checked:disabled:border-dark-charcoal-40 checked:disabled:bg-dark-charcoal-40"
+        class="block appearance-none border border-dark-charcoal bg-white transition-colors duration-100 me-3 checked:bg-dark-charcoal disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10 checked:disabled:border-dark-charcoal-40 checked:disabled:bg-dark-charcoal-40"
         :class="
           isSwitch
             ? ['h-4.5', 'w-9', 'rounded-full', 'focus-slim-offset']
