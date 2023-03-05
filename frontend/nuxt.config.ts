@@ -199,6 +199,7 @@ const config: NuxtConfig = {
     "@nuxtjs/svg",
     "@nuxtjs/eslint-module",
     "@pinia/nuxt",
+    "vue-plausible",
   ],
   modules: [
     "portal-vue/nuxt",
@@ -326,6 +327,12 @@ const config: NuxtConfig = {
       viewport: {
         viewports: VIEWPORTS,
       },
+    },
+  },
+  publicRuntimeConfig: {
+    plausible: {
+      domain: process.env.PLAUSIBLE_DOMAIN ?? "localhost",
+      apiHost: process.env.PLAUSIBLE_API_HOST ?? "http://localhost:50288",
     },
   },
 }
