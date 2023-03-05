@@ -2,25 +2,67 @@
   <VContentPage>
     <h1>{{ $t("pref-page.title") }}</h1>
 
-    <div v-for="isSwitchable in [false, true]" :key="isSwitchable">
-      <h2>
+    <!-- TODO: Extract this to preferences modal. -->
+    <!--
+    This area only lists switchable flags because if the flag is not switchable,
+    it doesn't count as a user preference.
+    -->
+    <div
+      v-for="(group, groupIndex) in featureData.groups"
+      :key="groupIndex"
+      class="not-prose"
+    >
+      <h2 class="label-bold mb-2">
+        {{ $t(`pref-page.groups.${group.title}.title`) }}
+      </h2>
+      <p class="label-regular mb-4">
+        {{ $t(`pref-page.groups.${group.title}.desc`) }}
+      </p>
+      <ul>
+        <li
+          v-for="(name, featureIndex) in group.features"
+          :key="featureIndex"
+          class="mb-4 last:mb-0"
+        >
+          <VCheckbox
+            v-if="getFlagStatus(featureData.features[name]) === SWITCHABLE"
+            :id="name"
+            class="flex-row items-center"
+            :checked="featureState(name) === ON"
+            is-switch
+            @change="handleChange"
+            >{{ $t(`pref-page.features.${name}`) }}</VCheckbox
+          >
+        </li>
+      </ul>
+    </div>
+
+    <hr />
+
+    <div
+      v-for="isSwitchable in [false, true]"
+      :key="isSwitchable"
+      class="not-prose my-6 py-4"
+    >
+      <h2 class="label-bold mb-2">
         {{ $t(`pref-page.${isSwitchable ? "" : "non-"}switchable.title`) }}
       </h2>
-      <p>
+      <p class="label-regular mb-4">
         {{ $t(`pref-page.${isSwitchable ? "" : "non-"}switchable.desc`) }}
       </p>
-      <ul class="!ps-0">
+      <ul>
         <template v-for="(feature, name) in flags">
           <li
             v-if="(getFlagStatus(feature) === SWITCHABLE) === isSwitchable"
             :key="name"
-            class="flex flex-row items-center"
+            class="mb-4 flex flex-row items-center last:mb-0"
           >
             <VCheckbox
               :id="name"
               class="flex-row items-center"
               :checked="featureState(name) === ON"
               :disabled="!isSwitchable"
+              is-switch
               @change="handleChange"
             >
               <div>
@@ -76,6 +118,8 @@
 import { computed, defineComponent } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
 
+import featureData from "~~/feat/feature-flags.json"
+
 import { useFeatureFlagStore, getFlagStatus } from "~/stores/feature-flag"
 import { SWITCHABLE, ON, OFF, FEATURE_STATES } from "~/constants/feature-flag"
 
@@ -122,6 +166,8 @@ export default defineComponent({
 
       handleChange,
       getFlagStatus,
+
+      featureData,
     }
   },
 })

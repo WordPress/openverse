@@ -15,18 +15,18 @@
       },
       "description": "Toggle the new header, including recent searches."
     },
-    "feat_disabled": {
-      "status": "disabled",
-      "description": "Will always be disabled"
-    },
-    "feat_enabled": {
-      "status": "enabled",
-      "description": "Will always be enabled"
-    },
-    "feat_switchable": {
-      "status": "switchable",
-      "description": "Can be switched between on and off",
-      "defaultState": "on"
+    "analytics": {
+      "status": {
+        "staging": "switchable",
+        "production": "disabled"
+      },
+      "description": "Record custom events and page views."
     }
-  }
+  },
+  "groups": [
+    {
+      "title": "analytics",
+      "features": ["analytics"]
+    }
+  ]
 }

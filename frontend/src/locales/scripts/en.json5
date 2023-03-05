@@ -680,6 +680,15 @@
   "skip-to-content": "Skip to content",
   "pref-page": {
     title: "Preferences",
+    groups: {
+      analytics: {
+        title: "Analytics",
+        desc: "Participate in anonymous analytics to improve user experience.",
+      },
+    },
+    features: {
+      analytics: "Record custom events and page views.",
+    },
     "non-switchable": {
       title: "Non-switchable features",
       desc: "You cannot modify the status of these features.",
