@@ -610,6 +610,7 @@ jobs:
     steps:
       - uses: peter-evans/create-or-update-comment@v2
         with:
+          token: ${{ secrets.ACCESS_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             **Playwright failure test results**
@@ -760,6 +761,7 @@ jobs:
       - uses: peter-evans/create-or-update-comment@v2
         if: steps.preview-comment.outputs.comment-id != 0
         with:
+          token: ${{ secrets.ACCESS_TOKEN }}
           comment-id: ${{ steps.preview-comment.outputs.comment-id }}
           edit-mode: replace
           body: |
@@ -770,6 +772,7 @@ jobs:
       - uses: peter-evans/create-or-update-comment@v2
         if: steps.preview-comment.outputs.comment-id == 0
         with:
+          token: ${{ secrets.ACCESS_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             **Full-stack documentation**: _Updating_
@@ -827,6 +830,7 @@ jobs:
 
       - uses: peter-evans/create-or-update-comment@v2
         with:
+          token: ${{ secrets.ACCESS_TOKEN }}
           comment-id: ${{ steps.final-preview-comment.outputs.comment-id }}
           edit-mode: replace
           body: |
