@@ -522,11 +522,11 @@
         },
         "elasticsearch-dsl": {
             "hashes": [
-                "sha256:046ea10820b94c075081b528b4526c5bc776bda4226d702f269a5f203232064b",
-                "sha256:c4a7b93882918a413b63bed54018a1685d7410ffd8facbc860ee7fd57f214a6d"
+                "sha256:07ee9c87dc28cc3cae2daa19401e1e18a172174ad9e5ca67938f752e3902a1d5",
+                "sha256:97f79239a252be7c4cce554c29e64695d7ef6a4828372316a5e5ff815e7a7498"
             ],
             "index": "pypi",
-            "version": "==7.4.0"
+            "version": "==7.4.1"
         },
         "frozenlist": {
             "hashes": [
