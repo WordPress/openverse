@@ -194,7 +194,8 @@ describe("Ui Store", () => {
         isDesktopLayout: initialState[0],
         isMobileUa: initialState[1],
       })
-      uiStore.updateBreakpoint(breakpoint)
+      // height and width can be any number
+      uiStore.updateBreakpoint(0, 0, breakpoint)
       const actualOutput = {
         isDesktopLayout: uiStore.isDesktopLayout,
         isMobileUa: uiStore.isMobileUa,
