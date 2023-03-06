@@ -53,16 +53,15 @@ precommit:
     #!/usr/bin/env bash
     set -eo pipefail
     if [ -z "$SKIP_PRE_COMMIT" ] && [ ! -f ./pre-commit.pyz ]; then
-      echo "Downloading pre-commit"
-      URL=$(
-        curl \
-          --fail \
-          --silent `# silence error raised by grep closing the pipe early` \
-          ${GITHUB_TOKEN:+ --header "Authorization: Bearer ${GITHUB_TOKEN}"} \
-          https://api.github.com/repos/pre-commit/pre-commit/releases/latest |
-          grep -o 'https://.*\.pyz' -m 1
-      )
-      echo "Download URL: $URL"
+      echo "Getting latest release"
+      curl \
+        ${GITHUB_TOKEN:+ --header "Authorization: Bearer ${GITHUB_TOKEN}"} \
+        --output latest.json \
+        https://api.github.com/repos/pre-commit/pre-commit/releases/latest
+      cat latest.json
+      URL=$(grep -o 'https://.*\.pyz' -m 1 latest.json)
+      rm latest.json
+      echo "Downloading pre-commit from $URL"
       curl \
         --fail \
         --location `# follow redirects, else cURL outputs a blank file` \
