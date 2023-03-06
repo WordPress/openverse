@@ -76,39 +76,6 @@
 
     <h2>{{ $t("pref-page.store-state") }}</h2>
     <pre><code>{{ flags }}</code></pre>
-
-    <h2>{{ $t("pref-page.content-filtering") }}</h2>
-    <ul>
-      <template v-for="(_, featName) in flags">
-        <template v-for="featState in FEATURE_STATES">
-          <i18n
-            v-if="featureState(featName) === featState"
-            :key="`${featName}-${featState}`"
-            path="pref-page.explanation"
-            tag="li"
-          >
-            <template #feat-name
-              ><code>{{ featName }}</code></template
-            >
-            <template #feat-state
-              ><code>{{ featState }}</code></template
-            >
-          </i18n>
-        </template>
-      </template>
-      <!--<i18n
-        v-if="featureState('feat_nonexistent') === ON"
-        path="pref-page.explanation"
-        tag="li"
-      >
-        <template #feat-name
-          ><code>{{ $t('flag-status.nonexistent') }}</code></template
-        >
-        <template #feat-state
-          ><code>{{ $t(`flag-status.${ON}`) }}</code></template
-        >
-      </i18n>-->
-    </ul>
   </VContentPage>
 </template>
 
