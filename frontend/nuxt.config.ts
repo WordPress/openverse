@@ -170,7 +170,7 @@ const config: NuxtConfig = {
       : undefined,
   },
   router: {
-    middleware: "middleware",
+    middleware: ["middleware", "page-views"],
   },
   components: [
     { path: "~/components", extensions: ["vue"], pathPrefix: false },
