@@ -189,6 +189,7 @@ class INaturalistDataIngester(ProviderDataIngester):
     ):
         # if it was never run, assume the data is new
         if last_success is None:
+            logger.info("No last success date, assuming iNaturalist data is new.")
             return
         s3 = S3Hook(aws_conn_id=aws_conn_id)
         s3_client = s3.get_client_type()
@@ -198,11 +199,22 @@ class INaturalistDataIngester(ProviderDataIngester):
             last_modified = s3_client.head_object(
                 Bucket="inaturalist-open-data", Key=key
             )["LastModified"]
+            logger.info(
+                f"{key} was last modified on s3 on "
+                f"{last_modified.strftime('%Y-%m-%d %H:%M:%S')}."
+            )
             # if any file has been updated, let's pull them all
             if last_success < last_modified:
+                logger.info(
+                    f"{key} was updated on s3 since the last dag run on "
+                    f"{last_success.to_datetime_string()}."
+                )
                 return
         # If no files have been updated, skip the DAG
-        raise AirflowSkipException("Nothing new to ingest")
+        raise AirflowSkipException(
+            "Nothing new to ingest since last successful dag run on "
+            f"{last_success.to_datetime_string()}."
+        )
 
     @staticmethod
     def load_catalog_of_life_names(task: PythonOperator, remove_api_files: bool):
@@ -286,6 +298,8 @@ class INaturalistDataIngester(ProviderDataIngester):
             check_for_file_updates = PythonOperator(
                 task_id="check_for_file_updates",
                 python_callable=INaturalistDataIngester.compare_update_dates,
+                # Pass in the start date of the prior successful dag run
+                # https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html
                 op_kwargs={
                     "last_success": "{{ prev_start_date_success }}",
                     "s3_keys": [
