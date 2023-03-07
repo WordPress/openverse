@@ -4,7 +4,6 @@
   "private": true,
   "version": "2.2.1",
   "scripts": {
-    "prepare": "pnpm i18n:get-translations --en-only && cp -r test/locales/* src/locales",
     "predev": "pnpm install && pnpm i18n:no-get",
     "dev": "pnpm dev:only",
     "dev:only": "nuxt --hostname 0.0.0.0",
@@ -43,7 +42,7 @@
     "lint": "prettier --check .; eslint --ext .js,.vue,.ts --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 .",
     "lint:fix": "prettier --write --loglevel=warn .; pnpm lint --fix",
     "i18n": "pnpm i18n:create-locales-list && pnpm i18n:get-translations && pnpm i18n:update-locales",
-    "i18n:watch-en": "pnpm i18n:get-translations --en-only --watch",
+    "i18n:en": "pnpm i18n:get-translations --en-only",
     "i18n:copy-test-locales": "cp -r test/locales/* src/locales/",
     "i18n:no-get": "pnpm i18n:create-locales-list && pnpm i18n:update-locales",
     "i18n:create-locales-list": "node src/locales/scripts/create-wp-locale-list",
