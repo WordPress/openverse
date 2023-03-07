@@ -1,5 +1,7 @@
 <template>
+  <!-- Form action is a fallback for when JavaScript is disabled. -->
   <form
+    action="/search"
     class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-white sm:h-16"
     @submit.prevent="handleSearch"
   >
