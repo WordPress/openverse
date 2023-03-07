@@ -1,0 +1,67 @@
+\# RFC: Analytics backend and visualisation service
+
+This RFC deals with the backend of analytics, about how we record events sent
+from the frontend and what we do with those events.
+
+## Reviewers
+
+- [ ] TBD
+- [ ] TBD
+
+## Rationale
+
+As discussed in the [previous RFC](20221006-implementation_plan_frontend.md),
+the frontend will emit analytic events for a number of interactions such as
+clicking on buttons and navigating between pages. These events will be sent to
+some endpoint where they will be recorded and then this recorded data can be
+used to make decisions, draw visualisations etc.
+
+There are numerous approaches to how the backend could be built, but they fall
+primarily into two categories.
+
+- Bespoke in-house implementation
+- Off-the-shelf analytics framework
+
+Considering the size of the team, needs of the project and volume of other
+projects in the roadmap, an off-the-shelf solution makes more sense compared to
+building something, even if rudimentary, from scratch. Such solutions are
+numerous, so we must apply the following criteria to narrow down our list.
+
+- Open source
+- GDPR compliant
+- Privacy respecting
+- Simple (subjective)
+
+This leaves us with only two main contenders, [Plausible](https://plausible.io/)
+and [Umami](https://umami.is/). They're basically identical (just look at their
+landing pages!) but have a few small differences.
+
+| Criteria          | Umami           | Plausible              |
+| ----------------- | --------------- | ---------------------- |
+| URL               | [umami.is][1]   | [plausible.io][2]      |
+| UI                | Clean           | Little dated           |
+| Language          | JS              | Elixir                 |
+| License           | MIT             | AGPL                   |
+| GH stars          | 14.8k           | 14.1k                  |
+| Integration       | [nuxt-umami][3] | [vue-plausible][4]     |
+| Integration stars | 41              | 112                    |
+| npm package       | No              | [plausible-tracker][5] |
+
+[1]: https://umami.is/
+[2]: https://plausible.io/
+[3]: https://github.com/ijkml/nuxt-umami/tree/main
+[4]: https://github.com/moritzsternemann/vue-plausible
+[5]: https://github.com/plausible/plausible-tracker
+
+Practically there is no reason to prefer one over the other, and it is very easy
+for us to switch between them, if needed, thanks to our composable abstracting
+the framework.
+
+Considering this, we can go ahead with Plausible considering that they offer an
+npm package that can be bundled with the app, whereas Umami needs a `<script>`
+tag. There was some talk of it being used in other WordPress endeavours, so it
+makes more sense to use it.
+
+One more reason to use Plausible is that I've already done some experimental
+work with it, and it might save us the effort if that existing work were to be
+used.
