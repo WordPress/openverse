@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-03-07T15:00:49+00:00\n"
+"POT-Creation-Date: 2023-03-07T15:19:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -33,9 +33,9 @@ msgctxt "hero.description"
 msgid "An extensive library of free stock photos, images, and audio, available for free use."
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:46
-#: src/components/VHeader/VSearchBar/VSearchBar.vue:11
-#: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:18
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:48
+#: src/components/VHeader/VSearchBar/VSearchBar.vue:13
+#: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:20
 msgctxt "hero.search.placeholder"
 msgid "Search for content"
 msgstr ""
@@ -181,7 +181,7 @@ msgctxt "header.see-results"
 msgid "See results"
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:35
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:37
 msgctxt "header.back-button"
 msgid "Go back"
 msgstr ""
@@ -1285,7 +1285,7 @@ msgid "Search"
 msgstr ""
 
 #: src/components/VHeader/VHeaderDesktop.vue:22
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:71
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:73
 msgctxt "browse-page.search-form.clear"
 msgid "Clear"
 msgstr ""
@@ -1944,15 +1944,15 @@ msgstr ""
 
 #: src/components/VHeader/VSearchBar/VSearchButton.vue:3
 #: src/components/VHeader/VSearchBar/VSearchButton.vue:20
-#: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:31
+#: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:33
 msgctxt "search.search"
 msgid "Search"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:51
-#: src/components/VHeader/VSearchBar/VSearchBar.vue:14
-#: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:21
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:53
+#: src/components/VHeader/VSearchBar/VSearchBar.vue:16
+#: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:23
 msgctxt "search.search-bar-label"
 msgid "Search for content in ###openverse###"
 msgstr ""
