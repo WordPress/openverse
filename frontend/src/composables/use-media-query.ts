@@ -1,13 +1,11 @@
 /* this implementation is from https://github.com/vueuse/vueuse/packages/core/useMediaQuery/
  which, in turn, is ported from https://github.com/logaretm/vue-use-web by Abdelrahman Awad */
-import { computed, ref, watchEffect } from "@nuxtjs/composition-api"
+import { computed, ref, watchEffect } from "vue"
 
-import { resolveUnref } from "@vueuse/core"
+import { resolveUnref, tryOnScopeDispose, useSupported } from "@vueuse/core"
 
 import { SCREEN_SIZES, Breakpoint } from "~/constants/screens"
 import { defaultWindow } from "~/constants/window"
-import { tryOnScopeDispose } from "~/utils/try-on-scope-dispose"
-import { useSupported } from "~/composables/use-supported"
 
 import type { MaybeComputedRef } from "@vueuse/core"
 

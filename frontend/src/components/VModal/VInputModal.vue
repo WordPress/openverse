@@ -27,7 +27,7 @@ import {
   toRef,
   ComponentInstance,
   SetupContext,
-} from "@nuxtjs/composition-api"
+} from "vue"
 
 import { Portal as VTeleport } from "portal-vue"
 

@@ -13,13 +13,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  PropType,
-  provide,
-  ref,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType, provide, ref } from "vue"
 
 import { tabsContextKey } from "~/types/tabs"
 import type { TabsState, TabVariant } from "~/types/tabs"

@@ -12,12 +12,8 @@
 </template>
 
 <script lang="ts">
-import {
-  useRoute,
-  watch,
-  computed,
-  defineComponent,
-} from "@nuxtjs/composition-api"
+import { watch, computed, defineComponent } from "vue"
+import { useRoute } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import { useActiveAudio } from "~/composables/use-active-audio"

@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@nuxtjs/composition-api"
+import { defineComponent } from "vue"
 
 import OpenverseLogo from "~/assets/logo.svg?inline"
 import OpenverseBrand from "~/assets/brand.svg?inline"

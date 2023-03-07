@@ -73,7 +73,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, useContext } from "@nuxtjs/composition-api"
+import { computed, defineComponent } from "vue"
+import { useContext } from "@nuxtjs/composition-api"
 
 import { useFeatureFlagStore, getFlagStatus } from "~/stores/feature-flag"
 import { SWITCHABLE, ON, OFF, FEATURE_STATES } from "~/constants/feature-flag"

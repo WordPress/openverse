@@ -1,4 +1,4 @@
-import { nextTick, watch, Ref } from "@nuxtjs/composition-api"
+import { nextTick, watch, Ref } from "vue"
 
 import { tryOnScopeDispose, unrefElement } from "@vueuse/core"
 

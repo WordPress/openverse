@@ -15,7 +15,7 @@
   </VButton>
 </template>
 <script>
-import { defineComponent } from "@nuxtjs/composition-api"
+import { defineComponent } from "vue"
 
 import VLogoLoader from "~/components/VLogoLoader/VLogoLoader.vue"
 import VButton from "~/components/VButton.vue"

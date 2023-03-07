@@ -1,6 +1,6 @@
-import { ref, onMounted, onBeforeUnmount } from "@nuxtjs/composition-api"
+import { ref, onMounted, onBeforeUnmount } from "vue"
 
-import type { Ref } from "@nuxtjs/composition-api"
+import type { Ref } from "vue"
 
 interface Options {
   initialWidth?: number

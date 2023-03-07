@@ -1,5 +1,4 @@
-import Vue from "vue"
-import { ref } from "@nuxtjs/composition-api"
+import Vue, { ref } from "vue"
 import { render } from "@testing-library/vue"
 
 import { useWindowScroll } from "~/composables/use-window-scroll"

@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@nuxtjs/composition-api"
+import { defineComponent } from "vue"
 
 import VNotificationBanner from "~/components/VBanner/VNotificationBanner.vue"
 import VLink from "~/components/VLink.vue"

@@ -39,13 +39,9 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  ref,
-  useContext,
-  useRouter,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, ref } from "vue"
+
+import { useContext, useRouter } from "@nuxtjs/composition-api"
 import { kebab } from "case"
 
 import { watchDebounced } from "@vueuse/core"

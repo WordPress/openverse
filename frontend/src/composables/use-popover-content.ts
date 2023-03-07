@@ -1,4 +1,4 @@
-import { computed, ref } from "@nuxtjs/composition-api"
+import { computed, ref } from "vue"
 
 import { PopoverContentProps, usePopper } from "~/composables/use-popper"
 
@@ -6,7 +6,7 @@ import { useDialogContent } from "~/composables/use-dialog-content"
 
 import type { CSSProperties } from "@vue/runtime-dom"
 
-import type { Ref, ToRefs, SetupContext } from "@nuxtjs/composition-api"
+import type { Ref, ToRefs, SetupContext } from "vue"
 
 type Props = {
   popoverRef: Ref<HTMLElement | null>

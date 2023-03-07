@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "@nuxtjs/composition-api"
+import { computed, defineComponent } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import { defineEvent } from "~/types/emits"
@@ -73,7 +73,7 @@ export default defineComponent({
         : i18n.t("header.filter-button.simple")
     )
     const lgMaxLabel = computed(() =>
-      filtersAreApplied ? filterCount.value : ""
+      filtersAreApplied.value ? filterCount.value : ""
     )
 
     return {

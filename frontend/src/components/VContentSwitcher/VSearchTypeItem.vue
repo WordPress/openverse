@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType } from "vue"
 
 import { BETA, contentStatus, SearchType } from "~/constants/media"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"

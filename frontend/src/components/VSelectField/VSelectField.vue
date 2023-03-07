@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from "@nuxtjs/composition-api"
+import { defineComponent, computed, PropType } from "vue"
 
 import { defineEvent } from "~/types/emits"
 import { ProperlyExtractPropTypes } from "~/types/prop-extraction"

@@ -44,15 +44,8 @@
   </div>
 </template>
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  provide,
-  ref,
-  useContext,
-  watch,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, onMounted, provide, ref, watch } from "vue"
+import { useContext } from "@nuxtjs/composition-api"
 import { PortalTarget as VTeleportTarget } from "portal-vue"
 
 import { useWindowScroll } from "~/composables/use-window-scroll"

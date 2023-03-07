@@ -1,4 +1,4 @@
-import type { DeepReadonly } from "@nuxtjs/composition-api"
+import type { DeepReadonly } from "vue"
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze#examples

@@ -41,7 +41,7 @@ RUN pipenv install --system --deploy --dev
 # This target assumes that the build host has run `manage.py collectstatic`
 # `just api/collectstatic` is provided as a convenient alias for running it the expected way
 
-FROM nginx:1.23.2-alpine as nginx
+FROM nginx:1.23.3-alpine as nginx
 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 

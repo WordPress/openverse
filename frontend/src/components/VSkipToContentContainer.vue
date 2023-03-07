@@ -1,5 +1,5 @@
 <template>
-  <Component :is="as" ref="containerNode">
+  <Component :is="as" id="main-content" ref="containerNode" tabindex="-1">
     <slot />
     <VTeleport to="skip-to-content">
       <VButton
@@ -13,10 +13,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from "@nuxtjs/composition-api"
+import { defineComponent, PropType, ref } from "vue"
 import { Portal as VTeleport } from "portal-vue"
-
-import { ensureFocus, getFirstTabbableIn } from "~/utils/reakit-utils/focus"
 
 import VButton from "~/components/VButton.vue"
 
@@ -45,10 +43,8 @@ export default defineComponent({
     const containerNode = ref()
 
     const skipToContent = () => {
-      if (!(containerNode.value || props.initialFocusNode)) return
-      const tabbable =
-        props.initialFocusNode || getFirstTabbableIn(containerNode.value, true)
-      ensureFocus(tabbable)
+      if (!(containerNode.value || props.initialFocusNode || !window)) return
+      window.document.getElementById("main-content")?.focus()
     }
 
     return { containerNode, skipToContent }

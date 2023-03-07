@@ -37,7 +37,7 @@ import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
 
-import type { Ref } from "@nuxtjs/composition-api"
+import type { Ref } from "vue"
 
 import type { Dictionary } from "vue-router/types/router"
 

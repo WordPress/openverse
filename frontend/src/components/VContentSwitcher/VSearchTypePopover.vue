@@ -24,12 +24,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  PropType,
-  ref,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType, ref } from "vue"
 
 import useSearchType from "~/composables/use-search-type"
 

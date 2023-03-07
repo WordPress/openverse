@@ -20,7 +20,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, useRoute } from "@nuxtjs/composition-api"
+import { computed } from "vue"
+import { defineComponent, useRoute } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import type { AudioDetail } from "~/types/media"

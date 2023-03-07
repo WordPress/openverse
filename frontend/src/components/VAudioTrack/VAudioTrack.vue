@@ -50,10 +50,9 @@ import {
   ref,
   watch,
   onUnmounted,
-  useContext,
-  useRoute,
   PropType,
-} from "@nuxtjs/composition-api"
+} from "vue"
+import { useContext, useRoute } from "@nuxtjs/composition-api"
 
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"

@@ -13,12 +13,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "@nuxtjs/composition-api"
+import { defineComponent, PropType } from "vue"
 
 import type { ImageDetail } from "~/types/media"
 import type { FetchState } from "~/types/fetch-state"
 
-import VImageGrid from "~/components/VImageGrid/VImageGrid.vue"
+import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 import VLoadingIcon from "~/components/LoadingIcon.vue"
 
 export default defineComponent({

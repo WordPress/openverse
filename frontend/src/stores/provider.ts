@@ -1,6 +1,6 @@
 import { capital } from "case"
 import { defineStore } from "pinia"
-import { Ref, ssrRef } from "@nuxtjs/composition-api"
+import { ssrRef } from "@nuxtjs/composition-api"
 import axios from "axios"
 
 import { env } from "~/utils/env"
@@ -12,8 +12,11 @@ import {
 } from "~/constants/media"
 import { warn } from "~/utils/console"
 import { initProviderServices } from "~/data/media-provider-service"
+
 import type { MediaProvider } from "~/types/media-provider"
 import type { FetchState } from "~/types/fetch-state"
+
+import type { Ref } from "vue"
 
 export interface ProviderState {
   providers: {

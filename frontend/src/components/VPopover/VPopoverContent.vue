@@ -28,7 +28,7 @@ import {
   provide,
   InjectionKey,
   PropType,
-} from "@nuxtjs/composition-api"
+} from "vue"
 
 import { usePopoverContent } from "~/composables/use-popover-content"
 import { defineEvent } from "~/types/emits"

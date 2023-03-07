@@ -37,7 +37,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: /
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     labels:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
