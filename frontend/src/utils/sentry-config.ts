@@ -16,7 +16,7 @@ export const sentryConfig: ModuleConfiguration = {
   lazy: true,
   clientConfig: {
     // Only allow errors that come from openverse.org or a subdomain
-    allowUrls: ["https://openverse.org", /^https?:\/\/(.*)\.openverse\.org/],
+    allowUrls: [/^https?:\/\/((.*)\.)?openverse\.org/],
   },
   config: {
     ignoreErrors: [
