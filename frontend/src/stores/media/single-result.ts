@@ -9,6 +9,9 @@ import { initServices } from "~/stores/media/services"
 import { useMediaStore } from "~/stores/media/index"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useProviderStore } from "~/stores/provider"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { hash, rand as prng } from "~/utils/prng"
+import { log } from "~/utils/console"
 
 export type MediaItemState =
   | {
@@ -115,7 +118,18 @@ export const useSingleResultStore = defineStore("single-result", {
         this._updateFetchState("start")
         const accessToken = this.$nuxt.$openverseApiToken
         const service = initServices[type](accessToken)
-        this.mediaItem = this._addProviderName(await service.getMediaDetail(id))
+        const item = this._addProviderName(await service.getMediaDetail(id))
+
+        // Fake ~50% of results as mature. This leaves actual mature results unchanged.
+        const featureFlagStore = useFeatureFlagStore()
+        if (featureFlagStore.isOn("fake_sensitive")) {
+          if (prng(hash(item.id))() > 0.5) {
+            item.mature = true
+            log("Fake mature", item.id)
+          }
+        }
+
+        this.mediaItem = item
         this.mediaType = type
 
         this._updateFetchState("end")
