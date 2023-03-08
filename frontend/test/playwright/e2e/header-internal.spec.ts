@@ -84,7 +84,9 @@ test.describe("Header internal", () => {
       const homeUrl = page.url()
       await clickMenuButton(page)
       await page.getByRole("link", { name: t("navigation.about") }).click()
-      await page.getByRole("link", { name: t("header.home-link") }).click()
+      // "Openverse Home" is hardcoded because our translation helper
+      // doesn't support named interpolation.
+      await page.getByRole("link", { name: "Openverse Home" }).click()
       expect(page.url()).toBe(homeUrl)
     })
   })
