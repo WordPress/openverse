@@ -84,3 +84,28 @@ provision all the following services:
 If we move to our own instance sometime in the future, we can
 [export data](https://plausible.io/docs/export-stats) and migrate that to our
 instance.
+
+## Pricing
+
+[Plausible pricing](https://plausible.io/#pricing) is based on number of events
+/ month. Each page view and each custom event recorded counts towards the total
+quota. The annual plan is 10x the monthly price i.e. 2 months free.
+
+There is no cap on
+
+- data retention, so we can export it much even after lots of usage.
+- number of users, so the entire team can be onboarded to see the dashboards.
+
+Considering we have ~15 pages and ~20 custom event types, for a person that
+looks through the entire site, we can estimate ~35 API hits. It can get pricey
+quite fast. Even if we go with the cloud solution to get up and running quickly,
+switching to self-hosted seems like the more economical option in the long term.
+
+> We're operating a sustainable project funded solely by the fees that our
+> subscribers pay us. And we donate 5% of our revenue.
+>
+> \- Plausible
+
+On the other hand, if we're being generous, this can be thought of as investment
+towards an open-source project that has doesn't have any other source of
+funding.
