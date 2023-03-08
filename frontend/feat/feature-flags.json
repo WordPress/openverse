@@ -1,5 +1,13 @@
 {
   "features": {
+    "fake_sensitive": {
+      "status": {
+        "staging": "switchable",
+        "production": "disabled"
+      },
+      "description": "Mark 50% of results as mature to test content safety.",
+      "defaultState": "off"
+    },
     "external_sources": {
       "status": {
         "staging": "switchable",
