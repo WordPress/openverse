@@ -96,7 +96,6 @@ import closeIcon from "~/assets/icons/close-small.svg"
 export default defineComponent({
   name: "VContentSettingsModalContent",
   components: {
-    VFilterTab,
     VIcon,
     VModalContent,
     VButton,
