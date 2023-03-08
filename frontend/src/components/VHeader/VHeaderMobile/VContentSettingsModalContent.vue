@@ -20,9 +20,9 @@
           v-if="showFilters"
           id="content-settings"
           size="medium"
-          class="label-regular gap-x-2 me-4"
+          class="gap-x-2 me-4"
           ><VIcon :icon-path="searchType.icon" />
-          <h2>{{ $t("search-type.heading") }}</h2></VTab
+          <h2 class="label-regular">{{ $t("search-type.heading") }}</h2></VTab
         >
         <h2
           v-else
@@ -80,6 +80,7 @@ import { useI18n } from "~/composables/use-i18n"
 import useSearchType from "~/composables/use-search-type"
 
 import VButton from "~/components/VButton.vue"
+import VFilterTab from "~/components/VHeader/VHeaderMobile/VFilterTab.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
@@ -98,6 +99,7 @@ export default defineComponent({
     VIcon,
     VModalContent,
     VButton,
+    VFilterTab,
     VIconButton,
     VSearchGridFilter,
     VSearchTypes,
