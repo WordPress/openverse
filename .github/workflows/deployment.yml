@@ -25,7 +25,7 @@ on:
 # Only allow a single deploy to happen at a time
 # If you need to stop an in-progress deployment to force # another for the same
 # environment, you'll need to manually cancel it
-concurrency: ${{ github.workflow }}-${{ inputs.environment }}
+concurrency: ${{ github.workflow }}-${{ github.event.inputs.environment }}
 
 jobs:
   deploy:
@@ -54,9 +54,40 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - uses: ./.github/actions/${{ inputs.environment }}-${{ inputs.service }}-deploy
+      # Cannot dynamically set "uses" due to security implications:
+      # https://github.com/orgs/community/discussions/25446
+
+      - uses: ./.github/actions/staging-nuxt-deploy
+        if: ${{ github.event.inputs.environment == 'staging' && github.event.inputs.service == 'nuxt' }}
         with:
-          tag: ${{ inputs.tag }}
+          tag: ${{ github.event.inputs.tag }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+
+      - uses: ./.github/actions/production-nuxt-deploy
+        if: ${{ github.event.inputs.environment == 'production' && github.event.inputs.service == 'nuxt' }}
+        with:
+          tag: ${{ github.event.inputs.tag }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+
+      - uses: ./.github/actions/staging-api-deploy
+        if: ${{ github.event.inputs.environment == 'staging' && github.event.inputs.service == 'api' }}
+        with:
+          tag: ${{ github.event.inputs.tag }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+
+      - uses: ./.github/actions/production-api-deploy
+        if: ${{ github.event.inputs.environment == 'production' && github.event.inputs.service == 'api' }}
+        with:
+          tag: ${{ github.event.inputs.tag }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
