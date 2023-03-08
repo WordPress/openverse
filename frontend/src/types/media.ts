@@ -44,6 +44,8 @@ export interface Media {
 
   tags: Tag[]
   fields_matched?: string[]
+
+  mature: boolean
 }
 
 export interface ImageDetail extends Media {

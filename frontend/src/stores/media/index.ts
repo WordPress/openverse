@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 
 import axios from "axios"
 
-import { warn } from "~/utils/console"
+import { log, warn } from "~/utils/console"
 import { hash, rand as prng } from "~/utils/prng"
 import prepareSearchQueryParams from "~/utils/prepare-search-query-params"
 import type { DetailFromMediaType, Media } from "~/types/media"
@@ -19,6 +19,7 @@ import { initServices } from "~/stores/media/services"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 export type MediaStoreResult = {
   count: number
@@ -426,6 +427,18 @@ export const useMediaStore = defineStore("media", {
           page = undefined
         }
         this._updateFetchState(mediaType, "end", errorMessage)
+
+        // Fake ~50% of results as mature. This leaves actual mature results unchanged.
+        const featureFlagStore = useFeatureFlagStore()
+        if (featureFlagStore.isOn("fake_sensitive")) {
+          Object.values(data.results).forEach((item) => {
+            if (prng(hash(item.id))() > 0.5) {
+              item.mature = true
+              log("Fake mature", item.id)
+            }
+          })
+        }
+
         this.setMedia({
           mediaType,
           media: data.results,
