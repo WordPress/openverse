@@ -10,7 +10,7 @@ the Openverse project.
 This workflow move issues with linked PRs from the "Backlog" and "To do" columns
 to the "In progress" column.
 
-**Cron:** [at every 15th minute](https://crontab.guru/#*/15_*_*_*_*)  
+**Cron:** [at every 15th minute](https://crontab.guru/#*/15_*_*_*_*)
 **Dispatch:** enabled
 
 ### PR project automation
@@ -27,7 +27,7 @@ This workflow ensures that all repos associated with the project have the
 minimum set of consistent labels. It creates missing labels, and updates the
 color and description where they do not match the standard values.
 
-**Cron:** [at 00:00](https://crontab.guru/#0_0_*_*_*)  
+**Cron:** [at 00:00](https://crontab.guru/#0_0_*_*_*)
 **Dispatch:** enabled
 
 ### Weekly updates
@@ -35,7 +35,7 @@ color and description where they do not match the standard values.
 This workflow creates and publishes a post on the Make Openverse site once a
 week, outlining the closed issues and merged PRs of the preceding week.
 
-**Cron:** [at 00:01 on Monday](https://crontab.guru/#1_0_*_*_1)  
+**Cron:** [at 00:01 on Monday](https://crontab.guru/#1_0_*_*_1)
 **Dispatch:** enabled
 
 ### New discussion notification
@@ -52,19 +52,22 @@ This workflow ensures that the files specified in [`sync.yml`](sync.yml) are
 synchronised across all Openverse repos. Treating this repo as the source of
 truth, it creates PRs to resolve any differences.
 
-**Cron:** [at 00:00](https://crontab.guru/#0_0_*_*_*)  
-**Push:** Branch `main`  
-**Dispatch:** enabled  
+**Cron:** [at 00:00](https://crontab.guru/#0_0_*_*_*)
+**Push:** Branch `main`
+**Dispatch:** enabled
 **Config:** `.github/sync.yml`
 
 ## Synced workflows
 
 ### New issue automation
 
-This workflow adds issues to the "Backlog" column in the Openverse project as
+This workflow adds issues to the "Backlog" column in the [(old) Openverse project](https://github.com/orgs/WordPress/projects/3/) as
 soon as they are created.
+This workflow also adds issues to the "Backlog" column in the
+ [Openverse project](https://github.com/orgs/WordPress/projects/75/) as soon as they are created. It also adds a priority field
+value to the project item based on the priority label applied to the issue.
 
-**Issue:** opened  
+**Issue:** opened
 **Dispatch:** disabled
 
 ### New PR automation
@@ -72,7 +75,7 @@ soon as they are created.
 This workflow adds PRs to the "In progress" or "Needs review" columns in the
 Openverse PRs project, based on whether they are marked as draft or ready.
 
-**PR:** opened, converted_to_draft, ready_for_review  
+**PR:** opened, converted_to_draft, ready_for_review
 **Dispatch:** disabled
 
 ### PR label check
@@ -80,7 +83,7 @@ Openverse PRs project, based on whether they are marked as draft or ready.
 This workflow ensures that all PRs have one label from each of the groups
 'aspect', 'goal' and 'priority' applied on them.
 
-**PR:** opened, edited, labeled, unlabeled, synchronize  
+**PR:** opened, edited, labeled, unlabeled, synchronize
 **Dispatch:** disabled
 
 ### New PR notification
@@ -101,5 +104,5 @@ These workflows run only in the downstream synced repos and not in `openverse`.
 This workflow updates the draft release message when new commits are added to
 `main` so that there is a ready-to-go changelog when publishing a new release.
 
-**Push:** Branch `main`  
+**Push:** Branch `main`
 **Config:** `.github/release_drafter.yml`
