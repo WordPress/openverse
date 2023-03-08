@@ -26,7 +26,7 @@ const port = 49153
 const host = "https://api.openverse.engineering"
 
 const urlPatterns = {
-  search: /\/(?<mediaType>images|audio|video|model-3d)\/*\?(?<query>[\w&=]+)/,
+  search: /\/(?<mediaType>images|audio|video|model-3d)\/*\?(?<query>[\w&=+]+)/,
   thumb:
     /\/(?<mediaType>images|audio|video|model-3d)\/(?<uuid>[\w-]{32,})\/thumb/,
   related:

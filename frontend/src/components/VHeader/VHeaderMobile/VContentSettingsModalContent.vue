@@ -20,10 +20,9 @@
           v-if="showFilters"
           id="content-settings"
           size="medium"
-          class="gap-x-2 me-4"
-          ><VIcon :icon-path="searchType.icon" />{{
-            $t("search-type.heading")
-          }}</VTab
+          class="label-regular gap-x-2 me-4"
+          ><VIcon :icon-path="searchType.icon" />
+          <h2>{{ $t("search-type.heading") }}</h2></VTab
         >
         <h2
           v-else
@@ -32,14 +31,10 @@
           <VIcon :icon-path="searchType.icon" />
           {{ $t("search-type.heading") }}
         </h2>
-        <VTab
+        <VFilterTab
           v-if="showFilters"
-          id="filters"
-          size="medium"
-          class="label-regular gap-x-2"
-        >
-          <VIcon :icon-path="filtersIcon" />{{ $t("filters.title") }}</VTab
-        >
+          :applied-filter-count="appliedFilterCount"
+        />
         <VIconButton
           class="self-center ms-auto hover:bg-dark-charcoal hover:text-white"
           :icon-props="{ iconPath: closeIcon }"
@@ -96,7 +91,6 @@ import VTabPanel from "~/components/VTabs/VTabPanel.vue"
 import VTabs from "~/components/VTabs/VTabs.vue"
 
 import closeIcon from "~/assets/icons/close-small.svg"
-import filtersIcon from "~/assets/icons/filter.svg"
 
 export default defineComponent({
   name: "VContentSettingsModalContent",
@@ -152,7 +146,9 @@ export default defineComponent({
     const isClearButtonDisabled = computed(
       () => !searchStore.isAnyFilterApplied
     )
-    const appliedFilterCount = computed(() => searchStore.appliedFilterCount)
+    const appliedFilterCount = computed<number>(
+      () => searchStore.appliedFilterCount
+    )
     const clearFiltersLabel = computed(() =>
       searchStore.isAnyFilterApplied
         ? i18n.t("filter-list.clear-numbered", {
@@ -169,7 +165,6 @@ export default defineComponent({
 
     return {
       closeIcon,
-      filtersIcon,
       searchType,
 
       selectedTab,

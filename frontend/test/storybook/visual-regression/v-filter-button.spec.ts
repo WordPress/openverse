@@ -9,42 +9,67 @@ const gotoWithArgs = makeGotoWithArgs(
 
 test.describe.configure({ mode: "parallel" })
 
+const wrapper = "#wrapper"
+
 test.describe("VFilterButton", () => {
-  breakpoints.describeLg(({ expectSnapshot }) => {
-    test("no filters applied", async ({ page }) => {
-      await gotoWithArgs(page, { isMinMd: true })
-      await expectSnapshot("filter-button-at-rest", page)
-    })
-
-    test("no filters pressed", async ({ page }) => {
-      await gotoWithArgs(page, { pressed: true })
-      await expectSnapshot("filter-button-pressed", page)
-    })
-
-    test("filters applied", async ({ page }) => {
-      await gotoWithArgs(page, { appliedFilters: 2 })
-      await expectSnapshot("filter-button-2-filters", page)
-    })
-
-    test("filters applied and pressed", async ({ page }) => {
-      await gotoWithArgs(page, {
-        isMinMd: true,
-        appliedFilters: 2,
-        pressed: true,
+  breakpoints.describeMobileAndDesktop(({ expectSnapshot }) => {
+    for (const filterCount of [0, 1, 12]) {
+      test(`resting, ${filterCount} filters`, async ({ page }) => {
+        await gotoWithArgs(page, { appliedFilters: filterCount })
+        await expectSnapshot(
+          `filter-button-at-rest-${filterCount}-checked`,
+          page.locator(wrapper)
+        )
       })
-      await expectSnapshot("filter-button-2-filters-pressed", page)
-    })
-  })
-
-  breakpoints.describeXl(({ expectSnapshot }) => {
-    test("no filters applied", async ({ page }) => {
-      await gotoWithArgs(page)
-      await expectSnapshot("filter-button-no-filters-not-scrolled", page)
-    })
-
-    test("2 filters", async ({ page }) => {
-      await gotoWithArgs(page, { appliedFilters: 2 })
-      await expectSnapshot("filter-button-2-filters-not-scrolled", page)
-    })
+      test(`focused, ${filterCount} filters`, async ({ page }) => {
+        await gotoWithArgs(page, { appliedFilters: filterCount })
+        await expectSnapshot(
+          `filter-button-at-rest-${filterCount}-checked`,
+          page.locator(wrapper)
+        )
+      })
+      test(`pressed, ${filterCount} filters`, async ({ page }) => {
+        await gotoWithArgs(page, {
+          appliedFilters: filterCount,
+          pressed: true,
+        })
+        await expectSnapshot(
+          `filter-button-pressed-${filterCount}-checked`,
+          page.locator(wrapper)
+        )
+      })
+      test(`pressed, hovered, ${filterCount} filters`, async ({ page }) => {
+        await gotoWithArgs(page, {
+          appliedFilters: filterCount,
+          pressed: true,
+        })
+        await page.locator("button", { hasText: "Filter" }).hover()
+        await expectSnapshot(
+          `filter-button-pressed-hovered-${filterCount}-checked`,
+          page.locator(wrapper)
+        )
+      })
+      test(`hovered, ${filterCount} filters`, async ({ page }) => {
+        await gotoWithArgs(page, {
+          appliedFilters: filterCount,
+        })
+        await page.locator("button", { hasText: "Filter" }).hover()
+        await expectSnapshot(
+          `filter-button-hovered-${filterCount}-checked`,
+          page.locator(wrapper)
+        )
+      })
+      test(`focused, pressed ${filterCount} filters`, async ({ page }) => {
+        await gotoWithArgs(page, {
+          appliedFilters: filterCount,
+          pressed: true,
+        })
+        await page.locator("button", { hasText: "Filter" }).focus()
+        await expectSnapshot(
+          `filter-button-focused-pressed-${filterCount}-checked`,
+          page.locator(wrapper)
+        )
+      })
+    }
   })
 })
