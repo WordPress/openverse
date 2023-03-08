@@ -36,16 +36,12 @@ jobs:
       api: ${{ steps.paths-filter.outputs.api }}
       ingestion_server: ${{ steps.paths-filter.outputs.ingestion_server }}
       frontend: ${{ steps.paths-filter.outputs.frontend }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - id: paths-filter
-        name: Check changed paths
-        uses: dorny/paths-filter@v2
-        with:
-          filters: ./.github/filters.yml
+      - name: Get changes
+        uses: ./.github/actions/get-changes
+        id: paths-filter
 
   get-image-tag:
     name: Get image tag
@@ -96,6 +92,34 @@ jobs:
         run: |
           just precommit
           just lint
+
+  add-stack-label:
+    name: Add stack label
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Add API stack label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ needs.get-changes.outputs.api == 'true' }}
+        with:
+          labels: "🧱 stack: api"
+
+      - name: Add ingestion server stack label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ needs.get-changes.outputs.ingestion_server == 'true' }}
+        with:
+          labels: "🧱 stack: ingestion server"
+
+      - name: Add frontend stack label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ needs.get-changes.outputs.frontend == 'true' }}
+        with:
+          labels: "🧱 stack: frontend"
 
   ############################
   # API and ingestion server #
