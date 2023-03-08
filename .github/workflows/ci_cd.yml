@@ -84,12 +84,7 @@ jobs:
           # Python is not needed to run pre-commit.
           setup_python: false
           # Node.js is needed by lint actions.
-          install_recipe: ""
-          # Need more complex install recipe.
-
-      - name: Install dependencies
-        run: |
-          just node-install
+          install_recipe: "node-install"
 
       - name: Cache pre-commit envs
         uses: actions/cache@v3
