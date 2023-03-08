@@ -15,8 +15,8 @@ export const sentryConfig: ModuleConfiguration = {
   logMockCalls: false,
   lazy: true,
   clientConfig: {
-    // Only allow errors that come from an actual openverse.engineering subdomain
-    allowUrls: [/^https?:\/\/(.*)\.openverse\.engineering/],
+    // Only allow errors that come from openverse.org or a subdomain
+    allowUrls: ["https://openverse.org", /^https?:\/\/(.*)\.openverse\.org/],
   },
   config: {
     ignoreErrors: [
