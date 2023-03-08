@@ -7,7 +7,7 @@
     :class="
       pressed
         ? 'bg-dark-charcoal text-white hover:bg-dark-charcoal-90'
-        : 'bg-tx hover:border-dark-charcoal-20'
+        : 'bg-white hover:border-dark-charcoal-20'
     "
     :pressed="pressed"
     :disabled="disabled"
