@@ -47,7 +47,7 @@ const audioConfig = {
   name: "Audio",
   url: "/search/audio?q=birds",
   canLoadMore: true,
-  results: /764 results/,
+  results: /Over 10,000 results/,
 } as const
 
 const searchTypes = [allContentConfig, imageConfig, audioConfig] as const
