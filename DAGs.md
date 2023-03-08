@@ -26,7 +26,7 @@ The following are DAGs grouped by their primary tag:
 | DAG ID                                      | Schedule Interval |
 | ------------------------------------------- | ----------------- |
 | [`audio_data_refresh`](#audio_data_refresh) | `@weekly`         |
-| [`image_data_refresh`](#image_data_refresh) | `@weekly`         |
+| [`image_data_refresh`](#image_data_refresh) | `None`            |
 
 ## Database
 
