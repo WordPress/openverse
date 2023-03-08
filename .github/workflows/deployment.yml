@@ -25,7 +25,7 @@ on:
 # Only allow a single deploy to happen at a time
 # If you need to stop an in-progress deployment to force # another for the same
 # environment, you'll need to manually cancel it
-concurrency: ${{ github.workflow }}-${{ inputs.environment }}
+concurrency: ${{ github.workflow }}-${{ github.event.inputs.environment }}
 
 jobs:
   deploy:
@@ -54,9 +54,9 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - uses: ./.github/actions/${{ inputs.environment }}-${{ inputs.service }}-deploy
+      - uses: ./.github/actions/${{ github.event.inputs.environment }}-${{ github.event.inputs.service }}-deploy
         with:
-          tag: ${{ inputs.tag }}
+          tag: ${{ github.event.inputs.tag }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
