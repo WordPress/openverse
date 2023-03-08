@@ -1,7 +1,7 @@
 <template>
   <VTab id="filters" size="medium" class="label-regular gap-x-2">
     <VIcon :icon-path="filtersIcon" />
-    <h2>{{ $t("filters.title") }}</h2>
+    <h2 class="label-regular">{{ $t("filters.title") }}</h2>
   </VTab>
 </template>
 <script lang="ts">
