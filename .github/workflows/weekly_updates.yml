@@ -16,34 +16,15 @@ jobs:
     name: Create post on Make site
     runs-on: ubuntu-latest
     steps:
-      - uses: pnpm/action-setup@v2.2.4
-        with:
-          # Ensure that this value matches `packageManager` field.
-          version: 7.17.1
-
-      - name: Cache pnpm modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.local/share/pnpm/store
-          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-
-
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
         with:
-          node-version: 16
-          cache: pnpm
-          cache-dependency-path: |
-            pnpm-lock.yaml
-            .npmrc
-
-      - name: Install dependencies
-        working-directory: ./automations/js
-        run: "pnpm install"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          install_recipe: node-install
 
       - name: Create draft post
         run: just automations/js/report
