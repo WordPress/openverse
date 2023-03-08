@@ -91,7 +91,7 @@ instance.
 / month. Each page view and each custom event recorded counts towards the total
 quota. The annual plan is 10x the monthly price i.e. 2 months free.
 
-There is no cap on
+There is no cap on:
 
 - data retention, so we can export it much even after lots of usage.
 - number of users, so the entire team can be onboarded to see the dashboards.
