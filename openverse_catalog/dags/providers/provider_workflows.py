@@ -1,8 +1,11 @@
 import inspect
+import logging
+import re
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
+from airflow.models import Variable
 from providers.provider_api_scripts.brooklyn_museum import BrooklynMuseumDataIngester
 from providers.provider_api_scripts.cleveland_museum import ClevelandDataIngester
 from providers.provider_api_scripts.europeana import EuropeanaDataIngester
@@ -26,6 +29,69 @@ from providers.provider_api_scripts.wikimedia_commons import (
     WikimediaCommonsDataIngester,
 )
 from providers.provider_api_scripts.wordpress import WordPressDataIngester
+from typing_extensions import NotRequired, TypedDict
+
+
+logger = logging.getLogger(__name__)
+
+
+class TaskOverride(TypedDict):
+    """
+    Describes available options for overriding a task's properties.
+
+    Required Arguments:
+
+    task_id: A regex pattern that matches the task_id of the task
+             to be modified.
+
+    Optional Arguments:
+
+    timeout: str in "%d:%H:%M:%S" format giving the amount of time the
+             task may take
+    """
+
+    task_id_pattern: str
+    timeout: NotRequired[str | None]
+
+
+def get_time_override(time_str: str | None) -> timedelta | None:
+    """
+    Convert a string in the format:
+    "{days}d:{hours}h:{minutes}m:{seconds}s" to a timedelta. Each
+    component is optional.
+    Return None if the string is improperly formatted.
+
+    Examples:
+    * "5d:10h:20m:30s" -> 5 days, 10 hours, 20 minutes, 30 seconds
+    * "10d" -> 10 days
+    * "90s" -> 90 seconds
+    * "1h:30m" -> 1 hour, 30 minutes
+    """
+    if time_str is None:
+        return None
+
+    days = hours = minutes = seconds = 0
+
+    ts = time_str.split(":")
+    for t in ts:
+        if not (match := re.match(r"(\d+)([d,h,m,s])$", t)):
+            # Incorrectly formatted time string. Do not apply. We don't raise
+            # an error in order to avoid breaking DAGs.
+            logger.error(f"{t} could not be parsed.")
+            return None
+
+        count, unit = match.groups()
+        match unit:
+            case "d":
+                days = int(count)
+            case "h":
+                hours = int(count)
+            case "m":
+                minutes = int(count)
+            case "s":
+                seconds = int(count)
+
+    return timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
 
 
 @dataclass
@@ -76,6 +142,7 @@ class ProviderWorkflow:
                         to run any necessary post-ingestion tasks, such as dropping data
                         loaded during pre-ingestion
     tags:               list of any additional tags to apply to the generated DAG
+    overrides:          list of TaskOverrides to apply to the generated DAG
     """
 
     ingester_class: type[ProviderDataIngester]
@@ -93,11 +160,18 @@ class ProviderWorkflow:
     create_preingestion_tasks: Callable | None = None
     create_postingestion_tasks: Callable | None = None
     tags: list[str] = field(default_factory=list)
+    overrides: list[TaskOverride] = field(default_factory=list)
 
-    def __post_init__(self):
+    def _get_module_info(self):
         # Get the module the ProviderDataIngester was defined in
         provider_script = inspect.getmodule(self.ingester_class)
-        self.provider_name = provider_script.__name__.split(".")[-1]
+        # Parse out the provider name
+        provider_name = provider_script.__name__.split(".")[-1]
+
+        return provider_script, provider_name
+
+    def __post_init__(self):
+        provider_script, self.provider_name = self._get_module_info()
 
         if not self.dag_id:
             self.dag_id = f"{self.provider_name}_workflow"
@@ -107,6 +181,12 @@ class ProviderWorkflow:
 
         if not self.doc_md:
             self.doc_md = provider_script.__doc__
+
+        # Check for custom configuration overrides, which will be applied when
+        # the DAG is generated.
+        self.overrides = Variable.get(
+            "CONFIGURATION_OVERRIDES", default_var={}, deserialize_json=True
+        ).get(self.dag_id, [])
 
 
 PROVIDER_WORKFLOWS = [

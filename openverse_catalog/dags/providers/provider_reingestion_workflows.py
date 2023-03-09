@@ -49,11 +49,8 @@ class ProviderReingestionWorkflow(ProviderWorkflow):
 
     def __post_init__(self):
         if not self.dag_id:
-            # Call super() first to initialize the provider_name
-            super().__post_init__()
-            # Override the dag_id
-            self.dag_id = f"{self.provider_name}_reingestion_workflow"
-            return
+            _, provider_name = self._get_module_info()
+            self.dag_id = f"{provider_name}_reingestion_workflow"
 
         super().__post_init__()
 

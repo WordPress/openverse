@@ -1,9 +1,12 @@
+from datetime import datetime, timedelta
 from unittest import mock
 
 import pytest
+from airflow import DAG
 from airflow.exceptions import AirflowSkipException, BackfillUnfinished
 from airflow.executors.debug_executor import DebugExecutor
 from airflow.models import DagRun, TaskInstance
+from airflow.operators.empty import EmptyOperator
 from airflow.utils.session import create_session
 from pendulum import now
 from providers import provider_dag_factory
@@ -116,3 +119,89 @@ def test_create_day_partitioned_ingestion_dag_with_multi_layer_dependencies():
     assert ingest4_task.upstream_task_ids == {gather1_id}
     ingest5_task = dag.get_task(ingest5_id)
     assert ingest5_task.upstream_task_ids == {gather1_id}
+
+
+def test_apply_configuration_overrides():
+    # Create a mock DAG
+    dag = DAG(
+        dag_id="test_dag",
+        start_date=datetime(1970, 1, 1),
+        default_args={"execution_timeout": timedelta(hours=1)},
+    )
+    with dag:
+        task_with_no_overrides_and_default = EmptyOperator(
+            task_id="task_with_no_overrides_and_default"
+        )
+        task_with_no_overrides = EmptyOperator(
+            task_id="task_with_no_overrides", execution_timeout=timedelta(hours=2)
+        )
+        task_with_override_but_no_timeout = EmptyOperator(
+            task_id="task_with_override_but_no_timeout",
+            execution_timeout=timedelta(hours=2),
+        )
+        task_with_override_but_improper_timeout = EmptyOperator(
+            task_id="task_with_override_but_improper_timeout",
+            execution_timeout=timedelta(hours=2),
+        )
+        task_with_override = EmptyOperator(
+            task_id="task_with_proper_override", execution_timeout=timedelta(hours=2)
+        )
+        mapped_task_with_override = EmptyOperator.partial(
+            task_id="mapped_task_with_override",
+        ).expand_kwargs([{"foo": 1}, {"foo": 2}])
+
+    overrides = [
+        {"task_id_pattern": "task_with_override_but_no_timeout", "timeout": None},
+        {
+            "task_id_pattern": "task_with_override_but_improper_timeout",
+            "timeout": "foo",  # Improperly formatted timeout should not be applied
+        },
+        {"task_id_pattern": "task_with_proper_override", "timeout": "1d:0h:0m:0s"},
+        {"task_id_pattern": "mapped_task_with_override", "timeout": "4m:0s"},
+        {"task_id_pattern": "some_task_that_does_not_exist", "timeout": "1d:2h:3m:4s"},
+    ]
+
+    # Apply the overrides to the DAG
+    provider_dag_factory._apply_configuration_overrides(dag, overrides)
+
+    # Assert that the overrides were applied
+    assert task_with_no_overrides_and_default.execution_timeout == timedelta(hours=1)
+    assert task_with_no_overrides.execution_timeout == timedelta(hours=2)
+    assert task_with_override_but_no_timeout.execution_timeout == timedelta(hours=2)
+    assert task_with_override_but_improper_timeout.execution_timeout == timedelta(
+        hours=2
+    )
+    assert task_with_override.execution_timeout == timedelta(days=1)
+    assert mapped_task_with_override.execution_timeout == timedelta(minutes=4)
+
+
+@pytest.mark.parametrize(
+    "task_id, expected_overrides",
+    [
+        # Fully match the task id
+        ("task_baz", {"task_id_pattern": "task_baz", "timeout": "3:3:3:3"}),
+        # Partial match
+        (
+            "task_bar_plus_suffix",
+            {"task_id_pattern": "task_bar", "timeout": "2:2:2:2"},
+        ),
+        # Partial match for a task that is part of a TaskGroup
+        (
+            "task_group_id.task_foo_plus_suffix",
+            {"task_id_pattern": "task_foo", "timeout": "1:1:1:1"},
+        ),
+        # No match
+        ("task_oops", None),
+    ],
+)
+def test_get_overrides_for_task(task_id, expected_overrides):
+    overrides = [
+        {"task_id_pattern": "task_foo", "timeout": "1:1:1:1"},
+        {"task_id_pattern": "task_bar", "timeout": "2:2:2:2"},
+        {"task_id_pattern": "task_baz", "timeout": "3:3:3:3"},
+    ]
+
+    actual_task_overrides = provider_dag_factory._get_overrides_for_task(
+        task_id, overrides
+    )
+    assert actual_task_overrides == expected_overrides

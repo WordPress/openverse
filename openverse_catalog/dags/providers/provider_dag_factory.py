@@ -64,9 +64,11 @@ https://github.com/creativecommons/cccatalog/issues/334)
 """
 import logging
 import os
+import re
 from string import Template
 
 from airflow import DAG
+from airflow.models.mappedoperator import MappedOperator
 from airflow.models.param import Param
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
@@ -76,7 +78,11 @@ from common.constants import DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
 from common.loader import loader, reporting, s3, sql
 from providers.factory_utils import date_partition_for_prefix, pull_media_wrapper
 from providers.provider_reingestion_workflows import ProviderReingestionWorkflow
-from providers.provider_workflows import ProviderWorkflow
+from providers.provider_workflows import (
+    ProviderWorkflow,
+    TaskOverride,
+    get_time_override,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -91,6 +97,44 @@ DATE_RANGE_ARG_TEMPLATE = "{{{{" + _DATE_RANGE_INNER_TEMPLATE + "}}}}"
 DATE_PARTITION_ARG_TEMPLATE = Template(
     "$media_type/$provider_name/{{ date_partition_for_prefix(dag.schedule_interval, dag_run.logical_date, $reingestion_date ) }}"  # noqa
 )
+
+
+def _apply_configuration_overrides(dag: DAG, overrides: list[TaskOverride]):
+    """
+    For each task in the given DAG, check if any overrides are configured and,
+    if so, apply them.
+    """
+    if not overrides:
+        return
+
+    for task in dag.tasks:
+        if (task_overrides := _get_overrides_for_task(task.task_id, overrides)) is None:
+            continue
+
+        # Format timeout override and apply
+        timeout_override = get_time_override(task_overrides.get("timeout"))
+        if timeout_override:
+            # If the task is a MappedOperator, apply the timeout to partial
+            # kwargs to ensure it is set on each mapped task.
+            if isinstance(task, MappedOperator):
+                task.partial_kwargs["execution_timeout"] = timeout_override
+            else:
+                task.execution_timeout = timeout_override
+
+
+def _get_overrides_for_task(
+    task_id: str, overrides: list[TaskOverride]
+) -> TaskOverride | None:
+    """
+    Return any configured TaskOverride whose task_id_pattern matches the
+    id of the given task.
+    """
+    for override in overrides:
+        if re.search(override["task_id_pattern"], task_id):
+            return override
+
+    # No overrides were found for this task.
+    return None
 
 
 def create_ingestion_workflow(
@@ -339,6 +383,9 @@ def create_provider_api_workflow_dag(conf: ProviderWorkflow):
 
         ingest_data >> report_load_completion
 
+    # Apply any overrides from the DAG configuration
+    _apply_configuration_overrides(dag, conf.overrides)
+
     return dag
 
 
@@ -492,5 +539,8 @@ def create_day_partitioned_reingestion_dag(
         # report_load_completion is downstream of all the ingestion TaskGroups in the
         # final list.
         partitioned_ingest_workflows[-1] >> report_load_completion
+
+    # Apply any overrides from the DAG configuration
+    _apply_configuration_overrides(dag, conf.overrides)
 
     return dag
