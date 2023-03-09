@@ -25,6 +25,7 @@ jobs:
     steps:
       - name: Add issue to "Backlog"
         run: |
+          # shellcheck disable=SC2016
           gh api graphql -f query='
           mutation($project:ID!, $issue:ID!) {
             addProjectV2ItemById(input: {projectId: $project, contentId: $issue}) {
@@ -64,6 +65,7 @@ jobs:
         env:
           PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo"
         run: |
+          # shellcheck disable=SC2016
           gh api graphql -f query='
             mutation (
               $project: ID!
