@@ -147,6 +147,8 @@ const openverseLocales = [
   ...(locales ?? []),
 ].filter((l) => Boolean(l.iso)) as LocaleObject[]
 
+const port = process.env.PORT || 8443
+
 const config: NuxtConfig = {
   // eslint-disable-next-line no-undef
   version: pkg.version, // used to purge cache :)
@@ -161,7 +163,7 @@ const config: NuxtConfig = {
   srcDir: "src/",
   modern: "client",
   server: {
-    port: process.env.PORT || 8443,
+    port,
     https: process.env.LOCAL_SSL
       ? {
           key: fs.readFileSync(path.resolve(__dirname, "localhost+1-key.pem")),
@@ -335,13 +337,15 @@ const config: NuxtConfig = {
   },
   plausible: {
     trackLocalhost: !isProd,
-    // Blank string so that requests are sent to the same domain.
-    apiHost: "",
   },
   publicRuntimeConfig: {
     plausible: {
       // This is the current domain of the site.
       domain: process.env.SITE_DOMAIN ?? isProd ? "openverse.org" : "localhost",
+      apiHost:
+        process.env.SITE_DOMAIN ?? isProd
+          ? "https://openverse.org"
+          : `http://localhost:${port}`,
     },
   },
 }
