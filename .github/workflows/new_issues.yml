@@ -24,8 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add issue to "Backlog"
-        with:
-          repo-token: ${{ secrets.ACCESS_TOKEN }}
         run: |
           gh api graphql -f query='
           mutation($project:ID!, $issue:ID!) {
@@ -46,16 +44,7 @@ jobs:
           }' -f project=$PROJECT_ID -f issue=$ISSUE_ID >> issue_data.json
 
           echo 'ITEM_ID='$(jq '.data.addProjectV2ItemById.item.id' issue_data.json) >> $GITHUB_ENV
-          echo 'ITEM_PRIORITY='$(jq '.data.addProjectV2ItemById.item.content.labels.nodes[] | select(.name | contains("priority")).name | split(": ")[1]' issue_data.json) >> $GITHUB_ENV
-
-  set_issue_priority_field:
-    name: Set issue priority
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set issue priority
-        env:
-          PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo"
-        run: |
+          ITEM_PRIORITY=$(jq '.data.addProjectV2ItemById.item.content.labels.nodes[] | select(.name | contains("priority")).name | split(": ")[1]' issue_data.json) >> $GITHUB_ENV
           if [[ $ITEM_PRIORITY == "low" ]]; then
               PRIORITY_VALUE_ID="279ae886"
           elif [[ $ITEM_PRIORITY == "medium" ]]; then
@@ -65,6 +54,16 @@ jobs:
           else
               PRIORITY_VALUE_ID="fb76bdbc"
           fi
+          echo 'PRIORITY_VALUE_ID='$PRIORITY_VALUE_ID >> $GITHUB_ENV
+
+  set_issue_priority_field:
+    name: Set issue priority
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set issue priority
+        env:
+          PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo"
+        run: |
           gh api graphql -f query='
             mutation (
               $project: ID!
