@@ -54,7 +54,7 @@ jobs:
           else
               PRIORITY_VALUE_ID="fb76bdbc"
           fi
-          echo 'PRIORITY_VALUE_ID='$PRIORITY_VALUE_ID >> $GITHUB_ENV
+          echo "PRIORITY_VALUE_ID="$PRIORITY_VALUE_ID >> $GITHUB_ENV
 
   set_issue_priority_field:
     name: Set issue priority
