@@ -2,7 +2,7 @@
 
 ## Reviewers
 
-- [ ] @stacimc or @aetherunbound
+- [ ] @aetherunbound
 - [ ] @krysal
 
 ## Project summary
