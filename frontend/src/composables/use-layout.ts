@@ -18,21 +18,17 @@ const widthToBreakpoint = (width: number): Breakpoint => {
 export function useLayout() {
   const uiStore = useUiStore()
 
-  const { width, height } = useWindowSize()
+  const { width } = useWindowSize()
 
   const updateBreakpoint = () => {
-    uiStore.updateBreakpoint(
-      width.value,
-      height.value,
-      widthToBreakpoint(width.value)
-    )
+    uiStore.updateBreakpoint(widthToBreakpoint(width.value))
   }
 
   watchThrottled(
-    [width, height],
-    ([newWidth, newHeight]) => {
+    width,
+    (newWidth) => {
       const newBp = widthToBreakpoint(newWidth)
-      uiStore.updateBreakpoint(newWidth, newHeight, newBp)
+      uiStore.updateBreakpoint(newBp)
     },
     { throttle: 100 }
   )

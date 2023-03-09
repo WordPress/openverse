@@ -34,14 +34,6 @@ export interface UiState {
    */
   isDesktopLayout: boolean
   /**
-   * the width of the browser viewport
-   */
-  deviceWidth: number
-  /**
-   * the height of the browser viewport
-   */
-  deviceHeight: number
-  /**
    * the screen's max-width breakpoint.
    */
   breakpoint: Breakpoint
@@ -60,8 +52,6 @@ export const useUiStore = defineStore("ui", {
     innerFilterVisible: false,
     isFilterDismissed: false,
     isDesktopLayout: false,
-    deviceWidth: -1,
-    deviceHeight: -1,
     breakpoint: "sm",
     isMobileUa: true,
     dismissedBanners: [],
@@ -150,22 +140,13 @@ export const useUiStore = defineStore("ui", {
      * @param cookies - mapping of UI state parameters and their states.
      */
     initFromCookies(cookies: OpenverseCookieState) {
-      let deviceWidth = this.deviceWidth
-      let deviceHeight = this.deviceHeight
       let breakpoint = this.breakpoint
-      if (typeof cookies.uiDeviceHeight === "number") {
-        deviceHeight = cookies.uiDeviceHeight
-      }
-      if (typeof cookies.uiDeviceWidth === "number") {
-        deviceWidth = cookies.uiDeviceWidth
-      }
       if (
         cookies.uiBreakpoint &&
         Object.keys(ALL_SCREEN_SIZES).includes(cookies.uiBreakpoint)
-      ) {
+      )
         breakpoint = cookies.uiBreakpoint
-      }
-      this.updateBreakpoint(deviceWidth, deviceHeight, breakpoint)
+      this.updateBreakpoint(breakpoint)
 
       if (typeof cookies.uiIsFilterDismissed === "boolean") {
         this.isFilterDismissed = cookies.uiIsFilterDismissed
@@ -197,8 +178,6 @@ export const useUiStore = defineStore("ui", {
           opts,
         },
         { name: "uiIsFilterDismissed", value: this.isFilterDismissed, opts },
-        { name: "uiDeviceWidth", value: this.deviceWidth, opts },
-        { name: "uiDeviceHeight", value: this.deviceHeight, opts },
         { name: "uiBreakpoint", value: this.breakpoint, opts },
         { name: "uiIsMobileUa", value: this.isMobileUa, opts },
         { name: "uiDismissedBanners", value: this.dismissedBanners, opts },
@@ -206,35 +185,17 @@ export const useUiStore = defineStore("ui", {
     },
 
     /**
-     * If the width, height or breakpoint is different from the state, updates the state, and saves it into app cookies.
+     * If the breakpoint is different from the state, updates the state, and saves it into app cookies.
      *
-     * @param deviceWidth - the updated device width
-     * @param deviceHeight - the updated device height
      * @param breakpoint - the `min-width` tailwind breakpoint for the screen width.
      */
-    updateBreakpoint(
-      deviceWidth: number,
-      deviceHeight: number,
-      breakpoint: Breakpoint
-    ) {
-      if (
-        this.deviceWidth === deviceWidth &&
-        this.deviceHeight === deviceHeight &&
-        this.breakpoint === breakpoint
-      ) {
+    updateBreakpoint(breakpoint: Breakpoint) {
+      if (this.breakpoint === breakpoint) {
         return
       }
 
-      this.deviceWidth = deviceWidth
-      this.deviceHeight = deviceHeight
       this.breakpoint = breakpoint
 
-      this.$nuxt.$cookies.set("uiDeviceWidth", this.deviceWidth, {
-        ...cookieOptions,
-      })
-      this.$nuxt.$cookies.set("uiDeviceHeight", this.deviceHeight, {
-        ...cookieOptions,
-      })
       this.$nuxt.$cookies.set("uiBreakpoint", this.breakpoint, {
         ...cookieOptions,
       })
