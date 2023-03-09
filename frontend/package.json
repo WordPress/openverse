@@ -65,6 +65,7 @@
     "@nuxt/vue-app": "^2.15.8",
     "@nuxtjs/composition-api": "^0.33.1",
     "@nuxtjs/i18n": "^7.0.3",
+    "@nuxtjs/proxy": "^2.1.0",
     "@nuxtjs/redirect-module": "^0.3.1",
     "@nuxtjs/sentry": "^5.1.7",
     "@nuxtjs/sitemap": "^2.4.0",

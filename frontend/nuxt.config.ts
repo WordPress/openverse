@@ -203,6 +203,7 @@ const config: NuxtConfig = {
   modules: [
     "portal-vue/nuxt",
     "@nuxtjs/i18n",
+    "@nuxtjs/proxy",
     "@nuxtjs/redirect-module",
     "@nuxtjs/sentry",
     "cookie-universal-nuxt",
@@ -329,13 +330,18 @@ const config: NuxtConfig = {
       },
     },
   },
+  proxy: {
+    "/api/event": "http://localhost:50288", // the key is appended as the path
+  },
   plausible: {
     trackLocalhost: !isProd,
   },
   publicRuntimeConfig: {
     plausible: {
-      domain: process.env.PLAUSIBLE_DOMAIN ?? "localhost",
-      apiHost: process.env.PLAUSIBLE_API_HOST ?? "http://localhost:50288",
+      // This is the current domain of the site.
+      domain: process.env.SITE_DOMAIN ?? isProd ? "openverse.org" : "localhost",
+      // Blank string so that requests are sent to the same domain.
+      apiHost: "",
     },
   },
 }
