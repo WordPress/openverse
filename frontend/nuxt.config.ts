@@ -335,13 +335,13 @@ const config: NuxtConfig = {
   },
   plausible: {
     trackLocalhost: !isProd,
+    // Blank string so that requests are sent to the same domain.
+    apiHost: "",
   },
   publicRuntimeConfig: {
     plausible: {
       // This is the current domain of the site.
       domain: process.env.SITE_DOMAIN ?? isProd ? "openverse.org" : "localhost",
-      // Blank string so that requests are sent to the same domain.
-      apiHost: "",
     },
   },
 }
