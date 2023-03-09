@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Add issue to "Backlog"
         run: |
-          gh api graphql -f query='
+          gh api graphql -f query="
           mutation($project:ID!, $issue:ID!) {
             addProjectV2ItemById(input: {projectId: $project, contentId: $issue}) {
               item {
@@ -41,9 +41,9 @@ jobs:
                 }
               }
             }
-          }' -f project=$PROJECT_ID -f issue=$ISSUE_ID >> issue_data.json
+          }" -f project=$PROJECT_ID -f issue=$ISSUE_ID >> issue_data.json
 
-          echo 'ITEM_ID='$(jq '.data.addProjectV2ItemById.item.id' issue_data.json) >> $GITHUB_ENV
+          echo "ITEM_ID="$(jq '.data.addProjectV2ItemById.item.id' issue_data.json) >> $GITHUB_ENV
           ITEM_PRIORITY=$(jq '.data.addProjectV2ItemById.item.content.labels.nodes[] | select(.name | contains("priority")).name | split(": ")[1]' issue_data.json) >> $GITHUB_ENV
           if [[ $ITEM_PRIORITY == "low" ]]; then
               PRIORITY_VALUE_ID="279ae886"
@@ -64,7 +64,7 @@ jobs:
         env:
           PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo"
         run: |
-          gh api graphql -f query='
+          gh api graphql -f query="
             mutation (
               $project: ID!
               $item: ID!
@@ -83,4 +83,4 @@ jobs:
                   id
                   }
               }
-            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f priority_field=$PRIORITY_FIELD_ID -f priority_value=$PRIORITY_VALUE_ID --silent
+            }" -f project=$PROJECT_ID -f item=$ITEM_ID -f priority_field=$PRIORITY_FIELD_ID -f priority_value=$PRIORITY_VALUE_ID --silent
