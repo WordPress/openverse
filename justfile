@@ -98,6 +98,7 @@ env:
 # Load sample data into the Docker Compose services
 init: _all-up
     ./load_sample_data.sh
+    ./setup_plausible.sh
 
 ##########
 # Docker #

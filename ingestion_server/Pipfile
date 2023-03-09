@@ -20,7 +20,7 @@ filelock = "~=3.9"
 gunicorn = "~=20.1"
 jsonschema = "~=4.17"
 psycopg2 = "~=2.9"
-python-decouple = "~=3.7"
+python-decouple = "~=3.8"
 PyYAML = "~=6.0"
 tldextract = "~=3.3"
 

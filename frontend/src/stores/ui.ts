@@ -143,20 +143,47 @@ export const useUiStore = defineStore("ui", {
      * Given a list of key value pairs of UI state parameters and their states,
      * populate the store state to match the cookie.
      *
+     * Since the cookies are passed through `JSON.parse()`, they can have the
+     * wrong types. This function resets cookies to the default value if their
+     * type is incorrect.
+     *
      * @param cookies - mapping of UI state parameters and their states.
      */
     initFromCookies(cookies: OpenverseCookieState) {
-      this.updateBreakpoint(
-        cookies.uiDeviceWidth ?? this.deviceWidth,
-        cookies.uiDeviceHeight ?? this.deviceHeight,
-        cookies.uiBreakpoint ?? this.breakpoint
-      )
-      this.isFilterDismissed = cookies.uiIsFilterDismissed ?? false
-      this.isMobileUa = cookies.uiIsMobileUa ?? false
+      let deviceWidth = this.deviceWidth
+      let deviceHeight = this.deviceHeight
+      let breakpoint = this.breakpoint
+      if (typeof cookies.uiDeviceHeight === "number") {
+        deviceHeight = cookies.uiDeviceHeight
+      }
+      if (typeof cookies.uiDeviceWidth === "number") {
+        deviceWidth = cookies.uiDeviceWidth
+      }
+      if (
+        cookies.uiBreakpoint &&
+        Object.keys(ALL_SCREEN_SIZES).includes(cookies.uiBreakpoint)
+      ) {
+        breakpoint = cookies.uiBreakpoint
+      }
+      this.updateBreakpoint(deviceWidth, deviceHeight, breakpoint)
+
+      if (typeof cookies.uiIsFilterDismissed === "boolean") {
+        this.isFilterDismissed = cookies.uiIsFilterDismissed
+      }
+
+      this.isMobileUa = false
+      if (typeof cookies.uiIsMobileUa === "boolean") {
+        this.isMobileUa = cookies.uiIsMobileUa
+      }
+
       this.innerFilterVisible = this.isDesktopLayout
         ? !this.isFilterDismissed
         : false
-      this.dismissedBanners = cookies.uiDismissedBanners ?? []
+
+      if (Array.isArray(cookies.uiDismissedBanners)) {
+        this.dismissedBanners = cookies.uiDismissedBanners
+      }
+
       this.updateCookies()
     },
 
