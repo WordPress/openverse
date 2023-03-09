@@ -1,7 +1,9 @@
 import json
 import os
+from unittest import mock
 
 import pytest
+from airflow.exceptions import AirflowException
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts.flickr import FlickrDataIngester
 
@@ -67,6 +69,35 @@ def test_get_record_count_from_response():
     count = flickr.get_record_count_from_response(response_json)
 
     assert count == 30
+
+
+@pytest.mark.parametrize(
+    "fetched_count, super_should_continue, expected_should_continue",
+    (
+        (1000, True, True),
+        # Return False if super().get_should_continue() is False
+        (1000, False, False),
+        (4000, True, True),
+        # Raise exception if fetched_count exceeds max_unique_records
+        pytest.param(
+            4001,
+            True,
+            False,
+            marks=pytest.mark.raises(exception=AirflowException),
+        ),
+    ),
+)
+def test_get_should_continue(
+    fetched_count, super_should_continue, expected_should_continue
+):
+    with mock.patch(
+        "providers.provider_api_scripts.time_delineated_provider_data_ingester.TimeDelineatedProviderDataIngester.get_should_continue",
+        return_value=super_should_continue,
+    ):
+        ingester = FlickrDataIngester(date=FROZEN_DATE)
+        ingester.fetched_count = fetched_count
+
+        assert ingester.get_should_continue({}) == expected_should_continue
 
 
 @pytest.mark.parametrize(

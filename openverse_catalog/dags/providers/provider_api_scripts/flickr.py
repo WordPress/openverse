@@ -50,7 +50,11 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
     batch_limit = 500
     retries = 5
 
-    max_records = 4_000
+    # Flickr will return a maximum of 4,000 unique records per query. In practice,
+    # we often see more records returned for a query than the given `resultCount`, so
+    # we cap `max_records` artificially low to accommodate this.
+    max_unique_records = 4_000  # Actual maximum, above which we should raise an error
+    max_records = 3_000  # Attempt to break ingestion into time slices of this size
     division_threshold = 20_000
     min_divisions = 12
     max_divisions = 60
@@ -258,10 +262,10 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         # Call the parent method in order to update the fetched_count
         should_continue = super().get_should_continue(response_json)
 
-        # Return early if more than the max_records have been ingested.
+        # Return early if more than the maximum unique records have been ingested.
         # This could happen if we did not break the ingestion down into
         # small enough divisions.
-        if self.fetched_count > self.max_records:
+        if self.fetched_count > self.max_unique_records:
             raise AirflowException(
                 f"{self.fetched_count} records retrieved, but there is a"
                 f" limit of {self.max_records}. Consider increasing the"
