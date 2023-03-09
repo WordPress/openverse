@@ -56,6 +56,10 @@ FLICKR_SUB_PROVIDERS = {
     "bio_diversity": {"61021753@N02"},  # BioDivLibrary
     "spacex": {"130608600@N05"},  # Official SpaceX Photos
     "woc_tech": {"136629440@N06"},  # WOCinTech Chat
+    "valence_romans": {"150408343@N02"},  # Valence Romans Agglomeration Media Library
+    "east_riding": {"138361426@N08"},  # East Riding Archives
+    "archief_alkmaar": {"98304311@N03"},  # Regionaal Archief Alkmaar Commons
+    "bib_gulbenkian": {"26577438@N06"},  # Gulbenkian Art Library
 }
 
 FLICKR_PHOTO_URL_BASE = "https://www.flickr.com/photos/"

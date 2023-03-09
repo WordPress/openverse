@@ -39,12 +39,13 @@ The following are DAGs grouped by their primary tag:
 
 ## Maintenance
 
-| DAG ID                                        | Schedule Interval |
-| --------------------------------------------- | ----------------- |
-| [`airflow_log_cleanup`](#airflow_log_cleanup) | `@weekly`         |
-| [`check_silenced_dags`](#check_silenced_dags) | `@weekly`         |
-| [`pr_review_reminders`](#pr_review_reminders) | `0 0 * * 1-5`     |
-| [`rotate_db_snapshots`](#rotate_db_snapshots) | `0 0 * * 6`       |
+| DAG ID                                                                      | Schedule Interval |
+| --------------------------------------------------------------------------- | ----------------- |
+| [`airflow_log_cleanup`](#airflow_log_cleanup)                               | `@weekly`         |
+| [`check_silenced_dags`](#check_silenced_dags)                               | `@weekly`         |
+| [`flickr_audit_sub_provider_workflow`](#flickr_audit_sub_provider_workflow) | `@monthly`        |
+| [`pr_review_reminders`](#pr_review_reminders)                               | `0 0 * * 1-5`     |
+| [`rotate_db_snapshots`](#rotate_db_snapshots)                               | `0 0 * * 6`       |
 
 ## Oauth
 
@@ -98,6 +99,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`europeana_reingestion_workflow`](#europeana_reingestion_workflow)
 1.  [`europeana_workflow`](#europeana_workflow)
 1.  [`finnish_museums_workflow`](#finnish_museums_workflow)
+1.  [`flickr_audit_sub_provider_workflow`](#flickr_audit_sub_provider_workflow)
 1.  [`flickr_reingestion_workflow`](#flickr_reingestion_workflow)
 1.  [`flickr_workflow`](#flickr_workflow)
 1.  [`freesound_workflow`](#freesound_workflow)
@@ -238,6 +240,14 @@ https://www.finna.fi/Content/help-syntax?lng=en-gb The Finnish Museums provider
 script is a dated DAG that ingests all records that were last updated in the
 previous day. Because of this, it is not necessary to run a separate reingestion
 DAG, as updated data will be processed during regular ingestion.
+
+## `flickr_audit_sub_provider_workflow`
+
+### Flickr Sub Provider Audit
+
+Check the list of member institutions of the Flickr Commons for institutions
+that have cc-licensed images and are not already configured as sub-providers for
+the Flickr DAG. Report suggestions for new sub-providers to Slack.
 
 ## `flickr_reingestion_workflow`
 
