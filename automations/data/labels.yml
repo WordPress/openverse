@@ -82,6 +82,24 @@ groups:
         description: Bug fix
         emoji: "🛠"
 
+  - name: stack
+    color: "006b75"
+    emoji: "🧱"
+    is_required: true
+    labels:
+      - name: frontend
+        description: Related to the Nuxt frontend
+      - name: mgmt
+        description: Related to repo management and automations
+      - name: api
+        description: Related to the Django API
+      - name: catalog
+        description: Related to the catalog and Airflow DAGs
+      - name: analytics
+        description: Related to the analytics setup
+      - name: ingestion server
+        description: Related to the ingestion/data refresh server
+
   - name: tooling
     labels:
       - name: sentry

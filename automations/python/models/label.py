@@ -23,15 +23,18 @@ class Label:
         has_emoji_name: bool = True,
         **kwargs,
     ):
+        self.group = group
         self.name = kwargs["name"]
         self.description = kwargs["description"]
-        self.emoji = kwargs["emoji"]
+        self.emoji = kwargs.get("emoji")
         self.own_color = color
         self.has_emoji_name = has_emoji_name
 
-        self.group = group
-        if group and self not in group.labels:
-            group.labels.append(self)
+        if group:
+            if self not in group.labels:
+                group.labels.append(self)
+            if self.emoji is None:
+                self.emoji = group.emoji
 
     @property
     def color(self) -> str:
