@@ -19,13 +19,6 @@ Overcoming **Data Inertia**.
 ### Motivation
 
 The first step in making the data we have reliable is describing it in detail.
-Currently, we have more than 600 million rows of data about media in the catalog
-database and similar but slightly different sets of data in the API database and
-elasticsearch. Because of the history of the project, some data we have does not
-conform to the requirements we now set and does not have the fields we describe
-as required, and there are some fields that store a very different data piece
-than what the users might expect[^1].
-
 The main goal of this project is to establish a comprehensive baseline of our
 media data: what information we currently have about each media item and what we
 expect to have. Our database currently holds more than 700 million rows of media
