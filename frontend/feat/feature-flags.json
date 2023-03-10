@@ -8,13 +8,6 @@
       "description": "Toggle the external sources in the header's search type switcher.",
       "defaultState": "off"
     },
-    "new_header": {
-      "status": {
-        "staging": "enabled",
-        "production": "enabled"
-      },
-      "description": "Toggle the new header, including recent searches."
-    },
     "analytics": {
       "status": {
         "staging": "switchable",
