@@ -50,6 +50,8 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         "qa",
         # "unstable__sort_by",  # excluding unstable fields
         # "unstable__sort_dir",  # excluding unstable fields
+        # "unstable__authority",  # excluding unstable fields
+        # "unstable__authority_boost",  # excluding unstable fields
         "page_size",
         "page",
     ]
@@ -137,6 +139,22 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         choices=SORT_DIRECTIONS,
         required=False,
         default=DESCENDING,
+    )
+    unstable__authority = serializers.BooleanField(
+        label="authority",
+        help_text="If enabled, the search will add a boost to results that are "
+        "from authoritative sources.",
+        required=False,
+        default=False,
+    )
+    unstable__authority_boost = serializers.FloatField(
+        label="authority_boost",
+        help_text="The boost coefficient to apply to authoritative sources, "
+        "multiplied with the popularity boost.",
+        required=False,
+        default=1.0,
+        min_value=0.0,
+        max_value=10.0,
     )
 
     page_size = serializers.IntegerField(
