@@ -4,7 +4,7 @@
     main: "Go to {link} or search for something similar from the field below.",
   },
   hero: {
-    subtitle: "Explore more than 600 million creative works",
+    subtitle: "Explore more than 700 million creative works",
     description: "An extensive library of free stock photos, images, and audio, available for free use.",
     search: {
       placeholder: "Search for content",
