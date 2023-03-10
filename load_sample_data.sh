@@ -68,15 +68,15 @@ sleep 2
 
 # Ingest and index the data
 just ingestion_server/ingest-upstream "audio" "init"
-just wait-for-index "audio-init"
+just docker/es/wait-for-index "audio-init"
 just ingestion_server/promote "audio" "init" "audio"
-just wait-for-index "audio"
+just docker/es/wait-for-index "audio"
 
 # Image ingestion is flaky; but usually works on the next attempt
 set +e
 while true; do
 	just ingestion_server/ingest-upstream "image" "init"
-	if just wait-for-index "image-init"
+	if just docker/es/wait-for-index "image-init"
 	then
 		break
 	fi
@@ -85,7 +85,7 @@ done
 set -e
 
 just ingestion_server/promote "image" "init" "image"
-just wait-for-index "image"
+just docker/es/wait-for-index "image"
 
 # Clear source cache since it's out of date after data has been loaded
 docker-compose exec -T "$CACHE_SERVICE_NAME" /bin/bash -c "echo \"del :1:sources-image\" | redis-cli"
