@@ -55,9 +55,9 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
     # we cap `max_records` artificially low to accommodate this.
     max_unique_records = 4_000  # Actual maximum, above which we should raise an error
     max_records = 3_000  # Attempt to break ingestion into time slices of this size
-    division_threshold = 20_000
-    min_divisions = 12
-    max_divisions = 60
+    division_threshold = 10_000
+    min_divisions = 6
+    max_divisions = 12
     # When we pull more records than the API reports, we don't want to raise an error
     # and halt ingestion. Instead, this DAG adds its own separate handling to cut off
     # ingestion when max_records is reached, and continue to the next time interval. See

@@ -177,6 +177,11 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
                 if record_count < self.division_threshold
                 else self.max_divisions
             )
+            logger.info(
+                f"Record count {record_count} is greater than maximum of"
+                f" {self.max_records}. Ingesting data in {num_divisions} slices for the"
+                f" hour starting at {start_hour}."
+            )
             minute_slices = self._get_timestamp_query_params_list(
                 start_hour, end_hour, num_divisions
             )

@@ -143,8 +143,9 @@ class ProviderDataIngester(ABC):
         # Allow overriding the date with a %Y-%m-%d string from the dagrun conf.
         date_override = conf.get("date")
         if date_override and datetime.strptime(date_override, "%Y-%m-%d"):
-            logger.info(f"Using date {date_override} from dagrun conf.")
             self.date = date_override
+        if self.date:
+            logger.info(f"Using date {self.date}.")
 
         # Used to skip over errors and continue ingestion. When enabled, errors
         # are not reported until ingestion has completed.
