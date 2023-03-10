@@ -333,7 +333,11 @@ const config: NuxtConfig = {
     },
   },
   proxy: {
-    "/api/event": "http://localhost:50288", // the key is appended as the path
+    // The key is appended to the address in the value.
+    "/api/event":
+      process.env.PLAUSIBLE_ORIGIN ?? isProd
+        ? "https://plausible.io"
+        : "http://localhost:50288",
   },
   plausible: {
     trackLocalhost: !isProd,
