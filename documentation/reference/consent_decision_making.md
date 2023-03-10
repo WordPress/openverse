@@ -153,7 +153,8 @@ outlined in [the documentation for those processes](./docs/projects/README.md).
 All proposals should include a summary of the purpose of the proposal and the
 problem(s) it attempts to address.
 
-Every proposal must include the following boilerplate text:
+Every proposal must include the following boilerplate text in the PR description
+or at the top of the GitHub Discussion:
 
 ```md
 ## Decision-making process
@@ -372,16 +373,6 @@ outcome.
 The following additional conventions will help our team make expedient decisions
 while still following the formalised process laid out above.
 
-### "Shortcutting" a round
-
-At any point during a round, any participant may say something along the lines
-of "no (further) questions", "no reaction", or "no objection" in order to
-short-cut their participation in the round. If all participants are finished
-sharing their part in a given round, the author can choose to move to the next
-round, even if the time period for the round has not been completed. This can be
-particularly helpful for simpler discussions where the 2 business day
-recommended time periods can feel overly slow.
-
 ### Discussion Dashboard
 
 The
@@ -414,6 +405,12 @@ bear explaining:
   written, but cannot
 
 ### Minimising parallel discussions
+
+In the past, Openverse maintainers have been prone to feeling overwhelmed or
+over encumbered by too many ongoing discussions demanding their attention. The
+following practices are meant to mitigate the chances of this happening by
+creating tools and processes for keep the number of active discussions per
+participant to 2 or fewer.
 
 #### Checking the dashboard
 
@@ -471,17 +468,23 @@ burdensome than technical discussions. It also makes sure there is still room
 for team members to be involved in one other separate technical discussion and
 feel like they can still focus on their other work duties.
 
-### Current round call out
+### Speeding up decision-making
 
-The author must maintain a heading at the top of the PR description or
-discussion body with the current round the discussion is in. This prevents
-accidental back-sliding into already completed rounds or jumping ahead to rounds
-not yet started. The call-out is embedded with the informational block linking
-to the process documentation. This is maintained in addition to the process
-described below in the "How to follow the process…" section where the author
-will add a top-level comment introducing each new round when it starts.
+The base process should help the Openverse project make decisions more quickly
+and effectively. However, the following additional practices are available to
+help move things along at an even faster clip, if so desired.
 
-### Optional, synchronous "lightening process"
+#### "Shortcutting" a round
+
+At any point during a round, any participant may say something along the lines
+of "no (further) questions", "no reaction", or "no objection" in order to
+short-cut their participation in the round. If all participants are finished
+sharing their part in a given round, the author can choose to move to the next
+round, even if the time period for the round has not been completed. This can be
+particularly helpful for simpler discussions where the 2 business day
+recommended time periods can feel overly slow.
+
+#### Optional, synchronous "lightening process"
 
 If all the participants of a particular discussion are able to participate in a
 synchronous version of the process outlined above, they may elect to do so. This
@@ -495,10 +498,24 @@ headings per round.** If necessary, the synchronous discussion can be broken
 into two separate sections to allow time for the revision round after reactions
 are shared.
 
-Even in these cases, however, the proposal should still be written in a GitHub
-PR or discussion.
+Even in these cases, however, the text of the proposal should still be written
+in a GitHub PR or discussion and available for all participants to read _before_
+the lightening process.
 
-Differences in structure
+Differences in structure for the "lightening process" from the asynchronous
+process are as follows:
+
+- Rather than tying the question and reaction rounds together, they are separate
+  rounds. Therefore, the rounds are as follows:
+  1. Question
+  1. Reaction
+  1. Revision
+  1. Objection
+  1. Objection revision
+- Each round should have notes taken clearly documenting the questions,
+  reactions, objections, and discussions for each (as appropriate). Priority
+  should be given to questions and objections that require revising the
+  proposal.
 
 ## How to follow the process in different settings
 
