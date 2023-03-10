@@ -33,13 +33,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
     ports:
       - "50292:9200"
-    environment:
-      # disable XPack
-      # https://www.elastic.co/guide/en/elasticsearch/reference/5.3/docker.html#_security_note
-      - xpack.security.enabled=false
-      - discovery.type=single-node
-      - http.cors.enabled=true
-      - http.cors.allow-origin=/.*/
+    env_file:
+      - docker/es/env.docker
     healthcheck:
       test:
         [
@@ -129,8 +124,8 @@ services:
     depends_on:
       - web
     volumes:
-      - ./nginx/templates:/etc/nginx/templates
-      - ./nginx/certs:/etc/nginx/certs
+      - ./docker/nginx/templates:/etc/nginx/templates
+      - ./docker/nginx/certs:/etc/nginx/certs
 
 volumes:
   api-postgres:
