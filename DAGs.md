@@ -14,12 +14,19 @@ The DAGs are shown in two forms:
 
 The following are DAGs grouped by their primary tag:
 
+1.  [Data Normalization](#data_normalization)
 1.  [Data Refresh](#data_refresh)
 1.  [Database](#database)
 1.  [Maintenance](#maintenance)
 1.  [Oauth](#oauth)
 1.  [Provider](#provider)
 1.  [Provider Reingestion](#provider-reingestion)
+
+## Data Normalization
+
+| DAG ID                                | Schedule Interval |
+| ------------------------------------- | ----------------- |
+| [`add_license_url`](#add_license_url) | `None`            |
 
 ## Data Refresh
 
@@ -93,6 +100,7 @@ The following are DAGs grouped by their primary tag:
 
 The following is documentation associated with each DAG (where available):
 
+1.  [`add_license_url`](#add_license_url)
 1.  [`airflow_log_cleanup`](#airflow_log_cleanup)
 1.  [`audio_data_refresh`](#audio_data_refresh)
 1.  [`check_silenced_dags`](#check_silenced_dags)
@@ -126,6 +134,18 @@ The following is documentation associated with each DAG (where available):
 1.  [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)
 1.  [`wikimedia_reingestion_workflow`](#wikimedia_reingestion_workflow)
 1.  [`wordpress_workflow`](#wordpress_workflow)
+
+## `add_license_url`
+
+### Add license URL
+
+Add `license_url` to all rows that have `NULL` in their `meta_data` fields. This
+PR sets the meta_data value to "{license_url: https://... }", where the url is
+constructed from the `license` and `license_version` columns.
+
+This is a maintenance DAG that should be run once. If all the null values in the
+`meta_data` column are updated, the DAG will only run the first and the last
+step, logging the statistics.
 
 ## `airflow_log_cleanup`
 
