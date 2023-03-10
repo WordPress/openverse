@@ -80,7 +80,7 @@ def test_get_record_data():
         "license_info": LicenseInfo(
             license="by-nc",
             version="2.0",
-            url="https://creativecommons.org/licenses/by-nc/2.0",
+            url="https://creativecommons.org/licenses/by-nc/2.0/",
             raw_url="http://creativecommons.org/licenses/by-nc/2.0/",
         ),
         "meta_data": {

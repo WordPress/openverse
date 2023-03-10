@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 LICENSE_PATH_MAP = constants.get_license_path_map()
 REVERSE_LICENSE_PATH_MAP = constants.get_reverse_license_path_map()
+CC_BASE_URL = "https://creativecommons.org/"
+LICENSE_URLS = {f"{CC_BASE_URL}{l}/" for l in LICENSE_PATH_MAP.keys()}  # noqa: E741
 
 
 class InvalidLicenseURLException(Exception):
@@ -143,14 +145,17 @@ def _get_valid_cc_url(license_url) -> str | None:
     This function enforces:
       - string type
       - https scheme
-      - parses into a urllib.parse.ParseResult with
-        netloc=creativecommons.org
+      - trailing slash
+
+    If the resulting URL is in the `LICENSE_URLS` set, we return it.
+    Otherwise, we parse URL into a urllib.parse.ParseResult, ensuring
+    that its netloc=creativecommons.org
 
     After that, we rewrite the URL to whatever we get redirected to when
     we make a request using it.
 
     If all of these validations and the rewriting succeed, we return the
-    rewritten URL. Otherwise, we return None
+    rewritten URL. Otherwise, we return None.
     """
     logger.debug(f"Checking license URL {license_url}")
     if type(license_url) != str:
@@ -158,6 +163,11 @@ def _get_valid_cc_url(license_url) -> str | None:
         return
 
     https_url = urls.add_url_scheme(license_url.lower(), "https")
+    if not https_url.endswith("/"):
+        https_url += "/"
+    if https_url in LICENSE_URLS:
+        return https_url
+
     parsed_url = urlparse(https_url)
 
     if parsed_url.netloc != "creativecommons.org":

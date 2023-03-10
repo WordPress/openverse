@@ -1,4 +1,5 @@
 import logging
+from unittest.mock import patch
 
 import common.urls
 import pytest
@@ -150,13 +151,15 @@ def test_get_license_info_from_url_with_license_url_path_mismatch(
     assert all([i is None for i in license_info])
 
 
-def test_get_license_info_from_url_with_good_license_url(mock_cc_url_validator):
+def test_get_license_info_from_url_with_good_license_url():
     expected_license, expected_version = "cc0", "1.0"
     license_url = "https://creativecommons.org/publicdomain/zero/1.0/"
     path_map = {"publicdomain/zero/1.0": ("cc0", "1.0")}
-    actual_license_info = licenses._get_license_info_from_url(
-        license_url, path_map=path_map
-    )
+
+    with patch.object(licenses.urls, "rewrite_redirected_url") as mock_rewriter:
+        actual_license_info = licenses._get_license_info_from_url(
+            license_url, path_map=path_map
+        )
     expected_license_info = (
         expected_license,
         expected_version,
@@ -164,6 +167,17 @@ def test_get_license_info_from_url_with_good_license_url(mock_cc_url_validator):
         license_url,
     )
     assert actual_license_info == expected_license_info
+    assert mock_rewriter.call_count == 0
+
+
+def test_get_valid_cc_url_adds_a_trailing_slash():
+    license_url = "https://creativecommons.org/licenses/by-nc-nd/2.0"
+
+    with patch.object(licenses.urls, "rewrite_redirected_url") as mock_rewriter:
+        actual_license_url = licenses._get_valid_cc_url(license_url)
+
+    assert mock_rewriter.call_count == 0
+    assert actual_license_url == f"{license_url}/"
 
 
 def test_get_license_info_from_license_pair_nones_when_missing_license(mock_rewriter):
