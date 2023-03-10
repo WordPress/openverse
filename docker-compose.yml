@@ -5,7 +5,7 @@ services:
     ports:
       - "50254:5432"
     env_file:
-      - postgres/env.docker
+      - docker/db/env.docker
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
     volumes:
