@@ -92,9 +92,9 @@ def test_get_record_data():
         "raw_tags": ["instrumental", "speed_medium"],
         "set_foreign_id": "119",
         "set_position": 6,
-        "set_thumbnail": "https://usercontent.jamendo.com?type=album&id=119&width=200",
+        "set_thumbnail": "https://usercontent.jamendo.com/?type=album&id=119&width=200",
         "set_url": "https://www.jamendo.com/album/119/opera-i",
-        "thumbnail_url": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
+        "thumbnail_url": "https://usercontent.jamendo.com/?type=album&id=119&width=200&trackid=732",
         "title": "Thoughtful",
     }
     assert actual == expected
@@ -152,3 +152,23 @@ def test_get_tags():
     expected_tags = ["vocal", "male", "speed_medium", "engage"]
     actual_tags = jamendo._get_tags(item_data)
     assert expected_tags == actual_tags
+
+
+@pytest.mark.parametrize(
+    "url, expected",
+    [
+        (None, None),
+        ("", ""),
+        (
+            "https://usercontent.jamendo.com?type=album&id=100007&width=300",
+            "https://usercontent.jamendo.com/?type=album&id=100007&width=300",
+        ),
+        (
+            "https://usercontent.jamendo.com/some-other-page/subpage?type=album&id=100007&width=300",
+            "https://usercontent.jamendo.com/some-other-page/subpage/?type=album&id=100007&width=300",
+        ),
+    ],
+)
+def test_add_trailing_slash(url, expected):
+    actual = jamendo._add_trailing_slash(url)
+    assert actual == expected
