@@ -3,6 +3,9 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from test.factory.models.image import ImageFactory
+from unittest.mock import ANY, patch
+
+from django.http import HttpResponse
 
 import pytest
 from requests import Request, Response
@@ -56,3 +59,18 @@ def test_oembed_sends_ua_header(api_client, requests):
     assert len(requests.requests) > 0
     for r in requests.requests:
         assert r.headers == ImageViewSet.OEMBED_HEADERS
+
+
+@pytest.mark.django_db
+def test_thumbnail_uses_upstream_thumb(api_client):
+    image = ImageFactory.create(
+        url="http://example.com/image.jpg",
+        thumbnail="http://example.com/thumb.jpg",
+        provider="rawpixel",
+    )
+    with patch("catalog.api.views.media_views.MediaViewSet.thumbnail") as thumb_call:
+        mock_response = HttpResponse("mock_response")
+        thumb_call.return_value = mock_response
+        api_client.get(f"/v1/images/{image.identifier}/thumb/")
+
+        thumb_call.assert_called_once_with(image.thumbnail, ANY)
