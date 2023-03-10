@@ -4,12 +4,12 @@ services:
     image: postgres:13.2-alpine
     ports:
       - "50254:5432"
+    volumes:
+      - api-postgres:/var/lib/postgresql/data
     env_file:
       - postgres/env.docker
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
-    volumes:
-      - api-postgres:/var/lib/postgresql/data
 
   upstream_db:
     image: postgres:13.2-alpine
@@ -22,6 +22,39 @@ services:
       - postgres/env.docker
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
+
+  plausible_db:
+    image: postgres:13.2-alpine
+    expose:
+      - "5432"
+    volumes:
+      - plausible-postgres:/var/lib/postgresql/data
+    env_file:
+      - postgres/plausible.env.docker
+    healthcheck:
+      test: "pg_isready -U deploy -d plausible"
+
+  plausible_ch:
+    image: clickhouse/clickhouse-server:22.6-alpine
+    volumes:
+      - plausible-clickhouse:/var/lib/clickhouse
+      - ./clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
+      - ./clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  plausible:
+    image: plausible/analytics:latest
+    ports:
+      - "50288:8000"
+    command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
+    depends_on:
+      - plausible_db
+      - plausible_ch
+    env_file:
+      - plausible/env.docker
 
   cache:
     image: redis:4.0.10
@@ -134,4 +167,6 @@ services:
 volumes:
   api-postgres:
   catalog-postgres:
+  plausible-postgres:
+  plausible-clickhouse:
   es-data:
