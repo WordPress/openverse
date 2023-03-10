@@ -113,17 +113,22 @@ DOCKER_FILE := "-f " + (
 # Run `docker-compose` configured with the correct files and environment
 dc *args:
     @{{ if IS_CI != "" { "just env" } else { "true" } }}
-    docker-compose {{ DOCKER_FILE }} {{ args }}
+    # For every profile added to `docker-compose.yml`, update `COMPOSE_PROFILES` here.
+    env COMPOSE_PROFILES="${COMPOSE_PROFILES:-api,tls}" docker-compose {{ DOCKER_FILE }} {{ args }}
 
 # Build all (or specified) services
 build *args:
     just dc build {{ args }}
 
-# Bring all Docker services up
+# Bring all Docker services up in all profiles
 up *flags="":
     just dc up -d {{ flags }}
 
-# Take all Docker services down
+# Bring all Docker services up in the API profile
+api-up *flags:
+    env COMPOSE_PROFILES="api" just dc up -d {{ flags }}
+
+# Take all Docker services down from all profiles
 down flags="":
     just dc down {{ flags }}
 
