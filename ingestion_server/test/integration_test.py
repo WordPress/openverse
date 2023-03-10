@@ -127,7 +127,7 @@ class TestIngestion(unittest.TestCase):
         logging.info("Waiting for ES to be ready...")
         port = service_ports["es"]
         # Point to the root `justfile` to avoid automatic resolution to the nearest.
-        cls._wait(["just", "../../docker/es/wait-for-es", f"localhost:{port}"])
+        cls._wait(["just", "../../docker/es/wait", f"localhost:{port}"])
         logging.info("Connected to ES")
 
     @classmethod
