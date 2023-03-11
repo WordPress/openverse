@@ -83,7 +83,7 @@ collectstatic:
 #########
 
 # Run API tests inside the Docker container
-test *args: _all-up
+test *args:
     just ../exec web ./test/run_test.sh {{ args }}
 
 # Run API tests locally

@@ -62,15 +62,24 @@ def test_oembed_sends_ua_header(api_client, requests):
 
 
 @pytest.mark.django_db
-def test_thumbnail_uses_upstream_thumb(api_client):
+@pytest.mark.parametrize(
+    "provider, expected_thumb_url",
+    [
+        # Rawpixel is a provider with working thumbnail URLs
+        ("rawpixel", "http://example.com/thumb.jpg"),
+        # Phylopic thumbnails should be omitted until fixed
+        ("phylopic", "http://example.com/image.jpg"),
+    ],
+)
+def test_thumbnail_uses_upstream_thumb(api_client, provider, expected_thumb_url):
     image = ImageFactory.create(
         url="http://example.com/image.jpg",
         thumbnail="http://example.com/thumb.jpg",
-        provider="rawpixel",
+        provider=provider,
     )
     with patch("catalog.api.views.media_views.MediaViewSet.thumbnail") as thumb_call:
         mock_response = HttpResponse("mock_response")
         thumb_call.return_value = mock_response
         api_client.get(f"/v1/images/{image.identifier}/thumb/")
 
-        thumb_call.assert_called_once_with(image.thumbnail, ANY)
+        thumb_call.assert_called_once_with(expected_thumb_url, ANY)
