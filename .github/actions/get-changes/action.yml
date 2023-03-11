@@ -11,6 +11,9 @@ outputs:
   frontend:
     description: "'true' if frontend changes are present"
     value: ${{ steps.paths-filter.outputs.frontend }}
+  lint:
+    description: "'true' if linting setup changes are present"
+    value: ${{ steps.paths-filter.outputs.frontend }}
 
 runs:
   using: "composite"

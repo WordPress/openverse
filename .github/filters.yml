@@ -18,3 +18,9 @@ frontend:
   - .pnpmfile.cjs
   # Change to the CI + CD workflow should trigger complete workflow.
   - .github/workflows/ci_cd.yml
+lint:
+  - prettier.config.js
+  - .prettierignore
+  - .eslintrc.js
+  - .eslintignore
+  - .pre-commit-config.yaml
