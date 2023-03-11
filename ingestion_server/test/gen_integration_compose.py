@@ -112,7 +112,8 @@ def _change_directories(conf: dict):
         conf["services"][service]["volumes"] = ["../:/ingestion_server"]
         conf["services"][service]["build"] = "../"
 
-    conf["services"]["upstream_db"]["volumes"] = ["./mock_data:/mock_data"]
+    upstream_db_build = conf["services"]["upstream_db"]["build"]
+    conf["services"]["upstream_db"]["build"] = f"../../{upstream_db_build}"
 
 
 def _rename_services(conf: dict):
