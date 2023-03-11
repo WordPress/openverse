@@ -873,7 +873,7 @@ jobs:
       !failure() && !cancelled() &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
-      ((github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'release' && github.repository == 'WordPress/openverse') || (github.event_name == 'pull_request' && github.repository == 'WordPress/openverse'))
+      ((github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'release' && github.repository == 'WordPress/openverse'))
     needs:
       # `build-images` is automatically included in `test-ing` and `test-api`.
       - test-ing
@@ -942,8 +942,7 @@ jobs:
     name: Deploy staging API
     if: |
       !failure() && !cancelled() &&
-      (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || github.event_name == 'pull_request')
-      && needs.get-changes.outputs.api == 'true' &&
+      github.event_name == 'push' && needs.get-changes.outputs.api == 'true' &&
       (needs.test-ing.result == 'success' && needs.publish-images.result == 'success')
     needs:
       - get-image-tag
