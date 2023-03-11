@@ -46,6 +46,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
+          install_recipe: node-install
 
       - uses: preactjs/compressed-size-action@2.5.0
         with:
