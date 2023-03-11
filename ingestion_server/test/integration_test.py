@@ -215,6 +215,18 @@ class TestIngestion(unittest.TestCase):
             cursor.execute(constraint_sql)
             return {constraint: name for name, constraint in cursor}
 
+    @classmethod
+    def _compose_cmd(cls, cmd: list[str], **kwargs):
+        """Run a Docker Compose command"""
+
+        cmd = ["docker-compose", "--profile", "api", "-f", cls.compose_path, *cmd]
+        subprocess.run(
+            cmd,
+            cwd=cls.compose_path.parent,
+            check=True,
+            **kwargs,
+        )
+
     def check_index_exists(self, index_name):
         es = self._get_es()
         assert es.indices.get(index=index_name) is not None
@@ -330,13 +342,7 @@ class TestIngestion(unittest.TestCase):
         compose_path = gen_integration_compose()
         cls.compose_path = compose_path
 
-        start_cmd = ["docker-compose", "-f", compose_path.name, "up", "-d"]
-        subprocess.run(
-            start_cmd,
-            cwd=compose_path.parent,
-            check=True,
-            capture_output=True,
-        )
+        cls._compose_cmd(["up", "-d"], capture_output=True)
 
         # Wait for services to be ready
         cls.upstream_db, cls.downstream_db = cls._wait_for_dbs()
@@ -367,19 +373,12 @@ class TestIngestion(unittest.TestCase):
         compose_path = cls.compose_path
         log_output = compose_path.parent / "ingestion_logs.txt"
         with log_output.open("w") as file:
-            subprocess.run(
-                ["docker-compose", "-f", compose_path.name, "logs", "--no-color"],
-                cwd=compose_path.parent,
-                check=True,
-                stderr=subprocess.STDOUT,
-                stdout=file,
+            cls._compose_cmd(
+                ["logs", "--no-color"], stderr=subprocess.STDOUT, stdout=file
             )
 
-        stop_cmd = ["docker-compose", "-f", compose_path.name, "down", "-v"]
-        subprocess.run(
-            stop_cmd,
-            cwd=compose_path.parent,
-            check=True,
+        cls._compose_cmd(
+            ["down", "-v"],
             capture_output=True,
         )
 
