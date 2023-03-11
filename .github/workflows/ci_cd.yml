@@ -921,7 +921,6 @@ jobs:
 
   deploy-frontend:
     name: Deploy staging frontend
-    runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
       github.event_name == 'push' && needs.get-changes.outputs.frontend == 'true' &&
@@ -941,7 +940,6 @@ jobs:
 
   deploy-api:
     name: Deploy staging API
-    runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
       (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call')
