@@ -940,13 +940,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Deploy to staging
-        uses: ./.github/actions/staging-nuxt-deploy
+        uses: ./.github/workflows/deploy-staging-nuxt.yml
         with:
           tag: ${{ needs.get-image-tag.outputs.image-tag }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+        secrets: inherit
 
   deploy-api:
     name: Deploy staging API
@@ -966,10 +963,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Deploy to staging
-        uses: ./.github/actions/staging-api-deploy
+        uses: ./.github/workflows/deploy-staging-api.yml
         with:
           tag: ${{ needs.get-image-tag.outputs.image-tag }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+        secrets: inherit
