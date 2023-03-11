@@ -5,6 +5,28 @@ CACHE_SERVICE_NAME="${CACHE_SERVICE_NAME:-cache}"
 UPSTREAM_DB_SERVICE_NAME="${UPSTREAM_DB_SERVICE_NAME:-upstream_db}"
 DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
 
+###############
+# Upstream DB #
+###############
+
+# Load sample data
+function load_sample_data {
+  docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql <<-EOF
+    DELETE FROM $1;
+		\copy $1 \
+			from './sample_data/sample_$1.csv' \
+			with (FORMAT csv, HEADER true);
+		REFRESH MATERIALIZED VIEW $1_view;
+		EOF"
+}
+
+load_sample_data "image"
+load_sample_data "audio"
+
+#######
+# API #
+#######
+
 # Set up API database and upstream
 docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py migrate --noinput"
 # Create a superuser and a user for integration testing
@@ -36,28 +58,9 @@ docker-compose exec -T "$DB_SERVICE_NAME" /bin/bash -c "psql <<-EOF
 		(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio');
 	EOF"
 
-docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql <<-EOF
-	DROP TABLE IF EXISTS content_provider CASCADE;
-	EOF"
-docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "PGPASSWORD=deploy pg_dump -t content_provider -h db | psql"
-
-# Load sample data for images
-docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql <<-EOF
-	\copy image \
-			(identifier, created_on, updated_on, ingestion_type, provider, source, foreign_identifier, foreign_landing_url, url, thumbnail, width, height, filesize, license, license_version, creator, creator_url, title, meta_data, tags, watermarked, last_synced_with_source, removed_from_source, filetype, category) \
-		from './sample_data/sample_images.csv' \
-		with (FORMAT csv, HEADER true);
-	REFRESH MATERIALIZED VIEW image_view;
-	EOF"
-
-# Load sample data for audio
-docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql <<-EOF
-	\copy audio \
-			(identifier, created_on, updated_on, ingestion_type, provider, source, foreign_identifier, foreign_landing_url, url, thumbnail, filetype, duration, bit_rate, sample_rate, category, genres, audio_set, set_position, alt_files, filesize, license, license_version, creator, creator_url, title, meta_data, tags, watermarked, last_synced_with_source, removed_from_source) \
-		from './sample_data/sample_audio.csv' \
-		with (FORMAT csv, HEADER true);
-	REFRESH MATERIALIZED VIEW audio_view;
-	EOF"
+#############
+# Ingestion #
+#############
 
 # Load search quality assurance data.
 just ingestion_server/load-test-data "audio"
@@ -86,6 +89,10 @@ set -e
 
 just ingestion_server/promote "image" "init" "image"
 just docker/es/wait-for-index "image"
+
+#########
+# Redis #
+#########
 
 # Clear source cache since it's out of date after data has been loaded
 docker-compose exec -T "$CACHE_SERVICE_NAME" /bin/bash -c "echo \"del :1:sources-image\" | redis-cli"
