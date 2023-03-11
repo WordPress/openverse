@@ -32,7 +32,7 @@ jobs:
     name: Check
     runs-on: ubuntu-latest
     if: |
-      github.repository == 'WordPress/openverse-frontend' &&
+      github.repository == 'WordPress/openverse' &&
       (needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.lint == 'true')
     needs:
       - get-changes
