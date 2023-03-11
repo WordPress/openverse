@@ -950,7 +950,8 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
-      github.event_name == 'push' && needs.get-changes.outputs.api == 'true' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call')
+      && needs.get-changes.outputs.api == 'true' &&
       (needs.test-ing.result == 'success' && needs.publish-images.result == 'success')
     needs:
       - get-image-tag
