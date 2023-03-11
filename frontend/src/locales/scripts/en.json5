@@ -4,7 +4,7 @@
     main: "Go to {link} or search for something similar from the field below.",
   },
   hero: {
-    subtitle: "Explore more than 600 million creative works",
+    subtitle: "Explore more than 700 million creative works",
     description: "An extensive library of free stock photos, images, and audio, available for free use.",
     search: {
       placeholder: "Search for content",
@@ -680,6 +680,15 @@
   "skip-to-content": "Skip to content",
   "pref-page": {
     title: "Preferences",
+    groups: {
+      analytics: {
+        title: "Analytics",
+        desc: "Participate in anonymous analytics to improve user experience.",
+      },
+    },
+    features: {
+      analytics: "Record custom events and page views.",
+    },
     "non-switchable": {
       title: "Non-switchable features",
       desc: "You cannot modify the status of these features.",
