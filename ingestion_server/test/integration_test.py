@@ -154,12 +154,15 @@ class TestIngestion(unittest.TestCase):
     def _load_data(cls, conn, table_names):
         cur = conn.cursor()
         for table_name in table_names:
-            data_path = this_dir.joinpath("mock_data", f"mocked_{table_name}.csv")
+            data_path = this_dir.joinpath(
+                "../../sample_data", f"sample_{table_name}.csv"
+            )
             with open(data_path) as data:
                 cur.copy_expert(
                     f"COPY {table_name} FROM STDIN WITH (FORMAT csv, HEADER true)",
                     data,
                 )
+                cur.execute(f"REFRESH MATERIALIZED VIEW {table_name}_view")
         conn.commit()
         cur.close()
 
@@ -342,9 +345,6 @@ class TestIngestion(unittest.TestCase):
 
         # Set up the base scenario for the tests
         cls._load_schemas(
-            cls.upstream_db, ["audio_view", "audioset_view", "image_view"]
-        )
-        cls._load_schemas(
             cls.downstream_db,
             [
                 "api_deletedaudio",
@@ -356,7 +356,7 @@ class TestIngestion(unittest.TestCase):
                 "image",
             ],
         )
-        cls._load_data(cls.upstream_db, ["audio_view", "image_view"])
+        cls._load_data(cls.upstream_db, ["audio", "image"])
 
     @classmethod
     def tearDownClass(cls) -> None:
