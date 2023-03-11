@@ -173,6 +173,10 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         min_value=1,
     )
 
+    def is_request_anonymous(self):
+        request = self.context.get("request")
+        return bool(request and request.user and request.user.is_anonymous)
+
     @staticmethod
     def _truncate(value):
         max_length = 200
@@ -219,18 +223,16 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         return self._truncate(value)
 
     def validate_unstable__sort_by(self, value):
-        request = self.context.get("request")
-        is_anonymous = bool(request and request.user and request.user.is_anonymous)
-        return RELEVANCE if is_anonymous else value
+        return RELEVANCE if self.is_request_anonymous() else value
 
     def validate_unstable__sort_dir(self, value):
-        request = self.context.get("request")
-        is_anonymous = bool(request and request.user and request.user.is_anonymous)
-        return DESCENDING if is_anonymous else value
+        return DESCENDING if self.is_request_anonymous() else value
+
+    def validate_unstable__authority(self, value):
+        return False if self.is_request_anonymous() else value
 
     def validate_page_size(self, value):
-        request = self.context.get("request")
-        is_anonymous = bool(request and request.user and request.user.is_anonymous)
+        is_anonymous = self.is_request_anonymous()
         max_value = (
             settings.MAX_ANONYMOUS_PAGE_SIZE
             if is_anonymous
