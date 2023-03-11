@@ -266,8 +266,10 @@ jobs:
 
   test-redoc:
     name: Check for API consumer docs
+    if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -292,8 +294,10 @@ jobs:
 
   validate-openapi-spec:
     name: Validate Open API spec
+    if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -327,8 +331,10 @@ jobs:
 
   django-check:
     name: Run Django check
+    if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -352,9 +358,11 @@ jobs:
         run: just api/dj check
 
   check-migrations:
-    name: Check for uncommited Django migrations
+    name: Check for uncommitted Django migrations
+    if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -442,8 +450,10 @@ jobs:
 
   frontend-unit:
     name: Run frontend unit tests
+    if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - lint
 
     steps:
@@ -462,8 +472,10 @@ jobs:
 
   storybook-smoke:
     name: Check Storybook smoke test
+    if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - lint
 
     steps:
@@ -482,8 +494,10 @@ jobs:
 
   nuxt-build:
     name: Check Nuxt build
+    if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - lint
 
     steps:
@@ -925,7 +939,7 @@ jobs:
     if: |
       !failure() && !cancelled() &&
       github.event_name == 'push' && needs.get-changes.outputs.frontend == 'true' &&
-      (needs.nuxt-playwright-e2e.result == 'success' && needs.nuxt-playwright-vr.result == 'success' && needs.storybook-playwright.result == 'success')
+      (needs.nuxt-build.result == 'success' && needs.nuxt-playwright-e2e.result == 'success' && needs.nuxt-playwright-vr.result == 'success' && needs.storybook-playwright.result == 'success')
     needs:
       - get-image-tag
       - get-changes
