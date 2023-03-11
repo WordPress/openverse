@@ -56,8 +56,6 @@ services:
       - es-data:/usr/share/elasticsearch/data
 
   web:
-    profiles:
-      - api
     build:
       context: ./api/
       args:
@@ -82,8 +80,6 @@ services:
     tty: true
 
   ingestion_server:
-    profiles:
-      - api
     build: ./ingestion_server/
     image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn.conf.py
@@ -102,8 +98,6 @@ services:
     tty: true
 
   indexer_worker:
-    profiles:
-      - api
     build: ./ingestion_server/
     image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn_worker.conf.py
@@ -121,8 +115,6 @@ services:
     tty: true
 
   proxy:
-    profiles:
-      - tls
     image: nginx:alpine
     ports:
       - "50200:9080"
