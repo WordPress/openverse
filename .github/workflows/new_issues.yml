@@ -46,6 +46,8 @@ jobs:
 
           echo 'ITEM_ID='"$(jq '.data.addProjectV2ItemById.item.id' issue_data.json)" >> "$GITHUB_ENV"
           ITEM_PRIORITY="$(jq '.data.addProjectV2ItemById.item.content.labels.nodes[] | select(.name | contains("priority")).name | split(": ")[1]' issue_data.json)" >> "$GITHUB_ENV"
+          # The IDs for the project's Priority custom field options.
+          # These IDs were manually retrieved from the GitHub API.
           if [[ $ITEM_PRIORITY == "low" ]]; then
               PRIORITY_VALUE_ID="279ae886"
           elif [[ $ITEM_PRIORITY == "medium" ]]; then
@@ -63,7 +65,7 @@ jobs:
     steps:
       - name: Set issue priority
         env:
-          PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo"
+          PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo" # The ID for the project Priority custom field.
         run: |
           # shellcheck disable=SC2016
           gh api graphql -f query='
