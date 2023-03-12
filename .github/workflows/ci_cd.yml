@@ -390,10 +390,13 @@ jobs:
   #########
 
   build-nginx:
-    # This requires a separate job due to the dependency on the other image builds
+    # This requires a separate job due because it uses the API image built by
+    # the `build-images` job.
     name: Build `nginx` Docker image
     runs-on: ubuntu-latest
+    if: needs.get-changes.outputs.api == 'true'
     needs:
+      - get-changes
       - build-images
 
     steps:
