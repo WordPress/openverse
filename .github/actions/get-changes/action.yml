@@ -11,6 +11,9 @@ outputs:
   frontend:
     description: "'true' if frontend changes are present"
     value: ${{ steps.paths-filter.outputs.frontend }}
+  changes:
+    description: "JSON array of keys from `.github/filters.yml`"
+    value: ${{ steps.paths-filter.outputs.changes }}
 
 runs:
   using: "composite"
