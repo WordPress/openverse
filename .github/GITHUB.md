@@ -27,7 +27,7 @@ This workflow ensures that all repos associated with the project have the
 minimum set of consistent labels. It creates missing labels, and updates the
 color and description where they do not match the standard values.
 
-**Cron:** [at 00:00](https://crontab.guru/#0_0_*_*_*)
+**Cron:** [at 00:00](https://crontab.guru/#0_0_*_*_*)  
 **Dispatch:** enabled
 
 ### Weekly updates
