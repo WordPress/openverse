@@ -87,12 +87,15 @@ jobs:
           publish_matrix = {"image": []}
 
           if "api" in changes:
+              build_matrix["image"].append("api")
               build_matrix["includes"].append({"image": "api", "target": "api"})
               publish_matrix["image"] += ["api", "api_nginx"]
           if "ingestion_server" in changes:
+              build_matrix["image"].append("ingestion_server")
               build_matrix["includes"].append({"image": "ingestion_server", "target": "ing"})
               publish_matrix["image"].append("ingestion_server")
           if "frontend" in changes:
+              build_matrix["image"].append("frontend")
               build_matrix["includes"].append({"image": "frontend", "target": "app"})
               publish_matrix["image"].append("frontend")
 
