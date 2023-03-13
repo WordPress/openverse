@@ -290,7 +290,7 @@ following reasons:
    performance issues can be ameliorated through caching hashes with Redis.
 
 The only significant downside that I think exists is the delay between
-unblurring and displayin7.29.1g the full image due to needing to download the
+unblurring and displaying the full image due to needing to download the
 full unblurred image. However, I think this is balanced out by the bytes saved
 over the network in _not_ sending images that might potentially never be
 unblurred.
@@ -304,7 +304,7 @@ said above, BlurHash looks complicated, but really only in comparison to how
 simple the CSS approach is. Anything would look complicated when compared to
 just adding a CSS filter style to something.
 
-##### Important detail7.29.1
+##### Important detail
 
 The success of this project rests on the completion of its technical
 implementation. However, we can add the following events to the API and frontend
