@@ -187,21 +187,19 @@ jobs:
           install_recipe: node-install
 
       # ℹ️Step only applies for frontend image.
-      - name: Download translation strings
+      # This step
+      # - downloads translation strings from GlotPress so that they can be
+      #   bundled inside the Docker image
+      # - copies pnpm config files from the root to the `frontend/` directory
+      #   so that they can be used to mock a workspace inside the Docker image
+      - name: Prepare frontend for building
         if: matrix.image == 'frontend'
-        run: just frontend/run i18n
+        run: |
+          just frontend/run i18n
+          cp .npmrc .pnpmfile.cjs pnpm-lock.yaml frontend/
         env:
           GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
           GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
-
-      # ℹ️Step only applies for frontend image.
-      - name: Copy files into Docker context
-        if: matrix.image == 'frontend'
-        run: |
-          cp .npmrc .pnpmfile.cjs pnpm-lock.yaml frontend/
-        # These files are copied into the `frontend/` folder so that they can be
-        # included in the Docker context. The `Dockerfile` will use them to mock
-        # up a monorepo inside the Docker image.
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
