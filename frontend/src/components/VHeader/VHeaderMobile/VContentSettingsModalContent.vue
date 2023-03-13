@@ -63,9 +63,10 @@
       <VButton
         v-show="showClearFiltersButton"
         variant="text"
+        class="label-regular"
         :disabled="isClearButtonDisabled"
         @click="clearFilters"
-        >{{ clearFiltersLabel }}
+        >{{ $t("filter-list.clear") }}
       </VButton>
       <VShowResultsButton :is-fetching="isFetching" @click="close" />
     </footer>
@@ -76,7 +77,6 @@ import { computed, defineComponent, ref } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 
-import { useI18n } from "~/composables/use-i18n"
 import useSearchType from "~/composables/use-search-type"
 
 import VButton from "~/components/VButton.vue"
@@ -131,8 +131,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
-
     const searchStore = useSearchStore()
     const content = useSearchType()
     const selectedTab = ref<"content-settings" | "filters">("content-settings")
@@ -150,13 +148,6 @@ export default defineComponent({
     )
     const appliedFilterCount = computed<number>(
       () => searchStore.appliedFilterCount
-    )
-    const clearFiltersLabel = computed(() =>
-      searchStore.isAnyFilterApplied
-        ? i18n.t("filter-list.clear-numbered", {
-            number: appliedFilterCount.value,
-          })
-        : i18n.t("filter-list.clear")
     )
 
     const searchType = computed(() => content.getSearchTypeProps())
@@ -176,7 +167,6 @@ export default defineComponent({
       appliedFilterCount,
       showClearFiltersButton,
       isClearButtonDisabled,
-      clearFiltersLabel,
       clearFilters,
     }
   },

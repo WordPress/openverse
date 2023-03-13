@@ -2,7 +2,7 @@
   <VIcon v-if="showIcon" :icon-path="filterIcon" />
   <p
     v-else
-    class="flex h-6 w-6 items-center justify-center"
+    class="flex h-6 w-6 items-center justify-center rounded-sm"
     :class="pressed ? 'bg-tx' : 'bg-dark-charcoal-10'"
   >
     {{ appliedFilterCount }}
