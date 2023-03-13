@@ -106,10 +106,7 @@ class ImageViewSet(MediaViewSet):
     )
     def thumbnail(self, request, *_, **__):
         image = self.get_object()
-        image_url = image.url
-        # TODO: Remove the Phylopic check once the thumbnails are fixed.
-        if image.thumbnail and image.provider != "phylopic":
-            image_url = image.thumbnail
+        image_url = image.thumbnail or image.url
 
         return super().thumbnail(image_url, request)
 
