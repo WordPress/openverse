@@ -62,6 +62,44 @@ jobs:
               echo "image-tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
           fi
 
+  determine-images:
+    name: Determine images to publish
+    runs-on: ubuntu-latest
+    outputs:
+      build-matrix: ${{ steps.set-matrix.outputs.build-matrix }}
+      publish-matrix: ${{ steps.set-matrix.outputs.publish-matrix }}
+    needs:
+      - get-changes
+
+    steps:
+      - name: Set matrix images
+        id: set-matrix
+        env:
+          CHANGES: ${{ needs.get-changes.outputs.changes }}
+        shell: python
+        run: |
+          import os
+          import json
+
+          changes = json.loads(os.environ.get('CHANGES'))
+
+          build_matrix = {"image": [], "includes": []}
+          publish_matrix = {"image": []}
+
+          if "api" in changes:
+              build_matrix["includes"] += [{"image": "api", "target": "api"}]
+              publish_matrix["image"] += ["api", "api_nginx"]
+          if "ingestion_server" in changes:
+              build_matrix["includes"] += [{"image": "ingestion_server", "target": "ing"}]
+              publish_matrix["image"] += ["ingestion_server"]
+          if "frontend" in changes:
+              build_matrix["includes"] += [{"image": "frontend", "target": "app"}]
+              publish_matrix["image"] += ["frontend"]
+
+          with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
+              print(f"build-matrix={json.dumps(build_matrix)}", file=gh_out)
+              print(f"publish-matrix={json.dumps(publish_matrix)}", file=gh_out)
+
   #############
   # Universal #
   #############
@@ -122,51 +160,11 @@ jobs:
         with:
           labels: "🧱 stack: frontend"
 
-  ############################
-  # API and ingestion server #
-  ############################
-
-  determine-images:
-    name: Determine images to publish
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    needs:
-      - get-changes
-
-    steps:
-      - name: Set matrix images
-        id: set-matrix
-        env:
-          CHANGES: ${{ needs.get-changes.outputs.changes }}
-        shell: python
-        run: |
-          import os
-          import json
-          changes = json.loads(os.environ.get('CHANGES'))
-          images = []
-          includes = []
-          if "api" in changes:
-              images.append("api")
-              includes.append({"image": "api", "target": "api"})
-          if "ingestion_server" in changes:
-              images.append("ingestion_server")
-              includes.append({"image": "ingestion_server", "target": "ing"})
-          if "frontend" in changes:
-              images.append("frontend")
-              includes.append({"image": "frontend", "target": "app"})
-          matrix = json.dumps({
-            "image": images,
-            "include": includes,
-          })
-          with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
-              print(f"matrix={matrix}", file=gh_out)
-
   build-images:
     name: Build Docker images
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.determine-images.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.determine-images.outputs.build-matrix) }}
     needs:
       - get-image-tag
       - lint
