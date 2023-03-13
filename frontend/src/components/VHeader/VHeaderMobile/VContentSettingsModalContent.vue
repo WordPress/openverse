@@ -63,7 +63,7 @@
       <VButton
         v-show="showClearFiltersButton"
         variant="text"
-        class="label-regular"
+        class="!font-normal"
         :disabled="isClearButtonDisabled"
         @click="clearFilters"
         >{{ $t("filter-list.clear") }}
