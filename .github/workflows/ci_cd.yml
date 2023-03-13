@@ -96,6 +96,12 @@ jobs:
               build_matrix["includes"].append({"image": "frontend", "target": "app"})
               publish_matrix["image"].append("frontend")
 
+          build_matrix = json.dumps(build_matrix)
+          publish_matrix = json.dumps(publish_matrix)
+
+          print(f"build-matrix={json.dumps(build_matrix)}")
+          print(f"publish-matrix={json.dumps(publish_matrix)}")
+
           with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
               print(f"build-matrix={json.dumps(build_matrix)}", file=gh_out)
               print(f"publish-matrix={json.dumps(publish_matrix)}", file=gh_out)
