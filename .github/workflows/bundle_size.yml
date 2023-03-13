@@ -1,4 +1,4 @@
-name: Bundle size
+name: Nuxt bundle size
 
 on:
   pull_request:
