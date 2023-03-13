@@ -63,7 +63,7 @@ jobs:
           fi
 
   determine-images:
-    name: Determine images to publish
+    name: Determine images to build and publish
     runs-on: ubuntu-latest
     outputs:
       build-matrix: ${{ steps.set-matrix.outputs.build-matrix }}
@@ -87,14 +87,14 @@ jobs:
           publish_matrix = {"image": []}
 
           if "api" in changes:
-              build_matrix["includes"] += [{"image": "api", "target": "api"}]
+              build_matrix["includes"].append({"image": "api", "target": "api"})
               publish_matrix["image"] += ["api", "api_nginx"]
           if "ingestion_server" in changes:
-              build_matrix["includes"] += [{"image": "ingestion_server", "target": "ing"}]
-              publish_matrix["image"] += ["ingestion_server"]
+              build_matrix["includes"].append({"image": "ingestion_server", "target": "ing"})
+              publish_matrix["image"].append("ingestion_server")
           if "frontend" in changes:
-              build_matrix["includes"] += [{"image": "frontend", "target": "app"}]
-              publish_matrix["image"] += ["frontend"]
+              build_matrix["includes"].append({"image": "frontend", "target": "app"})
+              publish_matrix["image"].append("frontend")
 
           with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
               print(f"build-matrix={json.dumps(build_matrix)}", file=gh_out)
@@ -893,24 +893,21 @@ jobs:
       !failure() && !cancelled() &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
+      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
       ((github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'release' && github.repository == 'WordPress/openverse'))
     needs:
-      # `build-images` is automatically included in `test-ing` and `test-api`.
-      - test-ing
-      - test-api
-      - build-nginx
-      - build-images
+      - determine-images
       - get-image-tag
+      - build-images
+      - build-nginx
+      - test-ing # test for ingestion server
+      - test-api # test for API
+      - nuxt-build # test for frontend
     permissions:
       packages: write
       contents: read
     strategy:
-      matrix:
-        image:
-          - api
-          - ingestion_server
-          - api_nginx
-          - frontend
+      matrix: ${{ fromJson(needs.determine-images.outputs.publish-matrix) }}
 
     steps:
       - name: Log in to GitHub Docker Registry
