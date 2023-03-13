@@ -1,26 +1,7 @@
-name: Compressed Size
+name: Nuxt bundle size
 
 on:
   pull_request:
-    paths:
-      - "**.ts"
-      - "**.js"
-      - "**.vue"
-      - "**.css"
-      # Changes to any dependency
-      - "pnpm-lock.yaml"
-      # This file configures ESLint. Changes could affect the outcome.
-      - "**.eslint*"
-      # This file configures Prettier. Changes could affect the outcome.
-      - "**.prettier*"
-      # This file configures TypeScript. Changes could affect the outcome.
-      - "**.tsconfig*"
-      # This file configures Nuxt (and therefore the build). Changes could affect the outcome.
-      - "frontend/nuxt.config.ts"
-      # This file configures Tailwind and could affect the style outcome.
-      - "frontend/tailwind.config.js"
-      # Changes to this workflow file should always verify the changes are successful.
-      - ".github/workflows/bundle_size.yml"
 
 # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
@@ -30,10 +11,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  get-changes:
+    name: Get changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      frontend: ${{ steps.paths-filter.outputs.frontend }}
+      lint: ${{ steps.paths-filter.outputs.lint }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get changes
+        id: paths-filter
+        uses: ./.github/actions/get-changes
+
   build:
     name: Check
     runs-on: ubuntu-latest
-    if: github.repository == 'WordPress/openverse-frontend'
+    if: |
+      github.repository == 'WordPress/openverse' &&
+      (needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.lint == 'true')
+    needs:
+      - get-changes
 
     steps:
       - name: Checkout repository
@@ -44,6 +46,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           setup_python: false
+          install_recipe: node-install
 
       - uses: preactjs/compressed-size-action@2.5.0
         with:
