@@ -65,7 +65,7 @@ around what constitutes "sensitive content" for Openverse users.
     Spanish, Brazilian Portugese, Turkish, and Russian. English is the only
     language used by all maintainers.
 
-3.  On what basis will Openverse maintainers use their "descretion" to create
+3.  On what basis will Openverse maintainers use their "discretion" to create
     this list?
 
     Until our community has developed its own standards around sensitivity, we
