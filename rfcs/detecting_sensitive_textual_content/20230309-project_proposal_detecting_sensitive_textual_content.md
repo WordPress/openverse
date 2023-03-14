@@ -66,8 +66,7 @@ categorisation of the sensitive terms list, or from an image classification API.
 Note that this designation needs to happen both in the search endpoint and in
 the single result endpoint. Each endpoint may need a different approach to
 achieve this. In particular, the approach taken will depend on whether
-Elasticsearch is used to determine whether a result needs to be designated as
-having sensitive textual content or if this is done in pure Python.
+Elasticsearch or Python is used to mark results as sensitive.
 
 ##### Implementation details
 
