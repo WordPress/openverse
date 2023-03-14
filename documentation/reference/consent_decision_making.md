@@ -1,14 +1,18 @@
 # Consent decision-making
 
-The Openverse project uses a decision-making model based on
-the
+```{contents} Table of Contents
+:depth: 3
+```
+
+The Openverse project uses a decision-making model based on the
 [Sociocracy practice of "consent decision-making"](https://patterns.sociocracy30.org/consent-decision-making.html).
 We hope this will accomplish the following:
 
 - Bring expediency to decision-making by giving guidelines for how and what
   types of feedback to give
-- Clarify the types of feedback expected during the decsion-making process, including which types of feedback must be addressed and which are marginal 
-  before a proposal can be ratified for implementation
+- Clarify the types of feedback expected during the decision-making process,
+  including which types of feedback must be addressed and which are marginal
+  before a proposal can be approved for implementation
 - Give specificity in feedback expectations, both for who will participate in a
   decision-making process and what responsibilities and tools they have for
   participating
@@ -54,10 +58,8 @@ adhere to. They cannot cover every situation and undoubtedly there are
 exceptional situations where following these suggestions to the letter would be
 antithetical to the goals of the project and even of the process itself.
 
-If during your time as an Openverse contributor, you feel there are ways in
-which this process can be improved and iterated upon, please know that this
-process should be iterated upon and that suggestions for improvement are open
-from any contributor to the project.
+If you have ideas for improving the Openverse decision-making process, please
+share them. Suggestions are open to any contributor.
 
 ## Terms
 
@@ -67,71 +69,36 @@ from any contributor to the project.
 - "Reactions": A broad class of feedback that can include personal preferences
   as well as general doubts about the validity or safety of the solutions
   described in the proposal.
-- "Question": A request for clarification, explanation, or additional information about an aspect of the proposal.
+- "Question": A request for clarification, explanation, or additional
+  information about an aspect of the proposal.
 - "Objection": An explained uncertainty about the appropriateness, efficacy, or
   safety of a solution
 - "Paramount objection": An objection outlining an issue that would cause harm
   to the project or its contributors; especially issues that could cause harm
   and are difficult to reverse and not strictly necessary to accomplish the
   goals of the project
-- "Ratified proposal": A proposal that has undergone the formal decision-making
-  process and has been accepted as a valid solution by the participants of the discussion.
+- "Approved proposal": A proposal that has undergone the formal decision-making
+  process and has been accepted as a valid solution by the participants of the
+  discussion.
 - "Process proposal": A proposal to change processes followed by the
   contributors in the course of stewarding the project towards success.
 - "Purpose": The motivation for the proposal. This is typically a statement
   describing the problem the proposal aims to solve. In the original Sociocratic
   model this is called the "driver".
 
-## Major differences from the original process
-
-Aside from being conducted primarily as an asynchronous process, Openverse's
-consent decision-making process has the following major differences from the
-Sociocratic model.
-
-### Reactions
-
-While the original process has a separate reactions round, in Openverse's
-process, reactions can be shared at any time. Be careful to ensure that they're
-not objections (which should, with few exceptions, be reserved for the objection
-round). Examples of reactions are:
-
-- "I love this approach"
-- "I like this proposal, but I don't understand X part of it yet"
-- "I don't think this will work, but I left some questions to clarify the areas
-  I have concerns over"
-- "I don't understand the underlying problem, so the solution seems too abstract
-  to me"
-- "I don't think this solution will solve the problem as described"
-
-Note that these are not questions (they do not ask for clarification) nor are
-they objections (they do not point to specific problems with the proposed
-solution).
-
-### Removal of initial rounds
-
-Because our process is primarily asynchronous, because our decision-making
-happens in public, and because the outcomes of our discussions are ultimately
-documented in GitHub or other accessible venues, we can skip some of the initial
-rounds. Specifically, the "consent to driver" and the "present the proposal"
-rounds cannot work in the same way. Typically, the purpose of a proposal will
-have been clarified through a previous discussion. Proposals raised without
-prior "buy-in" from other contributors should be done so carefully, with the
-understanding that participants may question the purpose and need for the
-proposal. The presentation of a proposal happens implicitly when the GitHub PR
-or discussion is opened to contain the proposal, so we do not need a special
-step for this.
-
 ## Process summary
 
-Full descriptions of each of these rounds of discussion are below. This section
-is meant as a summary for getting an initial overview for people new to the
-process or refreshing the broad intentions for folks already familiar with it.
+The process breaks proposal evaluation and decision-making into a series of
+rounds. Each round has expectations about what kinds of feedback are
+appropriate. These steps are ordered and must be followed in the order they are
+presented here.
 
-These steps are ordered and must be followed in the order they are presented
-here.
+Full descriptions for each of these rounds are below. This section is a summary
+meant to give an overview for people new to or refreshing themselves on the
+process.
 
-> **Nota bene**: The "goal" column is a very brief summary and is not intended
-> to encapsulate the full scope of the round. Please refer to the
+> **Note** The "goal" column is a very brief summary and is not intended to
+> encapsulate the full scope of the round. Please refer to the
 > [round descriptions below](#round-descriptions) for more details and examples.
 
 | round                                                 | Suggested span      | Goal                                                                                      |
@@ -140,7 +107,7 @@ here.
 | [Revision round](#revision-round)                     | Author's discretion | Update the text of the proposal to reflect the outcome of the previous round              |
 | [Objection round](#objection-round)                   | 2 days              | Identify paramount and non-paramount objections                                           |
 | [Objection revision round](#objection-revision-round) | Author's discretion | Work with participants to revise the text of the proposal to address paramount objections |
-| [Ratification](#ratification)                         | N/A                 | Mark as accepted and create issues to implement the proposal                              |
+| [Approval](#approval)                                 | N/A                 | Mark as approved and create issues to implement the proposal                              |
 | [Tabling](#tabling)                                   | N/A                 | Indicate that a proposal will not be implemented                                          |
 
 ## Proposal requirements
@@ -157,15 +124,14 @@ or at the top of the GitHub Discussion:
 ## Decision-making process
 
 For the purposes of this discussion, we will follow
-[Openverse’s decision-making model](https://wordpress.github.io/openverse/reference/consent_decision_making.html).
-Please note that this process follows formalised steps with specific
-expectations of participants. Before contributing, please read
+[Openverse's decision-making model](https://wordpress.github.io/openverse/reference/consent_decision_making.html).
+This process follows formalised steps with specific expectations of
+participants. Before contributing, please read
 [this document](https://wordpress.github.io/openverse/reference/consent_decision_making.html)
 as well as
-[Openverse’s Code of Conduct](https://github.com/WordPress/openverse/blob/main/CODE_OF_CONDUCT.md).
-Please note that the consent decision-making document linked above also includes
-instructions for opting out of a decision discussion you do not wish to
-or cannot participate in.
+[Openverse's Code of Conduct](https://github.com/WordPress/openverse/blob/main/CODE_OF_CONDUCT.md).
+The consent decision-making document linked above also includes instructions for
+opting out of a decision discussion you do not wish to or cannot participate in.
 
 ## Current round
 
@@ -195,53 +161,54 @@ The following general guidelines apply to all rounds:
 
 ### Question round
 
-This round lasts for 3 business days after the discussion starts but can be
-extended if questions reveal significant gaps in the proposal that must be
-understood before the proposal can be revised in the revision step. These
-questions are different from objections in that they’re not in the form of "we
-cannot do this because x part of the proposal will not work". Rather, they are
-clarifying questions in the form of:
+The goal of the question round is for everyone participating to fully understand
+the proposal.
 
-- "I don’t understand y in the proposal, can you clarify what is meant by this?"
+The round lasts for 3 business days but can be extended if important gaps in the
+proposal are found that would delay revision. Questions are different from
+objections in that they're not in the form of "we cannot do this because x part
+of the proposal will not work". Rather, they are clarifying questions in the
+form of:
+
+- "I don't understand y in the proposal, can you clarify what is meant by this?"
 - "I think a gap exists in the proposed solution here [clarify where]. Can you
   fill in the details in this area?"
 
-In short, the goal of the question round is for everyone participating to fully
-understand the proposal. Participants are urged that many objections can be
-restated as questions. This helps promote good faith between participants and
-allows the author to clarify things they might have missed in the initial draft
-of the proposal. This does _not_ mean that known paramount objections should be
-reserved by participants. If you know that a proposed solution is impossible or
-illegal, please do raise this concern as soon as possible.
+Participants should keep in mind that many objections can be restated as
+questions. This helps promote good faith between participants and allows the
+author to clarify things they might have missed in the initial draft of the
+proposal. This does _not_ mean participants should delay sharing known paramount
+objections. If you know that a proposed solution is impossible or illegal,
+please do raise this concern as soon as possible.
 
-Note that the author does not have to respond to every question. However, they
-should keep them in mind during the revision round.
+Note that the author does not have to respond to _every_ question. However, they
+should keep them in mind during the revision round with the understanding that
+the questions are shared in order to clarify the proposal.
 
 #### Reactions
 
 This round also invites participants to share reactions, positive or negative,
-separate from potential paramount objections. This is an excellent round
-to highlight positive aspects of the proposal, regardless of any paramount 
-objections. You may also share non-paramount
-objections at this round. For example, “I find JavaScript harder to work with
-than Python” is an objection but not a paramount objection. What makes an
-objection “paramount” is clarified further in the
-[Objection round](#objection-round) below.
+separate from potential paramount objections. This is an excellent round to
+highlight positive aspects of the proposal, regardless of any paramount
+objections. You may also share non-paramount objections at this round. For
+example, "I find JavaScript harder to work with than Python" is an objection but
+not a paramount objection. What makes an objection "paramount" is clarified
+further in the [Objection round](#objection-round) below.
 
-Reactions are expected during this round because, similar to questions,
-they can help prompt further clarification from the author to be address in the
-revision round.
+Reactions are expected during this round because, similar to questions, they can
+help prompt further clarification from the author to be address in the revision
+round.
 
 #### Purpose
 
-Proposals should all include an explicit "purpose". Often these are informed by
+Proposals must all include an explicit "purpose". Often these are informed by
 the needs of a particular project associated with the proposal or with a
 requested discussion as the result of a retrospective or other self-feedback
 mechanism. However, contributors may, at their discretion, raise proposals for
 discussion that do not have prior conversations. In these cases, the question
 round is also understood to include an evaluation and clarification of the
 purpose of the proposal. For regularly requested proposals, however, the purpose
-is taken to be accepted and should not be the focus
+is taken to be accepted and should not be the focus of the discussion.
 
 ### Revision round
 
@@ -255,68 +222,66 @@ requires additional time beyond their initial estimation, they should let the
 other participants know as soon as possible, keeping in mind that other
 discussions may be stalled in the meantime.
 
-**No revisions should be made to the proposal before
-this point other than grammatical or spelling corrections**. The reason for this
-is to allow the question round to fully complete without the proposal changing
-during the discussion. This allows clarification to happen fully without having
-to track ongoing changes to the proposal and sets the expectation that changes
-the proposal incorporate all the clarifying questions asked in addition to any
-information surfaced in the reaction round. This helps to minimise the
-potentially "frantic" nature of a discussion that is happening about a proposal
-document that is changing simultaneously with the discussion.
+**No revisions should be made to the proposal before this point other than
+grammatical or spelling corrections**. The reason for this is to allow the
+question round to fully complete without the proposal changing during the
+discussion. This allows clarification to happen fully without having to track
+ongoing changes to the proposal. It also sets the expectation that revisions to
+the proposal address the questions and reactions in full. This helps to minimise
+the potentially "frantic" nature of a discussion that is happening about a
+proposal document that is changing simultaneously with the discussion.
 
 ### Objection round
 
 This round lasts for 2 business days. Participants are now invited to share
-“paramount objections” to the proposal, if any exist. Objections are considered
-“paramount” only if:
+"paramount objections" to the proposal, if any exist. Objections are considered
+"paramount" only if:
 
 - They point to an issue that prevents the team from achieving its goals
   (whether these are technical, community, or interpersonal). These issues can
   also be said to "harm" the project or its contributors.
 - The objection reveals something that is irreversible (or extremely difficult
-  to reverse) of which the participants are not at least “okay” with or “sure
-  of”. For example, a proposal to switch to using MySQL when we’re currently
+  to reverse) of which the participants are not at least "okay" with or "sure
+  of". For example, a proposal to switch to using MySQL when we're currently
   invested heavily in Postgres would require significant time investment that
   would be difficult to reverse. If the participants are not absolutely certain
   that it is the best decision, then any objection to making the switch would be
   paramount.
 
-Note that during this round, like the question round, the author should not
-modify the text of the proposal. The focus of the author in this round should be
-to clarify objections (especially paramount objections) and decide whether
-the proposal can address them. This
-allows time for participants to fully digest the proposal and raise all
-objections without further revision happening. Participants are expected to help
-each other decide whether an objection is paramount. Whether an objection is
-paramount can be questioned by the author, but they should prefer to defer to
-the participants and trust their judgement.
+During this round, as in the question round, the author should not modify the
+text of the proposal. The focus of the author in this round should be to clarify
+objections (especially paramount objections) and decide whether the proposal can
+address them. This allows time for participants to fully digest the proposal and
+raise all objections without further revision happening. Participants are
+expected to help each other decide whether an objection is paramount. Whether an
+objection is paramount can be questioned by the author, but they should prefer
+to defer to the participants and trust their judgement.
 
 If there are no paramount objections then the process has finished and the
-proposal is [ratified](#ratification). In that case mark the discussion as
-ratified, however this can be best done with the tool being used (merge the PR,
-close the discussion, etc). The author is responsible for updating the “Current
-round” text to signify the proposal’s ratification.
+proposal is [approved](#approval).
 
-After the 2-day period, if the author does not think they can address
-the paramount objections, then the proposal is [tabled](#tabling). For projects
-where we absolutely want to implement, this should be rare.
-However, sometimes a paramount objection may be raised that requires completely
-re-writing the proposal from the ground up. In that case, we will follow this
-process again from the start with the new proposal, so we will end the process
-for the first proposal at this round and wait for a new one to be raised. In
-these cases, the author should update the “Current round” text to note that the proposal was tabled and that a new proposal has been requested.
+After the 2-day period, if the author does not think they can address the
+paramount objections, then the proposal is [tabled](#tabling). For certain
+proposals, this will be an unlikely outcome, in particular if the purpose of the
+proposal is well-established and necessary for the project. However, sometimes a
+paramount objection may be raised that requires completely re-writing the
+proposal from the ground up. In that case, we will follow this process again
+from the start with the new proposal, so we will end the process for the first
+proposal at this round and wait for a new one to be raised.
+
+Regardless of the outcome, the author is responsible for completing
+[the steps to finalise the discussion](#outcomes).
 
 ### Objection revision round
 
 This round, similar to the previous revision round, lasts as long as the author
-of the proposal needs it to last to completely address the paramount objections.
-The author should work with the person who raised the objection to revise the
-proposal to address the issue to resolution. The goal of this round is to reach
-a "good enough" middle ground solution that either completely addresses the
-paramount objection or mitigates the potential harm identified.
+needs to completely address the paramount objections. The author will work with
+the person who raised the objection to revise the proposal to address the issue
+to resolution. The goal of this round is to reach a "good enough" middle ground
+solution that either completely addresses the paramount objection or mitigates
+the potential harm identified.
 
-As stated in the previous round’s description, objection revision should only
+As stated in the previous round's description, objection revision should only
 happen if paramount objections can indeed be revised to remove the harm. If the
 paramount objection involves a core issue of the proposal that cannot be
 revised, then an entirely new proposal should be written, rather than the
@@ -334,12 +299,20 @@ that is implementation planning or implementation itself.
 ## Outcomes
 
 There are two possible outcomes for any proposal that follows this process:
-ratification or tabling.
+approval or tabling. In both cases, the author is expected to:
 
-### Ratification
+- Update the current round callout to indicate the outcome
+- If the proposal is in a GitHub discussion, lock the discussion
+- If the proposal is in a PR, merge the PR if approved or close it if tabled
+- Move the associated card on the discussion dashboard to the appropriate column
 
-Ratification occurs once all paramount objections have been addressed and the
-author is satisfied with the state of the proposal. At this point any necessary GitHub issues should be created and linked to the proposal.
+Further requirements specific to each outcome follow.
+
+### Approval
+
+Approval occurs once all paramount objections have been addressed and the author
+is satisfied with the state of the proposal. At this point any necessary GitHub
+issues should be created and linked to the proposal.
 
 ### Tabling
 
@@ -389,13 +362,14 @@ started being used are not documented there.
 
 For the most part, the columns correspond 1-to-1 with rounds of the Openverse
 consent decision-making process. However, the following columns are unique and
-bear explaining:
+bear explanation:
 
 - "Proposal requested": This column is meant for requested proposals or
   discussions for which no formal proposal yet exists. This column should be
   populated by the issues that document the request.
 - "Discussion pending": This column is meant for proposals that have been
-  written, but cannot
+  written, but cannot yet start the decision-making process (likely due to
+  contributor unavailability).
 
 ### Minimising parallel discussions
 
@@ -456,7 +430,7 @@ can follow two processes:
 
 For both, we will aim to limit the process discussions to one discussion at a
 time for any given team member. This is recommended to avoid discussion burn out
-as I think I’ve observed process discussions feeling much heavier weight and
+as I think I've observed process discussions feeling much heavier weight and
 burdensome than technical discussions. It also makes sure there is still room
 for team members to be involved in one other separate technical discussion and
 feel like they can still focus on their other work duties.
@@ -561,3 +535,42 @@ should still create a top-level comment closing the previous round and opening
 the objection round. If the proposal goes into objection revision, the
 discussion for addressing a given objection can happen in the accompanying
 thread.
+
+## Major differences from the original process
+
+Aside from being conducted primarily as an asynchronous process, Openverse's
+consent decision-making process has the following major differences from the
+Sociocratic model.
+
+### Reactions
+
+While the original process has a separate reactions round, in Openverse's
+process, reactions can be shared at any time. Be careful to ensure that they're
+not objections (which should, with few exceptions, be reserved for the objection
+round). Examples of reactions are:
+
+- "I love this approach"
+- "I like this proposal, but I don't understand X part of it yet"
+- "I don't think this will work, but I left some questions to clarify the areas
+  I have concerns over"
+- "I don't understand the underlying problem, so the solution seems too abstract
+  to me"
+- "I don't think this solution will solve the problem as described"
+
+Note that these are not questions (they do not ask for clarification) nor are
+they objections (they do not point to specific problems with the proposed
+solution).
+
+### Removal of initial rounds
+
+Because our process is primarily asynchronous, because our decision-making
+happens in public, and because the outcomes of our discussions are ultimately
+documented in GitHub or other accessible venues, we can skip some of the initial
+rounds. Specifically, the "consent to driver" and the "present the proposal"
+rounds cannot work in the same way. Typically, the purpose of a proposal will
+have been clarified through a previous discussion. Proposals raised without
+prior "buy-in" from other contributors should be done so carefully, with the
+understanding that participants may question the purpose and need for the
+proposal. The presentation of a proposal happens implicitly when the GitHub PR
+or discussion is opened to contain the proposal, so we do not need a special
+step for this.
