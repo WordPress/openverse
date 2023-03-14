@@ -91,12 +91,6 @@ env:
     cp api/env.template api/.env
     cp ingestion_server/env.template ingestion_server/.env
 
-# Ensure all services are up and running
-@_all-up:
-    just up
-    just ingestion_server/wait
-    just api/wait # API waits for ES in entrypoint
-
 ##########
 # Docker #
 ##########
@@ -118,6 +112,13 @@ build *args:
 # Bring all Docker services up, in all profiles
 up *flags:
     just dc up -d {{ flags }}
+
+# Also see `wait-up` recipe in sub-justfiles
+# Wait for all services to be up
+wait-up: up
+    just ingestion_server/wait-up
+    just api/wait-up
+    just frontend/wait-up
 
 # Also see `init` recipe in sub-justfiles
 # Load sample data into the Docker Compose services
