@@ -95,6 +95,7 @@ around what constitutes "sensitive content" for Openverse users.
    who are comfortable with looking at the list and reviewing the PR, looking
    for terms which should be removed or missing terms which should be added.
 5. Merge the PR, and now the list is available for use in Openverse projects.
+6. Publish a "Make" post about the creation of the list and its purpose.
 
 ## This Will Not Be Perfect
 
