@@ -82,8 +82,8 @@ There are two broad approaches that can be taken for this. I am actively
 consulting with people more familiar with Elasticsearch for the best way to do
 this, but the broad strokes of this are that we will either:
 
-- Loop over results in Python and use a Regex to determine if textual content
-  on the result includes sensitive terms. The results of this will be cached in
+- Loop over results in Python and use a Regex to determine if textual content on
+  the result includes sensitive terms. The results of this will be cached in
   Redis to ameliorate performance degradation over time.
 - Use a script field and multi-index search to determine in Elasticsearch and as
   a hit property whether the result is included in the filtered index (and is
@@ -108,13 +108,12 @@ Sensitive results never appear for users who have not opted-in to including
 sensitive results in their query. This feature will be built off the existing
 "mature" filter but enhanced with better UI and more comprehensive/less
 suggestive language. The API query parameter is not present in the frontend
-search route's query parameters. Instead, the setting is set within the
-browser's session storage and the filter applied at query time (rather than
-being passed through via the query params of the page). **Note that this differs
-from the implementation of the "mature" filter that previously existed**. This
-is discussed in further depth in the
-[settings persistence](#settings-persistence) and
-[outstanding questions](#outstanding-questions) sections below.
+search route's query parameters. Instead, the setting is set within a session
+cookie and the filter applied at query time (rather than being passed through
+via the query params of the page). **Note that this differs from the
+implementation of the "mature" filter that previously existed**. This is
+discussed in further depth in the [settings persistence](#settings-persistence)
+and [outstanding questions](#outstanding-questions) sections below.
 
 Sensitive results on the search results page are blurred. Users can unblur and
 reblur individual results through a simple and clear interaction on the search
@@ -136,14 +135,13 @@ page rather than a client side navigation.
 #### Settings persistence
 
 Right now, the recommendation is to store the "include sensitive results"
-setting in session storage and the "do not blur sensitive results" setting in
-the ephemeral application state. "Include sensitive settings" should not be
-reset by a page reload, but "do not blur sensitive results" should. To
-summarise:
+setting in session cookie and the "do not blur sensitive results" setting in the
+ephemeral application state. "Include sensitive settings" should not be reset by
+a page reload, but "do not blur sensitive results" should. To summarise:
 
 | Setting                       | Default | Persistence location            | Behaviour implications                                                                                                                                              |
 | ----------------------------- | ------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Include sensitive results     | Off     | Session storage                 | Cannot be manipulated through the query params. Does not reset on page reload or in new tabs. Does reset when the browser is restarted or when the session expires. |
+| Include sensitive results     | Off     | Session cookie                  | Cannot be manipulated through the query params. Does not reset on page reload or in new tabs. Does reset when the browser is restarted or when the session expires. |
 | Do not blur sensitive results | Off     | Application state (Pinia store) | Cannot be manipulated through the query params. Resets on page reloads and in new tabs and is independent of the browser session.                                   |
 
 Compared to Google and DuckDuckGo image searches' behaviour, ours would be more
@@ -172,15 +170,15 @@ clear benefit that I can think of.
 
 As described in the [settings persistence](#settings-persistence) section above,
 one outstanding question is how to store the "include sensitive results" option.
-The current recommendation is to use session storage. Discussed above is storing
-the setting in the query params (with reasons why we shouldn't do this). The
-only other option is to store the setting in the ephemeral application state the
-way we will store the "do not blur sensitive results" option.
+The current recommendation is to use a session cookie. Discussed above is
+storing the setting in the query params (with reasons why we shouldn't do this).
+The only other option is to store the setting in the ephemeral application state
+the way we will store the "do not blur sensitive results" option.
 
 To simply phrase the question to reviewers: **What is your preference for
 storing the "include sensitive results" option and why?**.
 
-Above I've recommended the session storage approach because I think it strikes a
+Above I've recommended the session cookie approach because I think it strikes a
 reasonable balance between usability and safety. If someone really wants to
 include sensitive results, they won't be annoyed by having to re-enable the
 setting every time they reload the page or open a new tab within the same
