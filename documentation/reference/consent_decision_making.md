@@ -1,6 +1,6 @@
 # Consent decision-making
 
-The Openverse maintainers have elected to adopt a decision-making model based on
+The Openverse project uses a decision-making model based on
 the
 [Sociocracy practice of "consent decision-making"](https://patterns.sociocracy30.org/consent-decision-making.html).
 We hope this will accomplish the following:
@@ -25,7 +25,7 @@ addition to the benefits described above.
 The process described below is heavily modified from the regular Sociocratic
 process. The differences come from two directions:
 
-- The needs of a largely asynchronously coordinated base of contributors
+- The needs of an asynchronously coordinated base of contributors
 - Internal feedback and iteration on the initial process, even after
   modification for asynchrony
 
@@ -67,9 +67,7 @@ from any contributor to the project.
 - "Reactions": A broad class of feedback that can include personal preferences
   as well as general doubts about the validity or safety of the solutions
   described in the proposal.
-- "Question": A request for clarification or explanation of an aspect of the
-  proposal. Questions may also request additional information be added to the
-  proposal.
+- "Question": A request for clarification, explanation, or additional information about an aspect of the proposal.
 - "Objection": An explained uncertainty about the appropriateness, efficacy, or
   safety of a solution
 - "Paramount objection": An objection outlining an issue that would cause harm
@@ -77,8 +75,7 @@ from any contributor to the project.
   and are difficult to reverse and not strictly necessary to accomplish the
   goals of the project
 - "Ratified proposal": A proposal that has undergone the formal decision-making
-  process and has been accepted as a valid solution for the problem it tries to
-  address by the participants of the discussion.
+  process and has been accepted as a valid solution by the participants of the discussion.
 - "Process proposal": A proposal to change processes followed by the
   contributors in the course of stewarding the project towards success.
 - "Purpose": The motivation for the proposal. This is typically a statement
@@ -160,25 +157,25 @@ or at the top of the GitHub Discussion:
 ## Decision-making process
 
 For the purposes of this discussion, we will follow
-[Openverse’s version of the Consent decision-making model](https://wordpress.github.io/openverse/reference/consent_decision_making.html).
+[Openverse’s decision-making model](https://wordpress.github.io/openverse/reference/consent_decision_making.html).
 Please note that this process follows formalised steps with specific
-expectations of participants. Before jumping in, please read
+expectations of participants. Before contributing, please read
 [this document](https://wordpress.github.io/openverse/reference/consent_decision_making.html)
 as well as
 [Openverse’s Code of Conduct](https://github.com/WordPress/openverse/blob/main/CODE_OF_CONDUCT.md).
 Please note that the consent decision-making document linked above also includes
-specific provisions for opting out of a decision discussion you do not wish to
+instructions for opting out of a decision discussion you do not wish to
 or cannot participate in.
 
 ## Current round
 
-The discussion is currently in the {Question, Reaction, Revision, Objection
-raising, Objection revision} round.
+The discussion is currently in the **{Question, Reaction, Revision, Objection
+raising, Objection revision}** round.
 ```
 
 ## Round descriptions
 
-Please keep in mind the following general guidelines that apply to all rounds:
+The following general guidelines apply to all rounds:
 
 - Reactions may be shared at any of the "feedback" rounds (Question and
   Objection).
@@ -223,15 +220,15 @@ should keep them in mind during the revision round.
 #### Reactions
 
 This round also invites participants to share reactions, positive or negative,
-separate from potential paramount objections and in particular is an excellent
-venue to highlight positive aspects of the proposal regardless of whether
-paramount objections might be raised later. You may also share non-paramount
+separate from potential paramount objections. This is an excellent round
+to highlight positive aspects of the proposal, regardless of any paramount 
+objections. You may also share non-paramount
 objections at this round. For example, “I find JavaScript harder to work with
 than Python” is an objection but not a paramount objection. What makes an
 objection “paramount” is clarified further in the
 [Objection round](#objection-round) below.
 
-Reactions are explicitly expected at this round because, similar to questions,
+Reactions are expected during this round because, similar to questions,
 they can help prompt further clarification from the author to be address in the
 revision round.
 
@@ -258,7 +255,7 @@ requires additional time beyond their initial estimation, they should let the
 other participants know as soon as possible, keeping in mind that other
 discussions may be stalled in the meantime.
 
-To every extent possible, **no revisions should be made to the proposal before
+**No revisions should be made to the proposal before
 this point other than grammatical or spelling corrections**. The reason for this
 is to allow the question round to fully complete without the proposal changing
 during the discussion. This allows clarification to happen fully without having
@@ -287,8 +284,8 @@ This round lasts for 2 business days. Participants are now invited to share
 
 Note that during this round, like the question round, the author should not
 modify the text of the proposal. The focus of the author in this round should be
-in clarifying objections (especially paramount objections) and deciding whether
-it will be possible or reasonable to revise the proposal to address them. This
+to clarify objections (especially paramount objections) and decide whether
+the proposal can address them. This
 allows time for participants to fully digest the proposal and raise all
 objections without further revision happening. Participants are expected to help
 each other decide whether an objection is paramount. Whether an objection is
@@ -301,15 +298,14 @@ ratified, however this can be best done with the tool being used (merge the PR,
 close the discussion, etc). The author is responsible for updating the “Current
 round” text to signify the proposal’s ratification.
 
-At the end of the 2-day period, if the author does not think they can address
+After the 2-day period, if the author does not think they can address
 the paramount objections, then the proposal is [tabled](#tabling). For projects
-where we absolutely want to follow through on the idea, this should be rare.
+where we absolutely want to implement, this should be rare.
 However, sometimes a paramount objection may be raised that requires completely
 re-writing the proposal from the ground up. In that case, we will follow this
 process again from the start with the new proposal, so we will end the process
 for the first proposal at this round and wait for a new one to be raised. In
-these cases, the author should update the “Current round” text to note that was
-tabled and that a new proposal has been requested.
+these cases, the author should update the “Current round” text to note that the proposal was tabled and that a new proposal has been requested.
 
 ### Objection revision round
 
@@ -338,15 +334,12 @@ that is implementation planning or implementation itself.
 ## Outcomes
 
 There are two possible outcomes for any proposal that follows this process:
-ratification or tabling. All raised proposals should eventually be marked as
-ratified (if the decision-making process warrants it) or tabled.
+ratification or tabling.
 
 ### Ratification
 
 Ratification occurs once all paramount objections have been addressed and the
-author is satisfied with the state of the proposal. At this point, if there are
-issues to create to implement the proposal, they should be created and linked in
-the proposal text relevant to the issue.
+author is satisfied with the state of the proposal. At this point any necessary GitHub issues should be created and linked to the proposal.
 
 ### Tabling
 
