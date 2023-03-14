@@ -120,12 +120,12 @@ dc *args:
 build *args:
     just dc build {{ args }}
 
-# Bring all Docker services up
-up *flags="":
+# Bring all Docker services up, in all profiles
+up *flags:
     just dc up -d {{ flags }}
 
-# Take all Docker services down
-down flags="":
+# Take all Docker services down, in all profiles
+down *flags:
     just dc down {{ flags }}
 
 # Recreate all volumes and containers from scratch
