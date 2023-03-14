@@ -94,7 +94,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":spinning-cd: A deployment of production-api triggered by <@${{ env.SLACK_USER_ID }}> is starting using the `${{ inputs.tag }}` tag."
+                    "text": ":spinning-cd: A deployment of *production-api* triggered by <@${{ env.SLACK_USER_ID }}> is starting using the `${{ inputs.tag }}` tag."
                   }
                 },
                 {
@@ -220,7 +220,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":tadaco: The deployment of production-api triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *succeeded*."
+                    "text": ":tadaco: The deployment of *production-api* triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *succeeded*."
                   }
                 },
                 {
@@ -248,7 +248,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":alert: The deployment of production-api triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *failed* :alert:"
+                    "text": ":alert: The deployment of *production-api* triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *failed* :alert:"
                   }
                 },
                 {
