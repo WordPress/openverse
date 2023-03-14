@@ -11,6 +11,14 @@ Detect results with sensitive textual content by checking their textual content
 against a list of sensitive terms. Once results with sensitive terms in their
 textual content are determined, blur those results on the frontend.
 
+> **Note** We acknowledge that we are making an inference about results based on
+> textual context. That inference applies specifically to the textual content
+> _only_, but is also likely to apply to content itself (whether image or
+> audio). We also acknowledge the various pit-falls that can come with this
+> approach as well as its insufficency. However, it's the best approach we can
+> implement now, in a timely manner, that will substantively improve the
+> accessibility of Openverse.
+
 ## Goals
 
 This advances Openverse's goal of increasing the safety of the platform.
@@ -192,11 +200,13 @@ argument to be made it favour if this approach, however, please share it.
 
 ### How to blur results
 
-There are two viable approaches to blurring results. One is significantly
-simpler than the other.
+There are three known viable approaches to blurring results. One is
+significantly simpler than the other two. If you know of others, please raise
+them in review.
 
 1. Blur using a CSS filter.
 2. Blur using [BlurHash](https://github.com/woltapp/blurhash).
+3. Blur using [LQIP](https://github.com/transitive-bullshit/lqip-modern).
 
 > **Note**: Photon, the image proxy we use, does
 > [have an option to apply two different types of blurs to images](https://developer.wordpress.com/docs/photon/api/#filter).
@@ -206,7 +216,8 @@ simpler than the other.
 > could lead to thinking that we could blur in our own thumbnail endpoint, but
 > that would be more resource intensive than using BlurHash (I believe). While
 > BlurHash is technically complex to implement, I do think it is the best
-> approach for reasons I will describe below.
+> approach for reasons I will describe below. LQIP could also be resource
+> intensive for the API, but ameliorated with caching.
 
 #### CSS filter
 
@@ -220,9 +231,14 @@ This option has the following downsides:
   is used
 - Gaussian blur may not be as aesthetically pleasing as the alternative
 - It requires the image to be downloaded to be blurred by the client
-- Requires the client to blur the image which may not be viable for low-spec
-  devices like certain Chromebooks (important for education settings) or mobile
-  devices
+
+Initial I speculated that client-side Gaussian blurring may have adverse effects
+on low-spec hardware's accessibility of the site. However, I've tested this
+locally by modifying the frontend to blur all images and visiting the local site
+on my PinePhone, on a low-spec quad-core ARM laptop, and on a US$30 Android
+phone. On none of these devices could I perceive a degradation in performance.
+Keep in mind these are all devices that are already very slow! They were able to
+render a full page of image results blurred at 1rem, without issue.
 
 It has one significant upside in that it is supremely simple to implement, does
 not require any new dependencies, and would only require about few lines of
@@ -238,7 +254,7 @@ changes to support. Rather than sending the image to the client, the thumbnail
 URL would send a hashed version of the image that represents the blur. A client
 side library decodes the hash and displays it in place of the thumbnail. It
 would require two new dependencies, a JavaScript BlurHash decoder to render the
-hash and an API library to produce the hash from the thumbnail.
+hash in a canvas and an API library to produce the hash from the thumbnail.
 
 It has the following downsides:
 
@@ -257,6 +273,8 @@ It has the following downsides:
     that (due to the nature of BlurHash) ignores almost all the content of the
     image rather than a Gaussian blur which needs to consider ever aspect of the
     image in order to apply the blur
+- It may have its own client-side performance issues due to clients needing to
+  render canvas for each image in view
 
 It has the following upsides:
 
@@ -274,10 +292,46 @@ It has the following upsides:
   all images in the future in our re-crawler, we could use them as placeholders
   rather than the skeleton boxes we currently use
 
+#### LQIP (modern)
+
+This approach generates a very low quality version of the image and passes that
+to the frontend for scaling to the placeholder size and then blurring.
+[There is an example implementation in JavaScript](https://github.com/transitive-bullshit/lqip-modern).
+
+It has all the same downsides as BlurHash (aside from hash decoding) in addition
+to the fact that we would need to reimplement it in Python. As far as I can
+tell, there is no Python implementation ready for us to use. Performance issues
+on the API side can be amortised through caching. It does not have the same
+potential client-side performance issue as BlurHash as it only requires scaling
+and blurring an image. We know low-spec hardware can handle blurring, and
+scaling is a trivial operation for most hardware.
+
+It has similar upsides to BlurHash. Critically, compared to BlurHash it:
+
+- Does not require the client to render the hash in a canvas
+- Uses image scaling and blurring on an image with very small amounts of
+  information, meaning the client-side Gaussian blur will be less heavy than
+  blurring the full thumbnail
+
+However, unlike BlurHash, it has almost no practical future usage for us with
+respect to image analysis.
+
 #### Recommendation
 
-If we can spare the time, I think BlurHash is the correct choice for the
-following reasons:
+We should implement the CSS blurring solution first. It is an iterative
+improvement on the current solution and is the fastest way to bring the
+improvements to users.
+
+Therefore, provided we cannot identify real device accessibility concerns
+(noting my experiments [covered above](#css-filter)), we should proceed with the
+client-side CSS blurring, with a follow-up proposal requested to evaluate
+switching to BlurHash, LQIP, or some other more advanced solution from which we
+might receive additional benefits. This proposal request is not urgent and
+should be triaged in the context of our other scheduled projects.
+
+If we had infinite time, I think BlurHash would be the best choice—provided it
+itself does not end up having device accessibility issues—for the following
+reasons:
 
 1. While significantly more complex, it is not sufficiently complex to be
    burdensome. The simplicity of the CSS filter makes BlurHash look monstrous,
@@ -289,21 +343,20 @@ following reasons:
    performance issues can be ameliorated through caching hashes with Redis.
 
 The only significant downside that I think exists is the delay between
-unblurring and displaying the full image due to needing to download the
-full unblurred image. However, I think this is balanced out by the bytes saved
-over the network in _not_ sending images that might potentially never be
-unblurred.
+unblurring and displaying the full image due to needing to download the full
+unblurred image. However, I think this is balanced out by the bytes saved over
+the network in _not_ sending images that might potentially never be unblurred.
 
-For reviewers: **What are you feelings on this issue and why?**. One alternative
-to going straight for BlurHash, if we wanted to get blurring out the door
-quickly is to treat BlurHash as a future "nice to have" and use CSS blurring in
-the meantime. This would allow us to get a fully working feature slightly more
-quickly. I'm not totally convinced it'd be _that_ much faster though. Like I
-said above, BlurHash looks complicated, but really only in comparison to how
-simple the CSS approach is. Anything would look complicated when compared to
-just adding a CSS filter style to something.
+More important, however, is getting the benefits of this broad feature out to
+users as soon as we can without compromising on the initial quality. We can do
+so using client-side CSS blurring.
 
-##### Important detail
+For reviewers: **What are you feelings on this issue and why?**. Do you think it
+is worth investing time up front in BlurHash, LQIP, or another solution; or is
+it fine to push that off to a later date as a potential future improvement to
+the feature?
+
+## Measurements and success criteria
 
 The success of this project rests on the completion of its technical
 implementation. However, we can add the following events to the API and frontend
@@ -316,21 +369,28 @@ to better understand the usage of the features.
     set to `True`. It should include a raw count of the number of results with
     sensitive textual content or with `mature` set to `True`. Not sent for
     results where the search params would not include sensitive results.
+  - Allows us to measure the saturation of sensitive results for queries that
+    include them.
 
 ### Frontend
 
-- `SENSITIVE_RESULTS_TOGGLED`
-  - Sent each time the "include sensitive results" setting is toggled. Include a
-    prop noting if the setting was being toggled on or off.
-- `SENSITIVE_RESULT_UNBLURRED`
+Each of these are intended for measuring the usage of the feature to which they
+relate.
+
+- `TOGGLE_SENSITIVE_RESULTS`
+  - Sent each time the "include sensitive results" setting is toggled.
+  - Include a prop noting if the setting was being toggled on or off.
+- `UNBLUR_SENSITIVE_RESULT`
   - Sent each time a result is unblurred. This should include a property
     denoting whether it on the single result or search results page.
-- `SENSITIVE_RESULT_REBLURRED`
+  - Include media ID (in case this proves useful).
+- `REBLUR_SENSITIVE_RESULT`
   - Sent each time a result is reblurred. This should include a property
     denoting whether it on the single result or search results page.
-- `NO_BLUR_TOGGLED`
+  - Include media ID (in case this proves useful).
+- `TOGGLE_DO_NOT_BLUR`
   - Sent each time the "do not blur sensitive results" setting is toggled.
-    Include a prop noting if the setting was being toggled on or off.
+  - Include a prop noting if the setting was being toggled on or off.
 
 ## Participants and stakeholders
 
@@ -349,7 +409,9 @@ There are no infrastructure changes anticipated for this project.
 
 We can coordinate with marketing to describe the new feature and its motivations
 and celebrate the increased safety for users, especially young people, using
-Openverse.
+Openverse. In particular, we may be able to collaborate with educators that use
+Openverse and share what improving the accessibility of Openverse in this way
+means to them and their students.
 
 ## Required implementation plans
 
@@ -363,16 +425,14 @@ In the order they should be completed:
      [filtering](#implementation-details) and
      [designation](#implementation-details-1) sections above.
 
-2. If we opt to use BlurHash, API and frontend implementation plan for BlurHash
-
-   - Does not include the final UI for blurring/unblurring nor the settings
-     management functionality for search.
-
-3. Frontend implementation plan for settings management and blurring/unblurring
+2. Frontend implementation plan for settings management and blurring/unblurring
    images
+
    - Must cover the UI changes requested by design, management of both new
      settings, and displaying the blurred image with the ability to unblur.
 
-If we do not opt to use BlurHash or if we opt to put off using BlurHash for a
-future improvement, then we can skip item 2. The CSS approach is so simple it is
-fine to roll it into item 3.
+## Dependent implementation plans
+
+The actual implementation of the two implementation plans requested in this
+proposal are blocked by the implementation of the
+[sensitive terms list, as proposed here](https://github.com/WordPress/openverse/pull/911).
