@@ -46,16 +46,19 @@ process. The differences come from two directions:
 ## Continuous improvement and exceptions to every rule
 
 **This process is not set in stone.** Nor is it a set of laws that must be
-followed at all times. This document uses prescriptive language filled with
-imperatives primarily to prevent the process itself from being filled with
-contingencies at every turn. However, as with every other aspect of our ever
-evolving processes, these are merely suggestions that we expect contributors to
-adhere to. They cannot cover every situation and undoubtedly there are
-exceptional situations where following these suggestions to the letter would be
-antithetical to the goals of the project and even of the process itself.
+followed at all times. This document uses prescriptive language. However, keep
+in mind that broad qualifications exist and are described in this section. The
+document avoids qualifying every imperative in order to prevent the text from
+ballooning in size and complexity.
+
+As with every other aspect of our ever evolving processes, this process is
+merely a guideline that we expect contributors to adhere to. It cannot cover
+every situation and undoubtedly there are exceptional situations where following
+the process to the letter would be antithetical to the goals of the project and
+even of the process itself.
 
 If you have ideas for improving the Openverse decision-making process, please
-share them. Suggestions are open to any contributor.
+share them. Any contributor may provide feedback on this process.
 
 ## Terms
 
