@@ -31,6 +31,10 @@
 
 <!-- What infrastructural considerations need to be made for this project? If there are none, say so explicitly rather than deleting the section. -->
 
+## Accessibility
+
+<!-- Are there specific accessibility concerns relevant to this project? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
+
 ## Marketing
 
 <!-- Are there potential marketing opportunities that we'd need to coordinate with the community to accomplish? If there are none, say so explicitly rather than deleting the section. -->

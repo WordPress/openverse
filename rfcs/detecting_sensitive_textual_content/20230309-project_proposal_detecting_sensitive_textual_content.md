@@ -204,7 +204,8 @@ them in review.
 
 1. Blur using a CSS filter.
 2. Blur using [BlurHash](https://github.com/woltapp/blurhash).
-3. Blur using [Low Quality Image Placeholders (LQIP)](https://github.com/transitive-bullshit/lqip-modern).
+3. Blur using
+   [Low Quality Image Placeholders (LQIP)](https://github.com/transitive-bullshit/lqip-modern).
 
 > **Note**: Photon, the image proxy we use, does
 > [have an option to apply two different types of blurs to images](https://developer.wordpress.com/docs/photon/api/#filter).
@@ -356,7 +357,12 @@ the feature?
 
 ## Measurements and success criteria
 
-The success of this project rests on the completion of its technical
+The project will be a success once we are able to safely and accessibly serve
+sensitive results to users. This is qualified by the fact that this is an
+initial solution and not the totality of what we wish to do in order to make
+Openverse safer and more broadly accessible.
+
+The success of that project rests on the completion of its technical
 implementation. However, we can add the following events to the API and frontend
 to better understand the usage of the features.
 
@@ -404,6 +410,16 @@ relate.
 
 There are no infrastructure changes anticipated for this project.
 
+## Accessibility
+
+The various blurring approaches have potential device accessibility questions
+that need to be answered. For now, sticking with client-side CSS filtering, we
+should not have an issue with device accessibility.
+
+UI accessibility remains a priority. The frontend implementation plan should
+include clear instructions for ensuring the designs are implemented in an
+accessible way.
+
 ## Marketing
 
 We can coordinate with marketing to describe the new feature and its motivations
@@ -429,6 +445,8 @@ In the order they should be completed:
 
    - Must cover the UI changes requested by design, management of both new
      settings, and displaying the blurred image with the ability to unblur.
+   - Must cover accessibility testing for the new UI elements, especially the
+     unblur/reblur controls.
 
 ## Dependent implementation plans
 
