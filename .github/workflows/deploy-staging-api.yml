@@ -37,9 +37,9 @@ on:
         required: true
         description: JSON mapping of GitHub usernames to Slack user IDs.
 
-# Only allow a single deploy to happen at a time
-# If you need to stop an in-progress deployment to force another for the same
-# environment, you'll need to manually cancel it
+# Only allow a single deployment workflow (service + environment) to happen at a time
+# If you need to stop an in-progress deployment of a service to force another for
+# the same environment, you'll need to manually cancel it
 concurrency: ${{ github.workflow }}
 
 jobs:
