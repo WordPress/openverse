@@ -7,7 +7,7 @@ We hope this will accomplish the following:
 
 - Bring expediency to decision-making by giving guidelines for how and what
   types of feedback to give
-- Adopt more specific standards about what types of feedback must be addressed
+- Clarify the types of feedback expected during the decsion-making process, including which types of feedback must be addressed and which are marginal 
   before a proposal can be ratified for implementation
 - Give specificity in feedback expectations, both for who will participate in a
   decision-making process and what responsibilities and tools they have for
