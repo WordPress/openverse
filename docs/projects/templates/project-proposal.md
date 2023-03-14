@@ -25,7 +25,7 @@
 
 ## Participants and stakeholders
 
-<!-- Who is working on the project and who are the external stakeholders, if any? -->
+<!-- Who is working on the project and who are the external stakeholders, if any? Consider the lead, implementers, designers, and other stakeholders who have a say in how the project goes. -->
 
 ## Infrastructure
 

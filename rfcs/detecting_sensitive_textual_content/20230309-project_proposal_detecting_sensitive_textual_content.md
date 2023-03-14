@@ -399,6 +399,7 @@ relate.
 ## Participants and stakeholders
 
 - Lead: @sarayourfriend
+- Design: @panchovm
 - Implementation:
   - @sarayourfriend
   - TBD
