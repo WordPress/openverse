@@ -109,6 +109,7 @@ dc *args:
 build *args:
     just dc build {{ args }}
 
+# Also see `profile-up` recipe in sub-justfiles
 # Bring all Docker services up, in all profiles
 up *flags:
     just dc up -d {{ flags }}
