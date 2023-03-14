@@ -82,7 +82,7 @@ There are two broad approaches that can be taken for this. I am actively
 consulting with people more familiar with Elasticsearch for the best way to do
 this, but the broad strokes of this are that we will either:
 
-- Loop over results in Python and using a Regex to determine if textual content
+- Loop over results in Python and use a Regex to determine if textual content
   on the result includes sensitive terms. The results of this will be cached in
   Redis to ameliorate performance degradation over time.
 - Use a script field and multi-index search to determine in Elasticsearch and as
