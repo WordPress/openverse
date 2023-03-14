@@ -30,7 +30,7 @@ The Openverse team will maintain a standalone public repository which contains
 an English-language list of sensitive terms. This term list is a living document
 which accepts community revisions for adding and removing new terms. The
 contents of the list will initially be based on an existing public list,
-modified at the descretion of Openverse maintainers interested in contributing.
+modified at the discretion of Openverse maintainers interested in contributing.
 The list will be iterated on and refined as we develop community standards
 around what constitutes "sensitive content" for Openverse users.
 
@@ -55,7 +55,7 @@ around what constitutes "sensitive content" for Openverse users.
     The vast majority of indexed works are in English. Additionally, it would be
     difficult to validate suggestions for terms in languages not spoken by
     Openverse maintainers, which to my current knowledge includes English,
-    Spanish, Brazillian Portugese, Turkish, and Russian. English is the only
+    Spanish, Brazilian Portugese, Turkish, and Russian. English is the only
     language used by all maintainers.
 
 3.  On what basis will Openverse maintainers use their "descretion" to create
@@ -94,17 +94,17 @@ around what constitutes "sensitive content" for Openverse users.
 4. Identify willing reviewers from the `@WordPress/openverse-maintainers` group
    who are comfortable with looking at the list and reviewing the PR, looking
    for terms which should be removed or missing terms which should be added.
-5. Merge the PR, and now the list is avaliable for use in Openverse projects.
+5. Merge the PR, and now the list is available for use in Openverse projects.
 
 ## This Will Not Be Perfect
 
 By default, we accept that this list and its usage will not be perfect. At times
-we may accidently include terms which inadvertently cause harm to groups or
-individuals. We may also accidently expose users to undesired content in the
+we may accidentally include terms which inadvertently cause harm to groups or
+individuals. We may also accidentally expose users to undesired content in the
 implementation of this list. Despite the potential for these transgressions this
 work will always be based on the following assumptions:
 
-1. Saftey first. Given the choice, we would prefer to incorrectly restrict
+1. Safety first. Given the choice, we would prefer to incorrectly restrict
    non-sensitive content rather than accidentally show sensitive content.
 2. Avoid censorship. This list will not be used to block or deny access to
    content, rather to make the viewing of content opt-in. The Openverse project
@@ -118,7 +118,7 @@ work will always be based on the following assumptions:
    marginalized identities in a positive light”
 
 3. Encourage feedback. We will request and monitor community feedback on the
-   terms in this list (without indavertently exposing anyone to the list) to
+   terms in this list (without inadvertently exposing anyone to the list) to
    make sure it meets the expectations of our users.
 
 ## Open questions for reviewers
