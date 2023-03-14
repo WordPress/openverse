@@ -128,7 +128,7 @@ they visit the single result page for that result. Results that have not been
 unblurred remain blurred upon navigating to the single results page.
 
 If a user lands directly on a single result page for a result with sensitive
-textual content, the result is always be blurred by default. This is true
+textual content, the result is always blurred by default. This is true
 regardless of whether the user has disabled blurring by default on the search
 results page, but only applies to page navigation _directly_ to a single results
 page rather than a client side navigation.
