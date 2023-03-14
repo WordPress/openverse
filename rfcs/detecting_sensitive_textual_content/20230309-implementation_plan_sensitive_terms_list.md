@@ -18,18 +18,18 @@
 
 The Openverse project
 [Filter and blur sensitive results by term matching #377](https://github.com/orgs/WordPress/projects/70?query=is%3Aopen+sort%3Aupdated-desc&pane=issue&itemId=19530115)
-requires that we compare the textual contents of Openverse media against a
-denylist of sensitive terms. We use this list to identify media that should be
-marked as "sensitive," which means they should not be displayed to users by
-default, but only with their explicit consent. Importantly, this list is not
-used to censor or deny access to specific works, but to enable opt-in access.
+requires that we compare the textual contents of Openverse media against a list
+of sensitive terms. We use this list to identify media that should be marked as
+"sensitive," which means they should not be displayed to users by default, but
+only with their explicit consent. Importantly, this list is not used to censor
+or deny access to specific works, but to enable opt-in access.
 
 The list must be accessible to contributors who need to modify it, but not so
 public that it could be seen by users who would rather not be exposed to it. We
 recognize that the list itself is sensitive content, and it needs to be treated
 with care.
 
-To create and manage this list I reccommend the following guidelines.
+To create and manage this list I recommend the following guidelines.
 
 ## Outline of the approach
 
@@ -84,8 +84,8 @@ around what constitutes "sensitive content" for Openverse users.
       [thumbnail policy](https://support.google.com/youtube/answer/9229980?hl=en&ref_topic=9282679#zippy=%2Cage-restricted-thumbnails-and-thumbnail-removal)
       includes some information on types of sexual and violent content that
       either can't be used or can be used behind a flag comparable to ours.
-      - Additionally, see the [#this-will-not-be-perfect](#this-wont-be-perfect)
-        section for additional
+      - Additionally, please read
+        [#this-will-not-be-perfect](#this-will-not-be-perfect).
 
 ## Implementation Plan
 
@@ -103,6 +103,24 @@ around what constitutes "sensitive content" for Openverse users.
    for terms which should be removed or missing terms which should be added.
 5. Merge the PR, and now the list is available for use in Openverse projects.
 6. Publish a "Make" post about the creation of the list and its purpose.
+7. The sensitive term list can be included as an environment variable in any of
+   our repositories by adding a terraform `http` data source. The code would
+   look something like this:
+
+   ```terraform
+   data "http" "sensitive-terms-raw" {
+     # Example of the raw url we would fetch from the repo
+     url = "https://raw.githubusercontent.com/WordPress/openverse-sensitive-terms/main//sensitive_terms.txt"
+   }
+
+   locals {
+      # The `sensitive()` function makes sure this list isn't printed by terraform
+      sensitive_terms_list = sensitive([for line in split("\n", data.http.sensitive-terms-raw): chomp(line)])
+   }
+   ```
+
+   `locals.sensitive_terms_list` can then be supplied to any of our terraform
+   modules.
 
 ## This Will Not Be Perfect
 
