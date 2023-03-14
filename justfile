@@ -97,11 +97,6 @@ env:
     just ingestion_server/wait
     just api/wait # API waits for ES in entrypoint
 
-# Load sample data into the Docker Compose services
-init: _all-up
-    ./load_sample_data.sh
-    ./setup_plausible.sh
-
 ##########
 # Docker #
 ##########
@@ -123,6 +118,12 @@ build *args:
 # Bring all Docker services up, in all profiles
 up *flags:
     just dc up -d {{ flags }}
+
+# Also see `init` recipe in sub-justfiles
+# Load sample data into the Docker Compose services
+init:
+    just api/init
+    just frontend/init
 
 # Take all Docker services down, in all profiles
 down *flags:

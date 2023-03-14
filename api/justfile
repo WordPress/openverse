@@ -32,6 +32,10 @@ wait-up: profile-up
     just ../ingestion_server/wait # API profile includes ingestion server
     just wait # API waits for ES in entrypoint
 
+# Load sample data into API via ingestion server
+init: wait-up
+    ../load_sample_data.sh
+
 ##########
 # Health #
 ##########
