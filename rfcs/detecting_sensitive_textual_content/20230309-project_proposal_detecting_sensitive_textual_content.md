@@ -230,7 +230,7 @@ This option has the following downsides:
 - Gaussian blur may not be as aesthetically pleasing as the alternative
 - It requires the image to be downloaded to be blurred by the client
 
-Initial I speculated that client-side Gaussian blurring may have adverse effects
+Initially I speculated that client-side Gaussian blurring may have adverse effects
 on low-spec hardware's accessibility of the site. However, I've tested this
 locally by modifying the frontend to blur all images and visiting the local site
 on my PinePhone, on a low-spec quad-core ARM laptop, and on a US$30 Android
