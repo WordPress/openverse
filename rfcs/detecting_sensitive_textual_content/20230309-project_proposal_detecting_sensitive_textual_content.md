@@ -204,7 +204,7 @@ them in review.
 
 1. Blur using a CSS filter.
 2. Blur using [BlurHash](https://github.com/woltapp/blurhash).
-3. Blur using [LQIP](https://github.com/transitive-bullshit/lqip-modern).
+3. Blur using [Low Quality Image Placeholders (LQIP)](https://github.com/transitive-bullshit/lqip-modern).
 
 > **Note**: Photon, the image proxy we use, does
 > [have an option to apply two different types of blurs to images](https://developer.wordpress.com/docs/photon/api/#filter).
