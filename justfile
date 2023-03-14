@@ -114,7 +114,7 @@ DOCKER_FILE := "-f " + (
 # Run `docker-compose` configured with the correct files and environment
 dc *args:
     @{{ if IS_CI != "" { "just env" } else { "true" } }}
-    docker-compose {{ DOCKER_FILE }} {{ args }}
+    env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend") }}" docker-compose {{ DOCKER_FILE }} {{ args }}
 
 # Build all (or specified) services
 build *args:
