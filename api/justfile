@@ -19,6 +19,19 @@ _all-up:
 install *args="--dev":
     pipenv install {{ args }}
 
+######
+# Up #
+######
+
+# Bring up services specific to the API profile
+profile-up *flags:
+    env COMPOSE_PROFILES="api" just ../up {{ flags }}
+
+# Wait for all profile services to be up
+wait-up: profile-up
+    just ../ingestion_server/wait # API profile includes ingestion server
+    just wait # API waits for ES in entrypoint
+
 ##########
 # Health #
 ##########
