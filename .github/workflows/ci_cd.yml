@@ -95,6 +95,7 @@ jobs:
 
   add-stack-label:
     name: Add stack label
+    if: github.event_name == 'pull_request' && github.repository == 'WordPress/openverse'
     runs-on: ubuntu-latest
     needs:
       - get-changes
