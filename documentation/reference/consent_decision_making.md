@@ -1,9 +1,5 @@
 # Consent decision-making
 
-```{contents} Table of Contents
-:depth: 3
-```
-
 The Openverse project uses a decision-making model based on the
 [Sociocracy practice of "consent decision-making"](https://patterns.sociocracy30.org/consent-decision-making.html).
 We hope this will accomplish the following:
