@@ -398,6 +398,7 @@ relate.
   - TBD
 - Stakeholders:
   - Team lead: @zackkrida
+  - Design: @panchovm & @WordPress/gutenberg-design
 
 ## Infrastructure
 
