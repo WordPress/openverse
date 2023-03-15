@@ -388,6 +388,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-images
+      - get-image-tag
 
     steps:
       - name: Checkout repository
@@ -648,6 +649,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-images
+      - get-image-tag
 
     steps:
       - name: Checkout repository
