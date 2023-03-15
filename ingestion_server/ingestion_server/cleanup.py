@@ -240,9 +240,9 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
                 clean = cleaning_func(dirty_value)
             if clean:
                 cleaned_data[update_field] = clean
-                log.info(
+                log.debug(
                     f"Updated {update_field} for {identifier} "
-                    "from '{dirty_value}' to '{clean}'"
+                    f"from '{dirty_value}' to '{clean}'"
                 )
         # Generate SQL update for all the fields we just cleaned
         update_field_expressions = []
