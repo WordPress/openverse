@@ -246,7 +246,7 @@ jobs:
         uses: ./.github/actions/load-img
 
       - name: Start API, ingest and index test data
-        run: just init
+        run: just api/init
 
       - name: Run API tests
         run: just api/test
