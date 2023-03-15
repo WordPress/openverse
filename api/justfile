@@ -29,7 +29,7 @@ wait-up: profile-up
 
 # Load sample data into API via ingestion server
 init: wait-up
-    ../load_sample_data.sh
+    cd .. && ./load_sample_data.sh
 
 ##########
 # Health #
