@@ -36,6 +36,7 @@ jobs:
       api: ${{ steps.paths-filter.outputs.api }}
       ingestion_server: ${{ steps.paths-filter.outputs.ingestion_server }}
       frontend: ${{ steps.paths-filter.outputs.frontend }}
+      changes: ${{ steps.paths-filter.outputs.changes }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -61,6 +62,53 @@ jobs:
           else
               echo "image-tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
           fi
+
+  determine-images:
+    name: Determine images to build and publish
+    runs-on: ubuntu-latest
+    outputs:
+      build-matrix: ${{ steps.set-matrix.outputs.build-matrix }}
+      publish-matrix: ${{ steps.set-matrix.outputs.publish-matrix }}
+    needs:
+      - get-changes
+
+    steps:
+      - name: Set matrix images
+        id: set-matrix
+        env:
+          CHANGES: ${{ needs.get-changes.outputs.changes }}
+        shell: python
+        run: |
+          import os
+          import json
+
+          changes = json.loads(os.environ.get('CHANGES'))
+
+          build_matrix = {"image": [], "include": []}
+          publish_matrix = {"image": []}
+
+          if "api" in changes:
+              build_matrix["image"].append("api")
+              build_matrix["include"].append({"image": "api", "target": "api"})
+              publish_matrix["image"] += ["api", "api_nginx"]
+          if "ingestion_server" in changes:
+              build_matrix["image"].append("ingestion_server")
+              build_matrix["include"].append({"image": "ingestion_server", "target": "ing"})
+              publish_matrix["image"].append("ingestion_server")
+          if "frontend" in changes:
+              build_matrix["image"].append("frontend")
+              build_matrix["include"].append({"image": "frontend", "target": "app"})
+              publish_matrix["image"].append("frontend")
+
+          build_matrix = json.dumps(build_matrix)
+          publish_matrix = json.dumps(publish_matrix)
+
+          print(f"build-matrix={build_matrix}")
+          print(f"publish-matrix={publish_matrix}")
+
+          with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
+              print(f"build-matrix={build_matrix}", file=gh_out)
+              print(f"publish-matrix={publish_matrix}", file=gh_out)
 
   #############
   # Universal #
@@ -123,25 +171,44 @@ jobs:
         with:
           labels: "🧱 stack: frontend"
 
-  ############################
-  # API and ingestion server #
-  ############################
-
   build-images:
     name: Build Docker images
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        image:
-          - api
-          - ingestion_server
+      matrix: ${{ fromJson(needs.determine-images.outputs.build-matrix) }}
     needs:
       - get-image-tag
       - lint
+      - determine-images
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      # ℹ️Step only applies for frontend image.
+      - name: Setup CI env
+        if: matrix.image == 'frontend'
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          # Python is not needed to build the image.
+          install_recipe: node-install
+
+      # ℹ️Step only applies for frontend image.
+      # This step
+      # - downloads translation strings from GlotPress so that they can be
+      #   bundled inside the Docker image
+      # - copies pnpm config files from the root to the `frontend/` directory
+      #   so that they can be used to mock a workspace inside the Docker image
+      - name: Prepare frontend for building
+        if: matrix.image == 'frontend'
+        run: |
+          just frontend/run i18n
+          cp .npmrc .pnpmfile.cjs pnpm-lock.yaml frontend/
+        env:
+          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
+          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -152,6 +219,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.image }}
+          target: ${{ matrix.target }}
           push: false
           tags: openverse-${{ matrix.image }}
           cache-from: type=gha,scope=${{ matrix.image }}
@@ -262,8 +330,10 @@ jobs:
 
   test-redoc:
     name: Check for API consumer docs
+    if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -288,8 +358,10 @@ jobs:
 
   validate-openapi-spec:
     name: Validate Open API spec
+    if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -323,8 +395,10 @@ jobs:
 
   django-check:
     name: Run Django check
+    if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -348,9 +422,11 @@ jobs:
         run: just api/dj check
 
   check-migrations:
-    name: Check for uncommited Django migrations
+    name: Check for uncommitted Django migrations
+    if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -378,10 +454,13 @@ jobs:
   #########
 
   build-nginx:
-    # This requires a separate job due to the dependency on the other image builds
+    # This requires a separate job due because it uses the API image built by
+    # the `build-images` job.
     name: Build `nginx` Docker image
     runs-on: ubuntu-latest
+    if: needs.get-changes.outputs.api == 'true'
     needs:
+      - get-changes
       - build-images
       - get-image-tag
 
@@ -439,8 +518,10 @@ jobs:
 
   frontend-unit:
     name: Run frontend unit tests
+    if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - lint
 
     steps:
@@ -459,8 +540,10 @@ jobs:
 
   storybook-smoke:
     name: Check Storybook smoke test
+    if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - lint
 
     steps:
@@ -479,8 +562,10 @@ jobs:
 
   nuxt-build:
     name: Check Nuxt build
+    if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - lint
 
     steps:
@@ -637,63 +722,6 @@ jobs:
             <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}>
 
             Read more about how to use this artifact here: <https://github.com/${{ github.repository }}/blob/main/frontend/test/playwright/README.md#debugging>
-
-  build-frontend:
-    # This requires a separate job due to a difference in build steps
-    name: Build `frontend` Docker image
-    runs-on: ubuntu-latest
-    needs:
-      - build-images
-      - get-image-tag
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          setup_python: false
-          # Python is not needed to build the image.
-          install_recipe: node-install
-
-      - name: Download translation strings
-        run: just frontend/run i18n
-        env:
-          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
-          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
-
-      - name: Copy files into Docker context
-        run: |
-          cp .npmrc .pnpmfile.cjs pnpm-lock.yaml frontend/
-        # These files are copied into the `frontend/` folder so that they can be
-        # included in the Docker context. The `Dockerfile` will use them to mock
-        # up a monorepo inside the Docker image.
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          install: true
-
-      - name: Build image `frontend`
-        uses: docker/build-push-action@v4
-        with:
-          context: frontend
-          target: app # from `frontend/Dockerfile`
-          push: false
-          tags: openverse-frontend
-          cache-from: type=gha,scope=frontend
-          cache-to: type=gha,scope=frontend
-          outputs: type=docker,dest=/tmp/frontend.tar
-          build-args: |
-            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image-tag }}
-
-      - name: Upload image `frontend`
-        uses: actions/upload-artifact@v3
-        with:
-          name: frontend
-          path: /tmp/frontend.tar
 
   #################
   # Documentation #
@@ -871,24 +899,21 @@ jobs:
       !failure() && !cancelled() &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
+      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
       ((github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'release' && github.repository == 'WordPress/openverse'))
     needs:
-      # `build-images` is automatically included in `test-ing` and `test-api`.
-      - test-ing
-      - test-api
-      - build-nginx
-      - build-frontend
+      - determine-images
       - get-image-tag
+      - build-images
+      - build-nginx
+      - test-ing # test for ingestion server
+      - test-api # test for API
+      - nuxt-build # test for frontend
     permissions:
       packages: write
       contents: read
     strategy:
-      matrix:
-        image:
-          - api
-          - ingestion_server
-          - api_nginx
-          - frontend
+      matrix: ${{ fromJson(needs.determine-images.outputs.publish-matrix) }}
 
     steps:
       - name: Log in to GitHub Docker Registry
@@ -922,7 +947,7 @@ jobs:
     if: |
       !failure() && !cancelled() &&
       github.event_name == 'push' && needs.get-changes.outputs.frontend == 'true' &&
-      (needs.nuxt-playwright-e2e.result == 'success' && needs.nuxt-playwright-vr.result == 'success' && needs.storybook-playwright.result == 'success')
+      (needs.nuxt-build.result == 'success' && needs.nuxt-playwright-e2e.result == 'success' && needs.nuxt-playwright-vr.result == 'success' && needs.storybook-playwright.result == 'success')
     needs:
       - get-image-tag
       - get-changes
