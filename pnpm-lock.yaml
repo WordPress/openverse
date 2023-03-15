@@ -44,7 +44,7 @@ importers:
       '@nuxtjs/style-resources': ^1.0.0
       '@nuxtjs/svg': ^0.4.0
       '@pinia/nuxt': 0.2.1
-      '@pinia/testing': ^0.0.12
+      '@pinia/testing': ^0.0.15
       '@playwright/test': 1.29.1
       '@popperjs/core': ^2.11.2
       '@tailwindcss/line-clamp': ^0.3.1
@@ -104,7 +104,7 @@ importers:
       node-html-parser: ^5.3.3
       npm-run-all: ^4.1.5
       nuxt: ^2.15.4
-      pinia: ^2.0.16
+      pinia: ^2.0.33
       portal-vue: ^2.1.7
       postcss: ^8.4.12
       postcss-focus-visible: ^6.0.4
@@ -144,7 +144,7 @@ importers:
       '@nuxtjs/sentry': 7.1.4_vue@2.7.14
       '@nuxtjs/sitemap': 2.4.0
       '@nuxtjs/svg': 0.4.0_jjogt4bliw5zkzgrcodkvsva3y
-      '@pinia/nuxt': 0.2.1_pinia@2.0.20+vue@2.7.14
+      '@pinia/nuxt': 0.2.1_pinia@2.0.33+vue@2.7.14
       '@popperjs/core': 2.11.2
       '@tailwindcss/line-clamp': 0.3.1_tailwindcss@3.2.4
       '@tailwindcss/typography': 0.5.2_tailwindcss@3.2.4
@@ -166,7 +166,7 @@ importers:
       glob: 8.0.1
       node-html-parser: 5.3.3
       nuxt: 2.15.8_vh7tpqnoroyy4jv5xoqehgzqj4
-      pinia: 2.0.20_hwpzsh6pnvsm3pjf2zi526hnzq
+      pinia: 2.0.33_hwpzsh6pnvsm3pjf2zi526hnzq
       portal-vue: 2.1.7_vue@2.7.14
       postcss-focus-visible: 6.0.4_postcss@8.4.21
       prom-client: 14.0.1
@@ -190,7 +190,7 @@ importers:
       '@nuxtjs/eslint-module': 3.1.0_4ccfrreed6ckxvste6jnrinore
       '@nuxtjs/storybook': 4.3.2_5ayhf6hqsrvyqy3xyawb2nduri
       '@nuxtjs/style-resources': 1.2.1
-      '@pinia/testing': 0.0.12_pinia@2.0.20+vue@2.7.14
+      '@pinia/testing': 0.0.15_pinia@2.0.33+vue@2.7.14
       '@playwright/test': 1.29.1
       '@testing-library/dom': 8.13.0
       '@testing-library/jest-dom': 5.16.1
@@ -3076,24 +3076,24 @@ packages:
       '@octokit/openapi-types': 16.0.0
     dev: false
 
-  /@pinia/nuxt/0.2.1_pinia@2.0.20+vue@2.7.14:
+  /@pinia/nuxt/0.2.1_pinia@2.0.33+vue@2.7.14:
     resolution: {integrity: sha512-XPsuClG2ag/zSdSDqU8FRkTxwWKVZTYD6TVTzjMon3l9QZKC9YvW+jdZWasQilLCnU+jWpmhx41YpfIoPSwMbg==}
     peerDependencies:
       pinia: '>=2.0.16'
     dependencies:
-      pinia: 2.0.20_hwpzsh6pnvsm3pjf2zi526hnzq
+      pinia: 2.0.33_hwpzsh6pnvsm3pjf2zi526hnzq
       vue-demi: 0.13.11_vue@2.7.14
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
     dev: false
 
-  /@pinia/testing/0.0.12_pinia@2.0.20+vue@2.7.14:
-    resolution: {integrity: sha512-OGJ5kZihiuNua9trREAVLiv8wAlxT2+gZAz3Cen1L4ch51MbSgY5/nbo9htYsP2my9dhbggBhecgYWlhejhRcQ==}
+  /@pinia/testing/0.0.15_pinia@2.0.33+vue@2.7.14:
+    resolution: {integrity: sha512-Ykz5sPUVDphDMssA27+ExPSzxqfn7Y3jax77KA0AChDB6ODu31CnXIwoiUG+U5WA6ey7gzHkZh8wlnAtzVnB8g==}
     peerDependencies:
-      pinia: '>=2.0.14'
+      pinia: '>=2.0.31'
     dependencies:
-      pinia: 2.0.20_hwpzsh6pnvsm3pjf2zi526hnzq
+      pinia: 2.0.33_hwpzsh6pnvsm3pjf2zi526hnzq
       vue-demi: 0.13.11_vue@2.7.14
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -5700,8 +5700,8 @@ packages:
       - whiskers
     dev: false
 
-  /@vue/devtools-api/6.2.1:
-    resolution: {integrity: sha512-OEgAMeQXvCoJ+1x8WyQuVZzFo0wcyCmUR3baRVLmKBo1LmYZWMlRiXlux5jd0fqVJu6PfDbOrZItVqUEzLobeQ==}
+  /@vue/devtools-api/6.5.0:
+    resolution: {integrity: sha512-o9KfBeaBmCKl10usN4crU53fYtC1r7jJwdGKjPT24t348rHxgfpZ0xL3Xm/gLUYnc0oTp8LAmrxOeLyu6tbk2Q==}
 
   /@vue/reactivity-transform/3.2.47:
     resolution: {integrity: sha512-m8lGXw8rdnPVVIdIFhf0LeQ/ixyHkH5plYuS83yop5n7ggVJU+z5v0zecwEnX7fa7HNLBhh2qngJJkxpwEEmYA==}
@@ -13824,8 +13824,8 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /pinia/2.0.20_hwpzsh6pnvsm3pjf2zi526hnzq:
-    resolution: {integrity: sha512-fdHHumXW/0U5HhxmY1emo3I4z85p8NJPdbtFQSlmJXFe3ktuF0pYNVgVtk2q+j2zCtTufY763xzaEMx0t6T59g==}
+  /pinia/2.0.33_hwpzsh6pnvsm3pjf2zi526hnzq:
+    resolution: {integrity: sha512-HOj1yVV2itw6rNIrR2f7+MirGNxhORjrULL8GWgRwXsGSvEqIQ+SE0MYt6cwtpegzCda3i+rVTZM+AM7CG+kRg==}
     peerDependencies:
       '@vue/composition-api': ^1.4.0
       typescript: '>=4.4.4'
@@ -13836,7 +13836,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@vue/devtools-api': 6.2.1
+      '@vue/devtools-api': 6.5.0
       typescript: 4.9.5
       vue: 2.7.14
       vue-demi: 0.13.11_vue@2.7.14
