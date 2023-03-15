@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import pytest
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts.smk import SmkDataIngester
 
@@ -57,10 +58,20 @@ def test_get_next_query_params_increments_offset():
     assert actual_param == expected_param
 
 
-def test__get_foreign_landing_url():
-    item = {"object_number": "KKSgb22423"}
+@pytest.mark.parametrize(
+    "object_number, expected_url",
+    [
+        ("KKSgb22423", "https://open.smk.dk/en/artwork/image/KKSgb22423"),
+        (
+            "KKSgb22423 version 1",
+            "https://open.smk.dk/en/artwork/image/KKSgb22423%20version%201",
+        ),
+        ("KSMB 25 106.5", "https://open.smk.dk/en/artwork/image/KSMB%2025%20106.5"),
+    ],
+)
+def test__get_foreign_landing_url(object_number, expected_url):
+    item = {"object_number": object_number}
     actual_url = smk._get_foreign_landing_url(item)
-    expected_url = "https://open.smk.dk/en/artwork/image/KKSgb22423"
     assert actual_url == expected_url
 
 
@@ -100,12 +111,12 @@ def test__get_images_legacy():
 
 
 def test__get_images_partial():
+    # Left in as a regression test for
+    # https://github.com/WordPress/openverse-catalog/issues/875
     item = _get_resource_json("image_data_partial.json")
-    expected_images_data = _get_resource_json("expected_image_data_partial.json")
-
     actual_images_data = smk._get_images(item)
 
-    assert actual_images_data == expected_images_data
+    assert actual_images_data == []
 
 
 def test__get_metadata():
@@ -125,10 +136,3 @@ def test_get_record_data_returns_main_image():
     images = smk.get_record_data(item)
 
     assert len(images) == 1
-
-
-def test_get_record_data_returns_alternative_images():
-    item = _get_resource_json("item_with_alternative_images.json")
-    images = smk.get_record_data(item)
-
-    assert len(images) == 3

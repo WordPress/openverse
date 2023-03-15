@@ -8,6 +8,7 @@ Output:                 TSV file containing the media metadata.
 Notes:                  https://www.smk.dk/en/article/smk-api/
 """
 import logging
+import urllib.parse
 
 from common import constants
 from common.licenses import get_license_info
@@ -56,7 +57,9 @@ class SmkDataIngester(ProviderDataIngester):
                 "foreign_landing_url."
             )
             return
-        return f"https://open.smk.dk/en/artwork/image/{object_num}"
+        # Occasionally, the object number will have a space in it. for these cases we
+        # need to urlencode it.
+        return f"https://open.smk.dk/en/artwork/image/{urllib.parse.quote(object_num)}"
 
     @staticmethod
     def _get_image_url(image_iiif_id: str, image_size=2048):
@@ -113,31 +116,11 @@ class SmkDataIngester(ProviderDataIngester):
                 }
             )
 
-        alternative_images = item.get("alternative_images")
-        if type(alternative_images) == list:
-            for alt_img in alternative_images:
-                if type(alt_img) == dict:
-                    iiif_id = alt_img.get("iiif_id")
-                    if iiif_id is None:
-                        # The API for alternative images does not include the
-                        # 'id', so we must skip if `iiif_id` is not present.
-                        continue
-                    image_url = SmkDataIngester._get_image_url(iiif_id)
-                    thumbnail_url = alt_img.get("thumbnail")
-                    height = alt_img.get("height")
-                    width = alt_img.get("width")
-                    filesize = alt_img.get("image_size") or alt_img.get("size")
+        # We used to get additional images from the `alternative_images` field,
+        # but we found these to be either redundant, duplicates, or lower quality
+        # versions. See https://github.com/WordPress/openverse-catalog/issues/875
+        # for the full investigation & discussion
 
-                    images.append(
-                        {
-                            "id": iiif_id,
-                            "image_url": image_url,
-                            "thumbnail_url": thumbnail_url,
-                            "height": height,
-                            "width": width,
-                            "filesize": filesize,
-                        }
-                    )
         return images
 
     @staticmethod
@@ -176,6 +159,10 @@ class SmkDataIngester(ProviderDataIngester):
                     "width": img.get("width"),
                     "filesize": img.get("filesize"),
                     "meta_data": self._get_metadata(data),
+                    # FIXME: USED AS A SENTINEL FOR WHICH FILES TO DELETE AFTER A FULL
+                    # RUN. THIS SHOULD BE REMOVED AS SOON AS A RUN IS COMPLETE AND THE
+                    # FILES MARKED AS WATERMARKED=False ARE DELETED.
+                    "watermarked": True,
                 }
             )
         return images
