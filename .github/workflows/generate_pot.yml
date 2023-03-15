@@ -2,6 +2,9 @@ name: Generate POT file
 
 on:
   push:
+    # The workflow will only run when both filters are satisfied.
+    paths:
+      - frontend/src/locales/scripts/en.json5
     branches:
       - main
 

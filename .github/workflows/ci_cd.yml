@@ -39,9 +39,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: Get changes
-        uses: ./.github/actions/get-changes
         id: paths-filter
+        uses: ./.github/actions/get-changes
 
   get-image-tag:
     name: Get image tag
@@ -181,12 +182,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - id: paths-filter
-        name: Conditionally skip job
-        uses: dorny/paths-filter@v2
-        with:
-          filters: .github/filters.yml
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
