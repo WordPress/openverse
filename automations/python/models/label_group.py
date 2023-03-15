@@ -5,6 +5,7 @@ class LabelGroup:
     A group has some fixed parameters:
     - name, which may be prefixed to all child label names
     - color, which acts as a fallback for child labels that do not specify one
+    - emoji, which acts as a fallback for child labels that do not specify one
     - is_prefixed, which determines if group name is prefixed on child labels
     - is_required, which determines if >=1 sub-label must be applied on issues
     """
@@ -12,12 +13,14 @@ class LabelGroup:
     def __init__(
         self,
         color=None,
+        emoji=None,
         is_prefixed=True,
         is_required=False,
         **kwargs,
     ):
         self.name = kwargs["name"]
         self.color = color
+        self.emoji = emoji
         self.is_prefixed = is_prefixed
         self.is_required = is_required
 

@@ -1,5 +1,13 @@
 {
   "features": {
+    "fake_sensitive": {
+      "status": {
+        "staging": "switchable",
+        "production": "disabled"
+      },
+      "description": "Mark 50% of results as mature to test content safety.",
+      "defaultState": "off"
+    },
     "external_sources": {
       "status": {
         "staging": "switchable",
@@ -8,25 +16,18 @@
       "description": "Toggle the external sources in the header's search type switcher.",
       "defaultState": "off"
     },
-    "new_header": {
+    "analytics": {
       "status": {
-        "staging": "enabled",
-        "production": "enabled"
+        "staging": "switchable",
+        "production": "disabled"
       },
-      "description": "Toggle the new header, including recent searches."
-    },
-    "feat_disabled": {
-      "status": "disabled",
-      "description": "Will always be disabled"
-    },
-    "feat_enabled": {
-      "status": "enabled",
-      "description": "Will always be enabled"
-    },
-    "feat_switchable": {
-      "status": "switchable",
-      "description": "Can be switched between on and off",
-      "defaultState": "on"
+      "description": "Record custom events and page views."
     }
-  }
+  },
+  "groups": [
+    {
+      "title": "analytics",
+      "features": ["analytics"]
+    }
+  ]
 }

@@ -260,3 +260,13 @@ export const areQueriesEqual = (
   }
   return true
 }
+
+/**
+ * Converts the API query `q` parameter to a single string that can
+ * be used as a search term. Use the first item if `q` is an array.
+ * @param q - the URL `q` parameter
+ */
+export const qToSearchTerm = (q: string | null | (string | null)[]) => {
+  const searchTerm = Array.isArray(q) ? q[0] : q
+  return searchTerm ? searchTerm.trim() : ""
+}

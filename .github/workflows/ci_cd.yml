@@ -36,16 +36,12 @@ jobs:
       api: ${{ steps.paths-filter.outputs.api }}
       ingestion_server: ${{ steps.paths-filter.outputs.ingestion_server }}
       frontend: ${{ steps.paths-filter.outputs.frontend }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - id: paths-filter
-        name: Check changed paths
-        uses: dorny/paths-filter@v2
-        with:
-          filters: ./.github/filters.yml
+      - name: Get changes
+        uses: ./.github/actions/get-changes
+        id: paths-filter
 
   get-image-tag:
     name: Get image tag
@@ -84,12 +80,7 @@ jobs:
           # Python is not needed to run pre-commit.
           setup_python: false
           # Node.js is needed by lint actions.
-          install_recipe: ""
-          # Need more complex install recipe.
-
-      - name: Install dependencies
-        run: |
-          just node-install
+          install_recipe: "node-install"
 
       - name: Cache pre-commit envs
         uses: actions/cache@v3
@@ -101,6 +92,35 @@ jobs:
         run: |
           just precommit
           just lint
+
+  add-stack-label:
+    name: Add stack label
+    if: github.event_name == 'pull_request' && github.repository == 'WordPress/openverse'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Add API stack label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ needs.get-changes.outputs.api == 'true' }}
+        with:
+          labels: "🧱 stack: api"
+
+      - name: Add ingestion server stack label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ needs.get-changes.outputs.ingestion_server == 'true' }}
+        with:
+          labels: "🧱 stack: ingestion server"
+
+      - name: Add frontend stack label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ needs.get-changes.outputs.frontend == 'true' }}
+        with:
+          labels: "🧱 stack: frontend"
 
   ############################
   # API and ingestion server #
@@ -902,7 +922,6 @@ jobs:
 
   deploy-frontend:
     name: Deploy staging frontend
-    runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
       github.event_name == 'push' && needs.get-changes.outputs.frontend == 'true' &&
@@ -915,23 +934,13 @@ jobs:
       - nuxt-playwright-vr
       - storybook-playwright
       - publish-images
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Deploy to staging
-        uses: ./.github/actions/staging-nuxt-deploy
-        with:
-          tag: ${{ needs.get-image-tag.outputs.image-tag }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+    uses: ./.github/workflows/deploy-staging-nuxt.yml
+    with:
+      tag: ${{ needs.get-image-tag.outputs.image-tag }}
+    secrets: inherit
 
   deploy-api:
     name: Deploy staging API
-    runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
       github.event_name == 'push' && needs.get-changes.outputs.api == 'true' &&
@@ -941,16 +950,7 @@ jobs:
       - get-changes
       - test-api
       - publish-images
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Deploy to staging
-        uses: ./.github/actions/staging-api-deploy
-        with:
-          tag: ${{ needs.get-image-tag.outputs.image-tag }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+    uses: ./.github/workflows/deploy-staging-api.yml
+    with:
+      tag: ${{ needs.get-image-tag.outputs.image-tag }}
+    secrets: inherit
