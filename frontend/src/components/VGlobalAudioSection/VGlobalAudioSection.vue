@@ -147,3 +147,8 @@ export default defineComponent({
   },
 })
 </script>
+<style>
+.global-audio {
+  grid-area: global-audio;
+}
+</style>
