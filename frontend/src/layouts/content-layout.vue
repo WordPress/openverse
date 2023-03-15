@@ -167,7 +167,7 @@ export default defineComponent({
   width: var(--filter-sidebar-width);
 }
 .app {
-  grid-template-areas: "header header" "main main" "global-audio global-audio";
+  grid-template-areas: "header" "main" "global-audio";
 }
 .header-el {
   grid-area: header;
