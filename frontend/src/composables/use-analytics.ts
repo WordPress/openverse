@@ -2,6 +2,7 @@ import { computed } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
 
 import type { Events, EventName } from "~/types/analytics"
+import { useUiStore } from "~/stores/ui"
 
 /**
  * The `ctx` parameter must be supplied if using this composable outside the
@@ -9,6 +10,7 @@ import type { Events, EventName } from "~/types/analytics"
  */
 export const useAnalytics = () => {
   const { $plausible, $ua, i18n } = useContext()
+  const uiStore = useUiStore()
 
   /**
    * the Plausible props that work identically on the server-side and the
@@ -17,6 +19,7 @@ export const useAnalytics = () => {
   const isomorphicProps = computed(() => ({
     timestamp: new Date().toISOString(),
     language: i18n.locale,
+    breakpoint: uiStore.breakpoint,
     ...($ua
       ? {
           ua: $ua.source,
