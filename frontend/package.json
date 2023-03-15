@@ -175,19 +175,6 @@
     "vue-tsc": "1.2.0",
     "webpack": "^4.46.0"
   },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "react",
-        "react-dom",
-        "consola"
-      ],
-      "allowedVersions": {
-        "babel-core": "7.0.0-bridge.0",
-        "postcss": "5.2.18"
-      }
-    }
-  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
