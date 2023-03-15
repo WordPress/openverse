@@ -1,0 +1,108 @@
+{
+    meta: {
+        createdAt: '2023-03-15T07:25:42.282Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+    },
+    req: {
+        headers: {
+            connection: 'close',
+        },
+        url: '/v1/images/da5cb478-c093-4d62-b721-cda18797e3fb/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Wed, 15 Mar 2023 07:25:43 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'close',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                '2ffee7aaa399492a999741f817a8cce1',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'MISS',
+            ],
+            'last-modified': [
+                'Wed, 15 Mar 2023 07:25:43 GMT',
+            ],
+            'server-timing': [
+                'cf-q-config;dur=5.0000089686364e-06',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '7a8306250d0b0558-OTP',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            id: 'da5cb478-c093-4d62-b721-cda18797e3fb',
+            title: 'bird',
+            indexed_on: '2020-04-27T19:49:30.552050Z',
+            foreign_landing_url: 'https://www.flickr.com/photos/8488209@N07/2385230430',
+            url: 'https://live.staticflickr.com/2129/2385230430_a699b25f12_b.jpg',
+            creator: 'Chester Zoo',
+            creator_url: 'https://www.flickr.com/photos/8488209@N07',
+            license: 'by-nd',
+            license_version: '2.0',
+            license_url: 'https://creativecommons.org/licenses/by-nd/2.0/',
+            provider: 'flickr',
+            source: 'flickr',
+            category: null,
+            filesize: null,
+            filetype: null,
+            tags: [
+                {
+                    name: 'bird',
+                    accuracy: null,
+                },
+            ],
+            attribution: '"bird" by Chester Zoo is licensed under CC BY-ND 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nd/2.0/.',
+            fields_matched: [],
+            mature: false,
+            height: 768,
+            width: 1024,
+            thumbnail: 'http://localhost:49153/v1/images/da5cb478-c093-4d62-b721-cda18797e3fb/thumb/',
+            detail_url: 'http://localhost:49153/v1/images/da5cb478-c093-4d62-b721-cda18797e3fb/',
+            related_url: 'http://localhost:49153/v1/images/da5cb478-c093-4d62-b721-cda18797e3fb/related/',
+        },
+    },
+}
