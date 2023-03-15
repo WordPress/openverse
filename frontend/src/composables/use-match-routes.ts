@@ -53,6 +53,7 @@ export const useMatchSearchRoutes = () => {
 
 /**
  * Reactive property that returns true only on the `single result` routes.
+ * The `report` routes are not included because they use a `search` header.
  * Homepage, search results and other content pages return `false`
  */
 export const useMatchSingleResultRoutes = () => {
@@ -61,11 +62,6 @@ export const useMatchSingleResultRoutes = () => {
       .filter((name) => name !== ALL_MEDIA)
       .map((name) => `${name}-id`),
   ]
-  // @TODO Switch to more generic implementation once
-  // an Audio reporting page is designed.
-  //
-  // routes = routes.concat(routes.map((name) => `${name}-report`))
-  routes.push("image-id-report")
 
   return useMatchRoute(routes)
 }
