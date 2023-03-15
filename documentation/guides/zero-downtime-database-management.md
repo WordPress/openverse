@@ -293,43 +293,63 @@ entire transformation process to be reversed.
 
 ## Environment variables
 
-In addition to careful database management, we must also pay attention to when
-we introduce or update environment variables and ensure that it is done in a way
-compatible with zero-downtime deployments. At first glance, it may be tempting
-to assume similar issues exist for environment variables as for column renaming
-and data-type changes. While some issues are shared between the two, there are
-also distinct issues when handling environment variable changes.
+In addition to careful database management, we must also take care when we
+introduce or update environment variables and ensure that it is done in a way
+compatible with zero-downtime deployments. While some issues and difficulties
+are shared between zero-downtime database schema changes and environment
+variable management, environment variables do have their own distinct issues to
+be aware of.
 
 ### How we configure environment variables
 
-Environment variables are stored in the task definition for the running
-application. A new task definition is created for every deployment of an
-application, including manual rollbacks and redeployments. Every single
-deployment (except for automated rollbacks, which re-use the previous task
-definition) creates a new task definition based on the task definition template.
-The task definition template is managed by Terraform and is the basis for all
-running task definitions. The task definition template _at the time of
-deployment_ is the one used to create the new task definition for a given
-deployment. Deployments are described in greater depth
-[in our deployment documentation](https://wordpress.github.io/openverse/guides/deployment.html),
-but the patterns distilled below are critical to understanding the potential
-issues with environment variable management and zero-downtime deployments.
+In order to understand the potential issues that can arise in managing
+environment variables, it is necessary to first understand the mechanisms used
+to management them and how they are propogated to application instances.
 
-The critical relationship to understand here is between the dispatched
-deployment, the task definition template it will use, and the task definition it
-will create. Importantly, the task definition template that is used is always
-the most recent, without exception. This means that the rendered task definition
-will always only include the environment variables as they are configured in the
-task definition template _at the time of the workflow dispatch_, even if rolling
-back to a previous version of the application.
+Environment variables for applications and their environments are configured and
+managed in the _task definition template_. The ECS service for each application
+does not run the template. Rather, it runs a _rendered task definition_ derived
+from the template. The critical piece here is that services run task definitions
+_based_ on the template, but not the template itself. Therefore, to get new or
+updated environment variables, it is necessary to render new application task
+definitions based on the templates. **Updating the template does not
+automatically update the application**.
 
-The distinction here is between the version of the application and the task
-definition revision used to deploy that version of the application. If a single
-version of the application is deployed more than once, there will be a new task
-definition revision _for each and every deployment_ of that version. Each
-revision will reflect the template at the time of the deployment. This is due to
-the decoupling of the application version (the docker image tag that is
-deployed) and the task definition template revision.
+New rendered task definitions are created during runs of the
+[deployment workflow](https://wordpress.github.io/openverse/guides/deployment.html#deployment-workflow).
+That means the following situations will render a new task definition:
+
+- New version deployments, including automated staging deployments and manual
+  production deployments
+- Manual rollbacks where the deployment workflow is newly dispatched
+- Redeployments of applications to the same version
+
+New task definitions are _not_ rendered during _automated rollbacks_. That is,
+if a deployment process fails, the previous working task definition revision is
+used without modification. **Notably, this includes the previous configuration
+of environment variables**.
+
+To restate for clarity: provided the task definition template environment
+variables have been updated, the only way to get new or updated environment
+variables into a running application is by forcing a new deployment which in
+turn creates a new task definition revision.
+
+It can be easy to tangle up the concept of the application version and the task
+definition revision, but they are separate. If an application is deployed to v1,
+then to v2, then rolled back to v1, there are only two application versions.
+However, there are now _three_ task definition revisions: one for each
+deployment and one for the rollback. To further reiterate the nuance here,
+rolling back the application version _does not use previous task definitions_
+and will render a new task definition pointing to the rolled back application
+version, but using the latest version of the template.
+
+Put yet another way: regardless of the application version being deployed,
+whether it is new, existing, or old, a new task definition revision is always
+created using the latest task definition template.
+
+This is restated several times in this section because it is a critical nuance
+that is easy to lose sight of, in particular in the course of an emergency
+rollback where details like this are easy to miss.
 
 ### What is distinct from column management
 
@@ -337,12 +357,14 @@ The difference between environment variable and column management comes down to
 the fact that with the database, the exact same database is being used by two
 different running versions of the application. For environment variables, the
 previously running version of the application will continue to use the
-environment variable configuration defined in its task definition. Environment
-variables are not automatically updated for the running application. This means
-that if a deployment was very carefully orchestrated, we do not necessarily need
-to worry about backwards incompatible changes, and even in the
+environment variable configuration defined in the previous task definition
+revision used to run that instance. Environment variables are not automatically
+updated for the running application. This means that if a deployment was very
+carefully orchestrated, we do not necessarily need to worry about backwards
+incompatible changes, and even in the
 [worst case described below](#manual-rollbacks-after-removing-an-environment-variable),
-it is still possible to recover by following an additional step.
+it is still possible to recover by following an additional step (re-updating the
+template before rolling back).
 
 Generally environment variables require far less care and attention than
 database management when it comes to maintaining zero-downtime deployments.
@@ -358,23 +380,30 @@ variable is deployed. This includes staging, which automatically deploys on
 pushes to `main`. If a new environment variable is required and has no
 acceptable default behaviour if not configured—i.e., the application will crash
 if it is not present or the behaviour when it is not present is incompatible
-with the running—then it must be added to the task definition template for the
-application and environment before the application is deployed. For staging,
+with the environment—then it must be added to the task definition template for
+the application and environment before the application is deployed. For staging,
 this means updating the task definition template before merging the PR. For
 production, this means updating the task definition template before running the
 production deployment workflow.
 
 It is generally best practice to configure acceptable default behaviours for
 undefined environment variables, but sometimes it's not possible to do so and in
-these cases it is imperative to update the task definition template beforehand.
+these cases it is imperative to update the task definition template before
+triggering a deployment (whether automated or manual).
 
 If the task definition template is updated _after_ the fact (whether because we
 forgot to do it beforehand or for any other reason), then the application will
-need to be redeployed to the running version so that a new task definition is
-created using the updated template. Note that in particular for staging, this
-may not be necessary if the template is updated before another, unrelated, PR is
-merged, as any new deployment will be used the updated template and receive the
-new variables.
+need to be redeployed so that a new task definition is created using the latest
+template revision with the updated variables.
+
+> **Note**
+>
+> _Any_ redeployment after the template is updated will receive the updated
+> variables. That means that, for example, if staging is automatically deployed
+> due to a push to `main` after updating the template, it is not necessary to
+> further redeploy staging for the application to get the updated variables. If
+> the timing of each is within seconds, however, it's best not to risk it and
+> just redeploy staging if you have any doubts.
 
 ### Manual rollbacks after removing an environment variable or updating its format
 
@@ -382,8 +411,8 @@ This is the primary situation where an environment variable change could cause
 an issue if not handled carefully. Imagine a situation where we've developed
 changes for one of our applications that removes the need for a previously
 required environment variable. For example, imagine we decided to get rid of
-Sentry and removed
-the[`SENTRY_DSN`](https://github.com/wordpress/openverse/blob/72087873e8383a656842cb6152a8f4391250cbbc/frontend/src/utils/sentry-config.ts#L11)
+Sentry and removed the
+[`SENTRY_DSN`](https://github.com/wordpress/openverse/blob/72087873e8383a656842cb6152a8f4391250cbbc/frontend/src/utils/sentry-config.ts#L11)
 environment variable from the template task definition in preparation for the
 subsequent deployment. Imagine further that for some reason, we needed
 immediately to rollback this change and for Sentry to return to working order.
@@ -397,11 +426,13 @@ The best way to avoid this complication is to leave unneeded environment
 variables in the template until after the application version that does not need
 them is confirmed to work as expected. After that, the template may be safely
 updated to remove the environment variable and any subsequent deployments will
-not include the variable.
+not include the variable. This is similar to how we remove columns from the
+database schema: deploy the code that doesn't use the variable/column first,
+_then_ remove the variable/column.
 
 Note that this same issue applies when making non-backwards compatible changes
 to environment variable formats. For this reason, it's best to follow the
 zero-downtime column data-type approach in this case and create a new
 environment variable name for the new format. This allows both the old and the
-new environment variable to co-exist and a manual rollback to occur without the
-need to re-add the previous variable to the template.
+new environment variable formats to co-exist and a manual rollback to occur
+without the need to re-add the previous variable to the template.
