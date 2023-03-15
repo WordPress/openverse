@@ -53,14 +53,26 @@ documentation site.
 As this is mainly a documentation project, its implementation plan can be
 written here, inside the project plan. (I think splitting it will unnecessarily
 slow down a smallish project. Please, correct me if you think I'm wrong) This
-project will create a table with all the media properties that we store or
+project will create a **table** with all the media properties that we store or
 compute on all levels of the stack (Catalog, API database, API elasticsearch,
-Frontend). This table will serve as a basis for any work on data normalization
-work. As such, it will be a work in progress because the links to the code and
-the details about the properties should change as we progress through the data
-normalization project. We can publish it on the monorepo documentation site or
-the Openverse blog on Make WordPress, with the admonition that the table is a
-living document and will be updated.
+Frontend).
+
+#### Table as a living document
+
+This table will serve as a basis for any work on data normalization work. As
+such, it will be a work in progress because the links to the code and the
+details about the properties should change as we progress through the data
+normalization project. To ensure that the table is up-to-date, this project will
+also add automation to the catalog CI pipeline to detect changes to the fields
+in the table and the catalog DDL and add a comment to update them, similar to
+the
+[migration safety warning](https://github.com/WordPress/openverse/blob/main/.github/workflows/migration_safety_warning.yml)
+
+We will publish the table on the
+[Openverse documentation site](https://wordpress.github.io/openverse/), with the
+admonition that the table is a living document and will be updated.
+
+#### Table contents
 
 The table will start with a list of columns in the Catalog database. For each
 property, we will provide the following information:
