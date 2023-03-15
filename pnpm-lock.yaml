@@ -45,7 +45,7 @@ importers:
       '@nuxtjs/svg': ^0.4.0
       '@pinia/nuxt': 0.2.1
       '@pinia/testing': ^0.0.12
-      '@playwright/test': 1.31.2
+      '@playwright/test': 1.30.0
       '@popperjs/core': ^2.11.2
       '@tailwindcss/line-clamp': ^0.3.1
       '@tailwindcss/typography': ^0.5.2
@@ -191,7 +191,7 @@ importers:
       '@nuxtjs/storybook': 4.3.2_5ayhf6hqsrvyqy3xyawb2nduri
       '@nuxtjs/style-resources': 1.2.1
       '@pinia/testing': 0.0.12_pinia@2.0.20+vue@2.7.14
-      '@playwright/test': 1.31.2
+      '@playwright/test': 1.30.0
       '@testing-library/dom': 8.13.0
       '@testing-library/jest-dom': 5.16.1
       '@testing-library/user-event': 13.5.0_tlwynutqiyp5mns3woioasuxnq
@@ -3100,15 +3100,13 @@ packages:
       - vue
     dev: true
 
-  /@playwright/test/1.31.2:
-    resolution: {integrity: sha512-BYVutxDI4JeZKV1+ups6dt5WiqKhjBtIYowyZIJ3kBDmJgsuPKsqqKNIMFbUePLSCmp2cZu+BDL427RcNKTRYw==}
+  /@playwright/test/1.30.0:
+    resolution: {integrity: sha512-SVxkQw1xvn/Wk/EvBnqWIq6NLo1AppwbYOjNLmyU0R1RoQ3rLEBtmjTnElcnz8VEtn11fptj1ECxK0tgURhajw==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
       '@types/node': 17.0.32
-      playwright-core: 1.31.2
-    optionalDependencies:
-      fsevents: 2.3.2
+      playwright-core: 1.30.0
     dev: true
 
   /@polka/url/1.0.0-next.21:
@@ -13896,8 +13894,8 @@ packages:
       find-up: 2.1.0
     dev: true
 
-  /playwright-core/1.31.2:
-    resolution: {integrity: sha512-a1dFgCNQw4vCsG7bnojZjDnPewZcw7tZUNFN0ZkcLYKj+mPmXvg4MpaaKZ5SgqPsOmqIf2YsVRkgqiRDxD+fDQ==}
+  /playwright-core/1.30.0:
+    resolution: {integrity: sha512-7AnRmTCf+GVYhHbLJsGUtskWTE33SwMZkybJ0v6rqR1boxq2x36U7p1vDRV7HO2IwTZgmycracLxPEJI49wu4g==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
