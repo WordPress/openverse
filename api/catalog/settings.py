@@ -261,7 +261,9 @@ DATABASES = {
         "PASSWORD": config("DJANGO_DATABASE_PASSWORD", default="deploy"),
         "NAME": config("DJANGO_DATABASE_NAME", default="openledger"),
         "OPTIONS": {
-            config("DJANGO_DATABASE_APPLICATION_NAME", default="openverse-api"),
+            "application_name": config(
+                "DJANGO_DATABASE_APPLICATION_NAME", default="openverse-api"
+            ),
         },
     },
 }
