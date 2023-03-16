@@ -95,6 +95,10 @@ jobs:
               build_matrix["image"].append("ingestion_server")
               build_matrix["include"].append({"image": "ingestion_server", "target": "ing"})
               publish_matrix["image"].append("ingestion_server")
+              # The `api` image needs to be built to run the `test-api` job.
+              if "api" not in changes:
+                  build_matrix["image"].append("api")
+                  build_matrix["include"].append({"image": "api", "target": "api"})
           if "frontend" in changes:
               build_matrix["image"].append("frontend")
               build_matrix["include"].append({"image": "frontend", "target": "app"})
