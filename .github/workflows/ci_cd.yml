@@ -503,7 +503,7 @@ jobs:
           context: api
           target: nginx # from `api/Dockerfile`
           push: false
-          tags: openverse-api_nginx
+          tags: openverse-api-nginx
           cache-from: type=gha,scope=nginx
           cache-to: type=gha,scope=nginx
           outputs: type=docker,dest=/tmp/api_nginx.tar

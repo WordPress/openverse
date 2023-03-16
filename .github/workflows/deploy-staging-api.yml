@@ -121,7 +121,7 @@ jobs:
               const { data: versions } =
                 await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
                   package_type: 'container',
-                  package_name: 'openverse-api_nginx',
+                  package_name: 'openverse-api-nginx',
                   org: 'WordPress',
                   page,
                   // max of `per_page`
@@ -134,7 +134,7 @@ jobs:
             }
             if (!exists) {
               throw new Error(
-                `'${{ inputs.tag }}' does not appear to be a valid tag for the ghcr.io/wordpress/openverse-api_nginx image.`
+                `'${{ inputs.tag }}' does not appear to be a valid tag for the ghcr.io/wordpress/openverse-api-nginx image.`
               )
             }
 
@@ -190,7 +190,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: nginx
-          image: "ghcr.io/wordpress/openverse-api_nginx:${{ inputs.tag }}"
+          image: "ghcr.io/wordpress/openverse-api-nginx:${{ inputs.tag }}"
 
       - name: "Fill in the new django image ID in the Amazon ECS task definition"
         id: "task-def-django"
