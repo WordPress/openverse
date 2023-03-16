@@ -7,8 +7,10 @@
 
 ## Project summary
 
-Update the visual style of VButton component in both Design Library and
-Storybook components to set a consistent baseline for all UI components.
+Update the visual style of `VButton` component in both
+[Design Library](https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-id=0-1&t=EezlH7nwKNn0ZXdO-0)
+and [Storybook](https://wordpress.github.io/openverse/storybook) components to
+set a consistent baseline for all UI components.
 
 ## Goals
 
@@ -16,23 +18,21 @@ Search Experience
 
 ## Requirements
 
-<!-- Detailed descriptions of the features required for the project. Include user stories if you feel they'd be helpful, but focus on describing a specification for how the feature would work with an eye towards edge cases. -->
+- Update the `VButton` component following the
+  [design](https://www.figma.com/file/es303VxVr0C7rFTcOe3OXL/Core-interface-improvement?t=DQpJvKZ9UCsfeWO8-0)
+  definition.
 
 ## Success
 
-- VButton code component follows the design documentation specs.
-- Design Library documents the VButton-based components following Storybook
+- `VButton` code component follows the design documentation specs.
+- Design Library documents the `VButton`-based components following Storybook
   documentation.
 
 ## Participants and stakeholders
 
-<!-- Who is working on the project and who are the external stakeholders, if any? -->
-
 - Design: @panchovm
 
 ## Infrastructure
-
-<!-- What infrastructural considerations need to be made for this project? If there are none, say so explicitly rather than deleting the section. -->
 
 ## Marketing
 
