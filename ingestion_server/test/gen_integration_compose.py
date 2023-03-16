@@ -71,7 +71,7 @@ def _fixup_env(conf: dict):
     :param conf: the Docker Compose configuration
     """
 
-    for service in {"db", "upstream_db"}:
+    for service in {"es", "db", "upstream_db"}:
         env_files = conf["services"][service]["env_file"]
         env_files = [str(src_dc_path.parent.joinpath(path)) for path in env_files]
         conf["services"][service]["env_file"] = env_files
@@ -112,7 +112,8 @@ def _change_directories(conf: dict):
         conf["services"][service]["volumes"] = ["../:/ingestion_server"]
         conf["services"][service]["build"] = "../"
 
-    conf["services"]["upstream_db"]["volumes"] = ["./mock_data:/mock_data"]
+    upstream_db_build = conf["services"]["upstream_db"]["build"]
+    conf["services"]["upstream_db"]["build"] = f"../../{upstream_db_build}"
 
 
 def _rename_services(conf: dict):

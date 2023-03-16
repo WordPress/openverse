@@ -11,7 +11,8 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 # Show all available recipes, also recurses inside nested justfiles
 @_default:
     just --list --unsorted
-    cd nginx && just
+    cd docker/nginx && just
+    cd docker/es && just
     cd api && just
     cd ingestion_server && just
     cd frontend && just
@@ -94,7 +95,7 @@ env:
 @_all-up:
     just up
     just ingestion_server/wait
-    just api/wait
+    just api/wait # API waits for ES in entrypoint
 
 # Load sample data into the Docker Compose services
 init: _all-up
@@ -146,26 +147,3 @@ EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
 # Execute statement in service containers using Docker Compose
 exec +args:
     just dc exec -u {{ DC_USER }} {{ EXEC_DEFAULTS }} {{ args }}
-
-#################
-# Elasticsearch #
-#################
-
-# Check the health of Elasticsearch
-@es-health es_host:
-    -curl -s -o /dev/null -w '%{http_code}' 'http://{{ es_host }}/_cluster/health'
-
-# Wait for Elasticsearch to be healthy
-@wait-for-es es_host="localhost:50292":
-    just _loop \
-    '"$(just es-health {{ es_host }})" != "200"' \
-    "Waiting for Elasticsearch to be healthy..."
-
-@check-index index="image":
-    -curl -sb -H "Accept:application/json" "http://localhost:50292/_cat/indices/{{ index }}" | grep -o "{{ index }}" | wc -l | xargs
-
-# Wait for the media to be indexed in Elasticsearch
-@wait-for-index index="image":
-    just _loop \
-    '"$(just check-index {{ index }})" != "1"' \
-    "Waiting for index '{{ index }}' to be ready..."
