@@ -1,0 +1,155 @@
+{
+    meta: {
+        createdAt: '2023-03-15T13:00:33.683Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/audio/2536a2ba-1eb3-4f40-9347-29534d029b5c/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Wed, 15 Mar 2023 13:00:33 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'access-control-allow-origin': [
+                '*',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                '5ffe6c8540ee41029a982ac6650185a4',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '7942',
+            ],
+            'last-modified': [
+                'Wed, 15 Mar 2023 10:48:11 GMT',
+            ],
+            'server-timing': [
+                'cf-q-config;dur=5.9999874792993e-06',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '7a84f0a80d1298b5-OTP',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            id: '2536a2ba-1eb3-4f40-9347-29534d029b5c',
+            title: 'Gulp.boaay',
+            indexed_on: '2022-06-01T12:00:12.608809Z',
+            foreign_landing_url: 'https://freesound.org/people/BOAAY/sounds/552676',
+            url: 'https://cdn.freesound.org/previews/552/552676_11452660-hq.mp3',
+            creator: 'BOAAY',
+            creator_url: 'https://freesound.org/people/BOAAY',
+            license: 'cc0',
+            license_version: '1.0',
+            license_url: 'https://creativecommons.org/publicdomain/zero/1.0/',
+            provider: 'freesound',
+            source: 'freesound',
+            category: null,
+            genres: null,
+            filesize: 15342,
+            filetype: 'mp3',
+            tags: [
+                {
+                    name: 'sip',
+                    accuracy: null,
+                },
+                {
+                    name: 'liquid',
+                    accuracy: null,
+                },
+                {
+                    name: 'drink',
+                    accuracy: null,
+                },
+                {
+                    name: 'gulp',
+                    accuracy: null,
+                },
+                {
+                    name: 'mouth',
+                    accuracy: null,
+                },
+                {
+                    name: 'throat',
+                    accuracy: null,
+                },
+                {
+                    name: 'swallow',
+                    accuracy: null,
+                },
+            ],
+            alt_files: [
+                {
+                    url: 'https://freesound.org/apiv2/sounds/552676/download/',
+                    bit_rate: '0',
+                    filesize: '51702',
+                    filetype: 'wav',
+                    sample_rate: '44100',
+                },
+            ],
+            attribution: '"Gulp.boaay" by BOAAY is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.',
+            fields_matched: [],
+            mature: false,
+            audio_set: null,
+            duration: 583,
+            bit_rate: 128000,
+            sample_rate: null,
+            thumbnail: null,
+            detail_url: 'http://localhost:49153/v1/audio/2536a2ba-1eb3-4f40-9347-29534d029b5c/',
+            related_url: 'http://localhost:49153/v1/audio/2536a2ba-1eb3-4f40-9347-29534d029b5c/related/',
+            waveform: 'http://localhost:49153/v1/audio/2536a2ba-1eb3-4f40-9347-29534d029b5c/waveform/',
+        },
+    },
+}
