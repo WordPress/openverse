@@ -100,5 +100,5 @@ if config("DJANGO_DB_LOGGING", cast=bool, default=False):
     # and it's nice to be able to enable it conditionally within that context
     LOGGING["loggers"]["django.db.backends"] = {
         "level": "DEBUG",
-        "handlers": ["console"],
+        "handlers": ["console", "console_prod"],
     }
