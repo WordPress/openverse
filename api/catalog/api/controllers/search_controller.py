@@ -376,10 +376,7 @@ def search(
 
     if settings.USE_RANK_FEATURES:
         feature_boost = {"standardized_popularity": DEFAULT_BOOST}
-        if (
-            "unstable__authority" in search_params.data
-            and search_params.data["unstable__authority"]
-        ):
+        if search_params.data["unstable__authority"]:
             feature_boost["authority_boost"] = (
                 search_params.data["unstable__authority_boost"] * DEFAULT_BOOST
             )
