@@ -30,7 +30,7 @@ test.describe("Global Audio", () => {
       const firstAudioRow = await audio.getNthAudioRow(page, 0)
       await audio.play(firstAudioRow)
 
-      // Click in the middle of the player. After this, the player cannot be closed
+      // Click in the middle of the player. After this, the player can be closed
       await page.mouse.click(170, 650)
 
       // Close the player
