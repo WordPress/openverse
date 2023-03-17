@@ -2,8 +2,8 @@
 
 ## Reviewers
 
-- [ ] @aetherunbound
-- [ ] @krysal
+- [x] @aetherunbound
+- [x] @krysal
 
 ## Project summary
 
