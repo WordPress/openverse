@@ -45,7 +45,7 @@ LOGGING = {
         },
         # Add a clause to log error messages to the console in production
         "console_prod": {
-            "level": "WARNING",
+            "level": LOG_LEVEL,
             "filters": ["require_debug_false", "request_id"],
             "class": "logging.StreamHandler",
             "formatter": "console",
