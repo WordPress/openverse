@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { sleep } from "~~/test/playwright/utils/navigation"
+import { sleep, t } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import audio from "~~/test/playwright/utils/audio"
 
@@ -22,6 +22,24 @@ test.describe("Global Audio", () => {
         "aria-label",
         /(Loading|Pause|Replay)/
       )
+    })
+
+    test("track can be closed while playing", async ({ page }) => {
+      await page.goto("/search/audio?q=honey")
+      // Find and play the first audio result
+      const firstAudioRow = await audio.getNthAudioRow(page, 0)
+      await audio.play(firstAudioRow)
+
+      // Click in the middle of the player. After this, the player can be closed
+      await page.mouse.click(170, 650)
+
+      // Close the player
+      await page
+        .locator(".global-audio")
+        .getByRole("button", { name: t("audio-track.close") })
+        .click()
+      // and confirm the player is not visible
+      await expect(page.locator(".global-audio")).not.toBeVisible()
     })
 
     test("player does not reproduce an audio different that the current audio in the details page", async ({
