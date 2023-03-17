@@ -50,6 +50,8 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         "qa",
         # "unstable__sort_by",  # excluding unstable fields
         # "unstable__sort_dir",  # excluding unstable fields
+        # "unstable__authority",  # excluding unstable fields
+        # "unstable__authority_boost",  # excluding unstable fields
         "page_size",
         "page",
     ]
@@ -138,6 +140,22 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         required=False,
         default=DESCENDING,
     )
+    unstable__authority = serializers.BooleanField(
+        label="authority",
+        help_text="If enabled, the search will add a boost to results that are "
+        "from authoritative sources.",
+        required=False,
+        default=False,
+    )
+    unstable__authority_boost = serializers.FloatField(
+        label="authority_boost",
+        help_text="The boost coefficient to apply to authoritative sources, "
+        "multiplied with the popularity boost.",
+        required=False,
+        default=1.0,
+        min_value=0.0,
+        max_value=10.0,
+    )
 
     page_size = serializers.IntegerField(
         label="page_size",
@@ -154,6 +172,10 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         max_value=settings.MAX_PAGINATION_DEPTH,
         min_value=1,
     )
+
+    def is_request_anonymous(self):
+        request = self.context.get("request")
+        return bool(request and request.user and request.user.is_anonymous)
 
     @staticmethod
     def _truncate(value):
@@ -201,18 +223,16 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         return self._truncate(value)
 
     def validate_unstable__sort_by(self, value):
-        request = self.context.get("request")
-        is_anonymous = bool(request and request.user and request.user.is_anonymous)
-        return RELEVANCE if is_anonymous else value
+        return RELEVANCE if self.is_request_anonymous() else value
 
     def validate_unstable__sort_dir(self, value):
-        request = self.context.get("request")
-        is_anonymous = bool(request and request.user and request.user.is_anonymous)
-        return DESCENDING if is_anonymous else value
+        return DESCENDING if self.is_request_anonymous() else value
+
+    def validate_unstable__authority(self, value):
+        return False if self.is_request_anonymous() else value
 
     def validate_page_size(self, value):
-        request = self.context.get("request")
-        is_anonymous = bool(request and request.user and request.user.is_anonymous)
+        is_anonymous = self.is_request_anonymous()
         max_value = (
             settings.MAX_ANONYMOUS_PAGE_SIZE
             if is_anonymous

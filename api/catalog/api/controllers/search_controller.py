@@ -33,6 +33,7 @@ URL = "url"
 PROVIDER = "provider"
 DEEP_PAGINATION_ERROR = "Deep pagination is not allowed."
 QUERY_SPECIAL_CHARACTER_ERROR = "Unescaped special characters are not allowed."
+DEFAULT_BOOST = 10000
 
 
 class RankFeature(Query):
@@ -374,7 +375,12 @@ def search(
             s = s.query("simple_query_string", fields=["tags.name"], query=tags)
 
     if settings.USE_RANK_FEATURES:
-        feature_boost = {"standardized_popularity": 10000}
+        feature_boost = {"standardized_popularity": DEFAULT_BOOST}
+        if search_params.data["unstable__authority"]:
+            feature_boost["authority_boost"] = (
+                search_params.data["unstable__authority_boost"] * DEFAULT_BOOST
+            )
+
         rank_queries = []
         for field, boost in feature_boost.items():
             rank_queries.append(Q("rank_feature", field=field, boost=boost))
