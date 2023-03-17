@@ -34,29 +34,6 @@ COPY Pipfile Pipfile.lock ./
 # Install Python dependencies system-wide (uses the active virtualenv)
 RUN pipenv install --system --deploy --dev
 
-#########
-# Nginx #
-#########
-
-# This target assumes that the build host has run `manage.py collectstatic`
-# `just api/collectstatic` is provided as a convenient alias for running it the expected way
-
-FROM nginx:1.23.3-alpine as nginx
-
-LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
-
-WORKDIR /app
-
-COPY nginx.conf.template /etc/nginx/templates/openverse-api.conf.template
-COPY /static /app/static
-
-# Only environment variables with this prefix will be available in the template
-ENV NGINX_ENVSUBST_FILTER="DJANGO_NGINX_"
-ENV DJANGO_NGINX_ENVIRONMENT="local"
-# Add the release version to the docker container
-ARG SEMANTIC_VERSION
-ENV DJANGO_NGINX_GIT_REVISION=$SEMANTIC_VERSION
-
 #######
 # API #
 #######
@@ -90,12 +67,23 @@ RUN apt-get update \
       && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /var/log/openverse_api/openverse_api.log
 
-# Create a non-root user
-RUN useradd --create-home opener
+# Create a folder for placing static files
+RUN mkdir /static
+
+# Create a non-root user, and make it the owner of the static dir created above
+RUN useradd --create-home opener \
+    && chown -R opener /static
 USER opener
 
 # Copy code into the final image
 COPY --chown=opener . /api/
+
+# Collect static assets, these are used by the next stage, `nginx`
+RUN env \
+      SETUP_ES="False" \
+      STATIC_ROOT="/static" \
+      DJANGO_SECRET_KEY="any string" \
+    python manage.py collectstatic
 
 # Add the release version to the docker container
 ARG SEMANTIC_VERSION
@@ -111,3 +99,25 @@ ENTRYPOINT ["./run.sh"]
 
 # Run Django dev server, can be overridden from Docker Compose
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+#########
+# NGINX #
+#########
+
+FROM nginx:1.23.3-alpine as nginx
+
+LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
+
+WORKDIR /app
+
+COPY nginx.conf.template /etc/nginx/templates/openverse-api.conf.template
+
+# Copy static files from `api` target
+COPY --from=api /static /app/static
+
+# Only environment variables with this prefix will be available in the template
+ENV NGINX_ENVSUBST_FILTER="DJANGO_NGINX_"
+ENV DJANGO_NGINX_ENVIRONMENT="local"
+# Add the release version to the docker container
+ARG SEMANTIC_VERSION
+ENV DJANGO_NGINX_GIT_REVISION=$SEMANTIC_VERSION
