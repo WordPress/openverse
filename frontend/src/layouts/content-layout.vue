@@ -1,6 +1,6 @@
 <template>
   <div
-    class="app flex grid min-h-screen min-h-[100dvh] grid-rows-[auto,1fr] bg-white"
+    class="app flex grid min-h-screen min-h-[100dvh] grid-rows-[auto,1fr,auto] bg-white"
     :class="[
       isDesktopLayout ? 'desktop' : 'mobile',
       breakpoint,
@@ -167,7 +167,7 @@ export default defineComponent({
   width: var(--filter-sidebar-width);
 }
 .app {
-  grid-template-areas: "header header" "main main";
+  grid-template-areas: "header" "main" "global-audio";
 }
 .header-el {
   grid-area: header;

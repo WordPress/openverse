@@ -1,0 +1,147 @@
+{
+    meta: {
+        createdAt: '2023-03-15T13:00:31.824Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/audio/789a34fe-3931-4a4b-ac72-cbbd6782edee/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Wed, 15 Mar 2023 13:00:32 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, Origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'access-control-allow-origin': [
+                '*',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                '6042d5afe5304578b3a5183e85ffce91',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '8732',
+            ],
+            'last-modified': [
+                'Wed, 15 Mar 2023 10:35:00 GMT',
+            ],
+            'server-timing': [
+                'cf-q-config;dur=6.9999950937927e-06',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '7a84f09e2f8798a6-OTP',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+            ],
+        },
+        body: {
+            id: '789a34fe-3931-4a4b-ac72-cbbd6782edee',
+            title: 'HONEY SAN HTUN.wav',
+            indexed_on: '2022-11-02T16:00:43.977525Z',
+            foreign_landing_url: 'https://freesound.org/people/ykg1/sounds/54553',
+            url: 'https://cdn.freesound.org/previews/54/54553_668450-hq.mp3',
+            creator: 'ykg1',
+            creator_url: 'https://freesound.org/people/ykg1',
+            license: 'sampling+',
+            license_version: '1.0',
+            license_url: 'https://creativecommons.org/licenses/sampling+/1.0/',
+            provider: 'freesound',
+            source: 'freesound',
+            category: null,
+            genres: null,
+            filesize: 26170,
+            filetype: 'mp3',
+            tags: [
+                {
+                    name: 'myanmar',
+                    accuracy: null,
+                },
+                {
+                    name: 'name',
+                    accuracy: null,
+                },
+                {
+                    name: 'pronounce',
+                    accuracy: null,
+                },
+            ],
+            alt_files: [
+                {
+                    url: 'https://freesound.org/apiv2/sounds/54553/download/',
+                    bit_rate: '0',
+                    filesize: '186360',
+                    filetype: 'wav',
+                    sample_rate: '44100',
+                },
+            ],
+            attribution: '"HONEY SAN HTUN.wav" by ykg1 is licensed under CC Sampling+ 1.0. To view a copy of this license, visit https://creativecommons.org/licenses/sampling+/1.0/.',
+            fields_matched: [],
+            mature: false,
+            audio_set: {
+                title: 'myanmese_names',
+                foreign_landing_url: 'https://freesound.org/apiv2/packs/3490/',
+                creator: 'ykg1',
+                creator_url: 'https://freesound.org/people/ykg1/',
+                url: null,
+                filesize: null,
+                filetype: null,
+            },
+            duration: 1055,
+            bit_rate: 128000,
+            sample_rate: null,
+            thumbnail: null,
+            detail_url: 'http://localhost:49153/v1/audio/789a34fe-3931-4a4b-ac72-cbbd6782edee/',
+            related_url: 'http://localhost:49153/v1/audio/789a34fe-3931-4a4b-ac72-cbbd6782edee/related/',
+            waveform: 'http://localhost:49153/v1/audio/789a34fe-3931-4a4b-ac72-cbbd6782edee/waveform/',
+        },
+    },
+}

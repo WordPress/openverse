@@ -34,6 +34,8 @@ Eventually the catalog will be merged into this repository as well.
   [openverse.org](https://openverse.org), built with Vue and Nuxt
 - [Automations](automations/) | Scripts used for various workflows around
   Openverse repositories and processes
+- [Utilities](utilities/) | Scripts or utilities which are useful across
+  multiple projects or don't necessarily fit into a specific project.
 
 This repository also contains the following directories.
 

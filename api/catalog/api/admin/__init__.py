@@ -16,12 +16,12 @@ admin.site = openverse_admin
 admin.sites.site = openverse_admin
 
 
-@admin.register(Image)
+# @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     search_fields = ("identifier",)
 
 
-@admin.register(Audio)
+# @admin.register(Audio)
 class AudioAdmin(admin.ModelAdmin):
     search_fields = ("identifier",)
 
@@ -58,12 +58,12 @@ class MediaReportAdmin(admin.ModelAdmin):
         return readonly_fields
 
 
-@admin.register(ImageReport)
+# @admin.register(ImageReport)
 class ImageReportAdmin(MediaReportAdmin):
     media_specific_list_display = ("image_url",)
 
 
-@admin.register(AudioReport)
+# @admin.register(AudioReport)
 class AudioReportAdmin(MediaReportAdmin):
     media_specific_list_display = ("audio_url",)
 
