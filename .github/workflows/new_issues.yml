@@ -62,7 +62,8 @@ jobs:
   set_issue_priority_field:
     name: Set issue priority
     runs-on: ubuntu-latest
-    needs: add_issue_to_project
+    needs:
+      - add_issue_to_project
     steps:
       - name: Set issue priority
         env:
