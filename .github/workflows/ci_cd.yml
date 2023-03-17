@@ -89,7 +89,7 @@ jobs:
 
           if "frontend" in changes:
               build_matrix["image"].append("frontend")
-              build_matrix["include"].append({"image": "frontend", context: "frontend", "target": "app"})
+              build_matrix["include"].append({"image": "frontend", "context": "frontend", "target": "app"})
               publish_matrix["image"].append("frontend")
           if "api" in changes or "ingestion_server" in changes:
               # Always build the ingestion server and API images for either changeset
