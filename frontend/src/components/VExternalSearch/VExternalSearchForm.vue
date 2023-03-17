@@ -9,14 +9,14 @@
       v-if="!hasNoResults && isSupported"
       path="external-sources.form.supported-title"
       tag="p"
-      class="text-base font-normal leading-[130%]"
+      class="text-base font-normal leading-snug"
     />
 
     <i18n
       v-else-if="!hasNoResults && !isSupported"
       path="external-sources.form.unsupported-title"
       tag="p"
-      class="text-base font-normal leading-[130%]"
+      class="text-base font-normal leading-snug"
     >
       <template #openverse>Openverse</template>
       <template #type>{{ $t(`external-sources.form.types.${type}`) }}</template>
@@ -26,7 +26,7 @@
       v-else
       path="external-sources.form.no-results-title"
       tag="p"
-      class="text-base font-normal leading-[130%]"
+      class="text-base font-normal leading-snug"
     >
       <template #type>{{ $t(`external-sources.form.types.${type}`) }}</template>
       <template #query>{{ searchTerm }}</template>
