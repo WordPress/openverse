@@ -20,9 +20,18 @@ docker-compose exec -T "$PLAUSIBLE_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy
 	EOF"
 
 # Create site using API key
-curl \
+RES=$(curl \
   -X POST \
   -H "Authorization: Bearer aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
   -F 'domain="localhost"' \
   -F 'timezone="UTC"' \
-  http://localhost:50288/api/v1/sites
+  http://localhost:50288/api/v1/sites)
+
+if [[ "$RES" == *"\"error\":\"domain This domain has already been taken"* ]]; then
+  echo "Domain already exists."
+elif [[ "$RES" == *"\"domain\":\"localhost\""* ]]; then
+  echo "Domain created."
+else
+  echo "Error: $RES"
+  exit 1
+fi
