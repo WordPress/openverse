@@ -28,7 +28,7 @@ import pytest
 import requests
 from django_redis import get_redis_connection
 
-from catalog.api.utils.validate_images import CACHE_PREFIX
+from catalog.api.utils.check_dead_links import CACHE_PREFIX
 
 
 @pytest.fixture
