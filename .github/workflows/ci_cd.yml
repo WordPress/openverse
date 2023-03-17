@@ -754,9 +754,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Load Docker images
-        uses: ./.github/actions/load-img
-
       - name: Compile documentation
         uses: ./.github/actions/build-docs
         # Docs will be located at `/tmp/docs`.
@@ -831,9 +828,6 @@ jobs:
         uses: ./.github/actions/setup-env
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Load Docker images
-        uses: ./.github/actions/load-img
 
       - name: Compile documentation
         uses: ./.github/actions/build-docs
