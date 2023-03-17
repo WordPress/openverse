@@ -100,5 +100,8 @@ if config("DJANGO_DB_LOGGING", cast=bool, default=False):
     # and it's nice to be able to enable it conditionally within that context
     LOGGING["loggers"]["django.db.backends"] = {
         "level": "DEBUG",
-        "handlers": ["console", "console_prod"],
+        # Send to general_console to avoid `console_prod` and `console`s
+        # specific configurations around specific log level and DEBUG
+        # setting, respectively.
+        "handlers": ["general_console"],
     }
