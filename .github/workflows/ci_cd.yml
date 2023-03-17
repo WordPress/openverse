@@ -91,7 +91,7 @@ jobs:
               build_matrix["image"].append("frontend")
               build_matrix["include"].append({"image": "frontend", "target": "app"})
               publish_matrix["image"].append("frontend")
-          else:
+          if "api" in changes or "ingestion_server" in changes:
               # Always build the ingestion server and API images for either changeset
               build_matrix["image"] += ["api", "ingestion_server"]
               build_matrix["include"] += [
