@@ -16,6 +16,7 @@ docker-compose exec -T "$PLAUSIBLE_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy
 	  (id, user_id, name, key_prefix, key_hash, inserted_at, updated_at, scopes, hourly_request_limit)
 	VALUES
 	  (1, 1, 'Development', 'aaaaaa', '332015ffc9f0e1f475c0fadb1e1a14d2eb09774249f71961f5a2c477efc0a0fc', now(), now(), '{sites:provision:*}', 1000)
+  ON CONFLICT (id) DO NOTHING
 	EOF"
 
 # Create site using API key
