@@ -134,8 +134,7 @@ opting out of a decision discussion you do not wish to or cannot participate in.
 
 ## Current round
 
-The discussion is currently in the **{Question, Reaction, Revision, Objection
-raising, Objection revision}** round.
+The discussion is currently in the **{Question, Revision, Objection, Objection revision}** round.
 ```
 
 ## Round descriptions
