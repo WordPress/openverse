@@ -89,14 +89,14 @@ jobs:
 
           if "frontend" in changes:
               build_matrix["image"].append("frontend")
-              build_matrix["include"].append({"image": "frontend", "target": "app"})
+              build_matrix["include"].append({"image": "frontend", context: "frontend", "target": "app"})
               publish_matrix["image"].append("frontend")
           if "api" in changes or "ingestion_server" in changes:
               # Always build the ingestion server and API images for either changeset
               build_matrix["image"] += ["api", "ingestion_server"]
               build_matrix["include"] += [
-                {"image": "ingestion_server", "target": "ing"},
-                {"image": "api", "target": "api"},
+                {"image": "ingestion_server", "context": "ingestion_server", "target": "ing"},
+                {"image": "api", "context": "api", "target": "api"},
               ]
               if "api" in changes:
                   publish_matrix["image"] += ["api", "api_nginx"]
@@ -221,7 +221,7 @@ jobs:
       - name: Build image `${{ matrix.image }}`
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.image }}
+          context: ${{ matrix.context }}
           target: ${{ matrix.target }}
           push: false
           tags: openverse-${{ matrix.image }}
