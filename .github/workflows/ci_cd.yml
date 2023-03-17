@@ -87,22 +87,21 @@ jobs:
           build_matrix = {"image": [], "include": []}
           publish_matrix = {"image": []}
 
-          if "api" in changes:
-              build_matrix["image"].append("api")
-              build_matrix["include"].append({"image": "api", "target": "api"})
-              publish_matrix["image"] += ["api", "api_nginx"]
-          if "ingestion_server" in changes:
-              build_matrix["image"].append("ingestion_server")
-              build_matrix["include"].append({"image": "ingestion_server", "target": "ing"})
-              publish_matrix["image"].append("ingestion_server")
-              # The `api` image needs to be built to run the `test-api` job.
-              if "api" not in changes:
-                  build_matrix["image"].append("api")
-                  build_matrix["include"].append({"image": "api", "target": "api"})
           if "frontend" in changes:
               build_matrix["image"].append("frontend")
               build_matrix["include"].append({"image": "frontend", "target": "app"})
               publish_matrix["image"].append("frontend")
+          if "api" in changes or "ingestion_server" in changes:
+              # Always build the ingestion server and API images for either changeset
+              build_matrix["image"] += ["api", "ingestion_server"]
+              build_matrix["include"] += [
+                {"image": "ingestion_server", "target": "ing"},
+                {"image": "api", "target": "api"},
+              ]
+              if "api" in changes:
+                  publish_matrix["image"] += ["api", "api_nginx"]
+              if "ingestion_server" in changes:
+                  publish_matrix["image"].append("ingestion_server")
 
           build_matrix = json.dumps(build_matrix)
           publish_matrix = json.dumps(publish_matrix)
