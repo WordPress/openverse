@@ -127,7 +127,7 @@ class TestIngestion(unittest.TestCase):
         logging.info("Waiting for ES to be ready...")
         port = service_ports["es"]
         # Point to the root `justfile` to avoid automatic resolution to the nearest.
-        cls._wait(["just", "../../wait-for-es", f"localhost:{port}"])
+        cls._wait(["just", "../../docker/es/wait", f"localhost:{port}"])
         logging.info("Connected to ES")
 
     @classmethod
@@ -154,12 +154,15 @@ class TestIngestion(unittest.TestCase):
     def _load_data(cls, conn, table_names):
         cur = conn.cursor()
         for table_name in table_names:
-            data_path = this_dir.joinpath("mock_data", f"mocked_{table_name}.csv")
+            data_path = this_dir.joinpath(
+                "../../sample_data", f"sample_{table_name}.csv"
+            )
             with open(data_path) as data:
                 cur.copy_expert(
                     f"COPY {table_name} FROM STDIN WITH (FORMAT csv, HEADER true)",
                     data,
                 )
+                cur.execute(f"REFRESH MATERIALIZED VIEW {table_name}_view")
         conn.commit()
         cur.close()
 
@@ -211,6 +214,18 @@ class TestIngestion(unittest.TestCase):
         with conn.cursor() as cursor:
             cursor.execute(constraint_sql)
             return {constraint: name for name, constraint in cursor}
+
+    @classmethod
+    def _compose_cmd(cls, cmd: list[str], **kwargs):
+        """Run a Docker Compose command"""
+
+        cmd = ["docker-compose", "-f", cls.compose_path, *cmd]
+        subprocess.run(
+            cmd,
+            cwd=cls.compose_path.parent,
+            check=True,
+            **kwargs,
+        )
 
     def check_index_exists(self, index_name):
         es = self._get_es()
@@ -327,13 +342,7 @@ class TestIngestion(unittest.TestCase):
         compose_path = gen_integration_compose()
         cls.compose_path = compose_path
 
-        start_cmd = ["docker-compose", "-f", compose_path.name, "up", "-d"]
-        subprocess.run(
-            start_cmd,
-            cwd=compose_path.parent,
-            check=True,
-            capture_output=True,
-        )
+        cls._compose_cmd(["up", "-d"], capture_output=True)
 
         # Wait for services to be ready
         cls.upstream_db, cls.downstream_db = cls._wait_for_dbs()
@@ -341,9 +350,6 @@ class TestIngestion(unittest.TestCase):
         cls._wait_for_ing()
 
         # Set up the base scenario for the tests
-        cls._load_schemas(
-            cls.upstream_db, ["audio_view", "audioset_view", "image_view"]
-        )
         cls._load_schemas(
             cls.downstream_db,
             [
@@ -356,7 +362,7 @@ class TestIngestion(unittest.TestCase):
                 "image",
             ],
         )
-        cls._load_data(cls.upstream_db, ["audio_view", "image_view"])
+        cls._load_data(cls.upstream_db, ["audio", "image"])
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -367,19 +373,12 @@ class TestIngestion(unittest.TestCase):
         compose_path = cls.compose_path
         log_output = compose_path.parent / "ingestion_logs.txt"
         with log_output.open("w") as file:
-            subprocess.run(
-                ["docker-compose", "-f", compose_path.name, "logs", "--no-color"],
-                cwd=compose_path.parent,
-                check=True,
-                stderr=subprocess.STDOUT,
-                stdout=file,
+            cls._compose_cmd(
+                ["logs", "--no-color"], stderr=subprocess.STDOUT, stdout=file
             )
 
-        stop_cmd = ["docker-compose", "-f", compose_path.name, "down", "-v"]
-        subprocess.run(
-            stop_cmd,
-            cwd=compose_path.parent,
-            check=True,
+        cls._compose_cmd(
+            ["down", "-v"],
             capture_output=True,
         )
 

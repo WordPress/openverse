@@ -7,19 +7,20 @@ services:
     volumes:
       - api-postgres:/var/lib/postgresql/data
     env_file:
-      - postgres/env.docker
+      - docker/db/env.docker
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
 
   upstream_db:
-    image: postgres:13.2-alpine
+    build: ./docker/upstream_db/
+    image: openverse-upstream_db
     expose:
       - "5432"
     volumes:
       - catalog-postgres:/var/lib/postgresql/data
       - ./sample_data:/sample_data
     env_file:
-      - postgres/env.docker
+      - docker/upstream_db/env.docker
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
 
@@ -30,7 +31,7 @@ services:
     volumes:
       - plausible-postgres:/var/lib/postgresql/data
     env_file:
-      - postgres/plausible.env.docker
+      - ./docker/plausible_db/env.docker
     healthcheck:
       test: "pg_isready -U deploy -d plausible"
 
@@ -38,8 +39,8 @@ services:
     image: clickhouse/clickhouse-server:22.6-alpine
     volumes:
       - plausible-clickhouse:/var/lib/clickhouse
-      - ./clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
-      - ./clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
+      - ./docker/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
+      - ./docker/clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
     ulimits:
       nofile:
         soft: 262144
@@ -54,7 +55,7 @@ services:
       - plausible_db
       - plausible_ch
     env_file:
-      - plausible/env.docker
+      - docker/plausible/env.docker
 
   cache:
     image: redis:4.0.10
@@ -65,13 +66,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
     ports:
       - "50292:9200"
-    environment:
-      # disable XPack
-      # https://www.elastic.co/guide/en/elasticsearch/reference/5.3/docker.html#_security_note
-      - xpack.security.enabled=false
-      - discovery.type=single-node
-      - http.cors.enabled=true
-      - http.cors.allow-origin=/.*/
+    env_file:
+      - docker/es/env.docker
     healthcheck:
       test:
         [
@@ -161,8 +157,8 @@ services:
     depends_on:
       - web
     volumes:
-      - ./nginx/templates:/etc/nginx/templates
-      - ./nginx/certs:/etc/nginx/certs
+      - ./docker/nginx/templates:/etc/nginx/templates
+      - ./docker/nginx/certs:/etc/nginx/certs
 
 volumes:
   api-postgres:
