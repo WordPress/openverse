@@ -109,6 +109,13 @@ MIDDLEWARE = [
     "oauth2_provider.middleware.OAuth2TokenMiddleware",
 ]
 
+# WARNING: This should not be run in production long-term as it can impact performance
+if config("DJANGO_DB_LOGGING", cast=bool, default=False):
+    MIDDLEWARE.append(
+        "catalog.api.middleware.force_debug_cursor_middleware.ForceDebugCursorMiddleware"  # noqa: E501
+    )
+
+
 SWAGGER_SETTINGS = {
     "DEFAULT_INFO": "catalog.urls.swagger.open_api_info",
     "SECURITY_DEFINITIONS": {},

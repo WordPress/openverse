@@ -101,4 +101,5 @@ if config("DJANGO_DB_LOGGING", cast=bool, default=False):
     LOGGING["loggers"]["django.db.backends"] = {
         "level": "DEBUG",
         "handlers": ["console", "console_prod"],
+        "propagate": False,
     }
