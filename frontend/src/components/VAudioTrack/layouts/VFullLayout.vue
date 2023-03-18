@@ -23,9 +23,7 @@
       <div
         class="audio-info order-2 flex w-full flex-col justify-center lg:order-1 lg:w-auto"
       >
-        <h1
-          class="font-heading text-base font-semibold leading-snug lg:text-3xl lg:line-clamp-2"
-        >
+        <h1 class="description-bold lg:heading-5 lg:line-clamp-2">
           {{ audio.title }}
         </h1>
         <div

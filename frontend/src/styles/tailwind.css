@@ -44,16 +44,16 @@ Heading 3           - 28px - 5xl bold
 Heading 4           - 24px - 4xl bold
 Heading 5           - 19px - 3xl semibold
 Heading 6           - 16px - 2xl semibold
-Paragraph Large     - 16px - 2xl regular leading-larger
-Paragraph Small     - 14px - base regular leading-large
-Body                - 14px - base regular (default leading-normal)
-Description Regular - 14px - base
-Description Bold    - 14px - base semibold
-Label Bold          - 13px - sm semibold
-Label Regular       - 13px - sm regular
-Caption Regular     - 12px - sr regular
-Caption Bold        - 12px - sr semibold
-Category            - 12px - sr semibold UPPERCASE
+Paragraph Large     - 16px - 2xl  regular  leading-larger
+Paragraph Small     - 14px - base regular  leading-large
+Body                - 14px - base regular  (default leading-normal)
+Description Regular - 14px - base regular  leading-snug
+Description Bold    - 14px - base semibold leading-snug
+Label Bold          - 13px - sm semibold (default leading-snug)
+Label Regular       - 13px - sm regular (default leading-snug)
+Caption Regular     - 12px - sr regular (default leading-snug)
+Caption Bold        - 12px - sr semibold (default leading-snug)
+Category            - 12px - sr semibold UPPERCASE (default leading-snug)
 Time                - 11px - xs semibold (default leading-tight)
 
 

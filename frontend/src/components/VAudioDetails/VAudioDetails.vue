@@ -136,6 +136,6 @@ dt {
 }
 
 dd {
-  @apply pt-2 text-sm text-base font-semibold capitalize leading-snug;
+  @apply description-bold pt-2 capitalize;
 }
 </style>
