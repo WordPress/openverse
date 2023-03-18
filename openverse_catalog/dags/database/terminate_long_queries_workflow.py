@@ -69,7 +69,7 @@ dag = DAG(
     max_active_tasks=MAX_ACTIVE,
     max_active_runs=MAX_ACTIVE,
     catchup=False,
-    schedule="*/15 * * * *",  # Every 15 minutes
+    schedule="*/7 * * * *",  # Every 7 minutes
     tags=["database"],
     render_template_as_native_obj=True,
 )
