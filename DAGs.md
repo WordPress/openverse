@@ -210,21 +210,24 @@ and related PRs:
 
 ### Silenced DAGs check
 
-Check for DAGs that have silenced Slack alerts which may need to be turned back
-on.
+Check for DAGs that have silenced Slack alerts or skipped errors which may need
+to be turned back on.
 
 When a DAG has known failures, it can be ommitted from Slack error reporting by
-adding an entry to the `SILENCED_SLACK_NOTIFICATIONS` Airflow variable. This is
-a dictionary where thekey is the `dag_id` of the affected DAG, and the value is
-a list of SilencedSlackNotifications (which map silenced notifications to GitHub
-URLs) for that DAG.
+adding an entry to the `SILENCED_SLACK_NOTIFICATIONS` Airflow variable.
+Similarly, errors that occur during the `pull_data` step may be configured to
+skip and allow ingestion to continue, using the `SKIPPED_INGESTION_ERRORS`
+Airflow variable. These variables are dictionaries where the key is the `dag_id`
+of the affected DAG, and the value is a list of configuration dictionaries
+mapping an error `predicate` to be skipped/silenced to an open GitHub issue.
 
 The `check_silenced_dags` DAG iterates over the entries in the
-`SILENCED_SLACK_NOTIFICATIONS` configuration and verifies that the associated
-GitHub issues are still open. If an issue has been closed, it is assumed that
-the DAG should have Slack reporting reenabled, and an alert is sent to prompt
-manual update of the configuration. This prevents developers from forgetting to
-reenable Slack reporting after the issue has been resolved.
+`SILENCED_SLACK_NOTIFICATIONS` and `SKIPPED_INGESTION_ERRORS` configurations and
+verifies that the associated GitHub issues are still open. If an issue has been
+closed, it is assumed that the entry should be removed, and an alert is sent to
+prompt manual update of the configuration. This prevents developers from
+forgetting to reenable Slack reporting or turnoff error skipping after the issue
+has been resolved.
 
 The DAG runs weekly.
 

@@ -102,7 +102,10 @@ def test_batch_limit_is_capped_to_ingestion_limit():
     with patch(
         "providers.provider_api_scripts.provider_data_ingester.Variable"
     ) as MockVariable:
-        MockVariable.get.side_effect = [20]
+        MockVariable.get.side_effect = [
+            20,  # ingestion_limit
+            {},  # skipped_ingestion_errors
+        ]
 
         ingester = MockProviderDataIngester()
         assert ingester.batch_limit == 20
@@ -274,7 +277,10 @@ def test_ingest_records_stops_after_reaching_limit():
         "providers.provider_api_scripts.provider_data_ingester.Variable"
     ) as MockVariable:
         # Mock the calls to Variable.get, in order
-        MockVariable.get.side_effect = [3]
+        MockVariable.get.side_effect = [
+            3,  # ingestion_limit
+            {},  # skipped_ingestion_errors
+        ]
 
         ingester = MockProviderDataIngester()
 
@@ -399,10 +405,13 @@ def test_ingest_records_raises_IngestionError():
         # Multiple errors are skipped
         (
             [
-                Exception("Mock exception 1"),
-                (EXPECTED_BATCH_DATA, True),  # First error
-                Exception("Mock exception 2"),
-                (EXPECTED_BATCH_DATA, False),  # Second error, `should_continue` False
+                Exception("Mock exception 1"),  # First error
+                (EXPECTED_BATCH_DATA, True),  # 'Good' batch
+                Exception("Mock exception 2"),  # Second error
+                (
+                    EXPECTED_BATCH_DATA,
+                    False,
+                ),  # 'Good' batch, but `should_continue` False
             ],
             4,  # get_batch is called until `should_continue` is False, ignoring errors
             AggregateIngestionError,
@@ -429,14 +438,15 @@ def test_ingest_records_raises_IngestionError():
         ),
     ],
 )
-def test_ingest_records_with_skip_ingestion_errors(
+def test_ingest_records_handles_skipped_ingestion_errors(
     batches, expected_call_count, expected_error
 ):
-    ingester = MockProviderDataIngester({"skip_ingestion_errors": True})
+    ingester = MockProviderDataIngester()
 
     with (
         patch.object(ingester, "get_batch") as get_batch_mock,
         patch.object(ingester, "process_batch", return_value=10),
+        patch.object(ingester, "_should_skip_ingestion_error", return_value=True),
     ):
         get_batch_mock.side_effect = batches
 
@@ -449,6 +459,101 @@ def test_ingest_records_with_skip_ingestion_errors(
         assert get_batch_mock.call_count == expected_call_count
 
 
+@pytest.mark.parametrize(
+    "skip_all_ingestion_errors, skipped_ingestion_errors, error, should_skip",
+    [
+        # When `skip_ingestion_errors` is enabled:
+        # No specific configured errors
+        (True, [], ValueError("Test error"), True),
+        # The error is also specifically configured to skip
+        (
+            True,
+            [
+                {
+                    "issue": "https://github.com/WordPress/openverse/issues/1",
+                    "predicate": "Test",
+                }
+            ],
+            ValueError("Test error"),
+            True,
+        ),
+        # When `skip_ingestion_errors` is not enabled:
+        # No errors are configured to skip
+        (False, [], ValueError("Test error"), False),
+        # There are some configured skipped errors, but they do not match
+        (
+            False,
+            [
+                {
+                    "issue": "https://github.com/WordPress/openverse/issues/1",
+                    "predicate": "KeyError",
+                },
+                {
+                    "issue": "https://github.com/WordPress/openverse/issues/1",
+                    "predicate": "Foo",
+                },
+            ],
+            ValueError("Test error"),
+            False,
+        ),
+        # Match on the error message
+        (
+            False,
+            [
+                {
+                    "issue": "https://github.com/WordPress/openverse/issues/1",
+                    "predicate": "My mock error",
+                },
+            ],
+            ValueError("My mock error"),
+            True,
+        ),
+        # Match on the error class
+        (
+            False,
+            [
+                {
+                    "issue": "https://github.com/WordPress/openverse/issues/1",
+                    "predicate": "KeyError",
+                },
+            ],
+            KeyError("A message that does not otherwise match the predicate"),
+            True,
+        ),
+        # Match is partial and not case-sensitive
+        (
+            False,
+            [
+                {
+                    "issue": "https://github.com/WordPress/openverse/issues/1",
+                    "predicate": "fOo",
+                },
+            ],
+            ValueError("This error message contains the predicate FOO"),
+            True,
+        ),
+    ],
+)
+def test_should_skip_ingestion_error(
+    skip_all_ingestion_errors, skipped_ingestion_errors, error, should_skip
+):
+    with patch(
+        "providers.provider_api_scripts.provider_data_ingester.Variable"
+    ) as MockVariable:
+        # Mock the calls to Variable.get in order
+        MockVariable.get.side_effect = [
+            None,  # ingestion_limit
+            {"my_dag_id": skipped_ingestion_errors},  # skipped_ingestion_errors
+        ]
+
+        ingester = MockProviderDataIngester(
+            conf={"skip_ingestion_errors": skip_all_ingestion_errors},
+            dag_id="my_dag_id",
+        )
+
+        assert ingester._should_skip_ingestion_error(error) == should_skip
+
+
 def test_ingest_records_exits_immediately_if_limit_already_reached():
     # A child class may override `ingest_records` to run multiple times.
     # Once the ingestion limit has been reached, subsequent calls to
@@ -458,7 +563,10 @@ def test_ingest_records_exits_immediately_if_limit_already_reached():
         "providers.provider_api_scripts.provider_data_ingester.Variable"
     ) as MockVariable:
         # Mock the calls to Variable.get to set an ingestion limit
-        MockVariable.get.side_effect = [5]
+        MockVariable.get.side_effect = [
+            5,  # ingestion_limit
+            {},  # skipped_ingestion_errors
+        ]
 
         ingester = MockProviderDataIngester()
 

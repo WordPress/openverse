@@ -3,6 +3,7 @@ import logging
 import traceback
 from abc import ABC, abstractmethod
 from datetime import datetime
+from typing import TypedDict
 
 from airflow.exceptions import AirflowException
 from airflow.models import Variable
@@ -45,6 +46,20 @@ class IngestionError(Exception):
     def repr_with_traceback(self):
         # Append traceback
         return f"{str(self)}\n{self.traceback}"
+
+
+class SkippedIngestionError(TypedDict):
+    """
+    Configuration for a silenced ingestion error.
+
+    issue:     A link to a GitHub issue which describes why the error
+               is silenced and tracks resolving the problem.
+    predicate: Errors whose classname or message contain the predicate will be
+               skipped. Matching is case-insensitive.
+    """
+
+    issue: str
+    predicate: str
 
 
 class ProviderDataIngester(ABC):
@@ -147,11 +162,6 @@ class ProviderDataIngester(ABC):
         if self.date:
             logger.info(f"Using date {self.date}.")
 
-        # Used to skip over errors and continue ingestion. When enabled, errors
-        # are not reported until ingestion has completed.
-        self.skip_ingestion_errors = conf.get("skip_ingestion_errors", False)
-        self.ingestion_errors: list[IngestionError] = []  # Keep track of errors
-
         # An optional set of initial query params from which to begin ingestion.
         self.initial_query_params = conf.get("initial_query_params")
 
@@ -161,6 +171,21 @@ class ProviderDataIngester(ABC):
         if query_params_list := conf.get("query_params_list"):
             # Create a generator to facilitate fetching the next set of query_params.
             self.override_query_params = (qp for qp in query_params_list)
+
+        # A configuration option that is used to skip over ALL errors and continue
+        # ingestion, reporting errors in aggregate when ingestion has completed. This
+        # option should be used sparingly and can only be enabled at the level of an
+        # individual DagRun.
+        self.skip_all_ingestion_errors = conf.get("skip_ingestion_errors", False)
+
+        # Global configuration for particular errors that should be skipped across all
+        # runs of this DAG. Only errors matching the configuration will be skipped, and
+        # reported in aggregate when ingestion has completed.
+        self.skipped_ingestion_errors: list[SkippedIngestionError] = Variable.get(
+            "SKIPPED_INGESTION_ERRORS", default_var={}, deserialize_json=True
+        ).get(self.dag_id, [])
+
+        self.ingestion_errors: list[IngestionError] = []  # Keep track of skipped errors
 
     def _init_media_stores(self, day_shift: int = None) -> dict[str, MediaStore]:
         """Initialize a media store for each media type supported by this provider."""
@@ -226,7 +251,7 @@ class ProviderDataIngester(ABC):
                     error, traceback.format_exc(), query_params
                 )
 
-                if self.skip_ingestion_errors:
+                if self._should_skip_ingestion_error(error):
                     # Add this to the errors list but continue processing
                     self.ingestion_errors.append(ingestion_error)
                     logger.error(f"Skipping batch due to ingestion error: {error}")
@@ -247,6 +272,18 @@ class ProviderDataIngester(ABC):
         # If errors were caught during processing, raise them now
         if error_summary := self._get_ingestion_errors():
             raise error_summary
+
+    def _should_skip_ingestion_error(self, error: Exception) -> bool:
+        """Determine whether an error should be skipped."""
+        if self.skip_all_ingestion_errors:
+            return True
+
+        for skipped_error in self.skipped_ingestion_errors:
+            # Check if the predicate matches
+            if skipped_error["predicate"].lower() in repr(error).lower():
+                return True
+
+        return False
 
     def _get_ingestion_errors(self) -> AggregateIngestionError | None:
         """

@@ -120,7 +120,7 @@ def test_check_configuration(silenced_dags, dags_to_reenable, should_send_alert)
         ) as get_dags_with_closed_issues_mock,
         mock.patch("maintenance.check_silenced_dags.send_alert") as send_alert_mock,
     ):
-        message = check_configuration("not_set")
+        message = check_configuration("not_set", "my_variable")
         assert send_alert_mock.called == should_send_alert
         assert get_dags_with_closed_issues_mock.called_with("not_set", silenced_dags)
 
@@ -154,7 +154,7 @@ def test_check_configuration_formats_dag_correctly():
         ),
         mock.patch("maintenance.check_silenced_dags.send_alert"),
     ):
-        message = check_configuration("not_set")
+        message = check_configuration("not_set", "my_variable")
         # Called with correct dag_ids
         assert f"<{issue}|{dag} ({task_id_pattern}): '{predicate}'>" in message
 
