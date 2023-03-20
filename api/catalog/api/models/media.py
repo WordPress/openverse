@@ -1,7 +1,6 @@
 import mimetypes
 
 from django.conf import settings
-from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.html import format_html
@@ -88,12 +87,6 @@ class AbstractMedia(
         blank=True,
         null=True,
         help_text="Tags with detailed metadata, such as accuracy.",
-    )
-    tags_list = ArrayField(
-        base_field=models.CharField(max_length=255),
-        blank=True,
-        null=True,
-        help_text="List of tags names without detailed metadata.",
     )
 
     category = models.CharField(
