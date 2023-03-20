@@ -266,6 +266,23 @@ ghcr.io/WordPress/openverse-catalog.
 Pull requests are welcome! Feel free to [join us on Slack][wp_slack] and discuss
 the project with the engineers and community members on #openverse.
 
+## Additional Resources
+
+- 2022-01-12: **[cc-archive/cccatalog](https://github.com/cc-archive/cccatalog):
+  The old repository for this catalog contains useful information for the
+  original motivations and architecture of the Catalog.**
+
+For additional context see:
+
+- 2020-12-07:
+  [Upcoming Changes to the CC Open Source Community — Creative Commons Open Source](https://opensource.creativecommons.org/blog/entries/2020-12-07-upcoming-changes-to-community/)
+- 2021-05-03:
+  [CC Search to Join WordPress - Creative Commons](https://creativecommons.org/2021/05/03/cc-search-to-join-wordpress/)
+- 2021-05-10:
+  [Welcome to Openverse – Openverse — WordPress.org](https://make.wordpress.org/openverse/2021/05/11/hello-world/)
+- 2021-12-13:
+  [Dear Users of CC Search, Welcome to Openverse - Creative Commons](https://creativecommons.org/2021/12/13/dear-users-of-cc-search-welcome-to-openverse/)
+
 ## Acknowledgments
 
 Openverse, previously known as CC Search, was conceived and built at
