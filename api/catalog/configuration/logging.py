@@ -9,7 +9,7 @@ def health_check_filter(record: LogRecord) -> bool:
 
 
 LOG_LEVEL = config("LOG_LEVEL", default="INFO").upper()
-
+DJANGO_DB_LOGGING = config("DJANGO_DB_LOGGING", cast=bool, default=False)
 
 # Logging configuration
 LOGGING = {
@@ -45,7 +45,7 @@ LOGGING = {
         },
         # Add a clause to log error messages to the console in production
         "console_prod": {
-            "level": "WARNING",
+            "level": LOG_LEVEL,
             "filters": ["require_debug_false", "request_id"],
             "class": "logging.StreamHandler",
             "formatter": "console",
@@ -95,10 +95,11 @@ LOGGING = {
     },
 }
 
-if config("DJANGO_DB_LOGGING", cast=bool, default=False):
+if DJANGO_DB_LOGGING:
     # Behind a separate flag as it's a very noisy debug logger
     # and it's nice to be able to enable it conditionally within that context
     LOGGING["loggers"]["django.db.backends"] = {
         "level": "DEBUG",
         "handlers": ["console", "console_prod"],
+        "propagate": False,
     }

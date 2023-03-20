@@ -24,7 +24,7 @@ from catalog.configuration.elasticsearch import ES, MEDIA_INDEX_MAPPING
 from catalog.configuration.link_validation_cache import (
     LinkValidationCacheExpiryConfiguration,
 )
-from catalog.configuration.logging import LOGGING
+from catalog.configuration.logging import DJANGO_DB_LOGGING, LOGGING
 
 
 # Build paths inside the project like this: BASE_DIR.join('dir', 'subdir'...)
@@ -108,6 +108,13 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "oauth2_provider.middleware.OAuth2TokenMiddleware",
 ]
+
+# WARNING: This should not be run in production long-term as it can impact performance
+if not DEBUG and DJANGO_DB_LOGGING:
+    MIDDLEWARE.append(
+        "catalog.api.middleware.force_debug_cursor_middleware.force_debug_cursor_middleware"  # noqa: E501
+    )
+
 
 SWAGGER_SETTINGS = {
     "DEFAULT_INFO": "catalog.urls.swagger.open_api_info",
