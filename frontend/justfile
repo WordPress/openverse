@@ -15,11 +15,11 @@ NO_COLOR := "\\033[0m"
 ######
 
 # Bring up services specific to the frontend profile
-profile-up *flags:
+up *flags:
     env COMPOSE_PROFILES="frontend" just ../up {{ flags }}
 
 # Wait for all profile services to be up
-wait-up:
+wait-up: up
     echo "🚧 TODO"
 
 # Set up user and test site in Plausible
