@@ -75,7 +75,7 @@ set up a virtualenv, provided you have the version of Python mentioned in the
 `Pipfile` installed and accessible locally.
 
 You can install Pipenv by following the
-[official instructions](https://pipenv.pypa.io/en/latest/install/#installing-pipenv).
+[official instructions](https://pipenv.pypa.io/en/latest/installation/#installing-pipenv).
 
 ### Node.js
 
