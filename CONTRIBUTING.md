@@ -33,7 +33,7 @@ The following resources are preferred reading for starting your Openverse
 contribution journey in the code and code-related space.
 
 - [GitHub contribution practices](https://wordpress.github.io/openverse/reference/github_contribution_practices.html)
-- [Dev flow](https://wordpress.github.io/openverse/reference/code_contribution_practices.html)
+- [Dev flow](https://wordpress.github.io/openverse/reference/dev_flow.html)
 - [General setup guide](https://wordpress.github.io/openverse/guides/general_setup.html)
 - [Quickstart guide](https://wordpress.github.io/openverse/guides/quickstart.html)
 
