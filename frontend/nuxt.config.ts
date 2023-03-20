@@ -196,7 +196,6 @@ const config: NuxtConfig = {
   buildModules: [
     "@nuxt/typescript-build",
     "@nuxtjs/composition-api/module",
-    "@nuxt/postcss8",
     "@nuxtjs/style-resources",
     "@nuxtjs/svg",
     "@nuxtjs/eslint-module",
@@ -281,24 +280,26 @@ const config: NuxtConfig = {
     filenames,
     friendlyErrors: false,
     postcss: {
-      plugins: {
-        tailwindcss: {
-          config: path.resolve(__dirname, "tailwind.config.js"),
+      postcssOptions: {
+        preset: {
+          features: {
+            // Disable conversion of logical properties to physical properties
+            // e.g.: `margin-inline-start` is NOT converted to `margin-left`
+            // Necessary for RTL support.
+            "logical-properties-and-values": false,
+          },
         },
-        autoprefixer: {},
-        "postcss-focus-visible": {},
+        plugins: {
+          tailwindcss: {
+            config: path.resolve(__dirname, "tailwind.config.js"),
+          },
+          "postcss-focus-visible": {},
+        },
       },
     },
     extend(config, ctx) {
       // Enables use of IDE debuggers
       config.devtool = ctx.isClient ? "source-map" : "inline-source-map"
-
-      // Mitigates import errors for Pinia
-      config.module?.rules.push({
-        test: /\.mjs$/,
-        include: /node_modules/,
-        type: "javascript/auto",
-      })
     },
   },
   storybook: {
