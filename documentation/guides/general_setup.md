@@ -200,6 +200,13 @@ different editor if you have a preference.
 
 The following setup steps are only needed in very specific scenarios.
 
+### coreutils (only for macOS)
+
+`coreutils` adds GNU utils to macOS. `timeout` from the package is required. 
+You can install it using Homebrew [here](https://formulae.brew.sh/formula/coreutils).
+Homebrew is a [package manager](https://en.wikipedia.org/wiki/Package_manager) for macOS 
+which can be downloaded [here](https://brew.sh).
+
 ### mkcert
 
 ```{note}
