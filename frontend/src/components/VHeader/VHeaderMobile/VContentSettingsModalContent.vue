@@ -21,9 +21,8 @@
           id="content-settings"
           size="medium"
           class="gap-x-2 me-4"
-          ><VIcon :icon-path="searchType.icon" />{{
-            $t("search-type.heading")
-          }}</VTab
+          ><VIcon :icon-path="searchType.icon" />
+          <h2 class="label-regular">{{ $t("search-type.heading") }}</h2></VTab
         >
         <h2
           v-else
@@ -32,14 +31,10 @@
           <VIcon :icon-path="searchType.icon" />
           {{ $t("search-type.heading") }}
         </h2>
-        <VTab
+        <VFilterTab
           v-if="showFilters"
-          id="filters"
-          size="medium"
-          class="label-regular gap-x-2"
-        >
-          <VIcon :icon-path="filtersIcon" />{{ $t("filters.title") }}</VTab
-        >
+          :applied-filter-count="appliedFilterCount"
+        />
         <VIconButton
           class="self-center ms-auto hover:bg-dark-charcoal hover:text-white"
           :icon-props="{ iconPath: closeIcon }"
@@ -68,9 +63,10 @@
       <VButton
         v-show="showClearFiltersButton"
         variant="text"
+        class="!font-normal"
         :disabled="isClearButtonDisabled"
         @click="clearFilters"
-        >{{ clearFiltersLabel }}
+        >{{ $t("filter-list.clear") }}
       </VButton>
       <VShowResultsButton :is-fetching="isFetching" @click="close" />
     </footer>
@@ -81,10 +77,10 @@ import { computed, defineComponent, ref } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 
-import { useI18n } from "~/composables/use-i18n"
 import useSearchType from "~/composables/use-search-type"
 
 import VButton from "~/components/VButton.vue"
+import VFilterTab from "~/components/VHeader/VHeaderMobile/VFilterTab.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
@@ -96,7 +92,6 @@ import VTabPanel from "~/components/VTabs/VTabPanel.vue"
 import VTabs from "~/components/VTabs/VTabs.vue"
 
 import closeIcon from "~/assets/icons/close-small.svg"
-import filtersIcon from "~/assets/icons/filter.svg"
 
 export default defineComponent({
   name: "VContentSettingsModalContent",
@@ -104,6 +99,7 @@ export default defineComponent({
     VIcon,
     VModalContent,
     VButton,
+    VFilterTab,
     VIconButton,
     VSearchGridFilter,
     VSearchTypes,
@@ -135,8 +131,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
-
     const searchStore = useSearchStore()
     const content = useSearchType()
     const selectedTab = ref<"content-settings" | "filters">("content-settings")
@@ -152,13 +146,8 @@ export default defineComponent({
     const isClearButtonDisabled = computed(
       () => !searchStore.isAnyFilterApplied
     )
-    const appliedFilterCount = computed(() => searchStore.appliedFilterCount)
-    const clearFiltersLabel = computed(() =>
-      searchStore.isAnyFilterApplied
-        ? i18n.t("filter-list.clear-numbered", {
-            number: appliedFilterCount.value,
-          })
-        : i18n.t("filter-list.clear")
+    const appliedFilterCount = computed<number>(
+      () => searchStore.appliedFilterCount
     )
 
     const searchType = computed(() => content.getSearchTypeProps())
@@ -169,7 +158,6 @@ export default defineComponent({
 
     return {
       closeIcon,
-      filtersIcon,
       searchType,
 
       selectedTab,
@@ -179,7 +167,6 @@ export default defineComponent({
       appliedFilterCount,
       showClearFiltersButton,
       isClearButtonDisabled,
-      clearFiltersLabel,
       clearFilters,
     }
   },
