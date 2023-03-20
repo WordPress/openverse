@@ -10,14 +10,26 @@ NO_COLOR := "\\033[0m"
     just --list --unsorted
 
 
-# Aliases _all-up from the parent directory
-# https://github.com/casey/just/issues/1550
-_all-up:
-    just ../_all-up
-
 # Install dependencies
 install *args="--dev":
     pipenv install {{ args }}
+
+######
+# Up #
+######
+
+# Bring up services specific to the API profile
+up *flags:
+    env COMPOSE_PROFILES="api" just ../up {{ flags }}
+
+# Wait for all profile services to be up
+wait-up: up
+    just ../ingestion_server/wait # API profile includes ingestion server
+    just wait # API waits for ES in entrypoint
+
+# Load sample data into API via ingestion server
+init: wait-up
+    cd .. && ./load_sample_data.sh
 
 ##########
 # Health #
@@ -60,7 +72,7 @@ dj-local +args="":
     pipenv run python manage.py {{ args }}
 
 # Run Django administrative commands inside the Docker container
-dj +args="": _all-up
+dj +args="": wait-up
     just ../exec web python manage.py {{ args }}
 
 # Get IPython shell inside the Docker container
@@ -83,7 +95,7 @@ collectstatic:
 #########
 
 # Run API tests inside the Docker container
-test *args: _all-up
+test *args: wait-up
     just ../exec web ./test/run_test.sh {{ args }}
 
 # Run API tests locally
@@ -91,5 +103,5 @@ test-local *args:
     pipenv run ./test/run_test.sh {{ args }}
 
 # Run smoke test for the API docs
-doc-test: _all-up
+doc-test: wait-up
     curl --fail 'http://localhost:50280/v1/?format=openapi'

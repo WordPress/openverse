@@ -10,6 +10,22 @@ NO_COLOR := "\\033[0m"
     just --list --unsorted
 
 
+######
+# Up #
+######
+
+# Bring up services specific to the frontend profile
+up *flags:
+    env COMPOSE_PROFILES="frontend" just ../up {{ flags }}
+
+# Wait for all profile services to be up
+wait-up: up
+    echo "🚧 TODO"
+
+# Set up user and test site in Plausible
+init: wait-up
+    cd .. && ./setup_plausible.sh
+
 # Run a package.json script via pnpm
 run *args:
     pnpm run {{ args }}
