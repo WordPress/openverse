@@ -11,7 +11,7 @@ DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
 
 # Load sample data
 function load_sample_data {
-  docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql <<-EOF
+  docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" bash -c "psql <<-EOF
     DELETE FROM $1;
 		\copy $1 \
 			from './sample_data/sample_$1.csv' \
@@ -28,10 +28,10 @@ load_sample_data "audio"
 #######
 
 # Set up API database and upstream
-docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py migrate --noinput"
+docker-compose exec -T "$WEB_SERVICE_NAME" bash -c "python3 manage.py migrate --noinput"
 # Create a superuser and a user for integration testing
 # Not that the Python code uses 4 spaces for indentation after the tab that is stripped by <<-
-docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py shell <<-EOF
+docker-compose exec -T "$WEB_SERVICE_NAME" bash -c "python3 manage.py shell <<-EOF
 	from django.contrib.auth.models import User
 	usernames = ['continuous_integration', 'deploy']
 	for username in usernames:
@@ -46,7 +46,7 @@ docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py shell
 	EOF"
 
 # Load content providers
-docker-compose exec -T "$DB_SERVICE_NAME" /bin/bash -c "psql <<-EOF
+docker-compose exec -T "$DB_SERVICE_NAME" bash -c "psql <<-EOF
 	DELETE FROM content_provider;
 	INSERT INTO content_provider
 		(created_on, provider_identifier, provider_name, domain_name, filter_content, media_type)
@@ -95,5 +95,5 @@ just docker/es/wait-for-index "image"
 #########
 
 # Clear source cache since it's out of date after data has been loaded
-docker-compose exec -T "$CACHE_SERVICE_NAME" /bin/bash -c "echo \"del :1:sources-image\" | redis-cli"
-docker-compose exec -T "$CACHE_SERVICE_NAME" /bin/bash -c "echo \"del :1:sources-audio\" | redis-cli"
+docker-compose exec -T "$CACHE_SERVICE_NAME" bash -c "echo \"del :1:sources-image\" | redis-cli"
+docker-compose exec -T "$CACHE_SERVICE_NAME" bash -c "echo \"del :1:sources-audio\" | redis-cli"
