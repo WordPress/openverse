@@ -91,17 +91,6 @@ env:
     cp api/env.template api/.env
     cp ingestion_server/env.template ingestion_server/.env
 
-# Ensure all services are up and running
-@_all-up:
-    just up
-    just ingestion_server/wait
-    just api/wait # API waits for ES in entrypoint
-
-# Load sample data into the Docker Compose services
-init: _all-up
-    ./load_sample_data.sh
-    ./setup_plausible.sh
-
 ##########
 # Docker #
 ##########
@@ -114,18 +103,32 @@ DOCKER_FILE := "-f " + (
 # Run `docker-compose` configured with the correct files and environment
 dc *args:
     @{{ if IS_CI != "" { "just env" } else { "true" } }}
-    docker-compose {{ DOCKER_FILE }} {{ args }}
+    env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend") }}" docker-compose {{ DOCKER_FILE }} {{ args }}
 
 # Build all (or specified) services
 build *args:
     just dc build {{ args }}
 
-# Bring all Docker services up
-up *flags="":
+# Also see `up` recipe in sub-justfiles
+# Bring all Docker services up, in all profiles
+up *flags:
     just dc up -d {{ flags }}
 
-# Take all Docker services down
-down flags="":
+# Also see `wait-up` recipe in sub-justfiles
+# Wait for all services to be up
+wait-up: up
+    just ingestion_server/wait-up
+    just api/wait-up
+    just frontend/wait-up
+
+# Also see `init` recipe in sub-justfiles
+# Load sample data into the Docker Compose services
+init:
+    just api/init
+    just frontend/init
+
+# Take all Docker services down, in all profiles
+down *flags:
     just dc down {{ flags }}
 
 # Recreate all volumes and containers from scratch

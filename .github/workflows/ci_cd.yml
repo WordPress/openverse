@@ -313,7 +313,7 @@ jobs:
         uses: ./.github/actions/load-img
 
       - name: Start API, ingest and index test data
-        run: just init
+        run: just api/init
 
       - name: Run API tests
         run: just api/test
@@ -486,7 +486,6 @@ jobs:
 
       - name: collectstatic
         run: |
-          just _all-up
           just api/collectstatic
         env:
           DC_USER: root

@@ -219,7 +219,14 @@ class TestIngestion(unittest.TestCase):
     def _compose_cmd(cls, cmd: list[str], **kwargs):
         """Run a Docker Compose command"""
 
-        cmd = ["docker-compose", "-f", cls.compose_path, *cmd]
+        cmd = [
+            "docker-compose",
+            "--profile",
+            "ingestion_server",
+            "-f",
+            cls.compose_path,
+            *cmd,
+        ]
         subprocess.run(
             cmd,
             cwd=cls.compose_path.parent,
