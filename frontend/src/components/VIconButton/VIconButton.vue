@@ -1,6 +1,7 @@
 <template>
   <VButton
     v-bind="buttonProps"
+    :aria-label="label"
     size="disabled"
     class="icon-button flex flex-shrink-0 items-center justify-center border-1.5"
     :class="buttonSizeClasses"
@@ -62,6 +63,13 @@ export default defineComponent({
     buttonProps: {
       type: Object as PropType<ButtonProps>,
       default: () => ({ variant: "plain" }),
+    },
+    /**
+     * the label for the button; This is used for accessibility purposes.
+     */
+    label: {
+      type: String,
+      required: true,
     },
   },
   setup(props, { attrs }) {

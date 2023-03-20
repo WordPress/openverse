@@ -40,7 +40,7 @@
         <template #default="{ close }">
           <div class="relative">
             <VIconButton
-              :aria-label="getLicenseExplanationCloseAria(item.code)"
+              :label="getLicenseExplanationCloseAria(item.code)"
               class="absolute top-0 border-none text-dark-charcoal-70 end-0"
               size="small"
               :icon-props="{ iconPath: icons.closeSmall }"

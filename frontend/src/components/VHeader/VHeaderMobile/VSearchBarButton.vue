@@ -1,6 +1,7 @@
 <template>
   <VIconButton
     class="border-tx bg-tx"
+    :label="label"
     :button-props="{ variant: 'plain--avoid' }"
     v-on="$listeners"
   >
@@ -65,6 +66,13 @@ export default defineComponent({
     rtlFlip: {
       type: Boolean,
       default: false,
+    },
+    /**
+     * The label to use as accessible name for the button (aria-label).
+     */
+    label: {
+      type: String,
+      required: true,
     },
   },
 })

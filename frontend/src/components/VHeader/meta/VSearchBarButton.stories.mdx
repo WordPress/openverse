@@ -46,7 +46,7 @@ import sourceIcon from "~/assets/icons/source.svg"
 />
 
 export const Template = (args) => ({
-  template: `<div class="bg-white"><VSearchBarButton v-bind="args" v-on="args" /></div>`,
+  template: `<div class="bg-white"><VSearchBarButton label="VSearchBarButton" v-bind="args" v-on="args" /></div>`,
   components: { VSearchBarButton },
   setup() {
     if (!args.iconPath) {
@@ -69,7 +69,7 @@ export const Template = (args) => ({
 export const contentSettingsTemplate = (args) => ({
   template: `
     <div class="bg-dark-charcoal-10 rounded-sm flex justify-end">
-    <VContentSettingsButton :are-filters-selected="true" v-bind="args" />
+    <VContentSettingsButton label="VContentSettingsButton" :are-filters-selected="true" v-bind="args" />
     </div>
   `,
   components: { VContentSettingsButton },
@@ -97,13 +97,13 @@ export const activeButtonsTemplate = (args) => ({
   <VSearchBarButton
     :icon-path="chevronLeftIcon"
     :inner-size="8"
-    :aria-label="$t('header.back-button')"
+    :label="$t('header.back-button').toString()"
     inner-area-classes="hover:bg-dark-charcoal hover:text-white"
     :rtl-flip="true"
   />
   <VSearchBarButton
     :icon-path="closeIcon"
-    :aria-label="$t('browse-page.search-form.clear')"
+    :label="$t('browse-page.search-form.clear').toString()"
     inner-area-classes="bg-white hover:bg-dark-charcoal-10"
   />
 </div>`,
