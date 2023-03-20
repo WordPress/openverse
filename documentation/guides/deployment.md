@@ -7,17 +7,17 @@ information regarding the ingestion server or our Airflow instance.
 
 ### Frontend
 
-| Environment | Deployment Log                                                                                                                | URL                                | Version Endpoint                                                 |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------- |
-| Staging     | [Deployment Log](https://github.com/WordPress/openverse-frontend/actions/workflows/ghcr.yml?query=branch%3Amain+event%3Apush) | <https://staging.openverse.org>    | [`/version.json`](https://staging.openverse.org/version.json)    |
-| Production  | [Deployment Log](https://github.com/WordPress/openverse-frontend/actions/workflows/ghcr.yml?query=event%3Arelease)            | <https://production.openverse.org> | [`/version.json`](https://production.openverse.org/version.json) |
+| Environment | Deployment Log                                                                                        | URL                                | Version Endpoint                                                 |
+| ----------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------- |
+| Staging     | [Deployment Log](https://github.com/WordPress/openverse/actions/workflows/deploy-staging-nuxt.yml)    | <https://staging.openverse.org>    | [`/version.json`](https://staging.openverse.org/version.json)    |
+| Production  | [Deployment Log](https://github.com/WordPress/openverse/actions/workflows/deploy-production-nuxt.yml) | <https://production.openverse.org> | [`/version.json`](https://production.openverse.org/version.json) |
 
 ### API
 
-| Environment | Deployment Log     | URL                                         | Version Endpoint                                                |
-| ----------- | ------------------ | ------------------------------------------- | --------------------------------------------------------------- |
-| Staging     | [Deployment Log]() | <https://api-staging.openverse.engineering> | [`/version`](https://api-staging.openverse.engineering/version) |
-| Production  | [Deployment Log]() | <https://api.openverse.engineering>         | [`/version`](https://api.openverse.engineering/version)         |
+| Environment | Deployment Log                                                                                       | URL                                         | Version Endpoint                                                |
+| ----------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------- | --------------------------------------------------------------- |
+| Staging     | [Deployment Log](https://github.com/WordPress/openverse/actions/workflows/deploy-staging-api.yml)    | <https://api-staging.openverse.engineering> | [`/version`](https://api-staging.openverse.engineering/version) |
+| Production  | [Deployment Log](https://github.com/WordPress/openverse/actions/workflows/deploy-production-api.yml) | <https://api.openverse.engineering>         | [`/version`](https://api.openverse.engineering/version)         |
 
 ## Overview
 
