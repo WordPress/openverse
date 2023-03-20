@@ -112,7 +112,7 @@ MIDDLEWARE = [
 # WARNING: This should not be run in production long-term as it can impact performance
 if config("DJANGO_DB_LOGGING", cast=bool, default=False):
     MIDDLEWARE.append(
-        "catalog.api.middleware.force_debug_cursor_middleware.ForceDebugCursorMiddleware"  # noqa: E501
+        "catalog.api.middleware.force_debug_cursor_middleware.force_debug_cursor_middleware"  # noqa: E501
     )
 
 
