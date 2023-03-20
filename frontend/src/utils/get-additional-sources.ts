@@ -47,7 +47,7 @@ interface AdditionalSourceBuilder extends SearchFunctions {
  * Describes an additional source, consisting of the source name and the
  * pre-populated URL.
  */
-interface AdditionalSource {
+export interface AdditionalSource {
   name: string
   url: string
 }

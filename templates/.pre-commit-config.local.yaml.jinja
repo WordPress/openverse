@@ -33,7 +33,7 @@ Repo blocks must be indented by 2 spaces.
       - id: types
         name: types
         files: ^frontend/.*$
-        entry: bash -c 'just frontend/run types'
+        entry: bash -c 'pnpm exec vue-tsc -p frontend --noEmit'
         language: system
         pass_filenames: false
       - id: test:unit
