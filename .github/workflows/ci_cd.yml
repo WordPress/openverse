@@ -487,7 +487,6 @@ jobs:
       - name: collectstatic
         run: |
           just api/collectstatic
-        # `api/collectstatic` uses `api/dj` which depends on `api/wait-up`
         env:
           DC_USER: root
 
