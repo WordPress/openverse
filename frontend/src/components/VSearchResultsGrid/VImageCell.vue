@@ -2,7 +2,7 @@
   <VLink
     itemprop="contentUrl"
     :title="image.title"
-    :href="`/image/${image.id}?q=${searchTerm}`"
+    :href="imageLink"
     class="group relative block w-full overflow-hidden rounded-sm bg-dark-charcoal-10 text-dark-charcoal-10 focus-bold-filled"
     :aria-label="image.title"
     :style="styles.container"
@@ -65,9 +65,12 @@ export default defineComponent({
       type: Object as PropType<ImageDetail>,
       required: true,
     },
+    /**
+     * The search term is added to the URL to allow the user to
+     * navigate back/forward to the search results page.
+     */
     searchTerm: {
       type: String,
-      required: true,
     },
     /**
      * All content view uses the square image cells, Image view
@@ -94,6 +97,12 @@ export default defineComponent({
       }
       const url = props.image.thumbnail || props.image.url
       return toAbsolutePath(url)
+    })
+
+    const imageLink = computed(() => {
+      return `/image/${props.image.id}/${
+        props.searchTerm ? "?q=" + props.searchTerm : ""
+      }`
     })
 
     const getImageForeignUrl = () =>
@@ -126,6 +135,7 @@ export default defineComponent({
       imgWidth,
       imgHeight,
       imageUrl,
+      imageLink,
 
       getImageForeignUrl,
       onImageLoadError,
