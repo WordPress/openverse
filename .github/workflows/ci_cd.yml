@@ -105,9 +105,9 @@ jobs:
               if "ingestion_server" in changes:
                   publish_matrix["image"].append("ingestion_server")
 
-          do_build = 'true' if len(build_matrix["image"]) != 0 else 'false'
+          do_build = 'true' if len(build_matrix["image"]) else 'false'
           build_matrix = json.dumps(build_matrix)
-          do_publish = 'true' if len(publish_matrix["image"]) != 0 else 'false'
+          do_publish = 'true' if len(publish_matrix["image"]) else 'false'
           publish_matrix = json.dumps(publish_matrix)
 
           print(f"do-build={do_build}")
