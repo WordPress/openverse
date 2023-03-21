@@ -327,13 +327,13 @@ jobs:
         run: just api/test
 
       - name: Print API test logs
-        if: success() || failure()
+        if: success() || failure() || cancelled()
         run: |
           just logs > api_logs
           cat api_logs
 
       - name: Upload API test logs
-        if: success() || failure()
+        if: success() || failure() || cancelled()
         uses: actions/upload-artifact@v3
         with:
           name: api_logs
