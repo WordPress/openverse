@@ -67,7 +67,9 @@ jobs:
     name: Determine images to build and publish
     runs-on: ubuntu-latest
     outputs:
+      do-build: ${{ steps.set-matrix.outputs.do-build }}
       build-matrix: ${{ steps.set-matrix.outputs.build-matrix }}
+      do-publish: ${{ steps.set-matrix.outputs.do-publish }}
       publish-matrix: ${{ steps.set-matrix.outputs.publish-matrix }}
     needs:
       - get-changes
@@ -103,14 +105,20 @@ jobs:
               if "ingestion_server" in changes:
                   publish_matrix["image"].append("ingestion_server")
 
+          do_build = 'true' if len(build_matrix["image"]) else 'false'
           build_matrix = json.dumps(build_matrix)
+          do_publish = 'true' if len(publish_matrix["image"]) else 'false'
           publish_matrix = json.dumps(publish_matrix)
 
+          print(f"do-build={do_build}")
           print(f"build-matrix={build_matrix}")
+          print(f"do-publish={do_publish}")
           print(f"publish-matrix={publish_matrix}")
 
           with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
+              print(f"do-build={do_build}", file=gh_out)
               print(f"build-matrix={build_matrix}", file=gh_out)
+              print(f"do-publish={do_publish}", file=gh_out)
               print(f"publish-matrix={publish_matrix}", file=gh_out)
 
   #############
@@ -176,6 +184,7 @@ jobs:
 
   build-images:
     name: Build Docker images
+    if: needs.determine-images.outputs.do-build == 'true'
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(needs.determine-images.outputs.build-matrix) }}
@@ -893,6 +902,7 @@ jobs:
     # prevent running on fork PRs
     if: |
       !failure() && !cancelled() &&
+      needs.determine-images.outputs.do-publish == 'true' &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
       (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
