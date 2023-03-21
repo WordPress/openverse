@@ -19,7 +19,7 @@ _MOCK_AUDIO_INFO = json.loads((_MOCK_AUDIO_PATH / "sample-audio-info.json").read
 @dataclass
 class RequestsFixture:
     requests: list[Request]
-    response_factory: Callable[
+    response_factory: Callable[  # noqa: E731
         [Request], Response
     ] = lambda x: RequestsFixture._default_response_factory(x)
 
