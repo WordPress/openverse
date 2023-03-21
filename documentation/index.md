@@ -4,6 +4,8 @@ This documentation is for developers who are building Openverse. If you want to
 use the Openverse API, you should instead refer to the
 [API consumer documentation](https://api.openverse.engineering/).
 
+🏁 We recommend you start with the [quickstart guide](./guides/quickstart.md).
+
 ## Related documentation
 
 <!-- These use HTML anchors because Sphinx treats them as internal references without scheme. -->

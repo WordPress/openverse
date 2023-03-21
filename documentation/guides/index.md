@@ -10,6 +10,7 @@ quickstart
 api/index
 ingestion_server/index
 frontend/index
+documentation/index
 run
 test
 https

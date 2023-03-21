@@ -1,7 +1,18 @@
 # Quickstart guide
 
+<!-- the main entrypoint of the Openverse documentation system -->
+
 This guide covers the steps to get the Openverse stack running locally on your
-computer.
+computer. This guide is for setting up the full stack, if you're interested in a
+smaller slice of the Openverse, project you will find the following guides more
+relevant.
+
+## Stack specific quickstarts
+
+- [Documentation](./documentation/quickstart.md)
+- [API](./api/quickstart.md)
+- [Ingestion server](./ingestion_server/quickstart.md)
+- [Frontend](./frontend/quickstart.md)
 
 ## Prerequisites
 
