@@ -41,12 +41,20 @@ prerequisites.
    $ cd openverse/
    ```
 
-3. Install all dependencies. This is generally not advisable unless you plan to
-   work on everything! This step won't install API or ingestion server
-   dependencies because they are meant to run using Docker containers.
+3. Install all dependencies. This step installs dependencies for the frontend,
+   the documentation and the automations (both Node.js and Python) but won't
+   install API or ingestion server dependencies because they are meant to run
+   using Docker containers.
 
    ```console
    $ just install
+   ```
+
+   To be more specific with your install, you can run either of the following.
+
+   ```console
+   $ just node-install # only frontend and Node.js automations
+   $ just py-install # only documentation and Python automations
    ```
 
 4. Spin up and orchestrate all Docker services. Once this is done, you should be
