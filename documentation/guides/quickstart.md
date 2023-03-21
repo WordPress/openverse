@@ -7,12 +7,20 @@ computer. This guide is for setting up the full stack, if you're interested in a
 smaller slice of the Openverse, project you will find the following guides more
 relevant.
 
-## Stack specific quickstarts
+## Stack-specific quickstarts
+
+It is very unlikely that you want to contribute to everything, everywhere, all
+at once. In all likelihood, you intend to contribute to a narrower slice of the
+stack. In such cases, you might find it more beneficial to go through one of
+these stack-specific quickstart guides.
 
 - [API](./api/quickstart.md)
 - [Ingestion server](./ingestion_server/quickstart.md)
 - [Frontend](./frontend/quickstart.md)
 - [Documentation](./documentation/quickstart.md)
+
+That said, there is something very appealing about running the end-to-end of the
+stack locally, which this guide is all about.
 
 ## Prerequisites
 
