@@ -159,10 +159,6 @@ class SmkDataIngester(ProviderDataIngester):
                     "width": img.get("width"),
                     "filesize": img.get("filesize"),
                     "meta_data": self._get_metadata(data),
-                    # FIXME: USED AS A SENTINEL FOR WHICH FILES TO DELETE AFTER A FULL
-                    # RUN. THIS SHOULD BE REMOVED AS SOON AS A RUN IS COMPLETE AND THE
-                    # FILES MARKED AS WATERMARKED=False ARE DELETED.
-                    "watermarked": True,
                 }
             )
         return images
