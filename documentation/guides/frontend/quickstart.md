@@ -66,7 +66,8 @@ prerequisites.
    $ env API_URL="http://localhost:50280" just frontend/run dev
    ```
 
-   The frontend is working fine.
+   Once this step completes, you can be assured that the frontend is working
+   fine.
 
 6. You can <kbd>Ctrl</kbd> + <kbd>C</kbd> to terminate the frontend process.
    Then use another `just` recipe to bring down all the services. If you include

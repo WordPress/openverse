@@ -50,7 +50,8 @@ prerequisites.
    $ just init
    ```
 
-   The ingestion server is working fine.
+   Once this step completes, you can be assured that the ingestion server is
+   working fine.
 
 5. With the data loaded, the API can now return JSON responses to your HTTP
    requests.
@@ -76,7 +77,7 @@ prerequisites.
    }
    ```
 
-   The API is working fine.
+   Once this step completes, you can be assured that the API is working fine.
 
 6. You can use a `just` recipe to bring down all the services. If you include
    the `-v` flag, it'll remove all volumes too.

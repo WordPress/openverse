@@ -76,7 +76,8 @@ prerequisites.
    $ just init
    ```
 
-   The ingestion server is working fine.
+   Once this step completes, you can be assured that the ingestion server is
+   working fine.
 
 6. With the data loaded, the API can now return JSON responses to your HTTP
    requests.
@@ -102,7 +103,7 @@ prerequisites.
    }
    ```
 
-   The API is working fine.
+   Once this step completes, you can be assured that the API is working fine.
 
 7. To bring up the frontend, we have another `just` recipe. We have `just`
    recipes for almost everything. You can open
@@ -113,7 +114,8 @@ prerequisites.
    $ env API_URL="http://localhost:50280" just frontend/run dev
    ```
 
-   The frontend is working fine.
+   Once this step completes, you can be assured that the frontend is working
+   fine.
 
 8. You can <kbd>Ctrl</kbd> + <kbd>C</kbd> to terminate the frontend process.
    Then use another `just` recipe to bring down all the services. If you include

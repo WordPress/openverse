@@ -48,7 +48,8 @@ prerequisites.
    $ just init
    ```
 
-   The ingestion server is working fine.
+   Once this step completes, you can be assured that the ingestion server is
+   working fine.
 
 5. You can use a `just` recipe to bring down all the services. If you include
    the `-v` flag, it'll remove all volumes too.
