@@ -217,16 +217,15 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
     start_time = time.time()
     cleaned_values = {field: [] for field in all_fields}
     for row in rows:
+        source, _id, identifier = row["source"], row["id"], row["identifier"]
+
         # Map fields that need updating to their cleaning functions
-        source = row["source"]
-        _id = row["id"]
-        identifier = row["identifier"]
+        fields_to_update = {**global_field_to_func}
         if source in sources_config:
             source_field_to_func = sources_config[source]["fields"]
             # Merge source-local and global function field mappings
-            fields_to_update = {**global_field_to_func, **source_field_to_func}
-        else:
-            fields_to_update = global_field_to_func
+            fields_to_update |= {**source_field_to_func}
+
         # Map fields to their cleaned data
         cleaned_data = {}
         for update_field in fields_to_update:
@@ -246,9 +245,9 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
                 )
         # Generate SQL update for all the fields we just cleaned
         update_field_expressions = []
-        for field in cleaned_data:
-            update_field_expressions.append(f"{field} = {cleaned_data[field]}")
-            cleaned_values[field].append((identifier, cleaned_data[field]))
+        for field, clean_value in cleaned_data.items():
+            update_field_expressions.append(f"{field} = {clean_value}")
+            cleaned_values[field].append((identifier, clean_value))
 
         if len(update_field_expressions) > 0:
             update_query = f"""UPDATE {temp_table} SET
@@ -315,8 +314,7 @@ def clean_image_data(table):
     fields_to_clean = set()
     for p in sources:
         _fields = list(table_config["sources"][p]["fields"])
-        for f in _fields:
-            fields_to_clean.add(f)
+        fields_to_clean.update(_fields)
 
     cleanup_selection = (
         f"SELECT id, identifier, source, "
@@ -340,6 +338,7 @@ def clean_image_data(table):
         num_workers = multiprocessing.cpu_count()
         num_cleaned = 0
         cleaned_counts_by_field = {field: 0 for field in fields_to_clean}
+        cleanable_fields_for_table = _get_cleanable_fields("image")
 
         while batch:
             # Divide updates into jobs for parallel execution.
@@ -359,7 +358,7 @@ def clean_image_data(table):
                         batch[start:end],
                         temp_table,
                         source_config,
-                        _get_cleanable_fields("image"),
+                        cleanable_fields_for_table,
                     )
                 )
             pool = multiprocessing.Pool(processes=num_workers)
