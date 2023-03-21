@@ -45,9 +45,11 @@ prerequisites.
    $ just frontend/up
    ```
 
-5. With those services running, you can start the frontend dev server. To bring
-   up the frontend, we have another `just` recipe. We have `just` recipes for
-   almost everything. You can open
+   The `frontend/up` recipe orchestrates the following services: `plausible_ch`,
+   `plasible_db` and `plausible`.
+
+5. To bring up the frontend, we have another `just` recipe. We have `just`
+   recipes for almost everything. You can open
    [http://localhost:8443](http://localhost:8443) in a browser to see your very
    own copy of Openverse.
 

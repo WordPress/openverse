@@ -40,6 +40,9 @@ prerequisites.
    $ just api/up
    ```
 
+   The `api/up` recipe orchestrates the following services: `cache`, `db`,
+   `upstream_db`, `es`, `indexer_worker`, `ingestion_server`, `web` and `proxy`.
+
 4. Load the sample data. This step take a few minutes. If it fails, take down
    everything with `just down -v` and start again from the previous step.
 

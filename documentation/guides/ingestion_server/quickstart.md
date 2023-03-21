@@ -38,6 +38,9 @@ prerequisites.
    $ just ingestion_server/up
    ```
 
+   The `ingestion_server/up` recipe orchestrates the following services: `db`,
+   `upstream_db`, `es`, `indexer_worker` and `ingestion_server`.
+
 4. Load the sample data. This step take a few minutes. If it fails, take down
    everything with `just down -v` and start again from the previous step.
 
