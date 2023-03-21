@@ -20,8 +20,8 @@ import catalog.api.models as models
 from catalog.api.constants.sorting import INDEXED_ON
 from catalog.api.serializers import media_serializers
 from catalog.api.utils import tallies
+from catalog.api.utils.check_dead_links import check_dead_links
 from catalog.api.utils.dead_link_mask import get_query_hash, get_query_mask
-from catalog.api.utils.validate_images import validate_images
 
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
@@ -179,7 +179,7 @@ def _post_process_results(
 
     if filter_dead:
         query_hash = get_query_hash(s)
-        validate_images(query_hash, start, results, to_validate)
+        check_dead_links(query_hash, start, results, to_validate)
 
         if len(results) == 0:
             # first page is all dead links

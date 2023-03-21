@@ -4,7 +4,7 @@ from unittest import mock
 import aiohttp
 import pook
 
-from catalog.api.utils.validate_images import HEADERS, validate_images
+from catalog.api.utils.check_dead_links import HEADERS, check_dead_links
 
 
 @mock.patch.object(aiohttp, "ClientSession", wraps=aiohttp.ClientSession)
@@ -22,7 +22,7 @@ def test_sends_user_agent(wrapped_client_session: mock.AsyncMock):
         .mock
     )
 
-    validate_images(query_hash, start_slice, results, image_urls)
+    check_dead_links(query_hash, start_slice, results, image_urls)
 
     assert head_mock.calls == len(results)
     requested_urls = [req.rawurl for req in head_mock.matches]
@@ -50,9 +50,34 @@ def test_handles_timeout():
     with mock.patch(
         "aiohttp.client.ClientSession._request", side_effect=raise_timeout_error
     ):
-        validate_images(query_hash, start_slice, results, image_urls)
+        check_dead_links(query_hash, start_slice, results, image_urls)
 
-    # `validate_images` directly modifies the results list
+    # `check_dead_links` directly modifies the results list
     # if the results are timing out then they're considered dead and discarded
     # so should not appear in the final list of results.
     assert len(results) == 0
+
+
+def test_thingiverse_403_considered_dead():
+    query_hash = "test_thingiverse_403_considered_dead"
+    results = [
+        {"identifier": i, "provider": "thingiverse" if i % 2 else "flickr"}
+        for i in range(4)
+    ]
+    image_urls = [f"https://example.org/{i}" for i in range(len(results))]
+    start_slice = 0
+
+    head_mock = (
+        pook.head(pook.regex(r"https://example.org/\d"))
+        .times(len(results))
+        .reply(403)
+        .mock
+    )
+
+    check_dead_links(query_hash, start_slice, results, image_urls)
+
+    assert head_mock.calls == len(results)
+
+    # All the "thingiverse" results should have been filtered out
+    # whereas the flickr results should be left
+    assert all([r["provider"] == "flickr" for r in results])
