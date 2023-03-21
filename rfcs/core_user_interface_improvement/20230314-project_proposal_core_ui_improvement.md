@@ -3,7 +3,7 @@
 ## Reviewers
 
 - [ ] @dhruvkb
-- [ ] @zackkrida
+- [x] @zackkrida
 
 ## Project summary
 
@@ -32,10 +32,6 @@ Search Experience
 
 - Design: @panchovm
 
-## Infrastructure
-
 ## Marketing
 
 There is no need for marketing or any public communication.
-
-## Required implementation plans
