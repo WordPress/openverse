@@ -18,3 +18,75 @@ jobs:
           column: Backlog
           # TODO: Switch to GITHUB_TOKEN if the project is moved to a repo
           repo-token: ${{ secrets.ACCESS_TOKEN }}
+
+  add_issue_to_project:
+    name: Add new issue to project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add issue to "Backlog"
+        run: |
+          # shellcheck disable=SC2016
+          gh api graphql -f query='
+          mutation($project:ID!, $issue:ID!) {
+            addProjectV2ItemById(input: {projectId: $project, contentId: $issue}) {
+              item {
+                id
+                content {
+                  ... on Issue {
+                    labels(first: 10) {
+                      nodes {
+                        name
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }' -f project="$PROJECT_ID" -f issue="$ISSUE_ID" >> issue_data.json
+
+          echo 'ITEM_ID='"$(jq '.data.addProjectV2ItemById.item.id' issue_data.json)" >> "$GITHUB_ENV"
+          ITEM_PRIORITY="$(jq '.data.addProjectV2ItemById.item.content.labels.nodes[] | select(.name | contains("priority")).name | split(": ")[1]' issue_data.json)" >> "$GITHUB_ENV"
+          # The IDs for the project's Priority custom field options.
+          # These IDs were manually retrieved from the GitHub API.
+          if [[ $ITEM_PRIORITY == "low" ]]; then
+              PRIORITY_VALUE_ID="279ae886"
+          elif [[ $ITEM_PRIORITY == "medium" ]]; then
+              PRIORITY_VALUE_ID="333b3c1d"
+          elif [[ $ITEM_PRIORITY == "high" ]]; then
+              PRIORITY_VALUE_ID="03fe8945"
+          else
+              PRIORITY_VALUE_ID="fb76bdbc"
+          fi
+          echo 'PRIORITY_VALUE_ID='"$PRIORITY_VALUE_ID" >> "$GITHUB_ENV"
+
+  set_issue_priority_field:
+    name: Set issue priority
+    runs-on: ubuntu-latest
+    needs:
+      - add_issue_to_project
+    steps:
+      - name: Set issue priority
+        env:
+          PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo" # The ID for the project Priority custom field.
+        run: |
+          # shellcheck disable=SC2016
+          gh api graphql -f query='
+            mutation (
+              $project: ID!
+              $item: ID!
+              $priority_field: ID!
+              $priority_value: String!
+            ) {
+              set_priority_field: updateProjectV2ItemFieldValue(input: {
+                projectId: $project
+                itemId: $item
+                fieldId: $priority_field
+                value: {
+                  singleSelectOptionId: $priority_value
+                  }
+              }) {
+                projectV2Item {
+                  id
+                  }
+              }
+            }' -f project="$PROJECT_ID" -f item="$ITEM_ID" -f priority_field="$PRIORITY_FIELD_ID" -f priority_value="$PRIORITY_VALUE_ID"

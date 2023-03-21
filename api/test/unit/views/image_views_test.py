@@ -18,7 +18,7 @@ _MOCK_IMAGE_INFO = json.loads((_MOCK_IMAGE_PATH / "sample-image-info.json").read
 @dataclass
 class RequestsFixture:
     requests: list[Request]
-    response_factory: Callable[
+    response_factory: Callable[  # noqa: E731
         [Request], Response
     ] = lambda x: RequestsFixture._default_response_factory(x)
 
