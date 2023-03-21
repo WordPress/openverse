@@ -49,9 +49,13 @@ prerequisites.
    $ just install
    ```
 
-4. Bring the ingestion server and API up, along with all their dependent
-   services. Once this is done, you should be able to see the API documentation
-   on [http://localhost:50280](http://localhost:50280).
+4. Spin up and orchestrate all Docker services. Once this is done, you should be
+   able to see
+
+   - the list of ingestion jobs on
+     [http://localhost:50281/task](http://localhost:50281/task)
+   - the API documentation on [http://localhost:50280](http://localhost:50280)
+   - the Plausible UI on [http://localhost:50288](http://localhost:50288)
 
    ```console
    $ just up

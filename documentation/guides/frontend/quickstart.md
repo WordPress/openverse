@@ -37,7 +37,9 @@ prerequisites.
    ```
 
 4. Bring up the Docker services needed by the frontend. This includes Plausible
-   and the PostgreSQL and Clickhouse databases it needs.
+   and the PostgreSQL and Clickhouse databases it needs. Once this is done, you
+   should be able to see the Plausible UI on
+   [http://localhost:50288](http://localhost:50288).
 
    ```console
    $ just frontend/up

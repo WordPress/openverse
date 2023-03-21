@@ -30,9 +30,11 @@ prerequisites.
    ```
 
 3. Bring the ingestion server and API up, along with all their dependent
-   services. Once this is done, you should be able to see the list of ingestion
-   jobs on [http://localhost:50281/task](http://localhost:50281/task) and the
-   API documentation on [http://localhost:50280](http://localhost:50280).
+   services. Once this is done, you should be able to see
+
+   - the list of ingestion jobs on
+     [http://localhost:50281/task](http://localhost:50281/task)
+   - the API documentation on [http://localhost:50280](http://localhost:50280)
 
    ```console
    $ just api/up
