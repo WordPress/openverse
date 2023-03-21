@@ -54,11 +54,12 @@ TAG_MIN_CONFIDENCE = 0.90
 TLS_CACHE = {
     "www.flickr.com": True,
     "commons.wikimedia.org": True,
-    "https://www.eol.org/": True,
     ".geograph.org.uk": True,
-    ".eol.org": True,
-    ".digitaltmuseum.org": True,
     "www.geograph.org.uk": True,
+    ".eol.org": True,
+    "www.eol.org": True,
+    ".digitaltmuseum.org": True,
+    "collections.musee-mccord.qc.ca": False,
 }
 
 
@@ -100,7 +101,7 @@ class CleanupFunctions:
             except KeyError:
                 tls_supported = TlsTest.test_tls_supported(url)
                 tls_support[_tld] = tls_supported
-                log.info(f"Tested domain {_tld}")
+                log.debug(f"Tested domain {_tld}")
 
             if tls_supported:
                 return f"'https://{url}'"
