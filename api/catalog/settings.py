@@ -145,7 +145,7 @@ REST_FRAMEWORK = {
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.URLPathVersioning",
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
-        "rest_framework.renderers.BrowsableAPIRenderer",
+        "catalog.api.utils.drf_renderer.BrowsableAPIRendererWithoutForms",
         "rest_framework_xml.renderers.XMLRenderer",
     ),
     "DEFAULT_THROTTLE_CLASSES": (
