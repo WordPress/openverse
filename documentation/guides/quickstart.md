@@ -9,10 +9,10 @@ relevant.
 
 ## Stack specific quickstarts
 
-- [Documentation](./documentation/quickstart.md)
 - [API](./api/quickstart.md)
 - [Ingestion server](./ingestion_server/quickstart.md)
 - [Frontend](./frontend/quickstart.md)
+- [Documentation](./documentation/quickstart.md)
 
 ## Prerequisites
 
