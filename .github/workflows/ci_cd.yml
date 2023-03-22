@@ -91,16 +91,18 @@ jobs:
 
           if "frontend" in changes:
               build_matrix["image"].append("frontend")
-              build_matrix["include"].append({"image": "frontend", "target": "app"})
+              build_matrix["include"].append({"image": "frontend", "context": "frontend", "target": "app"})
               publish_matrix["image"].append("frontend")
           if "api" in changes or "ingestion_server" in changes:
               # Always build the ingestion server and API images for either changeset
               build_matrix["image"] += ["api", "ingestion_server"]
               build_matrix["include"] += [
-                {"image": "ingestion_server", "target": "ing"},
-                {"image": "api", "target": "api"},
+                {"image": "ingestion_server", "context": "ingestion_server", "target": "ing"},
+                {"image": "api", "context": "api", "target": "api"},
               ]
               if "api" in changes:
+                  build_matrix["image"].append("api_nginx")
+                  build_matrix["include"].append({"image": "api_nginx", "context": "api", "target": "nginx"})
                   publish_matrix["image"] += ["api", "api_nginx"]
               if "ingestion_server" in changes:
                   publish_matrix["image"].append("ingestion_server")
@@ -230,7 +232,7 @@ jobs:
       - name: Build image `${{ matrix.image }}`
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.image }}
+          context: ${{ matrix.context }}
           target: ${{ matrix.target }}
           push: false
           tags: openverse-${{ matrix.image }}
@@ -460,68 +462,6 @@ jobs:
 
       - name: Run makemigrations
         run: just api/dj makemigrations --check --noinput --merge
-
-  #########
-  # NGINX #
-  #########
-
-  build-nginx:
-    # This requires a separate job due because it uses the API image built by
-    # the `build-images` job.
-    name: Build `nginx` Docker image
-    runs-on: ubuntu-latest
-    if: needs.get-changes.outputs.api == 'true'
-    needs:
-      - get-changes
-      - build-images
-      - get-image-tag
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          setup_python: false
-          # Python is not needed to build the image.
-          setup_nodejs: false
-          # Node.js is not needed to build the image.
-          install_recipe: ""
-
-      - name: Load Docker images
-        uses: ./.github/actions/load-img
-
-      - name: collectstatic
-        run: |
-          just api/collectstatic
-        env:
-          DC_USER: root
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          install: true
-
-      - name: Build image `api_nginx`
-        uses: docker/build-push-action@v4
-        with:
-          context: api
-          target: nginx # from `api/Dockerfile`
-          push: false
-          tags: openverse-api_nginx
-          cache-from: type=gha,scope=nginx
-          cache-to: type=gha,scope=nginx
-          outputs: type=docker,dest=/tmp/api_nginx.tar
-          build-args: |
-            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image-tag }}
-
-      - name: Upload image `api_nginx`
-        uses: actions/upload-artifact@v3
-        with:
-          name: api_nginx
-          path: /tmp/api_nginx.tar
 
   ############
   # Frontend #
@@ -911,7 +851,6 @@ jobs:
       - determine-images
       - get-image-tag
       - build-images
-      - build-nginx
       - test-ing # test for ingestion server
       - test-api # test for API
       - nuxt-build # test for frontend

@@ -83,13 +83,6 @@ ipython:
 dbshell:
     just dj dbshell
 
-# Run `collectstatic` to prepare for building the `nginx` Dockerfile target.
-collectstatic:
-    # The STATIC_ROOT environment variable is relative to the Django container's
-    # default working directory i.e. the `/api/` directory. The resulting output
-    # will be `/api/static/`, which is ignored by Git for convenience.
-    STATIC_ROOT="./static" just dj collectstatic --noinput
-
 #########
 # Tests #
 #########
@@ -105,3 +98,18 @@ test-local *args:
 # Run smoke test for the API docs
 doc-test: wait-up
     curl --fail 'http://localhost:50280/v1/?format=openapi'
+
+#########
+# NGINX #
+#########
+
+# Build and run the NGINX image locally
+nginx upstream_url='api.openverse.engineering':
+    # upstream_url can also be set to 172.17.0.1:50280 for local testing
+    docker build --target nginx . -t openverse-api_nginx:latest
+    @echo "--> NGINX server will be run at http://localhost:9090, upstream at {{ upstream_url }}"
+    @echo "--> Try a static URL like http://localhost:9090/static/admin/css/base.css to test"
+    docker run --rm -p 9090:8080 -it \
+      -e DJANGO_NGINX_UPSTREAM_URL="{{ upstream_url }}" \
+      -e DJANGO_NGINX_GIT_REVISION="$(git rev-parse HEAD)" \
+      openverse-api_nginx:latest
