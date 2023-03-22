@@ -49,10 +49,7 @@ import { useContext } from "@nuxtjs/composition-api"
 import { PortalTarget as VTeleportTarget } from "portal-vue"
 
 import { useWindowScroll } from "~/composables/use-window-scroll"
-import {
-  useMatchSearchRoutes,
-  useMatchSingleResultRoutes,
-} from "~/composables/use-match-routes"
+import { useMatchSearchRoutes } from "~/composables/use-match-routes"
 import { useLayout } from "~/composables/use-layout"
 
 import { useUiStore } from "~/stores/ui"
@@ -102,13 +99,11 @@ export default defineComponent({
     })
 
     const { matches: isSearchRoute } = useMatchSearchRoutes()
-    const { matches: isSingleResultRoute } = useMatchSingleResultRoutes()
 
     const nuxtError = computed(() => app.nuxt.err)
 
     const isSearchHeader = computed(
-      () =>
-        !nuxtError.value && (isSearchRoute.value || isSingleResultRoute.value)
+      () => !nuxtError.value && isSearchRoute.value
     )
 
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)

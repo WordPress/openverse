@@ -26,5 +26,5 @@ jobs:
           setup_python: false
           install_recipe: node-install
 
-      - name: Create draft post
+      - name: Publish post
         run: just automations/js/report

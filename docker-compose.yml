@@ -1,6 +1,9 @@
 version: "2.4"
 services:
   db:
+    profiles:
+      - ingestion_server
+      - api
     image: postgres:13.2-alpine
     ports:
       - "50254:5432"
@@ -12,6 +15,9 @@ services:
       test: "pg_isready -U deploy -d openledger"
 
   upstream_db:
+    profiles:
+      - ingestion_server
+      - api
     build: ./docker/upstream_db/
     image: openverse-upstream_db
     expose:
@@ -25,6 +31,8 @@ services:
       test: "pg_isready -U deploy -d openledger"
 
   plausible_db:
+    profiles:
+      - frontend
     image: postgres:13.2-alpine
     expose:
       - "5432"
@@ -36,6 +44,8 @@ services:
       test: "pg_isready -U deploy -d plausible"
 
   plausible_ch:
+    profiles:
+      - frontend
     image: clickhouse/clickhouse-server:22.6-alpine
     volumes:
       - plausible-clickhouse:/var/lib/clickhouse
@@ -47,6 +57,8 @@ services:
         hard: 262144
 
   plausible:
+    profiles:
+      - frontend
     image: plausible/analytics:latest
     ports:
       - "50288:8000"
@@ -58,11 +70,16 @@ services:
       - docker/plausible/env.docker
 
   cache:
+    profiles:
+      - api
     image: redis:4.0.10
     ports:
       - "50263:6379"
 
   es:
+    profiles:
+      - ingestion_server
+      - api
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
     ports:
       - "50292:9200"
@@ -89,6 +106,8 @@ services:
       - es-data:/usr/share/elasticsearch/data
 
   web:
+    profiles:
+      - api
     build:
       context: ./api/
       args:
@@ -113,6 +132,9 @@ services:
     tty: true
 
   ingestion_server:
+    profiles:
+      - ingestion_server
+      - api
     build: ./ingestion_server/
     image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn.conf.py
@@ -131,6 +153,9 @@ services:
     tty: true
 
   indexer_worker:
+    profiles:
+      - ingestion_server
+      - api
     build: ./ingestion_server/
     image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn_worker.conf.py
@@ -148,6 +173,8 @@ services:
     tty: true
 
   proxy:
+    profiles:
+      - api
     image: nginx:alpine
     ports:
       - "50200:9080"

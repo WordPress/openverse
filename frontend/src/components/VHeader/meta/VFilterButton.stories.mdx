@@ -20,17 +20,19 @@ import { IMAGE } from "~/constants/media"
     appliedFilters: {
       type: "number",
     },
+    disabled: {
+      type: "boolean",
+    },
     toggle: {
       action: "toggle",
-    },
-    tab: {
-      action: "tab",
     },
   }}
 />
 
 export const Template = (args, { argTypes }) => ({
-  template: `<VFilterButton v-bind="args" v-on="args" />`,
+  template: `<div id="wrapper" class="w-40 h-16 bg-dark-charcoal-06 flex align-center justify-center">
+  <VFilterButton v-bind="args" v-on="args" />
+  </div>`,
   components: { VFilterButton },
   props: Object.keys(argTypes),
   setup() {
@@ -67,8 +69,7 @@ export const Template = (args, { argTypes }) => ({
 <ArgsTable of={VFilterButton} />
 
 The button opens and closes the filters sidebar. It also shows how many filters
-are applied in the mobile view. the field receives an input. It also emits the
-`search` event when the search button is clicked.
+are applied. It also emits the `toggle` event when clicked.
 
 <Canvas>
   <Story
