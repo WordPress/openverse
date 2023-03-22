@@ -10,6 +10,7 @@ from catalog.api.models.oauth import ThrottledApplication
 from catalog.api.utils.throttle import (
     AbstractAnonRateThrottle,
     AbstractOAuth2IdRateThrottle,
+    BurstRateThrottle,
 )
 
 
@@ -124,3 +125,25 @@ def test_abstract_oauth2_id_rate_throttle_does_not_apply_if_token_app_rate_limit
     )
     access_token.application.save()
     assert throttle.get_cache_key(view.initialize_request(authed_request), view) is None
+
+
+@pytest.mark.django_db
+def test_rate_limit_headers(request_factory):
+    class DummyThrottle(BurstRateThrottle):
+        THROTTLE_RATES = {"anon_burst": "2/hour"}
+
+    class ThrottledImagesView(APIView):
+        throttle_classes = [DummyThrottle]
+
+    view = ThrottledImagesView().as_view()
+    request = request_factory.get("/")
+
+    # Send three requests. The third one should be throttled.
+    for _ in range(3):
+        response = view(request)
+
+    headers = [h for h in response.headers.items() if "X-RateLimit" in h[0]]
+    assert [
+        ("X-RateLimit-Limit-anon_burst", "2/hour"),
+        ("X-RateLimit-Available-anon_burst", "0"),
+    ] == headers
