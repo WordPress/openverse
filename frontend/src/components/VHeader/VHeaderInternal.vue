@@ -57,8 +57,8 @@
               />
               <VCloseButton
                 variant="filled-dark"
-                class="bg-tx hover:bg-dark-charcoal-90"
-                :label="$t('modal.close-pages-menu')"
+                class="bg-tx focus-slim-tx-yellow hover:bg-dark-charcoal-90"
+                :label="$t('modal.close-pages-menu').toString()"
                 @close="closePageMenu"
               />
             </div>

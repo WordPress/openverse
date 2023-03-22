@@ -41,7 +41,7 @@
           <div class="relative">
             <VCloseButton
               :label="getLicenseExplanationCloseAria(item.code)"
-              class="!absolute top-0 end-0"
+              class="!absolute top-0 text-dark-charcoal end-0"
               @click="close"
             />
             <VLicenseExplanation :license="item.code" />
