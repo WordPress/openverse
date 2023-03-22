@@ -3,6 +3,7 @@
     :id="bannerKey"
     variant="informational"
     data-testid="banner-translation"
+    :close-button-label="$t('notification.translation.close').toString()"
     @close="$emit('close')"
   >
     {{

@@ -1,14 +1,13 @@
 <template>
   <div class="relative max-w-[280px]" data-testid="source-list-popover">
-    <VIconButton
-      class="absolute top-0 border-none text-dark-charcoal-70 end-0"
-      :icon-props="{ iconPath: icons.closeSmall }"
-      :label="$t('modal.close')"
-      @click="$emit('close')"
-    />
     <h2 class="description-bold mb-2 px-4 pt-5 text-start">
       {{ $t("external-sources.title") }}
     </h2>
+    <VCloseButton
+      :label="$t('modal.close').toString()"
+      class="!absolute top-0 end-0"
+      @close="$emit('close')"
+    />
     <p class="caption-regular mb-4 px-4 text-start">
       {{ $t("external-sources.caption", { openverse: "Openverse" }) }}
     </p>
@@ -38,12 +37,11 @@ import { defineComponent, PropType } from "vue"
 import type { ExternalSource } from "~/types/external-source"
 
 import VButton from "~/components/VButton.vue"
+import VCloseButton from "~/components/VCloseButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 import externalLinkIcon from "~/assets/icons/external-link.svg"
 import caretDownIcon from "~/assets/icons/caret-down.svg"
-import closeSmallIcon from "~/assets/icons/close-small.svg"
 
 /**
  * This component renders a list of pre-populated links to additional sources
@@ -51,7 +49,7 @@ import closeSmallIcon from "~/assets/icons/close-small.svg"
  */
 export default defineComponent({
   name: "VExternalSourceList",
-  components: { VButton, VIcon, VIconButton },
+  components: { VCloseButton, VButton, VIcon },
   props: {
     /**
      * the media type to use as the criteria for filtering additional sources
@@ -66,7 +64,6 @@ export default defineComponent({
       icons: {
         externalLink: externalLinkIcon,
         caretDown: caretDownIcon,
-        closeSmall: closeSmallIcon,
       },
     }
   },

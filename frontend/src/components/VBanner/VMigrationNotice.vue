@@ -2,6 +2,7 @@
   <VNotificationBanner
     id="cc-referral"
     variant="announcement"
+    :close-button-label="$t('migration-notice.close').toString()"
     @close="$emit('close')"
   >
     {{

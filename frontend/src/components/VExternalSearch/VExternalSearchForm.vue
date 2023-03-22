@@ -55,7 +55,7 @@
       <VPopoverContent
         v-if="isMd"
         id="external-sources-popover"
-        aria-labelledby="external-sources-button"
+        :aria-label="$t('external-sources.title').toString()"
         :hide="closeDialog"
         :trigger-element="triggerElement"
         :visible="isVisible"
@@ -69,7 +69,7 @@
       <VModalContent
         v-else
         id="external-sources-modal"
-        aria-labelledby="external-sources-button"
+        :aria-label="$t('external-sources.title').toString()"
         :trigger-element="triggerElement"
         :hide="closeDialog"
         :visible="isVisible"

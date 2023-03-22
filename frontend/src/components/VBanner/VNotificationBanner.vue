@@ -1,26 +1,20 @@
 <template>
-  <div
-    class="flex items-center justify-between px-4 py-2 md:px-7"
+  <section
+    class="flex items-center justify-between gap-x-2 px-4 py-2 md:px-7"
     :class="$style[variant]"
     :data-testid="`banner-${id}`"
   >
     <p class="caption-regular md:description-regular text-left">
       <slot name="default" />
     </p>
-    <div class="flex">
-      <slot name="buttons">
-        <VIconButton
-          :class="{ 'text-white': variant === 'announcement' }"
-          size="small"
-          :label="$t('modal.close')"
-          :icon-props="{
-            iconPath: closeIcon,
-          }"
-          @click="handleClose"
-        />
-      </slot>
-    </div>
-  </div>
+    <slot name="buttons">
+      <VCloseButton
+        variant="filled-transparent"
+        :label="closeButtonLabel || $t('modal.close-banner').toString()"
+        @close="$emit('close')"
+      />
+    </slot>
+  </section>
 </template>
 
 <script lang="ts">
@@ -30,14 +24,12 @@ import { defineEvent } from "~/types/emits"
 
 import type { BannerId } from "~/types/banners"
 
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
-
-import closeIcon from "~/assets/icons/close.svg"
+import VCloseButton from "~/components/VCloseButton.vue"
 
 export default defineComponent({
   name: "VNotificationBanner",
   components: {
-    VIconButton,
+    VCloseButton,
   },
   props: {
     variant: {
@@ -48,19 +40,12 @@ export default defineComponent({
       type: String as PropType<BannerId>,
       required: true,
     },
+    closeButtonLabel: {
+      type: String,
+    },
   },
   emits: {
     close: defineEvent(),
-  },
-  setup(_, { emit }) {
-    const handleClose = () => {
-      emit("close")
-    }
-
-    return {
-      closeIcon,
-      handleClose,
-    }
   },
 })
 </script>
