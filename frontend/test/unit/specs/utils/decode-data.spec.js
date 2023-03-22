@@ -31,6 +31,12 @@ describe("decodeData", () => {
     expect(decodeData(data)).toBe("s\u1234\xe9")
   })
 
+  it("returns decoded string when string does not contain backslash", () => {
+    const data = "musu00e9e"
+
+    expect(decodeData(data)).toBe("musée")
+  })
+
   it("shouldnt throw exception", () => {
     const data = "Classic Twill - SlipcoverFabrics.com 100% Cotton"
 
