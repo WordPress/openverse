@@ -1,4 +1,4 @@
-import type { Ref } from "@nuxtjs/composition-api"
+import type { Ref } from "vue"
 
 export type ModalVariant =
   | "default"

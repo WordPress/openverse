@@ -1,5 +1,7 @@
 <template>
+  <!-- Form action is a fallback for when JavaScript is disabled. -->
   <form
+    action="/search"
     class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-white sm:h-16"
     @submit.prevent="handleSearch"
   >
@@ -43,12 +45,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  PropType,
-  ref,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType, ref } from "vue"
 
 import { defineEvent } from "~/types/emits"
 

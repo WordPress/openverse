@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType } from "vue"
 
 import { getFullLicenseName, isLicense as isLicenseFn } from "~/utils/license"
 import { useI18n } from "~/composables/use-i18n"

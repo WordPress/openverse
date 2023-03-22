@@ -35,6 +35,10 @@ group:
         dest: .github/release_drafter.yml
       - source: .github/ISSUE_TEMPLATE/
         dest: .github/ISSUE_TEMPLATE/
+        exclude: |
+          component_spec.md
+          design_changes.md
+          project_thread.md
 
   # prettier.config.js
   - repos: |

@@ -50,10 +50,9 @@ import {
   ref,
   watch,
   onUnmounted,
-  useContext,
-  useRoute,
   PropType,
-} from "@nuxtjs/composition-api"
+} from "vue"
+import { useContext, useRoute } from "@nuxtjs/composition-api"
 
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
@@ -136,7 +135,6 @@ export default defineComponent({
      */
     searchTerm: {
       type: String,
-      required: true,
     },
   },
   emits: {
@@ -457,7 +455,9 @@ export default defineComponent({
     const layoutBasedProps = computed(() =>
       isComposite.value
         ? {
-            href: `/audio/${props.audio.id}/?q=${props.searchTerm}`,
+            href: `/audio/${props.audio.id}/${
+              props.searchTerm ? "?q=" + props.searchTerm : ""
+            }`,
             class: [
               "cursor-pointer",
               {

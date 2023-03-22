@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType } from "vue"
 
 import { License, LICENSE_ICONS } from "~/constants/license"
 import { getFullLicenseName, getElements } from "~/utils/license"

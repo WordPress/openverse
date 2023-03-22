@@ -4,12 +4,15 @@
     class="flex items-stretch rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-pink focus-visible:ring-offset-1 focus-visible:ring-offset-tx"
     :class="variant === 'dark' ? 'text-dark-charcoal' : 'text-white'"
   >
-    <VBrand :is-fetching="false" :sr-text="$t('header.home-link').toString()" />
+    <VBrand
+      :is-fetching="false"
+      :sr-text="$t('header.home-link', { openverse: 'Openverse' }).toString()"
+    />
   </VLink>
 </template>
 
 <script lang="ts">
-import { type PropType, defineComponent } from "@nuxtjs/composition-api"
+import { type PropType, defineComponent } from "vue"
 
 import VBrand from "~/components/VBrand/VBrand.vue"
 import VLink from "~/components/VLink.vue"

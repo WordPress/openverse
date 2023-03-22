@@ -86,13 +86,8 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  ref,
-  useRoute,
-  watch,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, ref, watch } from "vue"
+import { useRoute } from "@nuxtjs/composition-api"
 
 import { useDialogControl } from "~/composables/use-dialog-control"
 import usePages from "~/composables/use-pages"

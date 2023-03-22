@@ -13,11 +13,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  type PropType,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, type PropType } from "vue"
 
 import {
   ALL_MEDIA,

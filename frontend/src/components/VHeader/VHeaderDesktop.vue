@@ -46,7 +46,7 @@
   </header>
 </template>
 <script lang="ts">
-import { computed, defineComponent, inject, ref } from "@nuxtjs/composition-api"
+import { computed, defineComponent, inject, ref } from "vue"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"

@@ -1,4 +1,5 @@
-import { ref, useRoute, useRouter, Ref } from "@nuxtjs/composition-api"
+import { ref, Ref } from "vue"
+import { useRoute, useRouter } from "@nuxtjs/composition-api"
 
 import { ALL_MEDIA, searchTypes, supportedSearchTypes } from "~/constants/media"
 import usePages from "~/composables/use-pages"
@@ -51,7 +52,7 @@ export const useMatchSearchRoutes = () => {
 }
 
 /**
- * Reactive property that returns true only on the `single result` routes.
+ * Reactive property that returns true only on the `single result` and `full-page report` routes.
  * Homepage, search results and other content pages return `false`
  */
 export const useMatchSingleResultRoutes = () => {

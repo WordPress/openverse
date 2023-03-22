@@ -1,4 +1,5 @@
-import { computed, useContext } from "@nuxtjs/composition-api"
+import { computed } from "vue"
+import { useContext } from "@nuxtjs/composition-api"
 
 import type { LocaleObject } from "@nuxtjs/i18n"
 

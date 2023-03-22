@@ -19,12 +19,7 @@
 <script lang="ts">
 import Clipboard from "clipboard"
 
-import {
-  defineComponent,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-} from "@nuxtjs/composition-api"
+import { defineComponent, onBeforeUnmount, onMounted, ref } from "vue"
 
 import VButton from "~/components/VButton.vue"
 

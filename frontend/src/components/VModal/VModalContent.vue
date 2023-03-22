@@ -60,13 +60,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  toRefs,
-  ref,
-  computed,
-  PropType,
-} from "@nuxtjs/composition-api"
+import { defineComponent, toRefs, ref, computed, PropType } from "vue"
 
 import { Portal as VTeleport } from "portal-vue"
 

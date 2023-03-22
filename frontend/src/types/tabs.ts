@@ -1,4 +1,4 @@
-import type { ComputedRef, InjectionKey, Ref } from "@nuxtjs/composition-api"
+import type { ComputedRef, InjectionKey, Ref } from "vue"
 import type { ComponentPublicInstance } from "@vue/runtime-dom"
 
 export type TabActivation = "manual" | "auto"

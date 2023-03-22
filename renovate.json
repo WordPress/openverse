@@ -1,9 +1,0 @@
-{
-  "extends": ["config:base", ":preserveSemverRanges", "schedule:monthly"],
-  "labels": [
-    "dependencies",
-    "💻 aspect: code",
-    "🧰 goal: internal improvement",
-    "🟩 priority: low"
-  ]
-}

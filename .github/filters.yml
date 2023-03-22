@@ -1,6 +1,23 @@
 api:
   - api/**
+  # Change to the CI + CD workflow should trigger complete workflow.
+  - .github/workflows/ci_cd.yml
 ingestion_server:
   - ingestion_server/**
+  # Change to the CI + CD workflow should trigger complete workflow.
+  - .github/workflows/ci_cd.yml
 frontend:
   - frontend/**
+  - package.json
+  - pnpm-lock.yaml
+  - pnpm-workspace.yaml
+  - .npmrc
+  - .pnpmfile.cjs
+  # Change to the CI + CD workflow should trigger complete workflow.
+  - .github/workflows/ci_cd.yml
+lint:
+  - prettier.config.js
+  - .prettierignore
+  - .eslintrc.js
+  - .eslintignore
+  - .pre-commit-config.yaml

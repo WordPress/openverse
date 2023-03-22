@@ -17,6 +17,19 @@
     "pnpm": ">= 7.17.1"
   },
   "volta": {
-    "node": "16.19.0"
+    "node": "16.19.1"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "react",
+        "react-dom",
+        "consola"
+      ],
+      "allowedVersions": {
+        "babel-core": "7.0.0-bridge.0",
+        "postcss": "5.2.18"
+      }
+    }
   }
 }

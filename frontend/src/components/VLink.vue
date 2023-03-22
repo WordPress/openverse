@@ -39,7 +39,8 @@
  * Internal links use `NuxtLink` component with `to` attribute set to `localePath(href)`
  * External links use `a` element set to open in a new tab and not raise an error with the current iframe setup.
  */
-import { computed, defineComponent, useContext } from "@nuxtjs/composition-api"
+import { computed, defineComponent } from "vue"
+import { useContext } from "@nuxtjs/composition-api"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 

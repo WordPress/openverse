@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from "@nuxtjs/composition-api"
+import { defineComponent, type PropType } from "vue"
 
 import { defineEvent } from "~/types/emits"
 

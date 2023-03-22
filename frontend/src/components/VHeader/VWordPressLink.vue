@@ -19,7 +19,7 @@
   </VLink>
 </template>
 <script lang="ts">
-import { PropType } from "@nuxtjs/composition-api"
+import { PropType } from "vue"
 
 import VLink from "~/components/VLink.vue"
 

@@ -1,4 +1,5 @@
-import { computed, useRouter, watch } from "@nuxtjs/composition-api"
+import { computed, watch } from "vue"
+import { useRouter } from "@nuxtjs/composition-api"
 
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"

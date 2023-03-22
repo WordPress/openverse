@@ -86,13 +86,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  PropType,
-  ref,
-  SetupContext,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType, ref, SetupContext } from "vue"
 
 import { defineEvent } from "~/types/emits"
 

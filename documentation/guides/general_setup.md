@@ -75,7 +75,7 @@ set up a virtualenv, provided you have the version of Python mentioned in the
 `Pipfile` installed and accessible locally.
 
 You can install Pipenv by following the
-[official instructions](https://pipenv.pypa.io/en/latest/install/#installing-pipenv).
+[official instructions](https://pipenv.pypa.io/en/latest/installation/#installing-pipenv).
 
 ### Node.js
 
@@ -199,6 +199,17 @@ different editor if you have a preference.
 ## Optional development setup
 
 The following setup steps are only needed in very specific scenarios.
+
+### coreutils
+
+```{note}
+This is only needed on macOS.
+```
+
+`coreutils` adds GNU utils to macOS. `timeout` from the package is required. You
+can install the
+[`coreutils` formula](https://formulae.brew.sh/formula/coreutils) using
+[Homebrew](https://brew.sh), which is a package manager for macOS.
 
 ### mkcert
 

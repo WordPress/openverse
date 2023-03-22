@@ -1,4 +1,4 @@
-import { ref, computed } from "@nuxtjs/composition-api"
+import { ref, computed } from "vue"
 
 import VModal from "~/components/VModal/VModal.vue"
 import VModalTarget from "~/components/VModal/VModalTarget.vue"

@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@nuxtjs/composition-api"
+import { defineComponent } from "vue"
 
 import VCopyButton from "~/components/VCopyButton.vue"
 import VTabPanel from "~/components/VTabs/VTabPanel.vue"

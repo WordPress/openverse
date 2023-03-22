@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "@nuxtjs/composition-api"
+import { defineComponent, PropType } from "vue"
 
 import type { ExternalSource } from "~/types/external-source"
 

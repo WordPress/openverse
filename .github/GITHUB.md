@@ -61,8 +61,11 @@ truth, it creates PRs to resolve any differences.
 
 ### New issue automation
 
-This workflow adds issues to the "Backlog" column in the Openverse project as
+This workflow adds issues to the "Backlog" column in the [(old) Openverse project](https://github.com/orgs/WordPress/projects/3/) as
 soon as they are created.
+This workflow also adds issues to the "Backlog" column in the
+ [Openverse project](https://github.com/orgs/WordPress/projects/75/) as soon as they are created. It also adds a priority field
+value to the project item based on the priority label applied to the issue.
 
 **Issue:** opened  
 **Dispatch:** disabled

@@ -1,4 +1,4 @@
-import { ref, watch, Ref, ToRefs } from "@nuxtjs/composition-api"
+import { ref, watch, Ref, ToRefs } from "vue"
 import {
   createPopper,
   detectOverflow,

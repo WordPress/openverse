@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { computed } from "@nuxtjs/composition-api"
+import { computed } from "vue"
 
 import Radiomark from "~/assets/icons/radiomark.svg?inline"
 

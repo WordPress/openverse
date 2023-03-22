@@ -31,7 +31,7 @@ import {
   onUnmounted,
   type PropType,
   ref,
-} from "@nuxtjs/composition-api"
+} from "vue"
 
 import { tabsContextKey } from "~/types/tabs"
 import { keycodes } from "~/constants/key-codes"

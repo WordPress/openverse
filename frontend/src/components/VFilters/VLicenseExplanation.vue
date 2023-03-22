@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "@nuxtjs/composition-api"
+import { defineComponent, PropType } from "vue"
 
 import { getLicenseUrl, isLicense } from "~/utils/license"
 

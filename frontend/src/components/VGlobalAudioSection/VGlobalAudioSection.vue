@@ -3,21 +3,18 @@
     <VGlobalAudioTrack v-if="audio" :audio="audio" />
     <VIconButton
       v-if="audio"
-      class="absolute top-0 z-10 border-none ltr:right-0 rtl:left-0"
+      class="absolute top-0 z-30 border-none ltr:right-0 rtl:left-0"
       size="large"
       :icon-props="{ iconPath: icons.closeIcon }"
+      :aria-label="$t('audio-track.close')"
       @click="handleClose"
     />
   </div>
 </template>
 
 <script lang="ts">
-import {
-  useRoute,
-  watch,
-  computed,
-  defineComponent,
-} from "@nuxtjs/composition-api"
+import { watch, computed, defineComponent } from "vue"
+import { useRoute } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import { useActiveAudio } from "~/composables/use-active-audio"
@@ -151,3 +148,9 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+.global-audio {
+  grid-area: global-audio;
+}
+</style>

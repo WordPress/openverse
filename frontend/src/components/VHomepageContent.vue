@@ -69,7 +69,7 @@
   </VSkipToContentContainer>
 </template>
 <script lang="ts">
-import { computed, ref, PropType } from "@nuxtjs/composition-api"
+import { computed, ref, PropType } from "vue"
 
 import type { SearchType } from "~/constants/media"
 import { ensureFocus } from "~/utils/reakit-utils/focus"

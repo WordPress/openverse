@@ -12,7 +12,9 @@
       @close="deactivate"
     >
       <div class="flex w-full" :class="{ 'px-2': isRecentSearchesModalOpen }">
+        <!-- Form action is a fallback for when JavaScript is disabled. -->
         <form
+          action="/search"
           class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-sm"
           :class="
             searchBarIsActive
@@ -110,14 +112,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  inject,
-  nextTick,
-  ref,
-  watch,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, inject, nextTick, ref, watch } from "vue"
 
 import { ensureFocus } from "~/utils/reakit-utils/focus"
 import { cyclicShift } from "~/utils/math"

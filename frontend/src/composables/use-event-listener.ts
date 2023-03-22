@@ -1,11 +1,4 @@
-import {
-  isRef,
-  watch,
-  onMounted,
-  onBeforeUnmount,
-  unref,
-  Ref,
-} from "@nuxtjs/composition-api"
+import { isRef, watch, onMounted, onBeforeUnmount, unref, Ref } from "vue"
 
 const isComponentInstance = (o: unknown): o is { $el: unknown } =>
   !!o && typeof (o as { $el: unknown }).$el !== "undefined"

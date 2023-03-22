@@ -45,13 +45,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  computed,
-  PropType,
-  SetupContext,
-} from "@nuxtjs/composition-api"
+import { defineComponent, ref, computed, PropType, SetupContext } from "vue"
 
 import { zIndexValidator } from "~/constants/z-indices"
 

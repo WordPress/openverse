@@ -7,7 +7,7 @@ import { PiniaVuePlugin, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import messages from "~/locales/en.json"
 
-import VImageGrid from "~/components/VImageGrid/VImageGrid.vue"
+import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
 const i18n = new VueI18n({
   locale: "en",

@@ -26,13 +26,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  PropType,
-  ref,
-  watch,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType, ref, watch } from "vue"
 
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"

@@ -1,5 +1,7 @@
 import { defineStore } from "pinia"
 
+import { useStorage } from "@vueuse/core"
+
 import featureData from "~~/feat/feature-flags.json"
 
 import { warn } from "~/utils/console"
@@ -156,8 +158,16 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      */
     toggleFeature(name: FlagName, targetState: FeatureState) {
       const flag = this.flags[name]
-      if (getFlagStatus(flag) === SWITCHABLE) flag.preferredState = targetState
-      else warn(`Cannot set preferred state for non-switchable flag: ${name}`)
+      if (getFlagStatus(flag) === SWITCHABLE) {
+        flag.preferredState = targetState
+
+        // For Plausible to stop tracking `plausible_ignore` must be set.
+        // Ref: https://plausible.io/docs/excluding-localstorage
+        if (name === "analytics") {
+          const storage = useStorage<boolean | null>("plausible_ignore", null)
+          storage.value = targetState === ON ? null : true
+        }
+      } else warn(`Cannot set preferred state for non-switchable flag: ${name}`)
     },
   },
 })

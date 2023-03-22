@@ -1,4 +1,4 @@
-import { Ref, ref, watch } from "@nuxtjs/composition-api"
+import { Ref, ref, watch } from "vue"
 
 import { contains, getDocument, isInDocument } from "~/utils/reakit-utils/dom"
 

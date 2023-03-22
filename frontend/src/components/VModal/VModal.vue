@@ -46,7 +46,7 @@ import {
   toRef,
   PropType,
   SetupContext,
-} from "@nuxtjs/composition-api"
+} from "vue"
 
 import type { ModalColorMode, ModalVariant } from "~/types/modal"
 

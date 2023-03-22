@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "@nuxtjs/composition-api"
+import { computed, defineComponent } from "vue"
 
 import { useUiStore } from "~/stores/ui"
 import type { TranslationBannerId } from "~/types/banners"

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="app flex grid min-h-screen min-h-[100dvh] grid-rows-[auto,1fr] bg-white"
+    class="app flex grid min-h-screen min-h-[100dvh] grid-rows-[auto,1fr,auto] bg-white"
     :class="[
       isDesktopLayout ? 'desktop' : 'mobile',
       breakpoint,
@@ -44,15 +44,8 @@
   </div>
 </template>
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  provide,
-  ref,
-  useContext,
-  watch,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent, onMounted, provide, ref, watch } from "vue"
+import { useContext } from "@nuxtjs/composition-api"
 import { PortalTarget as VTeleportTarget } from "portal-vue"
 
 import { useWindowScroll } from "~/composables/use-window-scroll"
@@ -174,7 +167,7 @@ export default defineComponent({
   width: var(--filter-sidebar-width);
 }
 .app {
-  grid-template-areas: "header header" "main main";
+  grid-template-areas: "header" "main" "global-audio";
 }
 .header-el {
   grid-area: header;

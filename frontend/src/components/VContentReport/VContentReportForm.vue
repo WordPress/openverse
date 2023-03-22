@@ -111,8 +111,8 @@
   </div>
 </template>
 
-<script>
-import { computed, defineComponent, ref } from "@nuxtjs/composition-api"
+<script lang="ts">
+import { computed, defineComponent, ref } from "vue"
 
 import ReportService from "~/data/report-service"
 
@@ -156,11 +156,9 @@ export default defineComponent({
     const service = props.reportService || ReportService
     const description = ref("")
 
-    /** @type {import('@nuxtjs/composition-api').Ref<string|null>} */
-    const status = ref(WIP)
+    const status = ref<string | null>(WIP)
 
-    /** @type {import('@nuxtjs/composition-api').Ref<string|null>} */
-    const selectedReason = ref(DMCA)
+    const selectedReason = ref<string | null>(DMCA)
 
     /* Buttons */
     const handleCancel = () => {

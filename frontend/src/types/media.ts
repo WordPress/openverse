@@ -44,6 +44,8 @@ export interface Media {
 
   tags: Tag[]
   fields_matched?: string[]
+
+  mature: boolean
 }
 
 export interface ImageDetail extends Media {
@@ -92,3 +94,10 @@ export interface ApiMedia
   title?: string
   originalTitle?: string
 }
+
+export interface ImageDimensions {
+  width?: number
+  height?: number
+}
+
+export type AspectRatio = "square" | "intrinsic"

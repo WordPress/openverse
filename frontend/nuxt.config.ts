@@ -147,6 +147,8 @@ const openverseLocales = [
   ...(locales ?? []),
 ].filter((l) => Boolean(l.iso)) as LocaleObject[]
 
+const port = process.env.PORT || 8443
+
 const config: NuxtConfig = {
   // eslint-disable-next-line no-undef
   version: pkg.version, // used to purge cache :)
@@ -161,7 +163,7 @@ const config: NuxtConfig = {
   srcDir: "src/",
   modern: "client",
   server: {
-    port: process.env.PORT || 8443,
+    port,
     https: process.env.LOCAL_SSL
       ? {
           key: fs.readFileSync(path.resolve(__dirname, "localhost+1-key.pem")),
@@ -194,7 +196,6 @@ const config: NuxtConfig = {
   buildModules: [
     "@nuxt/typescript-build",
     "@nuxtjs/composition-api/module",
-    "@nuxt/postcss8",
     "@nuxtjs/style-resources",
     "@nuxtjs/svg",
     "@nuxtjs/eslint-module",
@@ -203,9 +204,11 @@ const config: NuxtConfig = {
   modules: [
     "portal-vue/nuxt",
     "@nuxtjs/i18n",
+    "@nuxtjs/proxy",
     "@nuxtjs/redirect-module",
     "@nuxtjs/sentry",
     "cookie-universal-nuxt",
+    "vue-plausible",
     "~/modules/prometheus.ts",
     // Sitemap must be last to ensure that even routes created by other modules are added
     "@nuxtjs/sitemap",
@@ -277,22 +280,26 @@ const config: NuxtConfig = {
     filenames,
     friendlyErrors: false,
     postcss: {
-      plugins: {
-        tailwindcss: {},
-        autoprefixer: {},
-        "postcss-focus-visible": {},
+      postcssOptions: {
+        preset: {
+          features: {
+            // Disable conversion of logical properties to physical properties
+            // e.g.: `margin-inline-start` is NOT converted to `margin-left`
+            // Necessary for RTL support.
+            "logical-properties-and-values": false,
+          },
+        },
+        plugins: {
+          tailwindcss: {
+            config: path.resolve(__dirname, "tailwind.config.js"),
+          },
+          "postcss-focus-visible": {},
+        },
       },
     },
     extend(config, ctx) {
       // Enables use of IDE debuggers
       config.devtool = ctx.isClient ? "source-map" : "inline-source-map"
-
-      // Mitigates import errors for Pinia
-      config.module?.rules.push({
-        test: /\.mjs$/,
-        include: /node_modules/,
-        type: "javascript/auto",
-      })
     },
   },
   storybook: {
@@ -324,6 +331,26 @@ const config: NuxtConfig = {
       viewport: {
         viewports: VIEWPORTS,
       },
+    },
+  },
+  proxy: {
+    // The key is appended to the address in the value.
+    "/api/event":
+      process.env.PLAUSIBLE_ORIGIN ?? isProd
+        ? "https://plausible.io"
+        : "http://localhost:50288",
+  },
+  plausible: {
+    trackLocalhost: !isProd,
+  },
+  publicRuntimeConfig: {
+    plausible: {
+      // This is the current domain of the site.
+      domain: process.env.SITE_DOMAIN ?? isProd ? "openverse.org" : "localhost",
+      apiHost:
+        process.env.SITE_DOMAIN ?? isProd
+          ? "https://openverse.org"
+          : `http://localhost:${port}`,
     },
   },
 }
