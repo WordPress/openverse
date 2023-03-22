@@ -73,7 +73,7 @@ jobs:
 
       - name: Add new tag to existing docker image
         run: |
-          docker buildx imagetools create ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.tag-sha }} --tag ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.name }}
+          docker buildx imagetools create ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.sha-tag }} --tag ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.name }}
 
       - name: Update draft release
         # We don't actually ever use these releases, but because there's no easier
@@ -105,9 +105,9 @@ jobs:
         run: |
           mkdir -p changelogs
 
-          echo EOF<<
+          cat << EOF > changelogs/${{ steps.tag.outputs.name }}-${{ inputs.app }}.md
           ${{ steps.release-drafter.outputs.body }}
-          EOF > changelogs/${{ steps.tag.outputs.name }}-${{ inputs.app }}.md
+          EOF
 
       - name: Open changelog PR
         uses: peter-evans/create-pull-request@v4
