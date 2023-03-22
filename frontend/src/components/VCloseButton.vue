@@ -23,9 +23,12 @@ export default defineComponent({
     },
     variant: {
       type: String as PropType<
-        "filled-white" | "filled-transparent" | "filled-dark"
+        | "filled-white"
+        | "filled-white-light"
+        | "filled-transparent"
+        | "filled-dark"
       >,
-      default: "filled-white",
+      default: "filled-white-light",
     },
   },
   setup() {

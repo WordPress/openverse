@@ -36,8 +36,6 @@ import VContentReportButton from "~/components/VContentReport/VContentReportButt
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
 import VPopover from "~/components/VPopover/VPopover.vue"
 
-import flagIcon from "~/assets/icons/flag.svg"
-
 export default defineComponent({
   name: "VContentReportPopover",
   components: {
@@ -54,11 +52,6 @@ export default defineComponent({
       type: Object as PropType<AudioDetail | ImageDetail>,
       required: true,
     },
-  },
-  setup() {
-    return {
-      icons: { flag: flagIcon },
-    }
   },
 })
 </script>
