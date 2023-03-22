@@ -22,12 +22,11 @@ ping us via any of our [communication channels](README.md#keep-in-touch).
 ### Get started
 
 Detailed help for contributing code can be found in the
-[developer documentation](https://docs.openverse.org/), which also
-includes the following subfolders.
+[developer documentation](https://docs.openverse.org/), which also includes the
+following subfolders.
 
 - [Storybook](https://docs.openverse.org/storybook/) (UI components)
-- [Tailwind Config Viewer](https://docs.openverse.org/tailwind/)
-  (design tokens)
+- [Tailwind Config Viewer](https://docs.openverse.org/tailwind/) (design tokens)
 
 The following resources are preferred reading for starting your Openverse
 contribution journey in the code and code-related space.
