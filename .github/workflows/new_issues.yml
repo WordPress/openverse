@@ -22,6 +22,8 @@ jobs:
   add_issue_to_project:
     name: Add new issue to project
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Add issue to "Backlog"
         run: |
@@ -67,6 +69,7 @@ jobs:
     steps:
       - name: Set issue priority
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo" # The ID for the project Priority custom field.
         run: |
           # shellcheck disable=SC2016
