@@ -31,6 +31,7 @@ wait-up: up
 init: wait-up
     cd .. && ./load_sample_data.sh
 
+# Recreate volumes and containers specific to the API profile from scratch
 recreate:
     just ../down -v
     just up "--force-recreate --build"

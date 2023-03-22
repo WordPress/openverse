@@ -102,7 +102,7 @@ env:
 
 DOCKER_FILE := "-f " + (
     if IS_PROD == "true" { "ingestion_server/docker-compose.yml" }
-    else { "docker-compose.yml" }
+    else { "docker-compose.yml -f docker-compose.override.yml" }
 )
 
 # Run `docker-compose` configured with the correct files and environment
