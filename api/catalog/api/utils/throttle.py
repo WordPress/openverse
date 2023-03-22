@@ -85,10 +85,6 @@ class TenPerDay(AbstractAnonRateThrottle):
     rate = "10/day"
 
 
-class OneThousandPerMinute(AbstractAnonRateThrottle):
-    rate = "1000/min"
-
-
 class OnePerSecond(AbstractAnonRateThrottle):
     rate = "1/second"
 
