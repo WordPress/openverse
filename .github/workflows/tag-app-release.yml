@@ -1,0 +1,117 @@
+name: Tag app release
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        type: string
+        required: true
+        description: Application to tag for. Either `ingestion_server`, `api`, or `frontend`.
+      sha-tag:
+        type: string
+        required: true
+        description: The SHA of the commit to tag. Also used to find the existing Docker image. Must be a commit on `main`.
+
+concurrency: ${{ github.workflow }}-${{ inputs.app }}
+
+jobs:
+  tag-app-release:
+    name: Tag app release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate `app` input
+        shell: python
+        run: |
+          if "${{ inputs.app }}" not in ["api", "ingestion_server", "frontend"]:
+            raise ValueError("`app` input must be `api`, `ingestion_server`, or `frontend`. Received `${{ inputs.app}}`.")
+
+      - name: Validate `sha-tag` input
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let exists = undefined,
+              page = 0
+            while (!exists) {
+              page += 1
+              const { data: versions } =
+                await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
+                  package_type: 'container',
+                  package_name: 'openverse-${{ inputs.app }}',
+                  org: 'WordPress',
+                  page,
+                  // max of `per_page`
+                  per_page: 100,
+                })
+              if (!versions.length) {
+                break
+              }
+              exists = versions.some((v) => v.metadata.container.tags.includes('${{ inputs.sha-tag }}'))
+            }
+            if (!exists) {
+              throw new Error(
+                `'${{ inputs.sha-tag }}' does not appear to be a valid SHA tag for ${{ inputs.app }}.`
+              )
+            }
+
+      - name: Calculate tag name
+        id: tag
+        run: |
+          # Format example: rel-2023.03.22.04.56.29
+          echo "name=$(date -u +rel-%Y.%m.%d.%H.%M.%S)" >> "$GITHUB_OUTPUT"
+
+      - name: Add git tag
+        run: |
+          git tag -a ${{ steps.tag.outputs.name }} ${{ inputs.sha-tag }}
+          git push origin ${{ steps.tag.outputs.name }}
+
+      - name: Log in to GitHub Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: https://ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add new tag to existing docker image
+        run: |
+          docker buildx imagetools create ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.tag-sha }} --tag ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.name }}
+
+      - name: Update draft release
+        # We don't actually ever use these releases, but because there's no easier
+        # way to generate the release notes for an application than this action,
+        # and because the action doesn't support generating the notes without
+        # adding them to a release (draft or no), we still let the release get created
+        # and then just copy the body from the result of this action.
+        uses: release-drafter/release-drafter@v5
+        id: release-drafter
+        with:
+          config-name: release_drafter_${{ inputs.app }}.yml
+          version: ${{ steps.tag.outputs.name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete GitHub release draft
+        run: |
+          # strip the `https://github.com` from the front
+          release_identifier="$(echo "${{ steps.release-drafter.outputs.html_url }}" | sed 's/https:\/\/github.com//')"
+          gh api \
+            --method DELETE \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "$release_identifier"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add changelog
+        run: |
+          mkdir -p changelogs
+
+          echo EOF<<
+          ${{ steps.release-drafter.outputs.body }}
+          EOF > changelogs/${{ steps.tag.outputs.name }}-${{ inputs.app }}.md
+
+      - name: Open changelog PR
+        uses: peter-evans/create-pull-request@v4
+        with:
+          commit-message: "[skip ci] Publish changelog ${{ steps.tag.outputs.name }}"
+          body: |
+            This changelog PR was automatically generated for @${{ github.actor }} as a result of the ${{ github.workflow }} workflow.

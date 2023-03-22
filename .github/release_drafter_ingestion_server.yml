@@ -4,8 +4,8 @@
 # Docs: https://github.com/release-drafter/release-drafter
 # Workflow: Draft release
 
-name-template: "v$RESOLVED_VERSION"
-tag-template: "v$RESOLVED_VERSION"
+name-template: "Ingestion server $RESOLVED_VERSION"
+tag-template: "$RESOLVED_VERSION"
 categories:
   - title: New Features
     label: "🌟 goal: addition"
@@ -20,6 +20,8 @@ categories:
 change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
 exclude-labels:
   - "skip-changelog"
+include-labels:
+  - "🧱 stack: ingestion server"
 version-resolver:
   major:
     labels:
