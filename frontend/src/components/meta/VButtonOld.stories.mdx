@@ -7,13 +7,9 @@ import {
 } from "@storybook/addon-docs"
 import { buttonForms, buttonSizes, buttonVariants } from "~/types/button"
 import VButton from "~/components/VButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
 import { capital } from "case"
 
-import replayIcon from "~/assets/icons/replay.svg"
-import externalLinkIcon from "~/assets/icons/external-link.svg"
-
-<Meta title="Components/VButton" components={VButton} />
+<Meta title="Components/VButtonOld" components={VButton} />
 
 export const Template = (args) => ({
   template: `
@@ -29,25 +25,6 @@ export const Template = (args) => ({
   },
   setup() {
     return { args }
-  },
-})
-
-export const TemplateWithIcons = (args) => ({
-  template: `
-<div class="flex flex-col items-center gap-4 flex-wrap">
-  <VButton :variant="args.variant" :size="args.size" :has-icon-start="true">
-    <VIcon :icon-path="replayIcon" />Button
-  </VButton>
-  <VButton :variant="args.variant" :size="args.size" has-icon-end>
-    Button<VIcon :icon-path="externalLinkIcon" />
-  </VButton>
-  <VButton :variant="args.variant" :size="args.size" has-icon-start has-icon-end>
-    <VIcon :icon-path="replayIcon" />Button<VIcon :icon-path="externalLinkIcon" />
-  </VButton>
-</div>`,
-  components: { VButton, VIcon },
-  setup() {
-    return { args, replayIcon, externalLinkIcon }
   },
 })
 
@@ -110,15 +87,71 @@ export const VariantsTemplate = (args) => ({
 
 ## Button variants
 
-### Filled
+### Primary
 
-These buttons have a solid background color and no border.
+The style used for Call-to-action buttons, such as the 'Search' button or 'Get
+this media item' buttons. It is a pink button.
 
 <Canvas>
   <Story
-    name="filled"
+    name="primary"
+    args={{ variants: ["primary"] }}
+    argTypes={{
+      pressed: { control: "boolean" },
+      size: {
+        options: buttonSizes,
+        control: { type: "radio" },
+      },
+      disabled: { control: "boolean" },
+    }}
+  >
+    {VariantsTemplate.bind({})}
+  </Story>
+</Canvas>
+
+### Secondary
+
+The styles used for other buttons.
+
+There are three variants of secondary buttons: filled, bordered and text
+(without border).
+
+<Canvas>
+  <Story
+    name="secondary"
+    args={{ variants: ["secondary-bordered", "secondary-filled", "secondary"] }}
+    argTypes={{
+      pressed: { control: "boolean" },
+      size: {
+        options: buttonSizes,
+        control: { type: "radio" },
+      },
+      disabled: { control: "boolean" },
+    }}
+  >
+    {VariantsTemplate.bind({})}
+  </Story>
+</Canvas>
+
+### Action-menu
+
+The styles used for header 'action-menu' buttons.
+
+'action-menu' also has no border and no background. On hover, there is a light
+border. It is used in the desktop header buttons and for the content type
+switcher inside the searchbar.
+
+'action-menu-bordered' has a border but no background. It is used in the desktop
+header buttons when the (old) header is scrolled.
+
+'action-menu-muted' has a light charcoal background. It is used for filters when
+some filters are applied.
+
+<Canvas>
+  <Story
+    name="action-menu"
     args={{
-      variants: ["filled-pink", "filled-dark", "filled-gray", "filled-white"],
+      variants: ["action-menu", "action-menu-bordered", "action-menu-muted"],
     }}
     argTypes={{
       pressed: { control: "boolean" },
@@ -130,80 +163,5 @@ These buttons have a solid background color and no border.
     }}
   >
     {VariantsTemplate.bind({})}
-  </Story>
-</Canvas>
-
-### Bordered
-
-These buttons have a white background and a border.
-
-<Canvas>
-  <Story
-    name="bordered"
-    args={{ variants: ["bordered-gray", "bordered-dark"] }}
-    argTypes={{
-      pressed: { control: "boolean" },
-      size: {
-        options: buttonSizes,
-        control: { type: "radio" },
-      },
-      disabled: { control: "boolean" },
-    }}
-  >
-    {VariantsTemplate.bind({})}
-  </Story>
-</Canvas>
-
-### Transparent
-
-These buttons are transparent and don't have a border in resting state.
-
-<Canvas>
-  <Story
-    name="transparent"
-    args={{
-      variants: ["transparent-gray", "transparent-dark"],
-    }}
-    argTypes={{
-      pressed: { control: "boolean" },
-      size: {
-        options: buttonSizes,
-        control: { type: "radio" },
-      },
-      disabled: { control: "boolean" },
-    }}
-  >
-    {VariantsTemplate.bind({})}
-  </Story>
-</Canvas>
-
-### Buttons with Icons
-
-<Canvas>
-  <Story
-    name="icons"
-    argTypes={{
-      pressed: { control: "boolean" },
-      size: {
-        options: buttonSizes,
-        control: { type: "radio" },
-      },
-      variant: {
-        options: [
-          "filled-pink",
-          "filled-dark",
-          "filled-gray",
-          "filled-white",
-          "bordered-gray",
-          "bordered-dark",
-          "transparent-gray",
-          "transparent-dark",
-        ],
-        control: { type: "select" },
-      },
-      disabled: { control: "boolean" },
-    }}
-  >
-    {TemplateWithIcons.bind({})}
   </Story>
 </Canvas>

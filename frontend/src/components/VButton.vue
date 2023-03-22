@@ -2,16 +2,17 @@
   <Component
     :is="as"
     :type="typeRef"
-    class="group flex appearance-none items-center justify-center rounded-sm no-underline ring-offset-1 transition-shadow duration-100 ease-linear focus:outline-none"
+    class="group/button description-bold flex appearance-none items-center justify-center rounded-sm no-underline focus:outline-none"
     :class="[
       $style.button,
       $style[variant],
       isConnected && $style[`connection-${connections}`],
       isActive && $style[`${variant}-pressed`],
       $style[`size-${size}`],
-      isPlainDangerous
-        ? ''
-        : 'border border-tx focus-visible:ring focus-visible:ring-pink',
+      isPlainDangerous ? '' : 'border border-tx focus-slim-filled',
+      hasIconStart && $style[`icon-start-${size}`],
+      hasIconEnd && $style[`icon-end-${size}`],
+      (hasIconEnd || hasIconStart) && 'gap-x-2',
     ]"
     :aria-pressed="pressed"
     :aria-disabled="ariaDisabledRef"
@@ -157,6 +158,14 @@ const VButton = defineComponent({
       type: String as PropType<ButtonConnections>,
       default: "none",
     },
+    hasIconStart: {
+      type: Boolean,
+      default: false,
+    },
+    hasIconEnd: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props, { attrs }) {
     const propsRef = toRefs(props)
@@ -243,19 +252,86 @@ export default VButton
 }
 
 .size-small {
-  @apply py-1 px-2;
+  @apply h-8 py-0 px-3;
+}
+.icon-start-small {
+  @apply ps-1;
+}
+.icon-end-small {
+  @apply pe-1;
 }
 
 .size-medium {
-  @apply py-2 px-4;
+  @apply h-10 py-0 px-4;
+}
+.icon-start-medium {
+  @apply ps-3;
+}
+.icon-end-medium {
+  @apply pe-3;
 }
 
 .size-large {
-  @apply py-6 px-8;
+  @apply h-12 py-0 px-6;
+}
+.icon-start-large {
+  @apply ps-5;
+}
+.icon-end-large {
+  @apply pe-5;
 }
 
 a.button {
   @apply no-underline hover:no-underline;
+}
+
+.filled-pink {
+  @apply border-tx bg-pink text-white hover:border-tx hover:bg-dark-pink hover:text-white;
+}
+.filled-pink-pressed {
+  @apply bg-dark-pink;
+}
+
+.filled-dark {
+  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-80 hover:text-white;
+}
+.filled-dark-pressed {
+  @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
+}
+
+.filled-gray {
+  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+}
+.filled-gray-pressed {
+  @apply border-tx bg-dark-charcoal-90 text-white hover:border-tx hover:bg-dark-charcoal-80;
+}
+
+.filled-white {
+  @apply border-tx bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal-10;
+}
+.filled-white-pressed {
+  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal;
+}
+
+.bordered-gray {
+  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
+}
+.bordered-gray-pressed {
+  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal;
+}
+
+.bordered-dark {
+  @apply border-dark-charcoal bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
+}
+.bordered-dark-pressed {
+  @apply border-dark-charcoal bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
+}
+
+.transparent-gray {
+  @apply border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+}
+.transparent-dark {
+  @apply border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal hover:text-white hover:text-dark-charcoal;
 }
 
 .primary {
