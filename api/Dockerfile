@@ -19,6 +19,8 @@ ENV PYTHONBUFFERED=1
 # Activate the virtualenv
 ENV PATH="/venv/bin:$PATH"
 
+ARG PIPENV_INSTALL_ARGS
+
 # - Install system packages needed for building Python dependencies
 # - Create a virtualenv inside `/venv`
 # - Install Pipenv to install Python dependencies
@@ -32,7 +34,7 @@ RUN apt-get update \
 COPY Pipfile Pipfile.lock ./
 
 # Install Python dependencies system-wide (uses the active virtualenv)
-RUN pipenv install --system --deploy --dev
+RUN pipenv install --system --deploy ${PIPENV_INSTALL_ARGS}
 
 #######
 # API #
