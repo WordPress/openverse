@@ -31,6 +31,11 @@ wait-up: up
 init: wait-up
     cd .. && ./load_sample_data.sh
 
+recreate:
+    just ../down -v
+    just up "--force-recreate --build"
+    just init
+
 ##########
 # Health #
 ##########
