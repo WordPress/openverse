@@ -90,6 +90,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Delete GitHub release draft
+        # Cleans up the GitHub Release automatically drafted by the
+        # release-drafter action in the previous step
         run: |
           # strip the `https://github.com` from the front
           release_identifier="$(echo "${{ steps.release-drafter.outputs.html_url }}" | sed 's/https:\/\/github.com//')"
@@ -105,7 +107,7 @@ jobs:
         run: |
           mkdir -p changelogs
 
-          cat << EOF > changelogs/${{ steps.tag.outputs.name }}-${{ inputs.app }}.md
+          cat << EOF > documentation/changelogs/${{inputs.app}}/${{ steps.tag.outputs.name }}.md
           ${{ steps.release-drafter.outputs.body }}
           EOF
 

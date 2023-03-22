@@ -29,6 +29,7 @@ use the Openverse API, you should instead refer to the
 
 guides/index
 reference/index
+changelogs/index
 ```
 
 ```{toctree}
