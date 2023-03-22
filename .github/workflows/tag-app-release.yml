@@ -56,13 +56,16 @@ jobs:
       - name: Calculate tag name
         id: tag
         run: |
-          # Format example: rel-2023.03.22.04.56.29
-          echo "name=$(date -u +rel-%Y.%m.%d.%H.%M.%S)" >> "$GITHUB_OUTPUT"
+          # Format example: 2023.03.22.04.56.29
+          # `-u` forces UTC
+          formatted_date="$(date -u +%Y.%m.%d.%H.%M.%S)"
+          echo "date=$formatted_date" >> "$GITHUB_OUTPUT"
+          echo "tag=rel-$formated_date" >> "$GITHUB_OUTPUT"
 
       - name: Add git tag
         run: |
-          git tag -a ${{ steps.tag.outputs.name }} ${{ inputs.sha-tag }}
-          git push origin ${{ steps.tag.outputs.name }}
+          git tag -a ${{ steps.tag.outputs.tag }} ${{ inputs.sha-tag }}
+          git push origin ${{ steps.tag.outputs.tag }}
 
       - name: Log in to GitHub Docker Registry
         uses: docker/login-action@v2
@@ -73,7 +76,7 @@ jobs:
 
       - name: Add new tag to existing docker image
         run: |
-          docker buildx imagetools create ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.sha-tag }} --tag ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.name }}
+          docker buildx imagetools create ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.sha-tag }} --tag ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.tag }}
 
       - name: Update draft release
         # We don't actually ever use these releases, but because there's no easier
@@ -85,7 +88,7 @@ jobs:
         id: release-drafter
         with:
           config-name: release_drafter_${{ inputs.app }}.yml
-          version: ${{ steps.tag.outputs.name }}
+          version: ${{ steps.tag.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -107,13 +110,14 @@ jobs:
         run: |
           mkdir -p changelogs
 
-          cat << EOF > documentation/changelogs/${{inputs.app}}/${{ steps.tag.outputs.name }}.md
+          cat << EOF > documentation/changelogs/${{ inputs.app }}/${{ steps.tag.outputs.date }}.md
+          # ${{ steps.tag.outputs.date }}
           ${{ steps.release-drafter.outputs.body }}
           EOF
 
       - name: Open changelog PR
         uses: peter-evans/create-pull-request@v4
         with:
-          commit-message: "[skip ci] Publish changelog ${{ steps.tag.outputs.name }}"
+          commit-message: "[skip ci] Publish `${{ inputs.app }}` changelog for ${{ steps.tag.outputs.tag }}"
           body: |
             This changelog PR was automatically generated for @${{ github.actor }} as a result of the ${{ github.workflow }} workflow.
