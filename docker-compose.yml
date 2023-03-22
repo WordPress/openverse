@@ -110,6 +110,7 @@ services:
       - api
     build:
       context: ./api/
+      target: api
       args:
         SEMANTIC_VERSION: ${SEMANTIC_VERSION:-v1.0.0}
     image: openverse-api
