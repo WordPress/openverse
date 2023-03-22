@@ -17,7 +17,12 @@ class SimpleRateThrottleHeader(SimpleRateThrottle, metaclass=abc.ABCMeta):
     rate-limit headers in the response.
     """
 
-    def headers(self, suffix=0):
+    def allow_request(self, request, view):
+        is_allowed = super().allow_request(request, view)
+        view.headers |= self.headers()
+        return is_allowed
+
+    def headers(self):
         """
         Get `X-RateLimit-` headers for this particular throttle. Each pair of headers
         contains the limit and the number of requests left in the limit. Since multiple
@@ -25,6 +30,11 @@ class SimpleRateThrottleHeader(SimpleRateThrottle, metaclass=abc.ABCMeta):
         """
 
         headers = {}
+
+        suffix = getattr(self, "scope", None)
+        if suffix is None:
+            return headers
+
         if hasattr(self, "history"):
             headers = {
                 "Limit": self.rate,
