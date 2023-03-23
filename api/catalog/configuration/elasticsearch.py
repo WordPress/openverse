@@ -43,10 +43,14 @@ def _elasticsearch_connect():
     return _es
 
 
-ES = _elasticsearch_connect()
-#: Elasticsearch client, also aliased to connection 'default'
+SETUP_ES = config("SETUP_ES", default=True, cast=bool)
+if SETUP_ES:
+    ES = _elasticsearch_connect()
+    #: Elasticsearch client, also aliased to connection 'default'
 
-connections.add_connection("default", ES)
+    connections.add_connection("default", ES)
+else:
+    ES = None
 
 MEDIA_INDEX_MAPPING = {
     media_type: config(f"{media_type.upper()}_INDEX_NAME", default=media_type)

@@ -52,7 +52,7 @@ async def _make_head_requests(urls: list[str]) -> list[tuple[str, int]]:
     return responses.result()
 
 
-def validate_images(
+def check_dead_links(
     query_hash: str, start_slice: int, results: list[Hit], image_urls: list[str]
 ) -> None:
     """
@@ -64,7 +64,7 @@ def validate_images(
     Results are cached in redis and shared amongst all API servers in the
     cluster.
     """
-    logger = parent_logger.getChild("validate_images")
+    logger = parent_logger.getChild("check_dead_links")
     if not image_urls:
         logger.info("no image urls to validate")
         return
@@ -119,7 +119,14 @@ def validate_images(
     for idx, _ in enumerate(cached_statuses):
         del_idx = len(cached_statuses) - idx - 1
         status = cached_statuses[del_idx]
-        if status == 429 or status == 403:
+        # thingiverse treated as failure despite the suspect status code
+        # due to issues described here:
+        # https://github.com/WordPress/openverse/issues/900
+        if (
+            status == 429
+            or status == 403
+            and results[del_idx]["provider"] != "thingiverse"
+        ):
             logger.warning(
                 "Image validation failed due to rate limiting or blocking. "
                 f"url={image_urls[idx]} "

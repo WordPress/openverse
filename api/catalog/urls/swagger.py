@@ -15,8 +15,8 @@ description_path = settings.BASE_DIR.joinpath(
 with open(description_path) as description_file:
     description = description_file.read()
 
-tos_url = "https://wordpress.github.io/openverse-api/terms_of_service.html"
-license_url = "https://github.com/WordPress/openverse-api/blob/HEAD/LICENSE"
+tos_url = "https://docs.openverse.org/terms_of_service.html"
+license_url = "https://github.com/WordPress/openverse/blob/HEAD/LICENSE"
 logo_url = "https://raw.githubusercontent.com/WordPress/openverse/HEAD/brand/logo.svg"
 open_api_info = openapi.Info(
     title="Openverse API consumer docs",

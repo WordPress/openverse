@@ -48,7 +48,7 @@ DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
 
 ENVIRONMENT = config("ENVIRONMENT", default="local")
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",") + [
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="").split(",") + [
     gethostname(),
     gethostbyname(gethostname()),
 ]
