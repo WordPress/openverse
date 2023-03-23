@@ -29,20 +29,15 @@ class SimpleRateThrottleHeader(SimpleRateThrottle, metaclass=abc.ABCMeta):
         rate limits can apply concurrently, the suffix identifies each pair uniquely.
         """
 
-        headers = {}
-
-        suffix = getattr(self, "scope", None)
-        if suffix is None:
-            return headers
-
-        if hasattr(self, "history"):
-            headers = {
-                "Limit": self.rate,
-                "Available": self.num_requests - len(self.history),
-            }
-
         prefix = "X-RateLimit"
-        return {f"{prefix}-{k}-{suffix}": v for k, v in headers.items()}
+        suffix = self.scope or self.__class__.__name__.lower()
+        if hasattr(self, "history"):
+            return {
+                f"{prefix}-Limit-{suffix}": self.rate,
+                f"{prefix}-Available-{suffix}": self.num_requests - len(self.history),
+            }
+        else:
+            return {}
 
 
 class AbstractAnonRateThrottle(SimpleRateThrottleHeader, metaclass=abc.ABCMeta):
