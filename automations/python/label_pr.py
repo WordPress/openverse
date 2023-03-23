@@ -23,7 +23,7 @@ from shared.log import configure_logger
 log = logging.getLogger(__name__)
 
 REQUIRED_LABEL_CATEGORIES = ["aspect", "priority", "goal", "stack"]
-# Categories where all labels should be retrievd rather than first only
+# Categories where all labels should be retrieved rather than first only
 GET_ALL_LABEL_CATEGORIES = {"stack"}
 
 # region argparse
@@ -150,7 +150,7 @@ def get_linked_issues(url: str) -> list[str]:
 
 def get_all_labels_of_cat(cat: str, labels: list[Label]) -> list[Label]:
     """
-    Get all of the available labels from a category from a given list of
+    Get all the available labels from a category from a given list of
     labels.
 
     :param cat: the category to which the label should belong
@@ -222,7 +222,8 @@ def main():
                 break
     else:
         log.info("Could not find properly labelled issue")
-        pr.set_labels("🚦 status: awaiting triage")
+        # Only add the triage label onto existing labels, don't replace them
+        pr.set_labels("🚦 status: awaiting triage", *pr.get_labels())
 
 
 if __name__ == "__main__":
