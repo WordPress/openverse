@@ -377,10 +377,10 @@ a.button {
 }
 
 .transparent-gray {
-  @apply border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+  @apply border border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
 }
 .transparent-dark {
-  @apply border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal hover:text-white hover:text-dark-charcoal;
+  @apply border border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal hover:text-white hover:text-dark-charcoal;
 }
 
 .primary {
