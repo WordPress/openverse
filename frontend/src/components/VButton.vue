@@ -2,16 +2,17 @@
   <Component
     :is="as"
     :type="typeRef"
-    class="group flex appearance-none items-center justify-center rounded-sm no-underline ring-offset-1 transition-shadow duration-100 ease-linear focus:outline-none"
+    class="group/button flex appearance-none items-center justify-center rounded-sm no-underline"
     :class="[
       $style.button,
       $style[variant],
-      isConnected && $style[`connection-${connections}`],
-      isActive && $style[`${variant}-pressed`],
       $style[`size-${size}`],
-      isPlainDangerous
-        ? ''
-        : 'border border-tx focus-visible:ring focus-visible:ring-pink',
+      {
+        [$style[`${variant}-pressed`]]: isActive,
+        [$style[`connection-${connections}`]]: isConnected,
+        'border border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink':
+          !isPlainDangerous,
+      },
     ]"
     :aria-pressed="pressed"
     :aria-disabled="ariaDisabledRef"
@@ -111,7 +112,7 @@ const VButton = defineComponent({
      */
     size: {
       type: String as PropType<ButtonSize>,
-      default: "medium",
+      default: "medium-old",
     },
     /**
      * Whether the button is disabled. Used alone this will only
@@ -242,15 +243,13 @@ export default VButton
   @apply cursor-not-allowed;
 }
 
-.size-small {
+.size-small-old {
   @apply py-1 px-2;
 }
-
-.size-medium {
+.size-medium-old {
   @apply py-2 px-4;
 }
-
-.size-large {
+.size-large-old {
   @apply py-6 px-8;
 }
 
