@@ -37,7 +37,7 @@ prerequisites.
    ```
 
 4. Run the documentation live server. Once this is done, you should be able to
-   see the documentation on [http://localhost:50230](http://localhost:50230).
+   see the documentation on [http://127.0.0.1:50230](http://127.0.0.1:50230).
 
    ```console
    $ just documentation/live
