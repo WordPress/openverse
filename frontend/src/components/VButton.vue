@@ -6,15 +6,18 @@
     :class="[
       $style.button,
       $style[variant],
-      isConnected && $style[`connection-${connections}`],
-      isActive && $style[`${variant}-pressed`],
       $style[`size-${size}`],
-      hasIconStart && $style[`icon-start-${size}`],
-      hasIconEnd && $style[`icon-end-${size}`],
-      (hasIconEnd || hasIconStart) && 'gap-x-2',
-      variant.startsWith('filled-') && 'focus-slim-filled',
-      variant.startsWith('bordered-') && 'focus-slim-tx',
-      variant.startsWith('transparent-') && 'focus-slim-tx',
+      {
+        [$style[`${variant}-pressed`]]: isActive,
+        [$style[`connection-${connections}`]]: isConnected,
+        [$style[`icon-start-${size}`]]: hasIconStart,
+        [$style[`icon-end-${size}`]]: hasIconEnd,
+        'gap-x-2': hasIconEnd || hasIconStart,
+        'focus-slim-filled': isFilled,
+        'focus-slim-tx': isBordered || isTransparent,
+        'border border-tx ring-offset-1 focus-visible:ring focus-visible:ring-pink':
+          !isPlainDangerous && !isNewVariant,
+      },
     ]"
     :aria-pressed="pressed"
     :aria-disabled="ariaDisabledRef"
@@ -160,10 +163,20 @@ const VButton = defineComponent({
       type: String as PropType<ButtonConnections>,
       default: "none",
     },
+    /**
+     * Whether the button has an icon at the inline start of the button.
+     *
+     * @default false
+     */
     hasIconStart: {
       type: Boolean,
       default: false,
     },
+    /**
+     * Whether the button has an icon at the inline end of the button.
+     *
+     * @default false
+     */
     hasIconEnd: {
       type: Boolean,
       default: false,
@@ -191,6 +204,15 @@ const VButton = defineComponent({
 
     const isPlainDangerous = computed(() => {
       return propsRef.variant.value === "plain--avoid"
+    })
+    const isFilled = computed(() => {
+      return props.variant.startsWith("filled-")
+    })
+    const isBordered = computed(() => {
+      return props.variant.startsWith("bordered-")
+    })
+    const isTransparent = computed(() => {
+      return props.variant.startsWith("transparent-")
     })
 
     watch(
@@ -233,6 +255,15 @@ const VButton = defineComponent({
       { immediate: true }
     )
 
+    // TODO: remove after the Core UI improvements are done
+    const isNewVariant = computed(() => {
+      return (
+        props.variant.startsWith("filled-") ||
+        props.variant.startsWith("bordered-") ||
+        props.variant.startsWith("transparent-")
+      )
+    })
+
     return {
       disabledAttributeRef,
       ariaDisabledRef,
@@ -240,6 +271,10 @@ const VButton = defineComponent({
       isActive,
       isConnected,
       isPlainDangerous,
+      isNewVariant,
+      isFilled,
+      isBordered,
+      isTransparent,
     }
   },
 })
@@ -347,14 +382,14 @@ a.button {
   @apply ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink;
 }
 .primary {
-  @apply border border-tx bg-pink text-white ring-offset-1 hover:border-tx hover:bg-dark-pink hover:text-white focus:outline-none focus-visible:ring focus-visible:ring-pink;
+  @apply border-tx bg-pink text-white hover:border-tx hover:bg-dark-pink hover:text-white;
 }
 .primary-pressed {
   @apply bg-dark-pink;
 }
 
 .secondary {
-  @apply border border-tx bg-tx ring-offset-1 hover:bg-dark-charcoal hover:text-white focus:outline-none focus-visible:ring focus-visible:ring focus-visible:ring-pink focus-visible:ring-pink;
+  @apply border-tx bg-tx hover:bg-dark-charcoal hover:text-white focus-visible:ring focus-visible:ring-pink;
 }
 .secondary-pressed {
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
@@ -365,11 +400,11 @@ a.button {
 }
 
 .secondary-filled {
-  @apply border border-tx bg-dark-charcoal text-white ring-offset-1 hover:bg-dark-charcoal-80 hover:text-white focus:outline-none focus-visible:ring focus-visible:ring focus-visible:ring-pink focus-visible:ring-pink disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
+  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-80 hover:text-white focus-visible:ring focus-visible:ring-pink disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
 }
 
 .secondary-bordered {
-  @apply border border-dark-charcoal bg-tx ring-offset-1 hover:bg-dark-charcoal hover:text-white focus:outline-none focus-visible:border-tx focus-visible:ring focus-visible:ring-pink disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
+  @apply border-dark-charcoal bg-tx hover:bg-dark-charcoal hover:text-white focus-visible:border-tx disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
 }
 .secondary-bordered-pressed {
   @apply bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90 focus-visible:bg-dark-charcoal-90;
@@ -382,7 +417,7 @@ a.button {
 }
 
 .text {
-  @apply border border-tx bg-tx px-0 text-sm font-semibold text-pink ring-offset-1 hover:underline focus:outline-none focus-visible:ring focus-visible:ring-pink;
+  @apply border-tx bg-tx px-0 text-sm font-semibold text-pink hover:underline focus-visible:ring focus-visible:ring-pink;
 }
 
 .text[disabled="disabled"],
@@ -391,14 +426,14 @@ a.button {
 }
 
 .menu {
-  @apply border border-tx bg-white text-dark-charcoal ring-offset-0 focus:outline-none focus-visible:ring focus-visible:ring-pink;
+  @apply border-tx bg-white text-dark-charcoal ring-offset-0;
 }
 .menu-pressed {
   @apply border-tx bg-dark-charcoal text-white;
 }
 
 .action-menu {
-  @apply border border-tx bg-white text-dark-charcoal ring-offset-1 hover:border-dark-charcoal-20 focus:outline-none focus-visible:ring focus-visible:ring-pink group-focus-within:hover:border-tx;
+  @apply border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20 group-focus-within:hover:border-tx;
 }
 .action-menu-pressed {
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
@@ -409,14 +444,14 @@ Similar to `action-menu`, but always has a border, not only on hover.
 https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-id=1684%3A3678
  */
 .action-menu-bordered {
-  @apply border border-dark-charcoal-20 bg-white text-dark-charcoal ring-offset-1 focus:outline-none focus-visible:border-tx focus-visible:ring focus-visible:ring-pink;
+  @apply border-dark-charcoal-20 bg-white text-dark-charcoal focus-visible:border-tx;
 }
 .action-menu-bordered-pressed {
   @apply border-dark-charcoal bg-dark-charcoal text-white hover:bg-dark-charcoal-90;
 }
 
 .action-menu-muted {
-  @apply border border-tx bg-dark-charcoal-10 text-dark-charcoal ring-offset-1 hover:border-dark-charcoal-20 focus:outline-none focus-visible:ring focus-visible:ring-pink;
+  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:border-dark-charcoal-20;
 }
 .action-menu-muted-pressed {
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
@@ -432,7 +467,7 @@ https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-
 }
 
 .action-menu-secondary {
-  @apply border border-tx bg-white text-dark-charcoal ring-offset-1 hover:border-dark-charcoal-20 focus:outline-none focus-visible:ring focus-visible:ring-pink;
+  @apply border border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
 }
 
 .action-menu-secondary-pressed {
@@ -440,7 +475,7 @@ https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-
 }
 
 .full {
-  @apply w-full border border-tx bg-dark-charcoal-06 font-semibold ring-offset-1 hover:bg-dark-charcoal-40 hover:text-white focus:outline-none focus-visible:ring focus-visible:ring-pink;
+  @apply w-full bg-dark-charcoal-06 font-semibold hover:bg-dark-charcoal-40 hover:text-white;
 }
 
 .full-pressed {
@@ -448,7 +483,7 @@ https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-
 }
 
 .dropdown-label {
-  @apply border border-dark-charcoal-20 text-dark-charcoal focus-slim-tx hover:border-tx hover:bg-dark-charcoal hover:text-white focus:outline-none;
+  @apply border border-dark-charcoal-20 text-dark-charcoal focus-slim-tx hover:border-tx hover:bg-dark-charcoal hover:text-white;
 }
 .dropdown-label-pressed {
   @apply border-tx bg-dark-charcoal text-white focus-bold-filled active:hover:border-white;
