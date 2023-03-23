@@ -9,21 +9,24 @@ This is a maintenance DAG that should be run once. If all the null values in
 the `meta_data` column are updated, the DAG will only run the first and the
 last step, logging the statistics.
 """
+import csv
 import logging
 from collections import defaultdict
 from datetime import timedelta
+from tempfile import NamedTemporaryFile
 from textwrap import dedent
-from typing import Literal
 
 from airflow.models import DAG
 from airflow.models.abstractoperator import AbstractOperator
-from airflow.operators.python import BranchPythonOperator, PythonOperator
+from airflow.operators.python import PythonOperator
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.utils.trigger_rule import TriggerRule
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID, XCOM_PULL_TEMPLATE
 from common.licenses import get_license_info_from_license_pair
 from common.loader.sql import RETURN_ROW_COUNT
 from common.slack import send_message
 from common.sql import PostgresHook
+from providers.provider_dag_factory import AWS_CONN_ID, OPENVERSE_BUCKET
 from psycopg2._json import Json
 
 
@@ -52,28 +55,17 @@ def get_null_counts(
     return null_meta_data_count
 
 
-def get_statistics(
-    postgres_conn_id: str,
-    task: AbstractOperator,
-) -> Literal[UPDATE_LICENSE_URL, FINAL_REPORT]:
-    null_meta_data_count = get_null_counts(postgres_conn_id, task)
-
-    next_task = UPDATE_LICENSE_URL if null_meta_data_count > 0 else FINAL_REPORT
-    logger.info(
-        f"There are {null_meta_data_count} records with NULL in meta_data. \n"
-        f"Next step: {next_task}"
-    )
-
-    return next_task
-
-
-def update_license_url(postgres_conn_id: str, task: AbstractOperator) -> dict[str, int]:
+def update_license_url(
+    postgres_conn_id: str, s3_bucket, aws_conn_id, task: AbstractOperator
+) -> dict[str, int]:
     """Add license_url to meta_data batching all records with the same license.
+    :param aws_conn_id: AWS connection id
+    :param s3_bucket: the bucket to upload the invalid items TSV to
     :param task: automatically passed by Airflow, used to set the execution timeout
     :param postgres_conn_id: Postgres connection id
     """
 
-    logger.info("Getting image records without license_url.")
+    logger.info("Getting image records with NULL in meta_data.")
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
         default_statement_timeout=PostgresHook.get_execution_timeout(task),
@@ -85,28 +77,44 @@ def update_license_url(postgres_conn_id: str, task: AbstractOperator) -> dict[st
     FROM image WHERE meta_data IS NULL;"""
     )
     records_with_null_in_metadata = postgres.get_records(select_query)
+    logger.info(f"{len(records_with_null_in_metadata)} records found.")
 
     # Dictionary with license pair as key and list of identifiers as value
     records_to_update = defaultdict(list)
 
     for result in records_with_null_in_metadata:
         identifier, license_, version = result
+        # Some CC0 and PDM licenses are stored as uppercase in the database
+        license_ = license_.lower()
         records_to_update[(license_, version)].append(identifier)
 
     total_updated = 0
     updated_by_license = {}
 
+    invalid_items = []
+
     for (license_, version), identifiers in records_to_update.items():
         *_, license_url = get_license_info_from_license_pair(license_, version)
         if license_url is None:
             logger.info(f"No license pair ({license_}, {version}) in the license map.")
+            for identifier in identifiers:
+                invalid_items.append(
+                    {
+                        "license": license_,
+                        "license_version": version,
+                        "identifier": identifier,
+                    }
+                )
             continue
-        logger.info(f"{len(identifiers):4} items will be updated with {license_url}")
+        logger.info(
+            f"{len(identifiers):4} items will be updated "
+            f"with {license_url} and {license_}."
+        )
         license_url_dict = {"license_url": license_url}
         update_query = dedent(
             f"""
             UPDATE image
-            SET meta_data = {Json(license_url_dict)}
+            SET meta_data = {Json(license_url_dict)}, license='{license_}'
             WHERE identifier IN ({','.join([f"'{r}'" for r in identifiers])});
             """
         )
@@ -118,7 +126,36 @@ def update_license_url(postgres_conn_id: str, task: AbstractOperator) -> dict[st
             updated_by_license[license_url] = updated_count
         total_updated += updated_count
     logger.info(f"Updated {total_updated} rows")
+    # Save the invalid_items to S3 as a TSV
+    save_to_s3(aws_conn_id, invalid_items, s3_bucket)
     return updated_by_license
+
+
+def save_to_s3(aws_conn_id, invalid_items, s3_bucket):
+    """
+    Save the records with invalid license pairs to S3.
+    :param aws_conn_id: AWS connection id
+    :param invalid_items: The list of dictionaries with the invalid items
+    :param s3_bucket: S3 bucket
+    """
+    if not invalid_items:
+        return
+
+    s3_key = "invalid_items.tsv"
+
+    with NamedTemporaryFile(mode="w+", encoding="utf-8") as f:
+        tsv_writer = csv.DictWriter(
+            f, delimiter="\t", fieldnames=["license", "license_version", "identifier"]
+        )
+        tsv_writer.writeheader()
+        for item in invalid_items:
+            tsv_writer.writerow(item)
+        f.seek(0)
+        logger.info(f"Uploading the invalid items to {s3_bucket}:{s3_key}")
+        with open(f.name) as fp:
+            logger.info(fp.read())
+        s3 = S3Hook(aws_conn_id=aws_conn_id)
+        s3.load_file(f.name, s3_key, bucket_name=s3_bucket, replace=True)
 
 
 def final_report(
@@ -175,15 +212,14 @@ dag = DAG(
 )
 
 with dag:
-    get_statistics = BranchPythonOperator(
-        task_id="get_stats",
-        python_callable=get_statistics,
-        op_kwargs={"postgres_conn_id": POSTGRES_CONN_ID},
-    )
     update_license_url = PythonOperator(
         task_id=UPDATE_LICENSE_URL,
         python_callable=update_license_url,
-        op_kwargs={"postgres_conn_id": POSTGRES_CONN_ID},
+        op_kwargs={
+            "postgres_conn_id": POSTGRES_CONN_ID,
+            "s3_bucket": OPENVERSE_BUCKET,
+            "aws_conn_id": AWS_CONN_ID,
+        },
     )
     final_report = PythonOperator(
         task_id=FINAL_REPORT,
@@ -197,7 +233,6 @@ with dag:
         },
     )
 
-    # If there are no records with NULL meta_data, skip the update step
-    # and go straight to the final report
-    get_statistics >> [update_license_url, final_report]
+    # update_license_url only updates the images if there are records
+    # with NULL meta_data that have valid license pairs.
     update_license_url >> final_report
