@@ -37,6 +37,7 @@
         />
         <VCloseButton
           :label="$t('modal.close-content-settings')"
+          variant="filled-white"
           class="self-center ms-auto"
           @close="close"
         />
