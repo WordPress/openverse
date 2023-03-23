@@ -282,6 +282,14 @@ export const currentContentType = async (page: Page) => {
  * so the page should finish rendering before calling `dismissTranslationBanner`.
  */
 export const dismissTranslationBanner = async (page: Page) => {
+  await setCookies(page.context(), {
+    uiDismissedBanners: [
+      "translation-ru",
+      "translation-en",
+      "translation-ar",
+      "translation-es",
+    ],
+  })
   const bannerCloseButton = page.locator(
     '[data-testid="banner-translation"] button'
   )

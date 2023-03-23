@@ -52,7 +52,7 @@ export const useMatchSearchRoutes = () => {
 }
 
 /**
- * Reactive property that returns true only on the `single result` routes.
+ * Reactive property that returns true only on the `single result` and `full-page report` routes.
  * Homepage, search results and other content pages return `false`
  */
 export const useMatchSingleResultRoutes = () => {

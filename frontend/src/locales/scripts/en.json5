@@ -607,6 +607,7 @@
       loading: "Loading...",
     },
     creator: "by {creator}",
+    close: "Close the audio player",
   },
   "play-pause": {
     play: "Play",

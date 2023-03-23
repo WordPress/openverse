@@ -8,6 +8,12 @@
 name: "Deployment: production-api"
 
 on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        type: string
+        required: true
+        description: Image tag to deploy.
   workflow_call:
     inputs:
       tag:
@@ -15,6 +21,9 @@ on:
         required: true
         description: Image tag to deploy.
     secrets:
+      ACCESS_TOKEN:
+        required: true
+        description: GitHub access token.
       AWS_ACCESS_KEY_ID:
         required: true
         description: AWS access key ID.
@@ -28,6 +37,11 @@ on:
         required: true
         description: JSON mapping of GitHub usernames to Slack user IDs.
 
+# Only allow a single deployment workflow (service + environment) to happen at a time
+# If you need to stop an in-progress deployment of a service to force another for
+# the same environment, you'll need to manually cancel it
+concurrency: ${{ github.workflow }}
+
 jobs:
   deploy:
     name: Deploy production-api
@@ -36,6 +50,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Validate initiation user
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            const { data: members } = await github.rest.teams.listMembersInOrg({
+              org: 'WordPress',
+              team_slug: 'openverse-maintainers',
+            });
+            const isAllowed = members.some(m => m.login === "${{ github.actor }}")
+            if (!isAllowed) {
+              throw new Error(
+                "Only GitHub users in the @WordPress/openverse-maintainers "
+                + "team are allowed to run this workflow. If you need to run "
+                + "this workflow, please reach out to that group for help."
+              )
+            }
 
       - name: Set the Slack user
         shell: python
@@ -62,7 +94,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":spinning-cd: A deployment of production-api triggered by <@${{ env.SLACK_USER_ID }}> is starting using the `${{ inputs.tag }}` tag."
+                    "text": ":spinning-cd: A deployment of *production-api* triggered by <@${{ env.SLACK_USER_ID }}> is starting using the `${{ inputs.tag }}` tag."
                   }
                 },
                 {
@@ -188,7 +220,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":tadaco: The deployment of production-api triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *succeeded*."
+                    "text": ":tadaco: The deployment of *production-api* triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *succeeded*."
                   }
                 },
                 {
@@ -216,7 +248,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":alert: The deployment of production-api triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *failed* :alert:"
+                    "text": ":alert: The deployment of *production-api* triggered by <@${{ env.SLACK_USER_ID }}> using the `${{ inputs.tag }}` tag *failed* :alert:"
                   }
                 },
                 {

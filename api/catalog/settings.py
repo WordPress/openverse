@@ -24,7 +24,7 @@ from catalog.configuration.elasticsearch import ES, MEDIA_INDEX_MAPPING
 from catalog.configuration.link_validation_cache import (
     LinkValidationCacheExpiryConfiguration,
 )
-from catalog.configuration.logging import LOGGING
+from catalog.configuration.logging import DJANGO_DB_LOGGING, LOGGING
 
 
 # Build paths inside the project like this: BASE_DIR.join('dir', 'subdir'...)
@@ -48,7 +48,7 @@ DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
 
 ENVIRONMENT = config("ENVIRONMENT", default="local")
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",") + [
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="").split(",") + [
     gethostname(),
     gethostbyname(gethostname()),
 ]
@@ -109,6 +109,13 @@ MIDDLEWARE = [
     "oauth2_provider.middleware.OAuth2TokenMiddleware",
 ]
 
+# WARNING: This should not be run in production long-term as it can impact performance
+if not DEBUG and DJANGO_DB_LOGGING:
+    MIDDLEWARE.append(
+        "catalog.api.middleware.force_debug_cursor_middleware.force_debug_cursor_middleware"  # noqa: E501
+    )
+
+
 SWAGGER_SETTINGS = {
     "DEFAULT_INFO": "catalog.urls.swagger.open_api_info",
     "SECURITY_DEFINITIONS": {},
@@ -138,7 +145,7 @@ REST_FRAMEWORK = {
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.URLPathVersioning",
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
-        "rest_framework.renderers.BrowsableAPIRenderer",
+        "catalog.api.utils.drf_renderer.BrowsableAPIRendererWithoutForms",
         "rest_framework_xml.renderers.XMLRenderer",
     ),
     "DEFAULT_THROTTLE_CLASSES": (
@@ -260,6 +267,11 @@ DATABASES = {
         "USER": config("DJANGO_DATABASE_USER", default="deploy"),
         "PASSWORD": config("DJANGO_DATABASE_PASSWORD", default="deploy"),
         "NAME": config("DJANGO_DATABASE_NAME", default="openledger"),
+        "OPTIONS": {
+            "application_name": config(
+                "DJANGO_DATABASE_APPLICATION_NAME", default="openverse-api"
+            ),
+        },
     },
 }
 

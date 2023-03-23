@@ -168,7 +168,7 @@ breakpoints.describeMobileAndDesktop(() => {
       const filterButtonText = await page
         .locator('[aria-controls="filters"] span:visible')
         .textContent()
-      expect(filterButtonText).toContain("1")
+      expect(filterButtonText).toContain("Filters")
     } else {
       const filtersAriaLabel =
         (await page

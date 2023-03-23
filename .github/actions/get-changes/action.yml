@@ -2,6 +2,9 @@ name: openverse/get-changes
 description: Determine where changes happened in the repository
 
 outputs:
+  changes:
+    description: "JSON array of keys from `.github/filters.yml`"
+    value: ${{ steps.paths-filter.outputs.changes }}
   api:
     description: "'true' if API changes are present"
     value: ${{ steps.paths-filter.outputs.api }}
