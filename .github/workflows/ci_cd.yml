@@ -720,6 +720,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: /tmp/docs
           force_orphan: true
+          cname: docs.openverse.org
 
       - name: Checkout repository # again, to enable cleaning
         uses: actions/checkout@v3
