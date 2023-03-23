@@ -15,6 +15,7 @@
         'gap-x-2': hasIconEnd || hasIconStart,
         'focus-slim-filled': isFilled,
         'focus-slim-tx': isBordered || isTransparent,
+        'description-bold': isNewVariant,
         'border border-tx ring-offset-1 focus-visible:ring focus-visible:ring-pink':
           !isPlainDangerous && !isNewVariant,
       },
@@ -331,49 +332,49 @@ a.button {
 }
 
 .filled-pink {
-  @apply border-0 bg-pink text-base font-semibold leading-[1.3] text-white focus-slim-filled hover:bg-dark-pink hover:text-white;
+  @apply border-0 bg-pink text-white focus-slim-filled hover:bg-dark-pink hover:text-white;
 }
 .filled-pink-pressed {
   @apply bg-dark-pink;
 }
 
 .filled-dark {
-  @apply bg-dark-charcoal text-base font-semibold leading-[1.3] text-white focus-slim-filled hover:bg-dark-charcoal-80 hover:text-white;
+  @apply bg-dark-charcoal text-white focus-slim-filled hover:bg-dark-charcoal-80 hover:text-white;
 }
 .filled-dark-pressed {
   @apply bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
 }
 
 .filled-gray {
-  @apply bg-dark-charcoal-10 text-base font-semibold leading-[1.3] text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 .filled-gray-pressed {
   @apply bg-dark-charcoal-90 text-white hover:border-tx hover:bg-dark-charcoal-80;
 }
 
 .filled-white {
-  @apply bg-white text-base font-semibold leading-[1.3] text-dark-charcoal hover:bg-dark-charcoal-10;
+  @apply bg-white text-dark-charcoal hover:bg-dark-charcoal-10;
 }
 .filled-white-pressed {
   @apply bg-dark-charcoal-10 text-dark-charcoal;
 }
 
 .bordered-gray {
-  @apply border border-dark-charcoal-20 bg-white text-base font-semibold leading-[1.3] text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
+  @apply border border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
 }
 .bordered-gray-pressed {
   @apply border-tx bg-dark-charcoal-10 text-dark-charcoal;
 }
 
 .bordered-dark {
-  @apply border border-dark-charcoal bg-white text-base font-semibold leading-[1.3] text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
+  @apply border border-dark-charcoal bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
 }
 .bordered-dark-pressed {
   @apply border-dark-charcoal bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
 }
 
 .transparent-gray {
-  @apply border-tx bg-white text-base font-semibold leading-[1.3] text-dark-charcoal hover:border-dark-charcoal-20;
+  @apply border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
 }
 .transparent-dark {
   @apply border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal hover:text-white hover:text-dark-charcoal;
