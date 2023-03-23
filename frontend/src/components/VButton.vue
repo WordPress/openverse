@@ -344,7 +344,7 @@ a.button {
   @apply border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal hover:text-white hover:text-dark-charcoal;
 }
 .plain {
-  @apply border border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink;
+  @apply ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink;
 }
 .primary {
   @apply border border-tx bg-pink text-white ring-offset-1 hover:border-tx hover:bg-dark-pink hover:text-white focus:outline-none focus-visible:ring focus-visible:ring-pink;
