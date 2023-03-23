@@ -19,6 +19,22 @@ export const buttonVariants = [
   "full",
   "dropdown-label",
   "dropdown-label-pressed",
+  "filled-pink",
+  "filled-pink-pressed",
+  "filled-dark",
+  "filled-dark-pressed",
+  "filled-gray",
+  "filled-gray-pressed",
+  "filled-white",
+  "filled-white-pressed",
+  "bordered-gray",
+  "bordered-gray-pressed",
+  "bordered-dark",
+  "bordered-dark-pressed",
+  "transparent-gray",
+  "transparent-gray-pressed",
+  "transparent-dark",
+  "transparent-dark-pressed",
 ] as const
 export type ButtonVariant = typeof buttonVariants[number]
 

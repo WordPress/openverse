@@ -10,8 +10,15 @@
       {
         [$style[`${variant}-pressed`]]: isActive,
         [$style[`connection-${connections}`]]: isConnected,
-        'border border-tx ring-offset-1 focus-visible:outline-none focus-visible:ring focus-visible:ring-pink':
-          !isPlainDangerous,
+        [$style[`icon-start-${size}`]]: hasIconStart,
+        [$style[`icon-end-${size}`]]: hasIconEnd,
+        'gap-x-2': hasIconEnd || hasIconStart,
+        // Custom tailwind classes don't work with CSS modules in Vue.
+        'focus-slim-filled': isFilled,
+        'focus-slim-tx': isBordered || isTransparent,
+        'description-bold': isNewVariant,
+        'border border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink':
+          !isPlainDangerous && !isNewVariant,
       },
     ]"
     :aria-pressed="pressed"
@@ -158,6 +165,24 @@ const VButton = defineComponent({
       type: String as PropType<ButtonConnections>,
       default: "none",
     },
+    /**
+     * Whether the button has an icon at the inline start of the button.
+     *
+     * @default false
+     */
+    hasIconStart: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * Whether the button has an icon at the inline end of the button.
+     *
+     * @default false
+     */
+    hasIconEnd: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props, { attrs }) {
     const propsRef = toRefs(props)
@@ -181,6 +206,15 @@ const VButton = defineComponent({
 
     const isPlainDangerous = computed(() => {
       return propsRef.variant.value === "plain--avoid"
+    })
+    const isFilled = computed(() => {
+      return props.variant.startsWith("filled-")
+    })
+    const isBordered = computed(() => {
+      return props.variant.startsWith("bordered-")
+    })
+    const isTransparent = computed(() => {
+      return props.variant.startsWith("transparent-")
     })
 
     watch(
@@ -223,6 +257,15 @@ const VButton = defineComponent({
       { immediate: true }
     )
 
+    // TODO: remove after the Core UI improvements are done
+    const isNewVariant = computed(() => {
+      return (
+        props.variant.startsWith("filled-") ||
+        props.variant.startsWith("bordered-") ||
+        props.variant.startsWith("transparent-")
+      )
+    })
+
     return {
       disabledAttributeRef,
       ariaDisabledRef,
@@ -230,6 +273,10 @@ const VButton = defineComponent({
       isActive,
       isConnected,
       isPlainDangerous,
+      isNewVariant,
+      isFilled,
+      isBordered,
+      isTransparent,
     }
   },
 })
@@ -253,8 +300,87 @@ export default VButton
   @apply py-6 px-8;
 }
 
+.size-small {
+  @apply h-8 py-0 px-3;
+}
+.icon-start-small {
+  @apply ps-1;
+}
+.icon-end-small {
+  @apply pe-1;
+}
+
+.size-medium {
+  @apply h-10 py-0 px-4;
+}
+.icon-start-medium {
+  @apply ps-3;
+}
+.icon-end-medium {
+  @apply pe-3;
+}
+
+.size-large {
+  @apply h-12 py-0 px-6;
+}
+.icon-start-large {
+  @apply ps-5;
+}
+.icon-end-large {
+  @apply pe-5;
+}
+
 a.button {
   @apply no-underline hover:no-underline;
+}
+
+.filled-pink {
+  @apply border-0 bg-pink text-white focus-slim-filled hover:bg-dark-pink hover:text-white;
+}
+.filled-pink-pressed {
+  @apply bg-dark-pink;
+}
+
+.filled-dark {
+  @apply bg-dark-charcoal text-white focus-slim-filled hover:bg-dark-charcoal-80 hover:text-white;
+}
+.filled-dark-pressed {
+  @apply bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
+}
+
+.filled-gray {
+  @apply bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+}
+.filled-gray-pressed {
+  @apply bg-dark-charcoal-90 text-white hover:border-tx hover:bg-dark-charcoal-80;
+}
+
+.filled-white {
+  @apply bg-white text-dark-charcoal hover:bg-dark-charcoal-10;
+}
+.filled-white-pressed {
+  @apply bg-dark-charcoal-10 text-dark-charcoal;
+}
+
+.bordered-gray {
+  @apply border border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
+}
+.bordered-gray-pressed {
+  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal;
+}
+
+.bordered-dark {
+  @apply border border-dark-charcoal bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
+}
+.bordered-dark-pressed {
+  @apply border-dark-charcoal bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
+}
+
+.transparent-gray {
+  @apply border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+}
+.transparent-dark {
+  @apply border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal hover:text-white hover:text-dark-charcoal;
 }
 
 .primary {
