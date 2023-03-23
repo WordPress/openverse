@@ -7,7 +7,7 @@
     size="disabled"
     variant="plain--avoid"
     v-bind="tabProps"
-    class="rounded-none border-0 bg-white focus-visible:shadow-[0_0_0_1.5px_#c52b9b_inset]"
+    class="rounded-none bg-white focus-slim-tx"
     :class="[
       $style[variant],
       $style[`size-${size}`],
