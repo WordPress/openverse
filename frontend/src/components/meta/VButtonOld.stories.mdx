@@ -5,11 +5,25 @@ import {
   Meta,
   Story,
 } from "@storybook/addon-docs"
-import { buttonForms, buttonSizes, buttonVariants } from "~/types/button"
+import {
+  buttonForms,
+  buttonSizes as allButtonSizes,
+  buttonVariants as allButtonVariants,
+} from "~/types/button"
 import VButton from "~/components/VButton.vue"
 import { capital } from "case"
 
 <Meta title="Components/VButtonOld" components={VButton} />
+
+export const buttonVariants = allButtonVariants.filter(
+  (variant) =>
+    !variant.startsWith("filled-") &&
+    !variant.startsWith("bordered-") &&
+    !variant.startsWith("transparent-")
+)
+export const buttonSizes = allButtonSizes.filter(
+  (size) => size.endsWith("-old") || size === "disabled"
+)
 
 export const Template = (args) => ({
   template: `

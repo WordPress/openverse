@@ -5,7 +5,11 @@ import {
   Meta,
   Story,
 } from "@storybook/addon-docs"
-import { buttonForms, buttonSizes, buttonVariants } from "~/types/button"
+import {
+  buttonForms,
+  buttonSizes as allButtonSizes,
+  buttonVariants as allButtonVariants,
+} from "~/types/button"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import { capital } from "case"
@@ -14,6 +18,16 @@ import replayIcon from "~/assets/icons/replay.svg"
 import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 <Meta title="Components/VButton" components={VButton} />
+
+export const buttonVariants = allButtonVariants.filter(
+  (variant) =>
+    variant.startsWith("filled-") ||
+    variant.startsWith("bordered-") ||
+    variant.startsWith("transparent-")
+)
+export const buttonSizes = allButtonSizes.filter(
+  (size) => !size.endsWith("-old")
+)
 
 export const Template = (args) => ({
   template: `
@@ -71,11 +85,13 @@ export const TemplateWithIcons = (args) => ({
       variant: {
         options: buttonVariants,
         control: { type: "select" },
+        defaultValue: "filled-pink",
       },
       pressed: { control: "boolean" },
       size: {
         options: buttonSizes,
         control: { type: "radio" },
+        defaultValue: "medium",
       },
       disabled: { control: "boolean" },
       focusableWhenDisabled: { control: "boolean" },
@@ -125,6 +141,7 @@ These buttons have a solid background color and no border.
       size: {
         options: buttonSizes,
         control: { type: "radio" },
+        defaultValue: "medium",
       },
       disabled: { control: "boolean" },
     }}
@@ -146,6 +163,7 @@ These buttons have a white background and a border.
       size: {
         options: buttonSizes,
         control: { type: "radio" },
+        defaultValue: "medium",
       },
       disabled: { control: "boolean" },
     }}
@@ -169,6 +187,7 @@ These buttons are transparent and don't have a border in resting state.
       size: {
         options: buttonSizes,
         control: { type: "radio" },
+        defaultValue: "medium",
       },
       disabled: { control: "boolean" },
     }}
@@ -187,6 +206,7 @@ These buttons are transparent and don't have a border in resting state.
       size: {
         options: buttonSizes,
         control: { type: "radio" },
+        defaultValue: "medium",
       },
       variant: {
         options: [
@@ -200,6 +220,7 @@ These buttons are transparent and don't have a border in resting state.
           "transparent-dark",
         ],
         control: { type: "select" },
+        defaultValue: "bordered-dark",
       },
       disabled: { control: "boolean" },
     }}
