@@ -12,6 +12,7 @@ from catalog.api.utils.throttle import (
     AbstractAnonRateThrottle,
     AbstractOAuth2IdRateThrottle,
     BurstRateThrottle,
+    TenPerDay,
 )
 
 
@@ -155,3 +156,21 @@ def test_rate_limit_headers(request_factory):
             ("X-RateLimit-Limit-anon_burst", f"{limit}/hour"),
             ("X-RateLimit-Available-anon_burst", str(max(0, limit - idx))),
         ] == headers
+
+
+@pytest.mark.django_db
+def test_rate_limit_headers_when_no_scope(request_factory):
+    cache.clear()  # This is needed between multiple runs on the same computer.
+
+    class ThrottledImagesView(APIView):
+        throttle_classes = [TenPerDay]
+
+    view = ThrottledImagesView().as_view()
+    request = request_factory.get("/")
+
+    response = view(request)
+    headers = [h for h in response.headers.items() if "X-RateLimit" in h[0]]
+    assert [
+        ("X-RateLimit-Limit-tenperday", "10/day"),
+        ("X-RateLimit-Available-tenperday", "9"),
+    ] == headers
