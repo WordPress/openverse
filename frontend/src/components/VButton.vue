@@ -13,6 +13,7 @@
         [$style[`icon-start-${size}`]]: hasIconStart,
         [$style[`icon-end-${size}`]]: hasIconEnd,
         'gap-x-2': hasIconEnd || hasIconStart,
+        // Custom tailwind classes don't work with CSS modules in Vue.
         'focus-slim-filled': isFilled,
         'focus-slim-tx': isBordered || isTransparent,
         'description-bold': isNewVariant,
