@@ -1,5 +1,6 @@
 from test.factory.models.oauth2 import AccessTokenFactory
 
+from django.core.cache import cache
 from rest_framework.test import force_authenticate
 from rest_framework.views import APIView
 
@@ -129,8 +130,11 @@ def test_abstract_oauth2_id_rate_throttle_does_not_apply_if_token_app_rate_limit
 
 @pytest.mark.django_db
 def test_rate_limit_headers(request_factory):
+    cache.clear()  # This is needed between multiple runs on the same computer.
+    limit = 2
+
     class DummyThrottle(BurstRateThrottle):
-        THROTTLE_RATES = {"anon_burst": "2/hour"}
+        THROTTLE_RATES = {"anon_burst": f"{limit}/hour"}
 
     class ThrottledImagesView(APIView):
         throttle_classes = [DummyThrottle]
@@ -139,11 +143,15 @@ def test_rate_limit_headers(request_factory):
     request = request_factory.get("/")
 
     # Send three requests. The third one should be throttled.
-    for _ in range(3):
+    for idx in range(1, limit + 2):
         response = view(request)
+        headers = [h for h in response.headers.items() if "X-RateLimit" in h[0]]
 
-    headers = [h for h in response.headers.items() if "X-RateLimit" in h[0]]
-    assert [
-        ("X-RateLimit-Limit-anon_burst", "2/hour"),
-        ("X-RateLimit-Available-anon_burst", "0"),
-    ] == headers
+        # Assert that request returns 429 response if limit has been exceeded.
+        assert response.status_code == 429 if idx == limit + 1 else 200
+
+        # Assert that the 'Available' header constantly decrements, but not below zero.
+        assert [
+            ("X-RateLimit-Limit-anon_burst", f"{limit}/hour"),
+            ("X-RateLimit-Available-anon_burst", str(max(0, limit - idx))),
+        ] == headers
