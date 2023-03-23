@@ -2,7 +2,7 @@
 
 ## Reviewers
 
-- [ ] @dhruvkb
+- [x] @obulat
 - [x] @zackkrida
 
 ## Project summary
