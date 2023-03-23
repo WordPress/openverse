@@ -2,17 +2,19 @@
   <Component
     :is="as"
     :type="typeRef"
-    class="group flex appearance-none items-center justify-center rounded-sm no-underline focus:outline-none"
+    class="group/button flex appearance-none items-center justify-center rounded-sm no-underline"
     :class="[
       $style.button,
       $style[variant],
       isConnected && $style[`connection-${connections}`],
       isActive && $style[`${variant}-pressed`],
       $style[`size-${size}`],
-      isPlainDangerous ? '' : 'border border-tx',
       hasIconStart && $style[`icon-start-${size}`],
       hasIconEnd && $style[`icon-end-${size}`],
       (hasIconEnd || hasIconStart) && 'gap-x-2',
+      variant.startsWith('filled-') && 'focus-slim-filled',
+      variant.startsWith('bordered-') && 'focus-slim-tx',
+      variant.startsWith('transparent-') && 'focus-slim-tx',
     ]"
     :aria-pressed="pressed"
     :aria-disabled="ariaDisabledRef"
@@ -112,7 +114,7 @@ const VButton = defineComponent({
      */
     size: {
       type: String as PropType<ButtonSize>,
-      default: "medium",
+      default: "medium-old",
     },
     /**
      * Whether the button is disabled. Used alone this will only
@@ -250,7 +252,15 @@ export default VButton
 .button[aria-disabled="true"] {
   @apply cursor-not-allowed;
 }
-
+.size-small-old {
+  @apply py-1 px-2;
+}
+.size-large-old {
+  @apply py-6 px-8;
+}
+.size-medium-old {
+  @apply py-2 px-4;
+}
 .size-small {
   @apply h-8 py-0 px-3;
 }
@@ -286,31 +296,31 @@ a.button {
 }
 
 .filled-pink {
-  @apply border-0 bg-pink text-base font-semibold leading-[1.3] text-white hover:bg-dark-pink hover:text-white;
+  @apply border-0 bg-pink text-base font-semibold leading-[1.3] text-white focus-slim-filled hover:bg-dark-pink hover:text-white;
 }
 .filled-pink-pressed {
   @apply bg-dark-pink;
 }
 
 .filled-dark {
-  @apply border-0 bg-dark-charcoal text-base font-semibold leading-[1.3] text-white hover:bg-dark-charcoal-80 hover:text-white;
+  @apply bg-dark-charcoal text-base font-semibold leading-[1.3] text-white focus-slim-filled hover:bg-dark-charcoal-80 hover:text-white;
 }
 .filled-dark-pressed {
-  @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
+  @apply bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
 }
 
 .filled-gray {
-  @apply border-0 bg-dark-charcoal-10 text-base font-semibold leading-[1.3] text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply bg-dark-charcoal-10 text-base font-semibold leading-[1.3] text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 .filled-gray-pressed {
-  @apply border-tx bg-dark-charcoal-90 text-white hover:border-tx hover:bg-dark-charcoal-80;
+  @apply bg-dark-charcoal-90 text-white hover:border-tx hover:bg-dark-charcoal-80;
 }
 
 .filled-white {
-  @apply border-0 bg-white text-base font-semibold leading-[1.3] text-dark-charcoal hover:bg-dark-charcoal-10;
+  @apply bg-white text-base font-semibold leading-[1.3] text-dark-charcoal hover:bg-dark-charcoal-10;
 }
 .filled-white-pressed {
-  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal;
+  @apply bg-dark-charcoal-10 text-dark-charcoal;
 }
 
 .bordered-gray {
@@ -334,17 +344,17 @@ a.button {
   @apply border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal hover:text-white hover:text-dark-charcoal;
 }
 .plain {
-  @apply ring-offset-1 focus-visible:ring focus-visible:ring-pink;
+  @apply border border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink;
 }
 .primary {
-  @apply border-tx bg-pink text-white ring-offset-1 hover:border-tx hover:bg-dark-pink hover:text-white focus-visible:ring focus-visible:ring-pink;
+  @apply border border-tx bg-pink text-white ring-offset-1 hover:border-tx hover:bg-dark-pink hover:text-white focus:outline-none focus-visible:ring focus-visible:ring-pink;
 }
 .primary-pressed {
   @apply bg-dark-pink;
 }
 
 .secondary {
-  @apply border-tx bg-tx ring-offset-1 hover:bg-dark-charcoal hover:text-white focus-visible:ring focus-visible:ring focus-visible:ring-pink focus-visible:ring-pink;
+  @apply border border-tx bg-tx ring-offset-1 hover:bg-dark-charcoal hover:text-white focus:outline-none focus-visible:ring focus-visible:ring focus-visible:ring-pink focus-visible:ring-pink;
 }
 .secondary-pressed {
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
@@ -355,11 +365,11 @@ a.button {
 }
 
 .secondary-filled {
-  @apply border-tx bg-dark-charcoal text-white ring-offset-1 hover:bg-dark-charcoal-80 hover:text-white focus-visible:ring focus-visible:ring focus-visible:ring-pink focus-visible:ring-pink disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
+  @apply border border-tx bg-dark-charcoal text-white ring-offset-1 hover:bg-dark-charcoal-80 hover:text-white focus:outline-none focus-visible:ring focus-visible:ring focus-visible:ring-pink focus-visible:ring-pink disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
 }
 
 .secondary-bordered {
-  @apply border-dark-charcoal bg-tx ring-offset-1 hover:bg-dark-charcoal hover:text-white focus-visible:border-tx focus-visible:ring focus-visible:ring-pink disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
+  @apply border border-dark-charcoal bg-tx ring-offset-1 hover:bg-dark-charcoal hover:text-white focus:outline-none focus-visible:border-tx focus-visible:ring focus-visible:ring-pink disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
 }
 .secondary-bordered-pressed {
   @apply bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90 focus-visible:bg-dark-charcoal-90;
@@ -372,7 +382,7 @@ a.button {
 }
 
 .text {
-  @apply border-tx bg-tx px-0 text-sm font-semibold text-pink ring-offset-1 hover:underline focus-visible:ring focus-visible:ring-pink;
+  @apply border border-tx bg-tx px-0 text-sm font-semibold text-pink ring-offset-1 hover:underline focus:outline-none focus-visible:ring focus-visible:ring-pink;
 }
 
 .text[disabled="disabled"],
@@ -381,14 +391,14 @@ a.button {
 }
 
 .menu {
-  @apply border-tx bg-white text-dark-charcoal ring-offset-0 focus-visible:ring focus-visible:ring-pink;
+  @apply border border-tx bg-white text-dark-charcoal ring-offset-0 focus:outline-none focus-visible:ring focus-visible:ring-pink;
 }
 .menu-pressed {
   @apply border-tx bg-dark-charcoal text-white;
 }
 
 .action-menu {
-  @apply border-tx bg-white text-dark-charcoal ring-offset-1 hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink group-focus-within:hover:border-tx;
+  @apply border border-tx bg-white text-dark-charcoal ring-offset-1 hover:border-dark-charcoal-20 focus:outline-none focus-visible:ring focus-visible:ring-pink group-focus-within:hover:border-tx;
 }
 .action-menu-pressed {
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
@@ -399,14 +409,14 @@ Similar to `action-menu`, but always has a border, not only on hover.
 https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-id=1684%3A3678
  */
 .action-menu-bordered {
-  @apply border-dark-charcoal-20 bg-white text-dark-charcoal ring-offset-1 focus-visible:border-tx focus-visible:ring focus-visible:ring-pink;
+  @apply border border-dark-charcoal-20 bg-white text-dark-charcoal ring-offset-1 focus:outline-none focus-visible:border-tx focus-visible:ring focus-visible:ring-pink;
 }
 .action-menu-bordered-pressed {
   @apply border-dark-charcoal bg-dark-charcoal text-white hover:bg-dark-charcoal-90;
 }
 
 .action-menu-muted {
-  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal ring-offset-1 hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
+  @apply border border-tx bg-dark-charcoal-10 text-dark-charcoal ring-offset-1 hover:border-dark-charcoal-20 focus:outline-none focus-visible:ring focus-visible:ring-pink;
 }
 .action-menu-muted-pressed {
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
@@ -422,7 +432,7 @@ https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-
 }
 
 .action-menu-secondary {
-  @apply border border-tx bg-white text-dark-charcoal ring-offset-1 hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
+  @apply border border-tx bg-white text-dark-charcoal ring-offset-1 hover:border-dark-charcoal-20 focus:outline-none focus-visible:ring focus-visible:ring-pink;
 }
 
 .action-menu-secondary-pressed {
@@ -430,7 +440,7 @@ https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-
 }
 
 .full {
-  @apply w-full bg-dark-charcoal-06 font-semibold ring-offset-1 hover:bg-dark-charcoal-40 hover:text-white focus-visible:ring focus-visible:ring-pink;
+  @apply w-full border border-tx bg-dark-charcoal-06 font-semibold ring-offset-1 hover:bg-dark-charcoal-40 hover:text-white focus:outline-none focus-visible:ring focus-visible:ring-pink;
 }
 
 .full-pressed {
@@ -438,7 +448,7 @@ https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-
 }
 
 .dropdown-label {
-  @apply border border-dark-charcoal-20 text-dark-charcoal focus-slim-tx hover:border-tx hover:bg-dark-charcoal hover:text-white;
+  @apply border border-dark-charcoal-20 text-dark-charcoal focus-slim-tx hover:border-tx hover:bg-dark-charcoal hover:text-white focus:outline-none;
 }
 .dropdown-label-pressed {
   @apply border-tx bg-dark-charcoal text-white focus-bold-filled active:hover:border-white;

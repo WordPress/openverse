@@ -6,7 +6,7 @@
   >
     <template #default="{ iconSize }">
       <span
-        class="relative flex flex-shrink-0 flex-grow-0 items-center justify-center rounded-sm group-focus-visible:ring group-focus-visible:ring-pink group-active:ring group-active:ring-pink"
+        class="relative flex flex-shrink-0 flex-grow-0 items-center justify-center rounded-sm group-focus-visible/button:ring group-focus-visible/button:ring-pink group-active/button:ring group-active/button:ring-pink"
         :class="[`h-${innerSize} w-${innerSize}`, innerAreaClasses]"
       >
         <VIcon
