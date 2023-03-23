@@ -7,6 +7,7 @@ DAG. Report suggestions for new sub-providers to Slack.
 """
 
 import logging
+from typing import NamedTuple
 
 from airflow import DAG
 from airflow.exceptions import AirflowSkipException
@@ -23,6 +24,21 @@ logger = logging.getLogger(__name__)
 
 DAG_ID = "flickr_audit_sub_provider_workflow"
 MAX_ACTIVE = 1
+
+
+class SuggestedSubProvider(NamedTuple):
+    """
+    A Flickr Commons institution which should be considered for addition as a
+    Flickr sub-provider.
+
+    name:     The name of the institution
+    nsid:     The unique id of the institution
+    cc_count: The number of CC-licensed images for this institution
+    """
+
+    name: str
+    nsid: str
+    cc_count: int
 
 
 class FlickrSubProviderAuditor:
@@ -101,7 +117,7 @@ class FlickrSubProviderAuditor:
         return count
 
     def get_new_institutions_with_cc_licensed_images(self):
-        new_institutions_with_cc_images = []
+        new_institutions_with_cc_images: list[SuggestedSubProvider] = []
 
         # Get the full list of Flickr commons institutions from the API
         institutions = self.get_institutions()
@@ -130,7 +146,9 @@ class FlickrSubProviderAuditor:
 
             # Otherwise, consider this institution for addition as a
             # sub-provider.
-            new_institutions_with_cc_images.append((name, nsid, cc_count))
+            new_institutions_with_cc_images.append(
+                SuggestedSubProvider(name, nsid, cc_count)
+            )
 
         return new_institutions_with_cc_images
 
