@@ -18,9 +18,8 @@ Search Experience
 
 ## Requirements
 
-- Update the `VButton` component following the
-  [design](https://www.figma.com/file/es303VxVr0C7rFTcOe3OXL/Core-interface-improvement?t=DQpJvKZ9UCsfeWO8-0)
-  definition.
+Update the `VButton` component following the design specs and audit
+[documentation](https://www.figma.com/file/es303VxVr0C7rFTcOe3OXL/Core-interface-improvement?t=DQpJvKZ9UCsfeWO8-0).
 
 ## Success
 
@@ -31,6 +30,7 @@ Search Experience
 ## Participants and stakeholders
 
 - Design: @panchovm
+- Implementation: @obulat
 
 ## Marketing
 
