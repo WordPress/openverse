@@ -8,16 +8,15 @@ const buttonLocator = "text=Code is Poetry"
 
 test.describe.configure({ mode: "parallel" })
 
-const newButtonVariants = buttonVariants.filter(
+const oldButtonVariants = buttonVariants.filter(
   (name) =>
-    name.startsWith("filled-") ||
-    name.startsWith("bordered-") ||
-    name.startsWith("transparent-")
+    !name.startsWith("filled-") &&
+    !name.startsWith("bordered-") &&
+    !name.startsWith("transparent-")
 )
-
 test.describe("VButton", () => {
-  const gotoWithArgs = makeGotoWithArgs("components-vbutton--v-button")
-  const nonPressedVariants = newButtonVariants.filter(
+  const gotoWithArgs = makeGotoWithArgs("components-vbuttonold--v-button")
+  const nonPressedVariants = oldButtonVariants.filter(
     (name) => !name.endsWith("pressed")
   )
   for (const variant of nonPressedVariants) {

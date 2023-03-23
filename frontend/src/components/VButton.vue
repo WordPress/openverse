@@ -2,14 +2,14 @@
   <Component
     :is="as"
     :type="typeRef"
-    class="group/button description-bold flex appearance-none items-center justify-center rounded-sm no-underline focus:outline-none"
+    class="group flex appearance-none items-center justify-center rounded-sm no-underline focus:outline-none"
     :class="[
       $style.button,
       $style[variant],
       isConnected && $style[`connection-${connections}`],
       isActive && $style[`${variant}-pressed`],
       $style[`size-${size}`],
-      isPlainDangerous ? '' : 'border border-tx focus-slim-filled',
+      isPlainDangerous ? '' : 'border border-tx',
       hasIconStart && $style[`icon-start-${size}`],
       hasIconEnd && $style[`icon-end-${size}`],
       (hasIconEnd || hasIconStart) && 'gap-x-2',
@@ -286,63 +286,65 @@ a.button {
 }
 
 .filled-pink {
-  @apply border-tx bg-pink text-white hover:border-tx hover:bg-dark-pink hover:text-white;
+  @apply border-0 bg-pink text-base font-semibold leading-[1.3] text-white hover:bg-dark-pink hover:text-white;
 }
 .filled-pink-pressed {
   @apply bg-dark-pink;
 }
 
 .filled-dark {
-  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-80 hover:text-white;
+  @apply border-0 bg-dark-charcoal text-base font-semibold leading-[1.3] text-white hover:bg-dark-charcoal-80 hover:text-white;
 }
 .filled-dark-pressed {
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
 }
 
 .filled-gray {
-  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply border-0 bg-dark-charcoal-10 text-base font-semibold leading-[1.3] text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 .filled-gray-pressed {
   @apply border-tx bg-dark-charcoal-90 text-white hover:border-tx hover:bg-dark-charcoal-80;
 }
 
 .filled-white {
-  @apply border-tx bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal-10;
+  @apply border-0 bg-white text-base font-semibold leading-[1.3] text-dark-charcoal hover:bg-dark-charcoal-10;
 }
 .filled-white-pressed {
   @apply border-tx bg-dark-charcoal-10 text-dark-charcoal;
 }
 
 .bordered-gray {
-  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
+  @apply border border-dark-charcoal-20 bg-white text-base font-semibold leading-[1.3] text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
 }
 .bordered-gray-pressed {
   @apply border-tx bg-dark-charcoal-10 text-dark-charcoal;
 }
 
 .bordered-dark {
-  @apply border-dark-charcoal bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
+  @apply border border-dark-charcoal bg-white text-base font-semibold leading-[1.3] text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
 }
 .bordered-dark-pressed {
   @apply border-dark-charcoal bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
 }
 
 .transparent-gray {
-  @apply border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+  @apply border-tx bg-white text-base font-semibold leading-[1.3] text-dark-charcoal hover:border-dark-charcoal-20;
 }
 .transparent-dark {
   @apply border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal hover:text-white hover:text-dark-charcoal;
 }
-
+.plain {
+  @apply ring-offset-1 focus-visible:ring focus-visible:ring-pink;
+}
 .primary {
-  @apply border-tx bg-pink text-white hover:border-tx hover:bg-dark-pink hover:text-white;
+  @apply border-tx bg-pink text-white ring-offset-1 hover:border-tx hover:bg-dark-pink hover:text-white focus-visible:ring focus-visible:ring-pink;
 }
 .primary-pressed {
   @apply bg-dark-pink;
 }
 
 .secondary {
-  @apply border-tx bg-tx hover:bg-dark-charcoal hover:text-white focus-visible:ring focus-visible:ring-pink;
+  @apply border-tx bg-tx ring-offset-1 hover:bg-dark-charcoal hover:text-white focus-visible:ring focus-visible:ring focus-visible:ring-pink focus-visible:ring-pink;
 }
 .secondary-pressed {
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
@@ -353,11 +355,11 @@ a.button {
 }
 
 .secondary-filled {
-  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-80 hover:text-white focus-visible:ring focus-visible:ring-pink disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
+  @apply border-tx bg-dark-charcoal text-white ring-offset-1 hover:bg-dark-charcoal-80 hover:text-white focus-visible:ring focus-visible:ring focus-visible:ring-pink focus-visible:ring-pink disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
 }
 
 .secondary-bordered {
-  @apply border-dark-charcoal bg-tx hover:bg-dark-charcoal hover:text-white focus-visible:border-tx disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
+  @apply border-dark-charcoal bg-tx ring-offset-1 hover:bg-dark-charcoal hover:text-white focus-visible:border-tx focus-visible:ring focus-visible:ring-pink disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
 }
 .secondary-bordered-pressed {
   @apply bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90 focus-visible:bg-dark-charcoal-90;
@@ -370,7 +372,7 @@ a.button {
 }
 
 .text {
-  @apply border-tx bg-tx px-0 text-sm font-semibold text-pink hover:underline focus-visible:ring focus-visible:ring-pink;
+  @apply border-tx bg-tx px-0 text-sm font-semibold text-pink ring-offset-1 hover:underline focus-visible:ring focus-visible:ring-pink;
 }
 
 .text[disabled="disabled"],
@@ -379,14 +381,14 @@ a.button {
 }
 
 .menu {
-  @apply border-tx bg-white text-dark-charcoal ring-offset-0;
+  @apply border-tx bg-white text-dark-charcoal ring-offset-0 focus-visible:ring focus-visible:ring-pink;
 }
 .menu-pressed {
   @apply border-tx bg-dark-charcoal text-white;
 }
 
 .action-menu {
-  @apply border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20 group-focus-within:hover:border-tx;
+  @apply border-tx bg-white text-dark-charcoal ring-offset-1 hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink group-focus-within:hover:border-tx;
 }
 .action-menu-pressed {
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
@@ -397,14 +399,14 @@ Similar to `action-menu`, but always has a border, not only on hover.
 https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-id=1684%3A3678
  */
 .action-menu-bordered {
-  @apply border-dark-charcoal-20 bg-white text-dark-charcoal focus-visible:border-tx;
+  @apply border-dark-charcoal-20 bg-white text-dark-charcoal ring-offset-1 focus-visible:border-tx focus-visible:ring focus-visible:ring-pink;
 }
 .action-menu-bordered-pressed {
   @apply border-dark-charcoal bg-dark-charcoal text-white hover:bg-dark-charcoal-90;
 }
 
 .action-menu-muted {
-  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:border-dark-charcoal-20;
+  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal ring-offset-1 hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
 }
 .action-menu-muted-pressed {
   @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
@@ -420,7 +422,7 @@ https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-
 }
 
 .action-menu-secondary {
-  @apply border border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+  @apply border border-tx bg-white text-dark-charcoal ring-offset-1 hover:border-dark-charcoal-20 focus-visible:ring focus-visible:ring-pink;
 }
 
 .action-menu-secondary-pressed {
@@ -428,7 +430,7 @@ https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-
 }
 
 .full {
-  @apply w-full bg-dark-charcoal-06 font-semibold hover:bg-dark-charcoal-40 hover:text-white;
+  @apply w-full bg-dark-charcoal-06 font-semibold ring-offset-1 hover:bg-dark-charcoal-40 hover:text-white focus-visible:ring focus-visible:ring-pink;
 }
 
 .full-pressed {
