@@ -809,6 +809,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: /tmp/gh-pages
           force_orphan: true
+          cname: docs.openverse.org
 
       - uses: peter-evans/find-comment@v2
         id: final-preview-comment
