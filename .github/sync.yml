@@ -39,6 +39,9 @@ group:
           component_spec.md
           design_changes.md
           project_thread.md
+      # Other config
+      - source: .ruff.toml
+        dest: .ruff.toml
 
   # prettier.config.js
   - repos: |
