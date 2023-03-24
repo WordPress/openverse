@@ -84,6 +84,10 @@ jobs:
 
       - name: Add git tag
         run: |
+          git config author.name=${{ github.actor }}
+          git config author.email=${{ github.actor }}@users.noreply.github.com
+          git config committer.name=${{ github.actor }}
+          git config commiter.email=${{ github.actor }}@users.noreply.github.com
           git tag -a ${{ steps.tag.outputs.git-tag }} ${{ inputs.image-sha }}
           git push origin ${{ steps.tag.outputs.git-tag }}
 
