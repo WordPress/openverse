@@ -56,8 +56,7 @@
                 class="focus-visible:ring-yellow focus-visible:ring-offset-0"
               />
               <VCloseButton
-                variant="filled-dark"
-                class="bg-tx focus-slim-tx-yellow hover:bg-dark-charcoal-90"
+                variant="black"
                 :label="$t('modal.close-pages-menu').toString()"
                 @close="closePageMenu"
               />
