@@ -44,7 +44,7 @@ Repo blocks must be indented by 2 spaces.
         pass_filenames: false
         stages:
           - push
-    {% set renders = ["precommit", "prettier", "github"] %}
+    {% set renders = ["precommit", "prettier", "github", "release-drafter"] %}
     {% for render in renders %}
       - id: render-{{ render }}
         name: render-{{ render }}

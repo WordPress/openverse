@@ -132,6 +132,8 @@ jobs:
       - name: Open changelog PR
         uses: peter-evans/create-pull-request@v4
         with:
+          # Access token necessary for PRs to run with CI
+          token: ${{ secrets.ACCESS_TOKEN }}
           base: main
           branch: changelog/${{ steps.tag.outputs.git-tag }}
           commit-message: Publish changelog for ${{ steps.tag.outputs.git-tag }}

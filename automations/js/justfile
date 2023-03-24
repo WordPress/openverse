@@ -48,3 +48,4 @@ render-templates:
     just render-precommit
     just render-prettier
     just render-github
+    just render-release-drafter

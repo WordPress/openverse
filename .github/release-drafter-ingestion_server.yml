@@ -1,7 +1,7 @@
 # This file is generated from templates/release-drafter.yml.jinja
-# Changes to this file must be made in template
+# Changes to this file must be made in the template first
 
-name-template: "Ingestion server $RESOLVED_VERSION"
+tag-prefix: ingestion_server-
 categories:
   - title: New Features
     label: "🌟 goal: addition"

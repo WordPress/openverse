@@ -1,7 +1,7 @@
 # This file is generated from templates/release-drafter.yml.jinja
 # Changes to this file must be made in the template first
 
-name-template: "API $RESOLVED_VERSION"
+tag-prefix: api-
 categories:
   - title: New Features
     label: "🌟 goal: addition"
