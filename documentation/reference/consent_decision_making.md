@@ -29,19 +29,19 @@ process. The differences come from two directions:
 - Internal feedback and iteration on the initial process, even after
   modification for asynchrony
 
-> ## When to follow this process
->
-> Whether this process is followed for any given proposal or discussion is left
-> entirely to the discretion of the people relevant to the discussion. We
-> believe that this process helps the project's contributors make expedient and
-> clear decisions. However, it should not become an obstacle that is followed
-> for every tiny decision. If a decision can efficiently be made without this
-> process, contributors are invited to do so.
->
-> For the purposes of project planning, however, this process should be the
-> default and should be the strong preference, keeping in mind that it can be
-> made faster via [round shortcutting](#shortcutting-a-round) and the
-> [synchronous lightening process](#optional-synchronous-lightening-process).
+## When to follow this process
+
+Whether this process is followed for any given proposal or discussion is left
+entirely to the discretion of the people relevant to the discussion. We believe
+that this process helps the project's contributors make expedient and clear
+decisions. However, it should not become an obstacle that is followed for every
+tiny decision. If a decision can efficiently be made without this process,
+contributors are invited to do so.
+
+For the purposes of project planning, however, this process should be the
+default and should be the strong preference, keeping in mind that it can be made
+faster via [round shortcutting](#shortcutting-a-round) and the
+[synchronous lightening process](#optional-synchronous-lightening-process).
 
 ## Continuous improvement and exceptions to every rule
 
@@ -100,14 +100,28 @@ process.
 > encapsulate the full scope of the round. Please refer to the
 > [round descriptions below](#round-descriptions) for more details and examples.
 
-| round                                                 | Suggested span      | Goal                                                                                      |
+| Round                                                 | Suggested span      | Goal                                                                                      |
 | ----------------------------------------------------- | ------------------- | ----------------------------------------------------------------------------------------- |
-| [Question round](#question-round)                     | 3 days              | Clarify the proposal; share initial reactions                                             |
+| [Clarification round](#clarification-round)           | 3 days              | Clarify the proposal; share initial reactions                                             |
 | [Revision round](#revision-round)                     | Author's discretion | Update the text of the proposal to reflect the outcome of the previous round              |
-| [Objection round](#objection-round)                   | 2 days              | Identify paramount and non-paramount objections                                           |
+| [Decision round](#decision-round)                     | 2 days              | Decide whether the proposal can be implemented as is                                      |
 | [Objection revision round](#objection-revision-round) | Author's discretion | Work with participants to revise the text of the proposal to address paramount objections |
 | [Approval](#approval)                                 | N/A                 | Mark as approved and create issues to implement the proposal                              |
 | [Tabling](#tabling)                                   | N/A                 | Indicate that a proposal will not be implemented                                          |
+
+```{mermaid}
+flowchart TD
+    A[Proposal] --> B(Clarification Round)
+    B -->|Time: 3 days| C(Revision Round (if needed))
+    C -->|Time: As needed/estimated by author| D(Decision round)
+    D -->|Time: 2 days| E(Objection revision (if needed))
+    E -->|Time: As needed/estimated by author| F{Decision}
+    F -->|Insurmountable objections| G[Proposal tabled]
+    F -->|No objections| H[Proposal accepted]
+    G -->|New proposal needed| A
+    H --> I((End))
+    G --> I
+```
 
 ## Proposal requirements
 
@@ -123,33 +137,36 @@ or at the top of the GitHub Discussion:
 ## Decision-making process
 
 For the purposes of this discussion, we will follow
-[Openverse's decision-making model](https://wordpress.github.io/openverse/reference/consent_decision_making.html).
+[Openverse's decision-making model](https://docs.openverse.org/reference/consent_decision_making.html).
 This process follows formalised steps with specific expectations of
 participants. Before contributing, please read
-[this document](https://wordpress.github.io/openverse/reference/consent_decision_making.html)
+[this document](https://docs.openverse.org/reference/consent_decision_making.html)
 as well as
 [Openverse's Code of Conduct](https://github.com/WordPress/openverse/blob/main/CODE_OF_CONDUCT.md).
 The consent decision-making document linked above also includes instructions for
 opting out of a decision discussion you do not wish to or cannot participate in.
 
+If you've been asked to give input on this discussion but do not need to
+participate in the full decision-making process, please provide your
+feedback/input however best fits the needs of the discussion.
+
 ## Current round
 
-The discussion is currently in the **{Question, Revision, Objection, Objection revision}** round.
+The discussion is currently in the **{Clarification, Revision, Decision,
+Objection revision}** round.
 ```
 
 ## Round descriptions
 
 The following general guidelines apply to all rounds:
 
-- Reactions may be shared at any of the "feedback" rounds (Question and
-  Objection).
-- Proposal authors are not obligated to respond to every question, reaction, or
-  objection that is raised, except for paramount objections. While there is an
-  expectation that the author will address outstanding questions, it isn't
-  necessary to respond to every non-paramount objection before moving on to
-  subsequent rounds or ratifying the proposal. It is, of course, in the best
-  interest of the project and the proposal that as much clarity as possible is
-  achieved.
+- Reactions may be shared at any time
+- Proposal authors are not obligated to respond to every piece of feedback,
+  except for paramount objections. While there is an expectation that the author
+  will address outstanding questions, it isn't necessary to respond to every
+  non-paramount objection before moving on to subsequent rounds or marking the
+  proposal as approved. It is, of course, in the best interest of the project
+  and the proposal that as much clarity as possible is achieved.
 - Authors may table a proposal at any time at their discretion. If the proposal
   is tabled, discussion should not be expected to continue, but may, if there is
   something important being discussed.
@@ -157,16 +174,14 @@ The following general guidelines apply to all rounds:
   [shortcutting as described below](#shortcutting-a-round) or to extension at
   the discretion of the participants.
 
-### Question round
+### Clarification round
 
-The goal of the question round is for everyone participating to fully understand
-the proposal.
+The suggested length of this round is 3 business days. The goal of the
+clarification round is to ensure everyone participating fully understands the
+proposal. The focus of the round should be on asking clarifying questions and
+uncovering hidden assumptions or gaps in the proposal.
 
-The round lasts for 3 business days but can be extended if important gaps in the
-proposal are found that would delay revision. Questions are different from
-objections in that they're not in the form of "we cannot do this because x part
-of the proposal will not work". Rather, they are clarifying questions in the
-form of:
+Some examples of helpful clarifying questions are:
 
 - "I don't understand y in the proposal, can you clarify what is meant by this?"
 - "I think a gap exists in the proposed solution here [clarify where]. Can you
@@ -183,20 +198,6 @@ Note that the author does not have to respond to _every_ question. However, they
 should keep them in mind during the revision round with the understanding that
 the questions are shared in order to clarify the proposal.
 
-#### Reactions
-
-This round also invites participants to share reactions, positive or negative,
-separate from potential paramount objections. This is an excellent round to
-highlight positive aspects of the proposal, regardless of any paramount
-objections. You may also share non-paramount objections at this round. For
-example, "I find JavaScript harder to work with than Python" is an objection but
-not a paramount objection. What makes an objection "paramount" is clarified
-further in the [Objection round](#objection-round) below.
-
-Reactions are expected during this round because, similar to questions, they can
-help prompt further clarification from the author to be address in the revision
-round.
-
 #### Purpose
 
 Proposals must all include an explicit "purpose". Often these are informed by
@@ -210,30 +211,36 @@ is taken to be accepted and should not be the focus of the discussion.
 
 ### Revision round
 
-At this round, the author has the opportunity to revise the proposal in response
-to the questions and reactions raised. This round has no set time period. The
-author should use their discretion and give an expected time when the revised
-version will be ready. The expected date of completion for the revision is both
-for accountability (to prevent projects from being stalled indefinitely) and for
-clarity of expectations for the other participants in the process. If the author
-requires additional time beyond their initial estimation, they should let the
-other participants know as soon as possible, keeping in mind that other
-discussions may be stalled in the meantime.
+The goal of this round is to revise the proposal to include the clarifications
+from the discussion in the previous round. What feedback is incorporated into
+the document is at the discretion of the author.
+
+This round has no set time period. The author should use their discretion and
+give an expected time when the revised version will be ready. The expected date
+of completion for the revision is both for accountability (to prevent projects
+from being stalled indefinitely) and for clarity of expectations for the other
+participants in the process. If the author requires additional time beyond their
+initial estimation, they should let the other participants know as soon as
+possible, keeping in mind that other discussions may be stalled in the meantime.
 
 **No revisions should be made to the proposal before this point other than
 grammatical or spelling corrections**. The reason for this is to allow the
-question round to fully complete without the proposal changing during the
+clarification round to fully complete without the proposal changing during the
 discussion. This allows clarification to happen fully without having to track
 ongoing changes to the proposal. It also sets the expectation that revisions to
 the proposal address the questions and reactions in full. This helps to minimise
 the potentially "frantic" nature of a discussion that is happening about a
 proposal document that is changing simultaneously with the discussion.
 
-### Objection round
+### Decision round
 
-This round lasts for 2 business days. Participants are now invited to share
-"paramount objections" to the proposal, if any exist. Objections are considered
-"paramount" only if:
+This round lasts for 2 business days. The goal of this round is to decide
+whether the proposal can be implemented. Participants are asked to share
+objections to the proposal if they do not think it can be implemented.
+
+There are two types of objections, paramount and non-paramount. Participants
+must explicitly say which type of objection each of their objections falls
+under. Objections are considered "paramount" only if:
 
 - They point to an issue that prevents the team from achieving its goals
   (whether these are technical, community, or interpersonal). These issues can
@@ -246,14 +253,14 @@ This round lasts for 2 business days. Participants are now invited to share
   that it is the best decision, then any objection to making the switch would be
   paramount.
 
-During this round, as in the question round, the author should not modify the
-text of the proposal. The focus of the author in this round should be to clarify
-objections (especially paramount objections) and decide whether the proposal can
-address them. This allows time for participants to fully digest the proposal and
-raise all objections without further revision happening. Participants are
-expected to help each other decide whether an objection is paramount. Whether an
-objection is paramount can be questioned by the author, but they should prefer
-to defer to the participants and trust their judgement.
+During this round, as in the clarification round, the author should not modify
+the text of the proposal. The focus of the author in this round should be to
+clarify objections (especially paramount objections) and decide whether the
+proposal can address them. This allows time for participants to fully digest the
+proposal and raise all objections without further revision happening.
+Participants are expected to help each other decide whether an objection is
+paramount. Whether an objection is paramount can be questioned by the author,
+but they should prefer to defer to the participants and trust their judgement.
 
 If there are no paramount objections then the process has finished and the
 proposal is [approved](#approval).
@@ -320,7 +327,7 @@ Tabling can occur in the following cases:
 - Before a proposal is written, if the team reneges on a requested discussion
 - After a proposal is written, but before the discussion happens, if it is clear
   the proposal will not fit the needs of the project
-- During the objection round when insurmountable paramount objections are raised
+- During the decision round when insurmountable paramount objections are raised
 
 In the final case, the participants of the discussion are responsible for
 deciding whether a new proposal should be requested.
@@ -470,17 +477,15 @@ the lightening process.
 Differences in structure for the "lightening process" from the asynchronous
 process are as follows:
 
-- Rather than tying the question and reaction rounds together, they are separate
-  rounds. Therefore, the rounds are as follows:
-  1. Question
+- We have a separate round for reactions. Therefore, the rounds are as follows:
+  1. Clarification
   1. Reaction
   1. Revision
-  1. Objection
+  1. Decision
   1. Objection revision
-- Each round should have notes taken clearly documenting the questions,
-  reactions, objections, and discussions for each (as appropriate). Priority
-  should be given to questions and objections that require revising the
-  proposal.
+- Each round should have notes taken clearly documenting the feedback and
+  discussions for each (as appropriate). Priority should be given to questions
+  and objections that require revising the proposal.
 
 ## How to follow the process in different settings
 
@@ -507,32 +512,31 @@ GitHub PRs have the following ways of interacting with comments:
 Each of these can serve their own purposes:
 
 - Inline comments
-  - These are perfect to supplement the question and objection rounds. If a
-    question is about a specific part of the proposal (rather than a more
-    general clarification), participants can leave the question directly on the
-    part in question. Similarly, paramount objections specific to one part of
-    the proposal can be left as inline comments attached to a review requesting
-    changes.
+  - These are perfect to supplement the clarification and decision rounds. If a
+    request for clarification is about a specific part of the proposal (rather
+    than a more general clarification), participants can leave the question
+    directly on the relevant part of the proposal. Similarly, paramount
+    objections specific to one part of the proposal can be left as inline
+    comments attached to a review requesting changes.
 - General PR comments
   - For questions or non-paramount objections raised regarding the proposal in
     general or for the reaction round.
   - In addition to the PR description, the author of the PR will also create a
     new top-level PR comment when a new round starts.
 - Review comments
-  - These should be used in the objection raising round. Leave an approving
-    review if you have no paramount objections or "request changes" if you have
-    a paramount objection. Attach inline comments as needed in either case.
+  - These should be used in the decision round. Leave an approving review if you
+    have no paramount objections or "request changes" if you have a paramount
+    objection. Attach inline comments as needed in either case.
 
 ### GitHub Discussions
 
 Because the format is slightly more limited than PRs, we will have a top-level
 comment per round created by the author. Responses from participants should be
 contained within the thread for each round. However, paramount objections during
-the Objection round, should be raised as individual threads. Still, the author
+the decision round, should be raised as individual threads. Still, the author
 should still create a top-level comment closing the previous round and opening
-the objection round. If the proposal goes into objection revision, the
-discussion for addressing a given objection can happen in the accompanying
-thread.
+the decision round. If the proposal goes into objection revision, the discussion
+for addressing a given objection can happen in the accompanying thread.
 
 ## Major differences from the original process
 
