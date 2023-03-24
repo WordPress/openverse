@@ -20,6 +20,7 @@ updates:
       - "🧰 goal: internal improvement"
       - "🟩 priority: low"
       - "🐍 tech: python"
+      - "🧱 stack: catalog"
       - dependencies
 
   - package-ecosystem: "github-actions"
@@ -30,4 +31,5 @@ updates:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
       - "🟩 priority: low"
+      - "🧱 stack: mgmt"
       - dependencies
