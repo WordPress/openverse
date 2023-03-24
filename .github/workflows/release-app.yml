@@ -1,6 +1,15 @@
 name: Release app
 
 on:
+  workflow_call:
+    # Purely for testing
+    inputs:
+      app:
+        description: App (testing)
+        type: string
+      image-sha:
+        description: Image sha (testing)
+        type: string
   workflow_dispatch:
     inputs:
       app:
@@ -11,10 +20,10 @@ on:
           - frontend
         required: true
         description: Application to release. If `api` or `frontend`, the deployment workflow will automatically be dispatched for you.
-      sha-tag:
+      image-sha:
         type: string
         required: true
-        description: The SHA of the commit to tag. Also used to find the existing Docker image. Must be a commit on `main`.
+        description: The SHA of the staging image to tag.
 
 concurrency: ${{ github.workflow }}-${{ inputs.app }}
 
@@ -36,6 +45,9 @@ jobs:
               const { data: versions } =
                 await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
                   package_type: 'container',
+                  // We do not have to validate that auxiliary images also exist as they're built at the same time
+                  // as the "main" image. e.g., `api_nginx` is always built when `api` is built and they'll have
+                  // the same set of tags.
                   package_name: 'openverse-${{ inputs.app }}',
                   org: 'WordPress',
                   page,
@@ -45,11 +57,11 @@ jobs:
               if (!versions.length) {
                 break
               }
-              exists = versions.some((v) => v.metadata.container.tags.includes('${{ inputs.sha-tag }}'))
+              exists = versions.some((v) => v.metadata.container.tags.includes('${{ inputs.image-sha }}'))
             }
             if (!exists) {
               throw new Error(
-                `'${{ inputs.sha-tag }}' does not appear to be a valid SHA tag for ${{ inputs.app }}.`
+                `'${{ inputs.image-sha }}' does not appear to be a valid SHA tag for ${{ inputs.app }}.`
               )
             }
 
@@ -64,12 +76,12 @@ jobs:
           {
             echo "date=$formatted_date";
             echo "git-tag=${{ inputs.app }}-$formated_date";
-            echo "image-tag=rel-$formatted_date";
+            echo "image-tag=workflow-test____rel-$formatted_date";
           } >> "$GITHUB_OUTPUT"
 
       - name: Add git tag
         run: |
-          git tag -a ${{ steps.tag.outputs.git-tag }} ${{ inputs.sha-tag }}
+          git tag -a ${{ steps.tag.outputs.git-tag }} ${{ inputs.image-sha }}
           git push origin ${{ steps.tag.outputs.git-tag }}
 
       - name: Log in to GitHub Docker Registry
@@ -81,10 +93,10 @@ jobs:
 
       - name: Add new tag to existing docker image
         run: |
-          docker buildx imagetools create ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.sha-tag }} --tag ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.image-tag }}
+          docker buildx imagetools create ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.image-sha }} --tag ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.image-tag }}
 
           if [ "${{ inputs.app}}" = "api" ]; then
-            docker buildx imagetools create ghrc.io/wordpress/openverse-api_nginx:${{ inputs.sha-tag }} --tag ghrc.io/wordpress/openverse-api_nginx:${{ steps.tag.outputs.image-tag }}
+            docker buildx imagetools create ghrc.io/wordpress/openverse-api_nginx:${{ inputs.image-sha }} --tag ghrc.io/wordpress/openverse-api_nginx:${{ steps.tag.outputs.image-tag }}
           fi
 
       - name: Update draft release
@@ -118,14 +130,14 @@ jobs:
           body: |
             This changelog PR was automatically generated for @${{ github.actor }} as a result of the ${{ github.workflow }} workflow.
 
-      - name: Deploy production api
-        if: inputs.app == 'api'
-        uses: ./.github/workflows/deploy-production-api.yml
-        with:
-          tag: ${{ steps.tag.outputs.image-tag }}
+      # - name: Deploy production api
+      #   if: inputs.app == 'api'
+      #   uses: ./.github/workflows/deploy-production-api.yml
+      #   with:
+      #     tag: ${{ steps.tag.outputs.image-tag }}
 
-      - name: Deploy production frontend
-        if: inputs.app == 'frontend'
-        uses: ./.github/workflows/deploy-production-nuxt.yml
-        with:
-          tag: ${{ steps.tag.outputs.image-tag }}
+      # - name: Deploy production frontend
+      #   if: inputs.app == 'frontend'
+      #   uses: ./.github/workflows/deploy-production-nuxt.yml
+      #   with:
+      #     tag: ${{ steps.tag.outputs.image-tag }}

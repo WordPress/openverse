@@ -1,0 +1,16 @@
+name: Test release app
+
+on:
+  pull_request:
+
+concurrency: ${{ github.workflow }}
+
+jobs:
+  test-release-app:
+    name: Test release app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/workflows/release-app.yml
+        with:
+          app: api
+          image-sha: cd45ff87fb719e1fc092e73325b61afa38e17033
