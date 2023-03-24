@@ -202,7 +202,9 @@ export const closeMobileMenu = async (
   page: Page,
   dir: LanguageDirection = "ltr"
 ) => {
-  await page.click(`button[aria-label="${t("modal.aria-close", dir)}"]`)
+  await page.click(
+    `button[aria-label="${t("modal.close-content-settings", dir)}"]`
+  )
 }
 
 export const isMobileMenuOpen = async (page: Page) =>
