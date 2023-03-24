@@ -621,16 +621,6 @@ jobs:
           name: storybook-test-results
           path: frontend/test-results
 
-  clean-playwright-failure-comment:
-    name: Remove Playwright test debugging instructions
-    if: github.event_name == 'pull_request' && needs.get-changes.outputs.frontend == 'true'
-    runs-on: ubuntu-latest
-    needs:
-      - get-changes
-    
-    steps:
-      
-
   playwright-test-failure-comment:
     name: Post Playwright test debugging instructions
     if: |
@@ -642,7 +632,6 @@ jobs:
       - nuxt-playwright-e2e
       - nuxt-playwright-vr
       - storybook-playwright
-      - clean-playwright-failure-comment
       - get-changes
 
     steps:
@@ -812,6 +801,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: /tmp/gh-pages
           force_orphan: true
+          cname: docs.openverse.org
 
       - uses: peter-evans/find-comment@v2
         id: final-preview-comment
