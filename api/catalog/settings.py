@@ -146,7 +146,6 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
         "catalog.api.utils.drf_renderer.BrowsableAPIRendererWithoutForms",
-        "rest_framework_xml.renderers.XMLRenderer",
     ),
     "DEFAULT_THROTTLE_CLASSES": (
         "catalog.api.utils.throttle.BurstRateThrottle",
