@@ -19,8 +19,8 @@ on:
 concurrency: ${{ github.workflow }}-${{ inputs.app }}
 
 jobs:
-  tag-app-release:
-    name: Tag app release
+  release-app:
+    name: Release app
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -59,10 +59,12 @@ jobs:
           # Format example: 2023.03.22.04.56.29
           # `-u` forces UTC
           formatted_date="$(date -u +%Y.%m.%d.%H.%M.%S)"
+
           echo "date=$formatted_date" >> "$GITHUB_OUTPUT"
+
           # Split image and git tag to avoid app name duplicated in the fully qualified image name
           echo "git-tag=${{ inputs.app }}-$formated_date" >> "$GITHUB_OUTPUT"
-          echo "image-tag=rel=$formatted_date" >> "$GITHUB_OUTPUT"
+          echo "image-tag=rel-$formatted_date" >> "$GITHUB_OUTPUT"
 
       - name: Add git tag
         run: |
@@ -101,7 +103,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Add changelog
+      - name: Add new changelog file to documentation
         run: |
           cat << EOF > documentation/changelogs/${{ inputs.app }}/${{ steps.tag.outputs.date }}.md
           # ${{ steps.tag.outputs.date }}
