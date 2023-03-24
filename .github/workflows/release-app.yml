@@ -1,15 +1,6 @@
 name: Release app
 
 on:
-  workflow_call:
-    # Purely for testing
-    inputs:
-      app:
-        description: App (testing)
-        type: string
-      image-sha:
-        description: Image sha (testing)
-        type: string
   workflow_dispatch:
     inputs:
       app:
@@ -86,7 +77,7 @@ jobs:
           {
             echo "date=$formatted_date";
             echo "git-tag=${{ inputs.app }}-$formatted_date";
-            echo "image-tag=workflow-test____rel-$formatted_date";
+            echo "image-tag=rel-$formatted_date";
           } >> "$GITHUB_OUTPUT"
 
       - name: Add git tag
@@ -147,14 +138,14 @@ jobs:
           body: |
             This changelog PR was automatically generated for @${{ github.actor }} as a result of the ${{ github.workflow }} workflow.
 
-      # - name: Deploy production api
-      #   if: inputs.app == 'api'
-      #   uses: ./.github/workflows/deploy-production-api.yml
-      #   with:
-      #     tag: ${{ steps.tag.outputs.image-tag }}
+      - name: Deploy production api
+        if: inputs.app == 'api'
+        uses: ./.github/workflows/deploy-production-api.yml
+        with:
+          tag: ${{ steps.tag.outputs.image-tag }}
 
-      # - name: Deploy production frontend
-      #   if: inputs.app == 'frontend'
-      #   uses: ./.github/workflows/deploy-production-nuxt.yml
-      #   with:
-      #     tag: ${{ steps.tag.outputs.image-tag }}
+      - name: Deploy production frontend
+        if: inputs.app == 'frontend'
+        uses: ./.github/workflows/deploy-production-nuxt.yml
+        with:
+          tag: ${{ steps.tag.outputs.image-tag }}
