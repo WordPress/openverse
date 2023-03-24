@@ -31,6 +31,10 @@ jobs:
   release-app:
     name: Release app
     runs-on: ubuntu-latest
+    permissions:
+      # Needed for pushing the new docker image tag
+      packages: write
+      contents: write
     steps:
       - uses: actions/checkout@v3
         with:
