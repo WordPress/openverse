@@ -110,6 +110,7 @@ jobs:
         run: |
           cat << EOF > documentation/changelogs/${{ inputs.app }}/${{ steps.tag.outputs.date }}.md
           # ${{ steps.tag.outputs.date }}
+
           ${{ steps.release-drafter.outputs.body }}
           EOF
 
