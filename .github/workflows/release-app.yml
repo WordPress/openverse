@@ -129,6 +129,7 @@ jobs:
       - name: Open changelog PR
         uses: peter-evans/create-pull-request@v4
         with:
+          base: main
           commit-message: "[skip ci] Publish changelog for ${{ steps.tag.outputs.git-tag }}"
           body: |
             This changelog PR was automatically generated for @${{ github.actor }} as a result of the ${{ github.workflow }} workflow.
