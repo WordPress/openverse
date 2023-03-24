@@ -60,11 +60,12 @@ jobs:
           # `-u` forces UTC
           formatted_date="$(date -u +%Y.%m.%d.%H.%M.%S)"
 
-          echo "date=$formatted_date" >> "$GITHUB_OUTPUT"
-
           # Split image and git tag to avoid app name duplicated in the fully qualified image name
-          echo "git-tag=${{ inputs.app }}-$formated_date" >> "$GITHUB_OUTPUT"
-          echo "image-tag=rel-$formatted_date" >> "$GITHUB_OUTPUT"
+          {
+            echo "date=$formatted_date";
+            echo "git-tag=${{ inputs.app }}-$formated_date";
+            echo "image-tag=rel-$formatted_date";
+          } >> "$GITHUB_OUTPUT"
 
       - name: Add git tag
         run: |
@@ -118,15 +119,13 @@ jobs:
             This changelog PR was automatically generated for @${{ github.actor }} as a result of the ${{ github.workflow }} workflow.
 
       - name: Deploy production api
-        if: inputs.app == "api"
+        if: inputs.app == 'api'
         uses: ./.github/workflows/deploy-production-api.yml
         with:
           tag: ${{ steps.tag.outputs.image-tag }}
-        secrets: inherit
 
       - name: Deploy production frontend
-        if: inputs.app = "frontend"
+        if: inputs.app == 'frontend'
         uses: ./.github/workflows/deploy-production-nuxt.yml
         with:
           tag: ${{ steps.tag.outputs.image-tag }}
-        secrets: inherit
