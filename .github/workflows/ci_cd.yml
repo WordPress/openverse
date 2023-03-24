@@ -36,12 +36,14 @@ jobs:
       api: ${{ steps.paths-filter.outputs.api }}
       ingestion_server: ${{ steps.paths-filter.outputs.ingestion_server }}
       frontend: ${{ steps.paths-filter.outputs.frontend }}
+      changes: ${{ steps.paths-filter.outputs.changes }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: Get changes
-        uses: ./.github/actions/get-changes
         id: paths-filter
+        uses: ./.github/actions/get-changes
 
   get-image-tag:
     name: Get image tag
@@ -60,6 +62,66 @@ jobs:
           else
               echo "image-tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
           fi
+
+  determine-images:
+    name: Determine images to build and publish
+    runs-on: ubuntu-latest
+    outputs:
+      do-build: ${{ steps.set-matrix.outputs.do-build }}
+      build-matrix: ${{ steps.set-matrix.outputs.build-matrix }}
+      do-publish: ${{ steps.set-matrix.outputs.do-publish }}
+      publish-matrix: ${{ steps.set-matrix.outputs.publish-matrix }}
+    needs:
+      - get-changes
+
+    steps:
+      - name: Set matrix images
+        id: set-matrix
+        env:
+          CHANGES: ${{ needs.get-changes.outputs.changes }}
+        shell: python
+        run: |
+          import os
+          import json
+
+          changes = json.loads(os.environ.get('CHANGES'))
+
+          build_matrix = {"image": [], "include": []}
+          publish_matrix = {"image": []}
+
+          if "frontend" in changes:
+              build_matrix["image"].append("frontend")
+              build_matrix["include"].append({"image": "frontend", "context": "frontend", "target": "app"})
+              publish_matrix["image"].append("frontend")
+          if "api" in changes or "ingestion_server" in changes:
+              # Always build the ingestion server and API images for either changeset
+              build_matrix["image"] += ["api", "ingestion_server"]
+              build_matrix["include"] += [
+                {"image": "ingestion_server", "context": "ingestion_server", "target": "ing"},
+                {"image": "api", "context": "api", "target": "api"},
+              ]
+              if "api" in changes:
+                  build_matrix["image"].append("api_nginx")
+                  build_matrix["include"].append({"image": "api_nginx", "context": "api", "target": "nginx"})
+                  publish_matrix["image"] += ["api", "api_nginx"]
+              if "ingestion_server" in changes:
+                  publish_matrix["image"].append("ingestion_server")
+
+          do_build = 'true' if len(build_matrix["image"]) else 'false'
+          build_matrix = json.dumps(build_matrix)
+          do_publish = 'true' if len(publish_matrix["image"]) else 'false'
+          publish_matrix = json.dumps(publish_matrix)
+
+          print(f"do-build={do_build}")
+          print(f"build-matrix={build_matrix}")
+          print(f"do-publish={do_publish}")
+          print(f"publish-matrix={publish_matrix}")
+
+          with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
+              print(f"do-build={do_build}", file=gh_out)
+              print(f"build-matrix={build_matrix}", file=gh_out)
+              print(f"do-publish={do_publish}", file=gh_out)
+              print(f"publish-matrix={publish_matrix}", file=gh_out)
 
   #############
   # Universal #
@@ -95,6 +157,7 @@ jobs:
 
   add-stack-label:
     name: Add stack label
+    if: github.event_name == 'pull_request' && github.repository == 'WordPress/openverse'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -121,25 +184,45 @@ jobs:
         with:
           labels: "🧱 stack: frontend"
 
-  ############################
-  # API and ingestion server #
-  ############################
-
   build-images:
     name: Build Docker images
+    if: needs.determine-images.outputs.do-build == 'true'
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        image:
-          - api
-          - ingestion_server
+      matrix: ${{ fromJson(needs.determine-images.outputs.build-matrix) }}
     needs:
       - get-image-tag
       - lint
+      - determine-images
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      # ℹ️Step only applies for frontend image.
+      - name: Setup CI env
+        if: matrix.image == 'frontend'
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          setup_python: false
+          # Python is not needed to build the image.
+          install_recipe: node-install
+
+      # ℹ️Step only applies for frontend image.
+      # This step
+      # - downloads translation strings from GlotPress so that they can be
+      #   bundled inside the Docker image
+      # - copies pnpm config files from the root to the `frontend/` directory
+      #   so that they can be used to mock a workspace inside the Docker image
+      - name: Prepare frontend for building
+        if: matrix.image == 'frontend'
+        run: |
+          just frontend/run i18n
+          cp .npmrc .pnpmfile.cjs pnpm-lock.yaml frontend/
+        env:
+          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
+          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -149,7 +232,8 @@ jobs:
       - name: Build image `${{ matrix.image }}`
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.image }}
+          context: ${{ matrix.context }}
+          target: ${{ matrix.target }}
           push: false
           tags: openverse-${{ matrix.image }}
           cache-from: type=gha,scope=${{ matrix.image }}
@@ -180,12 +264,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - id: paths-filter
-        name: Conditionally skip job
-        uses: dorny/paths-filter@v2
-        with:
-          filters: .github/filters.yml
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -246,7 +324,7 @@ jobs:
         uses: ./.github/actions/load-img
 
       - name: Start API, ingest and index test data
-        run: just init
+        run: just api/init
 
       - name: Run API tests
         run: just api/test
@@ -266,8 +344,10 @@ jobs:
 
   test-redoc:
     name: Check for API consumer docs
+    if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -292,8 +372,10 @@ jobs:
 
   validate-openapi-spec:
     name: Validate Open API spec
+    if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -327,8 +409,10 @@ jobs:
 
   django-check:
     name: Run Django check
+    if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -352,9 +436,11 @@ jobs:
         run: just api/dj check
 
   check-migrations:
-    name: Check for uncommited Django migrations
+    name: Check for uncommitted Django migrations
+    if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - build-images
 
     steps:
@@ -377,73 +463,16 @@ jobs:
       - name: Run makemigrations
         run: just api/dj makemigrations --check --noinput --merge
 
-  #########
-  # NGINX #
-  #########
-
-  build-nginx:
-    # This requires a separate job due to the dependency on the other image builds
-    name: Build `nginx` Docker image
-    runs-on: ubuntu-latest
-    needs:
-      - build-images
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          setup_python: false
-          # Python is not needed to build the image.
-          setup_nodejs: false
-          # Node.js is not needed to build the image.
-          install_recipe: ""
-
-      - name: Load Docker images
-        uses: ./.github/actions/load-img
-
-      - name: collectstatic
-        run: |
-          just _all-up
-          just api/collectstatic
-        env:
-          DC_USER: root
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          install: true
-
-      - name: Build image `api_nginx`
-        uses: docker/build-push-action@v4
-        with:
-          context: api
-          target: nginx # from `api/Dockerfile`
-          push: false
-          tags: openverse-api_nginx
-          cache-from: type=gha,scope=nginx
-          cache-to: type=gha,scope=nginx
-          outputs: type=docker,dest=/tmp/api_nginx.tar
-          build-args: |
-            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image-tag }}
-
-      - name: Upload image `api_nginx`
-        uses: actions/upload-artifact@v3
-        with:
-          name: api_nginx
-          path: /tmp/api_nginx.tar
-
   ############
   # Frontend #
   ############
 
   frontend-unit:
     name: Run frontend unit tests
+    if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - lint
 
     steps:
@@ -462,8 +491,10 @@ jobs:
 
   storybook-smoke:
     name: Check Storybook smoke test
+    if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - lint
 
     steps:
@@ -482,8 +513,10 @@ jobs:
 
   nuxt-build:
     name: Check Nuxt build
+    if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - lint
 
     steps:
@@ -641,62 +674,6 @@ jobs:
 
             Read more about how to use this artifact here: <https://github.com/${{ github.repository }}/blob/main/frontend/test/playwright/README.md#debugging>
 
-  build-frontend:
-    # This requires a separate job due to a difference in build steps
-    name: Build `frontend` Docker image
-    runs-on: ubuntu-latest
-    needs:
-      - build-images
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          setup_python: false
-          # Python is not needed to build the image.
-          install_recipe: node-install
-
-      - name: Download translation strings
-        run: just frontend/run i18n
-        env:
-          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
-          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
-
-      - name: Copy files into Docker context
-        run: |
-          cp .npmrc .pnpmfile.cjs pnpm-lock.yaml frontend/
-        # These files are copied into the `frontend/` folder so that they can be
-        # included in the Docker context. The `Dockerfile` will use them to mock
-        # up a monorepo inside the Docker image.
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          install: true
-
-      - name: Build image `frontend`
-        uses: docker/build-push-action@v4
-        with:
-          context: frontend
-          target: app # from `frontend/Dockerfile`
-          push: false
-          tags: openverse-frontend
-          cache-from: type=gha,scope=frontend
-          cache-to: type=gha,scope=frontend
-          outputs: type=docker,dest=/tmp/frontend.tar
-          build-args: |
-            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image-tag }}
-
-      - name: Upload image `frontend`
-        uses: actions/upload-artifact@v3
-        with:
-          name: frontend
-          path: /tmp/frontend.tar
-
   #################
   # Documentation #
   #################
@@ -725,9 +702,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Load Docker images
-        uses: ./.github/actions/load-img
-
       - name: Compile documentation
         uses: ./.github/actions/build-docs
         # Docs will be located at `/tmp/docs`.
@@ -746,6 +720,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: /tmp/docs
           force_orphan: true
+          cname: docs.openverse.org
 
       - name: Checkout repository # again, to enable cleaning
         uses: actions/checkout@v3
@@ -803,9 +778,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Load Docker images
-        uses: ./.github/actions/load-img
-
       - name: Compile documentation
         uses: ./.github/actions/build-docs
         # Docs will be located at `/tmp/docs`.
@@ -837,6 +809,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: /tmp/gh-pages
           force_orphan: true
+          cname: docs.openverse.org
 
       - uses: peter-evans/find-comment@v2
         id: final-preview-comment
@@ -871,26 +844,23 @@ jobs:
     # prevent running on fork PRs
     if: |
       !failure() && !cancelled() &&
+      needs.determine-images.outputs.do-publish == 'true' &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
+      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
       ((github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'release' && github.repository == 'WordPress/openverse'))
     needs:
-      # `build-images` is automatically included in `test-ing` and `test-api`.
-      - test-ing
-      - test-api
-      - build-nginx
-      - build-frontend
+      - determine-images
       - get-image-tag
+      - build-images
+      - test-ing # test for ingestion server
+      - test-api # test for API
+      - nuxt-build # test for frontend
     permissions:
       packages: write
       contents: read
     strategy:
-      matrix:
-        image:
-          - api
-          - ingestion_server
-          - api_nginx
-          - frontend
+      matrix: ${{ fromJson(needs.determine-images.outputs.publish-matrix) }}
 
     steps:
       - name: Log in to GitHub Docker Registry
@@ -921,11 +891,10 @@ jobs:
 
   deploy-frontend:
     name: Deploy staging frontend
-    runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
       github.event_name == 'push' && needs.get-changes.outputs.frontend == 'true' &&
-      (needs.nuxt-playwright-e2e.result == 'success' && needs.nuxt-playwright-vr.result == 'success' && needs.storybook-playwright.result == 'success')
+      (needs.nuxt-build.result == 'success' && needs.nuxt-playwright-e2e.result == 'success' && needs.nuxt-playwright-vr.result == 'success' && needs.storybook-playwright.result == 'success')
     needs:
       - get-image-tag
       - get-changes
@@ -934,42 +903,23 @@ jobs:
       - nuxt-playwright-vr
       - storybook-playwright
       - publish-images
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Deploy to staging
-        uses: ./.github/actions/staging-nuxt-deploy
-        with:
-          tag: ${{ needs.get-image-tag.outputs.image-tag }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+    uses: ./.github/workflows/deploy-staging-nuxt.yml
+    with:
+      tag: ${{ needs.get-image-tag.outputs.image-tag }}
+    secrets: inherit
 
   deploy-api:
     name: Deploy staging API
-    runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
       github.event_name == 'push' && needs.get-changes.outputs.api == 'true' &&
-      (needs.test-ing.result == 'success' && needs.publish-images.result == 'success')
+      (needs.test-api.result == 'success' && needs.publish-images.result == 'success')
     needs:
       - get-image-tag
       - get-changes
       - test-api
       - publish-images
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Deploy to staging
-        uses: ./.github/actions/staging-api-deploy
-        with:
-          tag: ${{ needs.get-image-tag.outputs.image-tag }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          gh-slack-username-map: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+    uses: ./.github/workflows/deploy-staging-api.yml
+    with:
+      tag: ${{ needs.get-image-tag.outputs.image-tag }}
+    secrets: inherit

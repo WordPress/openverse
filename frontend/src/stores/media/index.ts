@@ -19,6 +19,8 @@ import { initServices } from "~/stores/media/services"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { markFakeSensitive } from "~/utils/content-safety"
 
 export type MediaStoreResult = {
   count: number
@@ -426,6 +428,13 @@ export const useMediaStore = defineStore("media", {
           page = undefined
         }
         this._updateFetchState(mediaType, "end", errorMessage)
+
+        // Fake ~50% of results as mature. This leaves actual mature results unchanged.
+        const featureFlagStore = useFeatureFlagStore()
+        if (featureFlagStore.isOn("fake_sensitive")) {
+          Object.values(data.results).forEach(markFakeSensitive)
+        }
+
         this.setMedia({
           mediaType,
           media: data.results,

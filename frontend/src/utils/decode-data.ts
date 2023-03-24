@@ -9,7 +9,11 @@ export const decodeData = (data = ""): string => {
   if (!data) return ""
 
   try {
-    const regexes = [/\\x([\d\w]{2})/gi, /\\u([\d\w]{4})/gi]
+    const regexes = [
+      /\\x([\da-f]{2})/gi,
+      /\\u([\da-f]{4})/gi,
+      /u([\da-f]{4})/gi,
+    ]
     regexes.forEach((regex) => {
       data = data.replace(regex, (_, grp) =>
         String.fromCharCode(parseInt(grp, 16))

@@ -14,7 +14,7 @@
       />
       <!-- Disable reason: We control the attribution HTML generation so this is safe and will not lead to XSS attacks -->
       <!-- eslint-disable vue/no-v-html -->
-      <caption
+      <figcaption
         class="block w-full text-left text-sr"
         v-html="getAttributionMarkup({ includeIcons: false })"
       />
@@ -61,6 +61,7 @@ export default defineComponent({
     VContentReportForm,
     VSkipToContentContainer,
   },
+  layout: "content-layout",
   setup() {
     const i18n = useI18n()
     const singleResultStore = useSingleResultStore()

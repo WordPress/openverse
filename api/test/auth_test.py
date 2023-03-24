@@ -122,6 +122,35 @@ def test_sorting_authed(
 
 
 @pytest.mark.django_db
+@pytest.mark.parametrize(
+    "authority_boost, exp_source",
+    [
+        ("1.0", "stocksnap"),
+        ("0.0", "flickr"),  # Authority boost is disabled
+    ],
+)
+def test_authority_authed(
+    client, monkeypatch, test_auth_token_exchange, authority_boost, exp_source
+):
+    # Prevent DB lookup for ES results because DB is empty.
+    monkeypatch.setattr("catalog.api.views.image_views.ImageSerializer.needs_db", False)
+
+    time.sleep(1)
+    token = test_auth_token_exchange["access_token"]
+    query_params = {
+        "q": "cat",
+        "unstable__authority": "true",
+        "unstable__authority_boost": authority_boost,
+    }
+    res = client.get("/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}")
+    assert res.status_code == 200
+
+    res_data = res.json()
+    source = res_data["results"][0]["source"]
+    assert source == exp_source
+
+
+@pytest.mark.django_db
 def test_page_size_limit_unauthed(client):
     query_params = {"page_size": 20}
     res = client.get("/v1/images/", query_params)

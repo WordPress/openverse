@@ -11,7 +11,8 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 # Show all available recipes, also recurses inside nested justfiles
 @_default:
     just --list --unsorted
-    cd nginx && just
+    cd docker/nginx && just
+    cd docker/es && just
     cd api && just
     cd ingestion_server && just
     cd frontend && just
@@ -90,17 +91,6 @@ env:
     cp api/env.template api/.env
     cp ingestion_server/env.template ingestion_server/.env
 
-# Ensure all services are up and running
-@_all-up:
-    just up
-    just ingestion_server/wait
-    just api/wait
-
-# Load sample data into the Docker Compose services
-init: _all-up
-    ./load_sample_data.sh
-    ./setup_plausible.sh
-
 ##########
 # Docker #
 ##########
@@ -113,18 +103,32 @@ DOCKER_FILE := "-f " + (
 # Run `docker-compose` configured with the correct files and environment
 dc *args:
     @{{ if IS_CI != "" { "just env" } else { "true" } }}
-    docker-compose {{ DOCKER_FILE }} {{ args }}
+    env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend") }}" docker-compose {{ DOCKER_FILE }} {{ args }}
 
 # Build all (or specified) services
 build *args:
     just dc build {{ args }}
 
-# Bring all Docker services up
-up *flags="":
+# Also see `up` recipe in sub-justfiles
+# Bring all Docker services up, in all profiles
+up *flags:
     just dc up -d {{ flags }}
 
-# Take all Docker services down
-down flags="":
+# Also see `wait-up` recipe in sub-justfiles
+# Wait for all services to be up
+wait-up: up
+    just ingestion_server/wait-up
+    just api/wait-up
+    just frontend/wait-up
+
+# Also see `init` recipe in sub-justfiles
+# Load sample data into the Docker Compose services
+init:
+    just api/init
+    just frontend/init
+
+# Take all Docker services down, in all profiles
+down *flags:
     just dc down {{ flags }}
 
 # Recreate all volumes and containers from scratch
@@ -146,26 +150,3 @@ EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
 # Execute statement in service containers using Docker Compose
 exec +args:
     just dc exec -u {{ DC_USER }} {{ EXEC_DEFAULTS }} {{ args }}
-
-#################
-# Elasticsearch #
-#################
-
-# Check the health of Elasticsearch
-@es-health es_host:
-    -curl -s -o /dev/null -w '%{http_code}' 'http://{{ es_host }}/_cluster/health'
-
-# Wait for Elasticsearch to be healthy
-@wait-for-es es_host="localhost:50292":
-    just _loop \
-    '"$(just es-health {{ es_host }})" != "200"' \
-    "Waiting for Elasticsearch to be healthy..."
-
-@check-index index="image":
-    -curl -sb -H "Accept:application/json" "http://localhost:50292/_cat/indices/{{ index }}" | grep -o "{{ index }}" | wc -l | xargs
-
-# Wait for the media to be indexed in Elasticsearch
-@wait-for-index index="image":
-    just _loop \
-    '"$(just check-index {{ index }})" != "1"' \
-    "Waiting for index '{{ index }}' to be ready..."

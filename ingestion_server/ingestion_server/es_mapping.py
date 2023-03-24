@@ -22,6 +22,9 @@ def index_settings(table_name):
                         "anime => anime",
                         "animate => animate",
                         "animated => animate",
+                        # Override "universe" to prevent matching to
+                        # "university" or "universal".
+                        "universe => universe",
                     ],
                 },
                 "english_stop": {"type": "stop", "stopwords": "_english_"},

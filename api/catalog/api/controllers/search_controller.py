@@ -20,8 +20,8 @@ import catalog.api.models as models
 from catalog.api.constants.sorting import INDEXED_ON
 from catalog.api.serializers import media_serializers
 from catalog.api.utils import tallies
+from catalog.api.utils.check_dead_links import check_dead_links
 from catalog.api.utils.dead_link_mask import get_query_hash, get_query_mask
-from catalog.api.utils.validate_images import validate_images
 
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
@@ -33,6 +33,7 @@ URL = "url"
 PROVIDER = "provider"
 DEEP_PAGINATION_ERROR = "Deep pagination is not allowed."
 QUERY_SPECIAL_CHARACTER_ERROR = "Unescaped special characters are not allowed."
+DEFAULT_BOOST = 10000
 
 
 class RankFeature(Query):
@@ -178,7 +179,7 @@ def _post_process_results(
 
     if filter_dead:
         query_hash = get_query_hash(s)
-        validate_images(query_hash, start, results, to_validate)
+        check_dead_links(query_hash, start, results, to_validate)
 
         if len(results) == 0:
             # first page is all dead links
@@ -374,7 +375,12 @@ def search(
             s = s.query("simple_query_string", fields=["tags.name"], query=tags)
 
     if settings.USE_RANK_FEATURES:
-        feature_boost = {"standardized_popularity": 10000}
+        feature_boost = {"standardized_popularity": DEFAULT_BOOST}
+        if search_params.data["unstable__authority"]:
+            feature_boost["authority_boost"] = (
+                search_params.data["unstable__authority_boost"] * DEFAULT_BOOST
+            )
+
         rank_queries = []
         for field, boost in feature_boost.items():
             rank_queries.append(Q("rank_feature", field=field, boost=boost))

@@ -57,13 +57,13 @@ def empty_validation_cache(monkeypatch):
         return [None] * len(image_urls)
 
     monkeypatch.setattr(
-        "catalog.api.utils.validate_images._get_cached_statuses",
+        "catalog.api.utils.check_dead_links._get_cached_statuses",
         get_empty_cached_statuses,
     )
 
 
 _MAKE_HEAD_REQUESTS_MODULE_PATH = (
-    "catalog.api.utils.validate_images._make_head_requests"
+    "catalog.api.utils.check_dead_links._make_head_requests"
 )
 
 

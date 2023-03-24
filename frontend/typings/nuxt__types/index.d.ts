@@ -5,6 +5,7 @@ import { CookieSerializeOptions } from "cookie"
 import type { OpenverseCookieState } from "~/types/cookies"
 
 import type { Details as UADetails } from "express-useragent"
+import type { Plausible } from "plausible-tracker"
 
 export interface SetParams<Key extends keyof OpenverseCookieState> {
   name: Key
@@ -35,6 +36,7 @@ declare module "@nuxt/types" {
   export interface Context {
     $ua: UADetails | null
     $cookies: NuxtCookies
+    $plausible: ReturnType<typeof Plausible>
   }
   export interface NuxtAppOptions {
     $ua: UADetails | null
