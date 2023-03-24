@@ -18,8 +18,7 @@ these stack-specific quickstart guides.
 - [Ingestion server](./ingestion_server/quickstart.md)
 - [Documentation](./documentation/quickstart.md)
 
-That said, there is something very appealing about running the end-to-end of the
-stack locally, which this guide is all about.
+That said, there is something very appealing about running the full stack locally, which this guide is all about.
 
 ## Prerequisites
 
