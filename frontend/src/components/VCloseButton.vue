@@ -10,6 +10,7 @@
     }"
     :icon-props="{ iconPath }"
     :borderless="true"
+    :size="size"
     :class="{
       'bg-black text-white ring-offset-black focus-slim-tx-yellow hover:border hover:border-white':
         variant === 'black',
