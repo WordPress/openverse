@@ -571,8 +571,8 @@ ETL Process: Use the API to identify all CC-licensed images.
 Output: TSV file containing the image, the respective meta-data.
 
 Notes:
-https://github.com/TheScienceMuseum/collectionsonline/wiki/Collections-Online-API #
-noqa Rate limited, no specific rate given.
+https://github.com/TheScienceMuseum/collectionsonline/wiki/Collections-Online-API
+Rate limited, no specific rate given.
 
 ## `smithsonian_workflow`
 
