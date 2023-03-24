@@ -100,10 +100,10 @@ jobs:
 
       - name: Add new tag to existing docker image
         run: |
-          docker buildx imagetools create ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.image-tag }} --append
+          docker buildx imagetools create --append -t ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.image-sha }} ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.image-tag }}
 
           if [ "${{ inputs.app}}" = "api" ]; then
-            docker buildx imagetools create ghcr.io/wordpress/openverse-api_nginx:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-api_nginx:${{ steps.tag.outputs.image-tag }} --append
+            docker buildx imagetools create --append -t ghcr.io/wordpress/openverse-api_nginx:${{ inputs.image-sha }} ghcr.io/wordpress/openverse-api_nginx:${{ steps.tag.outputs.image-tag }}
           fi
 
       - name: Create and publish release
