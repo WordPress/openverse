@@ -47,7 +47,7 @@ prerequisites.
    server.
 
 6. Sometimes, the documentation does not refresh to reflect changes in the table
-   of contents or changes to the file system. in those cases, you can clean the
+   of contents or changes to the file system. In those cases, you can clean the
    caches and restart the live server.
 
    ```console
