@@ -38,22 +38,8 @@ need to run this.
    $ just node-install
    ```
 
-4. Bring up the Docker services needed by the frontend. This includes Plausible
-   and the PostgreSQL and Clickhouse databases it needs. Once this is done, you
-   should be able to see the Plausible UI on
-   [http://localhost:50288](http://localhost:50288).
-
-   ```console
-   $ just frontend/up
-   ```
-
-   The `frontend/up` recipe orchestrates the following services: `plausible_ch`,
-   `plasible_db` and `plausible`.
-
-5. To bring up the frontend, we have another `just` recipe. We have `just`
-   recipes for almost everything. You can open
-   [http://localhost:8443](http://localhost:8443) in a browser to see your very
-   own copy of Openverse.
+4. To bring up the frontend, we have another `just` recipe. We have `just`
+   recipes for almost everything.
 
    ```console
    $ just frontend/run dev
@@ -68,22 +54,11 @@ need to run this.
    $ env API_URL="http://localhost:50280" just frontend/run dev
    ```
 
-   Once this step completes, you can be assured that the frontend is working
-   fine.
+   Now you should be able to access the following endpoints:
 
-6. You can <kbd>Ctrl</kbd> + <kbd>C</kbd> to terminate the frontend process.
-   Then use another `just` recipe to bring down all the services. If you include
-   the `-v` flag, it'll remove all volumes too.
+   - the Openverse search engine frontend on
+     [http://localhost:8443](http://localhost:8443)
 
-   ```console
-   $ just down
-   $ just down -v # delete Docker volumes
-   ```
+## Shutting down
 
-7. To see the logs for all services, you can use the `logs` recipe. To see the
-   logs for a particular service, pass the service name as an argument.
-
-   ```console
-   $ just logs
-   $ just logs plausible # only see logs for Plausible
-   ```
+You can press <kbd>Ctrl</kbd> + <kbd>C</kbd> to terminate the frontend process.

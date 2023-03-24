@@ -32,9 +32,7 @@ need to run this.
    $ cd openverse/
    ```
 
-3. Bring the ingestion server up, along with all their dependent services. Once
-   this is done, you should be able to see the list of ingestion jobs on
-   [http://localhost:50281/task](http://localhost:50281/task).
+3. Bring the ingestion server up, along with all their dependent services.
 
    ```console
    $ just ingestion_server/up
@@ -43,28 +41,11 @@ need to run this.
    The `ingestion_server/up` recipe orchestrates the following services: `db`,
    `upstream_db`, `es`, `indexer_worker` and `ingestion_server`.
 
-4. Load the sample data. This step take a few minutes. If it fails, take down
-   everything with `just down -v` and start again from the previous step.
+   Now you should be able to access the following endpoints:
 
-   ```console
-   $ just init
-   ```
+   - the list of ingestion jobs on
+     [http://localhost:50281/task](http://localhost:50281/task)
 
-   Once this step completes, you can be assured that the ingestion server is
-   working fine.
+## Shutting down
 
-5. You can use a `just` recipe to bring down all the services. If you include
-   the `-v` flag, it'll remove all volumes too.
-
-   ```console
-   $ just down
-   $ just down -v # delete Docker volumes
-   ```
-
-6. To see the logs for all services, you can use the `logs` recipe. To see the
-   logs for a particular service, pass the service name as an argument.
-
-   ```console
-   $ just logs
-   $ just logs ingestion_server # only see logs for the ingestion server
-   ```
+Refer to the [common instructions](../quickstart.md#shutting-down).

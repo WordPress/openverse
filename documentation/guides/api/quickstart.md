@@ -32,11 +32,7 @@ need to run this.
    ```
 
 3. Bring the ingestion server and API up, along with all their dependent
-   services. Once this is done, you should be able to see
-
-   - the list of ingestion jobs on
-     [http://localhost:50281/task](http://localhost:50281/task)
-   - the API documentation on [http://localhost:50280](http://localhost:50280)
+   services.
 
    ```console
    $ just api/up
@@ -45,15 +41,26 @@ need to run this.
    The `api/up` recipe orchestrates the following services: `cache`, `db`,
    `upstream_db`, `es`, `indexer_worker`, `ingestion_server`, `web` and `proxy`.
 
-4. Load the sample data. This step takes a few minutes. If it fails, take down
-   everything with `just down -v` and start again from the previous step.
+   Now you should be able to access the following endpoints:
+
+   - the list of ingestion jobs on
+     [http://localhost:50281/task](http://localhost:50281/task)
+   - the API documentation on [http://localhost:50280](http://localhost:50280)
+
+4. Load the sample data. This step can take a few minutes to complete.
 
    ```console
-   $ just init
+   $ just api/init
    ```
 
-   Once this step completes, you can be assured that the ingestion server is
-   working fine.
+   ````{admonition} Troubleshooting
+   If this step fails, cleaning up and restarting usually fixes it.
+
+   ```console
+   $ just down -v
+   $ just api/init
+   ```
+   ````
 
 5. With the data loaded, the API can now return JSON responses to your HTTP
    requests.
@@ -65,8 +72,10 @@ need to run this.
    [{"source_name":"flickr","display_name":"Flickr","source_url":"https://www.flickr.com","logo_url":null,"media_count":2500},{"source_name":"stocksnap","display_name":"StockSnap","source_url":"https://stocksnap.io","logo_url":null,"media_count":2500}]%
    ```
 
-   If you don't have [`jq`](https://stedolan.github.io/jq/) installed, you
-   should, it's great. If you do, you can pipe the response through that.
+   ````{tip}
+   [`jq`](https://stedolan.github.io/jq/) is a tool for parsing and manipulating
+   JSON data. If you have `jq` installed, you can pipe the response to it and
+   transform it.
 
    ```console
    $ just api/stats | jq '.[0]'
@@ -77,22 +86,19 @@ need to run this.
      "logo_url": null,
      "media_count": 2500
    }
+
+   $ just api/stats 'audio' | jq '[.[] | .source_name]'
+   [
+     "freesound",
+     "jamendo",
+     "wikimedia_audio"
+   ]
    ```
 
-   Once this step completes, you can be assured that the API is working fine.
+   `jq` is great, we recommend you
+   [download](https://stedolan.github.io/jq/download/) it.
+   ````
 
-6. You can use a `just` recipe to bring down all the services. If you include
-   the `-v` flag, it'll remove all volumes too.
+## Shutting down
 
-   ```console
-   $ just down
-   $ just down -v # delete Docker volumes
-   ```
-
-7. To see the logs for all services, you can use the `logs` recipe. To see the
-   logs for a particular service, pass the service name as an argument.
-
-   ```console
-   $ just logs
-   $ just logs web # only see logs for the API
-   ```
+Refer to the [common instructions](../quickstart.md#shutting-down).

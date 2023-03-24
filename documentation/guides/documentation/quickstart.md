@@ -45,10 +45,8 @@ need to run this.
    $ just documentation/live
    ```
 
-5. You can <kbd>Ctrl</kbd> + <kbd>C</kbd> to terminate the documentation live
-   server.
-
-6. Sometimes, the documentation does not refresh to reflect changes in the table
+   ````{admonition} Troubleshooting
+   Sometimes, the documentation does not refresh to reflect changes in the table
    of contents or changes to the file system. In those cases, you can clean the
    caches and restart the live server.
 
@@ -56,3 +54,9 @@ need to run this.
    $ just documentation/clean
    $ just documentation/live
    ```
+   ````
+
+## Shutting down
+
+You can press <kbd>Ctrl</kbd> + <kbd>C</kbd> to terminate the documentation live
+server.
