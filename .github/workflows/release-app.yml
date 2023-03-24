@@ -1,12 +1,16 @@
-name: Tag app release
+name: Release app
 
 on:
   workflow_dispatch:
     inputs:
       app:
-        type: string
+        type: choice
+        options:
+          - api
+          - ingestion_server
+          - frontend
         required: true
-        description: Application to tag for. Either `ingestion_server`, `api`, or `frontend`.
+        description: Application to release. If `api` or `frontend`, the deployment workflow will automatically be dispatched for you.
       sha-tag:
         type: string
         required: true
@@ -19,11 +23,7 @@ jobs:
     name: Tag app release
     runs-on: ubuntu-latest
     steps:
-      - name: Validate `app` input
-        shell: python
-        run: |
-          if "${{ inputs.app }}" not in ["api", "ingestion_server", "frontend"]:
-            raise ValueError("`app` input must be `api`, `ingestion_server`, or `frontend`. Received `${{ inputs.app}}`.")
+      - uses: actions/checkout@v3
 
       - name: Validate `sha-tag` input
         uses: actions/github-script@v6
@@ -60,12 +60,14 @@ jobs:
           # `-u` forces UTC
           formatted_date="$(date -u +%Y.%m.%d.%H.%M.%S)"
           echo "date=$formatted_date" >> "$GITHUB_OUTPUT"
-          echo "tag=rel-$formated_date" >> "$GITHUB_OUTPUT"
+          # Split image and git tag to avoid app name duplicated in the fully qualified image name
+          echo "git-tag=${{ inputs.app }}-$formated_date" >> "$GITHUB_OUTPUT"
+          echo "image-tag=rel=$formatted_date" >> "$GITHUB_OUTPUT"
 
       - name: Add git tag
         run: |
-          git tag -a ${{ steps.tag.outputs.tag }} ${{ inputs.sha-tag }}
-          git push origin ${{ steps.tag.outputs.tag }}
+          git tag -a ${{ steps.tag.outputs.git-tag }} ${{ inputs.sha-tag }}
+          git push origin ${{ steps.tag.outputs.git-tag }}
 
       - name: Log in to GitHub Docker Registry
         uses: docker/login-action@v2
@@ -76,7 +78,11 @@ jobs:
 
       - name: Add new tag to existing docker image
         run: |
-          docker buildx imagetools create ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.sha-tag }} --tag ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.tag }}
+          docker buildx imagetools create ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.sha-tag }} --tag ghrc.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.image-tag }}
+
+          if [ "${{ inputs.app}}" = "api" ]; then
+            docker buildx imagetools create ghrc.io/wordpress/openverse-api_nginx:${{ inputs.sha-tag }} --tag ghrc.io/wordpress/openverse-api_nginx:${{ steps.tag.outputs.image-tag }}
+          fi
 
       - name: Update draft release
         # We don't actually ever use these releases, but because there's no easier
@@ -87,29 +93,16 @@ jobs:
         uses: release-drafter/release-drafter@v5
         id: release-drafter
         with:
-          config-name: release_drafter_${{ inputs.app }}.yml
-          version: ${{ steps.tag.outputs.tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Delete GitHub release draft
-        # Cleans up the GitHub Release automatically drafted by the
-        # release-drafter action in the previous step
-        run: |
-          # strip the `https://github.com` from the front
-          release_identifier="$(echo "${{ steps.release-drafter.outputs.html_url }}" | sed 's/https:\/\/github.com//')"
-          gh api \
-            --method DELETE \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "$release_identifier"
+          config-name: release-drafter-${{ inputs.app }}.yml
+          version: ${{ steps.tag.outputs.date }}
+          tag: ${{ steps.tag.outputs.git-tag }}
+          tag-prefix: ${{ inputs.app }}-
+          publish: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add changelog
         run: |
-          mkdir -p changelogs
-
           cat << EOF > documentation/changelogs/${{ inputs.app }}/${{ steps.tag.outputs.date }}.md
           # ${{ steps.tag.outputs.date }}
           ${{ steps.release-drafter.outputs.body }}
@@ -118,6 +111,20 @@ jobs:
       - name: Open changelog PR
         uses: peter-evans/create-pull-request@v4
         with:
-          commit-message: "[skip ci] Publish `${{ inputs.app }}` changelog for ${{ steps.tag.outputs.tag }}"
+          commit-message: "[skip ci] Publish changelog for ${{ steps.tag.outputs.git-tag }}"
           body: |
             This changelog PR was automatically generated for @${{ github.actor }} as a result of the ${{ github.workflow }} workflow.
+
+      - name: Deploy production api
+        if: inputs.app == "api"
+        uses: ./.github/workflows/deploy-production-api.yml
+        with:
+          tag: ${{ steps.tag.outputs.image-tag }}
+        secrets: inherit
+
+      - name: Deploy production frontend
+        if: inputs.app = "frontend"
+        uses: ./.github/workflows/deploy-production-nuxt.yml
+        with:
+          tag: ${{ steps.tag.outputs.image-tag }}
+        secrets: inherit

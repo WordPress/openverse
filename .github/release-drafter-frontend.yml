@@ -1,11 +1,7 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/release-drafter/release-drafter/master/schema.json
-#
-# Configuration for the action `release-drafter/release-drafter`
-# Docs: https://github.com/release-drafter/release-drafter
-# Workflow: Draft release
+# This file is generated from templates/release-drafter.yml.jinja
+# Changes to this file must be made in the template first
 
 name-template: "Frontend $RESOLVED_VERSION"
-tag-template: "$RESOLVED_VERSION"
 categories:
   - title: New Features
     label: "🌟 goal: addition"
@@ -17,22 +13,12 @@ categories:
       - "🧰 goal: internal improvement"
   - title: Bug Fixes
     label: "🛠 goal: fix"
+# Identical to the default except it uses `-` instead of `*` to match our Markdown linter
 change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
 exclude-labels:
   - "skip-changelog"
 include-labels:
   - "🧱 stack: frontend"
-version-resolver:
-  major:
-    labels:
-      - "💥 versioning: major"
-  minor:
-    labels:
-      - "🎉 versioning: minor"
-  patch:
-    labels:
-      - "🐛 versioning: patch"
-  default: patch
 template: |
   $CHANGES
 
