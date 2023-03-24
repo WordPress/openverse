@@ -8,7 +8,7 @@
           ? 'filled-white'
           : variant,
     }"
-    :icon-props="{ iconPath: closeIcon }"
+    :icon-props="{ iconPath }"
     :borderless="true"
     :class="{
       'bg-black text-white ring-offset-black focus-slim-tx-yellow hover:border hover:border-white':
@@ -21,11 +21,12 @@
   />
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { computed, defineComponent, PropType } from "vue"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
-import closeIcon from "~/assets/icons/close-small.svg"
+import closeIcon from "~/assets/icons/close.svg"
+import closeIconSmall from "~/assets/icons/close-small.svg"
 
 export default defineComponent({
   name: "VCloseButton",
@@ -54,10 +55,30 @@ export default defineComponent({
       >,
       default: "filled-white-light",
     },
+    /**
+     * The size of the underlying VIconButton.
+     */
+    size: {
+      type: String as PropType<"small" | "medium" | "large">,
+      default: "medium",
+    },
+    /**
+     * Whether to choose `close-small` or `close` (medium) icon.
+     *
+     * @default "medium"
+     */
+    iconSize: {
+      type: String as PropType<"small" | "medium">,
+      default: "medium",
+    },
   },
-  setup() {
+  setup(props) {
+    const iconPath = computed<string>(() => {
+      return props.iconSize === "small" ? closeIconSmall : closeIcon
+    })
+
     return {
-      closeIcon,
+      iconPath,
     }
   },
 })

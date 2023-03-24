@@ -10,6 +10,7 @@
     <slot name="buttons">
       <VCloseButton
         variant="filled-transparent"
+        size="large"
         :label="closeButtonLabel || $t('modal.close-banner').toString()"
         @close="$emit('close')"
       />
