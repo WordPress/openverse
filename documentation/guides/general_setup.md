@@ -33,15 +33,18 @@ Based on which part of the Openverse stack you are contributing to, you might
 not need everything mentioned on this page. Refer to this chart to see which
 prerequisites are required to get started with your contributions.
 
-| Requirement        | Docs | Ingestion server | API | Frontend | Management |
-| ------------------ | ---- | ---------------- | --- | -------- | ---------- |
-| [Git](#git)        | ✅   | ✅               | ✅  | ✅       | ✅         |
-| [`just`](#just)    | ✅   | ✅               | ✅  | ✅       | ✅         |
-| [Python](#python)  | ✅   | ➖               | ➖  | ➖       | ✅         |
-| [Node.js](#nodejs) | ➖   | ➖               | ➖  | ✅       | ✅         |
-| [Docker](#docker)  | ➖   | ✅               | ✅  | ✅       | ➖         |
+| Requirement        | Docs | Ingestion server | API | Frontend       | Management |
+| ------------------ | ---- | ---------------- | --- | -------------- | ---------- |
+| [Git](#git)        | ✅   | ✅               | ✅  | ✅             | ✅         |
+| [`just`](#just)    | ✅   | ✅               | ✅  | ✅             | ✅         |
+| [Python](#python)  | ✅   | ➖               | ➖  | ➖             | ✅         |
+| [Node.js](#nodejs) | ➖   | ➖               | ➖  | ✅             | ✅         |
+| [Docker](#docker)  | ➖   | ✅               | ✅  | ❔[^analytics] | ➖         |
 
-Here ✅ means required, ➖ means not required.
+Here ✅ means required, ➖ means not required and ❔ means conditionally
+required.
+
+[^analytics]: This is required to run analytics, not required otherwise.
 
 ## Required setup
 
