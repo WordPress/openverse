@@ -628,6 +628,23 @@ jobs:
     needs:
       - get-changes
     steps:
+      - uses: peter-evans/find-comment@v2
+        id: test-results-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Playwright failure test results
+
+      - uses: actions/github-script@v6
+        if: steps.test-results-comment.outputs.comment-id != 0
+        with:
+          script: |
+            await github.rest.issues.deleteComment({
+              repo: context.repo.repo,
+              owner: context.repo.owner,
+              comment_id: ${{ steps.test-results-comment.outputs.comment-id }}
+            })
+            console.log('Deleted comment with ID ${{ steps.test-results-comment.outputs.comment-id }}')
+
   playwright-test-failure-comment:
     name: Post Playwright test debugging instructions
     if: |
