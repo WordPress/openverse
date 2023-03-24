@@ -2,6 +2,7 @@
   <VIconButton
     :button-props="{ variant }"
     :icon-props="{ iconPath: closeIcon }"
+    :borderless="true"
     :aria-label="label"
     @click="$emit('close')"
   />
