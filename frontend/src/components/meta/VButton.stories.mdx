@@ -134,7 +134,9 @@ These buttons have a solid background color and no border.
   <Story
     name="filled"
     args={{
-      variants: ["filled-pink", "filled-dark", "filled-gray", "filled-white"],
+      variants: buttonVariants.filter((variant) =>
+        variant.startsWith("filled-")
+      ),
     }}
     argTypes={{
       pressed: { control: "boolean" },
@@ -157,7 +159,11 @@ These buttons have a white background and a border.
 <Canvas>
   <Story
     name="bordered"
-    args={{ variants: ["bordered-gray", "bordered-dark"] }}
+    args={{
+      variants: buttonVariants.filter((variant) =>
+        variant.startsWith("bordered-")
+      ),
+    }}
     argTypes={{
       pressed: { control: "boolean" },
       size: {
@@ -180,7 +186,9 @@ These buttons are transparent and don't have a border in resting state.
   <Story
     name="transparent"
     args={{
-      variants: ["transparent-gray", "transparent-dark"],
+      variants: buttonVariants.filter((variant) =>
+        variant.startsWith("transparent-")
+      ),
     }}
     argTypes={{
       pressed: { control: "boolean" },
