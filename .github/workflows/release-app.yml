@@ -100,25 +100,19 @@ jobs:
 
       - name: Add new tag to existing docker image
         run: |
-          docker buildx imagetools create ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.image-tag }}
+          docker buildx imagetools create ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.image-tag }} --append
 
           if [ "${{ inputs.app}}" = "api" ]; then
-            docker buildx imagetools create ghcr.io/wordpress/openverse-api_nginx:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-api_nginx:${{ steps.tag.outputs.image-tag }}
+            docker buildx imagetools create ghcr.io/wordpress/openverse-api_nginx:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-api_nginx:${{ steps.tag.outputs.image-tag }} --append
           fi
 
-      - name: Update draft release
-        # We don't actually ever use these releases, but because there's no easier
-        # way to generate the release notes for an application than this action,
-        # and because the action doesn't support generating the notes without
-        # adding them to a release (draft or no), we still let the release get created
-        # and then just copy the body from the result of this action.
+      - name: Create and publish release
         uses: release-drafter/release-drafter@v5
         id: release-drafter
         with:
           config-name: release-drafter-${{ inputs.app }}.yml
           version: ${{ steps.tag.outputs.date }}
           tag: ${{ steps.tag.outputs.git-tag }}
-          tag-prefix: ${{ inputs.app }}-
           publish: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

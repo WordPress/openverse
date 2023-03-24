@@ -2,6 +2,7 @@
 # Changes to this file must be made in the template first
 
 name-template: "{{ app }} $RESOLVED_VERSION"
+tag-prefix: {{ app|lower|replace(" ", "_") }}-
 categories:
   - title: New Features
     label: "🌟 goal: addition"
