@@ -149,7 +149,6 @@ class OembedSerializer(BaseModelSerializer):
 
     version = serializers.ReadOnlyField(
         help_text="The oEmbed version number, always set to 1.0.",
-        required=True,
         default="1.0",
     )
     type = serializers.ReadOnlyField(
