@@ -632,7 +632,6 @@ jobs:
       - nuxt-playwright-e2e
       - nuxt-playwright-vr
       - storybook-playwright
-      - get-changes
 
     steps:
       - uses: peter-evans/create-or-update-comment@v2
