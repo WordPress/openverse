@@ -362,25 +362,25 @@ a.button {
   @apply bg-dark-charcoal-10 text-dark-charcoal;
 }
 
+.bordered-white {
+  @apply border border-white bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+}
+.bordered-white-pressed {
+  @apply border;
+}
+
 .bordered-gray {
-  @apply border border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
+  @apply border border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal;
 }
 .bordered-gray-pressed {
   @apply border-tx bg-dark-charcoal-10 text-dark-charcoal;
 }
 
-.bordered-dark {
-  @apply border border-dark-charcoal bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
-}
-.bordered-dark-pressed {
-  @apply border-dark-charcoal bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
-}
-
 .transparent-gray {
-  @apply border border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+  @apply bg-tx text-dark-charcoal hover:bg-dark-charcoal-10;
 }
 .transparent-dark {
-  @apply border border-tx bg-tx text-dark-charcoal hover:border-dark-charcoal hover:text-white hover:text-dark-charcoal;
+  @apply bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 
 .primary {
