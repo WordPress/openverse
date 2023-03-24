@@ -69,7 +69,7 @@ export default defineComponent({
      */
     iconSize: {
       type: String as PropType<"small" | "medium">,
-      default: "medium",
+      default: "small",
     },
   },
   setup(props) {
