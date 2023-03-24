@@ -75,7 +75,7 @@ jobs:
           # Split image and git tag to avoid app name duplicated in the fully qualified image name
           {
             echo "date=$formatted_date";
-            echo "git-tag=${{ inputs.app }}-$formated_date";
+            echo "git-tag=${{ inputs.app }}-$formatted_date";
             echo "image-tag=workflow-test____rel-$formatted_date";
           } >> "$GITHUB_OUTPUT"
 
