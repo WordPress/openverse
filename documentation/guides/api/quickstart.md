@@ -9,7 +9,7 @@ prerequisites. Refer to the 'API' column in the
 [requirement matrix](../general_setup.md#requirement-matrix) to know what you
 need to run this.
 
-## Steps
+## Starting up
 
 1. Ensure you download, install and set up all prerequisites. Ensure that the
    Docker daemon is running.

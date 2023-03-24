@@ -10,7 +10,7 @@ prerequisites. Refer to the 'Docs' column in the
 [requirement matrix](../general_setup.md#requirement-matrix) to know what you
 need to run this.
 
-## Steps
+## Starting up
 
 1. Ensure you download, install and set up all prerequisites.
 

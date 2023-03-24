@@ -27,7 +27,7 @@ stack locally, which this guide is all about.
 Refer to the [general setup guide](./general_setup.md) for setting up the
 prerequisites.
 
-## Steps
+## Starting up
 
 1. Ensure you download, install and set up all prerequisites. Ensure that the
    Docker daemon is running.
