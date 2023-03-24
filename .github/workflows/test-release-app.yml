@@ -7,12 +7,8 @@ concurrency: ${{ github.workflow }}
 
 jobs:
   test-release-app:
-    name: Test release app
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: ./.github/workflows/release-app.yml
-        with:
-          app: api
-          image-sha: cd45ff87fb719e1fc092e73325b61afa38e17033
+    uses: ./.github/workflows/release-app.yml
+    with:
+      app: api
+      image-sha: cd45ff87fb719e1fc092e73325b61afa38e17033
+    secrets: inherit
