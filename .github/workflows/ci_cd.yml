@@ -5,9 +5,6 @@ on:
   push:
     branches:
       - main
-  release:
-    types:
-      - published
   workflow_dispatch:
     inputs:
       image-tag:
