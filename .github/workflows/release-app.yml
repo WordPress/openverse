@@ -34,7 +34,10 @@ jobs:
     permissions:
       # Needed for pushing the new docker image tag
       packages: write
+      # Needed to push the tag
       contents: write
+      # Needed to open the changelog PR
+      pull-requests: write
     steps:
       - uses: actions/checkout@v3
         with:
