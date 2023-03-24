@@ -1,14 +1,32 @@
 # Quickstart guide
 
+<!-- the main entrypoint of the Openverse documentation system -->
+
 This guide covers the steps to get the Openverse stack running locally on your
-computer.
+computer. This guide is for setting up the full stack, which includes the API,
+the ingestion server and the frontend.
+
+## Stack-specific quickstarts
+
+It is very unlikely that you want to contribute to everything, everywhere, all
+at once. In all likelihood, you intend to contribute to a narrower slice of the
+stack. In such cases, you might find it more beneficial to go through one of
+these stack-specific quickstart guides.
+
+- [API](./api/quickstart.md)
+- [Frontend](./frontend/quickstart.md)
+- [Ingestion server](./ingestion_server/quickstart.md)
+- [Documentation](./documentation/quickstart.md)
+
+That said, there is something very appealing about running the full stack
+locally, which this guide is all about.
 
 ## Prerequisites
 
 Refer to the [general setup guide](./general_setup.md) for setting up the
 prerequisites.
 
-## Steps
+## Starting up
 
 1. Ensure you download, install and set up all prerequisites. Ensure that the
    Docker daemon is running.
@@ -30,30 +48,53 @@ prerequisites.
    $ cd openverse/
    ```
 
-3. Install all dependencies. This is generally not advisable unless you plan to
-   work on everything! This step won't install API or ingestion server
-   dependencies because they are meant to run using Docker containers.
+3. Install all dependencies. This step installs dependencies for the frontend,
+   the documentation and the automations (both Node.js and Python) but won't
+   install API or ingestion server dependencies because they are meant to run
+   using Docker containers.
 
    ```console
    $ just install
    ```
 
-4. Bring the ingestion server and API up, along with all their dependent
-   services. Once this is done, you should be able to see the API documentation
-   on [http://localhost:50280](http://localhost:50280).
+   To be more specific with your install, you can run either of the following.
+
+   ```console
+   $ just node-install # only frontend and Node.js automations
+   $ just py-install # only documentation and Python automations
+   ```
+
+4. Spin up and orchestrate all Docker services.
 
    ```console
    $ just up
    ```
 
-5. Load the sample data. This step take a few minutes. If it fails, take down
-   everything with `just down -v` and start again from the previous step.
+   The `up` recipe orchestrates the following services: `cache`, `db`,
+   `upstream_db`, `es`, `indexer_worker`, `ingestion_server`, `web`, `proxy`,
+   `plausible-ch`, `plausible-db` and `plausible`.
+
+   Now you should be able to access the following endpoints:
+
+   - the list of ingestion jobs on
+     [http://localhost:50281/task](http://localhost:50281/task)
+   - the API documentation on [http://localhost:50280](http://localhost:50280)
+   - the Plausible UI on [http://localhost:50288](http://localhost:50288)
+
+5. Load the sample data. This step can take a few minutes to complete.
 
    ```console
    $ just init
    ```
 
-   The ingestion server is working fine.
+   ````{admonition} Troubleshooting
+   If this step fails, cleaning up and restarting usually fixes it.
+
+   ```console
+   $ just down -v
+   $ just api/init
+   ```
+   ````
 
 6. With the data loaded, the API can now return JSON responses to your HTTP
    requests.
@@ -65,8 +106,10 @@ prerequisites.
    [{"source_name":"flickr","display_name":"Flickr","source_url":"https://www.flickr.com","logo_url":null,"media_count":2500},{"source_name":"stocksnap","display_name":"StockSnap","source_url":"https://stocksnap.io","logo_url":null,"media_count":2500}]%
    ```
 
-   If you don't have [`jq`](https://stedolan.github.io/jq/) installed, you
-   should, it's great. If you do, you can pipe the response through that.
+   ````{tip}
+   [`jq`](https://stedolan.github.io/jq/) is a tool for parsing and manipulating
+   JSON data. If you have `jq` installed, you can pipe the response to it and
+   transform it.
 
    ```console
    $ just api/stats | jq '.[0]'
@@ -77,34 +120,47 @@ prerequisites.
      "logo_url": null,
      "media_count": 2500
    }
+
+   $ just api/stats 'audio' | jq '[.[] | .source_name]'
+   [
+     "freesound",
+     "jamendo",
+     "wikimedia_audio"
+   ]
    ```
 
-   The API is working fine.
+   `jq` is great, we recommend you
+   [download](https://stedolan.github.io/jq/download/) it.
+   ````
 
 7. To bring up the frontend, we have another `just` recipe. We have `just`
-   recipes for almost everything. You can open
-   [http://localhost:8443](http://localhost:8443) in a browser to see your very
-   own copy of Openverse.
+   recipes for almost everything.
 
    ```console
    $ env API_URL="http://localhost:50280" just frontend/run dev
    ```
 
-   The frontend is working fine.
+   Now you should be able to access the following endpoints:
 
-8. You can <kbd>Ctrl</kbd> + <kbd>C</kbd> to terminate the frontend process.
-   Then use another `just` recipe to bring down all the services. If you include
-   the `-v` flag, it'll remove all volumes too.
+   - the Openverse search engine frontend on
+     [http://localhost:8443](http://localhost:8443)
+
+## Shutting down
+
+1. You can <kbd>Ctrl</kbd> + <kbd>C</kbd> to terminate the frontend process.
+
+2. For services running inside Docker, like the API, ingestion server and
+   Plausible, use another `just` recipe to bring them down.
 
    ```console
    $ just down
-   $ just down -v # delete Docker volumes
    ```
 
-9. To see the logs for all services, you can use the `logs` recipe. To see the
-   logs for a particular service, pass the service name as an argument.
+   ````{tip}
+   If you include the `-v` flag, all Docker volumes (including their data) will
+   be deleted too, which is useful in case you want a fresh start.
 
    ```console
-   $ just logs
-   $ just logs web # only see logs for web
+   $ just down -v
    ```
+   ````

@@ -27,6 +27,25 @@ Installation instructions for WSL on Windows 10 and 11 can be found in
 Microsoft's
 [official documentation](https://docs.microsoft.com/en-us/windows/wsl/install).
 
+## Requirement matrix
+
+Based on which part of the Openverse stack you are contributing to, you might
+not need everything mentioned on this page. Refer to this chart to see which
+prerequisites are required to get started with your contributions.
+
+| Requirement        | Docs | Ingestion server | API | Frontend       | Management |
+| ------------------ | ---- | ---------------- | --- | -------------- | ---------- |
+| [Git](#git)        | ✅   | ✅               | ✅  | ✅             | ✅         |
+| [`just`](#just)    | ✅   | ✅               | ✅  | ✅             | ✅         |
+| [Python](#python)  | ✅   | ➖               | ➖  | ➖             | ✅         |
+| [Node.js](#nodejs) | ➖   | ➖               | ➖  | ✅             | ✅         |
+| [Docker](#docker)  | ➖   | ✅               | ✅  | ❔[^analytics] | ➖         |
+
+Here ✅ means required, ➖ means not required and ❔ means conditionally
+required.
+
+[^analytics]: This is required to run analytics, not required otherwise.
+
 ## Required setup
 
 The following setup steps are needed to set up a local copy of Openverse and do
@@ -47,11 +66,48 @@ If you see `git version x.y.z`, you have Git installed. If you see an error, you
 need to install it by following the
 [official instructions](https://git-scm.com/downloads).
 
+### `just`
+
+We use `just` as our command runner. It makes it easier to run cumbersome
+commands that are generally needed a lot during development, like bringing up
+our backend services or linting the codebase.
+
+`just` can be [installed](https://github.com/casey/just#installation) for a host
+of operating systems via their respective
+[pacakge managers](https://github.com/casey/just#packages) or using
+[pre-built binaries](https://github.com/casey/just#pre-built-binaries) available
+for some operating systems.
+
+````{tip}
+If you run `just` inside the Openverse root repo without a recipe name, you can
+see a huge list of all the different recipes present in the project.
+
+```console
+$ cd openverse/
+$ just
+```
+````
+
+If for some reason, you are unable to install `just`, you can refer to the
+`justfile` to see the commands that make up a recipe, and then run those
+commands individually in a terminal. It won't be the best user experience, but
+it will work just the same.
+
+## Conditional setup
+
+A subset of the following requirements will be required depending on the extent
+of your contribution to the project. To see which of these you need, refer to
+the [requirement matrix](#requirement-matrix) above.
+
 ### Python
 
 ```{note}
-This is only needed for working with the Python stack outside of Docker and for
-Python automations.
+This is only needed if you are working with the following:
+
+- documentation
+- Python automations
+- API (outside Docker, for debugging purposes)
+- ingestion server (outside Docker, for debugging purposes)
 ```
 
 We use Python 3 in the backend of our stack. So to work with that part of the
@@ -80,7 +136,10 @@ You can install Pipenv by following the
 ### Node.js
 
 ```{note}
-This is only needed for working with the frontend and for Node.js automations.
+This is only needed if you are working with the following:
+
+- frontend
+- Node.js automations
 ```
 
 We use Node.js in the frontend of our stack. So to work with that part of the
@@ -108,8 +167,11 @@ onwards. So no installation is needed.
 ### Docker
 
 ```{note}
-This is only needed for working with the Python stack. The Node.js stack runs
-on the host.
+This is only needed if you are working with the following:
+
+- API
+- ingestion server
+- frontend
 ```
 
 Our Python packages are published as Docker images to make it easier to work
@@ -139,31 +201,12 @@ If you see `Docker Compose version vx.y.z`, you have Docker Compose installed.
 If you see an error, you need to install it by following the
 [official instructions](https://docs.docker.com/compose/install/).
 
-### `just`
-
-We use `just` as our command runner. It makes it easier to run cumbersome
-commands that are generally needed a lot during development, like bringing up
-our backend services or linting the codebase.
-
-`just` can be [installed](https://github.com/casey/just#installation) for a host
-of operating systems via their respective pacakge managers.
-
-````{tip}
-If you run `just` inside the Openverse root repo without a recipe name, you can
-see a huge list of all the different recipes present in the project.
-
-```console
-$ cd openverse/
-$ just
-```
-````
-
-## Development dependencies
-
-The following setup steps are needed to not just setup Openverse but to also
-contribute code to the project.
-
 ### GitHub
+
+```{note}
+This is only needed if you want to contribute code to Openverse. The codebase
+can be read, accessed and downloaded without an account.
+```
 
 The source code for Openverse is hosted on GitHub. To contribute to Openverse,
 you will also need to [sign up](https://github.com/signup) for a GitHub account.
@@ -231,6 +274,7 @@ found for -lssl` error when running the project outside Docker.
 ```
 
 This `psycopg2` package can fail to install on Apple Silicon Macs with the
-`ld: library not found for -lssl` error. To rectify this, install `openssl` via
-Homebrew and set `LDFLAGS` and `CPPFLAGS` as per the instructions in the output
-of the Homebrew installation.
+`ld: library not found for -lssl` error. To rectify this, install the
+[`openssl` formula](https://formulae.brew.sh/formula/openssl@3) using
+[Homebrew](https://brew.sh/) and set `LDFLAGS` and `CPPFLAGS` as per the
+instructions in the output of the Homebrew installation.
