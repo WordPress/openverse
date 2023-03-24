@@ -5,7 +5,9 @@ This is the quick start guide for setting up and running the API locally.
 ## Prerequisites
 
 Refer to the [general setup guide](../general_setup.md) for setting up the
-prerequisites.
+prerequisites. Refer to the 'API' column in the
+[requirement matrix](../general_setup.md#requirement-matrix) to know what you
+need to run this.
 
 ## Steps
 
