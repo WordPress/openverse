@@ -131,16 +131,16 @@ def test_abstract_oauth2_id_rate_throttle_does_not_apply_if_token_app_rate_limit
 
 @pytest.mark.django_db
 def test_rate_limit_headers(request_factory):
-    cache.clear()  # This is needed between multiple runs on the same computer.
+    cache.delete_pattern("throttle_*")
     limit = 2
 
     class DummyThrottle(BurstRateThrottle):
         THROTTLE_RATES = {"anon_burst": f"{limit}/hour"}
 
-    class ThrottledImagesView(APIView):
+    class ThrottledView(APIView):
         throttle_classes = [DummyThrottle]
 
-    view = ThrottledImagesView().as_view()
+    view = ThrottledView().as_view()
     request = request_factory.get("/")
 
     # Send three requests. The third one should be throttled.
@@ -160,12 +160,12 @@ def test_rate_limit_headers(request_factory):
 
 @pytest.mark.django_db
 def test_rate_limit_headers_when_no_scope(request_factory):
-    cache.clear()  # This is needed between multiple runs on the same computer.
+    cache.delete_pattern("throttle_*")
 
-    class ThrottledImagesView(APIView):
+    class ThrottledView(APIView):
         throttle_classes = [TenPerDay]
 
-    view = ThrottledImagesView().as_view()
+    view = ThrottledView().as_view()
     request = request_factory.get("/")
 
     response = view(request)
