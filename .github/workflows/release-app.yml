@@ -134,8 +134,14 @@ jobs:
         with:
           base: main
           branch: changelog/${{ steps.tag.outputs.git-tag }}
-          commit-message: "[skip ci] Publish changelog for ${{ steps.tag.outputs.git-tag }}"
+          commit-message: Publish changelog for ${{ steps.tag.outputs.git-tag }}
           title: Publish changelog for ${{ steps.tag.outputs.git-tag }}
+          # Add labels to pass CI
+          labels: |
+            🧱 stack: ${{ inputs.app == 'ingestion_server' && 'ingestion server' || inputs.app }}
+            🌟 goal: addition
+            📄 aspect: text
+            🟩 priority: low
           body: |
             This changelog PR was automatically generated for @${{ github.actor }} as a result of the ${{ github.workflow }} workflow.
 
