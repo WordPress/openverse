@@ -113,6 +113,7 @@ jobs:
           config-name: release-drafter-${{ inputs.app }}.yml
           version: ${{ steps.tag.outputs.date }}
           tag: ${{ steps.tag.outputs.git-tag }}
+          name: ${{ steps.tag.outputs.git-tag }}
           publish: true
           commitish: main
         env:
