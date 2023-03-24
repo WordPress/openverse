@@ -148,11 +148,11 @@ class OembedSerializer(BaseModelSerializer):
     """
 
     version = serializers.ReadOnlyField(
-        help_text="The oEmbed version number. This must be 1.0.",
+        help_text="The oEmbed version number, always set to 1.0.",
         default="1.0",
     )
     type = serializers.ReadOnlyField(
-        help_text="The resource type. This must be 'photo' for images.",
+        help_text="The resource type, always set to 'photo' for images.",
         default="photo",
     )
     width = serializers.SerializerMethodField(

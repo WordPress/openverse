@@ -1,5 +1,4 @@
 import io
-import re
 import struct
 
 from django.conf import settings
@@ -107,17 +106,7 @@ class ImageViewSet(MediaViewSet):
     )
     def thumbnail(self, request, *_, **__):
         image = self.get_object()
-
-        image_url = image.url
-        if not image_url:
-            raise NotFound("Could not find image.", 404)
-
-        # Hotfix to use scaled down version of the image from SMK
-        # TODO Remove when this issue is addressed:
-        # TODO https://github.com/WordPress/openverse-catalog/issues/698
-        if "iip.smk.dk" in image_url:
-            width = settings.THUMBNAIL_WIDTH_PX
-            image_url = re.sub(r"!\d+,", f"!{width},", image_url)
+        image_url = image.thumbnail or image.url
 
         return super().thumbnail(image_url, request)
 

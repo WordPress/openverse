@@ -1,5 +1,6 @@
 from test.factory.models.oauth2 import AccessTokenFactory
 
+from django.core.cache import cache
 from rest_framework.test import force_authenticate
 from rest_framework.views import APIView
 
@@ -10,6 +11,8 @@ from catalog.api.models.oauth import ThrottledApplication
 from catalog.api.utils.throttle import (
     AbstractAnonRateThrottle,
     AbstractOAuth2IdRateThrottle,
+    BurstRateThrottle,
+    TenPerDay,
 )
 
 
@@ -124,3 +127,50 @@ def test_abstract_oauth2_id_rate_throttle_does_not_apply_if_token_app_rate_limit
     )
     access_token.application.save()
     assert throttle.get_cache_key(view.initialize_request(authed_request), view) is None
+
+
+@pytest.mark.django_db
+def test_rate_limit_headers(request_factory):
+    cache.delete_pattern("throttle_*")
+    limit = 2
+
+    class DummyThrottle(BurstRateThrottle):
+        THROTTLE_RATES = {"anon_burst": f"{limit}/hour"}
+
+    class ThrottledView(APIView):
+        throttle_classes = [DummyThrottle]
+
+    view = ThrottledView().as_view()
+    request = request_factory.get("/")
+
+    # Send three requests. The third one should be throttled.
+    for idx in range(1, limit + 2):
+        response = view(request)
+        headers = [h for h in response.headers.items() if "X-RateLimit" in h[0]]
+
+        # Assert that request returns 429 response if limit has been exceeded.
+        assert response.status_code == 429 if idx == limit + 1 else 200
+
+        # Assert that the 'Available' header constantly decrements, but not below zero.
+        assert [
+            ("X-RateLimit-Limit-anon_burst", f"{limit}/hour"),
+            ("X-RateLimit-Available-anon_burst", str(max(0, limit - idx))),
+        ] == headers
+
+
+@pytest.mark.django_db
+def test_rate_limit_headers_when_no_scope(request_factory):
+    cache.delete_pattern("throttle_*")
+
+    class ThrottledView(APIView):
+        throttle_classes = [TenPerDay]
+
+    view = ThrottledView().as_view()
+    request = request_factory.get("/")
+
+    response = view(request)
+    headers = [h for h in response.headers.items() if "X-RateLimit" in h[0]]
+    assert [
+        ("X-RateLimit-Limit-tenperday", "10/day"),
+        ("X-RateLimit-Available-tenperday", "9"),
+    ] == headers
