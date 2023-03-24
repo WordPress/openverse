@@ -14,8 +14,8 @@ stack. In such cases, you might find it more beneficial to go through one of
 these stack-specific quickstart guides.
 
 - [API](./api/quickstart.md)
-- [Ingestion server](./ingestion_server/quickstart.md)
 - [Frontend](./frontend/quickstart.md)
+- [Ingestion server](./ingestion_server/quickstart.md)
 - [Documentation](./documentation/quickstart.md)
 
 That said, there is something very appealing about running the end-to-end of the
