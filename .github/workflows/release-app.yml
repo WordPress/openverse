@@ -33,6 +33,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          # Creating the tag requires having the whole history of `main`
+          fetch-depth: 0
 
       - name: Validate `sha-tag` input
         uses: actions/github-script@v6
