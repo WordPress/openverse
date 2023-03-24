@@ -120,6 +120,26 @@ jobs:
           ${{ steps.release-drafter.outputs.body }}
           EOF
 
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Python is not needed to run pre-commit.
+          setup_python: false
+          # Node.js is needed by lint actions.
+          install_recipe: "node-install"
+
+      - name: Cache pre-commit envs
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: Lint the changelog file so that it passes CI
+        run: |
+          just precommit
+          just lint
+
       - name: Open changelog PR
         uses: peter-evans/create-pull-request@v4
         with:
