@@ -54,7 +54,7 @@
             v-model="selectedReason"
             class="mb-4"
             name="reason"
-            :value="reason"
+            :own-value="reason"
           >
             {{ $t(`media-details.content-report.form.${reason}.option`) }}
           </VRadio>
@@ -112,7 +112,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue"
+import { computed, defineComponent, PropType, ref } from "vue"
 
 import ReportService from "~/data/report-service"
 
@@ -124,7 +124,10 @@ import {
   FAILED,
   WIP,
   DMCA_FORM_URL,
+  ReportReason,
 } from "~/constants/content-report"
+
+import type { AudioDetail, ImageDetail } from "~/types/media"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -146,23 +149,33 @@ export default defineComponent({
     VReportDescForm,
   },
   props: {
-    media: { required: true },
-    providerName: { required: true },
-    reportService: { required: false },
-    closeFn: { required: true },
-    allowCancel: { type: Boolean, default: true },
+    media: {
+      type: Object as PropType<AudioDetail | ImageDetail>,
+      required: true,
+    },
+    providerName: {
+      type: String as PropType<string>,
+      required: true,
+    },
+    closeFn: {
+      type: Function,
+      required: true,
+    },
+    allowCancel: {
+      type: Boolean,
+      default: true,
+    },
   },
   setup(props) {
-    const service = props.reportService || ReportService
     const description = ref("")
 
     const status = ref<string | null>(WIP)
 
-    const selectedReason = ref<string | null>(DMCA)
+    const selectedReason = ref<ReportReason>(DMCA)
 
     /* Buttons */
     const handleCancel = () => {
-      selectedReason.value = null
+      selectedReason.value = DMCA
       description.value = ""
       props.closeFn()
     }
@@ -170,12 +183,12 @@ export default defineComponent({
     const isSubmitDisabled = computed(
       () => selectedReason.value === OTHER && description.value.length < 20
     )
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event: Event) => {
       event.preventDefault()
       if (selectedReason.value === DMCA) return
       // Submit report
       try {
-        await service.sendReport({
+        await ReportService.sendReport({
           mediaType: props.media.frontendMediaType,
           identifier: props.media.id,
           reason: selectedReason.value,

@@ -15,13 +15,13 @@
         :disabled="isDisabled(item)"
         @change="onValueChange"
       >
-        <VLicense v-if="filterType === 'licenses'" :license="item.code" />
+        <VLicense v-if="isLicenseFilterItem(item)" :license="item.code" />
         <template v-else>{{ itemLabel(item) }}</template>
       </VCheckbox>
 
       <!-- License explanation -->
       <VPopover
-        v-if="filterType === 'licenses'"
+        v-if="isLicenseFilterItem(item)"
         strategy="fixed"
         :label="$t('browse-page.aria.license-explanation').toString()"
       >
@@ -59,7 +59,14 @@ import { defineComponent, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"
-import type { NonMatureFilterCategory, FilterItem } from "~/constants/filters"
+
+import type {
+  NonMatureFilterCategory,
+  FilterItem,
+  LicenseFilterItem,
+} from "~/constants/filters"
+import type { License } from "~/constants/license"
+
 import { defineEvent } from "~/types/emits"
 import { getElements } from "~/utils/license"
 
@@ -92,7 +99,7 @@ export default defineComponent({
   },
   props: {
     options: {
-      type: Array as PropType<FilterItem[]>,
+      type: Array as PropType<FilterItem[] | LicenseFilterItem[]>,
       required: false,
     },
     title: {
@@ -124,7 +131,7 @@ export default defineComponent({
         filterType: props.filterType,
       })
     }
-    const getLicenseExplanationCloseAria = (license) => {
+    const getLicenseExplanationCloseAria = (license: License) => {
       const elements = getElements(license).filter((icon) => icon !== "cc")
       const descriptions = elements
         .map((element) => i18n.t(`browse-page.license-description.${element}`))
@@ -140,12 +147,20 @@ export default defineComponent({
       props.disabled
     const icons = { help: helpIcon, closeSmall: closeSmallIcon }
 
+    const isLicenseFilterItem = (
+      item: FilterItem | LicenseFilterItem
+    ): item is LicenseFilterItem => {
+      // To prevent `item` is declared but its value is never read.
+      return item && props.filterType === "licenses"
+    }
+
     return {
       icons,
       isDisabled,
       itemLabel,
       onValueChange,
       getLicenseExplanationCloseAria,
+      isLicenseFilterItem,
     }
   },
 })

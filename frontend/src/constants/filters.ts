@@ -1,7 +1,7 @@
 import { kebab } from "case"
 
 import { ALL_MEDIA, AUDIO, IMAGE, VIDEO, MODEL_3D } from "~/constants/media"
-import { ACTIVE_LICENSES } from "~/constants/license"
+import { ACTIVE_LICENSES, License } from "~/constants/license"
 import { deepFreeze } from "~/utils/deep-freeze"
 
 import type { SearchType } from "~/constants/media"
@@ -10,6 +10,10 @@ export interface FilterItem {
   code: string
   name: string
   checked: boolean
+}
+
+export interface LicenseFilterItem extends FilterItem {
+  code: License
 }
 
 export interface Filters {
