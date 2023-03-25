@@ -4,7 +4,7 @@
     class="relative flex text-sm leading-5"
     :class="labelClasses"
   >
-    <div class="relative">
+    <span class="relative block">
       <!--
       The checkbox focus style is a slight variation on the `focus-slim-tx` style.
       Because it becomes filled when checked, it also needs the
@@ -30,9 +30,9 @@
       />
 
       <!-- Knob, for when `ifSwitch` is `true` -->
-      <div
+      <span
         v-if="isSwitch"
-        class="absolute top-0.75 left-0.75 h-3 w-3 rounded-full transition-transform duration-100"
+        class="absolute top-0.75 left-0.75 block h-3 w-3 rounded-full transition-transform duration-100"
         :class="
           localCheckedState
             ? ['bg-white', 'translate-x-[1.125rem]']
@@ -44,14 +44,23 @@
       />
 
       <!-- Checkmark, for when `ifSwitch` is `false` -->
-      <VIcon
+      <svg
         v-else
         v-show="localCheckedState"
-        class="absolute inset-0 transform text-white"
-        :icon-path="checkIcon"
-        :size="5"
-      />
-    </div>
+        class="absolute inset-0 h-5 w-5 flex-shrink-0 flex-grow-0 transform text-white"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <g id="icon">
+          <path
+            d="M17.9293 7.97825L10.731 17.6591L6.21469 14.3009L7.10972 13.0972L10.4223 15.5603L16.7255 7.08322L17.9293 7.97825Z"
+            fill="currentColor"
+          />
+        </g>
+      </svg>
+    </span>
 
     <!--  @slot The checkbox label  --><slot />
   </label>
@@ -61,10 +70,6 @@
 import { computed, defineComponent, ref, watch } from "vue"
 
 import { defineEvent } from "~/types/emits"
-
-import VIcon from "~/components/VIcon/VIcon.vue"
-
-import checkIcon from "~/assets/icons/check.svg"
 
 type CheckboxAttrs = {
   name: string
@@ -80,9 +85,6 @@ type CheckboxAttrs = {
  */
 export default defineComponent({
   name: "VCheckbox",
-  components: {
-    VIcon,
-  },
   props: {
     /**
      * Checkbox `id` is used for the input id property, connecting the label to
@@ -182,7 +184,6 @@ export default defineComponent({
       })
     }
     return {
-      checkIcon,
       localCheckedState,
       labelClasses,
       inputAttrs,
