@@ -30,6 +30,7 @@ repos:
       - id: fix-encoding-pragma
         args:
           - --remove
+      - id: actionlint
       {% if contains_python_code | default(true) %}
       - id: check-docstring-first
       - id: requirements-txt-fixer
