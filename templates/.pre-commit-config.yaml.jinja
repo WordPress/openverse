@@ -30,7 +30,6 @@ repos:
       - id: fix-encoding-pragma
         args:
           - --remove
-      - id: actionlint
       {% if contains_python_code | default(true) %}
       - id: check-docstring-first
       - id: requirements-txt-fixer
@@ -66,7 +65,7 @@ repos:
       - id: black
         args:
           - --safe
-
+          
   - repo: https://github.com/pycqa/pydocstyle
     rev: 6.2.2 # 6.2.3 is slightly broken
     hooks:
@@ -82,6 +81,11 @@ repos:
           # See the following documentation for what each rule does:
           # https://www.pydocstyle.org/en/6.2.3/error_codes.html#error-codes
           - --add-ignore=D1,D202,D205,D211,D400
+          
+  - repo: https://github.com/rhysd/actionlint
+    rev: main
+    hooks:
+      - id: actionlint        
 
   {% endif %}
   {% if contains_js_code | default(true) %}
