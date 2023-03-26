@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "composite": true
+  },
+  "references": [{ "path": "frontend" }],
+  "files": []
+}
