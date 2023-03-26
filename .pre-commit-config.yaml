@@ -163,3 +163,9 @@ repos:
         entry: bash -c 'just automations/js/render-github'
         language: system
         pass_filenames: false
+      - id: render-release-drafter
+        name: render-release-drafter
+        files: ^templates/.*$
+        entry: bash -c 'just automations/js/render-release-drafter'
+        language: system
+        pass_filenames: false

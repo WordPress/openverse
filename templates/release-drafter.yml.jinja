@@ -1,7 +1,7 @@
 # This file is generated from templates/release-drafter.yml.jinja
 # Changes to this file must be made in the template first
 
-tag-prefix: api-
+tag-prefix: {{ app|lower|replace(" ", "_") }}-
 categories:
   - title: New Features
     label: "🌟 goal: addition"
@@ -18,7 +18,7 @@ change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
 exclude-labels:
   - "skip-changelog"
 include-labels:
-  - "🧱 stack: api"
+  - "🧱 stack: {{ app|lower }}"
 template: |
   $CHANGES
 
