@@ -733,8 +733,12 @@ jobs:
   # Deployment #
   ##############
 
+  # See https://github.com/WordPress/openverse/issues/1033 for why
+  # we don't use the standard reusable workflow approach for these.
+
   deploy-frontend:
     name: Deploy staging frontend
+    runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
       github.event_name == 'push' &&
@@ -746,13 +750,16 @@ jobs:
       - playwright
       - get-image-tag
       - publish-images
-    uses: ./.github/workflows/deploy-staging-nuxt.yml
-    with:
-      tag: ${{ needs.get-image-tag.outputs.image_tag }}
-    secrets: inherit
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Dispatch workflow
+        run: "gh workflow run 'Deployment: staging-nuxt' -f tag=${{ needs.get-image-tag.outputs.image_tag }}"
 
   deploy-api:
     name: Deploy staging API
+    runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
       github.event_name == 'push' &&
@@ -762,7 +769,9 @@ jobs:
       - get-changes
       - get-image-tag
       - publish-images
-    uses: ./.github/workflows/deploy-staging-api.yml
-    with:
-      tag: ${{ needs.get-image-tag.outputs.image_tag }}
-    secrets: inherit
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Dispatch workflow
+        run: "gh workflow run 'Deployment: staging-api' -f tag=${{ needs.get-image-tag.outputs.image_tag }}"
