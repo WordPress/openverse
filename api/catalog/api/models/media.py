@@ -25,24 +25,6 @@ DMCA = "dmca"
 OTHER = "other"
 
 
-class TagsListDeferralManager(models.Manager):
-    """
-    Custom manager used temporarily to enable zero-downtime removal of the deprecated
-    `tags_list` field from the media modals.
-
-    @see https://github.com/WordPress/openverse/pull/956.
-    """
-
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .defer(
-                "tags_list",
-            )
-        )
-
-
 class AbstractMedia(
     IdentifierMixin, ForeignIdentifierMixin, MediaMixin, OpenLedgerModel
 ):
@@ -98,8 +80,6 @@ class AbstractMedia(
     )
 
     meta_data = models.JSONField(blank=True, null=True)
-
-    objects = TagsListDeferralManager()
 
     @property
     def license_url(self) -> str:
