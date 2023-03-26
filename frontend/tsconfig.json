@@ -78,6 +78,7 @@
     "src/components/VFilters/VLicenseExplanation.vue",
     "src/components/VHeader/VFilterButton.vue",
     "src/components/VHeader/VPageLinks.vue",
+    "src/components/VHeader/VFilterIconOrCounter.vue",
     "src/components/VHeader/VSearchBar/**.vue",
     "src/components/VImageDetails/VRelatedImages.vue",
     "src/components/VSearchResultsGrid/VImageCell.vue",
