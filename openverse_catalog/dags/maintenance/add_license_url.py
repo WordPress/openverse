@@ -204,7 +204,7 @@ dag = DAG(
         "retries": 0,
         "execution_timeout": timedelta(hours=5),
     },
-    schedule_interval=None,
+    schedule=None,
     catchup=False,
     doc_md=__doc__,
     tags=["data_normalization"],
