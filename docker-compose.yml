@@ -5,8 +5,8 @@ services:
       - ingestion_server
       - api
     image: postgres:13.2-alpine
-    ports:
-      - "50254:5432"
+    expose:
+      - "5432"
     volumes:
       - api-postgres:/var/lib/postgresql/data
     env_file:
@@ -60,8 +60,6 @@ services:
     profiles:
       - frontend
     image: plausible/analytics:latest
-    ports:
-      - "50288:8000"
     command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
     depends_on:
       - plausible_db
@@ -72,17 +70,17 @@ services:
   cache:
     profiles:
       - api
+    expose:
+      - "6379"
     image: redis:4.0.10
-    ports:
-      - "50263:6379"
 
   es:
     profiles:
       - ingestion_server
       - api
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
-    ports:
-      - "50292:9200"
+    expose:
+      - "9200"
     env_file:
       - docker/es/env.docker
     healthcheck:
@@ -116,9 +114,6 @@ services:
     image: openverse-api
     volumes:
       - ./api:/api
-    ports:
-      - "50280:8000" # Django
-      - "50230:3000" # Sphinx (unused by default; see `sphinx-live` recipe)
     depends_on:
       - db
       - es
@@ -139,8 +134,6 @@ services:
     build: ./ingestion_server/
     image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn.conf.py
-    ports:
-      - "50281:8001"
     depends_on:
       - db
       - upstream_db
@@ -177,11 +170,6 @@ services:
     profiles:
       - api
     image: nginx:alpine
-    ports:
-      - "50200:9080"
-      - "50243:9443"
-    environment:
-      HTTPS_PORT: 50243 # See `ports` mapping above.
     depends_on:
       - web
     volumes:

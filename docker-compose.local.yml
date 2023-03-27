@@ -1,0 +1,37 @@
+version: "2.4"
+services:
+  db:
+    ports:
+      - "50254:5432"
+
+  plausible:
+    ports:
+      - "50288:8000"
+
+  cache:
+    ports:
+      - "50263:6379"
+
+  es:
+    ports:
+      - "50292:9200"
+
+  web:
+    ports:
+      - "50280:8000" # Django
+      - "50230:3000" # Sphinx (unused by default; see `sphinx-live` recipe)
+    stdin_open: true
+    tty: true
+
+  ingestion_server:
+    ports:
+      - "50281:8001"
+    stdin_open: true
+    tty: true
+
+  proxy:
+    ports:
+      - "50200:9080"
+      - "50243:9443"
+    environment:
+      HTTPS_PORT: 50243 # See `ports` mapping above.
