@@ -157,4 +157,4 @@ EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
 
 # Execute statement in service containers using Docker Compose
 exec +args:
-    just dc exec -u {{ DC_USER }} {{ EXEC_DEFAULTS }} {{ args }}
+    just dc exec -u {{ DC_USER }} {{ EXEC_DEFAULTS }} "{{ args }}"
