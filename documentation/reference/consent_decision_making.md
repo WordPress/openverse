@@ -9,25 +9,24 @@ We hope this will accomplish the following:
 - Clarify the types of feedback expected during the decision-making process,
   including which types of feedback must be addressed and which are marginal
   before a proposal can be approved for implementation
-- Give specificity in feedback expectations, both for who will participate in a
-  decision-making process and what responsibilities and tools they have for
-  participating
+- Make participant expectations specific, including making explicit who will
+  participate in a given decision-making process and what responsibilities and
+  tools they have for participating
 - Reaffirm trust between contributors when evaluating proposals
 
 Historically, each of these have presented problems for the Openverse project as
 it has grown. Decision-making can drag on for months, proposal reviews get stuck
 in feedback cycles over issues that could be addressed later on, and there were
-few, if any, expectations around who would participate in a discussion or what
-the expectations of that participation was. Adopting the process described
-below, we hope, will address some of the underlying causes of these problems, in
+few, if any, expectations for who would participate in a discussion or what the
+expectations were of that participation. Adopting the process described below,
+we hope, will address some of the underlying causes of these problems, in
 addition to the benefits described above.
 
 The process described below is heavily modified from the regular Sociocratic
 process. The differences come from two directions:
 
 - The needs of an asynchronously coordinated base of contributors
-- Internal feedback and iteration on the initial process, even after
-  modification for asynchrony
+- Internal feedback and iteration on the process
 
 ## When to follow this process
 
@@ -109,12 +108,14 @@ process.
 | [Approval](#approval)                                 | N/A                 | Mark as approved and create issues to implement the proposal                              |
 | [Tabling](#tabling)                                   | N/A                 | Indicate that a proposal will not be implemented                                          |
 
+## Process diagram
+
 ```{mermaid}
 flowchart TD
     A[Proposal] --> B(Clarification Round)
-    B -->|Time: 3 days| C(Revision Round (if needed))
+    B -->|Time: 3 days| C("Revision Round (if needed)")
     C -->|Time: As needed/estimated by author| D(Decision round)
-    D -->|Time: 2 days| E(Objection revision (if needed))
+    D -->|Time: 2 days| E("Objection revision (if needed)")
     E -->|Time: As needed/estimated by author| F{Decision}
     F -->|Insurmountable objections| G[Proposal tabled]
     F -->|No objections| H[Proposal accepted]
@@ -127,8 +128,8 @@ flowchart TD
 
 Project proposals and technical implementation plans should follow the formats
 outlined in [the documentation for those processes](./docs/projects/README.md).
-All proposals should include a summary of the purpose of the proposal and the
-problem(s) it attempts to address.
+All proposals should include a summary of the
+[purpose of the proposal](#purpose) and the problem(s) it attempts to address.
 
 Every proposal must include the following boilerplate text in the PR description
 or at the top of the GitHub Discussion:
@@ -146,8 +147,8 @@ as well as
 The consent decision-making document linked above also includes instructions for
 opting out of a decision discussion you do not wish to or cannot participate in.
 
-If you've been asked to give input on this discussion but do not need to
-participate in the full decision-making process, please provide your
+**If you've been asked to give input on this discussion but do not need to
+participate in the full decision-making process**, please provide your
 feedback/input however best fits the needs of the discussion.
 
 ## Current round
@@ -160,7 +161,7 @@ Objection revision}** round.
 
 The following general guidelines apply to all rounds:
 
-- Reactions may be shared at any time
+- [Reactions](#reactions) may be shared at any time
 - Proposal authors are not obligated to respond to every piece of feedback,
   except for paramount objections. While there is an expectation that the author
   will address outstanding questions, it isn't necessary to respond to every
