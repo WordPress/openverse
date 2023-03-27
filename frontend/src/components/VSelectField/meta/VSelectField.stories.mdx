@@ -10,7 +10,7 @@ import { ref } from "vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VSelectField from "~/components/VSelectField/VSelectField.vue"
 
-import globeIcon from "~/assets/icons/globe.svg"
+import radioIcon from "~/assets/icons/radiomark.svg"
 
 <Meta
   title="Components/VSelectField"
@@ -86,13 +86,13 @@ export const SlotTemplate = (args) => ({
   template: `
     <VSelectField v-bind="args">
     <template #start>
-      <VIcon :icon-path="globeIcon" />
+      <VIcon :icon-path="radioIcon" />
     </template>
     </VSelectField>
   `,
   components: { VSelectField, VIcon },
   setup() {
-    return { args, globeIcon }
+    return { args, radioIcon }
   },
 })
 
@@ -113,7 +113,7 @@ export const ConstraintTemplate = (args) => ({
     <VSelectField class="max-w-[100px]" v-bind="args" />`,
   components: { VSelectField, VIcon },
   setup() {
-    return { args, globeIcon }
+    return { args, radioIcon }
   },
 })
 
