@@ -9,20 +9,13 @@
       :checked="isChecked"
       @input="handleInput"
     />
-    <svg
+    <Radiomark
       class="radiomark absolute h-5 w-5 text-dark-charcoal opacity-0 transition-opacity start-0"
       focusable="false"
-      aria-hidden="true"
       width="20"
       height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <g id="icon">
-        <circle cx="10" cy="10" r="6" fill="currentColor" />
-      </g>
-    </svg>
+      aria-hidden="true"
+    />
     <!--  @slot Label content goes here  -->
     <slot />
   </label>
@@ -31,12 +24,15 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue"
 
+import Radiomark from "~/assets/icons/radiomark.svg?inline"
+
 /**
  * Renders a radio input field, useful for choosing one of a few options that
  * can all be presented on the screen at once.
  */
 export default defineComponent({
   name: "VRadio",
+  components: { Radiomark },
   inheritAttrs: false,
   model: {
     prop: "modelValue",

@@ -44,22 +44,13 @@
       />
 
       <!-- Checkmark, for when `ifSwitch` is `false` -->
-      <svg
+      <VIcon
         v-else
         v-show="localCheckedState"
-        class="absolute inset-0 h-5 w-5 flex-shrink-0 flex-grow-0 transform text-white"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <g id="icon">
-          <path
-            d="M17.9293 7.97825L10.731 17.6591L6.21469 14.3009L7.10972 13.0972L10.4223 15.5603L16.7255 7.08322L17.9293 7.97825Z"
-            fill="currentColor"
-          />
-        </g>
-      </svg>
+        class="absolute inset-0 transform text-white"
+        :icon-path="checkIcon"
+        :size="5"
+      />
     </span>
 
     <!--  @slot The checkbox label  --><slot />
@@ -70,6 +61,10 @@
 import { computed, defineComponent, ref, watch } from "vue"
 
 import { defineEvent } from "~/types/emits"
+
+import VIcon from "~/components/VIcon/VIcon.vue"
+
+import checkIcon from "~/assets/icons/check.svg"
 
 type CheckboxAttrs = {
   name: string
@@ -85,6 +80,9 @@ type CheckboxAttrs = {
  */
 export default defineComponent({
   name: "VCheckbox",
+  components: {
+    VIcon,
+  },
   props: {
     /**
      * Checkbox `id` is used for the input id property, connecting the label to
@@ -184,6 +182,7 @@ export default defineComponent({
       })
     }
     return {
+      checkIcon,
       localCheckedState,
       labelClasses,
       inputAttrs,
