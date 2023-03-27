@@ -6,7 +6,7 @@ on:
     types:
       - opened
 env:
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GH_TOKEN: ${{ secrets.ACCESS_TOKEN }} # Projects need a personal access token to work.
   ISSUE_ID: ${{ github.event.issue.node_id }} # The global issue ID that works in both REST and GraphQL APIs.
   PROJECT_ID: "PVT_kwDOAAQ2Js4AMZdL" # The ID for the Openverse project (#75).
 
