@@ -15,13 +15,13 @@
         :disabled="isDisabled(item)"
         @change="onValueChange"
       >
-        <VLicense v-if="isLicenseFilterItem(item)" :license="item.code" />
+        <VLicense v-if="isLicense(item.code)" :license="item.code" />
         <template v-else>{{ itemLabel(item) }}</template>
       </VCheckbox>
 
       <!-- License explanation -->
       <VPopover
-        v-if="isLicenseFilterItem(item)"
+        v-if="isLicense(item.code)"
         strategy="fixed"
         :label="$t('browse-page.aria.license-explanation').toString()"
       >
@@ -60,11 +60,8 @@ import { defineComponent, PropType } from "vue"
 import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"
 
-import type {
-  NonMatureFilterCategory,
-  FilterItem,
-  LicenseFilterItem,
-} from "~/constants/filters"
+import type { NonMatureFilterCategory, FilterItem } from "~/constants/filters"
+
 import type { License } from "~/constants/license"
 
 import { defineEvent } from "~/types/emits"
@@ -99,7 +96,7 @@ export default defineComponent({
   },
   props: {
     options: {
-      type: Array as PropType<FilterItem[] | LicenseFilterItem[]>,
+      type: Array as PropType<FilterItem[]>,
       required: false,
     },
     title: {
@@ -147,11 +144,9 @@ export default defineComponent({
       props.disabled
     const icons = { help: helpIcon, closeSmall: closeSmallIcon }
 
-    const isLicenseFilterItem = (
-      item: FilterItem | LicenseFilterItem
-    ): item is LicenseFilterItem => {
+    const isLicense = (code: string): code is License => {
       // To prevent `item` is declared but its value is never read.
-      return item && props.filterType === "licenses"
+      return !!code && props.filterType === "licenses"
     }
 
     return {
@@ -160,7 +155,7 @@ export default defineComponent({
       itemLabel,
       onValueChange,
       getLicenseExplanationCloseAria,
-      isLicenseFilterItem,
+      isLicense,
     }
   },
 })
