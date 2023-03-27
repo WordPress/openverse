@@ -15,7 +15,6 @@ import logging
 from datetime import datetime, timedelta
 
 import lxml.html as html
-from airflow.exceptions import AirflowException
 from airflow.models import Variable
 from common import constants
 from common.licenses import get_license_info
@@ -71,11 +70,60 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         # are built multiple times. Fetch keys and build parameters here so it
         # is done only once.
         self.api_key = Variable.get("API_KEY_FLICKR")
-        self.license_param = ",".join(LICENSE_INFO.keys())
+        self.default_license_param = ",".join(LICENSE_INFO.keys())
 
         # Keeps track of number of requests made, so we can see how close we are
         # to hitting rate limits.
         self.requests_count = 0
+
+        # Keep track of batches containing more than the max_unique_records
+        self.large_batches = []
+        # When we encounter a batch containing more than the max_unique_records, we can
+        # either return early without attempting to ingest records, or we can ingest up
+        # to the max_unique_records count. This flag is used to control this behavior
+        # during different stages of the ingestion process.
+        self.process_large_batch = False
+
+    def ingest_records(self, **kwargs):
+        """
+        Ingest records, handling large batches.
+
+        The Flickr API returns a maximum of 4,000 unique records per query; after that,
+        it returns only duplicates. Therefore in order to ingest as many unique records
+        as possible, we must attempt to break ingestion into queries that contain fewer
+        than the max_unique_records each.
+
+        First, we use the TimeDelineatedProviderDataIngester to break queries down into
+        smaller intervals of time throughout the ingestion day. However, this only has
+        granularity down to about 5 minute intervals. If a 5-minute interval contains
+        more than the max unique records, we then try splitting the interval up by
+        license, making a separate query for each license type.
+
+        If a 5-minute interval contains more than max_unique_records for a single
+        license type, we accept that we cannot produce a query small enough to ingest
+        all the unique records over this time period. We will process up to the
+        max_unique_records count and then move on to the next batch.
+        """
+        # Perform ingestion as normal, splitting requests into time-slices of at most
+        # 5 minutes. When a batch is encountered which contains more than
+        # max_unique_records, it is skipped and added to the `large_batches` list for
+        # later processing.
+        super().ingest_records(**kwargs)
+        logger.info("Completed initial ingestion.")
+
+        # If we encounter a large batch at this stage of ingestion, we cannot break
+        # the batch down any further so we want to attempt to process as much as
+        # possible.
+        self.process_large_batch = True
+
+        for start_ts, end_ts in self.large_batches:
+            # For each large batch, ingest records for that interval one license
+            # type at a time.
+            for license in LICENSE_INFO.keys():
+                super().ingest_records_for_timestamp_pair(
+                    start_ts=start_ts, end_ts=end_ts, license=license
+                )
+        logger.info("Completed large batch processing by license type.")
 
     def get_next_query_params(self, prev_query_params, **kwargs):
         if not prev_query_params:
@@ -83,12 +131,16 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
             start_timestamp = kwargs.get("start_ts")
             end_timestamp = kwargs.get("end_ts")
 
+            # license will be available in the params if we're dealing
+            # with a large batch. If not, fall back to all licenses
+            license = kwargs.get("license", self.default_license_param)
+
             return {
                 "min_upload_date": start_timestamp,
                 "max_upload_date": end_timestamp,
                 "page": 0,
                 "api_key": self.api_key,
-                "license": self.license_param,
+                "license": license,
                 "per_page": self.batch_limit,
                 "method": "flickr.photos.search",
                 "media": "photos",
@@ -129,6 +181,32 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
 
         if response_json is None or response_json.get("stat") != "ok":
             return None
+
+        # Detect if this batch has more than the max_unique_records.
+        detected_count = self.get_record_count_from_response(response_json)
+        if detected_count > self.max_unique_records:
+            logger.error(
+                f"{detected_count} records retrieved, but there is a"
+                f" limit of {self.max_unique_records}."
+            )
+
+            if not self.process_large_batch:
+                # We don't want to attempt to process this batch. Return an empty
+                # batch now, and we will try again later, splitting the batch up by
+                # license type.
+                self.large_batches.append(self.current_timestamp_pair)
+                return None
+
+            # If we do want to process large batches, we should only ingest up to
+            # the `max_unique_records` and then return early, as all records
+            # retrieved afterward will be duplicates.
+            page_number = response_json.get("photos", {}).get("page", 1)
+            if self.batch_limit * page_number > self.max_unique_records:
+                # We have already ingested up to `max_unique_records` for this
+                # batch, so we should only be getting duplicates after this.
+                return None
+
+        # Return data for this batch
         return response_json.get("photos", {}).get("photo")
 
     def get_record_count_from_response(self, response_json) -> int:
@@ -257,22 +335,6 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         if "content_type" in image_data and image_data["content_type"] == "0":
             return ImageCategory.PHOTOGRAPH
         return None
-
-    def get_should_continue(self, response_json):
-        # Call the parent method in order to update the fetched_count
-        should_continue = super().get_should_continue(response_json)
-
-        # Return early if more than the maximum unique records have been ingested.
-        # This could happen if we did not break the ingestion down into
-        # small enough divisions.
-        if self.fetched_count > self.max_unique_records:
-            raise AirflowException(
-                f"{self.fetched_count} records retrieved, but there is a"
-                f" limit of {self.max_records}. Consider increasing the"
-                " number of divisions."
-            )
-
-        return should_continue
 
 
 def main(date):

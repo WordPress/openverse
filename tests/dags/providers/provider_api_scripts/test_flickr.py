@@ -1,9 +1,9 @@
 import json
 import os
+from datetime import datetime
 from unittest import mock
 
 import pytest
-from airflow.exceptions import AirflowException
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts.flickr import FlickrDataIngester
 
@@ -72,35 +72,6 @@ def test_get_record_count_from_response():
 
 
 @pytest.mark.parametrize(
-    "fetched_count, super_should_continue, expected_should_continue",
-    (
-        (1000, True, True),
-        # Return False if super().get_should_continue() is False
-        (1000, False, False),
-        (4000, True, True),
-        # Raise exception if fetched_count exceeds max_unique_records
-        pytest.param(
-            4001,
-            True,
-            False,
-            marks=pytest.mark.raises(exception=AirflowException),
-        ),
-    ),
-)
-def test_get_should_continue(
-    fetched_count, super_should_continue, expected_should_continue
-):
-    with mock.patch(
-        "providers.provider_api_scripts.time_delineated_provider_data_ingester.TimeDelineatedProviderDataIngester.get_should_continue",
-        return_value=super_should_continue,
-    ):
-        ingester = FlickrDataIngester(date=FROZEN_DATE)
-        ingester.fetched_count = fetched_count
-
-        assert ingester.get_should_continue({}) == expected_should_continue
-
-
-@pytest.mark.parametrize(
     "response_json, expected_response",
     [
         # Realistic full response
@@ -129,6 +100,42 @@ def test_get_should_continue(
 def test_get_batch_data(response_json, expected_response):
     actual_response = flickr.get_batch_data(response_json)
     assert actual_response == expected_response
+
+
+@pytest.mark.parametrize(
+    "process_large_batch, page_number, expected_response, expected_large_batches",
+    [
+        # process_large_batch is False: always return None and add batch to the list
+        (False, 1, None, 1),
+        (False, 20, None, 1),
+        # process_large_batch is True: never add batch to the list
+        # Fewer than max_unique_records have been processed
+        (True, 1, _get_resource_json("flickr_example_photo_list.json"), 0),
+        (True, 10, _get_resource_json("flickr_example_photo_list.json"), 0),
+        # More than max_unique_records have been processed
+        (True, 11, None, 0),
+        (True, 20, None, 0),
+    ],
+)
+def test_get_batch_data_when_detected_count_exceeds_max_unique_records(
+    process_large_batch, page_number, expected_response, expected_large_batches
+):
+    # Hard code the batch_limit and max_unique_records for the test
+    ingester = FlickrDataIngester(date=FROZEN_DATE)
+    # This means you should be able to get 100/10 = 10 pages of results before
+    # you exceed the max_unique_records.
+    ingester.batch_limit = 10
+    ingester.max_unique_records = 100
+    ingester.process_large_batch = process_large_batch
+
+    response_json = _get_resource_json("flickr_example_pretty.json")
+    response_json["photos"]["page"] = page_number
+    response_json["photos"]["total"] = 200  # More than max unique records
+
+    actual_response = ingester.get_batch_data(response_json)
+    assert actual_response == expected_response
+
+    assert len(ingester.large_batches) == expected_large_batches
 
 
 def test_get_record_data():
@@ -342,3 +349,40 @@ def test_get_record_data_with_sub_provider():
         "category": None,
     }
     assert actual_data == expected_data
+
+
+def test_ingest_records():
+    # Test a 'normal' run where no large batches are detected during ingestion.
+    with (
+        mock.patch(
+            "providers.provider_api_scripts.time_delineated_provider_data_ingester.TimeDelineatedProviderDataIngester.ingest_records"
+        ),
+        mock.patch(
+            "providers.provider_api_scripts.time_delineated_provider_data_ingester.TimeDelineatedProviderDataIngester.ingest_records_for_timestamp_pair"
+        ) as ingest_for_pair_mock,
+    ):
+        flickr.ingest_records()
+        # No additional calls to ingest_records_for_timestamp_pair were made
+        assert not ingest_for_pair_mock.called
+
+
+def test_ingest_records_when_large_batches_detected():
+    ingester = FlickrDataIngester(date=FROZEN_DATE)
+    with (
+        mock.patch(
+            "providers.provider_api_scripts.time_delineated_provider_data_ingester.TimeDelineatedProviderDataIngester.ingest_records"
+        ),
+        mock.patch(
+            "providers.provider_api_scripts.time_delineated_provider_data_ingester.TimeDelineatedProviderDataIngester.ingest_records_for_timestamp_pair"
+        ) as ingest_for_pair_mock,
+    ):
+        # Set large_batches to include one timestamp pair
+        mock_start = datetime(2020, 1, 1, 1, 0, 0)
+        mock_end = datetime(2020, 1, 1, 2, 0, 0)
+        ingester.large_batches = [
+            (mock_start, mock_end),
+        ]
+
+        ingester.ingest_records()
+        # An additional call made to ingest_records_for_timestamp_pair for each license type
+        assert ingest_for_pair_mock.call_count == 8

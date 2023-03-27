@@ -2,7 +2,6 @@ import logging
 from abc import abstractmethod
 from datetime import datetime, timedelta, timezone
 
-from airflow.exceptions import AirflowException
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
@@ -59,6 +58,12 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
         # Use to keep track of the number of records we've fetched from the API so far,
         # specifically in this iteration.
         self.fetched_count = 0
+
+        # Keep track of our ts pairs
+        self.timestamp_pairs = []
+
+        # Keep track of the current ts pair
+        self.current_timestamp_pair = ()
 
     @staticmethod
     def format_ts(timestamp):
@@ -153,6 +158,7 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
         # contain data. Hours that contain more data get divided into a larger number of
         # portions.
         hour_slices = self._get_timestamp_query_params_list(start_ts, end_ts, 24)
+
         for (start_hour, end_hour) in hour_slices:
             # Get the number of records in this hour interval
             record_count = self._get_record_count(start_hour, end_hour, **kwargs)
@@ -190,18 +196,27 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
         return pairs_list
 
     def ingest_records(self, **kwargs) -> None:
-        timestamp_pairs = self._get_timestamp_pairs(**kwargs)
-        if timestamp_pairs:
-            logger.info(f"{len(timestamp_pairs)} timestamp pairs generated.")
+        self.timestamp_pairs = self._get_timestamp_pairs(**kwargs)
+        if self.timestamp_pairs:
+            logger.info(f"{len(self.timestamp_pairs)} timestamp pairs generated.")
 
         # Run ingestion for each timestamp pair
-        for start_ts, end_ts in timestamp_pairs:
-            # Reset counts before we start
-            self.new_iteration = True
-            self.fetched_count = 0
+        for start_ts, end_ts in self.timestamp_pairs:
+            self.ingest_records_for_timestamp_pair(start_ts, end_ts, **kwargs)
 
-            logger.info(f"Ingesting data for start: {start_ts}, end: {end_ts}")
-            super().ingest_records(start_ts=start_ts, end_ts=end_ts, **kwargs)
+    def ingest_records_for_timestamp_pair(
+        self, start_ts: datetime, end_ts: datetime, **kwargs
+    ):
+        # Update `current_timestamp_pair` to keep track of what we are processing.
+        self.current_timestamp_pair = (start_ts, end_ts)
+
+        # Reset counts
+        self.new_iteration = True
+        self.fetched_count = 0
+
+        # Run ingestion for the given parameters
+        logger.info(f"Ingesting data for start: {start_ts}, end: {end_ts}")
+        super().ingest_records(start_ts=start_ts, end_ts=end_ts, **kwargs)
 
     def get_should_continue(self, response_json) -> bool:
         """
@@ -235,9 +250,9 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
                 " been fetched. Consider reducing the ingestion interval."
             )
             if self.should_raise_error:
-                raise AirflowException(error_message)
+                raise Exception(error_message)
             else:
-                logger.error(error_message)
+                logger.info(error_message)
 
         # If `should_raise_error` was enabled, the error is raised and ingestion
         # halted. If not, we want to log but continue ingesting.

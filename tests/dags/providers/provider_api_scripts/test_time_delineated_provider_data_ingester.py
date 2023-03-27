@@ -3,7 +3,6 @@ from itertools import repeat
 from unittest.mock import MagicMock, call, patch
 
 import pytest
-from airflow.exceptions import AirflowException
 
 from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
     MAX_RECORDS,
@@ -205,7 +204,7 @@ def test_ts_pairs_and_kwargs_are_available_in_get_next_query_params():
 
 
 def test_ingest_records_raises_error_if_the_total_count_has_been_exceeded():
-    # Test that `ingest_records` raises an AirflowException if the external
+    # Test that `ingest_records` raises an Exception if the external
     # API continues returning data in excess of the stated `resultCount`
     # (https://github.com/WordPress/openverse-catalog/pull/934)
     with (
@@ -238,7 +237,7 @@ def test_ingest_records_raises_error_if_the_total_count_has_been_exceeded():
         )
         # Assert that attempting to ingest records raises an exception when
         # `should_raise_error` is enabled
-        with (pytest.raises(AirflowException, match=expected_error_string)):
+        with (pytest.raises(Exception, match=expected_error_string)):
             ingester.ingest_records()
 
         # get_mock should have been called 4 times, twice for each batch (once in `get_batch`

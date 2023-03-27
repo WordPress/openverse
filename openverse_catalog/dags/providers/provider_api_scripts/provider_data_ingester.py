@@ -37,7 +37,7 @@ class IngestionError(Exception):
     def __init__(self, error, traceback, query_params):
         self.error = error
         self.traceback = traceback
-        self.query_params = json.dumps(query_params)
+        self.query_params = json.dumps(query_params, default=str)
 
     def __str__(self):
         # Append query_param info to error message
