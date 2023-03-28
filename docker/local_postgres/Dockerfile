@@ -1,6 +1,6 @@
 FROM postgres:13.6
 
-ARG PGCLI_VERSION=3.2.0
+ARG PGCLI_VERSION=3.5.0
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
