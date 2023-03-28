@@ -356,8 +356,11 @@ def clean_image_data(table):
 
                 for result in pool.starmap(_clean_data_worker, jobs):
                     batch_cleaned_counts = save_cleaned_data(result)
-                for field in batch_cleaned_counts:
-                    cleaned_counts_by_field[field] += batch_cleaned_counts[field]
+                    log.info(f"Batch cleaned counts: {batch_cleaned_counts}")
+                    log.info(f"Multiprocessing batch finished, result: {result}")
+                    for field in batch_cleaned_counts:
+                        cleaned_counts_by_field[field] += batch_cleaned_counts[field]
+                log.info("Finished cleaning jobs")
             num_cleaned += len(batch)
             batch_end_time = time.time()
             rate = len(batch) / (batch_end_time - batch_start_time)
