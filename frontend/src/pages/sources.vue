@@ -54,17 +54,18 @@
       {{ $t("sources.suggestions") }}
     </h2>
 
-    <p class="inline-block">
+    <p class="mt-5 inline-block">
       <VButton
         as="VLink"
         variant="filled-pink"
         size="large"
-        class="not-prose mt-5 font-semibold"
+        class="not-prose"
+        show-external-icon
+        :external-icon-size="6"
         has-icon-end
         href="https://github.com/WordPress/openverse-catalog/issues/new?assignees=&labels=%F0%9F%9A%A6+status%3A+awaiting+triage%2C+%F0%9F%A7%B9+status%3A+ticket+work+required%2C+%E2%98%81%EF%B8%8F+provider%3A+any&template=new-source-suggestion.md&title=%5BSource+Suggestion%5D+Insert+source+name+here"
       >
         {{ $t("sources.issue-button") }}
-        <VIcon :icon-path="externalLinkIcon" :rtl-flip="true" />
       </VButton>
     </p>
 
@@ -95,15 +96,12 @@ import { useI18n } from "~/composables/use-i18n"
 
 import VButton from "~/components/VButton.vue"
 import VLink from "~/components/VLink.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
 import VContentPage from "~/components/VContentPage.vue"
 import VSourcesTable from "~/components/VSourcesTable.vue"
 
-import externalLinkIcon from "~/assets/icons/external-link.svg"
-
 export default defineComponent({
   name: "SourcePage",
-  components: { VButton, VContentPage, VIcon, VLink, VSourcesTable },
+  components: { VButton, VContentPage, VLink, VSourcesTable },
   layout: "content-layout",
   setup() {
     const i18n = useI18n()
@@ -113,7 +111,7 @@ export default defineComponent({
       meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
 
-    return { externalLinkIcon, supportedMediaTypes }
+    return { supportedMediaTypes }
   },
   head: {},
 })

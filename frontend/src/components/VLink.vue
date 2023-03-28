@@ -16,7 +16,7 @@
     rel="noopener noreferrer"
     :role="href ? undefined : 'link'"
     :aria-disabled="!href"
-    :class="{ 'inline-flex flex-row items-center gap-2': showExternalIcon }"
+    :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
     v-on="$listeners"
   >
     <slot /><VIcon
