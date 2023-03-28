@@ -237,8 +237,13 @@ class ProviderDataIngester(ABC):
                     should_continue = False
 
             except AirflowException as error:
-                # AirflowExceptions should not be caught, as execution should not
-                # continue when the task is being stopped by Airflow.
+                # AirflowExceptions should not be caught or reraised as IngestionErrors,
+                # as execution should not continue when the task is being stopped by
+                # Airflow. However, we should still log the last query_params to be
+                # hit before the error was raised.
+                logger.info(
+                    f"Last query_params used: {json.dumps(query_params, default=str)}"
+                )
 
                 # If errors have already been caught during processing, raise them
                 # as well.
