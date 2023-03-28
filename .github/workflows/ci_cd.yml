@@ -547,62 +547,19 @@ jobs:
   # Documentation #
   #################
 
-  docs-publish:
-    name: Publish full-stack docs
+  emit-docs:
+    name: Emit full-stack docs
     # https://github.com/actions/runner/issues/491#issuecomment-850884422
     if: |
       !failure() && !cancelled() &&
-      (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
-      (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
-      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
-      github.event_name == 'push'
-    runs-on: ubuntu-latest
-    needs:
-      - test-ing
-      - test-api
-      - nuxt-build
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Compile documentation
-        uses: ./.github/actions/build-docs
-        # Docs will be located at `/tmp/docs`.
-
-      - name: Checkout repository at `gh-pages` branch
-        uses: actions/checkout@v3
-        with:
-          ref: gh-pages
-
-      - name: Preserve previews
-        run: mv _preview /tmp/docs/_preview
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: /tmp/docs
-          force_orphan: true
-          cname: docs.openverse.org
-
-      - name: Checkout repository # again, to enable cleaning
-        uses: actions/checkout@v3
-        if: always()
-
-  docs-preview:
-    name: Preview full-stack docs
-    # https://github.com/actions/runner/issues/491#issuecomment-850884422
-    if: |
-      !failure() && !cancelled() &&
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.head.repo.owner.login == 'WordPress' &&
-      github.actor != 'dependabot[bot]' &&
+      (
+        github.event_name == 'push' ||
+        (
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.owner.login == 'WordPress' &&
+          github.actor != 'dependabot[bot]'
+        )
+      ) &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
       (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped')
@@ -616,31 +573,6 @@ jobs:
       REPO_NAME: ${{ github.event.pull_request.head.repo.name }}
 
     steps:
-      - uses: peter-evans/find-comment@v2
-        id: preview-comment
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body-includes: Full-stack documentation
-
-      - uses: peter-evans/create-or-update-comment@v2
-        if: steps.preview-comment.outputs.comment-id != 0
-        with:
-          comment-id: ${{ steps.preview-comment.outputs.comment-id }}
-          edit-mode: replace
-          body: |
-            **Full-stack documentation**: _Updating_
-
-            (This comment will be automatically updated with the preview URL once it is ready)
-
-      - uses: peter-evans/create-or-update-comment@v2
-        if: steps.preview-comment.outputs.comment-id == 0
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            **Full-stack documentation**: _Updating_
-
-            (This comment will be automatically updated with the preview URLs once it is ready)
-
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -664,15 +596,18 @@ jobs:
         with:
           ref: gh-pages
 
-      - name: Merge preview with existing gh-pages
+      - name: Copy existing previews
+        if: github.event_name == 'push'
         run: |
-          cd ..
-          cp -r "$REPO_NAME" /tmp/gh-pages
-          # Trash the existing preview folder and replace it with the newly generated one.
-          # If the preview hasn't been pushed yet this will still exit with code 0.
+          mv /tmp/docs /tmp/gh-pages
+          mv _preview /tmp/docs/_preview
+
+      - name: Replace preview of current PR
+        if: github.event_name == 'pull_request'
+        run: |
+          cp -r . /tmp/gh-pages
           sudo rm -rf /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
           mv /tmp/docs /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
-          cd "$REPO_NAME"
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
@@ -683,13 +618,16 @@ jobs:
           cname: docs.openverse.org
 
       - uses: peter-evans/find-comment@v2
+        if: github.event_name == 'pull_request'
         id: final-preview-comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Full-stack documentation
 
       - uses: peter-evans/create-or-update-comment@v2
+        if: github.event_name == 'pull_request'
         with:
+          issue-number: ${{ github.event.pull_request.number }}
           comment-id: ${{ steps.final-preview-comment.outputs.comment-id }}
           edit-mode: replace
           body: |
@@ -703,7 +641,7 @@ jobs:
 
       - name: Checkout repository # again, to enable cleaning
         uses: actions/checkout@v3
-        if: always()
+        if: success() || failure()
 
   #################
   # Docker images #
