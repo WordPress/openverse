@@ -1,7 +1,8 @@
 <template>
   <VButton
-    variant="primary"
-    class="relative h-12 py-4 text-sm font-semibold ms-auto"
+    variant="filled-pink"
+    size="large"
+    class="relative ms-auto"
     @click="$emit('click')"
   >
     <!-- Loading animation -->

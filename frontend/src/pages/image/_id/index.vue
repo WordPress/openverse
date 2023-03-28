@@ -26,21 +26,19 @@
 
     <section
       id="title-button"
-      class="flex flex-row flex-wrap justify-between md:mt-6 md:flex-row-reverse"
+      class="flex flex-row flex-wrap justify-between gap-x-6 md:mt-6 md:flex-row-reverse"
     >
       <VButton
         as="VLink"
         :href="image.foreign_landing_url"
-        class="description-bold md:heading-6 mb-4 w-full flex-initial self-center md:mb-0 md:w-max"
-        size="large-old"
+        variant="filled-pink"
+        class="description-bold mb-4 w-full md:mb-0 md:w-max"
+        show-external-icon
+        external-icon-size="6"
+        has-icon-end
+        size="large"
       >
         {{ $t("image-details.weblink") }}
-        <VIcon
-          :icon-path="externalIcon"
-          :rtl-flip="true"
-          class="ms-2 md:h-6 md:w-6"
-          :size="4"
-        />
       </VButton>
       <div class="description-bold flex flex-1 flex-col justify-center">
         <h1 class="description-bold md:heading-5 line-clamp-2">
@@ -94,7 +92,6 @@ import { createDetailPageMeta } from "~/utils/og"
 
 import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 import VButton from "~/components/VButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
 import VImageDetails from "~/components/VImageDetails/VImageDetails.vue"
 import VLink from "~/components/VLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
@@ -110,7 +107,6 @@ export default defineComponent({
   components: {
     VBackToSearchResultsLink,
     VButton,
-    VIcon,
     VLink,
     VImageDetails,
     VMediaReuse,
