@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 import pytest
 from airflow.exceptions import AirflowException
+
 from providers.provider_api_scripts.smithsonian import SmithsonianDataIngester
 
 

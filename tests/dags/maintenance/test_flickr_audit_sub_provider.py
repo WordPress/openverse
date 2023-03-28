@@ -2,6 +2,7 @@ from unittest import mock
 
 import pytest
 from airflow.exceptions import AirflowSkipException
+
 from maintenance.flickr_audit_sub_provider_workflow import (
     FlickrSubProviderAuditor,
     audit_flickr_sub_providers,

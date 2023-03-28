@@ -3,6 +3,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from providers.provider_api_scripts.wordpress import WordPressDataIngester
 
 

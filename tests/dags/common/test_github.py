@@ -1,7 +1,8 @@
 import pook
 import pytest
-from common.github import GitHubAPI
 from requests import HTTPError
+
+from common.github import GitHubAPI
 
 
 SAMPLE_PAT = "foobar"

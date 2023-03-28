@@ -4,6 +4,7 @@ from unittest import mock
 
 import boto3
 import pytest
+
 from maintenance.rotate_db_snapshots import delete_previous_snapshots
 
 

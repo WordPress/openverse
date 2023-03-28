@@ -12,6 +12,7 @@ This should be run every time before a data refresh is triggered.
 """
 from airflow.operators.python import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
+
 from common.constants import POSTGRES_CONN_ID
 from common.popularity import sql
 from data_refresh import reporting

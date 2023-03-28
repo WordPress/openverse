@@ -2,6 +2,8 @@ import logging
 from textwrap import dedent
 
 from airflow.models.abstractoperator import AbstractOperator
+from psycopg2.errors import InvalidTextRepresentation
+
 from common.constants import AUDIO, IMAGE, MediaType
 from common.loader import provider_details as prov
 from common.loader.paths import _extract_media_type
@@ -15,7 +17,6 @@ from common.storage.tsv_columns import (
     CURRENT_IMAGE_TSV_COLUMNS,
     required_columns,
 )
-from psycopg2.errors import InvalidTextRepresentation
 
 
 logger = logging.getLogger(__name__)

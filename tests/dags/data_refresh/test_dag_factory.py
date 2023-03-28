@@ -7,6 +7,7 @@ from airflow.utils.session import create_session
 from airflow.utils.state import State
 from airflow.utils.timezone import datetime
 from airflow.utils.types import DagRunType
+
 from data_refresh import dag_factory
 from data_refresh.dag_factory import (
     REFRESH_MATERIALIZED_VIEW_TASK_ID,

@@ -3,6 +3,7 @@ from ast import literal_eval
 from pathlib import Path
 
 import pytest
+
 from common.constants import IMAGE
 from common.licenses import get_license_info
 from providers.provider_api_scripts.nappy import NappyDataIngester

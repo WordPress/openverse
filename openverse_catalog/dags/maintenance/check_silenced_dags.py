@@ -28,6 +28,7 @@ from datetime import datetime, timedelta
 from airflow.exceptions import AirflowException, AirflowSkipException
 from airflow.models import DAG, Variable
 from airflow.operators.python import PythonOperator
+
 from common.constants import DAG_DEFAULT_ARGS
 from common.github import GitHubAPI
 from common.slack import SilencedSlackNotification, send_alert

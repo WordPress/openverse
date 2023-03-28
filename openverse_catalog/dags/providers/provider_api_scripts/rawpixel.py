@@ -20,6 +20,7 @@ import re
 from urllib.parse import urlencode
 
 from airflow.models import Variable
+
 from common import constants
 from common.licenses import NO_LICENSE_FOUND, get_license_info
 from common.loader import provider_details as prov

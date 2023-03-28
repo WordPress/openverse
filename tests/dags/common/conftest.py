@@ -7,9 +7,9 @@ import pytest
 from airflow import DAG
 from airflow.models.abstractoperator import AbstractOperator
 from airflow.operators.python import PythonOperator
+
 from common.constants import POSTGRES_CONN_ID
 from common.sql import PGExecuteQueryOperator, PostgresHook
-
 from tests.dags.common.loader.test_s3 import ACCESS_KEY, S3_LOCAL_ENDPOINT, SECRET_KEY
 
 

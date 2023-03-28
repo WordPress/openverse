@@ -32,6 +32,7 @@ from airflow.operators.python import PythonOperator, ShortCircuitOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
+
 from common.constants import IMAGE, POSTGRES_CONN_ID, XCOM_PULL_TEMPLATE
 from common.loader import provider_details, reporting, sql
 from common.sql import PGExecuteQueryOperator, PostgresHook

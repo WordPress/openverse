@@ -2,10 +2,11 @@ import logging
 import time
 from collections.abc import Callable
 
-import oauth2
 import requests
 from airflow.exceptions import AirflowException
 from requests.exceptions import JSONDecodeError
+
+import oauth2
 
 
 # pytest_socket will not be available in production, so we must create a shim for

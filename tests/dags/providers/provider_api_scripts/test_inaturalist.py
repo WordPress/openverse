@@ -6,6 +6,7 @@ import pendulum
 import pytest
 from airflow.exceptions import AirflowSkipException
 from airflow.models import TaskInstance
+
 from common.constants import IMAGE
 from common.loader.reporting import RecordMetrics
 from common.sql import PostgresHook

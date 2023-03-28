@@ -3,6 +3,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts.jamendo import JamendoDataIngester
 

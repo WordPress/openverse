@@ -74,6 +74,7 @@ from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
+
 from common.constants import DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
 from common.loader import loader, reporting, s3, sql
 from providers.factory_utils import date_partition_for_prefix, pull_media_wrapper

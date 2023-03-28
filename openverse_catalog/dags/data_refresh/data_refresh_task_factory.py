@@ -57,10 +57,11 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from airflow.utils.task_group import TaskGroup
+from requests import Response
+
 from common.constants import XCOM_PULL_TEMPLATE
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from data_refresh.data_refresh_types import DataRefresh
-from requests import Response
 
 
 logger = logging.getLogger(__name__)

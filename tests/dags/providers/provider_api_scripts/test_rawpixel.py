@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import pytest
+
 from common.licenses import LicenseInfo
 from common.loader.provider_details import ImageCategory
 from providers.provider_api_scripts.rawpixel import RawpixelDataIngester

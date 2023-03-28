@@ -8,6 +8,7 @@ from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.providers.postgres.hooks.postgres import (
     PostgresHook as UpstreamPostgresHook,
 )
+
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 
 

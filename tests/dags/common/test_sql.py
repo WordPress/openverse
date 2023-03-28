@@ -3,10 +3,10 @@ import os
 from datetime import datetime, timedelta
 
 import pytest
-from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
-from common.sql import PGExecuteQueryOperator, PostgresHook
 from psycopg2.errors import QueryCanceled
 
+from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
+from common.sql import PGExecuteQueryOperator, PostgresHook
 from tests.conftest import mark_extended
 
 

@@ -4,6 +4,7 @@ from datetime import datetime
 from unittest import mock
 
 import pytest
+
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts.flickr import FlickrDataIngester
 

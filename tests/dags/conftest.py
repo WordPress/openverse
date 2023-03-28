@@ -1,8 +1,9 @@
 from unittest import mock
 
 import pytest
-from oauth2 import oauth2
 from requests import Response
+
+from oauth2 import oauth2
 
 
 FAKE_OAUTH_PROVIDER_NAME = "fakeprovider"

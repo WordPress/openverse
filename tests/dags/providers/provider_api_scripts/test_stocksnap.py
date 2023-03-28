@@ -4,6 +4,7 @@ import os
 from unittest.mock import patch
 
 import pytest
+
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.storage.image import ImageStore

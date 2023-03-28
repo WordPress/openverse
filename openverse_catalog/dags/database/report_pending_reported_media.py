@@ -18,6 +18,7 @@ from airflow import DAG
 from airflow.exceptions import AirflowException
 from airflow.models import BaseOperator, TaskInstance
 from airflow.operators.python import PythonOperator
+
 from common import slack
 from common.constants import (
     DAG_DEFAULT_ARGS,

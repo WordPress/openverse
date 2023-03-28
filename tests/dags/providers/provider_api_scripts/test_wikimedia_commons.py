@@ -4,6 +4,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
+
 from common.constants import IMAGE
 from common.licenses import get_license_info
 from providers.provider_api_scripts.wikimedia_commons import (

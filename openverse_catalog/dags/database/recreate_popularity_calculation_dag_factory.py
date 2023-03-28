@@ -10,6 +10,7 @@ SQL code is deployed for the calculation.
 """
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.popularity import sql
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh

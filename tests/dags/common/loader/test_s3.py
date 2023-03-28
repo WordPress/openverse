@@ -4,6 +4,7 @@ from unittest import mock
 import pytest
 from airflow.exceptions import AirflowSkipException
 from airflow.models import TaskInstance
+
 from common.loader import s3
 
 

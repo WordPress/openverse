@@ -3,6 +3,7 @@ import re
 from urllib.parse import parse_qs, urlparse
 
 from airflow.models import Variable
+
 from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov

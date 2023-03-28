@@ -28,9 +28,10 @@ Notes:                  https://metmuseum.github.io/#search
 import argparse
 import logging
 
+from provider_data_ingester import ProviderDataIngester
+
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
-from provider_data_ingester import ProviderDataIngester
 
 
 logging.basicConfig(

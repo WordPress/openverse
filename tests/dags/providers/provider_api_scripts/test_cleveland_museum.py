@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
+
 from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
 from common.storage.image import ImageStore

@@ -1,9 +1,10 @@
 """# OAuth Provider Authorization"""
 from datetime import datetime
 
-import oauth2
 from airflow.models import DAG
 from airflow.operators.python import PythonOperator
+
+import oauth2
 from common.constants import DAG_DEFAULT_ARGS
 
 

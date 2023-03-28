@@ -2,6 +2,7 @@ import json
 import os
 
 import pytest
+
 from common.licenses import LicenseInfo, get_license_info
 from providers.provider_api_scripts.europeana import (
     EuropeanaDataIngester,

@@ -9,6 +9,7 @@ from datetime import timedelta
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.loader import sql
 

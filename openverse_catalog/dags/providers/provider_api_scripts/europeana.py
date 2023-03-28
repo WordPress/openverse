@@ -13,8 +13,9 @@ import functools
 import logging
 from datetime import datetime, timedelta, timezone
 
-import common
 from airflow.models import Variable
+
+import common
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester

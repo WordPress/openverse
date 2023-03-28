@@ -10,6 +10,7 @@ refresh DAG.
 """
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
+
 from common.constants import POSTGRES_CONN_ID
 from common.popularity import sql
 from data_refresh import reporting

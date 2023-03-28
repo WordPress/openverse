@@ -7,6 +7,7 @@ from typing import NamedTuple
 
 import psycopg2
 import pytest
+
 from common.popularity import sql
 
 

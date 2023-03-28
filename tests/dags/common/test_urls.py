@@ -3,8 +3,9 @@ from unittest.mock import patch
 
 import pytest
 import requests
-from common import urls
 from requests import RequestException
+
+from common import urls
 
 
 logging.basicConfig(

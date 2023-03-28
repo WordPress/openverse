@@ -4,9 +4,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
-from common import requester
 from requests_oauthlib import OAuth2Session
 
+from common import requester
 from tests.dags.conftest import FAKE_OAUTH_PROVIDER_NAME
 
 

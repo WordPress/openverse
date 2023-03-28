@@ -25,6 +25,7 @@ import jinja2
 from airflow.configuration import conf
 from airflow.models import DAG
 from airflow.operators.python import PythonOperator
+
 from common import log_cleanup
 from common.constants import DAG_DEFAULT_ARGS
 

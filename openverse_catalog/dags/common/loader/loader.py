@@ -1,4 +1,5 @@
 from airflow.models.abstractoperator import AbstractOperator
+
 from common.loader import paths, s3, sql
 from common.loader.paths import _extract_media_type
 from common.loader.reporting import RecordMetrics

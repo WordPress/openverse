@@ -9,6 +9,7 @@ from airflow.utils.session import create_session
 from airflow.utils.state import State
 from airflow.utils.timezone import datetime
 from airflow.utils.types import DagRunType
+
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 
 

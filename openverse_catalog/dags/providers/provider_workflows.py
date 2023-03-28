@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
 from airflow.models import Variable
+from typing_extensions import NotRequired, TypedDict
+
 from providers.provider_api_scripts.brooklyn_museum import BrooklynMuseumDataIngester
 from providers.provider_api_scripts.cleveland_museum import ClevelandDataIngester
 from providers.provider_api_scripts.europeana import EuropeanaDataIngester
@@ -29,7 +31,6 @@ from providers.provider_api_scripts.wikimedia_commons import (
     WikimediaCommonsDataIngester,
 )
 from providers.provider_api_scripts.wordpress import WordPressDataIngester
-from typing_extensions import NotRequired, TypedDict
 
 
 logger = logging.getLogger(__name__)

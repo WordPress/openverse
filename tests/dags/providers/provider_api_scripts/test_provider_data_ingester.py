@@ -5,13 +5,13 @@ from unittest.mock import MagicMock, call, patch
 import pytest
 import requests
 from airflow.exceptions import AirflowException
+
 from common.requester import RetriesExceeded
 from common.storage.audio import AudioStore, MockAudioStore
 from common.storage.image import ImageStore, MockImageStore
 from providers.provider_api_scripts.provider_data_ingester import (
     AggregateIngestionError,
 )
-
 from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
     AUDIO_PROVIDER,
     EXPECTED_BATCH_DATA,

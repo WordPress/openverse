@@ -8,13 +8,14 @@ from unittest import mock
 import psycopg2
 import pytest
 from airflow.models import TaskInstance
+from flaky import flaky
+from psycopg2.errors import InvalidTextRepresentation
+
 from common.constants import IMAGE
 from common.loader import sql
 from common.loader.sql import TSV_COLUMNS, create_column_definitions
 from common.storage import columns as col
 from common.storage.db_columns import IMAGE_TABLE_COLUMNS
-from flaky import flaky
-from psycopg2.errors import InvalidTextRepresentation
 
 
 POSTGRES_CONN_ID = os.getenv("TEST_CONN_ID")

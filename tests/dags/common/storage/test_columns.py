@@ -2,6 +2,7 @@ import logging
 import string
 
 import tldextract
+
 from common import urls
 from common.storage import columns
 from common.storage.columns import Datatype

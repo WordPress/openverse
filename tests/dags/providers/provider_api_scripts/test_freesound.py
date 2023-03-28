@@ -3,6 +3,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from common.licenses.licenses import LicenseInfo
 from providers.provider_api_scripts.freesound import FreesoundDataIngester
 

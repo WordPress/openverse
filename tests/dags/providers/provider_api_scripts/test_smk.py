@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import pytest
+
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts.smk import SmkDataIngester
 

@@ -6,6 +6,7 @@ import logging
 from unittest.mock import patch
 
 import pytest
+
 from common import urls
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov

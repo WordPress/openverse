@@ -3,6 +3,7 @@ from datetime import timedelta
 from textwrap import dedent
 
 from airflow.models.abstractoperator import AbstractOperator
+
 from common.constants import AUDIO, IMAGE
 from common.loader.sql import TABLE_NAMES
 from common.sql import PostgresHook

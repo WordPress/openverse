@@ -1,6 +1,7 @@
 import logging
 
 import pytest
+
 from common.storage import util
 from common.storage.audio import AudioStore
 from common.storage.image import ImageStore

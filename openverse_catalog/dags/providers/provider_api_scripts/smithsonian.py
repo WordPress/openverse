@@ -12,11 +12,12 @@ import logging
 
 from airflow.exceptions import AirflowException
 from airflow.models import Variable
+from retry import retry
+
 from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
-from retry import retry
 
 
 logger = logging.getLogger(__name__)

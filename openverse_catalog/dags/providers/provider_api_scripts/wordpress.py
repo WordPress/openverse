@@ -12,6 +12,7 @@ Notes:                  https://wordpress.org/photos/wp-json/wp/v2
 import logging
 
 import lxml.html as html
+
 from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov

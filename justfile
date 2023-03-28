@@ -73,8 +73,8 @@ deploy:
     @just up
 
 # Run pre-commit on all files
-lint:
-    pre-commit run --all-files
+lint hook="":
+    pre-commit run {{ hook }} --all-files
 
 # Load any dependencies necessary for actions on the stack without running the webserver
 _deps:

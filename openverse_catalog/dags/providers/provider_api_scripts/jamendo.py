@@ -18,8 +18,9 @@ Notes:                  https://api.jamendo.com/v3.0/tracks/
 import logging
 from urllib.parse import parse_qs, urlencode, urlsplit
 
-import common
 from airflow.models import Variable
+
+import common
 from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov

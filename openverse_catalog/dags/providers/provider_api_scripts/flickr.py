@@ -16,6 +16,7 @@ from datetime import datetime, timedelta
 
 import lxml.html as html
 from airflow.models import Variable
+
 from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov

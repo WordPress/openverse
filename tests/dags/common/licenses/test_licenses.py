@@ -1,9 +1,10 @@
 import logging
 from unittest.mock import patch
 
-import common.urls
 import pytest
 import tldextract
+
+import common.urls
 from common.licenses import licenses
 
 

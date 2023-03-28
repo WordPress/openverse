@@ -16,13 +16,14 @@ import logging
 from datetime import datetime
 
 from airflow.models import Variable
+from requests.exceptions import ConnectionError, SSLError
+from retry import retry
+
 from common import constants
 from common.licenses.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import RetriesExceeded
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
-from requests.exceptions import ConnectionError, SSLError
-from retry import retry
 
 
 logger = logging.getLogger(__name__)

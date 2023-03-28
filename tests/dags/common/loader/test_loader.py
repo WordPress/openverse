@@ -1,6 +1,7 @@
 from unittest import mock
 
 import pytest
+
 from common.loader import loader
 from common.loader.reporting import RecordMetrics
 

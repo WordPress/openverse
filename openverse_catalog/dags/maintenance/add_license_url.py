@@ -21,13 +21,14 @@ from airflow.models.abstractoperator import AbstractOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.utils.trigger_rule import TriggerRule
+from psycopg2._json import Json
+
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID, XCOM_PULL_TEMPLATE
 from common.licenses import get_license_info_from_license_pair
 from common.loader.sql import RETURN_ROW_COUNT
 from common.slack import send_message
 from common.sql import PostgresHook
 from providers.provider_dag_factory import AWS_CONN_ID, OPENVERSE_BUCKET
-from psycopg2._json import Json
 
 
 DAG_ID = "add_license_url"

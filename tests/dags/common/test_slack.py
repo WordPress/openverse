@@ -3,6 +3,7 @@ from unittest import mock
 
 import pytest
 from airflow.exceptions import AirflowNotFoundException
+
 from common.slack import (
     SLACK_ALERTS_CONN_ID,
     SlackMessage,
