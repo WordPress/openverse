@@ -26,7 +26,7 @@ DMCA = "dmca"
 OTHER = "other"
 
 
-class CustomManager(models.Manager):
+class CustomTagsListDeferralManager(models.Manager):
     """
     Custom manager used temporarily to enable zero-downtime removal of the deprecated
     `tags_list` field from the media modals.
