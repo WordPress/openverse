@@ -2,12 +2,13 @@
   <div :style="{ width }">
     <!-- The width is determined by the parent element if the 'size' property is not specified. -->
     <div
-      class="box-track group relative h-0 w-full rounded-sm bg-yellow pt-full text-dark-blue"
+      class="box-track group relative h-0 w-full rounded-sm bg-yellow pt-full text-dark-charcoal"
     >
       <div class="absolute inset-0 flex flex-col">
         <div class="info flex flex-grow flex-col justify-between p-4">
           <h2
-            class="font-heading text-base font-semibold leading-snug line-clamp-3"
+            class="description-bold leading-[1.3]"
+            :class="isDesktopWithSidebar ? 'line-clamp-1' : 'line-clamp-3'"
           >
             {{ audio.title }}
           </h2>
@@ -17,7 +18,7 @@
               hide-name
               :license="audio.license"
             />
-            <div v-if="audio.category">
+            <div v-if="audio.category && !isDesktopWithSidebar">
               {{ categoryLabel }}
             </div>
           </div>
@@ -39,6 +40,8 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
+
+import { useUiStore } from "~/stores/ui"
 
 import type { AudioDetail } from "~/types/media"
 import type { AudioSize } from "~/constants/audio"
@@ -62,8 +65,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const uiStore = useUiStore()
     const i18n = useI18n()
-    const isSmall = computed(() => props.size === "s")
 
     const width = computed(() => {
       const magnitudes = {
@@ -71,18 +74,22 @@ export default defineComponent({
         m: 12.25,
         s: 9.75,
       }
-
       return props.size ? `${magnitudes[props.size]}rem` : undefined
     })
+
     const categoryLabel = computed(() =>
       i18n.t(`filters.audio-categories.${props.audio.category}`).toString()
     )
 
-    return {
-      isSmall,
+    const isDesktopWithSidebar = computed(() => {
+      return uiStore.isDesktopLayout && uiStore.isFilterVisible
+    })
 
+    return {
       width,
       categoryLabel,
+
+      isDesktopWithSidebar,
     }
   },
 })
