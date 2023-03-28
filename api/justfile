@@ -23,12 +23,12 @@ up *flags:
     env COMPOSE_PROFILES="api" just ../up {{ flags }}
 
 # Wait for all profile services to be up
-wait-up: up
+@wait-up: up
     just ../ingestion_server/wait # API profile includes ingestion server
     just wait # API waits for ES in entrypoint
 
 # Load sample data into API via ingestion server
-init: wait-up
+@init: wait-up
     cd .. && just exec "-T web /bin/bash < load_sample_data.sh"
 
 recreate:
@@ -41,27 +41,23 @@ recreate:
 ##########
 
 # Check the health of the service
-@health host="localhost:50280":
-    -curl -s -o /dev/null -w '%{http_code}' 'http://{{ host }}/healthcheck/'
+@health host="web:8000":
+    just ../curl "-s -o /dev/null -w %{http_code} 'http://{{ host }}/healthcheck/"
 
 # Wait for the service to be healthy
-@wait host="localhost:50280":
-    # The just command on the second line is executed in the context of the
-    # parent directory and so must be prefixed with `api/`.
-    just ../_loop \
-    '"$(just api/health {{ host }})" != "200"' \
-    "Waiting for the API to be healthy..."
+@wait host="web:8000":
+    just ../curl "--retry-connrefused --retry 5 --retry-delay 5 http://{{ host }}/healthcheck/"
 
 ########
 # cURL #
 ########
 
 # Make a cURL GET request to service at the given path
-_curl-get path host="localhost:50280":
-    curl "http://{{ host }}/v1/{{ path }}"
+_curl-get path host="web:8000":
+    just ../curl "http://{{ host }}/v1/{{ path }}"
 
 # Make a test cURL GET request to the API
-stats media="images" host="localhost:50280":
+stats media="images" host="web:8000":
     just _curl-get "{{ media }}/stats/" {{ host }}
 
 # Launch a `pgcli` shell in the web container (requires typing credentials)
