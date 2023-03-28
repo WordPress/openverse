@@ -361,6 +361,7 @@ def clean_image_data(table):
                     for field in batch_cleaned_counts:
                         cleaned_counts_by_field[field] += batch_cleaned_counts[field]
                 log.info("Finished cleaning jobs")
+            log.info("Finished multiprocessing pool")
             num_cleaned += len(batch)
             batch_end_time = time.time()
             rate = len(batch) / (batch_end_time - batch_start_time)
