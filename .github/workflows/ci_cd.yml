@@ -569,7 +569,6 @@ jobs:
       - test-api
       - nuxt-build
     env:
-      REPO_OWNER: ${{ github.event.pull_request.head.repo.owner.login }}
       REPO_NAME: ${{ github.event.pull_request.head.repo.name }}
 
     steps:
@@ -634,9 +633,7 @@ jobs:
           comment-id: ${{ steps.final-preview-comment.outputs.comment-id }}
           edit-mode: replace
           body: |
-            **Full-stack documentation**: _Ready_
-
-            <https://${{ env.REPO_OWNER }}.github.io/${{ env.REPO_NAME }}/_preview/${{ github.event.pull_request.number }}>
+            **Full-stack documentation**: <https://docs.openverse.org/_preview/${{ github.event.pull_request.number }}>
 
             Please note that GitHub pages takes a little time to deploy newly pushed code, if the links above don't work or you see old versions, wait 5 minutes and try again.
 
