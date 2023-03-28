@@ -26,6 +26,8 @@ jobs:
   add_issue_to_project:
     name: Add new issue to project
     runs-on: ubuntu-latest
+    env:
+      PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo" # The ID for the project Priority custom field.
     steps:
       - name: Add issue to "Backlog"
         run: |
@@ -63,15 +65,7 @@ jobs:
           fi
           echo 'PRIORITY_VALUE_ID='"$PRIORITY_VALUE_ID" >> "$GITHUB_ENV"
 
-  set_issue_priority_field:
-    name: Set issue priority
-    runs-on: ubuntu-latest
-    needs:
-      - add_issue_to_project
-    steps:
       - name: Set issue priority
-        env:
-          PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo" # The ID for the project Priority custom field.
         run: |
           # shellcheck disable=SC2016
           gh api graphql -f query='
