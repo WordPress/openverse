@@ -335,52 +335,33 @@ a.button {
 }
 
 .filled-pink {
-  @apply border-0 bg-pink text-white focus-slim-filled hover:bg-dark-pink hover:text-white;
-}
-.filled-pink-pressed {
-  @apply bg-dark-pink;
+  @apply bg-pink text-white hover:bg-dark-pink hover:text-white;
 }
 
 .filled-dark {
-  @apply bg-dark-charcoal text-white focus-slim-filled hover:bg-dark-charcoal-80 hover:text-white;
-}
-.filled-dark-pressed {
-  @apply bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
+  @apply bg-dark-charcoal text-white hover:bg-dark-charcoal-80 hover:text-white;
 }
 
 .filled-gray {
   @apply bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
-.filled-gray-pressed {
-  @apply bg-dark-charcoal-90 text-white hover:border-tx hover:bg-dark-charcoal-80;
-}
 
 .filled-white {
-  @apply bg-white text-dark-charcoal hover:bg-dark-charcoal-10;
-}
-.filled-white-pressed {
-  @apply bg-dark-charcoal-10 text-dark-charcoal;
+  @apply bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 
 .bordered-white {
   @apply border border-white bg-white text-dark-charcoal hover:border-dark-charcoal-20;
 }
-.bordered-white-pressed {
-  @apply border;
-}
 
 .bordered-gray {
   @apply border border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal;
 }
-.bordered-gray-pressed {
-  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal;
-}
-
 .transparent-gray {
-  @apply bg-tx text-dark-charcoal hover:bg-dark-charcoal-10;
+  @apply bg-white text-dark-charcoal hover:bg-dark-charcoal-10;
 }
 .transparent-dark {
-  @apply bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 
 .primary {
