@@ -355,23 +355,20 @@ def clean_image_data(table):
             log.info(f"Starting {len(jobs)} cleaning jobs")
 
             results = pool.starmap(_clean_data_worker, jobs)
-            log.info(f"Multiprocessing pool finished, results: {results}")
+
             for result in results:
                 batch_cleaned_counts = save_cleaned_data(result)
-                log.info(f"Batch cleaned counts: {batch_cleaned_counts}")
-                log.info(f"Multiprocessing batch finished, result: {result}")
                 for field in batch_cleaned_counts:
                     cleaned_counts_by_field[field] += batch_cleaned_counts[field]
             pool.close()
-            log.info("Finished cleaning jobs")
-            log.info("Finished multiprocessing pool")
+
             num_cleaned += len(batch)
             batch_end_time = time.time()
             rate = len(batch) / (batch_end_time - batch_start_time)
-            log.info(f"Batch finished, records/s: cleanup_rate={rate}")
             log.info(
-                f"Fetching next batch. Records cleaned so far: {num_cleaned},"
-                f"counts: {batch_cleaned_counts}"
+                f"Batch finished, records/s: cleanup_rate={rate}, "
+                f"items cleaned: {batch_cleaned_counts}.\n"
+                f"Fetching next batch."
             )
             jobs = []
             batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
