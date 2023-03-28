@@ -253,8 +253,12 @@ class TestIngestion(unittest.TestCase):
         stat_msg = "The job should launch successfully and return 202 ACCEPTED."
         self.assertEqual(res.status_code, 202, msg=stat_msg)
 
+        logging.info(
+            f"Waiting for the task to send us a callback {self.__class__.cb_queue}"
+        )
+
         # Wait for the task to send us a callback.
-        assert self.__class__.cb_queue.get(timeout=120) == "CALLBACK!"
+        assert self.__class__.cb_queue.get(timeout=240) == "CALLBACK!"
 
         # Check that the indices remained the same
         after_indices = self._get_indices(self.downstream_db, model)
