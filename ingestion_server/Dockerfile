@@ -55,12 +55,12 @@ RUN apt-get update \
       && mkdir /worker_state
 
 # Create a non-root user
-RUN useradd ingestionu
-RUN chown ingestionu /worker_state
-USER ingestionu
+RUN useradd opener
+RUN chown opener /worker_state
+USER opener
 
 # Copy code into the final image
-COPY --chown=ingestionu . /ingestion_server/
+COPY --chown=opener . /ingestion_server/
 
 # Exposes
 # - 8001: Gunicorn server for `ingestion_server` Falcon app
