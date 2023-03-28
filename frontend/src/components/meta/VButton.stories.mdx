@@ -31,7 +31,9 @@ export const buttonSizes = allButtonSizes.filter(
 
 export const Template = (args) => ({
   template: `
-    <div id="wrapper" class="w-40 h-16 flex items-center justify-center bg-white">
+    <div id="wrapper"
+        class="w-40 h-16 flex items-center justify-center"
+        :class="args?.variant.startsWith('transparent') ? 'bg-dark-charcoal-06': 'bg-white'">
     <VButton v-bind="args" @click="onClick" href="/">
       Code is Poetry
     </VButton>

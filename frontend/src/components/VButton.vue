@@ -358,10 +358,10 @@ a.button {
   @apply border border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal;
 }
 .transparent-gray {
-  @apply bg-white text-dark-charcoal hover:bg-dark-charcoal-10;
+  @apply bg-tx text-dark-charcoal hover:bg-dark-charcoal-10;
 }
 .transparent-dark {
-  @apply bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 
 .primary {
