@@ -26,7 +26,7 @@ DMCA = "dmca"
 OTHER = "other"
 
 
-class CustomTagsListDeferralManager(models.Manager):
+class TagsListDeferralManager(models.Manager):
     """
     Custom manager used temporarily to enable zero-downtime removal of the deprecated
     `tags_list` field from the media modals.
@@ -106,7 +106,7 @@ class AbstractMedia(
 
     meta_data = models.JSONField(blank=True, null=True)
 
-    objects = CustomManager()
+    objects = TagsListDeferralManager()
 
     @property
     def license_url(self) -> str:
