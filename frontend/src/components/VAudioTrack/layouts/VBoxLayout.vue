@@ -5,7 +5,10 @@
       class="box-track group relative h-0 w-full rounded-sm bg-yellow pt-full text-dark-charcoal"
     >
       <div class="absolute inset-0 flex flex-col">
-        <div class="info flex flex-grow flex-col justify-between p-4">
+        <div
+          class="info flex flex-grow flex-col justify-between p-4"
+          :class="{ 'pb-2': isDesktopWithSidebar }"
+        >
           <h2
             class="description-bold leading-[1.3]"
             :class="isDesktopWithSidebar ? 'line-clamp-1' : 'line-clamp-3'"
@@ -14,7 +17,8 @@
           </h2>
           <div class="info">
             <VLicense
-              class="mb-2 hidden md:group-hover:block md:group-focus:block"
+              class="hidden md:group-hover:block md:group-focus:block"
+              :class="{ 'md:mb-2': !isDesktopWithSidebar }"
               hide-name
               :license="audio.license"
             />

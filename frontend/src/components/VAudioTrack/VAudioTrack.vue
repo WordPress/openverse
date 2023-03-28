@@ -5,8 +5,8 @@
     v-bind="containerAttributes"
     class="audio-track group block overflow-hidden rounded-sm ring-pink hover:no-underline"
     :aria-label="ariaLabel"
+    :title="audio.title"
     :role="isComposite ? 'application' : undefined"
-    @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
     @keydown.native="handleKeydown"
     @blur.native="handleBlur"
   >
