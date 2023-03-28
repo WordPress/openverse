@@ -55,25 +55,6 @@ if [ "$index_count" = 0 ]; then
     "http://$ES_SERVICE_NAME:9200/_cluster/health?wait_for_status=green&timeout=2s"
 fi
 
-function check_index_exists {
-  index=$1
-  curl \
-    -s \
-    --output /dev/null \
-    -I \
-    -w "%{http_code}\n" \
-    "http://$ES_SERVICE_NAME:9200/$index" | grep -v 404 || true
-}
-
-# Check if init indexes already exist
-image_init_exists=$(check_index_exists image-init)
-audio_init_exists=$(check_index_exists audio-init)
-
-if [ "$image_init_exists" ] && [ "$audio_init_exists" ]; then
-  echo 'Both init indexes already exist. Use "just recreate" to fully recreate your local environment.' > /dev/stderr
-  exit 1
-fi
-
 # Set up API database and upstream
 python3 manage.py migrate --noinput
 
@@ -194,15 +175,12 @@ ingest_test_data image
 sleep 2
 
 # Ingest and index the data
-if [ -z "$audio_init_exists" ]; then
-  ingest_upstream audio init
-  promote audio init audio
-fi
+ingest_upstream audio init
+promote audio init audio
 
-if [ -z "$image_init_exists" ]; then
-  ingest_upstream image init 2
-  promote image init image
-fi
+ingest_upstream image init 2
+promote image init image
+
 
 #########
 # Redis #
