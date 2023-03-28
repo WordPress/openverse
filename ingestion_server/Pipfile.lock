@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "baa7e59093d8fa3c9fd561342bc6835848faf0fcbc1154ac6b186881c7683193"
+            "sha256": "4292654515cfa595c4e23962a5cfbd32411a38c3becb58a2cca3a97eeffe7404"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -460,7 +460,7 @@
                 "sha256:2d91e135bf72d31a410b17c16da610a82cb55f6b0477d1a902134b24a455b8b3",
                 "sha256:b6a85871a79d2e3b22d2d1b94ac2824226a63c6b741c88f7ae975f18b6778374"
             ],
-            "markers": "python_version >= '3.7'",
+            "markers": "python_full_version >= '3.7.0'",
             "version": "==2.0.0"
         },
         "ipython": {
@@ -492,7 +492,7 @@
                 "sha256:714ac14496c3e68c99c29b00845f7a2b85f3bb6f1078fd9f72fd20f0570002b2",
                 "sha256:b6ad297f8907de0fa2fe1ccbd26fdaf387f5f47c7275fedf8cce89f99446cf97"
             ],
-            "markers": "python_version >= '3.7'",
+            "markers": "python_full_version >= '3.7.0'",
             "version": "==23.0"
         },
         "parso": {
@@ -531,7 +531,7 @@
                 "sha256:23ac5d50538a9a38c8bde05fecb47d0b403ecd0662857a86f886f798563d5b9b",
                 "sha256:45ea77a2f7c60418850331366c81cf6b5b9cf4c7fd34616f733c5427e6abbb1f"
             ],
-            "markers": "python_version >= '3.7'",
+            "markers": "python_full_version >= '3.7.0'",
             "version": "==3.0.38"
         },
         "ptyprocess": {
@@ -574,11 +574,11 @@
         },
         "pytest-order": {
             "hashes": [
-                "sha256:5dd6b929fbd7eaa6d0ee07586f65c623babb0afe72b4843c5f15055d6b3b1b1f",
-                "sha256:bbe6e63a8e23741ab3e810d458d1ea7317e797b70f9550512d77d6e9e8fd1bbb"
+                "sha256:139d25b30826b78eebb42722f747eab14c44b88059d7a71d4f79d14a057269a5",
+                "sha256:3b3730969c97900fa5cd31ecff80847680ed56b2490954565c14949ba60d9371"
             ],
             "index": "pypi",
-            "version": "==1.0.1"
+            "version": "==1.1.0"
         },
         "remote-pdb": {
             "hashes": [
@@ -616,7 +616,7 @@
                 "sha256:9e6ec080259b9a5940c797d58b613b5e31441c2257b87c2e795c5228ae80d2d8",
                 "sha256:f6cde21a9c68cf756af02035f72d5a723bf607e862e7be33ece505abf4a3bad9"
             ],
-            "markers": "python_version >= '3.7'",
+            "markers": "python_full_version >= '3.7.0'",
             "version": "==5.9.0"
         },
         "wcwidth": {
