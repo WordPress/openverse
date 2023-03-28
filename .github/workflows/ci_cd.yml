@@ -618,12 +618,18 @@ jobs:
           name: storybook-test-results
           path: frontend/test-results
 
-  clean-playwright-failure-comment:
-    name: Remove Playwright test debugging instructions
-    if: github.event_name == 'pull_request' && needs.get-changes.outputs.frontend == 'true'
+  playwright-test-failure-comment:
+    name: Post Playwright test debugging instructions
+    if: |
+      !cancelled() &&
+      github.event_name == 'pull_request' &&
+      needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
+      - nuxt-playwright-e2e
+      - nuxt-playwright-vr
+      - storybook-playwright
 
     steps:
       - uses: peter-evans/find-comment@v2
@@ -643,21 +649,8 @@ jobs:
             })
             console.log('Deleted comment with ID ${{ steps.test-results-comment.outputs.comment-id }}')
 
-  playwright-test-failure-comment:
-    name: Post Playwright test debugging instructions
-    if: |
-      (success() || failure()) &&
-      github.event_name == 'pull_request' &&
-      (needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' || needs.storybook-playwright.result == 'failure')
-    runs-on: ubuntu-latest
-    needs:
-      - nuxt-playwright-e2e
-      - nuxt-playwright-vr
-      - storybook-playwright
-      - clean-playwright-failure-comment
-
-    steps:
       - uses: peter-evans/create-or-update-comment@v2
+        if: needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' || needs.storybook-playwright.result == 'failure'
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
