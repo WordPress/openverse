@@ -62,6 +62,7 @@ if DEBUG:
         "localhost",
         "127.0.0.1",
         "0.0.0.0",
+        "web",  # used when requesting from within the docker network context
     ]
 
 USE_S3 = config("USE_S3", default=False, cast=bool)
