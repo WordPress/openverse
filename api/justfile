@@ -29,7 +29,7 @@ wait-up: up
 
 # Load sample data into API via ingestion server
 init: wait-up
-    cd .. && just exec web load_sample_data.sh
+    cd .. && just exec "-T web /bin/bash < load_sample_data.sh"
 
 recreate:
     just ../down -v

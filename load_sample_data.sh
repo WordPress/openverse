@@ -1,3 +1,5 @@
+#! /usr/bin/env bash
+
 set -e
 UPSTREAM_DB_SERVICE_NAME="${UPSTREAM_DB_SERVICE_NAME:-upstream_db}"
 DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
@@ -14,13 +16,13 @@ function psql_cmd {
 
 # Load sample data
 function load_sample_data {
-  bash -c "$(psql_cmd $UPSTREAM_DB_SERVICE_NAME) <<-EOF
+  eval "$(psql_cmd "$UPSTREAM_DB_SERVICE_NAME")" <<-EOF
     DELETE FROM $1;
 		\copy $1 \
 			from '/sample_data/sample_$1.csv' \
 			with (FORMAT csv, HEADER true);
 		REFRESH MATERIALIZED VIEW $1_view;
-		EOF"
+		EOF
 }
 
 load_sample_data image
@@ -41,7 +43,7 @@ index_count=$(
     "http://$ES_SERVICE_NAME:9200/_cat/indices" | wc -l
 )
 
-if [ $index_count = 0 ]; then
+if [ "$index_count" = 0 ]; then
   # if indexes exist, then we don't need to wait for ES to initialise
   # if they don't exist, however, then we will need to hold on a second for ES
   # to be ready to start ingestion
@@ -67,8 +69,8 @@ function check_index_exists {
 image_init_exists=$(check_index_exists image-init)
 audio_init_exists=$(check_index_exists audio-init)
 
-if [ $image_init_exists ] && [ $audio_init_exists ]; then
-  echo 'Both init indexes already exist. Use `just recreate` to fully recreate your local environment.' > /dev/stderr
+if [ "$image_init_exists" ] && [ "$audio_init_exists" ]; then
+  echo 'Both init indexes already exist. Use "just recreate" to fully recreate your local environment.' > /dev/stderr
   exit 1
 fi
 
@@ -90,55 +92,88 @@ for username in usernames:
     user.save()
 EOF"
 
-bash -c "$(psql_cmd $DB_SERVICE_NAME) <<-EOF
-	DELETE FROM content_provider;
-	INSERT INTO content_provider
-		(created_on, provider_identifier, provider_name, domain_name, filter_content, media_type)
-	VALUES
-		(now(), 'flickr', 'Flickr', 'https://www.flickr.com', false, 'image'),
-		(now(), 'stocksnap', 'StockSnap', 'https://stocksnap.io', false, 'image'),
-		(now(), 'freesound', 'Freesound', 'https://freesound.org/', false, 'audio'),
-		(now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio'),
-		(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio');
-	EOF"
+eval "$(psql_cmd "$DB_SERVICE_NAME")" <<-EOF
+DELETE FROM content_provider;
+INSERT INTO content_provider
+  (created_on, provider_identifier, provider_name, domain_name, filter_content, media_type)
+VALUES
+  (now(), 'flickr', 'Flickr', 'https://www.flickr.com', false, 'image'),
+  (now(), 'stocksnap', 'StockSnap', 'https://stocksnap.io', false, 'image'),
+  (now(), 'freesound', 'Freesound', 'https://freesound.org/', false, 'audio'),
+  (now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio'),
+  (now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio');
+EOF
 
 #############
 # Ingestion #
 #############
 
 function _curl_post {
-  curl \
-    -X POST \
-    -s \
-    -H 'Content-Type: application/json' \
-    -d "$1" \
-    -w "\n" \
-    "http://$INGESTION_SERVER_SERVICE_NAME:8001/task"
+  response=$(
+    curl \
+      -X POST \
+      -s \
+      -H 'Content-Type: application/json' \
+      -d "$1" \
+      -w "\n" \
+      "http://$INGESTION_SERVER_SERVICE_NAME:8001/task"
+  )
+  # extract the status_check parameter from the response without needing to install jq
+  cat <<EOF | python
+import sys
+import json
+
+print(json.loads('$response')["status_check"])
+EOF
 }
 
-function wait_for_index {
-  index=${1:-image}
-  suffix=${2:-init}
-  # Wait for no relocating shards. Cannot wait for index health to be green
-  # as it is always yellow in the local environment.
-  echo "Waiting for index $index-$suffix..."
-  curl \
-    -s \
-    --output /dev/null \
-    --max-time 10 \
-    "http://$ES_SERVICE_NAME:9200/_cluster/health/$index-$suffix?wait_for_no_relocating_shards=true"
+function _await_task {
+  # This approach to waiting mirrors how the real data_refresh happens
+  # and is far more reliable than trying to infer the status of the indexes
+  # from ES endpoints
+  # Use python here as well to avoid needing to install jq or similar for
+  # parsing the response (and to make the parsing _obvious_ as opposed
+  # to using grep or sed!)
+
+  status_check=$1
+  task_name=$2
+  cat <<EOF | python
+import json
+from urllib.request import urlopen
+import time
+
+def is_active():
+    r = urlopen('$status_check')
+    r_json = json.loads(r.read().decode())
+    return r_json["active"]
+
+
+print('Awaiting $task_name')
+
+# Effectively waits a max of 30ish seconds as each iteration sleeps 1 second
+for _ in range(30):
+    if not is_active():
+        exit(0)
+    time.sleep(1)
+
+print('failed')
+EOF
 }
 
 function ingest_test_data {
-  echo "Loading $1 test data..."
-  _curl_post "{\"model\": \"$1\", \"action\": \"LOAD_TEST_DATA\"}"
+  status_check=$(_curl_post "{\"model\": \"$1\", \"action\": \"LOAD_TEST_DATA\"}")
+  _await_task "$status_check" "Loading $1 test data..."
 }
 
 function ingest_upstream {
   model=${1:-image}
   suffix=${2:-init}
-  echo "Ingesting $model-$suffix from upstream..."
-  _curl_post "{\"model\": \"$model\", \"action\": \"INGEST_UPSTREAM\", \"index_suffix\": \"$suffix\"}"
+  retry=$3
+  status_check=$(_curl_post "{\"model\": \"$model\", \"action\": \"INGEST_UPSTREAM\", \"index_suffix\": \"$suffix\"}")
+  e=$(_await_task "$status_check" "Ingesting $model-$suffix from upstream...")
+  if [ "$e" = "failed" ] && (( retry > 0 )); then
+    ingest_upstream "$model" "$suffix" "$(( retry - 1 ))"
+  fi
 }
 
 function promote {
@@ -146,8 +181,8 @@ function promote {
   suffix=${2:-init}
   alias=${3:-image}
 
-  echo "Promoting $model-$suffix to $alias..."
-  _curl_post "{\"model\": \"$model\", \"action\": \"PROMOTE\", \"index_suffix\": \"$suffix\", \"alias\": \"$alias\"}"
+  status_check=$(_curl_post "{\"model\": \"$model\", \"action\": \"PROMOTE\", \"index_suffix\": \"$suffix\", \"alias\": \"$alias\"}")
+  _await_task "$status_check" "Promoting $model-$suffix to $alias..."
 }
 
 
@@ -161,26 +196,12 @@ sleep 2
 # Ingest and index the data
 if [ -z "$audio_init_exists" ]; then
   ingest_upstream audio init
-  wait_for_index audio init
   promote audio init audio
-  wait_for_index audio
 fi
 
 if [ -z "$image_init_exists" ]; then
-  # Image ingestion is flaky; but usually works on the next attempt
-  set +e
-  while true; do
-    ingest_upstream image init
-    if wait_for_index image init
-    then
-      break
-    fi
-    ((c++)) && ((c==3)) && break
-  done
-  set -e
-
+  ingest_upstream image init 2
   promote image init image
-  wait_for_index image
 fi
 
 #########
