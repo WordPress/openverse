@@ -122,6 +122,10 @@ services:
       - cache
 
   ingestion_server:
+    build:
+      context: ./ingestion_server/
+      args:
+        PIPENV_INSTALL_ARGS: "--dev"
     depends_on:
       - db
       - upstream_db
@@ -129,6 +133,10 @@ services:
       - indexer_worker
 
   indexer_worker:
+    build:
+      context: ./ingestion_server/
+      args:
+        PIPENV_INSTALL_ARGS: "--dev"
     depends_on:
       - db
       - upstream_db
