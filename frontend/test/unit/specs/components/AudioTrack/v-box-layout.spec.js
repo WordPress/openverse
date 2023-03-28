@@ -3,6 +3,7 @@ import Vuei18n from "vue-i18n"
 import { createLocalVue } from "@vue/test-utils"
 
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
+import { createPinia, PiniaVuePlugin } from "~~/test/unit/test-utils/pinia"
 
 import VBoxLayout from "~/components/VAudioTrack/layouts/VBoxLayout.vue"
 
@@ -17,6 +18,7 @@ const i18n = new Vuei18n({
 describe("VBoxLayout", () => {
   let options = null
   let localVue
+
   let props = {
     audio: getAudioObj(),
     size: "m",
@@ -25,7 +27,10 @@ describe("VBoxLayout", () => {
   beforeEach(() => {
     localVue = createLocalVue()
     localVue.use(Vuei18n)
+    localVue.use(PiniaVuePlugin)
+
     options = {
+      pinia: createPinia(),
       propsData: props,
       mocks: { $nuxt: { context: { i18n } } },
       localVue,
