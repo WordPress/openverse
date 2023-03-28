@@ -39,7 +39,6 @@ RUN pnpm install --offline
 ENV NUXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
-ARG API_URL
 ARG SEMANTIC_VERSION
 
 RUN echo "{\"release\":\"${SEMANTIC_VERSION}\"}" > /home/node/frontend/src/static/version.json
