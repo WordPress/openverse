@@ -91,6 +91,23 @@ sensitive result designation than I had originally devised. This solution is
 easily 10x more intelligible and simpler to document and implement than the
 others I had considered.
 
+## Feasibility
+
+Whether the approach in this implementation plan is feasible was an open
+question for some time. After extensive discussions with folks who know
+Elasticsearch well, I decided on this approach and was able to test it in
+staging. The full process, index creation, reindex, refresh, was run on a
+production dataset from before iNaturalist was added. This means the origin
+index was smaller than our current one, but still large: 550 million documents.
+In staging, the whole process took just over six and a half hours. The resulting
+index had 444 million documents, meaning it excludes approximately 20% of the
+origin index.
+
+Therefore, I consider this approach feasible: it is sufficiently quick, it
+produced a dataset of unsurprising size (once quoted terms were used to prevent
+false positives), and is easy to implement with the tools we already have, use,
+and (mostly) understand.
+
 ## Technical description of plan
 
 Each heading refers to one of the steps in the previous section.
