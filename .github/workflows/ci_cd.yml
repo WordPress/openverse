@@ -773,12 +773,6 @@ jobs:
           run_id = os.environ.get("RUN_ID")
 
           jobs = ["emit-docs", "publish-images", "deploy-frontend", "deploy-api"]
-          emojis = {
-              "success": ":tadaco:",
-              "cancelled": ":no_good:",
-              "failure": ":alert:",
-              "skipped": ":warning:",
-          }
 
           results = {}
           counts = defaultdict(lambda: 0)
@@ -803,7 +797,7 @@ jobs:
                       "fields": [
                           {
                               "type": "mrkdwn",
-                              "text": f"*{job_name}:*\n{emojis[result]} {result}",
+                              "text": f"*{job_name}:*\n:workflow-{result}: {result}",
                           }
                           for job_name, result in results.items()
                       ],
