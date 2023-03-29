@@ -101,9 +101,16 @@ the process above. The staging deployment workflows
 
 ## Production
 
-Maintainers manually dispatch the production deployment workflows after [TBD cf
-https://github.com/WordPress/openverse/issues/976]. The workflow tags images
-based on input, and the release version tag name is used, for example `v3.4.3`.
+Maintainers manually dispatch the production deployment via the
+[Release app](https://github.com/WordPress/openverse/actions/workflows/release-app.yml)
+workflow. The workflow requires the tag of an existing Docker image to tag as
+the "released" image. It generates a date-based tag for the specific application
+being released, publishes a GitHub Release (which creates a git tag), tags the
+Docker image, and then triggers the deployment workflow.
+
+The same workflow is used to create production release images for the ingestion
+server. In that case the production deployment still needs to be handled via
+Terraform.
 
 ## Rollbacks
 
@@ -112,7 +119,7 @@ realise that the deployed code is not behaving as we expected. In these cases it
 may be necessary to force an environment to be deployed to a specific version,
 usually the previous version of the application.
 
-The same deployment workflows used for regular deployments can be used to
+The same staging and production deployment workflows are used directly to
 rollback any environment for any service. Only members of the
 @WordPress/openverse-maintainers GitHub team are able to dispatch the workflows
 to completion. Anyone else who tries to dispatch them will have the workflow
@@ -121,12 +128,19 @@ automatically fail.
 The workflows require one input: `tag`, which must be a valid tag that exists in
 the image repository for that application. The `tag` input is validated against
 the available list of tags and the workflow will fail if the tag is determined
-not to exist in the image repository.
+not to exist in the image repository. You can find a list of release tags for
+specific apps by filtering git tags based on the tag prefix for the app:
+
+```
+$ git tag -l '<app slug>-*'
+```
+
+Replace `<app slug>` with `api`, `frontend`, or `ingestion_server` as needed.
 
 After validating the tag and that the dispatcher is authorised, the Rollback
-workflow follows the deployment process described above. The only exception is
-that it skips the Docker image build and goes straight to step 2. Because of
-this difference, the rollback workflow generally takes less time.
+workflow follows the [deployment process described above](#deployment-workflow),
+without building the Docker image as it reuses the existing image tagged with
+the input.
 
 ## Environment Variables
 
