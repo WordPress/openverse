@@ -172,11 +172,11 @@ export default defineComponent({
   }
 
   .table th {
-    @apply first:rounded-tl-sm last:rounded-tr-sm;
+    @apply first:rounded-ss-sm last:rounded-se-sm;
   }
 
   .table tr:last-child td {
-    @apply border-b first:rounded-bl-sm last:rounded-br-sm;
+    @apply border-b first:rounded-es-sm last:rounded-ee-sm;
   }
 }
 </style>
