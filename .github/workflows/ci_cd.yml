@@ -378,6 +378,24 @@ jobs:
           name: openverse-api-openapi-schema.yaml
           path: ./api/openapi.yaml
 
+  fake-django-checks:
+    name: Run Django checks
+    if: needs.get-changes.outputs.api != 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+    strategy:
+      matrix:
+        recipe:
+          - "api/dj check"
+          - "api/dj validateopenapischema"
+          - "api/dj makemigrations --check --noinput --merge"
+          - "api/doc-test"
+
+    steps:
+      - name: Pass
+        run: echo 'Django checks are skipped because API is unchanged.'
+
   ############
   # Frontend #
   ############
@@ -491,6 +509,23 @@ jobs:
         with:
           name: ${{ matrix.name }}_test_results
           path: frontend/test-results
+
+  fake-playwright:
+    name: Run Playwright tests
+    if: needs.get-changes.outputs.frontend != 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+    strategy:
+      matrix:
+        name:
+          - playwright_vr
+          - playwright_e2e
+          - storybook_vr
+
+    steps:
+      - name: Pass
+        run: echo 'Playwright tests are skipped because frontend is unchanged.'
 
   playwright-test-failure-comment:
     name: Post Playwright test debugging instructions
