@@ -6,7 +6,9 @@ on:
     types:
       - opened
 env:
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GH_TOKEN: ${{ secrets.ACCESS_TOKEN }} # Projects need a personal access token to work.
+  ISSUE_ID: ${{ github.event.issue.node_id }} # The global issue ID that works in both REST and GraphQL APIs.
+  PROJECT_ID: "PVT_kwDOAAQ2Js4AMZdL" # The ID for the Openverse project (#75).
 
 jobs:
   add_issue:
@@ -24,6 +26,8 @@ jobs:
   add_issue_to_project:
     name: Add new issue to project
     runs-on: ubuntu-latest
+    env:
+      PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo" # The ID for the project Priority custom field.
     steps:
       - name: Add issue to "Backlog"
         run: |
@@ -61,15 +65,7 @@ jobs:
           fi
           echo 'PRIORITY_VALUE_ID='"$PRIORITY_VALUE_ID" >> "$GITHUB_ENV"
 
-  set_issue_priority_field:
-    name: Set issue priority
-    runs-on: ubuntu-latest
-    needs:
-      - add_issue_to_project
-    steps:
       - name: Set issue priority
-        env:
-          PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo" # The ID for the project Priority custom field.
         run: |
           # shellcheck disable=SC2016
           gh api graphql -f query='

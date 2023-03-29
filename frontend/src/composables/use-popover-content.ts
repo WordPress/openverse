@@ -4,7 +4,7 @@ import { PopoverContentProps, usePopper } from "~/composables/use-popper"
 
 import { useDialogContent } from "~/composables/use-dialog-content"
 
-import type { CSSProperties } from "@vue/runtime-dom"
+import type { Properties as CSSProperties } from "csstype"
 
 import type { Ref, ToRefs, SetupContext } from "vue"
 

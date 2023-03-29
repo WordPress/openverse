@@ -48,7 +48,7 @@ DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
 
 ENVIRONMENT = config("ENVIRONMENT", default="local")
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",") + [
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="").split(",") + [
     gethostname(),
     gethostbyname(gethostname()),
 ]
@@ -146,7 +146,6 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
         "catalog.api.utils.drf_renderer.BrowsableAPIRendererWithoutForms",
-        "rest_framework_xml.renderers.XMLRenderer",
     ),
     "DEFAULT_THROTTLE_CLASSES": (
         "catalog.api.utils.throttle.BurstRateThrottle",

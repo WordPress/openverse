@@ -134,7 +134,7 @@ repos:
       - id: types
         name: types
         files: ^frontend/.*$
-        entry: bash -c 'just frontend/run types'
+        entry: bash -c 'pnpm exec vue-tsc -p frontend --noEmit'
         language: system
         pass_filenames: false
       - id: test:unit
@@ -161,5 +161,11 @@ repos:
         name: render-github
         files: ^templates/.*$
         entry: bash -c 'just automations/js/render-github'
+        language: system
+        pass_filenames: false
+      - id: render-release-drafter
+        name: render-release-drafter
+        files: ^templates/.*$
+        entry: bash -c 'just automations/js/render-release-drafter'
         language: system
         pass_filenames: false

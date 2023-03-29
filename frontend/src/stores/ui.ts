@@ -5,14 +5,14 @@ import { useNavigationStore } from "~/stores/navigation"
 import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
 import type { BannerId, TranslationBannerId } from "~/types/banners"
 
-import type { Breakpoint } from "~/constants/screens"
+import type { RealBreakpoint } from "~/constants/screens"
 import { ALL_SCREEN_SIZES } from "~/constants/screens"
 import { cookieOptions } from "~/utils/cookies"
 import { needsTranslationBanner } from "~/utils/translation-banner"
 
 import type { LocaleObject } from "@nuxtjs/i18n"
 
-const desktopBreakpoints: Breakpoint[] = ["2xl", "xl", "lg"]
+const desktopBreakpoints: RealBreakpoint[] = ["2xl", "xl", "lg"]
 
 export interface UiState {
   /**
@@ -36,7 +36,7 @@ export interface UiState {
   /**
    * the screen's max-width breakpoint.
    */
-  breakpoint: Breakpoint
+  breakpoint: RealBreakpoint
   /**
    * whether the request user agent is mobile or not.
    */
@@ -189,7 +189,7 @@ export const useUiStore = defineStore("ui", {
      *
      * @param breakpoint - the `min-width` tailwind breakpoint for the screen width.
      */
-    updateBreakpoint(breakpoint: Breakpoint) {
+    updateBreakpoint(breakpoint: RealBreakpoint) {
       if (this.breakpoint === breakpoint) {
         return
       }
@@ -249,7 +249,7 @@ export const useUiStore = defineStore("ui", {
      * indicating whether the current breakpoint is greater than or equal to
      * the breakpoint passed as a parameter.
      */
-    isBreakpoint(breakpoint: Breakpoint): boolean {
+    isBreakpoint(breakpoint: RealBreakpoint): boolean {
       return (
         breakpoints.indexOf(breakpoint) >= breakpoints.indexOf(this.breakpoint)
       )

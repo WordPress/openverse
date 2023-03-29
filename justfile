@@ -40,16 +40,21 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 # Dev #
 #######
 
-# Installs Node.js dependencies for the entire monorepo.
+# Install Node.js dependencies for the entire monorepo
 node-install:
     pnpm i
     just frontend/run i18n:en
     just frontend/run i18n:copy-test-locales
 
-# Install all dependencies
-install: node-install
+# Install Python dependences for the monorepo
+py-install:
     just automations/python/install
     just documentation/install
+
+# Install all dependencies
+install:
+    just node-install
+    just py-install
 
 # Setup pre-commit as a Git hook
 precommit:
