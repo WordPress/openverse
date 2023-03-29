@@ -85,7 +85,7 @@
     <!-- Focus bar -->
     <div
       v-if="isInteractive && isSeeking"
-      class="absolute top-0 z-20 hidden h-full flex-col items-center justify-between bg-black group-focus:flex group-focus/waveform:flex"
+      class="absolute top-0 z-20 hidden h-full flex-col items-center justify-between bg-black group-focus/waveform:flex group-focus:flex"
       :style="{ width: `${barWidth}px`, left: `${progressBarWidth}px` }"
     >
       <div

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="app flex grid min-h-screen min-h-[100dvh] grid-rows-[auto,1fr,auto] bg-white"
+    class="app flex grid min-h-[100dvh] min-h-screen grid-rows-[auto,1fr,auto] bg-white"
     :class="[
       isDesktopLayout ? 'desktop' : 'mobile',
       breakpoint,
@@ -26,9 +26,9 @@
 
     <aside
       v-if="isSidebarVisible"
-      class="sidebar fixed z-10 mt-[81px] h-[calc(100vh-81px)] h-[calc(100dvh-81px)] overflow-y-auto border-dark-charcoal-20 bg-dark-charcoal-06 end-0 border-s"
+      class="sidebar fixed end-0 z-10 mt-[81px] h-[calc(100dvh-81px)] h-[calc(100vh-81px)] overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
     >
-      <VSearchGridFilter class="px-10 pt-8 pb-10" @close="closeSidebar" />
+      <VSearchGridFilter class="px-10 pb-10 pt-8" @close="closeSidebar" />
     </aside>
 
     <div class="main-page flex h-full w-full min-w-0 flex-col justify-between">

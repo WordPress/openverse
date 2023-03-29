@@ -42,7 +42,7 @@
       "
       variant="dropdown-label"
       size="disabled"
-      class="caption-regular min-w-max gap-1 py-1 px-3 text-dark-charcoal pe-1 ms-2 focus-visible:border-tx"
+      class="caption-regular ms-2 min-w-max gap-1 px-3 py-1 pe-1 text-dark-charcoal focus-visible:border-tx"
       @click="onTriggerClick"
       >{{ $t("external-sources.button").toString()
       }}<VIcon

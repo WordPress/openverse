@@ -3,7 +3,7 @@
     id="filter-button"
     variant="plain"
     size="disabled"
-    class="align-center label-regular h-12 w-12 gap-2 self-center border-tx xl:w-auto xl:ps-3 xl:pe-4"
+    class="align-center label-regular h-12 w-12 gap-2 self-center border-tx xl:w-auto xl:pe-4 xl:ps-3"
     :class="
       pressed
         ? 'bg-dark-charcoal text-white hover:bg-dark-charcoal-90'

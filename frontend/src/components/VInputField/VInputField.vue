@@ -4,9 +4,9 @@
     :class="[
       {
         // Padding is set to 1.5px to accommodate the border that will appear later.
-        'ps-1.5px rounded-s-none border-s-0 focus-within:ps-1.5px focus-within:rounded-s-none focus-within:border-s-0':
+        'rounded-s-none border-s-0 ps-1.5px focus-within:rounded-s-none focus-within:border-s-0 focus-within:ps-1.5px':
           connectionSides.includes('start'),
-        'pe-1.5px rounded-e-none border-e-0 focus-within:pe-1.5px focus-within:rounded-e-none focus-within:border-e-0':
+        'rounded-e-none border-e-0 pe-1.5px focus-within:rounded-e-none focus-within:border-e-0 focus-within:pe-1.5px':
           connectionSides.includes('end'),
       },
       sizeClass,
@@ -17,7 +17,7 @@
       v-bind="$attrs"
       ref="inputEl"
       :type="type"
-      class="h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none placeholder-dark-charcoal-70 ms-4 focus:outline-none md:text-base"
+      class="ms-4 h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none placeholder-dark-charcoal-70 focus:outline-none md:text-base"
       :value="modelValue"
       :aria-label="labelText"
       @input="updateModelValue"

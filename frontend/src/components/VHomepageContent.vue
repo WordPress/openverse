@@ -1,7 +1,7 @@
 <template>
   <VSkipToContentContainer>
     <h1
-      class="mt-auto mb-2 text-[40px] font-light leading-tight lg:text-[63px]"
+      class="mb-2 mt-auto text-[40px] font-light leading-tight lg:text-[63px]"
     >
       {{ $t("hero.subtitle") }}
     </h1>

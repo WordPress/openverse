@@ -16,7 +16,7 @@
     <template #notification>
       <span
         v-if="appliedFilterCount"
-        class="absolute top-[-2px] right-[-2px] h-[8px] w-[8px] rounded bg-pink"
+        class="absolute right-[-2px] top-[-2px] h-[8px] w-[8px] rounded bg-pink"
       />
     </template>
   </VSearchBarButton>

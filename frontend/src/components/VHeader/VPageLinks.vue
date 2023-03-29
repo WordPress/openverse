@@ -43,7 +43,7 @@
           v-if="isLinkExternal(page)"
           :icon-path="externalLinkIcon"
           :size="externalIconSize"
-          class="self-center ms-2"
+          class="ms-2 self-center"
           rtl-flip
       /></VLink>
     </li>

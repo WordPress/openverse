@@ -1,6 +1,6 @@
 <template>
   <div
-    class="app flex h-screen h-[100dvh] flex-col bg-yellow"
+    class="app flex h-[100dvh] h-screen flex-col bg-yellow"
     :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]"
   >
     <div class="sticky top-0 z-40 block">

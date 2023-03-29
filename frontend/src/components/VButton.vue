@@ -293,11 +293,11 @@ export default VButton
 }
 
 .size-medium-old {
-  @apply py-2 px-4;
+  @apply px-4 py-2;
 }
 
 .size-small {
-  @apply h-8 py-0 px-2;
+  @apply h-8 px-2 py-0;
 }
 .icon-start-small {
   @apply ps-1;
@@ -307,7 +307,7 @@ export default VButton
 }
 
 .size-medium {
-  @apply h-10 py-0 px-3;
+  @apply h-10 px-3 py-0;
 }
 .icon-start-medium {
   @apply ps-2;
@@ -317,7 +317,7 @@ export default VButton
 }
 
 .size-large {
-  @apply h-12 py-0 px-5;
+  @apply h-12 px-5 py-0;
 }
 .icon-start-large {
   @apply ps-4;

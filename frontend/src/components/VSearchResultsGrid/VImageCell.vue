@@ -29,7 +29,7 @@
         @error="onImageLoadError($event)"
       />
       <figcaption
-        class="invisible absolute left-0 bottom-0 bg-white p-1 text-dark-charcoal group-hover:visible group-focus:visible"
+        class="invisible absolute bottom-0 left-0 bg-white p-1 text-dark-charcoal group-hover:visible group-focus:visible"
       >
         <span class="sr-only">{{ image.title }}</span>
         <VLicense :license="image.license" :hide-name="true" />

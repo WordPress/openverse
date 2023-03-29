@@ -184,7 +184,7 @@ export default defineComponent({
 }
 .modal-backdrop {
   /* linting plugin changes the order if we use non-custom value of h-screen for 100vh */
-  @apply h-[100vh] h-[100dvh];
+  @apply h-[100dvh] h-[100vh];
 }
 .modal-backdrop-fit-content,
 .modal-backdrop-two-thirds {

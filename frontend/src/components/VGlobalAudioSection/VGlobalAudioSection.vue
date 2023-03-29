@@ -3,7 +3,7 @@
     <VGlobalAudioTrack v-if="audio" :audio="audio" />
     <VCloseButton
       v-if="audio"
-      class="!absolute top-0 z-30 end-0"
+      class="!absolute end-0 top-0 z-30"
       variant="filled-transparent"
       size="large"
       :label="$t('audio-track.close')"
