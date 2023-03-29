@@ -560,11 +560,11 @@ jobs:
             })
             console.log('Deleted comment with ID ${{ steps.test-results-comment.outputs.comment-id }}')
 
-      - uses: peter-evans/create-or-update-comment@v2
-        if: needs.playwright.result == 'failure'
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
+      - name: Build help body
+        id: help-body
+        run: |
+          help_body=$(
+            cat <<EOF
             **Playwright failure test results**
 
             It looks like some of the Playwright tests failed. You can download the Playwright trace
@@ -574,6 +574,27 @@ jobs:
             <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}>
 
             Read more about how to use this artifact here: <https://github.com/${{ github.repository }}/blob/main/frontend/test/playwright/README.md#debugging>
+            EOF
+          )
+          echo "help_body=$help_body" >> $GITHUB_OUTPUT
+
+      - uses: peter-evans/create-or-update-comment@v2
+        id: create-comment
+        # Do not leave a comment on forks
+        if: |
+          needs.playwright.result == 'failure' &&
+          (
+            github.event_name == 'pull_request' &&
+            github.event.pull_request.head.repo.owner.login == 'WordPress' &&
+            github.actor != 'dependabot[bot]'
+          )
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.help-body.outputs.help_body }}
+
+      - name: Log help body
+        if: steps.create-comment.status == 'skipped'
+        run: echo "${{ steps.help-body.outputs.help_body }}"
 
   #################
   # Documentation #
