@@ -228,7 +228,7 @@ PROVIDER_WORKFLOWS = [
         ingester_class=INaturalistDataIngester,
         create_preingestion_tasks=INaturalistDataIngester.create_preingestion_tasks,
         create_postingestion_tasks=INaturalistDataIngester.create_postingestion_tasks,
-        schedule_string="@monthly",
+        schedule_string="0 0 2 * *",
         pull_timeout=timedelta(days=5),
         upsert_timeout=timedelta(days=5),
     ),

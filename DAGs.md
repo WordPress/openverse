@@ -72,7 +72,7 @@ The following are DAGs grouped by their primary tag:
 | [`finnish_museums_workflow`](#finnish_museums_workflow)         | `@daily`          | `True`  | image         |
 | [`flickr_workflow`](#flickr_workflow)                           | `@daily`          | `True`  | image         |
 | [`freesound_workflow`](#freesound_workflow)                     | `@quarterly`      | `False` | audio         |
-| [`inaturalist_workflow`](#inaturalist_workflow)                 | `@monthly`        | `False` | image         |
+| [`inaturalist_workflow`](#inaturalist_workflow)                 | `0 0 2 * *`       | `False` | image         |
 | [`jamendo_workflow`](#jamendo_workflow)                         | `@monthly`        | `False` | audio         |
 | [`metropolitan_museum_workflow`](#metropolitan_museum_workflow) | `@daily`          | `True`  | image         |
 | `museum_victoria_workflow`                                      | `@monthly`        | `False` | image         |
