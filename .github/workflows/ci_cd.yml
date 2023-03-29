@@ -733,6 +733,7 @@ jobs:
 
   send_report:
     name: Send Slack report
+    runs-on: ubuntu-latest
     if: |
       !cancelled() &&
       github.event_name == 'push' &&
