@@ -43,6 +43,7 @@ API version prefix or distinctly new parameter.
 Implementing this plan will require making changes in the following areas:
 
 - API
+- Elasticsearch
 - Ingestion server
 - Airflow data refresh DAG factory
 
@@ -99,11 +100,11 @@ Each heading refers to one of the steps in the previous section.
 To efficiently filter sensitive content, we will create a secondary "filtered"
 index using Elasticsearch's
 [`reindex` API](https://www.elastic.co/guide/en/elasticsearch/reference/7.17/docs-reindex.html).
-This API allows us to create a new index based on an existing one, while also
-applying a query to the existing index. In effect, we can create a large negated
-`multi_match` filter to exclude all results that contain any of the sensitive
-terms in their textual content. This will happen in the ingestion server as a
-separate step during data refresh.
+This API allows us to copy documents from one index into another and using a
+query to select specific documents from the origin index. With this, we can
+create a large negated `multi_match` filter to exclude all results that contain
+any of the sensitive terms in their textual content. This will happen in the
+ingestion server as a separate step during data refresh.
 
 An example of the query built as a Python object iterating over a list of
 sensitive terms follows:
@@ -114,7 +115,16 @@ query = {
         "must_not": [
             {
                 "multi_match": {
-                    "query": term,
+                    # ``term`` must be quoted or terms with multiple
+                    # words will be treated with "OR" between each
+                    # word, leading to false positives on innocuous words
+                    # that are part of sensitive phrases. Quoting mitigates
+                    # this by telling ES to treat the entire term as
+                    # a single token.
+                    # See the ``operator`` parameter in the match
+                    # documentation for further details
+                    # https://www.elastic.co/guide/en/elasticsearch/reference/7.5/query-dsl-match-query.html#match-field-params
+                    "query": f'"{term}"',
                     "fields": ["tags.name", "title", "description"],
                 }
             }
@@ -131,28 +141,121 @@ appending `-filtered` to the name of the index that was already being filtered.
 For example, if the API is querying the filtered images index, it takes the
 already designated `image` index name and appends `-filtered`: `image-filtered`.
 
+In order for the new index to have the same settings as the original index
+(sharding, mappings, etc), we need to take special action before calling the
+reindex API. While the reindex API can create new indexes (if the destination
+index specified does not exist), it does not support configuring the index in
+the same request.
+
+There are two approaches to ensuring the correct configuration of the filtered
+index:
+
+1. Create the new filtered index before calling reindex, using the
+   [`index_settings`](https://github.com/wordpress/openverse/blob/38af21c359703d3faee9e160f1ac69372661d6a2/ingestion_server/ingestion_server/es_mapping.py#L1)
+   function to configure this index in the same was as the origin index for the
+   model.
+2. Create an index template that Elasticsearch will automatically apply to new
+   indexes that match the template pattern.
+   - In this option we can rely on the reindex API to create the new index as ES
+     will apply the template settings automatically.
+
+The first is my recommendation as it matches our current approach and is trivial
+to implement. The code sample at the end of this section demonstrates it in the
+call to `es.indices.create`.
+
+The second option, using index templates, is an interesting alternative that we
+could explore in the future, especially once we remove the ingestion server.
+However, it breaks significantly from our current approach to index
+configuration and I do not think is worth pursuing as part of this project.
+
+A sample implementation in a new `TableIndexer` method would look something like
+this:
+
+```py
+def create_and_populate_filtered_index(
+  self, model_name: str, index_suffix: str, **_
+):
+    source_index = f"{model_name}-{index_suffix}"
+    destination_index = f"{source_index}-filtered"
+
+    self.es.indices.create(
+        index=destination_index,
+        body=index_settings(model_name),
+    )
+
+    self.es.reindex(
+        body={
+            "source": {
+                "index": source_index,
+                "query": {
+                    "bool": {
+                        "must_not": [
+                            {
+                                "multi_match": {
+                                    "query": f'"{term}"',
+                                    "fields": ["tags.name", "title", "description"],
+                                }
+                            }
+                            for term in SENSITIVE_TERMS
+                        ]
+                    }
+                },
+            },
+            "dest": {"index": destination_index},
+        },
+        slices="auto",
+        wait_for_completion=True,
+    )
+
+    self.refresh(index_name=destination_index, change_settings=True)
+
+    self.ping_callback()
+```
+
+Please note the following important details:
+
+1. `wait_for_completion` defaults to `True`, but it's worth explicitly including
+   as we rely on the fact that the request will block the process until the
+   reindexing is finished so that we know when we can promote the index.
+1. `slices` is set to `"auto"` so that Elasticsearch is free to decide the
+   optimal number of slices to use to parallelise the reindex.
+1. The source index name is not passed explicitly to the API: instead the method
+   must build it. This means we match the API of other calls (making updates to
+   the data refresh DAG much simpler) and can avoid needing to parse the model
+   name from the source index name for the call to `index_settings`.
+1. We explicitly refresh the index after it is finished reindexing to prime it
+   to be searched. ES only automatically refreshes indexes that are being
+   actively used, and the index should be refreshed before it starts being used.
+
 The creation of the new index follow the same pattern of creating the regular
-index: create the index, wait for index creation to finish, then issue the
-command to point the alias to the new index. The ingestion server action to
-create the filtered index will be called `create_filtered_index`. The ingestion
-server action to promote the newly created filtered index will be called
-`promote_filtered_index`. These actions follow the same API as the existing
-`create` and `promote` actions.
+index: create the index, copy the data into the index, then issue the command to
+point the alias to the new index. This process is encapsulated in two actions:
+the `create_and_populate_filtered_index` action described above, and the
+existing `point_alias` action.
 
 > **Note**
 >
-> There is a notable exception to the similarity of this process with the
-> regular index creation step. Specifically, the filtered index creation does
-> not need to push the documents to Elasticsearch using the indexer workers: ES
-> already has the documents in the "origin" index.
+> While both processes have a "copy" step, they are notably different. The
+> origin index receives its documents from Postgres via ingestion workers, which
+> push the documents into Elasticsearch. The filtered index receives its
+> documents via the reindex API and does not require the ingestion workers.
 
 ### Airflow data refresh DAG factory (overview step 2)
 
 Adding these new steps to the Airflow data refresh DAG is simple and only
-requires adding the two new actions to the
+requires adding the two additional actions to the
 [existing `action_data_map`](https://github.com/WordPress/openverse-catalog/blob/4b5811aa240ba3ee2d92adea3a8abf88eb1e8aa4/openverse_catalog/dags/data_refresh/data_refresh_task_factory.py#L182)
-with the target alias also configured on the `promote_filtered_index` action,
-just as it is with the regular `promote` action.
+with the target alias configured on the `point_alias` action, just as it is with
+the regular `promote` action.
+
+```py
+action_data_map: dict[str, dict] = {
+    "ingest_upstream": {},
+    "promote": {"alias": target_alias},
+    "create_and_populate_filtered_index": {},
+    "point_alias": {"alias": f"{target_alias}-filtered"}
+}
+```
 
 ### Query the filtered index (overview step 3)
 
