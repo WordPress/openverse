@@ -42,6 +42,13 @@ wait-up: up
 # Tests #
 #########
 
+_gen-test-compose:
+    pipenv run python ./test/gen_integration_compose.py
+
 # Run ingestion-server tests locally
-test-local *args:
+test-local *args: _gen-test-compose
     pipenv run ./test/run_test.sh {{ args }}
+
+# Run ingestion-server tests in docker (does not work)
+test *args:
+    just ../exec "-u ingestionu ingestion_server /bin/bash -c 'pipenv run ./test/run_test.sh {{ args }}'"

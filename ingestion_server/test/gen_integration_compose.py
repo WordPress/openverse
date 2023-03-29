@@ -4,17 +4,16 @@ Parses the top-level Docker Compose file and generates one for the integration t
 The generated file is written to the same directory this script resides in with
 the name ``integration-docker-compose.yml``.
 
-A new file is generated instead of inheritance because using an inherited file
+A new file is generated instead of inheritance be   use using an inherited file
 will result in the containers being destroyed and recreated. By using generated
 files we ensure an up-to-date copy that does not interfere with the development
 environment.
 """
 
 import pathlib
+from test.test_constants import service_ports
 
 import yaml
-
-from .test_constants import service_ports
 
 
 this_dir = pathlib.Path(__file__).resolve().parent
@@ -37,29 +36,6 @@ def _prune_services(conf: dict):
     for service_name in dict(conf["services"]):
         if service_name not in services_to_keep:
             del conf["services"][service_name]
-
-
-def _map_ports(conf: dict):
-    """
-    Change the port mappings for the services to avoid conflicts.
-
-    This ensures that the test containers do not use the same ports as dev containers
-    that might already be using them.
-
-    :param conf: the Docker Compose configuration
-    """
-
-    for service_name, service in conf["services"].items():
-        if "ports" in service:
-            ports = service["ports"]
-            ports = [
-                f"{service_ports[service_name]}:{port.split(':')[1]}" for port in ports
-            ]
-            service["ports"] = ports
-        elif "expose" in service and service_name in service_ports:
-            exposes = service["expose"]
-            ports = [f"{service_ports[service_name]}:{expose}" for expose in exposes]
-            service["ports"] = ports
 
 
 def _fixup_env(conf: dict):
@@ -112,6 +88,8 @@ def _change_directories(conf: dict):
         conf["services"][service]["volumes"] = ["../:/ingestion_server"]
         conf["services"][service]["build"] = "../"
 
+    conf["services"]["upstream_db"]["volumes"] = ["../../sample_data:/sample_data"]
+
     upstream_db_build = conf["services"]["upstream_db"]["build"]
     conf["services"]["upstream_db"]["build"] = f"../../{upstream_db_build}"
 
@@ -124,7 +102,13 @@ def _rename_services(conf: dict):
     """
 
     for service_name, service in dict(conf["services"]).items():
-        conf["services"][f"integration_{service_name}"] = service
+        conf["services"][f"integration_{service_name}"] = service | {
+            # Allow services to still be refered to within the docker network
+            # by their regular name, without the `integration_` prefix.
+            # This helps keeps the tests consistent with existing code that
+            # relies on these names.
+            "hostname": service_name
+        }
         del conf["services"][service_name]
 
     for service in {"ingestion_server", "indexer_worker"}:
@@ -142,10 +126,6 @@ def gen_integration_compose():
 
         print("│ Pruning unwanted services... ", end="")
         _prune_services(conf)
-        print("done")
-
-        print("│ Mapping alternative ports... ", end="")
-        _map_ports(conf)
         print("done")
 
         print("│ Updating environment variables... ", end="")

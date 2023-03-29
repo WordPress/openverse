@@ -35,6 +35,8 @@ node-install:
 py-install:
     just automations/python/install
     just documentation/install
+    # Ingestion server tests run on the host
+    just ingestion_server/install
 
 # Install all dependencies
 install:

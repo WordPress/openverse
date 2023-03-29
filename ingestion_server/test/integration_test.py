@@ -21,13 +21,13 @@ import requests
 from bottle import Bottle
 from elasticsearch import Elasticsearch, NotFoundError, RequestsHttpConnection
 
-from .gen_integration_compose import gen_integration_compose
+from .gen_integration_compose import dest_dc_path
 from .test_constants import service_ports
 
 
 this_dir = pathlib.Path(__file__).resolve().parent
 
-ingestion_server = f"http://localhost:{service_ports['ingestion_server']}"
+ingestion_server = f"http://ingestion_server:{service_ports['ingestion_server']}"
 
 
 #################
@@ -68,50 +68,36 @@ class TestIngestion(unittest.TestCase):
     def _wait_for_dbs(cls):
         """
         Wait for databases to come up and establish connections to both.
-
-        :return: the connections to the upstream and downstream databases
         """
 
-        upstream_db = None
-        downstream_db = None
+        dbs_required = {"db", "upstream_db"}
 
         retries = 3
         while retries > 0:
             try:
-                db_args = {
-                    "connect_timeout": 5,
-                    "dbname": "openledger",
-                    "user": "deploy",
-                    "password": "deploy",
-                    "host": "localhost",
-                }
-                upstream_db = psycopg2.connect(
-                    **db_args | {"port": service_ports["upstream_db"]}
-                )
-                downstream_db = psycopg2.connect(
-                    **db_args | {"port": service_ports["db"]}
-                )
-                break
-            except psycopg2.OperationalError as e:
-                logging.debug(e)
-                logging.info("Waiting for databases to be ready...")
+                for db in ["db", "upstream_db"]:
+                    p = cls._psql("-l", db_hostname=db)
+                    if p.returncode == 0:
+                        dbs_required.remove(db)
+            except subprocess.CalledProcessError:
+                logging.info("Waiting for database to be ready...")
                 time.sleep(5)
                 retries -= 1
                 continue
 
-        if upstream_db is not None and downstream_db is not None:
-            logging.info("Connected to databases")
-            return upstream_db, downstream_db
-        else:
+        if dbs_required:
             raise ValueError("Could not connect to databases")
 
     @classmethod
-    def _wait(cls, cmd):
+    def _wait(cls, url: str):
         """
-        Run the given long-running command in a subprocess and block while it runs.
+        :param str: The url to request with curl.
+        """
 
-        :param cmd: the long-running command to execute in a subprocess
-        """
+        cls._compose_cmd(
+            "exec",
+            "integration_ingestion_server",
+        )
 
         subprocess.run(
             cmd,
@@ -125,9 +111,8 @@ class TestIngestion(unittest.TestCase):
         """Wait for Elasticsearch to come up."""
 
         logging.info("Waiting for ES to be ready...")
-        port = service_ports["es"]
         # Point to the root `justfile` to avoid automatic resolution to the nearest.
-        cls._wait(["just", "../../docker/es/wait", f"localhost:{port}"])
+        cls._wait(["just", "../../docker/es/wait"])
         logging.info("Connected to ES")
 
     @classmethod
@@ -135,36 +120,40 @@ class TestIngestion(unittest.TestCase):
         """Wait for ingestion-server to come up."""
 
         logging.info("Waiting for ingestion-server to be ready...")
-        port = service_ports["ingestion_server"]
         # Automatically resolves to the nearest `justfile`.
-        cls._wait(["just", "wait", f"localhost:{port}"])
+        cls._wait(["just", "wait"])
         logging.info("Connected to ingestion-server")
 
     @classmethod
-    def _load_schemas(cls, conn, schema_names):
-        cur = conn.cursor()
+    def _psql(cls, cmd: str, db_hostname: str = "db") -> subprocess.CompletedProcess:
+        return cls._compose_cmd(
+            [
+                "run",
+                f"integration_{db_hostname}",
+                "psql",
+                f"postgresql://deploy:deploy@{db_hostname}/openledger",
+                cmd,
+            ]
+        )
+
+    @classmethod
+    def _load_schemas(cls, schema_names):
         for schema_name in schema_names:
             schema_path = this_dir.joinpath("mock_schemas", f"{schema_name}.sql")
             with open(schema_path) as schema:
-                cur.execute(schema.read())
-        conn.commit()
-        cur.close()
+                cls._psql(schema.read(), db_hostname="db")
 
     @classmethod
-    def _load_data(cls, conn, table_names):
-        cur = conn.cursor()
+    def _load_data(cls, table_names):
         for table_name in table_names:
-            data_path = this_dir.joinpath(
-                "../../sample_data", f"sample_{table_name}.csv"
-            )
-            with open(data_path) as data:
-                cur.copy_expert(
-                    f"COPY {table_name} FROM STDIN WITH (FORMAT csv, HEADER true)",
-                    data,
-                )
-                cur.execute(f"REFRESH MATERIALIZED VIEW {table_name}_view")
-        conn.commit()
-        cur.close()
+            cmd = f"""
+            DELETE FROM {table_name};
+            \\copy {table_name} \
+                from '/sample_data/sample_{table_name}.csv' \
+                with (FORMAT csv, HEADER true);
+            REFRESH MATERIALIZED VIEW {table_name}_view;
+            """
+            cls._psql(cmd, db_hostname="upstream_db")
 
     @staticmethod
     def _get_index_parts(index: str, table: str) -> list[str]:
@@ -224,10 +213,10 @@ class TestIngestion(unittest.TestCase):
             "--profile",
             "ingestion_server",
             "-f",
-            cls.compose_path,
+            str(cls.compose_path),
             *cmd,
         ]
-        subprocess.run(
+        return subprocess.run(
             cmd,
             cwd=cls.compose_path.parent,
             check=True,
@@ -346,19 +335,17 @@ class TestIngestion(unittest.TestCase):
         cb_process.start()
 
         # Orchestrate containers with Docker Compose
-        compose_path = gen_integration_compose()
-        cls.compose_path = compose_path
+        cls.compose_path = dest_dc_path
 
         cls._compose_cmd(["up", "-d"], capture_output=True)
 
         # Wait for services to be ready
-        cls.upstream_db, cls.downstream_db = cls._wait_for_dbs()
+        cls._wait_for_dbs()
         cls._wait_for_es()
         cls._wait_for_ing()
 
         # Set up the base scenario for the tests
         cls._load_schemas(
-            cls.downstream_db,
             [
                 "api_deletedaudio",
                 "api_deletedimage",
@@ -369,7 +356,7 @@ class TestIngestion(unittest.TestCase):
                 "image",
             ],
         )
-        cls._load_data(cls.upstream_db, ["audio", "image"])
+        cls._load_data(["audio", "image"])
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -388,11 +375,6 @@ class TestIngestion(unittest.TestCase):
             ["down", "-v"],
             capture_output=True,
         )
-
-        # Close connections with databases
-        for conn in [cls.upstream_db, cls.downstream_db]:
-            if conn:
-                conn.close()
 
     @pytest.mark.order(1)
     def test_list_tasks_empty(self):
@@ -425,7 +407,7 @@ class TestIngestion(unittest.TestCase):
 
     def _get_es(self):
         return Elasticsearch(
-            host="localhost",
+            host="es",
             port=service_ports["es"],
             connection_class=RequestsHttpConnection,
             timeout=10,

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 red="\e[31m"
 green="\e[32m"
 endcol="\e[0m"
@@ -15,8 +17,7 @@ else
 fi
 
 PYTHONWARNINGS="ignore:Unverified HTTPS request" \
-PYTHONPATH=. \
-pytest -sx -vv --disable-pytest-warnings "${TEST_ARG[@]}"
+pipenv run python -m pytest -sx -vv --disable-pytest-warnings "${TEST_ARG[@]}"
 
 succeeded=$?
 if [[ $succeeded -eq 0 ]]; then
