@@ -22,9 +22,6 @@ from shared.log import configure_logger
 
 log = logging.getLogger(__name__)
 
-# Categories where all labels should be retrieved rather than first only
-GET_ALL_LABEL_CATEGORIES = {"stack"}
-
 # region argparse
 parser = argparse.ArgumentParser(description="")
 parser.add_argument(
@@ -184,6 +181,8 @@ def main():
     label_info = get_data("labels.yml", encoding='utf-8')
     label_groups = label_info["groups"]
     required_label_categories = [i.get("name") for i in label_groups if i.get("is_required")]
+    # Categories where all labels should be retrieved rather than first only
+    categories_with_all_labels = [i.get("name") for i in label_groups if i.get("apply_all_available")]
 
     github_info = get_data("github.yml")
     org_handle = github_info["org"]
@@ -207,7 +206,7 @@ def main():
         labels_to_add = []
 
         for category in required_label_categories:
-            if category in GET_ALL_LABEL_CATEGORIES and (
+            if category in categories_with_all_labels and (
                 available_labels := get_all_labels_of_cat(category, labels)
             ):
                 log.info(f"Found labels for category {category}: {available_labels}")

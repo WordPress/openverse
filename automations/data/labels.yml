@@ -15,6 +15,7 @@ colors:
 groups:
   - name: priority
     is_required: true
+    apply_all_available: false
     labels:
       - name: critical
         color: "UNFAVOURABLE"
@@ -35,6 +36,7 @@ groups:
 
   - name: status
     is_required: true
+    apply_all_available: false
     labels:
       - name: ready for work
         color: "LIGHT"
@@ -68,6 +70,7 @@ groups:
   - name: goal
     color: "ffffff"
     is_required: true
+    apply_all_available: false
     labels:
       - name: addition
         description: Addition of new feature
@@ -86,6 +89,7 @@ groups:
     color: "006b75"
     emoji: "🧱"
     is_required: true
+    apply_all_available: true
     labels:
       - name: frontend
         description: Related to the Nuxt frontend
@@ -101,6 +105,7 @@ groups:
         description: Related to the ingestion/data refresh server
 
   - name: tooling
+    apply_all_available: false
     labels:
       - name: sentry
         color: "362d59"
@@ -110,6 +115,7 @@ groups:
   - name: aspect
     color: "04338c"
     is_required: true
+    apply_all_available: false
     labels:
       - name: text
         description: Concerns the textual material in the repository
@@ -132,6 +138,7 @@ groups:
 
   - name: talk
     color: "f9bbe5"
+    apply_all_available: false
     labels:
       - name: question
         description: Can be resolved with an answer
@@ -142,6 +149,7 @@ groups:
 
   - name: tech
     color: "fcdf4a"
+    apply_all_available: false
     labels:
       # Programming languages
       - name: javascript
@@ -182,6 +190,7 @@ groups:
   - name: friendliness
     color: "7f0799"
     is_prefixed: false
+    apply_all_available: false
     labels:
       - name: good first issue
         description: New-contributor friendly
@@ -199,6 +208,7 @@ groups:
   # Docs: https://semver.org
   - name: versioning
     color:
+    apply_all_available: false
     labels:
       - name: major
         description: Major version bump, associated with breaking change
