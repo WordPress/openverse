@@ -106,7 +106,12 @@ Maintainers manually dispatch the production deployment via the
 workflow. The workflow requires the tag of an existing Docker image to tag as
 the "released" image. It generates a date-based tag for the specific application
 being released, publishes a GitHub Release (which creates a git tag), tags the
-Docker image, and then triggers the deployment workflow.
+Docker image, and then triggers the deployment workflow. The workflow also opens
+a PR to add the changelog to the
+[documentation site's changelog directory](https://docs.openverse.org/changelogs/index.html).
+This needs to be manually approved and merged by maintainers. The person who
+triggers the release app workflow is pinged in the PR description to help with
+the visibility of the PR.
 
 The same workflow is used to create production release images for the ingestion
 server. In that case the production deployment still needs to be handled via
