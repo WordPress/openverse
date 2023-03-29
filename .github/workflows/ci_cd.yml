@@ -378,7 +378,9 @@ jobs:
           name: openverse-api-openapi-schema.yaml
           path: ./api/openapi.yaml
 
-  fake-django-checks:
+  # This job runs when `django-checks` doesn't and always passes, thus allowing
+  # PRs to meet the required checks criteria and be merged.
+  bypass-django-checks:
     name: Run Django checks
     if: needs.get-changes.outputs.api != 'true'
     runs-on: ubuntu-latest
@@ -510,7 +512,9 @@ jobs:
           name: ${{ matrix.name }}_test_results
           path: frontend/test-results
 
-  fake-playwright:
+  # This job runs when `playwright` doesn't and always passes, thus allowing
+  # PRs to meet the required checks criteria and be merged.
+  bypass-playwright:
     name: Run Playwright tests
     if: needs.get-changes.outputs.frontend != 'true'
     runs-on: ubuntu-latest
