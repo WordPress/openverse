@@ -422,9 +422,9 @@ add back the environment variable. If we didn't then the manual rollback would
 use the same template as the original deployment that didn't include the
 environment variable.
 
-The best way to avoid this complication is to leave unneeded environment
+The best way to avoid this complication is to **leave unneeded environment
 variables in the template until after the application version that does not need
-them is confirmed to work as expected. After that, the template may be safely
+them is confirmed to work as expected**. After that, the template may be safely
 updated to remove the environment variable and any subsequent deployments will
 not include the variable. This is similar to how we remove columns from the
 database schema: deploy the code that doesn't use the variable/column first,

@@ -37,7 +37,7 @@ task is drained one at a time following our
 >
 > The number of running tasks per active task definition may vary per
 > environment but has no bearings on the deployment process. The size of the
-> service is handle entirely on the infrastructure side. The process above is
+> service is handled entirely on the infrastructure side. The process above is
 > completely automated and contributors generally do not need to be acutely
 > aware of the "behind the scenes" stuff going on, but it can be helpful for
 > understanding what is happening during a deployment.
