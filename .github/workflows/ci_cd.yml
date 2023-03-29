@@ -576,8 +576,8 @@ jobs:
       - name: Compile documentation
         uses: ./.github/actions/build-docs
         with:
-          make_username: ${{ secrets.MAKE_USERNAME }}
-          make_login_password: ${{ secrets.MAKE_LOGIN_PASSWORD }}
+          glotpress_username: ${{ secrets.MAKE_USERNAME }}
+          glotpress_password: ${{ secrets.MAKE_LOGIN_PASSWORD }}
         # Docs will be located at `/tmp/docs`.
 
       - name: Recreate working directory # to avoid superfluous files from getting tracked automatically

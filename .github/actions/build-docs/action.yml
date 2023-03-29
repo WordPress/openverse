@@ -2,11 +2,11 @@ name: openverse/build-docs
 description: Build Openverse full-stack docs
 
 inputs:
-  make_username:
+  glotpress_username:
     required: true
     description: The username for the GlotPress account for bulk download
 
-  make_login_password:
+  glotpress_password:
     required: true
     description: The password for the GlotPress account for bulk download
 
@@ -23,8 +23,8 @@ runs:
       run: |
         just frontend/run i18n
       env:
-        GLOTPRESS_USERNAME: ${{ inputs.make_username }}
-        GLOTPRESS_PASSWORD: ${{ inputs.make_login_password }}
+        GLOTPRESS_USERNAME: ${{ inputs.glotpress_username }}
+        GLOTPRESS_PASSWORD: ${{ inputs.glotpress_password }}
 
     - name: Build Storybook
       shell: bash
