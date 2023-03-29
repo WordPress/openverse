@@ -775,7 +775,7 @@ jobs:
           jobs = ["emit-docs", "publish-images", "deploy-frontend", "deploy-api"]
           emojis = {
               "success": ":tadaco:",
-              "cancelled": ":no-good:",
+              "cancelled": ":no_good:",
               "failure": ":alert:",
               "skipped": ":warning:",
           }
