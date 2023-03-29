@@ -596,11 +596,13 @@ jobs:
           github.actor != 'dependabot[bot]'
         )
       ) &&
+      (needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.documentation == 'true') &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
       (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped')
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - test-ing
       - test-api
       - nuxt-build
