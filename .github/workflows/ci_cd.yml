@@ -726,3 +726,97 @@ jobs:
     with:
       tag: ${{ needs.get-image-tag.outputs.image_tag }}
     secrets: inherit
+
+  ################
+  # Notification #
+  ################
+
+  send_report:
+    name: Send Slack report
+    if: |
+      !cancelled() &&
+      github.event_name == 'push' &&
+      github.repository == 'WordPress/openverse' &&
+      (
+        needs.emit-docs.result == 'failure' || needs.emit-docs.result == 'skipped' ||
+        needs.publish-images.result == 'failure' || needs.publish-images.result == 'skipped' ||
+        needs.deploy-frontend.result == 'failure' || needs.deploy-frontend.result == 'skipped' ||
+        needs.deploy-api.result == 'failure' || needs.deploy-api.result == 'skipped'
+      )
+    needs: # the end products of the CI + CD workflow
+      - emit-docs
+      - publish-images
+      - deploy-frontend
+      - deploy-api
+
+    steps:
+      - name: Generate report
+        id: report
+        shell: python
+        env:
+          EMIT_DOCS_RESULT: ${{ needs.emit-docs.result }}
+          PUBLISH_IMAGES_RESULT: ${{ needs.publish-images.result }}
+          DEPLOY_FRONTEND_RESULT: ${{ needs.deploy-frontend.result }}
+          DEPLOY_API_RESULT: ${{ needs.deploy-api.result }}
+          SERVER_URL: ${{ github.server_url }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          import json
+          import os
+          import sys
+          from collections import defaultdict
+
+          server_url = os.environ.get("SERVER_URL")
+          repository = os.environ.get("REPOSITORY")
+          run_id = os.environ.get("RUN_ID")
+
+          jobs = ["emit-docs", "publish-images", "deploy-frontend", "deploy-api"]
+          emojis = {
+              "success": ":tadaco:",
+              "cancelled": ":no-good:",
+              "failure": ":alert:",
+              "skipped": ":warning:",
+          }
+
+          results = {}
+          counts = defaultdict(lambda: 0)
+
+          for job_name in jobs:
+              result = os.environ.get(f"{job_name.replace('-', '_')}_result".upper())
+              results[job_name] = result
+              counts[result] += 1
+
+          payload = {
+              "text": ", ".join(f"{count} {result}" for result, count in counts.items()),
+              "blocks": [
+                  {
+                      "type": "section",
+                      "text": {
+                          "type": "mrkdwn",
+                          "text": f"<{server_url}/{repository}/actions/runs/{run_id}|Click here to review the completed CI + CD workflow>.",
+                      },
+                  },
+                  {
+                      "type": "section",
+                      "fields": [
+                          {
+                              "type": "mrkdwn",
+                              "text": f"*{job_name}:*\n{emojis[result]} {result}",
+                          }
+                          for job_name, result in results.items()
+                      ],
+                  },
+              ],
+          }
+
+          with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
+              for dest in [sys.stdout, gh_out]:
+                  print(f"payload={json.dumps(payload)}", file=dest)
+
+      - name: Send report
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: ${{ steps.report.outputs.payload }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
