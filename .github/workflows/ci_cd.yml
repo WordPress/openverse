@@ -7,13 +7,13 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      image-tag:
+      image_tag:
         description: "The tag to assign to the images built in the workflow."
         type: string
         required: true
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name == 'release' && 'release' || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   # Don't continue building images for a PR if the PR is updated quickly
   # For other workflows, allow them to complete and just block on them. This
   # ensures deployments in particular to happen in series rather than parallel.
@@ -46,28 +46,26 @@ jobs:
     name: Get image tag
     runs-on: ubuntu-latest
     outputs:
-      image-tag: ${{ steps.get-image-tag.outputs.image-tag }}
+      image_tag: ${{ steps.get-image-tag.outputs.image_tag }}
 
     steps:
       - name: Get image tag
         id: get-image-tag
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-              echo "image-tag=${{ inputs.image-tag }}" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ github.event_name }}" == "release" ]]; then
-              echo "image-tag=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+              echo "image_tag=${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
           else
-              echo "image-tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+              echo "image_tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
           fi
 
   determine-images:
     name: Determine images to build and publish
     runs-on: ubuntu-latest
     outputs:
-      do-build: ${{ steps.set-matrix.outputs.do-build }}
-      build-matrix: ${{ steps.set-matrix.outputs.build-matrix }}
-      do-publish: ${{ steps.set-matrix.outputs.do-publish }}
-      publish-matrix: ${{ steps.set-matrix.outputs.publish-matrix }}
+      do_build: ${{ steps.set-matrix.outputs.do_build }}
+      build_matrix: ${{ steps.set-matrix.outputs.build_matrix }}
+      do_publish: ${{ steps.set-matrix.outputs.do_publish }}
+      publish_matrix: ${{ steps.set-matrix.outputs.publish_matrix }}
     needs:
       - get-changes
 
@@ -78,8 +76,9 @@ jobs:
           CHANGES: ${{ needs.get-changes.outputs.changes }}
         shell: python
         run: |
-          import os
           import json
+          import os
+          import sys
 
           changes = json.loads(os.environ.get('CHANGES'))
 
@@ -105,20 +104,14 @@ jobs:
                   publish_matrix["image"].append("ingestion_server")
 
           do_build = 'true' if len(build_matrix["image"]) else 'false'
-          build_matrix = json.dumps(build_matrix)
           do_publish = 'true' if len(publish_matrix["image"]) else 'false'
-          publish_matrix = json.dumps(publish_matrix)
-
-          print(f"do-build={do_build}")
-          print(f"build-matrix={build_matrix}")
-          print(f"do-publish={do_publish}")
-          print(f"publish-matrix={publish_matrix}")
 
           with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
-              print(f"do-build={do_build}", file=gh_out)
-              print(f"build-matrix={build_matrix}", file=gh_out)
-              print(f"do-publish={do_publish}", file=gh_out)
-              print(f"publish-matrix={publish_matrix}", file=gh_out)
+              for dest in [sys.stdout, gh_out]:
+                  print(f"do_build={do_build}", file=dest)
+                  print(f"build_matrix={json.dumps(build_matrix)}", file=dest)
+                  print(f"do_publish={do_publish}", file=dest)
+                  print(f"publish_matrix={json.dumps(publish_matrix)}", file=dest)
 
   #############
   # Universal #
@@ -183,10 +176,11 @@ jobs:
 
   build-images:
     name: Build Docker images
-    if: needs.determine-images.outputs.do-build == 'true'
+    if: needs.determine-images.outputs.do_build == 'true'
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.determine-images.outputs.build-matrix) }}
+      fail-fast: false
+      matrix: ${{ fromJson(needs.determine-images.outputs.build_matrix) }}
     needs:
       - get-image-tag
       - lint
@@ -237,7 +231,7 @@ jobs:
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
           build-args: |
-            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image-tag }}
+            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
 
       - name: Upload image `${{ matrix.image }}`
         uses: actions/upload-artifact@v3
@@ -339,13 +333,21 @@ jobs:
           name: api_logs
           path: api_logs
 
-  test-redoc:
-    name: Check for API consumer docs
+  django-checks:
+    name: Run Django checks
     if: needs.get-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
       - build-images
+    strategy:
+      fail-fast: false
+      matrix:
+        recipe:
+          - "api/dj check"
+          - "api/dj validateopenapischema"
+          - "api/dj makemigrations --check --noinput --merge"
+          - "api/doc-test"
 
     steps:
       - name: Checkout repository
@@ -364,101 +366,17 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
 
-      - name: Test ReDoc site
-        run: just api/doc-test
-
-  validate-openapi-spec:
-    name: Validate Open API spec
-    if: needs.get-changes.outputs.api == 'true'
-    runs-on: ubuntu-latest
-    needs:
-      - get-changes
-      - build-images
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          setup_python: false
-          # Python is not needed to run the tests.
-          setup_nodejs: false
-          # Node.js is not needed to run API tests.
-          install_recipe: ""
-
-      - name: Load Docker images
-        uses: ./.github/actions/load-img
-
-      - name: Run check
-        run: just api/dj validateopenapischema
+      - name: Run check recipe
+        run: just ${{ matrix.recipe }}
         env:
           DC_USER: root
 
       - name: Upload schema on failure
-        if: failure()
+        if: failure() && contains(matrix.recipe, 'validateopenapischema')
         uses: actions/upload-artifact@v3
         with:
           name: openverse-api-openapi-schema.yaml
           path: ./api/openapi.yaml
-
-  django-check:
-    name: Run Django check
-    if: needs.get-changes.outputs.api == 'true'
-    runs-on: ubuntu-latest
-    needs:
-      - get-changes
-      - build-images
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          setup_python: false
-          # Python is not needed to run the tests.
-          setup_nodejs: false
-          # Node.js is not needed to run API tests.
-          install_recipe: ""
-
-      - name: Load Docker images
-        uses: ./.github/actions/load-img
-
-      - name: Run check
-        run: just api/dj check
-
-  check-migrations:
-    name: Check for uncommitted Django migrations
-    if: needs.get-changes.outputs.api == 'true'
-    runs-on: ubuntu-latest
-    needs:
-      - get-changes
-      - build-images
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          setup_python: false
-          # Python is not needed to run the tests.
-          setup_nodejs: false
-          # Node.js is not needed to run API tests.
-          install_recipe: ""
-
-      - name: Load Docker images
-        uses: ./.github/actions/load-img
-
-      - name: Run makemigrations
-        run: just api/dj makemigrations --check --noinput --merge
 
   ############
   # Frontend #
@@ -530,14 +448,28 @@ jobs:
       - name: Run build
         run: just frontend/run build
 
-  nuxt-playwright-e2e:
-    name: Nuxt Playwright e2e tests
+  playwright:
+    name: Run Playwright tests
     if: needs.get-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
       - get-changes
       - lint
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - playwright_vr
+          - playwright_e2e
+          - storybook_vr
+        include:
+          - name: playwright_vr
+            script: "test:playwright visual-regression"
+          - name: playwright_e2e
+            script: "test:playwright e2e"
+          - name: storybook_vr
+            script: "test:storybook"
 
     steps:
       - name: Checkout repository
@@ -550,72 +482,14 @@ jobs:
           setup_python: false
           install_recipe: node-install
 
-      - name: Run Nuxt Playwright e2e tests
-        run: just frontend/run test:playwright e2e --workers=2
-
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: nuxt-e2e-test-results
-          path: frontend/test-results
-
-  nuxt-playwright-vr:
-    name: Nuxt Playwright VR tests
-    if: needs.get-changes.outputs.frontend == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs:
-      - get-changes
-      - lint
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          setup_python: false
-          install_recipe: node-install
-
-      - name: Run Nuxt Playwright visual regression tests
-        run: just frontend/run test:playwright visual-regression --workers=2
-
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: nuxt-vr-test-results
-          path: frontend/test-results
-
-  storybook-playwright:
-    name: Storybook Playwright tests
-    if: needs.get-changes.outputs.frontend == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs:
-      - get-changes
-      - lint
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          setup_python: false
-          install_recipe: node-install
-
-      - name: Run Storybook Playwright tests
-        run: just frontend/run test:storybook
+      - name: Run Playwright tests
+        run: just frontend/run ${{ matrix.script }} --workers=2
 
       - uses: actions/upload-artifact@v3
         if: failure()
         id: test-results
         with:
-          name: storybook-test-results
+          name: ${{ matrix.name }}_test_results
           path: frontend/test-results
 
   playwright-test-failure-comment:
@@ -627,9 +501,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - get-changes
-      - nuxt-playwright-e2e
-      - nuxt-playwright-vr
-      - storybook-playwright
+      - playwright
 
     steps:
       - uses: peter-evans/find-comment@v2
@@ -650,7 +522,7 @@ jobs:
             console.log('Deleted comment with ID ${{ steps.test-results-comment.outputs.comment-id }}')
 
       - uses: peter-evans/create-or-update-comment@v2
-        if: needs.nuxt-playwright-vr.result == 'failure' || needs.nuxt-playwright-e2e.result == 'failure' || needs.storybook-playwright.result == 'failure'
+        if: needs.playwright.result == 'failure'
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
@@ -668,98 +540,31 @@ jobs:
   # Documentation #
   #################
 
-  docs-publish:
-    name: Publish full-stack docs
+  emit-docs:
+    name: Emit full-stack docs
     # https://github.com/actions/runner/issues/491#issuecomment-850884422
     if: |
       !failure() && !cancelled() &&
+      (
+        github.event_name == 'push' ||
+        (
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.owner.login == 'WordPress' &&
+          github.actor != 'dependabot[bot]'
+        )
+      ) &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
-      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
-      github.event_name == 'push'
-    runs-on: ubuntu-latest
-    needs:
-      - test-ing
-      - test-api
-      - nuxt-build
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Compile documentation
-        uses: ./.github/actions/build-docs
-        # Docs will be located at `/tmp/docs`.
-
-      - name: Checkout repository at `gh-pages` branch
-        uses: actions/checkout@v3
-        with:
-          ref: gh-pages
-
-      - name: Preserve previews
-        run: mv _preview /tmp/docs/_preview
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: /tmp/docs
-          force_orphan: true
-          cname: docs.openverse.org
-
-      - name: Checkout repository # again, to enable cleaning
-        uses: actions/checkout@v3
-        if: always()
-
-  docs-preview:
-    name: Preview full-stack docs
-    # https://github.com/actions/runner/issues/491#issuecomment-850884422
-    if: |
-      !failure() && !cancelled() &&
-      (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
-      (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
-      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
-      github.event_name == 'pull_request' && github.event.pull_request.head.repo.owner.login == 'WordPress' && github.actor != 'dependabot[bot]'
+      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped')
     runs-on: ubuntu-latest
     needs:
       - test-ing
       - test-api
       - nuxt-build
     env:
-      REPO_OWNER: ${{ github.event.pull_request.head.repo.owner.login }}
       REPO_NAME: ${{ github.event.pull_request.head.repo.name }}
 
     steps:
-      - uses: peter-evans/find-comment@v2
-        id: preview-comment
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body-includes: Full-stack documentation
-
-      - uses: peter-evans/create-or-update-comment@v2
-        if: steps.preview-comment.outputs.comment-id != 0
-        with:
-          comment-id: ${{ steps.preview-comment.outputs.comment-id }}
-          edit-mode: replace
-          body: |
-            **Full-stack documentation**: _Updating_
-
-            (This comment will be automatically updated with the preview URL once it is ready)
-
-      - uses: peter-evans/create-or-update-comment@v2
-        if: steps.preview-comment.outputs.comment-id == 0
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            **Full-stack documentation**: _Updating_
-
-            (This comment will be automatically updated with the preview URLs once it is ready)
-
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -770,6 +575,9 @@ jobs:
 
       - name: Compile documentation
         uses: ./.github/actions/build-docs
+        with:
+          glotpress_username: ${{ secrets.MAKE_USERNAME }}
+          glotpress_password: ${{ secrets.MAKE_LOGIN_PASSWORD }}
         # Docs will be located at `/tmp/docs`.
 
       - name: Recreate working directory # to avoid superfluous files from getting tracked automatically
@@ -783,15 +591,18 @@ jobs:
         with:
           ref: gh-pages
 
-      - name: Merge preview with existing gh-pages
+      - name: Copy existing previews
+        if: github.event_name == 'push'
         run: |
-          cd ..
-          cp -r "$REPO_NAME" /tmp/gh-pages
-          # Trash the existing preview folder and replace it with the newly generated one.
-          # If the preview hasn't been pushed yet this will still exit with code 0.
+          mv /tmp/docs /tmp/gh-pages
+          mv _preview /tmp/docs/_preview
+
+      - name: Replace preview of current PR
+        if: github.event_name == 'pull_request'
+        run: |
+          cp -r . /tmp/gh-pages
           sudo rm -rf /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
           mv /tmp/docs /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
-          cd "$REPO_NAME"
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
@@ -802,19 +613,20 @@ jobs:
           cname: docs.openverse.org
 
       - uses: peter-evans/find-comment@v2
+        if: github.event_name == 'pull_request'
         id: final-preview-comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Full-stack documentation
 
       - uses: peter-evans/create-or-update-comment@v2
+        if: github.event_name == 'pull_request'
         with:
+          issue-number: ${{ github.event.pull_request.number }}
           comment-id: ${{ steps.final-preview-comment.outputs.comment-id }}
           edit-mode: replace
           body: |
-            **Full-stack documentation**: _Ready_
-
-            <https://${{ env.REPO_OWNER }}.github.io/${{ env.REPO_NAME }}/_preview/${{ github.event.pull_request.number }}>
+            **Full-stack documentation**: <https://docs.openverse.org/_preview/${{ github.event.pull_request.number }}>
 
             Please note that GitHub pages takes a little time to deploy newly pushed code, if the links above don't work or you see old versions, wait 5 minutes and try again.
 
@@ -822,7 +634,7 @@ jobs:
 
       - name: Checkout repository # again, to enable cleaning
         uses: actions/checkout@v3
-        if: always()
+        if: success() || failure()
 
   #################
   # Docker images #
@@ -834,11 +646,12 @@ jobs:
     # prevent running on fork PRs
     if: |
       !failure() && !cancelled() &&
-      needs.determine-images.outputs.do-publish == 'true' &&
+      github.event_name == 'push' &&
+      github.repository == 'WordPress/openverse' &&
+      needs.determine-images.outputs.do_publish == 'true' &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
-      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
-      ((github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'release' && github.repository == 'WordPress/openverse'))
+      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped')
     needs:
       - determine-images
       - get-image-tag
@@ -850,7 +663,8 @@ jobs:
       packages: write
       contents: read
     strategy:
-      matrix: ${{ fromJson(needs.determine-images.outputs.publish-matrix) }}
+      fail-fast: false
+      matrix: ${{ fromJson(needs.determine-images.outputs.publish_matrix) }}
 
     steps:
       - name: Log in to GitHub Docker Registry
@@ -872,7 +686,7 @@ jobs:
           docker tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:latest
           docker tag openverse-${{ matrix.image }} \
-            ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ needs.get-image-tag.outputs.image-tag }}
+            ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ needs.get-image-tag.outputs.image_tag }}
           docker push --all-tags ghcr.io/wordpress/openverse-${{ matrix.image }}
 
   ##############
@@ -883,33 +697,32 @@ jobs:
     name: Deploy staging frontend
     if: |
       !failure() && !cancelled() &&
-      github.event_name == 'push' && needs.get-changes.outputs.frontend == 'true' &&
-      (needs.nuxt-build.result == 'success' && needs.nuxt-playwright-e2e.result == 'success' && needs.nuxt-playwright-vr.result == 'success' && needs.storybook-playwright.result == 'success')
+      github.event_name == 'push' &&
+      needs.get-changes.outputs.frontend == 'true' &&
+      needs.playwright.result == 'success' &&
+      needs.publish-images.result == 'success'
     needs:
-      - get-image-tag
       - get-changes
-      - nuxt-build
-      - nuxt-playwright-e2e
-      - nuxt-playwright-vr
-      - storybook-playwright
+      - playwright
+      - get-image-tag
       - publish-images
     uses: ./.github/workflows/deploy-staging-nuxt.yml
     with:
-      tag: ${{ needs.get-image-tag.outputs.image-tag }}
+      tag: ${{ needs.get-image-tag.outputs.image_tag }}
     secrets: inherit
 
   deploy-api:
     name: Deploy staging API
     if: |
       !failure() && !cancelled() &&
-      github.event_name == 'push' && needs.get-changes.outputs.api == 'true' &&
-      (needs.test-api.result == 'success' && needs.publish-images.result == 'success')
+      github.event_name == 'push' &&
+      needs.get-changes.outputs.api == 'true' &&
+      needs.publish-images.result == 'success'
     needs:
-      - get-image-tag
       - get-changes
-      - test-api
+      - get-image-tag
       - publish-images
     uses: ./.github/workflows/deploy-staging-api.yml
     with:
-      tag: ${{ needs.get-image-tag.outputs.image-tag }}
+      tag: ${{ needs.get-image-tag.outputs.image_tag }}
     secrets: inherit
