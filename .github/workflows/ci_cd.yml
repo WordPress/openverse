@@ -635,7 +635,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           mv /tmp/docs /tmp/gh-pages
-          mv _preview /tmp/docs/_preview
+          mv _preview /tmp/gh-pages/_preview
 
       - name: Replace preview of current PR
         if: github.event_name == 'pull_request'
