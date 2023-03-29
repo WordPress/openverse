@@ -117,7 +117,15 @@ build *args:
 # Also see `up` recipe in sub-justfiles
 # Bring all Docker services up, in all profiles
 up *flags:
-    just dc up -d {{ flags }}
+    #!/usr/bin/env bash
+    set -eo pipefail
+    while true; do
+      if just dc up -d {{ flags }} ; then
+        break
+      fi
+      ((c++)) && ((c==3)) && break
+      sleep 5
+    done
 
 # Also see `wait-up` recipe in sub-justfiles
 # Wait for all services to be up
