@@ -596,8 +596,6 @@ jobs:
       - test-ing
       - test-api
       - nuxt-build
-    env:
-      REPO_NAME: ${{ github.event.pull_request.head.repo.name }}
 
     steps:
       - name: Checkout repository
@@ -618,8 +616,8 @@ jobs:
       - name: Recreate working directory # to avoid superfluous files from getting tracked automatically
         run: |
           cd ..
-          sudo rm -rf "$REPO_NAME"
-          mkdir "$REPO_NAME"
+          sudo rm -rf openverse
+          mkdir openverse
 
       - name: Checkout repository at `gh-pages` branch
         uses: actions/checkout@v3
