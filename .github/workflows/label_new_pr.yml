@@ -9,26 +9,46 @@ on:
       - opened
 
 jobs:
+  # Documentation: https://docs.openverse.org/reference/ci_cd.html#get-changes
+  get-changes:
+    name: Get changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      changes: ${{ steps.paths-filter.outputs.changes }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get changes
+        id: paths-filter
+        uses: ./.github/actions/get-changes
+
   set_label:
     name: Set labels
     runs-on: ubuntu-latest
+    needs:
+      - get-changes
+
     steps:
       - name: Trigger remote workflow
         uses: felixp8/dispatch-and-wait@v0.1.0
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
+          CHANGES: ${{ needs.get-changes.outputs.changes }} # already JSON-encoded
         with:
           owner: WordPress
           repo: openverse
           token: ${{ secrets.ACCESS_TOKEN }} # Cannot create repository dispatch using GITHUB_TOKEN
           event_type: label_pr
-          client_payload: ${{ format('{{"pr_url":"{0}"}}', env.PR_URL) }}
+          client_payload: ${{ format('{{"pr_url":"{0}","changes":{1}}}', env.PR_URL, env.CHANGES) }}
           wait_time: 5 # check every 5 seconds
           max_time: 120 # timeout after 2 minutes
 
       - uses: actions/checkout@v3
       - name: Add default label in case of failure
         uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ failure() }}
+        if: failure()
         with:
           labels: "🚦 status: awaiting triage"
