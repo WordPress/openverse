@@ -420,6 +420,8 @@
       "remove-filter": "remove filter",
       "license-explanation": "license explanation",
       creator: "search by creator",
+      "image-title": "Image: {work-title}",
+      "audio-title": "Audio: {work-title}",
     },
   },
   "media-details": {

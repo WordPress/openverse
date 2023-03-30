@@ -1,10 +1,10 @@
 <template>
   <VLink
     itemprop="contentUrl"
-    :title="image.title"
+    :title="accessibleTitle"
     :href="imageLink"
     class="group relative block w-full overflow-hidden rounded-sm bg-dark-charcoal-10 text-dark-charcoal-10 focus-bold-filled"
-    :aria-label="image.title"
+    :aria-label="accessibleTitle"
     :style="styles.container"
   >
     <figure
@@ -44,6 +44,7 @@ import { computed, defineComponent, PropType } from "vue"
 
 import type { AspectRatio, ImageDetail } from "~/types/media"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
+import { useI18n } from "~/composables/use-i18n"
 
 import VLicense from "~/components/VLicense/VLicense.vue"
 import VLink from "~/components/VLink.vue"
@@ -105,6 +106,13 @@ export default defineComponent({
       }`
     })
 
+    const i18n = useI18n()
+    const accessibleTitle = computed(() =>
+      i18n
+        .t("browse-page.aria.image-title", { "work-title": props.image.title })
+        .toString()
+    )
+
     const getImageForeignUrl = () =>
       toAbsolutePath(props.image.foreign_landing_url)
 
@@ -142,6 +150,7 @@ export default defineComponent({
       getImgDimension,
 
       isSquare,
+      accessibleTitle,
     }
   },
 })
