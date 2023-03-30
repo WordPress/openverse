@@ -1,6 +1,15 @@
 name: openverse/build-docs
 description: Build Openverse full-stack docs
 
+inputs:
+  glotpress_username:
+    required: true
+    description: The username for the GlotPress account for bulk download
+
+  glotpress_password:
+    required: true
+    description: The password for the GlotPress account for bulk download
+
 runs:
   using: "composite"
   steps:
@@ -13,6 +22,9 @@ runs:
       shell: bash
       run: |
         just frontend/run i18n
+      env:
+        GLOTPRESS_USERNAME: ${{ inputs.glotpress_username }}
+        GLOTPRESS_PASSWORD: ${{ inputs.glotpress_password }}
 
     - name: Build Storybook
       shell: bash
