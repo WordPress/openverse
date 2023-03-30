@@ -7,10 +7,10 @@
 
 ## Project links
 
-[Project Thread](https://github.com/WordPress/openverse/issues/377)
-[Project Proposal](./20230309-project_proposal_detecting_sensitive_textual_content.md)
-[Milestone (pending)](#)
-[Implementation Plan: Managing A Sensitive Terms List](https://github.com/WordPress/openverse/pull/911)
+- [Project Thread](https://github.com/WordPress/openverse/issues/377)
+- [Project Proposal](./20230309-project_proposal_detecting_sensitive_textual_content.md)
+- [Milestone (pending)](#)
+- [Implementation Plan: Managing A Sensitive Terms List](https://github.com/WordPress/openverse/pull/911)
 
 Please refer to additional prior art linked in the project thread. The most
 significant technical prior art is this exploratory PR for creating a filtered
