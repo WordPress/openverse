@@ -178,11 +178,15 @@ def main():
 
     log.debug(f"PR URL: {args.pr_url}")
 
-    label_info = get_data("labels.yml", encoding='utf-8')
+    label_info = get_data("labels.yml")
     label_groups = label_info["groups"]
-    required_label_categories = [i.get("name") for i in label_groups if i.get("is_required")]
+    required_label_categories = [
+        i.get("name") for i in label_groups if i.get("is_required")
+    ]
     # Categories where all labels should be retrieved rather than first only
-    categories_with_all_labels = [i.get("name") for i in label_groups if i.get("apply_all_available")]
+    categories_with_all_labels = [
+        i.get("name") for i in label_groups if i.get("apply_all_available")
+    ]
 
     github_info = get_data("github.yml")
     org_handle = github_info["org"]
