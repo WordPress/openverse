@@ -1,3 +1,5 @@
+mgmt:
+  - .github/workflows/**
 api:
   - api/**
   # Change to the CI + CD workflow should trigger complete workflow.

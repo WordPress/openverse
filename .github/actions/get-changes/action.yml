@@ -17,6 +17,9 @@ outputs:
   lint:
     description: "'true' if linting setup changes are present"
     value: ${{ steps.paths-filter.outputs.frontend }}
+  mgmt:
+    description: "'true' if management changes are present"
+    value: ${{ steps.paths-filter.outputs.mgmt }}
 
 runs:
   using: "composite"
