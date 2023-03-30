@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import os
 import re
@@ -34,6 +35,11 @@ parser.add_argument(
     metavar="pr-url",
     required=True,
     help="the URL for the PR to label and/or check for labels",
+)
+parser.add_argument(
+    "--changes",
+    default="[]",
+    help="the changes identified by the `get-changes` action",
 )
 
 
@@ -175,12 +181,38 @@ def get_label_of_cat(cat: str, labels: list[Label]) -> Label | None:
     return next(iter(get_all_labels_of_cat(cat, labels)), None)
 
 
+def get_stack_labels_from_changes(changes: list[str]) -> list[str]:
+    """
+    Given a list of changes identified by the `.github/actions/get-changes.yml` action,
+    this function returns a list of labels that must be applied to a PR.
+
+    :param changes: the changes identfied by the `get-changes` action
+    :return: the list of 'stack' labels to apply to the PR
+    """
+
+    labels = []
+    if "mgmt" in changes:
+        labels.append("🧱 stack: mgmt")
+        # Since the workflow appears in other changelists, we will immediately return.
+        return labels
+
+    if "api" in changes:
+        labels.append("🧱 stack: api")
+    if "ingestion_server" in changes:
+        labels.append("🧱 stack: ingestion server")
+    if "frontend" in changes:
+        labels.append("🧱 stack: frontend")
+    return labels
+
+
 def main():
     configure_logger()
 
     args = parser.parse_args()
 
     log.debug(f"PR URL: {args.pr_url}")
+    changes = json.loads(args.changes)
+    log.debug(f"CHANGES: {changes}")
 
     github_info = get_data("github.yml")
     org_handle = github_info["org"]
@@ -203,6 +235,7 @@ def main():
         labels = issue.labels
         labels_to_add = []
 
+        labels_to_add.extend(get_stack_labels_from_changes(changes))
         for category in REQUIRED_LABEL_CATEGORIES:
             if category in GET_ALL_LABEL_CATEGORIES and (
                 available_labels := get_all_labels_of_cat(category, labels)
