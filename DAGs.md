@@ -79,7 +79,7 @@ The following are DAGs grouped by their primary tag:
 | `museum_victoria_workflow`                                      | `@monthly`        | `False` | image         |
 | [`nappy_workflow`](#nappy_workflow)                             | `@monthly`        | `False` | image         |
 | `nypl_workflow`                                                 | `@monthly`        | `False` | image         |
-| [`phylopic_workflow`](#phylopic_workflow)                       | `@daily`          | `True`  | image         |
+| [`phylopic_workflow`](#phylopic_workflow)                       | `@weekly`         | `False` | image         |
 | [`rawpixel_workflow`](#rawpixel_workflow)                       | `@monthly`        | `False` | image         |
 | [`science_museum_workflow`](#science_museum_workflow)           | `@monthly`        | `False` | image         |
 | [`smithsonian_workflow`](#smithsonian_workflow)                 | `@weekly`         | `False` | image         |
@@ -463,7 +463,7 @@ ETL Process: Use the API to identify all CC licensed images.
 
 Output: TSV file containing the image, their respective meta-data.
 
-Notes: http://phylopic.org/api/ No rate limit specified.
+Notes: http://api-docs.phylopic.org/v2/ No rate limit specified.
 
 ## `phylopic_workflow`
 
@@ -473,7 +473,7 @@ ETL Process: Use the API to identify all CC licensed images.
 
 Output: TSV file containing the image, their respective meta-data.
 
-Notes: http://phylopic.org/api/ No rate limit specified.
+Notes: http://api-docs.phylopic.org/v2/ No rate limit specified.
 
 ## `pr_review_reminders`
 

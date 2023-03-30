@@ -257,8 +257,7 @@ PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
         ingester_class=PhylopicDataIngester,
         start_date=datetime(2011, 2, 7),
-        schedule_string="@daily",
-        dated=True,
+        schedule_string="@weekly",
         pull_timeout=timedelta(hours=12),
     ),
     ProviderWorkflow(

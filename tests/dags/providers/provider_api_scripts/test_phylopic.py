@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import pytest
 
-from common.licenses import LicenseInfo
+from common.licenses import get_license_info
 from providers.provider_api_scripts.phylopic import PhylopicDataIngester
 
 
@@ -12,142 +12,99 @@ RESOURCES = Path(__file__).parent / "resources/phylopic"
 pp = PhylopicDataIngester()
 
 
-@pytest.fixture
-def image_data():
-    yield get_json("correct_meta_data_example.json")
-
-
 def get_json(filename):
     with open(RESOURCES / filename) as f:
         return json.load(f)
 
 
-@pytest.fixture
-def ingester() -> PhylopicDataIngester:
-    _pp = PhylopicDataIngester()
-    yield _pp
+def test__get_initial_query_params():
+    with patch.object(pp, "get_response_json", return_value={}), pytest.raises(
+        Exception
+    ):
+        pp._get_initial_query_params()
 
+    data = get_json("initial_request.json")
+    with patch.object(pp, "get_response_json", return_value=data):
+        pp._get_initial_query_params()
 
-def test_endpoint(ingester):
-    expected_endpoint = (
-        "http://phylopic.org/api/a/image/list/modified/2022-01-01/2022-01-02"
-    )
-    ingester.date = "2022-01-01"
-    assert ingester.endpoint == expected_endpoint
+    assert pp.build_param == 194
+    assert pp.total_pages == 145
 
 
 @pytest.mark.parametrize(
-    "response_json, expected",
+    "current_page, prev_query_params, expected_query_params",
     [
-        # Empty cases
-        (None, None),
-        ({}, None),
-        ({"other": "yes"}, None),
-        # Failure
-        ({"success": False}, None),
-        # Success, but no results
-        ({"success": True}, None),
-        # Success with results
-        ({"success": True, "result": 123}, 123),
+        (1, None, {"build": 111, "page": 0, "embed_items": "true"}),  # First call
+        (  # Second call
+            1,
+            {"build": 111, "page": 0, "embed_items": "true"},
+            {"build": 111, "page": 1, "embed_items": "true"},
+        ),
+        (  # Third call
+            2,
+            {"build": 111, "page": 1, "embed_items": "true"},
+            {"build": 111, "page": 2, "embed_items": "true"},
+        ),
+        (  # Random intermediate call
+            50,
+            {"build": 111, "page": 1, "embed_items": "true"},
+            {"build": 111, "page": 50, "embed_items": "true"},
+        ),
     ],
 )
-def test_get_response_data(response_json, expected):
-    actual = pp._get_response_data(response_json)
-    assert actual == expected
+def test_get_next_query_params(current_page, prev_query_params, expected_query_params):
+    pp.build_param = 111
+    pp.current_page = current_page
+    actual_query_params = pp.get_next_query_params(prev_query_params)
+
+    assert actual_query_params == expected_query_params
 
 
-def test_get_batch_data():
-    r = get_json("image_ids_example.json")
-    actual_img_ids = [data.get("uid") for data in pp.get_batch_data(r)]
-    expect_img_ids = [
-        "863694ac-9f36-40f5-9452-1b435337d9cc",
-        "329ff574-4bec-4f94-9dd6-9acfec2a6275",
-        "9c98ff56-8044-483e-b9f1-bf368e4f3322",
-    ]
-    assert actual_img_ids == expect_img_ids
-
-
-def test_get_creator_details(image_data):
-    result = image_data["result"]
-    actual_creator_details = pp._get_creator_details(result)
-    expect_creator_details = (
-        "Jonathan Wells",
-        "Jonathan Wells",
-        "2020-02-26 11:59:53",
-    )
-    assert actual_creator_details == expect_creator_details
-
-
-def test_get_taxa_details(image_data):
-    result = image_data["result"]
-    actual_taxa = pp._get_taxa_details(result)
-    expect_taxa = (
-        ["Chondrus crispus NODC Taxonomic Code, database (version 8.0) 1996"],
-        "Chondrus crispus NODC Taxonomic Code, database (version 8.0) 1996",
-    )
-    assert actual_taxa == expect_taxa
-
-
-def test_get_record_data(image_data):
-    image_uuid = "e9df48fe-68ea-419e-b9df-441e0b208335"
-    expected = {
-        "foreign_identifier": image_uuid,
-        "foreign_landing_url": f"http://phylopic.org/image/{image_uuid}",
-        "width": 847,
-        "height": 1024,
-        "creator": "Jonathan Wells",
-        "title": "Chondrus crispus NODC Taxonomic Code, database (version 8.0) 1996",
-        "image_url": "http://phylopic.org/assets/images/submissions/e9df48fe-68ea-419e-b9df-441e0b208335.1024.png",
-        "license_info": LicenseInfo(
-            license="cc0",
-            version="1.0",
-            url="https://creativecommons.org/publicdomain/zero/1.0/",
-            raw_url="http://creativecommons.org/publicdomain/zero/1.0/",
-        ),
-        "meta_data": {
-            "taxa": [
-                "Chondrus crispus NODC Taxonomic Code, database (version 8.0) 1996"
-            ],
-            "credit_line": "Jonathan Wells",
-            "pub_date": "2020-02-26 11:59:53",
-        },
-    }
-    with patch.object(pp, "get_response_json", return_value=image_data):
-        actual = pp.get_record_data({"uid": image_uuid})
-    assert actual == expected
-
-
-def test_get_record_data_no_data():
-    actual = pp.get_record_data({})
-    assert actual is None
-
-
-def test_get_record_data_with_no_img_url():
-    r = get_json("no_image_url_example.json")
-    with patch.object(pp, "get_response_json", return_value=r):
-        actual = pp.get_record_data({"uid": r["result"]["uid"]})
-    assert actual is None
-
-
-def test_get_image_info(image_data):
-    result = image_data["result"]
-    actual_img_info = pp._get_image_info(result, "e9df48fe-68ea-419e-b9df-441e0b208335")
-    expect_img_info = (
+@pytest.mark.parametrize(
+    "contributor_data, expected_creator",
+    [
+        ({}, (None, None)),
+        ({"title": "Jane Doe", "href": ""}, ("Jane Doe", None)),
         (
-            "http://phylopic.org/assets/images/submissions/e9df48fe-68ea-"
-            "419e-b9df-441e0b208335.1024.png"
+            {"title": "Jane Doe", "href": "/contributors/uuid?build=123"},
+            ("Jane Doe", "https://www.phylopic.org/contributors/uuid?build=123"),
         ),
-        847,
-        1024,
-    )
-    assert actual_img_info == expect_img_info
+    ],
+)
+def test__get_creator(contributor_data, expected_creator):
+    actual_creator = pp._get_creator(contributor_data)
+    assert actual_creator == expected_creator
 
 
-def test_get_image_info_with_no_img_url():
-    r = get_json("no_image_url_example.json")
-    result = r["result"]
-    actual_img_info = list(
-        pp._get_image_info(result, "7f7431c6-8f78-498b-92e2-ebf8882a8923")
+@pytest.mark.parametrize(
+    "data, expected_sizes",
+    [
+        ({}, (None, None)),
+        ({"sourceFile": {}}, (None, None)),
+        ({"sourceFile": {"sizes": "123x321"}}, (123, 321)),
+        ({"sourceFile": {"sizes": "413.39108x272.68854"}}, (413, 272)),
+    ],
+)
+def test__get_image_sizes(data, expected_sizes):
+    actual_sizes = pp._get_image_sizes(data)
+    assert actual_sizes == expected_sizes
+
+
+def test_get_record_data():
+    data = get_json("sample_record.json")
+    image = pp.get_record_data(data)
+    license_info = get_license_info(
+        license_url="https://creativecommons.org/publicdomain/zero/1.0/"
     )
-    expect_img_info = [None, None, None]
-    assert actual_img_info == expect_img_info
+
+    assert image == {
+        "license_info": license_info,
+        "foreign_identifier": "5b1e88b5-159d-495d-b8cb-04f9e28d2f02",
+        "foreign_landing_url": "https://www.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02?build=194",
+        "image_url": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/source.svg",
+        "title": "Hemaris tityus",
+        "creator": "Andy Wilson",
+        "creator_url": "https://www.phylopic.org/contributors/c3ac6939-e85a-4a10-99d1-4079537f34de?build=194",
+        "width": 2048,
+        "height": 2048,
+    }
