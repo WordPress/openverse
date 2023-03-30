@@ -1,3 +1,6 @@
+# This workflow is called from the `label_new_pr.yml` workflow and runs a Python
+# script to determine and apply the appropriate labels on the specified PR.
+
 name: Label PR
 
 on:
@@ -8,6 +11,7 @@ on:
 env:
   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # Can't use GITHUB_TOKEN to access PRs in other repos
   PR_URL: ${{ github.event.client_payload.pr_url }}
+  CHANGES: ${{ github.event.client_payload.changes }}
   GH_LOGIN: ${{ secrets.GH_LOGIN }}
   GH_PASSWORD: ${{ secrets.GH_PASSWORD }}
   GH_2FA_SECRET: ${{ secrets.GH_2FA_SECRET }}
@@ -31,4 +35,5 @@ jobs:
         working-directory: ./automations/python
         run: |
           pipenv run python label_pr.py \
-            --pr-url "$PR_URL"
+            --pr-url "$PR_URL" \
+            --changes '$CHANGES'
