@@ -1,36 +1,37 @@
-import { placements as popoverPlacements } from "@popperjs/core"
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
 
+import { placements as popoverPlacements } from "@popperjs/core"
 import { log } from "~/utils/console"
 
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VButton from "~/components/VButton.vue"
 
-export default {
-  component: VPopover,
-  title: "Components/VPopover",
-  argTypes: {
-    hideOnEsc: "boolean",
-    hideOnClickOutside: "boolean",
-    autoFocusOnShow: "boolean",
-    autoFocusOnHide: "boolean",
-    placement: {
-      type: "radio",
-      options: [...popoverPlacements],
-    },
-    label: "text",
-    labelledBy: "text",
-  },
+<Meta title="Components/VPopover" components={VPopover} argTypes={{}} />
+
+export const popoverArgTypes = {
+  hideOnEsc: { control: { type: "boolean" } },
+  hideOnClickOutside: { control: { type: "boolean" } },
+  autoFocusOnShow: { control: { type: "boolean" } },
+  autoFocusOnHide: { control: { type: "boolean" } },
+  placement: { options: [...popoverPlacements], control: { type: "radio" } },
+  label: { control: { type: "text" } },
+  labelledBy: { control: { type: "text" } },
 }
 
-const SinglePopoverStory = (args, { argTypes }) => ({
-  props: Object.keys(argTypes),
+export const SinglePopoverStory = (args) => ({
   template: `
     <div>
       <p>
         This story is configured to log when the popover opens or closes. Inspect the console output to observe this behavior.
       </p>
       <div tabindex="0">Focusable external area</div>
-      <VPopover v-bind="$props" @open="onOpen" @close="onClose">
+      <VPopover v-bind="args" @open="onOpen" @close="onClose">
         <template #trigger="{ visible, a11yProps }">
           <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
         </template>
@@ -42,18 +43,13 @@ const SinglePopoverStory = (args, { argTypes }) => ({
   setup() {
     const onOpen = () => log("opened!")
     const onClose = () => log("closed!")
-
-    return { onOpen, onClose }
+    return { onOpen, onClose, args }
   },
 })
 
-export const Default = SinglePopoverStory.bind({})
-Default.args = {}
-
-const ControlStory = (args, { argTypes }) => ({
-  props: Object.keys(argTypes),
+export const ControlStory = (args) => ({
   template: `
-    <VPopover>
+    <VPopover v-bind="args">
       <template #trigger="{ visible, a11yProps }">
         <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
       </template>
@@ -64,23 +60,23 @@ const ControlStory = (args, { argTypes }) => ({
       </template>
     </VPopover>
   `,
+  components: { VPopover, VButton },
+  setup() {
+    return { args }
+  },
 })
 
-export const Control = ControlStory.bind({})
-Control.args = {}
-
-const TwoPopoverStory = (args, { argTypes }) => ({
-  props: Object.keys(argTypes),
+export const TwoPopoverStory = (args) => ({
   template: `
     <div>
-      <VPopover label="First popover" v-bind="$props">
+      <VPopover label="First popover" v-bind="args">
         <template #trigger="{ visible, a11yProps }">
           <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'First popover open' : 'First popover closed' }}</VButton>
         </template>
         <div class="py-1 px-2">First popover content</div>
       </VPopover>
       <div class="h-5">Some content</div>
-      <VPopover label="Second popover" v-bind="$props">
+      <VPopover label="Second popover" v-bind="args">
         <template #trigger="{ visible, a11yProps }">
           <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Second popover open' : 'Second popover closed' }}</VButton>
         </template>
@@ -89,7 +85,35 @@ const TwoPopoverStory = (args, { argTypes }) => ({
     </div>
   `,
   components: { VPopover, VButton },
+  setup() {
+    return { args }
+  },
 })
 
-export const TwoPopovers = TwoPopoverStory.bind({})
-TwoPopovers.args = {}
+<Description of={VPopover} />
+
+<ArgsTable of={VPopover} />
+
+## Default VPopover
+
+<Canvas>
+  <Story name="Default" argTypes={popoverArgTypes}>
+    {SinglePopoverStory.bind({})}
+  </Story>
+</Canvas>
+
+## Control VPopover
+
+<Canvas>
+  <Story name="Control" argTypes={popoverArgTypes}>
+    {ControlStory.bind({})}
+  </Story>
+</Canvas>
+
+## Two VPopover
+
+<Canvas>
+  <Story name="Two Popovers" argTypes={popoverArgTypes}>
+    {TwoPopoverStory.bind({})}
+  </Story>
+</Canvas>
