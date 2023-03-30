@@ -145,35 +145,6 @@ jobs:
           just precommit
           just lint
 
-  add-stack-label:
-    name: Add stack label
-    if: github.event_name == 'pull_request' && github.repository == 'WordPress/openverse'
-    runs-on: ubuntu-latest
-    needs:
-      - get-changes
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Add API stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.api == 'true' }}
-        with:
-          labels: "🧱 stack: api"
-
-      - name: Add ingestion server stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.ingestion_server == 'true' }}
-        with:
-          labels: "🧱 stack: ingestion server"
-
-      - name: Add frontend stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.frontend == 'true' }}
-        with:
-          labels: "🧱 stack: frontend"
-
   build-images:
     name: Build Docker images
     if: needs.determine-images.outputs.do_build == 'true'
