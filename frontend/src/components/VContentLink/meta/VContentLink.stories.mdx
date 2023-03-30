@@ -4,21 +4,17 @@ import {
   Description,
   Meta,
   Story,
-} from '@storybook/addon-docs'
+} from "@storybook/addon-docs"
 
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
 
-<Meta
-  title="Components/VContentLink"
-  components={VContentLink}
-  argTypes={{}}
-/>
+<Meta title="Components/VContentLink" components={VContentLink} argTypes={{}} />
 
 export const contentLinkArgTypes = {
-    mediaType: {options: ["audio", "image"], control: { type: "radio" } },
-    resultsCount: { control: { type: "number" } },
-    isSelected: { control: { type: "boolean" } },
-    layout: { options: ["stacked", "horizontal"], control: { type: "radio" } },
+  mediaType: { options: ["audio", "image"], control: { type: "radio" } },
+  resultsCount: { control: { type: "number" } },
+  isSelected: { control: { type: "boolean" } },
+  layout: { options: ["stacked", "horizontal"], control: { type: "radio" } },
 }
 
 export const VContentLinkStory = (args) => ({
@@ -37,7 +33,6 @@ export const VContentLinkHorizontalStory = (args) => ({
   },
 })
 
-
 export const TwoVContentLinkStory = (agrs) => ({
   template: `
   <div class="grid grid-cols-2 gap-4">
@@ -55,7 +50,7 @@ export const TwoVContentLinkStory = (agrs) => ({
       types: [
         { mediaType: "image", resultsCount: 4321 },
         { mediaType: "audio", resultsCount: 1234 },
-      ]
+      ],
     }
   },
   methods: {
@@ -65,11 +60,9 @@ export const TwoVContentLinkStory = (agrs) => ({
   },
 })
 
-
 <Description of={VContentLink} />
 
 <ArgsTable of={VContentLink} />
-
 
 ## Default VContentList
 
@@ -77,9 +70,9 @@ export const TwoVContentLinkStory = (agrs) => ({
   <Story
     name="Default"
     args={{
-        mediaType: "image",
-        resultsCount: 5708,
-        isSelected: false,
+      mediaType: "image",
+      resultsCount: 5708,
+      isSelected: false,
     }}
     argTypes={contentLinkArgTypes}
   >
@@ -87,24 +80,22 @@ export const TwoVContentLinkStory = (agrs) => ({
   </Story>
 </Canvas>
 
-
 ## Horizontal VContentList
 
 <Canvas>
   <Story
     name="Horizontal"
     args={{
-        mediaType: "audio",
-        resultsCount: 4561,
-        isSelected: false,
-        layout: "horizontal",
+      mediaType: "audio",
+      resultsCount: 4561,
+      isSelected: false,
+      layout: "horizontal",
     }}
     argTypes={contentLinkArgTypes}
   >
     {VContentLinkHorizontalStory.bind({})}
   </Story>
 </Canvas>
-
 
 ## Mobile VContentList
 
@@ -118,4 +109,3 @@ export const TwoVContentLinkStory = (agrs) => ({
     {TwoVContentLinkStory.bind({})}
   </Story>
 </Canvas>
-
