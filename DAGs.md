@@ -24,9 +24,10 @@ The following are DAGs grouped by their primary tag:
 
 ## Data Normalization
 
-| DAG ID                                | Schedule Interval |
-| ------------------------------------- | ----------------- |
-| [`add_license_url`](#add_license_url) | `None`            |
+| DAG ID                                                                      | Schedule Interval |
+| --------------------------------------------------------------------------- | ----------------- |
+| [`add_license_url`](#add_license_url)                                       | `None`            |
+| [`update_phylopic_foreign_identifier`](#update_phylopic_foreign_identifier) | `None`            |
 
 ## Data Refresh
 
@@ -132,6 +133,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`smithsonian_workflow`](#smithsonian_workflow)
 1.  [`smk_workflow`](#smk_workflow)
 1.  [`stocksnap_workflow`](#stocksnap_workflow)
+1.  [`update_phylopic_foreign_identifier`](#update_phylopic_foreign_identifier)
 1.  [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)
 1.  [`wikimedia_reingestion_workflow`](#wikimedia_reingestion_workflow)
 1.  [`wordpress_workflow`](#wordpress_workflow)
@@ -605,6 +607,13 @@ Output: TSV file containing the image, the respective meta-data.
 Notes: https://stocksnap.io/api/load-photos/date/desc/1 https://stocksnap.io/faq
 All images are licensed under CC0. No rate limits or authorization required. API
 is undocumented.
+
+## `update_phylopic_foreign_identifier`
+
+One-time run DAG to fix the foreign identifier for PhyloPic images.
+
+In order to prevent broken links, we need to update the foreign identifier from
+using the image URL to using the foreign image UUID.
 
 ## `wikimedia_commons_workflow`
 
