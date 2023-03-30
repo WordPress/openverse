@@ -34,6 +34,7 @@ jobs:
       - name: Label PR
         working-directory: ./automations/python
         run: |
+          # shellcheck disable=SC2016
           pipenv run python label_pr.py \
             --pr-url "$PR_URL" \
             --changes '$CHANGES'
