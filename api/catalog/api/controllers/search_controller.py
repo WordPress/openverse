@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import logging as log
 import pprint
 from itertools import accumulate
@@ -407,10 +406,9 @@ def search(
     try:
         if settings.VERBOSE_ES_RESPONSE:
             log.info(pprint.pprint(s.to_dict()))
+
         search_response = s.execute()
-        log.info(
-            f"query={json.dumps(s.to_dict())}," f" es_took_ms={search_response.took}"
-        )
+
         if settings.VERBOSE_ES_RESPONSE:
             log.info(pprint.pprint(search_response.to_dict()))
     except RequestError as e:
