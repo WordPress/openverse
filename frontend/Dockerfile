@@ -1,8 +1,12 @@
+###################
+# Node.js builder #
+###################
+
 FROM node:16-alpine as builder
 
 # Install system packages needed to build on macOS
 RUN apk add --no-cache --virtual .gyp python3 make g++ \
-  && npm install -g pnpm
+  && npm install -g pnpm@7.17.1
 
 USER node
 
@@ -42,9 +46,9 @@ RUN echo "{\"release\":\"${RELEASE}\"}" > /home/node/frontend/src/static/version
 
 RUN pnpm build:only
 
-###################
-#    Nuxt app
-###################
+############
+# Nuxt app #
+############
 
 FROM node:16-alpine as app
 

@@ -58,14 +58,10 @@ repos:
         args:
           - --py310-plus
 
-  # Use the `.flake8` file to configure additional project-specific requirements.
-  - repo: https://github.com/PyCQA/flake8
-    rev: 3.9.2
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: "v0.0.257"
     hooks:
-      - id: flake8
-        args:
-          - --extend-ignore=E203,W503
-          - --max-line-length=88
+      - id: ruff
 
   - repo: https://github.com/ambv/black
     rev: 22.3.0
@@ -95,7 +91,7 @@ repos:
     hooks:
       - id: eslint
         files: \.(js|ts|vue)$
-        exclude: ^load_testing/.*|frontend/(nuxt-template-overrides/.*|.remake/.*)$ # ESLint raises warnings for ignored files.
+        exclude: ^utilities/load_testing/.*|frontend/(nuxt-template-overrides/.*|.remake/.*)$ # ESLint raises warnings for ignored files.
         "types": [file] # ESLint only accepts [javascript] by default.
         args:
           - --ignore-path=.gitignore
@@ -138,7 +134,7 @@ repos:
       - id: types
         name: types
         files: ^frontend/.*$
-        entry: bash -c 'just frontend/run types'
+        entry: bash -c 'pnpm exec vue-tsc -p frontend --noEmit'
         language: system
         pass_filenames: false
       - id: test:unit
@@ -165,5 +161,11 @@ repos:
         name: render-github
         files: ^templates/.*$
         entry: bash -c 'just automations/js/render-github'
+        language: system
+        pass_filenames: false
+      - id: render-release-drafter
+        name: render-release-drafter
+        files: ^templates/.*$
+        entry: bash -c 'just automations/js/render-release-drafter'
         language: system
         pass_filenames: false

@@ -11,7 +11,36 @@ from catalog.api.utils.oauth2_helper import get_token_info
 parent_logger = logging.getLogger(__name__)
 
 
-class AbstractAnonRateThrottle(SimpleRateThrottle, metaclass=abc.ABCMeta):
+class SimpleRateThrottleHeader(SimpleRateThrottle, metaclass=abc.ABCMeta):
+    """
+    Extends the ``SimpleRateThrottle`` class to provide additional functionality such as
+    rate-limit headers in the response.
+    """
+
+    def allow_request(self, request, view):
+        is_allowed = super().allow_request(request, view)
+        view.headers |= self.headers()
+        return is_allowed
+
+    def headers(self):
+        """
+        Get `X-RateLimit-` headers for this particular throttle. Each pair of headers
+        contains the limit and the number of requests left in the limit. Since multiple
+        rate limits can apply concurrently, the suffix identifies each pair uniquely.
+        """
+
+        prefix = "X-RateLimit"
+        suffix = self.scope or self.__class__.__name__.lower()
+        if hasattr(self, "history"):
+            return {
+                f"{prefix}-Limit-{suffix}": self.rate,
+                f"{prefix}-Available-{suffix}": self.num_requests - len(self.history),
+            }
+        else:
+            return {}
+
+
+class AbstractAnonRateThrottle(SimpleRateThrottleHeader, metaclass=abc.ABCMeta):
     """
     Limits the rate of API calls that may be made by a anonymous users.
 
@@ -61,15 +90,11 @@ class TenPerDay(AbstractAnonRateThrottle):
     rate = "10/day"
 
 
-class OneThousandPerMinute(AbstractAnonRateThrottle):
-    rate = "1000/min"
-
-
 class OnePerSecond(AbstractAnonRateThrottle):
     rate = "1/second"
 
 
-class AbstractOAuth2IdRateThrottle(SimpleRateThrottle, metaclass=abc.ABCMeta):
+class AbstractOAuth2IdRateThrottle(SimpleRateThrottleHeader, metaclass=abc.ABCMeta):
     """
     Ties a particular throttling scope from ``settings.py`` to a rate limit model.
 

@@ -159,8 +159,6 @@ import { hash, rand as prng } from "~/utils/prng"
 
 import { defineEvent } from "~/types/emits"
 
-import type { CSSProperties } from "@vue/runtime-dom"
-
 /**
  * If the duration is above this threshold, the progress timestamp will show ms.
  */
@@ -487,16 +485,16 @@ export default defineComponent({
       }
     })
 
-    const heightProperties = computed<CSSProperties>(() => ({
+    const heightProperties = computed(() => ({
       "--usable-height": `${Math.floor(props.usableFrac * 100)}%`,
       "--unusable-height": `${Math.floor((1 - props.usableFrac) * 100)}%`,
     }))
 
-    const progressTimeLeft = computed<CSSProperties>(() => ({
+    const progressTimeLeft = computed(() => ({
       "--progress-time-left": `${progressBarWidth.value}px`,
     }))
 
-    const seekTimeLeft = computed<CSSProperties>(() => ({
+    const seekTimeLeft = computed(() => ({
       "--seek-time-left": `${seekBarWidth.value}px`,
     }))
 

@@ -29,6 +29,7 @@ rfcs/                       @WordPress/openverse-maintainers
 templates/                  @WordPress/openverse-maintainers
 .gitattributes              @WordPress/openverse-maintainers
 .gitignore                  @WordPress/openverse-maintainers
+.github/                    @WordPress/openverse-maintainers
 .pre-commit-config.yaml     @WordPress/openverse-maintainers
 CODE_OF_CONDUCT.md          @WordPress/openverse-maintainers
 CONTRIBUTING.md             @WordPress/openverse-maintainers

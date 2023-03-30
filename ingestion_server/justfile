@@ -14,6 +14,18 @@ NO_COLOR := "\\033[0m"
 install *args="--dev":
     pipenv install {{ args }}
 
+######
+# Up #
+######
+
+# Bring up services specific to the ingestion server profile
+up *flags:
+    env COMPOSE_PROFILES="ingestion_server" just ../up {{ flags }}
+
+# Wait for all profile services to be up
+wait-up: up
+    just wait
+
 ##########
 # Health #
 ##########

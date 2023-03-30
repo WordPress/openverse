@@ -208,10 +208,14 @@ mature or sensitive content and others.
 
 class ImageOembed:
     desc = f"""
-oembed_list is an API endpoint to retrieve embedded content from a specified image URL.
+oembed is an API endpoint to retrieve the structured data for a specified image URL in
+the oEmbed format, which can be used to embed the image on the consumer's website.
+Only JSON format is supported. The oEmbed specification is available
+at https://oembed.com/.
 
-By using this endpoint, you can retrieve embedded content such as `version`, `type`,
-`width`, `height`, `title`, `author_name`, `author_url` and `license_url`.
+By using this endpoint, you can retrieve a JSON oembed object containing the following
+properties: `version`, `type`, `width`, `height`, `title`, `author_name`, `author_url`
+and `license_url`.
 
 {refer_sample}"""
 

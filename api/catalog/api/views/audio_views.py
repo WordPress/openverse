@@ -23,7 +23,10 @@ from catalog.api.serializers.audio_serializers import (
     AudioWaveformSerializer,
 )
 from catalog.api.serializers.media_serializers import MediaThumbnailRequestSerializer
-from catalog.api.utils.throttle import OneThousandPerMinute
+from catalog.api.utils.throttle import (
+    AnonThumbnailRateThrottle,
+    OAuth2IdThumbnailRateThrottle,
+)
 from catalog.api.views.media_views import MediaViewSet
 
 
@@ -54,7 +57,7 @@ class AudioViewSet(MediaViewSet):
         url_path="thumb",
         url_name="thumb",
         serializer_class=MediaThumbnailRequestSerializer,
-        throttle_classes=[OneThousandPerMinute],
+        throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
     )
     def thumbnail(self, request, *_, **__):
         audio = self.get_object()
@@ -72,7 +75,7 @@ class AudioViewSet(MediaViewSet):
     @action(
         detail=True,
         serializer_class=AudioWaveformSerializer,
-        throttle_classes=[OneThousandPerMinute],
+        throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
     )
     def waveform(self, *_, **__):
         audio = self.get_object()

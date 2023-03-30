@@ -5,5 +5,5 @@ This directory contains utilities from
 .
 
 We cannot use Reakit/Ariakit directly as it imports React's JSX types
-(`@types/react`) which conflict with Vue's own JSX types (`@vue/runtime-dom`).
+(`@types/react`) which conflict with Vue's own JSX types.
 [Ariakit has essentially the same issue as Storybook, for the moment](https://github.com/storybookjs/storybook/issues/12505).

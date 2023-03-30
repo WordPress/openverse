@@ -135,7 +135,6 @@ export default defineComponent({
      */
     searchTerm: {
       type: String,
-      required: true,
     },
   },
   emits: {
@@ -456,7 +455,9 @@ export default defineComponent({
     const layoutBasedProps = computed(() =>
       isComposite.value
         ? {
-            href: `/audio/${props.audio.id}/?q=${props.searchTerm}`,
+            href: `/audio/${props.audio.id}/${
+              props.searchTerm ? "?q=" + props.searchTerm : ""
+            }`,
             class: [
               "cursor-pointer",
               {

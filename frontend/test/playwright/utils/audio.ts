@@ -1,10 +1,13 @@
-import { expect, Locator } from "@playwright/test"
+import { expect, Locator, Page } from "@playwright/test"
+
+import type { LanguageDirection } from "~~/test/playwright/utils/navigation"
+import { t } from "~~/test/playwright/utils/navigation"
 
 import {
   activeAudioStatus,
+  AudioStatusVerb,
   inactiveAudioStatus,
   statusVerbMap,
-  AudioStatusVerb,
 } from "~/constants/audio"
 
 const getPossibleAudioActions = async (
@@ -63,10 +66,36 @@ const getAllInactive = async (
 const getInactive = async (context: Locator) =>
   (await getAllInactive(context, { filterVisible: true }))[0]
 
+const getNthAudioRow = async (page: Page, num: number) => {
+  const nthAudioRow = await page.getByRole("application").nth(num)
+  await expect(nthAudioRow.getByRole("article")).toHaveAttribute(
+    "status",
+    "paused"
+  )
+  return nthAudioRow
+}
+const play = async (audioRow: Locator, dir: LanguageDirection = "ltr") => {
+  await audioRow
+    .getByRole("button", { name: t("play-pause.play", dir) })
+    .click()
+  await expect(audioRow.locator("article")).toHaveAttribute(
+    "status",
+    /(loading|playing|played)/
+  )
+}
+
+const pause = async (audioRow: Locator, dir: LanguageDirection = "ltr") => {
+  await audioRow
+    .getByRole("button", { name: t("play-pause.pause", dir) })
+    .click()
+}
 export default {
   getPossibleAudioActions,
   getAllActive,
   getActive,
   getAllInactive,
   getInactive,
+  play,
+  pause,
+  getNthAudioRow,
 }

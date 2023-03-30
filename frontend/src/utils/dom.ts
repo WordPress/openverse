@@ -1,6 +1,5 @@
 // Credit: https://github.com/tailwindlabs/headlessui/
-import type { ComponentPublicInstance } from "@vue/runtime-dom"
-import type { Ref } from "vue"
+import type { Ref, ComponentPublicInstance } from "vue"
 
 export function getDomElement<T extends Element | ComponentPublicInstance>(
   ref?: Ref<T | null>

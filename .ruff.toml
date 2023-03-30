@@ -1,0 +1,5 @@
+[per-file-ignores]
+"*test*" = ["E501"]
+"*__init__*" = ["F401"]
+"*wsgi.py" = ["E402"]
+"*settings.py" = ["F401"]
