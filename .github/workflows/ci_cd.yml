@@ -755,7 +755,11 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Dispatch workflow
-        run: "gh workflow run 'Deployment: staging-nuxt' -f tag=${{ needs.get-image-tag.outputs.image_tag }}"
+        run: |
+          gh workflow run \
+            -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
+            -f actor=${{ github.actor }} \
+            "Deployment: staging-nuxt"
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
@@ -776,6 +780,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Dispatch workflow
-        run: "gh workflow run 'Deployment: staging-api' -f tag=${{ needs.get-image-tag.outputs.image_tag }}"
+        run: |
+          gh workflow run \
+            -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
+            -f actor=${{ github.actor }} \
+            "Deployment: staging-api"
         env:
           GITHUB_TOKEN: ${{ github.token }}
