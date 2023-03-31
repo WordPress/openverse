@@ -12,7 +12,9 @@
         [$style[`connection-${connections}`]]: isConnected,
         [$style[`icon-start-${size}`]]: hasIconStart,
         [$style[`icon-end-${size}`]]: hasIconEnd,
-        'gap-x-2': hasIconEnd || hasIconStart,
+        'gap-x-2':
+          (hasIconEnd || hasIconStart) && (size == 'medium' || size == 'large'),
+        'gap-x-1': (hasIconEnd || hasIconStart) && size == 'small',
         // Custom tailwind classes don't work with CSS modules in Vue.
         'focus-slim-filled': isFilled,
         'focus-slim-tx': isBordered || isTransparent,
@@ -301,7 +303,7 @@ export default VButton
 }
 
 .size-small {
-  @apply h-8 py-0 px-3;
+  @apply h-8 py-0 px-2;
 }
 .icon-start-small {
   @apply ps-1;
@@ -311,23 +313,23 @@ export default VButton
 }
 
 .size-medium {
-  @apply h-10 py-0 px-4;
+  @apply h-10 py-0 px-3;
 }
 .icon-start-medium {
-  @apply ps-3;
+  @apply ps-2;
 }
 .icon-end-medium {
-  @apply pe-3;
+  @apply pe-2;
 }
 
 .size-large {
-  @apply h-12 py-0 px-6;
+  @apply h-12 py-0 px-5;
 }
 .icon-start-large {
-  @apply ps-5;
+  @apply ps-4;
 }
 .icon-end-large {
-  @apply pe-5;
+  @apply pe-4;
 }
 
 a.button {
