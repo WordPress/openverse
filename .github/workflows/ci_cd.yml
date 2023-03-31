@@ -757,9 +757,9 @@ jobs:
       - name: Dispatch workflow
         run: |
           gh workflow run \
-            -f tag=${{ needs.get-image-tag.outputs.image_tag }}" \
+            -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
             -f actor=${{ github.actor }} \
-            'Deployment: staging-nuxt'
+            "Deployment: staging-nuxt"
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
@@ -782,8 +782,8 @@ jobs:
       - name: Dispatch workflow
         run: |
           gh workflow run \
-            -f tag=${{ needs.get-image-tag.outputs.image_tag }}" \
+            -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
             -f actor=${{ github.actor }} \
-            'Deployment: staging-api'
+            "Deployment: staging-api"
         env:
           GITHUB_TOKEN: ${{ github.token }}
