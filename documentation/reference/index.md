@@ -1,10 +1,10 @@
 # Reference
 
 ```{toctree}
-:maxdepth: 1
+:maxdepth: 3
 
 github_contribution_practices
-consent_decision_making
+decision_making/index
 dev_flow
 api/index
 frontend/index

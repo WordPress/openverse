@@ -25,7 +25,7 @@ use the Openverse API, you should instead refer to the
 ## Table of contents
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 3
 
 guides/index
 reference/index
