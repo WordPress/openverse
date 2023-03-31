@@ -132,7 +132,8 @@ repos:
   - repo: https://github.com/rhysd/actionlint
     rev: main
     hooks:
-      - id: actionlint
+      - id: actionlint-docker
+        files: ^\.github/(workflows|actions)/.*$
 
   - repo: local # More local hooks are defined at the top.
     hooks:
