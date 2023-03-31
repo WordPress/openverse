@@ -1,11 +1,11 @@
-# Additional Practices
+# Additional practices
 
 The goal of the practices described in this document are to help the team adhere
 to the general guidelines of the
 [decision-making process](./process_description.md) without overburdening
 participants with too many discussions.
 
-## Current-round Call Out
+## Current-round call out
 
 In the PR description or top-post of a GitHub discussion, discussion leaders
 should include the following text:
@@ -18,7 +18,7 @@ Requested reviewers or participants will be following this process. If you are
 being asked to give input on a specific detail, you do not need to familiarise
 yourself with the process and follow it.
 
-## Current Round
+## Current round
 
 This discussion is currently in the **{Clarification, Revision, Decision,
 Continued Revision} round**.
@@ -27,7 +27,7 @@ Continued Revision} round**.
 When a round ends, discussion leaders should leave a comment announcing the next
 round along with the length of time allotted for it.
 
-## Discussion Dashboard
+## Discussion dashboard
 
 The
 [discussion dashboard is implemented as a GitHub project](https://github.com/orgs/WordPress/projects/79/views/1)

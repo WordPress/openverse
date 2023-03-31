@@ -8,8 +8,9 @@ quickly. In many ways, this process is a refinement on what was already being
 practised, but with clearer expectations about time and feedback expression.
 
 ```{toctree}
-:maxdepth: 1
+:maxdepth: 2
 
 process_description
 additional_practices
+how_to_use
 ```

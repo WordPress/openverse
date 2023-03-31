@@ -1,4 +1,4 @@
-# Process Description
+# Process description
 
 ## Terms
 
@@ -17,7 +17,7 @@
   proposal. In other words, a problem that requires an entirely new proposal to
   be addressed.
 
-## Process Overview
+## Process overview
 
 The process is split into a series of rounds with broad expectations explained
 below. Each step has a particular goal that participants should keep in mind.
@@ -33,7 +33,7 @@ the discretion of the participants.
 | [Approval](#approval)                                 | N/A                 | Mark as approved and create issues to implement the proposal                  |
 | [Tabling](#tabling)                                   | N/A                 | Indicate that a proposal will not be implemented                              |
 
-### Time Spans
+### Time spans
 
 The suggested spans are just that: suggestions. If a particular proposal needs
 more time for any reason, participants should note that and extend the round
@@ -68,7 +68,7 @@ flowchart TD
     H[Proposal approved] --> I((End))
 ```
 
-## Round Descriptions
+## Round descriptions
 
 > **Note**
 >
@@ -81,7 +81,7 @@ flowchart TD
 > belies clarification, authors may revise to fix the proposal as soon as the
 > problem is identified.
 
-### Clarification Round
+### Clarification round
 
 The goal of this round is for participants to clarify the proposed solution and
 share their initial thoughts and feelings about the proposal. We especially
@@ -111,7 +111,7 @@ clarification of the purpose of the proposal. For regularly requested proposals,
 however, the purpose is taken to be accepted and should not be the focus of the
 discussion.
 
-### Revision Round
+### Revision round
 
 The goal of this round is for authors to incorporate the feedback received in
 the clarification round. At this time, any changes can be made to the proposal
@@ -123,7 +123,7 @@ they will need to return to the discussion and also establishes accountability
 on the part of the author. Together these help prevent discussions from dragging
 on or having an indefinite "slump" during revision.
 
-### Decision Round
+### Decision round
 
 The goal of this round is for the participants to decide whether the proposal
 can be implemented in its current form. The focus of this round should be to
@@ -171,7 +171,7 @@ between author and reviewers to decide whether problems are blockers. Further
 discussion about the problems should continue during the subsequent revision
 round between the person who identified the blocker and the proposal author.
 
-### Continued Revision Round
+### Continued revision round
 
 If fixable blocking problems are identified during the decision round, the
 author and participants should work together to revise the proposal to address
@@ -186,7 +186,7 @@ After the revision is complete, the proposal goes back to the decision round.
 The decision round and the continued revision round can repeat as many times as
 needed until a proposal no longer has blockers.
 
-### Proposal Approval
+### Proposal approval
 
 Proposals are approved when the requested reviewers have voiced approval and
 there are no outstanding blockers.
@@ -195,7 +195,7 @@ At this stage, authors will create any new milestones or issues to track the
 work needed to implement the accepted solution. Milestones should be linked in
 the proposal text.
 
-### Proposal Tabling
+### Proposal tabling
 
 Proposals are tabled when unworkable blockers are identified. In cases where a
 proposal was requested as part of a project, a new proposal should be requested
