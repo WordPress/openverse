@@ -32,8 +32,6 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from "vue"
 
-import { CSSProperties } from "@vue/runtime-dom"
-
 import usePages from "~/composables/use-pages"
 import useResizeObserver from "~/composables/use-resize-observer"
 
@@ -100,7 +98,7 @@ export default defineComponent({
         .map(([key]) => `footer-${key}`)
     )
 
-    const linkColumnHeight = computed<CSSProperties>(() => ({
+    const linkColumnHeight = computed(() => ({
       "--link-col-height": Math.ceil(Object.keys(allPages).length / 2),
     }))
 

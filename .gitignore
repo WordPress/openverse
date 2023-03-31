@@ -49,3 +49,5 @@ grafana.db
 # Ingestion server
 # TODO: This shouldn't be in root
 ingestion_server.log
+
+*.tsbuildinfo

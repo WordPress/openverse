@@ -24,7 +24,7 @@ report:
 
 # Run `render-jinja.js` with given input file, output file and context
 render in_file out_file ctx="{}":
-    node src/render-jinja.js {{ in_file }} {{ out_file }} {{ ctx }}
+    node src/render-jinja.js {{ in_file }} {{ out_file }} '{{ ctx }}'
 
 # Render `.pre-commit-config.yaml`
 render-precommit:
@@ -38,8 +38,14 @@ render-prettier:
 render-github:
     just render templates/pull_request_template.md.jinja .github/PULL_REQUEST_TEMPLATE/pull_request_template.md
 
+render-release-drafter:
+    just render templates/release-drafter.yml.jinja .github/release-drafter-api.yml '{ "app": "API" }'
+    just render templates/release-drafter.yml.jinja .github/release-drafter-ingestion_server.yml '{ "app": "Ingestion server" }'
+    just render templates/release-drafter.yml.jinja .github/release-drafter-frontend.yml '{ "app": "Frontend" }'
+
 # Render all templates (shortcut for easy iteration)
 render-templates:
     just render-precommit
     just render-prettier
     just render-github
+    just render-release-drafter

@@ -2,7 +2,7 @@ import type { FeatureState } from "~/constants/feature-flag"
 import { isProd } from "~/utils/node-env"
 
 import type { BannerId } from "~/types/banners"
-import type { Breakpoint } from "~/constants/screens"
+import type { RealBreakpoint } from "~/constants/screens"
 
 import type { CookieSerializeOptions } from "cookie"
 
@@ -29,7 +29,7 @@ export interface OpenverseCookieState {
   /**
    * The screen's max-width breakpoint.
    */
-  uiBreakpoint?: Breakpoint
+  uiBreakpoint?: RealBreakpoint
   /**
    * Whether the request user agent is mobile or not.
    */

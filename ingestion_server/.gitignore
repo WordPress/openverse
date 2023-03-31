@@ -1,3 +1,4 @@
 # Mutex
 ingestion_server/db
 ingestion_server/lock
+ingestion_server/**.tsv

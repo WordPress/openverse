@@ -29,3 +29,6 @@ init: wait-up
 # Run a package.json script via pnpm
 run *args:
     pnpm run {{ args }}
+
+types:
+    cd .. && pnpm exec vue-tsc -p frontend --noEmit
