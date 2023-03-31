@@ -154,12 +154,8 @@ jobs:
 
       - name: Deploy production api
         if: inputs.app == 'api'
-        uses: ./.github/workflows/deploy-production-api.yml
-        with:
-          tag: ${{ steps.tag.outputs.image-tag }}
+        run: "gh workflow run 'Deployment: production-api' -f tag=${{ steps.tag.outputs.image-tag }}"
 
       - name: Deploy production frontend
         if: inputs.app == 'frontend'
-        uses: ./.github/workflows/deploy-production-nuxt.yml
-        with:
-          tag: ${{ steps.tag.outputs.image-tag }}
+        run: "gh workflow run 'Deployment: production-nuxt' -f tag=${{ steps.tag.outputs.image-tag }}"
