@@ -1,12 +1,11 @@
+const NUMBER_OF_RECORDS = "700 million"
+const DESCRIPTION = `Search over ${NUMBER_OF_RECORDS} free and openly licensed images, photos, audio, and other media types for reuse and remixing.`
+
 /**
  * The default metadata for the site. Can be extended and/or overwritten per page. And even in components!
  * See the Nuxt.js docs for more info.
  * {@link https://nuxtjs.org/guides/features/meta-tags-seo} Nuxt.js Docs
  */
-
-const NUMBER_OF_RECORDS = "700 million"
-const DESCRIPTION = `Search over ${NUMBER_OF_RECORDS} free and openly licensed images, photos, audio, and other media types for reuse and remixing.`
-
 export const meta = [
   { charset: "utf-8" },
   {
