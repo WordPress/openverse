@@ -756,6 +756,8 @@ jobs:
 
       - name: Dispatch workflow
         run: "gh workflow run 'Deployment: staging-nuxt' -f tag=${{ needs.get-image-tag.outputs.image_tag }}"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
   deploy-api:
     name: Deploy staging API
@@ -775,3 +777,5 @@ jobs:
 
       - name: Dispatch workflow
         run: "gh workflow run 'Deployment: staging-api' -f tag=${{ needs.get-image-tag.outputs.image_tag }}"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
