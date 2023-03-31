@@ -43,7 +43,7 @@ const meta = [
   {
     name: "description",
     content:
-      "Search over 600 million free and openly licensed images, photos, audio, and other media types for reuse and remixing.",
+      "Search over 700 million free and openly licensed images, photos, audio, and other media types for reuse and remixing.",
   },
   { hid: "og:title", name: "og:title", content: "Openverse" },
   {
@@ -55,7 +55,7 @@ const meta = [
     hid: "og:description",
     name: "og:description",
     content:
-      "Search over 600 million free and openly licensed images, photos, audio, and other media types for reuse and remixing.",
+      "Search over 700 million free and openly licensed images, photos, audio, and other media types for reuse and remixing.",
   },
   { name: "twitter:card", content: "summary_large_image" },
   { name: "twitter:site", content: "@WPOpenverse" },
