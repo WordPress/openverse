@@ -758,7 +758,7 @@ jobs:
         run: |
           gh workflow run \
             -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
-            -f actor=${{ github.actor }} \
+            -f real_actor=${{ github.actor }} \
             "Deployment: staging-nuxt"
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -783,7 +783,7 @@ jobs:
         run: |
           gh workflow run \
             -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
-            -f actor=${{ github.actor }} \
+            -f real_actor=${{ github.actor }} \
             "Deployment: staging-api"
         env:
           GITHUB_TOKEN: ${{ github.token }}
