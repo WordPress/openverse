@@ -8,6 +8,9 @@ group:
       WordPress/openverse-catalog
       WordPress/openverse-infrastructure
     files:
+      # Synced actions
+      - source: .github/actions/get-changes/action.yml # used by `label_new_pr.yml` workflow
+        dest: .github/actions/get-changes/action.yml
       # Synced workflows
       - source: .github/workflows/new_issues.yml
         dest: .github/workflows/new_issues.yml
