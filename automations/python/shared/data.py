@@ -24,4 +24,4 @@ def get_data(file_name: str) -> dict:
 
     data_file: str = str(ROOT_DIR.joinpath("data", file_name))
     log.info(f"Reading file {data_file}")
-    return yaml.safe_load(open(data_file))
+    return yaml.safe_load(open(data_file, encoding="utf-8"))
