@@ -14,7 +14,7 @@
   the project or its contributors.
 - "Fixable blocker": A blocker that can be addressed by revising the proposal.
 - "Unworkable blocker": A blocker that cannot be addressed by revising the
-  proposal. In other words, an issue that requires an entirely new proposal to
+  proposal. In other words, a problem that requires an entirely new proposal to
   be addressed.
 
 ## Process Overview
@@ -24,14 +24,14 @@ below. Each step has a particular goal that participants should keep in mind.
 The decision and continued revision round can repeat as many times as needed, at
 the discretion of the participants.
 
-| Round                                                 | Suggested span      | Goal                                                                                 |
-| ----------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------ |
-| [Clarification round](#clarification-round)           | 5 days              | Clarify the proposal; share initial reactions                                        |
-| [Revision round](#revision-round)                     | Author's discretion | Update the text of the proposal to reflect the outcome of the previous round         |
-| [Decision round](#decision-round)                     | 3 days              | Decide whether the proposal can be implemented as is                                 |
-| [Continued revision round](#objection-revision-round) | Author's discretion | Work with participants to revise the text of the proposal to address blocking issues |
-| [Approval](#approval)                                 | N/A                 | Mark as approved and create issues to implement the proposal                         |
-| [Tabling](#tabling)                                   | N/A                 | Indicate that a proposal will not be implemented                                     |
+| Round                                                 | Suggested span      | Goal                                                                          |
+| ----------------------------------------------------- | ------------------- | ----------------------------------------------------------------------------- |
+| [Clarification round](#clarification-round)           | 5 days              | Clarify the proposal; share initial thoughts                                  |
+| [Revision round](#revision-round)                     | Author's discretion | Update the text of the proposal to reflect the outcome of the previous round  |
+| [Decision round](#decision-round)                     | 3 days              | Decide whether the proposal can be implemented as is                          |
+| [Continued revision round](#continued-revision-round) | Author's discretion | Work with participants to revise the text of the proposal to address blockers |
+| [Approval](#approval)                                 | N/A                 | Mark as approved and create issues to implement the proposal                  |
+| [Tabling](#tabling)                                   | N/A                 | Indicate that a proposal will not be implemented                              |
 
 ### Time Spans
 
@@ -57,13 +57,13 @@ will not be able to do so.
 ```{mermaid}
 flowchart TD
     A[Proposal] --> B(Clarification Round)
-    B -->|Time: 3 days| C("Revision Round (if needed)")
+    B -->|"Time: ~5 days"| C("Revision Round (if needed)")
     C -->|Time: As needed/estimated by author| D(Decision Round)
-    D -.->|Fixable blocking issues identified| E
+    D -.->|Fixable blockers identified| E
     E("Continued Revision Round (if needed)")
-    D -.->|No blocking issues identified| H
+    D -.->|No blockers identified| H
     E --> D
-    D -.->|Unworkable blocking issues identified| G
+    D -.->|Unworkable blockers identified| G
     G[Proposal tabled] -->|New proposal needed| A
     H[Proposal approved] --> I((End))
 ```
@@ -129,8 +129,10 @@ The goal of this round is for the participants to decide whether the proposal
 can be implemented in its current form. The focus of this round should be to
 carefully consider any problems present with the proposal and decide whether
 they are blockers or whether they can be iterated on after the initial
-implementation. If an issue is a blocker, then reviewers should request changes
-to address the issue, if it can be addressed. If the blocking issue cannot be
+implementation. If further clarification is needed about an aspect of the
+proposal that could cause harm, that is automatically considered to be a
+blocker. If problem is a blocker, then reviewers should request changes to
+address the issue, if it can be addressed. If the blocking issue cannot be
 addressed (it is "unworkable"), then the proposal is tabled, though this should
 be rare. Participants should all work together to help identify whether an issue
 is truly a blocker or whether it is something that can be iterated on. Objective
@@ -155,6 +157,19 @@ rules. Everyone makes mistakes and everyone can miss big or small details of a
 problem that lead them down the wrong path. Working together as a team, all the
 participants are tasked with deciding whether a solution is feasible and finding
 ways to resolve blockers.
+
+The suggested time span for the decision round is shorter for two reasons:
+
+1. To encourage front-loading discussion during the clarification round
+1. To acknowledge that the goal of the decision round is to decide whether the
+   proposal can be implemented and iterated on or whether it has blockers
+
+The decision round isn't necessarily another discussion round, aside from
+deliberating about whether certain problems are blockers or not. Three days is
+the suggested span because it allows time for at least one back and forth
+between author and reviewers to decide whether problems are blockers. Further
+discussion about the problems should continue during the subsequent revision
+round between the person who identified the blocker and the proposal author.
 
 ### Continued Revision Round
 

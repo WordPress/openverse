@@ -5,6 +5,28 @@ to the general guidelines of the
 [decision-making process](./process_description.md) without overburdening
 participants with too many discussions.
 
+## Current-round Call Out
+
+In the PR description or top-post of a GitHub discussion, discussion leaders
+should include the following text:
+
+```md
+This discussion is following the Openverse decision-making process. Information
+about this process can be found
+[on the Openverse documentation site](https://docs.openverse.org/reference/decision_making.html).
+Requested reviewers or participants will be following this process. If you are
+being asked to give input on a specific detail, you do not need to familiarise
+yourself with the process and follow it.
+
+## Current Round
+
+This discussion is currently in the **{Clarification, Revision, Decision,
+Continued Revision} round**.
+```
+
+When a round ends, discussion leaders should leave a comment announcing the next
+round along with the length of time allotted for it.
+
 ## Discussion Dashboard
 
 The
@@ -59,9 +81,10 @@ Tips for checking the dashboard and not accidentally over-encumbering people:
 - Check for discussions in the "pending discussion" column. If someone is
   already assigned to discussions there, then know that any new discussions that
   _must_ involve them will need to be triaged with the other discussion
-- If a discussion could happen using the "lightening process", then you may be
-  able to pull people in who are waiting for a discussion to restart during the
-  revision round, even if they're already participating in the discussion
+- If a discussion could happen synchronously (if all participants have time
+  available), then you may be able to pull people in who are waiting for a
+  discussion to restart during the revision round, even if they're already
+  participating in the discussion
 
 In either case, it is still courteous to check with the individuals and make it
 clear that they can push the discussion to someone else (provided they're not a
@@ -110,40 +133,24 @@ help move things along at an even faster clip, if so desired.
 ### "Shortcutting" a round
 
 At any point during a round, any participant may say something along the lines
-of "no (further) questions", "no reaction", or "no objection" in order to
-short-cut their participation in the round. If all participants are finished
-sharing their part in a given round, the author can choose to move to the next
-round, even if the time period for the round has not been completed. This can be
-particularly helpful for simpler discussions where the 2 business day
-recommended time periods can feel overly slow.
+of "no (further) discussion needed on my part" in order to short-cut their
+participation in the round. If all participants are finished sharing their part
+in a given round, the author can choose to move to the next round, even if the
+time period for the round has not been completed. This can be particularly
+helpful for simpler discussions.
 
-### Optional, synchronous "lightening process"
+### Going synchronous
 
 If all the participants of a particular discussion are able to participate in a
-synchronous version of the process outlined above, they may elect to do so. This
-can be particularly useful for relatively small but impactful decisions where
-the 2 business day periods would unnecessarily drag the process out. In these
-cases, participants should hold a synchronous conversation with the
-understanding that someone will take notes for each round, recording the
-questions, reactions, and any objections that arise. **The notes should be
-shared afterwards in the original proposal venue and should include explicit
-headings per round.** If necessary, the synchronous discussion can be broken
-into two separate sections to allow time for the revision round after reactions
-are shared.
+synchronous decision-making process, they may elect to do so. This can be
+particularly useful for relatively small but impactful decisions where the
+discussion periods would unnecessarily drag the process out. In these cases,
+participants should hold a synchronous conversation with the understanding that
+someone will take notes for each round, recording the feedback shared. **The
+notes should be shared afterwards in the original proposal venue and should
+include explicit headings per round.** If necessary, the synchronous discussion
+can be broken into two separate sections to allow time for revision.
 
 Even in these cases, however, the text of the proposal should still be written
 in a GitHub PR or discussion and available for all participants to read _before_
 the lightening process.
-
-Differences in structure for the "lightening process" from the asynchronous
-process are as follows:
-
-- We have a separate round for reactions. Therefore, the rounds are as follows:
-  1. Clarification
-  1. Reaction
-  1. Revision
-  1. Decision
-  1. Objection revision
-- Each round should have notes taken clearly documenting the feedback and
-  discussions for each (as appropriate). Priority should be given to questions
-  and objections that require revising the proposal.
