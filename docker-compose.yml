@@ -72,7 +72,7 @@ services:
   cache:
     profiles:
       - api
-    image: redis:4.0.10
+    image: redis:4.0.14
     ports:
       - "50263:6379"
 
