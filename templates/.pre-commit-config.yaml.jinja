@@ -81,11 +81,6 @@ repos:
           # See the following documentation for what each rule does:
           # https://www.pydocstyle.org/en/6.2.3/error_codes.html#error-codes
           - --add-ignore=D1,D202,D205,D211,D400
-          
-  - repo: https://github.com/rhysd/actionlint
-    rev: main
-    hooks:
-      - id: actionlint-docker
 
   {% endif %}
   {% if contains_js_code | default(true) %}
@@ -125,5 +120,10 @@ repos:
     rev: v0.8.0
     hooks:
       - id: shellcheck
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: main
+    hooks:
+      - id: actionlint-docker
   {% block repos_bottom %}
   {% endblock %}
