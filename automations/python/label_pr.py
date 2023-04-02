@@ -22,10 +22,6 @@ from shared.log import configure_logger
 
 log = logging.getLogger(__name__)
 
-REQUIRED_LABEL_CATEGORIES = ["aspect", "priority", "goal", "stack"]
-# Categories where all labels should be retrieved rather than first only
-GET_ALL_LABEL_CATEGORIES = {"stack"}
-
 # region argparse
 parser = argparse.ArgumentParser(description="")
 parser.add_argument(
@@ -182,6 +178,16 @@ def main():
 
     log.debug(f"PR URL: {args.pr_url}")
 
+    label_info = get_data("labels.yml")
+    label_groups = label_info["groups"]
+    required_label_categories = [
+        i.get("name") for i in label_groups if i.get("is_required")
+    ]
+    # Categories where all labels should be retrieved rather than first only
+    categories_with_all_labels = [
+        i.get("name") for i in label_groups if i.get("apply_all_available")
+    ]
+
     github_info = get_data("github.yml")
     org_handle = github_info["org"]
     log.info(f"Organization handle: {org_handle}")
@@ -203,8 +209,8 @@ def main():
         labels = issue.labels
         labels_to_add = []
 
-        for category in REQUIRED_LABEL_CATEGORIES:
-            if category in GET_ALL_LABEL_CATEGORIES and (
+        for category in required_label_categories:
+            if category in categories_with_all_labels and (
                 available_labels := get_all_labels_of_cat(category, labels)
             ):
                 log.info(f"Found labels for category {category}: {available_labels}")
@@ -218,7 +224,7 @@ def main():
             # Only break when all labels are applied, if we're missing any
             # then continue to the else to apply the awaiting triage label.
             # Stack can have more than one label so this is not an exact check
-            if len(labels_to_add) >= len(REQUIRED_LABEL_CATEGORIES):
+            if len(labels_to_add) >= len(required_label_categories):
                 break
     else:
         log.info("Could not find properly labelled issue")
