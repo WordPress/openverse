@@ -86,6 +86,7 @@ groups:
     color: "006b75"
     emoji: "🧱"
     is_required: true
+    apply_all_available: true
     labels:
       - name: frontend
         description: Related to the Nuxt frontend
