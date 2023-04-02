@@ -86,7 +86,6 @@ repos:
     rev: main
     hooks:
       - id: actionlint-docker
-        files: ^\.github/(workflows|actions)/.*$
 
   {% endif %}
   {% if contains_js_code | default(true) %}

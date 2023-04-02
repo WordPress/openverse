@@ -133,7 +133,6 @@ repos:
     rev: main
     hooks:
       - id: actionlint-docker
-        files: ^\.github/(workflows|actions)/.*$
 
   - repo: local # More local hooks are defined at the top.
     hooks:
