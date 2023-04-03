@@ -44,7 +44,6 @@ The following are DAGs grouped by their primary tag:
 | [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
 | [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation) | `None`            |
 | [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
-| `terminate_long_queries`                                                          | `*/7 * * * *`     |
 
 ## Maintenance
 
