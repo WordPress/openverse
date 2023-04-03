@@ -86,3 +86,8 @@ repos:
     rev: v0.8.0
     hooks:
       - id: shellcheck
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: main
+    hooks:
+      - id: actionlint-docker
