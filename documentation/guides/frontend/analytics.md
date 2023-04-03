@@ -1,7 +1,9 @@
 # Analytics
 
 Openverse uses Plausible for analytics. This document describes how to set up
-and use the Openverse Plausible integration.
+and use the Openverse Plausible integration. It is not necessary to set up
+Plausible for general frontend development unless specifically working on custom
+events.
 
 Running Plausible locally requires Docker and docker-compose.
 
