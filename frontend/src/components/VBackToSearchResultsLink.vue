@@ -3,6 +3,7 @@
   <VLink
     class="time inline-flex flex-row items-center gap-2 rounded-sm p-2 pe-3 text-xs font-semibold text-dark-charcoal-70 hover:text-dark-charcoal"
     v-bind="$attrs"
+    @click="handleClick()"
   >
     <VIcon name="chevron-left" :rtl-flip="true" />
     {{ $t("single-result.back") }}
@@ -10,7 +11,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineComponent, PropType } from "vue"
+
+import { useAnalytics } from "~/composables/use-analytics"
+import type { SupportedMediaType } from "~/constants/media"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VLink from "~/components/VLink.vue"
@@ -24,6 +28,35 @@ export default defineComponent({
     VIcon,
     VLink,
   },
+  props: {
+    /**
+     * The unique ID of the media
+    */
+    id: {
+      type: String,
+      required: true,
+    },
+    /**
+     * The media type being searched
+     */
+     mediaType: {
+      type: String as PropType<SupportedMediaType>,
+      required: true,
+    },
+  },
   inheritAttrs: false,
+  setup(props) {
+    const { sendCustomEvent } = useAnalytics()
+    const handleClick = () => {
+      sendCustomEvent("BACK_TO_SEARCH", {
+        id: props.id,
+        mediaType: props.mediaType,
+      })
+    }
+
+    return {
+      handleClick
+    }
+  },
 })
 </script>

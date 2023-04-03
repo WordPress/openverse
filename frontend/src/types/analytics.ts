@@ -27,6 +27,17 @@ export type Events = {
     identifier: string
   }
   /**
+   * Click on the 'back to search' link on a single result
+   *
+   * - Are these links used much? Are they necessary?
+   */
+  BACK_TO_SEARCH: {
+    /** The unique ID of the media */
+    id: string
+    /** The media type being searched */
+    mediaType: MediaType
+  }
+  /**
    * Description: The user clicks the CTA button to the external source to use the image
    * Questions:
    *   - How often do users go to the source after viewing a result?
