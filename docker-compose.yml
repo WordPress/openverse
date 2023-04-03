@@ -150,6 +150,7 @@ services:
       - ./ingestion_server:/ingestion_server
     env_file:
       - ingestion_server/env.docker
+      - ingestion_server/.env
     stdin_open: true
     tty: true
 
