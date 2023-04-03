@@ -8,7 +8,7 @@ import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 />
 
 export const Template = (args) => ({
-  template: `<VBackToSearchResultsLink v-bind="args"/>`,
+  template: `<VBackToSearchResultsLink v-bind="args" :id="id" :media-type="mediaType" />`,
   components: { VBackToSearchResultsLink },
   setup() {
     return { args }

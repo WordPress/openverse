@@ -1,7 +1,11 @@
 <template>
   <VSkipToContentContainer as="main">
     <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
-      <VBackToSearchResultsLink :href="backToSearchPath" />
+      <VBackToSearchResultsLink
+        :id="image.id"
+        :href="backToSearchPath"
+        :media-type="image.frontendMediaType"
+      />
     </div>
 
     <figure class="relative mb-4 border-b border-dark-charcoal-20 px-6">

@@ -3,7 +3,7 @@
   <VLink
     class="time inline-flex flex-row items-center gap-2 rounded-sm p-2 pe-3 text-xs font-semibold text-dark-charcoal-70 hover:text-dark-charcoal"
     v-bind="$attrs"
-    @click="handleClick()"
+    @click="handleClick"
   >
     <VIcon name="chevron-left" :rtl-flip="true" />
     {{ $t("single-result.back") }}
@@ -28,6 +28,7 @@ export default defineComponent({
     VIcon,
     VLink,
   },
+  inheritAttrs: false,
   props: {
     /**
      * The unique ID of the media
@@ -39,12 +40,11 @@ export default defineComponent({
     /**
      * The media type being searched
      */
-     mediaType: {
+    mediaType: {
       type: String as PropType<SupportedMediaType>,
       required: true,
     },
   },
-  inheritAttrs: false,
   setup(props) {
     const { sendCustomEvent } = useAnalytics()
     const handleClick = () => {
