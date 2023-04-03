@@ -4,4 +4,5 @@
 :maxdepth: 1
 
 feature_flags
+plausible
 ```
