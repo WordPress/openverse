@@ -121,6 +121,7 @@ importers:
       talkback: ^3.0.1
       throttle-debounce: ^5.0.0
       ts-node: ^10.9.1
+      type-fest: ^3.7.2
       typescript: ^4.9.5
       uuid: ^8.3.2
       vue: ^2.7.14
@@ -240,6 +241,7 @@ importers:
       tailwindcss-rtl: 0.9.0
       talkback: 3.0.1
       ts-node: 10.9.1_ytxlagnlbjxf7pw6smm3knvnbq
+      type-fest: 3.7.2
       typescript: 4.9.5
       vue-demi: 0.13.11_vue@2.7.14
       vue-i18n-extract: 2.0.7
@@ -18716,6 +18718,11 @@ packages:
   /type-fest/0.8.1:
     resolution: {integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==}
     engines: {node: '>=8'}
+    dev: true
+
+  /type-fest/3.7.2:
+    resolution: {integrity: sha512-f9BHrLjRJ4MYkfOsnC/53PNDzZJcVo14MqLp2+hXE39p5bgwqohxR5hDZztwxlbxmIVuvC2EFAKrAkokq23PLA==}
+    engines: {node: '>=14.16'}
     dev: true
 
   /type-is/1.6.18:
