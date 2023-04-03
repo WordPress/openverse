@@ -126,6 +126,11 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
                 )
         logger.info("Completed large batch processing by license type.")
 
+        # Report the final number of requests made. Because the Flickr DAG receives a
+        # large amount of data, we can safely assume that we used the maximum of 25
+        # additional requests when generating timestamp pairs.
+        logger.info(f"Made {self.requests_count + 25} requests to the Flickr API.")
+
     def get_next_query_params(self, prev_query_params, **kwargs):
         if not prev_query_params:
             # Initial request, return default params
@@ -175,11 +180,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         return constants.IMAGE
 
     def get_batch_data(self, response_json):
-        # Keep track of the number of requests we've made, and log every 100
         self.requests_count += 1
-        if self.requests_count % 100 == 0:
-            logger.debug(f"{self.requests_count} requests have been made.")
-
         if response_json is None or response_json.get("stat") != "ok":
             return None
 
