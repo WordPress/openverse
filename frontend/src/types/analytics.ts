@@ -1,3 +1,5 @@
+import type { ConditionalKeys } from "type-fest"
+
 /**
  * compound type of all custom events sent from the site; Index with `EventName`
  * to get the type of the payload for a specific event.
@@ -8,6 +10,8 @@
  * - Names should be in past tense for events not associated with user action.
  * - Documentation must be the step to emit the event, followed by a line break.
  * - Questions that are answered by the event must be listed as bullet points.
+ *
+ * Use `never` for the payload type to indicate an event with no payload.
  */
 export type Events = {
   /**
@@ -28,4 +32,6 @@ export type Events = {
 /**
  * the name of a custom event sent from the site
  */
+export type NoPayloadEventName = ConditionalKeys<Events, never>
+export type PayloadEventName = Exclude<keyof Events, NoPayloadEventName>
 export type EventName = keyof Events

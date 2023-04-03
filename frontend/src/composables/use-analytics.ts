@@ -1,7 +1,12 @@
 import { computed } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
 
-import type { Events, EventName } from "~/types/analytics"
+import type {
+  Events,
+  EventName,
+  NoPayloadEventName,
+  PayloadEventName,
+} from "~/types/analytics"
 import { useUiStore } from "~/stores/ui"
 
 /**
@@ -54,10 +59,12 @@ export const useAnalytics = () => {
    * @param name - the name of the event being recorded
    * @param payload - the additional information to record about the event
    */
-  const sendCustomEvent = <T extends EventName>(
+  function sendCustomEvent<T extends NoPayloadEventName>(name: T): void
+  function sendCustomEvent<T extends PayloadEventName>(
     name: T,
     payload: Events[T]
-  ) => {
+  ): void
+  function sendCustomEvent<T extends EventName>(name: T, payload?: Events[T]) {
     $plausible.trackEvent(name, {
       props: {
         ...isomorphicProps.value,
