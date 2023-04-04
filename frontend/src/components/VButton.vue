@@ -10,7 +10,7 @@
       {
         [$style[`${variant}-pressed`]]: isActive,
         [$style[`connection-${connections}`]]: isConnected,
-        'border border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink':
+        'border border-tx ring-offset-1 focus-visible:outline-none focus-visible:ring focus-visible:ring-pink':
           !isPlainDangerous,
       },
     ]"
