@@ -126,7 +126,7 @@ translating audio genres, for example.
 It will not be possible to document all the fields inside the `meta_data`
 column. It is a JSON column that was used to collect "whatever doesn't fit in
 the other fields" and its values can vary greatly. It would be extremely time-
-and resources- consuming to try to extract \_all_available meta_data fields. For
+and resource-consuming to try to extract _all_ available meta\_data fields. For
 this column, we will describe what we currently expect as a bare minimum value
 for it, and also the meta_data fields that are used in the provider scripts
 
