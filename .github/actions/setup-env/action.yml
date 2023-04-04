@@ -14,10 +14,6 @@ inputs:
     default: "true"
     description: Whether to install dependencies using Just
 
-  github_token:
-    required: true
-    description: The token to authenticate calls to the GitHub API
-
   install_recipe:
     default: "install"
     description: The recipe to use to install dependencies
@@ -29,7 +25,7 @@ runs:
     - name: Setup just
       uses: extractions/setup-just@v1
       env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
+        GITHUB_TOKEN: ${{ github.token }}
 
     # Python
     - name: Setup Python
