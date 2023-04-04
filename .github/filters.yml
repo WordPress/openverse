@@ -15,6 +15,8 @@ frontend:
   - pnpm-workspace.yaml
   - .npmrc
   - .pnpmfile.cjs
+documentation:
+  - documentation/**
 lint:
   - prettier.config.js
   - .prettierignore

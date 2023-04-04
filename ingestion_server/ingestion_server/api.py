@@ -1,6 +1,7 @@
 """A small RPC API server for scheduling data refresh and indexing tasks."""
 
 import logging
+import os
 import sys
 import time
 import uuid
@@ -8,7 +9,9 @@ from multiprocessing import Process, Value
 from urllib.parse import urlparse
 
 import falcon
+import sentry_sdk
 from falcon.media.validators import jsonschema
+from sentry_sdk.integrations.falcon import FalconIntegration
 
 from ingestion_server import slack
 from ingestion_server.constants.media_types import MEDIA_TYPES, MediaType
@@ -22,6 +25,15 @@ MODEL = "model"
 ACTION = "action"
 CALLBACK_URL = "callback_url"
 SINCE_DATE = "since_date"
+
+sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_DSN"),
+    integrations=[
+        FalconIntegration(),
+    ],
+    traces_sample_rate=os.environ.get("SENTRY_SAMPLE_RATE", 1.0),
+    environment=os.environ.get("ENVIRONMENT"),
+)
 
 
 class HealthResource:
