@@ -44,6 +44,8 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 node-install:
     pnpm i
     pnpm run build:packages
+    # Install again now that packages are built? :thinking:
+    pnpm i
     just frontend/run i18n:en
     just frontend/run i18n:copy-test-locales
 
