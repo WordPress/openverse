@@ -99,13 +99,13 @@ requirements described above.
 <!-- What infrastructural considerations need to be made for this project? If there are none, say so explicitly rather than deleting the section. -->
 
 This project may require infrastructure work necessary to assist with the rapid
-iteration of the data refresh server. Further details will be determined in the
+iteration of the ingestion server. Further details will be determined in the
 implementation plan.
 
 The project will also likely involve the creation or modification of Airflow
 DAGs related to the data refresh and infrastructure modification. This will
-require interfacing Airflow with the staging data refresh server, API database,
-and Elasticsearch cluster.
+require interfacing Airflow with the staging ingestion server, API database, and
+Elasticsearch cluster.
 
 ## Accessibility
 
@@ -130,12 +130,12 @@ In the order they should be completed:
 1. Staging API update procedure
    - This plan will describe a DAG which can be triggered to update the staging
      API database.
-2. Rapid iteration on data refresh server index configuration
+2. Rapid iteration on ingestion server index configuration
    - This plan will describe how rapid iteration of the Elasticsearch index
      configuration can happen.
    - It should be assessed as part of this implementation plan whether it would
-     be easier to convert the data refresh server to ECS or provide a mechanism
-     on the existing EC2 infrastructure to update the Elasticsearch index
+     be easier to convert the ingestion server to ECS or provide a mechanism on
+     the existing EC2 infrastructure to update the Elasticsearch index
      configuration without issuing a deployment (similar to the
      [dag-sync script for the catalog](https://github.com/WordPress/openverse-catalog/blob/10857e3ee94ae686853984c54d504b152082d4c2/dag-sync.sh)).
 3. Staging data refresh DAGs for both potential index types
