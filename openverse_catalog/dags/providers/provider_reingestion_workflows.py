@@ -81,6 +81,7 @@ PROVIDER_REINGESTION_WORKFLOWS = [
         ingester_class=MetMuseumDataIngester,
         max_active_tasks=2,
         pull_timeout=timedelta(hours=16),
+        dagrun_timeout=timedelta(days=7),
         daily_list_length=6,
         one_month_list_length=9,
         three_month_list_length=18,
