@@ -7,7 +7,7 @@ Project proposal for
 
 ## Assigned reviewers
 
-- [ ] @AetherUnbound
+- [x] @AetherUnbound
 - [ ] @krysal
 
 ## Description
@@ -36,9 +36,13 @@ catalog and API contributors, as well as API users.
 
 ### Success criteria
 
-The project will be considered successful when the document described below is
-created, reviewed by at least two maintainers, and published on the Openverse
-documentation site.
+The project will be considered successful when:
+
+- the documentation of all media properties is created, automatically extracted
+  from the code where possible.
+- the documentation is published on the Openverse documentation site, and the
+  process for automatically updating or encouraging the maintainers to update it
+  on relevant code changes is created.
 
 ### Implementors
 
@@ -50,12 +54,11 @@ documentation site.
 
 ### Implementation details
 
-As this is mainly a documentation project, its implementation plan can be
-written here, inside the project plan. (I think splitting it will unnecessarily
-slow down a smallish project. Please, correct me if you think I'm wrong) This
-project will create a **table** with all the media properties that we store or
-compute on all levels of the stack (Catalog, API database, API elasticsearch,
-Frontend).
+The scope of this project was increased from creating a markdown table
+documenting all the media properties on all levels of the stack (Catalog, API
+database, API elasticsearch, Frontend) to adding automation to update it and
+generating as much documentation as possible to the documentation that lives
+next to the code. This means that the project will need the implementation plan.
 
 #### Table as a living document
 
@@ -69,23 +72,26 @@ the
 [migration safety warning](https://github.com/WordPress/openverse/blob/main/.github/workflows/migration_safety_warning.yml)
 
 We will publish the table on the
-[Openverse documentation site](https://docs.openverse.org/), with the
-admonition that the table is a living document and will be updated.
+[Openverse documentation site](https://docs.openverse.org/), with the admonition
+that the table is a living document and will be updated.
 
 #### Table contents
 
 The table will start with a list of columns in the Catalog database. For each
-property, we will provide the following information:
+property, we will provide the following structured data:
 
-- A clear definition of what the property represents.
+- The property's data type in the database, and whether it is required and/or
+  nullable.
+- The Python column that is used to represent the property when saving the TSVs.
+- A short clear definition of what the property represents.
+
+For each property, we will also provide the following information in free-form
+text:
+
 - An explanation of where the property is sourced from in the catalog, and any
   special considerations that should be taken into account when extracting it.
   For instance, in the case of the `creator` field, we will specify whether to
   use the `author`, `photographer`, or both.
-- The property's data type, and whether it is required or nullable. We will also
-  indicate if the property is required but not present in some data, such as
-  `license_url` in the `meta_data` field. If the property has a set of distinct
-  values, we will note where they are in the code.
 - Whether the property is served by the API, and if so, on which endpoints
   (search or single result, or both). We will also highlight any differences
   between the property's type in the API versus the catalog, as noted in the
@@ -98,21 +104,29 @@ property, we will provide the following information:
   the type matches the catalog/API response type, and whether the frontend
   performs any cleanup or sanitization of the property. A link to the relevant
   code will be provided, if available.
+- We will also indicate if the property is required but not present in some
+  data, such as `license_url` in the `meta_data` field. If the property has a
+  set of distinct values, we will note where they are in the code.
 
 #### Tools
 
-The main tool to use for this table is an online spreadsheet app. I'm a little
-uncertain of whether the amount of information would be too much to fit into one
-table. If it is, it might be a good idea to split the data into a table with
-more standard pieces of information, and a list of all data properties with
-longer descriptions and things like code links and the criteria for selecting
-data from provider APIs.
+The table will be created by parsing the local catalog database DDL and the
+Python code that is used to save the TSVs. We can use `ast` module to parse the
+files and extract the necessary information. The data about where the properties
+are sourced from in the catalog will be extracted from the `MediaStore`,
+`ImageStore` and `AudioStore` classes. To make it easier, we can change the
+`add_item` function to take a dataclass with all the properties as arguments,
+describe how to source each property from providers in the docstrings, and then
+extract these docstrings into the markdown document. The API already creates an
+OpenAPI schema, which we can enrich by adding the information for each property
+of whether it is taken from the catalog "as is" or computed in the Django or the
+Elasticsearch code. This OpenAPI schema will then be used to generate the types
+for the Nuxt frontend, and also be extracted into the markdown document.
 
 #### The process for updating the table
 
 In the future, when the data is cleaned or changed in any way, we will need to
-update the table accordingly. If we keep it in the documentation site, we can
-use PRs to keep the history of changes, linking to all the related PRs.
+update the docstrings accordingly, and this will update the documentation.
 
 #### Localization concerns
 
@@ -126,7 +140,7 @@ translating audio genres, for example.
 It will not be possible to document all the fields inside the `meta_data`
 column. It is a JSON column that was used to collect "whatever doesn't fit in
 the other fields" and its values can vary greatly. It would be extremely time-
-and resource-consuming to try to extract _all_ available meta\_data fields. For
+and resource-consuming to try to extract _all_ available meta_data fields. For
 this column, we will describe what we currently expect as a bare minimum value
 for it, and also the meta_data fields that are used in the provider scripts
 
