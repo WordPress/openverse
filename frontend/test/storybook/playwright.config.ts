@@ -20,7 +20,7 @@ const config: PlaywrightTestConfig = {
     baseURL: "http://localhost:54000",
     trace: "retain-on-failure",
   },
-  timeout: 2 * 60 * 1e3,
+  timeout: 60 * 1e3, // 1 minute
   expect: {
     toMatchSnapshot: {
       // To avoid flaky tests, we allow a small amount of pixel difference.
