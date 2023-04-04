@@ -145,7 +145,7 @@ export default defineComponent({
     const icons = { help: helpIcon, closeSmall: closeSmallIcon }
 
     const isLicense = (code: string): code is License => {
-      // Quick check that also prevents `code` is declared but its value is never read warning.
+      // Quick check that also prevents "`code` is declared but its value is never read" warning.
       return !!code && props.filterType === "licenses"
     }
 
