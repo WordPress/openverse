@@ -1,29 +1,7 @@
 {
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
-    "composite": true,
-    "allowSyntheticDefaultImports": true,
-    "jsx": "preserve",
-    "target": "ES2018",
-    "module": "ESNext",
-    "lib": ["DOM", "ESNext", "ESNext.AsyncIterable"],
     "noEmit": true,
-    "declaration": true,
-    "isolatedModules": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    /* Strict Type-Checking Options */
-    "strict": true,
-    /* Additional Checks */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "importsNotUsedAsValues": "error",
-    /* Module Resolution Options */
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
     "types": ["@types/jest", "@nuxt/types", "@nuxtjs/i18n", "@pinia/nuxt"],
     "typeRoots": ["./typings", "./node_modules/@types"],
     "paths": {

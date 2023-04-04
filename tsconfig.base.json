@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "composite": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
+    "target": "ES2018",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext", "ESNext.AsyncIterable"],
+    "declaration": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    /* Strict Type-Checking Options */
+    "strict": true,
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "importsNotUsedAsValues": "error",
+    /* Module Resolution Options */
+    "moduleResolution": "Node",
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules"]
+}

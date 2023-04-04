@@ -1,0 +1,18 @@
+{
+  "name": "@openverse/eslint-plugin",
+  "version": "1.0.0",
+  "description": "Openverse custom ESLint rules",
+  "main": "dist/src/index.js",
+  "keywords": [],
+  "author": "Openverse <openverse@wordpress.org>",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/utils": "^5.57.1",
+    "eslint": "^8.28.0",
+    "typescript": "^4.9.5"
+  },
+  "peerDependencies": {
+    "eslint": "^8.28.0",
+    "typescript": "^4.9.5"
+  }
+}

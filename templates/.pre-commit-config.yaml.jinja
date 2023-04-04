@@ -17,7 +17,7 @@ repos:
         args: [--markdown-linebreak-ext=md]
       - id: check-executables-have-shebangs
       - id: check-json
-        exclude: tsconfig.json # contains comments
+        exclude: tsconfig(\.base)?.json # contains comments
       - id: check-case-conflict
       - id: check-toml
       - id: check-merge-conflict
