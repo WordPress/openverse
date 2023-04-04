@@ -43,6 +43,7 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 # Install Node.js dependencies for the entire monorepo
 node-install:
     pnpm i
+    pnpm run build:packages
     just frontend/run i18n:en
     just frontend/run i18n:copy-test-locales
 
