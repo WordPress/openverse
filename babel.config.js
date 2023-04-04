@@ -12,7 +12,10 @@ module.exports = {
         ],
         "@babel/preset-typescript",
       ],
-      plugins: ["@nuxtjs/composition-api/dist/babel-plugin"],
+      plugins: [
+        "@nuxtjs/composition-api/dist/babel-plugin",
+        "babel-plugin-replace-ts-export-assignment",
+      ],
     },
   },
 }

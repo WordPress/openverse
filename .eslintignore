@@ -3,7 +3,6 @@ dist/
 # https://github.com/eslint/eslint/issues/8429#issuecomment-292789858
 !.storybook
 nuxt-template-overrides/
-test/tapes
 coverage/
 node_modules
 .nuxt
@@ -11,3 +10,5 @@ node_modules
 !.github
 storybook-static
 .idea
+pnpm*.yaml
+tapes

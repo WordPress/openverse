@@ -2,7 +2,7 @@
   "name": "@openverse/eslint-plugin",
   "version": "1.0.0",
   "description": "Openverse custom ESLint rules",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "keywords": [],
   "author": "Openverse <openverse@wordpress.org>",
   "license": "MIT",
