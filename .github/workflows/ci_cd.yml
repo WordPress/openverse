@@ -33,6 +33,7 @@ jobs:
       api: ${{ steps.paths-filter.outputs.api }}
       ingestion_server: ${{ steps.paths-filter.outputs.ingestion_server }}
       frontend: ${{ steps.paths-filter.outputs.frontend }}
+      documentation: ${{ steps.paths-filter.outputs.documentation }}
       changes: ${{ steps.paths-filter.outputs.changes }}
     steps:
       - name: Checkout repository
@@ -595,11 +596,13 @@ jobs:
           github.actor != 'dependabot[bot]'
         )
       ) &&
+      (needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.documentation == 'true') &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
       (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped')
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - test-ing
       - test-api
       - nuxt-build
@@ -787,3 +790,94 @@ jobs:
             "Deployment: staging-api"
         env:
           GITHUB_TOKEN: ${{ github.token }}
+
+  ################
+  # Notification #
+  ################
+
+  send_report:
+    name: Send Slack report
+    runs-on: ubuntu-latest
+    if: |
+      !cancelled() &&
+      github.event_name == 'push' &&
+      github.repository == 'WordPress/openverse' &&
+      (
+        ((needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.documentation == 'true') && needs.emit-docs.result != 'success') ||
+        (needs.determine-images.outputs.do_publish == 'true' && needs.publish-images.result != 'success') ||
+        (needs.get-changes.outputs.frontend == 'true' && needs.deploy-frontend.result != 'success') ||
+        (needs.get-changes.outputs.api == 'true' && needs.deploy-api.result != 'success')
+      )
+    needs: # the end products of the CI + CD workflow
+      - get-changes
+      - determine-images
+      - emit-docs
+      - publish-images
+      - deploy-frontend
+      - deploy-api
+
+    steps:
+      - name: Generate report
+        id: report
+        shell: python
+        env:
+          EMIT_DOCS_RESULT: ${{ needs.emit-docs.result }}
+          PUBLISH_IMAGES_RESULT: ${{ needs.publish-images.result }}
+          DEPLOY_FRONTEND_RESULT: ${{ needs.deploy-frontend.result }}
+          DEPLOY_API_RESULT: ${{ needs.deploy-api.result }}
+          SERVER_URL: ${{ github.server_url }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          import json
+          import os
+          import sys
+          from collections import defaultdict
+
+          server_url = os.environ.get("SERVER_URL")
+          repository = os.environ.get("REPOSITORY")
+          run_id = os.environ.get("RUN_ID")
+
+          jobs = ["emit-docs", "publish-images", "deploy-frontend", "deploy-api"]
+
+          results = {}
+          counts = defaultdict(lambda: 0)
+
+          for job_name in jobs:
+              result = os.environ.get(f"{job_name.replace('-', '_')}_result".upper())
+              results[job_name] = result
+              counts[result] += 1
+
+          payload = {
+              "text": ", ".join(f"{count} {result}" for result, count in counts.items()),
+              "blocks": [
+                  {
+                      "type": "section",
+                      "text": {
+                          "type": "mrkdwn",
+                          "text": f"<{server_url}/{repository}/actions/runs/{run_id}|Click here to review the completed CI + CD workflow>.",
+                      },
+                  },
+                  {
+                      "type": "section",
+                      "fields": [
+                          {
+                              "type": "mrkdwn",
+                              "text": f"*{job_name}:*\n:workflow-{result}: {result}",
+                          }
+                          for job_name, result in results.items()
+                      ],
+                  },
+              ],
+          }
+
+          with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
+              for dest in [sys.stdout, gh_out]:
+                  print(f"payload={json.dumps(payload)}", file=dest)
+
+      - name: Send report
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: ${{ steps.report.outputs.payload }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
