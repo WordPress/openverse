@@ -17,7 +17,7 @@ export type Events = {
    * - Do users find these images interesting?
    * - Which set is most interesting for the users?
    */
-  CLICK_HOME_GALLERY_IMAGEa: {
+  CLICK_HOME_GALLERY_IMAGE: {
     /** the set to which the image belongs */
     set: string
     /** the identifier of the image */
