@@ -1,3 +1,8 @@
+# This file assigns names to groups of files. These names can be used to
+# determine which stacks have changed, which in turn is used to
+# - apply labels to PRs (see workflows `label_new_pr.yml` and `label_pr.yml`)
+# - determine which tests to run in CI (see workflow `ci_cd.yml`)
+
 workflows:
   - .github/workflows/**
 workflow_ci_cd:
