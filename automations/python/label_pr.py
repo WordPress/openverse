@@ -179,10 +179,10 @@ def get_label_of_cat(cat: str, labels: list[Label]) -> Label | None:
 
 def get_stack_labels_from_changes(changes: set[str]) -> list[str]:
     """
-    Given a list of changes identified by the `.github/actions/get-changes.yml` action,
+    Given a set of changes identified by the `.github/actions/get-changes.yml` action,
     this function returns a list of labels that must be applied to a PR.
 
-    :param changes: the changes identfied by the `get-changes` action
+    :param changes: the changes identified by the `get-changes` action
     :return: the list of 'stack' labels to apply to the PR
     """
 
