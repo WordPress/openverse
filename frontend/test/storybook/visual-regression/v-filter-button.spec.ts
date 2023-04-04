@@ -2,7 +2,6 @@ import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
-import { sleep } from "~~/test/playwright/utils/navigation"
 
 const gotoWithArgs = makeGotoWithArgs(
   "components-vheader-vfilterbutton--default-story"
@@ -22,6 +21,27 @@ test.describe("VFilterButton", () => {
           page.locator(wrapper)
         )
       })
+
+      test(`hovered, ${filterCount} filters`, async ({ page }) => {
+        await gotoWithArgs(page, {
+          appliedFilters: filterCount,
+        })
+        await page.locator("button", { hasText: "Filter" }).hover()
+        await expectSnapshot(
+          `filter-button-hovered-${filterCount}-checked`,
+          page.locator(wrapper)
+        )
+      })
+
+      test(`focused, ${filterCount} filters`, async ({ page }) => {
+        await gotoWithArgs(page, { appliedFilters: filterCount })
+        await page.locator("button", { hasText: "Filter" }).focus()
+        await expectSnapshot(
+          `filter-button-focused-${filterCount}-checked`,
+          page.locator(wrapper)
+        )
+      })
+
       test(`pressed, ${filterCount} filters`, async ({ page }) => {
         await gotoWithArgs(page, {
           appliedFilters: filterCount,
@@ -32,6 +52,7 @@ test.describe("VFilterButton", () => {
           page.locator(wrapper)
         )
       })
+
       test(`pressed, hovered, ${filterCount} filters`, async ({ page }) => {
         await gotoWithArgs(page, {
           appliedFilters: filterCount,
@@ -43,25 +64,15 @@ test.describe("VFilterButton", () => {
           page.locator(wrapper)
         )
       })
-      test(`hovered, ${filterCount} filters`, async ({ page }) => {
-        await gotoWithArgs(page, {
-          appliedFilters: filterCount,
-        })
-        await page.locator("button", { hasText: "Filter" }).hover()
-        await expectSnapshot(
-          `filter-button-hovered-${filterCount}-checked`,
-          page.locator(wrapper)
-        )
-      })
-      test(`focused, pressed ${filterCount} filters`, async ({ page }) => {
+
+      test(`pressed, focused, ${filterCount} filters`, async ({ page }) => {
         await gotoWithArgs(page, {
           appliedFilters: filterCount,
           pressed: true,
         })
         await page.locator("button", { hasText: "Filter" }).focus()
-        await sleep(500)
         await expectSnapshot(
-          `filter-button-focused-pressed-${filterCount}-checked`,
+          `filter-button-pressed-focused-${filterCount}-checked`,
           page.locator(wrapper)
         )
       })
