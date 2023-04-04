@@ -69,7 +69,7 @@ the
 [migration safety warning](https://github.com/WordPress/openverse/blob/main/.github/workflows/migration_safety_warning.yml)
 
 We will publish the table on the
-[Openverse documentation site](https://wordpress.github.io/openverse/), with the
+[Openverse documentation site](https://docs.openverse.org/), with the
 admonition that the table is a living document and will be updated.
 
 #### Table contents
