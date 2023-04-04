@@ -3,7 +3,7 @@
     <input
       :id="id"
       v-bind="$attrs"
-      :value="ownValue"
+      :value="value_"
       class="radio relative h-5 w-5 flex-shrink-0 appearance-none rounded-full border border-dark-charcoal bg-white me-3 focus:outline-none focus:ring focus:ring-pink focus:ring-offset-2 disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10"
       type="radio"
       :checked="isChecked"
@@ -53,7 +53,8 @@ export default defineComponent({
      * if this prop is called `value` and we have a `v-model` (which uses `value` under the hood in Vue 2, and `modelValue` in Vue 3, so we rename it to `value_` here.
      *
      */
-    ownValue: {
+    // eslint-disable-next-line vue/prop-name-casing
+    value_: {
       type: String,
       required: true,
     },
@@ -66,9 +67,9 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const isChecked = computed(() => props.ownValue === props.modelValue)
+    const isChecked = computed(() => props.value_ === props.modelValue)
     const handleInput = () => {
-      emit("change", props.ownValue)
+      emit("change", props.value_)
     }
 
     return {
