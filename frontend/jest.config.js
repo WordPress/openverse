@@ -11,7 +11,7 @@ module.exports = {
     "^~/(.*)$": "<rootDir>/src/$1",
     "^~~/(.*)$": "<rootDir>/$1",
     "^vue$": "vue/dist/vue.common.js",
-    "(.*svg)(\\?inline)$": "<rootDir>/test/unit/test-utils/svgTransform.js",
+    "(.*svg)(\\?inline)$": "<rootDir>/test/unit/svgTransform.js",
   },
   setupFiles: ["<rootDir>/test/unit/setup.js"],
   setupFilesAfterEnv: ["<rootDir>/test/unit/setup-after-env.js"],
@@ -22,12 +22,4 @@ module.exports = {
     "^.+\\.svg$": "<rootDir>/test/unit/svg-transform.js",
   },
   testPathIgnorePatterns: ["/playwright/", "/storybook/", ".remake"],
-  collectCoverage: true,
-  coverageDirectory: "<rootDir>/test/unit/coverage",
-  collectCoverageFrom: [
-    "<rootDir>/src/**/*.vue",
-    "<rootDir>/src/**/*.js",
-    "<rootDir>/src/**/*.ts",
-    "!<rootDir>/src/**/*.stories.js",
-  ],
 }

@@ -38,7 +38,28 @@ const isTypeAnnotationEmpty = (node: TSESTree.TSPropertySignature): boolean => {
     return true
   }
 
+  if (
+    innerTypeAnnotation.type === "TSNullKeyword" ||
+    innerTypeAnnotation.type === "TSUndefinedKeyword"
+  ) {
+    return true
+  }
+
   return false
+}
+
+const getPropertyName = (node: TSESTree.TSPropertySignature): string => {
+  if (node.key.type === "Identifier") {
+    return node.key.name
+  }
+
+  if (node.key.type === "Literal" && node.key.value) {
+    return node.key.value?.toString()
+  }
+
+  throw new Error(
+    `Could not identify event name on node type: ${node.key.type}`
+  )
 }
 
 // Use without docs for now... should we add a section in the reference
@@ -59,26 +80,25 @@ export const analyticsConfiguration = ESLintUtils.RuleCreator.withoutDocs<
             items: {
               type: "string",
             },
-            required: true,
           },
         },
+        additionalProperties: false,
+        required: ["reservedPropNames"],
       },
     ],
   },
-  defaultOptions: [{ reservedPropNames: [] }] as Options,
+  defaultOptions: [{ reservedPropNames: [] }],
   create(context, [options]) {
     const validatePayloadProp = (payloadNode: TSESTree.TypeElement) => {
       if (payloadNode.type === "TSPropertySignature") {
-        if (
-          payloadNode.key.type === "Identifier" &&
-          options.reservedPropNames.includes(payloadNode.key.name)
-        ) {
+        const propName = getPropertyName(payloadNode)
+        if (options.reservedPropNames.includes(propName)) {
           context.report({
             messageId: "reservedPayloadPropNames",
             data: {
-              propName: payloadNode.key.name,
+              propName: propName,
             },
-            loc: payloadNode.key.loc,
+            node: payloadNode.key,
           })
         }
 
@@ -95,7 +115,7 @@ export const analyticsConfiguration = ESLintUtils.RuleCreator.withoutDocs<
         ) {
           context.report({
             messageId: "invalidPayloadFormat",
-            loc: payloadNode.typeAnnotation.typeAnnotation.loc,
+            node: payloadNode.typeAnnotation.typeAnnotation,
           })
         }
       }
@@ -103,7 +123,7 @@ export const analyticsConfiguration = ESLintUtils.RuleCreator.withoutDocs<
       if (payloadNode.type === "TSIndexSignature") {
         context.report({
           messageId: "invalidPayloadFormat",
-          loc: payloadNode.loc,
+          node: payloadNode,
         })
       }
     }
@@ -111,14 +131,14 @@ export const analyticsConfiguration = ESLintUtils.RuleCreator.withoutDocs<
     const validateCustomEvent = (
       customEventNode: TSESTree.TSPropertySignature
     ) => {
-      const identifier = customEventNode.key as TSESTree.Identifier
-      if (!eventNameRegex.test(identifier.name)) {
+      const eventName = getPropertyName(customEventNode)
+      if (!eventNameRegex.test(eventName)) {
         context.report({
           messageId: "eventNameFormat",
           data: {
-            eventName: identifier.name,
+            eventName: eventName,
           },
-          loc: identifier.loc,
+          node: customEventNode.key,
         })
       }
 
@@ -127,7 +147,16 @@ export const analyticsConfiguration = ESLintUtils.RuleCreator.withoutDocs<
       if (isTypeAnnotationEmpty(customEventNode)) {
         context.report({
           messageId: "emptyPayloadType",
-          loc: customEventNode.typeAnnotation?.loc,
+          node: customEventNode.typeAnnotation,
+        })
+      }
+
+      if (
+        customEventNode.typeAnnotation.typeAnnotation.type === "TSLiteralType"
+      ) {
+        context.report({
+          messageId: "invalidPayloadFormat",
+          node: customEventNode.typeAnnotation.typeAnnotation,
         })
       }
 

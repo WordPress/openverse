@@ -38,8 +38,8 @@ Repo blocks must be indented by 2 spaces.
         pass_filenames: false
       - id: test:unit
         name: test:unit
-        files: ^frontend/.*$
-        entry: bash -c 'just frontend/run test:unit'
+        files: ^(frontend|packages)/.*$
+        entry: bash -c 'pnpm run test:unit'
         language: system
         pass_filenames: false
         stages:

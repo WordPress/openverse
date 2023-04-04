@@ -1,6 +1,6 @@
 import rules from "./rules"
 
-export = {
+export default {
   meta: {
     name: "@openverse/eslint-plugin",
   },
