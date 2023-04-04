@@ -185,6 +185,21 @@ def test_get_record_data_with_non_ok():
             None,
             id="not_cc0",
         ),
+        pytest.param(
+            json.loads('{"otherData": "is here"}'),  # isPublicDomain missing
+            None,
+            id="missing_cc0_info",
+        ),
+        pytest.param(
+            json.loads('{"isPublicDomain": false, "primaryImage": "test.com"}'),
+            None,
+            id="missing_foreign_landing_url",
+        ),
+        pytest.param(
+            json.loads('{"isPublicDomain": true, "objectURL": "test.com"}'),
+            None,
+            id="missing_images",
+        ),
     ],
 )
 def test_get_record_data_returns_response_json_when_all_ok(

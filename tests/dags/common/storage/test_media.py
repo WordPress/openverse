@@ -63,6 +63,13 @@ INT_MAX_PARAMETERIZATION = pytest.mark.parametrize(
     ],
 )
 
+TEST_REQUIRED_FIELDS = {
+    "foreign_landing_url": TEST_FOREIGN_LANDING_URL,
+    "foreign_identifier": "02",
+    "image_url": TEST_IMAGE_URL,
+    "license_info": BY_LICENSE_INFO,
+}
+
 
 @pytest.fixture
 def setup_env(monkeypatch):
@@ -173,12 +180,9 @@ def test_MediaStore_clean_media_metadata_does_not_change_required_media_argument
 ):
     image_store = image.ImageStore()
     image_data = {
-        "license_info": BY_LICENSE_INFO,
-        "foreign_landing_url": TEST_FOREIGN_LANDING_URL,
-        "image_url": TEST_IMAGE_URL,
+        **TEST_REQUIRED_FIELDS,
         "filetype": None,
         "thumbnail_url": None,
-        "foreign_identifier": None,
         "category": None,
     }
     cleaned_data = image_store.clean_media_metadata(**image_data)
@@ -191,9 +195,7 @@ def test_MediaStore_clean_media_metadata_adds_provider(monkeypatch):
     provider = "test_provider"
     image_store = image.ImageStore(provider=provider)
     image_data = {
-        "license_info": BY_LICENSE_INFO,
-        "foreign_landing_url": TEST_FOREIGN_LANDING_URL,
-        "image_url": TEST_IMAGE_URL,
+        **TEST_REQUIRED_FIELDS,
         "filetype": None,
         "category": None,
     }
@@ -205,11 +207,8 @@ def test_MediaStore_clean_media_metadata_adds_provider(monkeypatch):
 def test_MediaStore_clean_media_metadata_removes_license_urls(monkeypatch):
     image_store = image.ImageStore()
     image_data = {
-        "license_info": BY_LICENSE_INFO,
-        "foreign_landing_url": TEST_FOREIGN_LANDING_URL,
-        "image_url": TEST_IMAGE_URL,
+        **TEST_REQUIRED_FIELDS,
         "thumbnail_url": None,
-        "foreign_identifier": None,
         "filetype": None,
         "category": None,
     }
@@ -224,9 +223,8 @@ def test_MediaStore_clean_media_metadata_replaces_license_url_with_license_info(
 ):
     image_store = image.ImageStore()
     image_data = {
-        "license_info": BY_LICENSE_INFO,
+        **TEST_REQUIRED_FIELDS,
         "filetype": None,
-        "image_url": TEST_IMAGE_URL,
         "category": None,
     }
     cleaned_data = image_store.clean_media_metadata(**image_data)
@@ -241,9 +239,8 @@ def test_MediaStore_clean_media_metadata_replaces_license_url_with_license_info(
 def test_MediaStore_clean_media_metadata_adds_default_provider_category(monkeypatch):
     image_store = image.ImageStore(provider=prov.CLEVELAND_DEFAULT_PROVIDER)
     image_data = {
-        "license_info": BY_LICENSE_INFO,
+        **TEST_REQUIRED_FIELDS,
         "filetype": None,
-        "image_url": TEST_IMAGE_URL,
         "category": None,
     }
     cleaned_data = image_store.clean_media_metadata(**image_data)
@@ -256,9 +253,8 @@ def test_MediaStore_clean_media_metadata_does_not_replace_category_with_default(
 ):
     image_store = image.ImageStore(provider=prov.CLEVELAND_DEFAULT_PROVIDER)
     image_data = {
-        "license_info": BY_LICENSE_INFO,
+        **TEST_REQUIRED_FIELDS,
         "filetype": None,
-        "image_url": TEST_IMAGE_URL,
         "category": prov.ImageCategory.PHOTOGRAPH,
     }
     cleaned_data = image_store.clean_media_metadata(**image_data)
@@ -266,22 +262,35 @@ def test_MediaStore_clean_media_metadata_does_not_replace_category_with_default(
     assert cleaned_data["category"] == prov.ImageCategory.PHOTOGRAPH
 
 
+@pytest.mark.parametrize(
+    "field", ("foreign_identifier", "foreign_landing_url", "image_url")
+)
+def test_MediaStore_clean_media_metadata_raises_when_missing_required_field(
+    field,
+):
+    image_store = image.ImageStore()
+    image_data = {
+        **TEST_REQUIRED_FIELDS,
+        field: None,  # Override the test field with None
+    }
+    with pytest.raises(ValueError, match=f"Record missing required field: `{field}`"):
+        image_store.clean_media_metadata(**image_data)
+
+
 def test_MediaStore_clean_media_metadata_adds_license_urls_to_meta_data(monkeypatch):
     raw_license_url = "raw_license"
     license_url = "https://creativecommons.org/licenses/by-nc-nd/4.0/"
     image_store = image.ImageStore()
     image_data = {
+        **TEST_REQUIRED_FIELDS,
         "license_info": LicenseInfo(
             "by-nc-nd",
             "4.0",
             license_url,
             raw_license_url,
         ),
-        "foreign_landing_url": None,
         "filetype": None,
-        "image_url": TEST_IMAGE_URL,
         "thumbnail_url": None,
-        "foreign_identifier": None,
         "ingestion_type": "provider_api",
         "category": None,
     }
@@ -310,7 +319,7 @@ def test_MediaStore_clean_media_strips_url_trailing_slashes(
         "thumbnail_url": input_url,
         "creator_url": input_url,
     }
-    image_data = TEST_IMAGE_DICT | test_data | {"license_info": BY_LICENSE_INFO}
+    image_data = TEST_IMAGE_DICT | TEST_REQUIRED_FIELDS | test_data
     cleaned_data = image_store.clean_media_metadata(**image_data)
 
     for key in test_data:
@@ -327,7 +336,7 @@ def test_MediaStore_get_image_gets_source(monkeypatch):
         thumbnail_url=None,
         filetype=None,
         filesize=None,
-        foreign_identifier=None,
+        foreign_identifier="02",
         width=None,
         height=None,
         creator=None,
@@ -348,12 +357,12 @@ def test_MediaStore_sets_source_to_provider_if_source_is_none(monkeypatch):
 
     actual_image = image_store._get_image(
         license_info=BY_LICENSE_INFO,
-        foreign_landing_url=None,
+        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
         image_url=TEST_IMAGE_URL,
         thumbnail_url=None,
         filetype=None,
         filesize=1000,
-        foreign_identifier=None,
+        foreign_identifier="02",
         width=None,
         height=None,
         creator=None,
@@ -381,7 +390,7 @@ def test_MediaStore_add_image_replaces_non_dict_meta_data_with_no_license_url():
             foreign_landing_url=TEST_FOREIGN_LANDING_URL,
             image_url=TEST_IMAGE_URL,
             thumbnail_url=None,
-            foreign_identifier=None,
+            foreign_identifier="02",
             width=None,
             height=None,
             creator=None,
@@ -417,7 +426,7 @@ def test_MediaStore_add_item_creates_meta_data_with_valid_license_url(
             foreign_landing_url=TEST_FOREIGN_LANDING_URL,
             image_url=TEST_IMAGE_URL,
             thumbnail_url=None,
-            foreign_identifier=None,
+            foreign_identifier="02",
             width=None,
             height=None,
             creator=None,
@@ -453,7 +462,7 @@ def test_MediaStore_add_item_adds_valid_license_url_to_dict_meta_data(
             license_info=LicenseInfo("by", "4.0", valid_license_url, license_url),
             foreign_landing_url=TEST_FOREIGN_LANDING_URL,
             image_url=TEST_IMAGE_URL,
-            foreign_identifier=None,
+            foreign_identifier="02",
             width=None,
             height=None,
             creator=None,
@@ -488,6 +497,7 @@ def test_MediaStore_add_item_fixes_invalid_license_url():
             license_info=LicenseInfo("by-nc-sa", "2.0", updated_url, original_url),
             foreign_landing_url=TEST_FOREIGN_LANDING_URL,
             image_url=TEST_IMAGE_URL,
+            foreign_identifier="02",
             meta_data={},
         )
     actual_image = mock_save.call_args[0][0]
@@ -507,12 +517,12 @@ def test_MediaStore_get_image_enriches_singleton_tags():
             license_version="4.0",
             license_url="https://license/url",
         ),
-        foreign_landing_url=None,
+        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
         image_url=TEST_IMAGE_URL,
         thumbnail_url=None,
         filetype=None,
         filesize=None,
-        foreign_identifier=None,
+        foreign_identifier="02",
         width=None,
         height=None,
         creator=None,
@@ -545,12 +555,12 @@ def test_MediaStore_get_image_tag_blacklist():
             license_="by",
             license_version="4.0",
         ),
-        foreign_landing_url=None,
+        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
         image_url=TEST_IMAGE_URL,
         meta_data=None,
         raw_tags=raw_tags,
         category=None,
-        foreign_identifier=None,
+        foreign_identifier="02",
         thumbnail_url=None,
         filetype=None,
         filesize=None,
@@ -574,12 +584,12 @@ def test_MediaStore_get_image_enriches_multiple_tags():
             license_="by",
             license_version="4.0",
         ),
-        foreign_landing_url=None,
+        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
         image_url=TEST_IMAGE_URL,
         thumbnail_url=None,
         filetype=None,
         filesize=None,
-        foreign_identifier=None,
+        foreign_identifier="02",
         width=None,
         height=None,
         creator=None,
@@ -614,12 +624,12 @@ def test_MediaStore_get_image_leaves_preenriched_tags(setup_env):
             license_="by",
             license_version="4.0",
         ),
-        foreign_landing_url=None,
+        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
         image_url=TEST_IMAGE_URL,
         thumbnail_url=None,
         filetype=None,
         filesize=None,
-        foreign_identifier=None,
+        foreign_identifier="02",
         width=None,
         height=None,
         creator=None,
@@ -646,12 +656,12 @@ def test_MediaStore_get_image_nones_nonlist_tags():
             license_="by",
             license_version="4.0",
         ),
-        foreign_landing_url=None,
+        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
         image_url=TEST_IMAGE_URL,
         thumbnail_url=None,
         filetype=None,
         filesize=None,
-        foreign_identifier=None,
+        foreign_identifier="02",
         width=None,
         height=None,
         creator=None,

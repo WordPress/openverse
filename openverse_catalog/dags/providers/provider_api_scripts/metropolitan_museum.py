@@ -82,15 +82,21 @@ class MetMuseumDataIngester(ProviderDataIngester):
             object_endpoint, self.retries
         )
 
-        if object_json.get("isPublicDomain") is False:
+        if not object_json.get("isPublicDomain"):
             self.non_cc0_objects += 1
             if self.non_cc0_objects % self.batch_limit == 0:
                 logger.info(f"Retrieved {self.non_cc0_objects} non-CC0 objects.")
             return None
 
+        if (foreign_landing_url := object_json.get("objectURL")) is None:
+            return None
+
         main_image = object_json.get("primaryImage")
         other_images = object_json.get("additionalImages", [])
-        image_list = [main_image] + other_images
+        image_list = [img for img in [main_image, *other_images] if img is not None]
+        if not image_list:
+            logger.info(f"No images detected for {object_id=}.")
+            return None
 
         meta_data = self._get_meta_data(object_json)
         raw_tags = self._get_tag_list(object_json)
@@ -107,7 +113,7 @@ class MetMuseumDataIngester(ProviderDataIngester):
 
         return [
             {
-                "foreign_landing_url": object_json.get("objectURL"),
+                "foreign_landing_url": foreign_landing_url,
                 "image_url": img,
                 "license_info": self.DEFAULT_LICENSE_INFO,
                 "foreign_identifier": self._get_foreign_id(object_id, img),
