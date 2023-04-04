@@ -32,14 +32,14 @@ Repo blocks must be indented by 2 spaces.
     hooks:
       - id: types
         name: types
-        files: ^frontend/.*$
+        files: ^(frontend|packages)/.*$
         entry: bash -c 'pnpm exec vue-tsc -p frontend --noEmit'
         language: system
         pass_filenames: false
       - id: test:unit
         name: test:unit
         files: ^(frontend|packages)/.*$
-        entry: bash -c 'pnpm run test:unit'
+        entry: bash -c 'pnpm m --include-workspace-root run test:unit'
         language: system
         pass_filenames: false
         stages:

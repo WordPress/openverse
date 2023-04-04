@@ -423,7 +423,7 @@ jobs:
           install_recipe: node-install
 
       - name: Run unit tests
-        run: just frontend/run test:unit
+        run: pnpm m --include-workspace-root run test:unit
 
   storybook-smoke:
     name: Check Storybook smoke test
