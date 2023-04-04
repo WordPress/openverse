@@ -68,9 +68,9 @@ test API results from all currently available providers.
 
 ### Production data volume
 
-The production-data-volume index will be an index of similar size to production.
-This is how the data refresh is currently set up and does not require any
-additional work to set up.
+The production-data-volume index will be an index of similar size (i.e. on the
+same order of magnitude in document count) to production. This is how the data
+refresh is currently set up and does not require any additional work to set up.
 
 This index will allow us to test how queries and indexing operations perform at
 a data volume consistent with production.
@@ -131,8 +131,8 @@ In the order they should be completed:
    - This plan will describe a DAG which can be triggered to update the staging
      API database.
 2. Rapid iteration on ingestion server index configuration
-   - This plan will describe how rapid iteration of the Elasticsearch index
-     configuration can happen.
+   - This plan will describe how rapid iteration of Elasticsearch index
+     configurations can happen.
    - It should be assessed as part of this implementation plan whether it would
      be easier to convert the ingestion server to ECS or provide a mechanism on
      the existing EC2 infrastructure to update the Elasticsearch index
