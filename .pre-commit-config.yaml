@@ -129,6 +129,11 @@ repos:
     hooks:
       - id: shellcheck
 
+  - repo: https://github.com/rhysd/actionlint
+    rev: main
+    hooks:
+      - id: actionlint-docker
+
   - repo: local # More local hooks are defined at the top.
     hooks:
       - id: types

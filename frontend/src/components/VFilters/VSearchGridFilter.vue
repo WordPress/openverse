@@ -22,7 +22,7 @@
         v-for="filterType in filterTypes"
         :key="filterType"
         :options="filters[filterType]"
-        :title="filterTypeTitle(filterType)"
+        :title="filterTypeTitle(filterType).toString()"
         :filter-type="filterType"
         @toggle-filter="toggleFilter"
       />
@@ -88,7 +88,7 @@ export default defineComponent({
     const { i18n } = useContext()
     const router = useRouter()
 
-    const filtersFormRef = ref<HTMLFormElement>(null)
+    const filtersFormRef = ref<HTMLFormElement | null>(null)
 
     const isAnyFilterApplied = computed(() => searchStore.isAnyFilterApplied)
     const filters = computed(() => searchStore.searchFilters)

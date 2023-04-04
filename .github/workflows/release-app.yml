@@ -154,12 +154,20 @@ jobs:
 
       - name: Deploy production api
         if: inputs.app == 'api'
-        uses: ./.github/workflows/deploy-production-api.yml
-        with:
-          tag: ${{ steps.tag.outputs.image-tag }}
+        run: |
+          gh workflow run \
+            -f tag=${{ steps.tag.outputs.image-tag }} \
+            -f actor=${{ github.actor }} \
+            "Deployment: production-api"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Deploy production frontend
         if: inputs.app == 'frontend'
-        uses: ./.github/workflows/deploy-production-nuxt.yml
-        with:
-          tag: ${{ steps.tag.outputs.image-tag }}
+        run: |
+          gh workflow run \
+            -f tag=${{ steps.tag.outputs.image-tag }} \
+            -f actor=${{ github.actor }} \
+            "Deployment: production-nuxt"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

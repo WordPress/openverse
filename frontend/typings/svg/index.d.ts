@@ -4,7 +4,9 @@ declare module "*.svg" {
 }
 
 declare module "*.svg?inline" {
-  const SVG: unknown
+  import type { Component } from "vue"
+
+  const SVG: Component
   export default SVG
 }
 

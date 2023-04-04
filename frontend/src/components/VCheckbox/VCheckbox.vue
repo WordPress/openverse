@@ -4,7 +4,7 @@
     class="relative flex text-sm leading-5"
     :class="labelClasses"
   >
-    <div class="relative">
+    <span class="relative block">
       <!--
       The checkbox focus style is a slight variation on the `focus-slim-tx` style.
       Because it becomes filled when checked, it also needs the
@@ -30,9 +30,9 @@
       />
 
       <!-- Knob, for when `ifSwitch` is `true` -->
-      <div
+      <span
         v-if="isSwitch"
-        class="absolute top-0.75 left-0.75 h-3 w-3 rounded-full transition-transform duration-100"
+        class="absolute top-0.75 left-0.75 block h-3 w-3 rounded-full transition-transform duration-100"
         :class="
           localCheckedState
             ? ['bg-white', 'translate-x-[1.125rem]']
@@ -51,7 +51,7 @@
         :icon-path="checkIcon"
         :size="5"
       />
-    </div>
+    </span>
 
     <!--  @slot The checkbox label  --><slot />
   </label>

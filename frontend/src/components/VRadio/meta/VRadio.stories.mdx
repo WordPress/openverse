@@ -39,7 +39,7 @@ export const Template = (args, { argTypes }) => ({
     name="Default"
     args={{
       id: "default",
-      value: "value",
+      value_: "value",
       modelValue: "modelValue", // if same as value, radio is checked
     }}
   >
@@ -58,7 +58,7 @@ change the type as the field is specifically designed as a radio.
     name="Disabled"
     args={{
       id: "disabled",
-      value: "value",
+      value_: "value",
       modelValue: "modelValue", // if same as value, radio is checked
       disabled: true,
     }}
@@ -77,8 +77,8 @@ export const vModelTemplate = (args, { argTypes }) => ({
   template: `
     <div>
       <form class="flex flex-col gap-2 mb-2">
-        <VRadio id="a" name="test" value="A" v-model="picked">A</VRadio>
-        <VRadio id="b" name="test" value="B" v-model="picked">B</VRadio>
+        <VRadio id="a" name="test" own-value="A" v-model="picked">A</VRadio>
+        <VRadio id="b" name="test" own-value="B" v-model="picked">B</VRadio>
       </form>
       {{ picked ?? 'None' }}
     </div>

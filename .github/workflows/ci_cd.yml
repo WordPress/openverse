@@ -33,6 +33,7 @@ jobs:
       api: ${{ steps.paths-filter.outputs.api }}
       ingestion_server: ${{ steps.paths-filter.outputs.ingestion_server }}
       frontend: ${{ steps.paths-filter.outputs.frontend }}
+      documentation: ${{ steps.paths-filter.outputs.documentation }}
       changes: ${{ steps.paths-filter.outputs.changes }}
     steps:
       - name: Checkout repository
@@ -378,6 +379,26 @@ jobs:
           name: openverse-api-openapi-schema.yaml
           path: ./api/openapi.yaml
 
+  # This job runs when `django-checks` doesn't and always passes, thus allowing
+  # PRs to meet the required checks criteria and be merged.
+  bypass-django-checks:
+    name: Run Django checks
+    if: needs.get-changes.outputs.api != 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+    strategy:
+      matrix:
+        recipe:
+          - "api/dj check"
+          - "api/dj validateopenapischema"
+          - "api/dj makemigrations --check --noinput --merge"
+          - "api/doc-test"
+
+    steps:
+      - name: Pass
+        run: echo 'Django checks are skipped because API is unchanged.'
+
   ############
   # Frontend #
   ############
@@ -492,6 +513,25 @@ jobs:
           name: ${{ matrix.name }}_test_results
           path: frontend/test-results
 
+  # This job runs when `playwright` doesn't and always passes, thus allowing
+  # PRs to meet the required checks criteria and be merged.
+  bypass-playwright:
+    name: Run Playwright tests
+    if: needs.get-changes.outputs.frontend != 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+    strategy:
+      matrix:
+        name:
+          - playwright_vr
+          - playwright_e2e
+          - storybook_vr
+
+    steps:
+      - name: Pass
+        run: echo 'Playwright tests are skipped because frontend is unchanged.'
+
   playwright-test-failure-comment:
     name: Post Playwright test debugging instructions
     if: |
@@ -546,23 +586,26 @@ jobs:
     if: |
       !failure() && !cancelled() &&
       (
-        github.event_name == 'push' ||
+        (
+          github.event_name == 'push' &&
+          github.repository == 'WordPress/openverse'
+        ) ||
         (
           github.event_name == 'pull_request' &&
           github.event.pull_request.head.repo.owner.login == 'WordPress' &&
           github.actor != 'dependabot[bot]'
         )
       ) &&
+      (needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.documentation == 'true') &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
       (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped')
     runs-on: ubuntu-latest
     needs:
+      - get-changes
       - test-ing
       - test-api
       - nuxt-build
-    env:
-      REPO_NAME: ${{ github.event.pull_request.head.repo.name }}
 
     steps:
       - name: Checkout repository
@@ -583,8 +626,8 @@ jobs:
       - name: Recreate working directory # to avoid superfluous files from getting tracked automatically
         run: |
           cd ..
-          sudo rm -rf "$REPO_NAME"
-          mkdir "$REPO_NAME"
+          sudo rm -rf openverse
+          mkdir openverse
 
       - name: Checkout repository at `gh-pages` branch
         uses: actions/checkout@v3
@@ -595,7 +638,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           mv /tmp/docs /tmp/gh-pages
-          mv _preview /tmp/docs/_preview
+          mv _preview /tmp/gh-pages/_preview
 
       - name: Replace preview of current PR
         if: github.event_name == 'pull_request'
@@ -693,8 +736,12 @@ jobs:
   # Deployment #
   ##############
 
+  # See https://github.com/WordPress/openverse/issues/1033 for why
+  # we don't use the standard reusable workflow approach for these.
+
   deploy-frontend:
     name: Deploy staging frontend
+    runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
       github.event_name == 'push' &&
@@ -706,13 +753,22 @@ jobs:
       - playwright
       - get-image-tag
       - publish-images
-    uses: ./.github/workflows/deploy-staging-nuxt.yml
-    with:
-      tag: ${{ needs.get-image-tag.outputs.image_tag }}
-    secrets: inherit
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Dispatch workflow
+        run: |
+          gh workflow run \
+            -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
+            -f actor=${{ github.actor }} \
+            "Deployment: staging-nuxt"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
   deploy-api:
     name: Deploy staging API
+    runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
       github.event_name == 'push' &&
@@ -722,7 +778,106 @@ jobs:
       - get-changes
       - get-image-tag
       - publish-images
-    uses: ./.github/workflows/deploy-staging-api.yml
-    with:
-      tag: ${{ needs.get-image-tag.outputs.image_tag }}
-    secrets: inherit
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Dispatch workflow
+        run: |
+          gh workflow run \
+            -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
+            -f actor=${{ github.actor }} \
+            "Deployment: staging-api"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+  ################
+  # Notification #
+  ################
+
+  send_report:
+    name: Send Slack report
+    runs-on: ubuntu-latest
+    if: |
+      !cancelled() &&
+      github.event_name == 'push' &&
+      github.repository == 'WordPress/openverse' &&
+      (
+        ((needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.documentation == 'true') && needs.emit-docs.result != 'success') ||
+        (needs.determine-images.outputs.do_publish == 'true' && needs.publish-images.result != 'success') ||
+        (needs.get-changes.outputs.frontend == 'true' && needs.deploy-frontend.result != 'success') ||
+        (needs.get-changes.outputs.api == 'true' && needs.deploy-api.result != 'success')
+      )
+    needs: # the end products of the CI + CD workflow
+      - get-changes
+      - determine-images
+      - emit-docs
+      - publish-images
+      - deploy-frontend
+      - deploy-api
+
+    steps:
+      - name: Generate report
+        id: report
+        shell: python
+        env:
+          EMIT_DOCS_RESULT: ${{ needs.emit-docs.result }}
+          PUBLISH_IMAGES_RESULT: ${{ needs.publish-images.result }}
+          DEPLOY_FRONTEND_RESULT: ${{ needs.deploy-frontend.result }}
+          DEPLOY_API_RESULT: ${{ needs.deploy-api.result }}
+          SERVER_URL: ${{ github.server_url }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          import json
+          import os
+          import sys
+          from collections import defaultdict
+
+          server_url = os.environ.get("SERVER_URL")
+          repository = os.environ.get("REPOSITORY")
+          run_id = os.environ.get("RUN_ID")
+
+          jobs = ["emit-docs", "publish-images", "deploy-frontend", "deploy-api"]
+
+          results = {}
+          counts = defaultdict(lambda: 0)
+
+          for job_name in jobs:
+              result = os.environ.get(f"{job_name.replace('-', '_')}_result".upper())
+              results[job_name] = result
+              counts[result] += 1
+
+          payload = {
+              "text": ", ".join(f"{count} {result}" for result, count in counts.items()),
+              "blocks": [
+                  {
+                      "type": "section",
+                      "text": {
+                          "type": "mrkdwn",
+                          "text": f"<{server_url}/{repository}/actions/runs/{run_id}|Click here to review the completed CI + CD workflow>.",
+                      },
+                  },
+                  {
+                      "type": "section",
+                      "fields": [
+                          {
+                              "type": "mrkdwn",
+                              "text": f"*{job_name}:*\n:workflow-{result}: {result}",
+                          }
+                          for job_name, result in results.items()
+                      ],
+                  },
+              ],
+          }
+
+          with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
+              for dest in [sys.stdout, gh_out]:
+                  print(f"payload={json.dumps(payload)}", file=dest)
+
+      - name: Send report
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: ${{ steps.report.outputs.payload }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
