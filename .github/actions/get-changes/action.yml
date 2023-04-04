@@ -5,6 +5,16 @@ outputs:
   changes:
     description: "JSON array of keys from `.github/filters.yml`"
     value: ${{ steps.paths-filter.outputs.changes }}
+
+  workflows:
+    description: "'true' if any GitHub workflow has changed"
+    value: ${{ steps.paths-filter.outputs.workflows }}
+  workflow_ci_cd:
+    description: "'true' if the CI + CD workflow has changed"
+    value: ${{ steps.paths-filter.outputs.workflow_ci_cd }}
+  workflow_bundle_size:
+    description: "'true' if the bundle size workflow has changed"
+    value: ${{ steps.paths-filter.outputs.workflow_bundle_size }}
   api:
     description: "'true' if API changes are present"
     value: ${{ steps.paths-filter.outputs.api }}
@@ -17,9 +27,6 @@ outputs:
   lint:
     description: "'true' if linting setup changes are present"
     value: ${{ steps.paths-filter.outputs.frontend }}
-  mgmt:
-    description: "'true' if management changes are present"
-    value: ${{ steps.paths-filter.outputs.mgmt }}
 
 runs:
   using: "composite"

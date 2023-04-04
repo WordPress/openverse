@@ -1,13 +1,13 @@
-mgmt:
+workflows:
   - .github/workflows/**
+workflow_ci_cd:
+  - .github/workflows/ci_cd.yml
+workflow_bundle_size:
+  - .github/workflows/bundle_size.yml
 api:
   - api/**
-  # Change to the CI + CD workflow should trigger complete workflow.
-  - .github/workflows/ci_cd.yml
 ingestion_server:
   - ingestion_server/**
-  # Change to the CI + CD workflow should trigger complete workflow.
-  - .github/workflows/ci_cd.yml
 frontend:
   - frontend/**
   - package.json
@@ -15,8 +15,6 @@ frontend:
   - pnpm-workspace.yaml
   - .npmrc
   - .pnpmfile.cjs
-  # Change to the CI + CD workflow should trigger complete workflow.
-  - .github/workflows/ci_cd.yml
 lint:
   - prettier.config.js
   - .prettierignore

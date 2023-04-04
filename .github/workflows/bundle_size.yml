@@ -19,6 +19,7 @@ jobs:
     outputs:
       frontend: ${{ steps.paths-filter.outputs.frontend }}
       lint: ${{ steps.paths-filter.outputs.lint }}
+      workflow_bundle_size: ${{ steps.paths-filter.outputs.workflow_bundle_size }}
 
     steps:
       - name: Checkout repository
@@ -33,7 +34,11 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       github.repository == 'WordPress/openverse' &&
-      (needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.lint == 'true')
+      (
+        needs.get-changes.outputs.frontend == 'true' ||
+        needs.get-changes.outputs.lint == 'true' ||
+        needs.get-changes.outputs.workflow_bundle_size == 'true'
+      )
     needs:
       - get-changes
 
