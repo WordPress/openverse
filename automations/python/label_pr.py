@@ -177,7 +177,7 @@ def get_label_of_cat(cat: str, labels: list[Label]) -> Label | None:
     return next(iter(get_all_labels_of_cat(cat, labels)), None)
 
 
-def get_stack_labels_from_changes(changes: list[str]) -> list[str]:
+def get_stack_labels_from_changes(changes: set[str]) -> list[str]:
     """
     Given a list of changes identified by the `.github/actions/get-changes.yml` action,
     this function returns a list of labels that must be applied to a PR.
@@ -187,17 +187,20 @@ def get_stack_labels_from_changes(changes: list[str]) -> list[str]:
     """
 
     labels = []
-    if "mgmt" in changes:
+    if {"workflows", "lint"} & changes:
         labels.append("🧱 stack: mgmt")
-        # Since the workflow appears in other changelists, we will immediately return.
-        return labels
-
     if "api" in changes:
         labels.append("🧱 stack: api")
     if "ingestion_server" in changes:
         labels.append("🧱 stack: ingestion server")
     if "frontend" in changes:
         labels.append("🧱 stack: frontend")
+    if "documentation" in changes:
+        labels.append("🧱 stack: docs")
+    if "catalog" in changes:
+        labels.append("🧱 stack: catalog")
+    if "infra" in changes:
+        labels.append("🧱 stack: infra")
     return labels
 
 
@@ -207,7 +210,7 @@ def main():
     args = parser.parse_args()
 
     log.debug(f"PR URL: {args.pr_url}")
-    changes = json.loads(args.changes)
+    changes = set(json.loads(args.changes))
     log.debug(f"CHANGES: {changes}")
 
     label_info = get_data("labels.yml")
