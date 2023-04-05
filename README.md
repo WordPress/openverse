@@ -184,7 +184,7 @@ If you just need to run an airflow command, you can use the `airflow` recipe.
 Arguments passed to airflow must be quoted:
 
 ```shell
-just airflow "config list"
+just run airflow config list
 ```
 
 To follow the logs of the running container:
