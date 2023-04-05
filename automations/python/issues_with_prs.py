@@ -247,7 +247,7 @@ def main():
             cards_to_move.append((issue_card, issue))
     log.info(f"Found {len(cards_to_move)} cards to move")
 
-    for (issue_card, issue) in cards_to_move:
+    for issue_card, issue in cards_to_move:
         log.info(f"Moving card for issue {issue.html_url} to {target_column.name}")
         issue_card.move("bottom", target_column)
 
