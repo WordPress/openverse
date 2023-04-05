@@ -28,6 +28,8 @@ import { defineComponent, PropType } from "vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
+import type { TranslateResult } from "vue-i18n"
+
 /**
  * The buttons placed inside the mobile search bar in the header.
  * They are based on the VIconButton, look like they have a smallish focus area
@@ -71,7 +73,7 @@ export default defineComponent({
      * The label to use as accessible name for the button (aria-label).
      */
     label: {
-      type: [String, Object] as PropType<TranslateResult>,
+      type: [String, Object] as PropType<string | TranslateResult>,
       required: true,
     },
   },

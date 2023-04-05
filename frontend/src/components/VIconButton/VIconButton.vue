@@ -26,6 +26,8 @@ import type { ButtonType } from "~/types/button"
 import VIcon, { type IconProps } from "~/components/VIcon/VIcon.vue"
 import VButton, { type ButtonProps } from "~/components/VButton.vue"
 
+import type { TranslateResult } from "vue-i18n"
+
 const SIZE_MAP = Object.freeze({
   tiny: { icon: 6, button: "w-6 h-6" },
   small: { icon: 6, button: "w-10 h-10" },
@@ -68,7 +70,7 @@ export default defineComponent({
      * the label for the button; This is used for accessibility purposes.
      */
     label: {
-      type: [String, Object] as PropType<TranslateResult>,
+      type: [String, Object] as PropType<string | TranslateResult>,
       required: true,
     },
   },

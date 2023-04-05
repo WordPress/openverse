@@ -34,7 +34,7 @@
               v-show="searchBarIsActive"
               :icon-path="chevronLeftIcon"
               :inner-size="8"
-              :label="$t('header.back-button').toString()"
+              :label="$t('header.back-button')"
               :rtl-flip="true"
               inner-area-classes="bg-dark-charcoal-10 hover:bg-dark-charcoal hover:text-white"
               @click="handleBack"
@@ -70,7 +70,7 @@
             <VSearchBarButton
               v-show="searchBarIsActive && searchTerm"
               :icon-path="closeIcon"
-              :label="$t('browse-page.search-form.clear').toString()"
+              :label="$t('browse-page.search-form.clear')"
               inner-area-classes="bg-white hover:bg-dark-charcoal-10"
               @click="clearSearchText"
             />

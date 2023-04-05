@@ -38,7 +38,7 @@
         <VIconButton
           class="self-center ms-auto hover:bg-dark-charcoal hover:text-white"
           :icon-props="{ iconPath: closeIcon }"
-          :label="$t('modal.aria-close').toString()"
+          :label="$t('modal.aria-close')"
           @click="close"
         />
       </template>

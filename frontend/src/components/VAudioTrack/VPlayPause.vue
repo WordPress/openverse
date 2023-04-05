@@ -4,7 +4,7 @@
     :tabindex="isTabbable ? 0 : -1"
     class="play-pause flex-shrink-0 border-dark-charcoal bg-dark-charcoal text-white focus-visible:border-pink focus-visible:shadow-ring focus-visible:outline-none active:shadow-ring disabled:opacity-70"
     :icon-props="icon === undefined ? undefined : { iconPath: icon }"
-    :label="$t(label).toString()"
+    :label="$t(label)"
     :button-props="buttonProps"
     @click.stop.prevent="handleClick"
     @mousedown="handleMouseDown"

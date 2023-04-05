@@ -13,7 +13,7 @@
         <VIconButton
           class="absolute top-0 border-none text-dark-charcoal-70 end-0"
           :icon-props="{ iconPath: icons.closeSmall }"
-          :label="$t('modal.close').toString()"
+          :label="$t('modal.close')"
           @click="close"
         />
         <VContentReportForm

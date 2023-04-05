@@ -19,7 +19,7 @@
       <VSearchBarButton
         v-show="searchTerm !== ''"
         :icon-path="closeIcon"
-        :label="$t('browse-page.search-form.clear').toString()"
+        :label="$t('browse-page.search-form.clear')"
         inner-area-classes="bg-white hover:bg-dark-charcoal-10"
         class="hidden group-focus-within:flex"
         @click="clearSearchTerm"

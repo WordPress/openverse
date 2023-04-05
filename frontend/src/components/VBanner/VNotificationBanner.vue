@@ -12,7 +12,7 @@
         <VIconButton
           :class="{ 'text-white': variant === 'announcement' }"
           size="small"
-          :label="$t('modal.close').toString()"
+          :label="$t('modal.close')"
           :icon-props="{
             iconPath: closeIcon,
           }"

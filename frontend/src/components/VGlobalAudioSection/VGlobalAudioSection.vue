@@ -6,7 +6,7 @@
       class="absolute top-0 z-30 border-none ltr:right-0 rtl:left-0"
       size="large"
       :icon-props="{ iconPath: icons.closeIcon }"
-      :label="$t('audio-track.close').toString()"
+      :label="$t('audio-track.close')"
       @click="handleClose"
     />
   </div>
