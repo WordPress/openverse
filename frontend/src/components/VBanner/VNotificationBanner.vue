@@ -27,6 +27,8 @@ import type { BannerId } from "~/types/banners"
 
 import VCloseButton from "~/components/VCloseButton.vue"
 
+import type { TranslateResult } from "vue-i18n"
+
 export default defineComponent({
   name: "VNotificationBanner",
   components: {
@@ -42,7 +44,7 @@ export default defineComponent({
       required: true,
     },
     closeButtonLabel: {
-      type: String,
+      type: [String, Object] as PropType<string | TranslateResult>,
     },
   },
   emits: {
