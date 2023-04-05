@@ -42,6 +42,20 @@ test.describe("VFilterButton", () => {
         )
       })
 
+      /**
+       * When focused and not pressed, the button is the same with and without hover,
+       * so we reuse the snapshot from the focused test.
+       */
+      test(`focused, hovered, ${filterCount} filters`, async ({ page }) => {
+        await gotoWithArgs(page, { appliedFilters: filterCount })
+        await page.locator("button", { hasText: "Filter" }).focus()
+        await page.locator("button", { hasText: "Filter" }).hover()
+        await expectSnapshot(
+          `filter-button-focused-${filterCount}-checked`,
+          page.locator(wrapper)
+        )
+      })
+
       test(`pressed, ${filterCount} filters`, async ({ page }) => {
         await gotoWithArgs(page, {
           appliedFilters: filterCount,
