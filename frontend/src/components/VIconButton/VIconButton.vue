@@ -68,7 +68,7 @@ export default defineComponent({
      * the label for the button; This is used for accessibility purposes.
      */
     label: {
-      type: String,
+      type: [String, Object] as PropType<TranslateResult>,
       required: true,
     },
   },

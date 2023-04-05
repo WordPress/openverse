@@ -71,7 +71,7 @@ export default defineComponent({
      * The label to use as accessible name for the button (aria-label).
      */
     label: {
-      type: String,
+      type: [String, Object] as PropType<TranslateResult>,
       required: true,
     },
   },
