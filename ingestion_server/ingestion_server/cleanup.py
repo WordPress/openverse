@@ -351,16 +351,15 @@ def clean_image_data(table):
                         cleanable_fields_for_table,
                     )
                 )
-            pool = multiprocessing.Pool(processes=num_workers)
-            log.info(f"Starting {len(jobs)} cleaning jobs")
+            with multiprocessing.Pool(processes=num_workers) as pool:
+                log.info(f"Starting {len(jobs)} cleaning jobs")
 
-            results = pool.starmap(_clean_data_worker, jobs)
-
-            for result in results:
-                batch_cleaned_counts = save_cleaned_data(result)
-                for field in batch_cleaned_counts:
-                    cleaned_counts_by_field[field] += batch_cleaned_counts[field]
-            pool.close()
+                for result in pool.starmap(_clean_data_worker, jobs):
+                    batch_cleaned_counts = save_cleaned_data(result)
+                    for field in batch_cleaned_counts:
+                        cleaned_counts_by_field[field] += batch_cleaned_counts[field]
+                pool.close()
+                pool.join()
 
             num_cleaned += len(batch)
             batch_end_time = time.time()
