@@ -4,7 +4,7 @@
   "gitAuthor": "Openverse Bot <openverse@wordpress.org>",
   "onboarding": false,
   "platform": "github",
-  "repositories": ["WordPress/openverse-frontend"],
+  "repositories": ["WordPress/openverse"],
   "extends": ["config:base", ":preserveSemverRanges", "schedule:monthly"],
   "prCommitsPerRunLimit": 3,
   "labels": [
@@ -13,9 +13,12 @@
     "🧰 goal: internal improvement",
     "🟩 priority: low"
   ],
-  "docker": {
-    "labels": ["🐳 tech: docker"]
-  },
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "labels": ["🐳 tech: docker"]
+    }
+  ],
   "ignorePaths": ["package.json"],
   "includeForks": false
 }
