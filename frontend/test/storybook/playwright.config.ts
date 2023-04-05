@@ -13,7 +13,7 @@ const config: PlaywrightTestConfig = {
   webServer: {
     command: "pnpm storybook",
     timeout: 60_000 * 5, // 5 minutes
-    port: 54000,
+    url: "http://localhost:54000/iframe.html?id=meta-focus--slim-filled",
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
   },
   use: {
