@@ -352,6 +352,10 @@ a.button {
   @apply bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 
+.filled-transparent {
+  @apply bg-tx text-curr hover:bg-dark-charcoal hover:text-white;
+}
+
 .bordered-white {
   @apply border border-white bg-white text-dark-charcoal hover:border-dark-charcoal-20;
 }
