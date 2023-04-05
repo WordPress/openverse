@@ -17,7 +17,7 @@
       '!text-dark-charcoal-70 hover:!text-white':
         variant === 'filled-white-light',
     }"
-    :aria-label="label"
+    :label="label"
     @click="$emit('close')"
   />
 </template>
@@ -31,6 +31,11 @@ import type { TranslateResult } from "vue-i18n"
 import closeIcon from "~/assets/icons/close.svg"
 import closeIconSmall from "~/assets/icons/close-small.svg"
 
+/**
+ * The square icon button with a cross in it. Used to close popovers,
+ * modals, and other overlays.
+ * Must have a label for accessibility.
+ */
 export default defineComponent({
   name: "VCloseButton",
   components: { VIconButton },
