@@ -1,6 +1,7 @@
 <template>
   <VIconButton
     class="border-tx bg-tx"
+    :label="label"
     :button-props="{ variant: 'plain--avoid' }"
     v-on="$listeners"
   >
@@ -26,6 +27,8 @@ import { defineComponent, PropType } from "vue"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
+
+import type { TranslateResult } from "vue-i18n"
 
 /**
  * The buttons placed inside the mobile search bar in the header.
@@ -65,6 +68,13 @@ export default defineComponent({
     rtlFlip: {
       type: Boolean,
       default: false,
+    },
+    /**
+     * The label to use as accessible name for the button (aria-label).
+     */
+    label: {
+      type: [String, Object] as PropType<string | TranslateResult>,
+      required: true,
     },
   },
 })

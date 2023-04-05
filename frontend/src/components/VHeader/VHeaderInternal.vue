@@ -16,7 +16,7 @@
         id="menu-button"
         ref="menuButtonRef"
         :icon-props="{ iconPath: menuIcon }"
-        :aria-label="$t('header.aria.menu')"
+        :label="$t('header.aria.menu')"
         v-bind="triggerA11yProps"
         class="border-tx hover:bg-dark-charcoal hover:text-white"
         :class="{ 'bg-dark-charcoal text-white': isModalVisible }"
@@ -59,7 +59,7 @@
                 ref="closeButton"
                 :icon-props="{ iconPath: closeIcon }"
                 class="border-tx text-white focus-visible:ring-yellow focus-visible:ring-offset-0"
-                :aria-label="$t('modal.close')"
+                :label="$t('modal.close')"
                 @click="closePageMenu"
               />
             </div>
