@@ -8,7 +8,6 @@ on:
 env:
   GH_TOKEN: ${{ secrets.ACCESS_TOKEN }} # Projects need a personal access token to work.
   ISSUE_ID: ${{ github.event.issue.node_id }} # The global issue ID that works in both REST and GraphQL APIs.
-  PROJECT_ID: "PVT_kwDOAAQ2Js4AMZdL" # The ID for the Openverse project (#75).
 
 jobs:
   add_issue:
@@ -26,65 +25,18 @@ jobs:
   add_issue_to_project:
     name: Add new issue to project
     runs-on: ubuntu-latest
-    env:
-      PRIORITY_FIELD_ID: "PVTSSF_lADOAAQ2Js4AMZdLzgH6Kbo" # The ID for the project Priority custom field.
     steps:
-      - name: Add issue to "Backlog"
-        run: |
-          # shellcheck disable=SC2016
-          gh api graphql -f query='
-          mutation($project:ID!, $issue:ID!) {
-            addProjectV2ItemById(input: {projectId: $project, contentId: $issue}) {
-              item {
-                id
-                content {
-                  ... on Issue {
-                    labels(first: 10) {
-                      nodes {
-                        name
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }' -f project="$PROJECT_ID" -f issue="$ISSUE_ID" >> issue_data.json
-
-          echo 'ITEM_ID='"$(jq '.data.addProjectV2ItemById.item.id' issue_data.json)" >> "$GITHUB_ENV"
-          ITEM_PRIORITY="$(jq '.data.addProjectV2ItemById.item.content.labels.nodes[] | select(.name | contains("priority")).name | split(": ")[1]' issue_data.json)" >> "$GITHUB_ENV"
-          # The IDs for the project's Priority custom field options.
-          # These IDs were manually retrieved from the GitHub API.
-          if [[ $ITEM_PRIORITY == "low" ]]; then
-              PRIORITY_VALUE_ID="279ae886"
-          elif [[ $ITEM_PRIORITY == "medium" ]]; then
-              PRIORITY_VALUE_ID="333b3c1d"
-          elif [[ $ITEM_PRIORITY == "high" ]]; then
-              PRIORITY_VALUE_ID="03fe8945"
-          else
-              PRIORITY_VALUE_ID="fb76bdbc"
-          fi
-          echo 'PRIORITY_VALUE_ID='"$PRIORITY_VALUE_ID" >> "$GITHUB_ENV"
-
-      - name: Set issue priority
-        run: |
-          # shellcheck disable=SC2016
-          gh api graphql -f query='
-            mutation (
-              $project: ID!
-              $item: ID!
-              $priority_field: ID!
-              $priority_value: String!
-            ) {
-              set_priority_field: updateProjectV2ItemFieldValue(input: {
-                projectId: $project
-                itemId: $item
-                fieldId: $priority_field
-                value: {
-                  singleSelectOptionId: $priority_value
-                  }
-              }) {
-                projectV2Item {
-                  id
-                  }
-              }
-            }' -f project="$PROJECT_ID" -f item="$ITEM_ID" -f priority_field="$PRIORITY_FIELD_ID" -f priority_value="$PRIORITY_VALUE_ID"
+      - uses: bulatt3/add-to-project-and-label@v0.0.2
+        with:
+          project-url: https://github.com/orgs/WordPress/projects/75
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          # Exclude the issues with the following labels
+          labeled: project
+          label-operator: NOT
+          label-map: |
+            { "Priority": [
+              { "label": "🟥 priority: critical", "fieldValue": "🟥 priority: critical" },
+              { "label": "🟧 priority: high", "fieldValue": "🟧 priority: high" },
+              { "label": "🟨 priority: medium", "fieldValue": "🟨 priority: medium" },
+              { "label": "🟩 priority: low", "fieldValue": "🟩 priority: low" }
+            ]}
