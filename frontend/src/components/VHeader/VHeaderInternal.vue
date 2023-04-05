@@ -58,7 +58,7 @@
               <VCloseButton
                 variant="black"
                 icon-size="large"
-                :label="$t('modal.close-pages-menu').toString()"
+                :label="$t('modal.close-pages-menu')"
                 @close="closePageMenu"
               />
             </div>

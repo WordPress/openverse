@@ -6,7 +6,7 @@
       class="!absolute top-0 z-30 end-0"
       variant="filled-transparent"
       size="large"
-      :label="$t('audio-track.close').toString()"
+      :label="$t('audio-track.close')"
       @close="handleClose"
     />
   </div>

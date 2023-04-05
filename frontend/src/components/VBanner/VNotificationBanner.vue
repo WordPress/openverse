@@ -11,7 +11,7 @@
       <VCloseButton
         variant="filled-transparent"
         icon-size="large"
-        :label="closeButtonLabel || $t('modal.close-banner').toString()"
+        :label="closeButtonLabel || $t('modal.close-banner')"
         @close="$emit('close')"
       />
     </slot>

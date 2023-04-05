@@ -26,6 +26,8 @@ import { computed, defineComponent, PropType } from "vue"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
+import type { TranslateResult } from "vue-i18n"
+
 import closeIcon from "~/assets/icons/close.svg"
 import closeIconSmall from "~/assets/icons/close-small.svg"
 
@@ -34,7 +36,7 @@ export default defineComponent({
   components: { VIconButton },
   props: {
     label: {
-      type: String,
+      type: [String, Object] as PropType<string | TranslateResult>,
       required: true,
     },
     /**

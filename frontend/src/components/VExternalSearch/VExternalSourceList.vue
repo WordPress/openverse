@@ -4,7 +4,7 @@
       {{ $t("external-sources.title") }}
     </h2>
     <VCloseButton
-      :label="$t('modal.close').toString()"
+      :label="$t('modal.close')"
       class="!absolute top-0 end-0"
       @close="$emit('close')"
     />
