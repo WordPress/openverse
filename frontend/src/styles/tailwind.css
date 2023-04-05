@@ -9,7 +9,6 @@
 
   html {
     @apply m-0 font-normal leading-loose text-dark-charcoal;
-    font-display: swap;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -45,17 +44,17 @@ Heading 3           - 28px - 5xl bold
 Heading 4           - 24px - 4xl bold
 Heading 5           - 19px - 3xl semibold
 Heading 6           - 16px - 2xl semibold
-Paragraph Large     - 16px - 2xl regular leading-[190%] (larger)
-Paragraph Small     - 14px - base regular leading-[170%] (large)
-Body                - 14px - base regular (default leading-normal)
-Description Regular - 14px - base
-Description Bold    - 14px - base semibold
-Label Bold          - 13px - sm semibold
-Label Regular       - 13px - sm regular
-Caption Regular     - 12px - sr regular
-Caption Bold        - 12px - sr semibold
-Category            - 12px - sr semibold UPPERCASE
-Time                - 11px - xs semibold (default leading-[120%])
+Paragraph Large     - 16px - 2xl  regular  leading-larger
+Paragraph Small     - 14px - base regular  leading-large
+Body                - 14px - base regular  (default leading-normal)
+Description Regular - 14px - base regular leading-snug
+Description Bold    - 14px - base semibold leading-snug
+Label Bold          - 13px - sm semibold (default leading-snug)
+Label Regular       - 13px - sm regular (default leading-snug)
+Caption Regular     - 12px - sr regular (default leading-snug)
+Caption Bold        - 12px - sr semibold (default leading-snug)
+Category            - 12px - sr semibold UPPERCASE (default leading-snug)
+Time                - 11px - xs semibold (default leading-tight)
 
 
 */
@@ -85,11 +84,11 @@ Time                - 11px - xs semibold (default leading-[120%])
   }
 
   .paragraph-large {
-    @apply text-2xl leading-[190%];
+    @apply text-2xl leading-larger;
   }
 
   .paragraph-small {
-    @apply leading-large text-base;
+    @apply text-base leading-large;
   }
 
   .body {

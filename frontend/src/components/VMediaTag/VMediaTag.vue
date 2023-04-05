@@ -2,7 +2,7 @@
   <Component
     :is="tag"
     v-bind="$attrs"
-    class="inline-flex rounded-full bg-dark-charcoal-10 px-3 py-1 text-sr font-semibold leading-[130%] text-dark-blue md:px-4 md:py-2 md:text-base md:leading-[130%]"
+    class="caption-bold md:description-bold inline-flex rounded-full bg-dark-charcoal-10 px-3 py-1 text-dark-blue md:px-4 md:py-2"
   >
     <!-- @slot Content goes here -->
     <slot />
