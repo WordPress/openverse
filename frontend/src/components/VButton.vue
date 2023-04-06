@@ -292,14 +292,8 @@ export default VButton
   @apply cursor-not-allowed;
 }
 
-.size-small-old {
-  @apply py-1 px-2;
-}
 .size-medium-old {
   @apply py-2 px-4;
-}
-.size-large-old {
-  @apply py-6 px-8;
 }
 
 .size-small {

@@ -36,9 +36,7 @@ export const buttonSizes = [
   "medium",
   "small",
   "disabled",
-  "large-old",
   "medium-old",
-  "small-old",
 ] as const
 export type ButtonSize = typeof buttonSizes[number]
 
