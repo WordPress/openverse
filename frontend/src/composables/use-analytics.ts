@@ -6,6 +6,8 @@ import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useI18n } from "~/composables/use-i18n"
 
+import { log } from "~/utils/console"
+
 /**
  * The `ctx` parameter must be supplied if using this composable outside the
  * bounds of the composition API.
@@ -66,6 +68,7 @@ export const useAnalytics = () => {
     name: T,
     payload: Events[T]
   ) => {
+    log(`Analytics event: ${name}`, payload)
     $plausible.trackEvent(name, {
       props: {
         ...isomorphicProps.value,
