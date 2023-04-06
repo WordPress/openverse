@@ -89,7 +89,6 @@ class PendingIssueXRef(pending_xref):
 
 
 class IssueReferences(SphinxTransform):
-
     default_priority = 999
 
     def apply(self) -> None:

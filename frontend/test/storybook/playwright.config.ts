@@ -13,14 +13,14 @@ const config: PlaywrightTestConfig = {
   webServer: {
     command: "pnpm storybook",
     timeout: 60_000 * 5, // 5 minutes
-    port: 54000,
+    url: "http://localhost:54000/iframe.html?id=meta-focus--slim-filled",
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
   },
   use: {
     baseURL: "http://localhost:54000",
     trace: "retain-on-failure",
   },
-  timeout: 2 * 60 * 1e3,
+  timeout: 60 * 1e3, // 1 minute
   expect: {
     toMatchSnapshot: {
       // To avoid flaky tests, we allow a small amount of pixel difference.

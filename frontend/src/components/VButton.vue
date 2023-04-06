@@ -2,16 +2,26 @@
   <Component
     :is="as"
     :type="typeRef"
-    class="group flex appearance-none items-center justify-center rounded-sm no-underline ring-offset-1 transition-shadow duration-100 ease-linear focus:outline-none"
+    class="group/button flex appearance-none items-center justify-center rounded-sm no-underline"
     :class="[
       $style.button,
       $style[variant],
-      isConnected && $style[`connection-${connections}`],
-      isActive && $style[`${variant}-pressed`],
       $style[`size-${size}`],
-      isPlainDangerous
-        ? ''
-        : 'border border-tx focus-visible:ring focus-visible:ring-pink',
+      {
+        [$style[`${variant}-pressed`]]: isActive,
+        [$style[`connection-${connections}`]]: isConnected,
+        [$style[`icon-start-${size}`]]: hasIconStart,
+        [$style[`icon-end-${size}`]]: hasIconEnd,
+        'gap-x-2':
+          (hasIconEnd || hasIconStart) && (size == 'medium' || size == 'large'),
+        'gap-x-1': (hasIconEnd || hasIconStart) && size == 'small',
+        // Custom tailwind classes don't work with CSS modules in Vue so they are written here explicitly instead of accessed off of `$style`.
+        'focus-slim-filled': isFilled,
+        'focus-slim-tx': isBordered || isTransparent,
+        'description-bold': isNewVariant,
+        'border border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink':
+          !isPlainDangerous && !isNewVariant,
+      },
     ]"
     :aria-pressed="pressed"
     :aria-disabled="ariaDisabledRef"
@@ -111,7 +121,7 @@ const VButton = defineComponent({
      */
     size: {
       type: String as PropType<ButtonSize>,
-      default: "medium",
+      default: "medium-old",
     },
     /**
      * Whether the button is disabled. Used alone this will only
@@ -157,6 +167,24 @@ const VButton = defineComponent({
       type: String as PropType<ButtonConnections>,
       default: "none",
     },
+    /**
+     * Whether the button has an icon at the inline start of the button.
+     *
+     * @default false
+     */
+    hasIconStart: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * Whether the button has an icon at the inline end of the button.
+     *
+     * @default false
+     */
+    hasIconEnd: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props, { attrs }) {
     const propsRef = toRefs(props)
@@ -180,6 +208,15 @@ const VButton = defineComponent({
 
     const isPlainDangerous = computed(() => {
       return propsRef.variant.value === "plain--avoid"
+    })
+    const isFilled = computed(() => {
+      return props.variant.startsWith("filled-")
+    })
+    const isBordered = computed(() => {
+      return props.variant.startsWith("bordered-")
+    })
+    const isTransparent = computed(() => {
+      return props.variant.startsWith("transparent-")
     })
 
     watch(
@@ -222,6 +259,15 @@ const VButton = defineComponent({
       { immediate: true }
     )
 
+    // TODO: remove after the Core UI improvements are done
+    const isNewVariant = computed(() => {
+      return (
+        props.variant.startsWith("filled-") ||
+        props.variant.startsWith("bordered-") ||
+        props.variant.startsWith("transparent-")
+      )
+    })
+
     return {
       disabledAttributeRef,
       ariaDisabledRef,
@@ -229,6 +275,10 @@ const VButton = defineComponent({
       isActive,
       isConnected,
       isPlainDangerous,
+      isNewVariant,
+      isFilled,
+      isBordered,
+      isTransparent,
     }
   },
 })
@@ -242,20 +292,78 @@ export default VButton
   @apply cursor-not-allowed;
 }
 
-.size-small {
+.size-small-old {
   @apply py-1 px-2;
+}
+.size-medium-old {
+  @apply py-2 px-4;
+}
+.size-large-old {
+  @apply py-6 px-8;
+}
+
+.size-small {
+  @apply h-8 py-0 px-2;
+}
+.icon-start-small {
+  @apply ps-1;
+}
+.icon-end-small {
+  @apply pe-1;
 }
 
 .size-medium {
-  @apply py-2 px-4;
+  @apply h-10 py-0 px-3;
+}
+.icon-start-medium {
+  @apply ps-2;
+}
+.icon-end-medium {
+  @apply pe-2;
 }
 
 .size-large {
-  @apply py-6 px-8;
+  @apply h-12 py-0 px-5;
+}
+.icon-start-large {
+  @apply ps-4;
+}
+.icon-end-large {
+  @apply pe-4;
 }
 
 a.button {
   @apply no-underline hover:no-underline;
+}
+
+.filled-pink {
+  @apply bg-pink text-white hover:bg-dark-pink hover:text-white;
+}
+
+.filled-dark {
+  @apply bg-dark-charcoal text-white hover:bg-dark-charcoal-80 hover:text-white;
+}
+
+.filled-gray {
+  @apply bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+}
+
+.filled-white {
+  @apply bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+}
+
+.bordered-white {
+  @apply border border-white bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+}
+
+.bordered-gray {
+  @apply border border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal;
+}
+.transparent-gray {
+  @apply bg-tx text-dark-charcoal hover:bg-dark-charcoal-10;
+}
+.transparent-dark {
+  @apply bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 
 .primary {

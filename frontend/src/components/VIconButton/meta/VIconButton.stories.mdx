@@ -24,7 +24,7 @@ import replayIcon from "~/assets/icons/replay.svg"
 
 export const Template = (args) => ({
   template: `
-    <VIconButton class="text-white bg-dark-charcoal border-dark-charcoal" v-bind="args"/>
+    <VIconButton class="text-white bg-dark-charcoal border-dark-charcoal" v-bind="args" label="v-icon-button" />
   `,
   components: { VIconButton },
   setup() {
@@ -39,6 +39,7 @@ export const sizesTemplate = (args) => ({
         <p>{{ size }}</p>
         <VIconButton
            class="text-white bg-dark-charcoal border-dark-charcoal"
+           label="v-icon-button"
            :size="size" v-bind="args" />
       </div>
     </div>

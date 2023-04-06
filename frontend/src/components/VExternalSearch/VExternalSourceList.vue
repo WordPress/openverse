@@ -3,7 +3,7 @@
     <VIconButton
       class="absolute top-0 border-none text-dark-charcoal-70 end-0"
       :icon-props="{ iconPath: icons.closeSmall }"
-      :aria-label="$t('modal.close').toString()"
+      :label="$t('modal.close')"
       @click="$emit('close')"
     />
     <h2 class="description-bold mb-2 px-4 pt-5 text-start">
