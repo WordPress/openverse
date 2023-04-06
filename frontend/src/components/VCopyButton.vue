@@ -2,9 +2,8 @@
   <VButton
     :id="id"
     type="button"
-    variant="secondary-filled"
-    size="disabled"
-    class="py-2 px-3 text-sr font-semibold"
+    variant="filled-dark"
+    size="small"
     :data-clipboard-target="el"
   >
     <span v-if="!success">
