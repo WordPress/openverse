@@ -108,7 +108,7 @@ Time                - 11px - xs semibold (default leading-tight)
   }
 
   .label-regular {
-    @apply text-sm;
+    @apply text-sm font-normal;
   }
 
   .caption-regular {

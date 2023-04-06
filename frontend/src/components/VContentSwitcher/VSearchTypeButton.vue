@@ -1,9 +1,9 @@
 <template>
   <VButton
-    class="group h-12 flex-shrink-0 gap-2"
-    :class="showLabel ? 'w-auto gap-2 px-3' : 'w-12'"
-    variant="action-menu"
-    size="disabled"
+    class="min-w-12 gap-x-2"
+    :class="showLabel ? '!px-3' : 'w-12'"
+    variant="bordered-white"
+    size="large"
     :aria-label="$t('search-type.select-label', { type: label })"
     v-bind="$attrs"
     @click="$emit('click')"
