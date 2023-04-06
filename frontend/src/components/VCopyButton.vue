@@ -4,6 +4,7 @@
     type="button"
     variant="filled-dark"
     size="small"
+    class="label-bold flex-shrink-0"
     :data-clipboard-target="el"
   >
     <span v-if="!success">
