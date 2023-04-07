@@ -76,6 +76,7 @@ jobs:
         id: set-matrix
         env:
           CHANGES: ${{ needs.get-changes.outputs.changes }}
+        working-directory: ./automations/python
         run: python automations/python/set_matrix_images.py
 
   #############
@@ -889,7 +890,8 @@ jobs:
           SERVER_URL: ${{ github.server_url }}
           REPOSITORY: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
-        run: python automations/python/generate_report.py
+        working-directory: ./automations/python
+        run: python generate_report.py
 
       - name: Send report
         uses: slackapi/slack-github-action@v1.23.0
