@@ -3,6 +3,7 @@
 import json
 import os
 
+
 mapping = json.loads("${{ env.GH_SLACK_USERNAME_MAP }}")
 GITHUB_USER = "${{ inputs.actor || github.actor }}"
 slack_id = mapping[GITHUB_USER]
