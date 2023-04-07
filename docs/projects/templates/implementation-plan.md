@@ -19,7 +19,11 @@
 
 ## Overview
 
-<!-- A brief one or two sentence overview of the implementation being described. -->
+<!-- An overview of the implementation plan, if necessary. Save any specific steps for the section(s) below. -->
+
+## Expected Outcomes
+
+<!-- List any succinct expected products from this implementation plan. -->
 
 ## Outlined Steps
 
@@ -38,6 +42,10 @@
 ### Other projects or work
 
 <!-- Note any projects this plan is dependent on. -->
+
+## Alternatives
+
+<!-- Describe any alternatives considered and why they were not chosen or recommended. -->
 
 ## Design
 
