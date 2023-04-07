@@ -18,9 +18,12 @@ if "api" in changes or "ingestion_server" in changes:
     # Always build the ingestion server and API images for either changeset
     build_matrix["image"] += ["api", "ingestion_server"]
     build_matrix["include"] += [
-    {"image": "ingestion_server", "context": "ingestion_server", "target": "ing"},
-    {"image": "api", "context": "api", "target": "api"},
-    ]
+                                {"image": "ingestion_server",
+                                    "context": "ingestion_server",
+                                    "target": "ing"},
+                                {"image": "api", "context": "api",
+                                 "target": "api"},
+                                ]
     if "api" in changes:
         build_matrix["image"].append("api_nginx")
         build_matrix["include"].append({"image": "api_nginx",
@@ -32,7 +35,7 @@ if "api" in changes or "ingestion_server" in changes:
 DO_BUILD = 'true' if len(build_matrix["image"]) else 'false'
 DO_PUBLISH = 'true' if len(publish_matrix["image"]) else 'false'
 
-with open(os.environ.get("GITHUB_OUTPUT"), "a",encoding='utf-8') as gh_out:
+with open(os.environ.get("GITHUB_OUTPUT"), "a", encoding='utf-8') as gh_out:
     for dest in [sys.stdout, gh_out]:
         print(f"do_build={DO_BUILD}", file=dest)
         print(f"build_matrix={json.dumps(build_matrix)}", file=dest)

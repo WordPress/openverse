@@ -74,9 +74,10 @@ jobs:
     steps:
       - name: Set matrix images
         id: set-matrix
+        uses: actions/checkout@v3
         env:
           CHANGES: ${{ needs.get-changes.outputs.changes }}
-        working-directory: automations/python
+        working-directory: ./automations/python
         run: python set_matrix_images.py
 
   #############
@@ -882,6 +883,7 @@ jobs:
     steps:
       - name: Generate report
         id: report
+        uses: actions/checkout@v3
         env:
           EMIT_DOCS_RESULT: ${{ needs.emit-docs.result }}
           PUBLISH_IMAGES_RESULT: ${{ needs.publish-images.result }}
@@ -890,7 +892,7 @@ jobs:
           SERVER_URL: ${{ github.server_url }}
           REPOSITORY: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
-        working-directory: automations/python
+        working-directory: ./automations/python
         run: python generate_report.py
 
       - name: Send report
