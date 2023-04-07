@@ -11,10 +11,10 @@
 
 <!-- A brief one or two sentence summary of the project's features -->
 
-Reduce the length of time required for a data refresh by optimizing the popularity
-calculation steps, which are currently both time consuming and required steps.
-These optimizations will enable the data refresh to be run on a regular automated
-schedule.
+Reduce the length of time required for a data refresh by optimizing the
+popularity calculation steps, which are currently both time consuming and
+required steps. These optimizations will enable the data refresh to be run on a
+regular automated schedule.
 
 ## Goals
 
@@ -29,8 +29,8 @@ Yearly goal: **Data Inertia**
 Any changes to the data refresh and popularity calculations must meet the
 following criteria:
 
-1. A full data refresh should reliably complete in less than one week, for
-   each media type.
+1. A full data refresh should reliably complete in less than one week, for each
+   media type.
 2. During a data refresh, all updates made to existing records since the
    previous refesh should propagate to the API DB and Elasticsearch.
 3. During a data refresh, all _new_ records ingested since the previous refresh
@@ -38,25 +38,25 @@ following criteria:
 4. Records for providers that support popularity metrics should have
    standardized popularity scores as soon as they become available in
    Elasticsearch.
-5. There should be no regressions in the regularity with which popularity
-   scores are refreshed; constants should be recalculated monthly.
-6. When popularity constants and standardized scores are being updated, the
-   data refresh runtime should not be affected.
-7. There must be no 'down-time' in the Catalog, where writes to the
-   media tables are locked (i.e., ingestion workflows should be able to
-   continue as normal at all times).
+5. There should be no regressions in the regularity with which popularity scores
+   are refreshed; constants should be recalculated monthly.
+6. When popularity constants and standardized scores are being updated, the data
+   refresh runtime should not be affected.
+7. There must be no 'down-time' in the Catalog, where writes to the media tables
+   are locked (i.e., ingestion workflows should be able to continue as normal at
+   all times).
 8. Query time on the frontend must not be increased.
 
 ## Success
 
 <!-- How do we measure the success of the project? How do we know our ideas worked? -->
 
-For this project to be considered a success, we must be able to turn on the
-data refresh DAGs on an automated weekly schedule. This requires that the
-data refresh must be able to complete in under a week.
+For this project to be considered a success, we must be able to turn on the data
+refresh DAGs on an automated weekly schedule. This requires that the data
+refresh must be able to complete in under a week.
 
-The requirements in the section above should also be met to prevent
-regressions in data quality and availability.
+The requirements in the section above should also be met to prevent regressions
+in data quality and availability.
 
 ## Participants and stakeholders
 
@@ -74,6 +74,7 @@ regressions in data quality and availability.
 <!-- What infrastructural considerations need to be made for this project? If there are none, say so explicitly rather than deleting the section. -->
 
 This project will require:
+
 - changes to the Catalog DB
 - creation and modification of Airflow DAGs related to the data refresh
 - minor changes in the ingestion server
@@ -81,8 +82,8 @@ This project will require:
 Specifics will be detailed in the implementation plan. For testing, this will
 require connecting Airflow with the staging ingestion server and API database.
 
-I do not anticipate changes to the Elasticsearch mapping or queries. However
-it should be noted that if this changes, we may require access to the Search
+I do not anticipate changes to the Elasticsearch mapping or queries. However it
+should be noted that if this changes, we may require access to the Search
 Relevancy Sandbox in order to test.
 
 ## Accessibility
@@ -109,8 +110,8 @@ make an announcement if it is significant.
 <!-- What are the required implementation plans? Consider if they should be split per level of the stack or per feature. -->
 
 1. Removing the popularity steps from the data refresh
-   - This plan will describe changes needed to separate the popularity calculations
-     from the data refresh, including necessary changes to:
+   - This plan will describe changes needed to separate the popularity
+     calculations from the data refresh, including necessary changes to:
      - The data structure
      - New and existing DAGs
      - The ingestion server
