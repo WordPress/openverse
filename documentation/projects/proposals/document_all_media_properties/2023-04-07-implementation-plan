@@ -1,0 +1,102 @@
+# Implementation Plan: Catalog
+
+<!-- See the implementation plan guide for more information: https://github.com/WordPress/openverse/tree/19791f51c063d0979112f4b9f4eeace04c8cf5ff/docs/projects#implementation-plans-status-in-rfc -->
+<!-- This template is exhaustive and may include sections which aren't relevant to your project. Feel free to remove any sections which would not be useful to have. -->
+
+## Reviewers
+
+<!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
+
+- [ ] AetherUnbound
+- [ ] Krysal ? Dhruv ?
+
+## Project links
+
+<!-- Enumerate any references to other documents/pages, including milestones and other plans -->
+
+- [Project Thread]()
+- [Project Proposal]()
+
+## Overview
+
+<!-- A brief one or two sentence overview of the implementation being described. -->
+A proposal to create a documentation page with description of the media properties collected by the Catalog.
+
+## Motivation
+
+Having the documentation live next to code will help us keep it up to date. However, viewing it when it's spread out is difficult. Having a single page with all the information will make it easier to view and update.
+
+We already have a DAG documentation generator that extracts the docstrings from the DAGs and creates a page with the documentation. We can use the same approach to create a documentation page for the media properties. If possible, I would like to NOT use the live objects, but use the `ast` module to parse the code and extract the docstrings. This way, the checks would be faster. However, this will mean that some of the settings would not be picked up, and will have to be updated during the generation. One of examples of this is the `nullable` field in the `Column` class: it's falls back to the value of `not nullable` during the object initiation.
+
+## Outlined Steps
+
+There are several steps that the data goes through before it's stored in the database. Below I will describe what needs to be documented for each step.
+
+### Collection from the provider APIs, provider SQL dumps, and Common Crawl
+
+The central point that handles the "raw" collected data is the `MediaStore` class. Currently, we use named parameters in the `add_item` method to pass all the data properties. I propose to use a `dataclass` to pass the data to the `add_item` method. This will allow us to document the properties in the `dataclass` docstring. The `dataclass` will also allow us to use the `ast` module to extract the docstrings.
+In this `dataclass` we will be able to document the **selection criteria** for media properties. For example, we will be able to document that we only collect the `title` property if it's not empty, and that we only collect the `description` property if it's not empty and has more than 10 characters. This will allow us to document the selection criteria for each property, and will allow us to easily update the selection criteria if we decide to change it.
+
+### Cleaning and normalization
+
+The `MediaStore` class also handles the cleaning and normalization of the data. Each media property is cleaned using one of the `Column` classes, which validate the values and throw out or modify the ones that are invalid for the database. For instance, if the `title` property is longer than 5000 characters, it will be truncated, but if the license field is longer than 50 characters, it will be set to `null`. If we plan to introduce the dataclasses for the `add_item` method (see the previous section), we could use their `__post__init` method to validate the simple cases such as the string length.
+Another step that is done in the `MediaStore` class is the normalization of the data. For example, the tags are enriched to add a `provider` field, `url`s are validated, default category for provider is added.
+We can create a different `dataclass` for the cleaned and normalized data, and use the `ast` module to extract the docstrings from it. This will allow us to document the cleaning and normalization steps for each property.
+
+### Storing in the database
+
+The `local_postgres` DDLs are the source-of-truth for the media properties in the database. We can extract the media field descriptions from the SQL files. One challenge here is that most of the columns are defined in the `image_schema` and `audio_schema` files, but the API receives the data from the `materialized views` (`image_view` and `audio_view`). The materialized views have all the data from the other tables, but the columns have a different order. There's also an additional column that is created using a SQL function (which will be a little bit harder to parse).
+
+
+## Dependencies
+We can use as much of the Python standard library as possible for this project.
+
+### Infrastructure
+
+<!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
+
+### Tools & packages
+
+<!-- Describe any tools or packages which this work might be dependent on. If multiple options are available, try to list as many as are reasonable with your own recommendation. -->
+`ast` module - for extracting the documentation from the code.
+
+### Other projects or work
+
+<!-- Note any projects this plan is dependent on. -->
+
+## Streams of work
+
+<!-- What, if any, work within this plan can be parallelized? -->
+The following streams can be worked on in parallel:
+- creation of the dataclasses for `ProviderImageData`, `CleanImageData`, `ProviderAudioData` and `CleanAudioData` can be created in parallel.
+- extraction of the docstrings from the `Column` classes and the SQL DDL and creation of the markdown table from them.
+
+## Blockers
+
+<!-- What hard blockers exist which might prevent further work on this project? -->
+A potential blocker for this project is the move of the Catalog to the monorepository. Before the move, maintaining the markdown page on the documentation site will require intra-repository syncing. After the move, we can have the documentation generation step in the CI pipeline, and the documentation will be updated and deployed to docs.openverse.org automatically.
+
+## API version changes
+
+<!-- Explore or mention any changes to the API versioning scheme. -->
+
+## Accessibility
+
+<!-- Are there specific accessibility concerns relevant to this plan? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
+
+## Rollback
+
+<!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
+
+
+## Localization
+
+<!-- Any translation or regional requirements? Any differing legal requirements based on user location? -->
+No localization is planned for this project at this time.
+## Risks
+
+<!-- What risks are we taking with this solution? Are there risks that once taken can’t be undone?-->
+
+## Prior art
+
+<!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
