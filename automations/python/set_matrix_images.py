@@ -1,6 +1,4 @@
-"""
-Python script Set Matrix Images for workflow
-"""
+"""Python script Set Matrix Images for workflow"""
 
 import json
 import os

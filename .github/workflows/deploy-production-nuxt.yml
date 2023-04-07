@@ -59,7 +59,6 @@ jobs:
             }
 
       - name: Set the Slack user
-        shell: bash
         env:
           GH_SLACK_USERNAME_MAP: ${{ secrets.GH_SLACK_USERNAME_MAP }}
         run: python automations/python/set_slack_user.py

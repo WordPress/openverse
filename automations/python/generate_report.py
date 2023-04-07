@@ -1,6 +1,4 @@
-"""
-Python script for generating report for workflow
-"""
+"""Python script for generating report for workflow"""
 
 import json
 import os
