@@ -59,11 +59,9 @@ jobs:
             }
 
       - name: Set the Slack user
-        uses: actions/checkout@v3
         env:
           GH_SLACK_USERNAME_MAP: ${{ secrets.GH_SLACK_USERNAME_MAP }}
-        working-directory: ./automations/python
-        run: python set_slack_user.py
+        run: python ./automations/python/set_slack_user.py
 
       - name: Notify deployment start
         uses: slackapi/slack-github-action@v1.23.0

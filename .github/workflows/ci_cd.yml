@@ -72,13 +72,14 @@ jobs:
       - get-changes
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
       - name: Set matrix images
         id: set-matrix
-        uses: actions/checkout@v3
         env:
           CHANGES: ${{ needs.get-changes.outputs.changes }}
-        working-directory: ./automations/python
-        run: python set_matrix_images.py
+        run: python ./automations/python/set_matrix_images.py
 
   #############
   # Universal #
@@ -881,9 +882,11 @@ jobs:
       - deploy-api
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Generate report
         id: report
-        uses: actions/checkout@v3
         env:
           EMIT_DOCS_RESULT: ${{ needs.emit-docs.result }}
           PUBLISH_IMAGES_RESULT: ${{ needs.publish-images.result }}
@@ -892,8 +895,7 @@ jobs:
           SERVER_URL: ${{ github.server_url }}
           REPOSITORY: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
-        working-directory: ./automations/python
-        run: python generate_report.py
+        run: python ./automations/python/generate_report.py
 
       - name: Send report
         uses: slackapi/slack-github-action@v1.23.0
