@@ -27,6 +27,11 @@
 
 ## Dependencies
 
+### Infrastructure
+
+<!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
+
+
 ### Tools & packages
 
 <!-- Describe any tools or packages which this work might be dependent on. If multiple options are available, try to list as many as are reasonable with your own recommendation. -->
