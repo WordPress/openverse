@@ -76,8 +76,8 @@ jobs:
         id: set-matrix
         env:
           CHANGES: ${{ needs.get-changes.outputs.changes }}
-        working-directory: ./automations/python
-        run: python automations/python/set_matrix_images.py
+        working-directory: automations/python
+        run: python set_matrix_images.py
 
   #############
   # Universal #
@@ -890,7 +890,7 @@ jobs:
           SERVER_URL: ${{ github.server_url }}
           REPOSITORY: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
-        working-directory: ./automations/python
+        working-directory: automations/python
         run: python generate_report.py
 
       - name: Send report

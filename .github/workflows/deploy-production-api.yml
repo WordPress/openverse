@@ -61,8 +61,8 @@ jobs:
       - name: Set the Slack user
         env:
           GH_SLACK_USERNAME_MAP: ${{ secrets.GH_SLACK_USERNAME_MAP }}
-        working-directory: ./automations/python
-        run: python automations/python/set_slack_user.py
+        working-directory: automations/python
+        run: python set_slack_user.py
 
       - name: Notify deployment start
         uses: slackapi/slack-github-action@v1.23.0
