@@ -76,7 +76,7 @@ jobs:
         id: set-matrix
         env:
           CHANGES: ${{ needs.get-changes.outputs.changes }}
-        shell: python
+        shell: bash
         run: python automations/python/set_matrix_images.py
 
   #############
@@ -882,7 +882,7 @@ jobs:
     steps:
       - name: Generate report
         id: report
-        shell: python
+        shell: bash
         env:
           EMIT_DOCS_RESULT: ${{ needs.emit-docs.result }}
           PUBLISH_IMAGES_RESULT: ${{ needs.publish-images.result }}

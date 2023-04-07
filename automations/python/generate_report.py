@@ -1,3 +1,7 @@
+"""
+Python script for generating report for workflow
+"""
+
 import json
 import os
 import sys
@@ -24,7 +28,8 @@ payload = {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"<{server_url}/{repository}/actions/runs/{run_id}|Click here to review the completed CI + CD workflow>.",
+                "text": f"<{server_url}/{repository}/actions/runs/{run_id}|Click \
+                    here to review the completed CI + CD workflow>.",
             },
         },
         {
@@ -40,6 +45,6 @@ payload = {
     ],
 }
 
-with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
+with open(os.environ.get("GITHUB_OUTPUT"), "a", encoding='utf-8') as gh_out:
     for dest in [sys.stdout, gh_out]:
         print(f"payload={json.dumps(payload)}", file=dest)
