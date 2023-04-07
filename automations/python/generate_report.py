@@ -5,6 +5,7 @@ import os
 import sys
 from collections import defaultdict
 
+
 server_url = os.environ.get("SERVER_URL")
 repository = os.environ.get("REPOSITORY")
 run_id = os.environ.get("RUN_ID")
@@ -44,6 +45,6 @@ payload = {
     ],
 }
 
-with open(os.environ.get("GITHUB_OUTPUT"), "a", encoding='utf-8') as gh_out:
+with open(os.environ.get("GITHUB_OUTPUT"), "a", encoding="utf-8") as gh_out:
     for dest in [sys.stdout, gh_out]:
         print(f"payload={json.dumps(payload)}", file=dest)
