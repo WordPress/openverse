@@ -85,6 +85,22 @@ export type Events = {
     /** the reason for the report */
     reason: ReportReason
   }
+  /**
+   * Description: When the user chooses an external source from the dropdown of external sources
+   * Questions:
+   *   - Which external sources are most popular? This could drive inclusion in Openverse.
+   *   - Are certain media types more popular externally?
+   */
+  SELECT_EXTERNAL_SOURCE: {
+    /** The name of the external source */
+    name: string
+    /** The full URL of the source */
+    url: string
+    /** The media type being searched */
+    mediaType: MediaType
+    /** The search term */
+    query: string
+  }
 }
 
 /**
