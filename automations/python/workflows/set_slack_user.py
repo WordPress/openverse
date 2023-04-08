@@ -1,4 +1,4 @@
-"""Python script Set slack user for workflow"""
+"""Get Slack username corresponding to GitHub actor."""
 
 import json
 import os

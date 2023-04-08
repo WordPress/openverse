@@ -1,4 +1,4 @@
-"""Python script Set Matrix Images for workflow"""
+"""Determine which Docker images to build and publish."""
 
 import json
 import os

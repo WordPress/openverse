@@ -1,4 +1,4 @@
-"""Python script for generating report for workflow"""
+"""Generate a completion report for the CI + CD workflow."""
 
 import json
 import os
@@ -27,9 +27,10 @@ payload = {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"<{server_url}/{repository}/actions/runs/{run_id} \
-                |Click here to review \
-                the completed CI + CD workflow>.",
+                "text": (
+                    f"<{server_url}/{repository}/actions/runs/{run_id}|"
+                    "Click here to review the completed CI + CD workflow>."
+                ),
             },
         },
         {
