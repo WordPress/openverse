@@ -22,6 +22,8 @@ export const popoverArgTypes = {
   placement: { options: [...popoverPlacements], control: { type: "radio" } },
   label: { control: { type: "text" } },
   labelledBy: { control: { type: "text" } },
+  close: { action: "close" },
+  open: { action: "open" },
 }
 
 export const SinglePopoverStory = (args) => ({
@@ -31,7 +33,7 @@ export const SinglePopoverStory = (args) => ({
         This story is configured to log when the popover opens or closes. Inspect the console output to observe this behavior.
       </p>
       <div tabindex="0">Focusable external area</div>
-      <VPopover v-bind="args" @open="onOpen" @close="onClose">
+      <VPopover v-bind="args" v-on="args">
         <template #trigger="{ visible, a11yProps }">
           <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
         </template>
@@ -41,15 +43,13 @@ export const SinglePopoverStory = (args) => ({
   `,
   components: { VPopover, VButton },
   setup() {
-    const onOpen = () => log("opened!")
-    const onClose = () => log("closed!")
-    return { onOpen, onClose, args }
+    return { args }
   },
 })
 
 export const ControlStory = (args) => ({
   template: `
-    <VPopover v-bind="args">
+    <VPopover v-bind="args" v-on="args">
       <template #trigger="{ visible, a11yProps }">
         <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
       </template>
@@ -69,14 +69,14 @@ export const ControlStory = (args) => ({
 export const TwoPopoverStory = (args) => ({
   template: `
     <div>
-      <VPopover label="First popover" v-bind="args">
+      <VPopover label="First popover" v-bind="args" v-on="args">
         <template #trigger="{ visible, a11yProps }">
           <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'First popover open' : 'First popover closed' }}</VButton>
         </template>
         <div class="py-1 px-2">First popover content</div>
       </VPopover>
       <div class="h-5">Some content</div>
-      <VPopover label="Second popover" v-bind="args">
+      <VPopover label="Second popover" v-bind="args" v-on="args">
         <template #trigger="{ visible, a11yProps }">
           <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Second popover open' : 'Second popover closed' }}</VButton>
         </template>
