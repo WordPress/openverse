@@ -75,7 +75,6 @@
     "src/components/VContentReport/**.vue",
     "src/components/VContentSwitcher/VSearchTypeButton.vue",
     "src/components/VContentSwitcher/VSearchTypeItem.vue",
-    "src/components/VContentSwitcher/VSearchTypeRadio.vue",
     "src/components/VErrorSection/VErrorImage.vue",
     "src/components/VHeader/VFilterButton.vue",
     "src/components/VHeader/VPageLinks.vue",
