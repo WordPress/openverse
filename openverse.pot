@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-03-17T14:44:13+00:00\n"
+"POT-Creation-Date: 2023-04-10T15:15:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -64,14 +64,19 @@ msgid "search type"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VBanner/VTranslationStatusBanner.vue:12
+#: src/components/VBanner/VTranslationStatusBanner.vue:13
 msgctxt "notification.translation.text"
 msgid "The translation for ###locale### locale is incomplete. Help us get to 100 percent by ###link###."
 msgstr ""
 
-#: src/components/VBanner/VTranslationStatusBanner.vue:15
+#: src/components/VBanner/VTranslationStatusBanner.vue:16
 msgctxt "notification.translation.link"
 msgid "contributing a translation"
+msgstr ""
+
+#: src/components/VBanner/VTranslationStatusBanner.vue:6
+msgctxt "notification.translation.close"
+msgid "Close the translation contribution help request banner"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -164,13 +169,13 @@ msgctxt "header.loading"
 msgid "Loading..."
 msgstr ""
 
-#: src/components/VHeader/VFilterButton.vue:73
+#: src/components/VHeader/VFilterButton.vue:61
 msgctxt "header.filter-button.simple"
 msgid "Filters"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VFilterButton.vue:72
+#: src/components/VHeader/VFilterButton.vue:63
 msgctxt "header.filter-button.with-count"
 msgid "###count### Filter"
 msgid_plural "###count### Filters"
@@ -879,7 +884,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/image/_id/index.vue:237
-#: src/pages/image/_id/report.vue:100
+#: src/pages/image/_id/report.vue:101
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
@@ -898,7 +903,7 @@ msgctxt "error.audio"
 msgid "audio"
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:41
+#: src/components/VHeader/VHeaderMobile/VFilterTab.vue:4
 msgctxt "filters.title"
 msgid "Filters"
 msgstr ""
@@ -1180,13 +1185,12 @@ msgid "Hide filters"
 msgstr ""
 
 #: src/components/VFilters/VSearchGridFilter.vue:17
-#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:161
+#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:69
 msgctxt "filter-list.clear"
 msgid "Clear filters"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:158
 msgctxt "filter-list.clear-numbered"
 msgid "Clear filters (###number###)"
 msgstr ""
@@ -1350,7 +1354,7 @@ msgstr ""
 
 #: src/components/VFilters/VFilterChecklist.vue:26
 #: src/components/VFilters/VFilterChecklist.vue:33
-#: src/components/VFilters/VFilterChecklist.vue:133
+#: src/components/VFilters/VFilterChecklist.vue:134
 msgctxt "browse-page.aria.license-explanation"
 msgid "license explanation"
 msgstr ""
@@ -1727,7 +1731,7 @@ msgctxt "audio-details.information"
 msgid "Audio information"
 msgstr ""
 
-#: src/components/VAudioTrack/layouts/VFullLayout.vue:61
+#: src/components/VAudioTrack/layouts/VFullLayout.vue:59
 msgctxt "audio-details.weblink"
 msgid "Get this audio"
 msgstr ""
@@ -1762,7 +1766,7 @@ msgid "→"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VExternalSearch/VExternalSourceList.vue:13
+#: src/components/VExternalSearch/VExternalSourceList.vue:12
 msgctxt "external-sources.caption"
 msgid "###openverse### can not guarantee the accuracy of license information. Always verify that the work is actually under a CC license."
 msgstr ""
@@ -1772,7 +1776,7 @@ msgctxt "external-sources.button"
 msgid "Source list"
 msgstr ""
 
-#: src/components/VExternalSearch/VExternalSourceList.vue:10
+#: src/components/VExternalSearch/VExternalSourceList.vue:4
 msgctxt "external-sources.title"
 msgid "External sources"
 msgstr ""
@@ -1875,14 +1879,14 @@ msgid "Cover art for \"###title###\" by ###creator###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:475
+#: src/components/VAudioTrack/VAudioTrack.vue:476
 #: src/components/VAudioTrack/VGlobalAudioTrack.vue:71
 msgctxt "audio-track.aria-label"
 msgid "###title### - Audio Player"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:472
+#: src/components/VAudioTrack/VAudioTrack.vue:473
 msgctxt "audio-track.aria-label-interactive"
 msgid "###title### - audio player - press the spacebar to play and pause a preview of the audio"
 msgstr ""
@@ -1921,7 +1925,7 @@ msgid "Loading..."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/layouts/VFullLayout.vue:34
+#: src/components/VAudioTrack/layouts/VFullLayout.vue:32
 #: src/components/VAudioTrack/layouts/VRowLayout.vue:45
 msgctxt "audio-track.creator"
 msgid "by ###creator###"
@@ -2008,20 +2012,25 @@ msgid "Dropdown"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VBanner/VMigrationNotice.vue:8
+#: src/components/VBanner/VMigrationNotice.vue:9
 msgctxt "migration-notice.intro"
 msgid "###cc-search### is now called ###openverse### and joins ###wordpress### as an open source project."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VBanner/VMigrationNotice.vue:14
+#: src/components/VBanner/VMigrationNotice.vue:15
 msgctxt "migration-notice.more"
 msgid "###read-more### about this announcement."
 msgstr ""
 
-#: src/components/VBanner/VMigrationNotice.vue:20
+#: src/components/VBanner/VMigrationNotice.vue:21
 msgctxt "migration-notice.read"
 msgid "Read more"
+msgstr ""
+
+#: src/components/VBanner/VMigrationNotice.vue:5
+msgctxt "migration-notice.close"
+msgid "Close the announcement"
 msgstr ""
 
 msgctxt "download-button.aria.dropdown-label"
@@ -2032,7 +2041,7 @@ msgctxt "download-button.download"
 msgid "Download"
 msgstr ""
 
-#: src/components/VAudioTrack/layouts/VFullLayout.vue:48
+#: src/components/VAudioTrack/layouts/VFullLayout.vue:46
 #: src/components/VAudioTrack/layouts/VRowLayout.vue:48
 #: src/components/VAudioTrack/layouts/VRowLayout.vue:58
 #: src/components/VAudioTrack/layouts/VRowLayout.vue:65
@@ -2040,24 +2049,36 @@ msgctxt "interpunct"
 msgid "•"
 msgstr ""
 
-#: src/components/VBanner/VNotificationBanner.vue:15
-#: src/components/VContentReport/VContentReportPopover.vue:16
-#: src/components/VExternalSearch/VExternalSourceList.vue:6
-#: src/components/VHeader/VHeaderInternal.vue:62
+#: src/components/VContentReport/VContentReportPopover.vue:14
+#: src/components/VExternalSearch/VExternalSourceList.vue:7
 #: src/components/VModal/VModalContent.vue:42
 msgctxt "modal.close"
 msgid "Close"
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:46
 msgctxt "modal.aria-close"
 msgid "Close the modal"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VFilters/VFilterChecklist.vue:132
+#: src/components/VFilters/VFilterChecklist.vue:133
 msgctxt "modal.close-named"
 msgid "Close ###name###"
+msgstr ""
+
+#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:39
+msgctxt "modal.close-content-settings"
+msgid "Close the content settings menu"
+msgstr ""
+
+#: src/components/VHeader/VHeaderInternal.vue:61
+msgctxt "modal.close-pages-menu"
+msgid "Close the pages menu"
+msgstr ""
+
+#: src/components/VBanner/VNotificationBanner.vue:14
+msgctxt "modal.close-banner"
+msgid "Close the banner"
 msgstr ""
 
 msgctxt "error-images.depressed-musician"
@@ -2110,7 +2131,7 @@ msgid "Type of content to search"
 msgstr ""
 
 #: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:25
-#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:33
+#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:32
 msgctxt "search-type.heading"
 msgid "Content type"
 msgstr ""
