@@ -17,7 +17,7 @@
       as="VLink"
       variant="transparent-gray"
       size="medium"
-      class="caption-bold w-full justify-between"
+      class="caption-bold mb-1 w-full justify-between"
       show-external-icon
       has-icon-end
       :href="source.url"
