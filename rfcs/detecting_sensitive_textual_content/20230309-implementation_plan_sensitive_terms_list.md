@@ -13,7 +13,7 @@
 
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
-- [ ] @sarayourfriend
+- [x] @sarayourfriend
 - [ ] @dhruvkb
 
 The Openverse project
@@ -31,7 +31,7 @@ with care.
 
 To create and manage this list I recommend the following guidelines.
 
-## Outline of the approach
+## Proposal
 
 The Openverse team will maintain a standalone public repository which contains
 an English-language list of sensitive terms. This term list is a living document
@@ -40,6 +40,34 @@ contents of the list will initially be based on an existing public list,
 modified at the discretion of Openverse maintainers interested in contributing.
 The list will be iterated on and refined as we develop community standards
 around what constitutes "sensitive content" for Openverse users.
+
+### Maintenance of the list
+
+The list be will be maintained by a subset of Openeverse contributors who are
+comfortable reading these strings, but also making judgments about which should
+be included. This work may involve fielding pull requests and feedback from the
+community, along with researching unfamiliar sensitive terms to determine their
+suitability. Issues and PRs in this repo should be handled using the same
+practices as our other repositories, in terms of response times, review
+practices, and prioritization.
+
+These issues should **not**, however be included in the Openverse project board
+or directly referenced (linked to) in meetings. We want to take great care to
+make sure folks are only seeing this content if they consent to. The management
+of this list is itself a great model for how we want users of Openverse to view
+sensitive content.
+
+Participation in this group will be entirely opt-in. I (@zackkrida) will always
+be part of the group.
+
+#### How new terms are added
+
+New terms will be added manually by community contributors or maintainers. We
+don't have any specific quotas or goals to add new terms, but welcome them when
+suggested.
+
+In the future, it's possible we could use some analysis of Openverse content
+reports to find identify new terms are users are being exposed to inadvertently.
 
 ### Anticipated questions
 
@@ -94,10 +122,17 @@ around what constitutes "sensitive content" for Openverse users.
 2. Initialize the repository with a `README.md` and a blank
    `sensitive-terms.txt` file.
 3. Create a PR which initializes the sensitive terms list by copying all terms
-   in the "List of Dirty, Naughty, Obscene, and Otherwise Bad Words" repository.
-   _I am not including the link here to prevent accidental viewing of the
-   repository, but feel free to find it within the GitHub organization
-   "LDNOOBW"._
+   from two existing lists and removing any duplicates (Note: _I am not
+   including the links here to prevent accidental viewing of the repository, but
+   they should be easily found by searching their names._):
+
+   - LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words
+   - surge-ai/profanity
+
+   These combined lists give us a total of 1913 terms. This PR should be
+   reviewed by the sensitive list maintainers to remove any unacceptable words
+   based on their discretion (see above for more on that).
+
 4. Identify willing reviewers from the `@WordPress/openverse-maintainers` group
    who are comfortable with looking at the list and reviewing the PR, looking
    for terms which should be removed or missing terms which should be added.
@@ -122,7 +157,7 @@ around what constitutes "sensitive content" for Openverse users.
    `locals.sensitive_terms_list` can then be supplied to any of our terraform
    modules.
 
-## This Will Not Be Perfect
+## This will not be perfect
 
 By default, we accept that this list and its usage will not be perfect. At times
 we may accidentally include terms which inadvertently cause harm to groups or
@@ -147,14 +182,7 @@ work will always be based on the following assumptions:
    terms in this list (without inadvertently exposing anyone to the list) to
    make sure it meets the expectations of our users.
 
-## Open questions for reviewers
-
-- Within the Openverse maintainers; who has to view this list? Can anyone opt
-  out?
-- With what frequency and urgency will community suggestions for the list be
-  reviewed, and by whom?
-
-## Appendix A: Guidelines for using the list in Openverse projects
+## Guidelines for using the list in Openverse projects
 
 1. Never use terms from the list in Openverse repositories (issues, discussions,
    or code itself), chats, or communications of any time, outside of the
@@ -164,6 +192,29 @@ work will always be based on the following assumptions:
    viewing the list.
 3. Always use the most up-to-date version of the sensitive terms list when
    filtering and marking media as sensitive in Openverse projects.
+
+## How the initial sensitive terms list was chosen
+
+The initial set of terms, created by combining two lists:
+
+- LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words
+  - Very popular, used by many FOSS projects
+  - Created explicitly for stock photography moderation
+- surge-ai/profanity
+  - Comprehensive
+  - Contains more racist terms than LDNOOBW
+  - Is categorized, which we're not using yet but could in the future
+
+Generally, its beneficial to us that our list be as comprehansive as possible.
+This actually speeds up the time required to evaluate all works for sensitivity.
+It also makes sure we're correctly marking as many works as possible. An earlier
+version of this proposal only used the LDNOOBW list which was good, but limited
+in scope.
+
+Other lists were considered and rejected for a few reasons:
+
+- Even smaller datasets
+- Poorly-maintained with ignored PRs for terms to be reconsidered
 
 ## Credits
 
