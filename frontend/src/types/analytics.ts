@@ -22,6 +22,10 @@ export type Events = {
     set: string
     /** the identifier of the image */
     identifier: string
+  },
+  RIGHT_CLICK_IMAGE: {
+    set: string,
+    identifier: string
   }
 }
 
