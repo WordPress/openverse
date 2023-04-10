@@ -10,11 +10,10 @@
     </template>
     <template #default="{ close }">
       <div class="relative" data-testid="content-report-popover">
-        <VIconButton
-          class="absolute top-0 border-none text-dark-charcoal-70 end-0"
-          :icon-props="{ iconPath: icons.closeSmall }"
+        <VCloseButton
           :label="$t('modal.close')"
-          @click="close"
+          class="!absolute top-0 end-0"
+          @close="close"
         />
         <VContentReportForm
           class="w-80 p-6"
@@ -32,21 +31,18 @@ import { defineComponent, PropType } from "vue"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
 
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
-import VPopover from "~/components/VPopover/VPopover.vue"
+import VCloseButton from "~/components/VCloseButton.vue"
 import VContentReportButton from "~/components/VContentReport/VContentReportButton.vue"
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
-
-import flagIcon from "~/assets/icons/flag.svg"
-import closeSmallIcon from "~/assets/icons/close-small.svg"
+import VPopover from "~/components/VPopover/VPopover.vue"
 
 export default defineComponent({
   name: "VContentReportPopover",
   components: {
-    VIconButton,
-    VPopover,
+    VCloseButton,
     VContentReportButton,
     VContentReportForm,
+    VPopover,
   },
   props: {
     /**
@@ -56,11 +52,6 @@ export default defineComponent({
       type: Object as PropType<AudioDetail | ImageDetail>,
       required: true,
     },
-  },
-  setup() {
-    return {
-      icons: { flag: flagIcon, closeSmall: closeSmallIcon },
-    }
   },
 })
 </script>

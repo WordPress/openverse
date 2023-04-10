@@ -3,8 +3,8 @@
     v-bind="buttonProps"
     :aria-label="label"
     size="disabled"
-    class="icon-button flex flex-shrink-0 items-center justify-center border-1.5"
-    :class="buttonSizeClasses"
+    class="icon-button flex flex-shrink-0 items-center justify-center"
+    :class="[buttonSizeClasses, { 'border-1.5': !borderless }]"
     :type="type"
     v-on="$listeners"
   >
@@ -72,6 +72,14 @@ export default defineComponent({
     label: {
       type: [String, Object] as PropType<string | TranslateResult>,
       required: true,
+    },
+    /**
+     * whether the button should have a border or not.
+     * The `focus-` custom TW classes don't always work well with border.
+     */
+    borderless: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props, { attrs }) {

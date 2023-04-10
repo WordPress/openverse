@@ -1,13 +1,13 @@
 <template>
   <div class="global-audio sticky bottom-0 z-global-audio sm:hidden">
     <VGlobalAudioTrack v-if="audio" :audio="audio" />
-    <VIconButton
+    <VCloseButton
       v-if="audio"
-      class="absolute top-0 z-30 border-none ltr:right-0 rtl:left-0"
+      class="!absolute top-0 z-30 end-0"
+      variant="filled-transparent"
       size="large"
-      :icon-props="{ iconPath: icons.closeIcon }"
       :label="$t('audio-track.close')"
-      @click="handleClose"
+      @close="handleClose"
     />
   </div>
 </template>
@@ -26,16 +26,14 @@ import { useUiStore } from "~/stores/ui"
 
 import type { AudioDetail } from "~/types/media"
 
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VCloseButton from "~/components/VCloseButton.vue"
 import VGlobalAudioTrack from "~/components/VAudioTrack/VGlobalAudioTrack.vue"
-
-import closeIcon from "~/assets/icons/close-small.svg"
 
 export default defineComponent({
   name: "VGlobalAudioSection",
   components: {
+    VCloseButton,
     VGlobalAudioTrack,
-    VIconButton,
   },
   setup() {
     const route = useRoute()
@@ -136,10 +134,6 @@ export default defineComponent({
     })
 
     return {
-      icons: {
-        closeIcon,
-      },
-
       audio,
 
       handleError,

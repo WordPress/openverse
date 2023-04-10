@@ -168,7 +168,7 @@ Time                - 11px - xs semibold (default leading-tight)
   }
 
   [class*="focus-slim-filled"] {
-    @apply after:shadow-slim-filled;
+    @apply focus-visible:after:shadow-slim-filled;
     @apply focus-visible:ring; /* outer-stroke: box-shadow */
   }
 

@@ -36,6 +36,7 @@
     "**/*.ts",
     "test/proxy.js",
     "src/components/VButton.vue",
+    "src/components/VCloseButton.vue",
     "src/components/VContentPage.vue",
     "src/components/VLicenseElements.vue",
     "src/components/VWarningSuppressor.vue",
