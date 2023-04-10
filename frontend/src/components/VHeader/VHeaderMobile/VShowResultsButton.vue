@@ -2,7 +2,7 @@
   <VButton
     variant="filled-pink"
     size="large"
-    class="relative ms-auto"
+    class="label-bold relative ms-auto"
     @click="$emit('click')"
   >
     <!-- Loading animation -->

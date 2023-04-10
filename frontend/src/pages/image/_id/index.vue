@@ -32,9 +32,9 @@
         as="VLink"
         :href="image.foreign_landing_url"
         variant="filled-pink"
-        class="description-bold mb-4 w-full md:mb-0 md:w-max"
+        class="description-bold mb-4 !w-full flex-initial md:mb-0 md:!w-max"
         show-external-icon
-        external-icon-size="6"
+        :external-icon-size="6"
         has-icon-end
         size="large"
       >

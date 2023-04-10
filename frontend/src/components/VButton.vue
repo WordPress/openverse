@@ -15,10 +15,10 @@
         'gap-x-2':
           (hasIconEnd || hasIconStart) && (size == 'medium' || size == 'large'),
         'gap-x-1': (hasIconEnd || hasIconStart) && size == 'small',
-        // Custom tailwind classes don't work with CSS modules in Vue so they are written here explicitly instead of accessed off of `$style`.
+        // Custom tailwind classes don't work with CSS modules in Vue, so they are
+        // written here explicitly instead of accessed off of `$style`.
         'focus-slim-filled': isFilled,
         'focus-slim-tx': isBordered || isTransparent,
-        'description-bold': isNewVariant,
         'border border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink':
           !isPlainDangerous && !isNewVariant,
       },
