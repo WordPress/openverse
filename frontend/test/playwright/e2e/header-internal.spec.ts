@@ -8,7 +8,9 @@ import {
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
-const modalCloseButton = 'div[role="dialog"] >> [aria-label="Close"]'
+const modalCloseButton = `div[role="dialog"] >> [aria-label="${t(
+  "modal.close-pages-menu"
+)}"]`
 const currentPageLink = 'div[role="dialog"] >> [aria-current="page"]'
 const currentPageLinkInPopover = '.popover-content >> [aria-current="page"]'
 const menuButton = `[aria-label="${t("header.aria.menu")}"]`

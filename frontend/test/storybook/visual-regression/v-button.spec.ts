@@ -5,18 +5,26 @@ import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
 import { buttonVariants } from "~/types/button"
 
 const buttonLocator = "text=Code is Poetry"
+const wrapperLocator = "#wrapper"
 
 test.describe.configure({ mode: "parallel" })
 
+const newButtonVariants = buttonVariants.filter(
+  (name) =>
+    name.startsWith("filled-") ||
+    name.startsWith("bordered-") ||
+    name.startsWith("transparent-")
+)
+
 test.describe("VButton", () => {
   const gotoWithArgs = makeGotoWithArgs("components-vbutton--v-button")
-  const nonPressedVariants = buttonVariants.filter(
+  const nonPressedVariants = newButtonVariants.filter(
     (name) => !name.endsWith("pressed")
   )
   for (const variant of nonPressedVariants) {
     test(`${variant} resting`, async ({ page }) => {
       await gotoWithArgs(page, { variant })
-      expect(await page.locator(buttonLocator).screenshot()).toMatchSnapshot({
+      expect(await page.locator(wrapperLocator).screenshot()).toMatchSnapshot({
         name: `${variant}-resting.png`,
       })
     })
@@ -24,32 +32,17 @@ test.describe("VButton", () => {
     test(`${variant} hovered`, async ({ page }) => {
       await gotoWithArgs(page, { variant })
       await page.hover(buttonLocator)
-      expect(await page.locator(buttonLocator).screenshot()).toMatchSnapshot({
+      expect(await page.locator(wrapperLocator).screenshot()).toMatchSnapshot({
         name: `${variant}-hovered.png`,
       })
     })
 
-    test(`${variant} pressed`, async ({ page }) => {
-      await gotoWithArgs(page, { variant, pressed: true })
-      expect(await page.locator(buttonLocator).screenshot()).toMatchSnapshot({
-        name: `${variant}-pressed.png`,
-      })
-    })
-
-    test(`${variant} pressed hovered`, async ({ page }) => {
+    test(`${variant} focused`, async ({ page }) => {
       await gotoWithArgs(page, { variant })
-      await page.hover(buttonLocator)
-      expect(await page.locator(buttonLocator).screenshot()).toMatchSnapshot({
-        name: `${variant}-pressed-hovered.png`,
+      await page.focus(buttonLocator)
+      expect(await page.locator(wrapperLocator).screenshot()).toMatchSnapshot({
+        name: `${variant}-focused.png`,
       })
     })
-    if (variant.startsWith("action")) {
-      test(`${variant} disabled`, async ({ page }) => {
-        await gotoWithArgs(page, { variant, disabled: true })
-        expect(await page.locator(buttonLocator).screenshot()).toMatchSnapshot({
-          name: `${variant}-disabled.png`,
-        })
-      })
-    }
   }
 })

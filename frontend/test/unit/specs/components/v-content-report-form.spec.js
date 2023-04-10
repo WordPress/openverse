@@ -1,6 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/vue"
 import VueI18n from "vue-i18n"
 
+import ReportService from "~/data/report-service"
+
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
 
 const messages = require("~/locales/en.json")
@@ -43,11 +45,15 @@ const getDescriptionTextarea = () =>
     name: /other\.note/i,
   })
 
+const mockImplementation = () => Promise.resolve()
+const mock = jest.fn().mockImplementation(mockImplementation)
+jest.mock("~/data/report-service", () => ({
+  sendReport: () => mock,
+}))
+
 describe("VContentReportForm", () => {
   let props = null
   let options = {}
-
-  let reportServiceProp = { sendReport: () => Promise.resolve() }
 
   beforeEach(() => {
     props = {
@@ -59,7 +65,6 @@ describe("VContentReportForm", () => {
       },
       providerName: "Provider",
       closeFn: jest.fn(),
-      reportService: reportServiceProp,
     }
 
     options = {
@@ -88,7 +93,7 @@ describe("VContentReportForm", () => {
   })
 
   it("should render error message if report sending fails", async () => {
-    options.propsData.reportService = { sendReport: () => Promise.reject() }
+    ReportService.sendReport = () => Promise.reject()
 
     const { getByText } = render(VContentReportForm, options)
     await fireEvent.click(getMatureInput())
@@ -119,13 +124,13 @@ describe("VContentReportForm", () => {
   })
 
   it("should dispatch SEND_CONTENT_REPORT on next when mature is selected", async () => {
-    const serviceMock = { sendReport: jest.fn() }
-    options.propsData.reportService = serviceMock
+    ReportService.sendReport = jest.fn()
+
     render(VContentReportForm, options)
     await fireEvent.click(getMatureInput())
     await fireEvent.click(getReportButton())
 
-    expect(serviceMock.sendReport).toHaveBeenCalledWith({
+    expect(ReportService.sendReport).toHaveBeenCalledWith({
       identifier: props.media.id,
       reason: "mature",
       mediaType: props.media.frontendMediaType,
@@ -133,9 +138,8 @@ describe("VContentReportForm", () => {
     })
   })
 
-  it("should dispatch SEND_CONTENT_REPORT on other form submit", async () => {
-    const serviceMock = { sendReport: jest.fn() }
-    options.propsData.reportService = serviceMock
+  it("should send report on other form submit", async () => {
+    ReportService.sendReport = jest.fn()
 
     render(VContentReportForm, options)
     await fireEvent.click(getOtherInput())
@@ -144,7 +148,7 @@ describe("VContentReportForm", () => {
     await fireEvent.update(getDescriptionTextarea(), description)
 
     await fireEvent.click(getReportButton())
-    expect(serviceMock.sendReport).toHaveBeenCalledWith({
+    expect(ReportService.sendReport).toHaveBeenCalledWith({
       identifier: props.media.id,
       reason: "other",
       mediaType: "image",
@@ -153,7 +157,7 @@ describe("VContentReportForm", () => {
   })
 
   it("should not send other report if description is short", async () => {
-    options.propsData.reportService = { sendReport: jest.fn() }
+    ReportService.sendReport = jest.fn()
 
     render(VContentReportForm, options)
     await fireEvent.click(getOtherInput())

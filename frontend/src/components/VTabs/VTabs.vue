@@ -19,8 +19,6 @@ import { tabsContextKey } from "~/types/tabs"
 import type { TabsState, TabVariant } from "~/types/tabs"
 import { defineEvent } from "~/types/emits"
 
-import closeIcon from "~/assets/icons/close-small.svg"
-
 /**
  * VTabs is an accessible implementation of tabs component that displays one panel at a time.
  * @see { https://www.w3.org/TR/wai-aria-practices/#tabpanel }
@@ -129,7 +127,6 @@ export default defineComponent({
     return {
       accessibleLabel,
       selectedTabId: tabGroupContext.selectedId,
-      closeIcon,
       closeButtonRef,
     }
   },

@@ -5,4 +5,5 @@
 
 quickstart
 test
+analytics
 ```

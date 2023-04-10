@@ -2,7 +2,7 @@
   <VSearchBarButton
     id="content-settings-button"
     :icon-path="sourceIcon"
-    :aria-label="
+    :label="
       appliedFilterCount
         ? $tc('header.content-settings-button.with-count', appliedFilterCount)
         : $t('header.content-settings-button.simple')

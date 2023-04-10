@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test"
 
+import { t } from "~~/test/playwright/utils/navigation"
+
 test.describe.configure({ mode: "parallel" })
 
 test.describe("migration banner", () => {
@@ -54,7 +56,7 @@ test.describe("migration banner", () => {
     await expect(migrationNotice).toBeVisible({ timeout: 500 })
 
     await migrationNotice
-      .locator('[aria-label="Close"]:visible')
+      .locator(`[aria-label="${t("migration-notice.close")}"]:visible`)
       .click({ timeout: 500 })
     await expect(migrationNotice).not.toBeVisible({ timeout: 500 })
 

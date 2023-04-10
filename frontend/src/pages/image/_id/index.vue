@@ -32,7 +32,7 @@
         as="VLink"
         :href="image.foreign_landing_url"
         class="description-bold md:heading-6 mb-4 w-full flex-initial self-center md:mb-0 md:w-max"
-        size="large"
+        size="large-old"
       >
         {{ $t("image-details.weblink") }}
         <VIcon
