@@ -11,10 +11,10 @@
   "scripts": {
     "build": "just frontend/run build"
   },
-  "packageManager": "pnpm@7.17.1",
+  "packageManager": "pnpm@8.2.0",
   "engines": {
     "node": ">= 16.0.0 <17",
-    "pnpm": ">= 7.17.1"
+    "pnpm": ">= 8.2.0"
   },
   "volta": {
     "node": "16.19.1"
