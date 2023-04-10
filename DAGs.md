@@ -39,7 +39,6 @@ The following are DAGs grouped by their primary tag:
 
 | DAG ID                                                                            | Schedule Interval |
 | --------------------------------------------------------------------------------- | ----------------- |
-| `image_expiration_workflow`                                                       | `None`            |
 | [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
 | [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation) | `None`            |
 | [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
