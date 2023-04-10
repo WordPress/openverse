@@ -96,7 +96,6 @@ class SlackMessage:
         unfurl_media: bool = True,
         http_conn_id: str = SLACK_NOTIFICATIONS_CONN_ID,
     ):
-
         self.http = HttpHook(method="POST", http_conn_id=http_conn_id)
         self.blocks = []
         self._context = {}

@@ -29,9 +29,9 @@ END
 function header() {
   size=${COLUMNS:-80}
   # Print centered text between two dividers of length $size
-  printf '#%.0s' $(seq 1 $size) && echo
+  printf '#%.0s' $(seq 1 "$size") && echo
   printf "%*s\n" $(( (${#1} + size) / 2)) "$1"
-  printf '#%.0s' $(seq 1 $size) && echo
+  printf '#%.0s' $(seq 1 "$size") && echo
 }
 
 if [ "$1" == help ] || [ "$1" == --help ]; then help_text && exit 0; fi

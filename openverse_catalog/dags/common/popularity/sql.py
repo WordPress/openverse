@@ -73,7 +73,6 @@ def drop_media_popularity_relations(
     metrics=IMAGE_POPULARITY_METRICS_TABLE_NAME,
     pg_timeout: float = timedelta(minutes=10).total_seconds(),
 ):
-
     if media_type == AUDIO:
         db_view = AUDIO_VIEW_NAME
         constants = AUDIO_POPULARITY_CONSTANTS_VIEW

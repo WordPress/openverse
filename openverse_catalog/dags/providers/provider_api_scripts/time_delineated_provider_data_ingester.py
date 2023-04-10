@@ -159,7 +159,7 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
         # portions.
         hour_slices = self._get_timestamp_query_params_list(start_ts, end_ts, 24)
 
-        for (start_hour, end_hour) in hour_slices:
+        for start_hour, end_hour in hour_slices:
             # Get the number of records in this hour interval
             record_count = self._get_record_count(start_hour, end_hour, **kwargs)
             if record_count == 0:

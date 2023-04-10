@@ -96,7 +96,6 @@ def get_sample_id_list(sample_file, joined_on):
 
 
 if __name__ == "__main__":
-
     # PHOTOS
     photo_ids = [
         str(i)

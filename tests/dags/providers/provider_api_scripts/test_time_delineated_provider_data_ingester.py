@@ -237,7 +237,7 @@ def test_ingest_records_raises_error_if_the_total_count_has_been_exceeded():
         )
         # Assert that attempting to ingest records raises an exception when
         # `should_raise_error` is enabled
-        with (pytest.raises(Exception, match=expected_error_string)):
+        with pytest.raises(Exception, match=expected_error_string):
             ingester.ingest_records()
 
         # get_mock should have been called 4 times, twice for each batch (once in `get_batch`

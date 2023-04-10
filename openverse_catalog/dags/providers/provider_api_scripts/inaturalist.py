@@ -53,7 +53,6 @@ OUTPUT_DIR = Path(os.getenv("OUTPUT_DIR", "/tmp/"))
 
 
 class INaturalistDataIngester(ProviderDataIngester):
-
     providers = {"image": provider_details.INATURALIST_DEFAULT_PROVIDER}
 
     def get_next_query_params(self, prev_query_params=None, **kwargs):
@@ -293,9 +292,7 @@ class INaturalistDataIngester(ProviderDataIngester):
 
     @staticmethod
     def create_preingestion_tasks():
-
         with TaskGroup(group_id="preingestion_tasks") as preingestion_tasks:
-
             check_for_file_updates = PythonOperator(
                 task_id="check_for_file_updates",
                 python_callable=INaturalistDataIngester.compare_update_dates,
@@ -365,9 +362,7 @@ class INaturalistDataIngester(ProviderDataIngester):
 
     @staticmethod
     def create_ingestion_workflow():
-
         with TaskGroup(group_id="ingest_data") as ingest_data:
-
             preingestion_tasks = INaturalistDataIngester.create_preingestion_tasks()
 
             with TaskGroup(group_id="pull_image_data") as pull_data:
@@ -380,7 +375,6 @@ class INaturalistDataIngester(ProviderDataIngester):
                     ),
 
             with TaskGroup(group_id="load_image_data") as loader_tasks:
-
                 # Using the existing set up, but the indexes on the temporary table
                 # probably slows down the load a bit.
                 create_loading_table = PythonOperator(

@@ -564,7 +564,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
             "map_datum": "GPSMapDatum",
         }
         geo_data = {}
-        for (key, value) in geo_properties.items():
+        for key, value in geo_properties.items():
             key_value = media_data.get(value, {}).get("value")
             if key_value:
                 geo_data[key] = key_value

@@ -96,7 +96,7 @@ def check_configuration(github_pat: str, airflow_variable: str):
         " a new issue."
     )
 
-    for (dag, issue, predicate, task_id_pattern) in dags_to_reenable:
+    for dag, issue, predicate, task_id_pattern in dags_to_reenable:
         dag_name = f"{dag} ({task_id_pattern})" if task_id_pattern else dag
         message += f"\n  - <{issue}|{dag_name}: '{predicate}'>"
 

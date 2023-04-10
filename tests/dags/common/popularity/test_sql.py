@@ -345,7 +345,7 @@ def test_constants_view_adds_values_and_constants(
         ("my_provider", "views", 0.5, 50.0, 50.0, 50.0),
     ]
     sorted_rows = sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
-    for (expect_row, sorted_row) in zip(expect_rows, sorted_rows):
+    for expect_row, sorted_row in zip(expect_rows, sorted_rows):
         assert expect_row == pytest.approx(sorted_row)
 
 
@@ -401,7 +401,7 @@ def test_constants_view_handles_zeros_and_missing(
         ("my_provider", "views", 0.8, 0.0, 1.0, 0.25),
     ]
     sorted_rows = sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
-    for (expect_row, sorted_row) in zip(expect_rows, sorted_rows):
+    for expect_row, sorted_row in zip(expect_rows, sorted_rows):
         assert expect_row == pytest.approx(sorted_row)
 
 

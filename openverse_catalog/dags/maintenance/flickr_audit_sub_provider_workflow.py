@@ -43,7 +43,6 @@ class SuggestedSubProvider(NamedTuple):
 
 
 class FlickrSubProviderAuditor:
-
     endpoint = "https://www.flickr.com/services/rest"
     retries = 2
 
@@ -162,7 +161,7 @@ def audit_flickr_sub_providers():
         raise AirflowSkipException("No new potential sub-providers were identified.")
 
     message = "Consider adding the following sub-providers for Flickr:"
-    for (name, nsid, cc_count) in potential_sub_providers:
+    for name, nsid, cc_count in potential_sub_providers:
         message += "\n"
         message += f"{name}: {nsid} _({cc_count} cc-licensed images)_"
 

@@ -150,7 +150,6 @@ class SmithsonianDataIngester(ProviderDataIngester):
         # Parse out the necessary info from the record data into a dictionary.
         images = []
         if image_list := self._get_image_list(data):
-
             if (foreign_landing_url := self._get_foreign_landing_url(data)) is None:
                 return None
 
