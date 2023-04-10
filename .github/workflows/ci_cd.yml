@@ -563,7 +563,7 @@ jobs:
 
           It looks like some of the Playwright tests failed. You can download the trace output and image diffs for the failed tests under the "Artifacts" section in the above page.
 
-          You can read the [docs on how to use this artifact](https://github.com/${{ github.repository }}/blob/main/frontend/test/playwright/README.md#debugging).
+          You can read the [docs on how to use this artifact](https://docs.openverse.org/guides/frontend/playwright_tests.html#debugging).
           $EOF
           HEREDOC
           )
