@@ -23,7 +23,7 @@ function main() {
   )
 
   const eventsType = sourceFile.statements.find(
-    (s) => s.name.escapedText === "Events"
+    (s) => s.name?.escapedText === "Events"
   )
   const eventNames = eventsType.type.members.map((m) => m.name.escapedText)
 
