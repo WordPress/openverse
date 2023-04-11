@@ -161,6 +161,10 @@ init:
 down *flags:
     just dc down {{ flags }}
 
+# List all running services and their URLs and ports
+@ps:
+    python3 utilities/ps.py
+
 # Recreate all volumes and containers from scratch
 recreate:
     just down -v
