@@ -8,18 +8,18 @@
       class="!absolute end-0 top-0"
       @close="$emit('close')"
     />
-    <p class="caption-regular mb-5 px-4 text-start">
+    <p class="caption-regular mb-4 px-4 text-start">
       {{ $t("external-sources.caption", { openverse: "Openverse" }) }}
     </p>
     <VButton
       v-for="source in externalSources"
       :key="source.name"
       as="VLink"
-      variant="transparent-gray"
-      size="medium"
-      class="caption-bold my-[1px] w-full justify-between last:mb-0"
+      variant="plain"
+      size="disabled"
+      class="caption-bold w-full justify-between px-4 py-3 text-dark-charcoal hover:bg-dark-charcoal-10"
       show-external-icon
-      has-icon-end
+      :external-icon-size="4"
       :href="source.url"
       @mousedown="handleClick(source.name, source.url)"
     >
