@@ -58,7 +58,7 @@
         has-icon-end
         show-external-icon
         :external-icon-size="6"
-        class="description-bold order-1 ms-auto lg:order-2"
+        class="description-bold order-1 my-1 flex-shrink-0 ms-auto lg:order-2"
       >
         {{ $t("audio-details.weblink") }}
       </VButton>
