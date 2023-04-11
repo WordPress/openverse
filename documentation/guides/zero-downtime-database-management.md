@@ -91,12 +91,14 @@ Other causes are variations on this same pattern: a shared dependency is neither
 forward nor backwards compatible between two subsequent versions of the
 application.
 
-> **Note**: This issue of incompatibility only applies to _subsequent_ versions
-> of an application because only subsequent versions are ever deployed
-> simultaneously with the same underlying support infrastructure. So long as
-> there is at least one version between them, application versions may and
-> indeed sometimes do have fundamental incompatibilities with each other and
-> could not be simultaneously deployed.
+```{note}
+This issue of incompatibility only applies to _subsequent_ versions
+of an application because only subsequent versions are ever deployed
+simultaneously with the same underlying support infrastructure. So long as
+there is at least one version between them, application versions may and
+indeed sometimes do have fundamental incompatibilities with each other and
+could not be simultaneously deployed.
+```
 
 ## How to achieve zero-downtime deployments
 
@@ -396,14 +398,14 @@ forgot to do it beforehand or for any other reason), then the application will
 need to be redeployed so that a new task definition is created using the latest
 template revision with the updated variables.
 
-> **Note**
->
-> _Any_ redeployment after the template is updated will receive the updated
-> variables. That means that, for example, if staging is automatically deployed
-> due to a push to `main` after updating the template, it is not necessary to
-> further redeploy staging for the application to get the updated variables. If
-> the timing of each is within seconds, however, it's best not to risk it and
-> just redeploy staging if you have any doubts.
+```{warning}
+_Any_ redeployment after the template is updated will receive the updated
+variables. That means that, for example, if staging is automatically deployed
+due to a push to `main` after updating the template, it is not necessary to
+further redeploy staging for the application to get the updated variables. If
+the timing of each is within seconds, however, it's best not to risk it and
+just redeploy staging if you have any doubts.
+```
 
 ### Manual rollbacks after removing an environment variable or updating its format
 
@@ -422,7 +424,7 @@ add back the environment variable. If we didn't then the manual rollback would
 use the same template as the original deployment that didn't include the
 environment variable.
 
-The best way to avoid this complication is to **leave unneeded environment
+**The best way to avoid this complication is to leave unneeded environment
 variables in the template until after the application version that does not need
 them is confirmed to work as expected**. After that, the template may be safely
 updated to remove the environment variable and any subsequent deployments will

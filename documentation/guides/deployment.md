@@ -33,14 +33,14 @@ new one. The same process is followed when there are multiple tasks and each
 task is drained one at a time following our
 [zero-downtime approach to deployments](https://docs.openverse.org/guides/zero-downtime-database-management.html).
 
-> **Note**
->
-> The number of running tasks per active task definition may vary per
-> environment but has no bearings on the deployment process. The size of the
-> service is handled entirely on the infrastructure side. The process above is
-> completely automated and contributors generally do not need to be acutely
-> aware of the "behind the scenes" stuff going on, but it can be helpful for
-> understanding what is happening during a deployment.
+```{note}
+The number of running tasks per active task definition may vary per
+environment but has no bearings on the deployment process. The size of the
+service is handled entirely on the infrastructure side. The process above is
+completely automated and contributors generally do not need to be acutely
+aware of the "behind the scenes" stuff going on, but it can be helpful for
+understanding what is happening during a deployment.
+```
 
 ## Deployment Workflow
 
