@@ -14,6 +14,9 @@ outputs:
   frontend:
     description: "'true' if frontend changes are present"
     value: ${{ steps.paths-filter.outputs.frontend }}
+  documentation:
+    description: "'true' if documentation changes are present"
+    value: ${{ steps.paths-filter.outputs.documentation }}
   lint:
     description: "'true' if linting setup changes are present"
     value: ${{ steps.paths-filter.outputs.frontend }}

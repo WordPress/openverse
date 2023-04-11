@@ -117,7 +117,6 @@ jobs:
       - name: Setup CI env
         uses: ./.github/actions/setup-env
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           # Python is not needed to run pre-commit.
           setup_python: false
           # Node.js is needed by lint actions.
@@ -154,8 +153,20 @@ jobs:
 
       - name: Deploy production api
         if: inputs.app == 'api'
-        run: "gh workflow run 'Deployment: production-api' -f tag=${{ steps.tag.outputs.image-tag }}"
+        run: |
+          gh workflow run \
+            -f tag=${{ steps.tag.outputs.image-tag }} \
+            -f actor=${{ github.actor }} \
+            "Deployment: production-api"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Deploy production frontend
         if: inputs.app == 'frontend'
-        run: "gh workflow run 'Deployment: production-nuxt' -f tag=${{ steps.tag.outputs.image-tag }}"
+        run: |
+          gh workflow run \
+            -f tag=${{ steps.tag.outputs.image-tag }} \
+            -f actor=${{ github.actor }} \
+            "Deployment: production-nuxt"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

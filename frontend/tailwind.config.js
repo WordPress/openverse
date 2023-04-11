@@ -174,15 +174,6 @@ module.exports = {
         "1.2", // 120%
       ],
     },
-    // FIXME: This should be `lineHeight` but fixing it will break VRT
-    lineHeights: {
-      larger: "1.9",
-      large: "1.7",
-      normal: "1.5",
-      snug: "1.3",
-      tight: "1.2",
-      none: "1.0",
-    },
     flexGrow: {
       0: 0,
       DEFAULT: 1,
@@ -195,7 +186,14 @@ module.exports = {
     },
     extend: {
       lineHeight: {
+        loose: "2.0",
+        larger: "1.9",
         relaxed: "1.8",
+        large: "1.7",
+        normal: "1.5",
+        snug: "1.3",
+        tight: "1.2",
+        none: "1.0",
       },
       scale: {
         "-100": "-1",

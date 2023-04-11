@@ -19,13 +19,16 @@ docker-compose exec -T "$PLAUSIBLE_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy
   ON CONFLICT (id) DO NOTHING
 	EOF"
 
+authorization_header="Authorization: Bearer aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+local_plausible="http://localhost:50288"
+
 # Create site using API key
 RES=$(curl \
   -X POST \
-  -H "Authorization: Bearer aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+  -H "$authorization_header" \
   -F 'domain="localhost"' \
   -F 'timezone="UTC"' \
-  http://localhost:50288/api/v1/sites)
+  "$local_plausible/api/v1/sites")
 
 if [[ "$RES" == *"\"error\":\"domain This domain has already been taken"* ]]; then
   echo "Domain already exists."
@@ -35,3 +38,21 @@ else
   echo "Error: $RES"
   exit 1
 fi
+
+# Setup custom events
+custom_events=$(node ./frontend/bin/get-custom-event-names.js)
+
+echo "Verifying custom events:"
+
+for eventName in $custom_events;
+do
+  echo "$eventName"
+  curl \
+    -X PUT \
+    -s --output /dev/null \
+    -H "$authorization_header" \
+    -F 'site_id=localhost' \
+    -F 'goal_type=event' \
+    -F "event_name=$eventName" \
+    "$local_plausible/api/v1/sites/goals"
+done

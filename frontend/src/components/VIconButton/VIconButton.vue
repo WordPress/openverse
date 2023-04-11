@@ -1,9 +1,10 @@
 <template>
   <VButton
     v-bind="buttonProps"
+    :aria-label="label"
     size="disabled"
-    class="icon-button flex flex-shrink-0 items-center justify-center border-1.5"
-    :class="buttonSizeClasses"
+    class="icon-button flex flex-shrink-0 items-center justify-center"
+    :class="[buttonSizeClasses, { 'border-1.5': !borderless }]"
     :type="type"
     v-on="$listeners"
   >
@@ -24,6 +25,8 @@ import type { ButtonType } from "~/types/button"
 
 import VIcon, { type IconProps } from "~/components/VIcon/VIcon.vue"
 import VButton, { type ButtonProps } from "~/components/VButton.vue"
+
+import type { TranslateResult } from "vue-i18n"
 
 const SIZE_MAP = Object.freeze({
   tiny: { icon: 6, button: "w-6 h-6" },
@@ -62,6 +65,21 @@ export default defineComponent({
     buttonProps: {
       type: Object as PropType<ButtonProps>,
       default: () => ({ variant: "plain" }),
+    },
+    /**
+     * the label for the button; This is used for accessibility purposes.
+     */
+    label: {
+      type: [String, Object] as PropType<string | TranslateResult>,
+      required: true,
+    },
+    /**
+     * whether the button should have a border or not.
+     * The `focus-` custom TW classes don't always work well with border.
+     */
+    borderless: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props, { attrs }) {

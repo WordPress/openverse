@@ -72,7 +72,7 @@ services:
   cache:
     profiles:
       - api
-    image: redis:4.0.10
+    image: redis:4.0.14
     ports:
       - "50263:6379"
 
@@ -150,6 +150,7 @@ services:
       - ./ingestion_server:/ingestion_server
     env_file:
       - ingestion_server/env.docker
+      - ingestion_server/.env
     stdin_open: true
     tty: true
 

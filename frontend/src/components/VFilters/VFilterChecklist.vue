@@ -15,13 +15,13 @@
         :disabled="isDisabled(item)"
         @change="onValueChange"
       >
-        <VLicense v-if="filterType === 'licenses'" :license="item.code" />
+        <VLicense v-if="isLicense(item.code)" :license="item.code" />
         <template v-else>{{ itemLabel(item) }}</template>
       </VCheckbox>
 
       <!-- License explanation -->
       <VPopover
-        v-if="filterType === 'licenses'"
+        v-if="isLicense(item.code)"
         strategy="fixed"
         :label="$t('browse-page.aria.license-explanation').toString()"
       >
@@ -39,11 +39,9 @@
         </template>
         <template #default="{ close }">
           <div class="relative">
-            <VIconButton
-              :aria-label="getLicenseExplanationCloseAria(item.code)"
-              class="absolute top-0 border-none text-dark-charcoal-70 end-0"
-              size="small"
-              :icon-props="{ iconPath: icons.closeSmall }"
+            <VCloseButton
+              :label="getLicenseExplanationCloseAria(item.code)"
+              class="!absolute top-0 end-0"
               @click="close"
             />
             <VLicenseExplanation :license="item.code" />
@@ -59,20 +57,23 @@ import { defineComponent, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"
+
 import type { NonMatureFilterCategory, FilterItem } from "~/constants/filters"
+
+import type { License } from "~/constants/license"
+
 import { defineEvent } from "~/types/emits"
 import { getElements } from "~/utils/license"
 
-import VLicenseExplanation from "~/components/VFilters/VLicenseExplanation.vue"
-import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
-import VLicense from "~/components/VLicense/VLicense.vue"
 import VButton from "~/components/VButton.vue"
+import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
+import VCloseButton from "~/components/VCloseButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VLicense from "~/components/VLicense/VLicense.vue"
+import VLicenseExplanation from "~/components/VFilters/VLicenseExplanation.vue"
 import VPopover from "~/components/VPopover/VPopover.vue"
 
 import helpIcon from "~/assets/icons/help.svg"
-import closeSmallIcon from "~/assets/icons/close-small.svg"
 
 type toggleFilterPayload = {
   filterType: NonMatureFilterCategory
@@ -82,10 +83,10 @@ type toggleFilterPayload = {
 export default defineComponent({
   name: "FilterCheckList",
   components: {
+    VCloseButton,
     VCheckbox,
     VButton,
     VIcon,
-    VIconButton,
     VLicense,
     VLicenseExplanation,
     VPopover,
@@ -124,7 +125,7 @@ export default defineComponent({
         filterType: props.filterType,
       })
     }
-    const getLicenseExplanationCloseAria = (license) => {
+    const getLicenseExplanationCloseAria = (license: License) => {
       const elements = getElements(license).filter((icon) => icon !== "cc")
       const descriptions = elements
         .map((element) => i18n.t(`browse-page.license-description.${element}`))
@@ -138,7 +139,12 @@ export default defineComponent({
     const isDisabled = (item: FilterItem) =>
       useSearchStore().isFilterDisabled(item, props.filterType) ??
       props.disabled
-    const icons = { help: helpIcon, closeSmall: closeSmallIcon }
+    const icons = { help: helpIcon }
+
+    const isLicense = (code: string): code is License => {
+      // Quick check that also prevents "`code` is declared but its value is never read" warning.
+      return !!code && props.filterType === "licenses"
+    }
 
     return {
       icons,
@@ -146,6 +152,7 @@ export default defineComponent({
       itemLabel,
       onValueChange,
       getLicenseExplanationCloseAria,
+      isLicense,
     }
   },
 })

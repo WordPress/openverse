@@ -18,7 +18,7 @@ repos:
         pass_filenames: false
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.4.0
     hooks:
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
@@ -52,26 +52,26 @@ repos:
           - --lines-after-imports=2
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.2.2
+    rev: v3.3.1
     hooks:
       - id: pyupgrade
         args:
           - --py310-plus
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.257"
+    rev: "v0.0.261"
     hooks:
       - id: ruff
 
   - repo: https://github.com/ambv/black
-    rev: 22.3.0
+    rev: 23.3.0
     hooks:
       - id: black
         args:
           - --safe
 
   - repo: https://github.com/pycqa/pydocstyle
-    rev: 6.2.2 # 6.2.3 is slightly broken
+    rev: 6.3.0
     hooks:
       - id: pydocstyle
         args:
@@ -87,7 +87,7 @@ repos:
           - --add-ignore=D1,D202,D205,D211,D400
 
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.15.0
+    rev: v8.37.0
     hooks:
       - id: eslint
         files: \.(js|ts|vue)$
@@ -125,9 +125,14 @@ repos:
           - typescript@4.9.3
 
   - repo: https://github.com/koalaman/shellcheck-precommit
-    rev: v0.8.0
+    rev: v0.9.0
     hooks:
       - id: shellcheck
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.6.24
+    hooks:
+      - id: actionlint-docker
 
   - repo: local # More local hooks are defined at the top.
     hooks:
