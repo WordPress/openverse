@@ -7,7 +7,7 @@
       {{ $t("no-results.alternatives") }}
     </h2>
 
-    <div class="mt-10 flex flex-col flex-wrap gap-2 md:flex-row">
+    <div class="mt-10 flex flex-col flex-wrap gap-4 md:flex-row">
       <VButton
         v-for="source in externalSources"
         :key="source.name"
@@ -16,6 +16,7 @@
         variant="secondary-bordered"
         class="label-bold justify-between text-dark-charcoal md:justify-start md:gap-x-2"
         show-external-icon
+        :external-icon-size="4"
         @mousedown="handleClick(source.name, source.url)"
       >
         {{ source.name }}
