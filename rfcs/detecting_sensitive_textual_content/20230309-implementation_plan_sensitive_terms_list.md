@@ -14,7 +14,7 @@
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
 - [x] @sarayourfriend
-- [ ] @dhruvkb
+- [x] @dhruvkb
 
 The Openverse project
 [Filter and blur sensitive results by term matching #377](https://github.com/orgs/WordPress/projects/70?query=is%3Aopen+sort%3Aupdated-desc&pane=issue&itemId=19530115)
