@@ -127,10 +127,12 @@ title of each project lifecycle section. You can find a
 
 When contributors have decided to work on a project, we immediately create a
 project thread to capture this intent. You can use
-["Project Thread" issue template](../../.github/ISSUE_TEMPLATE/project_thread.md)
+["Project Thread" issue template](https://github.com/WordPress/openverse/blob/main/.github/ISSUE_TEMPLATE/project_thread.md)
 to create a new project thread. At this point, it is okay if we don't have any
 of the metadata for the project. Please just fill in as many of the fields in
-the [template](../../.github/ISSUE_TEMPLATE/project_thread.md) as you can.
+the
+[template](https://github.com/WordPress/openverse/blob/main/.github/ISSUE_TEMPLATE/project_thread.md)
+as you can.
 
 The post should include a small description explaining the goal and outcomes of
 the project. For example:
@@ -158,7 +160,7 @@ section of this document.
 
 ### Kickoff (`status: In Kickoff`)
 
-> **Note**
+- [Kickoff/Project Proposal template](./templates/project-proposal.md)
 
 In the kickoff stage, a **project proposal** is written and shared with the team
 by the project lead. The primary goals of this document are that of discovery;
@@ -213,7 +215,7 @@ convey the value of the work?
 #### Formatting and process for Project Proposals
 
 The PR description should use the
-["Project Proposal" PR template.](../../.github/PULL_REQUEST_TEMPLATE/project_proposal.md)
+["Project Proposal" PR template.](https://github.com/WordPress/openverse/blob/main/.github/PULL_REQUEST_TEMPLATE/project_proposal.md)
 
 #### The review process
 
@@ -246,6 +248,8 @@ to connect with any external collaborators and share the project details with
 them.
 
 ### Implementation Plans (`status: In RFC`)
+
+- [Implementation Plan Template](./templates/implementation-plan)
 
 Implementation plans are the next type of RFC created for a project. The main
 goal of an implementation plan is to produce a discrete and ordered list of
