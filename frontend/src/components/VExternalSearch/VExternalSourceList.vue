@@ -8,7 +8,7 @@
       class="!absolute end-0 top-0"
       @close="$emit('close')"
     />
-    <p class="caption-regular mb-4 px-4 text-start">
+    <p class="caption-regular mb-5 px-4 text-start">
       {{ $t("external-sources.caption", { openverse: "Openverse" }) }}
     </p>
     <VButton
@@ -38,7 +38,6 @@ import type { MediaType } from "~/constants/media"
 
 import VButton from "~/components/VButton.vue"
 import VCloseButton from "~/components/VCloseButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
 
 /**
  * This component renders a list of pre-populated links to additional sources
