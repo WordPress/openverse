@@ -205,7 +205,7 @@ The initial set of terms, created by combining two lists:
   - Contains more racist terms than LDNOOBW
   - Is categorized, which we're not using yet but could in the future
 
-Generally, its beneficial to us that our list be as comprehensive as possible.
+Generally, it is beneficial to us that our list be as comprehensive as possible.
 This actually speeds up the time required to evaluate all works for sensitivity.
 It also makes sure we're correctly marking as many works as possible. An earlier
 version of this proposal only used the LDNOOBW list which was good, but limited
