@@ -1,5 +1,3 @@
-↖️ Table of Contents
-
 # Welcome
 
 Thank you for your interest in Openverse! We're so excited to bring new

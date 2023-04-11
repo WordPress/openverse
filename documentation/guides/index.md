@@ -9,11 +9,6 @@ Here you will find guides to get you started with Openverse development.
 
 general_setup
 quickstart
-# run
-# test
-# https
-# publish
-# deploy
 logging
 zero-downtime-database-management
 ```

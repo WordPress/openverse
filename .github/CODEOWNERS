@@ -22,10 +22,8 @@ prettier.config.js  @WordPress/openverse-frontend
 automations/                @WordPress/openverse-maintainers
 brand/                      @WordPress/openverse-maintainers
 dead_links/                 @WordPress/openverse-maintainers
-docs/                       @WordPress/openverse-maintainers
 documentation/              @WordPress/openverse-maintainers
 readme_assets/              @WordPress/openverse-maintainers
-rfcs/                       @WordPress/openverse-maintainers
 templates/                  @WordPress/openverse-maintainers
 .gitattributes              @WordPress/openverse-maintainers
 .gitignore                  @WordPress/openverse-maintainers

@@ -9,6 +9,7 @@ sphinxcontrib-mermaid = "*"
 [dev-packages]
 sphinx = "*"
 sphinx-autobuild = "*"
+sphinx-copybutton = "*"
 furo = "*"
 myst-parser = "*"
 sphinxcontrib-mermaid = "*"
