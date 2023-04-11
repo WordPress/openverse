@@ -126,6 +126,7 @@ dmypy.json
 
 # Editors and IDE's
 .vscode/
+.history/
 .idea/
 *.sublime-workspace
 
