@@ -71,8 +71,12 @@ def parse_ps() -> List[Service]:
 def print_ps():
     """Print the formatted output for each service."""
 
+    print("=" * 80)
+    print(f"{'Services':^80}")
+    print("=" * 80)
     for service in parse_ps():
         service.print()
+    print("=" * 80)
 
 
 if __name__ == "__main__":

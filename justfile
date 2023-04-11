@@ -130,6 +130,16 @@ dc *args:
 build *args:
     just dc build {{ args }}
 
+# List all services and their URLs and ports
+ps:
+    #!/usr/bin/env bash
+    python3 -c "import yaml" &> /dev/null
+    if [ $? -ne 0 ]; then
+      echo "Port configuration for the services can be displayed by installing the Python package 'pyyaml'."
+      exit 0
+    fi
+    python3 utilities/ps.py
+
 # Also see `up` recipe in sub-justfiles
 # Bring all Docker services up, in all profiles
 up *flags:
@@ -142,6 +152,7 @@ up *flags:
       ((c++)) && ((c==3)) && break
       sleep 5
     done
+    echo && just ps
 
 # Also see `wait-up` recipe in sub-justfiles
 # Wait for all services to be up
@@ -160,10 +171,6 @@ init:
 # Take all Docker services down, in all profiles
 down *flags:
     just dc down {{ flags }}
-
-# List all running services and their URLs and ports
-@ps:
-    python3 utilities/ps.py
 
 # Recreate all volumes and containers from scratch
 recreate:
