@@ -2,15 +2,15 @@
 from __future__ import annotations
 
 import subprocess
-import yaml
 from dataclasses import dataclass
-from typing import List, Tuple
+
+import yaml
 
 
 @dataclass
 class Service:
     name: str
-    bindings: List[Tuple[int, int]]
+    bindings: list[tuple[int, int]]
 
     def print(self):
         """
@@ -45,14 +45,14 @@ def get_ps() -> str:
     return proc.stdout
 
 
-def parse_ps() -> List[Service]:
+def parse_ps() -> list[Service]:
     """
     Convert the yaml output given by Docker Compose config into a list of services and
     their port mappings.
     :return: a list of running services with their port
     """
 
-    services: List[Service] = []
+    services: list[Service] = []
 
     data = yaml.safe_load(get_ps())
     for name, service in data["services"].items():
