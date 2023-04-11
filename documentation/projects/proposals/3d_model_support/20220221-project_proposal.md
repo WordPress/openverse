@@ -58,7 +58,7 @@ We may be able to use previous work regarding the addition of audio to the
 catalog/API as a guide. These updates required a fair amount of generalization,
 which we may not need to do a second time around.
 
-WordPress/openverse#19
+https://github.com/wordpress/openverse/issues/19
 
 ### Design requirements
 
@@ -98,7 +98,7 @@ WordPress/openverse#19
 
 #### 2. Add 3D models to the API
 
-_Note: Borrowed heavily from WordPress/openverse#19_
+_Note: Borrowed heavily from https://github.com/wordpress/openverse/issues/19_
 
 - [ ] Django models for `model_3d`
 - [ ] Add DRF serializers for `model_3d`

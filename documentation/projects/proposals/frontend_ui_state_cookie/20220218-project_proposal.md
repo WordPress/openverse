@@ -3,7 +3,7 @@
 - [x] @obulat
 - [x] @zackkrida
 
-**Milestone:** https://github.com/WordPress/openverse-frontend/milestone/11
+**[Milestone](https://github.com/WordPress/openverse-frontend/milestone/11)**
 
 ## Rationale
 
@@ -11,9 +11,8 @@ We removed all the cookies from the application. That's a good thing generally.
 But we _can_ use cookies without a banner and still be GDPR compliant as long as
 the cookies are necessary for providing a smoother user experience.
 
-Doing this would fix problems like the UI pop in/out in this video:
-
-https://user-images.githubusercontent.com/24264157/154730060-dd602b4c-52cf-441b-b0f6-b2d7206244d9.mp4
+Doing this would fix problems like the UI pop in/out in this
+[video](https://user-images.githubusercontent.com/24264157/154730060-dd602b4c-52cf-441b-b0f6-b2d7206244d9.mp4).
 
 ## GDPR rules
 
