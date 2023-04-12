@@ -13,8 +13,8 @@ import type { MediaType } from "~/constants/media"
  */
 export type Events = {
   /**
-   * Click on one of the images in the gallery on the homepage.
-   *
+   * Description: The user clicks on one of the images in the gallery on the homepage.
+   * Questions:
    * - Do users know homepage images are links?
    * - Do users find these images interesting?
    * - Which set is most interesting for the users?
