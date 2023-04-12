@@ -9,13 +9,18 @@ from maintenance.rotate_db_snapshots import delete_previous_snapshots
 
 
 @pytest.fixture
-def rds_client(monkeypatch):
-    rds = mock.MagicMock()
-
-    def get_client(*args, **kwargs):
-        return rds
+def boto_client(monkeypatch):
+    get_client = mock.MagicMock()
 
     monkeypatch.setattr(boto3, "client", get_client)
+    return get_client
+
+
+@pytest.fixture
+def rds_client(boto_client):
+    rds = mock.MagicMock()
+
+    boto_client.return_value = rds
     return rds
 
 
@@ -48,7 +53,7 @@ def test_delete_previous_snapshots_no_snapshots_to_delete(
     snapshots, snapshots_to_retain, rds_client
 ):
     rds_client.describe_db_snapshots.return_value = snapshots
-    delete_previous_snapshots.function("fake_arn", snapshots_to_retain)
+    delete_previous_snapshots.function("fake_arn", snapshots_to_retain, "fake_region")
     rds_client.delete_db_snapshot.assert_not_called()
 
 
@@ -57,7 +62,8 @@ def test_delete_previous_snapshots(rds_client):
     snapshots = _make_snapshots(10)
     snapshots_to_delete = snapshots["DBSnapshots"][snapshots_to_retain:]
     rds_client.describe_db_snapshots.return_value = snapshots
-    delete_previous_snapshots.function("fake_arn", snapshots_to_retain)
+
+    delete_previous_snapshots.function("fake_arn", snapshots_to_retain, "fake_region")
     rds_client.delete_db_snapshot.assert_has_calls(
         [
             mock.call(DBSnapshotIdentifier=snapshot["DBSnapshotIdentifier"])
@@ -79,10 +85,18 @@ def test_sorts_snapshots(rds_client):
     random.shuffle(snapshots["DBSnapshots"])
 
     rds_client.describe_db_snapshots.return_value = snapshots
-    delete_previous_snapshots.function("fake_arn", snapshots_to_retain)
+    delete_previous_snapshots.function("fake_arn", snapshots_to_retain, "fake_region")
     rds_client.delete_db_snapshot.assert_has_calls(
         [
             mock.call(DBSnapshotIdentifier=snapshot["DBSnapshotIdentifier"])
             for snapshot in snapshots_to_delete
         ]
     )
+
+
+def test_instantiates_rds_client_with_region(boto_client, rds_client):
+    rds_client.describe_db_snapshots.return_value = _make_snapshots(0)
+
+    region = "fake_region"
+    delete_previous_snapshots.function("fake_arn", 0, region)
+    boto_client.assert_called_once_with("rds", region_name=region)
