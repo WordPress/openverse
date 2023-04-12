@@ -1,4 +1,4 @@
-# 2023-03-09 Implementation Plan: Managing A Sensitive Terms List
+# Implementation Plan: Sensitive Terms List - 2023-03-09
 
 > **Content Warning**
 >

@@ -1,4 +1,4 @@
-# 2022-02-21 Project Proposal: 3D Model Support
+# Project Proposal - 2022-02-21
 
 - [x] @sarayourfriend
 - [x] @panchovm

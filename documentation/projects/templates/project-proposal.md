@@ -1,7 +1,7 @@
 # Project Proposal Template
 
 ```md
-# {YYYY-MM-DD} Project Proposal: {Project Name}
+# {YYYY-MM-DD} Project Proposal
 
 ## Reviewers
 

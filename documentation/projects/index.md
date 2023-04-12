@@ -26,5 +26,5 @@ templates/*
 :glob:
 :maxdepth: 1
 
-proposals/**/*
+proposals/**/index
 ```

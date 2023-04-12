@@ -1,4 +1,4 @@
-# 2022-02-17 Implementation Plan: Visual regression testing
+# Implementation Plan - 2022-02-17
 
 A proposal to integrate visual regression testing into the Openverse frontend's
 automated testing suite.

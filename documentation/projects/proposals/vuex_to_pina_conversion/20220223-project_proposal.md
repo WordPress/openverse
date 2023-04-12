@@ -1,4 +1,4 @@
-# 2022-02-23 Project Proposal: Pinia Migration
+# Project Proposal - 2022-02-23
 
 - [x] @dhruvkb
 

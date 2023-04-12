@@ -1,4 +1,4 @@
-# 2023-03-09 Project Proposal: Detecting sensitive textual content
+# Project Proposal - 2023-03-09
 
 ## Reviewers
 

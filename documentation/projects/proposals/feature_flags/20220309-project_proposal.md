@@ -1,4 +1,4 @@
-# 2022-03-09 Project Proposal: Feature flags
+# Project Proposal - 2022-03-09
 
 ## Reviewers
 

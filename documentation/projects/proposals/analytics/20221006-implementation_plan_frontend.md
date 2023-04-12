@@ -1,4 +1,4 @@
-# 2022-10-06 Implentation Plan: Frontend event tracking
+# Implentation Plan: Frontend event tracking - 2022-10-06
 
 A proposal to emit frontend events based on user interactions and page visits.
 

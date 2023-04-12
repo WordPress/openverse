@@ -1,4 +1,4 @@
-# 2022-11-24 Project Proposal: Monorepo
+# Project Proposal - 2022-11-24
 
 ## Reviewers
 

@@ -1,4 +1,4 @@
-# 2023-03-14 Project Proposal: Core User Interface Improvements
+# Project Proposal - 2023-03-14
 
 ## Reviewers
 
