@@ -2,7 +2,12 @@
   <div>
     <div
       v-if="!noResults"
-      class="results-grid mb-4 grid grid-cols-2 gap-4 lg:grid-cols-5 2xl:grid-cols-6"
+      class="results-grid mb-4 grid gap-4"
+      :class="
+        isSidebarVisible
+          ? 'grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4'
+          : 'grid-cols-2 lg:grid-cols-5 2xl:grid-cols-6'
+      "
     >
       <VContentLink
         v-for="[mediaType, count] in resultCounts"
@@ -26,7 +31,12 @@
     />
     <div
       v-else
-      class="results-grid grid grid-cols-2 gap-4 lg:grid-cols-5 2xl:grid-cols-6"
+      class="results-grid grid gap-4"
+      :class="
+        isSidebarVisible
+          ? 'grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4'
+          : 'grid-cols-2 lg:grid-cols-5 2xl:grid-cols-6'
+      "
     >
       <div v-for="item in allMedia" :key="item.id">
         <VImageCell
@@ -119,6 +129,8 @@ export default defineComponent({
       uiStore.hideInstructionsSnackbar()
     }
 
+    const isSidebarVisible = computed(() => uiStore.isFilterVisible)
+
     return {
       searchTerm,
       isError,
@@ -130,6 +142,8 @@ export default defineComponent({
       noResults,
 
       contentLinkPath,
+
+      isSidebarVisible,
 
       isSnackbarVisible,
       showSnackbar,
