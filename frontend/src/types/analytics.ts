@@ -1,4 +1,5 @@
 import type { MediaType } from "~/constants/media"
+import type { ReportReason } from "~/constants/content-report"
 
 /**
  * Compound type of all custom events sent from the site; Index with `EventName`
@@ -51,6 +52,27 @@ export type Events = {
     format: "plain" | "rich" | "html"
     /** The media type being searched */
     mediaType: MediaType
+  }
+  /**
+   * Description: The user reports a piece of media through our form
+   * Questions:
+   *   - How often do we get reports?
+   *   - Which types of reports are more common?
+   *   - Do we see an uptick in reports when a certain provider
+   *     is added/updated/refreshed?
+   * Note: Because the DMCA report is sent via a Google form, we send
+   * this event when the form is opened, and not when the report form
+   * is actually sent.
+   */
+  REPORT_MEDIA: {
+    /** the unique ID of the media */
+    id: string
+    /** the slug (not the prettified name) of the provider */
+    provider: string
+    /** the media type being searched */
+    mediaType: MediaType
+    /** the reason for the report */
+    reason: ReportReason
   }
 }
 
