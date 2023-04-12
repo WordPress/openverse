@@ -46,11 +46,16 @@ Many of these mechanisms will likely be built in Airflow.
 The proportional-by-provider index will be a subset of the production data,
 constructed so that the number of records by provider is roughly proportional to
 the percentages per provider that exist in production. This index will allow us
-to create tests down the line which might assess result relevancy in an
-automated way, i.e. based on how many results from a particular provider appear
-in results (see the
-[provider tally script](https://github.com/WordPress/openverse/pull/397) for
-examples of these results). This could be done by:
+to iterate rapidly on the following:
+
+- Changes affecting Elasticsearch index configuration (e.g. shard sizes,
+  slicing, etc.)
+- Changes to the ingestion server's configuration which require running a data
+  refresh end-to-end
+- Measuring index performance
+- Integration testing dead link & thumbnail checks across all providers
+
+This could be done by:
 
 1. Querying the `/stats` endpoint of the production API (e.g.
    https://api.openverse.engineering/v1/images/stats/).
@@ -132,7 +137,12 @@ In the order they should be completed:
      API database.
 2. Rapid iteration on ingestion server index configuration
    - This plan will describe how rapid iteration of Elasticsearch index
-     configurations can happen.
+     configurations can happen. This can be done via Airflow interacting
+     directly with Elasticsearch rather than having to process requests through
+     the ingestion server. Airflow would only need to be aware of the
+     [existing index settings](https://github.com/WordPress/openverse/blob/0a5f4ab2ce5d80a48bd1c57d2a2dbcca14fcbedc/ingestion_server/ingestion_server/es_mapping.py)
+     and how to augment/adjust them for the new index.
+     ([See this comment for further inspiration](https://github.com/WordPress/openverse/pull/1107#discussion_r1155399508))
    - It should be assessed as part of this implementation plan whether it would
      be easier to convert the ingestion server to ECS or provide a mechanism on
      the existing EC2 infrastructure to update the Elasticsearch index
