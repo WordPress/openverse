@@ -23,6 +23,8 @@ jobs:
     name: Release app
     runs-on: ubuntu-latest
     permissions:
+      # Needed to create the GitHub release on the repo
+      contents: write
       # Needed for pushing the new docker image tag
       packages: write
       # Needed to open the changelog PR
