@@ -7,7 +7,7 @@
 # a maintainer to generate the updated version.
 ### !!!
 
-name: "Deployment: production-nuxt"
+name: "Deployment - production-nuxt"
 
 on:
   workflow_dispatch:

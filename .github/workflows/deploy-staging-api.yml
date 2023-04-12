@@ -7,7 +7,7 @@
 # a maintainer to generate the updated version.
 ### !!!
 
-name: "Deployment: staging-api"
+name: "Deployment - staging-api"
 
 on:
   workflow_dispatch:
