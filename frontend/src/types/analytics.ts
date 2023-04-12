@@ -31,7 +31,7 @@ export type Events = {
    *   - How often do users go to the source after viewing a result?
    */
   GET_MEDIA: {
-    /** The unique ID of the media */
+    /** the unique ID of the media */
     id: string
     /** The slug (not the prettified name) of the provider */
     provider: string
