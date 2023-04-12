@@ -1,7 +1,7 @@
 import type { MediaType } from "~/constants/media"
 
 /**
- * compound type of all custom events sent from the site; Index with `EventName`
+ * Compound type of all custom events sent from the site; Index with `EventName`
  * to get the type of the payload for a specific event.
  *
  * Conventions:
