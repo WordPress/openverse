@@ -157,7 +157,7 @@ jobs:
           gh workflow run \
             -f tag=${{ steps.tag.outputs.image-tag }} \
             -f actor=${{ github.actor }} \
-            "Deployment: production-api"
+            "Deployment - production-api"
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
@@ -167,6 +167,6 @@ jobs:
           gh workflow run \
             -f tag=${{ steps.tag.outputs.image-tag }} \
             -f actor=${{ github.actor }} \
-            "Deployment: production-nuxt"
+            "Deployment - production-nuxt"
         env:
           GITHUB_TOKEN: ${{ github.token }}
