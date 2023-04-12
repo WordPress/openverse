@@ -1,8 +1,9 @@
-import { computed } from "vue"
+import { computed, onMounted } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
 
 import type { Events, EventName } from "~/types/analytics"
 import { useUiStore } from "~/stores/ui"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 /**
  * The `ctx` parameter must be supplied if using this composable outside the
@@ -11,6 +12,11 @@ import { useUiStore } from "~/stores/ui"
 export const useAnalytics = () => {
   const { $plausible, $ua, i18n } = useContext()
   const uiStore = useUiStore()
+  const featureFlagStore = useFeatureFlagStore()
+
+  onMounted(() => {
+    featureFlagStore.syncAnalyticsWithLocalStorage()
+  })
 
   /**
    * the Plausible props that work identically on the server-side and the

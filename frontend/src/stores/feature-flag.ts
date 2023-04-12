@@ -160,14 +160,18 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
       const flag = this.flags[name]
       if (getFlagStatus(flag) === SWITCHABLE) {
         flag.preferredState = targetState
-
-        // For Plausible to stop tracking `plausible_ignore` must be set.
-        // Ref: https://plausible.io/docs/excluding-localstorage
-        if (name === "analytics") {
-          const storage = useStorage<boolean | null>("plausible_ignore", null)
-          storage.value = targetState === ON ? null : true
-        }
+        if (name === "analytics") this.syncAnalyticsWithLocalStorage()
       } else warn(`Cannot set preferred state for non-switchable flag: ${name}`)
+    },
+    /**
+     * For Plausible to stop tracking `plausible_ignore` must be set in
+     * `localStorage`.
+     * @see {@link https://plausible.io/docs/excluding-localstorage}
+     */
+    syncAnalyticsWithLocalStorage() {
+      const storage = useStorage<boolean | null>("plausible_ignore", null)
+      storage.value =
+        getFeatureState(this.flags["analytics"]) === ON ? null : true
     },
   },
 })
