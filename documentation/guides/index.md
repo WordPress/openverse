@@ -13,7 +13,7 @@ quickstart
 # test
 # https
 # publish
-# deploy
+deployment
 logging
 zero-downtime-database-management
 ```
