@@ -25,8 +25,9 @@ In addition to the previous broad qualification, this project explicitly does no
 - Sensitive content disputes: allowing users to dispute if they disagree with
   moderation decisions, especially allowing creators to dispute their works
   marked as sensitive.
-- DMCA reports, though there will inevitably be some overlap with the tools
-  being created, especially for cache management.
+- A process for reviewing DMCA reports. There is significant overlap in the
+  changes to the reports queue, but this project will not address how to handle
+  these reports, only sensitive content ones.
 
 ## Goals
 
@@ -38,7 +39,9 @@ Content safety and moderation.
 
 <!-- Detailed descriptions of the features required for the project. Include user stories if you feel they'd be helpful, but focus on describing a specification for how the feature would work with an eye towards edge cases. -->
 
-Requirements are outlined here, with further details below.
+Requirements are outlined here, with further details below. Each of these
+roughly correspond to a single implementation plan. Requested plans are
+[covered in detail below](#required-implementation-plans).
 
 1. Language is updated to use "sensitive" or "sensitive content" rather than
    "mature" where possible.
@@ -56,7 +59,7 @@ Requirements are outlined here, with further details below.
 This project does not deal with addressing DMCA reports, though there will
 inevitably be some tooling overlap.
 
-### Rename update database schema to use new "sensitive" language (requirement 1)
+### Update copy to use the more general "sensitive" language (requirement 1)
 
 This will be done in code, Django admin copy, and frontend copy only. The
 related database tables and columns for existing and future reports should
@@ -80,7 +83,7 @@ The content report admin views already exist, but need some upgrades to improve
 moderator quality of life:
 
 - Moderator notes, if moderators want to supply an explanatory note for their
-  decision.
+  decision. This should be a separate column to the content report description.
 - Improved table organisation by displaying the report ID and making that the
   clickable column rather than the status (which is confusing).
 - Create a "decision" page that displays all pending and historical reports for
@@ -89,8 +92,19 @@ moderator quality of life:
   [`LogEntry`](https://docs.djangoproject.com/en/4.2/ref/contrib/admin/#logentry-objects)
   for historical decisions to indicate the moderator that made the previous
   decision, if any.
-- Run report descriptions through Akismet to flag potentially spammy reports.
+- Run report descriptions through Akismet[^akismet] to flag potentially spammy
+  reports.
 - Display result information (title, description, etc) on the decision page.
+
+[^akismet]:
+    We do not currently use Akismet for Openverse, but in writing this it
+    occurred to me that we could use it to analyse result descriptions during
+    catalog ingestion to evaluate the "usefulness" of a description and develop
+    a score to help increase or reduce descriptions that may not be as useful.
+    This could be expanded to use bigger NLP APIs or text comparison/analysis
+    methods to find other qualities that could factor into the "usefulness" of a
+    description.
+    [I opened this discussion to further explore these ideas](https://github.com/WordPress/openverse/discussions/1175).
 
 Computer vision based safety tools are covered in the next section as they're
 sufficiently complicated to warrant their own set of considerations.
@@ -123,18 +137,19 @@ There are many computer vision options that could be evaluated by the
 implementation plan. AWS Rekognition, Google Vision API, Azure Computer Vision,
 and more. Essentially all the ones I've seen are affordable to us at our current
 planned utilisation levels. However, AWS Rekognition is the only one that makes
-sense for us to use, because:
+sense for us to use[^pending-verification], because:
 
 - We are already planning to use existing Rekognition data as part of the
   [Rekognition data incorporation](https://github.com/WordPress/openverse/issues/431)
   project later this year.
-- We can cache responses procured during moderation and plan to use those as a
-  starting point for a rolling integration of Rekognition data.
+- Building upon that work, we can cache responses procured during moderation and
+  plan to use those as a starting point for a rolling integration of Rekognition
+  data.
 - Billing and account management is already worked out for AWS and any other
   provider would require more work in the infrastructure repository to set up
   configuration management and more places to track billing.
 - From an ethical perspective, essentially all the major computer vision APIs
-  have the same problems, so AWS Rekognition isn't an especially heinous choice.
+  have similar problems, so AWS Rekognition isn't an especially heinous choice.
 
 The implementation plan writer is welcome to explore other options they think
 might make sense in spite of those reasons listed above. However, Rekognition
@@ -176,7 +191,7 @@ accessible to downstream middleware that manages the reverse index.
 ### Moderation response times (requirement 6, optional)
 
 If we are able to identify volunteers to moderate Openverse's content report
-queue, we can work with them to establish expectations about reponse times. To
+queue, we can work with them to establish expectations about response times. To
 have insight into the process, we'll need a reporting mechanism that tracks the
 number of resolved reports, average response time, and number of open reports on
 an ongoing basis.
@@ -219,8 +234,18 @@ Nonetheless, basic best-practices should be followed.
 
 <!-- Are there potential marketing opportunities that we'd need to coordinate with the community to accomplish? If there are none, say so explicitly rather than deleting the section. -->
 
-Maybe introducing content moderators? Making noise about how we're working on
-improving Openverse in this way?
+Most of the actual changes are internal, but we could market for this project
+along the following lines:
+
+- Further discussions about the use of the term "sensitive" rather than "mature"
+  and how Openverse is committed to considering all forms of accessibility and
+  inclusiveness.
+- Announce the start of our use of Rekognition to get more image metadata that
+  will eventually be used to improve search relevancy.
+- Highlighting the volunteers that choose to work with Openverse to manage our
+  content report queue.
+- Co-market with Akismet (Automattic) about our integration (very unsure about
+  this one).
 
 ## Required implementation plans
 
@@ -228,20 +253,25 @@ improving Openverse in this way?
 
 In no particular order, the following implementation plans are requested:
 
-- Response cache management
-  - Requirement 5
-- Moderator access control, Django admin improvements, and "mature" to
-  "sensitive" language updates
-  - Requirements 1 and 2
+- Copy updates to use "sensitive" rather than "mature"
+  - Requirement 1
+- Moderator access control and Django admin improvements
+  - Requirement 2
+- Bulk moderation actions
+  - Requirement 3
 - Computer vision API integration for image content safety metadata
   - Requirement 4
-  - Must include plans to cache responses in a way that could be upstreamed to
+  - Must include plans to save responses in a way that could be upstreamed to
     the catalogue in the future
+- Response cache management
+  - Requirement 5
 - Moderation queue progress insights
   - Optional: may be deferred if we haven't found a group of volunteers by the
     time implementation of the other three IPs is finished
   - Requirement 6
 
+```{note}
 The computer vision API IP should be written after the Django admin improvements
 IP, only to make it easier to understand the context of the "decision page" and
 how the computer vision API information would be displayed.
+```
