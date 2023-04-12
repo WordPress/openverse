@@ -28,8 +28,11 @@ We will not need any new tools on the API side for this work.
 
 ## Feature flags
 
-We should introduce a single "feature flag" on the API as an undocumented and
-unstable query parameter `unstable__include_sensitive_results`.
+A new Django setting `ENABLE_FILTERED_INDEX_QUERIES` will be used in the API to
+enable querying the filtered index. If this setting is not enabled, then the new
+parameter will still be used (as the downstream alias of the to-be-deprecated
+`mature` parameter), but it will behave exactly as the current `mature`
+parameter.
 
 ## API versioning
 
@@ -64,9 +67,10 @@ be implemented as a single pull request including appropriate tests.
    that do not have sensitive terms in the three textual content fields
    (`title`, `description`, `tags.name`). This is the filtered index.
    - Requires the following:
-     - SENSITIVE_TERMS injected as new environment variable. See
-       [the related IP](https://github.com/WordPress/openverse/pull/911) for how
-       this will be implemented in Terraform.
+     - `SENSITIVE_TERMS_URL` injected as new environment variable. See
+       [the related IP](./20230309-implementation_plan_sensitive_terms_list.md)
+       for how this list will be managed. Details about how this environment
+       variable will be used are below.
      - Ingestion server action to create the new index using `reindex` and an
        update the promote action to allow it to promote (point alias) for the
        filtered index
@@ -74,8 +78,8 @@ be implemented as a single pull request including appropriate tests.
        index
      - A benign list of terms to use for local testing that matches results in
        the sample data
-1. Update the data refresh DAG factory code to call the new filtered index
-   actions.
+1. Create a new `create_filtered_index` DAG that is triggered by the existing
+   data refresh DAG.
 1. Update the API with the new query parameter and query the filtered index when
    not including sensitive results.
 1. Update the API to query the filtered index by document `_id` to deduce which
@@ -123,10 +127,19 @@ create a large negated `multi_match` filter to exclude all results that contain
 any of the sensitive terms in their textual content. This will happen in the
 ingestion server as a separate step during data refresh.
 
+The `SENSITIVE_TERMS_URL` environment variable will point to a URL for a
+new-line separated list of sensitive terms. The default value of this variable
+will point to a localhost route to retrieve a list of testing terms. This file
+will be served by Falcon in the ingestion server. In production, this variable
+will point to the GitHub raw link for the `sensitive-terms.txt` document in the
+sensitive terms repository created as part of
+[the related implementation plan](./20230309-implementation_plan_sensitive_terms_list.md).
+
 An example of the query built as a Python object iterating over a list of
 sensitive terms follows:
 
 ```py
+sensitive_terms = requests.get(SENSITIVE_TERMS_URL).read().split("\n")
 query = {
     "bool": {
         "must_not": [
@@ -145,7 +158,7 @@ query = {
                     "fields": ["tags.name", "title", "description"],
                 }
             }
-            for term in SENSITIVE_TERMS
+            for term in sensitive_terms
         ]
     }
 }
@@ -169,7 +182,7 @@ index:
 
 1. Create the new filtered index before calling reindex, using the
    [`index_settings`](https://github.com/wordpress/openverse/blob/38af21c359703d3faee9e160f1ac69372661d6a2/ingestion_server/ingestion_server/es_mapping.py#L1)
-   function to configure this index in the same was as the origin index for the
+   function to configure this index in the same way as the origin index for the
    model.
 2. Create an index template that Elasticsearch will automatically apply to new
    indexes that match the template pattern.
@@ -190,10 +203,12 @@ this:
 
 ```py
 def create_and_populate_filtered_index(
-  self, model_name: str, index_suffix: str, **_
+  self, model_name: str, index_suffix: Optional[str], **_
 ):
-    source_index = f"{model_name}-{index_suffix}"
-    destination_index = f"{source_index}-filtered"
+    # Rely on the alias to always created the filtered index from the up-to-date origin
+    source_index = f"{model_name}"
+    index_suffix = index_suffix or uuid.uuid4().hex
+    destination_index = f"{source_index}-{index_suffix}-filtered"
 
     self.es.indices.create(
         index=destination_index,
@@ -244,58 +259,143 @@ Please note the following important details:
    to be searched. ES only automatically refreshes indexes that are being
    actively used, and the index should be refreshed before it starts being used.
 
-The creation of the new index follow the same pattern of creating the regular
+The creation of the new index follows the same pattern of creating the regular
 index: create the index, copy the data into the index, then issue the command to
 point the alias to the new index. This process is encapsulated in two actions:
 the `create_and_populate_filtered_index` action described above, and the
 existing `point_alias` action.
 
-> **Note**
->
-> While both processes have a "copy" step, they are notably different. The
-> origin index receives its documents from Postgres via ingestion workers, which
-> push the documents into Elasticsearch. The filtered index receives its
-> documents via the reindex API and does not require the ingestion workers.
+```{note}
+While both processes have a "copy" step, they are notably different. The
+origin index receives its documents from Postgres via ingestion workers, which
+push the documents into Elasticsearch. The filtered index receives its
+documents via the reindex API and does not require the ingestion workers.
+```
 
 ### Airflow data refresh DAG factory (overview step 2)
 
-Adding these new steps to the Airflow data refresh DAG is simple and only
-requires adding the two additional actions to the
-[existing `action_data_map`](https://github.com/WordPress/openverse-catalog/blob/4b5811aa240ba3ee2d92adea3a8abf88eb1e8aa4/openverse_catalog/dags/data_refresh/data_refresh_task_factory.py#L182)
-with the target alias configured on the `point_alias` action, just as it is with
-the regular `promote` action.
+To enable running filtered index creation independently of the data refresh
+DAGs, we will create a separate DAG that will be triggered by the data refresh
+DAGs using the
+[`TriggeredDagRunOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/trigger_dagrun/index.html).
+The new DAG will be named `<media_type>_filtered_index_creation`[^passive-name].
+It will not run on a schedule (only triggered), it will have a max concurrency
+of one, and it will accept the following configuration variables:
+
+[^passive-name]:
+    The passive voice name of this DAG is not ideal, but
+    `create_filtered_<model_name>_index_dag` reads as a DAG factory function
+    rather than a dag named "create filtered index".
+
+- `model_name`: The model being filtered. Used as the alias of the origin index
+  to use.
+- `index_suffix`: Optionally, the suffix to add to the destination index.
+- `force`: Used by the data refresh DAG to override the locking behaviour of the
+  DAG that prevents it from running during a data refresh.
+
+Splitting the process into a separate DAG presents complexities that are
+reflected in the last variable, `force`. Consider the following situation: a
+data refresh is currently happening, but you want to create a new filtered
+index. You can theoretically kick off the reindex job from the existing index.
+However, after the data refresh is finished, the previous index will be deleted!
+This will prevent the reindex from completing successfully. Therefore, we cannot
+run filtered index creation if a data refresh is currently underway.
+Additionally, if filtered index creation is underway, then we cannot run a data
+refresh either. Even though the data refresh process takes considerable time
+before it's ready to delete the previous index, we don't want to play with race
+conditions.
+
+Rather than trying to use a lock, we will read the DAG status directly from the
+DAG and fail the filtered index creation DAG run if the corresponding data
+refresh DAG is running, e.g.:
 
 ```py
-action_data_map: dict[str, dict] = {
-    "ingest_upstream": {},
-    "promote": {"alias": target_alias},
-    "create_and_populate_filtered_index": {},
-    "point_alias": {"alias": f"{target_alias}-filtered"}
-}
+from data_refresh.dag_factory import image_data_refresh, audio_data_refresh
+
+def filtered_index_creation_dag():
+    # ...
+    if model_name == "image":
+        if image_data_refresh.get_active_runs():
+            # fail dag
+    # etc for other media types
 ```
+
+In the data refresh, however, rather than failing if the filtered index creation
+DAG is running, we'll merely tell it to wait, using the
+[`ExternalTaskSensor`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/sensors/external_task/index.html#airflow.sensors.external_task.ExternalTaskSensor).
+That way it'll already be running and no new filtered index creation runs can be
+triggered between some potential lag time of the first one finishing before the
+data refresh is ready.
+
+When the data refresh DAG triggers filtered index creation, it should pass the
+suffix of the newly created origin index so that they match. We can identify
+filtered indexes created during data refresh because they will have a matching
+suffix to the origin index. Manual runs of the filtered index creation DAG
+should exclude this so that a new suffix is created to prevent clashing with the
+existing filtered index that was created for the previous data refresh run.
+
+The new DAG should be modelled on the existing data refresh DAG's patterns for
+making requests to the ingestion server. It must do the following:
+
+1. Read the existing filtered index alias destination and save it (for deleting
+   later)
+   - The
+     [data refresh DAG does this here](https://github.com/WordPress/openverse-catalog/blob/75990f356ed6d79601ecf3ecd96e48c3932acb47/openverse_catalog/dags/data_refresh/data_refresh_task_factory.py#L167-L174).
+1. Create a new suffix to use if one is not provided in the variables
+1. Call the `create_and_populate_filtered_index` action in the ingestion server
+   and wait for completion
+   - See existing data refresh DAG strategy for making and waiting for ingestion
+     server requests
+1. Call the `point_alias`[^no-promote-action] action in the ingestion server and
+   wait for completion.
+1. Delete the previous filtered index whose canonical name we retrieved in the
+   first step (`DELETE_INDEX` action)
+
+[^no-promote-action]:
+    We cannot use the `promote` action used by the regular data refresh flow
+    because while that action does point the alias to the newly created index,
+    it also promotes the API tables, which is not necessary for filtered index
+    creation. Therefore, we use the `point_alias` action which only points
+    aliases and nothing else.
+
+Because the image and audio data refreshes run concurrently, it is necessary for
+the filtered index creation DAG to also be a DAG factory, in the same style as
+the data refresh DAG factory. This will result in a new DAG per media type. With
+our current media types, that means we will add `image_filtered_index_creation`
+and `audio_filtered_index_creation` DAGs.
 
 ### Query the filtered index (overview step 3)
 
 We must add a new boolean query parameter to the search query serialiser,
-`unstable__include_sensitive_results`. This parameter will default to `False`.
-We will remove the `unstable` designation during the wrap-up of this
+`unstable__include_sensitive_results`. This parameter will default the disabled
+state. We will remove the `unstable` designation during the wrap-up of this
 implementation plan. This parameter should also reflect the state of the
-`mature` parameter: when `mature` is `True`, the new parameter should also be
-`True`. This prepares us to deprecate the `mature` parameter when we remove the
+`mature` parameter: when `mature` is enabled, the new parameter should also be
+enabled. This prepares us to deprecate the `mature` parameter when we remove the
 `unstable` designation from the new parameter.
 
-When `unstable__include_sensitive_results` is `False` (default behaviour), query
+If the `mature` parameter and the new parameter are both supplied on the
+request, the request should 400 with a note about the conflict and stating that
+the `mature` parameter is deprecated and that `include_sensitive_results` should
+be used instead.
+
+While the new parameter can be used in the search controller to simplify the
+code, querying the filtered index should only happen with the
+`ENABLE_FILTERED_INDEX_QUERIES` setting is enabled. When that is the case and
+when `unstable__include_sensitive_results` is not enabled for the request, query
 the filtered index by appending the `-filtered` suffix to the index name. Update
 the existing `mature` parameter handling to check
-`unstable__include_sensitive_results`. When the new parameter is `False`,
-results with the `mature` set to `true` should also be filtered out.
+`unstable__include_sensitive_results` instead. When the new parameter is not
+enabled on the request, results marked "mature" should also be filtered out, as
+they are already when the `mature` parameter is not enabled on the request.
 
-When `unstable__include_sensitive_results` is `True`, query the origin index
-(existing behaviour).
+When the `unstable__include_sensitive_results` parameter is enabled on the
+request, query the origin index so that results with sensitive textual content
+are included.
 
 ### Derive the list of sensitive document IDs based on the filtered index (overview step 4)
 
-When `unstable__include_sensitive_results` is `True`, we need to derive which
+When `unstable__include_sensitive_results` is enabled, we need to derive which
 documents in the results have sensitive textual content. To do this, we will
 rely on the fact that those documents are _not_ in the filtered index.
 Therefore, we can pull the list of `_id`s for the documents retrieved from the
@@ -314,22 +414,45 @@ ids_in_filtered_index = set({r["_id"] for r in results_in_filtered_index})
 sensitive_text_result_ids = result_ids - ids_in_filtered_index
 ```
 
-Add the resulting `sensitive_text_result_ids` set to the result serialiser
-context so that the media serialisers can reference them to derive the sensitive
-field:
+Additionally, we will query the content reports to disambiguate between provider
+supplied mature results and results that users have reported as sensitive:
+
+```py
+# continuing previous example...
+user_reported_sensitive_content_ids = MatureImage.objects
+    .get(identifier__in=result_ids)
+    .values_list("identifier", flat=True)
+```
+
+Add the resulting `sensitive_text_result_ids` and
+`user_reported_sensitive_content_ids` sets to the result serialiser context so
+that the media serialisers can reference them to derive the sensitive field:
 
 ```py
 sensitivity = serializers.SerializerMethodField()
 
 def get_sensitivity(self, obj):
     result = []
-    if obj["mature"]:
-        result.append("provider_supplied_mature")
+    if obj["identifier"] in self.context["user_reported_sensitive_content_ids"]:
+        result.append("user_reported_sensitive")
+    elif obj["mature"]:
+        # This needs to be elif rather than a separate clause entirely
+        # because reported content gets "mature" applied in Elasticsearch.
+        # Provider supplied mature settings are only accurate if there
+        # is not a corresponding, approved content report.
+        # This assumes that anything with a content report that is confirmed
+        # but not specifically de-indexed was not already marked as sensitive
+        # by the provider and also violated our terms anyway so would be excluded.
+        result.append("provider_supplied_sensitive")
 
     if obj["identifier"] in self.context["sensitive_result_ids"]:
         result.append("sensitive_text")
 
     return result
+```
+
+```{note}
+We _must_ disambiguate between provider supplied sensitivity, user reported sensitivity, and sensitive textual content detected. Not only is it important to provide transparent information for _why_ these documents are marked as sensitive for general use, our own frontend will need to know the difference in order to present the correct copy to users. See the discussion in [this GitHub issue](https://github.com/WordPress/openverse/issues/791#issuecomment-1486952983) for more details on how this will be used.
 ```
 
 #### Mature results
@@ -349,7 +472,7 @@ The examples below are meant to illustrate this point as it's a bit of a
 slippery concept without concrete examples (at least that's what I found when
 writing this document).
 
-```
+```py
 origin_index_results = [
   {id: 1, mature: false}, # no sensitive text
   {id: 2, mature: true}, # no sensitive text
@@ -361,7 +484,7 @@ filtered_index_results = [
   {id: 1, mature: false}, # no sensitive text
 ]
 
-origin_index_result_ids - filtered_index_result_ids
+sensitive_result_ids = origin_index_result_ids - filtered_index_result_ids
 # => [1, 2, 3, 4] - [1] = [2, 3, 4]
 ```
 
@@ -371,7 +494,7 @@ way around this as if we were to exclude the results marked `mature` from the
 origin result IDs in the final set subtraction, we'd end up with the following
 situation:
 
-```
+```py
 origin_index_results = [
   {id: 1, mature: false}, # no sensitive text
   {id: 2, mature: true}, # no sensitive text
@@ -386,7 +509,8 @@ filtered_index_results = [
 origin_index_less_mature_result_ids = [r for r in origin_index results if not r["mature"]]
 # => [1, 3]
 
-origin_index_less_mature_result_ids - filtered_index_result_ids
+sensitive_result_ids =
+  origin_index_less_mature_result_ids - filtered_index_result_ids
 # => [1, 3] - [1] = [3]
 ```
 
@@ -398,7 +522,7 @@ derived the list of sensitive result IDs. However, the problem will remain the
 same: we will exclude results that are both marked mature and have sensitive
 textual content:
 
-```
+```py
 origin_index_results = [
   {id: 1, mature: false}, # no sensitive text
   {id: 2, mature: true}, # no sensitive text
@@ -426,7 +550,11 @@ documents that _do_ have sensitive textual content and querying it to derive the
 final list of sensitive results without needing to rely on the diversely
 filtered index. However, this adds a big re-indexing burden (yet another
 additional index) that can be bypassed altogether if we just exclude mature
-results from the filtered index to begin with.
+results from the filtered index to begin with. Keep in mind that the `mature`
+field on documents is an indexed boolean field. Searching these fields is
+extremely efficient. Any potential performance benefit at query time would be
+negligible and certainly not worth the additional complications of the only
+potential way to exclude mature results from the filtered index.
 
 ## Wrap up
 
@@ -436,13 +564,8 @@ results are filtered or correctly marked as sensitive, we will promote the
 Additionally, we will deprecate the `mature` parameter by removing it from the
 documentation. To maintain API version backwards compatibility, it should
 continue to operate as an undocumented alias for the `include_sensitive_results`
-parameter.
-
-## Feature flags
-
-Because the new functionality will all be either internal (ingestion server and
-catalogue) or behind an unstable query parameter, we do not need any new feature
-flags to manage the rollout of this work.
+parameter. Finally, we will remove the `ENABLE_FILTERED_INDEX_QUERIES` setting
+and make it the default behaviour.
 
 ## Work streams
 
