@@ -88,12 +88,12 @@ class MetMuseumDataIngester(ProviderDataIngester):
                 logger.info(f"Retrieved {self.non_cc0_objects} non-CC0 objects.")
             return None
 
-        if (foreign_landing_url := object_json.get("objectURL")) is None:
+        if not (foreign_landing_url := object_json.get("objectURL")):
             return None
 
         main_image = object_json.get("primaryImage")
         other_images = object_json.get("additionalImages", [])
-        image_list = [img for img in [main_image, *other_images] if img is not None]
+        image_list = [img for img in [main_image, *other_images] if img]
         if not image_list:
             logger.info(f"No images detected for {object_id=}.")
             return None

@@ -196,9 +196,21 @@ def test_get_record_data_with_non_ok():
             id="missing_foreign_landing_url",
         ),
         pytest.param(
+            json.loads('{"isPublicDomain": false, "objectURL": ""}'),
+            None,
+            id="empty_string_for_foreign_landing_url",
+        ),
+        pytest.param(
             json.loads('{"isPublicDomain": true, "objectURL": "test.com"}'),
             None,
             id="missing_images",
+        ),
+        pytest.param(
+            json.loads(
+                '{"isPublicDomain": true, "objectURL": "test.com", "primaryImage": ""}'
+            ),
+            None,
+            id="missing_image_url",
         ),
     ],
 )
