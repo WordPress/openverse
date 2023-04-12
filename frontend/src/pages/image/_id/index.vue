@@ -37,6 +37,7 @@
         :external-icon-size="6"
         has-icon-end
         size="large"
+        @click="sendGetMediaEvent"
       >
         {{ $t("image-details.weblink") }}
       </VButton>
@@ -85,6 +86,8 @@ import { defineComponent, useRoute } from "@nuxtjs/composition-api"
 
 import { IMAGE } from "~/constants/media"
 import type { ImageDetail } from "~/types/media"
+import { useAnalytics } from "~/composables/use-analytics"
+
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useSearchStore } from "~/stores/search"
@@ -206,6 +209,20 @@ export default defineComponent({
         isLoadingMainImage.value = false
       }
     }
+
+    const { sendCustomEvent } = useAnalytics()
+
+    const sendGetMediaEvent = () => {
+      if (!image.value) {
+        return
+      }
+      sendCustomEvent("GET_MEDIA", {
+        id: image.value.id,
+        provider: image.value.provider,
+        mediaType: IMAGE,
+      })
+    }
+
     return {
       image,
       hasRelatedMedia,
@@ -221,6 +238,8 @@ export default defineComponent({
       onImageError,
       backToSearchPath,
       externalIcon,
+
+      sendGetMediaEvent,
     }
   },
   async asyncData({ app, error, route, $pinia }) {
