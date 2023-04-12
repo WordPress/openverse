@@ -21,6 +21,6 @@ existing GitHub issues assigned to a contributor. -->
 ### Blockers
 
 <!-- List any blockers for the week: any upcoming concerns which need to be
-addresed. Please @ anyone who may be qualified to resolve these blockers. The
+addressed. Please @ anyone who may be qualified to resolve these blockers. The
 more proactive you are about potential solutions the quicker we can make
 eliminate these blockers. -->
