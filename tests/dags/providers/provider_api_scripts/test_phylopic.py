@@ -1,20 +1,23 @@
-import json
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
 from common.licenses import get_license_info
 from providers.provider_api_scripts.phylopic import PhylopicDataIngester
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
+    make_resource_json_func,
+)
 
 
-RESOURCES = Path(__file__).parent / "resources/phylopic"
 pp = PhylopicDataIngester()
 
 
-def get_json(filename):
-    with open(RESOURCES / filename) as f:
-        return json.load(f)
+@pytest.fixture
+def image_data():
+    yield get_json("correct_meta_data_example.json")
+
+
+get_json = make_resource_json_func("phylopic")
 
 
 def test__get_initial_query_params():

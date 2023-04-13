@@ -1,14 +1,15 @@
-import json
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts.jamendo import JamendoDataIngester
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
+    make_resource_json_func,
+)
 
 
-RESOURCES = Path(__file__).parent.resolve() / "resources/jamendo"
+_get_resource_json = make_resource_json_func("jamendo")
 
 
 @pytest.fixture(autouse=True)
@@ -64,8 +65,7 @@ def test_get_next_query_params_leaves_other_keys():
 
 
 def test_get_record_data():
-    with open(RESOURCES / "audio_data_example.json") as f:
-        item_data = json.load(f)
+    item_data = _get_resource_json("audio_data_example.json")
     actual = jamendo.get_record_data(item_data)
     expected = {
         "audio_set": "Opera I",
@@ -110,15 +110,13 @@ def test_get_record_data():
     ],
 )
 def test_get_record_data_returns_none_when_required_data_is_null(required_field):
-    with open(RESOURCES / "audio_data_example.json") as f:
-        audio_data = json.load(f)
-        audio_data.pop(required_field, None)
+    audio_data = _get_resource_json("audio_data_example.json")
+    audio_data.pop(required_field, None)
     assert jamendo.get_record_data(audio_data) is None
 
 
 def test_get_record_data_handles_no_creator_url():
-    with open(RESOURCES / "audio_data_example.json") as f:
-        audio_data = json.load(f)
+    audio_data = _get_resource_json("audio_data_example.json")
     audio_data.pop("artist_idstr", None)
     expected_creator = "Haeresis"
 
@@ -128,8 +126,7 @@ def test_get_record_data_handles_no_creator_url():
 
 
 def test_get_record_data_handles_no_artist():
-    with open(RESOURCES / "audio_data_example.json") as f:
-        audio_data = json.load(f)
+    audio_data = _get_resource_json("audio_data_example.json")
     audio_data.pop("artist_name", None)
     actual_data = jamendo.get_record_data(audio_data)
 

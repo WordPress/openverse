@@ -1,5 +1,3 @@
-import json
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -8,16 +6,15 @@ from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
 from common.storage.image import ImageStore
 from providers.provider_api_scripts.brooklyn_museum import BrooklynMuseumDataIngester
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
+    make_resource_json_func,
+)
 
 
-RESOURCES = Path(__file__).parent / "resources/brooklynmuseum"
 bkm = BrooklynMuseumDataIngester()
 image_store = ImageStore(provider=prov.BROOKLYN_DEFAULT_PROVIDER)
 bkm.media_stores = {"image": image_store}
-
-
-def _get_resource_json(json_name):
-    return json.loads((RESOURCES / json_name).read_text())
+_get_resource_json = make_resource_json_func("brooklynmuseum")
 
 
 def test_build_query_param_default():
@@ -53,6 +50,12 @@ def test_get_data_from_response(resource_name, expected):
     response_json = _get_resource_json(resource_name)
     actual = bkm._get_data_from_response(response_json)
     assert actual == expected
+
+
+def test_docstring_example():
+    json_func_ex = make_resource_json_func("brooklynmuseum")
+    json_dict = json_func_ex("cc_license_info.json")
+    assert json_dict["public_name"] == "Creative Commons-BY"
 
 
 @pytest.mark.parametrize(

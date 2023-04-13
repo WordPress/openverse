@@ -1,17 +1,17 @@
-import json
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 from airflow.exceptions import AirflowException
 
 from providers.provider_api_scripts.smithsonian import SmithsonianDataIngester
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
+    make_resource_json_func,
+)
 
-
-RESOURCES = Path(__file__).parent / "resources/smithsonian"
 
 # Set up test class
 ingester = SmithsonianDataIngester()
+_get_resource_json = make_resource_json_func("smithsonian")
 
 
 def test_get_hash_prefixes_with_len_one():
@@ -607,8 +607,7 @@ def test_process_image_list(input_media, expected_image_data):
 
 
 def test_get_record_data():
-    with open(RESOURCES / "actual_record_data.json") as f:
-        data = json.load(f)
+    data = _get_resource_json("actual_record_data.json")
     actual_data = ingester.get_record_data(data)
     expected_data = [
         {

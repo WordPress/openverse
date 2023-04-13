@@ -1,5 +1,3 @@
-import json
-import os
 from datetime import datetime
 from unittest import mock
 
@@ -7,9 +5,10 @@ import pytest
 
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts.flickr import FlickrDataIngester
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
+    make_resource_json_func,
+)
 
-
-RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "resources/flickr")
 
 FROZEN_DATE = "2020-04-01"
 flickr = FlickrDataIngester(date=FROZEN_DATE)
@@ -21,10 +20,7 @@ test_license_info = LicenseInfo(
 )
 
 
-def _get_resource_json(json_name):
-    with open(os.path.join(RESOURCES, json_name)) as f:
-        resource_json = json.load(f)
-    return resource_json
+_get_resource_json = make_resource_json_func("flickr")
 
 
 def test_get_next_query_params():

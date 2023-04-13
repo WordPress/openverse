@@ -1,5 +1,3 @@
-import json
-import os
 from unittest.mock import MagicMock, call, patch
 
 import pytest
@@ -11,6 +9,9 @@ from common.storage.audio import AudioStore, MockAudioStore
 from common.storage.image import ImageStore, MockImageStore
 from providers.provider_api_scripts.provider_data_ingester import (
     AggregateIngestionError,
+)
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
+    make_resource_json_func,
 )
 from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
     AUDIO_PROVIDER,
@@ -24,10 +25,6 @@ from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.
 )
 
 
-RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), "resources/provider_data_ingester"
-)
-
 ingester = MockProviderDataIngester()
 image_ingester = MockImageOnlyProviderDataIngester()
 audio_ingester = MockAudioOnlyProviderDataIngester()
@@ -37,10 +34,7 @@ image_store = MockImageStore(IMAGE_PROVIDER)
 ingester.media_stores = {"audio": audio_store, "image": image_store}
 
 
-def _get_resource_json(json_name):
-    with open(os.path.join(RESOURCES, json_name)) as f:
-        resource_json = json.load(f)
-    return resource_json
+_get_resource_json = make_resource_json_func("provider_data_ingester")
 
 
 def test_init_media_stores():

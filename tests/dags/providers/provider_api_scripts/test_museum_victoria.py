@@ -1,6 +1,4 @@
-import json
 import logging
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -9,9 +7,9 @@ from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from common.storage.image import ImageStore
 from providers.provider_api_scripts.museum_victoria import VictoriaDataIngester
-
-
-RESOURCES = Path(__file__).parent / "resources/museumvictoria"
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
+    make_resource_json_func,
+)
 
 
 logging.basicConfig(
@@ -28,10 +26,7 @@ def after_test():
     mv.RECORDS_IDS = set()
 
 
-def _get_resource_json(json_name):
-    with open(RESOURCES / json_name) as f:
-        resource_json = json.load(f)
-        return resource_json
+_get_resource_json = make_resource_json_func("museumvictoria")
 
 
 def test_get_query_param_default():

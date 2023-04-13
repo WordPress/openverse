@@ -1,14 +1,14 @@
-import json
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from providers.provider_api_scripts.wordpress import WordPressDataIngester
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
+    make_resource_json_func,
+)
 
 
-RESOURCES = Path(__file__).parent / "resources/wordpress"
-SAMPLE_MEDIA_DATA = RESOURCES / "full_item.json"
+_get_resource_json = make_resource_json_func("wordpress")
 
 
 @pytest.fixture
@@ -64,37 +64,33 @@ def test_get_should_continue_checks_total_pages(
 def test_get_record_data_returns_none_when_missing_necessary_data(
     ingester, missing_field
 ):
-    with open(SAMPLE_MEDIA_DATA) as f:
-        image_data = json.load(f)
-        image_data.pop(missing_field, None)
+    image_data = _get_resource_json("full_item.json")
+    image_data.pop(missing_field, None)
     actual_image_info = ingester.get_record_data(image_data)
     assert actual_image_info is None
 
 
 def test_get_record_data_returns_none_when_no_image_url(ingester):
-    with open(SAMPLE_MEDIA_DATA) as f:
-        image_data = json.load(f)
-        image_data["_embedded"]["wp:featuredmedia"][0]["media_details"].pop("sizes")
+    image_data = _get_resource_json("full_item.json")
+    image_data["_embedded"]["wp:featuredmedia"][0]["media_details"].pop("sizes")
     actual_image_info = ingester.get_record_data(image_data)
     assert actual_image_info is None
 
 
 def test_get_title(ingester):
-    with open(SAMPLE_MEDIA_DATA) as f:
-        image_data = json.load(f)
+    image_data = _get_resource_json("full_item.json")
     actual_result = ingester._get_title(image_data)
     expected_result = "Coffee Bean with bags"
     assert actual_result == expected_result
 
 
 def test_get_file_info(ingester):
-    with open(SAMPLE_MEDIA_DATA) as f:
-        image_details = (
-            json.load(f)
-            .get("_embedded")
-            .get("wp:featuredmedia")[0]
-            .get("media_details")
-        )
+    image_details = (
+        _get_resource_json("full_item.json")
+        .get("_embedded")
+        .get("wp:featuredmedia")[0]
+        .get("media_details")
+    )
     actual_result = ingester._get_file_info(image_details)
     expected_result = (
         "https://pd.w.org/2022/05/203627f31f8770f03.61535278-2048x1366.jpg",  # image_url
@@ -106,8 +102,7 @@ def test_get_file_info(ingester):
 
 
 def test_get_author_data_when_is_non_empty(ingester):
-    with open(SAMPLE_MEDIA_DATA) as f:
-        image_data = json.load(f)
+    image_data = _get_resource_json("full_item.json")
     actual_author, actual_author_url = ingester._get_author_data(image_data)
     expected_author = "Shusei Toda"
     expected_author_url = "https://shuseitoda.com"
@@ -116,8 +111,7 @@ def test_get_author_data_when_is_non_empty(ingester):
 
 
 def test_get_author_data_handle_no_author(ingester):
-    with open(SAMPLE_MEDIA_DATA) as f:
-        image_data = json.load(f)
+    image_data = _get_resource_json("full_item.json")
     image_data["_embedded"].pop("author", None)
     actual_author, actual_author_url = ingester._get_author_data(image_data)
     assert actual_author is None
@@ -125,8 +119,7 @@ def test_get_author_data_handle_no_author(ingester):
 
 
 def test_get_author_data_use_slug_when_name_is_empty(ingester):
-    with open(SAMPLE_MEDIA_DATA) as f:
-        image_data = json.load(f)
+    image_data = _get_resource_json("full_item.json")
     image_data["_embedded"]["author"][0].pop("name")
     actual_author, _ = ingester._get_author_data(image_data)
     expected_author = "st810amaze"
@@ -134,8 +127,7 @@ def test_get_author_data_use_slug_when_name_is_empty(ingester):
 
 
 def test_get_metadata(ingester):
-    with open(SAMPLE_MEDIA_DATA) as f:
-        image_data = json.load(f)
+    image_data = _get_resource_json("full_item.json")
     image_details = (
         image_data.get("_embedded").get("wp:featuredmedia")[0].get("media_details")
     )

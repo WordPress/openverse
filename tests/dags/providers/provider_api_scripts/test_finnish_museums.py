@@ -1,6 +1,4 @@
-import json
 import logging
-import os
 from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
@@ -10,11 +8,10 @@ from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
 from common.storage.image import ImageStore
 from providers.provider_api_scripts.finnish_museums import FinnishMuseumsDataIngester
-
-
-RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), "resources/finnishmuseums"
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
+    make_resource_json_func,
 )
+
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
@@ -29,10 +26,7 @@ image_store = ImageStore(provider=prov.FINNISH_DEFAULT_PROVIDER)
 fm.media_stores = {"image": image_store}
 
 
-def _get_resource_json(json_name):
-    with open(os.path.join(RESOURCES, json_name)) as f:
-        resource_json = json.load(f)
-    return resource_json
+_get_resource_json = make_resource_json_func("finnishmuseums")
 
 
 @pytest.mark.parametrize(
