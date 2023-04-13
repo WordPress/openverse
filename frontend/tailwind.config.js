@@ -229,7 +229,6 @@ module.exports = {
     require("tailwindcss-rtl"),
     require("@tailwindcss/line-clamp"),
     require("@tailwindcss/typography"),
-    require("tailwindcss-labeled-groups")(["waveform"]),
     // Focus styles
     // This plugin has related stylesheets in `src/styles/tailwind.css`.
     plugin(({ matchUtilities, theme }) => {

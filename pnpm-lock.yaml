@@ -116,7 +116,6 @@ importers:
       seeded-rand: ^2.0.1
       tailwind-config-viewer: ^1.6.3
       tailwindcss: ^3.2.4
-      tailwindcss-labeled-groups: ^0.0.2
       tailwindcss-rtl: ^0.9.0
       talkback: ^3.0.1
       throttle-debounce: ^5.0.0
@@ -236,7 +235,6 @@ importers:
       rimraf: 3.0.2
       tailwind-config-viewer: 1.6.3_tailwindcss@3.2.4
       tailwindcss: 3.2.4_aesdjsunmf4wiehhujt67my7tu
-      tailwindcss-labeled-groups: 0.0.2_tailwindcss@3.2.4
       tailwindcss-rtl: 0.9.0
       talkback: 3.0.1
       ts-node: 10.9.1_ytxlagnlbjxf7pw6smm3knvnbq
@@ -18212,14 +18210,6 @@ packages:
       tailwindcss: 3.2.4_aesdjsunmf4wiehhujt67my7tu
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /tailwindcss-labeled-groups/0.0.2_tailwindcss@3.2.4:
-    resolution: {integrity: sha512-leOVv9h2K9WDHoXPXVBOmTJgWECVkpVFc/hjrwuqGUEtNxvRvuOtCjenu9ppY+pJtky5INJUqDCNa8pS3AbYmw==}
-    peerDependencies:
-      tailwindcss: ^3.0.23
-    dependencies:
-      tailwindcss: 3.2.4_aesdjsunmf4wiehhujt67my7tu
     dev: true
 
   /tailwindcss-rtl/0.9.0:
