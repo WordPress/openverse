@@ -180,6 +180,17 @@ groups:
         description: Requires familiarity with TypeScript
         emoji: "⌨️"
 
+  - name: project
+    color: "8b3dcd"
+    emoji: "🧭"
+    labels:
+      - name: thread
+        description: An issue used to track a project and its progress
+      - name: proposal
+        description: A proposal for a project
+      - name: implementation plan
+        description: An implementation plan for a project
+
   - name: friendliness
     color: "7f0799"
     is_prefixed: false
