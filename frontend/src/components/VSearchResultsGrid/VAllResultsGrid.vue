@@ -31,11 +31,11 @@
     />
     <div
       v-else
-      class="results-grid grid gap-4"
+      class="results-grid grid grid-cols-2 gap-4"
       :class="
         isSidebarVisible
-          ? 'grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4'
-          : 'grid-cols-2 lg:grid-cols-5 2xl:grid-cols-6'
+          ? 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
+          : 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
       "
     >
       <div v-for="item in allMedia" :key="item.id">
