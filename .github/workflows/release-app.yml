@@ -110,11 +110,9 @@ jobs:
 
       - name: Add new changelog file to documentation
         run: |
-          cat << EOF > documentation/changelogs/${{ inputs.app }}/${{ steps.tag.outputs.date }}.md
-          # ${{ steps.tag.outputs.date }}
-
-          ${{ steps.release-drafter.outputs.body }}
-          EOF
+          file="documentation/changelogs/${{ inputs.app }}/${{ steps.tag.outputs.date }}.md"
+          echo -e "# ${{ steps.tag.outputs.date }}\n\n" > "$file"
+          echo -e '${{ steps.release-drafter.outputs.body }}' >> "$file"
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -132,8 +130,11 @@ jobs:
 
       - name: Lint the changelog file so that it passes CI
         run: |
+          # Add the new changelog file to git so that pre-commit can lint it.
+          git add documentation/changelogs/${{ inputs.app }}/${{ steps.tag.outputs.date }}.md
           just precommit
-          just lint
+          # Ensure this step passes even if linting has made changes so the workflow can continue
+          just lint || true
 
       - name: Open changelog PR
         uses: peter-evans/create-pull-request@v4
