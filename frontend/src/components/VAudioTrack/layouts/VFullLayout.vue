@@ -53,16 +53,14 @@
       <VButton
         as="VLink"
         :href="audio.foreign_landing_url"
-        size="disabled"
-        class="order-1 self-center px-6 py-3 text-sr font-semibold ms-auto md:px-6 md:py-4 md:text-2xl lg:order-2"
+        size="large"
+        variant="filled-pink"
+        has-icon-end
+        show-external-icon
+        :external-icon-size="6"
+        class="description-bold order-1 my-1 flex-shrink-0 ms-auto lg:order-2"
       >
         {{ $t("audio-details.weblink") }}
-        <VIcon
-          :icon-path="externalIcon"
-          :rtl-flip="true"
-          :size="4"
-          class="ms-2 md:h-6 md:w-6"
-        />
       </VButton>
     </div>
   </div>
@@ -76,14 +74,11 @@ import { timeFmt } from "~/utils/time-fmt"
 import { AudioSize, AudioStatus, audioFeatures } from "~/constants/audio"
 
 import VButton from "~/components/VButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
 import VLink from "~/components/VLink.vue"
-
-import externalIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
   name: "VFullLayout",
-  components: { VButton, VIcon, VLink },
+  components: { VButton, VLink },
   props: {
     audio: {
       type: Object as PropType<AudioDetail>,
@@ -108,7 +103,6 @@ export default defineComponent({
 
       isSmall,
       audioFeatures,
-      externalIcon,
     }
   },
 })
