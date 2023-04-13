@@ -99,7 +99,6 @@ def test_get_next_query_params_adds_props(query_prop, media_prop, wmc):
 
 
 def test_get_response_json(monkeypatch, wmc):
-
     first_response = _get_resource_json("continuation/wmc_pretty1.json")
     second_response = _get_resource_json("continuation/wmc_pretty2.json")
     third_response = _get_resource_json("continuation/wmc_pretty3.json")
