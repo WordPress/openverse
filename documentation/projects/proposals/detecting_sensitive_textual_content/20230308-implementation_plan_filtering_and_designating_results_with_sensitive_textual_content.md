@@ -278,14 +278,10 @@ To enable running filtered index creation independently of the data refresh
 DAGs, we will create a separate DAG that will be triggered by the data refresh
 DAGs using the
 [`TriggeredDagRunOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/trigger_dagrun/index.html).
-The new DAG will be named `<media_type>_filtered_index_creation`[^passive-name].
-It will not run on a schedule (only triggered), it will have a max concurrency
-of one, and it will accept the following configuration variables:
-
-[^passive-name]:
-    The passive voice name of this DAG is not ideal, but
-    `create_filtered_<model_name>_index_dag` reads as a DAG factory function
-    rather than a dag named "create filtered index".
+The new DAG will be named `create_filtered_<media_type>_index`. It will not run
+on a schedule (only triggered), it will have a max concurrency of one, and it
+will accept the following
+[Airflow params](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/params.html):
 
 - `model_name`: The model being filtered. Used as the alias of the origin index
   to use.
@@ -299,25 +295,22 @@ data refresh is currently happening, but you want to create a new filtered
 index. You can theoretically kick off the reindex job from the existing index.
 However, after the data refresh is finished, the previous index will be deleted!
 This will prevent the reindex from completing successfully. Therefore, we cannot
-run filtered index creation if a data refresh is currently underway.
-Additionally, if filtered index creation is underway, then we cannot run a data
-refresh either. Even though the data refresh process takes considerable time
-before it's ready to delete the previous index, we don't want to play with race
-conditions.
+create a filtered index if a data refresh is currently underway. Additionally,
+if filtered index creation is underway, then we cannot run a data refresh
+either. Even though the data refresh process takes considerable time before it's
+ready to delete the previous index, we don't want to play with race conditions.
 
-Rather than trying to use a lock, we will read the DAG status directly from the
-DAG and fail the filtered index creation DAG run if the corresponding data
-refresh DAG is running, e.g.:
+Rather than trying to use a complex lock, we will read the data refresh DAG
+status at the start of the filtered index creation DAG run to check if the
+corresponding data refresh DAG is running, e.g.:
 
 ```py
-from data_refresh.dag_factory import image_data_refresh, audio_data_refresh
+from data_refresh.dag_factory import image_data_refresh
 
-def filtered_index_creation_dag():
-    # ...
-    if model_name == "image":
-        if image_data_refresh.get_active_runs():
-            # fail dag
-    # etc for other media types
+@task
+def prevent_concurrently_running_during_data_refresh():
+    if image_data_refresh.get_active_runs() and not :
+        # fail dag
 ```
 
 In the data refresh, however, rather than failing if the filtered index creation
@@ -342,20 +335,20 @@ making requests to the ingestion server. It must do the following:
    - The
      [data refresh DAG does this here](https://github.com/WordPress/openverse-catalog/blob/75990f356ed6d79601ecf3ecd96e48c3932acb47/openverse_catalog/dags/data_refresh/data_refresh_task_factory.py#L167-L174).
 1. Create a new suffix to use if one is not provided in the variables
-1. Call the `create_and_populate_filtered_index` action in the ingestion server
+1. Call the `CREATE_AND_POPULATE_FILTERED_INDEX` action in the ingestion server
    and wait for completion
    - See existing data refresh DAG strategy for making and waiting for ingestion
      server requests
-1. Call the `point_alias`[^no-promote-action] action in the ingestion server and
+1. Call the `POINT_ALIAS`[^no-promote-action] action in the ingestion server and
    wait for completion.
 1. Delete the previous filtered index whose canonical name we retrieved in the
    first step (`DELETE_INDEX` action)
 
 [^no-promote-action]:
-    We cannot use the `promote` action used by the regular data refresh flow
+    We cannot use the `PROMOT` action used by the regular data refresh flow
     because while that action does point the alias to the newly created index,
     it also promotes the API tables, which is not necessary for filtered index
-    creation. Therefore, we use the `point_alias` action which only points
+    creation. Therefore, we use the `POINT_ALIAS` action which only points
     aliases and nothing else.
 
 Because the image and audio data refreshes run concurrently, it is necessary for
@@ -367,9 +360,9 @@ and `audio_filtered_index_creation` DAGs.
 ### Query the filtered index (overview step 3)
 
 We must add a new boolean query parameter to the search query serialiser,
-`unstable__include_sensitive_results`. This parameter will default the disabled
-state. We will remove the `unstable` designation during the wrap-up of this
-implementation plan. This parameter should also reflect the state of the
+`unstable__include_sensitive_results`. This parameter will default to the
+disabled state. We will remove the `unstable` designation during the wrap-up of
+this implementation plan. This parameter should also reflect the state of the
 `mature` parameter: when `mature` is enabled, the new parameter should also be
 enabled. This prepares us to deprecate the `mature` parameter when we remove the
 `unstable` designation from the new parameter.
