@@ -6,7 +6,7 @@
   >
     <div
       class="relative flex-shrink-0 overflow-hidden rounded-sm"
-      :class="isLarge ? 'w-30 me-6' : 'w-20 me-4'"
+      :class="isLarge ? 'me-6 w-30' : 'me-4 w-20'"
     >
       <VAudioThumbnail :audio="audio" />
       <div v-show="isSmall" class="absolute bottom-0 ltr:right-0 rtl:left-0">
@@ -23,7 +23,7 @@
     >
       <div class="flex-shrink-0" :class="{ 'w-70': isMedium }">
         <div
-          class="decoration-inherit font-heading block rounded-sm p-px font-semibold text-dark-charcoal line-clamp-2 hover:text-dark-charcoal focus:outline-none focus:ring focus:ring-pink group-hover:underline md:line-clamp-1"
+          class="decoration-inherit font-heading line-clamp-2 block rounded-sm p-px font-semibold text-dark-charcoal hover:text-dark-charcoal focus:outline-none focus:ring focus:ring-pink group-hover:underline md:line-clamp-1"
           :class="{
             'text-2xl': isMedium || isLarge,
             'leading-snug': isSmall,
@@ -149,7 +149,7 @@ export default defineComponent({
 
 <style>
 .row-track .play-pause {
-  @apply flex-shrink-0 rounded-ts-sm rounded-bs-sm;
+  @apply flex-shrink-0 rounded-es-sm rounded-ss-sm;
 }
 
 .row-track .waveform {
@@ -158,7 +158,7 @@ export default defineComponent({
 }
 
 .row-track .waveform {
-  @apply rounded-te-sm rounded-be-sm;
+  @apply rounded-ee-sm rounded-se-sm;
 }
 
 .row-track.size-m .waveform {

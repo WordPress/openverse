@@ -177,13 +177,14 @@ export default defineComponent({
   @apply flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3;
 }
 .top-bar-full {
-  @apply flex h-20 w-full shrink-0 justify-between bg-dark-charcoal px-4 py-3 md:items-stretch md:justify-start md:py-4 md:px-7;
+  @apply flex h-20 w-full shrink-0 justify-between bg-dark-charcoal px-4 py-3 md:items-stretch md:justify-start md:px-7 md:py-4;
 }
 .top-bar-two-thirds {
   @apply bg-tx;
 }
 .modal-backdrop {
-  @apply h-screen h-[100dvh];
+  /* linting plugin changes the order if we use non-custom value of h-screen for 100vh */
+  @apply h-[100dvh] h-[100vh];
 }
 .modal-backdrop-fit-content,
 .modal-backdrop-two-thirds {
@@ -200,7 +201,7 @@ export default defineComponent({
   @apply w-full;
 }
 .modal-two-thirds {
-  @apply mt-auto h-2/3 w-full rounded-t-lg bg-white;
+  @apply mt-auto h-2/3 w-full  rounded-se-lg rounded-ss-lg bg-white;
 }
 
 .modal-dark {
@@ -211,22 +212,22 @@ export default defineComponent({
 }
 
 .modal-content-default {
-  @apply text-left align-bottom md:rounded-t-md;
+  @apply text-left align-bottom md:rounded-se-md md:rounded-ss-md;
 }
 .modal-content-centered {
   @apply w-auto;
 }
 .modal-fit-content {
-  @apply mt-auto w-full rounded-t-lg bg-white;
+  @apply mt-auto w-full rounded-se-lg rounded-ss-lg bg-white;
 }
 .modal-content-full {
   @apply flex w-full flex-col justify-between px-6 pb-10;
 }
 .modal-content-two-thirds {
-  @apply overflow-y-hidden rounded-t-md;
+  @apply overflow-y-hidden rounded-se-md rounded-ss-md;
 }
 .modal-content-fit-content {
-  @apply rounded-t-md;
+  @apply rounded-se-md rounded-ss-md;
 }
 .modal-content-dark {
   @apply bg-black text-white;

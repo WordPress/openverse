@@ -12,7 +12,7 @@
       <div class="relative" data-testid="content-report-popover">
         <VCloseButton
           :label="$t('modal.close')"
-          class="!absolute top-0 end-0"
+          class="!absolute end-0 top-0"
           @close="close"
         />
         <VContentReportForm

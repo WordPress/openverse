@@ -1,7 +1,7 @@
 <template>
   <VSkipToContentContainer
     as="main"
-    class="mx-auto mt-8 mb-6 max-w-none gap-x-10 px-4 md:grid md:max-w-4xl md:grid-cols-2 md:px-6 lg:mb-30 lg:px-0 xl:max-w-4xl"
+    class="mx-auto mb-6 mt-8 max-w-none gap-x-10 px-4 md:grid md:max-w-4xl md:grid-cols-2 md:px-6 lg:mb-30 lg:px-0 xl:max-w-4xl"
   >
     <figure class="mb-6 flex flex-col items-start gap-y-4">
       <img

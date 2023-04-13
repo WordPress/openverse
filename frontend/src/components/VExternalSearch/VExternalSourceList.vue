@@ -5,7 +5,7 @@
     </h2>
     <VCloseButton
       :label="$t('modal.close')"
-      class="!absolute top-0 end-0"
+      class="!absolute end-0 top-0"
       @close="$emit('close')"
     />
     <p class="caption-regular mb-4 px-4 text-start">

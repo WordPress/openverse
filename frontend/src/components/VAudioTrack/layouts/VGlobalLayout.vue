@@ -8,7 +8,7 @@
     <div class="relative flex-grow">
       <VLink
         :href="`/audio/${audio.id}`"
-        class="hover-underline absolute inset-x-0 top-[10.5px] z-10 flex flex-row items-center justify-between px-4 text-sr font-semibold text-dark-charcoal pe-12 line-clamp-2"
+        class="hover-underline absolute inset-x-0 top-[10.5px] z-10 line-clamp-2 flex flex-row items-center justify-between px-4 pe-12 text-sr font-semibold text-dark-charcoal"
       >
         {{ audio.title }}
       </VLink>

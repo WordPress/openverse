@@ -20,13 +20,13 @@
           v-if="showFilters"
           id="content-settings"
           size="medium"
-          class="gap-x-2 me-4"
+          class="me-4 gap-x-2"
           ><VIcon :icon-path="searchType.icon" />
           <h2 class="label-regular">{{ $t("search-type.heading") }}</h2></VTab
         >
         <h2
           v-else
-          class="label-regular relative my-2 flex h-12 items-center gap-x-2 px-2 me-4 after:absolute after:right-1/2 after:bottom-[-0.625rem] after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-dark-charcoal"
+          class="label-regular relative my-2 me-4 flex h-12 items-center gap-x-2 px-2 after:absolute after:bottom-[-0.625rem] after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-dark-charcoal"
         >
           <VIcon :icon-path="searchType.icon" />
           {{ $t("search-type.heading") }}
@@ -38,7 +38,7 @@
         <VCloseButton
           :label="$t('modal.close-content-settings')"
           variant="filled-white"
-          class="self-center ms-auto"
+          class="ms-auto self-center"
           @close="close"
         />
       </template>

@@ -1,6 +1,6 @@
 <template>
   <VSkipToContentContainer as="main">
-    <div v-if="backToSearchPath" class="w-full py-2 px-2 md:px-6">
+    <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
       <VBackToSearchResultsLink :href="backToSearchPath" />
     </div>
 
@@ -10,7 +10,7 @@
         id="main-image"
         :src="imageSrc"
         :alt="image.title"
-        class="mx-auto h-full max-h-[500px] w-full rounded-t-sm object-contain"
+        class="mx-auto h-full max-h-[500px] w-full rounded-se-sm rounded-ss-sm object-contain"
         :width="imageWidth"
         :height="imageHeight"
         @load="onImageLoaded"
@@ -19,7 +19,7 @@
       <VSketchFabViewer
         v-if="sketchFabUid"
         :uid="sketchFabUid"
-        class="mx-auto rounded-t-sm"
+        class="mx-auto rounded-se-sm rounded-ss-sm"
         @failure="sketchFabfailure = true"
       />
     </figure>

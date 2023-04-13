@@ -197,13 +197,13 @@ export default defineComponent({
 
 <style module>
 .bordered {
-  @apply rounded-t-sm border-x border-t border-tx text-sm font-semibold md:text-base md:font-semibold md:leading-snug;
+  @apply rounded-se-sm rounded-ss-sm border-x border-t border-tx text-sm font-semibold md:text-base md:font-semibold md:leading-snug;
 }
 .plain {
   @apply rounded-sm border-tx bg-tx text-sm hover:bg-dark-charcoal-10;
 }
 .bordered-selected {
-  @apply -mb-[1px] border border-x-dark-charcoal-20 border-t-dark-charcoal-20 border-b-white bg-white;
+  @apply -mb-[1px] border border-x-dark-charcoal-20 border-b-white border-t-dark-charcoal-20 bg-white;
 }
 .plain-selected {
   @apply relative after:absolute after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-dark-charcoal after:transition-all after:duration-200;
@@ -212,7 +212,7 @@ export default defineComponent({
   @apply after:bottom-[-0.125rem];
 }
 .size-default {
-  @apply py-3 px-4 md:px-6;
+  @apply px-4 py-3 md:px-6;
 }
 .size-large {
   @apply h-16;

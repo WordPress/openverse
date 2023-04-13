@@ -19,7 +19,7 @@
       <h4
         v-if="index !== 0"
         :class="bordered ? 'ps-0' : 'ps-6'"
-        class="category pt-6 pb-4"
+        class="category pb-4 pt-6"
       >
         {{ $t(`search-type.${category.heading}`) }}
       </h4>

@@ -13,7 +13,7 @@
       <input
         :id="id"
         type="checkbox"
-        class="block appearance-none border border-dark-charcoal bg-white transition-colors duration-100 me-3 checked:bg-dark-charcoal disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10 checked:disabled:border-dark-charcoal-40 checked:disabled:bg-dark-charcoal-40"
+        class="me-3 block appearance-none border border-dark-charcoal bg-white transition-colors duration-100 checked:bg-dark-charcoal disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10 checked:disabled:border-dark-charcoal-40 checked:disabled:bg-dark-charcoal-40"
         :class="
           isSwitch
             ? ['h-4.5', 'w-9', 'rounded-full', 'focus-slim-offset']
@@ -32,7 +32,7 @@
       <!-- Knob, for when `ifSwitch` is `true` -->
       <span
         v-if="isSwitch"
-        class="absolute top-0.75 left-0.75 block h-3 w-3 rounded-full transition-transform duration-100"
+        class="absolute left-0.75 top-0.75 block h-3 w-3 rounded-full transition-transform duration-100"
         :class="
           localCheckedState
             ? ['bg-white', 'translate-x-[1.125rem]']
