@@ -59,7 +59,7 @@
         as="VLink"
         variant="filled-pink"
         size="large"
-        class="not-prose"
+        class="not-prose description-bold"
         show-external-icon
         :external-icon-size="6"
         has-icon-end
