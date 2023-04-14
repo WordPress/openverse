@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  scheduler:
+    image: ghcr.io/wordpress/openverse-catalog:${DOCKER_IMAGE_TAG:-latest}
+    env_file:
+      - .env
+    restart: always
+    environment:
+      # Upgrade the DB on startup
+      _AIRFLOW_DB_UPGRADE: "true"
+    command: scheduler
+    expose:
+      - "8793" # Used for fetching logs
+    volumes:
+      - airflow:/var/workflow_output
+      - ./catalog/dags:/opt/airflow/catalog/dags
+
+  webserver:
+    image: ghcr.io/wordpress/openverse-catalog:${DOCKER_IMAGE_TAG:-latest}
+    depends_on:
+      - scheduler
+    env_file:
+      - .env
+    restart: always
+    command: webserver
+    ports:
+      - "${AIRFLOW_PORT}:8080"
+    volumes:
+      - ./catalog/dags:/opt/airflow/catalog/dags
+
+volumes:
+  airflow:

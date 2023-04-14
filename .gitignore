@@ -148,3 +148,10 @@ si_samples_*
 
 # macOS
 .DS_Store
+
+# pre-commit
+pre-commit.pyz
+
+# These logs must be Git-tracked
+!catalog/tests/dags/common/test_resources/logs/**/*.log
+!catalog/tests/dags/common/test_resources/logs/

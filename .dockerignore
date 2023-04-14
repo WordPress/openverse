@@ -1,6 +1,0 @@
-# Files and directories to be ignored when creating the Docker build context
-.github
-archive
-tests
-*.md
-.git

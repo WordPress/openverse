@@ -1,145 +1,145 @@
 set dotenv-load := false
 
-# Show all available recipes
-default:
-  @just --list --unsorted
+# Meaning of Just prefixes:
+# @ - Quiet recipes (https://github.com/casey/just#quiet-recipes)
+# _ - Private recipes (https://github.com/casey/just#private-recipes)
 
+# The monorepo uses `PROD` instead of `IS_PROD`.
 IS_PROD := env_var_or_default("IS_PROD", "")
-DOCKER_FILES := "--file=docker-compose.yml" + (
-    if IS_PROD != "true" {" --file=docker-compose.override.yml"} else {""}
-)
-SERVICE := env_var_or_default("SERVICE", "scheduler")
-DC_USER := env_var_or_default("DC_USER", "airflow")
+IS_CI := env_var_or_default("CI", "")
 
-export PROJECT_PY_VERSION := `grep '# PYTHON' requirements_prod.txt | awk -F= '{print $2}'`
-export PROJECT_AIRFLOW_VERSION := `grep '^apache-airflow' requirements_prod.txt | awk -F= '{print $3}'`
+# Show all available recipes
+@_default:
+  just --list --unsorted
+  cd catalog/ && just
 
-# Print the required Python version
-@py-version:
-    echo $PROJECT_PY_VERSION
+#######
+# Dev #
+#######
 
-# Print the current Airflow version
-@airflow-version:
-    echo $PROJECT_AIRFLOW_VERSION
-
-# Check the installed Python version matches the required Python version and fail if not
-check-py-version:
-    #! /usr/bin/env sh
-    installed_python_version=`python -c 'import sys; print(f"{sys.version_info[0]}.{sys.version_info[1]}")'`
-    if [ "$PROJECT_PY_VERSION" != "$installed_python_version" ]
-    then
-        printf "Detected Python version $installed_python_version but $PROJECT_PY_VERSION is required.\n" > /dev/stderr
-        exit 1
+# Setup pre-commit as a Git hook
+precommit:
+    #!/usr/bin/env bash
+    set -eo pipefail
+    if [ -z "$SKIP_PRE_COMMIT" ] && [ ! -f ./pre-commit.pyz ]; then
+      echo "Getting latest release"
+      curl \
+        ${GITHUB_TOKEN:+ --header "Authorization: Bearer ${GITHUB_TOKEN}"} \
+        --output latest.json \
+        https://api.github.com/repos/pre-commit/pre-commit/releases/latest
+      cat latest.json
+      URL=$(grep -o 'https://.*\.pyz' -m 1 latest.json)
+      rm latest.json
+      echo "Downloading pre-commit from $URL"
+      curl \
+        --fail \
+        --location `# follow redirects, else cURL outputs a blank file` \
+        --output pre-commit.pyz \
+        ${GITHUB_TOKEN:+ --header "Authorization: Bearer ${GITHUB_TOKEN}"} \
+        "$URL"
+      echo "Installing pre-commit"
+      python3 pre-commit.pyz install -t pre-push -t pre-commit
+      echo "Done"
+    else
+      echo "Skipping pre-commit installation"
     fi
 
-# Install dependencies into the current environment
-install: check-py-version
-    pip install -r requirements_tooling.txt -r requirements_dev.txt
-    pre-commit install
+# Run pre-commit to lint and reformat files
+lint hook="" *files="": precommit
+    python3 pre-commit.pyz run {{ hook }} {{ if files == "" { "--all-files" } else { "--files" } }}  {{ files }}
 
-# Create the .env file from the template
-dotenv:
-    @([ ! -f .env ] && cp env.template .env) || true
+########
+# Init #
+########
 
-# Run docker compose with the specified command
-_dc *args:
-    docker-compose {{ DOCKER_FILES }} {{ args }}
+# Create .env files from templates
+@env:
+    # Root
+    ([ ! -f .env ] && cp env.template .env) || true
+    # Docker
+    ([ ! -f docker/local_postgres/.env ] && cp docker/local_postgres/env.template docker/local_postgres/.env) || true
+    ([ ! -f docker/minio/.env ] && cp docker/minio/env.template docker/minio/.env) || true
+    # First party services
+    ([ ! -f catalog/.env ] && cp catalog/env.template catalog/.env) || true
 
-# Build all (or specified) container(s)
-build service="": dotenv
-    @just _dc build {{ service }}
+##########
+# Docker #
+##########
 
-# Bring all Docker services up
-up flags="": dotenv
-    @just _dc up -d {{ flags }}
+DOCKER_FILE := "-f " + (
+    if IS_PROD == "true" { "catalog/docker-compose.yml" }
+    else { "docker-compose.yml" }
+)
+EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
+DC_USER := env_var_or_default("DC_USER", "airflow")
 
-# Take all Docker services down
-down flags="":
-    @just _dc down {{ flags }}
+export PROJECT_PY_VERSION := `just catalog/py-version`
+export PROJECT_AIRFLOW_VERSION := `just catalog/airflow-version`
+
+# Run `docker-compose` configured with the correct files and environment
+dc *args:
+    @{{ if IS_CI != "" { "just env" } else { "true" } }}
+    env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend,catalog") }}" docker-compose {{ DOCKER_FILE }} {{ args }}
+
+# Build all (or specified) services
+build *args:
+    just dc build {{ args }}
+
+# Also see `up` recipe in sub-justfiles
+# Bring all Docker services up, in all profiles
+up *flags:
+    #!/usr/bin/env bash
+    set -eo pipefail
+    while true; do
+      if just dc up -d {{ flags }} ; then
+        break
+      fi
+      ((c++)) && ((c==3)) && break
+      sleep 5
+    done
+
+# Also see `wait-up` recipe in sub-justfiles
+# Wait for all services to be up
+wait-up: up
+    just catalog/wait-up
+
+# Also see `init` recipe in sub-justfiles
+# Load sample data into the Docker Compose services
+init:
+    echo "🚧 TODO"
+
+# Take all Docker services down, in all profiles
+down *flags:
+    just dc down {{ flags }}
 
 # Recreate all volumes and containers from scratch
-recreate: dotenv
-    @just down -v
-    @just up "--force-recreate --build"
+recreate:
+    just down -v
+    just up "--force-recreate --build"
+    just init
 
 # Show logs of all, or named, Docker services
-logs service="": up
-    @just _dc logs -f {{ service }}
+logs services="" args=(if IS_CI != "" { "" } else { "-f" }):
+    just dc logs {{ args }} {{ services }}
+
+# Attach to the specificed `service` with interactive TTY
+attach service:
+    docker attach $(docker-compose ps | grep {{ service }} | awk '{print $1}')
+
+# Execute statement in service containers using Docker Compose
+exec +args:
+    just dc exec -u {{ DC_USER }} {{ EXEC_DEFAULTS }} {{ args }}
+
+# Execute statement in a new service container using Docker Compose
+run +args:
+    just dc run -u {{ DC_USER }} {{ EXEC_DEFAULTS }} "{{ args }}"
+
+########
+# Misc #
+########
 
 # Pull, build, and deploy all services
 deploy:
     -git pull
     @just pull
     @just up
-
-# Run pre-commit on all files
-lint hook="":
-    pre-commit run {{ hook }} --all-files
-
-# Load any dependencies necessary for actions on the stack without running the webserver
-_deps:
-    @just up "postgres s3 load_to_s3"
-
-# Mount the tests directory and run a particular command
-@_mount-tests command: _deps
-    # The test directory is mounted into the container only during testing
-    @just _dc run \
-        -e AIRFLOW_VAR_INGESTION_LIMIT=1000000 \
-        -v {{ justfile_directory() }}/tests:/opt/airflow/tests/ \
-        -v {{ justfile_directory() }}/pytest.ini:/opt/airflow/pytest.ini \
-        -v {{ justfile_directory() }}/docker:/opt/airflow/docker/ \
-        --rm \
-        {{ SERVICE }} \
-        {{ command }}
-
-# Run a container that can be used for repeated interactive testing
-test-session:
-    @just _mount-tests bash
-
-# Run pytest using the webserver image
-test *pytestargs:
-    @just _mount-tests "bash -c \'pytest {{ pytestargs }}\'"
-
-# Open a shell into the webserver container
-shell user="airflow": up
-    @just _dc exec -u {{ user }} {{ SERVICE }} /bin/bash
-
-# Launch an IPython REPL using the webserver image
-ipython: _deps
-    @just _dc run \
-        --rm \
-        -w /opt/airflow/openverse_catalog/dags \
-        {{ SERVICE }} \
-        bash -c \'ipython\'
-
-# Run a given command in bash using the scheduler image
-run *args: _deps
-    @just _dc run --rm -u {{ DC_USER }} {{ SERVICE }} bash -c \'{{ args }}\'
-
-# Launch a pgcli shell on the postgres container (defaults to openledger) use "airflow" for airflow metastore
-db-shell args="openledger": up
-    @just _dc exec postgres pgcli {{ args }}
-
-# Generate the DAG documentation
-generate-dag-docs fail_on_diff="false":
-    #!/bin/bash
-    set -e
-    DC_USER=root just run 'python openverse_catalog/utilities/dag_doc_gen/dag_doc_generation.py \&\& chmod 666 /opt/airflow/openverse_catalog/utilities/dag_doc_gen/DAGs.md'
-    # Move the file to the top level, since that level is not mounted into the container
-    mv openverse_catalog/utilities/dag_doc_gen/DAGs.md DAGs.md
-    echo -n "Running linting..."
-    # Linting step afterwards is necessary since the generated output differs greatly from what prettier expects
-    just lint &>/dev/null || true
-    echo "Done!"
-    if {{ fail_on_diff }}; then
-      set +e
-      git diff --exit-code DAGs.md
-      if [ $? -ne 0 ]; then
-          printf "\n\n\e[31m!! Changes found in DAG documentation, please run 'just generate-dag-docs' locally and commit difference !!\n\n"
-          exit 1
-      fi
-    fi
-
-# Generate files for a new provider
-add-provider provider_name endpoint +media_types="image":
-    python3 openverse_catalog/templates/create_provider_ingester.py "{{ provider_name }}" "{{ endpoint }}" -m {{ media_types }}

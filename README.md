@@ -22,7 +22,7 @@ the internet.
 ### API Workflows
 
 To view more information about all the available workflows (DAGs) within the
-project, see [DAGs.md](DAGs.md).
+project, see [DAGs.md](catalog/DAGs.md).
 
 See each provider API script's notes in their respective [handbook][ov-handbook]
 entry.
@@ -69,15 +69,15 @@ This method was retired in 2021.
 ## Development setup for Airflow and API puller scripts
 
 There are a number of scripts in the directory
-[`openverse_catalog/dags/provider_api_scripts`][api_scripts] eventually loaded
-into a database to be indexed for searching in the Openverse API. These run in a
+[`catalog/dags/provider_api_scripts`][api_scripts] eventually loaded into a
+database to be indexed for searching in the Openverse API. These run in a
 different environment than the PySpark portion of the project, and so have their
 own dependency requirements.
 
 For instructions geared specifically towards production deployments, see
 [DEPLOYMENT.md](DEPLOYMENT.md)
 
-[api_scripts]: openverse_catalog/dags/providers/provider_api_scripts
+[api_scripts]: catalog/dags/providers/provider_api_scripts
 
 ### Requirements
 
@@ -129,7 +129,7 @@ The `.env` file does not need to be modified if you only want to run the tests.
 ### Running & Testing
 
 There is a [`docker-compose.yml`][dockercompose] provided in the
-[`openverse_catalog`][cc_airflow] directory, so from that directory, run
+[`catalog`][cc_airflow] directory, so from that directory, run
 
 ```shell
 just up
@@ -149,10 +149,9 @@ and some networking setup so that they can communicate. Note:
   databases and tables to emulate the production environment. It also provides a
   database for Airflow to store its running state.
 - The directory containing all modules files (including DAGs, dependencies, and
-  other tooling) will be mounted to the directory
-  `/opt/airflow/openverse_catalog` in the container
-  `openverse_catalog_webserver_1`. On production, only the DAGs folder will be
-  mounted, e.g. `/opt/airflow/openverse_catalog/dags`.
+  other tooling) will be mounted to the directory `/opt/airflow/catalog` in the
+  container `openverse_catalog_webserver_1`. On production, only the DAGs folder
+  will be mounted, e.g. `/opt/airflow/openverse/dags`.
 
 The various services can be accessed using these links:
 
@@ -184,7 +183,7 @@ If you just need to run an airflow command, you can use the `airflow` recipe.
 Arguments passed to airflow must be quoted:
 
 ```shell
-just run airflow config list
+just run scheduler airflow config list
 ```
 
 To follow the logs of the running container:
@@ -228,8 +227,8 @@ just recreate
 > [generate-dag-docs recipe](https://github.com/WordPress/openverse-catalog/blob/c9be67e483e49e9eda7cd21b52bcde8857cd3922/justfile#L126).
 
 [justfile]: justfile
-[dockercompose]: docker-compose.yml
-[cc_airflow]: openverse_catalog/
+[dockercompose]: catalog/docker-compose.yml
+[cc_airflow]: catalog/
 
 ## Directory Structure
 
@@ -240,7 +239,7 @@ openverse-catalog
 ├── docker/                                 # Dockerfiles and supporting files
 │   ├── airflow/                            #   - Docker image for Airflow server and workers
 │   └── local_postgres/                     #   - Docker image for development Postgres database
-├── openverse_catalog/                      # Primary code directory
+├── catalog/                                # Primary code directory
 │   ├── dags/                               # DAGs & DAG support code
 │   │   ├── common/                         #   - Shared modules used across DAGs
 │   │   ├── data_refresh/                   #   - DAGs & code related to the data refresh process

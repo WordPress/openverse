@@ -24,7 +24,7 @@ occur automatically and will need to be manually initiated.
 Currently the webserver, scheduler, and worker(s) are all run within a single
 docker container on the EC2 instance as defined by
 [the Airflow `Dockerfile` and related files](./docker/airflow). The
-[`docker-compose.yml`](./docker-compose.yml) is used to spin up Airflow in
+[`docker-compose.yml`](catalog/docker-compose.yml) is used to spin up Airflow in
 production.
 
 **Note**: Service deployments are only necessary in the following conditions:
@@ -89,4 +89,4 @@ out to the maintainers if you're interested).
 
 Any migrations to the Catalog database must either be performed by hand or as
 part of a DAG's normal operation (see:
-[iNaturalist](openverse_catalog/dags/providers/provider_api_scripts/inaturalist.py)).
+[iNaturalist](catalog/dags/providers/provider_api_scripts/inaturalist.py)).
