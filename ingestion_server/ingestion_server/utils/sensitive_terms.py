@@ -10,6 +10,6 @@ SENSITIVE_TERMS_URL = config(
 )
 
 
-def get_sensitive_terms():
+def get_sensitive_terms() -> list[str]:
     response: HTTPResponse = urlopen(SENSITIVE_TERMS_URL)
-    return response.readlines()
+    return [line.decode("utf-8") for line in response.readlines()]
