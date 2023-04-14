@@ -78,7 +78,7 @@ dj-local +args="":
 
 # Run Django administrative commands inside the Docker container
 dj +args="": wait-up
-    env DC_USER="opener" just ../exec web python manage.py {{ args }}
+    env DC_USER="{{ env_var_or_default("DC_USER", "opener") }}" just ../exec web python manage.py {{ args }}
 
 # Get IPython shell inside the Docker container
 ipython:
