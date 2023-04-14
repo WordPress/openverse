@@ -1,0 +1,92 @@
+{
+  "_links": {
+    "contributor": {
+      "href": "/contributors/c3ac6939-e85a-4a10-99d1-4079537f34de?build=194",
+      "title": "Andy Wilson"
+    },
+    "generalNode": {
+      "href": "/nodes/402efb6b-634b-4fe4-ac6e-547e8c37a437?build=194",
+      "title": "Hemaris"
+    },
+    "http://ogp.me/ns#image": {
+      "href": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/social/1200x628.png",
+      "sizes": "1200x628",
+      "type": "image/png"
+    },
+    "license": {
+      "href": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "nodes": [
+      {
+        "href": "/nodes/010fedfe-6a4f-4676-a886-4722448ec536?build=194",
+        "title": "Hemaris tityus"
+      },
+      {
+        "href": "/nodes/402efb6b-634b-4fe4-ac6e-547e8c37a437?build=194",
+        "title": "Hemaris"
+      }
+    ],
+    "rasterFiles": [
+      {
+        "href": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/raster/1536x1439.png",
+        "sizes": "1536x1439",
+        "type": "image/png"
+      },
+      {
+        "href": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/raster/1024x959.png",
+        "sizes": "1024x959",
+        "type": "image/png"
+      },
+      {
+        "href": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/raster/512x480.png",
+        "sizes": "512x480",
+        "type": "image/png"
+      }
+    ],
+    "self": {
+      "href": "/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02?build=194",
+      "title": "Hemaris tityus"
+    },
+    "sourceFile": {
+      "href": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/source.svg",
+      "sizes": "2048x2048",
+      "type": "image/svg+xml"
+    },
+    "specificNode": {
+      "href": "/nodes/010fedfe-6a4f-4676-a886-4722448ec536?build=194",
+      "title": "Hemaris tityus"
+    },
+    "thumbnailFiles": [
+      {
+        "href": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/thumbnail/192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "href": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/thumbnail/128x128.png",
+        "sizes": "128x128",
+        "type": "image/png"
+      },
+      {
+        "href": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/thumbnail/64x64.png",
+        "sizes": "64x64",
+        "type": "image/png"
+      }
+    ],
+    "twitter:image": {
+      "href": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/social/1200x628.png",
+      "sizes": "1200x628",
+      "type": "image/png"
+    },
+    "vectorFile": {
+      "href": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/vector.svg",
+      "sizes": "1197.7451x1121.9073",
+      "type": "image/svg+xml"
+    }
+  },
+  "attribution": "Andy Wilson",
+  "build": 194,
+  "created": "2023-03-24T10:45:31.187Z",
+  "sponsor": null,
+  "uuid": "5b1e88b5-159d-495d-b8cb-04f9e28d2f02"
+}

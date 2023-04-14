@@ -1,0 +1,14 @@
+{
+  "small": {
+    "height": 500,
+    "size": 20109,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg",
+    "width": 540
+  },
+  "thumbnail": {
+    "height": 250,
+    "size": 5282,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-thumbnail.jpg",
+    "width": 250
+  }
+}

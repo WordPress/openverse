@@ -1,0 +1,46 @@
+{
+  "completeness": 8,
+  "country": ["United Kingdom"],
+  "dataProvider": ["Wellcome Collection"],
+  "dcDescription": ["Lettering: Greenwich Hospital."],
+  "dcDescriptionLangAware": {
+    "en": ["Lettering: Greenwich Hospital."]
+  },
+  "dcTitleLangAware": {
+    "def": [
+      "Royal Naval Hospital, Greenwich, with ships and rowing boats in the foreground. Engraving."
+    ]
+  },
+  "dcTypeLangAware": {
+    "en": ["Engravings"]
+  },
+  "edmDatasetName": ["9200579_Ag_UK_WellcomeCollection_IIIF"],
+  "edmIsShownAt": ["https://wellcomecollection.org/works/zzwnbyhb"],
+  "edmIsShownBy": [
+    "https://iiif.wellcomecollection.org/image/V0013398.jpg/full/512,/0/default.jpg"
+  ],
+  "edmPreview": [
+    "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fiiif.wellcomecollection.org%2Fimage%2FV0013398.jpg%2Ffull%2F500%2C%2F0%2Fdefault.jpg&type=IMAGE"
+  ],
+  "europeanaCollectionName": ["9200579_Ag_UK_WellcomeCollection_IIIF"],
+  "europeanaCompleteness": 8,
+  "guid": "https://www.europeana.eu/item/9200579/zzwnbyhb?utm_source=api&utm_medium=api&utm_campaign=EoKgCesLr",
+  "id": "/9200579/zzwnbyhb",
+  "index": 0,
+  "language": ["en"],
+  "link": "https://api.europeana.eu/api/v2/record/9200579/zzwnbyhb.json?wskey=EoKgCesLr",
+  "previewNoDistribute": false,
+  "provider": ["Wellcome Collection"],
+  "rights": ["http://creativecommons.org/licenses/by/4.0/"],
+  "score": 6.580116,
+  "timestamp": 1563330662398,
+  "timestamp_created": "2019-06-09T11:48:32.594Z",
+  "timestamp_created_epoch": 1560080912594,
+  "timestamp_update": "2019-06-09T11:48:32.594Z",
+  "timestamp_update_epoch": 1560080912594,
+  "title": [
+    "Royal Naval Hospital, Greenwich, with ships and rowing boats in the foreground. Engraving."
+  ],
+  "type": "IMAGE",
+  "ugc": [false]
+}

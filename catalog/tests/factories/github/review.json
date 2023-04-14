@@ -1,0 +1,39 @@
+{
+  "_links": {
+    "html": {
+      "href": "https://github.com/WordPress/openverse-frontend/pull/0#pullrequestreview-0"
+    },
+    "pull_request": {
+      "href": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/0"
+    }
+  },
+  "author_association": "MEMBER",
+  "body": "el gee tee em",
+  "commit_id": "702248899a81326c7b59585cc90d46dbbbaa6487465707fb27",
+  "html_url": "https://github.com/WordPress/openverse-frontend/pull/0#pullrequestreview-0",
+  "id": -1002,
+  "node_id": "PRR_kwDOFSZ5Dc40UYT5",
+  "pull_request_url": "https://api.github.com/repos/WordPress/openverse-frontend/pulls/0",
+  "state": "APPROVED",
+  "submitted_at": "2022-02-09T16:43:51Z",
+  "user": {
+    "avatar_url": "https://avatars.githubusercontent.com/u/-1?&v=4",
+    "events_url": "https://api.github.com/users/very-cool-reviewer/events{/privacy}",
+    "followers_url": "https://api.github.com/users/very-cool-reviewer/followers",
+    "following_url": "https://api.github.com/users/very-cool-reviewer/following{/other_user}",
+    "gists_url": "https://api.github.com/users/very-cool-reviewer/gists{/gist_id}",
+    "gravatar_id": "",
+    "html_url": "https://github.com/very-cool-reviewer",
+    "id": -1,
+    "login": "very-cool-reviewer",
+    "node_id": "abc1234=",
+    "organizations_url": "https://api.github.com/users/very-cool-reviewer/orgs",
+    "received_events_url": "https://api.github.com/users/very-cool-reviewer/received_events",
+    "repos_url": "https://api.github.com/users/very-cool-reviewer/repos",
+    "site_admin": false,
+    "starred_url": "https://api.github.com/users/very-cool-reviewer/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/very-cool-reviewer/subscriptions",
+    "type": "User",
+    "url": "https://api.github.com/users/very-cool-reviewer"
+  }
+}

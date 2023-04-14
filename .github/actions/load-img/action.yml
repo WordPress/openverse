@@ -10,9 +10,27 @@ inputs:
     default: "true"
     description: Whether to set up API image
 
+  setup_catalog:
+    default: "true"
+    description: Whether to set up catalog image
+
 runs:
   using: "composite"
   steps:
+    # Catalog
+    - name: Download image `catalog`
+      uses: actions/download-artifact@v3
+      if: inputs.setup_catalog == 'true'
+      with:
+        name: catalog
+        path: /tmp
+
+    - name: Load image `catalog`
+      if: inputs.setup_catalog == 'true'
+      shell: bash
+      run: |
+        docker load --input /tmp/catalog.tar
+
     # Ingestion server
     - name: Download image `ingestion_server`
       uses: actions/download-artifact@v3

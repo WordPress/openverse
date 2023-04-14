@@ -66,7 +66,7 @@ stats media="images" host="localhost:50280":
 
 # Launch a `pgcli` shell in the web container (requires typing credentials)
 pgcli db_host="db" db_name="openledger" db_user="deploy":
-    just ../exec web pgcli -h {{ db_host }} openledger
+    env DC_USER="opener" just ../exec web pgcli -h {{ db_host }} openledger
 
 #########################
 # Django administration #
@@ -78,7 +78,7 @@ dj-local +args="":
 
 # Run Django administrative commands inside the Docker container
 dj +args="": wait-up
-    just ../exec web python manage.py {{ args }}
+    env DC_USER="opener" just ../exec web python manage.py {{ args }}
 
 # Get IPython shell inside the Docker container
 ipython:
@@ -94,7 +94,7 @@ dbshell:
 
 # Run API tests inside the Docker container
 test *args: wait-up
-    just ../exec web ./test/run_test.sh {{ args }}
+    env DC_USER="opener" just ../exec web ./test/run_test.sh {{ args }}
 
 # Run API tests locally
 test-local *args:

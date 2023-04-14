@@ -1,5 +1,31 @@
 version: "2.4"
+
+# Common build configuration for Airflow
+# Extension field, see https://docs.docker.com/compose/compose-file/compose-file-v3/#extension-fields
+x-airflow-common: &airflow-common
+  profiles:
+    - catalog
+  restart: on-failure
+  depends_on:
+    - postgres
+    - s3
+  image: openverse_catalog
+  env_file:
+    - .env
+    - catalog/.env
+  build:
+    context: ./catalog/
+    args:
+      - REQUIREMENTS_FILE=requirements_dev.txt
+      - PROJECT_PY_VERSION=${PROJECT_PY_VERSION}
+      - PROJECT_AIRFLOW_VERSION=${PROJECT_AIRFLOW_VERSION}
+  volumes:
+    - ./catalog:/opt/airflow/catalog
+    - catalog-ipython:/home/airflow/.ipython
+    - catalog-pytest-cache:/home/airflow/.cache/pytest
+
 services:
+  # Database used by the API
   db:
     profiles:
       - ingestion_server
@@ -14,8 +40,11 @@ services:
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
 
+  # Database used by the catalog
   upstream_db:
     profiles:
+      - catalog
+      - catalog_dependencies
       - ingestion_server
       - api
     build: ./docker/upstream_db/
@@ -29,6 +58,99 @@ services:
       - docker/upstream_db/env.docker
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
+
+  s3:
+    profiles:
+      - catalog_dependencies
+      - catalog
+    image: minio/minio:latest
+    ports:
+      - "5010:5000"
+      - "5011:5001"
+    env_file:
+      - .env
+      - docker/minio/.env
+    # Create empty buckets on every container startup
+    # Note: $0 is included in the exec because "/bin/bash -c" swallows the first
+    # argument, so it must be re-added at the beginning of the exec call
+    entrypoint: >-
+      /bin/bash -c
+      "for b in $${BUCKETS_TO_CREATE//,/ }; do
+        echo \"Making bucket $$b\" && mkdir -p /data/$$b;
+      done &&
+      exec $$0 \"$$@\""
+    command: minio server /data --address :5000 --console-address :5001
+    volumes:
+      - minio:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5010/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  load_to_s3:
+    profiles:
+      - catalog_dependencies
+      - catalog
+    image: minio/mc:latest
+    env_file:
+      - .env
+      - docker/minio/.env
+    depends_on:
+      - s3
+    volumes:
+      # Buckets for testing provider data imported from s3 are subdirectories under
+      # /tests/s3-data/
+      - ./catalog/tests/s3-data:/data:rw
+    # Loop through subdirectories mounted to the volume and load them to s3/minio.
+    # This takes care of filesystem delays on some local dev environments that may make
+    # minio miss files included directly in the minio volume.
+    # More info here: https://stackoverflow.com/questions/72867045
+    # This does *not* allow for testing permissions issues that may come up in real AWS.
+    # And, if you remove files from /tests/s3-data, you will need to use `just down -v`
+    # and `just up` or `just recreate` to see the minio bucket without those files.
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add s3 http://s3:5000 $${AWS_ACCESS_KEY} $${AWS_SECRET_KEY};
+      cd /data;
+      for b in */ ; do
+        echo \"Loading bucket $$b\"
+        /usr/bin/mc mb --ignore-existing s3/$$b
+        /usr/bin/mc cp --r $$b s3/$$b
+        /usr/bin/mc ls s3/$$b;
+      done ;
+      exit 0;
+      "
+
+  # Dev changes for the scheduler
+  scheduler:
+    <<: *airflow-common
+    depends_on:
+      - upstream_db
+      - s3
+    command: scheduler
+    expose:
+      - "8793" # Used for fetching logs
+    environment:
+      # Upgrade the DB on startup
+      _AIRFLOW_DB_UPGRADE: "true"
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: airflow
+      _AIRFLOW_WWW_USER_PASSWORD: airflow
+      _AIRFLOW_WWW_USER_FIRSTNAME: Air
+      _AIRFLOW_WWW_USER_LASTNAME: Flow
+      _AIRFLOW_WWW_USER_EMAIL: airflow@example.com
+
+  # Dev changes for the webserver container
+  webserver:
+    <<: *airflow-common
+    depends_on:
+      - upstream_db
+      - s3
+      - scheduler
+    command: webserver
+    ports:
+      - "${AIRFLOW_PORT}:8080"
 
   plausible_db:
     profiles:
@@ -195,3 +317,6 @@ volumes:
   plausible-postgres:
   plausible-clickhouse:
   es-data:
+  minio:
+  catalog-ipython:
+  catalog-pytest-cache:

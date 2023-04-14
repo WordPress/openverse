@@ -1,3 +1,7 @@
+catalog:
+  - catalog/**
+  # Change to the CI + CD workflow should trigger complete workflow.
+  - .github/workflows/ci_cd.yml
 api:
   - api/**
   # Change to the CI + CD workflow should trigger complete workflow.

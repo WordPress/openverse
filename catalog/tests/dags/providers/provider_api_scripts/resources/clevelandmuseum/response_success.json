@@ -1,0 +1,95 @@
+{
+  "data": [
+    {
+      "accession_number": "1916.586.a",
+      "catalogue_raisonne": null,
+      "citations": [],
+      "collection": "Decorative Arts",
+      "copyright": null,
+      "creation_date": "1700s",
+      "creation_date_earliest": 1700,
+      "creation_date_latest": 1799,
+      "creators": [],
+      "creditline": "Gift of Mr. and Mrs. J. H. Wade",
+      "culture": ["Germany, 18th century"],
+      "current_location": null,
+      "department": "Decorative Art and Design",
+      "digital_description": null,
+      "dimensions": {
+        "overall": {
+          "height": 0.102
+        }
+      },
+      "edition_of_the_work": null,
+      "exhibitions": {
+        "current": [],
+        "legacy": []
+      },
+      "find_spot": null,
+      "fun_fact": null,
+      "id": 96887,
+      "images": {
+        "full": {
+          "filename": "1916.586.a_full.tif",
+          "filesize": "40263224",
+          "height": "4339",
+          "url": "https://openaccess-cdn.clevelandart.org/1916.586.a/1916.586.a_full.tif",
+          "width": "3091"
+        },
+        "print": {
+          "filename": "1916.586.a_print.jpg",
+          "filesize": "1225285",
+          "height": "3400",
+          "url": "https://openaccess-cdn.clevelandart.org/1916.586.a/1916.586.a_print.jpg",
+          "width": "2422"
+        },
+        "web": {
+          "filename": "1916.586.a_web.jpg",
+          "filesize": "222248",
+          "height": "900",
+          "url": "https://openaccess-cdn.clevelandart.org/1916.586.a/1916.586.a_web.jpg",
+          "width": "641"
+        }
+      },
+      "inscriptions": [
+        {
+          "inscription": "signed:  Z. F. a M.",
+          "inscription_remark": null,
+          "inscription_translation": null
+        }
+      ],
+      "measurements": "Overall: 10.2 cm (4 in.)",
+      "provenance": [
+        {
+          "citations": [],
+          "date": null,
+          "description": "Mr. and Mrs. J. H. Wade, Cleveland, Ohio.",
+          "footnotes": null
+        }
+      ],
+      "related_works": [],
+      "series": null,
+      "series_in_original_language": null,
+      "share_license_status": "CC0",
+      "state_of_the_work": null,
+      "support_materials": [],
+      "technique": "glass with enamel decoration",
+      "title": "Scent Bottle",
+      "title_in_original_language": null,
+      "tombstone": "Scent Bottle, 1700s. Germany, 18th century. Glass with enamel decoration; overall: 10.2 cm (4 in.). The Cleveland Museum of Art, Gift of Mr. and Mrs. J. H. Wade 1916.586.a",
+      "type": "Miscellaneous",
+      "updated_at": "2019-11-25 09:00:26.170000",
+      "url": "https://clevelandart.org/art/1916.586.a",
+      "wall_description": null
+    }
+  ],
+  "info": {
+    "parameters": {
+      "cc": "1",
+      "has_image": "1",
+      "limit": "1",
+      "skip": "30000"
+    },
+    "total": 32483
+  }
+}

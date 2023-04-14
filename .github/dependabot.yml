@@ -36,6 +36,25 @@ updates:
       - "🧱 stack: ingestion server"
       - dependencies
 
+  # Enable version updates for Python dev-libs in the calalog
+  #
+  # `requirements-dev.txt` can be updated more frequently than
+  # `requirements_prod.txt` since they are not pinned by the Airflow constraints
+  # file.
+  - package-ecosystem: pip
+    # Look for requirements file in the `/ingestion_server` directory
+    directory: /catalog
+    # Check for updates once a month
+    schedule:
+      interval: monthly
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - "🐍 tech: python"
+      - "🧱 stack: catalog"
+      - dependencies
+
   - package-ecosystem: "github-actions"
     directory: /
     schedule:

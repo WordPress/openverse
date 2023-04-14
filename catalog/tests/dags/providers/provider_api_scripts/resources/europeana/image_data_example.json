@@ -1,0 +1,201 @@
+{
+  "completeness": 10,
+  "country": ["Spain"],
+  "dataProvider": ["Biblioteca Digital de Castilla y Le\u00f3n"],
+  "dcCreator": [
+    "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent2",
+    "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent3",
+    "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent4"
+  ],
+  "dcCreatorLangAware": {
+    "def": [
+      "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent2",
+      "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent3",
+      "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent4"
+    ]
+  },
+  "dcDescription": [
+    "Sello en seco: Espa\u00f1a art\u00edstica y monumental.",
+    "Se trata de la versi\u00f3n coloreada de las l\u00e1minas utilizadas en: Espa\u00f1a art\u00edstica y monumental / obra dirigida y ejecutada por Don Genaro P\u00e9rez de Villa-amil.-- Paris : Alberto Hauser, 1842-1850"
+  ],
+  "dcDescriptionLangAware": {
+    "def": [
+      "Sello en seco: Espa\u00f1a art\u00edstica y monumental.",
+      "Se trata de la versi\u00f3n coloreada de las l\u00e1minas utilizadas en: Espa\u00f1a art\u00edstica y monumental / obra dirigida y ejecutada por Don Genaro P\u00e9rez de Villa-amil.-- Paris : Alberto Hauser, 1842-1850"
+    ]
+  },
+  "dcLanguage": ["fre"],
+  "dcLanguageLangAware": {
+    "def": ["fre"]
+  },
+  "dcSubjectLangAware": {
+    "def": [
+      "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent5"
+    ]
+  },
+  "dcTitleLangAware": {
+    "def": [
+      "Claustro del Monasterio de S. Salvador en O\u00f1a [Material gr\u00e1fico]= Clo\u00eetre du Monast\u00e8re de S. Salvador \u00e0 O\u00f1a"
+    ]
+  },
+  "dcTypeLangAware": {
+    "def": ["Ilustraciones y Fotos"]
+  },
+  "edmAgent": [
+    "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent2",
+    "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent3",
+    "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent4",
+    "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent6"
+  ],
+  "edmAgentLabel": [
+    {
+      "def": "Villemin, Charles, fl. 1835-1849"
+    },
+    {
+      "def": "P\u00e9rez Villaamil, Genaro, 1807-1854"
+    },
+    {
+      "def": "Carderera, Valent\u00edn, 1796-1880"
+    },
+    {
+      "def": "Monasterio de San Salvador de O\u00f1a"
+    }
+  ],
+  "edmAgentLabelLangAware": {
+    "es": [
+      "Villemin, Charles, fl. 1835-1849",
+      "P\u00e9rez Villaamil, Genaro, 1807-1854",
+      "Carderera, Valent\u00edn, 1796-1880",
+      "Monasterio de San Salvador de O\u00f1a"
+    ]
+  },
+  "edmConcept": [
+    "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent5"
+  ],
+  "edmConceptLabel": [
+    {
+      "def": "Monasterio de San Salvador de O\u00f1a-Grabados"
+    }
+  ],
+  "edmConceptPrefLabelLangAware": {
+    "es": ["Monasterio de San Salvador de O\u00f1a-Grabados"]
+  },
+  "edmDatasetName": ["2022704_Ag_ES_Hispana_esegen3"],
+  "edmIsShownAt": [
+    "http://bibliotecadigital.jcyl.es/i18n/consulta/registro.cmd?id=26229"
+  ],
+  "edmIsShownBy": [
+    "http://bibliotecadigital.jcyl.es/i18n/catalogo_imagenes/imagen_id.cmd?idImagen=102620362"
+  ],
+  "edmPreview": [
+    "https://api.europeana.eu/api/v2/thumbnail-by-url.json?uri=http%3A%2F%2Fbibliotecadigital.jcyl.es%2Fi18n%2Fcatalogo_imagenes%2Fimagen_id.cmd%3FidImagen%3D102620362&type=IMAGE"
+  ],
+  "edmTimespan": [
+    "http://semium.org/time/184x",
+    "http://semium.org/time/18xx",
+    "http://semium.org/time/AD2xxx",
+    "http://semium.org/time/18xx_1_half"
+  ],
+  "edmTimespanLabel": [
+    {
+      "def": "1840s"
+    },
+    {
+      "def": "184?"
+    },
+    {
+      "def": "184x"
+    },
+    {
+      "def": "19.."
+    },
+    {
+      "def": "19??"
+    },
+    {
+      "def": "19e"
+    },
+    {
+      "def": "5th decade of the 19th century"
+    },
+    {
+      "def": "19-th"
+    },
+    {
+      "def": "19th"
+    },
+    {
+      "def": "19th century"
+    },
+    {
+      "def": "Second millenium AD"
+    },
+    {
+      "def": "Second millenium AD, years 1001-2000"
+    },
+    {
+      "def": "First half of the 19th century"
+    },
+    {
+      "def": "19\u0439 \u0432\u0435\u043a"
+    },
+    {
+      "def": "\u041f\u0435\u0440\u0432\u0430\u044f \u043f\u043e\u043b\u043e\u0432\u043d\u0438\u0430 19-\u0433\u043e \u0432\u0435\u043a\u0430"
+    },
+    {
+      "def": "19e si\u00e8cle"
+    },
+    {
+      "def": "2e mill\u00e9naire apr\u00e8s J.-C."
+    },
+    {
+      "def": "19e (d\u00e9but)"
+    },
+    {
+      "def": "19de eeuw"
+    }
+  ],
+  "edmTimespanLabelLangAware": {
+    "def": ["1840s", "184?", "184x", "19..", "19??", "19e"],
+    "en": [
+      "5th decade of the 19th century",
+      "19-th",
+      "19th",
+      "19th century",
+      "Second millenium AD",
+      "Second millenium AD, years 1001-2000",
+      "First half of the 19th century"
+    ],
+    "fr": [
+      "19e si\u00e8cle",
+      "2e mill\u00e9naire apr\u00e8s J.-C.",
+      "19e (d\u00e9but)"
+    ],
+    "nl": ["19de eeuw"],
+    "ru": [
+      "19\u0439 \u0432\u0435\u043a",
+      "\u041f\u0435\u0440\u0432\u0430\u044f \u043f\u043e\u043b\u043e\u0432\u043d\u0438\u0430 19-\u0433\u043e \u0432\u0435\u043a\u0430"
+    ]
+  },
+  "europeanaCollectionName": ["2022704_Ag_ES_Hispana_esegen3"],
+  "europeanaCompleteness": 10,
+  "guid": "https://www.europeana.eu/item/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1?utm_source=api&utm_medium=api&utm_campaign=test_key",
+  "id": "/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1",
+  "index": 0,
+  "language": ["es"],
+  "link": "https://api.europeana.eu/api/v2/record/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1.json?wskey=test_key",
+  "previewNoDistribute": false,
+  "provider": ["Hispana"],
+  "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+  "score": 1,
+  "timestamp": 1563309694939,
+  "timestamp_created": "2018-01-16T10:52:45.548Z",
+  "timestamp_created_epoch": 1516099965548,
+  "timestamp_update": "2018-01-16T10:52:45.548Z",
+  "timestamp_update_epoch": 1516099965548,
+  "title": [
+    "Claustro del Monasterio de S. Salvador en O\u00f1a [Material gr\u00e1fico]= Clo\u00eetre du Monast\u00e8re de S. Salvador \u00e0 O\u00f1a"
+  ],
+  "type": "IMAGE",
+  "ugc": [false]
+}

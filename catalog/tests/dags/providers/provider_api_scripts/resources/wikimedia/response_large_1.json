@@ -1,0 +1,74 @@
+{
+  "batchcomplete": "",
+  "continue": {},
+  "query": {
+    "pages": {
+      "456": {
+        "imageinfo": [
+          {
+            "descriptionshorturl": "https://comm.wiki.org/sml1",
+            "descriptionurl": "https://comm.wiki.org/desc1",
+            "extmetadata": {
+              "Artist": {
+                "source": "commons-desc-page",
+                "value": "<a rel=\"nofollow\" class=\"external text\" href=\"http://www.geograph.org.uk/profile/1234\">Alice Bobby</a>"
+              },
+              "ImageDescription": {
+                "source": "commons-desc-page",
+                "value": "decription 1"
+              },
+              "LicenseUrl": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "https://creativecommons.org/licenses/by-sa/4.0"
+              }
+            },
+            "height": 6000,
+            "size": 20000,
+            "thumbheight": 180,
+            "thumburl": "https://upl.wiki.org/thumburl1",
+            "thumbwidth": 300,
+            "url": "https://upl.wiki.org/url1",
+            "user": "User1",
+            "width": 10000
+          }
+        ],
+        "pageid": 456,
+        "title": "File:prettypic1.jpg"
+      },
+      "789": {
+        "imageinfo": [
+          {
+            "descriptionshorturl": "https://comm.wiki.org/sml2",
+            "descriptionurl": "https://comm.wiki.org/desc2",
+            "extmetadata": {
+              "Artist": {
+                "source": "commons-desc-page",
+                "value": "<a rel=\"nofollow\" class=\"external text\" href=\"http://www.geograph.org.uk/profile/5678\">Charlie Doe</a>"
+              },
+              "ImageDescription": {
+                "source": "commons-desc-page",
+                "value": "decription 2"
+              },
+              "LicenseUrl": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "https://creativecommons.org/licenses/by-sa/2.0"
+              }
+            },
+            "height": 500,
+            "size": 2000,
+            "thumbheight": 150,
+            "thumburl": "https://upl.wiki.org/thumburl2",
+            "thumbwidth": 300,
+            "url": "https://upl.wiki.org/url2",
+            "user": "User2",
+            "width": 1000
+          }
+        ],
+        "pageid": 789,
+        "title": "File:prettypic2.jpg"
+      }
+    }
+  }
+}

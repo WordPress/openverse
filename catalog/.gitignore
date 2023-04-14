@@ -1,0 +1,2 @@
+# Keep required logs
+!tests/dags/common/test_resources/logs/

@@ -148,10 +148,10 @@ Openverse is powered by upstream providers of openly licensed media. You can
 help expand Openverse by identifying sources of Creative Commons licensed
 media - we're always looking to broaden our dataset.
 
-[Our currently list of providers which have been identified but are not yet being ingested can be found here](https://github.com/WordPress/openverse-catalog/issues?q=is%3Aopen+is%3Aissue+label%3A%22%E2%98%81%EF%B8%8F+provider%3A+any%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+audio%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+images%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+text%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+video%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+3D+models%22).
+[Our currently list of providers which have been identified but are not yet being ingested can be found here](https://github.com/WordPress/openverse/issues?q=is%3Aopen+is%3Aissue+label%3A%22%E2%98%81%EF%B8%8F+provider%3A+any%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+audio%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+images%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+text%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+video%22%2C%22%E2%98%81%EF%B8%8F+provider%3A+3D+models%22).
 
 You can use the
-[New Source Suggestion for Openverse](https://github.com/WordPress/openverse-catalog/issues/new?assignees=&labels=%F0%9F%9A%A6+status%3A+awaiting+triage%2C%F0%9F%A7%B9+status%3A+ticket+work+required%2C%E2%98%81%EF%B8%8F+provider%3A+any&template=new_source_suggestion.yml&title=%3CSource+name+here%3E)
+[New Source Suggestion for Openverse](https://github.com/WordPress/openverse/issues/new?assignees=&labels=%F0%9F%9A%A6+status%3A+awaiting+triage%2C%F0%9F%A7%B9+status%3A+ticket+work+required%2C%E2%98%81%EF%B8%8F+provider%3A+any&template=new_source_suggestion.yml&title=%3CSource+name+here%3E)
 issue template to submit whatever sources you find.
 
 ### Feedback
