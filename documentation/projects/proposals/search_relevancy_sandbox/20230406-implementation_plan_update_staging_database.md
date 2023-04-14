@@ -40,48 +40,58 @@ production API database. This will be accomplished by:
 2. In the case where the snapshot is not yet available, wait for the status of
    the most recent snapshot using the
    [`RdsSnapshotExistenceSensor`](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/sensors/rds/index.html#airflow.providers.amazon.aws.sensors.rds.RdsSnapshotExistenceSensor).
-3. Create a new database from this snapshot using boto3's
-   [`restore_db_instance_from_db_snapshot`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/restore_db_instance_from_db_snapshot.html)
-   function (an operator does not exist for this operation). This database will
-   be named in a way that does not conflict with the existing dev database name,
-   e.g. `dev-next-openverse-db`. Careful consideration will need to be made when
-   drafting this step to ensure that the generated database matches the settings
-   for the existing database exactly. Specifically, the following should be
-   matched:
+3. In parallel, gather the attributes of the **staging** database using boto3's
+   [`describe_db_instances`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_instances.html)
+   function (an Airflow operator does not exist for this operation). Namely, the
+   following attributes should be gathered and set to ensure they match:
    - Availability should be a single DB instance (not multi-AZ)
    - It should be attached to our default VPC
    - It should not be publicly accessible
    - It will need access to the following VPC security groups: `default`,
      `openverse-vpc-db-access`, `staging-dev-rds-sg`
-   - It should match the dev database's instance size (currently `m5.xlarge`)
+   - It should match the staging database's instance size (currently
+     `m5.xlarge`)
    - It should have 3000 GB of allocated gp2 storage
    - It should use password authentication (this may not need to be changed from
      the default, as the snapshot should contain the same connection
      information)
-4. Wait for the new database to be ready using the
+4. Create a new database from this snapshot using boto3's
+   [`restore_db_instance_from_db_snapshot`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/restore_db_instance_from_db_snapshot.html)
+   function (an operator does not exist for this operation). This database will
+   be named in a way that does not conflict with the existing staging database
+   name, e.g. `dev-next-openverse-db`. The database configuration information
+   from the previous step will be used to ensure the new database matches the
+   old database's configuration exactly.
+5. Wait for the new database to be ready using the
    [`RdsDbSensor`](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/sensors/rds/index.html#airflow.providers.amazon.aws.sensors.rds.RdsDbSensor)
    ([example](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/operators/rds.html#howto-sensor-rdsdbsensor)).
-5. Rename the old staging database to `dev-old-openverse-db` using boto3's
+6. Rename the old staging database to `dev-old-openverse-db` using boto3's
    [`modify_db_instance`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/modify_db_instance.html)
    function (an operator does not exist for this operation). We must set the
    `ApplyImmediately` option here to `True` to ensure this operation happens
    immediately rather than waiting for the next maintenance window.
-6. Wait for the old database rename to be complete with the `RdsDbSensor` (we
+7. Wait for the old database rename to be complete with the `RdsDbSensor` (we
    may need retries on this step, since the database may not be initially
    available/named when the sensor first starts). _**Note**: this will cause a
    temporary outage of the staging API, see
-   [the alternatives section](#alternatives) for why this is the case._
-7. Rename the new database to `dev-openverse-db` using `modify_db_instance`.
-8. Wait for the new database rename to be complete with the `RdsDbSensor` (we
+   [the alternatives section](#alternatives) for why this is the case._ A Slack
+   notification should be sent out at the start of this step to alert the team
+   of the outage, and again once the outage is resolved.
+8. Rename the new database to `dev-openverse-db` using `modify_db_instance`.
+   (Noting that `ApplyImmediately` should be set to `True` here as well.)
+9. Wait for the new database rename to be complete with the `RdsDbSensor` (we
    may need retries on this step, since the database may not be initially
    available/named when the sensor first starts).
-9. If the previous steps fail, rename `dev-old-openverse-db` back to
-   `dev-openverse-db`. Otherwise, `dev-old-openverse-db` can be deleted using
-   the
-   [`RdsDeleteDbInstanceOperator`](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/operators/rds/index.html#airflow.providers.amazon.aws.operators.rds.RdsDeleteDbInstanceOperator)
-   (the `wait_for_completion` should be left as `True` here so we don't need a
-   follow-up sensor).
-10. Report the success or failure of the DAG run to Slack.
+10. If the previous steps fail, rename `dev-old-openverse-db` back to
+    `dev-openverse-db`. Otherwise, `dev-old-openverse-db` can be deleted using
+    the
+    [`RdsDeleteDbInstanceOperator`](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/operators/rds/index.html#airflow.providers.amazon.aws.operators.rds.RdsDeleteDbInstanceOperator).
+    We should use the following configuration options:
+    - `wait_for_completion` should be left as `True` here so this stop will hang
+      until the database removal is complete.
+    - `SkipFinalSnapshot` should be set to `True` to avoid creating a final
+      snapshot of the database before deletion.
+11. Report the success or failure of the DAG run to Slack.
 
 ## Dependencies
 
@@ -131,6 +141,13 @@ than try and avoid it.
 
 This DAG will need to have clear instructions for how to run it for those
 unfamiliar with Airflow.
+
+## Parallelizable streams
+
+<!-- What, if any, work within this plan can be parallelized? -->
+
+All of this work will be done as part of a single PR, so it is not
+parallelizable.
 
 ## Rollback
 
