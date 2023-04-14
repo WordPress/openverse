@@ -16,18 +16,12 @@ import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { useI18n } from "~/composables/use-i18n"
 
-import allIcon from "~/assets/icons/all-content.svg"
-import audioIcon from "~/assets/icons/audio-content.svg"
-import imageIcon from "~/assets/icons/image-content.svg"
-import videoIcon from "~/assets/icons/video-content.svg"
-import model3dIcon from "~/assets/icons/model-3d.svg"
-
 const icons = {
-  [ALL_MEDIA]: allIcon,
-  [AUDIO]: audioIcon,
-  [IMAGE]: imageIcon,
-  [VIDEO]: videoIcon,
-  [MODEL_3D]: model3dIcon,
+  [ALL_MEDIA]: "all",
+  [AUDIO]: "audio",
+  [IMAGE]: "image",
+  [VIDEO]: "video",
+  [MODEL_3D]: "model-3d",
 } as const
 
 const labels = {

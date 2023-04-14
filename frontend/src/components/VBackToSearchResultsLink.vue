@@ -4,7 +4,7 @@
     class="time inline-flex flex-row items-center gap-2 rounded-sm p-2 pe-3 text-xs font-semibold text-dark-charcoal-70 hover:text-dark-charcoal"
     v-bind="$attrs"
   >
-    <VIcon :icon-path="chevronIcon" :rtl-flip="true" />
+    <VIcon name="chevron" :rtl-flip="true" />
     {{ $t("single-result.back") }}
   </VLink>
 </template>
@@ -14,8 +14,6 @@ import { defineComponent } from "vue"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VLink from "~/components/VLink.vue"
-
-import chevronIcon from "~/assets/icons/chevron-left.svg"
 
 /**
  * This link takes the user from a single result back to the list of all
@@ -27,8 +25,5 @@ export default defineComponent({
     VLink,
   },
   inheritAttrs: false,
-  setup() {
-    return { chevronIcon }
-  },
 })
 </script>

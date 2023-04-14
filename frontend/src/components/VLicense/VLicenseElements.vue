@@ -8,7 +8,7 @@
       <VIcon
         view-box="0 0 30 30"
         :size="isSmall || isMobile ? 5 : 6"
-        :icon-path="icons[element]"
+        :name="`licenses/${element}`"
       />
       <span v-if="elementNames.length > 1" class="sr-only">{{
         element.toUpperCase()

@@ -14,9 +14,6 @@ import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import { capital } from "case"
 
-import replayIcon from "~/assets/icons/replay.svg"
-import externalLinkIcon from "~/assets/icons/external-link.svg"
-
 <Meta title="Components/VButton" components={VButton} />
 
 export const buttonVariants = allButtonVariants.filter(
@@ -54,18 +51,18 @@ export const TemplateWithIcons = (args) => ({
   template: `
 <div class="flex flex-col items-center gap-4 flex-wrap">
   <VButton :variant="args.variant" :size="args.size" :has-icon-start="true">
-    <VIcon :icon-path="replayIcon" />Button
+    <VIcon name="replay" />Button
   </VButton>
   <VButton :variant="args.variant" :size="args.size" has-icon-end>
-    Button<VIcon :icon-path="externalLinkIcon" />
+    Button<VIcon name="external-link" />
   </VButton>
   <VButton :variant="args.variant" :size="args.size" has-icon-start has-icon-end>
-    <VIcon :icon-path="replayIcon" />Button<VIcon :icon-path="externalLinkIcon" />
+    <VIcon name="replay" />Button<VIcon name="external-link" />
   </VButton>
 </div>`,
   components: { VButton, VIcon },
   setup() {
-    return { args, replayIcon, externalLinkIcon }
+    return { args }
   },
 })
 

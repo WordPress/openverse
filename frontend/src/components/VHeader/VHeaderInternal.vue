@@ -15,7 +15,7 @@
       <VIconButton
         id="menu-button"
         ref="menuButtonRef"
-        :icon-props="{ iconPath: menuIcon }"
+        :icon-props="{ name: 'menu' }"
         :label="$t('header.aria.menu')"
         v-bind="triggerA11yProps"
         class="border-tx hover:bg-dark-charcoal hover:text-white"
@@ -101,8 +101,6 @@ import VModalContent from "~/components/VModal/VModalContent.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
 
-import menuIcon from "~/assets/icons/menu.svg"
-
 export default defineComponent({
   name: "VHeaderInternal",
   components: {
@@ -163,8 +161,6 @@ export default defineComponent({
       menuButtonRef,
       modalContentRef,
       nodeRef,
-
-      menuIcon,
 
       allPages,
       currentPage,

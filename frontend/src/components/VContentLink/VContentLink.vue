@@ -11,7 +11,7 @@
     @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
   >
     <div class="flex flex-col items-start md:flex-row md:items-center">
-      <VIcon :icon-path="iconPath" />
+      <VIcon :name="mediaType" />
       <p class="hidden pt-1 font-semibold md:block md:ps-2 md:pt-0 md:text-2xl">
         {{ $t(`search-type.see-${mediaType}`) }}
       </p>
@@ -27,24 +27,15 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
-import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
+import type { SupportedMediaType } from "~/constants/media"
 
 import { defineEvent } from "~/types/emits"
 
-import VIcon from "~/components/VIcon/VIcon.vue"
 import VLink from "~/components/VLink.vue"
-
-import audioIcon from "~/assets/icons/audio-wave.svg"
-import imageIcon from "~/assets/icons/image.svg"
-
-const iconMapping = {
-  [AUDIO]: audioIcon,
-  [IMAGE]: imageIcon,
-}
 
 export default defineComponent({
   name: "VContentLink",
-  components: { VIcon, VLink },
+  components: { VLink },
   props: {
     /**
      * One of the media types supported.
@@ -72,14 +63,11 @@ export default defineComponent({
     "shift-tab": defineEvent<[KeyboardEvent]>(),
   },
   setup(props) {
-    const iconPath = computed(() => iconMapping[props.mediaType])
     const { getI18nCount } = useI18nResultsCount()
     const hasResults = computed(() => props.resultsCount > 0)
     const resultsCountLabel = computed(() => getI18nCount(props.resultsCount))
 
     return {
-      iconPath,
-      imageIcon,
       resultsCountLabel,
       hasResults,
     }

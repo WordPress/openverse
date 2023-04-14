@@ -1,12 +1,12 @@
-import cc from "~/assets/licenses/cc.svg"
-import by from "~/assets/licenses/by.svg"
-import nc from "~/assets/licenses/nc.svg"
-import nd from "~/assets/licenses/nd.svg"
-import sa from "~/assets/licenses/sa.svg"
-import zero from "~/assets/licenses/zero.svg"
-import pd from "~/assets/licenses/pd.svg"
-import sampling from "~/assets/licenses/sampling.svg"
-import samplingPlus from "~/assets/licenses/sampling.plus.svg"
+import cc from "~/assets/icons/raw/licenses/cc.svg"
+import by from "~/assets/icons/raw/licenses/by.svg"
+import nc from "~/assets/icons/raw/licenses/nc.svg"
+import nd from "~/assets/icons/raw/licenses/nd.svg"
+import sa from "~/assets/icons/raw/licenses/sa.svg"
+import zero from "~/assets/icons/raw/licenses/zero.svg"
+import pd from "~/assets/icons/raw/licenses/pd.svg"
+import sampling from "~/assets/icons/raw/licenses/sampling.svg"
+import samplingPlus from "~/assets/icons/raw/licenses/sampling.plus.svg"
 
 export const CC_LICENSES = [
   "by",

@@ -155,6 +155,7 @@ const config: NuxtConfig = {
     "@nuxtjs/composition-api/module",
     "@nuxtjs/style-resources",
     "@nuxtjs/svg",
+    "@nuxtjs/svg-sprite",
     "@nuxtjs/eslint-module",
     "@pinia/nuxt",
   ],
@@ -174,6 +175,10 @@ const config: NuxtConfig = {
     { path: "/healthcheck", handler: "~/server-middleware/healthcheck.js" },
     { path: "/robots.txt", handler: "~/server-middleware/robots.js" },
   ],
+  svgSprite: {
+    input: "~/assets/icons/raw",
+    output: "~/assets/icons",
+  },
   i18n: {
     baseUrl: "https://openverse.org",
     locales: openverseLocales,

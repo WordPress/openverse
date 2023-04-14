@@ -18,7 +18,7 @@
     >
       <VSearchBarButton
         v-show="searchTerm !== ''"
-        :icon-path="closeIcon"
+        icon="close"
         :label="$t('browse-page.search-form.clear')"
         inner-area-classes="bg-white hover:bg-dark-charcoal-10"
         class="hidden group-focus-within:flex"
@@ -63,8 +63,6 @@ import VSearchBar from "~/components/VHeader/VSearchBar/VSearchBar.vue"
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 import VSearchTypePopover from "~/components/VContentSwitcher/VSearchTypePopover.vue"
-
-import closeIcon from "~/assets/icons/close-small.svg"
 
 /**
  * The desktop search header.
@@ -113,7 +111,6 @@ export default defineComponent({
     const isXl = computed(() => uiStore.isBreakpoint("xl"))
 
     return {
-      closeIcon,
       filterButtonRef,
       searchBarRef,
       isFetching,

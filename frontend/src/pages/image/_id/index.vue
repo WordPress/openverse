@@ -103,7 +103,6 @@ import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
 import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
-import externalIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
   name: "VImageDetailsPage",
@@ -237,7 +236,6 @@ export default defineComponent({
       onImageLoaded,
       onImageError,
       backToSearchPath,
-      externalIcon,
 
       sendGetMediaEvent,
     }
