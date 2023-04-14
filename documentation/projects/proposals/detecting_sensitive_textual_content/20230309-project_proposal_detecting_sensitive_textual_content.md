@@ -1,4 +1,4 @@
-# Project Proposal - 2023-03-09
+# 2023-03-09 Project Proposal
 
 ## Reviewers
 
