@@ -24,6 +24,6 @@ others.
    in the [popularity/sql.py](sql.py) file.
 3. Add the new provider and metric to the
    `INSERT INTO public.image_popularity_metrics` statement in
-   [0004_openledger_image_view.sql](../../../../docker/local_postgres/0004_openledger_image_view.sql#L45).
+   [0004_openledger_image_view.sql](../../../../docker/upstream_db/0004_openledger_image_view.sql#L45).
    For now all percentiles should be set to `.85`, this may be adjusted in the
    future.

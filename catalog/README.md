@@ -237,8 +237,7 @@ openverse-catalog
 ├── .github/                                # Templates for GitHub
 ├── archive/                                # Files related to the previous CommonCrawl parsing implementation
 ├── docker/                                 # Dockerfiles and supporting files
-│   ├── airflow/                            #   - Docker image for Airflow server and workers
-│   └── local_postgres/                     #   - Docker image for development Postgres database
+│   └── upstream_db/                        #   - Docker image for development Postgres database
 ├── catalog/                                # Primary code directory
 │   ├── dags/                               # DAGs & DAG support code
 │   │   ├── common/                         #   - Shared modules used across DAGs
