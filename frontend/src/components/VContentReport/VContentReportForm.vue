@@ -65,6 +65,7 @@
             v-if="media.foreign_landing_url && selectedReason === DMCA"
             :provider="providerName"
             :foreign-landing-url="media.foreign_landing_url"
+            @click="handleDmcaSubmit"
           />
           <VReportDescForm
             v-if="selectedReason !== DMCA"
