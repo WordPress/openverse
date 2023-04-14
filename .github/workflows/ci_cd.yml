@@ -91,6 +91,9 @@ jobs:
               build_matrix["image"].append("frontend")
               build_matrix["include"].append({"image": "frontend", "context": "frontend", "target": "app"})
               publish_matrix["image"].append("frontend")
+          if any(item in changes for item in ["api", "ingestion_server", "catalog"]):
+              build_matrix["image"].append("upstream_db")
+              build_matrix["include"].append({"image": "upstream_db", "context": "docker/upstream_db", "target": "db"})
           if "catalog" in changes:
               build_matrix["image"].append("catalog")
               build_matrix["include"].append({"image": "catalog", "context": "catalog", "target": "cat"})
@@ -449,6 +452,8 @@ jobs:
 
       - name: Load Docker images
         uses: ./.github/actions/load-img
+        with:
+          setup_catalog: false
 
       - name: Run check recipe
         run: just ${{ matrix.recipe }}
