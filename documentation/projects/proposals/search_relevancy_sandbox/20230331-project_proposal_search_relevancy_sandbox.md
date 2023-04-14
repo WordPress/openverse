@@ -4,8 +4,9 @@
 
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
-- [ ] dhruvkb
 - [x] sarayourfriend
+- [x] zackkrida
+- [x] krysal
 
 ## Project summary
 
@@ -13,8 +14,9 @@
 
 Develop mechanisms and workflows for sustainably creating & updating our staging
 API database & Elasticsearch cluster, in order to enable testing changes to
-Elasticsearch indices. The staging setup will reflect production in two ways:
-proportionally by provider and with production-level volumes.
+Elasticsearch indices. The staging setup will reflect production in two separate
+ways using two different indices: proportionally by provider and with
+production-level volumes.
 
 ## Goals
 
@@ -132,7 +134,7 @@ No marketing is required as this is an improvement internal to the team.
 
 In the order they should be completed:
 
-1. Staging API update procedure
+1. Staging API DB update procedure
    - This plan will describe a DAG which can be triggered to update the staging
      API database.
 2. Rapid iteration on ingestion server index configuration
@@ -148,8 +150,12 @@ In the order they should be completed:
      the existing EC2 infrastructure to update the Elasticsearch index
      configuration without issuing a deployment (similar to the
      [dag-sync script for the catalog](https://github.com/WordPress/openverse-catalog/blob/10857e3ee94ae686853984c54d504b152082d4c2/dag-sync.sh)).
-3. Staging data refresh DAGs for both potential index types
+3. Staging Elasticsearch reindex DAGs for both potential index types (these will
+   be subsets of the full data refresh)
    - This plan will describe the DAG or DAGs which will be used to create/update
      both the proportional-by-provider and production-data-volume indices.
    - It will also describe the mechanism by which maintainers can rapidly switch
-     index aliases.
+     index the staging API uses. This could be done in two separate ways: a DAG
+     which allows changing the primary index alias or a set of changes to the
+     API which would allow queries to specify which index they use. The
+     implementation plan should explore and describe both options.
