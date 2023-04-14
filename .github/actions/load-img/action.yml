@@ -10,9 +10,45 @@ inputs:
     default: "true"
     description: Whether to set up API image
 
+  setup_catalog:
+    default: "true"
+    description: Whether to set up catalog image
+
+  setup_upstream_db:
+    default: "true"
+    description: Whether to set up upstream DB image
+
 runs:
   using: "composite"
   steps:
+    # Upstream DB
+    - name: Download image `upstream_db`
+      uses: actions/download-artifact@v3
+      if: inputs.setup_upstream_db == 'true'
+      with:
+        name: upstream_db
+        path: /tmp
+
+    - name: Load image `upstream_db`
+      if: inputs.setup_upstream_db == 'true'
+      shell: bash
+      run: |
+        docker load --input /tmp/upstream_db.tar
+
+    # Catalog
+    - name: Download image `catalog`
+      uses: actions/download-artifact@v3
+      if: inputs.setup_catalog == 'true'
+      with:
+        name: catalog
+        path: /tmp
+
+    - name: Load image `catalog`
+      if: inputs.setup_catalog == 'true'
+      shell: bash
+      run: |
+        docker load --input /tmp/catalog.tar
+
     # Ingestion server
     - name: Download image `ingestion_server`
       uses: actions/download-artifact@v3

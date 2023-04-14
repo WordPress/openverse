@@ -1,0 +1,115 @@
+{
+  "batchcomplete": "",
+  "continue": {
+    "continue": "gaicontinue||",
+    "gaicontinue": "20151031230201|Lancelot_'Capability'_BROWN_-_Wilderness_House_Moat_Lane_Hampton_Court_Palace_Hampton_Court_London_KT8_9AR.jpg"
+  },
+  "query": {
+    "pages": {
+      "18263872": {
+        "globalusage": [],
+        "ns": 6,
+        "pageid": 18263872,
+        "title": "File:Minchinmavida Volcano.jpg"
+      },
+      "44672185": {
+        "globalusage": [],
+        "ns": 6,
+        "pageid": 44672185,
+        "title": "File:2002-04-02 Hauptstra\u00dfe, Heidelberg IMG 0404.jpg"
+      },
+      "44672190": {
+        "globalusage": [
+          {
+            "title": "Liste_der_Kulturdenkmale_in_Niedercunnersdorf",
+            "url": "https://de.wikipedia.org/wiki/Liste_der_Kulturdenkmale_in_Niedercunnersdorf",
+            "wiki": "de.wikipedia.org"
+          },
+          {
+            "title": "Q49436288",
+            "url": "https://www.wikidata.org/wiki/Q49436288",
+            "wiki": "www.wikidata.org"
+          }
+        ],
+        "ns": 6,
+        "pageid": 44672190,
+        "title": "File:Niedercunnersdorf M\u00fchlgrabenweg 5 (1).JPG"
+      },
+      "44672194": {
+        "globalusage": [
+          {
+            "title": "Liste_der_Kulturdenkmale_in_Niedercunnersdorf",
+            "url": "https://de.wikipedia.org/wiki/Liste_der_Kulturdenkmale_in_Niedercunnersdorf",
+            "wiki": "de.wikipedia.org"
+          },
+          {
+            "title": "Q49436212",
+            "url": "https://www.wikidata.org/wiki/Q49436212",
+            "wiki": "www.wikidata.org"
+          }
+        ],
+        "ns": 6,
+        "pageid": 44672194,
+        "title": "File:Niedercunnersdorf Gartenweg 12.JPG"
+      },
+      "44672195": {
+        "globalusage": [
+          {
+            "title": "Liste_der_Kulturdenkmale_in_Niedercunnersdorf",
+            "url": "https://de.wikipedia.org/wiki/Liste_der_Kulturdenkmale_in_Niedercunnersdorf",
+            "wiki": "de.wikipedia.org"
+          },
+          {
+            "title": "Q49436237",
+            "url": "https://www.wikidata.org/wiki/Q49436237",
+            "wiki": "www.wikidata.org"
+          }
+        ],
+        "ns": 6,
+        "pageid": 44672195,
+        "title": "File:Niedercunnersdorf Gartenweg 25.JPG"
+      },
+      "44672196": {
+        "globalusage": [
+          {
+            "title": "Liste_der_Kulturdenkmale_in_Niedercunnersdorf",
+            "url": "https://de.wikipedia.org/wiki/Liste_der_Kulturdenkmale_in_Niedercunnersdorf",
+            "wiki": "de.wikipedia.org"
+          },
+          {
+            "title": "Q49436490",
+            "url": "https://www.wikidata.org/wiki/Q49436490",
+            "wiki": "www.wikidata.org"
+          }
+        ],
+        "ns": 6,
+        "pageid": 44672196,
+        "title": "File:Niedercunnersdorf NiedereHauptstra\u00dfe 66.JPG"
+      },
+      "44672207": {
+        "globalusage": [
+          {
+            "title": "Liste_der_Kulturdenkmale_in_Niedercunnersdorf",
+            "url": "https://de.wikipedia.org/wiki/Liste_der_Kulturdenkmale_in_Niedercunnersdorf",
+            "wiki": "de.wikipedia.org"
+          }
+        ],
+        "ns": 6,
+        "pageid": 44672207,
+        "title": "File:Niedercunnersdorf WillhelmTempelPlatz 11.JPG"
+      },
+      "44672210": {
+        "globalusage": [],
+        "ns": 6,
+        "pageid": 44672210,
+        "title": "File:A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History) BHL8403911.jpg"
+      },
+      "44672212": {
+        "globalusage": [],
+        "ns": 6,
+        "pageid": 44672212,
+        "title": "File:Edvard Munch - Night in Nice (1891).jpg"
+      }
+    }
+  }
+}

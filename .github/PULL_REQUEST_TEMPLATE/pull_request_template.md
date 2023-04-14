@@ -28,6 +28,7 @@ Fixes #[issue number] by @[issue author]
 - [ ] I added or updated documentation (if applicable).
 - [ ] I tried running the project locally and verified that there are no visible
       errors.
+- [ ] I ran the DAG documentation generator (only applicable for catalog PRs).
 
 [best_practices]:
   https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines

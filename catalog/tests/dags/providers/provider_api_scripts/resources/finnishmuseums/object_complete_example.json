@@ -1,0 +1,24 @@
+{
+  "authors": {
+    "primary": { "Uomala, valokuvaaja": { "role": ["-"] } },
+    "secondary": [],
+    "corporate": []
+  },
+  "buildings": [
+    { "value": "0/SA-kuva/", "translated": "Sotamuseo" },
+    { "value": "1/SA-kuva/SA-kuva/", "translated": "SA-kuva-arkisto" }
+  ],
+  "id": "sa-kuva.sa-kuva-1835",
+  "imageRights": {
+    "copyright": "CC BY 4.0",
+    "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
+    "description": [
+      "SA-kuvat ovat lisensoitu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0) -lisenssill\u00e4 ja ne ovat vapaasti k\u00e4ytett\u00e4viss\u00e4 ja julkaistavissa. Kuvat ovat n\u00e4ht\u00e4viss\u00e4 my\u00f6s www.sa-kuva.fi -palvelussa."
+    ]
+  },
+  "images": [
+    "/Cover/Show?source=Solr&id=sa-kuva.sa-kuva-1835&index=0&size=large"
+  ],
+  "subjects": [["1942-03-02"]],
+  "title": "Vuokkiniemen koulu"
+}

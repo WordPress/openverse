@@ -1,0 +1,186 @@
+{
+  "allow_deletions": {
+    "enabled": true
+  },
+  "allow_force_pushes": {
+    "enabled": true
+  },
+  "enforce_admins": {
+    "enabled": true,
+    "url": "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/enforce_admins"
+  },
+  "required_conversation_resolution": {
+    "enabled": true
+  },
+  "required_linear_history": {
+    "enabled": true
+  },
+  "required_pull_request_reviews": {
+    "dismiss_stale_reviews": true,
+    "dismissal_restrictions": {
+      "apps": [
+        {
+          "created_at": "2017-07-08T16:18:44-04:00",
+          "description": "",
+          "events": ["push", "pull_request"],
+          "external_url": "https://example.com",
+          "html_url": "https://github.com/apps/octoapp",
+          "id": 1,
+          "name": "Octocat App",
+          "node_id": "MDExOkludGVncmF0aW9uMQ==",
+          "owner": {
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "description": "A great organization",
+            "events_url": "https://api.github.com/orgs/github/events",
+            "hooks_url": "https://api.github.com/orgs/github/hooks",
+            "id": 1,
+            "issues_url": "https://api.github.com/orgs/github/issues",
+            "login": "github",
+            "members_url": "https://api.github.com/orgs/github/members{/member}",
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
+            "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
+            "repos_url": "https://api.github.com/orgs/github/repos",
+            "url": "https://api.github.com/orgs/github"
+          },
+          "permissions": {
+            "contents": "read",
+            "issues": "write",
+            "metadata": "read",
+            "single_file": "write"
+          },
+          "slug": "octoapp",
+          "updated_at": "2017-07-08T16:18:44-04:00"
+        }
+      ],
+      "teams": [
+        {
+          "description": "A great team.",
+          "html_url": "https://github.com/orgs/github/teams/justice-league",
+          "id": 1,
+          "members_url": "https://api.github.com/teams/1/members{/member}",
+          "name": "Justice League",
+          "node_id": "MDQ6VGVhbTE=",
+          "parent": null,
+          "permission": "admin",
+          "privacy": "closed",
+          "repositories_url": "https://api.github.com/teams/1/repos",
+          "slug": "justice-league",
+          "url": "https://api.github.com/teams/1"
+        }
+      ],
+      "teams_url": "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/dismissal_restrictions/teams",
+      "url": "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/dismissal_restrictions",
+      "users": [
+        {
+          "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+          "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+          "followers_url": "https://api.github.com/users/octocat/followers",
+          "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+          "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/octocat",
+          "id": 1,
+          "login": "octocat",
+          "node_id": "MDQ6VXNlcjE=",
+          "organizations_url": "https://api.github.com/users/octocat/orgs",
+          "received_events_url": "https://api.github.com/users/octocat/received_events",
+          "repos_url": "https://api.github.com/users/octocat/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/octocat"
+        }
+      ],
+      "users_url": "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/dismissal_restrictions/users"
+    },
+    "require_code_owner_reviews": true,
+    "required_approving_review_count": 2,
+    "url": "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/required_pull_request_reviews"
+  },
+  "required_status_checks": {
+    "contexts": ["continuous-integration/travis-ci"],
+    "contexts_url": "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/required_status_checks/contexts",
+    "enforcement_level": "non_admins",
+    "url": "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/required_status_checks"
+  },
+  "restrictions": {
+    "apps": [
+      {
+        "created_at": "2017-07-08T16:18:44-04:00",
+        "description": "",
+        "events": ["push", "pull_request"],
+        "external_url": "https://example.com",
+        "html_url": "https://github.com/apps/octoapp",
+        "id": 1,
+        "name": "Octocat App",
+        "node_id": "MDExOkludGVncmF0aW9uMQ==",
+        "owner": {
+          "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+          "description": "A great organization",
+          "events_url": "https://api.github.com/orgs/github/events",
+          "hooks_url": "https://api.github.com/orgs/github/hooks",
+          "id": 1,
+          "issues_url": "https://api.github.com/orgs/github/issues",
+          "login": "github",
+          "members_url": "https://api.github.com/orgs/github/members{/member}",
+          "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
+          "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
+          "repos_url": "https://api.github.com/orgs/github/repos",
+          "url": "https://api.github.com/orgs/github"
+        },
+        "permissions": {
+          "contents": "read",
+          "issues": "write",
+          "metadata": "read",
+          "single_file": "write"
+        },
+        "slug": "octoapp",
+        "updated_at": "2017-07-08T16:18:44-04:00"
+      }
+    ],
+    "apps_url": "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/restrictions/apps",
+    "teams": [
+      {
+        "description": "A great team.",
+        "html_url": "https://github.com/orgs/github/teams/justice-league",
+        "id": 1,
+        "members_url": "https://api.github.com/teams/1/members{/member}",
+        "name": "Justice League",
+        "node_id": "MDQ6VGVhbTE=",
+        "parent": null,
+        "permission": "admin",
+        "privacy": "closed",
+        "repositories_url": "https://api.github.com/teams/1/repos",
+        "slug": "justice-league",
+        "url": "https://api.github.com/teams/1"
+      }
+    ],
+    "teams_url": "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/restrictions/teams",
+    "url": "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/restrictions",
+    "users": [
+      {
+        "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+        "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+        "followers_url": "https://api.github.com/users/octocat/followers",
+        "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+        "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+        "gravatar_id": "",
+        "html_url": "https://github.com/octocat",
+        "id": 1,
+        "login": "octocat",
+        "node_id": "MDQ6VXNlcjE=",
+        "organizations_url": "https://api.github.com/users/octocat/orgs",
+        "received_events_url": "https://api.github.com/users/octocat/received_events",
+        "repos_url": "https://api.github.com/users/octocat/repos",
+        "site_admin": false,
+        "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+        "type": "User",
+        "url": "https://api.github.com/users/octocat"
+      }
+    ],
+    "users_url": "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/restrictions/users"
+  },
+  "url": "https://api.github.com/repos/octocat/Hello-World/branches/master/protection"
+}

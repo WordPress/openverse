@@ -4,15 +4,17 @@ set dotenv-load := false
 # @ - Quiet recipes (https://github.com/casey/just#quiet-recipes)
 # _ - Private recipes (https://github.com/casey/just#private-recipes)
 
-IS_PROD := env_var_or_default("PROD", "")
+IS_PROD := env_var_or_default("PROD", env_var_or_default("IS_PROD", ""))
+# `PROD_ENV` can be "ingestion_server" or "catalog"
+PROD_ENV := env_var_or_default("PROD_ENV", "")
 IS_CI := env_var_or_default("CI", "")
-DC_USER := env_var_or_default("DC_USER", "opener")
 
 # Show all available recipes, also recurses inside nested justfiles
 @_default:
     just --list --unsorted
     cd docker/nginx && just
     cd docker/es && just
+    cd catalog && just
     cd api && just
     cd ingestion_server && just
     cd frontend && just
@@ -93,22 +95,36 @@ lint hook="" *files="": precommit
 
 # Create .env files from templates
 env:
-    cp api/env.template api/.env
-    cp ingestion_server/env.template ingestion_server/.env
+    # Root
+    ([ ! -f .env ] && cp env.template .env) || true
+    # Docker
+    ([ ! -f docker/minio/.env ] && cp docker/minio/env.template docker/minio/.env) || true
+    # First-party services
+    ([ ! -f catalog/.env ] && cp catalog/env.template catalog/.env) || true
+    ([ ! -f ingestion_server/.env ] && cp ingestion_server/env.template ingestion_server/.env) || true
+    ([ ! -f api/.env ] && cp api/env.template api/.env) || true
 
 ##########
 # Docker #
 ##########
 
 DOCKER_FILE := "-f " + (
-    if IS_PROD == "true" { "ingestion_server/docker-compose.yml" }
+    if IS_PROD == "true" {
+        if PROD_ENV == "ingestion_server" { "ingestion_server/docker-compose.yml" }
+        else if PROD_ENV == "catalog" { "catalog/docker-compose.yml" }
+        else { "docker-compose.yml" }
+    }
     else { "docker-compose.yml" }
 )
+EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
+
+export PROJECT_PY_VERSION := `just catalog/py-version`
+export PROJECT_AIRFLOW_VERSION := `just catalog/airflow-version`
 
 # Run `docker-compose` configured with the correct files and environment
 dc *args:
     @{{ if IS_CI != "" { "just env" } else { "true" } }}
-    env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend") }}" docker-compose {{ DOCKER_FILE }} {{ args }}
+    env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend,catalog") }}" docker-compose {{ DOCKER_FILE }} {{ args }}
 
 # Build all (or specified) services
 build *args:
@@ -133,6 +149,7 @@ wait-up: up
     just ingestion_server/wait-up
     just api/wait-up
     just frontend/wait-up
+    just catalog/wait-up
 
 # Also see `init` recipe in sub-justfiles
 # Load sample data into the Docker Compose services
@@ -158,8 +175,20 @@ logs services="" args=(if IS_CI != "" { "" } else { "-f" }):
 attach service:
     docker attach $(docker-compose ps | grep {{ service }} | awk '{print $1}')
 
-EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
-
 # Execute statement in service containers using Docker Compose
 exec +args:
-    just dc exec -u {{ DC_USER }} {{ EXEC_DEFAULTS }} {{ args }}
+    just dc exec -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} {{ args }}
+
+# Execute statement in a new service container using Docker Compose
+run +args:
+    just dc run -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} "{{ args }}"
+
+########
+# Misc #
+########
+
+# Pull, build, and deploy all services
+deploy:
+    -git pull
+    @just pull
+    @just up

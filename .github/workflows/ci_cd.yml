@@ -30,6 +30,7 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
+      catalog: ${{ steps.paths-filter.outputs.catalog }}
       api: ${{ steps.paths-filter.outputs.api }}
       ingestion_server: ${{ steps.paths-filter.outputs.ingestion_server }}
       frontend: ${{ steps.paths-filter.outputs.frontend }}
@@ -90,6 +91,13 @@ jobs:
               build_matrix["image"].append("frontend")
               build_matrix["include"].append({"image": "frontend", "context": "frontend", "target": "app"})
               publish_matrix["image"].append("frontend")
+          if any(item in changes for item in ["api", "ingestion_server", "catalog"]):
+              build_matrix["image"].append("upstream_db")
+              build_matrix["include"].append({"image": "upstream_db", "context": "docker/upstream_db", "target": "db"})
+          if "catalog" in changes:
+              build_matrix["image"].append("catalog")
+              build_matrix["include"].append({"image": "catalog", "context": "catalog", "target": "cat"})
+              publish_matrix["image"].append("catalog")
           if "api" in changes or "ingestion_server" in changes:
               # Always build the ingestion server and API images for either changeset
               build_matrix["image"] += ["api", "ingestion_server"]
@@ -190,14 +198,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # ℹ️Step only applies for frontend image.
+      # ℹ️Step only applies for frontend and catalog images.
+      # Frontend downloads translations and catalog runs `just` recipes.
       - name: Setup CI env
-        if: matrix.image == 'frontend'
+        if: matrix.image == 'frontend' || matrix.image == 'catalog'
         uses: ./.github/actions/setup-env
         with:
           setup_python: false
           # Python is not needed to build the image.
           install_recipe: node-install
+
+      # ℹ️While this step only applies for catalog image, it is run for all.
+      # This step
+      # - sets the Python version used by the catalog image
+      # - sets the Airflow version used by the catalog image
+      - name: Prepare catalog for building
+        id: prepare-catalog
+        # if: matrix.image == 'catalog'
+        run: |
+          echo "python_version=$(just catalog/py-version)" >> "$GITHUB_OUTPUT"
+          echo "airflow_version=$(just catalog/airflow-version)" >> "$GITHUB_OUTPUT"
 
       # ℹ️Step only applies for frontend image.
       # This step
@@ -231,12 +251,80 @@ jobs:
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
+            PROJECT_PY_VERSION=${{ steps.prepare-catalog.outputs.python_version }}
+            PROJECT_AIRFLOW_VERSION=${{ steps.prepare-catalog.outputs.airflow_version }}
 
       - name: Upload image `${{ matrix.image }}`
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.image }}
           path: /tmp/${{ matrix.image }}.tar
+
+  ###########
+  # Catalog #
+  ###########
+
+  test-cat:
+    name: Run tests for the catalog
+    if: needs.get-changes.outputs.catalog == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs:
+      - get-changes
+      - build-images
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          # Python is not needed to run the tests.
+          setup_nodejs: false
+          # Node.js is not needed to run API tests.
+          install_recipe: ""
+
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
+        with:
+          setup_api: false
+          setup_ingestion_server: false
+
+      - name: Run tests
+        run: |
+          just catalog/test --extended
+
+  catalog-checks:
+    name: Run catalog checks
+    if: needs.get-changes.outputs.catalog == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+      - build-images
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          # Python is not needed to run pre-commit.
+          setup_python: false
+          # Node.js is needed by lint actions.
+          install_recipe: "node-install"
+
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
+        with:
+          setup_api: false
+          setup_ingestion_server: false
+
+      - name: Check DAG documentation
+        run: |
+          just catalog/generate-dag-docs true
 
   ####################
   # Ingestion server #
@@ -267,6 +355,7 @@ jobs:
         uses: ./.github/actions/load-img
         with:
           setup_api: false
+          setup_catalog: false
 
       - name: Run ingestion-server tests
         run: just ingestion_server/test-local
@@ -310,6 +399,8 @@ jobs:
 
       - name: Load Docker images
         uses: ./.github/actions/load-img
+        with:
+          setup_catalog: false
 
       - name: Start API, ingest and index test data
         run: just api/init
@@ -361,6 +452,8 @@ jobs:
 
       - name: Load Docker images
         uses: ./.github/actions/load-img
+        with:
+          setup_catalog: false
 
       - name: Run check recipe
         run: just ${{ matrix.recipe }}
@@ -460,6 +553,9 @@ jobs:
 
       - name: Run build
         run: just frontend/run build
+        env:
+          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
+          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
   playwright:
     name: Run Playwright tests
@@ -607,10 +703,12 @@ jobs:
       (needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.documentation == 'true') &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
+      (needs.test-cat.result == 'success' || needs.test-cat.result == 'skipped') &&
       (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped')
     runs-on: ubuntu-latest
     needs:
       - get-changes
+      - test-cat
       - test-ing
       - test-api
       - nuxt-build
@@ -700,6 +798,7 @@ jobs:
       needs.determine-images.outputs.do_publish == 'true' &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
+      (needs.test-cat.result == 'success' || needs.test-cat.result == 'skipped') &&
       (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped')
     needs:
       - determine-images
@@ -707,6 +806,7 @@ jobs:
       - build-images
       - test-ing # test for ingestion server
       - test-api # test for API
+      - test-cat # test for catalog
       - nuxt-build # test for frontend
     permissions:
       packages: write

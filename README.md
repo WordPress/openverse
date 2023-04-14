@@ -26,6 +26,8 @@ Eventually the catalog will be merged into this repository as well.
 
 - [Catalog](https://github.com/wordpress/openverse-catalog) | The Apache
   Airflow-powered system for downloading and storing Openverse's metadata
+- [Catalog](catalog/) | The methods used to identify and index over 1.4 billion
+  Creative Commons licensed works
 - [Ingestion server](ingestion_server/) | The mechanism for refreshing the data
   from the catalog to the API
 - [API](api/) | The Django REST API for querying the database, used by the

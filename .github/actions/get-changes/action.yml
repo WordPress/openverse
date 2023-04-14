@@ -5,6 +5,9 @@ outputs:
   changes:
     description: "JSON array of keys from `.github/filters.yml`"
     value: ${{ steps.paths-filter.outputs.changes }}
+  catalog:
+    description: "'true' if catalog changes are present"
+    value: ${{ steps.paths-filter.outputs.catalog }}
   api:
     description: "'true' if API changes are present"
     value: ${{ steps.paths-filter.outputs.api }}

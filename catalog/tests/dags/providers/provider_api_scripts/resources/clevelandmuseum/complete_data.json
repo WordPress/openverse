@@ -1,0 +1,648 @@
+{
+  "accession_number": "1335.1917",
+  "catalogue_raisonne": null,
+  "citations": [
+    {
+      "citation": "Hoffman, Charles Fenno. <em>New-York Mirror, </em>June 1838.",
+      "page_number": "Mentioned: p. 367, 390",
+      "url": null
+    },
+    {
+      "citation": "\"The Matthews Sale.\" <em>American Art News. </em>12:20 (February 21, 1914).",
+      "page_number": "Mentioned: p. 8",
+      "url": null
+    },
+    {
+      "citation": "\"Matthews Pictures Sold.\" <em>American Art News.</em> 14:16 (January 22, 1916).",
+      "page_number": "Mentioned: p. 3, no. 55",
+      "url": null
+    },
+    {
+      "citation": "\"Accessions.\" <em>The Bulletin of the Cleveland Museum of Art. </em>4:4 (April-May 1917).",
+      "page_number": "Mentioned: p. 64-67",
+      "url": "http://www.jstor.org/stable/25136092"
+    },
+    {
+      "citation": "Downes, William Howe. \"American Painters of Mountains.\" <em>The American Magazine of Art.</em> 25:4 (October, 1932).",
+      "page_number": "Reproduced: p. 194",
+      "url": null
+    },
+    {
+      "citation": "Francis, Henry S. \"Thomas Cole: Painter of the Catskill Mountains.\" <em>The Bulletin of The Cleveland Museum of Art.</em> 24:7 (July, 1937).",
+      "page_number": "Reproduced: front cover; Mentioned: p. 113-116",
+      "url": "http://www.jstor.org/stable/25137862"
+    },
+    {
+      "citation": "Kellner, Sydney. \"The Beginnings of Landscape Painting in America.\" <em>Art in America and Elsewhere: An Illustrated Quarterly Magazine.</em> 25 (October, 1938). p. 158-168.",
+      "page_number": "Reproduced",
+      "url": null
+    },
+    {
+      "citation": "Carnegie Institute, and Lloyd Goodrich. <em>A Century of American Landscape Painting, 1800 to 1900</em>. Pittsburgh, PA: Carnegie Institute, Department of Fine Arts 1939.",
+      "page_number": "Mentioned: p. 33, cat. no. 59",
+      "url": null
+    },
+    {
+      "citation": "Nathan, Walter L. \"Thomas Cole and the Romantic Landscape.\" <em>Romanticism in America: Papers Contributed to a Symposium Held at The Baltimore Museum of Art.</em> Edited by George Boas, p. 24-63. Baltimore: Johns Hopkins Press, 1940.",
+      "page_number": "Mentioned: p. 45",
+      "url": null
+    },
+    {
+      "citation": "Watson, Jane. \"News and Comment.\" <em>Magazine of Art.</em> 33 (May, 1940).",
+      "page_number": "Reproduced: p. 310",
+      "url": null
+    },
+    {
+      "citation": "Lane, James W. \"This Year the Carnegie National: Pittsburgh's Brilliant Survey of 160 Years of U.S. Painting.\" <em>The Art News.</em> 39:4 (26 October 1940). p. 7-18.",
+      "page_number": "Reproduced: p. 11",
+      "url": null
+    },
+    {
+      "citation": "Ault, George. \"Thomas Cole Exhibition at Albany Institute.\" <em>Ulster County News</em> (Kingston, NY), November 27, 1941.",
+      "page_number": "Mentioned: p. 14",
+      "url": null
+    },
+    {
+      "citation": "Lesley, Parker. \"Thomas Cole and the Romantic Sensibility.\" <em>The Art Quarterly.</em> 5:3 (Summer, 1942). p. 199-221.",
+      "page_number": "Mentioned: p. 199-221",
+      "url": null
+    },
+    {
+      "citation": "Frankenstein, Alfred. \"Thomas Cole: The Story of a New Local Purchase.\" <em>San Francisco Chronicle, </em>January, 1947.",
+      "page_number": "Mentioned: p. 21",
+      "url": null
+    },
+    {
+      "citation": "Devree, Howard. \"Baroque to Modern: A Wide Range of Styles in the New Shows.\" <em>The New York Times</em>, January 16, 1949.",
+      "page_number": "Reproduced: p. X9",
+      "url": null
+    },
+    {
+      "citation": "The Cleveland Museum of Art. <em>The Cleveland Museum of Art Handbook.</em> Cleveland, OH: The Cleveland Museum of Art, 1958.",
+      "page_number": "Mentioned and Reproduced: cat. no. 533",
+      "url": "https://archive.org/details/CMAHandbook1958/page/n98"
+    },
+    {
+      "citation": "The Cleveland Museum of Art. <em>Handbook of the Cleveland Museum of Art/1966</em>. Cleveland, OH: The Cleveland Museum of Art, 1966.",
+      "page_number": "Reproduced: p. 184",
+      "url": "https://archive.org/details/CMAHandbook1966/page/n208"
+    },
+    {
+      "citation": "The Cleveland Museum of Art. <em>Handbook of the Cleveland Museum of Art/1969</em>. Cleveland, OH: The Cleveland Museum of Art, 1969.",
+      "page_number": "Reproduced: p. 184",
+      "url": "https://archive.org/details/CMAHandbook1969/page/n208"
+    },
+    {
+      "citation": "Hamilton, George Heard. <em>19th and 20th Century Art: Painting, Sculpture, Architecture</em>. New York: H.N. Abrams, 1970.",
+      "page_number": "Mentioned: p. 70-77; Reproduced: p. 76, fig. 60",
+      "url": null
+    },
+    {
+      "citation": "Celeste, Adam, Rita Myers, and Adele Z. Silver. <em>An Introduction to American Art in The Cleveland Museum of Art. </em>Cleveland, OH: The Cleveland Museum of Art, 1972.",
+      "page_number": "Mentioned: p. 7-10; Reproduced: p. 7",
+      "url": null
+    },
+    {
+      "citation": "Cleveland Museum of Art. \"A Check List: American Paintings and Water Colors of the Eighteenth, Nineteenth, and Early Twentieth Centuries in The Cleveland Museum of Art.\" <em>The Bulletin of the Cleveland Museum of Art</em>. 60:1 (January, 1973). pp. 1-36.",
+      "page_number": "Mentioned: p. 24, no. 39",
+      "url": "http://www.jstor.org/stable/25152465"
+    },
+    {
+      "citation": "Talbot, William S. \"American Landscape Paintings in The Cleveland Museum of Art.\" <em>Antiques</em>. 104:5 (November, 1973). pp. 906-917.",
+      "page_number": "Reproduced: p. 906, fig. 1",
+      "url": null
+    },
+    {
+      "citation": "Barnett, Lincoln. <em>The Ancient Adirondacks.</em> New York: Time-Life Books, 1974.",
+      "page_number": "Reproduced",
+      "url": null
+    },
+    {
+      "citation": "Albright-Knox Art Gallery, Detroit Institute of Arts, and Toledo Museum of Art. <em>Heritage and Horizon: American Painting, 1776-1976</em>. Toledo, OH: Toledo Museum of Art, 1976.",
+      "page_number": "Mentioned: p. [16]; Reproduced",
+      "url": null
+    },
+    {
+      "citation": "Field, Marta. <em>\"</em>Kindred Spirits: George Arms and American Studies Since 1944.\" <em>New America. </em>3:2 (Summer/Fall, 1977).",
+      "page_number": "Reproduced: p. 44",
+      "url": null
+    },
+    {
+      "citation": "Johnson, Mark M. \"American Landscapes.\" <em>Arts and Activities. </em>82:4 (December, 1977). pp. 8-33.",
+      "page_number": "Reproduced: p. 28, fig. 1",
+      "url": null
+    },
+    {
+      "citation": "Cleveland Museum of Art. <em>Handbook of the Cleveland Museum of Art</em>. Cleveland, OH: Cleveland Museum of Art, 1978.",
+      "page_number": "Reproduced: p. 228",
+      "url": null
+    },
+    {
+      "citation": "Millhouse, Barbara Babcock. <em>American Wilderness: The Hudson River School of Painting</em>. Garden City, NY: Doubleday, 1978.",
+      "page_number": "Reproduced: p. 46; Mentioned: pp. 41-47",
+      "url": null
+    },
+    {
+      "citation": "Zakon, Ronnie L. \"The Romantic Vision.\" <em>The Romantic Vision: 19th Century American Landscape Painting in the Walker Art Center Permanent Collection. </em>Minneapolis, MN: Walker Art Center 1978. pp. 6-21.",
+      "page_number": "Reproduced: p. 8, fig. 3",
+      "url": null
+    },
+    {
+      "citation": "Powell, Earl A., III. \"Thomas Cole and the American Landscape Tradition: The Picturesque.\" <em>Arts Magazine.</em> 52 (March, 1978). pp. 110-117.",
+      "page_number": "Reproduced: p. 113",
+      "url": null
+    },
+    {
+      "citation": "Meservey, Anne Farmer. \"The Role of Art in American Life: Critics' Views of Native Art and Literature, 1830-1865.\" <em>The American Art Journal. </em>10:1 (May, 1978). pp. 72-89.",
+      "page_number": "Reproduced: p. 84, fig. 10",
+      "url": null
+    },
+    {
+      "citation": "Craven, Wayne. \"Thomas Cole and Italy.\" <em>The Magazine Antiques</em>. 114:5 (November, 1978). pp. 1014-1027.",
+      "page_number": "Mentioned: p. 1014-1027",
+      "url": null
+    },
+    {
+      "citation": "Moore, Janet Gaylord.<em> The Eastern Gate: An Invitation to the Arts of China and Japan</em>. Cleveland: Collins, 1979.",
+      "page_number": "Mentioned: p. 19-26; Reproduced: p. 23",
+      "url": null
+    },
+    {
+      "citation": "Cikovsky, Nicolai, Jr. \"'The Ravages of the Axe': The Meaning of the Tree Stump in Nineteenth-Century American Art.\" <em>The Art Bulletin.</em> 61:4 (December, 1979). pp. 611-626.",
+      "page_number": "Mentioned:  p. 624; Reproduced: p. 624, fig. 22",
+      "url": "www.jstor.org/stable/3049941"
+    },
+    {
+      "citation": "Wilmerding, John, and Lisa Fellows Andrus. <em>American Light: The Luminist Movement, 1850-1875: Paintings, Drawings, Photographs</em>. Washington, D.C.: National Gallery of Art, 1980.",
+      "page_number": "Mentioned: p. 162-170, 181-183; Reproduced: illus. p. 164, fig. 200",
+      "url": null
+    },
+    {
+      "citation": "Hobbs, Robert Carleton. <em>Robert Smithson: Sculpture</em>. Ithaca, NY: Cornell University Press, 1981.",
+      "page_number": "Mentioned: p. 27-30; Reproduced: p. 28",
+      "url": null
+    },
+    {
+      "citation": "Baigell, Matthew. <em>Thomas Cole</em>. New York: Watson-Guptill Publications, 1981.",
+      "page_number": "Mentioned: p. 34-35, 58-59, 68-69, 76-77; Reproduced: p. 59, plate 20",
+      "url": null
+    },
+    {
+      "citation": "Silver, Adele Z. <em>Guide to the Galleries: The Cleveland Museum of Art.</em> 2nd ed., revised. Cleveland, OH: Cleveland Museum of Art, 1981.",
+      "page_number": "Mentioned: p. 80-82; Reproduced: p. 82, fig. 75",
+      "url": null
+    },
+    {
+      "citation": "Czestochowski, Joseph S. <em>The American Landscape Tradition: A Study and Gallery of Paintings</em>. New York, NY: E.P. Dutton, 1982.",
+      "page_number": "Mentioned: p. 7-11, 13-17, 49, 68-69, 154-168; Reproduced: pp. 68-69, fig. no. 53",
+      "url": null
+    },
+    {
+      "citation": "Morse, Samuel Finley Breese. <em>Lectures on the Affinity of Painting with the Other Fine Arts</em>, edited by Nicolai Cikovsky. Columbia, MO: University of Missouri Press, 1983.",
+      "page_number": "Mentioned: p. 19-33; Reproduced: fig. 13",
+      "url": null
+    },
+    {
+      "citation": "Talbot, William S. \"Visions of Landscape: East and West.\" <em>The Bulletin of the Cleveland Museum of Art</em>. 70:3 (March, 1983). pp. 112-135.",
+      "page_number": "Mentioned: p. 115-117; Reproduced: p. 115, fig. 4",
+      "url": "http://www.jstor.org/stable/25159808"
+    },
+    {
+      "citation": "Creese, Walter L. <em>The Crowning of the American Landscape: Eight Great Spaces and Their Buildings</em>. Princeton, N.J.: Princeton University Press, 1985.",
+      "page_number": "Mentioned: p. 71-76; Reproduced: p. 76, fig. 20",
+      "url": null
+    },
+    {
+      "citation": "Kelly, Franklin. <em>Frederic Edwin Church and the North American Landscape, 1845-60</em>. Ph.D. dissertation, University of Delaware, 1985.",
+      "page_number": "Mentioned: p. 9",
+      "url": null
+    },
+    {
+      "citation": "Rodrigues Roque, Oswaldo. \"Realism and Idealism in Hudson River School Painting.\" <em>Antiques</em> 132:5 (November, 1987). pp. 1096-1109.",
+      "page_number": "Mentioned: p. 1100",
+      "url": null
+    },
+    {
+      "citation": "Parry, Ellwood C, III. <em>The Art of Thomas Cole: Ambition and Imagination</em>. Newark, NJ: University of Delaware Press, 1988.",
+      "page_number": "Mentioned: p. 188-225, 389-391; Reproduced: p. 202, fig. 165",
+      "url": null
+    },
+    {
+      "citation": "Roque, Oswaldo Rodriguez. \"The Exaltation of American Landscape Painting.\" <em>Nature Rightly Observed: Hudson River School Landscape Paintings from The Metropolitan Museum of Art. </em>Shizuoka-shi: Metoroporitan Bijutsukan Meisaku Nihon Jikk\u014d Iinkaii, 1988.",
+      "page_number": "Mentioned: p. 18, 36-55, 182, 209-210; Reproduced: p. 18, fig. 11",
+      "url": null
+    },
+    {
+      "citation": "Cikovsky, Nicolai, Jr. \"Thomas Cole (1801-1848) Schroon Lake.\" <em>American Paintings from the Manoogian Collection</em>. Washington, D.C.: National Gallery of Art, 1989.",
+      "page_number": "Mentioned: p. 16-17",
+      "url": null
+    },
+    {
+      "citation": "Vance, William L. <em>America's Rome.</em> New Haven, CT: Yale University Press, 1989.",
+      "page_number": "Mentioned: p. 90-105; Reproduced: p. 104, fig. 35",
+      "url": null
+    },
+    {
+      "citation": "Minks, Louise. <em>The Hudson River School</em>. New York: Crescent Books, 1989.",
+      "page_number": "Mentioned: p. 6-18, 20; Reproduced: p. 25",
+      "url": null
+    },
+    {
+      "citation": "Powell, Earl A. <em>Thomas Cole</em>. New York: H.N. Abrams, 1990.",
+      "page_number": "Mentioned: p. 20-47, 72-83, 139; Reproduced: p. 72",
+      "url": null
+    },
+    {
+      "citation": "Wilkins, David G., and Bernard Schultz. <em>Art Past/Art Present</em>. New York: Abrams, 1990.",
+      "page_number": "Mentioned: p. 388-389; Reproduced: p. 388, fig. 421",
+      "url": null
+    },
+    {
+      "citation": "Cleveland Museum of Art. <em>Handbook of the Cleveland Museum of Art</em>. Cleveland, OH: Cleveland Museum of Art, 1991.",
+      "page_number": "Reproduced: p. 126",
+      "url": null
+    },
+    {
+      "citation": "Parry, Ellwood C., III. \"Les Montagnes dans L'Imaginaire de Thomas Cole.\" <em>La montagne et ses images du peintre d'Askre\u0301silas a\u0300 Thomas Cole. </em>Paris: E\u0301ditions du CTHS, 1991.",
+      "page_number": "Mentioned: p. 383-415; Reproduced: p. 411, fig. 7",
+      "url": null
+    },
+    {
+      "citation": "Cle\u0301ment, Jean-Paul. <em>Chateaubriand et le sentiment de la nature</em>. Cha\u0302tenay-Malabry: La Valle\u0301e aux loups, Maison de Chateaubriand, 1991.",
+      "page_number": "Mentioned: p. 13-21; Reproduced: p. 16",
+      "url": null
+    },
+    {
+      "citation": "Robertson, Bruce. \"Frederic A. Whiting: Founding the Museum with Art and Craft.\" <em>Object Lessons: Cleveland Creates an Art Museum</em>. Cleveland, OH: Cleveland Museum of Art, 1991.",
+      "page_number": "Mentioned: p. 32-59; Reproduced: p. 47",
+      "url": null
+    },
+    {
+      "citation": "Marchetti, Francesca Castria, ed. <em>American Painting. </em>New York: Watson-Guptill Publications, 2002.",
+      "page_number": "Mentioned: p. 44",
+      "url": null
+    },
+    {
+      "citation": "Grabenhorst, T.N. \"A River Runs Through It: Master Artists of the Hudson.\" <em>The Compass: The Magazine of the Sea. </em>2 (2004).",
+      "page_number": "Mentioned: p. 30-35; Reproduced: p. 34",
+      "url": null
+    },
+    {
+      "citation": "Cole, Mark. \"New Spaces in the Cleveland Museum of Art.\" <em>American Art </em>24 no. 2 (Summer 2010)",
+      "page_number": "Reproduced: p. 16",
+      "url": null
+    },
+    {
+      "citation": "Shepard, Paul, Jr. \"Paintings of the New England Landscape: A Scientist Looks at Their Geomorphology.\" <em>College Art Journal. </em>17:1 (Fall, 1957). pp. 30-43.",
+      "page_number": "Reproduced: p. 36, fig. 5",
+      "url": null
+    },
+    {
+      "citation": "Eliot, Alexander. <em>Three Hundred Years of American Painting</em>. New York: Time Inc, 1957.",
+      "page_number": "Mentioned: pp. 70-74; Reproduced: p. 70",
+      "url": null
+    },
+    {
+      "citation": "Goodrich, Lloyd. \"What is American in American Art?\" <em>Art in America.</em> 46 (Fall, 1958). pp. 19-33.",
+      "page_number": "Reproduced: p. 23",
+      "url": null
+    },
+    {
+      "citation": "\"Special Exhibitions.\" <em>The Bulletin of The Cleveland Museum of Art.</em> 45:1 (January 1962). pp. 3-12.",
+      "page_number": "Reproduced",
+      "url": "http://www.jstor.org/stable/25142482"
+    },
+    {
+      "citation": "McCoubrey, John W. <em>American Tradition in Painting</em>. New York: G. Braziller, 1963.",
+      "page_number": "Reproduced: plate 22; Mentioned: pp. 22-31, 113-126",
+      "url": null
+    },
+    {
+      "citation": "<em>American Literature.</em> eds. Andrew J. Porter and Henry L. Terrie, Jr. New York: Ginn and Company, 1964.",
+      "page_number": "Reproduced: p. 204",
+      "url": null
+    },
+    {
+      "citation": "<em>The Beauty of America in Great American Art: With Selections from the Writings of Renowned American Authors</em>. Waukesha, WI: Country Beautiful Foundation; New York: In association with W. Morrow, 1965.",
+      "page_number": "Reproduced: pp. 38-39; Mentioned: pp. 37-39",
+      "url": null
+    },
+    {
+      "citation": "Huntington, David Carew. <em>The Landscapes of Frederic Edwin Church: Vision of an American Era</em>. New York: G. Braziller, 1966.",
+      "page_number": "Mentioned: p. 24-34, 200; Reproduced: fig. 4",
+      "url": null
+    },
+    {
+      "citation": "Merritt, Howard S. \"'A Wild Scene' Genesis of a Painting.\" <em>The Baltimore Museum of Art Annual II: Studies on Thomas Cole, An American Romanticist. </em>Baltimore, MD: The Baltimore Museum of Art, 1967.",
+      "page_number": "Mentioned: p. 7-40; Reproduced: p. 23, fig. 7",
+      "url": null
+    },
+    {
+      "citation": "\"I Don't Know Art, But I Know What I Like.\" <em>The Ohio Bell Voice, </em>January, 1967.",
+      "page_number": "Mentioned: p. 12-15; Reproduced: p. 13",
+      "url": null
+    },
+    {
+      "citation": "Moore, Janet Gaylord. <em>The Many Ways of Seeing: An Introduction to the Pleasures of Art</em>. Cleveland, OH: World Pub. Co, 1968.",
+      "page_number": "Mentioned: p. 117-120; Reproduced: p. 118",
+      "url": null
+    },
+    {
+      "citation": "Talbot, William S. \"American Visions of Wilderness.\" <em>The Bulletin of the Cleveland Museum of Art</em>. 56:4 (April, 1969). p. 151-166.",
+      "page_number": "Mentioned: p. 154-156; Reproduced: p. 154, fig. 3",
+      "url": "http://www.jstor.org/stable/25152270"
+    },
+    {
+      "citation": "Talbot, William S. \"American Visions of Wilderness.\" <em>The Living Wilderness.</em> 33:108 (Winter, 1969). pp. 14-25.",
+      "page_number": "Reproduced: p. 17, fig. 3",
+      "url": null
+    },
+    {
+      "citation": "Prown, Jules David. <em>American Painting: From Its Beginnings to the Armory Show, vol. 1. </em>Geneva: Skira, distributed by World Publishing Company, 1969.",
+      "page_number": "Mentioned: p. 64-75; Reproduced: p. 67",
+      "url": null
+    }
+  ],
+  "collection": "American - Painting",
+  "copyright": null,
+  "creation_date": "1838",
+  "creation_date_earliest": 1838,
+  "creation_date_latest": 1838,
+  "creators": [
+    {
+      "biography": null,
+      "birth_year": "1801",
+      "death_year": "1848",
+      "description": "Thomas Cole (American, 1801-1848)",
+      "extent": null,
+      "name_in_original_language": null,
+      "qualifier": null,
+      "role": "artist"
+    }
+  ],
+  "creditline": "Hinman B. Hurlbut Collection",
+  "culture": ["America, 19th century"],
+  "current_location": "206 American Landscape",
+  "department": "American Painting and Sculpture",
+  "digital_description": null,
+  "dimensions": {
+    "framed": {
+      "depth": 0.13,
+      "height": 1.325,
+      "width": 1.935
+    },
+    "unframed": {
+      "height": 0.998,
+      "width": 1.606
+    }
+  },
+  "edition_of_the_work": null,
+  "exhibitions": {
+    "current": [
+      {
+        "description": "<i>A Century of American Landscape Painting 1800-1900</i>. Whitney Museum of American Art, New York, NY (organizer) (co-organizer) (January 19-February 25, 1938).",
+        "opening_date": "1938-01-19T05:00:00",
+        "title": "A Century of American Landscape Painting 1800-1900"
+      },
+      {
+        "description": "<i>A Souvenir of Romanticism in America; or An Elegant Exposition of Taste and Fashion from 1812-to 1865</i>. The Baltimore Museum of Art, Baltimore, MD (organizer) (co-organizer) (May 10-June 10, 1940).",
+        "opening_date": "1940-05-10T04:00:00",
+        "title": "A Souvenir of Romanticism in America; or An Elegant Exposition of Taste and Fashion from 1812-to 1865"
+      },
+      {
+        "description": "<i>Survey of American Painting</i>. Carnegie Museum of Art, Pittsburgh, PA (co-organizer) (October 24-December 15, 1940).",
+        "opening_date": "1940-10-24T05:00:00",
+        "title": "Survey of American Painting"
+      },
+      {
+        "description": "<i>The Works of Thomas Cole, 1801-1848</i>. Albany Institute of History and Art, Albany, NY (organizer) (co-organizer) (November 1-December 15, 1941).",
+        "opening_date": "1941-11-01T05:00:00",
+        "title": "The Works of Thomas Cole, 1801-1848"
+      },
+      {
+        "description": "<i>The Hudson River School and the Early American Landscape Tradition</i>. The Art Institute of Chicago, Chicago, IL (organizer) (co-organizer) (February 15-March 25, 1945); Whitney Museum of American Art, New York, NY (April 17-May 18, 1945).",
+        "opening_date": "1945-02-15T04:00:00",
+        "title": "The Hudson River School and the Early American Landscape Tradition"
+      },
+      {
+        "description": "<i>Thomas Cole 1801-1848 One Hundred Years Later: A Loan Exhibition</i>. Wadsworth Atheneum Museum of Art, Hartford, CT (organizer) (co-organizer) (November 12, 1948-January 2, 1949); Whitney Museum of American Art, New York, NY (January 8-30, 1949).",
+        "opening_date": "1948-11-12T05:00:00",
+        "title": "Thomas Cole 1801-1848 One Hundred Years Later: A Loan Exhibition"
+      },
+      {
+        "description": "<i>Exhibition of the Month: The Romantic Spirit</i>. The Cleveland Museum of Art, Cleveland, OH (organizer) (March 29-May 5, 1952).",
+        "opening_date": "1952-03-29T05:00:00",
+        "title": "Exhibition of the Month: The Romantic Spirit"
+      },
+      {
+        "description": "<i>Arts of the Young Republic: The Age of William Dunlap</i>. Ackland Art Museum, University of North Carolina, Chapel Hill, NC (organizer) (co-organizer) (November 2-December 1, 1968).",
+        "opening_date": "1968-11-02T05:00:00",
+        "title": "Arts of the Young Republic: The Age of William Dunlap"
+      },
+      {
+        "description": "<i>Thomas Cole</i>. Memorial Art Gallery of the University of Rochester, NY (organizer) (co-organizer) (February 14-March 23, 1969); Munson-Williams-Proctor Institute, Utica, NY (April 7-May 4, 1969); Albany Institute of History and Art, Albany, NY (May 9-June 20, 1969); Whitney Museum of American Art, New York, NY (June 30-September 1, 1969).",
+        "opening_date": "1969-02-14T05:00:00",
+        "title": "Thomas Cole"
+      },
+      {
+        "description": "<i>Visions of Landscape: East and West</i>. The Cleveland Museum of Art (organizer) (February 17-March 21, 1982).",
+        "opening_date": "1982-02-17T05:00:00",
+        "title": "Visions of Landscape: East and West"
+      },
+      {
+        "description": "<i>A New World: Masterpieces of American Painting, 1760 - 1910</i>. Museum of Fine Arts, Boston, Boston, MA (organizer) (co-organizer) (September 7-November 13, 1983); Corcoran Gallery of Art, Washington, DC (December 7, 1983-February 12, 1984).",
+        "opening_date": "1983-09-07T04:00:00",
+        "title": "A New World: Masterpieces of American Painting, 1760 - 1910"
+      },
+      {
+        "description": "<i>American Paradise: The World of the Hudson River School</i>. The Metropolitan Museum of Art, New York, NY (organizer) (co-organizer) (October 4, 1987-January 3, 1988).",
+        "opening_date": "1987-10-04T04:00:00",
+        "title": "American Paradise: The World of the Hudson River School"
+      },
+      {
+        "description": "<i>A Nation's Legacy: 150 Years of American Art from Ohio Collections</i>. Columbus Museum of Art, Columbus, OH (organizer) (co-organizer) (January 19-March 15, 1992).",
+        "opening_date": "1992-01-19T05:00:00",
+        "title": "A Nation's Legacy: 150 Years of American Art from Ohio Collections"
+      },
+      {
+        "description": "<i>Landscape Into History</i>. National Museum of American Art, Washington, DC (organizer) (co-organizer) (March 18-August 7, 1994); Wadsworth Atheneum Museum of Art, Hartford, CT (September 11-December 4, 1994); The Brooklyn Museum, Brooklyn, NY (January 8-March 25, 1995).",
+        "opening_date": "1994-03-18T05:00:00",
+        "title": "Landscape Into History"
+      }
+    ],
+    "legacy": [
+      "New York, National Academy of Design, Thirteenth Annual Exhibition of the National Academy of Design (23 April 1838-?).<br>New York, Stuyvesant Institute, Dunlap Benefit Exhibition (19 November-December 1838), cat. no. 38.<br>New York, Apollo Gallery, January Exhibition of the Apollo Association for the Promotion of the Fine Arts in the United States (1839), no. 263.<br>New York, Gallery of the American Art-Union, Exhibition of the Paintings of the Late Thomas Cole, At the Gallery of the American Art-Union (27 March 1848-?), cat. no.75<br>Baltimore, The Picture Gallery, Maryland Historical Society, Second Annual Exhibition (1849), cat. no. 199 as Schroon Mountain, lent by J.S. Chapman.<br>Cleveland, The Cleveland Museum of Art, The Inaugural Exhibition (6 June-20 September 1916), cat. no.6 as Landscape, Lent by the Holland Galleries, p. 125.<br>New York, Whitney Museum of American Art, A Century of American Landscape Painting 1800-1900 (19 January-25 February 1938), cat. no. 20, listed p. 26 as The Catskill Mountains, 1833, illus.<br><br>Baltimore, The Baltimore Museum of Art, A Souvenir of Romanticism in America; or An Elegant Exposition of Taste and Fashion from 1812-to 1865 (10 May-10 June 1940), listed p. 23 as The Catskill Mountains.<br>Pittsburgh, Carnegie Institute, Survey of American Painting, (24 October-15 December 1940), cat. no. 107 as The Catskill Mountains.<br>Albany, N.Y., The Albany Institute of History and Art, The Works of Thomas Cole, 1801-1848 (1 November-15 December 1941), cat. not numbered, listed as The Catskill Mountains.<br>Chicago, The Art Institute of Chicago, The Hudson River School and the Early American Landscape Tradition (15 February-25 March 1945); traveled to New York, Whitney Museum of American Art (17 April-18 May 1945), cat. no. 48, listed p. 117 as The Catskill Mountains, ca. 1833; illus. p. 61, fig. 48, discussed p. 63.<br>Hartford, Wadsworth Athenaeum, Thomas Cole 1801-1848 One Hundred Years Later: A Loan Exhibition (12 November 1948-2 January 1949); traveled to New York, Whitney Museum of American Art (8 January-30 January 1949), cat. no. 22 as The Catskill Mountains, listed pp. 24-25.<br>Cleveland, The Cleveland Museum of Art, The Hudson River School (23 January-29 February 1962).<br>Peoria, Lakeview Center for the Arts and Sciences, 200 Years of American Painting (27 March-28 April1965).<br>Chapel Hill, NC, William Hayes Ackland Memorial Art Center, Arts of the Young Republic: The Age of William Dunlap (2 November-1 December 1968), cat. no. 106, illus., discussed p. 50.<br>Rochester, NY, Memorial Art Gallery of the University of Rochester, Thomas Cole (14 February-23 March 1969); traveled to Utica, NY, Munson-Williams-Proctor, Institute (7 April-4 May 1969); Albany, Albany Institute of History and Art (9 May-20 June 1969);  New York, Whitney Museum of American Art (30 June-1 September 1969); cat. no. 35, illus. p. 53, discussed p. 16, entry on p. 32.<br>Buffalo, Albright-Knox Art Gallery, Heritage and Horizon: American Painting 1776-1976 (6 March-11 April 1976); traveled to Detroit, The Detroit Institute of Arts (5 May-13 June 1976); Toledo, The Toledo Museum of Art (4 July-15 August 1976); Cleveland, The Cleveland Museum of Art (8 September-10 October 1976); cat. no. 8, illus.; pages not numbered.<br>Cleveland, The Cleveland Museum of Art, Visions of Landscape: East and West (17 February-21 March 1982). <br>Boston, Museum of Fine Arts, A New World: Masterpieces of American Painting 1760-1910 (7 September-13 November 1983); traveled to Washington, DC, The Corcoran Gallery of Art (7 December 1983-12 February 1984), cat. no. 30, illus. p. 76, listed p. 350, entry p. 230-231.<br>New York, The Metropolitan Museum of Art, American Paradise: The World of the Hudson River School (4 October 1987-3 January 1988), cat. not numbered; illus. p. 134, entry pp. 134-136.<br>Columbus, Columbus Museum of Art, A Nation's Legacy: 150 Years of American Art from Ohio Collections (19 January-15 March 1992), cat. no. 5, illus. p. 30 (color), 174 (black and white), discussed p. 22; did not travel to Japan.<br>Washington, D.C., National Museum of American Art, Thomas Cole, Landscape Into History (18 March-7 August 1994); traveled to Hartford, Wadsworth Atheneum (11 September-4 December 1994); Brooklyn, The Brooklyn Museum (8 January-25 March 1995), cat. not numbered, listed p. 171, illus. p. 69, fig. no. 84.<br>T.N. Grabenhorst, \"A River Runs Through It: Master Artists of the Hudson,\" The Compass: The Magazine of the Sea (2004), no. 2, pp. 30-35?, illus. p. 34"
+    ]
+  },
+  "find_spot": null,
+  "fun_fact": null,
+  "id": 93014,
+  "images": {
+    "full": {
+      "filename": "1335.1917_full.tif",
+      "filesize": "72628688",
+      "height": "3853",
+      "url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_full.tif",
+      "width": "6280"
+    },
+    "print": {
+      "filename": "1335.1917_print.jpg",
+      "filesize": "5582485",
+      "height": "2086",
+      "url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_print.jpg",
+      "width": "3400"
+    },
+    "web": {
+      "filename": "1335.1917_web.jpg",
+      "filesize": "716717",
+      "height": "775",
+      "url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_web.jpg",
+      "width": "1263"
+    }
+  },
+  "inscriptions": [
+    {
+      "inscription": "signed lower left:  T. Cole / Catskill 1838.",
+      "inscription_remark": null,
+      "inscription_translation": null
+    }
+  ],
+  "measurements": "Framed: 132.5 x 193.5 x 13 cm (52 3/16 x 76 3/16 x 5 1/8 in.); Unframed: 99.8 x 160.6 cm (39 5/16 x 63 1/4 in.)",
+  "provenance": [
+    {
+      "citations": [],
+      "date": "1838",
+      "description": "Dr. George Ackerly [d. 1842], New York, NY, to his daughter, Emma Ackerly1",
+      "footnotes": ["1Ackerly was Cole's brother-in-law."]
+    },
+    {
+      "citations": [
+        {
+          "citation": "William S. Talbot [?], notes on a telephone conversation with Howard S. Merritt, Oct. 1, 1982, in CMA curatorial file.",
+          "page_number": null,
+          "url": null
+        }
+      ],
+      "date": "By `839 - `847",
+      "description": "Emma Ackerly",
+      "footnotes": [
+        "1 Although the painting is listed as for sale in the 1839 Apollo Association exhibition catalogue, it may not have sold, because in the 1848 Thomas Cole exhibition at the Gallery of the American Art Union, the owner is given as \u201cMrs. J. J. [sic] Chapman,\u201d the married name of Emma Ackerly.",
+        ""
+      ]
+    },
+    {
+      "citations": [],
+      "date": "1847-",
+      "description": "Jonathan G. and Emma Ackerly Chapman, sold to Nicholas Matthews1",
+      "footnotes": ["1Chapman and Emma Ackerly married on April 20, 1847.11"]
+    },
+    {
+      "citations": [
+        {
+          "citation": "\"The Matthews Sale,\u201d <em>American Art News</em> (Feb. 21, 1914): 8.",
+          "page_number": null,
+          "url": null
+        }
+      ],
+      "date": "Until 1914",
+      "description": "Nicholas M. Matthews [1858-1930], Baltimore, MD",
+      "footnotes": []
+    },
+    {
+      "citations": [
+        {
+          "citation": "American Art Association. <em>Illustrated Catalogue of the Valuable Paintings by the Great and Little Masters of the Old and Modern Schools Formed by Mr. Nicholas M. Matthews of Baltimore</em>. New York: The Association, 1914.",
+          "page_number": null,
+          "url": null
+        },
+        {
+          "citation": "\"The Matthews Sale,\u201d <em>American Art News </em>(Feb. 21, 1914): 8.",
+          "page_number": null,
+          "url": null
+        }
+      ],
+      "date": "1914",
+      "description": "(American Art Association, Matthews collection sale, Feb. 17, 1914, no. 61, possibly sold to T. Austin)",
+      "footnotes": []
+    },
+    {
+      "citations": [
+        {
+          "citation": "American Federation of Arts. <em>American Art Annual</em>. New York: MacMillan Co, 1898.",
+          "page_number": null,
+          "url": null
+        },
+        {
+          "citation": "Lance Humphries, correspondence with David Steinberg, in CMA curatorial file.",
+          "page_number": null,
+          "url": null
+        },
+        {
+          "citation": "<em>American Art Annual</em> 11 (1914): 481.",
+          "page_number": null,
+          "url": null
+        },
+        {
+          "citation": null,
+          "page_number": null,
+          "url": null
+        }
+      ],
+      "date": "1914-1916",
+      "description": "Possibly T. Austin",
+      "footnotes": [
+        "According to <em>American Art Annual</em> (1914, vol. 11), the painting was purchased by T. Austin at the 1914 American Art Association sale of Matthews' collection. The painting then appears again in 1916 in the second Matthews collection sale, this time at Anderson Galleries, with no mention of any ownership by Austin. It is possible that it failed to sell in 1914, and was simply put up for sale again in 1916. That both the 1914 and 1916 sales situate the painting in the collection of Matthews calls into question the supposed purchase by Austin, as does the fact that the 1916 sale notes that the painting was purchased by Matthews \"from Mrs. J.G. Chapman, granddaughter of Mr. Cole,\" who appears prior to Matthews in the provenance.",
+        ""
+      ]
+    },
+    {
+      "citations": [
+        {
+          "citation": "Anderson Galleries, Inc. <em>Paintings by Old and Modern Masters</em>. 1916.",
+          "page_number": null,
+          "url": null
+        }
+      ],
+      "date": "1916",
+      "description": "(Anderson Galleries, New York, NY, Matthews collection sale, Jan. 17, 1916, no. 55, sold to Holland Galleries)",
+      "footnotes": [
+        "1In the sale catalogue the painting is titled \"Catskill Mountains.",
+        ""
+      ]
+    },
+    {
+      "citations": [
+        {
+          "citation": "Cleveland Museum of Art. <em>Catalogue of the Inaugural Exhibition June 6-September 20, 1916</em>. Cleveland: The Cleveland Museum of Art, 1916.",
+          "page_number": null,
+          "url": null
+        }
+      ],
+      "date": "1916-1917",
+      "description": "(Holland Galleries, New York, NY, sold to the Cleveland Museum of Art)",
+      "footnotes": [
+        "1Several copies of the catalogue of the 1916 Matthews collection sale have handwritten notations indicating that Holland Galleries was the buyer. Additionally, shortly prior to CMA's acquisition of the painting, Holland Galleries lent it to the museum's inaugural exhibition in 1916."
+      ]
+    },
+    {
+      "citations": [],
+      "date": "1917-",
+      "description": "The Cleveland Museum of Art, Cleveland, Ohio",
+      "footnotes": []
+    }
+  ],
+  "related_works": [],
+  "series": null,
+  "series_in_original_language": null,
+  "share_license_status": "CC0",
+  "state_of_the_work": null,
+  "support_materials": [],
+  "technique": "oil on canvas",
+  "title": "View of Schroon Mountain, Essex County, New York, After a Storm",
+  "title_in_original_language": null,
+  "tombstone": "View of Schroon Mountain, Essex County, New York, After a Storm, 1838. Thomas Cole (American, 1801-1848). Oil on canvas; framed: 132.5 x 193.5 x 13 cm (52 3/16 x 76 3/16 x 5 1/8 in.); unframed: 99.8 x 160.6 cm (39 5/16 x 63 1/4 in.). The Cleveland Museum of Art, Hinman B. Hurlbut Collection 1335.1917",
+  "type": "Painting",
+  "updated_at": "2019-11-18 09:03:30.462000",
+  "url": "https://clevelandart.org/art/1335.1917",
+  "wall_description": "Championing the unspoiled American wilderness, Cole declared, \"We are still in Eden,\" in his Essay on American Scenery, published two years before he painted this view of the Adirondacks. Cole sketched the scene in early summer, but when he created the painting in his Catskill studio, he rendered it in a dramatic blaze of fall colors. Such a choice likely had nationalistic overtones, for Cole once proclaimed that autumn was \"one season where the American forest surpasses all the world in gorgeousness.\" Cole further underscored the New World character of his scene by depicting Native Americans in the right foreground foliage. At this time, the presence of Native Americans in the Adirondacks-as in most areas east of the Mississippi River-was rapidly diminishing due to forced resettlement and repression."
+}

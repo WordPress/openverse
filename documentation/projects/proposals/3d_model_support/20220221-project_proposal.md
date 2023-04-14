@@ -83,7 +83,7 @@ https://github.com/wordpress/openverse/issues/19
 
 - [ ] Define necessary fields & schema for `model_3d` table & associated data
 - [ ] Add DDL to local Postgres image:
-      https://github.com/WordPress/openverse-catalog/tree/main/docker/local_postgres
+      https://github.com/WordPress/openverse-catalog/tree/main/docker/upstream_db
 - [ ] Create a popularity calculation view for `model_3d`
 - [ ] Add the database columns to `db_columns.py`:
       https://github.com/WordPress/openverse-catalog/blob/main/openverse_catalog/dags/common/storage/db_columns.py

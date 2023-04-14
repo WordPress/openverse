@@ -1,0 +1,8 @@
+{
+  "extmetadata": {
+    "Artist": {
+      "source": "commons-desc-page",
+      "value": "<a href=\"https://test.com/linkspot\" title=\"linktitle\">link text</a>"
+    }
+  }
+}
