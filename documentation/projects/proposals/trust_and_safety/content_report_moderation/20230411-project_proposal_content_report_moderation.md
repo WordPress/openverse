@@ -18,9 +18,16 @@ contributors outside the core maintainers for help processing them. This project
 will address these gaps, make it possible to easily and safely respond to
 content reports, and develop a baseline process for moderating content based on
 reports. It will also rename the "mature content" reports to "sensitive content"
-reports. This project is not the end-all, be-all for content report moderation in Openverse. The assumption should be that future iterations will occur. This project will establish the baseline practices that we will iterate on. It will not address, explore, or even mention _every_ current or future improvement required. It is necessary to constrain the scope in this way, otherwise this project would simply have no ending. In the same vein as "improve search" will always be an aspect of our ongoing projects, so should "improve content safety".
+reports. This project is not the end-all, be-all for content report moderation
+in Openverse. The assumption should be that future iterations will occur. This
+project will establish the baseline practices that we will iterate on. It will
+not address, explore, or even mention _every_ current or future improvement
+required. It is necessary to constrain the scope in this way, otherwise this
+project would simply have no ending. In the same vein as "improve search" will
+always be an aspect of our ongoing projects, so should "improve content safety".
 
-In addition to the previous broad qualification, this project explicitly does not cover the following with the understanding that future projects will:
+In addition to the previous broad qualification, this project explicitly does
+not cover the following with the understanding that future projects will:
 
 - Sensitive content disputes: allowing users to dispute if they disagree with
   moderation decisions, especially allowing creators to dispute their works
@@ -47,7 +54,8 @@ roughly correspond to a single implementation plan. Requested plans are
    "mature" where possible.
 1. Volunteers outside the core maintainers can access content reports in Django
    admin and work through a queue of pending reports.
-1. Bulk actions can be taken to deindex or mark sensitive many results. It is not overwhelmingly cumbersome to do so.
+1. Bulk actions can be taken to deindex or mark sensitive many results. It is
+   not overwhelmingly cumbersome to do so.
 1. Use a computer vision API to analyse images on a report to give hints to
    moderators about the contents of the image so that they can safely triage the
    report. Images are blurred in Django admin.
@@ -111,25 +119,48 @@ sufficiently complicated to warrant their own set of considerations.
 
 ### Bulk moderation actions (requirement 3)
 
-It is occasionally necessary to apply bulk actions to many results, whether the action is deindexing or marking as sensitive. For example, if a spammy Flickr user is indexed that only posts ads to pornography websites (before Flickr moderates them)[^actual-example], we need to be able to deindex or at least mark all the results for that creator as sensitive.
+It is occasionally necessary to apply bulk actions to many results, whether the
+action is deindexing or marking as sensitive. For example, if a spammy Flickr
+user is indexed that only posts ads to pornography websites (before Flickr
+moderates them)[^actual-example], we need to be able to deindex or at least mark
+all the results for that creator as sensitive.
 
-[^actual-example]: This is something that Openverse has actually seen. In other words, this is not an imagined scenario. We need to be able to perform these kinds of bulk actions.
+[^actual-example]:
+    This is something that Openverse has actually seen. In other words, this is
+    not an imagined scenario. We need to be able to perform these kinds of bulk
+    actions.
 
-There are two aspects of this that are worth covering in the baseline admin improvements:
+There are two aspects of this that are worth covering in the baseline admin
+improvements:
 
 1. Bulk actions for a specific creator
-1. Bulk actions for a set of results selected via a Django admin list view retrieved based on search terms
+1. Bulk actions for a set of results selected via a Django admin list view
+   retrieved based on search terms
 
-To accomplish this, we'll create a new abstract base-model to capture the history of bulk moderation actions performed. The base class will require the user who performed the action, the date of the action, the type of the action (described below), and required notes describing why the action was taken. The possible actions are:
+To accomplish this, we'll create a new abstract base-model to capture the
+history of bulk moderation actions performed. The base class will require the
+user who performed the action, the date of the action, the type of the action
+(described below), and required notes describing why the action was taken. The
+possible actions are:
 
 - Deindex
 - Mark sensitive
 - Reindex
 - Undo mark sensitive
 
-Subclasses must implement a method that returns the list of result identifiers to take the action for. Each of the actions will trigger the creation or deletion of corresponding `AbstractDeletedMedia` or `AbstractSensitiveMedia` (renamed as part of requirement 1 from `AbstractMatureMedia`) for each work returned by the `get_result_identifier` methods. The subclasses must also implement some way of tracking all the works affected by the action.
+Subclasses must implement a method that returns the list of result identifiers
+to take the action for. Each of the actions will trigger the creation or
+deletion of corresponding `AbstractDeletedMedia` or `AbstractSensitiveMedia`
+(renamed as part of requirement 1 from `AbstractMatureMedia`) for each work
+returned by the `get_result_identifier` methods. The subclasses must also
+implement some way of tracking all the works affected by the action.
 
-For the bulk actions list view, the subclass should have a related join table tying the bulk action instance identifier to the result identifiers. For the creator actions, the subclass only needs to indicate the identifier for the creator. Note that disambiguated creator identification must include the provider as the same username across different providers may be used by different distinct creators.
+For the bulk actions list view, the subclass should have a related join table
+tying the bulk action instance identifier to the result identifiers. For the
+creator actions, the subclass only needs to indicate the identifier for the
+creator. Note that disambiguated creator identification must include the
+provider as the same username across different providers may be used by
+different distinct creators.
 
 ### Computer vision based moderator safety tools (requirement 4)
 
@@ -251,27 +282,50 @@ along the following lines:
 
 <!-- What are the required implementation plans? Consider if they should be split per level of the stack or per feature. -->
 
-In no particular order, the following implementation plans are requested:
+The following implementation plans are requested, split into three streams of
+work.
 
 - Copy updates to use "sensitive" rather than "mature"
   - Requirement 1
-- Moderator access control and Django admin improvements
-  - Requirement 2
-- Bulk moderation actions
-  - Requirement 3
-- Computer vision API integration for image content safety metadata
-  - Requirement 4
-  - Must include plans to save responses in a way that could be upstreamed to
-    the catalogue in the future
+  - Single item stream
 - Response cache management
   - Requirement 5
-- Moderation queue progress insights
-  - Optional: may be deferred if we haven't found a group of volunteers by the
-    time implementation of the other three IPs is finished
-  - Requirement 6
+  - Single item stream
+- Django admin improvements
+  1. Moderator access control
+     - Requirement 2
+  1. Content report admin view upgrades
+     - Requirement 2
+  1. Computer vision API integration for image content safety metadata
+     - Requirement 4
+     - Must include plans to save responses in a way that could be upstreamed to
+       the catalogue in the future
+  1. Bulk moderation actions
+     - Requirement 3
+     - Can be planned concurrently with the previous two plans
+  1. Moderation queue progress insights
+     - Optional: may be deferred if we haven't found a group of volunteers by
+       the time implementation of the other three IPs is finished
+     - Requirement 6
 
-```{note}
-The computer vision API IP should be written after the Django admin improvements
-IP, only to make it easier to understand the context of the "decision page" and
-how the computer vision API information would be displayed.
+The diagram below helps visualise the flow of the work streams.
+
+```{mermaid}
+flowchart TD
+    subgraph copyUpdates ["Copy updates\n(Requirement 1)"]
+    end
+    subgraph cache ["Response cache\nmanagement\n(Requirement 5)"]
+    end
+    subgraph django [Django admin improvements]
+    AC["Moderator access control\n(Requirement 2)"]
+    VU["Content report admin view upgrades\n(Requirement 2)"]
+    CV["Computer vision API integration for\nimage content safety metadata\n(Requirement 4)"]
+    Bulk["Bulk moderation actions\n(Requirement 3)"]
+    Ins["Moderation queue progress insights\n(Requirement 6)"]
+
+    AC --> VU --> CV
+    AC --> Bulk
+    CV --> Ins
+    Bulk --> Ins
+    end
 ```
