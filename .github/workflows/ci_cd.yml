@@ -553,6 +553,9 @@ jobs:
 
       - name: Run build
         run: just frontend/run build
+        env:
+          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
+          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
   playwright:
     name: Run Playwright tests
