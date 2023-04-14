@@ -6,6 +6,7 @@ import sys
 import time
 import uuid
 from multiprocessing import Process, Value
+from pathlib import Path
 from urllib.parse import urlparse
 
 import falcon
@@ -338,6 +339,7 @@ def create_api(log=True):
     _api.add_route("/task/{task_id}", TaskStatus(task_tracker))
     _api.add_route("/worker_finished", WorkerFinishedResource(task_tracker))
     _api.add_route("/state", StateResource())
+    _api.add_static_route("/static", (Path(".") / "static").absolute())
 
     return _api
 
