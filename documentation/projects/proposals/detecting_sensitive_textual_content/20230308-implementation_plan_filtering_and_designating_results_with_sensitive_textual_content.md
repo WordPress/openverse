@@ -2,8 +2,8 @@
 
 ## Reviewers
 
-- [ ] TBD
-- [ ] TBD
+- [x] @stacimc
+- [x] @dhruvkb
 
 ## Project links
 
