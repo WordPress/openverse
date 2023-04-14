@@ -21,10 +21,10 @@ reports. It will also rename the "mature content" reports to "sensitive content"
 reports. This project is not the end-all, be-all for content report moderation
 in Openverse. The assumption should be that future iterations will occur. This
 project will establish the baseline practices that we will iterate on. It will
-not address, explore, or even mention _every_ current or future improvement
+not address or even mention every current or future improvement possible or
 required. It is necessary to constrain the scope in this way, otherwise this
 project would simply have no ending. In the same vein as "improve search" will
-always be an aspect of our ongoing projects, so should "improve content safety".
+always be an aspect of our ongoing projects, so will "improve content safety".
 
 In addition to the previous broad qualification, this project explicitly does
 not cover the following with the understanding that future projects will:
@@ -54,8 +54,7 @@ roughly correspond to a single implementation plan. Requested plans are
    "mature" where possible.
 1. Volunteers outside the core maintainers can access content reports in Django
    admin and work through a queue of pending reports.
-1. Bulk actions can be taken to deindex or mark sensitive many results. It is
-   not overwhelmingly cumbersome to do so.
+1. Bulk actions can be taken to deindex or mark sensitive many results.
 1. Use a computer vision API to analyse images on a report to give hints to
    moderators about the contents of the image so that they can safely triage the
    report. Images are blurred in Django admin.
@@ -82,15 +81,15 @@ Django admin already includes granular access control tools. We'll need to scope
 out the creation of a new Django user group with appropriate permissions, the
 management of the users in that group, and how to get volunteer moderators
 through Cloudflare Access. One suggested implementation is to add a new
-`WordPress/openverse-content-moderators` GitHub group to access Django admin. A
-new GitHub group would have the additional benefit of allowing discussions about
-iterations to the moderation processes and tools to include everyone actually
-doing the moderation.
+`WordPress/openverse-content-moderators` GitHub group able access Django admin.
+A new GitHub group would have the additional benefit of allowing discussions
+about iterations to the moderation processes and tools to include everyone
+actually doing the moderation.
 
 The content report admin views already exist, but need some upgrades to improve
 moderator quality of life:
 
-- Moderator notes, if moderators want to supply an explanatory note for their
+- Moderator notes, for moderators to supply an explanatory note for their
   decision. This should be a separate column to the content report description.
 - Improved table organisation by displaying the report ID and making that the
   clickable column rather than the status (which is confusing).
@@ -114,8 +113,9 @@ moderator quality of life:
     description.
     [I opened this discussion to further explore these ideas](https://github.com/WordPress/openverse/discussions/1175).
 
-Computer vision based safety tools are covered in the next section as they're
-sufficiently complicated to warrant their own set of considerations.
+Computer vision based enhancements to Django admin are covered in a subsequent
+section as it is sufficiently complicated to warrant its own set of
+considerations.
 
 ### Bulk moderation actions (requirement 3)
 
@@ -148,12 +148,14 @@ possible actions are:
 - Reindex
 - Undo mark sensitive
 
+The last two actions are necessary for "undoing" the first two.
+
 Subclasses must implement a method that returns the list of result identifiers
 to take the action for. Each of the actions will trigger the creation or
 deletion of corresponding `AbstractDeletedMedia` or `AbstractSensitiveMedia`
 (renamed as part of requirement 1 from `AbstractMatureMedia`) for each work
-returned by the `get_result_identifier` methods. The subclasses must also
-implement some way of tracking all the works affected by the action.
+returned by the subclass method. The subclasses must also implement some way of
+tracking all the works affected by the action.
 
 For the bulk actions list view, the subclass should have a related join table
 tying the bulk action instance identifier to the result identifiers. For the
@@ -168,14 +170,17 @@ There are many computer vision options that could be evaluated by the
 implementation plan. AWS Rekognition, Google Vision API, Azure Computer Vision,
 and more. Essentially all the ones I've seen are affordable to us at our current
 planned utilisation levels. However, AWS Rekognition is the only one that makes
-sense for us to use[^pending-verification], because:
+sense for us to use, because:
 
 - We are already planning to use existing Rekognition data as part of the
   [Rekognition data incorporation](https://github.com/WordPress/openverse/issues/431)
   project later this year.
 - Building upon that work, we can cache responses procured during moderation and
   plan to use those as a starting point for a rolling integration of Rekognition
-  data.
+  data as part of
+  [using computer vision to further our detection of sensitive content](https://github.com/WordPress/openverse/issues/422)
+  and as starting point data for the project to
+  [back propagate data from the API into the catalog](https://github.com/WordPress/openverse/issues/420).
 - Billing and account management is already worked out for AWS and any other
   provider would require more work in the infrastructure repository to set up
   configuration management and more places to track billing.
@@ -237,7 +242,9 @@ an ongoing basis.
 
 - Lead: @sarayourfriend
 - Implementers: @sarayourfriend and others TBD
-- Design: Not needed for this project
+- Design: @panchovm to
+  [assist and confirm copy changes to the frontend](#update-copy-to-use-the-more-general-sensitive-language-requirement-1);
+  all other changes are internal and do not need special input from design.
 - Stakeholders: TBD; we do not yet know who will be available to volunteer as a
   moderator. Once we do know, the early group of moderators will be consulted
   for advice about process proposals.
@@ -250,7 +257,7 @@ Moderators will need to be able to get through the Cloudflare Access portal. We
 will create a new GitHub group `WordPress/openverse-content-moderators` to
 enable starting discussions with moderators. This group will be granted access
 to the Django admin. Ongoing management of the users in the group should be done
-via terraform.
+via Terraform.
 
 ## Accessibility
 
@@ -275,8 +282,8 @@ along the following lines:
   will eventually be used to improve search relevancy.
 - Highlighting the volunteers that choose to work with Openverse to manage our
   content report queue.
-- Co-market with Akismet (Automattic) about our integration (very unsure about
-  this one).
+- Co-market with Akismet (Automattic) about our integration (unsure about this
+  one).
 
 ## Required implementation plans
 
@@ -298,8 +305,8 @@ work.
      - Requirement 2
   1. Computer vision API integration for image content safety metadata
      - Requirement 4
-     - Must include plans to save responses in a way that could be upstreamed to
-       the catalogue in the future
+     - Must include plans to save responses in a way that could be
+       [back propagated to the catalog in the future](https://github.com/WordPress/openverse/issues/420)
   1. Bulk moderation actions
      - Requirement 3
      - Can be planned concurrently with the previous two plans
