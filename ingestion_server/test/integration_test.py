@@ -29,6 +29,11 @@ this_dir = pathlib.Path(__file__).resolve().parent
 
 ingestion_server = f"http://localhost:{service_ports['ingestion_server']}"
 
+mock_sensitive_terms = (
+    (this_dir.parent / "ingestion_server" / "static" / "mock_sensitive_terms.txt")
+    .read_text()
+    .split("\n")
+)
 
 #################
 # Bottle server #
@@ -538,33 +543,31 @@ class TestIngestion(unittest.TestCase):
     def test_point_filtered_audio_alias(self):
         self._point_alias("audio", "integration-filtered", "audio-filtered")
 
-    @pytest.mark.order(after="test_point_filtered_image_alias")
-    def test_filtered_images(self):
-        """
-        Check that the image data has been successfully indexed in Elasticsearch.
-
-        The number of hits for a blank search should match the size of the loaded mock
-        data.
-        """
-
-        es = self._get_es()
-        count = es.count(index="image-filtered")["count"]
-        msg = "There should be 4638 images in Elasticsearch after filtering."
-        self.assertEqual(count, 4638, msg)
-
-    @pytest.mark.order(after="test_point_filtered_audio_alias")
-    def test_filtered_audio(self):
+    @pytest.mark.order(
+        after=["test_point_filtered_audio_alias", "test_point_filtered_image_alias"]
+    )
+    def test_filtered_indexes(self):
         """
         Check that the audio data has been successfully indexed in Elasticsearch.
 
         The number of hits for a blank search should match the size of the loaded mock
         data.
         """
-
-        es = self._get_es()
-        count = es.count(index="audio-filtered")["count"]
-        msg = "There should be 4881 audio tracks in Elasticsearch after filtering."
-        self.assertEqual(count, 4881, msg)
+        params = zip(mock_sensitive_terms, ["audio-filtered", "image-filtered"])
+        for sensitive_term, index in params:
+            with self.subTest(
+                f"Check that {index} does not include mock sensitive term {sensitive_term}"
+            ):
+                es = self._get_es()
+                res = es.search(
+                    index=index, query={"query_string": {"query": sensitive_term}}
+                )
+                count = res["hits"]["total"]["value"]
+                self.assertEqual(
+                    count,
+                    0,
+                    f"There should be no results for {sensitive_term} in {index}. Found {count}.",
+                )
 
     @pytest.mark.order(after="test_upstream_indexed_audio")
     def test_update_index_images(self):

@@ -84,3 +84,7 @@ create-and-populate-filtered-index model="image" destination_suffix="init":
 # Run ingestion-server tests locally
 test-local *args:
     pipenv run pytest {{ args }}
+
+# Clean integration test docker-compose stack. Useful if test tear down does not run due to catastrophic test failure.
+test-clean-dc:
+    docker-compose --profile=ingestion_server -f test/integration-docker-compose.yml down -v
