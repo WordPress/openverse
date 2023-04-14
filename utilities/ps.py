@@ -4,13 +4,11 @@ from __future__ import annotations
 import subprocess
 from dataclasses import dataclass
 
-import yaml
-
 
 @dataclass
 class Service:
     name: str
-    bindings: list[tuple[int, int]]
+    bindings: set[tuple[int, int]]
 
     def print(self):
         """
@@ -28,7 +26,7 @@ class Service:
             print(f"- {proto:>5}://0.0.0.0:{host_port} (→ {container_port})")
 
 
-def get_ps() -> str:
+def get_ps() -> list[str]:
     """
     Invoke Docker Compose to get the configuration for all services. The config is
     returned as a yaml string.
@@ -37,12 +35,19 @@ def get_ps() -> str:
     """
 
     proc = subprocess.run(
-        ["just", "dc", "config"],
+        [
+            "docker",
+            "ps",
+            "--filter",
+            "name=openverse",
+            "--format",
+            "{{.Names}}\n\t{{.Ports}}\n",
+        ],
         check=True,
         capture_output=True,
         text=True,
     )
-    return proc.stdout
+    return proc.stdout.split("\n")
 
 
 def parse_ps() -> list[Service]:
@@ -54,14 +59,23 @@ def parse_ps() -> list[Service]:
 
     services: list[Service] = []
 
-    data = yaml.safe_load(get_ps())
-    for name, service in data["services"].items():
-        bindings = []
-        for publisher in service.get("ports", []):
-            container_port = publisher["target"]
-            host_port = publisher["published"]
-            if host_port:
-                bindings.append((host_port, container_port))
+    lines = get_ps()
+    data_iter = iter([stripped for line in lines if (stripped := line.strip())])
+    # Iterate over the first two items in the list in pairs
+    # https://stackoverflow.com/a/48347320/3277713
+    for service, ports in zip(data_iter, data_iter):
+        # Services are usually of the form openverse_<name>_1
+        name = service.split("_", 1)[1].rsplit("_", 1)[0]
+        bindings = set()
+        for port_config in ports.split(","):
+            if "->" not in port_config:
+                # No published ports
+                continue
+            # Ports are of the form 0.0.0.0:50230->3000/tcp or :::50230->3000/tcp
+            host_port, container_port = (
+                port_config.split(":")[-1].split("/")[0].split("->")
+            )
+            bindings.add((host_port, container_port))
         if bindings:
             services.append(Service(name, bindings))
 

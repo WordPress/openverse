@@ -132,12 +132,6 @@ build *args:
 
 # List all services and their URLs and ports
 ps:
-    #!/usr/bin/env bash
-    python3 -c "import yaml" &> /dev/null
-    if [ $? -ne 0 ]; then
-      echo "Port configuration for the services can be displayed by installing the Python package 'pyyaml'."
-      exit 0
-    fi
     python3 utilities/ps.py
 
 # Also see `up` recipe in sub-justfiles
