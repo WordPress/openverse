@@ -13,7 +13,7 @@ run_id = os.environ.get("RUN_ID")
 jobs = ["emit-docs", "publish-images", "deploy-frontend", "deploy-api"]
 
 results = {}
-counts = defaultdict(lambda: 0)
+counts = defaultdict(int)
 
 for job_name in jobs:
     result = os.environ.get(f"{job_name.replace('-', '_')}_result".upper())
