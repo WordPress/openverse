@@ -29,8 +29,7 @@
             :class="idx >= imageCount ? 'hidden' : 'block'"
             :style="{ '--delay': `${idx * 0.05}s` }"
             :href="image.url"
-            @click="handleClick(image.identifier)"
-            @contextmenu.native="handleRightClick(image.identifier)"
+            @click="handleClick(image)"
           >
             <img
               :height="dimens"
@@ -133,12 +132,6 @@ export default defineComponent({
         identifier,
       })
     }
-    const handleRightClick = (identifier: string) => {
-      sendCustomEvent("RIGHT_CLICK_IMAGE", {
-        set: imageSet.value.key,
-        identifier,
-      })
-    }
 
     return {
       el,
@@ -153,7 +146,6 @@ export default defineComponent({
       prefersReducedMotion,
 
       handleClick,
-      handleRightClick
     }
   },
 })

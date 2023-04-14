@@ -15,6 +15,7 @@
         :height="imageHeight"
         @load="onImageLoaded"
         @error="onImageError"
+        @contextmenu="handleRightClick(image)"
       />
       <VSketchFabViewer
         v-if="sketchFabUid"
@@ -101,6 +102,8 @@ import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedImages from "~/components/VImageDetails/VRelatedImages.vue"
 import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
 import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
+
+import {useAnalytics} from "../../../composables/use-analytics"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
 import externalIcon from "~/assets/icons/external-link.svg"
@@ -210,6 +213,15 @@ export default defineComponent({
         isLoadingMainImage.value = false
       }
     }
+
+    const { sendCustomEvent } = useAnalytics()
+    const handleRightClick = (image: { id: string, originalTitle: string }) => {
+      sendCustomEvent("RIGHT_CLICK_IMAGE", {
+        set: image.originalTitle,
+        identifier: image.id,
+      })
+    }
+
     return {
       image,
       hasRelatedMedia,
@@ -223,6 +235,7 @@ export default defineComponent({
       sketchFabUid,
       onImageLoaded,
       onImageError,
+      handleRightClick,
       backToSearchPath,
       externalIcon,
     }
