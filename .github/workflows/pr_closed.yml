@@ -15,7 +15,19 @@ jobs:
         with:
           ref: gh-pages
 
+      - name: Determine if cleaning is necessary
+        id: should-clean
+        run: |
+          if [ -d "_preview/${{ github.event.pull_request.number }}" ]; then
+            echo "PR preview exists, cleaning"
+            echo "clean=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "PR preview does not exist, skipping"
+            echo "clean=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Remove PR preview
+        if: ${{ steps.should-clean.outputs.clean == 'true' }}
         run: rm -rf _preview/${{ github.event.pull_request.number }}
 
       - name: Push cleaned branch
