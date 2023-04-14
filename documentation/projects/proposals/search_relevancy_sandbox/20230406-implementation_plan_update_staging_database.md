@@ -63,7 +63,9 @@ production API database. This will be accomplished by:
    ([example](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/operators/rds.html#howto-sensor-rdsdbsensor)).
 5. Rename the old staging database to `dev-old-openverse-db` using boto3's
    [`modify_db_instance`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/modify_db_instance.html)
-   function (an operator does not exist for this operation).
+   function (an operator does not exist for this operation). We must set the
+   `ApplyImmediately` option here to `True` to ensure this operation happens
+   immediately rather than waiting for the next maintenance window.
 6. Wait for the old database rename to be complete with the `RdsDbSensor` (we
    may need retries on this step, since the database may not be initially
    available/named when the sensor first starts). _**Note**: this will cause a
