@@ -1,4 +1,4 @@
-# Implementation Plan: Sensitive Terms List - 2023-03-09
+# 2023-03-09 Implementation Plan: Sensitive Terms List
 
 > **Content Warning**
 >
