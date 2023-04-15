@@ -10,6 +10,19 @@ NO_COLOR := "\\033[0m"
     just --list --unsorted
 
 
+###########
+# Version #
+###########
+
+export API_PY_VERSION := `grep 'python_version' Pipfile | awk -F' = ' '{print $2}' | sed 's/"//g'`
+
+@py-version:
+    echo $API_PY_VERSION
+
+###########
+# Install #
+###########
+
 # Install dependencies
 install *args="--dev":
     pipenv install {{ args }}

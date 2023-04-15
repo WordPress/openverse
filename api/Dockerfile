@@ -1,3 +1,6 @@
+# Automatically build image using Python version specified in the `Pipfile`.
+ARG API_PY_VERSION
+
 ##################
 # Audio waveform #
 ##################
@@ -13,9 +16,13 @@ RUN ldd /usr/local/bin/audiowaveform | tr -s '[:blank:]' '\n' | grep '^/' | \
 # Python builder #
 ##################
 
-FROM python:3.10 AS builder
+FROM python:${API_PY_VERSION} AS builder
 
-ENV PYTHONBUFFERED=1
+# Container optimizations
+ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
+ENV PIP_NO_COLOR=1
+
 # Activate the virtualenv
 ENV PATH="/venv/bin:$PATH"
 
@@ -38,11 +45,15 @@ RUN pipenv install --system --deploy --dev
 # API #
 #######
 
-FROM python:3.10-slim as api
+FROM python:${API_PY_VERSION}-slim AS api
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
-ENV PYTHONBUFFERED=1
+# Container optimizations
+ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
+ENV PIP_NO_COLOR=1
+
 # Activate the virtualenv
 ENV PATH="/venv/bin:$PATH"
 

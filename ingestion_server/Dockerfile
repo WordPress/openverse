@@ -1,10 +1,17 @@
+# Automatically build image using Python version specified in the `Pipfile`.
+ARG ING_PY_VERSION
+
 ##################
 # Python builder #
 ##################
 
-FROM python:3.10 as builder
+FROM python:${ING_PY_VERSION} as builder
 
-ENV PYTHONBUFFERED=1
+# Container optimizations
+ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
+ENV PIP_NO_COLOR=1
+
 # Activate the virtualenv
 ENV PATH="/venv/bin:$PATH"
 
@@ -27,11 +34,15 @@ RUN pipenv install --system --deploy --dev
 # Ingestion server #
 ####################
 
-FROM python:3.10-slim as ing
+FROM python:${ING_PY_VERSION}-slim as ing
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
-ENV PYTHONBUFFERED=1
+# Container optimizations
+ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
+ENV PIP_NO_COLOR=1
+
 # Activate the virtualenv
 ENV PATH="/venv/bin:$PATH"
 

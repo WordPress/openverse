@@ -118,8 +118,10 @@ DOCKER_FILE := "-f " + (
 )
 EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
 
-export PROJECT_PY_VERSION := `just catalog/py-version`
-export PROJECT_AIRFLOW_VERSION := `just catalog/airflow-version`
+export CATALOG_PY_VERSION := `just catalog/py-version`
+export CATALOG_AIRFLOW_VERSION := `just catalog/airflow-version`
+export API_PY_VERSION := `just api/py-version`
+export ING_PY_VERSION := `just ingestion_server/py-version`
 
 # Run `docker-compose` configured with the correct files and environment
 dc *args:
