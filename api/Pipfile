@@ -16,6 +16,7 @@ remote-pdb = "~=2.1"
 pook = "~=1.0"
 pgcli = "~=3.5"
 freezegun = "~=1.2.2"
+pytest-sugar = "~=0.9"
 
 [packages]
 aws-requests-auth = "~=0.4"
