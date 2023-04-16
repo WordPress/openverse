@@ -19,7 +19,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
-import { License, LICENSE_ICONS } from "~/constants/license"
+import type { License } from "~/constants/license"
 import { getFullLicenseName, getElements } from "~/utils/license"
 import { useI18n } from "~/composables/use-i18n"
 
@@ -68,7 +68,6 @@ export default defineComponent({
     })
 
     return {
-      icons: LICENSE_ICONS,
       iconNames,
       licenseName,
     }
