@@ -198,7 +198,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Frontend downloads translations.
+      # Sets up `just` and Node.js.
+      # Node.js is needed for the frontend to download translations.
+      # `just` is needed to run the recipes and set build args.
       - name: Setup CI env
         uses: ./.github/actions/setup-env
         with:
@@ -206,6 +208,7 @@ jobs:
           setup_nodejs: ${{ matrix.image == 'frontend' && 'true' || 'false' }}
           install_recipe: ${{ matrix.image == 'frontend' && 'node-install' || '' }}
 
+      # Sets build args specifying versions needed to build Docker image.
       - name: Prepare build args
         id: prepare-build-args
         run: |
