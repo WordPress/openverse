@@ -1,4 +1,4 @@
-"""Per-provider status mappings."""
+"""Per-provider HTTP status mappings for link availability."""
 
 from collections import defaultdict
 from dataclasses import dataclass
