@@ -177,7 +177,7 @@ const config: NuxtConfig = {
   ],
   svgSprite: {
     input: "~/assets/icons/raw",
-    output: "~/assets/icons",
+    output: "~/assets/icons/sprite",
   },
   i18n: {
     baseUrl: "https://openverse.org",
