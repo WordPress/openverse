@@ -217,8 +217,8 @@ jobs:
           catalog_airflow_version=$(just catalog/airflow-version)
           api_py_version=$(just api/py-version)
           ing_py_version=$(just ingestion_server/py-version)
-          frontend_node_version=$( just frontend/node-version )
-          frontend_pnpm_version=$( just frontend/pnpm-version )
+          frontend_node_version=$(just frontend/node-version)
+          frontend_pnpm_version=$(just frontend/pnpm-version)
           EOF
 
       # ℹ️Step only applies for frontend image.
