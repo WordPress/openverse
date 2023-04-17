@@ -289,8 +289,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_api: false
-          setup_ingestion_server: false
+          setup_images: "upstream_db,catalog,"
 
       - name: Run tests
         run: |
@@ -319,8 +318,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_api: false
-          setup_ingestion_server: false
+          setup_images: "upstream_db,catalog,"
 
       - name: Check DAG documentation
         run: |
@@ -354,8 +352,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_api: false
-          setup_catalog: false
+          setup_images: "upstream_db,ingestion_server,"
 
       - name: Run ingestion-server tests
         run: just ingestion_server/test-local
@@ -400,7 +397,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_catalog: false
+          setup_images: "upstream_db,ingestion_server,api,"
 
       - name: Start API, ingest and index test data
         run: just api/init
@@ -453,7 +450,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_catalog: false
+          setup_images: "upstream_db,ingestion_server,api,"
 
       - name: Run check recipe
         run: just ${{ matrix.recipe }}
@@ -816,6 +813,9 @@ jobs:
       matrix: ${{ fromJson(needs.determine-images.outputs.publish_matrix) }}
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Log in to GitHub Docker Registry
         uses: docker/login-action@v2
         with:
@@ -823,15 +823,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download image `${{ matrix.image }}`
-        uses: actions/download-artifact@v3
+      - name: Load Docker image `${{ matrix.image }}`
+        uses: ./.github/actions/load-img
         with:
-          name: ${{ matrix.image }}
-          path: /tmp
+          setup_images: ${{ format('{0},', matrix.image) }}
 
       - name: Load and tag image `${{ matrix.image }}` (latest & sha)
         run: |
-          docker load --input /tmp/${{ matrix.image }}.tar
           docker tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:latest
           docker tag openverse-${{ matrix.image }} \

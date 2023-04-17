@@ -2,21 +2,9 @@ name: openverse/load-img
 description: Download and import Docker images from artifacts
 
 inputs:
-  setup_ingestion_server:
-    default: "true"
-    description: Whether to set up ingestion server image
-
-  setup_api:
-    default: "true"
-    description: Whether to set up API image
-
-  setup_catalog:
-    default: "true"
-    description: Whether to set up catalog image
-
-  setup_upstream_db:
-    default: "true"
-    description: Whether to set up upstream DB image
+  setup_images:
+    default: "upstream_db,ingestion_server,catalog,api,api_nginx,"
+    description: Comma-separated list of images (must include trailing comma)
 
 runs:
   using: "composite"
@@ -24,13 +12,13 @@ runs:
     # Upstream DB
     - name: Download image `upstream_db`
       uses: actions/download-artifact@v3
-      if: inputs.setup_upstream_db == 'true'
+      if: contains(inputs.setup_images, 'upstream_db,')
       with:
         name: upstream_db
         path: /tmp
 
     - name: Load image `upstream_db`
-      if: inputs.setup_upstream_db == 'true'
+      if: contains(inputs.setup_images, 'upstream_db,')
       shell: bash
       run: |
         docker load --input /tmp/upstream_db.tar
@@ -38,13 +26,13 @@ runs:
     # Catalog
     - name: Download image `catalog`
       uses: actions/download-artifact@v3
-      if: inputs.setup_catalog == 'true'
+      if: contains(inputs.setup_images, 'catalog,')
       with:
         name: catalog
         path: /tmp
 
     - name: Load image `catalog`
-      if: inputs.setup_catalog == 'true'
+      if: contains(inputs.setup_images, 'catalog,')
       shell: bash
       run: |
         docker load --input /tmp/catalog.tar
@@ -52,13 +40,13 @@ runs:
     # Ingestion server
     - name: Download image `ingestion_server`
       uses: actions/download-artifact@v3
-      if: inputs.setup_ingestion_server == 'true'
+      if: contains(inputs.setup_images, 'ingestion_server,')
       with:
         name: ingestion_server
         path: /tmp
 
     - name: Load image `ingestion_server`
-      if: inputs.setup_ingestion_server == 'true'
+      if: contains(inputs.setup_images, 'ingestion_server,')
       shell: bash
       run: |
         docker load --input /tmp/ingestion_server.tar
@@ -66,13 +54,26 @@ runs:
     # API
     - name: Download image `api`
       uses: actions/download-artifact@v3
-      if: inputs.setup_api == 'true'
+      if: contains(inputs.setup_images, 'api,')
       with:
         name: api
         path: /tmp
 
     - name: Load image `api`
-      if: inputs.setup_api == 'true'
+      if: contains(inputs.setup_images, 'api,')
       shell: bash
       run: |
         docker load --input /tmp/api.tar
+
+    - name: Download image `api_nginx`
+      uses: actions/download-artifact@v3
+      if: contains(inputs.setup_images, 'api_nginx,')
+      with:
+        name: api_nginx
+        path: /tmp
+
+    - name: Load image `api_nginx`
+      if: contains(inputs.setup_images, 'api_nginx,')
+      shell: bash
+      run: |
+        docker load --input /tmp/api_nginx.tar
