@@ -44,5 +44,14 @@ test.describe("VButton", () => {
         name: `${variant}-focused.png`,
       })
     })
+
+    test(`${variant} focused hovered`, async ({ page }) => {
+      await gotoWithArgs(page, { variant })
+      await page.focus(buttonLocator)
+      await page.hover(buttonLocator)
+      expect(await page.locator(wrapperLocator).screenshot()).toMatchSnapshot({
+        name: `${variant}-focused-hovered.png`,
+      })
+    })
   }
 })
