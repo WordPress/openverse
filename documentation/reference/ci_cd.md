@@ -99,19 +99,13 @@ downloads the artifact and load the `.tar` files into Docker as images.
 
 By default, all images built by the Docker system will be loaded but if the job
 only needs a subset of images, those can be set via the `setup_images` input,
-passing a comma-separated string of image names.
-
-```{caution}
-The value passed to the `setup_images` input must include a trailing comma to
-disambiguate names that are prefixes of other names, e.g. `api` and
-`api_nginx`.
-```
+passing a JSON encoded array of image names as strings.
 
 **Inputs:**
 
 ```typescript
 {
-  setup_images: string // default: "upstream_db,ingestion_server,catalog,api,api_nginx,"
+  setup_images: string // default: '["upstream_db", "ingestion_server", "catalog", "api", "api_nginx"]'
 }
 ```
 

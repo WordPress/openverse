@@ -292,7 +292,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_images: "upstream_db,catalog,"
+          setup_images: '["upstream_db", "catalog"]'
 
       - name: Run tests
         run: |
@@ -321,7 +321,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_images: "upstream_db,catalog,"
+          setup_images: '["upstream_db", "catalog"]'
 
       - name: Check DAG documentation
         run: |
@@ -355,7 +355,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_images: "upstream_db,ingestion_server,"
+          setup_images: '["upstream_db", "ingestion_server"]'
 
       - name: Run ingestion-server tests
         run: just ingestion_server/test-local
@@ -400,7 +400,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_images: "upstream_db,ingestion_server,api,"
+          setup_images: '["upstream_db", "ingestion_server", "api"]'
 
       - name: Start API, ingest and index test data
         run: just api/init
@@ -453,7 +453,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_images: "upstream_db,ingestion_server,api,"
+          setup_images: '["upstream_db", "ingestion_server", "api"]'
 
       - name: Run check recipe
         run: just ${{ matrix.recipe }}
@@ -838,7 +838,7 @@ jobs:
       - name: Load Docker image `${{ matrix.image }}`
         uses: ./.github/actions/load-img
         with:
-          setup_images: ${{ format('{0},', matrix.image) }}
+          setup_images: ${{ format('["{0}"]', matrix.image) }}
 
       - name: Load and tag image `${{ matrix.image }}` (latest & sha)
         run: |
