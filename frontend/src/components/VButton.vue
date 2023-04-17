@@ -336,7 +336,7 @@ a.button {
 }
 
 .filled-dark {
-  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-80 hover:text-white;
+  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-90 hover:text-white;
 }
 
 .filled-gray {
