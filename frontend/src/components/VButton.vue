@@ -19,7 +19,7 @@
         // written here explicitly instead of accessed off of `$style`.
         'focus-slim-filled': isFilled,
         'focus-slim-tx': isBordered || isTransparent,
-        border: !isPlainDangerous && variant !== 'filled-pink',
+        border: !isPlainDangerous,
         'border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink':
           !isPlainDangerous && !isNewVariant,
       },
