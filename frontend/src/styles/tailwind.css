@@ -167,10 +167,9 @@ Time                - 11px - xs semibold (default leading-tight)
   }
 
   [class*="focus-slim-filled"] {
-    @apply focus-visible:outline focus-visible:outline-[2px];
+    @apply focus-visible:border-white focus-visible:outline focus-visible:outline-[2px];
     @apply focus-visible:outline-offset-[0.5px] focus-visible:outline-pink;
-    @apply focus-visible:ring focus-visible:ring-white;
-    @apply focus-visible:border-white;
+    @apply focus-visible:ring-[1.5px] focus-visible:ring-white;
   }
 
   [class*="focus-bold-filled"] {
