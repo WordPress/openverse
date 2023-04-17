@@ -491,48 +491,6 @@ jobs:
   # Frontend #
   ############
 
-  frontend-unit:
-    name: Run frontend unit tests
-    if: needs.get-changes.outputs.frontend == 'true'
-    runs-on: ubuntu-latest
-    needs:
-      - get-changes
-      - lint
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          setup_python: false
-          install_recipe: node-install
-
-      - name: Run unit tests
-        run: just frontend/run test:unit
-
-  storybook-smoke:
-    name: Check Storybook smoke test
-    if: needs.get-changes.outputs.frontend == 'true'
-    runs-on: ubuntu-latest
-    needs:
-      - get-changes
-      - lint
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          setup_python: false
-          install_recipe: node-install
-
-      - name: Run Storybook smoke-test
-        run: just frontend/run storybook:smoke
-
   nuxt-build:
     name: Check Nuxt build
     if: needs.get-changes.outputs.frontend == 'true'
@@ -556,6 +514,57 @@ jobs:
         env:
           GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
           GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
+
+  nuxt-checks:
+    name: Run Nuxt checks
+    if: needs.get-changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+      - lint
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - unit_test
+          - storybook_smoke_test
+        include:
+          - name: unit_test
+            script: "test:unit"
+          - name: storybook_smoke_test
+            script: "storybook:smoke"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          install_recipe: node-install
+
+      - name: Run Nuxt checks
+        run: just frontend/run ${{ matrix.script }}
+
+  # This job runs when `nuxt-checks` doesn't and always passes, thus allowing
+  # PRs to meet the required checks criteria and be merged.
+  bypass-nuxt-checks:
+    name: Run Nuxt checks
+    if: needs.get-changes.outputs.frontend != 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - unit_test
+          - storybook_smoke_test
+
+    steps:
+      - name: Pass
+        run: echo 'Playwright tests are skipped because frontend is unchanged.'
 
   playwright:
     name: Run Playwright tests
