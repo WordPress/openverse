@@ -208,6 +208,9 @@ module.exports = {
       borderRadius: {
         inherit: "inherit",
       },
+      outlineWidth: {
+        1.5: "1.5px",
+      },
       typography: (theme) => ({
         DEFAULT: {
           css: {
@@ -237,7 +240,13 @@ module.exports = {
             "focus-slim-tx",
             "focus-slim-filled",
             "focus-bold-filled",
-          ].map((item) => [item, (value) => ({ "--tw-ring-color": value })])
+          ].map((item) => [
+            item,
+            (value) => ({
+              "--tw-ring-color": value,
+              "--tw-outline-color": value,
+            }),
+          ])
         ),
         { values: { ...theme("colors"), DEFAULT: theme("colors.pink") } }
       )

@@ -24,9 +24,8 @@ export const GetTemplate = (irrelevantClassNames) => (args) => ({
 Focus styles are defined across two axes: thickness (slim or bold) and style
 (transparent or filled). However, there is no bold-transparent variant.
 
-The transparent style works best if the element has a border and no background
-color. On the other hand the filled style works with elements that have a
-background color and no border.
+The transparent and filled styles work best if the element has a border and no
+background color.
 
 Both the outer and inner strokes in filled border variants are box-shadows.
 
@@ -50,7 +49,7 @@ applied to the component.
 
 <Canvas>
   <Story name="Slim filled" args={{ classNames: ["focus-slim-filled"] }}>
-    {GetTemplate("bg-pink text-white").bind({})}
+    {GetTemplate("bg-pink text-white border border-tx").bind({})}
   </Story>
 </Canvas>
 
@@ -61,7 +60,7 @@ applied to the component.
 
 <Canvas>
   <Story name="Bold filled" args={{ classNames: ["focus-bold-filled"] }}>
-    {GetTemplate("bg-yellow text-dark-charcoal").bind({})}
+    {GetTemplate("bg-yellow text-dark-charcoal border border-tx").bind({})}
   </Story>
 </Canvas>
 
@@ -76,6 +75,6 @@ no color is set, the default is assumed to be pink.
     args={{ classNames: ["focus-slim-tx-yellow"] }}
     parameters={{ backgrounds: { default: "Dark charcoal" } }}
   >
-    {GetTemplate("bg-dark-charcoal text-white").bind({})}
+    {GetTemplate("bg-dark-charcoal text-white border border-tx").bind({})}
   </Story>
 </Canvas>
