@@ -4,7 +4,7 @@ description: Download and import Docker images from artifacts
 inputs:
   setup_images:
     default: '["upstream_db", "ingestion_server", "catalog", "api", "api_nginx"]'
-    description: Comma-separated list of images (must include trailing comma)
+    description: JSON-encoded list of image names
 
 runs:
   using: "composite"
