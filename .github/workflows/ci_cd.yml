@@ -911,7 +911,7 @@ jobs:
   # Notification #
   ################
 
-  send_report:
+  send-report:
     name: Send Slack report
     runs-on: ubuntu-latest
     if: |
