@@ -15,7 +15,7 @@
 <!-- Enumerate any references to other documents/pages, including milestones and other plans -->
 
 - [Project Thread](https://github.com/WordPress/openverse/issues/392)
-- [Project Proposal]() _TBD_
+- [Project Proposal](https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.html)
 
 ## Overview
 
