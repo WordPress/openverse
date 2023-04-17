@@ -38,21 +38,24 @@ following criteria:
 4. Records for providers that support popularity metrics should have
    standardized popularity scores as soon as they become available in
    Elasticsearch.
-5. There should be no regressions in the regularity with which popularity scores
-   are refreshed; constants should be recalculated monthly.
-6. When popularity constants and standardized scores are being updated, the data
+5. When popularity constants and standardized scores are being updated, the data
    refresh runtime should not be affected.
-7. There must be no 'down-time' in the Catalog, where writes to the media tables
+6. There must be no 'down-time' in the Catalog, where writes to the media tables
    are locked (i.e., ingestion workflows should be able to continue as normal at
    all times).
-8. Query time on the frontend must not be increased.
+7. Query time in the API must not be increased.
+
+Ideally, we should have no regression in the regularity with which popularity
+constants are recalculated and normalization scores refreshed. Currently this
+happens monthly. However, as long as the stated requirements are met, it will be
+acceptable to recalculate constants and scores on a quarterly basis.
 
 ## Success
 
 <!-- How do we measure the success of the project? How do we know our ideas worked? -->
 
 For this project to be considered a success, we must be able to turn on the data
-refresh DAGs on an automated weekly schedule. This requires that the data
+refresh DAGs with an automated weekly schedule. This requires that the data
 refresh must be able to complete in under a week.
 
 The requirements in the section above should also be met to prevent regressions
@@ -75,7 +78,7 @@ in data quality and availability.
 
 This project will require:
 
-- changes to the Catalog DB
+- changes to the Catalog database schema
 - creation and modification of Airflow DAGs related to the data refresh
 - minor changes in the ingestion server
 
@@ -109,7 +112,7 @@ make an announcement if it is significant.
 
 <!-- What are the required implementation plans? Consider if they should be split per level of the stack or per feature. -->
 
-1. Removing the popularity steps from the data refresh
+1. Removing the popularity steps from the data refresh DAG
    - This plan will describe changes needed to separate the popularity
      calculations from the data refresh, including necessary changes to:
      - The data structure
