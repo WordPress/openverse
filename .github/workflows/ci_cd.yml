@@ -30,12 +30,12 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      catalog: ${{ steps.paths-filter.outputs.catalog }}
-      api: ${{ steps.paths-filter.outputs.api }}
-      ingestion_server: ${{ steps.paths-filter.outputs.ingestion_server }}
-      frontend: ${{ steps.paths-filter.outputs.frontend }}
-      documentation: ${{ steps.paths-filter.outputs.documentation }}
       changes: ${{ steps.paths-filter.outputs.changes }}
+      catalog: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'catalog') }}
+      ingestion_server: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ingestion_server') }}
+      api: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'api') }}
+      frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
+      documentation: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'documentation') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
