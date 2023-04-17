@@ -77,4 +77,4 @@ delete model="image" suffix="init" alias="image":
 
 # Run ingestion-server tests locally
 test-local *args:
-    pipenv run ./test/run_test.sh {{ args }}
+    pipenv run pytest {{ args }}
