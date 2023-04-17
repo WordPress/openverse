@@ -64,8 +64,10 @@ def parse_ps() -> list[Service]:
     # Iterate over the first two items in the list in pairs
     # https://stackoverflow.com/a/48347320/3277713
     for service, ports in zip(data_iter, data_iter):
-        # Services are usually of the form openverse-<name>-1
-        name = service.split("-", 1)[1].rsplit("-", 1)[0]
+        # Services are usually of the form openverse-<name>-1 or openverse_<name>_1,
+        # but we can't always tell which one is used.
+        strip_char = service.removeprefix("openverse")[0]
+        name = service.split(strip_char, 1)[1].rsplit(strip_char, 1)[0]
         bindings = set()
         for port_config in ports.split(","):
             if "->" not in port_config:
