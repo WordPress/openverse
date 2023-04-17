@@ -1,6 +1,6 @@
 This documentation is focused towards consumers who are using the Openverse API.
 To contribute to the development of the Openverse API, please refer to the
-[Openverse developer documentation](https://wordpress.githb.io/openverse/).
+[Openverse developer documentation](https://docs.openverse.org/).
 
 # Introduction
 
