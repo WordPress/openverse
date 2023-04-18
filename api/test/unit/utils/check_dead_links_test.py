@@ -3,6 +3,7 @@ from unittest import mock
 
 import aiohttp
 import pook
+import pytest
 
 from catalog.api.utils.check_dead_links import HEADERS, check_dead_links
 
@@ -11,7 +12,7 @@ from catalog.api.utils.check_dead_links import HEADERS, check_dead_links
 @pook.on
 def test_sends_user_agent(wrapped_client_session: mock.AsyncMock):
     query_hash = "test_sends_user_agent"
-    results = [object() for _ in range(40)]
+    results = [{"provider": "best_provider_ever"} for _ in range(40)]
     image_urls = [f"https://example.org/{i}" for i in range(len(results))]
     start_slice = 0
 
@@ -40,7 +41,7 @@ def test_handles_timeout():
     3 seconds.
     """
     query_hash = "test_handles_timeout"
-    results = [{"identifier": i} for i in range(1)]
+    results = [{"identifier": i, "provider": "best_provider_ever"} for i in range(1)]
     image_urls = [f"https://example.org/{i}" for i in range(len(results))]
     start_slice = 0
 
@@ -58,10 +59,12 @@ def test_handles_timeout():
     assert len(results) == 0
 
 
-def test_thingiverse_403_considered_dead():
-    query_hash = "test_thingiverse_403_considered_dead"
+@pytest.mark.parametrize("provider", ("thingiverse", "flickr"))
+def test_403_considered_dead(provider):
+    query_hash = f"test_{provider}_403_considered_dead"
+    other_provider = "fake_other_provider"
     results = [
-        {"identifier": i, "provider": "thingiverse" if i % 2 else "flickr"}
+        {"identifier": i, "provider": provider if i % 2 else other_provider}
         for i in range(4)
     ]
     image_urls = [f"https://example.org/{i}" for i in range(len(results))]
@@ -78,6 +81,5 @@ def test_thingiverse_403_considered_dead():
 
     assert head_mock.calls == len(results)
 
-    # All the "thingiverse" results should have been filtered out
-    # whereas the flickr results should be left
-    assert all([r["provider"] == "flickr" for r in results])
+    # All the provider's results should be filtered out, leaving only the "other" provider
+    assert all([r["provider"] == other_provider for r in results])
