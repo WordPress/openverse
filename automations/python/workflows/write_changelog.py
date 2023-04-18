@@ -1,9 +1,9 @@
 import os
 
 
-app = os.environ["INPUTS_APP"]
-tag_date = os.environ["STEPS_TAG_OUTPUTS_DATE"]
-release_body = os.environ["STEPS_RELEASE_DRAFTER_OUTPUTS_BODY"]
+app = os.environ["APP"]
+tag_date = os.environ["DATE"]
+release_body = os.environ["RELEASE_BODY"]
 
 file_path = f"documentation/changelogs/{app}/{tag_date}.md"
 
