@@ -44,8 +44,9 @@ production API database. This will be accomplished by:
    [`describe_db_instances`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_instances.html)
    function (an Airflow operator does not exist for this operation). Namely, the
    following attributes should be gathered and set to ensure they match:
-   - Availability should be a single DB instance (not multi-AZ)
-   - It should be attached to our default VPC
+   - Availability should be a single DB instance (not
+     [multi-AZ](https://docs.aws.amazon.com/fsx/latest/WindowsGuide/high-availability-multiAZ.html))
+   - It should be attached to our default Virtual Private Cloud (VPC)
    - It should not be publicly accessible
    - It will need access to the following VPC security groups: `default`,
      `openverse-vpc-db-access`, `staging-dev-rds-sg`
