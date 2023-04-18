@@ -23,6 +23,7 @@ export const buttonVariants = [
   "filled-dark",
   "filled-gray",
   "filled-white",
+  "filled-transparent",
   "bordered-white",
   "bordered-gray",
   "transparent-gray",
@@ -35,9 +36,7 @@ export const buttonSizes = [
   "medium",
   "small",
   "disabled",
-  "large-old",
   "medium-old",
-  "small-old",
 ] as const
 export type ButtonSize = typeof buttonSizes[number]
 

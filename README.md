@@ -41,8 +41,6 @@ This repository also contains the following directories.
 
 - [Brand](brand/) | Brand assets for Openverse such as logo and icon and
   guidelines for using these assets
-- [RFCs](rfcs/) | Proposals and planning documents for discussing changes to
-  Openverse
 - [Templates](templates/) | Common scaffolding code that is rendered and synced
   to the catalog repo
 

@@ -4,7 +4,7 @@ Changelogs for <https://openverse.org/>.
 
 ```{toctree}
 :glob:
-:reverse:
+:reversed:
 :titlesonly:
 
 *

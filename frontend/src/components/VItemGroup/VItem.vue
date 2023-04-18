@@ -179,11 +179,11 @@ export default defineComponent({
 }
 
 .vertical-bordered {
-  @apply border-t-0 border-b;
+  @apply border-b border-t-0;
 }
 
 .vertical:first-of-type {
-  @apply rounded-t-sm;
+  @apply rounded-se-sm rounded-ss-sm;
 }
 
 .vertical-bordered:first-of-type {
@@ -191,7 +191,7 @@ export default defineComponent({
 }
 
 .vertical:last-of-type {
-  @apply rounded-b-sm;
+  @apply rounded-ee-sm rounded-es-sm;
 }
 
 .vertical-content {
@@ -207,7 +207,7 @@ export default defineComponent({
 }
 
 .horizontal-bordered {
-  @apply border-dark-charcoal-20 border-s-0 border-e;
+  @apply border-e border-s-0 border-dark-charcoal-20;
 }
 
 .horizontal:first-of-type {

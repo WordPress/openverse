@@ -39,11 +39,9 @@
         </template>
         <template #default="{ close }">
           <div class="relative">
-            <VIconButton
+            <VCloseButton
               :label="getLicenseExplanationCloseAria(item.code)"
-              class="absolute top-0 border-none text-dark-charcoal-70 end-0"
-              size="small"
-              :icon-props="{ iconPath: icons.closeSmall }"
+              class="!absolute end-0 top-0"
               @click="close"
             />
             <VLicenseExplanation :license="item.code" />
@@ -67,16 +65,15 @@ import type { License } from "~/constants/license"
 import { defineEvent } from "~/types/emits"
 import { getElements } from "~/utils/license"
 
-import VLicenseExplanation from "~/components/VFilters/VLicenseExplanation.vue"
-import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
-import VLicense from "~/components/VLicense/VLicense.vue"
 import VButton from "~/components/VButton.vue"
+import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
+import VCloseButton from "~/components/VCloseButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VLicense from "~/components/VLicense/VLicense.vue"
+import VLicenseExplanation from "~/components/VFilters/VLicenseExplanation.vue"
 import VPopover from "~/components/VPopover/VPopover.vue"
 
 import helpIcon from "~/assets/icons/help.svg"
-import closeSmallIcon from "~/assets/icons/close-small.svg"
 
 type toggleFilterPayload = {
   filterType: NonMatureFilterCategory
@@ -86,10 +83,10 @@ type toggleFilterPayload = {
 export default defineComponent({
   name: "FilterCheckList",
   components: {
+    VCloseButton,
     VCheckbox,
     VButton,
     VIcon,
-    VIconButton,
     VLicense,
     VLicenseExplanation,
     VPopover,
@@ -142,7 +139,7 @@ export default defineComponent({
     const isDisabled = (item: FilterItem) =>
       useSearchStore().isFilterDisabled(item, props.filterType) ??
       props.disabled
-    const icons = { help: helpIcon, closeSmall: closeSmallIcon }
+    const icons = { help: helpIcon }
 
     const isLicense = (code: string): code is License => {
       // Quick check that also prevents "`code` is declared but its value is never read" warning.

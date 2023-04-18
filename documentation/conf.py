@@ -27,7 +27,12 @@ author = "Openverse <openverse@wordpress.org>"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["myst_parser", "sphinxcontrib.mermaid", "link_issues"]
+extensions = [
+    "myst_parser",
+    "sphinxcontrib.mermaid",
+    "link_issues",
+    "sphinx_copybutton",
+]
 myst_heading_anchors = 6  # Add anchors to all headers, this is disabled by default.
 
 source_suffix = {".rst": "restructuredtext", ".md": "markdown"}

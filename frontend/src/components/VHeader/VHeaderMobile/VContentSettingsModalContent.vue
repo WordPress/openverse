@@ -20,13 +20,13 @@
           v-if="showFilters"
           id="content-settings"
           size="medium"
-          class="gap-x-2 me-4"
+          class="me-4 gap-x-2"
           ><VIcon :icon-path="searchType.icon" />
           <h2 class="label-regular">{{ $t("search-type.heading") }}</h2></VTab
         >
         <h2
           v-else
-          class="label-regular relative my-2 flex h-12 items-center gap-x-2 px-2 me-4 after:absolute after:right-1/2 after:bottom-[-0.625rem] after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-dark-charcoal"
+          class="label-regular relative my-2 me-4 flex h-12 items-center gap-x-2 px-2 after:absolute after:bottom-[-0.625rem] after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-dark-charcoal"
         >
           <VIcon :icon-path="searchType.icon" />
           {{ $t("search-type.heading") }}
@@ -35,11 +35,11 @@
           v-if="showFilters"
           :applied-filter-count="appliedFilterCount"
         />
-        <VIconButton
-          class="self-center ms-auto hover:bg-dark-charcoal hover:text-white"
-          :icon-props="{ iconPath: closeIcon }"
-          :label="$t('modal.aria-close')"
-          @click="close"
+        <VCloseButton
+          :label="$t('modal.close-content-settings')"
+          variant="filled-white"
+          class="ms-auto self-center"
+          @close="close"
         />
       </template>
       <VTabPanel id="content-settings">
@@ -80,9 +80,10 @@ import { useSearchStore } from "~/stores/search"
 import useSearchType from "~/composables/use-search-type"
 
 import VButton from "~/components/VButton.vue"
+import VCloseButton from "~/components/VCloseButton.vue"
+
 import VFilterTab from "~/components/VHeader/VHeaderMobile/VFilterTab.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
@@ -91,16 +92,14 @@ import VTab from "~/components/VTabs/VTab.vue"
 import VTabPanel from "~/components/VTabs/VTabPanel.vue"
 import VTabs from "~/components/VTabs/VTabs.vue"
 
-import closeIcon from "~/assets/icons/close-small.svg"
-
 export default defineComponent({
   name: "VContentSettingsModalContent",
   components: {
+    VCloseButton,
     VIcon,
     VModalContent,
     VButton,
     VFilterTab,
-    VIconButton,
     VSearchGridFilter,
     VSearchTypes,
     VShowResultsButton,
@@ -157,7 +156,6 @@ export default defineComponent({
     }
 
     return {
-      closeIcon,
       searchType,
 
       selectedTab,

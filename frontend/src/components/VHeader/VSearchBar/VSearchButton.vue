@@ -3,10 +3,10 @@
     :aria-label="$t('search.search')"
     size="disabled"
     :variant="route === 'home' ? 'primary' : 'plain'"
-    class="heading-6 h-full flex-shrink-0 transition-none rounded-s-none"
+    class="heading-6 h-full flex-shrink-0 rounded-s-none transition-none"
     :class="[
       route === 'home'
-        ? 'w-[57px] whitespace-nowrap md:w-auto md:py-6 md:px-10'
+        ? 'w-[57px] whitespace-nowrap md:w-auto md:px-10 md:py-6'
         : 'search-button p-0.5px ps-1.5px hover:bg-pink hover:text-white focus-visible:bg-pink focus-visible:text-white group-focus-within:border-pink group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink group-hover:border-pink group-hover:bg-pink group-hover:text-white',
       {
         'w-10 bg-dark-charcoal-10 md:w-12': route === 'search',

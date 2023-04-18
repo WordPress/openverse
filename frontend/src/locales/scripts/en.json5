@@ -25,6 +25,7 @@
     translation: {
       text: "The translation for {locale} locale is incomplete. Help us get to 100 percent by {link}.",
       link: "contributing a translation",
+      close: "Close the translation contribution help request banner",
     },
   },
   header: {
@@ -640,6 +641,7 @@
     intro: "{cc-search} is now called {openverse} and joins {wordpress} as an open source project.",
     more: "{read-more} about this announcement.",
     read: "Read more",
+    close: "Close the announcement",
   },
   "download-button": {
     aria: {
@@ -652,6 +654,9 @@
     close: "Close",
     "aria-close": "Close the modal",
     "close-named": "Close {name}",
+    "close-content-settings": "Close the content settings menu",
+    "close-pages-menu": "Close the pages menu",
+    "close-banner": "Close the banner",
   },
   "error-images": {
     "depressed-musician": "A depressed pianist rests their head in their hands.",

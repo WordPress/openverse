@@ -3,12 +3,12 @@
     <div v-if="!isActive" class="flex w-full"><slot /></div>
     <VTeleport v-else to="modal">
       <div
-        class="fixed inset-0 z-40 flex h-screen h-[100dvh] w-full justify-center overflow-y-auto bg-white"
+        class="fixed inset-0 z-40 flex h-[100dvh] h-screen w-full justify-center overflow-y-auto bg-white"
       >
         <div
           ref="dialogRef"
           v-bind="$attrs"
-          class="flex w-full flex-col py-4 px-4"
+          class="flex w-full flex-col px-4 py-4"
           role="dialog"
           aria-modal="true"
           @keydown="onKeyDown"

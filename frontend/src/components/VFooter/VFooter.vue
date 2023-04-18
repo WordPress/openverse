@@ -142,7 +142,7 @@ export default defineComponent({
 /* logo-and-links > nav-list styles */
 
 .nav-list {
-  @apply grid grid-flow-col grid-cols-2 items-center gap-y-2 gap-x-10;
+  @apply grid grid-flow-col grid-cols-2 items-center gap-x-10 gap-y-2;
   /*
   We set the number of rows in JS to have 2 equally distributed link columns.
   */

@@ -1,7 +1,7 @@
 <template>
   <!-- @todo: Separate the absolute container from the link itself. -->
   <VLink
-    class="time inline-flex flex-row items-center gap-2 rounded-sm p-2 text-xs font-semibold text-dark-charcoal-70 pe-3 hover:text-dark-charcoal"
+    class="time inline-flex flex-row items-center gap-2 rounded-sm p-2 pe-3 text-xs font-semibold text-dark-charcoal-70 hover:text-dark-charcoal"
     v-bind="$attrs"
   >
     <VIcon :icon-path="chevronIcon" :rtl-flip="true" />

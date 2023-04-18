@@ -1,6 +1,6 @@
 <template>
   <header
-    class="main-header z-30 flex w-full items-stretch justify-between gap-x-2 border-b bg-white py-4 px-6"
+    class="main-header z-30 flex w-full items-stretch justify-between gap-x-2 border-b bg-white px-6 py-4"
     :class="
       isHeaderScrolled || isSidebarVisible
         ? 'border-dark-charcoal-20'
@@ -12,7 +12,7 @@
     <VSearchBar
       ref="searchBarRef"
       v-model.trim="searchTerm"
-      class="flex-grow me-4"
+      class="me-4 flex-grow"
       size="medium"
       @submit="handleSearch"
     >

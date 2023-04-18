@@ -1,7 +1,7 @@
 <template>
   <VButton
     v-show="canLoadMore"
-    size="large-old"
+    class="px-8 py-6"
     variant="full"
     :disabled="isFetching"
     data-testid="load-more"

@@ -2,7 +2,7 @@
   <div
     v-bind="waveformAttributes"
     ref="el"
-    class="waveform bg-background-var group-waveform relative overflow-hidden text-dark-charcoal focus:outline-none"
+    class="waveform bg-background-var group/waveform relative overflow-hidden text-dark-charcoal focus:outline-none"
     :style="heightProperties"
     :tabIndex="isTabbable && isInteractive ? 0 : -1"
     :aria-disabled="!isInteractive"
@@ -12,7 +12,7 @@
     <!-- Focus ring -->
     <svg
       v-if="isInteractive"
-      class="shadow-ring-1 absolute inset-0 z-20 hidden h-full w-full group-waveform-focus:block"
+      class="shadow-ring-1 absolute inset-0 z-20 hidden h-full w-full group-focus/waveform:block"
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="viewBox"
       preserveAspectRatio="none"
@@ -85,7 +85,7 @@
     <!-- Focus bar -->
     <div
       v-if="isInteractive && isSeeking"
-      class="absolute top-0 z-20 hidden h-full flex-col items-center justify-between bg-black group-focus:flex group-waveform-focus:flex"
+      class="absolute top-0 z-20 hidden h-full flex-col items-center justify-between bg-black group-focus/waveform:flex group-focus:flex"
       :style="{ width: `${barWidth}px`, left: `${progressBarWidth}px` }"
     >
       <div

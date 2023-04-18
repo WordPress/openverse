@@ -34,7 +34,7 @@ export const Template = (args) => ({
     <div id="wrapper"
         class="w-40 h-16 flex items-center justify-center"
         :class="args?.variant.startsWith('transparent') ? 'bg-dark-charcoal-06': 'bg-white'">
-    <VButton v-bind="args" @click="onClick" href="/">
+    <VButton v-bind="args" class="description-bold" @click="onClick" href="/">
       Code is Poetry
     </VButton>
     </div>

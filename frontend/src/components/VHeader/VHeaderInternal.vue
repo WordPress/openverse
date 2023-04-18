@@ -1,7 +1,7 @@
 <template>
   <header
     ref="nodeRef"
-    class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 border-b border-tx py-4 ps-2 pe-3 md:py-4 lg:ps-6 lg:pe-10"
+    class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 border-b border-tx py-4 pe-3 ps-2 md:py-4 lg:pe-10 lg:ps-6"
   >
     <VHomeLink variant="dark" class="px-4 hover:bg-yellow" />
     <nav class="hidden lg:flex">
@@ -55,12 +55,11 @@
                 variant="light"
                 class="focus-visible:ring-yellow focus-visible:ring-offset-0"
               />
-              <VIconButton
-                ref="closeButton"
-                :icon-props="{ iconPath: closeIcon }"
-                class="border-tx text-white focus-visible:ring-yellow focus-visible:ring-offset-0"
-                :label="$t('modal.close')"
-                @click="closePageMenu"
+              <VCloseButton
+                variant="black"
+                icon-size="large"
+                :label="$t('modal.close-pages-menu')"
+                @close="closePageMenu"
               />
             </div>
           </template>
@@ -94,6 +93,7 @@ import usePages from "~/composables/use-pages"
 
 import { useUiStore } from "~/stores/ui"
 
+import VCloseButton from "~/components/VCloseButton.vue"
 import VHomeLink from "~/components/VHeader/VHomeLink.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VPageLinks from "~/components/VHeader/VPageLinks.vue"
@@ -101,12 +101,12 @@ import VModalContent from "~/components/VModal/VModalContent.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
 
-import closeIcon from "~/assets/icons/close.svg"
 import menuIcon from "~/assets/icons/menu.svg"
 
 export default defineComponent({
   name: "VHeaderInternal",
   components: {
+    VCloseButton,
     VModalContent,
     VPopoverContent,
     VHomeLink,
@@ -164,7 +164,6 @@ export default defineComponent({
       modalContentRef,
       nodeRef,
 
-      closeIcon,
       menuIcon,
 
       allPages,

@@ -23,6 +23,8 @@ jobs:
     name: Release app
     runs-on: ubuntu-latest
     permissions:
+      # Needed to create the GitHub release on the repo
+      contents: write
       # Needed for pushing the new docker image tag
       packages: write
       # Needed to open the changelog PR
@@ -157,7 +159,7 @@ jobs:
           gh workflow run \
             -f tag=${{ steps.tag.outputs.image-tag }} \
             -f actor=${{ github.actor }} \
-            "Deployment: production-api"
+            "Deployment - production-api"
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
@@ -167,6 +169,6 @@ jobs:
           gh workflow run \
             -f tag=${{ steps.tag.outputs.image-tag }} \
             -f actor=${{ github.actor }} \
-            "Deployment: production-nuxt"
+            "Deployment - production-nuxt"
         env:
           GITHUB_TOKEN: ${{ github.token }}

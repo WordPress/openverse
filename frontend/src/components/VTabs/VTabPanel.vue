@@ -61,7 +61,7 @@ export default defineComponent({
 
     const panelVariantStyle = computed(() =>
       tabContext.variant.value === "bordered"
-        ? "border rounded-sm first:rounded-tl-none"
+        ? "border rounded-sm first:rounded-ss-none"
         : "border-t"
     )
 

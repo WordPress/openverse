@@ -11,7 +11,7 @@
         v-show="isAnyFilterApplied"
         id="clear-filter-button"
         variant="plain"
-        class="label-bold absolute py-1 px-4 text-pink end-0 hover:ring hover:ring-pink"
+        class="label-bold absolute end-0 px-4 py-1 text-pink hover:ring hover:ring-pink"
         @click="clearFilters"
       >
         {{ $t("filter-list.clear") }}

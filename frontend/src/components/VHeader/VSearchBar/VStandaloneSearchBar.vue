@@ -6,7 +6,7 @@
     @submit.prevent="handleSearch"
   >
     <div
-      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm border p-0.5px pe-2 rounded-e-none border-e-0 focus-within:border-1.5 focus-within:p-0 focus-within:pe-2 focus-within:border-e-0"
+      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border border-e-0 p-0.5px pe-2 focus-within:border-1.5 focus-within:border-e-0 focus-within:p-0 focus-within:pe-2"
       :class="[
         isHomeRoute ? 'border-tx' : 'border-black',
         hasPopover ? 'focus-within:border-tx' : 'focus-within:border-pink',
@@ -18,7 +18,7 @@
         type="search"
         name="q"
         :placeholder="$t('hero.search.placeholder').toString()"
-        class="paragraph-large md:label-regular h-full w-full appearance-none rounded-none bg-tx leading-none text-dark-charcoal placeholder-dark-charcoal-70 ms-4 focus:outline-none"
+        class="paragraph-large md:label-regular ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-dark-charcoal placeholder-dark-charcoal-70 focus:outline-none"
         :aria-label="
           $t('search.search-bar-label', {
             openverse: 'Openverse',
@@ -30,12 +30,12 @@
     </div>
     <VButton
       type="submit"
-      :aria-label="$t('search.search')"
+      :aria-label="$t('search.search').toString()"
       size="disabled"
       :variant="isHomeRoute ? 'primary' : 'plain'"
-      class="h-full w-14 flex-shrink-0 transition-none rounded-s-none sm:w-16"
+      class="h-full w-14 flex-shrink-0 rounded-s-none transition-none sm:w-16"
       :class="{
-        'search-button border border-black p-0.5px ps-1.5px hover:bg-pink hover:text-white focus:border-tx focus-visible:bg-pink focus-visible:text-white group-focus-within:border-tx group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink group-hover:border-tx group-hover:bg-pink group-hover:text-white group-focus:border-tx':
+        'search-button border !border-black p-0.5px ps-1.5px hover:bg-pink hover:text-white focus:!border-tx focus-visible:bg-pink focus-visible:text-white group-focus-within:!border-tx group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink group-hover:!border-tx group-hover:bg-pink group-hover:text-white group-focus:!border-tx':
           !isHomeRoute,
       }"
     >

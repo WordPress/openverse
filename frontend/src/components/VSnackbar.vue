@@ -42,10 +42,10 @@ export default defineComponent({
 }
 
 .large {
-  @apply w-max max-w-[calc(100%_-_2_*_theme(spacing.4))] flex-row items-center py-4 px-6 text-sm;
+  @apply w-max max-w-[calc(100%_-_2_*_theme(spacing.4))] flex-row items-center px-6 py-4 text-sm;
 }
 
 .small {
-  @apply w-2/3 flex-col items-start py-3 px-4 text-sr sm:w-2/5;
+  @apply w-2/3 flex-col items-start px-4 py-3 text-sr sm:w-2/5;
 }
 </style>

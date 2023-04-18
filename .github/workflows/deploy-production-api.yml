@@ -7,7 +7,7 @@
 # a maintainer to generate the updated version.
 ### !!!
 
-name: "Deployment: production-api"
+name: "Deployment - production-api"
 
 on:
   workflow_dispatch:

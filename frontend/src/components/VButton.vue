@@ -15,10 +15,10 @@
         'gap-x-2':
           (hasIconEnd || hasIconStart) && (size == 'medium' || size == 'large'),
         'gap-x-1': (hasIconEnd || hasIconStart) && size == 'small',
-        // Custom tailwind classes don't work with CSS modules in Vue so they are written here explicitly instead of accessed off of `$style`.
+        // Custom tailwind classes don't work with CSS modules in Vue, so they are
+        // written here explicitly instead of accessed off of `$style`.
         'focus-slim-filled': isFilled,
         'focus-slim-tx': isBordered || isTransparent,
-        'description-bold': isNewVariant,
         'border border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink':
           !isPlainDangerous && !isNewVariant,
       },
@@ -292,18 +292,12 @@ export default VButton
   @apply cursor-not-allowed;
 }
 
-.size-small-old {
-  @apply py-1 px-2;
-}
 .size-medium-old {
-  @apply py-2 px-4;
-}
-.size-large-old {
-  @apply py-6 px-8;
+  @apply px-4 py-2;
 }
 
 .size-small {
-  @apply h-8 py-0 px-2;
+  @apply h-8 px-2 py-0;
 }
 .icon-start-small {
   @apply ps-1;
@@ -313,7 +307,7 @@ export default VButton
 }
 
 .size-medium {
-  @apply h-10 py-0 px-3;
+  @apply h-10 px-3 py-0;
 }
 .icon-start-medium {
   @apply ps-2;
@@ -323,7 +317,7 @@ export default VButton
 }
 
 .size-large {
-  @apply h-12 py-0 px-5;
+  @apply h-12 px-5 py-0;
 }
 .icon-start-large {
   @apply ps-4;
@@ -350,6 +344,10 @@ a.button {
 
 .filled-white {
   @apply bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+}
+
+.filled-transparent {
+  @apply bg-tx text-curr hover:bg-dark-charcoal hover:text-white;
 }
 
 .bordered-white {
