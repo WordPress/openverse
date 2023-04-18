@@ -309,14 +309,8 @@ recipes.
 This job is skipped if the API codebase has not changed. Its counterpart is
 [`nuxt-checks`](#nuxt-checks) for the frontend.
 
-#### `bypass-django-checks`
-
-The `django-checks` job is marked as required check in GitHub. If the job is
-skipped, the matrix will not be expanded into individual jobs and all required
-checks will appear as pending, thus blocking PRs from being merged.
-
-To counter this, the `bypass-django-checks` job is run if the API codebase has
-not changed, and it simply passes the checks by having the same job names.
+Since this is a required check for a matrix job, it has a bypass counterpart.
+Refer to the documentation for [bypass jobs](#bypass-jobs).
 
 ## Frontend jobs
 
@@ -341,14 +335,8 @@ Node.js scripts.
 This job is skipped if the frontend codebase has not changed. Its counterpart is
 [`django-checks`](#django-checks) for the API.
 
-#### `bypass-nuxt-checks`
-
-The `nuxt-checks` job is marked as required check in GitHub. If the job is
-skipped, the matrix will not be expanded into individual jobs and all required
-checks will appear as pending, thus blocking PRs from being merged.
-
-To counter this, the `bypass-nuxt-checks` job is run if the frontend codebase
-has not changed, and it simply passes the checks by having the same job names.
+Since this is a required check for a matrix job, it has a bypass counterpart.
+Refer to the documentation for [bypass jobs](#bypass-jobs).
 
 ### `playwright`
 
@@ -366,14 +354,8 @@ This job, combined with the [`nuxt-build` job](#nuxt-build), is treated as the
 proof of functionality for deploying frontend to staging.
 ```
 
-#### `bypass-playwright`
-
-The `playwright` job is marked as required check in GitHub. If the job is
-skipped, the matrix will not be expanded into individual jobs and all required
-checks will appear as pending, thus blocking PRs from being merged.
-
-To counter this, the `bypass-playwright` job is run if the frontend codebase has
-not changed, and it simply passes the checks by having the same job names.
+Since this is a required check for a matrix job, it has a bypass counterpart.
+Refer to the documentation for [bypass jobs](#bypass-jobs).
 
 ## Documentation jobs
 
@@ -489,3 +471,17 @@ The workflow sends a Slack message, listing the outcome of four jobs
 Receiving this report in Slack is an indicator that the workflow did not
 complete successfully. It is up to the MSR to investigate the cause of the
 failure and take appropriate action.
+
+## Bypass jobs
+
+If a job is marked as a required check in GitHub it must
+[either pass or be skipped](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/troubleshooting-required-status-checks#handling-skipped-but-required-checks)
+to allow the PR to be merged. This is different for matrix jobs because if a
+matrix is skipped due to an `if` condition, it is not expanded into individual
+jobs but skipped as a whole, leaving the checks associated with that matrix in a
+pending state, preventing PRs from being merged.
+
+For such jobs, we use a bypass job, conventionally named `bypass-<job name>`,
+that is run on the opposite of the condition of the original job. This bypass
+job is an identical matrix, except it always succeeds, and satisfies the
+required checks by having the same job names as the original.
