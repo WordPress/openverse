@@ -112,7 +112,8 @@ jobs:
         run: |
           file="documentation/changelogs/${{ inputs.app }}/${{ steps.tag.outputs.date }}.md"
           echo -e "# ${{ steps.tag.outputs.date }}\n\n" > "$file"
-          echo -e '${{ steps.release-drafter.outputs.body }}' >> "$file"
+          printf -v safe_output '%s' "${{ steps.release-drafter.outputs.body }}"
+          echo "$safe_output" >> "$file"
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
