@@ -111,7 +111,7 @@ def test_paginates_audio_waveforms_to_generate(
             {"stderr": b"This is an error string"},
         ),
         (
-            psycopg2.errors.lookup(psycopg2.errorcodes.NOT_NULL_VIOLATION),
+            psycopg2.errors.NotNullViolation,
             tuple(),
             dict(),
         ),
