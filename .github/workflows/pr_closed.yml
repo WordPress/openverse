@@ -27,10 +27,10 @@ jobs:
           fi
 
       - name: Remove PR preview
-        if: ${{ steps.should-clean.outputs.clean == 'true' }}
         run: rm -rf _preview/${{ github.event.pull_request.number }}
 
       - name: Push cleaned branch
+        if: ${{ steps.should-clean.outputs.clean == 'true' }}
         run: |
           git config --global user.name 'PR Closed action'
           git config --global user.email 'openverse@wordpress.org'
