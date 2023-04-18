@@ -56,7 +56,7 @@ def get_ps() -> list[str]:
 
 def parse_ps() -> list[Service]:
     """
-    Convert the output lines given by Docker ps into a list of services and
+    Convert the output lines given by Docker "ps" into a list of services and
     their port mappings.
     :return: a list of running services with their port
     """
