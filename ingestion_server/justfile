@@ -71,6 +71,12 @@ promote model="image" suffix="init" alias="image":
 delete model="image" suffix="init" alias="image":
     just _curl-post '{"model": "{{ model }}", "action": "DELETE_INDEX", "index_suffix": "{{ suffix }}"}'
 
+point-alias model suffix alias:
+    just _curl-post '{"model": "{{ model }}", "action": "POINT_ALIAS", "index_suffix": "{{ suffix }}", "alias": "{{ alias }}"}'
+
+create-and-populate-filtered-index model="image" destination_suffix="init":
+    just _curl-post '{"model": "{{ model }}", "action": "CREATE_AND_POPULATE_FILTERED_INDEX", "destination_index_suffix": "{{ destination_suffix }}"}'
+
 #########
 # Tests #
 #########
@@ -78,3 +84,7 @@ delete model="image" suffix="init" alias="image":
 # Run ingestion-server tests locally
 test-local *args:
     pipenv run pytest {{ args }}
+
+# Clean integration test docker-compose stack. Useful if test tear down does not run due to catastrophic test failure.
+test-clean-dc:
+    docker-compose --profile=ingestion_server -f test/integration-docker-compose.yml down -v
