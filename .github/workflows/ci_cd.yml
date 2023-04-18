@@ -72,55 +72,15 @@ jobs:
       - get-changes
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Set matrix images
         id: set-matrix
         env:
           CHANGES: ${{ needs.get-changes.outputs.changes }}
-        shell: python
-        run: |
-          import json
-          import os
-          import sys
-
-          changes = json.loads(os.environ.get('CHANGES'))
-
-          build_matrix = {"image": [], "include": []}
-          publish_matrix = {"image": []}
-
-          if "frontend" in changes:
-              build_matrix["image"].append("frontend")
-              build_matrix["include"].append({"image": "frontend", "context": "frontend", "target": "app"})
-              publish_matrix["image"].append("frontend")
-          if any(item in changes for item in ["api", "ingestion_server", "catalog"]):
-              build_matrix["image"].append("upstream_db")
-              build_matrix["include"].append({"image": "upstream_db", "context": "docker/upstream_db", "target": "db"})
-          if "catalog" in changes:
-              build_matrix["image"].append("catalog")
-              build_matrix["include"].append({"image": "catalog", "context": "catalog", "target": "cat"})
-              publish_matrix["image"].append("catalog")
-          if "api" in changes or "ingestion_server" in changes:
-              # Always build the ingestion server and API images for either changeset
-              build_matrix["image"] += ["api", "ingestion_server"]
-              build_matrix["include"] += [
-                {"image": "ingestion_server", "context": "ingestion_server", "target": "ing"},
-                {"image": "api", "context": "api", "target": "api"},
-              ]
-              if "api" in changes:
-                  build_matrix["image"].append("api_nginx")
-                  build_matrix["include"].append({"image": "api_nginx", "context": "api", "target": "nginx"})
-                  publish_matrix["image"] += ["api", "api_nginx"]
-              if "ingestion_server" in changes:
-                  publish_matrix["image"].append("ingestion_server")
-
-          do_build = 'true' if len(build_matrix["image"]) else 'false'
-          do_publish = 'true' if len(publish_matrix["image"]) else 'false'
-
-          with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
-              for dest in [sys.stdout, gh_out]:
-                  print(f"do_build={do_build}", file=dest)
-                  print(f"build_matrix={json.dumps(build_matrix)}", file=dest)
-                  print(f"do_publish={do_publish}", file=dest)
-                  print(f"publish_matrix={json.dumps(publish_matrix)}", file=dest)
+        working-directory: automations/python/workflows
+        run: python set_matrix_images.py
 
   #############
   # Universal #
@@ -923,9 +883,11 @@ jobs:
       - deploy-api
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Generate report
         id: report
-        shell: python
         env:
           EMIT_DOCS_RESULT: ${{ needs.emit-docs.result }}
           PUBLISH_IMAGES_RESULT: ${{ needs.publish-images.result }}
@@ -934,52 +896,8 @@ jobs:
           SERVER_URL: ${{ github.server_url }}
           REPOSITORY: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
-        run: |
-          import json
-          import os
-          import sys
-          from collections import defaultdict
-
-          server_url = os.environ.get("SERVER_URL")
-          repository = os.environ.get("REPOSITORY")
-          run_id = os.environ.get("RUN_ID")
-
-          jobs = ["emit-docs", "publish-images", "deploy-frontend", "deploy-api"]
-
-          results = {}
-          counts = defaultdict(lambda: 0)
-
-          for job_name in jobs:
-              result = os.environ.get(f"{job_name.replace('-', '_')}_result".upper())
-              results[job_name] = result
-              counts[result] += 1
-
-          payload = {
-              "text": ", ".join(f"{count} {result}" for result, count in counts.items()),
-              "blocks": [
-                  {
-                      "type": "section",
-                      "text": {
-                          "type": "mrkdwn",
-                          "text": f"<{server_url}/{repository}/actions/runs/{run_id}|Click here to review the completed CI + CD workflow>.",
-                      },
-                  },
-                  {
-                      "type": "section",
-                      "fields": [
-                          {
-                              "type": "mrkdwn",
-                              "text": f"*{job_name}:*\n:workflow-{result}: {result}",
-                          }
-                          for job_name, result in results.items()
-                      ],
-                  },
-              ],
-          }
-
-          with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
-              for dest in [sys.stdout, gh_out]:
-                  print(f"payload={json.dumps(payload)}", file=dest)
+        working-directory: automations/python/workflows
+        run: python generate_report.py
 
       - name: Send report
         uses: slackapi/slack-github-action@v1.23.0
