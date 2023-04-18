@@ -146,7 +146,7 @@ up *flags:
       ((c++)) && ((c==3)) && break
       sleep 5
     done
-    echo && just ps
+    echo && sleep 1 && just ps
 
 # Also see `wait-up` recipe in sub-justfiles
 # Wait for all services to be up
