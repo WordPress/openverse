@@ -22,8 +22,8 @@ of these, "documentation" is also applicable to PRs.
 
   See job [`emit-docs`](#emit-docs) for details.
 
-- **Docker images:** When a new commit is pushed to `main`, the Docker images
-  for each of the affected services is pushed to
+- **Docker images:** When a new commit is pushed to `main`, the Docker image for
+  each of the affected services is pushed to
   [GHCR](https://github.com/orgs/WordPress/packages?repo_name=openverse). These
   images are tagged with the SHA of the commit.
 
@@ -137,14 +137,17 @@ outputs that are used by subsequent jobs.
 
 **Outputs:**
 
+Each of the `boolean` properties denote whether the PR or commit includes
+changes for the corresponding stack.
+
 ```typescript
 {
   changes: string // JSON-encoded array of modified changesets
-  catalog: boolean // whether `changes` contains 'catalog'
-  ingestion_server: boolean // whether `changes` contains 'ingestion_server'
-  api: boolean // whether `changes` contains 'api'
-  frontend: boolean // whether `changes` contains 'frontend'
-  documentation: boolean // whether `changes` contains 'documentation'
+  catalog: boolean
+  ingestion_server: boolean
+  api: boolean
+  frontend: boolean
+  documentation: boolean
 }
 ```
 
@@ -179,7 +182,7 @@ published to GHCR. This job determines those images.
 | `api`              | 🛠️            |           | 🛠️                 | 🚀    | 🚀          |            |
 | `frontend`         |               |           |                    |       |             | 🚀         |
 
-🚀 implies that the image is published to GHCR. 🛠️ implies that the image is
+🚀 denotes that the image is published to GHCR. 🛠️ denotes that the image is
 built but not published.
 
 ```{note}
@@ -188,6 +191,11 @@ convenience and speed, it is never published.
 ```
 
 **Outputs:**
+
+The `build_matrix` and `publish_matrix` conventionally use the name singular
+name "image" for the field because inside the steps
+[`matrix.image`](https://docs.github.com/en/actions/learn-github-actions/contexts#matrix-context)
+can be used to refer to the current matrix entry.
 
 ```typescript
 interface Output {
@@ -255,9 +263,9 @@ for the catalog.
 ### `catalog-checks`
 
 Runs tests for the catalog using the `catalog/generate-dag-docs` recipe. The job
-generates a new file from a Docker container so Python does not need to be
-installed. However, the job runs linting on the new file, so Node.js needs to be
-set up.
+runs inside a Docker container so Python does not need to be installed. However,
+the job generates a new documentation page that must be linted, so
+[`setup-env`](#setup-env) in invoked to set up Node.js and linting dependencies.
 
 This job is skipped if the catalog codebase has not changed.
 
@@ -292,8 +300,9 @@ ingestion server and [`nuxt-build`](#nuxt-build) for the frontend.
 
 ```{note}
 This job is treated as the proof of functionality for publishing Docker images
-for the API. Since it also initialises the API, it also largely proves that the
-ingestion server is working.
+for the API. Since the job also initialises the API, it provides a basic
+verification of the ingestion server's core functionality of populating the API
+database and Elasticsearch.
 ```
 
 ### `django-checks`
@@ -361,10 +370,16 @@ Refer to the documentation for [bypass jobs](#bypass-jobs).
 
 ### `emit-docs`
 
-Builds the documentation and publishes it to an appropriate target. For PRs, the
-target is a subdirectory under `_preview/` of the docs site, e.g. the docs for
-PR #420 will be published at <https://docs.openverse.org/_preview/420/>. For
-commits to `main`, the target is the <https://docs.openverse.org/> site itself.
+Builds the developer documentation and publishes it to an appropriate target.
+For PRs, the target is a subdirectory under `_preview/` of the docs site, e.g.
+the docs for PR #420 will be published at
+<https://docs.openverse.org/_preview/420/>. For commits to `main`, the target is
+the <https://docs.openverse.org/> site itself.
+
+```{caution}
+This job only publishes developer documentation. The API documentation hosted at
+<https://api.openverse.engineering/v1/> is provided by the API service itself.
+```
 
 This job is skipped if neither the documentation nor the frontend codebase has
 changed. It is also not executed on forks and for PRs made by Dependabot.
