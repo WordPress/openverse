@@ -8,7 +8,16 @@ import {
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
+import spriteData from "~/assets/icons/sprite/sprites.json"
+
 <Meta title="Components/VIcon" component={VIcon} />
+
+export const iconNames = spriteData.reduce((accumulator, sprite) => {
+  const iconsWithNamespace = sprite.symbols.map((symbol) =>
+    sprite.defaultSprite ? symbol : `${sprite.name}/${symbol}`
+  )
+  return accumulator.concat(iconsWithNamespace)
+}, [])
 
 export const Template = (args) => ({
   template: `<VIcon v-bind="args" />`,
@@ -35,6 +44,13 @@ To display the icon, pass the name of the icon as a prop.
     name="Default"
     args={{
       name: "replay",
+    }}
+    argTypes={{
+      name: {
+        options: iconNames,
+        control: { type: "select" },
+        defaultValue: "replay",
+      },
     }}
   >
     {Template.bind({})}

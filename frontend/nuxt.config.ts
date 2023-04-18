@@ -294,6 +294,13 @@ const config: NuxtConfig = {
         viewports: VIEWPORTS,
       },
     },
+    modules: {
+      // with upgraded storybook, svg-sprite is crashing the storybook build.
+      // It's not clear why that is, because it should have been fixed in
+      // svg-sprite 0.5.1: https://github.com/nuxt-community/storybook/issues/155
+      // That doesn't seem to have worked, however.
+      exclude: ["svg-sprite"],
+    },
   },
   proxy: {
     // The key is appended to the address in the value.
