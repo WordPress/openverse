@@ -39,7 +39,7 @@ def get_ps() -> list[str]:
             "docker",
             "ps",
             "--filter",
-            "name=openverse",
+            "network=openverse_default",
             "--format",
             "{{.Names}}\n\t{{.Ports}}\n",
         ],
