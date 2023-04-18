@@ -13,6 +13,7 @@ Vue.config.productionTip = false
 Vue.config.devtools = false
 Vue.use(VueI18n)
 
+/* eslint-disable vue/one-component-per-file */
 /**
  * Simplified mock of a NuxtLink component.
  */
@@ -20,6 +21,12 @@ config.stubs["nuxt-link"] = Vue.component("NuxtLink", {
   props: ["to"],
   template: '<a :href="to" v-on="$listeners"><slot /></a>',
 })
+
+config.stubs["svg-icon"] = Vue.component("SvgIcon", {
+  props: ["name"],
+  template: '<svg title="name" />',
+})
+/* eslint-enable vue/one-component-per-file */
 
 config.mocks.$t = (key) => key
 config.mocks.localePath = (i) => i
