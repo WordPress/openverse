@@ -175,8 +175,8 @@ published to GHCR. This job determines those images.
 | Change             | `upstream_db` | `catalog` | `ingestion_server` | `api` | `api_nginx` | `frontend` |
 | ------------------ | ------------- | --------- | ------------------ | ----- | ----------- | ---------- |
 | `catalog`          | 🛠️            | 🚀        |                    |       |             |            |
-| `ingestion_server` | 🛠             |           | 🚀                 | 🛠     |             |            |
-| `api`              | 🛠             |           | 🛠                  | 🚀    | 🚀          |            |
+| `ingestion_server` | 🛠️            |           | 🚀                 | 🛠️    |             |            |
+| `api`              | 🛠️            |           | 🛠️                 | 🚀    | 🚀          |            |
 | `frontend`         |               |           |                    |       |             | 🚀         |
 
 🚀 implies that the image is published to GHCR. 🛠️ implies that the image is
