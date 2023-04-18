@@ -8,6 +8,7 @@ from dataclasses import dataclass
 @dataclass
 class Service:
     name: str
+    image: str
     bindings: set[tuple[int, int]]
 
     def print(self):
@@ -18,7 +19,7 @@ class Service:
         It specially handles the singular NGINX port 9443 which serves over ``https``.
         """
 
-        print(f"\033[1m{self.name}:\033[0m")
+        print(f"\033[1m{self.name} ({self.image}):\033[0m")
         for host_port, container_port in self.bindings:
             proto = "http"
             if self.name == "proxy" and container_port == 9443:
@@ -41,12 +42,15 @@ def get_ps() -> list[str]:
             "--filter",
             "network=openverse_default",
             "--format",
-            "{{.Names}}\n\t{{.Ports}}\n",
+            "{{.Names}}\t{{.Image}}\t{{.Ports}}\n",
         ],
-        check=True,
         capture_output=True,
         text=True,
     )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"docker ps failed with code {proc.returncode} and output: {proc.stderr}"
+        )
     return proc.stdout.split("\n")
 
 
@@ -60,14 +64,19 @@ def parse_ps() -> list[Service]:
     services: list[Service] = []
 
     lines = get_ps()
-    data_iter = iter([stripped for line in lines if (stripped := line.strip())])
-    # Iterate over the first two items in the list in pairs
-    # https://stackoverflow.com/a/48347320/3277713
-    for service, ports in zip(data_iter, data_iter):
+    lines = [stripped for line in lines if (stripped := line.strip())]
+    for line in lines:
+        service, image, ports = line.split("\t")
         # Services are usually of the form openverse-<name>-1 or openverse_<name>_1,
         # but we can't always tell which one is used.
         strip_char = service.removeprefix("openverse")[0]
         name = service.split(strip_char, 1)[1].rsplit(strip_char, 1)[0]
+        # Image names may start with "openverse-" or "openverse_" or be an upstream
+        # image name like redis:4.0.0
+        if "openverse" in image:
+            image_name = image[len("openverse") + 1 :]
+        else:
+            image_name = image.split(":", 1)[0]
         bindings = set()
         for port_config in ports.split(","):
             if "->" not in port_config:
@@ -79,7 +88,7 @@ def parse_ps() -> list[Service]:
             )
             bindings.add((host_port, container_port))
         if bindings:
-            services.append(Service(name, bindings))
+            services.append(Service(name, image_name, bindings))
 
     return services
 
@@ -88,7 +97,7 @@ def print_ps():
     """Print the formatted output for each service."""
 
     print("=" * 80)
-    print(f"{'Services':^80}")
+    print(f"{'Service Ports':^80}")
     print("=" * 80)
     for service in parse_ps():
         service.print()
