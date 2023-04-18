@@ -162,7 +162,7 @@ jobs:
             -f actor=${{ github.actor }} \
             "Deployment - production-api"
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Deploy production frontend
         if: inputs.app == 'frontend'
@@ -172,4 +172,4 @@ jobs:
             -f actor=${{ github.actor }} \
             "Deployment - production-nuxt"
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
