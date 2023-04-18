@@ -1,8 +1,9 @@
 # CI + CD workflow
 
 The CI + CD workflow is the primary pipeline of the project. It runs the tests
-for all layers of the stack and deploys the API and frontend to their respective
-staging ECS targets if the tests pass.
+for all layers of the stack (which have changed in the current PR or commit)
+and, if the tests pass, publishes the documentation to the docs site and deploys
+the API and frontend to their respective staging ECS targets.
 
 It's a complex workflow with many jobs that depend on each other and the number
 of paths it can take becomes huge because jobs can be skipped based on the
@@ -11,10 +12,10 @@ contents of a PR or commit.
 ## Output
 
 The CI + CD workflow has four main outputs when new commits are pushed to the
-`main` branch, not each outcome is expected on each commit. The first of these,
-"documentation" is also applicable to PRs.
+`main` branch, although not all outputs are expected on each commit. The first
+of these, "documentation" is also applicable to PRs.
 
-- **Documentation:** For each PR that affects the documentation, the
+- **Documentation:** For each PR which affects the documentation, the
   documentation is built and deployed to a preview site. When a new commit is
   pushed to `main` that affects the documentation, the documentation is built
   and deployed to the [root of the docs site](https://docs.openverse.org).
@@ -28,17 +29,17 @@ The CI + CD workflow has four main outputs when new commits are pushed to the
 
   See job [`publish-images`](#publish-images).
 
-- **Frontend staging:** When a new commit is pushed to `main` that affects the
+- **Frontend staging:** When a new commit is pushed to `main` which affects the
   frontend service and the tests for the frontend pass, a new
   [staging deployment of the frontend](https://staging.openverse.org/) is
-  triggered.
+  triggered. The deployment uses the image published above.
 
   See job [`deploy-frontend`](#deploy-frontend).
 
-- **API staging:** When a new commit is pushed to `main` that affects the API
+- **API staging:** When a new commit is pushed to `main` which affects the API
   service and the tests for the API pass, a new
   [staging deployment of the API](https://api-staging.openverse.engineering/) is
-  triggered.
+  triggered. The deployment uses the image published above.
 
   See job [`deploy-api`](#deploy-api).
 
@@ -379,8 +380,8 @@ not changed, and it simply passes the checks by having the same job names.
 ### `emit-docs`
 
 Builds the documentation and publishes it to an appropriate target. For PRs, the
-target is a subdirectory under `_preview/` of the docs site, so the docs for PR
-#420 will be published at <https://docs.openverse.org/_preview/420/>. For
+target is a subdirectory under `_preview/` of the docs site, e.g. the docs for
+PR #420 will be published at <https://docs.openverse.org/_preview/420/>. For
 commits to `main`, the target is the <https://docs.openverse.org/> site itself.
 
 This job is skipped if neither the documentation nor the frontend codebase has
@@ -423,8 +424,9 @@ Images are only published if all the following conditions are met.
 
 ### `deploy-frontend`
 
-Triggers a separate workflow using `workflow_dispatch` that deploys the frontend
-to AWS ECS. That workflow is given two inputs.
+Triggers a separate workflow using `workflow_dispatch` that deploys the staging
+environment of the frontend service to AWS ECS. That workflow is given two
+inputs.
 
 - the tag of the image that was published by the
   [`publish-images`](#publish-images) job, which is the output of the
@@ -443,8 +445,8 @@ This deployment is only triggered if all the following conditions are met.
 
 ### `deploy-api`
 
-Triggers a separate workflow using `workflow_dispatch` that deploys the API to
-AWS ECS. That workflow is given two inputs.
+Triggers a separate workflow using `workflow_dispatch` that deploys the staging
+environment of the API service to AWS ECS. That workflow is given two inputs.
 
 - the tag of the image that was published by the
   [`publish-images`](#publish-images) job, which is the output of the
