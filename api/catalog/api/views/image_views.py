@@ -109,7 +109,7 @@ class ImageViewSet(MediaViewSet):
         image_url = image.url
         # Hotfix to use thumbnails for SMK images
         # TODO: Remove when small thumbnail issues are resolved
-        if "iip.smk.dk" in image_url:
+        if "iip.smk.dk" in image_url and image.thumbnail:
             image_url = image.thumbnail
 
         return super().thumbnail(image_url, request)
