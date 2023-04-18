@@ -28,8 +28,8 @@ class Service:
 
 def get_ps() -> list[str]:
     """
-    Invoke Docker Compose to get the configuration for all services. The config is
-    returned as a yaml string.
+    Invoke Docker "ps" with a filter to get the configuration for all services. The
+    info is returned as a list of plain text lines.
 
     :return: the output printed by the subprocess to STDOUT
     """
@@ -52,7 +52,7 @@ def get_ps() -> list[str]:
 
 def parse_ps() -> list[Service]:
     """
-    Convert the yaml output given by Docker Compose config into a list of services and
+    Convert the output lines given by Docker ps into a list of services and
     their port mappings.
     :return: a list of running services with their port
     """
