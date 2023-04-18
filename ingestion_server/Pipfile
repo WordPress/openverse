@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 ipython = "~=8.11"
 pycodestyle = "~=2.10"
-pytest = "~=7.2"
+pytest = "~=7.3"
 pytest-order = "~=1.1"
 pytest-sugar = "~=0.9"
 remote-pdb = "~=2.1"
