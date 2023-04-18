@@ -38,6 +38,7 @@ from ingestion_server.es_helpers import get_stat
 from ingestion_server.es_mapping import index_settings
 from ingestion_server.qa import create_search_qa_index
 from ingestion_server.queries import get_existence_queries
+from ingestion_server.utils.sensitive_terms import get_sensitive_terms
 
 
 DATABASE_HOST = config("DATABASE_HOST", default="localhost")
@@ -478,4 +479,58 @@ class TableIndexer:
 
         if self.progress is not None:
             self.progress.value = 100
+        self.ping_callback()
+
+    def create_and_populate_filtered_index(
+        self,
+        model_name: str,
+        origin_index_suffix: str | None = None,
+        destination_index_suffix: str | None = None,
+        **_,
+    ):
+        # Allow relying on the model-name-based alias by
+        # not suppliying `origin_index_suffix`
+        source_index = (
+            f"{model_name}-{origin_index_suffix}" if origin_index_suffix else model_name
+        )
+
+        # Destination and origin index suffixes must be possible to separate
+        # to allow for re-runs of filtered index creation based on the same
+        # origin index.
+        destination_index_suffix = destination_index_suffix or uuid.uuid4().hex
+        destination_index = f"{model_name}-{destination_index_suffix}-filtered"
+
+        self.es.indices.create(
+            index=destination_index,
+            body=index_settings(model_name),
+        )
+
+        sensitive_terms = get_sensitive_terms()
+
+        self.es.reindex(
+            body={
+                "source": {
+                    "index": source_index,
+                    "query": {
+                        "bool": {
+                            "must_not": [
+                                {
+                                    "multi_match": {
+                                        "query": f'"{term}"',
+                                        "fields": ["tags.name", "title", "description"],
+                                    }
+                                }
+                                for term in sensitive_terms
+                            ]
+                        }
+                    },
+                },
+                "dest": {"index": destination_index},
+            },
+            slices="auto",
+            wait_for_completion=True,
+        )
+
+        self.refresh(index_name=destination_index, change_settings=True)
+
         self.ping_callback()

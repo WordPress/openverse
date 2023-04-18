@@ -74,6 +74,10 @@ just ingestion_server/ingest-upstream "audio" "init"
 just docker/es/wait-for-index "audio-init"
 just ingestion_server/promote "audio" "init" "audio"
 just docker/es/wait-for-index "audio"
+just ingestion_server/create-and-populate-filtered-index "audio" "init"
+just docker/es/wait-for-index "audio-init-filtered"
+just ingestion_server/point-alias "audio" "init-filtered" "audio-filtered"
+just docker/es/wait-for-index "audio-filtered" "audio-init-filtered"
 
 # Image ingestion is flaky; but usually works on the next attempt
 set +e
@@ -89,6 +93,10 @@ set -e
 
 just ingestion_server/promote "image" "init" "image"
 just docker/es/wait-for-index "image"
+just ingestion_server/create-and-populate-filtered-index "image" "init"
+just docker/es/wait-for-index "image-init-filtered"
+just ingestion_server/point-alias "image" "init-filtered" "image-filtered"
+just docker/es/wait-for-index "image-filtered" "image-init-filtered"
 
 #########
 # Redis #

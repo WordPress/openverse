@@ -54,6 +54,9 @@ class TaskTypes(Enum):
     """create indices in ES for QA tests; this is not intended to run in production but
     can be run without negative consequences"""
 
+    CREATE_AND_POPULATE_FILTERED_INDEX = auto()
+    """create a filtered index based on existing alias index"""
+
     def __str__(self):
         """
         Get the string representation of this enum.
