@@ -71,7 +71,7 @@ def get(
 
         upstream_response = requests.get(
             upstream_url,
-            timeout=10,
+            timeout=15,
             params=params,
             headers=headers,
         )
