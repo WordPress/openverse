@@ -109,10 +109,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add new changelog file to documentation
-        run: |
-          file="documentation/changelogs/${{ inputs.app }}/${{ steps.tag.outputs.date }}.md"
-          echo -e "# ${{ steps.tag.outputs.date }}\n\n" > "$file"
-          echo -e '${{ steps.release-drafter.outputs.body }}' >> "$file"
+        env:
+          APP: ${{ inputs.app }}
+          DATE: ${{ steps.tag.outputs.date }}
+          RELEASE_BODY: ${{ steps.release-drafter.outputs.body }}
+        working-directory: automations/python/workflows
+        run: python write_changelog.py
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
