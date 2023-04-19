@@ -21,7 +21,8 @@ necessary to make new content added to the Catalog by our provider DAGs availabl
 to the API. You can read more in the [README](
 https://github.com/WordPress/openverse-api/blob/main/ingestion_server/README.md
 ) Importantly, the data refresh TaskGroup is also configured to handle concurrency
-requirements of the data refresh server.
+requirements of the data refresh server. Finally, once the origin indexes have been
+refreshed, the corresponding filtered index creation DAG is triggered.
 
 You can find more background information on this process in the following
 issues and related PRs:
@@ -37,6 +38,7 @@ from collections.abc import Sequence
 from airflow import DAG
 from airflow.models.dagrun import DagRun
 from airflow.operators.python import BranchPythonOperator, PythonOperator
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.settings import SASession
 from airflow.utils.session import provide_session
 from airflow.utils.state import State
@@ -261,11 +263,31 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
             },
         )
 
+        index_suffix = XCOM_PULL_TEMPLATE.format(
+            data_refresh_group.get_child_by_label("generate_index_suffix").task_id,
+            "return_value",
+        )
+        trigger_filtered_index_creation = TriggerDagRunOperator(
+            task_id=f"trigger_create_filtered_{data_refresh.media_type}_index",
+            trigger_dag_id=f"create_filtered_{data_refresh.media_type}_index",
+            params={
+                # Force to skip data refresh DAG concurrency check
+                # as the data refresh DAG will clearly already be running
+                # as it is triggering the filtered index creation DAG.
+                "force": True,
+                "origin_index_suffix": index_suffix,
+                # Match origin and destination suffixes so we can tell which
+                # filtered indexes were created as part of a data refresh.
+                "destination_index_suffix": index_suffix,
+            },
+        )
+
         # Set up task dependencies
         month_check >> [refresh_popularity_metrics, refresh_matview]
         before_record_count >> data_refresh_group
         refresh_popularity_metrics >> refresh_matview >> data_refresh_group
         data_refresh_group >> after_record_count >> report_counts
+        data_refresh_group >> trigger_filtered_index_creation
 
     return dag
 

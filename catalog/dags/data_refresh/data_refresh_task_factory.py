@@ -44,21 +44,17 @@ issues and related PRs:
 - [[Feature] Data refresh orchestration DAG](
 https://github.com/WordPress/openverse-catalog/issues/353)
 """
-import json
 import logging
 import os
 import uuid
 from collections.abc import Sequence
-from urllib.parse import urlparse
 
-from airflow.exceptions import AirflowException
 from airflow.models.baseoperator import chain
 from airflow.operators.python import PythonOperator
-from airflow.providers.http.operators.http import SimpleHttpOperator
-from airflow.providers.http.sensors.http import HttpSensor
+from airflow.sensors.external_task import ExternalTaskSensor
 from airflow.utils.task_group import TaskGroup
-from requests import Response
 
+from common import ingestion_server
 from common.constants import XCOM_PULL_TEMPLATE
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from data_refresh.data_refresh_types import DataRefresh
@@ -68,53 +64,6 @@ logger = logging.getLogger(__name__)
 
 
 DATA_REFRESH_POOL = "data_refresh"
-
-
-def response_filter_stat(response: Response) -> str:
-    """
-    Handle the response for the `get_current_index` task.
-
-    This is used to extract the name of the current index that the concerned alias
-    points to. This index name will be available via XCom in the downstream tasks.
-    """
-    index_name = response.json()["alt_names"]
-    # Indices are named as '<media type>-<suffix>', so everything after the first
-    # hyphen '-' is the suffix.
-    _, index_suffix = index_name.split("-", maxsplit=1)
-    return index_suffix
-
-
-def response_filter_data_refresh(response: Response) -> str:
-    """
-    Handle the response for `trigger_data_refresh` task.
-
-    This is used to grab the endpoint needed to poll for the status of the triggered
-    data refresh. This information will then be available via XCom in the downstream
-    tasks.
-    """
-    status_check_url = response.json()["status_check"]
-    return urlparse(status_check_url).path
-
-
-def response_check_wait_for_completion(response: Response) -> bool:
-    """
-    Handle the response for `wait_for_completion` Sensor.
-
-    Processes the response to determine whether the task can complete.
-    """
-    data = response.json()
-
-    if data["active"]:
-        # The data refresh is still running. Poll again later.
-        return False
-
-    if data["error"]:
-        raise AirflowException(
-            "Ingestion server encountered an error during data refresh."
-        )
-
-    logger.info(f"Data refresh done with {data['progress']}% completed.")
-    return True
 
 
 def create_data_refresh_task_group(
@@ -161,17 +110,26 @@ def create_data_refresh_task_group(
             mode="reschedule",
             pool=DATA_REFRESH_POOL,
         )
-        tasks.append(wait_for_data_refresh)
+
+        # If filtered index creation was manually triggered before the data refresh
+        # started, we need to wait for it to finish or the data refresh could destroy
+        # the origin index. Realistically the data refresh is too slow to beat the
+        # filtered index creation process, even if it was triggered immediately after
+        # filtered index creation. However, it is safer to avoid the possibility
+        # of the race condition altogether.
+        wait_for_filtered_index_creation = ExternalTaskSensor(
+            task_id="wait_for_create_and_populate_filtered_index",
+            external_dag_id=f"create_filtered_{data_refresh.media_type}_index",
+            external_task_id=None,
+            check_existence=True,
+            poke_interval=poke_interval,
+            mode="reschedule",
+        )
+
+        tasks.append([wait_for_data_refresh, wait_for_filtered_index_creation])
 
         # Get the index currently mapped to our target alias, to delete later.
-        get_current_index = SimpleHttpOperator(
-            task_id="get_current_index",
-            http_conn_id="data_refresh",
-            endpoint=f"stat/{target_alias}",
-            method="GET",
-            response_check=lambda response: response.status_code == 200,
-            response_filter=response_filter_stat,
-        )
+        get_current_index = ingestion_server.get_current_index(target_alias)
         tasks.append(get_current_index)
 
         # Generate a UUID suffix that will be used by the newly created index.
@@ -186,56 +144,29 @@ def create_data_refresh_task_group(
         }
         for action, action_post_data in action_data_map.items():
             with TaskGroup(group_id=action) as task_group:
-                trigger = SimpleHttpOperator(
-                    task_id=f"trigger_{action}",
-                    http_conn_id="data_refresh",
-                    endpoint="task",
-                    method="POST",
-                    headers={"Content-Type": "application/json"},
-                    data=json.dumps(
-                        action_post_data
-                        | {
-                            "model": data_refresh.media_type,
-                            "action": action.upper(),
-                            "index_suffix": XCOM_PULL_TEMPLATE.format(
-                                generate_index_suffix.task_id, "return_value"
-                            ),
-                        }
-                    ),
-                    response_check=lambda response: response.status_code == 202,
-                    response_filter=response_filter_data_refresh,
+                ingestion_server.trigger_and_wait_for_task(
+                    action=action,
+                    model=data_refresh.media_type,
+                    data={
+                        "index_suffix": XCOM_PULL_TEMPLATE.format(
+                            generate_index_suffix.task_id, "return_value"
+                        ),
+                    }
+                    | action_post_data,
+                    timeout=data_refresh.data_refresh_timeout,
                 )
-                waiter = HttpSensor(
-                    task_id=f"wait_for_{action}",
-                    http_conn_id="data_refresh",
-                    endpoint=XCOM_PULL_TEMPLATE.format(trigger.task_id, "return_value"),
-                    method="GET",
-                    response_check=response_check_wait_for_completion,
-                    mode="reschedule",
-                    poke_interval=poke_interval,
-                    timeout=data_refresh.data_refresh_timeout.total_seconds(),
-                )
-                trigger >> waiter
 
             tasks.append(task_group)
 
         # Delete the alias' previous target index, now unused.
-        delete_old_index = SimpleHttpOperator(
-            task_id="delete_old_index",
-            http_conn_id="data_refresh",
-            endpoint="task",
-            method="POST",
-            headers={"Content-Type": "application/json"},
-            data=json.dumps(
-                {
-                    "model": data_refresh.media_type,
-                    "action": "DELETE_INDEX",
-                    "index_suffix": XCOM_PULL_TEMPLATE.format(
-                        get_current_index.task_id, "return_value"
-                    ),
-                }
-            ),
-            response_check=lambda response: response.status_code == 202,
+        delete_old_index = ingestion_server.trigger_task(
+            action="DELETE_INDEX",
+            model=data_refresh.media_type,
+            data={
+                "index_suffix": XCOM_PULL_TEMPLATE.format(
+                    generate_index_suffix.task_id, "return_value"
+                ),
+            },
         )
         tasks.append(delete_old_index)
 
