@@ -21,8 +21,7 @@ x-airflow-common: &airflow-common
       - PROJECT_AIRFLOW_VERSION=${PROJECT_AIRFLOW_VERSION}
   volumes:
     - ./catalog:/opt/airflow/catalog
-    - catalog-ipython:/home/airflow/.ipython
-    - catalog-pytest-cache:/home/airflow/.cache/pytest
+    - catalog-cache:/home/airflow/.cache
 
 services:
   # Database used by the API
@@ -314,5 +313,4 @@ volumes:
   plausible-clickhouse:
   es-data:
   minio:
-  catalog-ipython:
-  catalog-pytest-cache:
+  catalog-cache:
