@@ -15,14 +15,14 @@ a new SVG file to the sprite.
 You can use SVG sprites through the `VIcon` component. To use it, first, import
 it into your component:
 
-```vue
-import { VIcon } from '~/components/VIcon'
+```js
+import { VIcon } from "~/components/VIcon"
 ```
 
 Then, add the VIcon component to your template, passing the name of the icon as
 a prop:
 
-```vue
+```html
 <template>
   <VIcon name="arrow-up" />
 </template>
