@@ -72,9 +72,38 @@ prerequisites.
 
    The `up` recipe orchestrates the following services: `cache`, `db`,
    `upstream_db`, `es`, `indexer_worker`, `ingestion_server`, `web`, `proxy`,
-   `plausible-ch`, `plausible-db` and `plausible`.
+   `webserver`, `scheduler`, `s3`, `plausible-ch`, `plausible-db` and
+   `plausible`.
 
-   Now you should be able to access the following endpoints:
+   The `up` recipe also prints out services that have ports exposed to the host
+   (this can also be seen by running `just ps`):
+
+   ```
+   ================================================================================
+                                    Service Ports
+   ================================================================================
+   webserver (catalog):
+   -  http://0.0.0.0:9090 (→ 8080)
+   ingestion_server (ingestion_server):
+   -  http://0.0.0.0:50281 (→ 8001)
+   plausible (plausible/analytics):
+   -  http://0.0.0.0:50288 (→ 8000)
+   web (api):
+   -  http://0.0.0.0:50280 (→ 8000)
+   -  http://0.0.0.0:50230 (→ 3000)
+   s3 (minio/minio):
+   -  http://0.0.0.0:5010 (→ 5000)
+   -  http://0.0.0.0:5011 (→ 5001)
+   db (postgres):
+   -  http://0.0.0.0:50254 (→ 5432)
+   es (docker.elastic.co/elasticsearch/elasticsearch):
+   -  http://0.0.0.0:50292 (→ 9200)
+   cache (redis):
+   -  http://0.0.0.0:50263 (→ 6379)
+   ================================================================================
+   ```
+
+   For example, you can access the following endpoints:
 
    - the list of ingestion jobs on
      [http://localhost:50281/task](http://localhost:50281/task)
