@@ -69,6 +69,7 @@ module.exports = {
       ex: "1ex",
       half: "50%",
       full: "100%",
+      "full-with-border": "calc(100% + 2px)",
 
       // Indexed by multiples of baseline (~ `0.25rem`)
       0: "0",
@@ -240,6 +241,7 @@ module.exports = {
             "focus-slim-tx",
             "focus-slim-filled",
             "focus-bold-filled",
+            "focus-slim-borderless-filled",
           ].map((item) => [
             item,
             (value) => ({

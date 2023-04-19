@@ -42,14 +42,28 @@ border is turned transparent.
   </Story>
 </Canvas>
 
-## Slim filled
+## Slim filled - for bordered elements
 
-A colored outer stroke of 1.5px and a white inner stroke of 1.5px are both
-applied to the component.
+A colored outer stroke of 1.5px and a white inner stroke of 1.5px overlapping
+the border are both applied to the component.
 
 <Canvas>
   <Story name="Slim filled" args={{ classNames: ["focus-slim-filled"] }}>
-    {GetTemplate("bg-pink text-white border border-tx").bind({})}
+    {GetTemplate("bg-dark-charcoal text-white border border-tx").bind({})}
+  </Story>
+</Canvas>
+
+## Slim filled borderless - for elements without a border
+
+Similar to "slim filled", a colored outer stroke of 1.5px and a white inner
+stroke of 1.5px are applied to the component.
+
+<Canvas>
+  <Story
+    name="Slim filled borderless"
+    args={{ classNames: ["focus-slim-borderless-filled"] }}
+  >
+    {GetTemplate("bg-pink text-white").bind({})}
   </Story>
 </Canvas>
 
@@ -60,7 +74,7 @@ applied to the component.
 
 <Canvas>
   <Story name="Bold filled" args={{ classNames: ["focus-bold-filled"] }}>
-    {GetTemplate("bg-yellow text-dark-charcoal border border-tx").bind({})}
+    {GetTemplate("bg-yellow text-dark-charcoal").bind({})}
   </Story>
 </Canvas>
 
