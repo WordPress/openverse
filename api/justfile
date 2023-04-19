@@ -65,7 +65,7 @@ stats media="images" host="localhost:50280":
     just _curl-get "{{ media }}/stats/" {{ host }}
 
 # Launch a `pgcli` shell in the web container
-pgcli db_host="db" db_name="openledger" db_user="deploy" db_password="deploy" db_port="5432":
+pgcli db_host="db" db_port="5432" db_name="openledger" db_user="deploy" db_password="deploy": up
     env DC_USER="opener" just ../exec web pgcli postgresql://{{ db_user }}:{{ db_password }}@{{ db_host }}:{{ db_port }}/{{ db_name }}
 
 #########################
