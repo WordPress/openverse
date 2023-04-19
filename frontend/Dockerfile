@@ -46,9 +46,9 @@ ENV NUXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
 ARG API_URL
-ARG RELEASE
+ARG SEMANTIC_VERSION
 
-RUN echo "{\"release\":\"${RELEASE}\"}" > /home/node/frontend/src/static/version.json
+RUN echo "{\"release\":\"${SEMANTIC_VERSION}\"}" > /home/node/frontend/src/static/version.json
 
 RUN pnpm build:only
 

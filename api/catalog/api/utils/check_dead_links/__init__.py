@@ -10,6 +10,9 @@ from asgiref.sync import async_to_sync
 from decouple import config
 from elasticsearch_dsl.response import Hit
 
+from catalog.api.utils.check_dead_links.provider_status_mappings import (
+    provider_status_mappings,
+)
 from catalog.api.utils.dead_link_mask import get_query_mask, save_query_mask
 
 
@@ -119,24 +122,23 @@ def check_dead_links(
     for idx, _ in enumerate(cached_statuses):
         del_idx = len(cached_statuses) - idx - 1
         status = cached_statuses[del_idx]
-        # thingiverse treated as failure despite the suspect status code
-        # due to issues described here:
-        # https://github.com/WordPress/openverse/issues/900
-        if (
-            status == 429
-            or status == 403
-            and results[del_idx]["provider"] != "thingiverse"
-        ):
+
+        provider = results[del_idx]["provider"]
+        status_mapping = provider_status_mappings[provider]
+
+        if status in status_mapping.unknown:
             logger.warning(
                 "Image validation failed due to rate limiting or blocking. "
                 f"url={image_urls[idx]} "
                 f"status={status} "
+                f"provider={provider} "
             )
-        elif status != 200:
+        elif status not in status_mapping.live:
             logger.info(
                 "Deleting broken image from results "
                 f"id={results[del_idx]['identifier']} "
                 f"status={status} "
+                f"provider={provider} "
             )
             # remove the result, mutating in place
             del results[del_idx]

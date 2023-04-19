@@ -106,7 +106,11 @@ class ImageViewSet(MediaViewSet):
     )
     def thumbnail(self, request, *_, **__):
         image = self.get_object()
-        image_url = image.thumbnail or image.url
+        image_url = image.url
+        # Hotfix to use thumbnails for SMK images
+        # TODO: Remove when small thumbnail issues are resolved
+        if "iip.smk.dk" in image_url and image.thumbnail:
+            image_url = image.thumbnail
 
         return super().thumbnail(image_url, request)
 

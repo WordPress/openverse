@@ -1,5 +1,7 @@
+import type { MediaType } from "~/constants/media"
+
 /**
- * compound type of all custom events sent from the site; Index with `EventName`
+ * Compound type of all custom events sent from the site; Index with `EventName`
  * to get the type of the payload for a specific event.
  *
  * Conventions:
@@ -11,8 +13,8 @@
  */
 export type Events = {
   /**
-   * Click on one of the images in the gallery on the homepage.
-   *
+   * Description: The user clicks on one of the images in the gallery on the homepage.
+   * Questions:
    * - Do users know homepage images are links?
    * - Do users find these images interesting?
    * - Which set is most interesting for the users?
@@ -22,6 +24,19 @@ export type Events = {
     set: string
     /** the identifier of the image */
     identifier: string
+  }
+  /**
+   * Description: The user clicks the CTA button to the external source to use the image
+   * Questions:
+   *   - How often do users go to the source after viewing a result?
+   */
+  GET_MEDIA: {
+    /** the unique ID of the media */
+    id: string
+    /** The slug (not the prettified name) of the provider */
+    provider: string
+    /** The media type being searched */
+    mediaType: MediaType
   }
 }
 

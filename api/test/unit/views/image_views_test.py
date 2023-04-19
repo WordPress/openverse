@@ -63,13 +63,15 @@ def test_oembed_sends_ua_header(api_client, requests):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "has_thumbnail, expected_thumb_url",
-    [(True, "http://example.com/thumb.jpg"), (False, "http://example.com/image.jpg")],
+    "smk_has_thumb, expected_thumb_url",
+    [(True, "http://iip.smk.dk/thumb.jpg"), (False, "http://iip.smk.dk/image.jpg")],
 )
-def test_thumbnail_uses_upstream_thumb(api_client, has_thumbnail, expected_thumb_url):
-    thumb_url = "http://example.com/thumb.jpg" if has_thumbnail else None
+def test_thumbnail_uses_upstream_thumb_for_smk(
+    api_client, smk_has_thumb, expected_thumb_url
+):
+    thumb_url = "http://iip.smk.dk/thumb.jpg" if smk_has_thumb else None
     image = ImageFactory.create(
-        url="http://example.com/image.jpg",
+        url="http://iip.smk.dk/image.jpg",
         thumbnail=thumb_url,
     )
     with patch("catalog.api.views.media_views.MediaViewSet.thumbnail") as thumb_call:
