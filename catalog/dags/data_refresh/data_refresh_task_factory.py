@@ -52,6 +52,7 @@ from collections.abc import Sequence
 from airflow.models.baseoperator import chain
 from airflow.operators.python import PythonOperator
 from airflow.sensors.external_task import ExternalTaskSensor
+from airflow.utils.state import State
 from airflow.utils.task_group import TaskGroup
 
 from common import ingestion_server
@@ -135,6 +136,8 @@ def create_data_refresh_task_group(
                 create_filtered_index_dag_id
             ),
             mode="reschedule",
+            # Any "finished" state is sufficient for us to continue.
+            allowed_states=[State.SUCCESS, State.FAILED],
         )
 
         tasks.append([wait_for_data_refresh, wait_for_filtered_index_creation])
