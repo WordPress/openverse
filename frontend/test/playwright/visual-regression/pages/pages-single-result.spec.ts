@@ -1,6 +1,5 @@
 import { test } from "@playwright/test"
 
-import { removeHiddenOverflow } from "~~/test/playwright/utils/page"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   goToSearchTerm,
@@ -30,8 +29,6 @@ for (const mediaType of supportedMediaTypes) {
         test(`from search results`, async ({ page }) => {
           // This will include the "Back to results" link.
           await openFirstResult(page, mediaType)
-          await removeHiddenOverflow(page)
-          await page.waitForEvent("load")
 
           await expectSnapshot(
             `${mediaType}-${dir}-from-search-results`,
