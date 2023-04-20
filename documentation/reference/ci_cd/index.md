@@ -1,9 +1,10 @@
 # CI + CD workflow
 
 The CI + CD workflow is the primary pipeline of the project. It runs the tests
-for all layers of the stack (which have changed in the current PR or commit)
-and, if the tests pass, publishes the documentation to the docs site and deploys
-the API and frontend to their respective staging ECS targets.
+for all layers of the stack that have been changed by the PR or commit it is
+being run against and, if the tests pass, publishes the documentation to the
+docs site and deploys the API and frontend to their respective staging ECS
+targets.
 
 It's a complex workflow with many jobs that depend on each other and the number
 of paths it can take becomes huge because jobs can be skipped based on the
