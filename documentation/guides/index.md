@@ -5,13 +5,12 @@ Here you will find guides to get you started with Openverse development.
 ## General guides
 
 ```{toctree}
-:maxdepth: 1
-
 general_setup
 quickstart
 deployment
 logging
 zero-downtime-database-management
+traffic/index
 ```
 
 ## Stack-specific guides
