@@ -1,11 +1,11 @@
 # Testing Guidelines
 
-This document describes general guidelines you should follow when testing pull
-requests in this repository. It is not exhaustive but should be the starting
-point that you adapt for each PR. You may also use your best judgement and skip
-things that are unrelated to a specific PR. However, please be careful when
-doing this as accessibility bugs _especially_ are easy to slip through the
-cracks when we aren't doing our due diligence and testing changes thoroughly.
+This document describes general guidelines you should follow when testing the
+/frontend pull requests. It is not exhaustive but should be the starting point
+that you adapt for each PR. You may also use your best judgement and skip things
+that are unrelated to a specific PR. However, please be careful when doing this
+as accessibility bugs _especially_ are easy to slip through the cracks when we
+aren't doing our due diligence and testing changes thoroughly.
 
 ## Running the application
 
@@ -25,12 +25,12 @@ http://localhost:8443.
 
 You can also access it from other devices in your same network (like a mobile
 phone) for additional testing. See the
-[finding your local IP address](README.md#finding-your-local-ip-address) section
-of the README for how to identify the local IP adress Nuxt is served on. Once
-you have identified your local IP address, you can access the website running on
-your computer by visiting `https://<local IP>:8443` replacing `<local IP>`
-(including the brackets) with the value you found using the instructions above
-in your mobile device's browser.
+[finding your local IP address](./miscellaneous.md#finding-your-local-ip-address)
+section of the README for how to identify the local IP address Nuxt is served
+on. Once you have identified your local IP address, you can access the website
+running on your computer by visiting `https://<local IP>:8443` replacing
+`<local IP>` (including the brackets) with the value you found using the
+instructions above in your mobile device's browser.
 
 Testing from multiple different devices as often as possible is a great way to
 contribute to Openverse's frontend development.
@@ -47,10 +47,9 @@ ways to solve this:
 2. You can introduce the environment variables necessary for authenticating with
    an API
 
-For the first,
-[run the Openverse API locally](https://github.com/WordPress/openverse-api).
-Then create a `.env` file by copying the `.env.template` file and update it with
-the following:
+For the first, [run the Openverse API locally](../api/quickstart.md). Then
+create a `.env` file by copying the `.env.template` file and update it with the
+following:
 
 ```shell
 API_URL="http://localhost:8000/"
@@ -76,16 +75,16 @@ API_CLIENT_ID=""
 API_CLIENT_SECRET=""
 ```
 
-Then run the API as usual using `pnpm dev`. Nuxt automatically loads `.env`
-files into the environment. With these variables in the environment, all
-requests made by your server will be made using an access token retrieved by the
-`~/plugins/api-token.server.ts` plugin.
+Then run the API as usual using `just api/up` & `just api/init`. Nuxt
+automatically loads `.env` files into the environment. With these variables in
+the environment, all requests made by your server will be made using an access
+token retrieved by the `~/plugins/api-token.server.ts` plugin.
 
 Once the `.env` file is set up, you may run the development build the typical
 way:
 
 ```shell
-pnpm build && pnpm start
+just frontend/run dev
 ```
 
 ## Browsers
@@ -110,7 +109,7 @@ websites and the accessibility properties of them. Many of them also include
 examples.
 
 Gutenberg also has an excellent
-[Accessibility Testing Guide](https://github.com/WordPress/gutenberg/blob/086b77ed409a70a6c6a6e74dee704851eff812f2/docs/contributors/accessibility-testing.md)
+[Accessibility Testing Guide](https://github.com/WordPress/gutenberg/blob/5413ddbced8cbe0f0f10eb7739dbc34a7e56adee/docs/contributors/accessibility-testing.md)
 with specific instructions for setting up screen readers for testing with.
 
 ### General recommendations
@@ -209,5 +208,7 @@ re-written using testing library.
 
 ### Playwright tests
 
-Please see the [Playwright test README.md](./test/playwright/README.md) for
-instructions on running and maintaining the Playwright test suite.
+Please see the [Playwright test guidelines](./playwright_tests.md) for
+instructions on running and maintaining the Playwright test suite, and the
+[Storybook test guidelines](./storybook_tests.md) for instructions on the
+Storybook Playwright test suite.

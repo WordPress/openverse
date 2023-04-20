@@ -1,6 +1,12 @@
-# Testing guide
+# Running frontend tests
 
 Once you've made some changes to the codebase, it is important to run tests.
+Openverse uses unit tests, Playwright tests for end-to-end, and visual
+regression testing of the app and Storybook components. This guide will help you
+run the tests. To learn more about how to test PRs, read the
+[testing guidelines](./testing_guidelines.md). To learn more about the
+Playwright tests, read [this guide](./playwright_tests.md). To learn more about
+the Storybook visual regression tests, read [this guide](./storybook_tests.md).
 
 ## Steps
 
@@ -21,3 +27,26 @@ Once you've made some changes to the codebase, it is important to run tests.
    ```
 
    ````
+
+3. Run the Playwright tests. This will run both the end-to-end tests and the app
+   visual regression tests.
+
+   ```console
+   $ just frontend/run test:playwright
+   ```
+
+4. Run the Storybook visual regression tests.
+
+   ```console
+   $ just frontend/run test:storybook
+   ```
+
+## Updating snapshots
+
+If you've made changes to the frontend that require updating snapshots, you can
+run the playwright tests with the `-u` flag. For example, this will update the
+snapshots for the app visual regression tests:
+
+```console
+$ just frontend/run test:playwright visual-regression -u
+```
