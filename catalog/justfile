@@ -49,7 +49,7 @@ check-py-version:
 
 # Install dependencies
 install *args: check-py-version
-    python -m pip install -r requirements_tooling.txt -r requirements_dev.txt
+    python -m pip install -r requirements_dev.txt
 
 ######
 # Up #
