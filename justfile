@@ -126,7 +126,7 @@ EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
 export CATALOG_PY_VERSION := `just catalog/py-version`
 export CATALOG_AIRFLOW_VERSION := `just catalog/airflow-version`
 export API_PY_VERSION := `just api/py-version`
-export ING_PY_VERSION := `just ingestion_server/py-version`
+export INGESTION_PY_VERSION := `just ingestion_server/py-version`
 
 versions:
     #!/usr/bin/env bash
@@ -134,7 +134,7 @@ versions:
     catalog_py_version=$(just catalog/py-version)
     catalog_airflow_version=$(just catalog/airflow-version)
     api_py_version=$(just api/py-version)
-    ing_py_version=$(just ingestion_server/py-version)
+    ingestion_py_version=$(just ingestion_server/py-version)
     frontend_node_version=$(just frontend/node-version)
     frontend_pnpm_version=$(just frontend/pnpm-version)
     EOF

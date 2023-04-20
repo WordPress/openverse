@@ -261,7 +261,7 @@ services:
       context: ./ingestion_server/
       target: ing
       args: # Automatically inferred from env vars, unless specified
-        - ING_PY_VERSION
+        - INGESTION_PY_VERSION
     image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn.conf.py
     ports:
@@ -287,7 +287,7 @@ services:
       context: ./ingestion_server/
       target: ing
       args: # Automatically inferred from env vars, unless specified
-        - ING_PY_VERSION
+        - INGESTION_PY_VERSION
     image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn_worker.conf.py
     expose:

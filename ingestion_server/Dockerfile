@@ -1,11 +1,11 @@
 # Automatically build image using Python version specified in the `Pipfile`.
-ARG ING_PY_VERSION
+ARG INGESTION_PY_VERSION
 
 ##################
 # Python builder #
 ##################
 
-FROM python:${ING_PY_VERSION} as builder
+FROM python:${INGESTION_PY_VERSION} as builder
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
@@ -34,7 +34,7 @@ RUN pipenv install --system --deploy --dev
 # Ingestion server #
 ####################
 
-FROM python:${ING_PY_VERSION}-slim as ing
+FROM python:${INGESTION_PY_VERSION}-slim as ing
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 

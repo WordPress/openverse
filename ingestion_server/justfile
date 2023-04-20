@@ -14,11 +14,11 @@ NO_COLOR := "\\033[0m"
 # Version #
 ###########
 
-export ING_PY_VERSION := `grep 'python_version' Pipfile | awk -F' = ' '{print $2}' | sed 's/"//g'`
+export INGESTION_PY_VERSION := `grep 'python_version' Pipfile | awk -F' = ' '{print $2}' | sed 's/"//g'`
 
 # Print the Python version specified in the `Pipfile`
 @py-version:
-    echo $ING_PY_VERSION
+    echo $INGESTION_PY_VERSION
 
 ###########
 # Install #
