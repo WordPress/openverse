@@ -61,11 +61,11 @@ downloads the artifact and load the `.tar` files into Docker as images.
 
 By default, all images built by the Docker system will be loaded but if the job
 only needs a subset of images, those can be set via the `setup_images` input,
-passing a JSON encoded array of image names as strings.
+passing a list of image names, as strings, separated using a space.
 
 ```typescript
 {
-  setup_images: string // default: '["upstream_db", "ingestion_server", "catalog", "api", "api_nginx", "frontend"]'
+  setup_images: string // default: 'upstream_db ingestion_server catalog api api_nginx frontend'
 }
 ```
 

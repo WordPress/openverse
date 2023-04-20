@@ -3,91 +3,41 @@ description: Download and import Docker images from artifacts
 
 inputs:
   setup_images:
-    default: '["upstream_db", "ingestion_server", "catalog", "api", "api_nginx", "frontend"]'
-    description: JSON-encoded list of image names
+    default: "upstream_db ingestion_server catalog api api_nginx frontend"
+    description: Space separated list of image names
 
 runs:
   using: "composite"
   steps:
-    # Upstream DB
-    - name: Download image `upstream_db`
-      uses: actions/download-artifact@v3
-      if: contains(fromJson(inputs.setup_images), 'upstream_db')
-      with:
-        name: upstream_db
-        path: /tmp
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-    - name: Load image `upstream_db`
-      if: contains(fromJson(inputs.setup_images), 'upstream_db')
+    # Doesn't use `setup-env` because the next step uses `npm`, not `pnpm`.
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: "16"
+
+    - name: Install `@actions/artifact`
       shell: bash
       run: |
-        docker load --input /tmp/upstream_db.tar
+        npm install @actions/artifact
 
-    # Catalog
-    - name: Download image `catalog`
-      uses: actions/download-artifact@v3
-      if: contains(fromJson(inputs.setup_images), 'catalog')
+    - name: Download images
+      uses: actions/github-script@v6
       with:
-        name: catalog
-        path: /tmp
+        script: |
+          const artifact = require("@actions/artifact")
+          const artifactClient = artifact.create()
+          const images = "${{ inputs.setup_images }}".split(" ")
+          for (image of images) {
+            await artifactClient.downloadArtifact(image, "/tmp", { createArtifactFolder: false })
+          }
 
-    - name: Load image `catalog`
-      if: contains(fromJson(inputs.setup_images), 'catalog')
+    - name: Load images
       shell: bash
       run: |
-        docker load --input /tmp/catalog.tar
-
-    # Ingestion server
-    - name: Download image `ingestion_server`
-      uses: actions/download-artifact@v3
-      if: contains(fromJson(inputs.setup_images), 'ingestion_server')
-      with:
-        name: ingestion_server
-        path: /tmp
-
-    - name: Load image `ingestion_server`
-      if: contains(fromJson(inputs.setup_images), 'ingestion_server')
-      shell: bash
-      run: |
-        docker load --input /tmp/ingestion_server.tar
-
-    # API
-    - name: Download image `api`
-      uses: actions/download-artifact@v3
-      if: contains(fromJson(inputs.setup_images), 'api')
-      with:
-        name: api
-        path: /tmp
-
-    - name: Load image `api`
-      if: contains(fromJson(inputs.setup_images), 'api')
-      shell: bash
-      run: |
-        docker load --input /tmp/api.tar
-
-    - name: Download image `api_nginx`
-      uses: actions/download-artifact@v3
-      if: contains(fromJson(inputs.setup_images), 'api_nginx')
-      with:
-        name: api_nginx
-        path: /tmp
-
-    - name: Load image `api_nginx`
-      if: contains(fromJson(inputs.setup_images), 'api_nginx')
-      shell: bash
-      run: |
-        docker load --input /tmp/api_nginx.tar
-
-    # Frontend
-    - name: Download image `frontend`
-      uses: actions/download-artifact@v3
-      if: contains(fromJson(inputs.setup_images), 'frontend')
-      with:
-        name: frontend
-        path: /tmp
-
-    - name: Load image `frontend`
-      if: contains(fromJson(inputs.setup_images), 'frontend')
-      shell: bash
-      run: |
-        docker load --input /tmp/frontend.tar
+        images=(${{ inputs.setup_images }});
+        for image in "${images[@]}"; do
+          docker load --input /tmp/${image}.tar
+        done
