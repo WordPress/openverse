@@ -2,7 +2,7 @@
 # Python builder #
 ##################
 
-FROM python:3.10 as builder
+FROM python:3.11 as builder
 
 ENV PYTHONBUFFERED=1
 # Activate the virtualenv
@@ -27,7 +27,7 @@ RUN pipenv install --system --deploy --dev
 # Ingestion server #
 ####################
 
-FROM python:3.10-slim as ing
+FROM python:3.11-slim as ing
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 

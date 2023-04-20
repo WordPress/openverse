@@ -13,7 +13,7 @@ RUN ldd /usr/local/bin/audiowaveform | tr -s '[:blank:]' '\n' | grep '^/' | \
 # Python builder #
 ##################
 
-FROM python:3.10 AS builder
+FROM python:3.11 AS builder
 
 ENV PYTHONBUFFERED=1
 # Activate the virtualenv
@@ -38,7 +38,7 @@ RUN pipenv install --system --deploy --dev
 # API #
 #######
 
-FROM python:3.10-slim as api
+FROM python:3.11-slim as api
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
