@@ -19,7 +19,8 @@
         // written here explicitly instead of accessed off of `$style`.
         'focus-slim-filled': isFilled,
         'focus-slim-tx': isBordered || isTransparent,
-        'border border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink':
+        border: !isPlainDangerous,
+        'border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink':
           !isPlainDangerous && !isNewVariant,
       },
     ]"
@@ -331,37 +332,37 @@ a.button {
 }
 
 .filled-pink {
-  @apply bg-pink text-white hover:bg-dark-pink hover:text-white;
+  @apply border-tx bg-pink text-white hover:bg-dark-pink hover:text-white;
 }
 
 .filled-dark {
-  @apply bg-dark-charcoal text-white hover:bg-dark-charcoal-80 hover:text-white;
+  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-90 hover:text-white;
 }
 
 .filled-gray {
-  @apply bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 
 .filled-white {
-  @apply bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply border-tx bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 
 .filled-transparent {
-  @apply bg-tx text-curr hover:bg-dark-charcoal hover:text-white;
+  @apply border-tx bg-tx text-curr hover:bg-dark-charcoal hover:text-white;
 }
 
 .bordered-white {
-  @apply border border-white bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+  @apply border-white bg-white text-dark-charcoal hover:border-dark-charcoal-20;
 }
 
 .bordered-gray {
-  @apply border border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal;
+  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal;
 }
 .transparent-gray {
-  @apply bg-tx text-dark-charcoal hover:bg-dark-charcoal-10;
+  @apply border-tx bg-tx text-dark-charcoal hover:bg-dark-charcoal-10;
 }
 .transparent-dark {
-  @apply bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply border-tx bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 
 .primary {

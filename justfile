@@ -135,9 +135,13 @@ dc *args:
 build *args:
     just dc build {{ args }}
 
+# List all services and their URLs and ports
+ps:
+    python3 utilities/ps.py
+
 # Also see `up` recipe in sub-justfiles
 # Bring all Docker services up, in all profiles
-up *flags:
+up *flags: && ps
     #!/usr/bin/env bash
     set -eo pipefail
     while true; do
@@ -147,6 +151,7 @@ up *flags:
       ((c++)) && ((c==3)) && break
       sleep 5
     done
+    echo && sleep 1
 
 # Also see `wait-up` recipe in sub-justfiles
 # Wait for all services to be up
