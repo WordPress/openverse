@@ -2,7 +2,7 @@
 
 To contribute code to Openverse, follow the following steps.
 
-1. Complete the [general setup](../guides/general_setup.md) of your development
+1. Complete the [general setup](/general/general_setup.md) of your development
    environment.
 
 2. Fork the repository you want to contribute to. When you make a code change
@@ -13,7 +13,7 @@ To contribute code to Openverse, follow the following steps.
    corner of the page. Click this and GitHub will guide you through the process
    of forking the repository.
 
-3. Make sure to go through the [quickstart guide](../guides/quickstart.md) to
+3. Make sure to go through the [quickstart guide](/general/quickstart.md) to
    have your local environment set up and running.
 
 4. Work on the issue you've chosen. Check out a new branch from `main`, named

@@ -364,7 +364,7 @@ revision used to run that instance. Environment variables are not automatically
 updated for the running application. This means that if a deployment was very
 carefully orchestrated, we do not necessarily need to worry about backwards
 incompatible changes, and even in the
-[worst case described below](#manual-rollbacks-after-removing-an-environment-variable),
+[worst case described below](#manual-rollbacks-after-removing-an-environment-variable-or-updating-its-format),
 it is still possible to recover by following an additional step (re-updating the
 template before rolling back).
 

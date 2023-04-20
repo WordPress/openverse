@@ -42,7 +42,7 @@ or knowledge that contributors might not have.
 
 These issues are a subset of [issues wanting help](#help-wanted) that are
 smaller in scope, make for a gentle introduction to the code and can be
-completed in under ~4 hours (including the [setup](../guides/general_setup.md)).
+completed in under ~4 hours (including the [setup](/general/general_setup.md)).
 
 ```{caution}
 In reality, the process can take more time if the setup process does not go

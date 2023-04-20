@@ -47,7 +47,7 @@ ways to solve this:
 2. You can introduce the environment variables necessary for authenticating with
    an API
 
-For the first, [run the Openverse API locally](../api/quickstart.md). Then
+For the first, [run the Openverse API locally](/api/guides/quickstart.md). Then
 create a `.env` file by copying the `.env.template` file and update it with the
 following:
 
@@ -208,7 +208,8 @@ re-written using testing library.
 
 ### Playwright tests
 
-Please see the [Playwright test guidelines](./playwright_tests.md) for
+Please see the
+[Playwright test guidelines](/frontend/reference/playwright_tests.md) for
 instructions on running and maintaining the Playwright test suite, and the
-[Storybook test guidelines](./storybook_tests.md) for instructions on the
-Storybook Playwright test suite.
+[Storybook test guidelines](/frontend/reference/storybook_tests.md) for
+instructions on the Storybook Playwright test suite.

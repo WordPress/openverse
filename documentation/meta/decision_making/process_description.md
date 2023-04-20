@@ -30,8 +30,8 @@ the discretion of the participants.
 | [Revision round](#revision-round)                     | Author's discretion | Update the text of the proposal to reflect the outcome of the previous round  |
 | [Decision round](#decision-round)                     | 3 days              | Decide whether the proposal can be implemented as is                          |
 | [Continued revision round](#continued-revision-round) | Author's discretion | Work with participants to revise the text of the proposal to address blockers |
-| [Approval](#approval)                                 | N/A                 | Mark as approved and create issues to implement the proposal                  |
-| [Tabling](#tabling)                                   | N/A                 | Indicate that a proposal will not be implemented                              |
+| [Approval](#proposal-approval)                        | N/A                 | Mark as approved and create issues to implement the proposal                  |
+| [Tabling](#proposal-tabling)                          | N/A                 | Indicate that a proposal will not be implemented                              |
 
 ### Time spans
 

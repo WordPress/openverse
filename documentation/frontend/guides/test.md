@@ -4,13 +4,16 @@ Once you've made some changes to the codebase, it is important to run tests.
 Openverse uses unit tests, Playwright tests for end-to-end, and visual
 regression testing of the app and Storybook components. This guide will help you
 run the tests. To learn more about how to test PRs, read the
-[testing guidelines](./testing_guidelines.md). To learn more about the
-Playwright tests, read [this guide](./playwright_tests.md). To learn more about
-the Storybook visual regression tests, read [this guide](./storybook_tests.md).
+[testing guidelines](/frontend/reference/testing_guidelines.md). To learn more
+about the Playwright tests, read
+[this guide](/frontend/reference/playwright_tests.md). To learn more about the
+Storybook visual regression tests, read
+[this guide](/frontend/reference/storybook_tests.md).
 
 ## Steps
 
-1. Ensure you've gone through the [quickstart guide](../quickstart.md).
+1. Ensure you've gone through the
+   [quickstart guide](/frontend/guides/quickstart.md).
 
 2. Run unit tests for the frontend.
 

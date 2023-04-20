@@ -13,17 +13,17 @@ at once. In all likelihood, you intend to contribute to a narrower slice of the
 stack. In such cases, you might find it more beneficial to go through one of
 these stack-specific quickstart guides.
 
-- [API](../api/guides/quickstart.md)
-- [Frontend](../frontend/guides/quickstart.md)
-- [Ingestion server](../ingestion_server/guides/quickstart.md)
-- [Documentation](../meta/quickstart.md)
+- [API](/api/guides/quickstart.md)
+- [Frontend](/frontend/guides/quickstart.md)
+- [Ingestion server](/ingestion_server/guides/quickstart.md)
+- [Documentation](/meta/documentation/quickstart.md)
 
 That said, there is something very appealing about running the full stack
 locally, which this guide is all about.
 
 ## Prerequisites
 
-Refer to the [general setup guide](./general_setup.md) for setting up the
+Refer to the [general setup guide](/general/general_setup.md) for setting up the
 prerequisites.
 
 ## Starting up
@@ -40,8 +40,8 @@ prerequisites.
    ```
 
    If you followed the setup guide and installed
-   [GitHub CLI](./general_setup.md#github-cli), you can clone more simply using
-   the `gh` command.
+   [GitHub CLI](/general/general_setup.md#github-cli), you can clone more simply
+   using the `gh` command.
 
    ```console
    $ gh repo clone WordPress/openverse # or your fork

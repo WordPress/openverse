@@ -4,8 +4,9 @@ Once you've made some changes to the codebase, it is important to run tests.
 
 ## Steps
 
-1. Ensure you've gone through the [quickstart guide](../quickstart.md). Ensure
-   that the Docker daemon is running.
+1. Ensure you've gone through the
+   [quickstart guide](/ingestion_server/guides/quickstart.md). Ensure that the
+   Docker daemon is running.
 
 2. Install the Python dependencies, including dev-dependencies.
 
@@ -15,7 +16,7 @@ Once you've made some changes to the codebase, it is important to run tests.
 
    ```{caution}
    If you experience error installing `psycopg2`, refer to the documentation
-   about the [OpenSSL prerequisite](../general_setup.md#openssl).
+   about the [OpenSSL prerequisite](/general/general_setup.md#openssl).
    ```
 
 3. Run the tests.

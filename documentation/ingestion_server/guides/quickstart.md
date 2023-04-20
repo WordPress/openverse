@@ -5,10 +5,10 @@ locally.
 
 ## Prerequisites
 
-Refer to the [general setup guide](../general_setup.md) for setting up the
+Refer to the [general setup guide](/general/general_setup.md) for setting up the
 prerequisites. Refer to the 'Ingestion server' column in the
-[requirement matrix](../general_setup.md#requirement-matrix) to know what you
-need to run this.
+[requirement matrix](/general/general_setup.md#requirement-matrix) to know what
+you need to run this.
 
 ## Starting up
 
@@ -24,8 +24,8 @@ need to run this.
    ```
 
    If you followed the general setup guide and installed
-   [GitHub CLI](./general_setup.md#github-cli), you can clone more simply using
-   the `gh` command.
+   [GitHub CLI](/general/general_setup.md#github-cli), you can clone more simply
+   using the `gh` command.
 
    ```console
    $ gh repo clone WordPress/openverse # or your fork
@@ -48,4 +48,4 @@ need to run this.
 
 ## Shutting down
 
-Refer to the [common instructions](../quickstart.md#shutting-down).
+Refer to the [common instructions](/general/quickstart.md#shutting-down).

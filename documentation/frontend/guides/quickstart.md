@@ -4,10 +4,10 @@ This is the quick start guide for setting up and running the frontend locally.
 
 ## Prerequisites
 
-Refer to the [general setup guide](../general_setup.md) for setting up the
+Refer to the [general setup guide](/general/general_setup.md) for setting up the
 prerequisites. Refer to the 'Frontend' column in the
-[requirement matrix](../general_setup.md#requirement-matrix) to know what you
-need to run this.
+[requirement matrix](/general/general_setup.md#requirement-matrix) to know what
+you need to run this.
 
 ## Starting up
 
@@ -23,8 +23,8 @@ need to run this.
    ```
 
    If you followed the general setup guide and installed
-   [GitHub CLI](./general_setup.md#github-cli), you can clone more simply using
-   the `gh` command.
+   [GitHub CLI](/general/general_setup.md#github-cli), you can clone more simply
+   using the `gh` command.
 
    ```console
    $ gh repo clone WordPress/openverse # or your fork
@@ -47,8 +47,8 @@ need to run this.
 
    If you want your frontend to use a different API instance, you can set the
    `API_URL` environment variable to point to that instance. If you had the
-   [API running locally](../api/quickstart.md), you can do the following to use
-   the local API with the frontend.
+   [API running locally](/api/guides/quickstart.md), you can do the following to
+   use the local API with the frontend.
 
    ```console
    $ env API_URL="http://localhost:50280" just frontend/run dev
