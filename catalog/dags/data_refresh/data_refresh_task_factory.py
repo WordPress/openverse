@@ -48,7 +48,9 @@ import logging
 import os
 import uuid
 from collections.abc import Sequence
+from datetime import datetime
 
+from airflow.models import DagRun
 from airflow.models.baseoperator import chain
 from airflow.operators.python import PythonOperator
 from airflow.sensors.external_task import ExternalTaskSensor
@@ -64,6 +66,30 @@ logger = logging.getLogger(__name__)
 
 
 DATA_REFRESH_POOL = "data_refresh"
+
+
+def get_most_recent_dag_run(dag_id) -> list[datetime] | datetime:
+    """
+    Retrieve the most recent DAG run's execution date.
+
+    Adapted from https://stackoverflow.com/a/74017474
+    CC BY-SA 4.0 by Stack Overflow user Nahid O.
+    """
+    dag_runs = DagRun.find(dag_id=dag_id)
+    dag_runs.sort(key=lambda x: x.execution_date, reverse=True)
+    if dag_runs:
+        return dag_runs[0].execution_date
+
+    # If there are no DAG runs, return an empty list to indicate that
+    # there are no execution dates to check.
+    # This works because the sensor waits until the number
+    # of runs for the execution dates in the ``allowed_states`` matches the
+    # length of the list of execution dates to check. If there are no runs
+    # for this DAG, then the only possible number of required states
+    # we can have is 0. See ``ExternalTaskSensor::poke`` and
+    # ``ExternalTaskSensor::get_count``, especially the handling
+    # of ``dttm_filter`` for the relevant implementation details.
+    return []
 
 
 def create_data_refresh_task_group(
@@ -117,12 +143,22 @@ def create_data_refresh_task_group(
         # filtered index creation process, even if it was triggered immediately after
         # filtered index creation. However, it is safer to avoid the possibility
         # of the race condition altogether.
+        # ``execution_dat_fn`` is used to find the most recent run becuase
+        # the filtered index createion DAGs are unscheduled so we can't derive
+        # anything from the execution date of the current data refresh DAG.
+        create_filtered_index_dag_id = (
+            f"create_filtered_{data_refresh.media_type}_index"
+        )
         wait_for_filtered_index_creation = ExternalTaskSensor(
             task_id="wait_for_create_and_populate_filtered_index",
-            external_dag_id=f"create_filtered_{data_refresh.media_type}_index",
+            external_dag_id=create_filtered_index_dag_id,
+            # Wait for the whole DAG, not just a part of it
             external_task_id=None,
-            check_existence=True,
+            check_existence=False,
             poke_interval=poke_interval,
+            execution_date_fn=lambda _: get_most_recent_dag_run(
+                create_filtered_index_dag_id
+            ),
             mode="reschedule",
         )
 
@@ -164,7 +200,7 @@ def create_data_refresh_task_group(
             model=data_refresh.media_type,
             data={
                 "index_suffix": XCOM_PULL_TEMPLATE.format(
-                    generate_index_suffix.task_id, "return_value"
+                    get_current_index.task_id, "return_value"
                 ),
             },
         )
