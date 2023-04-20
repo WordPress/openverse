@@ -55,6 +55,7 @@ from datetime import datetime
 
 from airflow import DAG
 from airflow.decorators import task
+from airflow.exceptions import AirflowSensorTimeout
 from airflow.models.param import Param
 from airflow.sensors.external_task import ExternalTaskSensor
 
@@ -97,7 +98,13 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
             execution_date_fn=lambda _: get_most_recent_dag_run(data_refresh_dag_id),
             mode="reschedule",
         )
-        wait_for_filtered_index_creation.execute(context)
+        try:
+            wait_for_filtered_index_creation.execute(context)
+        except AirflowSensorTimeout:
+            raise ValueError(
+                f"{media_type} data refresh concurrency check failed. "
+                "Filtered index creation cannot start during a data refresh."
+            )
 
     @task()
     def generate_index_suffix(default_suffix: str):
