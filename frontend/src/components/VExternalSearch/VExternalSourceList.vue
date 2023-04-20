@@ -17,7 +17,7 @@
       as="VLink"
       variant="plain"
       size="disabled"
-      class="caption-bold w-full justify-between px-4 py-3 text-dark-charcoal hover:bg-dark-charcoal-10"
+      class="caption-bold !w-full justify-between px-4 py-3 text-dark-charcoal hover:bg-dark-charcoal-10"
       show-external-icon
       :external-icon-size="4"
       :href="source.url"

@@ -14,7 +14,7 @@
         as="VLink"
         :href="source.url"
         variant="secondary-bordered"
-        class="label-bold justify-between text-dark-charcoal md:justify-start md:gap-x-2"
+        class="label-bold !w-full justify-between text-dark-charcoal md:!w-auto md:justify-start md:gap-x-2"
         show-external-icon
         :external-icon-size="4"
         @mousedown="handleClick(source.name, source.url)"
