@@ -66,6 +66,7 @@ from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
 
 def build_create_filtered_index_dag(media_type: str):
     dag_id = f"create_filtered_{media_type}_index"
+    target_alias = f"{media_type}-filtered"
 
     @task(
         task_id=f"prevent_concurrency_with_{media_type}_data_refresh",
@@ -97,7 +98,7 @@ def build_create_filtered_index_dag(media_type: str):
 
     def point_alias(destination_index_suffix: str):
         point_alias_payload = {
-            "alias": f"{media_type}-filtered",
+            "alias": target_alias,
             "index_suffix": f"{destination_index_suffix}-filtered",
         }
 
@@ -154,6 +155,10 @@ def build_create_filtered_index_dag(media_type: str):
     )
 
     with dag:
+        prevent_concurrency = prevent_concurrency_with_data_refresh(
+            force="{{ params.force }}",
+        )
+
         # If a destination index suffix isn't provided, we need to generate
         # one so that we know where to point the alias
         generate_index_suffix = PythonOperator(
@@ -167,18 +172,32 @@ def build_create_filtered_index_dag(media_type: str):
             generate_index_suffix.task_id, "return_value"
         )
 
+        get_current_index = ingestion_server.get_current_index(target_alias)
+
+        do_create = create_and_populate_filtered_index(
+            origin_index_suffix="{{ params.origin_index_suffix }}",
+            destination_index_suffix=destination_index_suffix,
+        )
+
+        do_point_alias = point_alias(destination_index_suffix=destination_index_suffix)
+
+        delete_old_index = ingestion_server.trigger_task(
+            action="DELETE_INDEX",
+            model=data_refresh.media_type,
+            data={
+                "index_suffix": XCOM_PULL_TEMPLATE.format(
+                    get_current_index.task_id, "return_value"
+                ),
+            },
+        )
+
         (
-            prevent_concurrency_with_data_refresh(
-                force="{{ params.force }}",
-            )
+            prevent_concurrency
             >> generate_index_suffix
-            >> create_and_populate_filtered_index(
-                origin_index_suffix="{{ params.origin_index_suffix }}",
-                destination_index_suffix=destination_index_suffix,
-            )
-            >> point_alias(
-                destination_index_suffix=destination_index_suffix,
-            )
+            >> get_current_index
+            >> do_create
+            >> do_point_alias
+            >> delete_old_index
         )
 
     return dag
