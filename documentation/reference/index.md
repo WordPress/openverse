@@ -8,5 +8,6 @@ decision_making/index
 dev_flow
 api/index
 frontend/index
+ci_cd/index
 search_algorithm
 ```
