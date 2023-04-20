@@ -65,7 +65,7 @@ passing a JSON encoded array of image names as strings.
 
 ```typescript
 {
-  setup_images: string // default: '["upstream_db", "ingestion_server", "catalog", "api", "api_nginx"]'
+  setup_images: string // default: '["upstream_db", "ingestion_server", "catalog", "api", "api_nginx", "frontend"]'
 }
 ```
 
