@@ -22,7 +22,7 @@ DAG_PATHS = [
     "maintenance/rotate_db_snapshots.py",
     "database/recreate_popularity_calculation_dag_factory.py",
     "data_refresh/dag_factory.py",
-    "create_filtered_index/dag_factory.py",
+    "data_refresh/create_filtered_index_dag.py",
     "oauth2/authorize_dag.py",
     "oauth2/token_refresh_dag.py",
 ]
@@ -36,7 +36,7 @@ EXPECTED_COUNT = {
     ),
     "database/recreate_popularity_calculation_dag_factory.py": len(MEDIA_TYPES),
     "data_refresh/dag_factory.py": len(MEDIA_TYPES),
-    "create_filtered_index/dag_factory.py": len(MEDIA_TYPES),
+    "data_refresh/create_filtered_index_dag.py": len(MEDIA_TYPES),
 }
 
 

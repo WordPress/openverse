@@ -53,31 +53,54 @@ of what you are doing.
 import uuid
 from datetime import datetime, timedelta
 
+from airflow import DAG
 from airflow.decorators import task
-from airflow.models import DAG
 from airflow.models.param import Param
-from airflow.operators.python import PythonOperator
+from airflow.sensors.external_task import ExternalTaskSensor
 
 from common import ingestion_server
 from common.constants import DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
-from data_refresh import dag_factory
+from common.sensors.utils import get_most_recent_dag_run
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
 
 
-def build_create_filtered_index_dag(media_type: str):
-    dag_id = f"create_filtered_{media_type}_index"
+# Note: We can't use the TaskFlow `@dag` DAG factory decorator
+# here because there's no way to set the media type as a static
+# variable in the context of the DAG because all arguments
+# passed to the DAG factory decorated by `@dag` are thrown
+# away: `@dag` decorated functions' arguments are treated
+# merely as DAG param aliases. We could use `@dag` inside
+# this factory function, but it would require a redundant
+# call to the decorated function and doesn't look like it would
+# provide any additional value whatsoever.
+def filtered_index_creation_dag_factory(media_type: str):
     target_alias = f"{media_type}-filtered"
 
     @task(
         task_id=f"prevent_concurrency_with_{media_type}_data_refresh",
     )
-    def prevent_concurrency_with_data_refresh(force: bool):
+    def prevent_concurrency_with_data_refresh(force: bool, **context):
         if force:
             return
 
-        data_refresh = getattr(dag_factory, f"{media_type}_data_refresh")
-        if data_refresh.get_active_runs():
-            raise ValueError(f"{media_type} data refresh is currently running.")
+        data_refresh_dag_id = f"{media_type}_data_refresh"
+        wait_for_filtered_index_creation = ExternalTaskSensor(
+            task_id="check_for_running_data_refresh",
+            external_dag_id=data_refresh_dag_id,
+            # Set timeout to 0 to prevent retries. If the data refresh DAG is running,
+            # immediately fail the filtered index creation DAG.
+            timeout=0,
+            # Wait for the whole DAG, not just a part of it
+            external_task_id=None,
+            check_existence=False,
+            execution_date_fn=lambda _: get_most_recent_dag_run(data_refresh_dag_id),
+            mode="reschedule",
+        )
+        wait_for_filtered_index_creation.execute(context)
+
+    @task()
+    def generate_index_suffix(default_suffix: str):
+        return default_suffix or uuid.uuid4().hex
 
     def create_and_populate_filtered_index(
         origin_index_suffix: str | None,
@@ -108,9 +131,9 @@ def build_create_filtered_index_dag(media_type: str):
             data=point_alias_payload,
         )
 
-    dag = DAG(
+    with DAG(
+        dag_id=f"create_filtered_{media_type}_index",
         default_args=DAG_DEFAULT_ARGS,
-        dag_id=dag_id,
         schedule=None,
         start_date=datetime(2023, 4, 1),
         tags=["data_refresh"],
@@ -136,8 +159,9 @@ def build_create_filtered_index_dag(media_type: str):
                 default=None,
                 type=["string", "null"],
                 description=(
-                    "See https://github.com/WordPress/openverse/blob/7427bbd4a8178d05a27e6fef07d70905ec7ef16b/ingestion_server/ingestion_server/indexer.py#L495-L497. "  # noqa: E501                    "For manual runs this can be left out if the new "
-                    f"filtered alias should be based on the ``{media_type}`` alias."
+                    "See https://github.com/WordPress/openverse/blob/7427bbd4a8178d05a27e6fef07d70905ec7ef16b/ingestion_server/ingestion_server/indexer.py#L495-L497. "  # noqa: E501
+                    "For manual runs this can be left out if the new "
+                    f"filtered alias should be based on the {media_type} alias."
                 ),
             ),
             "destination_index_suffix": Param(
@@ -152,24 +176,15 @@ def build_create_filtered_index_dag(media_type: str):
             ),
         },
         render_template_as_native_obj=True,
-    )
-
-    with dag:
+    ) as dag:
         prevent_concurrency = prevent_concurrency_with_data_refresh(
             force="{{ params.force }}",
         )
 
         # If a destination index suffix isn't provided, we need to generate
         # one so that we know where to point the alias
-        generate_index_suffix = PythonOperator(
-            task_id="generate_index_suffix",
-            op_args=["{{ params.destination_index_suffix }}"],
-            python_callable=lambda destination_index_suffix: destination_index_suffix
-            or uuid.uuid4().hex,
-        )
-
-        destination_index_suffix = XCOM_PULL_TEMPLATE.format(
-            generate_index_suffix.task_id, "return_value"
+        destination_index_suffix = generate_index_suffix(
+            "{{ params.destination_index_suffix }}"
         )
 
         get_current_index = ingestion_server.get_current_index(target_alias)
@@ -193,7 +208,7 @@ def build_create_filtered_index_dag(media_type: str):
 
         (
             prevent_concurrency
-            >> generate_index_suffix
+            >> destination_index_suffix
             >> get_current_index
             >> do_create
             >> do_point_alias
@@ -204,7 +219,6 @@ def build_create_filtered_index_dag(media_type: str):
 
 
 for data_refresh in DATA_REFRESH_CONFIGS:
-    filtered_index_creation_dag = build_create_filtered_index_dag(
+    create_filtered_index_dag = filtered_index_creation_dag_factory(
         data_refresh.media_type
     )
-    globals()[filtered_index_creation_dag.dag_id] = filtered_index_creation_dag

@@ -48,9 +48,7 @@ import logging
 import os
 import uuid
 from collections.abc import Sequence
-from datetime import datetime
 
-from airflow.models import DagRun
 from airflow.models.baseoperator import chain
 from airflow.operators.python import PythonOperator
 from airflow.sensors.external_task import ExternalTaskSensor
@@ -59,6 +57,7 @@ from airflow.utils.task_group import TaskGroup
 from common import ingestion_server
 from common.constants import XCOM_PULL_TEMPLATE
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
+from common.sensors.utils import get_most_recent_dag_run
 from data_refresh.data_refresh_types import DataRefresh
 
 
@@ -66,30 +65,6 @@ logger = logging.getLogger(__name__)
 
 
 DATA_REFRESH_POOL = "data_refresh"
-
-
-def get_most_recent_dag_run(dag_id) -> list[datetime] | datetime:
-    """
-    Retrieve the most recent DAG run's execution date.
-
-    Adapted from https://stackoverflow.com/a/74017474
-    CC BY-SA 4.0 by Stack Overflow user Nahid O.
-    """
-    dag_runs = DagRun.find(dag_id=dag_id)
-    dag_runs.sort(key=lambda x: x.execution_date, reverse=True)
-    if dag_runs:
-        return dag_runs[0].execution_date
-
-    # If there are no DAG runs, return an empty list to indicate that
-    # there are no execution dates to check.
-    # This works because the sensor waits until the number
-    # of runs for the execution dates in the ``allowed_states`` matches the
-    # length of the list of execution dates to check. If there are no runs
-    # for this DAG, then the only possible number of required states
-    # we can have is 0. See ``ExternalTaskSensor::poke`` and
-    # ``ExternalTaskSensor::get_count``, especially the handling
-    # of ``dttm_filter`` for the relevant implementation details.
-    return []
 
 
 def create_data_refresh_task_group(
