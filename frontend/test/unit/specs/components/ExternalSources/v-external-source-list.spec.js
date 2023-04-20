@@ -66,6 +66,7 @@ describe("VExternalSourceList", () => {
       name: propsData.externalSources[0].name,
       query: propsData.searchTerm,
       url: propsData.externalSources[0].url,
+      component: "VExternalSourceList",
     })
   })
 })
