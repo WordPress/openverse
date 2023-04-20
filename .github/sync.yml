@@ -25,12 +25,7 @@ group:
         dest: .github/workflows/subscribe_to_label.yml
       - source: .github/subscribe-to-label.json
         dest: .github/subscribe-to-label.json
-      # Downstream workflows
-      - source: .github/workflows_downstream/draft_release.yml
-        dest: .github/workflows/draft_release.yml
       # Templates
-      - source: .github/release_drafter.yml
-        dest: .github/release_drafter.yml
       - source: .github/ISSUE_TEMPLATE/bug_report.md
         dest: .github/ISSUE_TEMPLATE/bug_report.md
       - source: .github/ISSUE_TEMPLATE/config.yml
