@@ -119,7 +119,7 @@ def create_data_refresh_task_group(
         # filtered index creation process, even if it was triggered immediately after
         # filtered index creation. However, it is safer to avoid the possibility
         # of the race condition altogether.
-        # ``execution_dat_fn`` is used to find the most recent run becuase
+        # ``execution_date_fn`` is used to find the most recent run becuase
         # the filtered index createion DAGs are unscheduled so we can't derive
         # anything from the execution date of the current data refresh DAG.
         create_filtered_index_dag_id = (
