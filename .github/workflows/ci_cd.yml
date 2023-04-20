@@ -161,26 +161,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # ℹ️Step only applies for frontend and catalog images.
-      # Frontend downloads translations and catalog runs `just` recipes.
+      # Sets up `just` and Node.js.
+      # Node.js is needed for the frontend to download translations.
+      # `just` is needed to run the recipes and set build args.
       - name: Setup CI env
-        if: matrix.image == 'frontend' || matrix.image == 'catalog'
         uses: ./.github/actions/setup-env
         with:
           setup_python: false
-          # Python is not needed to build the image.
-          install_recipe: node-install
+          setup_nodejs: ${{ matrix.image == 'frontend' && 'true' || 'false' }}
+          install_recipe: ${{ matrix.image == 'frontend' && 'node-install' || '' }}
 
-      # ℹ️While this step only applies for catalog image, it is run for all.
-      # This step
-      # - sets the Python version used by the catalog image
-      # - sets the Airflow version used by the catalog image
-      - name: Prepare catalog for building
-        id: prepare-catalog
-        # if: matrix.image == 'catalog'
+      # Sets build args specifying versions needed to build Docker image.
+      - name: Prepare build args
+        id: prepare-build-args
         run: |
-          echo "python_version=$(just catalog/py-version)" >> "$GITHUB_OUTPUT"
-          echo "airflow_version=$(just catalog/airflow-version)" >> "$GITHUB_OUTPUT"
+          just versions
+          just versions >> "$GITHUB_OUTPUT"
 
       # ℹ️Step only applies for frontend image.
       # This step
@@ -214,8 +210,12 @@ jobs:
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
-            PROJECT_PY_VERSION=${{ steps.prepare-catalog.outputs.python_version }}
-            PROJECT_AIRFLOW_VERSION=${{ steps.prepare-catalog.outputs.airflow_version }}
+            CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
+            CATALOG_AIRFLOW_VERSION=${{ steps.prepare-build-args.outputs.catalog_airflow_version }}
+            API_PY_VERSION=${{ steps.prepare-build-args.outputs.api_py_version }}
+            INGESTION_PY_VERSION=${{ steps.prepare-build-args.outputs.ingestion_py_version }}
+            FRONTEND_NODE_VERSION=${{ steps.prepare-build-args.outputs.frontend_node_version }}
+            FRONTEND_PNPM_VERSION=${{ steps.prepare-build-args.outputs.frontend_pnpm_version }}
 
       - name: Upload image `${{ matrix.image }}`
         uses: actions/upload-artifact@v3
