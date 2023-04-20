@@ -152,7 +152,7 @@ None.
 
 I don't think we need the marketing outreach, but we will probably want to share
 the table on the Make blog, and with the teams that work with the API (like
-Gutenberg contributors)
+Gutenberg contributors).
 
 [^1]:
     Recent example is the `created_on` field, which actually stores the
