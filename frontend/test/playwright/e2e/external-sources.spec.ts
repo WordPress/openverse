@@ -27,7 +27,7 @@ test("sends analytics event on external source click", async ({ page }) => {
   const query = "cat"
 
   await setCookies(page.context(), { analytics: "true" })
-  await goToSearchTerm(page, "cat", { mode: "SSR" })
+  await goToSearchTerm(page, "cat", { mode: "SSR", query: "ff_analytics=on" })
 
   await page.getByRole("button", { name: "Source list" }).click()
   await page.getByRole("link", { name: "Centre for Ageing Better" }).click()
