@@ -69,6 +69,7 @@ module.exports = {
       ex: "1ex",
       half: "50%",
       full: "100%",
+      "full-with-border": "calc(100% + 2px)",
 
       // Indexed by multiples of baseline (~ `0.25rem`)
       0: "0",
@@ -208,6 +209,9 @@ module.exports = {
       borderRadius: {
         inherit: "inherit",
       },
+      outlineWidth: {
+        1.5: "1.5px",
+      },
       typography: (theme) => ({
         DEFAULT: {
           css: {
@@ -237,7 +241,14 @@ module.exports = {
             "focus-slim-tx",
             "focus-slim-filled",
             "focus-bold-filled",
-          ].map((item) => [item, (value) => ({ "--tw-ring-color": value })])
+            "focus-slim-borderless-filled",
+          ].map((item) => [
+            item,
+            (value) => ({
+              "--tw-ring-color": value,
+              "--tw-outline-color": value,
+            }),
+          ])
         ),
         { values: { ...theme("colors"), DEFAULT: theme("colors.pink") } }
       )
