@@ -51,7 +51,7 @@ used when manually triggering the DAG unless you are absolutely certain
 of what you are doing.
 """
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from airflow import DAG
 from airflow.decorators import task
@@ -61,7 +61,7 @@ from airflow.sensors.external_task import ExternalTaskSensor
 from common import ingestion_server
 from common.constants import DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
 from common.sensors.utils import get_most_recent_dag_run
-from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
+from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
 
 
 # Note: We can't use the TaskFlow `@dag` DAG factory decorator
@@ -73,7 +73,8 @@ from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
 # this factory function, but it would require a redundant
 # call to the decorated function and doesn't look like it would
 # provide any additional value whatsoever.
-def filtered_index_creation_dag_factory(media_type: str):
+def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
+    media_type = data_refresh.media_type
     target_alias = f"{media_type}-filtered"
 
     @task(
@@ -116,7 +117,7 @@ def filtered_index_creation_dag_factory(media_type: str):
             action="CREATE_AND_POPULATE_FILTERED_INDEX",
             model=media_type,
             data=create_payload or None,
-            timeout=timedelta(days=1),
+            timeout=data_refresh.create_filtered_index_timeout,
         )
 
     def point_alias(destination_index_suffix: str):
@@ -219,6 +220,4 @@ def filtered_index_creation_dag_factory(media_type: str):
 
 
 for data_refresh in DATA_REFRESH_CONFIGS:
-    create_filtered_index_dag = filtered_index_creation_dag_factory(
-        data_refresh.media_type
-    )
+    create_filtered_index_dag = filtered_index_creation_dag_factory(data_refresh)
