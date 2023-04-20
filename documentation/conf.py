@@ -48,6 +48,9 @@ html_theme_options = {
     "light_logo": "logo_light.svg",
     "dark_logo": "logo_dark.svg",
     "sidebar_hide_name": True,
+    "source_repository": "https://github.com/WordPress/openverse/",
+    "source_branch": "main",
+    "source_directory": "documentation/",
 }
 
 html_favicon = (
