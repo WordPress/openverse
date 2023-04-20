@@ -36,6 +36,7 @@ const config: PlaywrightTestConfig = {
     env: {
       API_URL: "http://localhost:49153/",
       UPDATE_TAPES: UPDATE_TAPES,
+      PW: "true",
     },
   },
   use: {

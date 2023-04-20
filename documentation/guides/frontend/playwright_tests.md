@@ -14,14 +14,15 @@ There are also **visual regression** tests that make sure that the pages display
 correct components, and components are rendered correctly. The components can be
 tested in isolation to make sure that the states are correctly rendered. For
 more on which states should be tested, see
-[`TESTING_GUIDELINES.md`](./TESTING_GUIDELINES.md). These tests should use
+[`Testing guidelines.md`](./testing_guidelines.md). These tests should use
 Storybook to render the component in isolation, and be placed in
-`test/storybook/visual-regression`.
+`frontend/test/storybook/visual-regression`.
 
 The component tests that test that the component state is correctly rendered
 based on the page interaction should be placed in
-`test/visual-regression/components`. For example, the header elements are tested
-this way because their appearance depends on the page scroll position.
+`frontend/test/visual-regression/components`. For example, the header elements
+are tested this way because their appearance depends on the page scroll
+position.
 
 ## Dockerization
 
@@ -53,14 +54,14 @@ codebase.
 To run the end-to-end tests, after having installed docker, run the following:
 
 ```bash
-pnpm test:playwright
+just frontend/run test:playwright
 ```
 
 You may pass arguments to playwright directly, for example `-u` to update
 snapshots or a filter.
 
 ```bash
-pnpm test:playwright visual-regression -u
+just frontend/run test:playwright visual-regression -u
 ```
 
 The above will run only test files with `visual-regression` in the path and will
@@ -70,10 +71,11 @@ update any snapshot tests due to the `-u` flag.
 
 When writing visual regression tests, it is good practice to write tests for
 each relevant breakpoint. There is a series of helpers in
-[`./utils/breakpoints.ts`](./utils/breakpoints.ts) for this. The most common
-usage for this module is to run a test or set of tests for every breakpoint our
-app knows about or a subset of them. Occasionally you will need to separate
-tests by breakpoint or by range for which there are also helpers.
+[`frontend/test/utils/breakpoints.ts`](https://github.com/WordPress/openverse/blob/main/frontend/test/playwright/utils/breakpoints.ts)
+for this. The most common usage for this module is to run a test or set of tests
+for every breakpoint our app knows about or a subset of them. Occasionally you
+will need to separate tests by breakpoint or by range for which there are also
+helpers.
 
 Each of the following methods expects a describe block callback function
 accepting some useful helpers.
@@ -92,7 +94,7 @@ accepting some useful helpers.
   `describeEachBreakpoint`. It is unlikely that you will need to use this helper
   directly.
 
-Additionally there are describe blocks for individual breakpoints, each
+Additionally, there are describe blocks for individual breakpoints, each
 following the pattern `` `describe${Capitalize<Breakpoint>}` ``, for example
 `breakpoints.describeXs`.
 
@@ -118,7 +120,7 @@ The configuration object currently supports the following options:
   to `false` for viewport widths above `md` (inclusive) is a no-op.
 
 Please see the
-[`homepage.spec.ts` visual-regression tests](visual-regression/pages/homepage.spec.ts)
+[`homepage.spec.ts` visual-regression tests](https://github.com/WordPress/openverse/blob/main/frontend/test/playwright/visual-regression/pages/homepage.spec.ts)
 as an example of how to use these helpers.
 
 ### What to test for visual regression
@@ -138,7 +140,8 @@ significantly speeds up the tests and makes the data being tested against
 consistent across test runs and eliminates variations that the API may include
 after data refreshes happen.
 
-The configuration for the Talkback proxy is in the [`proxy.js`](../proxy.js)
+The configuration for the Talkback proxy is in the
+[`proxy.js`](https://github.com/WordPress/openverse/blob/main/frontend/test/proxy.js)
 module and is run using `pnpm talkback`. It is rare and unlikely that you will
 need to run it directly as running it is handled by the Playwright `webServer`
 configuration.
@@ -147,7 +150,7 @@ If you've added new tests or updated existing ones, you may get errors about API
 responses not being found. To remedy this, you'll need to update the tapes:
 
 ```bash
-pnpm test:playwright:update-tapes
+just frontend/run test:playwright:update-tapes
 ```
 
 If for some reason you find yourself needing to completely recreate the tapes,
@@ -186,7 +189,7 @@ renders the page compared to the docker container.
 To run the debug tests:
 
 ```bash
-pnpm test:playwright:debug
+just frontend/run test:playwright:debug
 ```
 
 Note that this still runs the talkback proxy and the Nuxt server for you. If
@@ -212,8 +215,8 @@ When writing end-to-end tests, it can be helpful to use Playwright
 [codegen](https://playwright.dev/docs/cli#generate-code) to generate the tests
 by performing actions in the browser:
 
-```
-pnpm run test:playwright:gen
+```bash
+just frontend/run test:playwright:gen
 ```
 
 This will open the app in a new browser window, and record any actions you take
@@ -225,6 +228,6 @@ using `pnpm start` or `pnpm dev` separately before running the codegen script.
 To generate tests for a non-default breakpoint, set the viewport size using the
 `--viewport-size` flag. For example, to test the `xs` breakpoint, run:
 
-```
-pnpm run test:playwright:gen --viewport-size=340,600"
+```bash
+just frontend/run test:playwright:gen --viewport-size=340,600"
 ```

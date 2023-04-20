@@ -31,9 +31,13 @@ group:
       # Templates
       - source: .github/release_drafter.yml
         dest: .github/release_drafter.yml
-      - source: .github/ISSUE_TEMPLATE/
-        dest: .github/ISSUE_TEMPLATE/
-        exclude: |
-          component_spec.md
-          design_changes.md
-          project_thread.md
+      - source: .github/ISSUE_TEMPLATE/bug_report.md
+        dest: .github/ISSUE_TEMPLATE/bug_report.md
+      - source: .github/ISSUE_TEMPLATE/config.yml
+        dest: .github/ISSUE_TEMPLATE/config.yml
+      - source: .github/ISSUE_TEMPLATE/discussion.md
+        dest: .github/ISSUE_TEMPLATE/discussion.md
+      - source: .github/ISSUE_TEMPLATE/feature_request.md
+        dest: .github/ISSUE_TEMPLATE/feature_request.md
+      - source: .github/ISSUE_TEMPLATE/sentry_bug.md
+        dest: .github/ISSUE_TEMPLATE/sentry_bug.md

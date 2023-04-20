@@ -15,6 +15,7 @@ ENV AIRFLOW_HOME=/opt/airflow
 ENV DAGS_FOLDER=${AIRFLOW_HOME}/catalog/dags
 ENV PYTHONPATH=${DAGS_FOLDER}
 ENV PATH=${AIRFLOW_HOME}/.local/bin:$PATH
+ENV IPYTHONDIR=/home/airflow/.cache/ipython
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
@@ -44,11 +45,11 @@ RUN apt-get update \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
-# Create and set the ownership of directories so airflow user can write to them
+# Create and set the ownership of the cache directory so airflow user can write to them
 # These directories are not needed in production but it's easier to perform
 # this step here while we're doing it for the output directory
-RUN mkdir -p ${OUTPUT_DIR} /home/airflow/.ipython /home/airflow/.cache/pytest && \
-    chown airflow ${OUTPUT_DIR} /home/airflow/.ipython /home/airflow/.cache/pytest
+RUN mkdir -p ${OUTPUT_DIR} /home/airflow/.cache && \
+    chown airflow ${OUTPUT_DIR} /home/airflow/.cache
 
 USER airflow
 

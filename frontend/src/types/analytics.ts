@@ -38,6 +38,20 @@ export type Events = {
     /** The media type being searched */
     mediaType: MediaType
   }
+  /**
+   * Description: The user clicks one of the buttons to copy the media attribution
+   * Questions:
+   *   - How often do users use our attribution tool?
+   *   - Which format is the most popular?
+   */
+  COPY_ATTRIBUTION: {
+    /** The unique ID of the media */
+    id: string
+    /** The format of the copied attribution */
+    format: "plain" | "rich" | "html"
+    /** The media type being searched */
+    mediaType: MediaType
+  }
 }
 
 /**
