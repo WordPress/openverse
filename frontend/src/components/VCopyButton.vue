@@ -50,7 +50,7 @@ export default defineComponent({
 
     const onCopySuccess = (e: Clipboard.Event) => {
       success.value = true
-      emit("copied", { content: e.text })
+      emit("copied")
 
       setTimeout(() => {
         success.value = false
