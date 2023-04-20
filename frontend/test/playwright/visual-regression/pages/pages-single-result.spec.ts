@@ -31,6 +31,8 @@ for (const mediaType of supportedMediaTypes) {
           // This will include the "Back to results" link.
           await openFirstResult(page, mediaType)
           await removeHiddenOverflow(page)
+          await page.waitForEvent("load")
+
           await expectSnapshot(
             `${mediaType}-${dir}-from-search-results`,
             page,
