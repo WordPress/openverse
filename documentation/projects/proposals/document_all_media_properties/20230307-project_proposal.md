@@ -69,7 +69,7 @@ normalization project. To ensure that the table is up-to-date, this project will
 also add automation to the catalog CI pipeline to detect changes to the fields
 in the table and the catalog DDL and add a comment to update them, similar to
 the
-[migration safety warning](https://github.com/WordPress/openverse/blob/main/.github/workflows/migration_safety_warning.yml)
+[migration safety warning](https://github.com/WordPress/openverse/blob/main/.github/workflows/migration_safety_warning.yml).
 
 We will publish the table on the
 [Openverse documentation site](https://docs.openverse.org/), with the admonition
