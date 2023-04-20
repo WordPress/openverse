@@ -186,7 +186,7 @@ page without reloading the page in between. For example, to test the search
 route client side, you can execute a search from the homepage and it will
 redirect you client-side to the search page.
 
-## Conclusion
+### Conclusion
 
 Please note that these are non-expert and non-exhaustive recommendations. Spend
 time reading the [WAI-ARIA spec](https://www.w3.org/TR/wai-aria/) and other web
@@ -194,7 +194,7 @@ accessibility materials. Even just knowing about specific roles and interactions
 that exist and are meant to be developed in consistent ways is a good first step
 to learning what to look out for when testing.
 
-# Automated tests
+## Automated tests
 
 Openverse uses
 [Vue Testing Library](https://testing-library.com/docs/vue-testing-library/intro/)
