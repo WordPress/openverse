@@ -63,9 +63,10 @@ up *flags:
 up-deps *flags:
     env COMPOSE_PROFILES="catalog_dependencies" just ../up {{ flags }}
 
+# Tear down all the services and recreate the ones of the catalog profile
 recreate:
     just ../down -v
-    just up "--force-recreate --build"
+    just up --force-recreate --build
 
 ##################
 # Administration #
