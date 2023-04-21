@@ -1,9 +1,9 @@
 # Cannot use $PYTHON_VERSION because that is overwritten by the base image
 # with the patch version (we only care about major and minor version)
-ARG PROJECT_PY_VERSION
-ARG PROJECT_AIRFLOW_VERSION
+ARG CATALOG_PY_VERSION
+ARG CATALOG_AIRFLOW_VERSION
 
-FROM apache/airflow:slim-${PROJECT_AIRFLOW_VERSION}-python${PROJECT_PY_VERSION} as cat
+FROM apache/airflow:slim-${CATALOG_AIRFLOW_VERSION}-python${CATALOG_PY_VERSION} as cat
 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 
@@ -58,11 +58,11 @@ WORKDIR  ${AIRFLOW_HOME}
 COPY ${REQUIREMENTS_FILE} requirements_prod.txt ${AIRFLOW_HOME}/
 
 # args go out of scope when a new build stage starts so it must be redeclared here
-ARG PROJECT_PY_VERSION
-ARG PROJECT_AIRFLOW_VERSION
+ARG CATALOG_PY_VERSION
+ARG CATALOG_AIRFLOW_VERSION
 
 # https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html#constraints-files
-ARG CONSTRAINTS_FILE="https://raw.githubusercontent.com/apache/airflow/constraints-${PROJECT_AIRFLOW_VERSION}/constraints-${PROJECT_PY_VERSION}.txt"
+ARG CONSTRAINTS_FILE="https://raw.githubusercontent.com/apache/airflow/constraints-${CATALOG_AIRFLOW_VERSION}/constraints-${CATALOG_PY_VERSION}.txt"
 
 RUN pip install --user -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE}
 

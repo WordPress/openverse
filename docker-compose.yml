@@ -15,10 +15,11 @@ x-airflow-common: &airflow-common
     - catalog/.env
   build:
     context: ./catalog/
-    args:
+    target: cat
+    args: # Automatically inferred from env vars, unless specified
       - REQUIREMENTS_FILE=requirements_dev.txt
-      - PROJECT_PY_VERSION=${PROJECT_PY_VERSION}
-      - PROJECT_AIRFLOW_VERSION=${PROJECT_AIRFLOW_VERSION}
+      - CATALOG_PY_VERSION
+      - CATALOG_AIRFLOW_VERSION
   volumes:
     - ./catalog:/opt/airflow/catalog
     - catalog-cache:/home/airflow/.cache
@@ -46,7 +47,9 @@ services:
       - catalog_dependencies
       - ingestion_server
       - api
-    build: ./docker/upstream_db/
+    build:
+      context: ./docker/upstream_db/
+      target: db
     image: openverse-upstream_db
     expose:
       - "5432"
@@ -228,8 +231,9 @@ services:
     build:
       context: ./api/
       target: api
-      args:
-        SEMANTIC_VERSION: ${SEMANTIC_VERSION:-v1.0.0}
+      args: # Automatically inferred from env vars, unless specified
+        - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
+        - API_PY_VERSION
     image: openverse-api
     volumes:
       - ./api:/api
@@ -253,7 +257,11 @@ services:
     profiles:
       - ingestion_server
       - api
-    build: ./ingestion_server/
+    build:
+      context: ./ingestion_server/
+      target: ing
+      args: # Automatically inferred from env vars, unless specified
+        - INGESTION_PY_VERSION
     image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn.conf.py
     ports:
@@ -275,7 +283,11 @@ services:
     profiles:
       - ingestion_server
       - api
-    build: ./ingestion_server/
+    build:
+      context: ./ingestion_server/
+      target: ing
+      args: # Automatically inferred from env vars, unless specified
+        - INGESTION_PY_VERSION
     image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn_worker.conf.py
     expose:
