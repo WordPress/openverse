@@ -148,14 +148,11 @@ class MediaViewSet(ReadOnlyModelViewSet):
         serializer = self.get_serializer(results, many=True)
         return self.get_paginated_response(serializer.data)
 
-    def report(self, request, *_, **__):
-        media = self.get_object()
-        identifier = media.identifier
+    def report(self, request, identifier):
         serializer = self.get_serializer(data=request.data | {"identifier": identifier})
         serializer.is_valid(raise_exception=True)
-        report = serializer.save()
+        serializer.save()
 
-        serializer = self.get_serializer(report)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     def thumbnail(self, image_url, request, *_, **__):

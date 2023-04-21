@@ -93,5 +93,5 @@ class AudioViewSet(MediaViewSet):
         methods=["post"],
         serializer_class=AudioReportRequestSerializer,
     )
-    def report(self, *args, **kwargs):
-        return super().report(*args, **kwargs)
+    def report(self, request, identifier):
+        return super().report(request, identifier)
