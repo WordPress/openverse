@@ -270,7 +270,7 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
         trigger_filtered_index_creation = TriggerDagRunOperator(
             task_id=f"trigger_create_filtered_{data_refresh.media_type}_index",
             trigger_dag_id=f"create_filtered_{data_refresh.media_type}_index",
-            params={
+            conf={
                 # Force to skip data refresh DAG concurrency check
                 # as the data refresh DAG will clearly already be running
                 # as it is triggering the filtered index creation DAG.
