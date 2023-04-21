@@ -1,8 +1,5 @@
 # Feature Flags
 
-```{toctree}
-:titlesonly:
-:glob:
+```{include} /_toc_templates/flat.md
 
-*
 ```

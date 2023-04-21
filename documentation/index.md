@@ -2,12 +2,12 @@
 
 Openverse is a search engine for openly licensed media.
 
-## Documentation
+# Documentation
 
 To setup your computer and install pre-requisites for developing Openverse,
-refer to the [general setup guide](./guides/general_setup.md). To run the
+refer to the [general setup guide](./general/general_setup.md). To run the
 Openverse stack locally on your computer, refer to the
-[quickstart guide](./guides/quickstart.md).
+[quickstart guide](./general/quickstart.md).
 
 ```{note}
 This documentation is for developers who are building Openverse. If you want to
@@ -15,22 +15,20 @@ use the Openverse API, you should instead refer to the
 [API consumer documentation](https://api.openverse.engineering/).
 ```
 
-## Related documentation
+# Related documentation
 
 <!-- These use HTML anchors because Sphinx treats them as internal references without scheme. -->
 
 - <a href="./storybook">Storybook</a> (UI components)
 - <a href="./tailwind">Tailwind Config Viewer</a> (design tokens)
 
-## Table of contents
+# Table of contents
 
 ```{toctree}
-:maxdepth: 3
+:maxdepth: 2
+:glob:
 
-guides/index
-reference/index
-projects/index
-changelogs/index
+*/index
 ```
 
 ```{toctree}

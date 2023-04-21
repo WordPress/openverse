@@ -1,8 +1,5 @@
 # Search Relevancy Sandbox
 
-```{toctree}
-:titlesonly:
-:glob:
+```{include} /_toc_templates/flat.md
 
-*
 ```
