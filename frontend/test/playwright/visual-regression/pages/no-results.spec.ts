@@ -5,7 +5,7 @@ import {
   dismissBannersUsingCookies,
   goToSearchTerm,
   languageDirections,
-  setCookies,
+  setBreakpointCookie,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
@@ -20,11 +20,10 @@ for (const searchType of supportedSearchTypes) {
       test(`No results ${searchType} ${dir} page snapshots`, async ({
         page,
       }) => {
-        await setCookies(page.context(), {
-          uiBreakpoint: breakpoint as string,
-        })
         await dismissBannersUsingCookies(page)
         await closeFiltersUsingCookies(page)
+        await setBreakpointCookie(page, breakpoint)
+
         await goToSearchTerm(page, "querywithnoresults", { dir, searchType })
 
         await expectSnapshot(`no-results-${searchType}-${dir}`, page, {

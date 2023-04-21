@@ -7,7 +7,7 @@ import {
   dismissBannersUsingCookies,
   languageDirections,
   pathWithDir,
-  setCookies,
+  setBreakpointCookie,
 } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
@@ -25,12 +25,10 @@ for (const contentPage of contentPages) {
       test.describe.configure({ retries: 2 })
 
       breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
-        test.beforeEach(async ({ context, page }) => {
-          await setCookies(context, {
-            uiBreakpoint: breakpoint as string,
-          })
+        test.beforeEach(async ({ page }) => {
           await dismissBannersUsingCookies(page)
           await closeFiltersUsingCookies(page)
+          await setBreakpointCookie(page, breakpoint)
 
           await page.goto(pathWithDir(contentPage, dir))
         })
