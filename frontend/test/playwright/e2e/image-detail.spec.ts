@@ -1,7 +1,6 @@
 import { test, expect, Page } from "@playwright/test"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
-
 import { t } from "~~/test/playwright/utils/navigation"
 
 const goToCustomImagePage = async (page: Page) => {

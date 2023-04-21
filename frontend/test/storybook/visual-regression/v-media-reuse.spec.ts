@@ -1,7 +1,6 @@
 import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-
 import { languageDirections, t } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
