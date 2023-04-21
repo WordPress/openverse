@@ -375,16 +375,14 @@ export const searchFromHeader = async (page: Page, term: string) => {
  * Scroll down and up to load all lazy-loaded content.
  */
 export const openFirstResult = async (page: Page, mediaType: MediaType) => {
-  await Promise.all([
-    page.waitForNavigation(),
-    page
-      .locator(`a[href*="/${mediaType}/"]`)
-      .first()
-      .click({
-        position: { x: 32, y: 32 },
-      }),
-  ])
+  const firstResult = page.locator(`a[href*="/${mediaType}/"]`).first()
+  const firstResultHref = await firstResult.getAttribute("href")
+  if (!firstResultHref) {
+    throw new Error(`Could not find a link to a ${mediaType} in the page`)
+  }
+  await firstResult.click({ position: { x: 32, y: 32 } })
   await scrollDownAndUp(page)
+  await page.waitForURL(firstResultHref)
 }
 
 /**

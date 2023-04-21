@@ -3,7 +3,7 @@ description: Download and import Docker images from artifacts
 
 inputs:
   setup_images:
-    default: '["upstream_db", "ingestion_server", "catalog", "api", "api_nginx"]'
+    default: '["upstream_db", "ingestion_server", "catalog", "api", "api_nginx", "frontend"]'
     description: JSON-encoded list of image names
 
 runs:
@@ -77,3 +77,17 @@ runs:
       shell: bash
       run: |
         docker load --input /tmp/api_nginx.tar
+
+    # Frontend
+    - name: Download image `frontend`
+      uses: actions/download-artifact@v3
+      if: contains(fromJson(inputs.setup_images), 'frontend')
+      with:
+        name: frontend
+        path: /tmp
+
+    - name: Load image `frontend`
+      if: contains(fromJson(inputs.setup_images), 'frontend')
+      shell: bash
+      run: |
+        docker load --input /tmp/frontend.tar

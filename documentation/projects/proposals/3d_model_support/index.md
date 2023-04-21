@@ -1,8 +1,5 @@
 # 3D Model Support
 
-```{toctree}
-:titlesonly:
-:glob:
+```{include} /_toc_templates/flat.md
 
-*
 ```

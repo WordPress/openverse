@@ -1,8 +1,5 @@
 # Frontend UI State Cookie
 
-```{toctree}
-:titlesonly:
-:glob:
+```{include} /_toc_templates/flat.md
 
-*
 ```
