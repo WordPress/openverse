@@ -1,4 +1,4 @@
-# Traffic Management Guide
+# Traffic Management
 
 In this guide, you'll find documentation and runbooks to help you monitor,
 analyze, and manage Openverse traffic, primarily using CloudFlare's web UI. This
