@@ -2,11 +2,10 @@ import { test, expect, Page } from "@playwright/test"
 
 import {
   assertCheckboxStatus,
-  openFilters,
-  changeContentType,
+  changeSearchType,
   goToSearchTerm,
-  closeFilters,
   isPageDesktop,
+  filters,
 } from "~~/test/playwright/utils/navigation"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
@@ -52,7 +51,7 @@ breakpoints.describeMobileAndDesktop(() => {
     }) => {
       await goToSearchTerm(page, "cat", { searchType })
 
-      await openFilters(page)
+      await filters.open(page)
 
       await assertCheckboxCount(page, "total", FILTER_COUNTS[searchType])
     })
@@ -62,7 +61,7 @@ breakpoints.describeMobileAndDesktop(() => {
     await page.goto(
       "/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator"
     )
-    await openFilters(page)
+    await filters.open(page)
     // Creator filter was removed from the UI
     const expectedFilters = ["cc0", "commercial"]
 
@@ -77,19 +76,19 @@ breakpoints.describeMobileAndDesktop(() => {
     await page.goto(
       "/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator"
     )
-    await openFilters(page)
+    await filters.open(page)
     // Creator filter was removed from the UI
     const expectedFilters = ["cc0", "commercial"]
 
     for (const checkbox of expectedFilters) {
       await assertCheckboxStatus(page, checkbox)
     }
-    await changeContentType(page, "Images")
+    await changeSearchType(page, IMAGE)
 
     await expect(page).toHaveURL(
       "/search/image?q=cat&license_type=commercial&license=cc0&searchBy=creator"
     )
-    await openFilters(page)
+    await filters.open(page)
     for (const checkbox of expectedFilters) {
       await assertCheckboxStatus(page, checkbox)
     }
@@ -101,16 +100,16 @@ breakpoints.describeMobileAndDesktop(() => {
     await page.goto(
       "/search/image?q=cat&license_type=commercial&license=cc0&searchBy=creator"
     )
-    await openFilters(page)
+    await filters.open(page)
 
     // Creator filter was removed from the UI
     for (const checkbox of ["cc0", "commercial"]) {
       await assertCheckboxStatus(page, checkbox)
     }
 
-    await changeContentType(page, "All content")
+    await changeSearchType(page, ALL_MEDIA)
 
-    await openFilters(page)
+    await filters.open(page)
     await expect(page.locator('input[type="checkbox"]:checked')).toHaveCount(2)
 
     await expect(page).toHaveURL(
@@ -122,22 +121,22 @@ breakpoints.describeMobileAndDesktop(() => {
     page,
   }) => {
     await page.goto("/search/audio?q=cat&license_type=commercial")
-    await openFilters(page)
+    await filters.open(page)
 
     // by-nc is special because we normally test for fuzzy match, and by-nc matches 3 labels.
     const byNc = page.locator('input[value="by-nc"]')
     await expect(byNc).toBeDisabled()
     for (const checkbox of ["by-nc-sa", "by-nc-nd"]) {
-      await assertCheckboxStatus(page, checkbox, "", "disabled")
+      await assertCheckboxStatus(page, checkbox, "disabled")
     }
     await assertCheckboxStatus(page, "commercial")
 
     await page.click('label:has-text("commercial")')
 
-    await assertCheckboxStatus(page, "commercial", "", "unchecked")
+    await assertCheckboxStatus(page, "commercial", "unchecked")
     await expect(byNc).not.toBeDisabled()
     for (const checkbox of ["commercial", "by-nc-sa", "by-nc-nd"]) {
-      await assertCheckboxStatus(page, checkbox, "", "unchecked")
+      await assertCheckboxStatus(page, checkbox, "unchecked")
     }
   })
 
@@ -152,18 +151,18 @@ breakpoints.describeMobileAndDesktop(() => {
    */
   test("filters are updated when media type changes", async ({ page }) => {
     await page.goto("/search/image?q=cat&aspect_ratio=tall&license=cc0")
-    await openFilters(page)
+    await filters.open(page)
 
     await assertCheckboxStatus(page, "tall")
     await assertCheckboxStatus(page, "cc0")
 
-    await changeContentType(page, "Audio")
-    await openFilters(page)
+    await changeSearchType(page, AUDIO)
+    await filters.open(page)
 
     // Only CC0 checkbox is checked, and the filter button label is
     // '1 Filter' on `xl` or '1' on `lg` screens
     await assertCheckboxStatus(page, "cc0")
-    await closeFilters(page)
+    await filters.close(page)
     if (isPageDesktop(page)) {
       const filterButtonText = await page
         .locator('[aria-controls="filters"] span:visible')
@@ -184,9 +183,9 @@ breakpoints.describeMobileAndDesktop(() => {
     page,
   }) => {
     await page.goto("/search/image?q=cat")
-    await openFilters(page)
+    await filters.open(page)
 
-    await assertCheckboxStatus(page, "cc0", "", "unchecked")
+    await assertCheckboxStatus(page, "cc0", "unchecked")
 
     const [response] = await Promise.all([
       page.waitForResponse((response) => response.url().includes("cc0")),
@@ -210,9 +209,9 @@ breakpoints.describeMobileAndDesktop(() => {
       await page.goto(
         `/search/${searchType}?q=birds&source=${source.toLowerCase()}`
       )
-      await openFilters(page)
+      await filters.open(page)
 
-      await assertCheckboxStatus(page, source, "", "checked")
+      await assertCheckboxStatus(page, source, "checked")
     })
   }
 })

@@ -1,6 +1,6 @@
-import { BrowserContext, expect, Page } from "@playwright/test"
-
 import rtlMessages from "~~/test/locales/ar.json"
+
+import enMessages from "~/locales/en.json"
 
 import {
   ALL_MEDIA,
@@ -13,7 +13,7 @@ import {
   VIDEO,
 } from "~/constants/media"
 
-import enMessages from "~/locales/en.json"
+import type { BrowserContext, Locator, Page } from "@playwright/test"
 
 const messages: Record<string, Record<string, unknown>> = {
   ltr: enMessages,
@@ -40,7 +40,7 @@ const getNestedProperty = (
 
 /**
  * Simplified i18n t function that returns English messages for `ltr` and Arabic for `rtl`.
- * It can also handle nested labels using dot notation ('header.title').
+ * It can handle nested labels that use the dot notation ('header.title').
  * @param path - The label to translate.
  * @param dir - The language direction.
  */
@@ -63,20 +63,13 @@ export const renderingContexts = [
 
 export const renderModes = ["SSR", "CSR"] as const
 export type RenderMode = typeof renderModes[number]
-export type LanguageDirection = "ltr" | "rtl"
-
-export const buttonSelectors = {
-  filter: 'button[aria-controls="filters"]',
-  contentSwitcher: 'button[aria-controls="content-switcher-modal"]',
-  mobileContentSettings: `button[aria-controls="content-settings-modal"]`,
-}
+export type LanguageDirection = typeof languageDirections[number]
 
 export function sleep(ms: number) {
   return new Promise<void>((resolve) => setTimeout(resolve, ms))
 }
 
-export const searchTypePath = (searchType: SupportedSearchType) =>
-  searchType === "all" ? "" : `${searchType}`
+export type CheckboxStatus = "checked" | "unchecked" | "disabled"
 
 export const searchTypeNames = {
   ltr: {
@@ -95,50 +88,87 @@ export const searchTypeNames = {
   },
 }
 
-const isButtonPressed = async (
+/**
+ * On mobile screen, open the "tab" in the content settings modal.
+ * Should be called after the modal is open.
+ */
+export const openContentSettingsTab = async (
   page: Page,
-  buttonSelector: string
-): Promise<boolean> => {
-  const viewportSize = page.viewportSize()
-  if (!viewportSize) {
-    return false
-  }
-  const pageWidth = viewportSize.width
-  if (pageWidth > 640) {
-    return await getPressed(page, buttonSelector)
-  } else {
-    return await page.locator("button", { hasText: "Close" }).isVisible()
-  }
+  tab: "searchTypes" | "filters" = "searchTypes",
+  dir: LanguageDirection = "ltr"
+) => {
+  const tabKey = tab === "searchTypes" ? "search-type.heading" : "filters.title"
+
+  await page.getByRole("tab", { name: t(tabKey, dir) }).click()
 }
 
-const openMenu = async (page: Page, button: "filter" | "contentSwitcher") => {
-  const selector = buttonSelectors[button]
-  if (!(await isButtonPressed(page, selector))) {
-    await page.click(selector)
-    expect(await isButtonPressed(page, selector)).toEqual(true)
-  }
-}
-
-export const openFilters = async (
+/**
+ * On mobile screen, clicks on the "Close" button in the content settings modal.
+ */
+export const closeContentSettingsModal = async (
   page: Page,
   dir: LanguageDirection = "ltr"
 ) => {
-  if (isPageDesktop(page)) {
-    await openMenu(page, "filter")
-  } else {
-    await openContentSettingsTab(page, "filters", dir)
+  return page
+    .getByRole("button", { name: t("modal.close-content-settings", dir) })
+    .click()
+}
+
+/**
+ * Opens or closes the search settings:
+ * - given modal tab on mobile screen
+ * - filters sidebar or the search types popover on desktop screen
+ */
+export const setContentSwitcherState = async (
+  page: Page,
+  contentSwitcherKind: "filters" | "searchTypes",
+  state: "open" | "closed",
+  dir: LanguageDirection = "ltr"
+) => {
+  const isDesktop = isPageDesktop(page)
+
+  const buttonLocator = page.locator(
+    !isDesktop
+      ? "#content-settings-button"
+      : contentSwitcherKind === "filters"
+      ? "#filter-button"
+      : "#search-type-button"
+  )
+
+  const isPressed = await getSelectorPressed(buttonLocator)
+  const shouldBePressed = state === "open"
+
+  if (isDesktop) {
+    if (isPressed === shouldBePressed) return null
+    return await buttonLocator.click()
+  }
+
+  if (shouldBePressed) {
+    if (!isPressed) {
+      await buttonLocator.click()
+    }
+    return openContentSettingsTab(page, contentSwitcherKind, dir)
+  } else if (isPressed) {
+    await closeContentSettingsModal(page, dir)
   }
 }
 
-export const openContentTypes = async (
-  page: Page,
-  dir: LanguageDirection = "ltr"
-) => {
-  if (isPageDesktop(page)) {
-    await openMenu(page, "contentSwitcher")
-  } else {
-    await openContentSettingsTab(page, "contentTypes", dir)
-  }
+export const filters = {
+  open: async (page: Page, dir: LanguageDirection = "ltr") => {
+    await setContentSwitcherState(page, "filters", "open", dir)
+  },
+  close: async (page: Page, dir: LanguageDirection = "ltr") => {
+    await setContentSwitcherState(page, "filters", "closed", dir)
+  },
+}
+
+export const searchTypes = {
+  open: async (page: Page, dir: LanguageDirection = "ltr") => {
+    await setContentSwitcherState(page, "searchTypes", "open", dir)
+  },
+  close: async (page: Page, dir: LanguageDirection = "ltr") => {
+    await setContentSwitcherState(page, "searchTypes", "closed", dir)
+  },
 }
 
 export const isPageDesktop = (page: Page) => {
@@ -147,136 +177,73 @@ export const isPageDesktop = (page: Page) => {
   const desktopMinWidth = 1024
   return pageWidth >= desktopMinWidth
 }
+
 /**
- * Returns `true` if the `selector`'s `aria-pressed` attribute is `true`.
+ * Returns true if the button with the given selector is pressed or expanded.
  */
-const getPressed = async (page: Page, selector: string) => {
+const getSelectorPressed = async (selector: Locator) => {
   return (
-    (await page.getAttribute(selector, "aria-pressed")) === "true" ||
-    (await page.getAttribute(selector, "aria-expanded")) === "true"
+    (await selector.getAttribute("aria-pressed")) === "true" ||
+    (await selector.getAttribute("aria-expanded")) === "true"
   )
+}
+
+export const isDialogOpen = async (page: Page) => {
+  return page.getByRole("dialog").isVisible({ timeout: 100 })
 }
 
 /**
- * Clicks the `selector` button if it is not already pressed.
+ * Asserts that the checkbox has the given status.
+ *
+ * @param page - Playwright page object
+ * @param label - the label of the checkbox, converted to a RegExp if string
+ * @param status - the status to assert
  */
-const ensureButtonPressed = async (page: Page, selector: string) => {
-  if (!(await getPressed(page, selector))) {
-    await page.click(selector)
-    expect(await getPressed(page, selector)).toEqual(true)
-  }
-}
-/**
- * Open the Content types tab in the mobile content settings modal.
- */
-export const openContentSettingsTab = async (
-  page: Page,
-  tab: "contentTypes" | "filters" = "contentTypes",
-  dir: LanguageDirection = "ltr"
-) => {
-  const selector = "#content-settings-button"
-
-  await ensureButtonPressed(page, selector)
-
-  const tabLabel = t(
-    tab === "contentTypes" ? "search-type.heading" : "filters.title",
-    dir
-  )
-  await page.locator(`button[role="tab"]:has-text("${tabLabel}")`).click()
-}
-
-export const closeFilters = async (page: Page) => {
-  if (isPageDesktop(page)) {
-    const selector = buttonSelectors["filter"]
-
-    if (await isButtonPressed(page, selector)) {
-      await page.click(selector)
-      expect(await isButtonPressed(page, selector)).toEqual(false)
-    }
-  } else {
-    await closeMobileMenu(page)
-  }
-}
-
-export const closeMobileMenu = async (
-  page: Page,
-  dir: LanguageDirection = "ltr"
-) => {
-  await page.click(
-    `button[aria-label="${t("modal.close-content-settings", dir)}"]`
-  )
-}
-
-export const isMobileMenuOpen = async (page: Page) =>
-  page.locator('[role="dialog"]').isVisible({ timeout: 100 })
-
 export const assertCheckboxStatus = async (
   page: Page,
-  label: string,
-  forValue = "",
-  status: "checked" | "unchecked" | "disabled" = "checked"
+  label: string | RegExp,
+  status: CheckboxStatus = "checked"
 ) => {
-  const selector =
-    forValue === ""
-      ? `label:has-text('${label}')`
-      : `label[for="${forValue}"]:has-text('${label}')`
-  const checkbox = page.locator(selector)
-  switch (status) {
-    case "checked": {
-      await expect(checkbox).not.toBeDisabled()
-      await expect(checkbox).toBeChecked()
-      break
-    }
-    case "unchecked": {
-      await expect(checkbox).not.toBeDisabled()
-      await expect(checkbox).not.toBeChecked()
-      break
-    }
-    case "disabled": {
-      await expect(checkbox).toBeDisabled()
-    }
-  }
+  const labelRegexp = typeof label === "string" ? new RegExp(label, "i") : label
+  await page.getByRole("checkbox", {
+    name: labelRegexp,
+    disabled: status === "disabled",
+    checked: status === "checked",
+  })
 }
 
-export const changeContentType = async (
-  page: Page,
-  to: "Audio" | "Images" | "All content"
-) => {
-  if (isPageDesktop(page)) {
-    await page.click(
-      `button[aria-controls="content-switcher-popover"], button[aria-controls="content-switcher-modal"]`
-    )
-    // Ensure that the asynchronous navigation is finished before next steps
-    await Promise.all([
-      page.waitForNavigation(),
-      page.locator(`#content-switcher-popover a:has-text("${to}")`).click(),
-    ])
-  } else {
-    await openContentTypes(page)
-    await page.locator(`a[role="radio"]:has-text("${to}")`).click()
-    await closeMobileMenu(page)
-  }
+export const changeSearchType = async (page: Page, to: SupportedSearchType) => {
+  await searchTypes.open(page)
+
+  const changedUrl = new RegExp(
+    to === ALL_MEDIA ? `/search/?` : `/search/${to}`
+  )
+  await page.getByRole("radio", { name: searchTypeNames.ltr[to] }).click()
+  await page.waitForURL(changedUrl)
+
+  await searchTypes.close(page)
 }
 
 /**
- * For desktop, returns the content of the Content switcher button.
- * For mobile, returns the selected content type from the modal.
- * @param page - Playwright page object.
+ * Returns the name of the currently selected search type.
+ * Opens the content switcher and selects the text content of the checked
+ * radio item.
  */
 export const currentContentType = async (page: Page) => {
-  if (isPageDesktop(page)) {
-    const contentSwitcherButton = await page.locator(
-      `button[aria-controls="content-switcher-popover"]`
-    )
-    return (await contentSwitcherButton.textContent())?.trim()
-  } else {
-    await openContentTypes(page)
-    const currentContentType = await page
-      .locator('a[aria-current="page"]')
-      .textContent()
-    await closeMobileMenu(page)
-    return currentContentType
-  }
+  await searchTypes.open(page)
+  const currentContentType =
+    (await page.getByRole("radio", { checked: true }).textContent())?.trim() ??
+    ""
+  await searchTypes.close(page)
+
+  return currentContentType
+}
+
+export const dismissTranslationBannersUsingCookies = async (page: Page) => {
+  const uiDismissedBanners = ["ru", "en", "ar", "es"].map(
+    (lang) => `translation-${lang}`
+  )
+  await setCookies(page.context(), { uiDismissedBanners })
 }
 
 /**
@@ -284,14 +251,7 @@ export const currentContentType = async (page: Page) => {
  * so the page should finish rendering before calling `dismissTranslationBanner`.
  */
 export const dismissTranslationBanner = async (page: Page) => {
-  await setCookies(page.context(), {
-    uiDismissedBanners: [
-      "translation-ru",
-      "translation-en",
-      "translation-ar",
-      "translation-es",
-    ],
-  })
+  await dismissTranslationBannersUsingCookies(page)
   const bannerCloseButton = page.locator(
     '[data-testid="banner-translation"] button'
   )
@@ -305,10 +265,16 @@ export const selectHomepageSearchType = async (
   searchType: SupportedSearchType,
   dir: LanguageDirection = "ltr"
 ) => {
-  await page.getByRole("button", { name: t("search-type.all", dir) }).click()
+  await page
+    .getByRole("button", { name: searchTypeNames[dir][ALL_MEDIA] })
+    .click()
   await page
     .getByRole("radio", { name: searchTypeNames[dir][searchType] })
     .click()
+}
+
+export const dismissBannersUsingCookies = async (page: Page) => {
+  await dismissTranslationBanner(page)
 }
 
 export const goToSearchTerm = async (
@@ -326,14 +292,7 @@ export const goToSearchTerm = async (
   const mode = options.mode ?? "SSR"
   const query = options.query ? `&${options.query}` : ""
 
-  await setCookies(page.context(), {
-    uiDismissedBanners: [
-      "translation-ru",
-      "translation-en",
-      "translation-ar",
-      "translation-es",
-    ],
-  })
+  await dismissBannersUsingCookies(page)
   if (mode === "SSR") {
     const path = `${searchPath(searchType)}?q=${term}${query}`
     await page.goto(pathWithDir(path, dir))
@@ -348,11 +307,8 @@ export const goToSearchTerm = async (
     await searchInput.type(term)
     // Click search button
     // Wait for navigation
-    await Promise.all([
-      page.waitForNavigation(),
-      await page.getByRole("button", { name: t("search.search", dir) }).click(),
-    ])
-    await page.waitForLoadState("load")
+    await page.getByRole("button", { name: t("search.search", dir) }).click()
+    await page.waitForURL(/search/, { waitUntil: "load" })
   }
   await scrollDownAndUp(page)
 }
@@ -365,7 +321,8 @@ export const searchFromHeader = async (page: Page, term: string) => {
   // Double-click on the search bar to remove previous value
   await page.dblclick("id=search-bar")
   await page.fill("id=search-bar", term)
-  await Promise.all([page.waitForNavigation(), page.keyboard.press("Enter")])
+  await page.keyboard.press("Enter")
+  await page.waitForURL(/search/)
 }
 
 /**
@@ -376,29 +333,19 @@ export const searchFromHeader = async (page: Page, term: string) => {
  */
 export const openFirstResult = async (page: Page, mediaType: MediaType) => {
   const firstResult = page.locator(`a[href*="/${mediaType}/"]`).first()
-  const firstResultHref = await firstResult.getAttribute("href")
-  if (!firstResultHref) {
-    throw new Error(`Could not find a link to a ${mediaType} in the page`)
-  }
+  const firstResultHref = await getLocatorHref(firstResult)
   await firstResult.click({ position: { x: 32, y: 32 } })
   await scrollDownAndUp(page)
   await page.waitForURL(firstResultHref)
   await page.mouse.move(0, 0)
 }
 
-/**
- * Click on the first <mediaType> related result: a link that contains
- * /<mediaType>/ in its URL in the 'aside' element for related media.
- * We cannot use the 'startsWith' `^` matcher because localized routes
- * start with the locale prefix (e.g. /ar/image/).
- * Scroll down and up to load all lazy-loaded content.
- */
-export const openFirstRelatedResult = async (
-  page: Page,
-  mediaType: MediaType
-) => {
-  await page.locator(`aside a[href*="/${mediaType}/"]`).first().click()
-  await scrollDownAndUp(page)
+export const getLocatorHref = async (locator: Locator) => {
+  const href = await locator.getAttribute("href")
+  if (!href) {
+    throw new Error("Could not find href attribute")
+  }
+  return href
 }
 
 export const scrollToBottom = async (page: Page) => {
@@ -448,4 +395,12 @@ export const setCookies = async (
       maxAge: 60 * 5,
     }))
   )
+}
+
+export const closeFiltersUsingCookies = async (page: Page) => {
+  await setCookies(page.context(), { uiIsFilterDismissed: true })
+}
+
+export const setBreakpointCookie = async (page: Page, breakpoint: string) => {
+  await setCookies(page.context(), { uiBreakpoint: breakpoint })
 }

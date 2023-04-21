@@ -2,6 +2,8 @@ import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
+  closeFiltersUsingCookies,
+  dismissBannersUsingCookies,
   goToSearchTerm,
   languageDirections,
   openFirstResult,
@@ -22,9 +24,11 @@ for (const mediaType of supportedMediaTypes) {
           test.beforeEach(async ({ context, page }) => {
             await setCookies(context, {
               uiBreakpoint: breakpoint,
-              uiIsFilterDismissed: true,
-              uiDismissedBanners: ["translation-ar"],
             })
+
+            await closeFiltersUsingCookies(page)
+            await dismissBannersUsingCookies(page)
+
             await goToSearchTerm(page, "birds", { dir })
           })
 
@@ -49,9 +53,10 @@ for (const dir of languageDirections) {
     test(`${dir} full-page report snapshots`, async ({ page }) => {
       await setCookies(page.context(), {
         uiBreakpoint: breakpoint,
-        uiIsFilterDismissed: true,
-        uiDismissedBanners: ["translation-ar"],
       })
+      await dismissBannersUsingCookies(page)
+      await closeFiltersUsingCookies(page)
+
       const IMAGE_ID = "da5cb478-c093-4d62-b721-cda18797e3fb"
       const path = pathWithDir(`/image/${IMAGE_ID}/report`, dir)
 

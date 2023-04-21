@@ -1,6 +1,7 @@
 import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
+
 import { languageDirections } from "~~/test/playwright/utils/navigation"
 
 const headerSelector = ".main-header"

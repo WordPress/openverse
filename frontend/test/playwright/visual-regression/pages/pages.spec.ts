@@ -3,8 +3,10 @@ import { expect, Page, test } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { removeHiddenOverflow } from "~~/test/playwright/utils/page"
 import {
-  pathWithDir,
+  closeFiltersUsingCookies,
+  dismissBannersUsingCookies,
   languageDirections,
+  pathWithDir,
   setCookies,
 } from "~~/test/playwright/utils/navigation"
 
@@ -26,9 +28,10 @@ for (const contentPage of contentPages) {
         test.beforeEach(async ({ context, page }) => {
           await setCookies(context, {
             uiBreakpoint: breakpoint as string,
-            uiIsFilterDismissed: true,
-            uiDismissedBanners: ["translation-ar"],
           })
+          await dismissBannersUsingCookies(page)
+          await closeFiltersUsingCookies(page)
+
           await page.goto(pathWithDir(contentPage, dir))
         })
 
@@ -60,10 +63,8 @@ test.describe("Layout color is set correctly", () => {
 
       await page.getByPlaceholder("البحث عن محتوى").fill("cat")
 
-      await Promise.all([
-        page.waitForNavigation(),
-        page.getByRole("button", { name: "يبحث" }).click(),
-      ])
+      await page.getByRole("button", { name: "يبحث" }).click()
+      await page.waitForURL(/ar\/search/)
 
       await cleanImageResults(page)
 

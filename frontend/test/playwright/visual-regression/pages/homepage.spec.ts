@@ -4,8 +4,8 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {
   dismissTranslationBanner,
-  pathWithDir,
   languageDirections,
+  pathWithDir,
 } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })

@@ -1,6 +1,8 @@
 import { test } from "@playwright/test"
 
 import {
+  closeFiltersUsingCookies,
+  dismissBannersUsingCookies,
   goToSearchTerm,
   languageDirections,
   setCookies,
@@ -20,9 +22,9 @@ for (const searchType of supportedSearchTypes) {
       }) => {
         await setCookies(page.context(), {
           uiBreakpoint: breakpoint as string,
-          uiIsFilterDismissed: true,
-          uiDismissedBanners: ["translation-ar"],
         })
+        await dismissBannersUsingCookies(page)
+        await closeFiltersUsingCookies(page)
         await goToSearchTerm(page, "querywithnoresults", { dir, searchType })
 
         await expectSnapshot(`no-results-${searchType}-${dir}`, page, {
