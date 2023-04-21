@@ -8,6 +8,6 @@ type of change. The documents are generated using the
 [`release-drafter`](https://github.com/release-drafter/release-drafter)
 workflow.
 
-```{include} ../_toc_templates/stack_root.md
-
+```{quicktoctree}
+:type: stack_root
 ```

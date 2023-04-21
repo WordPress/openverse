@@ -1,14 +1,8 @@
 # Jobs
 
-```{toctree}
-:maxdepth: 1
+```{quicktoctree}
+:type: flat
 
 preparation
-frontend
 docker_preparation
-docker_publishing
-catalog
-ingestion_server
-api
-documentation
 ```

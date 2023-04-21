@@ -32,13 +32,14 @@ extensions = [
     "sphinxcontrib.mermaid",
     "link_issues",
     "sphinx_copybutton",
+    "quick_toctree",
 ]
 myst_heading_anchors = 6  # Add anchors to all headers, this is disabled by default.
 
 source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
 
-templates = ["_toc_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".venv"]
+autodoc_member_order = "bysource"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

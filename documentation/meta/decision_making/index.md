@@ -7,6 +7,6 @@ decisions. That is, decisions that are both "good enough for now" and also made
 quickly. In many ways, this process is a refinement on what was already being
 practised, but with clearer expectations about time and feedback expression.
 
-```{include} ../../_toc_templates/flat.md
-
+```{quicktoctree}
+:type: flat
 ```

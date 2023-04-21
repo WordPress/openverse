@@ -1,5 +1,5 @@
 # Ingestion server
 
-```{include} ../_toc_templates/stack_root.md
-
+```{quicktoctree}
+:type: stack_root
 ```
