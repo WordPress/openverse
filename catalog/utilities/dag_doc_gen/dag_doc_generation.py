@@ -14,6 +14,7 @@ The individual DAG documentation section pulls the DAG's `doc_md` blurb and rend
 it within the document.
 """
 import logging
+import re
 from collections import defaultdict
 from pathlib import Path
 from typing import NamedTuple
@@ -90,6 +91,28 @@ def get_provider_workflows() -> dict[str, ProviderWorkflow]:
     return {workflow.dag_id: workflow for workflow in PROVIDER_WORKFLOWS}
 
 
+heading_prog = re.compile(r"^#+", re.MULTILINE)
+
+
+def fix_headings(doc: str) -> str:
+    """
+    Increase all heading levels by 2.
+
+    This is necessary to accommodate the embedded setting of the DAG docs
+    in the final Markdown output.
+    """
+    # Reverse matches so we can work backwards and
+    # not need to worry about our changes to ``doc``
+    # changing the span for the next hit
+    for match in reversed(list(heading_prog.finditer(doc))):
+        start, end = match.span()
+        original_heading = match.string[start:end]
+        new_heading = f"##{original_heading}"
+        doc = f"{doc[:start]}{new_heading}{doc[end:]}"
+
+    return doc
+
+
 def get_dags_info(dags: DagMapping) -> list[DagInfo]:
     """
     Convert the provided DAG ID -> DAG mapping into a list of DagInfo instances.
@@ -99,10 +122,10 @@ def get_dags_info(dags: DagMapping) -> list[DagInfo]:
     provider_workflows = get_provider_workflows()
     for dag_id, dag in dags.items():
         doc = dag.doc_md
-        # Convert the initial H1 header level to H3 if it exists, for better formatting
-        # within the document
-        if doc and doc.strip().startswith("# "):
-            doc = "### " + doc.strip()[2:]
+
+        if doc:
+            doc = fix_headings(doc)
+
         dated = dag.catchup
         # Infer dag type from the first available tag
         type_ = dag.tags[0] if dag.tags else "other"
