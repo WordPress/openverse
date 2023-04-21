@@ -1,20 +1,22 @@
 # Proof-of-functionality
 
 In the CI + CD workflow, the concept of proof-of-functionality is used to
-determine if the build assets of a service are fit for two use cases.
+determine if the build assets of a service are fit for
+[three use cases](./flow.md).
 
-- published to GHCR
-- deployed to the staging environment
+- [Docs publish](./flow.md#documentation)
+- [GHCR publish](./flow.md#docker-publishing)
+- [Staging deploy](./flow.md#deployment)
 
 For different services, different tests are considered to establish
-proof-of-functionality.
+proof-of-functionality for different use-cases.
 
-| Service          | GHCR publish                                      | Staging deploy                                                                                |
-| ---------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Catalog          | [`test-cat`](./jobs/catalog.md#test-cat)          | [`test-cat`](./jobs/catalog.md#test-cat)                                                      |
-| Ingestion server | [`test-ing`](./jobs/ingestion_server.md#test-ing) | [`test-ing`](./jobs/ingestion_server.md#test-ing)                                             |
-| API              | [`test-api`](./jobs/api.md#test-api)              | [`test-api`](./jobs/api.md#test-api)                                                          |
-| Frontend         | [`nuxt-build`](./jobs/frontend.md#nuxt-build)     | [`nuxt-build`](./jobs/frontend.md#nuxt-build) + [`playwright`](./jobs/frontend.md#playwright) |
+| Service          | Docs publish                                      | GHCR publish                                      | Staging deploy                                                                                |
+| ---------------- | ------------------------------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Catalog          | [`test-cat`](./jobs/catalog.md#test-cat)          | [`test-cat`](./jobs/catalog.md#test-cat)          | [`test-cat`](./jobs/catalog.md#test-cat)                                                      |
+| Ingestion server | [`test-ing`](./jobs/ingestion_server.md#test-ing) | [`test-ing`](./jobs/ingestion_server.md#test-ing) | [`test-ing`](./jobs/ingestion_server.md#test-ing)                                             |
+| API              | [`test-api`](./jobs/api.md#test-api)              | [`test-api`](./jobs/api.md#test-api)              | [`test-api`](./jobs/api.md#test-api)                                                          |
+| Frontend         | [`nuxt-build`](./jobs/frontend.md#nuxt-build)     | [`nuxt-build`](./jobs/frontend.md#nuxt-build)     | [`nuxt-build`](./jobs/frontend.md#nuxt-build) + [`playwright`](./jobs/frontend.md#playwright) |
 
 ## Rationales
 

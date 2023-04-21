@@ -41,5 +41,6 @@ terms_of_service
 :caption: External links
 :hidden:
 
-GitHub repo <https://github.com/WordPress/openverse>
+Openverse <https://openverse.org>
+GitHub <https://github.com/WordPress/openverse>
 ```
