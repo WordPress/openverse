@@ -28,9 +28,15 @@ staging database with the latest data from the production database.
 
 <!-- Describe the implementation step necessary for completion. -->
 
-The final product of this plan will be a DAG (scheduled for `@monthly`) which
-will recreate the staging database from the most recent snapshot of the
-production API database. This will be accomplished by:
+There are two primary products of this plan. The first will be a DAG (scheduled
+for `@monthly`) which will recreate the staging database from the most recent
+snapshot of the production API database. The second will be modifications to the
+Django Admin UI notifying maintainers of the next scheduled staging database
+update.
+
+### DAG
+
+This will be accomplished by:
 
 1. Use a new `SKIP_STAGING_DATABASE_RESTORE`
    [Airflow Variable](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/variables.html)
@@ -100,6 +106,22 @@ production API database. This will be accomplished by:
     - `SkipFinalSnapshot` should be set to `True` to avoid creating a final
       snapshot of the database before deletion.
 12. Report the success or failure of the DAG run to Slack.
+
+### Django Admin UI changes
+
+The above section describes the process for performing the staging update. A
+side-effect of this method of updating is that the data in staging will be
+destroyed in favor of the data from the production database. Maintainers can use
+the `SKIP_STAGING_DATABASE_RESTORE` Airflow Variable described above to prevent
+the deletion of the staging database. We will also add a notice to the top of
+Django Admin UI denoting when the next scheduled database recreation will occur.
+This can be done by
+[overriding the base Django Admin template](https://docs.djangoproject.com/en/4.2/howto/overriding-templates/#extending-an-overridden-template)
+and adding a notice to the top of the page. Since the DAG is intended to be run
+`@monthly`, a countdown to the next run can be calculated and displayed for
+maintainers. We will also want to provide instructions or a link to instructions
+for how to disable the staging database recreation using the aforementioned
+Airflow Variable.
 
 ## Dependencies
 
