@@ -18,7 +18,7 @@ import lxml.html as html
 from airflow.models import Variable
 
 from common import constants
-from common.licenses import get_license_info
+from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from common.loader.provider_details import ImageCategory
 from providers.provider_api_scripts.time_delineated_provider_data_ingester import (
@@ -282,7 +282,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         return None
 
     @staticmethod
-    def _get_license_info(image_data):
+    def _get_license_info(image_data) -> LicenseInfo | None:
         license_id = str(image_data.get("license"))
         if license_id not in LICENSE_INFO:
             logger.warning(f"Unknown license ID: {license_id}")

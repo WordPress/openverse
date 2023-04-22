@@ -18,7 +18,7 @@ import logging
 from itertools import chain
 
 from common import constants
-from common.licenses import get_license_info
+from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.time_delineated_provider_data_ingester import (
     TimeDelineatedProviderDataIngester,
@@ -107,9 +107,7 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
     def get_record_data(self, data):
         records = []
 
-        license_url = self.get_license_url(data)
-        if license_url is None:
-            return None
+        license_info = self.get_license_info(data)
 
         foreign_identifier = data.get("id")
         if foreign_identifier is None:
@@ -131,9 +129,11 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
         image_list = data.get("images")
         for img in image_list:
             image_url = self._get_image_url(img)
+            if image_url is None:
+                continue
             records.append(
                 {
-                    "license_info": get_license_info(license_url),
+                    "license_info": license_info,
                     "foreign_identifier": foreign_identifier,
                     "foreign_landing_url": foreign_landing_url,
                     "image_url": image_url,
@@ -146,15 +146,14 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
         return records
 
     @staticmethod
-    def get_license_url(obj):
-        license_url = obj.get("imageRights", {}).get("link")
-        if license_url is None:
+    def get_license_info(obj) -> LicenseInfo | None:
+        if not (license_url := obj.get("imageRights", {}).get("link")):
             return None
 
         # The API returns urls linking to the Finnish version of the license deed,
         # (eg `licenses/by/4.0/deed.fi`), but the license validation logic expects
         # links to the license page (eg `license/by/4.0`).
-        return license_url.removesuffix("deed.fi")
+        return get_license_info(license_url=license_url.removesuffix("deed.fi"))
 
     @staticmethod
     def _get_image_url(img, image_url=API_URL):

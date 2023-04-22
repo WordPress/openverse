@@ -1,17 +1,20 @@
+import json
 import logging
+import os
 from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
 import pytest
 
-from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
-    make_resource_json_func,
-)
 from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
 from common.storage.image import ImageStore
 from providers.provider_api_scripts.finnish_museums import FinnishMuseumsDataIngester
 
+
+RESOURCES = os.path.join(
+    os.path.abspath(os.path.dirname(__file__)), "resources/finnishmuseums"
+)
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
@@ -26,7 +29,10 @@ image_store = ImageStore(provider=prov.FINNISH_DEFAULT_PROVIDER)
 fm.media_stores = {"image": image_store}
 
 
-_get_resource_json = make_resource_json_func("finnishmuseums")
+def _get_resource_json(json_name):
+    with open(os.path.join(RESOURCES, json_name)) as f:
+        resource_json = json.load(f)
+    return resource_json
 
 
 @pytest.mark.parametrize(
@@ -152,16 +158,19 @@ def test_get_image_url():
                     "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
                 }
             },
-            "http://creativecommons.org/licenses/by/4.0/",
+            "https://creativecommons.org/licenses/by/4.0/",
         ),
         (
             {"imageRights": {"link": "http://creativecommons.org/licenses/by/4.0/"}},
-            "http://creativecommons.org/licenses/by/4.0/",
+            "https://creativecommons.org/licenses/by/4.0/",
         ),
     ],
 )
 def test_get_license_url(image_rights_obj, expected_license_url):
-    assert fm.get_license_url(image_rights_obj) == expected_license_url
+    if expected_license_url is None:
+        assert fm.get_license_info(image_rights_obj) is None
+    else:
+        assert fm.get_license_info(image_rights_obj).url == expected_license_url
 
 
 @pytest.mark.parametrize(

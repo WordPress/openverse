@@ -16,7 +16,7 @@ from datetime import datetime, timedelta, timezone
 from airflow.models import Variable
 
 import common
-from common.licenses import get_license_info
+from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
@@ -58,7 +58,7 @@ class EuropeanaRecordBuilder:
     This small class contains the record building functionality and simplifies testing.
     """
 
-    def get_record_data(self, data: dict) -> dict:
+    def get_record_data(self, data: dict) -> dict | None:
         try:
             record = {
                 "foreign_landing_url": self._get_foreign_landing_url(data),
@@ -66,9 +66,7 @@ class EuropeanaRecordBuilder:
                 "foreign_identifier": self._get_foreign_identifier(data),
                 "meta_data": self._get_meta_data_dict(data),
                 "title": self._get_title(data),
-                "license_info": get_license_info(
-                    license_url=self._get_license_url(data)
-                ),
+                "license_info": self._get_license_info(data),
             }
 
             data_providers = set(record["meta_data"]["dataProvider"])
@@ -109,7 +107,7 @@ class EuropeanaRecordBuilder:
         return group[0] if group else None
 
     @raise_if_empty
-    def _get_license_url(self, data: dict) -> str | None:
+    def _get_license_info(self, data: dict) -> LicenseInfo | None:
         license_field = data.get("rights")
         if not license_field:
             return None
@@ -118,7 +116,7 @@ class EuropeanaRecordBuilder:
             logger.warning("More than one license field found")
         for license_ in license_field:
             if "creativecommons" in license_:
-                return license_
+                return get_license_info(license_url=license_)
 
         return None
 

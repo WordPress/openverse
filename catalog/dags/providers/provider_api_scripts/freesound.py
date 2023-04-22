@@ -20,7 +20,7 @@ from requests.exceptions import ConnectionError, SSLError
 from retry import retry
 
 from common import constants
-from common.licenses.licenses import get_license_info
+from common.licenses.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from common.requester import RetriesExceeded
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -132,12 +132,8 @@ class FreesoundDataIngester(ProviderDataIngester):
         return metadata
 
     @staticmethod
-    def _get_license(item):
-        item_license = get_license_info(license_url=item.get("license"))
-
-        if item_license.license is None:
-            return None
-        return item_license
+    def _get_license(item) -> LicenseInfo | None:
+        return get_license_info(license_url=item.get("license"))
 
     @functools.lru_cache(maxsize=1024)
     def _get_set_info(self, set_url):

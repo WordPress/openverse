@@ -94,10 +94,13 @@ class PhylopicDataIngester(ProviderDataIngester):
             return None
 
         data = data.get("_links", {})
-        license_url = data.get("license", {}).get("href")
         img_url = data.get("sourceFile", {}).get("href")
         foreign_url = data.get("self", {}).get("href")
-        if not license_url or not img_url or not foreign_url:
+        if not img_url or not foreign_url:
+            return None
+
+        license_url = data.get("license", {}).get("href")
+        if not (license_info := get_license_info(license_url=license_url)):
             return None
 
         foreign_url = self.host + foreign_url
@@ -107,7 +110,7 @@ class PhylopicDataIngester(ProviderDataIngester):
         width, height = self._get_image_sizes(data)
 
         return {
-            "license_info": get_license_info(license_url=license_url),
+            "license_info": license_info,
             "foreign_identifier": uid,
             "foreign_landing_url": foreign_url,
             "image_url": img_url,

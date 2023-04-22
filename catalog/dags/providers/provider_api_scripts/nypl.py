@@ -125,15 +125,17 @@ class NyplDataIngester(ProviderDataIngester):
                 continue
 
             foreign_landing_url = capture.get("itemLink", {}).get("$")
+            if not foreign_landing_url:
+                continue
             license_url = capture.get("rightsStatementURI", {}).get("$")
-            if not foreign_landing_url or license_url is None:
+            if not (license_info := get_license_info(license_url=license_url)):
                 continue
 
             image_data = {
                 "foreign_identifier": image_id,
                 "foreign_landing_url": foreign_landing_url,
                 "image_url": image_url,
-                "license_info": get_license_info(license_url=license_url),
+                "license_info": license_info,
                 "title": title,
                 "creator": creator,
                 "filetype": filetype,
