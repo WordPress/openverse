@@ -120,6 +120,8 @@ should mirror what existed before (albeit with an updated staging database).
 
 ## Alternatives
 
+### Database cut-over
+
 The plan described above will incur a short (<10 minute) outage of the staging
 API. This is because the database name is changed in the middle of the process.
 If we want to avoid this outage, we could instead create a new database with a
@@ -135,6 +137,46 @@ configuration.
 
 With this in mind, it seems much easier to handle the outage for staging rather
 than try and avoid it.
+
+### Per-table update policy
+
+We could also update the database in a more granular fashion, updating each
+table individually. This would allow us to avoid the outage, would enable
+further granularity with respect to which tables we update when, and could be
+used to reduce the delay between when the production database is updated and
+when the staging database receives the same data. This was discussed heavily
+[in the implementation plan PR](https://github.com/WordPress/openverse/pull/1154),
+and several potential mechanisms for this method of updating were discussed,
+namely:
+
+1. Foreign Data Wrapper to point staging media tables to production
+2. Postgres' "logical replication" feature to keep production and staging media
+   tables in sync
+3. Foreign Data Wrapper to insert all records from production media tables into
+   staging
+
+We opted to defer the persuit of this alternate approach for the time being for
+the following reasons:
+
+- The FDW/replication approach(es) described may have numerous pitfalls,
+  unknowns, or drawbacks which the maintainers are not privy to due to
+  unfamiliarity with the functionality.
+- The proposed alternative solution is essentially describes an ETL framework
+  for production -> staging replication. While such a system could be
+  significantly more flexible, it would by necessity also be more complex, and
+  would warrant its own project process to flesh out.
+- At the time of writing this is the first of
+  [three implementation plans this project requires](https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.html#required-implementation-plans),
+  the other two being "Rapid iteration on ingestion server index configuration"
+  and "Staging Elasticsearch reindex DAGs for both potential index types". Any
+  elongations to the project timeline at this step could also affect the
+  timeline for drafting and implementing those plans as well.
+- The DAG described here does not present any **permanent, lasting, and
+  irreversible** changes; it can be disabled and replaced at any time in favor
+  of a more thorough update approach down the line.
+
+It is intended to be explored further in
+[another project in the future](https://github.com/WordPress/openverse/issues/1874).
 
 ## Accessibility
 
