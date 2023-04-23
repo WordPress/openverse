@@ -62,7 +62,7 @@ class ClevelandDataIngester(ProviderDataIngester):
             "foreign_landing_url": foreign_landing_url,
             "title": data.get("title", None),
             "creator": creator_name,
-            "image_url": image["url"],
+            "url": image["url"],
             "width": self._get_int_value(image, "width"),
             "height": self._get_int_value(image, "height"),
             "filesize": self._get_int_value(image, "filesize"),

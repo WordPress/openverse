@@ -72,7 +72,7 @@ class NappyDataIngester(ProviderDataIngester):
         if not (foreign_landing_url := data.get("foreign_landing_url")):
             return None
 
-        if not (image_url := data.get("url")):
+        if not (url := data.get("url")):
             return None
 
         if not (foreign_identifier := data.get("foreign_identifier")):
@@ -95,7 +95,7 @@ class NappyDataIngester(ProviderDataIngester):
 
         return {
             "foreign_landing_url": foreign_landing_url,
-            "image_url": image_url,
+            "url": url,
             "thumbnail_url": thumbnail_url,
             "license_info": self.license_info,
             "foreign_identifier": foreign_identifier,

@@ -89,21 +89,21 @@ class PhylopicDataIngester(ProviderDataIngester):
         TODO: Adapt `url` and `creator_url` to avoid redirects.
         """
 
-        uid = data.get("uuid")
-        if not uid:
+        if not (foreign_identifier := data.get("uuid")):
             return None
 
-        data = data.get("_links", {})
-        img_url = data.get("sourceFile", {}).get("href")
-        foreign_url = data.get("self", {}).get("href")
-        if not img_url or not foreign_url:
+        links = data.get("_links", {})
+
+        if not (url := links.get("sourceFile", {}).get("href")):
             return None
 
-        license_url = data.get("license", {}).get("href")
+        if not (foreign_url_path := links.get("self", {}).get("href")):
+            return None
+        foreign_landing_url = self.host + foreign_url_path
+
+        license_url = links.get("license", {}).get("href")
         if not (license_info := get_license_info(license_url)):
             return None
-
-        foreign_url = self.host + foreign_url
 
         title = data.get("self", {}).get("title")
         creator, creator_url = self._get_creator(data.get("contributor", {}))
@@ -111,9 +111,9 @@ class PhylopicDataIngester(ProviderDataIngester):
 
         return {
             "license_info": license_info,
-            "foreign_identifier": uid,
-            "foreign_landing_url": foreign_url,
-            "image_url": img_url,
+            "foreign_identifier": foreign_identifier,
+            "foreign_landing_url": foreign_landing_url,
+            "url": url,
             "title": title,
             "creator": creator,
             "creator_url": creator_url,

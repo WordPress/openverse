@@ -222,7 +222,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
             return None
 
         image_size = self._get_largest_image_size(data)
-        if not (image_url := data.get(f"url_{image_size}")):
+        if not (url := data.get(f"url_{image_size}")):
             return None
 
         if not (foreign_identifier := data.get("id")):
@@ -254,7 +254,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
 
         return {
             "foreign_landing_url": foreign_landing_url,
-            "image_url": image_url,
+            "url": url,
             "license_info": license_info,
             "foreign_identifier": foreign_identifier,
             "width": width,

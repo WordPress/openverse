@@ -64,8 +64,7 @@ class SmkDataIngester(ProviderDataIngester):
     def _get_image_url(image_iiif_id: str, image_size=2048):
         # For high quality IIIF-enabled images, restrict the image size to prevent
         # loading very large files.
-        image_url = f"{image_iiif_id}/full/!{image_size},/0/default.jpg"
-        return image_url
+        return f"{image_iiif_id}/full/!{image_size},/0/default.jpg"
 
     @staticmethod
     def _get_title(item: dict) -> str | None:
@@ -118,12 +117,12 @@ class SmkDataIngester(ProviderDataIngester):
             return None
 
         # Legacy images do not have IIIF links.
-        image_url = (
+        url = (
             SmkDataIngester._get_image_url(iiif_id)
             if iiif_id
             else data.get("image_native")
         )
-        if not image_url:
+        if not url:
             return None
 
         thumbnail_url = data.get("image_thumbnail")
@@ -136,7 +135,7 @@ class SmkDataIngester(ProviderDataIngester):
             "foreign_landing_url": foreign_landing_url,
             "license_info": license_info,
             "title": self._get_title(data),
-            "image_url": image_url,
+            "url": url,
             "thumbnail_url": thumbnail_url,
             "height": height,
             "width": width,

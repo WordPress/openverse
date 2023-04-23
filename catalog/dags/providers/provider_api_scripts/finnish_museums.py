@@ -134,7 +134,7 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
                     "license_info": license_info,
                     "foreign_identifier": foreign_identifier,
                     "foreign_landing_url": foreign_landing_url,
-                    "image_url": image_url,
+                    "url": image_url,
                     "title": title,
                     "source": source,
                     "creator": creator,

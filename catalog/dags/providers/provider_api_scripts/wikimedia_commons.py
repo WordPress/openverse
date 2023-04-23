@@ -323,7 +323,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         meta_data = self.create_meta_data_dict(record)
 
         record_data = {
-            "media_url": url,
+            "url": url,
             "foreign_landing_url": foreign_landing_url,
             "foreign_identifier": foreign_identifier,
             "license_info": license_info,
@@ -346,7 +346,6 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
     @staticmethod
     def get_image_record_data(record_data, media_info):
         """Extend record_data with image-specific fields."""
-        record_data["image_url"] = record_data.pop("media_url")
         if record_data["filetype"] == "svg":
             record_data["category"] = "illustration"
 
@@ -358,8 +357,6 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
 
     def get_audio_record_data(self, record_data, media_info):
         """Extend record_data with audio-specific fields."""
-        record_data["audio_url"] = record_data.pop("media_url")
-
         duration = int(float(media_info.get("duration", 0)) * 1000)
         record_data["duration"] = duration
         record_data["category"] = self.extract_audio_category(record_data)

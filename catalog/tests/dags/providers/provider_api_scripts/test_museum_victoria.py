@@ -77,7 +77,7 @@ def test_get_record_data():
 
     expected_image_data = {
         "foreign_identifier": "media/488013",
-        "image_url": "https://collections.museumsvictoria.com.au/content/media/13/488013-large.jpg",
+        "url": "https://collections.museumsvictoria.com.au/content/media/13/488013-large.jpg",
         "height": 1753,
         "width": 3000,
         "creator": "",
@@ -138,7 +138,7 @@ def test_get_images_success():
     expected_image_data = {
         "creator": "Photographer: Deb Tout-Smith",
         "foreign_identifier": "media/329745",
-        "image_url": "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg",
+        "url": "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg",
         "license_info": get_license_info(
             license_url="https://creativecommons.org/licenses/by/4.0"
         ),

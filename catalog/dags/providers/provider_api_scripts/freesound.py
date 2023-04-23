@@ -194,7 +194,7 @@ class FreesoundDataIngester(ProviderDataIngester):
             return None, None
 
         main_file = {
-            "audio_url": preview_url,
+            "url": preview_url,
             "filetype": self.preferred_preview.split("-")[-1],
             "bit_rate": FreesoundDataIngester.preview_bitrates[self.preferred_preview],
             "filesize": int(filesize),
@@ -227,7 +227,7 @@ class FreesoundDataIngester(ProviderDataIngester):
         if not (item_license := get_license_info(media_data.get("license"))):
             return None
 
-        # We use the mp3-hq preview url as `audio_url` as the main url
+        # We use the mp3-hq preview url as `url` as the main url
         # for playing on the frontend,
         # and the actual uploaded file as an alt_file that is available
         # for download (and requires a user to be authenticated to download)
@@ -258,7 +258,7 @@ class FreesoundDataIngester(ProviderDataIngester):
             "audio_set": audio_set,
             "set_url": set_url,
             "alt_files": alt_files,
-            # audio_url, filetype, bit_rate
+            # url, filetype, bit_rate
             **main_audio,
         }
 

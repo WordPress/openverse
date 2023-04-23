@@ -172,7 +172,7 @@ def test_get_record_data_success(object_data):
     expected_image_data = {
         "foreign_identifier": "i4453",
         "foreign_landing_url": "https://collection.sciencemuseumgroup.org.uk/objects/co56202/telescope-by-galileo-replica-telescope-galilean-telescope-refracting-replica",
-        "image_url": "https://coimages.sciencemuseumgroup.org.uk/images/4/453/large_1923_0668__0002_.jpg",
+        "url": "https://coimages.sciencemuseumgroup.org.uk/images/4/453/large_1923_0668__0002_.jpg",
         "height": 1151,
         "width": 1536,
         "filetype": "jpeg",

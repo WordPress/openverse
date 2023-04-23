@@ -133,7 +133,7 @@ def test_get_record_data_success():
         "filetype": "jpeg",
         "foreign_identifier": "56738462",
         "foreign_landing_url": "http://digitalcollections.nypl.org/items/0cabe3d0-3d50-0134-a8e0-00505686a51c",
-        "image_url": "http://images.nypl.org/index.php?id=56738462&t=g&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+        "url": "http://images.nypl.org/index.php?id=56738462&t=g&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
         "meta_data": {
             "date_issued": "1981",
             "genre": "Maps",

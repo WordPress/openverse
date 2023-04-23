@@ -44,7 +44,7 @@ class AudioStore(MediaStore):
     def add_item(
         self,
         foreign_landing_url: str,
-        audio_url: str,
+        url: str,
         license_info: LicenseInfo,
         foreign_identifier: str,
         thumbnail_url: str | None = None,
@@ -79,7 +79,7 @@ class AudioStore(MediaStore):
 
         foreign_landing_url:  URL of page where the audio lives on the
                               source website.
-        audio_url:            Direct link to the audio file
+        url:                  Direct link to the audio file
         license_info:         LicenseInfo object that has
                               - the URL of the license for the audio,
                               - string representation of the license,
@@ -154,7 +154,7 @@ class AudioStore(MediaStore):
 
         audio_data = {
             "foreign_landing_url": foreign_landing_url,
-            "audio_url": audio_url,
+            "url": url,
             "license_info": license_info,
             "thumbnail_url": thumbnail_url,
             "filesize": filesize,
@@ -188,9 +188,6 @@ class AudioStore(MediaStore):
         audio_metadata = self.clean_media_metadata(**kwargs)
         if audio_metadata is None:
             return None
-        # Convert the `audio_url` key used in AudioStore, TSV and
-        # provider API scripts into `url` key used in db
-        audio_metadata["url"] = audio_metadata.pop("audio_url")
         # Validate that duration does not exceed Postgres int maximum
         audio_metadata["duration"] = self._validate_integer(
             audio_metadata.get("duration")
