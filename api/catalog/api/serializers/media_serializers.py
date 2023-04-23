@@ -6,6 +6,8 @@ from django.core.validators import MaxValueValidator
 from rest_framework import serializers
 from rest_framework.exceptions import NotAuthenticated
 
+from drf_spectacular.utils import extend_schema_serializer
+
 from catalog.api.constants.licenses import LICENSE_GROUPS
 from catalog.api.constants.sorting import (
     DESCENDING,
@@ -27,6 +29,15 @@ from catalog.api.utils.url import add_protocol
 #######################
 
 
+@extend_schema_serializer(
+    # Hide unstable fields from documentation, also see `field_names` below.
+    exclude_fields=[
+        "unstable__sort_by",
+        "unstable__sort_dir",
+        "unstable__authority",
+        "unstable__authority_boost",
+    ],
+)
 class MediaSearchRequestSerializer(serializers.Serializer):
     """This serializer parses and validates search query string parameters."""
 
@@ -48,10 +59,11 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         "extension",
         "mature",
         "qa",
-        # "unstable__sort_by",  # excluding unstable fields
-        # "unstable__sort_dir",  # excluding unstable fields
-        # "unstable__authority",  # excluding unstable fields
-        # "unstable__authority_boost",  # excluding unstable fields
+        # Excluded unstable fields, also see `exclude_fields` above.
+        # "unstable__sort_by",
+        # "unstable__sort_dir",
+        # "unstable__authority",
+        # "unstable__authority_boost",
         "page_size",
         "page",
     ]
