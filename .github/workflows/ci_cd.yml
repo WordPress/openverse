@@ -830,17 +830,20 @@ jobs:
       - get-image-tag
       - publish-images
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Dispatch workflow
-        run: |
-          gh workflow run \
-            -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
-            -f actor=${{ github.actor }} \
-            "Deployment - staging-nuxt"
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Deploy staging frontend
+        uses: felixp8/dispatch-and-wait@v0.1.0
+        with:
+          owner: WordPress
+          repo: openverse-infrastructure
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event_type: deploy_staging_nuxt
+          client_payload: |
+            {
+              "actor": "${{ github.actor }}",
+              "tag": "${{ needs.get-image-tag.outputs.image_tag }}"
+            }
+          wait_time: 60 # check every minute
+          max_time: 1800 # allow up to 30 minutes for a deployment
 
   deploy-api:
     name: Deploy staging API
@@ -855,17 +858,20 @@ jobs:
       - get-image-tag
       - publish-images
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Dispatch workflow
-        run: |
-          gh workflow run \
-            -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
-            -f actor=${{ github.actor }} \
-            "Deployment - staging-api"
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Deploy staging API
+        uses: felixp8/dispatch-and-wait@v0.1.0
+        with:
+          owner: WordPress
+          repo: openverse-infrastructure
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event_type: deploy_staging_api
+          client_payload: |
+            {
+              "actor": "${{ github.actor }}",
+              "tag": "${{ needs.get-image-tag.outputs.image_tag }}"
+            }
+          wait_time: 60 # check every minute
+          max_time: 1800 # allow up to 30 minutes for a deployment
 
   ################
   # Notification #
