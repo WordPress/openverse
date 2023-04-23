@@ -160,6 +160,82 @@ def test_get_record_data_failure():
     assert images is None
 
 
+def test_get_record_data_missing_uuid_returns_none():
+    _get_resource_json("response_search_success.json")
+
+    result = {"uuid": ""}
+    images = nypl.get_record_data(result)
+    assert images is None
+
+
+def test_get_record_data_missing_item_details_returns_none():
+    _get_resource_json("response_search_success.json")
+    result = {"nyplAPI": {"response": {}}}
+
+    item_response = None
+    with patch.object(nypl, "get_response_json", return_value=item_response):
+        images = nypl.get_record_data(result)
+    assert images is None
+
+
+def test_get_record_data_missing_captures_returns_none():
+    _get_resource_json("response_search_success.json")
+    result = {"nyplAPI": {"response": {"sibling_captures": {"capture": []}}}}
+
+    item_response = None
+    with patch.object(nypl, "get_response_json", return_value=item_response):
+        images = nypl.get_record_data(result)
+    assert images is None
+
+
+@pytest.mark.parametrize(
+    "falsy_property, api_param",
+    [
+        pytest.param("foreign_identifier", "imageID", id="foreign_identifier-imageID"),
+        pytest.param(
+            "foreign_landing_url", "itemLink", id="foreign_landing_url-itemLink"
+        ),
+        pytest.param(
+            "license_info", "rightsStatementURI", id="license_info-rightsStatementURI"
+        ),
+    ],
+)
+def test_get_record_data_missing_required_params_returns_empty_list(
+    falsy_property, api_param
+):
+    search_response = _get_resource_json("response_search_success.json")
+    result = search_response["nyplAPI"]["response"]["result"][0]
+
+    item_response = _get_resource_json("response_itemdetails_success.json")
+    test_capture = item_response["nyplAPI"]["response"]["sibling_captures"]["capture"][
+        0
+    ]
+    test_capture[api_param]["$"] = ""
+    item_response["nyplAPI"]["response"]["sibling_captures"]["capture"] = [test_capture]
+
+    with patch.object(nypl, "get_response_json", return_value=item_response):
+        images = nypl.get_record_data(result)
+    assert images == []
+
+
+def test_get_record_data_missing_image_urls_returns_empty_dictionary(
+    falsy_property, api_param
+):
+    search_response = _get_resource_json("response_search_success.json")
+    result = search_response["nyplAPI"]["response"]["result"][0]
+
+    item_response = _get_resource_json("response_itemdetails_success.json")
+    test_capture = item_response["nyplAPI"]["response"]["sibling_captures"]["capture"][
+        0
+    ]
+    test_capture["imageLinks"]["imageLink"] = []
+    item_response["nyplAPI"]["response"]["sibling_captures"]["capture"] = [test_capture]
+
+    with patch.object(nypl, "get_response_json", return_value=item_response):
+        images = nypl.get_record_data(result)
+    assert images == []
+
+
 @pytest.mark.parametrize(
     "dict_or_list, keys, expected",
     [

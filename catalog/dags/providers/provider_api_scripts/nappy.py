@@ -68,14 +68,16 @@ class NappyDataIngester(ProviderDataIngester):
                 multiplier = FILETYPE_MULTIPLIERS[stripped[-2:]]
                 return round(units * multiplier)
 
-    def get_record_data(self, data: dict) -> dict | list[dict] | None:
-        if (foreign_landing_url := data.get("foreign_landing_url")) is None:
+    def get_record_data(self, data: dict) -> dict | None:
+        if not (foreign_landing_url := data.get("foreign_landing_url")):
             return None
 
-        if (image_url := data.get("url")) is None:
+        if not (image_url := data.get("url")):
             return None
 
-        foreign_identifier = data.get("foreign_identifier")
+        if not (foreign_identifier := data.get("foreign_identifier")):
+            return None
+
         thumbnail_url = data.get("url") + "?auto=format&w=600&q=75"
         filesize = self._convert_filesize(data.get("filesize"))
         filetype = data.get("filetype")

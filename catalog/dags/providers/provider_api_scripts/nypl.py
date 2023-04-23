@@ -85,54 +85,53 @@ class NyplDataIngester(ProviderDataIngester):
         return None
 
     def get_record_data(self, data):
-        uuid = data.get("uuid")
+        if not (uuid := data.get("uuid")):
+            return None
 
         item_json = (
             self.get_response_json({}, endpoint=self.metadata_endpoint + uuid) or {}
         )
-        item_details = item_json.get("nyplAPI", {}).get("response")
-        if not item_details:
+        if not (item_details := item_json.get("nyplAPI", {}).get("response")):
             return None
-        mods = item_details.get("mods")
+        mods = item_details.get("mods", {})
 
-        title_info = mods.get("titleInfo")
-        if isinstance(title_info, list) and title_info:
-            title_info = title_info[0]
-        title = "" if title_info is None else title_info.get("title", {}).get("$")
+        title = NyplDataIngester._get_title(mods)
 
-        name_properties = mods.get("name")
-        creator = self._get_creators(name_properties) if name_properties else None
+        creator = (
+            NyplDataIngester._get_creators(name_properties)
+            if (name_properties := mods.get("name"))
+            else None
+        )
 
-        metadata = self._get_metadata(mods)
+        metadata = NyplDataIngester._get_metadata(mods)
         category = (
             ImageCategory.PHOTOGRAPH if metadata.get("genre") == "Photographs" else None
         )
 
-        captures = item_details.get("sibling_captures", {}).get("capture")
-        if not captures:
+        if not (captures := NyplDataIngester._get_captures(item_details)):
             return None
-        if not isinstance(captures, list):
-            captures = [captures]
+
         images = []
         for capture in captures:
-            image_id = capture.get("imageID", {}).get("$")
-            if image_id is None:
+            if not (foreign_identifier := capture.get("imageID", {}).get("$")):
                 continue
 
             image_link = capture.get("imageLinks", {}).get("imageLink", [])
-            image_url, filetype = self._get_image_data(image_link)
+            image_url, filetype = NyplDataIngester._get_image_data(image_link)
             if not image_url:
                 continue
 
             foreign_landing_url = capture.get("itemLink", {}).get("$")
             if not foreign_landing_url:
                 continue
+            if not (foreign_landing_url := capture.get("itemLink", {}).get("$")):
+                continue
             license_url = capture.get("rightsStatementURI", {}).get("$")
             if not (license_info := get_license_info(license_url)):
                 continue
 
             image_data = {
-                "foreign_identifier": image_id,
+                "foreign_identifier": foreign_identifier,
                 "foreign_landing_url": foreign_landing_url,
                 "image_url": image_url,
                 "license_info": license_info,
@@ -144,6 +143,20 @@ class NyplDataIngester(ProviderDataIngester):
             }
             images.append(image_data)
         return images
+
+    @staticmethod
+    def _get_title(mods: dict) -> str:
+        title_info = mods.get("titleInfo")
+        if isinstance(title_info, list) and title_info:
+            title_info = title_info[0]
+        return "" if title_info is None else title_info.get("title", {}).get("$")
+
+    @staticmethod
+    def _get_captures(item_details: dict) -> list[dict]:
+        captures = item_details.get("sibling_captures", {}).get("capture")
+        if captures and not isinstance(captures, list):
+            captures = [captures]
+        return captures
 
     @staticmethod
     def _get_filetype(description: str):
