@@ -393,7 +393,7 @@ jobs:
       matrix:
         recipe:
           - "api/dj check"
-          - "api/dj validateopenapischema"
+          - "api/dj spectacular --format openapi-json --validate --file openapi.json"
           - "api/dj makemigrations --check --noinput --merge"
           - "api/doc-test"
 
@@ -420,12 +420,12 @@ jobs:
         env:
           DC_USER: root
 
-      - name: Upload schema on failure
-        if: failure() && contains(matrix.recipe, 'validateopenapischema')
+      - name: Upload schema
+        if: contains(matrix.recipe, 'spectacular')
         uses: actions/upload-artifact@v3
         with:
-          name: openverse-api-openapi-schema.yaml
-          path: ./api/openapi.yaml
+          name: openapi.json
+          path: ./api/openapi.json
 
   # This job runs when `django-checks` doesn't and always passes, thus allowing
   # PRs to meet the required checks criteria and be merged.

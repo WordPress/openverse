@@ -36,6 +36,12 @@ runs:
       run: |
         just frontend/run tcv:build
 
+    - name: Build OpenAPI ReDoc
+      uses: actions/download-artifact@v3
+      with:
+        name: openapi.json
+        path: ${{ env.github_workspace }}/api/api_docs
+
     # Storybook will be available at `/storybook`
     # Tailwind will be available at `/tailwind`
     - name: Merge all docs
@@ -44,3 +50,4 @@ runs:
         mv documentation/_build /tmp/docs
         mv frontend/storybook-static /tmp/docs/storybook
         mv frontend/.tcv-export /tmp/docs/tailwind
+        mv api/api_docs /tmp/docs/api_docs

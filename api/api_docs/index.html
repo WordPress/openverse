@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Openvere API</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Recommended fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/svg"
+      href="https://raw.githubusercontent.com/WordPress/openverse/master/brand/icon.svg"
+    />
+
+    <style>
+      /* Redoc doesn't change outer page styles. */
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="redoc-container"></div>
+    <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+    <script>
+      const redocSettings = {
+        theme: {
+          logo: {
+            gutter: "20px",
+          },
+          typography: {
+            headings: {
+              fontFamily: "inherit",
+              fontWeight: 700,
+            },
+          },
+        },
+      }
+      Redoc.init(
+        "./openapi.json",
+        redocSettings,
+        document.getElementById("redoc-container")
+      )
+    </script>
+  </body>
+</html>
