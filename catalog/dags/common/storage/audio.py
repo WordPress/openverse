@@ -46,10 +46,10 @@ class AudioStore(MediaStore):
         foreign_landing_url: str,
         audio_url: str,
         license_info: LicenseInfo,
+        foreign_identifier: str,
         thumbnail_url: str | None = None,
         filesize: int | None = None,
         filetype: str | None = None,
-        foreign_identifier: str | None = None,
         creator: str | None = None,
         creator_url: str | None = None,
         title: str | None = None,
@@ -72,7 +72,8 @@ class AudioStore(MediaStore):
         **kwargs,
     ):
         """
-        Add information for a single audio to the AudioStore.
+        Add information for a single audio to the AudioStore. Audio data
+        without the required parameters will be discarded.
 
         Required Arguments:
 
@@ -93,7 +94,8 @@ class AudioStore(MediaStore):
         In the case of the `publicdomain` license, which has no version,
         one should pass `common.license.constants.NO_VERSION` here.
 
-        Audio data without the required parameters will be discarded.
+        foreign_identifier:  Unique identifier for the audio on the
+                             source site.
 
         Optional Arguments:
 
@@ -101,8 +103,6 @@ class AudioStore(MediaStore):
                              the audio.
         filesize:            Size of the main file in bytes
         filetype:            The filetype of the main file, eg. 'mp3', 'ogg'.
-        foreign_identifier:  Unique identifier for the audio on the
-                             source site.
         creator:             The creator of the audio.
         creator_url:         The user page, or home page of the creator.
         title:               Title of the audio.
