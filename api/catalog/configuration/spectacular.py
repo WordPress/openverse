@@ -22,8 +22,7 @@ SPECTACULAR_SETTINGS = {
     },
     "LICENSE": {
         "name": "MIT License",
-        "identifier": "MIT",
-        "url": "https://spdx.org/licenses/MIT.html",
+        "url": "https://github.com/WordPress/openverse/blob/main/LICENSE",
     },
     "VERSION": config("SEMANTIC_VERSION", default="Version not specified"),
     "EXTERNAL_DOCS": {
