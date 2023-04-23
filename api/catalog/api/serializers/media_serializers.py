@@ -353,28 +353,6 @@ class TagSerializer(serializers.Serializer):
     )
 
 
-class MediaSearchSerializer(serializers.Serializer):
-    """
-    This serializer serializes the full media search response.
-
-    The class should be inherited by all individual media serializers.
-    """
-
-    result_count = serializers.IntegerField(
-        help_text="The total number of items returned by search result.",
-    )
-    page_count = serializers.IntegerField(
-        help_text="The total number of pages returned by search result.",
-    )
-    page_size = serializers.IntegerField(
-        help_text="The number of items per page.",
-    )
-    page = serializers.IntegerField(
-        help_text="The current page number returned in the response.",
-    )
-    # ``results`` field added by child serializers
-
-
 class MediaSerializer(BaseModelSerializer):
     """
     This serializer serializes a single media file.

@@ -6,14 +6,12 @@ from catalog.api.constants.field_values import (
     IMAGE_CATEGORIES,
     IMAGE_SIZES,
 )
-from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import Image, ImageReport
 from catalog.api.serializers.base import BaseModelSerializer
 from catalog.api.serializers.fields import EnumCharField
 from catalog.api.serializers.media_serializers import (
     MediaReportRequestSerializer,
     MediaSearchRequestSerializer,
-    MediaSearchSerializer,
     MediaSerializer,
     get_hyperlinks_serializer,
     get_search_request_source_serializer,
@@ -103,23 +101,6 @@ class ImageSerializer(ImageHyperlinksSerializer, MediaSerializer):
         """
 
     needs_db = True  # for the 'height' and 'width' fields
-
-
-class ImageSearchSerializer(MediaSearchSerializer):
-    """
-    The full image search response.
-
-    This serializer is purely representational and not actually used to
-    serialize the response.
-    """
-
-    results = ImageSerializer(
-        many=True,
-        help_text=(
-            "An array of images and their details such as "
-            f"{fields_to_md(ImageSerializer.Meta.fields)}."
-        ),
-    )
 
 
 ##########################
