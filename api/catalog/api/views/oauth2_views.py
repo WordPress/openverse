@@ -179,7 +179,7 @@ If you believe you received this message in error, please disregard it.
 class VerifyEmail(APIView):
     """Enable a user's OAuth2 key upon visiting the emailed verification link."""
 
-    swagger_schema = None
+    schema = None  # Hide this view from the OpenAPI schema.
 
     def get(self, request, code, format=None):
         try:
