@@ -40,7 +40,7 @@ runs:
       uses: actions/download-artifact@v3
       with:
         name: openapi.json
-        path: ${{ env.github_workspace }}/api/api_docs
+        path: ${{ github.workspace }}/api/api_docs
 
     # Storybook will be available at `/storybook`
     # Tailwind will be available at `/tailwind`
