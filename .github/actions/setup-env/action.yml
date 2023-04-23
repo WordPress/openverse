@@ -35,7 +35,7 @@ runs:
         # Ensure that it matches `python_version` field in the following files:
         # - `automations/python/Pipfile`
         # - `dead_links/Pipfile`
-        python-version: "3.10"
+        python-version: "3.11"
         cache: pipenv
         cache-dependency-path: |
           **/Pipfile.lock

@@ -57,4 +57,4 @@ aiohttp = "~=3.8"
 drf-spectacular = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"
