@@ -5,6 +5,7 @@ from catalog.api.examples.audio_requests import (
     audio_search_curl,
     audio_search_list_curl,
     audio_stats_curl,
+    audio_waveform_curl,
 )
 from catalog.api.examples.audio_responses import (
     audio_complain_201_example,
@@ -15,6 +16,8 @@ from catalog.api.examples.audio_responses import (
     audio_search_200_example,
     audio_search_400_example,
     audio_stats_200_example,
+    audio_waveform_200_example,
+    audio_waveform_404_example,
 )
 from catalog.api.examples.image_requests import (
     image_complain_curl,
@@ -50,6 +53,7 @@ audio_mappings = {
     audio_stats_curl: audio_stats_200_example,
     audio_detail_curl: audio_detail_200_example,
     audio_complain_curl: audio_complain_201_example,
+    audio_waveform_curl: audio_waveform_200_example,
 }
 image_mappings = {
     image_search_curl: image_search_200_example,
