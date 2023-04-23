@@ -1,19 +1,19 @@
 from django.conf import settings
-from django.utils.decorators import method_decorator
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException, NotFound
 from rest_framework.response import Response
 
-from drf_yasg.utils import swagger_auto_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from catalog.api.constants.media_types import AUDIO_TYPE
 from catalog.api.docs.audio_docs import (
-    AudioComplain,
-    AudioDetail,
-    AudioRelated,
-    AudioSearch,
-    AudioStats,
-    AudioThumbnail,
+    detail,
+    related,
+    report,
+    search,
+    stats,
+    thumbnail,
+    waveform,
 )
 from catalog.api.models import Audio
 from catalog.api.serializers.audio_serializers import (
@@ -30,13 +30,13 @@ from catalog.api.utils.throttle import (
 from catalog.api.views.media_views import MediaViewSet
 
 
-@method_decorator(swagger_auto_schema(**AudioSearch.swagger_setup), "list")
-@method_decorator(swagger_auto_schema(**AudioStats.swagger_setup), "stats")
-@method_decorator(swagger_auto_schema(**AudioDetail.swagger_setup), "retrieve")
-@method_decorator(swagger_auto_schema(**AudioRelated.swagger_setup), "related")
-@method_decorator(swagger_auto_schema(**AudioComplain.swagger_setup), "report")
-@method_decorator(swagger_auto_schema(**AudioThumbnail.swagger_setup), "thumbnail")
-@method_decorator(swagger_auto_schema(auto_schema=None), "waveform")
+@extend_schema(tags=["audio"])
+@extend_schema_view(
+    list=search,
+    stats=stats,
+    retrieve=detail,
+    related=related,
+)
 class AudioViewSet(MediaViewSet):
     """Viewset for all endpoints pertaining to audio."""
 
@@ -52,6 +52,7 @@ class AudioViewSet(MediaViewSet):
 
     # Extra actions
 
+    @thumbnail
     @action(
         detail=True,
         url_path="thumb",
@@ -60,6 +61,11 @@ class AudioViewSet(MediaViewSet):
         throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
     )
     def thumbnail(self, request, *_, **__):
+        """
+        Retrieve the scaled down and compressed thumbnail of the artwork of an
+        audio track or its audio set.
+        """
+
         audio = self.get_object()
 
         image_url = None
@@ -72,12 +78,21 @@ class AudioViewSet(MediaViewSet):
 
         return super().thumbnail(image_url, request)
 
+    @waveform
     @action(
         detail=True,
         serializer_class=AudioWaveformSerializer,
         throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
     )
     def waveform(self, *_, **__):
+        """
+        Get the waveform peaks for an audio track.
+
+        The peaks are provided as a list of numbers, each of these numbers being
+        a fraction between 0 and 1. The list contains approximately 1000 numbers,
+        although it can be slightly higher or lower, depending on the track's length.
+        """
+
         audio = self.get_object()
 
         try:
@@ -88,10 +103,18 @@ class AudioViewSet(MediaViewSet):
         except Exception as e:
             raise APIException(getattr(e, "message", str(e)))
 
+    @report
     @action(
         detail=True,
         methods=["post"],
         serializer_class=AudioReportRequestSerializer,
     )
     def report(self, *args, **kwargs):
+        """
+        Report an issue about a specified audio track to Openverse.
+
+        By using this endpoint, you can report an audio track if it infringes
+        copyright, contains mature or sensitive content or some other reason.
+        """
+
         return super().report(*args, **kwargs)

@@ -4,26 +4,26 @@ import struct
 from django.conf import settings
 from django.http.response import FileResponse, HttpResponse
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
 import piexif
 import requests
-from drf_yasg.utils import swagger_auto_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from PIL import Image as PILImage
 
 from catalog.api.constants.media_types import IMAGE_TYPE
 from catalog.api.docs.image_docs import (
-    ImageComplain,
-    ImageDetail,
-    ImageOembed,
-    ImageRelated,
-    ImageSearch,
-    ImageStats,
-    ImageThumbnail,
+    detail,
+    oembed,
+    related,
+    report,
+    search,
+    stats,
+    thumbnail,
 )
+from catalog.api.docs.image_docs import watermark as watermark_doc
 from catalog.api.models import Image
 from catalog.api.serializers.image_serializers import (
     ImageReportRequestSerializer,
@@ -42,14 +42,13 @@ from catalog.api.utils.watermark import watermark
 from catalog.api.views.media_views import MediaViewSet
 
 
-@method_decorator(swagger_auto_schema(**ImageSearch.swagger_setup), "list")
-@method_decorator(swagger_auto_schema(**ImageStats.swagger_setup), "stats")
-@method_decorator(swagger_auto_schema(**ImageDetail.swagger_setup), "retrieve")
-@method_decorator(swagger_auto_schema(**ImageRelated.swagger_setup), "related")
-@method_decorator(swagger_auto_schema(**ImageComplain.swagger_setup), "report")
-@method_decorator(swagger_auto_schema(**ImageOembed.swagger_setup), "oembed")
-@method_decorator(swagger_auto_schema(**ImageThumbnail.swagger_setup), "thumbnail")
-@method_decorator(swagger_auto_schema(auto_schema=None), "watermark")
+@extend_schema(tags=["images"])
+@extend_schema_view(
+    list=search,
+    stats=stats,
+    retrieve=detail,
+    related=related,
+)
 class ImageViewSet(MediaViewSet):
     """Viewset for all endpoints pertaining to images."""
 
@@ -69,6 +68,7 @@ class ImageViewSet(MediaViewSet):
 
     # Extra actions
 
+    @oembed
     @action(
         detail=False,
         url_path="oembed",
@@ -76,6 +76,14 @@ class ImageViewSet(MediaViewSet):
         serializer_class=OembedSerializer,
     )
     def oembed(self, request, *_, **__):
+        """
+        Retrieve the structured data for a specified image URL as per the
+        [oEmbed spec](https://oembed.com/).
+
+        This info can be used to embed the image on the consumer's website. Only
+        JSON format is supported.
+        """
+
         params = OembedRequestSerializer(data=request.query_params)
         params.is_valid(raise_exception=True)
 
@@ -97,6 +105,7 @@ class ImageViewSet(MediaViewSet):
         serializer = self.get_serializer(image, context=context)
         return Response(data=serializer.data)
 
+    @thumbnail
     @action(
         detail=True,
         url_path="thumb",
@@ -105,6 +114,8 @@ class ImageViewSet(MediaViewSet):
         throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
     )
     def thumbnail(self, request, *_, **__):
+        """Retrieve the scaled down and compressed thumbnail of the image."""
+
         image = self.get_object()
         image_url = image.url
         # Hotfix to use thumbnails for SMK images
@@ -114,8 +125,17 @@ class ImageViewSet(MediaViewSet):
 
         return super().thumbnail(image_url, request)
 
+    @watermark_doc
     @action(detail=True, url_path="watermark", url_name="watermark")
-    def watermark(self, request, *_, **__):
+    def watermark(self, request, *_, **__):  # noqa: D401
+        """
+        This endpoint is deprecated.
+
+        ---
+
+        🚧 **TODO:** Document this.
+        """
+
         if not settings.WATERMARK_ENABLED:
             raise NotFound("The watermark feature is currently disabled.")
 
@@ -174,12 +194,20 @@ class ImageViewSet(MediaViewSet):
             self._save_wrapper(watermarked, exif_bytes, response)
             return response
 
+    @report
     @action(
         detail=True,
         methods=["post"],
         serializer_class=ImageReportRequestSerializer,
     )
     def report(self, *args, **kwargs):
+        """
+        Report an issue about a specified image to Openverse.
+
+        By using this endpoint, you can report an image if it infringes
+        copyright, contains mature or sensitive content or some other reason.
+        """
+
         return super().report(*args, **kwargs)
 
     # Helper functions

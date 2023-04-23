@@ -11,15 +11,12 @@ from catalog.api.models import ContentProvider
 from catalog.api.serializers.provider_serializers import ProviderSerializer
 from catalog.api.utils import photon
 from catalog.api.utils.pagination import StandardPagination
-from catalog.custom_auto_schema import CustomAutoSchema
 
 
 parent_logger = logging.getLogger(__name__)
 
 
 class MediaViewSet(ReadOnlyModelViewSet):
-    swagger_schema = CustomAutoSchema
-
     lookup_field = "identifier"
     # TODO: https://github.com/encode/django-rest-framework/pull/6789
     lookup_value_regex = (
