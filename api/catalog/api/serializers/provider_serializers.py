@@ -22,7 +22,8 @@ class ProviderSerializer(serializers.ModelSerializer):
         help_text="The URL of the source, e.g. https://www.flickr.com",
     )
     logo_url = serializers.ReadOnlyField(
-        default=None, help_text="Deprecated and unused. Always `null`."
+        default=None,
+        help_text="The URL to a logo for the source.",
     )
     media_count = serializers.SerializerMethodField(
         help_text="The number of media items indexed from the source.",

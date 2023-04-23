@@ -128,10 +128,10 @@ class ImageSearchSerializer(MediaSearchSerializer):
 
 
 class OembedRequestSerializer(serializers.Serializer):
-    """Parse and validate Oembed parameters."""
+    """Parse and validate oEmbed parameters."""
 
     url = serializers.CharField(
-        help_text="The link to an image.",
+        help_text="The link to an image present in Openverse.",
     )
 
     @staticmethod

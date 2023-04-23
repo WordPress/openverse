@@ -13,7 +13,10 @@ class InputErrorSerializer(serializers.Serializer):
 
     detail = serializers.DictField(
         help_text="Mapping of field names with errors from to that field.",
-        child=serializers.ListField(child=serializers.CharField()),
+        child=serializers.ListField(
+            help_text="List of errors for the field.",
+            child=serializers.CharField(),
+        ),
     )
 
 

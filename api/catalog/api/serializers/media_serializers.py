@@ -470,6 +470,11 @@ class MediaSerializer(BaseModelSerializer):
 
 
 def get_search_request_source_serializer(media_type):
+    media_path = {
+        "image": "images",
+        "audio": "audio",
+    }[media_type]
+
     class MediaSearchRequestSourceSerializer(serializers.Serializer):
         """Parses and validates the source/not_source fields from the query params."""
 
@@ -483,8 +488,9 @@ def get_search_request_source_serializer(media_type):
         """
 
         _field_attrs = {
-            "help_text": make_comma_separated_help_text(
-                search_controller.get_sources(media_type).keys(), "data sources"
+            "help_text": (
+                "A comma separated list of data sources; for valid sources see "
+                f"https://api.openverse.engineering/v1/{media_path}/stats/."
             ),
             "required": False,
         }
