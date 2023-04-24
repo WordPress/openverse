@@ -1,12 +1,18 @@
+# Automatically build image using Node.js version specified in `package.json`.
+ARG FRONTEND_NODE_VERSION
+
 ###################
 # Node.js builder #
 ###################
 
-FROM node:16-alpine as builder
+FROM node:${FRONTEND_NODE_VERSION}-alpine as builder
+
+# Automatically use the right version of pnpm.
+ARG FRONTEND_PNPM_VERSION
 
 # Install system packages needed to build on macOS
 RUN apk add --no-cache --virtual .gyp python3 make g++ \
-  && npm install -g pnpm@8.2.0
+  && npm install -g pnpm@${FRONTEND_PNPM_VERSION}
 
 USER node
 

@@ -10,6 +10,21 @@ NO_COLOR := "\\033[0m"
     just --list --unsorted
 
 
+###########
+# Version #
+###########
+
+export FRONTEND_NODE_VERSION := `grep "volta" -A 1 ../package.json | tail -n 1 | awk -F'[:"]' '{print $5}' | cut -d. -f1`
+export FRONTEND_PNPM_VERSION := `grep 'packageManager' ../package.json | awk -F'@' '{print $2}' | sed 's/",//g'`
+
+# Print the Node.js version specified in `package.json`
+@node-version:
+    echo $FRONTEND_NODE_VERSION
+
+# Print the pnpm version specified in `package.json`
+@pnpm-version:
+    echo $FRONTEND_PNPM_VERSION
+
 ######
 # Up #
 ######
