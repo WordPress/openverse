@@ -105,7 +105,48 @@ This will be accomplished by:
       until the database removal is complete.
     - `SkipFinalSnapshot` should be set to `True` to avoid creating a final
       snapshot of the database before deletion.
-12. Report the success or failure of the DAG run to Slack.
+12. Once the database rename is complete, the following actions will also need
+    to occur (they can occur simultaneously in the DAG):
+    1. The staging API must be deployed to apply any necessary migrations to the
+       new copy the database. In order to do this we must augment the existing
+       [GitHub API class](https://github.com/WordPress/openverse/blob/aedc9c16ce5ed11709e2b6f0b42bad77ea1eb19b/catalog/dags/common/github.py#L4)
+       with additional functions for **getting the latest GHCR image tag** and
+       **triggering the deployment workflow**. Once those functions exist, the
+       steps for this piece would be:
+       1. Get the latest image tag for the
+          [`openverse-api` package](https://github.com/WordPress/openverse/pkgs/container/openverse-api).
+       2. Trigger the deployment workflow
+          [in a similar manner to the existing CI/CD workflow](https://github.com/WordPress/openverse/blob/1f7b8e670a0f7812494375570d076a7c33142062/.github/workflows/ci_cd.yml#L833-L846)
+          using the tag from the previous step and the `openverse-bot` actor.
+    2. Update the Elasticsearch indices corresponding to each media type. This
+       can be done by using the
+       [`UPDATE_INDEX` action](https://github.com/WordPress/openverse/blob/7427bbd4a8178d05a27e6fef07d70905ec7ef16b/ingestion_server/ingestion_server/indexer.py#L314)
+       on the ingestion server. The steps for this piece would be:
+       1. Get the date for the last successful run of the update DAG (see the
+          [`_month_check` function](https://github.com/WordPress/openverse/blob/aedc9c16ce5ed11709e2b6f0b42bad77ea1eb19b/catalog/dags/data_refresh/dag_factory.py#L85)
+          from the data refresh DAG for a similar example).
+       2. For each media type:
+          1. Get the current index (see the
+             [`get_current_index` task](https://github.com/WordPress/openverse/blob/aedc9c16ce5ed11709e2b6f0b42bad77ea1eb19b/catalog/dags/data_refresh/data_refresh_task_factory.py#L167-L175)
+             on the data refresh DAG)
+          2. Initiate the
+             [`UPDATE_INDEX` action](https://github.com/WordPress/openverse/blob/7427bbd4a8178d05a27e6fef07d70905ec7ef16b/ingestion_server/ingestion_server/api.py#L107-L113)
+             using the date and index suffix retrieved above
+          3. Wait for the index update to complete
+    3. Truncate the OAuth tables to prevent production API applications from
+       working in staging. Each of these truncate operations can be run
+       simultaneously using
+       `TRUNCATE TABLE <table_name> RESTART IDENTITY CASCADE;` in a
+       [`PGExecuteQueryOperator`](https://github.com/WordPress/openverse/blob/aedc9c16ce5ed11709e2b6f0b42bad77ea1eb19b/catalog/dags/common/sql.py#L137).
+       The tables that need to be truncated are:
+       - `api_throttledapplication`
+       - `api_oauth2registration`
+       - `api_oauth2verification`
+       - `oauth2_provider_accesstoken`
+       - `oauth2_provider_grant`
+       - `oauth2_provider_idtoken`
+       - `oauth2_provider_refreshtoken`
+13. Report the success or failure of the DAG run to Slack.
 
 ### Django Admin UI changes
 
@@ -218,8 +259,15 @@ unfamiliar with Airflow.
 
 <!-- What, if any, work within this plan can be parallelized? -->
 
-All of this work will be done as part of a single PR, so it is not
-parallelizable.
+Based on the above steps, the following work can be parallelized:
+
+1. Alterations to the
+   [GitHub API class](https://github.com/WordPress/openverse/blob/aedc9c16ce5ed11709e2b6f0b42bad77ea1eb19b/catalog/dags/common/github.py#L4)
+   to include new methods for pulling the latest GHCR image tag and for
+   triggering a workflow.
+2. The addition of the notification banner to the Django Admin UI.
+
+After the above work is complete, the primary DAG can be written and tested.
 
 ## Rollback
 
