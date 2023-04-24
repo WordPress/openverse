@@ -58,7 +58,6 @@ audio_mappings = {
     audio_stats_curl: audio_stats_200_example,
     audio_detail_curl: audio_detail_200_example,
     audio_complain_curl: audio_complain_201_example,
-    audio_waveform_curl: audio_waveform_200_example,
 }
 image_mappings = {
     image_search_curl: image_search_200_example,
