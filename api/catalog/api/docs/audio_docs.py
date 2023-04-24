@@ -58,7 +58,7 @@ search = custom_extend_schema(
     eg=[audio_search_list_curl],
     external_docs={
         "description": "Openverse Syntax Guide",
-        "url": "https://search.creativecommons.org/search-help",
+        "url": "https://openverse.org/search-help",
     },
 )
 
