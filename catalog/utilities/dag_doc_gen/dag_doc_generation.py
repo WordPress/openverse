@@ -29,6 +29,7 @@ log = logging.getLogger(__name__)
 logging.getLogger("common.storage.media").setLevel(logging.WARNING)
 
 # Constants
+HEADING_PROG = re.compile(r"^#+", re.MULTILINE)
 DAG_MD_PATH = Path(__file__).parent / "DAGs.md"
 DAG_FOLDER = Path(__file__).parents[2] / "dags"
 PREAMBLE = """\
@@ -91,9 +92,6 @@ def get_provider_workflows() -> dict[str, ProviderWorkflow]:
     return {workflow.dag_id: workflow for workflow in PROVIDER_WORKFLOWS}
 
 
-heading_prog = re.compile(r"^#+", re.MULTILINE)
-
-
 def fix_headings(doc: str) -> str:
     """
     Increase all heading levels by 2.
@@ -104,7 +102,7 @@ def fix_headings(doc: str) -> str:
     # Reverse matches so we can work backwards and
     # not need to worry about our changes to ``doc``
     # changing the span for the next hit
-    for match in reversed(list(heading_prog.finditer(doc))):
+    for match in reversed(list(HEADING_PROG.finditer(doc))):
         start, end = match.span()
         original_heading = match.string[start:end]
         new_heading = f"##{original_heading}"
