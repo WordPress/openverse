@@ -115,8 +115,10 @@ class MediaStore(metaclass=abc.ABCMeta):
         `license_info`, `foreign_identifier`, `foreign_landing_url`, or `url`.
         TODO: simplify when the license_info is refactored to only hold valid licenses.
         """
-        if media_data["license_info"].license is None or not is_valid_license_info(
-            media_data["license_info"]
+        if (
+            not media_data["license_info"]
+            or media_data["license_info"].license is None
+            or not is_valid_license_info(media_data["license_info"])
         ):
             raise ValueError(
                 f"Discarding media due to invalid license: {media_data['license_info']}"
