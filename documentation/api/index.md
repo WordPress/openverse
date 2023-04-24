@@ -1,9 +1,13 @@
 # Django API
 
-This section includes documentation about developing the Openverse Django API.
-Documentation about how to use the API currently lives on the API itself at
-<https://api.openverse.engineering/v1/>.
+The Django API documentation is divided into two sections, based on the target
+audience. To contribute to the API codebase, read the
+[developer docs](./developer/index.md). To use the API as a consumer, read the
+[user docs](./user/index.md).
 
-```{include} ../_toc_templates/stack_root.md
+```{toctree}
+:maxdepth: 1
 
+developer/index
+user/index
 ```
