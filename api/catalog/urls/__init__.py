@@ -11,7 +11,11 @@ from django.urls import path, re_path
 from django.views.generic import RedirectView
 from rest_framework.routers import SimpleRouter
 
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 
 from catalog.api.utils.status_code_view import get_status_code_view
 from catalog.api.views.audio_views import AudioViewSet
@@ -27,8 +31,11 @@ discontinuation_message = {
 }
 
 versioned_paths = [
+    # OpenAPI
     path("", SpectacularRedocView.as_view(url_name="schema"), name="root"),
+    path("swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger"),
     path("schema/", SpectacularAPIView.as_view(api_version="v1"), name="schema"),
+    # Authentication endpoints
     path("rate_limit/", CheckRates.as_view(), name="key_info"),
     path("auth_tokens/", include(auth_tokens_patterns)),
     # Deprecated, redirects to new URL
