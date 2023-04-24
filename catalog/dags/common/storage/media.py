@@ -120,9 +120,7 @@ class MediaStore(metaclass=abc.ABCMeta):
             or media_data["license_info"].license is None
             or not is_valid_license_info(media_data["license_info"])
         ):
-            raise ValueError(
-                f"Discarding media due to invalid license: {media_data['license_info']}"
-            )
+            raise ValueError("Record missing required field: `license_info`")
 
         for field in [
             "foreign_identifier",
