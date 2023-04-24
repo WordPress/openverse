@@ -9,6 +9,7 @@ import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
+  searchPath,
   supportedSearchTypes,
   VIDEO,
 } from "~/constants/media"
@@ -124,40 +125,32 @@ describe("Search Store", () => {
      * - media specific filters that are unique (durations).
      * - media specific filters that have the same API param (extensions)
      * - no 'q' parameter in the query.
+     * - more than one value for a parameter in the query (q=cat&q=dog).
      */
     it.each`
-      query                                               | searchType
-      ${{ q: "cat", license: "by", mature: "true" }}      | ${IMAGE}
-      ${{ license: "by", mature: "true" }}                | ${IMAGE}
-      ${{ license: "", mature: "" }}                      | ${IMAGE}
-      ${{ q: "cat", license: "by", searchBy: "creator" }} | ${ALL_MEDIA}
-      ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}        | ${ALL_MEDIA}
-      ${{ q: "cat", length: "medium" }}                   | ${AUDIO}
-      ${{ q: "cat", extension: "svg" }}                   | ${IMAGE}
-      ${{ q: "cat", extension: "svg" }}                   | ${AUDIO}
-      ${{ q: "cat", extension: "mp3" }}                   | ${AUDIO}
+      query                                               | expectedQueryParams                                 | searchType
+      ${{ q: "cat", license: "by", mature: "true" }}      | ${{ q: "cat", license: "by", mature: "true" }}      | ${IMAGE}
+      ${{ license: "by", mature: "true" }}                | ${{ q: "", license: "by", mature: "true" }}         | ${IMAGE}
+      ${{ license: "", mature: "" }}                      | ${{ q: "" }}                                        | ${IMAGE}
+      ${{ q: "cat", license: "by", searchBy: "creator" }} | ${{ q: "cat", license: "by", searchBy: "creator" }} | ${ALL_MEDIA}
+      ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}        | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}        | ${ALL_MEDIA}
+      ${{ q: "cat", length: "medium" }}                   | ${{ q: "cat" }}                                     | ${IMAGE}
+      ${{ q: "cat", length: "medium" }}                   | ${{ q: "cat", length: "medium" }}                   | ${AUDIO}
+      ${{ q: "cat", extension: "svg" }}                   | ${{ q: "cat", extension: "svg" }}                   | ${IMAGE}
+      ${{ q: "cat", extension: "mp3" }}                   | ${{ q: "cat", extension: "mp3" }}                   | ${AUDIO}
+      ${{ q: "cat", extension: "svg" }}                   | ${{ q: "cat" }}                                     | ${AUDIO}
+      ${{ q: ["cat", "dog"], license: ["by", "cc0"] }}    | ${{ q: "cat", license: "by" }}                      | ${IMAGE}
     `(
       "returns correct searchQueryParams and filter status for $query and searchType $searchType",
-      ({ query, searchType }) => {
+      ({ query, expectedQueryParams, searchType }) => {
         const searchStore = useSearchStore()
-        const expectedQueryParams = query
         // It should discard the values that are not applicable for the search type:
-        if (searchType === AUDIO && query.extension === "svg") {
-          delete expectedQueryParams.extension
-        }
+
         searchStore.setSearchStateFromUrl({
-          path: `/search/${searchType === ALL_MEDIA ? "" : searchType}`,
-          urlQuery: { ...expectedQueryParams },
+          path: searchPath(searchType),
+          urlQuery: query,
         })
-        // Edge-case: query parameter value is a blank string
-        for (let param in expectedQueryParams) {
-          if (expectedQueryParams[param] === "")
-            delete expectedQueryParams[param]
-        }
-        // Should add a blank string as `q` value if `q` is not in query
-        if (!("q" in expectedQueryParams)) {
-          expectedQueryParams.q = ""
-        }
+
         expect(searchStore.searchQueryParams).toEqual(expectedQueryParams)
       }
     )

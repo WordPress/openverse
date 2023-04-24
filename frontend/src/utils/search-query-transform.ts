@@ -14,6 +14,9 @@ import {
 import { getParameterByName } from "~/utils/url-params"
 import { deepClone } from "~/utils/clone"
 
+import type { Context } from "@nuxt/types"
+import type { Dictionary } from "vue-router/types/router"
+
 export interface ApiQueryParams {
   q?: string
   license?: string
@@ -166,7 +169,7 @@ export const queryToFilterData = ({
   searchType = "image",
   defaultFilters,
 }: {
-  query: Record<string, string>
+  query: Dictionary<string>
   searchType: SupportedSearchType
   defaultFilters: Partial<Filters>
 }) => {
@@ -262,11 +265,23 @@ export const areQueriesEqual = (
 }
 
 /**
- * Converts the API query `q` parameter to a single string that can
- * be used as a search term. Use the first item if `q` is an array.
- * @param q - the URL `q` parameter
+ * The URL query string can contain multiple values for the same parameter.
+ * This function converts the query string to a dictionary where the values
+ * are always strings. If the parameter has multiple values, the first value
+ * is used.
+ * * @param queryDictionary - the query param dictionary provided by Vue router
  */
-export const qToSearchTerm = (q: string | null | (string | null)[]) => {
-  const searchTerm = Array.isArray(q) ? q[0] : q
-  return searchTerm ? searchTerm.trim() : ""
+export const queryDictionaryToQueryParams = (
+  queryDictionary: Context["query"]
+): Dictionary<string> => {
+  const queryParams = {} as Dictionary<string>
+  Object.keys(queryDictionary).forEach((key) => {
+    const value = queryDictionary[key]
+    // If the parameter is an array, use the first value.
+    const parameter = Array.isArray(value) ? value[0] : value
+    if (parameter) {
+      queryParams[key] = parameter
+    }
+  })
+  return queryParams
 }
