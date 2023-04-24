@@ -23,8 +23,7 @@
     "peerDependencyRules": {
       "ignoreMissing": [
         "react",
-        "react-dom",
-        "consola"
+        "react-dom"
       ],
       "allowedVersions": {
         "babel-core": "7.0.0-bridge.0",
