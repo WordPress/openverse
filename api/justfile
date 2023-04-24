@@ -119,7 +119,7 @@ doc-test: wait-up
     curl \
       -H 'Accept: application/vnd.oai.openapi+json' \
       --fail \
-      'http://localhost:50280/v1/schema/'
+      'http://localhost:50280/v1/schema/' > openapi.json
 
 #########
 # NGINX #

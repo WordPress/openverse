@@ -391,11 +391,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        recipe:
-          - "api/dj check"
-          - "api/dj spectacular --format openapi-json --validate --file openapi.json"
-          - "api/dj makemigrations --check --noinput --merge"
-          - "api/doc-test"
+        name:
+          - check_django
+          - validate_openapi
+          - check_migrations
+          - test_doc
+        include:
+          - name: check_django
+            recipe: api/dj check
+          - name: validate_openapi
+            recipe: api/dj spectacular --format openapi-json --validate --file openapi.json
+          - name: check_migrations
+            recipe: api/dj makemigrations --check --noinput --merge
+          - name: test_doc
+            recipe: api/doc-test
 
     steps:
       - name: Checkout repository
@@ -421,7 +430,7 @@ jobs:
           DC_USER: root
 
       - name: Upload schema
-        if: contains(matrix.recipe, 'spectacular')
+        if: matrix.name == 'test_doc'
         uses: actions/upload-artifact@v3
         with:
           name: openapi.json
@@ -437,11 +446,11 @@ jobs:
       - get-changes
     strategy:
       matrix:
-        recipe:
-          - "api/dj check"
-          - "api/dj validateopenapischema"
-          - "api/dj makemigrations --check --noinput --merge"
-          - "api/doc-test"
+        name:
+          - check_django
+          - validate_openapi
+          - check_migrations
+          - test_doc
 
     steps:
       - name: Pass
