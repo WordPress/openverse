@@ -83,6 +83,7 @@ def get(
             params=params,
             headers=headers,
         )
+        upstream_response.raise_for_status()
     except requests.ReadTimeout as exc:
         # Count the incident so that we can identify providers with most timeouts.
         key = f"{settings.THUMBNAIL_TIMEOUT_PREFIX}{domain}"
