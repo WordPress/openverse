@@ -242,7 +242,7 @@ flowchart TD
 
 After all the [proof-of-functionality](./proof_of_functionality.md) tests have
 concluded, we can initiate the stage of building the new documentation. The
-documentation is published to the [docs site](https://docs.openvere.org)
+documentation is published to the [docs site](https://docs.openverse.org)
 side-by-side with the [publishing of the Docker images](#docker-publishing).
 
 ```{mermaid}
