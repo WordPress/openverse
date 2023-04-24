@@ -40,11 +40,16 @@ from catalog.api.examples.image_responses import (
     image_search_400_example,
     image_stats_200_example,
 )
-from catalog.api.examples.oauth2_requests import auth_key_info_curl, auth_register_curl
+from catalog.api.examples.oauth2_requests import (
+    auth_key_info_curl,
+    auth_register_curl,
+    auth_token_curl,
+)
 from catalog.api.examples.oauth2_responses import (
     auth_key_info_200_example,
     auth_key_info_403_example,
     auth_register_201_example,
+    auth_token_200_example,
 )
 
 

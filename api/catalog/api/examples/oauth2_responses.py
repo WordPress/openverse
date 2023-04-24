@@ -9,6 +9,15 @@ auth_register_201_example = {
     }
 }
 
+auth_token_200_example = {
+    "application/json": {
+        "access_token": "DLBYIcfnKfolaXKcmMC8RIDCavc2hW",
+        "scope": "read write groups",
+        "expires_in": 36000,
+        "token_type": "Bearer",
+    }
+}
+
 auth_key_info_200_example = {
     "application/json": {
         "requests_this_minute": 2,
