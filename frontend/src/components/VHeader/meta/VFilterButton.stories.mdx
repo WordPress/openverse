@@ -29,10 +29,16 @@ import { IMAGE } from "~/constants/media"
   }}
 />
 
+[//]:
+  #
+  "Flexible-width wrappers are added to the template to make the button
+better visible on a darker background and to make the changes in button width
+easier to see."
+
 export const Template = (args, { argTypes }) => ({
-  template: `<div id="wrapper" class="w-40 h-16 bg-dark-charcoal-06 flex align-center justify-center">
+  template: `<div class="flex"><div id="wrapper" class="px-4 h-16 bg-dark-charcoal-06 flex align-center justify-center">
   <VFilterButton v-bind="args" v-on="args" />
-  </div>`,
+  </div></div>`,
   components: { VFilterButton },
   props: Object.keys(argTypes),
   setup() {
