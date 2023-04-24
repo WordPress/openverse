@@ -20,7 +20,7 @@ from catalog.api.serializers.oauth2_serializers import (
 
 register = custom_extend_schema(
     operation_id="register",
-    params=OAuth2RegistrationSerializer,
+    request=OAuth2RegistrationSerializer,
     res={
         201: (OAuth2ApplicationSerializer, auth_register_201_example),
         400: (InputErrorSerializer, None),
