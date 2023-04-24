@@ -49,8 +49,6 @@ if "api" in changes:
 if "frontend" in changes:
     build_matrix["image"].add("frontend")
     publish_matrix["image"].add("frontend")
-if "documentation" in changes:
-    build_matrix["image"] |= {"upstream_db", "ingestion_server", "api"}
 
 build_matrix["include"] = [includes[item] for item in build_matrix["image"]]
 

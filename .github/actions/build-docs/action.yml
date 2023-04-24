@@ -36,19 +36,6 @@ runs:
       run: |
         just frontend/run tcv:build
 
-    - name: Load Docker images # For API schema
-      uses: ./.github/actions/load-img
-      with:
-        setup_images: '["upstream_db", "ingestion_server", "api"]'
-
-    - name: Build Redoc
-      shell: bash
-      run: |
-        just api/doc-test
-        mv api/openapi.json api/api_docs
-      env:
-        DC_USER: root
-
     # Storybook will be available at `/storybook`
     # Tailwind will be available at `/tailwind`
     - name: Merge all docs
@@ -57,4 +44,3 @@ runs:
         mv documentation/_build /tmp/docs
         mv frontend/storybook-static /tmp/docs/storybook
         mv frontend/.tcv-export /tmp/docs/tailwind
-        mv api/api_docs /tmp/docs/api_docs
