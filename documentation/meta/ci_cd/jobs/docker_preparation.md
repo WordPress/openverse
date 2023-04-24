@@ -9,6 +9,7 @@ published to GHCR. This job determines those images.
 
 | Change             | `upstream_db` | `catalog` | `ingestion_server` | `api` | `api_nginx` | `frontend` |
 | ------------------ | ------------- | --------- | ------------------ | ----- | ----------- | ---------- |
+| `documentation`    | 🛠️            |           | 🛠️                 | 🛠️    |             |            |
 | `catalog`          | 🛠️            | 🚀        |                    |       |             |            |
 | `ingestion_server` | 🛠️            |           | 🚀                 | 🛠️    |             |            |
 | `api`              | 🛠️            |           | 🛠️                 | 🚀    | 🚀          |            |

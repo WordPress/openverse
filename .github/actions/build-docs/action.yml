@@ -36,11 +36,18 @@ runs:
       run: |
         just frontend/run tcv:build
 
-    - name: Build OpenAPI ReDoc
-      uses: actions/download-artifact@v3
+    - name: Load Docker images # For API schema
+      uses: ./.github/actions/load-img
       with:
-        name: openapi.json
-        path: ${{ github.workspace }}/api/api_docs
+        setup_images: '["upstream_db", "ingestion_server", "api"]'
+
+    - name: Build Redoc
+      shell: bash
+      run: |
+        just api/doc-test
+        mv api/openapi.json api/api_docs
+      env:
+        DC_USER: root
 
     # Storybook will be available at `/storybook`
     # Tailwind will be available at `/tailwind`
