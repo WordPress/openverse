@@ -27,7 +27,7 @@ SPECTACULAR_SETTINGS = {
     "VERSION": config("SEMANTIC_VERSION", default="Version not specified"),
     "EXTERNAL_DOCS": {
         "description": "Openverse documentation",
-        "url": "https://docs.openverse.org",
+        "url": "http://docs.openverse.org/api/user/index.html",
     },
     "SERVE_INCLUDE_SCHEMA": False,
     "SORT_OPERATION_PARAMETERS": False,
@@ -42,7 +42,7 @@ SPECTACULAR_SETTINGS = {
             "name": "auth",
             "externalDocs": {
                 "description": "Authentication documentation",
-                "url": "https://docs.openverse.org/authentication.html",
+                "url": "https://docs.openverse.org/api/user/authentication.html",
             },
         },
         {
