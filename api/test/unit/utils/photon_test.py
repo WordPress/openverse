@@ -239,28 +239,25 @@ def test_get_timeout_existing_cache_key(
     assert redis.get(key) == b"6"
 
 
-def test_get_request_exception(capture_exception, setup_requests_get_exception):
-    exc = requests.RequestException()
-    setup_requests_get_exception(exc)
+@pytest.mark.parametrize(
+    "exception, expected_message",
+    [
+        (  # Includes HTTP response errors
+            requests.RequestException(),
+            r"Failed to render thumbnail.",
+        ),
+        (ValueError(), r"due to unidentified exception."),
+    ],
+)
+def test_get_raise_exception_msg(
+    capture_exception, setup_requests_get_exception, exception, expected_message
+):
+    setup_requests_get_exception(exception)
 
-    with pytest.raises(
-        UpstreamThumbnailException, match=r"Failed to render thumbnail:"
-    ):
+    with pytest.raises(UpstreamThumbnailException, match=expected_message):
         photon_get(TEST_IMAGE_URL)
 
-    capture_exception.assert_called_once_with(exc)
-
-
-def test_get_generic_exception(capture_exception, setup_requests_get_exception):
-    exc = ValueError()
-    setup_requests_get_exception(exc)
-
-    with pytest.raises(
-        UpstreamThumbnailException, match=r"due to unidentified exception"
-    ):
-        photon_get(TEST_IMAGE_URL)
-
-    capture_exception.assert_called_once_with(exc)
+    capture_exception.assert_called_once_with(exception)
 
 
 @pook.on
