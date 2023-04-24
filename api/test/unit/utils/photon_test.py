@@ -284,3 +284,15 @@ def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
     assert mock_get.matched
+
+
+@pook.on
+def test_get_unsuccessful_request_raises_exception():
+    mock_get: pook.Mock = pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(404).mock
+
+    with pytest.raises(
+        UpstreamThumbnailException, match=r"Failed to render thumbnail."
+    ):
+        photon_get(TEST_IMAGE_URL)
+
+    assert mock_get.matched
