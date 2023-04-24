@@ -59,9 +59,9 @@ downloads the artifact and load the `.tar` files into Docker as images.
 
 **Inputs:**
 
-By default, all images built by the Docker system will be loaded but if the job
-only needs a subset of images, those can be set via the `setup_images` input,
-passing a list of image names, as strings, separated using a space.
+By default, all images built by the Docker system will be loaded. However, if
+the job only needs a subset of images, those can be set via the `setup_images`
+input, passing a space-separated list of image names.
 
 ```typescript
 {
