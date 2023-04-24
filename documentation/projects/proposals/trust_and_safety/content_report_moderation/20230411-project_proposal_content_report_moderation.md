@@ -58,8 +58,7 @@ roughly correspond to a single implementation plan. Requested plans are
 1. Use a computer vision API to analyse images on a report to give hints to
    moderators about the contents of the image so that they can safely triage the
    report. Images are blurred in Django admin.
-1. Results with confirmed reports are quickly updated to be excluded from
-   non-sensitive API queries.
+1. Results with confirmed reports are excluded from non-sensitive API queries.
 1. If volunteer moderators are identified, work with them to establish an
    initial goal for report response time.
 
@@ -74,6 +73,10 @@ remain unchanged. While the existing data is small and could be trivially
 transferred to new tables with better names, we can avoid that complication for
 now and defer that as a potential future improvement. We will also update the
 "reason" for reports from `mature` to `sensitive_content`.
+
+```{note}
+Design changes should be limited exclusively to copy updates. We will not be adding any new frontend features (like additional requests for information in the report modal) at this time.
+```
 
 ### Volunteer moderator Django admin tools and access control (requirement 2)
 
@@ -92,7 +95,8 @@ moderator quality of life:
 - Moderator notes, for moderators to supply an explanatory note for their
   decision. This should be a separate column to the content report description.
 - Improved table organisation by displaying the report ID and making that the
-  clickable column rather than the status (which is confusing).
+  clickable column rather than the status (which is confusing). Improved sorting
+  capabilities as well.
 - Create a "decision" page that displays all pending and historical reports for
   a given result. Decisions should update all "pending" reports with the new
   status and any explanatory notes. Query the
@@ -101,7 +105,13 @@ moderator quality of life:
   decision, if any.
 - Run report descriptions through Akismet[^akismet] to flag potentially spammy
   reports.
-- Display result information (title, description, etc) on the decision page.
+- Display the following result information (at least) on the decision page:
+  - Title
+  - Description
+  - Image (if any exist)
+  - Tags
+- Decision page images must be blurred by default. Moderators should be able to
+  turn of blurring by default.
 
 [^akismet]:
     We do not currently use Akismet for Openverse, but in writing this it
@@ -166,6 +176,14 @@ different distinct creators.
 
 ### Computer vision based moderator safety tools (requirement 4)
 
+We will use a computer vision tool to provide additional information about
+images to moderators. The intention of this tool is to provide moderators with
+as much information as possible about any images for the result so they can have
+as much context as possible before deciding to unblur the image. Even if a
+moderator has turned off blurring by default, we will still provide (and cache)
+the computer vision derived metadata as it may be used by other moderators for
+the same or future decisions.
+
 There are many computer vision options that could be evaluated by the
 implementation plan. AWS Rekognition, Google Vision API, Azure Computer Vision,
 and more. Essentially all the ones I've seen are affordable to us at our current
@@ -194,16 +212,45 @@ substantial benefit that invalidates those reasons.
 
 ### Cache management (requirement 5)
 
-Our current caching strategy is to cache responses at the Cloudflare level for 1
-month based on query params. While this roughly works for our existing needs, it
-will not be workable for content moderation due to the inability to granularly
-invalidate cached pages via query params. Any Cloudflare cache features that
-would enable this like custom cache keys or cache tags, are all enterprise only
-features and are not accessible to Openverse.
+There are two aspects to cache management that need to be updated.
 
-In order to invalidate responses that include a certain result, we need a
-reverse index of `result ID -> cache keys`. When a given result is marked as
-sensitive due to a report, we need to bust the cache keys under that result ID.
+1. We need to be able to invalidate cached responses that include results that
+   have been deindexed or marked sensitive. This is necessary to ensure that
+   sensitive or deindexed results do not continue to appear in Openverse after
+   they've been moderated.
+2. We need similarly to be able to invalidate cached response for the single
+   results, thumbnails, and related results endpoints. This is necessary to
+   ensure that links to results that have been deindexed no longer work and that
+   links to results that have been marked sensitive are updated to reflect the
+   new classification.
+
+Our current caching strategy for the search endpoint is to cache responses at
+the Cloudflare level for 1 month based on query params. While this roughly works
+for our existing needs, it is incompatible with the first requirement of this
+section. Any Cloudflare cache features that would enable granular cache
+invalidation on the level of significant query params, like custom cache keys or
+cache tags, are all enterprise only features and are not accessible to
+Openverse.
+
+On the other hand, all the other endpoints are not query param based and can
+easily be purged from Cloudflare's cache by using
+[this Cloudflare API endpoint to validate cached pages by URL](https://developers.cloudflare.com/api/operations/zone-purge#purge-cached-content-by-url).
+
+The implementation plan must include a determination for each route relevant to
+a particular result for whether it can continue to use Cloudflare's cache or
+whether it needs to use the Redis based cache invalidation strategy outlined
+below.
+
+```{note}
+This change to API cache management does not necessarily entirely preclude the use of Cloudflare's cache for other endpoints. We would need to make significant changes to the TTL of the Cloudflare cache for the endpoints addressed in this requirement if we continued to use it to appropriately reflect the need to have cache changes appear in a timely manner. The implementation plan must include a proposal for whether and to what extent we will continue to use Cloudflare's cache and what benefit we hope to see from it if we do.
+```
+
+#### Redis based cache invalidation strategy
+
+In order to invalidate search query responses that include a certain result, we
+need to maintain a reverse index of `result indentifier -> cache keys`. When a
+given result is marked as sensitive or deindexed due to a report, we need to
+bust the cached responses for the keys stored under that result's identifier.
 Cache keys also need to be invalidated based on the response cache timeout.
 Redis does not support expiring set elements, but we can use a sorted set where
 the score is the unix timestamp of the expiration time. To expire cache keys in
@@ -222,7 +269,17 @@ are two potential approaches an implementation plan could take: we could
 implement our own caching middleware entirely that also maintains the reverse
 index; or we could monkey patch the `learn_cache_key` function used by the
 caching middlewares to attach the cache key on the request context to make it
-accessible to downstream middleware that manages the reverse index.
+accessible to downstream middleware that manages the reverse index. The
+implementation plan should explore both options and make a determination of
+which to pursue.
+
+#### Cloudflare based cache invalidation strategy
+
+We need to be able to invalidate cached responses for pages that will continue
+to be cached exclusively in Cloudflare. The implementation plan must describe
+how this would be handled when moderators take actions in the Django API.
+Cloudflare's cache invalidation endpoints have daily rate limits and the
+implementation plan must account for this.
 
 ### Moderation response times (requirement 6, optional)
 
@@ -231,6 +288,9 @@ queue, we can work with them to establish expectations about response times. To
 have insight into the process, we'll need a reporting mechanism that tracks the
 number of resolved reports, average response time, and number of open reports on
 an ongoing basis.
+
+This requirement is entirely contingent on having found a group of moderators to
+advise us on what kinds of response times we should expect.
 
 ## Success
 
@@ -306,7 +366,10 @@ work.
   1. Computer vision API integration for image content safety metadata
      - Requirement 4
      - Must include plans to save responses in a way that could be
-       [back propagated to the catalog in the future](https://github.com/WordPress/openverse/issues/420)
+       [back propagated to the catalog in the future](https://github.com/WordPress/openverse/issues/420).
+       This should be kept simple and should not make finalizing decisions about
+       how the data would be stored long term. Storing the responses in Redis
+       and using a stable key (result identifier) should be sufficient.
   1. Bulk moderation actions
      - Requirement 3
      - Can be planned concurrently with the previous two plans
