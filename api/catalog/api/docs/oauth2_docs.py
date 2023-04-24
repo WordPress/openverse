@@ -5,6 +5,8 @@ from catalog.api.examples import (
     auth_key_info_curl,
     auth_register_201_example,
     auth_register_curl,
+    auth_token_200_example,
+    auth_token_curl,
 )
 from catalog.api.serializers.error_serializers import (
     ForbiddenErrorSerializer,
@@ -15,6 +17,8 @@ from catalog.api.serializers.oauth2_serializers import (
     OAuth2ApplicationSerializer,
     OAuth2KeyInfoSerializer,
     OAuth2RegistrationSerializer,
+    OAuth2TokenRequestSerializer,
+    OAuth2TokenSerializer,
 )
 
 
@@ -36,4 +40,13 @@ key_info = custom_extend_schema(
         500: (InternalServerErrorSerializer, None),
     },
     eg=[auth_key_info_curl],
+)
+
+token = custom_extend_schema(
+    operation_id="token",
+    request={"application/x-www-form-urlencoded": OAuth2TokenRequestSerializer},
+    res={
+        200: (OAuth2TokenSerializer, auth_token_200_example),
+    },
+    eg=[auth_token_curl],
 )

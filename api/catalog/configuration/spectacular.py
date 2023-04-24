@@ -40,10 +40,34 @@ SPECTACULAR_SETTINGS = {
     "TAGS": [
         {
             "name": "auth",
-            "externalDocs": {
-                "description": "Authentication documentation",
-                "url": "https://docs.openverse.org/api/user/authentication.html",
-            },
+            "description": dedent(
+                """
+                The API has rate-limiting and throttling in place to prevent
+                abuse. In the response for each request that is subject to
+                rate-limits, you can see the `X-RateLimit-` headers for info
+                about your permitted and available usage. Exceeding the limit
+                will result in '429: Too Many Requests' responses.
+
+                - Anonymous clients are limited to make 5 req/hour and
+                  100 req/day. Therefore we recommend registering for
+                  authenticated usage.
+
+                - Authenticated clients can make 100 req/minute and 10,000
+                  req/day. Additionally, you can request a higher limit to fit
+                  your application's needs.
+
+                To authenticate yourself, you must sign up for an API key using
+                the `register` endpoint and then get an access token using the
+                `token` endpoint. Read on to know about these endpoints.
+
+                In subsequent requests, include your access token as a bearer
+                token in the `Authorization` header.
+
+                ```
+                Authorization: Bearer <access_token>
+                ```
+                """
+            ),
         },
         {
             "name": "audio",

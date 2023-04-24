@@ -12,8 +12,9 @@ from rest_framework.views import APIView
 
 from drf_spectacular.utils import extend_schema
 from oauth2_provider.generators import generate_client_secret
+from oauth2_provider.views import TokenView as BaseTokenView
 
-from catalog.api.docs.oauth2_docs import key_info, register
+from catalog.api.docs.oauth2_docs import key_info, register, token
 from catalog.api.models import OAuth2Verification, ThrottledApplication
 from catalog.api.serializers.oauth2_serializers import (
     OAuth2KeyInfoSerializer,
@@ -33,16 +34,17 @@ class Register(APIView):
         Register an application to access to API via OAuth2.
 
         Upon registering, you will receive a `client_id` and `client_secret`,
-        which you can then use to authenticate using the standard OAuth2 Client
-        Credentials flow. See the Register and Authenticate section for
-        instructions on registering access to the API via OAuth2.
+        which you can then use to authenticate using the standard OAuth2 flow.
 
-        > ⚠️ **WARNING:** You must keep `client_secret` confidential, as anybody
-        > with your `client_secret` can impersonate your application.
+        > ⚠️ **WARNINGS:**
+        > - Store your `client_id` and `client_secret` because you will not be
+        >   able to retrieve them later.
+        > - You must keep `client_secret` confidential, as anybody with your
+        >   `client_secret` can impersonate your application.
 
-        Authenticated users have higher rate limits than anonymous users.
-        Additionally, by identifying yourself, you can request Openverse to
-        adjust your personal rate limit depending on your organization's needs.
+        You must verify your email address by click the link sent to you in an
+        email. Until you do that, the application will be subject to the same
+        rate limits as an anonymous user.
         """
 
         # Store the registration information the developer gave us.
@@ -131,6 +133,28 @@ class VerifyEmail(APIView):
                     "credentials already?"
                 },
             )
+
+
+@extend_schema(tags=["auth"])
+class TokenView(BaseTokenView, APIView):
+    @token
+    def post(self, *args, **kwargs):
+        """
+        Get an access token using client credentials.
+
+        To authenticate your requests to the Openverse API, you need to provide
+        an access token as a bearer token in the `Authorization` header of your
+        requests. This endpoints takes your client ID and secret, and issues an
+        access token.
+
+        > **NOTE:** This endpoint only accepts data as
+        > `application/x-www-form-urlencoded`. Any other encoding will not work.
+
+        Once your access token expires, you can request another one from this
+        endpoint.
+        """
+
+        return super().post(*args, **kwargs)
 
 
 @extend_schema(tags=["auth"])

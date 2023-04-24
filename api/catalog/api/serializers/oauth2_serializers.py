@@ -89,3 +89,42 @@ class OAuth2KeyInfoSerializer(serializers.Serializer):
     verified = serializers.BooleanField(
         help_text="Whether the application has verified the submitted email address."
     )
+
+
+class OAuth2TokenRequestSerializer(serializers.Serializer):
+    """
+    Serializes a request for an access token.
+
+    This is a dummy serializer for OpenAPI and is not actually used.
+    """
+
+    client_id = serializers.CharField(
+        help_text="The unique, public identifier of your application.",
+    )
+
+    client_secret = serializers.CharField(
+        help_text="The secret key used to authenticate your application.",
+    )
+
+    grant_type = serializers.ChoiceField(choices=["client_credentials"])
+
+
+class OAuth2TokenSerializer(serializers.Serializer):
+    """
+    Serializes the response for an access token.
+
+    This is a dummy serializer for OpenAPI and is not actually used.
+    """
+
+    access_token = serializers.CharField(
+        help_text="The access token that can be used to authenticate requests.",
+    )
+    token_type = serializers.CharField(
+        help_text="The type of token. This will always be 'Bearer'.",
+    )
+    expires_in = serializers.IntegerField(
+        help_text="The number of seconds until the token expires.",
+    )
+    scope = serializers.CharField(
+        help_text="The scope of the token.",
+    )
