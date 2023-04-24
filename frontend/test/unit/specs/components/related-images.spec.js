@@ -38,9 +38,10 @@ describe("RelatedImage", () => {
   it("should render an image grid", () => {
     render(VRelatedImages, options)
 
-    expect(screen.getByRole("heading").textContent).toContain(
+    expect(screen.getAllByRole("heading")[0].textContent).toContain(
       "image-details.related-images"
     )
+    expect(screen.queryAllByRole("heading").length).toEqual(3)
     expect(screen.queryAllByRole("img").length).toEqual(2)
     expect(screen.queryAllByRole("figure").length).toEqual(2)
   })
