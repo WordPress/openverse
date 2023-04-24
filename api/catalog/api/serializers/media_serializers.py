@@ -467,7 +467,8 @@ def get_search_request_source_serializer(media_type):
 
         _field_attrs = {
             "help_text": (
-                "A comma separated list of data sources; for valid sources see "
+                "A comma separated list of data sources; valid values are "
+                "``source_name``s from the stats endpoint: "
                 f"https://api.openverse.engineering/v1/{media_path}/stats/."
             ),
             "required": False,
