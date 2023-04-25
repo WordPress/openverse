@@ -129,8 +129,6 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
         records = []
         for img in image_list:
             image_url = self._get_image_url(img)
-            if image_url is None:
-                continue
             records.append(
                 {
                     "license_info": license_info,

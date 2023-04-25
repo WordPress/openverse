@@ -128,7 +128,7 @@ class NyplDataIngester(ProviderDataIngester):
             if not foreign_landing_url:
                 continue
             license_url = capture.get("rightsStatementURI", {}).get("$")
-            if not (license_info := get_license_info(license_url=license_url)):
+            if not (license_info := get_license_info(license_url)):
                 continue
 
             image_data = {

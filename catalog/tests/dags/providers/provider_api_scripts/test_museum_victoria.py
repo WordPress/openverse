@@ -61,6 +61,15 @@ def test_get_query_param_offset():
     assert actual_param == expected_param
 
 
+def test_get_record_data_returns_empty_list_if_missing_license():
+    media = _get_resource_json("record_data.json")["media"]
+    for item in media:
+        if "licence" in item:
+            item["licence"].pop("uri", None)
+    actual_image_data = mv._get_images(media)
+    assert actual_image_data == []
+
+
 def test_get_record_data():
     media = _get_resource_json("record_data.json")
     actual_image_data = mv.get_record_data(media)

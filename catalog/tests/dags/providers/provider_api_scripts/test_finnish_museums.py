@@ -24,6 +24,7 @@ FROZEN_DATE = "2020-04-01"
 FROZEN_UTC_DATE = datetime.strptime(FROZEN_DATE, "%Y-%m-%d").replace(
     tzinfo=timezone.utc
 )
+
 fm = FinnishMuseumsDataIngester(date=FROZEN_DATE)
 image_store = ImageStore(provider=prov.FINNISH_DEFAULT_PROVIDER)
 fm.media_stores = {"image": image_store}
@@ -139,6 +140,15 @@ def test_process_object_with_real_example():
 
     assert len(actual_data) == 1
     assert actual_data[0] == expected_data
+
+
+def test_get_record_data_returns_none_without_license_info():
+    object_data = _get_resource_json("object_complete_example.json")
+    object_data["imageRights"]["link"] = ""
+
+    actual_data = fm.get_record_data(object_data)
+
+    assert actual_data is None
 
 
 def test_get_image_url():

@@ -187,9 +187,7 @@ class JamendoDataIngester(ProviderDataIngester):
         if (audio_url := self._get_audio_url(data)) is None:
             return None
 
-        if not (
-            license_info := get_license_info(license_url=data.get("license_ccurl"))
-        ):
+        if not (license_info := get_license_info(data.get("license_ccurl"))):
             return None
 
         duration = data.get("duration")

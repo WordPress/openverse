@@ -192,6 +192,14 @@ def test_get_record_data_returns_none_when_missing_foreign_id():
     assert actual_data is None
 
 
+def test_get_record_data_returns_none_when_missing_license_info():
+    image_data = _get_resource_json("image_data_complete_example.json")
+    image_data["license"] = ""
+
+    actual_data = flickr.get_record_data(image_data)
+    assert actual_data is None
+
+
 @pytest.mark.parametrize(
     "args",
     [

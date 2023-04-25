@@ -104,14 +104,32 @@ def test_get_record_data():
 @pytest.mark.parametrize(
     "required_field",
     [
-        "shareurl",  # foreign identifier
+        "id",  # foreign identifier
+        "shareurl",  # foreign landing url
         "audio",  # audio url
         "license_ccurl",  # license
     ],
+    ids=["foreign_identifier", "foreign_landing_url", "url", "license_info"],
 )
 def test_get_record_data_returns_none_when_required_data_is_null(required_field):
     audio_data = _get_resource_json("audio_data_example.json")
     audio_data.pop(required_field, None)
+    assert jamendo.get_record_data(audio_data) is None
+
+
+@pytest.mark.parametrize(
+    "required_field",
+    [
+        # "id",  # foreign identifier
+        # "shareurl",  # foreign landing url
+        # "audio",  # audio url
+        "license_ccurl",  # license
+    ],
+    ids=["foreign_identifier"],  # , "foreign_landing_url", "url", "license_info"],
+)
+def test_get_record_data_returns_none_when_required_data_is_falsy(required_field):
+    audio_data = _get_resource_json("audio_data_example.json")
+    audio_data[required_field] = ""
     assert jamendo.get_record_data(audio_data) is None
 
 
