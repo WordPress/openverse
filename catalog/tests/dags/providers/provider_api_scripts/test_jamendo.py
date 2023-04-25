@@ -205,5 +205,5 @@ def test_add_trailing_slash(url, expected):
     ],
 )
 def test_remove_track_id_handles_data(thumbnail_url, expected):
-    actual = jamendo._remove_track_id(thumbnail_url)
+    actual = jamendo._remove_trackid(thumbnail_url)
     assert actual == expected
