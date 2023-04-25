@@ -298,8 +298,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         return None
 
     def get_record_data(self, record):
-        foreign_id = record.get("pageid")
-        if not foreign_id:
+        if not (foreign_id := record.get("pageid")):
             return None
 
         media_info = self.extract_media_info_dict(record)
@@ -314,15 +313,14 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         if not (media_url := media_info.get("url")):
             return None
 
+        if not (foreign_landing_url := media_info.get("descriptionshorturl")):
+            return None
+
         creator, creator_url = self.extract_creator_info(media_info)
         title = self.extract_title(media_info)
         filesize = media_info.get("size", 0)  # in bytes
         filetype = self.extract_file_type(media_info)
         meta_data = self.create_meta_data_dict(record)
-
-        foreign_landing_url = media_info.get("descriptionshorturl")
-        if not foreign_landing_url:
-            return None
 
         record_data = {
             "media_url": media_url,
