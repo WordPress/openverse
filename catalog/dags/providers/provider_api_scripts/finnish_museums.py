@@ -105,9 +105,8 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
         return response_json["records"]
 
     def get_record_data(self, data):
-        records = []
-
-        license_info = self.get_license_info(data)
+        if not (license_info := self.get_license_info(data)):
+            return None
 
         foreign_identifier = data.get("id")
         if foreign_identifier is None:
@@ -127,6 +126,7 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
             raw_tags = list(chain(*tag_lists))
 
         image_list = data.get("images")
+        records = []
         for img in image_list:
             image_url = self._get_image_url(img)
             if image_url is None:

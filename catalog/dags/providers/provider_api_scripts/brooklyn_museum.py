@@ -49,15 +49,18 @@ class BrooklynMuseumDataIngester(ProviderDataIngester):
         return self._get_data_from_response(response_json)
 
     @staticmethod
-    def _get_license_url(rights_info):
-        elements = html.fromstring(rights_info.get("description", ""))
+    def _get_license_info(data: dict) -> LicenseInfo | None:
+        rights_info = data.get("rights_type", {}).get("description", "")
+        elements = html.fromstring(rights_info)
         cc_links = [
             link
             for _, _, link, _ in elements.iterlinks()
             if "https://creativecommons.org/" in link
         ]
-        license_url = cc_links[0] if len(cc_links) == 1 else None
-        return license_url
+        if len(cc_links) == 1:
+            return get_license_info(license_url=cc_links[0])
+
+        return None
 
     @staticmethod
     def _get_image_sizes(image):
@@ -142,9 +145,7 @@ class BrooklynMuseumDataIngester(ProviderDataIngester):
         id_ = data.get("id")
         if not id_:
             return None
-        rights_info = data.get("rights_type")
-        license_url = self._get_license_url(rights_info)
-        if not (license_info := get_license_info(license_url)):
+        if not (license_info := self._get_license_info(data)):
             return None
         endpoint = f"{self.endpoint}{id_}"
         object_data = self._get_data_from_response(

@@ -114,9 +114,9 @@ class EuropeanaRecordBuilder:
 
         if len(license_field) > 1:
             logger.warning("More than one license field found")
-        for license_ in license_field:
-            if "creativecommons" in license_:
-                return get_license_info(license_url=license_)
+        for license_url in license_field:
+            if "creativecommons" in license_url:
+                return get_license_info(license_url=license_url)
 
         return None
 

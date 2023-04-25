@@ -218,7 +218,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         return 0
 
     def get_record_data(self, data):
-        if (license_info := self._get_license_info(data)) is None:
+        if not (license_info := self._get_license_info(data)):
             return None
 
         image_size = self._get_largest_image_size(data)

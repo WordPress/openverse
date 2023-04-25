@@ -231,8 +231,7 @@ class FreesoundDataIngester(ProviderDataIngester):
         if not foreign_identifier:
             return None
 
-        item_license = self._get_license(media_data)
-        if item_license is None:
+        if not (item_license := self._get_license(media_data)):
             return None
 
         # We use the mp3-hq preview url as `audio_url` as the main url
