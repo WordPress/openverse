@@ -95,11 +95,11 @@ class SmkDataIngester(ProviderDataIngester):
         image_id = iiif_id or item.get("id")
 
         if image_id is not None:
-            if iiif_id is None:
+            if iiif_id:
+                image_url = SmkDataIngester._get_image_url(iiif_id)
+            else:
                 # Legacy images do not have IIIF links.
                 image_url = item.get("image_native")
-            else:
-                image_url = SmkDataIngester._get_image_url(iiif_id)
 
             thumbnail_url = item.get("image_thumbnail")
             height = item.get("image_height")
@@ -142,14 +142,21 @@ class SmkDataIngester(ProviderDataIngester):
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
         if not (license_info := get_license_info(data.get("rights"))):
             return
+        if not (foreign_landing_url := self._get_foreign_landing_url(data)):
+            return None
         images = []
         alt_images = self._get_images(data)
         for img in alt_images:
+            if not (foreign_identifier := img.get("id")) or not (
+                image_url := img.get("image_url")
+            ):
+                continue
+
             images.append(
                 {
-                    "foreign_identifier": img.get("id"),
-                    "foreign_landing_url": self._get_foreign_landing_url(data),
-                    "image_url": img.get("image_url"),
+                    "foreign_identifier": foreign_identifier,
+                    "foreign_landing_url": foreign_landing_url,
+                    "image_url": image_url,
                     "thumbnail_url": img.get("thumbnail_url"),
                     "license_info": license_info,
                     "title": self._get_title(data),

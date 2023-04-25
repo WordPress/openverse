@@ -299,19 +299,19 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
 
     def get_record_data(self, record):
         foreign_id = record.get("pageid")
+        if not foreign_id:
+            return None
 
         media_info = self.extract_media_info_dict(record)
 
-        valid_media_type = self.extract_media_type(media_info)
-        if not valid_media_type:
+        if not (valid_media_type := self.extract_media_type(media_info)):
             # Do not process unsupported media types, like Video
             return None
 
         if not (license_info := self.extract_license_info(media_info)):
             return None
 
-        media_url = media_info.get("url")
-        if media_url is None:
+        if not (media_url := media_info.get("url")):
             return None
 
         creator, creator_url = self.extract_creator_info(media_info)
@@ -320,9 +320,13 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         filetype = self.extract_file_type(media_info)
         meta_data = self.create_meta_data_dict(record)
 
+        foreign_landing_url = media_info.get("descriptionshorturl")
+        if not foreign_landing_url:
+            return None
+
         record_data = {
             "media_url": media_url,
-            "foreign_landing_url": media_info.get("descriptionshorturl"),
+            "foreign_landing_url": foreign_landing_url,
             "foreign_identifier": foreign_id,
             "license_info": license_info,
             "creator": creator,
@@ -428,7 +432,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         return media_info
 
     @staticmethod
-    def get_value_by_name(key_value_list: list, prop_name: str):
+    def get_value_by_name(key_value_list: list | None, prop_name: str):
         """Get the first value for the given prop_name in a list of key value pairs."""
         if key_value_list is None:
             key_value_list = []
@@ -488,7 +492,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         # Titles often have 'File:filename.jpg' form
         # We remove the 'File:' and extension from title
         title = WikimediaCommonsDataIngester.extract_ext_value(media_info, "ObjectName")
-        if title is None:
+        if not title:
             title = media_info.get("title")
         if title.startswith("File:"):
             title = title.replace("File:", "", 1)
