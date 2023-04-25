@@ -113,9 +113,9 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         self.RECORD_IDS.add(id_)
         if not (foreign_landing_url := record.get("links", {}).get("self")):
             return None
-        if not (attributes := record.get("attributes")):
-            return None
-        if not (multimedia := attributes.get("multimedia")):
+        if not (attributes := record.get("attributes")) or not (
+            multimedia := attributes.get("multimedia")
+        ):
             return None
 
         title = attributes.get("summary_title")
@@ -194,9 +194,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         processed: dict,
     ) -> tuple[str | None, int | None, int | None, str | None]:
         height, width, filetype = None, None, None
-        image_data = processed.get("large")
-        if image_data is None:
-            image_data = processed.get("medium", {})
+        image_data = processed.get("large") or processed.get("medium", {})
 
         image_url = ScienceMuseumDataIngester.check_url(image_data.get("location"))
         if image_url:

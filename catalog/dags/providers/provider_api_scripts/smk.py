@@ -49,14 +49,13 @@ class SmkDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_foreign_landing_url(item) -> str | None:
         """Use the English site instead of the original link."""
-        object_num = item.get("object_number")
-        if not object_num:
+        if not (object_num := item.get("object_number")):
             logger.info(
                 f"Image with (foreign) id {item.get('id')} does not have "
                 "`object_number`! Therefore we cannot build the "
                 "foreign_landing_url."
             )
-            return
+            return None
         # Occasionally, the object number will have a space in it. for these cases we
         # need to urlencode it.
         return f"https://open.smk.dk/en/artwork/image/{urllib.parse.quote(object_num)}"
@@ -87,41 +86,37 @@ class SmkDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _get_images(item: dict) -> list:
-        images = []
-
         # Legacy images do not have an iiif_id; fall back to the ID from the
         # collection DB.
         iiif_id = item.get("image_iiif_id")
-        image_id = iiif_id or item.get("id")
 
-        if image_id is not None:
-            if iiif_id:
-                image_url = SmkDataIngester._get_image_url(iiif_id)
-            else:
-                # Legacy images do not have IIIF links.
-                image_url = item.get("image_native")
+        if not (foreign_identifier := iiif_id or item.get("id")):
+            return []
 
-            thumbnail_url = item.get("image_thumbnail")
-            height = item.get("image_height")
-            width = item.get("image_width")
-            filesize = item.get("image_size") or item.get("size")
-            images.append(
-                {
-                    "id": image_id,
-                    "image_url": image_url,
-                    "thumbnail_url": thumbnail_url,
-                    "height": height,
-                    "width": width,
-                    "filesize": filesize,
-                }
-            )
+        if iiif_id:
+            image_url = SmkDataIngester._get_image_url(iiif_id)
+        else:
+            # Legacy images do not have IIIF links.
+            image_url = item.get("image_native")
+
+        thumbnail_url = item.get("image_thumbnail")
+        height = item.get("image_height")
+        width = item.get("image_width")
+        filesize = item.get("image_size") or item.get("size")
 
         # We used to get additional images from the `alternative_images` field,
         # but we found these to be either redundant, duplicates, or lower quality
         # versions. See https://github.com/WordPress/openverse-catalog/issues/875
         # for the full investigation & discussion
 
-        return images
+        return {
+            "id": foreign_identifier,
+            "image_url": image_url,
+            "thumbnail_url": thumbnail_url,
+            "height": height,
+            "width": width,
+            "filesize": filesize,
+        }
 
     @staticmethod
     def _get_metadata(item: dict) -> dict:
@@ -141,22 +136,21 @@ class SmkDataIngester(ProviderDataIngester):
 
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
         if not (license_info := get_license_info(data.get("rights"))):
-            return
+            return None
+
+        if not (license_info := get_license_info(license_url=license_url)):
+            return None
         if not (foreign_landing_url := self._get_foreign_landing_url(data)):
             return None
         images = []
         alt_images = self._get_images(data)
+        # _get_images returns only items with valid id and image_url
         for img in alt_images:
-            if not (foreign_identifier := img.get("id")) or not (
-                image_url := img.get("image_url")
-            ):
-                continue
-
             images.append(
                 {
-                    "foreign_identifier": foreign_identifier,
+                    "foreign_identifier": img["id"],
                     "foreign_landing_url": foreign_landing_url,
-                    "image_url": image_url,
+                    "image_url": img["image_url"],
                     "thumbnail_url": img.get("thumbnail_url"),
                     "license_info": license_info,
                     "title": self._get_title(data),
