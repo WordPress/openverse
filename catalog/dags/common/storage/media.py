@@ -113,6 +113,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         `license_info`, `foreign_identifier`, `foreign_landing_url`, or `url`.
         """
         for field in [
+            "license_info",
             "foreign_identifier",
             "foreign_landing_url",
             f"{self.media_type}_url",
