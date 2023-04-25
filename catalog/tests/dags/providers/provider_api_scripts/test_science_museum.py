@@ -149,7 +149,7 @@ def test_get_record_data_returns_none_for_falsy_foreign_landing_url(record):
             "links": {"self": "link"},
             "attributes": {
                 "multimedia": [
-                    {"admin": {"uid": "fid"}, "processed": {"large": "link"}}
+                    {"admin": {"uid": "fid"}, "processed": {"large": {}}},
                 ],
             },
         },

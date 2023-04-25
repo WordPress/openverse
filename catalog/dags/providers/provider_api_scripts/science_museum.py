@@ -126,6 +126,8 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
             if not (foreign_id := image_data.get("admin", {}).get("uid")):
                 continue
             processed = image_data.get("processed")
+            if not isinstance(processed, dict):
+                continue
             (
                 image_url,
                 height,
