@@ -92,7 +92,7 @@
             :href="DMCA_FORM_URL"
           >
             {{ $t("media-details.content-report.form.dmca.open") }}
-            <VIcon :size="4" class="ms-1" :icon-path="icons.externalLink" />
+            <VIcon :size="4" class="ms-1" name="external-link" />
           </VButton>
           <VButton
             v-else
@@ -135,8 +135,6 @@ import VRadio from "~/components/VRadio/VRadio.vue"
 import VDmcaNotice from "~/components/VContentReport/VDmcaNotice.vue"
 import VReportDescForm from "~/components/VContentReport/VReportDescForm.vue"
 import VLink from "~/components/VLink.vue"
-
-import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
   name: "VContentReportForm",
@@ -201,9 +199,6 @@ export default defineComponent({
     }
 
     return {
-      icons: {
-        externalLink: externalLinkIcon,
-      },
       reasons,
       DMCA,
       OTHER,

@@ -1,6 +1,6 @@
 const { nuxifyStorybook } = require("../.nuxt-storybook/storybook/main")
 
-module.exports = nuxifyStorybook({
+const storybook = nuxifyStorybook({
   webpackFinal(config) {
     // extend config here
 
@@ -13,3 +13,11 @@ module.exports = nuxifyStorybook({
     // Add your addons here
   ],
 })
+
+const generatedIconsStory = storybook.stories.indexOf(
+  "@nuxtjs/svg-sprite/stories/*.stories.js"
+)
+storybook.stories[generatedIconsStory] =
+  "../node_modules/@nuxtjs/svg-sprite/stories/*.stories.js"
+
+module.exports = storybook

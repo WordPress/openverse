@@ -3,7 +3,7 @@
     v-bind="$attrs"
     :tabindex="isTabbable ? 0 : -1"
     class="play-pause flex-shrink-0 border-dark-charcoal bg-dark-charcoal text-white focus-visible:border-pink focus-visible:shadow-ring focus-visible:outline-none active:shadow-ring disabled:opacity-70"
-    :icon-props="icon === undefined ? undefined : { iconPath: icon }"
+    :icon-props="icon === undefined ? undefined : { name: icon }"
     :label="$t(label)"
     :button-props="buttonProps"
     @click.stop.prevent="handleClick"
@@ -38,14 +38,10 @@ import type { ButtonConnections, ButtonVariant } from "~/types/button"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
-import playIcon from "~/assets/icons/play.svg"
-import pauseIcon from "~/assets/icons/pause.svg"
-import replayIcon from "~/assets/icons/replay.svg"
-
 const statusIconMap = {
-  playing: pauseIcon,
-  paused: playIcon,
-  played: replayIcon,
+  playing: "pause",
+  paused: "play",
+  played: "replay",
   loading: undefined,
 } as const
 

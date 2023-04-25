@@ -48,7 +48,7 @@
       }}<VIcon
         class="text-dark-charcoal-40"
         :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
-        :icon-path="caretDownIcon"
+        name="caret-down"
       />
     </VButton>
     <template v-if="triggerElement">
@@ -102,8 +102,6 @@ import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
-
-import caretDownIcon from "~/assets/icons/caret-down.svg"
 
 export default defineComponent({
   name: "VExternalSearchForm",
@@ -176,8 +174,6 @@ export default defineComponent({
       triggerA11yProps,
 
       isVisible,
-
-      caretDownIcon,
     }
   },
 })

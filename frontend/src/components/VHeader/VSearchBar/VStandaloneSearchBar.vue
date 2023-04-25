@@ -39,7 +39,7 @@
           !isHomeRoute,
       }"
     >
-      <VIcon :icon-path="searchIcon" />
+      <VIcon name="search" />
     </VButton>
   </form>
 </template>
@@ -51,8 +51,6 @@ import { defineEvent } from "~/types/emits"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-
-import searchIcon from "~/assets/icons/search.svg"
 
 /**
  * Displays a search input for a search query and is attached to an action button
@@ -97,8 +95,6 @@ export default defineComponent({
       inputRef,
       handleSearch,
       isHomeRoute,
-
-      searchIcon,
     }
   },
 })

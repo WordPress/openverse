@@ -17,7 +17,7 @@
         class="label-bold justify-between text-dark-charcoal md:justify-start md:gap-x-2"
       >
         {{ source.name }}
-        <VIcon :icon-path="externalLinkIcon" :size="4" rtl-flip />
+        <VIcon name="external-link" :size="4" rtl-flip />
       </VButton>
     </div>
   </div>
@@ -29,10 +29,7 @@ import { defineComponent, PropType } from "vue"
 import type { ExternalSource } from "~/types/external-source"
 
 import VButton from "~/components/VButton.vue"
-
 import VIcon from "~/components/VIcon/VIcon.vue"
-
-import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
   name: "VNoResults",
@@ -46,11 +43,6 @@ export default defineComponent({
       type: String,
       required: true,
     },
-  },
-  setup() {
-    return {
-      externalLinkIcon,
-    }
   },
 })
 </script>

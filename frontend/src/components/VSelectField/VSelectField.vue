@@ -6,7 +6,7 @@
       <slot name="start" />
     </div>
     <div class="pointer-events-none absolute inset-y-0 end-2 my-auto h-fit">
-      <VIcon :icon-path="caretDownIcon" />
+      <VIcon name="caret-down" />
     </div>
     <select
       :id="fieldId"
@@ -33,8 +33,6 @@ import { defineEvent } from "~/types/emits"
 import { ProperlyExtractPropTypes } from "~/types/prop-extraction"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
-
-import caretDownIcon from "~/assets/icons/caret-down.svg"
 
 /**
  * Represents a singular valid option of the dropdown.
@@ -119,7 +117,6 @@ const VSelectField = defineComponent({
       fieldName,
       modelMedium,
       hasStartContent,
-      caretDownIcon,
     }
   },
 })

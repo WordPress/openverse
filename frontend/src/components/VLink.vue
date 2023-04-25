@@ -21,7 +21,7 @@
   >
     <slot /><VIcon
       v-if="showExternalIcon && !isInternal"
-      :icon-path="externalLinkIcon"
+      name="external-link"
       class="inline-block"
       :size="externalIconSize"
       rtl-flip
@@ -43,8 +43,6 @@ import { computed, defineComponent } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
-
-import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
   name: "VLink",
@@ -98,7 +96,6 @@ export default defineComponent({
       linkTo,
       isNuxtLink,
       isInternal,
-      externalLinkIcon,
     }
   },
 })

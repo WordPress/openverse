@@ -1,14 +1,7 @@
 <template>
   <VIconButton
-    :button-props="{
-      variant:
-        variant === 'black'
-          ? 'plain--avoid'
-          : variant === 'filled-white-light'
-          ? 'filled-white'
-          : variant,
-    }"
-    :icon-props="{ iconPath }"
+    :button-props="buttonProps"
+    :icon-props="iconProps"
     :borderless="true"
     :size="size"
     :class="{
@@ -24,12 +17,19 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
+import type { ButtonVariant } from "~/types/button"
+
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 import type { TranslateResult } from "vue-i18n"
 
-import closeIcon from "~/assets/icons/close.svg"
-import closeIconSmall from "~/assets/icons/close-small.svg"
+type CloseButtonVariant =
+  | "filled-white"
+  | "filled-white-light"
+  | "filled-transparent"
+  | "filled-dark"
+  | "black"
+  | "plain--avoid"
 
 /**
  * The square icon button with a cross in it. Used to close popovers,
@@ -54,13 +54,7 @@ export default defineComponent({
      * @default "filled-white-light"
      */
     variant: {
-      type: String as PropType<
-        | "filled-white"
-        | "filled-white-light"
-        | "filled-transparent"
-        | "filled-dark"
-        | "black"
-      >,
+      type: String as PropType<CloseButtonVariant>,
       default: "filled-white-light",
     },
     /**
@@ -81,12 +75,23 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const iconPath = computed<string>(() => {
-      return props.iconSize === "small" ? closeIconSmall : closeIcon
+    const iconProps = computed(() => {
+      return { name: props.iconSize === "small" ? "close-small" : "close" }
+    })
+
+    const buttonProps = computed<{ variant: ButtonVariant }>(() => {
+      const variant =
+        props.variant === "black"
+          ? "plain--avoid"
+          : props.variant === "filled-white-light"
+          ? "filled-white"
+          : props.variant
+      return { variant }
     })
 
     return {
-      iconPath,
+      buttonProps,
+      iconProps,
     }
   },
 })

@@ -8,10 +8,16 @@ import {
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-import replayIcon from "~/assets/icons/replay.svg"
-import externalLinkIcon from "~/assets/icons/external-link.svg"
+import spriteData from "~svgsprite/sprites.json"
 
 <Meta title="Components/VIcon" component={VIcon} />
+
+export const iconNames = spriteData.reduce((accumulator, sprite) => {
+  const iconsWithNamespace = sprite.symbols.map((symbol) =>
+    sprite.defaultSprite ? symbol : `${sprite.name}/${symbol}`
+  )
+  return accumulator.concat(iconsWithNamespace)
+}, [])
 
 export const Template = (args) => ({
   template: `<VIcon v-bind="args" />`,
@@ -27,34 +33,29 @@ export const Template = (args) => ({
 
 <ArgsTable of={VIcon} />
 
-To display the icon, the path to the SVG must be specified. When using a bundler
-like Webpack, importing an SVG (with the right loaders) will give the path to
-that SVG.
-
-```js
-import iconSvg from "~/path/to/icon" // contains the URL path to the SVG
-```
-
-You can then pass this imported value as the `iconPath` prop.
+To display the icon, pass the name of the icon as a prop.
 
 ```html
-<VIcon :iconPath="iconSvg" />
+<VIcon name="icon-name" />
 ```
 
 <Canvas>
   <Story
     name="Default"
     args={{
-      iconPath: replayIcon,
+      name: "replay",
+    }}
+    argTypes={{
+      name: {
+        options: iconNames,
+        control: { type: "select" },
+        defaultValue: "replay",
+      },
     }}
   >
     {Template.bind({})}
   </Story>
 </Canvas>
-
-Each icon SVG must have a `<g>` element right below the top-level `<svg>`
-element. This element should have the `id` attribute equal to `"icon"`. If not,
-pass the attribute value as the `gId` prop.
 
 ## RTL
 
@@ -69,7 +70,7 @@ using the 🌐 button.
     name="RTL"
     args={{
       rtlFlip: true,
-      iconPath: externalLinkIcon,
+      name: "external-link",
     }}
   >
     {Template.bind({})}

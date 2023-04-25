@@ -43,6 +43,7 @@ importers:
       '@nuxtjs/storybook': ^4.3.2
       '@nuxtjs/style-resources': ^1.0.0
       '@nuxtjs/svg': ^0.4.0
+      '@nuxtjs/svg-sprite': 0.5.2
       '@pinia/nuxt': 0.2.1
       '@pinia/testing': ^0.0.15
       '@playwright/test': 1.30.0
@@ -141,6 +142,7 @@ importers:
       '@nuxtjs/sentry': 7.1.4_vue@2.7.14
       '@nuxtjs/sitemap': 2.4.0
       '@nuxtjs/svg': 0.4.0_jjogt4bliw5zkzgrcodkvsva3y
+      '@nuxtjs/svg-sprite': 0.5.2
       '@pinia/nuxt': 0.2.1_pinia@2.0.33+vue@2.7.14
       '@popperjs/core': 2.11.2
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.1
@@ -4350,6 +4352,17 @@ packages:
       glob-all: 3.2.1
       sass-resources-loader: 2.2.4
     dev: true
+
+  /@nuxtjs/svg-sprite/0.5.2:
+    resolution: {integrity: sha512-zxNQbLHUMrKZjW80w0i0SONAqGF5BLUvNYx+j7dnuzUh0pxolJ0a2DIIfjxFs1hUxLk4dHTsclzl/vvV3mU+vA==}
+    dependencies:
+      chalk: 4.1.2
+      chokidar: 3.5.3
+      consola: 2.15.3
+      fs-extra: 9.1.0
+      svgo: 1.3.2
+      vue-functional-data-merge: 3.1.0
+    dev: false
 
   /@nuxtjs/svg/0.4.0_jjogt4bliw5zkzgrcodkvsva3y:
     resolution: {integrity: sha512-XF8uvV5YKBPAJr52SFRVkhltAsjCBTwwTc4GTysSm8WPYB2utJLY48qXdVC/J9dNQiMd7NHo1xmEYEqQfzqpqg==}
@@ -19208,6 +19221,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /vue-functional-data-merge/3.1.0:
+    resolution: {integrity: sha512-leT4kdJVQyeZNY1kmnS1xiUlQ9z1B/kdBFCILIjYYQDqZgLqCLa0UhjSSeRX6c3mUe6U5qYeM8LrEqkHJ1B4LA==}
+    dev: false
 
   /vue-hot-reload-api/2.3.4:
     resolution: {integrity: sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==}
