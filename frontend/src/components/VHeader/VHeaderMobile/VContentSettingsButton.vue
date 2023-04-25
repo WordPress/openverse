@@ -22,7 +22,7 @@
   </VSearchBarButton>
 </template>
 <script lang="ts">
-import VSearchBarButton from "../../../components/VHeader/VHeaderMobile/VSearchBarButton.vue"
+import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 
 export default {
   name: "VContentSettingsButton",
