@@ -60,7 +60,7 @@ def get_license_info(
     Otherwise, we return None.
     """
     license_info = _get_license_info_from_url(license_url)
-    if license_info is not None:
+    if license_info:
         logger.debug(
             f"Found derived license {license_info[0]},"
             f" derived version {license_info[1]},"
@@ -83,7 +83,7 @@ def get_license_info(
     validated_license_info = get_license_info_from_license_pair(
         license_, license_version
     )
-    if validated_license_info is None:
+    if not validated_license_info:
         logger.debug(
             f"No valid license_info could be derived. Inputs were"
             f" license_: {license_}"
