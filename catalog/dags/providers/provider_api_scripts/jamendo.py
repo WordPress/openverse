@@ -139,7 +139,7 @@ class JamendoDataIngester(ProviderDataIngester):
 
         creator_id = data.get("artist_id")
         creator_idstr = data.get("artist_idstr")
-        if creator_id is not None and creator_idstr is not None:
+        if creator_id and creator_idstr:
             creator_url = f"{base_url}{creator_id}/{creator_idstr}"
         else:
             creator_url = None
@@ -190,8 +190,7 @@ class JamendoDataIngester(ProviderDataIngester):
         if not (license_info := get_license_info(data.get("license_ccurl"))):
             return None
 
-        duration = data.get("duration")
-        if duration:
+        if duration := data.get("duration"):
             duration = int(duration) * 1000
         title = data.get("name")
         thumbnail = self._add_trailing_slash(data.get("image"))

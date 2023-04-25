@@ -218,12 +218,10 @@ class FreesoundDataIngester(ProviderDataIngester):
 
         Freesound does not have audio thumbnails.
         """
-        foreign_landing_url = media_data.get("url")
-        if not foreign_landing_url:
+        if not (foreign_landing_url := media_data.get("url")):
             return None
 
-        foreign_identifier = media_data.get("id")
-        if not foreign_identifier:
+        if not (foreign_identifier := media_data.get("id")):
             return None
 
         if not (item_license := get_license_info(media_data.get("license"))):

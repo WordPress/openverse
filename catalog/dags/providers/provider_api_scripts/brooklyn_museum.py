@@ -104,30 +104,31 @@ class BrooklynMuseumDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _handle_object_data(data, license_info: LicenseInfo) -> list[dict]:
-        images = []
-        if not (image_info := data.get("images")):
+        # id_ is used to create the foreign_landing_url, which is a required field
+        if not (image_info := data.get("images")) or not (id_ := data.get("id")):
             return []
 
-        if not (id_ := data.get("id")):
-            return []
+        foreign_landing_url = (
+            f"https://www.brooklynmuseum.org/opencollection/objects/{id_}"
+        )
 
         title = data.get("title", "")
-        foreign_url = f"https://www.brooklynmuseum.org/opencollection/objects/{id_}"
         metadata = BrooklynMuseumDataIngester._get_metadata(data)
         creators = BrooklynMuseumDataIngester._get_creators(data)
 
+        images = []
         for image in image_info:
-            if not (foreign_id := image.get("id")):
+            if not (foreign_identifier := image.get("id")):
                 continue
             if not (image_url := image.get("largest_derivative_url")):
                 continue
             height, width = BrooklynMuseumDataIngester._get_image_sizes(image)
             images.append(
                 {
-                    "foreign_landing_url": foreign_url,
+                    "foreign_landing_url": foreign_landing_url,
                     "image_url": image_url,
                     "license_info": license_info,
-                    "foreign_identifier": foreign_id,
+                    "foreign_identifier": foreign_identifier,
                     "width": width,
                     "height": height,
                     "title": title,

@@ -42,7 +42,11 @@ class ClevelandDataIngester(ProviderDataIngester):
             logger.debug(f"Wrong license image: {license_}")
             return None
 
+        # This would also be falsy if id is equal to `0`.
         if not (foreign_id := data.get("id")):
+            return None
+
+        if not (foreign_landing_url := data.get("url")):
             return None
 
         if not (image := self._get_image_data(data.get("images", {}))):
@@ -55,7 +59,7 @@ class ClevelandDataIngester(ProviderDataIngester):
 
         return {
             "foreign_identifier": f"{foreign_id}",
-            "foreign_landing_url": data.get("url"),
+            "foreign_landing_url": foreign_landing_url,
             "title": data.get("title", None),
             "creator": creator_name,
             "image_url": image["url"],

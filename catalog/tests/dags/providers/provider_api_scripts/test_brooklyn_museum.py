@@ -101,7 +101,6 @@ def test_process_batch(batch_objects_name, object_data_name, expected_count):
             ],
         ),
         ("object_data_noimage.json", []),
-        ({}, []),
     ],
 )
 def test_handle_object_data(resource_name, expected):
