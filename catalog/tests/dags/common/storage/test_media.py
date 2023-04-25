@@ -263,7 +263,7 @@ def test_MediaStore_clean_media_metadata_does_not_replace_category_with_default(
 
 
 @pytest.mark.parametrize(
-    "field", ("foreign_identifier", "foreign_landing_url", "image_url")
+    "field", ("foreign_identifier", "foreign_landing_url", "image_url", "license_info")
 )
 def test_MediaStore_clean_media_metadata_raises_when_missing_required_field(
     field,
