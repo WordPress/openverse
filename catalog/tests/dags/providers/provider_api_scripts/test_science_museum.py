@@ -107,6 +107,59 @@ def test_get_query_param_offset_page_number():
     assert actual_param == expected_param
 
 
+@pytest.mark.parametrize(
+    "record",
+    [
+        # missing foreign_landing_url
+        {"links": []},
+        {"links": {"self": ""}},
+    ],
+)
+def test_get_record_data_returns_none_for_falsy_foreign_landing_url(record):
+    actual_record_data = sm.get_record_data(record)
+    assert actual_record_data is None
+
+
+@pytest.mark.parametrize(
+    "record",
+    [
+        # missing foreign_landing_url
+        {"links": []},
+        {"links": {"self": ""}},
+        # missing foreign_identifier
+        {"links": {"self": "link"}, "attributes": {"multimedia": []}},
+        {"links": {"self": "link"}, "attributes": {"multimedia": [{"admin": ""}]}},
+        {
+            "links": {"self": "link"},
+            "attributes": {"multimedia": [{"admin": {"uid": ""}}]},
+        },
+        {
+            "links": {"self": "link"},
+            "attributes": {"multimedia": [{"admin": {"uid": "fid"}}]},
+        },
+        # missing image_url
+        {
+            "links": {"self": "link"},
+            "attributes": {
+                "multimedia": [{"admin": {"uid": "fid"}, "processed": {"large": ""}}],
+            },
+        },
+        # missing license_pair
+        {
+            "links": {"self": "link"},
+            "attributes": {
+                "multimedia": [
+                    {"admin": {"uid": "fid"}, "processed": {"large": "link"}}
+                ],
+            },
+        },
+    ],
+)
+def test_get_record_data_returns_empty_list_for_falsy_required_values(record):
+    actual_record_data = sm.get_record_data(record)
+    assert actual_record_data == []
+
+
 def test_get_record_data_success(object_data):
     actual_record_data = sm.get_record_data(object_data)
     actual_image_data = actual_record_data[0]

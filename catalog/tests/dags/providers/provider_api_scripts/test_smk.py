@@ -63,6 +63,7 @@ def test_get_next_query_params_increments_offset():
             "https://open.smk.dk/en/artwork/image/KKSgb22423%20version%201",
         ),
         ("KSMB 25 106.5", "https://open.smk.dk/en/artwork/image/KSMB%2025%20106.5"),
+        ("", None),
     ],
 )
 def test__get_foreign_landing_url(object_number, expected_url):
@@ -106,6 +107,14 @@ def test__get_images_legacy():
     assert actual_images_data == expected_images_data
 
 
+def test__get_images_legacy_returns_none_with_falsy_id():
+    item = _get_resource_json("image_data_legacy.json")
+    item["id"] = ""
+    actual_images_data = smk._get_images(item)
+
+    assert actual_images_data == []
+
+
 def test__get_images_partial():
     # Left in as a regression test for
     # https://github.com/WordPress/openverse-catalog/issues/875
@@ -132,3 +141,24 @@ def test_get_record_data_returns_main_image():
     images = smk.get_record_data(item)
 
     assert len(images) == 1
+
+
+def test_get_record_data_returns_none_with_falsy_license_info():
+    item = _get_resource_json("item.json")
+    item["rights"] = ""
+
+    assert smk.get_record_data(item) is None
+
+
+def test_get_record_data_returns_none_with_falsy_foreign_landing_url():
+    item = _get_resource_json("item.json")
+    item["object_number"] = ""
+
+    assert smk.get_record_data(item) is None
+
+
+def test_get_record_data_returns_none_with_falsy_foreign_identifier():
+    item = _get_resource_json("item.json")
+    item["object_number"] = ""
+
+    assert smk.get_record_data(item) is None
