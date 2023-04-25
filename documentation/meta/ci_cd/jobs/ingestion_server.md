@@ -1,6 +1,6 @@
 # Ingestion server jobs
 
-### `test-ing`
+## `test-ing`
 
 Runs tests for the ingestion server using the `ingestion_server/test-local`
 recipe. Tests are run on the host so Python needs to be installed and set up.
