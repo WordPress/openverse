@@ -89,7 +89,7 @@ class JamendoDataIngester(ProviderDataIngester):
         >>> _remove_trackid(url)
         'https://usercontent.jamendo.com?type=album&id=119&width=200'
         """
-        if thumbnail_url is None:
+        if not thumbnail_url:
             return None
         return self._remove_param_from_url(
             self._add_trailing_slash(thumbnail_url), "trackid"
@@ -127,14 +127,14 @@ class JamendoDataIngester(ProviderDataIngester):
         - audio_url
         - duration (in milliseconds)
         """
-        if (audio_url := data.get("audio")) is None:
+        if not (audio_url := data.get("audio")):
             return None
         return self._remove_param_from_url(audio_url, "from")
 
     @staticmethod
     def _get_creator_data(data):
         base_url = "https://www.jamendo.com/artist/"
-        if (creator_name := data.get("artist_name")) is None:
+        if not (creator_name := data.get("artist_name")):
             return None, None
 
         creator_id = data.get("artist_id")
@@ -178,13 +178,13 @@ class JamendoDataIngester(ProviderDataIngester):
         return tags
 
     def get_record_data(self, data):
-        if (foreign_identifier := data.get("id")) is None:
+        if not (foreign_identifier := data.get("id")):
             return None
 
-        if (foreign_landing_url := data.get("shareurl")) is None:
+        if not (foreign_landing_url := data.get("shareurl")):
             return None
 
-        if (audio_url := self._get_audio_url(data)) is None:
+        if not (audio_url := self._get_audio_url(data)):
             return None
 
         if not (license_info := get_license_info(data.get("license_ccurl"))):
@@ -207,9 +207,9 @@ class JamendoDataIngester(ProviderDataIngester):
         # Audio Set data
         set_url = None
         base_url = "https://www.jamendo.com/album/"
-        audio_set = data.get("album_name")
         set_position = data.get("position")
         set_thumbnail = self._remove_trackid(data.get("album_image"))
+        audio_set = data.get("album_name")
         set_id = data.get("album_id")
         if set_id and audio_set:
             set_slug = (

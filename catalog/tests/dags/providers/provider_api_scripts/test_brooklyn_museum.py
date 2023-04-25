@@ -101,6 +101,7 @@ def test_process_batch(batch_objects_name, object_data_name, expected_count):
             ],
         ),
         ("object_data_noimage.json", []),
+        ({}, []),
     ],
 )
 def test_handle_object_data(resource_name, expected):
@@ -117,6 +118,16 @@ def test_handle_object_data_missing_field(field):
     # Remove the requested field
     response_json["images"][0].pop(field)
     actual = bkm._handle_object_data(response_json, license_info=CC_BY_3_0)
+    assert actual == []
+
+
+@pytest.mark.parametrize("field", ["id", "largest_derivative_url"])
+def test_handle_object_data_falsy_field(field):
+    response_json = _get_resource_json("object_data.json")
+    license_url = "https://creativecommons.org/licenses/by/3.0/"
+    # Remove the requested field
+    response_json["images"][0][field] = ""
+    actual = bkm._handle_object_data(response_json, license_url)
     assert actual == []
 
 
@@ -181,6 +192,7 @@ def test_get_creators(data, expected):
     [
         ({}, True),
         ({"doesnt-have-id": "foobar"}, True),
+        ({"id": ""}, True),
         ({"id": "foobar"}, False),
     ],
 )

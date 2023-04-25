@@ -98,18 +98,21 @@ def test_get_object_list_from_json_returns_expected_output():
     assert actual_items_list == expect_items_list
 
 
-def test_get_object_list_return_none_if_empty():
-    test_dict = {"records": []}
-    assert fm.get_batch_data(test_dict) is None
-
-
-def test_get_object_list_return_none_if_missing():
-    test_dict = {}
-    assert fm.get_batch_data(test_dict) is None
-
-
-def test_get_object_list_return_none_if_none_json():
-    assert fm.get_batch_data(None) is None
+@pytest.mark.parametrize(
+    "response_json",
+    [
+        {"records": None},
+        {"records": {}},
+        {"records": ""},
+        {"records": []},
+        {"status": "OK"},
+        None,
+        {},
+        [],
+    ],
+)
+def test_get_object_list_returns_none_if_response_json_invalid(response_json):
+    assert fm.get_batch_data(response_json) is None
 
 
 def test_process_object_with_real_example():
@@ -155,6 +158,7 @@ def test_get_image_url():
     "image_rights_obj, expected_license_url",
     [
         ({}, None),
+        ({"imageRights": {"link": ""}}, None),
         (
             {
                 "imageRights": {

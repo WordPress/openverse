@@ -176,17 +176,26 @@ def test_get_record_data():
     assert actual_data == expected_data
 
 
-def test_get_record_data_returns_none_when_missing_owner():
-    image_data = _get_resource_json("image_data_complete_example.json")
-    image_data.pop("owner")
-
+@pytest.mark.parametrize(
+    "image_data",
+    [
+        {"license_info": None},
+        {"license_info": ""},
+        {"url_l": None},
+        {"url_l": ""},
+        {"id": None},
+        {"id": ""},
+    ],
+)
+def test_get_record_data_returns_none_when_required_params_falsy(image_data):
     actual_data = flickr.get_record_data(image_data)
     assert actual_data is None
 
 
-def test_get_record_data_returns_none_when_missing_foreign_id():
+@pytest.mark.parametrize("missing_param", ["owner", "id"])
+def test_get_record_data_returns_none_when_missing_owner(missing_param):
     image_data = _get_resource_json("image_data_complete_example.json")
-    image_data.pop("id")
+    image_data.pop(missing_param)
 
     actual_data = flickr.get_record_data(image_data)
     assert actual_data is None
