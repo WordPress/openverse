@@ -346,9 +346,9 @@ respective materialized views. Because the schema of the media tables now
 matches what the ingestion server already expects, we can simply change the
 table name each place it is referenced:
 
-- `_get_shared_cols`
-- `refresh_api_table`
-- `get_copy_data_query`
+- [`_get_shared_cols`](https://github.com/WordPress/openverse/blob/003c0d3e5c2813b671120144756659775f3369f4/ingestion_server/ingestion_server/ingest.py#L75)
+- [`refresh_api_table`](https://github.com/WordPress/openverse/blob/003c0d3e5c2813b671120144756659775f3369f4/ingestion_server/ingestion_server/ingest.py#L310)
+- [`get_copy_data_query`](https://github.com/WordPress/openverse/blob/003c0d3e5c2813b671120144756659775f3369f4/ingestion_server/ingestion_server/queries.py#L206)
 
 ## Dependencies
 
