@@ -25,6 +25,12 @@ class InvalidLicenseURLException(Exception):
 
 LicenseInfo = namedtuple("LicenseInfo", ["license", "version", "url", "raw_url"])
 
+# SMK sometimes uses incorrect URL for licenses
+special_cases = {
+    "https://creativecommons.org/share-your-work/public-domain/cc0/": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "https://creativecommons.org/share-your-work/public-domain/pdm/": "https://creativecommons.org/publicdomain/mark/1.0/",
+}
+
 
 @lru_cache(maxsize=1024)
 def get_license_info(
@@ -183,8 +189,6 @@ def _get_valid_cc_url(license_url) -> str | None:
         https_url += "/"
     if https_url in LICENSE_URLS:
         return https_url
-    if https_url == "https://creativecommons.org/share-your-work/public-domain/cc0/":
-        return "https://creativecommons.org/publicdomain/zero/1.0/"
 
     parsed_url = urlparse(https_url)
 
@@ -199,6 +203,12 @@ def _get_valid_cc_url(license_url) -> str | None:
     ):
         validated_license_url = rewritten_url
         logger.debug(f"Rewritten URL {rewritten_url} is valid")
+    elif rewritten_url is not None and rewritten_url in special_cases:
+        validated_license_url = special_cases[rewritten_url]
+        logger.debug(
+            f"Rewritten URL {validated_license_url} is valid, "
+            f"and uses non-standard URL {rewritten_url}"
+        )
     else:
         logger.debug(f"Rewritten URL {rewritten_url} is invalid")
         validated_license_url = None
