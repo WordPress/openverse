@@ -51,9 +51,9 @@ This table is updated by **ingestion**, which may:
 
 #### `image_popularity_metrics`
 
-A table which contains known 'metrics': that is, the name of the meta*data field
-which contains raw popularity data for each provider. \_Not all providers have a
-configured popularity metric.*
+A table which contains known 'metrics': that is, the name of the meta\_data field
+which contains raw popularity data for each provider. _Not all providers have a
+configured popularity metric._
 
 This table only needs to be updated when a metric is added or modified.
 
