@@ -189,7 +189,16 @@ export const useSearchStore = defineStore("search", {
       query,
     }: { type?: SearchType; query?: ApiQueryParams } = {}): string {
       const searchType = type || this.searchType
-      const queryParams = query || this.searchQueryParams
+      let queryParams
+      if (!query) {
+        if (type && isSearchTypeSupported(type)) {
+          queryParams = computeQueryParams(type, this.filters, this.searchTerm)
+        } else {
+          queryParams = this.searchQueryParams
+        }
+      } else {
+        queryParams = query
+      }
 
       return this.$nuxt.localePath({
         path: searchPath(searchType),
