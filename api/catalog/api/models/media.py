@@ -263,7 +263,7 @@ class PerformIndexUpdateMixin:
         es: Elasticsearch = settings.ES
 
         try:
-            identifier = self.media_obj.identifier
+            document_id = self.media_obj.id
         except self.media_class.DoesNotExist:
             if raise_errors:
                 raise ValidationError(
@@ -275,14 +275,14 @@ class PerformIndexUpdateMixin:
             try:
                 getattr(es, method)(
                     index=index,
-                    id=identifier,
+                    id=document_id,
                     refresh=True,
                     **es_method_args,
                 )
             except TransportError as e:
                 if e.status_code == 404:
                     logger.warn(
-                        f"Unable to update document with id {identifier} "
+                        f"Unable to update document with _id {document_id} "
                         f"in index {index} due to transport error: {e}"
                     )
                 else:

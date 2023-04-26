@@ -50,10 +50,7 @@ def test_deleted_media_deletes_from_all_indexes(
     instance.save()
 
     settings.ES.delete.assert_has_calls(
-        (
-            mock.call(index=index, id=media.identifier, refresh=True)
-            for index in indexes
-        ),
+        (mock.call(index=index, id=media.id, refresh=True) for index in indexes),
         # The order does not matter
         any_order=True,
     )
@@ -81,10 +78,7 @@ def test_deleted_media_ignores_elasticsearch_404_errors(
     instance.save()
 
     settings.ES.delete.assert_has_calls(
-        (
-            mock.call(index=index, id=media.identifier, refresh=True)
-            for index in indexes
-        ),
+        (mock.call(index=index, id=media.id, refresh=True) for index in indexes),
         # The order does not matter
         any_order=True,
     )
@@ -113,10 +107,7 @@ def test_deleted_media_raises_elasticsearch_400_errors(
         instance.save()
 
     settings.ES.delete.assert_has_calls(
-        (
-            mock.call(index=index, id=media.identifier, refresh=True)
-            for index in indexes
-        ),
+        (mock.call(index=index, id=media.id, refresh=True) for index in indexes),
         # The order does not matter
         any_order=True,
     )
@@ -145,7 +136,7 @@ def test_mature_media_updates_all_indexes(
         (
             mock.call(
                 index=index,
-                id=media.identifier,
+                id=media.id,
                 body={"doc": {"mature": True}},
                 refresh=True,
             )
@@ -181,7 +172,7 @@ def test_mature_media_ignores_elasticsearch_404_errors(
         (
             mock.call(
                 index=index,
-                id=media.identifier,
+                id=media.id,
                 body={"doc": {"mature": True}},
                 refresh=True,
             )
@@ -218,7 +209,7 @@ def test_mature_media_reraises_elasticsearch_400_errors(
         (
             mock.call(
                 index=index,
-                id=media.identifier,
+                id=media.id,
                 body={"doc": {"mature": True}},
                 refresh=True,
             )
