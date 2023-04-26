@@ -1,9 +1,12 @@
+import logging
 import mimetypes
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.html import format_html
+
+from elasticsearch import Elasticsearch, TransportError
 
 from catalog.api.models.base import OpenLedgerModel
 from catalog.api.models.mixins import (
@@ -23,6 +26,8 @@ NO_ACTION = "no_action"
 MATURE = "mature"
 DMCA = "dmca"
 OTHER = "other"
+
+parent_logger = logging.getLogger(__name__)
 
 
 class AbstractMedia(
@@ -242,7 +247,49 @@ class AbstractMediaReport(models.Model):
             same_reports.update(status=self.status)
 
 
-class AbstractDeletedMedia(OpenLedgerModel):
+class PerformIndexUpdateMixin:
+    @property
+    def indexes(self):
+        return [self.es_index, f"{self.es_index}-filtered"]
+
+    def _perform_index_update(self, method: str, raise_errors: bool, **es_method_args):
+        """
+        Call ``method`` on the Elasticsearch client.
+
+        Automatically handles ``DoesNotExist`` warnings, forces a refresh,
+        and calls the method for origin and filtered indexes.
+        """
+        logger = parent_logger.getChild("PerformIndexUpdateMixin._perform_index_update")
+        es: Elasticsearch = settings.ES
+
+        try:
+            identifier = self.media_obj.identifier
+        except self.media_class.DoesNotExist:
+            if raise_errors:
+                raise ValidationError(
+                    f"No '{self.media_class.__name__}' instance"
+                    f"with identifier {self.media_obj.identifier}."
+                )
+
+        for index in self.indexes:
+            try:
+                getattr(es, method)(
+                    index=index,
+                    id=identifier,
+                    refresh=True,
+                    **es_method_args,
+                )
+            except TransportError as e:
+                if e.status_code == 404:
+                    logger.warn(
+                        f"Unable to update document with id {identifier} "
+                        f"in index {index} due to transport error: {e}"
+                    )
+                else:
+                    raise e
+
+
+class AbstractDeletedMedia(PerformIndexUpdateMixin, OpenLedgerModel):
     """
     Generic model from which to inherit all deleted media classes.
 
@@ -275,26 +322,18 @@ class AbstractDeletedMedia(OpenLedgerModel):
         abstract = True
 
     def _update_es(self, raise_errors: bool) -> models.Model:
-        es = settings.ES
-        try:
-            obj = self.media_obj
-            es.delete(index=self.es_index, id=obj.id)
-            es.indices.refresh(index=self.es_index)
-            return obj
-        except self.media_class.DoesNotExist:
-            if raise_errors:
-                raise ValidationError(
-                    f"No '{self.media_class.__name__}' instance"
-                    f"with identifier {self.media_obj.identifier}."
-                )
+        self._perform_index_update(
+            "delete",
+            raise_errors,
+        )
 
     def save(self, *args, **kwargs):
-        obj = self._update_es(True)
+        self._update_es(True)
         super().save(*args, **kwargs)
-        obj.delete()  # remove the actual model instance
+        self.media_obj.delete()  # remove the actual model instance
 
 
-class AbstractMatureMedia(models.Model):
+class AbstractMatureMedia(PerformIndexUpdateMixin, models.Model):
     """
     Generic model from which to inherit all mature media classes.
 
@@ -333,21 +372,11 @@ class AbstractMatureMedia(models.Model):
         :param is_mature: whether to mark the media item as mature
         :param raise_errors: whether to raise an error if the no media item is found
         """
-
-        es = settings.ES
-        try:
-            es.update(
-                index=self.es_index,
-                id=self.media_obj.id,
-                body={"doc": {"mature": is_mature}},
-            )
-            es.indices.refresh(index=self.es_index)
-        except self.media_class.DoesNotExist:
-            if raise_errors:
-                raise ValidationError(
-                    f"No '{self.media_class.__name__}' instance"
-                    f"with identifier {self.media_obj.identifier}."
-                )
+        self._perform_index_update(
+            "update",
+            raise_errors,
+            body={"doc": {"mature": is_mature}},
+        )
 
     def save(self, *args, **kwargs):
         self._update_es(True, True)
