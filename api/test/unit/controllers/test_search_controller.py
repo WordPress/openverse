@@ -14,6 +14,9 @@ from catalog.api.utils import tallies
 from catalog.api.utils.dead_link_mask import get_query_hash, save_query_mask
 
 
+pytestmark = pytest.mark.django_db
+
+
 @pytest.mark.parametrize(
     "total_hits, real_result_count, page_size, page, expected",
     [
@@ -381,13 +384,16 @@ def test_paginate_with_dead_link_mask_query_mask_overlaps_query_window(
     ), f"expected {expected_range} but got {actual_range}"
 
 
-@pytest.mark.parametrize(
+parametrize_index = pytest.mark.parametrize(
     "index",
     (
         "image",
         "audio",
     ),
 )
+
+
+@parametrize_index
 @pytest.mark.parametrize(
     ("page", "page_size", "does_tally", "number_of_results_passed"),
     (
@@ -426,7 +432,6 @@ def test_paginate_with_dead_link_mask_query_mask_overlaps_query_window(
 @mock.patch(
     "catalog.api.controllers.search_controller._post_process_results",
 )
-@pytest.mark.django_db
 def test_search_tallies_pages_less_than_5(
     mock_post_process_results,
     count_provider_occurrences_mock: mock.MagicMock,
@@ -465,20 +470,13 @@ def test_search_tallies_pages_less_than_5(
         count_provider_occurrences_mock.assert_not_called()
 
 
-@pytest.mark.parametrize(
-    "index",
-    (
-        "image",
-        "audio",
-    ),
-)
+@parametrize_index
 @mock.patch.object(
     tallies, "count_provider_occurrences", wraps=tallies.count_provider_occurrences
 )
 @mock.patch(
     "catalog.api.controllers.search_controller._post_process_results",
 )
-@pytest.mark.django_db
 def test_search_tallies_handles_empty_page(
     mock_post_process_results,
     count_provider_occurrences_mock: mock.MagicMock,
@@ -503,3 +501,46 @@ def test_search_tallies_handles_empty_page(
     )
 
     count_provider_occurrences_mock.assert_not_called()
+
+
+@parametrize_index
+@pytest.mark.parametrize(
+    ("feature_enabled", "include_sensitive_results", "index_suffix"),
+    (
+        (True, True, ""),
+        (True, False, "-filtered"),
+        (False, True, ""),
+        (False, False, ""),
+    ),
+)
+@mock.patch("catalog.api.controllers.search_controller.Search", wraps=Search)
+def test_resolves_index(
+    search_class,
+    index,
+    feature_enabled,
+    include_sensitive_results,
+    index_suffix,
+    settings,
+    request_factory,
+):
+    origin_index = index
+    searched_index = f"{index}{index_suffix}"
+
+    settings.ENABLE_FILTERED_INDEX_QUERIES = feature_enabled
+
+    serializer = MediaSearchRequestSerializer(
+        data={"unstable__include_sensitive_results": include_sensitive_results}
+    )
+    serializer.is_valid()
+
+    search_controller.search(
+        search_params=serializer,
+        ip=0,
+        index=origin_index,
+        page=1,
+        page_size=20,
+        request=request_factory.get("/"),
+        filter_dead=False,
+    )
+
+    search_class.assert_called_once_with(index=searched_index)
