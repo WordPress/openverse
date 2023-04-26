@@ -21,10 +21,10 @@ for (const mediaType of supportedMediaTypes) {
       breakpoints.describeEvery(
         { maxDiffPixelRatio: 0.02 },
         ({ breakpoint, expectSnapshot }) => {
-        test.beforeEach(async ({ page }) => {
-          await closeFiltersUsingCookies(page)
-          await dismissBannersUsingCookies(page)
-          await setBreakpointCookie(page, breakpoint)
+          test.beforeEach(async ({ page }) => {
+            await closeFiltersUsingCookies(page)
+            await dismissBannersUsingCookies(page)
+            await setBreakpointCookie(page, breakpoint)
 
             await goToSearchTerm(page, "birds", { dir })
           })
