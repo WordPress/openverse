@@ -36,6 +36,7 @@ from catalog.api.utils.url import add_protocol
         "unstable__sort_dir",
         "unstable__authority",
         "unstable__authority_boost",
+        "unstable__include_sensitive_results",
     ],
 )
 class MediaSearchRequestSerializer(serializers.Serializer):
@@ -64,6 +65,7 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         # "unstable__sort_dir",
         # "unstable__authority",
         # "unstable__authority_boost",
+        # "unstable__include_sensitive_results",
         "page_size",
         "page",
     ]
@@ -168,6 +170,13 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         min_value=0.0,
         max_value=10.0,
     )
+    unstable__include_sensitive_results = serializers.BooleanField(
+        source="include_sensitive_results",
+        label="include_sensitive_results",
+        help_text="Whether to include results considered sensitive.",
+        required=False,
+        default=False,
+    )
 
     page_size = serializers.IntegerField(
         label="page_size",
@@ -242,6 +251,19 @@ class MediaSearchRequestSerializer(serializers.Serializer):
 
     def validate_unstable__authority(self, value):
         return False if self.is_request_anonymous() else value
+
+    def validate_unstable__include_sensitive_results(
+        self,
+        value,
+    ):
+        exclusive_fields = ("mature", "unstable__include_sensitive_results")
+        if all(f in self.initial_data for f in exclusive_fields):
+            raise serializers.ValidationError(
+                "`mature` and `unstable__include_sensitive_results` "
+                "must not both be defined."
+            )
+
+        return self.initial_data.get("mature") or value
 
     def validate_page_size(self, value):
         is_anonymous = self.is_request_anonymous()
