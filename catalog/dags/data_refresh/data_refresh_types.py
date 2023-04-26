@@ -65,8 +65,8 @@ DATA_REFRESH_CONFIGS = [
         data_refresh_timeout=timedelta(days=4),
         refresh_metrics_timeout=timedelta(hours=24),
         refresh_matview_timeout=timedelta(days=21),
-        create_pop_constants_view_timeout=timedelta(hours=8),
-        create_materialized_view_timeout=timedelta(hours=5),
+        create_pop_constants_view_timeout=timedelta(hours=24),
+        create_materialized_view_timeout=timedelta(days=21),
     ),
     DataRefresh(media_type="audio"),
 ]
