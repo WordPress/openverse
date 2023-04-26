@@ -20,7 +20,7 @@ from requests.exceptions import ConnectionError, SSLError
 from retry import retry
 
 from common import constants
-from common.licenses.licenses import LicenseInfo, get_license_info
+from common.licenses.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import RetriesExceeded
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -131,10 +131,6 @@ class FreesoundDataIngester(ProviderDataIngester):
                 metadata[field] = field_value
         return metadata
 
-    @staticmethod
-    def _get_license(item) -> LicenseInfo | None:
-        return get_license_info(license_url=item.get("license"))
-
     @functools.lru_cache(maxsize=1024)
     def _get_set_info(self, set_url):
         try:
@@ -231,7 +227,7 @@ class FreesoundDataIngester(ProviderDataIngester):
         if not foreign_identifier:
             return None
 
-        if not (item_license := self._get_license(media_data)):
+        if not (item_license := get_license_info(media_data.get("license"))):
             return None
 
         # We use the mp3-hq preview url as `audio_url` as the main url

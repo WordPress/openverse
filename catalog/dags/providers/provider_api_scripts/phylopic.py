@@ -100,7 +100,7 @@ class PhylopicDataIngester(ProviderDataIngester):
             return None
 
         license_url = data.get("license", {}).get("href")
-        if not (license_info := get_license_info(license_url=license_url)):
+        if not (license_info := get_license_info(license_url)):
             return None
 
         foreign_url = self.host + foreign_url

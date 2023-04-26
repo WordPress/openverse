@@ -299,19 +299,19 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
 
     def get_record_data(self, record):
         foreign_id = record.get("pageid")
-        if not foreign_id:
-            return None
 
         media_info = self.extract_media_info_dict(record)
 
-        if not (valid_media_type := self.extract_media_type(media_info)):
+        valid_media_type = self.extract_media_type(media_info)
+        if not valid_media_type:
             # Do not process unsupported media types, like Video
             return None
 
         if not (license_info := self.extract_license_info(media_info)):
             return None
 
-        if not (media_url := media_info.get("url")):
+        media_url = media_info.get("url")
+        if media_url is None:
             return None
 
         creator, creator_url = self.extract_creator_info(media_info)

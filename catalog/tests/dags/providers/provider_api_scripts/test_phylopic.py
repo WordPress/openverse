@@ -111,3 +111,43 @@ def test_get_record_data():
         "width": 2048,
         "height": 2048,
     }
+
+
+@pytest.mark.parametrize(
+    "property",
+    [
+        pytest.param("sourceFile", id="falsy url"),
+        pytest.param("uuid", id="falsy foreign_identifier"),
+        pytest.param("self", id="falsy foreign_landing_url"),
+        pytest.param("license", id="falsy license"),
+    ],
+)
+def test_get_record_data_returns_none_when_required_values_falsy(property):
+    data = get_json("sample_record.json")
+    if property == "uuid":
+        data[property] = ""
+    else:
+        data["_links"][property]["href"] = ""
+
+    image = pp.get_record_data(data)
+    assert image is None
+
+
+@pytest.mark.parametrize(
+    "property",
+    [
+        pytest.param("sourceFile", id="missing url"),
+        pytest.param("uuid", id="missing foreign_identifier"),
+        pytest.param("self", id="missing foreign_landing_url"),
+        pytest.param("license", id="missing license"),
+    ],
+)
+def test_get_record_data_returns_none_when_required_values_missing(property):
+    data = get_json("sample_record.json")
+    if property == "uuid":
+        data.pop(property)
+    else:
+        data["_links"].pop(property)
+
+    image = pp.get_record_data(data)
+    assert image is None
