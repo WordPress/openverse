@@ -318,3 +318,11 @@ def test_get_record_data():
         "title": "Bull elk searches for food",
         "width": 8272,
     }
+
+
+def test_get_record_data_returns_none_if_missing_required_values():
+    data = _get_resource_json("public_domain_response.json")
+    data["metadata"]["licenseUrl"] = None
+    actual = rwp.get_record_data(data["results"][0])
+
+    assert actual is None
