@@ -321,8 +321,8 @@ def test_get_record_data():
 
 
 def test_get_record_data_returns_none_if_missing_required_values():
-    data = _get_resource_json("public_domain_response.json")
+    data = _get_resource_json("public_domain_response.json")["results"][0]
     data["metadata"]["licenseUrl"] = None
-    actual = rwp.get_record_data(data["results"][0])
+    actual = rwp.get_record_data(data)
 
     assert actual is None
