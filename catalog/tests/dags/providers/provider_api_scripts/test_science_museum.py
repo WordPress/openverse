@@ -111,11 +111,12 @@ def test_get_query_param_offset_page_number():
     "record",
     [
         # missing foreign_landing_url
-        {"links": []},
+        {"links": {}},
         {"links": {"self": ""}},
+        {"links": {"self": "link"}, "attributes": {"multimedia": []}},
     ],
 )
-def test_get_record_data_returns_none_for_falsy_foreign_landing_url(record):
+def test_get_record_data_returns_none_for_falsy_fid_and_landing_url(record):
     actual_record_data = sm.get_record_data(record)
     assert actual_record_data is None
 
@@ -123,12 +124,8 @@ def test_get_record_data_returns_none_for_falsy_foreign_landing_url(record):
 @pytest.mark.parametrize(
     "record",
     [
-        # missing foreign_landing_url
-        {"links": []},
-        {"links": {"self": ""}},
         # missing foreign_identifier
-        {"links": {"self": "link"}, "attributes": {"multimedia": []}},
-        {"links": {"self": "link"}, "attributes": {"multimedia": [{"admin": ""}]}},
+        {"links": {"self": "link"}, "attributes": {"multimedia": [{"admin": {}}]}},
         {
             "links": {"self": "link"},
             "attributes": {"multimedia": [{"admin": {"uid": ""}}]},
@@ -155,7 +152,7 @@ def test_get_record_data_returns_none_for_falsy_foreign_landing_url(record):
         },
     ],
 )
-def test_get_record_data_returns_empty_list_for_falsy_required_values(record):
+def test_get_record_data_returns_empty_list_for_falsy_image_required_values(record):
     actual_record_data = sm.get_record_data(record)
     assert actual_record_data == []
 

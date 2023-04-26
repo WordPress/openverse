@@ -109,14 +109,16 @@ class SmkDataIngester(ProviderDataIngester):
         # versions. See https://github.com/WordPress/openverse-catalog/issues/875
         # for the full investigation & discussion
 
-        return {
-            "id": foreign_identifier,
-            "image_url": image_url,
-            "thumbnail_url": thumbnail_url,
-            "height": height,
-            "width": width,
-            "filesize": filesize,
-        }
+        return [
+            {
+                "id": foreign_identifier,
+                "image_url": image_url,
+                "thumbnail_url": thumbnail_url,
+                "height": height,
+                "width": width,
+                "filesize": filesize,
+            }
+        ]
 
     @staticmethod
     def _get_metadata(item: dict) -> dict:

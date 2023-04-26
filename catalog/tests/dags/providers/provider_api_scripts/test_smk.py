@@ -143,22 +143,25 @@ def test_get_record_data_returns_main_image():
     assert len(images) == 1
 
 
-def test_get_record_data_returns_none_with_falsy_license_info():
+@pytest.mark.parametrize(
+    "property_name",
+    [
+        pytest.param("object_number", id="falsy foreign_landing_url"),
+        pytest.param("rights", id="falsy license_info"),
+    ],
+)
+def test_get_record_data_returns_none_with_falsy_required_property(property_name):
     item = _get_resource_json("item.json")
-    item["rights"] = ""
+    if property_name == "id":
+        item["image_iiif_id"] = ""
+    item[property_name] = ""
 
     assert smk.get_record_data(item) is None
 
 
-def test_get_record_data_returns_none_with_falsy_foreign_landing_url():
+def test_get_record_data_returns_empty_list_with_falsy_id():
     item = _get_resource_json("item.json")
-    item["object_number"] = ""
+    item["id"] = ""
+    item["image_iiif_id"] = ""
 
-    assert smk.get_record_data(item) is None
-
-
-def test_get_record_data_returns_none_with_falsy_foreign_identifier():
-    item = _get_resource_json("item.json")
-    item["object_number"] = ""
-
-    assert smk.get_record_data(item) is None
+    assert smk.get_record_data(item) == []
