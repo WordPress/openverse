@@ -158,7 +158,11 @@ def post_reminders(github_pat: str, dry_run: bool):
 
     open_prs = []
     for repo in REPOSITORIES:
-        open_prs += [pr for pr in gh.get_open_prs(repo) if not pr["draft"]]
+        open_prs += [
+            pr
+            for pr in gh.get_open_prs(repo)
+            if (not pr["draft"] and pr["base"]["label"] == "WordPress:main")
+        ]
 
     urgent_prs = []
     for pr in open_prs:

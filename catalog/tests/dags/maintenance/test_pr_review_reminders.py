@@ -317,3 +317,12 @@ def test_does_not_ping_if_no_reviewers(github, urgency):
 
     assert past_due_pull["number"] not in github["posted_comments"]
     assert not_due_pull["number"] not in github["posted_comments"]
+
+
+@parametrize_urgency
+def test_skips_non_main_target(github, urgency):
+    non_main_target = make_pull(urgency, past_due=False)
+    non_main_target["base"]["label"] = "WordPress:main_old"
+
+    post_reminders("not_set", dry_run=False)
+    assert non_main_target["number"] not in github["posted_comments"]
