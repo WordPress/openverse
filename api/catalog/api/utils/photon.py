@@ -28,6 +28,10 @@ HEADERS = {
 
 
 def _get_photon_params(image_url, is_full_size, is_compressed):
+    """
+    Photon options documented here:
+    https://developer.wordpress.com/docs/photon/api/
+    """
     params = {}
 
     if not is_full_size:
@@ -60,8 +64,6 @@ def get(
     is_compressed: bool = True,
 ) -> HttpResponse:
     logger = parent_logger.getChild("get")
-    # Photon options documented here:
-    # https://developer.wordpress.com/docs/photon/api/
     params, parsed_image_url = _get_photon_params(
         image_url, is_full_size, is_compressed
     )
