@@ -1,3 +1,4 @@
+#!/bin/bash
 /usr/bin/mc config host add s3 http://s3:5000 ${AWS_ACCESS_KEY} ${AWS_SECRET_KEY};
 cd /data;
     for b in */ ; do
