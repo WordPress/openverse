@@ -383,6 +383,7 @@ export const openFirstResult = async (page: Page, mediaType: MediaType) => {
   await firstResult.click({ position: { x: 32, y: 32 } })
   await scrollDownAndUp(page)
   await page.waitForURL(firstResultHref)
+  await page.mouse.move(0, 0)
 }
 
 /**
