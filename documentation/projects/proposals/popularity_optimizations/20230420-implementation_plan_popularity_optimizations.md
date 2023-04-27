@@ -30,7 +30,8 @@ independently of popularity calculations.
 To improve search relevancy, we boost records in our search results relative to
 a normalized popularity score. Because the process of calculating these scores
 and pushing them into the API DB (referred to as "data refresh") is complex, it
-may be beneficial to briefly outline the tables and views currently used.
+may be beneficial to briefly outline the tables and views currently used in the
+catalog database.
 
 For simplicity, I will use `image` as an example, but note that equivalent
 structures exist for `audio` and will exist for any media types added in the
@@ -40,8 +41,8 @@ been omitted for brevity.
 #### `image`
 
 The 'main' image table. Rows in this table may contain **raw** popularity data
-in the `meta_data` column, such as the number of times this image has been
-viewed or downloaded.
+from the provider in the `meta_data` column, such as the number of times this
+image has been viewed or downloaded at the source provider.
 
 This table is updated by **ingestion**, which may:
 
@@ -384,9 +385,10 @@ scores and ultimately swapped tables. This has the benefit of avoiding
 concurrent writes to the `image` table, but the following disadvantages:
 
 - While the duplicate table is being built, writes to the `image` table from
-  provider DAGs would need to be propagated to it via a `Trigger`. Thus the same
-  deadlocking precautions are necessary, and the writes must still be batched,
-  offering no improved performance.
+  provider DAGs would need to be propagated to it via a Postgres
+  [`Trigger`](https://www.postgresql.org/docs/current/plpgsql-trigger.html)
+  rule. Thus the same deadlocking precautions are necessary, and the writes must
+  still be batched, offering no improved performance.
 - This approach requires much more space for the duplicate table (although
   roughly equivalent to the current materialized view approach).
 - This approach is much less efficient because it unnecessarily re-inserts
