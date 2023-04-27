@@ -75,12 +75,7 @@ services:
     # Create empty buckets on every container startup
     # Note: $0 is included in the exec because "/bin/bash -c" swallows the first
     # argument, so it must be re-added at the beginning of the exec call
-    entrypoint: >-
-      /bin/bash -c
-      "for b in $${BUCKETS_TO_CREATE//,/ }; do
-        echo \"Making bucket $$b\" && mkdir -p /data/$$b;
-      done &&
-      exec $$0 \"$$@\""
+    entrypoint: docker/minio/s3-entrypoint.sh
     command: minio server /data --address :5000 --console-address :5001
     volumes:
       - minio:/data
@@ -111,18 +106,7 @@ services:
     # This does *not* allow for testing permissions issues that may come up in real AWS.
     # And, if you remove files from /tests/s3-data, you will need to use `just down -v`
     # and `just up` or `just recreate` to see the minio bucket without those files.
-    entrypoint: >
-      /bin/sh -c "
-      /usr/bin/mc config host add s3 http://s3:5000 $${AWS_ACCESS_KEY} $${AWS_SECRET_KEY};
-      cd /data;
-      for b in */ ; do
-        echo \"Loading bucket $$b\"
-        /usr/bin/mc mb --ignore-existing s3/$$b
-        /usr/bin/mc cp --r $$b s3/$$b
-        /usr/bin/mc ls s3/$$b;
-      done ;
-      exit 0;
-      "
+    entrypoint: docker/minio/subDir-loop-entrypoint.sh
 
   # Dev changes for the scheduler
   scheduler:
