@@ -29,6 +29,7 @@ has a standalone and shareable page
 
 ## Infrastructure
 
+No infrastructure changes are required.
 ## Accessibility
 
 ## Marketing
