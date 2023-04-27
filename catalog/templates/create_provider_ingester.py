@@ -106,7 +106,7 @@ def fill_template(
     print(
         """
 NOTE: You will also need to add a new ProviderWorkflow dataclass configuration to the \
-PROVIDER_WORKFLOWS list in `openverse-catalog/dags/providers/provider_workflows.py`.
+PROVIDER_WORKFLOWS list in `openverse/dags/providers/provider_workflows.py`.
 """
     )
 

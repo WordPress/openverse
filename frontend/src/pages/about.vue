@@ -95,7 +95,7 @@
       <template #issue>
         <VLink
           aria-label="issue"
-          href="https://github.com/WordPress/openverse-catalog/issues"
+          href="https://github.com/WordPress/openverse/issues"
           >{{ $t("external-sources-page.new.issue") }}</VLink
         >
       </template>
