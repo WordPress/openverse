@@ -32,7 +32,7 @@ export default defineComponent({
   props: {
     /**
      * The unique ID of the media
-    */
+     */
     id: {
       type: String,
       required: true,
@@ -55,7 +55,7 @@ export default defineComponent({
     }
 
     return {
-      handleClick
+      handleClick,
     }
   },
 })
