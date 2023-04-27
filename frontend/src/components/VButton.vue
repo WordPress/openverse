@@ -354,6 +354,9 @@ a.button {
 .bordered-white {
   @apply border-white bg-white text-dark-charcoal hover:border-dark-charcoal-20;
 }
+.bordered-white-pressed {
+  @apply border border-tx bg-dark-charcoal text-white hover:border-dark-charcoal-90 hover:bg-dark-charcoal-90;
+}
 
 .bordered-gray {
   @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal;
@@ -413,48 +416,6 @@ a.button {
   @apply border-tx bg-white text-dark-charcoal ring-offset-0;
 }
 .menu-pressed {
-  @apply border-tx bg-dark-charcoal text-white;
-}
-
-.action-menu {
-  @apply border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20 group-focus-within:hover:border-tx;
-}
-.action-menu-pressed {
-  @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
-}
-
-/**
-Similar to `action-menu`, but always has a border, not only on hover.
-https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-id=1684%3A3678
- */
-.action-menu-bordered {
-  @apply border-dark-charcoal-20 bg-white text-dark-charcoal focus-visible:border-tx;
-}
-.action-menu-bordered-pressed {
-  @apply border-dark-charcoal bg-dark-charcoal text-white hover:bg-dark-charcoal-90;
-}
-
-.action-menu-muted {
-  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:border-dark-charcoal-20;
-}
-.action-menu-muted-pressed {
-  @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
-}
-
-.action-menu[disabled="disabled"],
-.action-menu[aria-disabled="true"],
-.action-menu-muted[disabled="disabled"],
-.action-menu-muted[aria-disabled="true"],
-.action-menu-bordered[disabled="disabled"],
-.action-menu-bordered[aria-disabled="true"] {
-  @apply border-dark-charcoal-10 bg-dark-charcoal-10 text-dark-charcoal-40;
-}
-
-.action-menu-secondary {
-  @apply border border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
-}
-
-.action-menu-secondary-pressed {
   @apply border-tx bg-dark-charcoal text-white;
 }
 
