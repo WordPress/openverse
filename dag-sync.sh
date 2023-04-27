@@ -38,5 +38,5 @@ else
   curl "$SLACK_URL" \
     -X POST \
     -H 'Content-Type: application/json' \
-    -d '{"text":"Deployed: '"$subject"'","username":"DAG Sync","icon_emoji":":recycle:","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"Deployed: <https://github.com/WordPress/openverse-catalog/commit/'"$new"'|'"$subject"'>"}}]}'
+    -d '{"text":"Deployed: '"$subject"'","username":"DAG Sync","icon_emoji":":recycle:","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"Deployed: <https://github.com/WordPress/openverse/commit/'"$new"'|'"$subject"'>"}}]}'
 fi
