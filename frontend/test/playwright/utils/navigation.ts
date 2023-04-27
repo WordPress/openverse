@@ -336,7 +336,7 @@ export const openFirstResult = async (page: Page, mediaType: MediaType) => {
   const firstResultHref = await getLocatorHref(firstResult)
   await firstResult.click({ position: { x: 32, y: 32 } })
   await scrollDownAndUp(page)
-  await page.waitForURL(firstResultHref)
+  await page.waitForURL(firstResultHref, { waitUntil: "networkidle" })
   await page.mouse.move(0, 0)
 }
 
