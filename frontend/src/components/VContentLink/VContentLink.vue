@@ -1,7 +1,9 @@
 <template>
   <!-- We 'disable' the link when there are 0 results by removing the href and setting aria-disabled. -->
+  <!-- TODO: Confirm with @obulat and @dhruvkb that the above comment was inaccurate but that aria-disabled should indeed be set below -->
   <VLink
     :href="hasResults ? to : undefined"
+    :aria-disabled="!hasResults"
     class="flex w-full flex-col items-start overflow-hidden rounded-sm border border-dark-charcoal/20 bg-white py-4 pe-12 ps-4 md:flex-row md:items-center md:justify-between md:p-6"
     :class="
       hasResults

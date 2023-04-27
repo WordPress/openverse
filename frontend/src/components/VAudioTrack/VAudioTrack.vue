@@ -470,7 +470,10 @@ export default defineComponent({
     )
     const ariaLabel = computed(() =>
       isComposite.value
-        ? i18n.t("audio-track.aria-label-interactive", {
+        ? // TODO: Confirm with @dhruvk when this _shouldn't_ be the "seekable" variant
+          // `seekable` variant for the string wasn't used before and changing this makes
+          // non-seekable variant unused: can we remove one or the other and just use one?
+          i18n.t("audio-track.aria-label-interactive-seekable", {
             title: props.audio.title,
           })
         : i18n.t("audio-track.aria-label", { title: props.audio.title })

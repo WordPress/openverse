@@ -8,11 +8,10 @@ const walkToNextOfType = async (type: "image" | "audio", page: Page) => {
   const isActiveElementOfType = () => {
     return page.evaluate(
       ([contextType]) =>
-        new RegExp(
-          `/${contextType}/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\?q=birds$`,
-          "i"
-        ).test(
-          (document.activeElement as HTMLAnchorElement | null)?.href ?? ""
+        new RegExp(`^/${contextType}: \\w+?/`, "i").test(
+          // Use the link title to ensure we are only using the context
+          // that a real user would have (e.g., via a screen-reader)
+          (document.activeElement as HTMLAnchorElement | null)?.title ?? ""
         ),
       [type]
     )

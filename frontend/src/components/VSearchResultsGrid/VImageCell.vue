@@ -1,10 +1,10 @@
 <template>
   <VLink
     itemprop="contentUrl"
-    :title="image.title"
+    :title="contextSensitiveTitle"
     :href="imageLink"
     class="group relative block w-full overflow-hidden rounded-sm bg-dark-charcoal-10 text-dark-charcoal-10 focus-bold-filled"
-    :aria-label="image.title"
+    :aria-label="contextSensitiveTitle"
     :style="styles.container"
   >
     <figure
@@ -44,6 +44,7 @@ import { computed, defineComponent, PropType } from "vue"
 
 import type { AspectRatio, ImageDetail } from "~/types/media"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
+import { useI18n } from "~/composables/use-i18n"
 
 import VLicense from "~/components/VLicense/VLicense.vue"
 import VLink from "~/components/VLink.vue"
@@ -87,6 +88,7 @@ export default defineComponent({
       imageSize: { width: props.image.width, height: props.image.height },
       isSquare,
     })
+    const i18n = useI18n()
 
     const imageUrl = computed(() => {
       // TODO: check if we have blurry panorama thumbnails
@@ -130,12 +132,19 @@ export default defineComponent({
       imgWidth.value = element.naturalWidth
     }
 
+    const contextSensitiveTitle = computed(() => {
+      return i18n.t("browse-page.aria.image-title", {
+        title: props.image.title,
+      })
+    })
+
     return {
       styles,
       imgWidth,
       imgHeight,
       imageUrl,
       imageLink,
+      contextSensitiveTitle,
 
       getImageForeignUrl,
       onImageLoadError,
