@@ -3,7 +3,7 @@
   <VLink
     class="time inline-flex flex-row items-center gap-2 rounded-sm p-2 pe-3 text-xs font-semibold text-dark-charcoal-70 hover:text-dark-charcoal"
     v-bind="$attrs"
-    @click="handleClick"
+    @mousedown="handleClick"
   >
     <VIcon name="chevron-left" :rtl-flip="true" />
     {{ $t("single-result.back") }}
