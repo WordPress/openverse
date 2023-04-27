@@ -134,7 +134,6 @@ class Image(SyncableDocType):
             identifier=row[schema['identifier']],
             creator=row[schema['creator']],
             creator_url=row[schema['creator_url']],
-            tags=row[schema['tags_list']],
             created_on=row[schema['created_on']],
             url=row[schema['url']],
             thumbnail=row[schema['thumbnail']],

@@ -1,7 +1,6 @@
 import mimetypes
 
 from django.conf import settings
-from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.html import format_html
@@ -24,24 +23,6 @@ NO_ACTION = "no_action"
 MATURE = "mature"
 DMCA = "dmca"
 OTHER = "other"
-
-
-class TagsListDeferralManager(models.Manager):
-    """
-    Custom manager used temporarily to enable zero-downtime removal of the deprecated
-    `tags_list` field from the media modals.
-
-    @see https://github.com/WordPress/openverse/pull/956.
-    """
-
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .defer(
-                "tags_list",
-            )
-        )
 
 
 class AbstractMedia(
@@ -89,12 +70,6 @@ class AbstractMedia(
         null=True,
         help_text="Tags with detailed metadata, such as accuracy.",
     )
-    tags_list = ArrayField(
-        base_field=models.CharField(max_length=255),
-        blank=True,
-        null=True,
-        help_text="List of tags names without detailed metadata.",
-    )
 
     category = models.CharField(
         max_length=80,
@@ -105,8 +80,6 @@ class AbstractMedia(
     )
 
     meta_data = models.JSONField(blank=True, null=True)
-
-    objects = TagsListDeferralManager()
 
     @property
     def license_url(self) -> str:

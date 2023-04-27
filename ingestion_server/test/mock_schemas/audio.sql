@@ -45,7 +45,6 @@ CREATE TABLE public.audio (
     removed_from_source boolean NOT NULL,
     view_count integer,
     tags jsonb,
-    tags_list character varying(255)[],
     meta_data jsonb,
     audio_set_position integer,
     genres character varying(80)[],
