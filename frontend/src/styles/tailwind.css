@@ -176,7 +176,7 @@ Time                - 11px - xs semibold (default leading-tight)
     @apply focus-visible:outline focus-visible:outline-1.5;
     /* absolutely positioned overlapping pseudo element with a 1.5px border */
     @apply focus-visible:after:absolute focus-visible:after:z-10 focus-visible:after:rounded-inherit;
-    @apply focus-visible:after:border-1.5 focus-visible:after:border-white;
+    @apply focus-visible:after:border focus-visible:after:border-white;
     @apply focus-visible:after:h-full-with-border focus-visible:after:w-full-with-border;
     @apply focus-visible:after:-left-px focus-visible:after:-top-px;
   }
