@@ -6,7 +6,7 @@
 **Output:** TSV file containing the image, the respective
                         meta-data.
 
-### Notes
+# Notes
 
 Rate limit of no more than 200 requests/second, and we are required to set a unique
 User-Agent field ([docs](https://www.mediawiki.org/wiki/Wikimedia_REST_API#Terms_and_conditions)).
@@ -88,7 +88,7 @@ Below are some specific references to various properties, with examples for case
 they might exceed the limit. Technically, it's feasible for almost any property to
 exceed the limit, but these are the ones that we've seen in practice.
 
-#### `imageinfo`
+## `imageinfo`
 [Docs](https://commons.wikimedia.org/w/api.php?action=help&modules=query%2Bimageinfo)
 
 [Example where metadata has hundreds of data points](https://commons.wikimedia.org/wiki/File:The_Railway_Chronicle_1844.pdf#metadata)
@@ -97,7 +97,7 @@ exceed the limit, but these are the ones that we've seen in practice.
 For these requests, we can remove the `metadata` property from the `iiprops` parameter
 to avoid this issue on subsequent iterations.
 
-#### `globalusage`
+## `globalusage`
 [Docs](https://commons.wikimedia.org/w/api.php?action=help&modules=query%2Bglobalusage)
 
 [Example where an image is used on almost every wiki](https://commons.wikimedia.org/w/index.php?curid=4298234).

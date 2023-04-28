@@ -9,6 +9,7 @@ on:
           - api
           - ingestion_server
           - frontend
+          - catalog
         required: true
         description: Application to release. If `api` or `frontend`, the deployment workflow will automatically be dispatched for you.
       image-sha:

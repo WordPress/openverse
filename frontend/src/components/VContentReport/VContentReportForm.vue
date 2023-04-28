@@ -65,6 +65,7 @@
             v-if="media.foreign_landing_url && selectedReason === DMCA"
             :provider="providerName"
             :foreign-landing-url="media.foreign_landing_url"
+            @click="handleDmcaSubmit"
           />
           <VReportDescForm
             v-if="selectedReason !== DMCA"
@@ -90,9 +91,10 @@
             as="VLink"
             variant="secondary-filled"
             :href="DMCA_FORM_URL"
+            @click="handleDmcaSubmit"
           >
             {{ $t("media-details.content-report.form.dmca.open") }}
-            <VIcon :size="4" class="ms-1" :icon-path="icons.externalLink" />
+            <VIcon :size="4" class="ms-1" name="external-link" />
           </VButton>
           <VButton
             v-else
@@ -128,6 +130,7 @@ import {
 } from "~/constants/content-report"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -135,8 +138,6 @@ import VRadio from "~/components/VRadio/VRadio.vue"
 import VDmcaNotice from "~/components/VContentReport/VDmcaNotice.vue"
 import VReportDescForm from "~/components/VContentReport/VReportDescForm.vue"
 import VLink from "~/components/VLink.vue"
-
-import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
   name: "VContentReportForm",
@@ -183,16 +184,37 @@ export default defineComponent({
     const isSubmitDisabled = computed(
       () => selectedReason.value === OTHER && description.value.length < 20
     )
+
+    const { sendCustomEvent } = useAnalytics()
+
+    const handleDmcaSubmit = () => {
+      sendCustomEvent("REPORT_MEDIA", {
+        id: props.media.id,
+        mediaType: props.media.frontendMediaType,
+        provider: props.media.provider,
+        reason: selectedReason.value,
+      })
+      status.value = SENT
+    }
     const handleSubmit = async (event: Event) => {
       event.preventDefault()
-      if (selectedReason.value === DMCA) return
       // Submit report
       try {
+        const mediaType = props.media.frontendMediaType
+        const reason = selectedReason.value
+
         await ReportService.sendReport({
-          mediaType: props.media.frontendMediaType,
+          mediaType,
+          reason,
           identifier: props.media.id,
-          reason: selectedReason.value,
           description: description.value,
+        })
+
+        sendCustomEvent("REPORT_MEDIA", {
+          mediaType,
+          reason,
+          id: props.media.id,
+          provider: props.media.provider,
         })
         status.value = SENT
       } catch (error) {
@@ -201,9 +223,6 @@ export default defineComponent({
     }
 
     return {
-      icons: {
-        externalLink: externalLinkIcon,
-      },
       reasons,
       DMCA,
       OTHER,
@@ -219,6 +238,7 @@ export default defineComponent({
 
       isSubmitDisabled,
       handleSubmit,
+      handleDmcaSubmit,
     }
   },
 })

@@ -2,11 +2,11 @@
   <div class="license flex flex-row items-center gap-2">
     <div class="flex gap-1">
       <VIcon
-        v-for="(name, index) in iconNames"
-        :key="index"
-        :class="['icon', bgFilled ? 'bg-filled text-black' : '']"
+        v-for="name in iconNames"
+        :key="name"
+        :class="{ 'bg-filled text-black': bgFilled }"
         view-box="0 0 30 30"
-        :icon-path="icons[name]"
+        :name="`licenses/${name}`"
         :size="4"
       />
     </div>
@@ -19,7 +19,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
-import { License, LICENSE_ICONS } from "~/constants/license"
+import type { License } from "~/constants/license"
 import { getFullLicenseName, getElements } from "~/utils/license"
 import { useI18n } from "~/composables/use-i18n"
 
@@ -68,7 +68,6 @@ export default defineComponent({
     })
 
     return {
-      icons: LICENSE_ICONS,
       iconNames,
       licenseName,
     }

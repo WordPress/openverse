@@ -9,7 +9,7 @@
     <span class="hidden text-sr md:inline md:text-base">{{
       $t("media-details.content-report.long")
     }}</span>
-    <VIcon :icon-path="icons.flag" class="ms-2" />
+    <VIcon name="flag" class="ms-2" />
   </VButton>
 </template>
 
@@ -19,18 +19,9 @@ import { defineComponent } from "vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
 
-import flagIcon from "~/assets/icons/flag.svg"
-
 export default defineComponent({
   name: "VContentReportButton",
   components: { VButton, VIcon },
-  setup() {
-    return {
-      icons: {
-        flag: flagIcon,
-      },
-    }
-  },
 })
 </script>
 

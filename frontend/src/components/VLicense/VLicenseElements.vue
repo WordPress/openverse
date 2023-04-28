@@ -8,7 +8,7 @@
       <VIcon
         view-box="0 0 30 30"
         :size="isSmall || isMobile ? 5 : 6"
-        :icon-path="icons[element]"
+        :name="`licenses/${element}`"
       />
       <span v-if="elementNames.length > 1" class="sr-only">{{
         element.toUpperCase()
@@ -24,7 +24,6 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import type { License } from "~/constants/license"
-import { LICENSE_ICONS } from "~/constants/license"
 import { useUiStore } from "~/stores/ui"
 import { getElements } from "~/utils/license"
 
@@ -60,7 +59,6 @@ export default defineComponent({
     const isMobile = computed(() => !uiStore.isDesktopLayout)
 
     return {
-      icons: LICENSE_ICONS,
       elementNames,
       isSmall,
       isMobile,

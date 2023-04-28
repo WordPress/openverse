@@ -109,7 +109,7 @@ class AudioViewSet(MediaViewSet):
         methods=["post"],
         serializer_class=AudioReportRequestSerializer,
     )
-    def report(self, *args, **kwargs):
+    def report(self, request, identifier):
         """
         Report an issue about a specified audio track to Openverse.
 
@@ -117,4 +117,4 @@ class AudioViewSet(MediaViewSet):
         copyright, contains mature or sensitive content or some other reason.
         """
 
-        return super().report(*args, **kwargs)
+        return super().report(request, identifier)

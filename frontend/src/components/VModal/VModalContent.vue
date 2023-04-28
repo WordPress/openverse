@@ -40,7 +40,7 @@
               @click="hide()"
             >
               {{ $t("modal.close") }}
-              <VIcon :icon-path="closeIcon" class="ms-2" :size="5" />
+              <VIcon name="close" class="ms-2" :size="5" />
             </VButton>
           </div>
         </slot>
@@ -70,8 +70,6 @@ import type { ModalColorMode, ModalVariant } from "~/types/modal"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-
-import closeIcon from "~/assets/icons/close.svg"
 
 /**
  * Renders the inner content of a modal and manages focus.
@@ -164,7 +162,6 @@ export default defineComponent({
       dialogRef,
       onKeyDown,
       onBlur,
-      closeIcon,
       closeButton,
       deactivateFocusTrap,
     }

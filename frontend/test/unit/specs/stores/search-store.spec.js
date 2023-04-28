@@ -57,8 +57,40 @@ describe("Search Store", () => {
         expect(searchStore.isAnyFilterApplied).toBe(filterCount > 0)
       }
     )
-  })
-  describe("getters", () => {
+
+    /**
+     * If the type is provided, search path is updated to it, and the query is
+     * kept as is if filter parameters can be used with the new type, otherwise
+     * the unused parameters are removed.
+     * - Uses the type and query from the store if type and query are undefined.
+     * Note that the search term is not added to the query either.
+     * - Replaces the type, keeps the store query if type is provided and query is undefined.
+     * Common query parameters are kept as is, and the parameters that are incompatible with
+     * the type are removed.
+     */
+    it.each`
+      type         | query                      | currentState                                                                                | expected
+      ${undefined} | ${undefined}               | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa", extension: "ogg" } }} | ${{ path: "/search/audio", query: { q: "cat", license: "by,by-sa", extension: "ogg" } }}
+      ${IMAGE}     | ${undefined}               | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${{ path: "/search/image", query: { q: "cat", license: "by,by-sa" } }}
+      ${AUDIO}     | ${undefined}               | ${{ path: "/search/image", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${{ path: "/search/audio", query: { q: "cat", license: "by,by-sa" } }}
+      ${AUDIO}     | ${undefined}               | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${{ path: "/search/audio", query: { q: "cat" } }}
+      ${IMAGE}     | ${undefined}               | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${{ path: "/search/image", query: { q: "cat", extension: "svg" } }}
+      ${IMAGE}     | ${undefined}               | ${{ path: "/search/audio", urlQuery: { q: "cat", duration: "medium" } }}                    | ${{ path: "/search/image", query: { q: "cat" } }}
+      ${VIDEO}     | ${undefined}               | ${{ path: "/search/audio", urlQuery: { q: "cat", extension: "ogg" } }}                      | ${{ path: "/search/video", query: { q: "cat", extension: "ogg" } }}
+      ${undefined} | ${{ param: "passedAsIs" }} | ${{ path: "/search/image", urlQuery: {} }}                                                  | ${{ path: "/search/image", query: { param: "passedAsIs" } }}
+    `(
+      "getSearchPath returns correct path $query and searchType $searchType",
+      ({ type, query, currentState, expected }) => {
+        const searchStore = useSearchStore()
+
+        searchStore.setSearchStateFromUrl(currentState)
+
+        searchStore.getSearchPath({ type, query })
+
+        expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith(expected)
+      }
+    )
+
     /**
      * For non-supported search types, the filters fall back to 'All content' filters.
      * Number of displayed filters is one less than the number of mediaFilterKeys

@@ -200,7 +200,7 @@ class ImageViewSet(MediaViewSet):
         methods=["post"],
         serializer_class=ImageReportRequestSerializer,
     )
-    def report(self, *args, **kwargs):
+    def report(self, request, identifier):
         """
         Report an issue about a specified image to Openverse.
 
@@ -208,7 +208,7 @@ class ImageViewSet(MediaViewSet):
         copyright, contains mature or sensitive content or some other reason.
         """
 
-        return super().report(*args, **kwargs)
+        return super().report(request, identifier)
 
     # Helper functions
 

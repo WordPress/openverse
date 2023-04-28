@@ -16,7 +16,7 @@
       sizeClasses,
     ]"
   >
-    <VIcon v-show="isIcon" :icon-path="searchIcon" />
+    <VIcon v-show="isIcon" name="search" />
     <span v-show="!isIcon">{{ $t("search.search") }}</span>
   </VButton>
 </template>
@@ -29,8 +29,6 @@ import { useUiStore } from "~/stores/ui"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
 import type { FieldSize } from "~/components/VInputField/VInputField.vue"
-
-import searchIcon from "~/assets/icons/search.svg"
 /**
  * The search button used in the search bar on the homepage and on the 404 page,
  * and on the search page.
@@ -74,7 +72,7 @@ export default defineComponent({
         : undefined
     )
 
-    return { searchIcon, sizeClasses, isIcon }
+    return { sizeClasses, isIcon }
   },
 })
 </script>

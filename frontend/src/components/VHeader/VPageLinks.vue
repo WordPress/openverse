@@ -19,7 +19,7 @@
         <span class="pe-2">{{ $t(page.name) }}</span>
         <VIcon
           v-if="isLinkExternal(page)"
-          :icon-path="externalLinkIcon"
+          name="external-link"
           :size="4"
           class="self-center"
           rtl-flip
@@ -41,7 +41,7 @@
         >{{ $t(page.name)
         }}<VIcon
           v-if="isLinkExternal(page)"
-          :icon-path="externalLinkIcon"
+          name="external-link"
           :size="externalIconSize"
           class="ms-2 self-center"
           rtl-flip
@@ -59,8 +59,6 @@ import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
 import VItem from "~/components/VItemGroup/VItem.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VLink from "~/components/VLink.vue"
-
-import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
   name: "VPageLinks",
@@ -116,7 +114,7 @@ export default defineComponent({
       currentPage,
       onClick,
       isLinkExternal,
-      externalLinkIcon,
+
       externalIconSize,
     }
   },
