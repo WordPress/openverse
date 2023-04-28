@@ -4,7 +4,6 @@ from elasticsearch_dsl.response import Hit
 
 from catalog.api.constants.field_order import field_position_map
 from catalog.api.constants.field_values import AUDIO_CATEGORIES, LENGTHS
-from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import Audio, AudioReport, AudioSet
 from catalog.api.serializers.fields import (
     EnumCharField,
@@ -13,7 +12,6 @@ from catalog.api.serializers.fields import (
 from catalog.api.serializers.media_serializers import (
     MediaReportRequestSerializer,
     MediaSearchRequestSerializer,
-    MediaSearchSerializer,
     MediaSerializer,
     get_hyperlinks_serializer,
     get_search_request_source_serializer,
@@ -170,23 +168,6 @@ class AudioSerializer(AudioHyperlinksSerializer, MediaSerializer):
             output["thumbnail"] = None
 
         return output
-
-
-class AudioSearchSerializer(MediaSearchSerializer):
-    """
-    The full audio search response.
-
-    This serializer is purely representational and not actually used to serialize the
-    response.
-    """
-
-    results = AudioSerializer(
-        many=True,
-        help_text=(
-            "An array of audios and their details such as "
-            f"{fields_to_md(AudioSerializer.Meta.fields)}."
-        ),
-    )
 
 
 ##########################

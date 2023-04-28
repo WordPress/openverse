@@ -92,12 +92,7 @@ class AbstractMedia(
 
     @property
     def attribution(self) -> str:
-        """
-        The plain-text English attribution for a media item.
-
-        Use this to credit creators for their work and fulfill legal attribution
-        requirements.
-        """
+        """Legally valid attribution for the media item in plain-text English."""
 
         return get_attribution_text(
             self.title,
@@ -241,7 +236,10 @@ class AbstractMediaReport(models.Model):
         )
         if self.status != DEINDEXED:
             same_reports = same_reports.filter(reason=self.reason)
-        same_reports.update(status=self.status)
+
+        # Prevent redundant update statement when creating the report
+        if self.status != PENDING:
+            same_reports.update(status=self.status)
 
 
 class AbstractDeletedMedia(OpenLedgerModel):

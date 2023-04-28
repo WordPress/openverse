@@ -10,3 +10,4 @@ docs/_build/
 
 # OpenAPI
 openapi.yaml
+openapi.json

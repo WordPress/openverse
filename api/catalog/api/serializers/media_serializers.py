@@ -6,6 +6,8 @@ from django.core.validators import MaxValueValidator
 from rest_framework import serializers
 from rest_framework.exceptions import NotAuthenticated
 
+from drf_spectacular.utils import extend_schema_serializer
+
 from catalog.api.constants.licenses import LICENSE_GROUPS
 from catalog.api.constants.sorting import (
     DESCENDING,
@@ -27,6 +29,15 @@ from catalog.api.utils.url import add_protocol
 #######################
 
 
+@extend_schema_serializer(
+    # Hide unstable fields from documentation, also see `field_names` below.
+    exclude_fields=[
+        "unstable__sort_by",
+        "unstable__sort_dir",
+        "unstable__authority",
+        "unstable__authority_boost",
+    ],
+)
 class MediaSearchRequestSerializer(serializers.Serializer):
     """This serializer parses and validates search query string parameters."""
 
@@ -48,10 +59,11 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         "extension",
         "mature",
         "qa",
-        # "unstable__sort_by",  # excluding unstable fields
-        # "unstable__sort_dir",  # excluding unstable fields
-        # "unstable__authority",  # excluding unstable fields
-        # "unstable__authority_boost",  # excluding unstable fields
+        # Excluded unstable fields, also see `exclude_fields` above.
+        # "unstable__sort_by",
+        # "unstable__sort_dir",
+        # "unstable__authority",
+        # "unstable__authority_boost",
         "page_size",
         "page",
     ]
@@ -341,28 +353,6 @@ class TagSerializer(serializers.Serializer):
     )
 
 
-class MediaSearchSerializer(serializers.Serializer):
-    """
-    This serializer serializes the full media search response.
-
-    The class should be inherited by all individual media serializers.
-    """
-
-    result_count = serializers.IntegerField(
-        help_text="The total number of items returned by search result.",
-    )
-    page_count = serializers.IntegerField(
-        help_text="The total number of pages returned by search result.",
-    )
-    page_size = serializers.IntegerField(
-        help_text="The number of items per page.",
-    )
-    page = serializers.IntegerField(
-        help_text="The current page number returned in the response.",
-    )
-    # ``results`` field added by child serializers
-
-
 class MediaSerializer(BaseModelSerializer):
     """
     This serializer serializes a single media file.
@@ -458,6 +448,11 @@ class MediaSerializer(BaseModelSerializer):
 
 
 def get_search_request_source_serializer(media_type):
+    media_path = {
+        "image": "images",
+        "audio": "audio",
+    }[media_type]
+
     class MediaSearchRequestSourceSerializer(serializers.Serializer):
         """Parses and validates the source/not_source fields from the query params."""
 
@@ -471,8 +466,10 @@ def get_search_request_source_serializer(media_type):
         """
 
         _field_attrs = {
-            "help_text": make_comma_separated_help_text(
-                search_controller.get_sources(media_type).keys(), "data sources"
+            "help_text": (
+                "A comma separated list of data sources; valid values are "
+                "``source_name``s from the stats endpoint: "
+                f"https://api.openverse.engineering/v1/{media_path}/stats/."
             ),
             "required": False,
         }

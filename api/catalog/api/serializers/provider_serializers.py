@@ -1,8 +1,13 @@
 from rest_framework import serializers
 
+from drf_spectacular.utils import extend_schema_serializer
+
 from catalog.api.models import ContentProvider
 
 
+@extend_schema_serializer(
+    deprecate_fields=["logo_url"],
+)
 class ProviderSerializer(serializers.ModelSerializer):
     source_name = serializers.CharField(
         source="provider_identifier",
@@ -17,7 +22,8 @@ class ProviderSerializer(serializers.ModelSerializer):
         help_text="The URL of the source, e.g. https://www.flickr.com",
     )
     logo_url = serializers.ReadOnlyField(
-        default=None, help_text="Deprecated and unused. Always `null`."
+        default=None,
+        help_text="The URL to a logo for the source.",
     )
     media_count = serializers.SerializerMethodField(
         help_text="The number of media items indexed from the source.",

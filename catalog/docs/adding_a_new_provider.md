@@ -76,9 +76,9 @@ used to generate the files you'll need and get you started:
 You should see output similar to this:
 
 ```
-Creating files in /Users/staci/projects/openverse-projects/openverse-catalog
-API script:        openverse-catalog/catalog/dags/providers/provider_api_scripts/foobar_museum.py
-API script test:   openverse-catalog/catalog/tests/dags/providers/provider_api_scripts/test_foobar_museum.py
+Creating files in /Users/staci/projects/openverse-projects/openverse
+API script:        openverse/catalog/dags/providers/provider_api_scripts/foobar_museum.py
+API script test:   openverse/catalog/tests/dags/providers/provider_api_scripts/test_foobar_museum.py
 
 NOTE: You will also need to add a new ProviderWorkflow dataclass configuration to the PROVIDER_WORKFLOWS list in `openverse-catalog/dags/providers/provider_workflows.py`.
 ```

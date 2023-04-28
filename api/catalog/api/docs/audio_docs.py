@@ -1,14 +1,6 @@
-from drf_yasg import openapi
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 
-from catalog.api.docs.media_docs import (
-    MediaComplain,
-    MediaDetail,
-    MediaRelated,
-    MediaSearch,
-    MediaStats,
-    fields_to_md,
-    refer_sample,
-)
+from catalog.api.docs.base_docs import custom_extend_schema, fields_to_md
 from catalog.api.examples import (
     audio_complain_201_example,
     audio_complain_curl,
@@ -23,12 +15,15 @@ from catalog.api.examples import (
     audio_search_list_curl,
     audio_stats_200_example,
     audio_stats_curl,
+    audio_waveform_200_example,
+    audio_waveform_404_example,
+    audio_waveform_curl,
 )
 from catalog.api.serializers.audio_serializers import (
     AudioReportRequestSerializer,
     AudioSearchRequestSerializer,
-    AudioSearchSerializer,
     AudioSerializer,
+    AudioWaveformSerializer,
 )
 from catalog.api.serializers.error_serializers import (
     InputErrorSerializer,
@@ -38,188 +33,86 @@ from catalog.api.serializers.media_serializers import MediaThumbnailRequestSeria
 from catalog.api.serializers.provider_serializers import ProviderSerializer
 
 
-class AudioSearch(MediaSearch):
-    desc = f"""
-audio_search is an API endpoint to search audio files using a query string.
+search = custom_extend_schema(
+    desc=f"""
+        Search audio files using a query string.
 
-By using this endpoint, you can obtain search results based on specified query and
-optionally filter results by
-{fields_to_md(AudioSearchRequestSerializer.fields_names)}.
+        By using this endpoint, you can obtain search results based on specified
+        query and optionally filter results by
+        {fields_to_md(AudioSearchRequestSerializer.fields_names)}.
 
-{MediaSearch.desc}"""
+        Results are ranked in order of relevance and paginated on the basis of the
+        `page` param. The `page_size` param controls the total number of pages.
 
-    responses = {
-        "200": openapi.Response(
-            description="OK",
-            examples=audio_search_200_example,
-            schema=AudioSearchSerializer(many=True),
-        ),
-        "400": openapi.Response(
-            description="Bad Request",
-            examples=audio_search_400_example,
-            schema=InputErrorSerializer,
-        ),
-    }
+        Although there may be millions of relevant records, only the most relevant
+        several thousand records can be viewed. This is by design: the search
+        endpoint should be used to find the top 10,000 most relevant results, not
+        for exhaustive search or bulk download of every barely relevant result. As
+        such, the caller should not try to access pages beyond `page_count`, or else
+        the server will reject the query.""",
+    params=AudioSearchRequestSerializer,
+    res={
+        200: (AudioSerializer, audio_search_200_example),
+        400: (InputErrorSerializer, audio_search_400_example),
+    },
+    eg=[audio_search_list_curl],
+    external_docs={
+        "description": "Openverse Syntax Guide",
+        "url": "https://openverse.org/search-help",
+    },
+)
 
-    code_examples = [
-        {
-            "lang": "Bash",
-            "source": audio_search_list_curl,
-        },
-    ]
+stats = custom_extend_schema(
+    desc=f"""
+        Get a list of all content providers and their respective number of
+        audio files in the Openverse catalog.
 
-    swagger_setup = {
-        "operation_id": "audio_search",
-        "operation_description": desc,
-        "query_serializer": AudioSearchRequestSerializer,
-        "responses": responses,
-        "code_examples": code_examples,
-    }
+        By using this endpoint, you can obtain info about content providers such
+        as {fields_to_md(ProviderSerializer.Meta.fields)}.""",
+    res={200: (ProviderSerializer, audio_stats_200_example)},
+    eg=[audio_stats_curl],
+)
 
+detail = custom_extend_schema(
+    desc=f"""
+        Get the details of a specified audio track.
 
-class AudioStats(MediaStats):
-    desc = f"""
-audio_stats is an API endpoint to get a list of all content providers and their
-respective number of audio files in the Openverse catalog.
+        By using this endpoint, you can obtain info about audio files such as
+        {fields_to_md(AudioSerializer.Meta.fields)}""",
+    res={
+        200: (AudioSerializer, audio_detail_200_example),
+        404: (NotFoundErrorSerializer, audio_detail_404_example),
+    },
+    eg=[audio_detail_curl],
+)
 
-{MediaStats.desc}"""
+related = custom_extend_schema(
+    desc=f"""
+        Get related audio files for a specified audio track.
 
-    responses = {
-        "200": openapi.Response(
-            description="OK",
-            examples=audio_stats_200_example,
-            schema=ProviderSerializer(many=True),
-        )
-    }
+        By using this endpoint, you can get the details of related audio such as
+        {fields_to_md(AudioSerializer.Meta.fields)}.""",
+    res={
+        200: (AudioSerializer(many=True), audio_related_200_example),
+        404: (NotFoundErrorSerializer, audio_related_404_example),
+    },
+    eg=[audio_related_curl],
+)
 
-    code_examples = [
-        {
-            "lang": "Bash",
-            "source": audio_stats_curl,
-        },
-    ]
+report = custom_extend_schema(
+    res={201: (AudioReportRequestSerializer, audio_complain_201_example)},
+    eg=[audio_complain_curl],
+)
 
-    swagger_setup = {
-        "operation_id": "audio_stats",
-        "operation_description": desc,
-        "responses": responses,
-        "code_examples": code_examples,
-    }
+thumbnail = extend_schema(
+    parameters=[MediaThumbnailRequestSerializer],
+    responses={200: OpenApiResponse(description="Thumbnail image")},
+)
 
-
-class AudioDetail(MediaDetail):
-    desc = f"""
-audio_detail is an API endpoint to get the details of a specified audio ID.
-
-By using this endpoint, you can get audio details such as
-{fields_to_md(AudioSerializer.Meta.fields)}.
-
-{MediaDetail.desc}"""
-
-    responses = {
-        "200": openapi.Response(
-            description="OK", examples=audio_detail_200_example, schema=AudioSerializer
-        ),
-        "404": openapi.Response(
-            description="OK",
-            examples=audio_detail_404_example,
-            schema=NotFoundErrorSerializer,
-        ),
-    }
-
-    code_examples = [
-        {
-            "lang": "Bash",
-            "source": audio_detail_curl,
-        },
-    ]
-
-    swagger_setup = {
-        "operation_id": "audio_detail",
-        "operation_description": desc,
-        "responses": responses,
-        "code_examples": code_examples,
-    }
-
-
-class AudioRelated(MediaRelated):
-    desc = f"""
-recommendations_audio_read is an API endpoint to get related audio files for a specified
-audio ID.
-
-By using this endpoint, you can get the details of related audio such as
-{fields_to_md(AudioSerializer.Meta.fields)}.
-
-{MediaRelated.desc}"""
-
-    responses = {
-        "200": openapi.Response(
-            description="OK", examples=audio_related_200_example, schema=AudioSerializer
-        ),
-        "404": openapi.Response(
-            description="Not Found",
-            examples=audio_related_404_example,
-            schema=NotFoundErrorSerializer,
-        ),
-    }
-
-    code_examples = [
-        {
-            "lang": "Bash",
-            "source": audio_related_curl,
-        },
-    ]
-
-    swagger_setup = {
-        "operation_id": "audio_related",
-        "operation_description": desc,
-        "responses": responses,
-        "code_examples": code_examples,
-    }
-
-
-class AudioComplain(MediaComplain):
-    desc = f"""
-audio_report_create is an API endpoint to report an issue about a specified audio ID to
-Openverse.
-
-By using this endpoint, you can report an audio file if it infringes copyright, contains
-mature or sensitive content and others.
-
-{MediaComplain.desc}"""
-
-    responses = {
-        "201": openapi.Response(
-            description="OK",
-            examples=audio_complain_201_example,
-            schema=AudioReportRequestSerializer,
-        )
-    }
-
-    code_examples = [
-        {
-            "lang": "Bash",
-            "source": audio_complain_curl,
-        }
-    ]
-
-    swagger_setup = {
-        "operation_id": "audio_report",
-        "operation_description": desc,
-        "responses": responses,
-        "code_examples": code_examples,
-    }
-
-
-class AudioThumbnail:
-    desc = f"""
-thumbnail is an API endpoint to retrieve the scaled down and compressed thumbnail
-of the artwork of an audio track or its audio set.
-
-{refer_sample}"""
-
-    swagger_setup = {
-        "operation_id": "audio_thumbnail",
-        "operation_description": desc,
-        "query_serializer": MediaThumbnailRequestSerializer,
-    }
+waveform = custom_extend_schema(
+    res={
+        200: (AudioWaveformSerializer, audio_waveform_200_example),
+        404: (NotFoundErrorSerializer, audio_waveform_404_example),
+    },
+    eg=[audio_waveform_curl],
+)
