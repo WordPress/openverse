@@ -20,7 +20,7 @@ class HealthCheck(APIView):
     load balancer and destroyed.
     """
 
-    swagger_schema = None
+    schema = None  # Hide this view from the OpenAPI schema.
 
     @staticmethod
     def _check_db() -> None:

@@ -391,11 +391,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        recipe:
-          - "api/dj check"
-          - "api/dj validateopenapischema"
-          - "api/dj makemigrations --check --noinput --merge"
-          - "api/doc-test"
+        name:
+          - check_django
+          - validate_openapi
+          - check_migrations
+          - test_doc
+        include:
+          - name: check_django
+            recipe: api/dj check
+          - name: validate_openapi
+            recipe: api/dj spectacular --format openapi-json --validate --file openapi.json
+          - name: check_migrations
+            recipe: api/dj makemigrations --check --noinput --merge
+          - name: test_doc
+            recipe: api/doc-test
 
     steps:
       - name: Checkout repository
@@ -420,12 +429,12 @@ jobs:
         env:
           DC_USER: root
 
-      - name: Upload schema on failure
-        if: failure() && contains(matrix.recipe, 'validateopenapischema')
+      - name: Upload schema
+        if: matrix.name == 'test_doc'
         uses: actions/upload-artifact@v3
         with:
-          name: openverse-api-openapi-schema.yaml
-          path: ./api/openapi.yaml
+          name: openapi.json
+          path: ./api/openapi.json
 
   # This job runs when `django-checks` doesn't and always passes, thus allowing
   # PRs to meet the required checks criteria and be merged.
@@ -437,11 +446,11 @@ jobs:
       - get-changes
     strategy:
       matrix:
-        recipe:
-          - "api/dj check"
-          - "api/dj validateopenapischema"
-          - "api/dj makemigrations --check --noinput --merge"
-          - "api/doc-test"
+        name:
+          - check_django
+          - validate_openapi
+          - check_migrations
+          - test_doc
 
     steps:
       - name: Pass
@@ -669,7 +678,10 @@ jobs:
           github.actor != 'dependabot[bot]'
         )
       ) &&
-      (needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.documentation == 'true') &&
+      (
+        needs.get-changes.outputs.frontend == 'true' ||
+        needs.get-changes.outputs.documentation == 'true'
+      ) &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
       (needs.test-cat.result == 'success' || needs.test-cat.result == 'skipped') &&
@@ -885,7 +897,13 @@ jobs:
       github.event_name == 'push' &&
       github.repository == 'WordPress/openverse' &&
       (
-        ((needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.documentation == 'true') && needs.emit-docs.result != 'success') ||
+        (
+          (
+            needs.get-changes.outputs.frontend == 'true' ||
+            needs.get-changes.outputs.documentation == 'true'
+          ) &&
+          needs.emit-docs.result != 'success'
+        ) ||
         (needs.determine-images.outputs.do_publish == 'true' && needs.publish-images.result != 'success') ||
         (needs.get-changes.outputs.frontend == 'true' && needs.deploy-frontend.result != 'success') ||
         (needs.get-changes.outputs.api == 'true' && needs.deploy-api.result != 'success')

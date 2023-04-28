@@ -92,12 +92,7 @@ class AbstractMedia(
 
     @property
     def attribution(self) -> str:
-        """
-        The plain-text English attribution for a media item.
-
-        Use this to credit creators for their work and fulfill legal attribution
-        requirements.
-        """
+        """Legally valid attribution for the media item in plain-text English."""
 
         return get_attribution_text(
             self.title,

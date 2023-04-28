@@ -67,3 +67,10 @@ curl \\
   -d '{{"reason": "mature", "description": "This audio contains sensitive content"}}' \\
   "{origin}/v1/audio/{identifier}/report/"
 """
+
+audio_waveform_curl = f"""
+# Get the waveform of audio ID {identifier}
+curl \\
+  {auth} \\
+  "{origin}/v1/audio/{identifier}/waveform/"
+"""

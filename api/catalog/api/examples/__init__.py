@@ -5,6 +5,7 @@ from catalog.api.examples.audio_requests import (
     audio_search_curl,
     audio_search_list_curl,
     audio_stats_curl,
+    audio_waveform_curl,
 )
 from catalog.api.examples.audio_responses import (
     audio_complain_201_example,
@@ -15,6 +16,8 @@ from catalog.api.examples.audio_responses import (
     audio_search_200_example,
     audio_search_400_example,
     audio_stats_200_example,
+    audio_waveform_200_example,
+    audio_waveform_404_example,
 )
 from catalog.api.examples.image_requests import (
     image_complain_curl,
@@ -36,6 +39,17 @@ from catalog.api.examples.image_responses import (
     image_search_200_example,
     image_search_400_example,
     image_stats_200_example,
+)
+from catalog.api.examples.oauth2_requests import (
+    auth_key_info_curl,
+    auth_register_curl,
+    auth_token_curl,
+)
+from catalog.api.examples.oauth2_responses import (
+    auth_key_info_200_example,
+    auth_key_info_403_example,
+    auth_register_201_example,
+    auth_token_200_example,
 )
 
 
