@@ -1,13 +1,11 @@
 import logging
 import os
-import struct
 from enum import Flag, auto
 from io import BytesIO
 from textwrap import wrap
 
 from django.conf import settings
 
-import piexif
 import requests
 from PIL import Image, ImageDraw, ImageFont
 from sentry_sdk import capture_exception
@@ -170,15 +168,10 @@ def _open_image(url):
         logger.error(f"Error loading image data: {e}")
         return None, None
 
-    try:
-        # Preserve EXIF metadata
-        exif = piexif.load(img.info["exif"]) if "exif" in img.info else None
-        return img, exif
-    except struct.error:
-        return img, None
+    return img, img.getexif()
 
 
-def _print_attribution_on_image(img, image_info):
+def _print_attribution_on_image(img: Image.Image, image_info):
     """
     Add a frame around the image and put the attribution text on the bottom.
 
