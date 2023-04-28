@@ -241,7 +241,10 @@ class AbstractMediaReport(models.Model):
         )
         if self.status != DEINDEXED:
             same_reports = same_reports.filter(reason=self.reason)
-        same_reports.update(status=self.status)
+
+        # Prevent redundant update statement when creating the report
+        if self.status != PENDING:
+            same_reports.update(status=self.status)
 
 
 class AbstractDeletedMedia(OpenLedgerModel):
