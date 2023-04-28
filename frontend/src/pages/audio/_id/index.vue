@@ -1,11 +1,7 @@
 <template>
   <VSkipToContentContainer as="main">
     <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
-      <VBackToSearchResultsLink
-        :id="audio.id"
-        :href="backToSearchPath"
-        :media-type="audio.frontendMediaType"
-      />
+      <VBackToSearchResultsLink :id="audio.id" :href="backToSearchPath" />
     </div>
 
     <VAudioTrack layout="full" :audio="audio" class="main-track" />

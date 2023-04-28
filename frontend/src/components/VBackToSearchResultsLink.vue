@@ -11,10 +11,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { defineComponent } from "vue"
 
 import { useAnalytics } from "~/composables/use-analytics"
-import type { SupportedMediaType } from "~/constants/media"
+import { useSearchStore } from "~/stores/search"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VLink from "~/components/VLink.vue"
@@ -37,20 +37,15 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    /**
-     * The media type being searched
-     */
-    mediaType: {
-      type: String as PropType<SupportedMediaType>,
-      required: true,
-    },
   },
   setup(props) {
     const { sendCustomEvent } = useAnalytics()
+    const searchStore = useSearchStore()
+
     const handleClick = () => {
       sendCustomEvent("BACK_TO_SEARCH", {
         id: props.id,
-        mediaType: props.mediaType,
+        searchType: searchStore.searchType,
       })
     }
 

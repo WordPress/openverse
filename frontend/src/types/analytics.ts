@@ -1,4 +1,4 @@
-import type { MediaType } from "~/constants/media"
+import type { MediaType, SearchType } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
 
 /**
@@ -34,8 +34,8 @@ export type Events = {
   BACK_TO_SEARCH: {
     /** The unique ID of the media */
     id: string
-    /** The media type being searched */
-    mediaType: MediaType
+    /** The content type being searched (can include All content) */
+    searchType: SearchType
   }
   /**
    * Description: The user clicks the CTA button to the external source to use the image

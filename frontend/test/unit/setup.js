@@ -19,7 +19,13 @@ Vue.use(VueI18n)
  */
 config.stubs["nuxt-link"] = Vue.component("NuxtLink", {
   props: ["to"],
-  template: '<a :href="to" v-on="$listeners"><slot /></a>',
+  methods: {
+    handleClick() {
+      this.$emit("mousedown")
+      this.$emit("click", new MouseEvent("click"))
+    },
+  },
+  template: '<a :href="to" v-on="$listeners" @click="handleClick"><slot /></a>',
 })
 
 config.stubs["svg-icon"] = Vue.component("SvgIcon", {
