@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 import pytest
 
-from catalog.api.models import (
+from api.models import (
     Audio,
     AudioReport,
     DeletedAudio,
@@ -16,14 +16,7 @@ from catalog.api.models import (
     MatureAudio,
     MatureImage,
 )
-from catalog.api.models.media import (
-    DEINDEXED,
-    DMCA,
-    MATURE,
-    MATURE_FILTERED,
-    OTHER,
-    PENDING,
-)
+from api.models.media import DEINDEXED, DMCA, MATURE, MATURE_FILTERED, OTHER, PENDING
 
 
 pytestmark = pytest.mark.django_db

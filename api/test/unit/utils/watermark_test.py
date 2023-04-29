@@ -10,7 +10,7 @@ import pytest
 from PIL import Image
 from requests import Request, Response
 
-from catalog.api.utils.watermark import HEADERS, _open_image, watermark
+from api.utils.watermark import HEADERS, _open_image, watermark
 
 
 _MOCK_IMAGE_PATH = Path(__file__).parent / ".." / ".." / "factory"

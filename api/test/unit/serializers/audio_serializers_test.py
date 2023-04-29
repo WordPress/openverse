@@ -5,8 +5,8 @@ from rest_framework.test import APIRequestFactory
 
 import pytest
 
-from catalog.api.models.audio import Audio
-from catalog.api.serializers.audio_serializers import AudioSerializer
+from api.models.audio import Audio
+from api.serializers.audio_serializers import AudioSerializer
 
 
 @pytest.fixture

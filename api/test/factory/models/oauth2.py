@@ -4,7 +4,7 @@ import factory
 from factory.django import DjangoModelFactory
 from oauth2_provider.models import AccessToken
 
-from catalog.api.models.oauth import (
+from api.models.oauth import (
     OAuth2Registration,
     OAuth2Verification,
     ThrottledApplication,

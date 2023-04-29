@@ -11,10 +11,10 @@ from django.test.utils import CaptureQueriesContext
 import psycopg2
 import pytest
 
-from catalog.api.models.audio import Audio, AudioAddOn
+from api.models.audio import Audio, AudioAddOn
 
 
-@mock.patch("catalog.api.models.audio.generate_peaks")
+@mock.patch("api.models.audio.generate_peaks")
 def call_generatewaveforms(mock_generate_peaks: mock.MagicMock) -> tuple[str, str]:
     mock_generate_peaks.side_effect = lambda _: WaveformProvider.generate_waveform()
     out = StringIO()
@@ -67,7 +67,7 @@ def test_does_not_reprocess_existing_waveforms():
 
 
 @pytest.mark.django_db
-@mock.patch("catalog.api.models.audio.generate_peaks")
+@mock.patch("api.models.audio.generate_peaks")
 def test_paginates_audio_waveforms_to_generate(
     mock_generate_peaks, django_assert_num_queries
 ):
@@ -117,7 +117,7 @@ def test_paginates_audio_waveforms_to_generate(
         ),
     ),
 )
-@mock.patch("catalog.api.models.audio.generate_peaks")
+@mock.patch("api.models.audio.generate_peaks")
 def test_logs_and_continues_if_waveform_generation_fails(
     mock_generate_peaks, exception_class, exception_args, exception_kwargs
 ):
@@ -151,7 +151,7 @@ def test_logs_and_continues_if_waveform_generation_fails(
 
 
 @pytest.mark.django_db
-@mock.patch("catalog.api.models.audio.generate_peaks")
+@mock.patch("api.models.audio.generate_peaks")
 def test_keyboard_interrupt_should_halt_processing(mock_generate_peaks):
     audio_count = 23
     interrupt_at = 9

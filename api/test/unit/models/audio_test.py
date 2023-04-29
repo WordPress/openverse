@@ -4,7 +4,7 @@ from unittest import mock
 
 import pytest
 
-from catalog.api.models.audio import Audio, AudioAddOn
+from api.models.audio import Audio, AudioAddOn
 
 
 @pytest.fixture
@@ -20,7 +20,7 @@ def audio_fixture():
 
 
 @pytest.mark.django_db
-@mock.patch("catalog.api.models.audio.generate_peaks")
+@mock.patch("api.models.audio.generate_peaks")
 def test_audio_waveform_caches(generate_peaks_mock, audio_fixture):
     mock_waveform = WaveformProvider.generate_waveform()
     generate_peaks_mock.return_value = mock_waveform
@@ -44,7 +44,7 @@ def test_audio_waveform_caches(generate_peaks_mock, audio_fixture):
 
 
 @pytest.mark.django_db
-@mock.patch("catalog.api.models.audio.AudioAddOn.objects.get")
+@mock.patch("api.models.audio.AudioAddOn.objects.get")
 def test_audio_waveform_sent_when_present(get_mock, audio_fixture):
     # When ``AudioAddOn.waveform_peaks`` exists, waveform is filled
     peaks = [0, 0.25, 0.5, 0.25, 0.1]
@@ -53,7 +53,7 @@ def test_audio_waveform_sent_when_present(get_mock, audio_fixture):
 
 
 @pytest.mark.django_db
-@mock.patch("catalog.api.models.audio.AudioAddOn.objects.get")
+@mock.patch("api.models.audio.AudioAddOn.objects.get")
 def test_audio_waveform_blank_when_absent(get_mock, audio_fixture):
     # When ``AudioAddOn`` does not exist, waveform is blank
     get_mock.side_effect = AudioAddOn.DoesNotExist()
@@ -61,7 +61,7 @@ def test_audio_waveform_blank_when_absent(get_mock, audio_fixture):
 
 
 @pytest.mark.django_db
-@mock.patch("catalog.api.models.audio.AudioAddOn.objects.get")
+@mock.patch("api.models.audio.AudioAddOn.objects.get")
 def test_audio_waveform_blank_when_none(get_mock, audio_fixture):
     # When ``AudioAddOn.waveform_peaks`` is None, waveform is blank
     get_mock.return_value = mock.Mock(waveform_peaks=None)

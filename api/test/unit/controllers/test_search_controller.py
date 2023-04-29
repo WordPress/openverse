@@ -8,10 +8,10 @@ import pytest
 from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
 
-from catalog.api.controllers import search_controller
-from catalog.api.serializers.media_serializers import MediaSearchRequestSerializer
-from catalog.api.utils import tallies
-from catalog.api.utils.dead_link_mask import get_query_hash, save_query_mask
+from api.controllers import search_controller
+from api.serializers.media_serializers import MediaSearchRequestSerializer
+from api.utils import tallies
+from api.utils.dead_link_mask import get_query_hash, save_query_mask
 
 
 @pytest.mark.parametrize(
@@ -424,7 +424,7 @@ def test_paginate_with_dead_link_mask_query_mask_overlaps_query_window(
     tallies, "count_provider_occurrences", wraps=tallies.count_provider_occurrences
 )
 @mock.patch(
-    "catalog.api.controllers.search_controller._post_process_results",
+    "api.controllers.search_controller._post_process_results",
 )
 @pytest.mark.django_db
 def test_search_tallies_pages_less_than_5(
@@ -476,7 +476,7 @@ def test_search_tallies_pages_less_than_5(
     tallies, "count_provider_occurrences", wraps=tallies.count_provider_occurrences
 )
 @mock.patch(
-    "catalog.api.controllers.search_controller._post_process_results",
+    "api.controllers.search_controller._post_process_results",
 )
 @pytest.mark.django_db
 def test_search_tallies_handles_empty_page(

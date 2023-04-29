@@ -25,10 +25,10 @@ def test_list_query_count(api_client, media_type, media_factory):
         num_results,
     )
     with patch(
-        "catalog.api.views.media_views.search_controller",
+        "api.views.media_views.search_controller",
         search=MagicMock(return_value=controller_ret),
     ), patch(
-        "catalog.api.serializers.media_serializers.search_controller",
+        "api.serializers.media_serializers.search_controller",
         get_sources=MagicMock(return_value={}),
     ), pytest_django.asserts.assertNumQueries(
         1

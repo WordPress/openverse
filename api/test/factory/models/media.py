@@ -4,7 +4,7 @@ from uuid import uuid4
 import factory
 from factory.django import DjangoModelFactory
 
-from catalog.api.constants.licenses import ALL_LICENSES
+from api.constants.licenses import ALL_LICENSES
 
 
 class MediaFactory(DjangoModelFactory):
