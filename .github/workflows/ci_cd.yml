@@ -131,11 +131,11 @@ jobs:
           # - list of stack filters: `.github/filters.yml`
           # - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
           script: |
-            const stacks = ['catalog', 'api', 'ingestion_server', 'frontend', 'documentation', 'mgmt']
+            const stacks = ["catalog", "api", "ingestion_server", "frontend", "documentation", "mgmt"]
             const labels = JSON
-              .parse(${{ needs.get-changes.outputs.changes }})
+              .parse('${{ needs.get-changes.outputs.changes }}')
               .filter(change => stacks.includes(change))
-              .map(change => `🧱 stack: ${change.replace('_', ' ')}`)
+              .map(change => `🧱 stack: ${change.replace("_", " ")}`)
             if (labels.len == 0) {
               labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
             }
