@@ -21,8 +21,10 @@ frontend:
   - .github/workflows/ci_cd.yml
 documentation:
   - documentation/**
-  # Change to the CI + CD workflow should trigger complete workflow.
-  - .github/workflows/ci_cd.yml
+  - frontend/.storybook/**
+  - frontend/**.stories.mdx
+  - frontend/nuxt.config.ts
+  - frontend/tailwind.config.js
 lint:
   - prettier.config.js
   - .prettierignore
