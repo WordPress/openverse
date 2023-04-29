@@ -452,7 +452,9 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-django-checks:
     name: Run Django checks
-    if: needs.django-checks.result == 'skipped'
+    if: |
+      !cancelled() &&
+      needs.django-checks.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
       - django-checks
@@ -536,7 +538,9 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-nuxt-checks:
     name: Run Nuxt checks
-    if: needs.nuxt-checks.result == 'skipped'
+    if: |
+      !cancelled() &&
+      needs.nuxt-checks.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
       - nuxt-checks
@@ -600,7 +604,9 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-playwright:
     name: Run Playwright tests
-    if: needs.playwright.result == 'skipped'
+    if: |
+      !cancelled() &&
+      needs.playwright.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
       - playwright
