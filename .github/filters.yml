@@ -1,5 +1,6 @@
-# Also see list of stacks in the job `add-stack-label` under workflow
-# `.github/workflows/ci_cd.yml`.
+# Also see
+# - list of stacks: job `add-stack-label` of workflow `ci_cd.yml`
+# - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
 catalog:
   - catalog/**
   - docker/minio/**

@@ -125,26 +125,26 @@ jobs:
       - get-changes
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Add API stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.api == 'true' }}
+      - uses: actions/github-script@v6
         with:
-          labels: "🧱 stack: api"
-
-      - name: Add ingestion server stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.ingestion_server == 'true' }}
-        with:
-          labels: "🧱 stack: ingestion server"
-
-      - name: Add frontend stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.frontend == 'true' }}
-        with:
-          labels: "🧱 stack: frontend"
+          # Also see
+          # - list of stack filters: `.github/filters.yml`
+          # - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
+          script: |
+            const stacks = ['catalog', 'api', 'ingestion_server', 'frontend', 'documentation', 'mgmt']
+            const labels = JSON
+              .parse(${{ needs.get-changes.outputs.changes }})
+              .filter(change => stacks.includes(change))
+              .map(change => `🧱 stack: ${change.replace('_', ' ')}`)
+            if (labels.len == 0) {
+              labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
+            }
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels,
+            })
 
   build-images:
     name: Build Docker images
