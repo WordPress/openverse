@@ -44,4 +44,5 @@ mgmt:
   - .github/**
   - automations/**
 ci_cd:
+  - .github/actions/**
   - .github/workflows/ci_cd.yml
