@@ -1,0 +1,137 @@
+# Implementation Plan: Catalog
+
+<!-- See the implementation plan guide for more information: https://github.com/WordPress/openverse/tree/19791f51c063d0979112f4b9f4eeace04c8cf5ff/docs/projects#implementation-plans-status-in-rfc -->
+<!-- This template is exhaustive and may include sections which aren't relevant to your project. Feel free to remove any sections which would not be useful to have. -->
+
+## Reviewers
+
+<!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
+
+- [ ] @AetherUnbound
+- [ ] @stacimc
+
+## Project links
+
+<!-- Enumerate any references to other documents/pages, including milestones and other plans -->
+
+- [Project Thread](https://github.com/WordPress/openverse/issues/412)
+- [Project Proposal](https://docs.openverse.org/projects/proposals/document_all_media_properties/20230307-project_proposal.html#description)
+
+## Overview
+
+<!-- A brief one or two sentence overview of the implementation being described. -->
+
+A proposal to create a documentation page with description of the media
+properties collected by the Catalog.
+
+## Background
+
+The catalog collects and transforms data from many different sources. The kind
+of data collected, transformations, and the expected data shape have changed
+over time. This plan will outline the creation of the documentation page about
+the media properties in the catalog. This will help answer some of the questions
+like:
+
+### User stories
+
+- As a maintainer/contributor, I need to know the list of available properties
+  for each media type in the catalog database. ... so that?
+- As a contributor, I need to know what is the expected data type for the
+  specific property. Is it required? ... so that?
+- As a contributor, I need to know how the data property is transformed and
+  validated.
+- As a contributor writing a provider API script, which data properties do I
+  need to collect?
+- As a contributor writing a provider API script, how do I select data for the
+  specific media property Openverse uses?
+- As a contributor writing a provider script, which format should I convert a
+  media property?
+- As a maintainer, I've found a discrepancy between the type of data property
+  the API returns and what is described in the table (e.g., is `null` for a
+  non-nullable property). Is there an issue to fix this data in the catalog
+  database, or do I need to create a new one?
+- As an API user, I need to know what exactly this media property is and what
+  data points from the providers are used for it. E.g., does the "creator" refer
+  to the person who created the object or took the picture?
+- As a provider of openly-licensed media, I want to know what media properties
+  Openverse collects so that I can change my API responses.
+
+The information on data types, transformations, and validations will be
+presented as a table and will be extracted from the code. Other information
+about the data selection properties and data discrepancies will be written in a
+separate markdown file as it is easier to read, write, and lint.
+
+The catalog has a DAG documentation generator that extracts the docstrings from
+the DAGs and creates a page with the documentation. We can use the same approach
+to create a documentation page for the media properties. The DAG doc generator
+runs the code inside docker to extract DAG information. In this project, we can
+simplify and use the `ast` module to parse static code and extract the
+docstrings to make the checks faster. This will, however, mean that some of the
+settings will not be picked up and will have to be updated during the
+generation. One example of this is the `nullable` field in the `Column` class:
+it falls back to the value of `not nullable` during the object initiation.
+
+## Outlined Steps
+
+### `just` script
+
+The script parses the SQL DDL files, Python files and markdown files to generate
+a markdown page with a table and long-form notes. This script can `diff` with
+the existing documentation page (created in step 4 below) for the `precommit`
+check and post a note about how to update the docs if differences are detected.
+
+### 1. SQL DDL parsing
+
+We will use the names of the properties as they are in the upstream database, in
+the same order as they are in the `image_view`/`audio_view` materialized views.
+These views are selected over the main `image` and `audio` tables because they
+are used by the API during data refresh and contain a complete list of
+properties.
+
+A Python script is written to extract the information from the SQL files into a
+mapping with the name of the media property and the following values: SQL
+datatype, and SQL constraints. More data will be added to this mapping in the
+further steps.
+
+### 2. Parsing of the Python code
+
+The `Column` class and its child classes describe the validations we use to
+write the data collected by provider scripts. The `add_item` method has
+docstrings with short descriptions of what each property is. The information
+from these items will be added into the mapping from step 1.
+
+### 3. Adding the long-form information from the markdown file
+
+The markdown file will be parsed and split into the preamble, postamble (???)
+and the information about each data property. This information would be added to
+the `description` in the property mapping.
+
+### 4. Writing the markdown file
+
+The mapping will be used to create a new markdown file: the Preamble, the tables
+for Audio and Image, the long-form document from step 3.
+
+### Information to include in `media_properties.md` for each property
+
+Media types: Image, Audio Short description Names used in the provider scripts,
+if different from the database name Shape of the object (if it is not a simple
+type) Selection criteria Normalization and validation performed in the
+`MediaStore` class and the relevant `Column` Inconsistencies in the database
+data See sample for `identifier` and `tags` in `sample_media_properties.md`
+
+## Dependencies
+
+We can use the Python standard library as possible for this project.
+
+## Alternative (or additional) Approaches
+
+We could also create a list of classes/functions that are used to transform the
+data and run a `git diff` on them to see if there are any changes. This would be
+a more manual approach and would require more maintenance.
+
+Another option for documenting the media properties is to pass a dataclass
+instead of the named parameters to the `add_item` method of the `ImageStore` and
+`AudioStore`. This would make the documentation closer to code for easier
+updating, adn have another benefit of allowing us to check for required
+properties sooner. However, this would require a lot of refactoring and if
+decided on, would need to be a separate project.
