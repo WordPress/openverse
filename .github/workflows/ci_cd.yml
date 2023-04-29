@@ -36,6 +36,7 @@ jobs:
       api: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'api') }}
       frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
       documentation: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'documentation') }}
+      ci_cd: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ci_cd') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -229,7 +230,9 @@ jobs:
 
   test-cat:
     name: Run tests for the catalog
-    if: needs.get-changes.outputs.catalog == 'true'
+    if: |
+      needs.get-changes.outputs.catalog == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -260,7 +263,9 @@ jobs:
 
   catalog-checks:
     name: Run catalog checks
-    if: needs.get-changes.outputs.catalog == 'true'
+    if: |
+      needs.get-changes.outputs.catalog == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -293,7 +298,9 @@ jobs:
 
   test-ing:
     name: Run tests for ingestion-server
-    if: needs.get-changes.outputs.ingestion_server == 'true'
+    if: |
+      needs.get-changes.outputs.ingestion_server == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -337,7 +344,10 @@ jobs:
 
   test-api:
     name: Run tests for the API
-    if: needs.get-changes.outputs.ingestion_server == 'true' || needs.get-changes.outputs.api == 'true'
+    if: |
+      needs.get-changes.outputs.ingestion_server == 'true' ||
+      needs.get-changes.outputs.api == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -383,7 +393,9 @@ jobs:
 
   django-checks:
     name: Run Django checks
-    if: needs.get-changes.outputs.api == 'true'
+    if: |
+      needs.get-changes.outputs.api == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -440,10 +452,10 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-django-checks:
     name: Run Django checks
-    if: needs.get-changes.outputs.api != 'true'
+    if: needs.django-checks.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - get-changes
+      - django-checks
     strategy:
       matrix:
         name:
@@ -462,7 +474,9 @@ jobs:
 
   nuxt-build:
     name: Check Nuxt build
-    if: needs.get-changes.outputs.frontend == 'true'
+    if: |
+      needs.get-changes.outputs.frontend == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -486,7 +500,9 @@ jobs:
 
   nuxt-checks:
     name: Run Nuxt checks
-    if: needs.get-changes.outputs.frontend == 'true'
+    if: |
+      needs.get-changes.outputs.frontend == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -520,10 +536,10 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-nuxt-checks:
     name: Run Nuxt checks
-    if: needs.get-changes.outputs.frontend != 'true'
+    if: needs.nuxt-checks.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - get-changes
+      - nuxt-checks
     strategy:
       fail-fast: false
       matrix:
@@ -537,7 +553,9 @@ jobs:
 
   playwright:
     name: Run Playwright tests
-    if: needs.get-changes.outputs.frontend == 'true'
+    if: |
+      needs.get-changes.outputs.frontend == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -582,10 +600,10 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-playwright:
     name: Run Playwright tests
-    if: needs.get-changes.outputs.frontend != 'true'
+    if: needs.playwright.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - get-changes
+      - playwright
     strategy:
       matrix:
         name:
@@ -602,10 +620,9 @@ jobs:
     if: |
       !cancelled() &&
       github.event_name == 'pull_request' &&
-      needs.get-changes.outputs.frontend == 'true'
+      needs.playwright.result != ''
     runs-on: ubuntu-latest
     needs:
-      - get-changes
       - playwright
 
     steps:
