@@ -1,13 +1,9 @@
 import { expect, Page, test } from "@playwright/test"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
-import {
-  goToSearchTerm,
-  searchTypePath,
-  t,
-} from "~~/test/playwright/utils/navigation"
+import { goToSearchTerm, t } from "~~/test/playwright/utils/navigation"
 
-import { supportedSearchTypes } from "~/constants/media"
+import { searchPath, supportedSearchTypes } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -24,7 +20,7 @@ for (const searchType of supportedSearchTypes) {
       mode: "CSR",
     })
 
-    const expectedUrl = `/search/${searchTypePath(searchType)}?q=cat`
+    const expectedUrl = `${searchPath(searchType)}?q=cat`
     await expect(page).toHaveURL(expectedUrl)
   })
 }

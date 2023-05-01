@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test"
 
 import {
-  changeContentType,
+  changeSearchType,
   goToSearchTerm,
   searchFromHeader,
 } from "~~/test/playwright/utils/navigation"
@@ -60,7 +60,7 @@ test.describe("search query on CSR", () => {
         query: "category=photograph",
       })
 
-      await changeContentType(page, "Audio")
+      await changeSearchType(page, AUDIO)
       await expect(page).toHaveURL("/search/audio?q=cat")
     })
 
@@ -72,7 +72,7 @@ test.describe("search query on CSR", () => {
         query: "aspect_ratio=tall",
       })
 
-      await changeContentType(page, "Audio")
+      await changeSearchType(page, AUDIO)
       await expect(page).toHaveURL("/search/audio?q=cat")
     })
 
