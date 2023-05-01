@@ -2,6 +2,9 @@ from logging import LogRecord
 
 from decouple import config
 
+from conf.settings.base import MIDDLEWARE
+from conf.settings.security import DEBUG
+
 
 def health_check_filter(record: LogRecord) -> bool:
     # Filter out health checks from the logs, they're verbose and happen frequently
@@ -109,3 +112,9 @@ if DJANGO_DB_LOGGING:
         "handlers": ["console", "console_prod"],
         "propagate": False,
     }
+
+    if not DEBUG:
+        # WARNING: Do not run in production long-term as it can impact performance.
+        MIDDLEWARE.append(
+            "api.middleware.force_debug_cursor_middleware.force_debug_cursor_middleware"  # noqa: E501
+        )

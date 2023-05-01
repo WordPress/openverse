@@ -1,7 +1,12 @@
 from textwrap import dedent
 
+from conf.settings.base import INSTALLED_APPS
 from conf.settings.misc import API_VERSION
 
+
+INSTALLED_APPS += [
+    "drf_spectacular",
+]
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Openverse API",

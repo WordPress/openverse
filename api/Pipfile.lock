@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "38d1a6b01bc9fe451cb6b111f0624901267303590cddb96b4a40621ce7bab643"
+            "sha256": "43bd4d4b9c8c45cac5d9a5cc89e3e05bb9923565cb0640dd8d257ce7960716ac"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -151,19 +151,19 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:38ca632be379963f2a2749b5f63a81fe1679913b954914f470ad282c77674bbc",
-                "sha256:4d575c180312bec6108852bae12e6396b9d1bb404154d652c57ee849c62fbb83"
+                "sha256:2ccb1827dc9d654970375b9bbe1bd77eb6a50ec6fa76cf227a34b4bff144814f",
+                "sha256:51722a3a791108236c8ce05e0ced030b13c08276001132d4153d29353038f8cc"
             ],
             "index": "pypi",
-            "version": "==1.26.122"
+            "version": "==1.26.123"
         },
         "botocore": {
             "hashes": [
-                "sha256:9e4984a9e9777c6b949aa1e98323fa35480d9f99d447af7e179ae611f7ed5af9",
-                "sha256:c3b41078d235761b9c5dc22f534a76952622ef96787b96bbd10242ec4d73f2a5"
+                "sha256:88f743e1db5bb65e3770af674400642f1d09fca159a1508bdbb8f8cc691589ca",
+                "sha256:b69cdf1c6f451ab1314a363bf97753dfbfe1da93d33853ed241edbdcb806867d"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==1.29.122"
+            "version": "==1.29.123"
         },
         "certifi": {
             "hashes": [
@@ -428,6 +428,14 @@
             "index": "pypi",
             "version": "==5.2.0"
         },
+        "django-split-settings": {
+            "hashes": [
+                "sha256:31415a618256b54c5cee8662cbaa72a890683b8b7465d64ba88fdd3affdd6c60",
+                "sha256:4b3be146776d49c61bd9dcf89fad40edb1544f13ab27a87a0b1aecf5a0d636f4"
+            ],
+            "index": "pypi",
+            "version": "==1.2.0"
+        },
         "django-sslserver": {
             "hashes": [
                 "sha256:c598a363d2ccdc2421c08ddb3d8b0973f80e8e47a3a5b74e4a2896f21c2947c5"
@@ -489,14 +497,6 @@
             ],
             "index": "pypi",
             "version": "==7.4.1"
-        },
-        "fakeredis": {
-            "hashes": [
-                "sha256:6377c27bc557be46089381d43fd670aece46672d091a494f73ab4c96c34022b3",
-                "sha256:e2a95fbda7b11188c117d68b0f9eecc00600cb449ccf3362a15fc03cf9e2477d"
-            ],
-            "index": "pypi",
-            "version": "==2.10.2"
         },
         "frozenlist": {
             "hashes": [
@@ -1218,11 +1218,11 @@
         },
         "sentry-sdk": {
             "hashes": [
-                "sha256:36a1ca082a3065a8a05aafa4b1e3d74e9459d41fbb0bea8a5364caca68626341",
-                "sha256:82faf9e2c9eb77401a7a187094b126ca25c2a3a478de6704612f48b3346f7a84"
+                "sha256:092888f3abf7a2ea78f0bfcefc3e0465caee2b6f0efb26f538ccc60f95dca179",
+                "sha256:99c15556a23621be9f18c2955f7ce63321713bf1c0ad396b27b61399bac5f458"
             ],
             "index": "pypi",
-            "version": "==1.21.0"
+            "version": "==1.21.1"
         },
         "setuptools": {
             "hashes": [
@@ -1239,13 +1239,6 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.16.0"
-        },
-        "sortedcontainers": {
-            "hashes": [
-                "sha256:25caa5a06cc30b6b83d11423433f65d1f9d76c4c6a0c90e3379eaa43b9bfdb88",
-                "sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0"
-            ],
-            "version": "==2.4.0"
         },
         "sqlparse": {
             "hashes": [
@@ -1646,11 +1639,11 @@
         },
         "ipython": {
             "hashes": [
-                "sha256:2442915417763b62181009259782975fa50bb5eedb97ae97fb614204bf6ecc21",
-                "sha256:e3015a1a4aa09b3984fb81b9cef4f0772af5a549878b81efb094cda8bb121993"
+                "sha256:1c80d08f04144a1994cda25569eab07fbdc4989bd8d8793e3a4ff643065ccb51",
+                "sha256:9c8487ac18f330c8a683fc50ab6d7bc0fcf9ef1d7a9f6ce7926938261067b81f"
             ],
             "index": "pypi",
-            "version": "==8.12.1"
+            "version": "==8.13.1"
         },
         "jedi": {
             "hashes": [

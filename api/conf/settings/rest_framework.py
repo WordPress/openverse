@@ -1,5 +1,12 @@
 from decouple import config
 
+from conf.settings.base import INSTALLED_APPS
+
+
+INSTALLED_APPS += [
+    "rest_framework",
+]
+
 
 THROTTLE_ANON_BURST = config("THROTTLE_ANON_BURST", default="5/hour")
 THROTTLE_ANON_SUSTAINED = config("THROTTLE_ANON_SUSTAINED", default="100/day")

@@ -1,5 +1,15 @@
 from decouple import config
 
+from conf.settings.base import INSTALLED_APPS, MIDDLEWARE
+
+
+INSTALLED_APPS += [
+    "oauth2_provider",
+]
+
+MIDDLEWARE += [
+    "oauth2_provider.middleware.OAuth2TokenMiddleware",
+]
 
 OAUTH2_PROVIDER = {
     "SCOPES": {
