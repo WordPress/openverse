@@ -248,7 +248,7 @@ index for a given media type. The DAG awaits the completion of the filtered
 index creation and then points the filtered index alias for the media type to
 the newly created index.
 
-## When this DAG runs
+#### When this DAG runs
 
 The DAGs generated in this module are triggered by the data refresh DAGs.
 Maintaining this process separate from the data refresh DAGs, while still
@@ -258,7 +258,7 @@ changes to the filtered index creation; and for re-running filtered index
 creation if an urgent change to the sensitive terms calls for an immediate
 recreation of the filtered indexes.
 
-## Race conditions
+#### Race conditions
 
 Because filtered index creation employs the `reindex` Elasticsearch API to
 derive the filtered index from an existing index, we need to be mindful of the
@@ -301,7 +301,7 @@ index for a given media type. The DAG awaits the completion of the filtered
 index creation and then points the filtered index alias for the media type to
 the newly created index.
 
-## When this DAG runs
+#### When this DAG runs
 
 The DAGs generated in this module are triggered by the data refresh DAGs.
 Maintaining this process separate from the data refresh DAGs, while still
@@ -311,7 +311,7 @@ changes to the filtered index creation; and for re-running filtered index
 creation if an urgent change to the sensitive terms calls for an immediate
 recreation of the filtered indexes.
 
-## Race conditions
+#### Race conditions
 
 Because filtered index creation employs the `reindex` Elasticsearch API to
 derive the filtered index from an existing index, we need to be mindful of the
