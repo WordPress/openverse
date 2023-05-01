@@ -426,6 +426,7 @@ parametrize_index = pytest.mark.parametrize(
         (8, 12, False, 0),
     ),
 )
+@pytest.mark.parametrize("include_sensitive_results", (True, False))
 @mock.patch.object(
     tallies, "count_provider_occurrences", wraps=tallies.count_provider_occurrences
 )
@@ -441,12 +442,18 @@ def test_search_tallies_pages_less_than_5(
     number_of_results_passed,
     index,
     request_factory,
+    include_sensitive_results,
 ):
     mock_post_process_results.return_value = [
         {"provider": "a provider", "identifier": i} for i in range(page_size)
     ]
 
-    serializer = MediaSearchRequestSerializer(data={"q": "dogs"})
+    serializer = MediaSearchRequestSerializer(
+        data={
+            "q": "dogs",
+            "unstable__include_sensitive_results": include_sensitive_results,
+        }
+    )
     serializer.is_valid()
 
     search_controller.search(
@@ -462,7 +469,7 @@ def test_search_tallies_pages_less_than_5(
     if does_tally:
         count_provider_occurrences_mock.assert_called_once_with(
             mock.ANY,
-            index,
+            index if include_sensitive_results else f"{index}-filtered",
         )
         passed_results = count_provider_occurrences_mock.call_args_list[0][0][0]
         assert len(passed_results) == number_of_results_passed
