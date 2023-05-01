@@ -281,9 +281,11 @@ class PerformIndexUpdateMixin:
                 )
             except TransportError as e:
                 if e.status_code == 404:
-                    logger.warn(
-                        f"Unable to update document with _id {document_id} "
-                        f"in index {index} due to transport error: {e}"
+                    # This is expected for the filtered index, but we should still
+                    # log, just in case.
+                    logger.warning(
+                        f"Document with _id {document_id} not found "
+                        f"in {index} index. No update performed."
                     )
                 else:
                     raise e
