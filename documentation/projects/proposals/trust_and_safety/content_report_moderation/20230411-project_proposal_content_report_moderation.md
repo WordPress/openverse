@@ -123,8 +123,8 @@ moderator quality of life:
     description.
     [I opened this discussion to further explore these ideas](https://github.com/WordPress/openverse/discussions/1175).
 
-Computer vision based enhancements to Django admin are covered in a subsequent
-section as it is sufficiently complicated to warrant its own set of
+Computer vision based enhancements to Django admin are covered in a [subsequent
+section](#computer-vision-based-moderator-safety-tools-requirement-4) as it is sufficiently complicated to warrant its own set of
 considerations.
 
 ### Bulk moderation actions (requirement 3)
