@@ -84,7 +84,7 @@ Django admin already includes granular access control tools. We'll need to scope
 out the creation of a new Django user group with appropriate permissions, the
 management of the users in that group, and how to get volunteer moderators
 through Cloudflare Access. One suggested implementation is to add a new
-`WordPress/openverse-content-moderators` GitHub group able access Django admin.
+`WordPress/openverse-content-moderators` GitHub group able to access Django admin.
 A new GitHub group would have the additional benefit of allowing discussions
 about iterations to the moderation processes and tools to include everyone
 actually doing the moderation.
