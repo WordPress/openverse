@@ -12,7 +12,7 @@
 <!-- A brief one or two sentence summary of the project's features -->
 
 While Openverse supports reporting results as mature, we do not have a process
-of handling these reports. Likewise, there are significant gaps in our
+for handling these reports. Likewise, there are significant gaps in our
 infrastructure that make it difficult to respond to these reports or to lean on
 contributors outside the core maintainers for help processing them. This project
 will address these gaps, make it possible to easily and safely respond to
