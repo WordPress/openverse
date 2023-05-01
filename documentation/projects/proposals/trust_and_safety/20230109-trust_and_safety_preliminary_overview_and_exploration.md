@@ -1,4 +1,4 @@
-# 2023-01-09 Project Proposal
+# 2023-01-09 Initial Overview and User Stories
 
 This document seeks to explore the facets of Trust and Safety that Openverse
 needs to consider as we undertake the important work of building systems and
