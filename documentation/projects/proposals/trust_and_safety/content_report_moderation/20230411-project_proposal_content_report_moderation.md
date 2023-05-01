@@ -84,10 +84,10 @@ Django admin already includes granular access control tools. We'll need to scope
 out the creation of a new Django user group with appropriate permissions, the
 management of the users in that group, and how to get volunteer moderators
 through Cloudflare Access. One suggested implementation is to add a new
-`WordPress/openverse-content-moderators` GitHub group able to access Django admin.
-A new GitHub group would have the additional benefit of allowing discussions
-about iterations to the moderation processes and tools to include everyone
-actually doing the moderation.
+`WordPress/openverse-content-moderators` GitHub group able to access Django
+admin. A new GitHub group would have the additional benefit of allowing
+discussions about iterations to the moderation processes and tools to include
+everyone actually doing the moderation.
 
 The content report admin views already exist, but need some upgrades to improve
 moderator quality of life:
@@ -123,9 +123,9 @@ moderator quality of life:
     description.
     [I opened this discussion to further explore these ideas](https://github.com/WordPress/openverse/discussions/1175).
 
-Computer vision based enhancements to Django admin are covered in a [subsequent
-section](#computer-vision-based-moderator-safety-tools-requirement-4) as it is sufficiently complicated to warrant its own set of
-considerations.
+Computer vision based enhancements to Django admin are covered in a
+[subsequent section](#computer-vision-based-moderator-safety-tools-requirement-4)
+as it is sufficiently complicated to warrant its own set of considerations.
 
 ### Bulk moderation actions (requirement 3)
 
