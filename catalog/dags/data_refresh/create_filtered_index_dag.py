@@ -167,7 +167,8 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
                 default=None,
                 type=["string", "null"],
                 description=(
-                    "See https://github.com/WordPress/openverse/blob/7427bbd4a8178d05a27e6fef07d70905ec7ef16b/ingestion_server/ingestion_server/indexer.py#L495-L497. "  # noqa: E501
+                    "See ``Indexer::create_and_populate_filtered_index`` in the "
+                    "Openverse ingestion server project. "
                     "For manual runs this can be left out if the new "
                     f"filtered alias should be based on the {media_type} alias."
                 ),
@@ -176,7 +177,8 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
                 default=None,
                 type=["string", "null"],
                 description=(
-                    "See https://github.com/WordPress/openverse/blob/7427bbd4a8178d05a27e6fef07d70905ec7ef16b/ingestion_server/ingestion_server/indexer.py#L498-L502. "  # noqa: E501
+                    "See ``Indexer::create_and_populate_filtered_index`` in the "
+                    "Openverse ingestion server project. "
                     "For manual runs this should be left out. This setting should "
                     "not conflict with another existing suffix or index creation "
                     "will fail."
