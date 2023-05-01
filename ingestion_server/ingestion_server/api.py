@@ -91,6 +91,8 @@ class TaskResource(BaseTaskResource):
                 "index_suffix": {"type": "string"},
                 "alias": {"type": "string"},
                 "force_delete": {"type": "boolean"},
+                "origin_index_suffix": {"type": "string"},
+                "destination_index_suffix": {"type": "string"},
             },
             "required": ["model", "action"],
             "allOf": [

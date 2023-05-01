@@ -1,17 +1,20 @@
-import { fireEvent, render, screen } from "@testing-library/vue"
 import VueI18n from "vue-i18n"
+
+import { fireEvent, render, screen } from "@testing-library/vue"
+import { createLocalVue } from "@vue/test-utils"
+
+import { createPinia } from "~~/test/unit/test-utils/pinia"
+import i18n from "~~/test/unit/test-utils/i18n"
 
 import ReportService from "~/data/report-service"
 
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
 
-const messages = require("~/locales/en.json")
-
-const i18n = new VueI18n({
-  locale: "en",
-  fallbackLocale: "en",
-  messages: { en: messages },
-})
+jest.mock("~/composables/use-analytics", () => ({
+  useAnalytics: jest.fn(() => ({
+    sendCustomEvent: jest.fn(),
+  })),
+}))
 
 const getDmcaInput = () =>
   screen.getByRole("radio", {
@@ -54,6 +57,8 @@ jest.mock("~/data/report-service", () => ({
 describe("VContentReportForm", () => {
   let props = null
   let options = {}
+  let pinia = null
+  let localVue = null
 
   beforeEach(() => {
     props = {
@@ -66,11 +71,17 @@ describe("VContentReportForm", () => {
       providerName: "Provider",
       closeFn: jest.fn(),
     }
+    pinia = createPinia()
+    localVue = createLocalVue()
+    localVue.use(pinia)
+    localVue.use(VueI18n)
 
     options = {
       propsData: props,
-      i18n,
       stubs: ["VIcon"],
+      localVue,
+      pinia,
+      i18n,
     }
   })
 

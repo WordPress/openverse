@@ -9,6 +9,7 @@ on:
           - api
           - ingestion_server
           - frontend
+          - catalog
         required: true
         description: Application to release. If `api` or `frontend`, the deployment workflow will automatically be dispatched for you.
       image-sha:
@@ -153,6 +154,7 @@ jobs:
             🌟 goal: addition
             📄 aspect: text
             🟩 priority: low
+            skip-changelog
           body: |
             This changelog PR was automatically generated for @${{ github.actor }} as a result of the ${{ github.workflow }} workflow.
 

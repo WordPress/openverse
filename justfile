@@ -194,9 +194,9 @@ recreate:
 logs services="" args=(if IS_CI != "" { "" } else { "-f" }):
     just dc logs {{ args }} {{ services }}
 
-# Attach to the specificed `service`. Enables interacting with the TTY of the running service.
+# Attach to the specificed service to interacting with its TTY
 attach service:
-    docker attach $(docker-compose ps | grep {{ service }} | awk '{print $1}')
+    docker attach $(just dc ps | awk '{print $1}' | grep {{ service }})
 
 # Execute statement in service containers using Docker Compose
 exec +args:

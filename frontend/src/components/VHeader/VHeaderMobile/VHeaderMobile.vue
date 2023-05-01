@@ -32,7 +32,7 @@
             />
             <VSearchBarButton
               v-show="searchBarIsActive"
-              :icon-path="chevronLeftIcon"
+              icon="chevron-left"
               :inner-size="8"
               :label="$t('header.back-button')"
               :rtl-flip="true"
@@ -69,7 +69,7 @@
           <slot>
             <VSearchBarButton
               v-show="searchBarIsActive && searchTerm"
-              :icon-path="closeIcon"
+              icon="close-small"
               :label="$t('browse-page.search-form.clear')"
               inner-area-classes="bg-white hover:bg-dark-charcoal-10"
               @click="clearSearchText"
@@ -133,9 +133,6 @@ import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VCo
 import VContentSettingsButton from "~/components/VHeader/VHeaderMobile/VContentSettingsButton.vue"
 import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
-
-import closeIcon from "~/assets/icons/close-small.svg"
-import chevronLeftIcon from "~/assets/icons/chevron-left.svg"
 
 /**
  * Displays a text field for a search query and is attached to an action button
@@ -292,8 +289,6 @@ export default defineComponent({
     })
 
     return {
-      chevronLeftIcon: chevronLeftIcon as unknown as string,
-      closeIcon: closeIcon as unknown as string,
       searchInputRef,
       headerRef,
 

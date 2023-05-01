@@ -25,6 +25,7 @@ from catalog.configuration.link_validation_cache import (
     LinkValidationCacheExpiryConfiguration,
 )
 from catalog.configuration.logging import DJANGO_DB_LOGGING, LOGGING
+from catalog.configuration.spectacular import SPECTACULAR_SETTINGS
 
 
 # Build paths inside the project like this: BASE_DIR.join('dir', 'subdir'...)
@@ -71,7 +72,6 @@ USE_S3 = config("USE_S3", default=False, cast=bool)
 INSTALLED_APPS = [
     "catalog",
     "catalog.api",
-    "drf_yasg",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "sslserver",
+    "drf_spectacular",
 ]
 
 if USE_S3:
@@ -171,6 +172,7 @@ REST_FRAMEWORK = {
         "exempt_oauth2_client_credentials": None,
     },
     "EXCEPTION_HANDLER": "catalog.api.utils.exceptions.exception_handler",
+    "DEFAULT_SCHEMA_CLASS": "catalog.api.docs.base_docs.MediaSchema",
 }
 
 if config("DISABLE_GLOBAL_THROTTLING", default=True, cast=bool):

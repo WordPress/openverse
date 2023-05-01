@@ -1,5 +1,5 @@
 <template>
-  <VIcon v-if="showIcon" :icon-path="filterIcon" />
+  <VIcon v-if="showIcon" name="filter" />
   <p
     v-else
     class="flex h-6 w-6 items-center justify-center rounded-sm"
@@ -12,8 +12,6 @@
 import { computed, defineComponent } from "@nuxtjs/composition-api"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
-
-import filterIcon from "~/assets/icons/filter.svg"
 
 export default defineComponent({
   name: "VFilterIconOrCounter",
@@ -33,7 +31,6 @@ export default defineComponent({
 
     return {
       showIcon,
-      filterIcon,
     }
   },
 })

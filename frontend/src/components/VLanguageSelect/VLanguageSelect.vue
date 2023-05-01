@@ -8,7 +8,7 @@
     :label-text="$t('language.language')"
   >
     <template #start>
-      <VIcon :icon-path="globeIcon" />
+      <VIcon name="globe" />
     </template>
   </VSelectField>
 </template>
@@ -24,8 +24,6 @@ import VSelectField, {
 } from "~/components/VSelectField/VSelectField.vue"
 
 import type { LocaleObject } from "@nuxtjs/i18n"
-
-import globeIcon from "~/assets/icons/globe.svg"
 
 /**
  * Presents a way for the users to change the app locale and use a translated
@@ -55,8 +53,6 @@ export default defineComponent({
     return {
       locale,
       choices,
-
-      globeIcon,
     }
   },
 })

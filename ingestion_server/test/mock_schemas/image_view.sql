@@ -42,7 +42,6 @@ CREATE TABLE public.image_view (
     creator character varying(2000),
     creator_url character varying(2000),
     title character varying(2000),
-    tags_list character varying(255)[],
     last_synced_with_source timestamp with time zone,
     removed_from_source boolean NOT NULL,
     meta_data jsonb,

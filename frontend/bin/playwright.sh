@@ -6,7 +6,7 @@ package_manager() {
 }
 
 version() {
-  pnpm ls --depth=0 | grep -e playwright | awk '{print $2}';
+  pnpm ls --depth=0 | grep -e playwright | awk '{print $2}'
 }
 
 PACKAGE_MANAGER=$(package_manager)

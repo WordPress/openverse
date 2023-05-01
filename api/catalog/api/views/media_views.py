@@ -11,15 +11,12 @@ from catalog.api.models import ContentProvider
 from catalog.api.serializers.provider_serializers import ProviderSerializer
 from catalog.api.utils import photon
 from catalog.api.utils.pagination import StandardPagination
-from catalog.custom_auto_schema import CustomAutoSchema
 
 
 parent_logger = logging.getLogger(__name__)
 
 
 class MediaViewSet(ReadOnlyModelViewSet):
-    swagger_schema = CustomAutoSchema
-
     lookup_field = "identifier"
     # TODO: https://github.com/encode/django-rest-framework/pull/6789
     lookup_value_regex = (
@@ -148,14 +145,11 @@ class MediaViewSet(ReadOnlyModelViewSet):
         serializer = self.get_serializer(results, many=True)
         return self.get_paginated_response(serializer.data)
 
-    def report(self, request, *_, **__):
-        media = self.get_object()
-        identifier = media.identifier
+    def report(self, request, identifier):
         serializer = self.get_serializer(data=request.data | {"identifier": identifier})
         serializer.is_valid(raise_exception=True)
-        report = serializer.save()
+        serializer.save()
 
-        serializer = self.get_serializer(report)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     def thumbnail(self, image_url, request, *_, **__):
