@@ -236,10 +236,11 @@ def create_media_popularity_constants_view(
     popularity_constants_idx=IMAGE_POP_CONSTANTS_IDX,
     popularity_metrics=IMAGE_POPULARITY_METRICS_TABLE_NAME,
     popularity_percentile=IMAGE_POPULARITY_PERCENTILE_FUNCTION,
-    pg_timeout: float = timedelta(hours=6).total_seconds(),
+    task: AbstractOperator = None,
 ):
     postgres = PostgresHook(
-        postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
+        postgres_conn_id=postgres_conn_id,
+        default_statement_timeout=PostgresHook.get_execution_timeout(task),
     )
     if media_type == AUDIO:
         popularity_constants = AUDIO_POPULARITY_CONSTANTS_VIEW

@@ -51,6 +51,7 @@ class DataRefresh:
     refresh_matview_timeout: timedelta = timedelta(hours=1)
     create_pop_constants_view_timeout: timedelta = timedelta(hours=1)
     create_materialized_view_timeout: timedelta = timedelta(hours=1)
+    create_filtered_index_timeout: timedelta = timedelta(days=1)
 
     def __post_init__(self):
         self.dag_id = f"{self.media_type}_data_refresh"

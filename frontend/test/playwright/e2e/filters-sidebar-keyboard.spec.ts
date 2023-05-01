@@ -2,8 +2,9 @@ import { test, expect, Page } from "@playwright/test"
 
 import {
   LanguageDirection,
+  languageDirections,
   pathWithDir,
-  setCookies,
+  setBreakpointCookie,
   t,
 } from "~~/test/playwright/utils/navigation"
 
@@ -28,10 +29,10 @@ const firstFilterCheckbox = (page: Page, dir: LanguageDirection) => {
 
 test.describe.configure({ mode: "parallel" })
 
-for (const dir of ["ltr", "rtl"]) {
+for (const dir of languageDirections) {
   test.describe(`search header keyboard accessibility test in ${dir}`, () => {
     test.beforeEach(async ({ page }) => {
-      await setCookies(page.context(), { uiBreakpoint: "lg" })
+      await setBreakpointCookie(page, "lg")
       /**
        * To simplify finding the last focusable element in the filters sidebar,
        * we use the image search page. After the removal of the "searchBy" filter,

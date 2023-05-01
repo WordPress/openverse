@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test"
 
-import { setCookies } from "~~/test/playwright/utils/navigation"
+import { dismissBannersUsingCookies } from "~~/test/playwright/utils/navigation"
 
 const russianSearchPath = "/ru/search?q=dog"
 
@@ -29,9 +29,7 @@ test.describe("translation banner", () => {
   test("Banner is not shown if dismissed state is saved in a cookie", async ({
     page,
   }) => {
-    await setCookies(page.context(), {
-      uiDismissedBanners: '["translation-ru"]',
-    })
+    await dismissBannersUsingCookies(page)
 
     await page.goto(russianSearchPath)
     await expect(

@@ -125,7 +125,7 @@ generate-dag-docs fail_on_diff="false":
     mv utilities/dag_doc_gen/DAGs.md DAGs.md
     echo -n "Running linting..."
     # Linting step afterwards is necessary since the generated output differs greatly from what prettier expects
-    just ../lint &>/dev/null || true
+    just ../lint prettier catalog/DAGs.md &>/dev/null || true
     echo "Done!"
     if {{ fail_on_diff }}; then
       set +e

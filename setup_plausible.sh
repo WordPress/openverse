@@ -6,7 +6,7 @@ PLAUSIBLE_DB_SERVICE_NAME="${PLAUSIBLE_DB_SERVICE_NAME:-plausible_db}"
 # Create Plausible user
 docker-compose exec -T "$PLAUSIBLE_SERVICE_NAME" \
   /app/bin/plausible rpc \
-  "Plausible.Auth.User.new(%{name: \"Deploy\", email: \"deploy@example.com\", password: \"deploy\", password_confirmation: \"deploy\"}) |> Plausible.Repo.insert"
+  'Plausible.Auth.User.new(%{name: "Deploy", email: "deploy@example.com", password: "deploy", password_confirmation: "deploy"}) |> Plausible.Repo.insert'
 
 # Create an API key with '{sites:provision:*}' scope
 # API key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (that's 64 times 'a')
@@ -30,9 +30,9 @@ RES=$(curl \
   -F 'timezone="UTC"' \
   "$local_plausible/api/v1/sites")
 
-if [[ "$RES" == *"\"error\":\"domain This domain has already been taken"* ]]; then
+if [[ $RES == *"\"error\":\"domain This domain has already been taken"* ]]; then
   echo "Domain already exists."
-elif [[ "$RES" == *"\"domain\":\"localhost\""* ]]; then
+elif [[ $RES == *"\"domain\":\"localhost\""* ]]; then
   echo "Domain created."
 else
   echo "Error: $RES"
@@ -44,8 +44,7 @@ custom_events=$(node ./frontend/bin/get-custom-event-names.js)
 
 echo "Verifying custom events:"
 
-for eventName in $custom_events;
-do
+for eventName in $custom_events; do
   echo "$eventName"
   curl \
     -X PUT \
