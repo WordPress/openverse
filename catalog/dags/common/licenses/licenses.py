@@ -80,7 +80,7 @@ def get_license_info(
         return license_info
     if license_ is None:
         logger.debug(
-            f"No valid license_info could be derived.  Inputs were"
+            f"No valid license_info could be derived. Inputs were"
             f" license_: {license_}"
             f" license_version: {license_version}"
             f" license_url: {license_url}"
