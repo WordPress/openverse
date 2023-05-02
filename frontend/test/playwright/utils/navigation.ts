@@ -404,3 +404,8 @@ export const closeFiltersUsingCookies = async (page: Page) => {
 export const setBreakpointCookie = async (page: Page, breakpoint: string) => {
   await setCookies(page.context(), { uiBreakpoint: breakpoint })
 }
+
+export const turnOnAnalytics = async (page: Page) => {
+  await page.goto("/preferences")
+  await page.getByLabel("Record custom events and page views.").click()
+}
