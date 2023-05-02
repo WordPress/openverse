@@ -97,12 +97,10 @@ const VButton = defineComponent({
      *
      * Plain removes all styles except the focus ring.
      * Plain--avoid removes _all_ styles including the focus ring.
-     *
-     * @default 'primary'
      */
     variant: {
       type: String as PropType<ButtonVariant>,
-      default: "primary",
+      required: true,
     },
     /**
      * Allows for programmatically setting the pressed state of a button,
@@ -366,13 +364,6 @@ a.button {
 }
 .transparent-dark {
   @apply border-tx bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
-}
-
-.primary {
-  @apply border-tx bg-pink text-white hover:border-tx hover:bg-dark-pink hover:text-white;
-}
-.primary-pressed {
-  @apply bg-dark-pink;
 }
 
 .secondary {

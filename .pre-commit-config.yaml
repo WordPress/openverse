@@ -126,6 +126,11 @@ repos:
     hooks:
       - id: shellcheck
 
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.6.0-2
+    hooks:
+      - id: shfmt-docker
+
   - repo: https://github.com/rhysd/actionlint
     rev: v1.6.24
     hooks:

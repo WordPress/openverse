@@ -1,14 +1,6 @@
-from drf_yasg import openapi
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 
-from catalog.api.docs.media_docs import (
-    MediaComplain,
-    MediaDetail,
-    MediaRelated,
-    MediaSearch,
-    MediaStats,
-    fields_to_md,
-    refer_sample,
-)
+from catalog.api.docs.base_docs import custom_extend_schema, fields_to_md
 from catalog.api.examples import (
     image_complain_201_example,
     image_complain_curl,
@@ -34,7 +26,6 @@ from catalog.api.serializers.error_serializers import (
 from catalog.api.serializers.image_serializers import (
     ImageReportRequestSerializer,
     ImageSearchRequestSerializer,
-    ImageSearchSerializer,
     ImageSerializer,
     OembedRequestSerializer,
     OembedSerializer,
@@ -43,218 +34,91 @@ from catalog.api.serializers.media_serializers import MediaThumbnailRequestSeria
 from catalog.api.serializers.provider_serializers import ProviderSerializer
 
 
-class ImageSearch(MediaSearch):
-    desc = f"""
-image_search is an API endpoint to search images using a query string.
+search = custom_extend_schema(
+    desc=f"""
+        Search images using a query string.
 
-By using this endpoint, you can obtain search results based on specified query and
-optionally filter results by
-{fields_to_md(ImageSearchRequestSerializer.fields_names)}.
+        By using this endpoint, you can obtain search results based on specified
+        query and optionally filter results by
+        {fields_to_md(ImageSearchRequestSerializer.fields_names)}.
 
-{MediaSearch.desc}"""
+        Results are ranked in order of relevance and paginated on the basis of the
+        `page` param. The `page_size` param controls the total number of pages.
 
-    responses = {
-        "200": openapi.Response(
-            description="OK",
-            examples=image_search_200_example,
-            schema=ImageSearchSerializer,
-        ),
-        "400": openapi.Response(
-            description="Bad Request",
-            examples=image_search_400_example,
-            schema=InputErrorSerializer,
-        ),
-    }
+        Although there may be millions of relevant records, only the most relevant
+        several thousand records can be viewed. This is by design: the search
+        endpoint should be used to find the top 10,000 most relevant results, not
+        for exhaustive search or bulk download of every barely relevant result. As
+        such, the caller should not try to access pages beyond `page_count`, or else
+        the server will reject the query.""",
+    params=ImageSearchRequestSerializer,
+    res={
+        200: (ImageSerializer, image_search_200_example),
+        400: (InputErrorSerializer, image_search_400_example),
+    },
+    eg=[image_search_list_curl],
+    external_docs={
+        "description": "Openverse Syntax Guide",
+        "url": "https://search.creativecommons.org/search-help",
+    },
+)
 
-    code_examples = [
-        {
-            "lang": "Bash",
-            "source": image_search_list_curl,
-        },
-    ]
+stats = custom_extend_schema(
+    desc=f"""
+        Get a list of all content providers and their respective number of
+        images in the Openverse catalog.
 
-    swagger_setup = {
-        "operation_id": "image_search",
-        "operation_description": desc,
-        "query_serializer": ImageSearchRequestSerializer,
-        "responses": responses,
-        "code_examples": code_examples,
-    }
+        By using this endpoint, you can obtain info about content providers such
+        as {fields_to_md(ProviderSerializer.Meta.fields)}.""",
+    res={200: (ProviderSerializer, image_stats_200_example)},
+    eg=[image_stats_curl],
+)
 
+detail = custom_extend_schema(
+    desc=f"""
+        Get the details of a specified image.
 
-class ImageStats(MediaStats):
-    desc = f"""
-image_stats is an API endpoint to get a list of all content providers and their
-respective number of images in the Openverse catalog.
+        By using this endpoint, you can obtain info about images such as
+        {fields_to_md(ImageSerializer.Meta.fields)}""",
+    res={
+        200: (ImageSerializer, image_detail_200_example),
+        404: (NotFoundErrorSerializer, image_detail_404_example),
+    },
+    eg=[image_detail_curl],
+)
 
-{MediaStats.desc}"""
+related = custom_extend_schema(
+    desc=f"""
+        Get related images for a specified image.
 
-    responses = {
-        "200": openapi.Response(
-            description="OK",
-            examples=image_stats_200_example,
-            schema=ProviderSerializer(many=True),
-        )
-    }
+        By using this endpoint, you can get the details of related images such as
+        {fields_to_md(ImageSerializer.Meta.fields)}.""",
+    res={
+        200: (ImageSerializer, image_related_200_example),
+        404: (NotFoundErrorSerializer, image_related_404_example),
+    },
+    eg=[image_related_curl],
+)
 
-    code_examples = [
-        {
-            "lang": "Bash",
-            "source": image_stats_curl,
-        }
-    ]
+report = custom_extend_schema(
+    res={201: (ImageReportRequestSerializer, image_complain_201_example)},
+    eg=[image_complain_curl],
+)
 
-    swagger_setup = {
-        "operation_id": "image_stats",
-        "operation_description": desc,
-        "responses": responses,
-        "code_examples": code_examples,
-    }
+thumbnail = extend_schema(
+    parameters=[MediaThumbnailRequestSerializer],
+    responses={200: OpenApiResponse(description="Thumbnail image")},
+)
 
+oembed = custom_extend_schema(
+    params=OembedRequestSerializer,
+    res={
+        200: (OembedSerializer, image_oembed_200_example),
+        404: (NotFoundErrorSerializer, image_oembed_404_example),
+    },
+    eg=[image_oembed_curl],
+)
 
-class ImageDetail(MediaDetail):
-    desc = f"""
-image_detail is an API endpoint to get the details of a specified image ID.
-
-By using this endpoint, you can image details such as
-{fields_to_md(ImageSerializer.Meta.fields)}.
-
-{MediaDetail.desc}"""
-
-    responses = {
-        "200": openapi.Response(
-            description="OK", examples=image_detail_200_example, schema=ImageSerializer
-        ),
-        "404": openapi.Response(
-            description="Not Found",
-            examples=image_detail_404_example,
-            schema=NotFoundErrorSerializer,
-        ),
-    }
-
-    code_examples = [{"lang": "Bash", "source": image_detail_curl}]
-
-    swagger_setup = {
-        "operation_id": "image_detail",
-        "operation_description": desc,
-        "responses": responses,
-        "code_examples": code_examples,
-    }
-
-
-class ImageRelated(MediaRelated):
-    desc = f"""
-recommendations_images_read is an API endpoint to get related images for a specified
-image ID.
-
-By using this endpoint, you can get the details of related images such as
-{fields_to_md(ImageSerializer.Meta.fields)}.
-
-{MediaRelated.desc}"""
-
-    responses = {
-        "200": openapi.Response(
-            description="OK", examples=image_related_200_example, schema=ImageSerializer
-        ),
-        "404": openapi.Response(
-            description="Not Found",
-            examples=image_related_404_example,
-            schema=NotFoundErrorSerializer,
-        ),
-    }
-
-    code_examples = [{"lang": "Bash", "source": image_related_curl}]
-
-    swagger_setup = {
-        "operation_id": "image_related",
-        "operation_description": desc,
-        "responses": responses,
-        "code_examples": code_examples,
-    }
-
-
-class ImageComplain(MediaComplain):
-    desc = f"""
-images_report_create is an API endpoint to report an issue about a specified image ID to
-Openverse.
-
-By using this endpoint, you can report an image if it infringes copyright, contains
-mature or sensitive content and others.
-
-{MediaComplain.desc}"""
-
-    responses = {
-        "201": openapi.Response(
-            description="OK",
-            examples=image_complain_201_example,
-            schema=ImageReportRequestSerializer,
-        )
-    }
-
-    code_examples = [
-        {
-            "lang": "Bash",
-            "source": image_complain_curl,
-        }
-    ]
-
-    swagger_setup = {
-        "operation_id": "image_report",
-        "operation_description": desc,
-        "responses": responses,
-        "code_examples": code_examples,
-    }
-
-
-class ImageOembed:
-    desc = f"""
-oembed is an API endpoint to retrieve the structured data for a specified image URL in
-the oEmbed format, which can be used to embed the image on the consumer's website.
-Only JSON format is supported. The oEmbed specification is available
-at https://oembed.com/.
-
-By using this endpoint, you can retrieve a JSON oembed object containing the following
-properties: `version`, `type`, `width`, `height`, `title`, `author_name`, `author_url`
-and `license_url`.
-
-{refer_sample}"""
-
-    responses = {
-        "200": openapi.Response(
-            description="OK", examples=image_oembed_200_example, schema=OembedSerializer
-        ),
-        "404": openapi.Response(
-            description="Not Found",
-            examples=image_oembed_404_example,
-            schema=NotFoundErrorSerializer,
-        ),
-    }
-
-    code_examples = [
-        {
-            "lang": "Bash",
-            "source": image_oembed_curl,
-        },
-    ]
-
-    swagger_setup = {
-        "operation_id": "image_oembed",
-        "operation_description": desc,
-        "query_serializer": OembedRequestSerializer,
-        "responses": responses,
-        "code_examples": code_examples,
-    }
-
-
-class ImageThumbnail:
-    desc = f"""
-thumbnail is an API endpoint to retrieve the scaled down and compressed thumbnail
-of an image.
-
-{refer_sample}"""
-
-    swagger_setup = {
-        "operation_id": "image_thumbnail",
-        "operation_description": desc,
-        "query_serializer": MediaThumbnailRequestSerializer,
-    }
+watermark = custom_extend_schema(
+    deprecated=True,
+)

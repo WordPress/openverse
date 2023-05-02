@@ -5,11 +5,11 @@ import breakpoints, {
 } from "~~/test/playwright/utils/breakpoints"
 import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {
-  closeFilters,
+  filters,
   goToSearchTerm,
   languageDirections,
   scrollToBottom,
-  setCookies,
+  setBreakpointCookie,
   sleep,
 } from "~~/test/playwright/utils/navigation"
 
@@ -20,10 +20,8 @@ const headerSelector = ".main-header"
 for (const dir of languageDirections) {
   test.describe(`header-${dir}`, () => {
     breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
-      test.beforeEach(async ({ context, page }) => {
-        if (!isMobileBreakpoint(breakpoint)) {
-          await setCookies(context, { uiIsDesktopLayout: true })
-        }
+      test.beforeEach(async ({ page }) => {
+        await setBreakpointCookie(page, breakpoint)
 
         await goToSearchTerm(page, "birds", { dir })
       })
@@ -39,7 +37,7 @@ for (const dir of languageDirections) {
       test("resting", async ({ page }) => {
         // By default, filters are open on desktop. We need to close them.
         if (!isMobileBreakpoint(breakpoint)) {
-          await closeFilters(page)
+          await filters.close(page)
         }
         // Make sure the header is not hovered on
         await page.mouse.move(0, 150)
@@ -48,7 +46,7 @@ for (const dir of languageDirections) {
 
       test("scrolled", async ({ page }) => {
         if (!isMobileBreakpoint(breakpoint)) {
-          await closeFilters(page)
+          await filters.close(page)
         }
         await scrollToBottom(page)
         await page.mouse.move(0, 150)
@@ -58,7 +56,7 @@ for (const dir of languageDirections) {
 
       test("searchbar hovered", async ({ page }) => {
         if (!isMobileBreakpoint(breakpoint)) {
-          await closeFilters(page)
+          await filters.close(page)
         }
         await page.hover("input")
         await hideInputCursors(page)
@@ -70,7 +68,7 @@ for (const dir of languageDirections) {
 
       test("searchbar active", async ({ page }) => {
         if (!isMobileBreakpoint(breakpoint)) {
-          await closeFilters(page)
+          await filters.close(page)
         }
         await hideInputCursors(page)
         await page.click("input")

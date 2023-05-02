@@ -1,19 +1,8 @@
 """
 This is the Openverse API URL configuration.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.0/topics/http/urls/
-
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+The `urlpatterns` list routes URLs to views. For more information please refer
+to the [documentation](https://docs.djangoproject.com/en/2.0/topics/http/urls/).
 """
 
 from django.conf.urls import include
@@ -22,13 +11,18 @@ from django.urls import path, re_path
 from django.views.generic import RedirectView
 from rest_framework.routers import SimpleRouter
 
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
+
 from catalog.api.utils.status_code_view import get_status_code_view
 from catalog.api.views.audio_views import AudioViewSet
 from catalog.api.views.health_views import HealthCheck
 from catalog.api.views.image_views import ImageViewSet
 from catalog.api.views.oauth2_views import CheckRates
 from catalog.urls.auth_tokens import urlpatterns as auth_tokens_patterns
-from catalog.urls.swagger import urlpatterns as swagger_patterns
 
 
 discontinuation_message = {
@@ -37,6 +31,11 @@ discontinuation_message = {
 }
 
 versioned_paths = [
+    # OpenAPI
+    path("", SpectacularRedocView.as_view(url_name="schema"), name="root"),
+    path("swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger"),
+    path("schema/", SpectacularAPIView.as_view(api_version="v1"), name="schema"),
+    # Authentication endpoints
     path("rate_limit/", CheckRates.as_view(), name="key_info"),
     path("auth_tokens/", include(auth_tokens_patterns)),
     # Deprecated, redirects to new URL
@@ -79,8 +78,6 @@ urlpatterns = [
     path("", RedirectView.as_view(pattern_name="root")),
     path("admin/", admin.site.urls),
     path("healthcheck/", HealthCheck.as_view()),
-    # Swagger documentation
-    path("", include(swagger_patterns)),
     # API
     path("v1/", include(versioned_paths)),
 ]

@@ -2,7 +2,7 @@
 <template>
   <NuxtLink
     v-if="isNuxtLink"
-    :class="{ 'inline-flex flex-row items-center gap-2': showExternalIcon }"
+    :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
     :to="linkTo"
     v-on="$listeners"
     @click.native="$emit('click', $event)"

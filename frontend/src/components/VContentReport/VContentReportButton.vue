@@ -1,15 +1,17 @@
 <template>
   <VButton
-    variant="plain"
-    class="report-button font-semibold text-dark-charcoal-70 hover:underline"
+    variant="transparent-gray"
+    size="medium"
+    has-icon-end
+    class="label-bold"
   >
-    <span class="text-sr md:hidden md:text-base">{{
+    <span class="md:hidden">{{
       $t("media-details.content-report.short")
     }}</span>
-    <span class="hidden text-sr md:inline md:text-base">{{
+    <span class="hidden md:inline">{{
       $t("media-details.content-report.long")
     }}</span>
-    <VIcon name="flag" class="ms-2" />
+    <VIcon name="flag" />
   </VButton>
 </template>
 
@@ -24,9 +26,3 @@ export default defineComponent({
   components: { VButton, VIcon },
 })
 </script>
-
-<style scoped>
-.report-button {
-  @apply px-0;
-}
-</style>

@@ -116,7 +116,10 @@ test-local *args:
 
 # Run smoke test for the API docs
 doc-test: wait-up
-    curl --fail 'http://localhost:50280/v1/?format=openapi'
+    curl \
+      -H 'Accept: application/vnd.oai.openapi+json' \
+      --fail \
+      'http://localhost:50280/v1/schema/' > openapi.json
 
 #########
 # NGINX #
