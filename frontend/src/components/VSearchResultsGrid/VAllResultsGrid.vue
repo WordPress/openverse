@@ -36,14 +36,14 @@
     >
       <li v-for="item in allMedia" :key="item.id">
         <VImageCell
-          v-if="isImageDetail(item)"
+          v-if="isDetail.image(item)"
           :key="item.id"
           :image="item"
           :search-term="searchTerm"
           aspect-ratio="square"
         />
         <VAudioCell
-          v-if="isAudioDetail(item)"
+          v-if="isDetail.audio(item)"
           :key="item.id"
           :audio="item"
           :search-term="searchTerm"
@@ -64,7 +64,7 @@ import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
-import { AudioDetail, ImageDetail, Media } from "~/types/media"
+import { isDetail } from "~/types/media"
 
 import { useI18n } from "~/composables/use-i18n"
 
@@ -129,13 +129,6 @@ export default defineComponent({
 
     const isSidebarVisible = computed(() => uiStore.isFilterVisible)
 
-    const isAudioDetail = (media: Media): media is AudioDetail => {
-      return media.frontendMediaType === "audio"
-    }
-    const isImageDetail = (media: Media): media is ImageDetail => {
-      return media.frontendMediaType === "image"
-    }
-
     return {
       searchTerm,
       isError,
@@ -154,8 +147,7 @@ export default defineComponent({
       showSnackbar,
       hideSnackbar,
 
-      isAudioDetail,
-      isImageDetail,
+      isDetail,
     }
   },
 })
