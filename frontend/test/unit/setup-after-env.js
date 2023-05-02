@@ -7,5 +7,6 @@ Vue.prototype.$nuxt = {
       captureException: jest.fn(),
       captureEvent: jest.fn(),
     },
+    localePath: (args) => args,
   },
 }

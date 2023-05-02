@@ -49,7 +49,7 @@ check-py-version:
 
 # Install dependencies
 install *args: check-py-version
-    python -m pip install -r requirements_tooling.txt -r requirements_dev.txt
+    python -m pip install -r requirements_dev.txt
 
 ######
 # Up #
@@ -62,6 +62,11 @@ up *flags:
 # Bring up services specific to the catalog profile, except Airflow
 up-deps *flags:
     env COMPOSE_PROFILES="catalog_dependencies" just ../up {{ flags }}
+
+# Tear down all the services and recreate the ones of the catalog profile
+recreate:
+    just ../down -v
+    just up --force-recreate --build
 
 ##################
 # Administration #
@@ -120,7 +125,7 @@ generate-dag-docs fail_on_diff="false":
     mv utilities/dag_doc_gen/DAGs.md DAGs.md
     echo -n "Running linting..."
     # Linting step afterwards is necessary since the generated output differs greatly from what prettier expects
-    just ../lint &>/dev/null || true
+    just ../lint prettier catalog/DAGs.md &>/dev/null || true
     echo "Done!"
     if {{ fail_on_diff }}; then
       set +e

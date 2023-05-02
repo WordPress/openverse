@@ -3,7 +3,7 @@
 set -e
 
 # shellcheck source=/dev/null
-source ./.env.sh || (echo "Please create a $(.env.sh) file based on the $(.env.sh.template) file." > /dev/stderr && false)
+source ./.env.sh || (echo "Please create a $(.env.sh) file based on the $(.env.sh.template) file." >/dev/stderr && false)
 
 host=$1
 
@@ -18,13 +18,13 @@ q=$(./get_word.sh)
 set -x
 
 ab \
-    -w \
-    -v 3 \
-    -c $concurrency \
-    -n $requests \
-    -T "application/json" \
-    -H "$auth_header" \
-    "$host/v1/images/?$q&page_size=500" > output.html
+  -w \
+  -v 3 \
+  -c $concurrency \
+  -n $requests \
+  -T "application/json" \
+  -H "$auth_header" \
+  "$host/v1/images/?$q&page_size=500" >output.html
 
 set +x
 

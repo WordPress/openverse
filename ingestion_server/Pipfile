@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-ipython = "~=8.11"
+ipython = "~=8.13"
 pycodestyle = "~=2.10"
 pytest = "~=7.3"
 pytest-order = "~=1.1"
@@ -27,4 +27,4 @@ tldextract = "~=3.3"
 sentry-sdk = {extras = ["falcon"], version = "*"}
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"

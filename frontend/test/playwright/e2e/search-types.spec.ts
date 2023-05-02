@@ -1,7 +1,7 @@
 import { test, expect, Page } from "@playwright/test"
 
 import {
-  changeContentType,
+  changeSearchType,
   goToSearchTerm,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
@@ -113,7 +113,7 @@ test.describe("search types", () => {
         const pageToOpen =
           searchType.id === "all" ? searchTypes[1] : searchTypes[0]
         await page.goto(pageToOpen.url)
-        await changeContentType(page, searchType.name)
+        await changeSearchType(page, searchType.id)
         await checkSearchResult(page, searchType)
       })
     }

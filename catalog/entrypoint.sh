@@ -3,7 +3,7 @@
 set -e
 
 function help_text() {
-  cat << 'END'
+  cat <<'END'
 
   ,-.  ;-.  ,--. .  . .   , ,--. ,-.   ,-.  ,--.
  /   \ |  ) |    |\ | |  /  |    |  ) (   ` |
@@ -25,17 +25,16 @@ Usage:
 END
 }
 
-
 function header() {
   size=${COLUMNS:-80}
   # Print centered text between two dividers of length $size
   printf '#%.0s' $(seq 1 "$size") && echo
-  printf "%*s\n" $(( (${#1} + size) / 2)) "$1"
+  printf "%*s\n" $(((${#1} + size) / 2)) "$1"
   printf '#%.0s' $(seq 1 "$size") && echo
 }
 
 if [ "$1" == help ] || [ "$1" == --help ]; then help_text && exit 0; fi
-sleep 0.1;  # The $COLUMNS variable takes a moment to populate
+sleep 0.1 # The $COLUMNS variable takes a moment to populate
 
 # Reformat Airflow connections that use https
 header "MODIFYING ENVIRONMENT"
@@ -45,20 +44,20 @@ header "MODIFYING ENVIRONMENT"
 # to propagate to the outer shell.
 # See: https://unix.stackexchange.com/a/402752
 while read -r var_string; do
-    # get the variable name
-    var_name=$(expr "$var_string" : '^\([A-Z_]*\)')
-    echo "Variable Name: $var_name"
-    # get the old value
-    old_value=$(expr "$var_string" : '^[A-Z_]*=\(http.*\)$')
-    echo "    Old Value: $old_value"
-    # call python to url encode the http clause
-    url_encoded=$(python -c "from urllib.parse import quote_plus; import sys; print(quote_plus(sys.argv[1]))" "$old_value")
-    # prepend https://
-    new_value='https://'$url_encoded
-    echo "    New Value: $new_value"
-    # set the environment variable
-    export "$var_name"="$new_value"
-# only include airflow connections with http somewhere in the string
+  # get the variable name
+  var_name=$(expr "$var_string" : '^\([A-Z_]*\)')
+  echo "Variable Name: $var_name"
+  # get the old value
+  old_value=$(expr "$var_string" : '^[A-Z_]*=\(http.*\)$')
+  echo "    Old Value: $old_value"
+  # call python to url encode the http clause
+  url_encoded=$(python -c "from urllib.parse import quote_plus; import sys; print(quote_plus(sys.argv[1]))" "$old_value")
+  # prepend https://
+  new_value='https://'$url_encoded
+  echo "    New Value: $new_value"
+  # set the environment variable
+  export "$var_name"="$new_value"
+  # only include airflow connections with http somewhere in the string
 done < <(env | grep "^AIRFLOW_CONN[A-Z_]\+=http.*$")
 
 exec /entrypoint "$@"

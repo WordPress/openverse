@@ -9,6 +9,7 @@ on:
           - api
           - ingestion_server
           - frontend
+          - catalog
         required: true
         description: Application to release. If `api` or `frontend`, the deployment workflow will automatically be dispatched for you.
       image-sha:
@@ -153,25 +154,28 @@ jobs:
             🌟 goal: addition
             📄 aspect: text
             🟩 priority: low
+            skip-changelog
           body: |
             This changelog PR was automatically generated for @${{ github.actor }} as a result of the ${{ github.workflow }} workflow.
 
-      - name: Deploy production api
-        if: inputs.app == 'api'
-        run: |
-          gh workflow run \
-            -f tag=${{ steps.tag.outputs.image-tag }} \
-            -f actor=${{ github.actor }} \
-            "Deployment - production-api"
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: Deploy production frontend
-        if: inputs.app == 'frontend'
-        run: |
-          gh workflow run \
-            -f tag=${{ steps.tag.outputs.image-tag }} \
-            -f actor=${{ github.actor }} \
-            "Deployment - production-nuxt"
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      - name: Deploy production application
+        if: inputs.app == 'frontend' || inputs.app == 'api'
+        uses: felixp8/dispatch-and-wait@v0.1.0
+        with:
+          owner: WordPress
+          repo: openverse-infrastructure
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event_type: deploy_production_${{ inputs.app == 'frontend' && 'nuxt' || inputs.app }}
+          client_payload: |
+            {
+              "actor": "${{ github.actor }}",
+              "tag": "${{ steps.tag.outputs.image-tag }}"
+            }
+          wait_time: 60 # check every minute
+          max_time: 1800 # allow up to 30 minutes for a deployment
+          # max_time can't easily be configured per application
+          # without duplicating information between our infrastructure
+          # and this workflow. The upstream workflows already have
+          # timeouts appropriately configured and will all fail before 30
+          # minutes is reached. On the other hand, we do want to wait
+          # so that there is a record of the successful deployment.

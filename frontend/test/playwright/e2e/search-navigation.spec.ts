@@ -2,10 +2,10 @@ import { expect, test } from "@playwright/test"
 
 import {
   goToSearchTerm,
-  openFilters,
+  filters,
   searchFromHeader,
-  t,
   openFirstResult,
+  t,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
@@ -23,19 +23,18 @@ test.describe("search history navigation", () => {
     }) => {
       await goToSearchTerm(page, "galah")
       // Open filter sidebar
-      await openFilters(page)
+      await filters.open(page)
 
       // Apply a filter
       await page.click("#modification")
       // There is a debounce when choosing a filter.
       // we need to wait for the page to reload before running the test
-      await page.waitForNavigation()
+      await page.waitForURL(/license_type=modification/)
 
       // Verify the filter is applied to the URL and the checkbox is checked
       // Note: Need to add that a search was actually executed with the new
       // filters and that the page results have been updated for the new filters
       // @todo(sarayourfriend): ^?
-      expect(page.url()).toContain("license_type=modification")
       expect(await page.isChecked("#modification")).toBe(true)
 
       // Navigate backwards and verify URL is updated and the filter is unapplied

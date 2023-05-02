@@ -21,12 +21,7 @@
       :href="source.url"
     >
       {{ source.name }}
-      <VIcon
-        :icon-path="icons.externalLink"
-        :size="4"
-        :rtl-flip="true"
-        class="ms-2"
-      />
+      <VIcon name="external-link" :size="4" :rtl-flip="true" class="ms-2" />
     </VButton>
   </div>
 </template>
@@ -39,9 +34,6 @@ import type { ExternalSource } from "~/types/external-source"
 import VButton from "~/components/VButton.vue"
 import VCloseButton from "~/components/VCloseButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-
-import externalLinkIcon from "~/assets/icons/external-link.svg"
-import caretDownIcon from "~/assets/icons/caret-down.svg"
 
 /**
  * This component renders a list of pre-populated links to additional sources
@@ -58,14 +50,6 @@ export default defineComponent({
       type: Array as PropType<ExternalSource[]>,
       required: true,
     },
-  },
-  setup() {
-    return {
-      icons: {
-        externalLink: externalLinkIcon,
-        caretDown: caretDownIcon,
-      },
-    }
   },
 })
 </script>

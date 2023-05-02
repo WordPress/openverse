@@ -252,7 +252,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_images: '["upstream_db", "catalog"]'
+          setup_images: upstream_db catalog
 
       - name: Run tests
         run: |
@@ -281,7 +281,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_images: '["upstream_db", "catalog"]'
+          setup_images: upstream_db catalog
 
       - name: Check DAG documentation
         run: |
@@ -315,7 +315,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_images: '["upstream_db", "ingestion_server"]'
+          setup_images: upstream_db ingestion_server
 
       - name: Run ingestion-server tests
         run: just ingestion_server/test-local
@@ -360,7 +360,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_images: '["upstream_db", "ingestion_server", "api"]'
+          setup_images: upstream_db ingestion_server api
 
       - name: Start API, ingest and index test data
         run: just api/init
@@ -391,11 +391,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        recipe:
-          - "api/dj check"
-          - "api/dj validateopenapischema"
-          - "api/dj makemigrations --check --noinput --merge"
-          - "api/doc-test"
+        name:
+          - check_django
+          - validate_openapi
+          - check_migrations
+          - test_doc
+        include:
+          - name: check_django
+            recipe: api/dj check
+          - name: validate_openapi
+            recipe: api/dj spectacular --format openapi-json --validate --file openapi.json
+          - name: check_migrations
+            recipe: api/dj makemigrations --check --noinput --merge
+          - name: test_doc
+            recipe: api/doc-test
 
     steps:
       - name: Checkout repository
@@ -413,19 +422,19 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_images: '["upstream_db", "ingestion_server", "api"]'
+          setup_images: upstream_db ingestion_server api
 
       - name: Run check recipe
         run: just ${{ matrix.recipe }}
         env:
           DC_USER: root
 
-      - name: Upload schema on failure
-        if: failure() && contains(matrix.recipe, 'validateopenapischema')
+      - name: Upload schema
+        if: matrix.name == 'test_doc'
         uses: actions/upload-artifact@v3
         with:
-          name: openverse-api-openapi-schema.yaml
-          path: ./api/openapi.yaml
+          name: openapi.json
+          path: ./api/openapi.json
 
   # This job runs when `django-checks` doesn't and always passes, thus allowing
   # PRs to meet the required checks criteria and be merged.
@@ -437,11 +446,11 @@ jobs:
       - get-changes
     strategy:
       matrix:
-        recipe:
-          - "api/dj check"
-          - "api/dj validateopenapischema"
-          - "api/dj makemigrations --check --noinput --merge"
-          - "api/doc-test"
+        name:
+          - check_django
+          - validate_openapi
+          - check_migrations
+          - test_doc
 
     steps:
       - name: Pass
@@ -669,7 +678,10 @@ jobs:
           github.actor != 'dependabot[bot]'
         )
       ) &&
-      (needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.documentation == 'true') &&
+      (
+        needs.get-changes.outputs.frontend == 'true' ||
+        needs.get-changes.outputs.documentation == 'true'
+      ) &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
       (needs.test-cat.result == 'success' || needs.test-cat.result == 'skipped') &&
@@ -694,6 +706,7 @@ jobs:
         with:
           glotpress_username: ${{ secrets.MAKE_USERNAME }}
           glotpress_password: ${{ secrets.MAKE_LOGIN_PASSWORD }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
         # Docs will be located at `/tmp/docs`.
 
       - name: Recreate working directory # to avoid superfluous files from getting tracked automatically
@@ -798,7 +811,7 @@ jobs:
       - name: Load Docker image `${{ matrix.image }}`
         uses: ./.github/actions/load-img
         with:
-          setup_images: ${{ format('["{0}"]', matrix.image) }}
+          setup_images: ${{ matrix.image }}
 
       - name: Load and tag image `${{ matrix.image }}` (latest & sha)
         run: |
@@ -830,17 +843,20 @@ jobs:
       - get-image-tag
       - publish-images
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Dispatch workflow
-        run: |
-          gh workflow run \
-            -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
-            -f actor=${{ github.actor }} \
-            "Deployment - staging-nuxt"
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Deploy staging frontend
+        uses: felixp8/dispatch-and-wait@v0.1.0
+        with:
+          owner: WordPress
+          repo: openverse-infrastructure
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event_type: deploy_staging_nuxt
+          client_payload: |
+            {
+              "actor": "${{ github.actor }}",
+              "tag": "${{ needs.get-image-tag.outputs.image_tag }}"
+            }
+          wait_time: 60 # check every minute
+          max_time: 1800 # allow up to 30 minutes for a deployment
 
   deploy-api:
     name: Deploy staging API
@@ -855,17 +871,20 @@ jobs:
       - get-image-tag
       - publish-images
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Dispatch workflow
-        run: |
-          gh workflow run \
-            -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
-            -f actor=${{ github.actor }} \
-            "Deployment - staging-api"
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Deploy staging API
+        uses: felixp8/dispatch-and-wait@v0.1.0
+        with:
+          owner: WordPress
+          repo: openverse-infrastructure
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event_type: deploy_staging_api
+          client_payload: |
+            {
+              "actor": "${{ github.actor }}",
+              "tag": "${{ needs.get-image-tag.outputs.image_tag }}"
+            }
+          wait_time: 60 # check every minute
+          max_time: 1800 # allow up to 30 minutes for a deployment
 
   ################
   # Notification #
@@ -879,7 +898,13 @@ jobs:
       github.event_name == 'push' &&
       github.repository == 'WordPress/openverse' &&
       (
-        ((needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.documentation == 'true') && needs.emit-docs.result != 'success') ||
+        (
+          (
+            needs.get-changes.outputs.frontend == 'true' ||
+            needs.get-changes.outputs.documentation == 'true'
+          ) &&
+          needs.emit-docs.result != 'success'
+        ) ||
         (needs.determine-images.outputs.do_publish == 'true' && needs.publish-images.result != 'success') ||
         (needs.get-changes.outputs.frontend == 'true' && needs.deploy-frontend.result != 'success') ||
         (needs.get-changes.outputs.api == 'true' && needs.deploy-api.result != 'success')

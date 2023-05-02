@@ -5,19 +5,23 @@ information regarding the ingestion server or our Airflow instance.
 
 ## Real-time Deployment Information
 
+```{note}
+Deployment logs are currently held in a private repository but are linked here for the benefit of maintainers. If you need information regarding deployments generally or a specific deployment, please ping `@WordPress/openverse-maintainers` and someone can retrieve the information you need for you.
+```
+
 ### Frontend
 
-| Environment | Deployment Log                                                                                        | URL                                | Version Endpoint                                                 |
-| ----------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------- |
-| Staging     | [Deployment Log](https://github.com/WordPress/openverse/actions/workflows/deploy-staging-nuxt.yml)    | <https://staging.openverse.org>    | [`/version.json`](https://staging.openverse.org/version.json)    |
-| Production  | [Deployment Log](https://github.com/WordPress/openverse/actions/workflows/deploy-production-nuxt.yml) | <https://production.openverse.org> | [`/version.json`](https://production.openverse.org/version.json) |
+| Environment | Deployment Log                                                                                                       | URL                                | Version Endpoint                                                 |
+| ----------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------- |
+| Staging     | [Deployment Log](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-staging-nuxt.yml)    | <https://staging.openverse.org>    | [`/version.json`](https://staging.openverse.org/version.json)    |
+| Production  | [Deployment Log](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-production-nuxt.yml) | <https://production.openverse.org> | [`/version.json`](https://production.openverse.org/version.json) |
 
 ### API
 
-| Environment | Deployment Log                                                                                       | URL                                         | Version Endpoint                                                |
-| ----------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------- | --------------------------------------------------------------- |
-| Staging     | [Deployment Log](https://github.com/WordPress/openverse/actions/workflows/deploy-staging-api.yml)    | <https://api-staging.openverse.engineering> | [`/version`](https://api-staging.openverse.engineering/version) |
-| Production  | [Deployment Log](https://github.com/WordPress/openverse/actions/workflows/deploy-production-api.yml) | <https://api.openverse.engineering>         | [`/version`](https://api.openverse.engineering/version)         |
+| Environment | Deployment Log                                                                                                      | URL                                         | Version Endpoint                                                |
+| ----------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | --------------------------------------------------------------- |
+| Staging     | [Deployment Log](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-staging-api.yml)    | <https://api-staging.openverse.engineering> | [`/version`](https://api-staging.openverse.engineering/version) |
+| Production  | [Deployment Log](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-production-api.yml) | <https://api.openverse.engineering>         | [`/version`](https://api.openverse.engineering/version)         |
 
 ## Overview
 

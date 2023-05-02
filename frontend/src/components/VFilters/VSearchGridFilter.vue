@@ -27,14 +27,6 @@
         @toggle-filter="toggleFilter"
       />
     </form>
-    <footer
-      v-if="showFilterHeader && isAnyFilterApplied"
-      class="flex justify-between md:hidden"
-    >
-      <VButton variant="primary" @click="$emit('close')">
-        {{ $t("filter-list.show") }}
-      </VButton>
-    </footer>
   </section>
 </template>
 

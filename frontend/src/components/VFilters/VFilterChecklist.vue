@@ -34,7 +34,7 @@
             class="text-dark-charcoal-70"
             type="button"
           >
-            <VIcon :icon-path="icons.help" />
+            <VIcon name="help" />
           </VButton>
         </template>
         <template #default="{ close }">
@@ -73,15 +73,13 @@ import VLicense from "~/components/VLicense/VLicense.vue"
 import VLicenseExplanation from "~/components/VFilters/VLicenseExplanation.vue"
 import VPopover from "~/components/VPopover/VPopover.vue"
 
-import helpIcon from "~/assets/icons/help.svg"
-
 type toggleFilterPayload = {
   filterType: NonMatureFilterCategory
   code: string
 }
 
 export default defineComponent({
-  name: "FilterCheckList",
+  name: "VFilterCheckList",
   components: {
     VCloseButton,
     VCheckbox,
@@ -139,7 +137,6 @@ export default defineComponent({
     const isDisabled = (item: FilterItem) =>
       useSearchStore().isFilterDisabled(item, props.filterType) ??
       props.disabled
-    const icons = { help: helpIcon }
 
     const isLicense = (code: string): code is License => {
       // Quick check that also prevents "`code` is declared but its value is never read" warning.
@@ -147,7 +144,6 @@ export default defineComponent({
     }
 
     return {
-      icons,
       isDisabled,
       itemLabel,
       onValueChange,

@@ -23,3 +23,24 @@ class StandardPagination(PageNumberPagination):
                 "results": data,
             }
         )
+
+    def get_paginated_response_schema(self, schema):
+        """
+        Get the schema of the paginated response, used by `drf-spectacular` to
+        generate the documentation of the paginated search results response.
+        """
+
+        field_descriptions = {
+            "result_count": "The total number of items returned by search result.",
+            "page_count": "The total number of pages returned by search result.",
+            "page_size": "The number of items per page.",
+            "page": "The current page number returned in the response.",
+        }
+        return {
+            "type": "object",
+            "properties": {
+                field: {"type": "integer", "description": description}
+                for field, description in field_descriptions.items()
+            }
+            | {"results": schema},
+        }

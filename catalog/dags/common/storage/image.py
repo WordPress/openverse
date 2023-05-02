@@ -46,10 +46,10 @@ class ImageStore(MediaStore):
         foreign_landing_url: str,
         image_url: str,
         license_info: LicenseInfo,
+        foreign_identifier: str,
         thumbnail_url: str | None = None,
         filesize: int | None = None,
         filetype: str | None = None,
-        foreign_identifier: str | None = None,
         width: int | None = None,
         height: int | None = None,
         creator: str | None = None,
@@ -64,7 +64,8 @@ class ImageStore(MediaStore):
         **kwargs,
     ):
         """
-        Add information for a single image to the ImageStore.
+        Add information for a single image to the ImageStore. Image data
+        without the required parameters will be discarded.
 
         Required Arguments:
         foreign_landing_url:  URL of page where the image lives on the
@@ -85,7 +86,9 @@ class ImageStore(MediaStore):
         In the case of the `publicdomain` license, which has no version,
         one should pass `common.license.constants.NO_VERSION` here.
 
-        Image data without the required parameters will be discarded.
+        foreign_identifier:  Unique identifier for the image on the
+                             source site.
+
 
         Optional Arguments:
 
@@ -93,8 +96,6 @@ class ImageStore(MediaStore):
                              the image.
         filesize:            Size of the image file in bytes.
         filetype:            eg. 'jpg', 'svg'.
-        foreign_identifier:  Unique identifier for the image on the
-                             source site.
         width:               in pixels.
         height:              in pixels.
         creator:             The creator of the image.

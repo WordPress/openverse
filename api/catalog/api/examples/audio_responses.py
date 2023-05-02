@@ -143,3 +143,22 @@ audio_complain_201_example = {
         "description": "This audio contains sensitive content",
     }
 }
+
+audio_waveform_200_example = {
+    "application/json": {
+        "len": 1083,
+        "points": [
+            0.61275,
+            0.19593,
+            0.74023,
+            # 1077 more entries
+            0.00089,
+            0.00043,
+            0.00049,
+        ],
+    }
+}
+
+audio_waveform_404_example = {
+    "application/json": {"detail": "An internal server error occurred."}
+}

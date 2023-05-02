@@ -1,7 +1,7 @@
 <template>
   <VSkipToContentContainer as="main">
     <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
-      <VBackToSearchResultsLink :href="backToSearchPath" />
+      <VBackToSearchResultsLink :id="image.id" :href="backToSearchPath" />
     </div>
 
     <figure class="relative mb-4 border-b border-dark-charcoal-20 px-6">
@@ -103,7 +103,6 @@ import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
 import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
-import externalIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
   name: "VImageDetailsPage",
@@ -237,7 +236,6 @@ export default defineComponent({
       onImageLoaded,
       onImageError,
       backToSearchPath,
-      externalIcon,
 
       sendGetMediaEvent,
     }

@@ -2,8 +2,8 @@
   <VButton
     :aria-label="$t('search.search')"
     size="disabled"
-    :variant="route === 'home' ? 'primary' : 'plain'"
-    class="heading-6 h-full flex-shrink-0 rounded-s-none transition-none"
+    :variant="route === 'home' ? 'filled-pink' : 'plain'"
+    class="heading-6 h-full flex-shrink-0 rounded-s-none"
     :class="[
       route === 'home'
         ? 'w-[57px] whitespace-nowrap md:w-auto md:px-10 md:py-6'
@@ -16,7 +16,7 @@
       sizeClasses,
     ]"
   >
-    <VIcon v-show="isIcon" :icon-path="searchIcon" />
+    <VIcon v-show="isIcon" name="search" />
     <span v-show="!isIcon">{{ $t("search.search") }}</span>
   </VButton>
 </template>
@@ -29,8 +29,6 @@ import { useUiStore } from "~/stores/ui"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
 import type { FieldSize } from "~/components/VInputField/VInputField.vue"
-
-import searchIcon from "~/assets/icons/search.svg"
 /**
  * The search button used in the search bar on the homepage and on the 404 page,
  * and on the search page.
@@ -74,7 +72,7 @@ export default defineComponent({
         : undefined
     )
 
-    return { searchIcon, sizeClasses, isIcon }
+    return { sizeClasses, isIcon }
   },
 })
 </script>

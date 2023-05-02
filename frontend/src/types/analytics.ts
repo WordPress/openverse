@@ -1,4 +1,5 @@
-import type { MediaType } from "~/constants/media"
+import type { MediaType, SearchType } from "~/constants/media"
+import type { ReportReason } from "~/constants/content-report"
 
 /**
  * Compound type of all custom events sent from the site; Index with `EventName`
@@ -26,6 +27,17 @@ export type Events = {
     identifier: string
   }
   /**
+   * Click on the 'back to search' link on a single result
+   *
+   * - Are these links used much? Are they necessary?
+   */
+  BACK_TO_SEARCH: {
+    /** The unique ID of the media */
+    id: string
+    /** The content type being searched (can include All content) */
+    searchType: SearchType
+  }
+  /**
    * Description: The user clicks the CTA button to the external source to use the image
    * Questions:
    *   - How often do users go to the source after viewing a result?
@@ -51,6 +63,27 @@ export type Events = {
     format: "plain" | "rich" | "html"
     /** The media type being searched */
     mediaType: MediaType
+  }
+  /**
+   * Description: The user reports a piece of media through our form
+   * Questions:
+   *   - How often do we get reports?
+   *   - Which types of reports are more common?
+   *   - Do we see an uptick in reports when a certain provider
+   *     is added/updated/refreshed?
+   * Note: Because the DMCA report is sent via a Google form, we send
+   * this event when the form is opened, and not when the report form
+   * is actually sent.
+   */
+  REPORT_MEDIA: {
+    /** the unique ID of the media */
+    id: string
+    /** the slug (not the prettified name) of the provider */
+    provider: string
+    /** the media type being searched */
+    mediaType: MediaType
+    /** the reason for the report */
+    reason: ReportReason
   }
 }
 

@@ -18,17 +18,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
         with:
-          python-version: "3.10"
-
-      - name: Install dependencies
-        working-directory: ./automations/python
-        run: |
-          python -m pip install --user --upgrade pip
-          python -m pip install --user pipenv
-          pipenv install --deploy
+          setup_nodejs: false # Node.js is not needed to run Python automations.
+          install_recipe: "automations/python/install"
 
       - name: Move stale issues from "In progress"
         working-directory: ./automations/python

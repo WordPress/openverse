@@ -24,7 +24,7 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue"
 
-import Radiomark from "~/assets/icons/radiomark.svg?inline"
+import Radiomark from "~/assets/radiomark.svg?inline"
 
 /**
  * Renders a radio input field, useful for choosing one of a few options that

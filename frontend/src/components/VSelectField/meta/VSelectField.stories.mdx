@@ -10,8 +10,6 @@ import { ref } from "vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VSelectField from "~/components/VSelectField/VSelectField.vue"
 
-import radioIcon from "~/assets/icons/radiomark.svg"
-
 <Meta
   title="Components/VSelectField"
   component={VSelectField}
@@ -86,13 +84,13 @@ export const SlotTemplate = (args) => ({
   template: `
     <VSelectField v-bind="args">
     <template #start>
-      <VIcon :icon-path="radioIcon" />
+      <VIcon name="radiomark" />
     </template>
     </VSelectField>
   `,
   components: { VSelectField, VIcon },
   setup() {
-    return { args, radioIcon }
+    return { args }
   },
 })
 

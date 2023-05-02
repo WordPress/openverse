@@ -1,24 +1,18 @@
 <template>
-  <svg
+  <SvgIcon
     class="v-icon flex-shrink-0 flex-grow-0"
     :class="[`w-${size}`, `h-${size}`, { 'rtl-flip': rtlFlip }]"
-    xmlns="http://www.w3.org/2000/svg"
-    :viewBox="viewBox"
+    :name="name"
     aria-hidden="true"
     focusable="false"
-  >
-    <use :href="`${iconPath}#${gId}`" />
-  </svg>
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue"
 
-import { isTest } from "~/utils/node-env"
-
-export type IconPath = string
 export type IconProps = {
-  iconPath: IconPath
+  name: string
   viewBox?: string
   gId?: string
   size?: number
@@ -42,11 +36,11 @@ export default defineComponent({
      * the path to the icon SVG; In a bundled application like Openverse,
      * importing an SVG should give us the path to the file.
      */
-    iconPath: {
+    name: {
       /**
        * In `jest` our icons get transformed to Vue components
        */
-      type: isTest ? Object : String,
+      type: String,
       required: true,
     },
     /**
