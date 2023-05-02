@@ -52,7 +52,7 @@ malicious traffic.
 
 #### Traffic Source Identifiers
 
-- Source ASNs (Autonomous System Numbers): Unique identifiers for a group of IP
+- Source "Autonomous System Numbers" (ASNs): Unique identifiers for a group of IP
   networks and routers under the control of a single organization, typically an
   internet service provider or hosting company.
 
