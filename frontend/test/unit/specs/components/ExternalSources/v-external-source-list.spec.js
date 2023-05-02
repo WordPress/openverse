@@ -13,9 +13,7 @@ import { IMAGE } from "~/constants/media"
 import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
 
 jest.mock("~/composables/use-analytics", () => ({
-  useAnalytics: jest.fn(() => ({
-    sendCustomEvent: jest.fn(),
-  })),
+  useAnalytics: jest.fn(),
 }))
 
 describe("VExternalSourceList", () => {
