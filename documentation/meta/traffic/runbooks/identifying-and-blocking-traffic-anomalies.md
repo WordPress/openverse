@@ -82,7 +82,7 @@ malicious traffic.
 
 #### Steps
 
-1.  Using the view from the previous task, scroll down and look for IP
+1.  Using [the view from the previous task](#1-identify-the-timeframe-of-the-traffic-anomalies), scroll down and look for IP
     Addresses, Source ASNs, or Source User Agents which exceed the typical usage
     thresholds defined above. Create a list of these traffic sources.
 
@@ -91,8 +91,7 @@ Cloudflare will only show the 5 largest of each category; greater than 5 disprop
 ```
 
 ```{warning}
-If you haven't found anything, it's unlikely that this situation is connected to malicious traffic or specific actors. Instead, it looks like a normal increase in traffic to Openverse. At this point, it's more likely that a change in code or infrastructure has caused a performance drop, exposed by the higher traffic, or that the traffic has grown so much that we need to allocate additional server resources.
-```
+If you haven't found anything, it's unlikely that this situation is connected to malicious traffic or specific actors. Instead, it is more likely to be a normal increase in traffic to Openverse. At this point, it's more likely that a change in code or infrastructure has caused a performance drop, exposed by the higher traffic, or that the traffic has grown so much that we need to allocate additional server resources. Consider recent Openverse marketing efforts or WordPress events if the traffic looks organic and we need to attribute it to something.
 
 2.  Take the list of suspicious traffic source IDs and go to the
     `Security => Bots` section of Cloudflare. Here, you'll see more lists of IP
