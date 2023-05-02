@@ -8,17 +8,13 @@ high error volume, or scraping patterns which disrupt service—in Openverse.
 
 ## When to use this runbook
 
-Use this runbook when either of these are true:
+Use this runbook when there is a marked increase in traffic visible in our AWS dashboards or
+   Cloudflare analytics and either of these are true:
 
 1. There is a service disruption to the Openverse API or frontend.
 2. There is a marked increase in resource usage on the API or frontend ECS
    services that continues to trend to unsustainable levels, which _could lead_
    to a service disruption.
-
-And:
-
-1. There is a marked increase in traffic visible in our AWS dashboards or
-   Cloudflare analytics.
 
 ## Requirements
 
