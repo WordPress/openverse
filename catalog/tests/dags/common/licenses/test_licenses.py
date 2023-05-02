@@ -112,6 +112,13 @@ def test_get_valid_cc_url_nones_missing_url(mock_rewriter):
     assert actual_url is None
 
 
+def test_get_valid_cc_url_rewrites_urls_from_special_cases():
+    actual_url = licenses._get_valid_cc_url(
+        "https://creativecommons.org/share-your-work/public-domain/cc0/"
+    )
+    assert actual_url == "https://creativecommons.org/publicdomain/zero/1.0/"
+
+
 def test_get_valid_cc_url_uses_rewritten_url(monkeypatch):
     expected_url = "https://creativecommons.org/licenses/licenses/by/1.0/"
 

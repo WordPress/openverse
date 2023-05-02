@@ -55,12 +55,6 @@ def test_get_data_from_response(resource_name, expected):
     assert actual == expected
 
 
-def test_docstring_example():
-    json_func_ex = make_resource_json_func("brooklynmuseum")
-    json_dict = json_func_ex("cc_license_info.json")
-    assert json_dict["public_name"] == "Creative Commons-BY"
-
-
 @pytest.mark.parametrize(
     "batch_objects_name, object_data_name, expected_count",
     [
