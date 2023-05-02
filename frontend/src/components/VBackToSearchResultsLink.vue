@@ -47,7 +47,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-
     const { sendCustomEvent } = useAnalytics()
     const searchStore = useSearchStore()
 
