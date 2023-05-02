@@ -8,8 +8,8 @@ high error volume, or scraping patterns which disrupt service—in Openverse.
 
 ## When to use this runbook
 
-Use this runbook when there is a marked increase in traffic visible in our AWS dashboards or
-   Cloudflare analytics and either of these are true:
+Use this runbook when there is a marked increase in traffic visible in our AWS
+dashboards or Cloudflare analytics and either of these are true:
 
 1. There is a service disruption to the Openverse API or frontend.
 2. There is a marked increase in resource usage on the API or frontend ECS
@@ -52,12 +52,16 @@ malicious traffic.
 
 #### Traffic Source Identifiers
 
-- Source "Autonomous System Numbers" (ASNs): Unique identifiers for a group of IP
-  networks and routers under the control of a single organization, typically an
-  internet service provider or hosting company.
+```{note}
+Expectations about the ratio of traffic a single source should occupy are based on historical data and subject to change over time. To validate these baseline percentages, please analyze a time-slice of traffic *without* any known malicious traffic, if one exists in Cloudflare's avaliable data, checking for any single source exceeding the percentages listed here.
+```
 
-  A single ASN usually makes up less than 10% of total Openverse requests in
-  a given timeframe. If the percentage of requests from a single ASN is higher
+- Source "Autonomous System Numbers" (ASNs): Unique identifiers for a group of
+  IP networks and routers under the control of a single organization, typically
+  an internet service provider or hosting company.
+
+  A single ASN usually makes up less than 10% of total Openverse requests in a
+  given timeframe. If the percentage of requests from a single ASN is higher
   than 10%, it may indicate that one or more users on the ASN are scraping
   Openverse or over using/abusing expected programmatic access patterns.
 
@@ -75,22 +79,25 @@ malicious traffic.
 - IP addresses: A unique identifier for a single machine or user.
 
   Typically, a single IP address makes up less than 1% of total Openverse
-  requests in a given timeframe. These larger IPs typically belong to "good" web
-  crawlers from places like Google, Bing, and Dotbot, as examples. If this
-  percentage is larger, it could suggest that a user on the ASN is scraping
-  Openverse or accessing Openverse programmatically in an aggressive way.
+  requests in a given timeframe. Larger IPs which exceed this 1% figure
+  typically belong to "good" web crawlers from places like Google, Bing, and
+  Dotbot, as examples. Traffic exceeding 1% which isn't from one of these
+  crawlers could suggest that a user on the ASN is scraping Openverse or
+  accessing Openverse programmatically in an aggressive way.
 
 #### Steps
 
-1.  Using [the view from the previous task](#1-identify-the-timeframe-of-the-traffic-anomalies), scroll down and look for IP
-    Addresses, Source ASNs, or Source User Agents which exceed the typical usage
-    thresholds defined above. Create a list of these traffic sources.
+1.  Using
+    [the view from the previous task](#1-identify-the-timeframe-of-the-traffic-anomalies),
+    scroll down and look for IP Addresses, Source ASNs, or Source User Agents
+    which exceed the typical usage thresholds defined above. Create a list of
+    these traffic sources.
 
 ```{note}
 Cloudflare will only show the 5 largest of each category; greater than 5 disproportionately-large items of any category would be unprecedented and surprising in Openverse's history.
 ```
 
-```{warning}
+````{warning}
 If you haven't found anything, it's unlikely that this situation is connected to malicious traffic or specific actors. Instead, it is more likely to be a normal increase in traffic to Openverse. At this point, it's more likely that a change in code or infrastructure has caused a performance drop, exposed by the higher traffic, or that the traffic has grown so much that we need to allocate additional server resources. Consider recent Openverse marketing efforts or WordPress events if the traffic looks organic and we need to attribute it to something.
 
 2.  Take the list of suspicious traffic source IDs and go to the
@@ -104,14 +111,7 @@ If you haven't found anything, it's unlikely that this situation is connected to
 
 ```{warning}
 If an ASN has a significant amount of human traffic, it can indicate this ASN is an ISP rather than a hosting company or company which offers a Virtual Private Network. Blocking these types of ASNs can disrupt service to human users.
-```
-
-1. Finally, and optionally, make a web search in your preferred browser for each
-   individual traffic source ID. Many ASNs and IP addresses used for scraping
-   will have negative reports, be on spam lists, or be associated with hosted
-   VPN services. This can be helpful in identifying which are truly malicious.
-   However, our first priority is Openverse's availability to users, so this
-   step may only be necessary in lower-pressure scenarios.
+````
 
 ### 3. Block suspicious traffic sources in the Web Access Firewall
 
@@ -133,7 +133,14 @@ explain how to do this well. Some suggestions:
   "Managed Challenge" action instead of an outright block. This should allow
   human users but block automated traffic.
 
-### 4. Monitor and Adjust Blocking Rules
+### 4. Analyze reputation of identified traffic sources
+
+Finally, make a web search in your preferred browser for each individual traffic
+source identifier. Many ASNs and IP addresses used for scraping will have
+negative reports, be on spam lists, or be associated with hosted VPN services.
+This can be helpful in identifying which are truly malicious.
+
+### 5. Monitor and Adjust Blocking Rules
 
 Periodically in the days after using this runbook repeat the entire process, at
 your discretion, only continuing if new sources of traffic have appeared. When
