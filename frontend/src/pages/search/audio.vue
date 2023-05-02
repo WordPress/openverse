@@ -17,18 +17,20 @@
       v-if="results.length === 0 && !fetchState.isFinished"
       is-for-tab="audio"
     />
-    <VAudioTrack
-      v-for="audio in results"
-      :key="audio.id"
-      class="mb-2 md:mb-1"
-      :audio="audio"
-      :size="audioTrackSize"
-      layout="row"
-      :search-term="searchTerm"
-      @interacted="hideSnackbar"
-      @mousedown.native="handleMouseDown"
-      @focus.native="showSnackbar"
-    />
+    <ol>
+      <li v-for="audio in results" :key="audio.id">
+        <VAudioTrack
+          class="mb-2 md:mb-1"
+          :audio="audio"
+          :size="audioTrackSize"
+          layout="row"
+          :search-term="searchTerm"
+          @interacted="hideSnackbar"
+          @mousedown.native="handleMouseDown"
+          @focus.native="showSnackbar"
+        />
+      </li>
+    </ol>
     <VLoadMore />
   </section>
 </template>

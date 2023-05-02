@@ -421,6 +421,7 @@
       "remove-filter": "remove filter",
       "license-explanation": "license explanation",
       creator: "search by creator",
+      results: "Search results for {query}.",
     },
   },
   "media-details": {
