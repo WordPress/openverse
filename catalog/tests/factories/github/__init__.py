@@ -37,7 +37,7 @@ def walk_backwards_in_time_until_weekday_count(today: datetime.datetime, count: 
 _pr_count = 1
 
 
-def make_pull(urgency: Urgency, past_due: bool) -> dict:
+def make_pull(urgency: Urgency, past_due: bool, base_branch: str = "main") -> dict:
     """
     Create a PR object like the one returned by the GitHub API.
 
@@ -69,6 +69,10 @@ def make_pull(urgency: Urgency, past_due: bool) -> dict:
         updated_at = datetime.datetime.now()
 
     pull["updated_at"] = _gh_date(updated_at)
+
+    base = pull["base"]
+    base["ref"] = base_branch
+    base["label"] = f"WordPress:{base_branch}"
 
     return pull
 

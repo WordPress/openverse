@@ -84,6 +84,7 @@ test.describe("Header internal", () => {
       await page.goto("/")
       await clickMenuButton(page)
       await page.getByRole("link", { name: t("navigation.about") }).click()
+      await page.waitForURL("/about")
       await scrollToBottom(page)
       const scrollPosition = await page.evaluate(() => window.scrollY)
       expect(scrollPosition).toBeGreaterThan(100)
