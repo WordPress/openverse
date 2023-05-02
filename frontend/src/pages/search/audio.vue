@@ -17,7 +17,7 @@
       v-if="results.length === 0 && !fetchState.isFinished"
       is-for-tab="audio"
     />
-    <ol>
+    <ol :aria-label="$t('browse-page.aria.results', { query: searchTerm })">
       <li v-for="audio in results" :key="audio.id">
         <VAudioTrack
           class="mb-2 md:mb-1"

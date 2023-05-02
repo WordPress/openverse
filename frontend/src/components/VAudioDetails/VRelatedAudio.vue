@@ -8,13 +8,11 @@
       v-if="!fetchState.fetchingError"
       class="-mx-2 mb-12 flex flex-col gap-4 md:-mx-4"
     >
-      <VAudioTrack
-        v-for="audio in media"
-        :key="audio.id"
-        :audio="audio"
-        layout="row"
-        :size="audioTrackSize"
-      />
+      <ol :aria-label="$t('audio-details.related-audios')">
+        <li v-for="audio in media" :key="audio.id">
+          <VAudioTrack :audio="audio" layout="row" :size="audioTrackSize" />
+        </li>
+      </ol>
       <LoadingIcon v-show="fetchState.isFetching" />
     </div>
     <p v-show="!!fetchState.fetchingError">

@@ -4,7 +4,7 @@
       v-if="!images.length && !fetchState.isFinished"
       is-for-tab="image"
     />
-    <ol class="image-grid flex flex-wrap gap-4">
+    <ol class="image-grid flex flex-wrap gap-4" :aria-label="imageGridLabel">
       <VImageCell
         v-for="image in images"
         :key="image.id"
@@ -62,6 +62,10 @@ export default defineComponent({
     },
     fetchState: {
       type: Object as PropType<FetchState>,
+      required: true,
+    },
+    imageGridLabel: {
+      type: String,
       required: true,
     },
   },
