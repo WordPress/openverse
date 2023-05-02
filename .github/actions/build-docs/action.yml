@@ -10,11 +10,17 @@ inputs:
     required: true
     description: The password for the GlotPress account for bulk download
 
+  github_token:
+    required: true
+    description: GitHub token to use for issue link resolution in documentation
+
 runs:
   using: "composite"
   steps:
     - name: Build Sphinx
       shell: bash
+      env:
+        LINK_ISSUES_GITHUB_TOKEN: ${{ inputs.github_token }}
       run: |
         just documentation/build
 
