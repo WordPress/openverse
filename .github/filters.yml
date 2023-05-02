@@ -1,3 +1,4 @@
+# This file is used by the `get-changes` action to determine the changesets.
 # Also see
 # - list of stacks: job `add-stack-label` of workflow `ci_cd.yml`
 # - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
