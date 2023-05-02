@@ -116,10 +116,10 @@ def test_get_record_data():
 @pytest.mark.parametrize(
     "property",
     [
-        pytest.param("sourceFile", id="falsy url"),
-        pytest.param("uuid", id="falsy foreign_identifier"),
-        pytest.param("self", id="falsy foreign_landing_url"),
-        pytest.param("license", id="falsy license"),
+        pytest.param("sourceFile", id="sourceFile-url"),
+        pytest.param("uuid", id="uuid-foreign_identifier"),
+        pytest.param("self", id="self-foreign_landing_url"),
+        pytest.param("license", id="license-license"),
     ],
 )
 def test_get_record_data_returns_none_when_required_values_falsy(property):
@@ -136,10 +136,10 @@ def test_get_record_data_returns_none_when_required_values_falsy(property):
 @pytest.mark.parametrize(
     "property",
     [
-        pytest.param("sourceFile", id="missing url"),
-        pytest.param("uuid", id="missing foreign_identifier"),
-        pytest.param("self", id="missing foreign_landing_url"),
-        pytest.param("license", id="missing license"),
+        pytest.param("sourceFile", id="sourceFile-url"),
+        pytest.param("uuid", id="uuid-foreign_identifier"),
+        pytest.param("self", id="self-foreign_landing_url"),
+        pytest.param("license", id="license-license"),
     ],
 )
 def test_get_record_data_returns_none_when_required_values_missing(property):

@@ -104,12 +104,11 @@ def test_get_record_data():
 @pytest.mark.parametrize(
     "required_field",
     [
-        "id",  # foreign identifier
-        "shareurl",  # foreign landing url
-        "audio",  # audio url
-        "license_ccurl",  # license
+        pytest.param("id", id="id-foreign_identifier"),
+        pytest.param("shareurl", id="shareurl-foreign_landing_url"),
+        pytest.param("audio", id="audio-audio_url"),
+        pytest.param("license_ccurl", id="license_ccurl-license_info"),
     ],
-    ids=["foreign_identifier", "foreign_landing_url", "url", "license_info"],
 )
 def test_get_record_data_returns_none_when_required_data_is_null(required_field):
     audio_data = _get_resource_json("audio_data_example.json")
@@ -120,12 +119,12 @@ def test_get_record_data_returns_none_when_required_data_is_null(required_field)
 @pytest.mark.parametrize(
     "required_field",
     [
-        # "id",  # foreign identifier
-        # "shareurl",  # foreign landing url
-        # "audio",  # audio url
-        "license_ccurl",  # license
+        # TODO: uncomment when the stricter checks for required parameters are merged
+        # pytest.param("id", id="id-foreign_identifier"),
+        # pytest.param("shareurl", id="shareurl-foreign_landing_url"),
+        # pytest.param("audio", id="audio-audio_url"),
+        pytest.param("license_ccurl", id="license_ccurl-license_info"),
     ],
-    ids=["foreign_identifier"],  # , "foreign_landing_url", "url", "license_info"],
 )
 def test_get_record_data_returns_none_when_required_data_is_falsy(required_field):
     audio_data = _get_resource_json("audio_data_example.json")

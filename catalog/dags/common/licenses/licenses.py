@@ -3,8 +3,8 @@ This module has a number of public methods which are useful for working
 with licenses.
 """
 import logging
-from collections import namedtuple
 from functools import lru_cache
+from typing import NamedTuple
 from urllib.parse import urlparse
 
 from common import urls
@@ -23,7 +23,7 @@ class InvalidLicenseURLException(Exception):
     pass
 
 
-LicenseInfo = namedtuple("LicenseInfo", ["license", "version", "url", "raw_url"])
+LicenseInfo = NamedTuple("LicenseInfo", ["license", "version", "url", "raw_url"])
 
 # SMK sometimes uses incorrect URL for licenses
 special_cases = {
@@ -216,7 +216,9 @@ def _get_valid_cc_url(license_url) -> str | None:
 
 
 def get_license_info_from_license_pair(
-    license_: str | None, license_version: str | int | float | None, pair_map=None
+    license_: str | None,
+    license_version: str | int | float | None,
+    pair_map: dict[tuple[str, str], str] = None,
 ) -> tuple[str, str, str] | None:
     """
     Validate a given license pair, and derive a license URL from it.
@@ -224,7 +226,7 @@ def get_license_info_from_license_pair(
     Returns both the validated pair and the derived license URL.
     """
     pair_map = pair_map or REVERSE_LICENSE_PATH_MAP
-    string_version = _ensure_license_version_string_or_none(license_version)
+    string_version = _ensure_license_version_is_valid(license_version)
     if string_version is None:
         return None
     license_path = pair_map.get((license_, string_version))
@@ -239,9 +241,13 @@ def get_license_info_from_license_pair(
     return valid_license, valid_version, valid_url
 
 
-def _ensure_license_version_string_or_none(
+def _ensure_license_version_is_valid(
     license_version: str | int | float | None,
 ) -> str | None:
+    """
+    Ensure that a given license version is valid, i.e. is a string of a
+    float like "4.0" or "N/A" for "publicdomain".
+    """
     string_license_version = None
     try:
         if license_version == constants.NO_VERSION:
