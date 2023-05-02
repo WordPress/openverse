@@ -23,7 +23,12 @@ class InvalidLicenseURLException(Exception):
     pass
 
 
-LicenseInfo = NamedTuple("LicenseInfo", ["license", "version", "url", "raw_url"])
+class LicenseInfo(NamedTuple):
+    license: str
+    version: str
+    url: str
+    raw_url: str | None = None
+
 
 # SMK sometimes uses incorrect URL for licenses
 special_cases = {
