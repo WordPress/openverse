@@ -59,7 +59,7 @@ search = custom_extend_schema(
     eg=[image_search_list_curl],
     external_docs={
         "description": "Openverse Syntax Guide",
-        "url": "https://api.creativecommons.org/search-help",
+        "url": "https://openverse.org/search-help",
     },
 )
 
