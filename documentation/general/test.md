@@ -82,5 +82,8 @@ testing. Links to each library's test-skipping approach are below:
   - `describe.skip`: <https://jestjs.io/docs/api#describeskipname-fn>
 
 ```{note}
-Jest and Playwright's `describe.skip` utilities should be used lightly and only if either the entire describe block is flaky or if the tests inside the block are interdependent and skipping an individual test will cause subsequent tests to incorrectly fail.
+Jest and Playwright's `describe.skip` utilities should be used lightly and
+only if either the entire describe block is flaky or if the tests inside the
+block are interdependent and skipping an individual test will cause subsequent
+tests to incorrectly fail.
 ```
