@@ -2,6 +2,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 import pytest
+from requests import HTTPError, Request, Response
 
 from catalog.dags.maintenance.pr_review_reminders.pr_review_reminders import (
     Urgency,
@@ -100,6 +101,13 @@ def github(monkeypatch):
     def get_branch_protection(*args, **kwargs):
         repo = args[1]
         branch = args[2]
+        if repo not in branch_protection or branch not in branch_protection[repo]:
+            response = Response()
+            response.status_code = 404
+            request = Request(method="GET", url="https://api.github.com/")
+            response.request = request
+            raise HTTPError(response=response)
+
         return branch_protection[repo][branch]
 
     def patch_gh_fn(fn, impl):
@@ -131,11 +139,16 @@ def freeze_friday(freeze_time):
 
 
 def _setup_branch_protection(github: dict, pr: dict, min_required_approvals: int = 2):
-    branch_protection = make_branch_protection(min_required_approvals)
-
     repo = pr["base"]["repo"]["name"]
     branch = pr["base"]["ref"]
 
+    _setup_branch_protection_for_branch(github, repo, branch, min_required_approvals)
+
+
+def _setup_branch_protection_for_branch(
+    github: dict, repo: str, branch: str, min_required_approvals: int = 2
+):
+    branch_protection = make_branch_protection(min_required_approvals)
     github["branch_protection"][repo][branch] = branch_protection
 
 
@@ -247,22 +260,25 @@ UNAPPROVED_REVIEW_STATES = ("CHANGES_REQUESTED", "COMMENTED")
     # tested elsewhere.
     ("APPROVED",) + UNAPPROVED_REVIEW_STATES,
 )
+@pytest.mark.parametrize("base_branch", ("main", "not_main"))
 def test_does_ping_if_pr_has_less_than_min_required_approvals(
-    github, urgency, first_review_state, second_review_state
+    github, urgency, first_review_state, second_review_state, base_branch
 ):
     reviews = [
         make_review(state)
         for state in (first_review_state, second_review_state)
         if state is not None
     ]
-    past_due_pull = make_pull(urgency, past_due=True)
+    past_due_pull = make_pull(urgency, past_due=True, base_branch=base_branch)
     past_due_pull["requested_reviewers"] = [
         make_requested_reviewer(f"reviewer-due-{i}") for i in range(2)
     ]
 
-    _setup_branch_protection(
+    # Always use `main` to exercise fallback for non-main branches
+    _setup_branch_protection_for_branch(
         github,
-        pr=past_due_pull,
+        repo="openverse",
+        branch="main",
         min_required_approvals=2,
     )
 
@@ -275,17 +291,26 @@ def test_does_ping_if_pr_has_less_than_min_required_approvals(
 
 
 @parametrize_urgency
-def test_does_not_ping_if_pr_has_min_required_approvals(github, urgency):
-    past_due_pull = make_pull(urgency, past_due=True)
+@pytest.mark.parametrize(
+    ("base_branch"),
+    (
+        "main",
+        "not_main",  # should fallback to use `main`
+    ),
+)
+def test_does_not_ping_if_pr_has_min_required_approvals(github, urgency, base_branch):
+    past_due_pull = make_pull(urgency, past_due=True, base_branch=base_branch)
     past_due_pull["requested_reviewers"] = [
         make_requested_reviewer(f"reviewer-due-{i}") for i in range(2)
     ]
 
     min_required_approvals = 4
 
-    _setup_branch_protection(
+    # Always use `main` to exercise fallback for non-main branches
+    _setup_branch_protection_for_branch(
         github,
-        pr=past_due_pull,
+        repo="openverse",
+        branch="main",
         min_required_approvals=min_required_approvals,
     )
 

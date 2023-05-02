@@ -2,8 +2,8 @@
   <VButton
     :aria-label="$t('search.search')"
     size="disabled"
-    :variant="route === 'home' ? 'primary' : 'plain'"
-    class="heading-6 h-full flex-shrink-0 rounded-s-none transition-none"
+    :variant="route === 'home' ? 'filled-pink' : 'plain'"
+    class="heading-6 h-full flex-shrink-0 rounded-s-none"
     :class="[
       route === 'home'
         ? 'w-[57px] whitespace-nowrap md:w-auto md:px-10 md:py-6'

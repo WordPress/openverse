@@ -51,17 +51,10 @@ interface Options {
    * @defaultValue true
    */
   uaMocking?: boolean
-  /**
-   * Adjust the error tolerance for a single test to avoid
-   * flakiness.
-   * Do not set to a value higher than 0.02.
-   */
-  maxDiffPixelRatio?: number
 }
 
 const defaultOptions = Object.freeze({
   uaMocking: true,
-  maxDiffPixelRatio: 0,
 })
 
 const makeBreakpointDescribe =

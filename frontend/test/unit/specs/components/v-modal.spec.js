@@ -22,7 +22,7 @@ const TestWrapper = Vue.component("TestWrapper", {
     <div>
       <VModal label="modal label" :initial-focus-element="resolvedInitialFocusElement">
         <template #trigger="{ a11yProps, visible }">
-          <VButton v-bind="a11yProps">{{ visible }}</VButton>
+          <VButton variant="filled-white" v-bind="a11yProps">{{ visible }}</VButton>
         </template>
 
         <div>Code is Poetry</div>

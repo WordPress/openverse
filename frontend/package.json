@@ -124,7 +124,6 @@
     "@testing-library/vue": "^5.8.2",
     "@types/express-useragent": "^1.0.2",
     "@types/jest": "^26.0.22",
-    "@types/lodash.sortby": "^4.7.7",
     "@types/module-alias": "^2.0.1",
     "@types/node": "^17.0.32",
     "@types/throttle-debounce": "^5.0.0",
