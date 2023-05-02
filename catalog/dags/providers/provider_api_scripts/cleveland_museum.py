@@ -39,7 +39,7 @@ class ClevelandDataIngester(ProviderDataIngester):
     def get_record_data(self, data):
         license_ = data.get("share_license_status", "").lower()
         if license_ != "cc0":
-            logger.debug("Wrong license image")
+            logger.debug(f"Wrong license image: {license_}")
             return None
 
         foreign_id = data.get("id")

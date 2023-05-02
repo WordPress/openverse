@@ -130,8 +130,7 @@ def _get_license_info_from_url(
     We return the validated LicenseInfo if possible,
     else None.
     """
-    if path_map is None:
-        path_map = LICENSE_PATH_MAP
+    path_map = path_map or LICENSE_PATH_MAP
     raw_url = license_url
     cc_url = _get_valid_cc_url(license_url)
     if cc_url is None:
@@ -224,8 +223,7 @@ def get_license_info_from_license_pair(
 
     Returns both the validated pair and the derived license URL.
     """
-    if pair_map is None:
-        pair_map = REVERSE_LICENSE_PATH_MAP
+    pair_map = pair_map or REVERSE_LICENSE_PATH_MAP
     string_version = _ensure_license_version_string_or_none(license_version)
     if string_version is None:
         return None
