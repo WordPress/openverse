@@ -1,5 +1,9 @@
 # Documentation
 
-```{include} ../../_toc_templates/flat.md
+```{toctree}
+:titlesonly:
 
+quickstart
+guidelines
+link_issues
 ```
