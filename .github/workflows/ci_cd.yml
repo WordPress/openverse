@@ -125,7 +125,8 @@ jobs:
       - get-changes
 
     steps:
-      - uses: actions/github-script@v6
+      - name: Apply stack labels
+        uses: actions/github-script@v6
         with:
           # Also see
           # - list of stack filters: `.github/filters.yml`
