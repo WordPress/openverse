@@ -1,4 +1,4 @@
-# Project Proposal - 2023-03-31
+# 2023-03-31 Project Proposal: Search relevancy sandbox
 
 ## Reviewers
 
