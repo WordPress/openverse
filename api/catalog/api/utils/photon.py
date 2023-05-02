@@ -27,15 +27,11 @@ HEADERS = {
 }
 
 
-def get(
-    image_url: str,
-    accept_header: str = "image/*",
-    is_full_size: bool = False,
-    is_compressed: bool = True,
-) -> HttpResponse:
-    logger = parent_logger.getChild("get")
-    # Photon options documented here:
-    # https://developer.wordpress.com/docs/photon/api/
+def _get_photon_params(image_url, is_full_size, is_compressed):
+    """
+    Photon options documented here:
+    https://developer.wordpress.com/docs/photon/api/
+    """
     params = {}
 
     if not is_full_size:
@@ -58,35 +54,38 @@ def get(
         # do not serve over HTTP and do not have a redirect)
         params["ssl"] = "true"
 
-    # Photon excludes the protocol so we need to reconstruct the url + port + path
+    return params, parsed_image_url
+
+
+def get(
+    image_url: str,
+    accept_header: str = "image/*",
+    is_full_size: bool = False,
+    is_compressed: bool = True,
+) -> HttpResponse:
+    logger = parent_logger.getChild("get")
+    params, parsed_image_url = _get_photon_params(
+        image_url, is_full_size, is_compressed
+    )
+
+    # Photon excludes the protocol, so we need to reconstruct the url + port + path
     # to send as the "path" of the Photon request
     domain = parsed_image_url.netloc
     path = parsed_image_url.path
     upstream_url = f"{settings.PHOTON_ENDPOINT}{domain}{path}"
 
-    try:
-        headers = {"Accept": accept_header} | HEADERS
-        if settings.PHOTON_AUTH_KEY:
-            headers["X-Photon-Authentication"] = settings.PHOTON_AUTH_KEY
+    headers = {"Accept": accept_header} | HEADERS
+    if settings.PHOTON_AUTH_KEY:
+        headers["X-Photon-Authentication"] = settings.PHOTON_AUTH_KEY
 
+    try:
         upstream_response = requests.get(
             upstream_url,
             timeout=15,
             params=params,
             headers=headers,
         )
-        res_status = upstream_response.status_code
-        content_type = upstream_response.headers.get("Content-Type")
-        logger.debug(
-            "Image proxy response "
-            f"status: {res_status}, content-type: {content_type}"
-        )
-
-        return HttpResponse(
-            upstream_response.content,
-            status=res_status,
-            content_type=content_type,
-        )
+        upstream_response.raise_for_status()
     except requests.ReadTimeout as exc:
         # Count the incident so that we can identify providers with most timeouts.
         key = f"{settings.THUMBNAIL_TIMEOUT_PREFIX}{domain}"
@@ -102,9 +101,22 @@ def get(
         )
     except requests.RequestException as exc:
         sentry_sdk.capture_exception(exc)
-        raise UpstreamThumbnailException(f"Failed to render thumbnail: {exc}")
+        raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
     except Exception as exc:
         sentry_sdk.capture_exception(exc)
         raise UpstreamThumbnailException(
-            f"Failed to render thumbnail due to unidentified exception: {exc}"
+            f"Failed to render thumbnail due to unidentified exception. {exc}"
+        )
+    else:
+        res_status = upstream_response.status_code
+        content_type = upstream_response.headers.get("Content-Type")
+        logger.debug(
+            "Image proxy response "
+            f"status: {res_status}, content-type: {content_type}"
+        )
+
+        return HttpResponse(
+            upstream_response.content,
+            status=res_status,
+            content_type=content_type,
         )
