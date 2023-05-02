@@ -3,6 +3,7 @@
     <slot />
     <VTeleport to="skip-to-content">
       <VButton
+        variant="filled-pink"
         class="z-50 ms-2 mt-2 focus:fixed focus:absolute"
         :class="$style.skipButton"
         @click="skipToContent"
