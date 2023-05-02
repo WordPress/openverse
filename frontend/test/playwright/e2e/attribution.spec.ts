@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test"
 
+import { turnOnAnalytics } from "~~/test/playwright/utils/navigation"
+
 test.describe.configure({ mode: "parallel" })
 
 test.beforeEach(async ({ context }) => {
@@ -62,6 +64,8 @@ test("sends analytics event on copy", async ({ page }) => {
   const mediaType = "image"
   const id = "e9d97a98-621b-4ec2-bf70-f47a74380452"
   const format = "rich"
+
+  await turnOnAnalytics(page)
 
   await page.goto(`${mediaType}/${id}?ff_analytics=on`)
   await page.click(`[id="copyattr-${format}"]`)

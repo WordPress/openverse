@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ed3ed0e2ab1dccc1395551b9135c31b231c4e9df74577fb641a6f247975492d7"
+            "sha256": "3b1f315a659bf7eb9b17cb5658f2afdbde60d4aa26452d2cf3a38a6739094016"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1543,11 +1543,11 @@
         },
         "faker": {
             "hashes": [
-                "sha256:49060d40e6659e116f53353c5771ad2f2cbcd12b15771f49e3000a3a451f13ec",
-                "sha256:ac903ba8cb5adbce2cdd15e5536118d484bbe01126f3c774dd9f6df77b61232d"
+                "sha256:3aabe5b8c4ab50103a0c05c15e31a24b22045968d1ac0b7fb48d1c6244400495",
+                "sha256:6f882f5a3303c0690b3fb2dd3418839935a2dca155d38f1b2931b0079f3ce622"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==18.6.0"
+            "version": "==18.6.1"
         },
         "fakeredis": {
             "hashes": [
@@ -1718,11 +1718,11 @@
         },
         "psycopg": {
             "hashes": [
-                "sha256:59b4a71536b146925513c0234dfd1dc42b81e65d56ce5335dff4813434dbc113",
-                "sha256:b1500c42063abaa01d30b056f0b300826b8dd8d586900586029a294ce74af327"
+                "sha256:ab400f207a8c120bafdd8077916d8f6c0106e809401378708485b016508c30c9",
+                "sha256:fbbac339274d8733ee70ba9822297af3e8871790a26e967b5ea53e30a4b74dcc"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==3.1.8"
+            "version": "==3.1.9"
         },
         "ptyprocess": {
             "hashes": [
