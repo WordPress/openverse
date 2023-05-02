@@ -3,6 +3,8 @@ import logging
 from collections import defaultdict
 from dataclasses import dataclass
 
+from requests import HTTPError
+
 from common.github import GitHubAPI
 
 
@@ -135,9 +137,7 @@ def base_repo_name(pr: dict):
 _BRANCH_PROTECTION_CACHE = defaultdict(dict)
 
 
-def get_branch_protection(gh: GitHubAPI, pr: dict) -> dict:
-    repo = base_repo_name(pr)
-    branch_name = pr["base"]["ref"]
+def get_branch_protection(gh: GitHubAPI, repo: str, branch_name: str) -> dict:
     if branch_name not in _BRANCH_PROTECTION_CACHE[repo]:
         _BRANCH_PROTECTION_CACHE[repo][branch_name] = gh.get_branch_protection(
             repo, branch_name
@@ -147,7 +147,20 @@ def get_branch_protection(gh: GitHubAPI, pr: dict) -> dict:
 
 
 def get_min_required_approvals(gh: GitHubAPI, pr: dict) -> int:
-    branch_protection_rules = get_branch_protection(gh, pr)
+    repo = base_repo_name(pr)
+    branch_name = pr["base"]["ref"]
+
+    try:
+        branch_protection_rules = get_branch_protection(gh, repo, branch_name)
+    except HTTPError as e:
+        # If the base branch does not have protection rules, the request
+        # above will 404. In that case, fall back to the rules for `main`
+        # as a safe default.
+        if e.response is not None and e.response.status_code == 404:
+            branch_protection_rules = get_branch_protection(gh, repo, "main")
+        else:
+            raise e
+
     return branch_protection_rules["required_pull_request_reviews"][
         "required_approving_review_count"
     ]
