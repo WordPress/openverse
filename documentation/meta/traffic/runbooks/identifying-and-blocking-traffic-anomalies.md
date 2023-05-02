@@ -56,10 +56,10 @@ malicious traffic.
   networks and routers under the control of a single organization, typically an
   internet service provider or hosting company.
 
-  Typically, a single ASN makes up less than 10% of total Openverse requests in
-  a given timeframe. If this percentage is larger, it could suggest that a user
-  on the ASN is scraping Openverse or accessing Openverse programmatically in an
-  aggressive way.
+  A single ASN usually makes up less than 10% of total Openverse requests in
+  a given timeframe. If the percentage of requests from a single ASN is higher
+  than 10%, it may indicate that one or more users on the ASN are scraping
+  Openverse or over using/abusing expected programmatic access patterns.
 
 - Source user agents: Unique user-agent strings sent with requests to Openverse.
   Nearly all UA strings from web browsers begin with `Mozilla`. Outside of the
