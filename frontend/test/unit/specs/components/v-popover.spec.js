@@ -31,7 +31,7 @@ const TestWrapper = Vue.component("TestWrapper", {
       <div>External area</div>
       <VPopover label="Test label" v-bind="popoverProps">
         <template #trigger="{ visible, a11yProps }">
-          <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
+          <VButton variant="bordered-white" :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
         </template>
         <div :tabindex="popoverContentTabIndex">Code is Poetry</div>
       </VPopover>
