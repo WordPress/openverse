@@ -18,29 +18,27 @@ test.describe.configure({ mode: "parallel" })
 for (const mediaType of supportedMediaTypes) {
   for (const dir of languageDirections) {
     test.describe(`${mediaType} ${dir} single-result page snapshots`, () => {
-      breakpoints.describeEvery(
-        { maxDiffPixelRatio: 0.02 },
-        ({ breakpoint, expectSnapshot }) => {
-          test.beforeEach(async ({ page }) => {
-            await closeFiltersUsingCookies(page)
-            await dismissBannersUsingCookies(page)
-            await setBreakpointCookie(page, breakpoint)
+      breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
+        test.beforeEach(async ({ page }) => {
+          await closeFiltersUsingCookies(page)
+          await dismissBannersUsingCookies(page)
+          await setBreakpointCookie(page, breakpoint)
 
-            await goToSearchTerm(page, "birds", { dir })
-          })
+          await goToSearchTerm(page, "birds", { dir })
+        })
 
-          test(`from search results`, async ({ page }) => {
-            // This will include the "Back to results" link.
-            await openFirstResult(page, mediaType)
+        test(`from search results`, async ({ page }) => {
+          // This will include the "Back to results" link.
+          await openFirstResult(page, mediaType)
 
-            await expectSnapshot(
-              `${mediaType}-${dir}-from-search-results`,
-              page,
-              { fullPage: true }
-            )
-          })
-        }
-      )
+          await expectSnapshot(
+            `${mediaType}-${dir}-from-search-results`,
+            page,
+            { fullPage: true },
+            { maxDiffPixelRatio: 0.02 }
+          )
+        })
+      })
     })
   }
 }
