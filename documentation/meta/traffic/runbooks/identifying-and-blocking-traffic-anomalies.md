@@ -47,7 +47,7 @@ can block them through the Cloudflare Web Access firewall.
 
 There are three primary identifiers for targeting traffic. These are ordered
 from largest, most persistent, and most impactful, to smallest and most
-ephemeral. When possible, **blocking ASNs** is the single best way to mitigate
+ephemeral. When possible, **blocking Autonomous System Numbers (ASNs)** is the single best way to mitigate
 malicious traffic.
 
 #### Traffic Source Identifiers
