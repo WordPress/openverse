@@ -139,9 +139,6 @@ class SmkDataIngester(ProviderDataIngester):
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
         if not (license_info := get_license_info(data.get("rights"))):
             return None
-
-        if not (license_info := get_license_info(license_url=license_url)):
-            return None
         if not (foreign_landing_url := self._get_foreign_landing_url(data)):
             return None
         images = []
