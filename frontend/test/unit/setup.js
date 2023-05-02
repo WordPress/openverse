@@ -21,6 +21,9 @@ config.stubs["nuxt-link"] = Vue.component("NuxtLink", {
   props: ["to"],
   methods: {
     handleClick() {
+      // This is an adaptation to mimic NuxtLink's behavior,
+      // see https://github.com/WordPress/openverse/pull/1118
+      // We should try to remove it after migrating to Nuxt 3.
       this.$emit("mousedown")
       this.$emit("click", new MouseEvent("click"))
     },

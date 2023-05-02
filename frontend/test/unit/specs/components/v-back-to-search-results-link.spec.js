@@ -8,9 +8,7 @@ import { useAnalytics } from "~/composables/use-analytics"
 import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 
 jest.mock("~/composables/use-analytics", () => ({
-  useAnalytics: jest.fn(() => ({
-    sendCustomEvent: jest.fn(),
-  })),
+  useAnalytics: jest.fn(),
 }))
 
 const localVue = createLocalVue()
