@@ -22,7 +22,8 @@ runs:
       env:
         LINK_ISSUES_GITHUB_TOKEN: ${{ inputs.github_token }}
       run: |
-        just documentation/build
+        # Pass -W to fail CI if warnings exist
+        just documentation/build -W
 
     - name: Install translations
       shell: bash
