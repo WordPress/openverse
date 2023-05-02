@@ -1,4 +1,4 @@
-# Project Proposal - 2022-02-23
+# 2022-02-23 Project Proposal: Vuex to Pinia conversion
 
 - [x] @dhruvkb
 

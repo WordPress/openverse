@@ -20,8 +20,14 @@ Changes by Tony Narlock (2022-08-21):
 
   Subclassed / typed BuildEnvironment with .tracker_config
 - Just GitHub (for demonstration)
+
+Changes by Openverse Contributors:
+- 2023-05-02
+
+  Add GitHub token to prevent rate limiting
 """
 import dataclasses
+import os
 import re
 import time
 import typing as t
@@ -265,7 +271,11 @@ def check_project_with_username(tracker_config: TrackerConfig) -> None:
         raise ValueError(f"username missing in project name: {tracker_config.project}")
 
 
-HEADERS = {"User-Agent": "sphinxcontrib-issuetracker v{}".format("1.0")}
+GITHUB_TOKEN = os.getenv("LINK_ISSUES_GITHUB_TOKEN")
+
+HEADERS = {
+    "User-Agent": "sphinxcontrib-issuetracker v{}".format("1.0"),
+} | ({"Authorization": f"Bearer {GITHUB_TOKEN}"} if GITHUB_TOKEN else {})
 
 
 def get(app: Sphinx, url: str) -> t.Optional[requests.Response]:
@@ -294,6 +304,20 @@ def lookup_github_issue(
 
     env = app.env
     if is_issuetracker_env(env):
+        if not GITHUB_TOKEN:
+            # If there is no GitHub token, bypass resolving issues entirely
+            # to prevent rate limiting and requests from slowing down what
+            # is probably local development.
+            # See https://docs.openverse.org/meta/documentation/link_issues.html for
+            # further details.
+            url = f"https://github.com/{tracker_config.project}/issues/{issue_id}"
+            return Issue(
+                id=issue_id,
+                title="No GitHub Token present; could not resolve issue title.",
+                url=url,
+                closed=False,
+            )
+
         # Get rate limit information from the environment
         timestamp, limit_hit = getattr(env, "github_rate_limit", (0, False))
 

@@ -37,8 +37,13 @@ myst_heading_anchors = 6  # Add anchors to all headers, this is disabled by defa
 
 source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
 
-templates = ["_toc_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".venv"]
+suppress_warnings = [
+    # Pygments does not fully support language features we use
+    # in code blocks in the documentation. Unfortunately the best
+    # way to deal with that is to just ignore highlighting failures.
+    "misc.highlighting_failure",
+]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

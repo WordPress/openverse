@@ -50,6 +50,14 @@ appendixes that go beyond the required scope of the project planning process
 described in this document. Those documents should accompany the required ones
 in the same subdirectory for the project.
 
+```{warning}
+Subdirectories require an `index.md` in order to be included in the documentation site's table of contents.
+
+Because project documents prefix their titles with a date, we can safely use a glob to include all project planning documents in a project directory and have them intuitively ordered by date.
+
+Refer to the [project `index.md` templates](/projects/templates/index.md) for a starting point.
+```
+
 All project documentation can be authored with any tool, but must be written in
 [MyST/Commonmark+ flavored Markdown](https://myst-parser.readthedocs.io/en/latest/syntax/reference.html).
 

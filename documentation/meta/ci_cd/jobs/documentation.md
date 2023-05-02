@@ -26,9 +26,12 @@ Documentation is only emitted if all the following conditions are met.
     - the author of the PR is not Dependabot
 - either the documentation or the frontend has changed (for the Storybook and
   Tailwind Config Viewer)
-- all the primary tests ([`test-cat`](#test-cat), [`test-ing`](#test-ing),
-  [`test-api`](#test-api), [`nuxt-build`](#nuxt-build)) succeeded, implying that
-  their changes are valid, or were skipped, implying that they have no changes.
+- all the primary tests ([`test-cat`](/meta/ci_cd/jobs/catalog.md#test-cat),
+  [`test-ing`](/meta/ci_cd/jobs/ingestion_server.md#test-ing),
+  [`test-api`](/meta/ci_cd/jobs/api.md#test-api),
+  [`nuxt-build`](/meta/ci_cd/jobs/frontend.md#nuxt-build)) succeeded, implying
+  that their changes are valid, or were skipped, implying that they have no
+  changes.
 
 ## `clean-gh-pages`
 

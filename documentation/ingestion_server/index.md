@@ -1,5 +1,9 @@
 # Ingestion server
 
-```{include} ../_toc_templates/stack_root.md
+```{toctree}
+:titlesonly:
+:maxdepth: 2
+:glob:
 
+*/index
 ```

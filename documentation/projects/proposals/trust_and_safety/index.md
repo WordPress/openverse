@@ -1,5 +1,9 @@
 # Trust and Safety
 
-```{include} /_toc_templates/flat.md
+```{toctree}
+:titlesonly:
+:glob:
 
+*
+*/index
 ```

@@ -19,10 +19,10 @@ Node.js scripts.
 - `storybook:smoke`
 
 This job is skipped if the frontend codebase has not changed. Its counterpart is
-[`django-checks`](#django-checks) for the API.
+[`django-checks`](/meta/ci_cd/jobs/api.md#django-checks) for the API.
 
 Since this is a required check for a matrix job, it has a bypass counterpart.
-Refer to the documentation for [bypass jobs](#bypass-jobs).
+Refer to the documentation for [bypass jobs](/meta/ci_cd/flow.md#bypass-jobs).
 
 ## `playwright`
 
@@ -36,9 +36,9 @@ Node.js scripts.
 This job is skipped if the frontend codebase has not changed.
 
 ```{note}
-This job, combined with the [`nuxt-build` job](#nuxt-build), is treated as the
+This job, combined with the [`nuxt-build` job](/meta/ci_cd/jobs/frontend.md#nuxt-build), is treated as the
 proof of functionality for deploying frontend to staging.
 ```
 
 Since this is a required check for a matrix job, it has a bypass counterpart.
-Refer to the documentation for [bypass jobs](#bypass-jobs).
+Refer to the documentation for [bypass jobs](/meta/ci_cd/flow.md#bypass-jobs).

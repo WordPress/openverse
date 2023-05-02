@@ -69,7 +69,8 @@ arguments have no effect, the job simply populates all build arguments needed by
 all images.
 
 Images built by this job are published as `.tar` artifacts and can be loaded
-into other jobs that need them using the [`load-img`](#load-img) action.
+into other jobs that need them using the
+[`load-img`](/meta/ci_cd/actions.md#load-img) action.
 
 This job is only run if there is at least one image needed to build, based on
 the `do_build` output of the [`determine-images`](#determine-images) job.
