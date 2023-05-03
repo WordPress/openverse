@@ -68,6 +68,7 @@ updates:
       - "🟩 priority: low"
       - "🐍 tech: python"
       - "🧱 stack: documentation"
+      - "🧱 stack: documentation"
       - dependencies
 
   # Enable version updates for Python libs in automations/python
