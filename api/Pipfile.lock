@@ -159,11 +159,11 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:cbcbd5b084952d332d7b8170577f10509e3e7b3b6abbc2920b1c27e93ad2ab25",
-                "sha256:ebe8a83dd1db18180774ce45b1911959c60bb1843ea0db610231495527a3518a"
+                "sha256:3005a7ffee083315e69938acdf1bfeaf9e21fe1fe1643d6573ee817721f4ffcd",
+                "sha256:ac87b63e9aa4231cd28941945024a0c4470c184c60334ebe5e1cae3544c785ed"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==1.29.124"
+            "version": "==1.29.125"
         },
         "certifi": {
             "hashes": [
@@ -374,11 +374,11 @@
         },
         "django": {
             "hashes": [
-                "sha256:ad33ed68db9398f5dfb33282704925bce044bef4261cd4fb59e4e7f9ae505a78",
-                "sha256:c36e2ab12824e2ac36afa8b2515a70c53c7742f0d6eaefa7311ec379558db997"
+                "sha256:066b6debb5ac335458d2a713ed995570536c8b59a580005acb0732378d5eb1ee",
+                "sha256:7efa6b1f781a6119a10ac94b4794ded90db8accbe7802281cd26f8664ffed59c"
             ],
             "index": "pypi",
-            "version": "==4.2"
+            "version": "==4.2.1"
         },
         "django-braces": {
             "hashes": [
@@ -1519,11 +1519,11 @@
         },
         "faker": {
             "hashes": [
-                "sha256:49060d40e6659e116f53353c5771ad2f2cbcd12b15771f49e3000a3a451f13ec",
-                "sha256:ac903ba8cb5adbce2cdd15e5536118d484bbe01126f3c774dd9f6df77b61232d"
+                "sha256:3aabe5b8c4ab50103a0c05c15e31a24b22045968d1ac0b7fb48d1c6244400495",
+                "sha256:6f882f5a3303c0690b3fb2dd3418839935a2dca155d38f1b2931b0079f3ce622"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==18.6.0"
+            "version": "==18.6.1"
         },
         "fakeredis": {
             "hashes": [
@@ -1694,11 +1694,11 @@
         },
         "psycopg": {
             "hashes": [
-                "sha256:59b4a71536b146925513c0234dfd1dc42b81e65d56ce5335dff4813434dbc113",
-                "sha256:b1500c42063abaa01d30b056f0b300826b8dd8d586900586029a294ce74af327"
+                "sha256:ab400f207a8c120bafdd8077916d8f6c0106e809401378708485b016508c30c9",
+                "sha256:fbbac339274d8733ee70ba9822297af3e8871790a26e967b5ea53e30a4b74dcc"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==3.1.8"
+            "version": "==3.1.9"
         },
         "ptyprocess": {
             "hashes": [
