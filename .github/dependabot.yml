@@ -68,7 +68,6 @@ updates:
       - "🟩 priority: low"
       - "🐍 tech: python"
       - "🧱 stack: documentation"
-      - "🧱 stack: documentation"
       - dependencies
 
   # Enable version updates for Python libs in automations/python
@@ -84,7 +83,6 @@ updates:
       - "🟩 priority: low"
       - "🐍 tech: python"
       - "🧱 stack: mgmt"
-      - "🧱 stack: automations"
       - dependencies
 
   - package-ecosystem: "github-actions"
