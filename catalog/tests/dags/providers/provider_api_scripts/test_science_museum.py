@@ -6,24 +6,16 @@ import pytest
 from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
 )
-from common.licenses import LicenseInfo
+from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.storage.image import ImageStore
 from providers.provider_api_scripts.science_museum import ScienceMuseumDataIngester
 
 
-BY_NC_SA = LicenseInfo(
-    "by-nc-sa",
-    "4.0",
-    "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-    None,
-)
-BY_SA = LicenseInfo(
-    license="by-sa",
-    version="4.0",
-    url="https://creativecommons.org/licenses/by-sa/4.0/",
-    raw_url=None,
-)
+BY_NC_SA_4_0 = get_license_info(license_="by-nc-sa", license_version="4.0")
+BY_NC_ND_4_0 = get_license_info(license_="by-nc-nd", license_version="4.0")
+BY_SA_4_0 = get_license_info(license_="by-sa", license_version="4.0")
+
 sm = ScienceMuseumDataIngester()
 image_store = ImageStore(provider=prov.SCIENCE_DEFAULT_PROVIDER)
 sm.media_stores = {"image": image_store}
@@ -127,7 +119,7 @@ def test_get_record_data_success(object_data):
         "height": 1151,
         "width": 1536,
         "filetype": "jpeg",
-        "license_info": BY_SA,
+        "license_info": BY_SA_4_0,
         "creator": "Galileo Galilei",
         "title": "Telescope by Galileo (replica) (telescope - Galilean; telescope - refracting; replica)",
         "meta_data": {
@@ -265,20 +257,20 @@ def test_get_dimensions_none():
         # Typical license with dash
         (
             {"source": {"legal": {"rights": [{"usage_terms": "CC-BY-NC-SA 4.0"}]}}},
-            ("by-nc-sa", "4.0"),
+            BY_NC_SA_4_0,
         ),
         (
             {"source": {"legal": {"rights": [{"usage_terms": "CC-BY-NC-ND 4.0"}]}}},
-            ("by-nc-nd", "4.0"),
+            BY_NC_ND_4_0,
         ),
         # Typical license with space
         (
             {"source": {"legal": {"rights": [{"usage_terms": "CC BY-NC-SA 4.0"}]}}},
-            ("by-nc-sa", "4.0"),
+            BY_NC_SA_4_0,
         ),
         (
             {"source": {"legal": {"rights": [{"usage_terms": "CC BY-SA 4.0"}]}}},
-            ("by-sa", "4.0"),
+            BY_SA_4_0,
         ),
         # No legal section
         (
@@ -334,7 +326,7 @@ def test_get_dimensions_none():
     ],
 )
 def test_get_license(image_data, expected):
-    actual_license_version = sm._get_license(image_data)
+    actual_license_version = sm._get_license_info(image_data)
     assert actual_license_version == expected
 
 

@@ -131,14 +131,6 @@ class FreesoundDataIngester(ProviderDataIngester):
                 metadata[field] = field_value
         return metadata
 
-    @staticmethod
-    def _get_license(item):
-        item_license = get_license_info(license_url=item.get("license"))
-
-        if item_license.license is None:
-            return None
-        return item_license
-
     @functools.lru_cache(maxsize=1024)
     def _get_set_info(self, set_url):
         try:
@@ -235,8 +227,7 @@ class FreesoundDataIngester(ProviderDataIngester):
         if not foreign_identifier:
             return None
 
-        item_license = self._get_license(media_data)
-        if item_license is None:
+        if not (item_license := get_license_info(media_data.get("license"))):
             return None
 
         # We use the mp3-hq preview url as `audio_url` as the main url

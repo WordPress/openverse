@@ -106,6 +106,19 @@ def test_get_metadata_missing_attrs():
     assert actual_metadata == expected_metadata
 
 
+def test_get_record_data_returns_empty_list_if_missing_license():
+    search_response = _get_resource_json("response_search_success.json")
+    result = search_response["nyplAPI"]["response"]["result"][0]
+    item_response = _get_resource_json("response_itemdetails_success.json")
+    capture = item_response["nyplAPI"]["response"]["sibling_captures"]["capture"][0]
+    capture["rightsStatementURI"]["$"] = None
+    item_response["nyplAPI"]["response"]["sibling_captures"]["capture"] = [capture]
+
+    with patch.object(nypl, "get_response_json", return_value=item_response):
+        images = nypl.get_record_data(result)
+    assert images == []
+
+
 def test_get_record_data_success():
     search_response = _get_resource_json("response_search_success.json")
     result = search_response["nyplAPI"]["response"]["result"][0]
