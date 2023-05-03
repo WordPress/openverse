@@ -17,7 +17,7 @@
         class="label-bold !w-full justify-between text-dark-charcoal md:!w-auto md:justify-start md:gap-x-2"
         show-external-icon
         :external-icon-size="4"
-        @mousedown="handleClick(source.name, source.url)"
+        @mousedown="handleClick(source.name)"
       >
         {{ source.name }}
       </VButton>
@@ -64,10 +64,9 @@ export default defineComponent({
   },
   setup(props) {
     const { sendCustomEvent } = useAnalytics()
-    const handleClick = (sourceName: string, sourceUrl: string) => {
+    const handleClick = (sourceName: string) => {
       sendCustomEvent("SELECT_EXTERNAL_SOURCE", {
         name: sourceName,
-        url: sourceUrl,
         mediaType: props.mediaType,
         query: props.searchTerm,
         component: "VNoResults",

@@ -5,10 +5,9 @@ import { goToSearchTerm, setCookies } from "~~/test/playwright/utils/navigation"
 test("sends analytics event on external source click", async ({ page }) => {
   let eventData: {
     name: string
-    url: string
     mediaType: string
     query: string
-  } = { name: "", url: "", mediaType: "", query: "" }
+  } = { name: "", mediaType: "", query: "" }
   page.on("request", (req) => {
     if (req.method() === "POST") {
       const requestData = req.postDataJSON()
@@ -22,8 +21,6 @@ test("sends analytics event on external source click", async ({ page }) => {
 
   const mediaType = "image"
   const name = "Centre For Ageing Better"
-  const url =
-    "https://ageingbetter.resourcespace.com/pages/search.php?search=cat"
   const query = "cat"
 
   await setCookies(page.context(), { analytics: "true" })
@@ -36,7 +33,6 @@ test("sends analytics event on external source click", async ({ page }) => {
   await newPage.close()
 
   expect(eventData.name).toEqual(name)
-  expect(eventData.url).toEqual(url)
   expect(eventData.mediaType).toEqual(mediaType)
   expect(eventData.query).toEqual(query)
 })

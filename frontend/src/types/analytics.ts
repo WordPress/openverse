@@ -94,8 +94,6 @@ export type Events = {
   SELECT_EXTERNAL_SOURCE: {
     /** The name of the external source */
     name: string
-    /** The full URL of the source */
-    url: string
     /** The media type being searched */
     mediaType: MediaType
     /** The search term */

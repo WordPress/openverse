@@ -21,7 +21,7 @@
       show-external-icon
       :external-icon-size="4"
       :href="source.url"
-      @mousedown="handleClick(source.name, source.url)"
+      @mousedown="handleClick(source.name)"
     >
       {{ source.name }}
     </VButton>
@@ -71,10 +71,9 @@ export default defineComponent({
   },
   setup(props) {
     const { sendCustomEvent } = useAnalytics()
-    const handleClick = (sourceName: string, sourceUrl: string) => {
+    const handleClick = (sourceName: string) => {
       sendCustomEvent("SELECT_EXTERNAL_SOURCE", {
         name: sourceName,
-        url: sourceUrl,
         mediaType: props.mediaType,
         query: props.searchTerm,
         component: "VExternalSourceList",
