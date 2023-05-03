@@ -234,7 +234,7 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
 
         # Drop and recreate the materialized view. This occurs on all DagRuns and
         # updates popularity data for newly ingested records. Formerly, we would refresh
-        # the materialized view, but this process would consistently time out.
+        # the materialized view, but that process would consistently time out.
         recreate_matview = create_recreate_view_data_task(data_refresh)
 
         # Trigger the actual data refresh on the remote data refresh server, and wait

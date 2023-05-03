@@ -1,6 +1,6 @@
 """
-# Refresh Materialized View Task Factory
-This file generates a Task that recreates the materialized view for a
+# Recreate Materialized View Task Factory
+This file generates a TaskGroup that recreates the materialized view for a
 given media type, using a factory function.
 
 The task drops and recreates the materialized view, but not the underlying tables. This
@@ -27,7 +27,7 @@ CREATE_DB_VIEW_TASK_ID = "create_materialized_popularity_view"
 
 def create_recreate_view_data_task(data_refresh: DataRefresh):
     """
-    Create the refresh related tasks.
+    Create the recreate related tasks.
 
     The task drops and recreates the materialized view for the given media type. The
     view collates popularity data for each record. Recreating has the effect of adding
