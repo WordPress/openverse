@@ -36,12 +36,6 @@ special_cases = {
     "https://creativecommons.org/share-your-work/public-domain/pdm/": "https://creativecommons.org/publicdomain/mark/1.0/",
 }
 
-# SMK sometimes uses incorrect URL for licenses
-special_cases = {
-    "https://creativecommons.org/share-your-work/public-domain/cc0/": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "https://creativecommons.org/share-your-work/public-domain/pdm/": "https://creativecommons.org/publicdomain/mark/1.0/",
-}
-
 
 @lru_cache(maxsize=1024)
 def get_license_info(
