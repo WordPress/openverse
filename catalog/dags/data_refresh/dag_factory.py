@@ -70,7 +70,7 @@ logger = logging.getLogger(__name__)
 
 # The first task in the recreate_matview TaskGroup
 RECREATE_MATERIALIZED_VIEW_TASK_ID = (
-    f"{RECREATE_MATVIEW_GROUP_ID}" f".{DROP_DB_VIEW_TASK_ID}"
+    f"{RECREATE_MATVIEW_GROUP_ID}.{DROP_DB_VIEW_TASK_ID}"
 )
 # The first task in the refresh_popularity_metrics TaskGroup
 REFRESH_POPULARITY_METRICS_TASK_ID = (
