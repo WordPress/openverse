@@ -55,6 +55,34 @@ updates:
       - "🧱 stack: catalog"
       - dependencies
 
+  # Enable version updates for Python libs in documentation
+  - package-ecosystem: pip
+    # Look for a `Pipfile` in the `/documentation` directory
+    directory: /documentation
+    # Check for updates once a month
+    schedule:
+      interval: monthly
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - "🐍 tech: python"
+      - dependencies
+
+  # Enable version updates for Python libs in automations/python
+  - package-ecosystem: pip
+    # Look for a `Pipfile` in the `/automations/python` directory
+    directory: /automations/python
+    # Check for updates once a month
+    schedule:
+      interval: monthly
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - "🐍 tech: python"
+      - dependencies
+
   - package-ecosystem: "github-actions"
     directory: /
     schedule:
