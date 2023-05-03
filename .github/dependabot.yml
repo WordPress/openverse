@@ -67,6 +67,7 @@ updates:
       - "🧰 goal: internal improvement"
       - "🟩 priority: low"
       - "🐍 tech: python"
+      - "🧱 stack: documentation"
       - dependencies
 
   # Enable version updates for Python libs in automations/python
@@ -81,6 +82,7 @@ updates:
       - "🧰 goal: internal improvement"
       - "🟩 priority: low"
       - "🐍 tech: python"
+      - "🧱 stack: automations"
       - dependencies
 
   - package-ecosystem: "github-actions"
