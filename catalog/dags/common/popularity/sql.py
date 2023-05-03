@@ -65,6 +65,21 @@ POPULARITY_METRICS_TABLE_COLUMNS = [
 ]
 
 
+def drop_media_matview(
+    postgres_conn_id: str,
+    media_type: str = IMAGE,
+    db_view: str = IMAGE_VIEW_NAME,
+    pg_timeout: float = timedelta(minutes=10).total_seconds(),
+):
+    if media_type == AUDIO:
+        db_view = AUDIO_VIEW_NAME
+
+    postgres = PostgresHook(
+        postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
+    )
+    postgres.run(f"DROP MATERIALIZED VIEW IF EXISTS public.{db_view} CASCADE;")
+
+
 def drop_media_popularity_relations(
     postgres_conn_id,
     media_type=IMAGE,
