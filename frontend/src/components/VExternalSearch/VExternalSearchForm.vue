@@ -52,35 +52,24 @@
       />
     </VButton>
     <template v-if="triggerElement">
-      <VPopoverContent
-        v-if="isMd"
-        id="external-sources-popover"
-        aria-labelledby="external-sources-button"
+      <Component
+        :is="isMd ? 'VPopoverContent' : 'VModalContent'"
+        :id="isMd ? 'external-sources-popover' : 'external-sources-modal'"
+        :aria-labelledby="'external-sources-button'"
         :hide="closeDialog"
         :trigger-element="triggerElement"
         :visible="isVisible"
-        z-index="popover"
+        :z-index="isMd ? 'popover' : 'modal'"
+        :variant="isMd ? undefined : 'centered'"
       >
         <VExternalSourceList
           class="flex flex-col"
           :external-sources="externalSources"
-          @close="closeDialog"
-      /></VPopoverContent>
-      <VModalContent
-        v-else
-        id="external-sources-modal"
-        aria-labelledby="external-sources-button"
-        :trigger-element="triggerElement"
-        :hide="closeDialog"
-        :visible="isVisible"
-        variant="centered"
-      >
-        <VExternalSourceList
-          class="flex-col justify-center"
-          :external-sources="externalSources"
+          :media-type="type"
+          :search-term="searchTerm"
           @close="closeDialog"
         />
-      </VModalContent>
+      </Component>
     </template>
   </section>
 </template>

@@ -9,7 +9,7 @@ describe("VCopyLicense", () => {
   beforeEach(() => {
     props = {
       media: {
-        id: 0,
+        id: "0",
         title: "foo",
         provider: "flickr",
         url: "foo.bar",
