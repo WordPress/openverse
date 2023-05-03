@@ -1,4 +1,4 @@
-# Implementation Plan: Catalog
+# 2023-04-26 Implementation Plan: Document all media properties in the catalog
 
 <!-- See the implementation plan guide for more information: https://github.com/WordPress/openverse/tree/19791f51c063d0979112f4b9f4eeace04c8cf5ff/docs/projects#implementation-plans-status-in-rfc -->
 <!-- This template is exhaustive and may include sections which aren't relevant to your project. Feel free to remove any sections which would not be useful to have. -->
@@ -64,12 +64,14 @@ separate markdown file as it is easier to read, write, and lint.
 The catalog has a DAG documentation generator that extracts the docstrings from
 the DAGs and creates a page with the documentation. We can use the same approach
 to create a documentation page for the media properties. The DAG doc generator
-runs the code inside docker to extract DAG information. In this project, we can
-simplify and use the `ast` module to parse static code and extract the
-docstrings to make the checks faster. This will, however, mean that some of the
-settings will not be picked up and will have to be updated during the
-generation. One example of this is the `nullable` field in the `Column` class:
-it falls back to the value of `not nullable` during the object initiation.
+runs the code inside docker to extract DAG information because it requires the
+project dependencies (i.e. `airflow`) in order to parse the DAG. In this
+project, we can simplify and use the `ast` module to parse static code and
+extract the docstrings to make the checks faster. This will, however, mean that
+some of the settings will not be picked up and will have to be updated during
+the generation. One example of this is the `nullable` field in the `Column`
+class: it falls back to the value of `not nullable` during the object
+initiation.
 
 ## Files
 
@@ -163,7 +165,7 @@ a more manual approach and would require more maintenance.
 Another option for documenting the media properties is to pass a dataclass
 instead of the named parameters to the `add_item` method of the `ImageStore` and
 `AudioStore`. This would make the documentation closer to code for easier
-updating, adn have another benefit of allowing us to check for required
+updating, and have another benefit of allowing us to check for required
 properties sooner. However, this would require a lot of refactoring and if
 decided on, would need to be a separate project.
 
