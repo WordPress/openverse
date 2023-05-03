@@ -82,6 +82,7 @@ updates:
       - "🧰 goal: internal improvement"
       - "🟩 priority: low"
       - "🐍 tech: python"
+      - "🧱 stack: mgmt"
       - "🧱 stack: automations"
       - dependencies
 
