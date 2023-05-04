@@ -9,7 +9,7 @@ on:
 env:
   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
   MAKE_USERNAME: ${{ secrets.MAKE_USERNAME }}
-  MAKE_PASSWORD: ${{ secrets.MAKE_PASSWORD }}
+  MAKE_PASSWORD: ${{ secrets.MAKE_PASSWORD }} # application password, not login password
 
 jobs:
   make_post:
