@@ -26,7 +26,7 @@ class NappyDataIngester(ProviderDataIngester):
     endpoint = "https://api.nappy.co/v1/openverse/images"
     headers = {"User-Agent": prov.UA_STRING, "Accept": "application/json"}
 
-    # Hardoded to CC0, the only license Nappy.co uses
+    # Hardcoded to CC0, the only license Nappy.co uses
     license_info = get_license_info(
         "https://creativecommons.org/publicdomain/zero/1.0/"
     )
