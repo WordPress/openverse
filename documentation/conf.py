@@ -30,6 +30,7 @@ author = "Openverse <openverse@wordpress.org>"
 extensions = [
     "myst_parser",
     "sphinxcontrib.mermaid",
+    "link_issues",
     "sphinx_copybutton",
 ]
 myst_heading_anchors = 6  # Add anchors to all headers, this is disabled by default.
