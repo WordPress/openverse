@@ -14,11 +14,11 @@ flowchart TB
 The API flow uses the following other jobs.
 
 - [`get-changes`](/meta/ci_cd/jobs/preparation.md#get-changes)
-- [`determine-images`](/meta/ci_cd/jobs/docker_preparation.md#determine-images)
+- [`determine-images`](/meta/ci_cd/jobs/docker.md#determine-images)
 - [`get-image-tag`](/meta/ci_cd/jobs/preparation.md#get-image-tag)
 - `lint`
-- [`build-images`](/meta/ci_cd/jobs/docker_preparation.md#build-images)
-- [`publish-images`](/meta/ci_cd/jobs/docker_publishing.md#publish-images)
+- [`build-images`](/meta/ci_cd/jobs/docker.md#build-images)
+- [`publish-images`](/meta/ci_cd/jobs/docker.md#publish-images)
 
 ## `test-api`
 

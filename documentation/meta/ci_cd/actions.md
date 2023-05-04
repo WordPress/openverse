@@ -53,10 +53,10 @@ host dependencies are needed).
 ## `load-img`
 
 All Docker images needed throughout the CI + CD workflow are built by the
-[`build-images`](/meta/ci_cd/jobs/docker_preparation.md#build-images) job
-matrix, saved as `.tar` files and uploaded as artifacts. This action is used by
-subsequent jobs that need those images. It downloads the artifact and load the
-`.tar` files into Docker as images.
+[`build-images`](/meta/ci_cd/jobs/docker.md#build-images) job matrix, saved as
+`.tar` files and uploaded as artifacts. This action is used by subsequent jobs
+that need those images. It downloads the artifact and load the `.tar` files into
+Docker as images.
 
 **Inputs:**
 

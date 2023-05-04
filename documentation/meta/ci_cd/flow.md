@@ -149,8 +149,8 @@ flowchart TD
 
 **Jobs:**
 
-- [`determine-images`](./jobs/docker_preparation.md#determine-images)
-- [`build-images`](./jobs/docker_preparation.md#build-images)
+- [`determine-images`](./jobs/docker.md#determine-images)
+- [`build-images`](./jobs/docker.md#build-images)
 
 ## Dockerised tests
 
@@ -306,7 +306,7 @@ flowchart TD
 
 **Jobs:**
 
-- [`publish-images`](./jobs/docker_publishing.md#publish-images)
+- [`publish-images`](./jobs/docker.md#publish-images)
 
 ## Deployment
 

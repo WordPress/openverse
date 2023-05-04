@@ -25,9 +25,9 @@ The following artifacts are Docker images:
 - `openverse_db`
 
 All of these images are outputs of the
-[`build-images`](/meta/ci_cd/jobs/docker_preparation.md#build-images) job. These
-artifacts have little utility outside of the workflow and are primarily intended
-to be consumed by other jobs that need these images, to avoid building them
+[`build-images`](/meta/ci_cd/jobs/docker.md#build-images) job. These artifacts
+have little utility outside of the workflow and are primarily intended to be
+consumed by other jobs that need these images, to avoid building them
 repeatedly.
 
 ## Logs
