@@ -5,5 +5,4 @@
 
 quickstart
 guidelines
-link_issues
 ```
