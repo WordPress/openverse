@@ -78,7 +78,7 @@ You are welcome to take any open issue in the tracker labelled
 contribution as well, but may be less accessible or well-defined in comparison
 to those that are explicitly labelled.
 
-See the [`CONTRIBUTING.md`](CONTRIBUTING.md) file for details.
+See the [`CONTRIBUTING.md`](documentation/general/CONTRIBUTING.md) file for details.
 
 ## Acknowledgments
 
