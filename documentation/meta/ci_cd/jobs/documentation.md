@@ -1,8 +1,29 @@
 # Documentation jobs
 
+## `build-docs`
+
+Builds the developer documentation and uploads it as an artifact.
+
+This job is skipped if neither the documentation nor the frontend codebase has
+changed. Its counterparts are
+
+- [`test-cat`](/meta/ci_cd/jobs/catalog.md#test-cat) for the catalog
+- [`test-api`](/meta/ci_cd/jobs/api.md#test-api) for the API
+- [`test-ing`](/meta/ci_cd/jobs/ingestion_server.md#test-ing) for the ingestion
+  server
+- [`nuxt-build`](/meta/ci_cd/jobs/frontend.md#nuxt-build) for the frontend
+
+This job exports the
+[`documentation` artifact](/meta/ci_cd/artifacts.md#documentation).
+
+```{note}
+This job is treated as the proof of functionality for the publishing the
+documentation.
+```
+
 ## `emit-docs`
 
-Builds the developer documentation and publishes it to an appropriate target.
+Downloads the documentation artifact and publishes it to an appropriate target.
 For PRs, the target is a subdirectory under `_preview/` of the docs site, e.g.
 the docs for PR #420 will be published at
 <https://docs.openverse.org/_preview/420/>. For commits to `main`, the target is
