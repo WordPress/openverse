@@ -33,6 +33,10 @@ analytics:
   - setup_plausible.sh
 documentation:
   - documentation/**
+  - frontend/**.mdx
+  - frontend/.storybook
+  - frontend/nuxt.config.ts 
+  - frontend/tailwind.config.js
 lint:
   - prettier.config.js
   - .editorconfig
