@@ -2,6 +2,9 @@
 
 ## `nuxt-build`
 
+Builds the frontend to raise any major issues that could cause the build to
+fail. If the build succeeds, no such issues exist.
+
 This job is skipped if the frontend codebase has not changed. Its counterparts
 are
 
@@ -14,7 +17,7 @@ are
 
 ```{note}
 This job is treated as the proof of functionality for publishing Docker images
-for the frotend.
+for the frontend.
 
 This job, combined with the [`playwright` job](#playwright), is treated as the
 proof of functionality for deploying frontend to staging.
