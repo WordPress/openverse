@@ -10,12 +10,22 @@ ingestion_server:
   - ingestion_server/**
   # Change to the CI + CD workflow should trigger complete workflow.
   - .github/workflows/ci_cd.yml
+frontend:
+  - frontend/**
+  - package.json
+  - pnpm-lock.yaml
+  - pnpm-workspace.yaml
+  - .npmrc
+  - .pnpmfile.cjs
+  # Change to the CI + CD workflow should trigger complete workflow.
+  - .github/workflows/ci_cd.yml
 documentation:
   - documentation/**
   - frontend/**.mdx
-  - frontend/.storybook
+  - frontend/.storybook/**
   - frontend/nuxt.config.ts
   - frontend/tailwind.config.js
+  - frontend/src/styles/tailwind.css
   # Change to the CI + CD workflow should trigger complete workflow.
   - .github/workflows/ci_cd.yml
 lint:
