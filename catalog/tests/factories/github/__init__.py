@@ -38,6 +38,8 @@ def walk_backwards_in_time_until_weekday_count(today: datetime.datetime, count: 
 
 _pr_count = 1
 
+_id_offset = 1000000
+
 
 def make_pull(urgency: Urgency, old: bool, base_branch: str = "main") -> dict:
     """
@@ -64,7 +66,20 @@ def make_pull(urgency: Urgency, old: bool, base_branch: str = "main") -> dict:
     # for the PR across all PRs on GitHub. It must
     # be different from the "number" to ensure
     # we're not confusing the two in code.
-    pull["id"] = random.randint(100000, 400000)
+    # Instead of tracking a separate number,
+    # we can add a huge number to the _pr_count.
+    # This would only ever be a problem if our
+    # function was used to generate more
+    # PR fixtures than the id offset accounts
+    # for. If that ever becomes the case, just add
+    # a 0 to the end of ``_id_offset`` above
+    # and it will resolve the issue.
+    # Note: We could use a UUID for this to prevent
+    # all possible collision with ``number`` from
+    # but GitHub uses integers for this property
+    # so to keep realistic-ish fixture data we
+    # should prefer an integer here as well.
+    pull["id"] = _pr_count + _id_offset
     _pr_count += 1
 
     for label in pull["labels"]:
