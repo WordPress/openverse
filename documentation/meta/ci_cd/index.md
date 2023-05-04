@@ -55,4 +55,5 @@ actions
 jobs/index
 flow
 proof_of_functionality
+artifacts
 ```
