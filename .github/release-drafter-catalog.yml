@@ -19,9 +19,4 @@ exclude-labels:
   - "skip-changelog"
 include-labels:
   - "🧱 stack: catalog"
-template: |
-  $CHANGES
-
-  ## Credits
-
-  Thanks to $CONTRIBUTORS for their contributions!
+template: $CHANGES
