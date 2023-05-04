@@ -302,7 +302,7 @@ flowchart TD
 In this stage we publish the Docker images that have passed the
 [proof-of-functionality](./proof_of_functionality.md) tests to
 [GHCR](https://github.com/orgs/WordPress/packages?repo_name=openverse). We
-[publish the new developer docs](#documentation) alongside these images.
+[publish the new developer docs](#documentation-emit) alongside these images.
 
 The `determine-images` job determines the images to publish (and also build, see
 section on [Docker preparation](#docker-preparation) above) based on the changes

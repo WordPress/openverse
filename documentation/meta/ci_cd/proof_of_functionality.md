@@ -4,7 +4,7 @@ In the CI + CD workflow, the concept of proof-of-functionality is used to
 determine if the build assets of a service are fit for
 [three use cases](/meta/ci_cd/flow.md).
 
-- [Docs publish](/meta/ci_cd/flow.md#documentation)
+- [Docs publish](/meta/ci_cd/flow.md#documentation-emit)
 - [GHCR publish](/meta/ci_cd/flow.md#docker-publishing)
 - [Staging deploy](/meta/ci_cd/flow.md#deployment)
 
