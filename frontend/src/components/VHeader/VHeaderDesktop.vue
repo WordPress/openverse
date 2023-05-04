@@ -54,6 +54,7 @@ import { useUiStore } from "~/stores/ui"
 
 import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
+import { useAnalytics } from "~/composables/use-analytics"
 import { useSearch } from "~/composables/use-search"
 
 import { ensureFocus } from "~/utils/reakit-utils/focus"
@@ -89,7 +90,10 @@ export default defineComponent({
 
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
-    const { updateSearchState, searchTerm, searchStatus } = useSearch()
+    const { sendCustomEvent } = useAnalytics()
+
+    const { updateSearchState, searchTerm, searchStatus } =
+      useSearch(sendCustomEvent)
 
     const clearSearchTerm = () => {
       searchTerm.value = ""
