@@ -191,9 +191,6 @@ jobs:
         run: |
           just frontend/run i18n
           cp .npmrc .pnpmfile.cjs pnpm-lock.yaml frontend/
-        env:
-          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
-          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -497,9 +494,6 @@ jobs:
 
       - name: Run build
         run: just frontend/run build
-        env:
-          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
-          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
   nuxt-checks:
     name: Run Nuxt checks
@@ -661,7 +655,9 @@ jobs:
 
           It looks like some of the Playwright tests failed. You can download the trace output and image diffs for the failed tests under the "Artifacts" section in the above page.
 
-          You can read the [docs on how to use this artifact](https://docs.openverse.org/guides/frontend/playwright_tests.html#debugging).
+          You can read the [docs on how to use this artifact](https://docs.openverse.org/frontend/reference/playwright_tests.html#debugging).
+
+          If the test is flaky, follow the [flaky test triage procedure](https://docs.openverse.org/general/test.html#flaky-tests).
           $EOF
           HEREDOC
           )
@@ -728,8 +724,6 @@ jobs:
       - name: Compile documentation
         uses: ./.github/actions/build-docs
         with:
-          glotpress_username: ${{ secrets.MAKE_USERNAME }}
-          glotpress_password: ${{ secrets.MAKE_LOGIN_PASSWORD }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
         # Docs will be located at `/tmp/docs`.
 

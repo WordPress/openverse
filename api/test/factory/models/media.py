@@ -13,6 +13,8 @@ class MediaFactory(DjangoModelFactory):
     class Meta:
         abstract = True
 
+    id = factory.sequence(lambda n: n)
+
     identifier = factory.sequence(lambda _: uuid4())
 
     foreign_identifier = factory.sequence(lambda _: uuid4())
