@@ -520,7 +520,7 @@ def test_search_tallies_handles_empty_page(
         (False, False, ""),
     ),
 )
-@mock.patch("catalog.api.controllers.search_controller.Search", wraps=Search)
+@mock.patch("api.controllers.search_controller.Search", wraps=Search)
 def test_resolves_index(
     search_class,
     index,
