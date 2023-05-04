@@ -78,6 +78,8 @@ class ClevelandDataIngester(ProviderDataIngester):
             return None
 
         for key in ["web", "print", "full"]:
+            # This dictionary contains the required `url` parameter, so we
+            # only use the item that contains the `url` key.
             if (keyed_image := image_data.get(key)) and "url" in keyed_image:
                 return keyed_image
         return None
