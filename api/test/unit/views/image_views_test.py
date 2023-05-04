@@ -10,7 +10,7 @@ from django.http import HttpResponse
 import pytest
 from requests import Request, Response
 
-from catalog.api.views.image_views import ImageViewSet
+from api.views.image_views import ImageViewSet
 
 
 _MOCK_IMAGE_PATH = Path(__file__).parent / ".." / ".." / "factory"
@@ -74,7 +74,7 @@ def test_thumbnail_uses_upstream_thumb_for_smk(
         url="http://iip.smk.dk/image.jpg",
         thumbnail=thumb_url,
     )
-    with patch("catalog.api.views.media_views.MediaViewSet.thumbnail") as thumb_call:
+    with patch("api.views.media_views.MediaViewSet.thumbnail") as thumb_call:
         mock_response = HttpResponse("mock_response")
         thumb_call.return_value = mock_response
         api_client.get(f"/v1/images/{image.identifier}/thumb/")

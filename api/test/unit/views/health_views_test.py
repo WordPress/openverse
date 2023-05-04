@@ -25,9 +25,7 @@ def test_health_check_plain(api_client):
 
 
 def test_health_check_calls__check_db(api_client):
-    with mock.patch(
-        "catalog.api.views.health_views.HealthCheck._check_db"
-    ) as mock_check_db:
+    with mock.patch("api.views.health_views.HealthCheck._check_db") as mock_check_db:
         res = api_client.get("/healthcheck/")
         assert res.status_code == 200
         mock_check_db.assert_called_once()

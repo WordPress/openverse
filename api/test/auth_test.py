@@ -8,7 +8,7 @@ from django.utils.http import urlencode
 import pytest
 from oauth2_provider.models import AccessToken
 
-from catalog.api.models import OAuth2Verification, ThrottledApplication
+from api.models import OAuth2Verification, ThrottledApplication
 
 
 @pytest.mark.django_db
@@ -108,7 +108,7 @@ def test_sorting_authed(
     client, monkeypatch, test_auth_token_exchange, sort_dir, exp_indexed_on
 ):
     # Prevent DB lookup for ES results because DB is empty.
-    monkeypatch.setattr("catalog.api.views.image_views.ImageSerializer.needs_db", False)
+    monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
 
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
@@ -133,7 +133,7 @@ def test_authority_authed(
     client, monkeypatch, test_auth_token_exchange, authority_boost, exp_source
 ):
     # Prevent DB lookup for ES results because DB is empty.
-    monkeypatch.setattr("catalog.api.views.image_views.ImageSerializer.needs_db", False)
+    monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
 
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]

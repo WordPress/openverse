@@ -9,9 +9,9 @@ from rest_framework.views import APIView
 
 import pytest
 
-from catalog.api.serializers.audio_serializers import AudioSerializer
-from catalog.api.serializers.image_serializers import ImageSerializer
-from catalog.api.serializers.media_serializers import MediaSearchRequestSerializer
+from api.serializers.audio_serializers import AudioSerializer
+from api.serializers.image_serializers import ImageSerializer
+from api.serializers.media_serializers import MediaSearchRequestSerializer
 
 
 @pytest.fixture
