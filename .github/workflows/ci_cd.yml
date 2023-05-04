@@ -191,9 +191,6 @@ jobs:
         run: |
           just frontend/run i18n
           cp .npmrc .pnpmfile.cjs pnpm-lock.yaml frontend/
-        env:
-          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
-          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -497,9 +494,6 @@ jobs:
 
       - name: Run build
         run: just frontend/run build
-        env:
-          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
-          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
   nuxt-checks:
     name: Run Nuxt checks
@@ -730,8 +724,6 @@ jobs:
       - name: Compile documentation
         uses: ./.github/actions/build-docs
         with:
-          glotpress_username: ${{ secrets.MAKE_USERNAME }}
-          glotpress_password: ${{ secrets.MAKE_LOGIN_PASSWORD }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
         # Docs will be located at `/tmp/docs`.
 

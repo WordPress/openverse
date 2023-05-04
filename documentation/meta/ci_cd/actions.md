@@ -76,16 +76,3 @@ Builds the documentation, including this Sphinx site, the frontend Storybook and
 the Tailwind config viewer and stores it at `/tmp/docs`. This compiled
 documentation is deployed to an appropriate location by the
 [`emit-docs`](/meta/ci_cd/jobs/documentation.md#emit-docs) job.
-
-**Inputs:**
-
-A GlotPress username and password combination is needed to download all
-[Openverse translations](https://translate.wordpress.org/projects/meta/openverse/)
-in bulk from GlotPress.
-
-```typescript
-{
-  glotpress_username: string // required, use secret `MAKE_USERNAME`
-  glotpress_password: string // required, use secret `MAKE_LOGIN_PASSWORD`
-}
-```
