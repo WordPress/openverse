@@ -298,7 +298,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         return None
 
     def get_record_data(self, record):
-        if not (foreign_id := record.get("pageid")):
+        if not (foreign_identifier := record.get("pageid")):
             return None
 
         media_info = self.extract_media_info_dict(record)
@@ -310,7 +310,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         if not (license_info := self.extract_license_info(media_info)):
             return None
 
-        if not (media_url := media_info.get("url")):
+        if not (url := media_info.get("url")):
             return None
 
         if not (foreign_landing_url := media_info.get("descriptionshorturl")):
@@ -323,9 +323,9 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         meta_data = self.create_meta_data_dict(record)
 
         record_data = {
-            "media_url": media_url,
+            "media_url": url,
             "foreign_landing_url": foreign_landing_url,
-            "foreign_identifier": foreign_id,
+            "foreign_identifier": foreign_identifier,
             "license_info": license_info,
             "creator": creator,
             "creator_url": creator_url,
@@ -421,13 +421,11 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         }
 
     @staticmethod
-    def extract_media_info_dict(media_data):
+    def extract_media_info_dict(media_data) -> dict:
         media_info_list = media_data.get("imageinfo")
-        if media_info_list:
-            media_info = media_info_list[0]
-        else:
-            media_info = {}
-        return media_info
+        if media_info_list and isinstance(media_info_list, list):
+            return media_info_list[0]
+        return {}
 
     @staticmethod
     def get_value_by_name(key_value_list: list | None, prop_name: str):
