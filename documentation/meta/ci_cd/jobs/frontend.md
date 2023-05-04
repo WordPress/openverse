@@ -15,8 +15,10 @@ proof of functionality for deploying frontend to staging.
 Runs a matrix for various Nuxt checks for the frontend using the following
 Node.js scripts.
 
-- `test:unit`
-- `storybook:smoke`
+| Name                   | Script            |
+| ---------------------- | ----------------- |
+| `unit_test`            | `test:unit`       |
+| `storybook_smoke_test` | `storybook:smoke` |
 
 This job is skipped if the frontend codebase has not changed. Its counterpart is
 [`django-checks`](/meta/ci_cd/jobs/api.md#django-checks) for the API.
@@ -29,9 +31,11 @@ Refer to the documentation for [bypass jobs](/meta/ci_cd/flow.md#bypass-jobs).
 Runs a matrix of various Playwright tests for the frontend using the following
 Node.js scripts.
 
-- `test:playwright visual-regression`
-- `test:playwright e2e`
-- `test:storybook`
+| Name             | Script                              |
+| ---------------- | ----------------------------------- |
+| `playwright_vr`  | `test:playwright visual-regression` |
+| `playwright_e2e` | `test:playwright e2e`               |
+| `storybook_vr`   | `test:storybook`                    |
 
 This job is skipped if the frontend codebase has not changed.
 
