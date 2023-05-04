@@ -2,21 +2,22 @@
 
 In the CI + CD workflow, the concept of proof-of-functionality is used to
 determine if the build assets of a service are fit for
-[three use cases](./flow.md).
+[three use cases](/meta/ci_cd/flow.md).
 
-- [Docs publish](./flow.md#documentation)
-- [GHCR publish](./flow.md#docker-publishing)
-- [Staging deploy](./flow.md#deployment)
+- [Docs publish](/meta/ci_cd/flow.md#documentation)
+- [GHCR publish](/meta/ci_cd/flow.md#docker-publishing)
+- [Staging deploy](/meta/ci_cd/flow.md#deployment)
 
 For different services, different tests are considered to establish
 proof-of-functionality for different use-cases.
 
-| Service          | Docs publish                                      | GHCR publish                                      | Staging deploy                                                                                |
-| ---------------- | ------------------------------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Catalog          | [`test-cat`](./jobs/catalog.md#test-cat)          | [`test-cat`](./jobs/catalog.md#test-cat)          | [`test-cat`](./jobs/catalog.md#test-cat)                                                      |
-| Ingestion server | [`test-ing`](./jobs/ingestion_server.md#test-ing) | [`test-ing`](./jobs/ingestion_server.md#test-ing) | [`test-ing`](./jobs/ingestion_server.md#test-ing)                                             |
-| API              | [`test-api`](./jobs/api.md#test-api)              | [`test-api`](./jobs/api.md#test-api)              | [`test-api`](./jobs/api.md#test-api)                                                          |
-| Frontend         | [`nuxt-build`](./jobs/frontend.md#nuxt-build)     | [`nuxt-build`](./jobs/frontend.md#nuxt-build)     | [`nuxt-build`](./jobs/frontend.md#nuxt-build) + [`playwright`](./jobs/frontend.md#playwright) |
+| Service          | Docs publish                                                 | GHCR publish                                                | Staging deploy                                                                                                    |
+| ---------------- | ------------------------------------------------------------ | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Catalog          | [`test-cat`](/meta/ci_cd/jobs/catalog.md#test-cat)           | [`test-cat`](/meta/ci_cd/jobs/catalog.md#test-cat)          | [`test-cat`](/meta/ci_cd/jobs/catalog.md#test-cat)                                                                |
+| Ingestion server | [`test-ing`](/meta/ci_cd/jobs/ingestion_server.md#test-ing)  | [`test-ing`](/meta/ci_cd/jobs/ingestion_server.md#test-ing) | [`test-ing`](/meta/ci_cd/jobs/ingestion_server.md#test-ing)                                                       |
+| API              | [`test-api`](/meta/ci_cd/jobs/api.md#test-api)               | [`test-api`](/meta/ci_cd/jobs/api.md#test-api)              | [`test-api`](/meta/ci_cd/jobs/api.md#test-api)                                                                    |
+| Frontend         | [`nuxt-build`](/meta/ci_cd/jobs/frontend.md#nuxt-build)      | [`nuxt-build`](/meta/ci_cd/jobs/frontend.md#nuxt-build)     | [`nuxt-build`](/meta/ci_cd/jobs/frontend.md#nuxt-build) + [`playwright`](/meta/ci_cd/jobs/frontend.md#playwright) |
+| Documentation    | [`build-docs`](/meta/ci_cd/jobs/documentation.md#build-docs) |                                                             |                                                                                                                   |
 
 ## Rationales
 

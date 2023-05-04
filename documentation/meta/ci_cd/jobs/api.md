@@ -27,10 +27,13 @@ the `api/test` recipe. Tests are run inside a Docker container so neither Python
 nor Node.js needs to be installed.
 
 This job is skipped if the API codebase has not changed. Its counterparts are
-[`test-cat`](/meta/ci_cd/jobs/catalog.md#test-cat) for the catalog,
-[`test-ing`](/meta/ci_cd/jobs/ingestion_server.md#test-ing) for the ingestion
-server and [`nuxt-build`](/meta/ci_cd/jobs/frontend.md#nuxt-build) for the
-frontend.
+
+- [`test-cat`](/meta/ci_cd/jobs/catalog.md#test-cat) for the catalog
+- [`test-ing`](/meta/ci_cd/jobs/ingestion_server.md#test-ing) for the ingestion
+  server
+- [`nuxt-build`](/meta/ci_cd/jobs/frontend.md#nuxt-build) for the frontend
+- [`build-docs`](/meta/ci_cd/jobs/documentation.md#build-docs) for the
+  documentation
 
 This job exports the [`api_logs` artifact](/meta/ci_cd/artifacts.md#logs).
 

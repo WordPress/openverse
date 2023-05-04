@@ -2,6 +2,16 @@
 
 ## `nuxt-build`
 
+This job is skipped if the frontend codebase has not changed. Its counterparts
+are
+
+- [`test-cat`](/meta/ci_cd/jobs/catalog.md#test-cat) for the catalog
+- [`test-api`](/meta/ci_cd/jobs/api.md#test-api) for the API
+- [`test-ing`](/meta/ci_cd/jobs/ingestion_server.md#test-ing) for the ingestion
+  server
+- [`build-docs`](/meta/ci_cd/jobs/documentation.md#build-docs) for the
+  documentation
+
 ```{note}
 This job is treated as the proof of functionality for publishing Docker images
 for the frotend.
