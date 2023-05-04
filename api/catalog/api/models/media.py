@@ -267,7 +267,7 @@ class PerformIndexUpdateMixin:
         except self.media_class.DoesNotExist:
             if raise_errors:
                 raise ValidationError(
-                    f"No '{self.media_class.__name__}' instance"
+                    f"No '{self.media_class.__name__}' instance "
                     f"with identifier {self.media_obj.identifier}."
                 )
 
