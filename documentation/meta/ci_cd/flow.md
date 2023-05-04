@@ -64,48 +64,6 @@ flowchart TD
 - [`get-image-tag`](./jobs/preparation.md#get-image-tag)
 - `lint`
 
-## Bypass jobs
-
-If a job is marked as a required check in GitHub it must
-[either pass or be skipped](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/troubleshooting-required-status-checks#handling-skipped-but-required-checks)
-to allow the PR to be merged. This is different for matrix jobs because if a
-matrix is skipped due to an `if` condition, it is not expanded into individual
-jobs but skipped as a whole, leaving the checks associated with that matrix in a
-pending state, preventing PRs from being merged.
-
-For such jobs, we use a bypass job, conventionally named `bypass-<job name>`,
-that is run on the opposite of the condition of the original job `<job name>`.
-This bypass job is an identical matrix, except it always succeeds, and satisfies
-the required checks by having the same job names as the original.
-
-```{mermaid}
-flowchart TD
-  subgraph preparation[Preparation]
-    get-changes
-  end
-
-  subgraph bypass_jobs[Bypass jobs]
-    bypass-django-checks
-    bypass-nuxt-checks
-    bypass-playwright
-  end
-
-  get-changes -- api == false --> bypass-django-checks
-  get-changes -- frontend == false --> bypass-nuxt-checks
-  get-changes -- frontend == false --> bypass-playwright
-
-  style preparation opacity:0.3
-```
-
-**Jobs:**
-
-- `bypass-django-checks` (opposite of
-  [`django-checks`](./jobs/api.md#django-checks))
-- `bypass-nuxt-checks` (opposite of
-  [`nuxt-checks`](./jobs/frontend.md#nuxt-checks))
-- `bypass-playwright` (opposite of
-  [`playwright`](./jobs/frontend.md#playwright))
-
 ## Frontend tests
 
 The frontend tests run outside the Docker containers, so they don't need to wait
@@ -134,6 +92,14 @@ flowchart TD
     playwright
   end
 
+  subgraph bypass_jobs[Bypass jobs]
+    bypass-nuxt-checks
+    bypass-playwright
+  end
+
+  nuxt-checks -- skipped --> bypass-nuxt-checks
+  playwright -- skipped --> bypass-playwright
+
   style x height:0
   style preparation opacity:0.3
 ```
@@ -143,6 +109,8 @@ flowchart TD
 - [`nuxt-checks`](./jobs/frontend.md#nuxt-checks)
 - [`nuxt-build`](./jobs/frontend.md#nuxt-build)
 - [`playwright`](./jobs/frontend.md#playwright)
+- [`bypass-nuxt-checks`](#bypass-jobs)
+- [`bypass-playwright`](#bypass-jobs)
 
 ## Docker preparation
 
@@ -223,6 +191,12 @@ flowchart TD
     django-checks
   end
 
+  subgraph bypass_jobs[Bypass jobs]
+    bypass-django-checks
+  end
+
+  django-checks -- skipped --> bypass-django-checks
+
   style x height:0
   style y height:0
   style z height:0
@@ -237,6 +211,7 @@ flowchart TD
 - [`test-ing`](./jobs/ingestion_server.md#test-ing)
 - [`test-api`](./jobs/api.md#test-api)
 - [`django-checks`](./jobs/api.md#django-checks)
+- [`bypass-django-checks`](#bypass-jobs)
 
 ## Documentation
 
@@ -430,3 +405,17 @@ flowchart TD
 **Jobs:**
 
 - [`send-report`](./jobs/notification.md#send-report)
+
+## Bypass jobs
+
+If a job is marked as a required check in GitHub it must
+[either pass or be skipped](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/troubleshooting-required-status-checks#handling-skipped-but-required-checks)
+to allow the PR to be merged. This is different for matrix jobs because if a
+matrix is skipped due to an `if` condition, it is not expanded into individual
+jobs but skipped as a whole, leaving the checks associated with that matrix in a
+pending state, preventing PRs from being merged.
+
+For such jobs, we use a bypass job, conventionally named `bypass-<job name>`,
+that is run on the opposite of the condition of the original job `<job name>`.
+This bypass job is an identical matrix, except it always succeeds, and satisfies
+the required checks by having the same job names as the original.
