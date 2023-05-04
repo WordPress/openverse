@@ -235,9 +235,12 @@ will be extended by one week at a time as-necessary.
 #### Wrapping up
 
 Finally, the plan is merged, then the project thread is given a substantial
-update. At this point we should be able to fill in all metadata, including some
-additional fields:
+update. At this point we should be able to fill in most project metadata and
+some additional details:
 
+- Create GitHub issues for all necessary implementation plans and link to them
+  in the project thread body. This allows implementation plans to be assigned
+  and scheduled properly.
 - Links to the kick-off and technical implementation documents
 - Links to any other external documents or supporting materials
 - List stakeholders:
