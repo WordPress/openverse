@@ -38,6 +38,10 @@ FILTER_DEAD_LINKS_BY_DEFAULT = config(
     "FILTER_DEAD_LINKS_BY_DEFAULT", cast=bool, default=True
 )
 
+ENABLE_FILTERED_INDEX_QUERIES = config(
+    "ENABLE_FILTERED_INDEX_QUERIES", cast=bool, default=False
+)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 

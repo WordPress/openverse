@@ -56,8 +56,8 @@ def test_search_quotes():
 
 
 def test_search_quotes_exact():
-    # ``bird perched`` returns different results when quoted vs unquoted
-    search_quotes_exact("images", "bird perched")
+    # ``dog pet`` returns different results when quoted vs unquoted
+    search_quotes_exact("images", "dog pet")
 
 
 def test_search_with_special_characters():
