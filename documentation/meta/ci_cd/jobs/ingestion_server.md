@@ -10,6 +10,8 @@ counterparts are [`test-cat`](/meta/ci_cd/jobs/catalog.md#test-cat) for the
 catalog, [`test-api`](/meta/ci_cd/jobs/api.md#test-api) for the API and
 [`nuxt-build`](/meta/ci_cd/jobs/frontend.md#nuxt-build) for the frontend.
 
+This job exports the [`ing_logs` artifact](/meta/ci_cd/artifacts.md#logs).
+
 ```{note}
 This job is treated as the proof of functionality for publishing Docker images
 for the ingestion server.

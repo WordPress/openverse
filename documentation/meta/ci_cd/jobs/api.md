@@ -32,6 +32,8 @@ This job is skipped if the API codebase has not changed. Its counterparts are
 server and [`nuxt-build`](/meta/ci_cd/jobs/frontend.md#nuxt-build) for the
 frontend.
 
+This job exports the [`api_logs` artifact](/meta/ci_cd/artifacts.md#logs).
+
 ```{note}
 This job is treated as the proof of functionality for publishing Docker images
 for the API. Since the job also initialises the API, it provides a basic
@@ -54,3 +56,6 @@ This job is skipped if the API codebase has not changed. Its counterpart is
 
 Since this is a required check for a matrix job, it has a bypass counterpart.
 Refer to the documentation for [bypass jobs](/meta/ci_cd/flow.md#bypass-jobs).
+
+The job with the name `test_doc` in this matrix exports the
+[`openapi.json` artifact](/meta/ci_cd/artifacts.md#documentation).

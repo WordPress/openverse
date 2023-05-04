@@ -74,3 +74,6 @@ into other jobs that need them using the
 
 This job is only run if there is at least one image needed to build, based on
 the `do_build` output of the [`determine-images`](#determine-images) job.
+
+This matrix exports all of the
+[Docker image artifacts](/meta/ci_cd/artifacts.md#docker-images).
