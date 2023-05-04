@@ -21,28 +21,30 @@ of these, "documentation" is also applicable to PRs.
   pushed to `main` that affects the documentation, the documentation is built
   and deployed to the [root of the docs site](https://docs.openverse.org).
 
-  See job [`emit-docs`](#emit-docs) for details.
+  See job [`emit-docs`](/meta/ci_cd/jobs/documentation.md#emit-docs) for
+  details.
 
 - **Docker images:** When a new commit is pushed to `main`, the Docker image for
   each of the affected services is pushed to
   [GHCR](https://github.com/orgs/WordPress/packages?repo_name=openverse). These
   images are tagged with the SHA of the commit.
 
-  See job [`publish-images`](#publish-images).
+  See job
+  [`publish-images`](/meta/ci_cd/jobs/docker_publishing.md#publish-images).
 
 - **Frontend staging:** When a new commit is pushed to `main` which affects the
   frontend service and the tests for the frontend pass, a new
   [staging deployment of the frontend](https://staging.openverse.org/) is
   triggered. The deployment uses the image published above.
 
-  See job [`deploy-frontend`](#deploy-frontend).
+  See job [`deploy-frontend`](/meta/ci_cd/jobs/deployment.md#deploy-frontend).
 
 - **API staging:** When a new commit is pushed to `main` which affects the API
   service and the tests for the API pass, a new
   [staging deployment of the API](https://api-staging.openverse.engineering/) is
   triggered. The deployment uses the image published above.
 
-  See job [`deploy-api`](#deploy-api).
+  See job [`deploy-api`](/meta/ci_cd/jobs/deployment.md#deploy-api).
 
 ## Workflow components
 

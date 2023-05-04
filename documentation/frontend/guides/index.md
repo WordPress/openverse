@@ -1,5 +1,11 @@
 # Guides
 
-```{include} ../../_toc_templates/flat.md
+```{toctree}
+:titlesonly:
 
+quickstart
+develop
+test
+analytics
+icons
 ```

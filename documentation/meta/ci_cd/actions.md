@@ -24,7 +24,7 @@ speed and to avoid wasteful consumption of resources.
 ## `setup-env`
 
 Sets up the runtime environment for a job. It sets up our task runner of choice,
-[`just`](../guides/general_setup.md#just) and also the specified languages and
+[`just`](/general/general_setup.md#just) and also the specified languages and
 their respective package managers.
 
 - Python (and Pipenv)
@@ -53,9 +53,10 @@ host dependencies are needed).
 ## `load-img`
 
 All Docker images needed throughout the CI + CD workflow are built by the
-[`build-images`](#build-images) job matrix, saved as `.tar` files and uploaded
-as artifacts. This action is used by subsequent jobs that need those images. It
-downloads the artifact and load the `.tar` files into Docker as images.
+[`build-images`](/meta/ci_cd/jobs/docker_preparation.md#build-images) job
+matrix, saved as `.tar` files and uploaded as artifacts. This action is used by
+subsequent jobs that need those images. It downloads the artifact and load the
+`.tar` files into Docker as images.
 
 **Inputs:**
 
@@ -74,17 +75,4 @@ input, passing a space-separated list of image names.
 Builds the documentation, including this Sphinx site, the frontend Storybook and
 the Tailwind config viewer and stores it at `/tmp/docs`. This compiled
 documentation is deployed to an appropriate location by the
-[`emit-docs`](#emit-docs) job.
-
-**Inputs:**
-
-A GlotPress username and password combination is needed to download all
-[Openverse translations](https://translate.wordpress.org/projects/meta/openverse/)
-in bulk from GlotPress.
-
-```typescript
-{
-  glotpress_username: string // required, use secret `MAKE_USERNAME`
-  glotpress_password: string // required, use secret `MAKE_LOGIN_PASSWORD`
-}
-```
+[`emit-docs`](/meta/ci_cd/jobs/documentation.md#emit-docs) job.

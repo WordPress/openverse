@@ -1,4 +1,4 @@
-import type { MediaType } from "~/constants/media"
+import type { MediaType, SearchType } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
 
 /**
@@ -25,6 +25,17 @@ export type Events = {
     set: string
     /** the identifier of the image */
     identifier: string
+  }
+  /**
+   * Click on the 'back to search' link on a single result
+   *
+   * - Are these links used much? Are they necessary?
+   */
+  BACK_TO_SEARCH: {
+    /** The unique ID of the media */
+    id: string
+    /** The content type being searched (can include All content) */
+    searchType: SearchType
   }
   /**
    * Description: The user clicks the CTA button to the external source to use the image
@@ -73,6 +84,22 @@ export type Events = {
     mediaType: MediaType
     /** the reason for the report */
     reason: ReportReason
+  }
+  /**
+   * Description: When the user chooses an external source from the dropdown of external sources
+   * Questions:
+   *   - Which external sources are most popular? This could drive inclusion in Openverse.
+   *   - Are certain media types more popular externally?
+   */
+  SELECT_EXTERNAL_SOURCE: {
+    /** The name of the external source */
+    name: string
+    /** The media type being searched */
+    mediaType: MediaType
+    /** The search term */
+    query: string
+    /** The component that triggered the event */
+    component: "VNoResults" | "VExternalSourceList"
   }
 }
 

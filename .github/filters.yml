@@ -1,24 +1,36 @@
+# This file is used by the `get-changes` action to determine the changesets.
+# Also see
+# - list of stacks: job `add-stack-label` of workflow `ci_cd.yml`
+# - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
 catalog:
   - catalog/**
-  # Change to the CI + CD workflow should trigger complete workflow.
-  - .github/workflows/ci_cd.yml
+  - docker/minio/**
+  - docker/upstream_db/**
 api:
   - api/**
-  # Change to the CI + CD workflow should trigger complete workflow.
-  - .github/workflows/ci_cd.yml
+  - docker/db/**
+  - docker/es/**
+  - docker/nginx/**
+  - load_sample_data.sh
 ingestion_server:
   - ingestion_server/**
-  # Change to the CI + CD workflow should trigger complete workflow.
-  - .github/workflows/ci_cd.yml
+  - docker/db/**
+  - docker/es/**
+  - docker/upstream_db/**
+  - load_sample_data.sh
 frontend:
   - frontend/**
   - package.json
   - pnpm-lock.yaml
   - pnpm-workspace.yaml
+  - tsconfig.json
   - .npmrc
   - .pnpmfile.cjs
-  # Change to the CI + CD workflow should trigger complete workflow.
-  - .github/workflows/ci_cd.yml
+analytics:
+  - docker/clickhouse/**
+  - docker/plausible/**
+  - docker/plausible_db/**
+  - setup_plausible.sh
 documentation:
   - documentation/**
   - frontend/**.mdx
@@ -26,11 +38,18 @@ documentation:
   - frontend/nuxt.config.ts
   - frontend/tailwind.config.js
   - frontend/src/styles/tailwind.css
-  # Change to the CI + CD workflow should trigger complete workflow.
-  - .github/workflows/ci_cd.yml
 lint:
   - prettier.config.js
-  - .prettierignore
+  - .editorconfig
   - .eslintrc.js
   - .eslintignore
+  - .isort.cfg
+  - .ruff.toml
+  - .prettierignore
   - .pre-commit-config.yaml
+mgmt:
+  - .github/**
+  - automations/**
+ci_cd:
+  - .github/actions/**
+  - .github/workflows/ci_cd.yml

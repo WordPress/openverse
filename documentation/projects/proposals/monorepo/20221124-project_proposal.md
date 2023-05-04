@@ -1,9 +1,9 @@
-# Project Proposal - 2022-11-24
+# 2022-11-24 Project Proposal: Monorepo
 
 ## Reviewers
 
-- [ ] @zackkrida
-- [ ] @sarayourfriend
+- [x] @zackkrida
+- [x] @AetherUnbound
 
 ## Rationale
 

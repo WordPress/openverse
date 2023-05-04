@@ -20,6 +20,7 @@ describe("VButton", () => {
   })
   it('should render a `button` by default with type="button" and no tabindex', async () => {
     render(VButton, {
+      props: { variant: "filled-white" },
       slots: { default: "Code is Poetry" },
     })
 
@@ -32,7 +33,7 @@ describe("VButton", () => {
 
   it("should allow passing an explicit type", async () => {
     render(VButton, {
-      props: { type: "submit" },
+      props: { type: "submit", variant: "filled-white" },
       slots: { default: "Code is Poetry" },
     })
 
@@ -44,7 +45,7 @@ describe("VButton", () => {
   it("should render an anchor with no type attribute", async () => {
     render(VButton, {
       attrs: { href: "http://localhost" },
-      props: { as: "VLink" },
+      props: { as: "VLink", variant: "filled-white" },
       slots: { default: "Code is Poetry" },
     })
     await nextTick()
@@ -57,7 +58,11 @@ describe("VButton", () => {
 
   it("should render the disabled attribute on a button when the element is explicitly unfocusableWhenDisabled and is disabled", async () => {
     render(VButton, {
-      props: { disabled: true, focusableWhenDisabled: false },
+      props: {
+        disabled: true,
+        focusableWhenDisabled: false,
+        variant: "filled-white",
+      },
       slots: { default: "Code is Poetry" },
     })
 
@@ -69,7 +74,11 @@ describe("VButton", () => {
 
   it("should not render the disabled attribute if the element is focusableWhenDisabled", async () => {
     render(VButton, {
-      props: { disabled: true, focusableWhenDisabled: true },
+      props: {
+        disabled: true,
+        focusableWhenDisabled: true,
+        variant: "filled-white",
+      },
       slots: { default: "Code is Poetry" },
     })
 
@@ -86,6 +95,7 @@ describe("VButton", () => {
         disabled: true,
         focusableWhenDisabled: true,
         href: "https://wordpress.org",
+        variant: "filled-white",
       },
       slots: { default: "Code is Poetry" },
     })

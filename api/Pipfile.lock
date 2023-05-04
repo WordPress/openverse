@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "91849dae8ea7744c305fb68cd4fae571bbafc4db2b0bfda93d5d23576e90d4be"
+            "sha256": "64d1f79d9578b8074518f2543d798bc2249c866e1a1c0fb118b602cccc166604"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -479,7 +479,7 @@
                 "sha256:0e2454645dc00517dee4c6de3863411a9c5f1955d013c5fefa29123dadc92f98",
                 "sha256:66c4ece2adfe7cc120e2b6a6798a1fd5c777aecf82eec39bb95cef7cfc7ea2b3"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3' and python_full_version < '4.0.0'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3' and python_version < '4'",
             "version": "==7.17.9"
         },
         "elasticsearch-dsl": {
@@ -1153,11 +1153,11 @@
         },
         "sentry-sdk": {
             "hashes": [
-                "sha256:36a1ca082a3065a8a05aafa4b1e3d74e9459d41fbb0bea8a5364caca68626341",
-                "sha256:82faf9e2c9eb77401a7a187094b126ca25c2a3a478de6704612f48b3346f7a84"
+                "sha256:092888f3abf7a2ea78f0bfcefc3e0465caee2b6f0efb26f538ccc60f95dca179",
+                "sha256:99c15556a23621be9f18c2955f7ce63321713bf1c0ad396b27b61399bac5f458"
             ],
             "index": "pypi",
-            "version": "==1.21.0"
+            "version": "==1.21.1"
         },
         "setuptools": {
             "hashes": [
@@ -1558,11 +1558,11 @@
         },
         "ipython": {
             "hashes": [
-                "sha256:2442915417763b62181009259782975fa50bb5eedb97ae97fb614204bf6ecc21",
-                "sha256:e3015a1a4aa09b3984fb81b9cef4f0772af5a549878b81efb094cda8bb121993"
+                "sha256:1c80d08f04144a1994cda25569eab07fbdc4989bd8d8793e3a4ff643065ccb51",
+                "sha256:9c8487ac18f330c8a683fc50ab6d7bc0fcf9ef1d7a9f6ce7926938261067b81f"
             ],
             "index": "pypi",
-            "version": "==8.12.1"
+            "version": "==8.13.1"
         },
         "jedi": {
             "hashes": [

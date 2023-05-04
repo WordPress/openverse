@@ -1,5 +1,16 @@
 # General development guidelines
 
-```{include} ../_toc_templates/stack_root.md
+```{toctree}
+:titlesonly:
+
+general_setup
+quickstart
+run
+test
+publish
+zero_downtime_database_management
+deployment
+logging
+https
 
 ```

@@ -79,7 +79,9 @@
         <div class="flex flex-row items-center justify-end gap-4">
           <VButton
             v-if="allowCancel"
-            variant="secondary-bordered"
+            variant="bordered-gray"
+            size="medium"
+            class="label-bold"
             @click="handleCancel"
           >
             {{ $t("media-details.content-report.form.cancel") }}
@@ -89,12 +91,16 @@
             v-if="selectedReason === DMCA"
             key="dmca"
             as="VLink"
-            variant="secondary-filled"
+            variant="filled-dark"
+            size="medium"
+            class="label-bold"
+            has-icon-end
+            show-external-icon
+            :external-icon-size="6"
             :href="DMCA_FORM_URL"
             @click="handleDmcaSubmit"
           >
             {{ $t("media-details.content-report.form.dmca.open") }}
-            <VIcon :size="4" class="ms-1" name="external-link" />
           </VButton>
           <VButton
             v-else
@@ -102,7 +108,9 @@
             type="submit"
             :disabled="isSubmitDisabled"
             :focusable-when-disabled="true"
-            variant="secondary-filled"
+            variant="filled-dark"
+            size="medium"
+            class="label-bold"
             :value="$t('media-details.content-report.form.submit')"
           >
             {{ $t("media-details.content-report.form.submit") }}
@@ -133,7 +141,6 @@ import type { AudioDetail, ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import VButton from "~/components/VButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
 import VRadio from "~/components/VRadio/VRadio.vue"
 import VDmcaNotice from "~/components/VContentReport/VDmcaNotice.vue"
 import VReportDescForm from "~/components/VContentReport/VReportDescForm.vue"
@@ -143,7 +150,6 @@ export default defineComponent({
   name: "VContentReportForm",
   components: {
     VButton,
-    VIcon,
     VLink,
     VRadio,
     VDmcaNotice,
