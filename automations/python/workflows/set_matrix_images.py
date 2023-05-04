@@ -37,6 +37,8 @@ includes = {
     "frontend": {"image": "frontend", "context": "frontend", "target": "app"},
 }
 
+if "ci_cd" in changes:
+    build_matrix["image"] |= set(includes.keys())
 if "catalog" in changes:
     build_matrix["image"] |= {"upstream_db", "catalog"}
     publish_matrix["image"].add("catalog")

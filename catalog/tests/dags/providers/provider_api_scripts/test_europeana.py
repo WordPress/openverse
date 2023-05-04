@@ -15,6 +15,8 @@ _get_resource_json = make_resource_json_func("europeana")
 
 FROZEN_DATE = "2018-01-15"
 
+CC0_1_0 = get_license_info("http://creativecommons.org/publicdomain/zero/1.0/")
+
 
 @pytest.fixture
 def ingester() -> EuropeanaDataIngester:
@@ -121,14 +123,7 @@ def test_record_builder_get_record_data(ingester, record_builder):
             "http://bibliotecadigital.jcyl.es/i18n/catalogo_imagenes"
             "/imagen_id.cmd?idImagen=102620362"
         ),
-        "license_info": (
-            LicenseInfo(
-                "cc0",
-                "1.0",
-                "https://creativecommons.org/publicdomain/zero/1.0/",
-                "http://creativecommons.org/publicdomain/zero/1.0/",
-            )
-        ),
+        "license_info": CC0_1_0,
         "foreign_identifier": "/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1",
         "title": (
             "Claustro del Monasterio de S. Salvador en Oña [Material gráfico]"
@@ -139,13 +134,11 @@ def test_record_builder_get_record_data(ingester, record_builder):
     }
 
 
-def test_record_builder_get_license_url_with_real_example(record_builder):
+def test_record_builder_get_license_info_with_real_example(record_builder):
     image_data = _get_resource_json("image_data_example.json")
     image_data["rights"] = ["http://creativecommons.org/publicdomain/zero/1.0/"]
 
-    assert record_builder.get_record_data(image_data)[
-        "license_info"
-    ] == get_license_info("http://creativecommons.org/publicdomain/zero/1.0/")
+    assert record_builder.get_record_data(image_data)["license_info"] == CC0_1_0
 
 
 def test_get_license_url_with_non_cc_license(record_builder):
@@ -155,15 +148,13 @@ def test_get_license_url_with_non_cc_license(record_builder):
     assert record_builder.get_record_data(image_data) is None
 
 
-def test_get_license_url_with_multiple_license(record_builder):
+def test_get_license_info_with_multiple_license(record_builder):
     image_data = _get_resource_json("image_data_example.json")
     image_data["rights"] = [
         "http://noncc.org/",
         "http://creativecommons.org/publicdomain/zero/1.0/",
     ]
-    expect_license = get_license_info(
-        "http://creativecommons.org/publicdomain/zero/1.0/"
-    )
+    expect_license = CC0_1_0
     assert record_builder.get_record_data(image_data)["license_info"] == expect_license
 
 

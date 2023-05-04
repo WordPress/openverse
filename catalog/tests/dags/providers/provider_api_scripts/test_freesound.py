@@ -170,6 +170,21 @@ def test_get_record_data_returns_none_when_missing_data(missing_fields, audio_da
     assert actual is None
 
 
+@pytest.mark.parametrize(
+    "missing_fields",
+    [
+        ("id",),
+        ("url", "download"),
+        ("license",),
+    ],
+)
+def test_get_record_data_returns_none_when_data_falsy(missing_fields, audio_data):
+    for field in missing_fields:
+        audio_data[field] = ""
+    actual = fsd.get_record_data(audio_data)
+    assert actual is None
+
+
 def test_get_audio_set_info(audio_data):
     set_foreign_id, audio_set, set_url = fsd._get_audio_set_info(audio_data)
     expected_audio_set_info = (

@@ -135,6 +135,15 @@ def test_process_object_with_real_example():
     assert actual_data[0] == expected_data
 
 
+def test_get_record_data_returns_none_without_license_info():
+    object_data = _get_resource_json("object_complete_example.json")
+    object_data["imageRights"]["link"] = ""
+
+    actual_data = fm.get_record_data(object_data)
+
+    assert actual_data is None
+
+
 def test_get_image_url():
     response_json = _get_resource_json("full_image_object.json")
     image_url = fm._get_image_url(response_json)
@@ -152,16 +161,19 @@ def test_get_image_url():
                     "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
                 }
             },
-            "http://creativecommons.org/licenses/by/4.0/",
+            "https://creativecommons.org/licenses/by/4.0/",
         ),
         (
             {"imageRights": {"link": "http://creativecommons.org/licenses/by/4.0/"}},
-            "http://creativecommons.org/licenses/by/4.0/",
+            "https://creativecommons.org/licenses/by/4.0/",
         ),
     ],
 )
 def test_get_license_url(image_rights_obj, expected_license_url):
-    assert fm.get_license_url(image_rights_obj) == expected_license_url
+    if expected_license_url is None:
+        assert fm.get_license_info(image_rights_obj) is None
+    else:
+        assert fm.get_license_info(image_rights_obj).url == expected_license_url
 
 
 @pytest.mark.parametrize(

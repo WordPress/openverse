@@ -272,10 +272,26 @@ def _exclude_filtered(s: Search):
     return s
 
 
-def _exclude_mature_by_param(s: Search, search_params):
-    if not search_params.data["mature"]:
+def _exclude_sensitive_by_param(s: Search, search_params):
+    if not search_params.validated_data["include_sensitive_results"]:
         s = s.exclude("term", mature=True)
     return s
+
+
+def _resolve_index(
+    index: Literal["image", "audio"],
+    search_params: media_serializers.MediaSearchRequestSerializer,
+) -> Literal["image", "image-filtered", "audio", "audio-filtered"]:
+    use_filtered_index = all(
+        (
+            settings.ENABLE_FILTERED_INDEX_QUERIES,
+            not search_params.validated_data["include_sensitive_results"],
+        )
+    )
+    if use_filtered_index:
+        return f"{index}-filtered"
+
+    return index
 
 
 def search(
@@ -303,6 +319,8 @@ def search(
     :return: Tuple with a List of Hits from elasticsearch, the total count of
     pages, and number of results.
     """
+    index = _resolve_index(index, search_params)
+
     search_client = Search(index=index)
 
     s = search_client
@@ -332,7 +350,7 @@ def search(
             s = _apply_filter(s, search_params, serializer_field, es_field, "exclude")
 
     # Exclude mature content and disabled sources
-    s = _exclude_mature_by_param(s, search_params)
+    s = _exclude_sensitive_by_param(s, search_params)
     s = _exclude_filtered(s)
 
     # Search either by generic multimatch or by "advanced search" with

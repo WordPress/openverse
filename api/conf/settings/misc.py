@@ -7,6 +7,10 @@ FILTER_DEAD_LINKS_BY_DEFAULT = config(
     "FILTER_DEAD_LINKS_BY_DEFAULT", cast=bool, default=True
 )
 
+ENABLE_FILTERED_INDEX_QUERIES = config(
+    "ENABLE_FILTERED_INDEX_QUERIES", cast=bool, default=False
+)
+
 # Whether to enable the image watermark endpoint
 WATERMARK_ENABLED = config("WATERMARK_ENABLED", default=False, cast=bool)
 

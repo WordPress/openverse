@@ -14,6 +14,7 @@ on:
       - unlabeled
 
 jobs:
+  # List of aspect labels: https://github.com/WordPress/openverse/labels?q=aspect
   check_aspect_label:
     name: Check aspect label
     runs-on: ubuntu-latest
@@ -24,6 +25,7 @@ jobs:
           one_of: "💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface,♿️ aspect: a11y"
           repo_token: ${{ secrets.GITHUB_TOKEN }}
 
+  # List of goal labels: https://github.com/WordPress/openverse/labels?q=goal
   check_goal_label:
     name: Check goal label
     runs-on: ubuntu-latest
@@ -34,6 +36,7 @@ jobs:
           one_of: "🌟 goal: addition,🛠 goal: fix,✨ goal: improvement,🧰 goal: internal improvement"
           repo_token: ${{ secrets.GITHUB_TOKEN }}
 
+  # List of priority labels: https://github.com/WordPress/openverse/labels?q=priority
   check_priority_label:
     name: Check priority label
     runs-on: ubuntu-latest
@@ -44,6 +47,7 @@ jobs:
           one_of: "🟩 priority: low,🟨 priority: medium,🟧 priority: high,🟥 priority: critical"
           repo_token: ${{ secrets.GITHUB_TOKEN }}
 
+  # List of stack labels: https://github.com/WordPress/openverse/labels?q=stack
   check_stack_label:
     name: Check stack label
     runs-on: ubuntu-latest
@@ -51,5 +55,5 @@ jobs:
       - name: Check stack label
         uses: docker://agilepathway/pull-request-label-checker:v1.4.26
         with:
-          any_of: "🧱 stack: backend,🧱 stack: documentation,🧱 stack: frontend,🧱 stack: mgmt,🧱 stack: api,🧱 stack: catalog,🧱 stack: ingestion server"
+          any_of: "🧱 stack: backend,🧱 stack: analytics, 🧱 stack: documentation,🧱 stack: frontend,🧱 stack: mgmt,🧱 stack: api,🧱 stack: catalog,🧱 stack: ingestion server,🧱 stack: infra"
           repo_token: ${{ secrets.GITHUB_TOKEN }}
