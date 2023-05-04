@@ -12,11 +12,14 @@ from catalog.dags.maintenance.pr_review_reminders.pr_review_reminders import (
 from catalog.tests.factories.github import (
     make_branch_protection,
     make_current_pr_comment,
+    make_non_urgent_events,
+    make_non_urgent_reviewable_events,
     make_outdated_pr_comment,
     make_pr_comment,
     make_pull,
     make_requested_reviewer,
     make_review,
+    make_urgent_events,
 )
 
 
@@ -77,6 +80,7 @@ def github(monkeypatch):
     deleted_comments = []
     pull_reviews = defaultdict(list)
     branch_protection = defaultdict(dict)
+    events = defaultdict(list)
 
     def get_prs(*args, **kwargs):
         return pulls
@@ -98,6 +102,10 @@ def github(monkeypatch):
         pr_number = args[2]
         return pull_reviews[pr_number]
 
+    def get_events(*args, **kwargs):
+        pr_number = args[2]
+        return events[pr_number]
+
     def get_branch_protection(*args, **kwargs):
         repo = args[1]
         branch = args[2]
@@ -118,6 +126,7 @@ def github(monkeypatch):
 
     patch_gh_fn("get_open_prs", get_prs)
     patch_gh_fn("get_issue_comments", get_comments)
+    patch_gh_fn("get_issue_events", get_events)
     patch_gh_fn("post_issue_comment", post_comment)
     patch_gh_fn("delete_issue_comment", delete_comment)
     patch_gh_fn("get_pull_reviews", get_reviews)
@@ -130,6 +139,7 @@ def github(monkeypatch):
         "deleted_comments": deleted_comments,
         "pull_reviews": pull_reviews,
         "branch_protection": branch_protection,
+        "events": events,
     }
 
 
@@ -163,29 +173,78 @@ parametrize_urgency = pytest.mark.parametrize(
 )
 
 
+# We don't need to test events list where the last
+# event is "convert_to_draft" because drafted PRs
+# are filtered out of the scenarios where a PR would
+# be eligible for a ping based on urgency.
+parametrize_possible_pingable_events = pytest.mark.parametrize(
+    "events",
+    (
+        # PRs opened "ready for review" do not have a ready for review event.
+        # This covers the most common case as most PRs will only have these
+        # events. There are no events for actual PR reviews or comments as those
+        # are in the "comments" and "reviews" feeds for the issue/PR
+        ("labeled", "review_requested"),
+        # PRs converted to a draft after being opened will have both convert and ready events
+        ("labeled", "review_requested", "convert_to_draft", ("ready_for_review", 1)),
+        # A PR opened as a draft does not have a "convert_to_draft" event but does still have "ready_for_review"
+        ("labeled", "review_requested", ("ready_for_review", 2)),
+        # PRs can have multiple ready for review events if converted to draft multiple times
+        (
+            "labeled",
+            "review_requested",
+            "convert_to_draft",
+            ("ready_for_review", 1),
+            "convert_to_draft",
+            "ready_for_review",
+        ),
+        # A PR opened as a draft can be set as ready for review and then redrafted
+        (
+            "labeled",
+            "review_requested",
+            ("ready_for_review", 2),
+            ("convert_to_draft", 1),
+            ("ready_for_review", 1),
+        ),
+    ),
+)
+
+
 @parametrize_urgency
-def test_pings_past_due(github, urgency):
-    past_due_pull = make_pull(urgency, past_due=True)
+@parametrize_possible_pingable_events
+def test_pings_past_due(github, urgency, events):
+    past_due_pull = make_pull(urgency, old=True)
     past_due_pull["requested_reviewers"] = [
         make_requested_reviewer(f"reviewer-due-{i}") for i in range(2)
     ]
-    not_due_pull = make_pull(urgency, past_due=False)
+    not_due_pull = make_pull(urgency, old=False)
     not_due_pull["requested_reviewers"] = [
         make_requested_reviewer(f"reviewer-not-due-{i}") for i in range(2)
     ]
+    old_but_not_due_pull = make_pull(urgency, old=True)
+    old_but_not_due_pull["requested_reviewers"] = [
+        make_requested_reviewer(f"reviewer-old-but-not-due-{i}") for i in range(2)
+    ]
 
-    for pr in [past_due_pull, not_due_pull]:
+    for pr in [past_due_pull, not_due_pull, old_but_not_due_pull]:
         _setup_branch_protection(github, pr)
 
-    github["pulls"] += [past_due_pull, not_due_pull]
+    github["pulls"] += [past_due_pull, not_due_pull, old_but_not_due_pull]
     github["pull_comments"][past_due_pull["number"]].append(
         make_pr_comment(is_reminder=False)
     )
+
+    github["events"][past_due_pull["number"]] = make_urgent_events(urgency, events)
+    github["events"][not_due_pull["number"]] = make_non_urgent_events(events)
+    github["events"][
+        old_but_not_due_pull["number"]
+    ] = make_non_urgent_reviewable_events(events)
 
     post_reminders("not_set", dry_run=False)
 
     assert past_due_pull["number"] in github["posted_comments"]
     assert not_due_pull["number"] not in github["posted_comments"]
+    assert old_but_not_due_pull["number"] not in github["posted_comments"]
 
     comments = github["posted_comments"][past_due_pull["number"]]
     for reviewer in past_due_pull["requested_reviewers"]:
@@ -194,39 +253,56 @@ def test_pings_past_due(github, urgency):
 
 
 @parametrize_urgency
-def test_does_not_reping_past_due_if_reminder_is_current(github, urgency):
-    past_due_pull = make_pull(urgency, past_due=True)
+@parametrize_possible_pingable_events
+def test_does_not_reping_past_due_if_reminder_is_current(github, urgency, events):
+    past_due_pull = make_pull(urgency, old=True)
     past_due_pull["requested_reviewers"] = [
         make_requested_reviewer(f"reviewer-due-{i}") for i in range(2)
     ]
-    not_due_pull = make_pull(urgency, past_due=False)
+    not_due_pull = make_pull(urgency, old=False)
     not_due_pull["requested_reviewers"] = [
         make_requested_reviewer(f"reviewer-not-due-{i}") for i in range(2)
     ]
+    old_but_not_due_pull = make_pull(urgency, old=True)
+    old_but_not_due_pull["requested_reviewers"] = [
+        make_requested_reviewer(f"reviewer-old-but-not-due-{i}") for i in range(2)
+    ]
 
-    for pr in [past_due_pull, not_due_pull]:
+    for pr in [past_due_pull, not_due_pull, old_but_not_due_pull]:
         _setup_branch_protection(github, pr)
 
-    github["pulls"] += [past_due_pull, not_due_pull]
+    github["pulls"] += [past_due_pull, not_due_pull, old_but_not_due_pull]
     github["pull_comments"][past_due_pull["number"]].append(
         make_current_pr_comment(past_due_pull)
     )
+
+    github["events"][past_due_pull["number"]] = make_urgent_events(urgency, events)
+    github["events"][not_due_pull["number"]] = make_non_urgent_events(events)
+    github["events"][
+        old_but_not_due_pull["number"]
+    ] = make_non_urgent_reviewable_events(events)
 
     post_reminders("not_set", dry_run=False)
 
     assert past_due_pull["number"] not in github["posted_comments"]
     assert not_due_pull["number"] not in github["posted_comments"]
+    assert old_but_not_due_pull["number"] not in github["posted_comments"]
 
 
 @parametrize_urgency
-def test_does_reping_past_due_if_reminder_is_outdated(github, urgency):
-    past_due_pull = make_pull(urgency, past_due=True)
+@parametrize_possible_pingable_events
+def test_does_reping_past_due_if_reminder_is_outdated(github, urgency, events):
+    past_due_pull = make_pull(urgency, old=True)
     past_due_pull["requested_reviewers"] = [
         make_requested_reviewer(f"reviewer-due-{i}") for i in range(2)
     ]
-    not_due_pull = make_pull(urgency, past_due=False)
+    not_due_pull = make_pull(urgency, old=False)
     not_due_pull["requested_reviewers"] = [
         make_requested_reviewer(f"reviewer-not-due-{i}") for i in range(2)
+    ]
+    old_but_not_due_pull = make_pull(urgency, old=True)
+    old_but_not_due_pull["requested_reviewers"] = [
+        make_requested_reviewer(f"reviewer-old-but-not-due-{i}") for i in range(2)
     ]
 
     for pr in [past_due_pull, not_due_pull]:
@@ -236,10 +312,18 @@ def test_does_reping_past_due_if_reminder_is_outdated(github, urgency):
     reminder_comment = make_outdated_pr_comment(past_due_pull)
     github["pull_comments"][past_due_pull["number"]].append(reminder_comment)
 
+    github["events"][past_due_pull["number"]] = make_urgent_events(urgency, events)
+    github["events"][not_due_pull["number"]] = make_non_urgent_events(events)
+    github["events"][
+        old_but_not_due_pull["number"]
+    ] = make_non_urgent_reviewable_events(events)
+
     post_reminders("not_set", dry_run=False)
 
     assert past_due_pull["number"] in github["posted_comments"]
     assert not_due_pull["number"] not in github["posted_comments"]
+    assert old_but_not_due_pull["number"] not in github["posted_comments"]
+
     assert reminder_comment["id"] in github["deleted_comments"]
 
 
@@ -261,15 +345,16 @@ UNAPPROVED_REVIEW_STATES = ("CHANGES_REQUESTED", "COMMENTED")
     ("APPROVED",) + UNAPPROVED_REVIEW_STATES,
 )
 @pytest.mark.parametrize("base_branch", ("main", "not_main"))
+@parametrize_possible_pingable_events
 def test_does_ping_if_pr_has_less_than_min_required_approvals(
-    github, urgency, first_review_state, second_review_state, base_branch
+    github, urgency, first_review_state, second_review_state, base_branch, events
 ):
     reviews = [
         make_review(state)
         for state in (first_review_state, second_review_state)
         if state is not None
     ]
-    past_due_pull = make_pull(urgency, past_due=True, base_branch=base_branch)
+    past_due_pull = make_pull(urgency, old=True, base_branch=base_branch)
     past_due_pull["requested_reviewers"] = [
         make_requested_reviewer(f"reviewer-due-{i}") for i in range(2)
     ]
@@ -283,7 +368,8 @@ def test_does_ping_if_pr_has_less_than_min_required_approvals(
     )
 
     github["pulls"] += [past_due_pull]
-    github["pull_reviews"][past_due_pull["id"]] = reviews
+    github["pull_reviews"][past_due_pull["number"]] = reviews
+    github["events"][past_due_pull["number"]] = make_urgent_events(urgency, events)
 
     post_reminders("not_set", dry_run=False)
 
@@ -298,8 +384,11 @@ def test_does_ping_if_pr_has_less_than_min_required_approvals(
         "not_main",  # should fallback to use `main`
     ),
 )
-def test_does_not_ping_if_pr_has_min_required_approvals(github, urgency, base_branch):
-    past_due_pull = make_pull(urgency, past_due=True, base_branch=base_branch)
+@parametrize_possible_pingable_events
+def test_does_not_ping_if_pr_has_min_required_approvals(
+    github, urgency, base_branch, events
+):
+    past_due_pull = make_pull(urgency, old=True, base_branch=base_branch)
     past_due_pull["requested_reviewers"] = [
         make_requested_reviewer(f"reviewer-due-{i}") for i in range(2)
     ]
@@ -315,9 +404,10 @@ def test_does_not_ping_if_pr_has_min_required_approvals(github, urgency, base_br
     )
 
     github["pulls"] += [past_due_pull]
-    github["pull_reviews"][past_due_pull["id"]] = [
+    github["pull_reviews"][past_due_pull["number"]] = [
         make_review("APPROVED"),
     ] * min_required_approvals
+    github["events"][past_due_pull["number"]] = make_urgent_events(urgency, events)
 
     post_reminders("not_set", dry_run=False)
 
@@ -325,15 +415,24 @@ def test_does_not_ping_if_pr_has_min_required_approvals(github, urgency, base_br
 
 
 @parametrize_urgency
-def test_does_not_ping_if_no_reviewers(github, urgency):
-    past_due_pull = make_pull(urgency, past_due=True)
+@parametrize_possible_pingable_events
+def test_does_not_ping_if_no_reviewers(github, urgency, events):
+    past_due_pull = make_pull(urgency, old=True)
     past_due_pull["requested_reviewers"] = []
-    not_due_pull = make_pull(urgency, past_due=False)
+    not_due_pull = make_pull(urgency, old=False)
     not_due_pull["requested_reviewers"] = []
-    github["pulls"] += [past_due_pull, not_due_pull]
+    old_but_not_due_pull = make_pull(urgency, old=True)
+
+    github["pulls"] += [past_due_pull, not_due_pull, old_but_not_due_pull]
     github["pull_comments"][past_due_pull["number"]].append(
         make_pr_comment(is_reminder=False)
     )
+
+    github["events"][past_due_pull["number"]] = make_urgent_events(urgency, events)
+    github["events"][not_due_pull["number"]] = make_non_urgent_events(events)
+    github["events"][
+        old_but_not_due_pull["number"]
+    ] = make_non_urgent_reviewable_events(events)
 
     for pr in [past_due_pull, not_due_pull]:
         _setup_branch_protection(github, pr)
@@ -342,3 +441,67 @@ def test_does_not_ping_if_no_reviewers(github, urgency):
 
     assert past_due_pull["number"] not in github["posted_comments"]
     assert not_due_pull["number"] not in github["posted_comments"]
+    assert old_but_not_due_pull["number"] not in github["posted_comments"]
+
+
+@parametrize_urgency
+@pytest.mark.parametrize(
+    "events",
+    (
+        # PRs converted to a draft after being opened will have both convert and ready events
+        ("labeled", "review_requested", "convert_to_draft", ("ready_for_review", 1)),
+        # A PR opened as a draft does not have a "convert_to_draft" event but does still have "ready_for_review"
+        ("labeled", "review_requested", ("ready_for_review", 2)),
+        # PRs can have multiple ready for review events if converted to draft multiple times
+        (
+            "labeled",
+            "review_requested",
+            "convert_to_draft",
+            ("ready_for_review", 1),
+            "convert_to_draft",
+            "ready_for_review",
+        ),
+        # A PR opened as a draft can be set as ready for review and then redrafted
+        (
+            "labeled",
+            "review_requested",
+            ("ready_for_review", 2),
+            ("convert_to_draft", 1),
+            ("ready_for_review", 1),
+        ),
+    ),
+)
+def test_ignores_created_at_and_pings_if_urgent_ready_for_review_event_exists(
+    github, urgency, events
+):
+    """
+    Artificial case to confirm ready for review events are respected.
+
+    This case never happens in reality because it's impossible to have an event
+    that occurs before the creation of the PR. However, while the other tests
+    show that pings happen for past due PRs and do not happen for
+    PRs not past due, they don't definitely show that the ready_for_review
+    event date is what marked the PR urgent.
+
+    This test creates a PR with a created_at timestamp that by itself
+    would _not_ cause the PR to be urgent. However, the PR's events
+    list has a ready_for_review event
+    """
+
+    # old=False ensures the PR's created_at date will not
+    # be the cause of it being eligible for a ping
+    pull = make_pull(urgency, old=False)
+    pull["requested_reviewers"] = [
+        make_requested_reviewer(f"reviewer-due-{i}") for i in range(2)
+    ]
+
+    github["pulls"] += [pull]
+
+    # Create urgent events to cause a ping
+    github["events"][pull["number"]] = make_urgent_events(urgency, events)
+
+    _setup_branch_protection(github, pull)
+
+    post_reminders("not_set", dry_run=False)
+
+    assert pull["number"] in github["posted_comments"]

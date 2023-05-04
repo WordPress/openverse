@@ -28,31 +28,33 @@ class Urgency:
     MEDIUM = Urgency("medium", 4)
     LOW = Urgency("low", 5)
 
+    @classmethod
+    def for_pr(cls, pr: dict) -> Urgency:
+        priority_labels = [
+            label["name"]
+            for label in pr["labels"]
+            if "priority" in label["name"].lower()
+        ]
+        if not priority_labels:
+            logger.error(f"Found unabled PR ({pr['html_url']}). Skipping!")
+            return None
+
+        priority_label = priority_labels[0]
+
+        if "critical" in priority_label:
+            return cls.CRITICAL
+        elif "high" in priority_label:
+            return cls.HIGH
+        elif "medium" in priority_label:
+            return cls.MEDIUM
+        elif "low" in priority_label:
+            return cls.LOW
+
 
 @dataclass
 class ReviewDelta:
     urgency: Urgency.Urgency
     days: int
-
-
-def pr_urgency(pr: dict) -> Urgency.Urgency:
-    priority_labels = [
-        label["name"] for label in pr["labels"] if "priority" in label["name"].lower()
-    ]
-    if not priority_labels:
-        logger.error(f"Found unabled PR ({pr['html_url']}). Skipping!")
-        return None
-
-    priority_label = priority_labels[0]
-
-    if "critical" in priority_label:
-        return Urgency.CRITICAL
-    elif "high" in priority_label:
-        return Urgency.HIGH
-    elif "medium" in priority_label:
-        return Urgency.MEDIUM
-    elif "low" in priority_label:
-        return Urgency.LOW
 
 
 def days_without_weekends(today: datetime, updated_at: datetime) -> int:
@@ -76,16 +78,31 @@ def parse_gh_date(d) -> datetime.datetime:
     return datetime.datetime.fromisoformat(d.rstrip("Z"))
 
 
-def get_urgency_if_urgent(pr: dict) -> ReviewDelta | None:
-    updated_at = parse_gh_date(pr["updated_at"])
+def get_urgency_if_urgent(gh: GitHubAPI, pr: dict) -> ReviewDelta | None:
+    events = gh.get_issue_events(base_repo_name(pr), pr["number"])
+    ready_for_review_date = pr["created_at"]
+    for event in reversed(events):
+        # Find the latest "ready_for_review" event.
+        # We don't need to check for or stop if we
+        # find a draft event because drafted PRs are
+        # already filtered out at this point. Any draft
+        # events present in the events list would
+        # be further back in time than the latest
+        # (and therefore relevant) ready_for_review
+        # event will appear before we reach any
+        # draft events.
+        if event["event"] == "ready_for_review":
+            ready_for_review_date = event["created_at"]
+
+    urgency_base_date = parse_gh_date(ready_for_review_date)
     today = datetime.datetime.now()
-    urgency = pr_urgency(pr)
-    if urgency is None:
+    pr_urgency = Urgency.for_pr(pr)
+    if pr_urgency is None:
         return None
 
-    days = days_without_weekends(today, updated_at)
+    days = days_without_weekends(today, urgency_base_date)
 
-    return ReviewDelta(urgency, days) if days >= urgency.days else None
+    return ReviewDelta(pr_urgency, days) if days >= pr_urgency.days else None
 
 
 COMMENT_MARKER = (
@@ -175,7 +192,7 @@ def post_reminders(github_pat: str, dry_run: bool):
 
     urgent_prs = []
     for pr in open_prs:
-        review_delta = get_urgency_if_urgent(pr)
+        review_delta = get_urgency_if_urgent(gh, pr)
         if review_delta:
             urgent_prs.append((pr, review_delta))
 
