@@ -15,7 +15,7 @@ from split_settings.tools import include
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parents[2]
 
 # The order of the arguments matters here. Please note
 # - any setting in a later file will override the same in an earlier file
