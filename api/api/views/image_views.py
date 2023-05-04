@@ -1,5 +1,4 @@
 import io
-import struct
 
 from django.conf import settings
 from django.http.response import FileResponse, HttpResponse
@@ -8,7 +7,6 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
-import piexif
 import requests
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from PIL import Image as PILImage
@@ -148,20 +146,8 @@ class ImageViewSet(MediaViewSet):
 
         # Create the actual watermarked image.
         watermarked, exif = watermark(image_url, image_info, params.data["watermark"])
-        # Re-insert EXIF metadata.
-        if exif:
-            # piexif dump raises InvalidImageDataError which is a child class
-            # of ValueError, and a struct error when the value is not
-            # between -2147483648 and 2147483647
-            # https://github.com/WordPress/openverse-api/issues/849
-            try:
-                exif_bytes = piexif.dump(exif)
-            except (struct.error, ValueError):
-                exif_bytes = None
-        else:
-            exif_bytes = None
         img_bytes = io.BytesIO()
-        self._save_wrapper(watermarked, exif_bytes, img_bytes)
+        self._save_wrapper(watermarked, exif, img_bytes)
 
         if params.data["embed_metadata"]:
             # Embed ccREL metadata with XMP.
@@ -184,11 +170,11 @@ class ImageViewSet(MediaViewSet):
             except (libxmp.XMPError, AttributeError):
                 # Just send the EXIF-ified file if libxmp fails to add metadata
                 response = HttpResponse(content_type="image/jpeg")
-                self._save_wrapper(watermarked, exif_bytes, response)
+                self._save_wrapper(watermarked, exif, response)
                 return response
         else:
             response = HttpResponse(img_bytes, content_type="image/jpeg")
-            self._save_wrapper(watermarked, exif_bytes, response)
+            self._save_wrapper(watermarked, exif, response)
             return response
 
     @report
@@ -214,6 +200,7 @@ class ImageViewSet(MediaViewSet):
         """Prevent PIL from crashing if ``exif_bytes`` is ``None``."""
 
         if exif_bytes:
+            # Re-insert EXIF metadata
             pil_img.save(destination, "jpeg", exif=exif_bytes)
         else:
             pil_img.save(destination, "jpeg")
