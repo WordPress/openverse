@@ -5,24 +5,30 @@ can assume it to take place across several stages.
 
 ```{mermaid}
 flowchart TD
-  preparation[Preparation] --> bypass_jobs[Bypass jobs] --- a[&nbsp]
+  preparation[Preparation] --- a[&nbsp]
   %% a is a fork
-  a --> frontend_tests[Frontend tests] & docker_preparation[Docker preparation]
+  a --> frontend_tests[Frontend tests] & docker_preparation[Docker preparation] & documentation_tests[Documentation tests]
   docker_preparation --> dockerised_tests[Dockerised tests]
-  frontend_tests & dockerised_tests --- b[&nbsp]
+  frontend_tests --- e[&nbsp]
+  %% e is a fork
+  dockerised_tests --- f[&nbsp]
+  %% f is a fork
+  e & f --- b[&nbsp]
   %% b is a join
-  b --- c[&nbsp]
-  %% c is fork
-  c --> documentation_publishing[Documentation] & docker_publishing[Docker publishing]
-  docker_publishing --> deployment[Deployment]
-  documentation_publishing & deployment --- d[&nbsp]
-  %% d is a join
+  b --> docker_publishing[Docker publishing] --> deployment[Deployment]
+  documentation_tests ---- c[&nbsp]
+  e & f --- c
+  %% c is a join
+  c --> documentation_emit[Documentation emit]
+  documentation_emit & deployment --- d[&nbsp]
   d --> notification[Notification]
 
   style a height:0,width:0
   style b height:0,width:0
   style c height:0,width:0
   style d height:0,width:0
+  style e height:0,width:0
+  style f height:0,width:0
 ```
 
 ```{caution}
@@ -63,6 +69,39 @@ flowchart TD
 - [`get-changes`](./jobs/preparation.md#get-changes)
 - [`get-image-tag`](./jobs/preparation.md#get-image-tag)
 - `lint`
+
+## Documentation tests
+
+The documentation tests run outside the Docker containers, so they don't need to
+wait for the Docker containers to be build. This stage happens in parallel with
+the [frontend tests](#frontend-tests) and the
+[Docker preparation](#docker-preparation) stages.
+
+These tests are only executed if the documentation has changed. Else they will
+be skipped.
+
+```{mermaid}
+flowchart TD
+  subgraph preparation[Preparation]
+    lint
+    get-changes
+  end
+
+  get-changes -- documentation == true &#124&#124 frontend == true --- x
+  lint --- x
+  x[&nbsp] --> build-docs
+
+  subgraph documentation_tests[Documentation tests]
+    build-docs
+  end
+
+  style x height:0
+  style preparation opacity:0.3
+```
+
+**Jobs:**
+
+- [`build-docs`](./jobs/documentation.md#build-docs)
 
 ## Frontend tests
 
@@ -213,10 +252,10 @@ flowchart TD
 - [`django-checks`](./jobs/api.md#django-checks)
 - [`bypass-django-checks`](#bypass-jobs)
 
-## Documentation
+## Documentation emit
 
 After all the [proof-of-functionality](./proof_of_functionality.md) tests have
-concluded, we can initiate the stage of building the new documentation. The
+concluded, we can initiate the stage of publishing the new documentation. The
 documentation is published to the [docs site](https://docs.openverse.org)
 side-by-side with the [publishing of the Docker images](#docker-publishing).
 
@@ -224,6 +263,10 @@ side-by-side with the [publishing of the Docker images](#docker-publishing).
 flowchart TD
   subgraph preparation[Preparation]
     get-changes
+  end
+
+  subgraph documentation_tests[Documentation tests]
+    build-docs
   end
 
   subgraph frontend_tests[Frontend tests]
@@ -240,12 +283,14 @@ flowchart TD
     emit-docs
   end
 
-  get-changes -- frontend == true &#124&#124 documentation == true --> emit-docs
+  get-changes -- documentation == true &#124&#124 frontend == true  --> emit-docs
+  build-docs -- success --> emit-docs
   test-cat & test-ing & test-api & nuxt-build -. success/skipped .-> emit-docs
 
   style preparation opacity:0.3
   style frontend_tests opacity:0.3
   style dockerised_tests opacity:0.3
+  style documentation_tests opacity:0.3
 ```
 
 **Jobs:**
