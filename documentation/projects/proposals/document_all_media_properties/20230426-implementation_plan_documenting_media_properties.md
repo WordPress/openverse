@@ -22,37 +22,45 @@
 <!-- A brief one or two sentence overview of the implementation being described. -->
 
 A proposal to create a documentation page with description of the media
-properties collected by the Catalog.
+properties collected by the Catalog, and keep it updated using CI.
 
 ## Background
 
 The catalog collects and transforms data from many different sources. The kind
 of data collected, transformations, and the expected data shape have changed
 over time. This plan will outline the creation of the documentation page about
-the media properties in the catalog. This will help answer some of the questions
-like:
+the media properties in the catalog.
 
-### User stories
+### User stories and user questions
 
 - As a maintainer/contributor, I need to know the list of available properties
-  for each media type in the catalog database. ... so that?
+  for each media type in the catalog database so that I can better understand
+  how different media types are represented within the catalog, can identify any
+  gaps or inconsistencies in the properties of media types.
 - As a contributor, I need to know what is the expected data type for the
-  specific property. Is it required? ... so that?
+  specific property so that I can correctly save the data in the catalog, or use
+  the data in the API.
 - As a contributor, I need to know how the data property is transformed and
-  validated.
-- As a contributor writing a provider API script, which data properties do I
-  need to collect?
-- As a contributor writing a provider API script, how do I select data for the
-  specific media property Openverse uses?
-- As a contributor writing a provider script, which format should I convert a
-  media property?
-- As a maintainer, I've found a discrepancy between the type of data property
-  the API returns and what is described in the table (e.g., is `null` for a
-  non-nullable property). Is there an issue to fix this data in the catalog
-  database, or do I need to create a new one?
+  validated so that I can ensure that I am collecting the correct data, or can
+  identify any potential improvements.
+- As a contributor writing a provider API script, I need to know what
+  information to save for each data property to collect from providers so that
+  the script collects data that is complete, valid for attribution and improves
+  search quality.
+- As a contributor writing a provider script, I need to know which format to
+  convert a media property to so that I can ensure that the data is valid and
+  can be saved in the database.
+- As a maintainer, I need to see if the discrepancy between the type of data
+  property the API returns and what is described in the table (e.g., is `null`
+  for a non-nullable property) is described in the documents so that I can open
+  a new issue if necessary.
+- As a maintainer, I need to know what data properties are available for each
+  media type so that I can identify any gaps or inconsistencies in the data
+  properties.
 - As an API user, I need to know what exactly this media property is and what
-  data points from the providers are used for it. E.g., does the "creator" refer
-  to the person who created the object or took the picture?
+  data points from the providers are used for it (e.g., does the "creator" refer
+  to the person who created the object or took the picture?) so that I can use
+  the data in my application.
 - As a provider of openly-licensed media, I want to know what media properties
   Openverse collects so that I can change my API responses.
 
@@ -61,96 +69,181 @@ presented as a table and will be extracted from the code. Other information
 about the data selection properties and data discrepancies will be written in a
 separate markdown file as it is easier to read, write, and lint.
 
+## Prior art
+
 The catalog has a DAG documentation generator that extracts the docstrings from
 the DAGs and creates a page with the documentation. We can use the same approach
-to create a documentation page for the media properties. The DAG doc generator
-runs the code inside docker to extract DAG information because it requires the
-project dependencies (i.e. `airflow`) in order to parse the DAG. In this
-project, we can simplify and use the `ast` module to parse static code and
-extract the docstrings to make the checks faster. This will, however, mean that
-some of the settings will not be picked up and will have to be updated during
-the generation. One example of this is the `nullable` field in the `Column`
-class: it falls back to the value of `not nullable` during the object
-initiation.
+to document media properties. The DAG doc generator runs the code inside docker
+to extract DAG information because it requires the project dependencies (i.e.
+`airflow`) in order to parse the DAG. In this project, we can simplify and use
+the `ast` module to parse static code and extract the docstrings to make the
+checks faster. This will, however, mean that some of the settings will not be
+picked up and will have to be updated during the generation. One example of this
+is the `nullable` field in the `Column` class: it falls back to the value of
+`not nullable` during the object initiation.
 
-## Files
+## Inputs
 
-This project will create the following documents:
+This section describes where the data for the documentation will be coming from.
 
-### `media_properties.md`
+### Existing Files
 
-Located at `catalog/utilities/media_docs_gen/media_properties.md`. This is a
-markdown file with the description of the media properties. This file is
-manually written by the maintainers and contains the detailed information about
-the shape and kind of data we expect to have for the property, how to select it
-from the provider, and any inconsistencies between the data we have in the
-database and the data we expect to have. This file is parsed in step 3 and the
-information is added to the final page on the documentation site.
+#### SQL DDL files
 
-### `media_properties_documentation.md`
+Located at `docker/upstream_db/`: `0003_openledger_image_schema.sql`,
+`0004_openledger_image_view.sql`, `0006_openledger_audio_schema.sql`,
+`0007_openledger_audio_view.sql`. These files define the database schema for the
+catalog. This will be parsed by the python script and converted into a table
+with the data properties. In the beginning, we will use the materialized views
+(`image_view` and `audio_view`) to get the list of properties and some
+properties that are not available in the main database (`popularity`). After
+[Popularity calculation optimizations (Matview refresh)](https://github.com/WordPress/openverse/issues/433)
+is implemented, and we drop the materialized views, only the main tables
+(`image` and `audio`) will be used. A Python method will extract the information
+from the SQL files into a mapping (dictionary) with the name of the media
+property and the following values: SQL datatype, and SQL constraints. More data
+will be added to this mapping in the further steps.
 
-Located at `documentation/catalog/media_properties_documentation.md`. This is
-markdown file generated by the `just` script and contains the preamble, the
-tables with the data properties, and the long-form description of the properties
-from `media_properties.md`. This file is used in the CI to compare the
-newly-generated file to the existing one. If there are differences, the CI will
-fail and the maintainers will need to update the documentation page.
+```python
+media_properties = {
+  "title": {
+     "sql_properties": {
+       "type": "character varying",
+       "sql_constraints": "(5000)",
+     },
+  }
+}
+```
 
-### `generate_media_properties_documentation.py`
+#### `columns.py`
 
-Located at
-`catalog/utilities/media_docs_gen/generate_media_properties_documentation.py`.
-This is a Python script that parses the SQL DDL files, Python files, and the
-`media_properties.md` file to generate the `media_properties_documentation.md`
-file. This script is run by the `just` script.
+Located in `catalog/dags/common/storage/columns.py`.
 
-## Outlined Steps
-
-### `just` script
-
-The script parses the SQL DDL files, Python files and markdown files to generate
-a markdown page with a table and long-form notes. This script can `diff` with
-the existing documentation page (created in step 4 below) for the `precommit`
-check and post a note about how to update the docs if differences are detected.
-
-### 1. SQL DDL parsing
-
-We will use the names of the properties as they are in the upstream database, in
-the same order as they are in the `image_view`/`audio_view` materialized views.
-These views are selected over the main `image` and `audio` tables because they
-are used by the API during data refresh and contain a complete list of
-properties.
-
-A Python script is written to extract the information from the SQL files into a
-mapping with the name of the media property and the following values: SQL
-datatype, and SQL constraints. More data will be added to this mapping in the
-further steps.
-
-### 2. Parsing of the Python code
+This file contains the `Column` class that defines the validation and
+transformation rules for the media properties. This file will be parsed by the
+python script and the information will be added to the "Python properties"
+column in the table with the data properties.
 
 The `Column` class and its child classes describe the validations we use to
 write the data collected by provider scripts. The `add_item` method has
 docstrings with short descriptions of what each property is. The information
 from these items will be added into the mapping from step 1.
 
-### 3. Adding the long-form information from the markdown file
+```python
+media_properties = {
+  "title": {
+     "sql_properties": { ... # SQL properties },
+     "python_properties": {
+       "column": "[StringColumn](https://github.com/WordPress/openverse/blob/b4adc87c4e3cd7c9bdc879affda17fa21791c9ad/catalog/dags/common/storage/columns.py#L361-L401)",
+       "required": False,
+       "nullable": True,
+       "truncate": True,
+       "size": 5000,
+    },
+  }
+}
+```
 
-The markdown file will be parsed and split into the preamble, postamble (???)
-and the information about each data property. This information would be added to
-the `description` in the property mapping.
+#### `media.py`, `image.py` and `audio.py`
 
-### 4. Writing the markdown file
+Located in `catalog/dags/common/storage/`.
 
-The mapping will be used to create a new markdown file: the Preamble, the tables
-for Audio and Image, the long-form document from step 3.
+These files contain the `MediaStore`, `ImageStore` and `AudioStore` classes that
+validate and transform the data. They are not easy to parse, so they are only
+used for the CI checks. When a PR adds changes to these files, the CI will show
+a warning that the documentation needs to be updated.
 
-### Information to include in `media_properties.md` for each property
+### New files
 
-Media types: Image, Audio Short description Names used in the provider scripts,
-if different from the database name Shape of the object (if it is not a simple
-type) Selection criteria Normalization and validation performed in the
-`MediaStore` class and the relevant `Column` Inconsistencies in the database
-data See sample for `identifier` and `tags` in `sample_media_properties.md`
+This project will create the following documents that will be used to generate
+the final documentation page posted on
+https://docs.openverse.org/openverse_media_properties_documentation.html.
+
+### `media_properties.md`
+
+Located at `catalog/utilities/media_docs_gen/media_properties.md`. See sample at
+[media_properties.md](samples/sample_media_properties.md).
+
+This is a markdown file with the description of the media properties. This file
+is manually written by the maintainers and contains the detailed information
+about the shape and kind of data we expect to have for the property, how to
+select it from the provider, and any inconsistencies between the data we have in
+the database and the data we expect to have. This file is parsed in step 3 and
+the information is added to the final page on the documentation site.
+
+#### Information to include in `media_properties.md` for each property
+
+- Media types: Image, Audio or both
+- Short description
+- Names used in the provider scripts, if different from the database name
+- Shape of the object (if it is not a simple type)
+- Selection criteria
+- Normalization and validation performed in the `MediaStore` class and the
+  relevant `Column`
+- Inconsistencies in the database data. See sample for `identifier` and `tags`
+  in `sample_media_properties.md`
+
+### `general.md`
+
+Located at `catalog/utilities/media_docs_gen/general.md`.
+
+See sample at [general.md](samples/sample_general.md). This is a markdown file
+with the preamble and the post-amble (i.e. the general notes that are applicable
+to more than one media property) for the documentation page.
+
+### `generate_media_properties_documentation.py`
+
+Located at
+`catalog/utilities/media_docs_gen/generate_media_properties_documentation.py`.
+
+This is a Python script that parses the SQL DDL files, Python files, and the
+`media_properties.md` file to generate the `media_properties_documentation.md`
+file. This script is run by the `just` script.
+
+## Final output
+
+The result of this project will be a markdown page with a table of media
+properties and a long-form description of each property. The page will be
+published on
+https://docs.openverse.org/openverse_media_properties_documentation.html.
+
+This page will be published at <url> with the title <title> "Openverse Media
+Properties" .
+
+### `media_properties_documentation.md`
+
+Located at `documentation/catalog/media_properties_documentation.md`.
+
+This is markdown file generated by the `just` script and contains the preamble,
+the tables with the data properties, and the long-form description of the
+properties from `media_properties.md`. This file is used in the CI to compare
+the newly-generated file to the existing one. If there are differences, the CI
+will fail and the maintainers will need to update the documentation page.
+
+Options for URLs:
+
+- https://docs.openverse.org/media/media_properties
+- https://docs.openverse.org/media/media_in_openverse
+- https://docs.openverse.org/data/media_properties
+
+Options for titles:
+
+- "Openverse Media Properties"
+- "Media in Openverse"
+- "Media Properties"
+
+## Outlined Steps
+
+1. Create a Python script that parses the DDL files, Python files and
+   `media_properties.md` file to generate the
+   `media_properties_documentation.md` file.
+2. Create a `just` script that runs the Python script from step 1 and posts a
+   note about how to update the documentation if there are differences.
+3. Create markdown files: `general.md` and `media_properties.md` with the
+   information about the media properties.
+4. Create checks for changes in `MediaStore` files that will post a note about
+   how to update the documentation if there are differences (in precommit).
+5. Add the CI workflows to `openverse` repository CI workflows.
 
 ## Dependencies
 
@@ -168,59 +261,3 @@ instead of the named parameters to the `add_item` method of the `ImageStore` and
 updating, and have another benefit of allowing us to check for required
 properties sooner. However, this would require a lot of refactoring and if
 decided on, would need to be a separate project.
-
-## Samples
-
-### `media_properties.md`
-
-```markdown
-# Title
-
-The title of the work. If blank, uses "This work" for the attribution sentence
-(This work by creator is licensed with CC BY). Shape of the data and Selection
-criteria
-
-We select the default title returned by the provider. It can be blank. Blank
-values (whether None or empty string "") are saved as empty string in the
-database (TODO: check if this is true). Existing data problems
-
-Some media items had incorrectly encoded titles [^1 - Link to a description of
-Unicode encoding problem in the "postamble"]. This is compensated for in the
-Frontend (link to the code that fixes title encoding). This problem has been
-fixed for the items that have been reingested after some time in 2020, but might
-still persist for items that were not updated since then. Link to issues for
-fixing the encoding in the catalog/api/frontend. Some Wikimedia titles have a
-shape of "FILE:xxx.svg". The provider script removes them now, but this is still
-a problem for items that were ingested earlier. The "FILE" and ".extension" are
-removed in the frontend (link to the code). Link to the issue to fix it in the
-API.
-```
-
-### `media_properties_documentation.md`
-
-```markdown
-# Openverse Media Properties
-
-preamble (copied from general.md)
-
-## Overview of the media properties
-
-table with the datatype details, possibly with links to the headings below.
-Autogenerated in steps 1-2.
-
-## In-depth description
-
-`identifier`
-
-Description of the identifier field. Step 3 reads the manually-written
-media_properties.md file, splits it by the media property, and then writes it
-here in the correct order. title
-
-description
-
-## Other considerations (postamble)
-
-### Encoding problems
-
-Description of what happened with encoding of tags and titles
-```

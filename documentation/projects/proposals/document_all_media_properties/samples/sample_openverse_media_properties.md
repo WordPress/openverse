@@ -1,4 +1,4 @@
-# Media Properties
+# Openverse Media Properties
 
 _This document is auto-generated from the source code in
 `utilities/media_props_gen/media_props_generation.py`. _
