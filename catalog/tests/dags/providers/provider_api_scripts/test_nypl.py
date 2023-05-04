@@ -218,9 +218,7 @@ def test_get_record_data_missing_required_params_returns_empty_list(
     assert images == []
 
 
-def test_get_record_data_missing_image_urls_returns_empty_dictionary(
-    falsy_property, api_param
-):
+def test_get_record_data_missing_image_urls_returns_empty_dictionary():
     search_response = _get_resource_json("response_search_success.json")
     result = search_response["nyplAPI"]["response"]["result"][0]
 
