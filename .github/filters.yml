@@ -35,6 +35,7 @@ documentation:
   - documentation/**
   - frontend/**.mdx
   - frontend/.storybook/**
+  - frontend/.storybook/**
   - frontend/nuxt.config.ts
   - frontend/tailwind.config.js
   - frontend/src/styles/tailwind.css
