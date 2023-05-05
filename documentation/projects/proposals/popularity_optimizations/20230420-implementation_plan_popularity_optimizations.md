@@ -27,11 +27,12 @@ independently of popularity calculations.
 
 ## Background
 
-To improve search relevancy, we boost records in our search results relative to
-a normalized popularity score. Because the process of calculating these scores
-and pushing them into the API DB (referred to as "data refresh") is complex, it
-may be beneficial to briefly outline the tables and views currently used in the
-catalog database.
+To improve search relevancy, we use a
+[rank feature query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-rank-feature-query.html)
+to calculate relevance scores based (in part) on a `standardized_popularity`
+score. Because the process of calculating these scores and pushing them into the
+API DB (referred to as "data refresh") is complex, it may be beneficial to
+briefly outline the tables and views currently used in the catalog database.
 
 For simplicity, I will use `image` as an example, but note that equivalent
 structures exist for `audio` and will exist for any media types added in the
@@ -98,8 +99,8 @@ data refresh is:
 
 1. Add `standardized_popularity` as a `nullable` column on the `image` and
    `audio` tables. ([link](#add-standardized-popularity-to-the-media-tables))
-1. Update the `provider_dag_factory` to calculate `standardized_popularity` **at
-   ingestion**.
+1. Update the `provider_dag_factory` and `ProviderDataIngester` to calculate
+   `standardized_popularity` **at ingestion**.
    ([link](#Update-provider-DAGs-to-calculate-standardized-popularity))
 1. Create a new `popularity_refresh` DAG
    ([link](#create-a-popularity_refresh-dag)) which:
@@ -293,7 +294,8 @@ BEGIN
 
   -- A temporary table storing the identifiers of all records that need
   -- to be updated, plus their row number. The row number will be used to
-  -- paginate the results more efficiently than using OFFSET.
+  -- paginate the results more efficiently than using OFFSET. The table
+  -- identifier must be unique for each provider to prevent conflict.
   CREATE TEMP TABLE rows_to_update AS
     SELECT ROW_NUMBER() over() row_id, identifier
     FROM image
@@ -363,7 +365,11 @@ We should not need any additional dependencies.
 
 <!-- Note any projects this plan is dependent on. -->
 
-This does not depend on any existing projects.
+This does not _depend_ on any existing projects. However, we should be careful
+to follow along with the
+[Documenting Media Properties](https://github.com/WordPress/openverse/issues/412)
+project which is also in progress, and make sure that schema changes are
+documented in accordance with that work.
 
 ### Infrastructure
 
@@ -403,12 +409,31 @@ used for the data refresh. The advantage is that the `image_popularity` view
 could be refreshed independently of the data refresh; this approach would also
 be very quick and easy to implement. The disadvantages:
 
-- Would require an expensive `join` at the time of data refresh
+- Would require a `join` at the time of data refresh
 - The `image_popularity` view still needs to be refreshed, and will still take
   an untenably long time.
 - When the data refresh runs, records that have not yet been refreshed in the
   `image_popularity` view will make it to the API, but without any standardized
   popularity score.
+
+### Separate `image_popularity` table
+
+Rather than having `popularity_score` as a column on the `image` table, we could
+have a separate `image_popularity` table which contains only the scores, and
+`identifier` for the purpose of joins. Initial popularity would still be
+calculated at ingestion, and written to the new table. The data refresh would be
+run on a (non-materialized) view which joins the two tables. This prevents the
+media tables from becoming larger, and may possibly be faster to update
+popularity. However:
+
+- It is more complex to implement, because updates now have to be made to two
+  tables at ingestion
+- It still requires the same batching logic to avoid deadlocks/timeouts, so it
+  is unlikely to be significantly faster at updating popularity scores
+- It may result in a longer running data refresh because of the join
+- It may result in longer loading times for provider DAGs
+- It will use more space as long as there is a high proportion of records with
+  popularity data, because we need to store two columns for each
 
 ## Accessibility
 
