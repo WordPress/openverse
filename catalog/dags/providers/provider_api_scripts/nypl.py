@@ -149,7 +149,7 @@ class NyplDataIngester(ProviderDataIngester):
         title_info = mods.get("titleInfo")
         if isinstance(title_info, list) and title_info:
             title_info = title_info[0]
-        return "" if title_info is None else title_info.get("title", {}).get("$")
+        return "" if not title_info else title_info.get("title", {}).get("$")
 
     @staticmethod
     def _get_captures(item_details: dict) -> list[dict]:
