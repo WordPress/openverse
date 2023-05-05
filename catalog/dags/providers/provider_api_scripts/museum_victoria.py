@@ -126,7 +126,7 @@ class VictoriaDataIngester(ProviderDataIngester):
         height, width, filesize = None, None, None
         media_data = {}
         for size in ["large", "medium", "small"]:
-            if size in media and "uri" in media[size]:
+            if isinstance(media.get(size), dict) and media[size].get("uri"):
                 media_data = media[size]
                 break
         if image_url := media_data.get("uri"):
