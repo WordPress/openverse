@@ -4,6 +4,8 @@ import { ref } from "vue"
 
 import { createPinia, PiniaVuePlugin } from "~~/test/unit/test-utils/pinia"
 
+import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
+
 import SearchIndex from "~/pages/search.vue"
 import { IMAGE } from "~/constants/media"
 
@@ -24,6 +26,12 @@ describe("SearchIndex", () => {
     searchStore.setSearchType(IMAGE)
     options = {
       localVue,
+      provide: {
+        showScrollButton: ref(false),
+        isHeaderScrolled: ref(false),
+        [IsHeaderScrolledKey]: ref(false),
+        [IsSidebarVisibleKey]: ref(false),
+      },
       pinia,
       mocks: {
         $router: { path: { name: "search-image" } },
@@ -38,7 +46,7 @@ describe("SearchIndex", () => {
   })
 
   it("hides the scroll button when injected value is false", () => {
-    options.provide = { showScrollButton: ref(false) }
+    options.provide.showScrollButton = ref(false)
 
     render(SearchIndex, options)
 
@@ -46,7 +54,7 @@ describe("SearchIndex", () => {
   })
 
   it("shows the scroll button when injected value is false", () => {
-    options.provide = { showScrollButton: ref(true) }
+    options.provide.showScrollButton = ref(true)
 
     render(SearchIndex, options)
 

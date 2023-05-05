@@ -1,5 +1,8 @@
 import { createLocalVue } from "@vue/test-utils"
 import { fireEvent, render, screen } from "@testing-library/vue"
+import VueI18n from "vue-i18n"
+
+import i18n from "~~/test/unit/test-utils/i18n"
 
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 import { PiniaVuePlugin, createPinia } from "~~/test/unit/test-utils/pinia"
@@ -17,6 +20,7 @@ jest.mock("~/composables/use-analytics", () => ({
 
 const localVue = createLocalVue()
 localVue.use(PiniaVuePlugin)
+localVue.use(VueI18n)
 
 describe("VFullLayout", () => {
   it("should render the weblink button with the foreign landing url", () => {
@@ -25,6 +29,7 @@ describe("VFullLayout", () => {
     render(VFullLayout, {
       localVue,
       pinia: createPinia(),
+      i18n,
       propsData: {
         audio,
         size: "s",
@@ -47,6 +52,7 @@ describe("VFullLayout", () => {
     render(VFullLayout, {
       localVue,
       pinia: createPinia(),
+      i18n,
       propsData: {
         audio,
         size: "s",

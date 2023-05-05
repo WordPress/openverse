@@ -1,5 +1,8 @@
 import Vue from "vue"
 import "@testing-library/jest-dom"
+import failOnConsole from "jest-fail-on-console"
+
+failOnConsole()
 
 Vue.prototype.$nuxt = {
   context: {
