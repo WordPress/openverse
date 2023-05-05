@@ -264,6 +264,37 @@ const config: NuxtConfig = {
       config.devtool = ctx.isClient ? "source-map" : "inline-source-map"
     },
   },
+  storybook: {
+    port: 6006, // standard port for Storybook
+    stories: ["~/**/*.stories.@(mdx|js)"],
+    addons: [
+      {
+        name: "@storybook/addon-essentials",
+        options: {
+          backgrounds: true,
+          viewport: true,
+          toolbars: true,
+        },
+      },
+    ],
+    parameters: {
+      backgrounds: {
+        default: "White",
+        values: [
+          { name: "White", value: "#ffffff" },
+          { name: "Dark charcoal", value: "#30272e" },
+        ],
+      },
+      options: {
+        storySort: {
+          order: ["Introduction", ["Openverse UI"], "Meta"],
+        },
+      },
+      viewport: {
+        viewports: VIEWPORTS,
+      },
+    },
+  },
   proxy: {
     // The key is appended to the address in the value.
     "/api/event":
