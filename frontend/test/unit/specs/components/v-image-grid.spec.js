@@ -18,11 +18,9 @@ const propsData = {
 }
 
 describe("VImageGrid", () => {
-  let pinia
   let options
   beforeEach(() => {
     options = {
-      pinia,
       props: propsData,
       stubs: ["VLicense"],
     }

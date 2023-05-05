@@ -14,7 +14,7 @@ const i18n = new VueI18n({
   silentTranslationWarn: true,
 })
 
-export const render = (Component, options = {}) => {
+export const render = (Component, options = {}, configureCb = null) => {
   if (!options?.i18n) {
     options.i18n = i18n
   }
@@ -25,6 +25,10 @@ export const render = (Component, options = {}) => {
   return testingLibraryRender(Component, options, (localVue) => {
     localVue.use(VueI18n)
     localVue.use(PiniaVuePlugin)
+
+    if (configureCb) {
+      configureCb(localVue, options)
+    }
   })
 }
 
