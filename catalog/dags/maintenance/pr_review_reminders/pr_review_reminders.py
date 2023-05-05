@@ -120,16 +120,16 @@ gently reminded to review this PR:
     f"{COMMENT_MARKER}"
     """
 
-Excluding weekend[^1] days, this PR was updated {days_since_update} day(s) ago. \
-PRs labelled with {urgency_label} urgency are expected to be reviewed within \
-{urgency_days} weekday(s)[^2].
+Excluding weekend[^1] days, this PR was ready for review {days_ready_for_review} \
+day(s) ago. PRs labelled with {urgency_label} urgency are expected to be reviewed \
+within {urgency_days} weekday(s)[^2].
 
 @{pr_author}, if this PR is not ready for a review, please draft it to \
 prevent reviewers from getting further unnecessary pings.
 
 [^1]: Specifically, Saturday and Sunday.
 [^2]: For the purpose of these reminders we treat Monday - Friday as weekdays. \
-Please note that the that generates these reminders runs at midnight \
+Please note that the operation that generates these reminders runs at midnight \
 UTC on Monday - Friday. This means that depending on your timezone, \
 you may be pinged outside of the expected range.
 """
@@ -142,7 +142,7 @@ def build_comment(review_delta: ReviewDelta, pr: dict):
         urgency_label=review_delta.urgency.label,
         urgency_days=review_delta.urgency.days,
         user_logins="\n".join(user_handles),
-        days_since_update=review_delta.days,
+        days_ready_for_review=review_delta.days,
         pr_author=pr["user"]["login"],
     )
 
