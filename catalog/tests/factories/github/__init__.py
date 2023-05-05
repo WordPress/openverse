@@ -225,7 +225,7 @@ def make_events(
     return result
 
 
-def make_non_urgent_events(events):
+def make_non_urgent_events(events: list[dict]):
     """
     Create an events list where all events happened today.
 
@@ -236,7 +236,7 @@ def make_non_urgent_events(events):
     return make_events(0, events)
 
 
-def make_non_urgent_reviewable_events(events):
+def make_non_urgent_reviewable_events(events: list[dict]):
     """
     Create a reviewable but non-urgent events list.
 
@@ -257,7 +257,7 @@ def make_non_urgent_reviewable_events(events):
     it is included in the "pingable" events examples
     but needs to be patched for old but non-urgent PRs.
     """
-    return make_events(0, events + ("ready_for_review",))
+    return make_events(0, events + ["ready_for_review"])
 
 
 def make_urgent_events(urgency: Urgency.Urgency, events: list[str | tuple[str, int]]):

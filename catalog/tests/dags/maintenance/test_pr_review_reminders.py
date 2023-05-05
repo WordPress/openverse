@@ -164,12 +164,15 @@ def _setup_branch_protection_for_branch(
 
 parametrize_urgency = pytest.mark.parametrize(
     "urgency",
-    (
-        Urgency.CRITICAL,
-        Urgency.HIGH,
-        Urgency.MEDIUM,
-        Urgency.LOW,
-    ),
+    [
+        pytest.param(urgency, id="{urgency.label}-urgency")
+        for urgency in (
+            Urgency.CRITICAL,
+            Urgency.HIGH,
+            Urgency.MEDIUM,
+            Urgency.LOW,
+        )
+    ],
 )
 
 
@@ -179,34 +182,54 @@ parametrize_urgency = pytest.mark.parametrize(
 # be eligible for a ping based on urgency.
 parametrize_possible_pingable_events = pytest.mark.parametrize(
     "events",
-    (
+    [
         # PRs opened "ready for review" do not have a ready for review event.
         # This covers the most common case as most PRs will only have these
         # events. There are no events for actual PR reviews or comments as those
         # are in the "comments" and "reviews" feeds for the issue/PR
-        ("labeled", "review_requested"),
+        pytest.param(
+            ["labeled", "review_requested"],
+            id="opened_ready_for_review",
+        ),
         # PRs converted to a draft after being opened will have both convert and ready events
-        ("labeled", "review_requested", "convert_to_draft", ("ready_for_review", 1)),
+        pytest.param(
+            [
+                "labeled",
+                "review_requested",
+                "convert_to_draft",
+                ("ready_for_review", 1),
+            ],
+            id="opened_then_drafted_finally_ready",
+        ),
         # A PR opened as a draft does not have a "convert_to_draft" event but does still have "ready_for_review"
-        ("labeled", "review_requested", ("ready_for_review", 2)),
+        pytest.param(
+            ["labeled", "review_requested", ("ready_for_review", 2)],
+            id="opened_as_draft_finally_ready",
+        ),
         # PRs can have multiple ready for review events if converted to draft multiple times
-        (
-            "labeled",
-            "review_requested",
-            "convert_to_draft",
-            ("ready_for_review", 1),
-            "convert_to_draft",
-            "ready_for_review",
+        pytest.param(
+            [
+                "labeled",
+                "review_requested",
+                "convert_to_draft",
+                ("ready_for_review", 1),
+                "convert_to_draft",
+                "ready_for_review",
+            ],
+            id="opened_then_drafted_redrafted_finally_ready",
         ),
         # A PR opened as a draft can be set as ready for review and then redrafted
-        (
-            "labeled",
-            "review_requested",
-            ("ready_for_review", 2),
-            ("convert_to_draft", 1),
-            ("ready_for_review", 1),
+        pytest.param(
+            [
+                "labeled",
+                "review_requested",
+                ("ready_for_review", 2),
+                ("convert_to_draft", 1),
+                ("ready_for_review", 1),
+            ],
+            id="opened_as_draft_redrafted_finally_ready",
         ),
-    ),
+    ],
 )
 
 
