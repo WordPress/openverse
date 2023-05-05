@@ -14,7 +14,7 @@ import re
 from datetime import date
 
 from common import slack
-from common.licenses import get_license_info
+from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
@@ -139,13 +139,9 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
             if image_url is None:
                 continue
 
-            license_pair = self._get_license(image_data)
-            if license_pair is None:
-                # some items do not return license anywhere, but in the UI
-                # they look like CC
+            if not (license_info := self._get_license_info(image_data)):
                 continue
-            license_, version = license_pair
-            license_info = get_license_info(license_=license_, license_version=version)
+
             image = {
                 "foreign_identifier": foreign_id,
                 "foreign_landing_url": foreign_landing_url,
@@ -241,7 +237,9 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         return metadata
 
     @staticmethod
-    def _get_license(image_data) -> None | tuple[str, str]:
+    def _get_license_info(image_data) -> LicenseInfo | None:
+        # some items do not return license anywhere, but in the UI
+        # they look like CC
         rights = image_data.get("source", {}).get("legal", {}).get("rights")
         if isinstance(rights, list):
             license_name = rights[0].get("usage_terms")
@@ -253,7 +251,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
                 # Unidentifiable license
                 return None
             license_, version = license_name.split(" ")
-            return license_, version
+            return get_license_info(license_=license_, license_version=version)
         return None
 
     def get_should_continue(self, response_json) -> bool:

@@ -28,7 +28,7 @@ import pytest
 import requests
 from django_redis import get_redis_connection
 
-from catalog.api.utils.check_dead_links import CACHE_PREFIX
+from api.utils.check_dead_links import CACHE_PREFIX
 
 
 @pytest.fixture
@@ -105,8 +105,8 @@ def test_search_quotes():
 
 
 def test_search_quotes_exact():
-    # ``water running`` returns different results when quoted vs unquoted
-    search_quotes_exact("audio", "water running")
+    # ``field recording`` returns different results when quoted vs unquoted
+    search_quotes_exact("audio", "field recording")
 
 
 def test_search_with_special_characters():

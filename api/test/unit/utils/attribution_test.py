@@ -2,7 +2,7 @@ import re
 
 import pytest
 
-from catalog.api.utils.attribution import get_attribution_text
+from api.utils.attribution import get_attribution_text
 
 
 @pytest.mark.parametrize(

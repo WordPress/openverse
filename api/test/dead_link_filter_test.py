@@ -8,7 +8,7 @@ import pytest
 import requests
 from fakeredis import FakeRedis
 
-from catalog.api.controllers.search_controller import DEAD_LINK_RATIO
+from api.controllers.search_controller import DEAD_LINK_RATIO
 
 
 @pytest.fixture(autouse=True)
@@ -19,7 +19,7 @@ def redis(monkeypatch) -> FakeRedis:
         return fake_redis
 
     monkeypatch.setattr(
-        "catalog.api.utils.dead_link_mask.get_redis_connection", get_redis_connection
+        "api.utils.dead_link_mask.get_redis_connection", get_redis_connection
     )
     monkeypatch.setattr("django_redis.get_redis_connection", get_redis_connection)
 
@@ -38,7 +38,7 @@ def turn_off_db_read(monkeypatch):
     without needing to populate the test DB.
     """
 
-    monkeypatch.setattr("catalog.api.views.image_views.ImageSerializer.needs_db", False)
+    monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
 
 
 @pytest.fixture
@@ -47,7 +47,7 @@ def unique_query_hash(redis, monkeypatch):
         return str(uuid4())
 
     monkeypatch.setattr(
-        "catalog.api.controllers.search_controller.get_query_hash", get_unique_hash
+        "api.controllers.search_controller.get_query_hash", get_unique_hash
     )
 
 
@@ -57,14 +57,12 @@ def empty_validation_cache(monkeypatch):
         return [None] * len(image_urls)
 
     monkeypatch.setattr(
-        "catalog.api.utils.check_dead_links._get_cached_statuses",
+        "api.utils.check_dead_links._get_cached_statuses",
         get_empty_cached_statuses,
     )
 
 
-_MAKE_HEAD_REQUESTS_MODULE_PATH = (
-    "catalog.api.utils.check_dead_links._make_head_requests"
-)
+_MAKE_HEAD_REQUESTS_MODULE_PATH = "api.utils.check_dead_links._make_head_requests"
 
 
 def _patch_make_head_requests():

@@ -22,7 +22,7 @@ from urllib.parse import urlencode
 from airflow.models import Variable
 
 from common import constants
-from common.licenses import NO_LICENSE_FOUND, get_license_info
+from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
@@ -255,8 +255,7 @@ class RawpixelDataIngester(ProviderDataIngester):
         if not (metadata := data.get("metadata")):
             return None
 
-        license_info = get_license_info(metadata["licenseUrl"])
-        if license_info == NO_LICENSE_FOUND:
+        if not (license_info := get_license_info(metadata["licenseUrl"])):
             return None
 
         if not (image_url := self._get_image_url(data, self.full_size_option)):

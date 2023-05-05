@@ -6,8 +6,8 @@ import pook
 import pytest
 import requests
 
-from catalog.api.utils.photon import HEADERS, UpstreamThumbnailException
-from catalog.api.utils.photon import get as photon_get
+from api.utils.photon import HEADERS, UpstreamThumbnailException
+from api.utils.photon import get as photon_get
 
 
 PHOTON_URL_FOR_TEST_IMAGE = f"{settings.PHOTON_ENDPOINT}subdomain.example.com/path_part1/part2/image_dot_jpg.jpg"

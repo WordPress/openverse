@@ -24,14 +24,17 @@
       :external-sources="externalSources"
       :search-term="searchTerm"
       :is-supported="supported"
-      @tab="$emit('tab', $event)"
     />
   </section>
   <VErrorSection v-else class="w-full py-10">
     <template #image>
       <VErrorImage error-code="NO_RESULT" />
     </template>
-    <VNoResults :external-sources="externalSources" :search-term="searchTerm" />
+    <VNoResults
+      :external-sources="externalSources"
+      :search-term="searchTerm"
+      :media-type="externalSourcesType"
+    />
   </VErrorSection>
 </template>
 

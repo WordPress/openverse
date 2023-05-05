@@ -36,6 +36,7 @@ jobs:
       api: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'api') }}
       frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
       documentation: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'documentation') }}
+      ci_cd: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ci_cd') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -124,26 +125,27 @@ jobs:
       - get-changes
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Add API stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.api == 'true' }}
+      - name: Apply stack labels
+        uses: actions/github-script@v6
         with:
-          labels: "🧱 stack: api"
-
-      - name: Add ingestion server stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.ingestion_server == 'true' }}
-        with:
-          labels: "🧱 stack: ingestion server"
-
-      - name: Add frontend stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.frontend == 'true' }}
-        with:
-          labels: "🧱 stack: frontend"
+          # Also see
+          # - list of stack filters: `.github/filters.yml`
+          # - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
+          script: |
+            const stacks = ["catalog", "api", "ingestion_server", "frontend", "documentation", "mgmt"]
+            const labels = JSON
+              .parse('${{ needs.get-changes.outputs.changes }}')
+              .filter(change => stacks.includes(change))
+              .map(change => `🧱 stack: ${change.replace("_", " ")}`)
+            if (labels.len == 0) {
+              labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
+            }
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels,
+            })
 
   build-images:
     name: Build Docker images
@@ -189,9 +191,6 @@ jobs:
         run: |
           just frontend/run i18n
           cp .npmrc .pnpmfile.cjs pnpm-lock.yaml frontend/
-        env:
-          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
-          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -229,7 +228,9 @@ jobs:
 
   test-cat:
     name: Run tests for the catalog
-    if: needs.get-changes.outputs.catalog == 'true'
+    if: |
+      needs.get-changes.outputs.catalog == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -260,7 +261,9 @@ jobs:
 
   catalog-checks:
     name: Run catalog checks
-    if: needs.get-changes.outputs.catalog == 'true'
+    if: |
+      needs.get-changes.outputs.catalog == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -293,7 +296,9 @@ jobs:
 
   test-ing:
     name: Run tests for ingestion-server
-    if: needs.get-changes.outputs.ingestion_server == 'true'
+    if: |
+      needs.get-changes.outputs.ingestion_server == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -337,7 +342,10 @@ jobs:
 
   test-api:
     name: Run tests for the API
-    if: needs.get-changes.outputs.ingestion_server == 'true' || needs.get-changes.outputs.api == 'true'
+    if: |
+      needs.get-changes.outputs.ingestion_server == 'true' ||
+      needs.get-changes.outputs.api == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -383,7 +391,9 @@ jobs:
 
   django-checks:
     name: Run Django checks
-    if: needs.get-changes.outputs.api == 'true'
+    if: |
+      needs.get-changes.outputs.api == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -440,10 +450,12 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-django-checks:
     name: Run Django checks
-    if: needs.get-changes.outputs.api != 'true'
+    if: |
+      !cancelled() &&
+      needs.django-checks.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - get-changes
+      - django-checks
     strategy:
       matrix:
         name:
@@ -462,7 +474,9 @@ jobs:
 
   nuxt-build:
     name: Check Nuxt build
-    if: needs.get-changes.outputs.frontend == 'true'
+    if: |
+      needs.get-changes.outputs.frontend == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -480,13 +494,12 @@ jobs:
 
       - name: Run build
         run: just frontend/run build
-        env:
-          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
-          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
   nuxt-checks:
     name: Run Nuxt checks
-    if: needs.get-changes.outputs.frontend == 'true'
+    if: |
+      needs.get-changes.outputs.frontend == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -520,10 +533,12 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-nuxt-checks:
     name: Run Nuxt checks
-    if: needs.get-changes.outputs.frontend != 'true'
+    if: |
+      !cancelled() &&
+      needs.nuxt-checks.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - get-changes
+      - nuxt-checks
     strategy:
       fail-fast: false
       matrix:
@@ -537,7 +552,9 @@ jobs:
 
   playwright:
     name: Run Playwright tests
-    if: needs.get-changes.outputs.frontend == 'true'
+    if: |
+      needs.get-changes.outputs.frontend == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -582,10 +599,12 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-playwright:
     name: Run Playwright tests
-    if: needs.get-changes.outputs.frontend != 'true'
+    if: |
+      !cancelled() &&
+      needs.playwright.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - get-changes
+      - playwright
     strategy:
       matrix:
         name:
@@ -602,10 +621,9 @@ jobs:
     if: |
       !cancelled() &&
       github.event_name == 'pull_request' &&
-      needs.get-changes.outputs.frontend == 'true'
+      needs.playwright.result != ''
     runs-on: ubuntu-latest
     needs:
-      - get-changes
       - playwright
 
     steps:
@@ -637,7 +655,9 @@ jobs:
 
           It looks like some of the Playwright tests failed. You can download the trace output and image diffs for the failed tests under the "Artifacts" section in the above page.
 
-          You can read the [docs on how to use this artifact](https://docs.openverse.org/guides/frontend/playwright_tests.html#debugging).
+          You can read the [docs on how to use this artifact](https://docs.openverse.org/frontend/reference/playwright_tests.html#debugging).
+
+          If the test is flaky, follow the [flaky test triage procedure](https://docs.openverse.org/general/test.html#flaky-tests).
           $EOF
           HEREDOC
           )
@@ -704,8 +724,6 @@ jobs:
       - name: Compile documentation
         uses: ./.github/actions/build-docs
         with:
-          glotpress_username: ${{ secrets.MAKE_USERNAME }}
-          glotpress_password: ${{ secrets.MAKE_LOGIN_PASSWORD }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
         # Docs will be located at `/tmp/docs`.
 

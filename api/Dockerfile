@@ -59,7 +59,7 @@ ENV PATH="/venv/bin:$PATH"
 
 WORKDIR /api
 
-ADD catalog/api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansPro-Bold.ttf
+ADD api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansPro-Bold.ttf
 
 # Copy virtualenv from the builder image
 COPY --from=builder /venv /venv
