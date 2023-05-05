@@ -75,7 +75,7 @@ services:
     # Create empty buckets on every container startup
     # Note: $0 is included in the exec because "/bin/bash -c" swallows the first
     # argument, so it must be re-added at the beginning of the exec call
-    entrypoint: docker/minio/s3-entrypoint.sh
+    entrypoint: docker/minio/s3_entrypoint.sh
     command: minio server /data --address :5000 --console-address :5001
     volumes:
       - minio:/data
