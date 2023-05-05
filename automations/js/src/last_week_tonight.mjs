@@ -18,7 +18,7 @@ import { escapeHtml } from './html.mjs'
 const pat = process.env.ACCESS_TOKEN
 /** the username for the Make site account making the post */
 const username = process.env.MAKE_USERNAME
-/** the application password for the Make site */
+/** the application password, not login password, for the Make site */
 const password = process.env.MAKE_PASSWORD
 
 if (!pat) {

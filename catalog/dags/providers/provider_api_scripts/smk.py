@@ -140,8 +140,7 @@ class SmkDataIngester(ProviderDataIngester):
         return meta_data
 
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
-        license_info = get_license_info(license_url=data.get("rights"))
-        if license_info is None:
+        if not (license_info := get_license_info(data.get("rights"))):
             return
         images = []
         alt_images = self._get_images(data)

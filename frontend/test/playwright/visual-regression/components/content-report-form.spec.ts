@@ -14,7 +14,8 @@ test.describe("content report form", () => {
     })
   })
 
-  test("focused close button", async ({ page }) => {
+  // Flaky: https://github.com/WordPress/openverse/issues/2020
+  test.skip("focused close button", async ({ page }) => {
     await page.click('button:has-text("report")', { timeout: 500 })
     const form = page.locator('[data-testid="content-report-popover"]')
 

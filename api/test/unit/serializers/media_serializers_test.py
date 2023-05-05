@@ -9,9 +9,9 @@ from rest_framework.views import APIView
 
 import pytest
 
-from catalog.api.serializers.audio_serializers import AudioSerializer
-from catalog.api.serializers.image_serializers import ImageSerializer
-from catalog.api.serializers.media_serializers import MediaSearchRequestSerializer
+from api.serializers.audio_serializers import AudioSerializer
+from api.serializers.image_serializers import ImageSerializer
+from api.serializers.media_serializers import MediaSearchRequestSerializer
 
 
 @pytest.fixture
@@ -100,3 +100,42 @@ def test_media_serializer_adds_license_url_if_missing(
     del hit.license_url  # without the ``del``, the property is dynamically generated
     repr = serializer_class(hit, context={"request": anon_request}).data
     assert repr["license_url"] == "https://creativecommons.org/publicdomain/zero/1.0/"
+
+
+@pytest.mark.parametrize(
+    ("data", "result"),
+    (
+        ({"mature": True}, {"unstable__include_sensitive_results": True}),
+        (
+            {"unstable__include_sensitive_results": True},
+            {"unstable__include_sensitive_results": True},
+        ),
+        ({"mature": False}, {"unstable__include_sensitive_results": False}),
+        (
+            {"unstable__include_sensitive_results": False},
+            {"unstable__include_sensitive_results": False},
+        ),
+    ),
+)
+def test_search_request_serializer_include_sensitive_results_validation_well_formed_request(
+    data: dict, result
+):
+    serializer = MediaSearchRequestSerializer(data=data)
+    assert serializer.is_valid()
+    # The expected value should be mapped from the field actually
+    # passed in data
+    _, expected_value = data.popitem()
+    assert serializer.validated_data["include_sensitive_results"] == expected_value
+
+
+@pytest.mark.parametrize(
+    "data",
+    (
+        {"mature": m, "unstable__include_sensitive_results": i}
+        for m in (True, False)
+        for i in (True, False)
+    ),
+)
+def test_search_request_serializer_include_sensitive_results_malformed_request(data):
+    serializer = MediaSearchRequestSerializer(data=data)
+    assert not serializer.is_valid()

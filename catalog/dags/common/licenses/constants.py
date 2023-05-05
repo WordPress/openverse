@@ -102,11 +102,11 @@ _SPECIAL_REVERSE_ONLY_PATHS = {
 }
 
 
-def _get_license_version_pair_from_path(path):
+def _get_license_version_pair_from_path(path: str) -> tuple[str, str]:
     return path.split("/")[1], path.split("/")[2]
 
 
-def get_license_path_map():
+def get_license_path_map() -> dict[str, tuple[str, str]]:
     license_path_map = {
         path: _get_license_version_pair_from_path(path)
         for path in _SIMPLE_LICENSE_PATHS + _SIMPLE_IRREVERSIBLE_LICENSE_PATHS
@@ -116,7 +116,7 @@ def get_license_path_map():
     return license_path_map
 
 
-def get_reverse_license_path_map():
+def get_reverse_license_path_map() -> dict[tuple[str, str], str]:
     reverse_map = {
         _get_license_version_pair_from_path(path): path
         for path in _SIMPLE_LICENSE_PATHS

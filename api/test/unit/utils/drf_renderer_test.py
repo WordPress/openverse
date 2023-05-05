@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 
 import pytest
 
-from catalog.api.utils.drf_renderer import BrowsableAPIRendererWithoutForms
+from api.utils.drf_renderer import BrowsableAPIRendererWithoutForms
 
 
 @pytest.fixture

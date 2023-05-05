@@ -1,5 +1,4 @@
-Project proposal for
-[Document all media properties](https://github.com/WordPress/openverse/issues/412)
+# 2023-03-07 Project proposal for [Document all media properties](https://github.com/WordPress/openverse/issues/412)
 
 ## Due date:
 
@@ -8,7 +7,8 @@ Project proposal for
 ## Assigned reviewers
 
 - [x] @AetherUnbound
-- [ ] @krysal
+- [x] @krysal
+- [x] @rwidom
 
 ## Description
 

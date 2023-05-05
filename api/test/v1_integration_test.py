@@ -11,9 +11,9 @@ from test.constants import API_URL
 import pytest
 import requests
 
-from catalog.api.constants.licenses import LICENSE_GROUPS
-from catalog.api.models import Image
-from catalog.api.utils.watermark import watermark
+from api.constants.licenses import LICENSE_GROUPS
+from api.models import Image
+from api.utils.watermark import watermark
 
 
 @pytest.fixture

@@ -16,6 +16,6 @@ title: "<Replace this with actual title>"
 - [ ] TBD
 - [ ] TBD
 
-<!-- Start the conversation. Please @ anyone relevant and try to ask questions to help facilate discussion. -->
+<!-- Start the conversation. Please @ anyone relevant and try to ask questions to help facilitate discussion. -->
 
 ## Description

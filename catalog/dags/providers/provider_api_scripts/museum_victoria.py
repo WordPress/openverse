@@ -101,7 +101,7 @@ class VictoriaDataIngester(ProviderDataIngester):
                 media
             )
             license_info = VictoriaDataIngester._get_license_info(media)
-            if image_url is None or image_id is None or license_info is None:
+            if image_url is None or image_id is None or not license_info:
                 continue
             creator = VictoriaDataIngester._get_creator(media)
 

@@ -6,8 +6,8 @@ import pook
 import pytest
 import requests
 
-from catalog.api.utils.photon import HEADERS, UpstreamThumbnailException
-from catalog.api.utils.photon import get as photon_get
+from api.utils.photon import HEADERS, UpstreamThumbnailException
+from api.utils.photon import get as photon_get
 
 
 PHOTON_URL_FOR_TEST_IMAGE = f"{settings.PHOTON_ENDPOINT}subdomain.example.com/path_part1/part2/image_dot_jpg.jpg"
@@ -239,28 +239,25 @@ def test_get_timeout_existing_cache_key(
     assert redis.get(key) == b"6"
 
 
-def test_get_request_exception(capture_exception, setup_requests_get_exception):
-    exc = requests.RequestException()
-    setup_requests_get_exception(exc)
+@pytest.mark.parametrize(
+    "exception, expected_message",
+    [
+        (  # Includes HTTP response errors
+            requests.RequestException(),
+            r"Failed to render thumbnail.",
+        ),
+        (ValueError(), r"due to unidentified exception."),
+    ],
+)
+def test_get_raise_exception_msg(
+    capture_exception, setup_requests_get_exception, exception, expected_message
+):
+    setup_requests_get_exception(exception)
 
-    with pytest.raises(
-        UpstreamThumbnailException, match=r"Failed to render thumbnail:"
-    ):
+    with pytest.raises(UpstreamThumbnailException, match=expected_message):
         photon_get(TEST_IMAGE_URL)
 
-    capture_exception.assert_called_once_with(exc)
-
-
-def test_get_generic_exception(capture_exception, setup_requests_get_exception):
-    exc = ValueError()
-    setup_requests_get_exception(exc)
-
-    with pytest.raises(
-        UpstreamThumbnailException, match=r"due to unidentified exception"
-    ):
-        photon_get(TEST_IMAGE_URL)
-
-    capture_exception.assert_called_once_with(exc)
+    capture_exception.assert_called_once_with(exception)
 
 
 @pook.on
@@ -286,4 +283,16 @@ def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
+    assert mock_get.matched
+
+
+@pook.on
+def test_get_unsuccessful_request_raises_exception():
+    mock_get: pook.Mock = pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(404).mock
+
+    with pytest.raises(
+        UpstreamThumbnailException, match=r"Failed to render thumbnail."
+    ):
+        photon_get(TEST_IMAGE_URL)
+
     assert mock_get.matched

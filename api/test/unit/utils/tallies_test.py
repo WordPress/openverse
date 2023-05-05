@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 from freezegun import freeze_time
 
-from catalog.api.utils import tallies
+from api.utils import tallies
 
 
 # Use a fake media type to avoid having to run each test case for each media type

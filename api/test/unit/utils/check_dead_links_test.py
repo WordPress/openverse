@@ -5,7 +5,7 @@ import aiohttp
 import pook
 import pytest
 
-from catalog.api.utils.check_dead_links import HEADERS, check_dead_links
+from api.utils.check_dead_links import HEADERS, check_dead_links
 
 
 @mock.patch.object(aiohttp, "ClientSession", wraps=aiohttp.ClientSession)

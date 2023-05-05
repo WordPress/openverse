@@ -1,5 +1,8 @@
 # Reference
 
-```{include} ../../_toc_templates/flat.md
+```{toctree}
+:titlesonly:
 
+search_algorithm
+authentication_and_throttling
 ```
