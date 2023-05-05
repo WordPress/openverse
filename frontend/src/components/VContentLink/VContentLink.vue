@@ -32,10 +32,11 @@ import type { SupportedMediaType } from "~/constants/media"
 import { defineEvent } from "~/types/emits"
 
 import VLink from "~/components/VLink.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
 
 export default defineComponent({
   name: "VContentLink",
-  components: { VLink },
+  components: { VIcon, VLink },
   props: {
     /**
      * One of the media types supported.

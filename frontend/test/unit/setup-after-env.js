@@ -8,5 +8,6 @@ Vue.prototype.$nuxt = {
       captureEvent: jest.fn(),
     },
     localePath: (args) => args,
+    i18n: { t: (val) => val, tc: (val) => val },
   },
 }

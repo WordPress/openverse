@@ -1,7 +1,9 @@
+import * as uuid from "uuid"
+
 export const getAudioObj = (overrides = {}) =>
   Object.assign(
     {
-      id: "e19345b8-6937-49f7-a0fd-03bf057efc28",
+      id: uuid.v4(),
       title: "La vie des bêtes",
       foreign_landing_url: "https://www.jamendo.com/track/11188",
       creator: "AS-POTIRONT!",
@@ -44,6 +46,7 @@ export const getAudioObj = (overrides = {}) =>
         "http://localhost:8000/v1/audio/e19345b8-6937-49f7-a0fd-03bf057efc28",
       related_url:
         "http://localhost:8000/v1/audio/e19345b8-6937-49f7-a0fd-03bf057efc28/recommendations",
+      peaks: [],
     },
     overrides
   )
