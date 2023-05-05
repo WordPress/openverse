@@ -106,7 +106,7 @@ services:
     # This does *not* allow for testing permissions issues that may come up in real AWS.
     # And, if you remove files from /tests/s3-data, you will need to use `just down -v`
     # and `just up` or `just recreate` to see the minio bucket without those files.
-    entrypoint: docker/minio/subDir-loop-entrypoint.sh
+    entrypoint: docker/minio/load_to_s3_entrypoint.sh
 
   # Dev changes for the scheduler
   scheduler:
