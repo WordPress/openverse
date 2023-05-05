@@ -31,7 +31,8 @@ dashboards or Cloudflare analytics and either of these are true:
 1.  Log into Cloudflare.
 2.  Select the relevant domain in the Cloudflare UI.
 3.  Go to `Analytics & Logs => Traffic` and choose the "Page Views" box in the
-    left sidebar.
+    left sidebar. You should see a page like the one shown in the image below.
+    ![Cloudflare's Analytics & Logs => Traffic page sample](./cloudflare_traffic_ui.png)
 4.  Set the time range dropdown to 24 hours.
 5.  See if you can find the point where the current spike in traffic begins.
 6.  If you do not see a place where traffic stabilizes to a relatively flat
