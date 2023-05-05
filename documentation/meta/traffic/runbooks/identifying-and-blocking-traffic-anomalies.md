@@ -53,7 +53,11 @@ single best way to mitigate malicious traffic.
 #### Traffic Source Identifiers
 
 ```{note}
-Expectations about the ratio of traffic a single source should occupy are based on historical data and subject to change over time. To validate these baseline percentages, please analyze a time-slice of traffic *without* any known malicious traffic, if one exists in Cloudflare's avaliable data, checking for any single source exceeding the percentages listed here.
+Expectations about the ratio of traffic a single source should occupy are based
+on historical data and subject to change over time. To validate these baseline
+percentages, please analyze a time-slice of traffic *without* any known
+malicious traffic, if one exists in Cloudflare's avaliable data, checking for
+any single source exceeding the percentages listed here.
 ```
 
 - Source "Autonomous System Numbers" (ASNs): Unique identifiers for a group of
@@ -94,11 +98,20 @@ Expectations about the ratio of traffic a single source should occupy are based 
     these traffic sources.
 
 ```{note}
-Cloudflare will only show the 5 largest of each category; greater than 5 disproportionately-large items of any category would be unprecedented and surprising in Openverse's history.
+Cloudflare will only show the 5 largest of each category; greater than 5
+disproportionately-large items of any category would be unprecedented and
+surprising in Openverse's history.
 ```
 
-````{warning}
-If you haven't found anything, it's unlikely that this situation is connected to malicious traffic or specific actors. Instead, it is more likely to be a normal increase in traffic to Openverse. At this point, it's more likely that a change in code or infrastructure has caused a performance drop, exposed by the higher traffic, or that the traffic has grown so much that we need to allocate additional server resources. Consider recent Openverse marketing efforts or WordPress events if the traffic looks organic and we need to attribute it to something.
+```{warning}
+If you haven't found anything, it's unlikely that this situation is connected
+to malicious traffic or specific actors. Instead, it is more likely to be a
+normal increase in traffic to Openverse. At this point, it's more likely that a
+change in code or infrastructure has caused a performance drop, exposed by the
+higher traffic, or that the traffic has grown so much that we need to allocate
+additional server resources. Consider recent Openverse marketing efforts or
+WordPress events if the traffic looks organic and we need to attribute it to
+something.
 
 2.  Take the list of suspicious traffic source IDs and go to the
     `Security => Bots` section of Cloudflare. Here, you'll see more lists of IP
@@ -108,15 +121,18 @@ If you haven't found anything, it's unlikely that this situation is connected to
 3.  Use the "add filter" button and filter by your listed resources
     individually. Write down which of the identified resources are comprised of
     the most `Automated` and `Likely Automated` traffic.
+```
 
 ```{warning}
-If an ASN has a significant amount of human traffic, it can indicate this ASN is an ISP rather than a hosting company or company which offers a Virtual Private Network. Blocking these types of ASNs can disrupt service to human users.
-````
+If an ASN has a significant amount of human traffic, it can indicate this ASN
+is an ISP rather than a hosting company or company which offers a Virtual
+Private Network. Blocking these types of ASNs can disrupt service to human users.
+```
 
 ### 3. Block suspicious traffic sources in the Web Access Firewall
 
-For each source in your list, create a Web Access Firewall rule in Cloudflare.
-These can be found in the `Security => WAF` section. The
+For each source in your list, create a **Web Access Firewall rule** in
+Cloudflare. These can be found in the `Security => WAF` section. The
 [official Cloudflare docs](https://developers.cloudflare.com/firewall/cf-dashboard/create-edit-delete-rules/#create-a-firewall-rule)
 explain how to do this well. Some suggestions:
 
