@@ -206,6 +206,10 @@ exec +args:
 run +args:
     just dc run -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} "{{ args }}"
 
+# Execute pgcli against one of the database instances
+_pgcli container db_user_pass db_name db_host db_port="5432":
+    just exec {{ container }} pgcli postgresql://{{ db_user_pass }}:{{ db_user_pass }}@{{ db_host }}:{{ db_port }}/{{ db_name }}
+
 ########
 # Misc #
 ########
