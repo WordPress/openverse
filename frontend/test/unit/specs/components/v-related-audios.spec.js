@@ -7,10 +7,6 @@ import VRelatedAudio from "~/components/VAudioDetails/VRelatedAudio.vue"
 
 const audioResults = [getAudioObj(), getAudioObj()]
 
-// localVue.prototype.$nuxt = {
-//   nbFetching: 0,
-// }
-
 describe("RelatedAudios", () => {
   it("should render content when finished loading related audios", async () => {
     await render(VRelatedAudio, {
@@ -20,7 +16,6 @@ describe("RelatedAudios", () => {
       },
       stubs: { LoadingIcon: true, VAudioThumbnail: true },
     })
-    screen.debug()
 
     expect(screen.findByText("audio-details.related-audios"))
 

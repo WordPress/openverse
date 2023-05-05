@@ -1,19 +1,8 @@
-import { render, screen } from "@testing-library/vue"
-import VueI18n from "vue-i18n"
+import { screen } from "@testing-library/vue"
 
-import { createLocalVue } from "@vue/test-utils"
-
-import { PiniaVuePlugin, createPinia } from "~~/test/unit/test-utils/pinia"
-
-import messages from "~/locales/en.json"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
-
-const i18n = new VueI18n({
-  locale: "en",
-  fallbackLocale: "en",
-  messages: { en: messages },
-})
 
 const propsData = {
   images: [
@@ -29,19 +18,13 @@ const propsData = {
 }
 
 describe("VImageGrid", () => {
-  let localVue
   let pinia
   let options
   beforeEach(() => {
-    localVue = createLocalVue()
-    localVue.use(PiniaVuePlugin)
-    pinia = createPinia()
     options = {
-      localVue,
       pinia,
       props: propsData,
       stubs: ["VLicense"],
-      mocks: { $nuxt: { context: { i18n } } },
     }
   })
   it("renders images without load more button", () => {
