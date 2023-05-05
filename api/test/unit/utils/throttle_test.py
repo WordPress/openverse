@@ -7,8 +7,8 @@ from rest_framework.views import APIView
 import pytest
 from fakeredis import FakeRedis
 
-from catalog.api.models.oauth import ThrottledApplication
-from catalog.api.utils.throttle import (
+from api.models.oauth import ThrottledApplication
+from api.utils.throttle import (
     AbstractAnonRateThrottle,
     AbstractOAuth2IdRateThrottle,
     BurstRateThrottle,
@@ -23,9 +23,7 @@ def redis(monkeypatch) -> FakeRedis:
     def get_redis_connection(*args, **kwargs):
         return fake_redis
 
-    monkeypatch.setattr(
-        "catalog.api.utils.throttle.get_redis_connection", get_redis_connection
-    )
+    monkeypatch.setattr("api.utils.throttle.get_redis_connection", get_redis_connection)
 
     yield fake_redis
     fake_redis.client().close()

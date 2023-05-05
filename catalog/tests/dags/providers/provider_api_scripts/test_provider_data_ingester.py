@@ -177,6 +177,23 @@ def test_process_batch_handles_list_of_records():
         assert image_store_mock.call_count == 1
 
 
+def test_process_batch_handles_empty_dictionary_of_records_from_get_record_data():
+    with (
+        patch.object(audio_store, "add_item") as audio_store_mock,
+        patch.object(image_store, "add_item") as image_store_mock,
+        patch.object(ingester, "get_record_data") as get_record_data_mock,
+    ):
+        # Mock `get_record_data` to return an empty list of records
+        get_record_data_mock.return_value = []
+
+        record_count = ingester.process_batch([{}])
+
+        # Both records are added, and to the appropriate stores
+        assert record_count == 0
+        assert audio_store_mock.call_count == 0
+        assert image_store_mock.call_count == 0
+
+
 def test_process_batch_halts_processing_after_reaching_ingestion_limit():
     # Set up an ingester with an ingestion limit of 1
     ingester = MockProviderDataIngester()

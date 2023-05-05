@@ -8,7 +8,7 @@ import pytest
 from requests import Request, Response
 from requests.structures import CaseInsensitiveDict
 
-from catalog.api.utils.waveform import UA_STRING, download_audio
+from api.utils.waveform import UA_STRING, download_audio
 
 
 _MOCK_AUDIO_PATH = Path(__file__).parent / ".." / ".." / "factory"

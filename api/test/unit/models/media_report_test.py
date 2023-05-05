@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import pytest
 from elasticsearch import TransportError
 
-from catalog.api.models import (
+from api.models import (
     Audio,
     AudioReport,
     DeletedAudio,
@@ -19,7 +19,7 @@ from catalog.api.models import (
     MatureAudio,
     MatureImage,
 )
-from catalog.api.models.media import (
+from api.models.media import (
     DEINDEXED,
     DMCA,
     MATURE,
