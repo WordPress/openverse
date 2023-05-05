@@ -66,9 +66,10 @@ any single source exceeding the percentages listed here.
   an internet service provider or hosting company.
 
   A single ASN usually makes up less than 10% of total Openverse requests in a
-  given timeframe. If the percentage of requests from a single ASN is significantly higher
-  than 10%, it may indicate that one or more users on the ASN are scraping
-  Openverse or over using/abusing expected programmatic access patterns.
+  given timeframe. If the percentage of requests from a single ASN is
+  significantly higher than 10%, it may indicate that one or more users on the
+  ASN are scraping Openverse or over using/abusing expected programmatic access
+  patterns.
 
 - Source user agents: Unique user-agent strings sent with requests to Openverse.
   Nearly all UA strings from web browsers begin with `Mozilla`. Outside of the
