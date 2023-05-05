@@ -191,7 +191,7 @@ recreate:
     just up "--force-recreate --build"
     just init
 
-# Recreate the frontend recreate recipe
+# Bust pnpm cache and reinstall Node.js dependencies
 node-recreate:
     find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
     rm -rf $(pnpm store path)
