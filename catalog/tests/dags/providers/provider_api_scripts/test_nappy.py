@@ -90,6 +90,17 @@ def test_get_should_continue(response_json, expected_result):
         pytest.param({}, None, id="empty_dict"),
         pytest.param(FULL_BATCH_RESPONSE, None, id="no_urls"),
         pytest.param(
+            {**SINGLE_ITEM, "foreign_landing_url": ""},
+            None,
+            id="falsy_foreign_landing_url",
+        ),
+        pytest.param(
+            {**SINGLE_ITEM, "foreign_identifier": ""},
+            None,
+            id="falsy_foreign_identifier",
+        ),
+        pytest.param({**SINGLE_ITEM, "url": ""}, None, id="falsy_url"),
+        pytest.param(
             SINGLE_ITEM,
             {
                 "foreign_landing_url": "https://nappy.co/photo/9/woman-with-tattoos",
