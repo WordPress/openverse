@@ -19,7 +19,8 @@ ENABLE_DC_OVERRIDES := env_var_or_default("OPENVERSE_ENABLE_DC_OVERRIDES", "true
     cd catalog && just
     cd api && just
     cd ingestion_server && just
-    cd frontend && just
+    cd 
+    && just
     cd automations/python && just
     cd automations/js && just
     cd documentation && just
@@ -189,6 +190,12 @@ recreate:
     just down -v
     just up "--force-recreate --build"
     just init
+
+# Recreate the frontend recreate recipe
+node-recreate:
+    find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+    rm -rf $(pnpm store path)
+    pnpm install
 
 # Show logs of all, or named, Docker services
 logs services="" args=(if IS_CI != "" { "" } else { "-f" }):
