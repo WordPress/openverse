@@ -1,10 +1,10 @@
-import LoadingIcon from "~/components/LoadingIcon.vue"
+import { render, screen } from "@testing-library/vue"
 
-import render from "../../test-utils/render"
+import LoadingIcon from "~/components/LoadingIcon.vue"
 
 describe("LoadingIcon", () => {
   it("should render correct contents", () => {
-    const wrapper = render(LoadingIcon)
-    expect(wrapper.find(".lds-ring").vm).toBeDefined()
+    render(LoadingIcon)
+    expect(screen.queryAllByTestId("lds-ring")).toHaveLength(1)
   })
 })
