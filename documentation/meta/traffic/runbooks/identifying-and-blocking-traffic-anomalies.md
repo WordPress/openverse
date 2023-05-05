@@ -112,6 +112,7 @@ higher traffic, or that the traffic has grown so much that we need to allocate
 additional server resources. Consider recent Openverse marketing efforts or
 WordPress events if the traffic looks organic and we need to attribute it to
 something.
+```
 
 2.  Take the list of suspicious traffic source IDs and go to the
     `Security => Bots` section of Cloudflare. Here, you'll see more lists of IP
@@ -121,7 +122,6 @@ something.
 3.  Use the "add filter" button and filter by your listed resources
     individually. Write down which of the identified resources are comprised of
     the most `Automated` and `Likely Automated` traffic.
-```
 
 ```{warning}
 If an ASN has a significant amount of human traffic, it can indicate this ASN
@@ -173,7 +173,5 @@ property which they share in common could be a great block target.
    the issue to the rest of the team via a ping in our team chat. A maintainer
    should review your run of the book and repeat it if they find a particular
    type of traffic anomaly wasn't assessed.
-2. If the team member is unable to complete the procedure successfully, escalate
-   the issue to the rest of the team via a ping in our team chat. Here we will
-   explore more drastic measures for mitigating the service disruption, like API
-   throttling or rate limiting adjustments.
+2. Here we will explore more drastic measures for mitigating the service
+   disruption, like API throttling or rate limiting adjustments.
