@@ -19,7 +19,7 @@ ENABLE_DC_OVERRIDES := env_var_or_default("OPENVERSE_ENABLE_DC_OVERRIDES", "true
     cd catalog && just
     cd api && just
     cd ingestion_server && just
-    cd && just
+    cd frontend && just
     cd automations/python && just
     cd automations/js && just
     cd documentation && just
