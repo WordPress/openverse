@@ -1,3 +1,2 @@
-```{note}
-**Note:** This contributing guide has been moved to [docs.openverse.org/general/contributing](https://docs.openverse.org/general/contributing). Please refer to the new location for the latest version.
-```
+> **Note**
+> This contributing guide has been moved to [docs.openverse.org/general/contributing](https://docs.openverse.org/general/contributing). Please refer to the new location for the latest version.
