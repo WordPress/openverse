@@ -197,7 +197,7 @@ jobs:
       - name: Build image `${{ matrix.image }}`
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.context }}
+          context: ${{ matrix.context || matrix.image }}
           target: ${{ matrix.target }}
           push: false
           tags: openverse-${{ matrix.image }}

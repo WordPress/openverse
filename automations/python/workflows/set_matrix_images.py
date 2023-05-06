@@ -26,20 +26,11 @@ includes = {
         "context": "docker/upstream_db",
         "target": "db",
     },
-    "catalog": {"image": "catalog", "context": "catalog", "target": "cat"},
-    "ingestion_server": {
-        "image": "ingestion_server",
-        "context": "ingestion_server",
-        "target": "ing",
-    },
-    "api": {"image": "api", "context": "api", "target": "api"},
+    "catalog": {"image": "catalog", "target": "cat"},
+    "ingestion_server": {"image": "ingestion_server", "target": "ing"},
+    "api": {"image": "api", "target": "api"},
     "api_nginx": {"image": "api_nginx", "context": "api", "target": "nginx"},
-    "frontend": {
-        "image": "frontend",
-        "context": "frontend",
-        "target": "app",
-        "build-contexts": "repo_root=.",
-    },
+    "frontend": {"image": "frontend", "target": "app", "build-contexts": "repo_root=."},
 }
 
 if "ci_cd" in changes:
