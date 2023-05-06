@@ -3,6 +3,7 @@
 ```{toctree}
 :titlesonly:
 
+contributing
 general_setup
 quickstart
 run
