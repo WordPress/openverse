@@ -80,6 +80,7 @@ jobs:
         id: set-matrix
         env:
           CHANGES: ${{ needs.get-changes.outputs.changes }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
         working-directory: automations/python/workflows
         run: python set_matrix_images.py
 
@@ -949,6 +950,7 @@ jobs:
           SERVER_URL: ${{ github.server_url }}
           REPOSITORY: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
         working-directory: automations/python/workflows
         run: python generate_report.py
 
