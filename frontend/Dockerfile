@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 # Automatically build image using Node.js version specified in `package.json`.
 ARG FRONTEND_NODE_VERSION
 
