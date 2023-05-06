@@ -19,13 +19,11 @@ USER node
 WORKDIR /home/node/
 
 # Copy monorepo mocking files into `/home/node`, which pretends to be the monorepo root.
-COPY --chown=node:node .npmrc .pnpmfile.cjs pnpm-lock.yaml ./
+COPY --from=repo_root --chown=node:node .npmrc .pnpmfile.cjs pnpm-lock.yaml ./
 RUN echo '{"packages":["frontend/"]}' > pnpm-workspace.yaml
 
 # Copy the `frontend/` directory into `/home/node/frontend`, as a package in the monorepo.
 COPY --chown=node:node . ./frontend/
-# Remove the files copied into `frontend/` by `.github/workflows/ci_cd.yml`.
-RUN rm ./frontend/.npmrc ./frontend/.pnpmfile.cjs ./frontend/pnpm-lock.yaml
 
 # Fetch dependencies, including local development tools, to the virtual store.
 RUN pnpm fetch
