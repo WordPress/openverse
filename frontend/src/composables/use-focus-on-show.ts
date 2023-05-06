@@ -1,4 +1,4 @@
-import { nextTick, watch, Ref } from "vue"
+import { nextTick, watch, Ref, computed, ref } from "vue"
 
 import { tryOnScopeDispose, unrefElement } from "@vueuse/core"
 
@@ -38,13 +38,21 @@ export const useFocusOnShow = ({
     /** */
   }
   let trap: UseFocusTrapReturn | undefined
+  const foundTabbableNode = ref<HTMLElement | null>(null)
+  const fallbackFocusNode = computed(
+    () => initialFocusElementRef.value || foundTabbableNode.value
+  )
   if (trapFocusRef.value) {
     trap = useFocusTrap(dialogRef, {
       // Prevent FocusTrap from trying to focus the first element.
       // We already do that in a more flexible, adaptive way in our Dialog composables.
       initialFocus: false,
       // if set to true, focus-trap prevents the default for the keyboard event, and we cannot handle it in our composables.
-      escapeDeactivates: false,
+      escapeDeactivates: false, // Even though we pass `initialFocus` as `false` above, `focus-trap` still
+      // checks if the container has at least one tabbable element. Because it sometimes
+      // doesn't play nicely with Vue's rendering life-cycle, we need to get it a
+      // dynamic way to retrieve the fallback node.
+      fallbackFocus: () => fallbackFocusNode.value as HTMLElement,
     })
 
     activateFocusTrap = trap.activate
@@ -78,8 +86,10 @@ export const useFocusOnShow = ({
 
           if (tabbable) {
             ensureFocus(tabbable, { preventScroll: true, isActive })
+            foundTabbableNode.value = tabbable
           } else {
             ensureFocus(dialog, { preventScroll: true, isActive })
+            foundTabbableNode.value = dialog
             if (dialog.tabIndex === undefined || dialog.tabIndex < 0) {
               warn(noFocusableElementWarning)
             }

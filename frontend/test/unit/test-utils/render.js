@@ -9,7 +9,7 @@ import messages from "~/locales/en.json"
 const i18n = new VueI18n({
   locale: "en",
   fallbackLocale: "en",
-  messages,
+  messages: { en: messages },
   missingWarn: false,
   silentTranslationWarn: true,
 })

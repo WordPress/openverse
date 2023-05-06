@@ -8,12 +8,14 @@ import { useSearchStore } from "~/stores/search"
 
 import SearchIndex from "~/pages/search.vue"
 
+import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
+
 describe("SearchIndex", () => {
   let options
   const defaultProvideOptions = {
     showScrollButton: ref(false),
-    IsSidebarVisibleKey: ref(false),
-    IsHeaderScrolledKey: ref(false),
+    [IsHeaderScrolledKey]: ref(false),
+    [IsSidebarVisibleKey]: ref(false),
   }
   let searchStore
 
