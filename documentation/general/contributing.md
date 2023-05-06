@@ -6,14 +6,14 @@ document is a set of guidelines to help you contribute to this project.
 
 ## Code of Conduct
 
-You should read and agree to abide by the [code of conduct](CODE_OF_CONDUCT.md)
+You should read and agree to abide by the [code of conduct](https://github.com/WordPress/openverse/blob/main/CODE_OF_CONDUCT.md)
 before contributing to WordPress projects. This applies to all Openverse
 repositories because Openverse is a WordPress Foundation project.
 
 ## Keep in touch
 
 Don't hesitate to ask for help; if you're stuck, we're here for you! You can
-ping us via any of our [communication channels](README.md#keep-in-touch).
+ping us via any of our [communication channels](https://github.com/WordPress/openverse#keep-in-touch).
 
 ## Code and code-related contributions
 
@@ -23,16 +23,13 @@ Detailed help for contributing code can be found in the
 [developer documentation](https://docs.openverse.org/), which also includes the
 following subfolders.
 
-- [Storybook](https://docs.openverse.org/storybook/) (UI components)
-- [Tailwind Config Viewer](https://docs.openverse.org/tailwind/) (design tokens)
-
 The following resources are preferred reading for starting your Openverse
 contribution journey in the code and code-related space.
 
-- [GitHub contribution practices](https://docs.openverse.org/meta/github_contribution_practices.html)
-- [Dev flow](https://docs.openverse.org/meta/dev_flow.html)
-- [General setup guide](https://docs.openverse.org/general/general_setup.html)
-- [Quickstart guide](https://docs.openverse.org/general/quickstart.html)
+- [GitHub contribution practices](/meta/github_contribution_practices.html)
+- [Dev flow](/meta/dev_flow.html)
+- [General setup guide](/general/general_setup.html)
+- [Quickstart guide](/general/quickstart.html)
 
 #### Friendly notes
 
@@ -168,7 +165,7 @@ deep gratitude for those who do. Note that you will need a GitHub account to
 create new issues.
 
 You can also provide feedback via any of our other
-[communication channels](README.md#keep-in-touch).
+[communication channels](https://github.com/WordPress/openverse#keep-in-touch).
 
 ### Referrals
 
