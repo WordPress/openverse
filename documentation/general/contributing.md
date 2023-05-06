@@ -6,14 +6,16 @@ document is a set of guidelines to help you contribute to this project.
 
 ## Code of Conduct
 
-You should read and agree to abide by the [code of conduct](https://github.com/WordPress/openverse/blob/main/CODE_OF_CONDUCT.md)
+You should read and agree to abide by the
+[code of conduct](https://github.com/WordPress/openverse/blob/main/CODE_OF_CONDUCT.md)
 before contributing to WordPress projects. This applies to all Openverse
 repositories because Openverse is a WordPress Foundation project.
 
 ## Keep in touch
 
 Don't hesitate to ask for help; if you're stuck, we're here for you! You can
-ping us via any of our [communication channels](https://github.com/WordPress/openverse#keep-in-touch).
+ping us via any of our
+[communication channels](https://github.com/WordPress/openverse#keep-in-touch).
 
 ## Code and code-related contributions
 
