@@ -192,15 +192,15 @@ groups:
       - name: any
         description: Replace with the actual provider type
       - name: audio
-        description: Audio provider APIs
+        description: Audio provider
       - name: images
-        description: Image provider APIs
+        description: Image provider
       - name: text
-        description: Text provider APIs
+        description: Text provider
       - name: video
-        description: Video provider APIs
+        description: Video provider
       - name: 3D models
-        description: 3D model provider APIs
+        description: 3D model provider
 
   - name: project
     color: "8b3dcd"
