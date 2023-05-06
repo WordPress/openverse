@@ -180,6 +180,24 @@ groups:
         description: Requires familiarity with TypeScript
         emoji: "⌨️"
 
+  # Labels related to new source issues
+  - name: provider
+    emoji: "☁️"
+    color: "478d04"
+    labels:
+      - name: any
+        description: Replace with the actual provider type
+      - name: audio
+        description: Audio provider APIs
+      - name: images
+        description: Image provider APIs
+      - name: text
+        description: Text provider APIs
+      - name: video
+        description: Video provider APIs
+      - name: 3D models
+        description: 3D model provider APIs
+
   - name: project
     color: "8b3dcd"
     emoji: "🧭"
