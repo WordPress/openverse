@@ -25,6 +25,23 @@ export FRONTEND_PNPM_VERSION := `grep 'packageManager' ../package.json | awk -F'
 @pnpm-version:
     echo $FRONTEND_PNPM_VERSION
 
+##########
+# Docker #
+##########
+
+# This section exists because the frontend is not a part of the Docker-based setup
+# and cannot be built easily like `just dc build <service>`.
+
+# Build the frontend Docker image
+build-img tag="openverse-frontend:local" target="app":
+    docker buildx build \
+    --target {{ target }} \
+    --build-context 'repo_root=..' \
+    --build-arg FRONTEND_NODE_VERSION=$(just node-version) \
+    --build-arg FRONTEND_PNPM_VERSION=$(just pnpm-version) \
+    --tag {{ tag }} \
+    .
+
 ######
 # Up #
 ######
