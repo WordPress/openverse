@@ -78,7 +78,9 @@ You are welcome to take any open issue in the tracker labelled
 contribution as well, but may be less accessible or well-defined in comparison
 to those that are explicitly labelled.
 
-See the [contribution docs](https://docs.openverse.org/general/contributing.html) file for details.
+See the
+[contribution docs](https://docs.openverse.org/general/contributing.html) file
+for details.
 
 ## Acknowledgments
 
