@@ -1,5 +1,4 @@
 org: WordPress
 repos:
   main: openverse
-  catalog: openverse-catalog
   infra: openverse-infrastructure
