@@ -1,7 +1,6 @@
-import { createLocalVue } from "@vue/test-utils"
-import { fireEvent, render } from "@testing-library/vue"
+import { fireEvent } from "@testing-library/vue"
 
-import { PiniaVuePlugin, createPinia } from "~~/test/unit/test-utils/pinia"
+import { render } from "~~/test/unit/test-utils/render"
 
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -11,8 +10,6 @@ jest.mock("~/composables/use-analytics", () => ({
   useAnalytics: jest.fn(),
 }))
 
-const localVue = createLocalVue()
-localVue.use(PiniaVuePlugin)
 describe("VBackToSearchResultsLink", () => {
   it("should send analytics event when clicked", async () => {
     const sendCustomEventMock = jest.fn()
@@ -27,11 +24,9 @@ describe("VBackToSearchResultsLink", () => {
     }
 
     const screen = render(VBackToSearchResultsLink, {
-      localVue,
-      pinia: createPinia(),
       propsData,
     })
-    const link = screen.getByText("single-result.back")
+    const link = screen.getByText(/back to results/i)
 
     await fireEvent.click(link)
 

@@ -1,14 +1,14 @@
 import Vue, { ref } from "vue"
-import { render } from "@testing-library/vue"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import { useWindowScroll } from "~/composables/use-window-scroll"
 
-const getMockWindow = <T>(props: T) =>
-  ({
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    ...props,
-  } as unknown as typeof window)
+const getMockWindow = (props) => ({
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+  ...props,
+})
 
 const UseWindowScrollTestContainer = Vue.component(
   "UseWindowScrollTestContainer",
@@ -20,7 +20,7 @@ const UseWindowScrollTestContainer = Vue.component(
           scrollX: props.initX,
           scrollY: props.initY,
         }),
-        throttleMs: props.throttleMs as number | undefined,
+        throttleMs: props.throttleMs,
       })
     },
     template: "<div>x={{x}} y={{y}} isScrolled={{isScrolled}}</div>",

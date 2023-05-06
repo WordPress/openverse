@@ -1,11 +1,9 @@
-import { fireEvent, render, screen } from "@testing-library/vue"
+import { fireEvent, screen } from "@testing-library/vue"
 import Vue from "vue"
 
-import VLink from "~/components/VLink.vue"
+import { render } from "~~/test/unit/test-utils/render"
 
-const nuxtContextMock = {
-  $nuxt: { context: { app: { localePath: jest.fn((v) => v) } } },
-}
+import VLink from "~/components/VLink.vue"
 
 describe("VLink", () => {
   it.each`
@@ -18,7 +16,6 @@ describe("VLink", () => {
       render(VLink, {
         props: { href },
         slots: { default: "Code is Poetry" },
-        mocks: nuxtContextMock,
       })
       const link = screen.getByRole("link")
       const expectedHref = href.startsWith("/")
@@ -37,6 +34,7 @@ describe("VLink", () => {
     const createVLinkWrapper = (href) =>
       // eslint-disable-next-line vue/one-component-per-file
       Vue.component("VLinkWrapper", {
+        components: { VLink },
         data: () => ({ text: "Link Text" }),
         methods: {
           handleClick(e) {
@@ -47,7 +45,7 @@ describe("VLink", () => {
         template: `<div><VLink href="${href}" @click="handleClick">{{ text }}</VLink></div>`,
       })
     const WrapperComponent = createVLinkWrapper(href)
-    render(WrapperComponent, { mocks: nuxtContextMock }, (localVue) => {
+    render(WrapperComponent, {}, (localVue) => {
       localVue.component("VLink", VLink)
     })
     const linkBefore = await screen.getByRole("link")

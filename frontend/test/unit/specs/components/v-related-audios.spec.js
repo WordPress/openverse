@@ -17,9 +17,9 @@ describe("RelatedAudios", () => {
       stubs: { LoadingIcon: true, VAudioThumbnail: true },
     })
 
-    expect(screen.findByText("audio-details.related-audios"))
+    screen.getByText(/related audio/i)
 
-    expect(screen.queryAllByLabelText("play-pause.play")).toHaveLength(
+    expect(screen.queryAllByLabelText("Play")).toHaveLength(
       // Two for each as the "row" layout rendered by VRelatedAudio
       // renders a "large" and "small" version that are visually hidden by a parent
       // depending on the breakpoint (but critically still rendered in the

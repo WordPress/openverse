@@ -1,6 +1,7 @@
 import Vue from "vue"
-import VueI18n from "vue-i18n"
 import { config } from "@vue/test-utils"
+
+import VueI18n from "vue-i18n"
 
 import { env } from "~/utils/env"
 
@@ -37,8 +38,6 @@ config.stubs["svg-icon"] = Vue.component("SvgIcon", {
 })
 /* eslint-enable vue/one-component-per-file */
 
-config.mocks.$t = (key) => key
-config.mocks.localePath = (i) => i
 global.matchMedia =
   global.matchMedia ||
   function () {

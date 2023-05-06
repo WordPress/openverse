@@ -1,4 +1,6 @@
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import { useReducedMotion } from "~/composables/use-media-query"
 

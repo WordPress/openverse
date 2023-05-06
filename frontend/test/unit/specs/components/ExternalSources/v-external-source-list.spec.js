@@ -1,11 +1,7 @@
-import VueI18n from "vue-i18n"
-
-import { createLocalVue } from "@vue/test-utils"
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 import userEvent from "@testing-library/user-event"
 
-import { PiniaVuePlugin, createPinia } from "~~/test/unit/test-utils/pinia"
-import i18n from "~~/test/unit/test-utils/i18n"
+import { render } from "~~/test/unit/test-utils/render"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { IMAGE } from "~/constants/media"
@@ -18,13 +14,9 @@ jest.mock("~/composables/use-analytics", () => ({
 
 describe("VExternalSourceList", () => {
   let propsData
-  let localVue
   let sendCustomEventMock
 
   beforeEach(() => {
-    localVue = createLocalVue()
-    localVue.use(PiniaVuePlugin)
-    localVue.use(VueI18n)
     sendCustomEventMock = jest.fn()
     useAnalytics.mockImplementation(() => ({
       sendCustomEvent: sendCustomEventMock,
@@ -38,9 +30,6 @@ describe("VExternalSourceList", () => {
       ],
     }
     render(VExternalSourceList, {
-      localVue,
-      pinia: createPinia(),
-      i18n,
       props: propsData,
     })
   })

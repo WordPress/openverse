@@ -22,9 +22,9 @@ describe("RelatedImage", () => {
   it("should render an image grid", () => {
     render(VRelatedImages, options)
 
-    expect(screen.getAllByRole("heading")[0].textContent).toContain(
-      "image-details.related-images"
-    )
+    expect(
+      screen.getAllByRole("heading", { name: /related images/i })
+    ).toHaveLength(1)
     expect(screen.queryAllByRole("heading").length).toEqual(3)
     expect(screen.queryAllByRole("img").length).toEqual(2)
     expect(screen.queryAllByRole("figure").length).toEqual(2)
@@ -33,9 +33,7 @@ describe("RelatedImage", () => {
   it("should not render data when media array is empty", () => {
     options.propsData.media = []
     render(VRelatedImages, options)
-    expect(screen.getByRole("heading").textContent).toContain(
-      "image-details.related-images"
-    )
+    expect(screen.getByRole("heading").textContent).toContain("Related images")
     expect(screen.queryAllByRole("img").length).toEqual(0)
   })
 })
