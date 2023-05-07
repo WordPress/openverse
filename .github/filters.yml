@@ -44,6 +44,7 @@ lint:
   - .pre-commit-config.yaml
 mgmt:
   - .github/**
+  - .devcontainer/**
   - automations/**
 ci_cd:
   - .github/actions/**
