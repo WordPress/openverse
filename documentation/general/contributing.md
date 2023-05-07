@@ -28,10 +28,10 @@ following subfolders.
 The following resources are preferred reading for starting your Openverse
 contribution journey in the code and code-related space.
 
-- [GitHub contribution practices](/meta/github_contribution_practices.html)
-- [Dev flow](/meta/dev_flow.html)
-- [General setup guide](/general/general_setup.html)
-- [Quickstart guide](/general/quickstart.html)
+- [GitHub contribution practices](/meta/github_contribution_practices.md)
+- [Dev flow](/meta/dev_flow.md)
+- [General setup guide](/general/general_setup.md)
+- [Quickstart guide](/general/quickstart.md)
 
 #### Friendly notes
 
