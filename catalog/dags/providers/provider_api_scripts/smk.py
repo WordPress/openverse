@@ -85,42 +85,6 @@ class SmkDataIngester(ProviderDataIngester):
         return data[0].get("creator")
 
     @staticmethod
-    def _get_images(item: dict) -> list:
-        # Legacy images do not have an iiif_id; fall back to the ID from the
-        # collection DB.
-        iiif_id = item.get("image_iiif_id")
-
-        if not (foreign_identifier := iiif_id or item.get("id")):
-            return []
-
-        if iiif_id:
-            image_url = SmkDataIngester._get_image_url(iiif_id)
-        else:
-            # Legacy images do not have IIIF links.
-            image_url = item.get("image_native")
-
-        thumbnail_url = item.get("image_thumbnail")
-        height = item.get("image_height")
-        width = item.get("image_width")
-        filesize = item.get("image_size") or item.get("size")
-
-        # We used to get additional images from the `alternative_images` field,
-        # but we found these to be either redundant, duplicates, or lower quality
-        # versions. See https://github.com/WordPress/openverse-catalog/issues/875
-        # for the full investigation & discussion
-
-        return [
-            {
-                "id": foreign_identifier,
-                "image_url": image_url,
-                "thumbnail_url": thumbnail_url,
-                "height": height,
-                "width": width,
-                "filesize": filesize,
-            }
-        ]
-
-    @staticmethod
     def _get_metadata(item: dict) -> dict:
         meta_data = {}
         if created_date := item.get("created"):
@@ -136,31 +100,50 @@ class SmkDataIngester(ProviderDataIngester):
             meta_data["colors"] = ",".join(colors)
         return meta_data
 
-    def get_record_data(self, data: dict) -> dict | list[dict] | None:
+    def get_record_data(self, data: dict) -> dict | None:
+        # We used to get additional images from the `alternative_images` field,
+        # but we found these to be either redundant, duplicates, or lower quality
+        # versions. See https://github.com/WordPress/openverse-catalog/issues/875
+        # for the full investigation & discussion
         if not (license_info := get_license_info(data.get("rights"))):
             return None
         if not (foreign_landing_url := self._get_foreign_landing_url(data)):
             return None
-        images = []
-        alt_images = self._get_images(data)
-        # _get_images returns only items with valid id and image_url
-        for img in alt_images:
-            images.append(
-                {
-                    "foreign_identifier": img["id"],
-                    "foreign_landing_url": foreign_landing_url,
-                    "image_url": img["image_url"],
-                    "thumbnail_url": img.get("thumbnail_url"),
-                    "license_info": license_info,
-                    "title": self._get_title(data),
-                    "creator": self._get_creator(data),
-                    "height": img.get("height"),
-                    "width": img.get("width"),
-                    "filesize": img.get("filesize"),
-                    "meta_data": self._get_metadata(data),
-                }
-            )
-        return images
+
+        # Legacy images do not have an iiif_id; fall back to the ID from the
+        # collection DB.
+        iiif_id = data.get("image_iiif_id")
+        foreign_identifier = iiif_id or data.get("id")
+        if not foreign_identifier:
+            return None
+
+        # Legacy images do not have IIIF links.
+        image_url = (
+            SmkDataIngester._get_image_url(iiif_id)
+            if iiif_id
+            else data.get("image_native")
+        )
+        if not image_url:
+            return None
+
+        thumbnail_url = data.get("image_thumbnail")
+        height = data.get("image_height")
+        width = data.get("image_width")
+        filesize = data.get("image_size") or data.get("size")
+
+        return {
+            "foreign_identifier": foreign_identifier,
+            "foreign_landing_url": foreign_landing_url,
+            "license_info": license_info,
+            "title": self._get_title(data),
+            "image_url": image_url,
+            "thumbnail_url": thumbnail_url,
+            "height": height,
+            "width": width,
+            "filesize": filesize,
+            "creator": self._get_creator(data),
+            "meta_data": self._get_metadata(data),
+        }
 
 
 def main():

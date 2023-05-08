@@ -138,30 +138,24 @@ def test__get_metadata():
 
 def test_get_record_data_returns_main_image():
     item = _get_resource_json("item.json")
-    images = smk.get_record_data(item)
+    image = smk.get_record_data(item)
 
-    assert len(images) == 1
+    assert image == {"id": "smk-123"}
 
 
 @pytest.mark.parametrize(
-    "property_name",
+    "property_names",
     [
-        pytest.param("object_number", id="falsy foreign_landing_url"),
-        pytest.param("rights", id="falsy license_info"),
+        pytest.param(["object_number"], id="falsy foreign_landing_url"),
+        pytest.param(["rights"], id="falsy license_info"),
+        # For items with iiif id, the image_url is constructed from it.
+        pytest.param(["image_native", "image_iiif_id"], id="falsy image_url"),
+        pytest.param(["id", "image_iiif_id"], id="falsy foreign_identifier"),
     ],
 )
-def test_get_record_data_returns_none_with_falsy_required_property(property_name):
+def test_get_record_data_returns_none_with_falsy_required_property(property_names):
     item = _get_resource_json("item.json")
-    if property_name == "id":
-        item["image_iiif_id"] = ""
-    item[property_name] = ""
+    for prop in property_names:
+        item[prop] = ""
 
     assert smk.get_record_data(item) is None
-
-
-def test_get_record_data_returns_empty_list_with_falsy_id():
-    item = _get_resource_json("item.json")
-    item["id"] = ""
-    item["image_iiif_id"] = ""
-
-    assert smk.get_record_data(item) == []
