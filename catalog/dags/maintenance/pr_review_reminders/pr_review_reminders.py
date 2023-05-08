@@ -36,7 +36,7 @@ class Urgency:
             if "priority" in label["name"].lower()
         ]
         if not priority_labels:
-            logger.error(f"Found unabled PR ({pr['html_url']}). Skipping!")
+            logger.error(f"Found unlabeled PR ({pr['html_url']}). Skipping!")
             return None
 
         priority_label = priority_labels[0]
