@@ -177,34 +177,36 @@ def test_get_record_data():
 
 
 @pytest.mark.parametrize(
-    "missing_param",
+    "missing_params",
     [
-        pytest.param("owner", id="owner-foreign_landing_url"),
-        pytest.param("license", id="license"),
-        pytest.param("url_l", id="url_l-image_url"),
-        pytest.param("id", id="id-foreign_identifier"),
+        pytest.param(["owner"], id="owner-foreign_landing_url"),
+        pytest.param(["license"], id="license"),
+        pytest.param(["url_l", "url_m", "url_s"], id="url_x-image_url"),
+        pytest.param(["id"], id="id-foreign_identifier"),
     ],
 )
-def test_get_record_data_returns_none_when_missing_required_params(missing_param):
+def test_get_record_data_returns_none_when_missing_required_params(missing_params):
     image_data = _get_resource_json("image_data_complete_example.json")
-    image_data.pop(missing_param)
+    for param in missing_params:
+        image_data.pop(param)
 
     actual_data = flickr.get_record_data(image_data)
     assert actual_data is None
 
 
 @pytest.mark.parametrize(
-    "falsy_param",
+    "falsy_params",
     [
-        pytest.param("owner", id="owner-foreign_landing_url"),
-        pytest.param("license", id="license"),
-        pytest.param("url_l", id="url_l-image_url"),
-        pytest.param("id", id="id-foreign_identifier"),
+        pytest.param(["owner"], id="owner-foreign_landing_url"),
+        pytest.param(["license"], id="license"),
+        pytest.param(["url_l", "url_m", "url_s"], id="url_x-image_url"),
+        pytest.param(["id"], id="id-foreign_identifier"),
     ],
 )
-def test_get_record_data_returns_none_when_required_params_falsy(falsy_param):
+def test_get_record_data_returns_none_when_required_params_falsy(falsy_params):
     image_data = _get_resource_json("image_data_complete_example.json")
-    image_data[falsy_param] = ""
+    for param in falsy_params:
+        image_data[param] = ""
 
     actual_data = flickr.get_record_data(image_data)
     assert actual_data is None
