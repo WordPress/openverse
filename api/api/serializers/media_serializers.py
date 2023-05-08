@@ -405,6 +405,11 @@ class TagSerializer(serializers.Serializer):
     )
 
 
+@extend_schema_serializer(
+    exclude_fields=[
+        "unstable__sensitivity",
+    ],
+)
 class MediaSerializer(BaseModelSerializer):
     """
     This serializer serializes a single media file.
@@ -434,6 +439,7 @@ class MediaSerializer(BaseModelSerializer):
             "attribution",  # property
             "fields_matched",
             "mature",
+            "unstable__sensitivity",
         ]
         """
         Keep the fields names in sync with the actual fields below as this list is
@@ -467,6 +473,37 @@ class MediaSerializer(BaseModelSerializer):
     mature = serializers.BooleanField(
         help_text="Whether the media item is marked as mature",
     )
+
+    # This should be promoted to a stable field alongside
+    # `include_sensitive_results`
+    unstable__sensitivity = serializers.SerializerMethodField(
+        help_text=(
+            "An array of sensitivity annotations. "
+            "May contain the following values: 'sensitive_text', "
+            "'user_reported_sensitive', or 'provider_supplied_sensitive'"
+        )
+    )
+
+    def get_unstable__sensitivity(self, obj):
+        result = []
+        if obj.identifier in self.context.get(
+            "user_reported_sensitive_result_ids", set()
+        ):
+            result.append("user_reported_sensitive")
+        elif obj.mature:
+            # This needs to be elif rather than a separate clause entirely
+            # because reported content gets "mature" applied in Elasticsearch.
+            # Provider supplied mature settings are only accurate if there
+            # is not a corresponding, approved content report.
+            # This assumes that anything with a content report that is confirmed
+            # but not specifically de-indexed was not already marked as sensitive
+            # by the provider and also violated our terms anyway so would be excluded.
+            result.append("provider_supplied_sensitive")
+
+        if obj.identifier in self.context.get("sensitive_text_result_ids", set()):
+            result.append("sensitive_text")
+
+        return result
 
     def to_representation(self, *args, **kwargs):
         output = super().to_representation(*args, **kwargs)
