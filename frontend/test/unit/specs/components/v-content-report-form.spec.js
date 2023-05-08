@@ -1,10 +1,6 @@
-import VueI18n from "vue-i18n"
+import { fireEvent, screen } from "@testing-library/vue"
 
-import { fireEvent, render, screen } from "@testing-library/vue"
-import { createLocalVue } from "@vue/test-utils"
-
-import { createPinia } from "~~/test/unit/test-utils/pinia"
-import i18n from "~~/test/unit/test-utils/i18n"
+import { render } from "~~/test/unit/test-utils/render"
 
 import ReportService from "~/data/report-service"
 
@@ -18,7 +14,7 @@ jest.mock("~/composables/use-analytics", () => ({
 
 const getDmcaInput = () =>
   screen.getByRole("radio", {
-    name: /dmca/i,
+    name: /Infringes copyright/i,
   })
 const getMatureInput = () =>
   screen.getByRole("radio", {
@@ -34,18 +30,18 @@ const getCancelButton = () =>
   })
 const getReportButton = () =>
   screen.getByRole("button", {
-    name: /submit/i,
+    name: /report/i,
   })
 
 // When DMCA selected
 const getReportLink = () =>
   screen.getByRole("link", {
-    name: /dmca\.open/i,
+    name: /DMCA form/i,
   })
 // When other selected
 const getDescriptionTextarea = () =>
   screen.getByRole("textbox", {
-    name: /other\.note/i,
+    name: /Describe the issue. Required/i,
   })
 
 const mockImplementation = () => Promise.resolve()
@@ -57,8 +53,6 @@ jest.mock("~/data/report-service", () => ({
 describe("VContentReportForm", () => {
   let props = null
   let options = {}
-  let pinia = null
-  let localVue = null
 
   beforeEach(() => {
     props = {
@@ -71,17 +65,10 @@ describe("VContentReportForm", () => {
       providerName: "Provider",
       closeFn: jest.fn(),
     }
-    pinia = createPinia()
-    localVue = createLocalVue()
-    localVue.use(pinia)
-    localVue.use(VueI18n)
 
     options = {
       propsData: props,
       stubs: ["VIcon"],
-      localVue,
-      pinia,
-      i18n,
     }
   })
 
@@ -111,7 +98,7 @@ describe("VContentReportForm", () => {
     await fireEvent.click(getReportButton())
 
     // Submission error message
-    getByText("media-details.content-report.failure.note")
+    getByText(/Something went wrong, please try again after some time./i)
   })
 
   it("should render DMCA notice", async () => {
@@ -130,7 +117,7 @@ describe("VContentReportForm", () => {
     await fireEvent.click(getOtherInput())
 
     // Report form with a submit button
-    getByText("media-details.content-report.form.other.note")
+    getByText(/Describe the issue./i)
     getDescriptionTextarea()
   })
 

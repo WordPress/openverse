@@ -1,15 +1,8 @@
-import { render, screen } from "@testing-library/vue"
-import VueI18n from "vue-i18n"
+import { screen } from "@testing-library/vue"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
-
-const enMessages = require("~/locales/en.json")
-
-const i18n = new VueI18n({
-  locale: "en",
-  fallbackLocale: "en",
-  messages: { en: enMessages },
-})
 
 describe("VContentLink", () => {
   let options = {}
@@ -17,13 +10,6 @@ describe("VContentLink", () => {
   beforeEach(() => {
     options = {
       props: { mediaType: "image", resultsCount: 123, to: "/images" },
-      mocks: {
-        $nuxt: {
-          context: {
-            i18n,
-          },
-        },
-      },
     }
   })
 

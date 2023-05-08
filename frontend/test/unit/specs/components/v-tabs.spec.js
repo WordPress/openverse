@@ -1,8 +1,8 @@
-import { render } from "@testing-library/vue"
-
 import Vue from "vue"
 
 import userEvent from "@testing-library/user-event"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import VTabs from "~/components/VTabs/VTabs.vue"
 import VTab from "~/components/VTabs/VTab.vue"

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/vue"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
 
@@ -13,8 +13,8 @@ describe("VSearchResultsTitle", () => {
   }
 
   it("should render an h1 tag containing the correct text", async () => {
-    render(VSearchResultsTitle, options)
-    const button = await screen.findByText("zack")
+    const { findByText } = render(VSearchResultsTitle, options)
+    const button = await findByText("zack")
     expect(button.tagName).toBe("H1")
   })
 })
