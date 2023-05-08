@@ -124,7 +124,10 @@ def get_dags_info(dags: DagMapping) -> list[DagInfo]:
         if doc:
             doc = fix_headings(doc)
 
-        dated = dag.catchup
+        provider_workflow = provider_workflows.get(dag_id)
+        dated = (
+            provider_workflow.dated if provider_workflow is not None else dag.catchup
+        )
         # Infer dag type from the first available tag
         type_ = dag.tags[0] if dag.tags else "other"
         dags_info.append(
@@ -134,7 +137,7 @@ def get_dags_info(dags: DagMapping) -> list[DagInfo]:
                 doc=doc,
                 type_=type_,
                 dated=dated,
-                provider_workflow=provider_workflows.get(dag_id),
+                provider_workflow=provider_workflow,
             )
         )
 
