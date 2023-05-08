@@ -190,6 +190,12 @@ recreate:
     just up "--force-recreate --build"
     just init
 
+# Bust pnpm cache and reinstall Node.js dependencies
+node-recreate:
+    find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+    rm -rf $(pnpm store path)
+    pnpm install
+
 # Show logs of all, or named, Docker services
 logs services="" args=(if IS_CI != "" { "" } else { "-f" }):
     just dc logs {{ args }} {{ services }}
