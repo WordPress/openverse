@@ -8,7 +8,6 @@ from typing import Literal
 
 from django.conf import settings
 from django.core.cache import cache
-from rest_framework.request import Request
 
 from elasticsearch.exceptions import NotFoundError, RequestError
 from elasticsearch_dsl import Q, Search
@@ -16,11 +15,13 @@ from elasticsearch_dsl.query import EMPTY_QUERY, MoreLikeThis, Query
 from elasticsearch_dsl.response import Hit, Response
 
 import api.models as models
+from api.constants.media_types import OriginIndex
 from api.constants.sorting import INDEXED_ON
 from api.serializers import media_serializers
 from api.utils import tallies
 from api.utils.check_dead_links import check_dead_links
 from api.utils.dead_link_mask import get_query_hash, get_query_mask
+from api.utils.search_context import SearchContext
 
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
@@ -147,7 +148,7 @@ def _quote_escape(query_string):
 
 
 def _post_process_results(
-    s, start, end, page_size, search_results, request, filter_dead
+    s, start, end, page_size, search_results, filter_dead
 ) -> list[Hit] | None:
     """
     Perform some steps on results fetched from the backend.
@@ -163,8 +164,6 @@ def _post_process_results(
     :param end: The end of the result slice.
     :param search_results: The Elasticsearch response object containing search
     results.
-    :param request: The Django request object, used to build a "reversed" URL
-    to detail pages.
     :param filter_dead: Whether images should be validated.
     :return: List of results.
     """
@@ -214,7 +213,7 @@ def _post_process_results(
             search_response = s.execute()
 
             return _post_process_results(
-                s, start, end, page_size, search_response, request, filter_dead
+                s, start, end, page_size, search_response, filter_dead
             )
 
     return results[:page_size]
@@ -296,33 +295,33 @@ def _resolve_index(
 
 def search(
     search_params: media_serializers.MediaSearchRequestSerializer,
-    index: Literal["image", "audio"],
+    origin_index: OriginIndex,
     exact_index: bool,
     page_size: int,
     ip: int,
-    request: Request,
     filter_dead: bool,
     page: int = 1,
-) -> tuple[list[Hit], int, int]:
+) -> tuple[list[Hit], int, int, dict]:
     """
     Perform a ranked paginated search from the set of keywords and, optionally, filters.
 
     :param search_params: Search parameters. See
      :class: `ImageSearchQueryStringSerializer`.
-    :param index: The Elasticsearch index to search (e.g. 'image')
+    :param origin_index: The Elasticsearch index to search (e.g. 'image')
     :param exact_index: whether to skip all modifications to the index name
     :param page_size: The number of results to return per page.
     :param ip: The user's hashed IP. Hashed IPs are used to anonymously but
     uniquely identify users exclusively for ensuring query consistency across
     Elasticsearch shards.
-    :param request: Django's request object.
     :param filter_dead: Whether dead links should be removed.
     :param page: The results page number.
     :return: Tuple with a List of Hits from elasticsearch, the total count of
-    pages, and number of results.
+    pages, the number of results, and the ``SearchContext`` as a dict.
     """
     if not exact_index:
-        index = _resolve_index(index, search_params)
+        index = _resolve_index(origin_index, search_params)
+    else:
+        index = origin_index
 
     search_client = Search(index=index)
 
@@ -436,7 +435,7 @@ def search(
         raise ValueError(e)
 
     results = _post_process_results(
-        s, start, end, page_size, search_response, request, filter_dead
+        s, start, end, page_size, search_response, filter_dead
     )
 
     result_count, page_count = _get_result_and_page_count(
@@ -471,7 +470,9 @@ def search(
         # check things like provider density for a set of queries.
         tallies.count_provider_occurrences(results_to_tally, index)
 
-    return results or [], page_count, result_count
+    search_context = SearchContext.build(results, origin_index)
+
+    return results or [], page_count, result_count, search_context.asdict()
 
 
 def related_media(uuid, index, request, filter_dead):

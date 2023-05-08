@@ -459,7 +459,7 @@ def test_search_tallies_pages_less_than_5(
     search_controller.search(
         search_params=serializer,
         ip=0,
-        index=index,
+        origin_index=index,
         exact_index=False,
         page=page,
         page_size=page_size,
@@ -499,7 +499,7 @@ def test_search_tallies_handles_empty_page(
     search_controller.search(
         search_params=serializer,
         ip=0,
-        index=index,
+        origin_index=index,
         exact_index=False,
         # Force calculated result depth length to include results within 80th position and above
         # to force edge case where retrieved results are only partially tallied.
@@ -545,7 +545,7 @@ def test_resolves_index(
     search_controller.search(
         search_params=serializer,
         ip=0,
-        index=origin_index,
+        origin_index=origin_index,
         exact_index=False,
         page=1,
         page_size=20,
