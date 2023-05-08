@@ -123,7 +123,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         metadata = self._get_metadata(attributes)
         images = []
         for image_data in multimedia:
-            if not (foreign_id := image_data.get("admin", {}).get("uid")):
+            if not (foreign_identifier := image_data.get("admin", {}).get("uid")):
                 continue
             processed = image_data.get("processed")
             if not isinstance(processed, dict):
@@ -141,7 +141,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
                 continue
 
             image = {
-                "foreign_identifier": foreign_id,
+                "foreign_identifier": foreign_identifier,
                 "foreign_landing_url": foreign_landing_url,
                 "image_url": image_url,
                 "height": height,

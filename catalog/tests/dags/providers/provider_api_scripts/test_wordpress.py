@@ -61,11 +61,21 @@ def test_get_should_continue_checks_total_pages(
 
 
 @pytest.mark.parametrize("missing_field", ["slug", "link"])
-def test_get_record_data_returns_none_when_necessary_data_is_falsy(
+def test_get_record_data_returns_none_when_necessary_data_is_missing(
     ingester, missing_field
 ):
     image_data = _get_resource_json("full_item.json")
-    image_data[missing_field] = ""
+    image_data.pop(missing_field, None)
+    actual_image_info = ingester.get_record_data(image_data)
+    assert actual_image_info is None
+
+
+@pytest.mark.parametrize("falsy_field", ["slug", "link"])
+def test_get_record_data_returns_none_when_necessary_data_is_falsy(
+    ingester, falsy_field
+):
+    image_data = _get_resource_json("full_item.json")
+    image_data[falsy_field] = ""
     actual_image_info = ingester.get_record_data(image_data)
     assert actual_image_info is None
 

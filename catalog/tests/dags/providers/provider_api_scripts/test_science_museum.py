@@ -110,13 +110,18 @@ def test_get_query_param_offset_page_number():
 @pytest.mark.parametrize(
     "record",
     [
-        # missing foreign_landing_url
+        # Missing any item in the foreign_landing_url chain
+        # Here we return `None` only if the foreign_landing_url is missing.
+        # Otherwise, we create an image list, check each image's
+        # required fields and return a blank list if none are valid (see next test).
         {"links": {}},
         {"links": {"self": ""}},
         {"links": {"self": "link"}, "attributes": {"multimedia": []}},
     ],
 )
-def test_get_record_data_returns_none_for_falsy_fid_and_landing_url(record):
+def test_get_record_data_returns_none_for_falsy_foreign_landing_url_and_multimedia(
+    record,
+):
     actual_record_data = sm.get_record_data(record)
     assert actual_record_data is None
 
@@ -130,11 +135,11 @@ def test_get_record_data_returns_none_for_falsy_fid_and_landing_url(record):
             "links": {"self": "link"},
             "attributes": {"multimedia": [{"admin": {"uid": ""}}]},
         },
+        # missing image_url
         {
             "links": {"self": "link"},
             "attributes": {"multimedia": [{"admin": {"uid": "fid"}}]},
         },
-        # missing image_url
         {
             "links": {"self": "link"},
             "attributes": {
@@ -153,6 +158,8 @@ def test_get_record_data_returns_none_for_falsy_fid_and_landing_url(record):
     ],
 )
 def test_get_record_data_returns_empty_list_for_falsy_image_required_values(record):
+    # If we have a foreign_landing_url, we create an image list, and check each
+    # image's required fields. If none are valid, we return an empty list.
     actual_record_data = sm.get_record_data(record)
     assert actual_record_data == []
 
