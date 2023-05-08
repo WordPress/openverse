@@ -34,7 +34,7 @@
     <div class="main-page flex h-full w-full min-w-0 flex-col justify-between">
       <Nuxt />
       <VFooter
-        :mode="isSearchHeader ? 'content' : 'search'"
+        :mode="isSearchHeader ? 'content' : 'internal'"
         class="border-t border-dark-charcoal-20 bg-white"
       />
     </div>
@@ -132,7 +132,6 @@ export default defineComponent({
     })
     const showScrollButton = computed(() => scrollY.value > 70)
 
-    provide("isHeaderScrolled", isHeaderScrolled)
     provide("showScrollButton", showScrollButton)
     provide(IsHeaderScrolledKey, isHeaderScrolled)
     provide(IsSidebarVisibleKey, isSidebarVisible)

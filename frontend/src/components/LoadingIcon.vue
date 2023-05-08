@@ -1,5 +1,5 @@
 <template>
-  <div class="lds-ring">
+  <div class="lds-ring" data-testid="lds-ring">
     <div />
     <div />
     <div />

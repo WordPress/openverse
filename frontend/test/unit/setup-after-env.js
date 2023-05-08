@@ -1,5 +1,8 @@
 import Vue from "vue"
 import "@testing-library/jest-dom"
+import failOnConsole from "jest-fail-on-console"
+
+failOnConsole()
 
 Vue.prototype.$nuxt = {
   context: {
@@ -8,5 +11,6 @@ Vue.prototype.$nuxt = {
       captureEvent: jest.fn(),
     },
     localePath: (args) => args,
+    i18n: { t: (val) => val, tc: (val) => val },
   },
 }

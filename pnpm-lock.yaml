@@ -97,6 +97,7 @@ importers:
       focus-visible: ^5.2.0
       glob: ^8.0.1
       jest: ^26.6.3
+      jest-fail-on-console: ^3.1.1
       jest-transform-stub: ^2.0.0
       module-alias: ^2.2.2
       node-html-parser: ^5.3.3
@@ -222,6 +223,7 @@ importers:
       eslint-plugin-vue: 9.9.0_eslint@8.28.0
       eslint-plugin-vuejs-accessibility: 1.1.1_eslint@8.28.0
       jest: 26.6.3_ts-node@10.9.1
+      jest-fail-on-console: 3.1.1
       jest-transform-stub: 2.0.0
       module-alias: 2.2.2
       npm-run-all: 4.1.5
@@ -12907,6 +12909,12 @@ packages:
       '@types/node': 17.0.32
       jest-mock: 26.6.2
       jest-util: 26.6.2
+    dev: true
+
+  /jest-fail-on-console/3.1.1:
+    resolution: {integrity: sha512-g9HGhKcWOz8lHeZhLCXGg+RD/7upngiKkkBrHimsO/tGB0qi++QZffOgybjeI2bDW1qgdFiJJEG6t/WeTlfmOw==}
+    dependencies:
+      chalk: 4.1.2
     dev: true
 
   /jest-get-type/26.3.0:

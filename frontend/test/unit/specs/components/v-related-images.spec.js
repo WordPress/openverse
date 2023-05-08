@@ -1,10 +1,6 @@
-import VueI18n from "vue-i18n"
-import { createLocalVue } from "@vue/test-utils"
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 
-import { PiniaVuePlugin, createPinia } from "~~/test/unit/test-utils/pinia"
-
-import messages from "~/locales/en.json"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VRelatedImages from "~/components/VImageDetails/VRelatedImages.vue"
 
@@ -12,27 +8,15 @@ const media = [
   { id: "img1", url: "https://wp.org/img1.jpg" },
   { id: "img2", url: "https://wp.org/img2.jpg" },
 ]
-const i18n = new VueI18n({
-  locale: "en",
-  fallbackLocale: "en",
-  messages: { en: messages },
-})
-const localVue = createLocalVue()
-localVue.use(VueI18n)
-localVue.use(PiniaVuePlugin)
+
 describe("RelatedImage", () => {
   let props
   let options
-  let pinia
   beforeEach(() => {
-    pinia = createPinia()
     props = { media, fetchState: { isFetching: false } }
     options = {
-      localVue,
-      pinia,
       propsData: props,
       stubs: ["VLicense"],
-      mocks: { $nuxt: { context: { i18n } } },
     }
   })
   it("should render an image grid", () => {
