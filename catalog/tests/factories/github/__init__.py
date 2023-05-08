@@ -1,6 +1,7 @@
 import datetime
 import json
 import random
+from collections import namedtuple
 from functools import partial
 from pathlib import Path
 from typing import Literal
@@ -180,9 +181,10 @@ def make_branch_protection(required_reviewers: int = 2) -> dict:
     return branch_protection
 
 
-def make_events(
-    origin_days_ago: int, events: list[str | tuple[str, int]]
-) -> list[dict]:
+EventsConfig = namedtuple("EventsConfig", "event_name, days_since_previous_event")
+
+
+def make_events(origin_days_ago: int, events: list[str | EventsConfig]) -> list[dict]:
     """
     Create an issue events list with events starting at the origin.
 
@@ -225,7 +227,7 @@ def make_events(
     return result
 
 
-def make_non_urgent_events(events: list[dict]):
+def make_non_urgent_events(events: list[str | EventsConfig]) -> list[dict]:
     """
     Create an events list where all events happened today.
 
@@ -236,7 +238,7 @@ def make_non_urgent_events(events: list[dict]):
     return make_events(0, events)
 
 
-def make_non_urgent_reviewable_events(events: list[dict]):
+def make_non_urgent_reviewable_events(events: list[str | EventsConfig]) -> list[dict]:
     """
     Create a reviewable but non-urgent events list.
 
@@ -260,7 +262,9 @@ def make_non_urgent_reviewable_events(events: list[dict]):
     return make_events(0, events + ["ready_for_review"])
 
 
-def make_urgent_events(urgency: Urgency.Urgency, events: list[str | tuple[str, int]]):
+def make_urgent_events(
+    urgency: Urgency.Urgency, events: list[str | EventsConfig]
+) -> list[dict]:
     """
     Create an events list ending in an event older than the urgency days.
 

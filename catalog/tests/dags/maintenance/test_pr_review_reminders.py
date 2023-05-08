@@ -10,6 +10,7 @@ from catalog.dags.maintenance.pr_review_reminders.pr_review_reminders import (
     post_reminders,
 )
 from catalog.tests.factories.github import (
+    EventsConfig,
     make_branch_protection,
     make_current_pr_comment,
     make_non_urgent_events,
@@ -197,13 +198,13 @@ parametrize_possible_pingable_events = pytest.mark.parametrize(
                 "labeled",
                 "review_requested",
                 "convert_to_draft",
-                ("ready_for_review", 1),
+                EventsConfig("ready_for_review", 1),
             ],
             id="opened_then_drafted_finally_ready",
         ),
         # A PR opened as a draft does not have a "convert_to_draft" event but does still have "ready_for_review"
         pytest.param(
-            ["labeled", "review_requested", ("ready_for_review", 2)],
+            ["labeled", "review_requested", EventsConfig("ready_for_review", 2)],
             id="opened_as_draft_finally_ready",
         ),
         # PRs can have multiple ready for review events if converted to draft multiple times
@@ -212,7 +213,7 @@ parametrize_possible_pingable_events = pytest.mark.parametrize(
                 "labeled",
                 "review_requested",
                 "convert_to_draft",
-                ("ready_for_review", 1),
+                EventsConfig("ready_for_review", 1),
                 "convert_to_draft",
                 "ready_for_review",
             ],
@@ -223,9 +224,9 @@ parametrize_possible_pingable_events = pytest.mark.parametrize(
             [
                 "labeled",
                 "review_requested",
-                ("ready_for_review", 2),
-                ("convert_to_draft", 1),
-                ("ready_for_review", 1),
+                EventsConfig("ready_for_review", 2),
+                EventsConfig("convert_to_draft", 1),
+                EventsConfig("ready_for_review", 1),
             ],
             id="opened_as_draft_redrafted_finally_ready",
         ),
@@ -484,15 +485,20 @@ parametrize_possible_pingable_events.args
     "events",
     (
         # PRs converted to a draft after being opened will have both convert and ready events
-        ("labeled", "review_requested", "convert_to_draft", ("ready_for_review", 1)),
+        (
+            "labeled",
+            "review_requested",
+            "convert_to_draft",
+            EventsConfig("ready_for_review", 1),
+        ),
         # A PR opened as a draft does not have a "convert_to_draft" event but does still have "ready_for_review"
-        ("labeled", "review_requested", ("ready_for_review", 2)),
+        ("labeled", "review_requested", EventsConfig("ready_for_review", 2)),
         # PRs can have multiple ready for review events if converted to draft multiple times
         (
             "labeled",
             "review_requested",
             "convert_to_draft",
-            ("ready_for_review", 1),
+            EventsConfig("ready_for_review", 1),
             "convert_to_draft",
             "ready_for_review",
         ),
@@ -500,9 +506,9 @@ parametrize_possible_pingable_events.args
         (
             "labeled",
             "review_requested",
-            ("ready_for_review", 2),
-            ("convert_to_draft", 1),
-            ("ready_for_review", 1),
+            EventsConfig("ready_for_review", 2),
+            EventsConfig("convert_to_draft", 1),
+            EventsConfig("ready_for_review", 1),
         ),
     ),
 )
