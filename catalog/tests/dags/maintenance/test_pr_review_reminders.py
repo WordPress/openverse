@@ -467,7 +467,19 @@ def test_does_not_ping_if_no_reviewers(github, urgency, events):
     assert old_but_not_due_pull["number"] not in github["posted_comments"]
 
 
+parametrize_possible_pingable_events.args
+
+
 @parametrize_urgency
+# We cannot use the ``possible_pingable_events`` fixture
+# because this test is only relevant for PRs that have
+# ready for review events (i.e., were at one point drafts).
+# Possible pingable events includes the one case where
+# a PR would not have a ready for review event but still
+# be eligible: PRs that were never drafts. As there's no
+# easy way to combine parametrized fixtures or to abstract
+# this without a great deal of displacement, it's easier
+# to just copy the relevant cases.
 @pytest.mark.parametrize(
     "events",
     (
