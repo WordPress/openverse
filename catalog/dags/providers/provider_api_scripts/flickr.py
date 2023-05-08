@@ -225,7 +225,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         if not (image_url := data.get(f"url_{image_size}")):
             return None
 
-        if not (foreign_id := data.get("id")):
+        if not (foreign_identifier := data.get("id")):
             return None
 
         if not (owner := data.get("owner")):
@@ -234,7 +234,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
             return None
 
         creator_url = self._url_join(self.photo_url_base, owner.strip())
-        foreign_landing_url = self._url_join(creator_url, foreign_id)
+        foreign_landing_url = self._url_join(creator_url, foreign_identifier)
 
         # Optional fields
         height = data.get(f"height_{image_size}")
@@ -256,7 +256,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
             "foreign_landing_url": foreign_landing_url,
             "image_url": image_url,
             "license_info": license_info,
-            "foreign_identifier": foreign_id,
+            "foreign_identifier": foreign_identifier,
             "width": width,
             "height": height,
             "creator": creator,
