@@ -6,7 +6,8 @@ https://docs.openverse.org/meta/ci_cd/jobs/docker_preparation.html#determine-ima
 
 import json
 import os
-import sys
+
+from shared.actions import write_to_github_output
 
 
 changes = json.loads(os.environ.get("CHANGES"))
@@ -59,9 +60,10 @@ do_publish = "true" if len(publish_matrix["image"]) else "false"
 build_matrix = json.dumps(build_matrix, default=ser_set)
 publish_matrix = json.dumps(publish_matrix, default=ser_set)
 
-with open(os.environ.get("GITHUB_OUTPUT", "/dev/null"), "a") as gh_out:
-    for dest in [sys.stdout, gh_out]:
-        print(f"do_build={do_build}", file=dest)
-        print(f"build_matrix={build_matrix}", file=dest)
-        print(f"do_publish={do_publish}", file=dest)
-        print(f"publish_matrix={publish_matrix}", file=dest)
+lines = [
+    f"do_build={do_build}",
+    f"build_matrix={build_matrix}",
+    f"do_publish={do_publish}",
+    f"publish_matrix={publish_matrix}",
+]
+write_to_github_output(lines)
