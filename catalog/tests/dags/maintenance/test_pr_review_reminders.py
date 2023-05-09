@@ -468,9 +468,6 @@ def test_does_not_ping_if_no_reviewers(github, urgency, events):
     assert old_but_not_due_pull["number"] not in github["posted_comments"]
 
 
-parametrize_possible_pingable_events.args
-
-
 @parametrize_urgency
 # We cannot use the ``possible_pingable_events`` fixture
 # because this test is only relevant for PRs that have
