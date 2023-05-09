@@ -685,7 +685,6 @@ jobs:
     name: Build full-stack docs
     if: |
       needs.get-changes.outputs.documentation == 'true' ||
-      needs.get-changes.outputs.frontend == 'true' ||
       needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
