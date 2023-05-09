@@ -1,11 +1,25 @@
-from test.factory.models import AudioFactory, ImageFactory
-from test.factory.models.media import CREATED_BY_FIXTURE_MARKER
+from dataclasses import dataclass
+from test.factory import models as model_factories
+from test.factory.models.media import CREATED_BY_FIXTURE_MARKER, MediaFactory
 from unittest.mock import MagicMock
 
 from rest_framework.test import APIClient, APIRequestFactory
 
 import pytest
 from elasticsearch import Elasticsearch
+
+from api.serializers.audio_serializers import (
+    AudioSearchRequestSerializer,
+    AudioSerializer,
+)
+from api.serializers.image_serializers import (
+    ImageSearchRequestSerializer,
+    ImageSerializer,
+)
+from api.serializers.media_serializers import (
+    MediaSearchRequestSerializer,
+    MediaSerializer,
+)
 
 
 @pytest.fixture
@@ -28,26 +42,48 @@ def request_factory() -> APIRequestFactory():
     return request_factory
 
 
-@pytest.fixture(params=["image", "audio"])
-def origin_index(request):
+@dataclass
+class MediaTypeConfig:
+    media_type: str
+    origin_index: str
+    filtered_index: str
+    model_factory: MediaFactory
+    mature_factory: MediaFactory
+    search_request_serializer: MediaSearchRequestSerializer
+    model_serializer: MediaSerializer
+
+
+MEDIA_TYPE_CONFIGS = (
+    MediaTypeConfig(
+        media_type="image",
+        origin_index="image",
+        filtered_index="image-filtered",
+        model_factory=model_factories.ImageFactory,
+        mature_factory=model_factories.MatureImageFactory,
+        search_request_serializer=ImageSearchRequestSerializer,
+        model_serializer=ImageSerializer,
+    ),
+    MediaTypeConfig(
+        media_type="audio",
+        origin_index="audio",
+        filtered_index="audio-filtered",
+        model_factory=model_factories.AudioFactory,
+        mature_factory=model_factories.MatureAudioFactory,
+        search_request_serializer=AudioSearchRequestSerializer,
+        model_serializer=AudioSerializer,
+    ),
+)
+
+
+@pytest.fixture(
+    params=MEDIA_TYPE_CONFIGS, ids=lambda x: f"{x.media_type}_media_type_config"
+)
+def media_type_config(request: pytest.FixtureRequest) -> MediaTypeConfig:
     return request.param
 
 
-@pytest.fixture
-def model_factory(request: pytest.FixtureRequest):
-    match request.getfixturevalue("origin_index"):
-        case "audio":
-            return AudioFactory
-        case "image":
-            return ImageFactory
-        case unknown:
-            raise ValueError(f"Unknown origin_index '{unknown}'")
-
-
 @pytest.fixture(autouse=True)
-def cleanup_test_documents_elasticsearch(
-    request, origin_index, model_factory, settings
-):
+def cleanup_elasticsearch_test_documents(request, settings):
     yield None
     # This fixture only matters after tests are finished
 

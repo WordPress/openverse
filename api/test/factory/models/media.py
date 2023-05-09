@@ -30,9 +30,9 @@ class MediaFactory(DjangoModelFactory):
         "foreign_landing_url",
         "url",
         "thumbnail",
-        "mature",
         "title",
         "tags",
+        "provider",
     )
 
     # Sub-factories must set this to their corresponding
@@ -52,6 +52,7 @@ class MediaFactory(DjangoModelFactory):
     """The foreign identifier isn't necessarily a UUID but for test purposes it's fine if it looks like one"""
 
     license = Faker("random_element", elements=ALL_LICENSES)
+    provider = Faker("random_element", elements=("wikimedia", "flickr"))
 
     foreign_landing_url = Faker("globally_unique_url")
     url = Faker("globally_unique_url")
@@ -66,18 +67,33 @@ class MediaFactory(DjangoModelFactory):
     )
 
     @classmethod
-    def create(cls, *args, **kwargs):
-        """
+    def create(cls, *args, **kwargs) -> AbstractMedia | tuple[AbstractMedia, Hit]:
+        r"""
         Create the media instance.
 
-        If ``mature_reported`` kwarg is passed, this is understood to mean
-        a document identified as mature as a result of a user report.
+        :param \**kwargs:
+            In addition to the media properties handled by the factory,
+            see the factory-behaviour specific kwargs below.
 
-        Provider-supplied maturity is only recorded in the ES
-        index and should be tested via the ``create_es_document``
-        helper method or mocking.
+        :Keyword Arguments:
+            * *mature_reported* (``bool``) --
+                Create a mature report for this media.
+            * *provider_marked_mature* (``bool``) --
+                Set ``mature=true`` on the Elasticsearch document.
+            * *sensitive_text* (``bool``) --
+                Whether the media should be treated as having sensitive text.
+                If not, it will be added to the filtered index.
+            * *skip_es* (``bool``) --
+                Skip Elasticsearch document creation.
+            * *with_hit* (``bool``) --
+                Whether to return the Elasticsearch ``Hit`` along with the
+                created media object.
         """
         mature_reported = kwargs.pop("mature_reported", False)
+        provider_marked_mature = kwargs.pop("provider_marked_mature", False)
+        sensitive_text = kwargs.pop("sensitive_text", False)
+        skip_es = kwargs.pop("skip_es", False)
+        with_hit = kwargs.pop("with_hit", False)
 
         model_class = cls._meta.get_model_class()
         if cls._highest_pre_existing_pk is None:
@@ -92,8 +108,21 @@ class MediaFactory(DjangoModelFactory):
         )
 
         model = super().create(*args, **kwargs)
+
+        if not skip_es:
+            hit = cls._save_model_to_es(
+                model,
+                add_to_filtered_index=not sensitive_text,
+                mature=provider_marked_mature or mature_reported,
+            )
+        else:
+            hit = None
+
         if mature_reported:
             cls._mature_factory.create(media_obj=model)
+
+        if with_hit:
+            return model, hit
 
         return model
 
@@ -101,24 +130,20 @@ class MediaFactory(DjangoModelFactory):
     def _create_es_source_document(
         cls,
         media: AbstractMedia,
-        # If ``None`` this will default to the ``media.mature``
-        # property value. Otherwise it will force the document
-        # value.
-        mature: bool | None,
+        mature: bool,
     ) -> dict:
-        mature = media.mature if mature is None else mature
         return {"mature": mature} | {
             field: getattr(media, field) for field in cls._document_fields
         }
 
     @classmethod
-    def save_model_to_es(
+    def _save_model_to_es(
         cls,
         media: AbstractMedia,
         *,
-        filtered: bool = True,
-        mature: bool | None = None,
-    ):
+        add_to_filtered_index: bool = True,
+        mature: bool = False,
+    ) -> Hit:
         """
         Persist a media model to Elasticsearch.
 
@@ -135,7 +160,7 @@ class MediaFactory(DjangoModelFactory):
             document=source_document,
             refresh=True,
         )
-        if filtered:
+        if add_to_filtered_index:
             es.create(
                 index=f"{origin_index}-filtered",
                 id=media.pk,
@@ -143,26 +168,14 @@ class MediaFactory(DjangoModelFactory):
                 refresh=True,
             )
 
-    @classmethod
-    def create_hit(
-        cls, media: AbstractMedia, *, _score: float = 1.0, mature: bool | None = None
-    ) -> Hit:
-        # ``document`` should match the dictionary returned
-        # by Elasticsearch. ``_source`` only contains the
-        # fields that are defined in the ``MediaFactory``,
-        # not all the fields for a
-        document = {
-            "_index": media._meta.db_table,
-            "_type": "doc",
-            "_id": media.pk,
-            "_score": _score,
-            "_source": cls._create_es_source_document(
-                media,
-                mature,
-            ),
-        }
-
-        return Hit(document)
+        return Hit(
+            {
+                "_index": origin_index,
+                "_score": 1.0,
+                "_id": media.pk,
+                "_source": source_document,
+            }
+        )
 
 
 class IdentifierFactory(factory.SubFactory):

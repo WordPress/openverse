@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 
 import pytest
 
+<<<<<<< HEAD
 from api.serializers.audio_serializers import (
     AudioSearchRequestSerializer,
     AudioSerializer,
@@ -18,6 +19,9 @@ from api.serializers.image_serializers import (
     ImageSearchRequestSerializer,
     ImageSerializer,
 )
+=======
+from api.constants import sensitivity
+>>>>>>> 9274ff532 (Remove provider-supplied sensitivity handling)
 from api.serializers.media_serializers import MediaSearchRequestSerializer
 
 
@@ -32,7 +36,7 @@ def access_token():
 @pytest.fixture
 def hit():
     hit = MagicMock(
-        identifier=uuid.uuid4(),
+        identifier=str(uuid.uuid4()),
         license="cc0",
         license_version="1.0",
     )
@@ -91,71 +95,56 @@ def test_page_size_validation(page_size, authenticated, anon_request, authed_req
     assert serializer.is_valid(raise_exception=True)
 
 
-parametrize_media_serializer_classes = pytest.mark.parametrize(
-    "serializer_class",
-    [
-        AudioSerializer,
-        ImageSerializer,
-    ],
-)
-
-
-@parametrize_media_serializer_classes
 def test_media_serializer_adds_license_url_if_missing(
-    anon_request, hit, serializer_class
+    anon_request, hit, media_type_config
 ):
     # Note that this behaviour is inherited from the parent `MediaSerializer` class, but
     # it cannot be tested without a concrete model to test with.
-
+    serializer_class = media_type_config.model_serializer
     del hit.license_url  # without the ``del``, the property is dynamically generated
     repr = serializer_class(hit, context={"request": anon_request}).data
     assert repr["license_url"] == "https://creativecommons.org/publicdomain/zero/1.0/"
 
 
-@parametrize_media_serializer_classes
 @pytest.mark.parametrize(
-    ("identifier_in_context_sets", "mature_hit", "expected_sensitivity"),
-    (
-        (
-            ("user_reported_sensitive_result_ids", "sensitive_text_result_ids"),
-            True,
-            {"user_reported_sensitive", "sensitive_text"},
-        ),
-        (
-            ("sensitive_text_result_ids",),
-            True,
-            {"provider_supplied_sensitive", "sensitive_text"},
-        ),
-        (("sensitive_text_result_ids",), False, {"sensitive_text"}),
-        (tuple(), True, {"provider_supplied_sensitive"}),
-        (("user_reported_sensitive_result_ids",), True, {"user_reported_sensitive"}),
-        (tuple(), False, set()),
-        # user_reported_sensitive_result_ids with mature ``False`` isn't a real
-        # configuration our data can have so it is ignored here in the tests.
-    ),
+    "has_sensitive_text",
+    (True, False),
+    ids=lambda x: "has_sensitive_text" if x else "no_sensitive_text",
 )
+@pytest.mark.parametrize(
+    "has_confirmed_report",
+    (True, False),
+    ids=lambda x: "has_confirmed_report" if x else "no_confirmed_report",
+)
+@pytest.mark.django_db
 def test_media_serializer_sensitivity(
-    serializer_class,
-    identifier_in_context_sets,
-    mature_hit,
-    expected_sensitivity,
-    hit,
+    has_sensitive_text,
+    has_confirmed_report,
+    provider_marked_mature,
+    media_type_config,
     anon_request,
 ):
-    hit.mature = mature_hit
-    other_result_ids = [uuid.uuid4() for _ in range(6)]
+    model, hit = media_type_config.model_factory.create(
+        sensitive_text=has_sensitive_text,
+        mature_reported=has_confirmed_report,
+        with_es=True,
+    )
+
+    other_result_ids = [str(uuid.uuid4()) for _ in range(6)]
     context = {
         "request": anon_request,
-        "result_ids": {hit.identifier} | set(other_result_ids),
-        "user_reported_sensitive_result_ids": set(
-            random.choices(other_result_ids, k=3)
-        ),
-        "sensitive_text_result_ids": set(random.choices(other_result_ids, k=3)),
+        "all_result_identifiers": {hit.identifier} | set(other_result_ids),
+        "sensitive_text_result_identifiers": set(random.choices(other_result_ids, k=3)),
     }
-    for context_set in identifier_in_context_sets:
-        context[context_set].add(hit.identifier)
 
-    serializer = serializer_class(hit, context=context)
+    if has_sensitive_text:
+        context["sensitive_text_result_identifiers"] |= {hit.identifier}
+
+    serializer = media_type_config.model_serializer(model, context=context)
+
+    expected_sensitivity = set()
+    if has_sensitive_text:
+        expected_sensitivity.add(sensitivity.TEXT)
 
     assert set(serializer.data["unstable__sensitivity"]) == expected_sensitivity
 

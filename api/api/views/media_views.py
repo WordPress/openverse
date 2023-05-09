@@ -115,7 +115,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
         serializer_context = search_context | self.get_serializer_context()
 
-        serializer_class = self.get_serializer_class()
+        serializer_class = self.get_serializer()
         if params.needs_db or serializer_class.needs_db:
             results = self.get_db_results(results)
 

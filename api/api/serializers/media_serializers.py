@@ -7,7 +7,9 @@ from rest_framework import serializers
 from rest_framework.exceptions import NotAuthenticated
 
 from drf_spectacular.utils import extend_schema_serializer
+from elasticsearch_dsl.response import Hit
 
+from api.constants import sensitivity
 from api.constants.licenses import LICENSE_GROUPS
 from api.constants.sorting import DESCENDING, RELEVANCE, SORT_DIRECTIONS, SORT_FIELDS
 from api.controllers import search_controller
@@ -484,24 +486,39 @@ class MediaSerializer(BaseModelSerializer):
         )
     )
 
-    def get_unstable__sensitivity(self, obj):
+    def get_unstable__sensitivity(self, obj: Hit | AbstractMedia) -> list[str]:
         result = []
-        if obj.identifier in self.context.get(
-            "user_reported_sensitive_result_ids", set()
-        ):
-            result.append("user_reported_sensitive")
-        elif obj.mature:
-            # This needs to be elif rather than a separate clause entirely
-            # because reported content gets "mature" applied in Elasticsearch.
-            # Provider supplied mature settings are only accurate if there
-            # is not a corresponding, approved content report.
-            # This assumes that anything with a content report that is confirmed
-            # but not specifically de-indexed was not already marked as sensitive
-            # by the provider and also violated our terms anyway so would be excluded.
-            result.append("provider_supplied_sensitive")
 
-        if obj.identifier in self.context.get("sensitive_text_result_ids", set()):
-            result.append("sensitive_text")
+        if obj.identifier in self.context.get(
+            "sensitive_text_result_identifiers", set()
+        ):
+            result.append(sensitivity.TEXT)
+
+        # ``obj.mature`` will either be `mature` from the ES document
+        # or the ``mature`` property on the Image or Audio model.
+        if obj.mature:
+            # We do not currently have any documents marked `mature=true`
+            # that were not marked so as a result of a confirmed user report.
+            # This is despite the fact that the ingestion server _does_ copy
+            # the mature field from record `meta_data`. If you query for
+            # documents in the production image and audio indexes that have
+            # `mature=true` but do not have confirmed reports, you will get
+            # 0 results. Whether this is because we truly do not have results
+            # that providers have themselves marked as mature, unsafe, etc,
+            # it isn't clear (aside from Flickr, where we use "safe search").
+            # What is clear is that we do not need to handle provider reported
+            # sensitivity here because it simply does not occurr in our database.
+            # That is _very_ convenient because provider supplied maturity is
+            # much more complex to derive. Its condition is that the result
+            # has no report _and_ has `mature=true` on the document in ES.
+            # The only way to derive that is to query both the database and
+            # Elasticsearch (or have access to both of those individually).
+            # Due to the flexibility of this serializer in being able to
+            # handle both Elasticsearch ``Hit``s _and_ media model instances,
+            # trying to handle provider supplied maturity significantly
+            # increases complexity here and, in order to prevent redundant
+            # queries to either Postgres or ES, in other parts of the codebase.
+            result.append(sensitivity.USER_REPORTED)
 
         return result
 

@@ -9,7 +9,6 @@ from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
 
 from api.controllers import search_controller
-from api.serializers.media_serializers import MediaSearchRequestSerializer
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
 
@@ -384,16 +383,6 @@ def test_paginate_with_dead_link_mask_query_mask_overlaps_query_window(
     ), f"expected {expected_range} but got {actual_range}"
 
 
-parametrize_index = pytest.mark.parametrize(
-    "index",
-    (
-        "image",
-        "audio",
-    ),
-)
-
-
-@parametrize_index
 @pytest.mark.parametrize(
     ("page", "page_size", "does_tally", "number_of_results_passed"),
     (
@@ -440,15 +429,16 @@ def test_search_tallies_pages_less_than_5(
     page_size,
     does_tally,
     number_of_results_passed,
-    index,
-    request_factory,
+    media_type_config,
     include_sensitive_results,
+    settings,
 ):
-    mock_post_process_results.return_value = [
-        {"provider": "a provider", "identifier": i} for i in range(page_size)
-    ]
+    media_with_hits = media_type_config.model_factory.create_batch(
+        size=page_size, with_hit=True
+    )
+    mock_post_process_results.return_value = [hit for _, hit in media_with_hits]
 
-    serializer = MediaSearchRequestSerializer(
+    serializer = media_type_config.search_request_serializer(
         data={
             "q": "dogs",
             "unstable__include_sensitive_results": include_sensitive_results,
@@ -459,18 +449,19 @@ def test_search_tallies_pages_less_than_5(
     search_controller.search(
         search_params=serializer,
         ip=0,
-        origin_index=index,
+        origin_index=media_type_config.origin_index,
         exact_index=False,
         page=page,
         page_size=page_size,
-        request=request_factory.get("/"),
         filter_dead=False,
     )
 
     if does_tally:
         count_provider_occurrences_mock.assert_called_once_with(
             mock.ANY,
-            index if include_sensitive_results else f"{index}-filtered",
+            media_type_config.origin_index
+            if include_sensitive_results
+            else media_type_config.filtered_index,
         )
         passed_results = count_provider_occurrences_mock.call_args_list[0][0][0]
         assert len(passed_results) == number_of_results_passed
@@ -478,7 +469,6 @@ def test_search_tallies_pages_less_than_5(
         count_provider_occurrences_mock.assert_not_called()
 
 
-@parametrize_index
 @mock.patch.object(
     tallies, "count_provider_occurrences", wraps=tallies.count_provider_occurrences
 )
@@ -488,31 +478,28 @@ def test_search_tallies_pages_less_than_5(
 def test_search_tallies_handles_empty_page(
     mock_post_process_results,
     count_provider_occurrences_mock: mock.MagicMock,
-    index,
-    request_factory,
+    media_type_config,
 ):
     mock_post_process_results.return_value = None
 
-    serializer = MediaSearchRequestSerializer(data={"q": "dogs"})
+    serializer = media_type_config.search_request_serializer(data={"q": "dogs"})
     serializer.is_valid()
 
     search_controller.search(
         search_params=serializer,
         ip=0,
-        origin_index=index,
+        origin_index=media_type_config.origin_index,
         exact_index=False,
         # Force calculated result depth length to include results within 80th position and above
         # to force edge case where retrieved results are only partially tallied.
         page=1,
         page_size=100,
-        request=request_factory.get("/"),
         filter_dead=True,
     )
 
     count_provider_occurrences_mock.assert_not_called()
 
 
-@parametrize_index
 @pytest.mark.parametrize(
     ("feature_enabled", "include_sensitive_results", "index_suffix"),
     (
@@ -525,19 +512,18 @@ def test_search_tallies_handles_empty_page(
 @mock.patch("api.controllers.search_controller.Search", wraps=Search)
 def test_resolves_index(
     search_class,
-    index,
+    media_type_config,
     feature_enabled,
     include_sensitive_results,
     index_suffix,
     settings,
-    request_factory,
 ):
-    origin_index = index
-    searched_index = f"{index}{index_suffix}"
+    origin_index = media_type_config.origin_index
+    searched_index = f"{origin_index}{index_suffix}"
 
     settings.ENABLE_FILTERED_INDEX_QUERIES = feature_enabled
 
-    serializer = MediaSearchRequestSerializer(
+    serializer = media_type_config.search_request_serializer(
         data={"unstable__include_sensitive_results": include_sensitive_results}
     )
     serializer.is_valid()
@@ -549,7 +535,6 @@ def test_resolves_index(
         exact_index=False,
         page=1,
         page_size=20,
-        request=request_factory.get("/"),
         filter_dead=False,
     )
 
