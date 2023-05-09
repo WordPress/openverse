@@ -4,11 +4,6 @@ from datetime import datetime, timedelta
 import pytest
 from requests import HTTPError, Request, Response
 
-from catalog.dags.maintenance.pr_review_reminders.pr_review_reminders import (
-    Urgency,
-    days_without_weekends,
-    post_reminders,
-)
 from catalog.tests.factories.github import (
     EventsConfig,
     make_branch_protection,
@@ -21,6 +16,11 @@ from catalog.tests.factories.github import (
     make_requested_reviewer,
     make_review,
     make_urgent_events,
+)
+from maintenance.pr_review_reminders.pr_review_reminders import (
+    Urgency,
+    days_without_weekends,
+    post_reminders,
 )
 
 
@@ -166,7 +166,7 @@ def _setup_branch_protection_for_branch(
 parametrize_urgency = pytest.mark.parametrize(
     "urgency",
     [
-        pytest.param(urgency, id="{urgency.label}-urgency")
+        pytest.param(urgency, id=f"{urgency.label}-urgency")
         for urgency in (
             Urgency.CRITICAL,
             Urgency.HIGH,
