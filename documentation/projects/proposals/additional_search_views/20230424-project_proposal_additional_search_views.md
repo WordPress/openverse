@@ -2,7 +2,7 @@
 
 ## Reviewers
 
-- [ ] @obulat
+- [x] @obulat
 - [ ] @krysal
 
 ## Project summary
@@ -24,7 +24,7 @@ interact in the following ways.
 
 Users land on the tag results page by clicking on the tag in the single result
 page or by opening a tag results link (for instance,
-[www.openverse.org/tags/image/cat](http://www.openverse.org/tags/image/cat)).
+[www.openverse.org/tags/image/cat](https://www.openverse.org/tags/image/cat)).
 
 The results page shows the name of the tag and all the items of the selected
 media type that have this exact tag applied. The items are sorted by
@@ -37,7 +37,7 @@ not items tagged with `cats` .
 
 Users land on the source results page by clicking on the source name in the
 single result page or by opening a source results link (for instance,
-[http://www.openverse.org/providers/wikimedia/image/](http://www.openverse.org/providers/wikimedia/image/))
+[http://www.openverse.org/providers/wikimedia/image/](https://www.openverse.org/providers/wikimedia/image/))
 
 The results page shows the name of the source and all the items from this source
 in the selected media type. The items are sorted by `ingested_on` field in
@@ -47,7 +47,7 @@ descending order.
 
 Users land on the creator results page by clicking on the creator’s name in the
 single result page or by opening a creator results link (for instance,
-[http://www.openverse.org/creators/cat_flickr](http://www.openverse.org/creators/cat_flickr))
+[http://www.openverse.org/creators/cat_flickr](https://www.openverse.org/creators/cat_flickr))
 
 The results page shows the creator’s name and the source where the content comes
 from, and all items in the selected media type. The items are sorted by
