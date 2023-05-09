@@ -29,7 +29,7 @@ class Urgency:
     LOW = Urgency("low", 5)
 
     @classmethod
-    def for_pr(cls, pr: dict) -> Urgency:
+    def for_pr(cls, pr: dict) -> Urgency | None:
         priority_labels = [
             label["name"]
             for label in pr["labels"]
