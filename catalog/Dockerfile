@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 # Cannot use $PYTHON_VERSION because that is overwritten by the base image
 # with the patch version (we only care about major and minor version)
 ARG CATALOG_PY_VERSION

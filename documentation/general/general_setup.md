@@ -184,6 +184,22 @@ If not, you can use one of the many
 [installation methods](https://docs.docker.com/engine/install/) officially
 supported by Docker.
 
+Note that the building images for the frontend needs an advanced build feature,
+namely additional build contexts, that is provided by the
+[Buildx plugin](https://docs.docker.com/build/architecture/#buildx). The Buildx
+plugin is included in Docker Desktop and all
+[installation methods](https://docs.docker.com/engine/install/) for Docker
+Engine include steps to also install the Buildx plugin.
+
+To know if your Docker setup is using Buildx, run the following command.
+
+```console
+$ docker build --help
+```
+
+If you see `docker buildx build` under 'Aliases', you have Buildx set up as the
+build client.
+
 #### Docker Compose
 
 Docker Compose makes it easy to orchestrate multiple services which we put to
