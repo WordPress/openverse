@@ -104,34 +104,31 @@ class BrooklynMuseumDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _handle_object_data(data, license_info: LicenseInfo) -> list[dict]:
-        images = []
-        image_info = data.get("images")
-        if image_info is None:
+        # id_ is used to create the foreign_landing_url, which is a required field
+        if not (image_info := data.get("images")) or not (id_ := data.get("id")):
             return []
 
-        id_ = data.get("id")
-        if id_ is None:
-            return []
+        foreign_landing_url = (
+            f"https://www.brooklynmuseum.org/opencollection/objects/{id_}"
+        )
 
         title = data.get("title", "")
-        foreign_url = f"https://www.brooklynmuseum.org/opencollection/objects/{id_}"
         metadata = BrooklynMuseumDataIngester._get_metadata(data)
         creators = BrooklynMuseumDataIngester._get_creators(data)
 
+        images = []
         for image in image_info:
-            foreign_id = image.get("id")
-            if foreign_id is None:
+            if not (foreign_identifier := image.get("id")):
                 continue
-            image_url = image.get("largest_derivative_url")
-            if image_url is None:
+            if not (image_url := image.get("largest_derivative_url")):
                 continue
             height, width = BrooklynMuseumDataIngester._get_image_sizes(image)
             images.append(
                 {
-                    "foreign_landing_url": foreign_url,
+                    "foreign_landing_url": foreign_landing_url,
                     "image_url": image_url,
                     "license_info": license_info,
-                    "foreign_identifier": foreign_id,
+                    "foreign_identifier": foreign_identifier,
                     "width": width,
                     "height": height,
                     "title": title,
@@ -142,8 +139,7 @@ class BrooklynMuseumDataIngester(ProviderDataIngester):
         return images
 
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
-        id_ = data.get("id")
-        if not id_:
+        if not (id_ := data.get("id")):
             return None
         if not (license_info := self._get_license_info(data)):
             return None
@@ -151,7 +147,7 @@ class BrooklynMuseumDataIngester(ProviderDataIngester):
         object_data = self._get_data_from_response(
             self.get_response_json(query_params={}, endpoint=endpoint)
         )
-        if object_data is None:
+        if not object_data:
             return None
         return self._handle_object_data(data=object_data, license_info=license_info)
 

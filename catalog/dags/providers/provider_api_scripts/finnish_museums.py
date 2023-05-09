@@ -95,10 +95,9 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
 
     def get_batch_data(self, response_json):
         if (
-            response_json is None
+            not response_json
             or str(response_json.get("status")).lower() != "ok"
-            or response_json.get("records") is None
-            or len(response_json.get("records")) == 0
+            or not response_json.get("records")
         ):
             return None
 
@@ -108,10 +107,12 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
         if not (license_info := self.get_license_info(data)):
             return None
 
-        foreign_identifier = data.get("id")
-        if foreign_identifier is None:
+        if not (foreign_identifier := data.get("id")):
             return None
         foreign_landing_url = LANDING_URL + foreign_identifier
+
+        if not (image_list := data.get("images")):
+            return None
 
         title = data.get("title")
         creator = self.get_creator(data.get("authors")) if data.get("authors") else None
@@ -121,14 +122,13 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
         )
 
         raw_tags = None
-        tag_lists = data.get("subjects")
-        if tag_lists is not None:
+        if tag_lists := data.get("subjects"):
             raw_tags = list(chain(*tag_lists))
 
-        image_list = data.get("images")
         records = []
         for img in image_list:
-            image_url = self._get_image_url(img)
+            if not (image_url := self._get_image_url(img)):
+                continue
             records.append(
                 {
                     "license_info": license_info,
@@ -154,13 +154,13 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
         return get_license_info(license_url=license_url.removesuffix("deed.fi"))
 
     @staticmethod
-    def _get_image_url(img, image_url=API_URL):
-        if img is None:
+    def _get_image_url(img, image_url=API_URL) -> str | None:
+        if not img:
             return None
         return image_url + img
 
     @staticmethod
-    def get_creator(authors_raw):
+    def get_creator(authors_raw) -> str | None:
         authors = []
         for author_type in ["primary", "secondary", "corporate"]:
             author = authors_raw.get(author_type)

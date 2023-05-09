@@ -187,3 +187,23 @@ def test_get_tags():
 def test_add_trailing_slash(url, expected):
     actual = jamendo._add_trailing_slash(url)
     assert actual == expected
+
+
+@pytest.mark.parametrize(
+    "thumbnail_url, expected",
+    [
+        (
+            "https://usercontent.jamendo.com/?type=album&id=100007&width=300&trackid=100007",
+            "https://usercontent.jamendo.com/?type=album&id=100007&width=300",
+        ),
+        (
+            "https://usercontent.jamendo.com/?type=album&id=100007&width=300",
+            "https://usercontent.jamendo.com/?type=album&id=100007&width=300",
+        ),
+        (None, None),
+        ("", None),
+    ],
+)
+def test_remove_track_id_handles_data(thumbnail_url, expected):
+    actual = jamendo._remove_trackid(thumbnail_url)
+    assert actual == expected
