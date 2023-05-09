@@ -1,30 +1,27 @@
-import { createLocalVue } from "@vue/test-utils"
-import { fireEvent, render, screen } from "@testing-library/vue"
+import { fireEvent } from "@testing-library/vue"
 
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
-import { PiniaVuePlugin, createPinia } from "~~/test/unit/test-utils/pinia"
+import { render } from "~~/test/unit/test-utils/render"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { AUDIO } from "~/constants/media"
 
 import VFullLayout from "~/components/VAudioTrack/layouts/VFullLayout.vue"
 
-jest.mock("~/composables/use-analytics", () => ({
-  useAnalytics: jest.fn(() => ({
-    sendCustomEvent: jest.fn(),
-  })),
-}))
-
-const localVue = createLocalVue()
-localVue.use(PiniaVuePlugin)
+jest.mock("~/composables/use-analytics")
 
 describe("VFullLayout", () => {
+  const sendCustomEventMock = jest.fn()
+  useAnalytics.mockImplementation(() => ({
+    sendCustomEvent: sendCustomEventMock,
+  }))
+  beforeEach(() => {
+    sendCustomEventMock.mockClear()
+  })
   it("should render the weblink button with the foreign landing url", () => {
     const audio = getAudioObj()
 
-    render(VFullLayout, {
-      localVue,
-      pinia: createPinia(),
+    const { getByText } = render(VFullLayout, {
       propsData: {
         audio,
         size: "s",
@@ -33,20 +30,14 @@ describe("VFullLayout", () => {
       },
     })
 
-    const downloadButton = screen.getByText("audio-details.weblink")
+    const downloadButton = getByText(/Get this audio/i)
     expect(downloadButton).toHaveAttribute("href", audio.foreign_landing_url)
   })
 
   it("should send GET_MEDIA analytics event on button click", async () => {
-    const sendCustomEventMock = jest.fn()
-    useAnalytics.mockImplementation(() => ({
-      sendCustomEvent: sendCustomEventMock,
-    }))
     const audio = getAudioObj()
 
-    render(VFullLayout, {
-      localVue,
-      pinia: createPinia(),
+    const { getByText } = render(VFullLayout, {
       propsData: {
         audio,
         size: "s",
@@ -55,7 +46,7 @@ describe("VFullLayout", () => {
       },
     })
 
-    const downloadButton = screen.getByText("audio-details.weblink")
+    const downloadButton = getByText(/Get this audio/i)
     await fireEvent.click(downloadButton)
 
     expect(sendCustomEventMock).toHaveBeenCalledWith("GET_MEDIA", {

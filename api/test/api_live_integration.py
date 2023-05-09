@@ -14,9 +14,9 @@ import uuid
 import pytest
 import requests
 
-from catalog.api.constants.licenses import LICENSE_GROUPS
-from catalog.api.models import Image
-from catalog.api.utils.watermark import watermark
+from api.constants.licenses import LICENSE_GROUPS
+from api.models import Image
+from api.utils.watermark import watermark
 
 
 API_URL = os.getenv("INTEGRATION_TEST_URL", "http://localhost:8000")

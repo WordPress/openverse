@@ -95,7 +95,16 @@ module.exports = {
         message: "Use the <VLink> component instead of <RouterLink>.",
       },
     ],
-    "no-restricted-syntax": ["error", ...i18nDestructureRules],
+    "no-restricted-syntax": [
+      "error",
+      ...i18nDestructureRules,
+      {
+        selector:
+          "ImportDeclaration[source.value='@vue/test-utils']:has(ImportSpecifier[local.name='shallowMount'])",
+        message:
+          "Do not use @vue/test-utils' `shallowMount`. Use @testing-library/vue's `render` instead.",
+      },
+    ],
     "unicorn/filename-case": ["error", { case: "kebabCase" }],
     "@typescript-eslint/no-var-requires": ["off"],
     "import/no-unresolved": [

@@ -1,70 +1,51 @@
-import { fireEvent, render, screen } from "@testing-library/vue"
-import { createLocalVue } from "@vue/test-utils"
-import VueI18n from "vue-i18n"
+import { fireEvent, screen } from "@testing-library/vue"
 
-import { PiniaVuePlugin, createPinia } from "~~/test/unit/test-utils/pinia"
+import { render } from "~~/test/unit/test-utils/render"
 
 import { useSearchStore } from "~/stores/search"
-
-import messages from "~/locales/en.json"
 
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 
 describe("VSearchGridFilter", () => {
   let options = {}
-  let localVue
-  let pinia
   let searchStore
+  let configureStoreCb
   const routerMock = { push: jest.fn() }
   const routeMock = { path: jest.fn() }
 
   beforeEach(() => {
-    localVue = createLocalVue()
-    localVue.use(PiniaVuePlugin)
-    localVue.use(VueI18n)
-
-    const i18n = new VueI18n({
-      locale: "en",
-      fallbackLocale: "en",
-      messages: { en: messages },
-    })
-    pinia = createPinia()
-
     options = {
-      localVue,
-      pinia,
-      i18n,
       mocks: {
         $route: routeMock,
         $router: routerMock,
-        $nuxt: {
-          context: {
-            app: { localePath: jest.fn() },
-            i18n: { t: (s) => s },
-          },
-        },
       },
     }
-    searchStore = useSearchStore(pinia)
+    configureStoreCb = (localVue, options) => {
+      searchStore = useSearchStore(options.pinia)
+    }
   })
 
   it("toggles filter", async () => {
     render(VSearchGridFilter, options)
     const checked = screen.queryAllByRole("checkbox", { checked: true })
     expect(checked.length).toEqual(0)
-    await fireEvent.click(screen.queryByLabelText(/commercial/i))
+    await fireEvent.click(
+      screen.queryByRole("checkbox", { name: /use commercially/i })
+    )
     // `getBy` serves as expect because it throws an error if no element is found
-    screen.getByRole("checkbox", { checked: true })
-    screen.getByLabelText(/commercial/, { checked: true })
+    screen.getByRole("checkbox", { checked: true, name: /use commercially/i })
   })
 
   it("clears filters", async () => {
-    searchStore.toggleFilter({ filterType: "licenses", code: "by" })
-    await render(VSearchGridFilter, options)
+    configureStoreCb = (localVue, options) => {
+      searchStore = useSearchStore(options.pinia)
+      searchStore.toggleFilter({ filterType: "licenses", code: "by" })
+    }
+    await render(VSearchGridFilter, options, configureStoreCb)
     // if no checked checkboxes were found, this would raise an error
     screen.getByRole("checkbox", { checked: true })
 
-    await fireEvent.click(screen.getByText("filter-list.clear"))
+    await fireEvent.click(screen.getByText("Clear filters"))
     const checkedFilters = screen.queryAllByRole("checkbox", { checked: true })
     const uncheckedFilters = screen.queryAllByRole("checkbox", {
       checked: false,

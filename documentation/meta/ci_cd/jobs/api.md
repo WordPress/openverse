@@ -1,16 +1,5 @@
 # API jobs
 
-```{mermaid}
-flowchart TB
-  get-changes{{get-changes}} -- API unchanged --> bypass-django-checks
-  get-changes -- API changed --- x[&nbsp] --> deploy-api & test-api & django-checks
-
-  get-changes --> determine-images
-  determine-images & get-image-tag & lint --> build-images --> test-api & django-checks --> publish-images --> deploy-api
-
-  style x height:0
-```
-
 The API flow uses the following other jobs.
 
 - [`get-changes`](/meta/ci_cd/jobs/preparation.md#get-changes)

@@ -1,37 +1,28 @@
-import { createLocalVue } from "@vue/test-utils"
-import { fireEvent, render, screen } from "@testing-library/vue"
+import { fireEvent, screen } from "@testing-library/vue"
 
-import { PiniaVuePlugin, createPinia } from "~~/test/unit/test-utils/pinia"
-
-import { useI18n } from "~/composables/use-i18n"
+import { render } from "~~/test/unit/test-utils/render"
 
 import FilterChecklist from "~/components/VFilters/VFilterChecklist.vue"
-
-jest.mock("~/composables/use-i18n", () => ({
-  useI18n: jest.fn(),
-}))
 
 describe("FilterChecklist", () => {
   let options = {}
   let props = null
-  let localVue = null
-  let pinia
 
   beforeEach(() => {
-    localVue = createLocalVue()
-    localVue.use(PiniaVuePlugin)
-    pinia = createPinia()
-    useI18n.mockImplementation(() => ({ t: (v) => v }))
-
     props = {
-      options: [{ code: "foo", name: "bar", checked: false }],
-      title: "Foo",
-      filterType: "bar",
+      // Using real values to avoid i18n warnings
+      options: [
+        {
+          code: "music",
+          name: "filters.audio-categories.music",
+          checked: false,
+        },
+      ],
+      title: "Music",
+      filterType: "audioCategories",
       disabled: false,
     }
     options = {
-      localVue,
-      pinia,
       propsData: props,
     }
   })

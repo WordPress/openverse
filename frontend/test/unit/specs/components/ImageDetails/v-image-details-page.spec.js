@@ -1,10 +1,6 @@
-import VueI18n from "vue-i18n"
+import { fireEvent, screen } from "@testing-library/vue"
 
-import { createLocalVue } from "@vue/test-utils"
-import { fireEvent, render, screen } from "@testing-library/vue"
-
-import { PiniaVuePlugin, createPinia } from "~~/test/unit/test-utils/pinia"
-import i18n from "~~/test/unit/test-utils/i18n"
+import { render } from "~~/test/unit/test-utils/render"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { IMAGE } from "~/constants/media"
@@ -31,10 +27,6 @@ const imageObject = {
   frontendMediaType: "image",
 }
 
-const localVue = createLocalVue()
-localVue.use(PiniaVuePlugin)
-localVue.use(VueI18n)
-
 describe("VImageDetailsPage", () => {
   it("should send GET_MEDIA analytics event on CTA button click", async () => {
     const sendCustomEventMock = jest.fn()
@@ -43,9 +35,6 @@ describe("VImageDetailsPage", () => {
     }))
 
     render(VImageDetailsPage, {
-      localVue,
-      pinia: createPinia(),
-      i18n,
       mocks: {
         $route: {
           params: {
@@ -55,7 +44,7 @@ describe("VImageDetailsPage", () => {
       },
     })
 
-    const downloadButton = screen.getByText("image-details.weblink")
+    const downloadButton = screen.getByText(/get this image/i)
     await fireEvent.click(downloadButton)
 
     expect(sendCustomEventMock).toHaveBeenCalledWith("GET_MEDIA", {

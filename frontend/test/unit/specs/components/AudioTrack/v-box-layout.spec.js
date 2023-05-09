@@ -1,35 +1,18 @@
-import { render } from "@testing-library/vue"
-import Vuei18n from "vue-i18n"
-import { createLocalVue } from "@vue/test-utils"
-
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VBoxLayout from "~/components/VAudioTrack/layouts/VBoxLayout.vue"
 
-const enMessages = require("~/locales/en.json")
-
-const i18n = new Vuei18n({
-  locale: "en",
-  fallbackLocale: "en",
-  messages: { en: enMessages },
-})
-
 describe("VBoxLayout", () => {
   let options = null
-  let localVue
   let props = {
     audio: getAudioObj(),
     size: "m",
   }
 
   beforeEach(() => {
-    localVue = createLocalVue()
-    localVue.use(Vuei18n)
     options = {
       propsData: props,
-      mocks: { $nuxt: { context: { i18n } } },
-      localVue,
-      i18n,
     }
   })
 

@@ -180,9 +180,8 @@ class FreesoundDataIngester(ProviderDataIngester):
     def _get_audio_files(
         self, media_data
     ) -> tuple[dict, list[dict]] | tuple[None, None]:
-        previews = media_data.get("previews")
         # If there are no previews, then we will not be able to play the file
-        if not previews:
+        if not (previews := media_data.get("previews")):
             return None, None
 
         # If our preferred preview type is not present, skip this audio
@@ -191,7 +190,7 @@ class FreesoundDataIngester(ProviderDataIngester):
 
         # If unable to get filesize from the preview, skip this audio
         # This may happen if the preview 404s
-        if (filesize := self._get_audio_file_size(preview_url)) is None:
+        if not (filesize := self._get_audio_file_size(preview_url)):
             return None, None
 
         main_file = {
@@ -219,12 +218,10 @@ class FreesoundDataIngester(ProviderDataIngester):
 
         Freesound does not have audio thumbnails.
         """
-        foreign_landing_url = media_data.get("url")
-        if not foreign_landing_url:
+        if not (foreign_landing_url := media_data.get("url")):
             return None
 
-        foreign_identifier = media_data.get("id")
-        if not foreign_identifier:
+        if not (foreign_identifier := media_data.get("id")):
             return None
 
         if not (item_license := get_license_info(media_data.get("license"))):
@@ -241,7 +238,7 @@ class FreesoundDataIngester(ProviderDataIngester):
                 f"Unable to get file size for {foreign_landing_url}, skipping"
             )
             return None
-        if main_audio is None:
+        if not main_audio:
             return None
 
         creator, creator_url = self._get_creator_data(media_data)

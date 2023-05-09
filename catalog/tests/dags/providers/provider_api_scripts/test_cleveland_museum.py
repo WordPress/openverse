@@ -99,16 +99,14 @@ def test_get_image_data_full():
     assert actual_image == expected_image
 
 
-def test_get_image_data_none():
-    image_data = _get_resource_json("image_type_none.json")
+@pytest.mark.parametrize(
+    "image_data",
+    [_get_resource_json("image_type_none.json"), None, {}, []],
+)
+def test_get_image_data_falsy_returns_none(image_data):
     actual_image = clm._get_image_data(image_data)
 
     assert actual_image is None
-
-
-def test_get_image_data_no_data():
-    # When image_data is None
-    assert clm._get_image_data(None) is None
 
 
 def test_get_metadata():

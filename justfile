@@ -190,6 +190,12 @@ recreate:
     just up "--force-recreate --build"
     just init
 
+# Bust pnpm cache and reinstall Node.js dependencies
+node-recreate:
+    find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+    rm -rf $(pnpm store path)
+    pnpm install
+
 # Show logs of all, or named, Docker services
 logs services="" args=(if IS_CI != "" { "" } else { "-f" }):
     just dc logs {{ args }} {{ services }}
@@ -205,6 +211,10 @@ exec +args:
 # Execute statement in a new service container using Docker Compose
 run +args:
     just dc run -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} "{{ args }}"
+
+# Execute pgcli against one of the database instances
+_pgcli container db_user_pass db_name db_host db_port="5432":
+    just exec {{ container }} pgcli postgresql://{{ db_user_pass }}:{{ db_user_pass }}@{{ db_host }}:{{ db_port }}/{{ db_name }}
 
 ########
 # Misc #

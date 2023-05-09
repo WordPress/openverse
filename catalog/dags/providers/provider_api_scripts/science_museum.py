@@ -111,39 +111,37 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         if id_ in self.RECORD_IDS:
             return None
         self.RECORD_IDS.add(id_)
-        foreign_landing_url = record.get("links", {}).get("self")
-        if foreign_landing_url is None:
+        if not (foreign_landing_url := record.get("links", {}).get("self")):
             return None
-        attributes = record.get("attributes")
-        if attributes is None:
+        if not (attributes := record.get("attributes")) or not (
+            multimedia := attributes.get("multimedia")
+        ):
             return None
+
         title = attributes.get("summary_title")
         creator = self._get_creator_info(attributes)
-
         metadata = self._get_metadata(attributes)
-        multimedia = attributes.get("multimedia")
-        if not multimedia:
-            return None
         images = []
         for image_data in multimedia:
-            foreign_id = image_data.get("admin", {}).get("uid")
-            if foreign_id is None:
+            if not (foreign_identifier := image_data.get("admin", {}).get("uid")):
                 continue
             processed = image_data.get("processed")
+            if not isinstance(processed, dict):
+                continue
             (
                 image_url,
                 height,
                 width,
                 filetype,
             ) = self._get_image_info(processed)
-            if image_url is None:
+            if not image_url:
                 continue
 
             if not (license_info := self._get_license_info(image_data)):
                 continue
 
             image = {
-                "foreign_identifier": foreign_id,
+                "foreign_identifier": foreign_identifier,
                 "foreign_landing_url": foreign_landing_url,
                 "image_url": image_url,
                 "height": height,
@@ -198,9 +196,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         processed: dict,
     ) -> tuple[str | None, int | None, int | None, str | None]:
         height, width, filetype = None, None, None
-        image_data = processed.get("large")
-        if image_data is None:
-            image_data = processed.get("medium", {})
+        image_data = processed.get("large") or processed.get("medium", {})
 
         image_url = ScienceMuseumDataIngester.check_url(image_data.get("location"))
         if image_url:

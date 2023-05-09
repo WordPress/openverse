@@ -121,6 +121,27 @@ def test_create_day_partitioned_ingestion_dag_with_multi_layer_dependencies():
     assert ingest5_task.upstream_task_ids == {gather1_id}
 
 
+@pytest.mark.parametrize(
+    "catchup_var, dated, expected_result",
+    [
+        (True, True, True),
+        (False, True, False),
+        # Always False if Dag is not dated
+        (True, False, False),
+        (False, False, False),
+    ],
+)
+def test_catchup_configuration(catchup_var, dated, expected_result):
+    with mock.patch("providers.provider_dag_factory.Variable") as MockVariable:
+        MockVariable.get.side_effect = [
+            catchup_var,
+        ]
+        dag = provider_dag_factory.create_provider_api_workflow_dag(
+            ProviderWorkflow(ingester_class=MockProviderDataIngester, dated=dated)
+        )
+        assert dag.catchup == expected_result
+
+
 def test_apply_configuration_overrides():
     # Create a mock DAG
     dag = DAG(

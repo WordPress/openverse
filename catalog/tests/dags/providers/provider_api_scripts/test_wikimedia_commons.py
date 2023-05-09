@@ -249,6 +249,33 @@ def test_extract_title_gets_cleaned_title(wmc):
     assert actual_title == expected_title
 
 
+def test_get_record_data_returns_none_when_missing_foreign_identifier(wmc):
+    media_data = _get_resource_json("image_data_example.json")
+    media_data["pageid"] = ""
+
+    record_data = wmc.get_record_data(media_data)
+
+    assert record_data is None
+
+
+@pytest.mark.parametrize(
+    "missing_parameter",
+    [
+        pytest.param("url", id="url"),
+        pytest.param("descriptionshorturl", id="foreign_landing_url"),
+    ],
+)
+def test_get_record_data_returns_none_when_missing_required_fields(
+    wmc, missing_parameter
+):
+    media_data = _get_resource_json("image_data_example.json")
+    media_data["imageinfo"][0][missing_parameter] = ""
+
+    record_data = wmc.get_record_data(media_data)
+
+    assert record_data is None
+
+
 def test_get_record_data_handles_example_dict(wmc):
     """
     Converts sample json data to correct image metadata,

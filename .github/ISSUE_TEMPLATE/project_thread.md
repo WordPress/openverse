@@ -18,7 +18,7 @@ title: "<Replace this with actual title>"
 <!-- Please link to these documents once they are written. -->
 
 - [ ] Project Proposal
-- [ ] Implementation Plan
+- [ ] Implementation Plan(s)
 
 ## Issues
 

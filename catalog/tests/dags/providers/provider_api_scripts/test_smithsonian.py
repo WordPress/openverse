@@ -567,6 +567,32 @@ def test_extract_tags(input_is, expect_tags):
                     "usage": {"access": "CC0"},
                     "guid": "http://gu.id.one",
                     "type": "Images",
+                    "content": "",
+                },
+            ],
+            [],
+        ),
+        (
+            [
+                {
+                    "thumbnail": "https://thumbnail.one",
+                    "idsId": "",
+                    "usage": {"access": "CC0"},
+                    "guid": "http://gu.id.one",
+                    "type": "Images",
+                    "content": "https://image.url.one",
+                }
+            ],
+            [],
+        ),
+        (
+            [
+                {
+                    "thumbnail": "https://thumbnail.one",
+                    "idsId": "id_one",
+                    "usage": {"access": "CC0"},
+                    "guid": "http://gu.id.one",
+                    "type": "Images",
                     "content": "https://image.url.one",
                 },
                 {

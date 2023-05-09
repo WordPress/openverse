@@ -30,6 +30,7 @@ import logging
 
 from provider_data_ingester import ProviderDataIngester
 
+from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 
@@ -81,8 +82,7 @@ class MetMuseumDataIngester(ProviderDataIngester):
         object_json = self.delayed_requester.get_response_json(
             object_endpoint, self.retries
         )
-
-        if not object_json.get("isPublicDomain"):
+        if not object_json or not object_json.get("isPublicDomain"):
             self.non_cc0_objects += 1
             if self.non_cc0_objects % self.batch_limit == 0:
                 logger.info(f"Retrieved {self.non_cc0_objects} non-CC0 objects.")
@@ -131,21 +131,17 @@ class MetMuseumDataIngester(ProviderDataIngester):
         if response_json:
             return False
 
-    def _get_foreign_id(self, object_id: int, image_url: str):
+    def _get_foreign_id(self, object_id: int, image_url: str) -> str:
         unique_identifier = image_url.split("/")[-1].split(".")[0]
         return f"{object_id}-{unique_identifier}"
 
-    def _get_meta_data(self, object_json):
-        if object_json is None:
-            return
+    def _get_meta_data(self, object_json: dict) -> dict | None:
         if object_json.get("accessionNumber"):
             return {
                 "accession_number": object_json.get("accessionNumber"),
             }
 
-    def _get_tag_list(self, object_json):
-        if object_json is None:
-            return
+    def _get_tag_list(self, object_json: dict) -> list:
         tag_list = [
             tag
             for tag in [
@@ -165,19 +161,16 @@ class MetMuseumDataIngester(ProviderDataIngester):
             tag_list += [tag["term"] for tag in object_json.get("tags")]
         return tag_list
 
-    def _get_title(self, object_json):
-        if object_json is not None:
-            # Use or to skip false-y (empty) titles: ""
-            return object_json.get("title") or object_json.get("objectName")
+    def _get_title(self, object_json: dict) -> str | None:
+        # Use or to skip false-y (empty) titles: ""
+        return object_json.get("title") or object_json.get("objectName")
 
-    def _get_artist_name(self, object_json):
-        if object_json is None:
-            return
+    def _get_artist_name(self, object_json: dict) -> str | None:
         return object_json.get("artistDisplayName")
 
-    def get_media_type(self, object_json):
+    def get_media_type(self, object_json: dict):
         # This provider only supports Images.
-        return "image"
+        return constants.IMAGE
 
 
 def main(date: str):

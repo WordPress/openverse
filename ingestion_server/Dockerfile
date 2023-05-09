@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 # Automatically build image using Python version specified in the `Pipfile`.
 ARG INGESTION_PY_VERSION
 

@@ -8,4 +8,5 @@ dev_flow
 ci_cd/index
 decision_making/index
 documentation/index
+traffic/index
 ```
