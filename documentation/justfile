@@ -33,3 +33,7 @@ serve port="50231":
 # Delete the live server and build output directories
 clean:
     rm -rf _serve/ _build
+
+# Clean & build the documentation, raising warnings as errors
+recreate: clean
+    just build -W
