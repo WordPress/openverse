@@ -87,3 +87,7 @@ No infrastructure changes are required.
 ## Marketing
 
 ## Required implementation plans
+
+- API
+- Frontend
+- Design issue
