@@ -1,10 +1,10 @@
-from collections import namedtuple
 from datetime import timedelta
 from textwrap import dedent
+from typing import NamedTuple
 
 from airflow.models.abstractoperator import AbstractOperator
 
-from common.constants import AUDIO, IMAGE
+from common.constants import AUDIO, IMAGE, MediaType
 from common.loader.sql import TABLE_NAMES
 from common.sql import PostgresHook
 from common.storage import columns as col
@@ -39,7 +39,29 @@ PARTITION = col.PROVIDER.db_name
 PERCENTILE = "percentile"
 PROVIDER = col.PROVIDER.db_name
 
-Column = namedtuple("Column", ["name", "definition"])
+
+class Column(NamedTuple):
+    name: str
+    definition: str
+
+
+class PopularityConstants(NamedTuple):
+    """
+    Data needed to calculate normalized popularity scores for a
+    particular provider and media type.
+
+    metric:   the key of the `meta_data` field representing the raw popularity
+              score
+    constant: the popularity constant used in the standardized popularity
+              function to normalize the raw score.
+    """
+
+    metric: str
+    constant: float
+
+
+ProviderPopularityConstants = dict[MediaType, PopularityConstants | None]
+
 
 IMAGE_POPULARITY_METRICS_TABLE_NAME = "image_popularity_metrics"
 AUDIO_POPULARITY_METRICS_TABLE_NAME = "audio_popularity_metrics"
@@ -420,3 +442,38 @@ def update_db_view(
         default_statement_timeout=PostgresHook.get_execution_timeout(task),
     )
     postgres.run(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {db_view_name};")
+
+
+def get_popularity_constants_for_provider(
+    postgres_conn_id: str,
+    providers: dict[MediaType, str],
+    task: AbstractOperator = None,
+) -> ProviderPopularityConstants:
+    """
+    Return a dictionary of popularity data used in standardized popularity
+    functions, for the given providers and media types.
+    """
+    postgres = PostgresHook(
+        postgres_conn_id=postgres_conn_id,
+        default_statement_timeout=PostgresHook.get_execution_timeout(task),
+    )
+
+    provider_popularity_data = {}
+    for media_type, provider_string in providers.items():
+        popularity_constants_view = (
+            IMAGE_POPULARITY_CONSTANTS_VIEW
+            if media_type == IMAGE
+            else AUDIO_POPULARITY_CONSTANTS_VIEW
+        )
+
+        popularity_data = postgres.run(
+            f"SELECT metric, constant FROM {popularity_constants_view}"
+            f" WHERE provider = '{provider_string}'"
+        )
+
+        # popularity_data will be either a PopularityConstants tuple or None,
+        # if popularity data has not been configured for this provider and
+        # media type.
+        provider_popularity_data[media_type] = popularity_data
+
+    return provider_popularity_data
