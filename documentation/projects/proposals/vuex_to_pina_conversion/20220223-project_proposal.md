@@ -1,5 +1,7 @@
 # 2022-02-23 Project Proposal: Vuex to Pinia conversion
 
+**Author**: @obulat
+
 - [x] @dhruvkb
 
 - [x] @sarayourfriend
