@@ -79,8 +79,8 @@ contribution as well, but may be less accessible or well-defined in comparison
 to those that are explicitly labelled.
 
 See the
-[contribution guide](https://docs.openverse.org/general/contributing.html)
-for details.
+[contribution guide](https://docs.openverse.org/general/contributing.html) for
+details.
 
 ## Acknowledgments
 
