@@ -19,7 +19,7 @@ This report is only sent if all the following conditions are met.
 The workflow sends a Slack message, listing the outcome of four jobs
 
 - [`emit-docs`](/meta/ci_cd/jobs/documentation.md#emit-docs)
-- [`publish-images`](/meta/ci_cd/jobs/docker_publishing.md#publish-images)
+- [`publish-images`](/meta/ci_cd/jobs/docker.md#publish-images)
 - [`deploy-frontend`](/meta/ci_cd/jobs/deployment.md#deploy-frontend)
 - [`deploy-api`](/meta/ci_cd/jobs/deployment.md#deploy-api)
 

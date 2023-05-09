@@ -29,8 +29,7 @@ of these, "documentation" is also applicable to PRs.
   [GHCR](https://github.com/orgs/WordPress/packages?repo_name=openverse). These
   images are tagged with the SHA of the commit.
 
-  See job
-  [`publish-images`](/meta/ci_cd/jobs/docker_publishing.md#publish-images).
+  See job [`publish-images`](/meta/ci_cd/jobs/docker.md#publish-images).
 
 - **Frontend staging:** When a new commit is pushed to `main` which affects the
   frontend service and the tests for the frontend pass, a new
@@ -55,4 +54,5 @@ actions
 jobs/index
 flow
 proof_of_functionality
+artifacts
 ```
