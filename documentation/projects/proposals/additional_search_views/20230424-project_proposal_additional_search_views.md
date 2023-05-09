@@ -70,8 +70,10 @@ The three pages described above will require changes to:
 
 ## Success
 
-The project will be considered successful when each tag, provider, and creator
-has a standalone and shareable page
+The project will be considered successful when:
+
+- Each tag, provider, and creator has a standalone and shareable page.
+- Page uses are tracked by derivating data from existing events.
 
 ## Participants and stakeholders
 
