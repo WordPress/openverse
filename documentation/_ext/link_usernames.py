@@ -28,7 +28,7 @@ GITHUB_USERNAME_REGEX = re.compile(
 """,
     flags=re.VERBOSE,
 )
-GITHUB_IGNORE_USERNAMES = {"todo", "WordPress", "username"}
+GITHUB_IGNORE_USERNAMES = {"todo", "WordPress", "username", "defaultValue"}
 
 
 def _replace_username(match: re.Match) -> str:
