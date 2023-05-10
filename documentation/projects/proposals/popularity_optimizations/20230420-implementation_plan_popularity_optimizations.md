@@ -39,7 +39,7 @@ structures exist for `audio` and will exist for any media types added in the
 future. Descriptions are not exhaustive; some details that are not relevant have
 been omitted for brevity.
 
-#### `image`
+### `image`
 
 The 'main' image table. Rows in this table may contain **raw** popularity data
 from the provider in the `meta_data` column, such as the number of times this
@@ -51,7 +51,7 @@ This table is updated by **ingestion**, which may:
 - update previously ingested images (for example, by updating raw popularity
   data)
 
-#### `image_popularity_metrics`
+### `image_popularity_metrics`
 
 A table which contains known 'metrics': that is, the name of the metadata field
 which contains raw popularity data for each provider. _Not all providers have a
@@ -59,7 +59,7 @@ configured popularity metric._
 
 This table only needs to be updated when a metric is added or modified.
 
-#### `image_popularity_constants`
+### `image_popularity_constants`
 
 A materialized view which calculates, for each provider that supports popularity
 data, a popularity constant that can be used to normalize raw popularity scores.
@@ -70,7 +70,7 @@ accuracy as more data is consumed.
 Refreshing this view results in the constants being recalculated. We currently
 do this once a month. It must also be done whenever a new metric is added.
 
-#### `image_view`
+### `image_view`
 
 A materialized view sourced from the `image` table, which adds the calculated
 `standardized_popularity` column. This normalized popularity score is calculated
