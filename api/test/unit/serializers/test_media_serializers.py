@@ -1,6 +1,6 @@
 import uuid
 from test.factory.models.oauth2 import AccessTokenFactory
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from django.conf import settings
 from rest_framework.exceptions import NotAuthenticated, ValidationError
@@ -9,8 +9,14 @@ from rest_framework.views import APIView
 
 import pytest
 
-from api.serializers.audio_serializers import AudioSerializer
-from api.serializers.image_serializers import ImageSerializer
+from api.serializers.audio_serializers import (
+    AudioSearchRequestSerializer,
+    AudioSerializer,
+)
+from api.serializers.image_serializers import (
+    ImageSearchRequestSerializer,
+    ImageSerializer,
+)
 from api.serializers.media_serializers import MediaSearchRequestSerializer
 
 
@@ -139,3 +145,97 @@ def test_search_request_serializer_include_sensitive_results_validation_well_for
 def test_search_request_serializer_include_sensitive_results_malformed_request(data):
     serializer = MediaSearchRequestSerializer(data=data)
     assert not serializer.is_valid()
+
+
+@pytest.mark.django_db
+@patch("django.conf.settings.ES")
+@pytest.mark.parametrize(
+    "data",
+    (
+        {"qa": True, "internal__index": "some-index"},
+        {"qa": False, "internal__index": "some-index"},
+    ),
+)
+def test_search_request_serializer_fails_contradictory_params(
+    mock_es, data, authed_request
+):
+    mock_es.indices.exists.return_value = True
+
+    serializer = MediaSearchRequestSerializer(
+        data=data, context={"request": authed_request}
+    )
+    assert not serializer.is_valid()
+    assert (
+        "Cannot set both 'qa' and 'internal__index'."
+        in serializer.errors["non_field_errors"][0]
+    )
+
+
+@pytest.mark.django_db
+@patch("django.conf.settings.ES")
+@pytest.mark.parametrize(
+    "authenticated",
+    (
+        True,
+        False,
+    ),
+)
+def test_index_is_only_set_if_authenticated(
+    mock_es, authenticated, anon_request, authed_request
+):
+    mock_es.indices.exists.return_value = True
+
+    request = authed_request if authenticated else anon_request
+    serializer = MediaSearchRequestSerializer(
+        data={"internal__index": "some-index"}, context={"request": request}
+    )
+    assert serializer.is_valid()
+    assert serializer.validated_data.get("index") == (
+        "some-index" if authenticated else None
+    )
+
+    if authenticated:
+        # If authenticated, we should have checked that the index exists.
+        mock_es.indices.exists.assert_called_with("some-index")
+    else:
+        # If not authenticated, the validator quickly returns ``None``.
+        mock_es.indices.exists.assert_not_called()
+
+
+@pytest.mark.django_db
+@patch("django.conf.settings.ES")
+@pytest.mark.parametrize(
+    "index, is_valid",
+    (("index-that-exists", True), ("index-that-does-not-exist", False)),
+)
+def test_index_is_only_set_if_valid(mock_es, index, is_valid, authed_request):
+    mock_es.indices.exists = lambda index: "exists" in index
+
+    serializer = MediaSearchRequestSerializer(
+        data={"internal__index": index}, context={"request": authed_request}
+    )
+    assert serializer.is_valid() == is_valid
+    assert serializer.validated_data.get("index") == (index if is_valid else None)
+
+
+@pytest.mark.django_db
+@patch("django.conf.settings.ES")
+@pytest.mark.parametrize(
+    "serializer_class, index, is_valid",
+    (
+        (AudioSearchRequestSerializer, "audio-other", True),
+        (ImageSearchRequestSerializer, "image-other", True),
+        (AudioSearchRequestSerializer, "image-other", False),
+        (ImageSearchRequestSerializer, "audio-other", False),
+    ),
+)
+def test_index_is_only_set_if_matches_media_type(
+    mock_es, serializer_class, index, is_valid, authed_request
+):
+    mock_es.indices.exists.return_value = True
+
+    serializer = serializer_class(
+        data={"internal__index": index}, context={"request": authed_request}
+    )
+    assert serializer.is_valid() == is_valid
+    assert serializer.validated_data.get("index") == (index if is_valid else None)
