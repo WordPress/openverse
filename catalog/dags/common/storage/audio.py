@@ -69,6 +69,7 @@ class AudioStore(MediaStore):
         alt_files: dict | None = None,
         source: str | None = None,
         ingestion_type: str | None = None,
+        standardized_popularity: float | None = None,
         **kwargs,
     ):
         """
@@ -139,6 +140,7 @@ class AudioStore(MediaStore):
                              AudioStore init function is the specific
                              provider of the audio.
         ingestion_type:      set programmatically
+        standardized_popularity: Standardized popularity score.
         """
         if audio_set is None:
             audio_set_data = None
@@ -176,6 +178,7 @@ class AudioStore(MediaStore):
             "alt_files": alt_files,
             "source": source,
             "ingestion_type": ingestion_type,
+            "standardized_popularity": standardized_popularity,
         }
 
         audio = self._get_audio(**audio_data)

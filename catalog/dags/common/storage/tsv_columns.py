@@ -39,6 +39,7 @@ COLUMNS = {
             col.AUDIO_SET,
             col.SET_POSITION,
             col.ALT_FILES,
+            col.STANDARDIZED_POPULARITY,
         ],
     },
     IMAGE: {
@@ -62,6 +63,7 @@ COLUMNS = {
             col.PROVIDER,
             col.SOURCE,
             col.INGESTION_TYPE,
+            col.STANDARDIZED_POPULARITY,
         ],
         "001": [
             col.FOREIGN_ID,
@@ -84,6 +86,7 @@ COLUMNS = {
             col.INGESTION_TYPE,
             col.WIDTH,
             col.HEIGHT,
+            col.STANDARDIZED_POPULARITY,
         ],
     },
 }

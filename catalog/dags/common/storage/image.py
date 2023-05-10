@@ -61,6 +61,7 @@ class ImageStore(MediaStore):
         watermarked: str | None = "f",
         source: str | None = None,
         ingestion_type: str | None = None,
+        standardized_popularity: float | None = None,
         **kwargs,
     ):
         """
@@ -121,6 +122,7 @@ class ImageStore(MediaStore):
                              ImageStore init function is the specific
                              provider of the image.
         ingestion_type:      Set programmatically
+        standardized_popularity: Standardized popularity score.
         """
 
         image_data = {
@@ -142,6 +144,7 @@ class ImageStore(MediaStore):
             "watermarked": watermarked,
             "source": source,
             "ingestion_type": ingestion_type,
+            "standardized_popularity": standardized_popularity,
         }
         image = self._get_image(**image_data)
         if image is not None:
@@ -192,6 +195,7 @@ class MockImageStore(ImageStore):
         "watermarked",
         "source",
         "ingestion_type",
+        "standardized_popularity",
     ]
 
     def __init__(
