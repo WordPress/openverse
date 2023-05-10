@@ -19,6 +19,7 @@ class Datatype(Enum):
     jsonb = "jsonb"
     timestamp = "timestamp with time zone"
     uuid = "uuid"
+    double = "double precision"
 
 
 class UpsertStrategy(Enum):
@@ -237,6 +238,49 @@ class IntegerColumn(Column):
             number = str(int(float(value)))
         except (TypeError, ValueError) as e:
             logger.debug(f"input {value} is not castable to an int.  The error was {e}")
+            number = None
+        return number
+
+
+class DoublePrecisionColumn(Column):
+    """
+    Represents a PostgreSQL column of type double precision.
+
+    name:      name of the corresponding column in the DB
+    required:  whether the column should be considered required by the
+               instantiating script.  (Not necessarily mapping to
+               `not null` columns in the PostgreSQL table)
+    """
+
+    def __init__(
+        self,
+        name: str,
+        required: bool,
+        constraint: str | None = None,
+        db_name: str | None = None,
+    ):
+        super().__init__(
+            name,
+            required,
+            datatype=Datatype.double,
+            upsert_strategy=UpsertStrategy.newest_non_null,
+            constraint=constraint,
+            db_name=db_name,
+        )
+
+    def prepare_string(self, value):
+        """
+        Return a string representation to the best float approx of input.
+
+        If there is no mapping from the input to a float,
+        returns None.
+
+        value: for useful output this should be reasonably castable to a float.
+        """
+        try:
+            number = str(float(value))
+        except (TypeError, ValueError) as e:
+            logger.debug(f"input {value} is not castable to a float. The error was {e}")
             number = None
         return number
 
@@ -659,3 +703,7 @@ REMOVED = BooleanColumn(
 )
 
 FILETYPE = StringColumn(name="filetype", required=False, truncate=False, size=5)
+
+STANDARDIZED_POPULARITY = DoublePrecisionColumn(
+    name="standardized_popularity", required=False
+)
