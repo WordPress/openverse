@@ -135,7 +135,7 @@ def test_get_record_data_returns_none_for_falsy_foreign_landing_url_and_multimed
             "links": {"self": "link"},
             "attributes": {"multimedia": [{"admin": {"uid": ""}}]},
         },
-        # missing image_url
+        # missing url
         {
             "links": {"self": "link"},
             "attributes": {"multimedia": [{"admin": {"uid": "fid"}}]},

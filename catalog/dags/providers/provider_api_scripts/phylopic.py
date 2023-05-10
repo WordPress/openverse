@@ -105,9 +105,9 @@ class PhylopicDataIngester(ProviderDataIngester):
         if not (license_info := get_license_info(license_url)):
             return None
 
-        title = data.get("self", {}).get("title")
-        creator, creator_url = self._get_creator(data.get("contributor", {}))
-        width, height = self._get_image_sizes(data)
+        title = links.get("self", {}).get("title")
+        creator, creator_url = self._get_creator(links.get("contributor", {}))
+        width, height = self._get_image_sizes(links)
 
         return {
             "license_info": license_info,

@@ -171,11 +171,11 @@ def test_get_image_data(image_size, expected_height, expected_width, expected_fi
         f"329745-{image_size}.jpg"
     )
 
-    actual_image_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
+    actual_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
         image_data
     )
 
-    assert actual_image_url == expected_url
+    assert actual_url == expected_url
     assert actual_height == expected_height
     assert actual_width == expected_width
     assert actual_filesize == expected_filesize
@@ -184,11 +184,11 @@ def test_get_image_data(image_size, expected_height, expected_width, expected_fi
 def test_get_image_data_none():
     image_data = {}
 
-    actual_image_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
+    actual_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
         image_data
     )
 
-    assert actual_image_url is None
+    assert actual_url is None
     assert actual_height is None
     assert actual_width is None
     assert actual_filesize is None

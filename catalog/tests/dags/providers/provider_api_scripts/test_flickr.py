@@ -179,7 +179,7 @@ def test_get_record_data():
     [
         pytest.param(["owner"], id="owner-foreign_landing_url"),
         pytest.param(["license"], id="license"),
-        pytest.param(["url_l", "url_m", "url_s"], id="url_x-image_url"),
+        pytest.param(["url_l", "url_m", "url_s"], id="url_x-url"),
         pytest.param(["id"], id="id-foreign_identifier"),
     ],
 )
@@ -197,7 +197,7 @@ def test_get_record_data_returns_none_when_missing_required_params(missing_param
     [
         pytest.param(["owner"], id="owner-foreign_landing_url"),
         pytest.param(["license"], id="license"),
-        pytest.param(["url_l", "url_m", "url_s"], id="url_x-image_url"),
+        pytest.param(["url_l", "url_m", "url_s"], id="url_x-url"),
         pytest.param(["id"], id="id-foreign_identifier"),
     ],
 )
