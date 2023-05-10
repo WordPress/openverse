@@ -1,5 +1,7 @@
 # 2023-04-24 Project Proposal: Additional search views
 
+**Author**: @fcoveram
+
 ## Reviewers
 
 - [x] @obulat
