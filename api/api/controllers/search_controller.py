@@ -429,7 +429,7 @@ def search(
 
         if settings.VERBOSE_ES_RESPONSE:
             log.info(pprint.pprint(search_response.to_dict()))
-    except RequestError as e:
+    except (RequestError, NotFoundError) as e:
         raise ValueError(e)
 
     results = _post_process_results(
