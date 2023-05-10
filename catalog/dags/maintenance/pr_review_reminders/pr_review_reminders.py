@@ -93,6 +93,7 @@ def get_urgency_if_urgent(gh: GitHubAPI, pr: dict) -> ReviewDelta | None:
         # draft events.
         if event["event"] == "ready_for_review":
             ready_for_review_date = event["created_at"]
+            break
 
     urgency_base_date = parse_gh_date(ready_for_review_date)
     today = datetime.datetime.now()
