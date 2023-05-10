@@ -1,5 +1,8 @@
 import datetime
 import json
+import random
+from collections import namedtuple
+from functools import partial
 from pathlib import Path
 from typing import Literal
 
@@ -15,7 +18,7 @@ def _read_fixture(fixture: str) -> dict:
         return json.loads(file.read())
 
 
-def _make_label(priority: Urgency) -> dict:
+def _make_label(priority: Urgency.Urgency) -> dict:
     return {"name": f"priority: {priority.label}"}
 
 
@@ -36,8 +39,10 @@ def walk_backwards_in_time_until_weekday_count(today: datetime.datetime, count: 
 
 _pr_count = 1
 
+_id_offset = 1000000
 
-def make_pull(urgency: Urgency, past_due: bool, base_branch: str = "main") -> dict:
+
+def make_pull(urgency: Urgency, old: bool, base_branch: str = "main") -> dict:
     """
     Create a PR object like the one returned by the GitHub API.
 
@@ -49,11 +54,33 @@ def make_pull(urgency: Urgency, past_due: bool, base_branch: str = "main") -> di
     urgency of the PR.
 
     :param urgency: The priority to apply to the PR.
-    :param past_due: Whether to create a PR that is "past due".
+    :param old: Whether to create a PR with a created_at date beyond
+    the urgency window for ``urgency``.
+    :param base_branch: The target branch for the PR.
     """
     global _pr_count
     pull = _read_fixture("pull")
-    pull["number"] = pull["id"] = _pr_count
+    # PR "number" is the number for the repository
+    # that we're used to
+    pull["number"] = _pr_count
+    # PR "id" is GitHub's internal unique identifier
+    # for the PR across all PRs on GitHub. It must
+    # be different from the "number" to ensure
+    # we're not confusing the two in code.
+    # Instead of tracking a separate number,
+    # we can add a huge number to the _pr_count.
+    # This would only ever be a problem if our
+    # function was used to generate more
+    # PR fixtures than the id offset accounts
+    # for. If that ever becomes the case, just add
+    # a 0 to the end of ``_id_offset`` above
+    # and it will resolve the issue.
+    # Note: We could use a UUID for this to prevent
+    # all possible collision with ``number`` from
+    # but GitHub uses integers for this property
+    # so to keep realistic-ish fixture data we
+    # should prefer an integer here as well.
+    pull["id"] = _pr_count + _id_offset
     _pr_count += 1
 
     for label in pull["labels"]:
@@ -61,14 +88,14 @@ def make_pull(urgency: Urgency, past_due: bool, base_branch: str = "main") -> di
             label.update(**_make_label(urgency))
             break
 
-    if past_due:
-        updated_at = walk_backwards_in_time_until_weekday_count(
+    if old:
+        created_at = walk_backwards_in_time_until_weekday_count(
             datetime.datetime.now(), urgency.days
         )
     else:
-        updated_at = datetime.datetime.now()
+        created_at = datetime.datetime.now()
 
-    pull["updated_at"] = _gh_date(updated_at)
+    pull["created_at"] = _gh_date(created_at)
 
     base = pull["base"]
     base["ref"] = base_branch
@@ -152,3 +179,109 @@ def make_branch_protection(required_reviewers: int = 2) -> dict:
     ] = required_reviewers
 
     return branch_protection
+
+
+EventsConfig = namedtuple("EventsConfig", "event_name, days_since_previous_event")
+
+
+def make_events(origin_days_ago: int, events: list[str | EventsConfig]) -> list[dict]:
+    """
+    Create an issue events list with events starting at the origin.
+
+    The complexity of this fixture function is necessary to ease building
+    events list and testing the various states an events list can be in.
+
+    :param origin_days_ago: The number of days ago to treat as the origin
+    for the events list. If 0 then all events will be treated as being created the
+    same day and days lapsed configured for individual events will be ignored.
+    :param events: A list of mixed strings and (string, int) tuples. The string
+    must always be an event name. If a tuple, the int should be the number
+    of days to increment the event past the previous event.
+    """
+    result = []
+    previous_event_days_ago = origin_days_ago
+    for event_name in events:
+        days_since_previous_event = 0
+        if isinstance(event_name, tuple):
+            if origin_days_ago == 0:
+                # If origin days is 0 then treat all events as occurring today,
+                # otherwise events configured with days lapsed would end up
+                # in the future.
+                days_since_previous_event = 0
+            else:
+                days_since_previous_event = event_name[1]
+
+            event_name = event_name[0]
+
+        # Example: If the previous event was 2 days ago, and it has been
+        # 1 day since that previous event, then this event was 1 day ago.
+        days_ago = previous_event_days_ago - days_since_previous_event
+        created_at = walk_backwards_in_time_until_weekday_count(
+            datetime.datetime.now(), days_ago
+        )
+
+        event = _read_fixture(f"events/{event_name}")
+        event["created_at"] = _gh_date(created_at)
+
+        previous_event_days_ago = days_ago
+        result.append(event)
+
+    return result
+
+
+def make_non_urgent_events(events: list[str | EventsConfig]) -> list[dict]:
+    """
+    Create an events list where all events happened today.
+
+    By setting ``origin_days_ago`` to 0 we force the entire
+    events list to happen _now_ which necessarily means
+    none of the events could be considered urgent.
+    """
+    return make_events(0, events)
+
+
+def make_non_urgent_reviewable_events(events: list[str | EventsConfig]) -> list[dict]:
+    """
+    Create a reviewable but non-urgent events list.
+
+    By adding a "ready_for_review" event at the
+    end of the events list, we create valid events for
+    a reviewable PR.
+
+    We set the origin_days_ago to ensure that the last
+    `ready_for_review` event happened today, guaranteeing
+    that despite the reviewable status, the events will not
+    be considered urgent. We do this by summing the days between
+    each event in the event list.
+
+    Suitable for testing old PRs that _must_ be
+    reviewable but non-urgent. This allows us to
+    combine tests that would otherwise need to be
+    split out due to old PRs automatically being
+    urgent if they do not have a non-urgent ready
+    for review event. As this is the most common case
+    for urgent PRs (i.e, PRs that have never been
+    drafted or undrafted, just opened as ready for review)
+    it is included in the "pingable" events examples
+    but needs to be patched for old but non-urgent PRs.
+    """
+    events_list_days = sum(
+        [event[1] if isinstance(event, tuple) else 0 for event in events]
+    )
+
+    return make_events(events_list_days, events + ["ready_for_review"])
+
+
+def make_urgent_events(
+    urgency: Urgency.Urgency, events: list[str | EventsConfig]
+) -> list[dict]:
+    """
+    Create an events list ending in an event older than the urgency days.
+
+    Allows parametrizing events without while setting origin days
+    in the test function.
+    """
+    events_list_days = sum(
+        [event[1] if isinstance(event, tuple) else 0 for event in events]
+    )
+    return make_events(events_list_days + urgency.days, events)
