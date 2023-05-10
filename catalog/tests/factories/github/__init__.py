@@ -213,7 +213,9 @@ def make_events(origin_days_ago: int, events: list[str | EventsConfig]) -> list[
 
             event_name = event_name[0]
 
-        days_ago = previous_event_days_ago + days_since_previous_event
+        # Example: If the previous event was 2 days ago, and it has been
+        # 1 day since that previous event, then this event was 1 day ago.
+        days_ago = previous_event_days_ago - days_since_previous_event
         created_at = walk_backwards_in_time_until_weekday_count(
             datetime.datetime.now(), days_ago
         )
@@ -244,9 +246,13 @@ def make_non_urgent_reviewable_events(events: list[str | EventsConfig]) -> list[
 
     By adding a "ready_for_review" event at the
     end of the events list, we create valid events for
-    a reviewable PR. By setting the origin days ago
-    to 0, we guarantee that despite the reviewable
-    status, the events will not be considered urgent.
+    a reviewable PR.
+
+    We set the origin_days_ago to ensure that the last
+    `ready_for_review` event happened today, guaranteeing
+    that despite the reviewable status, the events will not
+    be considered urgent. We do this by summing the days between
+    each event in the event list.
 
     Suitable for testing old PRs that _must_ be
     reviewable but non-urgent. This allows us to
@@ -259,7 +265,11 @@ def make_non_urgent_reviewable_events(events: list[str | EventsConfig]) -> list[
     it is included in the "pingable" events examples
     but needs to be patched for old but non-urgent PRs.
     """
-    return make_events(0, events + ["ready_for_review"])
+    events_list_days = sum(
+        [event[1] if isinstance(event, tuple) else 0 for event in events]
+    )
+
+    return make_events(events_list_days, events + ["ready_for_review"])
 
 
 def make_urgent_events(
