@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from api.constants.field_order import field_position_map
 from api.constants.field_values import ASPECT_RATIOS, IMAGE_CATEGORIES, IMAGE_SIZES
+from api.constants.media_types import IMAGE_TYPE
 from api.models import Image, ImageReport
 from api.serializers.base import BaseModelSerializer
 from api.serializers.fields import EnumCharField
@@ -57,6 +58,14 @@ class ImageSearchRequestSerializer(
         enum_class=IMAGE_SIZES,
         required=False,
     )
+
+    def validate_internal__index(self, value):
+        index = super().validate_internal__index(value)
+        if index is None:
+            return None
+        if not index.startswith(IMAGE_TYPE):
+            raise serializers.ValidationError(f"Invalid index name `{value}`.")
+        return index
 
 
 class ImageReportRequestSerializer(MediaReportRequestSerializer):
