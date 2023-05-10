@@ -1,4 +1,5 @@
 import subprocess
+import traceback
 from dataclasses import dataclass
 
 
@@ -103,6 +104,8 @@ def print_ps():
         for service in parse_ps():
             service.print()
     except Exception as err:
+        print(traceback.format_exc())
+        print("=" * 80)
         print(f"Failed to get service info ({err.__class__.__name__}): \n{err}")
     print("=" * 80)
 
