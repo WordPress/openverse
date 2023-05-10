@@ -198,14 +198,14 @@ parametrize_possible_pingable_events = pytest.mark.parametrize(
             [
                 "labeled",
                 "review_requested",
-                EventsConfig("convert_to_draft", 1),
-                "ready_for_review",
+                "convert_to_draft",
+                EventsConfig("ready_for_review", 1),
             ],
             id="opened_then_drafted_finally_ready",
         ),
         # A PR opened as a draft does not have a "convert_to_draft" event but does still have "ready_for_review"
         pytest.param(
-            ["labeled", EventsConfig("review_requested", 2), "ready_for_review"],
+            ["labeled", "review_requested", EventsConfig("ready_for_review", 2)],
             id="opened_as_draft_finally_ready",
         ),
         # PRs can have multiple ready for review events if converted to draft multiple times
@@ -225,9 +225,9 @@ parametrize_possible_pingable_events = pytest.mark.parametrize(
             [
                 "labeled",
                 "review_requested",
+                EventsConfig("ready_for_review", 2),
+                EventsConfig("convert_to_draft", 1),
                 EventsConfig("ready_for_review", 1),
-                EventsConfig("convert_to_draft", 0),
-                EventsConfig("ready_for_review", 0),
             ],
             id="opened_as_draft_redrafted_finally_ready",
         ),
@@ -486,8 +486,8 @@ def test_does_not_ping_if_no_reviewers(github, urgency, events):
         (
             "labeled",
             "review_requested",
-            EventsConfig("convert_to_draft", 1),
-            "ready_for_review",
+            "convert_to_draft",
+            EventsConfig("ready_for_review", 1),
         ),
         # A PR opened as a draft does not have a "convert_to_draft" event but does still have "ready_for_review"
         ("labeled", "review_requested", EventsConfig("ready_for_review", 2)),
@@ -504,9 +504,9 @@ def test_does_not_ping_if_no_reviewers(github, urgency, events):
         (
             "labeled",
             "review_requested",
+            EventsConfig("ready_for_review", 2),
+            EventsConfig("convert_to_draft", 1),
             EventsConfig("ready_for_review", 1),
-            EventsConfig("convert_to_draft", 0),
-            EventsConfig("ready_for_review", 0),
         ),
     ),
 )
