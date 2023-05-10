@@ -13,7 +13,7 @@ from api.utils import photon
 from api.utils.pagination import StandardPagination
 
 
-parent_logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class MediaViewSet(ReadOnlyModelViewSet):
@@ -85,7 +85,16 @@ class MediaViewSet(ReadOnlyModelViewSet):
         qa = params.validated_data["qa"]
         filter_dead = params.validated_data["filter_dead"]
 
-        search_index = self.qa_index if qa else self.default_index
+        if qa:
+            logger.info("Using QA index for media.")
+            search_index = self.qa_index
+        elif pref_index := params.validated_data.get("index"):
+            logger.info(f"Using preferred index {pref_index} for media.")
+            search_index = pref_index
+        else:
+            logger.info("Using default index for media.")
+            search_index = self.default_index
+
         try:
             results, num_pages, num_results = search_controller.search(
                 params,
