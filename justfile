@@ -150,7 +150,7 @@ build *args:
 
 # List all services and their URLs and ports
 ps:
-    python3 utilities/ps.py
+    python3 utilities/ps.py || true
 
 # Also see `up` recipe in sub-justfiles
 # Bring all Docker services up, in all profiles
