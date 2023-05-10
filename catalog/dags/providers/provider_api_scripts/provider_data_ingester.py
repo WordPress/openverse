@@ -8,6 +8,7 @@ from typing import TypedDict
 from airflow.exceptions import AirflowException
 from airflow.models import Variable
 
+from common.popularity.sql import ProviderPopularityConstants
 from common.requester import DelayedRequester
 from common.storage.media import MediaStore
 from common.storage.util import get_media_store_class
@@ -115,17 +116,25 @@ class ProviderDataIngester(ABC):
 
     def __init__(
         self,
-        conf: dict = None,
-        dag_id: str = None,
+        conf: dict,
+        dag_id: str,
+        popularity_constants: ProviderPopularityConstants,
         date: str = None,
         day_shift: int = None,
     ):
         """
         Initialize the provider configuration.
-        Optional Arguments:
+        Required Arguments:
 
         conf: The configuration dict for the running DagRun
         dag_id: The id of the running provider DAG
+        popularity_constants: A dictionary mapping each supported media type to
+            a PopularityConstants tuple, which provides the metric and constant
+            needed to do a standardized popularity calculation.
+
+        Optional Arguments:
+
+
         date: Date String in the form YYYY-MM-DD. This is the date for
               which running the script will pull data
         """
@@ -152,6 +161,7 @@ class ProviderDataIngester(ABC):
         self.media_stores = self._init_media_stores(day_shift)
         self.date = date
         self.dag_id = dag_id or ""
+        self.popularity_constants = popularity_constants
 
         # dag_run configuration options
         conf = conf or {}
@@ -459,10 +469,15 @@ class ProviderDataIngester(ABC):
                 # We need to know what type of record we're handling in
                 # order to add it to the correct store
                 media_type = self.get_media_type(record)
+                standardized_popularity = self.get_standardized_popularity(
+                    record, media_type
+                )
 
                 # Add the record to the correct store
                 store = self.media_stores[media_type]
-                store.add_item(**record)
+                store.add_item(
+                    **record, standardized_popularity=standardized_popularity
+                )
                 processed_count += 1
 
                 if self.limit and (self.record_count + processed_count) >= self.limit:
@@ -470,6 +485,55 @@ class ProviderDataIngester(ABC):
                     return processed_count
 
         return processed_count
+
+    def get_standardized_popularity(
+        self, record: dict, media_type: str
+    ) -> float | None:
+        """
+        Calculate the standardized popularity score for a record. If this provider does
+        not support popularity metrics, return None.
+
+        The standardized_popularity for a given record is calculated using the formula:
+
+            p(x) = x / (x + C)
+
+        where:
+        * x is the raw popularity score, parsed from the provider API during ingestion:
+          e.g., the number of times the record was viewed or downloaded at the source
+          provider.
+        * C is the popularity constant, a fixed, positive value used to map the raw
+          scores onto the interval [0, 1).
+
+        The popularity constant (`constant`) and the name of the `meta_data` key which
+        stores raw popularity data (`metric`) for a given media type can be obtained
+        from the `self.popularity_constants` dict.
+
+        The value of C is pinned to a percentile value (e.g., the 85th percentile value
+        in the distribution of "number of downloads" for records from this provider).
+        Because this number changes, the popularity refresh DAGs periodically update the
+        value of C and recalculate standardized_popularity for existing records using
+        the new constant. This calculation is done in SQL:
+        https://github.com/WordPress/openverse/blob/b2bcc39f291273d860d4753b6286c93b14d88999/catalog/dags/common/popularity/sql.py#L302
+        If the formula for calculating standardized popularity is changed here, this SQL
+        function must also be updated.
+
+        Reference: https://github.com/cc-archive/cccatalog/issues/405#issuecomment-629233047
+        """
+
+        if not (popularity_constants := self.popularity_constants[media_type]):
+            # If a provider does not support popularity metrics, return None for
+            # `standardized_popularity`
+            return None
+
+        metric, constant = popularity_constants
+        # Return None only when the provider does not provide popularity metrics, or if
+        # the record contains no data for the raw popularity score. This is an explicit
+        # None check because a raw popularity score of 0 should result in a standardized
+        # popularity score of 0, rather than None.
+        if (raw_popularity_score := record.get("meta_data", {}).get(metric)) is None:
+            return None
+
+        return raw_popularity_score / (raw_popularity_score + constant)
 
     def get_media_type(self, record: dict) -> str:
         """
