@@ -8,6 +8,7 @@ from catalog.tests.factories.github import (
     EventsConfig,
     make_branch_protection,
     make_current_pr_comment,
+    make_events,
     make_non_urgent_events,
     make_non_urgent_reviewable_events,
     make_outdated_pr_comment,
@@ -543,3 +544,38 @@ def test_ignores_created_at_and_pings_if_urgent_ready_for_review_event_exists(
     post_reminders("not_set", dry_run=False)
 
     assert pull["number"] in github["posted_comments"]
+
+
+@parametrize_urgency
+def test_multiple_drafts_only_uses_most_recent_ready_for_review_for_urgency(
+    github, urgency
+):
+    """
+    This check ensures that, in the case where a PR went through multiple drafting and
+    ready-for-review steps, that the PR urgency is only determined based off the latest
+    ready-for-review event (not any of the previous).
+    """
+    events = [
+        "labeled",
+        "review_requested",
+        EventsConfig("ready_for_review", 2),
+        EventsConfig("convert_to_draft", 0),
+        EventsConfig("ready_for_review", 0),
+    ]
+    pull = make_pull(urgency, old=False)
+    pull["requested_reviewers"] = [
+        make_requested_reviewer(f"reviewer-due-{i}") for i in range(2)
+    ]
+
+    github["pulls"] += [pull]
+    _setup_branch_protection(github, pull)
+
+    # Create events to cause a ping, we do this manually here to ensure
+    # that some events in the timeline are urgent but the more recent ones aren't
+    github["events"][pull["number"]] = make_events(max(urgency.days - 1, 0), events)
+
+    post_reminders("not_set", dry_run=False)
+
+    assert (
+        pull["number"] not in github["posted_comments"]
+    ), "PR with recent ready-for-review event should not be pinged"
