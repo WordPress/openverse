@@ -86,10 +86,6 @@ The project will be considered successful when:
 
 No infrastructure changes are required.
 
-## Accessibility
-
-## Marketing
-
 ## Required implementation plans
 
 - API
