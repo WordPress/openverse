@@ -34,7 +34,7 @@ extensions = [
     "sphinx_copybutton",
 ]
 myst_heading_anchors = 6  # Add anchors to all headers, this is disabled by default.
-myst_enable_extensions = ["fieldlist"]
+myst_enable_extensions = ["fieldlist"]  # Required for specifying :orphan: pages
 
 source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
 
